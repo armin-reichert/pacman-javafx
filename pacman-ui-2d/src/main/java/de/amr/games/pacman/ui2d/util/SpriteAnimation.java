@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.util;
 
-import de.amr.games.pacman.ui2d.rendering.SpriteArea;
+import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
@@ -36,7 +36,7 @@ public class SpriteAnimation {
             return this;
         }
 
-        public Builder sprites(SpriteArea... sprites) {
+        public Builder sprites(RectangularArea... sprites) {
             animation.sprites = sprites;
             return this;
         }
@@ -68,19 +68,19 @@ public class SpriteAnimation {
         };
     }
 
-    private SpriteArea[] sprites = new SpriteArea[0];
+    private RectangularArea[] sprites = new RectangularArea[0];
     private boolean loop;
     private int frameTicks = 1;
     private int fps = 60;
     private Transition transition;
     private int frameIndex;
 
-    public void setSprites(SpriteArea[] sprites) {
+    public void setSprites(RectangularArea[] sprites) {
         this.sprites = sprites;
         // TODO what about frame index?
     }
 
-    public SpriteArea[] getSprites() {
+    public RectangularArea[] getSprites() {
         return sprites;
     }
 
@@ -131,7 +131,7 @@ public class SpriteAnimation {
         return frameIndex;
     }
 
-    public SpriteArea currentSprite() {
+    public RectangularArea currentSprite() {
         return sprites[frameIndex];
     }
 

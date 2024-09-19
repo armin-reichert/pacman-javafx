@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.rendering.ms_pacman;
 
-import de.amr.games.pacman.ui2d.rendering.SpriteArea;
+import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 
 /**
  * @author Armin Reichert
@@ -45,7 +45,7 @@ public class ClapperboardAnimation {
         }
     }
 
-    public SpriteArea currentSprite(SpriteArea[] sprites) {
+    public RectangularArea currentSprite(RectangularArea[] sprites) {
         if (tick == 0) {
             return sprites[CLOSED];
         }

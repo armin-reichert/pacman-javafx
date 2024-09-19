@@ -14,7 +14,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameSounds;
-import de.amr.games.pacman.ui2d.rendering.SpriteArea;
+import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameScene;
@@ -241,7 +241,7 @@ public class PlayScene3D implements GameScene {
         switch (context.game().variant()) {
             case MS_PACMAN, MS_PACMAN_TENGEN -> {
                 var ss = (MsPacManGameSpriteSheet) context.spriteSheet(context.game().variant());
-                SpriteArea[] numberSprites = ss.ghostNumberSprites();
+                RectangularArea[] numberSprites = ss.ghostNumberSprites();
                 context.game().eventLog().killedGhosts.forEach(ghost -> {
                     int index = context.game().victims().indexOf(ghost);
                     var numberImage = ss.subImage(numberSprites[index]);
@@ -250,7 +250,7 @@ public class PlayScene3D implements GameScene {
             }
             case PACMAN, PACMAN_XXL -> {
                 var ss = (PacManGameSpriteSheet) context.spriteSheet(context.game().variant());
-                SpriteArea[] numberSprites = ss.ghostNumberSprites();
+                RectangularArea[] numberSprites = ss.ghostNumberSprites();
                 context.game().eventLog().killedGhosts.forEach(ghost -> {
                     int index = context.game().victims().indexOf(ghost);
                     var numberImage = ss.subImage(numberSprites[index]);

@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui2d.rendering.SpriteArea;
+import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 
 import static de.amr.games.pacman.lib.Globals.RND;
 import static de.amr.games.pacman.lib.Globals.t;
@@ -79,13 +79,13 @@ public class BootScene extends GameScene2D {
         }
     }
 
-    private SpriteArea randomSpriteSheetTile() {
+    private RectangularArea randomSpriteSheetTile() {
         var spriteSheet = context.spriteSheet(context.game().variant());
         var source = spriteSheet.source();
         var raster = spriteSheet.raster();
         int x = (int)(RND.nextDouble() * ((int)source.getWidth() - raster));
         int y = (int)(RND.nextDouble() * ((int)source.getHeight() - raster));
-        return new SpriteArea(x, y, raster, raster);
+        return new RectangularArea(x, y, raster, raster);
     }
 
     private void paintGrid() {

@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.rendering.pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.SpriteArea;
+import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import javafx.scene.image.Image;
 
@@ -44,38 +44,38 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
         return flashingMazeImage;
     }
 
-    private final SpriteArea fullMazeSprite = rect(0, 0, 224, 248);
+    private final RectangularArea fullMazeSprite = rect(0, 0, 224, 248);
 
-    public SpriteArea getFullMazeSprite() {
+    public RectangularArea getFullMazeSprite() {
         return fullMazeSprite;
     }
 
-    private final SpriteArea emptyMazeSprite = rect(228, 0, 224, 248);
+    private final RectangularArea emptyMazeSprite = rect(228, 0, 224, 248);
 
-    public SpriteArea getEmptyMazeSprite() {
+    public RectangularArea getEmptyMazeSprite() {
         return emptyMazeSprite;
     }
 
-    private final SpriteArea[] ghostNumberSprites = array(
+    private final RectangularArea[] ghostNumberSprites = array(
         rect(456, 133, 15, 7),  // 200
         rect(472, 133, 15, 7),  // 400
         rect(488, 133, 15, 7),  // 800
         rect(504, 133, 16, 7)); // 1600
 
-    public SpriteArea[] ghostNumberSprites() {
+    public RectangularArea[] ghostNumberSprites() {
         return ghostNumberSprites;
     }
 
-    private final SpriteArea[] bonusSymbolSprites = IntStream.range(0, 8)
+    private final RectangularArea[] bonusSymbolSprites = IntStream.range(0, 8)
         .mapToObj(symbolPosition -> rect(OFF_X + r(2 + symbolPosition), r(3) /*+ 0.5*/, r(1), r(1) /*- 0.5*/))
-        .toArray(SpriteArea[]::new);
+        .toArray(RectangularArea[]::new);
 
     @Override
-    public SpriteArea bonusSymbolSprite(byte symbol) {
+    public RectangularArea bonusSymbolSprite(byte symbol) {
         return bonusSymbolSprites[symbol];
     }
 
-    private final SpriteArea[] bonusValueSprites = new SpriteArea[8];
+    private final RectangularArea[] bonusValueSprites = new RectangularArea[8];
     {
         for (byte symbol = 0; symbol < 8; ++symbol) {
             bonusValueSprites[symbol] = switch (symbol) {
@@ -93,11 +93,11 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     @Override
-    public SpriteArea bonusValueSprite(byte symbol) {
+    public RectangularArea bonusValueSprite(byte symbol) {
         return bonusValueSprites[symbol];
     }
 
-    private final SpriteArea[] ghostFacingRightSprites = new SpriteArea[4];
+    private final RectangularArea[] ghostFacingRightSprites = new RectangularArea[4];
     {
         for (byte id = 0; id < 4; ++id) {
             int rx = 2 * ORDER.indexOf(Direction.RIGHT);
@@ -106,18 +106,18 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
         }
     }
 
-    public SpriteArea ghostFacingRight(byte ghostID) {
+    public RectangularArea ghostFacingRight(byte ghostID) {
         return ghostFacingRightSprites[ghostID];
     }
 
-    private final SpriteArea livesCounterSprite = rect(OFF_X + 129, 15, 16, 16);
+    private final RectangularArea livesCounterSprite = rect(OFF_X + 129, 15, 16, 16);
 
     @Override
-    public SpriteArea livesCounterSprite() {
+    public RectangularArea livesCounterSprite() {
         return livesCounterSprite;
     }
 
-    private final SpriteArea[][] pacMunchingSprites = new SpriteArea[4][];
+    private final RectangularArea[][] pacMunchingSprites = new RectangularArea[4][];
     {
         short margin = 1;
         int size = 16 - 2 * margin;
@@ -129,11 +129,11 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
         }
     }
 
-    public SpriteArea[] pacMunchingSprites(Direction dir) {
+    public RectangularArea[] pacMunchingSprites(Direction dir) {
         return pacMunchingSprites[ORDER.indexOf(dir)];
     }
 
-    private final SpriteArea[] pacDyingSprites = new SpriteArea[11];
+    private final RectangularArea[] pacDyingSprites = new RectangularArea[11];
     {
         for (int i = 0; i < pacDyingSprites.length; ++i) {
             boolean last = i == pacDyingSprites.length - 1;
@@ -141,11 +141,11 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
         }
     }
 
-    public SpriteArea[] pacDyingSprites() {
+    public RectangularArea[] pacDyingSprites() {
         return pacDyingSprites;
     }
 
-    private final SpriteArea[][][] ghostNormalSprites = new SpriteArea[4][4][];
+    private final RectangularArea[][][] ghostNormalSprites = new RectangularArea[4][4][];
     {
         for (byte id = 0; id < 4; ++id) {
             for (byte d = 0; d < 4; ++d) {
@@ -154,47 +154,47 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
         }
     }
 
-    public SpriteArea[] ghostNormalSprites(byte id, Direction dir) {
+    public RectangularArea[] ghostNormalSprites(byte id, Direction dir) {
         return ghostNormalSprites[id][ORDER.indexOf(dir)];
     }
 
-    private final SpriteArea[] ghostFrightenedSprites = array(
+    private final RectangularArea[] ghostFrightenedSprites = array(
         rect(OFF_X + r(8), r(4), r(1), r(1)),
         rect(OFF_X + r(9), r(4), r(1), r(1)));
 
-    public SpriteArea[] ghostFrightenedSprites() {
+    public RectangularArea[] ghostFrightenedSprites() {
         return ghostFrightenedSprites;
     }
 
-    private final SpriteArea[] ghostFlashingSprites = tilesRightOf(OFF_X, 8, 4, 4);
+    private final RectangularArea[] ghostFlashingSprites = tilesRightOf(OFF_X, 8, 4, 4);
 
-    public SpriteArea[] ghostFlashingSprites() {
+    public RectangularArea[] ghostFlashingSprites() {
         return ghostFlashingSprites;
     }
 
-    private final SpriteArea[][] ghostEyesSprites = new SpriteArea[4][];
+    private final RectangularArea[][] ghostEyesSprites = new RectangularArea[4][];
     {
         for (byte d = 0; d < 4; ++d) {
             ghostEyesSprites[d] = array(rect(OFF_X + r(8 + d), r(5), r(1), r(1)));
         }
     }
 
-    public SpriteArea[] ghostEyesSprites(Direction dir) {
+    public RectangularArea[] ghostEyesSprites(Direction dir) {
         return ghostEyesSprites[ORDER.indexOf(dir)];
     }
 
     // Pac-Man specific:
 
-    private final SpriteArea[] bigPacManSprites = array(
+    private final RectangularArea[] bigPacManSprites = array(
         rect(OFF_X + 32, 16, 32, 32),
         rect(OFF_X + 64, 16, 32, 32),
         rect(OFF_X + 96, 16, 32, 32));
 
-    public SpriteArea[] bigPacManSprites() {
+    public RectangularArea[] bigPacManSprites() {
         return bigPacManSprites;
     }
 
-    private final SpriteArea[] blinkyStretchedSprites = new SpriteArea[5];
+    private final RectangularArea[] blinkyStretchedSprites = new RectangularArea[5];
     {
         int size = raster();
         for (int i = 0; i < 5; ++i) {
@@ -202,11 +202,11 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
         }
     }
 
-    public SpriteArea[] blinkyStretchedSprites() {
+    public RectangularArea[] blinkyStretchedSprites() {
         return blinkyStretchedSprites;
     }
 
-    private final SpriteArea[] blinkyDamagedSprites = new SpriteArea[2];
+    private final RectangularArea[] blinkyDamagedSprites = new RectangularArea[2];
     {
         int m = 1;
         int size = raster() - 2 * m;
@@ -214,29 +214,29 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
         blinkyDamagedSprites[1] = rect(OFF_X + r(9) + m, r(7) + m, size, size);
     }
 
-    public SpriteArea[] blinkyDamagedSprites() {
+    public RectangularArea[] blinkyDamagedSprites() {
         return blinkyDamagedSprites;
     }
 
-    private final SpriteArea[] blinkyPatchedSprites = new SpriteArea[2];
+    private final RectangularArea[] blinkyPatchedSprites = new RectangularArea[2];
     {
         int size = raster();
         blinkyPatchedSprites[0] = rect(OFF_X + r(10), r(7), size, size);
         blinkyPatchedSprites[1] = rect(OFF_X + r(11), r(7), size, size);
     }
 
-    public SpriteArea[] blinkyPatchedSprites() {
+    public RectangularArea[] blinkyPatchedSprites() {
         return blinkyPatchedSprites;
     }
 
-    private final SpriteArea[] blinkyNakedSprites = new SpriteArea[2];
+    private final RectangularArea[] blinkyNakedSprites = new RectangularArea[2];
     {
         int size = raster();
         blinkyNakedSprites[0] = rect(OFF_X + r(8), r(8), 2 * size, size);
         blinkyNakedSprites[1] = rect(OFF_X + r(10), r(8), 2 * size, size);
     }
 
-    public SpriteArea[] blinkyNakedSprites() {
+    public RectangularArea[] blinkyNakedSprites() {
         return blinkyNakedSprites;
     }
 }

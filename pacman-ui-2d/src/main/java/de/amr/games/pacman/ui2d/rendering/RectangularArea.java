@@ -14,9 +14,9 @@ import javafx.geometry.Rectangle2D;
  * @param width width of rectangle
  * @param height height of rectangle
  */
-public record SpriteArea(short x, short y, short width, short height) {
+public record RectangularArea(short x, short y, short width, short height) {
 
-    public SpriteArea(int x, int y, int width, int height) {
+    public RectangularArea(int x, int y, int width, int height) {
         this((short) x, (short) y, (short) width, (short) height);
     }
 

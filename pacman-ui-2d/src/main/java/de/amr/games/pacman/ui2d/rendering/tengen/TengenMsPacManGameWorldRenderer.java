@@ -14,7 +14,7 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.SpriteImage;
-import de.amr.games.pacman.ui2d.rendering.SpriteArea;
+import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
@@ -133,33 +133,33 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
     }
 
     // Maps are all the same size and arranged in a 3x3 grid
-    private SpriteArea arcadeMapArea(int mapNumber, int width, int height) {
+    private RectangularArea arcadeMapArea(int mapNumber, int width, int height) {
         int index = mapNumber - 1;
         int rowIndex = index / 3, colIndex = index % 3;
-        return new SpriteArea(colIndex * width, rowIndex * height, width, height);
+        return new RectangularArea(colIndex * width, rowIndex * height, width, height);
     }
 
     // Maps have same width but different height and are arranged in 5 rows
-    private SpriteArea nonArcadeMapArea(int mapNumber, int width, int height) {
+    private RectangularArea nonArcadeMapArea(int mapNumber, int width, int height) {
         if (mapNumber <= 8) { // row #1, maps 1-8
             int colIndex = mapNumber - 1;
-            return new SpriteArea(colIndex * width, 0, width, height);
+            return new RectangularArea(colIndex * width, 0, width, height);
         }
         else if (mapNumber <= 16) { // row #2, maps 9-16
             int colIndex = (mapNumber - 1) % 8;
-            return new SpriteArea(colIndex * width, 248, width, height);
+            return new RectangularArea(colIndex * width, 248, width, height);
         }
         else if (mapNumber <= 24) { // row #3, maps 17-24
             int colIndex = (mapNumber - 1) % 8;
-            return new SpriteArea(colIndex * width, 544, width, height);
+            return new RectangularArea(colIndex * width, 544, width, height);
         }
         else if (mapNumber <= 33) { // row #4, maps 18-33
             int colIndex = (mapNumber - 1) % 9;
-            return new SpriteArea(colIndex * width, 840, width, height);
+            return new RectangularArea(colIndex * width, 840, width, height);
         }
         else if (mapNumber <= 37) { // row #5, maps 34-37
             int colIndex = (mapNumber - 1) % 4;
-            return new SpriteArea(colIndex * width, 1136, width, height);
+            return new RectangularArea(colIndex * width, 1136, width, height);
         }
         throw new IllegalArgumentException("Illegal map number: " + mapNumber);
     }

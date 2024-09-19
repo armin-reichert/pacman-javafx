@@ -10,7 +10,7 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.SpriteArea;
+import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
@@ -73,7 +73,7 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
             g.save();
             g.scale(scaling, scaling);
             if (blinkingOn) {
-                SpriteArea emptyMazeBright = spriteSheet.highlightedMaze(game.currentMapNumber());
+                RectangularArea emptyMazeBright = spriteSheet.highlightedMaze(game.currentMapNumber());
                 spriteRenderer.drawSubImage(g, spriteSheet.getFlashingMazesImage(), emptyMazeBright, x - 3, y);
             } else {
                 spriteRenderer.drawSprite(g, spriteSheet.emptyMaze(game.currentMapNumber()), x, y);

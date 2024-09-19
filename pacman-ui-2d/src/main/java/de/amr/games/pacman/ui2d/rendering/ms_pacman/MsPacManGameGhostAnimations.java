@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.rendering.ms_pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.ui2d.rendering.SpriteArea;
+import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
 
@@ -82,7 +82,7 @@ public class MsPacManGameGhostAnimations extends SpriteAnimations {
     }
 
     @Override
-    public SpriteArea currentSprite() {
+    public RectangularArea currentSprite() {
         var currentAnimation = currentAnimation();
         if (Ghost.ANIM_GHOST_NORMAL.equals(currentAnimationName)) {
             currentAnimation.setSprites(spriteSheet.ghostNormalSprites(ghost.id(), ghost.wishDir()));

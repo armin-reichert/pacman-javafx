@@ -11,7 +11,7 @@ import de.amr.games.pacman.ui2d.util.SpriteSheet;
  */
 public interface GameSpriteSheet extends SpriteSheet {
 
-    SpriteArea livesCounterSprite();
-    SpriteArea bonusSymbolSprite(byte symbol);
-    SpriteArea bonusValueSprite(byte symbol);
+    RectangularArea livesCounterSprite();
+    RectangularArea bonusSymbolSprite(byte symbol);
+    RectangularArea bonusValueSprite(byte symbol);
 }

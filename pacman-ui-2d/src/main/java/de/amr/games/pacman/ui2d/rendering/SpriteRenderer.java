@@ -47,7 +47,7 @@ public class SpriteRenderer {
      * @param x             scaled x-coordinate
      * @param y             scaled y-coordinate
      */
-    public void drawSprite(GraphicsContext g, SpriteArea sprite, double x, double y) {
+    public void drawSprite(GraphicsContext g, RectangularArea sprite, double x, double y) {
         drawSubImage(g, spriteSheet.source(), sprite, x, y);
     }
 
@@ -60,7 +60,7 @@ public class SpriteRenderer {
      * @param x             scaled x-coordinate
      * @param y             scaled y-coordinate
      */
-    public void drawSubImage(GraphicsContext g, Image sourceImage, SpriteArea sprite, double x, double y) {
+    public void drawSubImage(GraphicsContext g, Image sourceImage, RectangularArea sprite, double x, double y) {
         if (sprite != null) {
             g.drawImage(sourceImage,
                 sprite.x(), sprite.y(), sprite.width(), sprite.height(),
@@ -76,7 +76,7 @@ public class SpriteRenderer {
      * @param x         UNSCALED x position
      * @param y         UNSCALED y position
      */
-    public void drawSpriteScaled(GraphicsContext g, SpriteArea sprite, double x, double y) {
+    public void drawSpriteScaled(GraphicsContext g, RectangularArea sprite, double x, double y) {
         if (sprite != null) {
             g.drawImage(spriteSheet.source(),
                 sprite.x(), sprite.y(), sprite.width(), sprite.height(),
@@ -94,7 +94,7 @@ public class SpriteRenderer {
      * @param x         x-coordinate of left-upper corner of bounding box
      * @param y         y-coordinate of left-upper corner of bounding box
      */
-    public void drawSpriteCenteredOverBox(GraphicsContext g, SpriteArea sprite, double x, double y) {
+    public void drawSpriteCenteredOverBox(GraphicsContext g, RectangularArea sprite, double x, double y) {
         drawSpriteScaled(g, sprite, x + HTS - 0.5 * sprite.width(), y + HTS - 0.5 * sprite.height());
     }
 
@@ -105,7 +105,7 @@ public class SpriteRenderer {
      * @param entity    an entity like Pac-Man or a ghost
      * @param sprite    sprite sheet region (can be null)
      */
-    public void drawEntitySprite(GraphicsContext g, Entity entity, SpriteArea sprite) {
+    public void drawEntitySprite(GraphicsContext g, Entity entity, RectangularArea sprite) {
         if (entity.isVisible()) {
             drawSpriteCenteredOverBox(g,  sprite, entity.posX(), entity.posY());
         }

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.util;
 
-import de.amr.games.pacman.ui2d.rendering.SpriteArea;
+import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 
@@ -27,11 +27,11 @@ public interface SpriteSheet {
 
     Image source();
 
-    default SpriteArea rect(int x, int y, int width, int height) {
-        return new SpriteArea(x, y, width, height);
+    default RectangularArea rect(int x, int y, int width, int height) {
+        return new RectangularArea(x, y, width, height);
     }
 
-    default SpriteArea[] array(SpriteArea... sprites) {
+    default RectangularArea[] array(RectangularArea... sprites) {
         return sprites;
     }
 
@@ -39,7 +39,7 @@ public interface SpriteSheet {
      * @param r spritesheet region
      * @return source (copy) of spritesheet region
      */
-    default Image subImage(SpriteArea r) {
+    default Image subImage(RectangularArea r) {
         return subImage(r.x(), r.y(), r.width(), r.height());
     }
 
@@ -65,7 +65,7 @@ public interface SpriteSheet {
      * @param tileY grid row
      * @return square tile at given grid position
      */
-    default SpriteArea tile(int tileX, int tileY) {
+    default RectangularArea tile(int tileX, int tileY) {
         return rect(r(tileX), r(tileY), r(1), r(1));
     }
 
@@ -76,15 +76,15 @@ public interface SpriteSheet {
      * @param numTiles number of tiles
      * @return horizontal stripe of tiles at given grid position
      */
-    default SpriteArea[] tilesRightOf(int offsetX, int tileX, int tileY, int numTiles) {
-        var tiles = new SpriteArea[numTiles];
+    default RectangularArea[] tilesRightOf(int offsetX, int tileX, int tileY, int numTiles) {
+        var tiles = new RectangularArea[numTiles];
         for (int i = 0; i < numTiles; ++i) {
             tiles[i] = rect(offsetX + r(tileX + i), r(tileY), raster(), raster());
         }
         return tiles;
     }
 
-    default SpriteArea[] tilesRightOf(int tileX, int tileY, int numTiles) {
+    default RectangularArea[] tilesRightOf(int tileX, int tileY, int numTiles) {
         return tilesRightOf(0, tileX, tileY, numTiles);
     }
 }

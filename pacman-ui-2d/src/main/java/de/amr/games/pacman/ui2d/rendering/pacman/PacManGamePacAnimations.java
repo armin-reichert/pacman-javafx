@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.rendering.pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.rendering.SpriteArea;
+import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
 
@@ -57,7 +57,7 @@ public class PacManGamePacAnimations extends SpriteAnimations {
     }
 
     @Override
-    public SpriteArea currentSprite() {
+    public RectangularArea currentSprite() {
         var currentAnimation = currentAnimation();
         if (Pac.ANIM_MUNCHING.equals(currentAnimationName)) {
             currentAnimation.setSprites(spriteSheet.pacMunchingSprites(pac.moveDir()));
