@@ -97,8 +97,8 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
             int width = world.map().terrain().numCols() * TS, height = (world.map().terrain().numRows() - 5) * TS;
             // Maps 1-9 are the Arcade maps, maps 10+ are the non-Arcade maps
             TengenMap tengenMap = mapNumber <= 9
-                ? new TengenMap(assets.get("tengen.mazes.arcade"), arcadeWorldSpriteArea(mapNumber, width, height))
-                : new TengenMap(assets.get("tengen.mazes.non_arcade"), nonArcadeWorldSpriteArea(mapNumber - 9, width, height));
+                ? new TengenMap(assets.get("tengen.mazes.arcade"), arcadeMapArea(mapNumber, width, height))
+                : new TengenMap(assets.get("tengen.mazes.non_arcade"), nonArcadeMapArea(mapNumber - 9, width, height));
             // cut half pixel on each border to avoid "dirt"
             g.drawImage(tengenMap.mazesImage,
                 tengenMap.area.x() + 0.5, tengenMap.area.y() + 0.5,
@@ -128,32 +128,36 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
         g.fillRect(scaled(cx - TS), scaled(cy - TS), scaled(spriteSize), scaled(spriteSize));
     }
 
-    private SpriteArea arcadeWorldSpriteArea(int mapNumber, int width, int height) {
+    // Maps are all the same size and arranged in a 3x3 grid
+    private SpriteArea arcadeMapArea(int mapNumber, int width, int height) {
         int index = mapNumber - 1;
         int rowIndex = index / 3, colIndex = index % 3;
         return new SpriteArea(colIndex * width, rowIndex * height, width, height);
     }
 
-    private SpriteArea nonArcadeWorldSpriteArea(int mapNumber, int width, int height) {
+    // Maps have same width but different height and are arranged in 5 rows
+    private SpriteArea nonArcadeMapArea(int mapNumber, int width, int height) {
         if (mapNumber <= 8) { // row #1, maps 1-8
             int colIndex = mapNumber - 1;
             return new SpriteArea(colIndex * width, 0, width, height);
         }
-        if (mapNumber <= 16) { // row #2, maps 9-16
+        else if (mapNumber <= 16) { // row #2, maps 9-16
             int colIndex = (mapNumber - 1) % 8;
             return new SpriteArea(colIndex * width, 248, width, height);
         }
-        if (mapNumber <= 24) { // row #3, maps 17-24
+        else if (mapNumber <= 24) { // row #3, maps 17-24
             int colIndex = (mapNumber - 1) % 8;
             return new SpriteArea(colIndex * width, 544, width, height);
         }
-        if (mapNumber <= 33) { // row #4, maps 18-33
+        else if (mapNumber <= 33) { // row #4, maps 18-33
             int colIndex = (mapNumber - 1) % 9;
             return new SpriteArea(colIndex * width, 840, width, height);
         }
-        // row #5, maps 34-37
-        int colIndex = (mapNumber - 1) % 4;
-        return new SpriteArea(colIndex * width, 1136, width, height);
+        else if (mapNumber <= 37) { // row #5, maps 34-37
+            int colIndex = (mapNumber - 1) % 4;
+            return new SpriteArea(colIndex * width, 1136, width, height);
+        }
+        throw new IllegalArgumentException("Illegal map number: " + mapNumber);
     }
 
     @Override
