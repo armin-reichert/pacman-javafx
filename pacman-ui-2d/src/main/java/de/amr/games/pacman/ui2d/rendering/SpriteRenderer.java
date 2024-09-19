@@ -112,7 +112,7 @@ public class SpriteRenderer {
      */
     public void drawEntitySprite(GraphicsContext g, Entity entity, RectangularArea sprite) {
         if (entity.isVisible()) {
-            drawSpriteCenteredOverBox(g,  sprite, entity.posX(), entity.posY());
+            drawSpriteCenteredOverBox(g, sprite, entity.posX(), entity.posY());
         }
     }
 

@@ -21,8 +21,6 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
 
     private static final List<Direction> ORDER = List.of(Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
-    private static final int THIRD_COLUMN = 456;
-
     private final Image source;
     private final Image flashingMazesImage;
 
@@ -44,7 +42,7 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
 
     // third column contains the sprites (first two columns the maze images)
     private RectangularArea sprite(int tileX, int tileY) {
-        return new RectangularArea(THIRD_COLUMN + tiles(tileX), tiles(tileY), tileSize(), tileSize());
+        return rect(456 + tiles(tileX), tiles(tileY), tileSize(), tileSize());
     }
 
     private final RectangularArea[] ghostNumberSprites = rectArray(
