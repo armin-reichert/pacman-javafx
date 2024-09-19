@@ -21,6 +21,9 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.t;
 
+/**
+ * @author Armin Reichert
+ */
 public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRenderer {
 
     private final MsPacManGameSpriteSheet spriteSheet;
@@ -103,30 +106,29 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
     }
 
     @Override
-    public void drawMovingBonus(GraphicsContext g, MovingBonus movingBonus) {
+    public void drawMovingBonus(GraphicsContext g, MovingBonus bonus) {
         g.save();
-        g.translate(0, movingBonus.elongationY());
-        if (movingBonus.state() == Bonus.STATE_EDIBLE) {
-            spriteRenderer.drawEntitySprite(g,  movingBonus.entity(), spriteSheet.bonusSymbolSprite(movingBonus.symbol()));
-        } else if (movingBonus.state() == Bonus.STATE_EATEN) {
-            spriteRenderer.drawEntitySprite(g, movingBonus.entity(), spriteSheet.bonusValueSprite(movingBonus.symbol()));
+        g.translate(0, bonus.elongationY());
+        if (bonus.state() == Bonus.STATE_EDIBLE) {
+            spriteRenderer.drawEntitySprite(g,  bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+        } else if (bonus.state() == Bonus.STATE_EATEN) {
+            spriteRenderer.drawEntitySprite(g, bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
         }
         g.restore();
     }
 
     @Override
     public void drawClapperBoard(GraphicsContext g, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
-        double scaling = scalingProperty().get();
         var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
         if (sprite != null) {
             spriteRenderer.drawSpriteCenteredOverBox(g, sprite, x, y);
             g.setFont(font);
             g.setFill(textColor.darker());
-            var numberX = scaling * (x + sprite.width() - 25);
-            var numberY = scaling * (y + 18);
+            var numberX = scaled(x + sprite.width() - 25);
+            var numberY = scaled(y + 18);
             g.setFill(textColor);
             g.fillText(animation.number(), numberX, numberY);
-            var textX = scaling * (x + sprite.width());
+            var textX = scaled(x + sprite.width());
             g.fillText(animation.text(), textX, numberY);
         }
     }

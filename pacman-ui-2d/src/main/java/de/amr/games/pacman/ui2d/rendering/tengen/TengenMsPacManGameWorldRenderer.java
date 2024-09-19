@@ -165,17 +165,17 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
     }
 
     @Override
-    public void drawMovingBonus(GraphicsContext g, MovingBonus movingBonus) {
+    public void drawMovingBonus(GraphicsContext g, MovingBonus bonus) {
         //TODO just a test
         spriteRenderer.setSpriteSheet(tengenSpriteSheet);
         g.save();
-        g.translate(0, movingBonus.elongationY());
-        if (movingBonus.state() == Bonus.STATE_EDIBLE) {
-            spriteRenderer.drawEntitySprite(g,  movingBonus.entity(),
-                    spriteRenderer.spriteSheet().bonusSymbolSprite(movingBonus.symbol()));
-        } else if (movingBonus.state() == Bonus.STATE_EATEN) {
-            spriteRenderer.drawEntitySprite(g, movingBonus.entity(),
-                    spriteRenderer.spriteSheet().bonusValueSprite(movingBonus.symbol()));
+        g.translate(0, bonus.elongationY());
+        if (bonus.state() == Bonus.STATE_EDIBLE) {
+            spriteRenderer.drawEntitySprite(g,  bonus.entity(),
+                    spriteRenderer.spriteSheet().bonusSymbolSprite(bonus.symbol()));
+        } else if (bonus.state() == Bonus.STATE_EATEN) {
+            spriteRenderer.drawEntitySprite(g, bonus.entity(),
+                    spriteRenderer.spriteSheet().bonusValueSprite(bonus.symbol()));
         }
         g.restore();
         //TODO just a test

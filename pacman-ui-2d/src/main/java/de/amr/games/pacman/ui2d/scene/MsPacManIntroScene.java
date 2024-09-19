@@ -282,9 +282,9 @@ public class MsPacManIntroScene extends GameScene2D {
             renderer.drawText(g, "MS PAC-MAN", assets.color("palette.yellow"), font8, data.titlePosition.x(), data.topY + t(6));
         }
         for (Ghost ghost : data.ghosts) {
-            renderer.drawGhost(g, ghost);
+            renderer.drawAnimatedEntity(g, ghost);
         }
-        renderer.drawPac(g, data.msPacMan);
+        renderer.drawAnimatedEntity(g, data.msPacMan);
 
         if (context.game().variant() == GameVariant.MS_PACMAN) {
             MsPacManGameWorldRenderer msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) renderer;

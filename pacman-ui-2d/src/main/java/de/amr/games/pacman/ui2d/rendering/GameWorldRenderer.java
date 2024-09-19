@@ -8,9 +8,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
-import de.amr.games.pacman.model.actors.Creature;
-import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
 import javafx.beans.property.DoubleProperty;
@@ -56,21 +54,17 @@ public interface GameWorldRenderer {
         g.fillRect(scaled(cx - r), scaled(cy - r), scaled(2 * r), scaled(2 * r));
     }
 
-    default void drawPac(GraphicsContext g, Pac pac) {
-        if (pac.isVisible() && pac.animations().isPresent() && pac.animations().get() instanceof SpriteAnimations sa) {
-            spriteRenderer().drawEntitySprite(g, pac, sa.currentSprite());
-        }
-    }
-
-    default void drawGhost(GraphicsContext g, Ghost ghost) {
-        if (!ghost.isVisible()) {
+    default void drawAnimatedEntity(GraphicsContext g, AnimatedEntity animatedEntity) {
+        Entity entity = (Entity) animatedEntity;
+        if (!entity.isVisible()) {
             return;
         }
-        ghost.animations().ifPresent(ghostAnimations -> {
-            if (ghostAnimations instanceof SpriteAnimations animations) {
-                spriteRenderer().drawEntitySprite(g,  ghost, animations.currentSprite());
+        animatedEntity.animations().ifPresent(ghostAnimations -> {
+            if (ghostAnimations instanceof SpriteAnimations spriteAnimations) {
+                spriteRenderer().drawEntitySprite(g, entity, spriteAnimations.currentSprite());
             }
         });
+
     }
 
     default void drawPacInfo(GraphicsContext g, Pac pac) {

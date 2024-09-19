@@ -102,8 +102,8 @@ public class PlayScene2D extends GameScene2D {
 
         drawLevelMessage(); // READY, GAME_OVER etc.
 
-        renderer.drawPac(g, context.game().pac());
-        ghostsInZOrder().forEach(ghost -> renderer.drawGhost(g, ghost));
+        renderer.drawAnimatedEntity(g, context.game().pac());
+        ghostsInZOrder().forEach(ghost -> renderer.drawAnimatedEntity(g, ghost));
 
         // Debug mode info
         if (debugInfoPy.get()) {

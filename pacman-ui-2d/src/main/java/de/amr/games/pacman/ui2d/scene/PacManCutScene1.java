@@ -96,8 +96,8 @@ public class PacManCutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        renderer.drawPac(g, pac);
-        renderer.drawGhost(g, blinky);
+        renderer.drawAnimatedEntity(g, pac);
+        renderer.drawAnimatedEntity(g, blinky);
     }
 
     @Override

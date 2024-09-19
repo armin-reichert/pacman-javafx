@@ -19,9 +19,9 @@ public interface MsPacManGameWorldRenderer extends GameWorldRenderer {
      * Draws a moving bonus entity at its current position (including jump offset).
      *
      * @param g     graphics context
-     * @param movingBonus moving bonus entity
+     * @param bonus moving bonus entity
      */
-    void drawMovingBonus(GraphicsContext g, MovingBonus movingBonus);
+    void drawMovingBonus(GraphicsContext g, MovingBonus bonus);
 
     void drawClapperBoard(GraphicsContext g, Font font, Color textColor, ClapperboardAnimation animation, double x, double y);
 
