@@ -79,14 +79,11 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
                 RectangularArea emptyMazeBright = spriteSheet.highlightedMaze(game.currentMapNumber());
                 spriteRenderer.drawSubImage(g, spriteSheet.getFlashingMazesImage(), emptyMazeBright, x - 3, y);
             } else {
-                spriteRenderer.drawSprite(g, spriteSheet.emptyMaze(game.currentMapNumber()), x, y);
+                spriteRenderer.drawSpriteUnscaled(g, spriteSheet.emptyMaze(game.currentMapNumber()), x, y);
             }
             g.restore();
         } else {
-            g.save();
-            g.scale(scaling, scaling);
-            spriteRenderer.drawSprite(g, mapSprite.area(), x, y);
-            g.restore();
+            spriteRenderer.drawSpriteScaled(g, mapSprite.area(), x, y);
             world.map().food().tiles().filter(world::hasEatenFoodAt)
                 .forEach(tile -> overPaintFood(g, world, tile));
             if (!blinkingOn) {

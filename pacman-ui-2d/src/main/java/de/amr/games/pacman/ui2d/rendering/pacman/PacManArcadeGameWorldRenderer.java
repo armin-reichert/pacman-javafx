@@ -75,10 +75,10 @@ public class PacManArcadeGameWorldRenderer implements GameWorldRenderer {
                 // bright maze is in separate source, not in sprite sheet
                 g.drawImage(spriteSheet.getFlashingMazeImage(), t(0), t(3));
             } else {
-                spriteRenderer.drawSprite(g, spriteSheet.getEmptyMazeSprite(), t(0), t(3));
+                spriteRenderer.drawSpriteUnscaled(g, spriteSheet.getEmptyMazeSprite(), t(0), t(3));
             }
         } else {
-            spriteRenderer.drawSprite(g, spriteSheet.getFullMazeSprite(), t(0), t(3));
+            spriteRenderer.drawSpriteUnscaled(g, spriteSheet.getFullMazeSprite(), t(0), t(3));
             g.restore();
             world.map().food().tiles().filter(world::hasEatenFoodAt)
                 .forEach(tile -> overPaintFood(g, world, tile));
