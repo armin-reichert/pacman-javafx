@@ -26,7 +26,7 @@ public class SpriteRenderer {
 
     private GameSpriteSheet spriteSheet;
 
-    public double s(double value) {
+    public double scaled(double value) {
         return scalingPy.doubleValue() * value;
     }
 
@@ -84,7 +84,7 @@ public class SpriteRenderer {
         if (sprite != null) {
             g.drawImage(sourceImage,
                     sprite.x(), sprite.y(), sprite.width(), sprite.height(),
-                    s(x), s(y), s(sprite.width()), s(sprite.height()));
+                    scaled(x), scaled(y), scaled(sprite.width()), scaled(sprite.height()));
         }
     }
 
@@ -126,6 +126,6 @@ public class SpriteRenderer {
      * @param height    unscaled height
      */
     public void drawImageScaled(GraphicsContext g, Image image, double x, double y, double width, double height) {
-        g.drawImage(image, s(x), s(y), s(width), s(height));
+        g.drawImage(image, scaled(x), scaled(y), scaled(width), scaled(height));
     }
 }
