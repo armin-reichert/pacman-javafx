@@ -48,7 +48,7 @@ public class SpriteRenderer {
      * @param y             scaled y-coordinate
      */
     public void drawSpriteUnscaled(GraphicsContext g, RectangularArea sprite, double x, double y) {
-        drawSubImage(g, spriteSheet.source(), sprite, x, y);
+        drawSubImage(g, spriteSheet.sourceImage(), sprite, x, y);
     }
 
     /**
@@ -60,7 +60,7 @@ public class SpriteRenderer {
      * @param y         UNSCALED y position
      */
     public void drawSpriteScaled(GraphicsContext g, RectangularArea sprite, double x, double y) {
-        drawSubImageScaled(g, spriteSheet.source(), sprite, x, y);
+        drawSubImageScaled(g, spriteSheet.sourceImage(), sprite, x, y);
     }
 
     /**

@@ -33,21 +33,21 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     @Override
-    public Image source() {
+    public Image sourceImage() {
         return source;
     }
 
     @Override
-    public int raster() {
+    public int tileSize() {
         return 16;
     }
 
     // third column contains the sprites (first two columns the maze images)
     private RectangularArea sprite(int tileX, int tileY) {
-        return new RectangularArea(THIRD_COLUMN + r(tileX), r(tileY), raster(), raster());
+        return new RectangularArea(THIRD_COLUMN + tiles(tileX), tiles(tileY), tileSize(), tileSize());
     }
 
-    private final RectangularArea[] ghostNumberSprites = array(
+    private final RectangularArea[] ghostNumberSprites = rectArray(
         sprite(0, 8), sprite(1, 8), sprite(2, 8), sprite(3, 8));
 
     public RectangularArea[] ghostNumberSprites() {
@@ -85,7 +85,7 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
             var wide = sprite(0, d);
             var open = sprite(1, d);
             var closed = sprite(2, d);
-            msPacManMunchingSprites[d] = array(open, open, wide, wide, open, open, open, closed, closed);
+            msPacManMunchingSprites[d] = rectArray(open, open, wide, wide, open, open, open, closed, closed);
         }
     }
 
@@ -100,7 +100,7 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
         var up = sprite(1, 2);
         var down = sprite(1, 3);
         // TODO: this is not yet 100% correct
-        msPacManDyingSprites = array(down, left, up, right, down, left, up, right, down, left, up);
+        msPacManDyingSprites = rectArray(down, left, up, right, down, left, up, right, down, left, up);
     }
 
     public RectangularArea[] msPacManDyingSprites() {
@@ -111,7 +111,7 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
     {
         for (byte id = 0; id < 4; ++id) {
             for (byte d = 0; d < 4; ++d) {
-                ghostsNormalSprites[id][d] = array(sprite(2 * d, 4 + id), sprite(2 * d + 1, 4 + id));
+                ghostsNormalSprites[id][d] = rectArray(sprite(2 * d, 4 + id), sprite(2 * d + 1, 4 + id));
             }
         }
     }
@@ -120,13 +120,13 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
         return ghostsNormalSprites[id][ORDER.indexOf(dir)];
     }
 
-    private final RectangularArea[] ghostFrightenedSprites = array(sprite(8, 4), sprite(9, 4));
+    private final RectangularArea[] ghostFrightenedSprites = rectArray(sprite(8, 4), sprite(9, 4));
 
     public RectangularArea[] ghostFrightenedSprites() {
         return ghostFrightenedSprites;
     }
 
-    private final RectangularArea[] ghostFlashingSprites = array(
+    private final RectangularArea[] ghostFlashingSprites = rectArray(
         sprite(8, 4), sprite(9, 4), sprite(10, 4), sprite(11, 4));
 
     public RectangularArea[] ghostFlashingSprites() {
@@ -136,7 +136,7 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
     private final RectangularArea[][] ghostEyesSprites = new RectangularArea[4][];
     {
         for (byte d = 0; d < 4; ++d) {
-            ghostEyesSprites[d] = array(sprite(8 + d, 5));
+            ghostEyesSprites[d] = rectArray(sprite(8 + d, 5));
         }
     }
 
@@ -153,7 +153,7 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
     private final RectangularArea[][] pacManMunchingSprites = new RectangularArea[4][];
     {
         for (byte d = 0; d < 4; ++d) {
-            pacManMunchingSprites[d] = array(sprite(0, 9 + d), sprite(1, 9 + d), sprite(2, 9));
+            pacManMunchingSprites[d] = rectArray(sprite(0, 9 + d), sprite(1, 9 + d), sprite(2, 9));
         }
     }
 
@@ -179,7 +179,7 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
         return juniorPacSprite;
     }
 
-    private final RectangularArea[] clapperboardSprites = array(
+    private final RectangularArea[] clapperboardSprites = rectArray(
         rect(456, 208, 32, 32),  // open
         rect(488, 208, 32, 32),  // middle
         rect(520, 208, 32, 32)); // closed

@@ -44,12 +44,12 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     @Override
-    public int raster() {
+    public int tileSize() {
         return 16;
     }
 
     @Override
-    public Image source() {
+    public Image sourceImage() {
         return spritesImage;
     }
 }

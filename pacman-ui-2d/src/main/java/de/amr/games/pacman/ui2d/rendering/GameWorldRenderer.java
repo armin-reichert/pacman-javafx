@@ -58,8 +58,8 @@ public interface GameWorldRenderer {
         if (!animatedEntity.isVisible()) {
             return;
         }
-        animatedEntity.animations().ifPresent(ghostAnimations -> {
-            if (ghostAnimations instanceof SpriteAnimations spriteAnimations) {
+        animatedEntity.animations().ifPresent(animations -> {
+            if (animations instanceof SpriteAnimations spriteAnimations) {
                 spriteRenderer().drawEntitySprite(g, animatedEntity.entity(), spriteAnimations.currentSprite());
             }
         });

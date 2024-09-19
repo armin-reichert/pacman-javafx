@@ -15,58 +15,22 @@ import javafx.scene.image.WritableImage;
  */
 public interface SpriteSheet {
 
-    int raster();
+    int tileSize();
 
     /**
-     * @param n number of raster tiles
-     * @return pixels spanned by raster cells
+     * @param n number of tiles
+     * @return pixels taken by tiles
      */
-    default int r(int n) {
-        return n * raster();
+    default int tiles(int n) {
+        return n * tileSize();
     }
-
-    Image source();
 
     default RectangularArea rect(int x, int y, int width, int height) {
         return new RectangularArea(x, y, width, height);
     }
 
-    default RectangularArea[] array(RectangularArea... sprites) {
-        return sprites;
-    }
-
-    /**
-     * @param r spritesheet region
-     * @return source (copy) of spritesheet region
-     */
-    default Image subImage(RectangularArea r) {
-        return subImage(r.x(), r.y(), r.width(), r.height());
-    }
-
-    /**
-     * @param x      region x-coordinate
-     * @param y      region y-coordinate
-     * @param width  region width
-     * @param height region height
-     * @return source (copy) of spritesheet region
-     */
-    default Image subImage(int x, int y, int width, int height) {
-        return subImage(source(), x, y, width, height);
-    }
-
-    static Image subImage(Image source, int x, int y, int width, int height) {
-        var image = new WritableImage(width, height);
-        image.getPixelWriter().setPixels(0, 0, width, height, source.getPixelReader(), x, y);
-        return image;
-    }
-
-    /**
-     * @param tileX grid column
-     * @param tileY grid row
-     * @return square tile at given grid position
-     */
-    default RectangularArea tile(int tileX, int tileY) {
-        return rect(r(tileX), r(tileY), r(1), r(1));
+    default RectangularArea[] rectArray(RectangularArea... areas) {
+        return areas;
     }
 
     /**
@@ -79,12 +43,31 @@ public interface SpriteSheet {
     default RectangularArea[] tilesRightOf(int offsetX, int tileX, int tileY, int numTiles) {
         var tiles = new RectangularArea[numTiles];
         for (int i = 0; i < numTiles; ++i) {
-            tiles[i] = rect(offsetX + r(tileX + i), r(tileY), raster(), raster());
+            tiles[i] = rect(offsetX + tiles(tileX + i), tiles(tileY), tileSize(), tileSize());
         }
         return tiles;
     }
 
-    default RectangularArea[] tilesRightOf(int tileX, int tileY, int numTiles) {
-        return tilesRightOf(0, tileX, tileY, numTiles);
+    Image sourceImage();
+
+    /**
+     * @param r rectangular region
+     * @return image copy of region
+     */
+    default Image subImage(RectangularArea r) {
+        return subImage(r.x(), r.y(), r.width(), r.height());
+    }
+
+    /**
+     * @param x      region x-coordinate
+     * @param y      region y-coordinate
+     * @param width  region width
+     * @param height region height
+     * @return image copy of region
+     */
+    default Image subImage(int x, int y, int width, int height) {
+        var image = new WritableImage(width, height);
+        image.getPixelWriter().setPixels(0, 0, width, height, sourceImage().getPixelReader(), x, y);
+        return image;
     }
 }
