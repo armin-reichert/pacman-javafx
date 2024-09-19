@@ -146,8 +146,8 @@ public abstract class GameModel {
         this.userDir = checkNotNull(userDir);
     }
 
+    public abstract int mapNumberByLevelNumber(int levelNumber);
     public abstract void activateNextBonus();
-
     protected abstract void buildRegularLevel(int levelNumber);
     protected abstract void buildDemoLevel();
     protected abstract byte computeBonusSymbol();

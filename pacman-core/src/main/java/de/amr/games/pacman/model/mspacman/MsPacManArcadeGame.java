@@ -90,7 +90,8 @@ public class MsPacManArcadeGame extends GameModel {
      * </ul>
      * <p>
      */
-    private int mapNumberByLevelNumber(int levelNumber) {
+    @Override
+    public int mapNumberByLevelNumber(int levelNumber) {
         return switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;

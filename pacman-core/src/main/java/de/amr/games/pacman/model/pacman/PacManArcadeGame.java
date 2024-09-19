@@ -87,6 +87,11 @@ public class PacManArcadeGame extends GameModel {
     }
 
     @Override
+    public int mapNumberByLevelNumber(int levelNumber) {
+        return 1;
+    }
+
+    @Override
     public long huntingTicks(int levelNumber, int phaseIndex) {
         checkLevelNumber(levelNumber);
         checkHuntingPhaseIndex(phaseIndex);

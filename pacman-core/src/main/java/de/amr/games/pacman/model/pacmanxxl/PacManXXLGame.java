@@ -77,6 +77,11 @@ public class PacManXXLGame extends PacManArcadeGame {
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
+    @Override
+    public int mapNumberByLevelNumber(int levelNumber) {
+        return 42; //TODO
+    }
+
     private WorldMap selectMap(int levelNumber) {
         switch (mapSelectionMode) {
             case NO_CUSTOM_MAPS -> {

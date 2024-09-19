@@ -12,6 +12,7 @@ import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
+import de.amr.games.pacman.ui2d.rendering.SpriteSheetArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -26,6 +27,7 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
     private final MsPacManGameSpriteSheet spriteSheet;
     private final SpriteRenderer spriteRenderer = new SpriteRenderer();
 
+    private SpriteSheetArea mapSprite;
     private boolean flashMode;
     private boolean blinkingOn;
 
@@ -61,7 +63,8 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
 
     @Override
     public void selectMap(WorldMap worldMap, int mapNumber) {
-        //TODO what?
+        RectangularArea area = new RectangularArea(0, (mapNumber - 1) * 248, 226, 248);
+        mapSprite = new SpriteSheetArea(spriteSheet.source(), area);
     }
 
     @Override
@@ -82,7 +85,7 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
         } else {
             g.save();
             g.scale(scaling, scaling);
-            spriteRenderer.drawSprite(g, spriteSheet.filledMaze(game.currentMapNumber()), x, y);
+            spriteRenderer.drawSprite(g, mapSprite.area(), x, y);
             g.restore();
             world.map().food().tiles().filter(world::hasEatenFoodAt)
                 .forEach(tile -> overPaintFood(g, world, tile));

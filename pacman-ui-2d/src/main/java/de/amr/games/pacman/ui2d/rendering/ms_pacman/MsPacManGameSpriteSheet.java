@@ -181,18 +181,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
         return emptyMazeSprites[mazeNumber - 1];
     }
 
-    private final RectangularArea[] filledMazeSprites = new RectangularArea[MS_PACMAN_MAZE_COUNT];
-    {
-        for (byte mazeNumber = 1; mazeNumber <= 6; ++mazeNumber) {
-            filledMazeSprites[mazeNumber - 1] = rect(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT,
-                MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
-        }
-    }
-
-    public RectangularArea filledMaze(int mazeNumber) {
-        return filledMazeSprites[mazeNumber - 1];
-    }
-
     private final RectangularArea[][] pacManMunchingSprites = new RectangularArea[4][];
     {
         for (byte d = 0; d < 4; ++d) {
