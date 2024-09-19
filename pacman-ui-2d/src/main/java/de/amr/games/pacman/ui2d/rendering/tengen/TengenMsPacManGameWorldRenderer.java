@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.rendering.tengen;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameWorld;
@@ -33,7 +34,7 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRenderer {
 
-    private record TengenMap(Image mazesImage, SpriteArea area) {}
+    private record MapSprite(Image mazesImage, SpriteArea area) {}
 
     private final AssetStorage assets;
     private MsPacManGameSpriteSheet tmpSpriteSheet;
@@ -43,7 +44,7 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
 
-    private TengenMap tengenMap;
+    private MapSprite mapSprite;
     private boolean flashMode;
     private boolean blinkingOn;
 
@@ -93,11 +94,11 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
             terrainRenderer.setDoorColor(Color.BLACK);
             terrainRenderer.drawMap(g, terrain);
         } else {
-            if (tengenMap != null) { // is set when READY state is entered
-                g.drawImage(tengenMap.mazesImage,
-                        tengenMap.area.x() + 0.5, tengenMap.area.y() + 0.5,
-                        tengenMap.area.width() - 1, tengenMap.area.height() - 1,
-                        0, scaled(3 * TS), scaled(tengenMap.area.width()), scaled(tengenMap.area.height()));
+            if (mapSprite != null) { // is set when READY state is entered
+                g.drawImage(mapSprite.mazesImage,
+                        mapSprite.area.x() + 0.5, mapSprite.area.y() + 0.5,
+                        mapSprite.area.width() - 1, mapSprite.area.height() - 1,
+                        0, scaled(3 * TS), scaled(mapSprite.area.width()), scaled(mapSprite.area.height()));
                 hideActorSprite(g, terrain.getTileProperty("pos_pac", v2i(14, 26)), 0, 0);
                 hideActorSprite(g, terrain.getTileProperty("pos_ghost_1_red", v2i(13, 14)), 0, 0);
                 // The ghosts in the house are sitting some pixels below their home position
@@ -124,13 +125,14 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
     }
 
     @Override
-    public void selectMap(GameWorld world, int mapNumber) {
-        int width = world.map().terrain().numCols() * TS, height = (world.map().terrain().numRows() - 5) * TS;
+    public void selectMap(WorldMap worldMap, int mapNumber) {
+        int width = worldMap.terrain().numCols() * TS;
+        int height = (worldMap.terrain().numRows() - 5) * TS; // 3 empty rows before and 2 after maze image
         // Maps 1-9 are the Arcade maps, maps 10+ are the non-Arcade maps
-        tengenMap = mapNumber <= 9
-                ? new TengenMap(assets.get("tengen.mazes.arcade"), arcadeMapArea(mapNumber, width, height))
-                : new TengenMap(assets.get("tengen.mazes.non_arcade"), nonArcadeMapArea(mapNumber - 9, width, height));
-        Logger.info("Tengen map # {}: area: {}", mapNumber, tengenMap.area());
+        mapSprite = mapNumber <= 9
+                ? new MapSprite(assets.get("tengen.mazes.arcade"), arcadeMapArea(mapNumber, width, height))
+                : new MapSprite(assets.get("tengen.mazes.non_arcade"), nonArcadeMapArea(mapNumber - 9, width, height));
+        Logger.info("Tengen map # {}: area: {}", mapNumber, mapSprite.area());
     }
 
     // Maps are all the same size and arranged in a 3x3 grid

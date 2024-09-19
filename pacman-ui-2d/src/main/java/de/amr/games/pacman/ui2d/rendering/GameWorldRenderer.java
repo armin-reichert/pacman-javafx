@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.rendering;
 
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.Creature;
@@ -38,7 +39,7 @@ public interface GameWorldRenderer {
 
     SpriteRenderer spriteRenderer();
 
-    void selectMap(GameWorld world, int mapNumber);
+    void selectMap(WorldMap worldMap, int mapNumber);
 
     void drawWorld(GraphicsContext g, GameContext context, GameWorld world);
 

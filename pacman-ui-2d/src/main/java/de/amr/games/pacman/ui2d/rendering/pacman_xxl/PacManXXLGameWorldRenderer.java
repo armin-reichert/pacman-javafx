@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.rendering.pacman_xxl;
 
 import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameWorld;
@@ -67,7 +68,7 @@ public class PacManXXLGameWorldRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public void selectMap(GameWorld world, int mapNumber) {
+    public void selectMap(WorldMap worldMap, int mapNumber) {
         //TODO what?
     }
 

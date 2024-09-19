@@ -107,7 +107,7 @@ public class PlayScene2D extends GameScene2D {
             case MS_PACMAN_TENGEN -> {
                 MsPacManTengenGame tengenGame = (MsPacManTengenGame) context.game();
                 int mapNumber = tengenGame.mapNumberByLevelNumber(tengenGame.levelNumber());
-                renderer.selectMap(tengenGame.world(), mapNumber);
+                renderer.selectMap(tengenGame.world().map(), mapNumber);
             }
             default -> {}
         }
