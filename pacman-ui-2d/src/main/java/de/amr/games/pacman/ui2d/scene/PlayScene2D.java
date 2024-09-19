@@ -11,8 +11,10 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
+import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGameWorldRenderer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -91,10 +93,21 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onGameStateEntry(GameState state) {
         switch (state) {
-            case READY, PACMAN_DYING, LEVEL_COMPLETE -> GameSounds.stopAll();
+            case READY, LEVEL_COMPLETE -> GameSounds.stopAll();
             case GAME_OVER -> {
                 GameSounds.stopAll();
                 GameSounds.playGameOverSound();
+            }
+            default -> {}
+        }
+    }
+
+    private void selectMap() {
+        switch (context.game().variant()) {
+            case MS_PACMAN_TENGEN -> {
+                MsPacManTengenGame tengenGame = (MsPacManTengenGame) context.game();
+                int mapNumber = tengenGame.mapNumberByLevelNumber(tengenGame.levelNumber());
+                renderer.selectMap(tengenGame.world(), mapNumber);
             }
             default -> {}
         }
@@ -193,6 +206,11 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onGhostEaten(GameEvent e) {
         GameSounds.playGhostEatenSound();
+    }
+
+    @Override
+    public void onLevelCreated(GameEvent e) {
+        selectMap();
     }
 
     @Override

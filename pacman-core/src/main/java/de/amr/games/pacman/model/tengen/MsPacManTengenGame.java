@@ -29,7 +29,6 @@ import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * Ms. Pac-Man Tengen game. Currently, this is just a copy of the Ms. Pac-Man Arcade game with the Tengen mazes.
- *
  * TODO: use Tengen maze images, sprites
  * TODO: how do the ghosts in Tengen differ from the Arcade game such that they can handle non-Arcade maze structures?
  *
@@ -188,7 +187,7 @@ public class MsPacManTengenGame extends GameModel {
         var movingBonus = new MovingBonus(world, symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         movingBonus.setRoute(route, leftToRight);
         movingBonus.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
-        Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
+        Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
         bonus = movingBonus;
         bonus.setEdible(TickTimer.INDEFINITE);
         publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());

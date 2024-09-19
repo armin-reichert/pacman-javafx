@@ -59,6 +59,11 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
     }
 
     @Override
+    public void selectMap(GameWorld world, int mapNumber) {
+        //TODO what?
+    }
+
+    @Override
     public void drawWorld(GraphicsContext g, GameContext context, GameWorld world) {
         MsPacManArcadeGame game = (MsPacManArcadeGame) context.game();
         double scaling = scalingProperty().get();

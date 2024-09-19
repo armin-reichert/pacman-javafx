@@ -38,6 +38,8 @@ public interface GameWorldRenderer {
 
     SpriteRenderer spriteRenderer();
 
+    void selectMap(GameWorld world, int mapNumber);
+
     void drawWorld(GraphicsContext g, GameContext context, GameWorld world);
 
     void setFlashMode(boolean on);

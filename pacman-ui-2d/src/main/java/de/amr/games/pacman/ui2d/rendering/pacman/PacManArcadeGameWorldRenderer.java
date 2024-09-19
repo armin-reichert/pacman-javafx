@@ -60,6 +60,11 @@ public class PacManArcadeGameWorldRenderer implements GameWorldRenderer {
     }
 
     @Override
+    public void selectMap(GameWorld world, int mapNumber) {
+        //TODO what?
+    }
+
+    @Override
     public void drawWorld(GraphicsContext g, GameContext context, GameWorld world) {
         double scaling = scalingProperty().get();
         g.save();

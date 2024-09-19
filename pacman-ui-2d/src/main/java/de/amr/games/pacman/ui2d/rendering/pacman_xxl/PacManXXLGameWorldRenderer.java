@@ -67,6 +67,11 @@ public class PacManXXLGameWorldRenderer implements GameWorldRenderer {
     }
 
     @Override
+    public void selectMap(GameWorld world, int mapNumber) {
+        //TODO what?
+    }
+
+    @Override
     public void drawWorld(GraphicsContext g, GameContext context, GameWorld world) {
         TileMap terrain = world.map().terrain();
         Color wallStrokeColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_STROKE, Color.WHITE);
