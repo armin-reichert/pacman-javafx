@@ -52,6 +52,18 @@ public class SpriteRenderer {
     }
 
     /**
+     * Draws a sprite using the current scene scaling.
+     *
+     * @param g         graphics context
+     * @param sprite    sprite sheet region ("sprite")
+     * @param x         UNSCALED x position
+     * @param y         UNSCALED y position
+     */
+    public void drawSpriteScaled(GraphicsContext g, RectangularArea sprite, double x, double y) {
+        drawSubImageScaled(g, spriteSheet.source(), sprite, x, y);
+    }
+
+    /**
      * Draws a section of an source at the given (scaled) position.
      *
      * @param g             graphics context
@@ -68,19 +80,11 @@ public class SpriteRenderer {
         }
     }
 
-    /**
-     * Draws a sprite using the current scene scaling.
-     *
-     * @param g         graphics context
-     * @param sprite    sprite sheet region ("sprite")
-     * @param x         UNSCALED x position
-     * @param y         UNSCALED y position
-     */
-    public void drawSpriteScaled(GraphicsContext g, RectangularArea sprite, double x, double y) {
+    public void drawSubImageScaled(GraphicsContext g, Image sourceImage, RectangularArea sprite, double x, double y) {
         if (sprite != null) {
-            g.drawImage(spriteSheet.source(),
-                sprite.x(), sprite.y(), sprite.width(), sprite.height(),
-                s(x), s(y), s(sprite.width()), s(sprite.height()));
+            g.drawImage(sourceImage,
+                    sprite.x(), sprite.y(), sprite.width(), sprite.height(),
+                    s(x), s(y), s(sprite.width()), s(sprite.height()));
         }
     }
 

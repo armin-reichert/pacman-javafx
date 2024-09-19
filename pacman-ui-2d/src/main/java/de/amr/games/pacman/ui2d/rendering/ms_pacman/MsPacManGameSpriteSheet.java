@@ -21,10 +21,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
 
     private static final List<Direction> ORDER = List.of(Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
-    private static final int MAZE_IMAGE_WIDTH = 226;
-    private static final int MAZE_IMAGE_HEIGHT = 248;
-
-    private static final int SECOND_COLUMN = 228;
     private static final int THIRD_COLUMN = 456;
 
     private final Image source;
@@ -150,35 +146,8 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
 
     // Ms. Pac-Man specific:
 
-    private static final int MS_PACMAN_MAZE_COUNT = 6;
-
     public Image getFlashingMazesImage() {
         return flashingMazesImage;
-    }
-
-    private final RectangularArea[] highlightedMazeSprites = new RectangularArea[MS_PACMAN_MAZE_COUNT];
-    {
-        for (byte mazeNumber = 1; mazeNumber <= 6; ++mazeNumber) {
-            highlightedMazeSprites[mazeNumber - 1] = new RectangularArea(
-                0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT,
-                MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
-        }
-    }
-
-    public RectangularArea highlightedMaze(int mazeNumber) {
-        return highlightedMazeSprites[mazeNumber - 1];
-    }
-
-    private final RectangularArea[] emptyMazeSprites = new RectangularArea[MS_PACMAN_MAZE_COUNT];
-    {
-        for (byte mazeNumber = 1; mazeNumber <= 6; ++mazeNumber) {
-            emptyMazeSprites[mazeNumber - 1] = rect(SECOND_COLUMN, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT,
-                MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
-        }
-    }
-
-    public RectangularArea emptyMaze(int mazeNumber) {
-        return emptyMazeSprites[mazeNumber - 1];
     }
 
     private final RectangularArea[][] pacManMunchingSprites = new RectangularArea[4][];

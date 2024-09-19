@@ -27,7 +27,9 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
     private final MsPacManGameSpriteSheet spriteSheet;
     private final SpriteRenderer spriteRenderer = new SpriteRenderer();
 
-    private SpriteSheetArea mapSprite;
+    private SpriteSheetArea mapWithFoodSprite;
+    private SpriteSheetArea mapWithoutFoodSprite;
+    private SpriteSheetArea mapFlashingSprite;
     private boolean flashMode;
     private boolean blinkingOn;
 
@@ -63,8 +65,12 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
 
     @Override
     public void selectMap(WorldMap worldMap, int mapNumber) {
-        RectangularArea area = new RectangularArea(0, (mapNumber - 1) * 248, 226, 248);
-        mapSprite = new SpriteSheetArea(spriteSheet.source(), area);
+        mapWithFoodSprite = new SpriteSheetArea(spriteSheet.source(),
+            new RectangularArea(0, (mapNumber - 1) * 248, 226, 248));
+        mapWithoutFoodSprite = new SpriteSheetArea(spriteSheet.source(),
+            new RectangularArea(228, (mapNumber - 1) * 248, 226, 248));
+        mapFlashingSprite = new SpriteSheetArea(spriteSheet.getFlashingMazesImage(),
+            new RectangularArea(0, (mapNumber - 1) * 248, 226, 248));
     }
 
     @Override
@@ -73,17 +79,13 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
         double scaling = scalingProperty().get();
         double x = 0, y = t(3);
         if (flashMode) {
-            g.save();
-            g.scale(scaling, scaling);
             if (blinkingOn) {
-                RectangularArea emptyMazeBright = spriteSheet.highlightedMaze(game.currentMapNumber());
-                spriteRenderer.drawSubImage(g, spriteSheet.getFlashingMazesImage(), emptyMazeBright, x - 3, y);
+                spriteRenderer.drawSubImageScaled(g, mapFlashingSprite.source(), mapFlashingSprite.area(), x - 3, y); // WTF
             } else {
-                spriteRenderer.drawSpriteUnscaled(g, spriteSheet.emptyMaze(game.currentMapNumber()), x, y);
+                spriteRenderer.drawSubImageScaled(g, mapWithoutFoodSprite.source(), mapWithoutFoodSprite.area(), x, y);
             }
-            g.restore();
         } else {
-            spriteRenderer.drawSpriteScaled(g, mapSprite.area(), x, y);
+            spriteRenderer.drawSpriteScaled(g, mapWithFoodSprite.area(), x, y);
             world.map().food().tiles().filter(world::hasEatenFoodAt)
                 .forEach(tile -> overPaintFood(g, world, tile));
             if (!blinkingOn) {
