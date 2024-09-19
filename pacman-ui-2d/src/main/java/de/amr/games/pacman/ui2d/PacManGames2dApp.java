@@ -65,7 +65,7 @@ public class PacManGames2dApp extends Application {
 
         // Dashboard
 
-        assets.store("image.armin1970",                 rm.loadImage("graphics/armin.jpg"));
+        assets.store("source.armin1970",                 rm.loadImage("graphics/armin.jpg"));
         assets.store("icon.mute",                       rm.loadImage("graphics/icons/mute.png"));
         assets.store("icon.play",                       rm.loadImage("graphics/icons/play.png"));
         assets.store("icon.stop",                       rm.loadImage("graphics/icons/stop.png"));
@@ -116,7 +116,7 @@ public class PacManGames2dApp extends Application {
         //
 
         assets.store("ms_pacman.spritesheet",           new MsPacManGameSpriteSheet("/de/amr/games/pacman/ui2d/graphics/mspacman/"));
-        assets.store("ms_pacman.startpage.image",       rm.loadImage("graphics/mspacman/mspacman_flyer.png"));
+        assets.store("ms_pacman.startpage.source",       rm.loadImage("graphics/mspacman/mspacman_flyer.png"));
         assets.store("ms_pacman.startpage.image1",      rm.loadImage("graphics/mspacman/mspacman_flyer1.jpg"));
         assets.store("ms_pacman.startpage.image2",      rm.loadImage("graphics/mspacman/mspacman_flyer2.jpg"));
         assets.store("ms_pacman.helpButton.icon",       rm.loadImage("graphics/icons/help-red-64.png"));
@@ -155,7 +155,7 @@ public class PacManGames2dApp extends Application {
         assets.store("tengen.spritesheet",            new TengenMsPacManGameSpriteSheet("/de/amr/games/pacman/ui2d/graphics/tengen/"));
         assets.store("tengen.mazes.arcade",           rm.loadImage("graphics/tengen/arcade_mazes.png"));
         assets.store("tengen.mazes.non_arcade",       rm.loadImage("graphics/tengen/non_arcade_mazes.png"));
-        assets.store("tengen.startpage.image",        rm.loadImage("graphics/tengen/tengen_flyer.jpg"));
+        assets.store("tengen.startpage.source",        rm.loadImage("graphics/tengen/tengen_flyer.jpg"));
         assets.store("tengen.helpButton.icon",        rm.loadImage("graphics/icons/help-red-64.png"));
         assets.store("tengen.icon",                   rm.loadImage("graphics/icons/mspacman.png"));
         assets.store("tengen.logo.midway",            rm.loadImage("graphics/mspacman/midway_logo.png"));
@@ -219,7 +219,7 @@ public class PacManGames2dApp extends Application {
         //
         assets.store("pacman_xxl.icon",                     rm.loadImage("graphics/icons/pacman.png"));
         assets.store("pacman_xxl.helpButton.icon",          rm.loadImage("graphics/icons/help-blue-64.png"));
-        assets.store("pacman_xxl.startpage.image",          rm.loadImage("graphics/pacman_xxl/pacman_xxl_logo.png"));
+        assets.store("pacman_xxl.startpage.source",          rm.loadImage("graphics/pacman_xxl/pacman_xxl_logo.png"));
 
         assets.store("pacman_xxl.spritesheet",              new PacManGameSpriteSheet("/de/amr/games/pacman/ui2d/graphics/pacman/"));
 

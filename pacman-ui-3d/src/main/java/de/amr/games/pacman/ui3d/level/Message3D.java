@@ -76,9 +76,9 @@ public class Message3D extends Group {
         var image = canvas.snapshot(null, null);
         var material = new PhongMaterial();
         material.setDiffuseMap(image);
-        //material.setBumpMap(image);
+        //material.setBumpMap(source);
         blackboard.setMaterial(material);
-        Logger.trace("New image produced");
+        Logger.trace("New source produced");
     }
 
     public void setRotation(Point3D axis, double angle) {

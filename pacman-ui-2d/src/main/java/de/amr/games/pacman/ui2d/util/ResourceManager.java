@@ -25,10 +25,10 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  * <pre>
  *   src/main/resources/my/package/images/my_image.png
  *  </pre>
- * Then the image can be loaded as follows:
+ * Then the source can be loaded as follows:
  * <pre>
  *   ResourceManager rm = () -> my.package.SomeClass.class;
- *   Image image = rm.image("images/my_image.png"); *
+ *   Image source = rm.source("images/my_image.png"); *
  * </pre>
  *
  * @author Armin Reichert
@@ -85,8 +85,8 @@ public interface ResourceManager {
     }
 
     /**
-     * @param path path to image file.
-     * @return image loaded from resource addressed by this path.
+     * @param path path to source file.
+     * @return source loaded from resource addressed by this path.
      */
     default Image loadImage(String path) {
         return new Image(url(path).toExternalForm());

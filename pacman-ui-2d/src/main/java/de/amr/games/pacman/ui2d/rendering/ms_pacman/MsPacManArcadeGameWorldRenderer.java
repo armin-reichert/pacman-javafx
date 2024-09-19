@@ -93,7 +93,7 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
         /*
         var msPacManGame = (MsPacManGameModel) game;
         if (msPacManGame.blueMazeBug) {
-            // no map image available, use vector renderer
+            // no map source available, use vector renderer
             drawWorld(flashMode, blinkingOn);
         } else {
             int mapNumber = msPacManGame.currentMapNumber();

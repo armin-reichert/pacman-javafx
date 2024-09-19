@@ -52,10 +52,10 @@ public class SpriteRenderer {
     }
 
     /**
-     * Draws a section of an image at the given (scaled) position.
+     * Draws a section of an source at the given (scaled) position.
      *
      * @param g             graphics context
-     * @param sourceImage   the source image e.g. a spritesheet source
+     * @param sourceImage   the source source e.g. a spritesheet source
      * @param sprite        the sprite sheet section to draw
      * @param x             scaled x-coordinate
      * @param y             scaled y-coordinate
@@ -112,10 +112,10 @@ public class SpriteRenderer {
     }
 
     /**
-     * Draws the given image scaled by the current scaling value.
+     * Draws the given source scaled by the current scaling value.
      *
      * @param g         graphics context
-     * @param image     image
+     * @param image     source
      * @param x         unscaled x-coordinate
      * @param y         unscaled y-coordinate
      * @param width     unscaled width

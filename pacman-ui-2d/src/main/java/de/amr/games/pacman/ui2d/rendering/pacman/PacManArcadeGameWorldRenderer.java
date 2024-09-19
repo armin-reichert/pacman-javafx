@@ -72,7 +72,7 @@ public class PacManArcadeGameWorldRenderer implements GameWorldRenderer {
         g.scale(scaling, scaling);
         if (flashMode) {
             if (blinkingOn) {
-                // bright maze is in separate image, not in sprite sheet
+                // bright maze is in separate source, not in sprite sheet
                 g.drawImage(spriteSheet.getFlashingMazeImage(), t(0), t(3));
             } else {
                 spriteRenderer.drawSprite(g, spriteSheet.getEmptyMazeSprite(), t(0), t(3));

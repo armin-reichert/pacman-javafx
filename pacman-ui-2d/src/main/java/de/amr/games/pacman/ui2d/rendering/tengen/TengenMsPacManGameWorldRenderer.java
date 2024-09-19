@@ -13,6 +13,7 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.rendering.SpriteImage;
 import de.amr.games.pacman.ui2d.rendering.SpriteArea;
 import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
@@ -22,7 +23,6 @@ import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -34,8 +34,6 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRenderer {
 
-    private record MapSprite(Image mazesImage, SpriteArea area) {}
-
     private final AssetStorage assets;
     private MsPacManGameSpriteSheet tmpSpriteSheet;
     private TengenMsPacManGameSpriteSheet tengenSpriteSheet;
@@ -44,7 +42,7 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
 
-    private MapSprite mapSprite;
+    private SpriteImage mapSprite;
     private boolean flashMode;
     private boolean blinkingOn;
 
@@ -94,24 +92,23 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
             terrainRenderer.setDoorColor(Color.BLACK);
             terrainRenderer.drawMap(g, terrain);
         } else {
-            if (mapSprite != null) { // is set when READY state is entered
-                g.drawImage(mapSprite.mazesImage,
-                        mapSprite.area.x() + 0.5, mapSprite.area.y() + 0.5,
-                        mapSprite.area.width() - 1, mapSprite.area.height() - 1,
-                        0, scaled(3 * TS), scaled(mapSprite.area.width()), scaled(mapSprite.area.height()));
-                hideActorSprite(g, terrain.getTileProperty("pos_pac", v2i(14, 26)), 0, 0);
-                hideActorSprite(g, terrain.getTileProperty("pos_ghost_1_red", v2i(13, 14)), 0, 0);
-                // The ghosts in the house are sitting some pixels below their home position
-                // TODO: check if the ghosts in Tengen all start from the bottom of the house, if yes, change map properties
-                hideActorSprite(g, terrain.getTileProperty("pos_ghost_2_pink", v2i(13, 17)), 0, 4);
-                hideActorSprite(g, terrain.getTileProperty("pos_ghost_3_cyan", v2i(11, 17)), 0, 4);
-                hideActorSprite(g, terrain.getTileProperty("pos_ghost_4_orange", v2i(15, 17)), 0, 4);
-                world.map().food().tiles().filter(world::hasEatenFoodAt).forEach(tile -> overPaintFood(g, world, tile));
-                if (!blinkingOn) {
-                    world.energizerTiles().forEach(tile -> overPaintFood(g, world, tile));
-                }
-                context.game().bonus().ifPresent(bonus -> drawMovingBonus(g, (MovingBonus) bonus));
+            // map sprite is selected when game level starts, so it should always be set here
+            g.drawImage(mapSprite.source(),
+                mapSprite.area().x() + 0.5, mapSprite.area().y() + 0.5,
+                mapSprite.area().width() - 1, mapSprite.area().height() - 1,
+                0, scaled(3 * TS), scaled(mapSprite.area().width()), scaled(mapSprite.area().height()));
+            hideActorSprite(g, terrain.getTileProperty("pos_pac", v2i(14, 26)), 0, 0);
+            hideActorSprite(g, terrain.getTileProperty("pos_ghost_1_red", v2i(13, 14)), 0, 0);
+            // The ghosts in the house are sitting some pixels below their home position
+            // TODO: check if the ghosts in Tengen all start from the bottom of the house, if yes, change map properties
+            hideActorSprite(g, terrain.getTileProperty("pos_ghost_2_pink", v2i(13, 17)), 0, 4);
+            hideActorSprite(g, terrain.getTileProperty("pos_ghost_3_cyan", v2i(11, 17)), 0, 4);
+            hideActorSprite(g, terrain.getTileProperty("pos_ghost_4_orange", v2i(15, 17)), 0, 4);
+            world.map().food().tiles().filter(world::hasEatenFoodAt).forEach(tile -> overPaintFood(g, world, tile));
+            if (!blinkingOn) {
+                world.energizerTiles().forEach(tile -> overPaintFood(g, world, tile));
             }
+            context.game().bonus().ifPresent(bonus -> drawMovingBonus(g, (MovingBonus) bonus));
         }
     }
 
@@ -127,11 +124,11 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
     @Override
     public void selectMap(WorldMap worldMap, int mapNumber) {
         int width = worldMap.terrain().numCols() * TS;
-        int height = (worldMap.terrain().numRows() - 5) * TS; // 3 empty rows before and 2 after maze image
+        int height = (worldMap.terrain().numRows() - 5) * TS; // 3 empty rows before and 2 after maze source
         // Maps 1-9 are the Arcade maps, maps 10+ are the non-Arcade maps
         mapSprite = mapNumber <= 9
-                ? new MapSprite(assets.get("tengen.mazes.arcade"), arcadeMapArea(mapNumber, width, height))
-                : new MapSprite(assets.get("tengen.mazes.non_arcade"), nonArcadeMapArea(mapNumber - 9, width, height));
+                ? new SpriteImage(assets.get("tengen.mazes.arcade"), arcadeMapArea(mapNumber, width, height))
+                : new SpriteImage(assets.get("tengen.mazes.non_arcade"), nonArcadeMapArea(mapNumber - 9, width, height));
         Logger.info("Tengen map # {}: area: {}", mapNumber, mapSprite.area());
     }
 

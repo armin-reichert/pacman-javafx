@@ -76,7 +76,7 @@ public class StartPage extends StackPane implements Page {
             if (e.getButton().equals(MouseButton.PRIMARY)) {
                 context.selectGamePage();
             }
-            e.consume(); // do not propagate event to layout such that image changes
+            e.consume(); // do not propagate event to layout such that source changes
         });
         var btnPlayContainer = new BorderPane();
         btnPlayContainer.setBottom(btnPlay);
@@ -151,7 +151,7 @@ public class StartPage extends StackPane implements Page {
                     });
                 }
                 case MS_PACMAN_TENGEN -> {
-                    Image flyerImage = context.assets().image("tengen.startpage.image");
+                    Image flyerImage = context.assets().image("tengen.startpage.source");
                     var background = new Background(new BackgroundImage(flyerImage,
                         BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
                         BackgroundPosition.CENTER, FIT_HEIGHT));
@@ -169,7 +169,7 @@ public class StartPage extends StackPane implements Page {
                 }
                 case PACMAN_XXL -> {
                     setBackground(coloredBackground(Color.BLACK));
-                    Image xxlGameImage = context.assets().image("pacman_xxl.startpage.image");
+                    Image xxlGameImage = context.assets().image("pacman_xxl.startpage.source");
                     var xxlGameBackground = new Background(new BackgroundImage(xxlGameImage,
                         BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
                         BackgroundPosition.CENTER, FILL));

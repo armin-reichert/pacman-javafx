@@ -37,7 +37,7 @@ public interface SpriteSheet {
 
     /**
      * @param r spritesheet region
-     * @return image (copy) of spritesheet region
+     * @return source (copy) of spritesheet region
      */
     default Image subImage(SpriteArea r) {
         return subImage(r.x(), r.y(), r.width(), r.height());
@@ -48,7 +48,7 @@ public interface SpriteSheet {
      * @param y      region y-coordinate
      * @param width  region width
      * @param height region height
-     * @return image (copy) of spritesheet region
+     * @return source (copy) of spritesheet region
      */
     default Image subImage(int x, int y, int width, int height) {
         return subImage(source(), x, y, width, height);
@@ -70,7 +70,7 @@ public interface SpriteSheet {
     }
 
     /**
-     * @param offsetX  x-offset in spritesheet image
+     * @param offsetX  x-offset in spritesheet source
      * @param tileX    grid column (in tile coordinates)
      * @param tileY    grid row (in tile coordinates)
      * @param numTiles number of tiles

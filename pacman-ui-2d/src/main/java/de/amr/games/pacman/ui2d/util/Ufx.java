@@ -76,8 +76,8 @@ public interface Ufx {
     }
 
     /**
-     * @param image some image
-     * @return image background with default properties, see {@link BackgroundImage}
+     * @param image some source
+     * @return source background with default properties, see {@link BackgroundImage}
      */
     static Background imageBackground(Image image) {
         return new Background(new BackgroundImage(image, null, null, null, null));
@@ -88,8 +88,8 @@ public interface Ufx {
     }
 
     /**
-     * @param image some image
-     * @return image background with specified attributes
+     * @param image some source
+     * @return source background with specified attributes
      */
     static Background imageBackground(Image image, BackgroundRepeat repeatX, BackgroundRepeat repeatY,
                                        BackgroundPosition position, BackgroundSize size) {

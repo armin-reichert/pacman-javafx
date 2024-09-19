@@ -141,7 +141,7 @@ public class MtlReader {
 
     private Image loadImage(String filename) {
         filename = baseUrl + filename;
-        Logger.trace("Loading image from {}", filename);
+        Logger.trace("Loading source from {}", filename);
         return new Image(filename);
     }
 }

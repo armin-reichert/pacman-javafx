@@ -20,7 +20,7 @@ public class InfoBoxAbout extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        var theAuthorInYoungerYears = new ImageView(context.assets().image("image.armin1970"));
+        var theAuthorInYoungerYears = new ImageView(context.assets().image("source.armin1970"));
         theAuthorInYoungerYears.setFitWidth(250);
         theAuthorInYoungerYears.setPreserveRatio(true);
 
