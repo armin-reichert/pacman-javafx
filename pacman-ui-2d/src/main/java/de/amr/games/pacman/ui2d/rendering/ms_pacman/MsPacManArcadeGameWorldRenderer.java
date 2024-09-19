@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
-import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
@@ -75,8 +74,6 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
 
     @Override
     public void drawWorld(GraphicsContext g, GameContext context, GameWorld world) {
-        MsPacManArcadeGame game = (MsPacManArcadeGame) context.game();
-        double scaling = scalingProperty().get();
         double x = 0, y = t(3);
         if (flashMode) {
             if (blinkingOn) {
@@ -102,7 +99,7 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
             spriteRenderer.drawMsPacManWorld(g, game.world(), mapNumber, flashMode, blinkingOn);
         }
         */
-        game.bonus().ifPresent(bonus -> drawMovingBonus(g, (MovingBonus) bonus));
+        context.game().bonus().ifPresent(bonus -> drawMovingBonus(g, (MovingBonus) bonus));
     }
 
     @Override
