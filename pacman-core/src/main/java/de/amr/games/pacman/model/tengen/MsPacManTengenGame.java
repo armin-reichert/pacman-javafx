@@ -112,8 +112,8 @@ public class MsPacManTengenGame extends GameModel {
     @Override
     public void buildDemoLevel() {
         levelNumber = 1;
-        mapNumber = randomInt(1, maps.size() + 1);
-        setWorldAndCreatePopulation(createWorld(maps.get(mapNumber-1)));
+        mapNumber = mapNumberByLevelNumber(levelNumber);
+        setWorldAndCreatePopulation(createWorld(maps.get(mapNumber - 1)));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);
