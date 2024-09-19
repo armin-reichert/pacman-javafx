@@ -19,7 +19,6 @@ import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.page.StartPage;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManArcadeGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameGhostAnimations;
@@ -407,7 +406,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public GameSpriteSheet spriteSheet(GameVariant variant) {
+    public SpriteSheet spriteSheet(GameVariant variant) {
         return switch(variant) {
             case MS_PACMAN        -> assets.get("ms_pacman.spritesheet");
             case PACMAN           -> assets.get("pacman.spritesheet");

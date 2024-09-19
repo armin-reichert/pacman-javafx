@@ -3,12 +3,12 @@
  */
 package de.amr.games.pacman.ui2d.rendering.tengen;
 
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
+import de.amr.games.pacman.ui2d.util.SpriteSheet;
 import javafx.scene.image.Image;
 
-public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
+public class TengenMsPacManGameSpriteSheet implements SpriteSheet {
 
     private final Image spritesImage;
 

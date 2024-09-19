@@ -15,6 +15,10 @@ import javafx.scene.image.WritableImage;
  */
 public interface SpriteSheet {
 
+    RectangularArea livesCounterSprite();
+    RectangularArea bonusSymbolSprite(byte symbol);
+    RectangularArea bonusValueSprite(byte symbol);
+
     int tileSize();
 
     /**

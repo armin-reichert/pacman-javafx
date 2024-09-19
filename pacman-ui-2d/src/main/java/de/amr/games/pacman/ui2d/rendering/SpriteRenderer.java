@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.rendering;
 
 import de.amr.games.pacman.model.actors.Entity;
+import de.amr.games.pacman.ui2d.util.SpriteSheet;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -24,18 +25,18 @@ public class SpriteRenderer {
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(1);
     public final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(this, "backgroundColor", Color.BLACK);
 
-    private GameSpriteSheet spriteSheet;
+    private SpriteSheet spriteSheet;
 
     public double scaled(double value) {
         return scalingPy.doubleValue() * value;
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends GameSpriteSheet> T spriteSheet() {
+    public <T extends SpriteSheet> T spriteSheet() {
         return (T) spriteSheet;
     }
 
-    public void setSpriteSheet(GameSpriteSheet spriteSheet) {
+    public void setSpriteSheet(SpriteSheet spriteSheet) {
         this.spriteSheet = checkNotNull(spriteSheet);
     }
 

@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.rendering.pacman;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
+import de.amr.games.pacman.ui2d.util.SpriteSheet;
 import javafx.scene.image.Image;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 /**
  * @author Armin Reichert
  */
-public class PacManGameSpriteSheet implements GameSpriteSheet {
+public class PacManGameSpriteSheet implements SpriteSheet {
 
     private static final List<Direction> ORDER = List.of(Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
     private static final short OFF_X = 456;
