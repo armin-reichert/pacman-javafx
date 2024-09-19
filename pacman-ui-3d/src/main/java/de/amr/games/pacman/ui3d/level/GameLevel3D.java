@@ -103,26 +103,23 @@ public class GameLevel3D {
         switch (game.variant()) {
             case MS_PACMAN -> {
                 pac3D = new MsPacMan3D(game.pac(), PAC_SIZE, assets);
-                pac3D.shape3D().light().setColor(context.assets().color("ms_pacman.color.head").desaturate());
-                pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
+                pac3D.shape3D().light().setColor(assets.color("ms_pacman.color.head").desaturate());
             }
             case MS_PACMAN_TENGEN -> {
                 pac3D = new MsPacMan3D(game.pac(), PAC_SIZE, assets);
-                pac3D.shape3D().light().setColor(context.assets().color("tengen.color.head").desaturate());
-                pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
+                pac3D.shape3D().light().setColor(assets.color("tengen.color.head").desaturate());
             }
             case PACMAN -> {
                 pac3D = new PacMan3D(game.pac(), PAC_SIZE, assets);
-                pac3D.shape3D().light().setColor(context.assets().color("pacman.color.head").desaturate());
-                pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
+                pac3D.shape3D().light().setColor(assets.color("pacman.color.head").desaturate());
             }
             case PACMAN_XXL -> {
                 pac3D = new PacMan3D(game.pac(), PAC_SIZE, assets);
-                pac3D.shape3D().light().setColor(context.assets().color("pacman_xxl.color.head").desaturate());
-                pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
+                pac3D.shape3D().light().setColor(assets.color("pacman_xxl.color.head").desaturate());
             }
             default -> throw new IllegalArgumentException("Unsupported game variant: " + game.variant());
         }
+        pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         ghosts3D = game.ghosts().map(ghost -> new MutableGhost3D(assets.get("model3D.ghost"), assets, ghost, GHOST_SIZE)).toList();
         ghosts3D.forEach(ghost3D -> ghost3D.drawModePy.bind(PY_3D_DRAW_MODE));
