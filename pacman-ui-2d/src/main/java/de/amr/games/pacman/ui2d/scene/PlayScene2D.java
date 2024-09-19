@@ -89,23 +89,6 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onGameStateEntry(GameState state) {
-        switch (state) {
-            case READY, LEVEL_COMPLETE -> GameSounds.stopAll();
-            case GAME_OVER -> {
-                GameSounds.stopAll();
-                GameSounds.playGameOverSound();
-            }
-            default -> {}
-        }
-    }
-
-    private void selectMap(GameModel game) {
-        int mapNumber = game.mapNumberByLevelNumber(game.levelNumber());
-        renderer.selectMap(game.world().map(), mapNumber);
-    }
-
-    @Override
     protected void drawSceneContent() {
         if (context.game().world() == null) { // This happens on level start
             Logger.warn("Cannot draw scene content, game world not yet available!");
@@ -186,6 +169,18 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
+    public void onGameStateEntry(GameState state) {
+        switch (state) {
+            case READY, LEVEL_COMPLETE -> GameSounds.stopAll();
+            case GAME_OVER -> {
+                GameSounds.stopAll();
+                GameSounds.playGameOverSound();
+            }
+            default -> {}
+        }
+    }
+
+    @Override
     public void onBonusEaten(GameEvent e) {
         GameSounds.playBonusEatenSound();
     }
@@ -202,27 +197,29 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        selectMap(e.game);
+        int mapNumber = e.game.mapNumberByLevelNumber(e.game.levelNumber());
+        renderer.selectMap(e.game.world().map(), mapNumber);
     }
 
     @Override
-    public void onPacDied(GameEvent event) {
+    public void onPacDied(GameEvent e) {
+        GameSounds.stopAll();
         GameSounds.playPacDeathSound();
     }
 
     @Override
-    public void onPacFoundFood(GameEvent event) {
+    public void onPacFoundFood(GameEvent e) {
         GameSounds.playMunchingSound();
     }
 
     @Override
-    public void onPacGetsPower(GameEvent event) {
+    public void onPacGetsPower(GameEvent e) {
         GameSounds.stopSiren();
         GameSounds.playPacPowerSound();
     }
 
     @Override
-    public void onPacLostPower(GameEvent event) {
+    public void onPacLostPower(GameEvent e) {
         GameSounds.stopPacPowerSound();
     }
 }
