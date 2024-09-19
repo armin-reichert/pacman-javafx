@@ -13,6 +13,12 @@ import java.util.Optional;
  */
 public interface AnimatedEntity {
 
+    default Entity entity() {
+        return (Entity) this;
+    }
+
+    boolean isVisible();
+
     void setAnimations(Animations animations);
 
     Animations animationSet();

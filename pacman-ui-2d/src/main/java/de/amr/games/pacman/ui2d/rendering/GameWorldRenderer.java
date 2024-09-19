@@ -55,13 +55,12 @@ public interface GameWorldRenderer {
     }
 
     default void drawAnimatedEntity(GraphicsContext g, AnimatedEntity animatedEntity) {
-        Entity entity = (Entity) animatedEntity;
-        if (!entity.isVisible()) {
+        if (!animatedEntity.isVisible()) {
             return;
         }
         animatedEntity.animations().ifPresent(ghostAnimations -> {
             if (ghostAnimations instanceof SpriteAnimations spriteAnimations) {
-                spriteRenderer().drawEntitySprite(g, entity, spriteAnimations.currentSprite());
+                spriteRenderer().drawEntitySprite(g, animatedEntity.entity(), spriteAnimations.currentSprite());
             }
         });
 
