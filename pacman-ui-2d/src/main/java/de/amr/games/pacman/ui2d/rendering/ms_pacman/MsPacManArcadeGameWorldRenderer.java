@@ -115,8 +115,7 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
     }
 
     @Override
-    public void drawClapperBoard(GraphicsContext g, Font font, Color textColor, ClapperboardAnimation animation, double x, double y)
-    {
+    public void drawClapperBoard(GraphicsContext g, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
         double scaling = scalingProperty().get();
         var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
         if (sprite != null) {
