@@ -84,7 +84,7 @@ public class GameLevel3D {
     private final Group root = new Group();
     private final Group worldGroup = new Group();
     private final Group mazeGroup = new Group();
-    private Pac3D pac3D;
+    private final Pac3D pac3D;
     private final List<MutableGhost3D> ghosts3D;
     private final Map<Vector2i, Pellet3D> pellets3D = new HashMap<>();
     private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
@@ -382,19 +382,10 @@ public class GameLevel3D {
         if (bonus3D != null) {
             worldGroup.getChildren().remove(bonus3D);
         }
-        switch (context.game().variant()) {
-            case MS_PACMAN, MS_PACMAN_TENGEN -> {
-                var ss = (MsPacManGameSpriteSheet) context.spriteSheet(context.game().variant());
-                bonus3D = new Bonus3D(bonus,
-                    ss.subImage(ss.bonusSymbolSprite(bonus.symbol())), ss.subImage(ss.bonusValueSprite(bonus.symbol())));
-            }
-            case PACMAN, PACMAN_XXL -> {
-                var ss = (PacManGameSpriteSheet) context.spriteSheet(context.game().variant());
-                bonus3D = new Bonus3D(bonus,
-                    ss.subImage(ss.bonusSymbolSprite(bonus.symbol())), ss.subImage(ss.bonusValueSprite(bonus.symbol())));
-            }
-            default -> throw new IllegalArgumentException("Unsupported game variant: " + context.game().variant());
-        }
+        var gameSpriteSheet = context.spriteSheet(context.game().variant());
+        bonus3D = new Bonus3D(bonus,
+            gameSpriteSheet.subImage(gameSpriteSheet.bonusSymbolSprite(bonus.symbol())),
+            gameSpriteSheet.subImage(gameSpriteSheet.bonusValueSprite(bonus.symbol())));
         bonus3D.showEdible();
         worldGroup.getChildren().add(bonus3D);
     }

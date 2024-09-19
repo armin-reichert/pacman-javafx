@@ -51,7 +51,7 @@ public class MsPacManTengenGame extends GameModel {
     private static final int[] HUNTING_TICKS_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
     private static final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
 
-    private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
+    private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
 
     private static GameWorld createWorld(WorldMap map) {
         var world = new GameWorld(map);
@@ -147,43 +147,13 @@ public class MsPacManTengenGame extends GameModel {
         return world.eatenFoodCount() == 64 || world.eatenFoodCount() == 176;
     }
 
-    /**
-     * <p>Got this information from
-     * <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>:
-     * </p>
-     * <p style="font-style:italic">
-     * The exact fruit mechanics are as follows: After 64 dots are consumed, the game spawns the first fruit of the level.
-     * After 176 dots are consumed, the game attempts to spawn the second fruit of the level. If the first fruit is still
-     * present in the level when (or eaten very shortly before) the 176th dot is consumed, the second fruit will not
-     * spawn. Dying while a fruit is on screen causes it to immediately disappear and never return.
-     * (TODO: what does never mean here? For the rest of the game?).
-     * The type of fruit is determined by the level count - levels 1-7 will always have two cherries, two strawberries,
-     * etc. until two bananas on level 7. On level 8 and beyond, the fruit type is randomly selected using the weights in
-     * the following table:
-     *
-     * <table>
-     * <tr align="left">
-     *   <th>Cherry</th><th>Strawberry</th><th>Peach</th><th>Pretzel</th><th>Apple</th><th>Pear&nbsp;</th><th>Banana</th>
-     * </tr>
-     * <tr align="right">
-     *     <td>5/32</td><td>5/32</td><td>5/32</td><td>5/32</td><td>4/32</td><td>4/32</td><td>4/32</td>
-     * </tr>
-     * </table>
-     * </p>
-     */
     @Override
     public byte computeBonusSymbol() {
-        if (levelNumber <= 7) {
+        //TODO: no idea yet hwo Tengen does it
+        if (levelNumber <= BONUS_VALUE_FACTORS.length) {
             return (byte) (levelNumber - 1);
         }
-        int choice = randomInt(0, 320);
-        if (choice <  50) return 0; // 5/32 probability
-        if (choice < 100) return 1; // 5/32
-        if (choice < 150) return 2; // 5/32
-        if (choice < 200) return 3; // 5/32
-        if (choice < 240) return 4; // 4/32
-        if (choice < 280) return 5; // 4/32
-        else              return 6; // 4/32
+        return (byte) randomInt(0, BONUS_VALUE_FACTORS.length);
     }
 
     /**
