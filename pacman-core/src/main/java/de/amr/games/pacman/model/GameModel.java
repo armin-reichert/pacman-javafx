@@ -505,6 +505,8 @@ public abstract class GameModel {
         blinking.reset();
         pac.freeze();
         bonus().ifPresent(Bonus::setInactive);
+        // when cheating, there might still be food
+        world.map().food().tiles().forEach(world::eatFoodAt);
         huntingTimer.stop();
         Logger.info("Hunting timer stopped");
         powerTimer.stop();

@@ -9,7 +9,6 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
@@ -92,16 +91,10 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onGameStateEntry(GameState state) {
         switch (state) {
-            case READY, PACMAN_DYING -> GameSounds.stopAll();
+            case READY, PACMAN_DYING, LEVEL_COMPLETE -> GameSounds.stopAll();
             case GAME_OVER -> {
                 GameSounds.stopAll();
                 GameSounds.playGameOverSound();
-            }
-            case LEVEL_COMPLETE -> {
-                GameSounds.stopAll();
-                // if cheat has been used to complete level, food might still exist: "Eat it!" (Weird Al Jankovic)
-                GameWorld world = context.game().world();
-                world.map().food().tiles().forEach(world::eatFoodAt);
             }
             default -> {}
         }
