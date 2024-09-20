@@ -161,13 +161,13 @@ public class TengenMsPacManGameWorldRenderer extends SpriteRenderer implements M
     public void drawMovingBonus(GraphicsContext g, MovingBonus bonus) {
         g.save();
         g.translate(0, bonus.elongationY());
-        spriteSheet.useDelegate=false;
+        spriteSheet.useMsPacManSprites =false;
         switch (bonus.state()) {
             case Bonus.STATE_EDIBLE -> drawEntitySprite(g, bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
             case Bonus.STATE_EATEN  -> drawEntitySprite(g, bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
             default -> {}
         }
-        spriteSheet.useDelegate=true;
+        spriteSheet.useMsPacManSprites =true;
         g.restore();
     }
 

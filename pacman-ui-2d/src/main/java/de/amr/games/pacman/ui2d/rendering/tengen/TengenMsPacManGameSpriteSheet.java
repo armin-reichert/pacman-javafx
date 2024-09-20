@@ -15,17 +15,17 @@ import javafx.scene.image.Image;
  */
 public class TengenMsPacManGameSpriteSheet implements SpriteSheet {
 
-    private final MsPacManGameSpriteSheet delegateSpriteSheet;
+    private final MsPacManGameSpriteSheet msPacManSpriteSheet;
     private final Image spritesImage;
 
     //TODO: TEMPORARY
-    boolean useDelegate;
+    boolean useMsPacManSprites;
 
     public TengenMsPacManGameSpriteSheet(String resourcePath) {
         ResourceManager rm = this::getClass;
         spritesImage = rm.loadImage(resourcePath + "spritesheet.png");
-        delegateSpriteSheet = new MsPacManGameSpriteSheet("/de/amr/games/pacman/ui2d/graphics/mspacman/");
-        useDelegate = true;
+        msPacManSpriteSheet = new MsPacManGameSpriteSheet("/de/amr/games/pacman/ui2d/graphics/mspacman/");
+        useMsPacManSprites = true;
     }
 
     @Override
@@ -35,22 +35,22 @@ public class TengenMsPacManGameSpriteSheet implements SpriteSheet {
 
     @Override
     public Image sourceImage() {
-        return useDelegate ? delegateSpriteSheet.sourceImage() : spritesImage;
+        return useMsPacManSprites ? msPacManSpriteSheet.sourceImage() : spritesImage;
     }
 
     @Override
     public RectangularArea[] pacManMunchingSprites(Direction dir) {
-        return delegateSpriteSheet.pacManMunchingSprites(dir);
+        return msPacManSpriteSheet.pacManMunchingSprites(dir);
     }
 
     @Override
     public RectangularArea[] pacMunchingSprites(Direction dir) {
-        return delegateSpriteSheet.pacMunchingSprites(dir);
+        return msPacManSpriteSheet.pacMunchingSprites(dir);
     }
 
     @Override
     public RectangularArea[] pacDyingSprites() {
-        return delegateSpriteSheet.pacDyingSprites();
+        return msPacManSpriteSheet.pacDyingSprites();
     }
 
     @Override
@@ -80,42 +80,42 @@ public class TengenMsPacManGameSpriteSheet implements SpriteSheet {
 
     @Override
     public RectangularArea[] msPacManDyingSprites() {
-        return delegateSpriteSheet.msPacManDyingSprites();
+        return msPacManSpriteSheet.msPacManDyingSprites();
     }
 
     @Override
     public RectangularArea[] msPacManMunchingSprites(Direction dir) {
-        return delegateSpriteSheet.msPacManMunchingSprites(dir);
+        return msPacManSpriteSheet.msPacManMunchingSprites(dir);
     }
 
     @Override
     public RectangularArea[] ghostEyesSprites(Direction dir) {
-        return delegateSpriteSheet.ghostEyesSprites(dir);
+        return msPacManSpriteSheet.ghostEyesSprites(dir);
     }
 
     @Override
     public RectangularArea[] ghostFlashingSprites() {
-        return delegateSpriteSheet.ghostFlashingSprites();
+        return msPacManSpriteSheet.ghostFlashingSprites();
     }
 
     @Override
     public RectangularArea[] ghostFrightenedSprites() {
-        return delegateSpriteSheet.ghostFrightenedSprites();
+        return msPacManSpriteSheet.ghostFrightenedSprites();
     }
 
     @Override
     public RectangularArea[] ghostNumberSprites() {
-        return delegateSpriteSheet.ghostNumberSprites();
+        return msPacManSpriteSheet.ghostNumberSprites();
     }
 
     @Override
     public RectangularArea[] ghostNormalSprites(byte id, Direction dir) {
-        return delegateSpriteSheet.ghostNormalSprites(id, dir);
+        return msPacManSpriteSheet.ghostNormalSprites(id, dir);
     }
 
     @Override
     public RectangularArea livesCounterSprite() {
-        return delegateSpriteSheet.livesCounterSprite();
+        return msPacManSpriteSheet.livesCounterSprite();
     }
 
     private final RectangularArea[] bonusSymbolSprites = new RectangularArea[14];
@@ -140,21 +140,21 @@ public class TengenMsPacManGameSpriteSheet implements SpriteSheet {
     }
 
     public RectangularArea[] clapperboardSprites() {
-        return delegateSpriteSheet.clapperboardSprites();
+        return msPacManSpriteSheet.clapperboardSprites();
     }
 
     @Override
     public RectangularArea heartSprite() {
-        return delegateSpriteSheet.heartSprite();
+        return msPacManSpriteSheet.heartSprite();
     }
 
     @Override
     public RectangularArea blueBagSprite() {
-        return delegateSpriteSheet.blueBagSprite();
+        return msPacManSpriteSheet.blueBagSprite();
     }
 
     @Override
     public RectangularArea juniorPacSprite() {
-        return delegateSpriteSheet.juniorPacSprite();
+        return msPacManSpriteSheet.juniorPacSprite();
     }
 }
