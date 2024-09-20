@@ -187,6 +187,7 @@ public class PacManGames2dApp extends Application {
         //
 
         assets.store("pacman.spritesheet",              new PacManGameSpriteSheet("/de/amr/games/pacman/ui2d/graphics/pacman/"));
+        assets.store("pacman.flashing_maze",            rm.loadImage("/de/amr/games/pacman/ui2d/graphics/pacman/maze_flashing.png"));
         assets.store("pacman.startpage.image1",         rm.loadImage("graphics/pacman/pacman_flyer.png"));
         assets.store("pacman.startpage.image2",         rm.loadImage("graphics/pacman/pacman_flyer2.jpg"));
         assets.store("pacman.helpButton.icon",          rm.loadImage("graphics/icons/help-blue-64.png"));

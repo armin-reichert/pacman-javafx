@@ -24,12 +24,10 @@ public class PacManGameSpriteSheet implements SpriteSheet {
     private static final short OFF_X = 456;
 
     private final Image source;
-    private final Image flashingMazeImage;
 
     public PacManGameSpriteSheet(String resourcePath) {
         ResourceManager rm = this::getClass;
         source = rm.loadImage(resourcePath + "pacman_spritesheet.png");
-        flashingMazeImage = rm.loadImage(resourcePath + "maze_flashing.png");
     }
 
     @Override
@@ -40,10 +38,6 @@ public class PacManGameSpriteSheet implements SpriteSheet {
     @Override
     public int tileSize() {
         return 16;
-    }
-
-    public Image getFlashingMazeImage() {
-        return flashingMazeImage;
     }
 
     private final RectangularArea fullMazeSprite = rect(0, 0, 224, 248);

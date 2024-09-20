@@ -14,6 +14,7 @@ import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -25,13 +26,14 @@ import static de.amr.games.pacman.lib.Globals.t;
 public class PacManArcadeGameWorldRenderer extends SpriteRenderer implements GameWorldRenderer {
 
     private final PacManGameSpriteSheet spriteSheet;
-
+    private final Image flashingMazeImage;
     private boolean flashMode;
     private boolean blinkingOn;
 
     public PacManArcadeGameWorldRenderer(AssetStorage assets) {
         spriteSheet = assets.get("pacman.spritesheet");
         setSpriteSheet(spriteSheet);
+        flashingMazeImage = assets.image("pacman.flashing_maze");
     }
 
     @Override
@@ -72,7 +74,7 @@ public class PacManArcadeGameWorldRenderer extends SpriteRenderer implements Gam
         if (flashMode) {
             if (blinkingOn) {
                 // bright maze is in separate source, not in sprite sheet
-                g.drawImage(spriteSheet.getFlashingMazeImage(), t(0), t(3));
+                g.drawImage(flashingMazeImage, t(0), t(3));
             } else {
                 drawSpriteUnscaled(g, spriteSheet.getEmptyMazeSprite(), t(0), t(3));
             }
