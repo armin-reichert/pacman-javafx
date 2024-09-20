@@ -173,17 +173,16 @@ public class TengenMsPacManGameWorldRenderer extends SpriteRenderer implements M
 
     @Override
     public void drawClapperBoard(GraphicsContext g, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
-        double scaling = scalingProperty().get();
         var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
-        if (sprite != null) {
+        if (sprite != RectangularArea.EMPTY) {
             drawSpriteCenteredOverBox(g, sprite, x, y);
             g.setFont(font);
             g.setFill(textColor.darker());
-            var numberX = scaling * (x + sprite.width() - 25);
-            var numberY = scaling * (y + 18);
+            var numberX = scaled(x + sprite.width() - 25);
+            var numberY = scaled(y + 18);
             g.setFill(textColor);
             g.fillText(animation.number(), numberX, numberY);
-            var textX = scaling * (x + sprite.width());
+            var textX = scaled(x + sprite.width());
             g.fillText(animation.text(), textX, numberY);
         }
     }

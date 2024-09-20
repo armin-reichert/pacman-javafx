@@ -16,6 +16,8 @@ import javafx.geometry.Rectangle2D;
  */
 public record RectangularArea(short x, short y, short width, short height) {
 
+    public static final RectangularArea EMPTY = new RectangularArea(0, 0, 0, 0);
+
     public RectangularArea(int x, int y, int width, int height) {
         this((short) x, (short) y, (short) width, (short) height);
     }

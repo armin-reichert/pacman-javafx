@@ -24,10 +24,9 @@ import static de.amr.games.pacman.lib.Globals.t;
 /**
  * @author Armin Reichert
  */
-public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRenderer {
+public class MsPacManArcadeGameWorldRenderer extends SpriteRenderer implements MsPacManGameWorldRenderer {
 
     private final MsPacManGameSpriteSheet spriteSheet;
-    private final SpriteRenderer spriteRenderer = new SpriteRenderer();
 
     private SpriteSheetArea mapWithFoodSprite;
     private SpriteSheetArea mapWithoutFoodSprite;
@@ -37,12 +36,12 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
 
     public MsPacManArcadeGameWorldRenderer(AssetStorage assets) {
         spriteSheet = assets.get("ms_pacman.spritesheet");
-        spriteRenderer.setSpriteSheet(spriteSheet);
+        setSpriteSheet(spriteSheet);
     }
 
     @Override
     public SpriteRenderer spriteRenderer() {
-        return spriteRenderer;
+        return this;
     }
 
     @Override
@@ -57,12 +56,12 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
 
     @Override
     public DoubleProperty scalingProperty() {
-        return spriteRenderer.scalingPy;
+        return scalingPy;
     }
 
     @Override
     public ObjectProperty<Color> backgroundColorProperty() {
-        return spriteRenderer.backgroundColorPy;
+        return backgroundColorPy;
     }
 
     @Override
@@ -80,27 +79,17 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
         double x = 0, y = t(3);
         if (flashMode) {
             if (blinkingOn) {
-                spriteRenderer.drawSubImageScaled(g, mapFlashingSprite.source(), mapFlashingSprite.area(), x - 3, y); // WTF
+                drawSubImageScaled(g, mapFlashingSprite.source(), mapFlashingSprite.area(), x - 3, y); // WTF
             } else {
-                spriteRenderer.drawSubImageScaled(g, mapWithoutFoodSprite.source(), mapWithoutFoodSprite.area(), x, y);
+                drawSubImageScaled(g, mapWithoutFoodSprite.source(), mapWithoutFoodSprite.area(), x, y);
             }
         } else {
-            spriteRenderer.drawSpriteScaled(g, mapWithFoodSprite.area(), x, y);
+            drawSpriteScaled(g, mapWithFoodSprite.area(), x, y);
             world.map().food().tiles().filter(world::hasEatenFoodAt).forEach(tile -> overPaintFood(g, world, tile));
             if (!blinkingOn) {
                 world.energizerTiles().forEach(tile -> overPaintFood(g, world, tile));
             }
         }
-        /*
-        var msPacManGame = (MsPacManGameModel) game;
-        if (msPacManGame.blueMazeBug) {
-            // no map source available, use vector renderer
-            drawWorld(flashMode, blinkingOn);
-        } else {
-            int mapNumber = msPacManGame.currentMapNumber();
-            spriteRenderer.drawMsPacManWorld(g, game.world(), mapNumber, flashMode, blinkingOn);
-        }
-        */
         context.game().bonus().ifPresent(bonus -> drawMovingBonus(g, (MovingBonus) bonus));
     }
 
@@ -108,10 +97,10 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
     public void drawMovingBonus(GraphicsContext g, MovingBonus bonus) {
         g.save();
         g.translate(0, bonus.elongationY());
-        if (bonus.state() == Bonus.STATE_EDIBLE) {
-            spriteRenderer.drawEntitySprite(g,  bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
-        } else if (bonus.state() == Bonus.STATE_EATEN) {
-            spriteRenderer.drawEntitySprite(g, bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
+        switch (bonus.state()) {
+            case Bonus.STATE_EDIBLE -> drawEntitySprite(g, bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawEntitySprite(g, bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
+            default -> {}
         }
         g.restore();
     }
@@ -119,8 +108,8 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
     @Override
     public void drawClapperBoard(GraphicsContext g, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
         var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
-        if (sprite != null) {
-            spriteRenderer.drawSpriteCenteredOverBox(g, sprite, x, y);
+        if (sprite != RectangularArea.EMPTY) {
+            drawSpriteCenteredOverBox(g, sprite, x, y);
             g.setFont(font);
             g.setFill(textColor.darker());
             var numberX = scaled(x + sprite.width() - 25);

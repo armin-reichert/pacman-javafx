@@ -61,6 +61,6 @@ public class ClapperboardAnimation {
         if (tick <= 87) {
             return sprites[WIDE];
         }
-        return null;
+        return RectangularArea.EMPTY;
     }
 }
