@@ -30,12 +30,11 @@ import static de.amr.games.pacman.lib.Globals.*;
 /**
  * @author Armin Reichert
  */
-public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRenderer {
+public class TengenMsPacManGameWorldRenderer extends SpriteRenderer implements MsPacManGameWorldRenderer {
 
     private final AssetStorage assets;
     private final TengenMsPacManGameSpriteSheet spriteSheet;
 
-    private final SpriteRenderer spriteRenderer = new SpriteRenderer();
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
 
     private SpriteSheetArea mapSprite;
@@ -45,15 +44,15 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
     public TengenMsPacManGameWorldRenderer(AssetStorage assets) {
         this.assets = assets;
         spriteSheet = assets.get("tengen.spritesheet");
-        spriteRenderer.setSpriteSheet(spriteSheet);
+        setSpriteSheet(spriteSheet);
 
-        terrainRenderer.scalingPy.bind(spriteRenderer.scalingPy);
-        terrainRenderer.setMapBackgroundColor(spriteRenderer.backgroundColorPy.get());
+        terrainRenderer.scalingPy.bind(scalingPy);
+        terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
     }
 
     @Override
     public SpriteRenderer spriteRenderer() {
-        return spriteRenderer;
+        return this;
     }
 
     @Override
@@ -68,12 +67,12 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
 
     @Override
     public DoubleProperty scalingProperty() {
-        return spriteRenderer.scalingPy;
+        return scalingPy;
     }
 
     @Override
     public ObjectProperty<Color> backgroundColorProperty() {
-        return spriteRenderer.backgroundColorPy;
+        return backgroundColorPy;
     }
 
     @Override
@@ -164,8 +163,8 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
         g.translate(0, bonus.elongationY());
         spriteSheet.useDelegate=false;
         switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> spriteRenderer.drawEntitySprite(g, bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN -> spriteRenderer.drawEntitySprite(g, bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
+            case Bonus.STATE_EDIBLE -> drawEntitySprite(g, bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawEntitySprite(g, bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
             default -> {}
         }
         spriteSheet.useDelegate=true;
@@ -177,7 +176,7 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
         double scaling = scalingProperty().get();
         var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
         if (sprite != null) {
-            spriteRenderer.drawSpriteCenteredOverBox(g, sprite, x, y);
+            drawSpriteCenteredOverBox(g, sprite, x, y);
             g.setFont(font);
             g.setFill(textColor.darker());
             var numberX = scaling * (x + sprite.width() - 25);
