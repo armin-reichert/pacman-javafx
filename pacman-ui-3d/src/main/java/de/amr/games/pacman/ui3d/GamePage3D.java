@@ -124,7 +124,7 @@ public class GamePage3D extends GamePage {
         contextMenu.hide();
         if (gameScene instanceof PlayScene3D) {
             getChildren().set(0, gameScene.root());
-            dashboardLayer.getPip().setGameVariant(context.game().variant());
+            dashboardLayer.getPip().setGameVariant(context.game().variant()); //TODO check
         } else if (gameScene instanceof GameScene2D scene2D) {
             setGameScene2D(scene2D);
         } else {

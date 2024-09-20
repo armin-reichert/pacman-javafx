@@ -63,6 +63,7 @@ public class PictureInPictureView implements GameEventListener {
     private final GameContext context;
     private final HBox layout = new HBox();
     private final PlayScene2D gameScene;
+    private GameWorldRenderer renderer;
 
     public PictureInPictureView(GameContext context) {
         this.context = context;
@@ -93,15 +94,6 @@ public class PictureInPictureView implements GameEventListener {
     }
 
     public void setGameVariant(GameVariant variant) {
-        GameWorldRenderer renderer = switch (variant) {
-            case MS_PACMAN -> new MsPacManArcadeGameWorldRenderer(context.assets());
-            case MS_PACMAN_TENGEN -> new TengenMsPacManGameWorldRenderer(context.assets());
-            case PACMAN -> new PacManArcadeGameWorldRenderer(context.assets());
-            case PACMAN_XXL -> new PacManXXLGameWorldRenderer(context.assets());
-        };
-        renderer.scalingProperty().bind(gameScene.scalingPy);
-        renderer.backgroundColorProperty().bind(gameScene.backgroundColorPy);
-        gameScene.setRenderer(renderer);
         gameScene.backgroundColorPy.bind(PY_CANVAS_COLOR);
     }
 
@@ -117,6 +109,17 @@ public class PictureInPictureView implements GameEventListener {
             TileMap terrain = context.game().world().map().terrain();
             aspectPy.set((double) terrain.numCols() / terrain.numRows());
         }
+        renderer = switch (context.game().variant()) {
+            case MS_PACMAN -> new MsPacManArcadeGameWorldRenderer(context.assets());
+            case MS_PACMAN_TENGEN -> new TengenMsPacManGameWorldRenderer(context.assets());
+            case PACMAN -> new PacManArcadeGameWorldRenderer(context.assets());
+            case PACMAN_XXL -> new PacManXXLGameWorldRenderer(context.assets());
+        };
+        renderer.scalingProperty().bind(gameScene.scalingPy);
+        renderer.backgroundColorProperty().bind(gameScene.backgroundColorPy);
+        int mapNumber = context.game().mapNumberByLevelNumber(context.game().levelNumber());
+        renderer.selectMap(context.game().world().map(), mapNumber);
+        gameScene.setRenderer(renderer);
     }
 
     private void rescale() {

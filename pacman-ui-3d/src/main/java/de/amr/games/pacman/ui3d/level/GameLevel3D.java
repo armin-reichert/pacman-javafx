@@ -14,8 +14,6 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import de.amr.games.pacman.ui3d.model.Model3D;
@@ -325,18 +323,9 @@ public class GameLevel3D {
             cube.setTranslateZ(-HTS);
             levelCounter3D.getChildren().add(cube);
 
+            var ss = context.spriteSheet(context.game().variant());
             var material = new PhongMaterial(Color.WHITE);
-            switch (context.game().variant()) {
-                case MS_PACMAN, MS_PACMAN_TENGEN -> {
-                    var ss = (MsPacManGameSpriteSheet) context.spriteSheet(context.game().variant());
-                    material.setDiffuseMap(ss.subImage(ss.bonusSymbolSprite(symbol)));
-                }
-                case PACMAN, PACMAN_XXL -> {
-                    var ss = (PacManGameSpriteSheet) context.spriteSheet(context.game().variant());
-                    material.setDiffuseMap(ss.subImage(ss.bonusSymbolSprite(symbol)));
-                }
-                default -> throw new IllegalArgumentException("Unsupported game variant: " + context.game().variant());
-            }
+            material.setDiffuseMap(ss.subImage(ss.bonusSymbolSprite(symbol)));
             cube.setMaterial(material);
 
             var spinning = new RotateTransition(Duration.seconds(6), cube);

@@ -14,6 +14,8 @@ import javafx.scene.image.Image;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import static de.amr.games.pacman.ui2d.rendering.RectangularArea.rect;
+
 /**
  * @author Armin Reichert
  */

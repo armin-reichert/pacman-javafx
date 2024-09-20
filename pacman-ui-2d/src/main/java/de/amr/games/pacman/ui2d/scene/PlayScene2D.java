@@ -167,7 +167,6 @@ public class PlayScene2D extends GameScene2D {
     public void onSceneVariantSwitch(GameScene oldScene) {
         int mapNumber = context.game().mapNumberByLevelNumber(context.game().levelNumber());
         renderer.selectMap(context.game().world().map(), mapNumber);
-
         Logger.info("{} entered from {}", this, oldScene);
     }
 

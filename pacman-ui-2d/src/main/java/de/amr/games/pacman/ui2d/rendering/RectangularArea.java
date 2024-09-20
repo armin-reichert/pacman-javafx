@@ -18,6 +18,10 @@ public record RectangularArea(short x, short y, short width, short height) {
 
     public static final RectangularArea EMPTY = new RectangularArea(0, 0, 0, 0);
 
+    public static RectangularArea rect(int x, int y, int width, int height) {
+        return new RectangularArea(x, y, width, height);
+    }
+
     public RectangularArea(int x, int y, int width, int height) {
         this((short) x, (short) y, (short) width, (short) height);
     }

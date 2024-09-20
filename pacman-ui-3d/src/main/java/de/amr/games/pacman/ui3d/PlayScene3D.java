@@ -19,6 +19,7 @@ import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
+import de.amr.games.pacman.ui2d.util.SpriteSheet;
 import de.amr.games.pacman.ui3d.level.*;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
@@ -238,26 +239,13 @@ public class PlayScene3D implements GameScene {
     }
 
     private void onEnterStateGhostDying() {
-        switch (context.game().variant()) {
-            case MS_PACMAN, MS_PACMAN_TENGEN -> {
-                var ss = (MsPacManGameSpriteSheet) context.spriteSheet(context.game().variant());
-                RectangularArea[] numberSprites = ss.ghostNumberSprites();
-                context.game().eventLog().killedGhosts.forEach(ghost -> {
-                    int index = context.game().victims().indexOf(ghost);
-                    var numberImage = ss.subImage(numberSprites[index]);
-                    level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
-                });
-            }
-            case PACMAN, PACMAN_XXL -> {
-                var ss = (PacManGameSpriteSheet) context.spriteSheet(context.game().variant());
-                RectangularArea[] numberSprites = ss.ghostNumberSprites();
-                context.game().eventLog().killedGhosts.forEach(ghost -> {
-                    int index = context.game().victims().indexOf(ghost);
-                    var numberImage = ss.subImage(numberSprites[index]);
-                    level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
-                });
-            }
-        }
+        SpriteSheet ss = context.spriteSheet(context.game().variant());
+        RectangularArea[] numberSprites = ss.ghostNumberSprites();
+        context.game().eventLog().killedGhosts.forEach(ghost -> {
+            int victimIndex = context.game().victims().indexOf(ghost);
+            var numberImage = ss.subImage(numberSprites[victimIndex]);
+            level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
+        });
     }
 
     private void onEnterStateLevelComplete() {

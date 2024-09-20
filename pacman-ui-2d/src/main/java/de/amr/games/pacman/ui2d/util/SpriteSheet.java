@@ -9,6 +9,8 @@ import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 
+import static de.amr.games.pacman.ui2d.rendering.RectangularArea.rect;
+
 /**
  * A sprite sheet (bekommt kein Wunschkennzeichen!)
  *
@@ -50,10 +52,6 @@ public interface SpriteSheet {
      */
     default int tiles(int n) {
         return n * tileSize();
-    }
-
-    default RectangularArea rect(int x, int y, int width, int height) {
-        return new RectangularArea(x, y, width, height);
     }
 
     default RectangularArea[] rectArray(RectangularArea... areas) {
