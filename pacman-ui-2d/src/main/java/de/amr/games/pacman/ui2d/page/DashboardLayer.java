@@ -4,8 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.dashboard.*;
+import de.amr.games.pacman.ui2d.dashboard.InfoBox;
+import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import javafx.beans.binding.Bindings;
 import javafx.scene.layout.BorderPane;
@@ -14,6 +16,7 @@ import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 
@@ -22,33 +25,26 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
  */
 public class DashboardLayer extends BorderPane {
 
+    private record DashboardEntry(String title, InfoBox infoBox) {}
+
     private final GameContext context;
-    private final List<InfoBox> infoBoxes = new ArrayList<>();
+    private final List<DashboardEntry> dashboardItems = new ArrayList<>();
+    private final VBox dashboardContainer = new VBox();
     private final PictureInPictureView pip;
-    private final VBox dashboard = new VBox();
 
     public DashboardLayer(GameContext context) {
         this.context = context;
-
-        dashboard.setVisible(false);
-        addInfoBox(context.locText("infobox.general.title"), new InfoBoxGeneral());
-        addInfoBox(context.locText("infobox.game_control.title"), new InfoBoxGameControl());
-        addInfoBox(context.locText("infobox.game_info.title"), new InfoBoxGameInfo());
-        addInfoBox(context.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
-        addInfoBox(context.locText("infobox.actor_info.title"), new InfoBoxActorInfo());
-        addInfoBox(context.locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
-        addInfoBox(context.locText("infobox.about.title"), new InfoBoxAbout());
 
         pip = new PictureInPictureView(context);
         pip.heightPy.bind(PY_PIP_HEIGHT);
         pip.opacityPy.bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
 
-        setLeft(dashboard);
+        setLeft(dashboardContainer);
         setRight(new VBox(pip.node(), new HBox()));
 
         visibleProperty().bind(Bindings.createObjectBinding(
-            () -> dashboard.isVisible() || PY_PIP_ON.get(),
-            dashboard.visibleProperty(), PY_PIP_ON
+            () -> dashboardContainer.isVisible() || PY_PIP_ON.get(),
+            dashboardContainer.visibleProperty(), PY_PIP_ON
         ));
     }
 
@@ -56,31 +52,59 @@ public class DashboardLayer extends BorderPane {
         return pip;
     }
 
-    public void addInfoBox(String title, InfoBox infoBox) {
-        addInfoBox(infoBoxes.size(), title, infoBox);
-    }
-
-    public void addInfoBox(int index, String title, InfoBox infoBox) {
-        infoBoxes.add(index, infoBox);
+    private DashboardEntry createEntry(String title, InfoBox infoBox) {
         infoBox.setText(title);
         infoBox.setMinLabelWidth(context.assets().get("infobox.min_label_width"));
         infoBox.setTextColor(context.assets().get("infobox.text_color"));
         infoBox.setTextFont(context.assets().get("infobox.text_font"));
         infoBox.setLabelFont(context.assets().get("infobox.label_font"));
         infoBox.init(context);
-        dashboard.getChildren().add(index, infoBox);
+        return new DashboardEntry(title, infoBox);
+    }
+
+    public void addDashboardItem(String title, InfoBox infoBox) {
+        dashboardItems.add(createEntry(title, infoBox));
+    }
+
+    private void updateDashboardContainer() {
+        dashboardContainer.getChildren().setAll(dashboardItems.stream().map(DashboardEntry::infoBox).toArray(InfoBox[]::new));
+    }
+
+    public void addEntry(int index, String title, InfoBox infoBox) {
+        dashboardItems.add(index, createEntry(title, infoBox));
+    }
+
+    public void hideDashboard() {
+        dashboardContainer.setVisible(false);
+    }
+
+    public void showDashboard() {
+        updateDashboardContainer();
+        dashboardContainer.setVisible(true);
+        dashboardContainer.getChildren().stream()
+                .filter(infoBox -> infoBox instanceof InfoBoxCustomMaps)
+                .findFirst()
+                .ifPresent(infoBox -> {
+                    if (context.game().variant() != GameVariant.PACMAN_XXL) {
+                        dashboardContainer.getChildren().remove(infoBox);
+                    }
+                });
     }
 
     public void toggleDashboardVisibility() {
-        dashboard.setVisible(!dashboard.isVisible());
+        if (dashboardContainer.isVisible()) {
+            hideDashboard();
+        } else {
+            showDashboard();
+        }
     }
 
-    public List<InfoBox> getInfoBoxes() {
-        return infoBoxes;
+    public Stream<InfoBox> getInfoBoxes() {
+        return dashboardItems.stream().map(DashboardEntry::infoBox);
     }
 
     public void update() {
-        infoBoxes.forEach(InfoBox::update);
+        dashboardItems.stream().map(DashboardEntry::infoBox).forEach(InfoBox::update);
         pip.setVisible(PY_PIP_ON.get() && context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D));
         pip.draw();
     }

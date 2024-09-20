@@ -514,6 +514,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public void selectStartPage() {
         clock.stop();
+        //TODO check this
+        gamePage.dashboardLayer().hideDashboard();
         selectPage(startPage);
     }
 
@@ -577,16 +579,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         PacManXXLGame xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
         xxlGame.loadCustomMaps();
         Logger.info("Custom maps: {}", xxlGame.customMapsSortedByFile());
-        /* TODO: Find better solution
-        This is total crap! But the "custom map" collection lives inside the model which is
-        JavaFX-unaware, there is no observable FX collection where the infobox could register a
-        change listener. */
-        for (var infoBox : gamePage.dashboardLayer().getInfoBoxes()) {
-            if (infoBox instanceof InfoBoxCustomMaps customMapsInfoBox) {
-                customMapsInfoBox.updateTableView();
-                break;
-            }
-        }
+        // TODO: This is total crap! But the "custom map" collection lives inside the model which is JavaFX-unaware
+        // and there is no observable FX collection where the infobox could register a change listener.
+        gamePage.dashboardLayer().getInfoBoxes()
+            .filter(infoBox -> infoBox instanceof InfoBoxCustomMaps)
+            .findFirst()
+            .ifPresent(infoBox -> ((InfoBoxCustomMaps)infoBox).updateTableView());
     }
 
     @Override

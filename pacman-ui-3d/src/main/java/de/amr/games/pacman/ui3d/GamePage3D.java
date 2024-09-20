@@ -7,11 +7,6 @@ package de.amr.games.pacman.ui3d;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.page.GamePage;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManArcadeGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManArcadeGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.pacman_xxl.PacManXXLGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
@@ -39,7 +34,7 @@ public class GamePage3D extends GamePage {
 
     public GamePage3D(GameContext context, Scene parentScene) {
         super(context, parentScene);
-        dashboardLayer.addInfoBox(3, context.locText("infobox.3D_settings.title"), new InfoBox3D());
+        dashboardLayer.addEntry(3, context.locText("infobox.3D_settings.title"), new InfoBox3D());
         backgroundProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {

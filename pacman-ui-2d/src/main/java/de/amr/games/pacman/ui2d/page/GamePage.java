@@ -8,6 +8,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameSounds;
+import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
@@ -70,6 +71,14 @@ public class GamePage extends StackPane implements Page {
         decoratedCanvas.decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
 
         dashboardLayer = new DashboardLayer(context);
+        dashboardLayer.addDashboardItem(context.locText("infobox.general.title"), new InfoBoxGeneral());
+        dashboardLayer.addDashboardItem(context.locText("infobox.game_control.title"), new InfoBoxGameControl());
+        dashboardLayer.addDashboardItem(context.locText("infobox.game_info.title"), new InfoBoxGameInfo());
+        dashboardLayer.addDashboardItem(context.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
+        dashboardLayer.addDashboardItem(context.locText("infobox.actor_info.title"), new InfoBoxActorInfo());
+        dashboardLayer.addDashboardItem(context.locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
+        dashboardLayer.addDashboardItem(context.locText("infobox.about.title"), new InfoBoxAbout());
+
 
         popupLayer = new PopupLayer(context, decoratedCanvas);
         popupLayer.setMouseTransparent(true);
