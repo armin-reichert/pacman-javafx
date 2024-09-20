@@ -22,22 +22,21 @@ import static de.amr.games.pacman.lib.Globals.t;
 /**
  * @author Armin Reichert
  */
-public class PacManArcadeGameWorldRenderer implements GameWorldRenderer {
+public class PacManArcadeGameWorldRenderer extends SpriteRenderer implements GameWorldRenderer {
 
     private final PacManGameSpriteSheet spriteSheet;
-    private final SpriteRenderer spriteRenderer = new SpriteRenderer();
 
     private boolean flashMode;
     private boolean blinkingOn;
 
     public PacManArcadeGameWorldRenderer(AssetStorage assets) {
         spriteSheet = assets.get("pacman.spritesheet");
-        spriteRenderer.setSpriteSheet(spriteSheet);
+        setSpriteSheet(spriteSheet);
     }
 
     @Override
     public SpriteRenderer spriteRenderer() {
-        return spriteRenderer;
+        return this;
     }
 
     @Override
@@ -52,12 +51,12 @@ public class PacManArcadeGameWorldRenderer implements GameWorldRenderer {
 
     @Override
     public DoubleProperty scalingProperty() {
-        return spriteRenderer.scalingPy;
+        return scalingPy;
     }
 
     @Override
     public ObjectProperty<Color> backgroundColorProperty() {
-        return spriteRenderer.backgroundColorPy;
+        return backgroundColorPy;
     }
 
     @Override
@@ -75,10 +74,10 @@ public class PacManArcadeGameWorldRenderer implements GameWorldRenderer {
                 // bright maze is in separate source, not in sprite sheet
                 g.drawImage(spriteSheet.getFlashingMazeImage(), t(0), t(3));
             } else {
-                spriteRenderer.drawSpriteUnscaled(g, spriteSheet.getEmptyMazeSprite(), t(0), t(3));
+                drawSpriteUnscaled(g, spriteSheet.getEmptyMazeSprite(), t(0), t(3));
             }
         } else {
-            spriteRenderer.drawSpriteUnscaled(g, spriteSheet.getFullMazeSprite(), t(0), t(3));
+            drawSpriteUnscaled(g, spriteSheet.getFullMazeSprite(), t(0), t(3));
             g.restore();
             world.map().food().tiles().filter(world::hasEatenFoodAt)
                 .forEach(tile -> overPaintFood(g, world, tile));
@@ -96,9 +95,9 @@ public class PacManArcadeGameWorldRenderer implements GameWorldRenderer {
 
     private void drawStaticBonus(GraphicsContext g, Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
-            spriteRenderer.drawEntitySprite(g,  bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            drawEntitySprite(g,  bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
         } else if (bonus.state() == Bonus.STATE_EATEN) {
-            spriteRenderer.drawEntitySprite(g,  bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
+            drawEntitySprite(g,  bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
         }
     }
 }
