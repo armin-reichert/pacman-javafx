@@ -15,16 +15,15 @@ import javafx.scene.image.Image;
  */
 public class TengenMsPacManGameSpriteSheet implements SpriteSheet {
 
-    private final MsPacManGameSpriteSheet msPacManSpriteSheet;
-    private final Image tengenSpriteImage;
+    private final SpriteSheet msPacManSpriteSheet;
+    private final Image source;
 
     //TODO: TEMPORARY
     boolean useMsPacManSprites;
 
-    public TengenMsPacManGameSpriteSheet(String resourcePath) {
-        ResourceManager rm = this::getClass;
-        tengenSpriteImage = rm.loadImage(resourcePath + "spritesheet.png");
-        msPacManSpriteSheet = new MsPacManGameSpriteSheet("/de/amr/games/pacman/ui2d/graphics/mspacman/");
+    public TengenMsPacManGameSpriteSheet(Image source, SpriteSheet tmpDelegate) {
+        this.source = source;
+        msPacManSpriteSheet = tmpDelegate;
         useMsPacManSprites = true;
     }
 
@@ -35,7 +34,7 @@ public class TengenMsPacManGameSpriteSheet implements SpriteSheet {
 
     @Override
     public Image sourceImage() {
-        return useMsPacManSprites ? msPacManSpriteSheet.sourceImage() : tengenSpriteImage;
+        return useMsPacManSprites ? msPacManSpriteSheet.sourceImage() : source;
     }
 
     @Override

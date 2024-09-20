@@ -16,6 +16,7 @@ import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -27,6 +28,7 @@ import static de.amr.games.pacman.lib.Globals.t;
 public class MsPacManArcadeGameWorldRenderer extends SpriteRenderer implements MsPacManGameWorldRenderer {
 
     private final MsPacManGameSpriteSheet spriteSheet;
+    private final Image flashingMazesImage;
 
     private SpriteSheetArea mapWithFoodSprite;
     private SpriteSheetArea mapWithoutFoodSprite;
@@ -37,6 +39,7 @@ public class MsPacManArcadeGameWorldRenderer extends SpriteRenderer implements M
     public MsPacManArcadeGameWorldRenderer(AssetStorage assets) {
         spriteSheet = assets.get("ms_pacman.spritesheet");
         setSpriteSheet(spriteSheet);
+        flashingMazesImage = assets.get("ms_pacman.flashing_mazes");
     }
 
     @Override
@@ -70,7 +73,7 @@ public class MsPacManArcadeGameWorldRenderer extends SpriteRenderer implements M
             new RectangularArea(0, (mapNumber - 1) * 248, 226, 248));
         mapWithoutFoodSprite = new SpriteSheetArea(spriteSheet.sourceImage(),
             new RectangularArea(228, (mapNumber - 1) * 248, 226, 248));
-        mapFlashingSprite = new SpriteSheetArea(spriteSheet.getFlashingMazesImage(),
+        mapFlashingSprite = new SpriteSheetArea(flashingMazesImage,
             new RectangularArea(0, (mapNumber - 1) * 248, 226, 248));
     }
 

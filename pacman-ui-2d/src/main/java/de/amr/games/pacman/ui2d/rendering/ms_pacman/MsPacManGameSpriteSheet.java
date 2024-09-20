@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.rendering.ms_pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.ui2d.rendering.RectangularArea;
-import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteSheet;
 import javafx.scene.image.Image;
@@ -24,7 +23,6 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
     private static final List<Direction> ORDER = List.of(Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
     private final Image source;
-    private final Image flashingMazesImage;
 
     private final RectangularArea[] ghostNumberSprites = rectArray(
             sprite(0, 8), sprite(1, 8), sprite(2, 8), sprite(3, 8));
@@ -96,10 +94,8 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
             rect(488, 208, 32, 32),  // middle
             rect(520, 208, 32, 32)); // closed
 
-    public MsPacManGameSpriteSheet(String resourcePath) {
-        ResourceManager rm = this::getClass;
-        source = rm.loadImage(resourcePath + "mspacman_spritesheet.png");
-        flashingMazesImage = rm.loadImage(resourcePath + "mazes_flashing.png");
+    public MsPacManGameSpriteSheet(Image source) {
+        this.source = source;
     }
 
     @Override
@@ -160,10 +156,6 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
     @Override
     public RectangularArea[] ghostEyesSprites(Direction dir) {
         return ghostEyesSprites[ORDER.indexOf(dir)];
-    }
-
-    public Image getFlashingMazesImage() {
-        return flashingMazesImage;
     }
 
     @Override

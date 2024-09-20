@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.rendering.pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.ui2d.rendering.RectangularArea;
-import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui2d.util.SpriteSheet;
 import javafx.scene.image.Image;
 
@@ -25,9 +24,8 @@ public class PacManGameSpriteSheet implements SpriteSheet {
 
     private final Image source;
 
-    public PacManGameSpriteSheet(String resourcePath) {
-        ResourceManager rm = this::getClass;
-        source = rm.loadImage(resourcePath + "pacman_spritesheet.png");
+    public PacManGameSpriteSheet(Image source) {
+        this.source = source;
     }
 
     @Override
