@@ -40,14 +40,10 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
         return 16;
     }
 
-    // third column contains the sprites (first two columns the maze images)
-    private RectangularArea sprite(int tileX, int tileY) {
-        return rect(456 + tiles(tileX), tiles(tileY), tileSize(), tileSize());
-    }
-
     private final RectangularArea[] ghostNumberSprites = rectArray(
         sprite(0, 8), sprite(1, 8), sprite(2, 8), sprite(3, 8));
 
+    @Override
     public RectangularArea[] ghostNumberSprites() {
         return ghostNumberSprites;
     }
@@ -87,6 +83,7 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
         }
     }
 
+    @Override
     public RectangularArea[] msPacManMunchingSprites(Direction dir) {
         return msPacManMunchingSprites[ORDER.indexOf(dir)];
     }
@@ -101,6 +98,7 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
         msPacManDyingSprites = rectArray(down, left, up, right, down, left, up, right, down, left, up);
     }
 
+    @Override
     public RectangularArea[] msPacManDyingSprites() {
         return msPacManDyingSprites;
     }
@@ -114,12 +112,14 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
         }
     }
 
+    @Override
     public RectangularArea[] ghostNormalSprites(byte id, Direction dir) {
         return ghostsNormalSprites[id][ORDER.indexOf(dir)];
     }
 
     private final RectangularArea[] ghostFrightenedSprites = rectArray(sprite(8, 4), sprite(9, 4));
 
+    @Override
     public RectangularArea[] ghostFrightenedSprites() {
         return ghostFrightenedSprites;
     }
@@ -127,6 +127,7 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
     private final RectangularArea[] ghostFlashingSprites = rectArray(
         sprite(8, 4), sprite(9, 4), sprite(10, 4), sprite(11, 4));
 
+    @Override
     public RectangularArea[] ghostFlashingSprites() {
         return ghostFlashingSprites;
     }
@@ -138,11 +139,10 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
         }
     }
 
+    @Override
     public RectangularArea[] ghostEyesSprites(Direction dir) {
         return ghostEyesSprites[ORDER.indexOf(dir)];
     }
-
-    // Ms. Pac-Man specific:
 
     public Image getFlashingMazesImage() {
         return flashingMazesImage;
@@ -155,24 +155,63 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
         }
     }
 
+    @Override
     public RectangularArea[] pacManMunchingSprites(Direction dir) {
         return pacManMunchingSprites[ORDER.indexOf(dir)];
     }
 
+    @Override
+    public RectangularArea[] pacMunchingSprites(Direction dir) {
+        return new RectangularArea[0];
+    }
+
+    @Override
+    public RectangularArea[] pacDyingSprites() {
+        return new RectangularArea[0];
+    }
+
+    @Override
+    public RectangularArea[] blinkyNakedSprites() {
+        return new RectangularArea[0];
+    }
+
+    @Override
+    public RectangularArea[] blinkyPatchedSprites() {
+        return new RectangularArea[0];
+    }
+
+    @Override
+    public RectangularArea[] blinkyDamagedSprites() {
+        return new RectangularArea[0];
+    }
+
+    @Override
+    public RectangularArea[] blinkyStretchedSprites() {
+        return new RectangularArea[0];
+    }
+
+    @Override
+    public RectangularArea[] bigPacManSprites() {
+        return new RectangularArea[0];
+    }
+
     private final RectangularArea heartSprite = sprite(2, 10);
 
+    @Override
     public RectangularArea heartSprite() {
         return heartSprite;
     }
 
     private final RectangularArea blueBagSprite = rect(488, 199, 8, 8);
 
+    @Override
     public RectangularArea blueBagSprite() {
         return blueBagSprite;
     }
 
     private final RectangularArea juniorPacSprite = rect(509, 200, 8, 8);
 
+    @Override
     public RectangularArea juniorPacSprite() {
         return juniorPacSprite;
     }
@@ -182,6 +221,7 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
         rect(488, 208, 32, 32),  // middle
         rect(520, 208, 32, 32)); // closed
 
+    @Override
     public RectangularArea[] clapperboardSprites() {
         return clapperboardSprites;
     }
@@ -192,5 +232,10 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
             .frameTicks(8)
             .loop()
             .end();
+    }
+
+    // third column contains the sprites (first two columns the maze images)
+    private RectangularArea sprite(int tileX, int tileY) {
+        return rect(456 + tiles(tileX), tiles(tileY), tileSize(), tileSize());
     }
 }

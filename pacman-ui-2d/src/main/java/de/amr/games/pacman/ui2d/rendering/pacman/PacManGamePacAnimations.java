@@ -9,6 +9,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
+import de.amr.games.pacman.ui2d.util.SpriteSheet;
 
 import java.util.Map;
 
@@ -21,9 +22,9 @@ public class PacManGamePacAnimations extends SpriteAnimations {
 
     private final Map<String, SpriteAnimation> animationsByName;
     private final Pac pac;
-    private final PacManGameSpriteSheet spriteSheet;
+    private final SpriteSheet spriteSheet;
 
-    public PacManGamePacAnimations(Pac pac, PacManGameSpriteSheet spriteSheet) {
+    public PacManGamePacAnimations(Pac pac, SpriteSheet spriteSheet) {
         checkNotNull(pac);
         checkNotNull(spriteSheet);
         this.pac = pac;

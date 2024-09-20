@@ -7,17 +7,15 @@ package de.amr.games.pacman.ui2d.rendering.tengen;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.SpriteSheetArea;
 import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
+import de.amr.games.pacman.ui2d.rendering.SpriteSheetArea;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
@@ -35,12 +33,10 @@ import static de.amr.games.pacman.lib.Globals.*;
 public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRenderer {
 
     private final AssetStorage assets;
-    private MsPacManGameSpriteSheet tmpSpriteSheet;
-    private TengenMsPacManGameSpriteSheet tengenSpriteSheet;
+    private final TengenMsPacManGameSpriteSheet spriteSheet;
 
     private final SpriteRenderer spriteRenderer = new SpriteRenderer();
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
-    private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
 
     private SpriteSheetArea mapSprite;
     private boolean flashMode;
@@ -48,13 +44,11 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
 
     public TengenMsPacManGameWorldRenderer(AssetStorage assets) {
         this.assets = assets;
-        tengenSpriteSheet = assets.get("tengen.spritesheet");
-        // for now, just use Ms Pac-Man spritesheet
-        tmpSpriteSheet = assets.get("tengen.spritesheet.tmp");
-        spriteRenderer.setSpriteSheet(tmpSpriteSheet);
+        spriteSheet = assets.get("tengen.spritesheet");
+        spriteRenderer.setSpriteSheet(spriteSheet);
+
         terrainRenderer.scalingPy.bind(spriteRenderer.scalingPy);
         terrainRenderer.setMapBackgroundColor(spriteRenderer.backgroundColorPy.get());
-        foodRenderer.scalingPy.bind(spriteRenderer.scalingPy);
     }
 
     @Override
@@ -100,9 +94,9 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
             hideActorSprite(g, terrain.getTileProperty("pos_pac", v2i(14, 26)), 0, 0);
             hideActorSprite(g, terrain.getTileProperty("pos_ghost_1_red", v2i(13, 14)), 0, 0);
             // The ghosts in the house are sitting some pixels below their home position
-            // TODO: check if the ghosts in Tengen all start from the bottom of the house, if yes, change map properties
-            hideActorSprite(g, terrain.getTileProperty("pos_ghost_2_pink", v2i(13, 17)), 0, 4);
-            hideActorSprite(g, terrain.getTileProperty("pos_ghost_3_cyan", v2i(11, 17)), 0, 4);
+            // TODO: check if they really start from the bottom of the house, if yes, change map properties
+            hideActorSprite(g, terrain.getTileProperty("pos_ghost_2_pink",   v2i(13, 17)), 0, 4);
+            hideActorSprite(g, terrain.getTileProperty("pos_ghost_3_cyan",   v2i(11, 17)), 0, 4);
             hideActorSprite(g, terrain.getTileProperty("pos_ghost_4_orange", v2i(15, 17)), 0, 4);
             world.map().food().tiles().filter(world::hasEatenFoodAt).forEach(tile -> overPaintFood(g, world, tile));
             if (!blinkingOn) {
@@ -166,26 +160,22 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
 
     @Override
     public void drawMovingBonus(GraphicsContext g, MovingBonus bonus) {
-        //TODO just a test
-        spriteRenderer.setSpriteSheet(tengenSpriteSheet);
         g.save();
         g.translate(0, bonus.elongationY());
-        if (bonus.state() == Bonus.STATE_EDIBLE) {
-            spriteRenderer.drawEntitySprite(g,  bonus.entity(),
-                    spriteRenderer.spriteSheet().bonusSymbolSprite(bonus.symbol()));
-        } else if (bonus.state() == Bonus.STATE_EATEN) {
-            spriteRenderer.drawEntitySprite(g, bonus.entity(),
-                    spriteRenderer.spriteSheet().bonusValueSprite(bonus.symbol()));
+        spriteSheet.useDelegate=false;
+        switch (bonus.state()) {
+            case Bonus.STATE_EDIBLE -> spriteRenderer.drawEntitySprite(g, bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN -> spriteRenderer.drawEntitySprite(g, bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
+            default -> {}
         }
+        spriteSheet.useDelegate=true;
         g.restore();
-        //TODO just a test
-        spriteRenderer.setSpriteSheet(tmpSpriteSheet);
     }
 
     @Override
     public void drawClapperBoard(GraphicsContext g, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
         double scaling = scalingProperty().get();
-        var sprite = animation.currentSprite(tmpSpriteSheet.clapperboardSprites());
+        var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
         if (sprite != null) {
             spriteRenderer.drawSpriteCenteredOverBox(g, sprite, x, y);
             g.setFont(font);

@@ -63,7 +63,6 @@ public interface GameWorldRenderer {
                 spriteRenderer().drawEntitySprite(g, animatedEntity.entity(), spriteAnimations.currentSprite());
             }
         });
-
     }
 
     default void drawPacInfo(GraphicsContext g, Pac pac) {
@@ -164,5 +163,4 @@ public interface GameWorldRenderer {
             g.strokeLine(scaled(TS * col), 0, scaled(TS * col), scaled(numWorldTilesY * TS));
         }
     }
-
 }

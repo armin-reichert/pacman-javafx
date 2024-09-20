@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.util;
 
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -14,6 +15,28 @@ import javafx.scene.image.WritableImage;
  * @author Armin Reichert
  */
 public interface SpriteSheet {
+
+    RectangularArea[] pacMunchingSprites(Direction dir);
+    RectangularArea[] pacDyingSprites();
+    RectangularArea[] blinkyNakedSprites();
+    RectangularArea[] blinkyPatchedSprites();
+    RectangularArea[] blinkyDamagedSprites();
+    RectangularArea[] blinkyStretchedSprites();
+    RectangularArea[] bigPacManSprites();
+
+    RectangularArea[] msPacManDyingSprites();
+    RectangularArea[] msPacManMunchingSprites(Direction dir);
+    RectangularArea[] pacManMunchingSprites(Direction dir);
+    RectangularArea[] clapperboardSprites();
+    RectangularArea heartSprite();
+    RectangularArea blueBagSprite();
+    RectangularArea juniorPacSprite();
+
+    RectangularArea[] ghostEyesSprites(Direction dir);
+    RectangularArea[] ghostFlashingSprites();
+    RectangularArea[] ghostFrightenedSprites();
+    RectangularArea[] ghostNumberSprites();
+    RectangularArea[] ghostNormalSprites(byte id, Direction dir);
 
     RectangularArea livesCounterSprite();
     RectangularArea bonusSymbolSprite(byte symbol);

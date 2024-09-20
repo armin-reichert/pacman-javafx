@@ -24,6 +24,7 @@ import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
+import de.amr.games.pacman.ui2d.util.SpriteSheet;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -200,7 +201,7 @@ public class MsPacManIntroScene extends GameScene2D {
         super.init();
         context.setScoreVisible(true);
 
-        var sheet = (MsPacManGameSpriteSheet) context.spriteSheet(context.game().variant());
+        SpriteSheet sheet = context.spriteSheet(context.game().variant());
         renderer.spriteRenderer().setSpriteSheet(sheet);
         clearBlueMazeBug();
 

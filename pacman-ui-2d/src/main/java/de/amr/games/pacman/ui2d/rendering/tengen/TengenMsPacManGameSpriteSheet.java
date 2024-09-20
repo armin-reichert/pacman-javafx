@@ -3,23 +3,119 @@
  */
 package de.amr.games.pacman.ui2d.rendering.tengen;
 
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.ui2d.rendering.RectangularArea;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui2d.util.SpriteSheet;
 import javafx.scene.image.Image;
 
+/**
+ * @author Armin Reichert
+ */
 public class TengenMsPacManGameSpriteSheet implements SpriteSheet {
 
+    private final MsPacManGameSpriteSheet delegateSpriteSheet;
     private final Image spritesImage;
+
+    //TODO: TEMPORARY
+    boolean useDelegate;
 
     public TengenMsPacManGameSpriteSheet(String resourcePath) {
         ResourceManager rm = this::getClass;
         spritesImage = rm.loadImage(resourcePath + "spritesheet.png");
+        delegateSpriteSheet = new MsPacManGameSpriteSheet("/de/amr/games/pacman/ui2d/graphics/mspacman/");
+        useDelegate = true;
+    }
+
+    @Override
+    public int tileSize() {
+        return 16;
+    }
+
+    @Override
+    public Image sourceImage() {
+        return useDelegate ? delegateSpriteSheet.sourceImage() : spritesImage;
+    }
+
+    @Override
+    public RectangularArea[] pacManMunchingSprites(Direction dir) {
+        return delegateSpriteSheet.pacManMunchingSprites(dir);
+    }
+
+    @Override
+    public RectangularArea[] pacMunchingSprites(Direction dir) {
+        return delegateSpriteSheet.pacMunchingSprites(dir);
+    }
+
+    @Override
+    public RectangularArea[] pacDyingSprites() {
+        return delegateSpriteSheet.pacDyingSprites();
+    }
+
+    @Override
+    public RectangularArea[] blinkyNakedSprites() {
+        return new RectangularArea[0];
+    }
+
+    @Override
+    public RectangularArea[] blinkyPatchedSprites() {
+        return new RectangularArea[0];
+    }
+
+    @Override
+    public RectangularArea[] blinkyDamagedSprites() {
+        return new RectangularArea[0];
+    }
+
+    @Override
+    public RectangularArea[] blinkyStretchedSprites() {
+        return new RectangularArea[0];
+    }
+
+    @Override
+    public RectangularArea[] bigPacManSprites() {
+        return new RectangularArea[0];
+    }
+
+    @Override
+    public RectangularArea[] msPacManDyingSprites() {
+        return delegateSpriteSheet.msPacManDyingSprites();
+    }
+
+    @Override
+    public RectangularArea[] msPacManMunchingSprites(Direction dir) {
+        return delegateSpriteSheet.msPacManMunchingSprites(dir);
+    }
+
+    @Override
+    public RectangularArea[] ghostEyesSprites(Direction dir) {
+        return delegateSpriteSheet.ghostEyesSprites(dir);
+    }
+
+    @Override
+    public RectangularArea[] ghostFlashingSprites() {
+        return delegateSpriteSheet.ghostFlashingSprites();
+    }
+
+    @Override
+    public RectangularArea[] ghostFrightenedSprites() {
+        return delegateSpriteSheet.ghostFrightenedSprites();
+    }
+
+    @Override
+    public RectangularArea[] ghostNumberSprites() {
+        return delegateSpriteSheet.ghostNumberSprites();
+    }
+
+    @Override
+    public RectangularArea[] ghostNormalSprites(byte id, Direction dir) {
+        return delegateSpriteSheet.ghostNormalSprites(id, dir);
     }
 
     @Override
     public RectangularArea livesCounterSprite() {
-        return null;
+        return delegateSpriteSheet.livesCounterSprite();
     }
 
     private final RectangularArea[] bonusSymbolSprites = new RectangularArea[14];
@@ -43,13 +139,22 @@ public class TengenMsPacManGameSpriteSheet implements SpriteSheet {
         return bonusValueSprites[symbol];
     }
 
-    @Override
-    public int tileSize() {
-        return 16;
+    public RectangularArea[] clapperboardSprites() {
+        return delegateSpriteSheet.clapperboardSprites();
     }
 
     @Override
-    public Image sourceImage() {
-        return spritesImage;
+    public RectangularArea heartSprite() {
+        return delegateSpriteSheet.heartSprite();
+    }
+
+    @Override
+    public RectangularArea blueBagSprite() {
+        return delegateSpriteSheet.blueBagSprite();
+    }
+
+    @Override
+    public RectangularArea juniorPacSprite() {
+        return delegateSpriteSheet.juniorPacSprite();
     }
 }

@@ -62,6 +62,7 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         rect(488, 133, 15, 7),  // 800
         rect(504, 133, 16, 7)); // 1600
 
+    @Override
     public RectangularArea[] ghostNumberSprites() {
         return ghostNumberSprites;
     }
@@ -141,6 +142,7 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         }
     }
 
+    @Override
     public RectangularArea[] pacDyingSprites() {
         return pacDyingSprites;
     }
@@ -154,6 +156,7 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         }
     }
 
+    @Override
     public RectangularArea[] ghostNormalSprites(byte id, Direction dir) {
         return ghostNormalSprites[id][ORDER.indexOf(dir)];
     }
@@ -162,12 +165,14 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         rect(OFF_X + tiles(8), tiles(4), tiles(1), tiles(1)),
         rect(OFF_X + tiles(9), tiles(4), tiles(1), tiles(1)));
 
+    @Override
     public RectangularArea[] ghostFrightenedSprites() {
         return ghostFrightenedSprites;
     }
 
     private final RectangularArea[] ghostFlashingSprites = tilesRightOf(OFF_X, 8, 4, 4);
 
+    @Override
     public RectangularArea[] ghostFlashingSprites() {
         return ghostFlashingSprites;
     }
@@ -179,6 +184,42 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         }
     }
 
+    @Override
+    public RectangularArea[] pacManMunchingSprites(Direction dir) {
+        return new RectangularArea[0];
+    }
+
+    @Override
+    public RectangularArea[] msPacManDyingSprites() {
+        return new RectangularArea[0];
+    }
+
+    @Override
+    public RectangularArea[] msPacManMunchingSprites(Direction dir) {
+        return new RectangularArea[0];
+    }
+
+    @Override
+    public RectangularArea[] clapperboardSprites() {
+        return new RectangularArea[0];
+    }
+
+    @Override
+    public RectangularArea heartSprite() {
+        return null;
+    }
+
+    @Override
+    public RectangularArea blueBagSprite() {
+        return null;
+    }
+
+    @Override
+    public RectangularArea juniorPacSprite() {
+        return null;
+    }
+
+    @Override
     public RectangularArea[] ghostEyesSprites(Direction dir) {
         return ghostEyesSprites[ORDER.indexOf(dir)];
     }
@@ -190,6 +231,7 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         rect(OFF_X + 64, 16, 32, 32),
         rect(OFF_X + 96, 16, 32, 32));
 
+    @Override
     public RectangularArea[] bigPacManSprites() {
         return bigPacManSprites;
     }
@@ -202,6 +244,7 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         }
     }
 
+    @Override
     public RectangularArea[] blinkyStretchedSprites() {
         return blinkyStretchedSprites;
     }
@@ -214,6 +257,7 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         blinkyDamagedSprites[1] = rect(OFF_X + tiles(9) + m, tiles(7) + m, size, size);
     }
 
+    @Override
     public RectangularArea[] blinkyDamagedSprites() {
         return blinkyDamagedSprites;
     }
@@ -225,6 +269,7 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         blinkyPatchedSprites[1] = rect(OFF_X + tiles(11), tiles(7), size, size);
     }
 
+    @Override
     public RectangularArea[] blinkyPatchedSprites() {
         return blinkyPatchedSprites;
     }
@@ -236,6 +281,7 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         blinkyNakedSprites[1] = rect(OFF_X + tiles(10), tiles(8), 2 * size, size);
     }
 
+    @Override
     public RectangularArea[] blinkyNakedSprites() {
         return blinkyNakedSprites;
     }

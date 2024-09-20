@@ -23,11 +23,9 @@ import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManArcadeGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManArcadeGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.pacman_xxl.PacManXXLGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene;
@@ -411,7 +409,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             case MS_PACMAN        -> assets.get("ms_pacman.spritesheet");
             case PACMAN           -> assets.get("pacman.spritesheet");
             case PACMAN_XXL       -> assets.get("pacman_xxl.spritesheet");
-            case MS_PACMAN_TENGEN -> assets.get("tengen.spritesheet.tmp"); //TODO
+            case MS_PACMAN_TENGEN -> assets.get("tengen.spritesheet");
         };
     }
 
@@ -473,27 +471,19 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     public void onLevelCreated(GameEvent event) {
         // Found no better point in time to create and assign the sprite animations to the guys
         GameModel game = event.game;
+        SpriteSheet ss = spriteSheet(game.variant());
         switch (game.variant()) {
-            case MS_PACMAN -> {
-                var ss = (MsPacManGameSpriteSheet) spriteSheet(game.variant());
+            case MS_PACMAN, MS_PACMAN_TENGEN -> {
                 game.pac().setAnimations(new MsPacManGamePacAnimations(game.pac(), ss));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, ss)));
-                Logger.info("Created Ms. Pac-Man game creature animations for level #{}", game.levelNumber());
-            }
-            case MS_PACMAN_TENGEN -> {
-                var ss = (MsPacManGameSpriteSheet) spriteSheet(game.variant());
-                game.pac().setAnimations(new MsPacManGamePacAnimations(game.pac(), ss));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, ss)));
-                Logger.info("Created Ms. Pac-Man Tengen game creature animations for level #{}", game.levelNumber());
             }
             case PACMAN, PACMAN_XXL -> {
-                var ss = (PacManGameSpriteSheet) spriteSheet(game.variant());
                 game.pac().setAnimations(new PacManGamePacAnimations(game.pac(), ss));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, ss)));
-                Logger.info("Created Pac-Man game creature animations for level #{}", game.levelNumber());
             }
             default -> throw new IllegalArgumentException("Unsupported game variant: " + game.variant());
         }
+        Logger.info("Created {} game creature animations for level #{}", game.variant(), game.levelNumber());
         if (!game.isDemoLevel()) {
             game.pac().setManualSteering(new KeyboardPacSteering());
         }
