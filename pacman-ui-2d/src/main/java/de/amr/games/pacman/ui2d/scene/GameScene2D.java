@@ -86,7 +86,9 @@ public abstract class GameScene2D implements GameScene {
             Font creditFont = sceneFont(8);
             renderer.drawText(g, creditText, creditColor, creditFont, t(2), t(worldSize.y()) - 1);
         }
-        drawLevelCounter(g);
+        Vector2i worldSize = context.worldSize();
+        double x = t(worldSize.x() - 4), y = t(worldSize.y() - 2);
+        renderer.drawLevelCounter(g, context.game().levelCounter(), x, y);
     }
 
     /**
@@ -108,10 +110,5 @@ public abstract class GameScene2D implements GameScene {
     protected void drawDebugInfo() {
         Vector2i worldSize = context.worldSize();
         renderer.drawTileGrid(g, worldSize.x(), worldSize.y());
-    }
-
-    private void drawLevelCounter(GraphicsContext g) {
-        Vector2i worldSize = context.worldSize();
-        renderer.drawLevelCounter(g, context.game().levelCounter(), t(worldSize.x()) - 4, t(worldSize.y()) - 2);
     }
 }

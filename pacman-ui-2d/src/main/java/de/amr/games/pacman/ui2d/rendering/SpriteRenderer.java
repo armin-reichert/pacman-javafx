@@ -68,8 +68,8 @@ public class SpriteRenderer {
      * Draws a section of an source at the given (scaled) position.
      *
      * @param g             graphics context
-     * @param sourceImage   the source source e.g. a spritesheet source
-     * @param sprite        the sprite sheet section to draw
+     * @param sourceImage   the source image
+     * @param sprite        the source image area to draw
      * @param x             scaled x-coordinate
      * @param y             scaled y-coordinate
      */
