@@ -70,8 +70,8 @@ public interface GameWorldRenderer {
     }
 
     default void drawAnimatedCreatureInfo(GraphicsContext g, AnimatedEntity animatedCreature) {
-        Creature guy = (Creature) animatedCreature.entity();
         if (animatedCreature.animations().isPresent() && animatedCreature.animations().get() instanceof SpriteAnimations sa) {
+            Creature guy = (Creature) animatedCreature.entity();
             String animationName = sa.currentAnimationName();
             if (animationName != null) {
                 String text = animationName + " " + sa.currentAnimation().frameIndex();
@@ -79,20 +79,16 @@ public interface GameWorldRenderer {
                 g.setFont(Font.font("Monospaced", scaled(6)));
                 g.fillText(text, scaled(guy.posX() - 4), scaled(guy.posY() - 4));
             }
-        }
-        drawWishDir(g, guy);
-    }
-
-    default void drawWishDir(GraphicsContext g, Creature guy) {
-        if (guy.wishDir() != null) {
-            float r = 2;
-            var pacCenter = guy.center();
-            var indicatorCenter = guy.center().plus(guy.wishDir().vector().toVector2f().scaled(1.5f * TS));
-            var indicatorTopLeft = indicatorCenter.minus(r, r);
-            g.setStroke(Color.WHITE);
-            g.strokeLine(scaled(pacCenter.x()), scaled(pacCenter.y()), scaled(indicatorCenter.x()), scaled(indicatorCenter.y()));
-            g.setFill(guy.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
-            g.fillOval(scaled(indicatorTopLeft.x()), scaled(indicatorTopLeft.y()), scaled(2 * r), scaled(2 * r));
+            if (guy.wishDir() != null) {
+                float r = 2;
+                var pacCenter = guy.center();
+                var indicatorCenter = guy.center().plus(guy.wishDir().vector().toVector2f().scaled(1.5f * TS));
+                var indicatorTopLeft = indicatorCenter.minus(r, r);
+                g.setStroke(Color.WHITE);
+                g.strokeLine(scaled(pacCenter.x()), scaled(pacCenter.y()), scaled(indicatorCenter.x()), scaled(indicatorCenter.y()));
+                g.setFill(guy.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
+                g.fillOval(scaled(indicatorTopLeft.x()), scaled(indicatorTopLeft.y()), scaled(2 * r), scaled(2 * r));
+            }
         }
     }
 
