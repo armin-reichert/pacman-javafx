@@ -73,18 +73,15 @@ public class PacManArcadeGameWorldRenderer extends SpriteRenderer implements Gam
         g.scale(scaling, scaling);
         if (flashMode) {
             if (blinkingOn) {
-                // bright maze is in separate source, not in sprite sheet
                 g.drawImage(flashingMazeImage, t(0), t(3));
             } else {
                 drawSpriteUnscaled(g, spriteSheet.getEmptyMazeSprite(), t(0), t(3));
             }
         } else {
             drawSpriteUnscaled(g, spriteSheet.getFullMazeSprite(), t(0), t(3));
-            g.restore();
-            world.map().food().tiles().filter(world::hasEatenFoodAt)
-                .forEach(tile -> overPaintFood(g, world, tile));
+            overPaintEatenFood(g, world);
             if (!blinkingOn) {
-                world.energizerTiles().forEach(tile -> overPaintFood(g, world, tile));
+                overPaintEnergizers(g, world);
             }
         }
         g.restore();

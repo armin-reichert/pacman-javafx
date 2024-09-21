@@ -27,9 +27,7 @@ import static de.amr.games.pacman.lib.Globals.t;
  */
 public class MsPacManArcadeGameWorldRenderer extends SpriteRenderer implements MsPacManGameWorldRenderer {
 
-    private final MsPacManGameSpriteSheet spriteSheet;
     private final Image flashingMazesImage;
-
     private SpriteSheetArea mapWithFoodSprite;
     private SpriteSheetArea mapWithoutFoodSprite;
     private SpriteSheetArea mapFlashingSprite;
@@ -37,8 +35,7 @@ public class MsPacManArcadeGameWorldRenderer extends SpriteRenderer implements M
     private boolean blinkingOn;
 
     public MsPacManArcadeGameWorldRenderer(AssetStorage assets) {
-        spriteSheet = assets.get("ms_pacman.spritesheet");
-        setSpriteSheet(spriteSheet);
+        setSpriteSheet(assets.get("ms_pacman.spritesheet"));
         flashingMazesImage = assets.get("ms_pacman.flashing_mazes");
     }
 
@@ -69,9 +66,9 @@ public class MsPacManArcadeGameWorldRenderer extends SpriteRenderer implements M
 
     @Override
     public void selectMap(WorldMap worldMap, int mapNumber) {
-        mapWithFoodSprite = new SpriteSheetArea(spriteSheet.sourceImage(),
+        mapWithFoodSprite = new SpriteSheetArea(spriteSheet().sourceImage(),
             new RectangularArea(0, (mapNumber - 1) * 248, 226, 248));
-        mapWithoutFoodSprite = new SpriteSheetArea(spriteSheet.sourceImage(),
+        mapWithoutFoodSprite = new SpriteSheetArea(spriteSheet().sourceImage(),
             new RectangularArea(228, (mapNumber - 1) * 248, 226, 248));
         mapFlashingSprite = new SpriteSheetArea(flashingMazesImage,
             new RectangularArea(0, (mapNumber - 1) * 248, 226, 248));
@@ -88,9 +85,9 @@ public class MsPacManArcadeGameWorldRenderer extends SpriteRenderer implements M
             }
         } else {
             drawSpriteScaled(g, mapWithFoodSprite.area(), x, y);
-            world.map().food().tiles().filter(world::hasEatenFoodAt).forEach(tile -> overPaintFood(g, world, tile));
+            overPaintEatenFood(g, world);
             if (!blinkingOn) {
-                world.energizerTiles().forEach(tile -> overPaintFood(g, world, tile));
+                overPaintEnergizers(g, world);
             }
         }
         context.game().bonus().ifPresent(bonus -> drawMovingBonus(g, (MovingBonus) bonus));
@@ -101,8 +98,8 @@ public class MsPacManArcadeGameWorldRenderer extends SpriteRenderer implements M
         g.save();
         g.translate(0, bonus.elongationY());
         switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawEntitySprite(g, bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawEntitySprite(g, bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
+            case Bonus.STATE_EDIBLE -> drawEntitySprite(g, bonus.entity(), spriteSheet().bonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawEntitySprite(g, bonus.entity(), spriteSheet().bonusValueSprite(bonus.symbol()));
             default -> {}
         }
         g.restore();
@@ -110,7 +107,7 @@ public class MsPacManArcadeGameWorldRenderer extends SpriteRenderer implements M
 
     @Override
     public void drawClapperBoard(GraphicsContext g, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
-        var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
+        var sprite = animation.currentSprite(spriteSheet().clapperboardSprites());
         if (sprite != RectangularArea.EMPTY) {
             drawSpriteCenteredOverBox(g, sprite, x, y);
             g.setFont(font);

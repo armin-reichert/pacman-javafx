@@ -47,13 +47,21 @@ public interface GameWorldRenderer {
 
     void setBlinkingOn(boolean on);
 
-    default void overPaintFood(GraphicsContext g, GameWorld world, Vector2i tile) {
-        double cx = t(tile.x()) + HTS;
-        double cy = t(tile.y()) + HTS;
-        //TODO check if this crap is still needed
-        double r = world.isEnergizerPosition(tile) ? 4.5 : 2;
+    // Method assumes to be called in scaled context.
+    default void overPaintEatenFood(GraphicsContext g, GameWorld world) {
+        world.map().food().tiles().filter(world::hasEatenFoodAt).forEach(tile -> overPaintFoodTile(g, tile));
+    }
+
+    // Method assumes to be called in scaled context.
+    default void overPaintEnergizers(GraphicsContext g, GameWorld world) {
+        world.energizerTiles().forEach(tile -> overPaintFoodTile(g, tile));
+    }
+
+    // Method assumes to be called in scaled context.
+    private void overPaintFoodTile(GraphicsContext g, Vector2i tile) {
+        double extraSpace = 1; // WTF: to avoid noisy borders on blinking energizers
         g.setFill(backgroundColorProperty().get());
-        g.fillRect(scaled(cx - r), scaled(cy - r), scaled(2 * r), scaled(2 * r));
+        g.fillRect(tile.x() * TS - extraSpace, tile.y() * TS - extraSpace, TS + 2 * extraSpace, TS + 2 * extraSpace);
     }
 
     /**
