@@ -173,7 +173,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onGameStateEntry(GameState state) {
         switch (state) {
-            case READY, LEVEL_COMPLETE -> GameSounds.stopAll();
+            case READY, LEVEL_COMPLETE, PACMAN_DYING -> GameSounds.stopAll();
             case GAME_OVER -> {
                 GameSounds.stopAll();
                 GameSounds.playGameOverSound();
@@ -205,7 +205,6 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacDied(GameEvent e) {
-        GameSounds.stopAll();
         GameSounds.playPacDeathSound();
     }
 
