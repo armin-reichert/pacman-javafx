@@ -56,7 +56,7 @@ public interface GameWorldRenderer {
     default void overPaintEatenPellet(GraphicsContext g, GameWorld world) {
         world.map().food().tiles()
             .filter(not(world::isEnergizerPosition))
-            .filter(world::hasEatenFoodAt).forEach(tile -> overPaint(g, tile, 3));
+            .filter(world::hasEatenFoodAt).forEach(tile -> overPaint(g, tile, 4));
     }
 
     /**
@@ -64,7 +64,7 @@ public interface GameWorldRenderer {
      * Assumes to be called in scaled graphics context!
      */
     default void overPaintEnergizers(GraphicsContext g, GameWorld world, Predicate<Vector2i> condition) {
-        world.energizerTiles().filter(condition).forEach(tile -> overPaint(g, tile, 9));
+        world.energizerTiles().filter(condition).forEach(tile -> overPaint(g, tile, 9.5));
     }
 
     /**
