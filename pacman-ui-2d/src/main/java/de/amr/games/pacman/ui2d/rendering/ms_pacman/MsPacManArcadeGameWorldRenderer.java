@@ -84,11 +84,14 @@ public class MsPacManArcadeGameWorldRenderer extends SpriteRenderer implements M
                 drawSubImageScaled(g, mapWithoutFoodSprite.source(), mapWithoutFoodSprite.area(), originX, originY);
             }
         } else {
-            drawSpriteScaled(g, mapWithFoodSprite.area(), originX, originY);
+            g.save();
+            g.scale(scalingPy.get(), scalingPy.get());
+            drawSpriteUnscaled(g, mapWithFoodSprite.area(), originX, originY);
             overPaintEatenFood(g, world);
             if (!blinkingOn) {
                 overPaintEnergizers(g, world);
             }
+            g.restore();
         }
         context.game().bonus().ifPresent(bonus -> drawMovingBonus(g, (MovingBonus) bonus));
     }
