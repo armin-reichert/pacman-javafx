@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.rendering;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
@@ -81,11 +82,12 @@ public interface GameWorldRenderer {
             }
             if (guy.wishDir() != null) {
                 float r = 2;
-                var pacCenter = guy.center();
-                var indicatorCenter = guy.center().plus(guy.wishDir().vector().toVector2f().scaled(1.5f * TS));
-                var indicatorTopLeft = indicatorCenter.minus(r, r);
+                Vector2f dirVector = guy.wishDir().vector().toVector2f();
+                Vector2f guyCenter = guy.center();
+                Vector2f indicatorCenter = guyCenter.plus(dirVector.scaled(1.5f * TS));
+                Vector2f indicatorTopLeft = indicatorCenter.minus(r, r);
                 g.setStroke(Color.WHITE);
-                g.strokeLine(scaled(pacCenter.x()), scaled(pacCenter.y()), scaled(indicatorCenter.x()), scaled(indicatorCenter.y()));
+                g.strokeLine(scaled(guyCenter.x()), scaled(guyCenter.y()), scaled(indicatorCenter.x()), scaled(indicatorCenter.y()));
                 g.setFill(guy.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
                 g.fillOval(scaled(indicatorTopLeft.x()), scaled(indicatorTopLeft.y()), scaled(2 * r), scaled(2 * r));
             }
