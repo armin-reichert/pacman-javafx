@@ -8,7 +8,8 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
-import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.model.actors.AnimatedEntity;
+import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
 import javafx.beans.property.DoubleProperty;
@@ -54,41 +55,33 @@ public interface GameWorldRenderer {
         g.fillRect(scaled(cx - r), scaled(cy - r), scaled(2 * r), scaled(2 * r));
     }
 
-    default void drawAnimatedEntity(GraphicsContext g, AnimatedEntity animatedEntity) {
-        if (!animatedEntity.isVisible()) {
-            return;
-        }
-        animatedEntity.animations().ifPresent(animations -> {
-            if (animations instanceof SpriteAnimations spriteAnimations) {
-                spriteRenderer().drawEntitySprite(g, animatedEntity.entity(), spriteAnimations.currentSprite());
+    /**
+     * Draws animated entity (Pac-Man, ghost, moving bonus) if entity is visible.
+     *
+     * @param g graphics context
+     * @param guy the animated entity
+     */
+    default void drawAnimatedEntity(GraphicsContext g, AnimatedEntity guy) {
+        if (guy.isVisible() && guy.animations().isPresent()) {
+            if (guy.animations().get() instanceof SpriteAnimations spriteAnimations) {
+                spriteRenderer().drawEntitySprite(g, guy.entity(), spriteAnimations.currentSprite());
             }
-        });
+        }
     }
 
-    default void drawPacInfo(GraphicsContext g, Pac pac) {
-        if (pac.animations().isPresent() && pac.animations().get() instanceof SpriteAnimations sa) {
-            if (sa.currentAnimationName() != null) {
-                var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
+    default void drawAnimatedCreatureInfo(GraphicsContext g, AnimatedEntity animatedCreature) {
+        Creature guy = (Creature) animatedCreature.entity();
+        if (animatedCreature.animations().isPresent() && animatedCreature.animations().get() instanceof SpriteAnimations sa) {
+            String animationName = sa.currentAnimationName();
+            if (animationName != null) {
+                String text = animationName + " " + sa.currentAnimation().frameIndex();
                 g.setFill(Color.WHITE);
                 g.setFont(Font.font("Monospaced", scaled(6)));
-                g.fillText(text, scaled(pac.posX() - 4), scaled(pac.posY() - 4));
-            }
-            drawWishDir(g, pac);
-        }
-    }
-
-    default void drawGhostInfo(GraphicsContext g, Ghost ghost) {
-        if (ghost.animations().isPresent() && ghost.animations().get() instanceof SpriteAnimations sa) {
-            if (sa.currentAnimationName() != null) {
-                var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
-                g.setFill(Color.WHITE);
-                g.setFont(Font.font("Monospaced", scaled(6)));
-                g.fillText(text, scaled(ghost.posX() - 4), scaled(ghost.posY() - 4));
+                g.fillText(text, scaled(guy.posX() - 4), scaled(guy.posY() - 4));
             }
         }
-        drawWishDir(g, ghost);
+        drawWishDir(g, guy);
     }
-
 
     default void drawWishDir(GraphicsContext g, Creature guy) {
         if (guy.wishDir() != null) {

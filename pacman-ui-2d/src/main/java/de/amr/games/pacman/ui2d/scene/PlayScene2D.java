@@ -107,8 +107,8 @@ public class PlayScene2D extends GameScene2D {
 
         // Debug mode info
         if (debugInfoPy.get()) {
-            renderer.drawPacInfo(g, context.game().pac());
-            ghostsInZOrder().forEach(ghost -> renderer.drawGhostInfo(g, ghost));
+            renderer.drawAnimatedCreatureInfo(g, context.game().pac());
+            ghostsInZOrder().forEach(ghost -> renderer.drawAnimatedCreatureInfo(g, ghost));
         }
 
         if (!isCreditVisible()) {
