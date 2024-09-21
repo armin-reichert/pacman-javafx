@@ -76,15 +76,15 @@ public class MsPacManArcadeGameWorldRenderer extends SpriteRenderer implements M
 
     @Override
     public void drawWorld(GraphicsContext g, GameContext context, GameWorld world) {
-        double x = 0, y = t(3);
+        double originX = 0, originY = t(3);
         if (flashMode) {
             if (blinkingOn) {
-                drawSubImageScaled(g, mapFlashingSprite.source(), mapFlashingSprite.area(), x - 3, y); // WTF
+                drawSubImageScaled(g, mapFlashingSprite.source(), mapFlashingSprite.area(), originX - 3, originY); // WTF
             } else {
-                drawSubImageScaled(g, mapWithoutFoodSprite.source(), mapWithoutFoodSprite.area(), x, y);
+                drawSubImageScaled(g, mapWithoutFoodSprite.source(), mapWithoutFoodSprite.area(), originX, originY);
             }
         } else {
-            drawSpriteScaled(g, mapWithFoodSprite.area(), x, y);
+            drawSpriteScaled(g, mapWithFoodSprite.area(), originX, originY);
             overPaintEatenFood(g, world);
             if (!blinkingOn) {
                 overPaintEnergizers(g, world);

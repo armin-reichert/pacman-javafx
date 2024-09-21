@@ -68,17 +68,18 @@ public class PacManArcadeGameWorldRenderer extends SpriteRenderer implements Gam
 
     @Override
     public void drawWorld(GraphicsContext g, GameContext context, GameWorld world) {
+        double originX = 0, originY = t(3);
         double scaling = scalingProperty().get();
         g.save();
         g.scale(scaling, scaling);
         if (flashMode) {
             if (blinkingOn) {
-                g.drawImage(flashingMazeImage, t(0), t(3));
+                g.drawImage(flashingMazeImage, originX, originY);
             } else {
-                drawSpriteUnscaled(g, spriteSheet.getEmptyMazeSprite(), t(0), t(3));
+                drawSpriteUnscaled(g, spriteSheet.getEmptyMazeSprite(), originX, originY);
             }
         } else {
-            drawSpriteUnscaled(g, spriteSheet.getFullMazeSprite(), t(0), t(3));
+            drawSpriteUnscaled(g, spriteSheet.getFullMazeSprite(), originX, originY);
             overPaintEatenFood(g, world);
             if (!blinkingOn) {
                 overPaintEnergizers(g, world);
