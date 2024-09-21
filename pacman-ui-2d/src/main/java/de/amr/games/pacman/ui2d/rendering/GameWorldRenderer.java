@@ -81,15 +81,17 @@ public interface GameWorldRenderer {
                 g.fillText(text, scaled(guy.posX() - 4), scaled(guy.posY() - 4));
             }
             if (guy.wishDir() != null) {
-                float r = 2;
-                Vector2f dirVector = guy.wishDir().vector().toVector2f();
-                Vector2f guyCenter = guy.center();
-                Vector2f indicatorCenter = guyCenter.plus(dirVector.scaled(1.5f * TS));
-                Vector2f indicatorTopLeft = indicatorCenter.minus(r, r);
+                float scaling = (float) scalingProperty().get();
+                Vector2f arrowHead = guy.center().plus(guy.wishDir().vector().scaled(12f)).scaled(scaling);
+                Vector2f guyCenter = guy.center().scaled(scaling);
+                float radius = scaling * 2, diameter = 2 * radius;
+
                 g.setStroke(Color.WHITE);
-                g.strokeLine(scaled(guyCenter.x()), scaled(guyCenter.y()), scaled(indicatorCenter.x()), scaled(indicatorCenter.y()));
+                g.setLineWidth(0.5);
+                g.strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
+
                 g.setFill(guy.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
-                g.fillOval(scaled(indicatorTopLeft.x()), scaled(indicatorTopLeft.y()), scaled(2 * r), scaled(2 * r));
+                g.fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
             }
         }
     }
