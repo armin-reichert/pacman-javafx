@@ -409,7 +409,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             case MS_PACMAN        -> assets.get("ms_pacman.spritesheet");
             case PACMAN           -> assets.get("pacman.spritesheet");
             case PACMAN_XXL       -> assets.get("pacman_xxl.spritesheet");
-            case MS_PACMAN_TENGEN -> assets.get("tengen.spritesheet");
+            case MS_PACMAN_TENGEN -> assets.get("ms_pacman.spritesheet"); // assets.get("tengen.spritesheet"); //TODO not yet implemented
         };
     }
 
@@ -471,13 +471,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     public void onLevelCreated(GameEvent event) {
         // Found no better point in time to create and assign the sprite animations to the guys
         GameModel game = event.game;
-        SpriteSheet ss = spriteSheet(game.variant());
         switch (game.variant()) {
             case MS_PACMAN, MS_PACMAN_TENGEN -> {
+                var ss = spriteSheet(GameVariant.MS_PACMAN); //TODO temporary
                 game.pac().setAnimations(new MsPacManGamePacAnimations(game.pac(), ss));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, ss)));
             }
             case PACMAN, PACMAN_XXL -> {
+                var ss = spriteSheet(game.variant());
                 game.pac().setAnimations(new PacManGamePacAnimations(game.pac(), ss));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, ss)));
             }

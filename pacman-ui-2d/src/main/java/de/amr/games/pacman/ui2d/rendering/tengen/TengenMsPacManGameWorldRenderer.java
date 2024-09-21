@@ -9,13 +9,14 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.actors.Bonus;
-import de.amr.games.pacman.model.actors.MovingBonus;
+import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
 import de.amr.games.pacman.ui2d.rendering.SpriteSheetArea;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManArcadeGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
@@ -33,7 +34,8 @@ import static de.amr.games.pacman.lib.Globals.*;
 public class TengenMsPacManGameWorldRenderer extends SpriteRenderer implements MsPacManGameWorldRenderer {
 
     private final AssetStorage assets;
-    private final TengenMsPacManGameSpriteSheet spriteSheet;
+    private final MsPacManArcadeGameWorldRenderer rendererMsPacMan;
+    private final TengenMsPacManGameSpriteSheet spriteSheetTengen;
 
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
 
@@ -43,8 +45,11 @@ public class TengenMsPacManGameWorldRenderer extends SpriteRenderer implements M
 
     public TengenMsPacManGameWorldRenderer(AssetStorage assets) {
         this.assets = assets;
-        spriteSheet = assets.get("tengen.spritesheet");
-        setSpriteSheet(spriteSheet);
+        spriteSheetTengen = assets.get("tengen.spritesheet");
+        setSpriteSheet(spriteSheetTengen);
+
+        rendererMsPacMan = new MsPacManArcadeGameWorldRenderer(assets);
+        rendererMsPacMan.scalingPy.bind(scalingProperty());
 
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
@@ -159,22 +164,29 @@ public class TengenMsPacManGameWorldRenderer extends SpriteRenderer implements M
     }
 
     @Override
+    public void drawAnimatedEntity(GraphicsContext g, AnimatedEntity guy) {
+        if (guy instanceof Pac || guy instanceof Ghost || guy instanceof MovingBonus) {
+            rendererMsPacMan.drawAnimatedEntity(g, guy);
+        } else {
+            MsPacManGameWorldRenderer.super.drawAnimatedEntity(g, guy);
+        }
+    }
+
+    @Override
     public void drawMovingBonus(GraphicsContext g, MovingBonus bonus) {
         g.save();
         g.translate(0, bonus.elongationY());
-        spriteSheet.useMsPacManSprites = false;
         switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawEntitySprite(g, bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawEntitySprite(g, bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
+            case Bonus.STATE_EDIBLE -> drawEntitySprite(g, bonus.entity(), spriteSheetTengen.bonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawEntitySprite(g, bonus.entity(), spriteSheetTengen.bonusValueSprite(bonus.symbol()));
             default -> {}
         }
-        spriteSheet.useMsPacManSprites = true;
         g.restore();
     }
 
     @Override
     public void drawClapperBoard(GraphicsContext g, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
-        var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
+        var sprite = animation.currentSprite(spriteSheetTengen.clapperboardSprites());
         if (sprite != RectangularArea.EMPTY) {
             drawSpriteCenteredOverBox(g, sprite, x, y);
             g.setFont(font);

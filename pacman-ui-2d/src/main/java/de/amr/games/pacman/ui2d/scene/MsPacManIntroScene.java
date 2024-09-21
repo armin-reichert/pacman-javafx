@@ -203,6 +203,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
         SpriteSheet sheet = context.spriteSheet(context.game().variant());
         renderer.spriteRenderer().setSpriteSheet(sheet);
+
         clearBlueMazeBug();
 
         data = new Data();
