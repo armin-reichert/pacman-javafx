@@ -99,10 +99,8 @@ public class TengenMsPacManGameWorldRenderer extends SpriteRenderer implements M
             hideActorSprite(g, terrain.getTileProperty("pos_ghost_4_orange", v2i(15, 17)), 0, 4);
             g.save();
             g.scale(scalingPy.get(), scalingPy.get());
-            overPaintEatenFood(g, world);
-            if (!blinkingOn) {
-                overPaintEnergizers(g, world);
-            }
+            overPaintEatenPellet(g, world);
+            overPaintEnergizers(g, world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
             g.restore();
             context.game().bonus().ifPresent(bonus -> drawMovingBonus(g, (MovingBonus) bonus));
         }

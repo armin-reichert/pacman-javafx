@@ -80,10 +80,8 @@ public class PacManArcadeGameWorldRenderer extends SpriteRenderer implements Gam
             }
         } else {
             drawSpriteUnscaled(g, spriteSheet.getFullMazeSprite(), originX, originY);
-            overPaintEatenFood(g, world);
-            if (!blinkingOn) {
-                overPaintEnergizers(g, world);
-            }
+            overPaintEatenPellet(g, world);
+            overPaintEnergizers(g, world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
         }
         g.restore();
         context.game().bonus().ifPresent(bonus -> drawStaticBonus(g, bonus));

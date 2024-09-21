@@ -21,8 +21,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static java.util.function.Predicate.not;
 
 /**
  * @author Armin Reichert
@@ -47,21 +49,32 @@ public interface GameWorldRenderer {
 
     void setBlinkingOn(boolean on);
 
-    // Method assumes to be called in scaled context.
-    default void overPaintEatenFood(GraphicsContext g, GameWorld world) {
-        world.map().food().tiles().filter(world::hasEatenFoodAt).forEach(tile -> overPaintFoodTile(g, tile));
+    /**
+     * Over-paints all eaten pellet tiles.
+     * Assumes to be called in scaled graphics context!
+     */
+    default void overPaintEatenPellet(GraphicsContext g, GameWorld world) {
+        world.map().food().tiles()
+            .filter(not(world::isEnergizerPosition))
+            .filter(world::hasEatenFoodAt).forEach(tile -> overPaint(g, tile, 3));
     }
 
-    // Method assumes to be called in scaled context.
-    default void overPaintEnergizers(GraphicsContext g, GameWorld world) {
-        world.energizerTiles().forEach(tile -> overPaintFoodTile(g, tile));
+    /**
+     * Over-pains all eaten energizer tiles.
+     * Assumes to be called in scaled graphics context!
+     */
+    default void overPaintEnergizers(GraphicsContext g, GameWorld world, Predicate<Vector2i> condition) {
+        world.energizerTiles().filter(condition).forEach(tile -> overPaint(g, tile, 9));
     }
 
-    // Method assumes to be called in scaled context.
-    private void overPaintFoodTile(GraphicsContext g, Vector2i tile) {
-        double extraSpace = 1; // WTF: to avoid noisy borders on blinking energizers
+    /**
+     * Draws a square of the given size in background color over the tile. Used to hide eaten food and energizers.
+     * Assumes to be called in scaled graphics context!
+     */
+    private void overPaint(GraphicsContext g, Vector2i tile, double squareSize) {
+        double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
         g.setFill(backgroundColorProperty().get());
-        g.fillRect(tile.x() * TS - extraSpace, tile.y() * TS - extraSpace, TS + 2 * extraSpace, TS + 2 * extraSpace);
+        g.fillRect(centerX - 0.5 * squareSize, centerY - 0.5 * squareSize, squareSize, squareSize);
     }
 
     /**
