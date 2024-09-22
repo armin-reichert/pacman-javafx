@@ -11,11 +11,10 @@ import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Bonus;
+import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.RectangularArea;
-import de.amr.games.pacman.ui2d.rendering.SpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.SpriteSheetArea;
+import de.amr.games.pacman.ui2d.rendering.*;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManArcadeGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
@@ -203,6 +202,10 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
 
     @Override
     public void drawAnimatedEntity(GraphicsContext g, AnimatedEntity guy) {
-        rendererMsPacMan.drawAnimatedEntity(g, guy);
+        if (guy.entity() instanceof Ghost || guy.entity() instanceof MovingBonus) {
+            rendererMsPacMan.drawAnimatedEntity(g, guy);
+        } else {
+            MsPacManGameWorldRenderer.super.drawAnimatedEntity(g, guy);
+        }
     }
 }

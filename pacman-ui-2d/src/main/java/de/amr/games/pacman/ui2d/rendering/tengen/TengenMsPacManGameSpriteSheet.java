@@ -17,15 +17,28 @@ public class TengenMsPacManGameSpriteSheet implements SpriteSheet {
 
     private final Image source;
 
-    private final RectangularArea[] bonusSymbolSprites = new RectangularArea[14];
-    private final RectangularArea[] bonusValueSprites = new RectangularArea[14];
-    {
+    private static final RectangularArea[] MS_PAC_MUNCHING_SPRITES = {
+        rect(32, 15, 15, 15),
+        rect(52, 15, 15, 15),
+        rect(68, 15, 15, 15)
+    };
+
+    private static final RectangularArea[] GHOST_NUMBER_SPRITES = {
+        rect(259, 172, 16, 10),
+        rect(279, 172, 16, 10),
+        rect(259, 183, 16, 10),
+        rect(279, 183, 16, 10)
+    };
+
+    private static final RectangularArea[] BONUS_SYMBOL_SPRITES = new RectangularArea[14];
+    private static final RectangularArea[] BONUS_VALUE_SPRITES = new RectangularArea[14];
+    static {
         int[] xs = {  8, 24, 40, 56, 76, 96, 118, 140, 162, 182, 204, 230, 250, 272 };
         int[] ws = { 16, 15, 16, 18, 18, 20,  18,  18,  18,  18,  18,  18,  18,  18 };
         int[] dy = {  3,  4,  3,  0,  0,  0,   0,   0,   0,   0,   0,   0,   0,   0 };
         for (int i = 0; i < 14; ++i) {
-            bonusSymbolSprites[i] = new RectangularArea(xs[i], 66 + dy[i], ws[i], 20 - dy[i]);
-            bonusValueSprites[i]  = new RectangularArea(xs[i], 85, ws[i], 18);
+            BONUS_SYMBOL_SPRITES[i] = new RectangularArea(xs[i], 66 + dy[i], ws[i], 20 - dy[i]);
+            BONUS_VALUE_SPRITES[i]  = new RectangularArea(xs[i], 85, ws[i], 18);
         }
     }
 
@@ -40,7 +53,7 @@ public class TengenMsPacManGameSpriteSheet implements SpriteSheet {
 
     @Override
     public RectangularArea[] pacMunchingSprites(Direction dir) {
-        return NO_SPRITES;
+        return MS_PAC_MUNCHING_SPRITES;
     }
 
     @Override
@@ -65,7 +78,7 @@ public class TengenMsPacManGameSpriteSheet implements SpriteSheet {
 
     @Override
     public RectangularArea[] ghostNumberSprites() {
-        return NO_SPRITES;
+        return GHOST_NUMBER_SPRITES;
     }
 
     @Override
@@ -80,12 +93,12 @@ public class TengenMsPacManGameSpriteSheet implements SpriteSheet {
 
     @Override
     public RectangularArea bonusSymbolSprite(byte symbol) {
-        return bonusSymbolSprites[symbol];
+        return BONUS_SYMBOL_SPRITES[symbol];
     }
 
     @Override
     public RectangularArea bonusValueSprite(byte symbol) {
-        return bonusValueSprites[symbol];
+        return BONUS_VALUE_SPRITES[symbol];
     }
 
     public RectangularArea[] clapperboardSprites() {
