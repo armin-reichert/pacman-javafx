@@ -77,7 +77,7 @@ public interface GameWorldRenderer extends SpriteRenderer {
     default void drawAnimatedEntity(GraphicsContext g, AnimatedEntity guy) {
         if (guy.isVisible() && guy.animations().isPresent()) {
             if (guy.animations().get() instanceof SpriteAnimations spriteAnimations) {
-                drawEntitySprite(g, guy.entity(), spriteAnimations.currentSprite());
+                drawEntitySprite(g, guy.entity(), spriteAnimations.currentSprite(guy));
             }
         }
     }

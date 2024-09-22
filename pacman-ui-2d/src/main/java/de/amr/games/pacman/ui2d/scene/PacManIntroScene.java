@@ -272,8 +272,8 @@ public class PacManIntroScene extends GameScene2D {
         context.setScoreVisible(true);
         spriteSheet = (PacManGameSpriteSheet) context.worldRenderer().spriteSheet();
         data = new Data();
-        data.pacMan.setAnimations(new PacManGamePacAnimations(data.pacMan, spriteSheet));
-        data.ghosts.forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, spriteSheet)));
+        data.pacMan.setAnimations(new PacManGamePacAnimations(spriteSheet));
+        data.ghosts.forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(spriteSheet, ghost.id())));
         data.blinking.reset();
 
         sceneController.restart(SceneState.STARTING);

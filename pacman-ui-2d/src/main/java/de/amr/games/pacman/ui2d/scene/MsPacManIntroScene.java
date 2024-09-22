@@ -205,10 +205,10 @@ public class MsPacManIntroScene extends GameScene2D {
 
         data = new Data();
         SpriteSheet sheet = context.worldRenderer().spriteSheet();
-        data.msPacMan.setAnimations(new MsPacManGamePacAnimations(data.msPacMan, sheet));
+        data.msPacMan.setAnimations(new MsPacManGamePacAnimations(sheet));
         data.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
         for (Ghost ghost : data.ghosts) {
-            ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, sheet));
+            ghost.setAnimations(new MsPacManGameGhostAnimations(sheet, ghost.id()));
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
         }
         sceneController.restart(SceneState.STARTING);

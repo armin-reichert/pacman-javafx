@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.rendering.pacman;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
@@ -21,15 +22,13 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 public class PacManGameGhostAnimations extends SpriteAnimations {
 
     private final Map<String, SpriteAnimation> animationsByName;
-    private final Ghost ghost;
     private final SpriteSheet spriteSheet;
 
-    public PacManGameGhostAnimations(Ghost ghost, SpriteSheet spriteSheet) {
-        this.ghost = checkNotNull(ghost);
+    public PacManGameGhostAnimations(SpriteSheet spriteSheet, byte ghostID) {
         this.spriteSheet = checkNotNull(spriteSheet);
 
         var normal = SpriteAnimation.begin()
-            .sprites(spriteSheet.ghostNormalSprites(ghost.id(), Direction.LEFT))
+            .sprites(spriteSheet.ghostNormalSprites(ghostID, Direction.LEFT))
             .frameTicks(8)
             .loop()
             .end();
@@ -105,7 +104,8 @@ public class PacManGameGhostAnimations extends SpriteAnimations {
     }
 
     @Override
-    public RectangularArea currentSprite() {
+    public RectangularArea currentSprite(AnimatedEntity animatedEntity) {
+        Ghost ghost = (Ghost) animatedEntity.entity();
         var currentAnimation = currentAnimation();
         if (Ghost.ANIM_GHOST_NORMAL.equals(currentAnimationName)) {
             currentAnimation.setSprites(spriteSheet.ghostNormalSprites(ghost.id(), ghost.wishDir()));

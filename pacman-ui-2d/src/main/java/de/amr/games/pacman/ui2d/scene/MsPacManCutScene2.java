@@ -153,8 +153,8 @@ public class MsPacManCutScene2 extends GameScene2D {
 
         pacMan = new Pac();
         msPacMan = new Pac();
-        msPacMan.setAnimations(new MsPacManGamePacAnimations(msPacMan, sheet));
-        pacMan.setAnimations(new MsPacManGamePacAnimations(pacMan, sheet));
+        msPacMan.setAnimations(new MsPacManGamePacAnimations(sheet));
+        pacMan.setAnimations(new MsPacManGamePacAnimations(sheet));
 
         clapAnimation = new ClapperboardAnimation("2", "THE CHASE");
         clapAnimation.start();

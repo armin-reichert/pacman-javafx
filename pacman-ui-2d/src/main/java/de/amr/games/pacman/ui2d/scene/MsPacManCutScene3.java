@@ -163,8 +163,8 @@ public class MsPacManCutScene3 extends GameScene2D {
         stork = new Entity();
         bag = new Entity();
 
-        msPacMan.setAnimations(new MsPacManGamePacAnimations(msPacMan, spriteSheet));
-        pacMan.setAnimations(new MsPacManGamePacAnimations(pacMan, spriteSheet));
+        msPacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
+        pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
         storkAnimation = spriteSheet.createStorkFlyingAnimation();
         storkAnimation.start();
         clapAnimation = new ClapperboardAnimation("3", "JUNIOR");

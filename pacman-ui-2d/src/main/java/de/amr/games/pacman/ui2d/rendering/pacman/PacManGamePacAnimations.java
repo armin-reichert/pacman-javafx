@@ -5,11 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.rendering.pacman;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.rendering.RectangularArea;
+import de.amr.games.pacman.ui2d.rendering.SpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
-import de.amr.games.pacman.ui2d.rendering.SpriteSheet;
 
 import java.util.Map;
 
@@ -21,13 +22,10 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 public class PacManGamePacAnimations extends SpriteAnimations {
 
     private final Map<String, SpriteAnimation> animationsByName;
-    private final Pac pac;
     private final SpriteSheet spriteSheet;
 
-    public PacManGamePacAnimations(Pac pac, SpriteSheet spriteSheet) {
-        checkNotNull(pac);
+    public PacManGamePacAnimations(SpriteSheet spriteSheet) {
         checkNotNull(spriteSheet);
-        this.pac = pac;
         this.spriteSheet = spriteSheet;
 
         var munching = SpriteAnimation.begin()
@@ -58,7 +56,8 @@ public class PacManGamePacAnimations extends SpriteAnimations {
     }
 
     @Override
-    public RectangularArea currentSprite() {
+    public RectangularArea currentSprite(AnimatedEntity animatedEntity) {
+        Pac pac = (Pac) animatedEntity.entity();
         var currentAnimation = currentAnimation();
         if (Pac.ANIM_MUNCHING.equals(currentAnimationName)) {
             currentAnimation.setSprites(spriteSheet.pacMunchingSprites(pac.moveDir()));
