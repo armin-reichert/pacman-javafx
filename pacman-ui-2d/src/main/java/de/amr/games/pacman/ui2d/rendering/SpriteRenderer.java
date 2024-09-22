@@ -67,6 +67,19 @@ public interface SpriteRenderer {
     }
 
     /**
+     * Draws a sprite using the current scene scaling.
+     *
+     * @param g         graphics context
+     * @param spriteSheet the sprite sheet from which the sprite is drawn
+     * @param sprite    sprite sheet region ("sprite")
+     * @param x         UNSCALED x position
+     * @param y         UNSCALED y position
+     */
+    default void drawSpriteScaled(GraphicsContext g, SpriteSheet spriteSheet, RectangularArea sprite, double x, double y) {
+        drawSubImageScaled(g, spriteSheet.sourceImage(), sprite, x, y);
+    }
+
+    /**
      * Draws a section of an source at the given (scaled) position.
      *
      * @param g             graphics context
@@ -106,6 +119,21 @@ public interface SpriteRenderer {
     }
 
     /**
+     * Draws a sprite centered over a one "square tile" large box (bounding box of creature). The position specifies the
+     * left-upper corner of the bounding box. Note that the sprites for Pac-Man and the ghosts are 16 pixels wide but the
+     * bounding box is only 8 pixels (one square tile) wide.
+     *
+     * @param g         graphics context
+     * @param spriteSheet the sprite sheet from which the sprite is drawn
+     * @param sprite    sprite sheet region (can be null)
+     * @param x         x-coordinate of left-upper corner of bounding box
+     * @param y         y-coordinate of left-upper corner of bounding box
+     */
+    default void drawSpriteCenteredOverBox(GraphicsContext g, SpriteSheet spriteSheet, RectangularArea sprite, double x, double y) {
+        drawSpriteScaled(g, spriteSheet, sprite, x + HTS - 0.5 * sprite.width(), y + HTS - 0.5 * sprite.height());
+    }
+
+    /**
      * Draws the sprite over the bounding box of the given entity (if visible).
      *
      * @param g         graphics context
@@ -119,6 +147,20 @@ public interface SpriteRenderer {
     }
 
     /**
+     * Draws the sprite over the bounding box of the given entity (if visible).
+     *
+     * @param g         graphics context
+     * @param entity    an entity like Pac-Man or a ghost
+     * @param spriteSheet the sprite sheet from which the sprite is drwan
+     * @param sprite    sprite sheet region (can be null)
+     */
+    default void drawEntitySprite(GraphicsContext g, Entity entity, SpriteSheet spriteSheet, RectangularArea sprite) {
+        if (entity.isVisible()) {
+            drawSpriteCenteredOverBox(g, spriteSheet, sprite, entity.posX(), entity.posY());
+        }
+    }
+
+    /**
      * Draws animated entity (Pac-Man, ghost, moving bonus) if entity is visible.
      *
      * @param g graphics context
@@ -127,7 +169,9 @@ public interface SpriteRenderer {
     default void drawAnimatedEntity(GraphicsContext g, AnimatedEntity guy) {
         if (guy.isVisible() && guy.animations().isPresent()) {
             if (guy.animations().get() instanceof SpriteAnimations spriteAnimations) {
-                drawEntitySprite(g, guy.entity(), spriteAnimations.currentSprite(guy));
+                SpriteSheet spriteSheet = spriteAnimations.currentAnimation().spriteSheet();
+                RectangularArea sprite = spriteAnimations.currentSprite(guy);
+                drawEntitySprite(g, guy.entity(), spriteSheet, sprite);
             }
         }
     }
