@@ -269,7 +269,7 @@ public class PacManIntroScene extends GameScene2D {
         super.init();
         data = new Data();
 
-        var sheet = (PacManGameSpriteSheet) context.spriteSheet(context.game().variant());
+        var sheet = context.worldRenderer().spriteRenderer().spriteSheet();
         renderer.spriteRenderer().setSpriteSheet(sheet);
         context.setScoreVisible(true);
 

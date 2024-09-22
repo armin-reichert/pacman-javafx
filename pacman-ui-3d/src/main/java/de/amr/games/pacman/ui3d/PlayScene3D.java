@@ -15,8 +15,6 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.RectangularArea;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui2d.util.SpriteSheet;
@@ -239,11 +237,11 @@ public class PlayScene3D implements GameScene {
     }
 
     private void onEnterStateGhostDying() {
-        SpriteSheet ss = context.spriteSheet(context.game().variant());
-        RectangularArea[] numberSprites = ss.ghostNumberSprites();
+        SpriteSheet spriteSheet = context.worldRenderer().spriteRenderer().spriteSheet();
+        RectangularArea[] numberSprites = spriteSheet.ghostNumberSprites();
         context.game().eventLog().killedGhosts.forEach(ghost -> {
             int victimIndex = context.game().victims().indexOf(ghost);
-            var numberImage = ss.subImage(numberSprites[victimIndex]);
+            var numberImage = spriteSheet.subImage(numberSprites[victimIndex]);
             level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
         });
     }

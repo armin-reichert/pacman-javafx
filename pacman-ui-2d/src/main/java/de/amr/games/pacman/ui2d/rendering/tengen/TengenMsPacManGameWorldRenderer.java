@@ -164,15 +164,6 @@ public class TengenMsPacManGameWorldRenderer extends SpriteRenderer implements M
     }
 
     @Override
-    public void drawAnimatedEntity(GraphicsContext g, AnimatedEntity guy) {
-        if (guy instanceof Pac || guy instanceof Ghost || guy instanceof MovingBonus) {
-            rendererMsPacMan.drawAnimatedEntity(g, guy);
-        } else {
-            MsPacManGameWorldRenderer.super.drawAnimatedEntity(g, guy);
-        }
-    }
-
-    @Override
     public void drawMovingBonus(GraphicsContext g, MovingBonus bonus) {
         g.save();
         g.translate(0, bonus.elongationY());

@@ -323,7 +323,7 @@ public class GameLevel3D {
             cube.setTranslateZ(-HTS);
             levelCounter3D.getChildren().add(cube);
 
-            var ss = context.spriteSheet(context.game().variant());
+            var ss = context.worldRenderer().spriteRenderer().spriteSheet();
             var material = new PhongMaterial(Color.WHITE);
             material.setDiffuseMap(ss.subImage(ss.bonusSymbolSprite(symbol)));
             cube.setMaterial(material);
@@ -368,10 +368,10 @@ public class GameLevel3D {
         if (bonus3D != null) {
             worldGroup.getChildren().remove(bonus3D);
         }
-        var gameSpriteSheet = context.spriteSheet(context.game().variant());
+        var spriteSheet = context.worldRenderer().spriteRenderer().spriteSheet();
         bonus3D = new Bonus3D(bonus,
-            gameSpriteSheet.subImage(gameSpriteSheet.bonusSymbolSprite(bonus.symbol())),
-            gameSpriteSheet.subImage(gameSpriteSheet.bonusValueSprite(bonus.symbol())));
+            spriteSheet.subImage(spriteSheet.bonusSymbolSprite(bonus.symbol())),
+            spriteSheet.subImage(spriteSheet.bonusValueSprite(bonus.symbol())));
         bonus3D.showEdible();
         worldGroup.getChildren().add(bonus3D);
     }

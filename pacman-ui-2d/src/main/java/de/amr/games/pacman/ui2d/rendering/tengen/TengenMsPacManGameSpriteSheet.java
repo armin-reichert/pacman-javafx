@@ -8,13 +8,15 @@ import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import de.amr.games.pacman.ui2d.util.SpriteSheet;
 import javafx.scene.image.Image;
 
+import java.util.stream.IntStream;
+
 /**
  * @author Armin Reichert
  */
 public class TengenMsPacManGameSpriteSheet implements SpriteSheet {
 
     private static final RectangularArea   NO_SPRITE  = RectangularArea.EMPTY;
-    private static final RectangularArea[] NO_SPRITES = new RectangularArea[0];
+    private static final RectangularArea[] NO_SPRITES = IntStream.range(0, 10).mapToObj(i -> NO_SPRITE).toArray(RectangularArea[]::new);
 
     private final Image source;
 

@@ -106,6 +106,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected GamePage gamePage;
     protected EditorPage editorPage;
     protected Page currentPage;
+    protected GameWorldRenderer worldRenderer;
 
     public PacManGames2dUI(Dimension2D initialSize) {
         this.initialSize = checkNotNull(initialSize);
@@ -326,15 +327,15 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     private void configureGameScene2D(GameScene2D gameScene2D) {
-        GameWorldRenderer renderer = switch (game().variant()) {
+        worldRenderer = switch (game().variant()) {
             case MS_PACMAN -> new MsPacManArcadeGameWorldRenderer(assets);
             case MS_PACMAN_TENGEN -> new TengenMsPacManGameWorldRenderer(assets);
             case PACMAN -> new PacManArcadeGameWorldRenderer(assets);
             case PACMAN_XXL -> new PacManXXLGameWorldRenderer(assets);
         };
-        renderer.scalingProperty().bind(gameScene2D.scalingPy);
-        renderer.backgroundColorProperty().bind(gameScene2D.backgroundColorPy);
-        gameScene2D.setRenderer(renderer);
+        worldRenderer.scalingProperty().bind(gameScene2D.scalingPy);
+        worldRenderer.backgroundColorProperty().bind(gameScene2D.backgroundColorPy);
+        gameScene2D.setRenderer(worldRenderer);
         gameScene2D.backgroundColorPy.bind(PY_CANVAS_COLOR);
     }
 
@@ -404,13 +405,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public SpriteSheet spriteSheet(GameVariant variant) {
-        return switch(variant) {
-            case MS_PACMAN        -> assets.get("ms_pacman.spritesheet");
-            case PACMAN           -> assets.get("pacman.spritesheet");
-            case PACMAN_XXL       -> assets.get("pacman_xxl.spritesheet");
-            case MS_PACMAN_TENGEN -> assets.get("ms_pacman.spritesheet"); // assets.get("tengen.spritesheet"); //TODO not yet implemented
-        };
+    public GameWorldRenderer worldRenderer() {
+        return worldRenderer;
     }
 
     @Override
@@ -472,13 +468,23 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         // Found no better point in time to create and assign the sprite animations to the guys
         GameModel game = event.game;
         switch (game.variant()) {
-            case MS_PACMAN, MS_PACMAN_TENGEN -> {
-                var ss = spriteSheet(GameVariant.MS_PACMAN); //TODO temporary
+            case MS_PACMAN -> {
+                SpriteSheet ss = assets.get("ms_pacman.spritesheet");
                 game.pac().setAnimations(new MsPacManGamePacAnimations(game.pac(), ss));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, ss)));
             }
-            case PACMAN, PACMAN_XXL -> {
-                var ss = spriteSheet(game.variant());
+            case MS_PACMAN_TENGEN -> {
+                SpriteSheet ss = assets.get("ms_pacman.spritesheet"); //TODO use Tengen sprite sheet
+                game.pac().setAnimations(new MsPacManGamePacAnimations(game.pac(), ss));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, ss)));
+            }
+            case PACMAN -> {
+                SpriteSheet ss = assets.get("pacman.spritesheet");
+                game.pac().setAnimations(new PacManGamePacAnimations(game.pac(), ss));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, ss)));
+            }
+            case PACMAN_XXL -> {
+                SpriteSheet ss = assets.get("pacman_xxl.spritesheet");
                 game.pac().setAnimations(new PacManGamePacAnimations(game.pac(), ss));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, ss)));
             }

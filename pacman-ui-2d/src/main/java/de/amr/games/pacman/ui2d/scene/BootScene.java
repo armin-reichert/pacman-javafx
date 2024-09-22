@@ -80,7 +80,7 @@ public class BootScene extends GameScene2D {
     }
 
     private RectangularArea randomSpriteSheetTile() {
-        var spriteSheet = context.spriteSheet(context.game().variant());
+        var spriteSheet = context.worldRenderer().spriteRenderer().spriteSheet();
         var source = spriteSheet.sourceImage();
         var raster = spriteSheet.tileSize();
         int x = (int)(RND.nextDouble() * ((int)source.getWidth() - raster));

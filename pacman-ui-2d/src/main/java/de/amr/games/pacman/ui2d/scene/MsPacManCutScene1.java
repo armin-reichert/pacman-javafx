@@ -17,7 +17,6 @@ import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteSheet;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -220,7 +219,7 @@ public class MsPacManCutScene1 extends GameScene2D {
     private Entity heart;
 
     private ClapperboardAnimation clapAnimation;
-    private SpriteSheet sheet;
+    private SpriteSheet spriteSheet;
 
     private void startMusic() {
         int number  = context.gameState() == GameState.INTERMISSION_TEST
@@ -238,16 +237,16 @@ public class MsPacManCutScene1 extends GameScene2D {
     public void init() {
         super.init();
         context.setScoreVisible(true);
-        sheet = context.spriteSheet(context.game().variant());
+        spriteSheet = context.worldRenderer().spriteRenderer().spriteSheet();
         pacMan = new Pac();
         msPac = new Pac();
         inky = Ghost.cyan();
         pinky = Ghost.pink();
         heart = new Entity();
-        msPac.setAnimations(new MsPacManGamePacAnimations(msPac, sheet));
-        pacMan.setAnimations(new MsPacManGamePacAnimations(pacMan, sheet));
-        inky.setAnimations(new MsPacManGameGhostAnimations(inky, sheet));
-        pinky.setAnimations(new MsPacManGameGhostAnimations(pinky, sheet));
+        msPac.setAnimations(new MsPacManGamePacAnimations(msPac, spriteSheet));
+        pacMan.setAnimations(new MsPacManGamePacAnimations(pacMan, spriteSheet));
+        inky.setAnimations(new MsPacManGameGhostAnimations(inky, spriteSheet));
+        pinky.setAnimations(new MsPacManGameGhostAnimations(pinky, spriteSheet));
         clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
         clapAnimation.start();
 
@@ -271,6 +270,6 @@ public class MsPacManCutScene1 extends GameScene2D {
         renderer.drawAnimatedEntity(g, pacMan);
         renderer.drawAnimatedEntity(g, inky);
         renderer.drawAnimatedEntity(g, pinky);
-        renderer.spriteRenderer().drawEntitySprite(g, heart, sheet.heartSprite());
+        renderer.spriteRenderer().drawEntitySprite(g, heart, spriteSheet.heartSprite());
     }
 }
