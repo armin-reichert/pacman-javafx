@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.rendering;
 
 import de.amr.games.pacman.model.actors.Entity;
-import de.amr.games.pacman.ui2d.util.SpriteSheet;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;

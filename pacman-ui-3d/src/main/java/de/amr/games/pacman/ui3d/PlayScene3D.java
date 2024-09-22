@@ -17,7 +17,7 @@ import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
-import de.amr.games.pacman.ui2d.util.SpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.SpriteSheet;
 import de.amr.games.pacman.ui3d.level.*;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;

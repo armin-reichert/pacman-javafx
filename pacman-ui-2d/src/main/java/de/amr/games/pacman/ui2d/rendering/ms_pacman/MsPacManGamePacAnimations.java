@@ -9,7 +9,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
-import de.amr.games.pacman.ui2d.util.SpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.SpriteSheet;
 
 import java.util.Map;
 
@@ -31,12 +31,12 @@ public class MsPacManGamePacAnimations extends SpriteAnimations {
         this.spriteSheet = spriteSheet;
 
         var munching = SpriteAnimation.begin()
-            .sprites(spriteSheet.msPacManMunchingSprites(Direction.LEFT))
+            .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT))
             .loop()
             .end();
 
         var dying = SpriteAnimation.begin()
-            .sprites(spriteSheet.msPacManDyingSprites())
+            .sprites(spriteSheet.pacDyingSprites())
             .frameTicks(8)
             .end();
 
@@ -62,7 +62,7 @@ public class MsPacManGamePacAnimations extends SpriteAnimations {
     public RectangularArea currentSprite() {
         var currentAnimation = currentAnimation();
         if (Pac.ANIM_MUNCHING.equals(currentAnimationName)) {
-            currentAnimation.setSprites(spriteSheet.msPacManMunchingSprites(pac.moveDir()));
+            currentAnimation.setSprites(spriteSheet.pacMunchingSprites(pac.moveDir()));
         }
         if (Pac.ANIM_HUSBAND_MUNCHING.equals(currentAnimationName)) {
             currentAnimation.setSprites(spriteSheet.pacManMunchingSprites(pac.moveDir()));

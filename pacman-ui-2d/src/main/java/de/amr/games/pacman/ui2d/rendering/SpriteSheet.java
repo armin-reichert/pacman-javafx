@@ -2,10 +2,10 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.util;
+package de.amr.games.pacman.ui2d.rendering;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.ui2d.rendering.RectangularArea;
+import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 
@@ -38,8 +38,6 @@ public interface SpriteSheet {
     RectangularArea bonusValueSprite(byte symbol);
 
     // Ms. Pac-Man variants
-    default RectangularArea[] msPacManDyingSprites() { return NO_SPRITES; }
-    default RectangularArea[] msPacManMunchingSprites(Direction dir) { return NO_SPRITES; }
     default RectangularArea[] pacManMunchingSprites(Direction dir) { return NO_SPRITES; }
     default RectangularArea[] clapperboardSprites() { return NO_SPRITES; }
     default RectangularArea heartSprite() { return NO_SPRITE; }

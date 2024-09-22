@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui2d.rendering.ms_pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
-import de.amr.games.pacman.ui2d.util.SpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.SpriteSheet;
 import javafx.scene.image.Image;
 
 import java.util.List;
@@ -135,16 +135,6 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
     }
 
     @Override
-    public RectangularArea[] msPacManMunchingSprites(Direction dir) {
-        return munchingSprites[ORDER.indexOf(dir)];
-    }
-
-    @Override
-    public RectangularArea[] msPacManDyingSprites() {
-        return msPacManDyingSprites;
-    }
-
-    @Override
     public RectangularArea[] ghostNormalSprites(byte id, Direction dir) {
         return ghostsNormalSprites[id][ORDER.indexOf(dir)];
     }
@@ -171,12 +161,12 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
 
     @Override
     public RectangularArea[] pacMunchingSprites(Direction dir) {
-        return new RectangularArea[0]; //TODO check this
+        return munchingSprites[ORDER.indexOf(dir)];
     }
 
     @Override
     public RectangularArea[] pacDyingSprites() {
-        return new RectangularArea[0];//TODO check this
+        return msPacManDyingSprites;
     }
 
     @Override
