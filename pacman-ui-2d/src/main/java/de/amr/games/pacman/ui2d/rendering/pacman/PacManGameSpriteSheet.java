@@ -49,7 +49,7 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         rect(504, 133, 16, 7)); // 1600
 
     private static final RectangularArea[] BONUS_SYMBOL_SPRITES = IntStream.range(0, 8)
-        .mapToObj(i -> rect(OFF_X + RASTER_SIZE * (2 + i), RASTER_SIZE * 3, RASTER_SIZE, RASTER_SIZE))
+        .mapToObj(i -> rect(OFF_X + RASTER_SIZE * (2 + i), 49,  14, 14))
         .toArray(RectangularArea[]::new);
 
     private static final RectangularArea[] BONUS_VALUE_SPRITES = {
