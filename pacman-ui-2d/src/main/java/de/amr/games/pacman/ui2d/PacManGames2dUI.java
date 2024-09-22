@@ -334,9 +334,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             case PACMAN -> new PacManArcadeGameWorldRenderer(assets);
             case PACMAN_XXL -> new PacManXXLGameWorldRenderer(assets);
         };
-        worldRenderer.scalingProperty().bind(gameScene2D.scalingPy);
-        worldRenderer.backgroundColorProperty().bind(gameScene2D.backgroundColorPy);
-        gameScene2D.setRenderer(worldRenderer);
         gameScene2D.backgroundColorPy.bind(PY_CANVAS_COLOR);
     }
 

@@ -35,6 +35,8 @@ public class BootScene extends GameScene2D {
 
     @Override
     public void draw() {
+        context.worldRenderer().scalingProperty().set(scalingPy.get());
+        context.worldRenderer().backgroundColorProperty().set(backgroundColorPy.get());
         var timer = context.gameState().timer();
         if (timer.currentTick() == 1) {
             clearCanvas();
@@ -73,7 +75,7 @@ public class BootScene extends GameScene2D {
                 var splitX = GameModel.ARCADE_MAP_TILES_X / 8 + RND.nextInt(GameModel.ARCADE_MAP_TILES_X / 4);
                 for (int col = 0; col < GameModel.ARCADE_MAP_TILES_X / 2; ++col) {
                     var region = col < splitX ? region1 : region2;
-                    renderer.drawSpriteScaled(g, region, region.width() * col, region.height() * row);
+                    context.worldRenderer().drawSpriteScaled(g, region, region.width() * col, region.height() * row);
                 }
             }
         }

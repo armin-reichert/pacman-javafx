@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import javafx.beans.property.*;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -30,7 +29,6 @@ public abstract class GameScene2D implements GameScene {
 
     protected GameContext context;
     protected GraphicsContext g;
-    protected GameWorldRenderer renderer;
 
     public boolean isCreditVisible() {
         return context.game().hasCredit();
@@ -44,10 +42,6 @@ public abstract class GameScene2D implements GameScene {
         checkNotNull(canvas);
         g = canvas.getGraphicsContext2D();
         clearCanvas();
-    }
-
-    public void setRenderer(GameWorldRenderer renderer) {
-        this.renderer = checkNotNull(renderer);
     }
 
     protected double scaled(double value) {
@@ -68,12 +62,15 @@ public abstract class GameScene2D implements GameScene {
             Logger.error("Cannot render game scene {}, no canvas has been assigned", this);
             return;
         }
+        // set this on every draw call because picture-in-picture view has different scaling
+        context.worldRenderer().scalingProperty().set(scalingPy.get());
+        context.worldRenderer().backgroundColorProperty().set(backgroundColorPy.get());
         clearCanvas();
         if (context.isScoreVisible()) {
             Color scoreColor = context.assets().color("palette.pale");
             Font scoreFont = sceneFont(TS);
-            renderer.drawScore(g, context.game().score(), "SCORE", t(1), t(1), scoreFont, scoreColor);
-            renderer.drawScore(g, context.game().highScore(), "HIGH SCORE", t(14), t(1), scoreFont, scoreColor);
+            context.worldRenderer().drawScore(g, context.game().score(), "SCORE", t(1), t(1), scoreFont, scoreColor);
+            context.worldRenderer().drawScore(g, context.game().highScore(), "HIGH SCORE", t(14), t(1), scoreFont, scoreColor);
         }
         drawSceneContent();
         if (debugInfoPy.get()) {
@@ -84,11 +81,11 @@ public abstract class GameScene2D implements GameScene {
             String creditText = "CREDIT %2d".formatted(context.game().credit());
             Color creditColor = context.assets().color("palette.pale");
             Font creditFont = sceneFont(8);
-            renderer.drawText(g, creditText, creditColor, creditFont, t(2), t(worldSize.y()) - 1);
+            context.worldRenderer().drawText(g, creditText, creditColor, creditFont, t(2), t(worldSize.y()) - 1);
         }
         Vector2i worldSize = context.worldSize();
         double x = t(worldSize.x() - 4), y = t(worldSize.y() - 2);
-        renderer.drawLevelCounter(g, context.game().levelCounter(), x, y);
+        context.worldRenderer().drawLevelCounter(g, context.game().levelCounter(), x, y);
     }
 
     /**
@@ -96,7 +93,7 @@ public abstract class GameScene2D implements GameScene {
      */
     protected void drawSceneContent() {
         Font font = Font.font("Monospaced", 20);
-        renderer.drawText(g, "Implement method drawSceneContent()!", Color.WHITE, font, 10, 100);
+        context.worldRenderer().drawText(g, "Implement method drawSceneContent()!", Color.WHITE, font, 10, 100);
     }
 
     public void clearCanvas() {
@@ -109,6 +106,6 @@ public abstract class GameScene2D implements GameScene {
      */
     protected void drawDebugInfo() {
         Vector2i worldSize = context.worldSize();
-        renderer.drawTileGrid(g, worldSize.x(), worldSize.y());
+        context.worldRenderer().drawTileGrid(g, worldSize.x(), worldSize.y());
     }
 }

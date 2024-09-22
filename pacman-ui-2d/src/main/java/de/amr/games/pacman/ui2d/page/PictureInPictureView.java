@@ -11,11 +11,6 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManArcadeGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManArcadeGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.pacman_xxl.PacManXXLGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.BooleanProperty;
@@ -63,7 +58,6 @@ public class PictureInPictureView implements GameEventListener {
     private final GameContext context;
     private final HBox layout = new HBox();
     private final PlayScene2D gameScene;
-    private GameWorldRenderer renderer;
 
     public PictureInPictureView(GameContext context) {
         this.context = context;
@@ -97,29 +91,12 @@ public class PictureInPictureView implements GameEventListener {
         gameScene.backgroundColorPy.bind(PY_CANVAS_COLOR);
     }
 
-    public void draw() {
-        if (visiblePy.get()) {
-            gameScene.draw();
-        }
-    }
-
     @Override
     public void onLevelCreated(GameEvent e) {
         if (context.game().world() != null) {
             TileMap terrain = context.game().world().map().terrain();
             aspectPy.set((double) terrain.numCols() / terrain.numRows());
         }
-        renderer = switch (context.game().variant()) {
-            case MS_PACMAN -> new MsPacManArcadeGameWorldRenderer(context.assets());
-            case MS_PACMAN_TENGEN -> new TengenMsPacManGameWorldRenderer(context.assets());
-            case PACMAN -> new PacManArcadeGameWorldRenderer(context.assets());
-            case PACMAN_XXL -> new PacManXXLGameWorldRenderer(context.assets());
-        };
-        renderer.scalingProperty().bind(gameScene.scalingPy);
-        renderer.backgroundColorProperty().bind(gameScene.backgroundColorPy);
-        int mapNumber = context.game().mapNumberByLevelNumber(context.game().levelNumber());
-        renderer.selectMap(context.game().world().map(), mapNumber);
-        gameScene.setRenderer(renderer);
     }
 
     private void rescale() {
@@ -130,5 +107,11 @@ public class PictureInPictureView implements GameEventListener {
         Logger.debug("PiP scaling: {}", scaling);
         gameScene.scalingPy.set(scaling);
         gameScene.init();
+    }
+
+    public void draw() {
+        if (visiblePy.get()) {
+            gameScene.draw();
+        }
     }
 }

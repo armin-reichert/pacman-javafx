@@ -43,9 +43,9 @@ public class PacManCutScene2 extends GameScene2D {
         super.init();
         context.setScoreVisible(true);
         pac = new Pac();
-        pac.setAnimations(new PacManGamePacAnimations(renderer.spriteSheet()));
+        pac.setAnimations(new PacManGamePacAnimations(context.worldRenderer().spriteSheet()));
         blinky = Ghost.red();
-        var blinkyAnimations = new PacManGameGhostAnimations(renderer.spriteSheet(), blinky.id());
+        var blinkyAnimations = new PacManGameGhostAnimations(context.worldRenderer().spriteSheet(), blinky.id());
         blinkyNormal = blinkyAnimations.animation(Ghost.ANIM_GHOST_NORMAL);
         blinkyStretching = blinkyAnimations.animation(Ghost.ANIM_BLINKY_STRETCHED);
         blinkyDamaged = blinkyAnimations.animation(Ghost.ANIM_BLINKY_DAMAGED);
@@ -111,16 +111,16 @@ public class PacManCutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        renderer.drawSpriteScaled(g, blinkyStretching.currentSprite(), t(14), t(19) + 3);
-        renderer.drawAnimatedEntity(g, blinky);
-        renderer.drawAnimatedEntity(g, pac);
+        context.worldRenderer().drawSpriteScaled(g, blinkyStretching.currentSprite(), t(14), t(19) + 3);
+        context.worldRenderer().drawAnimatedEntity(g, blinky);
+        context.worldRenderer().drawAnimatedEntity(g, pac);
     }
 
     @Override
     protected void drawDebugInfo() {
         Vector2i worldSize = context.worldSize();
-        renderer.drawTileGrid(g, worldSize.x(), worldSize.y());
+        context.worldRenderer().drawTileGrid(g, worldSize.x(), worldSize.y());
         var text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        renderer.drawText(g, text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
+        context.worldRenderer().drawText(g, text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
     }
 }

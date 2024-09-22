@@ -96,19 +96,19 @@ public class PlayScene2D extends GameScene2D {
         }
 
         boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
-        renderer.setFlashMode(flashMode);
-        renderer.setBlinkingOn(context.game().blinking().isOn());
-        renderer.drawWorld(g, context, context.game().world());
+        context.worldRenderer().setFlashMode(flashMode);
+        context.worldRenderer().setBlinkingOn(context.game().blinking().isOn());
+        context.worldRenderer().drawWorld(g, context, context.game().world());
 
         drawLevelMessage(); // READY, GAME_OVER etc.
 
-        renderer.drawAnimatedEntity(g, context.game().pac());
-        ghostsInZOrder().forEach(ghost -> renderer.drawAnimatedEntity(g, ghost));
+        context.worldRenderer().drawAnimatedEntity(g, context.game().pac());
+        ghostsInZOrder().forEach(ghost -> context.worldRenderer().drawAnimatedEntity(g, ghost));
 
         // Debug mode info
         if (debugInfoPy.get()) {
-            renderer.drawAnimatedCreatureInfo(g, context.game().pac());
-            ghostsInZOrder().forEach(ghost -> renderer.drawAnimatedCreatureInfo(g, ghost));
+            context.worldRenderer().drawAnimatedCreatureInfo(g, context.game().pac());
+            ghostsInZOrder().forEach(ghost -> context.worldRenderer().drawAnimatedCreatureInfo(g, ghost));
         }
 
         if (!isCreditVisible()) {
@@ -117,7 +117,7 @@ public class PlayScene2D extends GameScene2D {
             if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
                 numLivesDisplayed += 1;
             }
-            renderer.drawLivesCounter(g, numLivesDisplayed, context.game().world().map().terrain().numRows() - 2);
+            context.worldRenderer().drawLivesCounter(g, numLivesDisplayed, context.game().world().map().terrain().numRows() - 2);
         }
     }
 
@@ -133,11 +133,11 @@ public class PlayScene2D extends GameScene2D {
         double msgY = t(houseOrigin.y() + houseSize.y() + 1);
         // "GAME OVER" is drawn in demo mode and when game is over:
         if (context.game().isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
-            renderer.drawText(g, "GAME  OVER", Color.RED, sceneFont(8), t(centerTileX - 5), msgY);
+            context.worldRenderer().drawText(g, "GAME  OVER", Color.RED, sceneFont(8), t(centerTileX - 5), msgY);
         } else {
             switch (context.gameState()) {
-                case READY      -> renderer.drawText(g, "READY!", Color.YELLOW, sceneFont(8), t(centerTileX - 3), msgY);
-                case LEVEL_TEST -> renderer.drawText(g, "TEST    L" + context.game().levelNumber(),
+                case READY      -> context.worldRenderer().drawText(g, "READY!", Color.YELLOW, sceneFont(8), t(centerTileX - 3), msgY);
+                case LEVEL_TEST -> context.worldRenderer().drawText(g, "TEST    L" + context.game().levelNumber(),
                     Color.YELLOW, sceneFont(8), t(8.5), msgY);
             }
         }
@@ -146,7 +146,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     protected void drawDebugInfo() {
         Vector2i worldSize = context.worldSize();
-        renderer.drawTileGrid(g, worldSize.x(), worldSize.y());
+        context.worldRenderer().drawTileGrid(g, worldSize.x(), worldSize.y());
         if (context.game().variant() == GameVariant.PACMAN && context.game().world() != null) {
             context.game().ghosts().forEach(ghost -> {
                 // Are currently the same for each ghost, but who knows what comes...
@@ -166,7 +166,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         int mapNumber = context.game().mapNumberByLevelNumber(context.game().levelNumber());
-        renderer.selectMap(context.game().world().map(), mapNumber);
+        context.worldRenderer().selectMap(context.game().world().map(), mapNumber);
         Logger.info("{} entered from {}", this, oldScene);
     }
 
@@ -200,7 +200,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onLevelCreated(GameEvent e) {
         int mapNumber = e.game.mapNumberByLevelNumber(e.game.levelNumber());
-        renderer.selectMap(e.game.world().map(), mapNumber);
+        context.worldRenderer().selectMap(e.game.world().map(), mapNumber);
     }
 
     @Override
