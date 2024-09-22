@@ -19,36 +19,14 @@ import static de.amr.games.pacman.ui2d.rendering.RectangularArea.rect;
  */
 public class PacManGameSpriteSheet implements SpriteSheet {
 
+    private static final byte RASTER_SIZE = 16;
+
     private static final List<Direction> ORDER = List.of(Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
     private static final short OFF_X = 456;
 
     private final Image source;
-
-    public PacManGameSpriteSheet(Image source) {
-        this.source = source;
-    }
-
-    @Override
-    public Image sourceImage() {
-        return source;
-    }
-
-    @Override
-    public int tileSize() {
-        return 16;
-    }
-
     private final RectangularArea fullMazeSprite = rect(0, 0, 224, 248);
-
-    public RectangularArea getFullMazeSprite() {
-        return fullMazeSprite;
-    }
-
     private final RectangularArea emptyMazeSprite = rect(228, 0, 224, 248);
-
-    public RectangularArea getEmptyMazeSprite() {
-        return emptyMazeSprite;
-    }
 
     private final RectangularArea[] ghostNumberSprites = rectArray(
         rect(456, 133, 15, 7),  // 200
@@ -56,19 +34,9 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         rect(488, 133, 15, 7),  // 800
         rect(504, 133, 16, 7)); // 1600
 
-    @Override
-    public RectangularArea[] ghostNumberSprites() {
-        return ghostNumberSprites;
-    }
-
     private final RectangularArea[] bonusSymbolSprites = IntStream.range(0, 8)
         .mapToObj(symbolPosition -> rect(OFF_X + tiles(2 + symbolPosition), tiles(3) /*+ 0.5*/, tiles(1), tiles(1) /*- 0.5*/))
         .toArray(RectangularArea[]::new);
-
-    @Override
-    public RectangularArea bonusSymbolSprite(byte symbol) {
-        return bonusSymbolSprites[symbol];
-    }
 
     private final RectangularArea[] bonusValueSprites = new RectangularArea[8];
     {
@@ -87,11 +55,6 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         }
     }
 
-    @Override
-    public RectangularArea bonusValueSprite(byte symbol) {
-        return bonusValueSprites[symbol];
-    }
-
     private final RectangularArea[] ghostFacingRightSprites = new RectangularArea[4];
     {
         for (byte id = 0; id < 4; ++id) {
@@ -101,21 +64,12 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         }
     }
 
-    public RectangularArea ghostFacingRight(byte ghostID) {
-        return ghostFacingRightSprites[ghostID];
-    }
-
     private final RectangularArea livesCounterSprite = rect(OFF_X + 129, 15, 16, 16);
-
-    @Override
-    public RectangularArea livesCounterSprite() {
-        return livesCounterSprite;
-    }
 
     private final RectangularArea[][] pacMunchingSprites = new RectangularArea[4][];
     {
-        short margin = 1;
-        int size = 16 - 2 * margin;
+        byte margin = 1;
+        int size = RASTER_SIZE - 2 * margin;
         for (byte d = 0; d < 4; ++d) {
             var wide   = rect(OFF_X      + margin, d * 16 + margin, size, size);
             var middle = rect(OFF_X + 16 + margin, d * 16 + margin, size, size);
@@ -124,21 +78,12 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         }
     }
 
-    public RectangularArea[] pacMunchingSprites(Direction dir) {
-        return pacMunchingSprites[ORDER.indexOf(dir)];
-    }
-
     private final RectangularArea[] pacDyingSprites = new RectangularArea[11];
     {
         for (int i = 0; i < pacDyingSprites.length; ++i) {
             boolean last = i == pacDyingSprites.length - 1;
             pacDyingSprites[i] = rect(504 + i * 16, 0, 15, last?16:15);
         }
-    }
-
-    @Override
-    public RectangularArea[] pacDyingSprites() {
-        return pacDyingSprites;
     }
 
     private final RectangularArea[][][] ghostNormalSprites = new RectangularArea[4][4][];
@@ -150,26 +95,11 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         }
     }
 
-    @Override
-    public RectangularArea[] ghostNormalSprites(byte id, Direction dir) {
-        return ghostNormalSprites[id][ORDER.indexOf(dir)];
-    }
-
     private final RectangularArea[] ghostFrightenedSprites = rectArray(
         rect(OFF_X + tiles(8), tiles(4), tiles(1), tiles(1)),
         rect(OFF_X + tiles(9), tiles(4), tiles(1), tiles(1)));
 
-    @Override
-    public RectangularArea[] ghostFrightenedSprites() {
-        return ghostFrightenedSprites;
-    }
-
     private final RectangularArea[] ghostFlashingSprites = tilesRightOf(OFF_X, 8, 4, 4);
-
-    @Override
-    public RectangularArea[] ghostFlashingSprites() {
-        return ghostFlashingSprites;
-    }
 
     private final RectangularArea[][] ghostEyesSprites = new RectangularArea[4][];
     {
@@ -178,39 +108,104 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         }
     }
 
-    @Override
-    public RectangularArea[] pacManMunchingSprites(Direction dir) {
-        return new RectangularArea[0];
+    private final RectangularArea[] bigPacManSprites = rectArray(
+        rect(OFF_X + 32, 16, 32, 32),
+        rect(OFF_X + 64, 16, 32, 32),
+        rect(OFF_X + 96, 16, 32, 32));
+
+    private final RectangularArea[] blinkyStretchedSprites = new RectangularArea[5];
+    {
+        for (int i = 0; i < 5; ++i) {
+            blinkyStretchedSprites[i] = rect(OFF_X + tiles(8 + i), tiles(6), RASTER_SIZE, RASTER_SIZE);
+        }
+    }
+
+    private final RectangularArea[] blinkyDamagedSprites = new RectangularArea[2];
+    {
+        byte margin = 1;
+        int size = RASTER_SIZE - 2 * margin;
+        blinkyDamagedSprites[0] = rect(OFF_X + tiles(8) + margin, tiles(7) + margin, size, size);
+        blinkyDamagedSprites[1] = rect(OFF_X + tiles(9) + margin, tiles(7) + margin, size, size);
+    }
+
+    private final RectangularArea[] blinkyPatchedSprites = new RectangularArea[2];
+    {
+        blinkyPatchedSprites[0] = rect(OFF_X + tiles(10), tiles(7), RASTER_SIZE, RASTER_SIZE);
+        blinkyPatchedSprites[1] = rect(OFF_X + tiles(11), tiles(7), RASTER_SIZE, RASTER_SIZE);
+    }
+
+    private final RectangularArea[] blinkyNakedSprites = new RectangularArea[2];
+    {
+        blinkyNakedSprites[0] = rect(OFF_X + tiles(8), tiles(8), 2 * RASTER_SIZE, RASTER_SIZE);
+        blinkyNakedSprites[1] = rect(OFF_X + tiles(10), tiles(8), 2 * RASTER_SIZE, RASTER_SIZE);
+    }
+
+    public PacManGameSpriteSheet(Image source) {
+        this.source = source;
+    }
+
+    public RectangularArea getFullMazeSprite() {
+        return fullMazeSprite;
+    }
+    public RectangularArea getEmptyMazeSprite() {
+        return emptyMazeSprite;
+    }
+    public RectangularArea ghostFacingRight(byte ghostID) {
+        return ghostFacingRightSprites[ghostID];
     }
 
     @Override
-    public RectangularArea[] msPacManDyingSprites() {
-        return new RectangularArea[0];
+    public Image sourceImage() {
+        return source;
     }
 
     @Override
-    public RectangularArea[] msPacManMunchingSprites(Direction dir) {
-        return new RectangularArea[0];
+    public int tileSize() {
+        return RASTER_SIZE;
     }
 
     @Override
-    public RectangularArea[] clapperboardSprites() {
-        return new RectangularArea[0];
+    public RectangularArea[] ghostNumberSprites() {
+        return ghostNumberSprites;
     }
 
     @Override
-    public RectangularArea heartSprite() {
-        return null;
+    public RectangularArea bonusSymbolSprite(byte symbol) {
+        return bonusSymbolSprites[symbol];
     }
 
     @Override
-    public RectangularArea blueBagSprite() {
-        return null;
+    public RectangularArea bonusValueSprite(byte symbol) {
+        return bonusValueSprites[symbol];
     }
 
     @Override
-    public RectangularArea juniorPacSprite() {
-        return null;
+    public RectangularArea livesCounterSprite() {
+        return livesCounterSprite;
+    }
+
+    public RectangularArea[] pacMunchingSprites(Direction dir) {
+        return pacMunchingSprites[ORDER.indexOf(dir)];
+    }
+
+    @Override
+    public RectangularArea[] pacDyingSprites() {
+        return pacDyingSprites;
+    }
+
+    @Override
+    public RectangularArea[] ghostNormalSprites(byte id, Direction dir) {
+        return ghostNormalSprites[id][ORDER.indexOf(dir)];
+    }
+
+    @Override
+    public RectangularArea[] ghostFrightenedSprites() {
+        return ghostFrightenedSprites;
+    }
+
+    @Override
+    public RectangularArea[] ghostFlashingSprites() {
+        return ghostFlashingSprites;
     }
 
     @Override
@@ -218,24 +213,9 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         return ghostEyesSprites[ORDER.indexOf(dir)];
     }
 
-    // Pac-Man specific:
-
-    private final RectangularArea[] bigPacManSprites = rectArray(
-        rect(OFF_X + 32, 16, 32, 32),
-        rect(OFF_X + 64, 16, 32, 32),
-        rect(OFF_X + 96, 16, 32, 32));
-
     @Override
     public RectangularArea[] bigPacManSprites() {
         return bigPacManSprites;
-    }
-
-    private final RectangularArea[] blinkyStretchedSprites = new RectangularArea[5];
-    {
-        int size = tileSize();
-        for (int i = 0; i < 5; ++i) {
-            blinkyStretchedSprites[i] = rect(OFF_X + tiles(8 + i), tiles(6), size, size);
-        }
     }
 
     @Override
@@ -243,36 +223,14 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         return blinkyStretchedSprites;
     }
 
-    private final RectangularArea[] blinkyDamagedSprites = new RectangularArea[2];
-    {
-        int m = 1;
-        int size = tileSize() - 2 * m;
-        blinkyDamagedSprites[0] = rect(OFF_X + tiles(8) + m, tiles(7) + m, size, size);
-        blinkyDamagedSprites[1] = rect(OFF_X + tiles(9) + m, tiles(7) + m, size, size);
-    }
-
     @Override
     public RectangularArea[] blinkyDamagedSprites() {
         return blinkyDamagedSprites;
     }
 
-    private final RectangularArea[] blinkyPatchedSprites = new RectangularArea[2];
-    {
-        int size = tileSize();
-        blinkyPatchedSprites[0] = rect(OFF_X + tiles(10), tiles(7), size, size);
-        blinkyPatchedSprites[1] = rect(OFF_X + tiles(11), tiles(7), size, size);
-    }
-
     @Override
     public RectangularArea[] blinkyPatchedSprites() {
         return blinkyPatchedSprites;
-    }
-
-    private final RectangularArea[] blinkyNakedSprites = new RectangularArea[2];
-    {
-        int size = tileSize();
-        blinkyNakedSprites[0] = rect(OFF_X + tiles(8), tiles(8), 2 * size, size);
-        blinkyNakedSprites[1] = rect(OFF_X + tiles(10), tiles(8), 2 * size, size);
     }
 
     @Override

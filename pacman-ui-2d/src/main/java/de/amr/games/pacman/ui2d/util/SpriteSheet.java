@@ -9,6 +9,8 @@ import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 
+import java.util.stream.IntStream;
+
 import static de.amr.games.pacman.ui2d.rendering.RectangularArea.rect;
 
 /**
@@ -18,21 +20,12 @@ import static de.amr.games.pacman.ui2d.rendering.RectangularArea.rect;
  */
 public interface SpriteSheet {
 
+    RectangularArea   NO_SPRITE  = RectangularArea.PIXEL;
+    RectangularArea[] NO_SPRITES = IntStream.range(0, 10).mapToObj(i -> NO_SPRITE).toArray(RectangularArea[]::new);
+
+    // Common
     RectangularArea[] pacMunchingSprites(Direction dir);
     RectangularArea[] pacDyingSprites();
-    RectangularArea[] blinkyNakedSprites();
-    RectangularArea[] blinkyPatchedSprites();
-    RectangularArea[] blinkyDamagedSprites();
-    RectangularArea[] blinkyStretchedSprites();
-    RectangularArea[] bigPacManSprites();
-
-    RectangularArea[] msPacManDyingSprites();
-    RectangularArea[] msPacManMunchingSprites(Direction dir);
-    RectangularArea[] pacManMunchingSprites(Direction dir);
-    RectangularArea[] clapperboardSprites();
-    RectangularArea heartSprite();
-    RectangularArea blueBagSprite();
-    RectangularArea juniorPacSprite();
 
     RectangularArea[] ghostEyesSprites(Direction dir);
     RectangularArea[] ghostFlashingSprites();
@@ -43,6 +36,23 @@ public interface SpriteSheet {
     RectangularArea livesCounterSprite();
     RectangularArea bonusSymbolSprite(byte symbol);
     RectangularArea bonusValueSprite(byte symbol);
+
+    // Ms. Pac-Man variants
+    default RectangularArea[] msPacManDyingSprites() { return NO_SPRITES; }
+    default RectangularArea[] msPacManMunchingSprites(Direction dir) { return NO_SPRITES; }
+    default RectangularArea[] pacManMunchingSprites(Direction dir) { return NO_SPRITES; }
+    default RectangularArea[] clapperboardSprites() { return NO_SPRITES; }
+    default RectangularArea heartSprite() { return NO_SPRITE; }
+    default RectangularArea blueBagSprite() { return NO_SPRITE; }
+    default RectangularArea juniorPacSprite() { return NO_SPRITE; }
+    default SpriteAnimation createStorkFlyingAnimation()  { return null; }
+
+    // Pac-Man variants
+    default RectangularArea[] blinkyNakedSprites() { return NO_SPRITES; }
+    default RectangularArea[] blinkyPatchedSprites() { return NO_SPRITES; }
+    default RectangularArea[] blinkyDamagedSprites() { return NO_SPRITES; }
+    default RectangularArea[] blinkyStretchedSprites() { return NO_SPRITES; }
+    default RectangularArea[] bigPacManSprites() { return NO_SPRITES; }
 
     int tileSize();
 
