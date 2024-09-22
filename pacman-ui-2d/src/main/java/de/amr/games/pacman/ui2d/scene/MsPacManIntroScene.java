@@ -204,7 +204,12 @@ public class MsPacManIntroScene extends GameScene2D {
         clearBlueMazeBug();
 
         data = new Data();
-        SpriteSheet sheet = context.worldRenderer().spriteSheet();
+
+        //TODO remove temporary hack
+        SpriteSheet sheet = context.game().variant() == GameVariant.MS_PACMAN_TENGEN
+            ? context.assets().get("ms_pacman.spritesheet")
+            : context.worldRenderer().spriteSheet();
+
         data.msPacMan.setAnimations(new MsPacManGamePacAnimations(sheet));
         data.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
         for (Ghost ghost : data.ghosts) {

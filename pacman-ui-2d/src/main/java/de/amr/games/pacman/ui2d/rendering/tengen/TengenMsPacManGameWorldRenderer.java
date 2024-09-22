@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -38,8 +39,10 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final AssetStorage assets;
-    private final MsPacManArcadeGameWorldRenderer rendererMsPacMan;
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
+
+    //TODO temporary
+    private final MsPacManArcadeGameWorldRenderer rendererMsPacMan;
 
     private SpriteSheetArea mapSprite;
     private boolean flashMode;
@@ -47,13 +50,11 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
 
     public TengenMsPacManGameWorldRenderer(AssetStorage assets) {
         this.assets = assets;
-
-        //TODO temporary
-        rendererMsPacMan = new MsPacManArcadeGameWorldRenderer(assets);
-        rendererMsPacMan.scalingProperty().bind(scalingProperty());
-
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
+
+        rendererMsPacMan = new MsPacManArcadeGameWorldRenderer(assets);
+        rendererMsPacMan.scalingProperty().bind(scalingProperty());
     }
 
     @Override
@@ -91,6 +92,10 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
             terrainRenderer.setDoorColor(Color.BLACK);
             terrainRenderer.drawMap(g, terrain);
         } else {
+            if (mapSprite == null) {
+                Logger.error("No map sprite selected");
+                return;
+            }
             // map sprite is selected when game level starts, so it should always be set here
             g.drawImage(mapSprite.source(),
                 mapSprite.area().x() + 0.5, mapSprite.area().y() + 0.5,
@@ -105,20 +110,12 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
             hideActorSprite(g, terrain.getTileProperty("pos_ghost_4_orange", v2i(15, 17)), 0, 4);
             g.save();
             g.scale(scalingPy.get(), scalingPy.get());
+            // Food
             overPaintEatenPellets(g, world);
             overPaintEnergizers(g, world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
             g.restore();
             context.game().bonus().ifPresent(bonus -> drawMovingBonus(g, (MovingBonus) bonus));
         }
-    }
-
-    private void hideActorSprite(GraphicsContext g, Vector2i tile, double offX, double offY) {
-        // Parameter tile denotes the left of the two tiles where actor is located between. Compute center position.
-        double cx = tile.x() * TS + TS + offX;
-        double cy = tile.y() * TS + HTS + offY;
-        double spriteSize = 2 * TS;
-        g.setFill(backgroundColorProperty().get());
-        g.fillRect(scaled(cx - TS), scaled(cy - TS), scaled(spriteSize), scaled(spriteSize));
     }
 
     @Override
@@ -190,5 +187,22 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
             var textX = scaled(x + sprite.width());
             g.fillText(animation.text(), textX, numberY);
         }
+    }
+
+    private void hideActorSprite(GraphicsContext g, Vector2i tile, double offX, double offY) {
+        // Parameter tile denotes the left of the two tiles where actor is located between. Compute center position.
+        double cx = tile.x() * TS + TS + offX;
+        double cy = tile.y() * TS + HTS + offY;
+        double spriteSize = 2 * TS;
+        g.setFill(backgroundColorProperty().get());
+        g.fillRect(scaled(cx - TS), scaled(cy - TS), scaled(spriteSize), scaled(spriteSize));
+    }
+
+    //TODO temporary
+
+
+    @Override
+    public void drawAnimatedEntity(GraphicsContext g, AnimatedEntity guy) {
+        rendererMsPacMan.drawAnimatedEntity(g, guy);
     }
 }

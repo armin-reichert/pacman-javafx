@@ -8,6 +8,8 @@ import de.amr.games.pacman.ui2d.rendering.RectangularArea;
 import de.amr.games.pacman.ui2d.rendering.SpriteSheet;
 import javafx.scene.image.Image;
 
+import static de.amr.games.pacman.ui2d.rendering.RectangularArea.rect;
+
 /**
  * @author Armin Reichert
  */
@@ -26,9 +28,6 @@ public class TengenMsPacManGameSpriteSheet implements SpriteSheet {
             bonusValueSprites[i]  = new RectangularArea(xs[i], 85, ws[i], 18);
         }
     }
-
-
-
 
     public TengenMsPacManGameSpriteSheet(Image source) {
         this.source = source;
@@ -76,7 +75,7 @@ public class TengenMsPacManGameSpriteSheet implements SpriteSheet {
 
     @Override
     public RectangularArea livesCounterSprite() {
-        return NO_SPRITE;
+        return rect(241, 15, 16, 16);
     }
 
     @Override
