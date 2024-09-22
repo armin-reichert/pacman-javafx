@@ -38,9 +38,9 @@ public class PacManCutScene1 extends GameScene2D {
         super.init();
         context.setScoreVisible(true);
         pac = new Pac();
-        pac.setAnimations(new PacManGamePacAnimations(context.worldRenderer().spriteSheet()));
+        pac.setAnimations(new PacManGamePacAnimations(context.renderer().spriteSheet()));
         blinky = Ghost.red();
-        blinky.setAnimations(new PacManGameGhostAnimations(context.worldRenderer().spriteSheet(), blinky.id()));
+        blinky.setAnimations(new PacManGameGhostAnimations(context.renderer().spriteSheet(), blinky.id()));
         frame = -1;
     }
 
@@ -96,15 +96,15 @@ public class PacManCutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        context.worldRenderer().drawAnimatedEntity(g, pac);
-        context.worldRenderer().drawAnimatedEntity(g, blinky);
+        context.renderer().drawAnimatedEntity(g, pac);
+        context.renderer().drawAnimatedEntity(g, blinky);
     }
 
     @Override
     protected void drawDebugInfo() {
         Vector2i worldSize = context.worldSize();
-        context.worldRenderer().drawTileGrid(g, worldSize.x(), worldSize.y());
+        context.renderer().drawTileGrid(g, worldSize.x(), worldSize.y());
         var text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        context.worldRenderer().drawText(g, text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
+        context.renderer().drawText(g, text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
     }
 }

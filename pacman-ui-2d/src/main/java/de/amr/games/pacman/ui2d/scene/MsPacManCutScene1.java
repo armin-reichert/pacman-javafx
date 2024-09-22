@@ -237,7 +237,7 @@ public class MsPacManCutScene1 extends GameScene2D {
     public void init() {
         super.init();
         context.setScoreVisible(true);
-        spriteSheet = context.worldRenderer().spriteSheet();
+        spriteSheet = context.renderer().spriteSheet();
         pacMan = new Pac();
         msPac = new Pac();
         inky = Ghost.cyan();
@@ -261,15 +261,15 @@ public class MsPacManCutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        var msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) context.worldRenderer();
+        var msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) context.renderer();
         msPacManGameWorldRenderer.drawClapperBoard(g,
             context.assets().font("font.arcade", scaled(8)),
             context.assets().color("palette.pale"),
             clapAnimation, t(3), t(10));
-        context.worldRenderer().drawAnimatedEntity(g, msPac);
-        context.worldRenderer().drawAnimatedEntity(g, pacMan);
-        context.worldRenderer().drawAnimatedEntity(g, inky);
-        context.worldRenderer().drawAnimatedEntity(g, pinky);
-        context.worldRenderer().drawEntitySprite(g, heart, spriteSheet.heartSprite());
+        context.renderer().drawAnimatedEntity(g, msPac);
+        context.renderer().drawAnimatedEntity(g, pacMan);
+        context.renderer().drawAnimatedEntity(g, inky);
+        context.renderer().drawAnimatedEntity(g, pinky);
+        context.renderer().drawEntitySprite(g, heart, spriteSheet.heartSprite());
     }
 }

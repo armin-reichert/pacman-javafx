@@ -63,7 +63,7 @@ public interface GameContext {
      */
     String locText(String keyOrPattern, Object... args);
 
-    GameWorldRenderer worldRenderer();
+    GameWorldRenderer renderer();
 
     // Actions
     void addCredit();

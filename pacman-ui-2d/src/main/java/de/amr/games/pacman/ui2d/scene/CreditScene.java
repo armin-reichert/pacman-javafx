@@ -51,38 +51,38 @@ public class CreditScene extends GameScene2D {
         var rose = context.assets().color("palette.rose");
         switch (context.game().variant()) {
             case MS_PACMAN -> {
-                RectangularArea livesCounterSprite = context.worldRenderer().spriteSheet().livesCounterSprite();
-                context.worldRenderer().drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(16));
-                context.worldRenderer().drawText(g, "1 PLAYER ONLY", orange, font8, t(8), t(18));
-                context.worldRenderer().drawText(g, "ADDITIONAL    AT 10000", orange, font8, t(2), t(25));
-                context.worldRenderer().drawSpriteScaled(g, livesCounterSprite, t(13), t(23) + 1);
-                context.worldRenderer().drawText(g, "PTS", orange, font6, t(25), t(25));
-                var msPacManGameRenderer = (MsPacManGameWorldRenderer) context.worldRenderer();
+                RectangularArea livesCounterSprite = context.renderer().spriteSheet().livesCounterSprite();
+                context.renderer().drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(16));
+                context.renderer().drawText(g, "1 PLAYER ONLY", orange, font8, t(8), t(18));
+                context.renderer().drawText(g, "ADDITIONAL    AT 10000", orange, font8, t(2), t(25));
+                context.renderer().drawSpriteScaled(g, livesCounterSprite, t(13), t(23) + 1);
+                context.renderer().drawText(g, "PTS", orange, font6, t(25), t(25));
+                var msPacManGameRenderer = (MsPacManGameWorldRenderer) context.renderer();
                 msPacManGameRenderer.drawMsPacManMidwayCopyright(g,
                     context.assets().get("ms_pacman.logo.midway"),
                     t(6), t(28), context.assets().color("palette.red"), sceneFont(TS));
             }
             case MS_PACMAN_TENGEN -> {
-                RectangularArea livesCounterSprite = context.worldRenderer().spriteSheet().livesCounterSprite();
-                context.worldRenderer().drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(16));
-                context.worldRenderer().drawText(g, "1 PLAYER ONLY", orange, font8, t(8), t(18));
-                context.worldRenderer().drawText(g, "ADDITIONAL    AT 10000", orange, font8, t(2), t(25));
-                context.worldRenderer().drawSpriteScaled(g, livesCounterSprite, t(13), t(23) + 1);
-                context.worldRenderer().drawText(g, "PTS", orange, font6, t(25), t(25));
+                RectangularArea livesCounterSprite = context.renderer().spriteSheet().livesCounterSprite();
+                context.renderer().drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(16));
+                context.renderer().drawText(g, "1 PLAYER ONLY", orange, font8, t(8), t(18));
+                context.renderer().drawText(g, "ADDITIONAL    AT 10000", orange, font8, t(2), t(25));
+                context.renderer().drawSpriteScaled(g, livesCounterSprite, t(13), t(23) + 1);
+                context.renderer().drawText(g, "PTS", orange, font6, t(25), t(25));
             }
             case PACMAN -> {
-                context.worldRenderer().drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(17));
-                context.worldRenderer().drawText(g, "1 PLAYER ONLY", cyan, font8, t(8), t(21));
-                context.worldRenderer().drawText(g, "BONUS PAC-MAN FOR 10000", rose, font8, t(1), t(25));
-                context.worldRenderer().drawText(g, "PTS", rose, font6, t(25), t(25));
-                var pacManGameRenderer = (PacManArcadeGameWorldRenderer) context.worldRenderer();
+                context.renderer().drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(17));
+                context.renderer().drawText(g, "1 PLAYER ONLY", cyan, font8, t(8), t(21));
+                context.renderer().drawText(g, "BONUS PAC-MAN FOR 10000", rose, font8, t(1), t(25));
+                context.renderer().drawText(g, "PTS", rose, font6, t(25), t(25));
+                var pacManGameRenderer = (PacManArcadeGameWorldRenderer) context.renderer();
                 pacManGameRenderer.drawMidwayCopyright(g, t(4), t(29), context.assets().color("palette.pink"), sceneFont(8));
             }
             case PACMAN_XXL -> {
-                context.worldRenderer().drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(17));
-                context.worldRenderer().drawText(g, "1 PLAYER ONLY", cyan, font8, t(8), t(21));
-                context.worldRenderer().drawText(g, "BONUS PAC-MAN FOR 10000", rose, font8, t(1), t(25));
-                context.worldRenderer().drawText(g, "PTS", rose, font6, t(25), t(25));
+                context.renderer().drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(17));
+                context.renderer().drawText(g, "1 PLAYER ONLY", cyan, font8, t(8), t(21));
+                context.renderer().drawText(g, "BONUS PAC-MAN FOR 10000", rose, font8, t(1), t(25));
+                context.renderer().drawText(g, "PTS", rose, font6, t(25), t(25));
             }
             default -> throw new IllegalArgumentException("Unsupported game variant: " + context.game().variant());
         }

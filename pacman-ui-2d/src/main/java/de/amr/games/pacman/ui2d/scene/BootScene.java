@@ -35,8 +35,8 @@ public class BootScene extends GameScene2D {
 
     @Override
     public void draw() {
-        context.worldRenderer().scalingProperty().set(scalingPy.get());
-        context.worldRenderer().backgroundColorProperty().set(backgroundColorPy.get());
+        context.renderer().scalingProperty().set(scalingPy.get());
+        context.renderer().backgroundColorProperty().set(backgroundColorPy.get());
         var timer = context.gameState().timer();
         if (timer.currentTick() == 1) {
             clearCanvas();
@@ -75,14 +75,14 @@ public class BootScene extends GameScene2D {
                 var splitX = GameModel.ARCADE_MAP_TILES_X / 8 + RND.nextInt(GameModel.ARCADE_MAP_TILES_X / 4);
                 for (int col = 0; col < GameModel.ARCADE_MAP_TILES_X / 2; ++col) {
                     var region = col < splitX ? region1 : region2;
-                    context.worldRenderer().drawSpriteScaled(g, region, region.width() * col, region.height() * row);
+                    context.renderer().drawSpriteScaled(g, region, region.width() * col, region.height() * row);
                 }
             }
         }
     }
 
     private RectangularArea randomSpriteSheetTile() {
-        var spriteSheet = context.worldRenderer().spriteSheet();
+        var spriteSheet = context.renderer().spriteSheet();
         var source = spriteSheet.sourceImage();
         var raster = 16;
         int x = (int) (RND.nextDouble() * ((int) source.getWidth() - raster));

@@ -156,7 +156,7 @@ public class MsPacManCutScene3 extends GameScene2D {
         context.setScoreVisible(true);
 
         //TODO check this
-        spriteSheet = (MsPacManGameSpriteSheet) context.worldRenderer().spriteSheet();
+        spriteSheet = (MsPacManGameSpriteSheet) context.renderer().spriteSheet();
 
         pacMan = new Pac();
         msPacMan = new Pac();
@@ -181,14 +181,14 @@ public class MsPacManCutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        var msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) context.worldRenderer();
+        var msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) context.renderer();
         msPacManGameWorldRenderer.drawClapperBoard(g,
             context.assets().font("font.arcade", scaled(8)),
             context.assets().color("palette.pale"),
             clapAnimation, t(3), t(10));
-        context.worldRenderer().drawAnimatedEntity(g, msPacMan);
-        context.worldRenderer().drawAnimatedEntity(g, pacMan);
-        context.worldRenderer().drawEntitySprite(g, stork, storkAnimation.currentSprite());
-        context.worldRenderer().drawEntitySprite(g, bag, bagOpen ? spriteSheet.juniorPacSprite() : spriteSheet.blueBagSprite());
+        context.renderer().drawAnimatedEntity(g, msPacMan);
+        context.renderer().drawAnimatedEntity(g, pacMan);
+        context.renderer().drawEntitySprite(g, stork, storkAnimation.currentSprite());
+        context.renderer().drawEntitySprite(g, bag, bagOpen ? spriteSheet.juniorPacSprite() : spriteSheet.blueBagSprite());
     }
 }

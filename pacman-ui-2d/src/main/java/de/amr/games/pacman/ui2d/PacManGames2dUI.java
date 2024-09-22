@@ -403,7 +403,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public GameWorldRenderer worldRenderer() {
+    public GameWorldRenderer renderer() {
         return worldRenderer;
     }
 

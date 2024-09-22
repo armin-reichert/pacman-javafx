@@ -149,7 +149,7 @@ public class MsPacManCutScene2 extends GameScene2D {
         super.init();
         context.setScoreVisible(true);
 
-        var sheet = context.worldRenderer().spriteSheet();
+        var sheet = context.renderer().spriteSheet();
 
         pacMan = new Pac();
         msPacMan = new Pac();
@@ -170,12 +170,12 @@ public class MsPacManCutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        var msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) context.worldRenderer();
+        var msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) context.renderer();
         msPacManGameWorldRenderer.drawClapperBoard(g,
             context.assets().font("font.arcade", scaled(8)),
             context.assets().color("palette.pale"),
             clapAnimation, t(3), t(10));
-        context.worldRenderer().drawAnimatedEntity(g, msPacMan);
-        context.worldRenderer().drawAnimatedEntity(g, pacMan);
+        context.renderer().drawAnimatedEntity(g, msPacMan);
+        context.renderer().drawAnimatedEntity(g, pacMan);
     }
 }
