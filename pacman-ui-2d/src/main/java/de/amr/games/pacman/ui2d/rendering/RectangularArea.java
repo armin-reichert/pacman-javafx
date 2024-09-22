@@ -4,10 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.rendering;
 
-import javafx.geometry.Rectangle2D;
-
 /**
- * A rectangular area to represent spritesheet regions.
+ * A rectangular area with short precision to represent sprite sheet regions.
  *
  * @param x left-upper corner x
  * @param y left-upper corner y
@@ -24,9 +22,5 @@ public record RectangularArea(short x, short y, short width, short height) {
 
     public RectangularArea(int x, int y, int width, int height) {
         this((short) x, (short) y, (short) width, (short) height);
-    }
-
-    public Rectangle2D toRect() {
-        return new Rectangle2D(x, y, width, height);
     }
 }

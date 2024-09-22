@@ -11,8 +11,6 @@ import javafx.scene.image.WritableImage;
 
 import java.util.stream.IntStream;
 
-import static de.amr.games.pacman.ui2d.rendering.RectangularArea.rect;
-
 /**
  * A sprite sheet (bekommt kein Wunschkennzeichen!)
  *
