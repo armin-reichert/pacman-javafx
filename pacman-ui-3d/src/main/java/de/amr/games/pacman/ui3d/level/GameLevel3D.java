@@ -386,21 +386,21 @@ public class GameLevel3D {
     }
 
     public Animation wallsDisappearAnimation(double seconds) {
-        var duration = Duration.seconds(seconds);
-        var phase1 = new Timeline(
-            new KeyFrame(duration.multiply(0.33),
+        var totalDuration = Duration.seconds(seconds);
+        var obstaclesDisappear = new Timeline(
+            new KeyFrame(totalDuration.multiply(0.33),
                 new KeyValue(obstacleHeightPy, 0, Interpolator.EASE_IN)
             ));
-        var phase2 = new Timeline(
-            new KeyFrame(duration.multiply(0.33),
+        var houseDisappears = new Timeline(
+            new KeyFrame(totalDuration.multiply(0.33),
                 new KeyValue(houseHeightPy, 0, Interpolator.EASE_IN)
             ));
-        var phase3 = new Timeline(
-            new KeyFrame(duration.multiply(0.33),
+        var borderWallsDisappear = new Timeline(
+            new KeyFrame(totalDuration.multiply(0.33),
                 new KeyValue(borderWallHeightPy, 0, Interpolator.EASE_IN)
             )
         );
-        var animation  = new SequentialTransition(phase1, phase2, phase3);
+        var animation  = new SequentialTransition(houseDisappears, obstaclesDisappear, borderWallsDisappear);
         animation.setOnFinished(e -> mazeGroup.setVisible(false));
         return animation;
     }
