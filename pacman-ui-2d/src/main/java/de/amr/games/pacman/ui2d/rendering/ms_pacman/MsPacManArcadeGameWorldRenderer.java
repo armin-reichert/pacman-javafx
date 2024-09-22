@@ -93,7 +93,7 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
             g.save();
             g.scale(scalingPy.get(), scalingPy.get());
             drawSpriteUnscaled(g, mapWithFoodSprite.area(), originX, originY);
-            overPaintEatenPellet(g, world);
+            overPaintEatenPellets(g, world);
             overPaintEnergizers(g, world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
             g.restore();
         }
@@ -114,16 +114,16 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
 
     @Override
     public void drawClapperBoard(GraphicsContext g, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
-        var sprite = animation.currentSprite(spriteSheet().clapperboardSprites());
+        RectangularArea sprite = animation.currentSprite(spriteSheet().clapperboardSprites());
         if (sprite != RectangularArea.PIXEL) {
+            double numberX = scaled(x + sprite.width() - 25);
+            double numberY = scaled(y + 18);
+            double textX = scaled(x + sprite.width());
             drawSpriteCenteredOverBox(g, sprite, x, y);
             g.setFont(font);
             g.setFill(textColor.darker());
-            var numberX = scaled(x + sprite.width() - 25);
-            var numberY = scaled(y + 18);
             g.setFill(textColor);
             g.fillText(animation.number(), numberX, numberY);
-            var textX = scaled(x + sprite.width());
             g.fillText(animation.text(), textX, numberY);
         }
     }

@@ -72,7 +72,7 @@ public class PacManArcadeGameWorldRenderer implements GameWorldRenderer {
     @Override
     public void drawWorld(GraphicsContext g, GameContext context, GameWorld world) {
         double originX = 0, originY = t(3);
-        double scaling = scalingProperty().get();
+        double scaling = scaling();
         g.save();
         g.scale(scaling, scaling);
         if (flashMode) {
@@ -83,7 +83,7 @@ public class PacManArcadeGameWorldRenderer implements GameWorldRenderer {
             }
         } else {
             drawSpriteUnscaled(g, spriteSheet().getFullMazeSprite(), originX, originY);
-            overPaintEatenPellet(g, world);
+            overPaintEatenPellets(g, world);
             overPaintEnergizers(g, world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
         }
         g.restore();

@@ -26,6 +26,9 @@ import static de.amr.games.pacman.maps.editor.TileMapUtil.getColorFromMap;
 import static de.amr.games.pacman.model.GameWorld.*;
 import static java.util.function.Predicate.not;
 
+/**
+ * @author Armin Reichert
+ */
 public class PacManXXLGameWorldRenderer implements GameWorldRenderer {
 
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
@@ -40,7 +43,6 @@ public class PacManXXLGameWorldRenderer implements GameWorldRenderer {
     public PacManXXLGameWorldRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
         terrainRenderer.scalingPy.bind(scalingPy);
-        terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
         foodRenderer.scalingPy.bind(scalingPy);
     }
 
@@ -80,6 +82,7 @@ public class PacManXXLGameWorldRenderer implements GameWorldRenderer {
         Color wallStrokeColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_STROKE, Color.WHITE);
         Color wallFillColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_FILL, Color.GREEN);
         Color doorColor = getColorFromMap(terrain, PROPERTY_COLOR_DOOR, Color.YELLOW);
+        terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
         if (flashMode) {
             terrainRenderer.setWallStrokeColor(blinkingOn ? Color.WHITE : Color.BLACK);
             terrainRenderer.setWallFillColor(blinkingOn   ? Color.BLACK : Color.WHITE);
@@ -94,7 +97,8 @@ public class PacManXXLGameWorldRenderer implements GameWorldRenderer {
             Color foodColor = getColorFromMap(world.map().food(), PROPERTY_COLOR_FOOD, Color.ORANGE);
             foodRenderer.setPelletColor(foodColor);
             foodRenderer.setEnergizerColor(foodColor);
-            world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition)).forEach(tile -> foodRenderer.drawPellet(g, tile));
+            world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
+                .forEach(tile -> foodRenderer.drawPellet(g, tile));
             if (blinkingOn) {
                 world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(g, tile));
             }

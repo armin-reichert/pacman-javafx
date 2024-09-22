@@ -44,7 +44,7 @@ public interface GameWorldRenderer extends SpriteRenderer {
      * Over-paints all eaten pellet tiles.
      * Assumes to be called in scaled graphics context!
      */
-    default void overPaintEatenPellet(GraphicsContext g, GameWorld world) {
+    default void overPaintEatenPellets(GraphicsContext g, GameWorld world) {
         world.map().food().tiles()
             .filter(not(world::isEnergizerPosition))
             .filter(world::hasEatenFoodAt).forEach(tile -> overPaint(g, tile, 4));
