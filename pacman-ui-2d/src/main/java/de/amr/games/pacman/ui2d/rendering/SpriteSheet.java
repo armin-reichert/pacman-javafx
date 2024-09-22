@@ -48,6 +48,9 @@ public interface SpriteSheet {
     default SpriteAnimation createStorkFlyingAnimation()  { return null; }
 
     // Pac-Man variants
+    default RectangularArea ghostFacingRight(byte ghostID) {
+        return NO_SPRITE;
+    }
     default RectangularArea[] blinkyNakedSprites() { return NO_SPRITES; }
     default RectangularArea[] blinkyPatchedSprites() { return NO_SPRITES; }
     default RectangularArea[] blinkyDamagedSprites() { return NO_SPRITES; }

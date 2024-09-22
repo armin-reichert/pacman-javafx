@@ -347,7 +347,7 @@ public class PacManIntroScene extends GameScene2D {
                 continue;
             }
             int ty = 7 + 3 * id;
-            context.worldRenderer().drawSpriteCenteredOverBox(g, spriteSheet.ghostFacingRight(id), t(tx) + 4, t(ty));
+            context.worldRenderer().drawGhostFacingRight(g, id, t(tx) + 4, t(ty));
             if (data.ghostCharacterVisible[id]) {
                 var text = "-" + data.ghostCharacters[id];
                 context.worldRenderer().drawText(g, text, GHOST_COLORS[id], font, t(tx + 3), t(ty + 1));

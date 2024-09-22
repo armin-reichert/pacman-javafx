@@ -152,14 +152,11 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         this.source = source;
     }
 
-    public RectangularArea getFullMazeSprite() {
+    RectangularArea getFullMazeSprite() {
         return FULL_MAZE_SPRITE;
     }
-    public RectangularArea getEmptyMazeSprite() {
+    RectangularArea getEmptyMazeSprite() {
         return EMPTY_MAZE_SPRITE;
-    }
-    public RectangularArea ghostFacingRight(byte ghostID) {
-        return GHOST_FACING_RIGHT_SPRITES[ghostID];
     }
 
     @Override
@@ -214,6 +211,11 @@ public class PacManGameSpriteSheet implements SpriteSheet {
     @Override
     public RectangularArea[] ghostEyesSprites(Direction dir) {
         return GHOST_EYES_SPRITES[ORDER.indexOf(dir)];
+    }
+
+    @Override
+    public RectangularArea ghostFacingRight(byte ghostID) {
+        return GHOST_FACING_RIGHT_SPRITES[ghostID];
     }
 
     @Override

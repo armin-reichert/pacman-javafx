@@ -82,6 +82,10 @@ public interface GameWorldRenderer extends SpriteRenderer {
         }
     }
 
+    default void drawGhostFacingRight(GraphicsContext g, byte ghostID, double x, double y) {
+        drawSpriteCenteredOverBox(g, spriteSheet().ghostFacingRight(ghostID), x, y);
+    }
+
     default void drawAnimatedCreatureInfo(GraphicsContext g, AnimatedEntity animatedCreature) {
         if (animatedCreature.animations().isPresent() && animatedCreature.animations().get() instanceof SpriteAnimations sa) {
             Creature guy = (Creature) animatedCreature.entity();
