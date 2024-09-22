@@ -20,6 +20,10 @@ import static de.amr.games.pacman.ui2d.rendering.RectangularArea.rect;
  */
 public interface SpriteSheet {
 
+    static RectangularArea[] rectArray(RectangularArea... areas) {
+        return areas;
+    }
+
     RectangularArea   NO_SPRITE  = RectangularArea.PIXEL;
     RectangularArea[] NO_SPRITES = IntStream.range(0, 10).mapToObj(i -> NO_SPRITE).toArray(RectangularArea[]::new);
 
@@ -53,33 +57,6 @@ public interface SpriteSheet {
     default RectangularArea[] bigPacManSprites() { return NO_SPRITES; }
 
     int tileSize();
-
-    /**
-     * @param n number of tiles
-     * @return pixels taken by tiles
-     */
-    default int tiles(int n) {
-        return n * tileSize();
-    }
-
-    default RectangularArea[] rectArray(RectangularArea... areas) {
-        return areas;
-    }
-
-    /**
-     * @param offsetX  x-offset in spritesheet source
-     * @param tileX    grid column (in tile coordinates)
-     * @param tileY    grid row (in tile coordinates)
-     * @param numTiles number of tiles
-     * @return horizontal stripe of tiles at given grid position
-     */
-    default RectangularArea[] tilesRightOf(int offsetX, int tileX, int tileY, int numTiles) {
-        var tiles = new RectangularArea[numTiles];
-        for (int i = 0; i < numTiles; ++i) {
-            tiles[i] = rect(offsetX + tiles(tileX + i), tiles(tileY), tileSize(), tileSize());
-        }
-        return tiles;
-    }
 
     Image sourceImage();
 

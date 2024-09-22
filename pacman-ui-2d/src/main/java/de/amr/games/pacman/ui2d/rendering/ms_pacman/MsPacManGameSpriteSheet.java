@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static de.amr.games.pacman.ui2d.rendering.RectangularArea.rect;
+import static de.amr.games.pacman.ui2d.rendering.SpriteSheet.rectArray;
 
 /**
  * @author Armin Reichert
@@ -97,7 +98,7 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
 
     // third "column" contains the sprites (first two columns the maze images)
     private RectangularArea spriteRegion(int tileX, int tileY) {
-        return rect(456 + tiles(tileX), tiles(tileY), RASTER_SIZE, RASTER_SIZE);
+        return rect(456 + RASTER_SIZE * (tileX), RASTER_SIZE * (tileY), RASTER_SIZE, RASTER_SIZE);
     }
 
     public MsPacManGameSpriteSheet(Image source) {
