@@ -9,36 +9,39 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.t;
 
 /**
  * @author Armin Reichert
  */
-public class PacManArcadeGameWorldRenderer extends SpriteRenderer implements GameWorldRenderer {
+public class PacManArcadeGameWorldRenderer implements GameWorldRenderer {
 
-    private final PacManGameSpriteSheet spriteSheet;
+    private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
+    private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
+    private final AssetStorage assets;
     private final Image flashingMazeImage;
     private boolean flashMode;
     private boolean blinkingOn;
 
     public PacManArcadeGameWorldRenderer(AssetStorage assets) {
-        spriteSheet = assets.get("pacman.spritesheet");
-        setSpriteSheet(spriteSheet);
+        this.assets = checkNotNull(assets);
         flashingMazeImage = assets.image("pacman.flashing_maze");
     }
 
     @Override
-    public SpriteRenderer spriteRenderer() {
-        return this;
+    public PacManGameSpriteSheet spriteSheet() {
+        return assets.get("pacman.spritesheet");
     }
 
     @Override
@@ -76,10 +79,10 @@ public class PacManArcadeGameWorldRenderer extends SpriteRenderer implements Gam
             if (blinkingOn) {
                 g.drawImage(flashingMazeImage, originX, originY);
             } else {
-                drawSpriteUnscaled(g, spriteSheet.getEmptyMazeSprite(), originX, originY);
+                drawSpriteUnscaled(g, spriteSheet().getEmptyMazeSprite(), originX, originY);
             }
         } else {
-            drawSpriteUnscaled(g, spriteSheet.getFullMazeSprite(), originX, originY);
+            drawSpriteUnscaled(g, spriteSheet().getFullMazeSprite(), originX, originY);
             overPaintEatenPellet(g, world);
             overPaintEnergizers(g, world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
         }
@@ -93,9 +96,9 @@ public class PacManArcadeGameWorldRenderer extends SpriteRenderer implements Gam
 
     private void drawStaticBonus(GraphicsContext g, Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
-            drawEntitySprite(g,  bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            drawEntitySprite(g,  bonus.entity(), spriteSheet().bonusSymbolSprite(bonus.symbol()));
         } else if (bonus.state() == Bonus.STATE_EATEN) {
-            drawEntitySprite(g,  bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
+            drawEntitySprite(g,  bonus.entity(), spriteSheet().bonusValueSprite(bonus.symbol()));
         }
     }
 }

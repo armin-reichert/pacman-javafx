@@ -38,9 +38,9 @@ public class PacManCutScene1 extends GameScene2D {
         super.init();
         context.setScoreVisible(true);
         pac = new Pac();
-        pac.setAnimations(new PacManGamePacAnimations(pac, renderer.spriteRenderer().spriteSheet()));
+        pac.setAnimations(new PacManGamePacAnimations(pac, renderer.spriteSheet()));
         blinky = Ghost.red();
-        blinky.setAnimations(new PacManGameGhostAnimations(blinky, renderer.spriteRenderer().spriteSheet()));
+        blinky.setAnimations(new PacManGameGhostAnimations(blinky, renderer.spriteSheet()));
         frame = -1;
     }
 

@@ -200,12 +200,11 @@ public class MsPacManIntroScene extends GameScene2D {
         super.init();
         context.setScoreVisible(true);
 
-        SpriteSheet sheet = context.worldRenderer().spriteRenderer().spriteSheet();
-        renderer.spriteRenderer().setSpriteSheet(sheet);
-
+        //TODO make this work again
         clearBlueMazeBug();
 
         data = new Data();
+        SpriteSheet sheet = context.worldRenderer().spriteSheet();
         data.msPacMan.setAnimations(new MsPacManGamePacAnimations(data.msPacMan, sheet));
         data.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
         for (Ghost ghost : data.ghosts) {

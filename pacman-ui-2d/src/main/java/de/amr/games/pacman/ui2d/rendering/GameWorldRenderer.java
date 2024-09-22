@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -29,17 +28,9 @@ import static java.util.function.Predicate.not;
 /**
  * @author Armin Reichert
  */
-public interface GameWorldRenderer {
-
-    DoubleProperty scalingProperty();
-
-    default double scaled(double factor) {
-        return scalingProperty().get() * factor;
-    }
+public interface GameWorldRenderer extends SpriteRenderer {
 
     ObjectProperty<Color> backgroundColorProperty();
-
-    SpriteRenderer spriteRenderer();
 
     void selectMap(WorldMap worldMap, int mapNumber);
 
@@ -86,7 +77,7 @@ public interface GameWorldRenderer {
     default void drawAnimatedEntity(GraphicsContext g, AnimatedEntity guy) {
         if (guy.isVisible() && guy.animations().isPresent()) {
             if (guy.animations().get() instanceof SpriteAnimations spriteAnimations) {
-                spriteRenderer().drawEntitySprite(g, guy.entity(), spriteAnimations.currentSprite());
+                drawEntitySprite(g, guy.entity(), spriteAnimations.currentSprite());
             }
         }
     }
@@ -141,7 +132,7 @@ public interface GameWorldRenderer {
         var x = TS * 2;
         var y = TS * tileY;
         for (int i = 0; i < Math.min(numLivesDisplayed, maxSymbols); ++i) {
-            spriteRenderer().drawSpriteScaled(g, spriteRenderer().spriteSheet().livesCounterSprite(), x + TS * (2 * i), y);
+            drawSpriteScaled(g, spriteSheet().livesCounterSprite(), x + TS * (2 * i), y);
         }
         // show text indicating that more lives are available than symbols displayed (can happen when lives are added via cheat)
         int moreLivesThanSymbols = numLivesDisplayed - maxSymbols;
@@ -154,8 +145,8 @@ public interface GameWorldRenderer {
     default void drawLevelCounter(GraphicsContext g, List<Byte> symbols, double x, double y) {
         double currentX = x;
         for (byte symbol : symbols) {
-            RectangularArea sprite = spriteRenderer().spriteSheet().bonusSymbolSprite(symbol);
-            spriteRenderer().drawSpriteScaled(g, sprite, currentX, y);
+            RectangularArea sprite = spriteSheet().bonusSymbolSprite(symbol);
+            drawSpriteScaled(g, sprite, currentX, y);
             currentX -= TS * 2;
         }
     }

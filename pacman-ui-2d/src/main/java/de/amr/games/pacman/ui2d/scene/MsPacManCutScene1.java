@@ -237,7 +237,7 @@ public class MsPacManCutScene1 extends GameScene2D {
     public void init() {
         super.init();
         context.setScoreVisible(true);
-        spriteSheet = context.worldRenderer().spriteRenderer().spriteSheet();
+        spriteSheet = context.worldRenderer().spriteSheet();
         pacMan = new Pac();
         msPac = new Pac();
         inky = Ghost.cyan();
@@ -270,6 +270,6 @@ public class MsPacManCutScene1 extends GameScene2D {
         renderer.drawAnimatedEntity(g, pacMan);
         renderer.drawAnimatedEntity(g, inky);
         renderer.drawAnimatedEntity(g, pinky);
-        renderer.spriteRenderer().drawEntitySprite(g, heart, spriteSheet.heartSprite());
+        renderer.drawEntitySprite(g, heart, spriteSheet.heartSprite());
     }
 }

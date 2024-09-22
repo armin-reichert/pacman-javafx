@@ -149,7 +149,7 @@ public class MsPacManCutScene2 extends GameScene2D {
         super.init();
         context.setScoreVisible(true);
 
-        var sheet = context.worldRenderer().spriteRenderer().spriteSheet();
+        var sheet = context.worldRenderer().spriteSheet();
 
         pacMan = new Pac();
         msPacMan = new Pac();

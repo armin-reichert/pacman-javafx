@@ -26,7 +26,7 @@ public interface MsPacManGameWorldRenderer extends GameWorldRenderer {
     void drawClapperBoard(GraphicsContext g, Font font, Color textColor, ClapperboardAnimation animation, double x, double y);
 
     default void drawMsPacManMidwayCopyright(GraphicsContext g, Image image, double x, double y, Color color, Font font) {
-        spriteRenderer().drawImageScaled(g, image, x, y + 2, t(4) - 2, t(4));
+        drawImageScaled(g, image, x, y + 2, t(4) - 2, t(4));
         g.setFont(font);
         g.setFill(color);
         g.fillText("©", scaled(x + TS * 5), scaled(y + TS * 2 + 2));

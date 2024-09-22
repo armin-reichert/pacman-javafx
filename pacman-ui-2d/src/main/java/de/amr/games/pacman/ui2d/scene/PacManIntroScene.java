@@ -248,6 +248,7 @@ public class PacManIntroScene extends GameScene2D {
     }
 
     private Data data;
+    private PacManGameSpriteSheet spriteSheet;
     private final FiniteStateMachine<SceneState, PacManIntroScene> sceneController;
 
     public PacManIntroScene() {
@@ -267,14 +268,12 @@ public class PacManIntroScene extends GameScene2D {
     @Override
     public void init() {
         super.init();
-        data = new Data();
 
-        var sheet = context.worldRenderer().spriteRenderer().spriteSheet();
-        renderer.spriteRenderer().setSpriteSheet(sheet);
         context.setScoreVisible(true);
-
-        data.pacMan.setAnimations(new PacManGamePacAnimations(data.pacMan, sheet));
-        data.ghosts.forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, sheet)));
+        spriteSheet = (PacManGameSpriteSheet) context.worldRenderer().spriteSheet();
+        data = new Data();
+        data.pacMan.setAnimations(new PacManGamePacAnimations(data.pacMan, spriteSheet));
+        data.ghosts.forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, spriteSheet)));
         data.blinking.reset();
 
         sceneController.restart(SceneState.STARTING);
@@ -348,8 +347,7 @@ public class PacManIntroScene extends GameScene2D {
                 continue;
             }
             int ty = 7 + 3 * id;
-            PacManGameSpriteSheet sheet = renderer.spriteRenderer().spriteSheet();
-            renderer.spriteRenderer().drawSpriteCenteredOverBox(g, sheet.ghostFacingRight(id), t(tx) + 4, t(ty));
+            renderer.drawSpriteCenteredOverBox(g, spriteSheet.ghostFacingRight(id), t(tx) + 4, t(ty));
             if (data.ghostCharacterVisible[id]) {
                 var text = "-" + data.ghostCharacters[id];
                 renderer.drawText(g, text, GHOST_COLORS[id], font, t(tx + 3), t(ty + 1));

@@ -10,23 +10,29 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.RectangularArea;
-import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
 import de.amr.games.pacman.ui2d.rendering.SpriteSheetArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
+import de.amr.games.pacman.ui2d.util.SpriteSheet;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.t;
 
 /**
  * @author Armin Reichert
  */
-public class MsPacManArcadeGameWorldRenderer extends SpriteRenderer implements MsPacManGameWorldRenderer {
+public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRenderer {
 
+    private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
+    private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
+    private final AssetStorage assets;
     private final Image flashingMazesImage;
     private SpriteSheetArea mapWithFoodSprite;
     private SpriteSheetArea mapWithoutFoodSprite;
@@ -35,13 +41,13 @@ public class MsPacManArcadeGameWorldRenderer extends SpriteRenderer implements M
     private boolean blinkingOn;
 
     public MsPacManArcadeGameWorldRenderer(AssetStorage assets) {
-        setSpriteSheet(assets.get("ms_pacman.spritesheet"));
+        this.assets = checkNotNull(assets);
         flashingMazesImage = assets.get("ms_pacman.flashing_mazes");
     }
 
     @Override
-    public SpriteRenderer spriteRenderer() {
-        return this;
+    public SpriteSheet spriteSheet() {
+        return assets.get("ms_pacman.spritesheet");
     }
 
     @Override
@@ -109,7 +115,7 @@ public class MsPacManArcadeGameWorldRenderer extends SpriteRenderer implements M
     @Override
     public void drawClapperBoard(GraphicsContext g, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
         var sprite = animation.currentSprite(spriteSheet().clapperboardSprites());
-        if (sprite != RectangularArea.EMPTY) {
+        if (sprite != RectangularArea.PIXEL) {
             drawSpriteCenteredOverBox(g, sprite, x, y);
             g.setFont(font);
             g.setFill(textColor.darker());

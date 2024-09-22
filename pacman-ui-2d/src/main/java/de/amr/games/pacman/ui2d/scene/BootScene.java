@@ -73,14 +73,14 @@ public class BootScene extends GameScene2D {
                 var splitX = GameModel.ARCADE_MAP_TILES_X / 8 + RND.nextInt(GameModel.ARCADE_MAP_TILES_X / 4);
                 for (int col = 0; col < GameModel.ARCADE_MAP_TILES_X / 2; ++col) {
                     var region = col < splitX ? region1 : region2;
-                    renderer.spriteRenderer().drawSpriteScaled(g, region, region.width() * col, region.height() * row);
+                    renderer.drawSpriteScaled(g, region, region.width() * col, region.height() * row);
                 }
             }
         }
     }
 
     private RectangularArea randomSpriteSheetTile() {
-        var spriteSheet = context.worldRenderer().spriteRenderer().spriteSheet();
+        var spriteSheet = context.worldRenderer().spriteSheet();
         var source = spriteSheet.sourceImage();
         var raster = spriteSheet.tileSize();
         int x = (int)(RND.nextDouble() * ((int)source.getWidth() - raster));

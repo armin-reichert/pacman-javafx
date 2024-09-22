@@ -51,11 +51,11 @@ public class CreditScene extends GameScene2D {
         var rose = context.assets().color("palette.rose");
         switch (context.game().variant()) {
             case MS_PACMAN -> {
-                RectangularArea livesCounterSprite = renderer.spriteRenderer().spriteSheet().livesCounterSprite();
+                RectangularArea livesCounterSprite = renderer.spriteSheet().livesCounterSprite();
                 renderer.drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(16));
                 renderer.drawText(g, "1 PLAYER ONLY", orange, font8, t(8), t(18));
                 renderer.drawText(g, "ADDITIONAL    AT 10000", orange, font8, t(2), t(25));
-                renderer.spriteRenderer().drawSpriteScaled(g, livesCounterSprite, t(13), t(23) + 1);
+                renderer.drawSpriteScaled(g, livesCounterSprite, t(13), t(23) + 1);
                 renderer.drawText(g, "PTS", orange, font6, t(25), t(25));
                 var msPacManGameRenderer = (MsPacManGameWorldRenderer) renderer;
                 msPacManGameRenderer.drawMsPacManMidwayCopyright(g,
@@ -63,11 +63,11 @@ public class CreditScene extends GameScene2D {
                     t(6), t(28), context.assets().color("palette.red"), sceneFont(TS));
             }
             case MS_PACMAN_TENGEN -> {
-                RectangularArea livesCounterSprite = renderer.spriteRenderer().spriteSheet().livesCounterSprite();
+                RectangularArea livesCounterSprite = renderer.spriteSheet().livesCounterSprite();
                 renderer.drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(16));
                 renderer.drawText(g, "1 PLAYER ONLY", orange, font8, t(8), t(18));
                 renderer.drawText(g, "ADDITIONAL    AT 10000", orange, font8, t(2), t(25));
-                renderer.spriteRenderer().drawSpriteScaled(g, livesCounterSprite, t(13), t(23) + 1);
+                renderer.drawSpriteScaled(g, livesCounterSprite, t(13), t(23) + 1);
                 renderer.drawText(g, "PTS", orange, font6, t(25), t(25));
             }
             case PACMAN -> {

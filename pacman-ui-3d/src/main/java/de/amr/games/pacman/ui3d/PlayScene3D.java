@@ -237,7 +237,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void onEnterStateGhostDying() {
-        SpriteSheet spriteSheet = context.worldRenderer().spriteRenderer().spriteSheet();
+        SpriteSheet spriteSheet = context.worldRenderer().spriteSheet();
         RectangularArea[] numberSprites = spriteSheet.ghostNumberSprites();
         context.game().eventLog().killedGhosts.forEach(ghost -> {
             int victimIndex = context.game().victims().indexOf(ghost);

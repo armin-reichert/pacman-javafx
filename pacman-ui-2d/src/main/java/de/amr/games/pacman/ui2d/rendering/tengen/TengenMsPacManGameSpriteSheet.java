@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
  */
 public class TengenMsPacManGameSpriteSheet implements SpriteSheet {
 
-    private static final RectangularArea   NO_SPRITE  = RectangularArea.EMPTY;
+    private static final RectangularArea   NO_SPRITE  = RectangularArea.PIXEL;
     private static final RectangularArea[] NO_SPRITES = IntStream.range(0, 10).mapToObj(i -> NO_SPRITE).toArray(RectangularArea[]::new);
 
     private final Image source;

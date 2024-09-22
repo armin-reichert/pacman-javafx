@@ -9,18 +9,20 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.model.actors.Bonus;
+import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.RectangularArea;
-import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
 import de.amr.games.pacman.ui2d.rendering.SpriteSheetArea;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManArcadeGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
+import de.amr.games.pacman.ui2d.util.SpriteSheet;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -31,12 +33,12 @@ import static de.amr.games.pacman.lib.Globals.*;
 /**
  * @author Armin Reichert
  */
-public class TengenMsPacManGameWorldRenderer extends SpriteRenderer implements MsPacManGameWorldRenderer {
+public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRenderer {
 
+    private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
+    private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final AssetStorage assets;
     private final MsPacManArcadeGameWorldRenderer rendererMsPacMan;
-    private final TengenMsPacManGameSpriteSheet spriteSheetTengen;
-
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
 
     private SpriteSheetArea mapSprite;
@@ -45,19 +47,18 @@ public class TengenMsPacManGameWorldRenderer extends SpriteRenderer implements M
 
     public TengenMsPacManGameWorldRenderer(AssetStorage assets) {
         this.assets = assets;
-        spriteSheetTengen = assets.get("tengen.spritesheet");
-        setSpriteSheet(spriteSheetTengen);
 
+        //TODO temporary
         rendererMsPacMan = new MsPacManArcadeGameWorldRenderer(assets);
-        rendererMsPacMan.scalingPy.bind(scalingProperty());
+        rendererMsPacMan.scalingProperty().bind(scalingProperty());
 
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
     }
 
     @Override
-    public SpriteRenderer spriteRenderer() {
-        return this;
+    public SpriteSheet spriteSheet() {
+        return assets.get("tengen.spritesheet");
     }
 
     @Override
@@ -168,8 +169,8 @@ public class TengenMsPacManGameWorldRenderer extends SpriteRenderer implements M
         g.save();
         g.translate(0, bonus.elongationY());
         switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawEntitySprite(g, bonus.entity(), spriteSheetTengen.bonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawEntitySprite(g, bonus.entity(), spriteSheetTengen.bonusValueSprite(bonus.symbol()));
+            case Bonus.STATE_EDIBLE -> drawEntitySprite(g, bonus.entity(), spriteSheet().bonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawEntitySprite(g, bonus.entity(), spriteSheet().bonusValueSprite(bonus.symbol()));
             default -> {}
         }
         g.restore();
@@ -177,8 +178,8 @@ public class TengenMsPacManGameWorldRenderer extends SpriteRenderer implements M
 
     @Override
     public void drawClapperBoard(GraphicsContext g, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
-        var sprite = animation.currentSprite(spriteSheetTengen.clapperboardSprites());
-        if (sprite != RectangularArea.EMPTY) {
+        var sprite = animation.currentSprite(spriteSheet().clapperboardSprites());
+        if (sprite != RectangularArea.PIXEL) {
             drawSpriteCenteredOverBox(g, sprite, x, y);
             g.setFont(font);
             g.setFill(textColor.darker());

@@ -11,10 +11,10 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameSounds;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -136,7 +136,7 @@ public class MsPacManCutScene3 extends GameScene2D {
     private SceneController sceneController;
     private ClapperboardAnimation clapAnimation;
     private SpriteAnimation storkAnimation;
-    private MsPacManGameSpriteSheet sheet;
+    private MsPacManGameSpriteSheet spriteSheet;
 
     private void startMusic() {
         int number  = context.gameState() == GameState.INTERMISSION_TEST
@@ -155,16 +155,17 @@ public class MsPacManCutScene3 extends GameScene2D {
         super.init();
         context.setScoreVisible(true);
 
-        sheet = context.worldRenderer().spriteRenderer().spriteSheet();
+        //TODO check this
+        spriteSheet = (MsPacManGameSpriteSheet) context.worldRenderer().spriteSheet();
 
         pacMan = new Pac();
         msPacMan = new Pac();
         stork = new Entity();
         bag = new Entity();
 
-        msPacMan.setAnimations(new MsPacManGamePacAnimations(msPacMan, sheet));
-        pacMan.setAnimations(new MsPacManGamePacAnimations(pacMan, sheet));
-        storkAnimation = sheet.createStorkFlyingAnimation();
+        msPacMan.setAnimations(new MsPacManGamePacAnimations(msPacMan, spriteSheet));
+        pacMan.setAnimations(new MsPacManGamePacAnimations(pacMan, spriteSheet));
+        storkAnimation = spriteSheet.createStorkFlyingAnimation();
         storkAnimation.start();
         clapAnimation = new ClapperboardAnimation("3", "JUNIOR");
         clapAnimation.start();
@@ -187,7 +188,7 @@ public class MsPacManCutScene3 extends GameScene2D {
             clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(g, msPacMan);
         renderer.drawAnimatedEntity(g, pacMan);
-        renderer.spriteRenderer().drawEntitySprite(g, stork, storkAnimation.currentSprite());
-        renderer.spriteRenderer().drawEntitySprite(g, bag, bagOpen ? sheet.juniorPacSprite() : sheet.blueBagSprite());
+        renderer.drawEntitySprite(g, stork, storkAnimation.currentSprite());
+        renderer.drawEntitySprite(g, bag, bagOpen ? spriteSheet.juniorPacSprite() : spriteSheet.blueBagSprite());
     }
 }

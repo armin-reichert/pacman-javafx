@@ -136,7 +136,7 @@ public class SpriteAnimation {
             return sprites[frameIndex];
         }
         Logger.warn("No sprite for frame index {}", frameIndex);
-        return RectangularArea.EMPTY;
+        return RectangularArea.PIXEL;
     }
 
     public void nextFrame() {

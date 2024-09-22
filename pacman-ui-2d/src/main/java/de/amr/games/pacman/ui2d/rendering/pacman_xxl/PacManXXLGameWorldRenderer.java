@@ -12,22 +12,25 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
+import de.amr.games.pacman.ui2d.util.SpriteSheet;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.maps.editor.TileMapUtil.getColorFromMap;
 import static de.amr.games.pacman.model.GameWorld.*;
 import static java.util.function.Predicate.not;
 
 public class PacManXXLGameWorldRenderer implements GameWorldRenderer {
 
-    private final PacManGameSpriteSheet spriteSheet;
-    private final SpriteRenderer spriteRenderer = new SpriteRenderer();
+    private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
+    private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
+    private final AssetStorage assets;
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
 
@@ -35,16 +38,15 @@ public class PacManXXLGameWorldRenderer implements GameWorldRenderer {
     private boolean blinkingOn;
 
     public PacManXXLGameWorldRenderer(AssetStorage assets) {
-        spriteSheet = assets.get("pacman_xxl.spritesheet");
-        spriteRenderer.setSpriteSheet(spriteSheet);
-        terrainRenderer.scalingPy.bind(spriteRenderer.scalingPy);
-        terrainRenderer.setMapBackgroundColor(spriteRenderer.backgroundColorPy.get());
-        foodRenderer.scalingPy.bind(spriteRenderer.scalingPy);
+        this.assets = checkNotNull(assets);
+        terrainRenderer.scalingPy.bind(scalingPy);
+        terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
+        foodRenderer.scalingPy.bind(scalingPy);
     }
 
     @Override
-    public SpriteRenderer spriteRenderer() {
-        return spriteRenderer;
+    public SpriteSheet spriteSheet() {
+        return assets.get("pacman_xxl.spritesheet");
     }
 
     @Override
@@ -59,12 +61,12 @@ public class PacManXXLGameWorldRenderer implements GameWorldRenderer {
 
     @Override
     public DoubleProperty scalingProperty() {
-        return spriteRenderer.scalingPy;
+        return scalingPy;
     }
 
     @Override
     public ObjectProperty<Color> backgroundColorProperty() {
-        return spriteRenderer.backgroundColorPy;
+        return backgroundColorPy;
     }
 
     @Override
@@ -102,9 +104,9 @@ public class PacManXXLGameWorldRenderer implements GameWorldRenderer {
 
     private void drawStaticBonus(GraphicsContext g, Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
-            spriteRenderer.drawEntitySprite(g,  bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            drawEntitySprite(g,  bonus.entity(), spriteSheet().bonusSymbolSprite(bonus.symbol()));
         } else if (bonus.state() == Bonus.STATE_EATEN) {
-            spriteRenderer.drawEntitySprite(g,  bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
+            drawEntitySprite(g,  bonus.entity(), spriteSheet().bonusValueSprite(bonus.symbol()));
         }
     }
 }
