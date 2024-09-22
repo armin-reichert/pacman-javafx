@@ -181,6 +181,10 @@ public class GamePage extends StackPane implements Page {
 
         contextMenu.getItems().add(new SeparatorMenuItem());
 
+        var miMuted = new CheckMenuItem("Sound muted"); // TODO: localize
+        miMuted.selectedProperty().bindBidirectional(GameSounds.mutedProperty());
+        contextMenu.getItems().add(miMuted);
+
         var miQuit = new MenuItem(context.locText("quit"));
         miQuit.setOnAction(e -> quit());
         contextMenu.getItems().add(miQuit);

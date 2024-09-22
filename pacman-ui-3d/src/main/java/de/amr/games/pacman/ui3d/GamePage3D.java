@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -104,6 +105,10 @@ public class GamePage3D extends GamePage {
         contextMenu.getItems().add(miImmunity);
 
         contextMenu.getItems().add(new SeparatorMenuItem());
+
+        var miMuted = new CheckMenuItem("Sound muted"); // TODO: localize
+        miMuted.selectedProperty().bindBidirectional(GameSounds.mutedProperty());
+        contextMenu.getItems().add(miMuted);
 
         if (context.game().variant() == GameVariant.PACMAN_XXL) {
             var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
