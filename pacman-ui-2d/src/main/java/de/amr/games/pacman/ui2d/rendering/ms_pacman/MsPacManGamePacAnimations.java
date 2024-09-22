@@ -22,23 +22,24 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 public class MsPacManGamePacAnimations extends SpriteAnimations {
 
     private final Map<String, SpriteAnimation> animationsByName;
-    private final SpriteSheet spriteSheet;
 
     public MsPacManGamePacAnimations(SpriteSheet spriteSheet) {
         checkNotNull(spriteSheet);
-        this.spriteSheet = spriteSheet;
 
         var munching = SpriteAnimation.begin()
+            .spriteSheet(spriteSheet)
             .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT))
             .loop()
             .end();
 
         var dying = SpriteAnimation.begin()
+            .spriteSheet(spriteSheet)
             .sprites(spriteSheet.pacDyingSprites())
             .frameTicks(8)
             .end();
 
         var husbandMunching = SpriteAnimation.begin()
+            .spriteSheet(spriteSheet)
             .sprites(spriteSheet.pacManMunchingSprites(Direction.LEFT))
             .frameTicks(2)
             .loop()
@@ -61,10 +62,10 @@ public class MsPacManGamePacAnimations extends SpriteAnimations {
         Pac msPacMan = (Pac) animatedEntity.entity();
         var currentAnimation = currentAnimation();
         if (Pac.ANIM_MUNCHING.equals(currentAnimationName)) {
-            currentAnimation.setSprites(spriteSheet.pacMunchingSprites(msPacMan.moveDir()));
+            currentAnimation.setSprites(currentAnimation.spriteSheet().pacMunchingSprites(msPacMan.moveDir()));
         }
         if (Pac.ANIM_HUSBAND_MUNCHING.equals(currentAnimationName)) {
-            currentAnimation.setSprites(spriteSheet.pacManMunchingSprites(msPacMan.moveDir()));
+            currentAnimation.setSprites(currentAnimation.spriteSheet().pacManMunchingSprites(msPacMan.moveDir()));
         }
         return currentAnimation != null ? currentAnimation.currentSprite() : null;
     }

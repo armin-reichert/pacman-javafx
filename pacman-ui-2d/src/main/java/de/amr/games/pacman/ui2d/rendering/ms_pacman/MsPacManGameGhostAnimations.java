@@ -22,35 +22,38 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 public class MsPacManGameGhostAnimations extends SpriteAnimations {
 
     private final Map<String, SpriteAnimation> animationsByName;
-    private final SpriteSheet spriteSheet;
 
     public MsPacManGameGhostAnimations(SpriteSheet spriteSheet, byte ghostID) {
         checkNotNull(spriteSheet);
-        this.spriteSheet = spriteSheet;
 
         var normal = SpriteAnimation.begin()
+            .spriteSheet(spriteSheet)
             .sprites(spriteSheet.ghostNormalSprites(ghostID, Direction.LEFT))
             .frameTicks(8)
             .loop()
             .end();
 
         var frightened = SpriteAnimation.begin()
+            .spriteSheet(spriteSheet)
             .sprites(spriteSheet.ghostFrightenedSprites())
             .frameTicks(8)
             .loop()
             .end();
 
         var flashing = SpriteAnimation.begin()
+            .spriteSheet(spriteSheet)
             .sprites(spriteSheet.ghostFlashingSprites())
             .frameTicks(7)
             .loop()
             .end();
 
         var eyes = SpriteAnimation.begin()
+            .spriteSheet(spriteSheet)
             .sprites(spriteSheet.ghostEyesSprites(Direction.LEFT))
             .end();
 
         var number = SpriteAnimation.begin()
+            .spriteSheet(spriteSheet)
             .sprites(spriteSheet.ghostNumberSprites())
             .end();
 
@@ -85,9 +88,9 @@ public class MsPacManGameGhostAnimations extends SpriteAnimations {
         Ghost ghost = (Ghost) animatedEntity.entity();
         var currentAnimation = currentAnimation();
         if (Ghost.ANIM_GHOST_NORMAL.equals(currentAnimationName)) {
-            currentAnimation.setSprites(spriteSheet.ghostNormalSprites(ghost.id(), ghost.wishDir()));
+            currentAnimation.setSprites(currentAnimation.spriteSheet().ghostNormalSprites(ghost.id(), ghost.wishDir()));
         } else if (Ghost.ANIM_GHOST_EYES.equals(currentAnimationName)) {
-            currentAnimation.setSprites(spriteSheet.ghostEyesSprites(ghost.wishDir()));
+            currentAnimation.setSprites(currentAnimation.spriteSheet().ghostEyesSprites(ghost.wishDir()));
         }
         return currentAnimation != null ? currentAnimation.currentSprite() : null;
     }

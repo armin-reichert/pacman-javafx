@@ -22,23 +22,24 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 public class PacManGamePacAnimations extends SpriteAnimations {
 
     private final Map<String, SpriteAnimation> animationsByName;
-    private final SpriteSheet spriteSheet;
 
     public PacManGamePacAnimations(SpriteSheet spriteSheet) {
         checkNotNull(spriteSheet);
-        this.spriteSheet = spriteSheet;
 
         var munching = SpriteAnimation.begin()
+            .spriteSheet(spriteSheet)
             .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT))
             .loop()
             .end();
 
         var dying = SpriteAnimation.begin()
+            .spriteSheet(spriteSheet)
             .sprites(spriteSheet.pacDyingSprites())
             .frameTicks(8)
             .end();
 
         var bigPacMan = SpriteAnimation.begin()
+            .spriteSheet(spriteSheet)
             .sprites(spriteSheet.bigPacManSprites())
             .frameTicks(3)
             .loop()
@@ -60,7 +61,7 @@ public class PacManGamePacAnimations extends SpriteAnimations {
         Pac pac = (Pac) animatedEntity.entity();
         var currentAnimation = currentAnimation();
         if (Pac.ANIM_MUNCHING.equals(currentAnimationName)) {
-            currentAnimation.setSprites(spriteSheet.pacMunchingSprites(pac.moveDir()));
+            currentAnimation.setSprites(currentAnimation.spriteSheet().pacMunchingSprites(pac.moveDir()));
         }
         return currentAnimation != null ? currentAnimation.currentSprite() : null;
     }

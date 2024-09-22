@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.util;
 
 import de.amr.games.pacman.ui2d.rendering.RectangularArea;
+import de.amr.games.pacman.ui2d.rendering.SpriteSheet;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
@@ -20,6 +21,11 @@ public class SpriteAnimation {
     public static class Builder {
 
         private final SpriteAnimation animation = new SpriteAnimation();
+
+        public Builder spriteSheet(SpriteSheet spriteSheet) {
+            animation.spriteSheet = spriteSheet;
+            return this;
+        }
 
         public Builder frameTicks(int ticks) {
             animation.frameTicks = ticks;
@@ -68,6 +74,7 @@ public class SpriteAnimation {
         };
     }
 
+    private SpriteSheet spriteSheet;
     private RectangularArea[] sprites = new RectangularArea[0];
     private boolean loop;
     private int frameTicks = 1;
@@ -78,6 +85,10 @@ public class SpriteAnimation {
     public void setSprites(RectangularArea[] sprites) {
         this.sprites = sprites;
         // TODO what about frame index?
+    }
+
+    public SpriteSheet spriteSheet() {
+        return spriteSheet;
     }
 
     public RectangularArea[] getSprites() {

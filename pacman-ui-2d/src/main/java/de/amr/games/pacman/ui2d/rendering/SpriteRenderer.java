@@ -4,7 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.rendering;
 
+import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Entity;
+import de.amr.games.pacman.ui2d.util.SpriteAnimations;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -24,6 +26,20 @@ public interface SpriteRenderer {
 
     default double scaled(double factor) {
         return scaling() * factor;
+    }
+
+    /**
+     * Draws the given source scaled by the current scaling value.
+     *
+     * @param g         graphics context
+     * @param image     source
+     * @param x         unscaled x-coordinate
+     * @param y         unscaled y-coordinate
+     * @param width     unscaled width
+     * @param height    unscaled height
+     */
+    default void drawImageScaled(GraphicsContext g, Image image, double x, double y, double width, double height) {
+        g.drawImage(image, scaled(x), scaled(y), scaled(width), scaled(height));
     }
 
     /**
@@ -103,16 +119,17 @@ public interface SpriteRenderer {
     }
 
     /**
-     * Draws the given source scaled by the current scaling value.
+     * Draws animated entity (Pac-Man, ghost, moving bonus) if entity is visible.
      *
-     * @param g         graphics context
-     * @param image     source
-     * @param x         unscaled x-coordinate
-     * @param y         unscaled y-coordinate
-     * @param width     unscaled width
-     * @param height    unscaled height
+     * @param g graphics context
+     * @param guy the animated entity
      */
-    default void drawImageScaled(GraphicsContext g, Image image, double x, double y, double width, double height) {
-        g.drawImage(image, scaled(x), scaled(y), scaled(width), scaled(height));
+    default void drawAnimatedEntity(GraphicsContext g, AnimatedEntity guy) {
+        if (guy.isVisible() && guy.animations().isPresent()) {
+            if (guy.animations().get() instanceof SpriteAnimations spriteAnimations) {
+                drawEntitySprite(g, guy.entity(), spriteAnimations.currentSprite(guy));
+            }
+        }
     }
+
 }

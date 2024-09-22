@@ -68,20 +68,6 @@ public interface GameWorldRenderer extends SpriteRenderer {
         g.fillRect(centerX - 0.5 * squareSize, centerY - 0.5 * squareSize, squareSize, squareSize);
     }
 
-    /**
-     * Draws animated entity (Pac-Man, ghost, moving bonus) if entity is visible.
-     *
-     * @param g graphics context
-     * @param guy the animated entity
-     */
-    default void drawAnimatedEntity(GraphicsContext g, AnimatedEntity guy) {
-        if (guy.isVisible() && guy.animations().isPresent()) {
-            if (guy.animations().get() instanceof SpriteAnimations spriteAnimations) {
-                drawEntitySprite(g, guy.entity(), spriteAnimations.currentSprite(guy));
-            }
-        }
-    }
-
     default void drawGhostFacingRight(GraphicsContext g, byte ghostID, double x, double y) {
         drawSpriteCenteredOverBox(g, spriteSheet().ghostFacingRight(ghostID), x, y);
     }
