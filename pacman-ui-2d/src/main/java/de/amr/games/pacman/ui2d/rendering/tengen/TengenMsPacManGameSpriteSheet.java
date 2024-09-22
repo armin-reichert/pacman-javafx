@@ -35,11 +35,6 @@ public class TengenMsPacManGameSpriteSheet implements SpriteSheet {
     }
 
     @Override
-    public int tileSize() {
-        return 16;
-    }
-
-    @Override
     public Image sourceImage() {
         return source;
     }

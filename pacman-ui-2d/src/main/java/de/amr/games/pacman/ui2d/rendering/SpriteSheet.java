@@ -56,8 +56,6 @@ public interface SpriteSheet {
     default RectangularArea[] blinkyStretchedSprites() { return NO_SPRITES; }
     default RectangularArea[] bigPacManSprites() { return NO_SPRITES; }
 
-    int tileSize();
-
     Image sourceImage();
 
     /**

@@ -171,11 +171,6 @@ public class PacManGameSpriteSheet implements SpriteSheet {
     }
 
     @Override
-    public int tileSize() {
-        return RASTER_SIZE;
-    }
-
-    @Override
     public RectangularArea[] ghostNumberSprites() {
         return ghostNumberSprites;
     }

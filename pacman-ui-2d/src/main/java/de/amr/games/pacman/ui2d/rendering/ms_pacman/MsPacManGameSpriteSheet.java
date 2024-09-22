@@ -111,11 +111,6 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
     }
 
     @Override
-    public int tileSize() {
-        return RASTER_SIZE;
-    }
-
-    @Override
     public RectangularArea[] ghostNumberSprites() {
         return ghostNumberSprites;
     }
