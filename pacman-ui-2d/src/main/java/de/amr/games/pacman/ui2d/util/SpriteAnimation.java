@@ -18,6 +18,8 @@ import org.tinylog.Logger;
  */
 public class SpriteAnimation {
 
+    private static final int FPS = 60;
+
     public static class Builder {
 
         private final SpriteAnimation spriteAnimation;
@@ -31,11 +33,6 @@ public class SpriteAnimation {
             return this;
         }
 
-        public Builder fps(int fps) {
-            spriteAnimation.fps = fps;
-            return this;
-        }
-
         public Builder sprites(RectArea... sprites) {
             spriteAnimation.sprites = sprites;
             return this;
@@ -43,12 +40,12 @@ public class SpriteAnimation {
 
         public SpriteAnimation loop() {
             spriteAnimation.loop = true;
-            spriteAnimation.animation = createTransition(spriteAnimation);
+            spriteAnimation.createClock();
             return spriteAnimation;
         }
 
         public SpriteAnimation end() {
-            spriteAnimation.animation = createTransition(spriteAnimation);
+            spriteAnimation.createClock();
             return spriteAnimation;
         }
     }
@@ -57,29 +54,11 @@ public class SpriteAnimation {
         return new Builder(spriteSheet);
     }
 
-    private static Transition createTransition(SpriteAnimation spriteAnimation) {
-        return new Transition() {
-            {
-                setCycleDuration(Duration.seconds(1.0 / spriteAnimation.fps * spriteAnimation.frameTicks));
-                setCycleCount(spriteAnimation.loop ? Animation.INDEFINITE : spriteAnimation.sprites.length);
-                setInterpolator(Interpolator.LINEAR);
-            }
-
-            @Override
-            protected void interpolate(double frac) {
-                if (frac >= 1) {
-                    spriteAnimation.nextFrame();
-                }
-            }
-        };
-    }
-
     private final GameSpriteSheet spriteSheet;
     private RectArea[] sprites;
     private boolean loop;
     private int frameTicks = 1;
-    private int fps = 60;
-    private Animation animation;
+    private Animation clock;
     private int frameIndex;
 
     private SpriteAnimation(GameSpriteSheet spriteSheet) {
@@ -95,17 +74,17 @@ public class SpriteAnimation {
     }
 
     public void reset() {
-        animation.stop();
-        animation.jumpTo(Duration.ZERO);
+        clock.stop();
+        clock.jumpTo(Duration.ZERO);
         frameIndex = 0;
     }
 
     public void setFrameTicks(int ticks) {
         if (ticks != frameTicks) {
-            boolean wasRunning = animation.getStatus() == Status.RUNNING;
-            animation.stop();
+            boolean wasRunning = clock.getStatus() == Status.RUNNING;
+            clock.stop();
             frameTicks = ticks;
-            animation = createTransition(this);
+            createClock();
             if (wasRunning) {
                 start();
             }
@@ -113,11 +92,11 @@ public class SpriteAnimation {
     }
 
     public void start() {
-        animation.play();
+        clock.play();
     }
 
     public void stop() {
-        animation.stop();
+        clock.stop();
     }
 
     public void setFrameIndex(int index) {
@@ -144,7 +123,24 @@ public class SpriteAnimation {
     public void nextFrame() {
         frameIndex++;
         if (frameIndex == sprites.length) {
-            frameIndex = animation.getCycleCount() == Animation.INDEFINITE ? 0 : sprites.length - 1;
+            frameIndex = clock.getCycleCount() == Animation.INDEFINITE ? 0 : sprites.length - 1;
         }
+    }
+
+    private void createClock() {
+        clock = new Transition() {
+            {
+                setCycleDuration(Duration.seconds(1.0 / FPS * frameTicks));
+                setCycleCount(loop ? Animation.INDEFINITE : sprites.length);
+                setInterpolator(Interpolator.LINEAR);
+            }
+
+            @Override
+            protected void interpolate(double frac) {
+                if (frac >= 1) {
+                    nextFrame();
+                }
+            }
+        };
     }
 }
