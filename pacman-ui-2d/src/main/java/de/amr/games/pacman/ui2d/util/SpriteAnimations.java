@@ -7,13 +7,14 @@ package de.amr.games.pacman.ui2d.util;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
-import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * @author Armin Reichert
@@ -33,6 +34,11 @@ public abstract class SpriteAnimations implements Animations {
 
     public String currentAnimationName() {
         return currentAnimationName;
+    }
+
+    public boolean currently(String name) {
+        checkNotNull(name);
+        return name.equals(currentAnimationName);
     }
 
     public final RectArea currentSprite(AnimatedEntity animatedEntity) {

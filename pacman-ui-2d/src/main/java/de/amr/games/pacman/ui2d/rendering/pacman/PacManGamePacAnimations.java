@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.rendering.pacman;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
@@ -51,7 +50,7 @@ public class PacManGamePacAnimations extends SpriteAnimations {
     @Override
     protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
         if (entity instanceof Pac pac) {
-            if (Pac.ANIM_MUNCHING.equals(currentAnimationName)) {
+            if (currently(Pac.ANIM_MUNCHING)) {
                 return spriteSheet.pacMunchingSprites(pac.moveDir());
             }
         }

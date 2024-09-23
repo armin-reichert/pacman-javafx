@@ -76,10 +76,10 @@ public class MsPacManGameGhostAnimations extends SpriteAnimations {
     @Override
     protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
         if (entity instanceof Ghost ghost) {
-            if (Ghost.ANIM_GHOST_NORMAL.equals(currentAnimationName)) {
+            if (currently(Ghost.ANIM_GHOST_NORMAL)) {
                 return spriteSheet.ghostNormalSprites(ghost.id(), ghost.wishDir());
             }
-            if (Ghost.ANIM_GHOST_EYES.equals(currentAnimationName)) {
+            if (currently(Ghost.ANIM_GHOST_EYES)) {
                 return spriteSheet.ghostEyesSprites(ghost.wishDir());
             }
         }

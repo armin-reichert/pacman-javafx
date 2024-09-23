@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.rendering.pacman;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
@@ -102,10 +101,10 @@ public class PacManGameGhostAnimations extends SpriteAnimations {
     @Override
     protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
         if (entity instanceof Ghost ghost) {
-            if (Ghost.ANIM_GHOST_NORMAL.equals(currentAnimationName)) {
+            if (currently(Ghost.ANIM_GHOST_NORMAL)) {
                 return spriteSheet.ghostNormalSprites(ghost.id(), ghost.wishDir());
             }
-            if (Ghost.ANIM_GHOST_EYES.equals(currentAnimationName)) {
+            if (currently(Ghost.ANIM_GHOST_EYES)) {
                 return spriteSheet.ghostEyesSprites(ghost.wishDir());
             }
         }
