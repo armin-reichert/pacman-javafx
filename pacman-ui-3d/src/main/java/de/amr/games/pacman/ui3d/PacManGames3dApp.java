@@ -44,7 +44,7 @@ public class PacManGames3dApp extends Application {
     public static final DoubleProperty              PY_3D_WALL_HEIGHT        = new SimpleDoubleProperty(3.5);
     public static final DoubleProperty              PY_3D_WALL_OPACITY       = new SimpleDoubleProperty(0.9);
 
-    private static Dimension2D computeInitialSize() {
+    private static Dimension2D initialSize() {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double aspect = screenSize.getWidth() / screenSize.getHeight();
         double height = 0.8 * screenSize.getHeight();
@@ -95,7 +95,7 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        ui = new PacManGames3dUI(computeInitialSize());
+        ui = new PacManGames3dUI(initialSize());
         ui.setGameScenes(createGameScenes());
         ui.createAndStart(stage);
 

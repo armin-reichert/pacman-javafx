@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.ui2d.GameAssets2D;
@@ -14,6 +18,9 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_FLOOR_COLOR;
 
+/**
+ * @author Armin Reichert
+ */
 public class GameAssets3D extends AssetStorage {
     
     public GameAssets3D(ResourceManager rm, GameAssets2D assets2D) {
