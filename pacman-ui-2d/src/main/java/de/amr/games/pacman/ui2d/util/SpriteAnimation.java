@@ -22,31 +22,38 @@ public class SpriteAnimation {
 
     public static class Builder {
 
-        private final SpriteAnimation spriteAnimation;
+        private final SpriteAnimation workPiece;
 
         private Builder(GameSpriteSheet spriteSheet) {
-            spriteAnimation = new SpriteAnimation(spriteSheet);
+            workPiece = new SpriteAnimation(spriteSheet);
+        }
+
+        public Builder info(String info) {
+            workPiece.info = info;
+            return this;
         }
 
         public Builder frameTicks(int ticks) {
-            spriteAnimation.frameTicks = ticks;
+            workPiece.frameTicks = ticks;
             return this;
         }
 
         public Builder sprites(RectArea... sprites) {
-            spriteAnimation.sprites = sprites;
+            workPiece.sprites = sprites;
             return this;
         }
 
         public SpriteAnimation loop() {
-            spriteAnimation.loop = true;
-            spriteAnimation.createClock();
-            return spriteAnimation;
+            workPiece.loop = true;
+            workPiece.createClock();
+            Logger.info("New sprite animation '{}'", workPiece.info);
+            return workPiece;
         }
 
         public SpriteAnimation end() {
-            spriteAnimation.createClock();
-            return spriteAnimation;
+            workPiece.createClock();
+            Logger.info("New sprite animation '{}'", workPiece.info);
+            return workPiece;
         }
     }
 
@@ -55,6 +62,7 @@ public class SpriteAnimation {
     }
 
     private final GameSpriteSheet spriteSheet;
+    private String info;
     private RectArea[] sprites;
     private boolean loop;
     private int frameTicks = 1;

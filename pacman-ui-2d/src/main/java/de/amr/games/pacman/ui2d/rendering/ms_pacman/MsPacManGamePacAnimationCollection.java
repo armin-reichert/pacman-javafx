@@ -26,17 +26,20 @@ public class MsPacManGamePacAnimationCollection extends SpriteAnimationCollectio
 
         var munching = SpriteAnimation
             .spriteSheet(spriteSheet)
+            .info("Ms. Pac-Man munching")
             .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT))
             .loop();
 
         var dying = SpriteAnimation
             .spriteSheet(spriteSheet)
+            .info("Ms. Pac-Man dying")
             .sprites(spriteSheet.pacDyingSprites())
             .frameTicks(8)
             .end();
 
         var husbandMunching = SpriteAnimation
             .spriteSheet(spriteSheet)
+            .info("Ms. Pac-Man's husband munching")
             .sprites(spriteSheet.pacManMunchingSprites(Direction.LEFT))
             .frameTicks(2)
             .loop();

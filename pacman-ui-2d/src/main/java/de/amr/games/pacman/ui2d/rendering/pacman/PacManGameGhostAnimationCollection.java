@@ -25,50 +25,59 @@ public class PacManGameGhostAnimationCollection extends SpriteAnimationCollectio
 
         var normal = SpriteAnimation
             .spriteSheet(spriteSheet)
+            .info("Normal ghost")
             .sprites(spriteSheet.ghostNormalSprites(ghostID, Direction.LEFT))
             .frameTicks(8)
             .loop();
 
         var frightened = SpriteAnimation
             .spriteSheet(spriteSheet)
+            .info("Frightened ghost")
             .sprites(spriteSheet.ghostFrightenedSprites())
             .frameTicks(8)
             .loop();
 
         var flashing = SpriteAnimation
             .spriteSheet(spriteSheet)
+            .info("Flashing ghost")
             .sprites(spriteSheet.ghostFlashingSprites())
             .frameTicks(7)
             .loop();
 
-        var eyesAnimation = SpriteAnimation
+        var eyes = SpriteAnimation
             .spriteSheet(spriteSheet)
+            .info("Eyes-only ghost")
             .sprites(spriteSheet.ghostEyesSprites(Direction.LEFT))
             .end();
 
-        var numberAnimation = SpriteAnimation
+        var number = SpriteAnimation
             .spriteSheet(spriteSheet)
+            .info("Number for dead ghost")
             .sprites(spriteSheet.ghostNumberSprites())
             .end();
 
         var damaged = SpriteAnimation
             .spriteSheet(spriteSheet)
+            .info("Damaged dress ghost")
             .sprites(spriteSheet.blinkyDamagedSprites())
             .end();
 
-        var stretched = SpriteAnimation
+        var stretching = SpriteAnimation
             .spriteSheet(spriteSheet)
+            .info("Stretching dress ghost")
             .sprites(spriteSheet.blinkyStretchedSprites())
             .end();
 
         var patched = SpriteAnimation
             .spriteSheet(spriteSheet)
+            .info("Patched dress ghost")
             .sprites(spriteSheet.blinkyPatchedSprites())
             .frameTicks(4)
             .loop();
 
         var naked = SpriteAnimation
             .spriteSheet(spriteSheet)
+            .info("Naked ghost")
             .sprites(spriteSheet.blinkyNakedSprites())
             .frameTicks(4)
             .loop();
@@ -77,15 +86,15 @@ public class PacManGameGhostAnimationCollection extends SpriteAnimationCollectio
             Ghost.ANIM_GHOST_NORMAL, normal,
             Ghost.ANIM_GHOST_FRIGHTENED, frightened,
             Ghost.ANIM_GHOST_FLASHING, flashing,
-            Ghost.ANIM_GHOST_EYES, eyesAnimation,
-            Ghost.ANIM_GHOST_NUMBER, numberAnimation,
+            Ghost.ANIM_GHOST_EYES, eyes,
+            Ghost.ANIM_GHOST_NUMBER, number,
             Ghost.ANIM_BLINKY_DAMAGED, damaged,
-            Ghost.ANIM_BLINKY_STRETCHED, stretched,
+            Ghost.ANIM_BLINKY_STRETCHED, stretching,
             Ghost.ANIM_BLINKY_PATCHED, patched,
             Ghost.ANIM_BLINKY_NAKED, naked));
 
         // TODO check this
-        eyesAnimation.start();
+        eyes.start();
         frightened.start();
         flashing.start();
     }
