@@ -4,9 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.util;
 
-import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
+import de.amr.games.pacman.ui2d.rendering.RectArea;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
@@ -21,11 +20,10 @@ public class SpriteAnimation {
 
     public static class Builder {
 
-        private final SpriteAnimation spriteAnimation = new SpriteAnimation();
+        private final SpriteAnimation spriteAnimation;
 
-        public Builder spriteSheet(GameSpriteSheet spriteSheet) {
-            spriteAnimation.spriteSheet = spriteSheet;
-            return this;
+        private Builder(GameSpriteSheet spriteSheet) {
+            spriteAnimation = new SpriteAnimation(spriteSheet);
         }
 
         public Builder frameTicks(int ticks) {
@@ -55,8 +53,8 @@ public class SpriteAnimation {
         }
     }
 
-    public static Builder begin() {
-        return new Builder();
+    public static Builder spriteSheet(GameSpriteSheet spriteSheet) {
+        return new Builder(spriteSheet);
     }
 
     private static Transition createTransition(SpriteAnimation spriteAnimation) {
@@ -76,7 +74,7 @@ public class SpriteAnimation {
         };
     }
 
-    private GameSpriteSheet spriteSheet;
+    private final GameSpriteSheet spriteSheet;
     private RectArea[] sprites;
     private boolean loop;
     private int frameTicks = 1;
@@ -84,17 +82,16 @@ public class SpriteAnimation {
     private Animation animation;
     private int frameIndex;
 
-    public void setSprites(RectArea[] sprites) {
-        this.sprites = sprites;
-        // TODO what about frame index?
+    private SpriteAnimation(GameSpriteSheet spriteSheet) {
+        this.spriteSheet = spriteSheet;
     }
 
     public GameSpriteSheet spriteSheet() {
         return spriteSheet;
     }
 
-    public RectArea[] getSprites() {
-        return sprites;
+    public void setSprites(RectArea[] sprites) {
+        this.sprites = sprites;
     }
 
     public void reset() {
@@ -121,14 +118,6 @@ public class SpriteAnimation {
 
     public void stop() {
         animation.stop();
-    }
-
-    public boolean isRunning() {
-        return animation.getStatus() == Status.RUNNING;
-    }
-
-    public void setDelay(Duration delay) {
-        animation.setDelay(delay);
     }
 
     public void setFrameIndex(int index) {

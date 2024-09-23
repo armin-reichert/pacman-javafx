@@ -26,18 +26,18 @@ public class MsPacManGamePacAnimations extends SpriteAnimations {
     public MsPacManGamePacAnimations(GameSpriteSheet spriteSheet) {
         checkNotNull(spriteSheet);
 
-        var munching = SpriteAnimation.begin()
+        var munching = SpriteAnimation
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT))
             .loop();
 
-        var dying = SpriteAnimation.begin()
+        var dying = SpriteAnimation
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.pacDyingSprites())
             .frameTicks(8)
             .end();
 
-        var husbandMunching = SpriteAnimation.begin()
+        var husbandMunching = SpriteAnimation
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.pacManMunchingSprites(Direction.LEFT))
             .frameTicks(2)

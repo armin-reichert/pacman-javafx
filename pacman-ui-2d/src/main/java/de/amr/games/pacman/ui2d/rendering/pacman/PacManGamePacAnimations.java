@@ -26,18 +26,18 @@ public class PacManGamePacAnimations extends SpriteAnimations {
     public PacManGamePacAnimations(GameSpriteSheet spriteSheet) {
         checkNotNull(spriteSheet);
 
-        var munching = SpriteAnimation.begin()
+        var munching = SpriteAnimation
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT))
             .loop();
 
-        var dying = SpriteAnimation.begin()
+        var dying = SpriteAnimation
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.pacDyingSprites())
             .frameTicks(8)
             .end();
 
-        var bigPacMan = SpriteAnimation.begin()
+        var bigPacMan = SpriteAnimation
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.bigPacManSprites())
             .frameTicks(3)

@@ -25,51 +25,51 @@ public class PacManGameGhostAnimations extends SpriteAnimations {
 
     public PacManGameGhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
 
-        var normal = SpriteAnimation.begin()
+        var normal = SpriteAnimation
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.ghostNormalSprites(ghostID, Direction.LEFT))
             .frameTicks(8)
             .loop();
 
-        var frightened = SpriteAnimation.begin()
+        var frightened = SpriteAnimation
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.ghostFrightenedSprites())
             .frameTicks(8)
             .loop();
 
-        var flashing = SpriteAnimation.begin()
+        var flashing = SpriteAnimation
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.ghostFlashingSprites())
             .frameTicks(7)
             .loop();
 
-        var eyesAnimation = SpriteAnimation.begin()
+        var eyesAnimation = SpriteAnimation
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.ghostEyesSprites(Direction.LEFT))
             .end();
 
-        var numberAnimation = SpriteAnimation.begin()
+        var numberAnimation = SpriteAnimation
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.ghostNumberSprites())
             .end();
 
-        var damaged = SpriteAnimation.begin()
+        var damaged = SpriteAnimation
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.blinkyDamagedSprites())
             .end();
 
-        var stretched = SpriteAnimation.begin()
+        var stretched = SpriteAnimation
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.blinkyStretchedSprites())
             .end();
 
-        var patched = SpriteAnimation.begin()
+        var patched = SpriteAnimation
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.blinkyPatchedSprites())
             .frameTicks(4)
             .loop();
 
-        var naked = SpriteAnimation.begin()
+        var naked = SpriteAnimation
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.blinkyNakedSprites())
             .frameTicks(4)
