@@ -28,6 +28,8 @@ import de.amr.games.pacman.ui2d.rendering.pacman.PacManArcadeGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.pacman_xxl.PacManXXLGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGameGhostAnimations;
+import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -472,10 +474,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ss, ghost.id())));
             }
             case MS_PACMAN_TENGEN -> {
-                GameSpriteSheet ss = assets.get("tengen.spritesheet");
+                GameSpriteSheet ss = assets.get("tengen.spritesheet"); //TODO use
                 GameSpriteSheet ssMsPac = assets.get("ms_pacman.spritesheet");
-                game.pac().setAnimations(new MsPacManGamePacAnimations(ss));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ssMsPac, ghost.id())));
+                game.pac().setAnimations(new TengenMsPacManGamePacAnimations(ssMsPac));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new TengenMsPacManGameGhostAnimations(ssMsPac, ghost.id())));
             }
             case PACMAN -> {
                 GameSpriteSheet ss = assets.get("pacman.spritesheet");
