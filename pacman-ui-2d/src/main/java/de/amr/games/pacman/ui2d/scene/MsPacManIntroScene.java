@@ -205,15 +205,13 @@ public class MsPacManIntroScene extends GameScene2D {
 
         data = new Data();
 
-        //TODO remove temporary hack
-        GameSpriteSheet sheet = context.game().variant() == GameVariant.MS_PACMAN_TENGEN
-            ? context.assets().get("ms_pacman.spritesheet")
-            : context.renderer().spriteSheet();
+        //TODO use Ms. Pac-Man animations also in Tengen for now
+        GameSpriteSheet spriteSheet = context.assets().get("ms_pacman.spritesheet");
 
-        data.msPacMan.setAnimations(new MsPacManGamePacAnimations(sheet));
+        data.msPacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
         data.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
         for (Ghost ghost : data.ghosts) {
-            ghost.setAnimations(new MsPacManGameGhostAnimations(sheet, ghost.id()));
+            ghost.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, ghost.id()));
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
         }
         sceneController.restart(SceneState.STARTING);

@@ -243,6 +243,10 @@ public class MsPacManCutScene1 extends GameScene2D {
         inky = Ghost.cyan();
         pinky = Ghost.pink();
         heart = new Entity();
+
+        //TODO use Ms. Pac-Man animations also in Tengen for now
+        spriteSheet = context.assets().get("ms_pacman.spritesheet");
+
         msPac.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
         pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
         inky.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, inky.id()));

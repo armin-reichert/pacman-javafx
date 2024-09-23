@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameSounds;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
@@ -149,12 +150,13 @@ public class MsPacManCutScene2 extends GameScene2D {
         super.init();
         context.setScoreVisible(true);
 
-        var sheet = context.renderer().spriteSheet();
-
         pacMan = new Pac();
         msPacMan = new Pac();
-        msPacMan.setAnimations(new MsPacManGamePacAnimations(sheet));
-        pacMan.setAnimations(new MsPacManGamePacAnimations(sheet));
+
+        //TODO use Ms. Pac-Man animations also in Tengen for now
+        GameSpriteSheet spriteSheet = context.assets().get("ms_pacman.spritesheet");
+        msPacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
+        pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
 
         clapAnimation = new ClapperboardAnimation("2", "THE CHASE");
         clapAnimation.start();

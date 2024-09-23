@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameSounds;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
@@ -155,18 +156,21 @@ public class MsPacManCutScene3 extends GameScene2D {
         super.init();
         context.setScoreVisible(true);
 
-        //TODO check this
-        spriteSheet = (MsPacManGameSpriteSheet) context.renderer().spriteSheet();
-
         pacMan = new Pac();
         msPacMan = new Pac();
         stork = new Entity();
         bag = new Entity();
 
+        //TODO check this
+        // spriteSheet = (MsPacManGameSpriteSheet) context.renderer().spriteSheet();
+        //TODO use Ms. Pac-Man animations also in Tengen for now
+        spriteSheet = context.assets().get("ms_pacman.spritesheet");
         msPacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
         pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
+
         storkAnimation = spriteSheet.createStorkFlyingAnimation();
         storkAnimation.start();
+
         clapAnimation = new ClapperboardAnimation("3", "JUNIOR");
         clapAnimation.start();
 
