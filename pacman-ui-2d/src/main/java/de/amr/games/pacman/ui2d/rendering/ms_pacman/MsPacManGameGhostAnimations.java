@@ -21,8 +21,6 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class MsPacManGameGhostAnimations extends SpriteAnimations {
 
-    private final Map<String, SpriteAnimation> animationsByName;
-
     public MsPacManGameGhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
         checkNotNull(spriteSheet);
 
@@ -54,12 +52,12 @@ public class MsPacManGameGhostAnimations extends SpriteAnimations {
             .sprites(spriteSheet.ghostNumberSprites())
             .end();
 
-        animationsByName = Map.of(
+        add(Map.of(
             Ghost.ANIM_GHOST_NORMAL, normal,
             Ghost.ANIM_GHOST_FRIGHTENED, frightened,
             Ghost.ANIM_GHOST_FLASHING, flashing,
             Ghost.ANIM_GHOST_EYES, eyes,
-            Ghost.ANIM_GHOST_NUMBER, number);
+            Ghost.ANIM_GHOST_NUMBER, number));
 
         // TODO check this
         eyes.start();

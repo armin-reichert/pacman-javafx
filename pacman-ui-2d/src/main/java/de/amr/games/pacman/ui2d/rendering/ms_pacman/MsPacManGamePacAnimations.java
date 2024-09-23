@@ -7,8 +7,8 @@ package de.amr.games.pacman.ui2d.rendering.ms_pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
 
@@ -20,8 +20,6 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  * @author Armin Reichert
  */
 public class MsPacManGamePacAnimations extends SpriteAnimations {
-
-    private final Map<String, SpriteAnimation> animationsByName;
 
     public MsPacManGamePacAnimations(GameSpriteSheet spriteSheet) {
         checkNotNull(spriteSheet);
@@ -43,11 +41,11 @@ public class MsPacManGamePacAnimations extends SpriteAnimations {
             .frameTicks(2)
             .loop();
 
-        animationsByName = Map.of(
+        add(Map.of(
             Pac.ANIM_MUNCHING, munching,
             Pac.ANIM_DYING, dying,
             Pac.ANIM_HUSBAND_MUNCHING, husbandMunching
-        );
+        ));
     }
 
     @Override

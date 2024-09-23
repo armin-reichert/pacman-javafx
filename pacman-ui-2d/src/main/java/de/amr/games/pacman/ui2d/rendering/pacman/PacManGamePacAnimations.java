@@ -21,8 +21,6 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class PacManGamePacAnimations extends SpriteAnimations {
 
-    private final Map<String, SpriteAnimation> animationsByName;
-
     public PacManGamePacAnimations(GameSpriteSheet spriteSheet) {
         checkNotNull(spriteSheet);
 
@@ -43,10 +41,10 @@ public class PacManGamePacAnimations extends SpriteAnimations {
             .frameTicks(3)
             .loop();
 
-        animationsByName = Map.of(
+        add(Map.of(
             Pac.ANIM_MUNCHING, munching,
             Pac.ANIM_DYING, dying,
-            Pac.ANIM_BIG_PACMAN, bigPacMan);
+            Pac.ANIM_BIG_PACMAN, bigPacMan));
     }
 
     @Override

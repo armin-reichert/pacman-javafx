@@ -9,12 +9,20 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
 import org.tinylog.Logger;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Armin Reichert
  */
 public abstract class SpriteAnimations implements Animations {
 
+    protected final Map<String, SpriteAnimation> animationsByName = new HashMap<>();
     protected String currentAnimationName;
+
+    public void add(Map<String, SpriteAnimation> entries) {
+        animationsByName.putAll(entries);
+    }
 
     public String currentAnimationName() {
         return currentAnimationName;

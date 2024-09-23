@@ -21,8 +21,6 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class PacManGameGhostAnimations extends SpriteAnimations {
 
-    private final Map<String, SpriteAnimation> animationsByName;
-
     public PacManGameGhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
 
         var normal = SpriteAnimation
@@ -75,7 +73,7 @@ public class PacManGameGhostAnimations extends SpriteAnimations {
             .frameTicks(4)
             .loop();
 
-        animationsByName = Map.of(
+        add(Map.of(
             Ghost.ANIM_GHOST_NORMAL, normal,
             Ghost.ANIM_GHOST_FRIGHTENED, frightened,
             Ghost.ANIM_GHOST_FLASHING, flashing,
@@ -84,7 +82,7 @@ public class PacManGameGhostAnimations extends SpriteAnimations {
             Ghost.ANIM_BLINKY_DAMAGED, damaged,
             Ghost.ANIM_BLINKY_STRETCHED, stretched,
             Ghost.ANIM_BLINKY_PATCHED, patched,
-            Ghost.ANIM_BLINKY_NAKED, naked);
+            Ghost.ANIM_BLINKY_NAKED, naked));
 
         // TODO check this
         eyesAnimation.start();
