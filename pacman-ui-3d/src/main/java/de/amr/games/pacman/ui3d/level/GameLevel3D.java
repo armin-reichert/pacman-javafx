@@ -97,16 +97,12 @@ public class GameLevel3D {
         final GameWorld world = game.world();
 
         pac3D = Factory3D.createPac3D(game.variant(), assets, game.pac(), PAC_SIZE);
-        pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
-
         ghosts3D = game.ghosts().map(ghost -> Factory3D.createGhost3D(game.variant(), assets, ghost, GHOST_SIZE)).toList();
-        ghosts3D.forEach(ghost3D -> ghost3D.drawModePy.bind(PY_3D_DRAW_MODE));
-
         livesCounter3D = Factory3D.createLivesCounter3D(
                 context.game().variant(), assets, LIVES_COUNTER_MAX, LIVE_SHAPE_SIZE, context.game().hasCredit());
-        updateLivesCounter();
+        message3D = Factory3D.createMessage3D(assets);
 
-        createMessage3D();
+        updateLivesCounter();
 
         wallFillMaterialPy.bind(Bindings.createObjectBinding(
             () -> coloredMaterial(opaqueColor(wallFillColorPy.get(), wallOpacityPy.get())), wallFillColorPy, wallOpacityPy));
@@ -243,12 +239,6 @@ public class GameLevel3D {
             }
         });
         energizers3D.trimToSize();
-    }
-
-    private void createMessage3D() {
-        message3D = new Message3D("", context.assets().font("font.arcade", 6), Color.YELLOW, Color.WHITE);
-        message3D.setRotation(Rotate.X_AXIS, 90);
-        message3D.setVisible(false);
     }
 
     public void showAnimatedMessage(String text, double displaySeconds, double x, double y) {
