@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.rendering.pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
+import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -48,12 +49,12 @@ public class PacManGamePacAnimations extends SpriteAnimations {
     }
 
     @Override
-    public RectArea currentSprite(AnimatedEntity animatedEntity) {
-        Pac pac = (Pac) animatedEntity.entity();
-        var currentAnimation = currentAnimation();
-        if (Pac.ANIM_MUNCHING.equals(currentAnimationName)) {
-            currentAnimation.setSprites(currentAnimation.spriteSheet().pacMunchingSprites(pac.moveDir()));
+    protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
+        if (entity instanceof Pac pac) {
+            if (Pac.ANIM_MUNCHING.equals(currentAnimationName)) {
+                return spriteSheet.pacMunchingSprites(pac.moveDir());
+            }
         }
-        return currentAnimation != null ? currentAnimation.currentSprite() : null;
+        return super.selectedSprites(spriteSheet, entity);
     }
 }

@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.rendering.ms_pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
+import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
@@ -49,15 +50,15 @@ public class MsPacManGamePacAnimations extends SpriteAnimations {
     }
 
     @Override
-    public RectArea currentSprite(AnimatedEntity animatedEntity) {
-        Pac msPacMan = (Pac) animatedEntity.entity();
-        var currentAnimation = currentAnimation();
-        if (Pac.ANIM_MUNCHING.equals(currentAnimationName)) {
-            currentAnimation.setSprites(currentAnimation.spriteSheet().pacMunchingSprites(msPacMan.moveDir()));
+    protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
+        if (entity instanceof Pac msPacMan) {
+            if (Pac.ANIM_MUNCHING.equals(currentAnimationName)) {
+                return spriteSheet.pacMunchingSprites(msPacMan.moveDir());
+            }
+            if (Pac.ANIM_HUSBAND_MUNCHING.equals(currentAnimationName)) {
+                return spriteSheet.pacManMunchingSprites(msPacMan.moveDir());
+            }
         }
-        if (Pac.ANIM_HUSBAND_MUNCHING.equals(currentAnimationName)) {
-            currentAnimation.setSprites(currentAnimation.spriteSheet().pacManMunchingSprites(msPacMan.moveDir()));
-        }
-        return currentAnimation != null ? currentAnimation.currentSprite() : null;
+        return super.selectedSprites(spriteSheet, entity);
     }
 }

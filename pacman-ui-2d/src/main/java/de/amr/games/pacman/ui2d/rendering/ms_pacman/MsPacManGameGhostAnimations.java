@@ -5,10 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.rendering.ms_pacman;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.actors.AnimatedEntity;
+import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
 
@@ -74,14 +74,15 @@ public class MsPacManGameGhostAnimations extends SpriteAnimations {
     }
 
     @Override
-    public RectArea currentSprite(AnimatedEntity animatedEntity) {
-        Ghost ghost = (Ghost) animatedEntity.entity();
-        var currentAnimation = currentAnimation();
-        if (Ghost.ANIM_GHOST_NORMAL.equals(currentAnimationName)) {
-            currentAnimation.setSprites(currentAnimation.spriteSheet().ghostNormalSprites(ghost.id(), ghost.wishDir()));
-        } else if (Ghost.ANIM_GHOST_EYES.equals(currentAnimationName)) {
-            currentAnimation.setSprites(currentAnimation.spriteSheet().ghostEyesSprites(ghost.wishDir()));
+    protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
+        if (entity instanceof Ghost ghost) {
+            if (Ghost.ANIM_GHOST_NORMAL.equals(currentAnimationName)) {
+                return spriteSheet.ghostNormalSprites(ghost.id(), ghost.wishDir());
+            }
+            if (Ghost.ANIM_GHOST_EYES.equals(currentAnimationName)) {
+                return spriteSheet.ghostEyesSprites(ghost.wishDir());
+            }
         }
-        return currentAnimation != null ? currentAnimation.currentSprite() : null;
+        return super.selectedSprites(spriteSheet, entity);
     }
 }
