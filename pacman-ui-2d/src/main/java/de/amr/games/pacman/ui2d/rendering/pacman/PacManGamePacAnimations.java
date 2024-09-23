@@ -19,9 +19,9 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public class PacManGamePacAnimationCollection extends SpriteAnimationCollection {
+public class PacManGamePacAnimations extends SpriteAnimationCollection {
 
-    public PacManGamePacAnimationCollection(GameSpriteSheet spriteSheet) {
+    public PacManGamePacAnimations(GameSpriteSheet spriteSheet) {
         checkNotNull(spriteSheet);
 
         var munching = SpriteAnimation

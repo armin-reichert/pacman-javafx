@@ -20,8 +20,8 @@ import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameGhostAnimationCollection;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimationCollection;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameGhostAnimations;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.scene.paint.Color;
@@ -210,10 +210,10 @@ public class MsPacManIntroScene extends GameScene2D {
             ? context.assets().get("ms_pacman.spritesheet")
             : context.renderer().spriteSheet();
 
-        data.msPacMan.setAnimations(new MsPacManGamePacAnimationCollection(sheet));
+        data.msPacMan.setAnimations(new MsPacManGamePacAnimations(sheet));
         data.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
         for (Ghost ghost : data.ghosts) {
-            ghost.setAnimations(new MsPacManGameGhostAnimationCollection(sheet, ghost.id()));
+            ghost.setAnimations(new MsPacManGameGhostAnimations(sheet, ghost.id()));
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
         }
         sceneController.restart(SceneState.STARTING);

@@ -19,9 +19,9 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public class PacManGameGhostAnimationCollection extends SpriteAnimationCollection {
+public class PacManGameGhostAnimations extends SpriteAnimationCollection {
 
-    public PacManGameGhostAnimationCollection(GameSpriteSheet spriteSheet, byte ghostID) {
+    public PacManGameGhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
 
         var normal = SpriteAnimation
             .spriteSheet(spriteSheet)

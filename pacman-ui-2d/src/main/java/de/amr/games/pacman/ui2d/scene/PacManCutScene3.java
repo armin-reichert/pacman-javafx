@@ -10,8 +10,8 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameSounds;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameGhostAnimationCollection;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManGamePacAnimationCollection;
+import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameGhostAnimations;
+import de.amr.games.pacman.ui2d.rendering.pacman.PacManGamePacAnimations;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -40,10 +40,10 @@ public class PacManCutScene3 extends GameScene2D {
         context.setScoreVisible(true);
 
         pac = new Pac();
-        pac.setAnimations(new PacManGamePacAnimationCollection(context.renderer().spriteSheet()));
+        pac.setAnimations(new PacManGamePacAnimations(context.renderer().spriteSheet()));
 
         blinky = Ghost.red();
-        blinky.setAnimations(new PacManGameGhostAnimationCollection(context.renderer().spriteSheet(), blinky.id()));
+        blinky.setAnimations(new PacManGameGhostAnimations(context.renderer().spriteSheet(), blinky.id()));
 
         frame = -1;
     }

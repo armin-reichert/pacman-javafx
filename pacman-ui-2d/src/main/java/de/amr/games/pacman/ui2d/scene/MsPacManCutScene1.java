@@ -15,8 +15,8 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameGhostAnimationCollection;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimationCollection;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameGhostAnimations;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -243,10 +243,10 @@ public class MsPacManCutScene1 extends GameScene2D {
         inky = Ghost.cyan();
         pinky = Ghost.pink();
         heart = new Entity();
-        msPac.setAnimations(new MsPacManGamePacAnimationCollection(spriteSheet));
-        pacMan.setAnimations(new MsPacManGamePacAnimationCollection(spriteSheet));
-        inky.setAnimations(new MsPacManGameGhostAnimationCollection(spriteSheet, inky.id()));
-        pinky.setAnimations(new MsPacManGameGhostAnimationCollection(spriteSheet, pinky.id()));
+        msPac.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
+        pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
+        inky.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, inky.id()));
+        pinky.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, pinky.id()));
         clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
         clapAnimation.start();
 
