@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.util;
 
 import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Animations;
-import de.amr.games.pacman.ui2d.rendering.RectangularArea;
+import de.amr.games.pacman.ui2d.rendering.RectArea;
 import org.tinylog.Logger;
 
 /**
@@ -25,7 +25,7 @@ public abstract class SpriteAnimations implements Animations {
         return currentAnimationName != null ? animation(currentAnimationName) : null;
     }
 
-    public abstract RectangularArea currentSprite(AnimatedEntity entity);
+    public abstract RectArea currentSprite(AnimatedEntity entity);
 
     public abstract SpriteAnimation animation(String name);
 

@@ -57,7 +57,7 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
     }
 
     @Override
-    public SpriteSheet spriteSheet() {
+    public GameSpriteSheet spriteSheet() {
         return assets.get("tengen.spritesheet");
     }
 
@@ -129,33 +129,33 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
     }
 
     // Maps are all the same size and arranged in a 3x3 grid
-    private RectangularArea arcadeMapArea(int arcadeMapNumber, int width, int height) {
+    private RectArea arcadeMapArea(int arcadeMapNumber, int width, int height) {
         int index = arcadeMapNumber - 1;
         int rowIndex = index / 3, colIndex = index % 3;
-        return new RectangularArea(colIndex * width, rowIndex * height, width, height);
+        return new RectArea(colIndex * width, rowIndex * height, width, height);
     }
 
     // Maps have same width but different height and are arranged in 5 rows
-    private RectangularArea nonArcadeMapArea(int nonArcadeMapNumber, int width, int height) {
+    private RectArea nonArcadeMapArea(int nonArcadeMapNumber, int width, int height) {
         if (nonArcadeMapNumber <= 8) { // row #1, maps 1-8
             int colIndex = nonArcadeMapNumber - 1;
-            return new RectangularArea(colIndex * width, 0, width, height);
+            return new RectArea(colIndex * width, 0, width, height);
         }
         else if (nonArcadeMapNumber <= 16) { // row #2, maps 9-16
             int colIndex = (nonArcadeMapNumber - 1) % 8;
-            return new RectangularArea(colIndex * width, 248, width, height);
+            return new RectArea(colIndex * width, 248, width, height);
         }
         else if (nonArcadeMapNumber <= 24) { // row #3, maps 17-24
             int colIndex = (nonArcadeMapNumber - 1) % 8;
-            return new RectangularArea(colIndex * width, 544, width, height);
+            return new RectArea(colIndex * width, 544, width, height);
         }
         else if (nonArcadeMapNumber <= 33) { // row #4, maps 18-33
             int colIndex = (nonArcadeMapNumber - 1) % 9;
-            return new RectangularArea(colIndex * width, 840, width, height);
+            return new RectArea(colIndex * width, 840, width, height);
         }
         else if (nonArcadeMapNumber <= 37) { // row #5, maps 34-37
             int colIndex = (nonArcadeMapNumber - 1) % 4;
-            return new RectangularArea(colIndex * width, 1136, width, height);
+            return new RectArea(colIndex * width, 1136, width, height);
         }
         throw new IllegalArgumentException("Illegal map number: " + nonArcadeMapNumber);
     }
@@ -175,7 +175,7 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
     @Override
     public void drawClapperBoard(GraphicsContext g, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
         var sprite = animation.currentSprite(spriteSheet().clapperboardSprites());
-        if (sprite != RectangularArea.PIXEL) {
+        if (sprite != RectArea.PIXEL) {
             drawSpriteCenteredOverBox(g, sprite, x, y);
             g.setFont(font);
             g.setFill(textColor.darker());

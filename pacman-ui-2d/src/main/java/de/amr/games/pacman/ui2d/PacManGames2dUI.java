@@ -20,7 +20,7 @@ import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.SpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManArcadeGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
@@ -467,23 +467,23 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         GameModel game = event.game;
         switch (game.variant()) {
             case MS_PACMAN -> {
-                SpriteSheet ss = assets.get("ms_pacman.spritesheet");
+                GameSpriteSheet ss = assets.get("ms_pacman.spritesheet");
                 game.pac().setAnimations(new MsPacManGamePacAnimations(ss));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ss, ghost.id())));
             }
             case MS_PACMAN_TENGEN -> {
-                SpriteSheet ss = assets.get("tengen.spritesheet");
-                SpriteSheet ssMsPac = assets.get("ms_pacman.spritesheet");
+                GameSpriteSheet ss = assets.get("tengen.spritesheet");
+                GameSpriteSheet ssMsPac = assets.get("ms_pacman.spritesheet");
                 game.pac().setAnimations(new MsPacManGamePacAnimations(ss));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ssMsPac, ghost.id())));
             }
             case PACMAN -> {
-                SpriteSheet ss = assets.get("pacman.spritesheet");
+                GameSpriteSheet ss = assets.get("pacman.spritesheet");
                 game.pac().setAnimations(new PacManGamePacAnimations(ss));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ss, ghost.id())));
             }
             case PACMAN_XXL -> {
-                SpriteSheet ss = assets.get("pacman_xxl.spritesheet");
+                GameSpriteSheet ss = assets.get("pacman_xxl.spritesheet");
                 game.pac().setAnimations(new PacManGamePacAnimations(ss));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ss, ghost.id())));
             }

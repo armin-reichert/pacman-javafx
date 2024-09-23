@@ -12,15 +12,15 @@ package de.amr.games.pacman.ui2d.rendering;
  * @param width width of rectangle
  * @param height height of rectangle
  */
-public record RectangularArea(short x, short y, short width, short height) {
+public record RectArea(short x, short y, short width, short height) {
 
-    public static final RectangularArea PIXEL = new RectangularArea(0, 0, 1, 1);
+    public static final RectArea PIXEL = new RectArea(0, 0, 1, 1);
 
-    public static RectangularArea rect(int x, int y, int width, int height) {
-        return new RectangularArea(x, y, width, height);
+    public static RectArea rect(int x, int y, int width, int height) {
+        return new RectArea(x, y, width, height);
     }
 
-    public RectangularArea(int x, int y, int width, int height) {
+    public RectArea(int x, int y, int width, int height) {
         this((short) x, (short) y, (short) width, (short) height);
     }
 }

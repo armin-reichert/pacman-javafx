@@ -7,8 +7,8 @@ package de.amr.games.pacman.ui2d.rendering.pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.rendering.RectangularArea;
-import de.amr.games.pacman.ui2d.rendering.SpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.RectArea;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
 
@@ -23,14 +23,13 @@ public class PacManGamePacAnimations extends SpriteAnimations {
 
     private final Map<String, SpriteAnimation> animationsByName;
 
-    public PacManGamePacAnimations(SpriteSheet spriteSheet) {
+    public PacManGamePacAnimations(GameSpriteSheet spriteSheet) {
         checkNotNull(spriteSheet);
 
         var munching = SpriteAnimation.begin()
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT))
-            .loop()
-            .end();
+            .loop();
 
         var dying = SpriteAnimation.begin()
             .spriteSheet(spriteSheet)
@@ -42,8 +41,7 @@ public class PacManGamePacAnimations extends SpriteAnimations {
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.bigPacManSprites())
             .frameTicks(3)
-            .loop()
-            .end();
+            .loop();
 
         animationsByName = Map.of(
             Pac.ANIM_MUNCHING, munching,
@@ -57,7 +55,7 @@ public class PacManGamePacAnimations extends SpriteAnimations {
     }
 
     @Override
-    public RectangularArea currentSprite(AnimatedEntity animatedEntity) {
+    public RectArea currentSprite(AnimatedEntity animatedEntity) {
         Pac pac = (Pac) animatedEntity.entity();
         var currentAnimation = currentAnimation();
         if (Pac.ANIM_MUNCHING.equals(currentAnimationName)) {

@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.rendering.RectangularArea;
+import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManArcadeGameWorldRenderer;
 
@@ -51,7 +51,7 @@ public class CreditScene extends GameScene2D {
         var rose = context.assets().color("palette.rose");
         switch (context.game().variant()) {
             case MS_PACMAN -> {
-                RectangularArea livesCounterSprite = context.renderer().spriteSheet().livesCounterSprite();
+                RectArea livesCounterSprite = context.renderer().spriteSheet().livesCounterSprite();
                 context.renderer().drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(16));
                 context.renderer().drawText(g, "1 PLAYER ONLY", orange, font8, t(8), t(18));
                 context.renderer().drawText(g, "ADDITIONAL    AT 10000", orange, font8, t(2), t(25));
@@ -63,7 +63,7 @@ public class CreditScene extends GameScene2D {
                     t(6), t(28), context.assets().color("palette.red"), sceneFont(TS));
             }
             case MS_PACMAN_TENGEN -> {
-                RectangularArea livesCounterSprite = context.renderer().spriteSheet().livesCounterSprite();
+                RectArea livesCounterSprite = context.renderer().spriteSheet().livesCounterSprite();
                 context.renderer().drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(16));
                 context.renderer().drawText(g, "1 PLAYER ONLY", orange, font8, t(8), t(18));
                 context.renderer().drawText(g, "ADDITIONAL    AT 10000", orange, font8, t(2), t(25));

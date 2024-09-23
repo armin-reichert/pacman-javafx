@@ -12,7 +12,7 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.SpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -47,7 +47,7 @@ public class PacManXXLGameWorldRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public SpriteSheet spriteSheet() {
+    public GameSpriteSheet spriteSheet() {
         return assets.get("pacman_xxl.spritesheet");
     }
 

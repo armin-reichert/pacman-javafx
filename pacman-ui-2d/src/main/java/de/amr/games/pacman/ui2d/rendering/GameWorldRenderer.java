@@ -135,7 +135,7 @@ public interface GameWorldRenderer extends SpriteRenderer {
     default void drawLevelCounter(GraphicsContext g, List<Byte> symbols, double x, double y) {
         double currentX = x;
         for (byte symbol : symbols) {
-            RectangularArea sprite = spriteSheet().bonusSymbolSprite(symbol);
+            RectArea sprite = spriteSheet().bonusSymbolSprite(symbol);
             drawSpriteScaled(g, sprite, currentX, y);
             currentX -= TS * 2;
         }

@@ -13,7 +13,7 @@ import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameSounds;
-import de.amr.games.pacman.ui2d.rendering.SpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
@@ -219,7 +219,7 @@ public class MsPacManCutScene1 extends GameScene2D {
     private Entity heart;
 
     private ClapperboardAnimation clapAnimation;
-    private SpriteSheet spriteSheet;
+    private GameSpriteSheet spriteSheet;
 
     private void startMusic() {
         int number  = context.gameState() == GameState.INTERMISSION_TEST

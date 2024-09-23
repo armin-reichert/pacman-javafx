@@ -4,8 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.util;
 
-import de.amr.games.pacman.ui2d.rendering.RectangularArea;
-import de.amr.games.pacman.ui2d.rendering.SpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.RectArea;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
@@ -20,36 +21,37 @@ public class SpriteAnimation {
 
     public static class Builder {
 
-        private final SpriteAnimation animation = new SpriteAnimation();
+        private final SpriteAnimation spriteAnimation = new SpriteAnimation();
 
-        public Builder spriteSheet(SpriteSheet spriteSheet) {
-            animation.spriteSheet = spriteSheet;
+        public Builder spriteSheet(GameSpriteSheet spriteSheet) {
+            spriteAnimation.spriteSheet = spriteSheet;
             return this;
         }
 
         public Builder frameTicks(int ticks) {
-            animation.frameTicks = ticks;
+            spriteAnimation.frameTicks = ticks;
             return this;
         }
 
         public Builder fps(int fps) {
-            animation.fps = fps;
+            spriteAnimation.fps = fps;
             return this;
         }
 
-        public Builder loop() {
-            animation.loop = true;
+        public Builder sprites(RectArea... sprites) {
+            spriteAnimation.sprites = sprites;
             return this;
         }
 
-        public Builder sprites(RectangularArea... sprites) {
-            animation.sprites = sprites;
-            return this;
+        public SpriteAnimation loop() {
+            spriteAnimation.loop = true;
+            spriteAnimation.animation = createTransition(spriteAnimation);
+            return spriteAnimation;
         }
 
         public SpriteAnimation end() {
-            animation.transition = createTransition(animation);
-            return animation;
+            spriteAnimation.animation = createTransition(spriteAnimation);
+            return spriteAnimation;
         }
     }
 
@@ -57,56 +59,56 @@ public class SpriteAnimation {
         return new Builder();
     }
 
-    private static Transition createTransition(SpriteAnimation sa) {
+    private static Transition createTransition(SpriteAnimation spriteAnimation) {
         return new Transition() {
             {
-                setCycleDuration(Duration.seconds(1.0 / sa.fps * sa.frameTicks));
-                setCycleCount(sa.loop ? Animation.INDEFINITE : sa.sprites.length);
+                setCycleDuration(Duration.seconds(1.0 / spriteAnimation.fps * spriteAnimation.frameTicks));
+                setCycleCount(spriteAnimation.loop ? Animation.INDEFINITE : spriteAnimation.sprites.length);
                 setInterpolator(Interpolator.LINEAR);
             }
 
             @Override
             protected void interpolate(double frac) {
-                if (frac == 1.0) {
-                    sa.nextFrame();
+                if (frac >= 1) {
+                    spriteAnimation.nextFrame();
                 }
             }
         };
     }
 
-    private SpriteSheet spriteSheet;
-    private RectangularArea[] sprites = new RectangularArea[0];
+    private GameSpriteSheet spriteSheet;
+    private RectArea[] sprites;
     private boolean loop;
     private int frameTicks = 1;
     private int fps = 60;
-    private Transition transition;
+    private Animation animation;
     private int frameIndex;
 
-    public void setSprites(RectangularArea[] sprites) {
+    public void setSprites(RectArea[] sprites) {
         this.sprites = sprites;
         // TODO what about frame index?
     }
 
-    public SpriteSheet spriteSheet() {
+    public GameSpriteSheet spriteSheet() {
         return spriteSheet;
     }
 
-    public RectangularArea[] getSprites() {
+    public RectArea[] getSprites() {
         return sprites;
     }
 
     public void reset() {
-        transition.stop();
-        transition.jumpTo(Duration.ZERO);
+        animation.stop();
+        animation.jumpTo(Duration.ZERO);
         frameIndex = 0;
     }
 
     public void setFrameTicks(int ticks) {
         if (ticks != frameTicks) {
-            boolean wasRunning = transition.getStatus() == Status.RUNNING;
-            transition.stop();
+            boolean wasRunning = animation.getStatus() == Status.RUNNING;
+            animation.stop();
             frameTicks = ticks;
-            transition = createTransition(this);
+            animation = createTransition(this);
             if (wasRunning) {
                 start();
             }
@@ -114,19 +116,19 @@ public class SpriteAnimation {
     }
 
     public void start() {
-        transition.play();
+        animation.play();
     }
 
     public void stop() {
-        transition.stop();
+        animation.stop();
     }
 
     public boolean isRunning() {
-        return transition.getStatus() == Status.RUNNING;
+        return animation.getStatus() == Status.RUNNING;
     }
 
     public void setDelay(Duration delay) {
-        transition.setDelay(delay);
+        animation.setDelay(delay);
     }
 
     public void setFrameIndex(int index) {
@@ -142,18 +144,18 @@ public class SpriteAnimation {
         return frameIndex;
     }
 
-    public RectangularArea currentSprite() {
+    public RectArea currentSprite() {
         if (frameIndex < sprites.length) {
             return sprites[frameIndex];
         }
         Logger.warn("No sprite for frame index {}", frameIndex);
-        return RectangularArea.PIXEL;
+        return RectArea.PIXEL;
     }
 
     public void nextFrame() {
         frameIndex++;
         if (frameIndex == sprites.length) {
-            frameIndex = transition.getCycleCount() == Animation.INDEFINITE ? 0 : sprites.length - 1;
+            frameIndex = animation.getCycleCount() == Animation.INDEFINITE ? 0 : sprites.length - 1;
         }
     }
 }

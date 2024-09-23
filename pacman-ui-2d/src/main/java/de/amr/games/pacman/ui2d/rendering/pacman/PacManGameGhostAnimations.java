@@ -7,8 +7,8 @@ package de.amr.games.pacman.ui2d.rendering.pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.ui2d.rendering.RectangularArea;
-import de.amr.games.pacman.ui2d.rendering.SpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.RectArea;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
 
@@ -23,28 +23,25 @@ public class PacManGameGhostAnimations extends SpriteAnimations {
 
     private final Map<String, SpriteAnimation> animationsByName;
 
-    public PacManGameGhostAnimations(SpriteSheet spriteSheet, byte ghostID) {
+    public PacManGameGhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
 
         var normal = SpriteAnimation.begin()
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.ghostNormalSprites(ghostID, Direction.LEFT))
             .frameTicks(8)
-            .loop()
-            .end();
+            .loop();
 
         var frightened = SpriteAnimation.begin()
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.ghostFrightenedSprites())
             .frameTicks(8)
-            .loop()
-            .end();
+            .loop();
 
         var flashing = SpriteAnimation.begin()
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.ghostFlashingSprites())
             .frameTicks(7)
-            .loop()
-            .end();
+            .loop();
 
         var eyesAnimation = SpriteAnimation.begin()
             .spriteSheet(spriteSheet)
@@ -70,15 +67,13 @@ public class PacManGameGhostAnimations extends SpriteAnimations {
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.blinkyPatchedSprites())
             .frameTicks(4)
-            .loop()
-            .end();
+            .loop();
 
         var naked = SpriteAnimation.begin()
             .spriteSheet(spriteSheet)
             .sprites(spriteSheet.blinkyNakedSprites())
             .frameTicks(4)
-            .loop()
-            .end();
+            .loop();
 
         animationsByName = Map.of(
             Ghost.ANIM_GHOST_NORMAL, normal,
@@ -111,7 +106,7 @@ public class PacManGameGhostAnimations extends SpriteAnimations {
     }
 
     @Override
-    public RectangularArea currentSprite(AnimatedEntity animatedEntity) {
+    public RectArea currentSprite(AnimatedEntity animatedEntity) {
         Ghost ghost = (Ghost) animatedEntity.entity();
         var currentAnimation = currentAnimation();
         if (Ghost.ANIM_GHOST_NORMAL.equals(currentAnimationName)) {

@@ -19,7 +19,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
-import de.amr.games.pacman.ui2d.rendering.SpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
@@ -206,7 +206,7 @@ public class MsPacManIntroScene extends GameScene2D {
         data = new Data();
 
         //TODO remove temporary hack
-        SpriteSheet sheet = context.game().variant() == GameVariant.MS_PACMAN_TENGEN
+        GameSpriteSheet sheet = context.game().variant() == GameVariant.MS_PACMAN_TENGEN
             ? context.assets().get("ms_pacman.spritesheet")
             : context.renderer().spriteSheet();
 

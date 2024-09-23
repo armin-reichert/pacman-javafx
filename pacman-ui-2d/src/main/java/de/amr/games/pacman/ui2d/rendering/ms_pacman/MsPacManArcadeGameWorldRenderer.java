@@ -9,8 +9,8 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.RectangularArea;
-import de.amr.games.pacman.ui2d.rendering.SpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.RectArea;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.SpriteSheetArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
@@ -46,7 +46,7 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
     }
 
     @Override
-    public SpriteSheet spriteSheet() {
+    public GameSpriteSheet spriteSheet() {
         return assets.get("ms_pacman.spritesheet");
     }
 
@@ -73,11 +73,11 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
     @Override
     public void selectMap(WorldMap worldMap, int mapNumber) {
         mapWithFoodSprite = new SpriteSheetArea(spriteSheet().sourceImage(),
-            new RectangularArea(0, (mapNumber - 1) * 248, 226, 248));
+            new RectArea(0, (mapNumber - 1) * 248, 226, 248));
         mapWithoutFoodSprite = new SpriteSheetArea(spriteSheet().sourceImage(),
-            new RectangularArea(228, (mapNumber - 1) * 248, 226, 248));
+            new RectArea(228, (mapNumber - 1) * 248, 226, 248));
         mapFlashingSprite = new SpriteSheetArea(flashingMazesImage,
-            new RectangularArea(0, (mapNumber - 1) * 248, 226, 248));
+            new RectArea(0, (mapNumber - 1) * 248, 226, 248));
     }
 
     @Override
@@ -114,8 +114,8 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
 
     @Override
     public void drawClapperBoard(GraphicsContext g, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
-        RectangularArea sprite = animation.currentSprite(spriteSheet().clapperboardSprites());
-        if (sprite != RectangularArea.PIXEL) {
+        RectArea sprite = animation.currentSprite(spriteSheet().clapperboardSprites());
+        if (sprite != RectArea.PIXEL) {
             double numberX = scaled(x + sprite.width() - 25);
             double numberY = scaled(y + 18);
             double textX = scaled(x + sprite.width());

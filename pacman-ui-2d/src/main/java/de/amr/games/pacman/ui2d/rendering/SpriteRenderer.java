@@ -18,7 +18,7 @@ import static de.amr.games.pacman.lib.Globals.HTS;
  */
 public interface SpriteRenderer {
 
-    SpriteSheet spriteSheet();
+    GameSpriteSheet spriteSheet();
 
     DoubleProperty scalingProperty();
 
@@ -50,7 +50,7 @@ public interface SpriteRenderer {
      * @param x             scaled x-coordinate
      * @param y             scaled y-coordinate
      */
-    default void drawSpriteUnscaled(GraphicsContext g, RectangularArea sprite, double x, double y) {
+    default void drawSpriteUnscaled(GraphicsContext g, RectArea sprite, double x, double y) {
         drawSubImage(g, spriteSheet().sourceImage(), sprite, x, y);
     }
 
@@ -62,7 +62,7 @@ public interface SpriteRenderer {
      * @param x         UNSCALED x position
      * @param y         UNSCALED y position
      */
-    default void drawSpriteScaled(GraphicsContext g, RectangularArea sprite, double x, double y) {
+    default void drawSpriteScaled(GraphicsContext g, RectArea sprite, double x, double y) {
         drawSubImageScaled(g, spriteSheet().sourceImage(), sprite, x, y);
     }
 
@@ -75,7 +75,7 @@ public interface SpriteRenderer {
      * @param x         UNSCALED x position
      * @param y         UNSCALED y position
      */
-    default void drawSpriteScaled(GraphicsContext g, SpriteSheet spriteSheet, RectangularArea sprite, double x, double y) {
+    default void drawSpriteScaled(GraphicsContext g, GameSpriteSheet spriteSheet, RectArea sprite, double x, double y) {
         drawSubImageScaled(g, spriteSheet.sourceImage(), sprite, x, y);
     }
 
@@ -88,7 +88,7 @@ public interface SpriteRenderer {
      * @param x             scaled x-coordinate
      * @param y             scaled y-coordinate
      */
-    default void drawSubImage(GraphicsContext g, Image sourceImage, RectangularArea sprite, double x, double y) {
+    default void drawSubImage(GraphicsContext g, Image sourceImage, RectArea sprite, double x, double y) {
         if (sprite != null) {
             g.drawImage(sourceImage,
                 sprite.x(), sprite.y(), sprite.width(), sprite.height(),
@@ -96,7 +96,7 @@ public interface SpriteRenderer {
         }
     }
 
-    default void drawSubImageScaled(GraphicsContext g, Image sourceImage, RectangularArea sprite, double x, double y) {
+    default void drawSubImageScaled(GraphicsContext g, Image sourceImage, RectArea sprite, double x, double y) {
         if (sprite != null) {
             g.drawImage(sourceImage,
                     sprite.x(), sprite.y(), sprite.width(), sprite.height(),
@@ -114,7 +114,7 @@ public interface SpriteRenderer {
      * @param x         x-coordinate of left-upper corner of bounding box
      * @param y         y-coordinate of left-upper corner of bounding box
      */
-    default void drawSpriteCenteredOverBox(GraphicsContext g, RectangularArea sprite, double x, double y) {
+    default void drawSpriteCenteredOverBox(GraphicsContext g, RectArea sprite, double x, double y) {
         drawSpriteScaled(g, sprite, x + HTS - 0.5 * sprite.width(), y + HTS - 0.5 * sprite.height());
     }
 
@@ -129,7 +129,7 @@ public interface SpriteRenderer {
      * @param x         x-coordinate of left-upper corner of bounding box
      * @param y         y-coordinate of left-upper corner of bounding box
      */
-    default void drawSpriteCenteredOverBox(GraphicsContext g, SpriteSheet spriteSheet, RectangularArea sprite, double x, double y) {
+    default void drawSpriteCenteredOverBox(GraphicsContext g, GameSpriteSheet spriteSheet, RectArea sprite, double x, double y) {
         drawSpriteScaled(g, spriteSheet, sprite, x + HTS - 0.5 * sprite.width(), y + HTS - 0.5 * sprite.height());
     }
 
@@ -140,7 +140,7 @@ public interface SpriteRenderer {
      * @param entity    an entity like Pac-Man or a ghost
      * @param sprite    sprite sheet region (can be null)
      */
-    default void drawEntitySprite(GraphicsContext g, Entity entity, RectangularArea sprite) {
+    default void drawEntitySprite(GraphicsContext g, Entity entity, RectArea sprite) {
         if (entity.isVisible()) {
             drawSpriteCenteredOverBox(g, sprite, entity.posX(), entity.posY());
         }
@@ -154,7 +154,7 @@ public interface SpriteRenderer {
      * @param spriteSheet the sprite sheet from which the sprite is drwan
      * @param sprite    sprite sheet region (can be null)
      */
-    default void drawEntitySprite(GraphicsContext g, Entity entity, SpriteSheet spriteSheet, RectangularArea sprite) {
+    default void drawEntitySprite(GraphicsContext g, Entity entity, GameSpriteSheet spriteSheet, RectArea sprite) {
         if (entity.isVisible()) {
             drawSpriteCenteredOverBox(g, spriteSheet, sprite, entity.posX(), entity.posY());
         }
@@ -169,8 +169,8 @@ public interface SpriteRenderer {
     default void drawAnimatedEntity(GraphicsContext g, AnimatedEntity guy) {
         if (guy.isVisible() && guy.animations().isPresent()) {
             if (guy.animations().get() instanceof SpriteAnimations spriteAnimations) {
-                SpriteSheet spriteSheet = spriteAnimations.currentAnimation().spriteSheet();
-                RectangularArea sprite = spriteAnimations.currentSprite(guy);
+                GameSpriteSheet spriteSheet = spriteAnimations.currentAnimation().spriteSheet();
+                RectArea sprite = spriteAnimations.currentSprite(guy);
                 drawEntitySprite(g, guy.entity(), spriteSheet, sprite);
             }
         }
