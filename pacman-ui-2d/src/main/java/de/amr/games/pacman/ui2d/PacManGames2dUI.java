@@ -19,8 +19,8 @@ import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.page.StartPage;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManArcadeGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
@@ -65,6 +65,7 @@ import static de.amr.games.pacman.controller.GameState.LEVEL_TEST;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
+import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static java.util.function.Predicate.not;
@@ -113,6 +114,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     public PacManGames2dUI(Dimension2D initialSize) {
         this.initialSize = checkNotNull(initialSize);
+        assets.addAll(new GameAssets2D(this::getClass));
+        GameSounds.setAssets(assets);
     }
 
     public void setGameScenes(Map<GameVariant, Map<GameSceneID, GameScene>> gameSceneMap) {

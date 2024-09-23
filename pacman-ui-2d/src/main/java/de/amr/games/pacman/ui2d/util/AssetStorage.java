@@ -33,6 +33,11 @@ public class AssetStorage {
         map.put(key, value);
     }
 
+    public void addAll(AssetStorage other) {
+        map.putAll(other.map);
+        bundles.addAll(other.bundles);
+    }
+
     /**
      * Generic getter. Example usage:
      *
