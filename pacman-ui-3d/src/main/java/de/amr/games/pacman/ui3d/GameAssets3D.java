@@ -89,6 +89,5 @@ public class GameAssets3D extends AssetStorage {
         store("pacman_xxl.color.head",           Color.rgb(255, 255, 0));
         store("pacman_xxl.color.eyes",           Color.rgb(33, 33, 33));
         store("pacman_xxl.color.palate",         Color.rgb(240, 180, 160));
-
     }
 }

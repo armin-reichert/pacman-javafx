@@ -114,7 +114,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     public PacManGames2dUI(Dimension2D initialSize) {
         this.initialSize = checkNotNull(initialSize);
-        assets.addAll(new GameAssets2D(this::getClass));
+        assets.addAll(new GameAssets2D(() -> PacManGames2dUI.class));
         GameSounds.setAssets(assets);
     }
 
