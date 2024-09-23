@@ -24,6 +24,10 @@ public abstract class SpriteAnimations implements Animations {
         animationsByName.putAll(entries);
     }
 
+    public SpriteAnimation animation(String name) {
+        return animationsByName.get(name);
+    }
+
     public String currentAnimationName() {
         return currentAnimationName;
     }
@@ -34,8 +38,6 @@ public abstract class SpriteAnimations implements Animations {
     }
 
     public abstract RectArea currentSprite(AnimatedEntity entity);
-
-    public abstract SpriteAnimation animation(String name);
 
     @Override
     public void select(String name, int index) {

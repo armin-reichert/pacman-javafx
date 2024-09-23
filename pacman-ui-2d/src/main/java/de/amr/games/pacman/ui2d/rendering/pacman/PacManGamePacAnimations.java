@@ -48,11 +48,6 @@ public class PacManGamePacAnimations extends SpriteAnimations {
     }
 
     @Override
-    public SpriteAnimation animation(String name) {
-        return animationsByName.get(name);
-    }
-
-    @Override
     public RectArea currentSprite(AnimatedEntity animatedEntity) {
         Pac pac = (Pac) animatedEntity.entity();
         var currentAnimation = currentAnimation();

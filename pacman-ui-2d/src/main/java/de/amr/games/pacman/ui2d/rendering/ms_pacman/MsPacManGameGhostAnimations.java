@@ -66,11 +66,6 @@ public class MsPacManGameGhostAnimations extends SpriteAnimations {
     }
 
     @Override
-    public SpriteAnimation animation(String name) {
-        return animationsByName.get(name);
-    }
-
-    @Override
     public void select(String name, int index) {
         super.select(name, index);
         if (Ghost.ANIM_GHOST_NUMBER.equals(name)) {
