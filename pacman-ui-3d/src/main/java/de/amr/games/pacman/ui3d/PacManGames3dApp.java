@@ -32,12 +32,12 @@ public class PacManGames3dApp extends Application {
 
     public static final String NO_TEXTURE = "No Texture";
 
-    public static final BooleanProperty PY_3D_AXES_VISIBLE                   = new SimpleBooleanProperty(false);
-    public static final ObjectProperty<DrawMode> PY_3D_DRAW_MODE             = new SimpleObjectProperty<>(DrawMode.FILL);
+    public static final BooleanProperty             PY_3D_AXES_VISIBLE       = new SimpleBooleanProperty(false);
+    public static final ObjectProperty<DrawMode>    PY_3D_DRAW_MODE          = new SimpleObjectProperty<>(DrawMode.FILL);
     public static final BooleanProperty             PY_3D_ENABLED            = new SimpleBooleanProperty(false);
     public static final BooleanProperty             PY_3D_ENERGIZER_EXPLODES = new SimpleBooleanProperty(true);
     public static final ObjectProperty<Color>       PY_3D_FLOOR_COLOR        = new SimpleObjectProperty<>(Color.web("#202020"));
-    public static final StringProperty PY_3D_FLOOR_TEXTURE                   = new SimpleStringProperty(NO_TEXTURE);
+    public static final StringProperty              PY_3D_FLOOR_TEXTURE      = new SimpleStringProperty(NO_TEXTURE);
     public static final ObjectProperty<Color>       PY_3D_LIGHT_COLOR        = new SimpleObjectProperty<>(Color.GHOSTWHITE);
     public static final BooleanProperty             PY_3D_PAC_LIGHT_ENABLED  = new SimpleBooleanProperty(true);
     public static final ObjectProperty<Perspective> PY_3D_PERSPECTIVE        = new SimpleObjectProperty<>(Perspective.FOLLOWING_PLAYER);
