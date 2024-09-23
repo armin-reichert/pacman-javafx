@@ -20,6 +20,7 @@ import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameWorldRenderer;
@@ -260,15 +261,15 @@ public class MsPacManIntroScene extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent() {
+    public void drawSceneContent(GameWorldRenderer renderer) {
         AssetStorage assets = context.assets();
         Font font8 = sceneFont(8); // depends on current scaling!
         BitSet marqueeState = computeMarqueeState(data.marqueeTimer.currentTick());
         drawMarquee(marqueeState);
-        context.renderer().drawText(g, "\"MS PAC-MAN\"", assets.color("palette.orange"), font8, data.titlePosition.x(), data.titlePosition.y());
+        renderer.drawText(g, "\"MS PAC-MAN\"", assets.color("palette.orange"), font8, data.titlePosition.x(), data.titlePosition.y());
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
             if (data.ghostIndex == GameModel.RED_GHOST) {
-                context.renderer().drawText(g, "WITH", assets.color("palette.pale"), font8, data.titlePosition.x(), data.topY + t(3));
+                renderer.drawText(g, "WITH", assets.color("palette.pale"), font8, data.titlePosition.x(), data.topY + t(3));
             }
             String ghostName = data.ghosts[data.ghostIndex].name().toUpperCase();
             Color color = switch (data.ghostIndex) {
@@ -279,18 +280,18 @@ public class MsPacManIntroScene extends GameScene2D {
                 default -> throw new IllegalStateException("Illegal ghost index: " + data.ghostIndex);
             };
             double dx = ghostName.length() < 4 ? t(1) : 0;
-            context.renderer().drawText(g, ghostName, color, font8, data.titlePosition.x() + t(3) + dx, data.topY + t(6));
+            renderer.drawText(g, ghostName, color, font8, data.titlePosition.x() + t(3) + dx, data.topY + t(6));
         } else if (sceneController.state() == SceneState.MS_PACMAN_MARCHING_IN || sceneController.state() == SceneState.READY_TO_PLAY) {
-            context.renderer().drawText(g, "STARRING", assets.color("palette.pale"), font8, data.titlePosition.x(), data.topY + t(3));
-            context.renderer().drawText(g, "MS PAC-MAN", assets.color("palette.yellow"), font8, data.titlePosition.x(), data.topY + t(6));
+            renderer.drawText(g, "STARRING", assets.color("palette.pale"), font8, data.titlePosition.x(), data.topY + t(3));
+            renderer.drawText(g, "MS PAC-MAN", assets.color("palette.yellow"), font8, data.titlePosition.x(), data.topY + t(6));
         }
         for (Ghost ghost : data.ghosts) {
-            context.renderer().drawAnimatedEntity(g, ghost);
+            renderer.drawAnimatedEntity(g, ghost);
         }
-        context.renderer().drawAnimatedEntity(g, data.msPacMan);
+        renderer.drawAnimatedEntity(g, data.msPacMan);
 
         if (context.game().variant() == GameVariant.MS_PACMAN) {
-            MsPacManGameWorldRenderer msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) context.renderer();
+            MsPacManGameWorldRenderer msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) renderer;
             msPacManGameWorldRenderer.drawMsPacManMidwayCopyright(g,
                 context.assets().get("ms_pacman.logo.midway"),
                 t(6), t(28), context.assets().color("palette.red"), sceneFont(TS));

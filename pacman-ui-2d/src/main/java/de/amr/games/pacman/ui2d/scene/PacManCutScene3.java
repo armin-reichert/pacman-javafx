@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameSounds;
+import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.variant.pacman.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.variant.pacman.PacManGamePacAnimations;
 import javafx.scene.paint.Color;
@@ -90,16 +91,16 @@ public class PacManCutScene3 extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent() {
-        context.renderer().drawAnimatedEntity(g, pac);
-        context.renderer().drawAnimatedEntity(g, blinky);
+    public void drawSceneContent(GameWorldRenderer renderer) {
+        renderer.drawAnimatedEntity(g, pac);
+        renderer.drawAnimatedEntity(g, blinky);
     }
 
     @Override
-    protected void drawDebugInfo() {
+    protected void drawDebugInfo(GameWorldRenderer renderer) {
         Vector2i worldSize = context.worldSize();
-        context.renderer().drawTileGrid(g, worldSize.x(), worldSize.y());
+        renderer.drawTileGrid(g, worldSize.x(), worldSize.y());
         var text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        context.renderer().drawText(g, text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
+        renderer.drawText(g, text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
     }
 }

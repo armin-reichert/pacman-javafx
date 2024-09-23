@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
 
 import static de.amr.games.pacman.lib.Globals.RND;
@@ -34,9 +35,9 @@ public class BootScene extends GameScene2D {
     }
 
     @Override
-    public void draw() {
-        context.renderer().scalingProperty().set(scalingPy.get());
-        context.renderer().backgroundColorProperty().set(backgroundColorPy.get());
+    public void draw(GameWorldRenderer renderer) {
+        renderer.scalingProperty().set(scalingPy.get());
+        renderer.backgroundColorProperty().set(backgroundColorPy.get());
         var timer = context.gameState().timer();
         if (timer.currentTick() == 1) {
             clearCanvas();
@@ -50,7 +51,7 @@ public class BootScene extends GameScene2D {
     }
 
     @Override
-    protected void drawSceneContent() {
+    protected void drawSceneContent(GameWorldRenderer renderer) {
         // not used here
     }
 

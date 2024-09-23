@@ -13,6 +13,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
+import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -89,26 +90,26 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    protected void drawSceneContent() {
+    protected void drawSceneContent(GameWorldRenderer renderer) {
         if (context.game().world() == null) { // This happens on level start
             Logger.warn("Cannot draw scene content, game world not yet available!");
             return;
         }
 
         boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
-        context.renderer().setFlashMode(flashMode);
-        context.renderer().setBlinkingOn(context.game().blinking().isOn());
-        context.renderer().drawWorld(g, context, context.game().world());
+        renderer.setFlashMode(flashMode);
+        renderer.setBlinkingOn(context.game().blinking().isOn());
+        renderer.drawWorld(g, context, context.game().world());
 
-        drawLevelMessage(); // READY, GAME_OVER etc.
+        drawLevelMessage(renderer); // READY, GAME_OVER etc.
 
-        context.renderer().drawAnimatedEntity(g, context.game().pac());
-        ghostsInZOrder().forEach(ghost -> context.renderer().drawAnimatedEntity(g, ghost));
+        renderer.drawAnimatedEntity(g, context.game().pac());
+        ghostsInZOrder().forEach(ghost -> renderer.drawAnimatedEntity(g, ghost));
 
         // Debug mode info
         if (debugInfoPy.get()) {
-            context.renderer().drawAnimatedCreatureInfo(g, context.game().pac());
-            ghostsInZOrder().forEach(ghost -> context.renderer().drawAnimatedCreatureInfo(g, ghost));
+            renderer.drawAnimatedCreatureInfo(g, context.game().pac());
+            ghostsInZOrder().forEach(ghost -> renderer.drawAnimatedCreatureInfo(g, ghost));
         }
 
         if (!isCreditVisible()) {
@@ -117,7 +118,7 @@ public class PlayScene2D extends GameScene2D {
             if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
                 numLivesDisplayed += 1;
             }
-            context.renderer().drawLivesCounter(g, numLivesDisplayed, context.game().world().map().terrain().numRows() - 2);
+            renderer.drawLivesCounter(g, numLivesDisplayed, context.game().world().map().terrain().numRows() - 2);
         }
     }
 
@@ -126,27 +127,27 @@ public class PlayScene2D extends GameScene2D {
             .map(context.game()::ghost);
     }
 
-    private void drawLevelMessage() {
+    private void drawLevelMessage(GameWorldRenderer renderer) {
         Vector2i houseOrigin = context.game().world().houseTopLeftTile();
         Vector2i houseSize = context.game().world().houseSize();
         int centerTileX = houseOrigin.x() + houseSize.x() / 2;
         double msgY = t(houseOrigin.y() + houseSize.y() + 1);
         // "GAME OVER" is drawn in demo mode and when game is over:
         if (context.game().isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
-            context.renderer().drawText(g, "GAME  OVER", Color.RED, sceneFont(8), t(centerTileX - 5), msgY);
+            renderer.drawText(g, "GAME  OVER", Color.RED, sceneFont(8), t(centerTileX - 5), msgY);
         } else {
             switch (context.gameState()) {
-                case READY      -> context.renderer().drawText(g, "READY!", Color.YELLOW, sceneFont(8), t(centerTileX - 3), msgY);
-                case LEVEL_TEST -> context.renderer().drawText(g, "TEST    L" + context.game().levelNumber(),
+                case READY      -> renderer.drawText(g, "READY!", Color.YELLOW, sceneFont(8), t(centerTileX - 3), msgY);
+                case LEVEL_TEST -> renderer.drawText(g, "TEST    L" + context.game().levelNumber(),
                     Color.YELLOW, sceneFont(8), t(8.5), msgY);
             }
         }
     }
 
     @Override
-    protected void drawDebugInfo() {
+    protected void drawDebugInfo(GameWorldRenderer renderer) {
         Vector2i worldSize = context.worldSize();
-        context.renderer().drawTileGrid(g, worldSize.x(), worldSize.y());
+        renderer.drawTileGrid(g, worldSize.x(), worldSize.y());
         if (context.game().variant() == GameVariant.PACMAN && context.game().world() != null) {
             context.game().ghosts().forEach(ghost -> {
                 // Are currently the same for each ghost, but who knows what comes...

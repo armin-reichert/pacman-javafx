@@ -11,6 +11,7 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameSounds;
+import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.variant.pacman.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.variant.pacman.PacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
@@ -110,17 +111,17 @@ public class PacManCutScene2 extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent() {
-        context.renderer().drawSpriteScaled(g, blinkyStretching.currentSprite(), t(14), t(19) + 3);
-        context.renderer().drawAnimatedEntity(g, blinky);
-        context.renderer().drawAnimatedEntity(g, pac);
+    public void drawSceneContent(GameWorldRenderer renderer) {
+        renderer.drawSpriteScaled(g, blinkyStretching.currentSprite(), t(14), t(19) + 3);
+        renderer.drawAnimatedEntity(g, blinky);
+        renderer.drawAnimatedEntity(g, pac);
     }
 
     @Override
-    protected void drawDebugInfo() {
+    protected void drawDebugInfo(GameWorldRenderer renderer) {
         Vector2i worldSize = context.worldSize();
-        context.renderer().drawTileGrid(g, worldSize.x(), worldSize.y());
+        renderer.drawTileGrid(g, worldSize.x(), worldSize.y());
         var text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        context.renderer().drawText(g, text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
+        renderer.drawText(g, text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
     }
 }

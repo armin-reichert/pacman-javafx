@@ -21,6 +21,10 @@ import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui2d.scene.GameScene2D;
+import de.amr.games.pacman.ui2d.scene.GameSceneID;
+import de.amr.games.pacman.ui2d.util.*;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManArcadeGameWorldRenderer;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGamePacAnimations;
@@ -31,10 +35,6 @@ import de.amr.games.pacman.ui2d.variant.pacman_xxl.PacManXXLGameWorldRenderer;
 import de.amr.games.pacman.ui2d.variant.tengen.TengenMsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.variant.tengen.TengenMsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.variant.tengen.TengenMsPacManGameWorldRenderer;
-import de.amr.games.pacman.ui2d.scene.GameScene;
-import de.amr.games.pacman.ui2d.scene.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.GameSceneID;
-import de.amr.games.pacman.ui2d.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -86,6 +86,15 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         GameVariant.MS_PACMAN,
         GameVariant.MS_PACMAN_TENGEN
     );
+
+    public static GameWorldRenderer createRenderer(GameVariant variant, AssetStorage assets) {
+        return switch (variant) {
+            case MS_PACMAN -> new MsPacManArcadeGameWorldRenderer(assets);
+            case MS_PACMAN_TENGEN -> new TengenMsPacManGameWorldRenderer(assets);
+            case PACMAN -> new PacManArcadeGameWorldRenderer(assets);
+            case PACMAN_XXL -> new PacManXXLGameWorldRenderer(assets);
+        };
+    }
 
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
@@ -206,7 +215,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             if (currentPage == gamePage) {
                 currentGameScene()
                     .filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast)
-                    .ifPresent(GameScene2D::draw);
+                    .ifPresent(scene2D -> scene2D.draw(worldRenderer));
                 gamePage.updateDashboard();
                 messageView.update();
             }
@@ -333,12 +342,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     private void configureGameScene2D(GameScene2D gameScene2D) {
-        worldRenderer = switch (game().variant()) {
-            case MS_PACMAN -> new MsPacManArcadeGameWorldRenderer(assets);
-            case MS_PACMAN_TENGEN -> new TengenMsPacManGameWorldRenderer(assets);
-            case PACMAN -> new PacManArcadeGameWorldRenderer(assets);
-            case PACMAN_XXL -> new PacManXXLGameWorldRenderer(assets);
-        };
+        worldRenderer = createRenderer(game().variant(), assets);
         gameScene2D.backgroundColorPy.bind(PY_CANVAS_COLOR);
     }
 

@@ -11,6 +11,8 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.PacManGames2dUI;
+import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.BooleanProperty;
@@ -58,6 +60,7 @@ public class PictureInPictureView implements GameEventListener {
     private final GameContext context;
     private final HBox layout = new HBox();
     private final PlayScene2D gameScene;
+    private GameWorldRenderer renderer;
 
     public PictureInPictureView(GameContext context) {
         this.context = context;
@@ -96,6 +99,9 @@ public class PictureInPictureView implements GameEventListener {
         if (context.game().world() != null) {
             TileMap terrain = context.game().world().map().terrain();
             aspectPy.set((double) terrain.numCols() / terrain.numRows());
+            renderer = PacManGames2dUI.createRenderer(context.game().variant(), context.assets());
+            int mapNumber = e.game.mapNumberByLevelNumber(e.game.levelNumber());
+            renderer.selectMap(e.game.world().map(), mapNumber);
         }
     }
 
@@ -111,7 +117,7 @@ public class PictureInPictureView implements GameEventListener {
 
     public void draw() {
         if (visiblePy.get()) {
-            gameScene.draw();
+            gameScene.draw(renderer);
         }
     }
 }

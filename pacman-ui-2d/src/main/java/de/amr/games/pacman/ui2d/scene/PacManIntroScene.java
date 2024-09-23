@@ -18,6 +18,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
+import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.variant.pacman.PacManArcadeGameWorldRenderer;
 import de.amr.games.pacman.ui2d.variant.pacman.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.variant.pacman.PacManGamePacAnimations;
@@ -301,27 +302,27 @@ public class PacManIntroScene extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent() {
+    public void drawSceneContent(GameWorldRenderer renderer) {
         var timer = sceneController.state().timer();
-        drawGallery();
+        drawGallery(renderer);
         switch (sceneController.state()) {
-            case SHOWING_POINTS -> drawPoints();
+            case SHOWING_POINTS -> drawPoints(renderer);
             case CHASING_PAC -> {
-                drawPoints();
+                drawPoints(renderer);
                 if (data.blinking.isOn()) {
                     drawEnergizer(t(data.leftTileX), t(20));
                 }
-                drawGuys(flutter(timer.currentTick()));
+                drawGuys(renderer, flutter(timer.currentTick()));
                 if (context.game().variant() == GameVariant.PACMAN) {
-                    var r = (PacManArcadeGameWorldRenderer) context.renderer();
+                    var r = (PacManArcadeGameWorldRenderer) renderer;
                     r.drawMidwayCopyright(g, t(4), t(32), context.assets().color("palette.pink"), sceneFont(8));
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
-                drawPoints();
-                drawGuys(0);
+                drawPoints(renderer);
+                drawGuys(renderer, 0);
                 if (context.game().variant() == GameVariant.PACMAN) {
-                    var r = (PacManArcadeGameWorldRenderer) context.renderer();
+                    var r = (PacManArcadeGameWorldRenderer) renderer;
                     r.drawMidwayCopyright(g, t(4), t(32), context.assets().color("palette.pink"), sceneFont(8));
                 }
             }
@@ -335,47 +336,47 @@ public class PacManIntroScene extends GameScene2D {
         return time % 5 < 2 ? 0 : -1;
     }
 
-    private void drawGallery() {
+    private void drawGallery(GameWorldRenderer renderer) {
         var font = sceneFont(8);
 
         int tx = data.leftTileX;
         if (data.titleVisible) {
-            context.renderer().drawText(g, "CHARACTER / NICKNAME", context.assets().color("palette.pale"), font, t(tx + 3), t(6));
+            renderer.drawText(g, "CHARACTER / NICKNAME", context.assets().color("palette.pale"), font, t(tx + 3), t(6));
         }
         for (byte id = 0; id < 4; ++id) {
             if (!data.ghostImageVisible[id]) {
                 continue;
             }
             int ty = 7 + 3 * id;
-            context.renderer().drawGhostFacingRight(g, id, t(tx) + 4, t(ty));
+            renderer.drawGhostFacingRight(g, id, t(tx) + 4, t(ty));
             if (data.ghostCharacterVisible[id]) {
                 var text = "-" + data.ghostCharacters[id];
-                context.renderer().drawText(g, text, GHOST_COLORS[id], font, t(tx + 3), t(ty + 1));
+                renderer.drawText(g, text, GHOST_COLORS[id], font, t(tx + 3), t(ty + 1));
             }
             if (data.ghostNicknameVisible[id]) {
                 var text = '"' + data.ghosts.get(id).name().toUpperCase() + '"';
-                context.renderer().drawText(g, text, GHOST_COLORS[id], font, t(tx + 14), t(ty + 1));
+                renderer.drawText(g, text, GHOST_COLORS[id], font, t(tx + 14), t(ty + 1));
             }
         }
     }
 
-    private void drawGuys(int shakingAmount) {
+    private void drawGuys(GameWorldRenderer renderer, int shakingAmount) {
         if (shakingAmount == 0) {
-            data.ghosts.forEach(ghost -> context.renderer().drawAnimatedEntity(g, ghost));
+            data.ghosts.forEach(ghost -> renderer.drawAnimatedEntity(g, ghost));
         } else {
-            context.renderer().drawAnimatedEntity(g, data.ghosts.get(0));
-            context.renderer().drawAnimatedEntity(g, data.ghosts.get(3));
+            renderer.drawAnimatedEntity(g, data.ghosts.get(0));
+            renderer.drawAnimatedEntity(g, data.ghosts.get(3));
             // shaking ghosts effect, not quite as in original game
             g.save();
             g.translate(shakingAmount, 0);
-            context.renderer().drawAnimatedEntity(g, data.ghosts.get(1));
-            context.renderer().drawAnimatedEntity(g, data.ghosts.get(2));
+            renderer.drawAnimatedEntity(g, data.ghosts.get(1));
+            renderer.drawAnimatedEntity(g, data.ghosts.get(2));
             g.restore();
         }
-        context.renderer().drawAnimatedEntity(g, data.pacMan);
+        renderer.drawAnimatedEntity(g, data.pacMan);
     }
 
-    private void drawPoints() {
+    private void drawPoints(GameWorldRenderer renderer) {
         var color = context.assets().color("palette.pale");
         var font8 = sceneFont(8);
         var font6 = sceneFont(6);
@@ -386,10 +387,10 @@ public class PacManIntroScene extends GameScene2D {
         if (data.blinking.isOn()) {
             drawEnergizer(t(tx), t(ty + 1));
         }
-        context.renderer().drawText(g, "10",  color, font8, t(tx + 2), t(ty));
-        context.renderer().drawText(g, "PTS", color, font6, t(tx + 5), t(ty));
-        context.renderer().drawText(g, "50",  color, font8, t(tx + 2), t(ty + 2));
-        context.renderer().drawText(g, "PTS", color, font6, t(tx + 5), t(ty + 2));
+        renderer.drawText(g, "10",  color, font8, t(tx + 2), t(ty));
+        renderer.drawText(g, "PTS", color, font6, t(tx + 5), t(ty));
+        renderer.drawText(g, "50",  color, font8, t(tx + 2), t(ty + 2));
+        renderer.drawText(g, "PTS", color, font6, t(tx + 5), t(ty + 2));
     }
 
     // draw pixelated "circle"
