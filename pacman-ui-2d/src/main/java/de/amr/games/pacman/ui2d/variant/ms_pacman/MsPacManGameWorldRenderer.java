@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui2d.rendering.ms_pacman;
+package de.amr.games.pacman.ui2d.variant.ms_pacman;
 
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;

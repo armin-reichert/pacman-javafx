@@ -21,16 +21,16 @@ import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManArcadeGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameGhostAnimations;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManArcadeGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameGhostAnimations;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.rendering.pacman_xxl.PacManXXLGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGameGhostAnimations;
-import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGameWorldRenderer;
+import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManArcadeGameWorldRenderer;
+import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameGhostAnimations;
+import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGamePacAnimations;
+import de.amr.games.pacman.ui2d.variant.pacman.PacManArcadeGameWorldRenderer;
+import de.amr.games.pacman.ui2d.variant.pacman.PacManGameGhostAnimations;
+import de.amr.games.pacman.ui2d.variant.pacman.PacManGamePacAnimations;
+import de.amr.games.pacman.ui2d.variant.pacman_xxl.PacManXXLGameWorldRenderer;
+import de.amr.games.pacman.ui2d.variant.tengen.TengenMsPacManGameGhostAnimations;
+import de.amr.games.pacman.ui2d.variant.tengen.TengenMsPacManGamePacAnimations;
+import de.amr.games.pacman.ui2d.variant.tengen.TengenMsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
@@ -114,7 +114,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     public PacManGames2dUI(Dimension2D initialSize) {
         this.initialSize = checkNotNull(initialSize);
-        assets.addAll(new GameAssets2D(() -> PacManGames2dUI.class));
+        GameAssets2D.load(() -> PacManGames2dUI.class, assets);
         GameSounds.setAssets(assets);
     }
 

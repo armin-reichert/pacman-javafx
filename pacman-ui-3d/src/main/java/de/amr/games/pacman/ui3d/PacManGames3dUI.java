@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui3d;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameSounds;
-import de.amr.games.pacman.ui2d.PacManGames2dApp;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
@@ -37,7 +36,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
     public PacManGames3dUI(Dimension2D initialSize) {
         super(initialSize);
-        assets.addAll(new GameAssets3D(this::getClass, new GameAssets2D(() -> PacManGames2dApp.class)));
+        GameAssets2D.load(() -> PacManGames2dUI.class, assets);
+        GameAssets3D.load(() -> PacManGames3dUI.class, assets);
         GameSounds.setAssets(assets);
     }
 

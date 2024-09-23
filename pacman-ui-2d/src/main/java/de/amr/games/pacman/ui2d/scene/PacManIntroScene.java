@@ -18,10 +18,10 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManArcadeGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameGhostAnimations;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameSpriteSheet;
+import de.amr.games.pacman.ui2d.variant.pacman.PacManArcadeGameWorldRenderer;
+import de.amr.games.pacman.ui2d.variant.pacman.PacManGameGhostAnimations;
+import de.amr.games.pacman.ui2d.variant.pacman.PacManGamePacAnimations;
+import de.amr.games.pacman.ui2d.variant.pacman.PacManGameSpriteSheet;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;

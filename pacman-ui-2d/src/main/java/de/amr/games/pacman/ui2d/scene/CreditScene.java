@@ -6,8 +6,8 @@ package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManArcadeGameWorldRenderer;
+import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameWorldRenderer;
+import de.amr.games.pacman.ui2d.variant.pacman.PacManArcadeGameWorldRenderer;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;

@@ -14,10 +14,10 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameGhostAnimations;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
+import de.amr.games.pacman.ui2d.variant.ms_pacman.ClapperboardAnimation;
+import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameGhostAnimations;
+import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGamePacAnimations;
+import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameWorldRenderer;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;

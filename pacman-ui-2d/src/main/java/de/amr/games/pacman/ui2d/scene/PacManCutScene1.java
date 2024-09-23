@@ -10,8 +10,8 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameSounds;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameGhostAnimations;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManGamePacAnimations;
+import de.amr.games.pacman.ui2d.variant.pacman.PacManGameGhostAnimations;
+import de.amr.games.pacman.ui2d.variant.pacman.PacManGamePacAnimations;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
