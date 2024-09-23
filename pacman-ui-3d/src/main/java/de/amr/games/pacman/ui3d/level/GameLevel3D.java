@@ -7,13 +7,11 @@ package de.amr.games.pacman.ui3d.level;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
@@ -80,6 +78,7 @@ public class GameLevel3D {
     private final Group root = new Group();
     private final Group worldGroup = new Group();
     private final Group mazeGroup = new Group();
+    private final Message3D message3D;
     private final Pac3D pac3D;
     private final List<MutableGhost3D> ghosts3D;
     private final Map<Vector2i, Pellet3D> pellets3D = new HashMap<>();
@@ -87,20 +86,15 @@ public class GameLevel3D {
     private House3D house3D;
     private final LivesCounter3D livesCounter3D;
     private Bonus3D bonus3D;
-    private Message3D message3D;
 
     public GameLevel3D(GameContext context) {
         this.context = checkNotNull(context);
 
-        final AssetStorage assets = context.assets();
-        final GameModel game  = context.game();
-        final GameWorld world = game.world();
-
-        pac3D = Factory3D.createPac3D(game.variant(), assets, game.pac(), PAC_SIZE);
-        ghosts3D = game.ghosts().map(ghost -> Factory3D.createGhost3D(game.variant(), assets, ghost, GHOST_SIZE)).toList();
+        pac3D = Factory3D.createPac3D(context.game().variant(), context.assets(), context.game().pac(), PAC_SIZE);
+        ghosts3D = context.game().ghosts().map(ghost -> Factory3D.createGhost3D(context.game().variant(), context.assets(), ghost, GHOST_SIZE)).toList();
         livesCounter3D = Factory3D.createLivesCounter3D(
-                context.game().variant(), assets, LIVES_COUNTER_MAX, LIVE_SHAPE_SIZE, context.game().hasCredit());
-        message3D = Factory3D.createMessage3D(assets);
+                context.game().variant(), context.assets(), LIVES_COUNTER_MAX, LIVE_SHAPE_SIZE, context.game().hasCredit());
+        message3D = Factory3D.createMessage3D(context.assets());
 
         updateLivesCounter();
 
@@ -110,8 +104,8 @@ public class GameLevel3D {
         wallStrokeMaterialPy.bind(Bindings.createObjectBinding(
             () -> coloredMaterial(wallStrokeColorPy.get()), wallStrokeColorPy));
 
-        buildWorld3D(world);
-        addFood3D(world);
+        buildWorld3D(context.game().world());
+        addFood3D(context.game().world());
 
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
         root.getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
