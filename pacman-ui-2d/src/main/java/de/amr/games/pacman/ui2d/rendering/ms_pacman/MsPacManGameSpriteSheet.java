@@ -188,7 +188,7 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
     @Override
     public SpriteAnimation createStorkFlyingAnimation() {
         return SpriteAnimation
-            .spriteSheet(this)
+            .use(this)
             .sprites(rect(489, 176, 32, 16), rect(521, 176, 32, 16))
             .frameTicks(8)
             .loop();

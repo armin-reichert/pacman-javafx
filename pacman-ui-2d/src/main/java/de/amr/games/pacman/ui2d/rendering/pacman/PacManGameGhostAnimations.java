@@ -24,59 +24,59 @@ public class PacManGameGhostAnimations extends SpriteAnimationCollection {
     public PacManGameGhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
 
         var normal = SpriteAnimation
-            .spriteSheet(spriteSheet)
+            .use(spriteSheet)
             .info("Normal ghost")
             .sprites(spriteSheet.ghostNormalSprites(ghostID, Direction.LEFT))
             .frameTicks(8)
             .loop();
 
         var frightened = SpriteAnimation
-            .spriteSheet(spriteSheet)
+            .use(spriteSheet)
             .info("Frightened ghost")
             .sprites(spriteSheet.ghostFrightenedSprites())
             .frameTicks(8)
             .loop();
 
         var flashing = SpriteAnimation
-            .spriteSheet(spriteSheet)
+            .use(spriteSheet)
             .info("Flashing ghost")
             .sprites(spriteSheet.ghostFlashingSprites())
             .frameTicks(7)
             .loop();
 
         var eyes = SpriteAnimation
-            .spriteSheet(spriteSheet)
+            .use(spriteSheet)
             .info("Eyes-only ghost")
             .sprites(spriteSheet.ghostEyesSprites(Direction.LEFT))
             .end();
 
         var number = SpriteAnimation
-            .spriteSheet(spriteSheet)
+            .use(spriteSheet)
             .info("Number for dead ghost")
             .sprites(spriteSheet.ghostNumberSprites())
             .end();
 
         var damaged = SpriteAnimation
-            .spriteSheet(spriteSheet)
+            .use(spriteSheet)
             .info("Damaged dress ghost")
             .sprites(spriteSheet.blinkyDamagedSprites())
             .end();
 
         var stretching = SpriteAnimation
-            .spriteSheet(spriteSheet)
+            .use(spriteSheet)
             .info("Stretching dress ghost")
             .sprites(spriteSheet.blinkyStretchedSprites())
             .end();
 
         var patched = SpriteAnimation
-            .spriteSheet(spriteSheet)
+            .use(spriteSheet)
             .info("Patched dress ghost")
             .sprites(spriteSheet.blinkyPatchedSprites())
             .frameTicks(4)
             .loop();
 
         var naked = SpriteAnimation
-            .spriteSheet(spriteSheet)
+            .use(spriteSheet)
             .info("Naked ghost")
             .sprites(spriteSheet.blinkyNakedSprites())
             .frameTicks(4)

@@ -23,31 +23,16 @@ public class PacManGamePacAnimations extends SpriteAnimationCollection {
 
     public PacManGamePacAnimations(GameSpriteSheet spriteSheet) {
         checkNotNull(spriteSheet);
-
-        var munching = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .info("Pac-Man munching")
-            .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT))
-            .loop();
-
-        var dying = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .info("Pac-Man dying")
-            .sprites(spriteSheet.pacDyingSprites())
-            .frameTicks(8)
-            .end();
-
-        var bigPacMan = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .info("BIG Pac-Man munching")
-            .sprites(spriteSheet.bigPacManSprites())
-            .frameTicks(3)
-            .loop();
-
         add(Map.of(
-            Pac.ANIM_MUNCHING, munching,
-            Pac.ANIM_DYING, dying,
-            Pac.ANIM_BIG_PACMAN, bigPacMan));
+            Pac.ANIM_MUNCHING,
+            SpriteAnimation.use(spriteSheet).info("Pac-Man munching").sprites(spriteSheet.pacMunchingSprites(Direction.LEFT)).loop(),
+
+            Pac.ANIM_DYING,
+            SpriteAnimation.use(spriteSheet).info("Pac-Man dying").sprites(spriteSheet.pacDyingSprites()).frameTicks(8).end(),
+
+            Pac.ANIM_BIG_PACMAN,
+            SpriteAnimation.use(spriteSheet).info("BIG Pac-Man munching").sprites(spriteSheet.bigPacManSprites()).frameTicks(3).loop()
+        ));
     }
 
     @Override
