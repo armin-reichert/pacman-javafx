@@ -14,8 +14,8 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameSounds;
-import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui3d.level.*;
@@ -353,7 +353,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onLevelStarted(GameEvent event) {
-        level3D.addLevelCounter3D(context.game().levelCounter());
+        addLevelCounter();
         if (context.game().levelNumber() == 1 || context.gameState() == GameState.LEVEL_TEST) {
             if (context.gameState() == GameState.LEVEL_TEST) {
                 replaceGameLevel3D(false);
@@ -396,10 +396,18 @@ public class PlayScene3D implements GameScene {
         GameSounds.stopPacPowerSound();
     }
 
+    private void addLevelCounter() {
+        // Place level counter at top right maze corner
+        double x = context.game().world().map().terrain().numCols() * TS - 2 * TS;
+        double y = 2 * TS;
+        Node levelCounter3D = Factory3D.createLevelCounter3D(context.renderer().spriteSheet(), context.game().levelCounter(), x, y);
+        level3D.root().getChildren().add(levelCounter3D);
+    }
+
     private void replaceGameLevel3D(boolean createLevelCounter) {
         level3D = new GameLevel3D(context);
         if (createLevelCounter) {
-            level3D.addLevelCounter3D(context.game().levelCounter());
+            addLevelCounter();
         }
         int lastIndex = root.getChildren().size() - 1;
         root.getChildren().set(lastIndex, level3D.root());
