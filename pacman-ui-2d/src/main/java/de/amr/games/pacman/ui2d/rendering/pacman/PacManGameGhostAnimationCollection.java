@@ -10,7 +10,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
-import de.amr.games.pacman.ui2d.util.SpriteAnimations;
+import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
 
 import java.util.Map;
 
@@ -19,9 +19,9 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public class PacManGameGhostAnimations extends SpriteAnimations {
+public class PacManGameGhostAnimationCollection extends SpriteAnimationCollection {
 
-    public PacManGameGhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
+    public PacManGameGhostAnimationCollection(GameSpriteSheet spriteSheet, byte ghostID) {
 
         var normal = SpriteAnimation
             .spriteSheet(spriteSheet)

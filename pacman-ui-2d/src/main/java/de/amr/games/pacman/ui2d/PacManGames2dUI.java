@@ -22,11 +22,11 @@ import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManArcadeGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameGhostAnimations;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameGhostAnimationCollection;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimationCollection;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManArcadeGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameGhostAnimations;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManGamePacAnimations;
+import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameGhostAnimationCollection;
+import de.amr.games.pacman.ui2d.rendering.pacman.PacManGamePacAnimationCollection;
 import de.amr.games.pacman.ui2d.rendering.pacman_xxl.PacManXXLGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene;
@@ -468,24 +468,24 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         switch (game.variant()) {
             case MS_PACMAN -> {
                 GameSpriteSheet ss = assets.get("ms_pacman.spritesheet");
-                game.pac().setAnimations(new MsPacManGamePacAnimations(ss));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ss, ghost.id())));
+                game.pac().setAnimations(new MsPacManGamePacAnimationCollection(ss));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimationCollection(ss, ghost.id())));
             }
             case MS_PACMAN_TENGEN -> {
                 GameSpriteSheet ss = assets.get("tengen.spritesheet");
                 GameSpriteSheet ssMsPac = assets.get("ms_pacman.spritesheet");
-                game.pac().setAnimations(new MsPacManGamePacAnimations(ss));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ssMsPac, ghost.id())));
+                game.pac().setAnimations(new MsPacManGamePacAnimationCollection(ss));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimationCollection(ssMsPac, ghost.id())));
             }
             case PACMAN -> {
                 GameSpriteSheet ss = assets.get("pacman.spritesheet");
-                game.pac().setAnimations(new PacManGamePacAnimations(ss));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ss, ghost.id())));
+                game.pac().setAnimations(new PacManGamePacAnimationCollection(ss));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimationCollection(ss, ghost.id())));
             }
             case PACMAN_XXL -> {
                 GameSpriteSheet ss = assets.get("pacman_xxl.spritesheet");
-                game.pac().setAnimations(new PacManGamePacAnimations(ss));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ss, ghost.id())));
+                game.pac().setAnimations(new PacManGamePacAnimationCollection(ss));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimationCollection(ss, ghost.id())));
             }
             default -> throw new IllegalArgumentException("Unsupported game variant: " + game.variant());
         }

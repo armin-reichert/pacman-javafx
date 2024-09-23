@@ -12,7 +12,7 @@ import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.util.SpriteAnimations;
+import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -73,7 +73,7 @@ public interface GameWorldRenderer extends SpriteRenderer {
     }
 
     default void drawAnimatedCreatureInfo(GraphicsContext g, AnimatedEntity animatedCreature) {
-        if (animatedCreature.animations().isPresent() && animatedCreature.animations().get() instanceof SpriteAnimations sa) {
+        if (animatedCreature.animations().isPresent() && animatedCreature.animations().get() instanceof SpriteAnimationCollection sa) {
             Creature guy = (Creature) animatedCreature.entity();
             String animationName = sa.currentAnimationName();
             if (animationName != null) {

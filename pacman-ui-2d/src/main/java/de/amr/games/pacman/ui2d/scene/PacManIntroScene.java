@@ -19,8 +19,8 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManArcadeGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameGhostAnimations;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManGamePacAnimations;
+import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameGhostAnimationCollection;
+import de.amr.games.pacman.ui2d.rendering.pacman.PacManGamePacAnimationCollection;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameSpriteSheet;
 import javafx.scene.paint.Color;
 
@@ -272,8 +272,8 @@ public class PacManIntroScene extends GameScene2D {
         context.setScoreVisible(true);
         spriteSheet = (PacManGameSpriteSheet) context.renderer().spriteSheet();
         data = new Data();
-        data.pacMan.setAnimations(new PacManGamePacAnimations(spriteSheet));
-        data.ghosts.forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(spriteSheet, ghost.id())));
+        data.pacMan.setAnimations(new PacManGamePacAnimationCollection(spriteSheet));
+        data.ghosts.forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimationCollection(spriteSheet, ghost.id())));
         data.blinking.reset();
 
         sceneController.restart(SceneState.STARTING);

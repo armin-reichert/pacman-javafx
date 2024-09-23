@@ -13,7 +13,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.util.SpriteAnimations;
+import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
 
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -105,7 +105,7 @@ public class InfoBoxActorInfo extends InfoBox {
         if (ghost.animations().isEmpty()) {
             return InfoText.NO_INFO;
         }
-        SpriteAnimations sa = (SpriteAnimations) ghost.animations().get();
+        SpriteAnimationCollection sa = (SpriteAnimationCollection) ghost.animations().get();
         return sa.currentAnimationName() != null ? sa.currentAnimationName() : InfoText.NO_INFO;
     }
 

@@ -11,7 +11,7 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimationCollection;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -153,8 +153,8 @@ public class MsPacManCutScene2 extends GameScene2D {
 
         pacMan = new Pac();
         msPacMan = new Pac();
-        msPacMan.setAnimations(new MsPacManGamePacAnimations(sheet));
-        pacMan.setAnimations(new MsPacManGamePacAnimations(sheet));
+        msPacMan.setAnimations(new MsPacManGamePacAnimationCollection(sheet));
+        pacMan.setAnimations(new MsPacManGamePacAnimationCollection(sheet));
 
         clapAnimation = new ClapperboardAnimation("2", "THE CHASE");
         clapAnimation.start();

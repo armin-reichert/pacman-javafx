@@ -12,7 +12,7 @@ import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimationCollection;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
@@ -163,8 +163,8 @@ public class MsPacManCutScene3 extends GameScene2D {
         stork = new Entity();
         bag = new Entity();
 
-        msPacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
-        pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
+        msPacMan.setAnimations(new MsPacManGamePacAnimationCollection(spriteSheet));
+        pacMan.setAnimations(new MsPacManGamePacAnimationCollection(spriteSheet));
         storkAnimation = spriteSheet.createStorkFlyingAnimation();
         storkAnimation.start();
         clapAnimation = new ClapperboardAnimation("3", "JUNIOR");

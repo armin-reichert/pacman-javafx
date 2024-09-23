@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.rendering;
 
 import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Entity;
-import de.amr.games.pacman.ui2d.util.SpriteAnimations;
+import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -168,7 +168,7 @@ public interface SpriteRenderer {
      */
     default void drawAnimatedEntity(GraphicsContext g, AnimatedEntity guy) {
         if (guy.isVisible() && guy.animations().isPresent()) {
-            if (guy.animations().get() instanceof SpriteAnimations spriteAnimations) {
+            if (guy.animations().get() instanceof SpriteAnimationCollection spriteAnimations) {
                 GameSpriteSheet spriteSheet = spriteAnimations.currentAnimation().spriteSheet();
                 RectArea sprite = spriteAnimations.currentSprite(guy);
                 drawEntitySprite(g, guy.entity(), spriteSheet, sprite);

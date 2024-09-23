@@ -19,7 +19,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public abstract class SpriteAnimations implements Animations {
+public class SpriteAnimationCollection implements Animations {
 
     protected final Map<String, SpriteAnimation> animationsByName = new HashMap<>();
     protected String currentAnimationName;
