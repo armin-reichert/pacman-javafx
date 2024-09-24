@@ -16,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -58,7 +59,6 @@ public interface Ufx {
     static void toggle(BooleanProperty booleanProperty) {
         booleanProperty.set(!booleanProperty.get());
     }
-
 
     static  Color opaqueColor(Color color, double opacity) {
         checkNotNull(color);
@@ -105,6 +105,10 @@ public interface Ufx {
     static Border border(Color color, double width) {
         checkNotNull(color);
         return new Border(new BorderStroke(color, BorderStrokeStyle.SOLID, null, new BorderWidths(width)));
+    }
+
+    static Font scaledFont(Font font, double scaling) {
+        return Font.font(font.getFamily(), scaling * font.getSize());
     }
 
     static PhongMaterial coloredMaterial(Color color) {

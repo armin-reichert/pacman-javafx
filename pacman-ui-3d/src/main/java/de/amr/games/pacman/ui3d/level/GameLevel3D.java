@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
+import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
@@ -172,9 +173,7 @@ public class GameLevel3D {
 
         house3D = new House3D(world);
         house3D.heightPy.bind(houseHeightPy);
-        house3D.fillMaterialPy.bind(Bindings.createObjectBinding(
-            () -> coloredMaterial(opaqueColor(wallFillColorPy.get(), HOUSE_OPACITY)), wallFillColorPy
-        ));
+        house3D.fillMaterialPy.bind(wallFillColorPy.map(fillColor -> opaqueColor(fillColor, HOUSE_OPACITY)).map(Ufx::coloredMaterial));
         house3D.strokeMaterialPy.bind(wallStrokeMaterialPy);
         house3D.usedPy.bind(houseUsedPy);
         house3D.openPy.bind(houseOpenPy);
@@ -201,6 +200,7 @@ public class GameLevel3D {
                     : textures.get(textureName);
             }, floorColorPy, floorTextureNamePy
         ));
+
         floorColorPy.bind(PY_3D_FLOOR_COLOR);
         floorTextureNamePy.bind(PY_3D_FLOOR_TEXTURE);
         return floor;
