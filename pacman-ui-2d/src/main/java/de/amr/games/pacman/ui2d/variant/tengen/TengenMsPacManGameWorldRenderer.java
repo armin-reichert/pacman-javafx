@@ -14,11 +14,13 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.*;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.RectArea;
+import de.amr.games.pacman.ui2d.rendering.SpriteSheetArea;
+import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManArcadeGameWorldRenderer;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameWorldRenderer;
-import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -128,36 +130,38 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
         Logger.info("Tengen map # {}: area: {}", mapNumber, mapSprite.area());
     }
 
-    // Maps are all the same size and arranged in a 3x3 grid
-    private RectArea arcadeMapArea(int arcadeMapNumber, int width, int height) {
-        int index = arcadeMapNumber - 1;
-        int rowIndex = index / 3, colIndex = index % 3;
-        return new RectArea(colIndex * width, rowIndex * height, width, height);
+    /**
+     *
+     * @param mapNumber number of Arcade map (1-9)
+     * @param width map width in pixels
+     * @param height map height in pixels
+     * @return sprite sheet area for map image
+     */
+    private RectArea arcadeMapArea(int mapNumber, int width, int height) {
+        if (1 <= mapNumber && mapNumber <= 9) {
+            int index = mapNumber - 1;
+            return new RectArea((index % 3) * width, (index / 3) * height, width, height);
+        }
+        throw new IllegalArgumentException("Illegal Arcade map number: " + mapNumber);
     }
 
-    // Maps have same width but different height and are arranged in 5 rows
-    private RectArea nonArcadeMapArea(int nonArcadeMapNumber, int width, int height) {
-        if (nonArcadeMapNumber <= 8) { // row #1, maps 1-8
-            int colIndex = nonArcadeMapNumber - 1;
-            return new RectArea(colIndex * width, 0, width, height);
+    /**
+     * @param mapNumber number of non-Arcade map (1-37)
+     * @param width map width in pixels
+     * @param height map height in pixels
+     * @return sprite sheet area for map image
+     */
+    private RectArea nonArcadeMapArea(int mapNumber, int width, int height) {
+        int col, y;
+        switch (mapNumber) {
+            case 1,2,3,4,5,6,7,8            -> { col = (mapNumber - 1);  y = 0;    }
+            case 9,10,11,12,13,14,15,16     -> { col = (mapNumber - 9);  y = 248;  }
+            case 17,18,19,20,21,22,23,24    -> { col = (mapNumber - 17); y = 544;  }
+            case 25,26,27,28,29,30,31,32,33 -> { col = (mapNumber - 25); y = 840;  }
+            case 34,35,36,37                -> { col = (mapNumber - 34); y = 1136; }
+            default -> throw new IllegalArgumentException("Illegal non-Arcade map number: " + mapNumber);
         }
-        else if (nonArcadeMapNumber <= 16) { // row #2, maps 9-16
-            int colIndex = (nonArcadeMapNumber - 1) % 8;
-            return new RectArea(colIndex * width, 248, width, height);
-        }
-        else if (nonArcadeMapNumber <= 24) { // row #3, maps 17-24
-            int colIndex = (nonArcadeMapNumber - 1) % 8;
-            return new RectArea(colIndex * width, 544, width, height);
-        }
-        else if (nonArcadeMapNumber <= 33) { // row #4, maps 18-33
-            int colIndex = (nonArcadeMapNumber - 1) % 9;
-            return new RectArea(colIndex * width, 840, width, height);
-        }
-        else if (nonArcadeMapNumber <= 37) { // row #5, maps 34-37
-            int colIndex = (nonArcadeMapNumber - 1) % 4;
-            return new RectArea(colIndex * width, 1136, width, height);
-        }
-        throw new IllegalArgumentException("Illegal map number: " + nonArcadeMapNumber);
+        return new RectArea(col * width, y, width, height);
     }
 
     @Override
