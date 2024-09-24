@@ -7,11 +7,13 @@ package de.amr.games.pacman.ui3d.level;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
@@ -73,6 +75,8 @@ public class GameLevel3D {
     private final ObjectProperty<PhongMaterial> wallFillMaterialPy   = new SimpleObjectProperty<>(this, "wallFillMaterial", DEFAULT_MATERIAL);
     private final ObjectProperty<PhongMaterial> wallStrokeMaterialPy = new SimpleObjectProperty<>(this, "wallStrokeMaterial", DEFAULT_MATERIAL);
 
+    public final IntegerProperty livesCounterPy = new SimpleIntegerProperty(0);
+
     private final GameContext context;
 
     private final Group root = new Group();
@@ -90,13 +94,14 @@ public class GameLevel3D {
     public GameLevel3D(GameContext context) {
         this.context = checkNotNull(context);
 
-        pac3D = Factory3D.createPac3D(context.game().variant(), context.assets(), context.game().pac(), PAC_SIZE);
-        ghosts3D = context.game().ghosts().map(ghost -> Factory3D.createGhost3D(context.game().variant(), context.assets(), ghost, GHOST_SIZE)).toList();
-        livesCounter3D = Factory3D.createLivesCounter3D(
-                context.game().variant(), context.assets(), LIVES_COUNTER_MAX, LIVE_SHAPE_SIZE, context.game().hasCredit());
-        message3D = Factory3D.createMessage3D(context.assets());
+        final GameVariant gameVariant = context.game().variant();
+        final AssetStorage assets = context.assets();
 
-        updateLivesCounter();
+        pac3D = Factory3D.createPac3D(gameVariant, assets, context.game().pac(), PAC_SIZE);
+        ghosts3D = context.game().ghosts().map(ghost -> Factory3D.createGhost3D(gameVariant, assets, ghost, GHOST_SIZE)).toList();
+        livesCounter3D = Factory3D.createLivesCounter3D(gameVariant, assets, LIVES_COUNTER_MAX, LIVE_SHAPE_SIZE, context.game().hasCredit());
+        livesCounter3D.livesCountPy.bind(livesCounterPy);
+        message3D = Factory3D.createMessage3D(assets);
 
         wallFillMaterialPy.bind(Bindings.createObjectBinding(
             () -> coloredMaterial(opaqueColor(wallFillColorPy.get(), wallOpacityPy.get())), wallFillColorPy, wallOpacityPy));
@@ -123,7 +128,6 @@ public class GameLevel3D {
         pac3D.update(context);
         ghosts3D().forEach(ghost3D -> ghost3D.update(context));
         bonus3D().ifPresent(bonus -> bonus.update(context));
-        updateLivesCounter();
 
         boolean houseAccessRequired = context.game()
             .ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
@@ -136,14 +140,12 @@ public class GameLevel3D {
 
         houseUsedPy.set(houseAccessRequired);
         houseOpenPy.set(ghostNearHouseEntry);
-    }
 
-    private void updateLivesCounter() {
-        //TODO reconsider this:
-        if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
-            livesCounter3D.livesCountPy.set(context.game().lives());
+        int symbolsDisplayed = Math.max(0, context.game().lives() - 1);
+        if (!context.game().pac().isVisible() && context.gameState() == GameState.READY) {
+            livesCounterPy.set(symbolsDisplayed + 1);
         } else {
-            livesCounter3D.livesCountPy.set(context.game().lives() - 1);
+            livesCounterPy.set(symbolsDisplayed);
         }
     }
 
