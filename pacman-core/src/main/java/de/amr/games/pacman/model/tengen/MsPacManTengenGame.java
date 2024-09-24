@@ -13,6 +13,7 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.Portal;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
@@ -170,11 +171,14 @@ public class MsPacManTengenGame extends GameModel {
         nextBonusIndex += 1;
 
         boolean leftToRight = RND.nextBoolean();
-        var houseEntry = tileAt(world.houseEntryPosition());
-        var houseEntryOpposite = houseEntry.plus(0, world.houseSize().y() + 1);
-        var portalList = world.portals().toList();
-        var entryPortal = portalList.get(RND.nextInt(portalList.size()));
-        var exitPortal  = portalList.get(RND.nextInt(portalList.size()));
+        Vector2i houseEntry = tileAt(world.houseEntryPosition());
+        Vector2i houseEntryOpposite = houseEntry.plus(0, world.houseSize().y() + 1);
+        List<Portal> portals = world.portals().toList();
+        if (portals.isEmpty()) {
+            return; // there should be no mazes without portal but who knows?
+        }
+        Portal entryPortal = portals.get(RND.nextInt(portals.size()));
+        Portal exitPortal  = portals.get(RND.nextInt(portals.size()));
         List<NavPoint> route = Stream.of(
             leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd(),
             houseEntry,
