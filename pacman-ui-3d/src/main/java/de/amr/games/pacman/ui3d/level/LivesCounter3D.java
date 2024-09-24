@@ -7,8 +7,8 @@ package de.amr.games.pacman.ui3d.level;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
+import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -19,9 +19,6 @@ import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
@@ -45,10 +42,9 @@ public class LivesCounter3D extends Group {
     private final ObjectProperty<PhongMaterial> plateMaterialPy = new SimpleObjectProperty<>(this, "plateMaterial", new PhongMaterial());
 
     private final PointLight light = new PointLight();
-    private final List<Animation> animations = new ArrayList<>();
+    private final ParallelTransition shapesRotation = new ParallelTransition();
 
-    public LivesCounter3D(Node[] shapes, int shapeHeight)
-    {
+    public LivesCounter3D(Node[] shapes, int shapeHeight) {
         pillarMaterialPy.bind(pillarColorPy.map(Ufx::coloredMaterial));
         plateMaterialPy.bind((plateColorPy.map(Ufx::coloredMaterial)));
 
@@ -78,7 +74,7 @@ public class LivesCounter3D extends Group {
             rotation.setInterpolator(Interpolator.LINEAR);
             rotation.setCycleCount(Animation.INDEFINITE);
             rotation.setAutoReverse(true);
-            animations.add(rotation);
+            shapesRotation.getChildren().add(rotation);
         }
         getChildren().addAll(standsGroup, light);
     }
@@ -102,9 +98,7 @@ public class LivesCounter3D extends Group {
         podium.heightProperty().bind(plateThicknessPy);
         podium.materialProperty().bind(plateMaterialPy);
         podium.setTranslateX(x);
-        podium.translateZProperty().bind(Bindings.createDoubleBinding(
-            () -> -pillarHeightPy.get() - plateThicknessPy.get(),
-            pillarHeightPy, plateThicknessPy));
+        podium.translateZProperty().bind(pillarHeightPy.add(plateThicknessPy).negate());
         podium.setRotationAxis(Rotate.X_AXIS);
         podium.setRotate(90);
         podium.drawModeProperty().bind(PY_3D_DRAW_MODE);
@@ -113,10 +107,10 @@ public class LivesCounter3D extends Group {
     }
 
     public void startAnimation() {
-        animations.forEach(Animation::play);
+        shapesRotation.play();
     }
 
     public void stopAnimation() {
-        animations.forEach(Animation::stop);
+        shapesRotation.stop();
     }
 }
