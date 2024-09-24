@@ -36,13 +36,15 @@ public interface GameContext {
     void setScoreVisible(boolean visible);
     boolean isScoreVisible();
 
+    /**
+     * @return size (in tiles) of current world or size of Arcade world if no world currently exists
+     */
     default Vector2i worldSize() {
-        if (game().world() != null) {
-            return new Vector2i(
-                game().world().map().terrain().numCols(),
-                game().world().map().terrain().numRows());
-        }
-        return new Vector2i(GameModel.ARCADE_MAP_TILES_X, GameModel.ARCADE_MAP_TILES_Y);
+        boolean worldExists = game().world() != null;
+        return new Vector2i(
+            worldExists ? game().world().map().terrain().numCols() : GameModel.ARCADE_MAP_TILES_X,
+            worldExists ? game().world().map().terrain().numRows() : GameModel.ARCADE_MAP_TILES_Y
+        );
     }
 
     // Game scenes

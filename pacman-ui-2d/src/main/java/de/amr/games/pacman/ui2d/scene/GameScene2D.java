@@ -77,13 +77,22 @@ public abstract class GameScene2D implements GameScene {
         if (debugInfoPy.get()) {
             drawDebugInfo(renderer);
         }
+        drawCredit(renderer);
+        drawLevelCounter(renderer);
+    }
+
+    protected void drawCredit(GameWorldRenderer renderer) {
         if (isCreditVisible()) {
             Vector2i worldSize = context.worldSize();
-            String creditText = "CREDIT %2d".formatted(context.game().credit());
-            Color creditColor = context.assets().color("palette.pale");
-            Font creditFont = sceneFont(8);
-            renderer.drawText(g, creditText, creditColor, creditFont, t(2), t(worldSize.y()) - 1);
+            renderer.drawText(g,
+                "CREDIT %2d".formatted(context.game().credit()),
+                context.assets().color("palette.pale"),
+                sceneFont(8),
+                t(2), t(worldSize.y()) - 1);
         }
+    }
+
+    protected void drawLevelCounter(GameWorldRenderer renderer) {
         Vector2i worldSize = context.worldSize();
         double x = t(worldSize.x() - 4), y = t(worldSize.y() - 2);
         renderer.drawLevelCounter(g, context.game().levelCounter(), x, y);
