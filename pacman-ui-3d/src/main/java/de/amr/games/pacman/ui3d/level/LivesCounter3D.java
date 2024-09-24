@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
+import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -23,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.util.Ufx.coloredMaterial;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
 
 /**
@@ -49,34 +49,27 @@ public class LivesCounter3D extends Group {
 
     public LivesCounter3D(Node[] shapes, int shapeHeight)
     {
-        int maxLives = shapes.length;
+        pillarMaterialPy.bind(pillarColorPy.map(Ufx::coloredMaterial));
+        plateMaterialPy.bind((plateColorPy.map(Ufx::coloredMaterial)));
 
-        pillarMaterialPy.bind(Bindings.createObjectBinding(() -> coloredMaterial(pillarColorPy.get()), pillarColorPy));
-        plateMaterialPy.bind(Bindings.createObjectBinding(() -> coloredMaterial(plateColorPy.get()), plateColorPy));
-
-        light.setMaxRange  (TS * (maxLives + 1));
-        light.setTranslateX(TS * (maxLives - 1));
+        light.setMaxRange  (TS * (shapes.length + 1));
+        light.setTranslateX(TS * (shapes.length - 1));
         light.setTranslateY(TS * (-1));
         light.translateZProperty().bind(pillarHeightPy.add(20).multiply(-1));
 
         var standsGroup = new Group();
         for (int i = 0; i < shapes.length; ++i) {
             int x = i * 2 * TS;
-
             standsGroup.getChildren().add(createStand(x));
 
             Node shape = shapes[i];
             shape.setUserData(i);
             shape.setTranslateX(x);
             shape.setTranslateY(0);
-            shape.translateZProperty().bind(Bindings.createDoubleBinding(
-                () -> -(pillarHeightPy.get() + plateThicknessPy.get() + 0.5 * shapeHeight),
-                pillarHeightPy, plateThicknessPy)
-            );
+            shape.translateZProperty().bind(pillarHeightPy.add(plateThicknessPy).add(0.5 * shapeHeight).negate());
             shape.setRotationAxis(Rotate.Z_AXIS);
             shape.setRotate(180);
-            shape.visibleProperty().bind(Bindings.createBooleanBinding(
-                () -> (int) shape.getUserData() < livesCountPy.get(), livesCountPy));
+            shape.visibleProperty().bind(livesCountPy.map(count -> count.intValue() > (int) shape.getUserData()));
             getChildren().add(shape);
 
             var rotation = new RotateTransition(Duration.seconds(10.0), shape);
