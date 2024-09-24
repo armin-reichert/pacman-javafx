@@ -83,6 +83,10 @@ public class LivesCounter3D extends Group {
         return light;
     }
 
+    public Animation shapesRotation() {
+        return shapesRotation;
+    }
+
     private Group createStand(double x) {
         var pillar = new Cylinder(1, 0.1);
         pillar.heightProperty().bind(pillarHeightPy);
@@ -104,13 +108,5 @@ public class LivesCounter3D extends Group {
         podium.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         return new Group(pillar, podium);
-    }
-
-    public void startAnimation() {
-        shapesRotation.play();
-    }
-
-    public void stopAnimation() {
-        shapesRotation.stop();
     }
 }

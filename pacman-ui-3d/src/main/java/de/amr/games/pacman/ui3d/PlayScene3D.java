@@ -225,7 +225,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void onEnterStateHunting() {
-        level3D.livesCounter3D().startAnimation();
+        level3D.livesCounter3D().shapesRotation().play();
         level3D.energizers3D().forEach(Energizer3D::startPumping);
     }
 
@@ -253,7 +253,7 @@ public class PlayScene3D implements GameScene {
         world.map().food().tiles().forEach(world::eatFoodAt);
         level3D.pellets3D().forEach(Pellet3D::onEaten);
         level3D.energizers3D().forEach(Energizer3D::onEaten);
-        level3D.livesCounter3D().stopAnimation();
+        level3D.livesCounter3D().shapesRotation().stop();
         level3D.house3D().door3D().setVisible(false);
         playLevelCompleteAnimation();
     }
@@ -284,7 +284,7 @@ public class PlayScene3D implements GameScene {
 
     private void stopLevelAnimations() {
         level3D.energizers3D().forEach(Energizer3D::stopPumping);
-        level3D.livesCounter3D().stopAnimation();
+        level3D.livesCounter3D().shapesRotation().stop();
         level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
     }
 
@@ -312,7 +312,7 @@ public class PlayScene3D implements GameScene {
             if (context.game().powerTimer().isRunning()) {
                 GameSounds.playPacPowerSound();
             }
-            level3D.livesCounter3D().startAnimation();
+            level3D.livesCounter3D().shapesRotation().play();
         }
     }
 
