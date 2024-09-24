@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui3d.level;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.animation.Animation;
@@ -21,6 +22,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -65,10 +67,7 @@ public interface Factory3D {
     }
 
     static LivesCounter3D createLivesCounter3D(GameVariant variant, AssetStorage assets, int maxShapes, double shapeSize, boolean hasCredit) {
-        Node[] shapes = new Node[maxShapes];
-        for (int i = 0; i < shapes.length; ++i) {
-            shapes[i] = createLivesCounterShape(variant, assets, shapeSize);
-        }
+        Node[] shapes = IntStream.range(0, maxShapes).mapToObj(i -> createLivesCounterShape(variant, assets, shapeSize)).toArray(Node[]::new);
         var counter3D = new LivesCounter3D(shapes, 10);
         counter3D.setTranslateX(2 * TS);
         counter3D.setTranslateY(2 * TS);
@@ -80,28 +79,28 @@ public interface Factory3D {
     }
 
     private static Node createLivesCounterShape(GameVariant variant, AssetStorage assets, double size) {
+        String assetPrefix = GameAssets2D.assetPrefix(variant) + ".";
         return switch (variant) {
             case MS_PACMAN, MS_PACMAN_TENGEN -> new Group(
                 PacModel3D.createPacShape(
                     assets.get("model3D.pacman"), size,
-                    assets.color("ms_pacman.color.head"),
-                    assets.color("ms_pacman.color.eyes"),
-                    assets.color("ms_pacman.color.palate")
+                    assets.color(assetPrefix + "color.head"),
+                    assets.color(assetPrefix + "color.eyes"),
+                    assets.color(assetPrefix + "color.palate")
                 ),
                 PacModel3D.createFemaleParts(size,
-                    assets.color("ms_pacman.color.hairbow"),
-                    assets.color("ms_pacman.color.hairbow.pearls"),
-                    assets.color("ms_pacman.color.boobs")
+                    assets.color(assetPrefix + "color.hairbow"),
+                    assets.color(assetPrefix + "color.hairbow.pearls"),
+                    assets.color(assetPrefix + "color.boobs")
                 )
             );
             case PACMAN, PACMAN_XXL ->
                 PacModel3D.createPacShape(
                     assets.get("model3D.pacman"), size,
-                    assets.color("pacman.color.head"),
-                    assets.color("pacman.color.eyes"),
+                    assets.color(assetPrefix + "color.head"),
+                    assets.color(assetPrefix + "color.eyes"),
                     Color.WHEAT
-                    //assets.color("pacman.color.palate")
-                    );
+                );
         };
     }
 
