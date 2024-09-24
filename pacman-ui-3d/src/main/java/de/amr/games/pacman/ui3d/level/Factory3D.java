@@ -31,25 +31,25 @@ public interface Factory3D {
     static Pac3D createPac3D(GameVariant variant, AssetStorage assets, Pac pac, double size) {
         switch (variant) {
             case MS_PACMAN -> {
-                var pac3D = new MsPacMan3D(pac, size, assets);
+                var pac3D = new MsPacMan3D(variant, pac, size, assets);
                 pac3D.shape3D().light().setColor(assets.color("ms_pacman.color.head").desaturate());
                 pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
                 return pac3D;
             }
             case MS_PACMAN_TENGEN -> {
-                var pac3D = new MsPacMan3D(pac, size, assets);
+                var pac3D = new MsPacMan3D(variant, pac, size, assets);
                 pac3D.shape3D().light().setColor(assets.color("tengen.color.head").desaturate());
                 pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
                 return pac3D;
             }
             case PACMAN -> {
-                var pac3D = new PacMan3D(pac, size, assets);
+                var pac3D = new PacMan3D(variant, pac, size, assets);
                 pac3D.shape3D().light().setColor(assets.color("pacman.color.head").desaturate());
                 pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
                 return pac3D;
             }
             case PACMAN_XXL -> {
-                var pac3D = new PacMan3D(pac, size, assets);
+                var pac3D = new PacMan3D(variant, pac, size, assets);
                 pac3D.shape3D().light().setColor(assets.color("pacman_xxl.color.head").desaturate());
                 pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
                 return pac3D;
@@ -59,7 +59,7 @@ public interface Factory3D {
     }
 
     static MutableGhost3D createGhost3D(GameVariant variant, AssetStorage assets, Ghost ghost, double size) {
-        var ghost3D = new MutableGhost3D(assets.get("model3D.ghost"), assets, ghost, size);
+        var ghost3D = new MutableGhost3D(variant, assets.get("model3D.ghost"), assets, ghost, size);
         ghost3D.drawModePy.bind(PY_3D_DRAW_MODE);
         return ghost3D;
     }

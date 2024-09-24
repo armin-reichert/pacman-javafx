@@ -4,7 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
@@ -33,24 +35,28 @@ public class PacMan3D implements Pac3D {
     /**
      * Creates a 3D Pac-Man.
      *
+     * @param variant game variant
      * @param pacMan Pac-Man instance
      * @param size diameter of Pac-Man
      * @param assets asset map
      */
-    public PacMan3D(Pac pacMan, double size, AssetStorage assets) {
+    public PacMan3D(GameVariant variant, Pac pacMan, double size, AssetStorage assets) {
+        checkNotNull(variant);
         this.pacMan = checkNotNull(pacMan);
         checkNotNull(assets);
+
+        String assetPrefix = GameAssets2D.assetPrefix(variant) + ".";
 
         Model3D model3D = assets.get("model3D.pacman");
 
         shape3D = new PacShape3D(model3D, size,
-            assets.color("pacman.color.head"),
-            assets.color("pacman.color.palate"));
+            assets.color(assetPrefix + "color.head"),
+            assets.color(assetPrefix + "color.palate"));
 
         Group body = PacModel3D.createPacShape(model3D, size,
-            assets.color("pacman.color.head"),
-            assets.color("pacman.color.eyes"),
-            assets.color("pacman.color.palate")
+            assets.color(assetPrefix + "color.head"),
+            assets.color(assetPrefix + "color.eyes"),
+            assets.color(assetPrefix + "color.palate")
         );
         meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(shape3D.drawModeProperty());
         meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(shape3D.drawModeProperty());

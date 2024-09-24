@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui3d.model.Model3D;
@@ -43,29 +42,26 @@ public class GameAssets3D {
             texturesByName.put(name, texture);
         });
 
-        assets.store("ghost.0.color.normal.dress",      assets.color("palette.red"));
-        assets.store("ghost.0.color.normal.eyeballs",   assets.color("palette.pale"));
-        assets.store("ghost.0.color.normal.pupils",     assets.color("palette.blue"));
+        // Ms. Pac-Man
 
-        assets.store("ghost.1.color.normal.dress",      assets.color("palette.pink"));
-        assets.store("ghost.1.color.normal.eyeballs",   assets.color("palette.pale"));
-        assets.store("ghost.1.color.normal.pupils",     assets.color("palette.blue"));
-
-        assets.store("ghost.2.color.normal.dress",      assets.color("palette.cyan"));
-        assets.store("ghost.2.color.normal.eyeballs",   assets.color("palette.pale"));
-        assets.store("ghost.2.color.normal.pupils",     assets.color("palette.blue"));
-
-        assets.store("ghost.3.color.normal.dress",      assets.color("palette.orange"));
-        assets.store("ghost.3.color.normal.eyeballs",   assets.color("palette.pale"));
-        assets.store("ghost.3.color.normal.pupils",     assets.color("palette.blue"));
-
-        assets.store("ghost.color.frightened.dress",    assets.color("palette.blue"));
-        assets.store("ghost.color.frightened.eyeballs", assets.color("palette.rose"));
-        assets.store("ghost.color.frightened.pupils",   assets.color("palette.rose"));
-
-        assets.store("ghost.color.flashing.dress",      assets.color("palette.pale"));
-        assets.store("ghost.color.flashing.eyeballs",   assets.color("palette.rose"));
-        assets.store("ghost.color.flashing.pupils",     assets.color("palette.red"));
+        assets.store("ms_pacman.ghost.0.color.normal.dress",      assets.color("palette.red"));
+        assets.store("ms_pacman.ghost.0.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.store("ms_pacman.ghost.0.color.normal.pupils",     assets.color("palette.blue"));
+        assets.store("ms_pacman.ghost.1.color.normal.dress",      assets.color("palette.pink"));
+        assets.store("ms_pacman.ghost.1.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.store("ms_pacman.ghost.1.color.normal.pupils",     assets.color("palette.blue"));
+        assets.store("ms_pacman.ghost.2.color.normal.dress",      assets.color("palette.cyan"));
+        assets.store("ms_pacman.ghost.2.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.store("ms_pacman.ghost.2.color.normal.pupils",     assets.color("palette.blue"));
+        assets.store("ms_pacman.ghost.3.color.normal.dress",      assets.color("palette.orange"));
+        assets.store("ms_pacman.ghost.3.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.store("ms_pacman.ghost.3.color.normal.pupils",     assets.color("palette.blue"));
+        assets.store("ms_pacman.ghost.color.frightened.dress",    assets.color("palette.blue"));
+        assets.store("ms_pacman.ghost.color.frightened.eyeballs", assets.color("palette.rose"));
+        assets.store("ms_pacman.ghost.color.frightened.pupils",   assets.color("palette.rose"));
+        assets.store("ms_pacman.ghost.color.flashing.dress",      assets.color("palette.pale"));
+        assets.store("ms_pacman.ghost.color.flashing.eyeballs",   assets.color("palette.rose"));
+        assets.store("ms_pacman.ghost.color.flashing.pupils",     assets.color("palette.red"));
 
         assets.store("ms_pacman.color.head",            Color.rgb(255, 255, 0));
         assets.store("ms_pacman.color.eyes",            Color.rgb(33, 33, 33));
@@ -74,16 +70,82 @@ public class GameAssets3D {
         assets.store("ms_pacman.color.hairbow",         Color.rgb(255, 0, 0));
         assets.store("ms_pacman.color.hairbow.pearls",  Color.rgb(33, 33, 255));
 
-        assets.store("tengen.color.head",               Color.rgb(255, 255, 0));
-        assets.store("tengen.color.eyes",               Color.rgb(33, 33, 33));
+        // Tengen Ms. Pac-Man
+
+        assets.store("tengen.color.head",               Color.rgb(232, 208, 32));
+        assets.store("tengen.color.eyes",               Color.rgb(32, 0, 176));
         assets.store("tengen.color.palate",             Color.rgb(240, 180, 160));
-        assets.store("tengen.color.boobs",              Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
-        assets.store("tengen.color.hairbow",            Color.rgb(255, 0, 0));
-        assets.store("tengen.color.hairbow.pearls",     Color.rgb(33, 33, 255));
+        assets.store("tengen.color.boobs",              Color.rgb(232, 208, 32).deriveColor(0, 1.0, 0.96, 1.0));
+        assets.store("tengen.color.hairbow",            Color.rgb(176, 15, 48));
+        assets.store("tengen.color.hairbow.pearls",     Color.rgb(32, 0, 176));
+
+        assets.store("tengen.ghost.0.color.normal.dress",      Color.rgb(176, 15, 48));
+        assets.store("tengen.ghost.0.color.normal.eyeballs",   Color.WHITE);
+        assets.store("tengen.ghost.0.color.normal.pupils",     Color.rgb(224, 80, 0));
+        assets.store("tengen.ghost.1.color.normal.dress",      Color.rgb(255, 96, 176));
+        assets.store("tengen.ghost.1.color.normal.eyeballs",   Color.WHITE);
+        assets.store("tengen.ghost.1.color.normal.pupils",     Color.rgb(63, 96, 248));
+        assets.store("tengen.ghost.2.color.normal.dress",      Color.rgb(63, 96, 248));
+        assets.store("tengen.ghost.2.color.normal.eyeballs",   Color.WHITE);
+        assets.store("tengen.ghost.2.color.normal.pupils",     Color.rgb(63, 96, 248));
+        assets.store("tengen.ghost.3.color.normal.dress",      Color.rgb(224, 80, 0));
+        assets.store("tengen.ghost.3.color.normal.eyeballs",   Color.WHITE);
+        assets.store("tengen.ghost.3.color.normal.pupils",     Color.rgb(176, 15, 48));
+        assets.store("tengen.ghost.color.frightened.dress",    Color.rgb(32, 0, 176));
+        assets.store("tengen.ghost.color.frightened.eyeballs", Color.WHITE);
+        assets.store("tengen.ghost.color.frightened.pupils",   Color.WHITE);
+        //TODO has two flashing colors
+        assets.store("tengen.ghost.color.flashing.dress",      Color.WHITE);
+        assets.store("tengen.ghost.color.flashing.eyeballs",   Color.rgb(176, 15, 48));
+        assets.store("tengen.ghost.color.flashing.pupils",     Color.rgb(176, 15, 48));
+
+
+        // Pac-Man
+
+        assets.store("pacman.ghost.0.color.normal.dress",      assets.color("palette.red"));
+        assets.store("pacman.ghost.0.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.store("pacman.ghost.0.color.normal.pupils",     assets.color("palette.blue"));
+        assets.store("pacman.ghost.1.color.normal.dress",      assets.color("palette.pink"));
+        assets.store("pacman.ghost.1.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.store("pacman.ghost.1.color.normal.pupils",     assets.color("palette.blue"));
+        assets.store("pacman.ghost.2.color.normal.dress",      assets.color("palette.cyan"));
+        assets.store("pacman.ghost.2.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.store("pacman.ghost.2.color.normal.pupils",     assets.color("palette.blue"));
+        assets.store("pacman.ghost.3.color.normal.dress",      assets.color("palette.orange"));
+        assets.store("pacman.ghost.3.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.store("pacman.ghost.3.color.normal.pupils",     assets.color("palette.blue"));
+        assets.store("pacman.ghost.color.frightened.dress",    assets.color("palette.blue"));
+        assets.store("pacman.ghost.color.frightened.eyeballs", assets.color("palette.rose"));
+        assets.store("pacman.ghost.color.frightened.pupils",   assets.color("palette.rose"));
+        assets.store("pacman.ghost.color.flashing.dress",      assets.color("palette.pale"));
+        assets.store("pacman.ghost.color.flashing.eyeballs",   assets.color("palette.rose"));
+        assets.store("pacman.ghost.color.flashing.pupils",     assets.color("palette.red"));
+
 
         assets.store("pacman.color.head",               Color.rgb(255, 255, 0));
         assets.store("pacman.color.eyes",               Color.rgb(33, 33, 33));
         assets.store("pacman.color.palate",             Color.rgb(240, 180, 160));
+
+        // Pac-Man XXL
+
+        assets.store("pacman_xxl.ghost.0.color.normal.dress",      assets.color("palette.red"));
+        assets.store("pacman_xxl.ghost.0.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.store("pacman_xxl.ghost.0.color.normal.pupils",     assets.color("palette.blue"));
+        assets.store("pacman_xxl.ghost.1.color.normal.dress",      assets.color("palette.pink"));
+        assets.store("pacman_xxl.ghost.1.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.store("pacman_xxl.ghost.1.color.normal.pupils",     assets.color("palette.blue"));
+        assets.store("pacman_xxl.ghost.2.color.normal.dress",      assets.color("palette.cyan"));
+        assets.store("pacman_xxl.ghost.2.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.store("pacman_xxl.ghost.2.color.normal.pupils",     assets.color("palette.blue"));
+        assets.store("pacman_xxl.ghost.3.color.normal.dress",      assets.color("palette.orange"));
+        assets.store("pacman_xxl.ghost.3.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.store("pacman_xxl.ghost.3.color.normal.pupils",     assets.color("palette.blue"));
+        assets.store("pacman_xxl.ghost.color.frightened.dress",    assets.color("palette.blue"));
+        assets.store("pacman_xxl.ghost.color.frightened.eyeballs", assets.color("palette.rose"));
+        assets.store("pacman_xxl.ghost.color.frightened.pupils",   assets.color("palette.rose"));
+        assets.store("pacman_xxl.ghost.color.flashing.dress",      assets.color("palette.pale"));
+        assets.store("pacman_xxl.ghost.color.flashing.eyeballs",   assets.color("palette.rose"));
+        assets.store("pacman_xxl.ghost.color.flashing.pupils",     assets.color("palette.red"));
 
         assets.store("pacman_xxl.color.head",           Color.rgb(255, 255, 0));
         assets.store("pacman_xxl.color.eyes",           Color.rgb(33, 33, 33));

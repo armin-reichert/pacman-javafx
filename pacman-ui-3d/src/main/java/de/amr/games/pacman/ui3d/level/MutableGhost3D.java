@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
@@ -72,7 +73,8 @@ public class MutableGhost3D {
     private final double size;
     private int numFlashes;
 
-    public MutableGhost3D(Model3D model3D, AssetStorage assets, Ghost ghost, double size) {
+    public MutableGhost3D(GameVariant variant, Model3D model3D, AssetStorage assets, Ghost ghost, double size) {
+        requireNonNull(variant);
         requireNonNull(model3D);
         requireNonNull(assets);
         requireNonNull(ghost);
@@ -81,7 +83,7 @@ public class MutableGhost3D {
         this.ghost = ghost;
         this.size = size;
 
-        ghost3D = new Ghost3D(model3D, assets, ghost.id(), size);
+        ghost3D = new Ghost3D(variant, model3D, assets, ghost.id(), size);
         ghost3D.drawModePy.bind(drawModePy);
 
         numberCube = new Box(14, 8, 8);

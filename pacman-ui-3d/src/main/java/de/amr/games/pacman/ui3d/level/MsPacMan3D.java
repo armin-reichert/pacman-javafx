@@ -4,7 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
@@ -35,34 +37,37 @@ public class MsPacMan3D implements Pac3D {
     /**
      * Creates a 3D Ms. Pac-Man.
      *
+     * @param variant game variant
      * @param msPacMan Ms. Pac-Man instance
      * @param size diameter of Pac-Man
      * @param assets asset map
      */
-    public MsPacMan3D(Pac msPacMan, double size, AssetStorage assets) {
+    public MsPacMan3D(GameVariant variant, Pac msPacMan, double size, AssetStorage assets) {
+        checkNotNull(variant);
         this.msPacMan = checkNotNull(msPacMan);
         checkNotNull(assets);
 
+        String assetPrefix = GameAssets2D.assetPrefix(variant) + ".";
         Model3D model3D = assets.get("model3D.pacman");
 
         shape3D = new PacShape3D(model3D, size,
-            assets.color("ms_pacman.color.head"),
-            assets.color("ms_pacman.color.palate"));
+            assets.color(assetPrefix + "color.head"),
+            assets.color(assetPrefix + "color.palate"));
 
         Group body = PacModel3D.createPacShape(
             model3D, size,
-            assets.color("ms_pacman.color.head"),
-            assets.color("ms_pacman.color.eyes"),
-            assets.color("ms_pacman.color.palate"));
+            assets.color(assetPrefix + "color.head"),
+            assets.color(assetPrefix + "color.eyes"),
+            assets.color(assetPrefix + "color.palate"));
 
         meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(shape3D.drawModeProperty());
         meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(shape3D.drawModeProperty());
         meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(shape3D.drawModeProperty());
 
         Group femaleParts = PacModel3D.createFemaleParts(size,
-            assets.color("ms_pacman.color.hairbow"),
-            assets.color("ms_pacman.color.hairbow.pearls"),
-            assets.color("ms_pacman.color.boobs"));
+            assets.color(assetPrefix + "color.hairbow"),
+            assets.color(assetPrefix + "color.hairbow.pearls"),
+            assets.color(assetPrefix + "color.boobs"));
 
         shape3D.getChildren().addAll(body, femaleParts);
         createHipSwayingAnimation(shape3D);
