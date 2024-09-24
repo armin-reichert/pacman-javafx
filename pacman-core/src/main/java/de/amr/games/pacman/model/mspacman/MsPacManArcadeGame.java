@@ -6,12 +6,14 @@ package de.amr.games.pacman.model.mspacman;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.Portal;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
@@ -41,18 +43,10 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class MsPacManArcadeGame extends GameModel {
 
+    private static final byte MAP_COUNT = 6;
     private static final byte HOUSE_X = 10, HOUSE_Y = 15;
-
-    private static GameWorld createWorld(WorldMap map) {
-        var world = new GameWorld(map);
-        world.createArcadeHouse(HOUSE_X, HOUSE_Y);
-        //TODO: store in map files
-        map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(world.houseTopLeftTile()));
-        return world;
-    }
-
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
-
+    private static final String MAP_PATTERN = "/de/amr/games/pacman/maps/mspacman/mspacman_%d.world";
     /**
      * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
      *
@@ -63,6 +57,14 @@ public class MsPacManArcadeGame extends GameModel {
     private static final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
 
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
+
+    private static GameWorld createWorld(WorldMap map) {
+        var world = new GameWorld(map);
+        world.createArcadeHouse(HOUSE_X, HOUSE_Y);
+        //TODO: store in map files
+        map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(world.houseTopLeftTile()));
+        return world;
+    }
 
     private int mapNumber;
     public boolean blueMazeBug = false;
@@ -101,6 +103,11 @@ public class MsPacManArcadeGame extends GameModel {
         };
     }
 
+    @Override
+    public int mapCount() {
+        return MAP_COUNT;
+    }
+
     /**
      * Used by sprite based renderer to select the image for the maze.
      * @return map number (1-6)
@@ -117,9 +124,9 @@ public class MsPacManArcadeGame extends GameModel {
 
     @Override
     public void buildRegularLevel(int levelNumber) {
-        this.levelNumber = checkLevelNumber(levelNumber);
+        this.levelNumber = levelNumber;
         mapNumber = mapNumberByLevelNumber(levelNumber);
-        URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/mspacman/mspacman_%d.world".formatted(mapNumber));
+        URL mapURL = getClass().getResource(MAP_PATTERN.formatted(mapNumber));
         var map = new WorldMap(mapURL);
         if (blueMazeBug && levelNumber == 1) {
             map.terrain().setProperty(GameWorld.PROPERTY_COLOR_WALL_FILL, "rgb(33,33,255)");
@@ -138,8 +145,8 @@ public class MsPacManArcadeGame extends GameModel {
     @Override
     public void buildDemoLevel() {
         levelNumber = 1;
-        mapNumber = randomInt(1, 7);
-        URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/mspacman/mspacman_%d.world".formatted(mapNumber));
+        mapNumber = randomInt(1, MAP_COUNT + 1);
+        URL mapURL = getClass().getResource(MAP_PATTERN.formatted(mapNumber));
         var map = new WorldMap(mapURL);
         setWorldAndCreatePopulation(createWorld(map));
         pac.setName("Ms. Pac-Man");
@@ -229,11 +236,14 @@ public class MsPacManArcadeGame extends GameModel {
         nextBonusIndex += 1;
 
         boolean leftToRight = RND.nextBoolean();
-        var houseEntry = tileAt(world.houseEntryPosition());
-        var houseEntryOpposite = houseEntry.plus(0, world.houseSize().y() + 1);
-        var portalList = world.portals().toList();
-        var entryPortal = portalList.get(RND.nextInt(portalList.size()));
-        var exitPortal  = portalList.get(RND.nextInt(portalList.size()));
+        Vector2i houseEntry = tileAt(world.houseEntryPosition());
+        Vector2i houseEntryOpposite = houseEntry.plus(0, world.houseSize().y() + 1);
+        List<Portal> portals = world.portals().toList();
+        if (portals.isEmpty()) {
+            return; // should not happen but...
+        }
+        Portal entryPortal = portals.get(RND.nextInt(portals.size()));
+        Portal exitPortal  = portals.get(RND.nextInt(portals.size()));
         List<NavPoint> route = Stream.of(
             leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd(),
             houseEntry,

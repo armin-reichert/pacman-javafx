@@ -37,8 +37,12 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class MsPacManTengenGame extends GameModel {
 
-    private static final String NON_ARCADE_MAPS_PATH = "/de/amr/games/pacman/maps/tengen/non_arcade/map%02d.world";
-    private static final String ARCADE_MAPS_PATH = "/de/amr/games/pacman/maps/tengen/arcade/map%02d.world";
+    private static final int ARCADE_MAP_COUNT = 9;
+    private static final int NON_ARCADE_MAP_COUNT = 37;
+    private static final int MAP_COUNT = ARCADE_MAP_COUNT + NON_ARCADE_MAP_COUNT;
+
+    private static final String ARCADE_MAP_PATTERN     = "/de/amr/games/pacman/maps/tengen/arcade/map%02d.world";
+    private static final String NON_ARCADE_MAP_PATTERN = "/de/amr/games/pacman/maps/tengen/non_arcade/map%02d.world";
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
@@ -68,18 +72,29 @@ public class MsPacManTengenGame extends GameModel {
         super(gameVariant, userDir);
         initialLives = 3;
         highScoreFile = new File(userDir, "highscore-ms_pacman_tengen.xml");
-        for (int num = 1; num <= 9; ++num) {
-            URL url = getClass().getResource(ARCADE_MAPS_PATH.formatted(num));
+        for (int num = 1; num <= ARCADE_MAP_COUNT; ++num) {
+            String path = ARCADE_MAP_PATTERN.formatted(num);
+            URL url = getClass().getResource(path);
             if (url != null) {
                 maps.add(new WorldMap(url));
+            } else {
+                Logger.error("Could not load Arcade map #{} using path {}", num, path);
             }
         }
-        for (int num = 1; num <= 36; ++num) {
-            URL url = getClass().getResource(NON_ARCADE_MAPS_PATH.formatted(num));
+        for (int num = 1; num <= NON_ARCADE_MAP_COUNT; ++num) {
+            String path = NON_ARCADE_MAP_PATTERN.formatted(num);
+            URL url = getClass().getResource(path);
             if (url != null) {
                 maps.add(new WorldMap(url));
+            } else {
+                Logger.error("Could not load non-Arcade map #{} using path {}", num, path);
             }
         }
+    }
+
+    @Override
+    public int mapCount() {
+        return MAP_COUNT;
     }
 
     public int mapNumberByLevelNumber(int levelNumber) {
@@ -95,7 +110,7 @@ public class MsPacManTengenGame extends GameModel {
 
     @Override
     public void buildRegularLevel(int levelNumber) {
-        this.levelNumber = checkLevelNumber(levelNumber);
+        this.levelNumber = levelNumber;
         mapNumber = mapNumberByLevelNumber(levelNumber);
         var map = maps.get(mapNumber - 1);
         setWorldAndCreatePopulation(createWorld(map));

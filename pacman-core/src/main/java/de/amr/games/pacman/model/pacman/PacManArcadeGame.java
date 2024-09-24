@@ -87,13 +87,17 @@ public class PacManArcadeGame extends GameModel {
     }
 
     @Override
+    public int mapCount() {
+        return 1;
+    }
+
+    @Override
     public int mapNumberByLevelNumber(int levelNumber) {
         return 1;
     }
 
     @Override
     public long huntingTicks(int levelNumber, int phaseIndex) {
-        checkLevelNumber(levelNumber);
         checkHuntingPhaseIndex(phaseIndex);
         long ticks = switch (levelNumber) {
             case 1 -> HUNTING_TICKS_1[phaseIndex];
@@ -105,7 +109,7 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     public void buildRegularLevel(int levelNumber) {
-        this.levelNumber = checkLevelNumber(levelNumber);
+        this.levelNumber = levelNumber;
         var world = new GameWorld(WORLD_MAP);
         world.createArcadeHouse(HOUSE_X, HOUSE_Y);
         setWorldAndCreatePopulation(world);
@@ -161,7 +165,7 @@ public class PacManArcadeGame extends GameModel {
     }
 
     protected int bonusEdibleTicks() {
-        return randomInt(9 * 60, 10 * 60); // 9-10 seconds
+        return randomInt(540, 600); // 9-10 seconds
     }
 
     protected void ghostHuntingBehaviour(Ghost ghost) {

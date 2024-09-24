@@ -30,8 +30,8 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class PacManXXLGame extends PacManArcadeGame {
 
-    private static final int NUM_MAPS = 8;
-    private static final String MAP_PATH_PATTERN = "/de/amr/games/pacman/maps/masonic/masonic_%d.world";
+    private static final int MAP_COUNT = 8;
+    private static final String MAP_PATTERN = "/de/amr/games/pacman/maps/masonic/masonic_%d.world";
 
     private final List<WorldMap> standardMaps = new ArrayList<>();
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
@@ -44,11 +44,16 @@ public class PacManXXLGame extends PacManArcadeGame {
         mapSelectionMode = MapSelectionMode.NO_CUSTOM_MAPS;
         customMapDir = new File(userDir, "maps");
         highScoreFile = new File(userDir, "highscore-pacman_xxl.xml");
-        for (int num = 1; num <= NUM_MAPS; ++num) {
-            URL url = getClass().getResource(MAP_PATH_PATTERN.formatted(num));
+        for (int num = 1; num <= MAP_COUNT; ++num) {
+            URL url = getClass().getResource(MAP_PATTERN.formatted(num));
             standardMaps.add(new WorldMap(url));
         }
         loadCustomMaps();
+    }
+
+    @Override
+    public int mapCount() {
+        return MAP_COUNT;
     }
 
     public void setMapSelectionMode(MapSelectionMode mapSelectionMode) {
@@ -62,7 +67,7 @@ public class PacManXXLGame extends PacManArcadeGame {
 
     @Override
     public void buildRegularLevel(int levelNumber) {
-        this.levelNumber = checkLevelNumber(levelNumber);
+        this.levelNumber = levelNumber;
         WorldMap map = selectMap(levelNumber);
         Logger.info("Map selection mode is {}", mapSelectionMode);
         Logger.info("Selected map URL is {}", map.url());

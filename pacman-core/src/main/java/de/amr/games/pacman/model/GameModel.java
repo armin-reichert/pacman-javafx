@@ -100,13 +100,6 @@ public abstract class GameModel {
         return id;
     }
 
-    public static int checkLevelNumber(int number) {
-        if (number < 1) {
-            throw GameException.illegalLevelNumber(number);
-        }
-        return number;
-    }
-
     protected final GameVariant    gameVariant;
     protected final File           userDir;
     protected final Pulse          blinking = new Pulse(10, Pulse.OFF);
@@ -146,6 +139,10 @@ public abstract class GameModel {
         this.userDir = checkNotNull(userDir);
     }
 
+    /**
+     * @return number of predefined maps
+     */
+    public abstract int mapCount();
     public abstract int mapNumberByLevelNumber(int levelNumber);
     public abstract void activateNextBonus();
     protected abstract void buildRegularLevel(int levelNumber);
