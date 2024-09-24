@@ -191,19 +191,18 @@ public class GameLevel3D {
         floor.translateZProperty().bind(floor.depthProperty().multiply(0.5));
         floor.drawModeProperty().bind(PY_3D_DRAW_MODE);
         floor.materialProperty().bind(Bindings.createObjectBinding(
-            () -> {
-                Color floorColor = floorColorPy.get();
-                String textureName = floorTextureNamePy.get();
-                Map<String, PhongMaterial> textures = context.assets().get("floorTextures");
-                return NO_TEXTURE.equals(textureName) || !textures.containsKey(textureName)
-                    ? coloredMaterial(floorColor)
-                    : textures.get(textureName);
-            }, floorColorPy, floorTextureNamePy
+            () -> createFloorMaterial(floorColorPy.get(), floorTextureNamePy.get(), context.assets().get("floorTextures")),
+            floorColorPy, floorTextureNamePy
         ));
-
         floorColorPy.bind(PY_3D_FLOOR_COLOR);
         floorTextureNamePy.bind(PY_3D_FLOOR_TEXTURE);
         return floor;
+    }
+
+    private PhongMaterial createFloorMaterial(Color color, String textureName, Map<String, PhongMaterial> textures) {
+        return NO_TEXTURE.equals(textureName) || !textures.containsKey(textureName)
+            ? coloredMaterial(color)
+            : textures.get(textureName);
     }
 
     private void addFood3D(GameWorld world) {
