@@ -85,7 +85,7 @@ public abstract class GameScene2D implements GameScene {
             renderer.drawText(g, creditText, creditColor, creditFont, t(2), t(worldSize.y()) - 1);
         }
         Vector2i worldSize = context.worldSize();
-        double x = t(worldSize.x() - 4), y = t(worldSize.y() - 2) + 1;
+        double x = t(worldSize.x() - 4), y = t(worldSize.y() - 2);
         renderer.drawLevelCounter(g, context.game().levelCounter(), x, y);
     }
 
