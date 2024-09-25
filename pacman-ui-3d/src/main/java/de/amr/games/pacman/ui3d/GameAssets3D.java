@@ -35,7 +35,6 @@ public class GameAssets3D {
         assets.store("wallpaper.night", rm.loadImage("graphics/sea-wallpaper-night.jpg"));
 
         Map<String, PhongMaterial> texturesByName = new LinkedHashMap<>();
-        assets.store("floorTextures", texturesByName);
         Stream.of("Carpet", "Rubber", "Wood").forEach(name -> {
             var texture = new PhongMaterial();
             texture.setBumpMap(rm.loadImage("graphics/textures/%s-bump.jpg".formatted(name.toLowerCase())));
@@ -43,15 +42,16 @@ public class GameAssets3D {
             texture.diffuseColorProperty().bind(PY_3D_FLOOR_COLOR);
             texturesByName.put(name, texture);
         });
+        assets.store("floorTextures", texturesByName);
 
         // Ms. Pac-Man
 
-        assets.store("ms_pacman.pac.color.head",                  Color.rgb(255, 255, 0));
-        assets.store("ms_pacman.pac.color.eyes",                  Color.rgb(33, 33, 33));
+        assets.store("ms_pacman.pac.color.head",                  PALETTE_YELLOW);
+        assets.store("ms_pacman.pac.color.eyes",                  Color.grayRgb(33));
         assets.store("ms_pacman.pac.color.palate",                Color.rgb(240, 180, 160));
-        assets.store("ms_pacman.pac.color.boobs",                 Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
-        assets.store("ms_pacman.pac.color.hairbow",               Color.rgb(255, 0, 0));
-        assets.store("ms_pacman.pac.color.hairbow.pearls",        Color.rgb(33, 33, 255));
+        assets.store("ms_pacman.pac.color.boobs",                 PALETTE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0));
+        assets.store("ms_pacman.pac.color.hairbow",               PALETTE_RED);
+        assets.store("ms_pacman.pac.color.hairbow.pearls",        PALETTE_BLUE);
 
         assets.store("ms_pacman.ghost.0.color.normal.dress",      PALETTE_RED);
         assets.store("ms_pacman.ghost.0.color.normal.eyeballs",   PALETTE_PALE);
@@ -76,7 +76,7 @@ public class GameAssets3D {
 
         assets.store("tengen.pac.color.head",                     Color.rgb(232, 208, 32));
         assets.store("tengen.pac.color.eyes",                     Color.rgb(32, 0, 176));
-        assets.store("tengen.pac.color.palate",                   Color.rgb(66, 66, 66));
+        assets.store("tengen.pac.color.palate",                   Color.grayRgb(66));
         assets.store("tengen.pac.color.boobs",                    Color.rgb(232, 208, 32).deriveColor(0, 1.0, 0.96, 1.0));
         assets.store("tengen.pac.color.hairbow",                  Color.rgb(176, 15, 48));
         assets.store("tengen.pac.color.hairbow.pearls",           Color.rgb(32, 0, 176));
@@ -104,8 +104,8 @@ public class GameAssets3D {
 
         // Pac-Man
 
-        assets.store("pacman.pac.color.head",                  Color.rgb(255, 255, 0));
-        assets.store("pacman.pac.color.eyes",                  Color.rgb(33, 33, 33));
+        assets.store("pacman.pac.color.head",                  PALETTE_YELLOW);
+        assets.store("pacman.pac.color.eyes",                  Color.grayRgb(33));
         assets.store("pacman.pac.color.palate",                Color.rgb(240, 180, 160));
 
         assets.store("pacman.ghost.0.color.normal.dress",      PALETTE_RED);
@@ -129,8 +129,8 @@ public class GameAssets3D {
 
         // Pac-Man XXL
 
-        assets.store("pacman_xxl.pac.color.head",                  Color.rgb(255, 255, 0));
-        assets.store("pacman_xxl.pac.color.eyes",                  Color.rgb(33, 33, 33));
+        assets.store("pacman_xxl.pac.color.head",                  PALETTE_YELLOW);
+        assets.store("pacman_xxl.pac.color.eyes",                  Color.grayRgb(33));
         assets.store("pacman_xxl.pac.color.palate",                Color.rgb(240, 180, 160));
 
         assets.store("pacman_xxl.ghost.0.color.normal.dress",      PALETTE_RED);
