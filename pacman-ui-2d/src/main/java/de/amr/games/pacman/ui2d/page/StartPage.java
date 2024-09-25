@@ -44,8 +44,11 @@ public class StartPage extends StackPane implements Page {
     private final BorderPane layout = new BorderPane();
     private final Image[] msPacManFlyerPages;
     private final Image[] pacManFlyerPages;
-    private int msPacManFlyerPageIndex;
-    private int pacManFlyerPageIndex;
+    private final Image[] tengenFlyerPages;
+
+    private int msPacManFlyerIndex;
+    private int pacManFlyerIndex;
+    private int tengenFlyerIndex;
 
     public StartPage(GameContext context) {
         this.context = checkNotNull(context);
@@ -57,6 +60,10 @@ public class StartPage extends StackPane implements Page {
         pacManFlyerPages = new Image[] {
             context.assets().image("pacman.startpage.image1"),
             context.assets().image("pacman.startpage.image2")
+        };
+        tengenFlyerPages = new Image[] {
+            context.assets().image("tengen.startpage.image1"),
+            context.assets().image("tengen.startpage.image2")
         };
 
         Button btnPrevVariant = createCarouselButton(context.assets().image("startpage.arrow.left"));
@@ -130,12 +137,17 @@ public class StartPage extends StackPane implements Page {
 
     private void browseMsPacManFlyer(boolean forward) {
         int n = msPacManFlyerPages.length, delta = forward ? 1 : n - 1;
-        msPacManFlyerPageIndex = selectFlyerPage(msPacManFlyerPages, (msPacManFlyerPageIndex + delta) % n);
+        msPacManFlyerIndex = selectFlyerPage(msPacManFlyerPages, (msPacManFlyerIndex + delta) % n);
     }
 
     private void browsePacManFlyer(boolean forward) {
         int n = pacManFlyerPages.length, delta = forward ? 1 : n - 1;
-        pacManFlyerPageIndex = selectFlyerPage(pacManFlyerPages, (pacManFlyerPageIndex + delta) % n);
+        pacManFlyerIndex = selectFlyerPage(pacManFlyerPages, (pacManFlyerIndex + delta) % n);
+    }
+
+    private void browseTengenFlyer(boolean forward) {
+        int n = tengenFlyerPages.length, delta = forward ? 1 : n - 1;
+        tengenFlyerIndex = selectFlyerPage(tengenFlyerPages, (tengenFlyerIndex + delta) % n);
     }
 
     private void initPageForGameVariant(GameVariant variant) {
@@ -143,7 +155,7 @@ public class StartPage extends StackPane implements Page {
             switch (variant) {
                 case MS_PACMAN -> {
                     setBackground(context.assets().get("wallpaper.background"));
-                    msPacManFlyerPageIndex = selectFlyerPage(msPacManFlyerPages, 0);
+                    msPacManFlyerIndex = selectFlyerPage(msPacManFlyerPages, 0);
                     setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
                             browseMsPacManFlyer(true);
@@ -151,16 +163,17 @@ public class StartPage extends StackPane implements Page {
                     });
                 }
                 case MS_PACMAN_TENGEN -> {
-                    Image flyerImage = context.assets().image("tengen.startpage.source");
-                    var background = new Background(new BackgroundImage(flyerImage,
-                        BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-                        BackgroundPosition.CENTER, FIT_HEIGHT));
-                    layout.setBackground(background);
-                    setOnMouseClicked(null);
+                    setBackground(context.assets().get("wallpaper.background"));
+                    tengenFlyerIndex = selectFlyerPage(tengenFlyerPages, 0);
+                    setOnMouseClicked(e -> {
+                        if (e.getButton() == MouseButton.PRIMARY) {
+                            browseTengenFlyer(true);
+                        }
+                    });
                 }
                 case PACMAN -> {
                     setBackground(context.assets().get("wallpaper.background"));
-                    pacManFlyerPageIndex = selectFlyerPage(pacManFlyerPages, 0);
+                    pacManFlyerIndex = selectFlyerPage(pacManFlyerPages, 0);
                     setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
                             browsePacManFlyer(true);
@@ -202,15 +215,17 @@ public class StartPage extends StackPane implements Page {
             context.selectPrevGameVariant();
         } else if (GameAction.NEXT_FLYER_PAGE.triggered()) {
             switch (context.game().variant()) {
-                case MS_PACMAN  -> browseMsPacManFlyer(true);
-                case PACMAN     -> browsePacManFlyer(true);
-                case PACMAN_XXL -> {}
+                case MS_PACMAN        -> browseMsPacManFlyer(true);
+                case MS_PACMAN_TENGEN -> browseTengenFlyer(true);
+                case PACMAN           -> browsePacManFlyer(true);
+                case PACMAN_XXL       -> {}
             }
         } else if (GameAction.PREV_FLYER_PAGE.triggered()) {
             switch (context.game().variant()) {
-                case MS_PACMAN  -> browseMsPacManFlyer(false);
-                case PACMAN     -> browsePacManFlyer(false);
-                case PACMAN_XXL -> {}
+                case MS_PACMAN        -> browseMsPacManFlyer(false);
+                case MS_PACMAN_TENGEN -> browseTengenFlyer(false);
+                case PACMAN           -> browsePacManFlyer(false);
+                case PACMAN_XXL       -> {}
             }
         }
     }
