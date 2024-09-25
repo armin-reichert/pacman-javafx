@@ -50,13 +50,13 @@ public class PacMan3D implements Pac3D {
         Model3D model3D = assets.get("model3D.pacman");
 
         shape3D = new PacShape3D(model3D, size,
-            assets.color(assetPrefix + "color.head"),
-            assets.color(assetPrefix + "color.palate"));
+            assets.color(assetPrefix + "pac.color.head"),
+            assets.color(assetPrefix + "pac.color.palate"));
 
         Group body = PacModel3D.createPacShape(model3D, size,
-            assets.color(assetPrefix + "color.head"),
-            assets.color(assetPrefix + "color.eyes"),
-            assets.color(assetPrefix + "color.palate")
+            assets.color(assetPrefix + "pac.color.head"),
+            assets.color(assetPrefix + "pac.color.eyes"),
+            assets.color(assetPrefix + "pac.color.palate")
         );
         meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(shape3D.drawModeProperty());
         meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(shape3D.drawModeProperty());

@@ -31,33 +31,14 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
 public interface Factory3D {
 
     static Pac3D createPac3D(GameVariant variant, AssetStorage assets, Pac pac, double size) {
-        switch (variant) {
-            case MS_PACMAN -> {
-                var pac3D = new MsPacMan3D(variant, pac, size, assets);
-                pac3D.shape3D().light().setColor(assets.color("ms_pacman.color.head").desaturate());
-                pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
-                return pac3D;
-            }
-            case MS_PACMAN_TENGEN -> {
-                var pac3D = new MsPacMan3D(variant, pac, size, assets);
-                pac3D.shape3D().light().setColor(assets.color("tengen.color.head").desaturate());
-                pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
-                return pac3D;
-            }
-            case PACMAN -> {
-                var pac3D = new PacMan3D(variant, pac, size, assets);
-                pac3D.shape3D().light().setColor(assets.color("pacman.color.head").desaturate());
-                pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
-                return pac3D;
-            }
-            case PACMAN_XXL -> {
-                var pac3D = new PacMan3D(variant, pac, size, assets);
-                pac3D.shape3D().light().setColor(assets.color("pacman_xxl.color.head").desaturate());
-                pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
-                return pac3D;
-            }
-            default -> throw new IllegalArgumentException("Unsupported game variant: " + variant);
-        }
+        String prefix = GameAssets2D.assetPrefix(variant) + ".";
+        Pac3D pac3D = switch (variant) {
+            case MS_PACMAN, MS_PACMAN_TENGEN -> new MsPacMan3D(variant, pac, size, assets);
+            case PACMAN, PACMAN_XXL          -> new PacMan3D(variant, pac, size, assets);
+        };
+        pac3D.shape3D().light().setColor(assets.color(prefix + "pac.color.head").desaturate());
+        pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
+        return pac3D;
     }
 
     static MutableGhost3D createGhost3D(GameVariant variant, AssetStorage assets, Ghost ghost, double size) {
@@ -84,22 +65,22 @@ public interface Factory3D {
             case MS_PACMAN, MS_PACMAN_TENGEN -> new Group(
                 PacModel3D.createPacShape(
                     assets.get("model3D.pacman"), size,
-                    assets.color(assetPrefix + "color.head"),
-                    assets.color(assetPrefix + "color.eyes"),
-                    assets.color(assetPrefix + "color.palate")
+                    assets.color(assetPrefix + "pac.color.head"),
+                    assets.color(assetPrefix + "pac.color.eyes"),
+                    assets.color(assetPrefix + "pac.color.palate")
                 ),
                 PacModel3D.createFemaleParts(size,
-                    assets.color(assetPrefix + "color.hairbow"),
-                    assets.color(assetPrefix + "color.hairbow.pearls"),
-                    assets.color(assetPrefix + "color.boobs")
+                    assets.color(assetPrefix + "pac.color.hairbow"),
+                    assets.color(assetPrefix + "pac.color.hairbow.pearls"),
+                    assets.color(assetPrefix + "pac.color.boobs")
                 )
             );
             case PACMAN, PACMAN_XXL ->
                 PacModel3D.createPacShape(
                     assets.get("model3D.pacman"), size,
-                    assets.color(assetPrefix + "color.head"),
-                    assets.color(assetPrefix + "color.eyes"),
-                    Color.WHEAT
+                    assets.color(assetPrefix + "pac.color.head"),
+                    assets.color(assetPrefix + "pac.color.eyes"),
+                    assets.color(assetPrefix + "pac.color.palate")
                 );
         };
     }
@@ -141,5 +122,4 @@ public interface Factory3D {
         message3D.setVisible(false);
         return message3D;
     }
-
 }

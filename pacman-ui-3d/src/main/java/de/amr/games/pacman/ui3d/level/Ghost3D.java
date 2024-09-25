@@ -39,17 +39,16 @@ public class Ghost3D {
     static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
     static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
 
-    public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+    public final ObjectProperty<DrawMode> drawModePy    = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+    private final ObjectProperty<Color> dressColorPy    = new SimpleObjectProperty<>(this, "dressColor", Color.ORANGE);
+    private final ObjectProperty<Color> eyeballsColorPy = new SimpleObjectProperty<>(this, "eyeballsColor", Color.WHITE);
+    private final ObjectProperty<Color> pupilsColorPy   = new SimpleObjectProperty<>(this, "pupilsColor", Color.BLUE);
 
     private final byte id;
     private final String assetPrefix;
     private final AssetStorage assets;
     private final Group root = new Group();
     private final Shape3D dress;
-
-    private final ObjectProperty<Color> dressColorPy = new SimpleObjectProperty<>(this, "dressColor", Color.ORANGE);
-    private final ObjectProperty<Color> eyeballsColorPy = new SimpleObjectProperty<>(this, "eyeballsColor", Color.WHITE);
-    private final ObjectProperty<Color> pupilsColorPy = new SimpleObjectProperty<>(this, "pupilsColor", Color.BLUE);
 
     private final RotateTransition dressAnimation;
     private Animation flashingAnimation;
