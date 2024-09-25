@@ -34,6 +34,10 @@ import static java.util.function.Predicate.not;
  */
 public interface GameWorldRenderer extends SpriteRenderer {
 
+    static ImageArea imageArea(Image sourceImage, int x, int y, int width, int height) {
+        return new ImageArea(sourceImage, new RectArea(x, y, width, height));
+    }
+
     ObjectProperty<Color> backgroundColorProperty();
 
     void selectMap(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet);

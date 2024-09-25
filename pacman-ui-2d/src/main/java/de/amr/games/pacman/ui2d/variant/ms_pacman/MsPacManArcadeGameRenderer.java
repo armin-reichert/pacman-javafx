@@ -10,8 +10,7 @@ import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.RectArea;
-import de.amr.games.pacman.ui2d.rendering.SpriteSheetArea;
+import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -22,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.ui2d.rendering.GameWorldRenderer.imageArea;
 
 /**
  * @author Armin Reichert
@@ -31,9 +31,9 @@ public class MsPacManArcadeGameRenderer implements GameWorldRenderer {
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final Image flashingMazesImage;
-    private SpriteSheetArea mapWithFoodSprite;
-    private SpriteSheetArea mapWithoutFoodSprite;
-    private SpriteSheetArea mapFlashingSprite;
+    private ImageArea mapWithFoodSprite;
+    private ImageArea mapWithoutFoodSprite;
+    private ImageArea mapFlashingSprite;
     private boolean flashMode;
     private boolean blinkingOn;
 
@@ -63,12 +63,9 @@ public class MsPacManArcadeGameRenderer implements GameWorldRenderer {
 
     @Override
     public void selectMap(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet) {
-        mapWithFoodSprite = new SpriteSheetArea(spriteSheet.sourceImage(),
-            new RectArea(0, (mapNumber - 1) * 248, 226, 248));
-        mapWithoutFoodSprite = new SpriteSheetArea(spriteSheet.sourceImage(),
-            new RectArea(228, (mapNumber - 1) * 248, 226, 248));
-        mapFlashingSprite = new SpriteSheetArea(flashingMazesImage,
-            new RectArea(0, (mapNumber - 1) * 248, 226, 248));
+        mapWithFoodSprite    = imageArea(spriteSheet.sourceImage(), 0, (mapNumber - 1) * 248, 226, 248);
+        mapWithoutFoodSprite = imageArea(spriteSheet.sourceImage(), 228, (mapNumber - 1) * 248, 226, 248);
+        mapFlashingSprite    = imageArea(flashingMazesImage, 0, (mapNumber - 1) * 248, 226, 248);
     }
 
     @Override

@@ -15,8 +15,8 @@ import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
-import de.amr.games.pacman.ui2d.rendering.SpriteSheetArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManArcadeGameRenderer;
 import javafx.beans.property.DoubleProperty;
@@ -44,7 +44,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     //TODO temporary
     private final MsPacManArcadeGameRenderer rendererMsPacMan;
 
-    private SpriteSheetArea mapSprite;
+    private ImageArea mapSprite;
     private boolean flashMode;
     private boolean blinkingOn;
 
@@ -120,8 +120,8 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
         int width = worldMap.terrain().numCols() * TS;
         int height = (worldMap.terrain().numRows() - 5) * TS; // 3 empty rows before and 2 after maze source
         mapSprite = mapNumber <= 9  // Maps 1-9 are the Arcade maps, maps 10+ are the non-Arcade maps
-            ? new SpriteSheetArea(arcadeMazesImage, arcadeMapArea(mapNumber, width, height))
-            : new SpriteSheetArea(nonArcadeMazesImage, nonArcadeMapArea(mapNumber - 9, width, height));
+            ? new ImageArea(arcadeMazesImage, arcadeMapArea(mapNumber, width, height))
+            : new ImageArea(nonArcadeMazesImage, nonArcadeMapArea(mapNumber - 9, width, height));
         Logger.info("Tengen map # {}: area: {}", mapNumber, mapSprite.area());
     }
 
