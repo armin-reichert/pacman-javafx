@@ -85,8 +85,8 @@ public class GameAssets2D extends AssetStorage {
         // Ms. Pac-Man game
         //
 
-        assets.store("ms_pacman.spritesheet",           new MsPacManGameSpriteSheet(rm.loadImage("/de/amr/games/pacman/ui2d/graphics/mspacman/mspacman_spritesheet.png")));
-        assets.store("ms_pacman.flashing_mazes",        rm.loadImage("/de/amr/games/pacman/ui2d/graphics/mspacman/mazes_flashing.png"));
+        assets.store("ms_pacman.spritesheet",           new MsPacManGameSpriteSheet(rm.loadImage("graphics/mspacman/mspacman_spritesheet.png")));
+        assets.store("ms_pacman.flashing_mazes",        rm.loadImage("graphics/mspacman/mazes_flashing.png"));
 
         assets.store("ms_pacman.startpage.source",      rm.loadImage("graphics/mspacman/mspacman_flyer.png"));
         assets.store("ms_pacman.startpage.image1",      rm.loadImage("graphics/mspacman/mspacman_flyer1.jpg"));
@@ -122,7 +122,7 @@ public class GameAssets2D extends AssetStorage {
         // Ms. Pac-Man game Tengen
         //
 
-        assets.store("tengen.spritesheet",              new TengenMsPacManGameSpriteSheet(rm.loadImage("/de/amr/games/pacman/ui2d/graphics/tengen/spritesheet.png")));
+        assets.store("tengen.spritesheet",              new TengenMsPacManGameSpriteSheet(rm.loadImage("graphics/tengen/spritesheet.png")));
         assets.store("tengen.mazes.arcade",             rm.loadImage("graphics/tengen/arcade_mazes.png"));
         assets.store("tengen.mazes.non_arcade",         rm.loadImage("graphics/tengen/non_arcade_mazes.png"));
         assets.store("tengen.startpage.source",         rm.loadImage("graphics/tengen/tengen_flyer.jpg"));
@@ -157,19 +157,19 @@ public class GameAssets2D extends AssetStorage {
         // Pac-Man game
         //
 
-        assets.store("pacman.spritesheet",       new PacManGameSpriteSheet(rm.loadImage("/de/amr/games/pacman/ui2d/graphics/pacman/pacman_spritesheet.png")));
-        assets.store("pacman.flashing_maze",     rm.loadImage("/de/amr/games/pacman/ui2d/graphics/pacman/maze_flashing.png"));
-        assets.store("pacman.startpage.image1",  rm.loadImage("graphics/pacman/pacman_flyer.png"));
-        assets.store("pacman.startpage.image2",  rm.loadImage("graphics/pacman/pacman_flyer2.jpg"));
-        assets.store("pacman.helpButton.icon",   rm.loadImage("graphics/icons/help-blue-64.png"));
-        assets.store("pacman.icon",              rm.loadImage("graphics/icons/pacman.png"));
+        assets.store("pacman.spritesheet",              new PacManGameSpriteSheet(rm.loadImage("graphics/pacman/pacman_spritesheet.png")));
+        assets.store("pacman.flashing_maze",            rm.loadImage("graphics/pacman/maze_flashing.png"));
+        assets.store("pacman.startpage.image1",         rm.loadImage("graphics/pacman/pacman_flyer.png"));
+        assets.store("pacman.startpage.image2",         rm.loadImage("graphics/pacman/pacman_flyer2.jpg"));
+        assets.store("pacman.helpButton.icon",          rm.loadImage("graphics/icons/help-blue-64.png"));
+        assets.store("pacman.icon",                     rm.loadImage("graphics/icons/pacman.png"));
 
         // Clips
-        assets.store("pacman.audio.bonus_eaten", rm.loadAudioClip("sound/pacman/eat_fruit.mp3"));
-        assets.store("pacman.audio.credit",      rm.loadAudioClip("sound/pacman/credit.wav"));
-        assets.store("pacman.audio.extra_life",  rm.loadAudioClip("sound/pacman/extend.mp3"));
-        assets.store("pacman.audio.ghost_eaten", rm.loadAudioClip("sound/pacman/eat_ghost.mp3"));
-        assets.store("pacman.audio.sweep",       rm.loadAudioClip("sound/common/sweep.mp3"));
+        assets.store("pacman.audio.bonus_eaten",        rm.loadAudioClip("sound/pacman/eat_fruit.mp3"));
+        assets.store("pacman.audio.credit",             rm.loadAudioClip("sound/pacman/credit.wav"));
+        assets.store("pacman.audio.extra_life",         rm.loadAudioClip("sound/pacman/extend.mp3"));
+        assets.store("pacman.audio.ghost_eaten",        rm.loadAudioClip("sound/pacman/eat_ghost.mp3"));
+        assets.store("pacman.audio.sweep",              rm.loadAudioClip("sound/common/sweep.mp3"));
 
         // Media player sounds
         assets.store("pacman.audio.game_ready",         rm.url("sound/pacman/game_start.mp3"));
@@ -192,27 +192,27 @@ public class GameAssets2D extends AssetStorage {
         assets.store("pacman_xxl.helpButton.icon",      rm.loadImage("graphics/icons/help-blue-64.png"));
         assets.store("pacman_xxl.startpage.source",     rm.loadImage("graphics/pacman_xxl/pacman_xxl_logo.png"));
 
-        assets.store("pacman_xxl.spritesheet",          new PacManGameSpriteSheet(rm.loadImage("/de/amr/games/pacman/ui2d/graphics/pacman/pacman_spritesheet.png")));
+        assets.store("pacman_xxl.spritesheet",          new PacManGameSpriteSheet(rm.loadImage("graphics/pacman/pacman_spritesheet.png")));
 
         // Clips
-        assets.store("pacman_xxl.audio.bonus_eaten",        rm.loadAudioClip("sound/pacman/eat_fruit.mp3"));
-        assets.store("pacman_xxl.audio.credit",             rm.loadAudioClip("sound/pacman/credit.wav"));
-        assets.store("pacman_xxl.audio.extra_life",         rm.loadAudioClip("sound/pacman/extend.mp3"));
-        assets.store("pacman_xxl.audio.ghost_eaten",        rm.loadAudioClip("sound/pacman/eat_ghost.mp3"));
-        assets.store("pacman_xxl.audio.sweep",              rm.loadAudioClip("sound/common/sweep.mp3"));
+        assets.store("pacman_xxl.audio.bonus_eaten",    rm.loadAudioClip("sound/pacman/eat_fruit.mp3"));
+        assets.store("pacman_xxl.audio.credit",         rm.loadAudioClip("sound/pacman/credit.wav"));
+        assets.store("pacman_xxl.audio.extra_life",     rm.loadAudioClip("sound/pacman/extend.mp3"));
+        assets.store("pacman_xxl.audio.ghost_eaten",    rm.loadAudioClip("sound/pacman/eat_ghost.mp3"));
+        assets.store("pacman_xxl.audio.sweep",          rm.loadAudioClip("sound/common/sweep.mp3"));
 
         // Media player sounds
-        assets.store("pacman_xxl.audio.game_ready",         rm.url("sound/pacman/game_start.mp3"));
-        assets.store("pacman_xxl.audio.game_over",          rm.url("sound/common/game-over.mp3"));
-        assets.store("pacman_xxl.audio.intermission",       rm.url("sound/pacman/intermission.mp3"));
-        assets.store("pacman_xxl.audio.pacman_death",       rm.url("sound/pacman/pacman_death.wav"));
-        assets.store("pacman_xxl.audio.pacman_munch",       rm.url("sound/pacman/doublemunch.wav"));
-        assets.store("pacman_xxl.audio.pacman_power",       rm.url("sound/pacman/ghost-turn-to-blue.mp3"));
-        assets.store("pacman_xxl.audio.level_complete",     rm.url("sound/common/level-complete.mp3"));
-        assets.store("pacman_xxl.audio.siren.1",            rm.url("sound/pacman/siren_1.mp3"));
-        assets.store("pacman_xxl.audio.siren.2",            rm.url("sound/pacman/siren_2.mp3"));
-        assets.store("pacman_xxl.audio.siren.3",            rm.url("sound/pacman/siren_3.mp3"));
-        assets.store("pacman_xxl.audio.siren.4",            rm.url("sound/pacman/siren_4.mp3"));
-        assets.store("pacman_xxl.audio.ghost_returning",    rm.url("sound/pacman/retreating.mp3"));
+        assets.store("pacman_xxl.audio.game_ready",     rm.url("sound/pacman/game_start.mp3"));
+        assets.store("pacman_xxl.audio.game_over",      rm.url("sound/common/game-over.mp3"));
+        assets.store("pacman_xxl.audio.intermission",   rm.url("sound/pacman/intermission.mp3"));
+        assets.store("pacman_xxl.audio.pacman_death",   rm.url("sound/pacman/pacman_death.wav"));
+        assets.store("pacman_xxl.audio.pacman_munch",   rm.url("sound/pacman/doublemunch.wav"));
+        assets.store("pacman_xxl.audio.pacman_power",   rm.url("sound/pacman/ghost-turn-to-blue.mp3"));
+        assets.store("pacman_xxl.audio.level_complete", rm.url("sound/common/level-complete.mp3"));
+        assets.store("pacman_xxl.audio.siren.1",        rm.url("sound/pacman/siren_1.mp3"));
+        assets.store("pacman_xxl.audio.siren.2",        rm.url("sound/pacman/siren_2.mp3"));
+        assets.store("pacman_xxl.audio.siren.3",        rm.url("sound/pacman/siren_3.mp3"));
+        assets.store("pacman_xxl.audio.siren.4",        rm.url("sound/pacman/siren_4.mp3"));
+        assets.store("pacman_xxl.audio.ghost_returning", rm.url("sound/pacman/retreating.mp3"));
     }
 }
