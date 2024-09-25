@@ -99,7 +99,7 @@ public class PlayScene2D extends GameScene2D {
         boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         renderer.setFlashMode(flashMode);
         renderer.setBlinkingOn(context.game().blinking().isOn());
-        renderer.drawWorld(g, context, context.game().world());
+        renderer.drawWorld(g, context.spriteSheet(), context, context.game().world());
 
         drawLevelMessage(renderer); // READY, GAME_OVER etc.
 
@@ -118,7 +118,7 @@ public class PlayScene2D extends GameScene2D {
             if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
                 numLivesDisplayed += 1;
             }
-            renderer.drawLivesCounter(g, numLivesDisplayed, context.game().world().map().terrain().numRows() - 2);
+            renderer.drawLivesCounter(g, context.spriteSheet(), numLivesDisplayed, context.game().world().map().terrain().numRows() - 2);
         }
     }
 
@@ -167,7 +167,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         int mapNumber = context.game().mapNumberByLevelNumber(context.game().levelNumber());
-        context.renderer().selectMap(context.game().world().map(), mapNumber);
+        context.renderer().selectMap(context.game().world().map(), mapNumber, context.spriteSheet());
         Logger.info("{} entered from {}", this, oldScene);
     }
 
@@ -201,7 +201,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onLevelCreated(GameEvent e) {
         int mapNumber = e.game.mapNumberByLevelNumber(e.game.levelNumber());
-        context.renderer().selectMap(e.game.world().map(), mapNumber);
+        context.renderer().selectMap(e.game.world().map(), mapNumber, context.spriteSheet());
     }
 
     @Override

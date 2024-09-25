@@ -15,7 +15,6 @@ import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameWorldRenderer;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -138,7 +137,6 @@ public class MsPacManCutScene3 extends GameScene2D {
     private SceneController sceneController;
     private ClapperboardAnimation clapAnimation;
     private SpriteAnimation storkAnimation;
-    private MsPacManGameSpriteSheet spriteSheet;
 
     private void startMusic() {
         int number  = context.gameState() == GameState.INTERMISSION_TEST
@@ -162,14 +160,10 @@ public class MsPacManCutScene3 extends GameScene2D {
         stork = new Entity();
         bag = new Entity();
 
-        //TODO check this
-        // spriteSheet = (MsPacManGameSpriteSheet) context.renderer().spriteSheet();
-        //TODO use Ms. Pac-Man animations also in Tengen for now
-        spriteSheet = context.assets().get("ms_pacman.spritesheet");
-        msPacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
-        pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
+        msPacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
+        pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
 
-        storkAnimation = spriteSheet.createStorkFlyingAnimation();
+        storkAnimation = context.spriteSheet().createStorkFlyingAnimation();
         storkAnimation.start();
 
         clapAnimation = new ClapperboardAnimation("3", "JUNIOR");
@@ -188,12 +182,14 @@ public class MsPacManCutScene3 extends GameScene2D {
     public void drawSceneContent(GameWorldRenderer renderer) {
         var msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) renderer;
         msPacManGameWorldRenderer.drawClapperBoard(g,
+            context.spriteSheet(),
             context.assets().font("font.arcade", scaled(8)),
             PALETTE_PALE,
             clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(g, msPacMan);
         renderer.drawAnimatedEntity(g, pacMan);
-        renderer.drawEntitySprite(g, stork, storkAnimation.currentSprite());
-        renderer.drawEntitySprite(g, bag, bagOpen ? spriteSheet.juniorPacSprite() : spriteSheet.blueBagSprite());
+        renderer.drawEntitySprite(g, stork, context.spriteSheet(), storkAnimation.currentSprite());
+        renderer.drawEntitySprite(g, bag, context.spriteSheet(),
+            bagOpen ? context.spriteSheet().juniorPacSprite() : context.spriteSheet().blueBagSprite());
     }
 }

@@ -1,6 +1,7 @@
 package de.amr.games.pacman.ui2d.variant.ms_pacman;
 
 import de.amr.games.pacman.model.actors.MovingBonus;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -15,15 +16,9 @@ import static de.amr.games.pacman.lib.Globals.t;
  */
 public interface MsPacManGameWorldRenderer extends GameWorldRenderer {
 
-    /**
-     * Draws a moving bonus entity at its current position (including jump offset).
-     *
-     * @param g     graphics context
-     * @param bonus moving bonus entity
-     */
-    void drawMovingBonus(GraphicsContext g, MovingBonus bonus);
+    void drawMovingBonus(GraphicsContext g, GameSpriteSheet spriteSheet, MovingBonus bonus);
 
-    void drawClapperBoard(GraphicsContext g, Font font, Color textColor, ClapperboardAnimation animation, double x, double y);
+    void drawClapperBoard(GraphicsContext g, GameSpriteSheet spriteSheet, Font font, Color textColor, ClapperboardAnimation animation, double x, double y);
 
     default void drawMsPacManMidwayCopyright(GraphicsContext g, Image image, double x, double y, Color color, Font font) {
         drawImageScaled(g, image, x, y + 2, t(4) - 2, t(4));

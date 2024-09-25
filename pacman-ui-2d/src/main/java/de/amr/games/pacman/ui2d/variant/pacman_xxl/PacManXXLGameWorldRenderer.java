@@ -47,11 +47,6 @@ public class PacManXXLGameWorldRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public GameSpriteSheet spriteSheet() {
-        return assets.get("pacman_xxl.spritesheet");
-    }
-
-    @Override
     public void setFlashMode(boolean flashMode) {
         this.flashMode = flashMode;
     }
@@ -72,12 +67,12 @@ public class PacManXXLGameWorldRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public void selectMap(WorldMap worldMap, int mapNumber) {
+    public void selectMap(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet) {
         //TODO what?
     }
 
     @Override
-    public void drawWorld(GraphicsContext g, GameContext context, GameWorld world) {
+    public void drawWorld(GraphicsContext g, GameSpriteSheet spriteSheet, GameContext context, GameWorld world) {
         TileMap terrain = world.map().terrain();
         Color wallStrokeColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_STROKE, Color.WHITE);
         Color wallFillColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_FILL, Color.GREEN);
@@ -103,14 +98,14 @@ public class PacManXXLGameWorldRenderer implements GameWorldRenderer {
                 world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(g, tile));
             }
         }
-        context.game().bonus().ifPresent(bonus -> drawStaticBonus(g, bonus));
+        context.game().bonus().ifPresent(bonus -> drawStaticBonus(g, spriteSheet, bonus));
     }
 
-    private void drawStaticBonus(GraphicsContext g, Bonus bonus) {
+    private void drawStaticBonus(GraphicsContext g, GameSpriteSheet spriteSheet, Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
-            drawEntitySprite(g,  bonus.entity(), spriteSheet().bonusSymbolSprite(bonus.symbol()));
+            drawEntitySprite(g,  bonus.entity(), spriteSheet, spriteSheet.bonusSymbolSprite(bonus.symbol()));
         } else if (bonus.state() == Bonus.STATE_EATEN) {
-            drawEntitySprite(g,  bonus.entity(), spriteSheet().bonusValueSprite(bonus.symbol()));
+            drawEntitySprite(g,  bonus.entity(), spriteSheet, spriteSheet.bonusValueSprite(bonus.symbol()));
         }
     }
 }

@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameSounds;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameGhostAnimations;
@@ -221,7 +220,6 @@ public class MsPacManCutScene1 extends GameScene2D {
     private Entity heart;
 
     private ClapperboardAnimation clapAnimation;
-    private GameSpriteSheet spriteSheet;
 
     private void startMusic() {
         int number  = context.gameState() == GameState.INTERMISSION_TEST
@@ -239,20 +237,16 @@ public class MsPacManCutScene1 extends GameScene2D {
     public void init() {
         super.init();
         context.setScoreVisible(true);
-        spriteSheet = context.renderer().spriteSheet();
         pacMan = new Pac();
         msPac = new Pac();
         inky = Ghost.cyan();
         pinky = Ghost.pink();
         heart = new Entity();
 
-        //TODO use Ms. Pac-Man animations also in Tengen for now
-        spriteSheet = context.assets().get("ms_pacman.spritesheet");
-
-        msPac.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
-        pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
-        inky.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, inky.id()));
-        pinky.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, pinky.id()));
+        msPac.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
+        pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
+        inky.setAnimations(new MsPacManGameGhostAnimations(context.spriteSheet(), inky.id()));
+        pinky.setAnimations(new MsPacManGameGhostAnimations(context.spriteSheet(), pinky.id()));
         clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
         clapAnimation.start();
 
@@ -269,6 +263,7 @@ public class MsPacManCutScene1 extends GameScene2D {
     public void drawSceneContent(GameWorldRenderer renderer) {
         var msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) renderer;
         msPacManGameWorldRenderer.drawClapperBoard(g,
+            context.spriteSheet(),
             context.assets().font("font.arcade", scaled(8)),
             PALETTE_PALE,
             clapAnimation, t(3), t(10));
@@ -276,6 +271,6 @@ public class MsPacManCutScene1 extends GameScene2D {
         renderer.drawAnimatedEntity(g, pacMan);
         renderer.drawAnimatedEntity(g, inky);
         renderer.drawAnimatedEntity(g, pinky);
-        renderer.drawEntitySprite(g, heart, spriteSheet.heartSprite());
+        renderer.drawEntitySprite(g, heart, context.spriteSheet(), context.spriteSheet().heartSprite());
     }
 }

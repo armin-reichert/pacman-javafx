@@ -32,9 +32,9 @@ public interface GameWorldRenderer extends SpriteRenderer {
 
     ObjectProperty<Color> backgroundColorProperty();
 
-    void selectMap(WorldMap worldMap, int mapNumber);
+    void selectMap(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet);
 
-    void drawWorld(GraphicsContext g, GameContext context, GameWorld world);
+    void drawWorld(GraphicsContext g, GameSpriteSheet spriteSheet, GameContext context, GameWorld world);
 
     void setFlashMode(boolean on);
 
@@ -66,10 +66,6 @@ public interface GameWorldRenderer extends SpriteRenderer {
         double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
         g.setFill(backgroundColorProperty().get());
         g.fillRect(centerX - 0.5 * squareSize, centerY - 0.5 * squareSize, squareSize, squareSize);
-    }
-
-    default void drawGhostFacingRight(GraphicsContext g, byte ghostID, double x, double y) {
-        drawSpriteCenteredOverBox(g, spriteSheet().ghostFacingRight(ghostID), x, y);
     }
 
     default void drawAnimatedCreatureInfo(GraphicsContext g, AnimatedEntity animatedCreature) {
@@ -114,7 +110,7 @@ public interface GameWorldRenderer extends SpriteRenderer {
         g.fillText(text, scaled(x), scaled(y));
     }
 
-    default void drawLivesCounter(GraphicsContext g, int numLivesDisplayed, int tileY) {
+    default void drawLivesCounter(GraphicsContext g, GameSpriteSheet spriteSheet, int numLivesDisplayed, int tileY) {
         if (numLivesDisplayed == 0) {
             return;
         }
@@ -122,7 +118,7 @@ public interface GameWorldRenderer extends SpriteRenderer {
         var x = TS * 2;
         var y = TS * tileY;
         for (int i = 0; i < Math.min(numLivesDisplayed, maxSymbols); ++i) {
-            drawSpriteScaled(g, spriteSheet().livesCounterSprite(), x + TS * (2 * i), y);
+            drawSpriteScaled(g, spriteSheet, spriteSheet.livesCounterSprite(), x + TS * (2 * i), y);
         }
         // show text indicating that more lives are available than symbols displayed (can happen when lives are added via cheat)
         int moreLivesThanSymbols = numLivesDisplayed - maxSymbols;
@@ -132,11 +128,10 @@ public interface GameWorldRenderer extends SpriteRenderer {
         }
     }
 
-    default void drawLevelCounter(GraphicsContext g, List<Byte> symbols, double x, double y) {
+    default void drawLevelCounter(GraphicsContext g, GameSpriteSheet spriteSheet, List<Byte> symbols, double x, double y) {
         double currentX = x;
         for (byte symbol : symbols) {
-            RectArea sprite = spriteSheet().bonusSymbolSprite(symbol);
-            drawSpriteScaled(g, sprite, currentX, y);
+            drawSpriteScaled(g, spriteSheet, spriteSheet.bonusSymbolSprite(symbol), currentX, y);
             currentX -= TS * 2;
         }
     }

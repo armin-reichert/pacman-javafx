@@ -22,7 +22,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.t;
 
 /**
@@ -32,7 +31,6 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
 
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
-    private final AssetStorage assets;
     private final Image flashingMazesImage;
     private SpriteSheetArea mapWithFoodSprite;
     private SpriteSheetArea mapWithoutFoodSprite;
@@ -41,13 +39,7 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
     private boolean blinkingOn;
 
     public MsPacManArcadeGameWorldRenderer(AssetStorage assets) {
-        this.assets = checkNotNull(assets);
         flashingMazesImage = assets.get("ms_pacman.flashing_mazes");
-    }
-
-    @Override
-    public GameSpriteSheet spriteSheet() {
-        return assets.get("ms_pacman.spritesheet");
     }
 
     @Override
@@ -71,17 +63,17 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
     }
 
     @Override
-    public void selectMap(WorldMap worldMap, int mapNumber) {
-        mapWithFoodSprite = new SpriteSheetArea(spriteSheet().sourceImage(),
+    public void selectMap(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet) {
+        mapWithFoodSprite = new SpriteSheetArea(spriteSheet.sourceImage(),
             new RectArea(0, (mapNumber - 1) * 248, 226, 248));
-        mapWithoutFoodSprite = new SpriteSheetArea(spriteSheet().sourceImage(),
+        mapWithoutFoodSprite = new SpriteSheetArea(spriteSheet.sourceImage(),
             new RectArea(228, (mapNumber - 1) * 248, 226, 248));
         mapFlashingSprite = new SpriteSheetArea(flashingMazesImage,
             new RectArea(0, (mapNumber - 1) * 248, 226, 248));
     }
 
     @Override
-    public void drawWorld(GraphicsContext g, GameContext context, GameWorld world) {
+    public void drawWorld(GraphicsContext g, GameSpriteSheet spriteSheet, GameContext context, GameWorld world) {
         double originX = 0, originY = t(3);
         if (flashMode) {
             if (blinkingOn) {
@@ -92,34 +84,34 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
         } else {
             g.save();
             g.scale(scalingPy.get(), scalingPy.get());
-            drawSpriteUnscaled(g, mapWithFoodSprite.area(), originX, originY);
+            drawSpriteUnscaled(g, spriteSheet, mapWithFoodSprite.area(), originX, originY);
             overPaintEatenPellets(g, world);
             overPaintEnergizers(g, world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
             g.restore();
         }
-        context.game().bonus().ifPresent(bonus -> drawMovingBonus(g, (MovingBonus) bonus));
+        context.game().bonus().ifPresent(bonus -> drawMovingBonus(g, context.spriteSheet(), (MovingBonus) bonus));
     }
 
     @Override
-    public void drawMovingBonus(GraphicsContext g, MovingBonus bonus) {
+    public void drawMovingBonus(GraphicsContext g, GameSpriteSheet spriteSheet, MovingBonus bonus) {
         g.save();
         g.translate(0, bonus.elongationY());
         switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawEntitySprite(g, bonus.entity(), spriteSheet().bonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawEntitySprite(g, bonus.entity(), spriteSheet().bonusValueSprite(bonus.symbol()));
+            case Bonus.STATE_EDIBLE -> drawEntitySprite(g, bonus.entity(), spriteSheet, spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawEntitySprite(g, bonus.entity(), spriteSheet, spriteSheet.bonusValueSprite(bonus.symbol()));
             default -> {}
         }
         g.restore();
     }
 
     @Override
-    public void drawClapperBoard(GraphicsContext g, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
-        RectArea sprite = animation.currentSprite(spriteSheet().clapperboardSprites());
+    public void drawClapperBoard(GraphicsContext g, GameSpriteSheet spriteSheet, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
+        RectArea sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
         if (sprite != RectArea.PIXEL) {
             double numberX = scaled(x + sprite.width() - 25);
             double numberY = scaled(y + 18);
             double textX = scaled(x + sprite.width());
-            drawSpriteCenteredOverBox(g, sprite, x, y);
+            drawSpriteCenteredOverBox(g, spriteSheet, sprite, x, y);
             g.setFont(font);
             g.setFill(textColor.darker());
             g.setFill(textColor);

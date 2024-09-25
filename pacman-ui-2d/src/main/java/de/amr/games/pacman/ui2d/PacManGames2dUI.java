@@ -412,6 +412,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
+    public GameSpriteSheet spriteSheet() {
+        String prefix = GameAssets2D.assetPrefix(game().variant());
+        return assets.get(prefix + ".spritesheet");
+    }
+
+    @Override
     public GameWorldRenderer renderer() {
         return worldRenderer;
     }
@@ -476,25 +482,18 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         GameModel game = event.game;
         switch (game.variant()) {
             case MS_PACMAN -> {
-                GameSpriteSheet ss = assets.get("ms_pacman.spritesheet");
-                game.pac().setAnimations(new MsPacManGamePacAnimations(ss));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ss, ghost.id())));
+                game.pac().setAnimations(new MsPacManGamePacAnimations(spriteSheet()));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(spriteSheet(), ghost.id())));
             }
             case MS_PACMAN_TENGEN -> {
-                GameSpriteSheet ss = assets.get("tengen.spritesheet"); //TODO use
+                //TODO use Tengen-specific sprites
                 GameSpriteSheet ssMsPac = assets.get("ms_pacman.spritesheet");
                 game.pac().setAnimations(new TengenMsPacManGamePacAnimations(ssMsPac));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new TengenMsPacManGameGhostAnimations(ssMsPac, ghost.id())));
             }
-            case PACMAN -> {
-                GameSpriteSheet ss = assets.get("pacman.spritesheet");
-                game.pac().setAnimations(new PacManGamePacAnimations(ss));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ss, ghost.id())));
-            }
-            case PACMAN_XXL -> {
-                GameSpriteSheet ss = assets.get("pacman_xxl.spritesheet");
-                game.pac().setAnimations(new PacManGamePacAnimations(ss));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ss, ghost.id())));
+            case PACMAN, PACMAN_XXL -> {
+                game.pac().setAnimations(new PacManGamePacAnimations(spriteSheet()));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(spriteSheet(), ghost.id())));
             }
             default -> throw new IllegalArgumentException("Unsupported game variant: " + game.variant());
         }

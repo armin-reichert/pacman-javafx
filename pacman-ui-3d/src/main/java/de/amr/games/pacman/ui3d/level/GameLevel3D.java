@@ -257,10 +257,9 @@ public class GameLevel3D {
         if (bonus3D != null) {
             worldGroup.getChildren().remove(bonus3D);
         }
-        var spriteSheet = context.renderer().spriteSheet();
         bonus3D = new Bonus3D(bonus,
-            spriteSheet.subImage(spriteSheet.bonusSymbolSprite(bonus.symbol())),
-            spriteSheet.subImage(spriteSheet.bonusValueSprite(bonus.symbol())));
+            context.spriteSheet().subImage(context.spriteSheet().bonusSymbolSprite(bonus.symbol())),
+            context.spriteSheet().subImage(context.spriteSheet().bonusValueSprite(bonus.symbol())));
         bonus3D.showEdible();
         worldGroup.getChildren().add(bonus3D);
     }

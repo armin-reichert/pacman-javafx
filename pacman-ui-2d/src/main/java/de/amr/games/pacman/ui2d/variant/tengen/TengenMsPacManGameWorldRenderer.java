@@ -59,11 +59,6 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
     }
 
     @Override
-    public GameSpriteSheet spriteSheet() {
-        return assets.get("tengen.spritesheet");
-    }
-
-    @Override
     public void setFlashMode(boolean flashMode) {
         this.flashMode = flashMode;
     }
@@ -84,7 +79,7 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
     }
 
     @Override
-    public void drawWorld(GraphicsContext g, GameContext context, GameWorld world) {
+    public void drawWorld(GraphicsContext g, GameSpriteSheet spriteSheet, GameContext context, GameWorld world) {
         TileMap terrain = world.map().terrain();
         if (flashMode) {
             // Flash mode uses vector rendering
@@ -115,12 +110,12 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
             overPaintEatenPellets(g, world);
             overPaintEnergizers(g, world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
             g.restore();
-            context.game().bonus().ifPresent(bonus -> drawMovingBonus(g, (MovingBonus) bonus));
+            context.game().bonus().ifPresent(bonus -> drawMovingBonus(g, spriteSheet, (MovingBonus) bonus));
         }
     }
 
     @Override
-    public void selectMap(WorldMap worldMap, int mapNumber) {
+    public void selectMap(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet) {
         int width = worldMap.terrain().numCols() * TS;
         int height = (worldMap.terrain().numRows() - 5) * TS; // 3 empty rows before and 2 after maze source
         // Maps 1-9 are the Arcade maps, maps 10+ are the non-Arcade maps
@@ -165,22 +160,22 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
     }
 
     @Override
-    public void drawMovingBonus(GraphicsContext g, MovingBonus bonus) {
+    public void drawMovingBonus(GraphicsContext g, GameSpriteSheet spriteSheet, MovingBonus bonus) {
         g.save();
         g.translate(0, bonus.elongationY());
         switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawEntitySprite(g, bonus.entity(), spriteSheet().bonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawEntitySprite(g, bonus.entity(), spriteSheet().bonusValueSprite(bonus.symbol()));
+            case Bonus.STATE_EDIBLE -> drawEntitySprite(g, bonus.entity(), spriteSheet, spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawEntitySprite(g, bonus.entity(), spriteSheet, spriteSheet.bonusValueSprite(bonus.symbol()));
             default -> {}
         }
         g.restore();
     }
 
     @Override
-    public void drawClapperBoard(GraphicsContext g, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
-        var sprite = animation.currentSprite(spriteSheet().clapperboardSprites());
+    public void drawClapperBoard(GraphicsContext g, GameSpriteSheet spriteSheet, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
+        var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
         if (sprite != RectArea.PIXEL) {
-            drawSpriteCenteredOverBox(g, sprite, x, y);
+            drawSpriteCenteredOverBox(g, spriteSheet, sprite, x, y);
             g.setFont(font);
             g.setFill(textColor.darker());
             var numberX = scaled(x + sprite.width() - 25);

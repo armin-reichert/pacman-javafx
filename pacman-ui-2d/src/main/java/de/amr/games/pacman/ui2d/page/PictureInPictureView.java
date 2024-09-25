@@ -101,7 +101,7 @@ public class PictureInPictureView implements GameEventListener {
             aspectPy.set((double) terrain.numCols() / terrain.numRows());
             renderer = PacManGames2dUI.createRenderer(context.game().variant(), context.assets());
             int mapNumber = e.game.mapNumberByLevelNumber(e.game.levelNumber());
-            renderer.selectMap(e.game.world().map(), mapNumber);
+            renderer.selectMap(e.game.world().map(), mapNumber, context.spriteSheet());
         }
     }
 

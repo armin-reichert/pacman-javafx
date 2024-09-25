@@ -22,7 +22,6 @@ import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.variant.pacman.PacManArcadeGameWorldRenderer;
 import de.amr.games.pacman.ui2d.variant.pacman.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.variant.pacman.PacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.variant.pacman.PacManGameSpriteSheet;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -251,7 +250,6 @@ public class PacManIntroScene extends GameScene2D {
     }
 
     private Data data;
-    private PacManGameSpriteSheet spriteSheet;
     private final FiniteStateMachine<SceneState, PacManIntroScene> sceneController;
 
     public PacManIntroScene() {
@@ -273,10 +271,9 @@ public class PacManIntroScene extends GameScene2D {
         super.init();
 
         context.setScoreVisible(true);
-        spriteSheet = (PacManGameSpriteSheet) context.renderer().spriteSheet();
         data = new Data();
-        data.pacMan.setAnimations(new PacManGamePacAnimations(spriteSheet));
-        data.ghosts.forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(spriteSheet, ghost.id())));
+        data.pacMan.setAnimations(new PacManGamePacAnimations(context.spriteSheet()));
+        data.ghosts.forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(context.spriteSheet(), ghost.id())));
         data.blinking.reset();
 
         sceneController.restart(SceneState.STARTING);
@@ -350,7 +347,7 @@ public class PacManIntroScene extends GameScene2D {
                 continue;
             }
             int ty = 7 + 3 * id;
-            renderer.drawGhostFacingRight(g, id, t(tx) + 4, t(ty));
+            renderer.drawSpriteCenteredOverBox(g, context.spriteSheet(), context.spriteSheet().ghostFacingRight(id), t(tx) + 4, t(ty));
             if (data.ghostCharacterVisible[id]) {
                 var text = "-" + data.ghostCharacters[id];
                 renderer.drawText(g, text, GHOST_COLORS[id], font, t(tx + 3), t(ty + 1));

@@ -18,8 +18,6 @@ import static de.amr.games.pacman.lib.Globals.HTS;
  */
 public interface SpriteRenderer {
 
-    GameSpriteSheet spriteSheet();
-
     DoubleProperty scalingProperty();
 
     default double scaling() { return scalingProperty().get(); }
@@ -46,24 +44,13 @@ public interface SpriteRenderer {
      * Draws a sprite (section of the sprite sheet source) at the given (scaled) position.
      *
      * @param g             graphics context
+     * @param spriteSheet   the sprite sheet
      * @param sprite        the sprite sheet section to draw
      * @param x             scaled x-coordinate
      * @param y             scaled y-coordinate
      */
-    default void drawSpriteUnscaled(GraphicsContext g, RectArea sprite, double x, double y) {
-        drawSubImage(g, spriteSheet().sourceImage(), sprite, x, y);
-    }
-
-    /**
-     * Draws a sprite using the current scene scaling.
-     *
-     * @param g         graphics context
-     * @param sprite    sprite sheet region ("sprite")
-     * @param x         UNSCALED x position
-     * @param y         UNSCALED y position
-     */
-    default void drawSpriteScaled(GraphicsContext g, RectArea sprite, double x, double y) {
-        drawSubImageScaled(g, spriteSheet().sourceImage(), sprite, x, y);
+    default void drawSpriteUnscaled(GraphicsContext g, GameSpriteSheet spriteSheet, RectArea sprite, double x, double y) {
+        drawSubImage(g, spriteSheet.sourceImage(), sprite, x, y);
     }
 
     /**
@@ -110,20 +97,6 @@ public interface SpriteRenderer {
      * bounding box is only 8 pixels (one square tile) wide.
      *
      * @param g         graphics context
-     * @param sprite    sprite sheet region (can be null)
-     * @param x         x-coordinate of left-upper corner of bounding box
-     * @param y         y-coordinate of left-upper corner of bounding box
-     */
-    default void drawSpriteCenteredOverBox(GraphicsContext g, RectArea sprite, double x, double y) {
-        drawSpriteScaled(g, sprite, x + HTS - 0.5 * sprite.width(), y + HTS - 0.5 * sprite.height());
-    }
-
-    /**
-     * Draws a sprite centered over a one "square tile" large box (bounding box of creature). The position specifies the
-     * left-upper corner of the bounding box. Note that the sprites for Pac-Man and the ghosts are 16 pixels wide but the
-     * bounding box is only 8 pixels (one square tile) wide.
-     *
-     * @param g         graphics context
      * @param spriteSheet the sprite sheet from which the sprite is drawn
      * @param sprite    sprite sheet region (can be null)
      * @param x         x-coordinate of left-upper corner of bounding box
@@ -131,19 +104,6 @@ public interface SpriteRenderer {
      */
     default void drawSpriteCenteredOverBox(GraphicsContext g, GameSpriteSheet spriteSheet, RectArea sprite, double x, double y) {
         drawSpriteScaled(g, spriteSheet, sprite, x + HTS - 0.5 * sprite.width(), y + HTS - 0.5 * sprite.height());
-    }
-
-    /**
-     * Draws the sprite over the bounding box of the given entity (if visible).
-     *
-     * @param g         graphics context
-     * @param entity    an entity like Pac-Man or a ghost
-     * @param sprite    sprite sheet region (can be null)
-     */
-    default void drawEntitySprite(GraphicsContext g, Entity entity, RectArea sprite) {
-        if (entity.isVisible()) {
-            drawSpriteCenteredOverBox(g, sprite, entity.posX(), entity.posY());
-        }
     }
 
     /**
@@ -175,5 +135,4 @@ public interface SpriteRenderer {
             }
         }
     }
-
 }

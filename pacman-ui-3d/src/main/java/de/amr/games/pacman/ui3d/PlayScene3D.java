@@ -14,7 +14,6 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameSounds;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
@@ -237,11 +236,10 @@ public class PlayScene3D implements GameScene {
     }
 
     private void onEnterStateGhostDying() {
-        GameSpriteSheet spriteSheet = context.renderer().spriteSheet();
-        RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
+        RectArea[] numberSprites = context.spriteSheet().ghostNumberSprites();
         context.game().eventLog().killedGhosts.forEach(ghost -> {
             int victimIndex = context.game().victims().indexOf(ghost);
-            var numberImage = spriteSheet.subImage(numberSprites[victimIndex]);
+            var numberImage = context.spriteSheet().subImage(numberSprites[victimIndex]);
             level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
         });
     }
@@ -400,7 +398,7 @@ public class PlayScene3D implements GameScene {
         // Place level counter at top right maze corner
         double x = context.game().world().map().terrain().numCols() * TS - 2 * TS;
         double y = 2 * TS;
-        Node levelCounter3D = Factory3D.createLevelCounter3D(context.renderer().spriteSheet(), context.game().levelCounter(), x, y);
+        Node levelCounter3D = Factory3D.createLevelCounter3D(context.spriteSheet(), context.game().levelCounter(), x, y);
         level3D.root().getChildren().add(levelCounter3D);
     }
 
