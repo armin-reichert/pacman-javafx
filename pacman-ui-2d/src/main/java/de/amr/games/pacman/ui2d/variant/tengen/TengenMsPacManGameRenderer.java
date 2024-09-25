@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
-import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -19,15 +18,14 @@ import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.rendering.SpriteSheetArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
-import de.amr.games.pacman.ui2d.variant.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManArcadeGameRenderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -39,8 +37,9 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
 
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
-    private final AssetStorage assets;
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
+    private final Image arcadeMazesImage;
+    private final Image nonArcadeMazesImage;
 
     //TODO temporary
     private final MsPacManArcadeGameRenderer rendererMsPacMan;
@@ -50,12 +49,14 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     private boolean blinkingOn;
 
     public TengenMsPacManGameRenderer(AssetStorage assets) {
-        this.assets = assets;
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
 
         rendererMsPacMan = new MsPacManArcadeGameRenderer(assets);
         rendererMsPacMan.scalingProperty().bind(scalingProperty());
+
+        arcadeMazesImage = assets.image("tengen.mazes.arcade");
+        nonArcadeMazesImage = assets.image("tengen.mazes.non_arcade");
     }
 
     @Override
@@ -118,33 +119,28 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     public void selectMap(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet) {
         int width = worldMap.terrain().numCols() * TS;
         int height = (worldMap.terrain().numRows() - 5) * TS; // 3 empty rows before and 2 after maze source
-        // Maps 1-9 are the Arcade maps, maps 10+ are the non-Arcade maps
-        mapSprite = mapNumber <= 9
-                ? new SpriteSheetArea(assets.get("tengen.mazes.arcade"), arcadeMapArea(mapNumber, width, height))
-                : new SpriteSheetArea(assets.get("tengen.mazes.non_arcade"), nonArcadeMapArea(mapNumber - 9, width, height));
+        mapSprite = mapNumber <= 9  // Maps 1-9 are the Arcade maps, maps 10+ are the non-Arcade maps
+            ? new SpriteSheetArea(arcadeMazesImage, arcadeMapArea(mapNumber, width, height))
+            : new SpriteSheetArea(nonArcadeMazesImage, nonArcadeMapArea(mapNumber - 9, width, height));
         Logger.info("Tengen map # {}: area: {}", mapNumber, mapSprite.area());
     }
 
     /**
-     *
      * @param mapNumber number of Arcade map (1-9)
      * @param width map width in pixels
      * @param height map height in pixels
-     * @return sprite sheet area for map image
+     * @return map area in Arcade maps image
      */
     private RectArea arcadeMapArea(int mapNumber, int width, int height) {
-        if (1 <= mapNumber && mapNumber <= 9) {
-            int index = mapNumber - 1;
-            return new RectArea((index % 3) * width, (index / 3) * height, width, height);
-        }
-        throw new IllegalArgumentException("Illegal Arcade map number: " + mapNumber);
+        int index = mapNumber - 1;
+        return new RectArea((index % 3) * width, (index / 3) * height, width, height);
     }
 
     /**
      * @param mapNumber number of non-Arcade map (1-37)
      * @param width map width in pixels
      * @param height map height in pixels
-     * @return sprite sheet area for map image
+     * @return map area in non-Arcade maps image
      */
     private RectArea nonArcadeMapArea(int mapNumber, int width, int height) {
         int col, y;
@@ -159,34 +155,6 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
         return new RectArea(col * width, y, width, height);
     }
 
-    @Override
-    public void drawMovingBonus(GraphicsContext g, GameSpriteSheet spriteSheet, MovingBonus bonus) {
-        g.save();
-        g.translate(0, bonus.elongationY());
-        switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawEntitySprite(g, bonus.entity(), spriteSheet, spriteSheet.bonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawEntitySprite(g, bonus.entity(), spriteSheet, spriteSheet.bonusValueSprite(bonus.symbol()));
-            default -> {}
-        }
-        g.restore();
-    }
-
-    @Override
-    public void drawClapperBoard(GraphicsContext g, GameSpriteSheet spriteSheet, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
-        var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
-        if (sprite != RectArea.PIXEL) {
-            drawSpriteCenteredOverBox(g, spriteSheet, sprite, x, y);
-            g.setFont(font);
-            g.setFill(textColor.darker());
-            var numberX = scaled(x + sprite.width() - 25);
-            var numberY = scaled(y + 18);
-            g.setFill(textColor);
-            g.fillText(animation.number(), numberX, numberY);
-            var textX = scaled(x + sprite.width());
-            g.fillText(animation.text(), textX, numberY);
-        }
-    }
-
     private void hideActorSprite(GraphicsContext g, Vector2i tile, double offX, double offY) {
         // Parameter tile denotes the left of the two tiles where actor is located between. Compute center position.
         double cx = tile.x() * TS + TS + offX;
@@ -196,8 +164,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
         g.fillRect(scaled(cx - TS), scaled(cy - TS), scaled(spriteSize), scaled(spriteSize));
     }
 
-    //TODO temporary
-
+    //TODO temporary hack until Tengen sprite sheet is usable
 
     @Override
     public void drawAnimatedEntity(GraphicsContext g, AnimatedEntity guy) {

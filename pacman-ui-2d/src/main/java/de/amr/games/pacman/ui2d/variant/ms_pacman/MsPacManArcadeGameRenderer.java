@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.variant.ms_pacman;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -21,7 +20,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.t;
 
@@ -91,33 +89,5 @@ public class MsPacManArcadeGameRenderer implements GameWorldRenderer {
             g.restore();
         }
         context.game().bonus().ifPresent(bonus -> drawMovingBonus(g, context.spriteSheet(), (MovingBonus) bonus));
-    }
-
-    @Override
-    public void drawMovingBonus(GraphicsContext g, GameSpriteSheet spriteSheet, MovingBonus bonus) {
-        g.save();
-        g.translate(0, bonus.elongationY());
-        switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawEntitySprite(g, bonus.entity(), spriteSheet, spriteSheet.bonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawEntitySprite(g, bonus.entity(), spriteSheet, spriteSheet.bonusValueSprite(bonus.symbol()));
-            default -> {}
-        }
-        g.restore();
-    }
-
-    @Override
-    public void drawClapperBoard(GraphicsContext g, GameSpriteSheet spriteSheet, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
-        RectArea sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
-        if (sprite != RectArea.PIXEL) {
-            double numberX = scaled(x + sprite.width() - 25);
-            double numberY = scaled(y + 18);
-            double textX = scaled(x + sprite.width());
-            drawSpriteCenteredOverBox(g, spriteSheet, sprite, x, y);
-            g.setFont(font);
-            g.setFill(textColor.darker());
-            g.setFill(textColor);
-            g.fillText(animation.number(), numberX, numberY);
-            g.fillText(animation.text(), textX, numberY);
-        }
     }
 }

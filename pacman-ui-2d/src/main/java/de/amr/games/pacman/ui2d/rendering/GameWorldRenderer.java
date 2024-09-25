@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
+import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -160,9 +161,29 @@ public interface GameWorldRenderer extends SpriteRenderer {
     }
 
     default void drawMovingBonus(GraphicsContext g, GameSpriteSheet spriteSheet, MovingBonus bonus) {
+        g.save();
+        g.translate(0, bonus.elongationY());
+        switch (bonus.state()) {
+            case Bonus.STATE_EDIBLE -> drawEntitySprite(g, bonus.entity(), spriteSheet, spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawEntitySprite(g, bonus.entity(), spriteSheet, spriteSheet.bonusValueSprite(bonus.symbol()));
+            default -> {}
+        }
+        g.restore();
     }
 
     default void drawClapperBoard(GraphicsContext g, GameSpriteSheet spriteSheet, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
+        var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
+        if (sprite != RectArea.PIXEL) {
+            drawSpriteCenteredOverBox(g, spriteSheet, sprite, x, y);
+            g.setFont(font);
+            g.setFill(textColor.darker());
+            var numberX = scaled(x + sprite.width() - 25);
+            var numberY = scaled(y + 18);
+            g.setFill(textColor);
+            g.fillText(animation.number(), numberX, numberY);
+            var textX = scaled(x + sprite.width());
+            g.fillText(animation.text(), textX, numberY);
+        }
     }
 
     default void drawMsPacManMidwayCopyright(GraphicsContext g, Image image, double x, double y, Color color, Font font) {
