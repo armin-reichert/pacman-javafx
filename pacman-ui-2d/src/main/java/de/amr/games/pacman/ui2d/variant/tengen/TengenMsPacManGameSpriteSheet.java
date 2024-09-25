@@ -42,6 +42,10 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
         }
     }
 
+    private static final RectArea HEART_SPRITE = rect(162, 270, 18, 18);
+    private static final RectArea BLUE_BAG_SPRITE = rect(239, 361, 12, 12);
+    private static final RectArea JUNIOR_PAC_SPRITE = rect(165, 303, 10, 10);
+
     public TengenMsPacManGameSpriteSheet(Image source) {
         this.source = source;
     }
@@ -112,16 +116,16 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
 
     @Override
     public RectArea heartSprite() {
-        return NO_SPRITE;
+        return HEART_SPRITE;
     }
 
     @Override
     public RectArea blueBagSprite() {
-        return NO_SPRITE;
+        return BLUE_BAG_SPRITE;
     }
 
     @Override
     public RectArea juniorPacSprite() {
-        return NO_SPRITE;
+        return JUNIOR_PAC_SPRITE;
     }
 }
