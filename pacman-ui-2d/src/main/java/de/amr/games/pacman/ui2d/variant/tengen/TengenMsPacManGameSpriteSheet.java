@@ -10,6 +10,7 @@ import de.amr.games.pacman.ui2d.rendering.RectArea;
 import javafx.scene.image.Image;
 
 import static de.amr.games.pacman.model.GameModel.*;
+import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.rectArray;
 import static de.amr.games.pacman.ui2d.rendering.RectArea.rect;
 
 /**
@@ -49,6 +50,24 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
             {rect(110,120,14,13), rect(126, 120, 14, 13)},
             {rect(142,120,14,13), rect(158, 120, 14, 13)},
             {rect(174,120,14,13), rect(190, 120, 14, 13)},
+    };
+
+    private static final RectArea[] GHOST_FRIGHTENED_SPRITES = {
+        rect(206, 75, 14, 13), rect(222, 75, 14, 13)
+    };
+
+    private static final RectArea[] GHOST_FLASHING_SPRITES = {
+        rect(206, 90, 14, 13),
+        rect(222, 90, 14, 13),
+        rect(222, 105, 14, 13),
+        rect(206, 105, 14, 13),
+    };
+
+    private static final RectArea[] GHOST_EYES_SPRITES = {
+        rect(208, 128, 10, 5),
+        rect(208, 121, 10, 5),
+        rect(221, 121, 10, 5),
+        rect(221, 128, 10, 5),
     };
 
     private static final RectArea[] GHOST_NUMBER_SPRITES = {
@@ -95,17 +114,17 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
 
     @Override
     public RectArea[] ghostEyesSprites(Direction dir) {
-        return NO_SPRITES;
+        return GHOST_EYES_SPRITES;
     }
 
     @Override
     public RectArea[] ghostFlashingSprites() {
-        return NO_SPRITES;
+        return GHOST_FLASHING_SPRITES;
     }
 
     @Override
     public RectArea[] ghostFrightenedSprites() {
-        return NO_SPRITES;
+        return GHOST_FRIGHTENED_SPRITES;
     }
 
     @Override
