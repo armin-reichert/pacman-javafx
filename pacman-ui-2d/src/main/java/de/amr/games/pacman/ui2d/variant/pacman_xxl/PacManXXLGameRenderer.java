@@ -29,7 +29,7 @@ import static java.util.function.Predicate.not;
 /**
  * @author Armin Reichert
  */
-public class PacManXXLGameWorldRenderer implements GameWorldRenderer {
+public class PacManXXLGameRenderer implements GameWorldRenderer {
 
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
@@ -40,7 +40,7 @@ public class PacManXXLGameWorldRenderer implements GameWorldRenderer {
     private boolean flashMode;
     private boolean blinkingOn;
 
-    public PacManXXLGameWorldRenderer(AssetStorage assets) {
+    public PacManXXLGameRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
         terrainRenderer.scalingPy.bind(scalingPy);
         foodRenderer.scalingPy.bind(scalingPy);

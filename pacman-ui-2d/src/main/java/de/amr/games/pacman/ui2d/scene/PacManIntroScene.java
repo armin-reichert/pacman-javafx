@@ -19,7 +19,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.variant.pacman.PacManArcadeGameWorldRenderer;
+import de.amr.games.pacman.ui2d.variant.pacman.PacManArcadeGameRenderer;
 import de.amr.games.pacman.ui2d.variant.pacman.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.variant.pacman.PacManGamePacAnimations;
 import javafx.scene.paint.Color;
@@ -313,7 +313,7 @@ public class PacManIntroScene extends GameScene2D {
                 }
                 drawGuys(renderer, flutter(timer.currentTick()));
                 if (context.game().variant() == GameVariant.PACMAN) {
-                    var r = (PacManArcadeGameWorldRenderer) renderer;
+                    var r = (PacManArcadeGameRenderer) renderer;
                     r.drawMidwayCopyright(g, t(4), t(32), PALETTE_PINK, sceneFont(8));
                 }
             }
@@ -321,7 +321,7 @@ public class PacManIntroScene extends GameScene2D {
                 drawPoints(renderer);
                 drawGuys(renderer, 0);
                 if (context.game().variant() == GameVariant.PACMAN) {
-                    var r = (PacManArcadeGameWorldRenderer) renderer;
+                    var r = (PacManArcadeGameRenderer) renderer;
                     r.drawMidwayCopyright(g, t(4), t(32), PALETTE_PINK, sceneFont(8));
                 }
             }

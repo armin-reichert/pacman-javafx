@@ -20,7 +20,7 @@ import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.rendering.SpriteSheetArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.ClapperboardAnimation;
-import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManArcadeGameWorldRenderer;
+import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManArcadeGameRenderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -35,7 +35,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 /**
  * @author Armin Reichert
  */
-public class TengenMsPacManGameWorldRenderer implements GameWorldRenderer {
+public class TengenMsPacManGameRenderer implements GameWorldRenderer {
 
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
@@ -43,18 +43,18 @@ public class TengenMsPacManGameWorldRenderer implements GameWorldRenderer {
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
 
     //TODO temporary
-    private final MsPacManArcadeGameWorldRenderer rendererMsPacMan;
+    private final MsPacManArcadeGameRenderer rendererMsPacMan;
 
     private SpriteSheetArea mapSprite;
     private boolean flashMode;
     private boolean blinkingOn;
 
-    public TengenMsPacManGameWorldRenderer(AssetStorage assets) {
+    public TengenMsPacManGameRenderer(AssetStorage assets) {
         this.assets = assets;
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
 
-        rendererMsPacMan = new MsPacManArcadeGameWorldRenderer(assets);
+        rendererMsPacMan = new MsPacManArcadeGameRenderer(assets);
         rendererMsPacMan.scalingProperty().bind(scalingProperty());
     }
 

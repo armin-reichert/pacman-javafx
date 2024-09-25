@@ -25,7 +25,7 @@ import static de.amr.games.pacman.lib.Globals.t;
 /**
  * @author Armin Reichert
  */
-public class PacManArcadeGameWorldRenderer implements GameWorldRenderer {
+public class PacManArcadeGameRenderer implements GameWorldRenderer {
 
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
@@ -33,7 +33,7 @@ public class PacManArcadeGameWorldRenderer implements GameWorldRenderer {
     private boolean flashMode;
     private boolean blinkingOn;
 
-    public PacManArcadeGameWorldRenderer(AssetStorage assets) {
+    public PacManArcadeGameRenderer(AssetStorage assets) {
         flashingMazeImage = assets.image("pacman.flashing_maze");
     }
 

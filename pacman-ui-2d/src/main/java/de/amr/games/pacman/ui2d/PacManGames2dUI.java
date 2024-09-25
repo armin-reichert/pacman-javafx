@@ -25,16 +25,16 @@ import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.util.*;
-import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManArcadeGameWorldRenderer;
+import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManArcadeGameRenderer;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.variant.pacman.PacManArcadeGameWorldRenderer;
+import de.amr.games.pacman.ui2d.variant.pacman.PacManArcadeGameRenderer;
 import de.amr.games.pacman.ui2d.variant.pacman.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.variant.pacman.PacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.variant.pacman_xxl.PacManXXLGameWorldRenderer;
+import de.amr.games.pacman.ui2d.variant.pacman_xxl.PacManXXLGameRenderer;
 import de.amr.games.pacman.ui2d.variant.tengen.TengenMsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.variant.tengen.TengenMsPacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.variant.tengen.TengenMsPacManGameWorldRenderer;
+import de.amr.games.pacman.ui2d.variant.tengen.TengenMsPacManGameRenderer;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -89,10 +89,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     public static GameWorldRenderer createRenderer(GameVariant variant, AssetStorage assets) {
         return switch (variant) {
-            case MS_PACMAN -> new MsPacManArcadeGameWorldRenderer(assets);
-            case MS_PACMAN_TENGEN -> new TengenMsPacManGameWorldRenderer(assets);
-            case PACMAN -> new PacManArcadeGameWorldRenderer(assets);
-            case PACMAN_XXL -> new PacManXXLGameWorldRenderer(assets);
+            case MS_PACMAN -> new MsPacManArcadeGameRenderer(assets);
+            case MS_PACMAN_TENGEN -> new TengenMsPacManGameRenderer(assets);
+            case PACMAN -> new PacManArcadeGameRenderer(assets);
+            case PACMAN_XXL -> new PacManXXLGameRenderer(assets);
         };
     }
 
