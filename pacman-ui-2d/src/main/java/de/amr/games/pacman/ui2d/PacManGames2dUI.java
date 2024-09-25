@@ -479,11 +479,21 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public void onLevelCreated(GameEvent event) {
         // Found no better point in time to create and assign the sprite animations to the guys
-        GameModel game = event.game;
-        switch (game.variant()) {
+        createActorAnimations(game().variant(), game(), spriteSheet());
+        Logger.info("Created {} game creature animations for level #{}", game().variant(), game().levelNumber());
+        if (!game().isDemoLevel()) {
+            game().pac().setManualSteering(new KeyboardPacSteering());
+        }
+        GameSounds.enabledProperty().set(!game().isDemoLevel());
+        //TODO better place than here?
+        gamePage.adaptCanvasSizeToCurrentWorld();
+    }
+
+    public void createActorAnimations(GameVariant variant, GameModel game, GameSpriteSheet spriteSheet) {
+        switch (variant) {
             case MS_PACMAN -> {
-                game.pac().setAnimations(new MsPacManGamePacAnimations(spriteSheet()));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(spriteSheet(), ghost.id())));
+                game.pac().setAnimations(new MsPacManGamePacAnimations(spriteSheet));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, ghost.id())));
             }
             case MS_PACMAN_TENGEN -> {
                 //TODO use Tengen-specific sprites
@@ -492,18 +502,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new TengenMsPacManGameGhostAnimations(ssMsPac, ghost.id())));
             }
             case PACMAN, PACMAN_XXL -> {
-                game.pac().setAnimations(new PacManGamePacAnimations(spriteSheet()));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(spriteSheet(), ghost.id())));
+                game.pac().setAnimations(new PacManGamePacAnimations(spriteSheet));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(spriteSheet, ghost.id())));
             }
-            default -> throw new IllegalArgumentException("Unsupported game variant: " + game.variant());
+            default -> throw new IllegalArgumentException("Unsupported game variant: " + variant);
         }
-        Logger.info("Created {} game creature animations for level #{}", game.variant(), game.levelNumber());
-        if (!game.isDemoLevel()) {
-            game.pac().setManualSteering(new KeyboardPacSteering());
-        }
-        GameSounds.enabledProperty().set(!game.isDemoLevel());
-        //TODO better place than here?
-        gamePage.adaptCanvasSizeToCurrentWorld();
     }
 
     @Override
