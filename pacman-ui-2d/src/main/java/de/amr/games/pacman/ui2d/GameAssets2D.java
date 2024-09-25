@@ -125,7 +125,8 @@ public class GameAssets2D extends AssetStorage {
         assets.store("tengen.spritesheet",              new TengenMsPacManGameSpriteSheet(rm.loadImage("graphics/tengen/spritesheet.png")));
         assets.store("tengen.mazes.arcade",             rm.loadImage("graphics/tengen/arcade_mazes.png"));
         assets.store("tengen.mazes.non_arcade",         rm.loadImage("graphics/tengen/non_arcade_mazes.png"));
-        assets.store("tengen.startpage.source",         rm.loadImage("graphics/tengen/tengen_flyer.jpg"));
+        assets.store("tengen.startpage.image1",         rm.loadImage("graphics/tengen/tengen_flyer.png"));
+        assets.store("tengen.startpage.image2",         rm.loadImage("graphics/tengen/tengen_flyer_back.png"));
         assets.store("tengen.helpButton.icon",          rm.loadImage("graphics/icons/help-red-64.png"));
         assets.store("tengen.icon",                     rm.loadImage("graphics/icons/mspacman.png"));
         assets.store("tengen.logo.midway",              rm.loadImage("graphics/mspacman/midway_logo.png"));
