@@ -9,6 +9,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.maps.editor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene;
@@ -65,7 +66,8 @@ public interface GameContext {
      * @return localized text with constructed key or default text if no such key exists
      */
     String locText(String keyOrPattern, Object... args);
-    GameSpriteSheet spriteSheet();
+    default GameSpriteSheet spriteSheet() { return spriteSheet(game().variant()); }
+    GameSpriteSheet spriteSheet(GameVariant variant);
     GameWorldRenderer renderer();
 
     // Actions

@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui2d.scene;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.timer.TickTimer;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameSounds;
@@ -128,6 +129,7 @@ public class MsPacManCutScene2 extends GameScene2D {
         }
     }
 
+    private GameSpriteSheet spriteSheet;
     private Pac pacMan;
     private Pac msPacMan;
 
@@ -154,8 +156,11 @@ public class MsPacManCutScene2 extends GameScene2D {
         pacMan = new Pac();
         msPacMan = new Pac();
 
-        //TODO use Ms. Pac-Man animations also in Tengen for now
-        GameSpriteSheet spriteSheet = context.assets().get("ms_pacman.spritesheet");
+        spriteSheet = context.spriteSheet();
+        //TODO use Tengen sprite sheet
+        if (context.game().variant() == GameVariant.MS_PACMAN_TENGEN) {
+            spriteSheet = context.spriteSheet(GameVariant.MS_PACMAN);
+        }
         msPacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
         pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
 
@@ -174,7 +179,7 @@ public class MsPacManCutScene2 extends GameScene2D {
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
         renderer.drawClapperBoard(g,
-            context.spriteSheet(),
+            spriteSheet,
             context.assets().font("font.arcade", scaled(8)),
             PALETTE_PALE,
             clapAnimation, t(3), t(10));

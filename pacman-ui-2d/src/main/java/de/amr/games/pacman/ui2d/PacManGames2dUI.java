@@ -370,6 +370,26 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         }
     }
 
+    public void createActorAnimations(GameVariant variant, GameModel game, GameSpriteSheet spriteSheet) {
+        switch (variant) {
+            case MS_PACMAN -> {
+                game.pac().setAnimations(new MsPacManGamePacAnimations(spriteSheet));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, ghost.id())));
+            }
+            case MS_PACMAN_TENGEN -> {
+                //TODO use Tengen-specific sprites
+                GameSpriteSheet ssMsPac = assets.get("ms_pacman.spritesheet");
+                game.pac().setAnimations(new TengenMsPacManGamePacAnimations(ssMsPac));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new TengenMsPacManGameGhostAnimations(ssMsPac, ghost.id())));
+            }
+            case PACMAN, PACMAN_XXL -> {
+                game.pac().setAnimations(new PacManGamePacAnimations(spriteSheet));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(spriteSheet, ghost.id())));
+            }
+            default -> throw new IllegalArgumentException("Unsupported game variant: " + variant);
+        }
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     // GameContext interface implementation
     // -----------------------------------------------------------------------------------------------------------------
@@ -412,9 +432,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public GameSpriteSheet spriteSheet() {
-        String prefix = GameAssets2D.assetPrefix(game().variant());
-        return assets.get(prefix + ".spritesheet");
+    public GameSpriteSheet spriteSheet(GameVariant variant) {
+        return assets.get(assetPrefix(variant) + ".spritesheet");
     }
 
     @Override
@@ -487,26 +506,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         GameSounds.enabledProperty().set(!game().isDemoLevel());
         //TODO better place than here?
         gamePage.adaptCanvasSizeToCurrentWorld();
-    }
-
-    public void createActorAnimations(GameVariant variant, GameModel game, GameSpriteSheet spriteSheet) {
-        switch (variant) {
-            case MS_PACMAN -> {
-                game.pac().setAnimations(new MsPacManGamePacAnimations(spriteSheet));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, ghost.id())));
-            }
-            case MS_PACMAN_TENGEN -> {
-                //TODO use Tengen-specific sprites
-                GameSpriteSheet ssMsPac = assets.get("ms_pacman.spritesheet");
-                game.pac().setAnimations(new TengenMsPacManGamePacAnimations(ssMsPac));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new TengenMsPacManGameGhostAnimations(ssMsPac, ghost.id())));
-            }
-            case PACMAN, PACMAN_XXL -> {
-                game.pac().setAnimations(new PacManGamePacAnimations(spriteSheet));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(spriteSheet, ghost.id())));
-            }
-            default -> throw new IllegalArgumentException("Unsupported game variant: " + variant);
-        }
     }
 
     @Override
