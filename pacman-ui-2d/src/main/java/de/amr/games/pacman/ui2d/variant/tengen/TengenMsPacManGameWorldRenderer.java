@@ -15,12 +15,12 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.rendering.SpriteSheetArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManArcadeGameWorldRenderer;
-import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameWorldRenderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -35,7 +35,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 /**
  * @author Armin Reichert
  */
-public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRenderer {
+public class TengenMsPacManGameWorldRenderer implements GameWorldRenderer {
 
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
@@ -204,7 +204,7 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
         if (guy.entity() instanceof Ghost || guy.entity() instanceof MovingBonus) {
             rendererMsPacMan.drawAnimatedEntity(g, guy);
         } else {
-            MsPacManGameWorldRenderer.super.drawAnimatedEntity(g, guy);
+            GameWorldRenderer.super.drawAnimatedEntity(g, guy);
         }
     }
 }

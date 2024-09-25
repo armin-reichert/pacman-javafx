@@ -17,7 +17,6 @@ import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameWorldRenderer;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
@@ -261,8 +260,7 @@ public class MsPacManCutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
-        var msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) renderer;
-        msPacManGameWorldRenderer.drawClapperBoard(g,
+        renderer.drawClapperBoard(g,
             context.spriteSheet(),
             context.assets().font("font.arcade", scaled(8)),
             PALETTE_PALE,

@@ -24,7 +24,6 @@ import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameWorldRenderer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -292,8 +291,7 @@ public class MsPacManIntroScene extends GameScene2D {
         renderer.drawAnimatedEntity(g, data.msPacMan);
 
         if (context.game().variant() == GameVariant.MS_PACMAN) {
-            MsPacManGameWorldRenderer msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) renderer;
-            msPacManGameWorldRenderer.drawMsPacManMidwayCopyright(g,
+            renderer.drawMsPacManMidwayCopyright(g,
                 context.assets().get("ms_pacman.logo.midway"),
                 t(6), t(28), PALETTE_RED, sceneFont(TS));
         }

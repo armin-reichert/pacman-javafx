@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.variant.pacman.PacManArcadeGameWorldRenderer;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -54,8 +53,7 @@ public class CreditScene extends GameScene2D {
                 renderer.drawText(g, "ADDITIONAL    AT 10000", PALETTE_ORANGE, font8, t(2), t(25));
                 renderer.drawSpriteScaled(g, context.spriteSheet(), context.spriteSheet().livesCounterSprite(), t(13), t(23) + 1);
                 renderer.drawText(g, "PTS", PALETTE_ORANGE, font6, t(25), t(25));
-                var msPacManGameRenderer = (MsPacManGameWorldRenderer) renderer;
-                msPacManGameRenderer.drawMsPacManMidwayCopyright(g,
+                renderer.drawMsPacManMidwayCopyright(g,
                     context.assets().get("ms_pacman.logo.midway"),
                     t(6), t(28), PALETTE_RED, sceneFont(TS));
             }
