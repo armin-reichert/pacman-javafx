@@ -21,7 +21,6 @@ import java.util.ResourceBundle;
  */
 public class GameAssets2D extends AssetStorage {
 
-    public static final Color PALETTE_BLACK  = Color.rgb(0, 0, 0);
     public static final Color PALETTE_RED    = Color.rgb(255, 0, 0);
     public static final Color PALETTE_YELLOW = Color.rgb(255, 255, 0);
     public static final Color PALETTE_PINK   = Color.rgb(252, 181, 255);
@@ -31,12 +30,12 @@ public class GameAssets2D extends AssetStorage {
     public static final Color PALETTE_PALE   = Color.rgb(222, 222, 255);
     public static final Color PALETTE_ROSE   = Color.rgb(252, 187, 179);
 
-        public static String assetPrefix(GameVariant variant) {
+    public static String assetPrefix(GameVariant variant) {
         return switch (variant) {
-            case MS_PACMAN -> "ms_pacman";
+            case MS_PACMAN        -> "ms_pacman";
             case MS_PACMAN_TENGEN -> "tengen";
-            case PACMAN -> "pacman";
-            case PACMAN_XXL -> "pacman_xxl";
+            case PACMAN           -> "pacman";
+            case PACMAN_XXL       -> "pacman_xxl";
         };
     }
 
@@ -46,7 +45,7 @@ public class GameAssets2D extends AssetStorage {
 
         // Dashboard
 
-        assets.store("source.armin1970",                rm.loadImage("graphics/armin.jpg"));
+        assets.store("photo.armin1970",                 rm.loadImage("graphics/armin.jpg"));
         assets.store("icon.mute",                       rm.loadImage("graphics/icons/mute.png"));
         assets.store("icon.play",                       rm.loadImage("graphics/icons/play.png"));
         assets.store("icon.stop",                       rm.loadImage("graphics/icons/stop.png"));

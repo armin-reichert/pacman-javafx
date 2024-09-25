@@ -20,9 +20,9 @@ public class InfoBoxAbout extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        var theAuthorInYoungerYears = new ImageView(context.assets().image("source.armin1970"));
-        theAuthorInYoungerYears.setFitWidth(250);
-        theAuthorInYoungerYears.setPreserveRatio(true);
+        var theAuthor = new ImageView(context.assets().image("photo.armin1970"));
+        theAuthor.setFitWidth(250);
+        theAuthor.setPreserveRatio(true);
 
         var madeBy = new Text("Made by     ");
         madeBy.setFont(Font.font("Helvetica", 16));
@@ -35,7 +35,7 @@ public class InfoBoxAbout extends InfoBox {
 
         var tf = new TextFlow(madeBy, signature);
         tf.setPadding(new Insets(5, 5, 5, 5));
-        grid.add(theAuthorInYoungerYears, 0, 0);
+        grid.add(theAuthor, 0, 0);
         grid.add(tf, 0, 1);
     }
 }
