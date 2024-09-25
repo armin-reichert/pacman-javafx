@@ -29,6 +29,8 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.maps.editor.TileMapUtil.getColorFromMap;
+import static de.amr.games.pacman.model.GameWorld.PROPERTY_COLOR_WALL_FILL;
 
 /**
  * @author Armin Reichert
@@ -84,8 +86,9 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
         TileMap terrain = world.map().terrain();
         if (flashMode) {
             // Flash mode uses vector rendering
-            terrainRenderer.setWallStrokeColor(blinkingOn ? Color.WHITE : Color.BLACK);
-            terrainRenderer.setWallFillColor(blinkingOn ? Color.BLACK : Color.WHITE);
+            Color wallFillColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_FILL, Color.GREEN);
+            terrainRenderer.setWallStrokeColor(Color.WHITE);
+            terrainRenderer.setWallFillColor(blinkingOn ? Color.BLACK : wallFillColor);
             terrainRenderer.setDoorColor(Color.BLACK);
             terrainRenderer.drawMap(g, terrain);
         } else {
