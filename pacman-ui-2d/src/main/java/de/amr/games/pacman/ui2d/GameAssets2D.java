@@ -5,12 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameSpriteSheet;
-import de.amr.games.pacman.ui2d.variant.pacman.PacManGameSpriteSheet;
-import de.amr.games.pacman.ui2d.variant.tengen.TengenMsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui2d.util.Ufx;
+import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameSpriteSheet;
+import de.amr.games.pacman.ui2d.variant.pacman.PacManGameSpriteSheet;
+import de.amr.games.pacman.ui2d.variant.tengen.TengenMsPacManGameSpriteSheet;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -21,7 +21,17 @@ import java.util.ResourceBundle;
  */
 public class GameAssets2D extends AssetStorage {
 
-    public static String assetPrefix(GameVariant variant) {
+    public static final Color PALETTE_BLACK  = Color.rgb(0, 0, 0);
+    public static final Color PALETTE_RED    = Color.rgb(255, 0, 0);
+    public static final Color PALETTE_YELLOW = Color.rgb(255, 255, 0);
+    public static final Color PALETTE_PINK   = Color.rgb(252, 181, 255);
+    public static final Color PALETTE_CYAN   = Color.rgb(0, 255, 255);
+    public static final Color PALETTE_ORANGE = Color.rgb(251, 190, 88);
+    public static final Color PALETTE_BLUE   = Color.rgb(33, 33, 255);
+    public static final Color PALETTE_PALE   = Color.rgb(222, 222, 255);
+    public static final Color PALETTE_ROSE   = Color.rgb(252, 187, 179);
+
+        public static String assetPrefix(GameVariant variant) {
         return switch (variant) {
             case MS_PACMAN -> "ms_pacman";
             case MS_PACMAN_TENGEN -> "tengen";
@@ -52,16 +62,6 @@ public class GameAssets2D extends AssetStorage {
         //
         // Common to all game variants
         //
-
-        assets.store("palette.black",                   Color.rgb(0, 0, 0));
-        assets.store("palette.red",                     Color.rgb(255, 0, 0));
-        assets.store("palette.yellow",                  Color.rgb(255, 255, 0));
-        assets.store("palette.pink",                    Color.rgb(252, 181, 255));
-        assets.store("palette.cyan",                    Color.rgb(0, 255, 255));
-        assets.store("palette.orange",                  Color.rgb(251, 190, 88));
-        assets.store("palette.blue",                    Color.rgb(33, 33, 255));
-        assets.store("palette.pale",                    Color.rgb(222, 222, 255));
-        assets.store("palette.rose",                    Color.rgb(252, 187, 179));
 
         assets.store("startpage.arrow.left",            rm.loadImage("graphics/icons/arrow-left.png"));
         assets.store("startpage.arrow.right",           rm.loadImage("graphics/icons/arrow-right.png"));

@@ -31,6 +31,8 @@ import java.util.List;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.EATEN;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
+import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
+import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PINK;
 
 /**
  * Intro scene of the Pac-Man game.
@@ -315,7 +317,7 @@ public class PacManIntroScene extends GameScene2D {
                 drawGuys(renderer, flutter(timer.currentTick()));
                 if (context.game().variant() == GameVariant.PACMAN) {
                     var r = (PacManArcadeGameWorldRenderer) renderer;
-                    r.drawMidwayCopyright(g, t(4), t(32), context.assets().color("palette.pink"), sceneFont(8));
+                    r.drawMidwayCopyright(g, t(4), t(32), PALETTE_PINK, sceneFont(8));
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
@@ -323,7 +325,7 @@ public class PacManIntroScene extends GameScene2D {
                 drawGuys(renderer, 0);
                 if (context.game().variant() == GameVariant.PACMAN) {
                     var r = (PacManArcadeGameWorldRenderer) renderer;
-                    r.drawMidwayCopyright(g, t(4), t(32), context.assets().color("palette.pink"), sceneFont(8));
+                    r.drawMidwayCopyright(g, t(4), t(32), PALETTE_PINK, sceneFont(8));
                 }
             }
             default -> {
@@ -341,7 +343,7 @@ public class PacManIntroScene extends GameScene2D {
 
         int tx = data.leftTileX;
         if (data.titleVisible) {
-            renderer.drawText(g, "CHARACTER / NICKNAME", context.assets().color("palette.pale"), font, t(tx + 3), t(6));
+            renderer.drawText(g, "CHARACTER / NICKNAME", PALETTE_PALE, font, t(tx + 3), t(6));
         }
         for (byte id = 0; id < 4; ++id) {
             if (!data.ghostImageVisible[id]) {
@@ -377,7 +379,7 @@ public class PacManIntroScene extends GameScene2D {
     }
 
     private void drawPoints(GameWorldRenderer renderer) {
-        var color = context.assets().color("palette.pale");
+        var color = PALETTE_PALE;
         var font8 = sceneFont(8);
         var font6 = sceneFont(6);
         int tx = data.leftTileX + 6;

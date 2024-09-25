@@ -22,6 +22,7 @@ import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameWorldRenderer;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
 
 /**
  * Intermission scene 1: "They meet".
@@ -269,7 +270,7 @@ public class MsPacManCutScene1 extends GameScene2D {
         var msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) renderer;
         msPacManGameWorldRenderer.drawClapperBoard(g,
             context.assets().font("font.arcade", scaled(8)),
-            context.assets().color("palette.pale"),
+            PALETTE_PALE,
             clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(g, msPac);
         renderer.drawAnimatedEntity(g, pacMan);

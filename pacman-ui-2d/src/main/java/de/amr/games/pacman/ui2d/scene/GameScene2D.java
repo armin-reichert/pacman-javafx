@@ -16,6 +16,7 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
 
 /**
  * Base class of all 2D scenes.
@@ -68,7 +69,7 @@ public abstract class GameScene2D implements GameScene {
         renderer.backgroundColorProperty().set(backgroundColorPy.get());
         clearCanvas();
         if (context.isScoreVisible()) {
-            Color scoreColor = context.assets().color("palette.pale");
+            Color scoreColor = PALETTE_PALE;
             Font scoreFont = sceneFont(TS);
             renderer.drawScore(g, context.game().score(), "SCORE", t(1), t(1), scoreFont, scoreColor);
             renderer.drawScore(g, context.game().highScore(), "HIGH SCORE", t(14), t(1), scoreFont, scoreColor);
@@ -86,7 +87,7 @@ public abstract class GameScene2D implements GameScene {
             Vector2i worldSize = context.worldSize();
             renderer.drawText(g,
                 "CREDIT %2d".formatted(context.game().credit()),
-                context.assets().color("palette.pale"),
+                PALETTE_PALE,
                 sceneFont(8),
                 t(2), t(worldSize.y()) - 1);
         }

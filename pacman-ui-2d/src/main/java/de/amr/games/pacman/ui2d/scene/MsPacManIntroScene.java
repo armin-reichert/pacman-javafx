@@ -21,10 +21,10 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameWorldRenderer;
-import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -33,6 +33,7 @@ import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
+import static de.amr.games.pacman.ui2d.GameAssets2D.*;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -266,24 +267,24 @@ public class MsPacManIntroScene extends GameScene2D {
         Font font8 = sceneFont(8); // depends on current scaling!
         BitSet marqueeState = computeMarqueeState(data.marqueeTimer.currentTick());
         drawMarquee(marqueeState);
-        renderer.drawText(g, "\"MS PAC-MAN\"", assets.color("palette.orange"), font8, data.titlePosition.x(), data.titlePosition.y());
+        renderer.drawText(g, "\"MS PAC-MAN\"", PALETTE_ORANGE, font8, data.titlePosition.x(), data.titlePosition.y());
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
             if (data.ghostIndex == GameModel.RED_GHOST) {
-                renderer.drawText(g, "WITH", assets.color("palette.pale"), font8, data.titlePosition.x(), data.topY + t(3));
+                renderer.drawText(g, "WITH", PALETTE_PALE, font8, data.titlePosition.x(), data.topY + t(3));
             }
             String ghostName = data.ghosts[data.ghostIndex].name().toUpperCase();
             Color color = switch (data.ghostIndex) {
-                case GameModel.RED_GHOST -> assets.color("palette.red");
-                case GameModel.PINK_GHOST -> assets.color("palette.pink");
-                case GameModel.CYAN_GHOST -> assets.color("palette.cyan");
-                case GameModel.ORANGE_GHOST -> assets.color("palette.orange");
+                case GameModel.RED_GHOST -> PALETTE_RED;
+                case GameModel.PINK_GHOST -> PALETTE_PINK;
+                case GameModel.CYAN_GHOST -> PALETTE_CYAN;
+                case GameModel.ORANGE_GHOST -> PALETTE_ORANGE;
                 default -> throw new IllegalStateException("Illegal ghost index: " + data.ghostIndex);
             };
             double dx = ghostName.length() < 4 ? t(1) : 0;
             renderer.drawText(g, ghostName, color, font8, data.titlePosition.x() + t(3) + dx, data.topY + t(6));
         } else if (sceneController.state() == SceneState.MS_PACMAN_MARCHING_IN || sceneController.state() == SceneState.READY_TO_PLAY) {
-            renderer.drawText(g, "STARRING", assets.color("palette.pale"), font8, data.titlePosition.x(), data.topY + t(3));
-            renderer.drawText(g, "MS PAC-MAN", assets.color("palette.yellow"), font8, data.titlePosition.x(), data.topY + t(6));
+            renderer.drawText(g, "STARRING", PALETTE_PALE, font8, data.titlePosition.x(), data.topY + t(3));
+            renderer.drawText(g, "MS PAC-MAN", PALETTE_YELLOW, font8, data.titlePosition.x(), data.topY + t(6));
         }
         for (Ghost ghost : data.ghosts) {
             renderer.drawAnimatedEntity(g, ghost);
@@ -294,7 +295,7 @@ public class MsPacManIntroScene extends GameScene2D {
             MsPacManGameWorldRenderer msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) renderer;
             msPacManGameWorldRenderer.drawMsPacManMidwayCopyright(g,
                 context.assets().get("ms_pacman.logo.midway"),
-                t(6), t(28), context.assets().color("palette.red"), sceneFont(TS));
+                t(6), t(28), PALETTE_RED, sceneFont(TS));
         }
     }
 
@@ -316,7 +317,7 @@ public class MsPacManIntroScene extends GameScene2D {
     }
 
     private void drawBulb(double x, double y, boolean on) {
-        g.setFill(on ? context.assets().color("palette.pale") : context.assets().color("palette.red"));
+        g.setFill(on ? PALETTE_PALE : PALETTE_RED);
         g.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 

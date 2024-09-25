@@ -32,6 +32,7 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.border;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
@@ -66,7 +67,7 @@ public class GamePage extends StackPane implements Page {
         canvasLayer.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
 
         DecoratedCanvas decoratedCanvas = canvasLayer.decoratedCanvas();
-        decoratedCanvas.setBorderColor(assets.color("palette.pale"));
+        decoratedCanvas.setBorderColor(PALETTE_PALE);
         decoratedCanvas.decoratedPy.bind(PY_CANVAS_DECORATED);
         decoratedCanvas.decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
 

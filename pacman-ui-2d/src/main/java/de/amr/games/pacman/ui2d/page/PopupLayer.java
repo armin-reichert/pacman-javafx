@@ -22,6 +22,8 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
+import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_BLUE;
+import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_RED;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_DEBUG_INFO;
 import static de.amr.games.pacman.ui2d.util.Ufx.opaqueColor;
 
@@ -100,9 +102,7 @@ public class PopupLayer extends Pane {
     }
 
     public void showHelp(double scaling) {
-        var bgColor = context.game().variant() == GameVariant.MS_PACMAN
-            ? context.assets().color("palette.red")
-            : context.assets().color("palette.blue");
+        var bgColor = context.game().variant() == GameVariant.MS_PACMAN ? PALETTE_RED : PALETTE_BLUE;
         var font = context.assets().font("font.monospaced", Math.max(6, 14 * scaling));
         var helpPane = HelpInfo.build(context).createPane(opaqueColor(bgColor, 0.8), font);
         helpPopUp.setTranslateX(10 * scaling);

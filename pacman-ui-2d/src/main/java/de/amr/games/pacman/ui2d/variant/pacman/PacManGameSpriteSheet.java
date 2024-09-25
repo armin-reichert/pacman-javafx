@@ -5,15 +5,15 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.variant.pacman;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.RectArea;
 import javafx.scene.image.Image;
 
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static de.amr.games.pacman.ui2d.rendering.RectArea.rect;
 import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.rectArray;
+import static de.amr.games.pacman.ui2d.rendering.RectArea.rect;
 
 /**
  * @author Armin Reichert

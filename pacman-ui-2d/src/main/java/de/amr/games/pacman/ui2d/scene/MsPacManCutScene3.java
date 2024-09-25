@@ -12,14 +12,15 @@ import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameWorldRenderer;
-import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
 
 /**
  * Intermission scene 3: "Junior".
@@ -188,7 +189,7 @@ public class MsPacManCutScene3 extends GameScene2D {
         var msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) renderer;
         msPacManGameWorldRenderer.drawClapperBoard(g,
             context.assets().font("font.arcade", scaled(8)),
-            context.assets().color("palette.pale"),
+            PALETTE_PALE,
             clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(g, msPacMan);
         renderer.drawAnimatedEntity(g, pacMan);
