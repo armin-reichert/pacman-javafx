@@ -99,7 +99,7 @@ public class GameLevel3D {
         final AssetStorage assets = context.assets();
 
         pac3D = Factory3D.createPac3D(gameVariant, assets, context.game().pac(), PAC_SIZE);
-        ghosts3D = context.game().ghosts().map(ghost -> Factory3D.createGhost3D(gameVariant, assets, ghost, GHOST_SIZE)).toList();
+        ghosts3D = context.game().ghosts().map(ghost -> Factory3D.createMutableGhost3D(gameVariant, assets, ghost, GHOST_SIZE)).toList();
         livesCounter3D = Factory3D.createLivesCounter3D(gameVariant, assets, LIVES_COUNTER_MAX, LIVE_SHAPE_SIZE, context.game().hasCredit());
         livesCounter3D.livesCountPy.bind(livesCounterPy);
         message3D = Factory3D.createMessage3D(assets);
