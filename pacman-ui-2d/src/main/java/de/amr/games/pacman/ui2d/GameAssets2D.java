@@ -105,9 +105,9 @@ public class GameAssets2D extends AssetStorage {
         // Audio played by MediaPlayer
         assets.store("ms_pacman.audio.game_ready",      rm.url("sound/mspacman/Start.mp3"));
         assets.store("ms_pacman.audio.game_over",       rm.url("sound/common/game-over.mp3"));
-        assets.store("ms_pacman.audio.intermission.1",  rm.url("sound/mspacman/Act1TheyMeet.mp3"));
-        assets.store("ms_pacman.audio.intermission.2",  rm.url("sound/mspacman/Act2TheChase.mp3"));
-        assets.store("ms_pacman.audio.intermission.3",  rm.url("sound/mspacman/Act3Junior.mp3"));
+        assets.store("ms_pacman.audio.intermission.1",  rm.url("sound/mspacman/Act_1_They_Meet.mp3"));
+        assets.store("ms_pacman.audio.intermission.2",  rm.url("sound/mspacman/Act_2_The_Chase.mp3"));
+        assets.store("ms_pacman.audio.intermission.3",  rm.url("sound/mspacman/Act_3_Junior.mp3"));
         assets.store("ms_pacman.audio.level_complete",  rm.url("sound/common/level-complete.mp3"));
         assets.store("ms_pacman.audio.pacman_death",    rm.url("sound/mspacman/Died.mp3"));
         assets.store("ms_pacman.audio.pacman_munch",    rm.url("sound/mspacman/Pill.wav"));
