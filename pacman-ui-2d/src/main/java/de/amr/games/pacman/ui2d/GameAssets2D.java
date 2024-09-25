@@ -131,22 +131,23 @@ public class GameAssets2D extends AssetStorage {
         assets.store("tengen.logo.midway",              rm.loadImage("graphics/mspacman/midway_logo.png"));
 
         // Clips
-        assets.store("tengen.audio.bonus_eaten",        rm.loadAudioClip("sound/mspacman/Fruit.mp3"));
-        assets.store("tengen.audio.credit",             rm.loadAudioClip("sound/mspacman/Credit.mp3"));
-        assets.store("tengen.audio.extra_life",         rm.loadAudioClip("sound/mspacman/ExtraLife.mp3"));
-        assets.store("tengen.audio.ghost_eaten",        rm.loadAudioClip("sound/mspacman/Ghost.mp3"));
+        assets.store("tengen.audio.bonus_eaten",        rm.loadAudioClip("sound/tengen/Fruit.mp3"));
+        assets.store("tengen.audio.credit",             rm.loadAudioClip("sound/mspacman/Credit.mp3")); //TODO: sound?
+        assets.store("tengen.audio.extra_life",         rm.loadAudioClip("sound/tengen/Extra_Life.wav"));
+        assets.store("tengen.audio.ghost_eaten",        rm.loadAudioClip("sound/tengen/Ghost_Eaten.mp3"));
+
         assets.store("tengen.audio.sweep",              rm.loadAudioClip("sound/common/sweep.mp3"));
 
         // Audio played by MediaPlayer
-        assets.store("tengen.audio.game_ready",         rm.url("sound/mspacman/Start.mp3"));
-        assets.store("tengen.audio.game_over",          rm.url("sound/common/game-over.mp3"));
-        assets.store("tengen.audio.intermission.1",     rm.url("sound/mspacman/Act1TheyMeet.mp3"));
-        assets.store("tengen.audio.intermission.2",     rm.url("sound/mspacman/Act2TheChase.mp3"));
-        assets.store("tengen.audio.intermission.3",     rm.url("sound/mspacman/Act3Junior.mp3"));
-        assets.store("tengen.audio.level_complete",     rm.url("sound/common/level-complete.mp3"));
-        assets.store("tengen.audio.pacman_death",       rm.url("sound/mspacman/Died.mp3"));
+        assets.store("tengen.audio.game_ready",         rm.url("sound/mspacman/Start.mp3")); //TODO sound?
+        assets.store("tengen.audio.game_over",          rm.url("sound/common/game-over.mp3")); //TODO sound?
+        assets.store("tengen.audio.intermission.1",     rm.url("sound/tengen/Act_1_They_Meet.mp3"));
+        assets.store("tengen.audio.intermission.2",     rm.url("sound/tengen/Act_2_The_Chase.mp3"));
+        assets.store("tengen.audio.intermission.3",     rm.url("sound/tengen/Act_3_Junior.mp3"));
+        assets.store("tengen.audio.level_complete",     rm.url("sound/common/level-complete.mp3")); //TODO sound?
+        assets.store("tengen.audio.pacman_death",       rm.url("sound/tengen/Life_Lost.mp3"));
         assets.store("tengen.audio.pacman_munch",       rm.url("sound/mspacman/Pill.wav"));
-        assets.store("tengen.audio.pacman_power",       rm.url("sound/mspacman/ScaredGhost.mp3"));
+        assets.store("tengen.audio.pacman_power",       rm.url("sound/tengen/Power_Pellet.mp3"));
         assets.store("tengen.audio.siren.1",            rm.url("sound/mspacman/GhostNoise1.wav"));
         assets.store("tengen.audio.siren.2",            rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
         assets.store("tengen.audio.siren.3",            rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
