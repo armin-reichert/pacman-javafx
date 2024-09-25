@@ -25,20 +25,20 @@ public class TengenMsPacManGamePacAnimations extends SpriteAnimationCollection {
         checkNotNull(spriteSheet);
 
         var munching = SpriteAnimation
-            .use(spriteSheet)
+            .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man munching")
             .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT))
             .loop();
 
         var dying = SpriteAnimation
-            .use(spriteSheet)
+            .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man dying")
             .sprites(spriteSheet.pacDyingSprites())
             .frameTicks(8)
             .end();
 
         var husbandMunching = SpriteAnimation
-            .use(spriteSheet)
+            .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man's husband munching")
             .sprites(spriteSheet.pacManMunchingSprites(Direction.LEFT))
             .frameTicks(2)

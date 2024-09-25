@@ -57,7 +57,7 @@ public class SpriteAnimation {
         }
     }
 
-    public static Builder use(GameSpriteSheet spriteSheet) {
+    public static Builder spriteSheet(GameSpriteSheet spriteSheet) {
         return new Builder(spriteSheet);
     }
 
@@ -73,7 +73,7 @@ public class SpriteAnimation {
         this.spriteSheet = spriteSheet;
     }
 
-    public GameSpriteSheet use() {
+    public GameSpriteSheet spriteSheet() {
         return spriteSheet;
     }
 

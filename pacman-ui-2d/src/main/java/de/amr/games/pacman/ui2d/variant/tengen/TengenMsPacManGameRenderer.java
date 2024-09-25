@@ -171,7 +171,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
 
     @Override
     public void drawAnimatedEntity(GraphicsContext g, AnimatedEntity guy) {
-        if (guy.entity() instanceof Ghost || guy.entity() instanceof MovingBonus) {
+        if (guy.entity() instanceof MovingBonus) {
             rendererMsPacMan.drawAnimatedEntity(g, guy);
         } else {
             GameWorldRenderer.super.drawAnimatedEntity(g, guy);

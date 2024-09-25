@@ -46,7 +46,7 @@ public class SpriteAnimationCollection implements Animations {
         if (currentAnimation == null) {
             return null;
         }
-        RectArea[] newSelection = selectedSprites(currentAnimation().use(), animatedEntity.entity());
+        RectArea[] newSelection = selectedSprites(currentAnimation().spriteSheet(), animatedEntity.entity());
         if (newSelection != null) {
             currentAnimation.setSprites(newSelection);
         }

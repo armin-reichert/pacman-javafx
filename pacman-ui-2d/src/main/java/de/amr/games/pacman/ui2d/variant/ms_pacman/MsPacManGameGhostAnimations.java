@@ -25,34 +25,34 @@ public class MsPacManGameGhostAnimations extends SpriteAnimationCollection {
         checkNotNull(spriteSheet);
 
         var normal = SpriteAnimation
-            .use(spriteSheet)
+            .spriteSheet(spriteSheet)
             .info("Normal ghost")
             .sprites(spriteSheet.ghostNormalSprites(ghostID, Direction.LEFT))
             .frameTicks(8)
             .loop();
 
         var frightened = SpriteAnimation
-            .use(spriteSheet)
+            .spriteSheet(spriteSheet)
             .info("Frightened ghost")
             .sprites(spriteSheet.ghostFrightenedSprites())
             .frameTicks(8)
             .loop();
 
         var flashing = SpriteAnimation
-            .use(spriteSheet)
+            .spriteSheet(spriteSheet)
             .info("Flashing ghost")
             .sprites(spriteSheet.ghostFlashingSprites())
             .frameTicks(7)
             .loop();
 
         var eyes = SpriteAnimation
-            .use(spriteSheet)
+            .spriteSheet(spriteSheet)
             .info("Eyes-only ghost")
             .sprites(spriteSheet.ghostEyesSprites(Direction.LEFT))
             .end();
 
         var number = SpriteAnimation
-            .use(spriteSheet)
+            .spriteSheet(spriteSheet)
             .info("Number for dead ghost")
             .sprites(spriteSheet.ghostNumberSprites())
             .end();

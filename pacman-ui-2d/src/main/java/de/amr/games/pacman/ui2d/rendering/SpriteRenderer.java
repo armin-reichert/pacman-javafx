@@ -129,7 +129,7 @@ public interface SpriteRenderer {
     default void drawAnimatedEntity(GraphicsContext g, AnimatedEntity guy) {
         if (guy.isVisible() && guy.animations().isPresent()) {
             if (guy.animations().get() instanceof SpriteAnimationCollection spriteAnimations) {
-                GameSpriteSheet spriteSheet = spriteAnimations.currentAnimation().use();
+                GameSpriteSheet spriteSheet = spriteAnimations.currentAnimation().spriteSheet();
                 RectArea sprite = spriteAnimations.currentSprite(guy);
                 drawEntitySprite(g, guy.entity(), spriteSheet, sprite);
             }
