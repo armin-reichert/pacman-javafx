@@ -25,8 +25,8 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
 
     private static final List<Direction> ORDER = List.of(Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
-    private static final RectArea FULL_MAZE_SPRITE = rect(0, 0, 224, 248);
-    private static final RectArea EMPTY_MAZE_SPRITE = rect(228, 0, 224, 248);
+    static final RectArea FULL_MAZE_SPRITE = rect(0, 0, 224, 248);
+    static final RectArea EMPTY_MAZE_SPRITE = rect(228, 0, 224, 248);
 
     /**
      * @param tileX    grid column (in tile coordinates)
@@ -150,13 +150,6 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
 
     public PacManGameSpriteSheet(Image source) {
         this.source = source;
-    }
-
-    RectArea getFullMazeSprite() {
-        return FULL_MAZE_SPRITE;
-    }
-    RectArea getEmptyMazeSprite() {
-        return EMPTY_MAZE_SPRITE;
     }
 
     @Override

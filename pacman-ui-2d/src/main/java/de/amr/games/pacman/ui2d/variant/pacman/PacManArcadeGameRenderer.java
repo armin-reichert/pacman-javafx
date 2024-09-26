@@ -64,7 +64,6 @@ public class PacManArcadeGameRenderer implements GameWorldRenderer {
 
     @Override
     public void drawWorld(GraphicsContext g, GameSpriteSheet spriteSheet, GameContext context, GameWorld world) {
-        PacManGameSpriteSheet pss = (PacManGameSpriteSheet) spriteSheet;
         double originX = 0, originY = t(3);
         double scaling = scaling();
         g.save();
@@ -73,10 +72,10 @@ public class PacManArcadeGameRenderer implements GameWorldRenderer {
             if (blinkingOn) {
                 g.drawImage(flashingMazeImage, originX, originY);
             } else {
-                drawSpriteUnscaled(g, pss, pss.getEmptyMazeSprite(), originX, originY);
+                drawSpriteUnscaled(g, spriteSheet, PacManGameSpriteSheet.EMPTY_MAZE_SPRITE, originX, originY);
             }
         } else {
-            drawSpriteUnscaled(g, pss, pss.getFullMazeSprite(), originX, originY);
+            drawSpriteUnscaled(g, spriteSheet, PacManGameSpriteSheet.FULL_MAZE_SPRITE, originX, originY);
             overPaintEatenPellets(g, world);
             overPaintEnergizers(g, world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
         }
