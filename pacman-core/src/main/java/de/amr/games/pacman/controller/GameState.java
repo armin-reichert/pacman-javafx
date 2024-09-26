@@ -329,7 +329,7 @@ public enum GameState implements FsmState<GameModel> {
             if (game.level().isEmpty()) {
                 return;
             }
-            if (game.levelNumber() == lastLevelNumber) {
+            if (game.levelNumber() > lastLevelNumber) {
                 GameController.it().restart(GameState.BOOT);
                 return;
             }
