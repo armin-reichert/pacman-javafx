@@ -6,16 +6,17 @@ package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.Ufx;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -32,14 +33,14 @@ public class PictureInPictureView implements GameEventListener {
     public final DoubleProperty heightPy = new SimpleDoubleProperty(GameModel.ARCADE_MAP_SIZE_Y) {
         @Override
         protected void invalidated() {
-            resize();
+            updateScaling();
         }
     };
 
     private final DoubleProperty aspectPy = new SimpleDoubleProperty(0.77) {
         @Override
         protected void invalidated() {
-            resize();
+            updateScaling();
         }
     };
 
@@ -49,29 +50,23 @@ public class PictureInPictureView implements GameEventListener {
         @Override
         protected void invalidated() {
             if (get()) {
-                resize();
-            }
-        }
-    };
-
-    public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>() {
-        @Override
-        protected void invalidated() {
-            GameVariant newVariant = get();
-            if (newVariant != null) {
-                renderer = PacManGames2dUI.createRenderer(newVariant, context.assets());
+                updateScaling();
             }
         }
     };
 
     private final GameContext context;
-    private final HBox layout = new HBox();
+    private final HBox container = new HBox();
     private final PlayScene2D gameScene;
     private GameWorldRenderer renderer;
 
     public PictureInPictureView(GameContext context) {
         this.context = context;
-        gameVariantPy.bind(context.gameVariantProperty());
+        context.gameVariantProperty().addListener((py, ov, nv) -> {
+            if (nv != null) {
+                renderer = PacManGames2dUI.createRenderer(nv, context.assets());
+            }
+        });
 
         Canvas canvas = new Canvas();
         canvas.heightProperty().bind(heightPy);
@@ -88,7 +83,7 @@ public class PictureInPictureView implements GameEventListener {
         pane.backgroundProperty().bind(PY_CANVAS_COLOR.map(Ufx::coloredBackground));
         pane.setPadding(new Insets(5,10,5,10));
 
-        layout.getChildren().add(pane);
+        container.getChildren().add(pane);
     }
 
     public void setVisible(boolean visible) {
@@ -96,7 +91,7 @@ public class PictureInPictureView implements GameEventListener {
     }
 
     public Node node() {
-        return layout;
+        return container;
     }
 
     @Override
@@ -109,7 +104,7 @@ public class PictureInPictureView implements GameEventListener {
         }
     }
 
-    private void resize() {
+    private void updateScaling() {
         double referenceHeight = context.worldSizeOrDefault().y() * TS;
         gameScene.scalingPy.set(heightPy.get() / referenceHeight);
         gameScene.init(); //TODO check if this is necessary
