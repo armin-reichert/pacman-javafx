@@ -87,6 +87,12 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
         }
     }
 
+    private static final RectArea[] CLAPPERBOARD_SPRITES = { // open, middle, closed
+        rect(91, 361, 32, 32),
+        rect(53, 361, 32, 32),
+        rect(14, 361, 32, 32),
+    };
+
     private static final RectArea HEART_SPRITE = rect(162, 270, 18, 18);
     private static final RectArea BLUE_BAG_SPRITE = rect(239, 361, 12, 12);
     private static final RectArea JUNIOR_PAC_SPRITE = rect(165, 303, 10, 10);
@@ -165,7 +171,7 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     public RectArea[] clapperboardSprites() {
-        return NO_SPRITES;
+        return CLAPPERBOARD_SPRITES;
     }
 
     @Override
