@@ -20,6 +20,8 @@ import static de.amr.games.pacman.ui2d.rendering.RectArea.rect;
  */
 public class PacManGameSpriteSheet implements GameSpriteSheet {
 
+    public static final String MIDWAY_COPYRIGHT = "© 1980 MIDWAY MFG.CO.";
+
     private static final int RASTER_SIZE = 16;
     private static final int OFF_X = 456;
 

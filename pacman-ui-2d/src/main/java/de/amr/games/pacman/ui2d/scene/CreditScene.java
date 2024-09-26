@@ -6,11 +6,11 @@ package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.variant.pacman.PacManArcadeGameRenderer;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
+import static de.amr.games.pacman.ui2d.variant.pacman.PacManGameSpriteSheet.MIDWAY_COPYRIGHT;
 
 /**
  * @author Armin Reichert
@@ -69,8 +69,8 @@ public class CreditScene extends GameScene2D {
                 renderer.drawText(g, "1 PLAYER ONLY", PALETTE_CYAN, font8, t(8), t(21));
                 renderer.drawText(g, "BONUS PAC-MAN FOR 10000", PALETTE_ROSE, font8, t(1), t(25));
                 renderer.drawText(g, "PTS", PALETTE_ROSE, font6, t(25), t(25));
-                var pacManGameRenderer = (PacManArcadeGameRenderer) renderer;
-                pacManGameRenderer.drawMidwayCopyright(g, t(4), t(29), PALETTE_PINK, sceneFont(8));
+                renderer.drawText(g, MIDWAY_COPYRIGHT, PALETTE_PINK, sceneFont(8),  t(4), t(29));
+
             }
             case PACMAN_XXL -> {
                 renderer.drawText(g, "PUSH START BUTTON", PALETTE_ORANGE, font8, t(6), t(17));

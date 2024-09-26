@@ -19,7 +19,6 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.variant.pacman.PacManArcadeGameRenderer;
 import de.amr.games.pacman.ui2d.variant.pacman.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.variant.pacman.PacManGamePacAnimations;
 import javafx.scene.paint.Color;
@@ -32,6 +31,7 @@ import static de.amr.games.pacman.model.actors.GhostState.EATEN;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
 import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PINK;
+import static de.amr.games.pacman.ui2d.variant.pacman.PacManGameSpriteSheet.MIDWAY_COPYRIGHT;
 
 /**
  * Intro scene of the Pac-Man game.
@@ -313,16 +313,14 @@ public class PacManIntroScene extends GameScene2D {
                 }
                 drawGuys(renderer, flutter(timer.currentTick()));
                 if (context.game().variant() == GameVariant.PACMAN) {
-                    var r = (PacManArcadeGameRenderer) renderer;
-                    r.drawMidwayCopyright(g, t(4), t(32), PALETTE_PINK, sceneFont(8));
+                    renderer.drawText(g, MIDWAY_COPYRIGHT, PALETTE_PINK, sceneFont(8),  t(4), t(32));
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints(renderer);
                 drawGuys(renderer, 0);
                 if (context.game().variant() == GameVariant.PACMAN) {
-                    var r = (PacManArcadeGameRenderer) renderer;
-                    r.drawMidwayCopyright(g, t(4), t(32), PALETTE_PINK, sceneFont(8));
+                    renderer.drawText(g, MIDWAY_COPYRIGHT, PALETTE_PINK, sceneFont(8),  t(4), t(32));
                 }
             }
             default -> {
