@@ -36,9 +36,7 @@ import de.amr.games.pacman.ui2d.variant.tengen.TengenMsPacManGameGhostAnimations
 import de.amr.games.pacman.ui2d.variant.tengen.TengenMsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.variant.tengen.TengenMsPacManGameRenderer;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -101,12 +99,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
         @Override
         protected void invalidated() {
-            Logger.info("Game variant changed to: {}", get());
             handleGameVariantChange(get());
         }
     };
-
-    public final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible");
 
     protected final Dimension2D initialSize;
     protected final AssetStorage assets = new AssetStorage();
@@ -120,6 +115,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected EditorPage editorPage;
     protected Page currentPage;
     protected GameWorldRenderer worldRenderer;
+    protected boolean scoreVisible;
 
     public PacManGames2dUI(Dimension2D initialSize) {
         this.initialSize = checkNotNull(initialSize);
@@ -443,12 +439,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public boolean isScoreVisible() {
-        return scoreVisiblePy.get();
+        return scoreVisible;
     }
 
     @Override
     public void setScoreVisible(boolean visible) {
-        scoreVisiblePy.set(visible);
+        scoreVisible = visible;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
