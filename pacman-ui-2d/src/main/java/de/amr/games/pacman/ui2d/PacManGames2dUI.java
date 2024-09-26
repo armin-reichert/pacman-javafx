@@ -103,7 +103,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         }
     };
 
-    protected final Dimension2D initialSize;
+    //protected final Dimension2D initialSize;
     protected final AssetStorage assets = new AssetStorage();
     protected Map<GameVariant, Map<GameSceneID, GameScene>> gameSceneMap;
     protected final FlashMessageView messageView = new FlashMessageView();
@@ -117,8 +117,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected GameWorldRenderer worldRenderer;
     protected boolean scoreVisible;
 
-    public PacManGames2dUI(Dimension2D initialSize) {
-        this.initialSize = checkNotNull(initialSize);
+    public PacManGames2dUI() {
         GameAssets2D.load(() -> PacManGames2dUI.class, assets);
         GameSounds.setAssets(assets);
     }
@@ -140,8 +139,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
      * @param stage primary stage (window)
      */
-    public void createAndStart(Stage stage) {
+    public void createAndStart(Stage stage, Dimension2D initialSize) {
         this.stage = checkNotNull(stage);
+        checkNotNull(initialSize);
 
         sceneRoot.getChildren().addAll(new Pane(), messageView, createMutedIcon());
         stage.setScene(createMainScene(initialSize));

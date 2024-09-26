@@ -12,7 +12,6 @@ import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
-import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.scene.shape.DrawMode;
 
@@ -34,8 +33,7 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
  */
 public class PacManGames3dUI extends PacManGames2dUI {
 
-    public PacManGames3dUI(Dimension2D initialSize) {
-        super(initialSize);
+    public PacManGames3dUI() {
         GameAssets2D.load(() -> PacManGames2dUI.class, assets);
         GameAssets3D.load(() -> PacManGames3dUI.class, assets);
         GameSounds.setAssets(assets);
@@ -62,7 +60,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
     @Override
     protected ObservableValue<String> stageTitleBinding() {
         return Bindings.createStringBinding(() -> {
-            // resource key is composed from game variant, paused state and display mode (2D, 3D)
+            // resource key is composed of game variant, paused state and display mode (2D, 3D)
             String gameVariantPart = "app.title." + assetPrefix(gameVariantPy.get());
             String pausedPart = clock.pausedPy.get() ? ".paused" : "";
             String displayMode = locText(PY_3D_ENABLED.get() ? "threeD" : "twoD");
