@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
+import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -31,8 +32,8 @@ public class GameAssets3D {
         assets.store("model3D.ghost",  new Model3D(rm.url("model3D/ghost.obj")));
         assets.store("model3D.pellet", new Model3D(rm.url("model3D/fruit.obj")));
 
-        assets.store("wallpaper.day",   rm.loadImage("graphics/sea-wallpaper.jpg"));
-        assets.store("wallpaper.night", rm.loadImage("graphics/sea-wallpaper-night.jpg"));
+        assets.store("wallpaper.day",   Ufx.wallpaperBackground(rm.loadImage("graphics/sea-wallpaper.jpg")));
+        assets.store("wallpaper.night", Ufx.wallpaperBackground(rm.loadImage("graphics/sea-wallpaper-night.jpg")));
 
         Map<String, PhongMaterial> texturesByName = new LinkedHashMap<>();
         Stream.of("Carpet", "Rubber", "Wood").forEach(name -> {

@@ -151,10 +151,10 @@ public class StartPage extends StackPane implements Page {
     }
 
     private void initPageForGameVariant(GameVariant variant) {
+        setBackground(context.assets().get("wallpaper.pacman"));
         if (variant != null && context != null) {
             switch (variant) {
                 case MS_PACMAN -> {
-                    setBackground(context.assets().get("wallpaper.background"));
                     msPacManFlyerIndex = selectFlyerPage(msPacManFlyerPages, 0);
                     setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
@@ -163,7 +163,6 @@ public class StartPage extends StackPane implements Page {
                     });
                 }
                 case MS_PACMAN_TENGEN -> {
-                    setBackground(context.assets().get("wallpaper.background"));
                     tengenFlyerIndex = selectFlyerPage(tengenFlyerPages, 0);
                     setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
@@ -172,7 +171,6 @@ public class StartPage extends StackPane implements Page {
                     });
                 }
                 case PACMAN -> {
-                    setBackground(context.assets().get("wallpaper.background"));
                     pacManFlyerIndex = selectFlyerPage(pacManFlyerPages, 0);
                     setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
@@ -181,7 +179,6 @@ public class StartPage extends StackPane implements Page {
                     });
                 }
                 case PACMAN_XXL -> {
-                    setBackground(coloredBackground(Color.BLACK));
                     Image xxlGameImage = context.assets().image("pacman_xxl.startpage.source");
                     var xxlGameBackground = new Background(new BackgroundImage(xxlGameImage,
                         BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,

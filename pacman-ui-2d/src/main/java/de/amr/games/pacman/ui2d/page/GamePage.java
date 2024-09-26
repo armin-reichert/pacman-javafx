@@ -12,7 +12,6 @@ import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
-import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.CanvasLayoutPane;
 import de.amr.games.pacman.ui2d.util.DecoratedCanvas;
 import de.amr.games.pacman.ui2d.util.Ufx;
@@ -60,9 +59,6 @@ public class GamePage extends StackPane implements Page {
         this.context = checkNotNull(context);
         this.parentScene = checkNotNull(parentScene);
 
-        AssetStorage assets = context.assets();
-
-        canvasLayer.setBackground(assets.background("wallpaper.background"));
         canvasLayer.setMinScaling(0.75);
         canvasLayer.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
 
@@ -82,10 +78,8 @@ public class GamePage extends StackPane implements Page {
 
         popupLayer = new PopupLayer(context, decoratedCanvas);
         popupLayer.setMouseTransparent(true);
-        popupLayer.configureSignature(canvasLayer,
-            assets.font("font.monospaced", 10),
-            Color.grayRgb(200),
-            context.locText("app.signature"));
+        popupLayer.configureSignature(canvasLayer, context.assets().font("font.monospaced", 10),
+            Color.grayRgb(200), context.locText("app.signature"));
 
         getChildren().addAll(canvasLayer, dashboardLayer, popupLayer);
 

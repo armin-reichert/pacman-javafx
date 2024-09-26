@@ -68,7 +68,7 @@ public class GameAssets2D extends AssetStorage {
         assets.store("startpage.button.color",          Color.WHITE);
         assets.store("startpage.button.font",           rm.loadFont("fonts/emulogic.ttf", 32));
 
-        assets.store("wallpaper.background",            Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
+        assets.store("wallpaper.pacman",            Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
         assets.store("wallpaper.color",                 Color.rgb(72, 78, 135));
 
         assets.store("font.arcade",                     rm.loadFont("fonts/emulogic.ttf", 8));

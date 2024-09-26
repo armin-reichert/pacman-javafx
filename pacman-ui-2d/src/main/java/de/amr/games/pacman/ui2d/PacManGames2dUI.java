@@ -49,6 +49,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -234,6 +235,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     protected Scene createMainScene(Dimension2D size) {
+        sceneRoot.setBackground(assets.get("wallpaper.pacman"));
         Scene mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, Keyboard::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, Keyboard::onKeyReleased);

@@ -38,13 +38,14 @@ public class GamePage3D extends GamePage {
         dashboardLayer.addEntry(3, context.locText("infobox.3D_settings.title"), new InfoBox3D());
         backgroundProperty().bind(Bindings.createObjectBinding(
             () -> {
+                if (!context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D)) {
+                    return context.assets().get("wallpaper.background");
+                }
                 if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
                     return coloredBackground(Color.rgb(150, 150, 200));
                 }
-                Image wallpaper = context.assets().get(PY_NIGHT_MODE.get()
-                    ? "wallpaper.night" : "wallpaper.day");
-                return wallpaperBackground(wallpaper);
-            }, PY_3D_DRAW_MODE, PY_NIGHT_MODE
+                return context.assets().get(PY_NIGHT_MODE.get() ? "wallpaper.night" : "wallpaper.day");
+            }, PY_3D_DRAW_MODE, PY_NIGHT_MODE, context.gameSceneProperty()
         ));
     }
 
