@@ -26,6 +26,7 @@ import java.util.Optional;
 public interface GameContext {
 
     // Game model and controller
+    ObjectProperty<GameVariant> gameVariantProperty();
     default GameController gameController() {
         return GameController.it();
     }

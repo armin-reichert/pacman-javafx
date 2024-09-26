@@ -415,6 +415,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
+    public ObjectProperty<GameVariant> gameVariantProperty() {
+        return gameVariantPy;
+    }
+
+    @Override
     public ObjectProperty<GameScene> gameSceneProperty() {
         return gameScenePy;
     }

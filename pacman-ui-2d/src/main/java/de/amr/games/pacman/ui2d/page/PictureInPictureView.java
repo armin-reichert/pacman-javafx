@@ -15,15 +15,11 @@ import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.Ufx;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.*;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.HBox;
-import org.tinylog.Logger;
 
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_CANVAS_COLOR;
 
@@ -57,6 +53,16 @@ public class PictureInPictureView implements GameEventListener {
         }
     };
 
+    public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>() {
+        @Override
+        protected void invalidated() {
+            GameVariant newVariant = get();
+            if (newVariant != null) {
+                renderer = PacManGames2dUI.createRenderer(newVariant, context.assets());
+            }
+        }
+    };
+
     private final GameContext context;
     private final HBox layout = new HBox();
     private final PlayScene2D gameScene;
@@ -64,6 +70,7 @@ public class PictureInPictureView implements GameEventListener {
 
     public PictureInPictureView(GameContext context) {
         this.context = context;
+        gameVariantPy.bind(context.gameVariantProperty());
 
         Canvas canvas = new Canvas();
         canvas.heightProperty().bind(heightPy);
@@ -72,6 +79,7 @@ public class PictureInPictureView implements GameEventListener {
         gameScene = new PlayScene2D();
         gameScene.setGameContext(context);
         gameScene.setCanvas(canvas);
+        gameScene.backgroundColorPy.bind(PY_CANVAS_COLOR);
 
         HBox pane = new HBox(canvas);
         pane.opacityProperty().bind(opacityPy);
@@ -90,16 +98,11 @@ public class PictureInPictureView implements GameEventListener {
         return layout;
     }
 
-    public void setGameVariant(GameVariant variant) {
-        gameScene.backgroundColorPy.bind(PY_CANVAS_COLOR);
-    }
-
     @Override
     public void onLevelCreated(GameEvent e) {
         if (context.game().world() != null) {
             TileMap terrain = context.game().world().map().terrain();
             aspectPy.set((double) terrain.numCols() / terrain.numRows());
-            renderer = PacManGames2dUI.createRenderer(context.game().variant(), context.assets());
             int mapNumber = e.game.mapNumberByLevelNumber(e.game.levelNumber());
             renderer.selectMap(e.game.world().map(), mapNumber, context.spriteSheet());
         }
@@ -110,9 +113,8 @@ public class PictureInPictureView implements GameEventListener {
             ? context.game().world().map().terrain().numRows() * Globals.TS
             : GameModel.ARCADE_MAP_SIZE_Y;
         double scaling = heightPy.get() / referenceHeight;
-        Logger.debug("PiP scaling: {}", scaling);
         gameScene.scalingPy.set(scaling);
-        gameScene.init();
+        gameScene.init(); //TODO check this
     }
 
     public void draw() {
