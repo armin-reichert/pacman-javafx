@@ -118,13 +118,12 @@ public interface GameWorldRenderer extends SpriteRenderer {
         g.fillText(text, scaled(x), scaled(y));
     }
 
-    default void drawLivesCounter(GraphicsContext g, GameSpriteSheet spriteSheet, int numLivesDisplayed, int tileY) {
+    default void drawLivesCounter(GraphicsContext g, GameSpriteSheet spriteSheet, int numLivesDisplayed, int y) {
         if (numLivesDisplayed == 0) {
             return;
         }
         int maxSymbols = 5;
         var x = TS * 2;
-        var y = TS * tileY;
         for (int i = 0; i < Math.min(numLivesDisplayed, maxSymbols); ++i) {
             drawSpriteScaled(g, spriteSheet, spriteSheet.livesCounterSprite(), x + TS * (2 * i), y);
         }

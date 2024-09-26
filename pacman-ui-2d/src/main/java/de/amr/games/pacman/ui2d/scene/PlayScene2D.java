@@ -118,7 +118,8 @@ public class PlayScene2D extends GameScene2D {
             if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
                 numLivesDisplayed += 1;
             }
-            renderer.drawLivesCounter(g, context.spriteSheet(), numLivesDisplayed, context.game().world().map().terrain().numRows() - 2);
+            renderer.drawLivesCounter(g, context.spriteSheet(), numLivesDisplayed,
+                    (context.worldSizeOrDefault().y() - 2) * TS - 1);
         }
     }
 

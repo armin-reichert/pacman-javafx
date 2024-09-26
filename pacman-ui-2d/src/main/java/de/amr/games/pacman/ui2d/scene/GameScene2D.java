@@ -89,7 +89,7 @@ public abstract class GameScene2D implements GameScene {
                 "CREDIT %2d".formatted(context.game().credit()),
                 PALETTE_PALE,
                 sceneFont(8),
-                t(2), t(worldSize.y()) - 1);
+                t(2), t(worldSize.y()) - 2);
         }
     }
 
