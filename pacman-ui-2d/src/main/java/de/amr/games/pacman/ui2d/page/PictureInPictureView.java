@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Globals;
-import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -21,6 +21,7 @@ import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.HBox;
 
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_CANVAS_COLOR;
 
 /**
@@ -31,14 +32,14 @@ public class PictureInPictureView implements GameEventListener {
     public final DoubleProperty heightPy = new SimpleDoubleProperty(GameModel.ARCADE_MAP_SIZE_Y) {
         @Override
         protected void invalidated() {
-            rescale();
+            resize();
         }
     };
 
     private final DoubleProperty aspectPy = new SimpleDoubleProperty(0.77) {
         @Override
         protected void invalidated() {
-            rescale();
+            resize();
         }
     };
 
@@ -48,7 +49,7 @@ public class PictureInPictureView implements GameEventListener {
         @Override
         protected void invalidated() {
             if (get()) {
-                rescale();
+                resize();
             }
         }
     };
@@ -100,21 +101,18 @@ public class PictureInPictureView implements GameEventListener {
 
     @Override
     public void onLevelCreated(GameEvent e) {
+        Vector2i worldSize = context.worldSizeOrDefault();
+        aspectPy.set((double) worldSize.x() / worldSize.y());
         if (context.game().world() != null) {
-            TileMap terrain = context.game().world().map().terrain();
-            aspectPy.set((double) terrain.numCols() / terrain.numRows());
-            int mapNumber = e.game.mapNumberByLevelNumber(e.game.levelNumber());
-            renderer.selectMap(e.game.world().map(), mapNumber, context.spriteSheet());
+            int mapNumber = context.game().mapNumberByLevelNumber(context.game().levelNumber());
+            renderer.selectMap(context.game().world().map(), mapNumber, context.spriteSheet());
         }
     }
 
-    private void rescale() {
-        double referenceHeight = context.game().world() != null
-            ? context.game().world().map().terrain().numRows() * Globals.TS
-            : GameModel.ARCADE_MAP_SIZE_Y;
-        double scaling = heightPy.get() / referenceHeight;
-        gameScene.scalingPy.set(scaling);
-        gameScene.init(); //TODO check this
+    private void resize() {
+        double referenceHeight = context.worldSizeOrDefault().y() * TS;
+        gameScene.scalingPy.set(heightPy.get() / referenceHeight);
+        gameScene.init(); //TODO check if this is necessary
     }
 
     public void draw() {

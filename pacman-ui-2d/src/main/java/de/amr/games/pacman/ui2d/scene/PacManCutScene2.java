@@ -119,7 +119,7 @@ public class PacManCutScene2 extends GameScene2D {
 
     @Override
     protected void drawDebugInfo(GameWorldRenderer renderer) {
-        Vector2i worldSize = context.worldSize();
+        Vector2i worldSize = context.worldSizeOrDefault();
         renderer.drawTileGrid(g, worldSize.x(), worldSize.y());
         var text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
         renderer.drawText(g, text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));

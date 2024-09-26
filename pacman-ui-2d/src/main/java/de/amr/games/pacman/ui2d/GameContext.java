@@ -42,7 +42,7 @@ public interface GameContext {
     /**
      * @return size (in tiles) of current world or size of Arcade world if no world currently exists
      */
-    default Vector2i worldSize() {
+    default Vector2i worldSizeOrDefault() {
         boolean worldExists = game().world() != null;
         return new Vector2i(
             worldExists ? game().world().map().terrain().numCols() : GameModel.ARCADE_MAP_TILES_X,

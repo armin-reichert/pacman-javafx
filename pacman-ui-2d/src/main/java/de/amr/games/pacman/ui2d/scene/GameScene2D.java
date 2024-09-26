@@ -84,7 +84,7 @@ public abstract class GameScene2D implements GameScene {
 
     protected void drawCredit(GameWorldRenderer renderer) {
         if (isCreditVisible()) {
-            Vector2i worldSize = context.worldSize();
+            Vector2i worldSize = context.worldSizeOrDefault();
             renderer.drawText(g,
                 "CREDIT %2d".formatted(context.game().credit()),
                 PALETTE_PALE,
@@ -94,7 +94,7 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected void drawLevelCounter(GameWorldRenderer renderer) {
-        Vector2i worldSize = context.worldSize();
+        Vector2i worldSize = context.worldSizeOrDefault();
         double x = t(worldSize.x() - 4), y = t(worldSize.y() - 2);
         renderer.drawLevelCounter(g, context.spriteSheet(), context.game().levelCounter(), x, y);
     }
@@ -116,7 +116,7 @@ public abstract class GameScene2D implements GameScene {
      * Draws additional scene info, e.g. tile structure or debug info.
      */
     protected void drawDebugInfo(GameWorldRenderer renderer) {
-        Vector2i worldSize = context.worldSize();
+        Vector2i worldSize = context.worldSizeOrDefault();
         renderer.drawTileGrid(g, worldSize.x(), worldSize.y());
     }
 }
