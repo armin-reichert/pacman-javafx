@@ -96,6 +96,7 @@ public class PacManGames3dApp extends Application {
     @Override
     public void start(Stage stage) {
         ui = new PacManGames3dUI();
+        ui.loadAssets();
         ui.setGameScenes(createGameScenes());
         ui.createAndStart(stage, initialSize());
 

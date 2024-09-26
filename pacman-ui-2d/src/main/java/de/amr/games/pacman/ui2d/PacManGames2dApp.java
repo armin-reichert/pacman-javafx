@@ -91,6 +91,7 @@ public class PacManGames2dApp extends Application {
     @Override
     public void start(Stage stage) {
         ui = new PacManGames2dUI();
+        ui.loadAssets();
         ui.setGameScenes(createGameScenes());
         ui.createAndStart(stage, initialSize());
 

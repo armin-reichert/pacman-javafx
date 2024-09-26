@@ -33,7 +33,7 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
  */
 public class PacManGames3dUI extends PacManGames2dUI {
 
-    public PacManGames3dUI() {
+    public void loadAssets() {
         GameAssets2D.load(() -> PacManGames2dUI.class, assets);
         GameAssets3D.load(() -> PacManGames3dUI.class, assets);
         GameSounds.setAssets(assets);

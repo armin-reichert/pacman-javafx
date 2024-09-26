@@ -117,7 +117,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected GameWorldRenderer worldRenderer;
     protected boolean scoreVisible;
 
-    public PacManGames2dUI() {
+    public void loadAssets() {
         GameAssets2D.load(() -> PacManGames2dUI.class, assets);
         GameSounds.setAssets(assets);
     }
