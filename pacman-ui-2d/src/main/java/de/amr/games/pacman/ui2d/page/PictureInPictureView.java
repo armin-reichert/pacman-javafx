@@ -23,7 +23,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.HBox;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_CANVAS_COLOR;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_CANVAS_BG_COLOR;
 
 /**
  * @author Armin Reichert
@@ -75,13 +75,13 @@ public class PictureInPictureView implements GameEventListener {
         gameScene = new PlayScene2D();
         gameScene.setGameContext(context);
         gameScene.setCanvas(canvas);
-        gameScene.backgroundColorPy.bind(PY_CANVAS_COLOR);
+        gameScene.backgroundColorPy.bind(PY_CANVAS_BG_COLOR);
 
         HBox pane = new HBox(canvas);
         pane.opacityProperty().bind(opacityPy);
         pane.visibleProperty().bind(visiblePy);
-        pane.backgroundProperty().bind(PY_CANVAS_COLOR.map(Ufx::coloredBackground));
-        pane.setPadding(new Insets(5,10,5,10));
+        pane.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
+        pane.setPadding(new Insets(5, 10, 5, 10));
 
         container.getChildren().add(pane);
     }
@@ -104,15 +104,14 @@ public class PictureInPictureView implements GameEventListener {
         }
     }
 
-    private void updateScaling() {
-        double referenceHeight = context.worldSizeOrDefault().y() * TS;
-        gameScene.scalingPy.set(heightPy.get() / referenceHeight);
-        gameScene.init(); //TODO check if this is necessary
-    }
-
     public void draw() {
         if (visiblePy.get()) {
             gameScene.draw(renderer);
         }
+    }
+
+    private void updateScaling() {
+        double referenceHeight = context.worldSizeOrDefault().y() * TS;
+        gameScene.scalingPy.set(heightPy.get() / referenceHeight);
     }
 }

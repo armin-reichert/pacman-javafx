@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.EnumMap;
 import java.util.Map;
 
 /**
@@ -31,7 +30,7 @@ import java.util.Map;
 public class PacManGames2dApp extends Application {
 
     public static final BooleanProperty                  PY_AUTOPILOT           = new SimpleBooleanProperty(false);
-    public static final ObjectProperty<Color>            PY_CANVAS_COLOR        = new SimpleObjectProperty<>(Color.BLACK);
+    public static final ObjectProperty<Color>            PY_CANVAS_BG_COLOR     = new SimpleObjectProperty<>(Color.BLACK);
     public static final BooleanProperty                  PY_CANVAS_DECORATED    = new SimpleBooleanProperty(true);
     public static final ObjectProperty<MapSelectionMode> PY_MAP_SELECTION_MODE  = new SimpleObjectProperty<>(MapSelectionMode.CUSTOM_MAPS_FIRST);
     public static final BooleanProperty                  PY_DEBUG_INFO          = new SimpleBooleanProperty(false);

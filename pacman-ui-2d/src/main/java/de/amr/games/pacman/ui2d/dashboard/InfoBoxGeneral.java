@@ -71,7 +71,7 @@ public class InfoBoxGeneral extends InfoBox {
         ));
         addTextRow("Total Updates", () -> context.gameClock().getUpdateCount());
 
-        pickerCanvasColor = addColorPickerRow("Canvas Color", PY_CANVAS_COLOR.get());
+        pickerCanvasColor = addColorPickerRow("Canvas Color", PY_CANVAS_BG_COLOR.get());
         cbCanvasDecoration = checkBox("Canvas Decoration");
         cbDebugUI = checkBox("Show Debug Info");
         cbTimeMeasured = checkBox("Time Measured");
@@ -80,7 +80,7 @@ public class InfoBoxGeneral extends InfoBox {
         buttonsSimulation[1].setOnAction(e -> context.gameClock().makeSteps(PY_SIMULATION_STEPS.get(), true));
         sliderTargetFPS.valueProperty().addListener(
             (py, ov, nv) -> context.gameClock().setTargetFrameRate(nv.intValue()));
-        pickerCanvasColor.setOnAction(e -> PY_CANVAS_COLOR.set(pickerCanvasColor.getValue()));
+        pickerCanvasColor.setOnAction(e -> PY_CANVAS_BG_COLOR.set(pickerCanvasColor.getValue()));
         cbCanvasDecoration.selectedProperty().bindBidirectional(PY_CANVAS_DECORATED);
         cbDebugUI.setOnAction(e -> Ufx.toggle(PY_DEBUG_INFO));
         cbTimeMeasured.setOnAction(e -> Ufx.toggle(context.gameClock().timeMeasuredPy));
