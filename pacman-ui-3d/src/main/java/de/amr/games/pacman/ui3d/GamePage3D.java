@@ -41,10 +41,9 @@ public class GamePage3D extends GamePage {
                 if (!context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D)) {
                     return context.assets().get("wallpaper.background");
                 }
-                if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
-                    return coloredBackground(Color.rgb(150, 150, 200));
-                }
-                return context.assets().get(PY_NIGHT_MODE.get() ? "wallpaper.night" : "wallpaper.day");
+                return PY_3D_DRAW_MODE.get() == DrawMode.LINE
+                    ? coloredBackground(Color.rgb(100, 100, 200))
+                    : context.assets().get(PY_NIGHT_MODE.get() ? "wallpaper.night" : "wallpaper.day");
             }, PY_3D_DRAW_MODE, PY_NIGHT_MODE, context.gameSceneProperty()
         ));
     }
