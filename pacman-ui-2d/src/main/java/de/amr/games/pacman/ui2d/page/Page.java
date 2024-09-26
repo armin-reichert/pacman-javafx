@@ -38,5 +38,5 @@ public interface Page {
         }
     }
 
-    default void handleKeyboardInput() {}
+    default void handleInput() {}
 }

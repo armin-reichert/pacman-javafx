@@ -206,7 +206,7 @@ public class StartPage extends StackPane implements Page {
     }
 
     @Override
-    public void handleKeyboardInput() {
+    public void handleInput() {
         if (GameAction.ENTER_GAME_PAGE.triggered()) {
             context.selectGamePage();
         } else if (GameAction.NEXT_VARIANT.triggered()) {

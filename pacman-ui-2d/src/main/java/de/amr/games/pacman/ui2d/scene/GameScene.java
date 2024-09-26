@@ -42,5 +42,5 @@ public interface GameScene extends GameEventListener {
     /**
      * Handles user input like pressed keys.
      */
-    default void handleUserInput() {}
+    default void handleInput() {}
 }

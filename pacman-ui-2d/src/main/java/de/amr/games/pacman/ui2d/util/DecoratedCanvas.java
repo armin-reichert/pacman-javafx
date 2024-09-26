@@ -19,7 +19,7 @@ public class DecoratedCanvas extends BorderPane {
 
     public static Dimension2D computeSize(double unscaledCanvasWidth, double unscaledCanvasHeight, double scaling) {
         return new Dimension2D(
-         Math.round(unscaledCanvasWidth * scaling + 25 * scaling), // TODO magic number
+            Math.round(unscaledCanvasWidth * scaling + 25 * scaling), // TODO magic number
             Math.round(unscaledCanvasHeight * scaling + 15 * scaling) // TODO magic number
         );
     }

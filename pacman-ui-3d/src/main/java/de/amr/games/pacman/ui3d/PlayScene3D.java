@@ -180,7 +180,7 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
-    public void handleUserInput() {
+    public void handleInput() {
         if (GameAction.ADD_CREDIT.triggered() && this.context.game().isDemoLevel()) {
             context.addCredit();
         } else if (GameAction.PREV_PERSPECTIVE.triggered()) {
