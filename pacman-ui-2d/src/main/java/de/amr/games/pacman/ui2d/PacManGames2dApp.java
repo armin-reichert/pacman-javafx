@@ -42,36 +42,6 @@ public class PacManGames2dApp extends Application {
     public static final IntegerProperty                  PY_PIP_OPACITY_PERCENT = new SimpleIntegerProperty(100);
     public static final IntegerProperty                  PY_SIMULATION_STEPS    = new SimpleIntegerProperty(1);
 
-    private static Map<GameVariant, Map<GameSceneID, GameScene>> createGameScenes() {
-        Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
-        for (GameVariant variant : GameVariant.values()) {
-            switch (variant) {
-                case MS_PACMAN, MS_PACMAN_TENGEN ->
-                    gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
-                        GameSceneID.BOOT_SCENE,   new BootScene(),
-                        GameSceneID.INTRO_SCENE,  new MsPacManIntroScene(),
-                        GameSceneID.CREDIT_SCENE, new CreditScene(),
-                        GameSceneID.PLAY_SCENE,   new PlayScene2D(),
-                        GameSceneID.CUT_SCENE_1,  new MsPacManCutScene1(),
-                        GameSceneID.CUT_SCENE_2,  new MsPacManCutScene2(),
-                        GameSceneID.CUT_SCENE_3,  new MsPacManCutScene3()
-                    )));
-                case PACMAN, PACMAN_XXL ->
-                    gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
-                        GameSceneID.BOOT_SCENE,   new BootScene(),
-                        GameSceneID.INTRO_SCENE,  new PacManIntroScene(),
-                        GameSceneID.CREDIT_SCENE, new CreditScene(),
-                        GameSceneID.PLAY_SCENE,   new PlayScene2D(),
-                        GameSceneID.CUT_SCENE_1,  new PacManCutScene1(),
-                        GameSceneID.CUT_SCENE_2,  new PacManCutScene2(),
-                        GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
-                    )));
-                default -> throw new IllegalArgumentException("Unsupported game variant: " + variant);
-            }
-        }
-        return gameScenesForVariant;
-    }
-
     private static Dimension2D initialSize() {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double aspect = 1.2;
@@ -92,7 +62,42 @@ public class PacManGames2dApp extends Application {
     public void start(Stage stage) {
         ui = new PacManGames2dUI();
         ui.loadAssets();
-        ui.setGameScenes(createGameScenes());
+        ui.setGameScenes(GameVariant.MS_PACMAN, Map.of(
+            GameSceneID.BOOT_SCENE,   new BootScene(),
+            GameSceneID.INTRO_SCENE,  new MsPacManIntroScene(),
+            GameSceneID.CREDIT_SCENE, new CreditScene(),
+            GameSceneID.PLAY_SCENE,   new PlayScene2D(),
+            GameSceneID.CUT_SCENE_1,  new MsPacManCutScene1(),
+            GameSceneID.CUT_SCENE_2,  new MsPacManCutScene2(),
+            GameSceneID.CUT_SCENE_3,  new MsPacManCutScene3()
+        ));
+        ui.setGameScenes(GameVariant.MS_PACMAN_TENGEN, Map.of(
+            GameSceneID.BOOT_SCENE,   new BootScene(),
+            GameSceneID.INTRO_SCENE,  new MsPacManIntroScene(),
+            GameSceneID.CREDIT_SCENE, new CreditScene(),
+            GameSceneID.PLAY_SCENE,   new PlayScene2D(),
+            GameSceneID.CUT_SCENE_1,  new MsPacManCutScene1(),
+            GameSceneID.CUT_SCENE_2,  new MsPacManCutScene2(),
+            GameSceneID.CUT_SCENE_3,  new MsPacManCutScene3()
+        ));
+        ui.setGameScenes(GameVariant.PACMAN, Map.of(
+            GameSceneID.BOOT_SCENE,   new BootScene(),
+            GameSceneID.INTRO_SCENE,  new PacManIntroScene(),
+            GameSceneID.CREDIT_SCENE, new CreditScene(),
+            GameSceneID.PLAY_SCENE,   new PlayScene2D(),
+            GameSceneID.CUT_SCENE_1,  new PacManCutScene1(),
+            GameSceneID.CUT_SCENE_2,  new PacManCutScene2(),
+            GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
+        ));
+        ui.setGameScenes(GameVariant.PACMAN_XXL, Map.of(
+            GameSceneID.BOOT_SCENE,   new BootScene(),
+            GameSceneID.INTRO_SCENE,  new PacManIntroScene(),
+            GameSceneID.CREDIT_SCENE, new CreditScene(),
+            GameSceneID.PLAY_SCENE,   new PlayScene2D(),
+            GameSceneID.CUT_SCENE_1,  new PacManCutScene1(),
+            GameSceneID.CUT_SCENE_2,  new PacManCutScene2(),
+            GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
+        ));
         ui.createAndStart(stage, initialSize());
 
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));

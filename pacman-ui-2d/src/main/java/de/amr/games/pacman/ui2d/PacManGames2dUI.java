@@ -54,6 +54,7 @@ import org.tinylog.Logger;
 
 import java.text.MessageFormat;
 import java.time.LocalTime;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -103,12 +104,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         }
     };
 
-    //protected final Dimension2D initialSize;
-    protected final AssetStorage assets = new AssetStorage();
-    protected Map<GameVariant, Map<GameSceneID, GameScene>> gameSceneMap;
-    protected final FlashMessageView messageView = new FlashMessageView();
-    protected final GameClockFX clock = new GameClockFX();
-    protected final StackPane sceneRoot = new StackPane();
+    protected final AssetStorage assets;
+    protected final FlashMessageView flashMessageLayer;
+    protected final GameClockFX clock;
+    protected final StackPane sceneRoot;
+    protected final Map<GameVariant, Map<GameSceneID, GameScene>> gameSceneMap;
+
     protected Stage stage;
     protected StartPage startPage;
     protected GamePage gamePage;
@@ -117,21 +118,27 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected GameWorldRenderer worldRenderer;
     protected boolean scoreVisible;
 
+    public PacManGames2dUI() {
+        assets = new AssetStorage();
+        clock = new GameClockFX();
+        flashMessageLayer = new FlashMessageView();
+        sceneRoot = new StackPane();
+        gameSceneMap = new EnumMap<>(GameVariant.class);
+    }
+
     public void loadAssets() {
         GameAssets2D.load(() -> PacManGames2dUI.class, assets);
         GameSounds.setAssets(assets);
     }
 
-    public void setGameScenes(Map<GameVariant, Map<GameSceneID, GameScene>> gameSceneMap) {
-        this.gameSceneMap = checkNotNull(gameSceneMap);
-        for (GameVariant variant : GameVariant.values()) {
-            gameSceneMap.get(variant).values().forEach(gameScene -> {
-                if (gameScene instanceof GameScene2D gameScene2D) {
-                    gameScene2D.setGameContext(this);
-                    gameScene2D.debugInfoPy.bind(PY_DEBUG_INFO);
-                }
-            });
-        }
+    public void setGameScenes(GameVariant variant, Map<GameSceneID, GameScene> gameScenes) {
+        gameSceneMap.put(variant, gameScenes);
+        gameScenes.values().forEach(gameScene -> {
+            if (gameScene instanceof GameScene2D gameScene2D) {
+                gameScene2D.setGameContext(this);
+                gameScene2D.debugInfoPy.bind(PY_DEBUG_INFO);
+            }
+        });
     }
 
     /**
@@ -143,7 +150,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         this.stage = checkNotNull(stage);
         checkNotNull(initialSize);
 
-        sceneRoot.getChildren().addAll(new Pane(), messageView, createMutedIcon());
+        sceneRoot.getChildren().addAll(new Pane(), flashMessageLayer, createMutedIcon());
         stage.setScene(createMainScene(initialSize));
 
         startPage = new StartPage(this);
@@ -213,7 +220,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                     .filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast)
                     .ifPresent(scene2D -> scene2D.draw(worldRenderer));
                 gamePage.updateDashboard();
-                messageView.update();
+                flashMessageLayer.update();
             }
         } catch (Exception x) {
             clock.stop();
@@ -562,7 +569,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public void showFlashMessageSeconds(double seconds, String message, Object... args) {
-        messageView.showMessage(String.format(message, args), seconds);
+        flashMessageLayer.showMessage(String.format(message, args), seconds);
     }
 
     @Override

@@ -14,6 +14,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.shape.DrawMode;
+import org.tinylog.Logger;
 
 import java.util.Map;
 
@@ -40,13 +41,20 @@ public class PacManGames3dUI extends PacManGames2dUI {
     }
 
     @Override
-    public void setGameScenes(Map<GameVariant, Map<GameSceneID, GameScene>> gameSceneMap) {
-        super.setGameScenes(gameSceneMap);
-        for (GameVariant variant : GameVariant.values()) {
-            var playScene3D = (PlayScene3D) gameSceneMap.get(variant).get(GameSceneID.PLAY_SCENE_3D);
+    public void setGameScenes(GameVariant variant, Map<GameSceneID, GameScene> gameScenes) {
+        super.setGameScenes(variant, gameScenes);
+        // init 3D play scene if present
+        GameScene gameScene = gameScenes.get(GameSceneID.PLAY_SCENE_3D);
+        if (gameScene == null) {
+            Logger.error("No play scene 3D has been registered.");
+            return;
+        }
+        if (gameScene instanceof PlayScene3D playScene3D) {
             playScene3D.setContext(this);
             playScene3D.widthProperty().bind(rootPane().widthProperty());
             playScene3D.heightProperty().bind(rootPane().heightProperty());
+        } else {
+            Logger.error("Something is wrong: Game scene registered as 3D play scene has unsupported class {}", gameScene.getClass());
         }
     }
 

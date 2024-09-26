@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.EnumMap;
 import java.util.Map;
 
 /**
@@ -52,37 +51,6 @@ public class PacManGames3dApp extends Application {
         return new Dimension2D(width, height);
     }
 
-    private static Map<GameVariant, Map<GameSceneID, GameScene>> createGameScenes() {
-        Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
-        for (var variant : GameVariant.values()) {
-            switch (variant) {
-                case MS_PACMAN, MS_PACMAN_TENGEN ->
-                    gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
-                        GameSceneID.BOOT_SCENE,   new BootScene(),
-                        GameSceneID.INTRO_SCENE,  new MsPacManIntroScene(),
-                        GameSceneID.CREDIT_SCENE, new CreditScene(),
-                        GameSceneID.PLAY_SCENE,   new PlayScene2D(),
-                        GameSceneID.CUT_SCENE_1,  new MsPacManCutScene1(),
-                        GameSceneID.CUT_SCENE_2,  new MsPacManCutScene2(),
-                        GameSceneID.CUT_SCENE_3,  new MsPacManCutScene3()
-                    )));
-                case PACMAN, PACMAN_XXL ->
-                    gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
-                        GameSceneID.BOOT_SCENE,   new BootScene(),
-                        GameSceneID.INTRO_SCENE,  new PacManIntroScene(),
-                        GameSceneID.CREDIT_SCENE, new CreditScene(),
-                        GameSceneID.PLAY_SCENE,   new PlayScene2D(),
-                        GameSceneID.CUT_SCENE_1,  new PacManCutScene1(),
-                        GameSceneID.CUT_SCENE_2,  new PacManCutScene2(),
-                        GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
-                    )));
-            }
-            gameScenesForVariant.get(variant).put(GameSceneID.PLAY_SCENE_3D, new PlayScene3D());
-            Logger.info("Added 3D play scene for variant " + variant);
-        }
-        return gameScenesForVariant;
-    }
-
     private PacManGames3dUI ui;
 
     @Override
@@ -97,7 +65,46 @@ public class PacManGames3dApp extends Application {
     public void start(Stage stage) {
         ui = new PacManGames3dUI();
         ui.loadAssets();
-        ui.setGameScenes(createGameScenes());
+        ui.setGameScenes(GameVariant.MS_PACMAN, Map.of(
+            GameSceneID.BOOT_SCENE,   new BootScene(),
+            GameSceneID.INTRO_SCENE,  new MsPacManIntroScene(),
+            GameSceneID.CREDIT_SCENE, new CreditScene(),
+            GameSceneID.PLAY_SCENE,   new PlayScene2D(),
+            GameSceneID.PLAY_SCENE_3D, new PlayScene3D(),
+            GameSceneID.CUT_SCENE_1,  new MsPacManCutScene1(),
+            GameSceneID.CUT_SCENE_2,  new MsPacManCutScene2(),
+            GameSceneID.CUT_SCENE_3,  new MsPacManCutScene3()
+        ));
+        ui.setGameScenes(GameVariant.MS_PACMAN_TENGEN, Map.of(
+            GameSceneID.BOOT_SCENE,   new BootScene(),
+            GameSceneID.INTRO_SCENE,  new MsPacManIntroScene(),
+            GameSceneID.CREDIT_SCENE, new CreditScene(),
+            GameSceneID.PLAY_SCENE,   new PlayScene2D(),
+            GameSceneID.PLAY_SCENE_3D, new PlayScene3D(),
+            GameSceneID.CUT_SCENE_1,  new MsPacManCutScene1(),
+            GameSceneID.CUT_SCENE_2,  new MsPacManCutScene2(),
+            GameSceneID.CUT_SCENE_3,  new MsPacManCutScene3()
+        ));
+        ui.setGameScenes(GameVariant.PACMAN, Map.of(
+            GameSceneID.BOOT_SCENE,   new BootScene(),
+            GameSceneID.INTRO_SCENE,  new PacManIntroScene(),
+            GameSceneID.CREDIT_SCENE, new CreditScene(),
+            GameSceneID.PLAY_SCENE,   new PlayScene2D(),
+            GameSceneID.PLAY_SCENE_3D, new PlayScene3D(),
+            GameSceneID.CUT_SCENE_1,  new PacManCutScene1(),
+            GameSceneID.CUT_SCENE_2,  new PacManCutScene2(),
+            GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
+        ));
+        ui.setGameScenes(GameVariant.PACMAN_XXL, Map.of(
+            GameSceneID.BOOT_SCENE,   new BootScene(),
+            GameSceneID.INTRO_SCENE,  new PacManIntroScene(),
+            GameSceneID.CREDIT_SCENE, new CreditScene(),
+            GameSceneID.PLAY_SCENE,   new PlayScene2D(),
+            GameSceneID.PLAY_SCENE_3D, new PlayScene3D(),
+            GameSceneID.CUT_SCENE_1,  new PacManCutScene1(),
+            GameSceneID.CUT_SCENE_2,  new PacManCutScene2(),
+            GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
+        ));
         ui.createAndStart(stage, initialSize());
 
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
