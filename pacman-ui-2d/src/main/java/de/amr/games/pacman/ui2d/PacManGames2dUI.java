@@ -49,7 +49,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -128,7 +127,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     public void loadAssets() {
-        GameAssets2D.load(() -> PacManGames2dUI.class, assets);
+        GameAssets2D.addTo(assets);
         GameSounds.setAssets(assets);
     }
 

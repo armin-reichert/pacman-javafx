@@ -35,8 +35,8 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 public class PacManGames3dUI extends PacManGames2dUI {
 
     public void loadAssets() {
-        GameAssets2D.load(() -> PacManGames2dUI.class, assets);
-        GameAssets3D.load(() -> PacManGames3dUI.class, assets);
+        GameAssets2D.addTo(assets);
+        GameAssets3D.addTo(assets);
         GameSounds.setAssets(assets);
     }
 
@@ -104,8 +104,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
     public void toggle2D3D() {
         currentGameScene().ifPresent(gameScene -> {
             toggle(PY_3D_ENABLED);
-            if (hasID(gameScene, GameSceneID.PLAY_SCENE)
-                || hasID(gameScene, GameSceneID.PLAY_SCENE_3D)) {
+            if (hasID(gameScene, GameSceneID.PLAY_SCENE) || hasID(gameScene, GameSceneID.PLAY_SCENE_3D)) {
                 updateGameScene(true);
                 gameScenePy.get().onSceneVariantSwitch(gameScene);
             }

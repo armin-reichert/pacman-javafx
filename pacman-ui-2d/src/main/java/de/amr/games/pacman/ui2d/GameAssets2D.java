@@ -39,7 +39,8 @@ public class GameAssets2D extends AssetStorage {
         };
     }
 
-    public static void load(ResourceManager rm, AssetStorage assets) {
+    public static void addTo(AssetStorage assets) {
+        ResourceManager rm = () -> GameAssets2D.class;
 
         assets.addBundle(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", rm.rootClass().getModule()));
 

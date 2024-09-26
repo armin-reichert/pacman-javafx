@@ -24,7 +24,8 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_FLOOR_COLOR;
  */
 public class GameAssets3D {
     
-    public static void load(ResourceManager rm, AssetStorage assets) {
+    public static void addTo(AssetStorage assets) {
+        ResourceManager rm = () -> GameAssets3D.class;
 
         assets.addBundle(ResourceBundle.getBundle("de.amr.games.pacman.ui3d.texts.messages", rm.rootClass().getModule()));
 
