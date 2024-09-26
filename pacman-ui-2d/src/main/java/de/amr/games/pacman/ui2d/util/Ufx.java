@@ -24,6 +24,7 @@ import java.io.PrintWriter;
 import java.util.Locale;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static javafx.scene.layout.BackgroundSize.AUTO;
 
 /**
  * Useful JavaFX helper methods.
@@ -33,6 +34,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 public interface Ufx {
 
     BackgroundSize FILL_PAGE = new BackgroundSize(1, 1, true, true, false, true);
+    BackgroundSize FIT_HEIGHT = new BackgroundSize(AUTO, 1, false, true, true, false);
 
     /**
      * Launches the application specified by the given class. In case an exception is thrown,

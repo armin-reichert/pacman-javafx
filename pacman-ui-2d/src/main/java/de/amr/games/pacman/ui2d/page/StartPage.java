@@ -3,6 +3,7 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
@@ -19,9 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredRoundedBackground;
-import static javafx.scene.layout.BackgroundSize.AUTO;
 
 /**
  * Got the flyer images from <a href="https://flyers.arcade-museum.com/">The Arcade Flyer Archive</a>.
@@ -30,8 +29,6 @@ import static javafx.scene.layout.BackgroundSize.AUTO;
  */
 public class StartPage extends StackPane implements Page {
 
-    static final BackgroundSize FIT_HEIGHT = new BackgroundSize(AUTO, 1, false, true, true, false);
-    static final BackgroundSize FILL       = new BackgroundSize(AUTO, AUTO, false, false, true, true);
 
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
         @Override
@@ -131,7 +128,7 @@ public class StartPage extends StackPane implements Page {
     private int selectFlyerPage(Image[] flyerPages, int page) {
         layout.setBackground(new Background(new BackgroundImage(flyerPages[page],
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-            BackgroundPosition.CENTER, FIT_HEIGHT)));
+            BackgroundPosition.CENTER, Ufx.FIT_HEIGHT)));
         return page;
     }
 
@@ -152,7 +149,7 @@ public class StartPage extends StackPane implements Page {
 
     private void initPageForGameVariant(GameVariant variant) {
         setBackground(context.assets().get("wallpaper.pacman"));
-        if (variant != null && context != null) {
+        if (variant != null) {
             switch (variant) {
                 case MS_PACMAN -> {
                     msPacManFlyerIndex = selectFlyerPage(msPacManFlyerPages, 0);
@@ -180,9 +177,9 @@ public class StartPage extends StackPane implements Page {
                 }
                 case PACMAN_XXL -> {
                     Image xxlGameImage = context.assets().image("pacman_xxl.startpage.source");
-                    var xxlGameBackground = new Background(new BackgroundImage(xxlGameImage,
+                    var xxlGameBackground = Ufx.imageBackground(xxlGameImage,
                         BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-                        BackgroundPosition.CENTER, FILL));
+                        BackgroundPosition.CENTER, Ufx.FILL_PAGE);
                     layout.setBackground(xxlGameBackground);
                     setOnMouseClicked(null);
                 }
