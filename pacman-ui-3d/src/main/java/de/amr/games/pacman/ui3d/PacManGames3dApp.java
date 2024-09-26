@@ -66,44 +66,44 @@ public class PacManGames3dApp extends Application {
         ui = new PacManGames3dUI();
         ui.loadAssets();
         ui.setGameScenes(GameVariant.MS_PACMAN, Map.of(
-            GameSceneID.BOOT_SCENE,   new BootScene(),
-            GameSceneID.INTRO_SCENE,  new MsPacManIntroScene(),
-            GameSceneID.CREDIT_SCENE, new CreditScene(),
-            GameSceneID.PLAY_SCENE,   new PlayScene2D(),
+            GameSceneID.BOOT_SCENE,    new BootScene(),
+            GameSceneID.INTRO_SCENE,   new MsPacManIntroScene(),
+            GameSceneID.CREDIT_SCENE,  new CreditScene(),
+            GameSceneID.PLAY_SCENE,    new PlayScene2D(),
             GameSceneID.PLAY_SCENE_3D, new PlayScene3D(),
-            GameSceneID.CUT_SCENE_1,  new MsPacManCutScene1(),
-            GameSceneID.CUT_SCENE_2,  new MsPacManCutScene2(),
-            GameSceneID.CUT_SCENE_3,  new MsPacManCutScene3()
+            GameSceneID.CUT_SCENE_1,   new MsPacManCutScene1(),
+            GameSceneID.CUT_SCENE_2,   new MsPacManCutScene2(),
+            GameSceneID.CUT_SCENE_3,   new MsPacManCutScene3()
         ));
         ui.setGameScenes(GameVariant.MS_PACMAN_TENGEN, Map.of(
-            GameSceneID.BOOT_SCENE,   new BootScene(),
-            GameSceneID.INTRO_SCENE,  new MsPacManIntroScene(),
-            GameSceneID.CREDIT_SCENE, new CreditScene(),
-            GameSceneID.PLAY_SCENE,   new PlayScene2D(),
+            GameSceneID.BOOT_SCENE,    new BootScene(),
+            GameSceneID.INTRO_SCENE,   new MsPacManIntroScene(),
+            GameSceneID.CREDIT_SCENE,  new CreditScene(),
+            GameSceneID.PLAY_SCENE,    new PlayScene2D(),
             GameSceneID.PLAY_SCENE_3D, new PlayScene3D(),
-            GameSceneID.CUT_SCENE_1,  new MsPacManCutScene1(),
-            GameSceneID.CUT_SCENE_2,  new MsPacManCutScene2(),
-            GameSceneID.CUT_SCENE_3,  new MsPacManCutScene3()
+            GameSceneID.CUT_SCENE_1,   new MsPacManCutScene1(),
+            GameSceneID.CUT_SCENE_2,   new MsPacManCutScene2(),
+            GameSceneID.CUT_SCENE_3,   new MsPacManCutScene3()
         ));
         ui.setGameScenes(GameVariant.PACMAN, Map.of(
-            GameSceneID.BOOT_SCENE,   new BootScene(),
-            GameSceneID.INTRO_SCENE,  new PacManIntroScene(),
-            GameSceneID.CREDIT_SCENE, new CreditScene(),
-            GameSceneID.PLAY_SCENE,   new PlayScene2D(),
+            GameSceneID.BOOT_SCENE,    new BootScene(),
+            GameSceneID.INTRO_SCENE,   new PacManIntroScene(),
+            GameSceneID.CREDIT_SCENE,  new CreditScene(),
+            GameSceneID.PLAY_SCENE,    new PlayScene2D(),
             GameSceneID.PLAY_SCENE_3D, new PlayScene3D(),
-            GameSceneID.CUT_SCENE_1,  new PacManCutScene1(),
-            GameSceneID.CUT_SCENE_2,  new PacManCutScene2(),
-            GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
+            GameSceneID.CUT_SCENE_1,   new PacManCutScene1(),
+            GameSceneID.CUT_SCENE_2,   new PacManCutScene2(),
+            GameSceneID.CUT_SCENE_3,   new PacManCutScene3()
         ));
         ui.setGameScenes(GameVariant.PACMAN_XXL, Map.of(
-            GameSceneID.BOOT_SCENE,   new BootScene(),
-            GameSceneID.INTRO_SCENE,  new PacManIntroScene(),
-            GameSceneID.CREDIT_SCENE, new CreditScene(),
-            GameSceneID.PLAY_SCENE,   new PlayScene2D(),
+            GameSceneID.BOOT_SCENE,    new BootScene(),
+            GameSceneID.INTRO_SCENE,   new PacManIntroScene(),
+            GameSceneID.CREDIT_SCENE,  new CreditScene(),
+            GameSceneID.PLAY_SCENE,    new PlayScene2D(),
             GameSceneID.PLAY_SCENE_3D, new PlayScene3D(),
-            GameSceneID.CUT_SCENE_1,  new PacManCutScene1(),
-            GameSceneID.CUT_SCENE_2,  new PacManCutScene2(),
-            GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
+            GameSceneID.CUT_SCENE_1,   new PacManCutScene1(),
+            GameSceneID.CUT_SCENE_2,   new PacManCutScene2(),
+            GameSceneID.CUT_SCENE_3,   new PacManCutScene3()
         ));
         ui.createAndStart(stage, initialSize());
 
