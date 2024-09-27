@@ -64,6 +64,7 @@ public class PictureInPictureView implements GameEventListener {
         context.gameVariantProperty().addListener((py, ov, nv) -> {
             if (nv != null) {
                 renderer = PacManGames2dUI.createRenderer(nv, context.assets());
+                renderer.setCanvas(canvas);
             }
         });
 
@@ -102,7 +103,6 @@ public class PictureInPictureView implements GameEventListener {
 
     public void draw() {
         if (visiblePy.get()) {
-            renderer.setCanvas(canvas);
             gameScene.draw(renderer);
         }
     }

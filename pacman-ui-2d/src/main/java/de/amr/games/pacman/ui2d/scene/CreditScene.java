@@ -69,7 +69,6 @@ public class CreditScene extends GameScene2D {
                 renderer.drawText("BONUS PAC-MAN FOR 10000", PALETTE_ROSE, font8, t(1), t(25));
                 renderer.drawText("PTS", PALETTE_ROSE, font6, t(25), t(25));
                 renderer.drawText(MIDWAY_COPYRIGHT, PALETTE_PINK, sceneFont(8),  t(4), t(29));
-
             }
             case PACMAN_XXL -> {
                 renderer.drawText("PUSH START BUTTON", PALETTE_ORANGE, font8, t(6), t(17));
