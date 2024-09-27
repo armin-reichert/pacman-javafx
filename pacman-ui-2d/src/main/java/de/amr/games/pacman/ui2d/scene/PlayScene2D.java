@@ -99,17 +99,17 @@ public class PlayScene2D extends GameScene2D {
         boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         renderer.setFlashMode(flashMode);
         renderer.setBlinkingOn(context.game().blinking().isOn());
-        renderer.drawWorld(g, context.spriteSheet(), context, context.game().world());
+        renderer.drawWorld(context.spriteSheet(), context, context.game().world());
 
         drawLevelMessage(renderer); // READY, GAME_OVER etc.
 
-        renderer.drawAnimatedEntity(g, context.game().pac());
-        ghostsInZOrder().forEach(ghost -> renderer.drawAnimatedEntity(g, ghost));
+        renderer.drawAnimatedEntity(context.game().pac());
+        ghostsInZOrder().forEach(renderer::drawAnimatedEntity);
 
         // Debug mode info
         if (debugInfoPy.get()) {
-            renderer.drawAnimatedCreatureInfo(g, context.game().pac());
-            ghostsInZOrder().forEach(ghost -> renderer.drawAnimatedCreatureInfo(g, ghost));
+            renderer.drawAnimatedCreatureInfo(context.game().pac());
+            ghostsInZOrder().forEach(renderer::drawAnimatedCreatureInfo);
         }
 
         if (!isCreditVisible()) {
@@ -118,8 +118,7 @@ public class PlayScene2D extends GameScene2D {
             if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
                 numLivesDisplayed += 1;
             }
-            renderer.drawLivesCounter(g, context.spriteSheet(), numLivesDisplayed,
-                    (context.worldSizeOrDefault().y() - 2) * TS - 1);
+            renderer.drawLivesCounter(context.spriteSheet(), numLivesDisplayed, (context.worldSizeTilesOrDefault().y() - 2) * TS - 1);
         }
     }
 
@@ -135,11 +134,11 @@ public class PlayScene2D extends GameScene2D {
         double msgY = t(houseOrigin.y() + houseSize.y() + 1);
         // "GAME OVER" is drawn in demo mode and when game is over:
         if (context.game().isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
-            renderer.drawText(g, "GAME  OVER", Color.RED, sceneFont(8), t(centerTileX - 5), msgY);
+            renderer.drawText("GAME  OVER", Color.RED, sceneFont(8), t(centerTileX - 5), msgY);
         } else {
             switch (context.gameState()) {
-                case READY      -> renderer.drawText(g, "READY!", Color.YELLOW, sceneFont(8), t(centerTileX - 3), msgY);
-                case LEVEL_TEST -> renderer.drawText(g, "TEST    L" + context.game().levelNumber(),
+                case READY      -> renderer.drawText("READY!", Color.YELLOW, sceneFont(8), t(centerTileX - 3), msgY);
+                case LEVEL_TEST -> renderer.drawText("TEST    L" + context.game().levelNumber(),
                     Color.YELLOW, sceneFont(8), t(8.5), msgY);
             }
         }
@@ -147,22 +146,22 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     protected void drawDebugInfo(GameWorldRenderer renderer) {
-        Vector2i worldSize = context.worldSizeOrDefault();
-        renderer.drawTileGrid(g, worldSize.x(), worldSize.y());
+        Vector2i worldSize = context.worldSizeTilesOrDefault();
+        renderer.drawTileGrid(worldSize.x(), worldSize.y());
         if (context.game().variant() == GameVariant.PACMAN && context.game().world() != null) {
             context.game().ghosts().forEach(ghost -> {
                 // Are currently the same for each ghost, but who knows what comes...
                 ghost.cannotMoveUpTiles().forEach(tile -> {
-                    g.setFill(Color.RED);
-                    g.fillOval(scaled(t(tile.x())), scaled(t(tile.y() - 1)), scaled(TS), scaled(TS));
-                    g.setFill(Color.WHITE);
-                    g.fillRect(scaled(t(tile.x()) + 1), scaled(t(tile.y()) - HTS - 1), scaled(TS - 2), scaled(2));
+                    renderer.ctx().setFill(Color.RED);
+                    renderer.ctx().fillOval(scaled(t(tile.x())), scaled(t(tile.y() - 1)), scaled(TS), scaled(TS));
+                    renderer.ctx().setFill(Color.WHITE);
+                    renderer.ctx().fillRect(scaled(t(tile.x()) + 1), scaled(t(tile.y()) - HTS - 1), scaled(TS - 2), scaled(2));
                 });
             });
         }
-        g.setFill(Color.YELLOW);
-        g.setFont(Font.font("Sans", FontWeight.BOLD, 24));
-        g.fillText(String.format("%s %d", context.gameState(), context.gameState().timer().currentTick()), 0, 64);
+        renderer.ctx().setFill(Color.YELLOW);
+        renderer.ctx().setFont(Font.font("Sans", FontWeight.BOLD, 24));
+        renderer.ctx().fillText(String.format("%s %d", context.gameState(), context.gameState().timer().currentTick()), 0, 64);
     }
 
     @Override

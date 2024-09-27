@@ -16,7 +16,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
@@ -36,9 +36,20 @@ public class MsPacManArcadeGameRenderer implements GameWorldRenderer {
     private ImageArea mapFlashingSprite;
     private boolean flashMode;
     private boolean blinkingOn;
+    private Canvas canvas;
 
     public MsPacManArcadeGameRenderer(AssetStorage assets) {
         flashingMazesImage = assets.get("ms_pacman.flashing_mazes");
+    }
+
+    @Override
+    public void setCanvas(Canvas canvas) {
+        this.canvas = canvas;
+    }
+
+    @Override
+    public Canvas canvas() {
+        return canvas;
     }
 
     @Override
@@ -69,22 +80,22 @@ public class MsPacManArcadeGameRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public void drawWorld(GraphicsContext g, GameSpriteSheet spriteSheet, GameContext context, GameWorld world) {
+    public void drawWorld(GameSpriteSheet spriteSheet, GameContext context, GameWorld world) {
         double originX = 0, originY = t(3);
         if (flashMode) {
             if (blinkingOn) {
-                drawSubImageScaled(g, mapFlashingSprite.source(), mapFlashingSprite.area(), originX - 3, originY); // WTF
+                drawSubImageScaled(mapFlashingSprite.source(), mapFlashingSprite.area(), originX - 3, originY); // WTF
             } else {
-                drawSubImageScaled(g, mapWithoutFoodSprite.source(), mapWithoutFoodSprite.area(), originX, originY);
+                drawSubImageScaled(mapWithoutFoodSprite.source(), mapWithoutFoodSprite.area(), originX, originY);
             }
         } else {
-            g.save();
-            g.scale(scalingPy.get(), scalingPy.get());
-            drawSpriteUnscaled(g, spriteSheet, mapWithFoodSprite.area(), originX, originY);
-            overPaintEatenPellets(g, world);
-            overPaintEnergizers(g, world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
-            g.restore();
+            ctx().save();
+            ctx().scale(scalingPy.get(), scalingPy.get());
+            drawSpriteUnscaled(spriteSheet, mapWithFoodSprite.area(), originX, originY);
+            overPaintEatenPellets(world);
+            overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
+            ctx().restore();
         }
-        context.game().bonus().ifPresent(bonus -> drawMovingBonus(g, context.spriteSheet(), (MovingBonus) bonus));
+        context.game().bonus().ifPresent(bonus -> drawMovingBonus(context.spriteSheet(), (MovingBonus) bonus));
     }
 }

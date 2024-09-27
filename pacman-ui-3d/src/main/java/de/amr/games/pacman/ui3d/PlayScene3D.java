@@ -101,7 +101,6 @@ public class PlayScene3D implements GameScene {
         this.context = checkNotNull(context);
     }
 
-    @Override
     public Node root() {
         return fxSubScene;
     }

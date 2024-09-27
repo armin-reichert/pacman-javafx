@@ -309,18 +309,18 @@ public class PacManIntroScene extends GameScene2D {
             case CHASING_PAC -> {
                 drawPoints(renderer);
                 if (data.blinking.isOn()) {
-                    drawEnergizer(t(data.leftTileX), t(20));
+                    drawEnergizer(renderer, t(data.leftTileX), t(20));
                 }
                 drawGuys(renderer, flutter(timer.currentTick()));
                 if (context.game().variant() == GameVariant.PACMAN) {
-                    renderer.drawText(g, MIDWAY_COPYRIGHT, PALETTE_PINK, sceneFont(8),  t(4), t(32));
+                    renderer.drawText(MIDWAY_COPYRIGHT, PALETTE_PINK, sceneFont(8),  t(4), t(32));
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints(renderer);
                 drawGuys(renderer, 0);
                 if (context.game().variant() == GameVariant.PACMAN) {
-                    renderer.drawText(g, MIDWAY_COPYRIGHT, PALETTE_PINK, sceneFont(8),  t(4), t(32));
+                    renderer.drawText(MIDWAY_COPYRIGHT, PALETTE_PINK, sceneFont(8),  t(4), t(32));
                 }
             }
             default -> {
@@ -338,39 +338,39 @@ public class PacManIntroScene extends GameScene2D {
 
         int tx = data.leftTileX;
         if (data.titleVisible) {
-            renderer.drawText(g, "CHARACTER / NICKNAME", PALETTE_PALE, font, t(tx + 3), t(6));
+            renderer.drawText("CHARACTER / NICKNAME", PALETTE_PALE, font, t(tx + 3), t(6));
         }
         for (byte id = 0; id < 4; ++id) {
             if (!data.ghostImageVisible[id]) {
                 continue;
             }
             int ty = 7 + 3 * id;
-            renderer.drawSpriteCenteredOverBox(g, context.spriteSheet(), context.spriteSheet().ghostFacingRight(id), t(tx) + 4, t(ty));
+            renderer.drawSpriteCenteredOverBox(context.spriteSheet(), context.spriteSheet().ghostFacingRight(id), t(tx) + 4, t(ty));
             if (data.ghostCharacterVisible[id]) {
                 var text = "-" + data.ghostCharacters[id];
-                renderer.drawText(g, text, GHOST_COLORS[id], font, t(tx + 3), t(ty + 1));
+                renderer.drawText(text, GHOST_COLORS[id], font, t(tx + 3), t(ty + 1));
             }
             if (data.ghostNicknameVisible[id]) {
                 var text = '"' + data.ghosts.get(id).name().toUpperCase() + '"';
-                renderer.drawText(g, text, GHOST_COLORS[id], font, t(tx + 14), t(ty + 1));
+                renderer.drawText(text, GHOST_COLORS[id], font, t(tx + 14), t(ty + 1));
             }
         }
     }
 
     private void drawGuys(GameWorldRenderer renderer, int shakingAmount) {
         if (shakingAmount == 0) {
-            data.ghosts.forEach(ghost -> renderer.drawAnimatedEntity(g, ghost));
+            data.ghosts.forEach(ghost -> renderer.drawAnimatedEntity(ghost));
         } else {
-            renderer.drawAnimatedEntity(g, data.ghosts.get(0));
-            renderer.drawAnimatedEntity(g, data.ghosts.get(3));
+            renderer.drawAnimatedEntity(data.ghosts.get(0));
+            renderer.drawAnimatedEntity(data.ghosts.get(3));
             // shaking ghosts effect, not quite as in original game
-            g.save();
-            g.translate(shakingAmount, 0);
-            renderer.drawAnimatedEntity(g, data.ghosts.get(1));
-            renderer.drawAnimatedEntity(g, data.ghosts.get(2));
-            g.restore();
+            renderer.ctx().save();
+            renderer.ctx().translate(shakingAmount, 0);
+            renderer.drawAnimatedEntity(data.ghosts.get(1));
+            renderer.drawAnimatedEntity(data.ghosts.get(2));
+            renderer.ctx().restore();
         }
-        renderer.drawAnimatedEntity(g, data.pacMan);
+        renderer.drawAnimatedEntity(data.pacMan);
     }
 
     private void drawPoints(GameWorldRenderer renderer) {
@@ -379,26 +379,26 @@ public class PacManIntroScene extends GameScene2D {
         var font6 = sceneFont(6);
         int tx = data.leftTileX + 6;
         int ty = 25;
-        g.setFill(PELLET_COLOR);
-        g.fillRect(scaled(t(tx) + 4), scaled(t(ty - 1) + 4), scaled(2), scaled(2));
+        renderer.ctx().setFill(PELLET_COLOR);
+        renderer.ctx().fillRect(scaled(t(tx) + 4), scaled(t(ty - 1) + 4), scaled(2), scaled(2));
         if (data.blinking.isOn()) {
-            drawEnergizer(t(tx), t(ty + 1));
+            drawEnergizer(renderer, t(tx), t(ty + 1));
         }
-        renderer.drawText(g, "10",  color, font8, t(tx + 2), t(ty));
-        renderer.drawText(g, "PTS", color, font6, t(tx + 5), t(ty));
-        renderer.drawText(g, "50",  color, font8, t(tx + 2), t(ty + 2));
-        renderer.drawText(g, "PTS", color, font6, t(tx + 5), t(ty + 2));
+        renderer.drawText("10",  color, font8, t(tx + 2), t(ty));
+        renderer.drawText("PTS", color, font6, t(tx + 5), t(ty));
+        renderer.drawText("50",  color, font8, t(tx + 2), t(ty + 2));
+        renderer.drawText("PTS", color, font6, t(tx + 5), t(ty + 2));
     }
 
     // draw pixelated "circle"
-    private void drawEnergizer(double x, double y) {
+    private void drawEnergizer(GameWorldRenderer renderer, double x, double y) {
         double scaling = scalingPy.get();
-        g.save();
-        g.scale(scaling, scaling);
-        g.setFill(PELLET_COLOR);
-        g.fillRect(x + 2, y, 4, 8);
-        g.fillRect(x, y + 2, 8, 4);
-        g.fillRect(x + 1, y + 1, 6, 6);
-        g.restore();
+        renderer.ctx().save();
+        renderer.ctx().scale(scaling, scaling);
+        renderer.ctx().setFill(PELLET_COLOR);
+        renderer.ctx().fillRect(x + 2, y, 4, 8);
+        renderer.ctx().fillRect(x, y + 2, 8, 4);
+        renderer.ctx().fillRect(x + 1, y + 1, 6, 6);
+        renderer.ctx().restore();
     }
 }

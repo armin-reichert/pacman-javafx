@@ -125,8 +125,8 @@ public class GamePage3D extends GamePage {
     @Override
     public void setGameScene(GameScene gameScene) {
         contextMenu.hide();
-        if (gameScene instanceof PlayScene3D) {
-            getChildren().set(0, gameScene.root());
+        if (gameScene instanceof PlayScene3D playScene3D) {
+            getChildren().set(0, playScene3D.root());
         } else if (gameScene instanceof GameScene2D scene2D) {
             setGameScene2D(scene2D);
         } else {

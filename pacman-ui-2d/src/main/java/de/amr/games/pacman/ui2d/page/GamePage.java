@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -19,6 +20,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -34,7 +36,6 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.border;
-import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 
 /**
  * @author Armin Reichert
@@ -170,16 +171,15 @@ public class GamePage extends StackPane implements Page {
         contextMenu.requestFocus();
     }
 
+    public Canvas canvas() {
+        return canvasLayer.decoratedCanvas().canvas();
+    }
+
     public void adaptCanvasSizeToCurrentWorld() {
-        var world = context.game().world();
-        if (world != null) {
-            canvasLayer.setUnscaledCanvasSize(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
-        } else {
-            canvasLayer.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
-        }
+        Vector2i worldSizePixels = context.worldSizeTilesOrDefault().scaled(TS);
+        canvasLayer.setUnscaledCanvasSize(worldSizePixels.x(), worldSizePixels.y());
         canvasLayer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-        Logger.info("Canvas size adapted. w={}, h={}",
-            canvasLayer.decoratedCanvas().getWidth(), canvasLayer.decoratedCanvas().getHeight());
+        Logger.info("Canvas size adapted. w={0.00}, h={0.00}", canvas().getWidth(), canvas().getHeight());
     }
 
     protected void setGameScene(GameScene gameScene) {
@@ -196,12 +196,8 @@ public class GamePage extends StackPane implements Page {
 
     protected void setGameScene2D(GameScene2D scene2D) {
         getChildren().set(0, canvasLayer);
-        scene2D.setCanvas(canvasLayer.decoratedCanvas().canvas());
         scene2D.scalingPy.bind(canvasLayer.scalingPy);
-        canvasLayer.decoratedCanvas().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> coloredBackground(scene2D.backgroundColorPy.get()), scene2D.backgroundColorPy
-        ));
-        scene2D.clearCanvas();
+        canvasLayer.decoratedCanvas().backgroundProperty().bind(scene2D.backgroundColorPy.map(Ufx::coloredBackground));
         adaptCanvasSizeToCurrentWorld();
     }
 

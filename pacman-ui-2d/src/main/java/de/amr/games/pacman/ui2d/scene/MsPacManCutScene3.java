@@ -188,15 +188,14 @@ public class MsPacManCutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
-        renderer.drawClapperBoard(g,
-            spriteSheet,
+        renderer.drawClapperBoard(spriteSheet,
             context.assets().font("font.arcade", scaled(8)),
             PALETTE_PALE,
             clapAnimation, t(3), t(10));
-        renderer.drawAnimatedEntity(g, msPacMan);
-        renderer.drawAnimatedEntity(g, pacMan);
-        renderer.drawEntitySprite(g, stork, spriteSheet, storkAnimation.currentSprite());
-        renderer.drawEntitySprite(g, bag, spriteSheet,
+        renderer.drawAnimatedEntity(msPacMan);
+        renderer.drawAnimatedEntity(pacMan);
+        renderer.drawEntitySprite(stork, spriteSheet, storkAnimation.currentSprite());
+        renderer.drawEntitySprite(bag, spriteSheet,
             bagOpen ? spriteSheet.juniorPacSprite() : spriteSheet.blueBagSprite());
     }
 }

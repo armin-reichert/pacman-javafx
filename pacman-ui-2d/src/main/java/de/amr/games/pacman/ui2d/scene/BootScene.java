@@ -41,13 +41,13 @@ public class BootScene extends GameScene2D {
         renderer.backgroundColorProperty().set(backgroundColorPy.get());
         var timer = context.gameState().timer();
         if (timer.currentTick() == 1) {
-            clearCanvas();
+            renderer.clearCanvas();
         } else if (timer.betweenSeconds(1, 2) && timer.currentTick() % 4 == 0) {
-            paintRandomHexCodes();
+            paintRandomHexCodes(renderer);
         } else if (timer.betweenSeconds(2, 3.5) && timer.currentTick() % 4 == 0) {
-            paintRandomSprites();
+            paintRandomSprites(renderer);
         } else if (timer.atSecond(3.5)) {
-            paintGrid();
+            paintGrid(renderer);
         }
     }
 
@@ -56,20 +56,20 @@ public class BootScene extends GameScene2D {
         // not used here
     }
 
-    private void paintRandomHexCodes() {
-        clearCanvas();
-        g.setFill(PALETTE_PALE);
-        g.setFont(sceneFont(8));
+    private void paintRandomHexCodes(GameWorldRenderer renderer) {
+        renderer.clearCanvas();
+        renderer.ctx().setFill(PALETTE_PALE);
+        renderer.ctx().setFont(sceneFont(8));
         for (int row = 0; row < GameModel.ARCADE_MAP_TILES_Y; ++row) {
             for (int col = 0; col < GameModel.ARCADE_MAP_TILES_X; ++col) {
                 var hexCode = Integer.toHexString(RND.nextInt(16));
-                g.fillText(hexCode, scaled(t(col)), scaled(t(row + 1)));
+                renderer.ctx().fillText(hexCode, scaled(t(col)), scaled(t(row + 1)));
             }
         }
     }
 
-    private void paintRandomSprites() {
-        clearCanvas();
+    private void paintRandomSprites(GameWorldRenderer renderer) {
+        renderer.clearCanvas();
         for (int row = 0; row < GameModel.ARCADE_MAP_TILES_Y / 2; ++row) {
             if (RND.nextInt(100) > 20) {
                 var region1 = randomSpriteSheetTile();
@@ -77,7 +77,7 @@ public class BootScene extends GameScene2D {
                 var splitX = GameModel.ARCADE_MAP_TILES_X / 8 + RND.nextInt(GameModel.ARCADE_MAP_TILES_X / 4);
                 for (int col = 0; col < GameModel.ARCADE_MAP_TILES_X / 2; ++col) {
                     var region = col < splitX ? region1 : region2;
-                    context.renderer().drawSpriteScaled(g, context.spriteSheet(), region, region.width() * col, region.height() * row);
+                    renderer.drawSpriteScaled(context.spriteSheet(), region, region.width() * col, region.height() * row);
                 }
             }
         }
@@ -91,20 +91,20 @@ public class BootScene extends GameScene2D {
         return new RectArea(x, y, raster, raster);
     }
 
-    private void paintGrid() {
-        clearCanvas();
+    private void paintGrid(GameWorldRenderer renderer) {
+        renderer.clearCanvas();
         double width = t(28), height = t(36), raster = 16;
         var numRows = GameModel.ARCADE_MAP_TILES_Y / 2;
         var numCols = GameModel.ARCADE_MAP_TILES_X / 2;
-        g.setStroke(PALETTE_PALE);
-        g.setLineWidth(scaled(2.0));
+        renderer.ctx().setStroke(PALETTE_PALE);
+        renderer.ctx().setLineWidth(scaled(2.0));
         for (int row = 0; row <= numRows; ++row) {
-            g.setLineWidth(row == 0 || row == numRows ? scaled(4.0) : scaled(2.0));
-            g.strokeLine(0, scaled(row * raster), scaled(width), scaled(row * raster));
+            renderer.ctx().setLineWidth(row == 0 || row == numRows ? scaled(4.0) : scaled(2.0));
+            renderer.ctx().strokeLine(0, scaled(row * raster), scaled(width), scaled(row * raster));
         }
         for (int col = 0; col <= numCols; ++col) {
-            g.setLineWidth(col == 0 || col == numCols ? scaled(4.0) : scaled(2.0));
-            g.strokeLine(scaled(col * raster), 0, scaled(col * raster), scaled(height));
+            renderer.ctx().setLineWidth(col == 0 || col == numCols ? scaled(4.0) : scaled(2.0));
+            renderer.ctx().strokeLine(scaled(col * raster), 0, scaled(col * raster), scaled(height));
         }
     }
 }

@@ -347,6 +347,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     private void configureGameScene2D(GameScene2D gameScene2D) {
         worldRenderer = createRenderer(game().variant(), assets);
+        worldRenderer.setCanvas(gamePage.canvas());
         gameScene2D.backgroundColorPy.bind(PY_CANVAS_BG_COLOR);
     }
 

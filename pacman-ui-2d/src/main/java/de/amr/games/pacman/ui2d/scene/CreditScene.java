@@ -48,35 +48,34 @@ public class CreditScene extends GameScene2D {
         var font6 = sceneFont(6);
         switch (context.game().variant()) {
             case MS_PACMAN -> {
-                renderer.drawText(g, "PUSH START BUTTON", PALETTE_ORANGE, font8, t(6), t(16));
-                renderer.drawText(g, "1 PLAYER ONLY", PALETTE_ORANGE, font8, t(8), t(18));
-                renderer.drawText(g, "ADDITIONAL    AT 10000", PALETTE_ORANGE, font8, t(2), t(25));
-                renderer.drawSpriteScaled(g, context.spriteSheet(), context.spriteSheet().livesCounterSprite(), t(13), t(23) + 1);
-                renderer.drawText(g, "PTS", PALETTE_ORANGE, font6, t(25), t(25));
-                renderer.drawMsPacManMidwayCopyright(g,
-                    context.assets().get("ms_pacman.logo.midway"),
+                renderer.drawText("PUSH START BUTTON", PALETTE_ORANGE, font8, t(6), t(16));
+                renderer.drawText("1 PLAYER ONLY", PALETTE_ORANGE, font8, t(8), t(18));
+                renderer.drawText("ADDITIONAL    AT 10000", PALETTE_ORANGE, font8, t(2), t(25));
+                renderer.drawSpriteScaled(context.spriteSheet(), context.spriteSheet().livesCounterSprite(), t(13), t(23) + 1);
+                renderer.drawText("PTS", PALETTE_ORANGE, font6, t(25), t(25));
+                renderer.drawMsPacManMidwayCopyright(context.assets().get("ms_pacman.logo.midway"),
                     t(6), t(28), PALETTE_RED, sceneFont(TS));
             }
             case MS_PACMAN_TENGEN -> {
-                renderer.drawText(g, "PUSH START BUTTON", PALETTE_ORANGE, font8, t(6), t(16));
-                renderer.drawText(g, "1 PLAYER ONLY", PALETTE_ORANGE, font8, t(8), t(18));
-                renderer.drawText(g, "ADDITIONAL    AT 10000", PALETTE_ORANGE, font8, t(2), t(25));
-                renderer.drawSpriteScaled(g, context.spriteSheet(), context.spriteSheet().livesCounterSprite(), t(13), t(23) + 1);
-                renderer.drawText(g, "PTS", PALETTE_ORANGE, font6, t(25), t(25));
+                renderer.drawText("PUSH START BUTTON", PALETTE_ORANGE, font8, t(6), t(16));
+                renderer.drawText("1 PLAYER ONLY", PALETTE_ORANGE, font8, t(8), t(18));
+                renderer.drawText("ADDITIONAL    AT 10000", PALETTE_ORANGE, font8, t(2), t(25));
+                renderer.drawSpriteScaled(context.spriteSheet(), context.spriteSheet().livesCounterSprite(), t(13), t(23) + 1);
+                renderer.drawText("PTS", PALETTE_ORANGE, font6, t(25), t(25));
             }
             case PACMAN -> {
-                renderer.drawText(g, "PUSH START BUTTON", PALETTE_ORANGE, font8, t(6), t(17));
-                renderer.drawText(g, "1 PLAYER ONLY", PALETTE_CYAN, font8, t(8), t(21));
-                renderer.drawText(g, "BONUS PAC-MAN FOR 10000", PALETTE_ROSE, font8, t(1), t(25));
-                renderer.drawText(g, "PTS", PALETTE_ROSE, font6, t(25), t(25));
-                renderer.drawText(g, MIDWAY_COPYRIGHT, PALETTE_PINK, sceneFont(8),  t(4), t(29));
+                renderer.drawText("PUSH START BUTTON", PALETTE_ORANGE, font8, t(6), t(17));
+                renderer.drawText("1 PLAYER ONLY", PALETTE_CYAN, font8, t(8), t(21));
+                renderer.drawText("BONUS PAC-MAN FOR 10000", PALETTE_ROSE, font8, t(1), t(25));
+                renderer.drawText("PTS", PALETTE_ROSE, font6, t(25), t(25));
+                renderer.drawText(MIDWAY_COPYRIGHT, PALETTE_PINK, sceneFont(8),  t(4), t(29));
 
             }
             case PACMAN_XXL -> {
-                renderer.drawText(g, "PUSH START BUTTON", PALETTE_ORANGE, font8, t(6), t(17));
-                renderer.drawText(g, "1 PLAYER ONLY", PALETTE_CYAN, font8, t(8), t(21));
-                renderer.drawText(g, "BONUS PAC-MAN FOR 10000", PALETTE_ROSE, font8, t(1), t(25));
-                renderer.drawText(g, "PTS", PALETTE_ROSE, font6, t(25), t(25));
+                renderer.drawText("PUSH START BUTTON", PALETTE_ORANGE, font8, t(6), t(17));
+                renderer.drawText("1 PLAYER ONLY", PALETTE_CYAN, font8, t(8), t(21));
+                renderer.drawText("BONUS PAC-MAN FOR 10000", PALETTE_ROSE, font8, t(1), t(25));
+                renderer.drawText("PTS", PALETTE_ROSE, font6, t(25), t(25));
             }
             default -> throw new IllegalArgumentException("Unsupported game variant: " + context.game().variant());
         }

@@ -48,6 +48,7 @@ public class PictureInPictureView implements GameEventListener {
 
     private final GameContext context;
     private final HBox container;
+    private final Canvas canvas = new Canvas();
     private final HBox canvasContainer;
     private final PlayScene2D gameScene;
     private GameWorldRenderer renderer;
@@ -66,10 +67,8 @@ public class PictureInPictureView implements GameEventListener {
             }
         });
 
-        Canvas canvas = new Canvas();
         canvas.heightProperty().bind(heightPy);
         canvas.widthProperty().bind(heightPy.multiply(aspect));
-        gameScene.setCanvas(canvas); //TODO attach to renderer instead?
 
         canvasContainer = new HBox(canvas);
         canvasContainer.visibleProperty().bind(visiblePy);
@@ -93,7 +92,7 @@ public class PictureInPictureView implements GameEventListener {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        Vector2i worldSize = context.worldSizeOrDefault();
+        Vector2i worldSize = context.worldSizeTilesOrDefault();
         aspect = (double) worldSize.x() / worldSize.y();
         if (context.game().world() != null) {
             int mapNumber = context.game().mapNumberByLevelNumber(context.game().levelNumber());
@@ -103,12 +102,13 @@ public class PictureInPictureView implements GameEventListener {
 
     public void draw() {
         if (visiblePy.get()) {
+            renderer.setCanvas(canvas);
             gameScene.draw(renderer);
         }
     }
 
     private void updateScaling() {
-        double referenceHeight = context.worldSizeOrDefault().y() * TS;
+        double referenceHeight = context.worldSizeTilesOrDefault().y() * TS;
         gameScene.scalingPy.set(heightPy.get() / referenceHeight);
     }
 }

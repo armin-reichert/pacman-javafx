@@ -17,7 +17,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.maps.editor.TileMapUtil.getColorFromMap;
@@ -36,10 +36,21 @@ public class PacManXXLGameRenderer implements GameWorldRenderer {
 
     private boolean flashMode;
     private boolean blinkingOn;
+    private Canvas canvas;
 
     public PacManXXLGameRenderer() {
         terrainRenderer.scalingPy.bind(scalingPy);
         foodRenderer.scalingPy.bind(scalingPy);
+    }
+
+    @Override
+    public void setCanvas(Canvas canvas) {
+        this.canvas = canvas;
+    }
+
+    @Override
+    public Canvas canvas() {
+        return canvas;
     }
 
     @Override
@@ -68,7 +79,7 @@ public class PacManXXLGameRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public void drawWorld(GraphicsContext g, GameSpriteSheet spriteSheet, GameContext context, GameWorld world) {
+    public void drawWorld(GameSpriteSheet spriteSheet, GameContext context, GameWorld world) {
         TileMap terrain = world.map().terrain();
         Color wallStrokeColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_STROKE, Color.WHITE);
         Color wallFillColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_FILL, Color.GREEN);
@@ -78,30 +89,30 @@ public class PacManXXLGameRenderer implements GameWorldRenderer {
             terrainRenderer.setWallStrokeColor(blinkingOn ? Color.WHITE : Color.BLACK);
             terrainRenderer.setWallFillColor(blinkingOn   ? Color.BLACK : Color.WHITE);
             terrainRenderer.setDoorColor(Color.BLACK);
-            terrainRenderer.drawMap(g, terrain);
+            terrainRenderer.drawMap(ctx(), terrain);
         }
         else {
             terrainRenderer.setWallStrokeColor(wallStrokeColor);
             terrainRenderer.setWallFillColor(wallFillColor);
             terrainRenderer.setDoorColor(doorColor);
-            terrainRenderer.drawMap(g, terrain);
+            terrainRenderer.drawMap(ctx(), terrain);
             Color foodColor = getColorFromMap(world.map().food(), PROPERTY_COLOR_FOOD, Color.ORANGE);
             foodRenderer.setPelletColor(foodColor);
             foodRenderer.setEnergizerColor(foodColor);
             world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
-                .forEach(tile -> foodRenderer.drawPellet(g, tile));
+                .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
             if (blinkingOn) {
-                world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(g, tile));
+                world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
             }
         }
-        context.game().bonus().ifPresent(bonus -> drawStaticBonus(g, spriteSheet, bonus));
+        context.game().bonus().ifPresent(bonus -> drawStaticBonus(spriteSheet, bonus));
     }
 
-    private void drawStaticBonus(GraphicsContext g, GameSpriteSheet spriteSheet, Bonus bonus) {
+    private void drawStaticBonus(GameSpriteSheet spriteSheet, Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
-            drawEntitySprite(g,  bonus.entity(), spriteSheet, spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            drawEntitySprite(bonus.entity(), spriteSheet, spriteSheet.bonusSymbolSprite(bonus.symbol()));
         } else if (bonus.state() == Bonus.STATE_EATEN) {
-            drawEntitySprite(g,  bonus.entity(), spriteSheet, spriteSheet.bonusValueSprite(bonus.symbol()));
+            drawEntitySprite(bonus.entity(), spriteSheet, spriteSheet.bonusValueSprite(bonus.symbol()));
         }
     }
 }

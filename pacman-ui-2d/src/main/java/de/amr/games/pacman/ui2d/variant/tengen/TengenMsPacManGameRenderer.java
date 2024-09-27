@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
-import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -23,7 +22,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -42,13 +41,13 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final Image arcadeMazesImage;
     private final Image nonArcadeMazesImage;
-
     //TODO temporary
     private final MsPacManArcadeGameRenderer rendererMsPacMan;
 
     private ImageArea mapSprite;
     private boolean flashMode;
     private boolean blinkingOn;
+    private Canvas canvas;
 
     public TengenMsPacManGameRenderer(AssetStorage assets) {
         terrainRenderer.scalingPy.bind(scalingPy);
@@ -60,6 +59,17 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
         arcadeMazesImage = assets.image("tengen.mazes.arcade");
         nonArcadeMazesImage = assets.image("tengen.mazes.non_arcade");
     }
+
+    @Override
+    public void setCanvas(Canvas canvas) {
+        this.canvas = canvas;
+    }
+
+    @Override
+    public Canvas canvas() {
+        return canvas;
+    }
+
 
     @Override
     public void setFlashMode(boolean flashMode) {
@@ -82,7 +92,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public void drawWorld(GraphicsContext g, GameSpriteSheet spriteSheet, GameContext context, GameWorld world) {
+    public void drawWorld(GameSpriteSheet spriteSheet, GameContext context, GameWorld world) {
         TileMap terrain = world.map().terrain();
         if (flashMode) {
             // Flash mode uses vector rendering
@@ -90,31 +100,31 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
             terrainRenderer.setWallStrokeColor(Color.WHITE);
             terrainRenderer.setWallFillColor(blinkingOn ? Color.BLACK : wallFillColor);
             terrainRenderer.setDoorColor(Color.BLACK);
-            terrainRenderer.drawMap(g, terrain);
+            terrainRenderer.drawMap(ctx(), terrain);
         } else {
             if (mapSprite == null) {
                 Logger.error("No map sprite selected");
                 return;
             }
             // map sprite is selected when game level starts, so it should always be set here
-            g.drawImage(mapSprite.source(),
+            ctx().drawImage(mapSprite.source(),
                 mapSprite.area().x() + 0.5, mapSprite.area().y() + 0.5,
                 mapSprite.area().width() - 1, mapSprite.area().height() - 1,
                 0, scaled(3 * TS), scaled(mapSprite.area().width()), scaled(mapSprite.area().height()));
-            hideActorSprite(g, terrain.getTileProperty("pos_pac", v2i(14, 26)), 0, 0);
-            hideActorSprite(g, terrain.getTileProperty("pos_ghost_1_red", v2i(13, 14)), 0, 0);
+            hideActorSprite(terrain.getTileProperty("pos_pac", v2i(14, 26)), 0, 0);
+            hideActorSprite(terrain.getTileProperty("pos_ghost_1_red", v2i(13, 14)), 0, 0);
             // The ghosts in the house are sitting some pixels below their home position
             // TODO: check if they really start from the bottom of the house, if yes, change map properties
-            hideActorSprite(g, terrain.getTileProperty("pos_ghost_2_pink",   v2i(13, 17)), 0, 4);
-            hideActorSprite(g, terrain.getTileProperty("pos_ghost_3_cyan",   v2i(11, 17)), 0, 4);
-            hideActorSprite(g, terrain.getTileProperty("pos_ghost_4_orange", v2i(15, 17)), 0, 4);
-            g.save();
-            g.scale(scalingPy.get(), scalingPy.get());
+            hideActorSprite(terrain.getTileProperty("pos_ghost_2_pink",   v2i(13, 17)), 0, 4);
+            hideActorSprite(terrain.getTileProperty("pos_ghost_3_cyan",   v2i(11, 17)), 0, 4);
+            hideActorSprite(terrain.getTileProperty("pos_ghost_4_orange", v2i(15, 17)), 0, 4);
+            ctx().save();
+            ctx().scale(scalingPy.get(), scalingPy.get());
             // Food
-            overPaintEatenPellets(g, world);
-            overPaintEnergizers(g, world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
-            g.restore();
-            context.game().bonus().ifPresent(bonus -> drawMovingBonus(g, spriteSheet, (MovingBonus) bonus));
+            overPaintEatenPellets(world);
+            overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
+            ctx().restore();
+            context.game().bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
         }
     }
 
@@ -158,23 +168,23 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
         return new RectArea(col * width, y, width, height);
     }
 
-    private void hideActorSprite(GraphicsContext g, Vector2i tile, double offX, double offY) {
+    private void hideActorSprite(Vector2i tile, double offX, double offY) {
         // Parameter tile denotes the left of the two tiles where actor is located between. Compute center position.
         double cx = tile.x() * TS + TS + offX;
         double cy = tile.y() * TS + HTS + offY;
         double spriteSize = 2 * TS;
-        g.setFill(backgroundColorProperty().get());
-        g.fillRect(scaled(cx - TS), scaled(cy - TS), scaled(spriteSize), scaled(spriteSize));
+        ctx().setFill(backgroundColorProperty().get());
+        ctx().fillRect(scaled(cx - TS), scaled(cy - TS), scaled(spriteSize), scaled(spriteSize));
     }
 
     //TODO temporary hack until Tengen sprite sheet is usable
 
     @Override
-    public void drawAnimatedEntity(GraphicsContext g, AnimatedEntity guy) {
+    public void drawAnimatedEntity(AnimatedEntity guy) {
         if (guy.entity() instanceof MovingBonus) {
-            rendererMsPacMan.drawAnimatedEntity(g, guy);
+            rendererMsPacMan.drawAnimatedEntity(guy);
         } else {
-            GameWorldRenderer.super.drawAnimatedEntity(g, guy);
+            GameWorldRenderer.super.drawAnimatedEntity(guy);
         }
     }
 }

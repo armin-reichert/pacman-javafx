@@ -17,7 +17,6 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.ClapperboardAnimation;
 import javafx.beans.property.ObjectProperty;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -42,49 +41,54 @@ public interface GameWorldRenderer extends SpriteRenderer {
 
     void selectMap(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet);
 
-    void drawWorld(GraphicsContext g, GameSpriteSheet spriteSheet, GameContext context, GameWorld world);
+    void drawWorld(GameSpriteSheet spriteSheet, GameContext context, GameWorld world);
 
     void setFlashMode(boolean on);
 
     void setBlinkingOn(boolean on);
 
+    default void clearCanvas() {
+        ctx().setFill(backgroundColorProperty().get());
+        ctx().fillRect(0, 0, canvas().getWidth(), canvas().getHeight());
+    }
+
     /**
      * Over-paints all eaten pellet tiles.
      * Assumes to be called in scaled graphics context!
      */
-    default void overPaintEatenPellets(GraphicsContext g, GameWorld world) {
+    default void overPaintEatenPellets(GameWorld world) {
         world.map().food().tiles()
             .filter(not(world::isEnergizerPosition))
-            .filter(world::hasEatenFoodAt).forEach(tile -> overPaint(g, tile, 4));
+            .filter(world::hasEatenFoodAt).forEach(tile -> overPaint(tile, 4));
     }
 
     /**
      * Over-pains all eaten energizer tiles.
      * Assumes to be called in scaled graphics context!
      */
-    default void overPaintEnergizers(GraphicsContext g, GameWorld world, Predicate<Vector2i> condition) {
-        world.energizerTiles().filter(condition).forEach(tile -> overPaint(g, tile, 9.5));
+    default void overPaintEnergizers(GameWorld world, Predicate<Vector2i> condition) {
+        world.energizerTiles().filter(condition).forEach(tile -> overPaint(tile, 9.5));
     }
 
     /**
      * Draws a square of the given size in background color over the tile. Used to hide eaten food and energizers.
      * Assumes to be called in scaled graphics context!
      */
-    private void overPaint(GraphicsContext g, Vector2i tile, double squareSize) {
+    private void overPaint(Vector2i tile, double squareSize) {
         double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
-        g.setFill(backgroundColorProperty().get());
-        g.fillRect(centerX - 0.5 * squareSize, centerY - 0.5 * squareSize, squareSize, squareSize);
+        ctx().setFill(backgroundColorProperty().get());
+        ctx().fillRect(centerX - 0.5 * squareSize, centerY - 0.5 * squareSize, squareSize, squareSize);
     }
 
-    default void drawAnimatedCreatureInfo(GraphicsContext g, AnimatedEntity animatedCreature) {
+    default void drawAnimatedCreatureInfo(AnimatedEntity animatedCreature) {
         if (animatedCreature.animations().isPresent() && animatedCreature.animations().get() instanceof SpriteAnimationCollection sa) {
             Creature guy = (Creature) animatedCreature.entity();
             String animationName = sa.currentAnimationName();
             if (animationName != null) {
                 String text = animationName + " " + sa.currentAnimation().frameIndex();
-                g.setFill(Color.WHITE);
-                g.setFont(Font.font("Monospaced", scaled(6)));
-                g.fillText(text, scaled(guy.posX() - 4), scaled(guy.posY() - 4));
+                ctx().setFill(Color.WHITE);
+                ctx().setFont(Font.font("Monospaced", scaled(6)));
+                ctx().fillText(text, scaled(guy.posX() - 4), scaled(guy.posY() - 4));
             }
             if (guy.wishDir() != null) {
                 float scaling = (float) scalingProperty().get();
@@ -92,12 +96,12 @@ public interface GameWorldRenderer extends SpriteRenderer {
                 Vector2f guyCenter = guy.center().scaled(scaling);
                 float radius = scaling * 2, diameter = 2 * radius;
 
-                g.setStroke(Color.WHITE);
-                g.setLineWidth(0.5);
-                g.strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
+                ctx().setStroke(Color.WHITE);
+                ctx().setLineWidth(0.5);
+                ctx().strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
 
-                g.setFill(guy.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
-                g.fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
+                ctx().setFill(guy.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
+                ctx().fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
             }
         }
     }
@@ -105,97 +109,95 @@ public interface GameWorldRenderer extends SpriteRenderer {
     /**
      * Draws a text with the given style at the given (unscaled) position.
      *
-     * @param g     graphics context
      * @param text  text
      * @param color text color
      * @param font  text font
      * @param x     unscaled x-position
      * @param y     unscaled y-position (baseline)
      */
-    default void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
-        g.setFont(font);
-        g.setFill(color);
-        g.fillText(text, scaled(x), scaled(y));
+    default void drawText(String text, Color color, Font font, double x, double y) {
+        ctx().setFont(font);
+        ctx().setFill(color);
+        ctx().fillText(text, scaled(x), scaled(y));
     }
 
-    default void drawLivesCounter(GraphicsContext g, GameSpriteSheet spriteSheet, int numLivesDisplayed, int y) {
+    default void drawLivesCounter(GameSpriteSheet spriteSheet, int numLivesDisplayed, int y) {
         if (numLivesDisplayed == 0) {
             return;
         }
         int maxSymbols = 5;
         var x = TS * 2;
         for (int i = 0; i < Math.min(numLivesDisplayed, maxSymbols); ++i) {
-            drawSpriteScaled(g, spriteSheet, spriteSheet.livesCounterSprite(), x + TS * (2 * i), y);
+            drawSpriteScaled(spriteSheet, spriteSheet.livesCounterSprite(), x + TS * (2 * i), y);
         }
         // show text indicating that more lives are available than symbols displayed (can happen when lives are added via cheat)
         int moreLivesThanSymbols = numLivesDisplayed - maxSymbols;
         if (moreLivesThanSymbols > 0) {
             Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            drawText(g, "+" + moreLivesThanSymbols, Color.YELLOW, font, x + TS * 10, y + TS);
+            drawText("+" + moreLivesThanSymbols, Color.YELLOW, font, x + TS * 10, y + TS);
         }
     }
 
-    default void drawLevelCounter(GraphicsContext g, GameSpriteSheet spriteSheet, List<Byte> symbols, double x, double y) {
+    default void drawLevelCounter(GameSpriteSheet spriteSheet, List<Byte> symbols, double x, double y) {
         double currentX = x;
         for (byte symbol : symbols) {
-            drawSpriteScaled(g, spriteSheet, spriteSheet.bonusSymbolSprite(symbol), currentX, y);
+            drawSpriteScaled(spriteSheet, spriteSheet.bonusSymbolSprite(symbol), currentX, y);
             currentX -= TS * 2;
         }
     }
 
-    default void drawScore(GraphicsContext g, Score score, String title, double x, double y, Font font, Color color) {
+    default void drawScore(Score score, String title, double x, double y, Font font, Color color) {
         var pointsText = String.format("%02d", score.points());
-        drawText(g, title, color, font, x, y);
-        drawText(g, String.format("%7s", pointsText), color, font, x, y + TS + 1);
+        drawText(title, color, font, x, y);
+        drawText(String.format("%7s", pointsText), color, font, x, y + TS + 1);
         if (score.points() != 0) {
-            drawText(g, "L" + score.levelNumber(), color, font, x + t(8), y + TS + 1);
+            drawText("L" + score.levelNumber(), color, font, x + t(8), y + TS + 1);
         }
     }
 
-    default void drawTileGrid(GraphicsContext g, int numWorldTilesX, int numWorldTilesY  ) {
-        g.setStroke(Color.LIGHTGRAY);
-        g.setLineWidth(0.2);
+    default void drawTileGrid(int numWorldTilesX, int numWorldTilesY  ) {
+        ctx().setStroke(Color.LIGHTGRAY);
+        ctx().setLineWidth(0.2);
         for (int row = 0; row <= numWorldTilesY; ++row) {
-            g.strokeLine(0, scaled(TS * row), scaled(numWorldTilesX * TS), scaled(TS * row));
+            ctx().strokeLine(0, scaled(TS * row), scaled(numWorldTilesX * TS), scaled(TS * row));
         }
         for (int col = 0; col <= numWorldTilesX; ++col) {
-            g.strokeLine(scaled(TS * col), 0, scaled(TS * col), scaled(numWorldTilesY * TS));
+            ctx().strokeLine(scaled(TS * col), 0, scaled(TS * col), scaled(numWorldTilesY * TS));
         }
     }
 
-    default void drawMovingBonus(GraphicsContext g, GameSpriteSheet spriteSheet, MovingBonus bonus) {
-        g.save();
-        g.translate(0, bonus.elongationY());
+    default void drawMovingBonus(GameSpriteSheet spriteSheet, MovingBonus bonus) {
+        ctx().save();
+        ctx().translate(0, bonus.elongationY());
         switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawEntitySprite(g, bonus.entity(), spriteSheet, spriteSheet.bonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawEntitySprite(g, bonus.entity(), spriteSheet, spriteSheet.bonusValueSprite(bonus.symbol()));
+            case Bonus.STATE_EDIBLE -> drawEntitySprite(bonus.entity(), spriteSheet, spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawEntitySprite(bonus.entity(), spriteSheet, spriteSheet.bonusValueSprite(bonus.symbol()));
             default -> {}
         }
-        g.restore();
+        ctx().restore();
     }
 
-    default void drawClapperBoard(GraphicsContext g, GameSpriteSheet spriteSheet, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
+    default void drawClapperBoard(GameSpriteSheet spriteSheet, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
         var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
         if (sprite != RectArea.PIXEL) {
-            drawSpriteCenteredOverBox(g, spriteSheet, sprite, x, y);
-            g.setFont(font);
-            g.setFill(textColor.darker());
+            drawSpriteCenteredOverBox(spriteSheet, sprite, x, y);
+            ctx().setFont(font);
+            ctx().setFill(textColor.darker());
             var numberX = scaled(x + sprite.width() - 25);
             var numberY = scaled(y + 18);
-            g.setFill(textColor);
-            g.fillText(animation.number(), numberX, numberY);
+            ctx().setFill(textColor);
+            ctx().fillText(animation.number(), numberX, numberY);
             var textX = scaled(x + sprite.width());
-            g.fillText(animation.text(), textX, numberY);
+            ctx().fillText(animation.text(), textX, numberY);
         }
     }
 
-    default void drawMsPacManMidwayCopyright(GraphicsContext g, Image image, double x, double y, Color color, Font font) {
-        drawImageScaled(g, image, x, y + 2, t(4) - 2, t(4));
-        g.setFont(font);
-        g.setFill(color);
-        g.fillText("©", scaled(x + TS * 5), scaled(y + TS * 2 + 2));
-        g.fillText("MIDWAY MFG CO", scaled(x + TS * 7), scaled(y + TS * 2));
-        g.fillText("1980/1981", scaled(x + TS * 8), scaled(y + TS * 4));
+    default void drawMsPacManMidwayCopyright(Image image, double x, double y, Color color, Font font) {
+        drawImageScaled(image, x, y + 2, t(4) - 2, t(4));
+        ctx().setFont(font);
+        ctx().setFill(color);
+        ctx().fillText("©", scaled(x + TS * 5), scaled(y + TS * 2 + 2));
+        ctx().fillText("MIDWAY MFG CO", scaled(x + TS * 7), scaled(y + TS * 2));
+        ctx().fillText("1980/1981", scaled(x + TS * 8), scaled(y + TS * 4));
     }
-
 }
