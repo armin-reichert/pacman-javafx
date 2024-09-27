@@ -37,13 +37,6 @@ public class PictureInPictureView implements GameEventListener {
         }
     };
 
-    private final DoubleProperty aspectPy = new SimpleDoubleProperty(0.77) {
-        @Override
-        protected void invalidated() {
-            updateScaling();
-        }
-    };
-
     public final DoubleProperty opacityPy = new SimpleDoubleProperty(1);
 
     public final BooleanProperty visiblePy = new SimpleBooleanProperty(true) {
@@ -59,6 +52,7 @@ public class PictureInPictureView implements GameEventListener {
     private final HBox container = new HBox();
     private final PlayScene2D gameScene;
     private GameWorldRenderer renderer;
+    private double aspect = 0.777;
 
     public PictureInPictureView(GameContext context) {
         this.context = context;
@@ -70,7 +64,7 @@ public class PictureInPictureView implements GameEventListener {
 
         Canvas canvas = new Canvas();
         canvas.heightProperty().bind(heightPy);
-        canvas.widthProperty().bind(heightPy.multiply(aspectPy));
+        canvas.widthProperty().bind(heightPy.multiply(aspect));
 
         gameScene = new PlayScene2D();
         gameScene.setGameContext(context);
@@ -97,7 +91,7 @@ public class PictureInPictureView implements GameEventListener {
     @Override
     public void onLevelCreated(GameEvent e) {
         Vector2i worldSize = context.worldSizeOrDefault();
-        aspectPy.set((double) worldSize.x() / worldSize.y());
+        aspect = (double) worldSize.x() / worldSize.y();
         if (context.game().world() != null) {
             int mapNumber = context.game().mapNumberByLevelNumber(context.game().levelNumber());
             renderer.selectMap(context.game().world().map(), mapNumber, context.spriteSheet());
