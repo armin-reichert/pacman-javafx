@@ -37,7 +37,7 @@ public class DashboardLayer extends BorderPane {
 
         pip = new PictureInPictureView(context);
         pip.heightPy.bind(PY_PIP_HEIGHT);
-        pip.opacityPy.bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
+        pip.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
 
         setLeft(dashboardContainer);
         setRight(new VBox(pip.node(), new HBox()));

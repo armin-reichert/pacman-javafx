@@ -37,8 +37,6 @@ public class PictureInPictureView implements GameEventListener {
         }
     };
 
-    public final DoubleProperty opacityPy = new SimpleDoubleProperty(1);
-
     public final BooleanProperty visiblePy = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
@@ -49,13 +47,19 @@ public class PictureInPictureView implements GameEventListener {
     };
 
     private final GameContext context;
-    private final HBox container = new HBox();
+    private final HBox container;
+    private final HBox canvasContainer;
     private final PlayScene2D gameScene;
     private GameWorldRenderer renderer;
     private double aspect = 0.777;
 
     public PictureInPictureView(GameContext context) {
         this.context = context;
+
+        gameScene = new PlayScene2D();
+        gameScene.setGameContext(context);
+        gameScene.backgroundColorPy.bind(PY_CANVAS_BG_COLOR);
+
         context.gameVariantProperty().addListener((py, ov, nv) -> {
             if (nv != null) {
                 renderer = PacManGames2dUI.createRenderer(nv, context.assets());
@@ -65,19 +69,18 @@ public class PictureInPictureView implements GameEventListener {
         Canvas canvas = new Canvas();
         canvas.heightProperty().bind(heightPy);
         canvas.widthProperty().bind(heightPy.multiply(aspect));
+        gameScene.setCanvas(canvas); //TODO attach to renderer instead?
 
-        gameScene = new PlayScene2D();
-        gameScene.setGameContext(context);
-        gameScene.setCanvas(canvas);
-        gameScene.backgroundColorPy.bind(PY_CANVAS_BG_COLOR);
+        canvasContainer = new HBox(canvas);
+        canvasContainer.visibleProperty().bind(visiblePy);
+        canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
+        canvasContainer.setPadding(new Insets(5, 10, 5, 10));
 
-        HBox pane = new HBox(canvas);
-        pane.opacityProperty().bind(opacityPy);
-        pane.visibleProperty().bind(visiblePy);
-        pane.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
-        pane.setPadding(new Insets(5, 10, 5, 10));
+        container = new HBox(canvasContainer);
+    }
 
-        container.getChildren().add(pane);
+    public DoubleProperty opacityProperty() {
+        return canvasContainer.opacityProperty();
     }
 
     public void setVisible(boolean visible) {
