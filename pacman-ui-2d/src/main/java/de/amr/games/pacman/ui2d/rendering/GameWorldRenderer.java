@@ -35,7 +35,9 @@ public interface GameWorldRenderer {
 
     static ImageArea imageArea(Image sourceImage, int x, int y, int width, int height) {
         return new ImageArea(sourceImage, new RectArea(x, y, width, height));
-    }    Canvas canvas();
+    }
+
+    Canvas canvas();
 
     void setCanvas(Canvas canvas);
 

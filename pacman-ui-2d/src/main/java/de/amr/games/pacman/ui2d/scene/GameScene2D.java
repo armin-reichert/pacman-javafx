@@ -39,8 +39,7 @@ public abstract class GameScene2D implements GameScene {
         return value * scalingPy.get();
     }
 
-    //TODO remove
-    protected Font sceneFont(double size) {
+    protected Font scaledArcadeFont(double size) {
         return context.assets().font("font.arcade", scaled(size));
     }
 
@@ -51,9 +50,8 @@ public abstract class GameScene2D implements GameScene {
 
         renderer.clearCanvas();
         if (context.isScoreVisible()) {
-            Font scoreFont = sceneFont(TS);
-            renderer.drawScore(context.game().score(),     "SCORE", t(1), t(1), scoreFont, PALETTE_PALE);
-            renderer.drawScore(context.game().highScore(), "HIGH SCORE", t(14), t(1), scoreFont, PALETTE_PALE);
+            renderer.drawScore(context.game().score(),     "SCORE",      t(1),  t(1), scaledArcadeFont(TS), PALETTE_PALE);
+            renderer.drawScore(context.game().highScore(), "HIGH SCORE", t(14), t(1), scaledArcadeFont(TS), PALETTE_PALE);
         }
         drawSceneContent(renderer);
         if (debugInfoPy.get()) {
@@ -66,7 +64,7 @@ public abstract class GameScene2D implements GameScene {
     protected void drawCredit(GameWorldRenderer renderer) {
         if (isCreditVisible()) {
             double x = 2 * TS, y = context.worldSizeTilesOrDefault().y() * TS - 2;
-            renderer.drawText("CREDIT %2d".formatted(context.game().credit()), PALETTE_PALE, sceneFont(8), x, y);
+            renderer.drawText("CREDIT %2d".formatted(context.game().credit()), PALETTE_PALE, scaledArcadeFont(TS), x, y);
         }
     }
 

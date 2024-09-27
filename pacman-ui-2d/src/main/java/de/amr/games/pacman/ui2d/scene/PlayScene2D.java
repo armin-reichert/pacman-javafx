@@ -134,12 +134,12 @@ public class PlayScene2D extends GameScene2D {
         double msgY = t(houseOrigin.y() + houseSize.y() + 1);
         // "GAME OVER" is drawn in demo mode and when game is over:
         if (context.game().isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
-            renderer.drawText("GAME  OVER", Color.RED, sceneFont(8), t(centerTileX - 5), msgY);
+            renderer.drawText("GAME  OVER", Color.RED, scaledArcadeFont(8), t(centerTileX - 5), msgY);
         } else {
             switch (context.gameState()) {
-                case READY      -> renderer.drawText("READY!", Color.YELLOW, sceneFont(8), t(centerTileX - 3), msgY);
+                case READY      -> renderer.drawText("READY!", Color.YELLOW, scaledArcadeFont(8), t(centerTileX - 3), msgY);
                 case LEVEL_TEST -> renderer.drawText("TEST    L" + context.game().levelNumber(),
-                    Color.YELLOW, sceneFont(8), t(8.5), msgY);
+                    Color.YELLOW, scaledArcadeFont(8), t(8.5), msgY);
             }
         }
     }

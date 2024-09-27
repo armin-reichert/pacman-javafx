@@ -313,14 +313,14 @@ public class PacManIntroScene extends GameScene2D {
                 }
                 drawGuys(renderer, flutter(timer.currentTick()));
                 if (context.game().variant() == GameVariant.PACMAN) {
-                    renderer.drawText(MIDWAY_COPYRIGHT, PALETTE_PINK, sceneFont(8),  t(4), t(32));
+                    renderer.drawText(MIDWAY_COPYRIGHT, PALETTE_PINK, scaledArcadeFont(8),  t(4), t(32));
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints(renderer);
                 drawGuys(renderer, 0);
                 if (context.game().variant() == GameVariant.PACMAN) {
-                    renderer.drawText(MIDWAY_COPYRIGHT, PALETTE_PINK, sceneFont(8),  t(4), t(32));
+                    renderer.drawText(MIDWAY_COPYRIGHT, PALETTE_PINK, scaledArcadeFont(8),  t(4), t(32));
                 }
             }
             default -> {
@@ -334,7 +334,7 @@ public class PacManIntroScene extends GameScene2D {
     }
 
     private void drawGallery(GameWorldRenderer renderer) {
-        var font = sceneFont(8);
+        var font = scaledArcadeFont(8);
 
         int tx = data.leftTileX;
         if (data.titleVisible) {
@@ -375,8 +375,8 @@ public class PacManIntroScene extends GameScene2D {
 
     private void drawPoints(GameWorldRenderer renderer) {
         var color = PALETTE_PALE;
-        var font8 = sceneFont(8);
-        var font6 = sceneFont(6);
+        var font8 = scaledArcadeFont(8);
+        var font6 = scaledArcadeFont(6);
         int tx = data.leftTileX + 6;
         int ty = 25;
         renderer.ctx().setFill(PELLET_COLOR);

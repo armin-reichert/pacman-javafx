@@ -261,7 +261,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
-        Font font8 = sceneFont(8); // depends on current scaling!
+        Font font8 = scaledArcadeFont(8); // depends on current scaling!
         BitSet marqueeState = computeMarqueeState(data.marqueeTimer.currentTick());
         drawMarquee(marqueeState);
         renderer.drawText("\"MS PAC-MAN\"", PALETTE_ORANGE, font8, data.titlePosition.x(), data.titlePosition.y());
@@ -290,7 +290,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
         if (context.game().variant() == GameVariant.MS_PACMAN) {
             renderer.drawMsPacManMidwayCopyright(context.assets().get("ms_pacman.logo.midway"),
-                t(6), t(28), PALETTE_RED, sceneFont(TS));
+                t(6), t(28), PALETTE_RED, scaledArcadeFont(TS));
         }
     }
 

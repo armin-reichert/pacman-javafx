@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
@@ -60,7 +59,7 @@ public class BootScene extends GameScene2D {
     private void paintRandomHexCodes(GameWorldRenderer renderer) {
         renderer.clearCanvas();
         renderer.ctx().setFill(PALETTE_PALE);
-        renderer.ctx().setFont(sceneFont(8));
+        renderer.ctx().setFont(scaledArcadeFont(8));
         for (int row = 0; row < GameModel.ARCADE_MAP_TILES_Y; ++row) {
             for (int col = 0; col < GameModel.ARCADE_MAP_TILES_X; ++col) {
                 var hexCode = Integer.toHexString(RND.nextInt(16));
