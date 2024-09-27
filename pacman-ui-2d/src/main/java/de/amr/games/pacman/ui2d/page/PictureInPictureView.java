@@ -17,7 +17,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -38,6 +37,9 @@ public class PictureInPictureView extends VBox implements GameEventListener {
     public PictureInPictureView(GameContext context) {
         this.context = context;
 
+        backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
+        setPadding(new Insets(5, 10, 5, 10));
+
         playScene2D = new PlayScene2D();
         playScene2D.backgroundColorPy.bind(PY_CANVAS_BG_COLOR);
         playScene2D.scalingPy.bind(canvasHeightPy.divide(context.worldSizeTilesOrDefault().y() * TS));
@@ -54,13 +56,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         canvas.heightProperty().bind(canvasHeightPy);
         canvas.widthProperty().bind(canvasHeightPy.multiply(aspect));
 
-        HBox canvasContainer = new HBox(canvas);
-        canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
-        canvasContainer.opacityProperty().bind(opacityProperty());
-        canvasContainer.visibleProperty().bind(visibleProperty());
-        canvasContainer.setPadding(new Insets(5, 10, 5, 10));
-
-        getChildren().add(canvasContainer);
+        getChildren().add(canvas);
     }
 
     @Override
