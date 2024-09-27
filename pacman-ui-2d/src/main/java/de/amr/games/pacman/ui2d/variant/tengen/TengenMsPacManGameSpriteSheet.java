@@ -4,13 +4,11 @@
 package de.amr.games.pacman.ui2d.variant.tengen;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.graph.Dir;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
 import javafx.scene.image.Image;
 
 import static de.amr.games.pacman.model.GameModel.*;
-import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.rectArray;
 import static de.amr.games.pacman.ui2d.rendering.RectArea.rect;
 
 /**
