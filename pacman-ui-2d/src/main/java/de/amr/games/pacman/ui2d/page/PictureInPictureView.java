@@ -31,7 +31,6 @@ public class PictureInPictureView extends VBox implements GameEventListener {
     public final DoubleProperty canvasHeightPy = new SimpleDoubleProperty(GameModel.ARCADE_MAP_SIZE_Y);
 
     private final GameContext context;
-    private final Canvas canvas = new Canvas();
     private final PlayScene2D playScene2D;
     private GameWorldRenderer renderer;
     private double aspect = 0.777;
@@ -44,6 +43,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         playScene2D.scalingPy.bind(canvasHeightPy.divide(context.worldSizeTilesOrDefault().y() * TS));
         playScene2D.setGameContext(context);
 
+        var canvas = new Canvas();
         //TODO check when renderer must be (re)created
         context.gameVariantProperty().addListener((py, ov, nv) -> {
             if (nv != null) {
@@ -51,7 +51,6 @@ public class PictureInPictureView extends VBox implements GameEventListener {
                 renderer.setCanvas(canvas);
             }
         });
-
         canvas.heightProperty().bind(canvasHeightPy);
         canvas.widthProperty().bind(canvasHeightPy.multiply(aspect));
 
@@ -69,8 +68,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         Vector2i worldSize = context.worldSizeTilesOrDefault();
         aspect = (double) worldSize.x() / worldSize.y();
         if (context.game().world() != null) {
-            int mapNumber = context.game().currentMapNumber();
-            renderer.selectMap(context.game().world().map(), mapNumber, context.spriteSheet());
+            renderer.selectMap(context.game().world().map(), context.game().currentMapNumber(), context.spriteSheet());
         }
     }
 
