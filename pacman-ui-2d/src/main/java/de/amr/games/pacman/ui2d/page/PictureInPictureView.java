@@ -61,7 +61,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         canvasContainer.visibleProperty().bind(visibleProperty());
         canvasContainer.setPadding(new Insets(5, 10, 5, 10));
 
-        getChildren().add(new HBox(canvasContainer));
+        getChildren().add(canvasContainer);
     }
 
     @Override
