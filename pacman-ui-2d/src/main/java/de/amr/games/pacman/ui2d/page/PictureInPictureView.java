@@ -81,7 +81,7 @@ public class PictureInPictureView implements GameEventListener {
         Vector2i worldSize = context.worldSizeTilesOrDefault();
         aspect = (double) worldSize.x() / worldSize.y();
         if (context.game().world() != null) {
-            int mapNumber = context.game().mapNumberByLevelNumber(context.game().levelNumber());
+            int mapNumber = context.game().currentMapNumber();
             renderer.selectMap(context.game().world().map(), mapNumber, context.spriteSheet());
         }
     }

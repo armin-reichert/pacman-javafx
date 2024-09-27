@@ -87,6 +87,11 @@ public class PacManArcadeGame extends GameModel {
     }
 
     @Override
+    public int currentMapNumber() {
+        return 1;
+    }
+
+    @Override
     public int mapCount() {
         return 1;
     }

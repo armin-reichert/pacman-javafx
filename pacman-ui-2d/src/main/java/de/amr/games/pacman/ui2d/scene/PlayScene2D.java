@@ -166,7 +166,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
-        int mapNumber = context.game().mapNumberByLevelNumber(context.game().levelNumber());
+        int mapNumber = context.game().currentMapNumber();
         context.renderer().selectMap(context.game().world().map(), mapNumber, context.spriteSheet());
         Logger.info("{} entered from {}", this, oldScene);
     }
@@ -200,7 +200,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        int mapNumber = e.game.mapNumberByLevelNumber(e.game.levelNumber());
+        int mapNumber = e.game.currentMapNumber();
         context.renderer().selectMap(e.game.world().map(), mapNumber, context.spriteSheet());
     }
 

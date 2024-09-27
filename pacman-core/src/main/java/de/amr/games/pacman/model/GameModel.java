@@ -143,6 +143,7 @@ public abstract class GameModel {
      * @return number of predefined maps
      */
     public abstract int mapCount();
+    public abstract int currentMapNumber();
     public abstract int mapNumberByLevelNumber(int levelNumber);
     public abstract void activateNextBonus();
     protected abstract void buildRegularLevel(int levelNumber);

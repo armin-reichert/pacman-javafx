@@ -93,6 +93,11 @@ public class MsPacManTengenGame extends GameModel {
     }
 
     @Override
+    public int currentMapNumber() {
+        return mapNumber;
+    }
+
+    @Override
     public int mapCount() {
         return MAP_COUNT;
     }
