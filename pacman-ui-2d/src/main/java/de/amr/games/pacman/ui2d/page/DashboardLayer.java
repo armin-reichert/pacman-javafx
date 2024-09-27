@@ -36,7 +36,7 @@ public class DashboardLayer extends BorderPane {
         this.context = context;
 
         pip = new PictureInPictureView(context);
-        pip.canvasHeightPy.bind(PY_PIP_HEIGHT);
+        pip.canvas().heightProperty().bind(PY_PIP_HEIGHT);
         pip.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
         pip.visibleProperty().bind(Bindings.createObjectBinding(
             () -> PY_PIP_ON.get() && context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D),

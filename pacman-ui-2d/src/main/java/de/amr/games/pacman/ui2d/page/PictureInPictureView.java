@@ -7,14 +7,11 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.Ufx;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.VBox;
@@ -27,36 +24,34 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_CANVAS_BG_COLOR;
  */
 public class PictureInPictureView extends VBox implements GameEventListener {
 
-    public final DoubleProperty canvasHeightPy = new SimpleDoubleProperty(GameModel.ARCADE_MAP_SIZE_Y);
-
     private final GameContext context;
+    private final Canvas canvas;
     private final PlayScene2D playScene2D;
     private GameWorldRenderer renderer;
     private double aspect = 0.777;
 
     public PictureInPictureView(GameContext context) {
         this.context = context;
+        this.canvas = new Canvas();
 
         backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
-        setPadding(new Insets(5, 10, 5, 10));
+        setPadding(new Insets(5, 15, 5, 15));
 
-        playScene2D = new PlayScene2D();
-        playScene2D.backgroundColorPy.bind(PY_CANVAS_BG_COLOR);
-        playScene2D.scalingPy.bind(canvasHeightPy.divide(context.worldSizeTilesOrDefault().y() * TS));
-        playScene2D.setGameContext(context);
-
-        var canvas = new Canvas();
-        //TODO check when renderer must be (re)created
+        //TODO check when exactly renderer must be (re)created
         context.gameVariantProperty().addListener((py, ov, nv) -> {
             if (nv != null) {
                 renderer = PacManGames2dUI.createRenderer(nv, context.assets());
                 renderer.setCanvas(canvas);
             }
         });
-        canvas.heightProperty().bind(canvasHeightPy);
-        canvas.widthProperty().bind(canvasHeightPy.multiply(aspect));
 
+        canvas.widthProperty().bind(canvas.heightProperty().multiply(aspect));
         getChildren().add(canvas);
+
+        playScene2D = new PlayScene2D();
+        playScene2D.backgroundColorPy.bind(PY_CANVAS_BG_COLOR);
+        playScene2D.scalingPy.bind(canvas.heightProperty().divide(context.worldSizeTilesOrDefault().y() * TS));
+        playScene2D.setGameContext(context);
     }
 
     @Override
@@ -64,6 +59,10 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         Vector2i worldSize = context.worldSizeTilesOrDefault();
         aspect = (double) worldSize.x() / worldSize.y();
         context.attachRendererToCurrentMap(renderer);
+    }
+
+    public Canvas canvas() {
+        return canvas;
     }
 
     public void draw() {
