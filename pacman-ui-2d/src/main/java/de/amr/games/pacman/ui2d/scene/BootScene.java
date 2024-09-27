@@ -8,8 +8,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
 
-import static de.amr.games.pacman.lib.Globals.RND;
-import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
 
 /**
@@ -59,7 +58,7 @@ public class BootScene extends GameScene2D {
     private void paintRandomHexCodes(GameWorldRenderer renderer) {
         renderer.clearCanvas();
         renderer.ctx().setFill(PALETTE_PALE);
-        renderer.ctx().setFont(scaledArcadeFont(8));
+        renderer.ctx().setFont(renderer.scaledArcadeFont(TS));
         for (int row = 0; row < GameModel.ARCADE_MAP_TILES_Y; ++row) {
             for (int col = 0; col < GameModel.ARCADE_MAP_TILES_X; ++col) {
                 var hexCode = Integer.toHexString(RND.nextInt(16));

@@ -91,7 +91,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             case MS_PACMAN -> new MsPacManArcadeGameRenderer(assets);
             case MS_PACMAN_TENGEN -> new TengenMsPacManGameRenderer(assets);
             case PACMAN -> new PacManArcadeGameRenderer(assets);
-            case PACMAN_XXL -> new PacManXXLGameRenderer();
+            case PACMAN_XXL -> new PacManXXLGameRenderer(assets);
         };
     }
 

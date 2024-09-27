@@ -13,6 +13,7 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -20,6 +21,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.maps.editor.TileMapUtil.getColorFromMap;
 import static de.amr.games.pacman.model.GameWorld.*;
 import static java.util.function.Predicate.not;
@@ -29,6 +31,7 @@ import static java.util.function.Predicate.not;
  */
 public class PacManXXLGameRenderer implements GameWorldRenderer {
 
+    private final AssetStorage assets;
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
@@ -38,9 +41,15 @@ public class PacManXXLGameRenderer implements GameWorldRenderer {
     private boolean blinkingOn;
     private Canvas canvas;
 
-    public PacManXXLGameRenderer() {
+    public PacManXXLGameRenderer(AssetStorage assets) {
+        this.assets = checkNotNull(assets);
         terrainRenderer.scalingPy.bind(scalingPy);
         foodRenderer.scalingPy.bind(scalingPy);
+    }
+
+    @Override
+    public AssetStorage assets() {
+        return assets;
     }
 
     @Override

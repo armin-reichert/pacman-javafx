@@ -17,6 +17,7 @@ import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
 import javafx.beans.property.ObjectProperty;
+import javafx.scene.text.Font;
 
 import java.util.Optional;
 
@@ -67,8 +68,11 @@ public interface GameContext {
      * @return localized text with constructed key or default text if no such key exists
      */
     String locText(String keyOrPattern, Object... args);
+
     default GameSpriteSheet spriteSheet() { return spriteSheet(game().variant()); }
+
     GameSpriteSheet spriteSheet(GameVariant variant);
+
     GameWorldRenderer renderer();
 
     // Actions

@@ -11,6 +11,7 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.ClapperboardAnimation;
 import javafx.beans.property.DoubleProperty;
@@ -37,6 +38,8 @@ public interface GameWorldRenderer {
         return new ImageArea(sourceImage, new RectArea(x, y, width, height));
     }
 
+    AssetStorage assets();
+
     Canvas canvas();
 
     void setCanvas(Canvas canvas);
@@ -51,6 +54,9 @@ public interface GameWorldRenderer {
         return scaling() * factor;
     }
 
+    default Font scaledArcadeFont(double size) {
+        return assets().font("font.arcade", scaled(size));
+    }
     /**
      * Draws the given source scaled by the current scaling value.
      *

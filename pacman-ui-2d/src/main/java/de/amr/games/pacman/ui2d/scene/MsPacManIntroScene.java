@@ -23,6 +23,7 @@ import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGamePacAnimations;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -261,13 +262,13 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
-        Font font8 = scaledArcadeFont(8); // depends on current scaling!
+        Font font = renderer.scaledArcadeFont(TS);
         BitSet marqueeState = computeMarqueeState(data.marqueeTimer.currentTick());
-        drawMarquee(marqueeState);
-        renderer.drawText("\"MS PAC-MAN\"", PALETTE_ORANGE, font8, data.titlePosition.x(), data.titlePosition.y());
+        drawMarquee(renderer.ctx(), marqueeState);
+        renderer.drawText("\"MS PAC-MAN\"", PALETTE_ORANGE, font, data.titlePosition.x(), data.titlePosition.y());
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
             if (data.ghostIndex == GameModel.RED_GHOST) {
-                renderer.drawText("WITH", PALETTE_PALE, font8, data.titlePosition.x(), data.topY + t(3));
+                renderer.drawText("WITH", PALETTE_PALE, font, data.titlePosition.x(), data.topY + t(3));
             }
             String ghostName = data.ghosts[data.ghostIndex].name().toUpperCase();
             Color color = switch (data.ghostIndex) {
@@ -278,10 +279,10 @@ public class MsPacManIntroScene extends GameScene2D {
                 default -> throw new IllegalStateException("Illegal ghost index: " + data.ghostIndex);
             };
             double dx = ghostName.length() < 4 ? t(1) : 0;
-            renderer.drawText(ghostName, color, font8, data.titlePosition.x() + t(3) + dx, data.topY + t(6));
+            renderer.drawText(ghostName, color, font, data.titlePosition.x() + t(3) + dx, data.topY + t(6));
         } else if (sceneController.state() == SceneState.MS_PACMAN_MARCHING_IN || sceneController.state() == SceneState.READY_TO_PLAY) {
-            renderer.drawText("STARRING", PALETTE_PALE, font8, data.titlePosition.x(), data.topY + t(3));
-            renderer.drawText("MS PAC-MAN", PALETTE_YELLOW, font8, data.titlePosition.x(), data.topY + t(6));
+            renderer.drawText("STARRING", PALETTE_PALE, font, data.titlePosition.x(), data.topY + t(3));
+            renderer.drawText("MS PAC-MAN", PALETTE_YELLOW, font, data.titlePosition.x(), data.topY + t(6));
         }
         for (Ghost ghost : data.ghosts) {
             renderer.drawAnimatedEntity(ghost);
@@ -290,30 +291,30 @@ public class MsPacManIntroScene extends GameScene2D {
 
         if (context.game().variant() == GameVariant.MS_PACMAN) {
             renderer.drawMsPacManMidwayCopyright(context.assets().get("ms_pacman.logo.midway"),
-                t(6), t(28), PALETTE_RED, scaledArcadeFont(TS));
+                t(6), t(28), PALETTE_RED, renderer.scaledArcadeFont(TS));
         }
     }
 
     // TODO This is too cryptic
-    private void drawMarquee(BitSet marqueeState) {
+    private void drawMarquee(GraphicsContext g, BitSet marqueeState) {
         double xMin = 60, xMax = 192, yMin = 88, yMax = 148;
         for (int i = 0; i < data.numBulbs; ++i) {
             boolean on = marqueeState.get(i);
             if (i <= 33) { // lower edge left-to-right
-                drawBulb(xMin + 4 * i, yMax, on);
+                drawBulb(g, xMin + 4 * i, yMax, on);
             } else if (i <= 48) { // right edge bottom-to-top
-                drawBulb(xMax, 4 * (70 - i), on);
+                drawBulb(g, xMax, 4 * (70 - i), on);
             } else if (i <= 81) { // upper edge right-to-left
-                drawBulb(4 * (96 - i), yMin, on);
+                drawBulb(g, 4 * (96 - i), yMin, on);
             } else { // left edge top-to-bottom
-                drawBulb(xMin, 4 * (i - 59), on);
+                drawBulb(g, xMin, 4 * (i - 59), on);
             }
         }
     }
 
-    private void drawBulb(double x, double y, boolean on) {
-        context.renderer().ctx().setFill(on ? PALETTE_PALE : PALETTE_RED);
-        context.renderer().ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
+    private void drawBulb(GraphicsContext g, double x, double y, boolean on) {
+        g.setFill(on ? PALETTE_PALE : PALETTE_RED);
+        g.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 
     /**

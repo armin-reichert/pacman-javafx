@@ -36,6 +36,7 @@ import static de.amr.games.pacman.model.GameWorld.PROPERTY_COLOR_WALL_FILL;
  */
 public class TengenMsPacManGameRenderer implements GameWorldRenderer {
 
+    private final AssetStorage assets;
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
@@ -50,6 +51,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     private Canvas canvas;
 
     public TengenMsPacManGameRenderer(AssetStorage assets) {
+        this.assets = checkNotNull(assets);
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
 
@@ -58,6 +60,11 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
 
         arcadeMazesImage = assets.image("tengen.mazes.arcade");
         nonArcadeMazesImage = assets.image("tengen.mazes.non_arcade");
+    }
+
+    @Override
+    public AssetStorage assets() {
+        return assets;
     }
 
     @Override

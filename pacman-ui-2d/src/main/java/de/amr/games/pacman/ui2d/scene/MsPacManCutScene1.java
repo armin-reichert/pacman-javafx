@@ -270,10 +270,7 @@ public class MsPacManCutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
-        renderer.drawClapperBoard(spriteSheet,
-            context.assets().font("font.arcade", scaled(8)),
-            PALETTE_PALE,
-            clapAnimation, t(3), t(10));
+        renderer.drawClapperBoard(spriteSheet, renderer.scaledArcadeFont(TS), PALETTE_PALE, clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(msPac);
         renderer.drawAnimatedEntity(pacMan);
         renderer.drawAnimatedEntity(inky);

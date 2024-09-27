@@ -19,6 +19,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.t;
 
 /**
@@ -26,6 +27,7 @@ import static de.amr.games.pacman.lib.Globals.t;
  */
 public class PacManArcadeGameRenderer implements GameWorldRenderer {
 
+    private final AssetStorage assets;
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final Image flashingMazeImage;
@@ -34,7 +36,13 @@ public class PacManArcadeGameRenderer implements GameWorldRenderer {
     private Canvas canvas;
 
     public PacManArcadeGameRenderer(AssetStorage assets) {
+        this.assets = checkNotNull(assets);
         flashingMazeImage = assets.image("pacman.flashing_maze");
+    }
+
+    @Override
+    public AssetStorage assets() {
+        return assets;
     }
 
     @Override
