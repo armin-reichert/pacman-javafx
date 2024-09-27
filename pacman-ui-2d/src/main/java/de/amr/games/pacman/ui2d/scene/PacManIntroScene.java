@@ -225,18 +225,18 @@ public class PacManIntroScene extends GameScene2D {
         }
     }
 
-    Pulse blinking;
-    Pac pacMan;
-    Ghost[] ghosts;
-    boolean[] ghostImageVisible;
-    boolean[] ghostNicknameVisible;
-    boolean[] ghostCharacterVisible;
-    List<Ghost> victims;
-    boolean titleVisible;
-    int ghostIndex;
-    long ghostKilledTime;
-
     private final FiniteStateMachine<SceneState, PacManIntroScene> sceneController;
+
+    private Pulse blinking;
+    private Pac pacMan;
+    private Ghost[] ghosts;
+    private boolean[] ghostImageVisible;
+    private boolean[] ghostNicknameVisible;
+    private boolean[] ghostCharacterVisible;
+    private List<Ghost> victims;
+    private boolean titleVisible;
+    private int ghostIndex;
+    private long ghostKilledTime;
 
     public PacManIntroScene() {
         sceneController = new FiniteStateMachine<>(SceneState.values()) {

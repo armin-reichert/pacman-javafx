@@ -46,7 +46,7 @@ public class PacManCutScene1 extends GameScene2D {
     }
 
     private void startMusic() {
-        int number  = context.gameState() == GameState.INTERMISSION_TEST
+        int number = context.gameState() == GameState.INTERMISSION_TEST
             ? GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber")
             : context.game().intermissionNumber(context.game().levelNumber());
         GameSounds.playIntermissionSound(number);
