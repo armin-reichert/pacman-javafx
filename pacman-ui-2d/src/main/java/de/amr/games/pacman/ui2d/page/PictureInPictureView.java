@@ -13,9 +13,7 @@ import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.Ufx;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
@@ -31,7 +29,6 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_CANVAS_BG_COLOR;
 public class PictureInPictureView extends VBox implements GameEventListener {
 
     public final DoubleProperty heightPy = new SimpleDoubleProperty(GameModel.ARCADE_MAP_SIZE_Y);
-    public final BooleanProperty visiblePy = new SimpleBooleanProperty(true);
 
     private final GameContext context;
     private final Canvas canvas = new Canvas();
@@ -61,7 +58,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         HBox canvasContainer = new HBox(canvas);
         canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
         canvasContainer.opacityProperty().bind(opacityProperty());
-        canvasContainer.visibleProperty().bind(visiblePy);
+        canvasContainer.visibleProperty().bind(visibleProperty());
         canvasContainer.setPadding(new Insets(5, 10, 5, 10));
 
         getChildren().add(new HBox(canvasContainer));
@@ -78,7 +75,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
     }
 
     public void draw() {
-        if (visiblePy.get()) {
+        if (isVisible()) {
             playScene2D.draw(renderer);
         }
     }
