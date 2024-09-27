@@ -9,6 +9,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameSounds;
+import de.amr.games.pacman.ui2d.PacManGames2dApp;
 import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -159,7 +160,11 @@ public class GamePage extends StackPane implements Page {
 
         contextMenu.getItems().add(new SeparatorMenuItem());
 
-        var miMuted = new CheckMenuItem("Sound muted"); // TODO: localize
+        var miCanvasDecorated = new CheckMenuItem(context.locText("canvas_decoration"));
+        miCanvasDecorated.selectedProperty().bindBidirectional(PY_CANVAS_DECORATED);
+        contextMenu.getItems().add(miCanvasDecorated);
+
+        var miMuted = new CheckMenuItem(context.locText("muted"));
         miMuted.selectedProperty().bindBidirectional(GameSounds.mutedProperty());
         contextMenu.getItems().add(miMuted);
 

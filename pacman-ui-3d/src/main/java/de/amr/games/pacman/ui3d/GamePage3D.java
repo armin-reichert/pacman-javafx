@@ -104,7 +104,11 @@ public class GamePage3D extends GamePage {
 
         contextMenu.getItems().add(new SeparatorMenuItem());
 
-        var miMuted = new CheckMenuItem("Sound muted"); // TODO: localize
+        var miCanvasDecorated = new CheckMenuItem(context.locText("canvas_decoration"));
+        miCanvasDecorated.selectedProperty().bindBidirectional(PY_CANVAS_DECORATED);
+        contextMenu.getItems().add(miCanvasDecorated);
+
+        var miMuted = new CheckMenuItem(context.locText("muted"));
         miMuted.selectedProperty().bindBidirectional(GameSounds.mutedProperty());
         contextMenu.getItems().add(miMuted);
 
