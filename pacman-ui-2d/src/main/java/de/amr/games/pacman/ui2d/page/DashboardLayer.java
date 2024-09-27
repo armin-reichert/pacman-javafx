@@ -38,6 +38,11 @@ public class DashboardLayer extends BorderPane {
         pip = new PictureInPictureView(context);
         pip.heightPy.bind(PY_PIP_HEIGHT);
         pip.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
+        pip.visiblePy.bind(Bindings.createObjectBinding(
+            () -> PY_PIP_ON.get() && context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D),
+            PY_PIP_ON, context.gameSceneProperty()
+        ));
+
 
         setLeft(dashboardContainer);
         setRight(new VBox(pip.node(), new HBox()));
@@ -105,7 +110,6 @@ public class DashboardLayer extends BorderPane {
 
     public void update() {
         dashboardItems.stream().map(DashboardEntry::infoBox).forEach(InfoBox::update);
-        pip.setVisible(PY_PIP_ON.get() && context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D));
         pip.draw();
     }
 }

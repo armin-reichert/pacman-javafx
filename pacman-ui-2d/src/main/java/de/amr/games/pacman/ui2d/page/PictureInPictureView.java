@@ -30,37 +30,26 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_CANVAS_BG_COLOR;
  */
 public class PictureInPictureView implements GameEventListener {
 
-    public final DoubleProperty heightPy = new SimpleDoubleProperty(GameModel.ARCADE_MAP_SIZE_Y) {
-        @Override
-        protected void invalidated() {
-            updateScaling();
-        }
-    };
-
-    public final BooleanProperty visiblePy = new SimpleBooleanProperty(true) {
-        @Override
-        protected void invalidated() {
-            if (get()) {
-                updateScaling();
-            }
-        }
-    };
+    public final DoubleProperty heightPy = new SimpleDoubleProperty(GameModel.ARCADE_MAP_SIZE_Y);
+    public final BooleanProperty visiblePy = new SimpleBooleanProperty(true);
 
     private final GameContext context;
     private final HBox container;
     private final Canvas canvas = new Canvas();
     private final HBox canvasContainer;
-    private final PlayScene2D gameScene;
+    private final PlayScene2D playScene2D;
     private GameWorldRenderer renderer;
     private double aspect = 0.777;
 
     public PictureInPictureView(GameContext context) {
         this.context = context;
 
-        gameScene = new PlayScene2D();
-        gameScene.setGameContext(context);
-        gameScene.backgroundColorPy.bind(PY_CANVAS_BG_COLOR);
+        playScene2D = new PlayScene2D();
+        playScene2D.backgroundColorPy.bind(PY_CANVAS_BG_COLOR);
+        playScene2D.scalingPy.bind(heightPy.divide(context.worldSizeTilesOrDefault().y() * TS));
+        playScene2D.setGameContext(context);
 
+        //TODO check when renderer must be (re)created
         context.gameVariantProperty().addListener((py, ov, nv) -> {
             if (nv != null) {
                 renderer = PacManGames2dUI.createRenderer(nv, context.assets());
@@ -83,10 +72,6 @@ public class PictureInPictureView implements GameEventListener {
         return canvasContainer.opacityProperty();
     }
 
-    public void setVisible(boolean visible) {
-        visiblePy.set(visible);
-    }
-
     public Node node() {
         return container;
     }
@@ -103,12 +88,7 @@ public class PictureInPictureView implements GameEventListener {
 
     public void draw() {
         if (visiblePy.get()) {
-            gameScene.draw(renderer);
+            playScene2D.draw(renderer);
         }
-    }
-
-    private void updateScaling() {
-        double referenceHeight = context.worldSizeTilesOrDefault().y() * TS;
-        gameScene.scalingPy.set(heightPy.get() / referenceHeight);
     }
 }
