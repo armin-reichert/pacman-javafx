@@ -28,7 +28,7 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_CANVAS_BG_COLOR;
  */
 public class PictureInPictureView extends VBox implements GameEventListener {
 
-    public final DoubleProperty heightPy = new SimpleDoubleProperty(GameModel.ARCADE_MAP_SIZE_Y);
+    public final DoubleProperty canvasHeightPy = new SimpleDoubleProperty(GameModel.ARCADE_MAP_SIZE_Y);
 
     private final GameContext context;
     private final Canvas canvas = new Canvas();
@@ -41,7 +41,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
 
         playScene2D = new PlayScene2D();
         playScene2D.backgroundColorPy.bind(PY_CANVAS_BG_COLOR);
-        playScene2D.scalingPy.bind(heightPy.divide(context.worldSizeTilesOrDefault().y() * TS));
+        playScene2D.scalingPy.bind(canvasHeightPy.divide(context.worldSizeTilesOrDefault().y() * TS));
         playScene2D.setGameContext(context);
 
         //TODO check when renderer must be (re)created
@@ -52,8 +52,8 @@ public class PictureInPictureView extends VBox implements GameEventListener {
             }
         });
 
-        canvas.heightProperty().bind(heightPy);
-        canvas.widthProperty().bind(heightPy.multiply(aspect));
+        canvas.heightProperty().bind(canvasHeightPy);
+        canvas.widthProperty().bind(canvasHeightPy.multiply(aspect));
 
         HBox canvasContainer = new HBox(canvas);
         canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
