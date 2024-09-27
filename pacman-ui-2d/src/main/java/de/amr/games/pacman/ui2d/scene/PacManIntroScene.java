@@ -25,6 +25,7 @@ import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.EATEN;
@@ -50,7 +51,7 @@ public class PacManIntroScene extends GameScene2D {
     static final int LEFT_TILE_X = 4;
 
     /**
-     * Intro is controlled by a FSM, here come the states.
+     * Intro is controlled by finite-state machine, here come the states.
      */
     private enum SceneState implements FsmState<PacManIntroScene> {
 
@@ -75,7 +76,7 @@ public class PacManIntroScene extends GameScene2D {
                 } else if (timer.atSecond(1.5)) {
                     intro.ghostNicknameVisible[intro.ghostIndex] = true;
                 } else if (timer.atSecond(2.0)) {
-                    if (intro.ghostIndex < intro.ghosts.size() - 1) {
+                    if (intro.ghostIndex < intro.ghosts.length - 1) {
                         timer.resetIndefinitely();
                     }
                     intro.ghostIndex += 1;
@@ -109,7 +110,7 @@ public class PacManIntroScene extends GameScene2D {
                 intro.pacMan.show();
                 intro.pacMan.selectAnimation(Pac.ANIM_MUNCHING);
                 intro.pacMan.animations().ifPresent(Animations::startSelected);
-                intro.ghosts.forEach(ghost -> {
+                Stream.of(intro.ghosts).forEach(ghost -> {
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setPosition(intro.pacMan.position().plus(16 * (ghost.id() + 1), 0));
                     ghost.setMoveAndWishDir(Direction.LEFT);
@@ -131,7 +132,7 @@ public class PacManIntroScene extends GameScene2D {
                 }
                 // Ghosts already reverse direction before Pac-Man eats the energizer and turns!
                 else if (intro.pacMan.posX() <= TS * LEFT_TILE_X + HTS) {
-                    intro.ghosts.forEach(ghost -> {
+                    Stream.of(intro.ghosts).forEach(ghost -> {
                         ghost.setState(FRIGHTENED);
                         ghost.selectAnimation(Ghost.ANIM_GHOST_FRIGHTENED);
                         ghost.setMoveAndWishDir(Direction.RIGHT);
@@ -142,7 +143,7 @@ public class PacManIntroScene extends GameScene2D {
                 } else { // keep moving
                     intro.blinking.tick();
                     intro.pacMan.move();
-                    intro.ghosts.forEach(Ghost::move);
+                    Stream.of(intro.ghosts).forEach(Ghost::move);
                 }
             }
         },
@@ -159,13 +160,13 @@ public class PacManIntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(PacManIntroScene intro) {
-                if (intro.ghosts.stream().allMatch(ghost -> ghost.inState(EATEN))) {
+                if (Stream.of(intro.ghosts).allMatch(ghost -> ghost.inState(EATEN))) {
                     intro.pacMan.hide();
                     intro.sceneController.changeState(READY_TO_PLAY);
                     return;
                 }
 
-                intro.ghosts.stream()
+                Stream.of(intro.ghosts)
                     .filter(ghost -> ghost.inState(FRIGHTENED) && ghost.sameTile(intro.pacMan))
                     .findFirst()
                     .ifPresent(victim -> {
@@ -173,7 +174,7 @@ public class PacManIntroScene extends GameScene2D {
                         intro.ghostKilledTime = timer.currentTick();
                         intro.pacMan.hide();
                         intro.pacMan.setSpeed(0);
-                        intro.ghosts.forEach(ghost -> {
+                        Stream.of(intro.ghosts).forEach(ghost -> {
                             ghost.setSpeed(0);
                             ghost.stopAnimation();
                         });
@@ -185,7 +186,7 @@ public class PacManIntroScene extends GameScene2D {
                 if (timer.currentTick() == intro.ghostKilledTime + 50) {
                     intro.pacMan.show();
                     intro.pacMan.setSpeed(CHASE_SPEED);
-                    intro.ghosts.forEach(ghost -> {
+                    Stream.of(intro.ghosts).forEach(ghost -> {
                         if (ghost.inState(EATEN)) {
                             ghost.hide();
                         } else {
@@ -197,7 +198,7 @@ public class PacManIntroScene extends GameScene2D {
                 }
 
                 intro.pacMan.move();
-                intro.ghosts.forEach(Ghost::move);
+                Stream.of(intro.ghosts).forEach(Ghost::move);
                 intro.blinking.tick();
             }
         },
@@ -206,7 +207,7 @@ public class PacManIntroScene extends GameScene2D {
             @Override
             public void onUpdate(PacManIntroScene intro) {
                 if (timer.atSecond(0.75)) {
-                    intro.ghosts.get(3).hide();
+                    intro.ghosts[3].hide();
                     if (!intro.context.game().hasCredit()) {
                         intro.context.gameController().changeState(GameState.READY);
                     }
@@ -226,7 +227,7 @@ public class PacManIntroScene extends GameScene2D {
 
     Pulse blinking;
     Pac pacMan;
-    List<Ghost> ghosts;
+    Ghost[] ghosts;
     boolean[] ghostImageVisible;
     boolean[] ghostNicknameVisible;
     boolean[] ghostCharacterVisible;
@@ -260,9 +261,9 @@ public class PacManIntroScene extends GameScene2D {
         pacMan = new Pac();
         pacMan.setAnimations(new PacManGamePacAnimations(context.spriteSheet()));
 
-        ghosts = List.of(Ghost.red(), Ghost.pink(), Ghost.cyan(), Ghost.orange());
-        for (int i = 0; i < ghosts.size(); ++i) {
-            Ghost ghost = ghosts.get(i);
+        ghosts = new Ghost[] { Ghost.red(), Ghost.pink(), Ghost.cyan(), Ghost.orange() };
+        for (int i = 0; i < ghosts.length; ++i) {
+            Ghost ghost = ghosts[i];
             ghost.setName(GHOST_NAMES[i]);
             ghost.setAnimations(new PacManGameGhostAnimations(context.spriteSheet(), ghost.id()));
         }
@@ -350,7 +351,7 @@ public class PacManIntroScene extends GameScene2D {
                 renderer.drawText(text, GHOST_COLORS[id], font, t(tx + 3), t(ty + 1));
             }
             if (ghostNicknameVisible[id]) {
-                String text = '"' + ghosts.get(id).name().toUpperCase() + '"';
+                String text = '"' + ghosts[id].name().toUpperCase() + '"';
                 renderer.drawText(text, GHOST_COLORS[id], font, t(tx + 14), t(ty + 1));
             }
         }
@@ -358,15 +359,15 @@ public class PacManIntroScene extends GameScene2D {
 
     private void drawGuys(GameWorldRenderer renderer, int shakingAmount) {
         if (shakingAmount == 0) {
-            ghosts.forEach(renderer::drawAnimatedEntity);
+            Stream.of(ghosts).forEach(renderer::drawAnimatedEntity);
         } else {
-            renderer.drawAnimatedEntity(ghosts.get(0));
-            renderer.drawAnimatedEntity(ghosts.get(3));
+            renderer.drawAnimatedEntity(ghosts[0]);
+            renderer.drawAnimatedEntity(ghosts[3]);
             // shaking ghosts effect, not quite as in original game
             renderer.ctx().save();
             renderer.ctx().translate(shakingAmount, 0);
-            renderer.drawAnimatedEntity(ghosts.get(1));
-            renderer.drawAnimatedEntity(ghosts.get(2));
+            renderer.drawAnimatedEntity(ghosts[1]);
+            renderer.drawAnimatedEntity(ghosts[2]);
             renderer.ctx().restore();
         }
         renderer.drawAnimatedEntity(pacMan);
