@@ -75,6 +75,12 @@ public interface GameContext {
 
     GameWorldRenderer renderer();
 
+    default void attachRendererToCurrentMap(GameWorldRenderer renderer) {
+        if (game().world() != null) {
+            renderer.selectMap(game().world().map(), game().currentMapNumber(), spriteSheet());
+        }
+    }
+
     // Actions
     void addCredit();
     void changeSimulationSpeed(int delta);

@@ -67,9 +67,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
     public void onLevelCreated(GameEvent e) {
         Vector2i worldSize = context.worldSizeTilesOrDefault();
         aspect = (double) worldSize.x() / worldSize.y();
-        if (context.game().world() != null) {
-            renderer.selectMap(context.game().world().map(), context.game().currentMapNumber(), context.spriteSheet());
-        }
+        context.attachRendererToCurrentMap(renderer);
     }
 
     public void draw() {
