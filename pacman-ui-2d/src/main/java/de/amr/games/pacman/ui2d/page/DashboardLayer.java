@@ -45,7 +45,7 @@ public class DashboardLayer extends BorderPane {
 
 
         setLeft(dashboardContainer);
-        setRight(new VBox(pip.node(), new HBox()));
+        setRight(new VBox(pip, new HBox()));
 
         visibleProperty().bind(Bindings.createObjectBinding(
             () -> dashboardContainer.isVisible() || PY_PIP_ON.get(),

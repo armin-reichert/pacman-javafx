@@ -18,9 +18,9 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_CANVAS_BG_COLOR;
@@ -28,15 +28,13 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_CANVAS_BG_COLOR;
 /**
  * @author Armin Reichert
  */
-public class PictureInPictureView implements GameEventListener {
+public class PictureInPictureView extends VBox implements GameEventListener {
 
     public final DoubleProperty heightPy = new SimpleDoubleProperty(GameModel.ARCADE_MAP_SIZE_Y);
     public final BooleanProperty visiblePy = new SimpleBooleanProperty(true);
 
     private final GameContext context;
-    private final HBox container;
     private final Canvas canvas = new Canvas();
-    private final HBox canvasContainer;
     private final PlayScene2D playScene2D;
     private GameWorldRenderer renderer;
     private double aspect = 0.777;
@@ -60,20 +58,13 @@ public class PictureInPictureView implements GameEventListener {
         canvas.heightProperty().bind(heightPy);
         canvas.widthProperty().bind(heightPy.multiply(aspect));
 
-        canvasContainer = new HBox(canvas);
-        canvasContainer.visibleProperty().bind(visiblePy);
+        HBox canvasContainer = new HBox(canvas);
         canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
+        canvasContainer.opacityProperty().bind(opacityProperty());
+        canvasContainer.visibleProperty().bind(visiblePy);
         canvasContainer.setPadding(new Insets(5, 10, 5, 10));
 
-        container = new HBox(canvasContainer);
-    }
-
-    public DoubleProperty opacityProperty() {
-        return canvasContainer.opacityProperty();
-    }
-
-    public Node node() {
-        return container;
+        getChildren().add(new HBox(canvasContainer));
     }
 
     @Override
