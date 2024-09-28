@@ -11,7 +11,6 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
@@ -21,6 +20,7 @@ import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGamePacAnimations;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
 
 /**
  * Intermission scene 3: "Junior".
@@ -144,7 +144,7 @@ public class MsPacManCutScene3 extends GameScene2D {
         int number  = context.gameState() == GameState.INTERMISSION_TEST
             ? GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber")
             : context.game().intermissionNumber(context.game().levelNumber());
-        GameSounds.playIntermissionSound(number);
+        SOUNDS.playIntermissionSound(number);
     }
 
     @Override

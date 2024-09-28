@@ -17,7 +17,6 @@ import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
 import javafx.beans.property.ObjectProperty;
-import javafx.scene.text.Font;
 
 import java.util.Optional;
 

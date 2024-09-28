@@ -27,82 +27,39 @@ import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
  */
 public class GameSounds {
 
-    private static final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(GameVariant.PACMAN) {
+    private final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(GameVariant.PACMAN) {
         @Override
         protected void invalidated() {
             loadSoundsForCurrentGameVariant();
         }
     };
 
-    private static final BooleanProperty enabledPy = new SimpleBooleanProperty(true) {
+    private final BooleanProperty enabledPy = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
             Logger.info("Game sounds are " + (get() ? "enabled" : "disabled"));
         }
     };
 
-    private static final BooleanProperty mutedPy = new SimpleBooleanProperty(false);
+    private final BooleanProperty mutedPy = new SimpleBooleanProperty(false);
 
-    private static AssetStorage assets;
+    private AssetStorage assets;
 
     // These are created when game variant changes
-    private static MediaPlayer gameOverSound;
-    private static MediaPlayer gameReadySound;
-    private static MediaPlayer levelCompleteSound;
-    private static MediaPlayer munchingSound;
-    private static MediaPlayer pacDeathSound;
-    private static MediaPlayer pacPowerSound;
-    private static MediaPlayer ghostReturnsHomeSound;
+    private MediaPlayer gameOverSound;
+    private MediaPlayer gameReadySound;
+    private MediaPlayer levelCompleteSound;
+    private MediaPlayer munchingSound;
+    private MediaPlayer pacDeathSound;
+    private MediaPlayer pacPowerSound;
+    private MediaPlayer ghostReturnsHomeSound;
 
     // These are created on demand
-    private static MediaPlayer intermissionSound;
-    private static Siren siren;
-    private static MediaPlayer voice;
+    private MediaPlayer intermissionSound;
+    private Siren siren;
+    private MediaPlayer voice;
 
-    public static void setAssets(AssetStorage assets) {
-        GameSounds.assets = checkNotNull(assets);
-    }
-
-    public static ObjectProperty<GameVariant> gameVariantProperty() {
-        return gameVariantPy;
-    }
-
-    public static BooleanProperty enabledProperty() {
-        return enabledPy;
-    }
-
-    public static BooleanProperty mutedProperty() {
-        return mutedPy;
-    }
-
-    private static void loadSoundsForCurrentGameVariant() {
-        gameOverSound = createPlayer("game_over", 0.5, false);
-        gameReadySound = createPlayer("game_ready", 0.5, false);
-        ghostReturnsHomeSound = createPlayer("ghost_returns", 0.5, true);
-        levelCompleteSound = createPlayer("level_complete", 0.5, false);
-        munchingSound = createPlayer("pacman_munch", 0.5, true);
-        pacDeathSound = createPlayer("pacman_death", 0.5, false);
-        pacPowerSound = createPlayer("pacman_power", 0.5, true);
-        // these are created on demand
-        intermissionSound = null;
-        siren = null;
-    }
-
-    public static void stopAll() {
-        stopSound(gameOverSound);
-        stopSound(gameReadySound);
-        stopSound(ghostReturnsHomeSound);
-        stopSound(intermissionSound);
-        stopSound(levelCompleteSound);
-        stopSound(munchingSound);
-        stopSound(pacDeathSound);
-        stopSound(pacPowerSound);
-        stopSiren();
-        stopVoice();
-        Logger.info("All sounds stopped");
-    }
-
-    private static void logSounds() {
+    private void logSounds() {
         logSound(gameOverSound, "Game Over");
         logSound(gameReadySound, "Game Ready");
         logSound(ghostReturnsHomeSound, "Ghost Returning Home");
@@ -116,14 +73,14 @@ public class GameSounds {
         }
     }
 
-    private static void logSound(MediaPlayer sound, String description) {
+    private void logSound(MediaPlayer sound, String description) {
         if (sound != null) {
             Logger.debug("[{}] state={} volume={}", description,
                 sound.getStatus() != null ? sound.getStatus() : "UNDEFINED", sound.getVolume());
         }
     }
 
-    private static MediaPlayer createPlayer(String keySuffix, double volume, boolean loop) {
+    private MediaPlayer createPlayer(String keySuffix, double volume, boolean loop) {
         GameVariant variant = gameVariantPy.get();
         String assetKey = assetPrefix(variant) + ".audio." + keySuffix;
         URL url = assets.get(assetKey);
@@ -141,18 +98,18 @@ public class GameSounds {
         return player;
     }
 
-    private static void playSound(MediaPlayer player) {
+    private void playSound(MediaPlayer player) {
         if (player != null && isEnabled()) {
             player.play();
         }
     }
 
-    private static void stopSound(MediaPlayer player) {
+    private void stopSound(MediaPlayer player) {
         if (player != null)
             player.stop();
     }
 
-    private static void playClip(String keySuffix) {
+    private void playClip(String keySuffix) {
         checkNotNull(keySuffix);
         String assetKey = assetPrefix(gameVariantPy.get()) + ".audio." + keySuffix;
         AudioClip clip = assets.get(assetKey);
@@ -166,23 +123,68 @@ public class GameSounds {
         }
     }
 
-    public static boolean isMuted() {
+    private void loadSoundsForCurrentGameVariant() {
+        gameOverSound = createPlayer("game_over", 0.5, false);
+        gameReadySound = createPlayer("game_ready", 0.5, false);
+        ghostReturnsHomeSound = createPlayer("ghost_returns", 0.5, true);
+        levelCompleteSound = createPlayer("level_complete", 0.5, false);
+        munchingSound = createPlayer("pacman_munch", 0.5, true);
+        pacDeathSound = createPlayer("pacman_death", 0.5, false);
+        pacPowerSound = createPlayer("pacman_power", 0.5, true);
+        // these are created on demand
+        intermissionSound = null;
+        siren = null;
+    }
+
+    // Public API
+
+    public void setAssets(AssetStorage assets) {
+        this.assets = checkNotNull(assets);
+    }
+
+    public ObjectProperty<GameVariant> gameVariantProperty() {
+        return gameVariantPy;
+    }
+
+    public BooleanProperty enabledProperty() {
+        return enabledPy;
+    }
+
+    public BooleanProperty mutedProperty() {
+        return mutedPy;
+    }
+
+    public void stopAll() {
+        stopSound(gameOverSound);
+        stopSound(gameReadySound);
+        stopSound(ghostReturnsHomeSound);
+        stopSound(intermissionSound);
+        stopSound(levelCompleteSound);
+        stopSound(munchingSound);
+        stopSound(pacDeathSound);
+        stopSound(pacPowerSound);
+        stopSiren();
+        stopVoice();
+        Logger.info("All sounds stopped ({})", gameVariantPy.get());
+    }
+
+    public boolean isMuted() {
         return mutedPy.get();
     }
 
-    public static void mute(boolean muted) {
+    public void mute(boolean muted) {
         mutedPy.set(muted);
     }
 
-    public static void toggleMuted() {
+    public void toggleMuted() {
         mute(!isMuted());
     }
 
-    public static boolean isEnabled() {
+    public boolean isEnabled() {
         return enabledPy.get();
     }
 
-    public static void selectSiren(int number) {
+    public void selectSiren(int number) {
         if (number < 1 || number > 4) {
             Logger.error("Siren number must be in 1..4 but is " + number);
             return;
@@ -195,79 +197,79 @@ public class GameSounds {
         }
     }
 
-    public static void playSiren() {
+    public void playSiren() {
         if (siren != null) {
             playSound(siren.player());
         }
     }
 
-    public static void stopSiren() {
+    public void stopSiren() {
         if (siren != null) {
             siren.player().stop();
         }
     }
 
-    public static void playBonusEatenSound() {
+    public void playBonusEatenSound() {
         playClip("bonus_eaten");
     }
 
-    public static void playCreditSound() {
+    public void playCreditSound() {
         playClip("credit");
     }
 
-    public static void playExtraLifeSound() {
+    public void playExtraLifeSound() {
         playClip("extra_life");
     }
 
-    public static void playGameOverSound() {
+    public void playGameOverSound() {
         playSound(gameOverSound);
     }
 
-    public static void playGameReadySound() {
+    public void playGameReadySound() {
         playSound(gameReadySound);
     }
 
-    public static void playGhostEatenSound() {
+    public void playGhostEatenSound() {
         playClip("ghost_eaten");
     }
 
-    public static void playGhostReturningHomeSound() {
+    public void playGhostReturningHomeSound() {
         playSound(ghostReturnsHomeSound);
     }
 
-    public static void stopGhostReturningHomeSound() {
+    public void stopGhostReturningHomeSound() {
         stopSound(ghostReturnsHomeSound);
     }
 
-    public static void playLevelChangedSound() {
+    public void playLevelChangedSound() {
         playClip("sweep");
     }
 
-    public static void playLevelCompleteSound() {
+    public void playLevelCompleteSound() {
         playSound(levelCompleteSound);
     }
 
-    public static void playMunchingSound() {
+    public void playMunchingSound() {
         playSound(munchingSound);
     }
 
-    public static void stopMunchingSound() {
+    public void stopMunchingSound() {
         stopSound(munchingSound);
     }
 
-    public static void playPacDeathSound() {
+    public void playPacDeathSound() {
         playSound(pacDeathSound);
     }
 
-    public static void playPacPowerSound() {
+    public void playPacPowerSound() {
         playSound(pacPowerSound);
     }
 
-    public static void stopPacPowerSound() {
+    public void stopPacPowerSound() {
         stopSound(pacPowerSound);
     }
 
-    public static void playIntermissionSound(int number) {
+    public void playIntermissionSound(int number) {
         if (number < 1 || number > 3) {
             Logger.error("Intermission number must be from 1..3 but is " + number);
             return;
@@ -282,7 +284,7 @@ public class GameSounds {
         intermissionSound.play();
     }
 
-    public static void playVoice(String voiceClipID, double delaySeconds) {
+    public void playVoice(String voiceClipID, double delaySeconds) {
         if (voice != null) {
             Logger.info("Cannot play voice {}, another voice is already playing", voiceClipID);
             return;
@@ -296,7 +298,7 @@ public class GameSounds {
         voice.play(); // play also if enabledPy is set to false
     }
 
-    public static void stopVoice() {
+    public void stopVoice() {
         if (voice != null) {
             voice.stop();
         }

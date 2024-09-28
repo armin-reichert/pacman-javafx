@@ -8,7 +8,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.GameSounds;
+import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.Animation;
@@ -115,7 +115,7 @@ public class MsPacMan3D implements Pac3D {
         spinning.setToAngle(360);
         spinning.setInterpolator(Interpolator.LINEAR);
         spinning.setCycleCount(4);
-        return new SequentialTransition(pauseSec(1), now(GameSounds::playPacDeathSound), spinning, pauseSec(1.5));
+        return new SequentialTransition(pauseSec(1), now(PacManGames2dUI.SOUNDS::playPacDeathSound), spinning, pauseSec(1.5));
     }
 
     // Hip swaying animation

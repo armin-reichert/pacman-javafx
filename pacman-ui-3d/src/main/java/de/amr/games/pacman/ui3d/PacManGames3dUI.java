@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAssets2D;
-import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
@@ -37,7 +36,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
     public void loadAssets() {
         GameAssets2D.addTo(assets);
         GameAssets3D.addTo(assets);
-        GameSounds.setAssets(assets);
+        SOUNDS.setAssets(assets);
     }
 
     @Override

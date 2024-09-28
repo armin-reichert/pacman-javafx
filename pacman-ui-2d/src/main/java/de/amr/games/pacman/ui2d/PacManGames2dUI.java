@@ -95,6 +95,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         };
     }
 
+    public static final GameSounds SOUNDS = new GameSounds();
+
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
@@ -128,7 +130,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     public void loadAssets() {
         GameAssets2D.addTo(assets);
-        GameSounds.setAssets(assets);
+        SOUNDS.setAssets(assets);
     }
 
     public void setGameScenes(GameVariant variant, Map<GameSceneID, GameScene> gameScenes) {
@@ -175,7 +177,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
         // select game variant of current game model
         gameVariantPy.set(game().variant());
-        GameSounds.gameVariantProperty().bind(gameVariantPy);
+        SOUNDS.gameVariantProperty().bind(gameVariantPy);
 
         // Not sure where this belongs
         PacManXXLGame xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
@@ -242,7 +244,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             if (GameAction.FULLSCREEN.triggered()) {
                 stage.setFullScreen(true);
             } else if (GameAction.MUTE.triggered()) {
-                GameSounds.toggleMuted();
+                SOUNDS.toggleMuted();
             } else {
                 currentPage.handleInput();
             }
@@ -295,7 +297,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         var icon = new ImageView(assets.<Image>get("icon.mute"));
         icon.setFitWidth(48);
         icon.setPreserveRatio(true);
-        icon.visibleProperty().bind(GameSounds.mutedProperty());
+        icon.visibleProperty().bind(SOUNDS.mutedProperty());
         StackPane.setAlignment(icon, Pos.BOTTOM_RIGHT);
         return icon;
     }
@@ -513,7 +515,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         if (!game().isDemoLevel()) {
             game().pac().setManualSteering(new KeyboardPacSteering());
         }
-        GameSounds.enabledProperty().set(!game().isDemoLevel());
+        SOUNDS.enabledProperty().set(!game().isDemoLevel());
         //TODO better place than here?
         gamePage.adaptCanvasSizeToCurrentWorld();
     }
@@ -523,14 +525,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         if (gameState() == LEVEL_TEST || game().isDemoLevel() || game().levelNumber() > 1) {
             return;
         }
-        GameSounds.playGameReadySound();
+        SOUNDS.playGameReadySound();
         LocalTime now = LocalTime.now();
         PY_NIGHT_MODE.set(now.getHour() >= 21 || now.getHour() <= 5);
     }
 
     @Override
     public void onStopAllSounds(GameEvent event) {
-        GameSounds.stopAll();
+        SOUNDS.stopAll();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -558,7 +560,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             return;
         }
         currentGameScene().ifPresent(GameScene::end);
-        GameSounds.stopAll();
+        SOUNDS.stopAll();
         clock.stop();
         if (editorPage == null) {
             var xxlGame = (PacManXXLGame) game();
@@ -582,7 +584,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public void startGame() {
         if (game().hasCredit()) {
-            GameSounds.stopVoice();
+            SOUNDS.stopVoice();
             if (gameState() == GameState.INTRO || gameState() == GameState.CREDIT) {
                 gameController().changeState(GameState.READY);
             } else {
@@ -625,7 +627,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public void restartIntro() {
-        GameSounds.stopAll();
+        SOUNDS.stopAll();
         currentGameScene().ifPresent(GameScene::end);
         if (gameState() == LEVEL_TEST) {
             gameState().onExit(game()); //TODO exit other states too?
@@ -636,7 +638,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public void reboot() {
-        GameSounds.stopAll();
+        SOUNDS.stopAll();
         currentGameScene().ifPresent(GameScene::end);
         game().removeWorld();
         clock.setTargetFrameRate(GameModel.FPS);
@@ -648,8 +650,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
      */
     @Override
     public void addCredit() {
-        GameSounds.enabledProperty().set(true); // in demo mode, sound is disabled
-        GameSounds.playCreditSound();
+        SOUNDS.enabledProperty().set(true); // in demo mode, sound is disabled
+        SOUNDS.playCreditSound();
         if (!game().isPlaying()) {
             boolean coinInserted = game().insertCoin();
             if (coinInserted) {
@@ -666,7 +668,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         toggle(clock.pausedPy);
         if (clock.isPaused()) {
             assets().audioClips().forEach(AudioClip::stop);
-            GameSounds.stopSiren();
+            SOUNDS.stopSiren();
         }
         Logger.info("Game variant ({}) {}", game(), clock.isPaused() ? "paused" : "resumed");
     }
@@ -748,7 +750,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         toggle(PY_AUTOPILOT);
         boolean auto = PY_AUTOPILOT.get();
         showFlashMessage(locText(auto ? "autopilot_on" : "autopilot_off"));
-        GameSounds.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
+        SOUNDS.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
     }
 
     @Override
@@ -760,7 +762,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     public void toggleImmunity() {
         toggle(PY_IMMUNITY);
         showFlashMessage(locText(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
-        GameSounds.playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
+        SOUNDS.playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
     }
 
     @Override

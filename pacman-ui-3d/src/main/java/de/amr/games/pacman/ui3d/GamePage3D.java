@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -21,6 +20,7 @@ import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
 import static de.amr.games.pacman.ui2d.page.Page.menuTitleItem;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
@@ -109,7 +109,7 @@ public class GamePage3D extends GamePage {
         contextMenu.getItems().add(miCanvasDecorated);
 
         var miMuted = new CheckMenuItem(context.locText("muted"));
-        miMuted.selectedProperty().bindBidirectional(GameSounds.mutedProperty());
+        miMuted.selectedProperty().bindBidirectional(SOUNDS.mutedProperty());
         contextMenu.getItems().add(miMuted);
 
         if (context.game().variant() == GameVariant.PACMAN_XXL) {

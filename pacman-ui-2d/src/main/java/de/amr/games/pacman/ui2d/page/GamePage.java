@@ -8,8 +8,6 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.GameSounds;
-import de.amr.games.pacman.ui2d.PacManGames2dApp;
 import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -36,6 +34,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
 import static de.amr.games.pacman.ui2d.util.Ufx.border;
 
 /**
@@ -110,7 +109,7 @@ public class GamePage extends StackPane implements Page {
         //TODO check if this is always what is wanted
         context.reboot();
         context.updateCustomMaps();
-        GameSounds.playVoice("voice.explain", 0);
+        SOUNDS.playVoice("voice.explain", 0);
     }
 
     @Override
@@ -165,7 +164,7 @@ public class GamePage extends StackPane implements Page {
         contextMenu.getItems().add(miCanvasDecorated);
 
         var miMuted = new CheckMenuItem(context.locText("muted"));
-        miMuted.selectedProperty().bindBidirectional(GameSounds.mutedProperty());
+        miMuted.selectedProperty().bindBidirectional(SOUNDS.mutedProperty());
         contextMenu.getItems().add(miMuted);
 
         var miQuit = new MenuItem(context.locText("quit"));
@@ -231,7 +230,7 @@ public class GamePage extends StackPane implements Page {
     }
 
     protected void quit() {
-        GameSounds.stopAll();
+        SOUNDS.stopAll();
         context.game().consumeCoin();
         context.selectStartPage();
     }

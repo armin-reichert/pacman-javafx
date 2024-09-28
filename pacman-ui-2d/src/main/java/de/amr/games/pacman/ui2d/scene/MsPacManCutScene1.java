@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.ClapperboardAnimation;
@@ -23,6 +22,7 @@ import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGamePacAnimations;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
 
 /**
  * Intermission scene 1: "They meet".
@@ -226,7 +226,7 @@ public class MsPacManCutScene1 extends GameScene2D {
         int number  = context.gameState() == GameState.INTERMISSION_TEST
             ? GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber")
             : context.game().intermissionNumber(context.game().levelNumber());
-        GameSounds.playIntermissionSound(number);
+        SOUNDS.playIntermissionSound(number);
     }
 
     @Override

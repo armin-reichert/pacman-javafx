@@ -18,7 +18,6 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameGhostAnimations;
@@ -33,6 +32,7 @@ import java.util.BitSet;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -235,7 +235,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void end() {
-        GameSounds.stopVoice();
+        SOUNDS.stopVoice();
     }
 
     @Override

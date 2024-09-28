@@ -16,7 +16,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.variant.pacman.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.variant.pacman.PacManGamePacAnimations;
@@ -31,6 +30,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.EATEN;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
 import static de.amr.games.pacman.ui2d.variant.pacman.PacManGameSpriteSheet.MIDWAY_COPYRIGHT;
 
 /**
@@ -282,7 +282,7 @@ public class PacManIntroScene extends GameScene2D {
 
     @Override
     public void end() {
-        GameSounds.stopVoice();
+        SOUNDS.stopVoice();
     }
 
     @Override
