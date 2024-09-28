@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
+import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -21,13 +22,20 @@ public class InfoBoxGameInfo extends InfoBox {
         addTextRow("Game Scene", ifGameScene(gameScene -> gameScene.getClass().getSimpleName()));
         addTextRow("Game State", () -> "%s".formatted(context.gameState()));
 
-        addTextRow("",
-            () -> "Running:   %s%s".formatted(
-                context.gameState().timer().currentTick(),
-                context.gameState().timer().isStopped() ? " (STOPPED)" : ""));
-
-        addTextRow("",
-            () -> "Remaining: %s".formatted(ticksToString(context.gameState().timer().remaining())));
+        addTextRow("State Timer",
+            () -> {
+                TickTimer timer = context.gameState().timer();
+                boolean indefinite = timer.duration() == TickTimer.INDEFINITE;
+                if (timer.isStopped()) {
+                    return "Stopped at tick %s of %s".formatted(
+                        timer.currentTick(), indefinite ? "∞" : timer.duration());
+                }
+                if (indefinite) {
+                    return "Tick %s of ∞".formatted(timer.currentTick());
+                }
+                return "Tick %s (%s remaining) of %s ticks".formatted(
+                    timer.currentTick(), timer.remaining(), timer.duration());
+            });
 
         addTextRow("Level Number",ifLevel(level -> "%d".formatted(context.game().levelNumber())));
 
