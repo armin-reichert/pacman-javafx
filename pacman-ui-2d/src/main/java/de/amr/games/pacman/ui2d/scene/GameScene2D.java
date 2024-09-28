@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import javafx.beans.property.*;
@@ -39,10 +40,8 @@ public abstract class GameScene2D implements GameScene {
     }
 
     public void draw(GameWorldRenderer renderer) {
-        //TODO use binding
         renderer.scalingProperty().set(scalingPy.get());
         renderer.backgroundColorProperty().set(backgroundColorPy.get());
-
         renderer.clearCanvas();
         if (context.isScoreVisible()) {
             renderer.drawScore(context.game().score(),     "SCORE",      t(1),  t(1), renderer.scaledArcadeFont(TS), PALETTE_PALE);
@@ -52,15 +51,19 @@ public abstract class GameScene2D implements GameScene {
         if (debugInfoPy.get()) {
             drawDebugInfo(renderer);
         }
-        drawCredit(renderer);
-        renderer.drawLevelCounter(context.spriteSheet(), context.game().levelCounter(), context.worldSizeTilesOrDefault());
+        drawCredit(renderer, context.worldSizeTilesOrDefault());
+        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 
-    protected void drawCredit(GameWorldRenderer renderer) {
+    protected void drawCredit(GameWorldRenderer renderer, Vector2i worldSize) {
         if (isCreditVisible()) {
-            double x = 2 * TS, y = context.worldSizeTilesOrDefault().y() * TS - 2;
+            double x = 2 * TS, y = worldSize.y() * TS - 2;
             renderer.drawText("CREDIT %2d".formatted(context.game().credit()), PALETTE_PALE, renderer.scaledArcadeFont(TS), x, y);
         }
+    }
+
+    protected void drawLevelCounter(GameWorldRenderer renderer, Vector2i worldSize) {
+        renderer.drawLevelCounter(context.spriteSheet(), context.game().levelCounter(), worldSize);
     }
 
     /**
