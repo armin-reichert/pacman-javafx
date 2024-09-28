@@ -272,7 +272,7 @@ public class GameSounds {
     }
 
     public void playPacPowerSound() {
-        playIfEnabled("pac_power");
+        playIfEnabled("pacman_power");
     }
 
     public void stopPacPowerSound() {
