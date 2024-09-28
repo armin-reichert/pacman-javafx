@@ -30,7 +30,7 @@ public class GameSounds {
     private final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(GameVariant.PACMAN) {
         @Override
         protected void invalidated() {
-            loadSoundsForCurrentGameVariant();
+            loadSoundsForGameVariant(get());
         }
     };
 
@@ -80,8 +80,7 @@ public class GameSounds {
         }
     }
 
-    private MediaPlayer createPlayer(String keySuffix, double volume, boolean loop) {
-        GameVariant variant = gameVariantPy.get();
+    private MediaPlayer createPlayer(GameVariant variant, AssetStorage assets, String keySuffix, double volume, boolean loop) {
         String assetKey = assetPrefix(variant) + ".audio." + keySuffix;
         URL url = assets.get(assetKey);
         if (url == null) {
@@ -117,20 +116,20 @@ public class GameSounds {
             Logger.error("No audio clip with key {}", assetKey);
             return;
         }
-        if (!isMuted() && isEnabled()) {
+        if (isUnMuted() && isEnabled()) {
             clip.setVolume(0.5);
             clip.play();
         }
     }
 
-    private void loadSoundsForCurrentGameVariant() {
-        gameOverSound = createPlayer("game_over", 0.5, false);
-        gameReadySound = createPlayer("game_ready", 0.5, false);
-        ghostReturnsHomeSound = createPlayer("ghost_returns", 0.5, true);
-        levelCompleteSound = createPlayer("level_complete", 0.5, false);
-        munchingSound = createPlayer("pacman_munch", 0.5, true);
-        pacDeathSound = createPlayer("pacman_death", 0.5, false);
-        pacPowerSound = createPlayer("pacman_power", 0.5, true);
+    private void loadSoundsForGameVariant(GameVariant variant) {
+        gameOverSound = createPlayer(variant, assets, "game_over", 0.5, false);
+        gameReadySound = createPlayer(variant, assets, "game_ready", 0.5, false);
+        ghostReturnsHomeSound = createPlayer(variant, assets, "ghost_returns", 0.5, true);
+        levelCompleteSound = createPlayer(variant, assets, "level_complete", 0.5, false);
+        munchingSound = createPlayer(variant, assets, "pacman_munch", 0.5, true);
+        pacDeathSound = createPlayer(variant, assets, "pacman_death", 0.5, false);
+        pacPowerSound = createPlayer(variant, assets, "pacman_power", 0.5, true);
         // these are created on demand
         intermissionSound = null;
         siren = null;
@@ -168,16 +167,16 @@ public class GameSounds {
         Logger.info("All sounds stopped ({})", gameVariantPy.get());
     }
 
-    public boolean isMuted() {
-        return mutedPy.get();
+    public boolean isUnMuted() {
+        return !mutedPy.get();
     }
 
-    public void mute(boolean muted) {
+    public void setMuted(boolean muted) {
         mutedPy.set(muted);
     }
 
     public void toggleMuted() {
-        mute(!isMuted());
+        setMuted(isUnMuted());
     }
 
     public boolean isEnabled() {
@@ -193,7 +192,7 @@ public class GameSounds {
             if (siren != null) {
                 stopSound(siren.player());
             }
-            siren = new Siren(number, createPlayer("siren." + number, 0.25, true));
+            siren = new Siren(number, createPlayer(gameVariantPy.get(), assets, "siren." + number, 0.25, true));
         }
     }
 
@@ -274,13 +273,14 @@ public class GameSounds {
             Logger.error("Intermission number must be from 1..3 but is " + number);
             return;
         }
-        switch (gameVariantPy.get()) {
-            case MS_PACMAN, MS_PACMAN_TENGEN -> intermissionSound = createPlayer("intermission." + number, 0.5, false);
+        intermissionSound = switch (gameVariantPy.get()) {
+            case MS_PACMAN, MS_PACMAN_TENGEN -> createPlayer(gameVariantPy.get(), assets, "intermission." + number, 0.5, false);
             case PACMAN, PACMAN_XXL -> {
-                intermissionSound = createPlayer("intermission", 0.5, false);
-                intermissionSound.setCycleCount(number == 2 ? 1 : 2);
+                var player = createPlayer(gameVariantPy.get(), assets, "intermission", 0.5, false);
+                player.setCycleCount(number == 2 ? 1 : 2);
+                yield player;
             }
-        }
+        };
         intermissionSound.play();
     }
 
