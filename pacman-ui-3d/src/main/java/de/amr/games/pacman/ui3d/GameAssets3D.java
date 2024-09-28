@@ -13,7 +13,6 @@ import javafx.scene.paint.PhongMaterial;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
@@ -27,7 +26,7 @@ public class GameAssets3D {
     public static void addTo(AssetStorage assets) {
         ResourceManager rm = () -> GameAssets3D.class;
 
-        assets.addBundle(ResourceBundle.getBundle("de.amr.games.pacman.ui3d.texts.messages", rm.rootClass().getModule()));
+        assets.addBundle(rm.getModuleBundle("de.amr.games.pacman.ui3d.texts.messages"));
 
         assets.store("model3D.pacman", new Model3D(rm.url("model3D/pacman.obj")));
         assets.store("model3D.ghost",  new Model3D(rm.url("model3D/ghost.obj")));

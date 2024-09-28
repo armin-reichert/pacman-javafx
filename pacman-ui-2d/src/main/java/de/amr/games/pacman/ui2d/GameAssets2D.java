@@ -14,8 +14,6 @@ import de.amr.games.pacman.ui2d.variant.tengen.TengenMsPacManGameSpriteSheet;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import java.util.ResourceBundle;
-
 /**
  * @author Armin Reichert
  */
@@ -42,7 +40,7 @@ public class GameAssets2D extends AssetStorage {
     public static void addTo(AssetStorage assets) {
         ResourceManager rm = () -> GameAssets2D.class;
 
-        assets.addBundle(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", rm.rootClass().getModule()));
+        assets.addBundle(rm.getModuleBundle("de.amr.games.pacman.ui2d.texts.messages"));
 
         // Dashboard
 

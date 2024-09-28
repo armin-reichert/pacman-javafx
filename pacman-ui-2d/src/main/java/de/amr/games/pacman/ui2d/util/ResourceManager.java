@@ -11,6 +11,7 @@ import org.tinylog.Logger;
 
 import java.net.URL;
 import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
@@ -56,6 +57,10 @@ public interface ResourceManager {
                 rootClass().getName(), path);
         }
         return url;
+    }
+
+    default ResourceBundle getModuleBundle(String baseName) {
+        return ResourceBundle.getBundle(baseName, rootClass().getModule());
     }
 
     /**
