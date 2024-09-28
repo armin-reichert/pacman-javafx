@@ -37,7 +37,7 @@ public class GameSounds {
     private static final BooleanProperty enabledPy = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
-            Logger.info("Game sounds are " + (get() ? "enabled" : "disbaled"));
+            Logger.info("Game sounds are " + (get() ? "enabled" : "disabled"));
         }
     };
 
@@ -52,7 +52,7 @@ public class GameSounds {
     private static MediaPlayer munchingSound;
     private static MediaPlayer pacDeathSound;
     private static MediaPlayer pacPowerSound;
-    private static MediaPlayer ghostReturningHomeSound;
+    private static MediaPlayer ghostReturnsHomeSound;
 
     // These are created on demand
     private static MediaPlayer intermissionSound;
@@ -78,7 +78,7 @@ public class GameSounds {
     private static void loadSoundsForCurrentGameVariant() {
         gameOverSound = createPlayer("game_over", 0.5, false);
         gameReadySound = createPlayer("game_ready", 0.5, false);
-        ghostReturningHomeSound = createPlayer("ghost_returning", 0.5, true);
+        ghostReturnsHomeSound = createPlayer("ghost_returns", 0.5, true);
         levelCompleteSound = createPlayer("level_complete", 0.5, false);
         munchingSound = createPlayer("pacman_munch", 0.5, true);
         pacDeathSound = createPlayer("pacman_death", 0.5, false);
@@ -91,7 +91,7 @@ public class GameSounds {
     public static void stopAll() {
         stopSound(gameOverSound);
         stopSound(gameReadySound);
-        stopSound(ghostReturningHomeSound);
+        stopSound(ghostReturnsHomeSound);
         stopSound(intermissionSound);
         stopSound(levelCompleteSound);
         stopSound(munchingSound);
@@ -105,7 +105,7 @@ public class GameSounds {
     private static void logSounds() {
         logSound(gameOverSound, "Game Over");
         logSound(gameReadySound, "Game Ready");
-        logSound(ghostReturningHomeSound, "Ghost Returning Home");
+        logSound(ghostReturnsHomeSound, "Ghost Returning Home");
         logSound(intermissionSound, "Intermission");
         logSound(levelCompleteSound, "Level Complete");
         logSound(munchingSound, "Munching");
@@ -232,11 +232,11 @@ public class GameSounds {
     }
 
     public static void playGhostReturningHomeSound() {
-        playSound(ghostReturningHomeSound);
+        playSound(ghostReturnsHomeSound);
     }
 
     public static void stopGhostReturningHomeSound() {
-        stopSound(ghostReturningHomeSound);
+        stopSound(ghostReturnsHomeSound);
     }
 
     public static void playLevelChangedSound() {

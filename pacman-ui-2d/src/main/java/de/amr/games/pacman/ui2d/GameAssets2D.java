@@ -115,7 +115,7 @@ public class GameAssets2D extends AssetStorage {
         assets.store("ms_pacman.audio.siren.2",         rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
         assets.store("ms_pacman.audio.siren.3",         rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
         assets.store("ms_pacman.audio.siren.4",         rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
-        assets.store("ms_pacman.audio.ghost_returning", rm.url("sound/mspacman/GhostEyes.mp3"));
+        assets.store("ms_pacman.audio.ghost_returns",   rm.url("sound/mspacman/GhostEyes.mp3"));
 
         //
         // Ms. Pac-Man game Tengen
@@ -152,7 +152,7 @@ public class GameAssets2D extends AssetStorage {
         assets.store("tengen.audio.siren.2",            rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
         assets.store("tengen.audio.siren.3",            rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
         assets.store("tengen.audio.siren.4",            rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
-        assets.store("tengen.audio.ghost_returning",    rm.url("sound/mspacman/GhostEyes.mp3"));
+        assets.store("tengen.audio.ghost_returns",      rm.url("sound/mspacman/GhostEyes.mp3"));
 
         //
         // Pac-Man game
@@ -184,7 +184,7 @@ public class GameAssets2D extends AssetStorage {
         assets.store("pacman.audio.siren.2",            rm.url("sound/pacman/siren_2.mp3"));
         assets.store("pacman.audio.siren.3",            rm.url("sound/pacman/siren_3.mp3"));
         assets.store("pacman.audio.siren.4",            rm.url("sound/pacman/siren_4.mp3"));
-        assets.store("pacman.audio.ghost_returning",    rm.url("sound/pacman/retreating.mp3"));
+        assets.store("pacman.audio.ghost_returns",      rm.url("sound/pacman/retreating.mp3"));
 
         //
         // Pac-Man XXL
@@ -214,6 +214,6 @@ public class GameAssets2D extends AssetStorage {
         assets.store("pacman_xxl.audio.siren.2",        rm.url("sound/pacman/siren_2.mp3"));
         assets.store("pacman_xxl.audio.siren.3",        rm.url("sound/pacman/siren_3.mp3"));
         assets.store("pacman_xxl.audio.siren.4",        rm.url("sound/pacman/siren_4.mp3"));
-        assets.store("pacman_xxl.audio.ghost_returning", rm.url("sound/pacman/retreating.mp3"));
+        assets.store("pacman_xxl.audio.ghost_returns",  rm.url("sound/pacman/retreating.mp3"));
     }
 }
