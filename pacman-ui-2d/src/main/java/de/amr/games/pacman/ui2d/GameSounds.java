@@ -17,6 +17,8 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.MissingResourceException;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -27,17 +29,17 @@ import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
  */
 public class GameSounds {
 
-    private final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(GameVariant.PACMAN) {
-        @Override
-        protected void invalidated() {
-            loadSoundsForGameVariant(get());
-        }
-    };
-
     private final BooleanProperty enabledPy = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
-            Logger.info("Game sounds are " + (get() ? "enabled" : "disabled"));
+            Logger.info("Game sound is {}abled", get() ? "en" : "dis");
+        }
+    };
+
+    private final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(GameVariant.PACMAN) {
+        @Override
+        protected void invalidated() {
+            initMediaPlayers(get());
         }
     };
 
@@ -46,38 +48,49 @@ public class GameSounds {
     private AssetStorage assets;
 
     // These are created when game variant changes
-    private MediaPlayer gameOverSound;
-    private MediaPlayer gameReadySound;
-    private MediaPlayer levelCompleteSound;
-    private MediaPlayer munchingSound;
-    private MediaPlayer pacDeathSound;
-    private MediaPlayer pacPowerSound;
-    private MediaPlayer ghostReturnsHomeSound;
+    private final Map<String, MediaPlayer> players = new HashMap<>();
 
     // These are created on demand
     private MediaPlayer intermissionSound;
     private Siren siren;
     private MediaPlayer voice;
 
-    private void logSounds() {
-        logSound(gameOverSound, "Game Over");
-        logSound(gameReadySound, "Game Ready");
-        logSound(ghostReturnsHomeSound, "Ghost Returning Home");
-        logSound(intermissionSound, "Intermission");
-        logSound(levelCompleteSound, "Level Complete");
-        logSound(munchingSound, "Munching");
-        logSound(pacDeathSound, "Death");
-        logSound(pacPowerSound, "Power");
+    //TODO check volume settings
+    private void initMediaPlayers(GameVariant variant) {
+        players.clear();
+        players.put("game_over",      createPlayer(variant, assets, "game_over", 0.5, false));
+        players.put("game_ready",     createPlayer(variant, assets, "game_ready", 0.5, false));
+        players.put("ghost_returns",  createPlayer(variant, assets, "ghost_returns", 0.5, true));
+        players.put("level_complete", createPlayer(variant, assets, "level_complete", 0.5, false));
+        players.put("pacman_munch",   createPlayer(variant, assets, "pacman_munch", 0.5, true));
+        players.put("pacman_death",   createPlayer(variant, assets, "pacman_death", 0.5, false));
+        players.put("pacman_power",   createPlayer(variant, assets, "pacman_power", 0.5, true));
+        intermissionSound = null;
+        siren = null;
+        logPlayerStatus();
+    }
+
+    private void logPlayerStatus() {
+        for (String key : players.keySet()) {
+            logPlayerStatus(players.get(key), key);
+        }
+        logPlayerStatus(intermissionSound, "Intermission");
         if (siren != null) {
-            logSound(siren.player(), "Siren" + siren.number());
+            logPlayerStatus(siren.player(), "Siren" + siren.number());
+        }
+        logPlayerStatus(voice, "Voice");
+    }
+
+    private void logPlayerStatus(MediaPlayer player, String key) {
+        if (player != null) {
+            Logger.info("[{}] state={} volume={}", key, player.getStatus() != null ? player.getStatus() : "UNDEFINED", player.getVolume());
+        } else {
+            Logger.info("No player exists for key {}", key);
         }
     }
 
-    private void logSound(MediaPlayer sound, String description) {
-        if (sound != null) {
-            Logger.debug("[{}] state={} volume={}", description,
-                sound.getStatus() != null ? sound.getStatus() : "UNDEFINED", sound.getVolume());
-        }
+    private void logPlayerStatusChange(MediaPlayer player, String key, MediaPlayer.Status oldStatus, MediaPlayer.Status newStatus) {
+        Logger.info("[{}] {} -> {}, volume {}", key, (oldStatus != null ? oldStatus : "undefined"), newStatus, player.getVolume());
     }
 
     private MediaPlayer createPlayer(GameVariant variant, AssetStorage assets, String keySuffix, double volume, boolean loop) {
@@ -93,7 +106,7 @@ public class GameSounds {
         player.setCycleCount(loop ? MediaPlayer.INDEFINITE : 1);
         player.setVolume(volume);
         player.muteProperty().bind(mutedPy);
-        player.statusProperty().addListener((py,ov,nv) -> logSounds());
+        player.statusProperty().addListener((py,ov,nv) -> logPlayerStatusChange(player, keySuffix, ov, nv));
         return player;
     }
 
@@ -122,19 +135,6 @@ public class GameSounds {
         }
     }
 
-    private void loadSoundsForGameVariant(GameVariant variant) {
-        gameOverSound = createPlayer(variant, assets, "game_over", 0.5, false);
-        gameReadySound = createPlayer(variant, assets, "game_ready", 0.5, false);
-        ghostReturnsHomeSound = createPlayer(variant, assets, "ghost_returns", 0.5, true);
-        levelCompleteSound = createPlayer(variant, assets, "level_complete", 0.5, false);
-        munchingSound = createPlayer(variant, assets, "pacman_munch", 0.5, true);
-        pacDeathSound = createPlayer(variant, assets, "pacman_death", 0.5, false);
-        pacPowerSound = createPlayer(variant, assets, "pacman_power", 0.5, true);
-        // these are created on demand
-        intermissionSound = null;
-        siren = null;
-    }
-
     // Public API
 
     public void setAssets(AssetStorage assets) {
@@ -154,14 +154,10 @@ public class GameSounds {
     }
 
     public void stopAll() {
-        stopSound(gameOverSound);
-        stopSound(gameReadySound);
-        stopSound(ghostReturnsHomeSound);
+        for (MediaPlayer player : players.values()) {
+            stopSound(player);
+        }
         stopSound(intermissionSound);
-        stopSound(levelCompleteSound);
-        stopSound(munchingSound);
-        stopSound(pacDeathSound);
-        stopSound(pacPowerSound);
         stopSiren();
         stopVoice();
         Logger.info("All sounds stopped ({})", gameVariantPy.get());
@@ -221,11 +217,11 @@ public class GameSounds {
     }
 
     public void playGameOverSound() {
-        playSound(gameOverSound);
+        playSound(players.get("game_over"));
     }
 
     public void playGameReadySound() {
-        playSound(gameReadySound);
+        playSound(players.get("game_ready"));
     }
 
     public void playGhostEatenSound() {
@@ -233,11 +229,11 @@ public class GameSounds {
     }
 
     public void playGhostReturningHomeSound() {
-        playSound(ghostReturnsHomeSound);
+        playSound(players.get("ghost_returns"));
     }
 
     public void stopGhostReturningHomeSound() {
-        stopSound(ghostReturnsHomeSound);
+        stopSound(players.get("ghost_returns"));
     }
 
     public void playLevelChangedSound() {
@@ -245,27 +241,27 @@ public class GameSounds {
     }
 
     public void playLevelCompleteSound() {
-        playSound(levelCompleteSound);
+        playSound(players.get("level_complete"));
     }
 
     public void playMunchingSound() {
-        playSound(munchingSound);
+        playSound(players.get("pacman_munch"));
     }
 
     public void stopMunchingSound() {
-        stopSound(munchingSound);
+        stopSound(players.get("pacman_munch"));
     }
 
     public void playPacDeathSound() {
-        playSound(pacDeathSound);
+        playSound(players.get("pacman_death"));
     }
 
     public void playPacPowerSound() {
-        playSound(pacPowerSound);
+        playSound(players.get("pac_power"));
     }
 
     public void stopPacPowerSound() {
-        stopSound(pacPowerSound);
+        stopSound(players.get("pac_power"));
     }
 
     public void playIntermissionSound(int number) {
