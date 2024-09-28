@@ -46,12 +46,12 @@ public class SpriteAnimation {
         public SpriteAnimation loop() {
             workPiece.loop = true;
             workPiece.clock = workPiece.new Clock();
-            Logger.info("New sprite animation '{}'", workPiece.info);
+            Logger.debug("New sprite animation '{}'", workPiece.info);
             return workPiece;
         }
 
         public SpriteAnimation end() {
-            Logger.info("New sprite animation '{}'", workPiece.info);
+            Logger.debug("New sprite animation '{}'", workPiece.info);
             workPiece.clock = workPiece.new Clock();
             return workPiece;
         }
