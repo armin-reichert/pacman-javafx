@@ -40,7 +40,7 @@ public class GameSounds {
     private AssetStorage assets;
 
     // These are created when game variant changes
-    private final Map<String, MediaPlayer> players = new HashMap<>();
+    private final Map<GameVariant, Map<String, MediaPlayer>> playerMapByGameVariant = new HashMap<>();
 
     // These are created on demand
     private MediaPlayer intermissionSound;
@@ -50,22 +50,30 @@ public class GameSounds {
     //TODO check volume settings
     public void init(GameVariant gameVariant) {
         this.gameVariant = checkNotNull(gameVariant);
-        players.clear();
-        players.put("game_over",      createPlayer(gameVariant, assets, "game_over", 0.5, false));
-        players.put("game_ready",     createPlayer(gameVariant, assets, "game_ready", 0.5, false));
-        players.put("ghost_returns",  createPlayer(gameVariant, assets, "ghost_returns", 0.5, true));
-        players.put("level_complete", createPlayer(gameVariant, assets, "level_complete", 0.5, false));
-        players.put("pacman_munch",   createPlayer(gameVariant, assets, "pacman_munch", 0.5, true));
-        players.put("pacman_death",   createPlayer(gameVariant, assets, "pacman_death", 0.5, false));
-        players.put("pacman_power",   createPlayer(gameVariant, assets, "pacman_power", 0.5, true));
+        if (playerMapByGameVariant.get(gameVariant) == null) {
+            Map<String, MediaPlayer> players = new HashMap<>();
+            players.put("game_over", createPlayer(gameVariant, assets, "game_over", 0.5, false));
+            players.put("game_ready", createPlayer(gameVariant, assets, "game_ready", 0.5, false));
+            players.put("ghost_returns", createPlayer(gameVariant, assets, "ghost_returns", 0.5, true));
+            players.put("level_complete", createPlayer(gameVariant, assets, "level_complete", 0.5, false));
+            players.put("pacman_munch", createPlayer(gameVariant, assets, "pacman_munch", 0.5, true));
+            players.put("pacman_death", createPlayer(gameVariant, assets, "pacman_death", 0.5, false));
+            players.put("pacman_power", createPlayer(gameVariant, assets, "pacman_power", 0.5, true));
+            playerMapByGameVariant.put(gameVariant, players);
+            Logger.info("Created media players for game variant {}", gameVariant);
+        }
         intermissionSound = null;
         siren = null;
         logPlayerStatus();
     }
 
+    private Map<String, MediaPlayer> players(GameVariant gameVariant) {
+        return playerMapByGameVariant.get(gameVariant);
+    }
+
     private void logPlayerStatus() {
-        for (String key : players.keySet()) {
-            logPlayerStatus(players.get(key), key);
+        for (String key : players(gameVariant).keySet()) {
+            logPlayerStatus(players(gameVariant).get(key), key);
         }
         logPlayerStatus(intermissionSound, "Intermission");
         if (siren != null) {
@@ -114,7 +122,7 @@ public class GameSounds {
     }
 
     private void playIfEnabled(String key) {
-        playIfEnabled(players.get(key));
+        playIfEnabled(players(gameVariant).get(key));
     }
 
     private void stop(MediaPlayer player) {
@@ -126,7 +134,7 @@ public class GameSounds {
     }
 
     private void stop(String key) {
-        stop(players.get(key));
+        stop(players(gameVariant).get(key));
     }
 
     private void playClipIfEnabled(String keySuffix) {
@@ -158,7 +166,7 @@ public class GameSounds {
     }
 
     public void stopAll() {
-        for (MediaPlayer player : players.values()) {
+        for (MediaPlayer player : players(gameVariant).values()) {
             stop(player);
         }
         stop(intermissionSound);
