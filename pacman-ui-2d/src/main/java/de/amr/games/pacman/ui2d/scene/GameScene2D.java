@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import javafx.beans.property.*;
@@ -54,7 +53,7 @@ public abstract class GameScene2D implements GameScene {
             drawDebugInfo(renderer);
         }
         drawCredit(renderer);
-        drawLevelCounter(renderer);
+        renderer.drawLevelCounter(context.spriteSheet(), context.game().levelCounter(), context.worldSizeTilesOrDefault());
     }
 
     protected void drawCredit(GameWorldRenderer renderer) {
@@ -62,10 +61,6 @@ public abstract class GameScene2D implements GameScene {
             double x = 2 * TS, y = context.worldSizeTilesOrDefault().y() * TS - 2;
             renderer.drawText("CREDIT %2d".formatted(context.game().credit()), PALETTE_PALE, renderer.scaledArcadeFont(TS), x, y);
         }
-    }
-
-    protected void drawLevelCounter(GameWorldRenderer renderer) {
-        renderer.drawLevelCounter(context.spriteSheet(), context.game().levelCounter(), context.worldSizeTilesOrDefault());
     }
 
     /**
@@ -80,7 +75,6 @@ public abstract class GameScene2D implements GameScene {
      * Draws additional scene info, e.g. tile structure or debug info.
      */
     protected void drawDebugInfo(GameWorldRenderer renderer) {
-        Vector2i worldSize = context.worldSizeTilesOrDefault();
-        renderer.drawTileGrid(worldSize.x(), worldSize.y());
+        renderer.drawTileGrid(context.worldSizeTilesOrDefault());
     }
 }

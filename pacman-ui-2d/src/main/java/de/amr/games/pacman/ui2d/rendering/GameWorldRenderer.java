@@ -276,14 +276,14 @@ public interface GameWorldRenderer {
         }
     }
 
-    default void drawTileGrid(int numWorldTilesX, int numWorldTilesY  ) {
+    default void drawTileGrid(Vector2i gridSizeTiles) {
         ctx().setStroke(Color.LIGHTGRAY);
         ctx().setLineWidth(0.2);
-        for (int row = 0; row <= numWorldTilesY; ++row) {
-            ctx().strokeLine(0, scaled(TS * row), scaled(numWorldTilesX * TS), scaled(TS * row));
+        for (int row = 0; row <= gridSizeTiles.y(); ++row) {
+            ctx().strokeLine(0, scaled(TS * row), scaled(gridSizeTiles.y() * TS), scaled(TS * row));
         }
-        for (int col = 0; col <= numWorldTilesX; ++col) {
-            ctx().strokeLine(scaled(TS * col), 0, scaled(TS * col), scaled(numWorldTilesY * TS));
+        for (int col = 0; col <= gridSizeTiles.x(); ++col) {
+            ctx().strokeLine(scaled(TS * col), 0, scaled(TS * col), scaled(gridSizeTiles.y() * TS));
         }
     }
 

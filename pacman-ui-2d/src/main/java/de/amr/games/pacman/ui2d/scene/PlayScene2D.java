@@ -146,8 +146,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     protected void drawDebugInfo(GameWorldRenderer renderer) {
-        Vector2i worldSize = context.worldSizeTilesOrDefault();
-        renderer.drawTileGrid(worldSize.x(), worldSize.y());
+        renderer.drawTileGrid(context.worldSizeTilesOrDefault());
         if (context.game().variant() == GameVariant.PACMAN && context.game().world() != null) {
             context.game().ghosts().forEach(ghost -> {
                 // Are currently the same for each ghost, but who knows what comes...
