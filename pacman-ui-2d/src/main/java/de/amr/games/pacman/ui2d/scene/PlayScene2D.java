@@ -113,12 +113,12 @@ public class PlayScene2D extends GameScene2D {
         }
 
         if (!isCreditVisible()) {
-            //TODO check this
-            int numLivesDisplayed = context.game().lives() - 1;
+            //TODO: this looks ugly
+            int numLivesShown = context.game().lives() - 1;
             if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
-                numLivesDisplayed += 1;
+                numLivesShown += 1;
             }
-            renderer.drawLivesCounter(context.spriteSheet(), numLivesDisplayed, (context.worldSizeTilesOrDefault().y() - 2) * TS - 1);
+            renderer.drawLivesCounter(context.spriteSheet(), numLivesShown, 5, context.worldSizeTilesOrDefault());
         }
     }
 

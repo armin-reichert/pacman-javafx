@@ -245,28 +245,28 @@ public interface GameWorldRenderer {
         ctx().fillText(text, scaled(x), scaled(y));
     }
 
-    default void drawLivesCounter(GameSpriteSheet spriteSheet, int numLivesDisplayed, int y) {
-        if (numLivesDisplayed == 0) {
+    default void drawLivesCounter(GameSpriteSheet spriteSheet, int numLives, int maxLives, Vector2i worldSize) {
+        if (numLives == 0) {
             return;
         }
-        int maxSymbols = 5;
-        var x = TS * 2;
-        for (int i = 0; i < Math.min(numLivesDisplayed, maxSymbols); ++i) {
+        double x = TS * 2;
+        double y = TS * (worldSize.y() - 2);
+        for (int i = 0; i < Math.min(numLives, maxLives); ++i) {
             drawSpriteScaled(spriteSheet, spriteSheet.livesCounterSprite(), x + TS * (2 * i), y);
         }
         // show text indicating that more lives are available than symbols displayed (can happen when lives are added via cheat)
-        int moreLivesThanSymbols = numLivesDisplayed - maxSymbols;
+        int moreLivesThanSymbols = numLives - maxLives;
         if (moreLivesThanSymbols > 0) {
             Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
             drawText("+" + moreLivesThanSymbols, Color.YELLOW, font, x + TS * 10, y + TS);
         }
     }
 
-    default void drawLevelCounter(GameSpriteSheet spriteSheet, List<Byte> symbols, double x, double y) {
-        double currentX = x;
+    default void drawLevelCounter(GameSpriteSheet spriteSheet, List<Byte> symbols, Vector2i worldSize) {
+        double x = TS * (worldSize.x() - 4), y = TS * (worldSize.y() - 2);
         for (byte symbol : symbols) {
-            drawSpriteScaled(spriteSheet, spriteSheet.bonusSymbolSprite(symbol), currentX, y);
-            currentX -= TS * 2;
+            drawSpriteScaled(spriteSheet, spriteSheet.bonusSymbolSprite(symbol), x, y);
+            x -= TS * 2;
         }
     }
 
