@@ -177,7 +177,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
         // select game variant of current game model
         gameVariantPy.set(game().variant());
-        SOUNDS.gameVariantProperty().bind(gameVariantPy);
 
         // Not sure where this belongs
         PacManXXLGame xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
@@ -281,6 +280,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         if (variant == GameVariant.PACMAN_XXL) {
             updateCustomMaps();
         }
+        SOUNDS.init(variant);
     }
 
     protected ObservableValue<String> stageTitleBinding() {

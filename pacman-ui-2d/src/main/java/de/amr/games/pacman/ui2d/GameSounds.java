@@ -7,9 +7,7 @@ package de.amr.games.pacman.ui2d;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -36,15 +34,9 @@ public class GameSounds {
         }
     };
 
-    private final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(GameVariant.PACMAN) {
-        @Override
-        protected void invalidated() {
-            initMediaPlayers(get());
-        }
-    };
-
     private final BooleanProperty mutedPy = new SimpleBooleanProperty(false);
 
+    private GameVariant gameVariant;
     private AssetStorage assets;
 
     // These are created when game variant changes
@@ -56,15 +48,16 @@ public class GameSounds {
     private MediaPlayer voice;
 
     //TODO check volume settings
-    private void initMediaPlayers(GameVariant variant) {
+    public void init(GameVariant gameVariant) {
+        this.gameVariant = checkNotNull(gameVariant);
         players.clear();
-        players.put("game_over",      createPlayer(variant, assets, "game_over", 0.5, false));
-        players.put("game_ready",     createPlayer(variant, assets, "game_ready", 0.5, false));
-        players.put("ghost_returns",  createPlayer(variant, assets, "ghost_returns", 0.5, true));
-        players.put("level_complete", createPlayer(variant, assets, "level_complete", 0.5, false));
-        players.put("pacman_munch",   createPlayer(variant, assets, "pacman_munch", 0.5, true));
-        players.put("pacman_death",   createPlayer(variant, assets, "pacman_death", 0.5, false));
-        players.put("pacman_power",   createPlayer(variant, assets, "pacman_power", 0.5, true));
+        players.put("game_over",      createPlayer(gameVariant, assets, "game_over", 0.5, false));
+        players.put("game_ready",     createPlayer(gameVariant, assets, "game_ready", 0.5, false));
+        players.put("ghost_returns",  createPlayer(gameVariant, assets, "ghost_returns", 0.5, true));
+        players.put("level_complete", createPlayer(gameVariant, assets, "level_complete", 0.5, false));
+        players.put("pacman_munch",   createPlayer(gameVariant, assets, "pacman_munch", 0.5, true));
+        players.put("pacman_death",   createPlayer(gameVariant, assets, "pacman_death", 0.5, false));
+        players.put("pacman_power",   createPlayer(gameVariant, assets, "pacman_power", 0.5, true));
         intermissionSound = null;
         siren = null;
         logPlayerStatus();
@@ -126,7 +119,7 @@ public class GameSounds {
 
     private void stop(MediaPlayer player) {
         if (player == null) {
-            Logger.error("Cannot stop sound, player is NULL");
+            Logger.warn("No player to stop");
             return;
         }
         player.stop();
@@ -138,7 +131,7 @@ public class GameSounds {
 
     private void playClipIfEnabled(String keySuffix) {
         checkNotNull(keySuffix);
-        String assetKey = assetPrefix(gameVariantPy.get()) + ".audio." + keySuffix;
+        String assetKey = assetPrefix(gameVariant) + ".audio." + keySuffix;
         AudioClip clip = assets.get(assetKey);
         if (clip == null) {
             Logger.error("No audio clip with key {}", assetKey);
@@ -160,10 +153,6 @@ public class GameSounds {
         return enabledPy;
     }
 
-    public ObjectProperty<GameVariant> gameVariantProperty() {
-        return gameVariantPy;
-    }
-
     public BooleanProperty mutedProperty() {
         return mutedPy;
     }
@@ -175,7 +164,7 @@ public class GameSounds {
         stop(intermissionSound);
         stopSiren();
         stopVoice();
-        Logger.info("All sounds stopped ({})", gameVariantPy.get());
+        Logger.info("All sounds stopped ({})", gameVariant);
     }
 
     public boolean isEnabled() {
@@ -203,7 +192,7 @@ public class GameSounds {
             if (siren != null) {
                 stop(siren.player());
             }
-            siren = new Siren(number, createPlayer(gameVariantPy.get(), assets, "siren." + number, 0.25, true));
+            siren = new Siren(number, createPlayer(gameVariant, assets, "siren." + number, 0.25, true));
         }
     }
 
@@ -284,10 +273,10 @@ public class GameSounds {
             Logger.error("Intermission number must be from 1..3 but is " + number);
             return;
         }
-        intermissionSound = switch (gameVariantPy.get()) {
-            case MS_PACMAN, MS_PACMAN_TENGEN -> createPlayer(gameVariantPy.get(), assets, "intermission." + number, 0.5, false);
+        intermissionSound = switch (gameVariant) {
+            case MS_PACMAN, MS_PACMAN_TENGEN -> createPlayer(gameVariant, assets, "intermission." + number, 0.5, false);
             case PACMAN, PACMAN_XXL -> {
-                var player = createPlayer(gameVariantPy.get(), assets, "intermission", 0.5, false);
+                var player = createPlayer(gameVariant, assets, "intermission", 0.5, false);
                 player.setCycleCount(number == 2 ? 1 : 2);
                 yield player;
             }
@@ -302,7 +291,7 @@ public class GameSounds {
         }
         URL url = assets.get(voiceClipID);
         voice = new MediaPlayer(new Media(url.toExternalForm()));
-        // media player stays in state PLAYING so we remove the reference when it reaches the end
+        // media player stays in state PLAYING, so we remove the reference when it reaches the end
         voice.setOnEndOfMedia(() -> voice = null);
         voice.muteProperty().bind(mutedPy);
         voice.setStartTime(Duration.seconds(delaySeconds));
