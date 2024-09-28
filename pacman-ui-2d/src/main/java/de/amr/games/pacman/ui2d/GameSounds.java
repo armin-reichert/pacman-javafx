@@ -102,16 +102,20 @@ public class GameSounds {
             throw new MissingResourceException(msg, GameSounds.class.getName(), assetKey);
         }
         var player = new MediaPlayer(new Media(url.toExternalForm()));
-        Logger.info("Media player created from URL {}", url);
         player.setCycleCount(loop ? MediaPlayer.INDEFINITE : 1);
         player.setVolume(volume);
         player.muteProperty().bind(mutedPy);
         player.statusProperty().addListener((py,ov,nv) -> logPlayerStatusChange(player, keySuffix, ov, nv));
+        Logger.info("Media player created from URL {}", url);
         return player;
     }
 
     private void playSound(MediaPlayer player) {
-        if (player != null && isEnabled()) {
+        if (player == null) {
+            Logger.error("Cannot play sound, player is NULL");
+            return;
+        }
+        if (isEnabled()) {
             player.play();
         }
     }
