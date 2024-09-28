@@ -275,6 +275,6 @@ public class MsPacManCutScene1 extends GameScene2D {
         renderer.drawAnimatedEntity(pacMan);
         renderer.drawAnimatedEntity(inky);
         renderer.drawAnimatedEntity(pinky);
-        renderer.drawEntitySprite(heart, spriteSheet, spriteSheet.heartSprite());
+        renderer.drawSprite(heart, spriteSheet, spriteSheet.heartSprite());
     }
 }

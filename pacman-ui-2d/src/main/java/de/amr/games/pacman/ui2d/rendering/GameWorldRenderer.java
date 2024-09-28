@@ -139,7 +139,7 @@ public interface GameWorldRenderer {
      * @param spriteSheet the sprite sheet from which the sprite is drwan
      * @param sprite    sprite sheet region (can be null)
      */
-    default void drawEntitySprite(Entity entity, GameSpriteSheet spriteSheet, RectArea sprite) {
+    default void drawSprite(Entity entity, GameSpriteSheet spriteSheet, RectArea sprite) {
         if (entity.isVisible()) {
             drawSpriteCenteredOverBox(spriteSheet, sprite, entity.posX(), entity.posY());
         }
@@ -148,18 +148,15 @@ public interface GameWorldRenderer {
     /**
      * Draws animated entity (Pac-Man, ghost, moving bonus) if entity is visible.
      *
-     * @param guy the animated entity
+     * @param character the animated entity
      */
-    default void drawAnimatedEntity(AnimatedEntity guy) {
-        if (guy.isVisible() && guy.animations().isPresent()) {
-            if (guy.animations().get() instanceof SpriteAnimationCollection spriteAnimations) {
-                GameSpriteSheet spriteSheet = spriteAnimations.currentAnimation().spriteSheet();
-                RectArea sprite = spriteAnimations.currentSprite(guy);
-                drawEntitySprite(guy.entity(), spriteSheet, sprite);
+    default void drawAnimatedEntity(AnimatedEntity character) {
+        character.animations().ifPresent(animations -> {
+            if (character.isVisible() && animations instanceof SpriteAnimationCollection spriteAnimations) {
+                drawSprite(character.entity(), spriteAnimations.current().spriteSheet(), spriteAnimations.currentSprite(character));
             }
-        }
+        });
     }
-
 
     ObjectProperty<Color> backgroundColorProperty();
 
@@ -209,7 +206,7 @@ public interface GameWorldRenderer {
             Creature guy = (Creature) animatedCreature.entity();
             String animationName = sa.currentAnimationName();
             if (animationName != null) {
-                String text = animationName + " " + sa.currentAnimation().frameIndex();
+                String text = animationName + " " + sa.current().frameIndex();
                 ctx().setFill(Color.WHITE);
                 ctx().setFont(Font.font("Monospaced", scaled(6)));
                 ctx().fillText(text, scaled(guy.posX() - 4), scaled(guy.posY() - 4));
@@ -294,8 +291,8 @@ public interface GameWorldRenderer {
         ctx().save();
         ctx().translate(0, bonus.elongationY());
         switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawEntitySprite(bonus.entity(), spriteSheet, spriteSheet.bonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawEntitySprite(bonus.entity(), spriteSheet, spriteSheet.bonusValueSprite(bonus.symbol()));
+            case Bonus.STATE_EDIBLE -> drawSprite(bonus.entity(), spriteSheet, spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawSprite(bonus.entity(), spriteSheet, spriteSheet.bonusValueSprite(bonus.symbol()));
             default -> {}
         }
         ctx().restore();

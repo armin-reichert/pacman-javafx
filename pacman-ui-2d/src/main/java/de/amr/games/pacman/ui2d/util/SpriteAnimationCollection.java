@@ -42,11 +42,11 @@ public class SpriteAnimationCollection implements Animations {
     }
 
     public final RectArea currentSprite(AnimatedEntity animatedEntity) {
-        var currentAnimation = currentAnimation();
+        var currentAnimation = current();
         if (currentAnimation == null) {
             return null;
         }
-        RectArea[] newSelection = selectedSprites(currentAnimation().spriteSheet(), animatedEntity.entity());
+        RectArea[] newSelection = selectedSprites(current().spriteSheet(), animatedEntity.entity());
         if (newSelection != null) {
             currentAnimation.setSprites(newSelection);
         }
@@ -58,7 +58,7 @@ public class SpriteAnimationCollection implements Animations {
     }
 
     @Override
-    public SpriteAnimation currentAnimation() {
+    public SpriteAnimation current() {
         return currentAnimationName != null ? animation(currentAnimationName) : null;
     }
 
@@ -66,8 +66,8 @@ public class SpriteAnimationCollection implements Animations {
     public void select(String name, int index) {
         if (!name.equals(currentAnimationName)) {
             currentAnimationName = name;
-            if (currentAnimation() != null) {
-                currentAnimation().setFrameIndex(0);
+            if (current() != null) {
+                current().setFrameIndex(0);
             } else {
                 Logger.warn("No animation with name {} exists", name);
             }
@@ -76,22 +76,22 @@ public class SpriteAnimationCollection implements Animations {
 
     @Override
     public void startSelected() {
-        if (currentAnimation() != null) {
-            currentAnimation().start();
+        if (current() != null) {
+            current().start();
         }
     }
 
     @Override
     public void stopSelected() {
-        if (currentAnimation() != null) {
-            currentAnimation().stop();
+        if (current() != null) {
+            current().stop();
         }
     }
 
     @Override
     public void resetSelected() {
-        if (currentAnimation() != null) {
-            currentAnimation().reset();
+        if (current() != null) {
+            current().reset();
         }
     }
 }

@@ -187,11 +187,11 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     //TODO temporary hack until Tengen sprite sheet is usable
 
     @Override
-    public void drawAnimatedEntity(AnimatedEntity guy) {
-        if (guy.entity() instanceof MovingBonus) {
-            rendererMsPacMan.drawAnimatedEntity(guy);
+    public void drawAnimatedEntity(AnimatedEntity character) {
+        if (character.entity() instanceof MovingBonus) {
+            rendererMsPacMan.drawAnimatedEntity(character);
         } else {
-            GameWorldRenderer.super.drawAnimatedEntity(guy);
+            GameWorldRenderer.super.drawAnimatedEntity(character);
         }
     }
 }

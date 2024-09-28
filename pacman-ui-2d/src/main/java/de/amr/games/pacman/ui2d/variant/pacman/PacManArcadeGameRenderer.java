@@ -103,9 +103,9 @@ public class PacManArcadeGameRenderer implements GameWorldRenderer {
 
     private void drawStaticBonus(GameSpriteSheet spriteSheet, Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
-            drawEntitySprite(bonus.entity(), spriteSheet, spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            drawSprite(bonus.entity(), spriteSheet, spriteSheet.bonusSymbolSprite(bonus.symbol()));
         } else if (bonus.state() == Bonus.STATE_EATEN) {
-            drawEntitySprite(bonus.entity(), spriteSheet, spriteSheet.bonusValueSprite(bonus.symbol()));
+            drawSprite(bonus.entity(), spriteSheet, spriteSheet.bonusValueSprite(bonus.symbol()));
         }
     }
 }
