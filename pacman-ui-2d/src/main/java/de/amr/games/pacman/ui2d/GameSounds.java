@@ -110,7 +110,7 @@ public class GameSounds {
         return player;
     }
 
-    private void playSound(MediaPlayer player) {
+    private void playIfEnabled(MediaPlayer player) {
         if (player == null) {
             Logger.error("Cannot play sound, player is NULL");
             return;
@@ -120,12 +120,23 @@ public class GameSounds {
         }
     }
 
-    private void stopSound(MediaPlayer player) {
-        if (player != null)
-            player.stop();
+    private void playIfEnabled(String key) {
+        playIfEnabled(players.get(key));
     }
 
-    private void playClip(String keySuffix) {
+    private void stop(MediaPlayer player) {
+        if (player == null) {
+            Logger.error("Cannot stop sound, player is NULL");
+            return;
+        }
+        player.stop();
+    }
+
+    private void stop(String key) {
+        stop(players.get(key));
+    }
+
+    private void playClipIfEnabled(String keySuffix) {
         checkNotNull(keySuffix);
         String assetKey = assetPrefix(gameVariantPy.get()) + ".audio." + keySuffix;
         AudioClip clip = assets.get(assetKey);
@@ -145,12 +156,12 @@ public class GameSounds {
         this.assets = checkNotNull(assets);
     }
 
-    public ObjectProperty<GameVariant> gameVariantProperty() {
-        return gameVariantPy;
-    }
-
     public BooleanProperty enabledProperty() {
         return enabledPy;
+    }
+
+    public ObjectProperty<GameVariant> gameVariantProperty() {
+        return gameVariantPy;
     }
 
     public BooleanProperty mutedProperty() {
@@ -159,12 +170,16 @@ public class GameSounds {
 
     public void stopAll() {
         for (MediaPlayer player : players.values()) {
-            stopSound(player);
+            stop(player);
         }
-        stopSound(intermissionSound);
+        stop(intermissionSound);
         stopSiren();
         stopVoice();
         Logger.info("All sounds stopped ({})", gameVariantPy.get());
+    }
+
+    public boolean isEnabled() {
+        return enabledPy.get();
     }
 
     public boolean isUnMuted() {
@@ -179,10 +194,6 @@ public class GameSounds {
         setMuted(isUnMuted());
     }
 
-    public boolean isEnabled() {
-        return enabledPy.get();
-    }
-
     public void selectSiren(int number) {
         if (number < 1 || number > 4) {
             Logger.error("Siren number must be in 1..4 but is " + number);
@@ -190,7 +201,7 @@ public class GameSounds {
         }
         if (siren == null || siren.number() != number) {
             if (siren != null) {
-                stopSound(siren.player());
+                stop(siren.player());
             }
             siren = new Siren(number, createPlayer(gameVariantPy.get(), assets, "siren." + number, 0.25, true));
         }
@@ -198,7 +209,7 @@ public class GameSounds {
 
     public void playSiren() {
         if (siren != null) {
-            playSound(siren.player());
+            playIfEnabled(siren.player());
         }
     }
 
@@ -209,63 +220,63 @@ public class GameSounds {
     }
 
     public void playBonusEatenSound() {
-        playClip("bonus_eaten");
+        playClipIfEnabled("bonus_eaten");
     }
 
     public void playCreditSound() {
-        playClip("credit");
+        playClipIfEnabled("credit");
     }
 
     public void playExtraLifeSound() {
-        playClip("extra_life");
+        playClipIfEnabled("extra_life");
     }
 
     public void playGameOverSound() {
-        playSound(players.get("game_over"));
+        playIfEnabled("game_over");
     }
 
     public void playGameReadySound() {
-        playSound(players.get("game_ready"));
+        playIfEnabled("game_ready");
     }
 
     public void playGhostEatenSound() {
-        playClip("ghost_eaten");
+        playClipIfEnabled("ghost_eaten");
     }
 
     public void playGhostReturningHomeSound() {
-        playSound(players.get("ghost_returns"));
+        playIfEnabled("ghost_returns");
     }
 
     public void stopGhostReturningHomeSound() {
-        stopSound(players.get("ghost_returns"));
+        stop("ghost_returns");
     }
 
     public void playLevelChangedSound() {
-        playClip("sweep");
+        playClipIfEnabled("sweep");
     }
 
     public void playLevelCompleteSound() {
-        playSound(players.get("level_complete"));
+        playIfEnabled("level_complete");
     }
 
     public void playMunchingSound() {
-        playSound(players.get("pacman_munch"));
+        playIfEnabled("pacman_munch");
     }
 
     public void stopMunchingSound() {
-        stopSound(players.get("pacman_munch"));
+        stop("pacman_munch");
     }
 
     public void playPacDeathSound() {
-        playSound(players.get("pacman_death"));
+        playIfEnabled("pacman_death");
     }
 
     public void playPacPowerSound() {
-        playSound(players.get("pac_power"));
+        playIfEnabled("pac_power");
     }
 
     public void stopPacPowerSound() {
-        stopSound(players.get("pac_power"));
+        stop("pac_power");
     }
 
     public void playIntermissionSound(int number) {
@@ -291,7 +302,7 @@ public class GameSounds {
         }
         URL url = assets.get(voiceClipID);
         voice = new MediaPlayer(new Media(url.toExternalForm()));
-        // media player stays in state PLAYING so we reset the reference when it reaches the end
+        // media player stays in state PLAYING so we remove the reference when it reaches the end
         voice.setOnEndOfMedia(() -> voice = null);
         voice.muteProperty().bind(mutedPy);
         voice.setStartTime(Duration.seconds(delaySeconds));
