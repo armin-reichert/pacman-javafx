@@ -254,8 +254,6 @@ public class PacManIntroScene extends GameScene2D {
 
     @Override
     public void init() {
-        super.init();
-
         blinking = new Pulse(10, true);
 
         pacMan = new Pac();

@@ -150,7 +150,6 @@ public class MsPacManCutScene2 extends GameScene2D {
 
     @Override
     public void init() {
-        super.init();
         context.setScoreVisible(true);
 
         pacMan = new Pac();
@@ -169,6 +168,10 @@ public class MsPacManCutScene2 extends GameScene2D {
 
         sceneController = new SceneController();
         sceneController.setState(SceneController.STATE_FLAP, 120);
+    }
+
+    @Override
+    public void end() {
     }
 
     @Override

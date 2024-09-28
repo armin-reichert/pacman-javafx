@@ -23,8 +23,11 @@ public class BootScene extends GameScene2D {
 
     @Override
     public void init() {
-        super.init();
         context.setScoreVisible(false);
+    }
+
+    @Override
+    public void end() {
     }
 
     @Override

@@ -16,7 +16,7 @@ public interface GameScene extends GameEventListener {
     /**
      * Called when the scene becomes the current one.
      */
-    default void init() {}
+    void init();
 
     /**
      * Called when the scene needs to be updated.
@@ -26,7 +26,7 @@ public interface GameScene extends GameEventListener {
     /**
      * Called when the scene ends and gets replaced by another scene.
      */
-    default void end() {}
+    void end();
 
     /**
      * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.

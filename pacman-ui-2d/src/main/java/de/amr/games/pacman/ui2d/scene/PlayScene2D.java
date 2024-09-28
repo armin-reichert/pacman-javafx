@@ -36,6 +36,10 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
+    public void init() {
+    }
+
+    @Override
     public void end() {
         SOUNDS.stopAll();
     }

@@ -24,13 +24,15 @@ public class CreditScene extends GameScene2D {
 
     @Override
     public void init() {
-        super.init();
         context.setScoreVisible(true);
     }
 
     @Override
+    public void end() {
+    }
+
+    @Override
     public void update() {
-        // nothing to do
     }
 
     @Override

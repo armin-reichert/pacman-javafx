@@ -41,7 +41,6 @@ public class PacManCutScene2 extends GameScene2D {
 
     @Override
     public void init() {
-        super.init();
         context.setScoreVisible(true);
         pac = new Pac();
         pac.setAnimations(new PacManGamePacAnimations(context.spriteSheet()));
@@ -56,11 +55,8 @@ public class PacManCutScene2 extends GameScene2D {
         frame = -1;
     }
 
-    private void startMusic() {
-        int number = context.gameState() == GameState.INTERMISSION_TEST
-            ? GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber")
-            : context.game().intermissionNumber(context.game().levelNumber());
-        SOUNDS.playIntermissionSound(number);
+    @Override
+    public void end() {
     }
 
     @Override
@@ -122,5 +118,12 @@ public class PacManCutScene2 extends GameScene2D {
         renderer.drawTileGrid(context.worldSizeTilesOrDefault());
         var text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
         renderer.drawText(text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
+    }
+
+    private void startMusic() {
+        int number = context.gameState() == GameState.INTERMISSION_TEST
+            ? GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber")
+            : context.game().intermissionNumber(context.game().levelNumber());
+        SOUNDS.playIntermissionSound(number);
     }
 }

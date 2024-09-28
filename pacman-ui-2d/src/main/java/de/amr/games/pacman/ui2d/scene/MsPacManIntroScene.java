@@ -48,8 +48,8 @@ public class MsPacManIntroScene extends GameScene2D {
     static final int STOP_X_GHOST = TS * 6 - 4;
     static final int STOP_X_MS_PAC_MAN = TS * 15 + 2;
     static final Vector2i TITLE_POSITION = v2i(TS * 10, TS * 8);
-    static final int numBulbs = 96;
-    static final int distanceBetweenActiveBulbs = 16;
+    static final int NUM_BULBS = 96;
+    static final int DISTANCE_BETWEEN_ACTIVE_BULBS = 16;
 
     private enum SceneState implements FsmState<MsPacManIntroScene> {
 
@@ -187,7 +187,6 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void init() {
-        super.init();
         context.setScoreVisible(true);
 
         //TODO make this work again
@@ -213,24 +212,6 @@ public class MsPacManIntroScene extends GameScene2D {
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
         }
         sceneController.restart(SceneState.STARTING);
-    }
-
-    /**
-     * 6 of the 96 bulbs are switched on per frame, shifting counter-clockwise every tick.
-     * The bulbs on the left border however are switched off every second frame. Bug in original game?
-     *
-     * @return bit set indicating which bulbs are switched on
-     */
-    private BitSet computeMarqueeState(long tick) {
-        var state = new BitSet(numBulbs);
-        for (int b = 0; b < 6; ++b) {
-            state.set((b * distanceBetweenActiveBulbs + (int) tick) % numBulbs);
-        }
-        // Simulate bug on left border
-        for (int i = 81; i < numBulbs; i += 2) {
-            state.clear(i);
-        }
-        return state;
     }
 
     @Override
@@ -292,10 +273,28 @@ public class MsPacManIntroScene extends GameScene2D {
         }
     }
 
+    /**
+     * 6 of the 96 bulbs are switched on per frame, shifting counter-clockwise every tick.
+     * The bulbs on the left border however are switched off every second frame. Bug in original game?
+     *
+     * @return bit set indicating which bulbs are switched on
+     */
+    private BitSet computeMarqueeState(long tick) {
+        var state = new BitSet(NUM_BULBS);
+        for (int b = 0; b < 6; ++b) {
+            state.set((b * DISTANCE_BETWEEN_ACTIVE_BULBS + (int) tick) % NUM_BULBS);
+        }
+        // Simulate bug on left border
+        for (int i = 81; i < NUM_BULBS; i += 2) {
+            state.clear(i);
+        }
+        return state;
+    }
+
     // TODO This is too cryptic
     private void drawMarquee(GraphicsContext g, BitSet marqueeState) {
         double xMin = 60, xMax = 192, yMin = 88, yMax = 148;
-        for (int i = 0; i < numBulbs; ++i) {
+        for (int i = 0; i < NUM_BULBS; ++i) {
             boolean on = marqueeState.get(i);
             if (i <= 33) { // lower edge left-to-right
                 drawBulb(g, xMin + 4 * i, yMax, on);
