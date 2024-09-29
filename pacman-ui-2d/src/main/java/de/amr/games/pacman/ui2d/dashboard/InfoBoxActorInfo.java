@@ -48,7 +48,7 @@ public class InfoBoxActorInfo extends InfoBox {
     }
 
     private Supplier<String> pacInfo(BiFunction<GameModel, Pac, String> fnPacInfo) {
-        return ifLevel(level -> fnPacInfo.apply(context.game(), context.game().pac()));
+        return ifLevelPresent(level -> fnPacInfo.apply(context.game(), context.game().pac()));
     }
 
     private String locationInfo(GameModel game, Creature guy) {
@@ -80,7 +80,7 @@ public class InfoBoxActorInfo extends InfoBox {
         BiFunction<GameModel, Ghost, String> fnGhostInfo, // (game, ghost) -> info text about this ghost
         byte ghostID)
     {
-        return ifLevel(level -> fnGhostInfo.apply(context.game(), context.game().ghost(ghostID)));
+        return ifLevelPresent(level -> fnGhostInfo.apply(context.game(), context.game().ghost(ghostID)));
     }
 
     private String ghostColorName(byte ghostID) {

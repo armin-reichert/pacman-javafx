@@ -19,45 +19,41 @@ public class InfoBoxGameInfo extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        labelAndComputedValue("Game Scene", ifGameScene(gameScene -> gameScene.getClass().getSimpleName()));
+        labelAndComputedValue("Game Scene", ifGameScenePresent(gameScene -> gameScene.getClass().getSimpleName()));
         labelAndComputedValue("Game State", () -> "%s".formatted(context.gameState()));
-
-        labelAndComputedValue("State Timer",
-            () -> {
-                TickTimer timer = context.gameState().timer();
-                boolean indefinite = timer.duration() == TickTimer.INDEFINITE;
-                if (timer.isStopped()) {
-                    return "Stopped at tick %s of %s".formatted(
-                        timer.currentTick(), indefinite ? "∞" : timer.duration());
-                }
-                if (indefinite) {
-                    return "Tick %s of ∞".formatted(timer.currentTick());
-                }
-                return "Tick %s (%s remaining) of %s ticks".formatted(
-                    timer.currentTick(), timer.remaining(), timer.duration());
-            });
-
-        labelAndComputedValue("Level Number",ifLevel(level -> "%d".formatted(context.game().levelNumber())));
-
-        labelAndComputedValue("World Map",ifWorld(world -> {
+        labelAndComputedValue("State Timer", this::stateTimerInfo);
+        labelAndComputedValue("Level Number", ifLevelPresent(level -> "%d".formatted(context.game().levelNumber())));
+        labelAndComputedValue("World Map", ifWorldPresent(world -> {
             String url = world.map().url().toString();
             return url.substring(url.lastIndexOf("/") + 1);
         }));
 
-        labelAndComputedValue("Lives",           ifLevel(level -> "%d".formatted(context.game().lives())));
+        labelAndComputedValue("Lives",           ifLevelPresent(level -> "%d".formatted(context.game().lives())));
 
-        labelAndComputedValue("Hunting Phase",   ifLevel(this::fmtHuntingPhase));
-        labelAndComputedValue("",                ifLevel(this::fmtHuntingTicksRunning));
-        labelAndComputedValue("",                ifLevel(this::fmtHuntingTicksRemaining));
+        labelAndComputedValue("Hunting Phase",   ifLevelPresent(this::fmtHuntingPhase));
+        labelAndComputedValue("",                ifLevelPresent(this::fmtHuntingTicksRunning));
+        labelAndComputedValue("",                ifLevelPresent(this::fmtHuntingTicksRemaining));
 
-        labelAndComputedValue("Pac-Man speed",   ifLevel(this::fmtPacSpeed));
-        labelAndComputedValue("- empowered",     ifLevel(this::fmtPacSpeedPowered));
-        labelAndComputedValue("Pellets",         ifWorld(this::fmtPelletCount));
-        labelAndComputedValue("Ghost speed",     ifLevel(this::fmtGhostSpeed));
-        labelAndComputedValue("- frightened",    ifLevel(this::fmtGhostSpeedFrightened));
-        labelAndComputedValue("- in tunnel",     ifLevel(this::fmtGhostSpeedTunnel));
-        labelAndComputedValue("Frightened time", ifLevel(this::fmtPacPowerSeconds));
-        labelAndComputedValue("Maze flashings",  ifLevel(this::fmtNumFlashes));
+        labelAndComputedValue("Pac-Man speed",   ifLevelPresent(this::fmtPacSpeed));
+        labelAndComputedValue("- empowered",     ifLevelPresent(this::fmtPacSpeedPowered));
+        labelAndComputedValue("Pellets",         ifWorldPresent(this::fmtPelletCount));
+        labelAndComputedValue("Ghost speed",     ifLevelPresent(this::fmtGhostSpeed));
+        labelAndComputedValue("- frightened",    ifLevelPresent(this::fmtGhostSpeedFrightened));
+        labelAndComputedValue("- in tunnel",     ifLevelPresent(this::fmtGhostSpeedTunnel));
+        labelAndComputedValue("Frightened time", ifLevelPresent(this::fmtPacPowerSeconds));
+        labelAndComputedValue("Maze flashings",  ifLevelPresent(this::fmtNumFlashes));
+    }
+
+    private String stateTimerInfo() {
+        TickTimer t = context.gameState().timer();
+        boolean indefinite = t.duration() == TickTimer.INDEFINITE;
+        if (t.isStopped()) {
+            return "Stopped at tick %s of %s".formatted(t.currentTick(), indefinite ? "∞" : t.duration());
+        }
+        if (indefinite) {
+            return "Tick %s of ∞".formatted(t.currentTick());
+        }
+        return "Tick %d of %d. Remaining: %d".formatted(t.currentTick(), t.duration(), t.remaining());
     }
 
     private String fmtHuntingPhase(GameLevel level) {

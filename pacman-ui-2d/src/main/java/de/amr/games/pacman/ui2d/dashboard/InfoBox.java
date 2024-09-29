@@ -94,16 +94,16 @@ public abstract class InfoBox extends TitledPane {
         this.textFont = textFont;
     }
 
-    protected Supplier<String> ifGameScene(Function<GameScene, String> infoSupplier) {
-        return () -> context.currentGameScene().map(infoSupplier).orElse(NO_INFO);
+    protected Supplier<String> ifGameScenePresent(Function<GameScene, String> fnInfo) {
+        return () -> context.currentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> ifLevel(Function<GameLevel, String> infoSupplier) {
-        return () -> context.game().level().map(infoSupplier).orElse(NO_INFO);
+    protected Supplier<String> ifLevelPresent(Function<GameLevel, String> fnInfo) {
+        return () -> context.game().level().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> ifWorld(Function<GameWorld, String> infoSupplier) {
-        return () -> Optional.ofNullable(context.game().world()).map(infoSupplier).orElse(NO_INFO);
+    protected Supplier<String> ifWorldPresent(Function<GameWorld, String> fnInfo) {
+        return () -> Optional.ofNullable(context.game().world()).map(fnInfo).orElse(NO_INFO);
     }
 
     protected void clearGrid() {
