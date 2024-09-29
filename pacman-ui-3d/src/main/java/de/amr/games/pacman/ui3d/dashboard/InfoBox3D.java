@@ -71,7 +71,7 @@ public class InfoBox3D extends InfoBox {
 
         setTooltip(sliderPiPSceneHeight, sliderPiPSceneHeight.valueProperty(), "%.0f px");
         setTooltip(sliderPiPOpacity, sliderPiPOpacity.valueProperty(), "%.0f %%");
-        cbUsePlayScene3D.setOnAction(e -> context.toggle2D3D());
+
         assignEditor(pickerLightColor, PY_3D_LIGHT_COLOR);
         assignEditor(pickerFloorColor, PY_3D_FLOOR_COLOR);
         assignEditor(pickerLightColor, PY_3D_LIGHT_COLOR);
@@ -86,19 +86,17 @@ public class InfoBox3D extends InfoBox {
         assignEditor(cbNightMode, PY_NIGHT_MODE);
         assignEditor(cbPacLighted, PY_3D_PAC_LIGHT_ENABLED);
         assignEditor(cbAxesVisible, PY_3D_AXES_VISIBLE);
-        cbWireframeMode.setOnAction(e -> context.toggleDrawMode()); //TODO
 
-        // init controls
+        cbUsePlayScene3D.setOnAction(e -> context.toggle2D3D()); // TODO
+        cbWireframeMode.setOnAction(e -> context.toggleDrawMode()); //TODO
+    }
+
+    private void updateControlsFromProperties() {
         comboPerspectives.setValue(PY_3D_PERSPECTIVE.get());
         sliderPiPSceneHeight.setValue(PY_PIP_HEIGHT.get());
         sliderPiPOpacity.setValue(PY_PIP_OPACITY_PERCENT.get());
         sliderWallHeight.setValue(PY_3D_WALL_HEIGHT.get());
         sliderWallOpacity.setValue(PY_3D_WALL_OPACITY.get());
-    }
-
-    @Override
-    public void update() {
-        super.update();
         cbUsePlayScene3D.setSelected(PY_3D_ENABLED.get());
         cbPiPOn.setSelected(PY_PIP_ON.getValue());
         comboFloorTexture.setValue(PY_3D_FLOOR_TEXTURE.get());
@@ -108,6 +106,12 @@ public class InfoBox3D extends InfoBox {
         cbPacLighted.setSelected(PY_3D_PAC_LIGHT_ENABLED.get());
         cbAxesVisible.setSelected(PY_3D_AXES_VISIBLE.get());
         cbWireframeMode.setSelected(PY_3D_DRAW_MODE.get() == DrawMode.LINE);
+    }
+
+    @Override
+    public void update() {
+        //TODO this should not be necessary on every update, when to initialize controls?
+        updateControlsFromProperties();
     }
 
     private String currentSceneCameraInfo() {
