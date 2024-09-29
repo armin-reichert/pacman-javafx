@@ -216,6 +216,10 @@ public abstract class InfoBox extends TitledPane {
         slider.valueProperty().bindBidirectional(property);
     }
 
+    protected void assignEditor(Spinner<Number> spinner, Property<Number> property) {
+        spinner.getValueFactory().valueProperty().bindBidirectional(property);
+    }
+
     protected Slider slider(String labelText, int min, int max, double initialValue) {
         var slider = new Slider(min, max, initialValue);
         slider.setMinWidth(context.assets().<Integer>get("infobox.min_col_width"));
@@ -233,6 +237,17 @@ public abstract class InfoBox extends TitledPane {
         spinner.setStyle(fontCSS(textFont));
         addRow(labelText, spinner);
         return spinner;
+    }
+
+    protected void setAction(Button button, Runnable action) {
+        button.setOnAction(e -> action.run());
+    }
+
+    protected void setAction(CheckBox checkBox, Runnable action) {
+        checkBox.setOnAction(e -> action.run());
+    }
+    protected void setAction(ComboBox<?> combo, Runnable action) {
+        combo.setOnAction(e -> action.run());
     }
 
     protected void setTooltip(Control control, ObservableValue<?> property, String pattern) {
