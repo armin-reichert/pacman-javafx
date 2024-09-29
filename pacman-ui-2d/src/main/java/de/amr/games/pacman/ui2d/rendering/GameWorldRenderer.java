@@ -57,6 +57,7 @@ public interface GameWorldRenderer {
     default Font scaledArcadeFont(double size) {
         return assets().font("font.arcade", scaled(size));
     }
+
     /**
      * Draws the given source scaled by the current scaling value.
      *

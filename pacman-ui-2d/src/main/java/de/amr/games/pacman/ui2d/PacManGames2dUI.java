@@ -80,10 +80,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
      * The order here is used by the start page!
      */
     public static List<GameVariant> GAME_VARIANTS_IN_ORDER = List.of(
-        GameVariant.PACMAN,
-        GameVariant.PACMAN_XXL,
-        GameVariant.MS_PACMAN,
-        GameVariant.MS_PACMAN_TENGEN
+        GameVariant.PACMAN, GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN, GameVariant.MS_PACMAN_TENGEN
     );
 
     public static GameWorldRenderer createRenderer(GameVariant variant, AssetStorage assets) {
