@@ -27,7 +27,7 @@ public interface Page {
 
     Pane rootPane();
 
-    void onSelected();
+    void onPageSelected();
 
     void setSize(double width, double height);
 

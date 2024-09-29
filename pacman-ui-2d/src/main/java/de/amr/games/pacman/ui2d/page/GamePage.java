@@ -104,7 +104,7 @@ public class GamePage extends StackPane implements Page {
     }
 
     @Override
-    public void onSelected() {
+    public void onPageSelected() {
         adaptCanvasSizeToCurrentWorld();
         //TODO check if this is always what is wanted
         context.reboot();

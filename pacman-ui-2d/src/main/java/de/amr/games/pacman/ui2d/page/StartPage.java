@@ -32,6 +32,39 @@ import static de.amr.games.pacman.ui2d.util.Ufx.coloredRoundedBackground;
  */
 public class StartPage extends StackPane implements Page {
 
+    private static Button createCarouselButton(Image image) {
+        ImageView icon = new ImageView(image);
+        icon.setFitHeight(32);
+        icon.setFitWidth(32);
+        var button = new Button();
+        // Without this, button gets input focus after being clicked with the mouse and the LEFT, RIGHT keys stop working!
+        button.setFocusTraversable(false);
+        button.setGraphic(icon);
+        button.setOpacity(0.1);
+        button.setOnMouseEntered(e -> button.setOpacity(0.4));
+        button.setOnMouseExited(e -> button.setOpacity(0.1));
+        return button;
+    }
+
+    private static Node createPlayButton(String buttonText, AssetStorage assets) {
+        var text = new Text(buttonText);
+        text.setFill(assets.color("startpage.button.color"));
+        text.setFont(assets.font("startpage.button.font"));
+
+        var shadow = new DropShadow();
+        shadow.setOffsetY(3.0f);
+        shadow.setColor(Color.color(0.2f, 0.2f, 0.2f));
+        text.setEffect(shadow);
+
+        var pane = new BorderPane(text);
+        pane.setMaxSize(200, 100);
+        pane.setPadding(new Insets(10));
+        pane.setCursor(Cursor.HAND);
+        pane.setBackground(coloredRoundedBackground(assets.color("startpage.button.bgColor"), 20));
+
+        return pane;
+    }
+
     private class Flyer {
         Image[] images;
         int index;
@@ -68,7 +101,9 @@ public class StartPage extends StackPane implements Page {
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
         @Override
         protected void invalidated() {
-            initPageForGameVariant(get());
+            if (get() != null) {
+                handleGameVariantChange(get());
+            }
         }
     };
 
@@ -81,8 +116,8 @@ public class StartPage extends StackPane implements Page {
         AssetStorage assets = context.assets();
 
         msPacManFlyer = new Flyer(assets.image("ms_pacman.startpage.image1"), assets.image("ms_pacman.startpage.image2"));
-        pacManFlyer   = new Flyer(assets.image("pacman.startpage.image1"), assets.image("pacman.startpage.image2"));
-        tengenFlyer   = new Flyer(assets.image("tengen.startpage.image1"), assets.image("tengen.startpage.image2"));
+        pacManFlyer   = new Flyer(assets.image("pacman.startpage.image1"),    assets.image("pacman.startpage.image2"));
+        tengenFlyer   = new Flyer(assets.image("tengen.startpage.image1"),    assets.image("tengen.startpage.image2"));
 
         Button btnPrevVariant = createCarouselButton(assets.image("startpage.arrow.left"));
         btnPrevVariant.setOnAction(e -> context.selectPrevGameVariant());
@@ -94,7 +129,7 @@ public class StartPage extends StackPane implements Page {
         VBox right = new VBox(btnNextVariant);
         right.setAlignment(Pos.CENTER_RIGHT);
 
-        Node btnPlay = createPlayButton(context.locText("play_button"));
+        Node btnPlay = createPlayButton(context.locText("play_button"), context.assets());
         BorderPane.setAlignment(btnPlay, Pos.BOTTOM_CENTER);
         btnPlay.setTranslateY(-40);
         btnPlay.setOnMouseClicked(e -> {
@@ -110,40 +145,8 @@ public class StartPage extends StackPane implements Page {
         layout.setRight(right);
         layout.setCenter(btnPlayContainer);
 
+        setBackground(context.assets().get("wallpaper.pacman"));
         getChildren().add(layout);
-    }
-
-    private Button createCarouselButton(Image image) {
-        ImageView icon = new ImageView(image);
-        icon.setFitHeight(32);
-        icon.setFitWidth(32);
-        var button = new Button();
-        // Without this, button gets input focus after being clicked with the mouse and the LEFT, RIGHT keys stop working!
-        button.setFocusTraversable(false);
-        button.setGraphic(icon);
-        button.setOpacity(0.1);
-        button.setOnMouseEntered(e -> button.setOpacity(0.4));
-        button.setOnMouseExited(e -> button.setOpacity(0.1));
-        return button;
-    }
-
-    private Node createPlayButton(String buttonText) {
-        var text = new Text(buttonText);
-        text.setFill(context.assets().color("startpage.button.color"));
-        text.setFont(context.assets().font("startpage.button.font"));
-
-        var shadow = new DropShadow();
-        shadow.setOffsetY(3.0f);
-        shadow.setColor(Color.color(0.2f, 0.2f, 0.2f));
-        text.setEffect(shadow);
-
-        var pane = new BorderPane(text);
-        pane.setMaxSize(200, 100);
-        pane.setPadding(new Insets(10));
-        pane.setCursor(Cursor.HAND);
-        pane.setBackground(coloredRoundedBackground(context.assets().color("startpage.button.bgColor"), 20));
-
-        return pane;
     }
 
     private Optional<Flyer> flyer(GameVariant variant) {
@@ -155,42 +158,39 @@ public class StartPage extends StackPane implements Page {
         });
     }
 
-    private void initPageForGameVariant(GameVariant variant) {
-        setBackground(context.assets().get("wallpaper.pacman"));
-        if (variant != null) {
-            switch (variant) {
-                case MS_PACMAN -> {
-                    msPacManFlyer.setPage(0);
-                    setOnMouseClicked(e -> {
-                        if (e.getButton() == MouseButton.PRIMARY) {
-                            msPacManFlyer.nextPage();
-                        }
-                    });
-                }
-                case MS_PACMAN_TENGEN -> {
-                    tengenFlyer.setPage(0);
-                    setOnMouseClicked(e -> {
-                        if (e.getButton() == MouseButton.PRIMARY) {
-                            tengenFlyer.nextPage();
-                        }
-                    });
-                }
-                case PACMAN -> {
-                    pacManFlyer.setPage(0);
-                    setOnMouseClicked(e -> {
-                        if (e.getButton() == MouseButton.PRIMARY) {
-                            pacManFlyer.nextPage();
-                        }
-                    });
-                }
-                case PACMAN_XXL -> {
-                    Image xxlGameImage = context.assets().image("pacman_xxl.startpage.source");
-                    var xxlGameBackground = Ufx.imageBackground(xxlGameImage,
-                        BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-                        BackgroundPosition.CENTER, Ufx.FILL_PAGE);
-                    layout.setBackground(xxlGameBackground);
-                    setOnMouseClicked(null);
-                }
+    private void handleGameVariantChange(GameVariant variant) {
+        switch (variant) {
+            case MS_PACMAN -> {
+                msPacManFlyer.setPage(0);
+                setOnMouseClicked(e -> {
+                    if (e.getButton() == MouseButton.PRIMARY) {
+                        msPacManFlyer.nextPage();
+                    }
+                });
+            }
+            case MS_PACMAN_TENGEN -> {
+                tengenFlyer.setPage(0);
+                setOnMouseClicked(e -> {
+                    if (e.getButton() == MouseButton.PRIMARY) {
+                        tengenFlyer.nextPage();
+                    }
+                });
+            }
+            case PACMAN -> {
+                pacManFlyer.setPage(0);
+                setOnMouseClicked(e -> {
+                    if (e.getButton() == MouseButton.PRIMARY) {
+                        pacManFlyer.nextPage();
+                    }
+                });
+            }
+            case PACMAN_XXL -> {
+                Image xxlGameImage = context.assets().image("pacman_xxl.startpage.source");
+                var xxlGameBackground = Ufx.imageBackground(xxlGameImage,
+                    BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER, Ufx.FILL_PAGE);
+                layout.setBackground(xxlGameBackground);
+                setOnMouseClicked(null);
             }
         }
     }
@@ -201,7 +201,7 @@ public class StartPage extends StackPane implements Page {
     }
 
     @Override
-    public void onSelected() {
+    public void onPageSelected() {
         if (context.gameClock().isRunning()) {
             context.gameClock().stop();
         }
@@ -209,21 +209,11 @@ public class StartPage extends StackPane implements Page {
 
     @Override
     public void handleInput() {
-        if (GameAction.ENTER_GAME_PAGE.triggered()) {
-            context.selectGamePage();
-        }
-        else if (GameAction.NEXT_VARIANT.triggered()) {
-            context.selectNextGameVariant();
-        }
-        else if (GameAction.PREV_VARIANT.triggered()) {
-            context.selectPrevGameVariant();
-        }
-        else if (GameAction.NEXT_FLYER_PAGE.triggered()) {
-            flyer(context.game().variant()).ifPresent(Flyer::nextPage);
-        }
-        else if (GameAction.PREV_FLYER_PAGE.triggered()) {
-            flyer(context.game().variant()).ifPresent(Flyer::prevPage);
-        }
+        if      (GameAction.ENTER_GAME_PAGE.triggered()) { context.selectGamePage(); }
+        else if (GameAction.NEXT_VARIANT.triggered())    { context.selectNextGameVariant(); }
+        else if (GameAction.PREV_VARIANT.triggered())    { context.selectPrevGameVariant(); }
+        else if (GameAction.NEXT_FLYER_PAGE.triggered()) { flyer(context.game().variant()).ifPresent(Flyer::nextPage); }
+        else if (GameAction.PREV_FLYER_PAGE.triggered()) { flyer(context.game().variant()).ifPresent(Flyer::prevPage); }
     }
 
     @Override

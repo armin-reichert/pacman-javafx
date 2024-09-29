@@ -98,7 +98,7 @@ public class EditorPage extends BorderPane implements Page {
     }
 
     @Override
-    public void onSelected() {
+    public void onPageSelected() {
     }
 
     @Override
