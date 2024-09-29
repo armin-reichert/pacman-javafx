@@ -147,6 +147,13 @@ public class GamePage extends StackPane implements Page {
             return;
         }
         contextMenu.getItems().clear();
+
+        contextMenu.getItems().add(Page.menuTitleItem(context.locText("scene_display")));
+
+        var miCanvasDecorated = new CheckMenuItem(context.locText("canvas_decoration"));
+        miCanvasDecorated.selectedProperty().bindBidirectional(PY_CANVAS_DECORATED);
+        contextMenu.getItems().add(miCanvasDecorated);
+
         contextMenu.getItems().add(Page.menuTitleItem(context.locText("pacman")));
 
         var miAutopilot = new CheckMenuItem(context.locText("autopilot"));
@@ -158,10 +165,6 @@ public class GamePage extends StackPane implements Page {
         contextMenu.getItems().add(miImmunity);
 
         contextMenu.getItems().add(new SeparatorMenuItem());
-
-        var miCanvasDecorated = new CheckMenuItem(context.locText("canvas_decoration"));
-        miCanvasDecorated.selectedProperty().bindBidirectional(PY_CANVAS_DECORATED);
-        contextMenu.getItems().add(miCanvasDecorated);
 
         var miMuted = new CheckMenuItem(context.locText("muted"));
         miMuted.selectedProperty().bindBidirectional(SOUNDS.mutedProperty());

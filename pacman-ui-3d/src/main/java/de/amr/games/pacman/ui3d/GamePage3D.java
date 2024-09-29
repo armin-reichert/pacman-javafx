@@ -65,7 +65,12 @@ public class GamePage3D extends GamePage {
         item.setOnAction(e -> context.toggle2D3D());
         contextMenu.getItems().add(item);
 
-        if (is3D) {
+        if (!is3D) {
+            var miCanvasDecorated = new CheckMenuItem(context.locText("canvas_decoration"));
+            miCanvasDecorated.selectedProperty().bindBidirectional(PY_CANVAS_DECORATED);
+            contextMenu.getItems().add(miCanvasDecorated);
+        }
+        else {
             // Toggle picture-in-picture display
             var miPiP = new CheckMenuItem(context.locText("pip"));
             miPiP.selectedProperty().bindBidirectional(PY_PIP_ON);
@@ -103,10 +108,6 @@ public class GamePage3D extends GamePage {
         contextMenu.getItems().add(miImmunity);
 
         contextMenu.getItems().add(new SeparatorMenuItem());
-
-        var miCanvasDecorated = new CheckMenuItem(context.locText("canvas_decoration"));
-        miCanvasDecorated.selectedProperty().bindBidirectional(PY_CANVAS_DECORATED);
-        contextMenu.getItems().add(miCanvasDecorated);
 
         var miMuted = new CheckMenuItem(context.locText("muted"));
         miMuted.selectedProperty().bindBidirectional(SOUNDS.mutedProperty());
