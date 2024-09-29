@@ -213,8 +213,10 @@ public abstract class InfoBox extends TitledPane {
         slider.valueProperty().bindBidirectional(property);
     }
 
-    protected Slider slider(String labelText, int min, int max, double initialValue) {
+    protected Slider slider(String labelText, int min, int max, double initialValue, boolean tickMarks,  boolean tickLabels) {
         var slider = new Slider(min, max, initialValue);
+        slider.setShowTickMarks(tickMarks);
+        slider.setShowTickLabels(tickLabels);
         slider.setMinWidth(context.assets().<Integer>get("infobox.min_col_width"));
         slider.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if (e.getClickCount() == 2) {

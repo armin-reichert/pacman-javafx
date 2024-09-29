@@ -59,10 +59,10 @@ public class InfoBox3D extends InfoBox {
         comboPerspectives    = comboBox("Perspective", Perspective.values());
         labelledValue("Camera", this::currentSceneCameraInfo);
         cbPiPOn              = checkBox("Picture-In-Picture");
-        sliderPiPSceneHeight = slider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
-        sliderPiPOpacity     = slider("- Opacity", 0, 100, PY_PIP_OPACITY_PERCENT.get());
-        sliderWallHeight     = slider("Obstacle Height", 0, 16, PY_3D_WALL_HEIGHT.get());
-        sliderWallOpacity    = slider("Wall Opacity", 0, 1, PY_3D_WALL_OPACITY.get());
+        sliderPiPSceneHeight = slider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get(), false, false);
+        sliderPiPOpacity     = slider("- Opacity", 0, 100, PY_PIP_OPACITY_PERCENT.get(), false, false);
+        sliderWallHeight     = slider("Obstacle Height", 0, 16, PY_3D_WALL_HEIGHT.get(), false, false);
+        sliderWallOpacity    = slider("Wall Opacity", 0, 1, PY_3D_WALL_OPACITY.get(), false, false);
         cbEnergizerExplodes  = checkBox("Energizer Explosion");
         cbNightMode          = checkBox("Night Mode");
         cbPacLighted         = checkBox("Pac-Man Lighted");
