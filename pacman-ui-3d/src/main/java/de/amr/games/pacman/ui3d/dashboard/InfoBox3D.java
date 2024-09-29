@@ -10,17 +10,17 @@ import de.amr.games.pacman.ui2d.dashboard.InfoBox;
 import de.amr.games.pacman.ui2d.dashboard.InfoText;
 import de.amr.games.pacman.ui3d.Perspective;
 import de.amr.games.pacman.ui3d.PlayScene3D;
-import javafx.beans.binding.Bindings;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Slider;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
-import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
-import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 
 /**
@@ -36,7 +36,7 @@ public class InfoBox3D extends InfoBox {
     private CheckBox cbUsePlayScene3D;
     private ColorPicker pickerLightColor;
     private ColorPicker pickerFloorColor;
-    private ComboBox<Object> comboFloorTexture;
+    private ComboBox<String> comboFloorTexture;
     private ComboBox<Perspective> comboPerspectives;
     private CheckBox cbPiPOn;
     private Slider sliderPiPSceneHeight;
@@ -52,68 +52,48 @@ public class InfoBox3D extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        cbUsePlayScene3D = checkBox("3D Play Scene");
-        pickerLightColor = addColorPickerRow("Light Color", PY_3D_LIGHT_COLOR.get());
-        pickerFloorColor = addColorPickerRow("Floor Color", PY_3D_FLOOR_COLOR.get());
-        comboFloorTexture = addComboBoxRow("Floor Texture", floorTextureComboBoxEntries());
-        comboPerspectives = addComboBoxRow("Perspective", Perspective.values());
-
-        addTextRow("Camera", this::currentSceneCameraInfo);
-
+        cbUsePlayScene3D     = checkBox("3D Play Scene");
+        pickerLightColor     = colorPicker("Light Color", PY_3D_LIGHT_COLOR.get());
+        pickerFloorColor     = colorPicker("Floor Color", PY_3D_FLOOR_COLOR.get());
+        comboFloorTexture    = comboBox("Floor Texture", floorTextureComboBoxEntries());
+        comboPerspectives    = comboBox("Perspective", Perspective.values());
+        labelAndComputedValue("Camera", this::currentSceneCameraInfo);
         cbPiPOn              = checkBox("Picture-In-Picture");
-        sliderPiPSceneHeight = addSliderRow("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
-        sliderPiPOpacity     = addSliderRow("- Opacity", 0, 100, PY_PIP_OPACITY_PERCENT.get());
-        sliderWallHeight     = addSliderRow("Obstacle Height", 0, 16, PY_3D_WALL_HEIGHT.get());
-        sliderWallOpacity    = addSliderRow("Wall Opacity", 0, 1, PY_3D_WALL_OPACITY.get());
+        sliderPiPSceneHeight = slider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
+        sliderPiPOpacity     = slider("- Opacity", 0, 100, PY_PIP_OPACITY_PERCENT.get());
+        sliderWallHeight     = slider("Obstacle Height", 0, 16, PY_3D_WALL_HEIGHT.get());
+        sliderWallOpacity    = slider("Wall Opacity", 0, 1, PY_3D_WALL_OPACITY.get());
         cbEnergizerExplodes  = checkBox("Energizer Explosion");
         cbNightMode          = checkBox("Night Mode");
         cbPacLighted         = checkBox("Pac-Man Lighted");
         cbAxesVisible        = checkBox("Show Axes");
         cbWireframeMode      = checkBox("Wireframe Mode");
 
-        {
-            var tooltip = new Tooltip();
-            tooltip.setShowDelay(Duration.millis(100));
-            tooltip.textProperty().bind(Bindings.createStringBinding(
-                () -> String.format("%.0f px", sliderPiPSceneHeight.getValue()),
-                sliderPiPSceneHeight.valueProperty())
-            );
-            sliderPiPSceneHeight.setTooltip(tooltip);
-        }
-        {
-            var tooltip = new Tooltip();
-            tooltip.setShowDelay(Duration.millis(100));
-            tooltip.textProperty().bind(Bindings.createStringBinding(
-                () -> String.format("%.0f %%", sliderPiPOpacity.getValue()),
-                sliderPiPOpacity.valueProperty())
-            );
-            sliderPiPOpacity.setTooltip(tooltip);
-        }
-
+        setTooltip(sliderPiPSceneHeight, sliderPiPSceneHeight.valueProperty(), "%.0f px");
+        setTooltip(sliderPiPOpacity, sliderPiPOpacity.valueProperty(), "%.0f %%");
         cbUsePlayScene3D.setOnAction(e -> context.toggle2D3D());
+        assignEditor(pickerLightColor, PY_3D_LIGHT_COLOR);
+        assignEditor(pickerFloorColor, PY_3D_FLOOR_COLOR);
+        assignEditor(pickerLightColor, PY_3D_LIGHT_COLOR);
+        assignEditor(comboFloorTexture, PY_3D_FLOOR_TEXTURE);
+        assignEditor(sliderPiPSceneHeight, PY_PIP_HEIGHT);
+        assignEditor(sliderPiPOpacity, PY_PIP_OPACITY_PERCENT);
+        assignEditor(sliderWallHeight, PY_3D_WALL_HEIGHT);
+        assignEditor(sliderWallOpacity, PY_3D_WALL_OPACITY);
+        assignEditor(cbPiPOn, PY_PIP_ON);
+        assignEditor(comboPerspectives, PY_3D_PERSPECTIVE);
+        assignEditor(cbEnergizerExplodes, PY_3D_ENERGIZER_EXPLODES);
+        assignEditor(cbNightMode, PY_NIGHT_MODE);
+        assignEditor(cbPacLighted, PY_3D_PAC_LIGHT_ENABLED);
+        assignEditor(cbAxesVisible, PY_3D_AXES_VISIBLE);
+        cbWireframeMode.setOnAction(e -> context.toggleDrawMode()); //TODO
 
-        pickerLightColor.setOnAction(e -> PY_3D_LIGHT_COLOR.set(pickerLightColor.getValue()));
-        pickerFloorColor.setOnAction(e -> PY_3D_FLOOR_COLOR.set(pickerFloorColor.getValue()));
-        comboFloorTexture.setOnAction(e -> PY_3D_FLOOR_TEXTURE.set(comboFloorTexture.getValue().toString()));
-
+        // init controls
         comboPerspectives.setValue(PY_3D_PERSPECTIVE.get());
         sliderPiPSceneHeight.setValue(PY_PIP_HEIGHT.get());
         sliderPiPOpacity.setValue(PY_PIP_OPACITY_PERCENT.get());
         sliderWallHeight.setValue(PY_3D_WALL_HEIGHT.get());
         sliderWallOpacity.setValue(PY_3D_WALL_OPACITY.get());
-
-        sliderPiPSceneHeight.valueProperty().addListener((py, ov, nv) -> PY_PIP_HEIGHT.set((int) sliderPiPSceneHeight.getValue()));
-        sliderPiPOpacity.valueProperty().bindBidirectional(PY_PIP_OPACITY_PERCENT);
-        sliderWallHeight.valueProperty().bindBidirectional(PY_3D_WALL_HEIGHT);
-        sliderWallOpacity.valueProperty().bindBidirectional(PY_3D_WALL_OPACITY);
-
-        cbPiPOn.setOnAction(e -> toggle(PY_PIP_ON));
-        comboPerspectives.setOnAction(e -> PY_3D_PERSPECTIVE.set(comboPerspectives.getValue()));
-        cbEnergizerExplodes.setOnAction(e -> toggle(PY_3D_ENERGIZER_EXPLODES));
-        cbNightMode.setOnAction(e -> toggle(PY_NIGHT_MODE));
-        cbPacLighted.setOnAction(e -> toggle(PY_3D_PAC_LIGHT_ENABLED));
-        cbAxesVisible.setOnAction(e -> toggle(PY_3D_AXES_VISIBLE));
-        cbWireframeMode.setOnAction(e -> context.toggleDrawMode());
     }
 
     @Override
@@ -140,11 +120,11 @@ public class InfoBox3D extends InfoBox {
         return InfoText.NO_INFO;
     }
 
-    private Object[] floorTextureComboBoxEntries() {
+    private String[] floorTextureComboBoxEntries() {
         Map<String, PhongMaterial> texturesByName = context.assets().get("floorTextures");
-        var names = new ArrayList<>();
+        var names = new ArrayList<String>();
         names.add(NO_TEXTURE);
         names.addAll(texturesByName.keySet());
-        return names.toArray();
+        return names.toArray(String[]::new);
     }
 }

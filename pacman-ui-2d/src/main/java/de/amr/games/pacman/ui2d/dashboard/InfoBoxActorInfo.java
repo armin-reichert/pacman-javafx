@@ -28,22 +28,22 @@ public class InfoBoxActorInfo extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        addTextRow("Pac Name", pacInfo((game, pac) -> pac.name()));
-        addTextRow("Movement", pacInfo(this::movementInfo));
-        addTextRow("Tile",     pacInfo(this::locationInfo));
-        addTextRow("Power", () -> {
+        labelAndComputedValue("Pac Name", pacInfo((game, pac) -> pac.name()));
+        labelAndComputedValue("Movement", pacInfo(this::movementInfo));
+        labelAndComputedValue("Tile",     pacInfo(this::locationInfo));
+        labelAndComputedValue("Power", () -> {
             TickTimer powerTimer = context.game().powerTimer();
             return powerTimer.isRunning()
                 ? "Remaining: %s".formatted(ticksToString(powerTimer.remaining()))
                 : "No Power";
         });
-        addEmptyRow();
+        emptyRow();
         ghostInfo(GameModel.RED_GHOST);
-        addEmptyRow();
+        emptyRow();
         ghostInfo(GameModel.PINK_GHOST);
-        addEmptyRow();
+        emptyRow();
         ghostInfo(GameModel.CYAN_GHOST);
-        addEmptyRow();
+        emptyRow();
         ghostInfo(GameModel.ORANGE_GHOST);
     }
 
@@ -70,10 +70,10 @@ public class InfoBoxActorInfo extends InfoBox {
     }
 
     private void ghostInfo(byte ghostID) {
-        addTextRow(ghostColorName(ghostID) + " Ghost", fnGhostInfo(this::ghostNameAndState, ghostID));
-        addTextRow("Animation",      fnGhostInfo(this::ghostAnimation, ghostID));
-        addTextRow("Movement",       fnGhostInfo(this::movementInfo, ghostID));
-        addTextRow("Tile",           fnGhostInfo(this::locationInfo, ghostID));
+        labelAndComputedValue(ghostColorName(ghostID) + " Ghost", fnGhostInfo(this::ghostNameAndState, ghostID));
+        labelAndComputedValue("Animation",      fnGhostInfo(this::ghostAnimation, ghostID));
+        labelAndComputedValue("Movement",       fnGhostInfo(this::movementInfo, ghostID));
+        labelAndComputedValue("Tile",           fnGhostInfo(this::locationInfo, ghostID));
     }
 
     private Supplier<String> fnGhostInfo(

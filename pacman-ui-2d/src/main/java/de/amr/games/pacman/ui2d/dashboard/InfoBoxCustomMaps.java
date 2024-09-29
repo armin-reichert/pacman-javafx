@@ -35,7 +35,7 @@ public class InfoBoxCustomMaps extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        comboMapSelectionMode = addComboBoxRow("Map Selection", MapSelectionMode.values());
+        comboMapSelectionMode = comboBox("Map Selection", MapSelectionMode.values());
         comboMapSelectionMode.setOnAction(e -> PY_MAP_SELECTION_MODE.set(comboMapSelectionMode.getValue()));
         comboMapSelectionMode.getSelectionModel().select(PY_MAP_SELECTION_MODE.get());
 

@@ -38,14 +38,14 @@ public class InfoBoxGeneral extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        addTextRow("Java Version",   Runtime.version().toString());
-        addTextRow("JavaFX Version", System.getProperty("javafx.runtime.version"));
+        labelAndValue("Java Version",   Runtime.version().toString());
+        labelAndValue("JavaFX Version", System.getProperty("javafx.runtime.version"));
 
         iconPlay = new ImageView(context.assets().image("icon.play"));
         iconStop = new ImageView(context.assets().image("icon.stop"));
         iconStep = new ImageView(context.assets().image("icon.step"));
 
-        buttonsSimulation = addButtonListRow("Simulation", "Pause", "Step(s)");
+        buttonsSimulation = buttonList("Simulation", "Pause", "Step(s)");
 
         var btnPlayPause = buttonsSimulation[0];
         btnPlayPause.setGraphic(iconPlay);
@@ -58,20 +58,20 @@ public class InfoBoxGeneral extends InfoBox {
         btnStep.setText(null);
         btnStep.setTooltip(tooltipStep);
 
-        spinnerSimulationSteps = addIntSpinnerRow("Num Steps", 1, 50, PY_SIMULATION_STEPS.get());
+        spinnerSimulationSteps = integerSpinner("Num Steps", 1, 50, PY_SIMULATION_STEPS.get());
         spinnerSimulationSteps.valueProperty().addListener((obs, oldVal, newVal) -> PY_SIMULATION_STEPS.set(newVal));
 
-        sliderTargetFPS = addSliderRow("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60);
+        sliderTargetFPS = slider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60);
         sliderTargetFPS.setShowTickLabels(false);
         sliderTargetFPS.setShowTickMarks(false);
 
-        addTextRow("", () -> String.format("FPS: %.1f (Tgt: %.1f)",
+        labelAndComputedValue("", () -> String.format("FPS: %.1f (Tgt: %.1f)",
             context.gameClock().getActualFrameRate(),
             context.gameClock().getTargetFrameRate()
         ));
-        addTextRow("Total Updates", () -> context.gameClock().getUpdateCount());
+        labelAndComputedValue("Total Updates", () -> context.gameClock().getUpdateCount());
 
-        pickerCanvasColor = addColorPickerRow("Canvas Color", PY_CANVAS_BG_COLOR.get());
+        pickerCanvasColor = colorPicker("Canvas Color", PY_CANVAS_BG_COLOR.get());
         cbCanvasDecoration = checkBox("Canvas Decoration");
         cbDebugUI = checkBox("Show Debug Info");
         cbTimeMeasured = checkBox("Time Measured");

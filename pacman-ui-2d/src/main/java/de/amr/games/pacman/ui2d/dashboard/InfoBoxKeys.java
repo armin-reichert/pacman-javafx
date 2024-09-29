@@ -16,25 +16,25 @@ public class InfoBoxKeys extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        addTextRow("F1, Alt+B", "Dashboard On/Off");
-        addTextRow("F2", "Pic-in-Pic On/Off");
-        addTextRow("F3", "Reboot");
-        addTextRow("Alt+A", "Autopilot On/Off");
-        addTextRow("Alt+C", "Play Cut-Scenes");
-        addTextRow("Alt+E", "Eat All Pellets");
-        addTextRow("Alt+I", "Player Immunity On/Off");
-        addTextRow("Alt+M", "Mute On/Off");
-        addTextRow("Alt+L", "Add 3 Lives");
-        addTextRow("Alt+N", "Next Level");
-        addTextRow("Alt+X", "Kill Hunting Ghosts");
-        addTextRow("Alt+3", "3D Play Scene On/Off");
-        addTextRow("P", "Pause On/Off");
-        addTextRow("Shift+P, SPACE", "Single Step");
-        addTextRow("Q", "Return to Intro");
+        labelAndValue("F1, Alt+B", "Dashboard On/Off");
+        labelAndValue("F2", "Pic-in-Pic On/Off");
+        labelAndValue("F3", "Reboot");
+        labelAndValue("Alt+A", "Autopilot On/Off");
+        labelAndValue("Alt+C", "Play Cut-Scenes");
+        labelAndValue("Alt+E", "Eat All Pellets");
+        labelAndValue("Alt+I", "Player Immunity On/Off");
+        labelAndValue("Alt+M", "Mute On/Off");
+        labelAndValue("Alt+L", "Add 3 Lives");
+        labelAndValue("Alt+N", "Next Level");
+        labelAndValue("Alt+X", "Kill Hunting Ghosts");
+        labelAndValue("Alt+3", "3D Play Scene On/Off");
+        labelAndValue("P", "Pause On/Off");
+        labelAndValue("Shift+P, SPACE", "Single Step");
+        labelAndValue("Q", "Return to Intro");
 
-        addTextRow("Start Screen Keys:", "");
-        addTextRow("V, RIGHT, LEFT", "Switch Game Variant");
-        addTextRow("1", "Start Playing");
-        addTextRow("5", "Add Credit");
+        labelAndValue("Start Screen Keys:", "");
+        labelAndValue("V, RIGHT, LEFT", "Switch Game Variant");
+        labelAndValue("1", "Start Playing");
+        labelAndValue("5", "Add Credit");
     }
 }

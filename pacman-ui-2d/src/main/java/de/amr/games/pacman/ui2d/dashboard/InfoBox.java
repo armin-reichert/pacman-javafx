@@ -9,6 +9,12 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.scene.GameScene;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.beans.value.WritableObjectValue;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -18,6 +24,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,24 +136,23 @@ public abstract class InfoBox extends TitledPane {
         addRow(label, right);
     }
 
-    protected InfoText addTextRow(String labelText, Supplier<?> fnValue) {
+    protected void labelAndComputedValue(String labelText, Supplier<?> fnValue) {
         var info = new InfoText(fnValue);
         info.setFill(textColor);
         info.setFont(textFont);
         infoTexts.add(info);
         addRow(labelText, info);
-        return info;
     }
 
-    protected void addTextRow(String labelText, String value) {
-        addTextRow(labelText, () -> value);
+    protected void labelAndValue(String labelText, String value) {
+        labelAndComputedValue(labelText, () -> value);
     }
 
-    protected void addEmptyRow() {
-        addTextRow("", "");
+    protected void emptyRow() {
+        labelAndValue("", "");
     }
 
-    protected Button[] addButtonListRow(String labelText, String... buttonTexts) {
+    protected Button[] buttonList(String labelText, String... buttonTexts) {
         var hbox = new HBox();
         var buttons = new Button[buttonTexts.length];
         for (int i = 0; i < buttonTexts.length; ++i) {
@@ -158,40 +164,59 @@ public abstract class InfoBox extends TitledPane {
         return buttons;
     }
 
-    protected CheckBox checkBox(String text, Runnable callback) {
+    protected CheckBox createCheckBox(String text) {
         var cb = new CheckBox(text);
         cb.setTextFill(textColor);
         cb.setFont(textFont);
-        if (callback != null) {
-            cb.setOnAction(e -> callback.run());
-        }
         return cb;
     }
 
-    protected CheckBox addCheckBoxRow(String labelText, Runnable callback) {
-        var cb = checkBox("", callback);
+    protected CheckBox checkBox(String labelText, String cbText) {
+        var cb = createCheckBox(cbText);
         addRow(labelText, cb);
         return cb;
     }
 
     protected CheckBox checkBox(String labelText) {
-        return addCheckBoxRow(labelText, null);
+        var cb = createCheckBox("");
+        addRow(labelText, cb);
+        return cb;
     }
 
-    protected <T> ComboBox<T> addComboBoxRow(String labelText, T[] items) {
+    protected <T> ComboBox<T> comboBox(String labelText, T[] items) {
         var combo = new ComboBox<>(FXCollections.observableArrayList(items));
         combo.setStyle(fontCSS(textFont));
         addRow(labelText, combo);
         return combo;
     }
 
-    protected ColorPicker addColorPickerRow(String labelText, Color color) {
+    protected ColorPicker colorPicker(String labelText, Color color) {
         var colorPicker = new ColorPicker(color);
         addRow(labelText, colorPicker);
         return colorPicker;
     }
 
-    protected Slider addSliderRow(String labelText, int min, int max, double initialValue) {
+    protected void assignEditor(CheckBox checkBox, BooleanProperty property) {
+        checkBox.selectedProperty().bindBidirectional(property);
+    }
+
+    protected void assignEditor(ColorPicker picker, ObjectProperty<Color> property) {
+        picker.setOnAction(e -> property.set(picker.getValue()));
+    }
+
+    protected <T> void assignEditor(ComboBox<T> combo, WritableObjectValue<T> property) {
+        combo.setOnAction(e -> property.set(combo.getValue()));
+    }
+
+    protected void assignEditor(ComboBox<String> combo, StringProperty property) {
+        combo.setOnAction(e -> property.set(combo.getValue()));
+    }
+
+    protected void assignEditor(Slider slider, Property<Number> property) {
+        slider.valueProperty().bindBidirectional(property);
+    }
+
+    protected Slider slider(String labelText, int min, int max, double initialValue) {
         var slider = new Slider(min, max, initialValue);
         slider.setMinWidth(context.assets().<Integer>get("infobox.min_col_width"));
         slider.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
@@ -203,10 +228,17 @@ public abstract class InfoBox extends TitledPane {
         return slider;
     }
 
-    protected Spinner<Integer> addIntSpinnerRow(String labelText, int min, int max, int initialValue) {
+    protected Spinner<Integer> integerSpinner(String labelText, int min, int max, int initialValue) {
         var spinner = new Spinner<Integer>(min, max, initialValue);
         spinner.setStyle(fontCSS(textFont));
         addRow(labelText, spinner);
         return spinner;
+    }
+
+    protected void setTooltip(Control control, ObservableValue<?> property, String pattern) {
+        var tooltip = new Tooltip();
+        tooltip.setShowDelay(Duration.millis(100));
+        tooltip.textProperty().bind(property.map(pattern::formatted));
+        control.setTooltip(tooltip);
     }
 }

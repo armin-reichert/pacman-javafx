@@ -42,11 +42,11 @@ public class InfoBoxGameControl extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        spinnerCredit = addIntSpinnerRow("Credit", 0, GameModel.MAX_CREDIT, 0);
-        comboGameVariant = addComboBoxRow("Variant", GameVariant.values());
-        comboInitialLives = addComboBoxRow("Initial Lives", new Integer[]{3, 5});
-        buttonsLevelActions = addButtonListRow("Game Level", "Start", "Quit", "Next");
-        buttonsIntermissionTest = addButtonListRow("Cut Scenes Test", "Start", "Quit");
+        spinnerCredit = integerSpinner("Credit", 0, GameModel.MAX_CREDIT, 0);
+        comboGameVariant = comboBox("Variant", GameVariant.values());
+        comboInitialLives = comboBox("Initial Lives", new Integer[]{3, 5});
+        buttonsLevelActions = buttonList("Game Level", "Start", "Quit", "Next");
+        buttonsIntermissionTest = buttonList("Cut Scenes Test", "Start", "Quit");
         cbAutopilot = checkBox("Autopilot");
         cbImmunity = checkBox("Pac-Man Immune");
 
