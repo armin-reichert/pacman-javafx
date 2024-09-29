@@ -23,7 +23,7 @@ import org.tinylog.Logger;
  */
 public class GameClockFX {
 
-    private final DoubleProperty targetFrameRatePy = new SimpleDoubleProperty(this, "targetFrameRate", GameModel.FPS) {
+    public final DoubleProperty targetFrameRatePy = new SimpleDoubleProperty(this, "targetFrameRate", GameModel.FPS) {
         @Override
         protected void invalidated() {
             handleTargetFrameRateChanged();

@@ -16,25 +16,25 @@ public class InfoBoxKeys extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        labelAndValue("F1, Alt+B", "Dashboard On/Off");
-        labelAndValue("F2", "Pic-in-Pic On/Off");
-        labelAndValue("F3", "Reboot");
-        labelAndValue("Alt+A", "Autopilot On/Off");
-        labelAndValue("Alt+C", "Play Cut-Scenes");
-        labelAndValue("Alt+E", "Eat All Pellets");
-        labelAndValue("Alt+I", "Player Immunity On/Off");
-        labelAndValue("Alt+M", "Mute On/Off");
-        labelAndValue("Alt+L", "Add 3 Lives");
-        labelAndValue("Alt+N", "Next Level");
-        labelAndValue("Alt+X", "Kill Hunting Ghosts");
-        labelAndValue("Alt+3", "3D Play Scene On/Off");
-        labelAndValue("P", "Pause On/Off");
-        labelAndValue("Shift+P, SPACE", "Single Step");
-        labelAndValue("Q", "Return to Intro");
+        labelledValue("F1, Alt+B", "Dashboard On/Off");
+        labelledValue("F2", "Pic-in-Pic On/Off");
+        labelledValue("F3", "Reboot");
+        labelledValue("Alt+A", "Autopilot On/Off");
+        labelledValue("Alt+C", "Play Cut-Scenes");
+        labelledValue("Alt+E", "Eat All Pellets");
+        labelledValue("Alt+I", "Player Immunity On/Off");
+        labelledValue("Alt+M", "Mute On/Off");
+        labelledValue("Alt+L", "Add 3 Lives");
+        labelledValue("Alt+N", "Next Level");
+        labelledValue("Alt+X", "Kill Hunting Ghosts");
+        labelledValue("Alt+3", "3D Play Scene On/Off");
+        labelledValue("P", "Pause On/Off");
+        labelledValue("Shift+P, SPACE", "Single Step");
+        labelledValue("Q", "Return to Intro");
 
-        labelAndValue("Start Screen Keys:", "");
-        labelAndValue("V, RIGHT, LEFT", "Switch Game Variant");
-        labelAndValue("1", "Start Playing");
-        labelAndValue("5", "Add Credit");
+        labelledValue("Start Screen Keys:", "");
+        labelledValue("V, RIGHT, LEFT", "Switch Game Variant");
+        labelledValue("1", "Start Playing");
+        labelledValue("5", "Add Credit");
     }
 }

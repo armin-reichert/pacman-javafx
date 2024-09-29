@@ -46,9 +46,11 @@ public class InfoBoxGameControl extends InfoBox {
         comboGameVariant   = comboBox("Variant", GameVariant.values());
         comboInitialLives  = comboBox("Initial Lives", new Integer[] {3, 5});
         bgLevelActions     = buttonList("Game Level", "Start", "Quit", "Next");
-        bgCutScenesTest = buttonList("Cut Scenes Test", "Start", "Quit");
+        bgCutScenesTest    = buttonList("Cut Scenes Test", "Start", "Quit");
         cbAutopilot        = checkBox("Autopilot");
         cbImmunity         = checkBox("Pac-Man Immune");
+
+        spinnerCredit.valueProperty().addListener((py, ov, number) -> context.game().setNumCoins(number));
 
         comboGameVariant.setOnAction(e -> {
             if (comboGameVariant.getValue() != context.game().variant()) {
@@ -66,7 +68,6 @@ public class InfoBoxGameControl extends InfoBox {
         setAction(cbAutopilot,                            context::toggleAutopilot);
         setAction(cbImmunity,                             context::toggleImmunity);
 
-        spinnerCredit.valueProperty().addListener((py, ov, number) -> context.game().setNumCoins(number));
     }
 
     @Override

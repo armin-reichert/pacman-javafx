@@ -9,10 +9,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.scene.GameScene;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.WritableObjectValue;
 import javafx.collections.FXCollections;
@@ -136,7 +133,7 @@ public abstract class InfoBox extends TitledPane {
         addRow(label, right);
     }
 
-    protected void labelAndComputedValue(String labelText, Supplier<?> fnValue) {
+    protected void labelledValue(String labelText, Supplier<?> fnValue) {
         var info = new InfoText(fnValue);
         info.setFill(textColor);
         info.setFont(textFont);
@@ -144,12 +141,12 @@ public abstract class InfoBox extends TitledPane {
         addRow(labelText, info);
     }
 
-    protected void labelAndValue(String labelText, String value) {
-        labelAndComputedValue(labelText, () -> value);
+    protected void labelledValue(String labelText, String value) {
+        labelledValue(labelText, () -> value);
     }
 
     protected void emptyRow() {
-        labelAndValue("", "");
+        labelledValue("", "");
     }
 
     protected Button[] buttonList(String labelText, String... buttonTexts) {
@@ -216,10 +213,6 @@ public abstract class InfoBox extends TitledPane {
         slider.valueProperty().bindBidirectional(property);
     }
 
-    protected void assignEditor(Spinner<Number> spinner, Property<Number> property) {
-        spinner.getValueFactory().valueProperty().bindBidirectional(property);
-    }
-
     protected Slider slider(String labelText, int min, int max, double initialValue) {
         var slider = new Slider(min, max, initialValue);
         slider.setMinWidth(context.assets().<Integer>get("infobox.min_col_width"));
@@ -234,6 +227,15 @@ public abstract class InfoBox extends TitledPane {
 
     protected Spinner<Integer> integerSpinner(String labelText, int min, int max, int initialValue) {
         var spinner = new Spinner<Integer>(min, max, initialValue);
+        spinner.setStyle(fontCSS(textFont));
+        addRow(labelText, spinner);
+        return spinner;
+    }
+
+    protected Spinner<Integer> integerSpinner(String labelText, int min, int max, IntegerProperty property) {
+        var spinner = new Spinner<Integer>(min, max, property.getValue());
+        spinner.getValueFactory().valueProperty().bindBidirectional(property.asObject());
+        spinner.valueProperty().addListener((py, ov, newValue) -> property.set(newValue));
         spinner.setStyle(fontCSS(textFont));
         addRow(labelText, spinner);
         return spinner;
