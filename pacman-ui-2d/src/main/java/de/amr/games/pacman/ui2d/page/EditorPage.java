@@ -9,10 +9,12 @@ import de.amr.games.pacman.maps.editor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
+import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -34,6 +36,9 @@ public class EditorPage extends BorderPane implements Page {
     public EditorPage(Stage stage, GameContext context, File customMapDir) {
         this.stage = checkNotNull(stage);
         checkNotNull(context);
+
+        // without this, Pac-Man wallpaper shines through
+        setBackground(Ufx.coloredBackground(Color.web("#dddddd"))); // JavaFX default grey
 
         editor = new TileMapEditor(customMapDir);
         editor.createUI(stage);
