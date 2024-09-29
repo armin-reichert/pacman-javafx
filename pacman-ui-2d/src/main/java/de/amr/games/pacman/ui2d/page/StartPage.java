@@ -160,30 +160,14 @@ public class StartPage extends StackPane implements Page {
 
     private void handleGameVariantChange(GameVariant variant) {
         switch (variant) {
-            case MS_PACMAN -> {
-                msPacManFlyer.setPage(0);
+            case MS_PACMAN, MS_PACMAN_TENGEN, PACMAN -> flyer(variant).ifPresent(flyer -> {
+                flyer.setPage(0);
                 setOnMouseClicked(e -> {
                     if (e.getButton() == MouseButton.PRIMARY) {
-                        msPacManFlyer.nextPage();
+                        flyer.nextPage();
                     }
                 });
-            }
-            case MS_PACMAN_TENGEN -> {
-                tengenFlyer.setPage(0);
-                setOnMouseClicked(e -> {
-                    if (e.getButton() == MouseButton.PRIMARY) {
-                        tengenFlyer.nextPage();
-                    }
-                });
-            }
-            case PACMAN -> {
-                pacManFlyer.setPage(0);
-                setOnMouseClicked(e -> {
-                    if (e.getButton() == MouseButton.PRIMARY) {
-                        pacManFlyer.nextPage();
-                    }
-                });
-            }
+            });
             case PACMAN_XXL -> {
                 Image xxlGameImage = context.assets().image("pacman_xxl.startpage.source");
                 var xxlGameBackground = Ufx.imageBackground(xxlGameImage,
