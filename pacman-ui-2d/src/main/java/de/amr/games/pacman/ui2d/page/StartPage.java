@@ -82,19 +82,11 @@ public class StartPage extends StackPane implements Page {
         }
 
         void nextPage() {
-            index += 1;
-            if (index == images.length) {
-                index = 0;
-            }
-            setPage(index);
+            setPage((index + 1) % images.length);
         }
 
         void prevPage() {
-            index -= 1;
-            if (index == -1) {
-                index = images.length - 1;
-            }
-            setPage(index);
+            setPage((index - 1 + images.length) % images.length);
         }
     }
 
