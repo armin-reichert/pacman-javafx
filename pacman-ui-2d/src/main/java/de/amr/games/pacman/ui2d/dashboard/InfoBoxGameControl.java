@@ -65,9 +65,9 @@ public class InfoBoxGameControl extends InfoBox {
         setAction(bgLevelActions[GAME_LEVEL_QUIT],        context::restartIntro);
         setAction(bgLevelActions[GAME_LEVEL_NEXT],        context::cheatEnterNextLevel);
         setAction(comboInitialLives,                      () -> context.game().setInitialLives(comboInitialLives.getValue()));
-        setAction(cbAutopilot,                            context::toggleAutopilot);
-        setAction(cbImmunity,                             context::toggleImmunity);
 
+        assignEditor(cbAutopilot, PY_AUTOPILOT);
+        assignEditor(cbImmunity, PY_IMMUNITY);
     }
 
     @Override
@@ -80,8 +80,6 @@ public class InfoBoxGameControl extends InfoBox {
         spinnerCredit.getValueFactory().setValue(game.credit());
         comboGameVariant.setValue(game.variant());
         comboInitialLives.setValue(game.initialLives());
-        cbAutopilot.setSelected(PY_AUTOPILOT.get());
-        cbImmunity.setSelected(PY_IMMUNITY.get());
 
         spinnerCredit.setDisable(!(oneOf(state, GameState.INTRO, GameState.CREDIT)));
         comboGameVariant.setDisable(state != GameState.INTRO);
