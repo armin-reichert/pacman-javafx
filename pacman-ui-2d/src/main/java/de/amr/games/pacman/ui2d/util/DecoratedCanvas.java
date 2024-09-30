@@ -17,13 +17,6 @@ import javafx.scene.shape.Rectangle;
  */
 public class DecoratedCanvas extends BorderPane {
 
-    public static Dimension2D computeSize(double unscaledCanvasWidth, double unscaledCanvasHeight, double scaling) {
-        return new Dimension2D(
-            Math.round(unscaledCanvasWidth  * scaling + 25 * scaling), // TODO avoid magic numbers
-            Math.round(unscaledCanvasHeight * scaling + 15 * scaling)  // TODO avoid magic numbers
-        );
-    }
-
     public final DoubleProperty scalingPy              = new SimpleDoubleProperty(this, "scaling", 1.0);
     public final BooleanProperty decoratedPy           = new SimpleBooleanProperty(this, "decorated", true);
     public final DoubleProperty unscaledCanvasWidthPy  = new SimpleDoubleProperty(this, "unscaledCanvasWidth", 500);
@@ -66,7 +59,10 @@ public class DecoratedCanvas extends BorderPane {
     }
 
     public Dimension2D getSize() {
-        return computeSize(unscaledCanvasWidth(), unscaledCanvasHeight(), scaling());
+        return new Dimension2D(
+            Math.round((unscaledCanvasWidth()  + 25) * scaling()), // TODO avoid magic numbers
+            Math.round((unscaledCanvasHeight() + 15) * scaling())  // TODO avoid magic numbers
+        );
     }
 
     public double scaling() {

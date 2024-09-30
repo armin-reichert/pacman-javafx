@@ -24,7 +24,10 @@ import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
-import de.amr.games.pacman.ui2d.util.*;
+import de.amr.games.pacman.ui2d.util.AssetStorage;
+import de.amr.games.pacman.ui2d.util.FlashMessageView;
+import de.amr.games.pacman.ui2d.util.GameClockFX;
+import de.amr.games.pacman.ui2d.util.Keyboard;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManArcadeGameRenderer;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGamePacAnimations;
@@ -183,11 +186,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         });
         xxlGame.setMapSelectionMode(PY_MAP_SELECTION_MODE.get());
 
+        stage.setMinWidth(GameModel.ARCADE_MAP_SIZE_X * 1.25);
+        stage.setMinHeight(GameModel.ARCADE_MAP_SIZE_Y * 1.25);
         stage.titleProperty().bind(stageTitleBinding());
-        //TODO this does not work yet correctly
-        Dimension2D minSize = DecoratedCanvas.computeSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y, 1);
-        stage.setMinWidth(minSize.getWidth());
-        stage.setMinHeight(minSize.getHeight());
         stage.centerOnScreen();
         stage.setOnShowing(e-> selectStartPage());
         stage.show();
