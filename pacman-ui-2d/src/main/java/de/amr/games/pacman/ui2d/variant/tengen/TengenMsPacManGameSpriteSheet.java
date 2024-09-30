@@ -26,44 +26,44 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
 
     // directions: rr ll uu dd
     private static final RectArea[][] RED_GHOST_SPRITES = {
-        {rect(46, 77,14,13), rect(62,  77, 14, 13)},
-        {rect(78, 77,14,13), rect(94,  77, 14, 13)},
-        {rect(110,77,14,13), rect(126, 77, 14, 13)},
-        {rect(142,77,14,13), rect(158, 77, 14, 13)},
+            {rect(10, 120,14,13), rect(26,  120, 14, 13)},
+            {rect(42, 120,14,13), rect(58,  120, 14, 13)},
+            {rect(74, 120,14,13), rect(90,  120, 14, 13)},
+            {rect(106,120,14,13), rect(122, 120, 14, 13)},
     };
     private static final RectArea[][] PINK_GHOST_SPRITES = {
-        {rect(46, 92,14,13), rect(62,  92, 14, 13)},
-        {rect(78, 92,14,13), rect(94,  92, 14, 13)},
-        {rect(110,92,14,13), rect(126, 92, 14, 13)},
-        {rect(142,92,14,13), rect(158, 92, 14, 13)},
+            {rect(10, 135,14,13), rect(26,  135, 14, 13)},
+            {rect(42, 135,14,13), rect(58,  135, 14, 13)},
+            {rect(74, 135,14,13), rect(90,  135, 14, 13)},
+            {rect(106,135,14,13), rect(122, 135, 14, 13)},
     };
     private static final RectArea[][] CYAN_GHOST_SPRITES = {
-        {rect(46, 107,14,13), rect(62,  107, 14, 13)},
-        {rect(78, 107,14,13), rect(94,  107, 14, 13)},
-        {rect(110,107,14,13), rect(126, 107, 14, 13)},
-        {rect(142,107,14,13), rect(158, 107, 14, 13)},
+            {rect(10, 150,14,13), rect(26,  150, 14, 13)},
+            {rect(42, 150,14,13), rect(58,  150, 14, 13)},
+            {rect(74, 150,14,13), rect(90,  150, 14, 13)},
+            {rect(106,150,14,13), rect(122, 150, 14, 13)},
     };
     private static final RectArea[][] ORANGE_GHOST_SPRITES = {
-        {rect(46, 122,14,13), rect(62,  122, 14, 13)},
-        {rect(78, 122,14,13), rect(94,  122, 14, 13)},
-        {rect(110,122,14,13), rect(126, 122, 14, 13)},
-        {rect(142,122,14,13), rect(158, 122, 14, 13)},
+            {rect(10, 165,14,13), rect(26,  165, 14, 13)},
+            {rect(42, 165,14,13), rect(58,  165, 14, 13)},
+            {rect(74, 165,14,13), rect(90,  165, 14, 13)},
+            {rect(106,165,14,13), rect(122, 165, 14, 13)},
     };
 
     private static final RectArea[] GHOST_FRIGHTENED_SPRITES = {
-        rect(174, 77, 14, 13), rect(174, 77, 14, 13)
+        rect(138, 120, 14, 13), rect(154, 120, 14, 13)
     };
 
     private static final RectArea[] GHOST_FLASHING_SPRITES = {
-        rect(174, 92, 14, 13),  rect(190, 92, 14, 13), // white/red eyes+mouth
-        rect(174, 107, 14, 13), rect(190, 107, 14, 13), // white/blue eyes+mouth
+        rect(138, 135, 14, 13),  rect(154, 135, 14, 13), // white/red eyes+mouth
+        rect(138, 150, 14, 13),  rect(154, 150, 14, 13), // white/blue eyes+mouth
     };
 
     private static final RectArea[] GHOST_EYES_SPRITES = {
-        rect(176, 123, 10, 5), // left
-        rect(189, 123, 10, 5), // right
-        rect(176, 130, 10, 5), // up
-        rect(189, 130, 10, 5), // down
+        rect(140, 173, 10, 5), // right
+        rect(140, 166, 10, 5), // left
+        rect(153, 166, 10, 5), // up
+        rect(153, 173, 10, 5), // down
     };
 
     private static final RectArea[] GHOST_NUMBER_SPRITES = {
@@ -120,7 +120,7 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
 
     @Override
     public RectArea[] ghostEyesSprites(Direction dir) {
-        return GHOST_EYES_SPRITES;
+        return new RectArea[] {GHOST_EYES_SPRITES[dirIndex(dir)]};
     }
 
     @Override

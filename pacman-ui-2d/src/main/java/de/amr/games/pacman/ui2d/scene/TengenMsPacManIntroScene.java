@@ -48,7 +48,7 @@ import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
  */
 public class TengenMsPacManIntroScene extends GameScene2D {
 
-    static final Color[] BLUE_SHADES = { Color.BLUE, Color.LIGHTBLUE, Color.WHITE };
+    static final Color[] BLUE_SHADES = { Color.DARKBLUE, Color.BLUE, Color.LIGHTBLUE };
     static final float SPEED = 1.1f;
     static final int TOP_Y = TS * 11 + 1;
     static final int STOP_X_GHOST = TS * 6 - 4;
@@ -62,7 +62,7 @@ public class TengenMsPacManIntroScene extends GameScene2D {
         WAITING_FOR_START {
             @Override
             public void onUpdate(TengenMsPacManIntroScene intro) {
-                if (Keyboard.pressed(KeyInput.of(KeyInput.key(KeyCode.SPACE)))) {
+                if (Keyboard.pressed(KeyCode.SPACE)) {
                     intro.sceneController.changeState(STARTING);
                 }
             }
