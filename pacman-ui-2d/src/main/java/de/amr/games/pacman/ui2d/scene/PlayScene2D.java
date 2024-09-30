@@ -12,7 +12,9 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
+import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -132,18 +134,22 @@ public class PlayScene2D extends GameScene2D {
     }
 
     private void drawLevelMessage(GameWorldRenderer renderer) {
+        AssetStorage assets = context.assets();
+        String assetPrefix = GameAssets2D.assetPrefix(context.game().variant());
         Vector2i houseOrigin = context.game().world().houseTopLeftTile();
         Vector2i houseSize = context.game().world().houseSize();
         int centerTileX = houseOrigin.x() + houseSize.x() / 2;
         double msgY = t(houseOrigin.y() + houseSize.y() + 1);
         // "GAME OVER" is drawn in demo mode and when game is over:
         if (context.game().isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
-            renderer.drawText("GAME  OVER", Color.RED, renderer.scaledArcadeFont(8), t(centerTileX - 5), msgY);
+            Color color = assets.color(assetPrefix + ".color.game_over_message");
+            renderer.drawText("GAME  OVER", color, renderer.scaledArcadeFont(8), t(centerTileX - 5), msgY);
         } else {
+            Color color = assets.color(assetPrefix + ".color.ready_message");
             switch (context.gameState()) {
-                case READY      -> renderer.drawText("READY!", Color.YELLOW, renderer.scaledArcadeFont(8), t(centerTileX - 3), msgY);
+                case READY      -> renderer.drawText("READY!", color, renderer.scaledArcadeFont(8), t(centerTileX - 3), msgY);
                 case LEVEL_TEST -> renderer.drawText("TEST    L" + context.game().levelNumber(),
-                    Color.YELLOW, renderer.scaledArcadeFont(8), t(8.5), msgY);
+                    color, renderer.scaledArcadeFont(8), t(8.5), msgY);
             }
         }
     }

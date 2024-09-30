@@ -94,6 +94,9 @@ public class GameAssets2D extends AssetStorage {
         assets.store("ms_pacman.icon",                  rm.loadImage("graphics/icons/mspacman.png"));
         assets.store("ms_pacman.logo.midway",           rm.loadImage("graphics/mspacman/midway_logo.png"));
 
+        assets.store("ms_pacman.color.game_over_message", Color.RED);
+        assets.store("ms_pacman.color.ready_message",   Color.YELLOW);
+
         // Clips
         assets.store("ms_pacman.audio.bonus_eaten",     rm.loadAudioClip("sound/mspacman/Fruit.mp3"));
         assets.store("ms_pacman.audio.credit",          rm.loadAudioClip("sound/mspacman/Credit.mp3"));
@@ -130,6 +133,9 @@ public class GameAssets2D extends AssetStorage {
         assets.store("tengen.icon",                     rm.loadImage("graphics/icons/mspacman.png"));
         assets.store("tengen.logo.midway",              rm.loadImage("graphics/mspacman/midway_logo.png"));
 
+        assets.store("tengen.color.game_over_message",  Color.web("#b5217b"));
+        assets.store("tengen.color.ready_message",      Color.YELLOW);
+
         // Clips
         assets.store("tengen.audio.bonus_eaten",        rm.loadAudioClip("sound/tengen/Fruit.mp3"));
         assets.store("tengen.audio.credit",             rm.loadAudioClip("sound/mspacman/Credit.mp3")); //TODO: sound?
@@ -165,6 +171,9 @@ public class GameAssets2D extends AssetStorage {
         assets.store("pacman.helpButton.icon",          rm.loadImage("graphics/icons/help-blue-64.png"));
         assets.store("pacman.icon",                     rm.loadImage("graphics/icons/pacman.png"));
 
+        assets.store("pacman.color.game_over_message",  Color.RED);
+        assets.store("pacman.color.ready_message",      Color.YELLOW);
+
         // Clips
         assets.store("pacman.audio.bonus_eaten",        rm.loadAudioClip("sound/pacman/eat_fruit.mp3"));
         assets.store("pacman.audio.credit",             rm.loadAudioClip("sound/pacman/credit.wav"));
@@ -194,6 +203,9 @@ public class GameAssets2D extends AssetStorage {
         assets.store("pacman_xxl.startpage.source",     rm.loadImage("graphics/pacman_xxl/pacman_xxl_logo.png"));
 
         assets.store("pacman_xxl.spritesheet",          new PacManGameSpriteSheet(rm.loadImage("graphics/pacman/pacman_spritesheet.png")));
+
+        assets.store("pacman_xxl.color.game_over_message", Color.RED);
+        assets.store("pacman_xxlcolor.ready_message",   Color.YELLOW);
 
         // Clips
         assets.store("pacman_xxl.audio.bonus_eaten",    rm.loadAudioClip("sound/pacman/eat_fruit.mp3"));
