@@ -19,8 +19,8 @@ public class DecoratedCanvas extends BorderPane {
 
     public static Dimension2D computeSize(double unscaledCanvasWidth, double unscaledCanvasHeight, double scaling) {
         return new Dimension2D(
-            Math.round(unscaledCanvasWidth * scaling + 25 * scaling), // TODO magic number
-            Math.round(unscaledCanvasHeight * scaling + 15 * scaling) // TODO magic number
+            Math.round(unscaledCanvasWidth  * scaling + 25 * scaling), // TODO avoid magic numbers
+            Math.round(unscaledCanvasHeight * scaling + 15 * scaling)  // TODO avoid magic numbers
         );
     }
 
@@ -37,30 +37,28 @@ public class DecoratedCanvas extends BorderPane {
         canvas.widthProperty().bind(unscaledCanvasWidthPy.multiply(scalingPy));
         canvas.heightProperty().bind(unscaledCanvasHeightPy.multiply(scalingPy));
 
-        clipProperty().bind(Bindings.createObjectBinding(
-            () -> {
-                if (decoratedPy.get()) {
-                    var clipRect = new Rectangle(getSize().getWidth(), getSize().getHeight());
-                    clipRect.setArcWidth(26 * scaling());
-                    clipRect.setArcHeight(26 * scaling());
-                    return clipRect;
-                }
+        clipProperty().bind(Bindings.createObjectBinding(() -> {
+            if (!isDecorated()) {
                 return null;
-            }, decoratedPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy
-        ));
+            }
+            var clipRect = new Rectangle(getSize().getWidth(), getSize().getHeight());
+            // TODO avoid magic numbers
+            double diameter = 26 * scaling();
+            clipRect.setArcWidth(diameter);
+            clipRect.setArcHeight(diameter);
+            return clipRect;
+        }, decoratedPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
 
-        borderProperty().bind(Bindings.createObjectBinding(
-            () -> {
-                if (!isDecorated()) {
-                    return null;
-                }
-                double w = Math.max(5, Math.ceil(getSize().getHeight() / 55)); // TODO avoid magic numbers
-                double r = Math.ceil(10 * scaling());
-                return new Border(
-                    new BorderStroke(borderColor(), BorderStrokeStyle.SOLID, new CornerRadii(r), new BorderWidths(w)));
-            },
-            decoratedPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy
-        ));
+        borderProperty().bind(Bindings.createObjectBinding(() -> {
+            if (!isDecorated()) {
+                return null;
+            }
+            // TODO avoid magic numbers
+            double w = Math.max(5, Math.ceil(getSize().getHeight() / 55));
+            double r = Math.ceil(10 * scaling());
+            return new Border(
+                new BorderStroke(borderColor(), BorderStrokeStyle.SOLID, new CornerRadii(r), new BorderWidths(w)));
+        }, decoratedPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
     }
 
     public Canvas canvas() {

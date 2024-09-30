@@ -203,7 +203,7 @@ public class GamePage extends StackPane implements Page {
 
     protected void setGameScene2D(GameScene2D scene2D) {
         getChildren().set(0, canvasLayer);
-        scene2D.scalingPy.bind(canvasLayer.scalingPy);
+        scene2D.scalingPy.bind(canvasLayer.decoratedCanvas().scalingPy);
         canvasLayer.decoratedCanvas().backgroundProperty().bind(scene2D.backgroundColorPy.map(Ufx::coloredBackground));
         adaptCanvasSizeToCurrentWorld();
     }
@@ -240,7 +240,7 @@ public class GamePage extends StackPane implements Page {
 
     protected void showHelp() {
         if (isCurrentGameScene2D()) {
-            popupLayer.showHelp(canvasLayer.scaling());
+            popupLayer.showHelp(canvasLayer.decoratedCanvas().scaling());
         }
     }
 }

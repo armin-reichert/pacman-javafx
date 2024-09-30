@@ -63,8 +63,8 @@ public class PopupLayer extends Pane {
             var text = new Text(word);
             text.setFill(color);
             text.fontProperty().bind(Bindings.createObjectBinding(
-                () -> Font.font(font.getFamily(), canvasPane.scaling() * font.getSize()),
-                canvasPane.scalingPy
+                () -> Font.font(font.getFamily(), canvasPane.decoratedCanvas().scaling() * font.getSize()),
+                canvasPane.decoratedCanvas().scalingPy
             ));
             signature.getChildren().add(text);
         }
@@ -72,13 +72,13 @@ public class PopupLayer extends Pane {
         // keep centered over canvas
         signature.translateXProperty().bind(Bindings.createDoubleBinding(
             () -> 0.5 * (canvasPane.decoratedCanvas().getWidth() - signature.getWidth()),
-            canvasPane.scalingPy, canvasPane.decoratedCanvas().widthProperty()
+            canvasPane.decoratedCanvas().scalingPy, canvasPane.decoratedCanvas().widthProperty()
         ));
 
         // keep vertical position over intro scene, also when scene gets scaled
         signature.translateYProperty().bind(Bindings.createDoubleBinding(
-            () -> canvasPane.scaling() * 30,
-            canvasPane.scalingPy, canvasPane.decoratedCanvas().heightProperty()
+            () -> canvasPane.decoratedCanvas().scaling() * 30,
+            canvasPane.decoratedCanvas().scalingPy, canvasPane.decoratedCanvas().heightProperty()
         ));
     }
 
