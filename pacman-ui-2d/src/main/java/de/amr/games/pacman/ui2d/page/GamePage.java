@@ -63,7 +63,7 @@ public class GamePage extends StackPane implements Page {
         canvasLayer.setMinScaling(0.75);
         canvasLayer.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
 
-        DecoratedCanvas decoratedCanvas = canvasLayer.decoratedCanvas();
+        DecoratedCanvas decoratedCanvas = canvasLayer.canvas();
         decoratedCanvas.setBorderColor(PALETTE_PALE);
         decoratedCanvas.decoratedPy.bind(PY_CANVAS_DECORATED);
         decoratedCanvas.decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
@@ -179,7 +179,7 @@ public class GamePage extends StackPane implements Page {
     }
 
     public Canvas canvas() {
-        return canvasLayer.decoratedCanvas().canvas();
+        return canvasLayer.canvas().canvas();
     }
 
     public void adaptCanvasSizeToCurrentWorld() {
@@ -203,8 +203,8 @@ public class GamePage extends StackPane implements Page {
 
     protected void setGameScene2D(GameScene2D scene2D) {
         getChildren().set(0, canvasLayer);
-        scene2D.scalingPy.bind(canvasLayer.decoratedCanvas().scalingPy);
-        canvasLayer.decoratedCanvas().backgroundProperty().bind(scene2D.backgroundColorPy.map(Ufx::coloredBackground));
+        scene2D.scalingPy.bind(canvasLayer.canvas().scalingPy);
+        canvasLayer.canvas().backgroundProperty().bind(scene2D.backgroundColorPy.map(Ufx::coloredBackground));
         adaptCanvasSizeToCurrentWorld();
     }
 
@@ -240,7 +240,7 @@ public class GamePage extends StackPane implements Page {
 
     protected void showHelp() {
         if (isCurrentGameScene2D()) {
-            popupLayer.showHelp(canvasLayer.decoratedCanvas().scaling());
+            popupLayer.showHelp(canvasLayer.canvas().scaling());
         }
     }
 }

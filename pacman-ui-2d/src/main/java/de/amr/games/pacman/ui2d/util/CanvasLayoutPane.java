@@ -12,23 +12,41 @@ import org.tinylog.Logger;
  */
 public class CanvasLayoutPane extends BorderPane {
 
-    private final DecoratedCanvas dcanvas = new DecoratedCanvas();
+    private final DecoratedCanvas decoratedCanvas = new DecoratedCanvas();
     private double minScaling = 1.0;
 
     public CanvasLayoutPane() {
-        setCenter(dcanvas);
-        dcanvas.scalingPy.addListener((py, ov, nv) -> doLayout(dcanvas.scaling(), true));
-        dcanvas.unscaledCanvasWidthPy.addListener((py, ov, nv) -> doLayout(dcanvas.scaling(), true));
-        dcanvas.unscaledCanvasHeightPy.addListener((py, ov, nv) -> doLayout(dcanvas.scaling(), true));
+        setCenter(decoratedCanvas);
+        decoratedCanvas.scalingPy.addListener((py, ov, nv) -> doLayout(decoratedCanvas.scaling(), true));
+        decoratedCanvas.unscaledCanvasWidthPy.addListener((py, ov, nv) -> doLayout(decoratedCanvas.scaling(), true));
+        decoratedCanvas.unscaledCanvasHeightPy.addListener((py, ov, nv) -> doLayout(decoratedCanvas.scaling(), true));
+    }
+
+    public DecoratedCanvas canvas() {
+        return decoratedCanvas;
+    }
+
+    public void setMinScaling(double value) {
+        minScaling = value;
     }
 
     public void resizeTo(double width, double height) {
-        doLayout(computeScaling(width, height), false);
+        if (decoratedCanvas.isDecorated()) {
+            double shrunkWidth  = 0.85 * width;
+            double shrunkHeight = 0.92 * height;
+            double scaling = shrunkHeight / decoratedCanvas.unscaledCanvasHeight();
+            if (scaling * decoratedCanvas.unscaledCanvasWidth() > shrunkWidth) {
+                scaling = shrunkWidth / decoratedCanvas.unscaledCanvasWidth();
+            }
+            doLayout(scaling, false);
+        } else {
+            doLayout(height / decoratedCanvas.unscaledCanvasHeight(), false);
+        }
     }
 
     public void setUnscaledCanvasSize(double width, double height) {
-        dcanvas.setUnscaledCanvasWidth(width);
-        dcanvas.setUnscaledCanvasHeight(height);
+        decoratedCanvas.setUnscaledCanvasWidth(width);
+        decoratedCanvas.setUnscaledCanvasHeight(height);
     }
 
     private void doLayout(double newScaling, boolean forced) {
@@ -36,44 +54,23 @@ public class CanvasLayoutPane extends BorderPane {
             Logger.warn("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
             return;
         }
-        if (!forced && Math.abs(dcanvas.scaling() - newScaling) < 1e-2) { // avoid irrelevant scaling
+        if (!forced && Math.abs(decoratedCanvas.scaling() - newScaling) < 1e-2) { // avoid irrelevant scaling
+            Logger.debug("No scaling needed, difference too small");
             return;
         }
-        double width = dcanvas.canvas().getWidth();
-        double height = dcanvas.canvas().getHeight();
-        if (dcanvas.isDecorated()) {
-            var size = dcanvas.getSize();
+        double width = decoratedCanvas.canvas().getWidth();
+        double height = decoratedCanvas.canvas().getHeight();
+        if (decoratedCanvas.isDecorated()) {
+            var size = decoratedCanvas.getSize();
             width = size.getWidth();
             height = size.getHeight();
         }
-        dcanvas.setMinSize(width, height);
-        dcanvas.setMaxSize(width, height);
-        dcanvas.setPrefSize(width, height);
-        dcanvas.setScaling(newScaling);
+        decoratedCanvas.setMinSize(width, height);
+        decoratedCanvas.setMaxSize(width, height);
+        decoratedCanvas.setPrefSize(width, height);
+        decoratedCanvas.setScaling(newScaling);
 
-        Logger.debug("Unscaled canvas size: w={0.0} h={0.0}", dcanvas.unscaledCanvasWidth(), dcanvas.unscaledCanvasHeight());
-        Logger.debug("Canvas size: w={0.0} h={0.0}", dcanvas.canvas().getWidth(), dcanvas.canvas().getHeight());
-    }
-
-    private double computeScaling(double width, double height) {
-        if (dcanvas.isDecorated()) {
-            double shrinkedWidth = 0.85 * width;
-            double shrinkedHeight = 0.92 * height;
-            double scaling = shrinkedHeight / dcanvas.unscaledCanvasHeight();
-            if (scaling * dcanvas.unscaledCanvasWidth() > shrinkedWidth) {
-                scaling = shrinkedWidth / dcanvas.unscaledCanvasWidth();
-            }
-            return scaling;
-        } else {
-            return height / dcanvas.unscaledCanvasHeight();
-        }
-    }
-
-    public DecoratedCanvas decoratedCanvas() {
-        return dcanvas;
-    }
-
-    public void setMinScaling(double value) {
-        minScaling = value;
+        Logger.debug("Unscaled canvas size: w={0.0} h={0.0}", decoratedCanvas.unscaledCanvasWidth(), decoratedCanvas.unscaledCanvasHeight());
+        Logger.debug("Canvas size: w={0.0} h={0.0}", decoratedCanvas.canvas().getWidth(), decoratedCanvas.canvas().getHeight());
     }
 }
