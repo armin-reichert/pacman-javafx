@@ -24,7 +24,7 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
         rect(68, 15, 15, 15)
     };
 
-    // red ghost rr ll uu dd
+    // directions: rr ll uu dd
     private static final RectArea[][] RED_GHOST_SPRITES = {
         {rect(46, 77,14,13), rect(62,  77, 14, 13)},
         {rect(78, 77,14,13), rect(94,  77, 14, 13)},
@@ -32,22 +32,22 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
         {rect(142,77,14,13), rect(158, 77, 14, 13)},
     };
     private static final RectArea[][] PINK_GHOST_SPRITES = {
-            {rect(46, 92,14,13), rect(62,  92, 14, 13)},
-            {rect(78, 92,14,13), rect(94,  92, 14, 13)},
-            {rect(110,92,14,13), rect(126, 92, 14, 13)},
-            {rect(142,92,14,13), rect(158, 92, 14, 13)},
+        {rect(46, 92,14,13), rect(62,  92, 14, 13)},
+        {rect(78, 92,14,13), rect(94,  92, 14, 13)},
+        {rect(110,92,14,13), rect(126, 92, 14, 13)},
+        {rect(142,92,14,13), rect(158, 92, 14, 13)},
     };
     private static final RectArea[][] CYAN_GHOST_SPRITES = {
-            {rect(46, 107,14,13), rect(62,  107, 14, 13)},
-            {rect(78, 107,14,13), rect(94,  107, 14, 13)},
-            {rect(110,107,14,13), rect(126, 107, 14, 13)},
-            {rect(142,107,14,13), rect(158, 107, 14, 13)},
+        {rect(46, 107,14,13), rect(62,  107, 14, 13)},
+        {rect(78, 107,14,13), rect(94,  107, 14, 13)},
+        {rect(110,107,14,13), rect(126, 107, 14, 13)},
+        {rect(142,107,14,13), rect(158, 107, 14, 13)},
     };
     private static final RectArea[][] ORANGE_GHOST_SPRITES = {
-            {rect(46, 122,14,13), rect(62,  122, 14, 13)},
-            {rect(78, 122,14,13), rect(94,  122, 14, 13)},
-            {rect(110,122,14,13), rect(126, 122, 14, 13)},
-            {rect(142,122,14,13), rect(158, 122, 14, 13)},
+        {rect(46, 122,14,13), rect(62,  122, 14, 13)},
+        {rect(78, 122,14,13), rect(94,  122, 14, 13)},
+        {rect(110,122,14,13), rect(126, 122, 14, 13)},
+        {rect(142,122,14,13), rect(158, 122, 14, 13)},
     };
 
     private static final RectArea[] GHOST_FRIGHTENED_SPRITES = {
