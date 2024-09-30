@@ -24,6 +24,10 @@ public class KeyInput {
         return keyInput;
     }
 
+    public static KeyInput of(KeyCodeCombination... combinations) {
+        return new KeyInput(combinations);
+    }
+
     private KeyInput(KeyCodeCombination... combinations) {
         this.combinations = combinations;
     }

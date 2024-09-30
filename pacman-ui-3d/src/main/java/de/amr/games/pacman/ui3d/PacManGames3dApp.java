@@ -77,7 +77,7 @@ public class PacManGames3dApp extends Application {
         ));
         ui.setGameScenes(GameVariant.MS_PACMAN_TENGEN, Map.of(
             GameSceneID.BOOT_SCENE,    new BootScene(),
-            GameSceneID.INTRO_SCENE,   new MsPacManIntroScene(),
+            GameSceneID.INTRO_SCENE,   new TengenMsPacManIntroScene(),
             GameSceneID.CREDIT_SCENE,  new CreditScene(),
             GameSceneID.PLAY_SCENE,    new PlayScene2D(),
             GameSceneID.PLAY_SCENE_3D, new PlayScene3D(),
