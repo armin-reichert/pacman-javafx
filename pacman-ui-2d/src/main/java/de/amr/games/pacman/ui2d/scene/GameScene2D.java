@@ -63,7 +63,7 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected void drawLevelCounter(GameWorldRenderer renderer, Vector2i worldSize) {
-        renderer.drawLevelCounter(context.spriteSheet(), context.game().levelCounter(), worldSize);
+        renderer.drawLevelCounter(context.spriteSheet(), context.game().levelNumber(), context.game().levelCounter(), worldSize);
     }
 
     /**
