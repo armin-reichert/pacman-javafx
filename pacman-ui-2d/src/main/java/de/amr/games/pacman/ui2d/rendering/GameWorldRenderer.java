@@ -260,7 +260,7 @@ public interface GameWorldRenderer {
         }
     }
 
-    default void drawLevelCounter(GameSpriteSheet spriteSheet, List<Byte> symbols, Vector2i worldSize) {
+    default void drawLevelCounter(GameSpriteSheet spriteSheet, int levelNumber, List<Byte> symbols, Vector2i worldSize) {
         double x = TS * (worldSize.x() - 4), y = TS * (worldSize.y() - 2);
         for (byte symbol : symbols) {
             drawSpriteScaled(spriteSheet, spriteSheet.bonusSymbolSprite(symbol), x, y);

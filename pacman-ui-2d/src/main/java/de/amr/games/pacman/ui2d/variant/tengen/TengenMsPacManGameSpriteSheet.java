@@ -85,6 +85,8 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
         }
     }
 
+    static final RectArea LEVEL_INDICATOR = rect(200,164,16,16);
+
     private static final RectArea[] CLAPPERBOARD_SPRITES = { // open, middle, closed
         rect(91, 361, 32, 32),
         rect(53, 361, 32, 32),
@@ -190,5 +192,10 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
     @Override
     public RectArea juniorPacSprite() {
         return JUNIOR_PAC_SPRITE;
+    }
+
+    // Tengen-specific
+    public RectArea digit(int d) {
+        return d == 0 ? rect(235, 184, 4, 5) : rect(185 + 5*d, 184, 4, 5);
     }
 }

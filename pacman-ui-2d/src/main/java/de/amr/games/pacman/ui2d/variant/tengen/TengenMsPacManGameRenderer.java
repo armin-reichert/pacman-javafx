@@ -27,6 +27,8 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
+import java.util.List;
+
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.maps.editor.TileMapUtil.getColorFromMap;
 import static de.amr.games.pacman.model.GameWorld.PROPERTY_COLOR_WALL_FILL;
@@ -136,6 +138,16 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     }
 
     @Override
+    public void drawLevelCounter(GameSpriteSheet spriteSheet, int levelNumber, List<Byte> symbols, Vector2i worldSize) {
+        GameWorldRenderer.super.drawLevelCounter(spriteSheet, levelNumber, symbols, worldSize);
+        if (levelNumber > 0) {
+            double x = TS * (worldSize.x() - 2), y = TS * (worldSize.y() - 2);
+            drawLevelNumber((TengenMsPacManGameSpriteSheet) spriteSheet, levelNumber, 0, y);
+            drawLevelNumber((TengenMsPacManGameSpriteSheet) spriteSheet, levelNumber, x, y);
+        }
+    }
+
+    @Override
     public void selectMap(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet) {
         int width = worldMap.terrain().numCols() * TS;
         int height = (worldMap.terrain().numRows() - 5) * TS; // 3 empty rows before and 2 after maze source
@@ -192,6 +204,24 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
             rendererMsPacMan.drawAnimatedEntity(character);
         } else {
             GameWorldRenderer.super.drawAnimatedEntity(character);
+        }
+    }
+
+    private void drawLevelNumber(TengenMsPacManGameSpriteSheet spriteSheet, int levelNumber, double x, double y) {
+        drawSpriteScaled(spriteSheet, TengenMsPacManGameSpriteSheet.LEVEL_INDICATOR, x, y);
+        ctx().setFill(Color.BLACK);
+        ctx().save();
+        ctx().scale(scaling(), scaling());
+        ctx().fillRect(x + 10, y + 2, 5, 5);
+        ctx().restore();
+        if (levelNumber < 10) {
+            int d0 = levelNumber % 10;
+            drawSpriteScaled(spriteSheet, spriteSheet.digit(d0), x + 10, y + 2);
+        } else if (levelNumber < 100) {
+            int d0 = levelNumber % 10;
+            int d1 = levelNumber / 10;
+            drawSpriteScaled(spriteSheet, spriteSheet.digit(d0), x + 10, y + 2);
+            drawSpriteScaled(spriteSheet, spriteSheet.digit(d1), x + 5, y + 2);
         }
     }
 }
