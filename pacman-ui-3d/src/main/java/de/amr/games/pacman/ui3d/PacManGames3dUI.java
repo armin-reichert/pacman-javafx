@@ -19,7 +19,8 @@ import java.util.Map;
 
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
-import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
+import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
+import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
 
 /**
  * User interface for all Pac-Man game variants with a 3D play scene. All others scenes are in 2D.
@@ -83,20 +84,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
             return playScene3D != null ? playScene3D : gameScene;
         }
         return gameScene;
-    }
-
-    @Override
-    public void selectNext3DPerspective() {
-        var next = Perspective.next(PY_3D_PERSPECTIVE.get());
-        PY_3D_PERSPECTIVE.set(next);
-        showFlashMessage(locText("camera_perspective", locText(next.name())));
-    }
-
-    @Override
-    public void selectPrev3DPerspective() {
-        var prev = Perspective.previous(PY_3D_PERSPECTIVE.get());
-        PY_3D_PERSPECTIVE.set(prev);
-        showFlashMessage(locText("camera_perspective", locText(prev.name())));
     }
 
     @Override

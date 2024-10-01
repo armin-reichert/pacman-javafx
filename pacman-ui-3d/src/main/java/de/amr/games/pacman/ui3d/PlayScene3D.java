@@ -182,10 +182,10 @@ public class PlayScene3D implements GameScene {
     public void handleInput() {
         if (GameAction.ADD_CREDIT.called() && this.context.game().isDemoLevel()) {
             GameAction.ADD_CREDIT.execute(context);
-        } else if (GameAction.PREV_PERSPECTIVE.called()) {
-            context.selectPrev3DPerspective();
-        } else if (GameAction.NEXT_PERSPECTIVE.called()) {
-            context.selectNext3DPerspective();
+        } else if (GameAction3D.PREV_PERSPECTIVE.called()) {
+            GameAction3D.PREV_PERSPECTIVE.execute(context);
+        } else if (GameAction3D.NEXT_PERSPECTIVE.called()) {
+            GameAction3D.NEXT_PERSPECTIVE.execute(context);
         } else if (GameAction.CHEAT_EAT_ALL.called()) {
             GameAction.CHEAT_EAT_ALL.execute(context);
         } else if (GameAction.CHEAT_ADD_LIVES.called()) {

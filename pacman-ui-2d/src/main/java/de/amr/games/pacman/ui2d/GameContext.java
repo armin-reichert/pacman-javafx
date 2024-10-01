@@ -87,15 +87,13 @@ public interface GameContext {
 
     //TODO check this
     void selectPage(Page page);
+    void selectStartPage();
+    void selectGamePage();
     EditorPage getOrCreateEditorPage();
 
     // Actions
     void quitMapEditor(TileMapEditor editor);
     void restartIntro();
-    void selectGamePage();
-    void selectNext3DPerspective();
-    void selectPrev3DPerspective();
-    void selectStartPage();
     void showFlashMessage(String message, Object... args);
     void showFlashMessageSeconds(double seconds, String message, Object... args);
     void startCutscenesTest();

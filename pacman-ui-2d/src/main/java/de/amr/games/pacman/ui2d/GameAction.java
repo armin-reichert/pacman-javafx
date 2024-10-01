@@ -113,7 +113,6 @@ public enum GameAction {
     IMMUNITY            (alt(KeyCode.I)),
     MUTE                (alt(KeyCode.M)),
     NEXT_FLYER_PAGE     (key(KeyCode.DOWN)),
-    NEXT_PERSPECTIVE    (alt(KeyCode.RIGHT)),
 
     NEXT_VARIANT(key(KeyCode.V), key(KeyCode.RIGHT)) {
         @Override
@@ -145,7 +144,6 @@ public enum GameAction {
     },
 
     PREV_FLYER_PAGE     (key(KeyCode.UP)),
-    PREV_PERSPECTIVE    (alt(KeyCode.LEFT)),
 
     PREV_VARIANT(key(KeyCode.LEFT)) {
         @Override

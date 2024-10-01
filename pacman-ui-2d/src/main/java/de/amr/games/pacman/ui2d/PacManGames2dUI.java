@@ -668,16 +668,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void selectNext3DPerspective() {
-        // not supported in 2D UI
-    }
-
-    @Override
-    public void selectPrev3DPerspective() {
-        // not supported in 2D UI
-    }
-
-    @Override
     public void toggleAutopilot() {
         toggle(PY_AUTOPILOT);
         boolean auto = PY_AUTOPILOT.get();
