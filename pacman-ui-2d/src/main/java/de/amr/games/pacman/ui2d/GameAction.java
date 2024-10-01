@@ -210,7 +210,20 @@ public enum GameAction {
         }
     },
 
-    START_GAME          (key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1), key(KeyCode.ENTER), key(KeyCode.SPACE)),
+    START_GAME(key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1), key(KeyCode.ENTER), key(KeyCode.SPACE)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            if (context.game().hasCredit()) {
+                context.sounds().stopVoice();
+                if (context.gameState() == GameState.INTRO || context.gameState() == GameState.CREDIT) {
+                    context.gameController().changeState(GameState.READY);
+                } else {
+                    Logger.error("Cannot start game play in game state {}", context.gameState());
+                }
+            }
+        }
+    },
 
     TEST_CUT_SCENES(alt(KeyCode.C)) {
         @Override

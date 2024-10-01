@@ -40,7 +40,7 @@ public class CreditScene extends GameScene2D {
         if (GameAction.ADD_CREDIT.called()) {
             GameAction.ADD_CREDIT.execute(context);
         } else if (GameAction.START_GAME.called()) {
-            context.startGame();
+            GameAction.START_GAME.execute(context);
         }
     }
 

@@ -590,18 +590,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void startGame() {
-        if (game().hasCredit()) {
-            SOUNDS.stopVoice();
-            if (gameState() == GameState.INTRO || gameState() == GameState.CREDIT) {
-                gameController().changeState(GameState.READY);
-            } else {
-                Logger.error("Cannot start game play in game state {}", gameState());
-            }
-        }
-    }
-
-    @Override
     public void quitMapEditor(TileMapEditor editor) {
         editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> stage.titleProperty().bind(stageTitleBinding()));
         editor.stop();
