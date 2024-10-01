@@ -17,6 +17,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
+import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
@@ -226,16 +227,8 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        if (GameAction2D.ADD_CREDIT.called()) {
-            if (sceneController.state() == SceneState.STARTING) {
-                triggerBlueMazeBug();
-            }
-            GameAction2D.ADD_CREDIT.execute(context);
-        } else if (GameAction2D.START_GAME.called()) {
-            GameAction2D.START_GAME.execute(context);
-        } else if (GameAction2D.TEST_CUT_SCENES.called()) {
-            GameAction2D.TEST_CUT_SCENES.execute(context);
-        }
+        GameAction.executeCalledAction(context, GameAction.NO_ACTION,
+            GameAction2D.ADD_CREDIT, GameAction2D.START_GAME, GameAction2D.TEST_CUT_SCENES);
     }
 
     @Override
