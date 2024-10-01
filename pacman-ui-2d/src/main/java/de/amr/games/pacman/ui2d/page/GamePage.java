@@ -107,7 +107,7 @@ public class GamePage extends StackPane implements Page {
     public void onPageSelected() {
         adaptCanvasSizeToCurrentWorld();
         //TODO check if this is always what is wanted
-        context.reboot();
+        GameAction.BOOT.execute(context);
         context.updateCustomMaps();
         SOUNDS.playVoice("voice.explain", 0);
     }
@@ -120,7 +120,7 @@ public class GamePage extends StackPane implements Page {
     @Override
     public void handleInput() {
         if      (GameAction.AUTOPILOT.called())           { context.toggleAutopilot(); }
-        else if (GameAction.BOOT.called())                { context.reboot(); }
+        else if (GameAction.BOOT.called())                { GameAction.BOOT.execute(context); }
         else if (GameAction.DEBUG_INFO.called())          { Ufx.toggle(PY_DEBUG_INFO); }
         else if (GameAction.IMMUNITY.called())            { context.toggleImmunity(); }
         else if (GameAction.HELP.called())                { showHelp(); }

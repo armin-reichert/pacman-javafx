@@ -87,7 +87,6 @@ public interface GameContext {
     void doSimulationSteps(int numSteps);
     void openMapEditor();
     void quitMapEditor(TileMapEditor editor);
-    void reboot();
     void resetSimulationSpeed();
     void restartIntro();
     void selectGamePage();

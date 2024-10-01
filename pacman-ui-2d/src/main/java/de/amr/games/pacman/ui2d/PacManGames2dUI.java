@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.maps.editor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -602,7 +601,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> stage.titleProperty().bind(stageTitleBinding()));
         editor.stop();
         updateCustomMaps();
-        reboot();
+        GameAction.BOOT.execute(this);
         selectStartPage();
     }
 
@@ -638,15 +637,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         }
         clock.setTargetFrameRate(GameModel.FPS);
         gameController().restart(INTRO);
-    }
-
-    @Override
-    public void reboot() {
-        SOUNDS.stopAll();
-        currentGameScene().ifPresent(GameScene::end);
-        game().removeWorld();
-        clock.setTargetFrameRate(GameModel.FPS);
-        gameController().restart(GameState.BOOT);
     }
 
     @Override

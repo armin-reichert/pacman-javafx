@@ -6,7 +6,9 @@ package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.scene.input.KeyCode;
@@ -45,7 +47,17 @@ public enum GameAction {
 
     AUTOPILOT           (alt(KeyCode.A)),
 
-    BOOT                (key(KeyCode.F3)),
+    BOOT(key(KeyCode.F3)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            context.sounds().stopAll();
+            context.currentGameScene().ifPresent(GameScene::end);
+            context.game().removeWorld();
+            context.gameClock().setTargetFrameRate(GameModel.FPS);
+            context.gameController().restart(GameState.BOOT);
+        }
+    },
 
     CHEAT_ADD_LIVES(alt(KeyCode.L)) {
         @Override
@@ -132,7 +144,7 @@ public enum GameAction {
     }
 
     public void execute(GameContext context) {
-        Logger.info("Action {} executed", name());
+        Logger.info("Execute game action {}", name());
     }
 
     private final KeyInput trigger;
