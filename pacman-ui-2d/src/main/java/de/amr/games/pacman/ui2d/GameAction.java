@@ -13,6 +13,8 @@ import java.util.stream.Stream;
  */
 public interface GameAction {
 
+    static final Runnable NO_ACTION = () -> {};
+
     static void executeCalledAction(GameContext context, Runnable defaultAction, GameAction... actions) {
         Stream.of(actions).filter(GameAction::called).findFirst().ifPresentOrElse(action -> action.execute(context), defaultAction);
     }
