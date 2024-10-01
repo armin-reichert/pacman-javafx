@@ -100,9 +100,4 @@ public class PacManGames3dUI extends PacManGames2dUI {
             }
         });
     }
-
-    @Override
-    public void toggleDrawMode() {
-        PY_3D_DRAW_MODE.set(PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
-    }
 }

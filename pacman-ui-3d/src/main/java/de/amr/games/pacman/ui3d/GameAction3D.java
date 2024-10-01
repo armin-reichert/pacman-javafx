@@ -5,9 +5,11 @@ import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.ui2d.util.KeyInput.alt;
+import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_PERSPECTIVE;
 
 public enum GameAction3D {
@@ -29,6 +31,14 @@ public enum GameAction3D {
             var prev = Perspective.previous(PY_3D_PERSPECTIVE.get());
             PY_3D_PERSPECTIVE.set(prev);
             context.showFlashMessage(context.locText("camera_perspective", context.locText(prev.name())));
+        }
+    },
+
+    TOGGLE_DRAW_MODE(alt(KeyCode.W)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            PY_3D_DRAW_MODE.set(PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
         }
     };
 

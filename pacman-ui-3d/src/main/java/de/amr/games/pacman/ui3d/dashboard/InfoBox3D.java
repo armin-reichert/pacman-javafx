@@ -8,6 +8,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.InfoBox;
 import de.amr.games.pacman.ui2d.dashboard.InfoText;
+import de.amr.games.pacman.ui3d.GameAction3D;
 import de.amr.games.pacman.ui3d.Perspective;
 import de.amr.games.pacman.ui3d.PlayScene3D;
 import javafx.scene.control.CheckBox;
@@ -88,7 +89,7 @@ public class InfoBox3D extends InfoBox {
         assignEditor(cbAxesVisible, PY_3D_AXES_VISIBLE);
 
         cbUsePlayScene3D.setOnAction(e -> context.toggle2D3D()); // TODO
-        cbWireframeMode.setOnAction(e -> context.toggleDrawMode()); //TODO
+        cbWireframeMode.setOnAction(e -> GameAction3D.TOGGLE_DRAW_MODE.execute(context)); //TODO
     }
 
     private void updateControlsFromProperties() {
