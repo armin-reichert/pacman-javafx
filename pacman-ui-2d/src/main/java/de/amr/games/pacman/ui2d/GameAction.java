@@ -236,8 +236,16 @@ public enum GameAction {
         }
     },
 
-    TOGGLE_DASHBOARD    (key(KeyCode.F1), alt(KeyCode.B)),
+    TOGGLE_DASHBOARD(key(KeyCode.F1), alt(KeyCode.B)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            context.gamePage().toggleDashboard();
+        }
+    },
+
     TOGGLE_PIP_VIEW     (key(KeyCode.F2)),
+
     TWO_D_THREE_D       (alt(KeyCode.DIGIT3));
 
     GameAction(KeyCodeCombination... combinations) {

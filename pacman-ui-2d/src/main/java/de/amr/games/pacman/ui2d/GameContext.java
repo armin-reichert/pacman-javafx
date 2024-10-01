@@ -11,6 +11,7 @@ import de.amr.games.pacman.maps.editor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.page.EditorPage;
+import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
@@ -42,6 +43,15 @@ public interface GameContext {
     void setScoreVisible(boolean visible);
     boolean isScoreVisible();
 
+    // UI
+    void selectPage(Page page);
+    void selectStartPage();
+    void selectGamePage();
+    EditorPage getOrCreateEditorPage();
+    GamePage gamePage();
+    void showFlashMessage(String message, Object... args);
+    void showFlashMessageSeconds(double seconds, String message, Object... args);
+
     /**
      * @return size (in tiles) of current world or size of Arcade world if no world currently exists
      */
@@ -60,6 +70,7 @@ public interface GameContext {
 
     // Resources
     AssetStorage assets();
+
     /**
      * Returns a translated text (for the current locale).
      * <p></p>
@@ -85,13 +96,6 @@ public interface GameContext {
 
     GameSounds sounds();
 
-    void selectPage(Page page);
-    void selectStartPage();
-    void selectGamePage();
-    EditorPage getOrCreateEditorPage();
-    void showFlashMessage(String message, Object... args);
-    void showFlashMessageSeconds(double seconds, String message, Object... args);
-
     // Actions
     void quitMapEditor(TileMapEditor editor);
     void restartIntro();
@@ -99,7 +103,6 @@ public interface GameContext {
     void startGame();
     void startLevelTestMode();
     void toggle2D3D();
-    void toggleDashboard();
     void toggleDrawMode();
     void toggleImmunity();
     void togglePipVisible();

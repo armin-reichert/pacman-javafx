@@ -575,6 +575,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
+    public GamePage gamePage() {
+        return gamePage;
+    }
+
+    @Override
     public void showFlashMessage(String message, Object... args) {
         showFlashMessageSeconds(1, message, args);
     }
@@ -637,11 +642,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         }
         clock.setTargetFrameRate(GameModel.FPS);
         gameController().restart(INTRO);
-    }
-
-    @Override
-    public void toggleDashboard() {
-        gamePage.toggleDashboard();
     }
 
     @Override
