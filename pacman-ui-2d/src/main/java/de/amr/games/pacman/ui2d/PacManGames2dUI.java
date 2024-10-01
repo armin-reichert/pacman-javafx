@@ -610,15 +610,4 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             .findFirst()
             .ifPresent(infoBox -> ((InfoBoxCustomMaps)infoBox).updateTableView());
     }
-
-    @Override
-    public void restartIntro() {
-        SOUNDS.stopAll();
-        currentGameScene().ifPresent(GameScene::end);
-        if (gameState() == LEVEL_TEST) {
-            gameState().onExit(game()); //TODO exit other states too?
-        }
-        clock.setTargetFrameRate(GameModel.FPS);
-        gameController().restart(INTRO);
-    }
 }

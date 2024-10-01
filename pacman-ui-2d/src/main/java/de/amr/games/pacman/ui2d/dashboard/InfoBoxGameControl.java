@@ -61,9 +61,9 @@ public class InfoBoxGameControl extends InfoBox {
         });
 
         setAction(bgCutScenesTest[CUT_SCENES_TEST_START], () -> GameAction.TEST_CUT_SCENES.execute(context));
-        setAction(bgCutScenesTest[CUT_SCENES_TEST_QUIT],  context::restartIntro);
+        setAction(bgCutScenesTest[CUT_SCENES_TEST_QUIT],  () -> GameAction.RESTART_INTRO.execute(context));
         setAction(bgLevelActions[GAME_LEVEL_START],       () -> GameAction.START_GAME.execute(context));
-        setAction(bgLevelActions[GAME_LEVEL_QUIT],        context::restartIntro);
+        setAction(bgLevelActions[GAME_LEVEL_QUIT],        () -> GameAction.RESTART_INTRO.execute(context));
         setAction(bgLevelActions[GAME_LEVEL_NEXT],        () -> GameAction.CHEAT_NEXT_LEVEL.execute(context));
         setAction(comboInitialLives,                      () -> context.game().setInitialLives(comboInitialLives.getValue()));
 

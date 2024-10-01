@@ -19,6 +19,8 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
+import static de.amr.games.pacman.controller.GameState.INTRO;
+import static de.amr.games.pacman.controller.GameState.LEVEL_TEST;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
@@ -154,7 +156,19 @@ public enum GameAction {
         }
     },
 
-    QUIT                (key(KeyCode.Q)),
+    RESTART_INTRO(key(KeyCode.Q)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            context.sounds().stopAll();
+            context.currentGameScene().ifPresent(GameScene::end);
+            if (context.gameState() == LEVEL_TEST) {
+                context.gameState().onExit(context.game()); //TODO exit other states too?
+            }
+            context.gameClock().setTargetFrameRate(GameModel.FPS);
+            context.gameController().restart(INTRO);
+        }
+    },
 
     SIMULATION_FASTER (alt(KeyCode.PLUS)) {
         @Override

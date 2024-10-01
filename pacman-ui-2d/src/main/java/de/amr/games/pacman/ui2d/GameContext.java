@@ -99,7 +99,6 @@ public interface GameContext {
 
     // Actions
     void quitMapEditor(TileMapEditor editor);
-    void restartIntro();
     void updateCustomMaps();
 
     // Others
