@@ -147,44 +147,47 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
      * Called from application start method (on JavaFX application thread).
 
      * @param stage primary stage (window)
+     * @param initialSize initial UI size
      */
     public void createAndStart(Stage stage, Dimension2D initialSize) {
         this.stage = checkNotNull(stage);
         checkNotNull(initialSize);
 
         sceneRoot.getChildren().addAll(new Pane(), flashMessageLayer, createMutedIcon());
-        stage.setScene(createMainScene(initialSize));
+        Scene mainScene = createMainScene(initialSize);
+        stage.setScene(mainScene);
 
         startPage = new StartPage(this);
         startPage.gameVariantPy.bind(gameVariantPy);
 
-        gamePage = createGamePage(stage.getScene());
+        gamePage = createGamePage(mainScene);
 
-        clock.setPauseableCallback(this::onNonPausedClockTick);
-        clock.setPermanentCallback(this::onEveryClockTick);
+        clock.setPauseableCallback(this::onNonPausedTick);
+        clock.setPermanentCallback(this::onEveryTick);
 
-        // start the whole machinery
+        // attach game event listeners to game model
         for (var variant : GameVariant.values()) {
-            GameController.it().gameModel(variant).addGameEventListener(this);
-            // TODO: find better way
-            GameController.it().gameModel(variant).addGameEventListener(gamePage.dashboardLayer().getPip());
+            GameModel game = GameController.it().gameModel(variant);
+            game.addGameEventListener(this);
+            // TODO: find better way for this:
+            game.addGameEventListener(gamePage.dashboardLayer().getPip());
         }
 
-        // Touch all game actions such that they get bound to keyboard
+        // init game variant property
+        gameVariantPy.set(game().variant());
+
+        // Not sure if this belongs here:
+        PacManXXLGame xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
+        xxlGame.setMapSelectionMode(PY_MAP_SELECTION_MODE.get());
+        PY_MAP_SELECTION_MODE.addListener((py,ov,selectionMode) -> {
+            xxlGame.loadCustomMaps();
+            xxlGame.setMapSelectionMode(selectionMode);
+        });
+
+        // Touch all game actions such that they get bound to keys
         for (var gameAction : GameAction.values()) {
             Logger.info("Game Action: {} => {}", gameAction, gameAction.trigger());
         }
-
-        // select game variant of current game model
-        gameVariantPy.set(game().variant());
-
-        // Not sure where this belongs
-        PacManXXLGame xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
-        PY_MAP_SELECTION_MODE.addListener((py,ov,nv) -> {
-            xxlGame.loadCustomMaps();
-            xxlGame.setMapSelectionMode(nv);
-        });
-        xxlGame.setMapSelectionMode(PY_MAP_SELECTION_MODE.get());
 
         stage.setMinWidth(GameModel.ARCADE_MAP_SIZE_X * 1.25);
         stage.setMinHeight(GameModel.ARCADE_MAP_SIZE_Y * 1.25);
@@ -195,9 +198,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     /**
-     * Executed on every clock tick if game is not paused.
+     * Executed on clock tick if game is not paused.
      */
-    protected void onNonPausedClockTick() {
+    protected void onNonPausedTick() {
         try {
             gameController().update();
             currentGameScene().ifPresent(GameScene::update);
@@ -210,9 +213,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     /**
-     * Executed on every clock tick even if game is paused.
+     * Executed on clock tick even if game is paused.
      */
-    protected void onEveryClockTick() {
+    protected void onEveryTick() {
         try {
             if (currentPage == gamePage) {
                 currentGameScene()
@@ -220,6 +223,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                     .ifPresent(scene2D -> scene2D.draw(worldRenderer));
                 gamePage.updateDashboard();
                 flashMessageLayer.update();
+            } else {
+                Logger.warn("Should not happen: handle tick when not on game page");
             }
         } catch (Exception x) {
             clock.stop();
@@ -554,7 +559,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public void openMapEditor() {
         if (game().variant() != GameVariant.PACMAN_XXL) {
-            showFlashMessageSeconds(3, "Map editor is not available in this game variant");
+            showFlashMessageSeconds(3, "Map editor is not available in this game variant"); //TODO localize
             return;
         }
         currentGameScene().ifPresent(GameScene::end);
@@ -586,7 +591,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             if (gameState() == GameState.INTRO || gameState() == GameState.CREDIT) {
                 gameController().changeState(GameState.READY);
             } else {
-                Logger.error("Cannot start playing when in game state {}", gameState());
+                Logger.error("Cannot start game play in game state {}", gameState());
             }
         }
     }
@@ -620,7 +625,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         } else {
             Logger.error("Intermission test can only be started from intro screen");
         }
-        showFlashMessage("Cut scenes");
+        showFlashMessage("Cut scenes test"); //TODO localize
     }
 
     @Override
