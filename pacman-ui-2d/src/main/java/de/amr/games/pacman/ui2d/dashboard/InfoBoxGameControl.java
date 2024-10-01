@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui2d.dashboard;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -63,7 +64,7 @@ public class InfoBoxGameControl extends InfoBox {
         setAction(bgCutScenesTest[CUT_SCENES_TEST_QUIT],  context::restartIntro);
         setAction(bgLevelActions[GAME_LEVEL_START],       context::startGame);
         setAction(bgLevelActions[GAME_LEVEL_QUIT],        context::restartIntro);
-        setAction(bgLevelActions[GAME_LEVEL_NEXT],        context::cheatEnterNextLevel);
+        setAction(bgLevelActions[GAME_LEVEL_NEXT],        () -> GameAction.CHEAT_NEXT_LEVEL.execute(context));
         setAction(comboInitialLives,                      () -> context.game().setInitialLives(comboInitialLives.getValue()));
 
         assignEditor(cbAutopilot, PY_AUTOPILOT);

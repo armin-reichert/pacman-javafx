@@ -180,20 +180,20 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void handleInput() {
-        if (GameAction.ADD_CREDIT.triggered() && this.context.game().isDemoLevel()) {
+        if (GameAction.ADD_CREDIT.called() && this.context.game().isDemoLevel()) {
             context.addCredit();
-        } else if (GameAction.PREV_PERSPECTIVE.triggered()) {
+        } else if (GameAction.PREV_PERSPECTIVE.called()) {
             context.selectPrev3DPerspective();
-        } else if (GameAction.NEXT_PERSPECTIVE.triggered()) {
+        } else if (GameAction.NEXT_PERSPECTIVE.called()) {
             context.selectNext3DPerspective();
-        } else if (GameAction.CHEAT_EAT_ALL.triggered()) {
-            context.cheatEatAllPellets();
-        } else if (GameAction.CHEAT_ADD_LIVES.triggered()) {
-            context.cheatAddLives();
-        } else if (GameAction.CHEAT_NEXT_LEVEL.triggered()) {
-            context.cheatEnterNextLevel();
-        } else if (GameAction.CHEAT_KILL_GHOSTS.triggered()) {
-            context.cheatKillAllEatableGhosts();
+        } else if (GameAction.CHEAT_EAT_ALL.called()) {
+            GameAction.CHEAT_EAT_ALL.execute(context);
+        } else if (GameAction.CHEAT_ADD_LIVES.called()) {
+            GameAction.CHEAT_ADD_LIVES.execute(context);
+        } else if (GameAction.CHEAT_NEXT_LEVEL.called()) {
+            GameAction.CHEAT_NEXT_LEVEL.execute(context);
+        } else if (GameAction.CHEAT_KILL_GHOSTS.called()) {
+            GameAction.CHEAT_KILL_GHOSTS.execute(context);
         }
     }
 

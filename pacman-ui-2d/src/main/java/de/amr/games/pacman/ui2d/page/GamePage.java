@@ -119,23 +119,23 @@ public class GamePage extends StackPane implements Page {
 
     @Override
     public void handleInput() {
-        if      (GameAction.AUTOPILOT.triggered())           { context.toggleAutopilot(); }
-        else if (GameAction.BOOT.triggered())                { context.reboot(); }
-        else if (GameAction.DEBUG_INFO.triggered())          { Ufx.toggle(PY_DEBUG_INFO); }
-        else if (GameAction.IMMUNITY.triggered())            { context.toggleImmunity(); }
-        else if (GameAction.HELP.triggered())                { showHelp(); }
-        else if (GameAction.PAUSE.triggered())               { context.togglePaused(); }
-        else if (GameAction.SIMULATION_1_STEP.triggered())   { context.doSimulationSteps(1); }
-        else if (GameAction.SIMULATION_10_STEPS.triggered()) { context.doSimulationSteps(10); }
-        else if (GameAction.SIMULATION_FASTER.triggered())   { context.changeSimulationSpeed(5); }
-        else if (GameAction.SIMULATION_SLOWER.triggered())   { context.changeSimulationSpeed(-5); }
-        else if (GameAction.SIMULATION_NORMAL.triggered())   { context.resetSimulationSpeed(); }
-        else if (GameAction.QUIT.triggered())                { quit(); }
-        else if (GameAction.START_TEST_MODE.triggered())     { context.startLevelTestMode(); }
-        else if (GameAction.TWO_D_THREE_D.triggered())       { context.toggle2D3D(); }
-        else if (GameAction.TOGGLE_DASHBOARD.triggered())    { context.toggleDashboard(); }
-        else if (GameAction.TOGGLE_PIP_VIEW.triggered())     { context.togglePipVisible(); }
-        else if (GameAction.OPEN_EDITOR.triggered())         { context.openMapEditor(); }
+        if      (GameAction.AUTOPILOT.called())           { context.toggleAutopilot(); }
+        else if (GameAction.BOOT.called())                { context.reboot(); }
+        else if (GameAction.DEBUG_INFO.called())          { Ufx.toggle(PY_DEBUG_INFO); }
+        else if (GameAction.IMMUNITY.called())            { context.toggleImmunity(); }
+        else if (GameAction.HELP.called())                { showHelp(); }
+        else if (GameAction.PAUSE.called())               { context.togglePaused(); }
+        else if (GameAction.SIMULATION_1_STEP.called())   { context.doSimulationSteps(1); }
+        else if (GameAction.SIMULATION_10_STEPS.called()) { context.doSimulationSteps(10); }
+        else if (GameAction.SIMULATION_FASTER.called())   { context.changeSimulationSpeed(5); }
+        else if (GameAction.SIMULATION_SLOWER.called())   { context.changeSimulationSpeed(-5); }
+        else if (GameAction.SIMULATION_NORMAL.called())   { context.resetSimulationSpeed(); }
+        else if (GameAction.QUIT.called())                { quit(); }
+        else if (GameAction.START_TEST_MODE.called())     { context.startLevelTestMode(); }
+        else if (GameAction.TWO_D_THREE_D.called())       { context.toggle2D3D(); }
+        else if (GameAction.TOGGLE_DASHBOARD.called())    { context.toggleDashboard(); }
+        else if (GameAction.TOGGLE_PIP_VIEW.called())     { context.togglePipVisible(); }
+        else if (GameAction.OPEN_EDITOR.called())         { context.openMapEditor(); }
         else {
             context.currentGameScene().ifPresent(GameScene::handleInput);
         }

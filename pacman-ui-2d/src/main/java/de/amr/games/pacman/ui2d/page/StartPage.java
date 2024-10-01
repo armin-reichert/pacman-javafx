@@ -185,11 +185,11 @@ public class StartPage extends StackPane implements Page {
 
     @Override
     public void handleInput() {
-        if      (GameAction.ENTER_GAME_PAGE.triggered()) { context.selectGamePage(); }
-        else if (GameAction.NEXT_VARIANT.triggered())    { context.selectNextGameVariant(); }
-        else if (GameAction.PREV_VARIANT.triggered())    { context.selectPrevGameVariant(); }
-        else if (GameAction.NEXT_FLYER_PAGE.triggered()) { flyer(context.game().variant()).ifPresent(Flyer::nextPage); }
-        else if (GameAction.PREV_FLYER_PAGE.triggered()) { flyer(context.game().variant()).ifPresent(Flyer::prevPage); }
+        if      (GameAction.ENTER_GAME_PAGE.called()) { context.selectGamePage(); }
+        else if (GameAction.NEXT_VARIANT.called())    { context.selectNextGameVariant(); }
+        else if (GameAction.PREV_VARIANT.called())    { context.selectPrevGameVariant(); }
+        else if (GameAction.NEXT_FLYER_PAGE.called()) { flyer(context.game().variant()).ifPresent(Flyer::nextPage); }
+        else if (GameAction.PREV_FLYER_PAGE.called()) { flyer(context.game().variant()).ifPresent(Flyer::prevPage); }
     }
 
     @Override

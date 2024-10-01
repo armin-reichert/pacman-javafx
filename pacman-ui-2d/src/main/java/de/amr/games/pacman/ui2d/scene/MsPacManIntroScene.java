@@ -226,14 +226,14 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        if (GameAction.ADD_CREDIT.triggered()) {
+        if (GameAction.ADD_CREDIT.called()) {
             if (sceneController.state() == SceneState.STARTING) {
                 triggerBlueMazeBug();
             }
             context.addCredit();
-        } else if (GameAction.START_GAME.triggered()) {
+        } else if (GameAction.START_GAME.called()) {
             context.startGame();
-        } else if (GameAction.CUTSCENES.triggered()) {
+        } else if (GameAction.CUTSCENES.called()) {
             context.startCutscenesTest();
         }
     }

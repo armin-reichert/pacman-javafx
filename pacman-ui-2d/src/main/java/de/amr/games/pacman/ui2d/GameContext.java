@@ -83,10 +83,6 @@ public interface GameContext {
     // Actions
     void addCredit();
     void changeSimulationSpeed(int delta);
-    void cheatAddLives();
-    void cheatEatAllPellets();
-    void cheatEnterNextLevel();
-    void cheatKillAllEatableGhosts();
     void doSimulationSteps(int numSteps);
     void openMapEditor();
     void quitMapEditor(TileMapEditor editor);

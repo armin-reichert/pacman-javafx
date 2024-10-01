@@ -81,16 +81,16 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void handleInput() {
-        if (GameAction.ADD_CREDIT.triggered() && context.game().isDemoLevel()) {
+        if (GameAction.ADD_CREDIT.called() && context.game().isDemoLevel()) {
             context.addCredit();
-        } else if (GameAction.CHEAT_EAT_ALL.triggered()) {
-            context.cheatEatAllPellets();
-        } else if (GameAction.CHEAT_ADD_LIVES.triggered()) {
-            context.cheatAddLives();
-        } else if (GameAction.CHEAT_NEXT_LEVEL.triggered()) {
-            context.cheatEnterNextLevel();
-        } else if (GameAction.CHEAT_KILL_GHOSTS.triggered()) {
-            context.cheatKillAllEatableGhosts();
+        } else if (GameAction.CHEAT_EAT_ALL.called()) {
+            GameAction.CHEAT_EAT_ALL.execute(context);
+        } else if (GameAction.CHEAT_ADD_LIVES.called()) {
+            GameAction.CHEAT_ADD_LIVES.execute(context);
+        } else if (GameAction.CHEAT_NEXT_LEVEL.called()) {
+            GameAction.CHEAT_NEXT_LEVEL.execute(context);
+        } else if (GameAction.CHEAT_KILL_GHOSTS.called()) {
+            GameAction.CHEAT_KILL_GHOSTS.execute(context);
         }
     }
 

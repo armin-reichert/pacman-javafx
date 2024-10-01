@@ -12,7 +12,6 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.maps.editor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.pacmanxxl.PacManXXLGame;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import de.amr.games.pacman.ui2d.page.EditorPage;
@@ -65,12 +64,9 @@ import java.util.Optional;
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.controller.GameState.LEVEL_TEST;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
-import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
-import static java.util.function.Predicate.not;
 
 /**
  * 2D user interface for all Pac-Man game variants.
@@ -263,9 +259,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, Keyboard::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, Keyboard::onKeyReleased);
         mainScene.setOnKeyPressed(e -> {
-            if (GameAction.FULLSCREEN.triggered()) {
+            if (GameAction.FULLSCREEN.called()) {
                 stage.setFullScreen(true);
-            } else if (GameAction.MUTE.triggered()) {
+            } else if (GameAction.MUTE.called()) {
                 SOUNDS.toggleMuted();
             } else {
                 currentPage.handleInput();
@@ -776,34 +772,4 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         }
     }
 
-    @Override
-    public void cheatAddLives() {
-        game().addLives(3);
-        showFlashMessage(locText("cheat_add_lives", game().lives()));
-    }
-
-    @Override
-    public void cheatEatAllPellets() {
-        if (game().isPlaying() && gameState() == GameState.HUNTING) {
-            GameWorld world = game().world();
-            world.map().food().tiles().filter(not(world::isEnergizerPosition)).forEach(world::eatFoodAt);
-            game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
-        }
-    }
-
-    @Override
-    public void cheatKillAllEatableGhosts() {
-        if (game().isPlaying() && gameState() == GameState.HUNTING) {
-            game().victims().clear();
-            game().ghosts(FRIGHTENED, HUNTING_PAC).forEach(game()::killGhost);
-            gameController().changeState(GameState.GHOST_DYING);
-        }
-    }
-
-    @Override
-    public void cheatEnterNextLevel() {
-        if (game().isPlaying() && gameState() == GameState.HUNTING) {
-            gameController().changeState(GameState.LEVEL_COMPLETE);
-        }
-    }
 }

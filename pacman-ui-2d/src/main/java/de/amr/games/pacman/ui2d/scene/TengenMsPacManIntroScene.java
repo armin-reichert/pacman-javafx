@@ -11,7 +11,6 @@ import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -20,14 +19,12 @@ import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.variant.tengen.TengenMsPacManGameSpriteSheet;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -241,14 +238,14 @@ public class TengenMsPacManIntroScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        if (GameAction.ADD_CREDIT.triggered()) {
+        if (GameAction.ADD_CREDIT.called()) {
             if (sceneController.state() == SceneState.STARTING) {
                 triggerBlueMazeBug();
             }
             context.addCredit();
-        } else if (GameAction.START_GAME.triggered()) {
+        } else if (GameAction.START_GAME.called()) {
             context.startGame();
-        } else if (GameAction.CUTSCENES.triggered()) {
+        } else if (GameAction.CUTSCENES.called()) {
             context.startCutscenesTest();
         }
     }
