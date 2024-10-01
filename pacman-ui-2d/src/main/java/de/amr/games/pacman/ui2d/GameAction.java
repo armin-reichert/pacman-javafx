@@ -9,7 +9,6 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.pacmanxxl.PacManXXLGame;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.util.KeyInput;
@@ -17,6 +16,8 @@ import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import org.tinylog.Logger;
+
+import java.util.List;
 
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
@@ -113,7 +114,17 @@ public enum GameAction {
     MUTE                (alt(KeyCode.M)),
     NEXT_FLYER_PAGE     (key(KeyCode.DOWN)),
     NEXT_PERSPECTIVE    (alt(KeyCode.RIGHT)),
-    NEXT_VARIANT        (key(KeyCode.V), key(KeyCode.RIGHT)),
+
+    NEXT_VARIANT(key(KeyCode.V), key(KeyCode.RIGHT)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            List<GameVariant> variantsInOrder = PacManGames2dUI.GAME_VARIANTS_IN_ORDER;
+            int nextIndex = variantsInOrder.indexOf(context.game().variant()) + 1;
+            context.selectGameVariant(variantsInOrder.get(nextIndex == variantsInOrder.size() ? 0 : nextIndex));
+        }
+    },
+
     PAUSE               (key(KeyCode.P)),
 
     OPEN_EDITOR         (shift_alt(KeyCode.E)) {
@@ -135,7 +146,17 @@ public enum GameAction {
 
     PREV_FLYER_PAGE     (key(KeyCode.UP)),
     PREV_PERSPECTIVE    (alt(KeyCode.LEFT)),
-    PREV_VARIANT        (key(KeyCode.LEFT)),
+
+    PREV_VARIANT(key(KeyCode.LEFT)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            List<GameVariant> variantsInOrder = PacManGames2dUI.GAME_VARIANTS_IN_ORDER;
+            int prevIndex = variantsInOrder.indexOf(context.game().variant()) - 1;
+            context.selectGameVariant(variantsInOrder.get(prevIndex < 0 ? variantsInOrder.size() - 1 : prevIndex));
+        }
+    },
+
     QUIT                (key(KeyCode.Q)),
 
     SIMULATION_FASTER (alt(KeyCode.PLUS)) {

@@ -29,6 +29,7 @@ public interface GameContext {
 
     // Game model and controller
     ObjectProperty<GameVariant> gameVariantProperty();
+    void selectGameVariant(GameVariant variant);
     default GameController gameController() {
         return GameController.it();
     }
@@ -92,9 +93,7 @@ public interface GameContext {
     void quitMapEditor(TileMapEditor editor);
     void restartIntro();
     void selectGamePage();
-    void selectNextGameVariant();
     void selectNext3DPerspective();
-    void selectPrevGameVariant();
     void selectPrev3DPerspective();
     void selectStartPage();
     void showFlashMessage(String message, Object... args);

@@ -467,6 +467,13 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
+    public void selectGameVariant(GameVariant variant) {
+        gameController().selectGame(variant);
+        gameController().restart(GameState.BOOT);
+        Logger.info("Selected game variant: {}", variant);
+    }
+
+    @Override
     public void selectPage(Page page) {
         if (page != currentPage) {
             currentPage = page;
@@ -658,24 +665,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         if (!currentGameSceneIs(GameSceneID.PLAY_SCENE_3D)) {
             showFlashMessage(locText(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
         }
-    }
-
-    @Override
-    public void selectNextGameVariant() {
-        int nextIndex = GAME_VARIANTS_IN_ORDER.indexOf(game().variant()) + 1;
-        selectGameVariant(GAME_VARIANTS_IN_ORDER.get(nextIndex == GAME_VARIANTS_IN_ORDER.size() ? 0 : nextIndex));
-    }
-
-    @Override
-    public void selectPrevGameVariant() {
-        int prevIndex = GAME_VARIANTS_IN_ORDER.indexOf(game().variant()) - 1;
-        selectGameVariant(GAME_VARIANTS_IN_ORDER.get(prevIndex < 0 ? GAME_VARIANTS_IN_ORDER.size() - 1 : prevIndex));
-    }
-
-    private void selectGameVariant(GameVariant variant) {
-        gameController().selectGame(variant);
-        gameController().restart(GameState.BOOT);
-        Logger.info("Selected game variant: {}", variant);
     }
 
     @Override
