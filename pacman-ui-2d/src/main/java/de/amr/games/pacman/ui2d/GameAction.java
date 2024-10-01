@@ -106,7 +106,7 @@ public enum GameAction {
             }
         }
     },
-    CUTSCENES           (alt(KeyCode.C)),
+
     DEBUG_INFO          (alt(KeyCode.D)),
     ENTER_GAME_PAGE     (key(KeyCode.SPACE), key(KeyCode.ENTER)),
     FULLSCREEN          (key(KeyCode.F11)),
@@ -122,18 +122,6 @@ public enum GameAction {
             List<GameVariant> variantsInOrder = PacManGames2dUI.GAME_VARIANTS_IN_ORDER;
             int nextIndex = variantsInOrder.indexOf(context.game().variant()) + 1;
             context.selectGameVariant(variantsInOrder.get(nextIndex == variantsInOrder.size() ? 0 : nextIndex));
-        }
-    },
-
-    TOGGLE_PAUSED(key(KeyCode.P)) {
-        @Override
-        public void execute(GameContext context) {
-            super.execute(context);
-            toggle(context.gameClock().pausedPy);
-            if (context.gameClock().isPaused()) {
-                context.sounds().stopAll();
-            }
-            Logger.info("Game variant ({}) {}", context.game(), context.gameClock().isPaused() ? "paused" : "resumed");
         }
     },
 
@@ -224,7 +212,29 @@ public enum GameAction {
 
     START_GAME          (key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1), key(KeyCode.ENTER), key(KeyCode.SPACE)),
 
-    START_TEST_MODE     (alt(KeyCode.T)),
+    TEST_CUT_SCENES(alt(KeyCode.C)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            if (context.gameState() == GameState.INTRO) {
+                context.gameController().changeState(GameState.INTERMISSION_TEST);
+            } else {
+                Logger.error("Intermission test can only be started from intro screen");
+            }
+            context.showFlashMessage("Cut scenes test"); //TODO localize
+        }
+    },
+
+    TEST_LEVELS(alt(KeyCode.T)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            if (context.gameState() == GameState.INTRO) {
+                context.gameController().restart(GameState.LEVEL_TEST);
+                context.showFlashMessageSeconds(3, "Level TEST MODE");
+            }
+        }
+    },
 
     TOGGLE_AUTOPILOT(alt(KeyCode.A)) {
         @Override
@@ -252,6 +262,18 @@ public enum GameAction {
             toggle(PY_IMMUNITY);
             context.showFlashMessage(context.locText(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
             context.sounds().playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
+        }
+    },
+
+    TOGGLE_PAUSED(key(KeyCode.P)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            toggle(context.gameClock().pausedPy);
+            if (context.gameClock().isPaused()) {
+                context.sounds().stopAll();
+            }
+            Logger.info("Game variant ({}) {}", context.game(), context.gameClock().isPaused() ? "paused" : "resumed");
         }
     };
 

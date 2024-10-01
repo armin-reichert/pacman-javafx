@@ -100,9 +100,7 @@ public interface GameContext {
     // Actions
     void quitMapEditor(TileMapEditor editor);
     void restartIntro();
-    void startCutscenesTest();
     void startGame();
-    void startLevelTestMode();
     void updateCustomMaps();
 
     // Others

@@ -624,16 +624,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void startCutscenesTest() {
-        if (gameState() == GameState.INTRO) {
-            gameController().changeState(GameState.INTERMISSION_TEST);
-        } else {
-            Logger.error("Intermission test can only be started from intro screen");
-        }
-        showFlashMessage("Cut scenes test"); //TODO localize
-    }
-
-    @Override
     public void restartIntro() {
         SOUNDS.stopAll();
         currentGameScene().ifPresent(GameScene::end);
@@ -642,13 +632,5 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         }
         clock.setTargetFrameRate(GameModel.FPS);
         gameController().restart(INTRO);
-    }
-
-    @Override
-    public void startLevelTestMode() {
-        if (gameState() == GameState.INTRO) {
-            gameController().restart(GameState.LEVEL_TEST);
-            showFlashMessageSeconds(3, "Level TEST MODE");
-        }
     }
 }

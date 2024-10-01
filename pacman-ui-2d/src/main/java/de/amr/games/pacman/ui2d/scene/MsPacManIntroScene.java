@@ -233,8 +233,8 @@ public class MsPacManIntroScene extends GameScene2D {
             GameAction.ADD_CREDIT.execute(context);
         } else if (GameAction.START_GAME.called()) {
             context.startGame();
-        } else if (GameAction.CUTSCENES.called()) {
-            context.startCutscenesTest();
+        } else if (GameAction.TEST_CUT_SCENES.called()) {
+            GameAction.TEST_CUT_SCENES.execute(context);
         }
     }
 
