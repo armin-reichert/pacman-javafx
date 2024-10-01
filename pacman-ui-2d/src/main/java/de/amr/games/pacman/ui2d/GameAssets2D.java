@@ -136,6 +136,19 @@ public class GameAssets2D extends AssetStorage {
         assets.store("tengen.color.game_over_message",  Color.web("#b5217b"));
         assets.store("tengen.color.ready_message",      Color.YELLOW);
 
+        assets.store("tengen.ghost.0.color.normal.dress",     Color.rgb(176, 15, 48));
+        assets.store("tengen.ghost.0.color.normal.eyeballs",  Color.WHITE);
+        assets.store("tengen.ghost.0.color.normal.pupils",    Color.rgb(224, 80, 0));
+        assets.store("tengen.ghost.1.color.normal.dress",     Color.rgb(255, 96, 176));
+        assets.store("tengen.ghost.1.color.normal.eyeballs",  Color.WHITE);
+        assets.store("tengen.ghost.1.color.normal.pupils",    Color.rgb(63, 96, 248));
+        assets.store("tengen.ghost.2.color.normal.dress",     Color.rgb(63, 96, 248));
+        assets.store("tengen.ghost.2.color.normal.eyeballs",  Color.WHITE);
+        assets.store("tengen.ghost.2.color.normal.pupils",    Color.rgb(63, 96, 248));
+        assets.store("tengen.ghost.3.color.normal.dress",     Color.rgb(224, 80, 0));
+        assets.store("tengen.ghost.3.color.normal.eyeballs",  Color.WHITE);
+        assets.store("tengen.ghost.3.color.normal.pupils",    Color.rgb(176, 15, 48));
+
         // Clips
         assets.store("tengen.audio.bonus_eaten",        rm.loadAudioClip("sound/tengen/Fruit.mp3"));
         assets.store("tengen.audio.credit",             rm.loadAudioClip("sound/mspacman/Credit.mp3")); //TODO: sound?

@@ -45,7 +45,7 @@ import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
 public class TengenMsPacManIntroScene extends GameScene2D {
 
     static final Color[] BLUE_SHADES = { Color.DARKBLUE, Color.BLUE, Color.LIGHTBLUE };
-    static final float SPEED = 1.1f;
+    static final float SPEED = 2.5f;
     static final int TOP_Y = TS * 11 + 1;
     static final int STOP_X_GHOST = TS * 6 - 4;
     static final int STOP_X_MS_PAC_MAN = TS * 15 + 2;
@@ -127,8 +127,7 @@ public class TengenMsPacManIntroScene extends GameScene2D {
                     }
                     else if (ghost.posY() <= endPositionY) {
                         ghost.setSpeed(0);
-                        ghost.stopAnimation();
-                        ghost.resetAnimation();
+                        ghost.setMoveAndWishDir(Direction.RIGHT);
                         return true;
                     }
                     else {
@@ -201,22 +200,22 @@ public class TengenMsPacManIntroScene extends GameScene2D {
         context.setScoreVisible(true);
 
         msPacMan = new Pac();
-        ghosts = new Ghost[] { Ghost.red(), Ghost.pink(), Ghost.cyan(), Ghost.orange() };
-        ghosts[RED_GHOST].setName("Blinky");
-        ghosts[PINK_GHOST].setName("Pinky");
-        ghosts[CYAN_GHOST].setName("Inky");
-        ghosts[ORANGE_GHOST].setName("Sue");
+        ghosts = new Ghost[] { Ghost.red(), Ghost.cyan(), Ghost.pink(), Ghost.orange() };
+        ghosts[0].setName("Blinky");
+        ghosts[2].setName("Pinky");
+        ghosts[1].setName("Inky");
+        ghosts[3].setName("Sue");
         marqueeTimer = new TickTimer("marquee-timer");
         ghostIndex = 0;
         waitBeforeRising = 0;
 
         //TODO use Ms. Pac-Man animations also in Tengen for now
-        GameSpriteSheet spriteSheet = context.assets().get("ms_pacman.spritesheet");
-
-        msPacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
+        GameSpriteSheet msPacManGameSpriteSheet = context.assets().get("ms_pacman.spritesheet");
+        msPacMan.setAnimations(new MsPacManGamePacAnimations(msPacManGameSpriteSheet));
         msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
+
         for (Ghost ghost : ghosts) {
-            ghost.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, ghost.id()));
+            ghost.setAnimations(new MsPacManGameGhostAnimations(context.spriteSheet(), ghost.id()));
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
         }
         sceneController.restart(SceneState.WAITING_FOR_START);
@@ -263,13 +262,7 @@ public class TengenMsPacManIntroScene extends GameScene2D {
                     renderer.drawText("WITH", PALETTE_PALE, font, TITLE_POSITION.x(), TOP_Y + t(3));
                 }
                 String ghostName = ghosts[ghostIndex].name().toUpperCase();
-                Color color = switch (ghostIndex) {
-                    case GameModel.RED_GHOST -> PALETTE_RED;
-                    case GameModel.PINK_GHOST -> PALETTE_PINK;
-                    case GameModel.CYAN_GHOST -> PALETTE_CYAN;
-                    case GameModel.ORANGE_GHOST -> PALETTE_ORANGE;
-                    default -> throw new IllegalStateException("Illegal ghost index: " + ghostIndex);
-                };
+                Color color = context.assets().color("tengen.ghost.%d.color.normal.dress".formatted(ghostIndex));
                 double dx = ghostName.length() < 4 ? t(1) : 0;
                 renderer.drawText(ghostName, color, font, TITLE_POSITION.x() + t(3) + dx, TOP_Y + t(6));
                 for (Ghost ghost : ghosts) {
