@@ -117,10 +117,35 @@ public enum GameAction {
     PREV_PERSPECTIVE    (alt(KeyCode.LEFT)),
     PREV_VARIANT        (key(KeyCode.LEFT)),
     QUIT                (key(KeyCode.Q)),
-    SIMULATION_FASTER   (alt(KeyCode.PLUS)),
-    SIMULATION_NORMAL   (alt(KeyCode.DIGIT0)),
-    SIMULATION_SLOWER   (alt(KeyCode.MINUS)),
-    SIMULATION_1_STEP   (key(KeyCode.SPACE), shift(KeyCode.P)),
+
+    SIMULATION_FASTER (alt(KeyCode.PLUS)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+                double newRate = context.gameClock().getTargetFrameRate() + 5;
+                if (newRate > 0) {
+                    context.gameClock().setTargetFrameRate(newRate);
+                    context.showFlashMessageSeconds(0.75, newRate + "Hz");
+                }
+        }
+    },
+
+    SIMULATION_NORMAL(alt(KeyCode.DIGIT0)),
+
+    SIMULATION_SLOWER(alt(KeyCode.MINUS)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            //TODO dry
+            double newRate = context.gameClock().getTargetFrameRate() - 5;
+            if (newRate > 0) {
+                context.gameClock().setTargetFrameRate(newRate);
+                context.showFlashMessageSeconds(0.75, newRate + "Hz");
+            }
+        }
+    },
+
+    SIMULATION_1_STEP(key(KeyCode.SPACE), shift(KeyCode.P)),
     SIMULATION_10_STEPS (shift(KeyCode.SPACE)),
     START_GAME          (key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1), key(KeyCode.ENTER), key(KeyCode.SPACE)),
     START_TEST_MODE     (alt(KeyCode.T)),

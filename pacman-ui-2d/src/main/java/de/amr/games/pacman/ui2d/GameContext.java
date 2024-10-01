@@ -83,7 +83,6 @@ public interface GameContext {
     GameSounds sounds();
 
     // Actions
-    void changeSimulationSpeed(int delta);
     void doSimulationSteps(int numSteps);
     void openMapEditor();
     void quitMapEditor(TileMapEditor editor);
