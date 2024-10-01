@@ -255,8 +255,6 @@ public enum GameAction {
         }
     },
 
-    TOGGLE_PIP_VIEW     (key(KeyCode.F2)),
-
     TWO_D_THREE_D       (alt(KeyCode.DIGIT3));
 
     GameAction(KeyCodeCombination... combinations) {

@@ -644,14 +644,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void togglePipVisible() {
-        toggle(PY_PIP_ON);
-        if (!currentGameSceneIs(GameSceneID.PLAY_SCENE_3D)) {
-            showFlashMessage(locText(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
-        }
-    }
-
-    @Override
     public void toggle2D3D() {
         // not supported in 2D UI
     }

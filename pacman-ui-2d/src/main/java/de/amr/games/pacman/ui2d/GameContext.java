@@ -103,7 +103,6 @@ public interface GameContext {
     void startGame();
     void startLevelTestMode();
     void toggle2D3D();
-    void togglePipVisible();
     void updateCustomMaps();
 
     // Others

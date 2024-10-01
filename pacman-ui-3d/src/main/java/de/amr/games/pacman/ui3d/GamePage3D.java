@@ -48,6 +48,14 @@ public class GamePage3D extends GamePage {
     }
 
     @Override
+    public void handleInput() {
+        if (GameAction3D.TOGGLE_PIP_VISIBILITY.called())  { GameAction3D.TOGGLE_PIP_VISIBILITY.execute(context); }
+        else {
+            super.handleInput();
+        }
+    }
+
+    @Override
     public void handleContextMenuRequest(ContextMenuEvent event) {
         contextMenu.getItems().clear();
         contextMenu.hide();

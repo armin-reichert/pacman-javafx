@@ -1,6 +1,7 @@
 package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.scene.input.KeyCode;
@@ -8,7 +9,10 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_PIP_ON;
 import static de.amr.games.pacman.ui2d.util.KeyInput.alt;
+import static de.amr.games.pacman.ui2d.util.KeyInput.key;
+import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_PERSPECTIVE;
 
@@ -39,6 +43,17 @@ public enum GameAction3D {
         public void execute(GameContext context) {
             super.execute(context);
             PY_3D_DRAW_MODE.set(PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+        }
+    },
+
+    TOGGLE_PIP_VISIBILITY(key(KeyCode.F2)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            toggle(PY_PIP_ON);
+            if (!context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D)) {
+                context.showFlashMessage(context.locText(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
+            }
         }
     };
 
