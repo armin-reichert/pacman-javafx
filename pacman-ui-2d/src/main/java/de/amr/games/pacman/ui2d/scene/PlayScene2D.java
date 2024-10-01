@@ -82,7 +82,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void handleInput() {
         if (GameAction.ADD_CREDIT.called() && context.game().isDemoLevel()) {
-            context.addCredit();
+            GameAction.ADD_CREDIT.execute(context);
         } else if (GameAction.CHEAT_EAT_ALL.called()) {
             GameAction.CHEAT_EAT_ALL.execute(context);
         } else if (GameAction.CHEAT_ADD_LIVES.called()) {

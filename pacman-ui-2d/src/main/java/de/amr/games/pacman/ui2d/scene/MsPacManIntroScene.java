@@ -230,7 +230,7 @@ public class MsPacManIntroScene extends GameScene2D {
             if (sceneController.state() == SceneState.STARTING) {
                 triggerBlueMazeBug();
             }
-            context.addCredit();
+            GameAction.ADD_CREDIT.execute(context);
         } else if (GameAction.START_GAME.called()) {
             context.startGame();
         } else if (GameAction.CUTSCENES.called()) {

@@ -413,6 +413,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
+    public GameSounds sounds() {
+        return SOUNDS;
+    }
+
+    @Override
     public GameClockFX gameClock() {
         return clock;
     }
@@ -642,24 +647,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         game().removeWorld();
         clock.setTargetFrameRate(GameModel.FPS);
         gameController().restart(GameState.BOOT);
-    }
-
-    /**
-     * Adds credit (simulates insertion of a coin) and switches to the credit scene.
-     */
-    @Override
-    public void addCredit() {
-        SOUNDS.enabledProperty().set(true); // in demo mode, sound is disabled
-        SOUNDS.playCreditSound();
-        if (!game().isPlaying()) {
-            boolean coinInserted = game().insertCoin();
-            if (coinInserted) {
-                game().publishGameEvent(GameEventType.CREDIT_ADDED);
-            }
-            if (gameState() != GameState.CREDIT) {
-                gameController().changeState(GameState.CREDIT);
-            }
-        }
     }
 
     @Override

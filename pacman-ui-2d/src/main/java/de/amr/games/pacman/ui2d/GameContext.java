@@ -80,8 +80,9 @@ public interface GameContext {
         }
     }
 
+    GameSounds sounds();
+
     // Actions
-    void addCredit();
     void changeSimulationSpeed(int delta);
     void doSimulationSteps(int numSteps);
     void openMapEditor();

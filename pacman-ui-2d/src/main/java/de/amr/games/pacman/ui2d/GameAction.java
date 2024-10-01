@@ -22,16 +22,42 @@ import static java.util.function.Predicate.not;
  * @author Armin Reichert
  */
 public enum GameAction {
-    ADD_CREDIT          (key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP)),
-    AUTOPILOT           (alt(KeyCode.A)),
-    BOOT                (key(KeyCode.F3)),
-    CHEAT_ADD_LIVES     (alt(KeyCode.L)) {
+    /**
+     * Adds credit (simulates insertion of a coin) and switches to the credit scene.
+     */
+    ADD_CREDIT(key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP)) {
+        @Override
         public void execute(GameContext context) {
+            super.execute(context);
+            context.sounds().enabledProperty().set(true); // in demo mode, sound is disabled
+            context.sounds().playCreditSound();
+            if (!context.game().isPlaying()) {
+                boolean coinInserted = context.game().insertCoin();
+                if (coinInserted) {
+                    context.game().publishGameEvent(GameEventType.CREDIT_ADDED);
+                }
+                if (context.gameState() != GameState.CREDIT) {
+                    context.gameController().changeState(GameState.CREDIT);
+                }
+            }
+        }
+    },
+
+    AUTOPILOT           (alt(KeyCode.A)),
+
+    BOOT                (key(KeyCode.F3)),
+
+    CHEAT_ADD_LIVES(alt(KeyCode.L)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
             context.game().addLives(3);
             context.showFlashMessage(context.locText("cheat_add_lives", context.game().lives()));
         }
     },
-    CHEAT_EAT_ALL       (alt(KeyCode.E)) {
+
+    CHEAT_EAT_ALL(alt(KeyCode.E)) {
+        @Override
         public void execute(GameContext context) {
             super.execute(context);
             if (context.game().isPlaying() && context.gameState() == GameState.HUNTING) {
@@ -41,7 +67,8 @@ public enum GameAction {
             }
         }
     },
-    CHEAT_KILL_GHOSTS   (alt(KeyCode.X)) {
+
+    CHEAT_KILL_GHOSTS(alt(KeyCode.X)) {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
@@ -52,7 +79,8 @@ public enum GameAction {
             }
         }
     },
-    CHEAT_NEXT_LEVEL    (alt(KeyCode.N)) {
+
+    CHEAT_NEXT_LEVEL(alt(KeyCode.N)) {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
