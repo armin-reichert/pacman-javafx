@@ -85,26 +85,23 @@ public interface GameContext {
 
     GameSounds sounds();
 
-    //TODO check this
     void selectPage(Page page);
     void selectStartPage();
     void selectGamePage();
     EditorPage getOrCreateEditorPage();
+    void showFlashMessage(String message, Object... args);
+    void showFlashMessageSeconds(double seconds, String message, Object... args);
 
     // Actions
     void quitMapEditor(TileMapEditor editor);
     void restartIntro();
-    void showFlashMessage(String message, Object... args);
-    void showFlashMessageSeconds(double seconds, String message, Object... args);
     void startCutscenesTest();
     void startGame();
     void startLevelTestMode();
     void toggle2D3D();
-    void toggleAutopilot();
     void toggleDashboard();
     void toggleDrawMode();
     void toggleImmunity();
-    void togglePaused();
     void togglePipVisible();
     void updateCustomMaps();
 

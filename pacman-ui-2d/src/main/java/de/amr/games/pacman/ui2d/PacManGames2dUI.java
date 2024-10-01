@@ -640,16 +640,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void togglePaused() {
-        toggle(clock.pausedPy);
-        if (clock.isPaused()) {
-            assets().audioClips().forEach(AudioClip::stop);
-            SOUNDS.stopSiren();
-        }
-        Logger.info("Game variant ({}) {}", game(), clock.isPaused() ? "paused" : "resumed");
-    }
-
-    @Override
     public void toggleDashboard() {
         gamePage.toggleDashboard();
     }
@@ -665,14 +655,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         if (!currentGameSceneIs(GameSceneID.PLAY_SCENE_3D)) {
             showFlashMessage(locText(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
         }
-    }
-
-    @Override
-    public void toggleAutopilot() {
-        toggle(PY_AUTOPILOT);
-        boolean auto = PY_AUTOPILOT.get();
-        showFlashMessage(locText(auto ? "autopilot_on" : "autopilot_off"));
-        SOUNDS.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
     }
 
     @Override

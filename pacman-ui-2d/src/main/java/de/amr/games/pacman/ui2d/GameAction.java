@@ -21,7 +21,9 @@ import java.util.List;
 
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.util.KeyInput.*;
+import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static java.util.function.Predicate.not;
 
 /**
@@ -48,8 +50,6 @@ public enum GameAction {
             }
         }
     },
-
-    AUTOPILOT           (alt(KeyCode.A)),
 
     BOOT(key(KeyCode.F3)) {
         @Override
@@ -124,7 +124,17 @@ public enum GameAction {
         }
     },
 
-    PAUSE               (key(KeyCode.P)),
+    TOGGLE_PAUSED(key(KeyCode.P)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            toggle(context.gameClock().pausedPy);
+            if (context.gameClock().isPaused()) {
+                context.sounds().stopAll();
+            }
+            Logger.info("Game variant ({}) {}", context.game(), context.gameClock().isPaused() ? "paused" : "resumed");
+        }
+    },
 
     OPEN_EDITOR         (shift_alt(KeyCode.E)) {
         @Override
@@ -212,7 +222,20 @@ public enum GameAction {
     },
 
     START_GAME          (key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1), key(KeyCode.ENTER), key(KeyCode.SPACE)),
+
     START_TEST_MODE     (alt(KeyCode.T)),
+
+    TOGGLE_AUTOPILOT(alt(KeyCode.A)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            toggle(PY_AUTOPILOT);
+            boolean auto = PY_AUTOPILOT.get();
+            context.showFlashMessage(context.locText(auto ? "autopilot_on" : "autopilot_off"));
+            context.sounds().playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
+        }
+    },
+
     TOGGLE_DASHBOARD    (key(KeyCode.F1), alt(KeyCode.B)),
     TOGGLE_PIP_VIEW     (key(KeyCode.F2)),
     TWO_D_THREE_D       (alt(KeyCode.DIGIT3));
