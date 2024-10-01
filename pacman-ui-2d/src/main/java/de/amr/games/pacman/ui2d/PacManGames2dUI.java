@@ -375,14 +375,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         }
     }
 
-    public void createActorAnimations(GameVariant variant, GameModel game, GameSpriteSheet spriteSheet) {
-        switch (variant) {
+    public void createActorAnimations(GameModel game, GameSpriteSheet spriteSheet) {
+        switch (game.variant()) {
             case MS_PACMAN -> {
                 game.pac().setAnimations(new MsPacManGamePacAnimations(spriteSheet));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, ghost.id())));
             }
             case MS_PACMAN_TENGEN -> {
-                //TODO use Tengen-specific sprites
+                //TODO use Tengen sprites
                 GameSpriteSheet ssMsPac = assets.get("ms_pacman.spritesheet");
                 game.pac().setAnimations(new TengenMsPacManGamePacAnimations(ssMsPac));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new TengenMsPacManGameGhostAnimations(spriteSheet, ghost.id())));
@@ -391,7 +391,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                 game.pac().setAnimations(new PacManGamePacAnimations(spriteSheet));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(spriteSheet, ghost.id())));
             }
-            default -> throw new IllegalArgumentException("Unsupported game variant: " + variant);
+            default -> throw new IllegalArgumentException("Unsupported game variant: " + game.variant());
         }
     }
 
@@ -508,7 +508,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public void onLevelCreated(GameEvent event) {
         // Found no better point in time to create and assign the sprite animations to the guys
-        createActorAnimations(game().variant(), game(), spriteSheet());
+        createActorAnimations(game(), spriteSheet());
         Logger.info("Created {} game creature animations for level #{}", game().variant(), game().levelNumber());
         if (!game().isDemoLevel()) {
             game().pac().setManualSteering(new KeyboardPacSteering());
