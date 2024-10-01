@@ -507,25 +507,25 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public void onLevelCreated(GameEvent event) {
-        // Found no better point in time to create and assign the sprite animations to the guys
         createActorAnimations(game(), spriteSheet());
-        Logger.info("Created {} game creature animations for level #{}", game().variant(), game().levelNumber());
-        if (!game().isDemoLevel()) {
+        Logger.info("Actor animations created. ({} level #{})", game().variant(), game().levelNumber());
+        if (game().isDemoLevel()) {
+            SOUNDS.setEnabled(false);
+        } else {
             game().pac().setManualSteering(new KeyboardPacSteering());
+            SOUNDS.setEnabled(true);
         }
-        SOUNDS.enabledProperty().set(!game().isDemoLevel());
-        //TODO better place than here?
+        //TODO use data binding?
         gamePage.adaptCanvasSizeToCurrentWorld();
     }
 
     @Override
     public void onLevelStarted(GameEvent event) {
-        if (gameState() == LEVEL_TEST || game().isDemoLevel() || game().levelNumber() > 1) {
-            return;
+        int hourOfDay = LocalTime.now().getHour();
+        PY_NIGHT_MODE.set(hourOfDay >= 21 || hourOfDay <= 4);
+        if (gameState() != LEVEL_TEST && !game().isDemoLevel() && game().levelNumber() == 1) {
+            SOUNDS.playGameReadySound();
         }
-        SOUNDS.playGameReadySound();
-        LocalTime now = LocalTime.now();
-        PY_NIGHT_MODE.set(now.getHour() >= 21 || now.getHour() <= 5);
     }
 
     @Override

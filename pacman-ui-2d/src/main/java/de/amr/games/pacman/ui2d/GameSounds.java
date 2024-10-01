@@ -175,12 +175,12 @@ public class GameSounds {
         Logger.info("All sounds stopped ({})", gameVariant);
     }
 
-    public boolean isEnabled() {
-        return enabledPy.get();
+    public void setEnabled(boolean enabled) {
+        enabledProperty().set(enabled);
     }
 
-    public boolean isUnMuted() {
-        return !mutedPy.get();
+    public boolean isEnabled() {
+        return enabledPy.get();
     }
 
     public void setMuted(boolean muted) {
@@ -189,6 +189,10 @@ public class GameSounds {
 
     public void toggleMuted() {
         setMuted(isUnMuted());
+    }
+
+    public boolean isUnMuted() {
+        return !mutedPy.get();
     }
 
     public void selectSiren(int number) {
