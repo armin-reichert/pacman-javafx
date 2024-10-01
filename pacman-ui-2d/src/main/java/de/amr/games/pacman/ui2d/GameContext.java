@@ -10,6 +10,8 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.maps.editor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.page.EditorPage;
+import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene;
@@ -82,9 +84,11 @@ public interface GameContext {
 
     GameSounds sounds();
 
+    //TODO check this
+    void selectPage(Page page);
+    EditorPage getOrCreateEditorPage();
+
     // Actions
-    void doSimulationSteps(int numSteps);
-    void openMapEditor();
     void quitMapEditor(TileMapEditor editor);
     void resetSimulationSpeed();
     void restartIntro();

@@ -125,8 +125,8 @@ public class GamePage extends StackPane implements Page {
         else if (GameAction.IMMUNITY.called())            { context.toggleImmunity(); }
         else if (GameAction.HELP.called())                { showHelp(); }
         else if (GameAction.PAUSE.called())               { context.togglePaused(); }
-        else if (GameAction.SIMULATION_1_STEP.called())   { context.doSimulationSteps(1); }
-        else if (GameAction.SIMULATION_10_STEPS.called()) { context.doSimulationSteps(10); }
+        else if (GameAction.SIMULATION_1_STEP.called())   { GameAction.SIMULATION_1_STEP.execute(context); }
+        else if (GameAction.SIMULATION_10_STEPS.called()) { GameAction.SIMULATION_10_STEPS.execute(context); }
         else if (GameAction.SIMULATION_FASTER.called())   { GameAction.SIMULATION_FASTER.execute(context); }
         else if (GameAction.SIMULATION_SLOWER.called())   { GameAction.SIMULATION_SLOWER.execute(context); }
         else if (GameAction.SIMULATION_NORMAL.called())   { context.resetSimulationSpeed(); }
@@ -135,7 +135,7 @@ public class GamePage extends StackPane implements Page {
         else if (GameAction.TWO_D_THREE_D.called())       { context.toggle2D3D(); }
         else if (GameAction.TOGGLE_DASHBOARD.called())    { context.toggleDashboard(); }
         else if (GameAction.TOGGLE_PIP_VIEW.called())     { context.togglePipVisible(); }
-        else if (GameAction.OPEN_EDITOR.called())         { context.openMapEditor(); }
+        else if (GameAction.OPEN_EDITOR.called())         { GameAction.OPEN_EDITOR.execute(context); }
         else {
             context.currentGameScene().ifPresent(GameScene::handleInput);
         }

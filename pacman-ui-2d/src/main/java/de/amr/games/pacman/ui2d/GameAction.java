@@ -7,7 +7,10 @@ package de.amr.games.pacman.ui2d;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.pacmanxxl.PacManXXLGame;
+import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui2d.util.Keyboard;
@@ -112,7 +115,24 @@ public enum GameAction {
     NEXT_PERSPECTIVE    (alt(KeyCode.RIGHT)),
     NEXT_VARIANT        (key(KeyCode.V), key(KeyCode.RIGHT)),
     PAUSE               (key(KeyCode.P)),
-    OPEN_EDITOR         (shift_alt(KeyCode.E)),
+
+    OPEN_EDITOR         (shift_alt(KeyCode.E)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            if (context.game().variant() != GameVariant.PACMAN_XXL) {
+                context.showFlashMessageSeconds(3, "Map editor is not available in this game variant"); //TODO localize
+                return;
+            }
+            context.currentGameScene().ifPresent(GameScene::end);
+            context.sounds().stopAll();
+            context.gameClock().stop();
+            EditorPage editorPage = context.getOrCreateEditorPage();
+            editorPage.startEditor(context.game().world().map());
+            context.selectPage(editorPage);
+        }
+    },
+
     PREV_FLYER_PAGE     (key(KeyCode.UP)),
     PREV_PERSPECTIVE    (alt(KeyCode.LEFT)),
     PREV_VARIANT        (key(KeyCode.LEFT)),
@@ -145,8 +165,26 @@ public enum GameAction {
         }
     },
 
-    SIMULATION_1_STEP(key(KeyCode.SPACE), shift(KeyCode.P)),
-    SIMULATION_10_STEPS (shift(KeyCode.SPACE)),
+    SIMULATION_1_STEP(key(KeyCode.SPACE), shift(KeyCode.P)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            if (context.gameClock().isPaused()) {
+                context.gameClock().makeStep(true);
+            }
+        }
+    },
+
+    SIMULATION_10_STEPS (shift(KeyCode.SPACE)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            if (context.gameClock().isPaused()) {
+                context.gameClock().makeSteps(10, true);
+            }
+        }
+    },
+
     START_GAME          (key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1), key(KeyCode.ENTER), key(KeyCode.SPACE)),
     START_TEST_MODE     (alt(KeyCode.T)),
     TOGGLE_DASHBOARD    (key(KeyCode.F1), alt(KeyCode.B)),

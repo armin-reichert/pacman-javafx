@@ -320,16 +320,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         return icon;
     }
 
-    protected void selectPage(Page page) {
-        if (page != currentPage) {
-            currentPage = page;
-            currentPage.setSize(stage.getScene().getWidth(), stage.getScene().getHeight());
-            sceneRoot.getChildren().set(0, currentPage.rootPane());
-            currentPage.rootPane().requestFocus();
-            currentPage.onPageSelected();
-        }
-    }
-
     private String displayName(GameScene gameScene) {
         String text = gameScene != null ? gameScene.getClass().getSimpleName() : "NO GAME SCENE";
         text += String.format(" (%s)", game().variant());
@@ -466,6 +456,27 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         scoreVisible = visible;
     }
 
+    @Override
+    public EditorPage getOrCreateEditorPage() {
+        if (editorPage == null) {
+            var xxlGame = (PacManXXLGame) game();
+            editorPage = new EditorPage(stage, this, xxlGame.customMapDir());
+            editorPage.setCloseAction(this::quitMapEditor);
+        }
+        return editorPage;
+    }
+
+    @Override
+    public void selectPage(Page page) {
+        if (page != currentPage) {
+            currentPage = page;
+            currentPage.setSize(stage.getScene().getWidth(), stage.getScene().getHeight());
+            sceneRoot.getChildren().set(0, currentPage.rootPane());
+            currentPage.rootPane().requestFocus();
+            currentPage.onPageSelected();
+        }
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     // GameScene related
     // -----------------------------------------------------------------------------------------------------------------
@@ -554,24 +565,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     public void selectGamePage() {
         selectPage(gamePage);
         clock.start();
-    }
-
-    @Override
-    public void openMapEditor() {
-        if (game().variant() != GameVariant.PACMAN_XXL) {
-            showFlashMessageSeconds(3, "Map editor is not available in this game variant"); //TODO localize
-            return;
-        }
-        currentGameScene().ifPresent(GameScene::end);
-        SOUNDS.stopAll();
-        clock.stop();
-        if (editorPage == null) {
-            var xxlGame = (PacManXXLGame) game();
-            editorPage = new EditorPage(stage, this, xxlGame.customMapDir());
-            editorPage.setCloseAction(this::quitMapEditor);
-        }
-        editorPage.startEditor(game().world().map());
-        selectPage(editorPage);
     }
 
     @Override
@@ -664,17 +657,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         toggle(PY_PIP_ON);
         if (!currentGameSceneIs(GameSceneID.PLAY_SCENE_3D)) {
             showFlashMessage(locText(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
-        }
-    }
-
-    @Override
-    public void doSimulationSteps(int numSteps) {
-        if (clock.isPaused()) {
-            if (numSteps == 1) {
-                clock.makeStep(true);
-            } else {
-                clock.makeSteps(numSteps, true);
-            }
         }
     }
 
