@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.maps.editor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.pacmanxxl.PacManXXLGame;
@@ -59,7 +58,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.controller.GameState.LEVEL_TEST;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
@@ -461,7 +459,13 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         if (editorPage == null) {
             var xxlGame = (PacManXXLGame) game();
             editorPage = new EditorPage(stage, this, xxlGame.customMapDir());
-            editorPage.setCloseAction(this::quitMapEditor);
+            editorPage.setCloseAction(editor -> {
+                editor.stop();
+                editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> stage.titleProperty().bind(stageTitleBinding()));
+                updateCustomMaps();
+                GameAction.BOOT.execute(this);
+                selectStartPage();
+            });
         }
         return editorPage;
     }
@@ -587,15 +591,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public void showFlashMessageSeconds(double seconds, String message, Object... args) {
         flashMessageLayer.showMessage(String.format(message, args), seconds);
-    }
-
-    @Override
-    public void quitMapEditor(TileMapEditor editor) {
-        editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> stage.titleProperty().bind(stageTitleBinding()));
-        editor.stop();
-        updateCustomMaps();
-        GameAction.BOOT.execute(this);
-        selectStartPage();
     }
 
     @Override

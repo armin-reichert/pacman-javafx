@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.maps.editor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.page.EditorPage;
@@ -29,6 +28,7 @@ import java.util.Optional;
 public interface GameContext {
 
     // Game model and controller
+
     ObjectProperty<GameVariant> gameVariantProperty();
     void selectGameVariant(GameVariant variant);
     default GameController gameController() {
@@ -40,10 +40,12 @@ public interface GameContext {
     default GameModel game() {
         return GameController.it().currentGame();
     }
+    void updateCustomMaps();
     void setScoreVisible(boolean visible);
     boolean isScoreVisible();
 
     // UI
+
     void selectPage(Page page);
     void selectStartPage();
     void selectGamePage();
@@ -51,6 +53,7 @@ public interface GameContext {
     GamePage gamePage();
     void showFlashMessage(String message, Object... args);
     void showFlashMessageSeconds(double seconds, String message, Object... args);
+    GameClockFX gameClock();
 
     /**
      * @return size (in tiles) of current world or size of Arcade world if no world currently exists
@@ -64,13 +67,16 @@ public interface GameContext {
     }
 
     // Game scenes
+
     boolean currentGameSceneIs(GameSceneID gameSceneID);
     ObjectProperty<GameScene> gameSceneProperty();
     Optional<GameScene> currentGameScene();
     void updateGameScene(boolean reloadCurrent);
 
     // Resources
+
     AssetStorage assets();
+    GameSounds sounds();
 
     /**
      * Returns a translated text (for the current locale).
@@ -94,13 +100,4 @@ public interface GameContext {
             renderer.selectMap(game().world().map(), game().currentMapNumber(), spriteSheet());
         }
     }
-
-    GameSounds sounds();
-
-    // Actions
-    void quitMapEditor(TileMapEditor editor);
-    void updateCustomMaps();
-
-    // Others
-    GameClockFX gameClock();
 }
