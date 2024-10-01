@@ -129,7 +129,7 @@ public class GamePage extends StackPane implements Page {
         else if (GameAction.SIMULATION_10_STEPS.called()) { GameAction.SIMULATION_10_STEPS.execute(context); }
         else if (GameAction.SIMULATION_FASTER.called())   { GameAction.SIMULATION_FASTER.execute(context); }
         else if (GameAction.SIMULATION_SLOWER.called())   { GameAction.SIMULATION_SLOWER.execute(context); }
-        else if (GameAction.SIMULATION_NORMAL.called())   { context.resetSimulationSpeed(); }
+        else if (GameAction.SIMULATION_NORMAL.called())   { GameAction.SIMULATION_NORMAL.execute(context); }
         else if (GameAction.QUIT.called())                { quit(); }
         else if (GameAction.START_TEST_MODE.called())     { context.startLevelTestMode(); }
         else if (GameAction.TWO_D_THREE_D.called())       { context.toggle2D3D(); }

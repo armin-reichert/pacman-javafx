@@ -90,7 +90,6 @@ public interface GameContext {
 
     // Actions
     void quitMapEditor(TileMapEditor editor);
-    void resetSimulationSpeed();
     void restartIntro();
     void selectGamePage();
     void selectNextGameVariant();

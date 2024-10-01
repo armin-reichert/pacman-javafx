@@ -150,7 +150,14 @@ public enum GameAction {
         }
     },
 
-    SIMULATION_NORMAL(alt(KeyCode.DIGIT0)),
+    SIMULATION_NORMAL(alt(KeyCode.DIGIT0)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            context.gameClock().setTargetFrameRate(GameModel.FPS);
+            context.showFlashMessageSeconds(0.75, context.gameClock().getTargetFrameRate() + "Hz");
+        }
+    },
 
     SIMULATION_SLOWER(alt(KeyCode.MINUS)) {
         @Override

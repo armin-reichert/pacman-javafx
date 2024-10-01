@@ -661,12 +661,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void resetSimulationSpeed() {
-        clock.setTargetFrameRate(GameModel.FPS);
-        showFlashMessageSeconds(0.75, clock.getTargetFrameRate() + "Hz");
-    }
-
-    @Override
     public void selectNextGameVariant() {
         int nextIndex = GAME_VARIANTS_IN_ORDER.indexOf(game().variant()) + 1;
         selectGameVariant(GAME_VARIANTS_IN_ORDER.get(nextIndex == GAME_VARIANTS_IN_ORDER.size() ? 0 : nextIndex));
