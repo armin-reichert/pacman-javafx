@@ -1,5 +1,6 @@
 package de.amr.games.pacman.ui3d;
 
+import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.util.KeyInput;
@@ -15,7 +16,7 @@ import static de.amr.games.pacman.ui2d.util.KeyInput.key;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 
-public enum GameAction3D {
+public enum GameAction3D implements GameAction {
 
     NEXT_PERSPECTIVE(alt(KeyCode.RIGHT)) {
         @Override
@@ -78,17 +79,17 @@ public enum GameAction3D {
         trigger = KeyInput.register(combinations);
     }
 
+    @Override
     public KeyInput trigger() {
         return trigger;
     }
 
-    /**
-     * @return {@code true} if any key combination defined for this game key is pressed
-     */
+    @Override
     public boolean called() {
         return Keyboard.pressed(trigger);
     }
 
+    @Override
     public void execute(GameContext context) {
         Logger.info("Execute game action {}", name());
     }

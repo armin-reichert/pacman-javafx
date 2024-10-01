@@ -16,7 +16,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
-import de.amr.games.pacman.ui2d.GameAction;
+import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.util.Keyboard;
@@ -238,15 +238,15 @@ public class TengenMsPacManIntroScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        if (GameAction.ADD_CREDIT.called()) {
+        if (GameAction2D.ADD_CREDIT.called()) {
             if (sceneController.state() == SceneState.STARTING) {
                 triggerBlueMazeBug();
             }
-            GameAction.ADD_CREDIT.execute(context);
-        } else if (GameAction.START_GAME.called()) {
-            GameAction.START_GAME.execute(context);
-        } else if (GameAction.TEST_CUT_SCENES.called()) {
-            GameAction.TEST_CUT_SCENES.execute(context);
+            GameAction2D.ADD_CREDIT.execute(context);
+        } else if (GameAction2D.START_GAME.called()) {
+            GameAction2D.START_GAME.execute(context);
+        } else if (GameAction2D.TEST_CUT_SCENES.called()) {
+            GameAction2D.TEST_CUT_SCENES.execute(context);
         }
     }
 

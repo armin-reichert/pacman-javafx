@@ -1,7 +1,7 @@
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.GameAction;
+import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.Ufx;
@@ -112,12 +112,12 @@ public class StartPage extends StackPane implements Page {
         tengenFlyer   = new Flyer(assets.image("tengen.startpage.image1"),    assets.image("tengen.startpage.image2"));
 
         Button btnPrevVariant = createCarouselButton(assets.image("startpage.arrow.left"));
-        btnPrevVariant.setOnAction(e -> GameAction.PREV_VARIANT.execute(context));
+        btnPrevVariant.setOnAction(e -> GameAction2D.PREV_VARIANT.execute(context));
         VBox left = new VBox(btnPrevVariant);
         left.setAlignment(Pos.CENTER_LEFT);
 
         Button btnNextVariant = createCarouselButton(assets.image("startpage.arrow.right"));
-        btnNextVariant.setOnAction(e -> GameAction.NEXT_VARIANT.execute(context));
+        btnNextVariant.setOnAction(e -> GameAction2D.NEXT_VARIANT.execute(context));
         VBox right = new VBox(btnNextVariant);
         right.setAlignment(Pos.CENTER_RIGHT);
 
@@ -185,11 +185,11 @@ public class StartPage extends StackPane implements Page {
 
     @Override
     public void handleInput() {
-        if      (GameAction.ENTER_GAME_PAGE.called()) { context.selectGamePage(); }
-        else if (GameAction.NEXT_VARIANT.called())    { GameAction.NEXT_VARIANT.execute(context); }
-        else if (GameAction.PREV_VARIANT.called())    { GameAction.PREV_VARIANT.execute(context); }
-        else if (GameAction.NEXT_FLYER_PAGE.called()) { flyer(context.game().variant()).ifPresent(Flyer::nextPage); }
-        else if (GameAction.PREV_FLYER_PAGE.called()) { flyer(context.game().variant()).ifPresent(Flyer::prevPage); }
+        if      (GameAction2D.ENTER_GAME_PAGE.called()) { context.selectGamePage(); }
+        else if (GameAction2D.NEXT_VARIANT.called())    { GameAction2D.NEXT_VARIANT.execute(context); }
+        else if (GameAction2D.PREV_VARIANT.called())    { GameAction2D.PREV_VARIANT.execute(context); }
+        else if (GameAction2D.NEXT_FLYER_PAGE.called()) { flyer(context.game().variant()).ifPresent(Flyer::nextPage); }
+        else if (GameAction2D.PREV_FLYER_PAGE.called()) { flyer(context.game().variant()).ifPresent(Flyer::prevPage); }
     }
 
     @Override

@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui2d.GameAction;
+import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.scene.GameScene;
@@ -107,7 +107,7 @@ public class GamePage extends StackPane implements Page {
     public void onPageSelected() {
         adaptCanvasSizeToCurrentWorld();
         //TODO check if this is always what is wanted
-        GameAction.BOOT.execute(context);
+        GameAction2D.BOOT.execute(context);
         context.updateCustomMaps();
         SOUNDS.playVoice("voice.explain", 0);
     }
@@ -119,21 +119,21 @@ public class GamePage extends StackPane implements Page {
 
     @Override
     public void handleInput() {
-        if      (GameAction.BOOT.called())                { GameAction.BOOT.execute(context); }
-        else if (GameAction.DEBUG_INFO.called())          { Ufx.toggle(PY_DEBUG_INFO); }
-        else if (GameAction.HELP.called())                { showHelp(); }
-        else if (GameAction.SIMULATION_1_STEP.called())   { GameAction.SIMULATION_1_STEP.execute(context); }
-        else if (GameAction.SIMULATION_10_STEPS.called()) { GameAction.SIMULATION_10_STEPS.execute(context); }
-        else if (GameAction.SIMULATION_FASTER.called())   { GameAction.SIMULATION_FASTER.execute(context); }
-        else if (GameAction.SIMULATION_SLOWER.called())   { GameAction.SIMULATION_SLOWER.execute(context); }
-        else if (GameAction.SIMULATION_NORMAL.called())   { GameAction.SIMULATION_NORMAL.execute(context); }
-        else if (GameAction.RESTART_INTRO.called())                { quit(); }
-        else if (GameAction.TEST_LEVELS.called())         { GameAction.TEST_LEVELS.execute(context); }
-        else if (GameAction.TOGGLE_AUTOPILOT.called())    { GameAction.TOGGLE_AUTOPILOT.execute(context); }
-        else if (GameAction.TOGGLE_IMMUNITY.called())     { GameAction.TOGGLE_IMMUNITY.execute(context); }
-        else if (GameAction.TOGGLE_DASHBOARD.called())    { GameAction.TOGGLE_DASHBOARD.execute(context); }
-        else if (GameAction.TOGGLE_PAUSED.called())       { GameAction.TOGGLE_PAUSED.execute(context); }
-        else if (GameAction.OPEN_EDITOR.called())         { GameAction.OPEN_EDITOR.execute(context); }
+        if      (GameAction2D.BOOT.called())                { GameAction2D.BOOT.execute(context); }
+        else if (GameAction2D.DEBUG_INFO.called())          { GameAction2D.DEBUG_INFO.execute(context); }
+        else if (GameAction2D.HELP.called())                { GameAction2D.HELP.execute(context); }
+        else if (GameAction2D.SIMULATION_1_STEP.called())   { GameAction2D.SIMULATION_1_STEP.execute(context); }
+        else if (GameAction2D.SIMULATION_10_STEPS.called()) { GameAction2D.SIMULATION_10_STEPS.execute(context); }
+        else if (GameAction2D.SIMULATION_FASTER.called())   { GameAction2D.SIMULATION_FASTER.execute(context); }
+        else if (GameAction2D.SIMULATION_SLOWER.called())   { GameAction2D.SIMULATION_SLOWER.execute(context); }
+        else if (GameAction2D.SIMULATION_NORMAL.called())   { GameAction2D.SIMULATION_NORMAL.execute(context); }
+        else if (GameAction2D.SHOW_START_PAGE.called())     { GameAction2D.SHOW_START_PAGE.execute(context); }
+        else if (GameAction2D.TEST_LEVELS.called())         { GameAction2D.TEST_LEVELS.execute(context); }
+        else if (GameAction2D.TOGGLE_AUTOPILOT.called())    { GameAction2D.TOGGLE_AUTOPILOT.execute(context); }
+        else if (GameAction2D.TOGGLE_IMMUNITY.called())     { GameAction2D.TOGGLE_IMMUNITY.execute(context); }
+        else if (GameAction2D.TOGGLE_DASHBOARD.called())    { GameAction2D.TOGGLE_DASHBOARD.execute(context); }
+        else if (GameAction2D.TOGGLE_PAUSED.called())       { GameAction2D.TOGGLE_PAUSED.execute(context); }
+        else if (GameAction2D.OPEN_EDITOR.called())         { GameAction2D.OPEN_EDITOR.execute(context); }
         else { context.currentGameScene().ifPresent(GameScene::handleInput); }
     }
 
@@ -167,7 +167,7 @@ public class GamePage extends StackPane implements Page {
         contextMenu.getItems().add(miMuted);
 
         var miQuit = new MenuItem(context.locText("quit"));
-        miQuit.setOnAction(e -> quit());
+        miQuit.setOnAction(e -> GameAction2D.SHOW_START_PAGE.execute(context));
         contextMenu.getItems().add(miQuit);
 
         contextMenu.show(this, event.getScreenX(), event.getScreenY());
@@ -228,13 +228,7 @@ public class GamePage extends StackPane implements Page {
         return dashboardLayer;
     }
 
-    protected void quit() {
-        SOUNDS.stopAll();
-        context.game().consumeCoin();
-        context.selectStartPage();
-    }
-
-    protected void showHelp() {
+    public void showHelp() {
         if (isCurrentGameScene2D()) {
             popupLayer.showHelp(canvasLayer.canvas().scaling());
         }

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
-import de.amr.games.pacman.ui2d.GameAction;
+import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -37,10 +37,10 @@ public class CreditScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        if (GameAction.ADD_CREDIT.called()) {
-            GameAction.ADD_CREDIT.execute(context);
-        } else if (GameAction.START_GAME.called()) {
-            GameAction.START_GAME.execute(context);
+        if (GameAction2D.ADD_CREDIT.called()) {
+            GameAction2D.ADD_CREDIT.execute(context);
+        } else if (GameAction2D.START_GAME.called()) {
+            GameAction2D.START_GAME.execute(context);
         }
     }
 

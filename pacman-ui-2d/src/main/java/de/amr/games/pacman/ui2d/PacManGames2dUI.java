@@ -196,7 +196,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         });
 
         // Touch all game actions such that they get bound to keys
-        for (var gameAction : GameAction.values()) {
+        for (var gameAction : GameAction2D.values()) {
             Logger.info("Game Action: {} => {}", gameAction, gameAction.trigger());
         }
 
@@ -254,9 +254,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, Keyboard::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, Keyboard::onKeyReleased);
         mainScene.setOnKeyPressed(e -> {
-            if (GameAction.FULLSCREEN.called()) {
+            if (GameAction2D.FULLSCREEN.called()) {
                 stage.setFullScreen(true);
-            } else if (GameAction.MUTE.called()) {
+            } else if (GameAction2D.MUTE.called()) {
                 SOUNDS.toggleMuted();
             } else {
                 currentPage.handleInput();
@@ -463,7 +463,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                 editor.stop();
                 editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> stage.titleProperty().bind(stageTitleBinding()));
                 updateCustomMaps();
-                GameAction.BOOT.execute(this);
+                GameAction2D.BOOT.execute(this);
                 selectStartPage();
             });
         }
