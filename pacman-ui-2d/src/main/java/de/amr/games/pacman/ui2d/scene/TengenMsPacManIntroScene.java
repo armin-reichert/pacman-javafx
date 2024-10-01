@@ -15,7 +15,7 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
+import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
@@ -27,7 +27,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import org.tinylog.Logger;
 
 import java.util.BitSet;
 
@@ -201,9 +200,6 @@ public class TengenMsPacManIntroScene extends GameScene2D {
     public void init() {
         context.setScoreVisible(true);
 
-        //TODO make this work again
-        clearBlueMazeBug();
-
         msPacMan = new Pac();
         ghosts = new Ghost[] { Ghost.red(), Ghost.pink(), Ghost.cyan(), Ghost.orange() };
         ghosts[RED_GHOST].setName("Blinky");
@@ -238,16 +234,8 @@ public class TengenMsPacManIntroScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        if (GameAction2D.ADD_CREDIT.called()) {
-            if (sceneController.state() == SceneState.STARTING) {
-                triggerBlueMazeBug();
-            }
-            GameAction2D.ADD_CREDIT.execute(context);
-        } else if (GameAction2D.START_GAME.called()) {
-            GameAction2D.START_GAME.execute(context);
-        } else if (GameAction2D.TEST_CUT_SCENES.called()) {
-            GameAction2D.TEST_CUT_SCENES.execute(context);
-        }
+        GameAction.executeCalledAction(context, GameAction.NO_ACTION,
+            GameAction2D.ADD_CREDIT, GameAction2D.START_GAME, GameAction2D.TEST_CUT_SCENES);
     }
 
     @Override
@@ -340,24 +328,5 @@ public class TengenMsPacManIntroScene extends GameScene2D {
     private void drawBulb(GraphicsContext g, double x, double y, boolean on) {
         g.setFill(on ? PALETTE_PALE : PALETTE_RED);
         g.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
-    }
-
-    /**
-     * <p>"It is well known that if a credit is inserted at the very beginning of the attract mode,
-     * before the red ghost appears under the marquee, the first maze of the game will be colored
-     * blue instead of the normal maze color."</p>
-     * @see  <a href="http://www.donhodges.com/ms_pacman_bugs.htm">Ms. Pac-Man blue maze bug</a>
-     */
-    private void triggerBlueMazeBug() {
-        if (context.game() instanceof MsPacManArcadeGame msPacManGame) {
-            msPacManGame.blueMazeBug = true;
-            Logger.info("Blue maze bug triggered");
-        }
-    }
-
-    private void clearBlueMazeBug() {
-        if (context.game() instanceof MsPacManArcadeGame msPacManGame) {
-            msPacManGame.blueMazeBug = false;
-        }
     }
 }

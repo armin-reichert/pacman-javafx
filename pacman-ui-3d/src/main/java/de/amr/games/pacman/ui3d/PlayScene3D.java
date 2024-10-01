@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
@@ -182,18 +183,10 @@ public class PlayScene3D implements GameScene {
     public void handleInput() {
         if (GameAction2D.ADD_CREDIT.called() && this.context.game().isDemoLevel()) {
             GameAction2D.ADD_CREDIT.execute(context);
-        } else if (GameAction3D.PREV_PERSPECTIVE.called()) {
-            GameAction3D.PREV_PERSPECTIVE.execute(context);
-        } else if (GameAction3D.NEXT_PERSPECTIVE.called()) {
-            GameAction3D.NEXT_PERSPECTIVE.execute(context);
-        } else if (GameAction2D.CHEAT_EAT_ALL.called()) {
-            GameAction2D.CHEAT_EAT_ALL.execute(context);
-        } else if (GameAction2D.CHEAT_ADD_LIVES.called()) {
-            GameAction2D.CHEAT_ADD_LIVES.execute(context);
-        } else if (GameAction2D.CHEAT_NEXT_LEVEL.called()) {
-            GameAction2D.CHEAT_NEXT_LEVEL.execute(context);
-        } else if (GameAction2D.CHEAT_KILL_GHOSTS.called()) {
-            GameAction2D.CHEAT_KILL_GHOSTS.execute(context);
+        } else {
+            GameAction.executeCalledAction(context, GameAction.NO_ACTION,
+                GameAction3D.PREV_PERSPECTIVE, GameAction3D.NEXT_PERSPECTIVE,
+                GameAction2D.CHEAT_EAT_ALL, GameAction2D.CHEAT_ADD_LIVES, GameAction2D.CHEAT_NEXT_LEVEL, GameAction2D.CHEAT_KILL_GHOSTS);
         }
     }
 
