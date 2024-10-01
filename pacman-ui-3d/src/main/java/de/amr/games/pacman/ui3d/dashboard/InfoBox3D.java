@@ -88,8 +88,9 @@ public class InfoBox3D extends InfoBox {
         assignEditor(cbPacLighted, PY_3D_PAC_LIGHT_ENABLED);
         assignEditor(cbAxesVisible, PY_3D_AXES_VISIBLE);
 
-        cbUsePlayScene3D.setOnAction(e -> context.toggle2D3D()); // TODO
-        cbWireframeMode.setOnAction(e -> GameAction3D.TOGGLE_DRAW_MODE.execute(context)); //TODO
+        //TODO check these
+        cbUsePlayScene3D.setOnAction(e -> GameAction3D.TOGGLE_PLAY_SCENE_2D_3D.execute(context));
+        cbWireframeMode.setOnAction(e -> GameAction3D.TOGGLE_DRAW_MODE.execute(context));
     }
 
     private void updateControlsFromProperties() {

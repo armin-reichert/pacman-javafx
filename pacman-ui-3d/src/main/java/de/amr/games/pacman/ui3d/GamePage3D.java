@@ -49,10 +49,9 @@ public class GamePage3D extends GamePage {
 
     @Override
     public void handleInput() {
-        if (GameAction3D.TOGGLE_PIP_VISIBILITY.called())  { GameAction3D.TOGGLE_PIP_VISIBILITY.execute(context); }
-        else {
-            super.handleInput();
-        }
+        if      (GameAction3D.TOGGLE_PIP_VISIBILITY.called())   { GameAction3D.TOGGLE_PIP_VISIBILITY.execute(context); }
+        else if (GameAction3D.TOGGLE_PLAY_SCENE_2D_3D.called()) { GameAction3D.TOGGLE_PLAY_SCENE_2D_3D.execute(context); }
+        else { super.handleInput(); }
     }
 
     @Override
@@ -71,7 +70,7 @@ public class GamePage3D extends GamePage {
         // Toggle 2D-3D
         boolean is3D = context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D);
         var item = new MenuItem(context.locText(is3D ? "use_2D_scene" : "use_3D_scene"));
-        item.setOnAction(e -> context.toggle2D3D());
+        item.setOnAction(e -> GameAction3D.TOGGLE_PLAY_SCENE_2D_3D.execute(context));
         contextMenu.getItems().add(item);
 
         if (!is3D) {

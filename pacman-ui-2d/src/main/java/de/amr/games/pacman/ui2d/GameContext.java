@@ -67,6 +67,7 @@ public interface GameContext {
     boolean currentGameSceneIs(GameSceneID gameSceneID);
     ObjectProperty<GameScene> gameSceneProperty();
     Optional<GameScene> currentGameScene();
+    void updateGameScene(boolean reloadCurrent);
 
     // Resources
     AssetStorage assets();
@@ -102,7 +103,6 @@ public interface GameContext {
     void startCutscenesTest();
     void startGame();
     void startLevelTestMode();
-    void toggle2D3D();
     void updateCustomMaps();
 
     // Others

@@ -64,7 +64,6 @@ import static de.amr.games.pacman.controller.GameState.LEVEL_TEST;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
-import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 
 /**
  * 2D user interface for all Pac-Man game variants.
@@ -325,35 +324,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         return text;
     }
 
-    protected void updateGameScene(boolean reloadCurrent) {
-        GameScene currentGameScene = gameScenePy.get();
-        GameScene nextGameScene = gameSceneForCurrentGameState();
-        boolean sceneChanging = nextGameScene != currentGameScene;
-        if (reloadCurrent || sceneChanging) {
-            if (currentGameScene != null) {
-                currentGameScene.end();
-                Logger.info("Game scene ended: {}", displayName(currentGameScene));
-            }
-            if (nextGameScene != null) {
-                if (nextGameScene instanceof GameScene2D gameScene2D) {
-                    configureGameScene2D(gameScene2D);
-                }
-                nextGameScene.init();
-            }
-            if (sceneChanging) {
-                gameScenePy.set(nextGameScene);
-                Logger.info("Game scene changed to: {}", displayName(gameScenePy.get()));
-            } else {
-                Logger.info("Game scene reloaded: {}", displayName(currentGameScene));
-            }
-            if (currentGameSceneIs(GameSceneID.INTRO_SCENE)) {
-                gamePage.showSignature();
-            } else {
-                gamePage.hideSignature();
-            }
-        }
-    }
-
     private void configureGameScene2D(GameScene2D gameScene2D) {
         worldRenderer = createRenderer(game().variant(), assets);
         worldRenderer.setCanvas(gamePage.canvas());
@@ -428,6 +398,37 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public boolean currentGameSceneIs(GameSceneID sceneID) {
         return currentGameScene().isPresent() && hasID(currentGameScene().get(), sceneID);
+    }
+
+
+    @Override
+    public void updateGameScene(boolean reloadCurrent) {
+        GameScene currentGameScene = gameScenePy.get();
+        GameScene nextGameScene = gameSceneForCurrentGameState();
+        boolean sceneChanging = nextGameScene != currentGameScene;
+        if (reloadCurrent || sceneChanging) {
+            if (currentGameScene != null) {
+                currentGameScene.end();
+                Logger.info("Game scene ended: {}", displayName(currentGameScene));
+            }
+            if (nextGameScene != null) {
+                if (nextGameScene instanceof GameScene2D gameScene2D) {
+                    configureGameScene2D(gameScene2D);
+                }
+                nextGameScene.init();
+            }
+            if (sceneChanging) {
+                gameScenePy.set(nextGameScene);
+                Logger.info("Game scene changed to: {}", displayName(gameScenePy.get()));
+            } else {
+                Logger.info("Game scene reloaded: {}", displayName(currentGameScene));
+            }
+            if (currentGameSceneIs(GameSceneID.INTRO_SCENE)) {
+                gamePage.showSignature();
+            } else {
+                gamePage.hideSignature();
+            }
+        }
     }
 
     @Override
@@ -641,11 +642,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         }
         clock.setTargetFrameRate(GameModel.FPS);
         gameController().restart(INTRO);
-    }
-
-    @Override
-    public void toggle2D3D() {
-        // not supported in 2D UI
     }
 
     @Override

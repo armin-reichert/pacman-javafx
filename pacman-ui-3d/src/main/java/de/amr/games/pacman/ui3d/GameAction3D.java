@@ -13,8 +13,7 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_PIP_ON;
 import static de.amr.games.pacman.ui2d.util.KeyInput.alt;
 import static de.amr.games.pacman.ui2d.util.KeyInput.key;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
-import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
-import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_PERSPECTIVE;
+import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 
 public enum GameAction3D {
 
@@ -43,6 +42,24 @@ public enum GameAction3D {
         public void execute(GameContext context) {
             super.execute(context);
             PY_3D_DRAW_MODE.set(PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+        }
+    },
+
+    TOGGLE_PLAY_SCENE_2D_3D(alt(KeyCode.DIGIT3)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            context.currentGameScene().ifPresent(gameScene -> {
+                toggle(PY_3D_ENABLED);
+                if (context.currentGameSceneIs(GameSceneID.PLAY_SCENE) || context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D)) {
+                    context.updateGameScene(true);
+                    context.gameSceneProperty().get().onSceneVariantSwitch(gameScene);
+                }
+                context.gameController().update();
+                if (!context.game().isPlaying()) {
+                    context.showFlashMessage(context.locText(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+                }
+            });
         }
     },
 

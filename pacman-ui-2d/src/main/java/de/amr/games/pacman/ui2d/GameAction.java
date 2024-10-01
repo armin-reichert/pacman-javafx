@@ -253,9 +253,7 @@ public enum GameAction {
             context.showFlashMessage(context.locText(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
             context.sounds().playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
         }
-    },
-
-    TWO_D_THREE_D       (alt(KeyCode.DIGIT3));
+    };
 
     GameAction(KeyCodeCombination... combinations) {
         trigger = KeyInput.register(combinations);
