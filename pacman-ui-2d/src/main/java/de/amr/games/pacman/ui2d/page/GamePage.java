@@ -121,7 +121,6 @@ public class GamePage extends StackPane implements Page {
     public void handleInput() {
         if      (GameAction.BOOT.called())                { GameAction.BOOT.execute(context); }
         else if (GameAction.DEBUG_INFO.called())          { Ufx.toggle(PY_DEBUG_INFO); }
-        else if (GameAction.IMMUNITY.called())            { context.toggleImmunity(); }
         else if (GameAction.HELP.called())                { showHelp(); }
         else if (GameAction.SIMULATION_1_STEP.called())   { GameAction.SIMULATION_1_STEP.execute(context); }
         else if (GameAction.SIMULATION_10_STEPS.called()) { GameAction.SIMULATION_10_STEPS.execute(context); }
@@ -132,13 +131,12 @@ public class GamePage extends StackPane implements Page {
         else if (GameAction.START_TEST_MODE.called())     { context.startLevelTestMode(); }
         else if (GameAction.TWO_D_THREE_D.called())       { context.toggle2D3D(); }
         else if (GameAction.TOGGLE_AUTOPILOT.called())    { GameAction.TOGGLE_AUTOPILOT.execute(context); }
+        else if (GameAction.TOGGLE_IMMUNITY.called())     { GameAction.TOGGLE_IMMUNITY.execute(context); }
         else if (GameAction.TOGGLE_DASHBOARD.called())    { GameAction.TOGGLE_DASHBOARD.execute(context); }
         else if (GameAction.TOGGLE_PIP_VIEW.called())     { context.togglePipVisible(); }
         else if (GameAction.TOGGLE_PAUSED.called())       { GameAction.TOGGLE_PAUSED.execute(context); }
         else if (GameAction.OPEN_EDITOR.called())         { GameAction.OPEN_EDITOR.execute(context); }
-        else {
-            context.currentGameScene().ifPresent(GameScene::handleInput);
-        }
+        else { context.currentGameScene().ifPresent(GameScene::handleInput); }
     }
 
     @Override

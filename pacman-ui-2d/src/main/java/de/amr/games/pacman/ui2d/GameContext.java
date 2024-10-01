@@ -104,7 +104,6 @@ public interface GameContext {
     void startLevelTestMode();
     void toggle2D3D();
     void toggleDrawMode();
-    void toggleImmunity();
     void togglePipVisible();
     void updateCustomMaps();
 

@@ -49,7 +49,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -663,18 +662,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void toggleImmunity() {
-        toggle(PY_IMMUNITY);
-        showFlashMessage(locText(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
-        SOUNDS.playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
-    }
-
-    @Override
     public void startLevelTestMode() {
         if (gameState() == GameState.INTRO) {
             gameController().restart(GameState.LEVEL_TEST);
             showFlashMessageSeconds(3, "Level TEST MODE");
         }
     }
-
 }

@@ -22,6 +22,7 @@ import java.util.List;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.util.KeyInput.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static java.util.function.Predicate.not;
@@ -110,7 +111,7 @@ public enum GameAction {
     ENTER_GAME_PAGE     (key(KeyCode.SPACE), key(KeyCode.ENTER)),
     FULLSCREEN          (key(KeyCode.F11)),
     HELP                (key(KeyCode.H)),
-    IMMUNITY            (alt(KeyCode.I)),
+
     MUTE                (alt(KeyCode.M)),
     NEXT_FLYER_PAGE     (key(KeyCode.DOWN)),
 
@@ -241,6 +242,16 @@ public enum GameAction {
         public void execute(GameContext context) {
             super.execute(context);
             context.gamePage().toggleDashboard();
+        }
+    },
+
+    TOGGLE_IMMUNITY(alt(KeyCode.I)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            toggle(PY_IMMUNITY);
+            context.showFlashMessage(context.locText(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
+            context.sounds().playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
         }
     },
 
