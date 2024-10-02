@@ -11,11 +11,11 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGamePacAnimations;
+import de.amr.games.pacman.ui2d.variant.tengen.TengenMsPacManGameRenderer;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
@@ -135,7 +135,6 @@ public class MsPacManCutScene3 extends GameScene2D {
     private boolean bagOpen;
     private int numBagBounces;
 
-    private GameSpriteSheet spriteSheet;
     private ClapperboardAnimation clapAnimation;
     private SpriteAnimation storkAnimation;
 
@@ -160,16 +159,17 @@ public class MsPacManCutScene3 extends GameScene2D {
         stork = new Entity();
         bag = new Entity();
 
-        spriteSheet = context.spriteSheet();
         //TODO use Tengen sprite sheet
         if (context.game().variant() == GameVariant.MS_PACMAN_TENGEN) {
-            spriteSheet = context.spriteSheet(GameVariant.MS_PACMAN);
+            msPacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
+            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
+        } else {
+            msPacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
+            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
+
         }
 
-        msPacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
-        pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
-
-        storkAnimation = spriteSheet.createStorkFlyingAnimation();
+        storkAnimation = context.spriteSheet().createStorkFlyingAnimation();
         storkAnimation.start();
 
         clapAnimation = new ClapperboardAnimation("3", "JUNIOR");
@@ -190,11 +190,17 @@ public class MsPacManCutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
-        renderer.drawClapperBoard(spriteSheet, renderer.scaledArcadeFont(TS), PALETTE_PALE, clapAnimation, t(3), t(10));
+        renderer.drawClapperBoard(context.spriteSheet(), renderer.scaledArcadeFont(TS), PALETTE_PALE, clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(msPacMan);
         renderer.drawAnimatedEntity(pacMan);
-        renderer.drawSprite(stork, spriteSheet, storkAnimation.currentSprite());
-        renderer.drawSprite(bag, spriteSheet,
-            bagOpen ? spriteSheet.juniorPacSprite() : spriteSheet.blueBagSprite());
+        //TODO Hack
+        if (context.game().variant() == GameVariant.MS_PACMAN_TENGEN) {
+            TengenMsPacManGameRenderer tr = (TengenMsPacManGameRenderer) renderer;
+            tr.drawStork(context.spriteSheet(), storkAnimation, stork, bag.acceleration().y() != 0);
+        } else {
+            renderer.drawSprite(stork, context.spriteSheet(), storkAnimation.currentSprite());
+        }
+        renderer.drawSprite(bag, context.spriteSheet(),
+            bagOpen ? context.spriteSheet().juniorPacSprite() : context.spriteSheet().blueBagSprite());
     }
 }

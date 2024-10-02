@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.variant.tengen;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
+import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.scene.image.Image;
 
 import static de.amr.games.pacman.model.GameModel.*;
@@ -96,8 +97,8 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
     };
 
     private static final RectArea HEART_SPRITE = rect(162, 270, 18, 18);
-    private static final RectArea BLUE_BAG_SPRITE = rect(239, 361, 12, 12);
-    private static final RectArea JUNIOR_PAC_SPRITE = rect(165, 303, 10, 10);
+    public static final RectArea BLUE_BAG_SPRITE = rect(241, 363, 7, 8);
+    private static final RectArea JUNIOR_PAC_SPRITE = rect(166, 304, 7, 8);
 
     public TengenMsPacManGameSpriteSheet(Image source) {
         this.source = source;
@@ -194,6 +195,14 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
     @Override
     public RectArea juniorPacSprite() {
         return JUNIOR_PAC_SPRITE;
+    }
+
+    @Override
+    public SpriteAnimation createStorkFlyingAnimation() {
+        return SpriteAnimation.spriteSheet(this)
+            .sprites(rect(157, 355, 33, 16), rect(198, 355, 33, 16))
+            .frameTicks(8)
+            .loop();
     }
 
     // Tengen-specific

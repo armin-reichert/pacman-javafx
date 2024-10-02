@@ -4,12 +4,15 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.variant.tengen;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
+import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -17,6 +20,7 @@ import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
+import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManArcadeGameRenderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -155,6 +159,24 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
             ? new ImageArea(arcadeMazesImage, arcadeMapArea(mapNumber, width, height))
             : new ImageArea(nonArcadeMazesImage, nonArcadeMapArea(mapNumber - 9, width, height));
         Logger.info("Tengen map # {}: area: {}", mapNumber, mapSprite.area());
+    }
+
+    public void drawStork(GameSpriteSheet spriteSheet, SpriteAnimation storkAnimation, Entity stork, boolean bagReleased) {
+        drawSprite(stork, spriteSheet, storkAnimation.currentSprite());
+        // erase bag if released
+        if (bagReleased) {
+            Vector2f center = stork.center();
+            ctx().setFill(backgroundColorProperty().get());
+            //ctx().setFill(Color.WHITE);
+            ctx().save();
+            ctx().scale(scaling(), scaling());
+            if (storkAnimation.frameIndex() == 0) {
+                ctx().fillRect(center.x() - 17, center.y() - 1, 9, 14);
+            } else {
+                ctx().fillRect(center.x() - 17, center.y() - 4, 9, 14);
+            }
+            ctx().restore();
+        }
     }
 
     /**
