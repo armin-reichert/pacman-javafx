@@ -33,7 +33,7 @@ public abstract class Perspective {
         }
     }
 
-    public static class DRONE extends Perspective {
+    public static class DronePerspective extends Perspective {
         static final int HEIGHT = 200;
 
         @Override
@@ -62,7 +62,7 @@ public abstract class Perspective {
         }
     };
 
-    public static class TOTAL extends Perspective {
+    public static class TotalPerspective extends Perspective {
         @Override
         public String toString() {
             return "Total";
@@ -84,7 +84,7 @@ public abstract class Perspective {
         }
     }
 
-    public static class FOLLOWING_PLAYER extends Perspective {
+    public static class FollowingPlayerPerspective extends Perspective {
         @Override
         public String toString() {
             return "Following Player";
@@ -106,7 +106,7 @@ public abstract class Perspective {
         }
     }
 
-    public static class NEAR_PLAYER extends Perspective {
+    public static class NearPlayerPerspective extends Perspective {
         @Override
         public String toString() {
             return "Near Player";

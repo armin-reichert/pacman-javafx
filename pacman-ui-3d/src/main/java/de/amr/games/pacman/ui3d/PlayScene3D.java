@@ -51,10 +51,10 @@ public class PlayScene3D implements GameScene {
     // Each 3D play scene has its own set of cameras/perspectives
     private final Map<Perspective.Name, Perspective> perspectiveMap = new EnumMap<>(Perspective.Name.class);
     {
-        perspectiveMap.put(Perspective.Name.DRONE, new Perspective.DRONE());
-        perspectiveMap.put(Perspective.Name.TOTAL, new Perspective.TOTAL());
-        perspectiveMap.put(Perspective.Name.FOLLOWING_PLAYER, new Perspective.FOLLOWING_PLAYER());
-        perspectiveMap.put(Perspective.Name.NEAR_PLAYER, new Perspective.NEAR_PLAYER());
+        perspectiveMap.put(Perspective.Name.DRONE, new Perspective.DronePerspective());
+        perspectiveMap.put(Perspective.Name.TOTAL, new Perspective.TotalPerspective());
+        perspectiveMap.put(Perspective.Name.FOLLOWING_PLAYER, new Perspective.FollowingPlayerPerspective());
+        perspectiveMap.put(Perspective.Name.NEAR_PLAYER, new Perspective.NearPlayerPerspective());
     }
 
     public final ObjectProperty<Perspective.Name> perspectiveNamePy = new SimpleObjectProperty<>(Perspective.Name.TOTAL) {
