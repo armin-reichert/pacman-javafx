@@ -45,7 +45,7 @@ public class GameAssets3D {
             texture.diffuseColorProperty().bind(PY_3D_FLOOR_COLOR);
             texturesByName.put(name, texture);
         });
-        assets.store("floorTextures", texturesByName);
+        assets.store("floor_textures", texturesByName);
 
         // Ms. Pac-Man
 

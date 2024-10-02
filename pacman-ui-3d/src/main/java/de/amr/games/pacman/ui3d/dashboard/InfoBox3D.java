@@ -128,7 +128,7 @@ public class InfoBox3D extends InfoBox {
     }
 
     private String[] floorTextureComboBoxEntries() {
-        Map<String, PhongMaterial> texturesByName = context.assets().get("floorTextures");
+        Map<String, PhongMaterial> texturesByName = context.assets().get("floor_textures");
         var names = new ArrayList<String>();
         names.add(GameAssets3D.NO_TEXTURE);
         names.addAll(texturesByName.keySet());

@@ -141,7 +141,7 @@ public class PlayScene3D implements GameScene {
             Logger.warn("Cannot update 3D play scene, 3D game level not yet created?");
             return;
         }
-        level3D.update();
+        level3D.update(context);
         perspective().update(fxSubScene.getCamera(), game.world(), game.pac());
 
         if (context.game().isDemoLevel()) {
@@ -307,7 +307,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        context.game().bonus().ifPresent(level3D::replaceBonus3D);
+        context.game().bonus().ifPresent(bonus -> level3D.replaceBonus3D(bonus, context.spriteSheet()));
     }
 
     @Override
