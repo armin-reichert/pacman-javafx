@@ -22,7 +22,6 @@ import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGamePacAnimations;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
 
 /**
  * Intermission scene 1: "They meet".
@@ -214,7 +213,6 @@ public class MsPacManCutScene1 extends GameScene2D {
 
     private SceneController sceneController;
 
-    private GameSpriteSheet spriteSheet;
     private Pac pacMan;
     private Pac msPac;
     private Ghost inky;
@@ -226,7 +224,7 @@ public class MsPacManCutScene1 extends GameScene2D {
         int number  = context.gameState() == GameState.INTERMISSION_TEST
             ? GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber")
             : context.game().intermissionNumber(context.game().levelNumber());
-        SOUNDS.playIntermissionSound(number);
+        context.sounds().playIntermissionSound(number);
     }
 
     @Override
@@ -244,17 +242,16 @@ public class MsPacManCutScene1 extends GameScene2D {
         pinky = Ghost.pink();
         heart = new Entity();
 
-        spriteSheet = context.spriteSheet();
-
         //TODO replace with Tengen sprite sheet later
         if (context.game().variant() == GameVariant.MS_PACMAN_TENGEN) {
-            spriteSheet = context.spriteSheet(GameVariant.MS_PACMAN);
+            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
+            msPac.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
+        } else {
+            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
+            msPac.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
         }
-
-        msPac.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
-        pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
-        inky.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, inky.id()));
-        pinky.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, pinky.id()));
+        inky.setAnimations(new MsPacManGameGhostAnimations(context.spriteSheet(), inky.id()));
+        pinky.setAnimations(new MsPacManGameGhostAnimations(context.spriteSheet(), pinky.id()));
         clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
         clapAnimation.start();
 
@@ -273,11 +270,11 @@ public class MsPacManCutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
-        renderer.drawClapperBoard(spriteSheet, renderer.scaledArcadeFont(TS), PALETTE_PALE, clapAnimation, t(3), t(10));
+        renderer.drawClapperBoard(context.spriteSheet(), renderer.scaledArcadeFont(TS), PALETTE_PALE, clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(msPac);
         renderer.drawAnimatedEntity(pacMan);
         renderer.drawAnimatedEntity(inky);
         renderer.drawAnimatedEntity(pinky);
-        renderer.drawSprite(heart, spriteSheet, spriteSheet.heartSprite());
+        renderer.drawSprite(heart, context.spriteSheet(), context.spriteSheet().heartSprite());
     }
 }

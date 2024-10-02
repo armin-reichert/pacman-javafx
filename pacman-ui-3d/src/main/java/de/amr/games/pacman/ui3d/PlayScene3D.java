@@ -11,7 +11,6 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
@@ -28,12 +27,14 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui2d.GameAction.executeActionIfCalled;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 
@@ -47,10 +48,22 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
  */
 public class PlayScene3D implements GameScene {
 
-    public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
+    // Each 3D play scene has its own set of cameras/perspectives
+    private final Map<Perspective.Name, Perspective> perspectiveMap = new EnumMap<>(Perspective.Name.class);
+    {
+        perspectiveMap.put(Perspective.Name.DRONE, new Perspective.DronePerspective());
+        perspectiveMap.put(Perspective.Name.TOTAL, new Perspective.TotalPerspective());
+        perspectiveMap.put(Perspective.Name.FOLLOWING_PLAYER, new Perspective.FollowingPlayerPerspective());
+        perspectiveMap.put(Perspective.Name.NEAR_PLAYER, new Perspective.NearPlayerPerspective());
+    }
+
+    public final ObjectProperty<Perspective.Name> perspectiveNamePy = new SimpleObjectProperty<>(Perspective.Name.TOTAL) {
         @Override
         protected void invalidated() {
-            perspective().init(fxSubScene.getCamera(), context.game().world());
+            Perspective.Name name = get();
+            Perspective perspective = perspectiveMap.get(name);
+            fxSubScene.setCamera(perspective.getCamera());
+            perspective.init(context.game().world());
         }
     };
 
@@ -75,16 +88,6 @@ public class PlayScene3D implements GameScene {
         // initial size is irrelevant as it is bound to parent scene later
         fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
         fxSubScene.setFill(null); // transparent
-
-        var camera = new PerspectiveCamera(true);
-        camera.setNearClip(0.1);
-        camera.setFarClip(10000.0);
-        camera.setFieldOfView(30); // default: 30
-        fxSubScene.setCamera(camera);
-
-        // keep the scores rotated such that the viewer always sees them frontally
-        scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
-        scores3D.rotateProperty().bind(camera.rotateProperty());
 
         // last child is placeholder for level 3D
         root.getChildren().setAll(scores3D, coordSystem, ambientLight, new Group());
@@ -111,14 +114,14 @@ public class PlayScene3D implements GameScene {
     }
 
     public Perspective perspective() {
-        return perspectivePy.get();
+        return perspectiveMap.get(perspectiveNamePy.get());
     }
 
     @Override
     public void init() {
         context.setScoreVisible(true);
         scores3D.fontPy.set(context.assets().font("font.arcade", 8));
-        perspectivePy.bind(PY_3D_PERSPECTIVE);
+        perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
         pickerGameOver = Picker.fromBundle(context.assets().bundles().getLast(), "game.over");
         pickerLevelComplete = Picker.fromBundle(context.assets().bundles().getLast(), "level.complete");
         Logger.info("3D play scene initialized. {}", this);
@@ -126,7 +129,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void end() {
-        perspectivePy.unbind();
+        perspectiveNamePy.unbind();
         level3D = null;
         Logger.info("3D play scene ended. {}", this);
     }
@@ -142,8 +145,12 @@ public class PlayScene3D implements GameScene {
             Logger.warn("Cannot update 3D play scene, 3D game level not yet created?");
             return;
         }
-        level3D.update();
-        perspective().update(fxSubScene.getCamera(), game.world(), game.pac());
+        level3D.update(context);
+
+        // Update camera and rotate the scores such that the viewer always sees them frontally
+        perspective().update(game.world(), game.pac());
+        scores3D.setRotationAxis(perspective().getCamera().getRotationAxis());
+        scores3D.setRotate(perspective().getCamera().getRotate());
 
         if (context.game().isDemoLevel()) {
             context.game().pac().setUseAutopilot(true);
@@ -165,28 +172,30 @@ public class PlayScene3D implements GameScene {
         // Sound
         if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
             int sirenNumber = 1 + context.game().huntingPhaseIndex() / 2;
-            SOUNDS.selectSiren(sirenNumber);
-            SOUNDS.playSiren();
+            context.sounds().selectSiren(sirenNumber);
+            context.sounds().playSiren();
         }
         if (context.game().pac().starvingTicks() > 8) { // TODO not sure how to do this right
-            SOUNDS.stopMunchingSound();
+            context.sounds().stopMunchingSound();
         }
         boolean ghostsReturning = context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
         if (context.game().pac().isAlive() && ghostsReturning) {
-            SOUNDS.playGhostReturningHomeSound();
+            context.sounds().playGhostReturningHomeSound();
         } else {
-            SOUNDS.stopGhostReturningHomeSound();
+            context.sounds().stopGhostReturningHomeSound();
         }
     }
 
     @Override
     public void handleInput() {
-        if (GameAction2D.ADD_CREDIT.called() && this.context.game().isDemoLevel()) {
-            GameAction2D.ADD_CREDIT.execute(context);
-        } else {
-            GameAction.executeCalledAction(context, GameAction.NO_ACTION,
-                GameAction3D.PREV_PERSPECTIVE, GameAction3D.NEXT_PERSPECTIVE,
-                GameAction2D.CHEAT_EAT_ALL, GameAction2D.CHEAT_ADD_LIVES, GameAction2D.CHEAT_NEXT_LEVEL, GameAction2D.CHEAT_KILL_GHOSTS);
+        if (!GameAction2D.ADD_CREDIT.executeIf(context, context.game()::isDemoLevel)) {
+            executeActionIfCalled(context,
+                GameAction3D.PREV_PERSPECTIVE,
+                GameAction3D.NEXT_PERSPECTIVE,
+                GameAction2D.CHEAT_EAT_ALL,
+                GameAction2D.CHEAT_ADD_LIVES,
+                GameAction2D.CHEAT_NEXT_LEVEL,
+                GameAction2D.CHEAT_KILL_GHOSTS);
         }
     }
 
@@ -206,7 +215,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void onEnterStateReady() {
-        SOUNDS.stopAll();
+        context.sounds().stopAll();
         if (level3D != null) {
             stopLevelAnimations();
             level3D.pac3D().init();
@@ -221,7 +230,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void onEnterStatePacManDying() {
-        SOUNDS.stopAll();
+        context.sounds().stopAll();
         // last update before dying animation
         level3D.pac3D().update(context);
         playPacManDiesAnimation();
@@ -237,7 +246,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void onEnterStateLevelComplete() {
-        SOUNDS.stopAll();
+        context.sounds().stopAll();
         // if cheat has been used to complete level, food might still exist, so eat it:
         GameWorld world = context.game().world();
         world.map().food().tiles().forEach(world::eatFoodAt);
@@ -252,7 +261,7 @@ public class PlayScene3D implements GameScene {
         context.gameState().timer().restartSeconds(3);
         replaceGameLevel3D(true);
         level3D.pac3D().init();
-        perspective().init(fxSubScene.getCamera(), context.game().world());
+        perspective().init(context.game().world());
     }
 
     private void onEnterStateLevelTest() {
@@ -260,7 +269,7 @@ public class PlayScene3D implements GameScene {
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
         showLevelTestMessage();
-        PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
+        PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
     }
 
     private void onEnterStateGameOver() {
@@ -268,8 +277,8 @@ public class PlayScene3D implements GameScene {
         // delay state exit for 3 seconds
         context.gameState().timer().restartSeconds(3);
         context.showFlashMessageSeconds(3, pickerGameOver.next());
-        SOUNDS.stopAll();
-        SOUNDS.playGameOverSound();
+        context.sounds().stopAll();
+        context.sounds().playGameOverSound();
     }
 
     private void stopLevelAnimations() {
@@ -300,7 +309,7 @@ public class PlayScene3D implements GameScene {
 
         if (context.gameState() == GameState.HUNTING) {
             if (context.game().powerTimer().isRunning()) {
-                SOUNDS.playPacPowerSound();
+                context.sounds().playPacPowerSound();
             }
             level3D.livesCounter3D().shapesRotation().play();
         }
@@ -308,13 +317,13 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        context.game().bonus().ifPresent(level3D::replaceBonus3D);
+        context.game().bonus().ifPresent(bonus -> level3D.replaceBonus3D(bonus, context.spriteSheet()));
     }
 
     @Override
     public void onBonusEaten(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
-        SOUNDS.playBonusEatenSound();
+        context.sounds().playBonusEatenSound();
     }
 
     @Override
@@ -324,12 +333,12 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onExtraLifeWon(GameEvent e) {
-        SOUNDS.playExtraLifeSound();
+        context.sounds().playExtraLifeSound();
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        SOUNDS.playGhostEatenSound();
+        context.sounds().playGhostEatenSound();
     }
 
     @Override
@@ -352,6 +361,7 @@ public class PlayScene3D implements GameScene {
                 showReadyMessage();
             }
         }
+        perspective().init(context.game().world());
     }
 
     @Override
@@ -370,20 +380,20 @@ public class PlayScene3D implements GameScene {
             level3D.energizer3D(tile).ifPresent(Energizer3D::onEaten);
             level3D.pellet3D(tile).ifPresent(Pellet3D::onEaten);
         }
-        SOUNDS.playMunchingSound();
+        context.sounds().playMunchingSound();
     }
 
     @Override
     public void onPacGetsPower(GameEvent event) {
         level3D.pac3D().setPowerMode(true);
-        SOUNDS.stopSiren();
-        SOUNDS.playPacPowerSound();
+        context.sounds().stopSiren();
+        context.sounds().playPacPowerSound();
     }
 
     @Override
     public void onPacLostPower(GameEvent event) {
         level3D.pac3D().setPowerMode(false);
-        SOUNDS.stopPacPowerSound();
+        context.sounds().stopPacPowerSound();
     }
 
     private void addLevelCounter() {
@@ -456,21 +466,21 @@ public class PlayScene3D implements GameScene {
         String message = pickerLevelComplete.next() + "\n\n" + context.locText("level_complete", context.game().levelNumber());
         return new SequentialTransition(
               now(() -> {
-                  perspectivePy.unbind();
-                  perspectivePy.set(Perspective.TOTAL);
+                  perspectiveNamePy.unbind();
+                  perspectiveNamePy.set(Perspective.Name.TOTAL);
                   level3D.livesCounter3D().light().setLightOn(false);
                   context.showFlashMessageSeconds(3, message);
               })
             , doAfterSec(2, level3D.mazeFlashAnimation(numFlashes))
             , doAfterSec(1, () -> {
                 context.game().pac().hide();
-                SOUNDS.playLevelCompleteSound();
+                context.sounds().playLevelCompleteSound();
             })
             , doAfterSec(0.5, level3D.levelRotateAnimation(1.5))
             , level3D.wallsDisappearAnimation(2.0)
             , doAfterSec(1, () -> {
-                SOUNDS.playLevelChangedSound();
-                perspectivePy.bind(PY_3D_PERSPECTIVE);
+                context.sounds().playLevelChangedSound();
+                perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
             })
         );
     }

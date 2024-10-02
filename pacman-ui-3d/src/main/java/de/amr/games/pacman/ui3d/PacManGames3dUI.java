@@ -12,14 +12,11 @@ import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
-import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 
 import java.util.Map;
 
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
-import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
-import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
 
 /**
@@ -37,7 +34,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
     public void loadAssets() {
         GameAssets2D.addTo(assets);
         GameAssets3D.addTo(assets);
-        SOUNDS.setAssets(assets);
+        sounds().setAssets(assets);
     }
 
     @Override

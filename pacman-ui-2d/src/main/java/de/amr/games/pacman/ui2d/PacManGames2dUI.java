@@ -21,6 +21,7 @@ import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
+import de.amr.games.pacman.ui2d.sound.GameSounds;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.FlashMessageView;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
@@ -106,7 +107,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         }
     }
 
-    public static final GameSounds SOUNDS = new GameSounds();
+    private static final GameSounds SOUNDS = new GameSounds();
 
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
@@ -141,7 +142,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     public void loadAssets() {
         GameAssets2D.addTo(assets);
-        SOUNDS.setAssets(assets);
+        sounds().setAssets(assets);
     }
 
     public void setGameScenes(GameVariant variant, Map<GameSceneID, GameScene> gameScenes) {
@@ -257,7 +258,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             if (GameAction2D.FULLSCREEN.called()) {
                 stage.setFullScreen(true);
             } else if (GameAction2D.MUTE.called()) {
-                SOUNDS.toggleMuted();
+                sounds().toggleMuted();
             } else {
                 currentPage.handleInput();
             }
@@ -294,7 +295,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         if (variant == GameVariant.PACMAN_XXL) {
             updateCustomMaps();
         }
-        SOUNDS.init(variant);
+        sounds().init(variant);
     }
 
     protected ObservableValue<String> stageTitleBinding() {
@@ -311,7 +312,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         var icon = new ImageView(assets.<Image>get("icon.mute"));
         icon.setFitWidth(48);
         icon.setPreserveRatio(true);
-        icon.visibleProperty().bind(SOUNDS.mutedProperty());
+        icon.visibleProperty().bind(sounds().mutedProperty());
         StackPane.setAlignment(icon, Pos.BOTTOM_RIGHT);
         return icon;
     }
@@ -537,10 +538,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         createActorAnimations(game(), assets, spriteSheet());
         Logger.info("Actor animations created. ({} level #{})", game().variant(), game().levelNumber());
         if (game().isDemoLevel()) {
-            SOUNDS.setEnabled(false);
+            sounds().setEnabled(false);
         } else {
             game().pac().setManualSteering(new KeyboardPacSteering());
-            SOUNDS.setEnabled(true);
+            sounds().setEnabled(true);
         }
         //TODO use data binding?
         gamePage.adaptCanvasSizeToCurrentWorld();
@@ -551,13 +552,13 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         int hourOfDay = LocalTime.now().getHour();
         PY_NIGHT_MODE.set(hourOfDay >= 21 || hourOfDay <= 4);
         if (gameState() != LEVEL_TEST && !game().isDemoLevel() && game().levelNumber() == 1) {
-            SOUNDS.playGameReadySound();
+            sounds().playGameReadySound();
         }
     }
 
     @Override
     public void onStopAllSounds(GameEvent event) {
-        SOUNDS.stopAll();
+        sounds().stopAll();
     }
 
     // -----------------------------------------------------------------------------------------------------------------

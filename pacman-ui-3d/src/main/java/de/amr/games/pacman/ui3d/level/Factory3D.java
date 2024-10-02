@@ -9,6 +9,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
+import de.amr.games.pacman.ui2d.sound.GameSounds;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -30,11 +31,11 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
 
 public interface Factory3D {
 
-    static Pac3D createPac3D(GameVariant variant, AssetStorage assets, Pac pac, double size) {
+    static Pac3D createPac3D(GameVariant variant, AssetStorage assets, GameSounds sounds, Pac pac, double size) {
         String prefix = GameAssets2D.assetPrefix(variant) + ".";
         Pac3D pac3D = switch (variant) {
-            case MS_PACMAN, MS_PACMAN_TENGEN -> new MsPacMan3D(variant, pac, size, assets);
-            case PACMAN, PACMAN_XXL          -> new PacMan3D(variant, pac, size, assets);
+            case MS_PACMAN, MS_PACMAN_TENGEN -> new MsPacMan3D(variant, pac, size, assets, sounds);
+            case PACMAN, PACMAN_XXL          -> new PacMan3D(variant, pac, size, assets, sounds);
         };
         pac3D.shape3D().light().setColor(assets.color(prefix + "pac.color.head").desaturate());
         pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);

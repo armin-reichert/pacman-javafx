@@ -8,7 +8,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.PacManGames2dUI;
+import de.amr.games.pacman.ui2d.sound.GameSounds;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.Animation;
@@ -30,6 +30,7 @@ import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
  */
 public class MsPacMan3D implements Pac3D {
 
+    private final GameSounds sounds;
     private final Pac msPacMan;
     private final PacShape3D shape3D;
     private RotateTransition hipSwayingAnimation;
@@ -40,12 +41,14 @@ public class MsPacMan3D implements Pac3D {
      * @param variant game variant
      * @param msPacMan Ms. Pac-Man instance
      * @param size diameter of Pac-Man
-     * @param assets asset map
+     * @param assets asset storage
+     * @param sounds game sounds
      */
-    public MsPacMan3D(GameVariant variant, Pac msPacMan, double size, AssetStorage assets) {
+    public MsPacMan3D(GameVariant variant, Pac msPacMan, double size, AssetStorage assets, GameSounds sounds) {
         checkNotNull(variant);
         this.msPacMan = checkNotNull(msPacMan);
         checkNotNull(assets);
+        this.sounds = checkNotNull(sounds);
 
         String assetPrefix = GameAssets2D.assetPrefix(variant) + ".";
         Model3D model3D = assets.get("model3D.pacman");
@@ -115,7 +118,7 @@ public class MsPacMan3D implements Pac3D {
         spinning.setToAngle(360);
         spinning.setInterpolator(Interpolator.LINEAR);
         spinning.setCycleCount(4);
-        return new SequentialTransition(pauseSec(1), now(PacManGames2dUI.SOUNDS::playPacDeathSound), spinning, pauseSec(1.5));
+        return new SequentialTransition(pauseSec(1), now(sounds::playPacDeathSound), spinning, pauseSec(1.5));
     }
 
     // Hip swaying animation

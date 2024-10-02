@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.variant.pacman.PacManGameGhostAnimations;
@@ -30,12 +29,11 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.EATEN;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
+import static de.amr.games.pacman.ui2d.GameAction.executeActionIfCalled;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
 import static de.amr.games.pacman.ui2d.variant.pacman.PacManGameSpriteSheet.MIDWAY_COPYRIGHT;
 
 /**
- * Intro scene of the Pac-Man game.
  * <p>
  * The ghosts are presented one by one, Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
  *
@@ -281,7 +279,7 @@ public class PacManIntroScene extends GameScene2D {
 
     @Override
     public void end() {
-        SOUNDS.stopVoice();
+        context.sounds().stopVoice();
     }
 
     @Override
@@ -291,8 +289,7 @@ public class PacManIntroScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        GameAction.executeCalledAction(context, GameAction.NO_ACTION,
-            GameAction2D.ADD_CREDIT, GameAction2D.START_GAME, GameAction2D.TEST_CUT_SCENES);
+        executeActionIfCalled(context, GameAction2D.ADD_CREDIT, GameAction2D.START_GAME, GameAction2D.TEST_CUT_SCENES);
     }
 
     @Override

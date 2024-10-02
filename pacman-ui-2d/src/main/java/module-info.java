@@ -22,5 +22,6 @@ open module de.amr.games.pacman.ui2d {
     exports de.amr.games.pacman.ui2d.variant.pacman_xxl;
     exports de.amr.games.pacman.ui2d.variant.tengen;
     exports de.amr.games.pacman.ui2d.scene;
+    exports de.amr.games.pacman.ui2d.sound;
     exports de.amr.games.pacman.ui2d.util;
 }

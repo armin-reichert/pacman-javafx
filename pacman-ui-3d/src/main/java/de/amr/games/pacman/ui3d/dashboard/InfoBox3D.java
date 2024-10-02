@@ -9,6 +9,7 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.InfoBox;
 import de.amr.games.pacman.ui2d.dashboard.InfoText;
 import de.amr.games.pacman.ui3d.GameAction3D;
+import de.amr.games.pacman.ui3d.GameAssets3D;
 import de.amr.games.pacman.ui3d.Perspective;
 import de.amr.games.pacman.ui3d.PlayScene3D;
 import javafx.scene.control.CheckBox;
@@ -38,7 +39,7 @@ public class InfoBox3D extends InfoBox {
     private ColorPicker pickerLightColor;
     private ColorPicker pickerFloorColor;
     private ComboBox<String> comboFloorTexture;
-    private ComboBox<Perspective> comboPerspectives;
+    private ComboBox<Perspective.Name> comboPerspectives;
     private CheckBox cbPiPOn;
     private Slider sliderPiPSceneHeight;
     private Slider sliderPiPOpacity;
@@ -57,7 +58,7 @@ public class InfoBox3D extends InfoBox {
         pickerLightColor     = colorPicker("Light Color", PY_3D_LIGHT_COLOR.get());
         pickerFloorColor     = colorPicker("Floor Color", PY_3D_FLOOR_COLOR.get());
         comboFloorTexture    = comboBox("Floor Texture", floorTextureComboBoxEntries());
-        comboPerspectives    = comboBox("Perspective", Perspective.values());
+        comboPerspectives    = comboBox("Perspective", Perspective.Name.values());
         labelledValue("Camera", this::currentSceneCameraInfo);
         cbPiPOn              = checkBox("Picture-In-Picture");
         sliderPiPSceneHeight = slider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get(), false, false);
@@ -127,9 +128,9 @@ public class InfoBox3D extends InfoBox {
     }
 
     private String[] floorTextureComboBoxEntries() {
-        Map<String, PhongMaterial> texturesByName = context.assets().get("floorTextures");
+        Map<String, PhongMaterial> texturesByName = context.assets().get("floor_textures");
         var names = new ArrayList<String>();
-        names.add(NO_TEXTURE);
+        names.add(GameAssets3D.NO_TEXTURE);
         names.addAll(texturesByName.keySet());
         return names.toArray(String[]::new);
     }

@@ -16,6 +16,7 @@ import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
+import de.amr.games.pacman.ui2d.sound.GameSounds;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
 import javafx.beans.property.ObjectProperty;

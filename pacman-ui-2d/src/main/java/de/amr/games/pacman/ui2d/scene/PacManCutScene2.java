@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
@@ -18,7 +17,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
 
 /**
  * @author Armin Reichert
@@ -124,6 +122,6 @@ public class PacManCutScene2 extends GameScene2D {
         int number = context.gameState() == GameState.INTERMISSION_TEST
             ? GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber")
             : context.game().intermissionNumber(context.game().levelNumber());
-        SOUNDS.playIntermissionSound(number);
+        context.sounds().playIntermissionSound(number);
     }
 }

@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
@@ -31,9 +30,8 @@ import javafx.scene.text.Font;
 import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.model.GameModel.*;
+import static de.amr.games.pacman.ui2d.GameAction.executeActionIfCalled;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -223,7 +221,7 @@ public class TengenMsPacManIntroScene extends GameScene2D {
 
     @Override
     public void end() {
-        SOUNDS.stopVoice();
+        context.sounds().stopVoice();
     }
 
     @Override
@@ -233,8 +231,7 @@ public class TengenMsPacManIntroScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        GameAction.executeCalledAction(context, GameAction.NO_ACTION,
-            GameAction2D.ADD_CREDIT, GameAction2D.START_GAME, GameAction2D.TEST_CUT_SCENES);
+        executeActionIfCalled(context, GameAction2D.ADD_CREDIT, GameAction2D.START_GAME, GameAction2D.TEST_CUT_SCENES);
     }
 
     @Override

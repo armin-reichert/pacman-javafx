@@ -22,7 +22,6 @@ import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
 import static de.amr.games.pacman.ui2d.page.Page.menuTitleItem;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
@@ -50,9 +49,11 @@ public class GamePage3D extends GamePage {
 
     @Override
     public void handleInput() {
-        GameAction.executeCalledAction(context, super::handleInput,
+        if (!GameAction.executeActionIfCalled(context,
             GameAction3D.TOGGLE_PIP_VISIBILITY,
-            GameAction3D.TOGGLE_PLAY_SCENE_2D_3D);
+            GameAction3D.TOGGLE_PLAY_SCENE_2D_3D)) {
+            super.handleInput();
+        }
     }
 
     @Override
@@ -89,7 +90,7 @@ public class GamePage3D extends GamePage {
 
             // Camera perspective selection
             var perspectivesGroup = new ToggleGroup();
-            for (var perspective : Perspective.values()) {
+            for (var perspective : Perspective.Name.values()) {
                 var miPerspective = new RadioMenuItem(context.locText(perspective.name()));
                 miPerspective.setToggleGroup(perspectivesGroup);
                 // keep global property in sync with selection
@@ -119,7 +120,7 @@ public class GamePage3D extends GamePage {
         contextMenu.getItems().add(new SeparatorMenuItem());
 
         var miMuted = new CheckMenuItem(context.locText("muted"));
-        miMuted.selectedProperty().bindBidirectional(SOUNDS.mutedProperty());
+        miMuted.selectedProperty().bindBidirectional(context.sounds().mutedProperty());
         contextMenu.getItems().add(miMuted);
 
         if (context.game().variant() == GameVariant.PACMAN_XXL) {

@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGamePacAnimations;
@@ -18,7 +17,6 @@ import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGamePacAnimations;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
 
 /**
  * Intermission scene 2: "The chase".
@@ -129,7 +127,6 @@ public class MsPacManCutScene2 extends GameScene2D {
         }
     }
 
-    private GameSpriteSheet spriteSheet;
     private Pac pacMan;
     private Pac msPacMan;
 
@@ -140,7 +137,7 @@ public class MsPacManCutScene2 extends GameScene2D {
         int number  = context.gameState() == GameState.INTERMISSION_TEST
             ? GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber")
             : context.game().intermissionNumber(context.game().levelNumber());
-        SOUNDS.playIntermissionSound(number);
+        context.sounds().playIntermissionSound(number);
     }
 
     @Override
@@ -155,13 +152,15 @@ public class MsPacManCutScene2 extends GameScene2D {
         pacMan = new Pac();
         msPacMan = new Pac();
 
-        spriteSheet = context.spriteSheet();
         //TODO use Tengen sprite sheet
         if (context.game().variant() == GameVariant.MS_PACMAN_TENGEN) {
-            spriteSheet = context.spriteSheet(GameVariant.MS_PACMAN);
+            msPacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
+            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
+        } else {
+            msPacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
+            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
+
         }
-        msPacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
-        pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
 
         clapAnimation = new ClapperboardAnimation("2", "THE CHASE");
         clapAnimation.start();
@@ -181,7 +180,7 @@ public class MsPacManCutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
-        renderer.drawClapperBoard(spriteSheet, renderer.scaledArcadeFont(TS), PALETTE_PALE, clapAnimation, t(3), t(10));
+        renderer.drawClapperBoard(context.spriteSheet(), renderer.scaledArcadeFont(TS), PALETTE_PALE, clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(msPacMan);
         renderer.drawAnimatedEntity(pacMan);
     }
