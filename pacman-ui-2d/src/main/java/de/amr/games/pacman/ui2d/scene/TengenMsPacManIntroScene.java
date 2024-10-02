@@ -31,7 +31,6 @@ import javafx.scene.text.Font;
 import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
 import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
 
