@@ -94,7 +94,7 @@ public abstract class Perspective {
         public void init(GameWorld world) {
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(60);
-            cam.setTranslateZ(-160);
+            cam.setTranslateZ(-120);
         }
 
         @Override
@@ -102,7 +102,7 @@ public abstract class Perspective {
             double speedX = 0.03;
             double speedY = 0.06;
             cam.setTranslateX(lerp(cam.getTranslateX(), spottedEntity.position().x(), speedX));
-            cam.setTranslateY(lerp(cam.getTranslateY(), spottedEntity.position().y() + 200, speedY));
+            cam.setTranslateY(lerp(cam.getTranslateY(), spottedEntity.position().y() + 150, speedY));
         }
     }
 
