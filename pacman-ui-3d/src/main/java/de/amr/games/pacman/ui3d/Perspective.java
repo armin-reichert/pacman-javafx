@@ -4,12 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Entity;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.lerp;
 
 /**
@@ -17,9 +17,23 @@ import static de.amr.games.pacman.lib.Globals.lerp;
  *
  * @author Armin Reichert
  */
-public enum Perspective {
+public abstract class Perspective {
 
-    DRONE {
+    public enum Name {
+        DRONE, TOTAL, FOLLOWING_PLAYER, NEAR_PLAYER;
+
+        public Name prev() {
+            int n = values().length, ord = ordinal();
+            return values()[ord == 0 ? n - 1 : ord - 1];
+        }
+
+        public Name next() {
+            int n = values().length, ord = ordinal();
+            return values()[ord < n - 1 ? ord + 1 : 0];
+        }
+    }
+
+    public static class DRONE extends Perspective {
         static final int HEIGHT = 200;
 
         @Override
@@ -46,9 +60,9 @@ public enum Perspective {
             cam.setTranslateX(x);
             cam.setTranslateY(y);
         }
-    },
+    };
 
-    TOTAL {
+    public static class TOTAL extends Perspective {
         @Override
         public String toString() {
             return "Total";
@@ -56,22 +70,21 @@ public enum Perspective {
 
         @Override
         public void init(GameWorld world) {
-            //TODO this is crap and doesn't work correctly for non-Arcade maps
-            cam.setRotationAxis(Rotate.X_AXIS);
-            cam.setRotate(70);
-            cam.setTranslateX(111);
-            int numRows = world != null ? world.map().terrain().numRows() : GameModel.ARCADE_MAP_SIZE_Y;
-            cam.setTranslateY( 8.5 * numRows + 100);
-            cam.setTranslateZ(-80);
         }
 
         @Override
         public void update(GameWorld world, Entity spottedEntity) {
-            //init(world);
+            int sizeX = world.map().terrain().numCols() * TS;
+            int sizeY = world.map().terrain().numRows() * TS;
+            cam.setRotationAxis(Rotate.X_AXIS);
+            cam.setRotate(70);
+            cam.setTranslateX(sizeX * 0.5);
+            cam.setTranslateY(sizeY * 1.5);
+            cam.setTranslateZ(-100);
         }
-    },
+    }
 
-    FOLLOWING_PLAYER() {
+    public static class FOLLOWING_PLAYER extends Perspective {
         @Override
         public String toString() {
             return "Following Player";
@@ -91,9 +104,9 @@ public enum Perspective {
             cam.setTranslateX(lerp(cam.getTranslateX(), spottedEntity.position().x(), speedX));
             cam.setTranslateY(lerp(cam.getTranslateY(), spottedEntity.position().y() + 200, speedY));
         }
-    },
+    }
 
-    NEAR_PLAYER() {
+    public static class NEAR_PLAYER extends Perspective {
         @Override
         public String toString() {
             return "Near Player";
@@ -115,16 +128,6 @@ public enum Perspective {
             cam.setTranslateZ(-40);
         }
     };
-
-    public Perspective next() {
-        int n = Perspective.values().length, ord = ordinal();
-        return Perspective.values()[ord < n - 1 ? ord + 1 : 0];
-    }
-
-    public Perspective previous() {
-        int n = Perspective.values().length, ord = ordinal();
-        return Perspective.values()[ord > 0 ? ord - 1 : n - 1];
-    }
 
     Perspective() {
         cam = new PerspectiveCamera(true);

@@ -27,6 +27,8 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -46,12 +48,22 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
  */
 public class PlayScene3D implements GameScene {
 
-    public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective", Perspective.TOTAL) {
+    // Each 3D play scene has its own set of cameras/perspectives
+    private final Map<Perspective.Name, Perspective> perspectiveMap = new EnumMap<>(Perspective.Name.class);
+    {
+        perspectiveMap.put(Perspective.Name.DRONE, new Perspective.DRONE());
+        perspectiveMap.put(Perspective.Name.TOTAL, new Perspective.TOTAL());
+        perspectiveMap.put(Perspective.Name.FOLLOWING_PLAYER, new Perspective.FOLLOWING_PLAYER());
+        perspectiveMap.put(Perspective.Name.NEAR_PLAYER, new Perspective.NEAR_PLAYER());
+    }
+
+    public final ObjectProperty<Perspective.Name> perspectiveNamePy = new SimpleObjectProperty<>(Perspective.Name.TOTAL) {
         @Override
         protected void invalidated() {
-            Perspective newPerspective = get();
-            fxSubScene.setCamera(newPerspective.getCamera());
-            newPerspective.init(context.game().world());
+            Perspective.Name name = get();
+            Perspective perspective = perspectiveMap.get(name);
+            fxSubScene.setCamera(perspective.getCamera());
+            perspective.init(context.game().world());
         }
     };
 
@@ -102,14 +114,14 @@ public class PlayScene3D implements GameScene {
     }
 
     public Perspective perspective() {
-        return perspectivePy.get();
+        return perspectiveMap.get(perspectiveNamePy.get());
     }
 
     @Override
     public void init() {
         context.setScoreVisible(true);
         scores3D.fontPy.set(context.assets().font("font.arcade", 8));
-        perspectivePy.bind(PY_3D_PERSPECTIVE);
+        perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
         pickerGameOver = Picker.fromBundle(context.assets().bundles().getLast(), "game.over");
         pickerLevelComplete = Picker.fromBundle(context.assets().bundles().getLast(), "level.complete");
         Logger.info("3D play scene initialized. {}", this);
@@ -117,7 +129,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void end() {
-        perspectivePy.unbind();
+        perspectiveNamePy.unbind();
         level3D = null;
         Logger.info("3D play scene ended. {}", this);
     }
@@ -257,7 +269,7 @@ public class PlayScene3D implements GameScene {
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
         showLevelTestMessage();
-        PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
+        PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
     }
 
     private void onEnterStateGameOver() {
@@ -349,6 +361,7 @@ public class PlayScene3D implements GameScene {
                 showReadyMessage();
             }
         }
+        perspective().init(context.game().world());
     }
 
     @Override
@@ -453,8 +466,8 @@ public class PlayScene3D implements GameScene {
         String message = pickerLevelComplete.next() + "\n\n" + context.locText("level_complete", context.game().levelNumber());
         return new SequentialTransition(
               now(() -> {
-                  perspectivePy.unbind();
-                  perspectivePy.set(Perspective.TOTAL);
+                  perspectiveNamePy.unbind();
+                  perspectiveNamePy.set(Perspective.Name.TOTAL);
                   level3D.livesCounter3D().light().setLightOn(false);
                   context.showFlashMessageSeconds(3, message);
               })
@@ -467,7 +480,7 @@ public class PlayScene3D implements GameScene {
             , level3D.wallsDisappearAnimation(2.0)
             , doAfterSec(1, () -> {
                 context.sounds().playLevelChangedSound();
-                perspectivePy.bind(PY_3D_PERSPECTIVE);
+                perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
             })
         );
     }

@@ -90,7 +90,7 @@ public class GamePage3D extends GamePage {
 
             // Camera perspective selection
             var perspectivesGroup = new ToggleGroup();
-            for (var perspective : Perspective.values()) {
+            for (var perspective : Perspective.Name.values()) {
                 var miPerspective = new RadioMenuItem(context.locText(perspective.name()));
                 miPerspective.setToggleGroup(perspectivesGroup);
                 // keep global property in sync with selection

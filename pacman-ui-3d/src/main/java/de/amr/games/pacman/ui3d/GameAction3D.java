@@ -22,7 +22,7 @@ public enum GameAction3D implements GameAction {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
-            var next = PY_3D_PERSPECTIVE.get().next();
+            Perspective.Name next = PY_3D_PERSPECTIVE.get().next();
             PY_3D_PERSPECTIVE.set(next);
             context.showFlashMessage(context.locText("camera_perspective", context.locText(next.name())));
         }
@@ -32,7 +32,7 @@ public enum GameAction3D implements GameAction {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
-            var prev = PY_3D_PERSPECTIVE.get().previous();
+            Perspective.Name prev = PY_3D_PERSPECTIVE.get().prev();
             PY_3D_PERSPECTIVE.set(prev);
             context.showFlashMessage(context.locText("camera_perspective", context.locText(prev.name())));
         }
