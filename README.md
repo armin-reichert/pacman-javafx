@@ -115,21 +115,29 @@ Cheats:
 
 ### 2D Play Scenes
 
+#### Pac-Man
 ![Pac-Man Play Scene](doc/pacman-playscene-2d.png)
 
+#### Pac-Man XXL
 ![Pac-Man Play Scene New](doc/pacman-newmaze-sample.png)
 
+#### Ms. Pac-Man
 ![Ms. Pac-Man Play Scene](doc/mspacman-playscene-2d.png)
 
 ### 3D Play Scenes
 
+#### Pac-Man
 ![Pac-Man Play Scene](doc/pacman-playscene.png)
 
+#### Pac-Man XXL Standard Map
 ![Pac-Man Play Scene New](doc/pacman-newmaze-sample-3d.png)
 
+#### Pac-Man XXL Custom Map
+![Custom Map](doc/wide-maze-3d.png)
+
+#### Ms. Pac-Man
 ![Ms. Pac-Man Play Scene](doc/mspacman-maze.png)
 
-![Custom Map](doc/wide-maze-3d.png)
 
 ### Tile map editor
 
