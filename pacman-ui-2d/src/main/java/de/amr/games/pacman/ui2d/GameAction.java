@@ -20,7 +20,7 @@ public interface GameAction {
      *
      * @param context game context
      * @param candidates actions that will be checked
-     * @return {@true} if an action from the list has been executed
+     * @return {@code true} if an action from the list has been executed
      */
     static boolean executeActionIfCalled(GameContext context, GameAction... candidates) {
         Optional<GameAction> calledAction = Stream.of(candidates).filter(GameAction::called).findFirst();
@@ -53,5 +53,8 @@ public interface GameAction {
      */
     boolean called();
 
+    /**
+     * @return the key input (set of key combinations) that triggers this action
+     */
     KeyInput trigger();
 }
