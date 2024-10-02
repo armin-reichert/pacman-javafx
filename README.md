@@ -129,6 +129,8 @@ Cheats:
 
 ![Ms. Pac-Man Play Scene](doc/mspacman-maze.png)
 
+![Custom Map](doc/wide-maze-3d.png)
+
 ### Tile map editor
 
 ![Map Editor](doc/map-editor.png)
