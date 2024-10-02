@@ -107,7 +107,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         }
     }
 
-    public static final GameSounds SOUNDS = new GameSounds();
+    private static final GameSounds SOUNDS = new GameSounds();
 
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 

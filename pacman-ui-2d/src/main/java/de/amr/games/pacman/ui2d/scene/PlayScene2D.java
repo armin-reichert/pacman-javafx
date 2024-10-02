@@ -25,7 +25,6 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
 
 /**
  * @author Armin Reichert
@@ -43,7 +42,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void end() {
-        SOUNDS.stopAll();
+        context.sounds().stopAll();
     }
 
     @Override
@@ -66,17 +65,17 @@ public class PlayScene2D extends GameScene2D {
     private void updatePlaySceneSound() {
         if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
             int sirenNumber = 1 + context.game().huntingPhaseIndex() / 2;
-            SOUNDS.selectSiren(sirenNumber);
-            SOUNDS.playSiren();
+            context.sounds().selectSiren(sirenNumber);
+            context.sounds().playSiren();
         }
         if (context.game().pac().starvingTicks() > 8) { // TODO not sure how to do this right
-            SOUNDS.stopMunchingSound();
+            context.sounds().stopMunchingSound();
         }
         boolean ghostsReturning = context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
         if (context.game().pac().isAlive() && ghostsReturning) {
-            SOUNDS.playGhostReturningHomeSound();
+            context.sounds().playGhostReturningHomeSound();
         } else {
-            SOUNDS.stopGhostReturningHomeSound();
+            context.sounds().stopGhostReturningHomeSound();
         }
     }
 
@@ -181,10 +180,10 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onGameStateEntry(GameState state) {
         switch (state) {
-            case READY, LEVEL_COMPLETE, PACMAN_DYING -> SOUNDS.stopAll();
+            case READY, LEVEL_COMPLETE, PACMAN_DYING -> context.sounds().stopAll();
             case GAME_OVER -> {
-                SOUNDS.stopAll();
-                SOUNDS.playGameOverSound();
+                context.sounds().stopAll();
+                context.sounds().playGameOverSound();
             }
             default -> {}
         }
@@ -192,17 +191,17 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        SOUNDS.playBonusEatenSound();
+        context.sounds().playBonusEatenSound();
     }
 
     @Override
     public void onExtraLifeWon(GameEvent e) {
-        SOUNDS.playExtraLifeSound();
+        context.sounds().playExtraLifeSound();
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        SOUNDS.playGhostEatenSound();
+        context.sounds().playGhostEatenSound();
     }
 
     @Override
@@ -212,22 +211,22 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacDied(GameEvent e) {
-        SOUNDS.playPacDeathSound();
+        context.sounds().playPacDeathSound();
     }
 
     @Override
     public void onPacFoundFood(GameEvent e) {
-        SOUNDS.playMunchingSound();
+        context.sounds().playMunchingSound();
     }
 
     @Override
     public void onPacGetsPower(GameEvent e) {
-        SOUNDS.stopSiren();
-        SOUNDS.playPacPowerSound();
+        context.sounds().stopSiren();
+        context.sounds().playPacPowerSound();
     }
 
     @Override
     public void onPacLostPower(GameEvent e) {
-        SOUNDS.stopPacPowerSound();
+        context.sounds().stopPacPowerSound();
     }
 }

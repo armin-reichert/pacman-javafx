@@ -31,11 +31,9 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.EATEN;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
 import static de.amr.games.pacman.ui2d.variant.pacman.PacManGameSpriteSheet.MIDWAY_COPYRIGHT;
 
 /**
- * Intro scene of the Pac-Man game.
  * <p>
  * The ghosts are presented one by one, Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
  *
@@ -281,7 +279,7 @@ public class PacManIntroScene extends GameScene2D {
 
     @Override
     public void end() {
-        SOUNDS.stopVoice();
+        context.sounds().stopVoice();
     }
 
     @Override

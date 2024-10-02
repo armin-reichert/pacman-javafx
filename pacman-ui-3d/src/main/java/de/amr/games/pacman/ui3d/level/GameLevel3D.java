@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.GameAssets3D;
 import de.amr.games.pacman.ui3d.animation.Squirting;
@@ -97,13 +96,12 @@ public class GameLevel3D {
         this.context = checkNotNull(context);
 
         final GameVariant gameVariant = context.game().variant();
-        final AssetStorage assets = context.assets();
 
-        pac3D = Factory3D.createPac3D(gameVariant, assets, context.game().pac(), PAC_SIZE);
-        ghosts3D = context.game().ghosts().map(ghost -> Factory3D.createMutableGhost3D(gameVariant, assets, ghost, GHOST_SIZE)).toList();
-        livesCounter3D = Factory3D.createLivesCounter3D(gameVariant, assets, LIVES_COUNTER_MAX, LIVE_SHAPE_SIZE, context.game().hasCredit());
+        pac3D = Factory3D.createPac3D(gameVariant, context.assets(), context.sounds(), context.game().pac(), PAC_SIZE);
+        ghosts3D = context.game().ghosts().map(ghost -> Factory3D.createMutableGhost3D(gameVariant, context.assets(), ghost, GHOST_SIZE)).toList();
+        livesCounter3D = Factory3D.createLivesCounter3D(gameVariant, context.assets(), LIVES_COUNTER_MAX, LIVE_SHAPE_SIZE, context.game().hasCredit());
         livesCounter3D.livesCountPy.bind(livesCounterPy);
-        message3D = Factory3D.createMessage3D(assets);
+        message3D = Factory3D.createMessage3D(context.assets());
 
         wallFillMaterialPy.bind(Bindings.createObjectBinding(
             () -> coloredMaterial(opaqueColor(wallFillColorPy.get(), wallOpacityPy.get())), wallFillColorPy, wallOpacityPy));

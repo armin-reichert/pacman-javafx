@@ -33,7 +33,6 @@ import java.util.Optional;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 
@@ -165,17 +164,17 @@ public class PlayScene3D implements GameScene {
         // Sound
         if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
             int sirenNumber = 1 + context.game().huntingPhaseIndex() / 2;
-            SOUNDS.selectSiren(sirenNumber);
-            SOUNDS.playSiren();
+            context.sounds().selectSiren(sirenNumber);
+            context.sounds().playSiren();
         }
         if (context.game().pac().starvingTicks() > 8) { // TODO not sure how to do this right
-            SOUNDS.stopMunchingSound();
+            context.sounds().stopMunchingSound();
         }
         boolean ghostsReturning = context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
         if (context.game().pac().isAlive() && ghostsReturning) {
-            SOUNDS.playGhostReturningHomeSound();
+            context.sounds().playGhostReturningHomeSound();
         } else {
-            SOUNDS.stopGhostReturningHomeSound();
+            context.sounds().stopGhostReturningHomeSound();
         }
     }
 
@@ -206,7 +205,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void onEnterStateReady() {
-        SOUNDS.stopAll();
+        context.sounds().stopAll();
         if (level3D != null) {
             stopLevelAnimations();
             level3D.pac3D().init();
@@ -221,7 +220,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void onEnterStatePacManDying() {
-        SOUNDS.stopAll();
+        context.sounds().stopAll();
         // last update before dying animation
         level3D.pac3D().update(context);
         playPacManDiesAnimation();
@@ -237,7 +236,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void onEnterStateLevelComplete() {
-        SOUNDS.stopAll();
+        context.sounds().stopAll();
         // if cheat has been used to complete level, food might still exist, so eat it:
         GameWorld world = context.game().world();
         world.map().food().tiles().forEach(world::eatFoodAt);
@@ -268,8 +267,8 @@ public class PlayScene3D implements GameScene {
         // delay state exit for 3 seconds
         context.gameState().timer().restartSeconds(3);
         context.showFlashMessageSeconds(3, pickerGameOver.next());
-        SOUNDS.stopAll();
-        SOUNDS.playGameOverSound();
+        context.sounds().stopAll();
+        context.sounds().playGameOverSound();
     }
 
     private void stopLevelAnimations() {
@@ -300,7 +299,7 @@ public class PlayScene3D implements GameScene {
 
         if (context.gameState() == GameState.HUNTING) {
             if (context.game().powerTimer().isRunning()) {
-                SOUNDS.playPacPowerSound();
+                context.sounds().playPacPowerSound();
             }
             level3D.livesCounter3D().shapesRotation().play();
         }
@@ -314,7 +313,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onBonusEaten(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
-        SOUNDS.playBonusEatenSound();
+        context.sounds().playBonusEatenSound();
     }
 
     @Override
@@ -324,12 +323,12 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onExtraLifeWon(GameEvent e) {
-        SOUNDS.playExtraLifeSound();
+        context.sounds().playExtraLifeSound();
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        SOUNDS.playGhostEatenSound();
+        context.sounds().playGhostEatenSound();
     }
 
     @Override
@@ -370,20 +369,20 @@ public class PlayScene3D implements GameScene {
             level3D.energizer3D(tile).ifPresent(Energizer3D::onEaten);
             level3D.pellet3D(tile).ifPresent(Pellet3D::onEaten);
         }
-        SOUNDS.playMunchingSound();
+        context.sounds().playMunchingSound();
     }
 
     @Override
     public void onPacGetsPower(GameEvent event) {
         level3D.pac3D().setPowerMode(true);
-        SOUNDS.stopSiren();
-        SOUNDS.playPacPowerSound();
+        context.sounds().stopSiren();
+        context.sounds().playPacPowerSound();
     }
 
     @Override
     public void onPacLostPower(GameEvent event) {
         level3D.pac3D().setPowerMode(false);
-        SOUNDS.stopPacPowerSound();
+        context.sounds().stopPacPowerSound();
     }
 
     private void addLevelCounter() {
@@ -464,12 +463,12 @@ public class PlayScene3D implements GameScene {
             , doAfterSec(2, level3D.mazeFlashAnimation(numFlashes))
             , doAfterSec(1, () -> {
                 context.game().pac().hide();
-                SOUNDS.playLevelCompleteSound();
+                context.sounds().playLevelCompleteSound();
             })
             , doAfterSec(0.5, level3D.levelRotateAnimation(1.5))
             , level3D.wallsDisappearAnimation(2.0)
             , doAfterSec(1, () -> {
-                SOUNDS.playLevelChangedSound();
+                context.sounds().playLevelChangedSound();
                 perspectivePy.bind(PY_3D_PERSPECTIVE);
             })
         );

@@ -8,7 +8,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.PacManGames2dUI;
+import de.amr.games.pacman.ui2d.sound.GameSounds;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
@@ -28,6 +28,7 @@ import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
  */
 public class PacMan3D implements Pac3D {
 
+    private final GameSounds sounds;
     private final Pac pacMan;
     private final PacShape3D shape3D;
     private RotateTransition headBanging;
@@ -39,11 +40,13 @@ public class PacMan3D implements Pac3D {
      * @param pacMan Pac-Man instance
      * @param size diameter of Pac-Man
      * @param assets asset map
+     * @param sounds game sounds
      */
-    public PacMan3D(GameVariant variant, Pac pacMan, double size, AssetStorage assets) {
+    public PacMan3D(GameVariant variant, Pac pacMan, double size, AssetStorage assets, GameSounds sounds) {
         checkNotNull(variant);
         this.pacMan = checkNotNull(pacMan);
         checkNotNull(assets);
+        this.sounds = sounds;
 
         String assetPrefix = GameAssets2D.assetPrefix(variant) + ".";
 
@@ -124,7 +127,7 @@ public class PacMan3D implements Pac3D {
 
         return new SequentialTransition(
             now(this::init), // TODO check this
-            doAfterSec(0.5, PacManGames2dUI.SOUNDS::playPacDeathSound),
+            doAfterSec(0.5, sounds::playPacDeathSound),
             new ParallelTransition(spins, new SequentialTransition(shrinks, expands), sinks),
             doAfterSec(1.0, () -> shape3D.setVisible(false))
         );

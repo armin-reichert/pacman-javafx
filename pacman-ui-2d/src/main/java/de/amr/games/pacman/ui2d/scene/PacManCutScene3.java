@@ -16,7 +16,6 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.lib.Globals.v2i;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
 
 /**
  * @author Armin Reichert
@@ -102,6 +101,6 @@ public class PacManCutScene3 extends GameScene2D {
         int number = context.gameState() == GameState.INTERMISSION_TEST
             ? GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber")
             : context.game().intermissionNumber(context.game().levelNumber());
-        SOUNDS.playIntermissionSound(number);
+        context.sounds().playIntermissionSound(number);
     }
 }

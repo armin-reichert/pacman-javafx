@@ -32,7 +32,6 @@ import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.SOUNDS;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -222,7 +221,7 @@ public class TengenMsPacManIntroScene extends GameScene2D {
 
     @Override
     public void end() {
-        SOUNDS.stopVoice();
+        context.sounds().stopVoice();
     }
 
     @Override
