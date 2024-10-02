@@ -6,6 +6,8 @@ package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.ui2d.util.KeyInput;
 
+import java.util.Optional;
+import java.util.function.BooleanSupplier;
 import java.util.stream.Stream;
 
 /**
@@ -13,10 +15,35 @@ import java.util.stream.Stream;
  */
 public interface GameAction {
 
-    static final Runnable NO_ACTION = () -> {};
+    /**
+     * Executes the first action from the given list that has been called by user input.
+     *
+     * @param context game context
+     * @param candidates actions that will be checked
+     * @return {@code true} if an action from the list has been executed
+     */
+    static boolean executeActionIfCalled(GameContext context, GameAction... candidates) {
+        Optional<GameAction> calledAction = Stream.of(candidates).filter(GameAction::called).findFirst();
+        if (calledAction.isPresent()) {
+            calledAction.get().execute(context);
+            return true;
+        }
+        return false;
+    }
 
-    static void executeCalledAction(GameContext context, Runnable defaultAction, GameAction... actions) {
-        Stream.of(actions).filter(GameAction::called).findFirst().ifPresentOrElse(action -> action.execute(context), defaultAction);
+    /**
+     * Executes this action if it has been called by user input and if condition holds.
+     *
+     * @param context game context
+     * @param condition condition that must hold if action is executed
+     * @return {@code true} if action has been executed
+     */
+    default boolean executeIf(GameContext context, BooleanSupplier condition) {
+        if (called() && condition.getAsBoolean()) {
+            execute(context);
+            return true;
+        }
+        return false;
     }
 
     void execute(GameContext context);
@@ -26,5 +53,8 @@ public interface GameAction {
      */
     boolean called();
 
+    /**
+     * @return the key input (set of key combinations) that triggers this action
+     */
     KeyInput trigger();
 }
