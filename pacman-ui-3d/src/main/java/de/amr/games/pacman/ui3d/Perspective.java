@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui3d;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Entity;
-import javafx.scene.Camera;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 
 import static de.amr.games.pacman.lib.Globals.lerp;
@@ -20,52 +20,54 @@ import static de.amr.games.pacman.lib.Globals.lerp;
 public enum Perspective {
 
     DRONE {
+        static final int HEIGHT = 200;
+
         @Override
         public String toString() {
             return "Drone";
         }
 
         @Override
-        public void init(Camera cam, GameWorld world) {
+        public void init(GameWorld world) {
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(0);
             cam.setTranslateX(0);
             cam.setTranslateY(0);
-            cam.setTranslateZ(-500);
+            cam.setTranslateZ(-HEIGHT);
         }
 
         @Override
-        public void update(Camera cam, GameWorld world, Entity spottedEntity) {
-            var position = spottedEntity.position();
-            double speed = 0.01;
+        public void update(GameWorld world, Entity focussedEntity) {
+            var position = focussedEntity.position();
+            double speed = 0.02;
             double x = lerp(cam.getTranslateX(), position.x(), speed);
             double y = lerp(cam.getTranslateY(), position.y(), speed);
-            cam.setTranslateZ(-500);
+            cam.setTranslateZ(-HEIGHT);
             cam.setTranslateX(x);
             cam.setTranslateY(y);
         }
     },
 
     TOTAL {
-
         @Override
         public String toString() {
             return "Total";
         }
 
         @Override
-        public void init(Camera cam, GameWorld world) {
+        public void init(GameWorld world) {
+            //TODO this is crap and doesn't work correctly for non-Arcade maps
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(70);
             cam.setTranslateX(111);
             int numRows = world != null ? world.map().terrain().numRows() : GameModel.ARCADE_MAP_SIZE_Y;
-            cam.setTranslateY( 8.5 * numRows + 175);
-            cam.setTranslateZ(-120);
+            cam.setTranslateY( 8.5 * numRows + 100);
+            cam.setTranslateZ(-80);
         }
 
         @Override
-        public void update(Camera cam, GameWorld world, Entity spottedEntity) {
-            init(cam, world);
+        public void update(GameWorld world, Entity spottedEntity) {
+            //init(world);
         }
     },
 
@@ -76,14 +78,14 @@ public enum Perspective {
         }
 
         @Override
-        public void init(Camera cam, GameWorld world) {
+        public void init(GameWorld world) {
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(60);
             cam.setTranslateZ(-160);
         }
 
         @Override
-        public void update(Camera cam, GameWorld world, Entity spottedEntity) {
+        public void update(GameWorld world, Entity spottedEntity) {
             double speedX = 0.03;
             double speedY = 0.06;
             cam.setTranslateX(lerp(cam.getTranslateX(), spottedEntity.position().x(), speedX));
@@ -98,13 +100,13 @@ public enum Perspective {
         }
 
         @Override
-        public void init(Camera cam, GameWorld world) {
+        public void init(GameWorld world) {
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(80);
         }
 
         @Override
-        public void update(Camera cam, GameWorld world, Entity spottedEntity) {
+        public void update(GameWorld world, Entity spottedEntity) {
             double speed = 0.02;
             double x = lerp(cam.getTranslateX(), spottedEntity.position().x(), speed);
             double y = lerp(cam.getTranslateY(), spottedEntity.position().y() + 150, speed);
@@ -114,17 +116,30 @@ public enum Perspective {
         }
     };
 
-    public static Perspective next(Perspective p) {
-        int n = Perspective.values().length;
-        return Perspective.values()[p.ordinal() < n - 1 ? p.ordinal() + 1 : 0];
+    public Perspective next() {
+        int n = Perspective.values().length, ord = ordinal();
+        return Perspective.values()[ord < n - 1 ? ord + 1 : 0];
     }
 
-    public static Perspective previous(Perspective p) {
-        int n = Perspective.values().length;
-        return Perspective.values()[p.ordinal() > 0 ? p.ordinal() - 1 : n - 1];
+    public Perspective previous() {
+        int n = Perspective.values().length, ord = ordinal();
+        return Perspective.values()[ord > 0 ? ord - 1 : n - 1];
     }
 
-    public abstract void init(Camera cam, GameWorld world);
+    Perspective() {
+        cam = new PerspectiveCamera(true);
+        cam.setNearClip(0.1);
+        cam.setFarClip(10000.0);
+        cam.setFieldOfView(40); // default: 30
+    }
 
-    public abstract void update(Camera cam, GameWorld world, Entity spottedEntity);
+    public abstract void init(GameWorld world);
+
+    public abstract void update(GameWorld world, Entity spottedEntity);
+
+    public PerspectiveCamera getCamera() {
+        return cam;
+    }
+
+    protected final PerspectiveCamera cam;
 }

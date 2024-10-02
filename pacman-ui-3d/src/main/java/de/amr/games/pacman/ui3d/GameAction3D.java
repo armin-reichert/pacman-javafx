@@ -22,8 +22,8 @@ public enum GameAction3D implements GameAction {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
-            var next = Perspective.next(PacManGames3dApp.PY_3D_PERSPECTIVE.get());
-            PacManGames3dApp.PY_3D_PERSPECTIVE.set(next);
+            var next = PY_3D_PERSPECTIVE.get().next();
+            PY_3D_PERSPECTIVE.set(next);
             context.showFlashMessage(context.locText("camera_perspective", context.locText(next.name())));
         }
     },
@@ -32,7 +32,7 @@ public enum GameAction3D implements GameAction {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
-            var prev = Perspective.previous(PY_3D_PERSPECTIVE.get());
+            var prev = PY_3D_PERSPECTIVE.get().previous();
             PY_3D_PERSPECTIVE.set(prev);
             context.showFlashMessage(context.locText("camera_perspective", context.locText(prev.name())));
         }

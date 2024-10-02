@@ -46,10 +46,12 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
  */
 public class PlayScene3D implements GameScene {
 
-    public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
+    public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective", Perspective.TOTAL) {
         @Override
         protected void invalidated() {
-            perspective().init(fxSubScene.getCamera(), context.game().world());
+            Perspective newPerspective = get();
+            fxSubScene.setCamera(newPerspective.getCamera());
+            newPerspective.init(context.game().world());
         }
     };
 
@@ -74,16 +76,6 @@ public class PlayScene3D implements GameScene {
         // initial size is irrelevant as it is bound to parent scene later
         fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
         fxSubScene.setFill(null); // transparent
-
-        var camera = new PerspectiveCamera(true);
-        camera.setNearClip(0.1);
-        camera.setFarClip(10000.0);
-        camera.setFieldOfView(30); // default: 30
-        fxSubScene.setCamera(camera);
-
-        // keep the scores rotated such that the viewer always sees them frontally
-        scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
-        scores3D.rotateProperty().bind(camera.rotateProperty());
 
         // last child is placeholder for level 3D
         root.getChildren().setAll(scores3D, coordSystem, ambientLight, new Group());
@@ -142,7 +134,11 @@ public class PlayScene3D implements GameScene {
             return;
         }
         level3D.update(context);
-        perspective().update(fxSubScene.getCamera(), game.world(), game.pac());
+
+        // Update camera and rotate the scores such that the viewer always sees them frontally
+        perspective().update(game.world(), game.pac());
+        scores3D.setRotationAxis(perspective().getCamera().getRotationAxis());
+        scores3D.setRotate(perspective().getCamera().getRotate());
 
         if (context.game().isDemoLevel()) {
             context.game().pac().setUseAutopilot(true);
@@ -251,7 +247,7 @@ public class PlayScene3D implements GameScene {
         context.gameState().timer().restartSeconds(3);
         replaceGameLevel3D(true);
         level3D.pac3D().init();
-        perspective().init(fxSubScene.getCamera(), context.game().world());
+        perspective().init(context.game().world());
     }
 
     private void onEnterStateLevelTest() {
