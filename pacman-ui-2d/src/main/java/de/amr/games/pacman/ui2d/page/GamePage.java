@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.*;
@@ -33,6 +32,7 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.ui2d.GameAction.executeCalledAction;
 import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.border;
@@ -119,22 +119,25 @@ public class GamePage extends StackPane implements Page {
 
     @Override
     public void handleInput() {
-        GameAction.executeCalledAction(context, () -> context.currentGameScene().ifPresent(GameScene::handleInput),
-        GameAction2D.BOOT,
-        GameAction2D.DEBUG_INFO,
-        GameAction2D.HELP,
-        GameAction2D.SIMULATION_1_STEP,
-        GameAction2D.SIMULATION_10_STEPS,
-        GameAction2D.SIMULATION_FASTER,
-        GameAction2D.SIMULATION_SLOWER,
-        GameAction2D.SIMULATION_NORMAL,
-        GameAction2D.SHOW_START_PAGE,
-        GameAction2D.TEST_LEVELS,
-        GameAction2D.TOGGLE_AUTOPILOT,
-        GameAction2D.TOGGLE_IMMUNITY,
-        GameAction2D.TOGGLE_DASHBOARD,
-        GameAction2D.TOGGLE_PAUSED,
-        GameAction2D.OPEN_EDITOR);
+        if (!executeCalledAction(context,
+            GameAction2D.BOOT,
+            GameAction2D.DEBUG_INFO,
+            GameAction2D.HELP,
+            GameAction2D.SIMULATION_1_STEP,
+            GameAction2D.SIMULATION_10_STEPS,
+            GameAction2D.SIMULATION_FASTER,
+            GameAction2D.SIMULATION_SLOWER,
+            GameAction2D.SIMULATION_NORMAL,
+            GameAction2D.SHOW_START_PAGE,
+            GameAction2D.TEST_LEVELS,
+            GameAction2D.TOGGLE_AUTOPILOT,
+            GameAction2D.TOGGLE_IMMUNITY,
+            GameAction2D.TOGGLE_DASHBOARD,
+            GameAction2D.TOGGLE_PAUSED,
+            GameAction2D.OPEN_EDITOR))
+        {
+            context.currentGameScene().ifPresent(GameScene::handleInput);
+        }
     }
 
     @Override

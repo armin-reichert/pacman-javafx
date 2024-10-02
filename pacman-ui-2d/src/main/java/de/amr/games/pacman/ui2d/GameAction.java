@@ -6,6 +6,8 @@ package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.ui2d.util.KeyInput;
 
+import java.util.Optional;
+import java.util.function.BooleanSupplier;
 import java.util.stream.Stream;
 
 /**
@@ -13,10 +15,23 @@ import java.util.stream.Stream;
  */
 public interface GameAction {
 
-    static final Runnable NO_ACTION = () -> {};
+    Runnable NO_ACTION = () -> {};
 
-    static void executeCalledAction(GameContext context, Runnable defaultAction, GameAction... actions) {
-        Stream.of(actions).filter(GameAction::called).findFirst().ifPresentOrElse(action -> action.execute(context), defaultAction);
+    static boolean executeCalledAction(GameContext context, GameAction... candidates) {
+        Optional<GameAction> calledAction = Stream.of(candidates).filter(GameAction::called).findFirst();
+        if (calledAction.isPresent()) {
+            calledAction.get().execute(context);
+            return true;
+        }
+        return false;
+    }
+
+    default boolean executeIf(GameContext context, BooleanSupplier condition) {
+        if (called() && condition.getAsBoolean()) {
+            execute(context);
+            return true;
+        }
+        return false;
     }
 
     void execute(GameContext context);

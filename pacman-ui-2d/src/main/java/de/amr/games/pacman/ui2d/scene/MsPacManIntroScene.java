@@ -17,7 +17,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
-import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
@@ -32,6 +31,7 @@ import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
+import static de.amr.games.pacman.ui2d.GameAction.executeCalledAction;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
 
 /**
@@ -226,8 +226,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        GameAction.executeCalledAction(context, GameAction.NO_ACTION,
-            GameAction2D.ADD_CREDIT, GameAction2D.START_GAME, GameAction2D.TEST_CUT_SCENES);
+        executeCalledAction(context, GameAction2D.ADD_CREDIT, GameAction2D.START_GAME, GameAction2D.TEST_CUT_SCENES);
     }
 
     @Override

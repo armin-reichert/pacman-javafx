@@ -11,7 +11,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
@@ -23,6 +22,7 @@ import org.tinylog.Logger;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui2d.GameAction.executeCalledAction;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 
@@ -81,12 +81,12 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void handleInput() {
-        //TODO how to handle this with convenience method?
-        if (GameAction2D.ADD_CREDIT.called() && context.game().isDemoLevel()) {
-            GameAction2D.ADD_CREDIT.execute(context);
-        } else {
-            GameAction.executeCalledAction(context, GameAction.NO_ACTION,
-                GameAction2D.CHEAT_EAT_ALL, GameAction2D.CHEAT_ADD_LIVES, GameAction2D.CHEAT_NEXT_LEVEL, GameAction2D.CHEAT_KILL_GHOSTS);
+        if (!GameAction2D.ADD_CREDIT.executeIf(context, context.game()::isDemoLevel)) {
+            executeCalledAction(context,
+                GameAction2D.CHEAT_EAT_ALL,
+                GameAction2D.CHEAT_ADD_LIVES,
+                GameAction2D.CHEAT_NEXT_LEVEL,
+                GameAction2D.CHEAT_KILL_GHOSTS);
         }
     }
 

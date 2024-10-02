@@ -49,9 +49,11 @@ public class GamePage3D extends GamePage {
 
     @Override
     public void handleInput() {
-        GameAction.executeCalledAction(context, super::handleInput,
+        if (!GameAction.executeCalledAction(context,
             GameAction3D.TOGGLE_PIP_VISIBILITY,
-            GameAction3D.TOGGLE_PLAY_SCENE_2D_3D);
+            GameAction3D.TOGGLE_PLAY_SCENE_2D_3D)) {
+            super.handleInput();
+        }
     }
 
     @Override
