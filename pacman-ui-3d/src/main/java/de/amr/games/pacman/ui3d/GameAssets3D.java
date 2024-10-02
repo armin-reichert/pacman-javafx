@@ -32,8 +32,8 @@ public class GameAssets3D {
         assets.store("model3D.ghost",  new Model3D(rm.url("model3D/ghost.obj")));
         assets.store("model3D.pellet", new Model3D(rm.url("model3D/fruit.obj")));
 
-        assets.store("wallpaper.day",   Ufx.wallpaperBackground(rm.loadImage("graphics/sea-wallpaper.jpg")));
-        assets.store("wallpaper.night", Ufx.wallpaperBackground(rm.loadImage("graphics/sea-wallpaper-night.jpg")));
+        assets.store("wallpaper.day",   Ufx.wallpaperBackground(rm.loadImage("graphics/abstract-wallpaper-1.jpg")));
+        assets.store("wallpaper.night", Ufx.wallpaperBackground(rm.loadImage("graphics/abstract-wallpaper-2.jpg")));
 
         Map<String, PhongMaterial> texturesByName = new LinkedHashMap<>();
         Stream.of("Carpet", "Rubber", "Wood").forEach(name -> {
