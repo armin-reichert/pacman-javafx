@@ -15,6 +15,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.Ufx;
+import de.amr.games.pacman.ui3d.GameAssets3D;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
@@ -60,7 +61,7 @@ public class GameLevel3D {
 
     static final PhongMaterial DEFAULT_MATERIAL = new PhongMaterial();
 
-    private final StringProperty floorTextureNamePy = new SimpleStringProperty(this, "floorTextureName", NO_TEXTURE);
+    private final StringProperty floorTextureNamePy = new SimpleStringProperty(this, "floorTextureName", GameAssets3D.NO_TEXTURE);
     private final DoubleProperty borderWallHeightPy = new SimpleDoubleProperty(this, "borderWallHeight", BORDER_WALL_HEIGHT);
     private final DoubleProperty obstacleHeightPy   = new SimpleDoubleProperty(this, "obstacleHeight", OBSTACLE_HEIGHT);
     private final DoubleProperty wallOpacityPy      = new SimpleDoubleProperty(this, "wallOpacity",1.0);
@@ -200,7 +201,7 @@ public class GameLevel3D {
     }
 
     private PhongMaterial createFloorMaterial(Color color, String textureName, Map<String, PhongMaterial> textures) {
-        return NO_TEXTURE.equals(textureName) || !textures.containsKey(textureName)
+        return GameAssets3D.NO_TEXTURE.equals(textureName) || !textures.containsKey(textureName)
             ? coloredMaterial(color)
             : textures.get(textureName);
     }

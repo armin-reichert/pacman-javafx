@@ -9,6 +9,7 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.InfoBox;
 import de.amr.games.pacman.ui2d.dashboard.InfoText;
 import de.amr.games.pacman.ui3d.GameAction3D;
+import de.amr.games.pacman.ui3d.GameAssets3D;
 import de.amr.games.pacman.ui3d.Perspective;
 import de.amr.games.pacman.ui3d.PlayScene3D;
 import javafx.scene.control.CheckBox;
@@ -129,7 +130,7 @@ public class InfoBox3D extends InfoBox {
     private String[] floorTextureComboBoxEntries() {
         Map<String, PhongMaterial> texturesByName = context.assets().get("floorTextures");
         var names = new ArrayList<String>();
-        names.add(NO_TEXTURE);
+        names.add(GameAssets3D.NO_TEXTURE);
         names.addAll(texturesByName.keySet());
         return names.toArray(String[]::new);
     }
