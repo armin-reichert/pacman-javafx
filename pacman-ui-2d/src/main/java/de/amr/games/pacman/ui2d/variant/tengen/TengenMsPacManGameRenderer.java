@@ -21,6 +21,7 @@ import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
+import de.amr.games.pacman.ui2d.variant.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManArcadeGameRenderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -29,6 +30,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -159,6 +161,23 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
             ? new ImageArea(arcadeMazesImage, arcadeMapArea(mapNumber, width, height))
             : new ImageArea(nonArcadeMazesImage, nonArcadeMapArea(mapNumber - 9, width, height));
         Logger.info("Tengen map # {}: area: {}", mapNumber, mapSprite.area());
+    }
+
+    public void drawClapperBoard(GameSpriteSheet spriteSheet, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
+        var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
+        if (sprite != RectArea.PIXEL) {
+            drawSpriteCenteredOverBox(spriteSheet, sprite, x, y);
+            var numberX = x + 8;
+            var numberY = y + 18; // baseline
+            ctx().setFill(backgroundColorPy.get());
+            ctx().save();
+            ctx().scale(scaling(), scaling());
+            ctx().fillRect(numberX - 1, numberY - 8, 12, 8);
+            ctx().restore();
+            ctx().setFont(font);
+            ctx().setFill(textColor);
+            ctx().fillText(animation.number(), scaled(numberX), scaled(numberY));
+        }
     }
 
     public void drawStork(GameSpriteSheet spriteSheet, SpriteAnimation storkAnimation, Entity stork, boolean bagReleased) {
