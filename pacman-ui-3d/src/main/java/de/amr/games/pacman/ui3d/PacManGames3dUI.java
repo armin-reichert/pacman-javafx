@@ -34,7 +34,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
     public void loadAssets() {
         GameAssets2D.addTo(assets);
         GameAssets3D.addTo(assets);
-        SOUNDS.setAssets(assets);
+        sounds().setAssets(assets);
     }
 
     @Override

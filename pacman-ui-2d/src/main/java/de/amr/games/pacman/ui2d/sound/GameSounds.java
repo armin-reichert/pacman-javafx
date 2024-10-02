@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d;
+package de.amr.games.pacman.ui2d.sound;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
