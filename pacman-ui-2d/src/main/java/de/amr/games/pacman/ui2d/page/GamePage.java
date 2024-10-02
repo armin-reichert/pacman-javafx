@@ -32,7 +32,7 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.GameAction.executeCalledAction;
+import static de.amr.games.pacman.ui2d.GameAction.executeActionIfCalled;
 import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.border;
@@ -119,7 +119,7 @@ public class GamePage extends StackPane implements Page {
 
     @Override
     public void handleInput() {
-        if (!executeCalledAction(context,
+        if (!executeActionIfCalled(context,
             GameAction2D.BOOT,
             GameAction2D.DEBUG_INFO,
             GameAction2D.HELP,

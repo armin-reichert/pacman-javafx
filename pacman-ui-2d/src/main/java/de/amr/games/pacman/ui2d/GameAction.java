@@ -15,9 +15,14 @@ import java.util.stream.Stream;
  */
 public interface GameAction {
 
-    Runnable NO_ACTION = () -> {};
-
-    static boolean executeCalledAction(GameContext context, GameAction... candidates) {
+    /**
+     * Executes the first action from the given list that has been called by user input.
+     *
+     * @param context game context
+     * @param candidates actions that will be checked
+     * @return {@true} if an action from the list has been executed
+     */
+    static boolean executeActionIfCalled(GameContext context, GameAction... candidates) {
         Optional<GameAction> calledAction = Stream.of(candidates).filter(GameAction::called).findFirst();
         if (calledAction.isPresent()) {
             calledAction.get().execute(context);
@@ -26,6 +31,13 @@ public interface GameAction {
         return false;
     }
 
+    /**
+     * Executes this action if it has been called by user input and if condition holds.
+     *
+     * @param context game context
+     * @param condition condition that must hold if action is executed
+     * @return {@code true} if action has been executed
+     */
     default boolean executeIf(GameContext context, BooleanSupplier condition) {
         if (called() && condition.getAsBoolean()) {
             execute(context);

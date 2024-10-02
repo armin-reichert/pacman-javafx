@@ -30,7 +30,7 @@ import javafx.scene.text.Font;
 import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.GameAction.executeCalledAction;
+import static de.amr.games.pacman.ui2d.GameAction.executeActionIfCalled;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
 
 /**
@@ -231,7 +231,7 @@ public class TengenMsPacManIntroScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        executeCalledAction(context, GameAction2D.ADD_CREDIT, GameAction2D.START_GAME, GameAction2D.TEST_CUT_SCENES);
+        executeActionIfCalled(context, GameAction2D.ADD_CREDIT, GameAction2D.START_GAME, GameAction2D.TEST_CUT_SCENES);
     }
 
     @Override
