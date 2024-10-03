@@ -67,8 +67,8 @@ public class Globals {
         return halfTileRightOf(tile.x(), tile.y());
     }
 
-    public static double t(double tiles) {
-        return tiles * TS;
+    public static float t(double tiles) {
+        return (float) tiles * TS;
     }
 
     public static <T> T checkNotNull(T value) {
