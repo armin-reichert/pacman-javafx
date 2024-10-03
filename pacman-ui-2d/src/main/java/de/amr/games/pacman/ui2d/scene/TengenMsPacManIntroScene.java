@@ -345,20 +345,20 @@ public class TengenMsPacManIntroScene extends GameScene2D {
         GraphicsContext g = renderer.ctx();
         for (int i = 0; i < NUM_BULBS; ++i) {
             boolean on = marqueeState.get(i);
+            g.setFill(on ? Color.WHITE : Color.web("d84060"));
             if (i <= 33) { // lower edge left-to-right
-                drawBulb(g, xMin + 4 * i, yMax, on);
+                drawBulb(g, xMin + 4 * i, yMax);
             } else if (i <= 48) { // right edge bottom-to-top
-                drawBulb(g, xMax, 4 * (70 - i), on);
+                drawBulb(g, xMax, 4 * (70 - i));
             } else if (i <= 81) { // upper edge right-to-left
-                drawBulb(g, 4 * (96 - i), yMin, on);
+                drawBulb(g, 4 * (96 - i), yMin);
             } else { // left edge top-to-bottom
-                drawBulb(g, xMin, 4 * (i - 59), on);
+                drawBulb(g, xMin, 4 * (i - 59));
             }
         }
     }
 
-    private void drawBulb(GraphicsContext g, double x, double y, boolean on) {
-        g.setFill(on ? Color.WHITE : Color.web("d84060"));
+    private void drawBulb(GraphicsContext g, double x, double y) {
         g.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 }
