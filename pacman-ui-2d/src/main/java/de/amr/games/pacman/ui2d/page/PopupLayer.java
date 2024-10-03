@@ -57,28 +57,29 @@ public class PopupLayer extends Pane {
     }
 
     public void configureSignature(CanvasLayoutPane canvasPane, Font font, Color color, String... words) {
+        final DecoratedCanvas decoratedCanvas = canvasPane.canvas();
+
         signature.setOpacity(0); // invisible initially
         signature.getChildren().clear(); // just in case
         for (String word : words) {
             var text = new Text(word);
             text.setFill(color);
-            text.fontProperty().bind(Bindings.createObjectBinding(
-                () -> Font.font(font.getFamily(), canvasPane.canvas().scaling() * font.getSize()),
-                canvasPane.canvas().scalingPy
-            ));
+            text.fontProperty().bind(decoratedCanvas.scalingPy.map(
+                scaling -> Font.font(font.getFamily(), scaling.doubleValue() * font.getSize()))
+            );
             signature.getChildren().add(text);
         }
 
-        // keep centered over canvas
+        // keep signature centered over canvas
         signature.translateXProperty().bind(Bindings.createDoubleBinding(
-            () -> 0.5 * (canvasPane.canvas().getWidth() - signature.getWidth()),
-            canvasPane.canvas().scalingPy, canvasPane.canvas().widthProperty()
+            () -> 0.5 * (decoratedCanvas.getWidth() - signature.getWidth()),
+            decoratedCanvas.scalingPy, decoratedCanvas.widthProperty()
         ));
 
         // keep vertical position over intro scene, also when scene gets scaled
         signature.translateYProperty().bind(Bindings.createDoubleBinding(
-            () -> canvasPane.canvas().scaling() * (canvasPane.canvas().isDecorated() ? 30 : 24),
-            canvasPane.canvas().scalingPy, canvasPane.canvas().heightProperty()
+            () -> decoratedCanvas.scaling() * (decoratedCanvas.isDecorated() ? 30 : 24),
+            decoratedCanvas.scalingPy, decoratedCanvas.heightProperty()
         ));
     }
 
