@@ -52,21 +52,31 @@ public class TengenMsPacManIntroScene extends GameScene2D {
 
     private enum SceneState implements FsmState<TengenMsPacManIntroScene> {
 
-        BLINKY_RUNNING_OVER_SCREEN {
+        TENGEN_PRESENTS {
             @Override
             public void onEnter(TengenMsPacManIntroScene intro) {
-                intro.ghosts[0].setPosition(t(31), t(30)); //TODO check y position
-                intro.ghosts[0].setMoveAndWishDir(Direction.LEFT);
-                intro.ghosts[0].setSpeed(SPEED);
-                intro.ghosts[0].setVisible(true);
+                intro.tengenPresentsY = 36 * TS;
             }
 
             @Override
             public void onUpdate(TengenMsPacManIntroScene intro) {
-                if (intro.ghosts[0].position().x() < -TS) {
-                    intro.sceneController.changeState(WAITING_FOR_START);
-                } else {
+                long t = timer.currentTick();
+                if (0 <= t && t < 120) {
+                    if (t % 4 == 0 && intro.tengenPresentsY > 16 * TS) { // TODO check y position
+                        intro.tengenPresentsY -= TS;
+                    }
+                }
+                else if (t == 120) {
+                    intro.ghosts[0].setPosition(t(31), t(30)); //TODO check y position
+                    intro.ghosts[0].setMoveAndWishDir(Direction.LEFT);
+                    intro.ghosts[0].setSpeed(3); // TODO check speed
+                    intro.ghosts[0].setVisible(true);
+                }
+                else if (120 <= t && t < 240) {
                     intro.ghosts[0].move();
+                }
+                else if (t == 240) {
+                    intro.sceneController.changeState(WAITING_FOR_START);
                 }
             }
         },
@@ -75,12 +85,12 @@ public class TengenMsPacManIntroScene extends GameScene2D {
             @Override
             public void onUpdate(TengenMsPacManIntroScene intro) {
                 if (Keyboard.pressed(KeyCode.SPACE)) {
-                    intro.sceneController.changeState(STARTING);
+                    intro.sceneController.changeState(SHOWING_MARQUEE);
                 }
             }
         },
 
-        STARTING {
+        SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacManIntroScene intro) {
                 intro.marqueeTimer.restartIndefinitely();
@@ -197,6 +207,7 @@ public class TengenMsPacManIntroScene extends GameScene2D {
     private TickTimer marqueeTimer;
     private int ghostIndex;
     private int waitBeforeRising;
+    private int tengenPresentsY;
 
     public TengenMsPacManIntroScene() {
         sceneController = new FiniteStateMachine<>(SceneState.values()) {
@@ -241,7 +252,7 @@ public class TengenMsPacManIntroScene extends GameScene2D {
             ghost.setAnimations(new MsPacManGameGhostAnimations(context.spriteSheet(), ghost.id()));
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
         }
-        sceneController.restart(SceneState.BLINKY_RUNNING_OVER_SCREEN);
+        sceneController.restart(SceneState.TENGEN_PRESENTS);
     }
 
     @Override
@@ -260,19 +271,25 @@ public class TengenMsPacManIntroScene extends GameScene2D {
             .ifPresent(action -> action.execute(context));
     }
 
+    private static Color shadeOfBlue(long t) {
+        int index = (int) (t % 48) /16;
+        return SHADES_OF_BLUE[index];
+    }
+
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
         TickTimer timer = sceneController.state().timer();
+        long t = timer.currentTick();
         Font font = renderer.scaledArcadeFont(TS);
         BitSet marqueeState = computeMarqueeState(marqueeTimer.currentTick());
         switch (sceneController.state()) {
-            case BLINKY_RUNNING_OVER_SCREEN -> {
+            case TENGEN_PRESENTS -> {
+                renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t), font, 6 * TS, tengenPresentsY);
                 renderer.drawAnimatedEntity(ghosts[0]);
             }
             case WAITING_FOR_START -> {
                 // Loop over 3 different shades of blue, 16 frames each
-                int index = (int) (timer.currentTick() % 48) /16;
-                renderer.drawText("TENGEN PRESENTS", SHADES_OF_BLUE[index], font, 6 * TS, 10 * TS);
+                renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t), font, 6 * TS, 10 * TS);
                 renderer.drawSpriteScaled(context.spriteSheet(), TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE, 3 * TS, 11 * TS);
                 // Blink effect, 32(?) frames for each phase
                 if (timer.currentTick() % 64 < 32) {
@@ -283,9 +300,11 @@ public class TengenMsPacManIntroScene extends GameScene2D {
                 renderer.drawText("©1990 TENGEN INC",        copyrightColor, font, 5 * TS, 28 * TS);
                 renderer.drawText("ALL RIGHTS RESERVED",     copyrightColor, font, 4 * TS, 29 * TS);
             }
+            case SHOWING_MARQUEE -> {
+                drawMarquee(renderer, font, marqueeState);
+            }
             case GHOSTS_MARCHING_IN -> {
-                drawMarquee(renderer.ctx(), marqueeState);
-                renderer.drawText("\"MS PAC-MAN\"", YELLOWISH, font, TITLE_POSITION.x(), TITLE_POSITION.y());
+                drawMarquee(renderer, font, marqueeState);
                 if (ghostIndex == 0) {
                     renderer.drawText("WITH", Color.WHITE, font, TITLE_POSITION.x(), TOP_Y + 20);
                 }
@@ -296,8 +315,7 @@ public class TengenMsPacManIntroScene extends GameScene2D {
                 renderer.drawAnimatedEntity(msPacMan);
             }
             case MS_PACMAN_MARCHING_IN, READY_TO_PLAY -> {
-                drawMarquee(renderer.ctx(), marqueeState);
-                renderer.drawText("\"MS PAC-MAN\"", YELLOWISH,   font, TITLE_POSITION.x(), TITLE_POSITION.y());
+                drawMarquee(renderer, font, marqueeState);
                 renderer.drawText("STARRING",       Color.WHITE,    font, TITLE_POSITION.x(), TOP_Y + 20);
                 renderer.drawText("MS PAC-MAN",     YELLOWISH, font, TITLE_POSITION.x(), TOP_Y + 40);
                 for (Ghost ghost : ghosts) { renderer.drawAnimatedEntity(ghost); }
@@ -325,8 +343,10 @@ public class TengenMsPacManIntroScene extends GameScene2D {
     }
 
     // TODO This is too cryptic
-    private void drawMarquee(GraphicsContext g, BitSet marqueeState) {
+    private void drawMarquee(GameWorldRenderer renderer, Font font, BitSet marqueeState) {
+        renderer.drawText("\"MS PAC-MAN\"", YELLOWISH, font, TITLE_POSITION.x(), TITLE_POSITION.y());
         double xMin = 60, xMax = 192, yMin = 88, yMax = 148;
+        GraphicsContext g = renderer.ctx();
         for (int i = 0; i < NUM_BULBS; ++i) {
             boolean on = marqueeState.get(i);
             if (i <= 33) { // lower edge left-to-right
