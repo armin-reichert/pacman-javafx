@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
-import de.amr.games.pacman.ui2d.util.CanvasLayoutPane;
 import de.amr.games.pacman.ui2d.util.DecoratedCanvas;
 import de.amr.games.pacman.ui2d.util.FadingPane;
 import de.amr.games.pacman.ui2d.util.Ufx;
@@ -22,6 +21,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_BLUE;
 import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_RED;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_DEBUG_INFO;
@@ -56,9 +56,7 @@ public class PopupLayer extends Pane {
         ));
     }
 
-    public void configureSignature(CanvasLayoutPane canvasPane, Font font, Color color, String... words) {
-        final DecoratedCanvas decoratedCanvas = canvasPane.canvas();
-
+    public void sign(DecoratedCanvas decoratedCanvas, Font font, Color color, String... words) {
         signature.setOpacity(0); // invisible initially
         signature.getChildren().clear(); // just in case
         for (String word : words) {
@@ -77,9 +75,8 @@ public class PopupLayer extends Pane {
         ));
 
         // keep vertical position over intro scene, also when scene gets scaled
-        signature.translateYProperty().bind(Bindings.createDoubleBinding(
-            () -> decoratedCanvas.scaling() * (decoratedCanvas.isDecorated() ? 30 : 24),
-            decoratedCanvas.scalingPy, decoratedCanvas.heightProperty()
+        signature.translateYProperty().bind(decoratedCanvas.scalingPy.map(
+            scaling -> scaling.doubleValue() * (decoratedCanvas.isDecorated() ? 4*TS : 3*TS)
         ));
     }
 

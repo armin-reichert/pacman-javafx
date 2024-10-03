@@ -79,8 +79,9 @@ public class GamePage extends StackPane implements Page {
 
         popupLayer = new PopupLayer(context, decoratedCanvas);
         popupLayer.setMouseTransparent(true);
-        popupLayer.configureSignature(canvasLayer, context.assets().font("font.monospaced", 10),
-            Color.grayRgb(200), context.locText("app.signature"));
+        popupLayer.sign(decoratedCanvas,
+            context.assets().font("font.monospaced", 8), Color.LIGHTGRAY,
+            context.locText("app.signature"));
 
         getChildren().addAll(canvasLayer, dashboardLayer, popupLayer);
 
