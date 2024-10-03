@@ -32,9 +32,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.GameAction.calledAction;
 
 /**
- * Intro scene of the Ms. Pac-Man game.
- * <p>
- * The ghosts and Ms. Pac-Man are introduced on a billboard and are marching in one after another.
+ * Intro scene of the Tengen Ms. Pac-Man game.
  *
  * @author Armin Reichert
  */
@@ -72,10 +70,15 @@ public class TengenMsPacManIntroScene extends GameScene2D {
                     intro.ghosts[0].setSpeed(3); // TODO check speed
                     intro.ghosts[0].setVisible(true);
                 }
-                else if (120 <= t && t < 240) {
+                else if (120 < t && t < 360) {
                     intro.ghosts[0].move();
                 }
-                else if (t == 240) {
+                else if (360 <= t && t < 480) {
+                    if (t % 4 == 0) {
+                        intro.tengenPresentsY += TS;
+                    }
+                }
+                else if (t == 480) {
                     intro.sceneController.changeState(WAITING_FOR_START);
                 }
             }
@@ -220,7 +223,7 @@ public class TengenMsPacManIntroScene extends GameScene2D {
 
     @Override
     public boolean isCreditVisible() {
-        return sceneController.state() != SceneState.WAITING_FOR_START;
+        return false;
     }
 
     @Override
@@ -291,8 +294,8 @@ public class TengenMsPacManIntroScene extends GameScene2D {
                 // Loop over 3 different shades of blue, 16 frames each
                 renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t), font, 6 * TS, 10 * TS);
                 renderer.drawSpriteScaled(context.spriteSheet(), TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE, 3 * TS, 11 * TS);
-                // Blink effect, 32(?) frames for each phase
-                if (timer.currentTick() % 64 < 32) {
+                // Blink effect, 32 frames for each phase. TODO: check rate
+                if (t % 64 < 32) {
                     renderer.drawText("PRESS START", Color.WHITE, font, 8 * TS, 20 * TS);
                 }
                 Color copyrightColor = Color.web("#ff60b0"); //TODO check this
@@ -300,24 +303,22 @@ public class TengenMsPacManIntroScene extends GameScene2D {
                 renderer.drawText("©1990 TENGEN INC",        copyrightColor, font, 5 * TS, 28 * TS);
                 renderer.drawText("ALL RIGHTS RESERVED",     copyrightColor, font, 4 * TS, 29 * TS);
             }
-            case SHOWING_MARQUEE -> {
-                drawMarquee(renderer, font, marqueeState);
-            }
+            case SHOWING_MARQUEE -> drawMarquee(renderer, font, marqueeState);
             case GHOSTS_MARCHING_IN -> {
                 drawMarquee(renderer, font, marqueeState);
                 if (ghostIndex == 0) {
                     renderer.drawText("WITH", Color.WHITE, font, TITLE_POSITION.x(), TOP_Y + 20);
                 }
                 String ghostName = ghosts[ghostIndex].name().toUpperCase();
-                double dx = ghostName.length() < 4 ? t(1) : 0;
-                renderer.drawText(ghostName, ghostColors[ghostIndex], font, TITLE_POSITION.x() + t(3) + dx, TOP_Y + 40);
+                double indent = ghostName.length() < 4 ? TS : 0;
+                renderer.drawText(ghostName, ghostColors[ghostIndex], font, TITLE_POSITION.x() + t(3) + indent, TOP_Y + 40);
                 for (Ghost ghost : ghosts) { renderer.drawAnimatedEntity(ghost); }
                 renderer.drawAnimatedEntity(msPacMan);
             }
             case MS_PACMAN_MARCHING_IN, READY_TO_PLAY -> {
                 drawMarquee(renderer, font, marqueeState);
-                renderer.drawText("STARRING",       Color.WHITE,    font, TITLE_POSITION.x(), TOP_Y + 20);
-                renderer.drawText("MS PAC-MAN",     YELLOWISH, font, TITLE_POSITION.x(), TOP_Y + 40);
+                renderer.drawText("STARRING",   Color.WHITE, font, TITLE_POSITION.x(), TOP_Y + 20);
+                renderer.drawText("MS PAC-MAN", YELLOWISH,   font, TITLE_POSITION.x(), TOP_Y + 40);
                 for (Ghost ghost : ghosts) { renderer.drawAnimatedEntity(ghost); }
                 renderer.drawAnimatedEntity(msPacMan);
             }
