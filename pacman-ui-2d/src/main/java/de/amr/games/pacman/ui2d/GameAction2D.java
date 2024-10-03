@@ -117,9 +117,9 @@ public enum GameAction2D implements GameAction {
         }
     },
 
-    ENTER_GAME_PAGE     (key(KeyCode.SPACE), key(KeyCode.ENTER)),
+    ENTER_GAME_PAGE(key(KeyCode.SPACE), key(KeyCode.ENTER)),
 
-    FULLSCREEN          (key(KeyCode.F11)),
+    FULLSCREEN(key(KeyCode.F11)),
 
     HELP(key(KeyCode.H)) {
         @Override
@@ -129,9 +129,9 @@ public enum GameAction2D implements GameAction {
         }
     },
 
-    MUTE                (alt(KeyCode.M)),
+    MUTE(alt(KeyCode.M)),
 
-    NEXT_FLYER_PAGE     (key(KeyCode.DOWN)),
+    NEXT_FLYER_PAGE(key(KeyCode.DOWN)),
 
     NEXT_VARIANT(key(KeyCode.V), key(KeyCode.RIGHT)) {
         @Override
@@ -143,14 +143,10 @@ public enum GameAction2D implements GameAction {
         }
     },
 
-    OPEN_EDITOR         (shift_alt(KeyCode.E)) {
+    OPEN_EDITOR(shift_alt(KeyCode.E)) {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
-            if (context.game().variant() != GameVariant.PACMAN_XXL) {
-                context.showFlashMessageSeconds(3, "Map editor is not available in this game variant"); //TODO localize
-                return;
-            }
             context.currentGameScene().ifPresent(GameScene::end);
             context.sounds().stopAll();
             context.gameClock().stop();
@@ -160,7 +156,7 @@ public enum GameAction2D implements GameAction {
         }
     },
 
-    PREV_FLYER_PAGE     (key(KeyCode.UP)),
+    PREV_FLYER_PAGE(key(KeyCode.UP)),
 
     PREV_VARIANT(key(KeyCode.LEFT)) {
         @Override
@@ -196,7 +192,7 @@ public enum GameAction2D implements GameAction {
         }
     },
 
-    SIMULATION_FASTER (alt(KeyCode.PLUS)) {
+    SIMULATION_FASTER(alt(KeyCode.PLUS)) {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
@@ -240,7 +236,7 @@ public enum GameAction2D implements GameAction {
         }
     },
 
-    SIMULATION_10_STEPS (shift(KeyCode.SPACE)) {
+    SIMULATION_10_STEPS(shift(KeyCode.SPACE)) {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
