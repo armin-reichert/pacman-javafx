@@ -17,6 +17,7 @@ import de.amr.games.pacman.model.Portal;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
+import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
@@ -114,6 +115,18 @@ public class MsPacManTengenGame extends GameModel {
     }
 
     @Override
+    protected Pac createPac() {
+        Pac msPacMan = new Pac();
+        msPacMan.setName("Ms. Pac-Man");
+        return msPacMan;
+    }
+
+    @Override
+    protected Ghost[] createGhosts() {
+        return new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.sue() };
+    }
+
+    @Override
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = levelNumber;
         mapNumber = mapNumberByLevelNumber(levelNumber);
@@ -122,10 +135,6 @@ public class MsPacManTengenGame extends GameModel {
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
-        ghosts[RED_GHOST].setName("Blinky");
-        ghosts[PINK_GHOST].setName("Pinky");
-        ghosts[CYAN_GHOST].setName("Inky");
-        ghosts[ORANGE_GHOST].setName("Sue");
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
@@ -137,10 +146,6 @@ public class MsPacManTengenGame extends GameModel {
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);
-        ghosts[RED_GHOST].setName("Blinky");
-        ghosts[PINK_GHOST].setName("Pinky");
-        ghosts[CYAN_GHOST].setName("Inky");
-        ghosts[ORANGE_GHOST].setName("Sue");
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 

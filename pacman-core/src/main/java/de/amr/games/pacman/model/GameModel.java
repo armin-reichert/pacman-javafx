@@ -146,6 +146,8 @@ public abstract class GameModel {
     public abstract int currentMapNumber();
     public abstract int mapNumberByLevelNumber(int levelNumber);
     public abstract void activateNextBonus();
+    protected abstract Pac createPac();
+    protected abstract Ghost[] createGhosts();
     protected abstract void buildRegularLevel(int levelNumber);
     protected abstract void buildDemoLevel();
     protected abstract byte computeBonusSymbol();
@@ -179,13 +181,12 @@ public abstract class GameModel {
         bonusSymbols[0] = computeBonusSymbol();
         bonusSymbols[1] = computeBonusSymbol();
 
-        pac = new Pac();
+        pac = createPac();
         pac.setWorld(world);
-        pac.setName("Pac-Man");
         pac.reset();
         pac.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
 
-        ghosts = new Ghost[] { Ghost.red(), Ghost.pink(), Ghost.cyan(), Ghost.orange() };
+        ghosts = createGhosts();
         ghosts().forEach(ghost -> {
             ghost.setWorld(world);
             ghost.reset();

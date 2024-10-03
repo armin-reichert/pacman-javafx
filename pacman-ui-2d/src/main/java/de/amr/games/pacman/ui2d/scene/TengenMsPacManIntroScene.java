@@ -231,11 +231,7 @@ public class TengenMsPacManIntroScene extends GameScene2D {
         context.setScoreVisible(true);
 
         msPacMan = new Pac();
-        ghosts = new Ghost[] { Ghost.red(), Ghost.cyan(), Ghost.pink(), Ghost.orange() };
-        ghosts[0].setName("Blinky");
-        ghosts[1].setName("Inky");
-        ghosts[2].setName("Pinky");
-        ghosts[3].setName("Sue");
+        ghosts = new Ghost[] { Ghost.blinky(), Ghost.inky(), Ghost.pinky(), Ghost.sue() };
         ghostColors = new Color[] {
             context.assets().color("tengen.ghost.0.color.normal.dress"),
             context.assets().color("tengen.ghost.2.color.normal.dress"),
@@ -307,18 +303,17 @@ public class TengenMsPacManIntroScene extends GameScene2D {
             case GHOSTS_MARCHING_IN -> {
                 drawMarquee(renderer, font, marqueeState);
                 if (ghostIndex == 0) {
-                    renderer.drawText("WITH", Color.WHITE, font, TITLE_POSITION.x(), TOP_Y + 20);
+                    renderer.drawText("WITH", Color.WHITE, font, TITLE_POSITION.x() - TS, TOP_Y + 20);
                 }
                 String ghostName = ghosts[ghostIndex].name().toUpperCase();
-                double indent = ghostName.length() < 4 ? TS : 0;
-                renderer.drawText(ghostName, ghostColors[ghostIndex], font, TITLE_POSITION.x() + t(3) + indent, TOP_Y + 40);
+                renderer.drawText(ghostName, ghostColors[ghostIndex], font, TITLE_POSITION.x() + t(3), TOP_Y + 38);
                 for (Ghost ghost : ghosts) { renderer.drawAnimatedEntity(ghost); }
                 renderer.drawAnimatedEntity(msPacMan);
             }
             case MS_PACMAN_MARCHING_IN, READY_TO_PLAY -> {
                 drawMarquee(renderer, font, marqueeState);
-                renderer.drawText("STARRING",   Color.WHITE, font, TITLE_POSITION.x(), TOP_Y + 20);
-                renderer.drawText("MS PAC-MAN", YELLOWISH,   font, TITLE_POSITION.x(), TOP_Y + 40);
+                renderer.drawText("STARRING",   Color.WHITE, font, TITLE_POSITION.x() - TS, TOP_Y + 20);
+                renderer.drawText("MS PAC-MAN", YELLOWISH,   font, TITLE_POSITION.x() + TS, TOP_Y + 38);
                 for (Ghost ghost : ghosts) { renderer.drawAnimatedEntity(ghost); }
                 renderer.drawAnimatedEntity(msPacMan);
             }

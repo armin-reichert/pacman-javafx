@@ -30,7 +30,6 @@ import org.tinylog.Logger;
 import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.ui2d.GameAction.calledAction;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
 
@@ -193,11 +192,7 @@ public class MsPacManIntroScene extends GameScene2D {
         clearBlueMazeBug();
 
         msPacMan = new Pac();
-        ghosts = new Ghost[] { Ghost.red(), Ghost.pink(), Ghost.cyan(), Ghost.orange() };
-        ghosts[RED_GHOST].setName("Blinky");
-        ghosts[PINK_GHOST].setName("Pinky");
-        ghosts[CYAN_GHOST].setName("Inky");
-        ghosts[ORANGE_GHOST].setName("Sue");
+        ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.sue() };
         marqueeTimer = new TickTimer("marquee-timer");
         ghostIndex = 0;
         waitBeforeRising = 0;

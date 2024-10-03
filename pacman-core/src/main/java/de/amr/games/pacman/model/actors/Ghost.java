@@ -38,20 +38,34 @@ public class Ghost extends Creature implements AnimatedEntity {
     public static final String ANIM_BLINKY_PATCHED   = "patched";
     public static final String ANIM_BLINKY_NAKED     = "naked";
 
-    public static Ghost red() {
-        return new Ghost(GameModel.RED_GHOST);
+    public static Ghost blinky() {
+        var ghost = new Ghost(GameModel.RED_GHOST);
+        ghost.setName("Blinky");
+        return ghost;
     }
 
-    public static Ghost pink() {
-        return new Ghost(GameModel.PINK_GHOST);
+    public static Ghost pinky() {
+        var ghost = new Ghost(GameModel.PINK_GHOST);
+        ghost.setName("Pinky");
+        return ghost;
     }
 
-    public static Ghost cyan() {
-        return new Ghost(GameModel.CYAN_GHOST);
+    public static Ghost inky() {
+        var ghost = new Ghost(GameModel.CYAN_GHOST);
+        ghost.setName("Inky");
+        return ghost;
     }
 
-    public static Ghost orange() {
-        return new Ghost(GameModel.ORANGE_GHOST);
+    public static Ghost clyde() {
+        var ghost = new Ghost(GameModel.ORANGE_GHOST);
+        ghost.setName("Clyde");
+        return ghost;
+    }
+
+    public static Ghost sue() {
+        var ghost = new Ghost(GameModel.ORANGE_GHOST);
+        ghost.setName("Sue");
+        return ghost;
     }
 
     private final byte id;
@@ -93,7 +107,7 @@ public class Ghost extends Creature implements AnimatedEntity {
         return id;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 

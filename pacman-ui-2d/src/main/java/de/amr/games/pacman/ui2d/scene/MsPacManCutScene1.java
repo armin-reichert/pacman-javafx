@@ -14,7 +14,6 @@ import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAssets2D;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManGameGhostAnimations;
@@ -23,7 +22,6 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
 
 /**
  * Intermission scene 1: "They meet".
@@ -240,8 +238,8 @@ public class MsPacManCutScene1 extends GameScene2D {
 
         pacMan = new Pac();
         msPac = new Pac();
-        inky = Ghost.cyan();
-        pinky = Ghost.pink();
+        inky = Ghost.inky();
+        pinky = Ghost.pinky();
         heart = new Entity();
 
         //TODO replace with Tengen sprite sheet later

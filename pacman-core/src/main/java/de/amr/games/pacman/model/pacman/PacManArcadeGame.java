@@ -15,6 +15,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.steering.RouteBasedSteering;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
@@ -113,6 +114,19 @@ public class PacManArcadeGame extends GameModel {
     }
 
     @Override
+    protected Pac createPac() {
+        Pac pacMan = new Pac();
+        pacMan.setName("Pac-Man");
+        return pacMan;
+    }
+
+    @Override
+    protected Ghost[] createGhosts() {
+        return new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.clyde() };
+    }
+
+
+    @Override
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = levelNumber;
         var world = new GameWorld(WORLD_MAP);
@@ -121,10 +135,6 @@ public class PacManArcadeGame extends GameModel {
         pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
-        ghosts[RED_GHOST].setName("Blinky");
-        ghosts[PINK_GHOST].setName("Pinky");
-        ghosts[CYAN_GHOST].setName("Inky");
-        ghosts[ORANGE_GHOST].setName("Clyde");
         ghosts().forEach(ghost -> {
             ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
             ghost.setCannotMoveUpTiles(CANNOT_MOVE_UP_TILES);

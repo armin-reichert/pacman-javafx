@@ -41,7 +41,6 @@ import static de.amr.games.pacman.ui2d.variant.pacman.PacManGameSpriteSheet.MIDW
  */
 public class PacManIntroScene extends GameScene2D {
 
-    static final String[] GHOST_NAMES = { "Blinky", "Pinky", "Inky", "Clyde" };
     static final String[] GHOST_CHARACTERS = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
     static final Color[] GHOST_COLORS = { PALETTE_RED, PALETTE_PINK, PALETTE_CYAN, PALETTE_ORANGE };
     static final Color PELLET_COLOR = PALETTE_ROSE;
@@ -258,10 +257,8 @@ public class PacManIntroScene extends GameScene2D {
         pacMan = new Pac();
         pacMan.setAnimations(new PacManGamePacAnimations(context.spriteSheet()));
 
-        ghosts = new Ghost[] { Ghost.red(), Ghost.pink(), Ghost.cyan(), Ghost.orange() };
-        for (int i = 0; i < ghosts.length; ++i) {
-            Ghost ghost = ghosts[i];
-            ghost.setName(GHOST_NAMES[i]);
+        ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.clyde() };
+        for (Ghost ghost : ghosts) {
             ghost.setAnimations(new PacManGameGhostAnimations(context.spriteSheet(), ghost.id()));
         }
         ghostImageVisible     = new boolean[4];
