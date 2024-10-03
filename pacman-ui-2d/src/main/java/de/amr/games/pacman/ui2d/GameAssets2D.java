@@ -94,6 +94,11 @@ public class GameAssets2D extends AssetStorage {
         assets.store("ms_pacman.icon",                  rm.loadImage("graphics/icons/mspacman.png"));
         assets.store("ms_pacman.logo.midway",           rm.loadImage("graphics/mspacman/midway_logo.png"));
 
+        assets.store("ms_pacman.ghost.0.color.normal.dress", PALETTE_RED);
+        assets.store("ms_pacman.ghost.1.color.normal.dress", PALETTE_PINK);
+        assets.store("ms_pacman.ghost.2.color.normal.dress", PALETTE_CYAN);
+        assets.store("ms_pacman.ghost.3.color.normal.dress", PALETTE_ORANGE);
+
         assets.store("ms_pacman.color.game_over_message", Color.RED);
         assets.store("ms_pacman.color.ready_message",   Color.YELLOW);
         assets.store("ms_pacman.color.clapperboard",    PALETTE_PALE);

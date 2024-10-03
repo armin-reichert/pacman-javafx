@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -31,7 +30,6 @@ import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.GameAction.calledAction;
-import static de.amr.games.pacman.ui2d.GameAssets2D.*;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -42,14 +40,15 @@ import static de.amr.games.pacman.ui2d.GameAssets2D.*;
  */
 public class TengenMsPacManIntroScene extends GameScene2D {
 
-    static final Color[] BLUE_SHADES = { Color.DARKBLUE, Color.BLUE, Color.LIGHTBLUE };
-    static final float SPEED = 2.5f;
-    static final int TOP_Y = TS * 11 + 1;
-    static final int STOP_X_GHOST = TS * 6 - 4;
-    static final int STOP_X_MS_PAC_MAN = TS * 15 + 2;
+    static final Color[]  SHADES_OF_BLUE = { Color.DARKBLUE, Color.BLUE, Color.LIGHTBLUE }; //TODO check exact colors
+    static final Color    YELLOWISH = Color.web("e8d020");
+    static final float    SPEED = 1.1f * 2; //TODO check exact speed
+    static final int      TOP_Y = TS * 11 + 1;
+    static final int      STOP_X_GHOST = TS * 6 - 4;
+    static final int      STOP_X_MS_PAC_MAN = TS * 15 + 2;
     static final Vector2i TITLE_POSITION = v2i(TS * 10, TS * 8);
-    static final int NUM_BULBS = 96;
-    static final int DISTANCE_BETWEEN_ACTIVE_BULBS = 16;
+    static final int      NUM_BULBS = 96;
+    static final int      DISTANCE_BETWEEN_ACTIVE_BULBS = 16;
 
     private enum SceneState implements FsmState<TengenMsPacManIntroScene> {
 
@@ -175,6 +174,7 @@ public class TengenMsPacManIntroScene extends GameScene2D {
 
     private Pac msPacMan;
     private Ghost[] ghosts;
+    private Color[] ghostColors;
     private TickTimer marqueeTimer;
     private int ghostIndex;
     private int waitBeforeRising;
@@ -200,14 +200,20 @@ public class TengenMsPacManIntroScene extends GameScene2D {
         msPacMan = new Pac();
         ghosts = new Ghost[] { Ghost.red(), Ghost.cyan(), Ghost.pink(), Ghost.orange() };
         ghosts[0].setName("Blinky");
-        ghosts[2].setName("Pinky");
         ghosts[1].setName("Inky");
+        ghosts[2].setName("Pinky");
         ghosts[3].setName("Sue");
+        ghostColors = new Color[] {
+            context.assets().color("tengen.ghost.0.color.normal.dress"),
+            context.assets().color("tengen.ghost.2.color.normal.dress"),
+            context.assets().color("tengen.ghost.1.color.normal.dress"),
+            context.assets().color("tengen.ghost.3.color.normal.dress"),
+        };
         marqueeTimer = new TickTimer("marquee-timer");
         ghostIndex = 0;
         waitBeforeRising = 0;
 
-        //TODO use Ms. Pac-Man animations also in Tengen for now
+        //TODO use Tengen sprites for Ms. Pac-Man and PacMan characters
         GameSpriteSheet msPacManGameSpriteSheet = context.assets().get("ms_pacman.spritesheet");
         msPacMan.setAnimations(new MsPacManGamePacAnimations(msPacManGameSpriteSheet));
         msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
@@ -242,40 +248,37 @@ public class TengenMsPacManIntroScene extends GameScene2D {
         BitSet marqueeState = computeMarqueeState(marqueeTimer.currentTick());
         switch (sceneController.state()) {
             case WAITING_FOR_START -> {
-                int index = (int)(timer.currentTick() % 60) / 20;
-                Color color = BLUE_SHADES[index];
-                renderer.drawText("TENGEN PRESENTS", color, font, 6*TS, 10*TS);
-                renderer.drawSpriteScaled(context.spriteSheet(), TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE, 3*TS, 11*TS);
-                if (timer.currentTick() % 60 < 30) {
+                // Loop over 3 different shades of blue, 16 frames each
+                int index = (int) (timer.currentTick() % 48) /16;
+                renderer.drawText("TENGEN PRESENTS", SHADES_OF_BLUE[index], font, 6 * TS, 10 * TS);
+                renderer.drawSpriteScaled(context.spriteSheet(), TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE, 3 * TS, 11 * TS);
+                // Blink effect, 32(?) frames for each phase
+                if (timer.currentTick() % 64 < 32) {
                     renderer.drawText("PRESS START", Color.WHITE, font, 8 * TS, 20 * TS);
                 }
-                renderer.drawText("MS PAC-MAN TM NAMCO LTD", Color.web("#ff60b0"), font, 3*TS, 27*TS);
-                renderer.drawText("©1990 TENGEN INC", Color.web("#ff60b0"), font, 5*TS, 28*TS);
-                renderer.drawText("ALL RIGHTS RESERVED", Color.web("#ff60b0"), font, 4*TS, 29*TS);
+                Color copyrightColor = Color.web("#ff60b0"); //TODO check this
+                renderer.drawText("MS PAC-MAN TM NAMCO LTD", copyrightColor, font, 3 * TS, 27 * TS);
+                renderer.drawText("©1990 TENGEN INC",        copyrightColor, font, 5 * TS, 28 * TS);
+                renderer.drawText("ALL RIGHTS RESERVED",     copyrightColor, font, 4 * TS, 29 * TS);
             }
             case GHOSTS_MARCHING_IN -> {
                 drawMarquee(renderer.ctx(), marqueeState);
-                renderer.drawText("\"MS PAC-MAN\"", PALETTE_ORANGE, font, TITLE_POSITION.x(), TITLE_POSITION.y());
-                if (ghostIndex == GameModel.RED_GHOST) {
-                    renderer.drawText("WITH", PALETTE_PALE, font, TITLE_POSITION.x(), TOP_Y + t(3));
+                renderer.drawText("\"MS PAC-MAN\"", YELLOWISH, font, TITLE_POSITION.x(), TITLE_POSITION.y());
+                if (ghostIndex == 0) {
+                    renderer.drawText("WITH", Color.WHITE, font, TITLE_POSITION.x(), TOP_Y + 20);
                 }
                 String ghostName = ghosts[ghostIndex].name().toUpperCase();
-                Color color = context.assets().color("tengen.ghost.%d.color.normal.dress".formatted(ghostIndex));
                 double dx = ghostName.length() < 4 ? t(1) : 0;
-                renderer.drawText(ghostName, color, font, TITLE_POSITION.x() + t(3) + dx, TOP_Y + t(6));
-                for (Ghost ghost : ghosts) {
-                    renderer.drawAnimatedEntity(ghost);
-                }
+                renderer.drawText(ghostName, ghostColors[ghostIndex], font, TITLE_POSITION.x() + t(3) + dx, TOP_Y + 40);
+                for (Ghost ghost : ghosts) { renderer.drawAnimatedEntity(ghost); }
                 renderer.drawAnimatedEntity(msPacMan);
             }
-            case MS_PACMAN_MARCHING_IN, READY_TO_PLAY-> {
+            case MS_PACMAN_MARCHING_IN, READY_TO_PLAY -> {
                 drawMarquee(renderer.ctx(), marqueeState);
-                renderer.drawText("\"MS PAC-MAN\"", PALETTE_ORANGE, font, TITLE_POSITION.x(), TITLE_POSITION.y());
-                renderer.drawText("STARRING", PALETTE_PALE, font, TITLE_POSITION.x(), TOP_Y + t(3));
-                renderer.drawText("MS PAC-MAN", PALETTE_YELLOW, font, TITLE_POSITION.x(), TOP_Y + t(6));
-                for (Ghost ghost : ghosts) {
-                    renderer.drawAnimatedEntity(ghost);
-                }
+                renderer.drawText("\"MS PAC-MAN\"", YELLOWISH,   font, TITLE_POSITION.x(), TITLE_POSITION.y());
+                renderer.drawText("STARRING",       Color.WHITE,    font, TITLE_POSITION.x(), TOP_Y + 20);
+                renderer.drawText("MS PAC-MAN",     YELLOWISH, font, TITLE_POSITION.x(), TOP_Y + 40);
+                for (Ghost ghost : ghosts) { renderer.drawAnimatedEntity(ghost); }
                 renderer.drawAnimatedEntity(msPacMan);
             }
         }
@@ -317,7 +320,7 @@ public class TengenMsPacManIntroScene extends GameScene2D {
     }
 
     private void drawBulb(GraphicsContext g, double x, double y, boolean on) {
-        g.setFill(on ? PALETTE_PALE : PALETTE_RED);
+        g.setFill(on ? Color.WHITE : Color.web("d84060"));
         g.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 }
