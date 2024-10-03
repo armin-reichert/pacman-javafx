@@ -40,7 +40,7 @@ public class TengenMsPacManIntroScene extends GameScene2D {
 
     static final Color[]  SHADES_OF_BLUE = { Color.DARKBLUE, Color.BLUE, Color.LIGHTBLUE }; //TODO check exact colors
     static final Color    YELLOWISH = Color.web("e8d020");
-    static final float    SPEED = 1.1f * 2; //TODO check exact speed
+    static final float    SPEED = 2.2f; //TODO check exact speed
     static final int      TOP_Y = TS * 11 + 1;
     static final int      STOP_X_GHOST = TS * 6 - 4;
     static final int      STOP_X_MS_PAC_MAN = TS * 15 + 2;
@@ -67,7 +67,7 @@ public class TengenMsPacManIntroScene extends GameScene2D {
                 else if (t == 120) {
                     intro.ghosts[0].setPosition(t(31), t(30)); //TODO check y position
                     intro.ghosts[0].setMoveAndWishDir(Direction.LEFT);
-                    intro.ghosts[0].setSpeed(3); // TODO check speed
+                    intro.ghosts[0].setSpeed(8); // TODO check speed
                     intro.ghosts[0].setVisible(true);
                 }
                 else if (120 < t && t < 360) {
