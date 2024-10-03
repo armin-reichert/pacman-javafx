@@ -121,7 +121,7 @@ public class GamePage3D extends GamePage {
         miMuted.selectedProperty().bindBidirectional(context.sounds().mutedProperty());
         contextMenu.getItems().add(miMuted);
 
-        if (context.game().variant() == GameVariant.PACMAN_XXL) {
+        if (context.game().variant() == GameVariant.PACMAN_XXL || context.game().variant() == GameVariant.MS_PACMAN_TENGEN) {
             var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
             miOpenMapEditor.setOnAction(e -> GameAction2D.OPEN_EDITOR.execute(context));
             contextMenu.getItems().add(miOpenMapEditor);

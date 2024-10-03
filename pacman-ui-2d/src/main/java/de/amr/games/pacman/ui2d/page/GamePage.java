@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.*;
@@ -170,6 +171,12 @@ public class GamePage extends StackPane implements Page {
         var miMuted = new CheckMenuItem(context.locText("muted"));
         miMuted.selectedProperty().bindBidirectional(context.sounds().mutedProperty());
         contextMenu.getItems().add(miMuted);
+
+        if (context.game().variant() == GameVariant.PACMAN_XXL || context.game().variant() == GameVariant.MS_PACMAN_TENGEN) {
+            var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
+            miOpenMapEditor.setOnAction(e -> GameAction2D.OPEN_EDITOR.execute(context));
+            contextMenu.getItems().add(miOpenMapEditor);
+        }
 
         var miQuit = new MenuItem(context.locText("quit"));
         miQuit.setOnAction(e -> GameAction2D.SHOW_START_PAGE.execute(context));
