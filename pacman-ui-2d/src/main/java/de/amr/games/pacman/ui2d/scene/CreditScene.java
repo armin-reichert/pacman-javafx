@@ -4,12 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
+import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.ui2d.GameAction.executeActionIfCalled;
+import static de.amr.games.pacman.ui2d.GameAction.calledAction;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
 import static de.amr.games.pacman.ui2d.variant.pacman.PacManGameSpriteSheet.MIDWAY_COPYRIGHT;
 
@@ -38,7 +39,7 @@ public class CreditScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        executeActionIfCalled(context, GameAction2D.ADD_CREDIT, GameAction2D.START_GAME);
+        calledAction(GameAction2D.ADD_CREDIT, GameAction2D.START_GAME).ifPresent(action -> action.execute(context));
     }
 
     @Override

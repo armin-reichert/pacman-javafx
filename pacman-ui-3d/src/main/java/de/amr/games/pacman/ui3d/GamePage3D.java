@@ -21,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 
+import static de.amr.games.pacman.ui2d.GameAction.calledAction;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.page.Page.menuTitleItem;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
@@ -49,11 +50,8 @@ public class GamePage3D extends GamePage {
 
     @Override
     public void handleInput() {
-        if (!GameAction.executeActionIfCalled(context,
-            GameAction3D.TOGGLE_PIP_VISIBILITY,
-            GameAction3D.TOGGLE_PLAY_SCENE_2D_3D)) {
-            super.handleInput();
-        }
+        calledAction(GameAction3D.TOGGLE_PIP_VISIBILITY, GameAction3D.TOGGLE_PLAY_SCENE_2D_3D)
+            .ifPresentOrElse(action -> action.execute(context), super::handleInput);
     }
 
     @Override
