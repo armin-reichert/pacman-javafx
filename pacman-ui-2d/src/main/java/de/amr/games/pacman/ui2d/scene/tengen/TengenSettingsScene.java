@@ -76,9 +76,10 @@ public class TengenSettingsScene extends GameScene2D {
 
     private int fps(MsPacManTengenGame.Difficulty difficulty) {
         return switch (difficulty) {
-            case CRAZY -> 120;
             case EASY -> 40;
+            case NORMAL -> 60;
             case HARD -> 90;
+            case CRAZY -> 120;
         };
     }
 

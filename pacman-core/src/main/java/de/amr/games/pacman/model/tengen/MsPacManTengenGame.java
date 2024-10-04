@@ -40,7 +40,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 public class MsPacManTengenGame extends GameModel {
 
     public enum MapCategory { ARCADE, STRANGE, MINI, BIG }
-    public enum Difficulty { EASY, HARD, CRAZY }
+    public enum Difficulty { EASY, NORMAL, HARD, CRAZY }
 
     private static final int ARCADE_MAP_COUNT = 9;
     private static final int NON_ARCADE_MAP_COUNT = 37;
