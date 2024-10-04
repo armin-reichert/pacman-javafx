@@ -132,7 +132,6 @@ public class MsPacManTengenGame extends GameModel {
         mapNumber = mapNumberByLevelNumber(levelNumber);
         var map = maps.get(mapNumber - 1);
         setWorldAndCreatePopulation(createWorld(map));
-        pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
@@ -143,7 +142,6 @@ public class MsPacManTengenGame extends GameModel {
         levelNumber = 1;
         mapNumber = mapNumberByLevelNumber(levelNumber);
         setWorldAndCreatePopulation(createWorld(maps.get(mapNumber - 1)));
-        pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
