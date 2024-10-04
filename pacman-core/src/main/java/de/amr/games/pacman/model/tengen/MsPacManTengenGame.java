@@ -31,8 +31,9 @@ import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * Ms. Pac-Man Tengen game. Currently, this is just a copy of the Ms. Pac-Man Arcade game with the Tengen mazes.
- * TODO: use Tengen maze images, sprites
- * TODO: how do the ghosts in Tengen differ from the Arcade game such that they can handle non-Arcade maze structures?
+ * <p>
+ * TODO: use Tengen sprites all over the place
+ * TODO: how do the ghosts in Tengen differ from the Arcade game? How can they handle non-Arcade maze structures?
  *
  * @author Armin Reichert
  */
@@ -60,7 +61,7 @@ public class MsPacManTengenGame extends GameModel {
 
     private static GameWorld createWorld(WorldMap map) {
         var world = new GameWorld(map);
-        //TODO is there any Tengen maze where the house is at a different location than in the Arcade mazes?
+        // It seems that in all Tengen mazes the house is at the same location as in the Arcade mazes
         Vector2i houseTopLeftTile = map.terrain().getTileProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, v2i(10, 15));
         world.createArcadeHouse(houseTopLeftTile.x(), houseTopLeftTile.y());
         return world;
@@ -172,7 +173,7 @@ public class MsPacManTengenGame extends GameModel {
 
     @Override
     public byte computeBonusSymbol() {
-        //TODO: no idea yet hwo Tengen does it
+        //TODO: no idea yet how Tengen does it
         if (levelNumber <= BONUS_VALUE_FACTORS.length) {
             return (byte) (levelNumber - 1);
         }
