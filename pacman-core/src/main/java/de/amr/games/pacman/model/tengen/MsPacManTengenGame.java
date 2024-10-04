@@ -40,6 +40,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 public class MsPacManTengenGame extends GameModel {
 
     public enum MapCategory { ARCADE, STRANGE, MINI, BIG }
+    public enum Difficulty { EASY, HARD, CRAZY }
 
     private static final int ARCADE_MAP_COUNT = 9;
     private static final int NON_ARCADE_MAP_COUNT = 37;
@@ -77,6 +78,7 @@ public class MsPacManTengenGame extends GameModel {
     private final List<WorldMap> bigMaps;
     private List<WorldMap> maps = new ArrayList<>();
     private MapCategory mapCategory;
+    private Difficulty difficulty;
     private int mapNumber;
 
     public MsPacManTengenGame(GameVariant gameVariant, File userDir) {
@@ -88,6 +90,7 @@ public class MsPacManTengenGame extends GameModel {
         miniMaps    = readMaps(MapCategory.MINI,    MINI_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
         bigMaps     = readMaps(MapCategory.BIG,     BIG_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
         setMapCategory(MapCategory.STRANGE);
+        setDifficulty(Difficulty.EASY);
     }
 
     public MapCategory mapCategory() {
@@ -102,6 +105,14 @@ public class MsPacManTengenGame extends GameModel {
             case MINI -> miniMaps;
             case STRANGE -> strangeMaps;
         };
+    }
+
+    public Difficulty difficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
     }
 
     public int mapNumberByLevelNumber(int levelNumber) {

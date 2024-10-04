@@ -2,23 +2,28 @@ package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
-import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import java.util.Map;
-
 import static de.amr.games.pacman.lib.Globals.TS;
 
 public class TengenSettingsScene extends GameScene2D {
 
+    static final Color LABEL_COLOR = Color.YELLOW;
+    static final Color VALUE_COLOR = Color.WHITE;
+
+    static final int NUM_SELECTIONS = 2;
+    static final int SETTING_DIFFICULTY = 0;
+    static final int SETTING_MAZE_SELECTION = 1;
+
+    private int selectedSetting;
+
     @Override
     public void init() {
+        selectedSetting = SETTING_DIFFICULTY;
     }
 
     @Override
@@ -32,18 +37,33 @@ public class TengenSettingsScene extends GameScene2D {
     @Override
     protected void drawSceneContent(GameWorldRenderer renderer) {
         MsPacManTengenGame tengenGame = (MsPacManTengenGame) context.game();
-        int keyX = 2*TS;
-        int valueX = 19*TS;
-        Color labelColor = Color.YELLOW;
-        Color valueColor = Color.WHITE;
+        int col1 = 2 * TS;
+        int col2 = 19 * TS;
         Font font = renderer.scaledArcadeFont(TS);
-        renderer.drawText("MS PAC-MAN OPTIONS", labelColor, font, 6*TS, 6*TS);
-        renderer.drawText("MAZE SELECTION : ", labelColor, font, keyX, 10*TS);
-        renderer.drawText(tengenGame.mapCategory().name(), valueColor, font, valueX, 10*TS);
-        renderer.drawText("MOVE ARROW WITH CURSOR KEYS", labelColor, font, keyX, 30*TS);
-        renderer.drawText("CHOOSE OPTIONS WITH ENTER", labelColor, font, keyX, 31*TS);
-        renderer.drawText("PRESS SPACE TO START GAME", labelColor, font, keyX, 32*TS);
+        renderer.drawText("MS PAC-MAN OPTIONS", LABEL_COLOR, font, 6*TS, 6*TS);
 
+        int y = 14 * TS;
+        // setting 0
+        drawArrowIfSelected(renderer, SETTING_DIFFICULTY, y);
+        renderer.drawText("GAME DIFFICULTY : ", LABEL_COLOR, font, col1, y);
+        renderer.drawText(tengenGame.difficulty().name(), VALUE_COLOR, font, col2, y);
+
+        y += 2*TS;
+        // setting 1
+        drawArrowIfSelected(renderer, SETTING_MAZE_SELECTION, y);
+        renderer.drawText("MAZE SELECTION  : ", LABEL_COLOR, font, col1, y);
+        renderer.drawText(tengenGame.mapCategory().name(), VALUE_COLOR, font, col2, y);
+
+        renderer.drawText("MOVE ARROW WITH CURSOR KEYS", LABEL_COLOR, font, col1, 30*TS);
+        renderer.drawText("CHOOSE OPTIONS WITH ENTER", LABEL_COLOR, font, col1, 31*TS);
+        renderer.drawText("PRESS SPACE TO START GAME", LABEL_COLOR, font, col1, 32*TS);
+    }
+
+    private void drawArrowIfSelected(GameWorldRenderer renderer, int setting, int y) {
+        if (selectedSetting == setting) {
+            Font font = renderer.scaledArcadeFont(TS);
+            renderer.drawText(">", LABEL_COLOR, font, 0, y);
+        }
     }
 
     @Override
@@ -51,22 +71,52 @@ public class TengenSettingsScene extends GameScene2D {
         return false;
     }
 
+    private int fps(MsPacManTengenGame.Difficulty difficulty) {
+        return switch (difficulty) {
+            case CRAZY -> 120;
+            case EASY -> 40;
+            case HARD -> 90;
+        };
+    }
+
     @Override
     public void handleInput() {
+        MsPacManTengenGame tengenGame = (MsPacManTengenGame) context.game();
         if (Keyboard.pressed(KeyCode.ENTER)) {
-            // currently, map category is the only value that can be changed
-            MsPacManTengenGame tengenGame = (MsPacManTengenGame) context.game();
-            MsPacManTengenGame.MapCategory category = tengenGame.mapCategory();
-            int ord = category.ordinal();
-            if (ord == MsPacManTengenGame.MapCategory.values().length - 1) {
-                tengenGame.setMapCategory(MsPacManTengenGame.MapCategory.values()[0]);
-            } else {
-                tengenGame.setMapCategory(MsPacManTengenGame.MapCategory.values()[ord + 1]);
+            switch (selectedSetting) {
+                case SETTING_DIFFICULTY -> {
+                    MsPacManTengenGame.Difficulty difficulty = tengenGame.difficulty();
+                    int ord = difficulty.ordinal();
+                    if (ord == MsPacManTengenGame.Difficulty.values().length - 1) {
+                        tengenGame.setDifficulty(MsPacManTengenGame.Difficulty.values()[0]);
+                    } else {
+                        tengenGame.setDifficulty(MsPacManTengenGame.Difficulty.values()[ord + 1]);
+                    }
+                }
+                case SETTING_MAZE_SELECTION -> {
+                    MsPacManTengenGame.MapCategory category = tengenGame.mapCategory();
+                    int ord = category.ordinal();
+                    if (ord == MsPacManTengenGame.MapCategory.values().length - 1) {
+                        tengenGame.setMapCategory(MsPacManTengenGame.MapCategory.values()[0]);
+                    } else {
+                        tengenGame.setMapCategory(MsPacManTengenGame.MapCategory.values()[ord + 1]);
+                    }
+                }
+                default -> {}
             }
-        } else if (Keyboard.pressed(KeyCode.SPACE)) {
+        }
+        else if (Keyboard.pressed(KeyCode.SPACE)) {
             context.sounds().stopAll();
             context.game().insertCoin();
+            //TODO when to change FPS? Only during hunting state?
+            //context.gameClock().setTargetFrameRate(fps(tengenGame.difficulty()));
             context.gameController().changeState(GameState.READY);
+        }
+        else if (Keyboard.pressed(KeyCode.UP)) {
+            selectedSetting = (selectedSetting > 0) ? selectedSetting - 1: NUM_SELECTIONS - 1;
+        }
+        else if (Keyboard.pressed(KeyCode.DOWN)) {
+            selectedSetting = (selectedSetting < NUM_SELECTIONS - 1) ? selectedSetting + 1 : 0;
         }
     }
 }
