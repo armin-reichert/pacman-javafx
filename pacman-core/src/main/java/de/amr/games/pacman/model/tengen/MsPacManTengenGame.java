@@ -90,6 +90,10 @@ public class MsPacManTengenGame extends GameModel {
         setMapCategory(MapCategory.STRANGE);
     }
 
+    public MapCategory mapCategory() {
+        return mapCategory;
+    }
+
     public void setMapCategory(MapCategory mapCategory) {
         this.mapCategory = checkNotNull(mapCategory);
         maps = switch (mapCategory) {

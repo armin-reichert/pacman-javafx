@@ -14,7 +14,6 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.util.Keyboard;
@@ -29,7 +28,6 @@ import javafx.scene.text.Font;
 import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.GameAction.calledAction;
 
 /**
  * Intro scene of the Tengen Ms. Pac-Man game.
@@ -70,15 +68,13 @@ public class TengenMsPacManIntroScene extends GameScene2D {
                     intro.ghosts[0].setSpeed(8); // TODO check speed
                     intro.ghosts[0].setVisible(true);
                 }
-                else if (120 < t && t < 360) {
+                else if (120 < t && t < 240) {
                     intro.ghosts[0].move();
                 }
-                else if (360 <= t && t < 480) {
-                    if (t % 4 == 0) {
-                        intro.tengenPresentsY += TS;
-                    }
+                else if (240 <= t && t < 360) {
+                    if (t % 4 == 0) { intro.tengenPresentsY += 2*TS; }
                 }
-                else if (t == 480) {
+                else if (t == 360) {
                     intro.sceneController.changeState(WAITING_FOR_START);
                 }
             }
@@ -176,20 +172,9 @@ public class TengenMsPacManIntroScene extends GameScene2D {
                 if (intro.msPacMan.posX() <= STOP_X_MS_PAC_MAN) {
                     intro.msPacMan.setSpeed(0);
                     intro.msPacMan.animations().ifPresent(Animations::resetSelected);
-                    intro.sceneController.changeState(READY_TO_PLAY);
                 }
-            }
-        },
-
-        READY_TO_PLAY {
-
-            @Override
-            public void onUpdate(TengenMsPacManIntroScene intro) {
-                intro.marqueeTimer.tick();
-                if (timer.atSecond(2.0) && !intro.context.game().hasCredit()) {
-                    intro.context.gameController().changeState(GameState.READY); // demo level
-                } else if (timer.atSecond(5)) {
-                    intro.context.gameController().changeState(GameState.CREDIT);
+                if (timer().atSecond(4)) {
+                    intro.context.gameController().changeState(GameState.CREDIT); // The settings scene
                 }
             }
         };
@@ -264,12 +249,6 @@ public class TengenMsPacManIntroScene extends GameScene2D {
         sceneController.update();
     }
 
-    @Override
-    public void handleInput() {
-        calledAction(GameAction2D.ADD_CREDIT, GameAction2D.START_GAME, GameAction2D.TEST_CUT_SCENES)
-            .ifPresent(action -> action.execute(context));
-    }
-
     private static Color shadeOfBlue(long t) {
         int index = (int) (t % 48) /16;
         return SHADES_OF_BLUE[index];
@@ -292,7 +271,7 @@ public class TengenMsPacManIntroScene extends GameScene2D {
                 renderer.drawSpriteScaled(context.spriteSheet(), TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE, 3 * TS, 11 * TS);
                 // Blink effect, 32 frames for each phase. TODO: check rate
                 if (t % 64 < 32) {
-                    renderer.drawText("PRESS START", Color.WHITE, font, 8 * TS, 20 * TS);
+                    renderer.drawText("PRESS SPACE", Color.WHITE, font, 8 * TS, 20 * TS);
                 }
                 Color copyrightColor = Color.web("#ff60b0"); //TODO check this
                 renderer.drawText("MS PAC-MAN TM NAMCO LTD", copyrightColor, font, 3 * TS, 27 * TS);
@@ -310,7 +289,7 @@ public class TengenMsPacManIntroScene extends GameScene2D {
                 for (Ghost ghost : ghosts) { renderer.drawAnimatedEntity(ghost); }
                 renderer.drawAnimatedEntity(msPacMan);
             }
-            case MS_PACMAN_MARCHING_IN, READY_TO_PLAY -> {
+            case MS_PACMAN_MARCHING_IN -> {
                 drawMarquee(renderer, font, marqueeState);
                 renderer.drawText("STARRING",   Color.WHITE, font, TITLE_POSITION.x() - TS, TOP_Y + 20);
                 renderer.drawText("MS PAC-MAN", YELLOWISH,   font, TITLE_POSITION.x() + TS, TOP_Y + 38);

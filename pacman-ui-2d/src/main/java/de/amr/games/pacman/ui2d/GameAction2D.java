@@ -226,7 +226,7 @@ public enum GameAction2D implements GameAction {
         }
     },
 
-    SIMULATION_1_STEP(key(KeyCode.SPACE), shift(KeyCode.P)) {
+    SIMULATION_1_STEP(shift(KeyCode.P)) {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
@@ -246,7 +246,8 @@ public enum GameAction2D implements GameAction {
         }
     },
 
-    START_GAME(key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1), key(KeyCode.ENTER), key(KeyCode.SPACE)) {
+    //TODO this is not useful in Tengen Ms. Pac-Man
+    START_GAME(key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1), key(KeyCode.SPACE)) {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
