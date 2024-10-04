@@ -7,6 +7,10 @@ package de.amr.games.pacman.ui3d;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.scene.*;
+import de.amr.games.pacman.ui2d.variant.ms_pacman.*;
+import de.amr.games.pacman.ui2d.variant.pacman.*;
+import de.amr.games.pacman.ui2d.variant.tengen.TengenMsPacManIntroScene;
+import de.amr.games.pacman.ui2d.variant.tengen.TengenSettingsScene;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.application.Application;
 import javafx.beans.property.*;
@@ -66,7 +70,7 @@ public class PacManGames3dApp extends Application {
         ui.setGameScenes(GameVariant.MS_PACMAN, Map.of(
             GameSceneID.BOOT_SCENE,    new BootScene(),
             GameSceneID.INTRO_SCENE,   new MsPacManIntroScene(),
-            GameSceneID.CREDIT_SCENE,  new CreditScene(),
+            GameSceneID.CREDIT_SCENE,  new MsPacManCreditScene(),
             GameSceneID.PLAY_SCENE,    new PlayScene2D(),
             GameSceneID.PLAY_SCENE_3D, new PlayScene3D(),
             GameSceneID.CUT_SCENE_1,   new MsPacManCutScene1(),
@@ -86,7 +90,7 @@ public class PacManGames3dApp extends Application {
         ui.setGameScenes(GameVariant.PACMAN, Map.of(
             GameSceneID.BOOT_SCENE,    new BootScene(),
             GameSceneID.INTRO_SCENE,   new PacManIntroScene(),
-            GameSceneID.CREDIT_SCENE,  new CreditScene(),
+            GameSceneID.CREDIT_SCENE,  new PacManCreditScene(),
             GameSceneID.PLAY_SCENE,    new PlayScene2D(),
             GameSceneID.PLAY_SCENE_3D, new PlayScene3D(),
             GameSceneID.CUT_SCENE_1,   new PacManCutScene1(),
@@ -96,7 +100,7 @@ public class PacManGames3dApp extends Application {
         ui.setGameScenes(GameVariant.PACMAN_XXL, Map.of(
             GameSceneID.BOOT_SCENE,    new BootScene(),
             GameSceneID.INTRO_SCENE,   new PacManIntroScene(),
-            GameSceneID.CREDIT_SCENE,  new CreditScene(),
+            GameSceneID.CREDIT_SCENE,  new PacManCreditScene(),
             GameSceneID.PLAY_SCENE,    new PlayScene2D(),
             GameSceneID.PLAY_SCENE_3D, new PlayScene3D(),
             GameSceneID.CUT_SCENE_1,   new PacManCutScene1(),

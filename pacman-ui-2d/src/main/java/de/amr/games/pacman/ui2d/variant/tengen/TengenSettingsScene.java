@@ -1,8 +1,9 @@
-package de.amr.games.pacman.ui2d.scene;
+package de.amr.games.pacman.ui2d.variant.tengen;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;

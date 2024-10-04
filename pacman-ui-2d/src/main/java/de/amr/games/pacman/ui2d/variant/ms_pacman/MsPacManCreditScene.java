@@ -2,11 +2,11 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.scene;
+package de.amr.games.pacman.ui2d.variant.ms_pacman;
 
-import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.scene.GameScene2D;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
@@ -17,7 +17,7 @@ import static de.amr.games.pacman.ui2d.variant.pacman.PacManGameSpriteSheet.MIDW
 /**
  * @author Armin Reichert
  */
-public class CreditScene extends GameScene2D {
+public class MsPacManCreditScene extends GameScene2D {
 
     @Override
     public boolean isCreditVisible() {
