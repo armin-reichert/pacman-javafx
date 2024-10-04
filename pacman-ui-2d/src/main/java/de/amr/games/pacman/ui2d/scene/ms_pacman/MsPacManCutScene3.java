@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.variant.ms_pacman;
+package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
@@ -15,7 +15,7 @@ import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
-import de.amr.games.pacman.ui2d.variant.tengen.TengenMsPacManGameRenderer;
+import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;

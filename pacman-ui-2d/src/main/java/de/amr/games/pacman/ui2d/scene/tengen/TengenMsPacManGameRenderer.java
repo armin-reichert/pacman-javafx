@@ -2,19 +2,17 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.variant.tengen;
+package de.amr.games.pacman.ui2d.scene.tengen;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.MovingBonus;
-import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
 import de.amr.games.pacman.model.tengen.MsPacManTengenGame.MapCategory;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -23,8 +21,8 @@ import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
-import de.amr.games.pacman.ui2d.variant.ms_pacman.ClapperboardAnimation;
-import de.amr.games.pacman.ui2d.variant.ms_pacman.MsPacManArcadeGameRenderer;
+import de.amr.games.pacman.ui2d.scene.ms_pacman.ClapperboardAnimation;
+import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManArcadeGameRenderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;

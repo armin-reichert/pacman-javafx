@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.variant.pacman;
+package de.amr.games.pacman.ui2d.scene.pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.Entity;

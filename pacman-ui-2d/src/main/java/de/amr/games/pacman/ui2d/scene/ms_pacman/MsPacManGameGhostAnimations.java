@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.variant.tengen;
+package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.Entity;
@@ -19,9 +19,9 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public class TengenMsPacManGameGhostAnimations extends SpriteAnimationCollection {
+public class MsPacManGameGhostAnimations extends SpriteAnimationCollection {
 
-    public TengenMsPacManGameGhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
+    public MsPacManGameGhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
         checkNotNull(spriteSheet);
 
         var normal = SpriteAnimation

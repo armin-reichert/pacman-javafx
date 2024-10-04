@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.variant.tengen;
+package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.Entity;
@@ -19,9 +19,9 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public class TengenMsPacManGamePacAnimations extends SpriteAnimationCollection {
+public class MsPacManGamePacAnimations extends SpriteAnimationCollection {
 
-    public TengenMsPacManGamePacAnimations(GameSpriteSheet spriteSheet) {
+    public MsPacManGamePacAnimations(GameSpriteSheet spriteSheet) {
         checkNotNull(spriteSheet);
 
         var munching = SpriteAnimation

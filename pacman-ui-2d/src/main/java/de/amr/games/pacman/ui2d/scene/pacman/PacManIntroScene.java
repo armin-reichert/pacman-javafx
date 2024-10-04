@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.variant.pacman;
+package de.amr.games.pacman.ui2d.scene.pacman;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
@@ -30,7 +30,6 @@ import static de.amr.games.pacman.model.actors.GhostState.EATEN;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.ui2d.GameAction.calledAction;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
-import static de.amr.games.pacman.ui2d.variant.pacman.PacManGameSpriteSheet.MIDWAY_COPYRIGHT;
 
 /**
  * <p>
@@ -302,14 +301,14 @@ public class PacManIntroScene extends GameScene2D {
                 }
                 drawGuys(renderer, flutter(timer.currentTick()));
                 if (context.game().variant() == GameVariant.PACMAN) {
-                    renderer.drawText(MIDWAY_COPYRIGHT, PALETTE_PINK, renderer.scaledArcadeFont(TS),  t(4), t(32));
+                    renderer.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, PALETTE_PINK, renderer.scaledArcadeFont(TS),  t(4), t(32));
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints(renderer);
                 drawGuys(renderer, 0);
                 if (context.game().variant() == GameVariant.PACMAN) {
-                    renderer.drawText(MIDWAY_COPYRIGHT, PALETTE_PINK, renderer.scaledArcadeFont(TS),  t(4), t(32));
+                    renderer.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, PALETTE_PINK, renderer.scaledArcadeFont(TS),  t(4), t(32));
                 }
             }
             default -> {

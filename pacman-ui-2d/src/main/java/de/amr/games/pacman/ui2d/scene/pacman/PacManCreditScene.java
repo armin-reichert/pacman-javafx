@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.variant.pacman;
+package de.amr.games.pacman.ui2d.scene.pacman;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction2D;
@@ -12,7 +12,7 @@ import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.ui2d.GameAction.calledAction;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
-import static de.amr.games.pacman.ui2d.variant.pacman.PacManGameSpriteSheet.MIDWAY_COPYRIGHT;
+import static de.amr.games.pacman.ui2d.scene.pacman.PacManGameSpriteSheet.MIDWAY_COPYRIGHT;
 
 /**
  * @author Armin Reichert
