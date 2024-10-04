@@ -28,6 +28,8 @@ import javafx.scene.text.Font;
 import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer.PINKISH;
+import static de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer.YELLOWISH;
 
 /**
  * Intro scene of the Tengen Ms. Pac-Man game.
@@ -36,8 +38,10 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class TengenMsPacManIntroScene extends GameScene2D {
 
-    static final Color[]  SHADES_OF_BLUE = { Color.DARKBLUE, Color.BLUE, Color.LIGHTBLUE }; //TODO check exact colors
-    static final Color    YELLOWISH = Color.web("e8d020");
+    //TODO check exact colors
+    static final Color[]  SHADES_OF_BLUE = {
+        Color.DARKBLUE, Color.BLUE, Color.LIGHTBLUE
+    };
     static final float    SPEED = 2.2f; //TODO check exact speed
     static final int      TOP_Y = TS * 11 + 1;
     static final int      STOP_X_GHOST = TS * 6 - 4;
@@ -213,7 +217,7 @@ public class TengenMsPacManIntroScene extends GameScene2D {
 
     @Override
     public void init() {
-        context.setScoreVisible(true);
+        context.setScoreVisible(false);
 
         msPacMan = new Pac();
         ghosts = new Ghost[] { Ghost.blinky(), Ghost.inky(), Ghost.pinky(), Ghost.sue() };
@@ -250,7 +254,9 @@ public class TengenMsPacManIntroScene extends GameScene2D {
     }
 
     private static Color shadeOfBlue(long t) {
-        int index = (int) (t % 48) /16;
+        int ticksPerColor = 16;
+        int ticksPerAnimation = (ticksPerColor * SHADES_OF_BLUE.length);
+        int index = (int) (t % ticksPerAnimation) / ticksPerColor;
         return SHADES_OF_BLUE[index];
     }
 
@@ -270,13 +276,14 @@ public class TengenMsPacManIntroScene extends GameScene2D {
                 renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t), font, 6 * TS, 10 * TS);
                 renderer.drawSpriteScaled(context.spriteSheet(), TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE, 3 * TS, 11 * TS);
                 // Blink effect, 32 frames for each phase. TODO: check rate
-                if (t % 64 < 32) {
+                if (t % 96 < 48) {
                     renderer.drawText("PRESS SPACE", Color.WHITE, font, 8 * TS, 20 * TS);
                 }
-                Color copyrightColor = Color.web("#ff60b0"); //TODO check this
-                renderer.drawText("MS PAC-MAN TM NAMCO LTD", copyrightColor, font, 3 * TS, 27 * TS);
-                renderer.drawText("©1990 TENGEN INC",        copyrightColor, font, 5 * TS, 28 * TS);
-                renderer.drawText("ALL RIGHTS RESERVED",     copyrightColor, font, 4 * TS, 29 * TS);
+                Font copyrightFont = renderer.scaledArcadeFont(7.5);
+                Color copyrightColor = PINKISH; //TODO check this
+                renderer.drawText("MS PAC-MAN TM NAMCO LTD", copyrightColor, copyrightFont, 3 * TS, 27 * TS);
+                renderer.drawText("©1990 TENGEN INC",        copyrightColor, copyrightFont, 5 * TS, 28 * TS);
+                renderer.drawText("ALL RIGHTS RESERVED",     copyrightColor, copyrightFont, 4 * TS, 29 * TS);
             }
             case SHOWING_MARQUEE -> drawMarquee(renderer, font, marqueeState);
             case GHOSTS_MARCHING_IN -> {

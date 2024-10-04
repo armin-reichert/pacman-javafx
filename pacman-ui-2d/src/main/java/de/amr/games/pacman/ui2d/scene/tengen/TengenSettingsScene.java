@@ -10,10 +10,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer.YELLOWISH;
 
 public class TengenSettingsScene extends GameScene2D {
 
-    static final Color LABEL_COLOR = Color.YELLOW;
+    static final Color LABEL_COLOR = YELLOWISH;
     static final Color VALUE_COLOR = Color.WHITE;
 
     static final int NUM_SELECTIONS = 2;
@@ -46,16 +47,17 @@ public class TengenSettingsScene extends GameScene2D {
         int y = 14 * TS;
         // setting 0
         drawArrowIfSelected(renderer, SETTING_DIFFICULTY, y);
-        renderer.drawText("GAME DIFFICULTY : ", LABEL_COLOR, font, col1, y);
+        renderer.drawText("GAME DIFFICULTY:", LABEL_COLOR, font, col1, y);
         renderer.drawText(tengenGame.difficulty().name(), VALUE_COLOR, font, col2, y);
 
-        y += 2*TS;
+        y += 3*TS;
         // setting 1
         drawArrowIfSelected(renderer, SETTING_MAZE_SELECTION, y);
-        renderer.drawText("MAZE SELECTION  : ", LABEL_COLOR, font, col1, y);
+        renderer.drawText("MAZE SELECTION:", LABEL_COLOR, font, col1, y);
         renderer.drawText(tengenGame.mapCategory().name(), VALUE_COLOR, font, col2, y);
 
-        renderer.drawText("MOVE ARROW WITH CURSOR KEYS", LABEL_COLOR, font, col1, 30*TS);
+        font = renderer.scaledArcadeFont(7);
+        renderer.drawText("MOVE ARROW WITH CURSOR KEYS", LABEL_COLOR, font, col1-TS, 30*TS);
         renderer.drawText("CHOOSE OPTIONS WITH ENTER", LABEL_COLOR, font, col1, 31*TS);
         renderer.drawText("PRESS SPACE TO START GAME", LABEL_COLOR, font, col1, 32*TS);
     }

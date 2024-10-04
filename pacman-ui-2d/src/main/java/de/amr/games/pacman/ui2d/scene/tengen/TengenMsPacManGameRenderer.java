@@ -44,6 +44,10 @@ import static de.amr.games.pacman.model.GameWorld.PROPERTY_COLOR_WALL_FILL;
  */
 public class TengenMsPacManGameRenderer implements GameWorldRenderer {
 
+    static final Color PINKISH = Color.web("#ff60b0");
+    static final Color REDISH = Color.web("d84060");
+    static final Color YELLOWISH = Color.web("e8d020");
+
     private final AssetStorage assets;
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
