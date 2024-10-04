@@ -83,7 +83,7 @@ public class PacManXXLGameRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public void selectMap(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet) {
+    public void selectMapSprite(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet) {
         //TODO what?
     }
 

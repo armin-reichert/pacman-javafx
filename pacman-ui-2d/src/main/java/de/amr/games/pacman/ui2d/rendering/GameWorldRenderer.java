@@ -161,7 +161,7 @@ public interface GameWorldRenderer {
 
     ObjectProperty<Color> backgroundColorProperty();
 
-    void selectMap(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet);
+    void selectMapSprite(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet);
 
     void drawWorld(GameSpriteSheet spriteSheet, GameContext context, GameWorld world);
 

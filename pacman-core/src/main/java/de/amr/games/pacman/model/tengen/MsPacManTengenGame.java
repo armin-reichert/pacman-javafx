@@ -39,12 +39,16 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class MsPacManTengenGame extends GameModel {
 
+    public enum MapCategory { ARCADE, STRANGE, MINI, BIG }
+
     private static final int ARCADE_MAP_COUNT = 9;
     private static final int NON_ARCADE_MAP_COUNT = 37;
     private static final int MAP_COUNT = ARCADE_MAP_COUNT + NON_ARCADE_MAP_COUNT;
 
     private static final String ARCADE_MAP_PATTERN     = "/de/amr/games/pacman/maps/tengen/arcade/map%02d.world";
-    private static final String NON_ARCADE_MAP_PATTERN = "/de/amr/games/pacman/maps/tengen/non_arcade/map%02d.world";
+    private static final String STRANGE_MAP_PATTERN = "/de/amr/games/pacman/maps/tengen/non_arcade/map%02d-strange.world";
+    private static final String MINI_MAP_PATTERN = "/de/amr/games/pacman/maps/tengen/non_arcade/map%02d-mini.world";
+    private static final String BIG_MAP_PATTERN = "/de/amr/games/pacman/maps/tengen/non_arcade/map%02d-big.world";
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
@@ -67,31 +71,54 @@ public class MsPacManTengenGame extends GameModel {
         return world;
     }
 
-    private final List<WorldMap> maps = new ArrayList<>();
+    private final List<WorldMap> arcadeMaps;
+    private final List<WorldMap> strangeMaps;
+    private final List<WorldMap> miniMaps;
+    private final List<WorldMap> bigMaps;
+    private List<WorldMap> maps = new ArrayList<>();
+    private MapCategory mapCategory;
     private int mapNumber;
 
     public MsPacManTengenGame(GameVariant gameVariant, File userDir) {
         super(gameVariant, userDir);
         initialLives = 3;
         highScoreFile = new File(userDir, "highscore-ms_pacman_tengen.xml");
-        for (int num = 1; num <= ARCADE_MAP_COUNT; ++num) {
-            String path = ARCADE_MAP_PATTERN.formatted(num);
+        arcadeMaps  = readMaps(MapCategory.ARCADE,  ARCADE_MAP_PATTERN, 9);
+        strangeMaps = readMaps(MapCategory.STRANGE, STRANGE_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
+        miniMaps    = readMaps(MapCategory.MINI,    MINI_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
+        bigMaps     = readMaps(MapCategory.BIG,     BIG_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
+        setMapCategory(MapCategory.STRANGE);
+    }
+
+    public void setMapCategory(MapCategory mapCategory) {
+        this.mapCategory = checkNotNull(mapCategory);
+        maps = switch (mapCategory) {
+            case ARCADE -> arcadeMaps;
+            case BIG -> bigMaps;
+            case MINI -> miniMaps;
+            case STRANGE -> strangeMaps;
+        };
+    }
+
+    public int mapNumberByLevelNumber(int levelNumber) {
+        int numMaps = maps.size();
+        return levelNumber <= numMaps ? levelNumber : Globals.randomInt(1, numMaps + 1);
+    }
+
+    private List<WorldMap> readMaps(MapCategory category, String pattern, int maxNumber) {
+        List<WorldMap> maps = new ArrayList<>();
+        for (int num = 1; num <= maxNumber; ++num) {
+            String path = pattern.formatted(num);
             URL url = getClass().getResource(path);
             if (url != null) {
-                maps.add(new WorldMap(url));
-            } else {
-                Logger.error("Could not load Arcade map #{} using path {}", num, path);
+                WorldMap worldMap = new WorldMap(url);
+                worldMap.terrain().setProperty("map_category", category.name());
+                worldMap.terrain().setProperty("map_number",   String.valueOf(num));
+                maps.add(worldMap);
+                Logger.info("{}: map #{}", category, num);
             }
         }
-        for (int num = 1; num <= NON_ARCADE_MAP_COUNT; ++num) {
-            String path = NON_ARCADE_MAP_PATTERN.formatted(num);
-            URL url = getClass().getResource(path);
-            if (url != null) {
-                maps.add(new WorldMap(url));
-            } else {
-                Logger.error("Could not load non-Arcade map #{} using path {}", num, path);
-            }
-        }
+        return maps;
     }
 
     @Override
@@ -102,11 +129,6 @@ public class MsPacManTengenGame extends GameModel {
     @Override
     public int mapCount() {
         return MAP_COUNT;
-    }
-
-    public int mapNumberByLevelNumber(int levelNumber) {
-        int numMaps = maps.size();
-        return levelNumber <= numMaps ? levelNumber : Globals.randomInt(1, numMaps + 1);
     }
 
     @Override

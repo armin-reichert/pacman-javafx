@@ -81,7 +81,7 @@ public class MsPacManArcadeGameRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public void selectMap(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet) {
+    public void selectMapSprite(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet) {
         mapWithFoodSprite    = imageArea(spriteSheet.sourceImage(), 0, (mapNumber - 1) * 248, 226, 248);
         mapWithoutFoodSprite = imageArea(spriteSheet.sourceImage(), 228, (mapNumber - 1) * 248, 226, 248);
         mapFlashingSprite    = imageArea(flashingMazesImage, 0, (mapNumber - 1) * 248, 226, 248);

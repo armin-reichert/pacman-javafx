@@ -14,6 +14,8 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.MovingBonus;
+import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
+import de.amr.games.pacman.model.tengen.MsPacManTengenGame.MapCategory;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
@@ -154,12 +156,18 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public void selectMap(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet) {
-        int width = worldMap.terrain().numCols() * TS;
-        int height = (worldMap.terrain().numRows() - 5) * TS; // 3 empty rows before and 2 after maze source
-        mapSprite = mapNumber <= 9  // Maps 1-9 are the Arcade maps, maps 10+ are the non-Arcade maps
-            ? new ImageArea(arcadeMazesImage, arcadeMapArea(mapNumber, width, height))
-            : new ImageArea(nonArcadeMazesImage, nonArcadeMapArea(mapNumber - 9, width, height));
+    public void selectMapSprite(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet) {
+        TileMap terrainMap = worldMap.terrain();
+        int width = terrainMap.numCols() * TS;
+        int height = (terrainMap.numRows() - 5) * TS; // 3 empty rows before and 2 after maze source
+        MapCategory mapCategory = MapCategory.valueOf(terrainMap.getProperty("map_category"));
+        switch (mapCategory) {
+            case ARCADE -> mapSprite = new ImageArea(arcadeMazesImage, arcadeMapArea(mapNumber, width, height));
+            default -> {
+                mapNumber = Integer.parseInt(terrainMap.getProperty("map_number"));
+                mapSprite = new ImageArea(nonArcadeMazesImage, nonArcadeMapArea(mapNumber, width, height));
+            }
+        }
         Logger.info("Tengen map # {}: area: {}", mapNumber, mapSprite.area());
     }
 
