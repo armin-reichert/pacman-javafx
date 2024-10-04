@@ -89,8 +89,8 @@ public class MsPacManTengenGame extends GameModel {
         strangeMaps = readMaps(MapCategory.STRANGE, STRANGE_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
         miniMaps    = readMaps(MapCategory.MINI,    MINI_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
         bigMaps     = readMaps(MapCategory.BIG,     BIG_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
-        setMapCategory(MapCategory.STRANGE);
-        setDifficulty(Difficulty.EASY);
+        setMapCategory(MapCategory.ARCADE);
+        setDifficulty(Difficulty.NORMAL);
     }
 
     public MapCategory mapCategory() {
