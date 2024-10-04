@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d;
 import de.amr.games.pacman.ui2d.util.KeyInput;
 
 import java.util.Optional;
-import java.util.function.BooleanSupplier;
 import java.util.stream.Stream;
 
 /**

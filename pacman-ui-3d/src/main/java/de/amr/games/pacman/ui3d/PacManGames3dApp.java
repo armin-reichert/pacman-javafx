@@ -6,11 +6,11 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.scene.*;
+import de.amr.games.pacman.ui2d.scene.BootScene;
+import de.amr.games.pacman.ui2d.scene.GameSceneID;
+import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.*;
 import de.amr.games.pacman.ui2d.scene.pacman.*;
-import de.amr.games.pacman.ui2d.variant.ms_pacman.*;
-import de.amr.games.pacman.ui2d.variant.pacman.*;
 import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManIntroScene;
 import de.amr.games.pacman.ui2d.scene.tengen.TengenSettingsScene;
 import de.amr.games.pacman.ui3d.model.Model3D;
