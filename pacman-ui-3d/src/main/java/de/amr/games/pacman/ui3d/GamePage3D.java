@@ -49,7 +49,7 @@ public class GamePage3D extends GamePage {
 
     @Override
     public void handleInput() {
-        calledAction(GameAction3D.TOGGLE_PIP_VISIBILITY, GameAction3D.TOGGLE_PLAY_SCENE_2D_3D)
+        calledAction(context.keyboard(), GameAction3D.TOGGLE_PIP_VISIBILITY, GameAction3D.TOGGLE_PLAY_SCENE_2D_3D)
             .ifPresentOrElse(action -> action.execute(context), super::handleInput);
     }
 

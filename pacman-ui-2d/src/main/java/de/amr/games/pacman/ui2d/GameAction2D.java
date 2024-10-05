@@ -327,7 +327,7 @@ public enum GameAction2D implements GameAction {
     };
 
     GameAction2D(KeyCodeCombination... combinations) {
-        trigger = KeyInput.register(combinations);
+        trigger = KeyInput.of(combinations);
     }
 
     @Override
@@ -336,8 +336,8 @@ public enum GameAction2D implements GameAction {
     }
 
     @Override
-    public boolean called() {
-        return Keyboard.pressed(trigger);
+    public boolean called(Keyboard keyboard) {
+        return keyboard.pressed(trigger);
     }
 
     @Override

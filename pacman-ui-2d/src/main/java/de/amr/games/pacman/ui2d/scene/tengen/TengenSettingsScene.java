@@ -6,7 +6,6 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
-import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -88,7 +87,7 @@ public class TengenSettingsScene extends GameScene2D {
     @Override
     public void handleInput() {
         MsPacManTengenGame tengenGame = (MsPacManTengenGame) context.game();
-        if (Keyboard.pressed(KeyCode.ENTER)) {
+        if (context.keyboard().pressed(KeyCode.ENTER)) {
             switch (selectedSetting) {
                 case SETTING_DIFFICULTY -> {
                     MsPacManTengenGame.Difficulty difficulty = tengenGame.difficulty();
@@ -111,21 +110,21 @@ public class TengenSettingsScene extends GameScene2D {
                 default -> {}
             }
         }
-        else if (Keyboard.pressed(KeyCode.SPACE)) {
+        else if (context.keyboard().pressed(KeyCode.SPACE)) {
             context.sounds().stopAll();
             context.game().insertCoin();
             //TODO when to change FPS? Only during hunting state?
             //context.gameClock().setTargetFrameRate(fps(tengenGame.difficulty()));
             context.gameController().changeState(GameState.READY);
         }
-        else if (Keyboard.pressed(KeyCode.UP)) {
+        else if (context.keyboard().pressed(KeyCode.UP)) {
             selectedSetting = (selectedSetting > 0) ? selectedSetting - 1: NUM_SELECTIONS - 1;
         }
-        else if (Keyboard.pressed(KeyCode.DOWN)) {
+        else if (context.keyboard().pressed(KeyCode.DOWN)) {
             selectedSetting = (selectedSetting < NUM_SELECTIONS - 1) ? selectedSetting + 1 : 0;
         }
         else {
-            GameAction.calledAction(GameAction2D.TEST_LEVELS).ifPresent(action -> action.execute(context));
+            GameAction.calledAction(context.keyboard(), GameAction2D.TEST_LEVELS).ifPresent(action -> action.execute(context));
         }
     }
 }

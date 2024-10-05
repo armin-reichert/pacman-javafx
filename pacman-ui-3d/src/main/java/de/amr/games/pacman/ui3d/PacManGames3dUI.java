@@ -5,6 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.GameAction;
+import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.GameScene;
@@ -36,6 +38,16 @@ public class PacManGames3dUI extends PacManGames2dUI {
         GameAssets3D.addTo(assets);
         sounds().setAssets(assets);
     }
+
+    protected void registerActions() {
+        for (GameAction action : GameAction2D.values()) {
+            KEYBOARD.register(action.trigger());
+        }
+        for (GameAction action : GameAction3D.values()) {
+            KEYBOARD.register(action.trigger());
+        }
+    }
+
 
     @Override
     public void setGameScenes(GameVariant variant, Map<GameSceneID, GameScene> gameScenes) {

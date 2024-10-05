@@ -18,9 +18,9 @@ public class KeyInput {
 
     private final KeyCodeCombination[] combinations;
 
-    public static KeyInput register(KeyCodeCombination... combinations) {
+    public static KeyInput register(Keyboard keyboard, KeyCodeCombination... combinations) {
         var keyInput = new KeyInput(combinations);
-        Keyboard.register(keyInput);
+        keyboard.register(keyInput);
         return keyInput;
     }
 

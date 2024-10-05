@@ -121,7 +121,7 @@ public class GamePage extends StackPane implements Page {
 
     @Override
     public void handleInput() {
-        calledAction(
+        calledAction(context.keyboard(),
             GameAction2D.BOOT,
             GameAction2D.DEBUG_INFO,
             GameAction2D.HELP,

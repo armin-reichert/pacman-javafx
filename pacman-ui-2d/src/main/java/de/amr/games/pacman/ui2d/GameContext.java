@@ -19,6 +19,7 @@ import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.sound.GameSounds;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
+import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.beans.property.ObjectProperty;
 
 import java.util.Optional;
@@ -49,6 +50,7 @@ public interface GameContext {
 
     // UI
 
+    Keyboard keyboard();
     void selectPage(Page page);
     void selectStartPage();
     void selectGamePage();

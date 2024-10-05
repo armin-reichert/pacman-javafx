@@ -39,7 +39,7 @@ public class PacManCreditScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        calledAction(GameAction2D.ADD_CREDIT, GameAction2D.START_GAME).ifPresent(action -> action.execute(context));
+        calledAction(context.keyboard(), GameAction2D.ADD_CREDIT, GameAction2D.START_GAME).ifPresent(action -> action.execute(context));
     }
 
     @Override

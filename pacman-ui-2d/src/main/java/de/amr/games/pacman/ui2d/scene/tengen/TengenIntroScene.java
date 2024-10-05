@@ -19,7 +19,6 @@ import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -87,7 +86,8 @@ public class TengenIntroScene extends GameScene2D {
         WAITING_FOR_START {
             @Override
             public void onUpdate(TengenIntroScene intro) {
-                if (Keyboard.pressed(KeyCode.SPACE)) {
+                //TODO check this
+                if (intro.context.keyboard().pressed(KeyCode.SPACE)) {
                     intro.sceneController.changeState(SHOWING_MARQUEE);
                 }
             }

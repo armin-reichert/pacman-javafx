@@ -28,9 +28,9 @@ import de.amr.games.pacman.ui2d.scene.pacman.PacManArcadeGameRenderer;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.scene.pacman_xxl.PacManXXLGameRenderer;
+import de.amr.games.pacman.ui2d.scene.tengen.TengenGameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.tengen.TengenGhostAnimations;
 import de.amr.games.pacman.ui2d.scene.tengen.TengenPacAnimations;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenGameWorldRenderer;
 import de.amr.games.pacman.ui2d.sound.GameSounds;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.FlashMessageView;
@@ -71,6 +71,8 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
  */
 public class PacManGames2dUI implements GameEventListener, GameContext {
 
+    protected static final Keyboard KEYBOARD = new Keyboard();
+
     /**
      * The order here is used by the start page!
      */
@@ -94,7 +96,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, ghost.id())));
             }
             case MS_PACMAN_TENGEN -> {
-                //TODO use Tengen sprites
+                //TODO use Tengen sprites everywhere
                 GameSpriteSheet ssMsPac = assets.get("ms_pacman.spritesheet");
                 game.pac().setAnimations(new TengenPacAnimations(ssMsPac));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new TengenGhostAnimations(spriteSheet, ghost.id())));
@@ -143,6 +145,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     public void loadAssets() {
         GameAssets2D.addTo(assets);
         sounds().setAssets(assets);
+    }
+
+    protected void registerActions() {
+        for (GameAction action : GameAction2D.values()) {
+            KEYBOARD.register(action.trigger());
+        }
     }
 
     public void setGameScenes(GameVariant variant, Map<GameSceneID, GameScene> gameScenes) {
@@ -196,10 +204,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             xxlGame.setMapSelectionMode(selectionMode);
         });
 
-        // Touch all game actions such that they get bound to keys
-        for (var gameAction : GameAction2D.values()) {
-            Logger.info("Game Action: {} => {}", gameAction, gameAction.trigger());
-        }
+        registerActions();
 
         stage.setMinWidth(GameModel.ARCADE_MAP_SIZE_X * 1.25);
         stage.setMinHeight(GameModel.ARCADE_MAP_SIZE_Y * 1.25);
@@ -252,12 +257,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected Scene createMainScene(Dimension2D size) {
         sceneRoot.setBackground(assets.get("wallpaper.pacman"));
         Scene mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
-        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, Keyboard::onKeyPressed);
-        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, Keyboard::onKeyReleased);
+        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, KEYBOARD::onKeyPressed);
+        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, KEYBOARD::onKeyReleased);
         mainScene.setOnKeyPressed(e -> {
-            if (GameAction2D.FULLSCREEN.called()) {
+            if (GameAction2D.FULLSCREEN.called(KEYBOARD)) {
                 stage.setFullScreen(true);
-            } else if (GameAction2D.MUTE.called()) {
+            } else if (GameAction2D.MUTE.called(KEYBOARD)) {
                 sounds().toggleMuted();
             } else {
                 currentPage.handleInput();
@@ -356,6 +361,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     // -----------------------------------------------------------------------------------------------------------------
     // GameContext interface implementation
     // -----------------------------------------------------------------------------------------------------------------
+
+
+    @Override
+    public Keyboard keyboard() {
+        return KEYBOARD;
+    }
 
     @Override
     public String locText(String keyOrPattern, Object... args) {
@@ -539,7 +550,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         if (game().isDemoLevel()) {
             sounds().setEnabled(false);
         } else {
-            game().pac().setManualSteering(new KeyboardPacSteering());
+            game().pac().setManualSteering(new KeyboardPacSteering(KEYBOARD));
             sounds().setEnabled(true);
         }
         //TODO use data binding?

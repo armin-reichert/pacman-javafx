@@ -11,6 +11,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
@@ -19,6 +20,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -81,17 +84,16 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void handleInput() {
-        if (GameAction2D.ADD_CREDIT.called() && context.game().isDemoLevel()) {
-            GameAction2D.ADD_CREDIT.execute(context);
-        } else {
-            calledAction(
-                GameAction2D.ADD_CREDIT,
-                GameAction2D.CHEAT_EAT_ALL,
-                GameAction2D.CHEAT_ADD_LIVES,
-                GameAction2D.CHEAT_NEXT_LEVEL,
-                GameAction2D.CHEAT_KILL_GHOSTS
-            ).ifPresent(action -> action.execute(context));
+        List<GameAction> actions = new ArrayList<>(List.of(
+            GameAction2D.CHEAT_EAT_ALL,
+            GameAction2D.CHEAT_ADD_LIVES,
+            GameAction2D.CHEAT_NEXT_LEVEL,
+            GameAction2D.CHEAT_KILL_GHOSTS
+        ));
+        if (context.game().isDemoLevel()) {
+            actions.add(GameAction2D.ADD_CREDIT);
         }
+        calledAction(context.keyboard(), actions).ifPresent(action -> action.execute(context));
     }
 
     @Override

@@ -284,7 +284,7 @@ public class PacManIntroScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        calledAction(
+        calledAction(context.keyboard(),
             GameAction2D.ADD_CREDIT,
             GameAction2D.START_GAME,
             GameAction2D.TEST_LEVELS,

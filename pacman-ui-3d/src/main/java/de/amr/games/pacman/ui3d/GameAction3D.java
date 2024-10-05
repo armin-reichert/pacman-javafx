@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.ui2d.GameAction;
@@ -16,6 +20,9 @@ import static de.amr.games.pacman.ui2d.util.KeyInput.key;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 
+/**
+ * @author Armin Reichert
+ */
 public enum GameAction3D implements GameAction {
 
     NEXT_PERSPECTIVE(alt(KeyCode.RIGHT)) {
@@ -76,7 +83,7 @@ public enum GameAction3D implements GameAction {
     };
 
     GameAction3D(KeyCodeCombination... combinations) {
-        trigger = KeyInput.register(combinations);
+        trigger = KeyInput.of(combinations);
     }
 
     @Override
@@ -85,8 +92,8 @@ public enum GameAction3D implements GameAction {
     }
 
     @Override
-    public boolean called() {
-        return Keyboard.pressed(trigger);
+    public boolean called(Keyboard keyboard) {
+        return keyboard.pressed(trigger);
     }
 
     @Override

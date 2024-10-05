@@ -9,7 +9,6 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
 
-import java.security.Key;
 import java.util.*;
 
 import static de.amr.games.pacman.ui2d.util.KeyInput.key;
@@ -19,37 +18,37 @@ import static de.amr.games.pacman.ui2d.util.KeyInput.key;
  */
 public class Keyboard {
 
-    private static final Set<KeyCodeCombination> REGISTERED_COMBINATIONS = new HashSet<>();
-    private static final List<KeyCodeCombination> MATCHING_COMBINATIONS = new ArrayList<>(3);
+    private final Set<KeyCodeCombination> registeredCombinations = new HashSet<>();
+    private final List<KeyCodeCombination> matchingCombinations = new ArrayList<>(3);
 
-    public static void register(KeyInput input) {
-        REGISTERED_COMBINATIONS.addAll(Arrays.asList(input.getCombinations()));
+    public void register(KeyInput input) {
+        registeredCombinations.addAll(Arrays.asList(input.getCombinations()));
     }
 
-    public static void onKeyPressed(KeyEvent e) {
+    public void onKeyPressed(KeyEvent e) {
         Logger.debug("Key pressed: {}", e.getCode());
-        REGISTERED_COMBINATIONS.stream().filter(kcc -> kcc.match(e)).forEach(Keyboard::addMatch);
+        registeredCombinations.stream().filter(kcc -> kcc.match(e)).forEach(this::addMatch);
     }
 
-    private static void addMatch(KeyCodeCombination kcc) {
-        MATCHING_COMBINATIONS.add(kcc);
+    private void addMatch(KeyCodeCombination kcc) {
+        matchingCombinations.add(kcc);
         Logger.debug("Added matching combination {}", kcc);
     }
 
-    public static void onKeyReleased(KeyEvent e) {
+    public void onKeyReleased(KeyEvent e) {
         Logger.debug("Key released: {}", e.getCode());
-        MATCHING_COMBINATIONS.clear();
+        matchingCombinations.clear();
     }
 
     /**
      * @param keyInput key input
      * @return tells if any of the given key combinations is matched by the current keyboard state
      */
-    public static boolean pressed(KeyInput keyInput) {
-        return Arrays.stream(keyInput.getCombinations()).anyMatch(MATCHING_COMBINATIONS::contains);
+    public boolean pressed(KeyInput keyInput) {
+        return Arrays.stream(keyInput.getCombinations()).anyMatch(matchingCombinations::contains);
     }
 
-    public static boolean pressed(KeyCode keyCode) {
+    public boolean pressed(KeyCode keyCode) {
         return pressed(KeyInput.of(key(keyCode)));
     }
 }

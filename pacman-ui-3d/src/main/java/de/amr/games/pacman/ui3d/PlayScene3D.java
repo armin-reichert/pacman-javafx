@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.RectArea;
@@ -28,6 +29,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -47,6 +49,15 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
  * @author Armin Reichert
  */
 public class PlayScene3D implements GameScene {
+
+    private static final List<GameAction> GAME_ACTIONS = List.of(
+        GameAction3D.PREV_PERSPECTIVE,
+        GameAction3D.NEXT_PERSPECTIVE,
+        GameAction2D.CHEAT_EAT_ALL,
+        GameAction2D.CHEAT_ADD_LIVES,
+        GameAction2D.CHEAT_NEXT_LEVEL,
+        GameAction2D.CHEAT_KILL_GHOSTS
+    );
 
     // Each 3D play scene has its own set of cameras/perspectives
     private final Map<Perspective.Name, Perspective> perspectiveMap = new EnumMap<>(Perspective.Name.class);
@@ -188,17 +199,11 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void handleInput() {
-        if (GameAction2D.ADD_CREDIT.called() && context.game().isDemoLevel()) {
-            GameAction2D.ADD_CREDIT.execute(context);
+        Optional<GameAction> calledAddCredit = calledAction(context.keyboard(), GameAction2D.ADD_CREDIT);
+        if (calledAddCredit.isPresent() && context.game().isDemoLevel()) {
+            calledAddCredit.get().execute(context);
         } else {
-            calledAction(
-                GameAction3D.PREV_PERSPECTIVE,
-                GameAction3D.NEXT_PERSPECTIVE,
-                GameAction2D.CHEAT_EAT_ALL,
-                GameAction2D.CHEAT_ADD_LIVES,
-                GameAction2D.CHEAT_NEXT_LEVEL,
-                GameAction2D.CHEAT_KILL_GHOSTS)
-            .ifPresent(action -> action.execute(context));
+            calledAction(context.keyboard(), GAME_ACTIONS).ifPresent(action -> action.execute(context));
         }
     }
 
