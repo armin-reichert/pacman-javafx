@@ -16,7 +16,7 @@ import de.amr.games.pacman.ui2d.scene.pacman.PacManCutScene1;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManCutScene2;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManCutScene3;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManIntroScene;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManIntroScene;
+import de.amr.games.pacman.ui2d.scene.tengen.TengenIntroScene;
 import de.amr.games.pacman.ui2d.scene.tengen.TengenSettingsScene;
 import javafx.application.Application;
 import javafx.beans.property.*;
@@ -81,7 +81,7 @@ public class PacManGames2dApp extends Application {
         ));
         ui.setGameScenes(GameVariant.MS_PACMAN_TENGEN, Map.of(
             GameSceneID.BOOT_SCENE,   new BootScene(),
-            GameSceneID.INTRO_SCENE,  new TengenMsPacManIntroScene(),
+            GameSceneID.INTRO_SCENE,  new TengenIntroScene(),
             GameSceneID.CREDIT_SCENE, new TengenSettingsScene(),
             GameSceneID.PLAY_SCENE,   new PlayScene2D(),
             GameSceneID.CUT_SCENE_1,  new MsPacManCutScene1(),

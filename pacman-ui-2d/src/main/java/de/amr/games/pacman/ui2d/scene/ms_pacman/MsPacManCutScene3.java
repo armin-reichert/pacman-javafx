@@ -14,7 +14,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer;
+import de.amr.games.pacman.ui2d.scene.tengen.TengenGameWorldRenderer;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.scene.paint.Color;
 
@@ -197,7 +197,7 @@ public class MsPacManCutScene3 extends GameScene2D {
         renderer.drawAnimatedEntity(pacMan);
         //TODO Hack
         if (context.game().variant() == GameVariant.MS_PACMAN_TENGEN) {
-            TengenMsPacManGameRenderer tr = (TengenMsPacManGameRenderer) renderer;
+            TengenGameWorldRenderer tr = (TengenGameWorldRenderer) renderer;
             tr.drawStork(context.spriteSheet(), storkAnimation, stork, bag.acceleration().y() != 0);
         } else {
             renderer.drawSprite(stork, context.spriteSheet(), storkAnimation.currentSprite());

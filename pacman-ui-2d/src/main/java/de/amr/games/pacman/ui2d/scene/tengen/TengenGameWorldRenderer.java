@@ -42,7 +42,7 @@ import static de.amr.games.pacman.model.GameWorld.PROPERTY_COLOR_WALL_FILL;
 /**
  * @author Armin Reichert
  */
-public class TengenMsPacManGameRenderer implements GameWorldRenderer {
+public class TengenGameWorldRenderer implements GameWorldRenderer {
 
     static final Color PINKISH = Color.web("#ff60b0");
     static final Color REDISH = Color.web("d84060");
@@ -62,7 +62,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     private boolean blinkingOn;
     private Canvas canvas;
 
-    public TengenMsPacManGameRenderer(AssetStorage assets) {
+    public TengenGameWorldRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
@@ -152,8 +152,8 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
         GameWorldRenderer.super.drawLevelCounter(spriteSheet, levelNumber, symbols, worldSize);
         if (levelNumber > 0) {
             double x = TS * (worldSize.x() - 2), y = TS * (worldSize.y() - 2);
-            drawLevelNumber((TengenMsPacManGameSpriteSheet) spriteSheet, levelNumber, 0, y);
-            drawLevelNumber((TengenMsPacManGameSpriteSheet) spriteSheet, levelNumber, x, y);
+            drawLevelNumber((TengenSpriteSheet) spriteSheet, levelNumber, 0, y);
+            drawLevelNumber((TengenSpriteSheet) spriteSheet, levelNumber, x, y);
         }
     }
 
@@ -258,8 +258,8 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
         }
     }
 
-    private void drawLevelNumber(TengenMsPacManGameSpriteSheet spriteSheet, int levelNumber, double x, double y) {
-        drawSpriteScaled(spriteSheet, TengenMsPacManGameSpriteSheet.LEVEL_INDICATOR, x, y);
+    private void drawLevelNumber(TengenSpriteSheet spriteSheet, int levelNumber, double x, double y) {
+        drawSpriteScaled(spriteSheet, TengenSpriteSheet.LEVEL_INDICATOR, x, y);
         ctx().setFill(Color.BLACK);
         ctx().save();
         ctx().scale(scaling(), scaling());
