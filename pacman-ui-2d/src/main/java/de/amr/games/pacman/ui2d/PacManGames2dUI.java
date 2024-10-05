@@ -458,8 +458,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public EditorPage getOrCreateEditorPage() {
         if (editorPage == null) {
-            var xxlGame = (PacManXXLGame) game();
-            editorPage = new EditorPage(stage, this, xxlGame.customMapDir());
+            editorPage = new EditorPage(stage, this, game().customMapDir());
             editorPage.setCloseAction(editor -> {
                 editor.stop();
                 editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> stage.titleProperty().bind(stageTitleBinding()));

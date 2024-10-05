@@ -135,6 +135,7 @@ public class PacManXXLGame extends PacManArcadeGame {
         return customMapsByFile.keySet().stream().sorted().map(customMapsByFile::get).toList();
     }
 
+    @Override
     public File customMapDir() {
         return customMapDir;
     }

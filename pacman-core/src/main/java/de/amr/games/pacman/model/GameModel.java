@@ -139,6 +139,10 @@ public abstract class GameModel {
         this.userDir = checkNotNull(userDir);
     }
 
+    public File customMapDir() {
+        return new File(userDir, "maps");
+    }
+
     /**
      * @return number of predefined maps
      */
