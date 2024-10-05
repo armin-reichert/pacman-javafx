@@ -42,14 +42,16 @@ public class MsPacManTengenGame extends GameModel {
     public enum MapCategory { ARCADE, STRANGE, MINI, BIG }
     public enum Difficulty { EASY, NORMAL, HARD, CRAZY }
 
+    //TODO check how many maps are really used in Tengen game
     private static final int ARCADE_MAP_COUNT = 9;
     private static final int NON_ARCADE_MAP_COUNT = 37;
     private static final int MAP_COUNT = ARCADE_MAP_COUNT + NON_ARCADE_MAP_COUNT;
 
-    private static final String ARCADE_MAP_PATTERN  = "/de/amr/games/pacman/maps/tengen/arcade/map%02d.world";
-    private static final String STRANGE_MAP_PATTERN = "/de/amr/games/pacman/maps/tengen/non_arcade/map%02d-strange.world";
-    private static final String MINI_MAP_PATTERN    = "/de/amr/games/pacman/maps/tengen/non_arcade/map%02d-mini.world";
-    private static final String BIG_MAP_PATTERN     = "/de/amr/games/pacman/maps/tengen/non_arcade/map%02d-big.world";
+    private static final String MAPS_ROOT = "/de/amr/games/pacman/maps/tengen/";
+    private static final String ARCADE_MAP_PATTERN  = MAPS_ROOT + "arcade/map%02d.world";
+    private static final String STRANGE_MAP_PATTERN = MAPS_ROOT + "non_arcade/map%02d-strange.world";
+    private static final String MINI_MAP_PATTERN    = MAPS_ROOT + "non_arcade/map%02d-mini.world";
+    private static final String BIG_MAP_PATTERN     = MAP_COUNT + "non_arcade/map%02d-big.world";
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
