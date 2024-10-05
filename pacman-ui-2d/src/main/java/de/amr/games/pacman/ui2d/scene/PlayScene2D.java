@@ -56,7 +56,6 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void end() {
         context.sounds().stopAll();
-        context.game().setPlaying(false);
     }
 
     @Override
@@ -98,6 +97,7 @@ public class PlayScene2D extends GameScene2D {
         //TODO hack
         if (context.game().variant() == GameVariant.MS_PACMAN_TENGEN && context.keyboard().pressed(KeyCode.ESCAPE)) {
             end();
+            context.game().setPlaying(false);
             context.gameController().changeState(GameState.CREDIT); // shows Tengen settings scene
             return;
         }
