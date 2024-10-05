@@ -130,6 +130,7 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
                 mapSprite.area().x() + 0.5, mapSprite.area().y() + 0.5,
                 mapSprite.area().width() - 1, mapSprite.area().height() - 1,
                 0, scaled(3 * TS), scaled(mapSprite.area().width()), scaled(mapSprite.area().height()));
+            drawSpriteCenteredOverBox(spriteSheet, TengenSpriteSheet.FRAME_SPRITE, terrain.numCols() * HTS, 2 * TS);
             hideActorSprite(terrain.getTileProperty("pos_pac", v2i(14, 26)), 0, 0);
             hideActorSprite(terrain.getTileProperty("pos_ghost_1_red", v2i(13, 14)), 0, 0);
             // The ghosts in the house are sitting some pixels below their home position

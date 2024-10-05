@@ -19,6 +19,8 @@ public class TengenSpriteSheet implements GameSpriteSheet {
 
     private final Image source;
 
+    static final RectArea FRAME_SPRITE = rect(174, 124, 128, 8);
+
     static final RectArea[] MS_PAC_MUNCHING_SPRITES = {
         rect(32, 15, 15, 15),
         rect(52, 15, 15, 15),
