@@ -93,7 +93,8 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void handleInput() {
-        if (context.isActionCalled(GameAction2D.ADD_CREDIT)) {
+        // add credit is only allowed in demo level
+        if (context.isActionCalled(GameAction2D.ADD_CREDIT) && context.game().isDemoLevel()) {
             GameAction2D.ADD_CREDIT.execute(context);
             return;
         }
