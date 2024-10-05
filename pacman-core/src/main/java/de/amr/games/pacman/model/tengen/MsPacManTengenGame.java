@@ -51,7 +51,7 @@ public class MsPacManTengenGame extends GameModel {
     private static final String ARCADE_MAP_PATTERN  = MAPS_ROOT + "arcade/map%02d.world";
     private static final String STRANGE_MAP_PATTERN = MAPS_ROOT + "non_arcade/map%02d-strange.world";
     private static final String MINI_MAP_PATTERN    = MAPS_ROOT + "non_arcade/map%02d-mini.world";
-    private static final String BIG_MAP_PATTERN     = MAP_COUNT + "non_arcade/map%02d-big.world";
+    private static final String BIG_MAP_PATTERN     = MAPS_ROOT + "non_arcade/map%02d-big.world";
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
