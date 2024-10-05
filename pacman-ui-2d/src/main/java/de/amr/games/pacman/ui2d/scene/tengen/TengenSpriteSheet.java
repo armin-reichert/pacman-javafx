@@ -19,7 +19,10 @@ public class TengenSpriteSheet implements GameSpriteSheet {
 
     private final Image source;
 
-    static final RectArea FRAME_SPRITE = rect(174, 124, 128, 8);
+    static final RectArea FRAME_SPRITE   = rect(174, 124, 128, 8);
+    static final RectArea STRANGE_SPRITE = rect(261, 133, 26, 6);
+    static final RectArea BIG_SPRITE     = rect(261, 141, 26, 6);
+    static final RectArea MINI_SPRITE    = rect(261, 149, 26, 6);
 
     static final RectArea[] MS_PAC_MUNCHING_SPRITES = {
         rect(32, 15, 15, 15),
