@@ -77,10 +77,10 @@ public class TengenIntroScene extends GameScene2D {
                 else if (120 < t && t < 240) {
                     intro.ghosts[0].move();
                 }
-                else if (240 <= t && t < 300) {
+                else if (240 <= t && t < 330) {
                     if (t % 4 == 0) { intro.tengenPresentsY += 2*TS; }
                 }
-                else if (t == 300) {
+                else if (t == 330) {
                     intro.grayScreen = true;
                 }
                 else if (t == 360) {

@@ -35,8 +35,12 @@ public abstract class GameScene2D implements GameScene {
         this.context = checkNotNull(context);
     }
 
+    protected double scaling() {
+        return scalingPy.get();
+    }
+
     protected double scaled(double value) {
-        return value * scalingPy.get();
+        return value * scaling();
     }
 
     public void draw(GameWorldRenderer renderer) {

@@ -5,6 +5,7 @@ import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -18,10 +19,13 @@ public class TengenSettingsScene extends GameScene2D {
 
     static final Color LABEL_COLOR = YELLOWISH;
     static final Color VALUE_COLOR = Color.WHITE;
+    static final Color BABY_BLUE = Color.rgb(59, 190, 255);
 
-    static final int NUM_SELECTIONS = 2;
-    static final int SETTING_DIFFICULTY = 0;
+    static final int NUM_SELECTIONS = 3;
+
+    static final int SETTING_DIFFICULTY     = 0;
     static final int SETTING_MAZE_SELECTION = 1;
+    static final int SETTING_STARTING_LEVEL = 2;
 
     private int selectedSetting;
     private MsPacManTengenGame tengenGame;
@@ -40,35 +44,62 @@ public class TengenSettingsScene extends GameScene2D {
     public void update() {
     }
 
+    private void drawBabyBlueBar(GameWorldRenderer renderer, double y) {
+        Canvas canvas = renderer.canvas();
+        renderer.ctx().save();
+        renderer.ctx().scale(scaling(), scaling());
+        renderer.ctx().setFill(Color.WHITE);
+        renderer.ctx().fillRect(0, y, canvas.getWidth(), 8);
+        renderer.ctx().setFill(BABY_BLUE);
+        renderer.ctx().fillRect(0, y + 1, canvas.getWidth(), 6);
+        renderer.ctx().restore();
+    }
+
     @Override
     protected void drawSceneContent(GameWorldRenderer renderer) {
-        int col1 = 2 * TS;
-        int col2 = 19 * TS;
+        int col1 = 3 * TS;
+        int col2 = 20 * TS;
         Font font = renderer.scaledArcadeFont(TS);
+
+        drawBabyBlueBar(renderer, 3 * TS);
         renderer.drawText("MS PAC-MAN OPTIONS", LABEL_COLOR, font, 6*TS, 6*TS);
 
         int y = 14 * TS;
         // setting 0
-        drawArrowIfSelected(renderer, SETTING_DIFFICULTY, y);
-        renderer.drawText("GAME DIFFICULTY:", LABEL_COLOR, font, col1, y);
+        drawArrowIfSelected(renderer, SETTING_DIFFICULTY, TS, y);
+        renderer.drawText("GAME DIFFICULTY", LABEL_COLOR, font, col1, y);
+        renderer.drawText(":", LABEL_COLOR, font, col2 - 16, y);
         renderer.drawText(tengenGame.difficulty().name(), VALUE_COLOR, font, col2, y);
 
-        y += 3*TS;
+        y += 3 * TS;
         // setting 1
-        drawArrowIfSelected(renderer, SETTING_MAZE_SELECTION, y);
-        renderer.drawText("MAZE SELECTION:", LABEL_COLOR, font, col1, y);
+        drawArrowIfSelected(renderer, SETTING_MAZE_SELECTION, TS, y);
+        renderer.drawText("MAZE SELECTION", LABEL_COLOR, font, col1, y);
+        renderer.drawText(":", LABEL_COLOR, font, col2 - 16, y);
         renderer.drawText(tengenGame.mapCategory().name(), VALUE_COLOR, font, col2, y);
 
-        font = renderer.scaledArcadeFont(7);
-        renderer.drawText("MOVE ARROW WITH CURSOR KEYS", LABEL_COLOR, font, col1-TS, 30*TS);
-        renderer.drawText("CHOOSE OPTIONS WITH ENTER", LABEL_COLOR, font, col1, 31*TS);
-        renderer.drawText("PRESS SPACE TO START GAME", LABEL_COLOR, font, col1, 32*TS);
+        y += 3 * TS;
+        // setting 2
+        drawArrowIfSelected(renderer, SETTING_STARTING_LEVEL, TS, y);
+        renderer.drawText("STARTING LEVEL", LABEL_COLOR, font, col1, y);
+        renderer.drawText(":", LABEL_COLOR, font, col2 - 16, y);
+        renderer.drawText("1", VALUE_COLOR, font, col2, y);
+
+        drawCenteredText(renderer, "MOVE ARROW WITH TAB KEY",      LABEL_COLOR, font, 30 * TS);
+        drawCenteredText(renderer, "CHOOSE OPTIONS WITH DOWN KEY", LABEL_COLOR, font, 31 * TS);
+        drawCenteredText(renderer, "PRESS ENTER TO START GAME",    LABEL_COLOR, font, 32 * TS);
+        drawBabyBlueBar(renderer, 32.5 * TS);
     }
 
-    private void drawArrowIfSelected(GameWorldRenderer renderer, int setting, int y) {
+    private void drawCenteredText(GameWorldRenderer renderer, String text, Color color, Font font, double y) {
+        renderer.drawText(text, color, font, 0.5 * TS * (28 - text.length()), y);
+    }
+
+    private void drawArrowIfSelected(GameWorldRenderer renderer, int setting, int x, int y) {
         if (selectedSetting == setting) {
             Font font = renderer.scaledArcadeFont(TS);
-            renderer.drawText(">", LABEL_COLOR, font, 0, y);
+            renderer.drawText("-", LABEL_COLOR, font, x, y);
+            renderer.drawText(">", LABEL_COLOR, font, x + 3, y);
         }
     }
 
@@ -88,7 +119,7 @@ public class TengenSettingsScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        if (context.keyboard().pressed(KeyCode.ENTER)) {
+        if (context.keyboard().pressed(KeyCode.DOWN)) {
             switch (selectedSetting) {
                 case SETTING_DIFFICULTY -> {
                     MsPacManTengenGame.Difficulty difficulty = tengenGame.difficulty();
@@ -111,17 +142,14 @@ public class TengenSettingsScene extends GameScene2D {
                 default -> {}
             }
         }
-        else if (context.keyboard().pressed(KeyCode.SPACE)) {
+        else if (context.keyboard().pressed(KeyCode.ENTER)) {
             context.sounds().stopAll();
             context.game().insertCoin();
             //TODO when to change FPS? Only during hunting state?
             //context.gameClock().setTargetFrameRate(fps(tengenGame.difficulty()));
             context.gameController().changeState(GameState.READY);
         }
-        else if (context.keyboard().pressed(KeyCode.UP)) {
-            selectedSetting = (selectedSetting > 0) ? selectedSetting - 1: NUM_SELECTIONS - 1;
-        }
-        else if (context.keyboard().pressed(KeyCode.DOWN)) {
+        else if (context.keyboard().pressed(KeyCode.TAB)) {
             selectedSetting = (selectedSetting < NUM_SELECTIONS - 1) ? selectedSetting + 1 : 0;
         }
         else {
