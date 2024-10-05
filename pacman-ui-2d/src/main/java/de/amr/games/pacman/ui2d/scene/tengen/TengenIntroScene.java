@@ -37,9 +37,12 @@ import static de.amr.games.pacman.ui2d.scene.tengen.TengenGameWorldRenderer.YELL
  */
 public class TengenIntroScene extends GameScene2D {
 
-    //TODO check exact colors
+    //TODO which are the exact colors?
     static final Color[]  SHADES_OF_BLUE = {
-        Color.DARKBLUE, Color.BLUE, Color.LIGHTBLUE
+        Color.rgb(35, 24, 145),
+        Color.rgb(0, 111, 234),
+        Color.rgb(63, 184, 255),
+        Color.rgb(166, 229, 251)
     };
     static final float    SPEED = 2.2f; //TODO check exact speed
     static final int      TOP_Y = TS * 11 + 1;
