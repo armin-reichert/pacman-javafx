@@ -10,16 +10,25 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.Ufx;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.VBox;
+import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_CANVAS_BG_COLOR;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 
 /**
+ * Picture-in-Picture view. Adapts its aspect ratio to the current game world. Height can be changed via dashboard.
+ * <p>
+ * TODO: For large maps we need a camera inside this view or something alike
+ * </p>
+ *
  * @author Armin Reichert
  */
 public class PictureInPictureView extends VBox implements GameEventListener {
@@ -28,46 +37,68 @@ public class PictureInPictureView extends VBox implements GameEventListener {
     private final Canvas canvas;
     private final PlayScene2D playScene2D;
     private GameWorldRenderer renderer;
-    private double aspect = 0.777;
 
     public PictureInPictureView(GameContext context) {
-        this.context = context;
-        this.canvas = new Canvas();
+        this.context = checkNotNull(context);
 
-        backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
+        canvas = new Canvas();
+        canvas.heightProperty().bind(PY_PIP_HEIGHT);
+        canvas.heightProperty().addListener((py,ov,nv) -> recomputeLayout());
+
+        playScene2D = new PlayScene2D();
+        playScene2D.setGameContext(context);
+        playScene2D.backgroundColorPy.bind(PY_CANVAS_BG_COLOR);
+
+        getChildren().add(canvas);
+
         setPadding(new Insets(5, 15, 5, 15));
-
-        //TODO check when exactly renderer must be (re)created
-        context.gameVariantProperty().addListener((py, ov, nv) -> {
-            if (nv != null) {
-                renderer = PacManGames2dUI.createRenderer(nv, context.assets());
-                renderer.setCanvas(canvas);
+        backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
+        opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
+        visibleProperty().bind(Bindings.createObjectBinding(
+            () -> PY_PIP_ON.get() && context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D),
+            PY_PIP_ON, context.gameSceneProperty()
+        ));
+        visibleProperty().addListener((py,ov,visible) -> {
+            if (visible) {
+                recomputeLayout();
             }
         });
 
-        canvas.widthProperty().bind(canvas.heightProperty().multiply(aspect));
-        getChildren().add(canvas);
-
-        playScene2D = new PlayScene2D();
-        playScene2D.backgroundColorPy.bind(PY_CANVAS_BG_COLOR);
-        playScene2D.scalingPy.bind(canvas.heightProperty().divide(context.worldSizeTilesOrDefault().y() * TS));
-        playScene2D.setGameContext(context);
+        context.gameVariantProperty().addListener((py,ov,variant) -> {
+            renderer = PacManGames2dUI.createRenderer(variant, context.assets());
+            renderer.setCanvas(canvas);
+        });
     }
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        Vector2i worldSize = context.worldSizeTilesOrDefault();
-        aspect = (double) worldSize.x() / worldSize.y();
         context.attachRendererToCurrentMap(renderer);
-    }
-
-    public Canvas canvas() {
-        return canvas;
+        recomputeLayout();
     }
 
     public void draw() {
         if (isVisible()) {
             playScene2D.draw(renderer);
         }
+    }
+
+    private double worldAspectRatio() {
+        Vector2i worldTiles = context.worldSizeTilesOrDefault();
+        return (double) worldTiles.x() / (double) worldTiles.y();
+    }
+
+    private double standardHeight() {
+        Vector2i worldTiles = context.worldSizeTilesOrDefault();
+        return worldTiles.y() * TS;
+    }
+
+    private void recomputeLayout() {
+        double canvasHeight = canvas.getHeight();
+        double aspectRatio = worldAspectRatio();
+        canvas.setWidth(aspectRatio * canvasHeight);
+        playScene2D.scalingPy.set(canvasHeight / standardHeight());
+        layout();
+        Logger.info("Layout recomputed, w={0.00} h={0.00} aspect={0.00}, world size (tiles)={}",
+            getWidth(), getHeight(), aspectRatio, context.worldSizeTilesOrDefault());
     }
 }
