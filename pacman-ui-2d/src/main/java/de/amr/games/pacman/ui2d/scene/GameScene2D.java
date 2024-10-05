@@ -44,7 +44,7 @@ public abstract class GameScene2D implements GameScene {
         renderer.backgroundColorProperty().set(backgroundColorPy.get());
         renderer.clearCanvas();
         if (context.isScoreVisible()) {
-            renderer.drawScores(context.game());
+            renderer.drawScores(context);
         }
         drawSceneContent(renderer);
         if (debugInfoPy.get()) {

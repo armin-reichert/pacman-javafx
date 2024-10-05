@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.MovingBonus;
+import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
 import de.amr.games.pacman.model.tengen.MsPacManTengenGame.MapCategory;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -113,6 +114,7 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
 
     @Override
     public void drawWorld(GameSpriteSheet spriteSheet, GameContext context, GameWorld world) {
+        MsPacManTengenGame tengenGame = (MsPacManTengenGame) context.game();
         TileMap terrain = world.map().terrain();
         if (flashMode) {
             // Flash mode uses vector rendering
@@ -139,7 +141,14 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
                 case STRANGE -> TengenSpriteSheet.STRANGE_SPRITE;
                 case ARCADE  -> TengenSpriteSheet.NO_SPRITE;
             };
-            drawSpriteCenteredOverBox(spriteSheet, categorySprite, terrain.numCols() * HTS, 2 * TS);
+            var difficultySprite = switch (tengenGame.difficulty()) {
+                case EASY -> TengenSpriteSheet.EASY_SPRITE;
+                case HARD -> TengenSpriteSheet.HARD_SPRITE;
+                case CRAZY -> TengenSpriteSheet.CRAZY_SPRITE;
+                case NORMAL -> TengenSpriteSheet.NO_SPRITE;
+            };
+            drawSpriteCenteredOverBox(spriteSheet, difficultySprite, terrain.numCols() * HTS, 2 * TS);
+            drawSpriteCenteredOverBox(spriteSheet, categorySprite, terrain.numCols() * HTS + t(4), 2 * TS);
             hideActorSprite(terrain.getTileProperty("pos_pac", v2i(14, 26)), 0, 0);
             hideActorSprite(terrain.getTileProperty("pos_ghost_1_red", v2i(13, 14)), 0, 0);
             // The ghosts in the house are sitting some pixels below their home position
@@ -153,19 +162,21 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
             overPaintEatenPellets(world);
             overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
             ctx().restore();
-            context.game().bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
+            tengenGame.bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
         }
     }
 
     @Override
-    public void drawScores(GameModel game) {
+    public void drawScores(GameContext context) {
+        long t = context.gameClock().getUpdateCount();
         Color color = Color.WHITE;
         Font font = scaledArcadeFont(7.5);
-        var pointsText = String.format("%02d", game.score().points());
-        var highScorePointsText = String.format("%d", game.highScore().points());
+        var pointsText = String.format("%02d", context.game().score().points());
+        var highScorePointsText = String.format("%d", context.game().highScore().points());
         drawText("HIGH SCORE", color, font, t(9), t(1));
         drawText(pointsText, color, font, t(3), t(2));
         drawText(highScorePointsText, color, font, t(12), t(2));
+        if (t % 60 < 30) { drawText("1UP", color, font, t(2), t(1)); }
     }
 
     @Override
