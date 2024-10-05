@@ -48,7 +48,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
         }
     }
 
-
     @Override
     public void setGameScenes(GameVariant variant, Map<GameSceneID, GameScene> gameScenes) {
         super.setGameScenes(variant, gameScenes);

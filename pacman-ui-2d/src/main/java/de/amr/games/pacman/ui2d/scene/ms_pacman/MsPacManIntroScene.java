@@ -29,8 +29,8 @@ import org.tinylog.Logger;
 import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.GameAction.calledAction;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.calledAction;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -220,7 +220,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        calledAction(context.keyboard(),
+        calledAction(
             GameAction2D.ADD_CREDIT,
             GameAction2D.START_GAME,
             GameAction2D.TEST_LEVELS,

@@ -10,8 +10,8 @@ import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 
 import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.ui2d.GameAction.calledAction;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.calledAction;
 import static de.amr.games.pacman.ui2d.scene.pacman.PacManGameSpriteSheet.MIDWAY_COPYRIGHT;
 
 /**
@@ -39,7 +39,7 @@ public class PacManCreditScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        calledAction(context.keyboard(), GameAction2D.ADD_CREDIT, GameAction2D.START_GAME).ifPresent(action -> action.execute(context));
+        calledAction(GameAction2D.ADD_CREDIT, GameAction2D.START_GAME).ifPresent(action -> action.execute(context));
     }
 
     @Override

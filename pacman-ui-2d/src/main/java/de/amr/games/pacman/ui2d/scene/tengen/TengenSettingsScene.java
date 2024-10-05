@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.calledAction;
 import static de.amr.games.pacman.ui2d.scene.tengen.TengenGameWorldRenderer.YELLOWISH;
 
 public class TengenSettingsScene extends GameScene2D {
@@ -124,7 +125,7 @@ public class TengenSettingsScene extends GameScene2D {
             selectedSetting = (selectedSetting < NUM_SELECTIONS - 1) ? selectedSetting + 1 : 0;
         }
         else {
-            GameAction.calledAction(context.keyboard(), GameAction2D.TEST_LEVELS).ifPresent(action -> action.execute(context));
+            calledAction(GameAction2D.TEST_LEVELS).ifPresent(action -> action.execute(context));
         }
     }
 }

@@ -20,19 +20,25 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.GameAction.calledAction;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.calledAction;
 
 /**
  * @author Armin Reichert
  */
 public class PlayScene2D extends GameScene2D {
+
+    private static final List<GameAction> GAME_ACTIONS = List.of(
+        GameAction2D.CHEAT_EAT_ALL,
+        GameAction2D.CHEAT_ADD_LIVES,
+        GameAction2D.CHEAT_NEXT_LEVEL,
+        GameAction2D.CHEAT_KILL_GHOSTS
+    );
 
     @Override
     public boolean isCreditVisible() {
@@ -84,16 +90,12 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void handleInput() {
-        List<GameAction> actions = new ArrayList<>(List.of(
-            GameAction2D.CHEAT_EAT_ALL,
-            GameAction2D.CHEAT_ADD_LIVES,
-            GameAction2D.CHEAT_NEXT_LEVEL,
-            GameAction2D.CHEAT_KILL_GHOSTS
-        ));
-        if (context.game().isDemoLevel()) {
-            actions.add(GameAction2D.ADD_CREDIT);
+        boolean addCreditCalled = calledAction(GameAction2D.ADD_CREDIT).isPresent();
+        if (addCreditCalled) {
+            GameAction2D.ADD_CREDIT.execute(context);
+            return;
         }
-        calledAction(context.keyboard(), actions).ifPresent(action -> action.execute(context));
+        calledAction(GAME_ACTIONS).ifPresent(action -> action.execute(context));
     }
 
     @Override

@@ -58,6 +58,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.LEVEL_TEST;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -72,6 +73,14 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 public class PacManGames2dUI implements GameEventListener, GameContext {
 
     protected static final Keyboard KEYBOARD = new Keyboard();
+
+    public static Optional<GameAction> calledAction(GameAction... candidates) {
+        return Stream.of(candidates).filter(action -> action.called(KEYBOARD)).findFirst();
+    }
+
+    public static Optional<GameAction> calledAction(List<GameAction> candidates) {
+        return candidates.stream().filter(action -> action.called(KEYBOARD)).findFirst();
+    }
 
     /**
      * The order here is used by the start page!
