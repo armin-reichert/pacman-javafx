@@ -11,13 +11,12 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.games.pacman.ui2d.util.KeyInput.key;
-
 /**
  * @author Armin Reichert
  */
 public class Keyboard {
 
+    private final Set<KeyCode> pressedKeys = new HashSet<>();
     private final Set<KeyCodeCombination> registeredCombinations = new HashSet<>();
     private final List<KeyCodeCombination> matchingCombinations = new ArrayList<>(3);
 
@@ -28,6 +27,7 @@ public class Keyboard {
     public void onKeyPressed(KeyEvent e) {
         Logger.debug("Key pressed: {}", e.getCode());
         registeredCombinations.stream().filter(kcc -> kcc.match(e)).forEach(this::addMatch);
+        pressedKeys.add(e.getCode());
     }
 
     private void addMatch(KeyCodeCombination kcc) {
@@ -38,17 +38,19 @@ public class Keyboard {
     public void onKeyReleased(KeyEvent e) {
         Logger.debug("Key released: {}", e.getCode());
         matchingCombinations.clear();
+        pressedKeys.remove(e.getCode());
     }
 
     /**
      * @param keyInput key input
-     * @return tells if any of the given key combinations is matched by the current keyboard state
+     * @return tells if any of the registered given key combinations is matched by the current keyboard state
      */
-    public boolean pressed(KeyInput keyInput) {
+    public boolean isRegisteredKeyPressed(KeyInput keyInput) {
         return Arrays.stream(keyInput.getCombinations()).anyMatch(matchingCombinations::contains);
     }
 
     public boolean pressed(KeyCode keyCode) {
-        return pressed(KeyInput.of(key(keyCode)));
+        //return pressed(KeyInput.of(key(keyCode)));
+        return pressedKeys.contains(keyCode);
     }
 }

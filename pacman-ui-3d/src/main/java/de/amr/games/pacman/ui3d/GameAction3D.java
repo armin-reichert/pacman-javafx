@@ -93,7 +93,7 @@ public enum GameAction3D implements GameAction {
 
     @Override
     public boolean called(Keyboard keyboard) {
-        return keyboard.pressed(trigger);
+        return keyboard.isRegisteredKeyPressed(trigger);
     }
 
     @Override

@@ -15,6 +15,7 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -93,6 +94,12 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void handleInput() {
+        //TODO hack
+        if (context.game().variant() == GameVariant.MS_PACMAN_TENGEN && context.keyboard().pressed(KeyCode.ESCAPE)) {
+            end();
+            context.gameController().changeState(GameState.CREDIT); // shows Tengen settings scene
+            return;
+        }
         // add credit is only allowed in demo level
         if (context.isActionCalled(GameAction2D.ADD_CREDIT) && context.game().isDemoLevel()) {
             GameAction2D.ADD_CREDIT.execute(context);

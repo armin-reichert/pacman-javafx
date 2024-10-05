@@ -47,7 +47,7 @@ public class KeyboardPacSteering implements Steering {
     @Override
     public void steer(Creature creature, GameWorld world) {
         dirByKey.keySet().stream()
-            .filter(keyboard::pressed)
+            .filter(keyboard::isRegisteredKeyPressed)
             .map(dirByKey::get)
             .findFirst()
             .ifPresent(creature::setWishDir);
