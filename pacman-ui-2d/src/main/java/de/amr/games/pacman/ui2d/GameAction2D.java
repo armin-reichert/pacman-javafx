@@ -83,6 +83,7 @@ public enum GameAction2D implements GameAction {
                 GameWorld world = context.game().world();
                 world.map().food().tiles().filter(not(world::isEnergizerPosition)).forEach(world::eatFoodAt);
                 context.game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
+                context.sounds().stopMunchingSound();
             }
         }
     },
