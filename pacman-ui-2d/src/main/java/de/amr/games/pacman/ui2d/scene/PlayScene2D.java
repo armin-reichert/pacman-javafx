@@ -41,6 +41,10 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public boolean isCreditVisible() {
+        //TODO Hack
+        if (context.game().variant() == GameVariant.MS_PACMAN_TENGEN) {
+            return false;
+        }
         return !context.game().hasCredit() || context.gameState() == GameState.GAME_OVER;
     }
 
