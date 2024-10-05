@@ -280,10 +280,8 @@ public enum GameAction2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
-            if (context.gameState() == GameState.INTRO) {
-                context.gameController().restart(GameState.LEVEL_TEST);
-                context.showFlashMessageSeconds(3, "Level TEST MODE");
-            }
+            context.gameController().restart(GameState.LEVEL_TEST);
+            context.showFlashMessageSeconds(3, "Level TEST MODE");
         }
     },
 

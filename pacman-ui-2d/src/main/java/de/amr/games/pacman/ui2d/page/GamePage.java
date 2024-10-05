@@ -131,7 +131,6 @@ public class GamePage extends StackPane implements Page {
             GameAction2D.SIMULATION_SLOWER,
             GameAction2D.SIMULATION_NORMAL,
             GameAction2D.SHOW_START_PAGE,
-            GameAction2D.TEST_LEVELS,
             GameAction2D.TOGGLE_AUTOPILOT,
             GameAction2D.TOGGLE_IMMUNITY,
             GameAction2D.TOGGLE_DASHBOARD,

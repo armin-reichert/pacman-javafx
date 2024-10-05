@@ -2,6 +2,8 @@ package de.amr.games.pacman.ui2d.scene.tengen;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
+import de.amr.games.pacman.ui2d.GameAction;
+import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.util.Keyboard;
@@ -121,6 +123,9 @@ public class TengenSettingsScene extends GameScene2D {
         }
         else if (Keyboard.pressed(KeyCode.DOWN)) {
             selectedSetting = (selectedSetting < NUM_SELECTIONS - 1) ? selectedSetting + 1 : 0;
+        }
+        else {
+            GameAction.calledAction(GameAction2D.TEST_LEVELS).ifPresent(action -> action.execute(context));
         }
     }
 }

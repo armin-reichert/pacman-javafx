@@ -284,8 +284,11 @@ public class PacManIntroScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        calledAction(GameAction2D.ADD_CREDIT, GameAction2D.START_GAME, GameAction2D.TEST_CUT_SCENES)
-            .ifPresent(action -> action.execute(context));
+        calledAction(
+            GameAction2D.ADD_CREDIT,
+            GameAction2D.START_GAME,
+            GameAction2D.TEST_LEVELS,
+            GameAction2D.TEST_CUT_SCENES).ifPresent(action -> action.execute(context));
     }
 
     @Override

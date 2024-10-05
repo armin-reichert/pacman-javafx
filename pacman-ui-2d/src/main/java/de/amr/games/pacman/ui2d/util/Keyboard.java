@@ -9,6 +9,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
 
+import java.security.Key;
 import java.util.*;
 
 import static de.amr.games.pacman.ui2d.util.KeyInput.key;
@@ -27,9 +28,12 @@ public class Keyboard {
 
     public static void onKeyPressed(KeyEvent e) {
         Logger.debug("Key pressed: {}", e.getCode());
-        REGISTERED_COMBINATIONS.stream()
-            .filter(combi -> combi.match(e))
-            .forEach(MATCHING_COMBINATIONS::add);
+        REGISTERED_COMBINATIONS.stream().filter(kcc -> kcc.match(e)).forEach(Keyboard::addMatch);
+    }
+
+    private static void addMatch(KeyCodeCombination kcc) {
+        MATCHING_COMBINATIONS.add(kcc);
+        Logger.debug("Added matching combination {}", kcc);
     }
 
     public static void onKeyReleased(KeyEvent e) {
