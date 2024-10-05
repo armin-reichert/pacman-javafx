@@ -74,8 +74,11 @@ public class TengenIntroScene extends GameScene2D {
                 else if (120 < t && t < 240) {
                     intro.ghosts[0].move();
                 }
-                else if (240 <= t && t < 360) {
+                else if (240 <= t && t < 300) {
                     if (t % 4 == 0) { intro.tengenPresentsY += 2*TS; }
+                }
+                else if (t == 300) {
+                    intro.grayScreen = true;
                 }
                 else if (t == 360) {
                     intro.sceneController.changeState(WAITING_FOR_START);
@@ -200,6 +203,7 @@ public class TengenIntroScene extends GameScene2D {
     private int ghostIndex;
     private int waitBeforeRising;
     private int tengenPresentsY;
+    private boolean grayScreen;
 
     public TengenIntroScene() {
         sceneController = new FiniteStateMachine<>(SceneState.values()) {
@@ -230,6 +234,7 @@ public class TengenIntroScene extends GameScene2D {
         marqueeTimer = new TickTimer("marquee-timer");
         ghostIndex = 0;
         waitBeforeRising = 0;
+        grayScreen = false;
 
         //TODO use Tengen sprites for Ms. Pac-Man and PacMan characters
         GameSpriteSheet msPacManGameSpriteSheet = context.assets().get("ms_pacman.spritesheet");
@@ -268,8 +273,13 @@ public class TengenIntroScene extends GameScene2D {
         BitSet marqueeState = computeMarqueeState(marqueeTimer.currentTick());
         switch (sceneController.state()) {
             case TENGEN_PRESENTS -> {
-                renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t), font, 6 * TS, tengenPresentsY);
-                renderer.drawAnimatedEntity(ghosts[0]);
+                if (grayScreen) {
+                    renderer.ctx().setFill(Color.grayRgb(116));
+                    renderer.ctx().fillRect(0, 0, renderer.canvas().getWidth(), renderer.canvas().getHeight());
+                } else {
+                    renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t), font, 6 * TS, tengenPresentsY);
+                    renderer.drawAnimatedEntity(ghosts[0]);
+                }
             }
             case WAITING_FOR_START -> {
                 // Loop over 3 different shades of blue, 16 frames each

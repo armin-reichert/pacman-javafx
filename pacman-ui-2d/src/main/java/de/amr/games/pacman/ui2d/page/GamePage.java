@@ -222,7 +222,7 @@ public class GamePage extends StackPane implements Page {
     }
 
     public void showSignature() {
-        popupLayer.showSignature(1, 3, 2);
+        popupLayer.showSignature(1, 2, 1);
     }
 
     public void hideSignature() {
