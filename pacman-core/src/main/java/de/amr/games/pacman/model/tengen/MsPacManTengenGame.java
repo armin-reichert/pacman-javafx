@@ -53,16 +53,45 @@ public class MsPacManTengenGame extends GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
-    /**
-     * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
-     *
-     * @see <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>
-     * @see <a href="https://github.com/armin-reichert/pacman-basic/blob/main/doc/mspacman-details-reddit-user-damselindis.md">GitHub</a>
-     */
+    //TODO I have no idea about the hunting times in Tengen, use Ms. Pac-Man Arcade times for now
     private static final int[] HUNTING_TICKS_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
     private static final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
 
-    private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+    // Bonus symbols in Arcade, Mini and Big mazes
+    private static final byte BONUS_CHERRY     = 0;
+    private static final byte BONUS_STRAWBERRY = 1;
+    private static final byte BONUS_ORANGE     = 2;
+    private static final byte BONUS_PRETZEL    = 3;
+    private static final byte BONUS_APPLE      = 4;
+    private static final byte BONUS_PEAR       = 5;
+    private static final byte BONUS_BANANA     = 6;
+    // Additional bonus symbols in Strange mazes
+    private static final byte BONUS_MILK       = 7;
+    private static final byte BONUS_ICE_CREAM  = 8;
+    private static final byte BONUS_GLASS_SLIPPER = 9;
+    private static final byte BONUS_STAR       = 10;
+    private static final byte BONUS_HAND       = 11;
+    private static final byte BONUS_RING       = 12;
+    private static final byte BONUS_FLOWER     = 13;
+
+    // Bonus value = factor * 100
+    private static final byte[] BONUS_VALUE_FACTORS = new byte[14];
+    static {
+        BONUS_VALUE_FACTORS[BONUS_CHERRY]        = 1;
+        BONUS_VALUE_FACTORS[BONUS_STRAWBERRY]    = 2;
+        BONUS_VALUE_FACTORS[BONUS_ORANGE]        = 5;
+        BONUS_VALUE_FACTORS[BONUS_PRETZEL]       = 7;
+        BONUS_VALUE_FACTORS[BONUS_APPLE]         = 10;
+        BONUS_VALUE_FACTORS[BONUS_PEAR]          = 20;
+        BONUS_VALUE_FACTORS[BONUS_BANANA]        = 50;
+        BONUS_VALUE_FACTORS[BONUS_MILK]          = 30;
+        BONUS_VALUE_FACTORS[BONUS_ICE_CREAM]     = 40;
+        BONUS_VALUE_FACTORS[BONUS_GLASS_SLIPPER] = 60;
+        BONUS_VALUE_FACTORS[BONUS_STAR]          = 70;
+        BONUS_VALUE_FACTORS[BONUS_HAND]          = 80;
+        BONUS_VALUE_FACTORS[BONUS_RING]          = 90;
+        BONUS_VALUE_FACTORS[BONUS_FLOWER]        = 100;
+    }
 
     private static GameWorld createWorld(WorldMap map) {
         var world = new GameWorld(map);
@@ -210,21 +239,17 @@ public class MsPacManTengenGame extends GameModel {
 
     @Override
     public byte computeBonusSymbol() {
-        //TODO: no idea yet how Tengen does it
-        if (levelNumber <= BONUS_VALUE_FACTORS.length) {
+        //TODO: I have no idea yet how Tengen does this
+        byte maxBonus = mapCategory == MapCategory.STRANGE ? BONUS_FLOWER : BONUS_BANANA;
+        if (levelNumber <= maxBonus) {
             return (byte) (levelNumber - 1);
         }
-        return (byte) randomInt(0, BONUS_VALUE_FACTORS.length);
+        return (byte) randomInt(0, maxBonus);
     }
 
-    /**
-     * Bonus symbol enters the world at a random portal, walks to the house entry, takes a tour around the
-     * house and finally leaves the world through a random portal on the opposite side of the world.
-     * <p>
-     * Note: This is not the exact behavior from the original Arcade game.
-     **/
     @Override
     public void activateNextBonus() {
+        //TODO No idea how this behaves in Tengen
         if (bonus != null && bonus.state() != Bonus.STATE_INACTIVE) {
             Logger.info("Previous bonus is still active, skip this one");
             return;
