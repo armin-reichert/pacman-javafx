@@ -36,7 +36,6 @@ import java.util.Optional;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.calledAction;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 
@@ -199,12 +198,11 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void handleInput() {
-        boolean addCreditCalled = calledAction(GameAction2D.ADD_CREDIT).isPresent();
-        if (addCreditCalled && context.game().isDemoLevel()) {
+        if (context.isActionCalled(GameAction2D.ADD_CREDIT) && context.game().isDemoLevel()) {
             GameAction2D.ADD_CREDIT.execute(context);
             return;
         }
-        calledAction(GAME_ACTIONS).ifPresent(action -> action.execute(context));
+        context.executeFirstCalledAction(GAME_ACTIONS.stream());
     }
 
     @Override

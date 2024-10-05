@@ -27,10 +27,10 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.util.BitSet;
+import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.calledAction;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -220,11 +220,11 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        calledAction(
+        context.executeFirstCalledAction(Stream.of(
             GameAction2D.ADD_CREDIT,
             GameAction2D.START_GAME,
             GameAction2D.TEST_LEVELS,
-            GameAction2D.TEST_CUT_SCENES).ifPresent(action -> action.execute(context));
+            GameAction2D.TEST_CUT_SCENES));
     }
 
     @Override

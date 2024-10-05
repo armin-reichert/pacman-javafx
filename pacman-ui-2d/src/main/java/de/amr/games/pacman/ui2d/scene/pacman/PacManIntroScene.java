@@ -29,7 +29,6 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.EATEN;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.calledAction;
 
 /**
  * <p>
@@ -284,11 +283,11 @@ public class PacManIntroScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        calledAction(
+        context.executeFirstCalledAction(Stream.of(
             GameAction2D.ADD_CREDIT,
             GameAction2D.START_GAME,
             GameAction2D.TEST_LEVELS,
-            GameAction2D.TEST_CUT_SCENES).ifPresent(action -> action.execute(context));
+            GameAction2D.TEST_CUT_SCENES));
     }
 
     @Override

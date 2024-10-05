@@ -23,6 +23,7 @@ import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.beans.property.ObjectProperty;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 
@@ -59,6 +60,11 @@ public interface GameContext {
     void showFlashMessage(String message, Object... args);
     void showFlashMessageSeconds(double seconds, String message, Object... args);
     GameClockFX gameClock();
+
+    // Actions
+    boolean isActionCalled(GameAction action);
+    void executeFirstCalledAction(Stream<GameAction> actions);
+    void executeFirstCalledActionOrElse(Stream<GameAction> actions, Runnable defaultAction);
 
     /**
      * @return size (in tiles) of current world or size of Arcade world if no world currently exists

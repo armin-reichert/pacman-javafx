@@ -26,7 +26,6 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.calledAction;
 
 /**
  * @author Armin Reichert
@@ -90,12 +89,11 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void handleInput() {
-        boolean addCreditCalled = calledAction(GameAction2D.ADD_CREDIT).isPresent();
-        if (addCreditCalled) {
+        if (context.isActionCalled(GameAction2D.ADD_CREDIT)) {
             GameAction2D.ADD_CREDIT.execute(context);
             return;
         }
-        calledAction(GAME_ACTIONS).ifPresent(action -> action.execute(context));
+        context.executeFirstCalledAction(GAME_ACTIONS.stream());
     }
 
     @Override

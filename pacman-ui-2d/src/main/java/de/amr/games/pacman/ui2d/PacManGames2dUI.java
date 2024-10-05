@@ -74,14 +74,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     protected static final Keyboard KEYBOARD = new Keyboard();
 
-    public static Optional<GameAction> calledAction(GameAction... candidates) {
-        return Stream.of(candidates).filter(action -> action.called(KEYBOARD)).findFirst();
-    }
-
-    public static Optional<GameAction> calledAction(List<GameAction> candidates) {
-        return candidates.stream().filter(action -> action.called(KEYBOARD)).findFirst();
-    }
-
     /**
      * The order here is used by the start page!
      */
@@ -375,6 +367,21 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public Keyboard keyboard() {
         return KEYBOARD;
+    }
+
+    @Override
+    public boolean isActionCalled(GameAction action) {
+        return action.called(KEYBOARD);
+    }
+
+    @Override
+    public void executeFirstCalledAction(Stream<GameAction> actions) {
+        actions.filter(this::isActionCalled).findFirst().ifPresent(action -> action.execute(this));
+    }
+
+    @Override
+    public void executeFirstCalledActionOrElse(Stream<GameAction> actions, Runnable defaultAction) {
+        actions.filter(this::isActionCalled).findFirst().ifPresentOrElse(action -> action.execute(this), defaultAction);
     }
 
     @Override

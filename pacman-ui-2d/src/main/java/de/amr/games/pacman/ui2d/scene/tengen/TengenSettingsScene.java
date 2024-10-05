@@ -2,7 +2,6 @@ package de.amr.games.pacman.ui2d.scene.tengen;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
-import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -10,8 +9,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import java.util.stream.Stream;
+
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.calledAction;
 import static de.amr.games.pacman.ui2d.scene.tengen.TengenGameWorldRenderer.YELLOWISH;
 
 public class TengenSettingsScene extends GameScene2D {
@@ -24,10 +24,12 @@ public class TengenSettingsScene extends GameScene2D {
     static final int SETTING_MAZE_SELECTION = 1;
 
     private int selectedSetting;
+    private MsPacManTengenGame tengenGame;
 
     @Override
     public void init() {
         selectedSetting = SETTING_DIFFICULTY;
+        tengenGame = (MsPacManTengenGame) context.game();
     }
 
     @Override
@@ -40,7 +42,6 @@ public class TengenSettingsScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent(GameWorldRenderer renderer) {
-        MsPacManTengenGame tengenGame = (MsPacManTengenGame) context.game();
         int col1 = 2 * TS;
         int col2 = 19 * TS;
         Font font = renderer.scaledArcadeFont(TS);
@@ -87,7 +88,6 @@ public class TengenSettingsScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        MsPacManTengenGame tengenGame = (MsPacManTengenGame) context.game();
         if (context.keyboard().pressed(KeyCode.ENTER)) {
             switch (selectedSetting) {
                 case SETTING_DIFFICULTY -> {
@@ -125,7 +125,7 @@ public class TengenSettingsScene extends GameScene2D {
             selectedSetting = (selectedSetting < NUM_SELECTIONS - 1) ? selectedSetting + 1 : 0;
         }
         else {
-            calledAction(GameAction2D.TEST_LEVELS).ifPresent(action -> action.execute(context));
+            context.executeFirstCalledAction(Stream.of(GameAction2D.TEST_LEVELS));
         }
     }
 }

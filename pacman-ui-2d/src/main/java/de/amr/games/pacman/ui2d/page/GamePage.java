@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.*;
@@ -31,17 +32,35 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
+import java.util.List;
+
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.calledAction;
 import static de.amr.games.pacman.ui2d.util.Ufx.border;
 
 /**
  * @author Armin Reichert
  */
 public class GamePage extends StackPane implements Page {
+
+    private static final List<GameAction> GAME_ACTIONS = List.of(
+        GameAction2D.BOOT,
+        GameAction2D.DEBUG_INFO,
+        GameAction2D.HELP,
+        GameAction2D.SIMULATION_1_STEP,
+        GameAction2D.SIMULATION_10_STEPS,
+        GameAction2D.SIMULATION_FASTER,
+        GameAction2D.SIMULATION_SLOWER,
+        GameAction2D.SIMULATION_NORMAL,
+        GameAction2D.SHOW_START_PAGE,
+        GameAction2D.TOGGLE_AUTOPILOT,
+        GameAction2D.TOGGLE_IMMUNITY,
+        GameAction2D.TOGGLE_DASHBOARD,
+        GameAction2D.TOGGLE_PAUSED,
+        GameAction2D.OPEN_EDITOR
+    );
 
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
         @Override
@@ -121,25 +140,8 @@ public class GamePage extends StackPane implements Page {
 
     @Override
     public void handleInput() {
-        calledAction(
-            GameAction2D.BOOT,
-            GameAction2D.DEBUG_INFO,
-            GameAction2D.HELP,
-            GameAction2D.SIMULATION_1_STEP,
-            GameAction2D.SIMULATION_10_STEPS,
-            GameAction2D.SIMULATION_FASTER,
-            GameAction2D.SIMULATION_SLOWER,
-            GameAction2D.SIMULATION_NORMAL,
-            GameAction2D.SHOW_START_PAGE,
-            GameAction2D.TOGGLE_AUTOPILOT,
-            GameAction2D.TOGGLE_IMMUNITY,
-            GameAction2D.TOGGLE_DASHBOARD,
-            GameAction2D.TOGGLE_PAUSED,
-            GameAction2D.OPEN_EDITOR)
-        .ifPresentOrElse(
-            action -> action.execute(context),
-            () -> context.currentGameScene().ifPresent(GameScene::handleInput)
-        );
+        context.executeFirstCalledActionOrElse(GAME_ACTIONS.stream(),
+            () -> context.currentGameScene().ifPresent(GameScene::handleInput));
     }
 
     @Override
