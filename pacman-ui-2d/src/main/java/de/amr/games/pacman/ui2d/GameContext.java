@@ -23,6 +23,8 @@ import javafx.beans.property.ObjectProperty;
 
 import java.util.Optional;
 
+import static de.amr.games.pacman.lib.Globals.TS;
+
 /**
  * @author Armin Reichert
  */
@@ -61,10 +63,15 @@ public interface GameContext {
      */
     default Vector2i worldSizeTilesOrDefault() {
         boolean worldExists = game().world() != null;
-        return new Vector2i(
+        var size = new Vector2i(
             worldExists ? game().world().map().terrain().numCols() : GameModel.ARCADE_MAP_TILES_X,
             worldExists ? game().world().map().terrain().numRows() : GameModel.ARCADE_MAP_TILES_Y
         );
+        //TODO Hack
+        if (game().variant() == GameVariant.MS_PACMAN_TENGEN) {
+            return size.plus(0, 1);
+        }
+        return size;
     }
 
     // Game scenes

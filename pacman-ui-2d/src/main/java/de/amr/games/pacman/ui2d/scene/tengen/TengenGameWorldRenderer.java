@@ -180,13 +180,24 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
     }
 
     @Override
+    public void drawLivesCounter(GameSpriteSheet spriteSheet, int numLives, int maxLives, Vector2i worldSize) {
+        ctx().save();
+        ctx().translate(0, -HTS);
+        GameWorldRenderer.super.drawLivesCounter(spriteSheet, numLives, maxLives, worldSize);
+        ctx().restore();
+    }
+
+    @Override
     public void drawLevelCounter(GameSpriteSheet spriteSheet, int levelNumber, List<Byte> symbols, Vector2i worldSize) {
+        ctx().save();
+        ctx().translate(0, -HTS);
         GameWorldRenderer.super.drawLevelCounter(spriteSheet, levelNumber, symbols, worldSize);
         if (levelNumber > 0) {
             double x = TS * (worldSize.x() - 2), y = TS * (worldSize.y() - 2);
             drawLevelNumber((TengenSpriteSheet) spriteSheet, levelNumber, 0, y);
             drawLevelNumber((TengenSpriteSheet) spriteSheet, levelNumber, x, y);
         }
+        ctx().restore();
     }
 
     @Override
@@ -277,17 +288,6 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
         double spriteSize = 2 * TS;
         ctx().setFill(backgroundColorProperty().get());
         ctx().fillRect(scaled(cx - TS), scaled(cy - TS), scaled(spriteSize), scaled(spriteSize));
-    }
-
-    //TODO temporary hack until Tengen sprite sheet is usable
-
-    @Override
-    public void drawAnimatedEntity(AnimatedEntity character) {
-        if (character.entity() instanceof MovingBonus) {
-            rendererMsPacMan.drawAnimatedEntity(character);
-        } else {
-            GameWorldRenderer.super.drawAnimatedEntity(character);
-        }
     }
 
     private void drawLevelNumber(TengenSpriteSheet spriteSheet, int levelNumber, double x, double y) {
