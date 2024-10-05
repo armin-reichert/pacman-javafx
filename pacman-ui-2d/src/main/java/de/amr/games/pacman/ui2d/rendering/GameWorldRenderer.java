@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui2d.rendering;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.*;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
 import static java.util.function.Predicate.not;
 
 /**
@@ -266,6 +268,11 @@ public interface GameWorldRenderer {
             drawSpriteScaled(spriteSheet, spriteSheet.bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;
         }
+    }
+
+    default void drawScores(GameModel game) {
+        drawScore(game.score(),     "SCORE",      t(1),  t(1), scaledArcadeFont(TS), PALETTE_PALE);
+        drawScore(game.highScore(), "HIGH SCORE", t(14), t(1), scaledArcadeFont(TS), PALETTE_PALE);
     }
 
     default void drawScore(Score score, String title, double x, double y, Font font, Color color) {

@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Entity;
@@ -44,8 +45,8 @@ import static de.amr.games.pacman.model.GameWorld.PROPERTY_COLOR_WALL_FILL;
  */
 public class TengenGameWorldRenderer implements GameWorldRenderer {
 
-    static final Color PINKISH = Color.web("#ff60b0");
-    static final Color REDISH = Color.web("d84060");
+    static final Color PINKISH   = Color.web("#ff60b0");
+    static final Color REDISH    = Color.web("d84060");
     static final Color YELLOWISH = Color.web("e8d020");
 
     private final AssetStorage assets;
@@ -154,6 +155,17 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
             ctx().restore();
             context.game().bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
         }
+    }
+
+    @Override
+    public void drawScores(GameModel game) {
+        Color color = Color.WHITE;
+        Font font = scaledArcadeFont(7.5);
+        var pointsText = String.format("%02d", game.score().points());
+        var highScorePointsText = String.format("%d", game.highScore().points());
+        drawText("HIGH SCORE", color, font, t(9), t(1));
+        drawText(pointsText, color, font, t(3), t(2));
+        drawText(highScorePointsText, color, font, t(12), t(2));
     }
 
     @Override
