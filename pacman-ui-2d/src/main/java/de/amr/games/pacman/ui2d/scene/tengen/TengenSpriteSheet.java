@@ -64,7 +64,10 @@ public class TengenSpriteSheet implements GameSpriteSheet {
     };
 
     static final RectArea[] GHOST_FLASHING_SPRITES = {
-        rect(138, 135, 14, 13),  rect(154, 135, 14, 13), // white/red eyes+mouth
+        //TODO when are the white-red sprites used?
+        //rect(138, 120, 14, 13), rect(154, 120, 14, 13), // blue
+        //rect(138, 135, 14, 13),  rect(154, 135, 14, 13), // white/red eyes+mouth
+        rect(138, 120, 14, 13), rect(154, 120, 14, 13), // blue
         rect(138, 150, 14, 13),  rect(154, 150, 14, 13), // white/blue eyes+mouth
     };
 
