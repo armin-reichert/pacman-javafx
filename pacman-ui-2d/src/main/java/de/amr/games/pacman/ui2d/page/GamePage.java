@@ -127,9 +127,12 @@ public class GamePage extends StackPane implements Page {
     @Override
     public void onPageSelected() {
         adaptCanvasSizeToCurrentWorld();
-        //TODO check if this is always what is wanted
+        //TODO check if booting is always wanted here
         GameAction2D.BOOT.execute(context);
-        context.sounds().playVoice("voice.explain", 0);
+        if (context.gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
+            // Tengen has a settings scene where the game is started instead of a credits scene
+            context.sounds().playVoice("voice.explain", 0);
+        }
     }
 
     @Override

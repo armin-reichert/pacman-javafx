@@ -32,23 +32,34 @@ import java.util.stream.Stream;
 public interface GameContext {
 
     // Game model and controller
-
-    ObjectProperty<GameVariant> gameVariantProperty();
-    void selectGameVariant(GameVariant variant);
     default GameController gameController() {
         return GameController.it();
     }
     default GameState gameState() {
         return GameController.it().state();
     }
+    ObjectProperty<GameVariant> gameVariantProperty();
+    void selectGameVariant(GameVariant variant);
+    default GameVariant gameVariant() { return GameController.it().currentGame().variant(); }
     default GameModel game() {
         return GameController.it().currentGame();
     }
     void setScoreVisible(boolean visible);
     boolean isScoreVisible();
+    /**
+     * @return size (tiles) of current world or size of Arcade world if no current world exists
+     */
+    default Vector2i worldSizeTilesOrDefault() {
+        boolean worldExists = game().world() != null;
+        var size = new Vector2i(
+            worldExists ? game().world().map().terrain().numCols() : GameModel.ARCADE_MAP_TILES_X,
+            worldExists ? game().world().map().terrain().numRows() : GameModel.ARCADE_MAP_TILES_Y
+        );
+        // add some vertical space for Tengen worlds to be able to display higher lives/level counters
+        return gameVariant() == GameVariant.MS_PACMAN_TENGEN ? size.plus(0, 1) : size;
+    }
 
     // UI
-
     Keyboard keyboard();
     void selectPage(Page page);
     void selectStartPage();
@@ -62,31 +73,11 @@ public interface GameContext {
     // Actions
     boolean isActionCalled(GameAction action);
     void execFirstCalledAction(Stream<GameAction> actions);
-    default void execFirstCalledAction(Collection<GameAction> actions) {
-        execFirstCalledAction(actions.stream());
-    }
-    default void execFirstCalledAction(GameAction... actions) {
-        execFirstCalledAction(Stream.of(actions));
-    }
+    default void execFirstCalledAction(Collection<GameAction> actions) { execFirstCalledAction(actions.stream()); }
+    default void execFirstCalledAction(GameAction... actions) { execFirstCalledAction(Stream.of(actions)); }
     void execFirstCalledActionOrElse(Stream<GameAction> actions, Runnable defaultAction);
     default void execFirstCalledActionOrElse(Collection<GameAction> actions, Runnable defaultAction) {
         execFirstCalledActionOrElse(actions.stream(), defaultAction);
-    }
-
-    /**
-     * @return size (in tiles) of current world or size of Arcade world if no world currently exists
-     */
-    default Vector2i worldSizeTilesOrDefault() {
-        boolean worldExists = game().world() != null;
-        var size = new Vector2i(
-            worldExists ? game().world().map().terrain().numCols() : GameModel.ARCADE_MAP_TILES_X,
-            worldExists ? game().world().map().terrain().numRows() : GameModel.ARCADE_MAP_TILES_Y
-        );
-        //TODO Hack
-        if (game().variant() == GameVariant.MS_PACMAN_TENGEN) {
-            return size.plus(0, 1);
-        }
-        return size;
     }
 
     // Game scenes

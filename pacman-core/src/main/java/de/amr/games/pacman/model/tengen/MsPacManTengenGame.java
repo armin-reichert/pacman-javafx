@@ -41,6 +41,7 @@ public class MsPacManTengenGame extends GameModel {
 
     public enum MapCategory { ARCADE, STRANGE, MINI, BIG }
     public enum Difficulty { EASY, NORMAL, HARD, CRAZY }
+    public enum PacBooster { OFF, USING_KEY, ALWAYS_ON }
 
     //TODO check how many maps are really used in Tengen game
     private static final int ARCADE_MAP_COUNT = 9;
@@ -110,6 +111,8 @@ public class MsPacManTengenGame extends GameModel {
     private List<WorldMap> maps = new ArrayList<>();
     private MapCategory mapCategory;
     private Difficulty difficulty;
+    private PacBooster pacBooster;
+    private byte startingLevel; // 1-7
     private int mapNumber;
 
     public MsPacManTengenGame(GameVariant gameVariant, File userDir) {
@@ -121,7 +124,17 @@ public class MsPacManTengenGame extends GameModel {
         miniMaps    = readMaps(MapCategory.MINI,    MINI_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
         bigMaps     = readMaps(MapCategory.BIG,     BIG_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
         setMapCategory(MapCategory.ARCADE);
+        setPacBooster(PacBooster.OFF);
         setDifficulty(Difficulty.NORMAL);
+        setStartingLevel(1);
+    }
+
+    public void setPacBooster(PacBooster pacBooster) {
+        this.pacBooster = pacBooster;
+    }
+
+    public PacBooster pacBooster() {
+        return pacBooster;
     }
 
     public MapCategory mapCategory() {
@@ -144,6 +157,18 @@ public class MsPacManTengenGame extends GameModel {
 
     public void setDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public byte startingLevel() {
+        return startingLevel;
+    }
+
+    public void setStartingLevel(int startingLevel) {
+        if (1 <= startingLevel && startingLevel <= 7) {
+            this.startingLevel = (byte) startingLevel;
+        } else {
+            Logger.error("Starting level must be in interval 1-7");
+        }
     }
 
     public int mapNumberByLevelNumber(int levelNumber) {
