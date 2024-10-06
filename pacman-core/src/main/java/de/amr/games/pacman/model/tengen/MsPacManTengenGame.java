@@ -44,7 +44,7 @@ public class MsPacManTengenGame extends GameModel {
     public enum PacBooster { OFF, USING_KEY, ALWAYS_ON }
 
     // TODO what is the exact speed increase?
-    private static final float BOOSTER_FACTOR = 1.75f;
+    private static final float BOOSTER_FACTOR = 1.5f;
 
     //TODO check how many maps are really used in Tengen game
     private static final int ARCADE_MAP_COUNT = 9;
