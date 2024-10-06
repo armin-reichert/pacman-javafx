@@ -141,7 +141,7 @@ public class GameAssets2D extends AssetStorage {
 
         assets.store("tengen.color.game_over_message",  Color.web("#b5217b"));
         assets.store("tengen.color.ready_message",      Color.YELLOW);
-        assets.store("tengen.color.clapperboard",    Color.WHITE);
+        assets.store("tengen.color.clapperboard",       Color.WHITE);
 
         assets.store("tengen.ghost.0.color.normal.dress",     Color.rgb(176, 15, 48));
         assets.store("tengen.ghost.0.color.normal.eyeballs",  Color.WHITE);
@@ -225,7 +225,7 @@ public class GameAssets2D extends AssetStorage {
         assets.store("pacman_xxl.spritesheet",          new PacManGameSpriteSheet(rm.loadImage("graphics/pacman/pacman_spritesheet.png")));
 
         assets.store("pacman_xxl.color.game_over_message", Color.RED);
-        assets.store("pacman_xxlcolor.ready_message",   Color.YELLOW);
+        assets.store("pacman_xxl.color.ready_message",  Color.YELLOW);
 
         // Clips
         assets.store("pacman_xxl.audio.bonus_eaten",    rm.loadAudioClip("sound/pacman/eat_fruit.mp3"));
