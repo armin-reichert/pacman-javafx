@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
 import de.amr.games.pacman.ui2d.GameAction2D;
+import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import javafx.scene.canvas.Canvas;
@@ -16,7 +17,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.scene.tengen.TengenGameWorldRenderer.YELLOWISH;
 
 /**
  * @author Armin Reichert
@@ -28,7 +28,7 @@ public class TengenSettingsScene extends GameScene2D {
     static final int COL_COLON = 17 * TS;
     static final int COL_VALUE = 19 * TS;
 
-    static final Color LABEL_COLOR = YELLOWISH;
+    static final Color LABEL_COLOR = GameAssets2D.TENGEN_YELLOW;
     static final Color VALUE_COLOR = Color.WHITE;
     static final Color BABY_BLUE = Color.rgb(59, 190, 255);
 

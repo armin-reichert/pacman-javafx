@@ -28,6 +28,10 @@ public class GameAssets2D extends AssetStorage {
     public static final Color PALETTE_PALE   = Color.rgb(222, 222, 255);
     public static final Color PALETTE_ROSE   = Color.rgb(252, 187, 179);
 
+    public static final Color TENGEN_PINK   = Color.web("#ff60b0");
+    public static final Color TENGEN_RED    = Color.web("d84060");
+    public static final Color TENGEN_YELLOW = Color.web("e8d020");
+
     public static String assetPrefix(GameVariant variant) {
         return switch (variant) {
             case MS_PACMAN        -> "ms_pacman";
@@ -139,9 +143,9 @@ public class GameAssets2D extends AssetStorage {
         assets.store("tengen.icon",                     rm.loadImage("graphics/icons/mspacman.png"));
         assets.store("tengen.logo.midway",              rm.loadImage("graphics/mspacman/midway_logo.png"));
 
-        assets.store("tengen.color.game_over_message",  Color.web("#b5217b"));
-        assets.store("tengen.color.ready_message",      Color.YELLOW);
-        assets.store("tengen.color.clapperboard",       Color.WHITE);
+        assets.store("tengen.color.game_over_message",       Color.web("#b5217b"));
+        assets.store("tengen.color.ready_message",           Color.YELLOW);
+        assets.store("tengen.color.clapperboard",            Color.WHITE);
 
         assets.store("tengen.ghost.0.color.normal.dress",     Color.rgb(176, 15, 48));
         assets.store("tengen.ghost.0.color.normal.eyeballs",  Color.WHITE);
