@@ -43,6 +43,7 @@ public abstract class GameScene2D implements GameScene {
         return value * scaling();
     }
 
+    @Override
     public void draw(GameWorldRenderer renderer) {
         renderer.scalingProperty().set(scalingPy.get());
         renderer.backgroundColorProperty().set(backgroundColorPy.get());

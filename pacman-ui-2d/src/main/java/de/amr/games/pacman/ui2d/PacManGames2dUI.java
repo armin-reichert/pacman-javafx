@@ -236,13 +236,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected void onEveryTick() {
         try {
             if (currentPage == gamePage) {
-                currentGameScene()
-                    .filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast)
-                    .ifPresent(scene2D -> scene2D.draw(worldRenderer));
+                // 2D scenes only:
+                currentGameScene().ifPresent(gameScene -> gameScene.draw(worldRenderer));
                 gamePage.updateDashboard();
                 flashMessageLayer.update();
             } else {
-                Logger.warn("Should not happen: handle tick when not on game page");
+                Logger.warn("Should not happen: Cannot handle tick when not on game page");
             }
         } catch (Exception x) {
             clock.stop();
