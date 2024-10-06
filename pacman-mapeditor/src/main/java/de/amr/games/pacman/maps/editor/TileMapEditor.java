@@ -316,8 +316,129 @@ public class TileMapEditor  {
         foodMapRenderer.setPelletColor(TileMapUtil.parseColor(DEFAULT_FOOD_COLOR));
         foodMapRenderer.setEnergizerColor(TileMapUtil.parseColor(DEFAULT_FOOD_COLOR));
 
-        createLayout();
-        createMenus();
+        fileChooser = new FileChooser();
+        var worldExtensionFilter = new FileChooser.ExtensionFilter("World Map Files", "*.world");
+        var anyExtensionFilter = new FileChooser.ExtensionFilter("All Files", "*.*");
+        fileChooser.getExtensionFilters().addAll(worldExtensionFilter, anyExtensionFilter);
+        fileChooser.setSelectedExtensionFilter(worldExtensionFilter);
+        fileChooser.setInitialDirectory(lastUsedDir);
+
+        editCanvas = new Canvas();
+        editCanvas.setOnMouseClicked(this::onMouseClickedOnEditCanvas);
+        editCanvas.setOnMouseMoved(this::onMouseMovedOverEditCanvas);
+        ScrollPane editCanvasScroll = new ScrollPane(editCanvas);
+        editCanvasScroll.setFitToHeight(true);
+
+        previewCanvas = new Canvas();
+        ScrollPane previewCanvasScroll = new ScrollPane(previewCanvas);
+        previewCanvasScroll.setFitToHeight(true);
+        previewCanvasScroll.hvalueProperty().bindBidirectional(editCanvasScroll.hvalueProperty());
+        previewCanvasScroll.vvalueProperty().bindBidirectional(editCanvasScroll.vvalueProperty());
+        previewCanvasScroll.visibleProperty().bind(previewVisiblePy);
+
+        mapSourceView = new Text();
+        mapSourceView.setSmooth(true);
+        mapSourceView.setFontSmoothingType(FontSmoothingType.LCD);
+        mapSourceView.setFont(Font.font("Monospace", 14));
+
+        var vbox = new VBox(mapSourceView);
+        vbox.setPadding(new Insets(10,20,10,20));
+
+        var mapSourceViewScroll = new ScrollPane(vbox);
+        mapSourceViewScroll.setFitToHeight(true);
+
+        palettes.put(PALETTE_ACTORS, createActorPalette());
+        palettes.put(PALETTE_TERRAIN, createTerrainPalette());
+        palettes.put(PALETTE_FOOD, createFoodPalette());
+
+        var terrainPaletteTab = new Tab(tt("terrain"), palettes.get(PALETTE_TERRAIN).root());
+        terrainPaletteTab.setClosable(false);
+        terrainPaletteTab.setUserData(PALETTE_TERRAIN);
+
+        var actorPaletteTab = new Tab(tt("actors"), palettes.get(PALETTE_ACTORS).root());
+        actorPaletteTab.setClosable(false);
+        actorPaletteTab.setUserData(PALETTE_ACTORS);
+
+        var foodPaletteTab = new Tab(tt("pellets"), palettes.get(PALETTE_FOOD).root());
+        foodPaletteTab.setClosable(false);
+        foodPaletteTab.setUserData(PALETTE_FOOD);
+
+        palettesTabPane = new TabPane(actorPaletteTab, terrainPaletteTab, foodPaletteTab);
+        palettesTabPane.setPadding(new Insets(5,5,5,5));
+
+        terrainMapPropertiesEditor = new PropertyEditorPane(this);
+        terrainMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
+        terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
+
+        foodMapPropertiesEditor = new PropertyEditorPane(this);
+        foodMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
+        foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
+
+        var terrainPropertiesArea = new TitledPane();
+        terrainPropertiesArea.setExpanded(true);
+        terrainPropertiesArea.setText(tt("terrain"));
+        terrainPropertiesArea.setContent(terrainMapPropertiesEditor);
+
+        var foodPropertiesArea = new TitledPane();
+        foodPropertiesArea.setExpanded(true);
+        foodPropertiesArea.setText(tt("pellets"));
+        foodPropertiesArea.setContent(foodMapPropertiesEditor);
+
+        var propertyEditorsPane = new VBox();
+        propertyEditorsPane.getChildren().addAll(terrainPropertiesArea, foodPropertiesArea);
+
+        focussedTileInfo = new Label();
+        focussedTileInfo.setMinWidth(100);
+        focussedTileInfo.setMaxWidth(100);
+
+        messageLabel = new Label();
+        messageLabel.setMinWidth(200);
+        messageLabel.setPadding(new Insets(0, 0, 0, 10));
+
+        var filler = new Region();
+        HBox.setHgrow(filler, Priority.ALWAYS);
+
+        Slider sliderZoom = new Slider(8, 48, 16);
+        sliderZoom.valueProperty().bindBidirectional(gridSizePy);
+        sliderZoom.setShowTickLabels(false);
+        sliderZoom.setShowTickMarks(true);
+        sliderZoom.setPrefWidth(200);
+
+        var sliderZoomContainer = new HBox(new Label("Zoom"), sliderZoom);
+        sliderZoomContainer.setSpacing(5);
+
+        var footer = new HBox(focussedTileInfo, messageLabel, filler, sliderZoomContainer);
+        footer.setPadding(new Insets(0, 50, 0, 10));
+
+        var splitPane = new SplitPane(editCanvasScroll, previewCanvasScroll);
+        splitPane.setDividerPositions(0.5);
+
+        var tabSourceView = new Tab(tt("source"), mapSourceViewScroll);
+        tabSourceView.setClosable(false);
+
+        var tabPreview = new Tab(tt("preview"), splitPane);
+        tabPreview.setClosable(false);
+
+        var tabPaneViews = new TabPane(tabPreview, tabSourceView);
+        tabPaneViews.setSide(Side.BOTTOM);
+
+        var vbox2 = new VBox(tabPaneViews);
+        vbox2.setPadding(new Insets(0,5,0,5));
+
+        var hbox = new HBox(propertyEditorsPane, vbox2);
+        hbox.setPadding(new Insets(0,0,10,0));
+        HBox.setHgrow(vbox2, Priority.ALWAYS);
+
+        contentPane.setTop(palettesTabPane);
+        contentPane.setCenter(hbox);
+        contentPane.setBottom(footer);
+
+
+        createFileMenu();
+        createEditMenu();
+        createLoadMapMenu();
+        createViewMenu();
+        menuBar = new MenuBar(menuFile, menuEdit, menuLoadMap, menuView);
 
         // Note: this must be done *after* the initial map has been created/loaded!
         editCanvas.heightProperty().bind(Bindings.createDoubleBinding(
@@ -480,133 +601,6 @@ public class TileMapEditor  {
 
     private Palette selectedPalette() {
         return palettes.get(selectedPaletteID());
-    }
-
-    private void createLayout() {
-        fileChooser = new FileChooser();
-        var worldExtensionFilter = new FileChooser.ExtensionFilter("World Map Files", "*.world");
-        var anyExtensionFilter = new FileChooser.ExtensionFilter("All Files", "*.*");
-        fileChooser.getExtensionFilters().addAll(worldExtensionFilter, anyExtensionFilter);
-        fileChooser.setSelectedExtensionFilter(worldExtensionFilter);
-        fileChooser.setInitialDirectory(lastUsedDir);
-
-        editCanvas = new Canvas();
-        editCanvas.setOnMouseClicked(this::onMouseClickedOnEditCanvas);
-        editCanvas.setOnMouseMoved(this::onMouseMovedOverEditCanvas);
-        ScrollPane editCanvasScroll = new ScrollPane(editCanvas);
-        editCanvasScroll.setFitToHeight(true);
-
-        previewCanvas = new Canvas();
-        ScrollPane previewCanvasScroll = new ScrollPane(previewCanvas);
-        previewCanvasScroll.setFitToHeight(true);
-        previewCanvasScroll.hvalueProperty().bindBidirectional(editCanvasScroll.hvalueProperty());
-        previewCanvasScroll.vvalueProperty().bindBidirectional(editCanvasScroll.vvalueProperty());
-        previewCanvasScroll.visibleProperty().bind(previewVisiblePy);
-
-        mapSourceView = new Text();
-        mapSourceView.setSmooth(true);
-        mapSourceView.setFontSmoothingType(FontSmoothingType.LCD);
-        mapSourceView.setFont(Font.font("Monospace", 14));
-
-        var vbox = new VBox(mapSourceView);
-        vbox.setPadding(new Insets(10,20,10,20));
-
-        var mapSourceViewScroll = new ScrollPane(vbox);
-        mapSourceViewScroll.setFitToHeight(true);
-
-        palettes.put(PALETTE_ACTORS, createActorPalette());
-        palettes.put(PALETTE_TERRAIN, createTerrainPalette());
-        palettes.put(PALETTE_FOOD, createFoodPalette());
-
-        var terrainPaletteTab = new Tab(tt("terrain"), palettes.get(PALETTE_TERRAIN).root());
-        terrainPaletteTab.setClosable(false);
-        terrainPaletteTab.setUserData(PALETTE_TERRAIN);
-
-        var actorPaletteTab = new Tab(tt("actors"), palettes.get(PALETTE_ACTORS).root());
-        actorPaletteTab.setClosable(false);
-        actorPaletteTab.setUserData(PALETTE_ACTORS);
-
-        var foodPaletteTab = new Tab(tt("pellets"), palettes.get(PALETTE_FOOD).root());
-        foodPaletteTab.setClosable(false);
-        foodPaletteTab.setUserData(PALETTE_FOOD);
-
-        palettesTabPane = new TabPane(actorPaletteTab, terrainPaletteTab, foodPaletteTab);
-        palettesTabPane.setPadding(new Insets(5,5,5,5));
-
-        terrainMapPropertiesEditor = new PropertyEditorPane(this);
-        terrainMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
-        terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
-
-        foodMapPropertiesEditor = new PropertyEditorPane(this);
-        foodMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
-        foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
-
-        var terrainPropertiesArea = new TitledPane();
-        terrainPropertiesArea.setExpanded(true);
-        terrainPropertiesArea.setText(tt("terrain"));
-        terrainPropertiesArea.setContent(terrainMapPropertiesEditor);
-
-        var foodPropertiesArea = new TitledPane();
-        foodPropertiesArea.setExpanded(true);
-        foodPropertiesArea.setText(tt("pellets"));
-        foodPropertiesArea.setContent(foodMapPropertiesEditor);
-
-        var propertyEditorsPane = new VBox();
-        propertyEditorsPane.getChildren().addAll(terrainPropertiesArea, foodPropertiesArea);
-
-        focussedTileInfo = new Label();
-        focussedTileInfo.setMinWidth(100);
-        focussedTileInfo.setMaxWidth(100);
-
-        messageLabel = new Label();
-        messageLabel.setMinWidth(200);
-        messageLabel.setPadding(new Insets(0, 0, 0, 10));
-
-        var filler = new Region();
-        HBox.setHgrow(filler, Priority.ALWAYS);
-
-        Slider sliderZoom = new Slider(8, 48, 16);
-        sliderZoom.valueProperty().bindBidirectional(gridSizePy);
-        sliderZoom.setShowTickLabels(false);
-        sliderZoom.setShowTickMarks(true);
-        sliderZoom.setPrefWidth(200);
-
-        var sliderZoomContainer = new HBox(new Label("Zoom"), sliderZoom);
-        sliderZoomContainer.setSpacing(5);
-
-        var footer = new HBox(focussedTileInfo, messageLabel, filler, sliderZoomContainer);
-        footer.setPadding(new Insets(0, 50, 0, 10));
-
-        var splitPane = new SplitPane(editCanvasScroll, previewCanvasScroll);
-        splitPane.setDividerPositions(0.5);
-
-        var tabSourceView = new Tab(tt("source"), mapSourceViewScroll);
-        tabSourceView.setClosable(false);
-
-        var tabPreview = new Tab(tt("preview"), splitPane);
-        tabPreview.setClosable(false);
-
-        var tabPaneViews = new TabPane(tabPreview, tabSourceView);
-        tabPaneViews.setSide(Side.BOTTOM);
-
-        var vbox2 = new VBox(tabPaneViews);
-        vbox2.setPadding(new Insets(0,5,0,5));
-
-        var hbox = new HBox(propertyEditorsPane, vbox2);
-        hbox.setPadding(new Insets(0,0,10,0));
-        HBox.setHgrow(vbox2, Priority.ALWAYS);
-
-        contentPane.setTop(palettesTabPane);
-        contentPane.setCenter(hbox);
-        contentPane.setBottom(footer);
-    }
-
-    private void createMenus() {
-        createFileMenu();
-        createEditMenu();
-        createLoadMapMenu();
-        createViewMenu();
-        menuBar = new MenuBar(menuFile, menuEdit, menuLoadMap, menuView);
     }
 
     private void createFileMenu() {
