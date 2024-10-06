@@ -128,12 +128,12 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
                 Logger.error("No map sprite selected");
                 return;
             }
-            // map sprite is selected when game level starts, so it should always be set here
-            ctx().drawImage(mapSprite.source(),
-                mapSprite.area().x() + 0.5, mapSprite.area().y() + 0.5,
-                mapSprite.area().width() - 1, mapSprite.area().height() - 1,
-                0, scaled(3 * TS), scaled(mapSprite.area().width()), scaled(mapSprite.area().height()));
-            drawSpriteCenteredOverBox(spriteSheet, TengenSpriteSheet.FRAME_SPRITE, terrain.numCols() * HTS, 2 * TS);
+            // Header
+            var pacBooster = tengenGame.pacBooster();
+            if (pacBooster == MsPacManTengenGame.PacBooster.ALWAYS_ON || pacBooster == MsPacManTengenGame.PacBooster.USING_KEY) {
+                //TODO is this symbol always displayed when USING_KEY is selected or only if the key is pressed?
+                drawSpriteCenteredOverBox(spriteSheet, TengenSpriteSheet.BOOSTER_SPRITE, 9 * TS, 2 * TS + 0.5);
+            }
             var category = MapCategory.valueOf(terrain.getProperty("map_category"));
             var categorySprite = switch (category) {
                 case BIG     -> TengenSpriteSheet.BIG_SPRITE;
@@ -149,6 +149,13 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
             };
             drawSpriteCenteredOverBox(spriteSheet, difficultySprite, terrain.numCols() * HTS, 2 * TS);
             drawSpriteCenteredOverBox(spriteSheet, categorySprite, terrain.numCols() * HTS + t(4), 2 * TS);
+            drawSpriteCenteredOverBox(spriteSheet, TengenSpriteSheet.FRAME_SPRITE, terrain.numCols() * HTS, 2 * TS);
+
+            // map sprite is selected when game level starts, so it should always be set here
+            ctx().drawImage(mapSprite.source(),
+                    mapSprite.area().x() + 0.5, mapSprite.area().y() + 0.5,
+                    mapSprite.area().width() - 1, mapSprite.area().height() - 1,
+                    0, scaled(3 * TS), scaled(mapSprite.area().width()), scaled(mapSprite.area().height()));
             hideActorSprite(terrain.getTileProperty("pos_pac", v2i(14, 26)), 0, 0);
             hideActorSprite(terrain.getTileProperty("pos_ghost_1_red", v2i(13, 14)), 0, 0);
             // The ghosts in the house are sitting some pixels below their home position
