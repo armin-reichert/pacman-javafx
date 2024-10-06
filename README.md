@@ -107,11 +107,14 @@ Cheats:
 - <kbd>Alt+X</kbd> Kill all ghosts outside of the ghost house
 
 ## How it looks (Click to play video)
+
 <div float="left">
     <a href="https://magentacloud.de/s/wiBT4sHy52dApYG">
         <img src="doc/pacman-maze.png" style="width:500px">
     </a>
 </div>
+
+There are some new videos about the different game variants available on [YouTube](https://www.youtube.com/channel/UCARNko9I75M8XQsmepFi4CA) (despite I hate that platform for their censorship practices).
 
 ### 2D Play Scenes
 
