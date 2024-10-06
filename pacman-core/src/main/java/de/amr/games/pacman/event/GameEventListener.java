@@ -24,6 +24,7 @@ public interface GameEventListener {
             case BONUS_EATEN -> onBonusEaten(event);
             case BONUS_EXPIRED -> onBonusExpired(event);
             case CREDIT_ADDED -> onCreditAdded(event);
+            case CUSTOM_MAPS_CHANGED -> onCustomMapsChanged(event);
             case EXTRA_LIFE_WON -> onExtraLifeWon(event);
             case GAME_STATE_CHANGED -> {
                 var changeEvent = (GameStateChangeEvent) event;
@@ -49,72 +50,28 @@ public interface GameEventListener {
         }
     }
 
-    default void onCreditAdded(GameEvent e) {
-    }
-
-    default void onExtraLifeWon(GameEvent e) {
-    }
-
-    default void onBonusActivated(GameEvent e) {
-    }
-
-    default void onBonusEaten(GameEvent e) {
-    }
-
-    default void onBonusExpired(GameEvent e) {
-    }
-
-    default void onGameStateExit(GameState state) {
-    }
-
-    default void onGameStateEntry(GameState state) {
-    }
-
-    default void onGameVariantChanged(GameEvent e) {
-    }
-
-    default void onGhostEaten(GameEvent e) {
-    }
-
-    default void onGhostEntersHouse(GameEvent e) {
-    }
-
-    default void onGhostStartsReturningHome(GameEvent e) {
-    }
-
-    default void onHuntingPhaseStarted(GameEvent e) {
-    }
-
-    default void onIntermissionStarted(GameEvent e) {
-    }
-
-    default void onLevelCreated(GameEvent e) {
-    }
-
-    default void onLevelStarted(GameEvent e) {
-    }
-
-    default void onPacDied(GameEvent e) {
-    }
-
-    default void onPacFoundFood(GameEvent e) {
-    }
-
-    default void onPacGetsExtraLife(GameEvent e) {
-    }
-
-    default void onPacGetsPower(GameEvent e) {
-    }
-
-    default void onPacLostPower(GameEvent e) {
-    }
-
-    default void onPacStartsLosingPower(GameEvent e) {
-    }
-
-    default void onStopAllSounds(GameEvent e) {
-    }
-
-    default void onUnspecifiedChange(GameEvent e) {
-    }
+    default void onCreditAdded(GameEvent e) {}
+    default void onCustomMapsChanged(GameEvent e) {}
+    default void onExtraLifeWon(GameEvent e) {}
+    default void onBonusActivated(GameEvent e) {}
+    default void onBonusEaten(GameEvent e) {}
+    default void onBonusExpired(GameEvent e) {}
+    default void onGameStateExit(GameState state) {}
+    default void onGameStateEntry(GameState state) {}
+    default void onGameVariantChanged(GameEvent e) {}
+    default void onGhostEaten(GameEvent e) {}
+    default void onGhostEntersHouse(GameEvent e) {}
+    default void onGhostStartsReturningHome(GameEvent e) {}
+    default void onHuntingPhaseStarted(GameEvent e) {}
+    default void onIntermissionStarted(GameEvent e) {}
+    default void onLevelCreated(GameEvent e) {}
+    default void onLevelStarted(GameEvent e) {}
+    default void onPacDied(GameEvent e) {}
+    default void onPacFoundFood(GameEvent e) {}
+    default void onPacGetsExtraLife(GameEvent e) {}
+    default void onPacGetsPower(GameEvent e) {}
+    default void onPacLostPower(GameEvent e) {}
+    default void onPacStartsLosingPower(GameEvent e) {}
+    default void onStopAllSounds(GameEvent e) {}
+    default void onUnspecifiedChange(GameEvent e) {}
 }

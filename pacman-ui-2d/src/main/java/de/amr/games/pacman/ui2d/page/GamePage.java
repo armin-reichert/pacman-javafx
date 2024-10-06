@@ -129,7 +129,6 @@ public class GamePage extends StackPane implements Page {
         adaptCanvasSizeToCurrentWorld();
         //TODO check if this is always what is wanted
         GameAction2D.BOOT.execute(context);
-        context.updateCustomMaps();
         context.sounds().playVoice("voice.explain", 0);
     }
 

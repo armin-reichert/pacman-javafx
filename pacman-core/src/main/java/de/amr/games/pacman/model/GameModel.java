@@ -143,6 +143,8 @@ public abstract class GameModel {
         return new File(userDir, "maps");
     }
 
+    public void updateCustomMaps() {}
+
     /**
      * @return number of predefined maps
      */

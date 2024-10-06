@@ -48,7 +48,7 @@ public class PacManXXLGame extends PacManArcadeGame {
             URL url = getClass().getResource(MAP_PATTERN.formatted(num));
             standardMaps.add(new WorldMap(url));
         }
-        loadCustomMaps();
+        updateCustomMaps();
     }
 
     @Override
@@ -72,7 +72,6 @@ public class PacManXXLGame extends PacManArcadeGame {
         Logger.info("Map selection mode is {}", mapSelectionMode);
         Logger.info("Selected map URL is {}", map.url());
         setWorldAndCreatePopulation(createWorld(map));
-        pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
@@ -140,7 +139,8 @@ public class PacManXXLGame extends PacManArcadeGame {
         return customMapDir;
     }
 
-    public void loadCustomMaps() {
+    @Override
+    public void updateCustomMaps() {
         if (customMapDir.exists() && customMapDir.isDirectory()) {
             Logger.info("Custom map directory found: '{}'", customMapDir);
         } else {
@@ -166,6 +166,7 @@ public class PacManXXLGame extends PacManArcadeGame {
             customMapsByFile.put(mapFile, new WorldMap(mapFile));
             Logger.info("Custom map loaded from " + mapFile);
         }
+        publishGameEvent(GameEventType.CUSTOM_MAPS_CHANGED);
     }
 
     private GameWorld createWorld(WorldMap map) {

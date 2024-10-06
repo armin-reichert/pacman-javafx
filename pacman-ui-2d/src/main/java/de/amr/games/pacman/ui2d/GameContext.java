@@ -44,7 +44,6 @@ public interface GameContext {
     default GameModel game() {
         return GameController.it().currentGame();
     }
-    void updateCustomMaps();
     void setScoreVisible(boolean visible);
     boolean isScoreVisible();
 

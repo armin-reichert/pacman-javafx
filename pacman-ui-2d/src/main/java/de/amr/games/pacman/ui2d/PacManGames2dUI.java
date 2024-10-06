@@ -197,13 +197,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         // init game variant property
         gameVariantPy.set(game().variant());
 
-        // Not sure if this belongs here:
+        //TODO: Not sure if this belongs here:
         PacManXXLGame xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
         xxlGame.setMapSelectionMode(PY_MAP_SELECTION_MODE.get());
-        PY_MAP_SELECTION_MODE.addListener((py,ov,selectionMode) -> {
-            xxlGame.loadCustomMaps();
-            xxlGame.setMapSelectionMode(selectionMode);
-        });
+        PY_MAP_SELECTION_MODE.addListener((py,ov,selectionMode) -> xxlGame.setMapSelectionMode(selectionMode));
 
         registerActions();
 
@@ -296,9 +293,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         Image icon = assets.image(assetPrefix(variant) + ".icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
-        }
-        if (variant == GameVariant.PACMAN_XXL) {
-            updateCustomMaps();
         }
         sounds().init(variant);
     }
@@ -488,7 +482,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             editorPage.setCloseAction(editor -> {
                 editor.stop();
                 editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> stage.titleProperty().bind(stageTitleBinding()));
-                updateCustomMaps();
+                game().updateCustomMaps();
                 GameAction2D.BOOT.execute(this);
                 selectStartPage();
             });
@@ -546,6 +540,15 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             // dispatch event to current game scene if any
             currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
         }
+    }
+
+    @Override
+    public void onCustomMapsChanged(GameEvent e) {
+        gamePage.dashboardLayer().getInfoBoxes()
+            .filter(infoBox -> infoBox instanceof InfoBoxCustomMaps)
+            .findFirst()
+            .ifPresent(infoBox -> ((InfoBoxCustomMaps)infoBox).updateTableView());
+        Logger.info("Custom maps table updated");
     }
 
     @Override
@@ -617,18 +620,5 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public void showFlashMessageSeconds(double seconds, String message, Object... args) {
         flashMessageLayer.showMessage(String.format(message, args), seconds);
-    }
-
-    @Override
-    public void updateCustomMaps() {
-        PacManXXLGame xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
-        xxlGame.loadCustomMaps();
-        Logger.info("Custom maps: {}", xxlGame.customMapsSortedByFile());
-        // TODO: This is total crap! But the "custom map" collection lives inside the model which is JavaFX-unaware
-        // and there is no observable FX collection where the infobox could register a change listener.
-        gamePage.dashboardLayer().getInfoBoxes()
-            .filter(infoBox -> infoBox instanceof InfoBoxCustomMaps)
-            .findFirst()
-            .ifPresent(infoBox -> ((InfoBoxCustomMaps)infoBox).updateTableView());
     }
 }
