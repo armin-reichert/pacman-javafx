@@ -43,6 +43,9 @@ public class MsPacManTengenGame extends GameModel {
     public enum Difficulty { EASY, NORMAL, HARD, CRAZY }
     public enum PacBooster { OFF, USING_KEY, ALWAYS_ON }
 
+    // TODO what is the exact speed increase?
+    private static final float BOOSTER_FACTOR = 1.75f;
+
     //TODO check how many maps are really used in Tengen game
     private static final int ARCADE_MAP_COUNT = 9;
     private static final int NON_ARCADE_MAP_COUNT = 37;
@@ -226,6 +229,9 @@ public class MsPacManTengenGame extends GameModel {
         mapNumber = mapNumberByLevelNumber(levelNumber);
         var map = maps.get(mapNumber - 1);
         setWorldAndCreatePopulation(createWorld(map));
+        if (pacBooster == PacBooster.ALWAYS_ON) {
+            pac.setBaseSpeed(BOOSTER_FACTOR * PPS_AT_100_PERCENT * SEC_PER_TICK);
+        }
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
