@@ -375,6 +375,7 @@ public class TileMapEditor  {
         foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
         var terrainPropertiesArea = new TitledPane();
+        terrainPropertiesArea.setMinWidth(300);
         terrainPropertiesArea.setExpanded(true);
         terrainPropertiesArea.setText(tt("terrain"));
         terrainPropertiesArea.setContent(terrainMapPropertiesEditor);
@@ -432,7 +433,6 @@ public class TileMapEditor  {
         contentPane.setTop(palettesTabPane);
         contentPane.setCenter(hbox);
         contentPane.setBottom(footer);
-
 
         createFileMenu();
         createEditMenu();
