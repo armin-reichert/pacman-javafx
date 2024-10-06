@@ -375,12 +375,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void executeFirstCalledAction(Stream<GameAction> actions) {
+    public void execFirstCalledAction(Stream<GameAction> actions) {
         actions.filter(this::isActionCalled).findFirst().ifPresent(action -> action.execute(this));
     }
 
     @Override
-    public void executeFirstCalledActionOrElse(Stream<GameAction> actions, Runnable defaultAction) {
+    public void execFirstCalledActionOrElse(Stream<GameAction> actions, Runnable defaultAction) {
         actions.filter(this::isActionCalled).findFirst().ifPresentOrElse(action -> action.execute(this), defaultAction);
     }
 

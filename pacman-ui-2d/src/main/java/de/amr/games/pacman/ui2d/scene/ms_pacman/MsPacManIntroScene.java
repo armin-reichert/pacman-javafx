@@ -220,7 +220,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        context.executeFirstCalledAction(Stream.of(
+        context.execFirstCalledAction(Stream.of(
             GameAction2D.ADD_CREDIT,
             GameAction2D.START_GAME,
             GameAction2D.TEST_LEVELS,

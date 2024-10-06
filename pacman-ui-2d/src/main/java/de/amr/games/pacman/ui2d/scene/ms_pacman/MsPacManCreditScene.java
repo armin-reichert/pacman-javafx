@@ -40,7 +40,7 @@ public class MsPacManCreditScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        context.executeFirstCalledAction(Stream.of(GameAction2D.ADD_CREDIT, GameAction2D.START_GAME));
+        context.execFirstCalledAction(Stream.of(GameAction2D.ADD_CREDIT, GameAction2D.START_GAME));
     }
 
     @Override

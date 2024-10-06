@@ -153,7 +153,7 @@ public class TengenSettingsScene extends GameScene2D {
             selectedSetting = (selectedSetting < NUM_SELECTIONS - 1) ? selectedSetting + 1 : 0;
         }
         else {
-            context.executeFirstCalledAction(Stream.of(GameAction2D.TEST_LEVELS));
+            context.execFirstCalledAction(GameAction2D.TEST_LEVELS);
         }
     }
 }

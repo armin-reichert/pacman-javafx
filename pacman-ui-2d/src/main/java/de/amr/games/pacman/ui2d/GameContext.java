@@ -22,10 +22,9 @@ import de.amr.games.pacman.ui2d.util.GameClockFX;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.beans.property.ObjectProperty;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Stream;
-
-import static de.amr.games.pacman.lib.Globals.TS;
 
 /**
  * @author Armin Reichert
@@ -63,8 +62,17 @@ public interface GameContext {
 
     // Actions
     boolean isActionCalled(GameAction action);
-    void executeFirstCalledAction(Stream<GameAction> actions);
-    void executeFirstCalledActionOrElse(Stream<GameAction> actions, Runnable defaultAction);
+    void execFirstCalledAction(Stream<GameAction> actions);
+    default void execFirstCalledAction(Collection<GameAction> actions) {
+        execFirstCalledAction(actions.stream());
+    }
+    default void execFirstCalledAction(GameAction... actions) {
+        execFirstCalledAction(Stream.of(actions));
+    }
+    void execFirstCalledActionOrElse(Stream<GameAction> actions, Runnable defaultAction);
+    default void execFirstCalledActionOrElse(Collection<GameAction> actions, Runnable defaultAction) {
+        execFirstCalledActionOrElse(actions.stream(), defaultAction);
+    }
 
     /**
      * @return size (in tiles) of current world or size of Arcade world if no world currently exists

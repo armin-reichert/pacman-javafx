@@ -106,7 +106,7 @@ public class PlayScene2D extends GameScene2D {
             GameAction2D.ADD_CREDIT.execute(context);
             return;
         }
-        context.executeFirstCalledAction(GAME_ACTIONS.stream());
+        context.execFirstCalledAction(GAME_ACTIONS);
     }
 
     @Override

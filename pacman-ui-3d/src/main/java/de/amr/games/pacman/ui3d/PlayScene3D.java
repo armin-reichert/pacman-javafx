@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -24,6 +25,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -198,11 +200,18 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void handleInput() {
+        //TODO hack
+        if (context.game().variant() == GameVariant.MS_PACMAN_TENGEN && context.keyboard().pressed(KeyCode.ESCAPE)) {
+            end();
+            context.game().setPlaying(false);
+            context.gameController().changeState(GameState.CREDIT); // shows Tengen settings scene
+            return;
+        }
         if (context.isActionCalled(GameAction2D.ADD_CREDIT) && context.game().isDemoLevel()) {
             GameAction2D.ADD_CREDIT.execute(context);
             return;
         }
-        context.executeFirstCalledAction(GAME_ACTIONS.stream());
+        context.execFirstCalledAction(GAME_ACTIONS.stream());
     }
 
     @Override
