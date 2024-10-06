@@ -51,6 +51,19 @@ public class MsPacManTengenGame extends GameModel {
     private static final int NON_ARCADE_MAP_COUNT = 37;
     private static final int MAP_COUNT = ARCADE_MAP_COUNT + NON_ARCADE_MAP_COUNT;
 
+    private static final byte[] STRANGE_MAP_NUMBERS = {
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+        17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 3, 32 // TODO check in video
+    };
+
+    private static final byte[] MINI_MAP_NUMBERS = {
+        16, 28, 30, 34, 35, 36, 37 // TODO check in video
+    };
+
+    private static final byte[] BIG_MAP_NUMBERS = {
+        10, 14, 17, 19, 20, 21, 22, 23, 25, 26, 33 // TODO check in video
+    };
+
     private static final String MAPS_ROOT = "/de/amr/games/pacman/maps/tengen/";
     private static final String ARCADE_MAP_PATTERN  = MAPS_ROOT + "arcade/map%02d.world";
     private static final String STRANGE_MAP_PATTERN = MAPS_ROOT + "non_arcade/map%02d-strange.world";
