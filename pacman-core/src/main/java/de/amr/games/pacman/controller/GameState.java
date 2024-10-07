@@ -267,7 +267,7 @@ public enum GameState implements FsmState<GameModel> {
 
     GAME_OVER {
 
-        static final int TICKS_STATE_DURATION = 90; // not sure
+        static final int TICKS_STATE_DURATION = 120; // not sure
 
         @Override
         public void onEnter(GameModel game) {
