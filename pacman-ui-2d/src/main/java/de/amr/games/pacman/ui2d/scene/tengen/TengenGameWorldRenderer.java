@@ -9,9 +9,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
@@ -45,10 +43,6 @@ import static de.amr.games.pacman.model.GameWorld.PROPERTY_COLOR_WALL_FILL;
  * @author Armin Reichert
  */
 public class TengenGameWorldRenderer implements GameWorldRenderer {
-
-    static final Color PINKISH   = Color.web("#ff60b0");
-    static final Color REDISH    = Color.web("d84060");
-    static final Color YELLOWISH = Color.web("e8d020");
 
     private final AssetStorage assets;
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
@@ -128,12 +122,12 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
                 Logger.error("No map sprite selected");
                 return;
             }
-            // map sprite is selected when game level starts, so it should always be set here
-            ctx().drawImage(mapSprite.source(),
-                mapSprite.area().x() + 0.5, mapSprite.area().y() + 0.5,
-                mapSprite.area().width() - 1, mapSprite.area().height() - 1,
-                0, scaled(3 * TS), scaled(mapSprite.area().width()), scaled(mapSprite.area().height()));
-            drawSpriteCenteredOverBox(spriteSheet, TengenSpriteSheet.FRAME_SPRITE, terrain.numCols() * HTS, 2 * TS);
+            // Header
+            var pacBooster = tengenGame.pacBooster();
+            if (pacBooster == MsPacManTengenGame.PacBooster.ALWAYS_ON || pacBooster == MsPacManTengenGame.PacBooster.USING_KEY) {
+                //TODO is this symbol always displayed when USING_KEY is selected or only if the key is pressed?
+                drawSpriteCenteredOverBox(spriteSheet, TengenSpriteSheet.BOOSTER_SPRITE, 9 * TS, 2 * TS + 0.5);
+            }
             var category = MapCategory.valueOf(terrain.getProperty("map_category"));
             var categorySprite = switch (category) {
                 case BIG     -> TengenSpriteSheet.BIG_SPRITE;
@@ -149,6 +143,13 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
             };
             drawSpriteCenteredOverBox(spriteSheet, difficultySprite, terrain.numCols() * HTS, 2 * TS);
             drawSpriteCenteredOverBox(spriteSheet, categorySprite, terrain.numCols() * HTS + t(4), 2 * TS);
+            drawSpriteCenteredOverBox(spriteSheet, TengenSpriteSheet.FRAME_SPRITE, terrain.numCols() * HTS, 2 * TS);
+
+            // map sprite is selected when game level starts, so it should always be set here
+            ctx().drawImage(mapSprite.source(),
+                    mapSprite.area().x() + 0.5, mapSprite.area().y() + 0.5,
+                    mapSprite.area().width() - 1, mapSprite.area().height() - 1,
+                    0, scaled(3 * TS), scaled(mapSprite.area().width()), scaled(mapSprite.area().height()));
             hideActorSprite(terrain.getTileProperty("pos_pac", v2i(14, 26)), 0, 0);
             hideActorSprite(terrain.getTileProperty("pos_ghost_1_red", v2i(13, 14)), 0, 0);
             // The ghosts in the house are sitting some pixels below their home position
@@ -182,7 +183,7 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
     @Override
     public void drawLivesCounter(GameSpriteSheet spriteSheet, int numLives, int maxLives, Vector2i worldSize) {
         ctx().save();
-        ctx().translate(0, -HTS);
+        ctx().translate(0, -5);
         GameWorldRenderer.super.drawLivesCounter(spriteSheet, numLives, maxLives, worldSize);
         ctx().restore();
     }
@@ -190,14 +191,31 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
     @Override
     public void drawLevelCounter(GameSpriteSheet spriteSheet, int levelNumber, List<Byte> symbols, Vector2i worldSize) {
         ctx().save();
-        ctx().translate(0, -HTS);
+        ctx().translate(0, -5);
         GameWorldRenderer.super.drawLevelCounter(spriteSheet, levelNumber, symbols, worldSize);
         if (levelNumber > 0) {
-            double x = TS * (worldSize.x() - 2), y = TS * (worldSize.y() - 2);
-            drawLevelNumber((TengenSpriteSheet) spriteSheet, levelNumber, 0, y);
-            drawLevelNumber((TengenSpriteSheet) spriteSheet, levelNumber, x, y);
+            double y = TS * (worldSize.y() - 2);
+            drawLevelNumberInsideBox((TengenSpriteSheet) spriteSheet, levelNumber, 0, y); // left border
+            drawLevelNumberInsideBox((TengenSpriteSheet) spriteSheet, levelNumber, TS * (worldSize.x() - 2), y); // right border
         }
         ctx().restore();
+    }
+
+    private void drawLevelNumberInsideBox(TengenSpriteSheet spriteSheet, int levelNumber, double x, double y) {
+        drawSpriteScaled(spriteSheet, TengenSpriteSheet.LEVEL_INDICATOR, x, y);
+        ctx().setFill(Color.BLACK);
+        ctx().save();
+        ctx().scale(scaling(), scaling());
+        ctx().fillRect(x + 10, y + 2, 5, 5);
+        ctx().restore();
+        if (levelNumber < 10) {
+            drawSpriteScaled(spriteSheet, spriteSheet.digit(levelNumber), x + 10, y + 2);
+        } else if (levelNumber < 100) { // d1 d0
+            int d0 = levelNumber % 10;
+            int d1 = levelNumber / 10;
+            drawSpriteScaled(spriteSheet, spriteSheet.digit(d0), x + 10, y + 2);
+            drawSpriteScaled(spriteSheet, spriteSheet.digit(d1), x + 1,  y + 2);
+        }
     }
 
     @Override
@@ -288,23 +306,5 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
         double spriteSize = 2 * TS;
         ctx().setFill(backgroundColorProperty().get());
         ctx().fillRect(scaled(cx - TS), scaled(cy - TS), scaled(spriteSize), scaled(spriteSize));
-    }
-
-    private void drawLevelNumber(TengenSpriteSheet spriteSheet, int levelNumber, double x, double y) {
-        drawSpriteScaled(spriteSheet, TengenSpriteSheet.LEVEL_INDICATOR, x, y);
-        ctx().setFill(Color.BLACK);
-        ctx().save();
-        ctx().scale(scaling(), scaling());
-        ctx().fillRect(x + 10, y + 2, 5, 5);
-        ctx().restore();
-        if (levelNumber < 10) {
-            int d0 = levelNumber % 10;
-            drawSpriteScaled(spriteSheet, spriteSheet.digit(d0), x + 10, y + 2);
-        } else if (levelNumber < 100) {
-            int d0 = levelNumber % 10;
-            int d1 = levelNumber / 10;
-            drawSpriteScaled(spriteSheet, spriteSheet.digit(d0), x + 10, y + 2);
-            drawSpriteScaled(spriteSheet, spriteSheet.digit(d1), x + 5, y + 2);
-        }
     }
 }

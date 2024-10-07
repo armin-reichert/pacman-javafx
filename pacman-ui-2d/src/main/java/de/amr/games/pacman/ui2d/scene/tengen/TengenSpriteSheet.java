@@ -99,7 +99,9 @@ public class TengenSpriteSheet implements GameSpriteSheet {
 
     static final RectArea LEVEL_INDICATOR = rect(200,164,16,16);
 
-    public static final RectArea MS_PAC_MAN_TITLE = rect(15, 191, 152, 40);
+    static final RectArea BOOSTER_SPRITE = rect(190, 134, 7, 5);
+
+    static final RectArea MS_PAC_MAN_TITLE = rect(15, 191, 152, 40);
 
     static final RectArea[] CLAPPERBOARD_SPRITES = { // open, middle, closed
         rect(91, 361, 32, 32),

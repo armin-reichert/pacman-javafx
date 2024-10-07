@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -27,8 +28,6 @@ import javafx.scene.text.Font;
 import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.scene.tengen.TengenGameWorldRenderer.PINKISH;
-import static de.amr.games.pacman.ui2d.scene.tengen.TengenGameWorldRenderer.YELLOWISH;
 
 /**
  * Intro scene of the Tengen Ms. Pac-Man game.
@@ -293,7 +292,7 @@ public class TengenIntroScene extends GameScene2D {
                     renderer.drawText("PRESS SPACE", Color.WHITE, font, 8 * TS, 20 * TS);
                 }
                 Font copyrightFont = renderer.scaledArcadeFont(7.5);
-                Color copyrightColor = PINKISH; //TODO check this
+                Color copyrightColor = GameAssets2D.TENGEN_PINK;
                 renderer.drawText("MS PAC-MAN TM NAMCO LTD", copyrightColor, copyrightFont, 3 * TS, 27 * TS);
                 renderer.drawText("©1990 TENGEN INC",        copyrightColor, copyrightFont, 5 * TS, 28 * TS);
                 renderer.drawText("ALL RIGHTS RESERVED",     copyrightColor, copyrightFont, 4 * TS, 29 * TS);
@@ -312,7 +311,7 @@ public class TengenIntroScene extends GameScene2D {
             case MS_PACMAN_MARCHING_IN -> {
                 drawMarquee(renderer, font, marqueeState);
                 renderer.drawText("STARRING",   Color.WHITE, font, TITLE_POSITION.x() - TS, TOP_Y + 20);
-                renderer.drawText("MS PAC-MAN", YELLOWISH,   font, TITLE_POSITION.x() + TS, TOP_Y + 38);
+                renderer.drawText("MS PAC-MAN", GameAssets2D.TENGEN_YELLOW, font, TITLE_POSITION.x() + TS, TOP_Y + 38);
                 for (Ghost ghost : ghosts) { renderer.drawAnimatedEntity(ghost); }
                 renderer.drawAnimatedEntity(msPacMan);
             }
@@ -339,7 +338,7 @@ public class TengenIntroScene extends GameScene2D {
 
     // TODO This is too cryptic
     private void drawMarquee(GameWorldRenderer renderer, Font font, BitSet marqueeState) {
-        renderer.drawText("\"MS PAC-MAN\"", YELLOWISH, font, TITLE_POSITION.x(), TITLE_POSITION.y());
+        renderer.drawText("\"MS PAC-MAN\"", GameAssets2D.TENGEN_YELLOW, font, TITLE_POSITION.x(), TITLE_POSITION.y());
         double xMin = 60, xMax = 192, yMin = 88, yMax = 148;
         GraphicsContext g = renderer.ctx();
         for (int i = 0; i < NUM_BULBS; ++i) {
