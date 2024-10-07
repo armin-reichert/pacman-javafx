@@ -132,7 +132,11 @@ public interface GameWorldRenderer {
      * @param y         y-coordinate of left-upper corner of bounding box
      */
     default void drawSpriteCenteredOverBox(GameSpriteSheet spriteSheet, RectArea sprite, double x, double y) {
-        drawSpriteScaled(spriteSheet, sprite, x + HTS - 0.5 * sprite.width(), y + HTS - 0.5 * sprite.height());
+        drawSpriteCenteredOverPosition(spriteSheet, sprite, x + HTS, y + HTS);
+    }
+
+    default void drawSpriteCenteredOverPosition(GameSpriteSheet spriteSheet, RectArea sprite, double x, double y) {
+        drawSpriteScaled(spriteSheet, sprite, x - 0.5 * sprite.width(), y - 0.5 * sprite.height());
     }
 
     /**

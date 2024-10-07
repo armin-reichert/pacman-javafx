@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
 import de.amr.games.pacman.model.tengen.MsPacManTengenGame.MapCategory;
+import de.amr.games.pacman.model.tengen.MsPacManTengenGame.PacBooster;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
@@ -122,34 +123,41 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
                 Logger.error("No map sprite selected");
                 return;
             }
-            // Header
-            var pacBooster = tengenGame.pacBooster();
-            if (pacBooster == MsPacManTengenGame.PacBooster.ALWAYS_ON || pacBooster == MsPacManTengenGame.PacBooster.TOGGLE_USING_KEY) {
-                //TODO is this symbol always displayed when USING_KEY is selected or only if the key is pressed?
-                drawSpriteCenteredOverBox(spriteSheet, TengenSpriteSheet.BOOSTER_SPRITE, 9 * TS, 2 * TS + 0.5);
-            }
-            var category = MapCategory.valueOf(terrain.getProperty("map_category"));
-            var categorySprite = switch (category) {
+            // HUD top
+            MapCategory category = MapCategory.valueOf(terrain.getProperty("map_category"));
+            RectArea categorySprite = switch (category) {
                 case BIG     -> TengenSpriteSheet.BIG_SPRITE;
                 case MINI    -> TengenSpriteSheet.MINI_SPRITE;
                 case STRANGE -> TengenSpriteSheet.STRANGE_SPRITE;
                 case ARCADE  -> TengenSpriteSheet.NO_SPRITE;
             };
-            var difficultySprite = switch (tengenGame.difficulty()) {
+            RectArea difficultySprite = switch (tengenGame.difficulty()) {
                 case EASY -> TengenSpriteSheet.EASY_SPRITE;
                 case HARD -> TengenSpriteSheet.HARD_SPRITE;
                 case CRAZY -> TengenSpriteSheet.CRAZY_SPRITE;
                 case NORMAL -> TengenSpriteSheet.NO_SPRITE;
             };
-            drawSpriteCenteredOverBox(spriteSheet, difficultySprite, terrain.numCols() * HTS, 2 * TS);
-            drawSpriteCenteredOverBox(spriteSheet, categorySprite, terrain.numCols() * HTS + t(4), 2 * TS);
-            drawSpriteCenteredOverBox(spriteSheet, TengenSpriteSheet.FRAME_SPRITE, terrain.numCols() * HTS, 2 * TS);
 
-            // map sprite is selected when game level starts, so it should always be set here
+            double centerX = terrain.numCols() * HTS;
+            double y = t(2) + HTS;
+            if (tengenGame.pacBooster() != PacBooster.OFF) {
+                //TODO: always displayed when TOGGLE_USING_KEY is selected or only if booster is active?
+                drawSpriteCenteredOverPosition(spriteSheet, TengenSpriteSheet.BOOSTER_SPRITE, centerX - t(6), y);
+            }
+            drawSpriteCenteredOverPosition(spriteSheet, difficultySprite, centerX, y);
+            drawSpriteCenteredOverPosition(spriteSheet, categorySprite, centerX + t(4.5), y);
+            drawSpriteCenteredOverPosition(spriteSheet, TengenSpriteSheet.FRAME_SPRITE, centerX, y);
+
+            //TODO: check all places where map sprite gets selected
             ctx().drawImage(mapSprite.source(),
-                    mapSprite.area().x() + 0.5, mapSprite.area().y() + 0.5,
-                    mapSprite.area().width() - 1, mapSprite.area().height() - 1,
-                    0, scaled(3 * TS), scaled(mapSprite.area().width()), scaled(mapSprite.area().height()));
+                //TODO check why these offsets are needed to avoid rendering noise
+                mapSprite.area().x() + 0.5,   mapSprite.area().y() + 0.5,
+                mapSprite.area().width() - 1, mapSprite.area().height() - 1,
+                0, scaled(3 * TS),
+                scaled(mapSprite.area().width()), scaled(mapSprite.area().height())
+            );
+
+            // Tengen maps contain actor sprites, overpaint them
             hideActorSprite(terrain.getTileProperty("pos_pac", v2i(14, 26)), 0, 0);
             hideActorSprite(terrain.getTileProperty("pos_ghost_1_red", v2i(13, 14)), 0, 0);
             // The ghosts in the house are sitting some pixels below their home position
@@ -157,12 +165,14 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
             hideActorSprite(terrain.getTileProperty("pos_ghost_2_pink",   v2i(13, 17)), 0, 4);
             hideActorSprite(terrain.getTileProperty("pos_ghost_3_cyan",   v2i(11, 17)), 0, 4);
             hideActorSprite(terrain.getTileProperty("pos_ghost_4_orange", v2i(15, 17)), 0, 4);
+
+            // Food
             ctx().save();
             ctx().scale(scalingPy.get(), scalingPy.get());
-            // Food
             overPaintEatenPellets(world);
             overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
             ctx().restore();
+
             tengenGame.bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
         }
     }
@@ -171,13 +181,13 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
     public void drawScores(GameContext context) {
         long t = context.gameClock().getUpdateCount();
         Color color = Color.WHITE;
-        Font font = scaledArcadeFont(7.5);
-        var pointsText = String.format("%02d", context.game().score().points());
-        var highScorePointsText = String.format("%d", context.game().highScore().points());
-        drawText("HIGH SCORE", color, font, t(9), t(1));
-        drawText(pointsText, color, font, t(3), t(2));
-        drawText(highScorePointsText, color, font, t(12), t(2));
+        Font font = scaledArcadeFont(TS);
         if (t % 60 < 30) { drawText("1UP", color, font, t(2), t(1)); }
+        drawText("HIGH SCORE", color, font, t(9), t(1));
+        var highScore = String.format("%6d", context.game().highScore().points());
+        var score     = String.format("%6d", context.game().score().points());
+        drawText(score,     color, font, 0,     t(2));
+        drawText(highScore, color, font, t(11), t(2));
     }
 
     @Override
