@@ -100,7 +100,8 @@ public class GameSounds {
         if (url == null) {
             String msg = "Could not load audio resource using asset key: " + assetKey;
             Logger.error(msg);
-            throw new MissingResourceException(msg, GameSounds.class.getName(), assetKey);
+            //throw new MissingResourceException(msg, GameSounds.class.getName(), assetKey);
+            return null;
         }
         var player = new MediaPlayer(new Media(url.toExternalForm()));
         player.setCycleCount(loop ? MediaPlayer.INDEFINITE : 1);
@@ -204,7 +205,13 @@ public class GameSounds {
             if (siren != null) {
                 stop(siren.player());
             }
-            siren = new Siren(number, createPlayer(gameVariant, assets, "siren." + number, 0.25, true));
+            MediaPlayer sirenPlayer = createPlayer(gameVariant, assets, "siren." + number, 0.25, true);
+            if (sirenPlayer == null) {
+                //Logger.error("Could not create media player for siren number {}", number);
+                siren = null;
+            } else {
+                siren = new Siren(number, sirenPlayer);
+            }
         }
     }
 
