@@ -78,7 +78,7 @@ public class TengenSettingsScene extends GameScene2D {
     protected void drawSceneContent(GameWorldRenderer renderer) {
         Font font = renderer.scaledArcadeFont(TS);
 
-        int y = 3 * TS;
+        int y = 7 * TS;
         drawBabyBlueBar(renderer, y);
 
         y += 3 * TS;
