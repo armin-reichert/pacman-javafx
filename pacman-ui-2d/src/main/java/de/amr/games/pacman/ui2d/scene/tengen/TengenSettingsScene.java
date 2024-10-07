@@ -134,7 +134,7 @@ public class TengenSettingsScene extends GameScene2D {
         return switch (pacBooster) {
             case OFF -> "OFF";
             case ALWAYS_ON -> "ALWAYS ON";
-            case USING_KEY -> "KEY A";
+            case TOGGLE_USING_KEY -> "KEY A";
         };
     }
 

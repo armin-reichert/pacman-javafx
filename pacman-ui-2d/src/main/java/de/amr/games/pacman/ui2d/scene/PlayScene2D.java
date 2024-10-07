@@ -15,7 +15,6 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -38,6 +37,11 @@ public class PlayScene2D extends GameScene2D {
         GameAction2D.CHEAT_ADD_LIVES,
         GameAction2D.CHEAT_NEXT_LEVEL,
         GameAction2D.CHEAT_KILL_GHOSTS
+    );
+
+    private static final List<GameAction> TENGEN_GAME_ACTIONS = List.of(
+        GameAction2D.TENGEN_TOGGLE_PAC_BOOSTER,
+        GameAction2D.TENGEN_QUIT_PLAY_SCENE
     );
 
     @Override
@@ -94,19 +98,17 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void handleInput() {
-        //TODO hack
-        if (context.game().variant() == GameVariant.MS_PACMAN_TENGEN && context.keyboard().pressed(KeyCode.ESCAPE)) {
-            end();
-            context.game().setPlaying(false);
-            context.gameController().changeState(GameState.CREDIT); // shows Tengen settings scene
-            return;
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            context.execFirstCalledActionOrElse(TENGEN_GAME_ACTIONS.stream(),
+                () -> context.execFirstCalledAction(GAME_ACTIONS));
+        } else {
+            // add credit is only allowed in demo level
+            if (context.isActionCalled(GameAction2D.ADD_CREDIT) && context.game().isDemoLevel()) {
+                GameAction2D.ADD_CREDIT.execute(context);
+            } else {
+                context.execFirstCalledAction(GAME_ACTIONS);
+            }
         }
-        // add credit is only allowed in demo level
-        if (context.isActionCalled(GameAction2D.ADD_CREDIT) && context.game().isDemoLevel()) {
-            GameAction2D.ADD_CREDIT.execute(context);
-            return;
-        }
-        context.execFirstCalledAction(GAME_ACTIONS);
     }
 
     @Override

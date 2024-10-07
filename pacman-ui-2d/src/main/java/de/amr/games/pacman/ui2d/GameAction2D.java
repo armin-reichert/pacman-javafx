@@ -9,6 +9,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.util.KeyInput;
@@ -263,6 +264,33 @@ public enum GameAction2D implements GameAction {
         }
     },
 
+    TENGEN_TOGGLE_PAC_BOOSTER(key(KeyCode.A)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            MsPacManTengenGame tengenGame = (MsPacManTengenGame) context.game();
+            if (tengenGame.pacBooster() == MsPacManTengenGame.PacBooster.TOGGLE_USING_KEY) {
+                tengenGame.setBoosterActive(!tengenGame.isBoosterActive());
+                //TODO for now, use flash message, later change sprites
+                if (tengenGame.isBoosterActive()) {
+                    context.showFlashMessage("Pac booster ON");
+                } else {
+                    context.showFlashMessage("Pac booster OFF");
+                }
+            }
+        }
+    },
+
+    TENGEN_QUIT_PLAY_SCENE(key(KeyCode.ESCAPE)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            context.currentGameScene().ifPresent(GameScene::end);
+            context.game().setPlaying(false);
+            context.gameController().changeState(GameState.CREDIT); // shows Tengen settings scene
+        }
+    },
+
     TEST_CUT_SCENES(alt(KeyCode.C)) {
         @Override
         public void execute(GameContext context) {
@@ -342,7 +370,7 @@ public enum GameAction2D implements GameAction {
 
     @Override
     public void execute(GameContext context) {
-        Logger.info("Execute game action {}", name());
+        Logger.info("Game action {} called", name());
     }
 
     private final KeyInput trigger;

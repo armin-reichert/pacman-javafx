@@ -124,7 +124,7 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
             }
             // Header
             var pacBooster = tengenGame.pacBooster();
-            if (pacBooster == MsPacManTengenGame.PacBooster.ALWAYS_ON || pacBooster == MsPacManTengenGame.PacBooster.USING_KEY) {
+            if (pacBooster == MsPacManTengenGame.PacBooster.ALWAYS_ON || pacBooster == MsPacManTengenGame.PacBooster.TOGGLE_USING_KEY) {
                 //TODO is this symbol always displayed when USING_KEY is selected or only if the key is pressed?
                 drawSpriteCenteredOverBox(spriteSheet, TengenSpriteSheet.BOOSTER_SPRITE, 9 * TS, 2 * TS + 0.5);
             }

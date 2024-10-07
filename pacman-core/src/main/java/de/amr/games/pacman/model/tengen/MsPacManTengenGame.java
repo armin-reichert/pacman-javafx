@@ -41,7 +41,7 @@ public class MsPacManTengenGame extends GameModel {
 
     public enum MapCategory { ARCADE, STRANGE, MINI, BIG }
     public enum Difficulty { EASY, NORMAL, HARD, CRAZY }
-    public enum PacBooster { OFF, USING_KEY, ALWAYS_ON }
+    public enum PacBooster { OFF, TOGGLE_USING_KEY, ALWAYS_ON }
 
     // TODO what is the exact speed increase?
     private static final float BOOSTER_FACTOR = 1.5f;
@@ -128,6 +128,7 @@ public class MsPacManTengenGame extends GameModel {
     private MapCategory mapCategory;
     private Difficulty difficulty;
     private PacBooster pacBooster;
+    private boolean boosterActive;
     private byte startingLevel; // 1-7
     private int mapNumber;
 
@@ -151,6 +152,18 @@ public class MsPacManTengenGame extends GameModel {
 
     public PacBooster pacBooster() {
         return pacBooster;
+    }
+
+    public void setBoosterActive(boolean boosterActive) {
+        this.boosterActive = boosterActive;
+        float multiplier = boosterActive ? BOOSTER_FACTOR : 1;
+        float speed = multiplier * PPS_AT_100_PERCENT * SEC_PER_TICK;
+        pac.setBaseSpeed(speed);
+        Logger.info("Pac base speed is {0.00} px/s", speed);
+    }
+
+    public boolean isBoosterActive() {
+        return boosterActive;
     }
 
     public MapCategory mapCategory() {
@@ -242,8 +255,19 @@ public class MsPacManTengenGame extends GameModel {
         mapNumber = mapNumberByLevelNumber(levelNumber);
         var map = maps.get(mapNumber - 1);
         setWorldAndCreatePopulation(createWorld(map));
-        if (pacBooster == PacBooster.ALWAYS_ON) {
-            pac.setBaseSpeed(BOOSTER_FACTOR * PPS_AT_100_PERCENT * SEC_PER_TICK);
+        switch (pacBooster) {
+            case ALWAYS_ON -> {
+                pac.setBaseSpeed(BOOSTER_FACTOR * PPS_AT_100_PERCENT * SEC_PER_TICK);
+                setBoosterActive(true);
+            }
+            case OFF -> {
+                pac.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
+                setBoosterActive(false);
+            }
+            case TOGGLE_USING_KEY -> {
+                pac.setBaseSpeed(BOOSTER_FACTOR * PPS_AT_100_PERCENT * SEC_PER_TICK);
+                setBoosterActive(false);
+            }
         }
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
@@ -257,6 +281,7 @@ public class MsPacManTengenGame extends GameModel {
         setWorldAndCreatePopulation(createWorld(maps.get(mapNumber - 1)));
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);
+        //TODO: Pac booster?
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
