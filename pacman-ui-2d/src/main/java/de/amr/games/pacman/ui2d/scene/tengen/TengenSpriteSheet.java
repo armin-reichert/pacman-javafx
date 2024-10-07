@@ -97,7 +97,7 @@ public class TengenSpriteSheet implements GameSpriteSheet {
         }
     }
 
-    static final RectArea LEVEL_INDICATOR = rect(200,164,16,16);
+    static final RectArea LEVEL_BOX_SPRITE = rect(200, 164, 16, 16);
 
     static final RectArea BOOSTER_SPRITE = rect(190, 134, 7, 5);
 

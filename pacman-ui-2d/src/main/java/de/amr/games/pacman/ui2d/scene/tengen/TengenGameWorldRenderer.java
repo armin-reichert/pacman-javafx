@@ -168,7 +168,7 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
 
             // Food
             ctx().save();
-            ctx().scale(scalingPy.get(), scalingPy.get());
+            ctx().scale(scaling(), scaling());
             overPaintEatenPellets(world);
             overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
             ctx().restore();
@@ -179,21 +179,18 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
 
     @Override
     public void drawScores(GameContext context) {
-        long t = context.gameClock().getUpdateCount();
         Color color = Color.WHITE;
         Font font = scaledArcadeFont(TS);
-        if (t % 60 < 30) { drawText("1UP", color, font, t(2), t(1)); }
+        if (context.gameClock().getUpdateCount() % 60 < 30) { drawText("1UP", color, font, t(2), t(1)); }
         drawText("HIGH SCORE", color, font, t(9), t(1));
-        var highScore = String.format("%6d", context.game().highScore().points());
-        var score     = String.format("%6d", context.game().score().points());
-        drawText(score,     color, font, 0,     t(2));
-        drawText(highScore, color, font, t(11), t(2));
+        drawText("%6d".formatted(context.game().score().points()),     color, font, 0,     t(2));
+        drawText("%6d".formatted(context.game().highScore().points()), color, font, t(11), t(2));
     }
 
     @Override
     public void drawLivesCounter(GameSpriteSheet spriteSheet, int numLives, int maxLives, Vector2i worldSize) {
         ctx().save();
-        ctx().translate(0, -5);
+        ctx().translate(0, -5); // lift a bit
         GameWorldRenderer.super.drawLivesCounter(spriteSheet, numLives, maxLives, worldSize);
         ctx().restore();
     }
@@ -205,26 +202,28 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
         GameWorldRenderer.super.drawLevelCounter(spriteSheet, levelNumber, symbols, worldSize);
         if (levelNumber > 0) {
             double y = TS * (worldSize.y() - 2);
-            drawLevelNumberInsideBox((TengenSpriteSheet) spriteSheet, levelNumber, 0, y); // left border
-            drawLevelNumberInsideBox((TengenSpriteSheet) spriteSheet, levelNumber, TS * (worldSize.x() - 2), y); // right border
+            drawLevelNumberBox(spriteSheet, levelNumber, 0, y); // left border
+            drawLevelNumberBox(spriteSheet, levelNumber, TS * (worldSize.x() - 2), y); // right border
         }
         ctx().restore();
     }
 
-    private void drawLevelNumberInsideBox(TengenSpriteSheet spriteSheet, int levelNumber, double x, double y) {
-        drawSpriteScaled(spriteSheet, TengenSpriteSheet.LEVEL_INDICATOR, x, y);
+    private void drawLevelNumberBox(GameSpriteSheet spriteSheet, int levelNumber, double x, double y) {
+        TengenSpriteSheet tss = (TengenSpriteSheet) spriteSheet;
+        drawSpriteScaled(spriteSheet, TengenSpriteSheet.LEVEL_BOX_SPRITE, x, y);
+        // erase violet area (what is it good for?)
         ctx().setFill(Color.BLACK);
         ctx().save();
         ctx().scale(scaling(), scaling());
         ctx().fillRect(x + 10, y + 2, 5, 5);
         ctx().restore();
         if (levelNumber < 10) {
-            drawSpriteScaled(spriteSheet, spriteSheet.digit(levelNumber), x + 10, y + 2);
+            drawSpriteScaled(spriteSheet, tss.digit(levelNumber), x + 10, y + 2);
         } else if (levelNumber < 100) { // d1 d0
             int d0 = levelNumber % 10;
             int d1 = levelNumber / 10;
-            drawSpriteScaled(spriteSheet, spriteSheet.digit(d0), x + 10, y + 2);
-            drawSpriteScaled(spriteSheet, spriteSheet.digit(d1), x + 1,  y + 2);
+            drawSpriteScaled(spriteSheet, tss.digit(d0), x + 10, y + 2);
+            drawSpriteScaled(spriteSheet, tss.digit(d1), x + 1,  y + 2);
         }
     }
 
