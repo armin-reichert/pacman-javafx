@@ -80,10 +80,11 @@ public class GamePage extends StackPane implements Page {
         this.context = checkNotNull(context);
         this.parentScene = checkNotNull(parentScene);
 
-        canvasLayer.setMinScaling(0.75);
-        canvasLayer.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
+        canvasLayer.setMinScaling(0.5);
 
         DecoratedCanvas decoratedCanvas = canvasLayer.canvas();
+        decoratedCanvas.setUnscaledCanvasWidth(GameModel.ARCADE_MAP_SIZE_X);
+        decoratedCanvas.setUnscaledCanvasHeight(GameModel.ARCADE_MAP_SIZE_Y);
         decoratedCanvas.setBorderColor(PALETTE_PALE);
         decoratedCanvas.decoratedPy.bind(PY_CANVAS_DECORATED);
         decoratedCanvas.decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
@@ -195,7 +196,8 @@ public class GamePage extends StackPane implements Page {
 
     public void adaptCanvasSizeToCurrentWorld() {
         Vector2i worldSizePixels = context.worldSizeTilesOrDefault().scaled(TS);
-        canvasLayer.setUnscaledCanvasSize(worldSizePixels.x(), worldSizePixels.y());
+        canvasLayer.canvas().setUnscaledCanvasWidth(worldSizePixels.x());
+        canvasLayer.canvas().setUnscaledCanvasHeight(worldSizePixels.y());
         canvasLayer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
         Logger.info("Canvas size adapted. w={0.00}, h={0.00}", canvas().getWidth(), canvas().getHeight());
     }

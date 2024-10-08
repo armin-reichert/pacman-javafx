@@ -44,11 +44,6 @@ public class CanvasLayoutPane extends BorderPane {
         }
     }
 
-    public void setUnscaledCanvasSize(double width, double height) {
-        decoratedCanvas.setUnscaledCanvasWidth(width);
-        decoratedCanvas.setUnscaledCanvasHeight(height);
-    }
-
     private void doLayout(double newScaling, boolean forced) {
         if (newScaling < minScaling) {
             Logger.warn("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
