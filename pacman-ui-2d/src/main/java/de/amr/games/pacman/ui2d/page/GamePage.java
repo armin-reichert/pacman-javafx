@@ -91,9 +91,9 @@ public class GamePage extends StackPane implements Page {
         gameCanvasDecoration.setUnscaledCanvasHeight(GameModel.ARCADE_MAP_SIZE_Y);
         gameCanvasDecoration.setBorderColor(PALETTE_PALE);
         gameCanvasDecoration.borderVisiblePy.bind(PY_GAME_CANVAS_HAS_BORDER);
+        gameCanvasDecoration.roundedCornersPy.bind(PY_GAME_CANVAS_CORNERS_ROUNDED);
         gameCanvasDecoration.enabledPy.bind(PY_GAME_CANVAS_HAS_DECORATION);
         gameCanvasDecoration.enabledPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
-
         gameCanvasPane.setCenter(gameCanvasDecoration);
 
         dashboardLayer = new DashboardLayer(context);

@@ -40,7 +40,8 @@ public class PacManGames2dApp extends Application {
 
     public static final BooleanProperty PY_AUTOPILOT                  = new SimpleBooleanProperty(false);
     public static final ObjectProperty<Color> PY_CANVAS_BG_COLOR      = new SimpleObjectProperty<>(Color.BLACK);
-    public static final BooleanProperty PY_GAME_CANVAS_HAS_BORDER     = new SimpleBooleanProperty(false);
+    public static final BooleanProperty PY_GAME_CANVAS_HAS_BORDER     = new SimpleBooleanProperty(true);
+    public static final BooleanProperty PY_GAME_CANVAS_CORNERS_ROUNDED = new SimpleBooleanProperty(true);
     public static final BooleanProperty PY_GAME_CANVAS_HAS_DECORATION = new SimpleBooleanProperty(true);
     public static final ObjectProperty<MapSelectionMode> PY_MAP_SELECTION_MODE = new SimpleObjectProperty<>(MapSelectionMode.CUSTOM_MAPS_FIRST);
     public static final BooleanProperty PY_DEBUG_INFO                 = new SimpleBooleanProperty(false);

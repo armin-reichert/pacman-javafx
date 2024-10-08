@@ -28,6 +28,7 @@ public class InfoBoxGeneral extends InfoBox {
     private ColorPicker pickerCanvasColor;
     private CheckBox cbCanvasBorder;
     private CheckBox cbCanvasDecoration;
+    private CheckBox cbCanvasRoundedCorners;
     private CheckBox cbDebugUI;
     private CheckBox cbTimeMeasured;
 
@@ -54,8 +55,9 @@ public class InfoBoxGeneral extends InfoBox {
         labelledValue("",              () -> "FPS: %.1f (Tgt: %.1f)".formatted(clock.getActualFrameRate(), clock.getTargetFrameRate()));
         labelledValue("Total Updates", clock::getUpdateCount);
         pickerCanvasColor              = colorPicker("Canvas Color", PY_CANVAS_BG_COLOR.get());
-        cbCanvasBorder                 = checkBox("Canvas Border");
         cbCanvasDecoration             = checkBox("Canvas Decoration");
+        cbCanvasBorder                 = checkBox("Canvas Border");
+        cbCanvasRoundedCorners         = checkBox("Canvas Corners Rounded");
         cbDebugUI                      = checkBox("Show Debug Info");
         cbTimeMeasured                 = checkBox("Time Measured");
 
@@ -74,8 +76,9 @@ public class InfoBoxGeneral extends InfoBox {
         setAction(bgSimulation[1], () -> clock.makeSteps(PY_SIMULATION_STEPS.get(), true));
         assignEditor(sliderTargetFPS, clock.targetFrameRatePy);
         assignEditor(pickerCanvasColor, PY_CANVAS_BG_COLOR);
-        assignEditor(cbCanvasBorder, PY_GAME_CANVAS_HAS_BORDER);
         assignEditor(cbCanvasDecoration, PY_GAME_CANVAS_HAS_DECORATION);
+        assignEditor(cbCanvasBorder, PY_GAME_CANVAS_HAS_BORDER);
+        assignEditor(cbCanvasRoundedCorners, PY_GAME_CANVAS_CORNERS_ROUNDED);
         assignEditor(cbDebugUI, PY_DEBUG_INFO);
         assignEditor(cbTimeMeasured, clock.timeMeasuredPy);
     }

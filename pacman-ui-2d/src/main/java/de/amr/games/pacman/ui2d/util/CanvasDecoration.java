@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.util;
 
+import de.amr.games.pacman.lib.Vector2f;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.Dimension2D;
@@ -20,16 +21,35 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class CanvasDecoration extends BorderPane {
 
-    public final BooleanProperty borderVisiblePy = new SimpleBooleanProperty(false);
+    static final Vector2f DOWNSCALING_IF_BORDER = new Vector2f(0.85f, 0.93f);
+
+    public final BooleanProperty borderVisiblePy = new SimpleBooleanProperty(false) {
+        @Override
+        protected void invalidated() {
+            doLayout(scaling(), true);
+        }
+    };
 
     public final ObjectProperty<Color> borderColorPy = new SimpleObjectProperty<>(Color.LIGHTBLUE);
 
-    public final BooleanProperty enabledPy = new SimpleBooleanProperty(true);
+    public final BooleanProperty enabledPy = new SimpleBooleanProperty(true) {
+        @Override
+        protected void invalidated() {
+            doLayout(scaling(), true);
+        }
+    };
+
+    public final BooleanProperty roundedCornersPy = new SimpleBooleanProperty(true) {
+        @Override
+        protected void invalidated() {
+            doLayout(scaling(), true);
+        }
+    };
 
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0) {
         @Override
         protected void invalidated() {
-            doLayout(get(), true);
+            doLayout(scaling(), true);
         }
     };
 
@@ -52,7 +72,6 @@ public class CanvasDecoration extends BorderPane {
     public CanvasDecoration(Canvas canvas) {
         this.canvas = checkNotNull(canvas);
 
-        setBackground(Background.fill(Color.BLUE));
         setCenter(canvas);
 
         canvas.widthProperty().bind(unscaledCanvasWidthPy.multiply(scalingPy));
@@ -62,24 +81,24 @@ public class CanvasDecoration extends BorderPane {
             if (!isEnabled()) {
                 return null;
             }
-            var clipRect = new Rectangle(computeSize().getWidth(), computeSize().getHeight());
-            // TODO avoid magic numbers
-            double diameter = 26 * scaling();
-            clipRect.setArcWidth(diameter);
-            clipRect.setArcHeight(diameter);
-            return clipRect;
-        }, enabledPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
+            Dimension2D size = computeSize();
+            var clipNode = new Rectangle(size.getWidth(), size.getHeight());
+            if (roundedCornersPy.get()) {
+                double arcSize = 26 * scaling(); // TODO avoid magic numbers
+                clipNode.setArcWidth(arcSize);
+                clipNode.setArcHeight(arcSize);
+            }
+            return clipNode;
+        }, enabledPy, roundedCornersPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
 
         borderProperty().bind(Bindings.createObjectBinding(() -> {
             if (!isEnabled() || !isBorderVisible()) {
                 return null;
             }
-            // TODO avoid magic numbers
-            double w = Math.max(5, Math.ceil(computeSize().getHeight() / 55));
-            double r = Math.ceil(10 * scaling());
-            return new Border(
-                new BorderStroke(borderColor(), BorderStrokeStyle.SOLID, new CornerRadii(r), new BorderWidths(w)));
-        }, enabledPy, borderVisiblePy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
+            double bw = Math.max(5, Math.ceil(computeSize().getHeight() / 55)); // TODO avoid magic numbers
+            CornerRadii cr = hasRoundedCorners() ? new CornerRadii(Math.ceil(10 * scaling())) : null;
+            return new Border(new BorderStroke(borderColor(), BorderStrokeStyle.SOLID, cr, new BorderWidths(bw)));
+        }, enabledPy, borderVisiblePy, roundedCornersPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
     }
 
     private void doLayout(double newScaling, boolean forced) {
@@ -148,11 +167,14 @@ public class CanvasDecoration extends BorderPane {
 
     public void resizeTo(double width, double height) {
         if (isEnabled()) {
-            double shrunkWidth  = 0.85 * width;
-            double shrunkHeight = 0.92 * height;
-            double scaling = shrunkHeight / unscaledCanvasHeight();
-            if (scaling * unscaledCanvasWidth() > shrunkWidth) {
-                scaling = shrunkWidth / unscaledCanvasWidth();
+            double downScaledWidth = width, downScaledHeight = height;
+            if (isBorderVisible()) {
+                downScaledWidth = DOWNSCALING_IF_BORDER.x() * width;
+                downScaledHeight = DOWNSCALING_IF_BORDER.y() * height;
+            }
+            double scaling = downScaledHeight / unscaledCanvasHeight();
+            if (scaling * unscaledCanvasWidth() > downScaledWidth) {
+                scaling = downScaledWidth / unscaledCanvasWidth();
             }
             doLayout(scaling, false);
         } else {
@@ -182,5 +204,13 @@ public class CanvasDecoration extends BorderPane {
 
     public void setBorderVisible(boolean visible) {
         borderVisiblePy.set(visible);
+    }
+
+    public boolean hasRoundedCorners() {
+        return roundedCornersPy.get();
+    }
+
+    public void setRoundedCorers(boolean rounded) {
+        roundedCornersPy.set(rounded);
     }
 }
