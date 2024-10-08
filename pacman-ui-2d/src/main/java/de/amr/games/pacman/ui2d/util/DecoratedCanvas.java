@@ -18,29 +18,29 @@ import org.tinylog.Logger;
  */
 public class DecoratedCanvas extends BorderPane {
 
-    public final DoubleProperty scalingPy              = new SimpleDoubleProperty(this, "scaling", 1.0) {
+    public final ObjectProperty<Color> borderColorPy = new SimpleObjectProperty<>(Color.LIGHTBLUE);
+
+    public final BooleanProperty decoratedPy = new SimpleBooleanProperty(true);
+
+    public final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0) {
         @Override
         protected void invalidated() {
             doLayout(get(), true);
         }
     };
 
-    public final BooleanProperty decoratedPy           = new SimpleBooleanProperty(this, "decorated", true);
-
-    public final DoubleProperty unscaledCanvasWidthPy  = new SimpleDoubleProperty(this, "unscaledCanvasWidth", 500) {
+    public final DoubleProperty unscaledCanvasWidthPy = new SimpleDoubleProperty(500) {
         @Override
         protected void invalidated() {
             doLayout(scaling(), true);
         }
     };
-    public final DoubleProperty unscaledCanvasHeightPy = new SimpleDoubleProperty(this, "unscaledCanvasHeight", 400) {
+    public final DoubleProperty unscaledCanvasHeightPy = new SimpleDoubleProperty(400) {
         @Override
         protected void invalidated() {
             doLayout(scaling(), true);
         }
     };
-
-    public final ObjectProperty<Color> borderColorPy   = new SimpleObjectProperty<>(this, "borderColor", Color.LIGHTBLUE);
 
     private final Canvas canvas = new Canvas();
     private double minScaling = 1.0;
@@ -72,10 +72,6 @@ public class DecoratedCanvas extends BorderPane {
             return new Border(
                 new BorderStroke(borderColor(), BorderStrokeStyle.SOLID, new CornerRadii(r), new BorderWidths(w)));
         }, decoratedPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
-    }
-
-    public void setMinScaling(double value) {
-        minScaling = value;
     }
 
     private void doLayout(double newScaling, boolean forced) {
@@ -120,6 +116,10 @@ public class DecoratedCanvas extends BorderPane {
 
     public void setScaling(double scaling) {
         scalingPy.set(scaling);
+    }
+
+    public void setMinScaling(double value) {
+        minScaling = value;
     }
 
     public double unscaledCanvasWidth() {
