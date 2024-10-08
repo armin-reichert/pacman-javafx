@@ -357,19 +357,7 @@ public class TileMapEditor  {
         createMessageDisplay();
         createZoomSlider();
 
-        var filler = new Region();
-        HBox.setHgrow(filler, Priority.ALWAYS);
-
-        var footer = new HBox(focussedTileInfo, messageLabel, filler, sliderZoomContainer);
-        footer.setPadding(new Insets(10, 10, 10, 10));
-
-        var rightArea = new VBox(tabPaneWithPalettes, tabPaneMapViews, footer);
-        rightArea.setPadding(new Insets(0,5,0,5));
-        tabPaneWithPalettes.setMinHeight(75);
-
-        contentPane.setLeft(propertyEditorsPane);
-        contentPane.setCenter(rightArea);
-
+        arrangeMainLayout();
 
         // Note: this must be done *after* the initial map has been created/loaded!
         editCanvas.heightProperty().bind(Bindings.createDoubleBinding(
@@ -418,31 +406,7 @@ public class TileMapEditor  {
             }
         });
 
-        // Active rendering (good idea?)
-        int fps = 10;
-        clock = new Timeline(fps, new KeyFrame(javafx.util.Duration.millis(1000.0 / fps), e -> {
-            if (messageCloseTime != null && Instant.now().isAfter(messageCloseTime)) {
-                messageCloseTime = null;
-                FadeTransition fade = new FadeTransition(javafx.util.Duration.seconds(2));
-                fade.setNode(messageLabel);
-                fade.setFromValue(1);
-                fade.setToValue(0.1);
-                fade.play();
-                fade.setOnFinished(event -> {
-                    messageLabel.setText("");
-                    messageLabel.setOpacity(1);
-                });
-            }
-            try {
-                drawEditCanvas();
-                drawPreviewCanvas();
-                drawSelectedPalette();
-            } catch (Exception x) {
-                x.printStackTrace(System.err);
-                drawBlueScreen(x);
-            }
-        }));
-        clock.setCycleCount(Animation.INDEFINITE);
+        initActiveRendering();
     }
 
     private void createRenderers() {
@@ -531,6 +495,7 @@ public class TileMapEditor  {
 
         tabPaneWithPalettes = new TabPane(tab2, tab1, tab3);
         tabPaneWithPalettes.setPadding(new Insets(5, 5, 5, 5));
+        tabPaneWithPalettes.setMinHeight(75);
     }
 
     private void createPropertyEditors() {
@@ -586,6 +551,48 @@ public class TileMapEditor  {
 
         sliderZoomContainer = new HBox(new Label("Zoom"), sliderZoom);
         sliderZoomContainer.setSpacing(5);
+    }
+
+    private void arrangeMainLayout() {
+        var filler = new Region();
+        HBox.setHgrow(filler, Priority.ALWAYS);
+
+        var bottom = new HBox(focussedTileInfo, messageLabel, filler, sliderZoomContainer);
+        bottom.setPadding(new Insets(10, 10, 10, 10));
+
+        var right = new VBox(tabPaneWithPalettes, tabPaneMapViews, bottom);
+        right.setPadding(new Insets(0,5,0,5));
+
+        contentPane.setLeft(propertyEditorsPane);
+        contentPane.setCenter(right);
+    }
+
+    // Active rendering (good idea?)
+    private void initActiveRendering() {
+        int fps = 10;
+        clock = new Timeline(fps, new KeyFrame(javafx.util.Duration.millis(1000.0 / fps), e -> {
+            if (messageCloseTime != null && Instant.now().isAfter(messageCloseTime)) {
+                messageCloseTime = null;
+                FadeTransition fade = new FadeTransition(javafx.util.Duration.seconds(2));
+                fade.setNode(messageLabel);
+                fade.setFromValue(1);
+                fade.setToValue(0.1);
+                fade.play();
+                fade.setOnFinished(event -> {
+                    messageLabel.setText("");
+                    messageLabel.setOpacity(1);
+                });
+            }
+            try {
+                drawEditCanvas();
+                drawPreviewCanvas();
+                drawSelectedPalette();
+            } catch (Exception x) {
+                x.printStackTrace(System.err);
+                drawBlueScreen(x);
+            }
+        }));
+        clock.setCycleCount(Animation.INDEFINITE);
     }
 
     private Palette createTerrainPalette() {
