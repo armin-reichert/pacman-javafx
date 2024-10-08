@@ -48,18 +48,18 @@ public class EditorPage extends BorderPane implements Page {
 
         var miQuitEditor = new MenuItem(context.locText("back_to_game"));
         miQuitEditor.setOnAction(e -> closeAction.accept(editor));
-        editor.menuFile().getItems().add(miQuitEditor);
+        editor.getFileMenu().getItems().add(miQuitEditor);
 
         // load maps from core module
         editor.addLoadMapMenuItem("Pac-Man", loadMap("pacman.world"));
-        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
+        editor.getLoadMapMenu().getItems().add(new SeparatorMenuItem());
         for (int mapNumber = 1; mapNumber <= 6; ++mapNumber) {
             WorldMap map = loadMap("mspacman/mspacman_%d.world".formatted(mapNumber));
             if (map != null) {
                 editor.addLoadMapMenuItem("Ms. Pac-Man " + mapNumber, map);
             }
         }
-        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
+        editor.getLoadMapMenu().getItems().add(new SeparatorMenuItem());
         for (int mapNumber = 1; mapNumber <= 8; ++mapNumber) {
             WorldMap map = loadMap("masonic/masonic_%d.world".formatted(mapNumber));
             if (map != null) {

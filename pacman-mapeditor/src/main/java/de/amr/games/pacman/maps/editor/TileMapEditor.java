@@ -206,14 +206,19 @@ public class TileMapEditor  {
 
     private Stage stage;
     private final BorderPane contentPane = new BorderPane();
+    private Pane propertyEditorsPane;
     private Canvas editCanvas;
-    private final ContextMenu contextMenu = new ContextMenu();
+    private ScrollPane editCanvasScroll;
     private Canvas previewCanvas;
+    private ScrollPane previewCanvasScroll;
     private Text mapSourceView;
+    private ScrollPane mapSourceViewScroll;
+    private TabPane tabPaneMapViews;
     private Label messageLabel;
     private Label focussedTileInfo;
+    private HBox sliderZoomContainer;
     private FileChooser fileChooser;
-    private TabPane palettesTabPane;
+    private TabPane tabPaneWithPalettes;
     private final Map<String, Palette> palettes = new HashMap<>();
     private final Image spriteSheet;
 
@@ -222,6 +227,8 @@ public class TileMapEditor  {
     private Menu menuEdit;
     private Menu menuLoadMap;
     private Menu menuView;
+
+    private final ContextMenu contextMenu = new ContextMenu();
 
     private PropertyEditorPane     terrainMapPropertiesEditor;
     private PropertyEditorPane     foodMapPropertiesEditor;
@@ -246,6 +253,33 @@ public class TileMapEditor  {
         spriteSheet = new Image(url.toExternalForm());
         WorldMap map = createWorldMap(36, 28); // standard Arcade map size
         setMap(map);
+    }
+
+    public void showMessage(String message, long seconds, MessageType type) {
+        messageLabel.setText(message);
+        messageLabel.setFont(Font.font("sans", FontWeight.BOLD, 12));
+        Color color = switch (type) {
+            case INFO -> Color.BLACK;
+            case WARNING -> Color.GREEN;
+            case ERROR -> Color.RED;
+        };
+        messageLabel.setTextFill(color);
+        messageCloseTime = Instant.now().plus(Duration.ofSeconds(seconds));
+    }
+
+    public void start() {
+        // content pane and scroll pane have no height yet at this point!
+        int gridSize = (int)(0.75 *  stage.getHeight() / map().terrain().numRows());
+        gridSizePy.set(Math.max(gridSize, 8));
+        clock.play();
+        Logger.info("Stage height {}", stage.getHeight());
+        showMessage(tt("welcome_message"), 3, MessageType.INFO);
+    }
+
+    public void stop() {
+        clock.stop();
+        editingEnabledPy.set(false);
+        unsavedChanges = false;
     }
 
     public WorldMap map() {
@@ -303,142 +337,33 @@ public class TileMapEditor  {
 
     public void createUI(Stage stage) {
         this.stage = stage;
-
-        terrainMapEditRenderer = new TerrainMapEditRenderer();
-        terrainMapEditRenderer.setWallStrokeColor(parseColor(DEFAULT_COLOR_WALL_STROKE));
-        terrainMapEditRenderer.setWallFillColor(parseColor(DEFAULT_COLOR_WALL_FILL));
-
-        terrainMapPreviewRenderer = new TerrainMapRenderer();
-        terrainMapPreviewRenderer.setWallStrokeColor(parseColor(DEFAULT_COLOR_WALL_STROKE));
-        terrainMapPreviewRenderer.setWallFillColor(parseColor(DEFAULT_COLOR_WALL_FILL));
-
-        foodMapRenderer = new FoodMapRenderer();
-        foodMapRenderer.setPelletColor(TileMapUtil.parseColor(DEFAULT_FOOD_COLOR));
-        foodMapRenderer.setEnergizerColor(TileMapUtil.parseColor(DEFAULT_FOOD_COLOR));
-
-        fileChooser = new FileChooser();
-        var worldExtensionFilter = new FileChooser.ExtensionFilter("World Map Files", "*.world");
-        var anyExtensionFilter = new FileChooser.ExtensionFilter("All Files", "*.*");
-        fileChooser.getExtensionFilters().addAll(worldExtensionFilter, anyExtensionFilter);
-        fileChooser.setSelectedExtensionFilter(worldExtensionFilter);
-        fileChooser.setInitialDirectory(lastUsedDir);
-
-        editCanvas = new Canvas();
-        editCanvas.setOnMouseClicked(this::onMouseClickedOnEditCanvas);
-        editCanvas.setOnMouseMoved(this::onMouseMovedOverEditCanvas);
-        ScrollPane editCanvasScroll = new ScrollPane(editCanvas);
-        editCanvasScroll.setFitToHeight(true);
-
-        previewCanvas = new Canvas();
-        ScrollPane previewCanvasScroll = new ScrollPane(previewCanvas);
-        previewCanvasScroll.setFitToHeight(true);
-        previewCanvasScroll.hvalueProperty().bindBidirectional(editCanvasScroll.hvalueProperty());
-        previewCanvasScroll.vvalueProperty().bindBidirectional(editCanvasScroll.vvalueProperty());
-        previewCanvasScroll.visibleProperty().bind(previewVisiblePy);
-
-        mapSourceView = new Text();
-        mapSourceView.setSmooth(true);
-        mapSourceView.setFontSmoothingType(FontSmoothingType.LCD);
-        mapSourceView.setFont(Font.font("Monospace", 14));
-
-        var vbox = new VBox(mapSourceView);
-        vbox.setPadding(new Insets(10,20,10,20));
-
-        var mapSourceViewScroll = new ScrollPane(vbox);
-        mapSourceViewScroll.setFitToHeight(true);
-
-        palettes.put(PALETTE_ACTORS, createActorPalette());
-        palettes.put(PALETTE_TERRAIN, createTerrainPalette());
-        palettes.put(PALETTE_FOOD, createFoodPalette());
-
-        var terrainPaletteTab = new Tab(tt("terrain"), palettes.get(PALETTE_TERRAIN).root());
-        terrainPaletteTab.setClosable(false);
-        terrainPaletteTab.setUserData(PALETTE_TERRAIN);
-
-        var actorPaletteTab = new Tab(tt("actors"), palettes.get(PALETTE_ACTORS).root());
-        actorPaletteTab.setClosable(false);
-        actorPaletteTab.setUserData(PALETTE_ACTORS);
-
-        var foodPaletteTab = new Tab(tt("pellets"), palettes.get(PALETTE_FOOD).root());
-        foodPaletteTab.setClosable(false);
-        foodPaletteTab.setUserData(PALETTE_FOOD);
-
-        palettesTabPane = new TabPane(actorPaletteTab, terrainPaletteTab, foodPaletteTab);
-        palettesTabPane.setPadding(new Insets(5,5,5,5));
-
-        terrainMapPropertiesEditor = new PropertyEditorPane(this);
-        terrainMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
-        terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
-
-        foodMapPropertiesEditor = new PropertyEditorPane(this);
-        foodMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
-        foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
-
-        var terrainPropertiesArea = new TitledPane();
-        terrainPropertiesArea.setMinWidth(300);
-        terrainPropertiesArea.setExpanded(true);
-        terrainPropertiesArea.setText(tt("terrain"));
-        terrainPropertiesArea.setContent(terrainMapPropertiesEditor);
-
-        var foodPropertiesArea = new TitledPane();
-        foodPropertiesArea.setExpanded(true);
-        foodPropertiesArea.setText(tt("pellets"));
-        foodPropertiesArea.setContent(foodMapPropertiesEditor);
-
-        var propertyEditorsPane = new VBox();
-        propertyEditorsPane.getChildren().addAll(terrainPropertiesArea, foodPropertiesArea);
-
-        focussedTileInfo = new Label();
-        focussedTileInfo.setMinWidth(100);
-        focussedTileInfo.setMaxWidth(100);
-
-        messageLabel = new Label();
-        messageLabel.setMinWidth(200);
-        messageLabel.setPadding(new Insets(0, 0, 0, 10));
+        createRenderers();
+        createFileChooser();
+        createMenuBarAndMenus();
+        createEditCanvas();
+        createPreviewCanvas();
+        createMapSourceView();
+        createTabPaneWithPalettes();
+        createPropertyEditors();
+        createTabPaneWithMapViews();
+        createFocussedTileIndicator();
+        createMessageDisplay();
+        createZoomSlider();
 
         var filler = new Region();
         HBox.setHgrow(filler, Priority.ALWAYS);
 
-        Slider sliderZoom = new Slider(8, 48, 16);
-        sliderZoom.valueProperty().bindBidirectional(gridSizePy);
-        sliderZoom.setShowTickLabels(false);
-        sliderZoom.setShowTickMarks(true);
-        sliderZoom.setPrefWidth(200);
-
-        var sliderZoomContainer = new HBox(new Label("Zoom"), sliderZoom);
-        sliderZoomContainer.setSpacing(5);
-
         var footer = new HBox(focussedTileInfo, messageLabel, filler, sliderZoomContainer);
         footer.setPadding(new Insets(0, 50, 0, 10));
 
-        var splitPane = new SplitPane(editCanvasScroll, previewCanvasScroll);
-        splitPane.setDividerPositions(0.5);
+        var rightArea = new VBox(tabPaneWithPalettes, tabPaneMapViews);
+        rightArea.setPadding(new Insets(0,5,0,5));
+        tabPaneWithPalettes.setMinHeight(75);
 
-        var tabSourceView = new Tab(tt("source"), mapSourceViewScroll);
-        tabSourceView.setClosable(false);
-
-        var tabPreview = new Tab(tt("preview"), splitPane);
-        tabPreview.setClosable(false);
-
-        var tabPaneViews = new TabPane(tabPreview, tabSourceView);
-        tabPaneViews.setSide(Side.BOTTOM);
-
-        var vbox2 = new VBox(tabPaneViews);
-        vbox2.setPadding(new Insets(0,5,0,5));
-
-        var hbox = new HBox(propertyEditorsPane, vbox2);
-        hbox.setPadding(new Insets(0,0,10,0));
-        HBox.setHgrow(vbox2, Priority.ALWAYS);
-
-        contentPane.setTop(palettesTabPane);
-        contentPane.setCenter(hbox);
+        contentPane.setLeft(propertyEditorsPane);
+        contentPane.setCenter(rightArea);
         contentPane.setBottom(footer);
 
-        createFileMenu();
-        createEditMenu();
-        createLoadMapMenu();
-        createViewMenu();
-        menuBar = new MenuBar(menuFile, menuEdit, menuLoadMap, menuView);
 
         // Note: this must be done *after* the initial map has been created/loaded!
         editCanvas.heightProperty().bind(Bindings.createDoubleBinding(
@@ -514,31 +439,138 @@ public class TileMapEditor  {
         clock.setCycleCount(Animation.INDEFINITE);
     }
 
-    public void start() {
-        // content pane and scroll pane have no height yet at this point!
-        int gridSize = (int)(0.75 *  stage.getHeight() / map().terrain().numRows());
-        gridSizePy.set(Math.max(gridSize, 8));
-        clock.play();
-        Logger.info("Stage height {}", stage.getHeight());
-        showMessage(tt("welcome_message"), 3, MessageType.INFO);
+    private void createRenderers() {
+        terrainMapEditRenderer = new TerrainMapEditRenderer();
+        terrainMapEditRenderer.setWallStrokeColor(parseColor(DEFAULT_COLOR_WALL_STROKE));
+        terrainMapEditRenderer.setWallFillColor(parseColor(DEFAULT_COLOR_WALL_FILL));
+
+        terrainMapPreviewRenderer = new TerrainMapRenderer();
+        terrainMapPreviewRenderer.setWallStrokeColor(parseColor(DEFAULT_COLOR_WALL_STROKE));
+        terrainMapPreviewRenderer.setWallFillColor(parseColor(DEFAULT_COLOR_WALL_FILL));
+
+        foodMapRenderer = new FoodMapRenderer();
+        foodMapRenderer.setPelletColor(TileMapUtil.parseColor(DEFAULT_FOOD_COLOR));
+        foodMapRenderer.setEnergizerColor(TileMapUtil.parseColor(DEFAULT_FOOD_COLOR));
     }
 
-    public void stop() {
-        clock.stop();
-        editingEnabledPy.set(false);
-        unsavedChanges = false;
+    private void createFileChooser() {
+        fileChooser = new FileChooser();
+        var worldExtensionFilter = new FileChooser.ExtensionFilter("World Map Files", "*.world");
+        var anyExtensionFilter = new FileChooser.ExtensionFilter("All Files", "*.*");
+        fileChooser.getExtensionFilters().addAll(worldExtensionFilter, anyExtensionFilter);
+        fileChooser.setSelectedExtensionFilter(worldExtensionFilter);
+        fileChooser.setInitialDirectory(lastUsedDir);
     }
 
-    public void showMessage(String message, long seconds, MessageType type) {
-        messageLabel.setText(message);
-        messageLabel.setFont(Font.font("sans", FontWeight.BOLD, 12));
-        Color color = switch (type) {
-            case INFO -> Color.BLACK;
-            case WARNING -> Color.GREEN;
-            case ERROR -> Color.RED;
-        };
-        messageLabel.setTextFill(color);
-        messageCloseTime = Instant.now().plus(Duration.ofSeconds(seconds));
+    private void createEditCanvas() {
+        editCanvas = new Canvas();
+        editCanvas.setOnMouseClicked(this::onMouseClickedOnEditCanvas);
+        editCanvas.setOnMouseMoved(this::onMouseMovedOverEditCanvas);
+        editCanvasScroll = new ScrollPane(editCanvas);
+        editCanvasScroll.setFitToHeight(true);
+    }
+
+    private void createPreviewCanvas() {
+        previewCanvas = new Canvas();
+        previewCanvasScroll = new ScrollPane(previewCanvas);
+        previewCanvasScroll.setFitToHeight(true);
+        previewCanvasScroll.hvalueProperty().bindBidirectional(editCanvasScroll.hvalueProperty());
+        previewCanvasScroll.vvalueProperty().bindBidirectional(editCanvasScroll.vvalueProperty());
+        previewCanvasScroll.visibleProperty().bind(previewVisiblePy);
+    }
+
+    private void createMapSourceView() {
+        mapSourceView = new Text();
+        mapSourceView.setSmooth(true);
+        mapSourceView.setFontSmoothingType(FontSmoothingType.LCD);
+        mapSourceView.setFont(Font.font("Monospace", 14));
+
+        var vbox = new VBox(mapSourceView);
+        vbox.setPadding(new Insets(10, 20, 10, 20));
+
+        mapSourceViewScroll = new ScrollPane(vbox);
+        mapSourceViewScroll.setFitToHeight(true);
+    }
+
+    private void createTabPaneWithMapViews() {
+        var tabSourceView = new Tab(tt("source"), mapSourceViewScroll);
+        tabSourceView.setClosable(false);
+
+        var splitPane = new SplitPane(editCanvasScroll, previewCanvasScroll);
+        splitPane.setDividerPositions(0.5);
+
+        var tabPreview = new Tab(tt("preview"), splitPane);
+        tabPreview.setClosable(false);
+
+        tabPaneMapViews = new TabPane(tabPreview, tabSourceView);
+        tabPaneMapViews.setSide(Side.BOTTOM);
+    }
+
+    private void createTabPaneWithPalettes() {
+        palettes.put(PALETTE_ACTORS, createActorPalette());
+        palettes.put(PALETTE_TERRAIN, createTerrainPalette());
+        palettes.put(PALETTE_FOOD, createFoodPalette());
+
+        var tab1 = new Tab(tt("terrain"), palettes.get(PALETTE_TERRAIN).root());
+        tab1.setClosable(false);
+        tab1.setUserData(PALETTE_TERRAIN);
+
+        var tab2 = new Tab(tt("actors"), palettes.get(PALETTE_ACTORS).root());
+        tab2.setClosable(false);
+        tab2.setUserData(PALETTE_ACTORS);
+
+        var tab3 = new Tab(tt("pellets"), palettes.get(PALETTE_FOOD).root());
+        tab3.setClosable(false);
+        tab3.setUserData(PALETTE_FOOD);
+
+        tabPaneWithPalettes = new TabPane(tab2, tab1, tab3);
+        tabPaneWithPalettes.setPadding(new Insets(5, 5, 5, 5));
+    }
+
+    private void createPropertyEditors() {
+        terrainMapPropertiesEditor = new PropertyEditorPane(this);
+        terrainMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
+        terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
+
+        foodMapPropertiesEditor = new PropertyEditorPane(this);
+        foodMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
+        foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
+
+        var terrainPropertiesPane = new TitledPane();
+        terrainPropertiesPane.setMinWidth(300);
+        terrainPropertiesPane.setExpanded(true);
+        terrainPropertiesPane.setText(tt("terrain"));
+        terrainPropertiesPane.setContent(terrainMapPropertiesEditor);
+
+        var foodPropertiesPane = new TitledPane();
+        foodPropertiesPane.setExpanded(true);
+        foodPropertiesPane.setText(tt("pellets"));
+        foodPropertiesPane.setContent(foodMapPropertiesEditor);
+
+        propertyEditorsPane = new VBox(terrainPropertiesPane, foodPropertiesPane);
+    }
+
+    private void createFocussedTileIndicator() {
+        focussedTileInfo = new Label();
+        focussedTileInfo.setMinWidth(100);
+        focussedTileInfo.setMaxWidth(100);
+    }
+
+    private void createMessageDisplay() {
+        messageLabel = new Label();
+        messageLabel.setMinWidth(200);
+        messageLabel.setPadding(new Insets(0, 0, 0, 10));
+    }
+
+    private void createZoomSlider() {
+        var sliderZoom = new Slider(8, 48, 16);
+        sliderZoom.valueProperty().bindBidirectional(gridSizePy);
+        sliderZoom.setShowTickLabels(false);
+        sliderZoom.setShowTickMarks(true);
+        sliderZoom.setPrefWidth(200);
+
+        sliderZoomContainer = new HBox(new Label("Zoom"), sliderZoom);
+        sliderZoomContainer.setSpacing(5);
     }
 
     private Palette createTerrainPalette() {
@@ -596,11 +628,19 @@ public class TileMapEditor  {
     }
 
     private String selectedPaletteID() {
-        return (String) palettesTabPane.getSelectionModel().getSelectedItem().getUserData();
+        return (String) tabPaneWithPalettes.getSelectionModel().getSelectedItem().getUserData();
     }
 
     private Palette selectedPalette() {
         return palettes.get(selectedPaletteID());
+    }
+
+    private void createMenuBarAndMenus() {
+        createFileMenu();
+        createEditMenu();
+        createLoadMapMenu();
+        createViewMenu();
+        menuBar = new MenuBar(menuFile, menuEdit, menuLoadMap, menuView);
     }
 
     private void createFileMenu() {
@@ -810,11 +850,11 @@ public class TileMapEditor  {
         return menuBar;
     }
 
-    public Menu menuFile() {
+    public Menu getFileMenu() {
         return menuFile;
     }
 
-    public Menu menuLoadMap() {
+    public Menu getLoadMapMenu() {
         return menuLoadMap;
     }
 

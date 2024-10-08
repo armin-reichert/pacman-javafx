@@ -55,7 +55,7 @@ public class TileMapEditorApp extends Application  {
 
         var miQuit = new MenuItem(TileMapEditor.tt("quit"));
         miQuit.setOnAction(e -> editor.showSaveConfirmationDialog(editor::showSaveDialog, stage::close));
-        editor.menuFile().getItems().add(miQuit);
+        editor.getFileMenu().getItems().add(miQuit);
 
         double height = Math.max(0.9 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
         double width = 1.9 * height;
@@ -64,9 +64,9 @@ public class TileMapEditorApp extends Application  {
         stage.setScene(scene);
 
         editor.addLoadMapMenuItem("Pac-Man", mapPacManGame);
-        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
+        editor.getLoadMapMenu().getItems().add(new SeparatorMenuItem());
         rangeClosed(1, 6).forEach(num -> editor.addLoadMapMenuItem("Ms. Pac-Man " + num, mapsMsPacManGame.get(num - 1)));
-        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
+        editor.getLoadMapMenu().getItems().add(new SeparatorMenuItem());
         rangeClosed(1, 8).forEach(num -> editor.addLoadMapMenuItem("Pac-Man XXL " + num, mapsPacManXXLGame.get(num - 1)));
 
         stage.titleProperty().bind(editor.titlePy);
