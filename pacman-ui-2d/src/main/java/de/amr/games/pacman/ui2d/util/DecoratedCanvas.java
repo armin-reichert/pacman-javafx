@@ -54,7 +54,7 @@ public class DecoratedCanvas extends BorderPane {
             if (!isDecorated()) {
                 return null;
             }
-            var clipRect = new Rectangle(getSize().getWidth(), getSize().getHeight());
+            var clipRect = new Rectangle(computeSize().getWidth(), computeSize().getHeight());
             // TODO avoid magic numbers
             double diameter = 26 * scaling();
             clipRect.setArcWidth(diameter);
@@ -67,7 +67,7 @@ public class DecoratedCanvas extends BorderPane {
                 return null;
             }
             // TODO avoid magic numbers
-            double w = Math.max(5, Math.ceil(getSize().getHeight() / 55));
+            double w = Math.max(5, Math.ceil(computeSize().getHeight() / 55));
             double r = Math.ceil(10 * scaling());
             return new Border(
                 new BorderStroke(borderColor(), BorderStrokeStyle.SOLID, new CornerRadii(r), new BorderWidths(w)));
@@ -86,7 +86,7 @@ public class DecoratedCanvas extends BorderPane {
         double width = canvas().getWidth();
         double height = canvas().getHeight();
         if (isDecorated()) {
-            Dimension2D size = getSize();
+            Dimension2D size = computeSize();
             width = size.getWidth();
             height = size.getHeight();
         }
@@ -103,7 +103,7 @@ public class DecoratedCanvas extends BorderPane {
         return canvas;
     }
 
-    public Dimension2D getSize() {
+    private Dimension2D computeSize() {
         return new Dimension2D(
             Math.round((unscaledCanvasWidth()  + 25) * scaling()), // TODO avoid magic numbers
             Math.round((unscaledCanvasHeight() + 15) * scaling())  // TODO avoid magic numbers
