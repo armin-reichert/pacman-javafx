@@ -59,58 +59,53 @@ import static java.util.Objects.requireNonNull;
  */
 public class TileMapEditor  {
 
-    private static final Node NO_GRAPHIC = null;
+    static final Node NO_GRAPHIC = null;
+    static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(TileMapEditor.class.getPackageName() + ".texts");
 
-    private static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(TileMapEditor.class.getPackageName() + ".texts");
+    static final Rectangle2D PAC_SPRITE          = new Rectangle2D(473,  16, 14, 14);
+    static final Rectangle2D RED_GHOST_SPRITE    = new Rectangle2D(505,  65, 14, 14);
+    static final Rectangle2D PINK_GHOST_SPRITE   = new Rectangle2D(553,  81, 14, 14);
+    static final Rectangle2D CYAN_GHOST_SPRITE   = new Rectangle2D(521,  97, 14, 14);
+    static final Rectangle2D ORANGE_GHOST_SPRITE = new Rectangle2D(521, 113, 14, 14);
+    static final Rectangle2D BONUS_SPRITE        = new Rectangle2D(505,  49, 14, 14);
 
-    public static String tt(String key, Object... args) {
-        return MessageFormat.format(TEXT_BUNDLE.getString(key), args);
-    }
+    static final String DEFAULT_COLOR_WALL_STROKE         = "rgb(33,33,255)";
+    static final String DEFAULT_COLOR_WALL_FILL           = "rgb(0,0,0)";
+    static final String DEFAULT_COLOR_DOOR                = "rgb(255,183, 255)";
 
-    public static final Rectangle2D PAC_SPRITE          = new Rectangle2D(473,  16, 14, 14);
-    public static final Rectangle2D RED_GHOST_SPRITE    = new Rectangle2D(505,  65, 14, 14);
-    public static final Rectangle2D PINK_GHOST_SPRITE   = new Rectangle2D(553,  81, 14, 14);
-    public static final Rectangle2D CYAN_GHOST_SPRITE   = new Rectangle2D(521,  97, 14, 14);
-    public static final Rectangle2D ORANGE_GHOST_SPRITE = new Rectangle2D(521, 113, 14, 14);
-    public static final Rectangle2D BONUS_SPRITE        = new Rectangle2D(505,  49, 14, 14);
+    static final String PROPERTY_COLOR_WALL_STROKE        = "color_wall_stroke";
+    static final String PROPERTY_COLOR_WALL_FILL          = "color_wall_fill";
+    static final String PROPERTY_COLOR_DOOR               = "color_door";
+    static final String PROPERTY_POS_BONUS                = "pos_bonus";
+    static final String PROPERTY_POS_PAC                  = "pos_pac";
+    static final String PROPERTY_POS_RED_GHOST            = "pos_ghost_1_red";
+    static final String PROPERTY_POS_PINK_GHOST           = "pos_ghost_2_pink";
+    static final String PROPERTY_POS_CYAN_GHOST           = "pos_ghost_3_cyan";
+    static final String PROPERTY_POS_ORANGE_GHOST         = "pos_ghost_4_orange";
+    static final String PROPERTY_POS_SCATTER_RED_GHOST    = "pos_scatter_ghost_1_red";
+    static final String PROPERTY_POS_SCATTER_PINK_GHOST   = "pos_scatter_ghost_2_pink";
+    static final String PROPERTY_POS_SCATTER_CYAN_GHOST   = "pos_scatter_ghost_3_cyan";
+    static final String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
 
-    public static final String DEFAULT_COLOR_WALL_STROKE         = "rgb(33,33,255)";
-    public static final String DEFAULT_COLOR_WALL_FILL           = "rgb(0,0,0)";
-    public static final String DEFAULT_COLOR_DOOR                = "rgb(255,183, 255)";
+    static final String PROPERTY_POS_HOUSE_MIN_TILE       = "pos_house_min_tile";
 
-    public static final String PROPERTY_COLOR_WALL_STROKE        = "color_wall_stroke";
-    public static final String PROPERTY_COLOR_WALL_FILL          = "color_wall_fill";
-    public static final String PROPERTY_COLOR_DOOR               = "color_door";
-    public static final String PROPERTY_POS_BONUS                = "pos_bonus";
-    public static final String PROPERTY_POS_PAC                  = "pos_pac";
-    public static final String PROPERTY_POS_RED_GHOST            = "pos_ghost_1_red";
-    public static final String PROPERTY_POS_PINK_GHOST           = "pos_ghost_2_pink";
-    public static final String PROPERTY_POS_CYAN_GHOST           = "pos_ghost_3_cyan";
-    public static final String PROPERTY_POS_ORANGE_GHOST         = "pos_ghost_4_orange";
-    public static final String PROPERTY_POS_SCATTER_RED_GHOST    = "pos_scatter_ghost_1_red";
-    public static final String PROPERTY_POS_SCATTER_PINK_GHOST   = "pos_scatter_ghost_2_pink";
-    public static final String PROPERTY_POS_SCATTER_CYAN_GHOST   = "pos_scatter_ghost_3_cyan";
-    public static final String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
+    static final String PROPERTY_COLOR_FOOD = "color_food";
+    static final String DEFAULT_FOOD_COLOR  = "rgb(255,0,0)";
 
-    public static final String PROPERTY_POS_HOUSE_MIN_TILE       = "pos_house_min_tile";
+    static final Vector2i DEFAULT_POS_PAC          = new Vector2i(13, 26);
+    static final Vector2i DEFAULT_POS_RED_GHOST    = new Vector2i(13, 14);
+    static final Vector2i DEFAULT_POS_PINK_GHOST   = new Vector2i(13, 17);
+    static final Vector2i DEFAULT_POS_CYAN_GHOST   = new Vector2i(11, 17);
+    static final Vector2i DEFAULT_POS_ORANGE_GHOST = new Vector2i(15, 17);
+    static final Vector2i DEFAULT_POS_BONUS        = new Vector2i(13, 20);
 
-    public static final String PROPERTY_COLOR_FOOD = "color_food";
-    public static final String DEFAULT_FOOD_COLOR  = "rgb(255,0,0)";
+    static final String PALETTE_TERRAIN = "Terrain";
+    static final String PALETTE_ACTORS  = "Actors";
+    static final String PALETTE_FOOD    = "Food";
 
-    public static final Vector2i DEFAULT_POS_PAC          = new Vector2i(13, 26);
-    public static final Vector2i DEFAULT_POS_RED_GHOST    = new Vector2i(13, 14);
-    public static final Vector2i DEFAULT_POS_PINK_GHOST   = new Vector2i(13, 17);
-    public static final Vector2i DEFAULT_POS_CYAN_GHOST   = new Vector2i(11, 17);
-    public static final Vector2i DEFAULT_POS_ORANGE_GHOST = new Vector2i(15, 17);
-    public static final Vector2i DEFAULT_POS_BONUS        = new Vector2i(13, 20);
+    static final int TOOL_SIZE = 32;
 
-    private static final String PALETTE_TERRAIN = "Terrain";
-    private static final String PALETTE_ACTORS  = "Actors";
-    private static final String PALETTE_FOOD    = "Food";
-
-    private static final int TOOL_SIZE = 32;
-
-    private static final byte[][] GHOST_HOUSE_SHAPE = {
+    static final byte[][] GHOST_HOUSE_SHAPE = {
         {16, 8, 8,14,14, 8, 8,17},
         { 9, 0, 0, 0, 0, 0, 0, 9},
         { 9, 0, 0, 0, 0, 0, 0, 9},
@@ -118,10 +113,14 @@ public class TileMapEditor  {
         {19, 8, 8, 8, 8, 8, 8,18}
     };
 
-    private static final byte[][] CIRCLE_2x2 = {
+    static final byte[][] CIRCLE_2x2 = {
         {Tiles.CORNER_NW, Tiles.CORNER_NE},
         {Tiles.CORNER_SW, Tiles.CORNER_SE}
     };
+
+    static String tt(String key, Object... args) {
+        return MessageFormat.format(TEXT_BUNDLE.getString(key), args);
+    }
 
     private static void addBorder(TileMap terrain, int emptyRowsTop, int emptyRowsBottom) {
         for (int row = emptyRowsTop; row < terrain.numRows() - emptyRowsBottom; ++row) {
@@ -156,28 +155,31 @@ public class TileMapEditor  {
         };
     }
 
-    public final ObjectProperty<String> titlePy = new SimpleObjectProperty<>(this, "title");
+    final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>();
 
-    public final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(this, "terrainVisible", true);
+    final BooleanProperty editingEnabledPy         = new SimpleBooleanProperty(false);
 
-    public final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(this, "foodVisible", true);
+    final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>() {
+        @Override
+        protected void invalidated() {
+            Vector2i tile = get();
+            var text = "Tile: " + (tile != null ? String.format("x=%2d y=%2d", tile.x(), tile.y()) : "n/a");
+            focussedTileInfo.setText(text);
+        }
+    };
 
-    public final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(this, "gridVisible", true);
+    final BooleanProperty foodVisiblePy            = new SimpleBooleanProperty(true);
 
-    public final BooleanProperty editingEnabledPy = new SimpleBooleanProperty(this,"editingEnabled", false);
-
-    public final BooleanProperty previewVisiblePy = new SimpleBooleanProperty(this, "previewVisible", true);
-
-    public final IntegerProperty gridSizePy = new SimpleIntegerProperty(this, "gridSize", 16) {
+    final IntegerProperty gridSizePy = new SimpleIntegerProperty(16) {
         @Override
         protected void invalidated() {
             invalidateTerrainMapPaths();
         }
     };
 
-    public final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>(this, "currentFile");
+    final BooleanProperty gridVisiblePy            = new SimpleBooleanProperty(true);
 
-    private final ObjectProperty<WorldMap> mapPy = new SimpleObjectProperty<>(this, "map") {
+    final ObjectProperty<WorldMap> mapPy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
             WorldMap map = get();
@@ -193,16 +195,21 @@ public class TileMapEditor  {
         }
     };
 
-    private final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>(this, "focussedTile") {
+    final BooleanProperty propertyEditorsVisiblePy = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
-            Vector2i tile = get();
-            var text = "Tile: " + (tile != null ? String.format("x=%2d y=%2d", tile.x(), tile.y()) : "n/a");
-            focussedTileInfo.setText(text);
+            changePropertyEditorsPaneVisibility(get());
         }
     };
 
-    private final BooleanProperty symmetricEditModePy = new SimpleBooleanProperty(this, "symmetricEditMode", true);
+    final BooleanProperty previewVisiblePy         = new SimpleBooleanProperty(true);
+
+    final BooleanProperty symmetricEditModePy = new SimpleBooleanProperty(true);
+
+    final ObjectProperty<String> titlePy           = new SimpleObjectProperty<>("Tile Map Editor");
+
+    final BooleanProperty terrainVisiblePy         = new SimpleBooleanProperty(true);
+
 
     private Stage stage;
     private final BorderPane contentPane = new BorderPane();
@@ -354,15 +361,14 @@ public class TileMapEditor  {
         HBox.setHgrow(filler, Priority.ALWAYS);
 
         var footer = new HBox(focussedTileInfo, messageLabel, filler, sliderZoomContainer);
-        footer.setPadding(new Insets(0, 50, 0, 10));
+        footer.setPadding(new Insets(10, 10, 10, 10));
 
-        var rightArea = new VBox(tabPaneWithPalettes, tabPaneMapViews);
+        var rightArea = new VBox(tabPaneWithPalettes, tabPaneMapViews, footer);
         rightArea.setPadding(new Insets(0,5,0,5));
         tabPaneWithPalettes.setMinHeight(75);
 
         contentPane.setLeft(propertyEditorsPane);
         contentPane.setCenter(rightArea);
-        contentPane.setBottom(footer);
 
 
         // Note: this must be done *after* the initial map has been created/loaded!
@@ -548,6 +554,15 @@ public class TileMapEditor  {
         foodPropertiesPane.setContent(foodMapPropertiesEditor);
 
         propertyEditorsPane = new VBox(terrainPropertiesPane, foodPropertiesPane);
+        propertyEditorsPane.visibleProperty().bind(propertyEditorsVisiblePy);
+    }
+
+    private void changePropertyEditorsPaneVisibility(boolean visible) {
+        if (visible) {
+            contentPane.setLeft(propertyEditorsPane);
+        } else {
+            contentPane.setLeft(null);
+        }
     }
 
     private void createFocussedTileIndicator() {
@@ -567,7 +582,7 @@ public class TileMapEditor  {
         sliderZoom.valueProperty().bindBidirectional(gridSizePy);
         sliderZoom.setShowTickLabels(false);
         sliderZoom.setShowTickMarks(true);
-        sliderZoom.setPrefWidth(200);
+        sliderZoom.setPrefWidth(150);
 
         sliderZoomContainer = new HBox(new Label("Zoom"), sliderZoom);
         sliderZoomContainer.setSpacing(5);
@@ -694,24 +709,28 @@ public class TileMapEditor  {
     }
 
     private void createViewMenu() {
-        var miViewTerrain = new CheckMenuItem(tt("menu.view.terrain"));
-        miViewTerrain.selectedProperty().bindBidirectional(terrainVisiblePy);
+        var miShowPropertyEditors = new CheckMenuItem("Property Editors"); //TODO localize
+        miShowPropertyEditors.selectedProperty().bindBidirectional(propertyEditorsVisiblePy);
 
-        var miViewFood = new CheckMenuItem(tt("menu.view.food"));
-        miViewFood.selectedProperty().bindBidirectional(foodVisiblePy);
+        var miShowTerrain = new CheckMenuItem(tt("menu.view.terrain"));
+        miShowTerrain.selectedProperty().bindBidirectional(terrainVisiblePy);
 
-        var miViewGrid = new CheckMenuItem(tt("menu.view.grid"));
-        miViewGrid.selectedProperty().bindBidirectional(gridVisiblePy);
+        var miShowFood = new CheckMenuItem(tt("menu.view.food"));
+        miShowFood.selectedProperty().bindBidirectional(foodVisiblePy);
 
-        var miViewPreview = new CheckMenuItem(tt("menu.view.preview"));
-        miViewPreview.selectedProperty().bindBidirectional(previewVisiblePy);
+        var miShowGrid = new CheckMenuItem(tt("menu.view.grid"));
+        miShowGrid.selectedProperty().bindBidirectional(gridVisiblePy);
+
+        var miShowPreview = new CheckMenuItem(tt("menu.view.preview"));
+        miShowPreview.selectedProperty().bindBidirectional(previewVisiblePy);
 
         menuView = new Menu(tt("menu.view"), NO_GRAPHIC,
-            miViewTerrain,
-            miViewFood,
-            miViewGrid,
+            miShowPropertyEditors,
+            miShowTerrain,
+            miShowFood,
+            miShowGrid,
             new SeparatorMenuItem(),
-            miViewPreview);
+            miShowPreview);
     }
 
     public void addLoadMapMenuItem(String description, WorldMap map) {
