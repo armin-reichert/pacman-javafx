@@ -24,9 +24,22 @@ public class DecoratedCanvas extends BorderPane {
             doLayout(get(), true);
         }
     };
+
     public final BooleanProperty decoratedPy           = new SimpleBooleanProperty(this, "decorated", true);
-    public final DoubleProperty unscaledCanvasWidthPy  = new SimpleDoubleProperty(this, "unscaledCanvasWidth", 500);
-    public final DoubleProperty unscaledCanvasHeightPy = new SimpleDoubleProperty(this, "unscaledCanvasHeight", 400);
+
+    public final DoubleProperty unscaledCanvasWidthPy  = new SimpleDoubleProperty(this, "unscaledCanvasWidth", 500) {
+        @Override
+        protected void invalidated() {
+            doLayout(scaling(), true);
+        }
+    };
+    public final DoubleProperty unscaledCanvasHeightPy = new SimpleDoubleProperty(this, "unscaledCanvasHeight", 400) {
+        @Override
+        protected void invalidated() {
+            doLayout(scaling(), true);
+        }
+    };
+
     public final ObjectProperty<Color> borderColorPy   = new SimpleObjectProperty<>(this, "borderColor", Color.LIGHTBLUE);
 
     private final Canvas canvas = new Canvas();
@@ -36,9 +49,6 @@ public class DecoratedCanvas extends BorderPane {
         setCenter(canvas);
         canvas.widthProperty().bind(unscaledCanvasWidthPy.multiply(scalingPy));
         canvas.heightProperty().bind(unscaledCanvasHeightPy.multiply(scalingPy));
-
-        unscaledCanvasWidthPy.addListener((py, ov, nv) -> doLayout(scaling(), true));
-        unscaledCanvasHeightPy.addListener((py, ov, nv) -> doLayout(scaling(), true));
 
         clipProperty().bind(Bindings.createObjectBinding(() -> {
             if (!isDecorated()) {
