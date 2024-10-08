@@ -160,6 +160,8 @@ public class TileMapEditor  {
         };
     }
 
+    // --  end static --
+
     final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>();
 
     final BooleanProperty editingEnabledPy = new SimpleBooleanProperty(false);
@@ -369,6 +371,8 @@ public class TileMapEditor  {
         createZoomSlider();
         arrangeMainLayout();
         initActiveRendering();
+
+        propertyEditorsVisiblePy.set(false);
     }
 
     private void createRenderers() {
@@ -1120,6 +1124,7 @@ public class TileMapEditor  {
         }
 
         void onMouseClicked(MouseEvent event) {
+            editCanvas.requestFocus();
             if (event.getButton() == MouseButton.PRIMARY) {
                 contextMenu.hide();
                 if (event.getClickCount() == 2) { // double-click

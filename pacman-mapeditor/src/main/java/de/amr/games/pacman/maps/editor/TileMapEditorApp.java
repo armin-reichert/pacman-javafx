@@ -40,6 +40,8 @@ public class TileMapEditorApp extends Application  {
     @Override
     public void start(Stage stage) {
         try {
+            stage.setMinWidth(1024);
+            stage.setMinHeight(768);
             doStart(stage);
         } catch (Exception x) {
             x.printStackTrace(System.err);
@@ -57,8 +59,8 @@ public class TileMapEditorApp extends Application  {
         miQuit.setOnAction(e -> editor.showSaveConfirmationDialog(editor::showSaveDialog, stage::close));
         editor.getFileMenu().getItems().add(miQuit);
 
-        double height = Math.max(0.9 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
-        double width = 1.9 * height;
+        double height = Math.max(0.8 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
+        double width = 1.25 * height;
         var scene = new Scene(layout, width, height);
         scene.setFill(Color.BLACK);
         stage.setScene(scene);
