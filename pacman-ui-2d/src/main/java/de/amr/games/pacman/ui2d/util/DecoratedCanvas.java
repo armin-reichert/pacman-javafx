@@ -13,6 +13,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+
 /**
  * @author Armin Reichert
  */
@@ -42,10 +44,12 @@ public class DecoratedCanvas extends BorderPane {
         }
     };
 
-    private final Canvas canvas = new Canvas();
+    private final Canvas canvas;
     private double minScaling = 1.0;
 
-    public DecoratedCanvas() {
+    public DecoratedCanvas(Canvas canvas) {
+        this.canvas = checkNotNull(canvas);
+
         setCenter(canvas);
         canvas.widthProperty().bind(unscaledCanvasWidthPy.multiply(scalingPy));
         canvas.heightProperty().bind(unscaledCanvasHeightPy.multiply(scalingPy));

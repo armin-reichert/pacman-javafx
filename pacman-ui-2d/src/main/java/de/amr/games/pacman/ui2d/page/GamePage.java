@@ -21,6 +21,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -71,8 +72,9 @@ public class GamePage extends StackPane implements Page {
 
     protected final GameContext context;
     protected final Scene parentScene;
+    protected final Canvas canvas;
     protected final BorderPane gameCanvasPane = new BorderPane();
-    protected final DecoratedCanvas gameCanvas = new DecoratedCanvas();
+    protected final DecoratedCanvas gameCanvas;
     protected final DashboardLayer dashboardLayer; // dashboard, picture-in-picture view
     protected final PopupLayer popupLayer; // help, signature
     protected final ContextMenu contextMenu = new ContextMenu();
@@ -81,6 +83,9 @@ public class GamePage extends StackPane implements Page {
         this.context = checkNotNull(context);
         this.parentScene = checkNotNull(parentScene);
 
+        canvas = new Canvas();
+
+        gameCanvas = new DecoratedCanvas(canvas);
         gameCanvas.setMinScaling(0.5);
         gameCanvas.setUnscaledCanvasWidth(GameModel.ARCADE_MAP_SIZE_X);
         gameCanvas.setUnscaledCanvasHeight(GameModel.ARCADE_MAP_SIZE_Y);
