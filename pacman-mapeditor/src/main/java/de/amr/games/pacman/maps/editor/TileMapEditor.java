@@ -33,10 +33,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontSmoothingType;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
+import javafx.scene.text.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
@@ -66,6 +63,9 @@ public class TileMapEditor  {
 
     static final Node NO_GRAPHIC = null;
     static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(TileMapEditor.class.getPackageName() + ".texts");
+
+    static final Font FONT_STATUS_LINE = Font.font(Font.getDefault().getFamily(), FontWeight.BOLD, 12);
+    static final Font FONT_MESSAGE     = Font.font("Serif", FontWeight.EXTRA_BOLD, 14);
 
     static final Rectangle2D PAC_SPRITE          = new Rectangle2D(473,  16, 14, 14);
     static final Rectangle2D RED_GHOST_SPRITE    = new Rectangle2D(505,  65, 14, 14);
@@ -166,14 +166,7 @@ public class TileMapEditor  {
 
     final BooleanProperty editingEnabledPy = new SimpleBooleanProperty(false);
 
-    final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>() {
-        @Override
-        protected void invalidated() {
-            Vector2i tile = get();
-            var text = "Tile: " + (tile != null ? String.format("x=%2d y=%2d", tile.x(), tile.y()) : "n/a");
-            focussedTileInfo.setText(text);
-        }
-    };
+    final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>();
 
     final BooleanProperty foodVisiblePy            = new SimpleBooleanProperty(true);
 
@@ -275,7 +268,6 @@ public class TileMapEditor  {
 
     public void showMessage(String message, long seconds, MessageType type) {
         messageLabel.setText(message);
-        messageLabel.setFont(Font.font("sans", FontWeight.BOLD, 12));
         Color color = switch (type) {
             case INFO -> Color.BLACK;
             case WARNING -> Color.GREEN;
@@ -333,12 +325,9 @@ public class TileMapEditor  {
     }
 
     private WorldMap createWorldMap(int numRows, int numCols) {
-        var map = new WorldMap(numRows, numCols);
-        Logger.info("Map created. rows={}, cols={}", numRows, numCols);
+        var worldMap = new WorldMap(numRows, numCols);
 
-        TileMap terrain = map.terrain();
-        addBorder(terrain, 3, 2);
-
+        TileMap terrain = worldMap.terrain();
         terrain.setProperty(PROPERTY_COLOR_WALL_STROKE, DEFAULT_COLOR_WALL_STROKE);
         terrain.setProperty(PROPERTY_COLOR_WALL_FILL,   DEFAULT_COLOR_WALL_FILL);
         terrain.setProperty(PROPERTY_COLOR_DOOR,        DEFAULT_COLOR_DOOR);
@@ -348,10 +337,13 @@ public class TileMapEditor  {
         terrain.setProperty(PROPERTY_POS_CYAN_GHOST,    formatTile(DEFAULT_POS_CYAN_GHOST));
         terrain.setProperty(PROPERTY_POS_ORANGE_GHOST,  formatTile(DEFAULT_POS_ORANGE_GHOST));
         terrain.setProperty(PROPERTY_POS_BONUS,         formatTile(DEFAULT_POS_BONUS));
-        map.food().setProperty(PROPERTY_COLOR_FOOD,     DEFAULT_FOOD_COLOR);
-
+        addBorder(terrain, 3, 2);
         invalidateTerrainMapPaths();
-        return map;
+
+        worldMap.food().setProperty(PROPERTY_COLOR_FOOD, DEFAULT_FOOD_COLOR);
+
+        Logger.info("Map created. rows={}, cols={}", numRows, numCols);
+        return worldMap;
     }
 
     public void createUI(Stage stage) {
@@ -509,13 +501,16 @@ public class TileMapEditor  {
 
     private void createFocussedTileIndicator() {
         focussedTileInfo = new Label();
+        focussedTileInfo.setFont(FONT_STATUS_LINE);
         focussedTileInfo.setMinWidth(100);
         focussedTileInfo.setMaxWidth(100);
+        focussedTileInfo.textProperty().bind(focussedTilePy.map(
+            tile -> tile != null ? "Tile: x=%2d y=%2d".formatted(tile.x(), tile.y()) : "n/a"));
     }
 
     private void createEditModeIndicator() {
         editModeIndicator = new Label();
-        editModeIndicator.setTextFill(Color.RED);
+        editModeIndicator.setFont(FONT_STATUS_LINE);
         editModeIndicator.textProperty().bind(Bindings.createStringBinding(
                 () -> {
                     if (!editingEnabledPy.get()) {
@@ -534,6 +529,7 @@ public class TileMapEditor  {
 
     private void createMessageDisplay() {
         messageLabel = new Label();
+        messageLabel.setFont(FONT_MESSAGE);
         messageLabel.setMinWidth(200);
         messageLabel.setPadding(new Insets(0, 0, 0, 10));
     }
