@@ -11,6 +11,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import org.tinylog.Logger;
 
 /**
  * @author Armin Reichert
@@ -24,11 +25,16 @@ public class DecoratedCanvas extends BorderPane {
     public final ObjectProperty<Color> borderColorPy   = new SimpleObjectProperty<>(this, "borderColor", Color.LIGHTBLUE);
 
     private final Canvas canvas = new Canvas();
+    private double minScaling = 1.0;
 
     public DecoratedCanvas() {
         setCenter(canvas);
         canvas.widthProperty().bind(unscaledCanvasWidthPy.multiply(scalingPy));
         canvas.heightProperty().bind(unscaledCanvasHeightPy.multiply(scalingPy));
+
+        scalingPy.addListener((py, ov, nv) -> doLayout(scaling(), true));
+        unscaledCanvasWidthPy.addListener((py, ov, nv) -> doLayout(scaling(), true));
+        unscaledCanvasHeightPy.addListener((py, ov, nv) -> doLayout(scaling(), true));
 
         clipProperty().bind(Bindings.createObjectBinding(() -> {
             if (!isDecorated()) {
@@ -53,6 +59,51 @@ public class DecoratedCanvas extends BorderPane {
                 new BorderStroke(borderColor(), BorderStrokeStyle.SOLID, new CornerRadii(r), new BorderWidths(w)));
         }, decoratedPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
     }
+
+    public void setMinScaling(double value) {
+        minScaling = value;
+    }
+
+
+    void doLayout(double newScaling, boolean forced) {
+        if (newScaling < minScaling) {
+            Logger.warn("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
+            return;
+        }
+        if (!forced && Math.abs(scaling() - newScaling) < 1e-2) { // avoid irrelevant scaling
+            Logger.debug("No scaling needed, difference too small");
+            return;
+        }
+        double width = canvas().getWidth();
+        double height = canvas().getHeight();
+        if (isDecorated()) {
+            var size = getSize();
+            width = size.getWidth();
+            height = size.getHeight();
+        }
+        setMinSize(width, height);
+        setMaxSize(width, height);
+        setPrefSize(width, height);
+        setScaling(newScaling);
+
+        Logger.debug("Unscaled canvas size: w={0.0} h={0.0}", unscaledCanvasWidth(), unscaledCanvasHeight());
+        Logger.debug("Canvas size: w={0.0} h={0.0}", canvas().getWidth(), canvas().getHeight());
+    }
+
+    public void resizeTo(double width, double height) {
+        if (isDecorated()) {
+            double shrunkWidth  = 0.85 * width;
+            double shrunkHeight = 0.92 * height;
+            double scaling = shrunkHeight / unscaledCanvasHeight();
+            if (scaling * unscaledCanvasWidth() > shrunkWidth) {
+                scaling = shrunkWidth / unscaledCanvasWidth();
+            }
+            doLayout(scaling, false);
+        } else {
+            doLayout(height / unscaledCanvasHeight(), false);
+        }
+    }
+
 
     public Canvas canvas() {
         return canvas;

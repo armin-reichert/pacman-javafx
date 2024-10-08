@@ -80,9 +80,9 @@ public class GamePage extends StackPane implements Page {
         this.context = checkNotNull(context);
         this.parentScene = checkNotNull(parentScene);
 
-        canvasLayer.setMinScaling(0.5);
 
         DecoratedCanvas decoratedCanvas = canvasLayer.canvas();
+        decoratedCanvas.setMinScaling(0.5);
         decoratedCanvas.setUnscaledCanvasWidth(GameModel.ARCADE_MAP_SIZE_X);
         decoratedCanvas.setUnscaledCanvasHeight(GameModel.ARCADE_MAP_SIZE_Y);
         decoratedCanvas.setBorderColor(PALETTE_PALE);
@@ -138,7 +138,7 @@ public class GamePage extends StackPane implements Page {
 
     @Override
     public void setSize(double width, double height) {
-        canvasLayer.resizeTo(width, height);
+        canvasLayer.canvas().resizeTo(width, height);
     }
 
     @Override
@@ -198,7 +198,7 @@ public class GamePage extends StackPane implements Page {
         Vector2i worldSizePixels = context.worldSizeTilesOrDefault().scaled(TS);
         canvasLayer.canvas().setUnscaledCanvasWidth(worldSizePixels.x());
         canvasLayer.canvas().setUnscaledCanvasHeight(worldSizePixels.y());
-        canvasLayer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
+        canvasLayer.canvas().resizeTo(parentScene.getWidth(), parentScene.getHeight());
         Logger.info("Canvas size adapted. w={0.00}, h={0.00}", canvas().getWidth(), canvas().getHeight());
     }
 
