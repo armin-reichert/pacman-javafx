@@ -18,7 +18,12 @@ import org.tinylog.Logger;
  */
 public class DecoratedCanvas extends BorderPane {
 
-    public final DoubleProperty scalingPy              = new SimpleDoubleProperty(this, "scaling", 1.0);
+    public final DoubleProperty scalingPy              = new SimpleDoubleProperty(this, "scaling", 1.0) {
+        @Override
+        protected void invalidated() {
+            doLayout(get(), true);
+        }
+    };
     public final BooleanProperty decoratedPy           = new SimpleBooleanProperty(this, "decorated", true);
     public final DoubleProperty unscaledCanvasWidthPy  = new SimpleDoubleProperty(this, "unscaledCanvasWidth", 500);
     public final DoubleProperty unscaledCanvasHeightPy = new SimpleDoubleProperty(this, "unscaledCanvasHeight", 400);
@@ -32,7 +37,6 @@ public class DecoratedCanvas extends BorderPane {
         canvas.widthProperty().bind(unscaledCanvasWidthPy.multiply(scalingPy));
         canvas.heightProperty().bind(unscaledCanvasHeightPy.multiply(scalingPy));
 
-        scalingPy.addListener((py, ov, nv) -> doLayout(scaling(), true));
         unscaledCanvasWidthPy.addListener((py, ov, nv) -> doLayout(scaling(), true));
         unscaledCanvasHeightPy.addListener((py, ov, nv) -> doLayout(scaling(), true));
 
