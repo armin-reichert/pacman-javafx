@@ -11,6 +11,7 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.*;
+import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
@@ -20,7 +21,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -191,16 +191,15 @@ public class GamePage extends StackPane implements Page {
         contextMenu.requestFocus();
     }
 
-    public Canvas canvas() {
-        return gameCanvas.canvas();
-    }
-
     public void adaptCanvasSizeToCurrentWorld() {
         Vector2i worldSizePixels = context.worldSizeTilesOrDefault().scaled(TS);
         gameCanvas.setUnscaledCanvasWidth(worldSizePixels.x());
         gameCanvas.setUnscaledCanvasHeight(worldSizePixels.y());
         gameCanvas.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-        Logger.info("Canvas size adapted. w={0.00}, h={0.00}", canvas().getWidth(), canvas().getHeight());
+    }
+
+    public void setWorldRenderer(GameWorldRenderer renderer) {
+        renderer.setCanvas(gameCanvas.canvas());
     }
 
     protected void setGameScene(GameScene gameScene) {

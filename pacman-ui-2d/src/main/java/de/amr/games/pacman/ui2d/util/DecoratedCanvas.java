@@ -150,6 +150,7 @@ public class DecoratedCanvas extends BorderPane {
         } else {
             doLayout(height / unscaledCanvasHeight(), false);
         }
+        Logger.debug("Decorated canvas size adapted. w={0.00}, h={0.00}", canvas().getWidth(), canvas().getHeight());
     }
 
     public boolean isDecorated() {
