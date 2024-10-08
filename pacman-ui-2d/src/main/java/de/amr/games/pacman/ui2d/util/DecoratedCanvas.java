@@ -64,8 +64,7 @@ public class DecoratedCanvas extends BorderPane {
         minScaling = value;
     }
 
-
-    void doLayout(double newScaling, boolean forced) {
+    private void doLayout(double newScaling, boolean forced) {
         if (newScaling < minScaling) {
             Logger.warn("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
             return;
@@ -77,7 +76,7 @@ public class DecoratedCanvas extends BorderPane {
         double width = canvas().getWidth();
         double height = canvas().getHeight();
         if (isDecorated()) {
-            var size = getSize();
+            Dimension2D size = getSize();
             width = size.getWidth();
             height = size.getHeight();
         }
@@ -89,21 +88,6 @@ public class DecoratedCanvas extends BorderPane {
         Logger.debug("Unscaled canvas size: w={0.0} h={0.0}", unscaledCanvasWidth(), unscaledCanvasHeight());
         Logger.debug("Canvas size: w={0.0} h={0.0}", canvas().getWidth(), canvas().getHeight());
     }
-
-    public void resizeTo(double width, double height) {
-        if (isDecorated()) {
-            double shrunkWidth  = 0.85 * width;
-            double shrunkHeight = 0.92 * height;
-            double scaling = shrunkHeight / unscaledCanvasHeight();
-            if (scaling * unscaledCanvasWidth() > shrunkWidth) {
-                scaling = shrunkWidth / unscaledCanvasWidth();
-            }
-            doLayout(scaling, false);
-        } else {
-            doLayout(height / unscaledCanvasHeight(), false);
-        }
-    }
-
 
     public Canvas canvas() {
         return canvas;
@@ -138,6 +122,20 @@ public class DecoratedCanvas extends BorderPane {
 
     public void setUnscaledCanvasHeight(double h) {
         unscaledCanvasHeightPy.set(h);
+    }
+
+    public void resizeTo(double width, double height) {
+        if (isDecorated()) {
+            double shrunkWidth  = 0.85 * width;
+            double shrunkHeight = 0.92 * height;
+            double scaling = shrunkHeight / unscaledCanvasHeight();
+            if (scaling * unscaledCanvasWidth() > shrunkWidth) {
+                scaling = shrunkWidth / unscaledCanvasWidth();
+            }
+            doLayout(scaling, false);
+        } else {
+            doLayout(height / unscaledCanvasHeight(), false);
+        }
     }
 
     public boolean isDecorated() {

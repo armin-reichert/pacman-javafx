@@ -71,8 +71,8 @@ public class GamePage extends StackPane implements Page {
 
     protected final GameContext context;
     protected final Scene parentScene;
-    protected final BorderPane canvasLayer = new BorderPane();
-    protected final DecoratedCanvas decoratedCanvas = new DecoratedCanvas();
+    protected final BorderPane gameCanvasPane = new BorderPane();
+    protected final DecoratedCanvas gameCanvas = new DecoratedCanvas();
     protected final DashboardLayer dashboardLayer; // dashboard, picture-in-picture view
     protected final PopupLayer popupLayer; // help, signature
     protected final ContextMenu contextMenu = new ContextMenu();
@@ -81,14 +81,14 @@ public class GamePage extends StackPane implements Page {
         this.context = checkNotNull(context);
         this.parentScene = checkNotNull(parentScene);
 
-        decoratedCanvas.setMinScaling(0.5);
-        decoratedCanvas.setUnscaledCanvasWidth(GameModel.ARCADE_MAP_SIZE_X);
-        decoratedCanvas.setUnscaledCanvasHeight(GameModel.ARCADE_MAP_SIZE_Y);
-        decoratedCanvas.setBorderColor(PALETTE_PALE);
-        decoratedCanvas.decoratedPy.bind(PY_CANVAS_DECORATED);
-        decoratedCanvas.decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
+        gameCanvas.setMinScaling(0.5);
+        gameCanvas.setUnscaledCanvasWidth(GameModel.ARCADE_MAP_SIZE_X);
+        gameCanvas.setUnscaledCanvasHeight(GameModel.ARCADE_MAP_SIZE_Y);
+        gameCanvas.setBorderColor(PALETTE_PALE);
+        gameCanvas.decoratedPy.bind(PY_CANVAS_DECORATED);
+        gameCanvas.decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
 
-        canvasLayer.setCenter(decoratedCanvas);
+        gameCanvasPane.setCenter(gameCanvas);
 
         dashboardLayer = new DashboardLayer(context);
         dashboardLayer.addDashboardItem(context.locText("infobox.general.title"), new InfoBoxGeneral());
@@ -99,13 +99,13 @@ public class GamePage extends StackPane implements Page {
         dashboardLayer.addDashboardItem(context.locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
         dashboardLayer.addDashboardItem(context.locText("infobox.about.title"), new InfoBoxAbout());
 
-        popupLayer = new PopupLayer(context, decoratedCanvas);
+        popupLayer = new PopupLayer(context, gameCanvas);
         popupLayer.setMouseTransparent(true);
-        popupLayer.sign(decoratedCanvas,
+        popupLayer.sign(gameCanvas,
             context.assets().font("font.monospaced", 8), Color.LIGHTGRAY,
             context.locText("app.signature"));
 
-        getChildren().addAll(canvasLayer, dashboardLayer, popupLayer);
+        getChildren().addAll(gameCanvasPane, dashboardLayer, popupLayer);
 
         //TODO is this the recommended way to close an open context-menu?
         setOnMouseClicked(e -> contextMenu.hide());
@@ -115,7 +115,7 @@ public class GamePage extends StackPane implements Page {
             () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? border(Color.RED, 3) : null,
             PY_DEBUG_INFO, context.gameSceneProperty()
         ));
-        canvasLayer.borderProperty().bind(Bindings.createObjectBinding(
+        gameCanvasPane.borderProperty().bind(Bindings.createObjectBinding(
             () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? border(Color.YELLOW, 3) : null,
             PY_DEBUG_INFO, context.gameSceneProperty()
         ));
@@ -139,7 +139,7 @@ public class GamePage extends StackPane implements Page {
 
     @Override
     public void setSize(double width, double height) {
-        decoratedCanvas.resizeTo(width, height);
+        gameCanvas.resizeTo(width, height);
     }
 
     @Override
@@ -192,14 +192,14 @@ public class GamePage extends StackPane implements Page {
     }
 
     public Canvas canvas() {
-        return decoratedCanvas.canvas();
+        return gameCanvas.canvas();
     }
 
     public void adaptCanvasSizeToCurrentWorld() {
         Vector2i worldSizePixels = context.worldSizeTilesOrDefault().scaled(TS);
-        decoratedCanvas.setUnscaledCanvasWidth(worldSizePixels.x());
-        decoratedCanvas.setUnscaledCanvasHeight(worldSizePixels.y());
-        decoratedCanvas.resizeTo(parentScene.getWidth(), parentScene.getHeight());
+        gameCanvas.setUnscaledCanvasWidth(worldSizePixels.x());
+        gameCanvas.setUnscaledCanvasHeight(worldSizePixels.y());
+        gameCanvas.resizeTo(parentScene.getWidth(), parentScene.getHeight());
         Logger.info("Canvas size adapted. w={0.00}, h={0.00}", canvas().getWidth(), canvas().getHeight());
     }
 
@@ -216,9 +216,9 @@ public class GamePage extends StackPane implements Page {
     }
 
     protected void setGameScene2D(GameScene2D scene2D) {
-        getChildren().set(0, canvasLayer);
-        scene2D.scalingPy.bind(decoratedCanvas.scalingPy);
-        decoratedCanvas.backgroundProperty().bind(scene2D.backgroundColorPy.map(Ufx::coloredBackground));
+        getChildren().set(0, gameCanvasPane);
+        scene2D.scalingPy.bind(gameCanvas.scalingPy);
+        gameCanvas.backgroundProperty().bind(scene2D.backgroundColorPy.map(Ufx::coloredBackground));
         adaptCanvasSizeToCurrentWorld();
     }
 
@@ -248,7 +248,7 @@ public class GamePage extends StackPane implements Page {
 
     public void showHelp() {
         if (isCurrentGameScene2D()) {
-            popupLayer.showHelp(decoratedCanvas.scaling());
+            popupLayer.showHelp(gameCanvas.scaling());
         }
     }
 }
