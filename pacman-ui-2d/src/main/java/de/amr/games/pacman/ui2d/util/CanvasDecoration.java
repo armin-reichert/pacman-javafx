@@ -18,11 +18,13 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public class DecoratedCanvas extends BorderPane {
+public class CanvasDecoration extends BorderPane {
+
+    public final BooleanProperty borderVisiblePy = new SimpleBooleanProperty(false);
 
     public final ObjectProperty<Color> borderColorPy = new SimpleObjectProperty<>(Color.LIGHTBLUE);
 
-    public final BooleanProperty decoratedPy = new SimpleBooleanProperty(true);
+    public final BooleanProperty enabledPy = new SimpleBooleanProperty(true);
 
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0) {
         @Override
@@ -47,15 +49,17 @@ public class DecoratedCanvas extends BorderPane {
     private final Canvas canvas;
     private double minScaling = 1.0;
 
-    public DecoratedCanvas(Canvas canvas) {
+    public CanvasDecoration(Canvas canvas) {
         this.canvas = checkNotNull(canvas);
 
+        setBackground(Background.fill(Color.BLUE));
         setCenter(canvas);
+
         canvas.widthProperty().bind(unscaledCanvasWidthPy.multiply(scalingPy));
         canvas.heightProperty().bind(unscaledCanvasHeightPy.multiply(scalingPy));
 
         clipProperty().bind(Bindings.createObjectBinding(() -> {
-            if (!isDecorated()) {
+            if (!isEnabled()) {
                 return null;
             }
             var clipRect = new Rectangle(computeSize().getWidth(), computeSize().getHeight());
@@ -64,10 +68,10 @@ public class DecoratedCanvas extends BorderPane {
             clipRect.setArcWidth(diameter);
             clipRect.setArcHeight(diameter);
             return clipRect;
-        }, decoratedPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
+        }, enabledPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
 
         borderProperty().bind(Bindings.createObjectBinding(() -> {
-            if (!isDecorated()) {
+            if (!isEnabled() || !isBorderVisible()) {
                 return null;
             }
             // TODO avoid magic numbers
@@ -75,7 +79,7 @@ public class DecoratedCanvas extends BorderPane {
             double r = Math.ceil(10 * scaling());
             return new Border(
                 new BorderStroke(borderColor(), BorderStrokeStyle.SOLID, new CornerRadii(r), new BorderWidths(w)));
-        }, decoratedPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
+        }, enabledPy, borderVisiblePy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
     }
 
     private void doLayout(double newScaling, boolean forced) {
@@ -89,7 +93,7 @@ public class DecoratedCanvas extends BorderPane {
         }
         double width = canvas().getWidth();
         double height = canvas().getHeight();
-        if (isDecorated()) {
+        if (isEnabled()) {
             Dimension2D size = computeSize();
             width = size.getWidth();
             height = size.getHeight();
@@ -143,7 +147,7 @@ public class DecoratedCanvas extends BorderPane {
     }
 
     public void resizeTo(double width, double height) {
-        if (isDecorated()) {
+        if (isEnabled()) {
             double shrunkWidth  = 0.85 * width;
             double shrunkHeight = 0.92 * height;
             double scaling = shrunkHeight / unscaledCanvasHeight();
@@ -154,15 +158,14 @@ public class DecoratedCanvas extends BorderPane {
         } else {
             doLayout(height / unscaledCanvasHeight(), false);
         }
-        Logger.debug("Decorated canvas size adapted. w={0.00}, h={0.00}", canvas().getWidth(), canvas().getHeight());
     }
 
-    public boolean isDecorated() {
-        return decoratedPy.get();
+    public boolean isEnabled() {
+        return enabledPy.get();
     }
 
-    public void setDecorated(boolean enabled) {
-        decoratedPy.set(enabled);
+    public void setEnabled(boolean enabled) {
+        enabledPy.set(enabled);
     }
 
     public Color borderColor() {
@@ -171,5 +174,13 @@ public class DecoratedCanvas extends BorderPane {
 
     public void setBorderColor(Color color) {
         borderColorPy.set(color);
+    }
+
+    public boolean isBorderVisible() {
+        return borderVisiblePy.get();
+    }
+
+    public void setBorderVisible(boolean visible) {
+        borderVisiblePy.set(visible);
     }
 }

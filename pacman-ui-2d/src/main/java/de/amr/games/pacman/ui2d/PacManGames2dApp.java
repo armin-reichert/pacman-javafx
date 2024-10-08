@@ -38,17 +38,18 @@ import java.util.Map;
  */
 public class PacManGames2dApp extends Application {
 
-    public static final BooleanProperty PY_AUTOPILOT             = new SimpleBooleanProperty(false);
-    public static final ObjectProperty<Color> PY_CANVAS_BG_COLOR = new SimpleObjectProperty<>(Color.BLACK);
-    public static final BooleanProperty PY_CANVAS_DECORATED      = new SimpleBooleanProperty(true);
+    public static final BooleanProperty PY_AUTOPILOT                  = new SimpleBooleanProperty(false);
+    public static final ObjectProperty<Color> PY_CANVAS_BG_COLOR      = new SimpleObjectProperty<>(Color.BLACK);
+    public static final BooleanProperty PY_GAME_CANVAS_HAS_BORDER     = new SimpleBooleanProperty(false);
+    public static final BooleanProperty PY_GAME_CANVAS_HAS_DECORATION = new SimpleBooleanProperty(true);
     public static final ObjectProperty<MapSelectionMode> PY_MAP_SELECTION_MODE = new SimpleObjectProperty<>(MapSelectionMode.CUSTOM_MAPS_FIRST);
-    public static final BooleanProperty PY_DEBUG_INFO            = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_IMMUNITY              = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_NIGHT_MODE            = new SimpleBooleanProperty(false);
-    public static final IntegerProperty PY_PIP_HEIGHT            = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_Y);
-    public static final BooleanProperty PY_PIP_ON                = new SimpleBooleanProperty(false);
-    public static final IntegerProperty PY_PIP_OPACITY_PERCENT   = new SimpleIntegerProperty(100);
-    public static final IntegerProperty PY_SIMULATION_STEPS      = new SimpleIntegerProperty(1);
+    public static final BooleanProperty PY_DEBUG_INFO                 = new SimpleBooleanProperty(false);
+    public static final BooleanProperty PY_IMMUNITY                   = new SimpleBooleanProperty(false);
+    public static final BooleanProperty PY_NIGHT_MODE                 = new SimpleBooleanProperty(false);
+    public static final IntegerProperty PY_PIP_HEIGHT                 = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_Y);
+    public static final BooleanProperty PY_PIP_ON                     = new SimpleBooleanProperty(false);
+    public static final IntegerProperty PY_PIP_OPACITY_PERCENT        = new SimpleIntegerProperty(100);
+    public static final IntegerProperty PY_SIMULATION_STEPS           = new SimpleIntegerProperty(1);
 
     private static Dimension2D initialSize() {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();

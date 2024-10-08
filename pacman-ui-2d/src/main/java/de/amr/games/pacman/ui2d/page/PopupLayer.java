@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
-import de.amr.games.pacman.ui2d.util.DecoratedCanvas;
+import de.amr.games.pacman.ui2d.util.CanvasDecoration;
 import de.amr.games.pacman.ui2d.util.FadingPane;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.animation.Animation;
@@ -37,7 +37,7 @@ public class PopupLayer extends Pane {
     private final TextFlow signature = new TextFlow();
     private Animation signatureAnimation;
 
-    public PopupLayer(GameContext context, DecoratedCanvas canvas) {
+    public PopupLayer(GameContext context, CanvasDecoration canvas) {
         this.context = context;
 
         getChildren().addAll(helpPopUp, signature);
@@ -56,13 +56,13 @@ public class PopupLayer extends Pane {
         ));
     }
 
-    public void sign(DecoratedCanvas decoratedCanvas, Font font, Color color, String... words) {
+    public void sign(CanvasDecoration canvasDecoration, Font font, Color color, String... words) {
         signature.setOpacity(0); // invisible initially
         signature.getChildren().clear(); // just in case
         for (String word : words) {
             var text = new Text(word);
             text.setFill(color);
-            text.fontProperty().bind(decoratedCanvas.scalingPy.map(
+            text.fontProperty().bind(canvasDecoration.scalingPy.map(
                 scaling -> Font.font(font.getFamily(), scaling.doubleValue() * font.getSize()))
             );
             signature.getChildren().add(text);
@@ -70,13 +70,13 @@ public class PopupLayer extends Pane {
 
         // keep signature centered over canvas
         signature.translateXProperty().bind(Bindings.createDoubleBinding(
-            () -> 0.5 * (decoratedCanvas.getWidth() - signature.getWidth()),
-            decoratedCanvas.scalingPy, decoratedCanvas.widthProperty()
+            () -> 0.5 * (canvasDecoration.getWidth() - signature.getWidth()),
+            canvasDecoration.scalingPy, canvasDecoration.widthProperty()
         ));
 
         // keep vertical position over intro scene, also when scene gets scaled
-        signature.translateYProperty().bind(decoratedCanvas.scalingPy.map(
-            scaling -> scaling.doubleValue() * (decoratedCanvas.isDecorated() ? 4*TS : 3*TS)
+        signature.translateYProperty().bind(canvasDecoration.scalingPy.map(
+            scaling -> scaling.doubleValue() * (canvasDecoration.isEnabled() ? 4*TS : 3*TS)
         ));
     }
 
