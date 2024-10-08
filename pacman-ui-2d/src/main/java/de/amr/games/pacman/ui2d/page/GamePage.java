@@ -14,7 +14,6 @@ import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
-import de.amr.games.pacman.ui2d.util.CanvasLayoutPane;
 import de.amr.games.pacman.ui2d.util.DecoratedCanvas;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.binding.Bindings;
@@ -27,6 +26,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -71,7 +71,8 @@ public class GamePage extends StackPane implements Page {
 
     protected final GameContext context;
     protected final Scene parentScene;
-    protected final CanvasLayoutPane canvasLayer = new CanvasLayoutPane();
+    protected final BorderPane canvasLayer = new BorderPane();
+    protected final DecoratedCanvas decoratedCanvas = new DecoratedCanvas();
     protected final DashboardLayer dashboardLayer; // dashboard, picture-in-picture view
     protected final PopupLayer popupLayer; // help, signature
     protected final ContextMenu contextMenu = new ContextMenu();
@@ -80,14 +81,14 @@ public class GamePage extends StackPane implements Page {
         this.context = checkNotNull(context);
         this.parentScene = checkNotNull(parentScene);
 
-
-        DecoratedCanvas decoratedCanvas = canvasLayer.canvas();
         decoratedCanvas.setMinScaling(0.5);
         decoratedCanvas.setUnscaledCanvasWidth(GameModel.ARCADE_MAP_SIZE_X);
         decoratedCanvas.setUnscaledCanvasHeight(GameModel.ARCADE_MAP_SIZE_Y);
         decoratedCanvas.setBorderColor(PALETTE_PALE);
         decoratedCanvas.decoratedPy.bind(PY_CANVAS_DECORATED);
         decoratedCanvas.decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
+
+        canvasLayer.setCenter(decoratedCanvas);
 
         dashboardLayer = new DashboardLayer(context);
         dashboardLayer.addDashboardItem(context.locText("infobox.general.title"), new InfoBoxGeneral());
@@ -138,7 +139,7 @@ public class GamePage extends StackPane implements Page {
 
     @Override
     public void setSize(double width, double height) {
-        canvasLayer.canvas().resizeTo(width, height);
+        decoratedCanvas.resizeTo(width, height);
     }
 
     @Override
@@ -191,14 +192,14 @@ public class GamePage extends StackPane implements Page {
     }
 
     public Canvas canvas() {
-        return canvasLayer.canvas().canvas();
+        return decoratedCanvas.canvas();
     }
 
     public void adaptCanvasSizeToCurrentWorld() {
         Vector2i worldSizePixels = context.worldSizeTilesOrDefault().scaled(TS);
-        canvasLayer.canvas().setUnscaledCanvasWidth(worldSizePixels.x());
-        canvasLayer.canvas().setUnscaledCanvasHeight(worldSizePixels.y());
-        canvasLayer.canvas().resizeTo(parentScene.getWidth(), parentScene.getHeight());
+        decoratedCanvas.setUnscaledCanvasWidth(worldSizePixels.x());
+        decoratedCanvas.setUnscaledCanvasHeight(worldSizePixels.y());
+        decoratedCanvas.resizeTo(parentScene.getWidth(), parentScene.getHeight());
         Logger.info("Canvas size adapted. w={0.00}, h={0.00}", canvas().getWidth(), canvas().getHeight());
     }
 
@@ -216,8 +217,8 @@ public class GamePage extends StackPane implements Page {
 
     protected void setGameScene2D(GameScene2D scene2D) {
         getChildren().set(0, canvasLayer);
-        scene2D.scalingPy.bind(canvasLayer.canvas().scalingPy);
-        canvasLayer.canvas().backgroundProperty().bind(scene2D.backgroundColorPy.map(Ufx::coloredBackground));
+        scene2D.scalingPy.bind(decoratedCanvas.scalingPy);
+        decoratedCanvas.backgroundProperty().bind(scene2D.backgroundColorPy.map(Ufx::coloredBackground));
         adaptCanvasSizeToCurrentWorld();
     }
 
@@ -247,7 +248,7 @@ public class GamePage extends StackPane implements Page {
 
     public void showHelp() {
         if (isCurrentGameScene2D()) {
-            popupLayer.showHelp(canvasLayer.canvas().scaling());
+            popupLayer.showHelp(decoratedCanvas.scaling());
         }
     }
 }
