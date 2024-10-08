@@ -398,13 +398,15 @@ public class TileMapEditor  {
         editCanvas.setOnMouseClicked(controller::onMouseClicked);
         editCanvas.setOnMouseMoved(controller::onMouseMoved);
         editCanvas.setOnKeyPressed(controller::onKeyPressed);
+        editCanvas.setOnKeyReleased(controller::onKeyReleased);
+        editCanvas.setOnKeyTyped(controller::onKeyTyped);
         editCanvasScroll = new ScrollPane(editCanvas);
         editCanvasScroll.setFitToHeight(true);
         // Note: this must be done *after* the initial map has been created/loaded!
         editCanvas.heightProperty().bind(Bindings.createDoubleBinding(
-                () -> (double) mapPy.get().terrain().numRows() * gridSize(), mapPy, gridSizePy));
+                () -> (double) map().terrain().numRows() * gridSize(), mapPy, gridSizePy));
         editCanvas.widthProperty().bind(Bindings.createDoubleBinding(
-                () -> (double) mapPy.get().terrain().numCols() * gridSize(), mapPy, gridSizePy));
+                () -> (double) map().terrain().numCols() * gridSize(), mapPy, gridSizePy));
     }
 
     private void createPreviewCanvas() {
@@ -681,7 +683,6 @@ public class TileMapEditor  {
 
     private void createLoadMapMenu() {
         menuLoadMap = new Menu(tt("menu.load_map"));
-        //menuLoadMap.disableProperty().bind(editingEnabledPy.not());
     }
 
     private void createViewMenu() {
@@ -1086,6 +1087,11 @@ public class TileMapEditor  {
             mode = EditMode.DRAW;
         }
 
+        public void setMode(EditMode mode) {
+            this.mode = mode;
+            editCanvas.setCursor(mode == EditMode.ERASE ? rubberCursor : Cursor.DEFAULT);
+        }
+
         void onMouseClicked(MouseEvent event) {
             if (event.getButton() == MouseButton.PRIMARY) {
                 contextMenu.hide();
@@ -1116,28 +1122,29 @@ public class TileMapEditor  {
             if (!editingEnabledPy.get()) {
                 return;
             }
-            if (event.isShiftDown()) {
-                switch (selectedPaletteID()) {
-                    case PALETTE_TERRAIN -> {
-                        if (selectedPalette().isToolSelected()) {
-                            selectedPalette().selectedTool().apply(map().terrain(), focussedTilePy.get());
+
+            if (mode == EditMode.ERASE) {
+                setTileValue(map().terrain(), tile, Tiles.EMPTY);
+                setTileValue(map().food(),    tile, Tiles.EMPTY);
+            }
+            else {
+
+                if (event.isShiftDown()) {
+                    switch (selectedPaletteID()) {
+                        case PALETTE_TERRAIN -> {
+                            if (selectedPalette().isToolSelected()) {
+                                selectedPalette().selectedTool().apply(map().terrain(), focussedTilePy.get());
+                            }
+                            markTileMapEdited(map().terrain());
                         }
-                        markTileMapEdited(map().terrain());
-                    }
-                    case PALETTE_FOOD -> {
-                        if (selectedPalette().isToolSelected()) {
-                            selectedPalette().selectedTool().apply(map().food(), focussedTilePy.get());
+                        case PALETTE_FOOD -> {
+                            if (selectedPalette().isToolSelected()) {
+                                selectedPalette().selectedTool().apply(map().food(), focussedTilePy.get());
+                            }
+                            markTileMapEdited(map().food());
                         }
-                        markTileMapEdited(map().food());
+                        default -> {}
                     }
-                    default -> {}
-                }
-            } else if (event.isControlDown()) {
-                // delete content while moving
-                switch (selectedPaletteID()) {
-                    case PALETTE_TERRAIN -> setTileValue(map().terrain(), tile, Tiles.EMPTY);
-                    case PALETTE_FOOD    -> setTileValue(map().food(), tile, Tiles.EMPTY);
-                    default -> {}
                 }
             }
         }
@@ -1156,6 +1163,16 @@ public class TileMapEditor  {
                     focussedTilePy.set(newTile);
                 }
             }
+        }
+
+        void onKeyTyped(KeyEvent event) {
+            Logger.info("Typed {}", event);
+            if (event.getCharacter().equals("x")) {
+                setMode(mode == EditMode.DRAW ? EditMode.ERASE : EditMode.DRAW);
+            }
+        }
+
+        void onKeyReleased(KeyEvent event) {
         }
 
         void onContextMenuRequested(ContextMenuEvent event) {
