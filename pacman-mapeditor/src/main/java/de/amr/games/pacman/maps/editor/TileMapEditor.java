@@ -162,7 +162,7 @@ public class TileMapEditor  {
 
     final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>();
 
-    final BooleanProperty editingEnabledPy         = new SimpleBooleanProperty(false);
+    final BooleanProperty editingEnabledPy = new SimpleBooleanProperty(false);
 
     final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>() {
         @Override
@@ -229,6 +229,7 @@ public class TileMapEditor  {
     private TabPane tabPaneMapViews;
     private Label messageLabel;
     private Label focussedTileInfo;
+    private Label editModeIndicator;
     private HBox sliderZoomContainer;
     private FileChooser fileChooser;
     private TabPane tabPaneWithPalettes;
@@ -363,6 +364,7 @@ public class TileMapEditor  {
         createPropertyEditors();
         createTabPaneWithMapViews();
         createFocussedTileIndicator();
+        createEditModeIndicator();
         createMessageDisplay();
         createZoomSlider();
         arrangeMainLayout();
@@ -507,6 +509,25 @@ public class TileMapEditor  {
         focussedTileInfo.setMaxWidth(100);
     }
 
+    private void createEditModeIndicator() {
+        editModeIndicator = new Label();
+        editModeIndicator.setTextFill(Color.RED);
+        editModeIndicator.textProperty().bind(Bindings.createStringBinding(
+                () -> {
+                    if (!editingEnabledPy.get()) {
+                        return "Editing disabled";
+                    }
+                    return switch (controller.modePy.get()) {
+                        case DRAW -> "Draw mode";
+                        case ERASE -> "Erase mode";
+                    };
+
+                },
+                controller.modePy, editingEnabledPy
+
+        ));
+    }
+
     private void createMessageDisplay() {
         messageLabel = new Label();
         messageLabel.setMinWidth(200);
@@ -528,7 +549,7 @@ public class TileMapEditor  {
         var filler = new Region();
         HBox.setHgrow(filler, Priority.ALWAYS);
 
-        var bottom = new HBox(focussedTileInfo, messageLabel, filler, sliderZoomContainer);
+        var bottom = new HBox(focussedTileInfo, editModeIndicator, messageLabel, filler, sliderZoomContainer);
         bottom.setPadding(new Insets(10, 10, 10, 10));
 
         var right = new VBox(tabPaneWithPalettes, tabPaneMapViews, bottom);
@@ -1081,15 +1102,21 @@ public class TileMapEditor  {
     // Edit controller
 
     class EditController {
-        private EditMode mode;
+        ObjectProperty<EditMode> modePy = new SimpleObjectProperty<>() {
+            @Override
+            protected void invalidated() {
+                if (editCanvas != null) {
+                    editCanvas.setCursor(get() == EditMode.ERASE ? rubberCursor : Cursor.DEFAULT);
+                }
+            }
+        };
 
         EditController() {
-            mode = EditMode.DRAW;
+            setMode(EditMode.DRAW);
         }
 
         public void setMode(EditMode mode) {
-            this.mode = mode;
-            editCanvas.setCursor(mode == EditMode.ERASE ? rubberCursor : Cursor.DEFAULT);
+            modePy.set(checkNotNull(mode));
         }
 
         void onMouseClicked(MouseEvent event) {
@@ -1123,12 +1150,11 @@ public class TileMapEditor  {
                 return;
             }
 
-            if (mode == EditMode.ERASE) {
+            if (modePy.get() == EditMode.ERASE) {
                 setTileValue(map().terrain(), tile, Tiles.EMPTY);
                 setTileValue(map().food(),    tile, Tiles.EMPTY);
             }
             else {
-
                 if (event.isShiftDown()) {
                     switch (selectedPaletteID()) {
                         case PALETTE_TERRAIN -> {
@@ -1168,7 +1194,7 @@ public class TileMapEditor  {
         void onKeyTyped(KeyEvent event) {
             Logger.info("Typed {}", event);
             if (event.getCharacter().equals("x")) {
-                setMode(mode == EditMode.DRAW ? EditMode.ERASE : EditMode.DRAW);
+                setMode(modePy.get() == EditMode.DRAW ? EditMode.ERASE : EditMode.DRAW);
             }
         }
 
