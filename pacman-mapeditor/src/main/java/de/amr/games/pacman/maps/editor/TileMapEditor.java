@@ -21,11 +21,14 @@ import javafx.beans.property.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.Side;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -58,6 +61,8 @@ import static java.util.Objects.requireNonNull;
  * @author Armin Reichert
  */
 public class TileMapEditor  {
+
+    enum EditMode { DRAW, ERASE }
 
     static final Node NO_GRAPHIC = null;
     static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(TileMapEditor.class.getPackageName() + ".texts");
@@ -210,6 +215,7 @@ public class TileMapEditor  {
 
     final BooleanProperty terrainVisiblePy         = new SimpleBooleanProperty(true);
 
+    private final EditController controller = new EditController();
 
     private Stage stage;
     private final BorderPane contentPane = new BorderPane();
@@ -228,6 +234,7 @@ public class TileMapEditor  {
     private TabPane tabPaneWithPalettes;
     private final Map<String, Palette> palettes = new HashMap<>();
     private final Image spriteSheet;
+    private final Cursor rubberCursor;
 
     private MenuBar menuBar;
     private Menu menuFile;
@@ -258,6 +265,7 @@ public class TileMapEditor  {
         titlePy.bind(createTitleBinding());
         URL url = requireNonNull(getClass().getResource("pacman_spritesheet.png"));
         spriteSheet = new Image(url.toExternalForm());
+        rubberCursor = Cursor.cursor(getClass().getResource("graphics/radiergummi.jpg").toExternalForm());
         WorldMap map = createWorldMap(36, 28); // standard Arcade map size
         setMap(map);
     }
@@ -359,52 +367,8 @@ public class TileMapEditor  {
 
         arrangeMainLayout();
 
-        // Note: this must be done *after* the initial map has been created/loaded!
-        editCanvas.heightProperty().bind(Bindings.createDoubleBinding(
-            () -> (double) mapPy.get().terrain().numRows() * gridSize(), mapPy, gridSizePy));
-        editCanvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> (double) mapPy.get().terrain().numCols() * gridSize(), mapPy, gridSizePy));
         previewCanvas.widthProperty().bind(editCanvas.widthProperty());
         previewCanvas.heightProperty().bind(editCanvas.heightProperty());
-
-        // Cursor navigation, whatever it's good for
-        editCanvas.setOnKeyPressed(e -> {
-            Direction moveDir = switch (e.getCode()) {
-                case LEFT -> Direction.LEFT;
-                case RIGHT -> Direction.RIGHT;
-                case UP -> Direction.UP;
-                case DOWN -> Direction.DOWN;
-                default -> null;
-            };
-            if (moveDir != null && focussedTilePy.get() != null) {
-                Vector2i newTile = focussedTilePy.get().plus(moveDir.vector());
-                if (!map().terrain().outOfBounds(newTile)) {
-                    focussedTilePy.set(newTile);
-                }
-            }
-        });
-
-        editCanvas.setOnContextMenuRequested(mouse -> {
-            if (editingEnabledPy.get()) {
-                Vector2i tile = tileAtMousePosition(mouse.getX(), mouse.getY());
-
-                var miAddCircle2x2 = new MenuItem("2x2 Circle");
-                miAddCircle2x2.setOnAction(actionEvent -> addShape(map().terrain(), CIRCLE_2x2, tile));
-                miAddCircle2x2.disableProperty().bind(editingEnabledPy.not());
-
-                var miAddHouse = new MenuItem(tt("menu.edit.add_house"));
-                miAddHouse.setOnAction(actionEvent -> {
-                    addShapeNotMirrored(map().terrain(), GHOST_HOUSE_SHAPE, tile);
-                    // ensure no mirroring
-                    map().terrain().setProperty(PROPERTY_POS_HOUSE_MIN_TILE, formatTile(tile));
-                    terrainMapPropertiesEditor.rebuildPropertyEditors(); //TODO better solution
-                });
-                miAddHouse.disableProperty().bind(editingEnabledPy.not());
-
-                contextMenu.getItems().setAll(miAddCircle2x2, miAddHouse);
-                contextMenu.show(editCanvas, mouse.getScreenX(), mouse.getScreenY());
-            }
-        });
 
         initActiveRendering();
     }
@@ -434,10 +398,17 @@ public class TileMapEditor  {
 
     private void createEditCanvas() {
         editCanvas = new Canvas();
-        editCanvas.setOnMouseClicked(this::onMouseClickedOnEditCanvas);
-        editCanvas.setOnMouseMoved(this::onMouseMovedOverEditCanvas);
+        editCanvas.setOnContextMenuRequested(controller::onContextMenuRequested);
+        editCanvas.setOnMouseClicked(controller::onMouseClicked);
+        editCanvas.setOnMouseMoved(controller::onMouseMoved);
+        editCanvas.setOnKeyPressed(controller::onKeyPressed);
         editCanvasScroll = new ScrollPane(editCanvas);
         editCanvasScroll.setFitToHeight(true);
+        // Note: this must be done *after* the initial map has been created/loaded!
+        editCanvas.heightProperty().bind(Bindings.createDoubleBinding(
+                () -> (double) mapPy.get().terrain().numRows() * gridSize(), mapPy, gridSizePy));
+        editCanvas.widthProperty().bind(Bindings.createDoubleBinding(
+                () -> (double) mapPy.get().terrain().numCols() * gridSize(), mapPy, gridSizePy));
     }
 
     private void createPreviewCanvas() {
@@ -903,62 +874,6 @@ public class TileMapEditor  {
         return new Vector2i(fullTiles(mouseX), fullTiles(mouseY));
     }
 
-    private void onMouseClickedOnEditCanvas(MouseEvent e) {
-        if (e.getButton() == MouseButton.PRIMARY) {
-            contextMenu.hide();
-            if (e.getClickCount() == 2) { // double-click
-                editingEnabledPy.set(true);
-                editCanvas.requestFocus();
-            } else if (e.getClickCount() == 1) {
-                switch (selectedPaletteID()) {
-                    case PALETTE_TERRAIN -> editMapTileAtMousePosition(map().terrain(), e);
-                    case PALETTE_ACTORS -> {
-                        if (selectedPalette().isToolSelected()) {
-                            Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
-                            selectedPalette().selectedTool().apply(map().terrain(), tile);
-                            markTileMapEdited(map().terrain());
-                            terrainMapPropertiesEditor.updatePropertyEditorValues();
-                        }
-                    }
-                    case PALETTE_FOOD -> editMapTileAtMousePosition(map().food(), e);
-                    default -> Logger.error("Unknown palette selection");
-                }
-            }
-        }
-    }
-
-    private void onMouseMovedOverEditCanvas(MouseEvent e) {
-        Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
-        focussedTilePy.set(tile);
-        if (!editingEnabledPy.get()) {
-            return;
-        }
-        if (e.isShiftDown()) {
-            switch (selectedPaletteID()) {
-                case PALETTE_TERRAIN -> {
-                    if (selectedPalette().isToolSelected()) {
-                        selectedPalette().selectedTool().apply(map().terrain(), focussedTilePy.get());
-                    }
-                    markTileMapEdited(map().terrain());
-                }
-                case PALETTE_FOOD -> {
-                    if (selectedPalette().isToolSelected()) {
-                        selectedPalette().selectedTool().apply(map().food(), focussedTilePy.get());
-                    }
-                    markTileMapEdited(map().food());
-                }
-                default -> {}
-            }
-        } else if (e.isControlDown()) {
-            // delete content while moving
-            switch (selectedPaletteID()) {
-                case PALETTE_TERRAIN -> setTileValue(map().terrain(), tile, Tiles.EMPTY);
-                case PALETTE_FOOD    -> setTileValue(map().food(), tile, Tiles.EMPTY);
-                default -> {}
-            }
-        }
-    }
-
     private void editMapTileAtMousePosition(TileMap tileMap, MouseEvent mouse) {
         var tile = tileAtMousePosition(mouse.getX(), mouse.getY());
         if (mouse.isControlDown()) { // Control-Click clears tile content
@@ -1161,6 +1076,110 @@ public class TileMapEditor  {
                 g.strokeLine(col * gridSize, 0, col * gridSize, editCanvas.getHeight());
             }
             g.restore();
+        }
+    }
+
+    // Edit controller
+
+    class EditController {
+        private EditMode mode;
+
+        EditController() {
+            mode = EditMode.DRAW;
+        }
+
+        void onMouseClicked(MouseEvent event) {
+            if (event.getButton() == MouseButton.PRIMARY) {
+                contextMenu.hide();
+                if (event.getClickCount() == 2) { // double-click
+                    editingEnabledPy.set(true);
+                    editCanvas.requestFocus();
+                } else if (event.getClickCount() == 1) {
+                    switch (selectedPaletteID()) {
+                        case PALETTE_TERRAIN -> editMapTileAtMousePosition(map().terrain(), event);
+                        case PALETTE_ACTORS -> {
+                            if (selectedPalette().isToolSelected()) {
+                                Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
+                                selectedPalette().selectedTool().apply(map().terrain(), tile);
+                                markTileMapEdited(map().terrain());
+                                terrainMapPropertiesEditor.updatePropertyEditorValues();
+                            }
+                        }
+                        case PALETTE_FOOD -> editMapTileAtMousePosition(map().food(), event);
+                        default -> Logger.error("Unknown palette selection");
+                    }
+                }
+            }
+        }
+
+        void onMouseMoved(MouseEvent event) {
+            Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
+            focussedTilePy.set(tile);
+            if (!editingEnabledPy.get()) {
+                return;
+            }
+            if (event.isShiftDown()) {
+                switch (selectedPaletteID()) {
+                    case PALETTE_TERRAIN -> {
+                        if (selectedPalette().isToolSelected()) {
+                            selectedPalette().selectedTool().apply(map().terrain(), focussedTilePy.get());
+                        }
+                        markTileMapEdited(map().terrain());
+                    }
+                    case PALETTE_FOOD -> {
+                        if (selectedPalette().isToolSelected()) {
+                            selectedPalette().selectedTool().apply(map().food(), focussedTilePy.get());
+                        }
+                        markTileMapEdited(map().food());
+                    }
+                    default -> {}
+                }
+            } else if (event.isControlDown()) {
+                // delete content while moving
+                switch (selectedPaletteID()) {
+                    case PALETTE_TERRAIN -> setTileValue(map().terrain(), tile, Tiles.EMPTY);
+                    case PALETTE_FOOD    -> setTileValue(map().food(), tile, Tiles.EMPTY);
+                    default -> {}
+                }
+            }
+        }
+
+        void onKeyPressed(KeyEvent event) {
+            Direction moveDir = switch (event.getCode()) {
+                case LEFT -> Direction.LEFT;
+                case RIGHT -> Direction.RIGHT;
+                case UP -> Direction.UP;
+                case DOWN -> Direction.DOWN;
+                default -> null;
+            };
+            if (moveDir != null && focussedTilePy.get() != null) {
+                Vector2i newTile = focussedTilePy.get().plus(moveDir.vector());
+                if (!map().terrain().outOfBounds(newTile)) {
+                    focussedTilePy.set(newTile);
+                }
+            }
+        }
+
+        void onContextMenuRequested(ContextMenuEvent event) {
+            if (editingEnabledPy.get()) {
+                Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
+
+                var miAddCircle2x2 = new MenuItem("2x2 Circle");
+                miAddCircle2x2.setOnAction(actionEvent -> addShape(map().terrain(), CIRCLE_2x2, tile));
+                miAddCircle2x2.disableProperty().bind(editingEnabledPy.not());
+
+                var miAddHouse = new MenuItem(tt("menu.edit.add_house"));
+                miAddHouse.setOnAction(actionEvent -> {
+                    addShapeNotMirrored(map().terrain(), GHOST_HOUSE_SHAPE, tile);
+                    // ensure no mirroring
+                    map().terrain().setProperty(PROPERTY_POS_HOUSE_MIN_TILE, formatTile(tile));
+                    terrainMapPropertiesEditor.rebuildPropertyEditors(); //TODO better solution
+                });
+                miAddHouse.disableProperty().bind(editingEnabledPy.not());
+
+                contextMenu.getItems().setAll(miAddCircle2x2, miAddHouse);
+                contextMenu.show(editCanvas, event.getScreenX(), event.getScreenY());
+            }
         }
     }
 }
