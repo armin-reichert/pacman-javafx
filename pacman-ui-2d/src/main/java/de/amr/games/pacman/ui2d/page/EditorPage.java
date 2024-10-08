@@ -72,7 +72,6 @@ public class EditorPage extends BorderPane implements Page {
         if (map != null) {
             editor.setMap(map);
         }
-        stage.titleProperty().bind(editor.titlePy);
         editor.start();
     }
 

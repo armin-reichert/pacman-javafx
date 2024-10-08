@@ -283,6 +283,7 @@ public class TileMapEditor  {
     }
 
     public void start() {
+        stage.titleProperty().bind(titlePy);
         // content pane and scroll pane have no height yet at this point!
         int gridSize = (int)(0.75 *  stage.getHeight() / map().terrain().numRows());
         gridSizePy.set(Math.max(gridSize, 8));
@@ -351,7 +352,7 @@ public class TileMapEditor  {
     }
 
     public void createUI(Stage stage) {
-        this.stage = stage;
+        this.stage = checkNotNull(stage);
         createRenderers();
         createFileChooser();
         createMenuBarAndMenus();
@@ -364,12 +365,7 @@ public class TileMapEditor  {
         createFocussedTileIndicator();
         createMessageDisplay();
         createZoomSlider();
-
         arrangeMainLayout();
-
-        previewCanvas.widthProperty().bind(editCanvas.widthProperty());
-        previewCanvas.heightProperty().bind(editCanvas.heightProperty());
-
         initActiveRendering();
     }
 
@@ -418,6 +414,8 @@ public class TileMapEditor  {
         previewCanvasScroll.hvalueProperty().bindBidirectional(editCanvasScroll.hvalueProperty());
         previewCanvasScroll.vvalueProperty().bindBidirectional(editCanvasScroll.vvalueProperty());
         previewCanvasScroll.visibleProperty().bind(previewVisiblePy);
+        previewCanvas.widthProperty().bind(editCanvas.widthProperty());
+        previewCanvas.heightProperty().bind(editCanvas.heightProperty());
     }
 
     private void createMapSourceView() {
