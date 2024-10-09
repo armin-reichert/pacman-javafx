@@ -534,8 +534,7 @@ public class TileMapEditor  {
                     };
 
                 },
-                controller.modePy, editingEnabledPy
-
+                controller.modePy, editingEnabledPy, symmetricEditModePy
         ));
     }
 
@@ -1221,6 +1220,8 @@ public class TileMapEditor  {
             Logger.info("Typed {}", event);
             if (event.getCharacter().equals("x")) {
                 setMode(modePy.get() == EditMode.DRAW ? EditMode.ERASE : EditMode.DRAW);
+            } else if (event.getCharacter().equals("s")) {
+                symmetricEditModePy.set(!symmetricEditModePy.get());
             }
         }
 
