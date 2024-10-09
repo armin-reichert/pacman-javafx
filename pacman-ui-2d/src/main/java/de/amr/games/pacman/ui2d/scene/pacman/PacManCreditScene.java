@@ -19,11 +19,6 @@ import static de.amr.games.pacman.ui2d.scene.pacman.PacManGameSpriteSheet.MIDWAY
 public class PacManCreditScene extends GameScene2D {
 
     @Override
-    public boolean isCreditVisible() {
-        return true;
-    }
-
-    @Override
     public void init() {
         context.setScoreVisible(true);
     }
@@ -52,5 +47,7 @@ public class PacManCreditScene extends GameScene2D {
         if (context.game().variant() == GameVariant.PACMAN) {
             renderer.drawText(MIDWAY_COPYRIGHT, PALETTE_PINK, renderer.scaledArcadeFont(8), t(4), t(29));
         }
+        drawCredit(renderer, context.worldSizeTilesOrDefault());
+        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 }

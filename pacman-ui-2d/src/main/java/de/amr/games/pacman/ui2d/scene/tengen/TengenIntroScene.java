@@ -217,11 +217,6 @@ public class TengenIntroScene extends GameScene2D {
     }
 
     @Override
-    public boolean isCreditVisible() {
-        return false;
-    }
-
-    @Override
     public void init() {
         context.setScoreVisible(false);
 

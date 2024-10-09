@@ -21,11 +21,6 @@ import static de.amr.games.pacman.ui2d.scene.pacman.PacManGameSpriteSheet.MIDWAY
 public class MsPacManCreditScene extends GameScene2D {
 
     @Override
-    public boolean isCreditVisible() {
-        return true;
-    }
-
-    @Override
     public void init() {
         context.setScoreVisible(true);
     }
@@ -79,5 +74,7 @@ public class MsPacManCreditScene extends GameScene2D {
             }
             default -> throw new IllegalArgumentException("Unsupported game variant: " + context.game().variant());
         }
+        drawCredit(renderer, context.worldSizeTilesOrDefault());
+        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 }

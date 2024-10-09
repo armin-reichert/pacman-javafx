@@ -32,11 +32,6 @@ public class PacManCutScene2 extends GameScene2D {
     private SpriteAnimation blinkyDamaged;
 
     @Override
-    public boolean isCreditVisible() {
-        return !context.game().hasCredit();
-    }
-
-    @Override
     public void init() {
         context.setScoreVisible(true);
         pac = new Pac();
@@ -108,6 +103,7 @@ public class PacManCutScene2 extends GameScene2D {
         renderer.drawSpriteScaled(context.spriteSheet(), blinkyStretching.currentSprite(), t(14), t(19) + 3);
         renderer.drawAnimatedEntity(blinky);
         renderer.drawAnimatedEntity(pac);
+        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 
     @Override

@@ -28,11 +28,6 @@ public class PacManCutScene3 extends GameScene2D {
     private Ghost blinky;
 
     @Override
-    public boolean isCreditVisible() {
-        return !context.game().hasCredit();
-    }
-
-    @Override
     public void init() {
         context.setScoreVisible(true);
 
@@ -87,6 +82,7 @@ public class PacManCutScene3 extends GameScene2D {
     public void drawSceneContent(GameWorldRenderer renderer) {
         renderer.drawAnimatedEntity(pac);
         renderer.drawAnimatedEntity(blinky);
+        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 
     @Override

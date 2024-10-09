@@ -146,13 +146,8 @@ public class MsPacManCutScene3 extends GameScene2D {
     }
 
     @Override
-    public boolean isCreditVisible() {
-        return !context.game().hasCredit();
-    }
-
-    @Override
     public void init() {
-        context.setScoreVisible(true);
+        context.setScoreVisible(context.gameVariant() != GameVariant.MS_PACMAN_TENGEN);
 
         pacMan = new Pac();
         msPacMan = new Pac();
@@ -204,5 +199,6 @@ public class MsPacManCutScene3 extends GameScene2D {
         }
         renderer.drawSprite(bag, context.spriteSheet(),
             bagOpen ? context.spriteSheet().juniorPacSprite() : context.spriteSheet().blueBagSprite());
+        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 }

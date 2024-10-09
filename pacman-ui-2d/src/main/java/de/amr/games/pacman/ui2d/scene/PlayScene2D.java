@@ -15,6 +15,7 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.scene.tengen.TengenGameWorldRenderer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -43,15 +44,6 @@ public class PlayScene2D extends GameScene2D {
         GameAction2D.TENGEN_TOGGLE_PAC_BOOSTER,
         GameAction2D.TENGEN_QUIT_PLAY_SCENE
     );
-
-    @Override
-    public boolean isCreditVisible() {
-        //TODO Hack
-        if (context.game().variant() == GameVariant.MS_PACMAN_TENGEN) {
-            return false;
-        }
-        return !context.game().hasCredit() || context.gameState() == GameState.GAME_OVER;
-    }
 
     @Override
     public void init() {
@@ -118,6 +110,8 @@ public class PlayScene2D extends GameScene2D {
             return;
         }
 
+        Vector2i worldSize = context.worldSizeTilesOrDefault();
+
         boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         renderer.setFlashMode(flashMode);
         renderer.setBlinkingOn(context.game().blinking().isOn());
@@ -134,13 +128,26 @@ public class PlayScene2D extends GameScene2D {
             ghostsInZOrder().forEach(renderer::drawAnimatedCreatureInfo);
         }
 
-        if (!isCreditVisible()) {
-            //TODO: this looks ugly
+        boolean showCredit = switch (context.gameVariant()) {
+            case MS_PACMAN_TENGEN -> false;
+            default -> !context.game().hasCredit() || context.gameState() == GameState.GAME_OVER;
+        };
+
+        if (showCredit) {
+            drawCredit(renderer, worldSize);
+        } else {
+            //TODO: this code looks ugly
             int numLivesShown = context.game().lives() - 1;
             if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
                 numLivesShown += 1;
             }
-            renderer.drawLivesCounter(context.spriteSheet(), numLivesShown, 5, context.worldSizeTilesOrDefault());
+            renderer.drawLivesCounter(context.spriteSheet(), numLivesShown, 5, worldSize);
+        }
+        drawLevelCounter(renderer, worldSize);
+        //TODO Hack: Tengen has those boxes displaying the level number
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            TengenGameWorldRenderer tr = (TengenGameWorldRenderer) renderer;
+            tr.drawLevelNumberBoxes(context.spriteSheet(), context.game().levelNumber(), worldSize);
         }
     }
 

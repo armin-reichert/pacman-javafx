@@ -141,13 +141,8 @@ public class MsPacManCutScene2 extends GameScene2D {
     }
 
     @Override
-    public boolean isCreditVisible() {
-        return !context.game().hasCredit();
-    }
-
-    @Override
     public void init() {
-        context.setScoreVisible(true);
+        context.setScoreVisible(context.gameVariant() != GameVariant.MS_PACMAN_TENGEN);
 
         pacMan = new Pac();
         msPacMan = new Pac();
@@ -185,5 +180,6 @@ public class MsPacManCutScene2 extends GameScene2D {
         renderer.drawClapperBoard(context.spriteSheet(), renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(msPacMan);
         renderer.drawAnimatedEntity(pacMan);
+        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 }

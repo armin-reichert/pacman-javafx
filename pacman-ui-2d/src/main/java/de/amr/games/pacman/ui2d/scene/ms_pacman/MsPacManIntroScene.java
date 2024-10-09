@@ -179,11 +179,6 @@ public class MsPacManIntroScene extends GameScene2D {
     }
 
     @Override
-    public boolean isCreditVisible() {
-        return true;
-    }
-
-    @Override
     public void init() {
         context.setScoreVisible(true);
 
@@ -260,6 +255,8 @@ public class MsPacManIntroScene extends GameScene2D {
             renderer.drawMsPacManMidwayCopyright(context.assets().get("ms_pacman.logo.midway"),
                 t(6), t(28), PALETTE_RED, renderer.scaledArcadeFont(TS));
         }
+        drawCredit(renderer, context.worldSizeTilesOrDefault());
+        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 
     /**

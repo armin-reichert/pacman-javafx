@@ -296,11 +296,7 @@ public enum GameAction2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
-            if (context.gameState() == GameState.INTRO) {
-                context.gameController().changeState(GameState.INTERMISSION_TEST);
-            } else {
-                Logger.error("Intermission test can only be started from intro screen");
-            }
+            context.gameController().changeState(GameState.INTERMISSION_TEST);
             context.showFlashMessage("Cut scenes test"); //TODO localize
         }
     },

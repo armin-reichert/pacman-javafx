@@ -243,11 +243,6 @@ public class PacManIntroScene extends GameScene2D {
     }
 
     @Override
-    public boolean isCreditVisible() {
-        return true;
-    }
-
-    @Override
     public void init() {
         blinking = new Pulse(10, true);
 
@@ -316,6 +311,8 @@ public class PacManIntroScene extends GameScene2D {
             default -> {
             }
         }
+        drawCredit(renderer, context.worldSizeTilesOrDefault());
+        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 
     // TODO inspect in MAME what's really going on here

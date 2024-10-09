@@ -28,10 +28,6 @@ public abstract class GameScene2D implements GameScene {
 
     protected GameContext context;
 
-    public boolean isCreditVisible() {
-        return context.game().hasCredit();
-    }
-
     public void setGameContext(GameContext context) {
         this.context = checkNotNull(context);
     }
@@ -56,10 +52,6 @@ public abstract class GameScene2D implements GameScene {
         if (debugInfoPy.get()) {
             drawDebugInfo(renderer);
         }
-        if (isCreditVisible()) {
-            drawCredit(renderer, context.worldSizeTilesOrDefault());
-        }
-        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 
     protected void drawCredit(GameWorldRenderer renderer, Vector2i worldSize) {

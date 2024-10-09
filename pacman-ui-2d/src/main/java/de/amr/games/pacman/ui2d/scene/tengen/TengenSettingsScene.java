@@ -150,11 +150,6 @@ public class TengenSettingsScene extends GameScene2D {
         }
     }
 
-    @Override
-    public boolean isCreditVisible() {
-        return false;
-    }
-
     private int fps(MsPacManTengenGame.Difficulty difficulty) {
         return switch (difficulty) {
             case EASY -> 40;
@@ -233,7 +228,7 @@ public class TengenSettingsScene extends GameScene2D {
             context.gameController().changeState(GameState.READY);
         }
         else {
-            context.execFirstCalledAction(GameAction2D.TEST_LEVELS);
+            context.execFirstCalledAction(GameAction2D.TEST_LEVELS, GameAction2D.TEST_CUT_SCENES);
         }
     }
 }

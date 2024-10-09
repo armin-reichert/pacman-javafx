@@ -200,6 +200,12 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
         ctx().save();
         ctx().translate(0, -5);
         GameWorldRenderer.super.drawLevelCounter(spriteSheet, levelNumber, symbols, worldSize);
+        ctx().restore();
+    }
+
+    public void drawLevelNumberBoxes(GameSpriteSheet spriteSheet, int levelNumber, Vector2i worldSize) {
+        ctx().save();
+        ctx().translate(0, -5);
         if (levelNumber > 0) {
             double y = TS * (worldSize.y() - 2);
             drawLevelNumberBox(spriteSheet, levelNumber, 0, y); // left border

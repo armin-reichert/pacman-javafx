@@ -17,11 +17,6 @@ import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
 public class BootScene extends GameScene2D {
 
     @Override
-    public boolean isCreditVisible() {
-        return false;
-    }
-
-    @Override
     public void init() {
         context.setScoreVisible(false);
     }
