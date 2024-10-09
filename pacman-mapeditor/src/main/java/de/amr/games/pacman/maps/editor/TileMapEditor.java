@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.maps.editor;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
@@ -19,7 +20,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.geometry.Insets;
-import javafx.geometry.Rectangle2D;
 import javafx.geometry.Side;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -70,12 +70,12 @@ public class TileMapEditor  {
     static final Font FONT_STATUS_LINE = Font.font(Font.getDefault().getFamily(), FontWeight.BOLD, 12);
     static final Font FONT_MESSAGE     = Font.font("Serif", FontWeight.EXTRA_BOLD, 14);
 
-    static final Rectangle2D PAC_SPRITE          = new Rectangle2D(473,  16, 14, 14);
-    static final Rectangle2D RED_GHOST_SPRITE    = new Rectangle2D(505,  65, 14, 14);
-    static final Rectangle2D PINK_GHOST_SPRITE   = new Rectangle2D(553,  81, 14, 14);
-    static final Rectangle2D CYAN_GHOST_SPRITE   = new Rectangle2D(521,  97, 14, 14);
-    static final Rectangle2D ORANGE_GHOST_SPRITE = new Rectangle2D(521, 113, 14, 14);
-    static final Rectangle2D BONUS_SPRITE        = new Rectangle2D(505,  49, 14, 14);
+    static final RectArea PAC_SPRITE          = new RectArea(473,  16, 14, 14);
+    static final RectArea RED_GHOST_SPRITE    = new RectArea(505,  65, 14, 14);
+    static final RectArea PINK_GHOST_SPRITE   = new RectArea(553,  81, 14, 14);
+    static final RectArea CYAN_GHOST_SPRITE   = new RectArea(521,  97, 14, 14);
+    static final RectArea ORANGE_GHOST_SPRITE = new RectArea(521, 113, 14, 14);
+    static final RectArea BONUS_SPRITE        = new RectArea(505,  49, 14, 14);
 
     static final String DEFAULT_COLOR_WALL_STROKE         = "rgb(33,33,255)";
     static final String DEFAULT_COLOR_WALL_FILL           = "rgb(0,0,0)";
@@ -1062,17 +1062,17 @@ public class TileMapEditor  {
         drawActorSprites(g);
     }
 
-    private void drawSprite(GraphicsContext g, String tilePropertyName, Rectangle2D sprite, Vector2i defaultTile) {
+    private void drawSprite(GraphicsContext g, String tilePropertyName, RectArea sprite, Vector2i defaultTile) {
         var tile = getTileFromMap(map().terrain(), tilePropertyName, defaultTile);
         if (tile != null) {
             drawSprite(g, sprite, tile.x() * gridSize() + 0.5 * gridSize(), tile.y() * gridSize(), 1.75 * gridSize(), 1.75 * gridSize());
         }
     }
 
-    private void drawSprite(GraphicsContext g, Rectangle2D sprite, double x, double y, double w, double h) {
+    private void drawSprite(GraphicsContext g, RectArea sprite, double x, double y, double w, double h) {
         double ox = 0.5 * (w - gridSize());
         double oy = 0.5 * (h - gridSize());
-        g.drawImage(spriteSheet, sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), x - ox, y - oy, w, h);
+        g.drawImage(spriteSheet, sprite.x(), sprite.y(), sprite.width(), sprite.height(), x - ox, y - oy, w, h);
     }
 
     private void drawSelectedPalette() {
