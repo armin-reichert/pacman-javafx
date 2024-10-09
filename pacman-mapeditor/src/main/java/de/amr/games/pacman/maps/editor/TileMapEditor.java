@@ -101,12 +101,14 @@ public class TileMapEditor  {
     static final String PROPERTY_COLOR_FOOD               = "color_food";
     static final String DEFAULT_FOOD_COLOR                = "rgb(255,255,255)";
 
-    static final Vector2i DEFAULT_POS_PAC                 = new Vector2i(13, 26);
-    static final Vector2i DEFAULT_POS_RED_GHOST           = new Vector2i(13, 14);
-    static final Vector2i DEFAULT_POS_PINK_GHOST          = new Vector2i(13, 17);
-    static final Vector2i DEFAULT_POS_CYAN_GHOST          = new Vector2i(11, 17);
-    static final Vector2i DEFAULT_POS_ORANGE_GHOST        = new Vector2i(15, 17);
+    static final Vector2i DEFAULT_POS_HOUSE               = new Vector2i(10, 15);
+    static final Vector2i DEFAULT_POS_RED_GHOST           = DEFAULT_POS_HOUSE.plus(3, -1);
+    static final Vector2i DEFAULT_POS_CYAN_GHOST          = DEFAULT_POS_HOUSE.plus(1, 2);
+    static final Vector2i DEFAULT_POS_PINK_GHOST          = DEFAULT_POS_HOUSE.plus(3, 2);
+    static final Vector2i DEFAULT_POS_ORANGE_GHOST        = DEFAULT_POS_HOUSE.plus(5, 2);
+
     static final Vector2i DEFAULT_POS_BONUS               = new Vector2i(13, 20);
+    static final Vector2i DEFAULT_POS_PAC                 = new Vector2i(13, 26);
 
     static final String PALETTE_TERRAIN = "Terrain";
     static final String PALETTE_ACTORS  = "Actors";
@@ -266,8 +268,7 @@ public class TileMapEditor  {
         URL url = requireNonNull(getClass().getResource("pacman_spritesheet.png"));
         spriteSheet = new Image(url.toExternalForm());
         rubberCursor = Cursor.cursor(getClass().getResource("graphics/radiergummi.jpg").toExternalForm());
-        WorldMap map = createPreconfiguredMap(28, 36); // standard Arcade map size
-        setMap(map);
+        setMap(new WorldMap(36, 28));
     }
 
     public void showMessage(String message, long seconds, MessageType type) {
@@ -330,23 +331,25 @@ public class TileMapEditor  {
 
     private WorldMap createPreconfiguredMap(int tilesX, int tilesY) {
         var worldMap = new WorldMap(tilesY, tilesX);
-
         TileMap terrain = worldMap.terrain();
+
+        Vector2i houseOrigin = v2i(tilesX / 2 - 4, tilesY / 2 - 3);
+
+        addBorder(terrain, 3, 2);
+        addHouse(terrain, houseOrigin);
+
         terrain.setProperty(PROPERTY_COLOR_WALL_STROKE,        DEFAULT_COLOR_WALL_STROKE);
         terrain.setProperty(PROPERTY_COLOR_WALL_FILL,          DEFAULT_COLOR_WALL_FILL);
         terrain.setProperty(PROPERTY_COLOR_DOOR,               DEFAULT_COLOR_DOOR);
-        terrain.setProperty(PROPERTY_POS_PAC,                  formatTile(DEFAULT_POS_PAC));
-        terrain.setProperty(PROPERTY_POS_RED_GHOST,            formatTile(DEFAULT_POS_RED_GHOST));
-        terrain.setProperty(PROPERTY_POS_PINK_GHOST,           formatTile(DEFAULT_POS_PINK_GHOST));
-        terrain.setProperty(PROPERTY_POS_CYAN_GHOST,           formatTile(DEFAULT_POS_CYAN_GHOST));
-        terrain.setProperty(PROPERTY_POS_ORANGE_GHOST,         formatTile(DEFAULT_POS_ORANGE_GHOST));
-        terrain.setProperty(PROPERTY_POS_BONUS,                formatTile(DEFAULT_POS_BONUS));
-        terrain.setProperty(PROPERTY_POS_SCATTER_RED_GHOST,    formatTile(v2i(25, 0)));
+
+        terrain.setProperty(PROPERTY_POS_PAC,                  formatTile(houseOrigin.plus(3, 11)));
+        terrain.setProperty(PROPERTY_POS_BONUS,                formatTile(houseOrigin.plus(3, 5)));
+
+        terrain.setProperty(PROPERTY_POS_SCATTER_RED_GHOST,    formatTile(v2i(tilesX - 3, 0)));
         terrain.setProperty(PROPERTY_POS_SCATTER_PINK_GHOST,   formatTile(v2i(3, 0)));
         terrain.setProperty(PROPERTY_POS_SCATTER_CYAN_GHOST,   formatTile(v2i(tilesX - 1, tilesY - 2)));
         terrain.setProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(v2i(0, tilesY - 2)));
 
-        addBorder(terrain, 3, 2);
         invalidateTerrainMapPaths();
 
         worldMap.food().setProperty(PROPERTY_COLOR_FOOD, DEFAULT_FOOD_COLOR);
@@ -754,9 +757,12 @@ public class TileMapEditor  {
 
     public void markTileMapEdited(TileMap tileMap) {
         unsavedChanges = true;
-        updateSourceView(map());
-        if (tileMap == map().terrain()) {
-            invalidateTerrainMapPaths();
+        WorldMap currentWorldMap = map();
+        if (currentWorldMap != null) {
+            updateSourceView(currentWorldMap);
+            if (tileMap == currentWorldMap.terrain()) {
+                invalidateTerrainMapPaths();
+            }
         }
     }
 
@@ -947,6 +953,16 @@ public class TileMapEditor  {
             }
         }
         markTileMapEdited(map);
+    }
+
+    private void addHouse(TileMap terrain, Vector2i tile) {
+        addShapeNotMirrored(terrain, GHOST_HOUSE_SHAPE, tile);
+        terrain.setProperty(PROPERTY_POS_HOUSE_MIN_TILE, formatTile(tile));
+        terrain.setProperty(PROPERTY_POS_RED_GHOST,      formatTile(tile.plus(3, -1)));
+        terrain.setProperty(PROPERTY_POS_CYAN_GHOST,     formatTile(tile.plus(1, 2)));
+        terrain.setProperty(PROPERTY_POS_PINK_GHOST,     formatTile(tile.plus(3, 2)));
+        terrain.setProperty(PROPERTY_POS_ORANGE_GHOST,   formatTile(tile.plus(5, 2)));
+        terrainMapPropertiesEditor.rebuildPropertyEditors(); //TODO better solution
     }
 
     private void updateSourceView(WorldMap map) {
@@ -1220,12 +1236,7 @@ public class TileMapEditor  {
                 miAddCircle2x2.disableProperty().bind(editingEnabledPy.not());
 
                 var miAddHouse = new MenuItem(tt("menu.edit.add_house"));
-                miAddHouse.setOnAction(actionEvent -> {
-                    addShapeNotMirrored(map().terrain(), GHOST_HOUSE_SHAPE, tile);
-                    // ensure no mirroring
-                    map().terrain().setProperty(PROPERTY_POS_HOUSE_MIN_TILE, formatTile(tile));
-                    terrainMapPropertiesEditor.rebuildPropertyEditors(); //TODO better solution
-                });
+                miAddHouse.setOnAction(actionEvent -> addHouse(map().terrain(), tile));
                 miAddHouse.disableProperty().bind(editingEnabledPy.not());
 
                 contextMenu.getItems().setAll(miAddCircle2x2, miAddHouse);
