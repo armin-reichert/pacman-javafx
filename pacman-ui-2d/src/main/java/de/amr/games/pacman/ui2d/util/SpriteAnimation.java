@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.util;
 
+import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.RectArea;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;

@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
+import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.RectArea;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;

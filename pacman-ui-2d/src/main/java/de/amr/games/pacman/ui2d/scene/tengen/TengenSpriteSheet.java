@@ -4,13 +4,13 @@
 package de.amr.games.pacman.ui2d.scene.tengen;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.scene.image.Image;
 
+import static de.amr.games.pacman.lib.RectArea.rect;
 import static de.amr.games.pacman.model.GameModel.*;
-import static de.amr.games.pacman.ui2d.rendering.RectArea.rect;
 
 /**
  * @author Armin Reichert

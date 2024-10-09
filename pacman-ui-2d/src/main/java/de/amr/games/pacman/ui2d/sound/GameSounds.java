@@ -17,7 +17,6 @@ import org.tinylog.Logger;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.MissingResourceException;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;

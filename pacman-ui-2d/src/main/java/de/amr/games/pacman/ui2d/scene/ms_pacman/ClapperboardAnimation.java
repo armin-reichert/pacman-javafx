@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
-import de.amr.games.pacman.ui2d.rendering.RectArea;
+import de.amr.games.pacman.lib.RectArea;
 
 /**
  * @author Armin Reichert

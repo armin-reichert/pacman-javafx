@@ -33,7 +33,10 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontSmoothingType;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
@@ -94,15 +97,15 @@ public class TileMapEditor  {
 
     static final String PROPERTY_POS_HOUSE_MIN_TILE       = "pos_house_min_tile";
 
-    static final String PROPERTY_COLOR_FOOD = "color_food";
-    static final String DEFAULT_FOOD_COLOR  = "rgb(255,0,0)";
+    static final String PROPERTY_COLOR_FOOD               = "color_food";
+    static final String DEFAULT_FOOD_COLOR                = "rgb(255,255,255)";
 
-    static final Vector2i DEFAULT_POS_PAC          = new Vector2i(13, 26);
-    static final Vector2i DEFAULT_POS_RED_GHOST    = new Vector2i(13, 14);
-    static final Vector2i DEFAULT_POS_PINK_GHOST   = new Vector2i(13, 17);
-    static final Vector2i DEFAULT_POS_CYAN_GHOST   = new Vector2i(11, 17);
-    static final Vector2i DEFAULT_POS_ORANGE_GHOST = new Vector2i(15, 17);
-    static final Vector2i DEFAULT_POS_BONUS        = new Vector2i(13, 20);
+    static final Vector2i DEFAULT_POS_PAC                 = new Vector2i(13, 26);
+    static final Vector2i DEFAULT_POS_RED_GHOST           = new Vector2i(13, 14);
+    static final Vector2i DEFAULT_POS_PINK_GHOST          = new Vector2i(13, 17);
+    static final Vector2i DEFAULT_POS_CYAN_GHOST          = new Vector2i(11, 17);
+    static final Vector2i DEFAULT_POS_ORANGE_GHOST        = new Vector2i(15, 17);
+    static final Vector2i DEFAULT_POS_BONUS               = new Vector2i(13, 20);
 
     static final String PALETTE_TERRAIN = "Terrain";
     static final String PALETTE_ACTORS  = "Actors";
@@ -262,7 +265,7 @@ public class TileMapEditor  {
         URL url = requireNonNull(getClass().getResource("pacman_spritesheet.png"));
         spriteSheet = new Image(url.toExternalForm());
         rubberCursor = Cursor.cursor(getClass().getResource("graphics/radiergummi.jpg").toExternalForm());
-        WorldMap map = createWorldMap(36, 28); // standard Arcade map size
+        WorldMap map = createPreconfiguredMap(36, 28); // standard Arcade map size
         setMap(map);
     }
 
@@ -324,7 +327,7 @@ public class TileMapEditor  {
         );
     }
 
-    private WorldMap createWorldMap(int numRows, int numCols) {
+    private WorldMap createPreconfiguredMap(int numRows, int numCols) {
         var worldMap = new WorldMap(numRows, numCols);
 
         TileMap terrain = worldMap.terrain();
@@ -776,7 +779,7 @@ public class TileMapEditor  {
         dialog.showAndWait().ifPresent(text -> {
             Vector2i size = parseSize(text);
             if (size != null) {
-                WorldMap map = createWorldMap(size.y(), size.x());
+                WorldMap map = createPreconfiguredMap(size.y(), size.x());
                 setMap(map);
                 currentFilePy.set(null);
             }

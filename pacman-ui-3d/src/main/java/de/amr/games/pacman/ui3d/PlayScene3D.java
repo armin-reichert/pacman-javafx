@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
+import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameVariant;
@@ -15,7 +16,6 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui3d.level.*;

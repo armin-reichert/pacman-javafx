@@ -5,10 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.tengen;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.RectArea;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
 

@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.rendering;
 
+import de.amr.games.pacman.lib.RectArea;
 import javafx.scene.image.Image;
 
 /**

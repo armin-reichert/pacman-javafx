@@ -4,11 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.util;
 
+import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.RectArea;
 import org.tinylog.Logger;
 
 import java.util.HashMap;

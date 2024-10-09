@@ -8,7 +8,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.InfoBox;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
-import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import javafx.beans.binding.Bindings;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -18,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_PIP_ON;
 
 /**
  * @author Armin Reichert
