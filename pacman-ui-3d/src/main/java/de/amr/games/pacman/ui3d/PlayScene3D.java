@@ -25,7 +25,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -58,6 +57,11 @@ public class PlayScene3D implements GameScene {
         GameAction2D.CHEAT_ADD_LIVES,
         GameAction2D.CHEAT_NEXT_LEVEL,
         GameAction2D.CHEAT_KILL_GHOSTS
+    );
+
+    private static final List<GameAction> TENGEN_GAME_ACTIONS = List.of(
+        GameAction2D.TENGEN_TOGGLE_PAC_BOOSTER,
+        GameAction2D.TENGEN_QUIT_PLAY_SCENE
     );
 
     // Each 3D play scene has its own set of cameras/perspectives
@@ -200,18 +204,17 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void handleInput() {
-        //TODO hack
-        if (context.game().variant() == GameVariant.MS_PACMAN_TENGEN && context.keyboard().pressed(KeyCode.ESCAPE)) {
-            end();
-            context.game().setPlaying(false);
-            context.gameController().changeState(GameState.CREDIT); // shows Tengen settings scene
-            return;
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            context.execFirstCalledActionOrElse(TENGEN_GAME_ACTIONS.stream(),
+                () -> context.execFirstCalledAction(GAME_ACTIONS));
+        } else {
+            // add credit is only allowed in demo level
+            if (context.isActionCalled(GameAction2D.ADD_CREDIT) && context.game().isDemoLevel()) {
+                GameAction2D.ADD_CREDIT.execute(context);
+            } else {
+                context.execFirstCalledAction(GAME_ACTIONS.stream());
+            }
         }
-        if (context.isActionCalled(GameAction2D.ADD_CREDIT) && context.game().isDemoLevel()) {
-            GameAction2D.ADD_CREDIT.execute(context);
-            return;
-        }
-        context.execFirstCalledAction(GAME_ACTIONS.stream());
     }
 
     @Override
