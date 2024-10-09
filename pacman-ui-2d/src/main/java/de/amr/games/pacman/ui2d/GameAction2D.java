@@ -285,6 +285,7 @@ public enum GameAction2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
+            context.sounds().stopAll();
             context.currentGameScene().ifPresent(GameScene::end);
             context.game().setPlaying(false);
             context.gameController().changeState(GameState.CREDIT); // shows Tengen settings scene
