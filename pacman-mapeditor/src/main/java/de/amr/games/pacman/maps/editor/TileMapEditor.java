@@ -529,8 +529,8 @@ public class TileMapEditor  {
                         return "Editing disabled";
                     }
                     return switch (controller.modePy.get()) {
-                        case DRAW -> "Draw mode";
-                        case ERASE -> "Erase mode";
+                        case DRAW -> symmetricEditModePy.get() ?  "Symmetric" : "Normal";
+                        case ERASE -> "Erase";
                     };
 
                 },
