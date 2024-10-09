@@ -41,6 +41,11 @@ public class EditController {
         {19, 8, 8, 8, 8, 8, 8, 18}
     };
 
+    static final byte[][] CIRCLE_2x2 = {
+        {Tiles.CORNER_NW, Tiles.CORNER_NE},
+        {Tiles.CORNER_SW, Tiles.CORNER_SE}
+    };
+
     static byte mirroredTileContent(byte content) {
         return switch (content) {
             case Tiles.CORNER_NE -> Tiles.CORNER_NW;
@@ -269,7 +274,7 @@ public class EditController {
             WorldMap worldMap = mapPy.get();
 
             var miAddCircle2x2 = new MenuItem("2x2 Circle");
-            miAddCircle2x2.setOnAction(actionEvent -> addShape(worldMap.terrain(), TileMapEditor.CIRCLE_2x2, tile));
+            miAddCircle2x2.setOnAction(actionEvent -> addShape(worldMap.terrain(), CIRCLE_2x2, tile));
             miAddCircle2x2.disableProperty().bind(editingEnabledPy.not());
 
             var miAddHouse = new MenuItem(TileMapEditor.tt("menu.edit.add_house"));

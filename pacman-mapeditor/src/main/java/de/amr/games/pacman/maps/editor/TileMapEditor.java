@@ -110,11 +110,6 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     static final int TOOL_SIZE = 32;
 
-    static final byte[][] CIRCLE_2x2 = {
-        {Tiles.CORNER_NW, Tiles.CORNER_NE},
-        {Tiles.CORNER_SW, Tiles.CORNER_SE}
-    };
-
     static String tt(String key, Object... args) {
         return MessageFormat.format(TEXT_BUNDLE.getString(key), args);
     }
@@ -275,10 +270,6 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     public void setMap(WorldMap map) {
         mapPy.set(checkNotNull(map));
-    }
-
-    public Stage stage() {
-        return stage;
     }
 
     private StringBinding createTitleBinding() {
