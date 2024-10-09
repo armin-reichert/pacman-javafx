@@ -201,6 +201,7 @@ public class TengenSpriteSheet implements GameSpriteSheet {
             case MsPacManTengenGame.BONUS_ICE_CREAM -> 7; // 4000!
             default -> symbol;
         };
+        return BONUS_VALUE_SPRITES[index];
     }
 
     public RectArea[] clapperboardSprites() {
