@@ -50,7 +50,7 @@ public class MsPacManTengenGame extends GameModel {
 
     private static final byte[] STRANGE_MAP_NUMBERS = {
         1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-        17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 3, 32 // TODO check in video
+        17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32 // TODO check in video
     };
 
     private static final byte[] MINI_MAP_NUMBERS = {
@@ -63,9 +63,7 @@ public class MsPacManTengenGame extends GameModel {
 
     private static final String MAPS_ROOT = "/de/amr/games/pacman/maps/tengen/";
     private static final String ARCADE_MAP_PATTERN  = MAPS_ROOT + "arcade/map%02d.world";
-    private static final String STRANGE_MAP_PATTERN = MAPS_ROOT + "non_arcade/map%02d-strange.world";
-    private static final String MINI_MAP_PATTERN    = MAPS_ROOT + "non_arcade/map%02d-mini.world";
-    private static final String BIG_MAP_PATTERN     = MAPS_ROOT + "non_arcade/map%02d-big.world";
+    private static final String NON_ARCADE_MAP_PATTERN  = MAPS_ROOT + "non_arcade/map%02d.world";
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
@@ -134,6 +132,7 @@ public class MsPacManTengenGame extends GameModel {
         initialLives = 3;
         highScoreFile = new File(userDir, "highscore-ms_pacman_tengen.xml");
         arcadeMaps  = readMaps(MapCategory.ARCADE,  ARCADE_MAP_PATTERN, 9);
+
         strangeMaps = readMaps(MapCategory.STRANGE, STRANGE_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
         miniMaps    = readMaps(MapCategory.MINI,    MINI_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
         bigMaps     = readMaps(MapCategory.BIG,     BIG_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
