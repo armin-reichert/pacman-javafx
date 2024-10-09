@@ -58,7 +58,7 @@ public class Palette {
         Tooltip.install(canvas, tooltip);
     }
 
-    public TileValueEditorTool createTileValueEditorTool(TileMapEditor editor, byte value, String description) {
+    public TileValueEditorTool createTileValueEditorTool(EditController editor, byte value, String description) {
         return new TileValueEditorTool(editor, renderer, toolSize, value, description);
     }
 

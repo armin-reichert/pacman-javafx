@@ -74,7 +74,7 @@ public class PropertyEditorPane extends BorderPane {
         return tileMapPy.get();
     }
 
-    private final TileMapEditor mapEditor;
+    private final EditController editController;
     private final GridPane grid = new GridPane();
     private final List<AbstractPropertyEditor> propertyEditors = new ArrayList<>();
 
@@ -102,36 +102,36 @@ public class PropertyEditorPane extends BorderPane {
                 if (deletePropertyName.equals(propertyName)) {
                     tileMap().getProperties().remove(propertyName);
                     Logger.debug("Property {} deleted", propertyName);
-                    mapEditor.markTileMapEdited(tileMap());
+                    editController.markTileMapEdited(tileMap());
                     rebuildPropertyEditors(); //TODO check
-                    mapEditor.showMessage("Property %s deleted".formatted(propertyName), 1, MessageType.INFO);
+                    editController.showInfoMessage("Property %s deleted".formatted(propertyName), 1);
                 } else {
                     nameEditor.setText(propertyName);
-                    mapEditor.showMessage("Cannot delete other property %s".formatted(deletePropertyName), 2, MessageType.ERROR);
+                    editController.showErrorMessage("Cannot delete other property %s".formatted(deletePropertyName), 2);
                 }
                 return;
             }
             if (!isValidPropertyName(editedName)) {
                 nameEditor.setText(propertyName);
-                mapEditor.showMessage("Property name %s is invalid".formatted(editedName), 2, MessageType.ERROR);
+                editController.showErrorMessage("Property name %s is invalid".formatted(editedName), 2);
                 return;
             }
             if (tileMap().getProperties().get(editedName) != null) {
-                mapEditor.showMessage("Property name already used", 2, MessageType.ERROR);
+                editController.showErrorMessage("Property name already used", 2);
                 nameEditor.setText(propertyName);
                 return;
             }
             tileMap().getProperties().remove(propertyName);
             tileMap().getProperties().put(editedName, formattedPropertyValue());
-            mapEditor.showMessage("Property %s renamed to %s".formatted(propertyName, editedName), 2, MessageType.INFO);
+            editController.showInfoMessage("Property %s renamed to %s".formatted(propertyName, editedName), 2);
             propertyName = editedName;
             rebuildPropertyEditors(); // sort order might have changed
-            mapEditor.markTileMapEdited(tileMap());
+            editController.markTileMapEdited(tileMap());
         }
 
         void storePropertyValue() {
             tileMap().getProperties().put(propertyName, formattedPropertyValue());
-            mapEditor.markTileMapEdited(tileMap());
+            editController.markTileMapEdited(tileMap());
         }
 
         abstract String formattedPropertyValue();
@@ -252,14 +252,14 @@ public class PropertyEditorPane extends BorderPane {
         }
     }
 
-    public PropertyEditorPane(TileMapEditor mapEditor) {
-        this.mapEditor = checkNotNull(mapEditor);
+    public PropertyEditorPane(EditController editController) {
+        this.editController = checkNotNull(editController);
 
         var btnAddColorEntry = new Button("Color");
         btnAddColorEntry.setOnAction(e -> {
             String propertyName = "color_RENAME_ME";
             tileMap().getProperties().put(propertyName, "green");
-            mapEditor.showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
+            editController.showInfoMessage("New property %s added".formatted(propertyName), 1);
             rebuildPropertyEditors();
         });
         btnAddColorEntry.disableProperty().bind(enabledPy.not());
@@ -268,7 +268,7 @@ public class PropertyEditorPane extends BorderPane {
         btnAddPosEntry.setOnAction(e -> {
             String propertyName = "pos_RENAME_ME";
             tileMap().getProperties().put(propertyName, "(0,0)");
-            mapEditor.showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
+            editController.showInfoMessage("New property %s added".formatted(propertyName), 1);
             rebuildPropertyEditors();
         });
         btnAddPosEntry.disableProperty().bind(enabledPy.not());
@@ -277,7 +277,7 @@ public class PropertyEditorPane extends BorderPane {
         btnAddGenericEntry.setOnAction(e -> {
             String propertyName = "RENAME_ME";
             tileMap().getProperties().put(propertyName, "any text");
-            mapEditor.showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
+            editController.showInfoMessage("New property %s added".formatted(propertyName), 1);
             rebuildPropertyEditors();
         });
         btnAddGenericEntry.disableProperty().bind(enabledPy.not());

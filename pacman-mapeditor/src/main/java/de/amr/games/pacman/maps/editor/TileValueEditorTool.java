@@ -14,13 +14,13 @@ import javafx.scene.paint.Color;
  * @author Armin Reichert
  */
 public class TileValueEditorTool implements Tool {
-    private final TileMapEditor editor;
+    private final EditController editor;
     private final TileMapRenderer renderer;
     private final double size;
     private final byte value;
     private final String description;
 
-    public TileValueEditorTool(TileMapEditor editor, TileMapRenderer renderer, double size, byte value, String description) {
+    public TileValueEditorTool(EditController editor, TileMapRenderer renderer, double size, byte value, String description) {
         this.editor = editor;
         this.renderer = renderer;
         this.size = size;
