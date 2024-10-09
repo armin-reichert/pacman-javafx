@@ -5,6 +5,7 @@ package de.amr.games.pacman.ui2d.scene.tengen;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.scene.image.Image;
@@ -193,7 +194,13 @@ public class TengenSpriteSheet implements GameSpriteSheet {
 
     @Override
     public RectArea bonusValueSprite(byte symbol) {
-        return BONUS_VALUE_SPRITES[symbol];
+        // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000
+        int index = switch (symbol) {
+            case MsPacManTengenGame.BONUS_BANANA -> 8; // 5000!
+            case MsPacManTengenGame.BONUS_MILK -> 6; // 3000!
+            case MsPacManTengenGame.BONUS_ICE_CREAM -> 7; // 4000!
+            default -> symbol;
+        };
     }
 
     public RectArea[] clapperboardSprites() {
