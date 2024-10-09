@@ -127,7 +127,7 @@ public class GameSounds {
 
     private void stop(MediaPlayer player) {
         if (player == null) {
-            Logger.warn("No media player to stop");
+            Logger.debug("No media player to stop");
             return;
         }
         player.stop();
