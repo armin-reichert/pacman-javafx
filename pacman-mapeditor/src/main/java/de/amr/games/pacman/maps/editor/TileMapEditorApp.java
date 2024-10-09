@@ -40,8 +40,8 @@ public class TileMapEditorApp extends Application  {
     @Override
     public void start(Stage stage) {
         try {
-            stage.setMinWidth(1024);
-            stage.setMinHeight(768);
+            stage.setMinWidth(900);
+            stage.setMinHeight(600);
             doStart(stage);
         } catch (Exception x) {
             x.printStackTrace(System.err);
