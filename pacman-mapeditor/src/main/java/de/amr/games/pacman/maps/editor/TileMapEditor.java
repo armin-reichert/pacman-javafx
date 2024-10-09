@@ -63,7 +63,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class TileMapEditor  {
 
-    enum EditMode { DRAW, ERASE }
+    static final byte MIN_GRID_SIZE = 8;
+    static final byte MAX_GRID_SIZE = 48;
 
     static final Node NO_GRAPHIC = null;
     static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(TileMapEditor.class.getPackageName() + ".texts");
@@ -170,8 +171,6 @@ public class TileMapEditor  {
 
     final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>();
 
-    final BooleanProperty editingEnabledPy = new SimpleBooleanProperty(false);
-
     final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>();
 
     final BooleanProperty foodVisiblePy            = new SimpleBooleanProperty(true);
@@ -210,13 +209,12 @@ public class TileMapEditor  {
 
     final BooleanProperty previewVisiblePy = new SimpleBooleanProperty(true);
 
-    final BooleanProperty symmetricEditModePy = new SimpleBooleanProperty(true);
 
     final ObjectProperty<String> titlePy = new SimpleObjectProperty<>("Tile Map Editor");
 
     final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
 
-    private final EditController controller = new EditController();
+    private final EditController editController = new EditController();
 
     private Stage stage;
     private final BorderPane contentPane = new BorderPane();
@@ -294,7 +292,7 @@ public class TileMapEditor  {
 
     public void stop() {
         clock.stop();
-        editingEnabledPy.set(false);
+        editController.editingEnabledPy.set(false);
         unsavedChanges = false;
     }
 
@@ -376,8 +374,30 @@ public class TileMapEditor  {
         arrangeMainLayout();
         initActiveRendering();
 
+        contentPane.setOnKeyTyped(this::onKeyTyped);
         propertyEditorsVisiblePy.set(false);
     }
+
+    private void onKeyTyped(KeyEvent event) {
+        Logger.info("Typed {}", event);
+        String ch = event.getCharacter();
+        switch (ch) {
+            case "n" -> editController.setNormalDrawMode();
+            case "s" -> editController.setSymmetricDrawMode();
+            case "x" -> editController.setEraseMode();
+            case "+" -> {
+                if (gridSizePy.get() < MAX_GRID_SIZE) {
+                    gridSizePy.set(gridSize() + 1);
+                }
+            }
+            case "-" -> {
+                if (gridSizePy.get() > MIN_GRID_SIZE) {
+                    gridSizePy.set(gridSize() - 1);
+                }
+            }
+        }
+    }
+
 
     private void createRenderers() {
         terrainMapEditRenderer = new TerrainMapEditRenderer();
@@ -404,12 +424,11 @@ public class TileMapEditor  {
 
     private void createEditCanvas() {
         editCanvas = new Canvas();
-        editCanvas.setOnContextMenuRequested(controller::onContextMenuRequested);
-        editCanvas.setOnMouseClicked(controller::onMouseClicked);
-        editCanvas.setOnMouseMoved(controller::onMouseMoved);
-        editCanvas.setOnKeyPressed(controller::onKeyPressed);
-        editCanvas.setOnKeyReleased(controller::onKeyReleased);
-        editCanvas.setOnKeyTyped(controller::onKeyTyped);
+        editCanvas.setOnContextMenuRequested(editController::onContextMenuRequested);
+        editCanvas.setOnMouseClicked(editController::onMouseClicked);
+        editCanvas.setOnMouseMoved(editController::onMouseMoved);
+        editCanvas.setOnKeyPressed(editController::onKeyPressed);
+        editCanvas.setOnKeyReleased(editController::onKeyReleased);
         editCanvasScroll = new ScrollPane(editCanvas);
         editCanvasScroll.setFitToHeight(true);
         // Note: this must be done *after* the initial map has been created/loaded!
@@ -481,11 +500,11 @@ public class TileMapEditor  {
 
     private void createPropertyEditors() {
         terrainMapPropertiesEditor = new PropertyEditorPane(this);
-        terrainMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
+        terrainMapPropertiesEditor.enabledPy.bind(editController.editingEnabledPy);
         terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
         foodMapPropertiesEditor = new PropertyEditorPane(this);
-        foodMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
+        foodMapPropertiesEditor.enabledPy.bind(editController.editingEnabledPy);
         foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
         var terrainPropertiesPane = new TitledPane();
@@ -525,16 +544,16 @@ public class TileMapEditor  {
         editModeIndicator.setFont(FONT_STATUS_LINE);
         editModeIndicator.textProperty().bind(Bindings.createStringBinding(
                 () -> {
-                    if (!editingEnabledPy.get()) {
+                    if (!editController.editingEnabledPy.get()) {
                         return "Editing disabled";
                     }
-                    return switch (controller.modePy.get()) {
-                        case DRAW -> symmetricEditModePy.get() ?  "Symmetric" : "Normal";
+                    return switch (editController.modePy.get()) {
+                        case DRAW -> editController.symmetricEditModePy.get() ?  "Symmetric" : "Normal";
                         case ERASE -> "Erase";
                     };
 
                 },
-                controller.modePy, editingEnabledPy, symmetricEditModePy
+                editController.modePy, editController.editingEnabledPy, editController.symmetricEditModePy
         ));
     }
 
@@ -546,7 +565,7 @@ public class TileMapEditor  {
     }
 
     private void createZoomSlider() {
-        var sliderZoom = new Slider(8, 48, 16);
+        var sliderZoom = new Slider(MIN_GRID_SIZE, MAX_GRID_SIZE, 2 * MIN_GRID_SIZE);
         sliderZoom.valueProperty().bindBidirectional(gridSizePy);
         sliderZoom.setShowTickLabels(false);
         sliderZoom.setShowTickMarks(true);
@@ -683,7 +702,7 @@ public class TileMapEditor  {
 
     private void createEditMenu() {
         var miSymmetricMode = new CheckMenuItem(tt("menu.edit.symmetric"));
-        miSymmetricMode.selectedProperty().bindBidirectional(symmetricEditModePy);
+        miSymmetricMode.selectedProperty().bindBidirectional(editController.symmetricEditModePy);
 
         var miAddBorder = new MenuItem(tt("menu.edit.add_border"));
         miAddBorder.setOnAction(e -> {
@@ -710,7 +729,7 @@ public class TileMapEditor  {
             miClearTerrain,
             miClearFood);
 
-        menuEdit.disableProperty().bind(editingEnabledPy.not());
+        menuEdit.disableProperty().bind(editController.editingEnabledPy.not());
     }
 
     private void createLoadMapMenu() {
@@ -925,9 +944,9 @@ public class TileMapEditor  {
     void setTileValue(TileMap tileMap, Vector2i tile, byte value) {
         checkNotNull(tileMap);
         checkNotNull(tile);
-        if (editingEnabledPy.get()) {
+        if (editController.editingEnabledPy.get()) {
             tileMap.set(tile, value);
-            if (symmetricEditModePy.get()) {
+            if (editController.symmetricEditModePy.get()) {
                 tileMap.set(tile.y(), tileMap.numCols() - 1 - tile.x(), mirroredTileContent(tileMap.get(tile)));
             }
         }
@@ -1037,7 +1056,7 @@ public class TileMapEditor  {
             foodMapRenderer.drawMap(g, map().food());
         }
         drawActorSprites(g);
-        if (!editingEnabledPy.get()) {
+        if (!editController.editingEnabledPy.get()) {
             drawEditingHint(g);
         }
         if (focussedTilePy.get() != null) {
@@ -1125,8 +1144,13 @@ public class TileMapEditor  {
 
     // Edit controller
 
+    enum EditMode { DRAW, ERASE }
+
     class EditController {
-        ObjectProperty<EditMode> modePy = new SimpleObjectProperty<>() {
+
+        final BooleanProperty editingEnabledPy = new SimpleBooleanProperty(false);
+
+        final ObjectProperty<EditMode> modePy = new SimpleObjectProperty<>() {
             @Override
             protected void invalidated() {
                 if (editCanvas != null) {
@@ -1135,11 +1159,26 @@ public class TileMapEditor  {
             }
         };
 
+        final BooleanProperty symmetricEditModePy = new SimpleBooleanProperty(true);
+
         EditController() {
             setMode(EditMode.DRAW);
         }
 
-        public void setMode(EditMode mode) {
+        void setNormalDrawMode() {
+            setMode(EditMode.DRAW);
+            symmetricEditModePy.set(false);
+        }
+        void setSymmetricDrawMode() {
+            setMode(EditMode.DRAW);
+            symmetricEditModePy.set(true);
+        }
+
+        void setEraseMode() {
+            setMode(EditMode.ERASE);
+        }
+
+        void setMode(EditMode mode) {
             modePy.set(checkNotNull(mode));
         }
 
@@ -1213,15 +1252,6 @@ public class TileMapEditor  {
                 if (!map().terrain().outOfBounds(newTile)) {
                     focussedTilePy.set(newTile);
                 }
-            }
-        }
-
-        void onKeyTyped(KeyEvent event) {
-            Logger.info("Typed {}", event);
-            if (event.getCharacter().equals("x")) {
-                setMode(modePy.get() == EditMode.DRAW ? EditMode.ERASE : EditMode.DRAW);
-            } else if (event.getCharacter().equals("s")) {
-                symmetricEditModePy.set(!symmetricEditModePy.get());
             }
         }
 
