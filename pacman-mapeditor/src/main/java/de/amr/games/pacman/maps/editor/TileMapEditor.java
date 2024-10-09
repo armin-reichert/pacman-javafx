@@ -53,6 +53,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.lib.Globals.v2i;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
 import static de.amr.games.pacman.maps.editor.TileMapUtil.*;
 import static java.util.Objects.requireNonNull;
@@ -180,7 +181,7 @@ public class TileMapEditor  {
         }
     };
 
-    final BooleanProperty gridVisiblePy            = new SimpleBooleanProperty(true);
+    final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
 
     final ObjectProperty<WorldMap> mapPy = new SimpleObjectProperty<>() {
         @Override
@@ -205,13 +206,13 @@ public class TileMapEditor  {
         }
     };
 
-    final BooleanProperty previewVisiblePy         = new SimpleBooleanProperty(true);
+    final BooleanProperty previewVisiblePy = new SimpleBooleanProperty(true);
 
     final BooleanProperty symmetricEditModePy = new SimpleBooleanProperty(true);
 
-    final ObjectProperty<String> titlePy           = new SimpleObjectProperty<>("Tile Map Editor");
+    final ObjectProperty<String> titlePy = new SimpleObjectProperty<>("Tile Map Editor");
 
-    final BooleanProperty terrainVisiblePy         = new SimpleBooleanProperty(true);
+    final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
 
     private final EditController controller = new EditController();
 
@@ -265,7 +266,7 @@ public class TileMapEditor  {
         URL url = requireNonNull(getClass().getResource("pacman_spritesheet.png"));
         spriteSheet = new Image(url.toExternalForm());
         rubberCursor = Cursor.cursor(getClass().getResource("graphics/radiergummi.jpg").toExternalForm());
-        WorldMap map = createPreconfiguredMap(36, 28); // standard Arcade map size
+        WorldMap map = createPreconfiguredMap(28, 36); // standard Arcade map size
         setMap(map);
     }
 
@@ -327,25 +328,30 @@ public class TileMapEditor  {
         );
     }
 
-    private WorldMap createPreconfiguredMap(int numRows, int numCols) {
-        var worldMap = new WorldMap(numRows, numCols);
+    private WorldMap createPreconfiguredMap(int tilesX, int tilesY) {
+        var worldMap = new WorldMap(tilesY, tilesX);
 
         TileMap terrain = worldMap.terrain();
-        terrain.setProperty(PROPERTY_COLOR_WALL_STROKE, DEFAULT_COLOR_WALL_STROKE);
-        terrain.setProperty(PROPERTY_COLOR_WALL_FILL,   DEFAULT_COLOR_WALL_FILL);
-        terrain.setProperty(PROPERTY_COLOR_DOOR,        DEFAULT_COLOR_DOOR);
-        terrain.setProperty(PROPERTY_POS_PAC,           formatTile(DEFAULT_POS_PAC));
-        terrain.setProperty(PROPERTY_POS_RED_GHOST,     formatTile(DEFAULT_POS_RED_GHOST));
-        terrain.setProperty(PROPERTY_POS_PINK_GHOST,    formatTile(DEFAULT_POS_PINK_GHOST));
-        terrain.setProperty(PROPERTY_POS_CYAN_GHOST,    formatTile(DEFAULT_POS_CYAN_GHOST));
-        terrain.setProperty(PROPERTY_POS_ORANGE_GHOST,  formatTile(DEFAULT_POS_ORANGE_GHOST));
-        terrain.setProperty(PROPERTY_POS_BONUS,         formatTile(DEFAULT_POS_BONUS));
+        terrain.setProperty(PROPERTY_COLOR_WALL_STROKE,        DEFAULT_COLOR_WALL_STROKE);
+        terrain.setProperty(PROPERTY_COLOR_WALL_FILL,          DEFAULT_COLOR_WALL_FILL);
+        terrain.setProperty(PROPERTY_COLOR_DOOR,               DEFAULT_COLOR_DOOR);
+        terrain.setProperty(PROPERTY_POS_PAC,                  formatTile(DEFAULT_POS_PAC));
+        terrain.setProperty(PROPERTY_POS_RED_GHOST,            formatTile(DEFAULT_POS_RED_GHOST));
+        terrain.setProperty(PROPERTY_POS_PINK_GHOST,           formatTile(DEFAULT_POS_PINK_GHOST));
+        terrain.setProperty(PROPERTY_POS_CYAN_GHOST,           formatTile(DEFAULT_POS_CYAN_GHOST));
+        terrain.setProperty(PROPERTY_POS_ORANGE_GHOST,         formatTile(DEFAULT_POS_ORANGE_GHOST));
+        terrain.setProperty(PROPERTY_POS_BONUS,                formatTile(DEFAULT_POS_BONUS));
+        terrain.setProperty(PROPERTY_POS_SCATTER_RED_GHOST,    formatTile(v2i(25, 0)));
+        terrain.setProperty(PROPERTY_POS_SCATTER_PINK_GHOST,   formatTile(v2i(3, 0)));
+        terrain.setProperty(PROPERTY_POS_SCATTER_CYAN_GHOST,   formatTile(v2i(tilesX - 1, tilesY - 2)));
+        terrain.setProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(v2i(0, tilesY - 2)));
+
         addBorder(terrain, 3, 2);
         invalidateTerrainMapPaths();
 
         worldMap.food().setProperty(PROPERTY_COLOR_FOOD, DEFAULT_FOOD_COLOR);
 
-        Logger.info("Map created. rows={}, cols={}", numRows, numCols);
+        Logger.info("Map created. rows={}, cols={}", tilesY, tilesX);
         return worldMap;
     }
 
@@ -779,7 +785,7 @@ public class TileMapEditor  {
         dialog.showAndWait().ifPresent(text -> {
             Vector2i size = parseSize(text);
             if (size != null) {
-                WorldMap map = createPreconfiguredMap(size.y(), size.x());
+                WorldMap map = createPreconfiguredMap(size.x(), size.y());
                 setMap(map);
                 currentFilePy.set(null);
             }
