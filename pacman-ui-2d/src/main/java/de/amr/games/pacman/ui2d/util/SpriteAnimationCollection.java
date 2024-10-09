@@ -32,6 +32,7 @@ public class SpriteAnimationCollection implements Animations {
         return animationsByName.get(name);
     }
 
+    @Override
     public String currentAnimationName() {
         return currentAnimationName;
     }

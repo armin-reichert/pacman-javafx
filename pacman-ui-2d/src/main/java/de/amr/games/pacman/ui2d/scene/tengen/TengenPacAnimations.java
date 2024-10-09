@@ -27,7 +27,13 @@ public class TengenPacAnimations extends SpriteAnimationCollection {
         var munching = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man munching")
-            .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT))
+            .sprites(TengenSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT)
+            .loop();
+
+        var munchingBooster = SpriteAnimation
+            .spriteSheet(spriteSheet)
+            .info("Ms. Pac-Man munching booster mode")
+            .sprites(TengenSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
             .loop();
 
         var dying = SpriteAnimation
@@ -46,6 +52,7 @@ public class TengenPacAnimations extends SpriteAnimationCollection {
 
         add(Map.of(
             Pac.ANIM_MUNCHING, munching,
+            Pac.ANIM_MUNCHING_BOOSTER, munchingBooster,
             Pac.ANIM_DYING, dying,
             Pac.ANIM_HUSBAND_MUNCHING, husbandMunching
         ));
@@ -55,7 +62,10 @@ public class TengenPacAnimations extends SpriteAnimationCollection {
     protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
         if (entity instanceof Pac msPacMan) {
             if (currently(Pac.ANIM_MUNCHING)) {
-                return spriteSheet.pacMunchingSprites(msPacMan.moveDir());
+                return TengenSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT;
+            }
+            if (currently(Pac.ANIM_MUNCHING_BOOSTER)) {
+                return TengenSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER;
             }
             if (currently(Pac.ANIM_HUSBAND_MUNCHING)) {
                 return spriteSheet.pacManMunchingSprites(msPacMan.moveDir());

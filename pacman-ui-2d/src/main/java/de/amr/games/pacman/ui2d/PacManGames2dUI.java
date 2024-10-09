@@ -99,7 +99,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             case MS_PACMAN_TENGEN -> {
                 //TODO use Tengen sprites everywhere
                 GameSpriteSheet ssMsPac = assets.get("ms_pacman.spritesheet");
-                game.pac().setAnimations(new TengenPacAnimations(ssMsPac));
+                game.pac().setAnimations(new TengenPacAnimations(spriteSheet));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new TengenGhostAnimations(spriteSheet, ghost.id())));
             }
             case PACMAN, PACMAN_XXL -> {

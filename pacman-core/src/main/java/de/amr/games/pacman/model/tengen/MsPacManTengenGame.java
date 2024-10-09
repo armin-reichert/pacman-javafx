@@ -14,10 +14,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Portal;
-import de.amr.games.pacman.model.actors.Bonus;
-import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.MovingBonus;
-import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
@@ -159,6 +156,7 @@ public class MsPacManTengenGame extends GameModel {
         float multiplier = boosterActive ? BOOSTER_FACTOR : 1;
         float speed = multiplier * PPS_AT_100_PERCENT * SEC_PER_TICK;
         pac.setBaseSpeed(speed);
+        pac.selectAnimation(boosterActive ? Pac.ANIM_MUNCHING_BOOSTER : Pac.ANIM_MUNCHING);
         Logger.info("Pac base speed is {0.00} px/s", speed);
     }
 
@@ -242,6 +240,12 @@ public class MsPacManTengenGame extends GameModel {
         Pac msPacMan = new Pac();
         msPacMan.setName("Ms. Pac-Man");
         return msPacMan;
+    }
+
+    @Override
+    protected void initPacAnimation() {
+        pac.selectAnimation(isBoosterActive() ? Pac.ANIM_MUNCHING_BOOSTER : Pac.ANIM_MUNCHING);
+        pac.animations().ifPresent(Animations::resetSelected);
     }
 
     @Override

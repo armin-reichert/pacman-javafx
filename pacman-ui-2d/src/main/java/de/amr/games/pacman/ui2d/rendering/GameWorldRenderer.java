@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
+import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -23,6 +24,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import org.tinylog.Logger;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -160,7 +162,12 @@ public interface GameWorldRenderer {
     default void drawAnimatedEntity(AnimatedEntity character) {
         character.animations().ifPresent(animations -> {
             if (character.isVisible() && animations instanceof SpriteAnimationCollection spriteAnimations) {
-                drawSprite(character.entity(), spriteAnimations.current().spriteSheet(), spriteAnimations.currentSprite(character));
+                SpriteAnimation currentAnimation = spriteAnimations.current();
+                if (currentAnimation != null) {
+                    drawSprite(character.entity(), currentAnimation.spriteSheet(), spriteAnimations.currentSprite(character));
+                } else {
+                    Logger.error("No current animation for character {}", character);
+                }
             }
         });
     }

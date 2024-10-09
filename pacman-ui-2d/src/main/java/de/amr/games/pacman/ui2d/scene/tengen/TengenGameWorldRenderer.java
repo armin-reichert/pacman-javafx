@@ -11,8 +11,7 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.actors.Entity;
-import de.amr.games.pacman.model.actors.MovingBonus;
+import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
 import de.amr.games.pacman.model.tengen.MsPacManTengenGame.MapCategory;
 import de.amr.games.pacman.model.tengen.MsPacManTengenGame.PacBooster;
@@ -24,6 +23,7 @@ import de.amr.games.pacman.ui2d.scene.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManArcadeGameRenderer;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
+import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -105,6 +105,52 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
     @Override
     public ObjectProperty<Color> backgroundColorProperty() {
         return backgroundColorPy;
+    }
+
+    @Override
+    public void drawAnimatedEntity(AnimatedEntity guy) {
+        if (guy instanceof Pac msPacMan) {
+            drawMsPacMan(msPacMan);
+        } else {
+            GameWorldRenderer.super.drawAnimatedEntity(guy);
+        }
+    }
+
+    private void drawMsPacMan(Pac msPacMan) {
+        if (!msPacMan.isVisible()) {
+            return;
+        }
+        msPacMan.animations().ifPresent(animations -> {
+            if (animations instanceof SpriteAnimationCollection spriteAnimations) {
+                SpriteAnimation spriteAnimation = spriteAnimations.current();
+                if (spriteAnimation != null) {
+                    switch (animations.currentAnimationName()) {
+                        case Pac.ANIM_MUNCHING, Pac.ANIM_MUNCHING_BOOSTER -> drawInMoveDirection(msPacMan, spriteAnimation);
+                        case Pac.ANIM_DYING -> {
+                            //TODO does not work yet
+                            drawSprite(msPacMan.entity(), spriteAnimation.spriteSheet(), spriteAnimation.currentSprite());
+                        }
+                        default -> GameWorldRenderer.super.drawAnimatedEntity(msPacMan);
+                    }
+                } else {
+                    Logger.error("No current animation for character {}", msPacMan);
+                }
+            }
+        });
+    }
+
+    private void drawInMoveDirection(Creature guy, SpriteAnimation spriteAnimation) {
+        Vector2f center = guy.center().scaled((float) scaling());
+        ctx().save();
+        ctx().translate(center.x(), center.y());
+        switch (guy.moveDir()) {
+            case UP    -> ctx().rotate(90);
+            case LEFT  -> {}
+            case RIGHT -> ctx().scale(-1, 1);
+            case DOWN  -> { ctx().scale(-1, 1); ctx().rotate(-90); }
+        }
+        drawSpriteCenteredOverPosition(spriteAnimation.spriteSheet(), spriteAnimation.currentSprite(), 0, 0);
+        ctx().restore();
     }
 
     @Override

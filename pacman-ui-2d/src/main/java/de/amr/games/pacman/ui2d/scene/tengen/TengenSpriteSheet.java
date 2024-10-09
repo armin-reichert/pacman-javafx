@@ -27,10 +27,16 @@ public class TengenSpriteSheet implements GameSpriteSheet {
     static final RectArea HARD_SPRITE    = rect(229, 141, 18, 7);
     static final RectArea EASY_SPRITE    = rect(229, 149, 18, 7);
 
-    static final RectArea[] MS_PAC_MUNCHING_SPRITES = {
+    static final RectArea[] MS_PAC_MUNCHING_SPRITES_LEFT = {
         rect(32, 15, 15, 15),
-        rect(52, 15, 15, 15),
-        rect(68, 15, 15, 15)
+        rect(51, 15, 15, 15),
+        rect(66, 15, 15, 15)
+    };
+
+    static final RectArea[] MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER = {
+        rect(86, 15, 15, 15),
+        rect(105, 15, 15, 15),
+        rect(120, 15, 15, 15)
     };
 
     // directions: rr ll uu dd
@@ -124,8 +130,12 @@ public class TengenSpriteSheet implements GameSpriteSheet {
 
     @Override
     public RectArea[] pacMunchingSprites(Direction dir) {
-        return MS_PAC_MUNCHING_SPRITES;
+        return MS_PAC_MUNCHING_SPRITES_LEFT;
     }
+
+    public RectArea[] pacMunchingSpritesNormal() { return MS_PAC_MUNCHING_SPRITES_LEFT; }
+
+    public RectArea[] pacMunchingSpritesBooster() { return MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER; }
 
     @Override
     public RectArea[] pacDyingSprites() {

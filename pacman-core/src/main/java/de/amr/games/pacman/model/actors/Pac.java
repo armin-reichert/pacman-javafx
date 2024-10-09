@@ -17,6 +17,8 @@ import de.amr.games.pacman.steering.Steering;
 public class Pac extends Creature implements AnimatedEntity {
 
     public static final String ANIM_MUNCHING = "munching";
+    /** In Tengen there is pac booster node */
+    public static final String ANIM_MUNCHING_BOOSTER = "munching_booster";
     public static final String ANIM_DYING = "dying";
     /** In Pac-Man cutscene, a big Pac-Man appears. */
     public static final String ANIM_BIG_PACMAN = "big_pacman";

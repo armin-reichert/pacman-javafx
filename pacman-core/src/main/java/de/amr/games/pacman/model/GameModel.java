@@ -346,8 +346,7 @@ public abstract class GameModel {
         pac.reset(); // invisible!
         pac.setPosition(world.pacPosition());
         pac.setMoveAndWishDir(Direction.LEFT);
-        pac.selectAnimation(Pac.ANIM_MUNCHING);
-        pac.animations().ifPresent(Animations::resetSelected);
+        initPacAnimation();
         ghosts().forEach(ghost -> {
             ghost.reset(); // invisible!
             ghost.setPosition(world.ghostPosition(ghost.id()));
@@ -359,6 +358,11 @@ public abstract class GameModel {
         powerTimer.resetIndefinitely();
         blinking.setStartPhase(Pulse.ON); // Energizers are visible when ON
         blinking.reset();
+    }
+
+    protected void initPacAnimation() {
+        pac.selectAnimation(Pac.ANIM_MUNCHING);
+        pac.animations().ifPresent(Animations::resetSelected);
     }
 
     public void showGuys() {
