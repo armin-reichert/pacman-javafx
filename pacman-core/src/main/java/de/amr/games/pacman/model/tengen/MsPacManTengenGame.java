@@ -48,19 +48,6 @@ public class MsPacManTengenGame extends GameModel {
     private static final int NON_ARCADE_MAP_COUNT = 37;
     private static final int MAP_COUNT = ARCADE_MAP_COUNT + NON_ARCADE_MAP_COUNT;
 
-    private static final byte[] STRANGE_MAP_NUMBERS = {
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-        17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32 // TODO check in video
-    };
-
-    private static final byte[] MINI_MAP_NUMBERS = {
-        16, 28, 30, 34, 35, 36, 37 // TODO check in video
-    };
-
-    private static final byte[] BIG_MAP_NUMBERS = {
-        10, 14, 17, 19, 20, 21, 22, 23, 25, 26, 33 // TODO check in video
-    };
-
     private static final String MAPS_ROOT = "/de/amr/games/pacman/maps/tengen/";
     private static final String ARCADE_MAP_PATTERN  = MAPS_ROOT + "arcade/map%02d.world";
     private static final String NON_ARCADE_MAP_PATTERN  = MAPS_ROOT + "non_arcade/map%02d.world";
@@ -131,11 +118,23 @@ public class MsPacManTengenGame extends GameModel {
         super(gameVariant, userDir);
         initialLives = 3;
         highScoreFile = new File(userDir, "highscore-ms_pacman_tengen.xml");
-        arcadeMaps  = readMaps(MapCategory.ARCADE,  ARCADE_MAP_PATTERN, 9);
 
-        strangeMaps = readMaps(MapCategory.STRANGE, STRANGE_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
-        miniMaps    = readMaps(MapCategory.MINI,    MINI_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
-        bigMaps     = readMaps(MapCategory.BIG,     BIG_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
+        arcadeMaps  = readMaps(ARCADE_MAP_PATTERN, 9);
+        assignMapsToCategory(arcadeMaps, MapCategory.ARCADE);
+
+        List<WorldMap> nonArcadeMaps = readMaps(NON_ARCADE_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
+
+        //TODO how are maps really categorized in Tengen?
+
+        strangeMaps = nonArcadeMaps.stream().filter(worldMap -> worldMap.terrain().numRows() >= ARCADE_MAP_TILES_Y).toList();
+        assignMapsToCategory(strangeMaps, MapCategory.STRANGE);
+
+        miniMaps = nonArcadeMaps.stream().filter(worldMap -> worldMap.terrain().numRows() < ARCADE_MAP_TILES_Y).toList();
+        assignMapsToCategory(miniMaps, MapCategory.MINI);
+
+        bigMaps = nonArcadeMaps.stream().filter(worldMap -> worldMap.terrain().numRows() > ARCADE_MAP_TILES_Y).toList();
+        assignMapsToCategory(bigMaps, MapCategory.BIG);
+
         setMapCategory(MapCategory.ARCADE);
         setPacBooster(PacBooster.OFF);
         setDifficulty(Difficulty.NORMAL);
@@ -202,20 +201,26 @@ public class MsPacManTengenGame extends GameModel {
         return levelNumber <= numMaps ? levelNumber : Globals.randomInt(1, numMaps + 1);
     }
 
-    private List<WorldMap> readMaps(MapCategory category, String pattern, int maxNumber) {
+    private List<WorldMap> readMaps(String pattern, int maxNumber) {
         List<WorldMap> maps = new ArrayList<>();
         for (int num = 1; num <= maxNumber; ++num) {
             String path = pattern.formatted(num);
             URL url = getClass().getResource(path);
             if (url != null) {
                 WorldMap worldMap = new WorldMap(url);
-                worldMap.terrain().setProperty("map_category", category.name());
-                worldMap.terrain().setProperty("map_number",   String.valueOf(num));
+                worldMap.terrain().setProperty("map_number", String.valueOf(num));
                 maps.add(worldMap);
-                Logger.info("{}: map #{}", category, num);
+                Logger.info("World map #{} has been read from URL {}", num, url);
             }
         }
         return maps;
+    }
+
+    private void assignMapsToCategory(List<WorldMap> maps, MapCategory category) {
+        maps.forEach(map -> {
+            map.terrain().setProperty("map_category", category.name());
+            Logger.info("Map #{} -> {}", map.terrain().getProperty("map_number"), category);
+        });
     }
 
     @Override
