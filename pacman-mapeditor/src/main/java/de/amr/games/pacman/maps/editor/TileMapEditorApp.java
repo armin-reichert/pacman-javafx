@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 
 import java.util.List;
 
+import static de.amr.games.pacman.maps.editor.TileMapEditorViewModel.tt;
 import static java.util.stream.IntStream.rangeClosed;
 
 /**
@@ -55,7 +56,7 @@ public class TileMapEditorApp extends Application  {
         layout.setCenter(editor.getContentPane());
         layout.setTop(editor.getMenuBar());
 
-        var miQuit = new MenuItem(TileMapEditor.tt("quit"));
+        var miQuit = new MenuItem(tt("quit"));
         miQuit.setOnAction(e -> editor.showSaveConfirmationDialog(editor::showSaveDialog, stage::close));
         editor.getFileMenu().getItems().add(miQuit);
 

@@ -9,7 +9,10 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -24,8 +27,7 @@ import java.net.URL;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.v2i;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
-import static de.amr.games.pacman.maps.editor.TileMapEditorViewModel.MAX_GRID_SIZE;
-import static de.amr.games.pacman.maps.editor.TileMapEditorViewModel.MIN_GRID_SIZE;
+import static de.amr.games.pacman.maps.editor.TileMapEditorViewModel.*;
 
 /**
  * @author Armin Reichert
@@ -196,8 +198,8 @@ public class EditController {
             } else if (event.getClickCount() == 1) {
                 WorldMap worldMap = mapPy.get();
                 switch (viewModel.selectedPaletteID()) {
-                    case TileMapEditor.PALETTE_TERRAIN -> editMapTileAtMousePosition(worldMap.terrain(), event);
-                    case TileMapEditor.PALETTE_ACTORS -> {
+                    case PALETTE_ID_TERRAIN -> editMapTileAtMousePosition(worldMap.terrain(), event);
+                    case PALETTE_ID_ACTORS -> {
                         if (viewModel.selectedPalette().isToolSelected()) {
                             Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
                             viewModel.selectedPalette().selectedTool().apply(worldMap.terrain(), tile);
@@ -205,7 +207,7 @@ public class EditController {
                             viewModel.terrainPropertiesEditor().updatePropertyEditorValues();
                         }
                     }
-                    case TileMapEditor.PALETTE_FOOD -> editMapTileAtMousePosition(worldMap.food(), event);
+                    case PALETTE_ID_FOOD -> editMapTileAtMousePosition(worldMap.food(), event);
                     default -> Logger.error("Unknown palette selection");
                 }
             }
@@ -221,19 +223,19 @@ public class EditController {
         WorldMap worldMap = mapPy.get();
         if (modePy.get() == EditMode.ERASE) {
             switch (viewModel.selectedPaletteID()) {
-                case TileMapEditor.PALETTE_TERRAIN -> eraseTileValue(worldMap.terrain(), tile);
-                case TileMapEditor.PALETTE_FOOD    -> eraseTileValue(worldMap.food(), tile);
+                case PALETTE_ID_TERRAIN -> eraseTileValue(worldMap.terrain(), tile);
+                case PALETTE_ID_FOOD -> eraseTileValue(worldMap.food(), tile);
             }
         } else {
             if (event.isShiftDown()) {
                 switch (viewModel.selectedPaletteID()) {
-                    case TileMapEditor.PALETTE_TERRAIN -> {
+                    case PALETTE_ID_TERRAIN -> {
                         if (viewModel.selectedPalette().isToolSelected()) {
                             viewModel.selectedPalette().selectedTool().apply(worldMap.terrain(), focussedTilePy.get());
                         }
                         markTileMapEdited(worldMap.terrain());
                     }
-                    case TileMapEditor.PALETTE_FOOD -> {
+                    case PALETTE_ID_FOOD -> {
                         if (viewModel.selectedPalette().isToolSelected()) {
                             viewModel.selectedPalette().selectedTool().apply(worldMap.food(), focussedTilePy.get());
                         }
@@ -264,7 +266,7 @@ public class EditController {
     }
 
     void onKeyTyped(KeyEvent event) {
-        Logger.info("Typed {}", event);
+        Logger.debug("Typed {}", event);
         String ch = event.getCharacter();
         boolean editingEnabled = editingEnabledPy.get();
         switch (ch) {
@@ -307,7 +309,7 @@ public class EditController {
             miAddCircle2x2.setOnAction(actionEvent -> addShapeMirrored(worldMap.terrain(), CIRCLE_2x2, tile));
             miAddCircle2x2.disableProperty().bind(editingEnabledPy.not());
 
-            var miAddHouse = new MenuItem(TileMapEditor.tt("menu.edit.add_house"));
+            var miAddHouse = new MenuItem(tt("menu.edit.add_house"));
             miAddHouse.setOnAction(actionEvent -> addHouse(worldMap.terrain(), tile));
             miAddHouse.disableProperty().bind(editingEnabledPy.not());
 
@@ -344,11 +346,11 @@ public class EditController {
 
     void addHouse(TileMap terrain, Vector2i tile) {
         addShape(terrain, GHOST_HOUSE_SHAPE, tile);
-        terrain.setProperty(TileMapEditor.PROPERTY_POS_HOUSE_MIN_TILE, formatTile(tile));
-        terrain.setProperty(TileMapEditor.PROPERTY_POS_RED_GHOST, formatTile(tile.plus(3, -1)));
-        terrain.setProperty(TileMapEditor.PROPERTY_POS_CYAN_GHOST, formatTile(tile.plus(1, 2)));
-        terrain.setProperty(TileMapEditor.PROPERTY_POS_PINK_GHOST, formatTile(tile.plus(3, 2)));
-        terrain.setProperty(TileMapEditor.PROPERTY_POS_ORANGE_GHOST, formatTile(tile.plus(5, 2)));
+        terrain.setProperty(PROPERTY_POS_HOUSE_MIN_TILE, formatTile(tile));
+        terrain.setProperty(PROPERTY_POS_RED_GHOST, formatTile(tile.plus(3, -1)));
+        terrain.setProperty(PROPERTY_POS_CYAN_GHOST, formatTile(tile.plus(1, 2)));
+        terrain.setProperty(PROPERTY_POS_PINK_GHOST, formatTile(tile.plus(3, 2)));
+        terrain.setProperty(PROPERTY_POS_ORANGE_GHOST, formatTile(tile.plus(5, 2)));
 
         viewModel.terrainPropertiesEditor().rebuildPropertyEditors();
     }
@@ -415,21 +417,21 @@ public class EditController {
         addBorder(terrain, 3, 2);
         addHouse(terrain, houseOrigin);
 
-        terrain.setProperty(TileMapEditor.PROPERTY_COLOR_WALL_STROKE, TileMapEditor.DEFAULT_COLOR_WALL_STROKE);
-        terrain.setProperty(TileMapEditor.PROPERTY_COLOR_WALL_FILL, TileMapEditor.DEFAULT_COLOR_WALL_FILL);
-        terrain.setProperty(TileMapEditor.PROPERTY_COLOR_DOOR, TileMapEditor.DEFAULT_COLOR_DOOR);
+        terrain.setProperty(PROPERTY_COLOR_WALL_STROKE, DEFAULT_COLOR_WALL_STROKE);
+        terrain.setProperty(PROPERTY_COLOR_WALL_FILL, DEFAULT_COLOR_WALL_FILL);
+        terrain.setProperty(PROPERTY_COLOR_DOOR, DEFAULT_COLOR_DOOR);
 
-        terrain.setProperty(TileMapEditor.PROPERTY_POS_PAC, formatTile(houseOrigin.plus(3, 11)));
-        terrain.setProperty(TileMapEditor.PROPERTY_POS_BONUS, formatTile(houseOrigin.plus(3, 5)));
+        terrain.setProperty(PROPERTY_POS_PAC, formatTile(houseOrigin.plus(3, 11)));
+        terrain.setProperty(PROPERTY_POS_BONUS, formatTile(houseOrigin.plus(3, 5)));
 
-        terrain.setProperty(TileMapEditor.PROPERTY_POS_SCATTER_RED_GHOST, formatTile(v2i(tilesX - 3, 0)));
-        terrain.setProperty(TileMapEditor.PROPERTY_POS_SCATTER_PINK_GHOST, formatTile(v2i(3, 0)));
-        terrain.setProperty(TileMapEditor.PROPERTY_POS_SCATTER_CYAN_GHOST, formatTile(v2i(tilesX - 1, tilesY - 2)));
-        terrain.setProperty(TileMapEditor.PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(v2i(0, tilesY - 2)));
+        terrain.setProperty(PROPERTY_POS_SCATTER_RED_GHOST, formatTile(v2i(tilesX - 3, 0)));
+        terrain.setProperty(PROPERTY_POS_SCATTER_PINK_GHOST, formatTile(v2i(3, 0)));
+        terrain.setProperty(PROPERTY_POS_SCATTER_CYAN_GHOST, formatTile(v2i(tilesX - 1, tilesY - 2)));
+        terrain.setProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(v2i(0, tilesY - 2)));
 
         invalidateTerrainMapPaths();
 
-        worldMap.food().setProperty(TileMapEditor.PROPERTY_COLOR_FOOD, TileMapEditor.DEFAULT_FOOD_COLOR);
+        worldMap.food().setProperty(PROPERTY_COLOR_FOOD, DEFAULT_COLOR_FOOD);
 
         Logger.info("Map created. rows={}, cols={}", tilesY, tilesX);
         return worldMap;
