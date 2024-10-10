@@ -15,6 +15,9 @@ import javafx.scene.control.ContextMenu;
  */
 public interface TileMapEditorViewModel {
 
+    byte MIN_GRID_SIZE = 8;
+    byte MAX_GRID_SIZE = 48;
+
     ObjectProperty<WorldMap> worldMapProperty();
 
     IntegerProperty gridSizeProperty();

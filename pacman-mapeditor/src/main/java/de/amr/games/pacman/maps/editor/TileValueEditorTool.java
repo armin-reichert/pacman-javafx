@@ -20,8 +20,8 @@ public class TileValueEditorTool implements Tool {
     private final byte value;
     private final String description;
 
-    public TileValueEditorTool(EditController editor, TileMapRenderer renderer, double size, byte value, String description) {
-        this.editor = editor;
+    public TileValueEditorTool(EditController editController, TileMapRenderer renderer, double size, byte value, String description) {
+        this.editor = editController;
         this.renderer = renderer;
         this.size = size;
         this.value = value;

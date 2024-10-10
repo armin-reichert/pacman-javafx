@@ -24,6 +24,8 @@ import java.net.URL;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.v2i;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
+import static de.amr.games.pacman.maps.editor.TileMapEditorViewModel.MAX_GRID_SIZE;
+import static de.amr.games.pacman.maps.editor.TileMapEditorViewModel.MIN_GRID_SIZE;
 
 /**
  * @author Armin Reichert
@@ -64,17 +66,9 @@ public class EditController {
         };
     }
 
-
     final BooleanProperty editingEnabledPy = new SimpleBooleanProperty(false);
 
     final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>();
-
-    final IntegerProperty gridSizePy = new SimpleIntegerProperty(16) {
-        @Override
-        protected void invalidated() {
-            invalidateTerrainMapPaths();
-        }
-    };
 
     final ObjectProperty<WorldMap> mapPy = new SimpleObjectProperty<>() {
         @Override
@@ -113,7 +107,7 @@ public class EditController {
     EditController(TileMapEditorViewModel viewModel) {
         this.viewModel = viewModel;
         this.mapPy.bind(viewModel.worldMapProperty());
-        this.gridSizePy.bind(viewModel.gridSizeProperty());
+        viewModel.gridSizeProperty().addListener((py,ov,nv) -> invalidateTerrainMapPaths());
         URL iconURL = getClass().getResource("graphics/radiergummi.jpg");
         if (iconURL != null) {
             rubberCursor = Cursor.cursor(iconURL.toExternalForm());
@@ -154,7 +148,7 @@ public class EditController {
      * @return number of full tiles spanned by pixels
      */
     private int fullTiles(double pixels) {
-        return (int) (pixels / gridSizePy.get());
+        return (int) (pixels / viewModel.gridSizeProperty().get());
     }
 
     void invalidateTerrainMapPaths() {
@@ -166,7 +160,6 @@ public class EditController {
             mapPy.get().terrain().computeTerrainPaths();
             terrainMapPathsUpToDate = true;
         }
-
     }
 
     void markTileMapEdited(TileMap tileMap) {
@@ -187,7 +180,7 @@ public class EditController {
     void editMapTileAtMousePosition(TileMap tileMap, MouseEvent mouse) {
         var tile = tileAtMousePosition(mouse.getX(), mouse.getY());
         if (mouse.isControlDown()) { // Control-Click clears tile content
-            setTileValue(tileMap, tile, Tiles.EMPTY);
+            eraseTileValue(tileMap, tile);
         } else if (viewModel.selectedPalette().isToolSelected()) {
             viewModel.selectedPalette().selectedTool().apply(tileMap, tile);
         }
@@ -227,8 +220,10 @@ public class EditController {
         }
         WorldMap worldMap = mapPy.get();
         if (modePy.get() == EditMode.ERASE) {
-            setTileValue(worldMap.terrain(), tile, Tiles.EMPTY);
-            setTileValue(worldMap.food(), tile, Tiles.EMPTY);
+            switch (viewModel.selectedPaletteID()) {
+                case TileMapEditor.PALETTE_TERRAIN -> eraseTileValue(worldMap.terrain(), tile);
+                case TileMapEditor.PALETTE_FOOD    -> eraseTileValue(worldMap.food(), tile);
+            }
         } else {
             if (event.isShiftDown()) {
                 switch (viewModel.selectedPaletteID()) {
@@ -268,13 +263,48 @@ public class EditController {
         }
     }
 
+    void onKeyTyped(KeyEvent event) {
+        Logger.info("Typed {}", event);
+        String ch = event.getCharacter();
+        boolean editingEnabled = editingEnabledPy.get();
+        switch (ch) {
+            case "n" -> {
+                if (editingEnabled) setNormalDrawMode();
+            }
+            case "s" -> {
+                if (editingEnabled) {
+                    setSymmetricDrawMode();
+                }
+            }
+            case "x" -> {
+                if (editingEnabled) {
+                    if (modePy.get() == EditMode.ERASE) {
+                        modePy.set(EditMode.DRAW);
+                    } else {
+                        setEraseMode();
+                    }
+                }
+            }
+            case "+" -> {
+                if (viewModel.gridSizeProperty().get() < MAX_GRID_SIZE) {
+                    viewModel.gridSizeProperty().set(viewModel.gridSizeProperty().get() + 1);
+                }
+            }
+            case "-" -> {
+                if (viewModel.gridSizeProperty().get() > MIN_GRID_SIZE) {
+                    viewModel.gridSizeProperty().set(viewModel.gridSizeProperty().get() - 1);
+                }
+            }
+        }
+    }
+
     void onContextMenuRequested(ContextMenu contextMenu, ContextMenuEvent event) {
         if (editingEnabledPy.get()) {
             Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
             WorldMap worldMap = mapPy.get();
 
             var miAddCircle2x2 = new MenuItem("2x2 Circle");
-            miAddCircle2x2.setOnAction(actionEvent -> addShape(worldMap.terrain(), CIRCLE_2x2, tile));
+            miAddCircle2x2.setOnAction(actionEvent -> addShapeMirrored(worldMap.terrain(), CIRCLE_2x2, tile));
             miAddCircle2x2.disableProperty().bind(editingEnabledPy.not());
 
             var miAddHouse = new MenuItem(TileMapEditor.tt("menu.edit.add_house"));
@@ -313,7 +343,7 @@ public class EditController {
     }
 
     void addHouse(TileMap terrain, Vector2i tile) {
-        addShapeNotMirrored(terrain, GHOST_HOUSE_SHAPE, tile);
+        addShape(terrain, GHOST_HOUSE_SHAPE, tile);
         terrain.setProperty(TileMapEditor.PROPERTY_POS_HOUSE_MIN_TILE, formatTile(tile));
         terrain.setProperty(TileMapEditor.PROPERTY_POS_RED_GHOST, formatTile(tile.plus(3, -1)));
         terrain.setProperty(TileMapEditor.PROPERTY_POS_CYAN_GHOST, formatTile(tile.plus(1, 2)));
@@ -323,7 +353,7 @@ public class EditController {
         viewModel.terrainPropertiesEditor().rebuildPropertyEditors();
     }
 
-    void addShape(TileMap map, byte[][] content, Vector2i originTile) {
+    void addShapeMirrored(TileMap map, byte[][] content, Vector2i originTile) {
         int numRows = content.length, numCols = content[0].length;
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
@@ -333,7 +363,7 @@ public class EditController {
         markTileMapEdited(map);
     }
 
-    void addShapeNotMirrored(TileMap map, byte[][] content, Vector2i originTile) {
+    void addShape(TileMap map, byte[][] content, Vector2i originTile) {
         int numRows = content.length, numCols = content[0].length;
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
@@ -356,6 +386,11 @@ public class EditController {
                 tileMap.set(tile.y(), tileMap.numCols() - 1 - tile.x(), mirroredTileContent(tileMap.get(tile)));
             }
         }
+        markTileMapEdited(tileMap);
+    }
+
+    void eraseTileValue(TileMap tileMap, Vector2i tile) {
+        tileMap.set(tile, Tiles.EMPTY);
         markTileMapEdited(tileMap);
     }
 

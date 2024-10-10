@@ -25,7 +25,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -55,9 +54,6 @@ import static java.util.Objects.requireNonNull;
  * @author Armin Reichert
  */
 public class TileMapEditor implements TileMapEditorViewModel {
-
-    static final byte MIN_GRID_SIZE = 8;
-    static final byte MAX_GRID_SIZE = 48;
 
     static final Node NO_GRAPHIC = null;
     static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(TileMapEditor.class.getPackageName() + ".texts");
@@ -309,28 +305,8 @@ public class TileMapEditor implements TileMapEditorViewModel {
         arrangeMainLayout();
         initActiveRendering();
 
-        contentPane.setOnKeyTyped(this::onKeyTyped);
+        contentPane.setOnKeyTyped(editController::onKeyTyped);
         propertyEditorsVisiblePy.set(false);
-    }
-
-    private void onKeyTyped(KeyEvent event) {
-        Logger.info("Typed {}", event);
-        String ch = event.getCharacter();
-        switch (ch) {
-            case "n" -> editController.setNormalDrawMode();
-            case "s" -> editController.setSymmetricDrawMode();
-            case "x" -> editController.setEraseMode();
-            case "+" -> {
-                if (gridSizePy.get() < MAX_GRID_SIZE) {
-                    gridSizePy.set(gridSize() + 1);
-                }
-            }
-            case "-" -> {
-                if (gridSizePy.get() > MIN_GRID_SIZE) {
-                    gridSizePy.set(gridSize() - 1);
-                }
-            }
-        }
     }
 
     private void createRenderers() {
