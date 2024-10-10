@@ -13,7 +13,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
-import org.tinylog.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Armin Reichert
@@ -22,12 +24,13 @@ public class Palette {
 
     public static final Color BG_COLOR = Color.WHITE;
 
+    private final GraphicsContext g;
+
     private final int toolSize;
     private final int numRows;
     private final int numCols;
     private final TileMapRenderer renderer;
-    private final Tool[] tools;
-    private final GraphicsContext g;
+    private List<Tool> tools;
     private Tool selectedTool;
     private int selectedRow;
     private int selectedCol;
@@ -38,7 +41,7 @@ public class Palette {
         this.numRows = numRows;
         this.numCols = numCols;
         this.renderer = renderer;
-        tools = new Tool[numRows * numCols];
+        tools = new ArrayList<>();
 
         selectedTool = null;
         selectedRow = -1;
@@ -58,23 +61,20 @@ public class Palette {
         Tooltip.install(canvas, tooltip);
     }
 
-    public TileValueEditorTool createTileValueEditorTool(EditController editor, byte value, String description) {
+    public TileValueEditorTool newTileTool(EditController editor, byte value, String description) {
         return new TileValueEditorTool(editor, renderer, toolSize, value, description);
     }
 
-    public PropertyValueEditorTool createPropertyValueEditorTool(String propertyName, String description) {
+    public PropertyValueEditorTool newPropertyTool(String propertyName, String description) {
         return new PropertyValueEditorTool(renderer, toolSize, propertyName, description);
     }
 
-    public void setTools(Tool... editorTools) {
-        for (int i = 0; i < editorTools.length; ++i) {
-            if (i < tools.length) {
-                tools[i] = editorTools[i];
-            } else {
-                Logger.error("Palette is full");
-                break;
-            }
-        }
+    public void addTileTool(EditController editor, byte value, String description) {
+        tools.add(newTileTool(editor, value, description));
+    }
+
+    public void addPropertyTool(String propertyName, String description) {
+        tools.add(newPropertyTool(propertyName, description));
     }
 
     public Node root() {
@@ -90,21 +90,29 @@ public class Palette {
     }
 
     public void selectTool(int index) {
-        if (index >= 0 && index < tools.length) {
-            selectedTool = tools[index];
+        if (index >= 0 && index < tools.size()) {
+            selectedTool = tools.get(index);
             selectedRow = index / numCols;
             selectedCol = index % numCols;
         }
+    }
+
+    private Tool getToolOrNull(int index) {
+        if (index < tools.size()) {
+            return tools.get(index);
+        }
+        return null;
     }
 
     private void handleMouseClick(MouseEvent e) {
         int row = (int) e.getY() / toolSize;
         int col = (int) e.getX() / toolSize;
         int i = row * numCols + col;
-        if (tools[i] != null) {
+        Tool tool = getToolOrNull(i);
+        if (tool != null) {
             selectedRow = row;
             selectedCol = col;
-            selectedTool = tools[i];
+            selectedTool = tool;
         }
     }
 
@@ -112,8 +120,9 @@ public class Palette {
         int row = (int) e.getY() / toolSize;
         int col = (int) e.getX() / toolSize;
         int i = row * numCols + col;
-        if (tools[i] != null) {
-            String text = tools[i].description();
+        Tool tool = getToolOrNull(i);
+        if (tool != null) {
+            String text = tool.description();
             tooltip.setText(text.isEmpty() ? "?" : text);
         } else {
             tooltip.setText("No selection");
@@ -130,8 +139,9 @@ public class Palette {
         if (renderer != null) {
             renderer.setScaling(toolSize / 8.0);
             for (int i = 0; i < numRows * numCols; ++i) {
-                if (tools[i] != null) {
-                    tools[i].draw(g, i / numCols, i % numCols);
+                Tool tool = getToolOrNull(i);
+                if (tool != null) {
+                    tool.draw(g, i / numCols, i % numCols);
                 }
             }
         }

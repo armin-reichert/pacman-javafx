@@ -503,54 +503,49 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     private Palette createTerrainPalette() {
         var palette = new Palette(TOOL_SIZE, 1, 19, terrainMapEditRenderer);
-        palette.setTools(
-            palette.createTileValueEditorTool(editController, Tiles.WALL_H, "Horiz. Wall"),
-            palette.createTileValueEditorTool(editController, Tiles.WALL_V, "Vert. Wall"),
-            palette.createTileValueEditorTool(editController, Tiles.DWALL_H, "Hor. Double-Wall"),
-            palette.createTileValueEditorTool(editController, Tiles.DWALL_V, "Vert. Double-Wall"),
-            palette.createTileValueEditorTool(editController, Tiles.CORNER_NW, "NW Corner"),
-            palette.createTileValueEditorTool(editController, Tiles.CORNER_NE, "NE Corner"),
-            palette.createTileValueEditorTool(editController, Tiles.CORNER_SW, "SW Corner"),
-            palette.createTileValueEditorTool(editController, Tiles.CORNER_SE, "SE Corner"),
-            palette.createTileValueEditorTool(editController, Tiles.DCORNER_NW, "NW Corner"),
-            palette.createTileValueEditorTool(editController, Tiles.DCORNER_NE, "NE Corner"),
-            palette.createTileValueEditorTool(editController, Tiles.DCORNER_SW, "SW Corner"),
-            palette.createTileValueEditorTool(editController, Tiles.DCORNER_SE, "SE Corner"),
-            palette.createTileValueEditorTool(editController, Tiles.DCORNER_ANGULAR_NW, "NW Corner"),
-            palette.createTileValueEditorTool(editController, Tiles.DCORNER_ANGULAR_NE, "NE Corner"),
-            palette.createTileValueEditorTool(editController, Tiles.DCORNER_ANGULAR_SW, "SW Corner"),
-            palette.createTileValueEditorTool(editController, Tiles.DCORNER_ANGULAR_SE, "SE Corner"),
-            palette.createTileValueEditorTool(editController, Tiles.EMPTY, "Empty Space"),
-            palette.createTileValueEditorTool(editController, Tiles.TUNNEL, "Tunnel"),
-            palette.createTileValueEditorTool(editController, Tiles.DOOR, "Door")
-        );
-        palette.selectTool(16); // EMPTY
+        palette.addTileTool(editController, Tiles.EMPTY, "Empty Space");
+        palette.addTileTool(editController, Tiles.WALL_H, "Horiz. Wall");
+        palette.addTileTool(editController, Tiles.WALL_V, "Vert. Wall");
+        palette.addTileTool(editController, Tiles.DWALL_H, "Horiz. Double-Wall");
+        palette.addTileTool(editController, Tiles.DWALL_V, "Vert. Double-Wall");
+        palette.addTileTool(editController, Tiles.CORNER_NW, "NW Corner");
+        palette.addTileTool(editController, Tiles.CORNER_NE, "NE Corner");
+        palette.addTileTool(editController, Tiles.CORNER_SW, "SW Corner");
+        palette.addTileTool(editController, Tiles.CORNER_SE, "SE Corner");
+        palette.addTileTool(editController, Tiles.DCORNER_NW, "NW Corner");
+        palette.addTileTool(editController, Tiles.DCORNER_NE, "NE Corner");
+        palette.addTileTool(editController, Tiles.DCORNER_SW, "SW Corner");
+        palette.addTileTool(editController, Tiles.DCORNER_SE, "SE Corner");
+        palette.addTileTool(editController, Tiles.DCORNER_ANGULAR_NW, "NW Corner");
+        palette.addTileTool(editController, Tiles.DCORNER_ANGULAR_NE, "NE Corner");
+        palette.addTileTool(editController, Tiles.DCORNER_ANGULAR_SW, "SW Corner");
+        palette.addTileTool(editController, Tiles.DCORNER_ANGULAR_SE, "SE Corner");
+        palette.addTileTool(editController, Tiles.TUNNEL, "Tunnel");
+        palette.addTileTool(editController, Tiles.DOOR, "Door");
+        palette.selectTool(0); // EMPTY
         return palette;
     }
 
     private Palette createActorPalette() {
         var palette = new Palette(TOOL_SIZE, 1, 9, terrainMapEditRenderer);
-        palette.setTools(
-            palette.createPropertyValueEditorTool(PROPERTY_POS_RED_GHOST, "Red Ghost"),
-            palette.createPropertyValueEditorTool(PROPERTY_POS_PINK_GHOST, "Pink Ghost"),
-            palette.createPropertyValueEditorTool(PROPERTY_POS_CYAN_GHOST, "Cyan Ghost"),
-            palette.createPropertyValueEditorTool(PROPERTY_POS_ORANGE_GHOST, "Orange Ghost"),
-            palette.createPropertyValueEditorTool(PROPERTY_POS_SCATTER_RED_GHOST, "Red Ghost Scatter"),
-            palette.createPropertyValueEditorTool(PROPERTY_POS_SCATTER_PINK_GHOST, "Pink Ghost Scatter"),
-            palette.createPropertyValueEditorTool(PROPERTY_POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter"),
-            palette.createPropertyValueEditorTool(PROPERTY_POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter"),
-            palette.createPropertyValueEditorTool(PROPERTY_POS_PAC, "Pac-Man")
-        );
+        palette.addPropertyTool(PROPERTY_POS_PAC, "Pac-Man");
+        palette.addPropertyTool(PROPERTY_POS_RED_GHOST, "Red Ghost");
+        palette.addPropertyTool(PROPERTY_POS_PINK_GHOST, "Pink Ghost");
+        palette.addPropertyTool(PROPERTY_POS_CYAN_GHOST, "Cyan Ghost");
+        palette.addPropertyTool(PROPERTY_POS_ORANGE_GHOST, "Orange Ghost");
+        palette.addPropertyTool(PROPERTY_POS_SCATTER_RED_GHOST, "Red Ghost Scatter");
+        palette.addPropertyTool(PROPERTY_POS_SCATTER_PINK_GHOST, "Pink Ghost Scatter");
+        palette.addPropertyTool(PROPERTY_POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter");
+        palette.addPropertyTool(PROPERTY_POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter");
+        palette.selectTool(0); // Pac-Man position
         return palette;
     }
 
     private Palette createFoodPalette() {
         var palette = new Palette(TOOL_SIZE, 1, 3, foodMapRenderer);
-        palette.setTools(
-            palette.createTileValueEditorTool(editController, Tiles.EMPTY, "No Food"),
-            palette.createTileValueEditorTool(editController, Tiles.PELLET, "Pellet"),
-            palette.createTileValueEditorTool(editController, Tiles.ENERGIZER, "Energizer")
-        );
+        palette.addTileTool(editController, Tiles.EMPTY, "No Food");
+        palette.addTileTool(editController, Tiles.PELLET, "Pellet");
+        palette.addTileTool(editController, Tiles.ENERGIZER, "Energizer");
         palette.selectTool(0); // EMPTY
         return palette;
     }
