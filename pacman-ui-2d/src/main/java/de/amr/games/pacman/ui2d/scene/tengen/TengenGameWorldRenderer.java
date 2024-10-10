@@ -37,6 +37,7 @@ import org.tinylog.Logger;
 import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.RectArea.rect;
 import static de.amr.games.pacman.maps.editor.TileMapUtil.getColorFromMap;
 import static de.amr.games.pacman.model.GameWorld.PROPERTY_COLOR_WALL_FILL;
 
@@ -44,6 +45,47 @@ import static de.amr.games.pacman.model.GameWorld.PROPERTY_COLOR_WALL_FILL;
  * @author Armin Reichert
  */
 public class TengenGameWorldRenderer implements GameWorldRenderer {
+
+    // Maze images are taken from files "arcade_mazes.png" and "non_arcade_mazes.png" via AssetStorage
+
+    /**
+     * @param mapNumber number of Arcade map (1-9)
+     * @param width map width in pixels
+     * @param height map height in pixels
+     * @return map area in Arcade maps image
+     */
+    private static RectArea arcadeMapArea(int mapNumber, int width, int height) {
+        int index = mapNumber - 1;
+        return new RectArea((index % 3) * width, (index / 3) * height, width, height);
+    }
+
+    /**
+     * @param mapNumber number of non-Arcade map (1-37)
+     * @param width map width in pixels
+     * @param height map height in pixels
+     * @return map area in non-Arcade maps image
+     */
+    private static RectArea nonArcadeMapArea(int mapNumber, int width, int height) {
+        int col, y;
+        switch (mapNumber) {
+            case 1,2,3,4,5,6,7,8            -> { col = (mapNumber - 1);  y = 0;    }
+            case 9,10,11,12,13,14,15,16     -> { col = (mapNumber - 9);  y = 248;  }
+            case 17,18,19,20,21,22,23,24    -> { col = (mapNumber - 17); y = 544;  }
+            case 25,26,27,28,29,30,31,32,33 -> { col = (mapNumber - 25); y = 840;  }
+            case 34,35,36,37                -> { col = (mapNumber - 34); y = 1136; }
+            default -> throw new IllegalArgumentException("Illegal non-Arcade map number: " + mapNumber);
+        }
+        return new RectArea(col * width, y, width, height);
+    }
+
+    /*
+     * Maze #32 has 3 different images to create a visual effect.
+     */
+    private static final RectArea[] MAP_32_FRAMES = {
+        rect(1568,  840, 224, 248),
+        rect(1568, 1088, 224, 248),
+        rect(1568, 1336, 224, 248),
+    };
 
     private final AssetStorage assets;
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
@@ -169,39 +211,31 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
                 Logger.error("No map sprite selected");
                 return;
             }
-            // HUD top
-            MapCategory category = MapCategory.valueOf(terrain.getProperty("map_category"));
-            RectArea categorySprite = switch (category) {
-                case BIG     -> TengenSpriteSheet.BIG_SPRITE;
-                case MINI    -> TengenSpriteSheet.MINI_SPRITE;
-                case STRANGE -> TengenSpriteSheet.STRANGE_SPRITE;
-                case ARCADE  -> TengenSpriteSheet.NO_SPRITE;
-            };
-            RectArea difficultySprite = switch (tengenGame.difficulty()) {
-                case EASY -> TengenSpriteSheet.EASY_SPRITE;
-                case HARD -> TengenSpriteSheet.HARD_SPRITE;
-                case CRAZY -> TengenSpriteSheet.CRAZY_SPRITE;
-                case NORMAL -> TengenSpriteSheet.NO_SPRITE;
-            };
+            drawTop(spriteSheet, terrain, tengenGame);
 
-            double centerX = terrain.numCols() * HTS;
-            double y = t(2) + HTS;
-            if (tengenGame.pacBooster() != PacBooster.OFF) {
-                //TODO: always displayed when TOGGLE_USING_KEY is selected or only if booster is active?
-                drawSpriteCenteredOverPosition(spriteSheet, TengenSpriteSheet.BOOSTER_SPRITE, centerX - t(6), y);
+            // Maze #32 has this psychedelic effect
+            int mapNumber = Integer.parseInt(world.map().terrain().getProperty("map_number"));
+            if (mapNumber == 32) {
+                long tick = context.gameClock().getUpdateCount();
+                int frameTicks = 8; // TODO correct?
+                long frameIndex = (tick % (MAP_32_FRAMES.length * frameTicks)) / frameTicks;
+                RectArea mapArea = MAP_32_FRAMES[(int)frameIndex];
+                ctx().drawImage(mapSprite.source(),
+                    mapArea.x(), mapArea.y(),
+                    mapArea.width(), mapArea.height(),
+                    0, scaled(3 * TS),
+                    scaled(mapArea.width()), scaled(mapArea.height())
+                );
+            } else {
+                RectArea mapArea = mapSprite.area();
+                ctx().drawImage(mapSprite.source(),
+                    //TODO check if these offsets are really needed to avoid rendering noise
+                    mapArea.x() + 0.5, mapArea.y() + 0.5,
+                    mapArea.width() - 1, mapArea.height() - 1,
+                    0, scaled(3 * TS),
+                    scaled(mapArea.width()), scaled(mapArea.height())
+                );
             }
-            drawSpriteCenteredOverPosition(spriteSheet, difficultySprite, centerX, y);
-            drawSpriteCenteredOverPosition(spriteSheet, categorySprite, centerX + t(4.5), y);
-            drawSpriteCenteredOverPosition(spriteSheet, TengenSpriteSheet.FRAME_SPRITE, centerX, y);
-
-            //TODO: check all places where map sprite gets selected
-            ctx().drawImage(mapSprite.source(),
-                //TODO check why these offsets are needed to avoid rendering noise
-                mapSprite.area().x() + 0.5,   mapSprite.area().y() + 0.5,
-                mapSprite.area().width() - 1, mapSprite.area().height() - 1,
-                0, scaled(3 * TS),
-                scaled(mapSprite.area().width()), scaled(mapSprite.area().height())
-            );
 
             // Tengen maps contain actor sprites, overpaint them
             hideActorSprite(terrain.getTileProperty("pos_pac", v2i(14, 26)), 0, 0);
@@ -221,6 +255,31 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
 
             tengenGame.bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
         }
+    }
+
+    private void drawTop(GameSpriteSheet spriteSheet, TileMap terrain, MsPacManTengenGame tengenGame) {
+        MapCategory category = MapCategory.valueOf(terrain.getProperty("map_category"));
+        RectArea categorySprite = switch (category) {
+            case BIG     -> TengenSpriteSheet.BIG_SPRITE;
+            case MINI    -> TengenSpriteSheet.MINI_SPRITE;
+            case STRANGE -> TengenSpriteSheet.STRANGE_SPRITE;
+            case ARCADE  -> TengenSpriteSheet.NO_SPRITE;
+        };
+        RectArea difficultySprite = switch (tengenGame.difficulty()) {
+            case EASY -> TengenSpriteSheet.EASY_SPRITE;
+            case HARD -> TengenSpriteSheet.HARD_SPRITE;
+            case CRAZY -> TengenSpriteSheet.CRAZY_SPRITE;
+            case NORMAL -> TengenSpriteSheet.NO_SPRITE;
+        };
+        double centerX = terrain.numCols() * HTS;
+        double y = t(2) + HTS;
+        if (tengenGame.pacBooster() != PacBooster.OFF) {
+            //TODO: always displayed when TOGGLE_USING_KEY is selected or only if booster is active?
+            drawSpriteCenteredOverPosition(spriteSheet, TengenSpriteSheet.BOOSTER_SPRITE, centerX - t(6), y);
+        }
+        drawSpriteCenteredOverPosition(spriteSheet, difficultySprite, centerX, y);
+        drawSpriteCenteredOverPosition(spriteSheet, categorySprite, centerX + t(4.5), y);
+        drawSpriteCenteredOverPosition(spriteSheet, TengenSpriteSheet.FRAME_SPRITE, centerX, y);
     }
 
     @Override
@@ -328,36 +387,6 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
             }
             ctx().restore();
         }
-    }
-
-    /**
-     * @param mapNumber number of Arcade map (1-9)
-     * @param width map width in pixels
-     * @param height map height in pixels
-     * @return map area in Arcade maps image
-     */
-    private RectArea arcadeMapArea(int mapNumber, int width, int height) {
-        int index = mapNumber - 1;
-        return new RectArea((index % 3) * width, (index / 3) * height, width, height);
-    }
-
-    /**
-     * @param mapNumber number of non-Arcade map (1-37)
-     * @param width map width in pixels
-     * @param height map height in pixels
-     * @return map area in non-Arcade maps image
-     */
-    private RectArea nonArcadeMapArea(int mapNumber, int width, int height) {
-        int col, y;
-        switch (mapNumber) {
-            case 1,2,3,4,5,6,7,8            -> { col = (mapNumber - 1);  y = 0;    }
-            case 9,10,11,12,13,14,15,16     -> { col = (mapNumber - 9);  y = 248;  }
-            case 17,18,19,20,21,22,23,24    -> { col = (mapNumber - 17); y = 544;  }
-            case 25,26,27,28,29,30,31,32,33 -> { col = (mapNumber - 25); y = 840;  }
-            case 34,35,36,37                -> { col = (mapNumber - 34); y = 1136; }
-            default -> throw new IllegalArgumentException("Illegal non-Arcade map number: " + mapNumber);
-        }
-        return new RectArea(col * width, y, width, height);
     }
 
     private void hideActorSprite(Vector2i tile, double offX, double offY) {
