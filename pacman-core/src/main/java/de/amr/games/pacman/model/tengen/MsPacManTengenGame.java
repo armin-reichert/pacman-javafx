@@ -209,8 +209,7 @@ public class MsPacManTengenGame extends GameModel {
 
     public int mapNumberByLevelNumber(int levelNumber) {
         int numMaps = currentMapList.size();
-//        return levelNumber <= numMaps ? levelNumber : Globals.randomInt(1, numMaps + 1);
-        return 32;
+        return levelNumber <= numMaps ? levelNumber : Globals.randomInt(1, numMaps + 1);
     }
 
     private List<WorldMap> readMaps(String pattern, int maxNumber) {
