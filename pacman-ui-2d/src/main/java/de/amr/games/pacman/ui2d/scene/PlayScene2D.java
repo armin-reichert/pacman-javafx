@@ -110,14 +110,12 @@ public class PlayScene2D extends GameScene2D {
             return;
         }
 
-        Vector2i worldSize = context.worldSizeTilesOrDefault();
+        drawLevelMessage(renderer); // READY, GAME_OVER etc.
 
         boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         renderer.setFlashMode(flashMode);
         renderer.setBlinkingOn(context.game().blinking().isOn());
         renderer.drawWorld(context.spriteSheet(), context, context.game().world());
-
-        drawLevelMessage(renderer); // READY, GAME_OVER etc.
 
         renderer.drawAnimatedEntity(context.game().pac());
         ghostsInZOrder().forEach(renderer::drawAnimatedEntity);
@@ -133,6 +131,7 @@ public class PlayScene2D extends GameScene2D {
             default -> !context.game().hasCredit() || context.gameState() == GameState.GAME_OVER;
         };
 
+        Vector2i worldSize = context.worldSizeTilesOrDefault();
         if (showCredit) {
             drawCredit(renderer, worldSize);
         } else {

@@ -126,10 +126,10 @@ public class MsPacManTengenGame extends GameModel {
 
         //TODO how are maps really categorized in Tengen?
 
-        strangeMaps = nonArcadeMaps.stream().filter(worldMap -> worldMap.terrain().numRows() >= ARCADE_MAP_TILES_Y).toList();
+        strangeMaps = nonArcadeMaps.stream().filter(this::isStrangeMap).toList();
         assignMapCategory(strangeMaps, MapCategory.STRANGE);
 
-        miniMaps = nonArcadeMaps.stream().filter(worldMap -> worldMap.terrain().numRows() < ARCADE_MAP_TILES_Y).toList();
+        miniMaps = nonArcadeMaps.stream().filter(worldMap -> worldMap.terrain().numRows() <= 30).toList();
         assignMapCategory(miniMaps, MapCategory.MINI);
 
         bigMaps = nonArcadeMaps.stream().filter(worldMap -> worldMap.terrain().numRows() > ARCADE_MAP_TILES_Y).toList();
@@ -139,6 +139,17 @@ public class MsPacManTengenGame extends GameModel {
         setPacBooster(PacBooster.OFF);
         setDifficulty(Difficulty.NORMAL);
         setStartingLevel(1);
+    }
+
+    private boolean isStrangeMap(WorldMap worldMap) {
+        int mapNumber = Integer.parseInt(worldMap.terrain().getProperty("map_number"));
+        if (mapNumber == 16) {
+            return true; // this MINI map appears in STRANGE gameplay
+        }
+        if (mapNumber == 28 || mapNumber == 30) {
+            return true; // appear with different color palette!?
+        }
+        return worldMap.terrain().numRows() > 30; //TODO correct?
     }
 
     public void setPacBooster(PacBooster pacBooster) {
