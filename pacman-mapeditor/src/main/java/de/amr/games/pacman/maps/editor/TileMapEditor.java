@@ -217,10 +217,10 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     public void start() {
         stage.titleProperty().bind(titlePy);
-        Logger.info("Canvas scrollpane height {}", spEditCanvas.getHeight());
+        Logger.info("Canvas scrollpane height {0.00}", spEditCanvas.getHeight());
         double gridSize = spEditCanvas.getHeight() / map().terrain().numRows();
         gridSize = Math.max(gridSize, MIN_GRID_SIZE);
-        Logger.info("Grid size {}", gridSize);
+        Logger.info("Grid size {0.00}", gridSize);
         gridSizePy.set((int) gridSize);
         editController.showInfoMessage(tt("welcome_message"), 3);
         clock.play();
@@ -238,25 +238,6 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     public void setMap(WorldMap map) {
         mapPy.set(checkNotNull(map));
-    }
-
-    private StringBinding createTitleBinding() {
-        return Bindings.createStringBinding(
-            () -> {
-                String title = tt("map_editor");
-                if (currentFilePy.get() != null) {
-                    title += " - " + currentFilePy.get();
-                } else if (map() != null && map().url() != null) {
-                    title += " - " + map().url();
-                } else {
-                    title += " - <" + tt("unsaved_map") + ">";
-                }
-                if (map() != null) {
-                    title += " (%d rows, %d cols)".formatted(map().terrain().numRows(), map().terrain().numCols());
-                }
-                return title;
-            }, currentFilePy, mapPy
-        );
     }
 
     public void createUI(Stage stage) {
@@ -456,11 +437,18 @@ public class TileMapEditor implements TileMapEditorViewModel {
         sliderZoomContainer.setSpacing(5);
     }
 
-    private void arrangeMainLayout() {
-        var filler = new Region();
-        HBox.setHgrow(filler, Priority.ALWAYS);
+    private HBox filler(int pixels) {
+        var filler = new HBox();
+        filler.setMinWidth(pixels);
+        filler.setMaxWidth(pixels);
+        return filler;
+    }
 
-        var bottom = new HBox(focussedTileInfo, editModeIndicator, messageLabel, filler, sliderZoomContainer);
+    private void arrangeMainLayout() {
+        var spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        var bottom = new HBox(focussedTileInfo, editModeIndicator, filler(50), messageLabel, spacer, sliderZoomContainer);
         bottom.setPadding(new Insets(10, 10, 10, 10));
 
         var right = new VBox(tabPaneWithPalettes, tabPaneMapViews, bottom);
@@ -468,6 +456,25 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
         contentPane.setLeft(propertyEditorsPane);
         contentPane.setCenter(right);
+    }
+
+    private StringBinding createTitleBinding() {
+        return Bindings.createStringBinding(() -> {
+                WorldMap currentMap = map();
+                String title = tt("map_editor");
+                if (currentFilePy.get() != null) {
+                    title += " - " + currentFilePy.get();
+                } else if (currentMap != null && currentMap.url() != null) {
+                    title += " - " + currentMap.url();
+                } else {
+                    title += " - <" + tt("unsaved_map") + ">";
+                }
+                if (currentMap != null) {
+                    title += " (%d rows, %d cols)".formatted(currentMap.terrain().numRows(), currentMap.terrain().numCols());
+                }
+                return title;
+            }, currentFilePy, mapPy
+        );
     }
 
     private void updateMessageAnimation() {
