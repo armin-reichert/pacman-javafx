@@ -61,16 +61,16 @@ public class Palette {
         Tooltip.install(canvas, tooltip);
     }
 
-    public TileValueEditorTool newTileTool(EditController editor, byte value, String description) {
-        return new TileValueEditorTool(editor, renderer, toolSize, value, description);
+    public TileValueEditorTool newTileTool(EditController editController, byte value, String description) {
+        return new TileValueEditorTool(editController, renderer, toolSize, value, description);
     }
 
     public PropertyValueEditorTool newPropertyTool(String propertyName, String description) {
         return new PropertyValueEditorTool(renderer, toolSize, propertyName, description);
     }
 
-    public void addTileTool(EditController editor, byte value, String description) {
-        tools.add(newTileTool(editor, value, description));
+    public void addTileTool(EditController editController, byte value, String description) {
+        tools.add(newTileTool(editController, value, description));
     }
 
     public void addPropertyTool(String propertyName, String description) {
