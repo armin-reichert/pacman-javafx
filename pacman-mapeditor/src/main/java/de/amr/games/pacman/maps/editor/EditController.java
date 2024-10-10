@@ -13,7 +13,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.Cursor;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
@@ -21,8 +20,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import org.tinylog.Logger;
-
-import java.net.URL;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.v2i;
@@ -90,8 +87,9 @@ public class EditController {
     final ObjectProperty<EditMode> modePy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
-            if (viewModel.canvas() != null) {
-                viewModel.canvas().setCursor(get() == EditMode.ERASE ? rubberCursor : Cursor.DEFAULT);
+            switch (get()) {
+                case EditMode.DRAW -> viewModel.indicateEditMode();
+                case EditMode.ERASE -> viewModel.indicateEraseMode();
             }
         }
     };
@@ -103,19 +101,10 @@ public class EditController {
     private boolean unsavedChanges;
     private boolean terrainMapPathsUpToDate;
 
-    //TODO
-    private Cursor rubberCursor;
-
     EditController(TileMapEditorViewModel viewModel) {
         this.viewModel = viewModel;
         this.mapPy.bind(viewModel.worldMapProperty());
         viewModel.gridSizeProperty().addListener((py,ov,nv) -> invalidateTerrainMapPaths());
-        URL iconURL = getClass().getResource("graphics/radiergummi.jpg");
-        if (iconURL != null) {
-            rubberCursor = Cursor.cursor(iconURL.toExternalForm());
-        } else {
-            Logger.error("Could not load rubber icon");
-        }
         setMode(EditMode.DRAW);
     }
 

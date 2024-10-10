@@ -20,6 +20,7 @@ import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Side;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -113,6 +114,8 @@ public class TileMapEditor implements TileMapEditorViewModel {
     private TabPane tabPaneWithPalettes;
     private final Map<String, Palette> palettes = new HashMap<>();
     private final Image spriteSheet;
+    private final Cursor rubberCursor;
+
 
     private MenuBar menuBar;
     private Menu menuFile;
@@ -140,9 +143,14 @@ public class TileMapEditor implements TileMapEditorViewModel {
         editController = new EditController(this);
         lastUsedDir = workDir;
         titlePy.bind(createTitleBinding());
-        URL url = requireNonNull(getClass().getResource("pacman_spritesheet.png"));
-        spriteSheet = new Image(url.toExternalForm());
+        spriteSheet = new Image(urlString("graphics/pacman_spritesheet.png"));
+        rubberCursor = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
         setMap(new WorldMap(36, 28));
+    }
+
+    private String urlString(String resourcePath) {
+        URL url = requireNonNull(getClass().getResource(resourcePath));
+        return url.toExternalForm();
     }
 
     @Override
@@ -200,6 +208,20 @@ public class TileMapEditor implements TileMapEditorViewModel {
         };
         messageLabel.setTextFill(color);
         messageCloseTime = Instant.now().plus(Duration.ofSeconds(seconds));
+    }
+
+    @Override
+    public void indicateEditMode() {
+        if (editCanvas != null) {
+            editCanvas.setCursor(Cursor.DEFAULT);
+        }
+    }
+
+    @Override
+    public void indicateEraseMode() {
+        if (editCanvas != null) {
+            editCanvas.setCursor(rubberCursor);
+        }
     }
 
     public void start() {

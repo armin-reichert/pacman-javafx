@@ -71,6 +71,10 @@ public interface TileMapEditorViewModel {
 
     void showMessage(String message, long seconds, MessageType type);
 
+    void indicateEraseMode();
+
+    void indicateEditMode();
+
     Palette selectedPalette();
 
     String selectedPaletteID();
