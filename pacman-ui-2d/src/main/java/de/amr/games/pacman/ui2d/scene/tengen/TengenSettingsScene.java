@@ -121,9 +121,9 @@ public class TengenSettingsScene extends GameScene2D {
 
         y += 3 * TS;
         drawCenteredText(renderer, "MOVE ARROW WITH CURSOR KEYS", LABEL_COLOR, font, y);
-        y += TS;
+        y += TS + 1;
         drawCenteredText(renderer, "CHOOSE OPTIONS WITH TAB", LABEL_COLOR, font, y);
-        y += TS;
+        y += TS + 1;
         drawCenteredText(renderer, "PRESS ENTER TO START GAME", LABEL_COLOR, font, y);
 
         y += TS;
