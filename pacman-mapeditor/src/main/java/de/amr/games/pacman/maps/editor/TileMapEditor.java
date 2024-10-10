@@ -226,12 +226,13 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     public void start() {
         stage.titleProperty().bind(titlePy);
-        // content pane and scroll pane have no height yet at this point!
-        int gridSize = (int)(0.75 *  stage.getHeight() / map().terrain().numRows());
-        gridSizePy.set(Math.max(gridSize, 8));
+        Logger.info("Canvas scrollpane height {}", editCanvasScroll.getHeight());
+        double gridSize = editCanvasScroll.getHeight() / map().terrain().numRows();
+        gridSize = Math.max(gridSize, MIN_GRID_SIZE);
+        Logger.info("Grid size {}", gridSize);
+        gridSizePy.set((int) gridSize);
+        editController.showInfoMessage(tt("welcome_message"), 3);
         clock.play();
-        Logger.info("Stage height {}", stage.getHeight());
-        showMessage(tt("welcome_message"), 3, MessageType.INFO);
     }
 
     public void stop() {
