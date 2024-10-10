@@ -34,13 +34,13 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,43 +68,34 @@ public class TileMapEditor implements TileMapEditorViewModel {
     static final RectArea BONUS_SPRITE        = new RectArea(505,  49, 14, 14);
 
     static final int TOOL_SIZE = 32;
-
-    // --  end static --
+    static final int ACTIVE_RENDERING_FPS = 20;
 
     final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>();
-
-    final BooleanProperty foodVisiblePy            = new SimpleBooleanProperty(true);
-
+    final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
     final IntegerProperty gridSizePy = new SimpleIntegerProperty(16);
-
     final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
-
     final ObjectProperty<WorldMap> mapPy = new SimpleObjectProperty<>();
-
+    final BooleanProperty previewVisiblePy = new SimpleBooleanProperty(true);
     final BooleanProperty propertyEditorsVisiblePy = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
             changePropertyEditorsPaneVisibility(get());
         }
     };
-
-    final BooleanProperty previewVisiblePy = new SimpleBooleanProperty(true);
-
-    final ObjectProperty<String> titlePy = new SimpleObjectProperty<>("Tile Map Editor");
-
     final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
+    final ObjectProperty<String> titlePy = new SimpleObjectProperty<>("Tile Map Editor");
 
     private final EditController editController;
 
-    private Stage stage;
     private final BorderPane contentPane = new BorderPane();
+    private Stage stage;
     private Pane propertyEditorsPane;
     private Canvas editCanvas;
-    private ScrollPane editCanvasScroll;
+    private ScrollPane spEditCanvas;
     private Canvas previewCanvas;
-    private ScrollPane previewCanvasScroll;
-    private Text mapSourceView;
-    private ScrollPane mapSourceViewScroll;
+    private ScrollPane spPreviewCanvas;
+    private Text sourceView;
+    private ScrollPane spSourceView;
     private TabPane tabPaneMapViews;
     private Label messageLabel;
     private Label focussedTileInfo;
@@ -112,10 +103,8 @@ public class TileMapEditor implements TileMapEditorViewModel {
     private HBox sliderZoomContainer;
     private FileChooser fileChooser;
     private TabPane tabPaneWithPalettes;
-    private final Map<String, Palette> palettes = new HashMap<>();
     private final Image spriteSheet;
     private final Cursor rubberCursor;
-
 
     private MenuBar menuBar;
     private Menu menuFile;
@@ -125,8 +114,10 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     private final ContextMenu contextMenu = new ContextMenu();
 
+    private final Map<String, Palette> palettes = new HashMap<>();
     private PropertyEditorPane     terrainMapPropertiesEditor;
     private PropertyEditorPane     foodMapPropertiesEditor;
+
     private TerrainMapEditRenderer terrainMapEditRenderer;
     private TerrainMapRenderer     terrainMapPreviewRenderer;
     private FoodMapRenderer        foodMapRenderer;
@@ -207,7 +198,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
             case ERROR -> Color.RED;
         };
         messageLabel.setTextFill(color);
-        messageCloseTime = Instant.now().plus(Duration.ofSeconds(seconds));
+        messageCloseTime = Instant.now().plus(java.time.Duration.ofSeconds(seconds));
     }
 
     @Override
@@ -226,8 +217,8 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     public void start() {
         stage.titleProperty().bind(titlePy);
-        Logger.info("Canvas scrollpane height {}", editCanvasScroll.getHeight());
-        double gridSize = editCanvasScroll.getHeight() / map().terrain().numRows();
+        Logger.info("Canvas scrollpane height {}", spEditCanvas.getHeight());
+        double gridSize = spEditCanvas.getHeight() / map().terrain().numRows();
         gridSize = Math.max(gridSize, MIN_GRID_SIZE);
         Logger.info("Grid size {}", gridSize);
         gridSizePy.set((int) gridSize);
@@ -319,8 +310,8 @@ public class TileMapEditor implements TileMapEditorViewModel {
         editCanvas.setOnMouseClicked(editController::onMouseClicked);
         editCanvas.setOnMouseMoved(editController::onMouseMoved);
         editCanvas.setOnKeyPressed(editController::onKeyPressed);
-        editCanvasScroll = new ScrollPane(editCanvas);
-        editCanvasScroll.setFitToHeight(true);
+        spEditCanvas = new ScrollPane(editCanvas);
+        spEditCanvas.setFitToHeight(true);
         // Note: this must be done *after* the initial map has been created/loaded!
         editCanvas.heightProperty().bind(Bindings.createDoubleBinding(
                 () -> (double) map().terrain().numRows() * gridSize(), mapPy, gridSizePy));
@@ -330,33 +321,33 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     private void createPreviewCanvas() {
         previewCanvas = new Canvas();
-        previewCanvasScroll = new ScrollPane(previewCanvas);
-        previewCanvasScroll.setFitToHeight(true);
-        previewCanvasScroll.hvalueProperty().bindBidirectional(editCanvasScroll.hvalueProperty());
-        previewCanvasScroll.vvalueProperty().bindBidirectional(editCanvasScroll.vvalueProperty());
-        previewCanvasScroll.visibleProperty().bind(previewVisiblePy);
+        spPreviewCanvas = new ScrollPane(previewCanvas);
+        spPreviewCanvas.setFitToHeight(true);
+        spPreviewCanvas.hvalueProperty().bindBidirectional(spEditCanvas.hvalueProperty());
+        spPreviewCanvas.vvalueProperty().bindBidirectional(spEditCanvas.vvalueProperty());
+        spPreviewCanvas.visibleProperty().bind(previewVisiblePy);
         previewCanvas.widthProperty().bind(editCanvas.widthProperty());
         previewCanvas.heightProperty().bind(editCanvas.heightProperty());
     }
 
     private void createMapSourceView() {
-        mapSourceView = new Text();
-        mapSourceView.setSmooth(true);
-        mapSourceView.setFontSmoothingType(FontSmoothingType.LCD);
-        mapSourceView.setFont(Font.font("Monospace", 14));
+        sourceView = new Text();
+        sourceView.setSmooth(true);
+        sourceView.setFontSmoothingType(FontSmoothingType.LCD);
+        sourceView.setFont(Font.font("Monospace", 14));
 
-        var vbox = new VBox(mapSourceView);
+        var vbox = new VBox(sourceView);
         vbox.setPadding(new Insets(10, 20, 10, 20));
 
-        mapSourceViewScroll = new ScrollPane(vbox);
-        mapSourceViewScroll.setFitToHeight(true);
+        spSourceView = new ScrollPane(vbox);
+        spSourceView.setFitToHeight(true);
     }
 
     private void createTabPaneWithMapViews() {
-        var tabSourceView = new Tab(tt("source"), mapSourceViewScroll);
+        var tabSourceView = new Tab(tt("source"), spSourceView);
         tabSourceView.setClosable(false);
 
-        var splitPane = new SplitPane(editCanvasScroll, previewCanvasScroll);
+        var splitPane = new SplitPane(spEditCanvas, spPreviewCanvas);
         splitPane.setDividerPositions(0.5);
 
         var tabPreview = new Tab(tt("preview"), splitPane);
@@ -479,29 +470,32 @@ public class TileMapEditor implements TileMapEditorViewModel {
         contentPane.setCenter(right);
     }
 
+    private void updateMessageAnimation() {
+        if (messageCloseTime != null && Instant.now().isAfter(messageCloseTime)) {
+            messageCloseTime = null;
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(2), messageLabel);
+            fadeOut.setFromValue(1.0);
+            fadeOut.setToValue(0.0);
+            fadeOut.setOnFinished(event -> {
+                messageLabel.setText("");
+                messageLabel.setOpacity(1.0);
+            });
+            fadeOut.play();
+        }
+    }
+
     // Active rendering (good idea?)
     private void initActiveRendering() {
-        int fps = 10;
-        clock = new Timeline(fps, new KeyFrame(javafx.util.Duration.millis(1000.0 / fps), e -> {
-            if (messageCloseTime != null && Instant.now().isAfter(messageCloseTime)) {
-                messageCloseTime = null;
-                FadeTransition fade = new FadeTransition(javafx.util.Duration.seconds(2));
-                fade.setNode(messageLabel);
-                fade.setFromValue(1);
-                fade.setToValue(0.1);
-                fade.play();
-                fade.setOnFinished(event -> {
-                    messageLabel.setText("");
-                    messageLabel.setOpacity(1);
-                });
-            }
+        double frameDuration = 1000.0 / ACTIVE_RENDERING_FPS;
+        clock = new Timeline(ACTIVE_RENDERING_FPS, new KeyFrame(Duration.millis(frameDuration), e -> {
+            updateMessageAnimation();
             try {
                 drawEditCanvas();
                 drawPreviewCanvas();
                 drawSelectedPalette();
             } catch (Exception x) {
-                x.printStackTrace(System.err);
-                drawBlueScreen(x);
+                Logger.error(x);
+                drawBlueScreen(x); // TODO this is crap
             }
         }));
         clock.setCycleCount(Animation.INDEFINITE);
@@ -773,7 +767,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
     }
 
     private void updateSourceView(WorldMap map) {
-        if (mapSourceView == null) {
+        if (sourceView == null) {
             Logger.warn("Cannot update source view as it doesn't exist yet");
             return;
         }
@@ -783,7 +777,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
             for (int i = 0; i < lines.length; ++i) {
                 lines[i] = "%5d:   %s".formatted(i+1, lines[i]);
             }
-            mapSourceView.setText(String.join("\n", lines));
+            sourceView.setText(String.join("\n", lines));
         } catch (Exception x) {
             Logger.error("Could not create text for map");
             Logger.error(x);
