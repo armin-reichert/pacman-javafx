@@ -84,9 +84,9 @@ public class MsPacManTengenGame extends GameModel {
         BONUS_VALUE_FACTORS[BONUS_PRETZEL]       = 7;
         BONUS_VALUE_FACTORS[BONUS_APPLE]         = 10;
         BONUS_VALUE_FACTORS[BONUS_PEAR]          = 20;
-        BONUS_VALUE_FACTORS[BONUS_BANANA]        = 50;
-        BONUS_VALUE_FACTORS[BONUS_MILK]          = 30;
-        BONUS_VALUE_FACTORS[BONUS_ICE_CREAM]     = 40;
+        BONUS_VALUE_FACTORS[BONUS_BANANA]        = 50; // !!
+        BONUS_VALUE_FACTORS[BONUS_MILK]          = 30; // !!
+        BONUS_VALUE_FACTORS[BONUS_ICE_CREAM]     = 40; // !!
         BONUS_VALUE_FACTORS[BONUS_GLASS_SLIPPER] = 60;
         BONUS_VALUE_FACTORS[BONUS_STAR]          = 70;
         BONUS_VALUE_FACTORS[BONUS_HAND]          = 80;
@@ -96,7 +96,6 @@ public class MsPacManTengenGame extends GameModel {
 
     private static GameWorld createWorld(WorldMap map) {
         var world = new GameWorld(map);
-        // It seems that in all Tengen mazes the house is at the same location as in the Arcade mazes
         Vector2i houseTopLeftTile = map.terrain().getTileProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, v2i(10, 15));
         world.createArcadeHouse(houseTopLeftTile.x(), houseTopLeftTile.y());
         return world;
@@ -106,7 +105,8 @@ public class MsPacManTengenGame extends GameModel {
     private final List<WorldMap> strangeMaps;
     private final List<WorldMap> miniMaps;
     private final List<WorldMap> bigMaps;
-    private List<WorldMap> maps = new ArrayList<>();
+    private List<WorldMap> currentMapList;
+
     private MapCategory mapCategory;
     private Difficulty difficulty;
     private PacBooster pacBooster;
@@ -119,21 +119,21 @@ public class MsPacManTengenGame extends GameModel {
         initialLives = 3;
         highScoreFile = new File(userDir, "highscore-ms_pacman_tengen.xml");
 
-        arcadeMaps  = readMaps(ARCADE_MAP_PATTERN, 9);
-        assignMapsToCategory(arcadeMaps, MapCategory.ARCADE);
+        arcadeMaps = readMaps(ARCADE_MAP_PATTERN, ARCADE_MAP_COUNT);
+        assignMapCategory(arcadeMaps, MapCategory.ARCADE);
 
         List<WorldMap> nonArcadeMaps = readMaps(NON_ARCADE_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
 
         //TODO how are maps really categorized in Tengen?
 
         strangeMaps = nonArcadeMaps.stream().filter(worldMap -> worldMap.terrain().numRows() >= ARCADE_MAP_TILES_Y).toList();
-        assignMapsToCategory(strangeMaps, MapCategory.STRANGE);
+        assignMapCategory(strangeMaps, MapCategory.STRANGE);
 
         miniMaps = nonArcadeMaps.stream().filter(worldMap -> worldMap.terrain().numRows() < ARCADE_MAP_TILES_Y).toList();
-        assignMapsToCategory(miniMaps, MapCategory.MINI);
+        assignMapCategory(miniMaps, MapCategory.MINI);
 
         bigMaps = nonArcadeMaps.stream().filter(worldMap -> worldMap.terrain().numRows() > ARCADE_MAP_TILES_Y).toList();
-        assignMapsToCategory(bigMaps, MapCategory.BIG);
+        assignMapCategory(bigMaps, MapCategory.BIG);
 
         setMapCategory(MapCategory.ARCADE);
         setPacBooster(PacBooster.OFF);
@@ -168,7 +168,7 @@ public class MsPacManTengenGame extends GameModel {
 
     public void setMapCategory(MapCategory mapCategory) {
         this.mapCategory = checkNotNull(mapCategory);
-        maps = switch (mapCategory) {
+        currentMapList = switch (mapCategory) {
             case ARCADE -> arcadeMaps;
             case BIG -> bigMaps;
             case MINI -> miniMaps;
@@ -197,7 +197,7 @@ public class MsPacManTengenGame extends GameModel {
     }
 
     public int mapNumberByLevelNumber(int levelNumber) {
-        int numMaps = maps.size();
+        int numMaps = currentMapList.size();
         return levelNumber <= numMaps ? levelNumber : Globals.randomInt(1, numMaps + 1);
     }
 
@@ -216,7 +216,7 @@ public class MsPacManTengenGame extends GameModel {
         return maps;
     }
 
-    private void assignMapsToCategory(List<WorldMap> maps, MapCategory category) {
+    private void assignMapCategory(List<WorldMap> maps, MapCategory category) {
         maps.forEach(map -> {
             map.terrain().setProperty("map_category", category.name());
             Logger.info("Map #{} -> {}", map.terrain().getProperty("map_number"), category);
@@ -261,24 +261,11 @@ public class MsPacManTengenGame extends GameModel {
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = levelNumber;
         mapNumber = mapNumberByLevelNumber(levelNumber);
-        var map = maps.get(mapNumber - 1);
+        var map = currentMapList.get(mapNumber - 1);
         setWorldAndCreatePopulation(createWorld(map));
-        switch (pacBooster) {
-            case ALWAYS_ON -> {
-                pac.setBaseSpeed(BOOSTER_FACTOR * PPS_AT_100_PERCENT * SEC_PER_TICK);
-                setBoosterActive(true);
-            }
-            case OFF -> {
-                pac.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
-                setBoosterActive(false);
-            }
-            case TOGGLE_USING_KEY -> {
-                pac.setBaseSpeed(BOOSTER_FACTOR * PPS_AT_100_PERCENT * SEC_PER_TICK);
-                setBoosterActive(false);
-            }
-        }
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
+        initPacBooster();
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
@@ -286,10 +273,10 @@ public class MsPacManTengenGame extends GameModel {
     public void buildDemoLevel() {
         levelNumber = 1;
         mapNumber = mapNumberByLevelNumber(levelNumber);
-        setWorldAndCreatePopulation(createWorld(maps.get(mapNumber - 1)));
+        setWorldAndCreatePopulation(createWorld(currentMapList.get(mapNumber - 1)));
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);
-        //TODO: Pac booster?
+        initPacBooster();
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
@@ -374,6 +361,23 @@ public class MsPacManTengenGame extends GameModel {
         } else {
             boolean chase = isChasingPhase(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
             ghost.followTarget(chase ? chasingTarget(ghost) : scatterTarget(ghost), speed);
+        }
+    }
+
+    private void initPacBooster() {
+        switch (pacBooster) {
+            case ALWAYS_ON -> {
+                pac.setBaseSpeed(BOOSTER_FACTOR * PPS_AT_100_PERCENT * SEC_PER_TICK);
+                setBoosterActive(true);
+            }
+            case OFF -> {
+                pac.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
+                setBoosterActive(false);
+            }
+            case TOGGLE_USING_KEY -> {
+                pac.setBaseSpeed(BOOSTER_FACTOR * PPS_AT_100_PERCENT * SEC_PER_TICK);
+                setBoosterActive(false);
+            }
         }
     }
 }
