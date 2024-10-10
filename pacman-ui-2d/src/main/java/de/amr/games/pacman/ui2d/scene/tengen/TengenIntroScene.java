@@ -36,12 +36,12 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class TengenIntroScene extends GameScene2D {
 
-    //TODO which are the exact colors?
+    // Picked from NES Emulator
     static final Color[]  SHADES_OF_BLUE = {
-        Color.rgb(35, 24, 145),
-        Color.rgb(0, 111, 234),
-        Color.rgb(63, 184, 255),
-        Color.rgb(166, 229, 251)
+        Color.rgb(0, 42, 136),
+        Color.rgb(21, 95, 217),
+        Color.rgb(100, 176, 255),
+        Color.rgb(192, 223, 255)
     };
     static final float    SPEED = 2.2f; //TODO check exact speed
     static final int      TOP_Y = TS * 11 + 1;
