@@ -37,7 +37,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 public class MsPacManTengenGame extends GameModel {
 
     public enum MapCategory { ARCADE, STRANGE, MINI, BIG }
-    public enum Difficulty { EASY, NORMAL, HARD, CRAZY }
+    public enum Difficulty { NORMAL, EASY, HARD, CRAZY }
     public enum PacBooster { OFF, TOGGLE_USING_KEY, ALWAYS_ON }
 
     // TODO what is the exact speed increase?
