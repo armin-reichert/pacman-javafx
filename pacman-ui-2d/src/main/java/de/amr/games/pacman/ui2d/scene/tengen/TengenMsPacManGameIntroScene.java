@@ -39,7 +39,7 @@ import static de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer.*
  */
 public class TengenMsPacManGameIntroScene extends GameScene2D {
 
-    static final List<GameAction> ACTIONS = List.of(GameAction2D.TENGEN_SHOW_START);
+    static final List<GameAction> ACTIONS = List.of(GameAction2D.START_GAME);
 
     static final float    SPEED = 2.2f; //TODO check exact speed
     static final int      TOP_Y = TS * 11 + 1;
@@ -201,9 +201,7 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
         WAITING_FOR_START {
             @Override
             public void onUpdate(TengenMsPacManGameIntroScene intro) {
-                if (intro.context.keyboard().pressed(KeyCode.SPACE)) {
-                    intro.context.gameController().changeState(GameState.STARTING);
-                } else if (timer().atSecond(8)) {
+                if (timer().atSecond(8)) {
                     intro.sceneController.changeState(SHOWING_MARQUEE);
                 }
             }

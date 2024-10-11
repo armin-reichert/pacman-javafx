@@ -247,12 +247,13 @@ public enum GameAction2D implements GameAction {
         }
     },
 
-    //TODO this is not useful in Tengen Ms. Pac-Man
     START_GAME(key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1), key(KeyCode.SPACE)) {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
-            if (context.game().hasCredit()) {
+            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                context.gameController().changeState(GameState.STARTING);
+            } else if (context.game().hasCredit()) {
                 context.sounds().stopVoice();
                 if (context.gameState() == GameState.INTRO || context.gameState() == GameState.STARTING) {
                     context.gameController().changeState(GameState.READY);
@@ -260,14 +261,6 @@ public enum GameAction2D implements GameAction {
                     Logger.error("Cannot start game play in game state {}", context.gameState());
                 }
             }
-        }
-    },
-
-    TENGEN_SHOW_START(key(KeyCode.SPACE)) {
-        @Override
-        public void execute(GameContext context) {
-            super.execute(context);
-            context.gameController().changeState(GameState.STARTING);
         }
     },
 
