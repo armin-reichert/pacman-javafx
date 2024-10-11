@@ -193,8 +193,9 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
         WAITING_FOR_START {
             @Override
             public void onUpdate(TengenMsPacManGameIntroScene intro) {
-                //TODO check this
                 if (intro.context.keyboard().pressed(KeyCode.SPACE)) {
+                    intro.context.gameController().changeState(GameState.STARTING);
+                } else if (timer().atSecond(8)) {
                     intro.sceneController.changeState(SHOWING_MARQUEE);
                 }
             }
@@ -275,7 +276,6 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
         },
 
         MS_PACMAN_MARCHING_IN {
-
             @Override
             public void onUpdate(TengenMsPacManGameIntroScene intro) {
                 intro.marqueeTimer.tick();
@@ -284,8 +284,9 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
                     intro.msPacMan.setSpeed(0);
                     intro.msPacMan.animations().ifPresent(Animations::resetSelected);
                 }
-                if (timer().atSecond(4)) {
-                    intro.context.gameController().changeState(GameState.STARTING); // The settings scene
+                if (timer().atSecond(6)) {
+                    // show demo level
+                    intro.context.gameController().changeState(GameState.READY);
                 }
             }
         };

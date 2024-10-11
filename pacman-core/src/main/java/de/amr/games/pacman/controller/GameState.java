@@ -309,7 +309,7 @@ public enum GameState implements FsmState<GameModel> {
 
     // Test states
 
-    TESTING_LEVELS_BONI {
+    TESTING_LEVEL_BONI {
 
         private int lastLevelNumber;
 
@@ -420,11 +420,6 @@ public enum GameState implements FsmState<GameModel> {
             game.createLevel(1);
             game.startLevel();
             game.showGuys();
-            game.pac().startAnimation();
-            game.ghosts().forEach(Ghost::startAnimation);
-            game.blinking().setStartPhase(Pulse.ON);
-            game.blinking().restart(Integer.MAX_VALUE);
-            game.publishGameEvent(GameEventType.HUNTING_PHASE_STARTED);
         }
 
         @Override
@@ -454,6 +449,12 @@ public enum GameState implements FsmState<GameModel> {
                 //enterState(GHOST_DYING);
             }
         }
+
+        @Override
+        public void onExit(GameModel game) {
+            game.levelCounter().clear();
+        }
+
     },
 
     TESTING_CUT_SCENES {

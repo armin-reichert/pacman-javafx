@@ -60,7 +60,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS_BONI;
+import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
@@ -585,7 +585,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     public void onLevelStarted(GameEvent event) {
         int hourOfDay = LocalTime.now().getHour();
         PY_NIGHT_MODE.set(hourOfDay >= 21 || hourOfDay <= 4);
-        if (gameState() != TESTING_LEVELS_BONI && !game().isDemoLevel() && game().levelNumber() == 1) {
+        if (gameState() != TESTING_LEVEL_BONI && !game().isDemoLevel() && game().levelNumber() == 1) {
             sounds().playGameReadySound();
         }
     }

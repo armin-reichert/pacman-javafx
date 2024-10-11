@@ -238,8 +238,9 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
                 Logger.error("No map sprite selected");
                 return;
             }
-            drawTop(spriteSheet, terrain, tengenGame);
-
+            if (!context.game().isDemoLevel()) {
+                drawTop(spriteSheet, terrain, tengenGame);
+            }
             // Maze #32 has this psychedelic effect
             int mapNumber = Integer.parseInt(world.map().terrain().getProperty("map_number"));
             if (mapNumber == 32) {

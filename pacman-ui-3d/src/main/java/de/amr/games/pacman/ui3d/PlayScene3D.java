@@ -219,6 +219,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onGameStateEntry(GameState state) {
+        Logger.info("on game state entry: {}", state);
         switch (state) {
             case READY            -> onEnterStateReady();
             case HUNTING          -> onEnterStateHunting();
@@ -226,7 +227,8 @@ public class PlayScene3D implements GameScene {
             case GHOST_DYING      -> onEnterStateGhostDying();
             case LEVEL_COMPLETE   -> onEnterStateLevelComplete();
             case LEVEL_TRANSITION -> onEnterStateLevelTransition();
-            case TESTING_LEVELS_BONI -> onEnterStateLevelTest();
+            case TESTING_LEVEL_BONI -> onEnterStateTestingLevelBoni();
+            case TESTING_LEVEL_TEASERS -> onEnterStateTestingLevelTeasers();
             case GAME_OVER        -> onEnterStateGameOver();
             default -> {}
         }
@@ -282,11 +284,19 @@ public class PlayScene3D implements GameScene {
         perspective().init(context.game().world());
     }
 
-    private void onEnterStateLevelTest() {
+    private void onEnterStateTestingLevelBoni() {
         replaceGameLevel3D(true);
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
-        showLevelTestMessage();
+        showLevelTestMessage("BONI LEVEL" + context.game().levelNumber());
+        PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
+    }
+
+    private void onEnterStateTestingLevelTeasers() {
+        replaceGameLevel3D(true);
+        level3D.pac3D().init();
+        level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
+        showLevelTestMessage("TEASER LEVEL " + context.game().levelNumber());
         PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
     }
 
@@ -371,12 +381,23 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onLevelStarted(GameEvent event) {
         addLevelCounter();
-        if (context.game().levelNumber() == 1 || context.gameState() == GameState.TESTING_LEVELS_BONI) {
-            if (context.gameState() == GameState.TESTING_LEVELS_BONI) {
-                replaceGameLevel3D(false);
-                showLevelTestMessage();
-            } else if (!context.game().isDemoLevel()){
-                showReadyMessage();
+        if (context.game().levelNumber() == 1
+                || context.gameState() == GameState.TESTING_LEVEL_BONI
+                || context.gameState() == GameState.TESTING_LEVEL_TEASERS) {
+            switch (context.gameState()) {
+                case TESTING_LEVEL_BONI -> {
+                    replaceGameLevel3D(false);
+                    showLevelTestMessage("BONI LEVEL " + context.game().levelNumber());
+                }
+                case TESTING_LEVEL_TEASERS -> {
+                    replaceGameLevel3D(false);
+                    showLevelTestMessage("TEASER LEVEL " + context.game().levelNumber());
+                }
+                default -> {
+                    if (!context.game().isDemoLevel()){
+                        showReadyMessage();
+                    }
+                }
             }
         }
         perspective().init(context.game().world());
@@ -435,11 +456,10 @@ public class PlayScene3D implements GameScene {
         Logger.info("3D game level {} created.", context.game().levelNumber());
     }
 
-    private void showLevelTestMessage() {
+    private void showLevelTestMessage(String message) {
         TileMap terrainMap = context.game().world().map().terrain();
         double x = terrainMap.numCols() * HTS;
         double y = (terrainMap.numRows() - 2) * TS;
-        String message = "TEST LEVEL " + context.game().levelNumber();
         level3D.showAnimatedMessage(message, 5, x, y);
     }
 

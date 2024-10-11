@@ -63,6 +63,9 @@ public class PlayScene2D extends GameScene2D {
         if (context.game().isDemoLevel()) {
             context.game().pac().setUseAutopilot(true);
             context.game().pac().setImmune(false);
+            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                context.setScoreVisible(true);
+            }
         } else {
             context.setScoreVisible(true);
             context.game().pac().setUseAutopilot(PY_AUTOPILOT.get());
@@ -143,8 +146,8 @@ public class PlayScene2D extends GameScene2D {
             renderer.drawLivesCounter(context.spriteSheet(), numLivesShown, 5, worldSize);
         }
         drawLevelCounter(renderer, worldSize);
-        //TODO Hack: Tengen has those boxes displaying the level number
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+        //TODO Hack: Tengen has these boxes on the left and on the right showing the current level number
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN && !context.game().isDemoLevel()) {
             TengenMsPacManGameRenderer tr = (TengenMsPacManGameRenderer) renderer;
             tr.drawLevelNumberBoxes(context.spriteSheet(), context.game().levelNumber(), worldSize);
         }
@@ -172,7 +175,7 @@ public class PlayScene2D extends GameScene2D {
             int x = TS * (cx - text.length() / 2);
             Color color = context.assets().color(assetPrefix + ".color.ready_message");
             renderer.drawText(text, color, font, x, y);
-        } else if (context.gameState() == GameState.TESTING_LEVELS_BONI) {
+        } else if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
             String text = "TEST    L%03d".formatted(context.game().levelNumber());
             int x = TS * (cx - text.length() / 2);
             renderer.drawText(text, GameAssets2D.ARCADE_PALE, font, x, y);
