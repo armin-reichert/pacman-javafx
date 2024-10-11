@@ -38,7 +38,7 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
 
     static final float    SPEED = 2.2f; //TODO check exact speed
     static final int      TOP_Y = TS * 11 + 1;
-    static final int      STOP_X_GHOST = TS * 6 - 4;
+    static final int      STOP_X_GHOST = TS * 5 + 2;
     static final int      STOP_X_MS_PAC_MAN = TS * 15 + 2;
     static final Vector2i TITLE_POSITION = v2i(TS * 10, TS * 8);
     static final int      NUM_BULBS = 96;
@@ -78,9 +78,7 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
         ghostIndex = 0;
         waitBeforeRising = 0;
 
-        //TODO use Tengen sprites for Ms. Pac-Man and PacMan characters
-        GameSpriteSheet msPacManGameSpriteSheet = context.assets().get("ms_pacman.spritesheet");
-        msPacMan.setAnimations(new MsPacManGamePacAnimations(msPacManGameSpriteSheet));
+        msPacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
         msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
 
         for (Ghost ghost : ghosts) {
@@ -116,7 +114,7 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
                 renderer.drawSpriteScaled(context.spriteSheet(), TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE, 3 * TS, 12 * TS);
                 renderer.ctx().restore();
                 // Blink effect TODO: check exact rate
-                if (t % 96 < 48) {
+                if (t % 60 < 30) {
                     renderer.drawText("PRESS SPACE", Color.WHITE, font, 8 * TS, 21 * TS);
                 }
                 Font copyrightFont = renderer.scaledArcadeFont(7.5);
@@ -282,9 +280,9 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
                 intro.msPacMan.move();
                 if (intro.msPacMan.posX() <= STOP_X_MS_PAC_MAN) {
                     intro.msPacMan.setSpeed(0);
-                    intro.msPacMan.animations().ifPresent(Animations::resetSelected);
+                    intro.msPacMan.animations().ifPresent(Animations::resetSelected); //TODO check in Tengen, seems not to work!
                 }
-                if (timer().atSecond(6)) {
+                if (timer().atSecond(8)) {
                     // show demo level
                     intro.context.gameController().changeState(GameState.READY);
                 }

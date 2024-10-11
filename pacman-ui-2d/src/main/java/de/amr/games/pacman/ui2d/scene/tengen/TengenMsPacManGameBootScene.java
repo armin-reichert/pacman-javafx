@@ -33,12 +33,12 @@ public class TengenMsPacManGameBootScene extends GameScene2D {
     @Override
     public void update() {
         if (0 <= t && t < 120) {
-            if (t % 4 == 0 && tengenPresentsY > 16 * TS) { // TODO check y position
-                tengenPresentsY -= TS;
+            if (t % 4 == 0 && tengenPresentsY > 17 * TS) {
+                tengenPresentsY -= 2*TS;
             }
         }
         else if (t == 120) {
-            ghost.setPosition(t(31), t(30)); //TODO check y position
+            ghost.setPosition(t(31), t(25));
             ghost.setMoveAndWishDir(Direction.LEFT);
             ghost.setSpeed(8); // TODO check speed
             ghost.setVisible(true);
@@ -46,10 +46,10 @@ public class TengenMsPacManGameBootScene extends GameScene2D {
         else if (120 < t && t < 240) {
             ghost.move();
         }
-        else if (240 <= t && t < 330) {
+        else if (240 <= t && t < 350) {
             if (t % 4 == 0) { tengenPresentsY += 2*TS; }
         }
-        else if (t == 330) {
+        else if (t == 350) {
             grayScreen = true;
         }
         else if (t == 360) {

@@ -178,11 +178,14 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
 
     @Override
     public void drawAnimatedEntity(AnimatedEntity guy) {
+        ctx().save();
+        ctx().setImageSmoothing(false);
         if (guy instanceof Pac msPacMan) {
             drawMsPacMan(msPacMan);
         } else {
             GameWorldRenderer.super.drawAnimatedEntity(guy);
         }
+        ctx().restore();
     }
 
     private void drawMsPacMan(Pac msPacMan) {

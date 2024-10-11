@@ -7,8 +7,10 @@ package de.amr.games.pacman.ui2d.scene;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.maps.editor.TileMapUtil;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
@@ -165,7 +167,16 @@ public class PlayScene2D extends GameScene2D {
         int y = TS * (houseTopLeftTile.y() + houseSize.y() + 1);
         String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
         Font font = renderer.scaledArcadeFont(TS);
-        if (context.gameState() == GameState.GAME_OVER || context.game().isDemoLevel()) {
+        if (context.game().isDemoLevel()) {
+            String text = "GAME  OVER";
+            int x = TS * (cx - text.length() / 2);
+            Color color = context.assets().color(assetPrefix + ".color.game_over_message");
+            // Tengen seems to use wall stroke color of current maze. TODO: verify this!
+            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                color = TileMapUtil.getColorFromMap(context.game().world().map().terrain(), GameWorld.PROPERTY_COLOR_WALL_STROKE, color);
+            }
+            renderer.drawText(text, color, font, x, y);
+        } else if (context.gameState() == GameState.GAME_OVER) {
             String text = "GAME  OVER";
             int x = TS * (cx - text.length() / 2);
             Color color = context.assets().color(assetPrefix + ".color.game_over_message");
