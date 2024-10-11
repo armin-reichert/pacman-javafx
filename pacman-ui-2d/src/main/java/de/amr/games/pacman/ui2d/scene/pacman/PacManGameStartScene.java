@@ -5,9 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.pacman;
 
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
+
+import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
@@ -17,6 +20,11 @@ import static de.amr.games.pacman.ui2d.scene.pacman.PacManGameSpriteSheet.MIDWAY
  * @author Armin Reichert
  */
 public class PacManGameStartScene extends GameScene2D {
+
+    static final List<GameAction> ACTIONS = List.of(
+        GameAction2D.ADD_CREDIT,
+        GameAction2D.START_GAME
+    );
 
     @Override
     public void init() {
@@ -33,7 +41,7 @@ public class PacManGameStartScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        context.execFirstCalledAction(GameAction2D.ADD_CREDIT, GameAction2D.START_GAME);
+        context.execFirstCalledAction(ACTIONS);
     }
 
     @Override

@@ -33,20 +33,20 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
     static final Color BABY_BLUE = Color.rgb(59, 190, 255);
 
     static final int SETTING_PLAYERS        = 0;
-    static final int SETTING_PAC_BOOSTER    = 1;
-    static final int SETTING_DIFFICULTY     = 2;
-    static final int SETTING_MAZE_SELECTION = 3;
-    static final int SETTING_STARTING_LEVEL = 4;
+    static final int OPTION_PAC_BOOSTER = 1;
+    static final int OPTION_DIFFICULTY = 2;
+    static final int OPTION_MAZE_SELECTION = 3;
+    static final int OPTION_STARTING_LEVEL = 4;
 
     static final int NUM_SELECTIONS = 5;
 
-    private int selection;
+    private int option;
     private MsPacManTengenGame tengenGame;
 
     @Override
     public void init() {
         context.setScoreVisible(false);
-        selection = SETTING_PAC_BOOSTER;
+        option = OPTION_PAC_BOOSTER;
         tengenGame = (MsPacManTengenGame) context.game();
     }
 
@@ -93,28 +93,28 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
 
         // Pac-Booster
         y += 3 * TS;
-        drawArrowIfSelected(renderer, SETTING_PAC_BOOSTER, COL_ARROW, y);
+        drawArrowIfSelected(renderer, OPTION_PAC_BOOSTER, COL_ARROW, y);
         renderer.drawText("PAC BOOSTER", LABEL_COLOR, font, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, font, COL_COLON, y);
         renderer.drawText(pacBoosterText(tengenGame.pacBooster()), VALUE_COLOR, font, COL_VALUE, y);
 
         // Game difficulty
         y += 3 * TS;
-        drawArrowIfSelected(renderer, SETTING_DIFFICULTY, COL_ARROW, y);
+        drawArrowIfSelected(renderer, OPTION_DIFFICULTY, COL_ARROW, y);
         renderer.drawText("GAME DIFFICULTY", LABEL_COLOR, font, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, font, COL_COLON, y);
         renderer.drawText(tengenGame.difficulty().name(), VALUE_COLOR, font, COL_VALUE, y);
 
         // Maze (type) selection
         y += 3 * TS;
-        drawArrowIfSelected(renderer, SETTING_MAZE_SELECTION, COL_ARROW, y);
+        drawArrowIfSelected(renderer, OPTION_MAZE_SELECTION, COL_ARROW, y);
         renderer.drawText("MAZE SELECTION", LABEL_COLOR, font, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, font, COL_COLON, y);
         renderer.drawText(tengenGame.mapCategory().name(), VALUE_COLOR, font, COL_VALUE, y);
 
         // Starting level number
         y += 3 * TS;
-        drawArrowIfSelected(renderer, SETTING_STARTING_LEVEL, COL_ARROW, y);
+        drawArrowIfSelected(renderer, OPTION_STARTING_LEVEL, COL_ARROW, y);
         renderer.drawText("STARTING LEVEL", LABEL_COLOR, font, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, font, COL_COLON, y);
         renderer.drawText(String.valueOf(tengenGame.startingLevel()), VALUE_COLOR, font, COL_VALUE + TS, y);
@@ -143,95 +143,108 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
     }
 
     private void drawArrowIfSelected(GameWorldRenderer renderer, int setting, int x, int y) {
-        if (selection == setting) {
+        if (option == setting) {
             Font font = renderer.scaledArcadeFont(TS);
             renderer.drawText("-", LABEL_COLOR, font, x, y);
             renderer.drawText(">", LABEL_COLOR, font, x + 3, y);
         }
     }
 
-    private int fps(MsPacManTengenGame.Difficulty difficulty) {
-        return switch (difficulty) {
-            case EASY -> 40;
-            case NORMAL -> 60;
-            case HARD -> 90;
-            case CRAZY -> 120;
-        };
-    }
-
-    private void playChangeSelectionSound() {
+    private void playChangeOptionSound() {
         //TODO use right sound
     }
 
-    private void playChangeValueSound() {
-        context.sounds().playBonusEatenSound(); //TOD use right sound
+    private void playChangeOptionValueSound() {
+        //TODO use right sound
+        context.sounds().playBonusEatenSound();
     }
 
     @Override
     public void handleInput() {
+        //TODO Put all these cases into Tengen-specific game actions?
+
         if (context.keyboard().pressed(KeyCode.DOWN)) {
-            selection = (selection < NUM_SELECTIONS - 1) ? selection + 1 : 0;
-            playChangeSelectionSound();
+            selectNextOption();
         }
+
         else if (context.keyboard().pressed(KeyCode.UP)) {
-            selection = selection == 0 ? NUM_SELECTIONS - 1 : selection - 1;
-            playChangeSelectionSound();
+            selectPrevOption();
         }
+
         else if (context.keyboard().pressed(KeyCode.TAB)) {
-            switch (selection) {
-                case SETTING_PAC_BOOSTER -> {
-                    MsPacManTengenGame.PacBooster pacBooster = tengenGame.pacBooster();
-                    int ord = pacBooster.ordinal();
-                    if (ord == MsPacManTengenGame.PacBooster.values().length - 1) {
-                        tengenGame.setPacBooster(MsPacManTengenGame.PacBooster.values()[0]);
-                    } else {
-                        tengenGame.setPacBooster(MsPacManTengenGame.PacBooster.values()[ord + 1]);
-                    }
-                    playChangeValueSound();
-                }
-                case SETTING_DIFFICULTY -> {
-                    MsPacManTengenGame.Difficulty difficulty = tengenGame.difficulty();
-                    int ord = difficulty.ordinal();
-                    if (ord == MsPacManTengenGame.Difficulty.values().length - 1) {
-                        tengenGame.setDifficulty(MsPacManTengenGame.Difficulty.values()[0]);
-                    } else {
-                        tengenGame.setDifficulty(MsPacManTengenGame.Difficulty.values()[ord + 1]);
-                    }
-                    playChangeValueSound();
-                }
-                case SETTING_MAZE_SELECTION -> {
-                    MsPacManTengenGame.MapCategory category = tengenGame.mapCategory();
-                    int ord = category.ordinal();
-                    if (ord == MsPacManTengenGame.MapCategory.values().length - 1) {
-                        tengenGame.setMapCategory(MsPacManTengenGame.MapCategory.values()[0]);
-                    } else {
-                        tengenGame.setMapCategory(MsPacManTengenGame.MapCategory.values()[ord + 1]);
-                    }
-                    playChangeValueSound();
-                }
-                case SETTING_STARTING_LEVEL -> {
-                    if (tengenGame.startingLevel() < 7) {
-                        tengenGame.setStartingLevel(tengenGame.startingLevel() + 1);
-                    } else {
-                        tengenGame.setStartingLevel(1);
-                    }
-                    playChangeValueSound();
-                }
+            switch (option) {
+                case OPTION_PAC_BOOSTER    -> selectNextPacBoosterValue();
+                case OPTION_DIFFICULTY     -> selectNextDifficultyValue();
+                case OPTION_MAZE_SELECTION -> selectNextMazeSelectionValue();
+                case OPTION_STARTING_LEVEL -> selectNextStartingLevelValue();
                 default -> {}
             }
         }
+
         else if (context.keyboard().pressed(KeyCode.ENTER)) {
+            // get ready to play
             context.sounds().stopAll();
-            context.game().insertCoin();
-            //TODO when to change FPS? Only during hunting state?
-            //context.gameClock().setTargetFrameRate(fps(tengenGame.difficulty()));
+            context.game().insertCoin(); //TODO check this
             context.gameController().changeState(GameState.READY);
         }
+
         else {
             context.execFirstCalledAction(
                 GameAction2D.TEST_LEVELS_BONI,
                 GameAction2D.TEST_LEVELS_TEASERS,
                 GameAction2D.TEST_CUT_SCENES);
         }
+    }
+
+    private void selectPrevOption() {
+        option = option == 0 ? NUM_SELECTIONS - 1 : option - 1;
+        playChangeOptionSound();
+    }
+
+    private void selectNextOption() {
+        option = (option < NUM_SELECTIONS - 1) ? option + 1 : 0;
+        playChangeOptionSound();
+    }
+
+    private void selectNextStartingLevelValue() {
+        if (tengenGame.startingLevel() < 7) {
+            tengenGame.setStartingLevel(tengenGame.startingLevel() + 1);
+        } else {
+            tengenGame.setStartingLevel(1);
+        }
+        playChangeOptionValueSound();
+    }
+
+    private void selectNextMazeSelectionValue() {
+        MsPacManTengenGame.MapCategory category = tengenGame.mapCategory();
+        int ord = category.ordinal();
+        if (ord == MsPacManTengenGame.MapCategory.values().length - 1) {
+            tengenGame.setMapCategory(MsPacManTengenGame.MapCategory.values()[0]);
+        } else {
+            tengenGame.setMapCategory(MsPacManTengenGame.MapCategory.values()[ord + 1]);
+        }
+        playChangeOptionValueSound();
+    }
+
+    private void selectNextDifficultyValue() {
+        MsPacManTengenGame.Difficulty difficulty = tengenGame.difficulty();
+        int ord = difficulty.ordinal();
+        if (ord == MsPacManTengenGame.Difficulty.values().length - 1) {
+            tengenGame.setDifficulty(MsPacManTengenGame.Difficulty.values()[0]);
+        } else {
+            tengenGame.setDifficulty(MsPacManTengenGame.Difficulty.values()[ord + 1]);
+        }
+        playChangeOptionValueSound();
+    }
+
+    private void selectNextPacBoosterValue() {
+        MsPacManTengenGame.PacBooster pacBooster = tengenGame.pacBooster();
+        int ord = pacBooster.ordinal();
+        if (ord == MsPacManTengenGame.PacBooster.values().length - 1) {
+            tengenGame.setPacBooster(MsPacManTengenGame.PacBooster.values()[0]);
+        } else {
+            tengenGame.setPacBooster(MsPacManTengenGame.PacBooster.values()[ord + 1]);
+        }
+        playChangeOptionValueSound();
     }
 }

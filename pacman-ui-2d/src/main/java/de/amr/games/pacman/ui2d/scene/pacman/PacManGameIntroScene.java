@@ -53,9 +53,170 @@ public class PacManGameIntroScene extends GameScene2D {
     static final float GHOST_FRIGHTENED_SPEED = 0.6f;
     static final int LEFT_TILE_X = 4;
 
-    /**
-     * Intro is controlled by finite-state machine, here come the states.
-     */
+    private final FiniteStateMachine<SceneState, PacManGameIntroScene> sceneController;
+
+    private Pulse blinking;
+    private Pac pacMan;
+    private Ghost[] ghosts;
+    private boolean[] ghostImageVisible;
+    private boolean[] ghostNicknameVisible;
+    private boolean[] ghostCharacterVisible;
+    private List<Ghost> victims;
+    private boolean titleVisible;
+    private int ghostIndex;
+    private long ghostKilledTime;
+
+    public PacManGameIntroScene() {
+        sceneController = new FiniteStateMachine<>(SceneState.values()) {
+            @Override
+            public PacManGameIntroScene context() {
+                return PacManGameIntroScene.this;
+            }
+        };
+    }
+
+    @Override
+    public void init() {
+        blinking = new Pulse(10, true);
+
+        pacMan = new Pac();
+        pacMan.setAnimations(new PacManGamePacAnimations(context.spriteSheet()));
+
+        ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.clyde() };
+        for (Ghost ghost : ghosts) {
+            ghost.setAnimations(new PacManGameGhostAnimations(context.spriteSheet(), ghost.id()));
+        }
+        ghostImageVisible     = new boolean[4];
+        ghostNicknameVisible  = new boolean[4];
+        ghostCharacterVisible = new boolean[4];
+
+        victims = new ArrayList<>(4);
+        titleVisible = false;
+        ghostIndex = 0;
+        ghostKilledTime = 0;
+
+        context.setScoreVisible(true);
+        sceneController.restart(SceneState.STARTING);
+    }
+
+    @Override
+    public void end() {
+        context.sounds().stopVoice();
+    }
+
+    @Override
+    public void update() {
+        sceneController.update();
+    }
+
+    @Override
+    public void handleInput() {
+        context.execFirstCalledAction(ACTIONS);
+    }
+
+    @Override
+    public void drawSceneContent(GameWorldRenderer renderer) {
+        TickTimer timer = sceneController.state().timer();
+        drawGallery(renderer);
+        switch (sceneController.state()) {
+            case SHOWING_POINTS -> drawPoints(renderer);
+            case CHASING_PAC -> {
+                drawPoints(renderer);
+                if (blinking.isOn()) {
+                    drawEnergizer(renderer, t(LEFT_TILE_X), t(20));
+                }
+                drawGuys(renderer, flutter(timer.currentTick()));
+                if (context.gameVariant() == GameVariant.PACMAN) {
+                    renderer.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, PALETTE_PINK, renderer.scaledArcadeFont(TS),  t(4), t(32));
+                }
+            }
+            case CHASING_GHOSTS, READY_TO_PLAY -> {
+                drawPoints(renderer);
+                drawGuys(renderer, 0);
+                if (context.gameVariant() == GameVariant.PACMAN) {
+                    renderer.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, PALETTE_PINK, renderer.scaledArcadeFont(TS),  t(4), t(32));
+                }
+            }
+            default -> {
+            }
+        }
+        drawCredit(renderer, context.worldSizeTilesOrDefault());
+        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
+    }
+
+    // TODO inspect in MAME what's really going on here
+    private int flutter(long time) {
+        return time % 5 < 2 ? 0 : -1;
+    }
+
+    private void drawGallery(GameWorldRenderer renderer) {
+        Font font = renderer.scaledArcadeFont(TS);
+        int tx = LEFT_TILE_X;
+        if (titleVisible) {
+            renderer.drawText("CHARACTER / NICKNAME", PALETTE_PALE, font, t(tx + 3), t(6));
+        }
+        for (byte id = 0; id < 4; ++id) {
+            if (!ghostImageVisible[id]) {
+                continue;
+            }
+            int ty = 7 + 3 * id;
+            renderer.drawSpriteCenteredOverBox(context.spriteSheet(), context.spriteSheet().ghostFacingRight(id), t(tx) + 4, t(ty));
+            if (ghostCharacterVisible[id]) {
+                String text = "-" + GHOST_CHARACTERS[id];
+                renderer.drawText(text, GHOST_COLORS[id], font, t(tx + 3), t(ty + 1));
+            }
+            if (ghostNicknameVisible[id]) {
+                String text = '"' + ghosts[id].name().toUpperCase() + '"';
+                renderer.drawText(text, GHOST_COLORS[id], font, t(tx + 14), t(ty + 1));
+            }
+        }
+    }
+
+    private void drawGuys(GameWorldRenderer renderer, int shakingAmount) {
+        if (shakingAmount == 0) {
+            Stream.of(ghosts).forEach(renderer::drawAnimatedEntity);
+        } else {
+            renderer.drawAnimatedEntity(ghosts[0]);
+            renderer.drawAnimatedEntity(ghosts[3]);
+            // shaking ghosts effect, not quite as in original game
+            renderer.ctx().save();
+            renderer.ctx().translate(shakingAmount, 0);
+            renderer.drawAnimatedEntity(ghosts[1]);
+            renderer.drawAnimatedEntity(ghosts[2]);
+            renderer.ctx().restore();
+        }
+        renderer.drawAnimatedEntity(pacMan);
+    }
+
+    private void drawPoints(GameWorldRenderer renderer) {
+        var color = PALETTE_PALE;
+        var font8 = renderer.scaledArcadeFont(8);
+        var font6 = renderer.scaledArcadeFont(6);
+        int tx = LEFT_TILE_X + 6;
+        int ty = 25;
+        renderer.ctx().setFill(PELLET_COLOR);
+        renderer.ctx().fillRect(scaled(t(tx) + 4), scaled(t(ty - 1) + 4), scaled(2), scaled(2));
+        if (blinking.isOn()) {
+            drawEnergizer(renderer, t(tx), t(ty + 1));
+        }
+        renderer.drawText("10",  color, font8, t(tx + 2), t(ty));
+        renderer.drawText("PTS", color, font6, t(tx + 5), t(ty));
+        renderer.drawText("50",  color, font8, t(tx + 2), t(ty + 2));
+        renderer.drawText("PTS", color, font6, t(tx + 5), t(ty + 2));
+    }
+
+    // draw pixelated "circle"
+    private void drawEnergizer(GameWorldRenderer renderer, double x, double y) {
+        double scaling = scalingPy.get();
+        renderer.ctx().save();
+        renderer.ctx().scale(scaling, scaling);
+        renderer.ctx().setFill(PELLET_COLOR);
+        renderer.ctx().fillRect(x + 2, y, 4, 8);
+        renderer.ctx().fillRect(x, y + 2, 8, 4);
+        renderer.ctx().fillRect(x + 1, y + 1, 6, 6);
+        renderer.ctx().restore();
+    }
+
     private enum SceneState implements FsmState<PacManGameIntroScene> {
 
         STARTING {
@@ -226,169 +387,5 @@ public class PacManGameIntroScene extends GameScene2D {
         public TickTimer timer() {
             return timer;
         }
-    }
-
-    private final FiniteStateMachine<SceneState, PacManGameIntroScene> sceneController;
-
-    private Pulse blinking;
-    private Pac pacMan;
-    private Ghost[] ghosts;
-    private boolean[] ghostImageVisible;
-    private boolean[] ghostNicknameVisible;
-    private boolean[] ghostCharacterVisible;
-    private List<Ghost> victims;
-    private boolean titleVisible;
-    private int ghostIndex;
-    private long ghostKilledTime;
-
-    public PacManGameIntroScene() {
-        sceneController = new FiniteStateMachine<>(SceneState.values()) {
-            @Override
-            public PacManGameIntroScene context() {
-                return PacManGameIntroScene.this;
-            }
-        };
-    }
-
-    @Override
-    public void init() {
-        blinking = new Pulse(10, true);
-
-        pacMan = new Pac();
-        pacMan.setAnimations(new PacManGamePacAnimations(context.spriteSheet()));
-
-        ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.clyde() };
-        for (Ghost ghost : ghosts) {
-            ghost.setAnimations(new PacManGameGhostAnimations(context.spriteSheet(), ghost.id()));
-        }
-        ghostImageVisible     = new boolean[4];
-        ghostNicknameVisible  = new boolean[4];
-        ghostCharacterVisible = new boolean[4];
-
-        victims = new ArrayList<>(4);
-        titleVisible = false;
-        ghostIndex = 0;
-        ghostKilledTime = 0;
-
-        context.setScoreVisible(true);
-        sceneController.restart(SceneState.STARTING);
-    }
-
-    @Override
-    public void end() {
-        context.sounds().stopVoice();
-    }
-
-    @Override
-    public void update() {
-        sceneController.update();
-    }
-
-    @Override
-    public void handleInput() {
-        context.execFirstCalledAction(ACTIONS);
-    }
-
-    @Override
-    public void drawSceneContent(GameWorldRenderer renderer) {
-        TickTimer timer = sceneController.state().timer();
-        drawGallery(renderer);
-        switch (sceneController.state()) {
-            case SHOWING_POINTS -> drawPoints(renderer);
-            case CHASING_PAC -> {
-                drawPoints(renderer);
-                if (blinking.isOn()) {
-                    drawEnergizer(renderer, t(LEFT_TILE_X), t(20));
-                }
-                drawGuys(renderer, flutter(timer.currentTick()));
-                if (context.gameVariant() == GameVariant.PACMAN) {
-                    renderer.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, PALETTE_PINK, renderer.scaledArcadeFont(TS),  t(4), t(32));
-                }
-            }
-            case CHASING_GHOSTS, READY_TO_PLAY -> {
-                drawPoints(renderer);
-                drawGuys(renderer, 0);
-                if (context.gameVariant() == GameVariant.PACMAN) {
-                    renderer.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, PALETTE_PINK, renderer.scaledArcadeFont(TS),  t(4), t(32));
-                }
-            }
-            default -> {
-            }
-        }
-        drawCredit(renderer, context.worldSizeTilesOrDefault());
-        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
-    }
-
-    // TODO inspect in MAME what's really going on here
-    private int flutter(long time) {
-        return time % 5 < 2 ? 0 : -1;
-    }
-
-    private void drawGallery(GameWorldRenderer renderer) {
-        Font font = renderer.scaledArcadeFont(TS);
-        int tx = LEFT_TILE_X;
-        if (titleVisible) {
-            renderer.drawText("CHARACTER / NICKNAME", PALETTE_PALE, font, t(tx + 3), t(6));
-        }
-        for (byte id = 0; id < 4; ++id) {
-            if (!ghostImageVisible[id]) {
-                continue;
-            }
-            int ty = 7 + 3 * id;
-            renderer.drawSpriteCenteredOverBox(context.spriteSheet(), context.spriteSheet().ghostFacingRight(id), t(tx) + 4, t(ty));
-            if (ghostCharacterVisible[id]) {
-                String text = "-" + GHOST_CHARACTERS[id];
-                renderer.drawText(text, GHOST_COLORS[id], font, t(tx + 3), t(ty + 1));
-            }
-            if (ghostNicknameVisible[id]) {
-                String text = '"' + ghosts[id].name().toUpperCase() + '"';
-                renderer.drawText(text, GHOST_COLORS[id], font, t(tx + 14), t(ty + 1));
-            }
-        }
-    }
-
-    private void drawGuys(GameWorldRenderer renderer, int shakingAmount) {
-        if (shakingAmount == 0) {
-            Stream.of(ghosts).forEach(renderer::drawAnimatedEntity);
-        } else {
-            renderer.drawAnimatedEntity(ghosts[0]);
-            renderer.drawAnimatedEntity(ghosts[3]);
-            // shaking ghosts effect, not quite as in original game
-            renderer.ctx().save();
-            renderer.ctx().translate(shakingAmount, 0);
-            renderer.drawAnimatedEntity(ghosts[1]);
-            renderer.drawAnimatedEntity(ghosts[2]);
-            renderer.ctx().restore();
-        }
-        renderer.drawAnimatedEntity(pacMan);
-    }
-
-    private void drawPoints(GameWorldRenderer renderer) {
-        var color = PALETTE_PALE;
-        var font8 = renderer.scaledArcadeFont(8);
-        var font6 = renderer.scaledArcadeFont(6);
-        int tx = LEFT_TILE_X + 6;
-        int ty = 25;
-        renderer.ctx().setFill(PELLET_COLOR);
-        renderer.ctx().fillRect(scaled(t(tx) + 4), scaled(t(ty - 1) + 4), scaled(2), scaled(2));
-        if (blinking.isOn()) {
-            drawEnergizer(renderer, t(tx), t(ty + 1));
-        }
-        renderer.drawText("10",  color, font8, t(tx + 2), t(ty));
-        renderer.drawText("PTS", color, font6, t(tx + 5), t(ty));
-        renderer.drawText("50",  color, font8, t(tx + 2), t(ty + 2));
-        renderer.drawText("PTS", color, font6, t(tx + 5), t(ty + 2));
-    }
-
-    // draw pixelated "circle"
-    private void drawEnergizer(GameWorldRenderer renderer, double x, double y) {
-        double scaling = scalingPy.get();
-        renderer.ctx().save();
-        renderer.ctx().scale(scaling, scaling);
-        renderer.ctx().setFill(PELLET_COLOR);
-        renderer.ctx().fillRect(x + 2, y, 4, 8);
-        renderer.ctx().fillRect(x, y + 2, 8, 4);
-        renderer.ctx().fillRect(x + 1, y + 1, 6, 6);
-        renderer.ctx().restore();
     }
 }

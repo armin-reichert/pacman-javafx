@@ -27,6 +27,10 @@ import static de.amr.games.pacman.model.GameWorld.*;
 import static java.util.function.Predicate.not;
 
 /**
+ * As this game variant allows playing arbitrary custom maps, we use a
+ * vector graphics rendering that draws wall and obstacle paths generated from
+ * the map data.
+ *
  * @author Armin Reichert
  */
 public class PacManXXLGameRenderer implements GameWorldRenderer {
