@@ -167,20 +167,22 @@ public class GameAssets2D extends AssetStorage {
 
         assets.store("tengen.audio.sweep",              rm.loadAudioClip("sound/common/sweep.mp3"));
 
+        //TODO I need a full set of the Tengen sounds
+
         // Audio played by MediaPlayer
-        assets.store("tengen.audio.game_ready",         rm.url("sound/mspacman/Start.mp3")); //TODO sound?
-        assets.store("tengen.audio.game_over",          rm.url("sound/common/game-over.mp3")); //TODO sound?
+        assets.store("tengen.audio.game_ready",         rm.url("sound/mspacman/Start.mp3"));
+        assets.store("tengen.audio.game_over",          rm.url("sound/common/game-over.mp3"));
         assets.store("tengen.audio.intermission.1",     rm.url("sound/tengen/Act_1_They_Meet.mp3"));
         assets.store("tengen.audio.intermission.2",     rm.url("sound/tengen/Act_2_The_Chase.mp3"));
         assets.store("tengen.audio.intermission.3",     rm.url("sound/tengen/Act_3_Junior.mp3"));
-        assets.store("tengen.audio.level_complete",     rm.url("sound/common/level-complete.mp3")); //TODO sound?
-        assets.store("tengen.audio.pacman_death",       rm.url("sound/tengen/Life_Lost.mp3"));
+        assets.store("tengen.audio.level_complete",     rm.url("sound/common/level-complete.mp3"));
+        assets.store("tengen.audio.pacman_death",       rm.url("sound/tengen/Life_Lost.wav"));
         //assets.store("tengen.audio.pacman_munch",       rm.url("sound/mspacman/Pill.wav"));
         assets.store("tengen.audio.pacman_power",       rm.url("sound/tengen/Power_Pellet.mp3"));
         //assets.store("tengen.audio.siren.1",            rm.url("sound/tengen/GhostNoise1.wav"));
-        //assets.store("tengen.audio.siren.2",            rm.url("sound/tengen/GhostNoise1.wav"));// TODO
-        //assets.store("tengen.audio.siren.3",            rm.url("sound/tengen/GhostNoise1.wav"));// TODO
-        //assets.store("tengen.audio.siren.4",            rm.url("sound/tengen/GhostNoise1.wav"));// TODO
+        //assets.store("tengen.audio.siren.2",            rm.url("sound/tengen/GhostNoise1.wav"));
+        //assets.store("tengen.audio.siren.3",            rm.url("sound/tengen/GhostNoise1.wav"));
+        //assets.store("tengen.audio.siren.4",            rm.url("sound/tengen/GhostNoise1.wav"));
         //assets.store("tengen.audio.ghost_returns",      rm.url("sound/mspacman/GhostEyes.mp3"));
 
         //

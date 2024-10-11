@@ -48,10 +48,10 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
 
     // Picked from NES Emulator
     static final Color[]  SHADES_OF_BLUE = {
-            Color.rgb(0, 42, 136),
-            Color.rgb(21, 95, 217),
-            Color.rgb(100, 176, 255),
-            Color.rgb(192, 223, 255)
+        Color.rgb(0, 42, 136),
+        Color.rgb(21, 95, 217),
+        Color.rgb(100, 176, 255),
+        Color.rgb(192, 223, 255)
     };
 
     static Color shadeOfBlue(long t) {
