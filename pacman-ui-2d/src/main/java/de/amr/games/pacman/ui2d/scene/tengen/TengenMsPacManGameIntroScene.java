@@ -172,7 +172,7 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
         GraphicsContext g = renderer.ctx();
         for (int i = 0; i < NUM_BULBS; ++i) {
             boolean on = marqueeState.get(i);
-            g.setFill(on ? Color.WHITE : Color.web("d84060"));
+            g.setFill(on ? Color.WHITE : Color.web("#b71e7b"));
             if (i <= 33) { // lower edge left-to-right
                 drawBulb(g, xMin + 4 * i, yMax);
             } else if (i <= 48) { // right edge bottom-to-top

@@ -30,9 +30,10 @@ public class GameAssets2D extends AssetStorage {
     public static final Color PALETTE_BLUE   = Color.rgb(33, 33, 255);
     public static final Color PALETTE_PALE   = Color.rgb(222, 222, 255);
     public static final Color PALETTE_ROSE   = Color.rgb(252, 187, 179);
+
     public static final Color TENGEN_PINK   = Color.web("#FE6ECC");
     public static final Color TENGEN_RED    = Color.web("#d84060");
-    public static final Color TENGEN_YELLOW = Color.web("#e8d020");
+    public static final Color TENGEN_YELLOW = Color.web("#BCBE00");
 
     public static String assetPrefix(GameVariant variant) {
         return switch (variant) {

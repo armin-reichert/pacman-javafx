@@ -30,7 +30,7 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
 
     static final Color LABEL_COLOR = GameAssets2D.TENGEN_YELLOW;
     static final Color VALUE_COLOR = Color.WHITE;
-    static final Color BABY_BLUE = Color.rgb(59, 190, 255);
+    static final Color BABY_BLUE = Color.web("64b0ff");
 
     static final int SETTING_PLAYERS        = 0;
     static final int OPTION_PAC_BOOSTER = 1;
