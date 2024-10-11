@@ -169,6 +169,7 @@ public class Ghost extends Creature implements AnimatedEntity {
         Vector2i currentTile = tile();
         if (!world.isPortalAt(currentTile) && (isNewTileEntered() || !moveInfo.moved)) {
             Direction dir = pseudoRandomDirection();
+            //TODO: this is a critical code location because map with dead-ends can lead to an infinite loop here!
             while (dir == moveDir().opposite()
                 || !canAccessTile(currentTile.plus(dir.vector()))) {
                 dir = dir.nextClockwise();

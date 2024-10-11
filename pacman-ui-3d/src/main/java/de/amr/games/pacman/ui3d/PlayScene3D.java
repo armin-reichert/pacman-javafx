@@ -9,12 +9,14 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.maps.editor.TileMapUtil;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
+import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
@@ -182,7 +184,14 @@ public class PlayScene3D implements GameScene {
         if (context.game().hasCredit()) {
             scores3D.showScore(game.score().points(), game.score().levelNumber());
         } else { // demo level or "game over" state
-            scores3D.showTextAsScore("GAME OVER!", Color.RED);
+            String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
+            Color color = context.assets().color(assetPrefix + ".color.game_over_message");
+            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                    color = TileMapUtil.getColorFromMap(context.game().world().map().terrain(), GameWorld.PROPERTY_COLOR_WALL_STROKE, color);
+                }
+            }
+            scores3D.showTextAsScore("GAME OVER!", color);
         }
 
         // Sound

@@ -36,6 +36,7 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 public class PlayScene2D extends GameScene2D {
 
     private static final List<GameAction> ACTIONS = List.of(
+        GameAction2D.START_GAME,
         GameAction2D.CHEAT_EAT_ALL,
         GameAction2D.CHEAT_ADD_LIVES,
         GameAction2D.CHEAT_NEXT_LEVEL,

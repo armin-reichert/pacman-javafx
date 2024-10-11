@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
 import de.amr.games.pacman.ui2d.GameAction2D;
-import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import javafx.scene.canvas.Canvas;
@@ -44,14 +43,14 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
     private int option;
     private MsPacManTengenGame tengenGame;
 
-    private long t;
+    private long idleTicks;
 
     @Override
     public void init() {
         context.setScoreVisible(false);
         option = OPTION_PAC_BOOSTER;
         tengenGame = (MsPacManTengenGame) context.game();
-        t = 0;
+        resetIdleTimer();
     }
 
     @Override
@@ -60,11 +59,11 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
 
     @Override
     public void update() {
-        if (t == 5*60) {
+        if (idleTicks == 15*60) {
             context.gameController().changeState(GameState.INTRO);
             return;
         }
-        t += 1;
+        idleTicks += 1;
     }
 
     private void drawBabyBlueBar(GameWorldRenderer renderer, double y) {
@@ -205,14 +204,20 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
         }
     }
 
+    private void resetIdleTimer() {
+        idleTicks = 0;
+    }
+
     private void selectPrevOption() {
         option = option == 0 ? NUM_SELECTIONS - 1 : option - 1;
         playChangeOptionSound();
+        resetIdleTimer();
     }
 
     private void selectNextOption() {
         option = (option < NUM_SELECTIONS - 1) ? option + 1 : 0;
         playChangeOptionSound();
+        resetIdleTimer();
     }
 
     private void selectNextStartingLevelValue() {
@@ -222,6 +227,7 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
             tengenGame.setStartingLevel(1);
         }
         playChangeOptionValueSound();
+        resetIdleTimer();
     }
 
     private void selectNextMazeSelectionValue() {
@@ -233,6 +239,7 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
             tengenGame.setMapCategory(MsPacManTengenGame.MapCategory.values()[ord + 1]);
         }
         playChangeOptionValueSound();
+        resetIdleTimer();
     }
 
     private void selectNextDifficultyValue() {
@@ -244,6 +251,7 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
             tengenGame.setDifficulty(MsPacManTengenGame.Difficulty.values()[ord + 1]);
         }
         playChangeOptionValueSound();
+        resetIdleTimer();
     }
 
     private void selectNextPacBoosterValue() {
@@ -255,5 +263,6 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
             tengenGame.setPacBooster(MsPacManTengenGame.PacBooster.values()[ord + 1]);
         }
         playChangeOptionValueSound();
+        resetIdleTimer();
     }
 }
