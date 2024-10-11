@@ -530,7 +530,8 @@ public class TileMapEditor implements TileMapEditorViewModel {
     }
 
     private Palette createActorPalette() {
-        var palette = new Palette(TOOL_SIZE, 1, 9, terrainMapEditRenderer);
+        var palette = new Palette(TOOL_SIZE, 1, 10, terrainMapEditRenderer);
+        palette.addTileTool(editController, Tiles.EMPTY, "");
         palette.addPropertyTool(PROPERTY_POS_PAC, "Pac-Man");
         palette.addPropertyTool(PROPERTY_POS_RED_GHOST, "Red Ghost");
         palette.addPropertyTool(PROPERTY_POS_PINK_GHOST, "Pink Ghost");
@@ -540,7 +541,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
         palette.addPropertyTool(PROPERTY_POS_SCATTER_PINK_GHOST, "Pink Ghost Scatter");
         palette.addPropertyTool(PROPERTY_POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter");
         palette.addPropertyTool(PROPERTY_POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter");
-        palette.selectTool(0); // Pac-Man position
+        palette.selectTool(0); // No actor
         return palette;
     }
 

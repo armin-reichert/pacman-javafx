@@ -185,6 +185,9 @@ public class EditController {
                 editingEnabledPy.set(true);
                 viewModel.canvas().requestFocus();
             } else if (event.getClickCount() == 1) {
+                if (!editingEnabledPy.get()) {
+                    return;
+                }
                 WorldMap worldMap = mapPy.get();
                 switch (viewModel.selectedPaletteID()) {
                     case PALETTE_ID_TERRAIN -> editMapTileAtMousePosition(worldMap.terrain(), event);
