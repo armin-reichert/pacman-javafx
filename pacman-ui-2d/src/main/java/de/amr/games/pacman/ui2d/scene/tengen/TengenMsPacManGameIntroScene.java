@@ -14,6 +14,8 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui2d.GameAction;
+import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -25,6 +27,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.util.BitSet;
+import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer.*;
@@ -35,6 +38,8 @@ import static de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer.*
  * @author Armin Reichert
  */
 public class TengenMsPacManGameIntroScene extends GameScene2D {
+
+    static final List<GameAction> ACTIONS = List.of(GameAction2D.TENGEN_SHOW_START);
 
     static final float    SPEED = 2.2f; //TODO check exact speed
     static final int      TOP_Y = TS * 11 + 1;
@@ -96,6 +101,11 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
     @Override
     public void update() {
         sceneController.update();
+    }
+
+    @Override
+    public void handleInput() {
+        context.execFirstCalledAction(ACTIONS);
     }
 
     @Override

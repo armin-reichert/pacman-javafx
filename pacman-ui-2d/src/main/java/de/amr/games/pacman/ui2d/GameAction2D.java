@@ -263,6 +263,14 @@ public enum GameAction2D implements GameAction {
         }
     },
 
+    TENGEN_SHOW_START(key(KeyCode.SPACE)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            context.gameController().changeState(GameState.STARTING);
+        }
+    },
+
     TENGEN_TOGGLE_PAC_BOOSTER(key(KeyCode.A)) {
         @Override
         public void execute(GameContext context) {
