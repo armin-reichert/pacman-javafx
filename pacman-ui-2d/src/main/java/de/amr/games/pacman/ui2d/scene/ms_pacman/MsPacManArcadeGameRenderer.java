@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
+import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.MovingBonus;
@@ -19,6 +20,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.t;
@@ -105,5 +107,20 @@ public class MsPacManArcadeGameRenderer implements GameWorldRenderer {
             ctx().restore();
         }
         context.game().bonus().ifPresent(bonus -> drawMovingBonus(context.spriteSheet(), (MovingBonus) bonus));
+    }
+
+    public void drawClapperBoard(GameSpriteSheet spriteSheet, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
+        var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
+        if (sprite != RectArea.PIXEL) {
+            drawSpriteCenteredOverBox(spriteSheet, sprite, x, y);
+            ctx().setFont(font);
+            ctx().setFill(textColor.darker());
+            var numberX = scaled(x + sprite.width() - 25);
+            var numberY = scaled(y + 18);
+            ctx().setFill(textColor);
+            ctx().fillText(animation.number(), numberX, numberY);
+            var textX = scaled(x + sprite.width());
+            ctx().fillText(animation.text(), textX, numberY);
+        }
     }
 }

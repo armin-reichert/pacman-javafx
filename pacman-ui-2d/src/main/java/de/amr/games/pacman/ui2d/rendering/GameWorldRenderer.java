@@ -317,20 +317,10 @@ public interface GameWorldRenderer {
         ctx().restore();
     }
 
-    default void drawClapperBoard(GameSpriteSheet spriteSheet, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
-        var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
-        if (sprite != RectArea.PIXEL) {
-            drawSpriteCenteredOverBox(spriteSheet, sprite, x, y);
-            ctx().setFont(font);
-            ctx().setFill(textColor.darker());
-            var numberX = scaled(x + sprite.width() - 25);
-            var numberY = scaled(y + 18);
-            ctx().setFill(textColor);
-            ctx().fillText(animation.number(), numberX, numberY);
-            var textX = scaled(x + sprite.width());
-            ctx().fillText(animation.text(), textX, numberY);
-        }
-    }
+    default void drawClapperBoard(GameSpriteSheet spriteSheet,
+        Font font, Color textColor,
+        ClapperboardAnimation animation,
+        double x, double y) {}
 
     default void drawMsPacManMidwayCopyright(Image image, double x, double y, Color color, Font font) {
         drawImageScaled(image, x, y + 2, t(4) - 2, t(4));

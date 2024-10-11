@@ -368,6 +368,8 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
             ctx().setFont(font);
             ctx().setFill(textColor);
             ctx().fillText(animation.number(), scaled(numberX), scaled(numberY));
+            var textX = scaled(x + sprite.width());
+            ctx().fillText(animation.text(), textX, numberY);
         }
     }
 
