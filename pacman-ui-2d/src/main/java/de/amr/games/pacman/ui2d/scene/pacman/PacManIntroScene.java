@@ -207,7 +207,7 @@ public class PacManIntroScene extends GameScene2D {
                         intro.context.gameController().changeState(GameState.READY);
                     }
                 } else if (timer.atSecond(5)) {
-                    intro.context.gameController().changeState(GameState.CREDIT);
+                    intro.context.gameController().changeState(GameState.STARTING);
                 }
             }
         };

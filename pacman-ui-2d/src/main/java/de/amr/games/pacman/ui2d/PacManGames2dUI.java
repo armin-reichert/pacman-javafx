@@ -332,7 +332,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         GameVariant variant = gameVariant();
         return switch (gameState()) {
             case BOOT -> gameScene(variant, GameSceneID.BOOT_SCENE);
-            case CREDIT -> gameScene(variant, GameSceneID.CREDIT_SCENE);
+            case STARTING -> gameScene(variant, GameSceneID.CREDIT_SCENE);
             case INTRO -> gameScene(variant, GameSceneID.INTRO_SCENE);
             case INTERMISSION -> gameScene(variant, GameSceneID.valueOf(
                 "CUT_SCENE_" + game().intermissionNumber(game().levelNumber())));

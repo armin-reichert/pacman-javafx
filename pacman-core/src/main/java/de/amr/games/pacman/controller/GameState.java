@@ -58,7 +58,7 @@ public enum GameState implements FsmState<GameModel> {
         }
     },
 
-    CREDIT {
+    STARTING {
         @Override
         public void onUpdate(GameModel game) {
             // wait for user interaction to leave state
@@ -281,7 +281,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 game.removeWorld();
-                enterState(game.hasCredit() ? CREDIT : INTRO);
+                enterState(game.hasCredit() ? STARTING : INTRO);
             }
         }
 

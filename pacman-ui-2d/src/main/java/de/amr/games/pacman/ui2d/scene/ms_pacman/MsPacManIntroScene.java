@@ -148,7 +148,7 @@ public class MsPacManIntroScene extends GameScene2D {
                 if (timer.atSecond(2.0) && !intro.context.game().hasCredit()) {
                     intro.context.gameController().changeState(GameState.READY); // demo level
                 } else if (timer.atSecond(5)) {
-                    intro.context.gameController().changeState(GameState.CREDIT);
+                    intro.context.gameController().changeState(GameState.STARTING);
                 }
             }
         };

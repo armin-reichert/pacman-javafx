@@ -82,7 +82,7 @@ public class InfoBoxGameControl extends InfoBox {
         comboGameVariant.setValue(game.variant());
         comboInitialLives.setValue(game.initialLives());
 
-        spinnerCredit.setDisable(!(oneOf(state, GameState.INTRO, GameState.CREDIT)));
+        spinnerCredit.setDisable(!(oneOf(state, GameState.INTRO, GameState.STARTING)));
         comboGameVariant.setDisable(state != GameState.INTRO);
         comboInitialLives.setDisable(state != GameState.INTRO);
 
@@ -102,7 +102,7 @@ public class InfoBoxGameControl extends InfoBox {
     }
 
     private boolean canStartLevel() {
-        return context.game().hasCredit() && oneOf(context.gameState(), GameState.INTRO, GameState.CREDIT);
+        return context.game().hasCredit() && oneOf(context.gameState(), GameState.INTRO, GameState.STARTING);
     }
 
     private boolean canEnterNextLevel() {

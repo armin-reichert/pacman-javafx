@@ -183,7 +183,7 @@ public class TengenIntroScene extends GameScene2D {
                     intro.msPacMan.animations().ifPresent(Animations::resetSelected);
                 }
                 if (timer().atSecond(4)) {
-                    intro.context.gameController().changeState(GameState.CREDIT); // The settings scene
+                    intro.context.gameController().changeState(GameState.STARTING); // The settings scene
                 }
             }
         };

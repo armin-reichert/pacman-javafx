@@ -48,8 +48,8 @@ public enum GameAction2D implements GameAction {
                 if (coinInserted) {
                     context.game().publishGameEvent(GameEventType.CREDIT_ADDED);
                 }
-                if (context.gameState() != GameState.CREDIT) {
-                    context.gameController().changeState(GameState.CREDIT);
+                if (context.gameState() != GameState.STARTING) {
+                    context.gameController().changeState(GameState.STARTING);
                 }
             }
         }
@@ -255,7 +255,7 @@ public enum GameAction2D implements GameAction {
             super.execute(context);
             if (context.game().hasCredit()) {
                 context.sounds().stopVoice();
-                if (context.gameState() == GameState.INTRO || context.gameState() == GameState.CREDIT) {
+                if (context.gameState() == GameState.INTRO || context.gameState() == GameState.STARTING) {
                     context.gameController().changeState(GameState.READY);
                 } else {
                     Logger.error("Cannot start game play in game state {}", context.gameState());
@@ -288,7 +288,7 @@ public enum GameAction2D implements GameAction {
             context.sounds().stopAll();
             context.currentGameScene().ifPresent(GameScene::end);
             context.game().setPlaying(false);
-            context.gameController().changeState(GameState.CREDIT); // shows Tengen settings scene
+            context.gameController().changeState(GameState.STARTING); // shows Tengen settings scene
         }
     },
 

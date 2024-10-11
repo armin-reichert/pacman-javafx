@@ -21,7 +21,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 /**
  * @author Armin Reichert
  */
-public class TengenSettingsScene extends GameScene2D {
+public class TengenStartScene extends GameScene2D {
 
     static final int COL_ARROW = 0;
     static final int COL_LABEL = 2 * TS;
