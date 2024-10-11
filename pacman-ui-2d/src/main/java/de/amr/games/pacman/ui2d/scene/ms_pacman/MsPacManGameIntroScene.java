@@ -40,7 +40,7 @@ import static de.amr.games.pacman.ui2d.GameAssets2D.*;
  *
  * @author Armin Reichert
  */
-public class MsPacManIntroScene extends GameScene2D {
+public class MsPacManGameIntroScene extends GameScene2D {
 
     static final List<GameAction> ACTIONS = List.of(
         GameAction2D.ADD_CREDIT,
@@ -57,7 +57,7 @@ public class MsPacManIntroScene extends GameScene2D {
     static final int NUM_BULBS = 96;
     static final int DISTANCE_BETWEEN_ACTIVE_BULBS = 16;
 
-    private final FiniteStateMachine<SceneState, MsPacManIntroScene> sceneController;
+    private final FiniteStateMachine<SceneState, MsPacManGameIntroScene> sceneController;
 
     private Pac msPacMan;
     private Ghost[] ghosts;
@@ -65,11 +65,11 @@ public class MsPacManIntroScene extends GameScene2D {
     private int ghostIndex;
     private int waitBeforeRising;
 
-    public MsPacManIntroScene() {
+    public MsPacManGameIntroScene() {
         sceneController = new FiniteStateMachine<>(SceneState.values()) {
             @Override
-            public MsPacManIntroScene context() {
-                return MsPacManIntroScene.this;
+            public MsPacManGameIntroScene context() {
+                return MsPacManGameIntroScene.this;
             }
         };
     }
@@ -212,11 +212,11 @@ public class MsPacManIntroScene extends GameScene2D {
 
     // Scene controller FSM states
 
-    private enum SceneState implements FsmState<MsPacManIntroScene> {
+    private enum SceneState implements FsmState<MsPacManGameIntroScene> {
 
         STARTING {
             @Override
-            public void onEnter(MsPacManIntroScene intro) {
+            public void onEnter(MsPacManGameIntroScene intro) {
                 intro.marqueeTimer.restartIndefinitely();
                 intro.msPacMan.setPosition(TS * 31, TS * 20);
                 intro.msPacMan.setMoveDir(Direction.LEFT);
@@ -236,7 +236,7 @@ public class MsPacManIntroScene extends GameScene2D {
             }
 
             @Override
-            public void onUpdate(MsPacManIntroScene intro) {
+            public void onUpdate(MsPacManGameIntroScene intro) {
                 intro.marqueeTimer.tick();
                 if (timer.atSecond(1)) {
                     intro.sceneController.changeState(GHOSTS_MARCHING_IN);
@@ -247,7 +247,7 @@ public class MsPacManIntroScene extends GameScene2D {
         GHOSTS_MARCHING_IN {
 
             @Override
-            public void onUpdate(MsPacManIntroScene intro) {
+            public void onUpdate(MsPacManGameIntroScene intro) {
                 intro.marqueeTimer.tick();
                 boolean reachedEndPosition = letGhostMarchIn(intro);
                 if (reachedEndPosition) {
@@ -259,7 +259,7 @@ public class MsPacManIntroScene extends GameScene2D {
                 }
             }
 
-            boolean letGhostMarchIn(MsPacManIntroScene intro) {
+            boolean letGhostMarchIn(MsPacManGameIntroScene intro) {
                 Ghost ghost = intro.ghosts[intro.ghostIndex];
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.posX() <= STOP_X_GHOST) {
@@ -292,7 +292,7 @@ public class MsPacManIntroScene extends GameScene2D {
         MS_PACMAN_MARCHING_IN {
 
             @Override
-            public void onUpdate(MsPacManIntroScene intro) {
+            public void onUpdate(MsPacManGameIntroScene intro) {
                 intro.marqueeTimer.tick();
                 intro.msPacMan.move();
                 if (intro.msPacMan.posX() <= STOP_X_MS_PAC_MAN) {
@@ -306,7 +306,7 @@ public class MsPacManIntroScene extends GameScene2D {
         READY_TO_PLAY {
 
             @Override
-            public void onUpdate(MsPacManIntroScene intro) {
+            public void onUpdate(MsPacManGameIntroScene intro) {
                 intro.marqueeTimer.tick();
                 if (timer.atSecond(2.0) && !intro.context.game().hasCredit()) {
                     intro.context.gameController().changeState(GameState.READY); // demo level

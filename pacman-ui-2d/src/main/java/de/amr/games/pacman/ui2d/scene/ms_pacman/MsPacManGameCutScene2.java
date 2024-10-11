@@ -26,11 +26,65 @@ import static de.amr.games.pacman.lib.Globals.t;
  *
  * @author Armin Reichert
  */
-public class MsPacManCutScene2 extends GameScene2D {
+public class MsPacManGameCutScene2 extends GameScene2D {
 
     static final int UPPER_LANE_Y = TS * 12;
     static final int MIDDLE_LANE_Y = TS * 18;
     static final int LOWER_LANE_Y = TS * 24;
+
+    private Pac pacMan;
+    private Pac msPacMan;
+
+    private SceneController sceneController;
+    private ClapperboardAnimation clapAnimation;
+
+    private void startMusic() {
+        int number  = context.gameState() == GameState.TESTING_CUT_SCENES
+            ? GameState.TESTING_CUT_SCENES.getProperty("intermissionTestNumber")
+            : context.game().intermissionNumber(context.game().levelNumber());
+        context.sounds().playIntermissionSound(number);
+    }
+
+    @Override
+    public void init() {
+        context.setScoreVisible(context.gameVariant() != GameVariant.MS_PACMAN_TENGEN);
+
+        pacMan = new Pac();
+        msPacMan = new Pac();
+
+        msPacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
+        //TODO use Tengen sprite sheet
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
+        } else {
+            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
+        }
+
+        clapAnimation = new ClapperboardAnimation("2", "THE CHASE");
+        clapAnimation.start();
+
+        sceneController = new SceneController();
+        sceneController.setState(SceneController.STATE_FLAP, 120);
+    }
+
+    @Override
+    public void end() {
+    }
+
+    @Override
+    public void update() {
+        sceneController.tick();
+    }
+
+    @Override
+    public void drawSceneContent(GameWorldRenderer renderer) {
+        String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
+        Color color = context.assets().color(assetPrefix + ".color.clapperboard");
+        renderer.drawClapperBoard(context.spriteSheet(), renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
+        renderer.drawAnimatedEntity(msPacMan);
+        renderer.drawAnimatedEntity(pacMan);
+        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
+    }
 
     private class SceneController {
 
@@ -125,59 +179,5 @@ public class MsPacManCutScene2 extends GameScene2D {
                 msPacMan.move();
             }
         }
-    }
-
-    private Pac pacMan;
-    private Pac msPacMan;
-
-    private SceneController sceneController;
-    private ClapperboardAnimation clapAnimation;
-
-    private void startMusic() {
-        int number  = context.gameState() == GameState.TESTING_CUT_SCENES
-            ? GameState.TESTING_CUT_SCENES.getProperty("intermissionTestNumber")
-            : context.game().intermissionNumber(context.game().levelNumber());
-        context.sounds().playIntermissionSound(number);
-    }
-
-    @Override
-    public void init() {
-        context.setScoreVisible(context.gameVariant() != GameVariant.MS_PACMAN_TENGEN);
-
-        pacMan = new Pac();
-        msPacMan = new Pac();
-
-        msPacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
-        //TODO use Tengen sprite sheet
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
-        } else {
-            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
-        }
-
-        clapAnimation = new ClapperboardAnimation("2", "THE CHASE");
-        clapAnimation.start();
-
-        sceneController = new SceneController();
-        sceneController.setState(SceneController.STATE_FLAP, 120);
-    }
-
-    @Override
-    public void end() {
-    }
-
-    @Override
-    public void update() {
-        sceneController.tick();
-    }
-
-    @Override
-    public void drawSceneContent(GameWorldRenderer renderer) {
-        String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
-        Color color = context.assets().color(assetPrefix + ".color.clapperboard");
-        renderer.drawClapperBoard(context.spriteSheet(), renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
-        renderer.drawAnimatedEntity(msPacMan);
-        renderer.drawAnimatedEntity(pacMan);
-        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 }

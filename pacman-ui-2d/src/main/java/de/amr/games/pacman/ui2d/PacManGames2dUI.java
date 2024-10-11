@@ -21,16 +21,16 @@ import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
-import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManArcadeGameRenderer;
+import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.scene.pacman.PacManArcadeGameRenderer;
+import de.amr.games.pacman.ui2d.scene.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.scene.pacman_xxl.PacManXXLGameRenderer;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenGameWorldRenderer;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenGhostAnimations;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenPacAnimations;
+import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer;
+import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameGhostAnimations;
+import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.sound.GameSounds;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.FlashMessageView;
@@ -83,9 +83,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     public static GameWorldRenderer createRenderer(GameVariant variant, AssetStorage assets) {
         return switch (variant) {
-            case MS_PACMAN -> new MsPacManArcadeGameRenderer(assets);
-            case MS_PACMAN_TENGEN -> new TengenGameWorldRenderer(assets);
-            case PACMAN -> new PacManArcadeGameRenderer(assets);
+            case MS_PACMAN -> new MsPacManGameRenderer(assets);
+            case MS_PACMAN_TENGEN -> new TengenMsPacManGameRenderer(assets);
+            case PACMAN -> new PacManGameRenderer(assets);
             case PACMAN_XXL -> new PacManXXLGameRenderer(assets);
         };
     }
@@ -97,8 +97,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, ghost.id())));
             }
             case MS_PACMAN_TENGEN -> {
-                game.pac().setAnimations(new TengenPacAnimations(spriteSheet));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new TengenGhostAnimations(spriteSheet, ghost.id())));
+                game.pac().setAnimations(new TengenMsPacManGamePacAnimations(spriteSheet));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new TengenMsPacManGameGhostAnimations(spriteSheet, ghost.id())));
             }
             case PACMAN, PACMAN_XXL -> {
                 game.pac().setAnimations(new PacManGamePacAnimations(spriteSheet));

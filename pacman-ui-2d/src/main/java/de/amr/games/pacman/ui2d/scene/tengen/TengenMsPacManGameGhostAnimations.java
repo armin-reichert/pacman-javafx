@@ -19,9 +19,9 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public class TengenGhostAnimations extends SpriteAnimationCollection {
+public class TengenMsPacManGameGhostAnimations extends SpriteAnimationCollection {
 
-    public TengenGhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
+    public TengenMsPacManGameGhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
         checkNotNull(spriteSheet);
 
         var normal = SpriteAnimation

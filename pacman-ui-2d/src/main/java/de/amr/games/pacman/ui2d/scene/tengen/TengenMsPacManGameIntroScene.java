@@ -34,7 +34,7 @@ import static de.amr.games.pacman.lib.Globals.*;
  *
  * @author Armin Reichert
  */
-public class TengenIntroScene extends GameScene2D {
+public class TengenMsPacManGameIntroScene extends GameScene2D {
 
     // Picked from NES Emulator
     static final Color[]  SHADES_OF_BLUE = {
@@ -51,16 +51,16 @@ public class TengenIntroScene extends GameScene2D {
     static final int      NUM_BULBS = 96;
     static final int      DISTANCE_BETWEEN_ACTIVE_BULBS = 16;
 
-    private enum SceneState implements FsmState<TengenIntroScene> {
+    private enum SceneState implements FsmState<TengenMsPacManGameIntroScene> {
 
         TENGEN_PRESENTS {
             @Override
-            public void onEnter(TengenIntroScene intro) {
+            public void onEnter(TengenMsPacManGameIntroScene intro) {
                 intro.tengenPresentsY = 36 * TS;
             }
 
             @Override
-            public void onUpdate(TengenIntroScene intro) {
+            public void onUpdate(TengenMsPacManGameIntroScene intro) {
                 long t = timer.currentTick();
                 if (0 <= t && t < 120) {
                     if (t % 4 == 0 && intro.tengenPresentsY > 16 * TS) { // TODO check y position
@@ -90,7 +90,7 @@ public class TengenIntroScene extends GameScene2D {
 
         WAITING_FOR_START {
             @Override
-            public void onUpdate(TengenIntroScene intro) {
+            public void onUpdate(TengenMsPacManGameIntroScene intro) {
                 //TODO check this
                 if (intro.context.keyboard().pressed(KeyCode.SPACE)) {
                     intro.sceneController.changeState(SHOWING_MARQUEE);
@@ -100,7 +100,7 @@ public class TengenIntroScene extends GameScene2D {
 
         SHOWING_MARQUEE {
             @Override
-            public void onEnter(TengenIntroScene intro) {
+            public void onEnter(TengenMsPacManGameIntroScene intro) {
                 intro.marqueeTimer.restartIndefinitely();
                 intro.msPacMan.setPosition(TS * 31, TS * 20);
                 intro.msPacMan.setMoveDir(Direction.LEFT);
@@ -120,7 +120,7 @@ public class TengenIntroScene extends GameScene2D {
             }
 
             @Override
-            public void onUpdate(TengenIntroScene intro) {
+            public void onUpdate(TengenMsPacManGameIntroScene intro) {
                 intro.marqueeTimer.tick();
                 if (timer.atSecond(1)) {
                     intro.sceneController.changeState(GHOSTS_MARCHING_IN);
@@ -131,7 +131,7 @@ public class TengenIntroScene extends GameScene2D {
         GHOSTS_MARCHING_IN {
 
             @Override
-            public void onUpdate(TengenIntroScene intro) {
+            public void onUpdate(TengenMsPacManGameIntroScene intro) {
                 intro.marqueeTimer.tick();
                 boolean reachedEndPosition = letGhostMarchIn(intro);
                 if (reachedEndPosition) {
@@ -143,7 +143,7 @@ public class TengenIntroScene extends GameScene2D {
                 }
             }
 
-            boolean letGhostMarchIn(TengenIntroScene intro) {
+            boolean letGhostMarchIn(TengenMsPacManGameIntroScene intro) {
                 Ghost ghost = intro.ghosts[intro.ghostIndex];
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.posX() <= STOP_X_GHOST) {
@@ -175,7 +175,7 @@ public class TengenIntroScene extends GameScene2D {
         MS_PACMAN_MARCHING_IN {
 
             @Override
-            public void onUpdate(TengenIntroScene intro) {
+            public void onUpdate(TengenMsPacManGameIntroScene intro) {
                 intro.marqueeTimer.tick();
                 intro.msPacMan.move();
                 if (intro.msPacMan.posX() <= STOP_X_MS_PAC_MAN) {
@@ -196,7 +196,7 @@ public class TengenIntroScene extends GameScene2D {
         }
     }
 
-    private final FiniteStateMachine<SceneState, TengenIntroScene> sceneController;
+    private final FiniteStateMachine<SceneState, TengenMsPacManGameIntroScene> sceneController;
 
     private Pac msPacMan;
     private Ghost[] ghosts;
@@ -207,11 +207,11 @@ public class TengenIntroScene extends GameScene2D {
     private int tengenPresentsY;
     private boolean grayScreen;
 
-    public TengenIntroScene() {
+    public TengenMsPacManGameIntroScene() {
         sceneController = new FiniteStateMachine<>(SceneState.values()) {
             @Override
-            public TengenIntroScene context() {
-                return TengenIntroScene.this;
+            public TengenMsPacManGameIntroScene context() {
+                return TengenMsPacManGameIntroScene.this;
             }
         };
     }
@@ -281,7 +281,7 @@ public class TengenIntroScene extends GameScene2D {
             case WAITING_FOR_START -> {
                 // Loop over 3 different shades of blue, 16 frames each
                 renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t), font, 6 * TS, 10 * TS);
-                renderer.drawSpriteScaled(context.spriteSheet(), TengenSpriteSheet.MS_PAC_MAN_TITLE, 3 * TS, 11 * TS);
+                renderer.drawSpriteScaled(context.spriteSheet(), TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE, 3 * TS, 11 * TS);
                 // Blink effect, 32 frames for each phase. TODO: check rate
                 if (t % 96 < 48) {
                     renderer.drawText("PRESS SPACE", Color.WHITE, font, 8 * TS, 20 * TS);

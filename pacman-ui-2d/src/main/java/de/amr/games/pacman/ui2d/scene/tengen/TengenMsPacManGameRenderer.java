@@ -20,7 +20,7 @@ import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.ClapperboardAnimation;
-import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManArcadeGameRenderer;
+import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
@@ -44,7 +44,7 @@ import static de.amr.games.pacman.model.GameWorld.PROPERTY_COLOR_WALL_FILL;
 /**
  * @author Armin Reichert
  */
-public class TengenGameWorldRenderer implements GameWorldRenderer {
+public class TengenMsPacManGameRenderer implements GameWorldRenderer {
 
     // Maze images are taken from files "arcade_mazes.png" and "non_arcade_mazes.png" via AssetStorage
 
@@ -94,19 +94,19 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
     private final Image arcadeMazesImage;
     private final Image nonArcadeMazesImage;
     //TODO temporary
-    private final MsPacManArcadeGameRenderer rendererMsPacMan;
+    private final MsPacManGameRenderer rendererMsPacMan;
 
     private ImageArea mapSprite;
     private boolean flashMode;
     private boolean blinkingOn;
     private Canvas canvas;
 
-    public TengenGameWorldRenderer(AssetStorage assets) {
+    public TengenMsPacManGameRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
 
-        rendererMsPacMan = new MsPacManArcadeGameRenderer(assets);
+        rendererMsPacMan = new MsPacManGameRenderer(assets);
         rendererMsPacMan.scalingProperty().bind(scalingProperty());
 
         arcadeMazesImage = assets.image("tengen.mazes.arcade");
@@ -260,26 +260,26 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
     private void drawTop(GameSpriteSheet spriteSheet, TileMap terrain, MsPacManTengenGame tengenGame) {
         MapCategory category = MapCategory.valueOf(terrain.getProperty("map_category"));
         RectArea categorySprite = switch (category) {
-            case BIG     -> TengenSpriteSheet.BIG_SPRITE;
-            case MINI    -> TengenSpriteSheet.MINI_SPRITE;
-            case STRANGE -> TengenSpriteSheet.STRANGE_SPRITE;
-            case ARCADE  -> TengenSpriteSheet.NO_SPRITE;
+            case BIG     -> TengenMsPacManGameSpriteSheet.BIG_SPRITE;
+            case MINI    -> TengenMsPacManGameSpriteSheet.MINI_SPRITE;
+            case STRANGE -> TengenMsPacManGameSpriteSheet.STRANGE_SPRITE;
+            case ARCADE  -> TengenMsPacManGameSpriteSheet.NO_SPRITE;
         };
         RectArea difficultySprite = switch (tengenGame.difficulty()) {
-            case EASY -> TengenSpriteSheet.EASY_SPRITE;
-            case HARD -> TengenSpriteSheet.HARD_SPRITE;
-            case CRAZY -> TengenSpriteSheet.CRAZY_SPRITE;
-            case NORMAL -> TengenSpriteSheet.NO_SPRITE;
+            case EASY -> TengenMsPacManGameSpriteSheet.EASY_SPRITE;
+            case HARD -> TengenMsPacManGameSpriteSheet.HARD_SPRITE;
+            case CRAZY -> TengenMsPacManGameSpriteSheet.CRAZY_SPRITE;
+            case NORMAL -> TengenMsPacManGameSpriteSheet.NO_SPRITE;
         };
         double centerX = terrain.numCols() * HTS;
         double y = t(2) + HTS;
         if (tengenGame.pacBooster() != PacBooster.OFF) {
             //TODO: always displayed when TOGGLE_USING_KEY is selected or only if booster is active?
-            drawSpriteCenteredOverPosition(spriteSheet, TengenSpriteSheet.BOOSTER_SPRITE, centerX - t(6), y);
+            drawSpriteCenteredOverPosition(spriteSheet, TengenMsPacManGameSpriteSheet.BOOSTER_SPRITE, centerX - t(6), y);
         }
         drawSpriteCenteredOverPosition(spriteSheet, difficultySprite, centerX, y);
         drawSpriteCenteredOverPosition(spriteSheet, categorySprite, centerX + t(4.5), y);
-        drawSpriteCenteredOverPosition(spriteSheet, TengenSpriteSheet.FRAME_SPRITE, centerX, y);
+        drawSpriteCenteredOverPosition(spriteSheet, TengenMsPacManGameSpriteSheet.FRAME_SPRITE, centerX, y);
     }
 
     @Override
@@ -320,8 +320,8 @@ public class TengenGameWorldRenderer implements GameWorldRenderer {
     }
 
     private void drawLevelNumberBox(GameSpriteSheet spriteSheet, int levelNumber, double x, double y) {
-        TengenSpriteSheet tss = (TengenSpriteSheet) spriteSheet;
-        drawSpriteScaled(spriteSheet, TengenSpriteSheet.LEVEL_BOX_SPRITE, x, y);
+        TengenMsPacManGameSpriteSheet tss = (TengenMsPacManGameSpriteSheet) spriteSheet;
+        drawSpriteScaled(spriteSheet, TengenMsPacManGameSpriteSheet.LEVEL_BOX_SPRITE, x, y);
         // erase violet area (what is it good for?)
         ctx().setFill(Color.BLACK);
         ctx().save();

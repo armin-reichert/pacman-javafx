@@ -16,7 +16,7 @@ import static de.amr.games.pacman.ui2d.scene.pacman.PacManGameSpriteSheet.MIDWAY
 /**
  * @author Armin Reichert
  */
-public class PacManStartScene extends GameScene2D {
+public class PacManGameStartScene extends GameScene2D {
 
     @Override
     public void init() {

@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui2d;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGameSpriteSheet;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenSpriteSheet;
+import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui2d.util.Ufx;
@@ -134,7 +134,7 @@ public class GameAssets2D extends AssetStorage {
         // Ms. Pac-Man game Tengen
         //
 
-        assets.store("tengen.spritesheet",              new TengenSpriteSheet(rm.loadImage("graphics/tengen/spritesheet.png")));
+        assets.store("tengen.spritesheet",              new TengenMsPacManGameSpriteSheet(rm.loadImage("graphics/tengen/spritesheet.png")));
         assets.store("tengen.mazes.arcade",             rm.loadImage("graphics/tengen/arcade_mazes.png"));
         assets.store("tengen.mazes.non_arcade",         rm.loadImage("graphics/tengen/non_arcade_mazes.png"));
         assets.store("tengen.startpage.image1",         rm.loadImage("graphics/tengen/tengen_flyer.png"));

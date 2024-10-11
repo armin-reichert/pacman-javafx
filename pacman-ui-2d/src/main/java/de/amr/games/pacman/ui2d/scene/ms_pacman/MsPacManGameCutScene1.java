@@ -30,7 +30,7 @@ import static de.amr.games.pacman.lib.Globals.t;
  *
  * @author Armin Reichert
  */
-public class MsPacManCutScene1 extends GameScene2D {
+public class MsPacManGameCutScene1 extends GameScene2D {
 
     static final int UPPER_LANE_Y  = TS * 12;
     static final int MIDDLE_LANE_Y = TS * 18;
@@ -41,8 +41,71 @@ public class MsPacManCutScene1 extends GameScene2D {
     static final float SPEED_GHOST_AFTER_COLLISION = 0.3f;
     static final float SPEED_GHOST_CHASING = 1.25f;
 
-    private class SceneController {
+    private SceneController sceneController;
 
+    private Pac pacMan;
+    private Pac msPac;
+    private Ghost inky;
+    private Ghost pinky;
+    private Entity heart;
+    private ClapperboardAnimation clapAnimation;
+
+    private void startMusic() {
+        int number  = context.gameState() == GameState.TESTING_CUT_SCENES
+            ? GameState.TESTING_CUT_SCENES.getProperty("intermissionTestNumber")
+            : context.game().intermissionNumber(context.game().levelNumber());
+        context.sounds().playIntermissionSound(number);
+    }
+
+    @Override
+    public void init() {
+        context.setScoreVisible(context.gameVariant() != GameVariant.MS_PACMAN_TENGEN);
+
+        pacMan = new Pac();
+        msPac = new Pac();
+        inky = Ghost.inky();
+        pinky = Ghost.pinky();
+        heart = new Entity();
+
+        msPac.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
+        //TODO replace with Tengen sprite sheet later
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
+        } else {
+            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
+        }
+        inky.setAnimations(new MsPacManGameGhostAnimations(context.spriteSheet(), inky.id()));
+        pinky.setAnimations(new MsPacManGameGhostAnimations(context.spriteSheet(), pinky.id()));
+        clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
+        clapAnimation.start();
+
+        sceneController = new SceneController();
+        sceneController.setState(SceneController.STATE_FLAP, 120);
+    }
+
+    @Override
+    public void end() {
+    }
+
+    @Override
+    public void update() {
+        sceneController.tick();
+    }
+
+    @Override
+    public void drawSceneContent(GameWorldRenderer renderer) {
+        String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
+        Color color = context.assets().color(assetPrefix + ".color.clapperboard");
+        renderer.drawClapperBoard(context.spriteSheet(), renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
+        renderer.drawAnimatedEntity(msPac);
+        renderer.drawAnimatedEntity(pacMan);
+        renderer.drawAnimatedEntity(inky);
+        renderer.drawAnimatedEntity(pinky);
+        renderer.drawSprite(heart, context.spriteSheet(), context.spriteSheet().heartSprite());
+        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
+    }
+
+    private class SceneController {
         static final byte STATE_FLAP = 0;
         static final byte STATE_CHASED_BY_GHOSTS = 1;
         static final byte STATE_COMING_TOGETHER = 2;
@@ -207,69 +270,5 @@ public class MsPacManCutScene1 extends GameScene2D {
                 context.gameController().terminateCurrentState();
             }
         }
-    }
-
-    private SceneController sceneController;
-
-    private Pac pacMan;
-    private Pac msPac;
-    private Ghost inky;
-    private Ghost pinky;
-    private Entity heart;
-    private ClapperboardAnimation clapAnimation;
-
-    private void startMusic() {
-        int number  = context.gameState() == GameState.TESTING_CUT_SCENES
-            ? GameState.TESTING_CUT_SCENES.getProperty("intermissionTestNumber")
-            : context.game().intermissionNumber(context.game().levelNumber());
-        context.sounds().playIntermissionSound(number);
-    }
-
-    @Override
-    public void init() {
-        context.setScoreVisible(context.gameVariant() != GameVariant.MS_PACMAN_TENGEN);
-
-        pacMan = new Pac();
-        msPac = new Pac();
-        inky = Ghost.inky();
-        pinky = Ghost.pinky();
-        heart = new Entity();
-
-        msPac.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
-        //TODO replace with Tengen sprite sheet later
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
-        } else {
-            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
-        }
-        inky.setAnimations(new MsPacManGameGhostAnimations(context.spriteSheet(), inky.id()));
-        pinky.setAnimations(new MsPacManGameGhostAnimations(context.spriteSheet(), pinky.id()));
-        clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
-        clapAnimation.start();
-
-        sceneController = new SceneController();
-        sceneController.setState(SceneController.STATE_FLAP, 120);
-    }
-
-    @Override
-    public void end() {
-    }
-
-    @Override
-    public void update() {
-        sceneController.tick();
-    }
-
-    @Override
-    public void drawSceneContent(GameWorldRenderer renderer) {
-        String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
-        Color color = context.assets().color(assetPrefix + ".color.clapperboard");
-        renderer.drawClapperBoard(context.spriteSheet(), renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
-        renderer.drawAnimatedEntity(msPac);
-        renderer.drawAnimatedEntity(pacMan);
-        renderer.drawAnimatedEntity(inky);
-        renderer.drawAnimatedEntity(pinky);
-        renderer.drawSprite(heart, context.spriteSheet(), context.spriteSheet().heartSprite());
-        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 }

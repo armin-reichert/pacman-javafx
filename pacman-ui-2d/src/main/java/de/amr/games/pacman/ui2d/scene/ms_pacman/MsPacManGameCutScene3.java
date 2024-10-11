@@ -14,7 +14,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenGameWorldRenderer;
+import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.scene.paint.Color;
 
@@ -31,9 +31,83 @@ import static de.amr.games.pacman.lib.Globals.t;
  *
  * @author Armin Reichert
  */
-public class MsPacManCutScene3 extends GameScene2D {
+public class MsPacManGameCutScene3 extends GameScene2D {
 
     static final int LANE_Y = TS * 24;
+
+    private SceneController sceneController;
+
+    private Pac pacMan;
+    private Pac msPacMan;
+    private Entity stork;
+    private Entity bag;
+    private boolean bagOpen;
+    private int numBagBounces;
+
+    private ClapperboardAnimation clapAnimation;
+    private SpriteAnimation storkAnimation;
+
+    private void startMusic() {
+        int number  = context.gameState() == GameState.TESTING_CUT_SCENES
+            ? GameState.TESTING_CUT_SCENES.getProperty("intermissionTestNumber")
+            : context.game().intermissionNumber(context.game().levelNumber());
+        context.sounds().playIntermissionSound(number);
+    }
+
+    @Override
+    public void init() {
+        context.setScoreVisible(context.gameVariant() != GameVariant.MS_PACMAN_TENGEN);
+
+        pacMan = new Pac();
+        msPacMan = new Pac();
+        stork = new Entity();
+        bag = new Entity();
+
+        msPacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
+        //TODO use Tengen sprite sheet
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
+        } else {
+            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
+        }
+
+        storkAnimation = context.spriteSheet().createStorkFlyingAnimation();
+        storkAnimation.start();
+
+        clapAnimation = new ClapperboardAnimation("3", "JUNIOR");
+        clapAnimation.start();
+
+        sceneController = new SceneController();
+        sceneController.setState(SceneController.STATE_FLAP, TickTimer.INDEFINITE);
+    }
+
+    @Override
+    public void end() {
+    }
+
+    @Override
+    public void update() {
+        sceneController.tick();
+    }
+
+    @Override
+    public void drawSceneContent(GameWorldRenderer renderer) {
+        String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
+        Color color = context.assets().color(assetPrefix + ".color.clapperboard");
+        renderer.drawClapperBoard(context.spriteSheet(), renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
+        renderer.drawAnimatedEntity(msPacMan);
+        renderer.drawAnimatedEntity(pacMan);
+        //TODO Hack
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            TengenMsPacManGameRenderer tr = (TengenMsPacManGameRenderer) renderer;
+            tr.drawStork(context.spriteSheet(), storkAnimation, stork, bag.acceleration().y() != 0);
+        } else {
+            renderer.drawSprite(stork, context.spriteSheet(), storkAnimation.currentSprite());
+        }
+        renderer.drawSprite(bag, context.spriteSheet(),
+            bagOpen ? context.spriteSheet().juniorPacSprite() : context.spriteSheet().blueBagSprite());
+        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
+    }
 
     private class SceneController {
 
@@ -124,79 +198,5 @@ public class MsPacManCutScene3 extends GameScene2D {
                 context.gameController().terminateCurrentState();
             }
         }
-    }
-
-    private SceneController sceneController;
-
-    private Pac pacMan;
-    private Pac msPacMan;
-    private Entity stork;
-    private Entity bag;
-    private boolean bagOpen;
-    private int numBagBounces;
-
-    private ClapperboardAnimation clapAnimation;
-    private SpriteAnimation storkAnimation;
-
-    private void startMusic() {
-        int number  = context.gameState() == GameState.TESTING_CUT_SCENES
-            ? GameState.TESTING_CUT_SCENES.getProperty("intermissionTestNumber")
-            : context.game().intermissionNumber(context.game().levelNumber());
-        context.sounds().playIntermissionSound(number);
-    }
-
-    @Override
-    public void init() {
-        context.setScoreVisible(context.gameVariant() != GameVariant.MS_PACMAN_TENGEN);
-
-        pacMan = new Pac();
-        msPacMan = new Pac();
-        stork = new Entity();
-        bag = new Entity();
-
-        msPacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
-        //TODO use Tengen sprite sheet
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
-        } else {
-            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
-        }
-
-        storkAnimation = context.spriteSheet().createStorkFlyingAnimation();
-        storkAnimation.start();
-
-        clapAnimation = new ClapperboardAnimation("3", "JUNIOR");
-        clapAnimation.start();
-
-        sceneController = new SceneController();
-        sceneController.setState(SceneController.STATE_FLAP, TickTimer.INDEFINITE);
-    }
-
-    @Override
-    public void end() {
-    }
-
-    @Override
-    public void update() {
-        sceneController.tick();
-    }
-
-    @Override
-    public void drawSceneContent(GameWorldRenderer renderer) {
-        String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
-        Color color = context.assets().color(assetPrefix + ".color.clapperboard");
-        renderer.drawClapperBoard(context.spriteSheet(), renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
-        renderer.drawAnimatedEntity(msPacMan);
-        renderer.drawAnimatedEntity(pacMan);
-        //TODO Hack
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            TengenGameWorldRenderer tr = (TengenGameWorldRenderer) renderer;
-            tr.drawStork(context.spriteSheet(), storkAnimation, stork, bag.acceleration().y() != 0);
-        } else {
-            renderer.drawSprite(stork, context.spriteSheet(), storkAnimation.currentSprite());
-        }
-        renderer.drawSprite(bag, context.spriteSheet(),
-            bagOpen ? context.spriteSheet().juniorPacSprite() : context.spriteSheet().blueBagSprite());
-        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 }

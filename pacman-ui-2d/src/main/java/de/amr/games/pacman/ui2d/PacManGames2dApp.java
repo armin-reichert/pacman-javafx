@@ -12,12 +12,12 @@ import de.amr.games.pacman.ui2d.scene.BootScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.*;
-import de.amr.games.pacman.ui2d.scene.pacman.PacManCutScene1;
-import de.amr.games.pacman.ui2d.scene.pacman.PacManCutScene2;
-import de.amr.games.pacman.ui2d.scene.pacman.PacManCutScene3;
-import de.amr.games.pacman.ui2d.scene.pacman.PacManIntroScene;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenIntroScene;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenStartScene;
+import de.amr.games.pacman.ui2d.scene.pacman.PacManGameCutScene1;
+import de.amr.games.pacman.ui2d.scene.pacman.PacManGameCutScene2;
+import de.amr.games.pacman.ui2d.scene.pacman.PacManGameCutScene3;
+import de.amr.games.pacman.ui2d.scene.pacman.PacManGameIntroScene;
+import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameIntroScene;
+import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameStartScene;
 import javafx.application.Application;
 import javafx.beans.property.*;
 import javafx.geometry.Dimension2D;
@@ -74,39 +74,39 @@ public class PacManGames2dApp extends Application {
         ui.loadAssets();
         ui.setGameScenes(GameVariant.MS_PACMAN, Map.of(
             GameSceneID.BOOT_SCENE,   new BootScene(),
-            GameSceneID.INTRO_SCENE,  new MsPacManIntroScene(),
-            GameSceneID.START_SCENE, new MsPacManStartScene(),
+            GameSceneID.INTRO_SCENE,  new MsPacManGameIntroScene(),
+            GameSceneID.START_SCENE, new MsPacManGameStartScene(),
             GameSceneID.PLAY_SCENE,   new PlayScene2D(),
-            GameSceneID.CUT_SCENE_1,  new MsPacManCutScene1(),
-            GameSceneID.CUT_SCENE_2,  new MsPacManCutScene2(),
-            GameSceneID.CUT_SCENE_3,  new MsPacManCutScene3()
+            GameSceneID.CUT_SCENE_1,  new MsPacManGameCutScene1(),
+            GameSceneID.CUT_SCENE_2,  new MsPacManGameCutScene2(),
+            GameSceneID.CUT_SCENE_3,  new MsPacManGameCutScene3()
         ));
         ui.setGameScenes(GameVariant.MS_PACMAN_TENGEN, Map.of(
             GameSceneID.BOOT_SCENE,   new BootScene(),
-            GameSceneID.INTRO_SCENE,  new TengenIntroScene(),
-            GameSceneID.START_SCENE, new TengenStartScene(),
+            GameSceneID.INTRO_SCENE,  new TengenMsPacManGameIntroScene(),
+            GameSceneID.START_SCENE, new TengenMsPacManGameStartScene(),
             GameSceneID.PLAY_SCENE,   new PlayScene2D(),
-            GameSceneID.CUT_SCENE_1,  new MsPacManCutScene1(),
-            GameSceneID.CUT_SCENE_2,  new MsPacManCutScene2(),
-            GameSceneID.CUT_SCENE_3,  new MsPacManCutScene3()
+            GameSceneID.CUT_SCENE_1,  new MsPacManGameCutScene1(),
+            GameSceneID.CUT_SCENE_2,  new MsPacManGameCutScene2(),
+            GameSceneID.CUT_SCENE_3,  new MsPacManGameCutScene3()
         ));
         ui.setGameScenes(GameVariant.PACMAN, Map.of(
             GameSceneID.BOOT_SCENE,   new BootScene(),
-            GameSceneID.INTRO_SCENE,  new PacManIntroScene(),
-            GameSceneID.START_SCENE, new MsPacManStartScene(),
+            GameSceneID.INTRO_SCENE,  new PacManGameIntroScene(),
+            GameSceneID.START_SCENE, new MsPacManGameStartScene(),
             GameSceneID.PLAY_SCENE,   new PlayScene2D(),
-            GameSceneID.CUT_SCENE_1,  new PacManCutScene1(),
-            GameSceneID.CUT_SCENE_2,  new PacManCutScene2(),
-            GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
+            GameSceneID.CUT_SCENE_1,  new PacManGameCutScene1(),
+            GameSceneID.CUT_SCENE_2,  new PacManGameCutScene2(),
+            GameSceneID.CUT_SCENE_3,  new PacManGameCutScene3()
         ));
         ui.setGameScenes(GameVariant.PACMAN_XXL, Map.of(
             GameSceneID.BOOT_SCENE,   new BootScene(),
-            GameSceneID.INTRO_SCENE,  new PacManIntroScene(),
-            GameSceneID.START_SCENE, new MsPacManStartScene(),
+            GameSceneID.INTRO_SCENE,  new PacManGameIntroScene(),
+            GameSceneID.START_SCENE, new MsPacManGameStartScene(),
             GameSceneID.PLAY_SCENE,   new PlayScene2D(),
-            GameSceneID.CUT_SCENE_1,  new PacManCutScene1(),
-            GameSceneID.CUT_SCENE_2,  new PacManCutScene2(),
-            GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
+            GameSceneID.CUT_SCENE_1,  new PacManGameCutScene1(),
+            GameSceneID.CUT_SCENE_2,  new PacManGameCutScene2(),
+            GameSceneID.CUT_SCENE_3,  new PacManGameCutScene3()
         ));
         ui.createAndStart(stage, initialSize());
 

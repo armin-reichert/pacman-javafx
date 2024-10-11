@@ -15,7 +15,7 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenGameWorldRenderer;
+import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -33,14 +33,14 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
  */
 public class PlayScene2D extends GameScene2D {
 
-    private static final List<GameAction> GAME_ACTIONS = List.of(
+    private static final List<GameAction> ACTIONS = List.of(
         GameAction2D.CHEAT_EAT_ALL,
         GameAction2D.CHEAT_ADD_LIVES,
         GameAction2D.CHEAT_NEXT_LEVEL,
         GameAction2D.CHEAT_KILL_GHOSTS
     );
 
-    private static final List<GameAction> TENGEN_GAME_ACTIONS = List.of(
+    private static final List<GameAction> TENGEN_ACTIONS = List.of(
         GameAction2D.TENGEN_TOGGLE_PAC_BOOSTER,
         GameAction2D.TENGEN_QUIT_PLAY_SCENE
     );
@@ -91,16 +91,16 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void handleInput() {
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            context.execFirstCalledActionOrElse(TENGEN_GAME_ACTIONS.stream(),
-                () -> context.execFirstCalledAction(GAME_ACTIONS));
-        } else {
-            // add credit is only allowed in demo level
-            if (context.isActionCalled(GameAction2D.ADD_CREDIT) && context.game().isDemoLevel()) {
-                GameAction2D.ADD_CREDIT.execute(context);
-            } else {
-                context.execFirstCalledAction(GAME_ACTIONS);
-            }
+            // add credit is not available in Tengen Ms. Pac-Man
+            context.execFirstCalledActionOrElse(TENGEN_ACTIONS, () -> context.execFirstCalledAction(ACTIONS));
+            return;
         }
+        // add credit is only allowed in demo level
+        if (context.isActionCalled(GameAction2D.ADD_CREDIT) && context.game().isDemoLevel()) {
+            GameAction2D.ADD_CREDIT.execute(context);
+            return;
+        }
+        context.execFirstCalledAction(ACTIONS);
     }
 
     @Override
@@ -145,7 +145,7 @@ public class PlayScene2D extends GameScene2D {
         drawLevelCounter(renderer, worldSize);
         //TODO Hack: Tengen has those boxes displaying the level number
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            TengenGameWorldRenderer tr = (TengenGameWorldRenderer) renderer;
+            TengenMsPacManGameRenderer tr = (TengenMsPacManGameRenderer) renderer;
             tr.drawLevelNumberBoxes(context.spriteSheet(), context.game().levelNumber(), worldSize);
         }
     }
