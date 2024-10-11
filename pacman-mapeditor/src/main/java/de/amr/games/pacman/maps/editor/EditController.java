@@ -146,7 +146,7 @@ public class EditController {
         terrainMapPathsUpToDate = false;
     }
 
-    void ensureTerrainMapsUpToDate() {
+    void ensureTerrainMapsPathsUpToDate() {
         if (!terrainMapPathsUpToDate) {
             mapPy.get().terrain().computeTerrainPaths();
             terrainMapPathsUpToDate = true;

@@ -864,7 +864,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
         g.fillRect(0, 0, previewCanvas.getWidth(), previewCanvas.getHeight());
         if (terrainVisiblePy.get()) {
             TileMap terrainMap = map().terrain();
-            editController.ensureTerrainMapsUpToDate();
+            editController.ensureTerrainMapsPathsUpToDate();
             terrainMapPreviewRenderer.setScaling(gridSize() / 8.0);
             terrainMapPreviewRenderer.setWallStrokeColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(DEFAULT_COLOR_WALL_STROKE)));
             terrainMapPreviewRenderer.setWallFillColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(DEFAULT_COLOR_WALL_FILL)));
