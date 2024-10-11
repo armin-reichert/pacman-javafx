@@ -235,13 +235,12 @@ public class MsPacManCutScene1 extends GameScene2D {
         pinky = Ghost.pinky();
         heart = new Entity();
 
+        msPac.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
         //TODO replace with Tengen sprite sheet later
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
-            msPac.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
         } else {
             pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
-            msPac.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
         }
         inky.setAnimations(new MsPacManGameGhostAnimations(context.spriteSheet(), inky.id()));
         pinky.setAnimations(new MsPacManGameGhostAnimations(context.spriteSheet(), pinky.id()));

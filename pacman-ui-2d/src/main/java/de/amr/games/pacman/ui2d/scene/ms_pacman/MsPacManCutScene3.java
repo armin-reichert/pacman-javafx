@@ -154,14 +154,12 @@ public class MsPacManCutScene3 extends GameScene2D {
         stork = new Entity();
         bag = new Entity();
 
+        msPacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
         //TODO use Tengen sprite sheet
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            msPacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
             pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
         } else {
-            msPacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
             pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
-
         }
 
         storkAnimation = context.spriteSheet().createStorkFlyingAnimation();

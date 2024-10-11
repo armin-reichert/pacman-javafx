@@ -147,14 +147,12 @@ public class MsPacManCutScene2 extends GameScene2D {
         pacMan = new Pac();
         msPacMan = new Pac();
 
+        msPacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
         //TODO use Tengen sprite sheet
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            msPacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
             pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
         } else {
-            msPacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
             pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
-
         }
 
         clapAnimation = new ClapperboardAnimation("2", "THE CHASE");
