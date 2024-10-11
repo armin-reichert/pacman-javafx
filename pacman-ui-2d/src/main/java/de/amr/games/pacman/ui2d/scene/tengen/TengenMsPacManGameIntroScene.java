@@ -110,11 +110,15 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
         switch (sceneController.state()) {
             case WAITING_FOR_START -> {
                 // Loop over 3 different shades of blue, 16 frames each
-                renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t), font, 6 * TS, 10 * TS);
-                renderer.drawSpriteScaled(context.spriteSheet(), TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE, 3 * TS, 11 * TS);
-                // Blink effect, 32 frames for each phase. TODO: check rate
+                renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t, 16), font, 6 * TS, 11 * TS);
+                // Draw Tengen logo without image smoothing
+                renderer.ctx().save();
+                renderer.ctx().setImageSmoothing(false);
+                renderer.drawSpriteScaled(context.spriteSheet(), TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE, 3 * TS, 12 * TS);
+                renderer.ctx().restore();
+                // Blink effect TODO: check exact rate
                 if (t % 96 < 48) {
-                    renderer.drawText("PRESS SPACE", Color.WHITE, font, 8 * TS, 20 * TS);
+                    renderer.drawText("PRESS SPACE", Color.WHITE, font, 8 * TS, 21 * TS);
                 }
                 Font copyrightFont = renderer.scaledArcadeFont(7.5);
                 Color copyrightColor = GameAssets2D.TENGEN_PINK;

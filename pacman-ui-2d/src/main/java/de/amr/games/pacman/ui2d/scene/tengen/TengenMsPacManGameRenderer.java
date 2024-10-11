@@ -54,10 +54,9 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
         Color.rgb(192, 223, 255)
     };
 
-    static Color shadeOfBlue(long t) {
-        int ticksPerColor = 16;
+    static Color shadeOfBlue(long tick, int ticksPerColor) {
         int ticksPerAnimation = (ticksPerColor * SHADES_OF_BLUE.length);
-        int index = (int) (t % ticksPerAnimation) / ticksPerColor;
+        int index = (int) (tick % ticksPerAnimation) / ticksPerColor;
         return SHADES_OF_BLUE[index];
     }
 

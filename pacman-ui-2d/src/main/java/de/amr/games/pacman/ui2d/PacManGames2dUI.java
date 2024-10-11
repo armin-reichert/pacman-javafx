@@ -250,7 +250,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     protected Scene createMainScene(Dimension2D size) {
-        sceneRoot.setBackground(assets.get("wallpaper.pacman"));
         Scene mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, KEYBOARD::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, KEYBOARD::onKeyReleased);
@@ -288,7 +287,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     private void handleGameVariantChange(GameVariant variant) {
-        Image icon = assets.image(assetPrefix(variant) + ".icon");
+        String assetPrefix = assetPrefix(variant);
+        sceneRoot.setBackground(assets.get(assetPrefix + ".scene_background"));
+        Image icon = assets.image(assetPrefix + ".icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
         }

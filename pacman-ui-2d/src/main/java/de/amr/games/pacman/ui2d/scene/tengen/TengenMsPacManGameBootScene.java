@@ -69,7 +69,7 @@ public class TengenMsPacManGameBootScene extends GameScene2D {
         } else {
             Font font = renderer.scaledArcadeFont(TS);
             long t = context.gameClock().getUpdateCount();
-            renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t), font, 6 * TS, tengenPresentsY);
+            renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t, 16), font, 6 * TS, tengenPresentsY);
             renderer.drawAnimatedEntity(ghost);
         }
     }

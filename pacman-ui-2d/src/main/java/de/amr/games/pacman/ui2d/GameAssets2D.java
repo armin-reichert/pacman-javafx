@@ -14,6 +14,9 @@ import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
+import static de.amr.games.pacman.ui2d.util.Ufx.imageBackground;
+
 /**
  * @author Armin Reichert
  */
@@ -27,10 +30,9 @@ public class GameAssets2D extends AssetStorage {
     public static final Color PALETTE_BLUE   = Color.rgb(33, 33, 255);
     public static final Color PALETTE_PALE   = Color.rgb(222, 222, 255);
     public static final Color PALETTE_ROSE   = Color.rgb(252, 187, 179);
-
-    public static final Color TENGEN_PINK   = Color.web("#ff60b0");
-    public static final Color TENGEN_RED    = Color.web("d84060");
-    public static final Color TENGEN_YELLOW = Color.web("e8d020");
+    public static final Color TENGEN_PINK   = Color.web("#FE6ECC");
+    public static final Color TENGEN_RED    = Color.web("#d84060");
+    public static final Color TENGEN_YELLOW = Color.web("#e8d020");
 
     public static String assetPrefix(GameVariant variant) {
         return switch (variant) {
@@ -71,7 +73,6 @@ public class GameAssets2D extends AssetStorage {
         assets.store("startpage.button.color",          Color.WHITE);
         assets.store("startpage.button.font",           rm.loadFont("fonts/emulogic.ttf", 32));
 
-        assets.store("wallpaper.pacman",            Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
         assets.store("wallpaper.color",                 Color.rgb(72, 78, 135));
 
         assets.store("font.arcade",                     rm.loadFont("fonts/emulogic.ttf", 8));
@@ -87,6 +88,8 @@ public class GameAssets2D extends AssetStorage {
         //
         // Ms. Pac-Man game
         //
+
+        assets.store("ms_pacman.scene_background",      imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
 
         assets.store("ms_pacman.spritesheet",           new MsPacManGameSpriteSheet(rm.loadImage("graphics/mspacman/mspacman_spritesheet.png")));
         assets.store("ms_pacman.flashing_mazes",        rm.loadImage("graphics/mspacman/mazes_flashing.png"));
@@ -133,6 +136,8 @@ public class GameAssets2D extends AssetStorage {
         //
         // Ms. Pac-Man game Tengen
         //
+
+        assets.store("tengen.scene_background",         coloredBackground(Color.BLACK));
 
         assets.store("tengen.spritesheet",              new TengenMsPacManGameSpriteSheet(rm.loadImage("graphics/tengen/spritesheet.png")));
         assets.store("tengen.mazes.arcade",             rm.loadImage("graphics/tengen/arcade_mazes.png"));
@@ -189,6 +194,8 @@ public class GameAssets2D extends AssetStorage {
         // Pac-Man game
         //
 
+        assets.store("pacman.scene_background",         imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
+
         assets.store("pacman.spritesheet",              new PacManGameSpriteSheet(rm.loadImage("graphics/pacman/pacman_spritesheet.png")));
         assets.store("pacman.flashing_maze",            rm.loadImage("graphics/pacman/maze_flashing.png"));
         assets.store("pacman.startpage.image1",         rm.loadImage("graphics/pacman/pacman_flyer.png"));
@@ -223,6 +230,8 @@ public class GameAssets2D extends AssetStorage {
         //
         // Pac-Man XXL
         //
+        assets.store("pacman_xxl.scene_background",     imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
+
         assets.store("pacman_xxl.icon",                 rm.loadImage("graphics/icons/pacman.png"));
         assets.store("pacman_xxl.helpButton.icon",      rm.loadImage("graphics/icons/help-blue-64.png"));
         assets.store("pacman_xxl.startpage.source",     rm.loadImage("graphics/pacman_xxl/pacman_xxl_logo.png"));
