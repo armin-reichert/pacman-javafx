@@ -32,27 +32,27 @@ public class TengenMsPacManGameBootScene extends GameScene2D {
 
     @Override
     public void update() {
-        if (0 <= t && t < 120) {
+        if (0 <= t && t < 100) {
             if (t % 4 == 0 && tengenPresentsY > 17 * TS) {
                 tengenPresentsY -= 2*TS;
             }
         }
-        else if (t == 120) {
+        else if (t == 100) {
             ghost.setPosition(t(31), t(25));
             ghost.setMoveAndWishDir(Direction.LEFT);
             ghost.setSpeed(8); // TODO check speed
             ghost.setVisible(true);
         }
-        else if (120 < t && t < 240) {
+        else if (100 < t && t < 140) {
             ghost.move();
         }
-        else if (240 <= t && t < 350) {
-            if (t % 4 == 0) { tengenPresentsY += 2*TS; }
+        else if (140 <= t && t < 180) {
+            if (t % 2 == 0) { tengenPresentsY += 2 * TS; }
         }
-        else if (t == 350) {
+        else if (t == 180) {
             grayScreen = true;
         }
-        else if (t == 360) {
+        else if (t == 184) {
             context.gameController().changeState(GameState.INTRO);
         }
         t += 1;
