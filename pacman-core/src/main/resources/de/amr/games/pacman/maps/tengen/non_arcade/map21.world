@@ -1,6 +1,6 @@
 !terrain
 #
-#Thu Oct 10 14:31:59 CEST 2024
+#Fri Oct 11 10:30:43 CEST 2024
 color_door=rgb(255,255,255)
 color_wall_fill=rgb(0,0,0)
 color_wall_stroke=rgb(255,255,255)
@@ -9,7 +9,7 @@ pos_ghost_1_red=(13,14)
 pos_ghost_2_pink=(13,17)
 pos_ghost_3_cyan=(11,17)
 pos_ghost_4_orange=(15,17)
-pos_pac=(10,1)
+pos_pac=(13,33)
 pos_scatter_ghost_1_red=(25,0)
 pos_scatter_ghost_2_pink=(2,0)
 pos_scatter_ghost_3_cyan=(27,40)
@@ -59,7 +59,7 @@ pos_scatter_ghost_4_orange=(0,40)
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 !food
 #
-#Thu Oct 10 14:31:59 CEST 2024
+#Fri Oct 11 10:30:43 CEST 2024
 color_food=rgb(0,123,140)
 !data
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
