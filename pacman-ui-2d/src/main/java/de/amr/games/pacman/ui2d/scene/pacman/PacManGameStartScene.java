@@ -48,12 +48,12 @@ public class PacManGameStartScene extends GameScene2D {
     public void drawSceneContent(GameWorldRenderer renderer) {
         var font8 = renderer.scaledArcadeFont(8);
         var font6 = renderer.scaledArcadeFont(6);
-        renderer.drawText("PUSH START BUTTON", PALETTE_ORANGE, font8, t(6), t(17));
-        renderer.drawText("1 PLAYER ONLY", PALETTE_CYAN, font8, t(8), t(21));
-        renderer.drawText("BONUS PAC-MAN FOR 10000", PALETTE_ROSE, font8, t(1), t(25));
-        renderer.drawText("PTS", PALETTE_ROSE, font6, t(25), t(25));
+        renderer.drawText("PUSH START BUTTON", ARCADE_ORANGE, font8, t(6), t(17));
+        renderer.drawText("1 PLAYER ONLY", ARCADE_CYAN, font8, t(8), t(21));
+        renderer.drawText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, font8, t(1), t(25));
+        renderer.drawText("PTS", ARCADE_ROSE, font6, t(25), t(25));
         if (context.gameVariant() == GameVariant.PACMAN) {
-            renderer.drawText(MIDWAY_COPYRIGHT, PALETTE_PINK, renderer.scaledArcadeFont(8), t(4), t(29));
+            renderer.drawText(MIDWAY_COPYRIGHT, ARCADE_PINK, renderer.scaledArcadeFont(8), t(4), t(29));
         }
         drawCredit(renderer, context.worldSizeTilesOrDefault());
         drawLevelCounter(renderer, context.worldSizeTilesOrDefault());

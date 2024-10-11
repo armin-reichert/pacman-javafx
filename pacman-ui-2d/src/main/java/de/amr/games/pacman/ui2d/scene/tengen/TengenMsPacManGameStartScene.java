@@ -17,6 +17,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer.TENGEN_BABY_BLUE;
+import static de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer.TENGEN_YELLOW;
 
 /**
  * @author Armin Reichert
@@ -28,9 +30,8 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
     static final int COL_COLON = 17 * TS;
     static final int COL_VALUE = 19 * TS;
 
-    static final Color LABEL_COLOR = GameAssets2D.TENGEN_YELLOW;
+    static final Color LABEL_COLOR = TENGEN_YELLOW;
     static final Color VALUE_COLOR = Color.WHITE;
-    static final Color BABY_BLUE = Color.web("64b0ff");
 
     static final int SETTING_PLAYERS        = 0;
     static final int OPTION_PAC_BOOSTER = 1;
@@ -64,7 +65,7 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
         renderer.ctx().scale(scaling(), scaling());
         renderer.ctx().setFill(Color.WHITE);
         renderer.ctx().fillRect(0, y, canvas.getWidth(), 8);
-        renderer.ctx().setFill(BABY_BLUE);
+        renderer.ctx().setFill(TENGEN_BABY_BLUE);
         renderer.ctx().fillRect(0, y + 1, canvas.getWidth(), 6);
         renderer.ctx().restore();
     }

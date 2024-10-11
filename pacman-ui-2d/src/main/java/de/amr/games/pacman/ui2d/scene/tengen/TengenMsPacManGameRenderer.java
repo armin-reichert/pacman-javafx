@@ -46,6 +46,19 @@ import static de.amr.games.pacman.model.GameWorld.PROPERTY_COLOR_WALL_FILL;
  */
 public class TengenMsPacManGameRenderer implements GameWorldRenderer {
 
+    public static final Color TENGEN_PINK      = Color.web("#FE6ECC");
+    public static final Color TENGEN_RED       = Color.web("#d84060");
+    public static final Color TENGEN_YELLOW    = Color.web("#BCBE00");
+    public static final Color TENGEN_BABY_BLUE = Color.web("#64b0ff");
+    public static final Color MARQUEE_COLOR    = Color.web("#b71e7b");
+
+    // picked from NES emulator
+    public static final Color PAC_COLOR = Color.web("#bcbe00");
+    public static final Color RED_GHOST_COLOR = Color.web("#6e0040");
+    public static final Color PINK_GHOST_COLOR = Color.web("#fe6ecc");
+    public static final Color CYAN_GHOST_COLOR = Color.web("#155fd9");
+    public static final Color ORANGE_GHOST_COLOR = Color.web("#b53120");
+
     // Picked from NES Emulator
     static final Color[]  SHADES_OF_BLUE = {
         Color.rgb(0, 42, 136),
@@ -234,12 +247,15 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
                 int frameTicks = 8; // TODO correct?
                 long frameIndex = (tick % (MAP_32_FRAMES.length * frameTicks)) / frameTicks;
                 RectArea mapArea = MAP_32_FRAMES[(int)frameIndex];
+                ctx().save();
+                ctx().setImageSmoothing(false);
                 ctx().drawImage(mapSprite.source(),
                     mapArea.x(), mapArea.y(),
                     mapArea.width(), mapArea.height(),
                     0, scaled(3 * TS),
                     scaled(mapArea.width()), scaled(mapArea.height())
                 );
+                ctx().restore();
             } else {
                 RectArea mapArea = mapSprite.area();
                 ctx().drawImage(mapSprite.source(),

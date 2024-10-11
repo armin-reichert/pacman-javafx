@@ -175,7 +175,7 @@ public class PlayScene2D extends GameScene2D {
         } else if (context.gameState() == GameState.TESTING_LEVELS_BONI) {
             String text = "TEST    L%03d".formatted(context.game().levelNumber());
             int x = TS * (cx - text.length() / 2);
-            renderer.drawText(text, GameAssets2D.PALETTE_PALE, font, x, y);
+            renderer.drawText(text, GameAssets2D.ARCADE_PALE, font, x, y);
         }
     }
 

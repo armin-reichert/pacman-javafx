@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
+import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static java.util.function.Predicate.not;
 
 /**
@@ -282,8 +282,8 @@ public interface GameWorldRenderer {
     }
 
     default void drawScores(GameContext context) {
-        drawScore(context.game().score(),     "SCORE",      t(1),  t(1), scaledArcadeFont(TS), PALETTE_PALE);
-        drawScore(context.game().highScore(), "HIGH SCORE", t(14), t(1), scaledArcadeFont(TS), PALETTE_PALE);
+        drawScore(context.game().score(),     "SCORE",      t(1),  t(1), scaledArcadeFont(TS), ARCADE_PALE);
+        drawScore(context.game().highScore(), "HIGH SCORE", t(14), t(1), scaledArcadeFont(TS), ARCADE_PALE);
     }
 
     default void drawScore(Score score, String title, double x, double y, Font font, Color color) {

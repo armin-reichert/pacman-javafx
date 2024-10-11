@@ -47,8 +47,8 @@ public class PacManGameIntroScene extends GameScene2D {
         GameAction2D.TEST_CUT_SCENES);
 
     static final String[] GHOST_CHARACTERS = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
-    static final Color[] GHOST_COLORS = { PALETTE_RED, PALETTE_PINK, PALETTE_CYAN, PALETTE_ORANGE };
-    static final Color PELLET_COLOR = PALETTE_ROSE;
+    static final Color[] GHOST_COLORS = {ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE};
+    static final Color PELLET_COLOR = ARCADE_ROSE;
     static final float CHASE_SPEED = 1.1f;
     static final float GHOST_FRIGHTENED_SPEED = 0.6f;
     static final int LEFT_TILE_X = 4;
@@ -127,14 +127,14 @@ public class PacManGameIntroScene extends GameScene2D {
                 }
                 drawGuys(renderer, flutter(timer.currentTick()));
                 if (context.gameVariant() == GameVariant.PACMAN) {
-                    renderer.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, PALETTE_PINK, renderer.scaledArcadeFont(TS),  t(4), t(32));
+                    renderer.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, ARCADE_PINK, renderer.scaledArcadeFont(TS),  t(4), t(32));
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints(renderer);
                 drawGuys(renderer, 0);
                 if (context.gameVariant() == GameVariant.PACMAN) {
-                    renderer.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, PALETTE_PINK, renderer.scaledArcadeFont(TS),  t(4), t(32));
+                    renderer.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, ARCADE_PINK, renderer.scaledArcadeFont(TS),  t(4), t(32));
                 }
             }
             default -> {
@@ -153,7 +153,7 @@ public class PacManGameIntroScene extends GameScene2D {
         Font font = renderer.scaledArcadeFont(TS);
         int tx = LEFT_TILE_X;
         if (titleVisible) {
-            renderer.drawText("CHARACTER / NICKNAME", PALETTE_PALE, font, t(tx + 3), t(6));
+            renderer.drawText("CHARACTER / NICKNAME", ARCADE_PALE, font, t(tx + 3), t(6));
         }
         for (byte id = 0; id < 4; ++id) {
             if (!ghostImageVisible[id]) {
@@ -189,7 +189,7 @@ public class PacManGameIntroScene extends GameScene2D {
     }
 
     private void drawPoints(GameWorldRenderer renderer) {
-        var color = PALETTE_PALE;
+        var color = ARCADE_PALE;
         var font8 = renderer.scaledArcadeFont(8);
         var font6 = renderer.scaledArcadeFont(6);
         int tx = LEFT_TILE_X + 6;
