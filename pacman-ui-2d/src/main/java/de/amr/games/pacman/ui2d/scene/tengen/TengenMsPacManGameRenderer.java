@@ -292,7 +292,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     }
 
     private void drawTop(GameSpriteSheet spriteSheet, TileMap terrain, MsPacManTengenGame tengenGame) {
-        MapCategory category = MapCategory.valueOf(terrain.getProperty("map_category"));
+        MapCategory category = tengenGame.mapCategory();
         RectArea categorySprite = switch (category) {
             case BIG     -> TengenMsPacManGameSpriteSheet.BIG_SPRITE;
             case MINI    -> TengenMsPacManGameSpriteSheet.MINI_SPRITE;
