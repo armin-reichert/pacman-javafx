@@ -16,6 +16,7 @@ import de.amr.games.pacman.ui2d.scene.pacman.PacManGameCutScene1;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGameCutScene2;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGameCutScene3;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGameIntroScene;
+import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameBootScene;
 import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameIntroScene;
 import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameStartScene;
 import javafx.application.Application;
@@ -75,16 +76,16 @@ public class PacManGames2dApp extends Application {
         ui.setGameScenes(GameVariant.MS_PACMAN, Map.of(
             GameSceneID.BOOT_SCENE,   new BootScene(),
             GameSceneID.INTRO_SCENE,  new MsPacManGameIntroScene(),
-            GameSceneID.START_SCENE, new MsPacManGameStartScene(),
+            GameSceneID.START_SCENE,  new MsPacManGameStartScene(),
             GameSceneID.PLAY_SCENE,   new PlayScene2D(),
             GameSceneID.CUT_SCENE_1,  new MsPacManGameCutScene1(),
             GameSceneID.CUT_SCENE_2,  new MsPacManGameCutScene2(),
             GameSceneID.CUT_SCENE_3,  new MsPacManGameCutScene3()
         ));
         ui.setGameScenes(GameVariant.MS_PACMAN_TENGEN, Map.of(
-            GameSceneID.BOOT_SCENE,   new BootScene(),
+            GameSceneID.BOOT_SCENE,   new TengenMsPacManGameBootScene(),
             GameSceneID.INTRO_SCENE,  new TengenMsPacManGameIntroScene(),
-            GameSceneID.START_SCENE, new TengenMsPacManGameStartScene(),
+            GameSceneID.START_SCENE,  new TengenMsPacManGameStartScene(),
             GameSceneID.PLAY_SCENE,   new PlayScene2D(),
             GameSceneID.CUT_SCENE_1,  new MsPacManGameCutScene1(),
             GameSceneID.CUT_SCENE_2,  new MsPacManGameCutScene2(),
@@ -93,7 +94,7 @@ public class PacManGames2dApp extends Application {
         ui.setGameScenes(GameVariant.PACMAN, Map.of(
             GameSceneID.BOOT_SCENE,   new BootScene(),
             GameSceneID.INTRO_SCENE,  new PacManGameIntroScene(),
-            GameSceneID.START_SCENE, new MsPacManGameStartScene(),
+            GameSceneID.START_SCENE,  new MsPacManGameStartScene(),
             GameSceneID.PLAY_SCENE,   new PlayScene2D(),
             GameSceneID.CUT_SCENE_1,  new PacManGameCutScene1(),
             GameSceneID.CUT_SCENE_2,  new PacManGameCutScene2(),
@@ -102,7 +103,7 @@ public class PacManGames2dApp extends Application {
         ui.setGameScenes(GameVariant.PACMAN_XXL, Map.of(
             GameSceneID.BOOT_SCENE,   new BootScene(),
             GameSceneID.INTRO_SCENE,  new PacManGameIntroScene(),
-            GameSceneID.START_SCENE, new MsPacManGameStartScene(),
+            GameSceneID.START_SCENE,  new MsPacManGameStartScene(),
             GameSceneID.PLAY_SCENE,   new PlayScene2D(),
             GameSceneID.CUT_SCENE_1,  new PacManGameCutScene1(),
             GameSceneID.CUT_SCENE_2,  new PacManGameCutScene2(),

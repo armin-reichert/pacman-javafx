@@ -46,6 +46,21 @@ import static de.amr.games.pacman.model.GameWorld.PROPERTY_COLOR_WALL_FILL;
  */
 public class TengenMsPacManGameRenderer implements GameWorldRenderer {
 
+    // Picked from NES Emulator
+    static final Color[]  SHADES_OF_BLUE = {
+            Color.rgb(0, 42, 136),
+            Color.rgb(21, 95, 217),
+            Color.rgb(100, 176, 255),
+            Color.rgb(192, 223, 255)
+    };
+
+    static Color shadeOfBlue(long t) {
+        int ticksPerColor = 16;
+        int ticksPerAnimation = (ticksPerColor * SHADES_OF_BLUE.length);
+        int index = (int) (t % ticksPerAnimation) / ticksPerColor;
+        return SHADES_OF_BLUE[index];
+    }
+
     // Maze images are taken from files "arcade_mazes.png" and "non_arcade_mazes.png" via AssetStorage
 
     /**
