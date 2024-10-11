@@ -143,11 +143,9 @@ public class MsPacManTengenGame extends GameModel {
 
     private boolean isStrangeMap(WorldMap worldMap) {
         int mapNumber = Integer.parseInt(worldMap.terrain().getProperty("map_number"));
-        if (mapNumber == 16) {
-            return true; // this MINI map appears in STRANGE gameplay
-        }
-        if (mapNumber == 28 || mapNumber == 30) {
-            return true; // appear with different color palette!?
+        if (mapNumber == 16 || mapNumber == 28 || mapNumber == 30) {
+            // 28 and 30 appear with different, random(?) color palette!?
+            return true;
         }
         return worldMap.terrain().numRows() > 30; //TODO correct?
     }
@@ -162,11 +160,13 @@ public class MsPacManTengenGame extends GameModel {
 
     public void setBoosterActive(boolean boosterActive) {
         this.boosterActive = boosterActive;
-        float multiplier = boosterActive ? BOOSTER_FACTOR : 1;
-        float speed = multiplier * PPS_AT_100_PERCENT * SEC_PER_TICK;
-        pac.setBaseSpeed(speed);
+        float baseSpeed = PPS_AT_100_PERCENT * SEC_PER_TICK; // pixel/sec
+        if (boosterActive) {
+            baseSpeed *= BOOSTER_FACTOR;
+        }
+        pac.setBaseSpeed(baseSpeed);
         pac.selectAnimation(boosterActive ? Pac.ANIM_MUNCHING_BOOSTER : Pac.ANIM_MUNCHING);
-        Logger.info("Pac base speed is {0.00} px/s", speed);
+        Logger.info("Ms. Pac-Man base speed is {0.00} px/s", baseSpeed);
     }
 
     public boolean isBoosterActive() {
