@@ -221,47 +221,36 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
     }
 
     private void selectNextStartingLevelValue() {
-        if (tengenGame.startingLevel() < 7) {
-            tengenGame.setStartingLevel(tengenGame.startingLevel() + 1);
-        } else {
-            tengenGame.setStartingLevel(1);
-        }
+        int current = tengenGame.startingLevel();
+        int next = (current < 7) ? current + 1 : 1;
+        tengenGame.setStartingLevel(next);
         playChangeOptionValueSound();
         resetIdleTimer();
     }
 
     private void selectNextMazeSelectionValue() {
         MsPacManTengenGame.MapCategory category = tengenGame.mapCategory();
-        int ord = category.ordinal();
-        if (ord == MsPacManTengenGame.MapCategory.values().length - 1) {
-            tengenGame.setMapCategory(MsPacManTengenGame.MapCategory.values()[0]);
-        } else {
-            tengenGame.setMapCategory(MsPacManTengenGame.MapCategory.values()[ord + 1]);
-        }
+        var values = MsPacManTengenGame.MapCategory.values();
+        int current = category.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
+        tengenGame.setMapCategory(values[next]);
         playChangeOptionValueSound();
         resetIdleTimer();
     }
 
     private void selectNextDifficultyValue() {
         MsPacManTengenGame.Difficulty difficulty = tengenGame.difficulty();
-        int ord = difficulty.ordinal();
-        if (ord == MsPacManTengenGame.Difficulty.values().length - 1) {
-            tengenGame.setDifficulty(MsPacManTengenGame.Difficulty.values()[0]);
-        } else {
-            tengenGame.setDifficulty(MsPacManTengenGame.Difficulty.values()[ord + 1]);
-        }
+        var values = MsPacManTengenGame.Difficulty.values();
+        int current = difficulty.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
+        tengenGame.setDifficulty(values[next]);
         playChangeOptionValueSound();
         resetIdleTimer();
     }
 
     private void selectNextPacBoosterValue() {
         MsPacManTengenGame.PacBooster pacBooster = tengenGame.pacBooster();
-        int ord = pacBooster.ordinal();
-        if (ord == MsPacManTengenGame.PacBooster.values().length - 1) {
-            tengenGame.setPacBooster(MsPacManTengenGame.PacBooster.values()[0]);
-        } else {
-            tengenGame.setPacBooster(MsPacManTengenGame.PacBooster.values()[ord + 1]);
-        }
+        var values = MsPacManTengenGame.PacBooster.values();
+        int current = pacBooster.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
+        tengenGame.setPacBooster(values[next]);
         playChangeOptionValueSound();
         resetIdleTimer();
     }
