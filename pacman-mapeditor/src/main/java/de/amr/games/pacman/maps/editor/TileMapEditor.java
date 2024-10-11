@@ -42,8 +42,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.maps.editor.TileMapEditorViewModel.tt;
@@ -112,12 +110,10 @@ public class TileMapEditor implements TileMapEditorViewModel {
     private Menu menuLoadMap;
     private Menu menuView;
 
-    private final ContextMenu contextMenu = new ContextMenu();
-
-    private final Map<String, Palette> palettes = new HashMap<>();
+    private final ContextMenu      contextMenu = new ContextMenu();
+    private final Palette[]        palettes = new Palette[3];
     private PropertyEditorPane     terrainMapPropertiesEditor;
     private PropertyEditorPane     foodMapPropertiesEditor;
-
     private TerrainMapEditRenderer terrainMapEditRenderer;
     private TerrainMapRenderer     terrainMapPreviewRenderer;
     private FoodMapRenderer        foodMapRenderer;
@@ -165,13 +161,13 @@ public class TileMapEditor implements TileMapEditorViewModel {
     }
 
     @Override
-    public String selectedPaletteID() {
-        return (String) tabPaneWithPalettes.getSelectionModel().getSelectedItem().getUserData();
+    public byte selectedPaletteID() {
+        return (Byte) tabPaneWithPalettes.getSelectionModel().getSelectedItem().getUserData();
     }
 
     @Override
     public Palette selectedPalette() {
-        return palettes.get(selectedPaletteID());
+        return palettes[selectedPaletteID()];
     }
 
     @Override
@@ -248,7 +244,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
         createEditCanvas();
         createPreviewCanvas();
         createMapSourceView();
-        createTabPaneWithPalettes();
+        createPalettes();
         createPropertyEditors();
         createTabPaneWithMapViews();
         createFocussedTileIndicator();
@@ -338,20 +334,20 @@ public class TileMapEditor implements TileMapEditorViewModel {
         tabPaneMapViews.setSide(Side.BOTTOM);
     }
 
-    private void createTabPaneWithPalettes() {
-        palettes.put(PALETTE_ID_ACTORS, createActorPalette());
-        palettes.put(PALETTE_ID_TERRAIN, createTerrainPalette());
-        palettes.put(PALETTE_ID_FOOD, createFoodPalette());
+    private void createPalettes() {
+        palettes[PALETTE_ID_ACTORS]  = createActorPalette();
+        palettes[PALETTE_ID_TERRAIN] = createTerrainPalette();
+        palettes[PALETTE_ID_FOOD]    = createFoodPalette();
 
-        var tab1 = new Tab(tt("terrain"), palettes.get(PALETTE_ID_TERRAIN).root());
+        var tab1 = new Tab(tt("terrain"), palettes[PALETTE_ID_TERRAIN].root());
         tab1.setClosable(false);
         tab1.setUserData(PALETTE_ID_TERRAIN);
 
-        var tab2 = new Tab(tt("actors"), palettes.get(PALETTE_ID_ACTORS).root());
+        var tab2 = new Tab(tt("actors"), palettes[PALETTE_ID_ACTORS].root());
         tab2.setClosable(false);
         tab2.setUserData(PALETTE_ID_ACTORS);
 
-        var tab3 = new Tab(tt("pellets"), palettes.get(PALETTE_ID_FOOD).root());
+        var tab3 = new Tab(tt("pellets"), palettes[PALETTE_ID_FOOD].root());
         tab3.setClosable(false);
         tab3.setUserData(PALETTE_ID_FOOD);
 
@@ -899,8 +895,8 @@ public class TileMapEditor implements TileMapEditorViewModel {
     }
 
     private void drawSelectedPalette() {
-        Palette selectedPalette = palettes.get(selectedPaletteID());
-        if (selectedPaletteID().equals(PALETTE_ID_TERRAIN)) {
+        Palette selectedPalette = palettes[selectedPaletteID()];
+        if (selectedPaletteID() == PALETTE_ID_TERRAIN) {
             double scaling = terrainMapEditRenderer.scaling();
             terrainMapEditRenderer.setScaling((double) TOOL_SIZE / 8);
             terrainMapEditRenderer.setWallStrokeColor(terrainMapEditRenderer.wallStrokeColor);

@@ -22,9 +22,9 @@ public interface TileMapEditorViewModel {
     byte MIN_GRID_SIZE = 8;
     byte MAX_GRID_SIZE = 48;
 
-    String PALETTE_ID_TERRAIN = "Terrain";
-    String PALETTE_ID_ACTORS  = "Actors";
-    String PALETTE_ID_FOOD    = "Food";
+    byte PALETTE_ID_ACTORS  = 0;
+    byte PALETTE_ID_TERRAIN = 1;
+    byte PALETTE_ID_FOOD    = 2;
 
     String PROPERTY_COLOR_FOOD               = "color_food";
     String PROPERTY_COLOR_WALL_STROKE        = "color_wall_stroke";
@@ -77,7 +77,7 @@ public interface TileMapEditorViewModel {
 
     Palette selectedPalette();
 
-    String selectedPaletteID();
+    byte selectedPaletteID();
 
     PropertyEditorPane terrainPropertiesEditor();
 
