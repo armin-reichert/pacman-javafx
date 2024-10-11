@@ -9,10 +9,12 @@ import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.pacmanxxl.PacManXXLGame;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -313,11 +315,16 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
+            int numCustomMaps = 0;
+            if (game.variant() == GameVariant.PACMAN_XXL) {
+                PacManXXLGame xxlGame = (PacManXXLGame) game;
+                numCustomMaps = xxlGame.customMapsSortedByFile().size();
+            }
             lastLevelNumber = switch (game.variant()) {
                 case MS_PACMAN -> 17;
                 case MS_PACMAN_TENGEN -> 32;
                 case PACMAN -> 21;
-                case PACMAN_XXL -> 8; //TODO what about custom maps?
+                case PACMAN_XXL -> 8 + numCustomMaps;
             };
             timer.restartIndefinitely();
             game.reset();
@@ -396,11 +403,16 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
+            int numCustomMaps = 0;
+            if (game.variant() == GameVariant.PACMAN_XXL) {
+                PacManXXLGame xxlGame = (PacManXXLGame) game;
+                numCustomMaps = xxlGame.customMapsSortedByFile().size();
+            }
             lastLevelNumber = switch (game.variant()) {
                 case MS_PACMAN -> 17;
                 case MS_PACMAN_TENGEN -> 32;
                 case PACMAN -> 21;
-                case PACMAN_XXL -> 8; //TODO what about custom maps?
+                case PACMAN_XXL -> 8 + numCustomMaps;
             };
             levelStartTime = System.currentTimeMillis();
             timer.restartIndefinitely();
