@@ -36,7 +36,7 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class MsPacManTengenGame extends GameModel {
 
-    public enum MapCategory { ARCADE, STRANGE, MINI, BIG }
+    public enum MapCategory { ARCADE, MINI, BIG, STRANGE }
     public enum Difficulty { NORMAL, EASY, HARD, CRAZY }
     public enum PacBooster { OFF, TOGGLE_USING_KEY, ALWAYS_ON }
 

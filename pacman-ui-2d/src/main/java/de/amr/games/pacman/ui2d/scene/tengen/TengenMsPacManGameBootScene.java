@@ -17,9 +17,11 @@ public class TengenMsPacManGameBootScene extends GameScene2D {
     private Ghost ghost;
     private int tengenPresentsY;
     private boolean grayScreen;
+    private long t;
 
     @Override
     public void init() {
+        t = 0;
         context.setScoreVisible(false);
         tengenPresentsY = 36 * TS;
         grayScreen = false;
@@ -30,7 +32,6 @@ public class TengenMsPacManGameBootScene extends GameScene2D {
 
     @Override
     public void update() {
-        long t = context.gameClock().getUpdateCount();
         if (0 <= t && t < 120) {
             if (t % 4 == 0 && tengenPresentsY > 16 * TS) { // TODO check y position
                 tengenPresentsY -= TS;
@@ -54,7 +55,7 @@ public class TengenMsPacManGameBootScene extends GameScene2D {
         else if (t == 360) {
             context.gameController().changeState(GameState.INTRO);
         }
-
+        t += 1;
     }
 
     @Override
@@ -68,7 +69,6 @@ public class TengenMsPacManGameBootScene extends GameScene2D {
             renderer.ctx().fillRect(0, 0, renderer.canvas().getWidth(), renderer.canvas().getHeight());
         } else {
             Font font = renderer.scaledArcadeFont(TS);
-            long t = context.gameClock().getUpdateCount();
             renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t, 16), font, 6 * TS, tengenPresentsY);
             renderer.drawAnimatedEntity(ghost);
         }

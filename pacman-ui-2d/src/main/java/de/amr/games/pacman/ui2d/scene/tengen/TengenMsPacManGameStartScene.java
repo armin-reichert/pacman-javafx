@@ -81,7 +81,7 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
         int y = 7 * TS;
         drawBabyBlueBar(renderer, y);
 
-        y += 3 * TS;
+        y += 3 * TS + 2;
         renderer.drawText("MS PAC-MAN OPTIONS", LABEL_COLOR, font, 6 * TS, y);
 
         // Players (not implemented)
@@ -119,14 +119,14 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
         renderer.drawText(":", LABEL_COLOR, font, COL_COLON, y);
         renderer.drawText(String.valueOf(tengenGame.startingLevel()), VALUE_COLOR, font, COL_VALUE + TS, y);
 
-        y += 3 * TS;
+        y += 3 * TS + 3;
         drawCenteredText(renderer, "MOVE ARROW WITH CURSOR KEYS", LABEL_COLOR, font, y);
         y += TS + 1;
         drawCenteredText(renderer, "CHOOSE OPTIONS WITH TAB", LABEL_COLOR, font, y);
         y += TS + 1;
         drawCenteredText(renderer, "PRESS ENTER TO START GAME", LABEL_COLOR, font, y);
 
-        y += TS;
+        y += TS - 3;
         drawBabyBlueBar(renderer, y);
     }
 
