@@ -229,7 +229,7 @@ public class TengenStartScene extends GameScene2D {
         }
         else {
             context.execFirstCalledAction(
-                GameAction2D.TEST_LEVELS_AND_BONUSES,
+                GameAction2D.TEST_LEVELS_BONI,
                 GameAction2D.TEST_LEVELS_TEASERS,
                 GameAction2D.TEST_CUT_SCENES);
         }

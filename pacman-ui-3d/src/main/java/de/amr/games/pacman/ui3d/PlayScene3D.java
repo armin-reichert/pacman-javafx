@@ -226,7 +226,7 @@ public class PlayScene3D implements GameScene {
             case GHOST_DYING      -> onEnterStateGhostDying();
             case LEVEL_COMPLETE   -> onEnterStateLevelComplete();
             case LEVEL_TRANSITION -> onEnterStateLevelTransition();
-            case TESTING_LEVELS_AND_BONUSES -> onEnterStateLevelTest();
+            case TESTING_LEVELS_BONI -> onEnterStateLevelTest();
             case GAME_OVER        -> onEnterStateGameOver();
             default -> {}
         }
@@ -371,8 +371,8 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onLevelStarted(GameEvent event) {
         addLevelCounter();
-        if (context.game().levelNumber() == 1 || context.gameState() == GameState.TESTING_LEVELS_AND_BONUSES) {
-            if (context.gameState() == GameState.TESTING_LEVELS_AND_BONUSES) {
+        if (context.game().levelNumber() == 1 || context.gameState() == GameState.TESTING_LEVELS_BONI) {
+            if (context.gameState() == GameState.TESTING_LEVELS_BONI) {
                 replaceGameLevel3D(false);
                 showLevelTestMessage();
             } else if (!context.game().isDemoLevel()){

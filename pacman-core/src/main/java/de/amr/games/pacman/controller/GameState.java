@@ -307,7 +307,7 @@ public enum GameState implements FsmState<GameModel> {
 
     // Test states
 
-    TESTING_LEVELS_AND_BONUSES {
+    TESTING_LEVELS_BONI {
 
         private int lastLevelNumber;
 
