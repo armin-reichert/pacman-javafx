@@ -8,5 +8,5 @@ package de.amr.games.pacman.ui2d.scene;
  * @author Armin Reichert
  */
 public enum GameSceneID {
-    BOOT_SCENE, INTRO_SCENE, CREDIT_SCENE, PLAY_SCENE, PLAY_SCENE_3D, CUT_SCENE_1, CUT_SCENE_2, CUT_SCENE_3
+    BOOT_SCENE, INTRO_SCENE, START_SCENE, PLAY_SCENE, PLAY_SCENE_3D, CUT_SCENE_1, CUT_SCENE_2, CUT_SCENE_3
 }

@@ -218,7 +218,7 @@ public class MsPacManIntroScene extends GameScene2D {
         context.execFirstCalledAction(Stream.of(
             GameAction2D.ADD_CREDIT,
             GameAction2D.START_GAME,
-            GameAction2D.TEST_LEVELS,
+            GameAction2D.TEST_LEVELS_AND_BONUSES,
             GameAction2D.TEST_CUT_SCENES));
     }
 

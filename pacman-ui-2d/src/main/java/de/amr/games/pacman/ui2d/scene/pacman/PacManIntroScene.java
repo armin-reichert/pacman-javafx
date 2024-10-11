@@ -15,6 +15,7 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -37,6 +38,13 @@ import static de.amr.games.pacman.ui2d.GameAssets2D.*;
  * @author Armin Reichert
  */
 public class PacManIntroScene extends GameScene2D {
+
+    private static final List<GameAction> ACTIONS = List.of(
+        GameAction2D.ADD_CREDIT,
+        GameAction2D.START_GAME,
+        GameAction2D.TEST_LEVELS_AND_BONUSES,
+        GameAction2D.TEST_LEVELS_TEASERS,
+        GameAction2D.TEST_CUT_SCENES);
 
     static final String[] GHOST_CHARACTERS = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
     static final Color[] GHOST_COLORS = { PALETTE_RED, PALETTE_PINK, PALETTE_CYAN, PALETTE_ORANGE };
@@ -278,11 +286,7 @@ public class PacManIntroScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        context.execFirstCalledAction(
-            GameAction2D.ADD_CREDIT,
-            GameAction2D.START_GAME,
-            GameAction2D.TEST_LEVELS,
-            GameAction2D.TEST_CUT_SCENES);
+        context.execFirstCalledAction(ACTIONS);
     }
 
     @Override

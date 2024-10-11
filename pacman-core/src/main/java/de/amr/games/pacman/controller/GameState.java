@@ -305,7 +305,9 @@ public enum GameState implements FsmState<GameModel> {
         }
     },
 
-    LEVEL_TEST {
+    // Test states
+
+    TESTING_LEVELS_AND_BONUSES {
 
         private int lastLevelNumber;
 
@@ -313,7 +315,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             lastLevelNumber = switch (game.variant()) {
                 case MS_PACMAN -> 17;
-                case MS_PACMAN_TENGEN -> 46;
+                case MS_PACMAN_TENGEN -> 32;
                 case PACMAN -> 21;
                 case PACMAN_XXL -> 8; //TODO what about custom maps?
             };
@@ -382,7 +384,67 @@ public enum GameState implements FsmState<GameModel> {
         }
     },
 
-    INTERMISSION_TEST {
+    /**
+     * Play levels for some defined time e.g. 20 seconds.
+     */
+    TESTING_LEVEL_TEASERS {
+
+        static final int PLAY_TIME_SECONDS = 7; // 7 seconds, seven seconds away...
+
+        private int lastLevelNumber;
+        private long levelStartTime;
+
+        @Override
+        public void onEnter(GameModel game) {
+            lastLevelNumber = switch (game.variant()) {
+                case MS_PACMAN -> 17;
+                case MS_PACMAN_TENGEN -> 32;
+                case PACMAN -> 21;
+                case PACMAN_XXL -> 8; //TODO what about custom maps?
+            };
+            levelStartTime = System.currentTimeMillis();
+            timer.restartIndefinitely();
+            game.reset();
+            game.createLevel(1);
+            game.startLevel();
+            game.showGuys();
+            game.pac().startAnimation();
+            game.ghosts().forEach(Ghost::startAnimation);
+            game.blinking().setStartPhase(Pulse.ON);
+            game.blinking().restart(Integer.MAX_VALUE);
+            game.publishGameEvent(GameEventType.HUNTING_PHASE_STARTED);
+        }
+
+        @Override
+        public void onUpdate(GameModel game) {
+            game.doHuntingStep();
+            if (System.currentTimeMillis() - levelStartTime >= PLAY_TIME_SECONDS * 1000) {
+                if (game.levelNumber() == lastLevelNumber) {
+                    enterState(INTRO);
+                } else {
+                    timer().restartIndefinitely();
+                    game.pac().freeze();
+                    game.bonus().ifPresent(Bonus::setInactive);
+                    setProperty("mazeFlashing", false);
+                    game.blinking().reset();
+                    game.createLevel(game.levelNumber() + 1);
+                    game.startLevel();
+                    game.showGuys();
+                    levelStartTime = System.currentTimeMillis();
+                }
+            }
+            else if (game.isLevelComplete()) {
+                //enterState(LEVEL_COMPLETE);
+                enterState(INTRO);
+            } else if (game.isPacManKilled()) {
+                //enterState(PACMAN_DYING);
+            } else if (game.areGhostsKilled()) {
+                //enterState(GHOST_DYING);
+            }
+        }
+    },
+
+    TESTING_CUT_SCENES {
         @Override
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();

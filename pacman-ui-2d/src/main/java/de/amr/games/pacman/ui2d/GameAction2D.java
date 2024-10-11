@@ -22,7 +22,6 @@ import org.tinylog.Logger;
 import java.util.List;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
-import static de.amr.games.pacman.controller.GameState.LEVEL_TEST;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
@@ -186,7 +185,7 @@ public enum GameAction2D implements GameAction {
             super.execute(context);
             context.sounds().stopAll();
             context.currentGameScene().ifPresent(GameScene::end);
-            if (context.gameState() == LEVEL_TEST) {
+            if (context.gameState() == GameState.TESTING_LEVELS_AND_BONUSES) {
                 context.gameState().onExit(context.game()); //TODO exit other states too?
             }
             context.gameClock().setTargetFrameRate(GameModel.FPS);
@@ -296,16 +295,25 @@ public enum GameAction2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
-            context.gameController().changeState(GameState.INTERMISSION_TEST);
+            context.gameController().changeState(GameState.TESTING_CUT_SCENES);
             context.showFlashMessage("Cut scenes test"); //TODO localize
         }
     },
 
-    TEST_LEVELS(alt(KeyCode.T)) {
+    TEST_LEVELS_AND_BONUSES(alt(KeyCode.T)) {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
-            context.gameController().restart(GameState.LEVEL_TEST);
+            context.gameController().restart(GameState.TESTING_LEVELS_AND_BONUSES);
+            context.showFlashMessageSeconds(3, "Level TEST MODE");
+        }
+    },
+
+    TEST_LEVELS_TEASERS(shift_alt(KeyCode.T)) {
+        @Override
+        public void execute(GameContext context) {
+            super.execute(context);
+            context.gameController().restart(GameState.TESTING_LEVEL_TEASERS);
             context.showFlashMessageSeconds(3, "Level TEST MODE");
         }
     },

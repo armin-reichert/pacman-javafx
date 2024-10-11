@@ -172,7 +172,7 @@ public class PlayScene2D extends GameScene2D {
             int x = TS * (cx - text.length() / 2);
             Color color = context.assets().color(assetPrefix + ".color.ready_message");
             renderer.drawText(text, color, font, x, y);
-        } else if (context.gameState() == GameState.LEVEL_TEST) {
+        } else if (context.gameState() == GameState.TESTING_LEVELS_AND_BONUSES) {
             String text = "TEST    L%03d".formatted(context.game().levelNumber());
             int x = TS * (cx - text.length() / 2);
             renderer.drawText(text, GameAssets2D.PALETTE_PALE, font, x, y);

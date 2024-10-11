@@ -91,7 +91,7 @@ public class InfoBoxGameControl extends InfoBox {
         bgLevelActions[GAME_LEVEL_NEXT].setDisable(isBooting() || !canEnterNextLevel());
 
         bgCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || state != GameState.INTRO);
-        bgCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(isBooting() || state != GameState.INTERMISSION_TEST);
+        bgCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(isBooting() || state != GameState.TESTING_CUT_SCENES);
 
         cbAutopilot.setDisable(isBooting());
         cbImmunity.setDisable(isBooting());

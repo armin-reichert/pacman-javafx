@@ -60,7 +60,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.controller.GameState.LEVEL_TEST;
+import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS_AND_BONUSES;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
@@ -90,15 +90,13 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         };
     }
 
-    private static void createActorAnimations(GameModel game, AssetStorage assets, GameSpriteSheet spriteSheet) {
+    private static void createActorAnimations(GameModel game, GameSpriteSheet spriteSheet) {
         switch (game.variant()) {
             case MS_PACMAN -> {
                 game.pac().setAnimations(new MsPacManGamePacAnimations(spriteSheet));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, ghost.id())));
             }
             case MS_PACMAN_TENGEN -> {
-                //TODO use Tengen sprites everywhere
-                GameSpriteSheet ssMsPac = assets.get("ms_pacman.spritesheet");
                 game.pac().setAnimations(new TengenPacAnimations(spriteSheet));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new TengenGhostAnimations(spriteSheet, ghost.id())));
             }
@@ -329,16 +327,23 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     protected GameScene gameSceneForCurrentGameState() {
-        GameVariant variant = gameVariant();
-        return switch (gameState()) {
-            case BOOT -> gameScene(variant, GameSceneID.BOOT_SCENE);
-            case STARTING -> gameScene(variant, GameSceneID.CREDIT_SCENE);
-            case INTRO -> gameScene(variant, GameSceneID.INTRO_SCENE);
-            case INTERMISSION -> gameScene(variant, GameSceneID.valueOf(
-                "CUT_SCENE_" + game().intermissionNumber(game().levelNumber())));
-            case INTERMISSION_TEST -> gameScene(variant, GameSceneID.valueOf(
-                "CUT_SCENE_" + gameState().<Integer>getProperty("intermissionTestNumber")));
-            default -> gameScene(variant, GameSceneID.PLAY_SCENE);
+        GameSceneID sceneID = switch (gameState()) {
+            case BOOT               -> GameSceneID.BOOT_SCENE;
+            case STARTING           -> GameSceneID.START_SCENE;
+            case INTRO              -> GameSceneID.INTRO_SCENE;
+            case INTERMISSION       -> cutSceneID(game().intermissionNumber(game().levelNumber()));
+            case TESTING_CUT_SCENES -> cutSceneID(gameState().<Integer>getProperty("intermissionTestNumber"));
+            default                 -> GameSceneID.PLAY_SCENE;
+        };
+        return gameScene(gameVariant(), sceneID);
+    }
+
+    private GameSceneID cutSceneID(int number) {
+        return switch (number) {
+            case 1 -> GameSceneID.CUT_SCENE_1;
+            case 2 -> GameSceneID.CUT_SCENE_2;
+            case 3 -> GameSceneID.CUT_SCENE_3;
+            default -> null;
         };
     }
 
@@ -563,7 +568,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public void onLevelCreated(GameEvent event) {
-        createActorAnimations(game(), assets, spriteSheet());
+        createActorAnimations(game(), spriteSheet());
         Logger.info("Actor animations created. ({} level #{})", gameVariant(), game().levelNumber());
         if (game().isDemoLevel()) {
             sounds().setEnabled(false);
@@ -579,7 +584,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     public void onLevelStarted(GameEvent event) {
         int hourOfDay = LocalTime.now().getHour();
         PY_NIGHT_MODE.set(hourOfDay >= 21 || hourOfDay <= 4);
-        if (gameState() != LEVEL_TEST && !game().isDemoLevel() && game().levelNumber() == 1) {
+        if (gameState() != TESTING_LEVELS_AND_BONUSES && !game().isDemoLevel() && game().levelNumber() == 1) {
             sounds().playGameReadySound();
         }
     }
