@@ -44,11 +44,14 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
     private int option;
     private MsPacManTengenGame tengenGame;
 
+    private long t;
+
     @Override
     public void init() {
         context.setScoreVisible(false);
         option = OPTION_PAC_BOOSTER;
         tengenGame = (MsPacManTengenGame) context.game();
+        t = 0;
     }
 
     @Override
@@ -57,6 +60,11 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
 
     @Override
     public void update() {
+        if (t == 5*60) {
+            context.gameController().changeState(GameState.INTRO);
+            return;
+        }
+        t += 1;
     }
 
     private void drawBabyBlueBar(GameWorldRenderer renderer, double y) {
