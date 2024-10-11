@@ -140,7 +140,7 @@ public enum GameAction2D implements GameAction {
         public void execute(GameContext context) {
             super.execute(context);
             List<GameVariant> variantsInOrder = PacManGames2dUI.GAME_VARIANTS_IN_ORDER;
-            int nextIndex = variantsInOrder.indexOf(context.game().variant()) + 1;
+            int nextIndex = variantsInOrder.indexOf(context.gameVariant()) + 1;
             context.selectGameVariant(variantsInOrder.get(nextIndex == variantsInOrder.size() ? 0 : nextIndex));
         }
     },
@@ -165,7 +165,7 @@ public enum GameAction2D implements GameAction {
         public void execute(GameContext context) {
             super.execute(context);
             List<GameVariant> variantsInOrder = PacManGames2dUI.GAME_VARIANTS_IN_ORDER;
-            int prevIndex = variantsInOrder.indexOf(context.game().variant()) - 1;
+            int prevIndex = variantsInOrder.indexOf(context.gameVariant()) - 1;
             context.selectGameVariant(variantsInOrder.get(prevIndex < 0 ? variantsInOrder.size() - 1 : prevIndex));
         }
     },

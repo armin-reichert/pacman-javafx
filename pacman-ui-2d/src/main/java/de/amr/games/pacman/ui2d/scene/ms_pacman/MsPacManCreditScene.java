@@ -42,7 +42,7 @@ public class MsPacManCreditScene extends GameScene2D {
     public void drawSceneContent(GameWorldRenderer renderer) {
         var font8 = renderer.scaledArcadeFont(8);
         var font6 = renderer.scaledArcadeFont(6);
-        switch (context.game().variant()) {
+        switch (context.gameVariant()) {
             case MS_PACMAN -> {
                 renderer.drawText("PUSH START BUTTON", PALETTE_ORANGE, font8, t(6), t(16));
                 renderer.drawText("1 PLAYER ONLY", PALETTE_ORANGE, font8, t(8), t(18));
@@ -72,7 +72,7 @@ public class MsPacManCreditScene extends GameScene2D {
                 renderer.drawText("BONUS PAC-MAN FOR 10000", PALETTE_ROSE, font8, t(1), t(25));
                 renderer.drawText("PTS", PALETTE_ROSE, font6, t(25), t(25));
             }
-            default -> throw new IllegalArgumentException("Unsupported game variant: " + context.game().variant());
+            default -> throw new IllegalArgumentException("Unsupported game variant: " + context.gameVariant());
         }
         drawCredit(renderer, context.worldSizeTilesOrDefault());
         drawLevelCounter(renderer, context.worldSizeTilesOrDefault());

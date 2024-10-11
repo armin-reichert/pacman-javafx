@@ -236,7 +236,7 @@ public class MsPacManCutScene1 extends GameScene2D {
         heart = new Entity();
 
         //TODO replace with Tengen sprite sheet later
-        if (context.game().variant() == GameVariant.MS_PACMAN_TENGEN) {
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
             msPac.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
         } else {
@@ -263,7 +263,7 @@ public class MsPacManCutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
-        String assetPrefix = GameAssets2D.assetPrefix(context.game().variant());
+        String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
         Color color = context.assets().color(assetPrefix + ".color.clapperboard");
         renderer.drawClapperBoard(context.spriteSheet(), renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(msPac);

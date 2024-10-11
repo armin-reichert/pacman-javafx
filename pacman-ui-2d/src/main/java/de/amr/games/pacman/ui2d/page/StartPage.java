@@ -188,8 +188,8 @@ public class StartPage extends StackPane implements Page {
         if      (GameAction2D.ENTER_GAME_PAGE.called(context.keyboard())) { context.selectGamePage(); }
         else if (GameAction2D.NEXT_VARIANT.called(context.keyboard()))    { GameAction2D.NEXT_VARIANT.execute(context); }
         else if (GameAction2D.PREV_VARIANT.called(context.keyboard()))    { GameAction2D.PREV_VARIANT.execute(context); }
-        else if (GameAction2D.NEXT_FLYER_PAGE.called(context.keyboard())) { flyer(context.game().variant()).ifPresent(Flyer::nextPage); }
-        else if (GameAction2D.PREV_FLYER_PAGE.called(context.keyboard())) { flyer(context.game().variant()).ifPresent(Flyer::prevPage); }
+        else if (GameAction2D.NEXT_FLYER_PAGE.called(context.keyboard())) { flyer(context.gameVariant()).ifPresent(Flyer::nextPage); }
+        else if (GameAction2D.PREV_FLYER_PAGE.called(context.keyboard())) { flyer(context.gameVariant()).ifPresent(Flyer::prevPage); }
     }
 
     @Override

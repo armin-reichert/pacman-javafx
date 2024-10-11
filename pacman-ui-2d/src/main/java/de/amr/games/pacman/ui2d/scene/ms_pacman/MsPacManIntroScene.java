@@ -251,7 +251,7 @@ public class MsPacManIntroScene extends GameScene2D {
         }
         renderer.drawAnimatedEntity(msPacMan);
 
-        if (context.game().variant() == GameVariant.MS_PACMAN) {
+        if (context.gameVariant() == GameVariant.MS_PACMAN) {
             renderer.drawMsPacManMidwayCopyright(context.assets().get("ms_pacman.logo.midway"),
                 t(6), t(28), PALETTE_RED, renderer.scaledArcadeFont(TS));
         }

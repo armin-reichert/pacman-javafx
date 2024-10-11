@@ -82,7 +82,7 @@ public class DashboardLayer extends BorderPane {
                 .filter(infoBox -> infoBox instanceof InfoBoxCustomMaps)
                 .findFirst()
                 .ifPresent(infoBox -> {
-                    if (context.game().variant() != GameVariant.PACMAN_XXL) {
+                    if (context.gameVariant() != GameVariant.PACMAN_XXL) {
                         dashboardContainer.getChildren().remove(infoBox);
                     }
                 });

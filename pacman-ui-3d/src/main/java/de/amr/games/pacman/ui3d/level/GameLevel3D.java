@@ -93,7 +93,7 @@ public class GameLevel3D {
     private Bonus3D bonus3D;
 
     public GameLevel3D(GameContext context) {
-        final GameVariant variant = context.game().variant();
+        final GameVariant variant = context.gameVariant();
 
         pac3D = Factory3D.createPac3D(variant, context.assets(), context.sounds(), context.game().pac(), PAC_SIZE);
 

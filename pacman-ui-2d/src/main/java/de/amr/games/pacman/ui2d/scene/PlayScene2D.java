@@ -160,7 +160,7 @@ public class PlayScene2D extends GameScene2D {
         Vector2i houseSize        = context.game().world().houseSize();
         int cx = houseTopLeftTile.x() + houseSize.x() / 2;
         int y = TS * (houseTopLeftTile.y() + houseSize.y() + 1);
-        String assetPrefix = GameAssets2D.assetPrefix(context.game().variant());
+        String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
         Font font = renderer.scaledArcadeFont(TS);
         if (context.gameState() == GameState.GAME_OVER || context.game().isDemoLevel()) {
             String text = "GAME  OVER";
@@ -182,7 +182,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     protected void drawDebugInfo(GameWorldRenderer renderer) {
         renderer.drawTileGrid(context.worldSizeTilesOrDefault());
-        if (context.game().variant() == GameVariant.PACMAN && context.game().world() != null) {
+        if (context.gameVariant() == GameVariant.PACMAN && context.game().world() != null) {
             context.game().ghosts().forEach(ghost -> {
                 // Are currently the same for each ghost, but who knows what comes...
                 ghost.cannotMoveUpTiles().forEach(tile -> {

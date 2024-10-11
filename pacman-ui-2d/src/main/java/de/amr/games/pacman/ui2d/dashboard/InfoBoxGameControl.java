@@ -54,7 +54,7 @@ public class InfoBoxGameControl extends InfoBox {
         spinnerCredit.valueProperty().addListener((py, ov, number) -> context.game().setNumCoins(number));
 
         comboGameVariant.setOnAction(e -> {
-            if (comboGameVariant.getValue() != context.game().variant()) {
+            if (comboGameVariant.getValue() != context.gameVariant()) {
                 context.gameController().selectGame(comboGameVariant.getValue());
                 context.gameController().restart(GameState.BOOT);
             }

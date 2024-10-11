@@ -103,7 +103,7 @@ public interface GameContext {
      */
     String locText(String keyOrPattern, Object... args);
 
-    default GameSpriteSheet spriteSheet() { return spriteSheet(game().variant()); }
+    default GameSpriteSheet spriteSheet() { return spriteSheet(gameVariant()); }
 
     GameSpriteSheet spriteSheet(GameVariant variant);
 

@@ -195,7 +195,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         }
 
         // init game variant property
-        gameVariantPy.set(game().variant());
+        gameVariantPy.set(gameVariant());
 
         //TODO: Not sure if this belongs here:
         PacManXXLGame xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
@@ -318,18 +318,18 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     private String displayName(GameScene gameScene) {
         String text = gameScene != null ? gameScene.getClass().getSimpleName() : "NO GAME SCENE";
-        text += String.format(" (%s)", game().variant());
+        text += String.format(" (%s)", gameVariant());
         return text;
     }
 
     private void configureGameScene2D(GameScene2D gameScene2D) {
-        worldRenderer = createRenderer(game().variant(), assets);
+        worldRenderer = createRenderer(gameVariant(), assets);
         gamePage.setWorldRenderer(worldRenderer);
         gameScene2D.backgroundColorPy.bind(PY_CANVAS_BG_COLOR);
     }
 
     protected GameScene gameSceneForCurrentGameState() {
-        GameVariant variant = game().variant();
+        GameVariant variant = gameVariant();
         return switch (gameState()) {
             case BOOT -> gameScene(variant, GameSceneID.BOOT_SCENE);
             case CREDIT -> gameScene(variant, GameSceneID.CREDIT_SCENE);
@@ -513,7 +513,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     // -----------------------------------------------------------------------------------------------------------------
 
     protected boolean hasID(GameScene gameScene, GameSceneID sceneID) {
-        return gameScene(game().variant(), sceneID) == gameScene;
+        return gameScene(gameVariant(), sceneID) == gameScene;
     }
 
     //TODO maybe return an Optional?
@@ -564,7 +564,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public void onLevelCreated(GameEvent event) {
         createActorAnimations(game(), assets, spriteSheet());
-        Logger.info("Actor animations created. ({} level #{})", game().variant(), game().levelNumber());
+        Logger.info("Actor animations created. ({} level #{})", gameVariant(), game().levelNumber());
         if (game().isDemoLevel()) {
             sounds().setEnabled(false);
         } else {

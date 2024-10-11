@@ -155,7 +155,7 @@ public class MsPacManCutScene3 extends GameScene2D {
         bag = new Entity();
 
         //TODO use Tengen sprite sheet
-        if (context.game().variant() == GameVariant.MS_PACMAN_TENGEN) {
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             msPacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
             pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
         } else {
@@ -185,13 +185,13 @@ public class MsPacManCutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
-        String assetPrefix = GameAssets2D.assetPrefix(context.game().variant());
+        String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
         Color color = context.assets().color(assetPrefix + ".color.clapperboard");
         renderer.drawClapperBoard(context.spriteSheet(), renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(msPacMan);
         renderer.drawAnimatedEntity(pacMan);
         //TODO Hack
-        if (context.game().variant() == GameVariant.MS_PACMAN_TENGEN) {
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             TengenGameWorldRenderer tr = (TengenGameWorldRenderer) renderer;
             tr.drawStork(context.spriteSheet(), storkAnimation, stork, bag.acceleration().y() != 0);
         } else {
