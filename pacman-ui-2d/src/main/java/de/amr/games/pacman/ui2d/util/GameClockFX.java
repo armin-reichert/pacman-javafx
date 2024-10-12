@@ -36,11 +36,13 @@ public class GameClockFX {
 
     private Runnable pauseableCallback = () -> {};
     private Runnable permanentCallback = () -> {};
-    private Timeline timeline;
+    private Timeline timeLine;
     private long updateCount;
+    private long tickCount;
+
     private long ticksPerSec;
     private long countTicksStartTime;
-    private long ticks;
+    private long ticksInFrame;
 
     public GameClockFX() {
         createTimeline(targetFrameRatePy.get());
@@ -55,15 +57,15 @@ public class GameClockFX {
     }
 
     private void createTimeline(double targetFPS) {
-        var tick = new KeyFrame(Duration.seconds(1.0 / targetFPS), e -> makeStep(!isPaused()));
-        timeline = new Timeline(targetFPS, tick);
-        timeline.setCycleCount(Animation.INDEFINITE);
+        var tickDuration = Duration.seconds(1.0 / targetFPS);
+        timeLine = new Timeline(targetFPS, new KeyFrame(tickDuration, e -> makeStep(!isPaused())));
+        timeLine.setCycleCount(Animation.INDEFINITE);
     }
 
     private void handleTargetFrameRateChanged() {
-        boolean running = timeline.getStatus() == Status.RUNNING;
+        boolean running = timeLine.getStatus() == Status.RUNNING;
         if (running) {
-            timeline.stop();
+            timeLine.stop();
         }
         createTimeline(targetFrameRatePy.get());
         if (running) {
@@ -80,26 +82,26 @@ public class GameClockFX {
     }
 
     public void start() {
-        if (timeline.getStatus() != Status.RUNNING) {
-            timeline.play();
-            Logger.info("Clock status: {}", timeline.getStatus());
+        if (timeLine.getStatus() != Status.RUNNING) {
+            timeLine.play();
+            Logger.info("Clock status: {}", timeLine.getStatus());
         } else {
-            Logger.info("Clock status remains {}", timeline.getStatus());
+            Logger.info("Clock status remains {}", timeLine.getStatus());
         }
         Logger.info("Clock target frequency: {} Hz", getTargetFrameRate());
     }
 
     public void stop() {
-        if (timeline.getStatus() == Status.RUNNING) {
-            timeline.stop();
-            Logger.info("Clock status: {}", timeline.getStatus());
+        if (timeLine.getStatus() == Status.RUNNING) {
+            timeLine.stop();
+            Logger.info("Clock status: {}", timeLine.getStatus());
         } else {
-            Logger.info("Clock status remains {}", timeline.getStatus());
+            Logger.info("Clock status remains {}", timeLine.getStatus());
         }
     }
 
     public boolean isRunning() {
-        return timeline.getStatus() == Status.RUNNING;
+        return timeLine.getStatus() == Status.RUNNING;
     }
 
     public boolean isPaused() {
@@ -108,6 +110,13 @@ public class GameClockFX {
 
     public double getActualFrameRate() {
         return ticksPerSec;
+    }
+
+    /**
+     * @return total number of ticks this clock has made.
+     */
+    public long getTickCount() {
+        return tickCount;
     }
 
     public long getUpdateCount() {
@@ -121,22 +130,23 @@ public class GameClockFX {
     }
 
     public void makeStep(boolean pauseableCallbackEnabled) {
-        long executionTime = System.nanoTime();
+        long now = System.nanoTime();
         if (pauseableCallbackEnabled) {
-            execute(pauseableCallback, "Pausable phase: {} milliseconds");
+            execute(pauseableCallback, "Pauseable phase: {} milliseconds");
             updateCount++;
         }
         execute(permanentCallback, "Continous phase: {} milliseconds");
-        ++ticks;
-        computeFrameRate(executionTime);
+        ++tickCount;
+        ++ticksInFrame;
+        computeFrameRate(now);
     }
 
-    private void execute(Runnable callback, String callbackMsg) {
+    private void execute(Runnable callback, String logMessage) {
         if (timeMeasuredPy.get()) {
             double start = System.nanoTime();
             callback.run();
             double duration = System.nanoTime() - start;
-            Logger.info(callbackMsg, duration / 1e6);
+            Logger.info(logMessage, duration / 1e6);
         } else {
             callback.run();
         }
@@ -144,8 +154,8 @@ public class GameClockFX {
 
     private void computeFrameRate(long time) {
         if (time - countTicksStartTime > 1e9) {
-            ticksPerSec = ticks;
-            ticks = 0;
+            ticksPerSec = ticksInFrame;
+            ticksInFrame = 0;
             countTicksStartTime = time;
         }
     }

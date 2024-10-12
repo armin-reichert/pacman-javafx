@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.tengen;
 
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
@@ -20,7 +21,6 @@ import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.ClapperboardAnimation;
-import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
@@ -46,25 +46,20 @@ import static de.amr.games.pacman.model.GameWorld.PROPERTY_COLOR_WALL_FILL;
  */
 public class TengenMsPacManGameRenderer implements GameWorldRenderer {
 
-    public static final Color TENGEN_PINK      = Color.web("#FE6ECC");
-    public static final Color TENGEN_RED       = Color.web("#d84060");
-    public static final Color TENGEN_YELLOW    = Color.web("#BCBE00");
-    public static final Color TENGEN_BABY_BLUE = Color.web("#64b0ff");
-    public static final Color MARQUEE_COLOR    = Color.web("#b71e7b");
+    // all colors picked from NES emulator
+    public static final Color TENGEN_BABY_BLUE          = Color.web("#64b0ff");
+    public static final Color TENGEN_PINK               = Color.web("#fe6ecc");
+    public static final Color TENGEN_YELLOW             = Color.web("#bcbe00");
+    public static final Color TENGEN_MARQUEE_COLOR      = Color.web("#b71e7b");
+    public static final Color TENGEN_PAC_COLOR          = TENGEN_YELLOW;
+    public static final Color TENGEN_RED_GHOST_COLOR    = Color.web("#6e0040");
+    public static final Color TENGEN_PINK_GHOST_COLOR   = TENGEN_PINK;
+    public static final Color TENGEN_CYAN_GHOST_COLOR   = Color.web("#155fd9");
+    public static final Color TENGEN_ORANGE_GHOST_COLOR = Color.web("#b53120");
 
-    // picked from NES emulator
-    public static final Color PAC_COLOR = Color.web("#bcbe00");
-    public static final Color RED_GHOST_COLOR = Color.web("#6e0040");
-    public static final Color PINK_GHOST_COLOR = Color.web("#fe6ecc");
-    public static final Color CYAN_GHOST_COLOR = Color.web("#155fd9");
-    public static final Color ORANGE_GHOST_COLOR = Color.web("#b53120");
-
-    // Picked from NES Emulator
+    // blue colors used in intro, dark to bright
     static final Color[]  SHADES_OF_BLUE = {
-        Color.rgb(0, 42, 136),
-        Color.rgb(21, 95, 217),
-        Color.rgb(100, 176, 255),
-        Color.rgb(192, 223, 255)
+        Color.rgb(0, 42, 136), Color.rgb(21, 95, 217), Color.rgb(100, 176, 255), Color.rgb(192, 223, 255)
     };
 
     static Color shadeOfBlue(long tick, int ticksPerColor) {
@@ -105,13 +100,9 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
         return new RectArea(col * width, y, width, height);
     }
 
-    /*
-     * Maze #32 has 3 different images to create a visual effect.
-     */
+    // Map #32 has 3 different images to create a visual effect.
     private static final RectArea[] MAP_32_FRAMES = {
-        rect(1568,  840, 224, 248),
-        rect(1568, 1088, 224, 248),
-        rect(1568, 1336, 224, 248),
+        rect(1568, 840, 224, 248), rect(1568, 1088, 224, 248), rect(1568, 1336, 224, 248),
     };
 
     private final AssetStorage assets;
@@ -120,8 +111,6 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final Image arcadeMazesImage;
     private final Image nonArcadeMazesImage;
-    //TODO temporary
-    private final MsPacManGameRenderer rendererMsPacMan;
 
     private ImageArea mapSprite;
     private boolean flashMode;
@@ -132,10 +121,6 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
         this.assets = checkNotNull(assets);
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
-
-        rendererMsPacMan = new MsPacManGameRenderer(assets);
-        rendererMsPacMan.scalingProperty().bind(scalingProperty());
-
         arcadeMazesImage = assets.image("tengen.mazes.arcade");
         nonArcadeMazesImage = assets.image("tengen.mazes.non_arcade");
     }
@@ -154,7 +139,6 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     public Canvas canvas() {
         return canvas;
     }
-
 
     @Override
     public void setFlashMode(boolean flashMode) {
@@ -197,9 +181,10 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
                 SpriteAnimation spriteAnimation = spriteAnimations.current();
                 if (spriteAnimation != null) {
                     switch (animations.currentAnimationName()) {
-                        case Pac.ANIM_MUNCHING, Pac.ANIM_MUNCHING_BOOSTER -> drawInMoveDirection(msPacMan, spriteAnimation);
+                        case Pac.ANIM_MUNCHING,
+                             Pac.ANIM_MUNCHING_BOOSTER -> drawRotatedTowardsDir(msPacMan, msPacMan.moveDir(), spriteAnimation);
                         case Pac.ANIM_DYING -> {
-                            //TODO does not work yet
+                            //TODO does not work yet!
                             drawSprite(msPacMan.entity(), spriteAnimation.spriteSheet(), spriteAnimation.currentSprite());
                         }
                         default -> GameWorldRenderer.super.drawAnimatedEntity(msPacMan);
@@ -211,11 +196,11 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
         });
     }
 
-    private void drawInMoveDirection(Creature guy, SpriteAnimation spriteAnimation) {
+    private void drawRotatedTowardsDir(Creature guy, Direction dir, SpriteAnimation spriteAnimation) {
         Vector2f center = guy.center().scaled((float) scaling());
         ctx().save();
         ctx().translate(center.x(), center.y());
-        switch (guy.moveDir()) {
+        switch (dir) {
             case UP    -> ctx().rotate(90);
             case LEFT  -> {}
             case RIGHT -> ctx().scale(-1, 1);
@@ -244,22 +229,10 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
             if (!context.game().isDemoLevel()) {
                 drawTop(spriteSheet, terrain, tengenGame);
             }
-            // Maze #32 has this psychedelic effect
+            // Maze #32 has this psychedelic animation effect
             int mapNumber = Integer.parseInt(world.map().terrain().getProperty("map_number"));
             if (mapNumber == 32) {
-                long tick = context.gameClock().getUpdateCount();
-                int frameTicks = 8; // TODO correct?
-                long frameIndex = (tick % (MAP_32_FRAMES.length * frameTicks)) / frameTicks;
-                RectArea mapArea = MAP_32_FRAMES[(int)frameIndex];
-                ctx().save();
-                ctx().setImageSmoothing(false);
-                ctx().drawImage(mapSprite.source(),
-                    mapArea.x(), mapArea.y(),
-                    mapArea.width(), mapArea.height(),
-                    0, scaled(3 * TS),
-                    scaled(mapArea.width()), scaled(mapArea.height())
-                );
-                ctx().restore();
+                drawAnimatedMaze(context.gameClock().getUpdateCount(), MAP_32_FRAMES);
             } else {
                 RectArea mapArea = mapSprite.area();
                 ctx().drawImage(mapSprite.source(),
@@ -291,6 +264,21 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
         }
     }
 
+    private void drawAnimatedMaze(long tick, RectArea[] sprites) {
+        long frameTicks = 8; // TODO correct?
+        int frameIndex = (int) ( (tick % (sprites.length * frameTicks)) / frameTicks );
+        RectArea currentSprite = sprites[frameIndex];
+        ctx().save();
+        ctx().setImageSmoothing(false);
+        ctx().drawImage(mapSprite.source(),
+            currentSprite.x(), currentSprite.y(),
+            currentSprite.width(), currentSprite.height(),
+            0, scaled(3 * TS),
+            scaled(currentSprite.width()), scaled(currentSprite.height())
+        );
+        ctx().restore();
+    }
+
     private void drawTop(GameSpriteSheet spriteSheet, TileMap terrain, MsPacManTengenGame tengenGame) {
         MapCategory category = tengenGame.mapCategory();
         RectArea categorySprite = switch (category) {
@@ -320,7 +308,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     public void drawScores(GameContext context) {
         Color color = Color.WHITE;
         Font font = scaledArcadeFont(TS);
-        if (context.gameClock().getUpdateCount() % 60 < 30) { drawText("1UP", color, font, t(2), t(1)); }
+        if (context.gameClock().getTickCount() % 60 < 30) { drawText("1UP", color, font, t(2), t(1)); }
         drawText("HIGH SCORE", color, font, t(9), t(1));
         drawText("%6d".formatted(context.game().score().points()),     color, font, 0,     t(2));
         drawText("%6d".formatted(context.game().highScore().points()), color, font, t(11), t(2));

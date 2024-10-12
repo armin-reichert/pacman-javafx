@@ -47,13 +47,13 @@ public class InfoBoxGeneral extends InfoBox {
         iconStop = new ImageView(context.assets().image("icon.stop"));
         iconStep = new ImageView(context.assets().image("icon.step"));
 
-        labelledValue("Java Version",   Runtime.version().toString());
-        labelledValue("JavaFX Version", System.getProperty("javafx.runtime.version"));
-        bgSimulation                  = buttonList("Simulation", "Pause", "Step(s)");
-        spinnerSimulationSteps        = integerSpinner("Num Steps", 1, 50, PY_SIMULATION_STEPS);
-        sliderTargetFPS               = slider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
-        labelledValue("",              () -> "FPS: %.1f (Tgt: %.1f)".formatted(clock.getActualFrameRate(), clock.getTargetFrameRate()));
-        labelledValue("Total Updates", clock::getUpdateCount);
+        labeledValue("Java Version",   Runtime.version().toString());
+        labeledValue("JavaFX Version", System.getProperty("javafx.runtime.version"));
+        bgSimulation                   = buttonList("Simulation", "Pause", "Step(s)");
+        spinnerSimulationSteps         = integerSpinner("Num Steps", 1, 50, PY_SIMULATION_STEPS);
+        sliderTargetFPS                = slider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
+        labeledValue("",               () -> "FPS: %.1f (Tgt: %.1f)".formatted(clock.getActualFrameRate(), clock.getTargetFrameRate()));
+        labeledValue("Total Updates",  clock::getUpdateCount);
         pickerCanvasColor              = colorPicker("Canvas Color", PY_CANVAS_BG_COLOR.get());
         cbCanvasDecoration             = checkBox("Canvas Decoration");
         cbCanvasBorder                 = checkBox("Canvas Border");

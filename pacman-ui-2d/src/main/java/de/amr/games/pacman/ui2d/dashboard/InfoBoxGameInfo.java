@@ -19,29 +19,29 @@ public class InfoBoxGameInfo extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        labelledValue("Game Scene", ifGameScenePresent(gameScene -> gameScene.getClass().getSimpleName()));
-        labelledValue("Game State", () -> "%s".formatted(context.gameState()));
-        labelledValue("State Timer", this::stateTimerInfo);
-        labelledValue("Level Number", ifLevelPresent(level -> "%d".formatted(context.game().levelNumber())));
-        labelledValue("World Map", ifWorldPresent(world -> {
+        labeledValue("Game Scene", ifGameScenePresent(gameScene -> gameScene.getClass().getSimpleName()));
+        labeledValue("Game State", () -> "%s".formatted(context.gameState()));
+        labeledValue("State Timer", this::stateTimerInfo);
+        labeledValue("Level Number", ifLevelPresent(level -> "%d".formatted(context.game().levelNumber())));
+        labeledValue("World Map", ifWorldPresent(world -> {
             String url = world.map().url().toString();
             return url.substring(url.lastIndexOf("/") + 1);
         }));
 
-        labelledValue("Lives",           ifLevelPresent(level -> "%d".formatted(context.game().lives())));
+        labeledValue("Lives",           ifLevelPresent(level -> "%d".formatted(context.game().lives())));
 
-        labelledValue("Hunting Phase",   ifLevelPresent(this::fmtHuntingPhase));
-        labelledValue("",                ifLevelPresent(this::fmtHuntingTicksRunning));
-        labelledValue("",                ifLevelPresent(this::fmtHuntingTicksRemaining));
+        labeledValue("Hunting Phase",   ifLevelPresent(this::fmtHuntingPhase));
+        labeledValue("",                ifLevelPresent(this::fmtHuntingTicksRunning));
+        labeledValue("",                ifLevelPresent(this::fmtHuntingTicksRemaining));
 
-        labelledValue("Pac-Man speed",   ifLevelPresent(this::fmtPacSpeed));
-        labelledValue("- empowered",     ifLevelPresent(this::fmtPacSpeedPowered));
-        labelledValue("Pellets",         ifWorldPresent(this::fmtPelletCount));
-        labelledValue("Ghost speed",     ifLevelPresent(this::fmtGhostSpeed));
-        labelledValue("- frightened",    ifLevelPresent(this::fmtGhostSpeedFrightened));
-        labelledValue("- in tunnel",     ifLevelPresent(this::fmtGhostSpeedTunnel));
-        labelledValue("Frightened time", ifLevelPresent(this::fmtPacPowerSeconds));
-        labelledValue("Maze flashings",  ifLevelPresent(this::fmtNumFlashes));
+        labeledValue("Pac-Man speed",   ifLevelPresent(this::fmtPacSpeed));
+        labeledValue("- empowered",     ifLevelPresent(this::fmtPacSpeedPowered));
+        labeledValue("Pellets",         ifWorldPresent(this::fmtPelletCount));
+        labeledValue("Ghost speed",     ifLevelPresent(this::fmtGhostSpeed));
+        labeledValue("- frightened",    ifLevelPresent(this::fmtGhostSpeedFrightened));
+        labeledValue("- in tunnel",     ifLevelPresent(this::fmtGhostSpeedTunnel));
+        labeledValue("Frightened time", ifLevelPresent(this::fmtPacPowerSeconds));
+        labeledValue("Maze flashings",  ifLevelPresent(this::fmtNumFlashes));
     }
 
     private String stateTimerInfo() {

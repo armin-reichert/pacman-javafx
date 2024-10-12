@@ -145,30 +145,30 @@ public class GameAssets2D extends AssetStorage {
         assets.store("tengen.icon",                           rm.loadImage("graphics/icons/mspacman.png"));
         assets.store("tengen.logo.midway",                    rm.loadImage("graphics/mspacman/midway_logo.png"));
 
-        assets.store("tengen.color.game_over_message",        TengenMsPacManGameRenderer.CYAN_GHOST_COLOR);
+        assets.store("tengen.color.game_over_message",        TengenMsPacManGameRenderer.TENGEN_CYAN_GHOST_COLOR);
         assets.store("tengen.color.ready_message",            TengenMsPacManGameRenderer.TENGEN_YELLOW);
         assets.store("tengen.color.clapperboard",             Color.WHITE);
 
-        assets.store("tengen.pac.color.head",                 TengenMsPacManGameRenderer.PAC_COLOR);
+        assets.store("tengen.pac.color.head",                 TengenMsPacManGameRenderer.TENGEN_PAC_COLOR);
         assets.store("tengen.pac.color.eyes",                 Color.rgb(32, 0, 100));
         assets.store("tengen.pac.color.palate",               Color.grayRgb(66));
-        assets.store("tengen.pac.color.boobs",                TengenMsPacManGameRenderer.PAC_COLOR.deriveColor(0, 1.0, 0.96, 1.0));
-        assets.store("tengen.pac.color.hairbow",              TengenMsPacManGameRenderer.RED_GHOST_COLOR);
+        assets.store("tengen.pac.color.boobs",                TengenMsPacManGameRenderer.TENGEN_PAC_COLOR.deriveColor(0, 1.0, 0.96, 1.0));
+        assets.store("tengen.pac.color.hairbow",              TengenMsPacManGameRenderer.TENGEN_RED_GHOST_COLOR);
         assets.store("tengen.pac.color.hairbow.pearls",       Color.web("#002a88"));
 
-        assets.store("tengen.ghost.0.color.normal.dress",     TengenMsPacManGameRenderer.RED_GHOST_COLOR);
+        assets.store("tengen.ghost.0.color.normal.dress",     TengenMsPacManGameRenderer.TENGEN_RED_GHOST_COLOR);
         assets.store("tengen.ghost.0.color.normal.eyeballs",  Color.WHITE);
         assets.store("tengen.ghost.0.color.normal.pupils",    Color.rgb(224, 80, 0));
 
-        assets.store("tengen.ghost.1.color.normal.dress",     TengenMsPacManGameRenderer.PINK_GHOST_COLOR);
+        assets.store("tengen.ghost.1.color.normal.dress",     TengenMsPacManGameRenderer.TENGEN_PINK_GHOST_COLOR);
         assets.store("tengen.ghost.1.color.normal.eyeballs",  Color.WHITE);
         assets.store("tengen.ghost.1.color.normal.pupils",    Color.rgb(63, 96, 248));
 
-        assets.store("tengen.ghost.2.color.normal.dress",     TengenMsPacManGameRenderer.CYAN_GHOST_COLOR);
+        assets.store("tengen.ghost.2.color.normal.dress",     TengenMsPacManGameRenderer.TENGEN_CYAN_GHOST_COLOR);
         assets.store("tengen.ghost.2.color.normal.eyeballs",  Color.WHITE);
         assets.store("tengen.ghost.2.color.normal.pupils",    Color.rgb(63, 96, 248));
 
-        assets.store("tengen.ghost.3.color.normal.dress",     TengenMsPacManGameRenderer.ORANGE_GHOST_COLOR);
+        assets.store("tengen.ghost.3.color.normal.dress",     TengenMsPacManGameRenderer.TENGEN_ORANGE_GHOST_COLOR);
         assets.store("tengen.ghost.3.color.normal.eyeballs",  Color.WHITE);
         assets.store("tengen.ghost.3.color.normal.pupils",    Color.rgb(176, 15, 48));
 

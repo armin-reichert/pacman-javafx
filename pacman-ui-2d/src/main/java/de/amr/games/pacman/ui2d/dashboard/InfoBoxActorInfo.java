@@ -28,10 +28,10 @@ public class InfoBoxActorInfo extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        labelledValue("Pac Name", pacInfo((game, pac) -> pac.name()));
-        labelledValue("Movement", pacInfo(this::movementInfo));
-        labelledValue("Tile",     pacInfo(this::locationInfo));
-        labelledValue("Power", () -> {
+        labeledValue("Pac Name", pacInfo((game, pac) -> pac.name()));
+        labeledValue("Movement", pacInfo(this::movementInfo));
+        labeledValue("Tile",     pacInfo(this::locationInfo));
+        labeledValue("Power", () -> {
             TickTimer powerTimer = context.game().powerTimer();
             return powerTimer.isRunning()
                 ? "Remaining: %s".formatted(ticksToString(powerTimer.remaining()))
@@ -70,10 +70,10 @@ public class InfoBoxActorInfo extends InfoBox {
     }
 
     private void ghostInfo(byte ghostID) {
-        labelledValue(ghostColorName(ghostID) + " Ghost", fnGhostInfo(this::ghostNameAndState, ghostID));
-        labelledValue("Animation",      fnGhostInfo(this::ghostAnimation, ghostID));
-        labelledValue("Movement",       fnGhostInfo(this::movementInfo, ghostID));
-        labelledValue("Tile",           fnGhostInfo(this::locationInfo, ghostID));
+        labeledValue(ghostColorName(ghostID) + " Ghost", fnGhostInfo(this::ghostNameAndState, ghostID));
+        labeledValue("Animation",      fnGhostInfo(this::ghostAnimation, ghostID));
+        labeledValue("Movement",       fnGhostInfo(this::movementInfo, ghostID));
+        labeledValue("Tile",           fnGhostInfo(this::locationInfo, ghostID));
     }
 
     private Supplier<String> fnGhostInfo(

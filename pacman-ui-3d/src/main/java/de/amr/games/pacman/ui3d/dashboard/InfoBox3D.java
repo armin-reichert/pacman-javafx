@@ -59,7 +59,7 @@ public class InfoBox3D extends InfoBox {
         pickerFloorColor     = colorPicker("Floor Color", PY_3D_FLOOR_COLOR.get());
         comboFloorTexture    = comboBox("Floor Texture", floorTextureComboBoxEntries());
         comboPerspectives    = comboBox("Perspective", Perspective.Name.values());
-        labelledValue("Camera", this::currentSceneCameraInfo);
+        labeledValue("Camera", this::currentSceneCameraInfo);
         cbPiPOn              = checkBox("Picture-In-Picture");
         sliderPiPSceneHeight = slider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get(), false, false);
         sliderPiPOpacity     = slider("- Opacity", 0, 100, PY_PIP_OPACITY_PERCENT.get(), false, false);

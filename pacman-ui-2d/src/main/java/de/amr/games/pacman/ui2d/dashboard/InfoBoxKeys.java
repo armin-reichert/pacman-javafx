@@ -16,25 +16,25 @@ public class InfoBoxKeys extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        labelledValue("F1, Alt+B", "Dashboard On/Off");
-        labelledValue("F2", "Pic-in-Pic On/Off");
-        labelledValue("F3", "Reboot");
-        labelledValue("Alt+A", "Autopilot On/Off");
-        labelledValue("Alt+C", "Play Cut-Scenes");
-        labelledValue("Alt+E", "Eat All Pellets");
-        labelledValue("Alt+I", "Player Immunity On/Off");
-        labelledValue("Alt+M", "Mute On/Off");
-        labelledValue("Alt+L", "Add 3 Lives");
-        labelledValue("Alt+N", "Next Level");
-        labelledValue("Alt+X", "Kill Hunting Ghosts");
-        labelledValue("Alt+3", "3D Play Scene On/Off");
-        labelledValue("P", "Pause On/Off");
-        labelledValue("Shift+P, SPACE", "Single Step");
-        labelledValue("Q", "Return to Intro");
+        labeledValue("F1, Alt+B", "Dashboard On/Off");
+        labeledValue("F2", "Pic-in-Pic On/Off");
+        labeledValue("F3", "Reboot");
+        labeledValue("Alt+A", "Autopilot On/Off");
+        labeledValue("Alt+C", "Play Cut-Scenes");
+        labeledValue("Alt+E", "Eat All Pellets");
+        labeledValue("Alt+I", "Player Immunity On/Off");
+        labeledValue("Alt+M", "Mute On/Off");
+        labeledValue("Alt+L", "Add 3 Lives");
+        labeledValue("Alt+N", "Next Level");
+        labeledValue("Alt+X", "Kill Hunting Ghosts");
+        labeledValue("Alt+3", "3D Play Scene On/Off");
+        labeledValue("P", "Pause On/Off");
+        labeledValue("Shift+P, SPACE", "Single Step");
+        labeledValue("Q", "Return to Intro");
 
-        labelledValue("Start Screen Keys:", "");
-        labelledValue("V, RIGHT, LEFT", "Switch Game Variant");
-        labelledValue("1", "Start Playing");
-        labelledValue("5", "Add Credit");
+        labeledValue("Start Screen Keys:", "");
+        labeledValue("V, RIGHT, LEFT", "Switch Game Variant");
+        labeledValue("1", "Start Playing");
+        labeledValue("5", "Add Credit");
     }
 }
