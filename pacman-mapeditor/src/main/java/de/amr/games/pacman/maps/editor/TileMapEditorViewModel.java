@@ -28,10 +28,6 @@ public interface TileMapEditorViewModel {
     byte PALETTE_ID_TERRAIN = 1;
     byte PALETTE_ID_FOOD    = 2;
 
-    String PROPERTY_COLOR_FOOD               = "color_food";
-    String PROPERTY_COLOR_WALL_STROKE        = "color_wall_stroke";
-    String PROPERTY_COLOR_WALL_FILL          = "color_wall_fill";
-    String PROPERTY_COLOR_DOOR               = "color_door";
     String PROPERTY_POS_BONUS                = "pos_bonus";
     String PROPERTY_POS_PAC                  = "pos_pac";
     String PROPERTY_POS_RED_GHOST            = "pos_ghost_1_red";

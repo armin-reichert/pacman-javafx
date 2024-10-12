@@ -19,6 +19,15 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class WorldMap {
 
+    public static final String PROPERTY_COLOR_FOOD         = "color_food";
+    public static final String PROPERTY_COLOR_WALL_STROKE  = "color_wall_stroke";
+    public static final String PROPERTY_COLOR_WALL_FILL    = "color_wall_fill";
+    public static final String PROPERTY_COLOR_DOOR         = "color_door";
+
+    static final MapColorScheme ARCADE_PACMAN_COLOR_SCHEME = new MapColorScheme(
+          "#000000", "#2121ff", "#fcb5ff", "febdb4"
+    );
+
     public static final String TERRAIN_SECTION_START = "!terrain";
     public static final String FOOD_SECTION_START    = "!food";
 
@@ -31,6 +40,8 @@ public class WorldMap {
     private URL url;
     private TileMap terrain;
     private TileMap food;
+    private MapColorScheme defaultColorScheme = ARCADE_PACMAN_COLOR_SCHEME;
+    private MapColorScheme colorScheme = ARCADE_PACMAN_COLOR_SCHEME;
 
     /**
      * Creates a world map consisting of copies of the other map's layers.
@@ -42,9 +53,12 @@ public class WorldMap {
         terrain = new TileMap(other.terrain);
         food = new TileMap(other.food);
         url = other.url;
+        defaultColorScheme = other.defaultColorScheme;
+        colorScheme = other.colorScheme;
         terrain.computeTerrainPaths();
     }
 
+    // Used by map editor
     public WorldMap(int numRows, int numCols) {
         terrain = new TileMap(numRows, numCols);
         food = new TileMap(numRows, numCols);
@@ -97,6 +111,17 @@ public class WorldMap {
         terrain = TileMap.parseTileMap(terrainSection, tv -> 0 <= tv && tv <= Tiles.LAST_TERRAIN_VALUE);
         terrain.computeTerrainPaths();
         food = TileMap.parseTileMap(foodSection, tv -> 0 <= tv && tv <= Tiles.ENERGIZER);
+        defaultColorScheme = new MapColorScheme(
+            terrain.hasProperty(PROPERTY_COLOR_WALL_FILL)
+                ? terrain.getProperty(PROPERTY_COLOR_WALL_FILL) : ARCADE_PACMAN_COLOR_SCHEME.fill(),
+            terrain.hasProperty(PROPERTY_COLOR_WALL_STROKE)
+                ? terrain.getProperty(PROPERTY_COLOR_WALL_STROKE) : ARCADE_PACMAN_COLOR_SCHEME.stroke(),
+            terrain.hasProperty(PROPERTY_COLOR_DOOR)
+                ? terrain.getProperty(PROPERTY_COLOR_DOOR) : ARCADE_PACMAN_COLOR_SCHEME.door(),
+            food.hasProperty(PROPERTY_COLOR_FOOD)
+                ? food.getProperty(PROPERTY_COLOR_FOOD) : ARCADE_PACMAN_COLOR_SCHEME.pellet()
+        );
+        colorScheme = defaultColorScheme;
     }
 
     public void save(File file) {
@@ -121,5 +146,25 @@ public class WorldMap {
 
     public TileMap food() {
         return food;
+    }
+
+    public MapColorScheme colorScheme() {
+        return colorScheme;
+    }
+
+    public void setColorScheme(MapColorScheme colorScheme) {
+        this.colorScheme = colorScheme;
+    }
+
+    public MapColorScheme defaultColorScheme() {
+        return defaultColorScheme;
+    }
+
+    public void setDefaultColorScheme(MapColorScheme defaultColorScheme) {
+        this.defaultColorScheme = defaultColorScheme;
+    }
+
+    public void resetColorScheme() {
+        setColorScheme(defaultColorScheme);
     }
 }

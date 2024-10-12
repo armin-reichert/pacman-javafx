@@ -46,6 +46,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.maps.editor.TileMapEditorViewModel.tt;
 import static de.amr.games.pacman.maps.editor.TileMapUtil.*;
 import static java.util.Objects.requireNonNull;
@@ -871,7 +872,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
         if (terrainVisiblePy.get()) {
             TileMap terrainMap = map().terrain();
             terrainMapEditRenderer.setScaling(gridSize() / 8.0);
-            terrainMapEditRenderer.setWallStrokeColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(DEFAULT_COLOR_WALL_STROKE)));
+            terrainMapEditRenderer.setWallStrokeColor(getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_STROKE, parseColor(DEFAULT_COLOR_WALL_STROKE)));
             terrainMapEditRenderer.setWallFillColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(DEFAULT_COLOR_WALL_FILL)));
             terrainMapEditRenderer.setDoorColor(getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(DEFAULT_COLOR_DOOR)));
             terrainMapEditRenderer.drawMap(g, terrainMap);

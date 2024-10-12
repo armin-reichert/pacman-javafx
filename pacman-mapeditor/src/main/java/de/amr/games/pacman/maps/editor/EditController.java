@@ -21,6 +21,7 @@ import org.tinylog.Logger;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.v2i;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.maps.editor.TileMapEditorViewModel.*;
 
 /**
