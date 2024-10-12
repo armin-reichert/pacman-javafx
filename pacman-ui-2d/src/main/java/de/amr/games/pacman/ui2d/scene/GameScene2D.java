@@ -13,7 +13,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
+import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 
 /**
  * Base class of all 2D scenes.
@@ -56,7 +56,7 @@ public abstract class GameScene2D implements GameScene {
 
     protected void drawCredit(GameWorldRenderer renderer, Vector2i worldSize) {
         double x = 2 * TS, y = worldSize.y() * TS - 2;
-        renderer.drawText("CREDIT %2d".formatted(context.game().credit()), PALETTE_PALE, renderer.scaledArcadeFont(TS), x, y);
+        renderer.drawText("CREDIT %2d".formatted(context.game().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS), x, y);
     }
 
     protected void drawLevelCounter(GameWorldRenderer renderer, Vector2i worldSize) {

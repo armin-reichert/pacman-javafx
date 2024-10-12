@@ -7,30 +7,29 @@ package de.amr.games.pacman.ui2d;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGameSpriteSheet;
+import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer;
 import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
-import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
+import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
+import static de.amr.games.pacman.ui2d.util.Ufx.imageBackground;
 
 /**
  * @author Armin Reichert
  */
 public class GameAssets2D extends AssetStorage {
 
-    public static final Color PALETTE_RED    = Color.rgb(255, 0, 0);
-    public static final Color PALETTE_YELLOW = Color.rgb(255, 255, 0);
-    public static final Color PALETTE_PINK   = Color.rgb(252, 181, 255);
-    public static final Color PALETTE_CYAN   = Color.rgb(0, 255, 255);
-    public static final Color PALETTE_ORANGE = Color.rgb(251, 190, 88);
-    public static final Color PALETTE_BLUE   = Color.rgb(33, 33, 255);
-    public static final Color PALETTE_PALE   = Color.rgb(222, 222, 255);
-    public static final Color PALETTE_ROSE   = Color.rgb(252, 187, 179);
-
-    public static final Color TENGEN_PINK   = Color.web("#ff60b0");
-    public static final Color TENGEN_RED    = Color.web("d84060");
-    public static final Color TENGEN_YELLOW = Color.web("e8d020");
+    public static final Color ARCADE_RED    = Color.rgb(255, 0, 0);
+    public static final Color ARCADE_YELLOW = Color.rgb(255, 255, 0);
+    public static final Color ARCADE_PINK   = Color.rgb(252, 181, 255);
+    public static final Color ARCADE_CYAN   = Color.rgb(0, 255, 255);
+    public static final Color ARCADE_ORANGE = Color.rgb(251, 190, 88);
+    public static final Color ARCADE_BLUE   = Color.rgb(33, 33, 255);
+    public static final Color ARCADE_PALE   = Color.rgb(222, 222, 255);
+    public static final Color ARCADE_ROSE   = Color.rgb(252, 187, 179);
 
     public static String assetPrefix(GameVariant variant) {
         return switch (variant) {
@@ -71,7 +70,6 @@ public class GameAssets2D extends AssetStorage {
         assets.store("startpage.button.color",          Color.WHITE);
         assets.store("startpage.button.font",           rm.loadFont("fonts/emulogic.ttf", 32));
 
-        assets.store("wallpaper.pacman",            Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
         assets.store("wallpaper.color",                 Color.rgb(72, 78, 135));
 
         assets.store("font.arcade",                     rm.loadFont("fonts/emulogic.ttf", 8));
@@ -88,6 +86,8 @@ public class GameAssets2D extends AssetStorage {
         // Ms. Pac-Man game
         //
 
+        assets.store("ms_pacman.scene_background",      imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
+
         assets.store("ms_pacman.spritesheet",           new MsPacManGameSpriteSheet(rm.loadImage("graphics/mspacman/mspacman_spritesheet.png")));
         assets.store("ms_pacman.flashing_mazes",        rm.loadImage("graphics/mspacman/mazes_flashing.png"));
 
@@ -98,14 +98,14 @@ public class GameAssets2D extends AssetStorage {
         assets.store("ms_pacman.icon",                  rm.loadImage("graphics/icons/mspacman.png"));
         assets.store("ms_pacman.logo.midway",           rm.loadImage("graphics/mspacman/midway_logo.png"));
 
-        assets.store("ms_pacman.ghost.0.color.normal.dress", PALETTE_RED);
-        assets.store("ms_pacman.ghost.1.color.normal.dress", PALETTE_PINK);
-        assets.store("ms_pacman.ghost.2.color.normal.dress", PALETTE_CYAN);
-        assets.store("ms_pacman.ghost.3.color.normal.dress", PALETTE_ORANGE);
+        assets.store("ms_pacman.ghost.0.color.normal.dress", ARCADE_RED);
+        assets.store("ms_pacman.ghost.1.color.normal.dress", ARCADE_PINK);
+        assets.store("ms_pacman.ghost.2.color.normal.dress", ARCADE_CYAN);
+        assets.store("ms_pacman.ghost.3.color.normal.dress", ARCADE_ORANGE);
 
         assets.store("ms_pacman.color.game_over_message", Color.RED);
         assets.store("ms_pacman.color.ready_message",   Color.YELLOW);
-        assets.store("ms_pacman.color.clapperboard",    PALETTE_PALE);
+        assets.store("ms_pacman.color.clapperboard", ARCADE_PALE);
 
         // Clips
         assets.store("ms_pacman.audio.bonus_eaten",     rm.loadAudioClip("sound/mspacman/Fruit.mp3"));
@@ -134,31 +134,52 @@ public class GameAssets2D extends AssetStorage {
         // Ms. Pac-Man game Tengen
         //
 
-        assets.store("tengen.spritesheet",              new TengenMsPacManGameSpriteSheet(rm.loadImage("graphics/tengen/spritesheet.png")));
-        assets.store("tengen.mazes.arcade",             rm.loadImage("graphics/tengen/arcade_mazes.png"));
-        assets.store("tengen.mazes.non_arcade",         rm.loadImage("graphics/tengen/non_arcade_mazes.png"));
-        assets.store("tengen.startpage.image1",         rm.loadImage("graphics/tengen/tengen_flyer.png"));
-        assets.store("tengen.startpage.image2",         rm.loadImage("graphics/tengen/tengen_flyer_back.png"));
-        assets.store("tengen.helpButton.icon",          rm.loadImage("graphics/icons/help-red-64.png"));
-        assets.store("tengen.icon",                     rm.loadImage("graphics/icons/mspacman.png"));
-        assets.store("tengen.logo.midway",              rm.loadImage("graphics/mspacman/midway_logo.png"));
+        assets.store("tengen.scene_background",               coloredBackground(Color.BLACK));
 
-        assets.store("tengen.color.game_over_message",       Color.web("#b5217b"));
-        assets.store("tengen.color.ready_message",           Color.YELLOW);
-        assets.store("tengen.color.clapperboard",            Color.WHITE);
+        assets.store("tengen.spritesheet",                    new TengenMsPacManGameSpriteSheet(rm.loadImage("graphics/tengen/spritesheet.png")));
+        assets.store("tengen.mazes.arcade",                   rm.loadImage("graphics/tengen/arcade_mazes.png"));
+        assets.store("tengen.mazes.non_arcade",               rm.loadImage("graphics/tengen/non_arcade_mazes.png"));
+        assets.store("tengen.startpage.image1",               rm.loadImage("graphics/tengen/tengen_flyer.png"));
+        assets.store("tengen.startpage.image2",               rm.loadImage("graphics/tengen/tengen_flyer_back.png"));
+        assets.store("tengen.helpButton.icon",                rm.loadImage("graphics/icons/help-red-64.png"));
+        assets.store("tengen.icon",                           rm.loadImage("graphics/icons/mspacman.png"));
+        assets.store("tengen.logo.midway",                    rm.loadImage("graphics/mspacman/midway_logo.png"));
 
-        assets.store("tengen.ghost.0.color.normal.dress",     Color.rgb(176, 15, 48));
+        assets.store("tengen.color.game_over_message",        TengenMsPacManGameRenderer.CYAN_GHOST_COLOR);
+        assets.store("tengen.color.ready_message",            TengenMsPacManGameRenderer.TENGEN_YELLOW);
+        assets.store("tengen.color.clapperboard",             Color.WHITE);
+
+        assets.store("tengen.pac.color.head",                 TengenMsPacManGameRenderer.PAC_COLOR);
+        assets.store("tengen.pac.color.eyes",                 Color.rgb(32, 0, 100));
+        assets.store("tengen.pac.color.palate",               Color.grayRgb(66));
+        assets.store("tengen.pac.color.boobs",                TengenMsPacManGameRenderer.PAC_COLOR.deriveColor(0, 1.0, 0.96, 1.0));
+        assets.store("tengen.pac.color.hairbow",              TengenMsPacManGameRenderer.RED_GHOST_COLOR);
+        assets.store("tengen.pac.color.hairbow.pearls",       Color.web("#002a88"));
+
+        assets.store("tengen.ghost.0.color.normal.dress",     TengenMsPacManGameRenderer.RED_GHOST_COLOR);
         assets.store("tengen.ghost.0.color.normal.eyeballs",  Color.WHITE);
         assets.store("tengen.ghost.0.color.normal.pupils",    Color.rgb(224, 80, 0));
-        assets.store("tengen.ghost.1.color.normal.dress",     Color.rgb(255, 96, 176));
+
+        assets.store("tengen.ghost.1.color.normal.dress",     TengenMsPacManGameRenderer.PINK_GHOST_COLOR);
         assets.store("tengen.ghost.1.color.normal.eyeballs",  Color.WHITE);
         assets.store("tengen.ghost.1.color.normal.pupils",    Color.rgb(63, 96, 248));
-        assets.store("tengen.ghost.2.color.normal.dress",     Color.rgb(63, 96, 248));
+
+        assets.store("tengen.ghost.2.color.normal.dress",     TengenMsPacManGameRenderer.CYAN_GHOST_COLOR);
         assets.store("tengen.ghost.2.color.normal.eyeballs",  Color.WHITE);
         assets.store("tengen.ghost.2.color.normal.pupils",    Color.rgb(63, 96, 248));
-        assets.store("tengen.ghost.3.color.normal.dress",     Color.rgb(224, 80, 0));
+
+        assets.store("tengen.ghost.3.color.normal.dress",     TengenMsPacManGameRenderer.ORANGE_GHOST_COLOR);
         assets.store("tengen.ghost.3.color.normal.eyeballs",  Color.WHITE);
         assets.store("tengen.ghost.3.color.normal.pupils",    Color.rgb(176, 15, 48));
+
+        assets.store("tengen.ghost.color.frightened.dress",   Color.rgb(32, 0, 176));
+        assets.store("tengen.ghost.color.frightened.eyeballs", Color.WHITE);
+        assets.store("tengen.ghost.color.frightened.pupils",  Color.WHITE);
+
+        //TODO has two flashing colors
+        assets.store("tengen.ghost.color.flashing.dress",     Color.WHITE);
+        assets.store("tengen.ghost.color.flashing.eyeballs",  Color.rgb(176, 15, 48));
+        assets.store("tengen.ghost.color.flashing.pupils",    Color.rgb(176, 15, 48));
 
         // Clips
         assets.store("tengen.audio.bonus_eaten",        rm.loadAudioClip("sound/tengen/Fruit.mp3"));
@@ -167,25 +188,29 @@ public class GameAssets2D extends AssetStorage {
 
         assets.store("tengen.audio.sweep",              rm.loadAudioClip("sound/common/sweep.mp3"));
 
+        //TODO I need a full set of the Tengen sounds
+
         // Audio played by MediaPlayer
-        assets.store("tengen.audio.game_ready",         rm.url("sound/mspacman/Start.mp3")); //TODO sound?
-        assets.store("tengen.audio.game_over",          rm.url("sound/common/game-over.mp3")); //TODO sound?
+        assets.store("tengen.audio.game_ready",         rm.url("sound/mspacman/Start.mp3"));
+        assets.store("tengen.audio.game_over",          rm.url("sound/common/game-over.mp3"));
         assets.store("tengen.audio.intermission.1",     rm.url("sound/tengen/Act_1_They_Meet.mp3"));
         assets.store("tengen.audio.intermission.2",     rm.url("sound/tengen/Act_2_The_Chase.mp3"));
         assets.store("tengen.audio.intermission.3",     rm.url("sound/tengen/Act_3_Junior.mp3"));
-        assets.store("tengen.audio.level_complete",     rm.url("sound/common/level-complete.mp3")); //TODO sound?
-        assets.store("tengen.audio.pacman_death",       rm.url("sound/tengen/Life_Lost.mp3"));
+        assets.store("tengen.audio.level_complete",     rm.url("sound/common/level-complete.mp3"));
+        assets.store("tengen.audio.pacman_death",       rm.url("sound/tengen/Life_Lost.wav"));
         //assets.store("tengen.audio.pacman_munch",       rm.url("sound/mspacman/Pill.wav"));
         assets.store("tengen.audio.pacman_power",       rm.url("sound/tengen/Power_Pellet.mp3"));
         //assets.store("tengen.audio.siren.1",            rm.url("sound/tengen/GhostNoise1.wav"));
-        //assets.store("tengen.audio.siren.2",            rm.url("sound/tengen/GhostNoise1.wav"));// TODO
-        //assets.store("tengen.audio.siren.3",            rm.url("sound/tengen/GhostNoise1.wav"));// TODO
-        //assets.store("tengen.audio.siren.4",            rm.url("sound/tengen/GhostNoise1.wav"));// TODO
+        //assets.store("tengen.audio.siren.2",            rm.url("sound/tengen/GhostNoise1.wav"));
+        //assets.store("tengen.audio.siren.3",            rm.url("sound/tengen/GhostNoise1.wav"));
+        //assets.store("tengen.audio.siren.4",            rm.url("sound/tengen/GhostNoise1.wav"));
         //assets.store("tengen.audio.ghost_returns",      rm.url("sound/mspacman/GhostEyes.mp3"));
 
         //
         // Pac-Man game
         //
+
+        assets.store("pacman.scene_background",         imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
 
         assets.store("pacman.spritesheet",              new PacManGameSpriteSheet(rm.loadImage("graphics/pacman/pacman_spritesheet.png")));
         assets.store("pacman.flashing_maze",            rm.loadImage("graphics/pacman/maze_flashing.png"));
@@ -221,6 +246,8 @@ public class GameAssets2D extends AssetStorage {
         //
         // Pac-Man XXL
         //
+        assets.store("pacman_xxl.scene_background",     imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
+
         assets.store("pacman_xxl.icon",                 rm.loadImage("graphics/icons/pacman.png"));
         assets.store("pacman_xxl.helpButton.icon",      rm.loadImage("graphics/icons/help-blue-64.png"));
         assets.store("pacman_xxl.startpage.source",     rm.loadImage("graphics/pacman_xxl/pacman_xxl_logo.png"));

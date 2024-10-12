@@ -7,8 +7,10 @@ package de.amr.games.pacman.ui2d.scene;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.maps.editor.TileMapUtil;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
@@ -34,6 +36,7 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 public class PlayScene2D extends GameScene2D {
 
     private static final List<GameAction> ACTIONS = List.of(
+        GameAction2D.START_GAME,
         GameAction2D.CHEAT_EAT_ALL,
         GameAction2D.CHEAT_ADD_LIVES,
         GameAction2D.CHEAT_NEXT_LEVEL,
@@ -63,6 +66,9 @@ public class PlayScene2D extends GameScene2D {
         if (context.game().isDemoLevel()) {
             context.game().pac().setUseAutopilot(true);
             context.game().pac().setImmune(false);
+            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                context.setScoreVisible(true);
+            }
         } else {
             context.setScoreVisible(true);
             context.game().pac().setUseAutopilot(PY_AUTOPILOT.get());
@@ -143,8 +149,8 @@ public class PlayScene2D extends GameScene2D {
             renderer.drawLivesCounter(context.spriteSheet(), numLivesShown, 5, worldSize);
         }
         drawLevelCounter(renderer, worldSize);
-        //TODO Hack: Tengen has those boxes displaying the level number
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+        //TODO Hack: Tengen has these boxes on the left and on the right showing the current level number
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN && !context.game().isDemoLevel()) {
             TengenMsPacManGameRenderer tr = (TengenMsPacManGameRenderer) renderer;
             tr.drawLevelNumberBoxes(context.spriteSheet(), context.game().levelNumber(), worldSize);
         }
@@ -162,7 +168,16 @@ public class PlayScene2D extends GameScene2D {
         int y = TS * (houseTopLeftTile.y() + houseSize.y() + 1);
         String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
         Font font = renderer.scaledArcadeFont(TS);
-        if (context.gameState() == GameState.GAME_OVER || context.game().isDemoLevel()) {
+        if (context.game().isDemoLevel()) {
+            String text = "GAME  OVER";
+            int x = TS * (cx - text.length() / 2);
+            Color color = context.assets().color(assetPrefix + ".color.game_over_message");
+            // Tengen seems to use wall stroke color of current maze. TODO: verify this!
+            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                color = TileMapUtil.getColorFromMap(context.game().world().map().terrain(), GameWorld.PROPERTY_COLOR_WALL_STROKE, color);
+            }
+            renderer.drawText(text, color, font, x, y);
+        } else if (context.gameState() == GameState.GAME_OVER) {
             String text = "GAME  OVER";
             int x = TS * (cx - text.length() / 2);
             Color color = context.assets().color(assetPrefix + ".color.game_over_message");
@@ -172,10 +187,10 @@ public class PlayScene2D extends GameScene2D {
             int x = TS * (cx - text.length() / 2);
             Color color = context.assets().color(assetPrefix + ".color.ready_message");
             renderer.drawText(text, color, font, x, y);
-        } else if (context.gameState() == GameState.TESTING_LEVELS_BONI) {
+        } else if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
             String text = "TEST    L%03d".formatted(context.game().levelNumber());
             int x = TS * (cx - text.length() / 2);
-            renderer.drawText(text, GameAssets2D.PALETTE_PALE, font, x, y);
+            renderer.drawText(text, GameAssets2D.ARCADE_PALE, font, x, y);
         }
     }
 

@@ -309,7 +309,7 @@ public enum GameState implements FsmState<GameModel> {
 
     // Test states
 
-    TESTING_LEVELS_BONI {
+    TESTING_LEVEL_BONI {
 
         private int lastLevelNumber;
 
@@ -396,7 +396,7 @@ public enum GameState implements FsmState<GameModel> {
      */
     TESTING_LEVEL_TEASERS {
 
-        static final int PLAY_TIME_SECONDS = 7; // 7 seconds, seven seconds away...
+        static final int TEASER_TIME_SECONDS = 7; // 7 seconds, seven seconds away...
 
         private int lastLevelNumber;
         private long levelStartTime;
@@ -420,17 +420,12 @@ public enum GameState implements FsmState<GameModel> {
             game.createLevel(1);
             game.startLevel();
             game.showGuys();
-            game.pac().startAnimation();
-            game.ghosts().forEach(Ghost::startAnimation);
-            game.blinking().setStartPhase(Pulse.ON);
-            game.blinking().restart(Integer.MAX_VALUE);
-            game.publishGameEvent(GameEventType.HUNTING_PHASE_STARTED);
         }
 
         @Override
         public void onUpdate(GameModel game) {
             game.doHuntingStep();
-            if (System.currentTimeMillis() - levelStartTime >= PLAY_TIME_SECONDS * 1000) {
+            if (System.currentTimeMillis() - levelStartTime >= TEASER_TIME_SECONDS * 1000) {
                 if (game.levelNumber() == lastLevelNumber) {
                     enterState(INTRO);
                 } else {
@@ -454,6 +449,12 @@ public enum GameState implements FsmState<GameModel> {
                 //enterState(GHOST_DYING);
             }
         }
+
+        @Override
+        public void onExit(GameModel game) {
+            game.levelCounter().clear();
+        }
+
     },
 
     TESTING_CUT_SCENES {

@@ -37,7 +37,7 @@ import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
+import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.border;
 
@@ -89,7 +89,7 @@ public class GamePage extends StackPane implements Page {
         gameCanvasDecoration.setMinScaling(0.5);
         gameCanvasDecoration.setUnscaledCanvasWidth(GameModel.ARCADE_MAP_SIZE_X);
         gameCanvasDecoration.setUnscaledCanvasHeight(GameModel.ARCADE_MAP_SIZE_Y);
-        gameCanvasDecoration.setBorderColor(PALETTE_PALE);
+        gameCanvasDecoration.setBorderColor(ARCADE_PALE);
         gameCanvasDecoration.borderVisiblePy.bind(PY_GAME_CANVAS_HAS_BORDER);
         gameCanvasDecoration.roundedCornersPy.bind(PY_GAME_CANVAS_CORNERS_ROUNDED);
         gameCanvasDecoration.enabledPy.bind(PY_GAME_CANVAS_HAS_DECORATION);

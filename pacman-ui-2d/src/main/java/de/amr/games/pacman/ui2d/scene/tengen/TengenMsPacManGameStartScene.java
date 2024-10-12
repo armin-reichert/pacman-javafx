@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
 import de.amr.games.pacman.ui2d.GameAction2D;
-import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import javafx.scene.canvas.Canvas;
@@ -17,6 +16,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer.TENGEN_BABY_BLUE;
+import static de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer.TENGEN_YELLOW;
 
 /**
  * @author Armin Reichert
@@ -28,9 +29,8 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
     static final int COL_COLON = 17 * TS;
     static final int COL_VALUE = 19 * TS;
 
-    static final Color LABEL_COLOR = GameAssets2D.TENGEN_YELLOW;
+    static final Color LABEL_COLOR = TENGEN_YELLOW;
     static final Color VALUE_COLOR = Color.WHITE;
-    static final Color BABY_BLUE = Color.rgb(59, 190, 255);
 
     static final int SETTING_PLAYERS        = 0;
     static final int OPTION_PAC_BOOSTER = 1;
@@ -43,11 +43,14 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
     private int option;
     private MsPacManTengenGame tengenGame;
 
+    private long idleTicks;
+
     @Override
     public void init() {
         context.setScoreVisible(false);
         option = OPTION_PAC_BOOSTER;
         tengenGame = (MsPacManTengenGame) context.game();
+        resetIdleTimer();
     }
 
     @Override
@@ -56,6 +59,11 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
 
     @Override
     public void update() {
+        if (idleTicks == 15*60) {
+            context.gameController().changeState(GameState.INTRO);
+            return;
+        }
+        idleTicks += 1;
     }
 
     private void drawBabyBlueBar(GameWorldRenderer renderer, double y) {
@@ -64,7 +72,7 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
         renderer.ctx().scale(scaling(), scaling());
         renderer.ctx().setFill(Color.WHITE);
         renderer.ctx().fillRect(0, y, canvas.getWidth(), 8);
-        renderer.ctx().setFill(BABY_BLUE);
+        renderer.ctx().setFill(TENGEN_BABY_BLUE);
         renderer.ctx().fillRect(0, y + 1, canvas.getWidth(), 6);
         renderer.ctx().restore();
     }
@@ -81,7 +89,7 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
         int y = 7 * TS;
         drawBabyBlueBar(renderer, y);
 
-        y += 3 * TS;
+        y += 3 * TS + 2;
         renderer.drawText("MS PAC-MAN OPTIONS", LABEL_COLOR, font, 6 * TS, y);
 
         // Players (not implemented)
@@ -119,14 +127,14 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
         renderer.drawText(":", LABEL_COLOR, font, COL_COLON, y);
         renderer.drawText(String.valueOf(tengenGame.startingLevel()), VALUE_COLOR, font, COL_VALUE + TS, y);
 
-        y += 3 * TS;
+        y += 3 * TS + 3;
         drawCenteredText(renderer, "MOVE ARROW WITH CURSOR KEYS", LABEL_COLOR, font, y);
         y += TS + 1;
         drawCenteredText(renderer, "CHOOSE OPTIONS WITH TAB", LABEL_COLOR, font, y);
         y += TS + 1;
         drawCenteredText(renderer, "PRESS ENTER TO START GAME", LABEL_COLOR, font, y);
 
-        y += TS;
+        y += TS - 3;
         drawBabyBlueBar(renderer, y);
     }
 
@@ -196,55 +204,54 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
         }
     }
 
+    private void resetIdleTimer() {
+        idleTicks = 0;
+    }
+
     private void selectPrevOption() {
         option = option == 0 ? NUM_SELECTIONS - 1 : option - 1;
         playChangeOptionSound();
+        resetIdleTimer();
     }
 
     private void selectNextOption() {
         option = (option < NUM_SELECTIONS - 1) ? option + 1 : 0;
         playChangeOptionSound();
+        resetIdleTimer();
     }
 
     private void selectNextStartingLevelValue() {
-        if (tengenGame.startingLevel() < 7) {
-            tengenGame.setStartingLevel(tengenGame.startingLevel() + 1);
-        } else {
-            tengenGame.setStartingLevel(1);
-        }
+        int current = tengenGame.startingLevel();
+        int next = (current < 7) ? current + 1 : 1;
+        tengenGame.setStartingLevel(next);
         playChangeOptionValueSound();
+        resetIdleTimer();
     }
 
     private void selectNextMazeSelectionValue() {
         MsPacManTengenGame.MapCategory category = tengenGame.mapCategory();
-        int ord = category.ordinal();
-        if (ord == MsPacManTengenGame.MapCategory.values().length - 1) {
-            tengenGame.setMapCategory(MsPacManTengenGame.MapCategory.values()[0]);
-        } else {
-            tengenGame.setMapCategory(MsPacManTengenGame.MapCategory.values()[ord + 1]);
-        }
+        var values = MsPacManTengenGame.MapCategory.values();
+        int current = category.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
+        tengenGame.setMapCategory(values[next]);
         playChangeOptionValueSound();
+        resetIdleTimer();
     }
 
     private void selectNextDifficultyValue() {
         MsPacManTengenGame.Difficulty difficulty = tengenGame.difficulty();
-        int ord = difficulty.ordinal();
-        if (ord == MsPacManTengenGame.Difficulty.values().length - 1) {
-            tengenGame.setDifficulty(MsPacManTengenGame.Difficulty.values()[0]);
-        } else {
-            tengenGame.setDifficulty(MsPacManTengenGame.Difficulty.values()[ord + 1]);
-        }
+        var values = MsPacManTengenGame.Difficulty.values();
+        int current = difficulty.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
+        tengenGame.setDifficulty(values[next]);
         playChangeOptionValueSound();
+        resetIdleTimer();
     }
 
     private void selectNextPacBoosterValue() {
         MsPacManTengenGame.PacBooster pacBooster = tengenGame.pacBooster();
-        int ord = pacBooster.ordinal();
-        if (ord == MsPacManTengenGame.PacBooster.values().length - 1) {
-            tengenGame.setPacBooster(MsPacManTengenGame.PacBooster.values()[0]);
-        } else {
-            tengenGame.setPacBooster(MsPacManTengenGame.PacBooster.values()[ord + 1]);
-        }
+        var values = MsPacManTengenGame.PacBooster.values();
+        int current = pacBooster.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
+        tengenGame.setPacBooster(values[next]);
         playChangeOptionValueSound();
+        resetIdleTimer();
     }
 }

@@ -185,7 +185,7 @@ public enum GameAction2D implements GameAction {
             super.execute(context);
             context.sounds().stopAll();
             context.currentGameScene().ifPresent(GameScene::end);
-            if (context.gameState() == GameState.TESTING_LEVELS_BONI) {
+            if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
                 context.gameState().onExit(context.game()); //TODO exit other states too?
             }
             context.gameClock().setTargetFrameRate(GameModel.FPS);
@@ -247,12 +247,13 @@ public enum GameAction2D implements GameAction {
         }
     },
 
-    //TODO this is not useful in Tengen Ms. Pac-Man
     START_GAME(key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1), key(KeyCode.SPACE)) {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
-            if (context.game().hasCredit()) {
+            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                context.gameController().changeState(GameState.STARTING);
+            } else if (context.game().hasCredit()) {
                 context.sounds().stopVoice();
                 if (context.gameState() == GameState.INTRO || context.gameState() == GameState.STARTING) {
                     context.gameController().changeState(GameState.READY);
@@ -304,7 +305,7 @@ public enum GameAction2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
-            context.gameController().restart(GameState.TESTING_LEVELS_BONI);
+            context.gameController().restart(GameState.TESTING_LEVEL_BONI);
             context.showFlashMessageSeconds(3, "Level TEST MODE");
         }
     },

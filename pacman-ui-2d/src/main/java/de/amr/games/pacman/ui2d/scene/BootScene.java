@@ -9,7 +9,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.GameAssets2D.PALETTE_PALE;
+import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 
 /**
  * @author Armin Reichert
@@ -55,7 +55,7 @@ public class BootScene extends GameScene2D {
 
     private void paintRandomHexCodes(GameWorldRenderer renderer) {
         renderer.clearCanvas();
-        renderer.ctx().setFill(PALETTE_PALE);
+        renderer.ctx().setFill(ARCADE_PALE);
         renderer.ctx().setFont(renderer.scaledArcadeFont(TS));
         for (int row = 0; row < GameModel.ARCADE_MAP_TILES_Y; ++row) {
             for (int col = 0; col < GameModel.ARCADE_MAP_TILES_X; ++col) {
@@ -93,7 +93,7 @@ public class BootScene extends GameScene2D {
         double width = t(28), height = t(36), raster = 16;
         var numRows = GameModel.ARCADE_MAP_TILES_Y / 2;
         var numCols = GameModel.ARCADE_MAP_TILES_X / 2;
-        renderer.ctx().setStroke(PALETTE_PALE);
+        renderer.ctx().setStroke(ARCADE_PALE);
         renderer.ctx().setLineWidth(scaled(2.0));
         for (int row = 0; row <= numRows; ++row) {
             renderer.ctx().setLineWidth(row == 0 || row == numRows ? scaled(4.0) : scaled(2.0));
