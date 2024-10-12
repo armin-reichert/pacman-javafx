@@ -396,10 +396,9 @@ public enum GameState implements FsmState<GameModel> {
      */
     TESTING_LEVEL_TEASERS {
 
-        static final int TEASER_TIME_SECONDS = 7; // 7 seconds, seven seconds away...
+        static final int TEASER_TIME_SECONDS = 10;
 
         private int lastLevelNumber;
-        private long levelStartTime;
 
         @Override
         public void onEnter(GameModel game) {
@@ -414,8 +413,7 @@ public enum GameState implements FsmState<GameModel> {
                 case PACMAN -> 21;
                 case PACMAN_XXL -> 8 + numCustomMaps;
             };
-            levelStartTime = System.currentTimeMillis();
-            timer.restartIndefinitely();
+            timer.restartSeconds(TEASER_TIME_SECONDS);
             game.reset();
             game.createLevel(1);
             game.startLevel();
@@ -425,12 +423,12 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             game.doHuntingStep();
-            if (System.currentTimeMillis() - levelStartTime >= TEASER_TIME_SECONDS * 1000) {
+            if (timer().hasExpired()) {
                 if (game.levelNumber() == lastLevelNumber) {
                     game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
                     enterState(INTRO);
                 } else {
-                    timer().restartIndefinitely();
+                    timer().restartSeconds(TEASER_TIME_SECONDS);
                     game.pac().freeze();
                     game.bonus().ifPresent(Bonus::setInactive);
                     setProperty("mazeFlashing", false);
@@ -438,16 +436,15 @@ public enum GameState implements FsmState<GameModel> {
                     game.createLevel(game.levelNumber() + 1);
                     game.startLevel();
                     game.showGuys();
-                    levelStartTime = System.currentTimeMillis();
                 }
             }
             else if (game.isLevelComplete()) {
                 //enterState(LEVEL_COMPLETE);
                 enterState(INTRO);
             } else if (game.isPacManKilled()) {
-                //enterState(PACMAN_DYING);
+                timer.expire();
             } else if (game.areGhostsKilled()) {
-                //enterState(GHOST_DYING);
+                enterState(GHOST_DYING);
             }
         }
 
