@@ -408,21 +408,22 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     }
 
     public void drawStork(GameSpriteSheet spriteSheet, SpriteAnimation storkAnimation, Entity stork, boolean bagReleased) {
-        drawSprite(stork, spriteSheet, storkAnimation.currentSprite());
-        // erase bag if released
-        if (bagReleased) {
-            Vector2f center = stork.center();
-            ctx().setFill(backgroundColorProperty().get());
-            //ctx().setFill(Color.WHITE);
-            ctx().save();
-            ctx().scale(scaling(), scaling());
-            if (storkAnimation.frameIndex() == 0) {
-                ctx().fillRect(center.x() - 17, center.y() - 1, 9, 14);
-            } else {
-                ctx().fillRect(center.x() - 17, center.y() - 4, 9, 14);
-            }
-            ctx().restore();
+        if (!stork.isVisible()) {
+            return;
         }
+        Vector2f pos = stork.position();
+        // sprites are not vertically aligned in sprite sheet! wtf?
+        double eyeY = pos.y() + (storkAnimation.frameIndex() == 1 ? 5 : 1);
+        ctx().save();
+        ctx().setImageSmoothing(false);
+        drawSpriteScaled(spriteSheet, storkAnimation.currentSprite(), pos.x(), eyeY);
+        // over-paint bag when released from beak
+        if (bagReleased) {
+            ctx().scale(scaling(), scaling());
+            ctx().setFill(backgroundColorProperty().get());
+            ctx().fillRect(pos.x(), eyeY + 4, scaled(7), scaled(6));
+        }
+        ctx().restore();
     }
 
     private void hideActorSprite(Vector2i tile, double offX, double offY) {

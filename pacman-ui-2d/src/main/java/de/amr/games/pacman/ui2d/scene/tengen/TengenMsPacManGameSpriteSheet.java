@@ -231,7 +231,7 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
     @Override
     public SpriteAnimation createStorkFlyingAnimation() {
         return SpriteAnimation.spriteSheet(this)
-            .sprites(rect(157, 355, 33, 16), rect(198, 355, 33, 16))
+            .sprites(rect(157, 355, 33, 15), rect(198, 356, 33, 15))
             .frameTicks(8)
             .loop();
     }
