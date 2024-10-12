@@ -98,8 +98,7 @@ public class GameSounds {
         URL url = assets.get(assetKey);
         if (url == null) {
             String msg = "Could not load audio resource using asset key: " + assetKey;
-            Logger.error(msg);
-            //throw new MissingResourceException(msg, GameSounds.class.getName(), assetKey);
+            //Logger.error(msg);
             return null;
         }
         var player = new MediaPlayer(new Media(url.toExternalForm()));
@@ -113,7 +112,7 @@ public class GameSounds {
 
     private void playIfEnabled(MediaPlayer player) {
         if (player == null) {
-            Logger.error("Cannot play sound, player is NULL");
+            //Logger.error("Cannot play sound, player is NULL");
             return;
         }
         if (isEnabled()) {
