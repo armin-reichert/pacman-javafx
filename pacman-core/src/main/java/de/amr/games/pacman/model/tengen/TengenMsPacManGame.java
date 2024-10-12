@@ -173,7 +173,7 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     private static void addMapToList(int number, List<WorldMap> sourceMaps, List<WorldMap> targetMaps, MapColorScheme colorScheme) {
-        WorldMap map = new WorldMap(sourceMaps.get(number)); // use a copy
+        WorldMap map = new WorldMap(sourceMaps.get(number-1)); // use a copy
         map.setColorScheme(colorScheme);
         targetMaps.add(map);
     }
