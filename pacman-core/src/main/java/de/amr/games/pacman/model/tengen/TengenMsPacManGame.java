@@ -56,63 +56,119 @@ public class TengenMsPacManGame extends GameModel {
     //TODO: Colors are from non-original spritsheet and probably not correct
 
     public static final MapColorScheme COLOR_SCHEME_BLACK_WHITE = new MapColorScheme(
-            "000000", "ffffff", "ffffff", "ffffff");
+        "000000", "ffffff", "ffffff", "007b8c");
 
     public static final MapColorScheme COLOR_SCHEME_BLACK_DARKBLUE = new MapColorScheme(
-            "000000", "00298c", "00298c", "ffffff");
+        "000000", "00298c", "00298c", "ffffff");
 
-    public static final MapColorScheme COLOR_SCHEME_GREEN_WHITE = new MapColorScheme(
-            "398400", "ffffff", "ffffff", "bdbd00");
+    public static final MapColorScheme COLOR_SCHEME_BLUE_WHITE = new MapColorScheme(
+        "4242ff", "ffffff", "ffffff", "bdbd00");
+
+    public static final MapColorScheme COLOR_SCHEME_BLUE2_WHITE = new MapColorScheme(
+        "3900a5", "ffffff", "ffffff", "bdbd00");
+
+    public static final MapColorScheme COLOR_SCHEME_BLUE_YELLOW = new MapColorScheme(
+        "00298c", "e7e794", "e7e794", "ffffff");
+
+    public static final MapColorScheme COLOR_SCHEME_BROWN_WHITE = new MapColorScheme(
+        "522100", "ffffff", "ffffff", "bdbd00");
+
+    public static final MapColorScheme COLOR_SCHEME_GRAY_WHITE_YELLOW = new MapColorScheme(
+        "adadad", "ffffff", "ffffff", "bdbd00");
+
+    public static final MapColorScheme COLOR_SCHEME_GREEN_WHITE_YELLOW = new MapColorScheme(
+        "109400", "ffffff", "ffffff", "bdbd00");
+
+    public static final MapColorScheme COLOR_SCHEME_GREEN_WHITE_WHITE = new MapColorScheme(
+        "398400", "ffffff", "ffffff", "ffffff");
+
+    public static final MapColorScheme COLOR_SCHEME_GREEN_WHITE_VIOLET = new MapColorScheme(
+        "00424a", "ffffff", "ffffff", "9c18ce");
 
     public static final MapColorScheme COLOR_SCHEME_LIGHTBLUE_WHITE = new MapColorScheme(
-            "63adff", "ffffff", "ffffff", "bdbd00");
+        "63adff", "ffffff", "ffffff", "bdbd00");
+
+    public static final MapColorScheme COLOR_SCHEME_KHAKI_WHITE = new MapColorScheme(
+        "6b6b00", "ffffff", "ffffff", "ffffff");
 
     public static final MapColorScheme COLOR_SCHEME_PINK_DARKRED = new MapColorScheme(
         "ffc6e7", "b5217b", "b5217b", "ffffff");
 
+    public static final MapColorScheme COLOR_SCHEME_PINK_WHITE = new MapColorScheme(
+        "ff6bce", "ffffff", "ffffff", "ffffff");
+
     public static final MapColorScheme COLOR_SCHEME_PINK_YELLOW = new MapColorScheme(
-            "ffc6e7", "bdbd00", "bdbd00", "ffffff");
+        "ffc6e7", "bdbd00", "bdbd00", "ffffff");
 
     public static final MapColorScheme COLOR_SCHEME_ORANGE_WHITE = new MapColorScheme(
         "b53121", "ffffff", "ffffff", "b5217b");
 
     public static final MapColorScheme COLOR_SCHEME_DARKBLUE_YELLOW = new MapColorScheme(
-            "00298c", "e7e794", "e7e794", "ffffff");
+        "00298c", "e7e794", "e7e794", "ffffff");
 
     public static final MapColorScheme COLOR_SCHEME_RED_PINK = new MapColorScheme(
-            "b5217b", "ff6bce", "ff6bce", "ffc6e7");
+        "b5217b", "ff6bce", "ff6bce", "ffc6e7");
 
     public static final MapColorScheme COLOR_SCHEME_VIOLET_WHITE = new MapColorScheme(
-            "5a007b", "ffffff", "ffffff", "ffffff");
+        "5a007b", "ffffff", "ffffff", "ffffff");
 
-    public static final MapColorScheme COLOR_SCHEME_YELLOW_WHITE = new MapColorScheme(
-            "bdbd00", "ffffff", "ffffff", "5ae731");
+    public static final MapColorScheme COLOR_SCHEME_VIOLET_WHITE_GREEN = new MapColorScheme(
+        "c673ff", "ffffff", "ffffff", "42de84");
 
-    // Got the first 15 entries by looking at a YouTube video. TODO: need real data!
+    public static final MapColorScheme COLOR_SCHEME_YELLOW_WHITE_GREEN = new MapColorScheme(
+        "bdbd00", "ffffff", "ffffff", "5ae731");
+
+    // Got the first 15 entries by looking at a YouTube video (https://www.youtube.com/watch?v=cD0oGudVpbw)
+    // TODO: need real data!
     private static List<WorldMap> miniMaps(List<WorldMap> nonArcadeMaps) {
         var miniMaps = new ArrayList<WorldMap>();
+
+        // 1-5
         addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_PINK_DARKRED);
         addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_LIGHTBLUE_WHITE);
         addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_ORANGE_WHITE);
         addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_DARKBLUE_YELLOW);
         addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_PINK_YELLOW);
+
+        // 6-10
         addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_PINK_DARKRED);
         addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_ORANGE_WHITE);
         addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_VIOLET_WHITE);
         addMapToList(30, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLACK_WHITE);
         addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLACK_DARKBLUE);
+
+        // 11-15
         addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_PINK_YELLOW);
         addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_RED_PINK);
-        addMapToList(30, nonArcadeMaps, miniMaps, COLOR_SCHEME_GREEN_WHITE);
-        addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_YELLOW_WHITE);
-        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_GREEN_WHITE);
+        addMapToList(30, nonArcadeMaps, miniMaps, COLOR_SCHEME_GREEN_WHITE_WHITE);
+        addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_YELLOW_WHITE_GREEN);
+        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_GREEN_WHITE_YELLOW);
 
-        //TODO what about the remaining 17 levels? Use random values for now.
-        byte[] mapNumbers = { 30, 34, 35, 36 };
-        for (int number = 16; number <= 32; ++number) {
-            MapColorScheme randomScheme = nonArcadeMaps.get(randomInt(0, nonArcadeMaps.size())).colorSchemeOrDefault();
-            addMapToList(mapNumbers[randomInt(0, mapNumbers.length)], nonArcadeMaps, miniMaps, randomScheme);
-        }
+        // 16-20
+        addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_KHAKI_WHITE);
+        addMapToList(30, nonArcadeMaps, miniMaps, COLOR_SCHEME_PINK_WHITE);
+        addMapToList(16, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLUE_WHITE);
+        addMapToList(16, nonArcadeMaps, miniMaps, COLOR_SCHEME_BROWN_WHITE);
+        addMapToList(30, nonArcadeMaps, miniMaps, COLOR_SCHEME_RED_PINK);
+
+        // 21-25
+        addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLACK_WHITE);
+        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_GREEN_WHITE_WHITE);
+        addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_GREEN_WHITE_VIOLET);
+        addMapToList(37, nonArcadeMaps, miniMaps, COLOR_SCHEME_VIOLET_WHITE_GREEN);
+        addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_GRAY_WHITE_YELLOW);
+
+        // 26-30
+        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLUE2_WHITE);
+        addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_VIOLET_WHITE);
+        addMapToList(30, nonArcadeMaps, miniMaps, COLOR_SCHEME_ORANGE_WHITE);
+        addMapToList(28, nonArcadeMaps, miniMaps, COLOR_SCHEME_ORANGE_WHITE);
+        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLUE_YELLOW);
+
+        // 31-32
+        addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLACK_WHITE);
+        addMapToList(37, nonArcadeMaps, miniMaps, COLOR_SCHEME_RED_PINK);
+
         return miniMaps;
     }
 
