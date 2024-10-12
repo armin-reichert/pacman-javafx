@@ -13,9 +13,9 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
-import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
-import de.amr.games.pacman.model.tengen.MsPacManTengenGame.MapCategory;
-import de.amr.games.pacman.model.tengen.MsPacManTengenGame.PacBooster;
+import de.amr.games.pacman.model.tengen.TengenMsPacManGame;
+import de.amr.games.pacman.model.tengen.TengenMsPacManGame.MapCategory;
+import de.amr.games.pacman.model.tengen.TengenMsPacManGame.PacBooster;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
@@ -212,7 +212,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
 
     @Override
     public void drawWorld(GameSpriteSheet spriteSheet, GameContext context, GameWorld world) {
-        MsPacManTengenGame tengenGame = (MsPacManTengenGame) context.game();
+        TengenMsPacManGame tengenGame = (TengenMsPacManGame) context.game();
         TileMap terrain = world.map().terrain();
         if (flashMode) {
             // Flash mode uses vector rendering
@@ -279,7 +279,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
         ctx().restore();
     }
 
-    private void drawTop(GameSpriteSheet spriteSheet, TileMap terrain, MsPacManTengenGame tengenGame) {
+    private void drawTop(GameSpriteSheet spriteSheet, TileMap terrain, TengenMsPacManGame tengenGame) {
         MapCategory category = tengenGame.mapCategory();
         RectArea categorySprite = switch (category) {
             case BIG     -> TengenMsPacManGameSpriteSheet.BIG_SPRITE;
@@ -288,9 +288,9 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
             case ARCADE  -> TengenMsPacManGameSpriteSheet.NO_SPRITE;
         };
         RectArea difficultySprite = switch (tengenGame.difficulty()) {
-            case EASY -> TengenMsPacManGameSpriteSheet.EASY_SPRITE;
-            case HARD -> TengenMsPacManGameSpriteSheet.HARD_SPRITE;
-            case CRAZY -> TengenMsPacManGameSpriteSheet.CRAZY_SPRITE;
+            case EASY   -> TengenMsPacManGameSpriteSheet.EASY_SPRITE;
+            case HARD   -> TengenMsPacManGameSpriteSheet.HARD_SPRITE;
+            case CRAZY  -> TengenMsPacManGameSpriteSheet.CRAZY_SPRITE;
             case NORMAL -> TengenMsPacManGameSpriteSheet.NO_SPRITE;
         };
         double centerX = terrain.numCols() * HTS;

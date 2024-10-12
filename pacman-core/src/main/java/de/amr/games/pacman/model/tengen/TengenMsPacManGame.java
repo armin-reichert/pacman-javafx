@@ -34,7 +34,7 @@ import static de.amr.games.pacman.lib.Globals.*;
  *
  * @author Armin Reichert
  */
-public class MsPacManTengenGame extends GameModel {
+public class TengenMsPacManGame extends GameModel {
 
     public enum MapCategory { ARCADE, MINI, BIG, STRANGE }
     public enum Difficulty { NORMAL, EASY, HARD, CRAZY }
@@ -114,7 +114,7 @@ public class MsPacManTengenGame extends GameModel {
     private byte startingLevel; // 1-7
     private int mapNumber;
 
-    public MsPacManTengenGame(GameVariant gameVariant, File userDir) {
+    public TengenMsPacManGame(GameVariant gameVariant, File userDir) {
         super(gameVariant, userDir);
         initialLives = 3;
         highScoreFile = new File(userDir, "highscore-ms_pacman_tengen.xml");

@@ -12,7 +12,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
 import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.model.pacmanxxl.PacManXXLGame;
-import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
+import de.amr.games.pacman.model.tengen.TengenMsPacManGame;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -64,7 +64,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         super(GameState.values());
         checkNotNull(userDir);
         modelsByVariant.put(GameVariant.MS_PACMAN,        new MsPacManArcadeGame(GameVariant.MS_PACMAN, userDir));
-        modelsByVariant.put(GameVariant.MS_PACMAN_TENGEN, new MsPacManTengenGame(GameVariant.MS_PACMAN_TENGEN, userDir));
+        modelsByVariant.put(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacManGame(GameVariant.MS_PACMAN_TENGEN, userDir));
         modelsByVariant.put(GameVariant.PACMAN,           new PacManArcadeGame(GameVariant.PACMAN, userDir));
         modelsByVariant.put(GameVariant.PACMAN_XXL,       new PacManXXLGame(GameVariant.PACMAN_XXL, userDir));
         for (var entry : modelsByVariant.entrySet()) {

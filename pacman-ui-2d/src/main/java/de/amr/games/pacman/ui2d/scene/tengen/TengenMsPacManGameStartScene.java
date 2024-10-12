@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.scene.tengen;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
+import de.amr.games.pacman.model.tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -40,7 +40,7 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
 
     static final int NUM_OPTIONS = 5;
 
-    private MsPacManTengenGame tengenGame;
+    private TengenMsPacManGame tengenGame;
     private int selectedOption;
     private long idleTicks;
 
@@ -48,7 +48,7 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
     public void init() {
         context.setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
-        tengenGame = (MsPacManTengenGame) context.game();
+        tengenGame = (TengenMsPacManGame) context.game();
         resetIdleTimer();
     }
 
@@ -137,7 +137,7 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
         drawBabyBlueBar(renderer, y);
     }
 
-    private String pacBoosterText(MsPacManTengenGame.PacBooster pacBooster) {
+    private String pacBoosterText(TengenMsPacManGame.PacBooster pacBooster) {
         return switch (pacBooster) {
             case OFF -> "OFF";
             case ALWAYS_ON -> "ALWAYS ON";
@@ -225,8 +225,8 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
     }
 
     private void selectNextMazeSelectionValue() {
-        MsPacManTengenGame.MapCategory category = tengenGame.mapCategory();
-        var values = MsPacManTengenGame.MapCategory.values();
+        TengenMsPacManGame.MapCategory category = tengenGame.mapCategory();
+        var values = TengenMsPacManGame.MapCategory.values();
         int current = category.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame.setMapCategory(values[next]);
         playChangeOptionValueSound();
@@ -234,8 +234,8 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
     }
 
     private void selectNextDifficultyValue() {
-        MsPacManTengenGame.Difficulty difficulty = tengenGame.difficulty();
-        var values = MsPacManTengenGame.Difficulty.values();
+        TengenMsPacManGame.Difficulty difficulty = tengenGame.difficulty();
+        var values = TengenMsPacManGame.Difficulty.values();
         int current = difficulty.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame.setDifficulty(values[next]);
         playChangeOptionValueSound();
@@ -243,8 +243,8 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
     }
 
     private void selectNextPacBoosterValue() {
-        MsPacManTengenGame.PacBooster pacBooster = tengenGame.pacBooster();
-        var values = MsPacManTengenGame.PacBooster.values();
+        TengenMsPacManGame.PacBooster pacBooster = tengenGame.pacBooster();
+        var values = TengenMsPacManGame.PacBooster.values();
         int current = pacBooster.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame.setPacBooster(values[next]);
         playChangeOptionValueSound();
