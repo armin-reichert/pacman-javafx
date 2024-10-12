@@ -427,6 +427,7 @@ public enum GameState implements FsmState<GameModel> {
             game.doHuntingStep();
             if (System.currentTimeMillis() - levelStartTime >= TEASER_TIME_SECONDS * 1000) {
                 if (game.levelNumber() == lastLevelNumber) {
+                    game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
                     enterState(INTRO);
                 } else {
                     timer().restartIndefinitely();
