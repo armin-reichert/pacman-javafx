@@ -148,7 +148,8 @@ public abstract class FiniteStateMachine<S extends FsmState<C>, C> {
             throw new IllegalStateException("State machine cannot resume previous state because there is none");
         }
         Logger.trace("Resume state {}, timer= {}", prevState, prevState.timer());
-        changeState(prevState);
+        state().onExit(context());
+        currentState = prevState;
     }
 
     /**
