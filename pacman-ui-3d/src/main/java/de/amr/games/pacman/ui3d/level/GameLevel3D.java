@@ -6,7 +6,9 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -156,10 +158,10 @@ public class GameLevel3D {
         //TODO check this
         obstacleHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
-        TileMap terrain = world.map().terrain();
-        wallStrokeColorPy.set(getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255)));
-        wallFillColorPy.set(getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_FILL, Color.rgb(0, 0, 0)));
+        wallStrokeColorPy.set(Color.web(world.map().colorScheme().stroke()));
+        wallFillColorPy.set(Color.web(world.map().colorScheme().fill()));
 
+        TileMap terrain = world.map().terrain();
         Box floor = createFloor(assets.get("floor_textures"), terrain.numCols() * TS - 1, terrain.numRows() * TS - 1);
 
         terrain.doubleStrokePaths()
@@ -209,7 +211,7 @@ public class GameLevel3D {
 
     private void addFood3D(GameWorld world, AssetStorage assets) {
         TileMap foodMap = world.map().food();
-        Color foodColor = getColorFromMap(foodMap, GameWorld.PROPERTY_COLOR_FOOD, Color.WHITE);
+        Color foodColor = Color.web(world.map().colorScheme().pellet());
         Material foodMaterial = coloredMaterial(foodColor);
         Model3D pelletModel3D = assets.get("model3D.pellet");
         foodMap.tiles().filter(world::hasFoodAt).forEach(tile -> {

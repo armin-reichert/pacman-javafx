@@ -15,7 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.maps.editor.TileMapUtil.getColorFromMap;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
 
 /**
@@ -54,7 +53,7 @@ public class House3D {
             createWall(xMin, yMax, xMax, yMax)
         );
 
-        Color doorColor = getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_DOOR, Color.rgb(254,184,174));
+        Color doorColor = Color.web(world.map().colorScheme().door());
         door3D = new Door3D(leftDoorTile, rightDoorTile, doorColor);
         door3D.drawModePy.bind(PY_3D_DRAW_MODE);
 

@@ -142,7 +142,7 @@ public class MsPacManArcadeGame extends GameModel {
         URL mapURL = getClass().getResource(MAP_PATTERN.formatted(mapNumber));
         var map = new WorldMap(mapURL);
         if (blueMazeBug && levelNumber == 1) {
-            map.terrain().setProperty(GameWorld.PROPERTY_COLOR_WALL_FILL, "rgb(33,33,255)");
+            map.terrain().setProperty(WorldMap.PROPERTY_COLOR_WALL_FILL, "rgb(33,33,255)");
         }
         setWorldAndCreatePopulation(createWorld(map));
         pac.setName("Ms. Pac-Man");

@@ -22,8 +22,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.maps.editor.TileMapUtil.getColorFromMap;
-import static de.amr.games.pacman.model.GameWorld.*;
 import static java.util.function.Predicate.not;
 
 /**
@@ -93,25 +91,20 @@ public class PacManXXLGameRenderer implements GameWorldRenderer {
 
     @Override
     public void drawWorld(GameSpriteSheet spriteSheet, GameContext context, GameWorld world) {
-        TileMap terrain = world.map().terrain();
-        Color wallStrokeColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_STROKE, Color.WHITE);
-        Color wallFillColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_FILL, Color.GREEN);
-        Color doorColor = getColorFromMap(terrain, PROPERTY_COLOR_DOOR, Color.YELLOW);
         terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
         if (flashMode) {
             terrainRenderer.setWallStrokeColor(blinkingOn ? Color.WHITE : Color.BLACK);
             terrainRenderer.setWallFillColor(blinkingOn   ? Color.BLACK : Color.WHITE);
             terrainRenderer.setDoorColor(Color.BLACK);
-            terrainRenderer.drawMap(ctx(), terrain);
+            terrainRenderer.drawMap(ctx(), world.map().terrain());
         }
         else {
-            terrainRenderer.setWallStrokeColor(wallStrokeColor);
-            terrainRenderer.setWallFillColor(wallFillColor);
-            terrainRenderer.setDoorColor(doorColor);
-            terrainRenderer.drawMap(ctx(), terrain);
-            Color foodColor = getColorFromMap(world.map().food(), PROPERTY_COLOR_FOOD, Color.ORANGE);
-            foodRenderer.setPelletColor(foodColor);
-            foodRenderer.setEnergizerColor(foodColor);
+            terrainRenderer.setWallStrokeColor(Color.web(world.map().colorScheme().stroke()));
+            terrainRenderer.setWallFillColor(Color.web(world.map().colorScheme().fill()));
+            terrainRenderer.setDoorColor(Color.web(world.map().colorScheme().door()));
+            terrainRenderer.drawMap(ctx(), world.map().terrain());
+            foodRenderer.setPelletColor(Color.web(world.map().colorScheme().pellet()));
+            foodRenderer.setEnergizerColor(Color.web(world.map().colorScheme().pellet()));
             world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
                 .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
             if (blinkingOn) {

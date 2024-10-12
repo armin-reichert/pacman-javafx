@@ -188,7 +188,7 @@ public class PlayScene3D implements GameScene {
             Color color = context.assets().color(assetPrefix + ".color.game_over_message");
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                    color = TileMapUtil.getColorFromMap(context.game().world().map().terrain(), GameWorld.PROPERTY_COLOR_WALL_STROKE, color);
+                    color = Color.web(context.game().world().map().colorScheme().stroke());
                 }
             }
             scores3D.showTextAsScore("GAME OVER!", color);
@@ -305,7 +305,7 @@ public class PlayScene3D implements GameScene {
         replaceGameLevel3D(true);
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
-        showLevelTestMessage("TEASER LEVEL " + context.game().levelNumber());
+        showLevelTestMessage("PREVIEW LEVEL " + context.game().levelNumber());
         PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
     }
 
@@ -400,7 +400,7 @@ public class PlayScene3D implements GameScene {
                 }
                 case TESTING_LEVEL_TEASERS -> {
                     replaceGameLevel3D(false);
-                    showLevelTestMessage("TEASER LEVEL " + context.game().levelNumber());
+                    showLevelTestMessage("PREVIEW LEVEL " + context.game().levelNumber());
                 }
                 default -> {
                     if (!context.game().isDemoLevel()){
