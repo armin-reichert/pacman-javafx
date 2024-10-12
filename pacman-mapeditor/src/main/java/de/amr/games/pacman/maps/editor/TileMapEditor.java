@@ -42,6 +42,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.maps.editor.TileMapEditorViewModel.tt;
@@ -255,6 +257,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
         initActiveRendering();
 
         contentPane.setOnKeyTyped(editController::onKeyTyped);
+        contentPane.setOnKeyPressed(editController::onKeyPressed);
         propertyEditorsVisiblePy.set(false);
     }
 
@@ -283,10 +286,10 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     private void createEditCanvas() {
         editCanvas = new Canvas();
-        editCanvas.setOnContextMenuRequested(event -> editController.onContextMenuRequested(contextMenu, event));
-        editCanvas.setOnMouseClicked(editController::onMouseClicked);
-        editCanvas.setOnMouseMoved(editController::onMouseMoved);
-        editCanvas.setOnKeyPressed(editController::onKeyPressed);
+        editCanvas.setOnContextMenuRequested(event -> editController.onEditCanvasContextMenuRequested(contextMenu, event));
+        editCanvas.setOnMouseClicked(editController::onEditCanvasMouseClicked);
+        editCanvas.setOnMouseMoved(editController::onEditCanvasMouseMoved);
+        editCanvas.setOnKeyPressed(editController::onEditCanvasKeyPressed);
         spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);
         // Note: this must be done *after* the initial map has been created/loaded!
@@ -456,19 +459,21 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     private StringBinding createTitleBinding() {
         return Bindings.createStringBinding(() -> {
+                File currentFile = currentFilePy.get();
                 WorldMap currentMap = map();
-                String title = tt("map_editor");
-                if (currentFilePy.get() != null) {
-                    title += " - " + currentFilePy.get();
+                String desc = "";
+                if (currentFile != null) {
+                    desc = "[%s] - %s".formatted(currentFile.getName(), currentFile.getPath());
                 } else if (currentMap != null && currentMap.url() != null) {
-                    title += " - " + currentMap.url();
+                    desc = "[%s]".formatted(currentMap.url());
                 } else {
-                    title += " - <" + tt("unsaved_map") + ">";
+                    desc = "[%s]".formatted(tt("unsaved_map"));
                 }
                 if (currentMap != null) {
-                    title += " (%d rows, %d cols)".formatted(currentMap.terrain().numRows(), currentMap.terrain().numCols());
+                    String prefix = "(%d rows, %d cols)".formatted(currentMap.terrain().numRows(), currentMap.terrain().numCols());
+                    desc = prefix + " " + desc;
                 }
-                return title;
+                return tt("map_editor") + ": " + desc;
             }, currentFilePy, mapPy
         );
     }
@@ -567,7 +572,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
         miNew.setOnAction(e -> showNewMapDialog());
 
         var miOpen = new MenuItem(tt("menu.file.open"));
-        miOpen.setOnAction(e -> openMapFile());
+        miOpen.setOnAction(e -> openMapFileInteractively());
 
         var miSaveAs = new MenuItem(tt("menu.file.save_as"));
         miSaveAs.setOnAction(e -> showSaveDialog());
@@ -682,7 +687,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
         }
     }
 
-    private void openMapFile() {
+    private void openMapFileInteractively() {
         fileChooser.setTitle(tt("open_file"));
         fileChooser.setInitialDirectory(lastUsedDir);
         File file = fileChooser.showOpenDialog(stage);
@@ -691,13 +696,54 @@ public class TileMapEditor implements TileMapEditorViewModel {
         }
     }
 
-    private void readMapFile(File file) {
+    private boolean readMapFile(File file) {
         if (file.getName().endsWith(".world")) {
             loadMap(new WorldMap(file));
             lastUsedDir = file.getParentFile();
             currentFilePy.set(file);
             Logger.info("Map read from file {}", file);
+            return true;
         }
+        return false;
+    }
+
+    @Override
+    public Optional<File> readNextMapFileInDirectory() {
+        return nextMapFileInDirectory(currentFilePy.get(), true).filter(this::readMapFile);
+    }
+
+    @Override
+    public Optional<File> readPrevMapFileInDirectory() {
+        return nextMapFileInDirectory(currentFilePy.get(), false).filter(this::readMapFile);
+    }
+
+    private Optional<File> nextMapFileInDirectory(File currentFile, boolean forward) {
+        if (currentFile == null) {
+            return Optional.empty();
+        }
+        File dir = currentFile.getParentFile();
+        if (dir == null) {
+            Logger.error("Cannot load next map file for {}, parent is NULL", currentFile);
+            return Optional.empty();
+        }
+        File[] mapFiles = dir.listFiles((folder, name) -> name.endsWith(".world"));
+        if (mapFiles == null) {
+            Logger.warn("No map files found in directory {}", dir);
+            return Optional.empty();
+        }
+        Arrays.sort(mapFiles);
+        int index = Arrays.binarySearch(mapFiles, currentFile);
+        if (0 <= index && index < mapFiles.length) {
+            int next;
+            if (forward) {
+                next = index == mapFiles.length - 1 ? 0 : index + 1;
+            } else {
+                next = index > 0 ? index - 1: mapFiles.length - 1;
+            }
+            File nextFile = mapFiles[next];
+            return Optional.of(nextFile);
+        }
+        return Optional.empty();
     }
 
     public void showSaveDialog() {

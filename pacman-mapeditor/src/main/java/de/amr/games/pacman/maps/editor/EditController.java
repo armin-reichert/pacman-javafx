@@ -15,10 +15,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -177,7 +174,7 @@ public class EditController {
         }
     }
 
-    void onMouseClicked(MouseEvent event) {
+    void onEditCanvasMouseClicked(MouseEvent event) {
         viewModel.canvas().requestFocus();
         if (event.getButton() == MouseButton.PRIMARY) {
             viewModel.contextMenu().hide();
@@ -206,7 +203,7 @@ public class EditController {
         }
     }
 
-    void onMouseMoved(MouseEvent event) {
+    void onEditCanvasMouseMoved(MouseEvent event) {
         Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
         focussedTilePy.set(tile);
         if (!editingEnabledPy.get()) {
@@ -241,16 +238,30 @@ public class EditController {
     }
 
     void onKeyPressed(KeyEvent event) {
-        Direction moveDir = switch (event.getCode()) {
+        if (event.isAltDown()) {
+            if (event.getCode() == KeyCode.LEFT) {
+                viewModel.readPrevMapFileInDirectory().ifPresentOrElse(
+                    file -> showInfoMessage("Previous map file read: %s".formatted(file.getName()), 3),
+                    () -> showErrorMessage("Previous file not available", 1));
+            } else if (event.getCode() == KeyCode.RIGHT) {
+                viewModel.readNextMapFileInDirectory().ifPresentOrElse(
+                    file -> showInfoMessage("Next map file read: %s".formatted(file.getName()), 3),
+                    () -> showErrorMessage("Next file not available", 1));
+            }
+        }
+    }
+
+    void onEditCanvasKeyPressed(KeyEvent event) {
+        Direction cursor = switch (event.getCode()) {
             case LEFT -> Direction.LEFT;
             case RIGHT -> Direction.RIGHT;
             case UP -> Direction.UP;
             case DOWN -> Direction.DOWN;
             default -> null;
         };
-        if (moveDir != null && focussedTilePy.get() != null) {
+        if (cursor != null && focussedTilePy.get() != null) {
             WorldMap worldMap = mapPy.get();
-            Vector2i newTile = focussedTilePy.get().plus(moveDir.vector());
+            Vector2i newTile = focussedTilePy.get().plus(cursor.vector());
             if (!worldMap.terrain().outOfBounds(newTile)) {
                 focussedTilePy.set(newTile);
             }
@@ -292,7 +303,7 @@ public class EditController {
         }
     }
 
-    void onContextMenuRequested(ContextMenu contextMenu, ContextMenuEvent event) {
+    void onEditCanvasContextMenuRequested(ContextMenu contextMenu, ContextMenuEvent event) {
         if (editingEnabledPy.get()) {
             Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
             WorldMap worldMap = mapPy.get();
@@ -428,5 +439,4 @@ public class EditController {
         Logger.info("Map created. rows={}, cols={}", tilesY, tilesX);
         return worldMap;
     }
-
 } // EditController

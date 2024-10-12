@@ -11,7 +11,9 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ContextMenu;
 
+import java.io.File;
 import java.text.MessageFormat;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -84,4 +86,8 @@ public interface TileMapEditorViewModel {
     PropertyEditorPane foodPropertiesEditor();
 
     void updateSourceView();
+
+    Optional<File> readNextMapFileInDirectory();
+
+    Optional<File> readPrevMapFileInDirectory();
 }
