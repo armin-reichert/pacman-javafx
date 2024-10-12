@@ -150,6 +150,28 @@ public class TengenMsPacManGame extends GameModel {
         return worldMap.terrain().numRows() > 30; //TODO correct?
     }
 
+    private List<WorldMap> miniMaps(List<WorldMap> nonArcadeMaps) {
+        return List.of(
+            nonArcadeMaps.get(34), // pink/darkred
+            nonArcadeMaps.get(35), // lightblue/white
+            nonArcadeMaps.get(34), // orange/white
+            nonArcadeMaps.get(35), // darkblue/yellow
+            nonArcadeMaps.get(36), // pink/yellow
+            nonArcadeMaps.get(34), // pink/darkred
+            nonArcadeMaps.get(35), // orange/white
+            nonArcadeMaps.get(36), // violet/white
+            nonArcadeMaps.get(30), // black/white
+            nonArcadeMaps.get(34), // darkblue/black
+            nonArcadeMaps.get(35), // pink/yellow
+            nonArcadeMaps.get(36), // red/white
+            nonArcadeMaps.get(30), // green/white
+            nonArcadeMaps.get(34), // yellow/white
+            nonArcadeMaps.get(35) // green/white
+
+            //TODO what about the remaining 17 levels?
+        );
+    }
+
     public void setPacBooster(PacBooster pacBooster) {
         this.pacBooster = pacBooster;
     }
