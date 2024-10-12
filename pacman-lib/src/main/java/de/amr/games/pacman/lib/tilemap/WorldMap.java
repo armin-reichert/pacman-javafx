@@ -111,15 +111,12 @@ public class WorldMap {
         terrain = TileMap.parseTileMap(terrainSection, tv -> 0 <= tv && tv <= Tiles.LAST_TERRAIN_VALUE);
         terrain.computeTerrainPaths();
         food = TileMap.parseTileMap(foodSection, tv -> 0 <= tv && tv <= Tiles.ENERGIZER);
+
         defaultColorScheme = new MapColorScheme(
-            terrain.hasProperty(PROPERTY_COLOR_WALL_FILL)
-                ? terrain.getProperty(PROPERTY_COLOR_WALL_FILL) : ARCADE_PACMAN_COLOR_SCHEME.fill(),
-            terrain.hasProperty(PROPERTY_COLOR_WALL_STROKE)
-                ? terrain.getProperty(PROPERTY_COLOR_WALL_STROKE) : ARCADE_PACMAN_COLOR_SCHEME.stroke(),
-            terrain.hasProperty(PROPERTY_COLOR_DOOR)
-                ? terrain.getProperty(PROPERTY_COLOR_DOOR) : ARCADE_PACMAN_COLOR_SCHEME.door(),
-            food.hasProperty(PROPERTY_COLOR_FOOD)
-                ? food.getProperty(PROPERTY_COLOR_FOOD) : ARCADE_PACMAN_COLOR_SCHEME.pellet()
+            terrain.getPropertyOrDefault(PROPERTY_COLOR_WALL_FILL, ARCADE_PACMAN_COLOR_SCHEME.fill()),
+            terrain.getPropertyOrDefault(PROPERTY_COLOR_WALL_STROKE, ARCADE_PACMAN_COLOR_SCHEME.stroke()),
+            terrain.getPropertyOrDefault(PROPERTY_COLOR_DOOR, ARCADE_PACMAN_COLOR_SCHEME.door()),
+            food.getPropertyOrDefault(PROPERTY_COLOR_FOOD, ARCADE_PACMAN_COLOR_SCHEME.pellet())
         );
         colorScheme = defaultColorScheme;
     }

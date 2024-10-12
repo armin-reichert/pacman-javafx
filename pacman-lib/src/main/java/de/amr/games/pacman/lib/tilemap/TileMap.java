@@ -185,9 +185,12 @@ public class TileMap {
         properties.put(name, value);
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T getProperty(String key) {
-        return (T) properties.get(key);
+    public String getProperty(String key) {
+        return properties.getProperty(key);
+    }
+
+    public String getPropertyOrDefault(String key, String defaultValue) {
+        return properties.getProperty(key, defaultValue);
     }
 
     public boolean hasProperty(String name) {
