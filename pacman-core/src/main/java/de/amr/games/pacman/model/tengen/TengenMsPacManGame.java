@@ -444,7 +444,7 @@ public class TengenMsPacManGame extends GameModel {
     public byte computeBonusSymbol() {
         //TODO: I have no idea yet how Tengen does this
         byte maxBonus = mapCategory == MapCategory.STRANGE ? BONUS_FLOWER : BONUS_BANANA;
-        if (levelNumber <= maxBonus) {
+        if (levelNumber - 1 <= maxBonus) {
             return (byte) (levelNumber - 1);
         }
         return (byte) randomInt(0, maxBonus);
