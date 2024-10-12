@@ -32,23 +32,22 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
     static final Color LABEL_COLOR = TENGEN_YELLOW;
     static final Color VALUE_COLOR = Color.WHITE;
 
-    static final int SETTING_PLAYERS        = 0;
+    static final int OPTION_PLAYERS = 0;
     static final int OPTION_PAC_BOOSTER = 1;
     static final int OPTION_DIFFICULTY = 2;
     static final int OPTION_MAZE_SELECTION = 3;
     static final int OPTION_STARTING_LEVEL = 4;
 
-    static final int NUM_SELECTIONS = 5;
+    static final int NUM_OPTIONS = 5;
 
-    private int option;
     private MsPacManTengenGame tengenGame;
-
+    private int selectedOption;
     private long idleTicks;
 
     @Override
     public void init() {
         context.setScoreVisible(false);
-        option = OPTION_PAC_BOOSTER;
+        selectedOption = OPTION_PAC_BOOSTER;
         tengenGame = (MsPacManTengenGame) context.game();
         resetIdleTimer();
     }
@@ -94,7 +93,7 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
 
         // Players (not implemented)
         y += 3 * TS;
-        drawArrowIfSelected(renderer, SETTING_PLAYERS, COL_ARROW, y);
+        drawArrowIfSelected(renderer, OPTION_PLAYERS, COL_ARROW, y);
         renderer.drawText("TYPE", LABEL_COLOR, font, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, font, COL_LABEL + 4 * TS + 4, y);
         renderer.drawText("1 PLAYER", VALUE_COLOR, font, COL_LABEL + 6 * TS  , y);
@@ -150,8 +149,8 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
         renderer.drawText(text, color, font, 0.5 * TS * (28 - text.length()), y);
     }
 
-    private void drawArrowIfSelected(GameWorldRenderer renderer, int setting, int x, int y) {
-        if (option == setting) {
+    private void drawArrowIfSelected(GameWorldRenderer renderer, int option, int x, int y) {
+        if (selectedOption == option) {
             Font font = renderer.scaledArcadeFont(TS);
             renderer.drawText("-", LABEL_COLOR, font, x, y);
             renderer.drawText(">", LABEL_COLOR, font, x + 3, y);
@@ -169,28 +168,25 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        //TODO Put all these cases into Tengen-specific game actions?
-
         if (context.keyboard().pressed(KeyCode.DOWN)) {
             selectNextOption();
         }
-
         else if (context.keyboard().pressed(KeyCode.UP)) {
             selectPrevOption();
         }
 
         else if (context.keyboard().pressed(KeyCode.TAB)) {
-            switch (option) {
+            switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> selectNextPacBoosterValue();
                 case OPTION_DIFFICULTY     -> selectNextDifficultyValue();
                 case OPTION_MAZE_SELECTION -> selectNextMazeSelectionValue();
-                case OPTION_STARTING_LEVEL -> selectNextStartingLevelValue();
+                case OPTION_STARTING_LEVEL -> selectNextStartingLevelValue(7); // max value
                 default -> {}
             }
         }
 
-        else if (context.keyboard().pressed(KeyCode.ENTER)) {
-            // get ready to play
+        //TODO make into game action?
+        else if (context.keyboard().pressed(KeyCode.ENTER)) { // start playing
             context.sounds().stopAll();
             context.game().insertCoin(); //TODO check this
             context.gameController().changeState(GameState.READY);
@@ -209,20 +205,20 @@ public class TengenMsPacManGameStartScene extends GameScene2D {
     }
 
     private void selectPrevOption() {
-        option = option == 0 ? NUM_SELECTIONS - 1 : option - 1;
+        selectedOption = selectedOption == 0 ? NUM_OPTIONS - 1 : selectedOption - 1;
         playChangeOptionSound();
         resetIdleTimer();
     }
 
     private void selectNextOption() {
-        option = (option < NUM_SELECTIONS - 1) ? option + 1 : 0;
+        selectedOption = (selectedOption < NUM_OPTIONS - 1) ? selectedOption + 1 : 0;
         playChangeOptionSound();
         resetIdleTimer();
     }
 
-    private void selectNextStartingLevelValue() {
+    private void selectNextStartingLevelValue(int maxValue) {
         int current = tengenGame.startingLevel();
-        int next = (current < 7) ? current + 1 : 1;
+        int next = (current < maxValue) ? current + 1 : 1;
         tengenGame.setStartingLevel(next);
         playChangeOptionValueSound();
         resetIdleTimer();
