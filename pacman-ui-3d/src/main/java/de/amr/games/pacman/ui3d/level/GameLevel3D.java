@@ -158,8 +158,8 @@ public class GameLevel3D {
         //TODO check this
         obstacleHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
-        wallStrokeColorPy.set(Color.web(world.map().colorScheme().stroke()));
-        wallFillColorPy.set(Color.web(world.map().colorScheme().fill()));
+        wallStrokeColorPy.set(Color.web(world.map().colorSchemeOrDefault().stroke()));
+        wallFillColorPy.set(Color.web(world.map().colorSchemeOrDefault().fill()));
 
         TileMap terrain = world.map().terrain();
         Box floor = createFloor(assets.get("floor_textures"), terrain.numCols() * TS - 1, terrain.numRows() * TS - 1);
@@ -211,7 +211,7 @@ public class GameLevel3D {
 
     private void addFood3D(GameWorld world, AssetStorage assets) {
         TileMap foodMap = world.map().food();
-        Color foodColor = Color.web(world.map().colorScheme().pellet());
+        Color foodColor = Color.web(world.map().colorSchemeOrDefault().pellet());
         Material foodMaterial = coloredMaterial(foodColor);
         Model3D pelletModel3D = assets.get("model3D.pellet");
         foodMap.tiles().filter(world::hasFoodAt).forEach(tile -> {

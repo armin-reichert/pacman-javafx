@@ -8,8 +8,10 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
@@ -38,6 +40,7 @@ import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.RectArea.rect;
+import static java.util.function.Predicate.not;
 
 /**
  * @author Armin Reichert
@@ -107,6 +110,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
+    private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
     private final Image arcadeMazesImage;
     private final Image nonArcadeMazesImage;
 
@@ -119,6 +123,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
         this.assets = checkNotNull(assets);
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
+        foodRenderer.scalingPy.bind(scalingPy);
         arcadeMazesImage = assets.image("tengen.mazes.arcade");
         nonArcadeMazesImage = assets.image("tengen.mazes.non_arcade");
     }
@@ -214,12 +219,28 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
         TileMap terrain = world.map().terrain();
         if (flashMode) {
             // Flash mode uses vector rendering
-            Color wallFillColor = Color.web(world.map().colorScheme().fill());
+            Color wallFillColor = Color.web(world.map().colorSchemeOrDefault().fill());
             terrainRenderer.setWallStrokeColor(Color.WHITE);
             terrainRenderer.setWallFillColor(blinkingOn ? Color.BLACK : wallFillColor);
             terrainRenderer.setDoorColor(Color.BLACK);
             terrainRenderer.drawMap(ctx(), terrain);
-        } else {
+        }
+        else if (world.map().colorScheme() != null) {
+            // default color scheme has been overwritten, use vector rendering
+            MapColorScheme colorScheme = world.map().colorScheme();
+            terrainRenderer.setWallStrokeColor(Color.web(colorScheme.stroke()));
+            terrainRenderer.setWallFillColor(Color.web(colorScheme.fill()));
+            terrainRenderer.setDoorColor(Color.web(colorScheme.door()));
+            terrainRenderer.drawMap(ctx(), terrain);
+            foodRenderer.setPelletColor(Color.web(colorScheme.pellet()));
+            foodRenderer.setEnergizerColor(Color.web(colorScheme.pellet()));
+            world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
+                    .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
+            if (blinkingOn) {
+                world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
+            }
+        }
+        else {
             if (mapSprite == null) {
                 Logger.error("No map sprite selected");
                 return;
@@ -241,25 +262,29 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
                     scaled(mapArea.width()), scaled(mapArea.height())
                 );
             }
-
-            // Tengen maps contain actor sprites, overpaint them
-            hideActorSprite(terrain.getTileProperty("pos_pac", v2i(14, 26)), 0, 0);
-            hideActorSprite(terrain.getTileProperty("pos_ghost_1_red", v2i(13, 14)), 0, 0);
-            // The ghosts in the house are sitting some pixels below their home position
-            // TODO: check if they really start from the bottom of the house, if yes, change map properties
-            hideActorSprite(terrain.getTileProperty("pos_ghost_2_pink",   v2i(13, 17)), 0, 4);
-            hideActorSprite(terrain.getTileProperty("pos_ghost_3_cyan",   v2i(11, 17)), 0, 4);
-            hideActorSprite(terrain.getTileProperty("pos_ghost_4_orange", v2i(15, 17)), 0, 4);
-
-            // Food
-            ctx().save();
-            ctx().scale(scaling(), scaling());
-            overPaintEatenPellets(world);
-            overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
-            ctx().restore();
-
-            tengenGame.bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
+            hideActorSprites(terrain);
+            drawFoodUsingMapSprite(tengenGame, world, spriteSheet);
         }
+    }
+
+    private void hideActorSprites(TileMap terrain) {
+        // Tengen maps contain actor sprites, overpaint them
+        hideActorSprite(terrain.getTileProperty("pos_pac", v2i(14, 26)), 0, 0);
+        hideActorSprite(terrain.getTileProperty("pos_ghost_1_red", v2i(13, 14)), 0, 0);
+        // The ghosts in the house are sitting some pixels below their home position
+        // TODO: check if they really start from the bottom of the house, if yes, change map properties
+        hideActorSprite(terrain.getTileProperty("pos_ghost_2_pink",   v2i(13, 17)), 0, 4);
+        hideActorSprite(terrain.getTileProperty("pos_ghost_3_cyan",   v2i(11, 17)), 0, 4);
+        hideActorSprite(terrain.getTileProperty("pos_ghost_4_orange", v2i(15, 17)), 0, 4);
+    }
+
+    private void drawFoodUsingMapSprite(TengenMsPacManGame game, GameWorld world, GameSpriteSheet spriteSheet) {
+        ctx().save();
+        ctx().scale(scaling(), scaling());
+        overPaintEatenPellets(world);
+        overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
+        ctx().restore();
+        game.bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
     }
 
     private void drawAnimatedMaze(long tick, RectArea[] sprites) {

@@ -8,6 +8,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
@@ -51,6 +52,75 @@ public class TengenMsPacManGame extends GameModel {
     private static final String MAPS_ROOT = "/de/amr/games/pacman/maps/tengen/";
     private static final String ARCADE_MAP_PATTERN  = MAPS_ROOT + "arcade/map%02d.world";
     private static final String NON_ARCADE_MAP_PATTERN  = MAPS_ROOT + "non_arcade/map%02d.world";
+
+    //TODO: Colors are from non-original spritsheet and probably not correct
+
+    public static final MapColorScheme COLOR_SCHEME_BLACK_WHITE = new MapColorScheme(
+            "000000", "ffffff", "ffffff", "ffffff");
+
+    public static final MapColorScheme COLOR_SCHEME_BLACK_DARKBLUE = new MapColorScheme(
+            "000000", "00298c", "00298c", "ffffff");
+
+    public static final MapColorScheme COLOR_SCHEME_GREEN_WHITE = new MapColorScheme(
+            "398400", "ffffff", "ffffff", "bdbd00");
+
+    public static final MapColorScheme COLOR_SCHEME_LIGHTBLUE_WHITE = new MapColorScheme(
+            "63adff", "ffffff", "ffffff", "bdbd00");
+
+    public static final MapColorScheme COLOR_SCHEME_PINK_DARKRED = new MapColorScheme(
+        "ffc6e7", "b5217b", "b5217b", "ffffff");
+
+    public static final MapColorScheme COLOR_SCHEME_PINK_YELLOW = new MapColorScheme(
+            "ffc6e7", "bdbd00", "bdbd00", "ffffff");
+
+    public static final MapColorScheme COLOR_SCHEME_ORANGE_WHITE = new MapColorScheme(
+        "b53121", "ffffff", "ffffff", "b5217b");
+
+    public static final MapColorScheme COLOR_SCHEME_DARKBLUE_YELLOW = new MapColorScheme(
+            "00298c", "e7e794", "e7e794", "ffffff");
+
+    public static final MapColorScheme COLOR_SCHEME_RED_PINK = new MapColorScheme(
+            "b5217b", "ff6bce", "ff6bce", "ffc6e7");
+
+    public static final MapColorScheme COLOR_SCHEME_VIOLET_WHITE = new MapColorScheme(
+            "5a007b", "ffffff", "ffffff", "ffffff");
+
+    public static final MapColorScheme COLOR_SCHEME_YELLOW_WHITE = new MapColorScheme(
+            "bdbd00", "ffffff", "ffffff", "5ae731");
+
+    // Got the first 15 entries by looking at a YouTube video. TODO: need real data!
+    private static List<WorldMap> miniMaps(List<WorldMap> nonArcadeMaps) {
+        var miniMaps = new ArrayList<WorldMap>();
+        addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_PINK_DARKRED);
+        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_LIGHTBLUE_WHITE);
+        addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_ORANGE_WHITE);
+        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_DARKBLUE_YELLOW);
+        addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_PINK_YELLOW);
+        addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_PINK_DARKRED);
+        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_ORANGE_WHITE);
+        addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_VIOLET_WHITE);
+        addMapToList(30, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLACK_WHITE);
+        addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLACK_DARKBLUE);
+        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_PINK_YELLOW);
+        addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_RED_PINK);
+        addMapToList(30, nonArcadeMaps, miniMaps, COLOR_SCHEME_GREEN_WHITE);
+        addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_YELLOW_WHITE);
+        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_GREEN_WHITE);
+
+        //TODO what about the remaining 17 levels? Use random values for now.
+        byte[] mapNumbers = { 30, 34, 35, 36 };
+        for (int number = 16; number <= 32; ++number) {
+            MapColorScheme randomScheme = nonArcadeMaps.get(randomInt(0, nonArcadeMaps.size())).colorSchemeOrDefault();
+            addMapToList(mapNumbers[randomInt(0, mapNumbers.length)], nonArcadeMaps, miniMaps, randomScheme);
+        }
+        return miniMaps;
+    }
+
+    private static void addMapToList(int number, List<WorldMap> sourceMaps, List<WorldMap> targetMaps, MapColorScheme colorScheme) {
+        WorldMap map = new WorldMap(sourceMaps.get(number)); // use a copy
+        map.setColorScheme(colorScheme);
+        targetMaps.add(map);
+    }
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
@@ -129,7 +199,7 @@ public class TengenMsPacManGame extends GameModel {
         strangeMaps = nonArcadeMaps.stream().filter(this::isStrangeMap).toList();
         assignMapCategory(strangeMaps, MapCategory.STRANGE);
 
-        miniMaps = nonArcadeMaps.stream().filter(worldMap -> worldMap.terrain().numRows() <= 30).toList();
+        miniMaps = miniMaps(nonArcadeMaps);
         assignMapCategory(miniMaps, MapCategory.MINI);
 
         bigMaps = nonArcadeMaps.stream().filter(worldMap -> worldMap.terrain().numRows() > ARCADE_MAP_TILES_Y).toList();
@@ -148,28 +218,6 @@ public class TengenMsPacManGame extends GameModel {
             return true;
         }
         return worldMap.terrain().numRows() > 30; //TODO correct?
-    }
-
-    private List<WorldMap> miniMaps(List<WorldMap> nonArcadeMaps) {
-        return List.of(
-            nonArcadeMaps.get(34), // pink/darkred
-            nonArcadeMaps.get(35), // lightblue/white
-            nonArcadeMaps.get(34), // orange/white
-            nonArcadeMaps.get(35), // darkblue/yellow
-            nonArcadeMaps.get(36), // pink/yellow
-            nonArcadeMaps.get(34), // pink/darkred
-            nonArcadeMaps.get(35), // orange/white
-            nonArcadeMaps.get(36), // violet/white
-            nonArcadeMaps.get(30), // black/white
-            nonArcadeMaps.get(34), // darkblue/black
-            nonArcadeMaps.get(35), // pink/yellow
-            nonArcadeMaps.get(36), // red/white
-            nonArcadeMaps.get(30), // green/white
-            nonArcadeMaps.get(34), // yellow/white
-            nonArcadeMaps.get(35) // green/white
-
-            //TODO what about the remaining 17 levels?
-        );
     }
 
     public void setPacBooster(PacBooster pacBooster) {

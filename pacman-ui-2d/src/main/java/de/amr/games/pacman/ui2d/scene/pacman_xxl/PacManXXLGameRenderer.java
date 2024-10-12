@@ -100,12 +100,12 @@ public class PacManXXLGameRenderer implements GameWorldRenderer {
             terrainRenderer.drawMap(ctx(), world.map().terrain());
         }
         else {
-            terrainRenderer.setWallStrokeColor(Color.web(world.map().colorScheme().stroke()));
-            terrainRenderer.setWallFillColor(Color.web(world.map().colorScheme().fill()));
-            terrainRenderer.setDoorColor(Color.web(world.map().colorScheme().door()));
+            terrainRenderer.setWallStrokeColor(Color.web(world.map().colorSchemeOrDefault().stroke()));
+            terrainRenderer.setWallFillColor(Color.web(world.map().colorSchemeOrDefault().fill()));
+            terrainRenderer.setDoorColor(Color.web(world.map().colorSchemeOrDefault().door()));
             terrainRenderer.drawMap(ctx(), world.map().terrain());
-            foodRenderer.setPelletColor(Color.web(world.map().colorScheme().pellet()));
-            foodRenderer.setEnergizerColor(Color.web(world.map().colorScheme().pellet()));
+            foodRenderer.setPelletColor(Color.web(world.map().colorSchemeOrDefault().pellet()));
+            foodRenderer.setEnergizerColor(Color.web(world.map().colorSchemeOrDefault().pellet()));
             world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
                 .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
             if (blinkingOn) {

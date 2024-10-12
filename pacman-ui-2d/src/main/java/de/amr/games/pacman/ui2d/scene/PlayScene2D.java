@@ -172,7 +172,7 @@ public class PlayScene2D extends GameScene2D {
             Color color = context.assets().color(assetPrefix + ".color.game_over_message");
             // Tengen seems to use wall stroke color of current maze. TODO: verify this!
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                color = Color.web(context.game().world().map().colorScheme().stroke());
+                color = Color.web(context.game().world().map().colorSchemeOrDefault().stroke());
             }
             renderer.drawText(text, color, font, x, y);
         } else if (context.gameState() == GameState.GAME_OVER) {

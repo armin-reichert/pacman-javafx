@@ -41,7 +41,7 @@ public class WorldMap {
     private TileMap terrain;
     private TileMap food;
     private MapColorScheme defaultColorScheme = ARCADE_PACMAN_COLOR_SCHEME;
-    private MapColorScheme colorScheme = ARCADE_PACMAN_COLOR_SCHEME;
+    private MapColorScheme colorScheme;
 
     /**
      * Creates a world map consisting of copies of the other map's layers.
@@ -118,7 +118,6 @@ public class WorldMap {
             terrain.getPropertyOrDefault(PROPERTY_COLOR_DOOR, ARCADE_PACMAN_COLOR_SCHEME.door()),
             food.getPropertyOrDefault(PROPERTY_COLOR_FOOD, ARCADE_PACMAN_COLOR_SCHEME.pellet())
         );
-        colorScheme = defaultColorScheme;
     }
 
     public void save(File file) {
@@ -147,6 +146,10 @@ public class WorldMap {
 
     public MapColorScheme colorScheme() {
         return colorScheme;
+    }
+
+    public MapColorScheme colorSchemeOrDefault() {
+        return colorScheme != null ? colorScheme : defaultColorScheme;
     }
 
     public void setColorScheme(MapColorScheme colorScheme) {
