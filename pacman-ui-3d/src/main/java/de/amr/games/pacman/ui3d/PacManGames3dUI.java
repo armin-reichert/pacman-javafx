@@ -38,7 +38,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
         sounds().setAssets(assets);
     }
 
-    protected void registerActions() {
+    protected void bindActionsToKeys() {
         for (GameAction action : GameAction2D.values()) {
             KEYBOARD.register(action.trigger());
         }

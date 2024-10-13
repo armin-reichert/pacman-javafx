@@ -110,7 +110,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         sounds().setAssets(assets);
     }
 
-    protected void registerActions() {
+    protected void bindActionsToKeys() {
         for (GameAction action : GameAction2D.values()) {
             KEYBOARD.register(action.trigger());
         }
@@ -164,7 +164,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         xxlGame.setMapSelectionMode(PY_MAP_SELECTION_MODE.get());
         PY_MAP_SELECTION_MODE.addListener((py,ov,selectionMode) -> xxlGame.setMapSelectionMode(selectionMode));
 
-        registerActions();
+        bindActionsToKeys();
 
         stage.setMinWidth(GameModel.ARCADE_MAP_SIZE_X * 1.25);
         stage.setMinHeight(GameModel.ARCADE_MAP_SIZE_Y * 1.25);
