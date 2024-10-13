@@ -97,6 +97,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected Page currentPage;
     protected GameWorldRenderer worldRenderer;
     protected boolean scoreVisible;
+    protected boolean signatureShown;
 
     public PacManGames2dUI() {
         assets = new AssetStorage();
@@ -400,11 +401,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                 Logger.info("Game scene changed to: {}", displayName(gameScenePy.get()));
             } else {
                 Logger.info("Game scene reloaded: {}", displayName(currentGameScene));
-            }
-            if (currentGameSceneHasID(GameSceneID.INTRO_SCENE)) {
-                gamePage.showSignature();
-            } else {
-                gamePage.hideSignature();
             }
         }
     }
