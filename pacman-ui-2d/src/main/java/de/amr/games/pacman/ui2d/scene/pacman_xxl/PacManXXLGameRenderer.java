@@ -52,8 +52,8 @@ public class PacManXXLGameRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public GameWorldRenderer copy() {
-        return new PacManGameRenderer(assets);
+    public PacManXXLGameRenderer copy() {
+        return new PacManXXLGameRenderer(assets);
     }
 
     @Override
