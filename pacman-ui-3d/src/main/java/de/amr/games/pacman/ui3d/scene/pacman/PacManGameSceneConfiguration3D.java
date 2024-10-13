@@ -4,13 +4,15 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGameSceneConfiguration;
+import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui3d.PlayScene3D;
 
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
 
 public class PacManGameSceneConfiguration3D extends PacManGameSceneConfiguration {
 
-    public PacManGameSceneConfiguration3D() {
+    public PacManGameSceneConfiguration3D(AssetStorage assets) {
+        super(assets);
         set(GameSceneID.PLAY_SCENE_3D, new PlayScene3D());
     }
 

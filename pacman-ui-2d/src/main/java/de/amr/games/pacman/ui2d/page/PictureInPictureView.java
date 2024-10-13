@@ -64,7 +64,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         });
 
         context.gameVariantProperty().addListener((py,ov,variant) -> {
-            renderer = context.gameSceneConfiguration(variant).createRenderer(context.assets());
+            renderer = context.currentGameSceneConfiguration().renderer().copy();
             renderer.setCanvas(canvas);
         });
     }

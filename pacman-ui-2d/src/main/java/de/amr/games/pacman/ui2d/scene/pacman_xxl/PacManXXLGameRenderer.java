@@ -13,6 +13,7 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.scene.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -47,6 +48,11 @@ public class PacManXXLGameRenderer implements GameWorldRenderer {
         this.assets = checkNotNull(assets);
         terrainRenderer.scalingPy.bind(scalingPy);
         foodRenderer.scalingPy.bind(scalingPy);
+    }
+
+    @Override
+    public GameWorldRenderer copy() {
+        return new PacManGameRenderer(assets);
     }
 
     @Override

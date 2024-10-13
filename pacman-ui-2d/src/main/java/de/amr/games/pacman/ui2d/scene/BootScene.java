@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -66,22 +67,23 @@ public class BootScene extends GameScene2D {
     }
 
     private void paintRandomSprites(GameWorldRenderer renderer) {
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
         renderer.clearCanvas();
         for (int row = 0; row < GameModel.ARCADE_MAP_TILES_Y / 2; ++row) {
             if (RND.nextInt(100) > 20) {
-                var region1 = randomSpriteSheetTile();
-                var region2 = randomSpriteSheetTile();
+                var region1 = randomSpriteSheetTile(spriteSheet);
+                var region2 = randomSpriteSheetTile(spriteSheet);
                 var splitX = GameModel.ARCADE_MAP_TILES_X / 8 + RND.nextInt(GameModel.ARCADE_MAP_TILES_X / 4);
                 for (int col = 0; col < GameModel.ARCADE_MAP_TILES_X / 2; ++col) {
                     var region = col < splitX ? region1 : region2;
-                    renderer.drawSpriteScaled(context.spriteSheet(), region, region.width() * col, region.height() * row);
+                    renderer.drawSpriteScaled(spriteSheet, region, region.width() * col, region.height() * row);
                 }
             }
         }
     }
 
-    private RectArea randomSpriteSheetTile() {
-        var source = context.spriteSheet().sourceImage();
+    private RectArea randomSpriteSheetTile(GameSpriteSheet spriteSheet) {
+        var source = spriteSheet.sourceImage();
         var raster = 16;
         int x = (int) (RND.nextDouble() * ((int) source.getWidth() - raster));
         int y = (int) (RND.nextDouble() * ((int) source.getHeight() - raster));

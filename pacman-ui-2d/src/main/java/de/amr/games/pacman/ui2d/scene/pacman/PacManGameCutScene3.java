@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import javafx.scene.paint.Color;
@@ -30,13 +31,11 @@ public class PacManGameCutScene3 extends GameScene2D {
     @Override
     public void init() {
         context.setScoreVisible(true);
-
+        GameSpriteSheet spriteSheet =  context.currentGameSceneConfiguration().spriteSheet();
         pac = new Pac();
-        pac.setAnimations(new PacManGamePacAnimations(context.spriteSheet()));
-
+        pac.setAnimations(new PacManGamePacAnimations(spriteSheet));
         blinky = Ghost.blinky();
-        blinky.setAnimations(new PacManGameGhostAnimations(context.spriteSheet(), blinky.id()));
-
+        blinky.setAnimations(new PacManGameGhostAnimations(spriteSheet, blinky.id()));
         frame = -1;
     }
 

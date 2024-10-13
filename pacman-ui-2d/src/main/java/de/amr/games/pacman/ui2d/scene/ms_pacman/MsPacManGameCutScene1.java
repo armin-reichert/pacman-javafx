@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAssets2D;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import javafx.scene.paint.Color;
@@ -67,15 +68,17 @@ public class MsPacManGameCutScene1 extends GameScene2D {
         pinky = Ghost.pinky();
         heart = new Entity();
 
-        msPac.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
+        msPac.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
         //TODO replace with Tengen sprite sheet later
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
+            var msPacManSpriteSheet = context.gameSceneConfiguration(GameVariant.MS_PACMAN).spriteSheet();
+            pacMan.setAnimations(new MsPacManGamePacAnimations(msPacManSpriteSheet));
         } else {
-            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
+            pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
         }
-        inky.setAnimations(new MsPacManGameGhostAnimations(context.spriteSheet(), inky.id()));
-        pinky.setAnimations(new MsPacManGameGhostAnimations(context.spriteSheet(), pinky.id()));
+        inky.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, inky.id()));
+        pinky.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, pinky.id()));
         clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
         clapAnimation.start();
 
@@ -94,14 +97,15 @@ public class MsPacManGameCutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
         String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
         Color color = context.assets().color(assetPrefix + ".color.clapperboard");
-        renderer.drawClapperBoard(context.spriteSheet(), renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
+        renderer.drawClapperBoard(spriteSheet, renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(msPac);
         renderer.drawAnimatedEntity(pacMan);
         renderer.drawAnimatedEntity(inky);
         renderer.drawAnimatedEntity(pinky);
-        renderer.drawSprite(heart, context.spriteSheet(), context.spriteSheet().heartSprite());
+        renderer.drawSprite(heart, spriteSheet, spriteSheet.heartSprite());
         drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 

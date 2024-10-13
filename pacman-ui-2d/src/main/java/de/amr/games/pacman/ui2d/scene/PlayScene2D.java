@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer;
 import javafx.scene.paint.Color;
@@ -113,13 +114,15 @@ public class PlayScene2D extends GameScene2D {
             Logger.warn("Cannot draw scene content, game world not yet available!");
             return;
         }
+        //TODO check this
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
 
         drawLevelMessage(renderer); // READY, GAME_OVER etc.
 
         boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         renderer.setFlashMode(flashMode);
         renderer.setBlinkingOn(context.game().blinking().isOn());
-        renderer.drawWorld(context.spriteSheet(), context, context.game().world());
+        renderer.drawWorld(spriteSheet, context, context.game().world());
 
         renderer.drawAnimatedEntity(context.game().pac());
         ghostsInZOrder().forEach(renderer::drawAnimatedEntity);
@@ -144,13 +147,13 @@ public class PlayScene2D extends GameScene2D {
             if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
                 numLivesShown += 1;
             }
-            renderer.drawLivesCounter(context.spriteSheet(), numLivesShown, 5, worldSize);
+            renderer.drawLivesCounter(spriteSheet, numLivesShown, 5, worldSize);
         }
         drawLevelCounter(renderer, worldSize);
         //TODO Hack: Tengen has these boxes on the left and on the right showing the current level number
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN && !context.game().isDemoLevel()) {
             TengenMsPacManGameRenderer tr = (TengenMsPacManGameRenderer) renderer;
-            tr.drawLevelNumberBoxes(context.spriteSheet(), context.game().levelNumber(), worldSize);
+            tr.drawLevelNumberBoxes(spriteSheet, context.game().levelNumber(), worldSize);
         }
     }
 
@@ -213,7 +216,8 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
-        context.attachRendererToCurrentMap(context.renderer());
+        //TODO check this
+        context.attachRendererToCurrentMap(context.currentGameSceneConfiguration().renderer());
         Logger.info("{} entered from {}", this, oldScene);
     }
 
@@ -246,7 +250,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        context.attachRendererToCurrentMap(context.renderer());
+        context.attachRendererToCurrentMap(context.currentGameSceneConfiguration().renderer());
     }
 
     @Override

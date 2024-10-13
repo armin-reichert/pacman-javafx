@@ -45,6 +45,8 @@ public interface GameWorldRenderer {
         return new ImageArea(sourceImage, new RectArea(x, y, width, height));
     }
 
+    GameWorldRenderer copy();
+
     AssetStorage assets();
 
     Canvas canvas();

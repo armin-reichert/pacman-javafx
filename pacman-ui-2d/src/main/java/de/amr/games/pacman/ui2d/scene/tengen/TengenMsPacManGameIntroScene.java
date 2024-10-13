@@ -16,6 +16,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameGhostAnimations;
@@ -67,6 +68,7 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
 
     @Override
     public void init() {
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
         context.setScoreVisible(false);
 
         msPacMan = new Pac();
@@ -81,11 +83,11 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
         ghostIndex = 0;
         waitBeforeRising = 0;
 
-        msPacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
+        msPacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
         msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
 
         for (Ghost ghost : ghosts) {
-            ghost.setAnimations(new MsPacManGameGhostAnimations(context.spriteSheet(), ghost.id()));
+            ghost.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, ghost.id()));
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
         }
         sceneController.restart(SceneState.WAITING_FOR_START);
@@ -108,6 +110,7 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
         TickTimer timer = sceneController.state().timer();
         long t = timer.currentTick();
         Font font = renderer.scaledArcadeFont(TS);
@@ -119,7 +122,7 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
                 // Draw Tengen logo without image smoothing
                 renderer.ctx().save();
                 renderer.ctx().setImageSmoothing(false);
-                renderer.drawSpriteScaled(context.spriteSheet(), TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE, 3 * TS, 12 * TS);
+                renderer.drawSpriteScaled(spriteSheet, TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE, 3 * TS, 12 * TS);
                 renderer.ctx().restore();
                 // Blink effect TODO: check exact rate
                 if (t % 60 < 30) {

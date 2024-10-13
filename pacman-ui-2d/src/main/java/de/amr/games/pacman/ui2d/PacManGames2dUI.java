@@ -16,7 +16,6 @@ import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.page.StartPage;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -95,7 +94,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected GamePage gamePage;
     protected EditorPage editorPage;
     protected Page currentPage;
-    protected GameWorldRenderer worldRenderer;
     protected boolean scoreVisible;
     protected boolean signatureShown;
 
@@ -198,7 +196,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         try {
             if (currentPage == gamePage) {
                 // 2D scenes only:
-                currentGameScene().ifPresent(gameScene -> gameScene.draw(worldRenderer));
+                GameWorldRenderer renderer = currentGameSceneConfiguration().renderer();
+                currentGameScene().ifPresent(gameScene -> gameScene.draw(renderer));
                 gamePage.updateDashboard();
                 flashMessageLayer.update();
             } else {
@@ -290,8 +289,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     private void configureGameScene2D(GameScene2D gameScene2D) {
-        worldRenderer = gameSceneConfigByVariant.get(gameVariant()).createRenderer(assets);
-        gamePage.setWorldRenderer(worldRenderer);
+        var gameSceneConfig = currentGameSceneConfiguration();
+        gamePage.setWorldRenderer(gameSceneConfig.renderer());
         gameScene2D.backgroundColorPy.bind(PY_CANVAS_BG_COLOR);
     }
 
@@ -382,14 +381,13 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         if (currentGameScene().isEmpty()) {
             return false;
         }
-        var gameSceneConfig = gameSceneConfiguration(gameVariant());
-        return gameSceneConfig.gameSceneHasID(currentGameScene().get(), sceneID);
+        return currentGameSceneConfiguration().gameSceneHasID(currentGameScene().get(), sceneID);
     }
 
     @Override
     public void updateGameScene(boolean reloadCurrent) {
         GameScene currentGameScene = gameScenePy.get();
-        GameScene nextGameScene = gameSceneConfiguration(gameVariant()).selectGameScene(this);
+        GameScene nextGameScene = currentGameSceneConfiguration().selectGameScene(this);
         boolean sceneChanging = nextGameScene != currentGameScene;
         if (reloadCurrent || sceneChanging) {
             if (currentGameScene != null) {
@@ -414,16 +412,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public AssetStorage assets() {
         return assets;
-    }
-
-    @Override
-    public GameSpriteSheet spriteSheet(GameVariant variant) {
-        return assets.get(assetPrefix(variant) + ".spritesheet");
-    }
-
-    @Override
-    public GameWorldRenderer renderer() {
-        return worldRenderer;
     }
 
     @Override
@@ -530,7 +518,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public void onLevelCreated(GameEvent event) {
-        gameSceneConfiguration(gameVariant()).createActorAnimations(game(), spriteSheet());
+        currentGameSceneConfiguration().createActorAnimations(game());
         Logger.info("Actor animations created. ({} level #{})", gameVariant(), game().levelNumber());
         if (game().isDemoLevel()) {
             sounds().setEnabled(false);

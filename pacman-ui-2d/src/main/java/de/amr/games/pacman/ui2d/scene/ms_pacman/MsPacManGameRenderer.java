@@ -48,6 +48,11 @@ public class MsPacManGameRenderer implements GameWorldRenderer {
         flashingMazesImage = assets.get("ms_pacman.flashing_mazes");
     }
 
+    public MsPacManGameRenderer copy() {
+        return new MsPacManGameRenderer(assets);
+        //TODO which properties to copy?
+    }
+
     @Override
     public AssetStorage assets() {
         return assets;
@@ -108,7 +113,7 @@ public class MsPacManGameRenderer implements GameWorldRenderer {
             overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
             ctx().restore();
         }
-        context.game().bonus().ifPresent(bonus -> drawMovingBonus(context.spriteSheet(), (MovingBonus) bonus));
+        context.game().bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
     }
 
     public void drawClapperBoard(GameSpriteSheet spriteSheet, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {

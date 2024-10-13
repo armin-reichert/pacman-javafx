@@ -18,6 +18,7 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui3d.level.*;
@@ -266,10 +267,11 @@ public class PlayScene3D implements GameScene {
     }
 
     private void onEnterStateGhostDying() {
-        RectArea[] numberSprites = context.spriteSheet().ghostNumberSprites();
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
+        RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
         context.game().eventLog().killedGhosts.forEach(ghost -> {
             int victimIndex = context.game().victims().indexOf(ghost);
-            var numberImage = context.spriteSheet().subImage(numberSprites[victimIndex]);
+            var numberImage = spriteSheet.subImage(numberSprites[victimIndex]);
             level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
         });
     }
@@ -354,7 +356,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        context.game().bonus().ifPresent(bonus -> level3D.replaceBonus3D(bonus, context.spriteSheet()));
+        context.game().bonus().ifPresent(bonus -> level3D.replaceBonus3D(bonus, context.currentGameSceneConfiguration().spriteSheet()));
     }
 
     @Override
@@ -448,7 +450,8 @@ public class PlayScene3D implements GameScene {
         // Place level counter at top right maze corner
         double x = context.game().world().map().terrain().numCols() * TS - 2 * TS;
         double y = 2 * TS;
-        Node levelCounter3D = Factory3D.createLevelCounter3D(context.spriteSheet(), context.game().levelCounter(), x, y);
+        Node levelCounter3D = Factory3D.createLevelCounter3D(context.currentGameSceneConfiguration().spriteSheet(),
+                context.game().levelCounter(), x, y);
         level3D.root().getChildren().add(levelCounter3D);
     }
 

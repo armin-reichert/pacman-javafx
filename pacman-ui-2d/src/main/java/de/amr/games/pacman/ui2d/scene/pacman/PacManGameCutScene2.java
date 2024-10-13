@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
@@ -35,9 +36,10 @@ public class PacManGameCutScene2 extends GameScene2D {
     public void init() {
         context.setScoreVisible(true);
         pac = new Pac();
-        pac.setAnimations(new PacManGamePacAnimations(context.spriteSheet()));
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
+        pac.setAnimations(new PacManGamePacAnimations(spriteSheet));
         blinky = Ghost.blinky();
-        var blinkyAnimations = new PacManGameGhostAnimations(context.spriteSheet(), blinky.id());
+        var blinkyAnimations = new PacManGameGhostAnimations(spriteSheet, blinky.id());
         blinkyNormal = blinkyAnimations.animation(Ghost.ANIM_GHOST_NORMAL);
         blinkyStretching = blinkyAnimations.animation(Ghost.ANIM_BLINKY_STRETCHED);
         blinkyDamaged = blinkyAnimations.animation(Ghost.ANIM_BLINKY_DAMAGED);
@@ -100,7 +102,8 @@ public class PacManGameCutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
-        renderer.drawSpriteScaled(context.spriteSheet(), blinkyStretching.currentSprite(), t(14), t(19) + 3);
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
+        renderer.drawSpriteScaled(spriteSheet, blinkyStretching.currentSprite(), t(14), t(19) + 3);
         renderer.drawAnimatedEntity(blinky);
         renderer.drawAnimatedEntity(pac);
         drawLevelCounter(renderer, context.worldSizeTilesOrDefault());

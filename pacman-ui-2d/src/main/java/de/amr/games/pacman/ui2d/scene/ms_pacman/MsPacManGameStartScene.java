@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
 import de.amr.games.pacman.ui2d.GameAction2D;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 
@@ -40,6 +41,7 @@ public class MsPacManGameStartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
         var font8 = renderer.scaledArcadeFont(8);
         var font6 = renderer.scaledArcadeFont(6);
         switch (context.gameVariant()) {
@@ -47,7 +49,7 @@ public class MsPacManGameStartScene extends GameScene2D {
                 renderer.drawText("PUSH START BUTTON", ARCADE_ORANGE, font8, t(6), t(16));
                 renderer.drawText("1 PLAYER ONLY", ARCADE_ORANGE, font8, t(8), t(18));
                 renderer.drawText("ADDITIONAL    AT 10000", ARCADE_ORANGE, font8, t(2), t(25));
-                renderer.drawSpriteScaled(context.spriteSheet(), context.spriteSheet().livesCounterSprite(), t(13), t(23) + 1);
+                renderer.drawSpriteScaled(spriteSheet, spriteSheet.livesCounterSprite(), t(13), t(23) + 1);
                 renderer.drawText("PTS", ARCADE_ORANGE, font6, t(25), t(25));
                 renderer.drawMsPacManMidwayCopyright(context.assets().get("ms_pacman.logo.midway"),
                     t(6), t(28), ARCADE_RED, renderer.scaledArcadeFont(TS));
@@ -56,7 +58,7 @@ public class MsPacManGameStartScene extends GameScene2D {
                 renderer.drawText("PUSH START BUTTON", ARCADE_ORANGE, font8, t(6), t(16));
                 renderer.drawText("1 PLAYER ONLY", ARCADE_ORANGE, font8, t(8), t(18));
                 renderer.drawText("ADDITIONAL    AT 10000", ARCADE_ORANGE, font8, t(2), t(25));
-                renderer.drawSpriteScaled(context.spriteSheet(), context.spriteSheet().livesCounterSprite(), t(13), t(23) + 1);
+                renderer.drawSpriteScaled(spriteSheet, spriteSheet.livesCounterSprite(), t(13), t(23) + 1);
                 renderer.drawText("PTS", ARCADE_ORANGE, font6, t(25), t(25));
             }
             case PACMAN -> {

@@ -130,6 +130,11 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     }
 
     @Override
+    public GameWorldRenderer copy() {
+        return new TengenMsPacManGameRenderer(assets);
+    }
+
+    @Override
     public AssetStorage assets() {
         return assets;
     }

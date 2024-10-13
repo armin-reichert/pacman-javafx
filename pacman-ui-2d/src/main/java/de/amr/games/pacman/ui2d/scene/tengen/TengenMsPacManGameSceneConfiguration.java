@@ -1,9 +1,10 @@
 package de.amr.games.pacman.ui2d.scene.tengen;
 
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneConfiguration;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
@@ -15,7 +16,10 @@ import de.amr.games.pacman.ui2d.util.AssetStorage;
 
 public class TengenMsPacManGameSceneConfiguration extends GameSceneConfiguration {
 
-    public TengenMsPacManGameSceneConfiguration() {
+    private final GameSpriteSheet spriteSheet;
+    private final TengenMsPacManGameRenderer renderer;
+
+    public TengenMsPacManGameSceneConfiguration(AssetStorage assets) {
         set(GameSceneID.BOOT_SCENE,  new TengenMsPacManGameBootScene());
         set(GameSceneID.INTRO_SCENE, new TengenMsPacManGameIntroScene());
         set(GameSceneID.START_SCENE, new TengenMsPacManGameStartScene());
@@ -23,6 +27,19 @@ public class TengenMsPacManGameSceneConfiguration extends GameSceneConfiguration
         set(GameSceneID.CUT_SCENE_1, new MsPacManGameCutScene1());
         set(GameSceneID.CUT_SCENE_2, new MsPacManGameCutScene2());
         set(GameSceneID.CUT_SCENE_3, new MsPacManGameCutScene3());
+
+        spriteSheet = assets.get(GameAssets2D.assetPrefix(GameVariant.MS_PACMAN_TENGEN) + ".spritesheet");
+        renderer = new TengenMsPacManGameRenderer(assets);
+    }
+
+    @Override
+    public TengenMsPacManGameRenderer renderer() {
+        return renderer;
+    }
+
+    @Override
+    public GameSpriteSheet spriteSheet() {
+        return spriteSheet;
     }
 
     @Override
@@ -39,12 +56,7 @@ public class TengenMsPacManGameSceneConfiguration extends GameSceneConfiguration
     }
 
     @Override
-    public GameWorldRenderer createRenderer(AssetStorage assets) {
-        return new TengenMsPacManGameRenderer(assets);
-    }
-
-    @Override
-    public void createActorAnimations(GameModel game, GameSpriteSheet spriteSheet) {
+    public void createActorAnimations(GameModel game) {
         game.pac().setAnimations(new TengenMsPacManGamePacAnimations(spriteSheet));
         game.ghosts().forEach(ghost -> ghost.setAnimations(new TengenMsPacManGameGhostAnimations(spriteSheet, ghost.id())));
     }

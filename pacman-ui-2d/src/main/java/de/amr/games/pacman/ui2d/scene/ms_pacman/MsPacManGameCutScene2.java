@@ -11,6 +11,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAssets2D;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import javafx.scene.paint.Color;
@@ -52,12 +53,14 @@ public class MsPacManGameCutScene2 extends GameScene2D {
         pacMan = new Pac();
         msPacMan = new Pac();
 
-        msPacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
+        msPacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
         //TODO use Tengen sprite sheet
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
+            var msPacManSpriteSheet = context.gameSceneConfiguration(GameVariant.MS_PACMAN).spriteSheet();
+            pacMan.setAnimations(new MsPacManGamePacAnimations(msPacManSpriteSheet));
         } else {
-            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
+            pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
         }
 
         clapAnimation = new ClapperboardAnimation("2", "THE CHASE");
@@ -78,9 +81,10 @@ public class MsPacManGameCutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
         String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
         Color color = context.assets().color(assetPrefix + ".color.clapperboard");
-        renderer.drawClapperBoard(context.spriteSheet(), renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
+        renderer.drawClapperBoard(spriteSheet, renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(msPacMan);
         renderer.drawAnimatedEntity(pacMan);
         drawLevelCounter(renderer, context.worldSizeTilesOrDefault());

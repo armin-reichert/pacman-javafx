@@ -12,6 +12,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAssets2D;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer;
@@ -63,15 +64,16 @@ public class MsPacManGameCutScene3 extends GameScene2D {
         stork = new Entity();
         bag = new Entity();
 
-        msPacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
-        //TODO use Tengen sprite sheet
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
+        msPacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet(GameVariant.MS_PACMAN)));
+            var msPacManSpriteSheet = context.gameSceneConfiguration(GameVariant.MS_PACMAN).spriteSheet();
+            pacMan.setAnimations(new MsPacManGamePacAnimations(msPacManSpriteSheet));
         } else {
-            pacMan.setAnimations(new MsPacManGamePacAnimations(context.spriteSheet()));
+            pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
         }
 
-        storkAnimation = context.spriteSheet().createStorkFlyingAnimation();
+        storkAnimation = spriteSheet.createStorkFlyingAnimation();
         storkAnimation.start();
 
         clapAnimation = new ClapperboardAnimation("3", "JUNIOR");
@@ -92,20 +94,20 @@ public class MsPacManGameCutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
         String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
         Color color = context.assets().color(assetPrefix + ".color.clapperboard");
-        renderer.drawClapperBoard(context.spriteSheet(), renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
+        renderer.drawClapperBoard(spriteSheet, renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(msPacMan);
         renderer.drawAnimatedEntity(pacMan);
         //TODO Hack
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             TengenMsPacManGameRenderer tr = (TengenMsPacManGameRenderer) renderer;
-            tr.drawStork(context.spriteSheet(), storkAnimation, stork, bag.acceleration().y() != 0);
+            tr.drawStork(spriteSheet, storkAnimation, stork, bag.acceleration().y() != 0);
         } else {
-            renderer.drawSprite(stork, context.spriteSheet(), storkAnimation.currentSprite());
+            renderer.drawSprite(stork, spriteSheet, storkAnimation.currentSprite());
         }
-        renderer.drawSprite(bag, context.spriteSheet(),
-            bagOpen ? context.spriteSheet().juniorPacSprite() : context.spriteSheet().blueBagSprite());
+        renderer.drawSprite(bag, spriteSheet,  bagOpen ? spriteSheet.juniorPacSprite() : spriteSheet.blueBagSprite());
         drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 

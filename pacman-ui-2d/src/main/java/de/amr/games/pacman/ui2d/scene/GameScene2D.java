@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
@@ -60,7 +61,9 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected void drawLevelCounter(GameWorldRenderer renderer, Vector2i worldSize) {
-        renderer.drawLevelCounter(context.spriteSheet(), context.game().levelNumber(), context.game().levelCounter(), worldSize);
+        //TODO check this
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
+        renderer.drawLevelCounter(spriteSheet, context.game().levelNumber(), context.game().levelCounter(), worldSize);
     }
 
     /**

@@ -41,6 +41,11 @@ public class PacManGameRenderer implements GameWorldRenderer {
     }
 
     @Override
+    public GameWorldRenderer copy() {
+        return new PacManGameRenderer(assets);
+    }
+
+    @Override
     public AssetStorage assets() {
         return assets;
     }

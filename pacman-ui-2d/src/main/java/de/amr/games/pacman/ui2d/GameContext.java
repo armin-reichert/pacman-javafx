@@ -12,7 +12,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneConfiguration;
@@ -83,6 +82,9 @@ public interface GameContext {
 
     // Game scenes
     GameSceneConfiguration gameSceneConfiguration(GameVariant variant);
+    default GameSceneConfiguration currentGameSceneConfiguration() {
+        return gameSceneConfiguration(gameVariant());
+    }
     boolean currentGameSceneHasID(GameSceneID gameSceneID);
     ObjectProperty<GameScene> gameSceneProperty();
     Optional<GameScene> currentGameScene();
@@ -104,15 +106,10 @@ public interface GameContext {
      */
     String locText(String keyOrPattern, Object... args);
 
-    default GameSpriteSheet spriteSheet() { return spriteSheet(gameVariant()); }
-
-    GameSpriteSheet spriteSheet(GameVariant variant);
-
-    GameWorldRenderer renderer();
-
+    //TODO check this
     default void attachRendererToCurrentMap(GameWorldRenderer renderer) {
         if (game().world() != null) {
-            renderer.configure(game(), spriteSheet());
+            renderer.configure(game(), currentGameSceneConfiguration().spriteSheet());
         }
     }
 }

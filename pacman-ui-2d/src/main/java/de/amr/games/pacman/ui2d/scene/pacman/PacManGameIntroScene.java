@@ -17,6 +17,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import javafx.scene.paint.Color;
@@ -77,24 +78,21 @@ public class PacManGameIntroScene extends GameScene2D {
 
     @Override
     public void init() {
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
         blinking = new Pulse(10, true);
-
         pacMan = new Pac();
-        pacMan.setAnimations(new PacManGamePacAnimations(context.spriteSheet()));
-
+        pacMan.setAnimations(new PacManGamePacAnimations(spriteSheet));
         ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.clyde() };
         for (Ghost ghost : ghosts) {
-            ghost.setAnimations(new PacManGameGhostAnimations(context.spriteSheet(), ghost.id()));
+            ghost.setAnimations(new PacManGameGhostAnimations(spriteSheet, ghost.id()));
         }
         ghostImageVisible     = new boolean[4];
         ghostNicknameVisible  = new boolean[4];
         ghostCharacterVisible = new boolean[4];
-
         victims = new ArrayList<>(4);
         titleVisible = false;
         ghostIndex = 0;
         ghostKilledTime = 0;
-
         context.setScoreVisible(true);
         sceneController.restart(SceneState.STARTING);
     }
@@ -150,6 +148,7 @@ public class PacManGameIntroScene extends GameScene2D {
     }
 
     private void drawGallery(GameWorldRenderer renderer) {
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
         Font font = renderer.scaledArcadeFont(TS);
         int tx = LEFT_TILE_X;
         if (titleVisible) {
@@ -160,7 +159,7 @@ public class PacManGameIntroScene extends GameScene2D {
                 continue;
             }
             int ty = 7 + 3 * id;
-            renderer.drawSpriteCenteredOverBox(context.spriteSheet(), context.spriteSheet().ghostFacingRight(id), t(tx) + 4, t(ty));
+            renderer.drawSpriteCenteredOverBox(spriteSheet, spriteSheet.ghostFacingRight(id), t(tx) + 4, t(ty));
             if (ghostCharacterVisible[id]) {
                 String text = "-" + GHOST_CHARACTERS[id];
                 renderer.drawText(text, GHOST_COLORS[id], font, t(tx + 3), t(ty + 1));

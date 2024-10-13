@@ -37,9 +37,11 @@ public abstract class GameSceneConfiguration {
         return get(sceneID) == gameScene;
     }
 
-    public abstract GameWorldRenderer createRenderer(AssetStorage assets);
+    public abstract GameSpriteSheet spriteSheet();
 
-    public abstract void createActorAnimations(GameModel game, GameSpriteSheet spriteSheet);
+    public abstract GameWorldRenderer renderer();
+
+    public abstract void createActorAnimations(GameModel game);
 
     public abstract GameScene selectGameScene(GameContext context);
 
