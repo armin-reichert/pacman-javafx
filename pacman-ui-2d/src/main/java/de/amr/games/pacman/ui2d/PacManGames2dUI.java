@@ -36,16 +36,17 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.text.MessageFormat;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
@@ -53,7 +54,6 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
-import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 
 /**
  * 2D user interface for all Pac-Man game variants.
@@ -161,7 +161,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         // init game variant property
         gameVariantPy.set(gameVariant());
 
-        //TODO: Not sure if this belongs here:
+        // TODO: Not sure if this belongs here
+        // The game models are in project "pacman-core" which has no dependency toJavaFX,
+        // therefore we cannot use data binding to the model classes.
         PacManXXLGame xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
         xxlGame.setMapSelectionMode(PY_MAP_SELECTION_MODE.get());
         PY_MAP_SELECTION_MODE.addListener((py,ov,selectionMode) -> xxlGame.setMapSelectionMode(selectionMode));
@@ -240,10 +242,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         mainScene.widthProperty().addListener(sizeListener);
         mainScene.heightProperty().addListener(sizeListener);
         return mainScene;
-    }
-
-    public StackPane rootPane() {
-        return sceneRoot;
     }
 
     protected GamePage createGamePage(Scene parentScene) {

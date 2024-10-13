@@ -58,8 +58,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
         }
         if (gameScene instanceof PlayScene3D playScene3D) {
             playScene3D.setContext(this);
-            playScene3D.widthProperty().bind(rootPane().widthProperty());
-            playScene3D.heightProperty().bind(rootPane().heightProperty());
+            playScene3D.widthProperty().bind(sceneRoot.widthProperty());
+            playScene3D.heightProperty().bind(sceneRoot.heightProperty());
         } else {
             Logger.error("Something is wrong: Game scene registered as 3D play scene has unsupported class {}", gameScene.getClass());
         }
