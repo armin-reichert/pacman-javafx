@@ -201,7 +201,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
                              Pac.ANIM_MUNCHING_BOOSTER -> drawRotatedTowardsDir(msPacMan, msPacMan.moveDir(), spriteAnimation);
                         case Pac.ANIM_DYING -> {
                             //TODO does not work yet!
-                            drawSprite(msPacMan.entity(), spriteAnimation.spriteSheet(), spriteAnimation.currentSprite());
+                            drawSprite(msPacMan.entity(), spriteAnimation.currentSprite());
                         }
                         default -> GameWorldRenderer.super.drawAnimatedEntity(msPacMan);
                     }
@@ -222,12 +222,12 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
             case RIGHT -> ctx().scale(-1, 1);
             case DOWN  -> { ctx().scale(-1, 1); ctx().rotate(-90); }
         }
-        drawSpriteCenteredOverPosition(spriteAnimation.spriteSheet(), spriteAnimation.currentSprite(), 0, 0);
+        drawSpriteCenteredOverPosition(spriteAnimation.currentSprite(), 0, 0);
         ctx().restore();
     }
 
     @Override
-    public void drawWorld(GameSpriteSheet spriteSheet, GameContext context, GameWorld world) {
+    public void drawWorld(GameContext context, GameWorld world) {
         TengenMsPacManGame tengenGame = (TengenMsPacManGame) context.game();
         TileMap terrain = world.map().terrain();
         if (flashMode) {
@@ -337,11 +337,11 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
         double y = t(2) + HTS;
         if (tengenGame.pacBooster() != PacBooster.OFF) {
             //TODO: always displayed when TOGGLE_USING_KEY is selected or only if booster is active?
-            drawSpriteCenteredOverPosition(spriteSheet, TengenMsPacManGameSpriteSheet.BOOSTER_SPRITE, centerX - t(6), y);
+            drawSpriteCenteredOverPosition(TengenMsPacManGameSpriteSheet.BOOSTER_SPRITE, centerX - t(6), y);
         }
-        drawSpriteCenteredOverPosition(spriteSheet, difficultySprite, centerX, y);
-        drawSpriteCenteredOverPosition(spriteSheet, categorySprite, centerX + t(4.5), y);
-        drawSpriteCenteredOverPosition(spriteSheet, TengenMsPacManGameSpriteSheet.FRAME_SPRITE, centerX, y);
+        drawSpriteCenteredOverPosition(difficultySprite, centerX, y);
+        drawSpriteCenteredOverPosition(categorySprite, centerX + t(4.5), y);
+        drawSpriteCenteredOverPosition(TengenMsPacManGameSpriteSheet.FRAME_SPRITE, centerX, y);
     }
 
     @Override
@@ -355,22 +355,22 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public void drawLivesCounter(GameSpriteSheet spriteSheet, int numLives, int maxLives, Vector2i worldSize) {
+    public void drawLivesCounter(int numLives, int maxLives, Vector2i worldSize) {
         ctx().save();
         ctx().translate(0, -5); // lift a bit
-        GameWorldRenderer.super.drawLivesCounter(spriteSheet, numLives, maxLives, worldSize);
+        GameWorldRenderer.super.drawLivesCounter(numLives, maxLives, worldSize);
         ctx().restore();
     }
 
     @Override
-    public void drawLevelCounter(GameSpriteSheet spriteSheet, int levelNumber, List<Byte> symbols, Vector2i worldSize) {
+    public void drawLevelCounter(int levelNumber, List<Byte> symbols, Vector2i worldSize) {
         ctx().save();
         ctx().translate(0, -5);
-        GameWorldRenderer.super.drawLevelCounter(spriteSheet, levelNumber, symbols, worldSize);
+        GameWorldRenderer.super.drawLevelCounter(levelNumber, symbols, worldSize);
         ctx().restore();
     }
 
-    public void drawLevelNumberBoxes(GameSpriteSheet spriteSheet, int levelNumber, Vector2i worldSize) {
+    public void drawLevelNumberBoxes(int levelNumber, Vector2i worldSize) {
         ctx().save();
         ctx().translate(0, -5);
         if (levelNumber > 0) {
@@ -383,7 +383,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
 
     private void drawLevelNumberBox(GameSpriteSheet spriteSheet, int levelNumber, double x, double y) {
         TengenMsPacManGameSpriteSheet tss = (TengenMsPacManGameSpriteSheet) spriteSheet;
-        drawSpriteScaled(spriteSheet, TengenMsPacManGameSpriteSheet.LEVEL_BOX_SPRITE, x, y);
+        drawSpriteScaled(TengenMsPacManGameSpriteSheet.LEVEL_BOX_SPRITE, x, y);
         // erase violet area (what is it good for?)
         ctx().setFill(Color.BLACK);
         ctx().save();
@@ -391,12 +391,12 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
         ctx().fillRect(x + 10, y + 2, 5, 5);
         ctx().restore();
         if (levelNumber < 10) {
-            drawSpriteScaled(spriteSheet, tss.digit(levelNumber), x + 10, y + 2);
+            drawSpriteScaled(tss.digit(levelNumber), x + 10, y + 2);
         } else if (levelNumber < 100) { // d1 d0
             int d0 = levelNumber % 10;
             int d1 = levelNumber / 10;
-            drawSpriteScaled(spriteSheet, tss.digit(d0), x + 10, y + 2);
-            drawSpriteScaled(spriteSheet, tss.digit(d1), x + 1,  y + 2);
+            drawSpriteScaled(tss.digit(d0), x + 10, y + 2);
+            drawSpriteScaled(tss.digit(d1), x + 1,  y + 2);
         }
     }
 
@@ -418,7 +418,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     public void drawClapperBoard(GameSpriteSheet spriteSheet, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
         var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
         if (sprite != RectArea.PIXEL) {
-            drawSpriteCenteredOverBox(spriteSheet, sprite, x, y);
+            drawSpriteCenteredOverBox(sprite, x, y);
             var numberX = x + 8;
             var numberY = y + 18; // baseline
             ctx().setFill(backgroundColorPy.get());
@@ -443,7 +443,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
         double eyeY = pos.y() + (storkAnimation.frameIndex() == 1 ? 5 : 1);
         ctx().save();
         ctx().setImageSmoothing(false);
-        drawSpriteScaled(spriteSheet, storkAnimation.currentSprite(), pos.x(), eyeY);
+        drawSpriteScaled(storkAnimation.currentSprite(), pos.x(), eyeY);
         // over-paint bag when released from beak
         if (bagReleased) {
             ctx().scale(scaling(), scaling());

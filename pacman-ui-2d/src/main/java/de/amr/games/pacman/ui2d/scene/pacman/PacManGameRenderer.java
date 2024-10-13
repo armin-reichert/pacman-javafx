@@ -91,7 +91,7 @@ public class PacManGameRenderer implements GameWorldRenderer {
     public void configure(GameModel game, GameSpriteSheet spriteSheet) {}
 
     @Override
-    public void drawWorld(GameSpriteSheet spriteSheet, GameContext context, GameWorld world) {
+    public void drawWorld(GameContext context, GameWorld world) {
         double originX = 0, originY = t(3);
         double scaling = scaling();
         ctx().save();
@@ -100,10 +100,10 @@ public class PacManGameRenderer implements GameWorldRenderer {
             if (blinkingOn) {
                 ctx().drawImage(flashingMazeImage, originX, originY);
             } else {
-                drawSpriteUnscaled(spriteSheet, PacManGameSpriteSheet.EMPTY_MAZE_SPRITE, originX, originY);
+                drawSpriteUnscaled(PacManGameSpriteSheet.EMPTY_MAZE_SPRITE, originX, originY);
             }
         } else {
-            drawSpriteUnscaled(spriteSheet, PacManGameSpriteSheet.FULL_MAZE_SPRITE, originX, originY);
+            drawSpriteUnscaled(PacManGameSpriteSheet.FULL_MAZE_SPRITE, originX, originY);
             overPaintEatenPellets(world);
             overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
         }
@@ -113,9 +113,9 @@ public class PacManGameRenderer implements GameWorldRenderer {
 
     private void drawStaticBonus(GameSpriteSheet spriteSheet, Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
-            drawSprite(bonus.entity(), spriteSheet, spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            drawSprite(bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
         } else if (bonus.state() == Bonus.STATE_EATEN) {
-            drawSprite(bonus.entity(), spriteSheet, spriteSheet.bonusValueSprite(bonus.symbol()));
+            drawSprite(bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
         }
     }
 }

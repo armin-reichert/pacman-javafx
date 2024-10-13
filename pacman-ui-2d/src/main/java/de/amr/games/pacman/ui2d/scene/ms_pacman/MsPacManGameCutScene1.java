@@ -100,12 +100,12 @@ public class MsPacManGameCutScene1 extends GameScene2D {
         GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
         String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
         Color color = context.assets().color(assetPrefix + ".color.clapperboard");
-        renderer.drawClapperBoard(spriteSheet, renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
+        renderer.drawClapperBoard(renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(msPac);
         renderer.drawAnimatedEntity(pacMan);
         renderer.drawAnimatedEntity(inky);
         renderer.drawAnimatedEntity(pinky);
-        renderer.drawSprite(heart, spriteSheet, spriteSheet.heartSprite());
+        renderer.drawSprite(heart, spriteSheet.heartSprite());
         drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 

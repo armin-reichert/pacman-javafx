@@ -97,7 +97,7 @@ public class MsPacManGameCutScene3 extends GameScene2D {
         GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
         String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
         Color color = context.assets().color(assetPrefix + ".color.clapperboard");
-        renderer.drawClapperBoard(spriteSheet, renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
+        renderer.drawClapperBoard(renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(msPacMan);
         renderer.drawAnimatedEntity(pacMan);
         //TODO Hack
@@ -105,9 +105,9 @@ public class MsPacManGameCutScene3 extends GameScene2D {
             TengenMsPacManGameRenderer tr = (TengenMsPacManGameRenderer) renderer;
             tr.drawStork(spriteSheet, storkAnimation, stork, bag.acceleration().y() != 0);
         } else {
-            renderer.drawSprite(stork, spriteSheet, storkAnimation.currentSprite());
+            renderer.drawSprite(stork, storkAnimation.currentSprite());
         }
-        renderer.drawSprite(bag, spriteSheet,  bagOpen ? spriteSheet.juniorPacSprite() : spriteSheet.blueBagSprite());
+        renderer.drawSprite(bag, bagOpen ? spriteSheet.juniorPacSprite() : spriteSheet.blueBagSprite());
         drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 

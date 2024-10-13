@@ -104,7 +104,7 @@ public class MsPacManGameRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public void drawWorld(GameSpriteSheet spriteSheet, GameContext context, GameWorld world) {
+    public void drawWorld(GameContext context, GameWorld world) {
         double originX = 0, originY = t(3);
         if (flashMode) {
             if (blinkingOn) {
@@ -115,7 +115,7 @@ public class MsPacManGameRenderer implements GameWorldRenderer {
         } else {
             ctx().save();
             ctx().scale(scalingPy.get(), scalingPy.get());
-            drawSpriteUnscaled(spriteSheet, mapWithFoodSprite.area(), originX, originY);
+            drawSpriteUnscaled(mapWithFoodSprite.area(), originX, originY);
             overPaintEatenPellets(world);
             overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
             ctx().restore();
@@ -123,10 +123,10 @@ public class MsPacManGameRenderer implements GameWorldRenderer {
         context.game().bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
     }
 
-    public void drawClapperBoard(GameSpriteSheet spriteSheet, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
+    public void drawClapperBoard(Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
         var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
         if (sprite != RectArea.PIXEL) {
-            drawSpriteCenteredOverBox(spriteSheet, sprite, x, y);
+            drawSpriteCenteredOverBox(sprite, x, y);
             ctx().setFont(font);
             ctx().setFill(textColor.darker());
             var numberX = scaled(x + sprite.width() - 25);

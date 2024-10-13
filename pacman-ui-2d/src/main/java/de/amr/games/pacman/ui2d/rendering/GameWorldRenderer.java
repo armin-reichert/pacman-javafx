@@ -85,25 +85,23 @@ public interface GameWorldRenderer {
     /**
      * Draws a sprite (section of the sprite sheet source) at the given (scaled) position.
      *
-     * @param spriteSheet   the sprite sheet
      * @param sprite        the sprite sheet section to draw
      * @param x             scaled x-coordinate
      * @param y             scaled y-coordinate
      */
-    default void drawSpriteUnscaled(GameSpriteSheet spriteSheet, RectArea sprite, double x, double y) {
-        drawSubImage(spriteSheet.sourceImage(), sprite, x, y);
+    default void drawSpriteUnscaled(RectArea sprite, double x, double y) {
+        drawSubImage(spriteSheet().sourceImage(), sprite, x, y);
     }
 
     /**
      * Draws a sprite using the current scene scaling.
      *
-     * @param spriteSheet the sprite sheet from which the sprite is drawn
      * @param sprite    sprite sheet region ("sprite")
      * @param x         UNSCALED x position
      * @param y         UNSCALED y position
      */
-    default void drawSpriteScaled(GameSpriteSheet spriteSheet, RectArea sprite, double x, double y) {
-        drawSubImageScaled(spriteSheet.sourceImage(), sprite, x, y);
+    default void drawSpriteScaled(RectArea sprite, double x, double y) {
+        drawSubImageScaled(spriteSheet().sourceImage(), sprite, x, y);
     }
 
     /**
@@ -135,29 +133,27 @@ public interface GameWorldRenderer {
      * left-upper corner of the bounding box. Note that the sprites for Pac-Man and the ghosts are 16 pixels wide but the
      * bounding box is only 8 pixels (one square tile) wide.
      *
-     * @param spriteSheet the sprite sheet from which the sprite is drawn
      * @param sprite    sprite sheet region (can be null)
      * @param x         x-coordinate of left-upper corner of bounding box
      * @param y         y-coordinate of left-upper corner of bounding box
      */
-    default void drawSpriteCenteredOverBox(GameSpriteSheet spriteSheet, RectArea sprite, double x, double y) {
-        drawSpriteCenteredOverPosition(spriteSheet, sprite, x + HTS, y + HTS);
+    default void drawSpriteCenteredOverBox(RectArea sprite, double x, double y) {
+        drawSpriteCenteredOverPosition(sprite, x + HTS, y + HTS);
     }
 
-    default void drawSpriteCenteredOverPosition(GameSpriteSheet spriteSheet, RectArea sprite, double x, double y) {
-        drawSpriteScaled(spriteSheet, sprite, x - 0.5 * sprite.width(), y - 0.5 * sprite.height());
+    default void drawSpriteCenteredOverPosition(RectArea sprite, double x, double y) {
+        drawSpriteScaled(sprite, x - 0.5 * sprite.width(), y - 0.5 * sprite.height());
     }
 
     /**
      * Draws the sprite over the bounding box of the given entity (if visible).
      *
      * @param entity    an entity like Pac-Man or a ghost
-     * @param spriteSheet the sprite sheet from which the sprite is drwan
      * @param sprite    sprite sheet region (can be null)
      */
-    default void drawSprite(Entity entity, GameSpriteSheet spriteSheet, RectArea sprite) {
+    default void drawSprite(Entity entity, RectArea sprite) {
         if (entity.isVisible()) {
-            drawSpriteCenteredOverBox(spriteSheet, sprite, entity.posX(), entity.posY());
+            drawSpriteCenteredOverBox(sprite, entity.posX(), entity.posY());
         }
     }
 
@@ -171,7 +167,7 @@ public interface GameWorldRenderer {
             if (character.isVisible() && animations instanceof SpriteAnimationCollection spriteAnimations) {
                 SpriteAnimation currentAnimation = spriteAnimations.current();
                 if (currentAnimation != null) {
-                    drawSprite(character.entity(), currentAnimation.spriteSheet(), spriteAnimations.currentSprite(character));
+                    drawSprite(character.entity(), spriteAnimations.currentSprite(character));
                 } else {
                     Logger.error("No current animation for character {}", character);
                 }
@@ -181,7 +177,7 @@ public interface GameWorldRenderer {
 
     ObjectProperty<Color> backgroundColorProperty();
 
-    void drawWorld(GameSpriteSheet spriteSheet, GameContext context, GameWorld world);
+    void drawWorld(GameContext context, GameWorld world);
 
     void setFlashMode(boolean on);
 
@@ -261,14 +257,14 @@ public interface GameWorldRenderer {
         ctx().fillText(text, scaled(x), scaled(y));
     }
 
-    default void drawLivesCounter(GameSpriteSheet spriteSheet, int numLives, int maxLives, Vector2i worldSize) {
+    default void drawLivesCounter(int numLives, int maxLives, Vector2i worldSize) {
         if (numLives == 0) {
             return;
         }
         double x = TS * 2;
         double y = TS * (worldSize.y() - 2);
         for (int i = 0; i < Math.min(numLives, maxLives); ++i) {
-            drawSpriteScaled(spriteSheet, spriteSheet.livesCounterSprite(), x + TS * (2 * i), y);
+            drawSpriteScaled(spriteSheet().livesCounterSprite(), x + TS * (2 * i), y);
         }
         // show text indicating that more lives are available than symbols displayed (can happen when lives are added via cheat)
         int moreLivesThanSymbols = numLives - maxLives;
@@ -278,10 +274,10 @@ public interface GameWorldRenderer {
         }
     }
 
-    default void drawLevelCounter(GameSpriteSheet spriteSheet, int levelNumber, List<Byte> symbols, Vector2i worldSize) {
+    default void drawLevelCounter(int levelNumber, List<Byte> symbols, Vector2i worldSize) {
         double x = TS * (worldSize.x() - 4), y = TS * (worldSize.y() - 2);
         for (byte symbol : symbols) {
-            drawSpriteScaled(spriteSheet, spriteSheet.bonusSymbolSprite(symbol), x, y);
+            drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;
         }
     }
@@ -315,14 +311,14 @@ public interface GameWorldRenderer {
         ctx().save();
         ctx().translate(0, bonus.elongationY());
         switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawSprite(bonus.entity(), spriteSheet, spriteSheet.bonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawSprite(bonus.entity(), spriteSheet, spriteSheet.bonusValueSprite(bonus.symbol()));
+            case Bonus.STATE_EDIBLE -> drawSprite(bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawSprite(bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
             default -> {}
         }
         ctx().restore();
     }
 
-    default void drawClapperBoard(GameSpriteSheet spriteSheet,
+    default void drawClapperBoard(
         Font font, Color textColor,
         ClapperboardAnimation animation,
         double x, double y) {}

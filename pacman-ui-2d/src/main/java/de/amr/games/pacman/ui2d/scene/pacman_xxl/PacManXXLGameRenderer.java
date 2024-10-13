@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.pacman_xxl;
 
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameModel;
@@ -101,7 +100,7 @@ public class PacManXXLGameRenderer implements GameWorldRenderer {
     public void configure(GameModel game, GameSpriteSheet spriteSheet) {}
 
     @Override
-    public void drawWorld(GameSpriteSheet spriteSheet, GameContext context, GameWorld world) {
+    public void drawWorld(GameContext context, GameWorld world) {
         terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
         if (flashMode) {
             terrainRenderer.setWallStrokeColor(blinkingOn ? Color.WHITE : Color.BLACK);
@@ -127,9 +126,9 @@ public class PacManXXLGameRenderer implements GameWorldRenderer {
 
     private void drawStaticBonus(GameSpriteSheet spriteSheet, Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
-            drawSprite(bonus.entity(), spriteSheet, spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            drawSprite(bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
         } else if (bonus.state() == Bonus.STATE_EATEN) {
-            drawSprite(bonus.entity(), spriteSheet, spriteSheet.bonusValueSprite(bonus.symbol()));
+            drawSprite(bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
         }
     }
 }

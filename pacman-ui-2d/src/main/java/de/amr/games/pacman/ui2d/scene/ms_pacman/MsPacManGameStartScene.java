@@ -49,7 +49,7 @@ public class MsPacManGameStartScene extends GameScene2D {
                 renderer.drawText("PUSH START BUTTON", ARCADE_ORANGE, font8, t(6), t(16));
                 renderer.drawText("1 PLAYER ONLY", ARCADE_ORANGE, font8, t(8), t(18));
                 renderer.drawText("ADDITIONAL    AT 10000", ARCADE_ORANGE, font8, t(2), t(25));
-                renderer.drawSpriteScaled(spriteSheet, spriteSheet.livesCounterSprite(), t(13), t(23) + 1);
+                renderer.drawSpriteScaled(spriteSheet.livesCounterSprite(), t(13), t(23) + 1);
                 renderer.drawText("PTS", ARCADE_ORANGE, font6, t(25), t(25));
                 renderer.drawMsPacManMidwayCopyright(context.assets().get("ms_pacman.logo.midway"),
                     t(6), t(28), ARCADE_RED, renderer.scaledArcadeFont(TS));
@@ -58,7 +58,7 @@ public class MsPacManGameStartScene extends GameScene2D {
                 renderer.drawText("PUSH START BUTTON", ARCADE_ORANGE, font8, t(6), t(16));
                 renderer.drawText("1 PLAYER ONLY", ARCADE_ORANGE, font8, t(8), t(18));
                 renderer.drawText("ADDITIONAL    AT 10000", ARCADE_ORANGE, font8, t(2), t(25));
-                renderer.drawSpriteScaled(spriteSheet, spriteSheet.livesCounterSprite(), t(13), t(23) + 1);
+                renderer.drawSpriteScaled(spriteSheet.livesCounterSprite(), t(13), t(23) + 1);
                 renderer.drawText("PTS", ARCADE_ORANGE, font6, t(25), t(25));
             }
             case PACMAN -> {

@@ -110,7 +110,6 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
-        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
         TickTimer timer = sceneController.state().timer();
         long t = timer.currentTick();
         Font font = renderer.scaledArcadeFont(TS);
@@ -122,7 +121,7 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
                 // Draw Tengen logo without image smoothing
                 renderer.ctx().save();
                 renderer.ctx().setImageSmoothing(false);
-                renderer.drawSpriteScaled(spriteSheet, TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE, 3 * TS, 12 * TS);
+                renderer.drawSpriteScaled(TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE, 3 * TS, 12 * TS);
                 renderer.ctx().restore();
                 // Blink effect TODO: check exact rate
                 if (t % 60 < 30) {

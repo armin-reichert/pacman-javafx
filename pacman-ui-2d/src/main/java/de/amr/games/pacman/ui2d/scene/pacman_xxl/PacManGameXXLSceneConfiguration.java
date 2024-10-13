@@ -13,7 +13,7 @@ import de.amr.games.pacman.ui2d.util.AssetStorage;
 public class PacManGameXXLSceneConfiguration extends GameSceneConfiguration {
 
     private final GameSpriteSheet spriteSheet;
-    private final PacManGameRenderer renderer;
+    private final PacManXXLGameRenderer renderer;
 
     public PacManGameXXLSceneConfiguration(AssetStorage assets) {
         set(GameSceneID.BOOT_SCENE,  new BootScene());
@@ -25,11 +25,11 @@ public class PacManGameXXLSceneConfiguration extends GameSceneConfiguration {
         set(GameSceneID.CUT_SCENE_3, new PacManGameCutScene3());
 
         spriteSheet = assets.get(GameAssets2D.assetPrefix(GameVariant.PACMAN_XXL) + ".spritesheet");
-        renderer = new PacManGameRenderer(assets);
+        renderer = new PacManXXLGameRenderer(assets);
     }
 
     @Override
-    public PacManGameRenderer renderer() {
+    public PacManXXLGameRenderer renderer() {
         return renderer;
     }
 
