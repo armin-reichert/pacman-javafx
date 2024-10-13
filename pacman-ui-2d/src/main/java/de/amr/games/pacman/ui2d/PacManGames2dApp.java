@@ -8,17 +8,10 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.pacmanxxl.MapSelectionMode;
-import de.amr.games.pacman.ui2d.scene.BootScene;
-import de.amr.games.pacman.ui2d.scene.GameSceneID;
-import de.amr.games.pacman.ui2d.scene.PlayScene2D;
-import de.amr.games.pacman.ui2d.scene.ms_pacman.*;
-import de.amr.games.pacman.ui2d.scene.pacman.PacManGameCutScene1;
-import de.amr.games.pacman.ui2d.scene.pacman.PacManGameCutScene2;
-import de.amr.games.pacman.ui2d.scene.pacman.PacManGameCutScene3;
-import de.amr.games.pacman.ui2d.scene.pacman.PacManGameIntroScene;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameBootScene;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameIntroScene;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameStartScene;
+import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSceneConfiguration;
+import de.amr.games.pacman.ui2d.scene.pacman.PacManGameSceneConfiguration;
+import de.amr.games.pacman.ui2d.scene.pacman_xxl.PacManGameXXLSceneConfiguration;
+import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameSceneConfiguration;
 import javafx.application.Application;
 import javafx.beans.property.*;
 import javafx.geometry.Dimension2D;
@@ -71,42 +64,10 @@ public class PacManGames2dApp extends Application {
     public void start(Stage stage) {
         ui = new PacManGames2dUI();
         ui.loadAssets();
-        ui.setGameScenes(GameVariant.MS_PACMAN, Map.of(
-            GameSceneID.BOOT_SCENE,   new BootScene(),
-            GameSceneID.INTRO_SCENE,  new MsPacManGameIntroScene(),
-            GameSceneID.START_SCENE,  new MsPacManGameStartScene(),
-            GameSceneID.PLAY_SCENE,   new PlayScene2D(),
-            GameSceneID.CUT_SCENE_1,  new MsPacManGameCutScene1(),
-            GameSceneID.CUT_SCENE_2,  new MsPacManGameCutScene2(),
-            GameSceneID.CUT_SCENE_3,  new MsPacManGameCutScene3()
-        ));
-        ui.setGameScenes(GameVariant.MS_PACMAN_TENGEN, Map.of(
-            GameSceneID.BOOT_SCENE,   new TengenMsPacManGameBootScene(),
-            GameSceneID.INTRO_SCENE,  new TengenMsPacManGameIntroScene(),
-            GameSceneID.START_SCENE,  new TengenMsPacManGameStartScene(),
-            GameSceneID.PLAY_SCENE,   new PlayScene2D(),
-            GameSceneID.CUT_SCENE_1,  new MsPacManGameCutScene1(),
-            GameSceneID.CUT_SCENE_2,  new MsPacManGameCutScene2(),
-            GameSceneID.CUT_SCENE_3,  new MsPacManGameCutScene3()
-        ));
-        ui.setGameScenes(GameVariant.PACMAN, Map.of(
-            GameSceneID.BOOT_SCENE,   new BootScene(),
-            GameSceneID.INTRO_SCENE,  new PacManGameIntroScene(),
-            GameSceneID.START_SCENE,  new MsPacManGameStartScene(),
-            GameSceneID.PLAY_SCENE,   new PlayScene2D(),
-            GameSceneID.CUT_SCENE_1,  new PacManGameCutScene1(),
-            GameSceneID.CUT_SCENE_2,  new PacManGameCutScene2(),
-            GameSceneID.CUT_SCENE_3,  new PacManGameCutScene3()
-        ));
-        ui.setGameScenes(GameVariant.PACMAN_XXL, Map.of(
-            GameSceneID.BOOT_SCENE,   new BootScene(),
-            GameSceneID.INTRO_SCENE,  new PacManGameIntroScene(),
-            GameSceneID.START_SCENE,  new MsPacManGameStartScene(),
-            GameSceneID.PLAY_SCENE,   new PlayScene2D(),
-            GameSceneID.CUT_SCENE_1,  new PacManGameCutScene1(),
-            GameSceneID.CUT_SCENE_2,  new PacManGameCutScene2(),
-            GameSceneID.CUT_SCENE_3,  new PacManGameCutScene3()
-        ));
+        ui.setGameSceneConfiguration(GameVariant.MS_PACMAN, new MsPacManGameSceneConfiguration());
+        ui.setGameSceneConfiguration(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacManGameSceneConfiguration());
+        ui.setGameSceneConfiguration(GameVariant.PACMAN, new PacManGameSceneConfiguration());
+        ui.setGameSceneConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLSceneConfiguration());
         ui.createAndStart(stage, initialSize());
 
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));

@@ -10,6 +10,7 @@ import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui2d.scene.GameSceneConfiguration;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
@@ -49,10 +50,10 @@ public class PacManGames3dUI extends PacManGames2dUI {
     }
 
     @Override
-    public void setGameScenes(GameVariant variant, Map<GameSceneID, GameScene> gameScenes) {
-        super.setGameScenes(variant, gameScenes);
+    public void setGameSceneConfiguration(GameVariant variant, GameSceneConfiguration gameSceneConfiguration) {
+        super.setGameSceneConfiguration(variant, gameSceneConfiguration);
         // init 3D play scene if present
-        GameScene gameScene = gameScenes.get(GameSceneID.PLAY_SCENE_3D);
+        GameScene gameScene = gameSceneConfiguration.get(GameSceneID.PLAY_SCENE_3D);
         if (gameScene == null) {
             Logger.error("No play scene 3D has been registered.");
             return;
