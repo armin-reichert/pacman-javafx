@@ -246,20 +246,10 @@ public class TengenMsPacManGame extends GameModel {
         highScoreFile = new File(userDir, "highscore-ms_pacman_tengen.xml");
 
         arcadeMaps = readMaps(ARCADE_MAP_PATTERN, ARCADE_MAP_COUNT);
-        assignMapCategory(arcadeMaps, MapCategory.ARCADE);
-
         List<WorldMap> nonArcadeMaps = readMaps(NON_ARCADE_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
-
-        //TODO how are maps really categorized in Tengen?
-
         strangeMaps = nonArcadeMaps.stream().filter(this::isStrangeMap).toList();
-        assignMapCategory(strangeMaps, MapCategory.STRANGE);
-
         miniMaps = miniMaps(nonArcadeMaps);
-        assignMapCategory(miniMaps, MapCategory.MINI);
-
         bigMaps = nonArcadeMaps.stream().filter(worldMap -> worldMap.terrain().numRows() > ARCADE_MAP_TILES_Y).toList();
-        assignMapCategory(bigMaps, MapCategory.BIG);
 
         setMapCategory(MapCategory.ARCADE);
         setPacBooster(PacBooster.OFF);
@@ -351,13 +341,6 @@ public class TengenMsPacManGame extends GameModel {
             }
         }
         return maps;
-    }
-
-    private void assignMapCategory(List<WorldMap> maps, MapCategory category) {
-        maps.forEach(map -> {
-            map.terrain().setProperty("map_category", category.name());
-            Logger.info("Map #{} -> {}", map.terrain().getProperty("map_number"), category);
-        });
     }
 
     @Override
