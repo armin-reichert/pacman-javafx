@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.*;
@@ -37,6 +38,8 @@ import static java.util.function.Predicate.not;
  * @author Armin Reichert
  */
 public interface GameWorldRenderer {
+
+    void configure(GameModel game, GameSpriteSheet spriteSheet);
 
     static ImageArea imageArea(Image sourceImage, int x, int y, int width, int height) {
         return new ImageArea(sourceImage, new RectArea(x, y, width, height));
@@ -173,8 +176,6 @@ public interface GameWorldRenderer {
     }
 
     ObjectProperty<Color> backgroundColorProperty();
-
-    void selectMapSprite(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet);
 
     void drawWorld(GameSpriteSheet spriteSheet, GameContext context, GameWorld world);
 

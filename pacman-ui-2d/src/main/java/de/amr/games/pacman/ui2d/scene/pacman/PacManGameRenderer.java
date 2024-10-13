@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.pacman;
 
-import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -76,9 +76,7 @@ public class PacManGameRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public void selectMapSprite(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet) {
-        //TODO what?
-    }
+    public void configure(GameModel game, GameSpriteSheet spriteSheet) {}
 
     @Override
     public void drawWorld(GameSpriteSheet spriteSheet, GameContext context, GameWorld world) {

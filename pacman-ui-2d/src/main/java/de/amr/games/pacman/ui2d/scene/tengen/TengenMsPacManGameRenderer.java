@@ -13,6 +13,7 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.tengen.TengenMsPacManGame;
@@ -384,17 +385,16 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public void selectMapSprite(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet) {
-        TileMap terrainMap = worldMap.terrain();
-        int width = terrainMap.numCols() * TS;
-        int height = (terrainMap.numRows() - 5) * TS; // 3 empty rows before and 2 after maze source
-        MapCategory mapCategory = MapCategory.valueOf(terrainMap.getProperty("map_category"));
-        switch (mapCategory) {
-            case ARCADE -> mapSprite = new ImageArea(arcadeMazesImage, arcadeMapArea(mapNumber, width, height));
-            default -> {
-                mapNumber = Integer.parseInt(terrainMap.getProperty("map_number"));
-                mapSprite = new ImageArea(nonArcadeMazesImage, nonArcadeMapArea(mapNumber, width, height));
-            }
+    public void configure(GameModel game, GameSpriteSheet spriteSheet) {
+        TengenMsPacManGame tengenGame = (TengenMsPacManGame) game;
+        WorldMap worldMap = game.world().map();
+        int mapNumber = game.currentMapNumber();
+        int width  = worldMap.terrain().numCols() * TS;
+        int height = worldMap.terrain().numRows() * TS - 5 * TS; // 3 empty rows before and 2 after maze source
+        if (tengenGame.mapCategory() == MapCategory.ARCADE) {
+            mapSprite = new ImageArea(arcadeMazesImage, arcadeMapArea(mapNumber, width, height));
+        } else {
+            mapSprite = new ImageArea(nonArcadeMazesImage, nonArcadeMapArea(mapNumber, width, height));
         }
         Logger.info("Tengen map # {}: area: {}", mapNumber, mapSprite.area());
     }

@@ -111,7 +111,7 @@ public interface GameContext {
 
     default void attachRendererToCurrentMap(GameWorldRenderer renderer) {
         if (game().world() != null) {
-            renderer.selectMapSprite(game().world().map(), game().currentMapNumber(), spriteSheet());
+            renderer.configure(game(), spriteSheet());
         }
     }
 }

@@ -4,11 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.pacman_xxl;
 
-import de.amr.games.pacman.lib.Globals;
-import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -23,7 +22,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.lib.Globals.randomInt;
 import static java.util.function.Predicate.not;
 
 /**
@@ -87,8 +85,7 @@ public class PacManXXLGameRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public void selectMapSprite(WorldMap worldMap, int mapNumber, GameSpriteSheet spriteSheet) {
-    }
+    public void configure(GameModel game, GameSpriteSheet spriteSheet) {}
 
     @Override
     public void drawWorld(GameSpriteSheet spriteSheet, GameContext context, GameWorld world) {
