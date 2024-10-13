@@ -6,12 +6,11 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.scene.GameSceneID;
-import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSceneConfiguration;
-import de.amr.games.pacman.ui2d.scene.pacman.PacManGameSceneConfiguration;
-import de.amr.games.pacman.ui2d.scene.pacman_xxl.PacManGameXXLSceneConfiguration;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameSceneConfiguration;
 import de.amr.games.pacman.ui3d.model.Model3D;
+import de.amr.games.pacman.ui3d.scene.ms_pacman.MsPacManGameSceneConfiguration3D;
+import de.amr.games.pacman.ui3d.scene.pacman.PacManGameSceneConfiguration3D;
+import de.amr.games.pacman.ui3d.scene.pacman_xxl.PacManGameXXLSceneConfiguration3D;
+import de.amr.games.pacman.ui3d.scene.tengen.TengenMsPacManGameSceneConfiguration3D;
 import javafx.application.Application;
 import javafx.beans.property.*;
 import javafx.geometry.Dimension2D;
@@ -67,26 +66,10 @@ public class PacManGames3dApp extends Application {
     public void start(Stage stage) {
         ui = new PacManGames3dUI();
         ui.loadAssets();
-        {
-            var sceneConfig = new MsPacManGameSceneConfiguration();
-            sceneConfig.set(GameSceneID.PLAY_SCENE_3D, new PlayScene3D());
-            ui.setGameSceneConfiguration(GameVariant.MS_PACMAN, sceneConfig);
-        }
-        {
-            var sceneConfig = new TengenMsPacManGameSceneConfiguration();
-            sceneConfig.set(GameSceneID.PLAY_SCENE_3D, new PlayScene3D());
-            ui.setGameSceneConfiguration(GameVariant.MS_PACMAN_TENGEN, sceneConfig);
-        }
-        {
-            var sceneConfig = new PacManGameSceneConfiguration();
-            sceneConfig.set(GameSceneID.PLAY_SCENE_3D, new PlayScene3D());
-            ui.setGameSceneConfiguration(GameVariant.PACMAN, sceneConfig);
-        }
-        {
-            var sceneConfig = new PacManGameXXLSceneConfiguration();
-            sceneConfig.set(GameSceneID.PLAY_SCENE_3D, new PlayScene3D());
-            ui.setGameSceneConfiguration(GameVariant.PACMAN_XXL, sceneConfig);
-        }
+        ui.setGameSceneConfiguration(GameVariant.MS_PACMAN, new MsPacManGameSceneConfiguration3D());
+        ui.setGameSceneConfiguration(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacManGameSceneConfiguration3D());
+        ui.setGameSceneConfiguration(GameVariant.PACMAN, new PacManGameSceneConfiguration3D());
+        ui.setGameSceneConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLSceneConfiguration3D());
         ui.createAndStart(stage, initialSize());
 
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
