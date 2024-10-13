@@ -16,7 +16,6 @@ import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.page.StartPage;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneConfiguration;
@@ -145,8 +144,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
         gamePage = createGamePage(mainScene);
 
-        clock.setPauseableCallback(this::onNonPausedTick);
-        clock.setPermanentCallback(this::onEveryTick);
+        clock.setPauseableCallback(this::runIfNotPausedOnEveryTick);
+        clock.setPermanentCallback(this::runOnEveryTick);
 
         // attach game event listeners to game model
         for (var variant : GameVariant.values()) {
@@ -177,7 +176,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     /**
      * Executed on clock tick if game is not paused.
      */
-    protected void onNonPausedTick() {
+    protected void runIfNotPausedOnEveryTick() {
         try {
             gameController().update();
             currentGameScene().ifPresent(GameScene::update);
@@ -192,12 +191,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     /**
      * Executed on clock tick even if game is paused.
      */
-    protected void onEveryTick() {
+    protected void runOnEveryTick() {
         try {
             if (currentPage == gamePage) {
                 // 2D scenes only:
-                GameWorldRenderer renderer = currentGameSceneConfiguration().renderer();
-                currentGameScene().ifPresent(gameScene -> gameScene.draw(renderer));
+                currentGameScene().ifPresent(gameScene -> gameScene.draw(currentGameSceneConfiguration().renderer()));
                 gamePage.updateDashboard();
                 flashMessageLayer.update();
             } else {
