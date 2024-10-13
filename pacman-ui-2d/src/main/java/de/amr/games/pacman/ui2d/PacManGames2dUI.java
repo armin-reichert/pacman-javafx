@@ -358,6 +358,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
+    public GamePage gamePage() {
+        return gamePage;
+    }
+
+    @Override
     public ObjectProperty<GameScene> gameSceneProperty() {
         return gameScenePy;
     }
@@ -464,6 +469,30 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         }
     }
 
+    @Override
+    public void selectStartPage() {
+        clock.stop();
+        //TODO check this
+        gamePage.dashboardLayer().hideDashboard();
+        selectPage(startPage);
+    }
+
+    @Override
+    public void selectGamePage() {
+        selectPage(gamePage);
+        clock.start();
+    }
+
+    @Override
+    public void showFlashMessage(String message, Object... args) {
+        showFlashMessageSeconds(1, message, args);
+    }
+
+    @Override
+    public void showFlashMessageSeconds(double seconds, String message, Object... args) {
+        flashMessageLayer.showMessage(String.format(message, args), seconds);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     // GameEventListener interface implementation
     // -----------------------------------------------------------------------------------------------------------------
@@ -527,38 +556,5 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public void onStopAllSounds(GameEvent event) {
         sounds().stopAll();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // Actions
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void selectStartPage() {
-        clock.stop();
-        //TODO check this
-        gamePage.dashboardLayer().hideDashboard();
-        selectPage(startPage);
-    }
-
-    @Override
-    public void selectGamePage() {
-        selectPage(gamePage);
-        clock.start();
-    }
-
-    @Override
-    public GamePage gamePage() {
-        return gamePage;
-    }
-
-    @Override
-    public void showFlashMessage(String message, Object... args) {
-        showFlashMessageSeconds(1, message, args);
-    }
-
-    @Override
-    public void showFlashMessageSeconds(double seconds, String message, Object... args) {
-        flashMessageLayer.showMessage(String.format(message, args), seconds);
     }
 }
