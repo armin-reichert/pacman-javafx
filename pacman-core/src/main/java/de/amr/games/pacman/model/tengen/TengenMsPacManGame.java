@@ -42,83 +42,83 @@ public class TengenMsPacManGame extends GameModel {
     public enum PacBooster { OFF, TOGGLE_USING_KEY, ALWAYS_ON }
 
     // TODO what is the exact speed increase?
-    private static final float BOOSTER_FACTOR = 1.5f;
+    static final float BOOSTER_FACTOR = 1.5f;
 
     //TODO check how many maps are really used in Tengen game
-    private static final int ARCADE_MAP_COUNT = 9;
-    private static final int NON_ARCADE_MAP_COUNT = 37;
-    private static final int MAP_COUNT = ARCADE_MAP_COUNT + NON_ARCADE_MAP_COUNT;
+    static final int ARCADE_MAP_COUNT = 9;
+    static final int NON_ARCADE_MAP_COUNT = 37;
+    static final int MAP_COUNT = ARCADE_MAP_COUNT + NON_ARCADE_MAP_COUNT;
 
-    private static final String MAPS_ROOT = "/de/amr/games/pacman/maps/tengen/";
-    private static final String ARCADE_MAP_PATTERN  = MAPS_ROOT + "arcade/map%02d.world";
-    private static final String NON_ARCADE_MAP_PATTERN  = MAPS_ROOT + "non_arcade/map%02d.world";
+    static final String MAPS_ROOT = "/de/amr/games/pacman/maps/tengen/";
+    static final String ARCADE_MAP_PATTERN  = MAPS_ROOT + "arcade/map%02d.world";
+    static final String NON_ARCADE_MAP_PATTERN  = MAPS_ROOT + "non_arcade/map%02d.world";
 
     //TODO: Colors are from non-original spritsheet and probably not correct
 
-    public static final MapColorScheme COLOR_SCHEME_BLACK_WHITE = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_BLACK_WHITE = new MapColorScheme(
         "000000", "ffffff", "ffffff", "007b8c");
 
-    public static final MapColorScheme COLOR_SCHEME_BLACK_DARKBLUE = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_BLACK_DARKBLUE = new MapColorScheme(
         "000000", "00298c", "00298c", "ffffff");
 
-    public static final MapColorScheme COLOR_SCHEME_BLUE_WHITE = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_BLUE_WHITE = new MapColorScheme(
         "4242ff", "ffffff", "ffffff", "bdbd00");
 
-    public static final MapColorScheme COLOR_SCHEME_BLUE2_WHITE = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_BLUE2_WHITE = new MapColorScheme(
         "3900a5", "ffffff", "ffffff", "bdbd00");
 
-    public static final MapColorScheme COLOR_SCHEME_BLUE_YELLOW = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_BLUE_YELLOW = new MapColorScheme(
         "00298c", "e7e794", "e7e794", "ffffff");
 
-    public static final MapColorScheme COLOR_SCHEME_BROWN_WHITE = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_BROWN_WHITE = new MapColorScheme(
         "522100", "ffffff", "ffffff", "bdbd00");
 
-    public static final MapColorScheme COLOR_SCHEME_GRAY_WHITE_YELLOW = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_GRAY_WHITE_YELLOW = new MapColorScheme(
         "adadad", "ffffff", "ffffff", "bdbd00");
 
-    public static final MapColorScheme COLOR_SCHEME_GREEN_WHITE_YELLOW = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_GREEN_WHITE_YELLOW = new MapColorScheme(
         "109400", "ffffff", "ffffff", "bdbd00");
 
-    public static final MapColorScheme COLOR_SCHEME_GREEN_WHITE_WHITE = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_GREEN_WHITE_WHITE = new MapColorScheme(
         "398400", "ffffff", "ffffff", "ffffff");
 
-    public static final MapColorScheme COLOR_SCHEME_GREEN_WHITE_VIOLET = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_GREEN_WHITE_VIOLET = new MapColorScheme(
         "00424a", "ffffff", "ffffff", "9c18ce");
 
-    public static final MapColorScheme COLOR_SCHEME_LIGHTBLUE_WHITE = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_LIGHTBLUE_WHITE = new MapColorScheme(
         "63adff", "ffffff", "ffffff", "bdbd00");
 
-    public static final MapColorScheme COLOR_SCHEME_KHAKI_WHITE = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_KHAKI_WHITE = new MapColorScheme(
         "6b6b00", "ffffff", "ffffff", "ffffff");
 
-    public static final MapColorScheme COLOR_SCHEME_PINK_DARKRED = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_PINK_DARKRED = new MapColorScheme(
         "ffc6e7", "b5217b", "b5217b", "ffffff");
 
-    public static final MapColorScheme COLOR_SCHEME_PINK_WHITE = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_PINK_WHITE = new MapColorScheme(
         "ff6bce", "ffffff", "ffffff", "ffffff");
 
-    public static final MapColorScheme COLOR_SCHEME_PINK_YELLOW = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_PINK_YELLOW = new MapColorScheme(
         "ffc6e7", "bdbd00", "bdbd00", "ffffff");
 
-    public static final MapColorScheme COLOR_SCHEME_ORANGE_WHITE = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_ORANGE_WHITE = new MapColorScheme(
         "b53121", "ffffff", "ffffff", "b5217b");
 
-    public static final MapColorScheme COLOR_SCHEME_DARKBLUE_YELLOW = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_DARKBLUE_YELLOW = new MapColorScheme(
         "00298c", "e7e794", "e7e794", "ffffff");
 
-    public static final MapColorScheme COLOR_SCHEME_RED_PINK = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_RED_PINK = new MapColorScheme(
         "b5217b", "ff6bce", "ff6bce", "ffc6e7");
 
-    public static final MapColorScheme COLOR_SCHEME_VIOLET_WHITE = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_VIOLET_WHITE = new MapColorScheme(
         "5a007b", "ffffff", "ffffff", "ffffff");
 
-    public static final MapColorScheme COLOR_SCHEME_VIOLET_WHITE_GREEN = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_VIOLET_WHITE_GREEN = new MapColorScheme(
         "c673ff", "ffffff", "ffffff", "42de84");
 
-    public static final MapColorScheme COLOR_SCHEME_YELLOW_WHITE_GREEN = new MapColorScheme(
+    static final MapColorScheme COLOR_SCHEME_YELLOW_WHITE_GREEN = new MapColorScheme(
         "bdbd00", "ffffff", "ffffff", "5ae731");
 
-    // Got the first 15 entries by looking at a YouTube video (https://www.youtube.com/watch?v=cD0oGudVpbw)
+    // Got this sequence by looking at a YouTube video (https://www.youtube.com/watch?v=cD0oGudVpbw)
     // TODO: need real data!
     private static List<WorldMap> miniMaps(List<WorldMap> nonArcadeMaps) {
         var miniMaps = new ArrayList<WorldMap>();
@@ -185,24 +185,24 @@ public class TengenMsPacManGame extends GameModel {
     private static final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
 
     // Bonus symbols in Arcade, Mini and Big mazes
-    public static final byte BONUS_CHERRY     = 0;
-    public static final byte BONUS_STRAWBERRY = 1;
-    public static final byte BONUS_ORANGE     = 2;
-    public static final byte BONUS_PRETZEL    = 3;
-    public static final byte BONUS_APPLE      = 4;
-    public static final byte BONUS_PEAR       = 5;
-    public static final byte BONUS_BANANA     = 6;
+    public static final byte BONUS_CHERRY        = 0;
+    public static final byte BONUS_STRAWBERRY    = 1;
+    public static final byte BONUS_ORANGE        = 2;
+    public static final byte BONUS_PRETZEL       = 3;
+    public static final byte BONUS_APPLE         = 4;
+    public static final byte BONUS_PEAR          = 5;
+    public static final byte BONUS_BANANA        = 6;
     // Additional bonus symbols in Strange mazes
-    public static final byte BONUS_MILK       = 7;
-    public static final byte BONUS_ICE_CREAM  = 8;
+    public static final byte BONUS_MILK          = 7;
+    public static final byte BONUS_ICE_CREAM     = 8;
     public static final byte BONUS_GLASS_SLIPPER = 9;
-    public static final byte BONUS_STAR       = 10;
-    public static final byte BONUS_HAND       = 11;
-    public static final byte BONUS_RING       = 12;
-    public static final byte BONUS_FLOWER     = 13;
+    public static final byte BONUS_STAR          = 10;
+    public static final byte BONUS_HAND          = 11;
+    public static final byte BONUS_RING          = 12;
+    public static final byte BONUS_FLOWER        = 13;
 
     // Bonus value = factor * 100
-    private static final byte[] BONUS_VALUE_FACTORS = new byte[14];
+    static final byte[] BONUS_VALUE_FACTORS = new byte[14];
     static {
         BONUS_VALUE_FACTORS[BONUS_CHERRY]        = 1;
         BONUS_VALUE_FACTORS[BONUS_STRAWBERRY]    = 2;
