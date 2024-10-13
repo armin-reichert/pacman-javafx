@@ -239,6 +239,9 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
             terrainRenderer.drawMap(ctx(), terrain);
         }
         else if (world.map().colorScheme() != null) {
+            if (!context.game().isDemoLevel()) {
+                drawTop(spriteSheet, terrain, tengenGame);
+            }
             // default color scheme has been overwritten, use vector rendering
             MapColorScheme colorScheme = world.map().colorScheme();
             terrainRenderer.setWallStrokeColor(Color.web(colorScheme.stroke()));
@@ -403,6 +406,10 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     @Override
     public void setRendererFor(GameModel game) {
         TengenMsPacManGame tengenGame = (TengenMsPacManGame) game;
+        if (game.world() == null) {
+            Logger.warn("Cannot set renderer for game, no world exists");
+            return;
+        }
         WorldMap worldMap = game.world().map();
         int mapNumber = game.currentMapNumber();
         int width  = worldMap.terrain().numCols() * TS;
