@@ -1,5 +1,7 @@
 package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.BootScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneConfiguration;
@@ -24,4 +26,9 @@ public class MsPacManGameSceneConfiguration extends GameSceneConfiguration {
         return new MsPacManGameRenderer(assets);
     }
 
+    @Override
+    public void createActorAnimations(GameModel game, GameSpriteSheet spriteSheet) {
+        game.pac().setAnimations(new MsPacManGamePacAnimations(spriteSheet));
+        game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, ghost.id())));
+    }
 }

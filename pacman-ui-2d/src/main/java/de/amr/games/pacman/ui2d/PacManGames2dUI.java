@@ -20,14 +20,8 @@ import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.scene.GameSceneConfiguration;
-import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameGhostAnimations;
-import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.scene.pacman.PacManGameGhostAnimations;
-import de.amr.games.pacman.ui2d.scene.pacman.PacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameGhostAnimations;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGamePacAnimations;
+import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.sound.GameSounds;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.FlashMessageView;
@@ -78,24 +72,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     public static List<GameVariant> GAME_VARIANTS_IN_ORDER = List.of(
         GameVariant.PACMAN, GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN, GameVariant.MS_PACMAN_TENGEN
     );
-
-    private static void createActorAnimations(GameModel game, GameSpriteSheet spriteSheet) {
-        switch (game.variant()) {
-            case MS_PACMAN -> {
-                game.pac().setAnimations(new MsPacManGamePacAnimations(spriteSheet));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, ghost.id())));
-            }
-            case MS_PACMAN_TENGEN -> {
-                game.pac().setAnimations(new TengenMsPacManGamePacAnimations(spriteSheet));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new TengenMsPacManGameGhostAnimations(spriteSheet, ghost.id())));
-            }
-            case PACMAN, PACMAN_XXL -> {
-                game.pac().setAnimations(new PacManGamePacAnimations(spriteSheet));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(spriteSheet, ghost.id())));
-            }
-            default -> throw new IllegalArgumentException("Unsupported game variant: " + game.variant());
-        }
-    }
 
     private static final GameSounds SOUNDS = new GameSounds();
 
@@ -421,7 +397,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         return currentGameScene().isPresent() && hasID(currentGameScene().get(), sceneID);
     }
 
-
     @Override
     public void updateGameScene(boolean reloadCurrent) {
         GameScene currentGameScene = gameScenePy.get();
@@ -565,7 +540,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public void onLevelCreated(GameEvent event) {
-        createActorAnimations(game(), spriteSheet());
+        gameSceneConfiguration(gameVariant()).createActorAnimations(game(), spriteSheet());
         Logger.info("Actor animations created. ({} level #{})", gameVariant(), game().levelNumber());
         if (game().isDemoLevel()) {
             sounds().setEnabled(false);

@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 
@@ -31,4 +33,6 @@ public abstract class GameSceneConfiguration {
     }
 
     public abstract GameWorldRenderer createRenderer(AssetStorage assets);
+
+    public abstract void createActorAnimations(GameModel game, GameSpriteSheet spriteSheet);
 }
