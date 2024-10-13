@@ -400,6 +400,11 @@ public class TengenMsPacManGame extends GameModel {
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
+    @Override
+    protected boolean isScoreEnabledInDemoLevel() {
+        return true;
+    }
+
     /** In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
      * (also inside a level) whenever a bonus score is reached. At least that's what I was told.
      */

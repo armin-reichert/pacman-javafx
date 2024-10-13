@@ -454,21 +454,30 @@ public abstract class GameModel {
         return score;
     }
 
+    protected boolean isScoreEnabledInDemoLevel() {
+        return false;
+    }
+
     public void scorePoints(int points) {
-        if (demoLevel) {
-            return;
-        }
         int oldScore = score.points();
         int newScore = oldScore + points;
-        score.setPoints(newScore);
-        if (newScore > highScore.points()) {
-            highScore.setPoints(newScore);
-            highScore.setLevelNumber(levelNumber);
-            highScore.setDate(LocalDate.now());
+        // score can be enabled in demo level e.g. Tengen Ms. Pac-Man has it
+        if (isDemoLevel() && isScoreEnabledInDemoLevel()) {
+            score.setPoints(newScore);
         }
-        if (oldScore < EXTRA_LIFE_SCORE && newScore >= EXTRA_LIFE_SCORE) {
-            addLives(1);
-            publishGameEvent(GameEventType.EXTRA_LIFE_WON);
+        // high score and extra life are not enabled in demo level
+        if (!isDemoLevel()) {
+            // New high score?
+            if (newScore > highScore.points()) {
+                highScore.setPoints(newScore);
+                highScore.setLevelNumber(levelNumber);
+                highScore.setDate(LocalDate.now());
+            }
+            // Extra life?
+            if (oldScore < EXTRA_LIFE_SCORE && newScore >= EXTRA_LIFE_SCORE) {
+                addLives(1);
+                publishGameEvent(GameEventType.EXTRA_LIFE_WON);
+            }
         }
     }
 
