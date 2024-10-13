@@ -222,13 +222,14 @@ public enum GameState implements FsmState<GameModel> {
 
     PACMAN_DYING {
 
+        //TODO this is crap, should depend on sprite animation time
         static final int TICK_HIDE_GHOSTS = 60;
         static final int TICK_START_PAC_ANIMATION = 90;
-        static final int TICK_HIDE_PAC = 180;
+        static final int TICK_HIDE_PAC = 210;
 
         @Override
         public void onEnter(GameModel game) {
-            timer.reset(220);
+            timer.reset(240);
             timer.start();
             game.onPacDying();
         }

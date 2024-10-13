@@ -10,6 +10,8 @@ import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.scene.image.Image;
 
+import java.util.Arrays;
+
 import static de.amr.games.pacman.lib.RectArea.rect;
 import static de.amr.games.pacman.model.GameModel.*;
 
@@ -29,16 +31,23 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
     static final RectArea EASY_SPRITE    = rect(229, 149, 18, 7);
 
     static final RectArea[] MS_PAC_MUNCHING_SPRITES_LEFT = {
-        rect(32, 15, 15, 15),
-        rect(51, 15, 15, 15),
-        rect(66, 15, 15, 15)
+        rect(32, 15, 15, 15), // closed
+        rect(51, 15, 15, 15), // open
+        rect(66, 15, 15, 15)  // wide open
     };
 
     static final RectArea[] MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER = {
-        rect(86, 15, 15, 15),
-        rect(105, 15, 15, 15),
-        rect(120, 15, 15, 15)
+        rect(86, 15, 15, 15),  // closed
+        rect(105, 15, 15, 15), // open
+        rect(120, 15, 15, 15)  // wide open
     };
+
+    // there is only a sprite pointing left in the sprite sheet, renderer makes the animation
+    static final RectArea[] MS_PAC_ROTATING_SPRITES = new RectArea[11];
+    static {
+        RectArea pacSprite = rect(51, 15, 15, 15);
+        Arrays.fill(MS_PAC_ROTATING_SPRITES, pacSprite);
+    }
 
     // directions: rr ll uu dd
     static final RectArea[][] RED_GHOST_SPRITES = {
@@ -140,7 +149,7 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
 
     @Override
     public RectArea[] pacDyingSprites() {
-        return NO_SPRITES;
+        return MS_PAC_ROTATING_SPRITES;
     }
 
     @Override

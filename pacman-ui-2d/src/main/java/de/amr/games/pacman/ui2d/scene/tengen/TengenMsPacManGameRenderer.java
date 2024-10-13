@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.graph.Dir;
 import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
@@ -200,8 +201,16 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
                         case Pac.ANIM_MUNCHING,
                              Pac.ANIM_MUNCHING_BOOSTER -> drawRotatedTowardsDir(msPacMan, msPacMan.moveDir(), spriteAnimation);
                         case Pac.ANIM_DYING -> {
-                            //TODO does not work yet!
-                            drawSprite(msPacMan.entity(), spriteAnimation.currentSprite());
+                            Direction dir = Direction.UP;
+                            if (spriteAnimation.frameIndex() < 11) {
+                                dir = switch (spriteAnimation.frameIndex() % 4) {
+                                    default -> Direction.DOWN; // start with DOWN
+                                    case 1 -> Direction.LEFT;
+                                    case 2 -> Direction.UP;
+                                    case 3 -> Direction.RIGHT;
+                                };
+                            }
+                            drawRotatedTowardsDir(msPacMan, dir, spriteAnimation);
                         }
                         default -> GameWorldRenderer.super.drawAnimatedEntity(msPacMan);
                     }
