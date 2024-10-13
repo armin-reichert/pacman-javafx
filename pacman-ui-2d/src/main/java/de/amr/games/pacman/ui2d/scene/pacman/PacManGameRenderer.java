@@ -28,6 +28,7 @@ import static de.amr.games.pacman.lib.Globals.t;
 public class PacManGameRenderer implements GameWorldRenderer {
 
     private final AssetStorage assets;
+    private final GameSpriteSheet spriteSheet;
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final Image flashingMazeImage;
@@ -37,6 +38,7 @@ public class PacManGameRenderer implements GameWorldRenderer {
 
     public PacManGameRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
+        spriteSheet = assets.get("pacman.spritesheet");
         flashingMazeImage = assets.image("pacman.flashing_maze");
     }
 
@@ -48,6 +50,11 @@ public class PacManGameRenderer implements GameWorldRenderer {
     @Override
     public AssetStorage assets() {
         return assets;
+    }
+
+    @Override
+    public GameSpriteSheet spriteSheet() {
+        return spriteSheet;
     }
 
     @Override

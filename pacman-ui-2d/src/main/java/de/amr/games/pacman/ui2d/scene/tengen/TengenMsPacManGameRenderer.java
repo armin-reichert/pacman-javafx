@@ -108,6 +108,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     };
 
     private final AssetStorage assets;
+    private final GameSpriteSheet spriteSheet;
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
@@ -122,6 +123,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
 
     public TengenMsPacManGameRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
+        spriteSheet = assets.get("tengen.spritesheet");
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
         foodRenderer.scalingPy.bind(scalingPy);
@@ -137,6 +139,11 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     @Override
     public AssetStorage assets() {
         return assets;
+    }
+
+    @Override
+    public GameSpriteSheet spriteSheet() {
+        return spriteSheet;
     }
 
     @Override

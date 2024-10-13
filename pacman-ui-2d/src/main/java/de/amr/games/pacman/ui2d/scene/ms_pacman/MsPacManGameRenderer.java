@@ -33,6 +33,7 @@ import static de.amr.games.pacman.ui2d.rendering.GameWorldRenderer.imageArea;
 public class MsPacManGameRenderer implements GameWorldRenderer {
 
     private final AssetStorage assets;
+    private final GameSpriteSheet spriteSheet;
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final Image flashingMazesImage;
@@ -45,6 +46,7 @@ public class MsPacManGameRenderer implements GameWorldRenderer {
 
     public MsPacManGameRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
+        spriteSheet = assets.get("ms_pacman.spritesheet");
         flashingMazesImage = assets.get("ms_pacman.flashing_mazes");
     }
 
@@ -56,6 +58,11 @@ public class MsPacManGameRenderer implements GameWorldRenderer {
     @Override
     public AssetStorage assets() {
         return assets;
+    }
+
+    @Override
+    public GameSpriteSheet spriteSheet() {
+        return spriteSheet;
     }
 
     @Override

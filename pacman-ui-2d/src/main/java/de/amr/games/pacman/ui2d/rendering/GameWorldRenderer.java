@@ -49,6 +49,8 @@ public interface GameWorldRenderer {
 
     AssetStorage assets();
 
+    GameSpriteSheet spriteSheet();
+
     Canvas canvas();
 
     void setCanvas(Canvas canvas);

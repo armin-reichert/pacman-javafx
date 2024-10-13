@@ -35,6 +35,7 @@ import static java.util.function.Predicate.not;
 public class PacManXXLGameRenderer implements GameWorldRenderer {
 
     private final AssetStorage assets;
+    private final GameSpriteSheet spriteSheet;
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
@@ -46,6 +47,7 @@ public class PacManXXLGameRenderer implements GameWorldRenderer {
 
     public PacManXXLGameRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
+        spriteSheet = assets.get("pacman_xxl.spritesheet");
         terrainRenderer.scalingPy.bind(scalingPy);
         foodRenderer.scalingPy.bind(scalingPy);
     }
@@ -58,6 +60,11 @@ public class PacManXXLGameRenderer implements GameWorldRenderer {
     @Override
     public AssetStorage assets() {
         return assets;
+    }
+
+    @Override
+    public GameSpriteSheet spriteSheet() {
+        return spriteSheet;
     }
 
     @Override
