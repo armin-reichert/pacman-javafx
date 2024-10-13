@@ -401,7 +401,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public void configure(GameModel game, GameSpriteSheet spriteSheet) {
+    public void setRendererFor(GameModel game) {
         TengenMsPacManGame tengenGame = (TengenMsPacManGame) game;
         WorldMap worldMap = game.world().map();
         int mapNumber = game.currentMapNumber();

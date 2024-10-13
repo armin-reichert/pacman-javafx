@@ -96,7 +96,7 @@ public class MsPacManGameRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public void configure(GameModel game, GameSpriteSheet spriteSheet) {
+    public void setRendererFor(GameModel game) {
         int mapNumber = game.currentMapNumber();
         mapWithFoodSprite    = imageArea(spriteSheet.sourceImage(), 0, (mapNumber - 1) * 248, 226, 248);
         mapWithoutFoodSprite = imageArea(spriteSheet.sourceImage(), 228, (mapNumber - 1) * 248, 226, 248);

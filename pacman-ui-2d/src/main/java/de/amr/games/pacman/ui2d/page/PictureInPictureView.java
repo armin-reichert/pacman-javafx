@@ -71,7 +71,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        context.attachRendererToCurrentMap(renderer);
+        context.currentGameSceneConfiguration().renderer().setRendererFor(context.game());
         recomputeLayout();
     }
 

@@ -97,7 +97,7 @@ public class PacManXXLGameRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public void configure(GameModel game, GameSpriteSheet spriteSheet) {}
+    public void setRendererFor(GameModel game) {}
 
     @Override
     public void drawWorld(GameContext context, GameWorld world) {

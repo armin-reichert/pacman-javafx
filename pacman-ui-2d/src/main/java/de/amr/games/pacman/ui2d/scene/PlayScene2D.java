@@ -213,7 +213,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         //TODO check this
-        context.attachRendererToCurrentMap(context.currentGameSceneConfiguration().renderer());
+        context.currentGameSceneConfiguration().renderer().setRendererFor(context.game());
         Logger.info("{} entered from {}", this, oldScene);
     }
 
@@ -246,7 +246,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        context.attachRendererToCurrentMap(context.currentGameSceneConfiguration().renderer());
+        context.currentGameSceneConfiguration().renderer().setRendererFor(context.game());
     }
 
     @Override

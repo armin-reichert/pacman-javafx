@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d.rendering;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
@@ -39,7 +38,7 @@ import static java.util.function.Predicate.not;
  */
 public interface GameWorldRenderer {
 
-    void configure(GameModel game, GameSpriteSheet spriteSheet);
+    void setRendererFor(GameModel game);
 
     static ImageArea imageArea(Image sourceImage, int x, int y, int width, int height) {
         return new ImageArea(sourceImage, new RectArea(x, y, width, height));

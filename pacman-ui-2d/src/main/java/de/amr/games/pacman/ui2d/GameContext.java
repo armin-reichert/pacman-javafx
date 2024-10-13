@@ -12,7 +12,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneConfiguration;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
@@ -105,11 +104,4 @@ public interface GameContext {
      * @return localized text with constructed key or default text if no such key exists
      */
     String locText(String keyOrPattern, Object... args);
-
-    //TODO check this
-    default void attachRendererToCurrentMap(GameWorldRenderer renderer) {
-        if (game().world() != null) {
-            renderer.configure(game(), currentGameSceneConfiguration().spriteSheet());
-        }
-    }
 }
