@@ -76,9 +76,9 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
      * @param mapNumber number of Arcade map (1-9)
      * @param width map width in pixels
      * @param height map height in pixels
-     * @return map area in Arcade maps image
+     * @return map sprite in Arcade maps sprite sheet
      */
-    private static RectArea arcadeMapArea(int mapNumber, int width, int height) {
+    private static RectArea arcadeMapSprite(int mapNumber, int width, int height) {
         int index = mapNumber - 1;
         return new RectArea((index % 3) * width, (index / 3) * height, width, height);
     }
@@ -87,9 +87,9 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
      * @param mapNumber number of non-Arcade map (1-37)
      * @param width map width in pixels
      * @param height map height in pixels
-     * @return map area in non-Arcade maps image
+     * @return map sprite in non-Arcade maps sprite sheet
      */
-    private static RectArea nonArcadeMapArea(int mapNumber, int width, int height) {
+    private static RectArea nonArcadeMapSprite(int mapNumber, int width, int height) {
         int col, y;
         switch (mapNumber) {
             case 1,2,3,4,5,6,7,8            -> { col = (mapNumber - 1);  y = 0;    }
@@ -103,7 +103,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     }
 
     // Map #32 has 3 different images to create a visual effect.
-    private static final RectArea[] MAP_32_FRAMES = {
+    private static final RectArea[] MAP_32_SPRITES = {
         rect(1568, 840, 224, 248), rect(1568, 1088, 224, 248), rect(1568, 1336, 224, 248),
     };
 
@@ -235,10 +235,14 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
             terrainRenderer.drawMap(ctx(), terrain);
             foodRenderer.setPelletColor(Color.web(colorScheme.pellet()));
             foodRenderer.setEnergizerColor(Color.web(colorScheme.pellet()));
-            world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
-                    .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
+            world.map().food().tiles()
+                .filter(world::hasFoodAt)
+                .filter(not(world::isEnergizerPosition))
+                .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
             if (blinkingOn) {
-                world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
+                world.energizerTiles()
+                    .filter(world::hasFoodAt)
+                    .forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
             }
         }
         else {
@@ -250,9 +254,9 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
                 drawTop(spriteSheet, terrain, tengenGame);
             }
             // Maze #32 has this psychedelic animation effect
-            int mapNumber = Integer.parseInt(world.map().terrain().getProperty("map_number"));
+            int mapNumber = tengenGame.currentMapNumber();
             if (mapNumber == 32) {
-                drawAnimatedMaze(context.gameClock().getUpdateCount(), MAP_32_FRAMES);
+                drawAnimatedMaze(context.gameClock().getUpdateCount(), MAP_32_SPRITES);
             } else {
                 RectArea mapArea = mapSprite.area();
                 ctx().drawImage(mapSprite.source(),
@@ -392,9 +396,9 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
         int width  = worldMap.terrain().numCols() * TS;
         int height = worldMap.terrain().numRows() * TS - 5 * TS; // 3 empty rows before and 2 after maze source
         if (tengenGame.mapCategory() == MapCategory.ARCADE) {
-            mapSprite = new ImageArea(arcadeMazesImage, arcadeMapArea(mapNumber, width, height));
+            mapSprite = new ImageArea(arcadeMazesImage, arcadeMapSprite(mapNumber, width, height));
         } else {
-            mapSprite = new ImageArea(nonArcadeMazesImage, nonArcadeMapArea(mapNumber, width, height));
+            mapSprite = new ImageArea(nonArcadeMazesImage, nonArcadeMapSprite(mapNumber, width, height));
         }
         Logger.info("Tengen map # {}: area: {}", mapNumber, mapSprite.area());
     }
