@@ -8,7 +8,6 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.scene.PlayScene2D;
@@ -65,7 +64,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         });
 
         context.gameVariantProperty().addListener((py,ov,variant) -> {
-            renderer = PacManGames2dUI.createRenderer(variant, context.assets());
+            renderer = context.gameSceneConfiguration(variant).createRenderer(context.assets());
             renderer.setCanvas(canvas);
         });
     }

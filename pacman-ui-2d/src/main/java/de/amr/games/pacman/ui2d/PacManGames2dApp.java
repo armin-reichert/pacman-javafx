@@ -69,7 +69,6 @@ public class PacManGames2dApp extends Application {
         ui.setGameSceneConfiguration(GameVariant.PACMAN, new PacManGameSceneConfiguration());
         ui.setGameSceneConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLSceneConfiguration());
         ui.createAndStart(stage, initialSize());
-
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         Logger.info("Assets loaded: {}", ui.assets().summary(
             Map.of(Image.class, "images",  Font.class, "fonts", Color.class, "colors", AudioClip.class, "audio clips")

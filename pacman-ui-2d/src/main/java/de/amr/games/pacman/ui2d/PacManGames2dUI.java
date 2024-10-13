@@ -22,14 +22,10 @@ import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.scene.GameSceneConfiguration;
-import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.scene.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.scene.pacman_xxl.PacManXXLGameRenderer;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer;
 import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.sound.GameSounds;
@@ -83,15 +79,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         GameVariant.PACMAN, GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN, GameVariant.MS_PACMAN_TENGEN
     );
 
-    public static GameWorldRenderer createRenderer(GameVariant variant, AssetStorage assets) {
-        return switch (variant) {
-            case MS_PACMAN -> new MsPacManGameRenderer(assets);
-            case MS_PACMAN_TENGEN -> new TengenMsPacManGameRenderer(assets);
-            case PACMAN -> new PacManGameRenderer(assets);
-            case PACMAN_XXL -> new PacManXXLGameRenderer(assets);
-        };
-    }
-
     private static void createActorAnimations(GameModel game, GameSpriteSheet spriteSheet) {
         switch (game.variant()) {
             case MS_PACMAN -> {
@@ -125,7 +112,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected final FlashMessageView flashMessageLayer;
     protected final GameClockFX clock;
     protected final StackPane sceneRoot;
-    protected final Map<GameVariant, GameSceneConfiguration> sceneConfigurationForGameVariant;
+    protected final Map<GameVariant, GameSceneConfiguration> gameSceneConfigByVariant;
 
     protected Stage stage;
     protected StartPage startPage;
@@ -140,7 +127,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         clock = new GameClockFX();
         flashMessageLayer = new FlashMessageView();
         sceneRoot = new StackPane();
-        sceneConfigurationForGameVariant = new EnumMap<>(GameVariant.class);
+        gameSceneConfigByVariant = new EnumMap<>(GameVariant.class);
     }
 
     public void loadAssets() {
@@ -155,7 +142,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     public void setGameSceneConfiguration(GameVariant variant, GameSceneConfiguration gameSceneConfiguration) {
-        sceneConfigurationForGameVariant.put(variant, gameSceneConfiguration);
+        gameSceneConfigByVariant.put(variant, gameSceneConfiguration);
         gameSceneConfiguration.gameScenes().forEach(gameScene -> {
             if (gameScene instanceof GameScene2D gameScene2D) {
                 gameScene2D.setGameContext(this);
@@ -326,7 +313,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     private void configureGameScene2D(GameScene2D gameScene2D) {
-        worldRenderer = createRenderer(gameVariant(), assets);
+        worldRenderer = gameSceneConfigByVariant.get(gameVariant()).createRenderer(assets);
         gamePage.setWorldRenderer(worldRenderer);
         gameScene2D.backgroundColorPy.bind(PY_CANVAS_BG_COLOR);
     }
@@ -417,6 +404,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public ObjectProperty<GameScene> gameSceneProperty() {
         return gameScenePy;
+    }
+
+    @Override
+    public GameSceneConfiguration gameSceneConfiguration(GameVariant variant) {
+        return gameSceneConfigByVariant.get(variant);
     }
 
     @Override
@@ -528,7 +520,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     //TODO maybe return an Optional?
     protected GameScene gameScene(GameVariant variant, GameSceneID sceneID) {
-        GameScene gameScene = sceneConfigurationForGameVariant.get(variant).get(sceneID);
+        GameScene gameScene = gameSceneConfigByVariant.get(variant).get(sceneID);
         if (gameScene != null) {
             return gameScene;
         }

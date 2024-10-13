@@ -4,6 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
+import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.util.AssetStorage;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -11,7 +14,7 @@ import java.util.stream.Stream;
 /**
  * @author Armin Reichert
  */
-public class GameSceneConfiguration {
+public abstract class GameSceneConfiguration {
 
     private final Map<GameSceneID, GameScene> sceneByID = new HashMap<>();
 
@@ -26,4 +29,6 @@ public class GameSceneConfiguration {
     public Stream<GameScene> gameScenes() {
         return sceneByID.values().stream();
     }
+
+    public abstract GameWorldRenderer createRenderer(AssetStorage assets);
 }
