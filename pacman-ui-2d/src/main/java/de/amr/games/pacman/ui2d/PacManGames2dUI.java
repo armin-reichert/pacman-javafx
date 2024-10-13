@@ -36,17 +36,16 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.text.MessageFormat;
 import java.time.LocalTime;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
@@ -54,6 +53,7 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
+import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 
 /**
  * 2D user interface for all Pac-Man game variants.
@@ -85,9 +85,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected final AssetStorage assets;
     protected final FlashMessageView flashMessageLayer;
     protected final GameClockFX clock;
-    protected final StackPane sceneRoot;
     protected final Map<GameVariant, GameSceneConfiguration> gameSceneConfigByVariant;
-
+    protected final StackPane sceneRoot;
     protected Stage stage;
     protected StartPage startPage;
     protected GamePage gamePage;
@@ -135,7 +134,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         this.stage = checkNotNull(stage);
         checkNotNull(initialSize);
 
-        sceneRoot.getChildren().addAll(new Pane(), flashMessageLayer, createMutedIcon());
+        var mutedIcon = createMutedIcon(48);
+        StackPane.setAlignment(mutedIcon, Pos.BOTTOM_RIGHT);
+        var pauseIcon = createPauseIcon(64);
+        StackPane.setAlignment(pauseIcon, Pos.CENTER);
+        sceneRoot.getChildren().addAll(new Pane(), flashMessageLayer, pauseIcon, mutedIcon);
         Scene mainScene = createMainScene(initialSize);
         stage.setScene(mainScene);
 
@@ -271,12 +274,19 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             clock.pausedPy, gameVariantPy);
     }
 
-    protected ImageView createMutedIcon() {
+    protected ImageView createMutedIcon(int size) {
         var icon = new ImageView(assets.<Image>get("icon.mute"));
-        icon.setFitWidth(48);
+        icon.setFitWidth(size);
         icon.setPreserveRatio(true);
         icon.visibleProperty().bind(sounds().mutedProperty());
-        StackPane.setAlignment(icon, Pos.BOTTOM_RIGHT);
+        return icon;
+    }
+
+    protected ImageView createPauseIcon(int size) {
+        var icon = new ImageView(assets.<Image>get("icon.pause"));
+        icon.setFitWidth(size);
+        icon.setPreserveRatio(true);
+        icon.visibleProperty().bind(clock.pausedPy);
         return icon;
     }
 

@@ -49,6 +49,7 @@ public class GameAssets2D extends AssetStorage {
 
         assets.store("photo.armin1970",                 rm.loadImage("graphics/armin.jpg"));
         assets.store("icon.mute",                       rm.loadImage("graphics/icons/mute.png"));
+        assets.store("icon.pause",                      rm.loadImage("graphics/icons/pause.png"));
         assets.store("icon.play",                       rm.loadImage("graphics/icons/play.png"));
         assets.store("icon.stop",                       rm.loadImage("graphics/icons/stop.png"));
         assets.store("icon.step",                       rm.loadImage("graphics/icons/step.png"));
