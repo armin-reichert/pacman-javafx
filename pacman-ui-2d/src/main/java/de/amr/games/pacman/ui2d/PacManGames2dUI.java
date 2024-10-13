@@ -290,6 +290,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     private void handleGameVariantChange(GameVariant variant) {
         String assetPrefix = assetPrefix(variant);
         sceneRoot.setBackground(assets.get(assetPrefix + ".scene_background"));
+        boolean gameCanvasDecorated = variant != GameVariant.MS_PACMAN_TENGEN;
+        PY_GAME_CANVAS_DECORATED.set(gameCanvasDecorated);
         Image icon = assets.image(assetPrefix + ".icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
