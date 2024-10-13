@@ -75,7 +75,7 @@ public class GamePage3D extends GamePage {
 
         if (!is3D) {
             var miCanvasDecorated = new CheckMenuItem(context.locText("canvas_decoration"));
-            miCanvasDecorated.selectedProperty().bindBidirectional(PY_GAME_CANVAS_HAS_DECORATION);
+            miCanvasDecorated.selectedProperty().bindBidirectional(PY_GAME_CANVAS_DECORATED);
             contextMenu.getItems().add(miCanvasDecorated);
         }
         else {

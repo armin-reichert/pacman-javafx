@@ -19,11 +19,11 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public class CanvasDecoration extends BorderPane {
+public class TooFancyGameCanvasContainer extends BorderPane {
 
     static final Vector2f DOWNSCALING_IF_BORDER = new Vector2f(0.85f, 0.93f);
 
-    public final BooleanProperty borderVisiblePy = new SimpleBooleanProperty(false) {
+    public final BooleanProperty borderVisiblePy = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
             doLayout(scaling(), true);
@@ -69,7 +69,7 @@ public class CanvasDecoration extends BorderPane {
     private final Canvas canvas;
     private double minScaling = 1.0;
 
-    public CanvasDecoration(Canvas canvas) {
+    public TooFancyGameCanvasContainer(Canvas canvas) {
         this.canvas = checkNotNull(canvas);
 
         setCenter(canvas);
