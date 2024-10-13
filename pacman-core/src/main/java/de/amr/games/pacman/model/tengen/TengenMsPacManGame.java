@@ -58,6 +58,9 @@ public class TengenMsPacManGame extends GameModel {
     static final MapColorScheme COLOR_SCHEME_BLACK_WHITE = new MapColorScheme(
         "000000", "ffffff", "ffffff", "007b8c");
 
+    static final MapColorScheme COLOR_SCHEME_BLACK_WHITE_YELLOW = new MapColorScheme(
+            "000000", "ffffff", "ffffff", "bdbd00");
+
     static final MapColorScheme COLOR_SCHEME_BLACK_DARKBLUE = new MapColorScheme(
         "000000", "00298c", "00298c", "ffffff");
 
@@ -65,13 +68,16 @@ public class TengenMsPacManGame extends GameModel {
         "4242ff", "ffffff", "ffffff", "bdbd00");
 
     static final MapColorScheme COLOR_SCHEME_BLUE2_WHITE = new MapColorScheme(
-        "3900a5", "ffffff", "ffffff", "bdbd00");
+        "3900a5", "ffffff", "ffffff", "ffffff");
 
     static final MapColorScheme COLOR_SCHEME_BLUE_YELLOW = new MapColorScheme(
         "00298c", "e7e794", "e7e794", "ffffff");
 
     static final MapColorScheme COLOR_SCHEME_BROWN_WHITE = new MapColorScheme(
-        "522100", "ffffff", "ffffff", "bdbd00");
+        "522100", "ffffff", "ffffff", "ffffff");
+
+    static final MapColorScheme COLOR_SCHEME_BROWN2_WHITE = new MapColorScheme(
+        "9c4a00", "ffffff", "ffffff", "ffffff");
 
     static final MapColorScheme COLOR_SCHEME_GRAY_WHITE_YELLOW = new MapColorScheme(
         "adadad", "ffffff", "ffffff", "bdbd00");
@@ -91,6 +97,9 @@ public class TengenMsPacManGame extends GameModel {
     static final MapColorScheme COLOR_SCHEME_KHAKI_WHITE = new MapColorScheme(
         "6b6b00", "ffffff", "ffffff", "ffffff");
 
+    static final MapColorScheme COLOR_SCHEME_PINK_ROSE = new MapColorScheme(
+            "b5217b", "ff6bce", "ff6bce", "ffffff");
+
     static final MapColorScheme COLOR_SCHEME_PINK_DARKRED = new MapColorScheme(
         "ffc6e7", "b5217b", "b5217b", "ffffff");
 
@@ -109,8 +118,14 @@ public class TengenMsPacManGame extends GameModel {
     static final MapColorScheme COLOR_SCHEME_RED_PINK = new MapColorScheme(
         "b5217b", "ff6bce", "ff6bce", "ffc6e7");
 
+    static final MapColorScheme COLOR_SCHEME_VIOLET_PINK = new MapColorScheme(
+            "9c18ce", "ff6bce", "ffffff", "ffffff");
+
     static final MapColorScheme COLOR_SCHEME_VIOLET_WHITE = new MapColorScheme(
         "5a007b", "ffffff", "ffffff", "ffffff");
+
+    static final MapColorScheme COLOR_SCHEME_VIOLET2_WHITE = new MapColorScheme(
+            "7329ff", "ffffff", "ffffff", "ffffff");
 
     static final MapColorScheme COLOR_SCHEME_VIOLET_WHITE_GREEN = new MapColorScheme(
         "c673ff", "ffffff", "ffffff", "42de84");
@@ -132,14 +147,14 @@ public class TengenMsPacManGame extends GameModel {
 
         // 6-10
         addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_PINK_DARKRED);
-        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_ORANGE_WHITE);
-        addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_VIOLET_WHITE);
-        addMapToList(30, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLACK_WHITE);
+        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_BROWN2_WHITE);
+        addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_VIOLET2_WHITE);
+        addMapToList(30, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLACK_WHITE_YELLOW);
         addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLACK_DARKBLUE);
 
         // 11-15
-        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_PINK_YELLOW);
-        addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_RED_PINK);
+        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_VIOLET_PINK);
+        addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_PINK_WHITE);
         addMapToList(30, nonArcadeMaps, miniMaps, COLOR_SCHEME_GREEN_WHITE_WHITE);
         addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_YELLOW_WHITE_GREEN);
         addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_GREEN_WHITE_YELLOW);
@@ -161,8 +176,8 @@ public class TengenMsPacManGame extends GameModel {
         // 26-30
         addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLUE2_WHITE);
         addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_VIOLET_WHITE);
-        addMapToList(30, nonArcadeMaps, miniMaps, COLOR_SCHEME_ORANGE_WHITE);
-        addMapToList(28, nonArcadeMaps, miniMaps, COLOR_SCHEME_ORANGE_WHITE);
+        addMapToList(30, nonArcadeMaps, miniMaps, COLOR_SCHEME_BROWN2_WHITE);
+        addMapToList(28, nonArcadeMaps, miniMaps, COLOR_SCHEME_BROWN2_WHITE);
         addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLUE_YELLOW);
 
         // 31-32
