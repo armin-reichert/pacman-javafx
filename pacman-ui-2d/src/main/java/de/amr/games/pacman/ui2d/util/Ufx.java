@@ -13,6 +13,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -56,6 +57,14 @@ public interface Ufx {
                 e.printStackTrace(System.err);
             }
         }
+    }
+
+    static ImageView createIcon(Image iconImage, int size, BooleanProperty visibleProperty) {
+        var icon = new ImageView(iconImage);
+        icon.setFitWidth(size);
+        icon.setPreserveRatio(true);
+        icon.visibleProperty().bind(visibleProperty);
+        return icon;
     }
 
     static void toggle(BooleanProperty booleanProperty) {

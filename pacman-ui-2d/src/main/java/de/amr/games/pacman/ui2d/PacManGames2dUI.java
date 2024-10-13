@@ -34,7 +34,6 @@ import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -54,6 +53,7 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
+import static de.amr.games.pacman.ui2d.util.Ufx.createIcon;
 
 /**
  * 2D user interface for all Pac-Man game variants.
@@ -134,9 +134,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         this.stage = checkNotNull(stage);
         checkNotNull(initialSize);
 
-        var mutedIcon = createMutedIcon(48);
+        var mutedIcon = createIcon(assets.get("icon.mute"), 48, sounds().mutedProperty());
         StackPane.setAlignment(mutedIcon, Pos.BOTTOM_RIGHT);
-        var pauseIcon = createPauseIcon(64);
+        var pauseIcon = createIcon(assets.get("icon.pause"), 64, clock.pausedPy);
         StackPane.setAlignment(pauseIcon, Pos.CENTER);
         sceneRoot.getChildren().addAll(new Pane(), flashMessageLayer, pauseIcon, mutedIcon);
         Scene mainScene = createMainScene(initialSize);
@@ -250,7 +250,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         return gamePage;
     }
 
-    private void handleGameVariantChange(GameVariant variant) {
+    protected void handleGameVariantChange(GameVariant variant) {
         String assetPrefix = assetPrefix(variant);
         sceneRoot.setBackground(assets.get(assetPrefix + ".scene_background"));
         boolean gameCanvasDecorated = variant != GameVariant.MS_PACMAN_TENGEN;
@@ -270,22 +270,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                 return locText(gameVariantPart + pausedPart, "2D");
             },
             clock.pausedPy, gameVariantPy);
-    }
-
-    protected ImageView createMutedIcon(int size) {
-        var icon = new ImageView(assets.<Image>get("icon.mute"));
-        icon.setFitWidth(size);
-        icon.setPreserveRatio(true);
-        icon.visibleProperty().bind(sounds().mutedProperty());
-        return icon;
-    }
-
-    protected ImageView createPauseIcon(int size) {
-        var icon = new ImageView(assets.<Image>get("icon.pause"));
-        icon.setFitWidth(size);
-        icon.setPreserveRatio(true);
-        icon.visibleProperty().bind(clock.pausedPy);
-        return icon;
     }
 
     private String displayName(GameScene gameScene) {
@@ -313,7 +297,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     // -----------------------------------------------------------------------------------------------------------------
     // GameContext interface implementation
     // -----------------------------------------------------------------------------------------------------------------
-
 
     @Override
     public Keyboard keyboard() {
