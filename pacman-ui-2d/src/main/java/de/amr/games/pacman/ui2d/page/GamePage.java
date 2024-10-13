@@ -66,7 +66,7 @@ public class GamePage extends StackPane implements Page {
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
         @Override
         protected void invalidated() {
-            setGameScene(get());
+            handleGameSceneChange(get());
         }
     };
 
@@ -93,7 +93,6 @@ public class GamePage extends StackPane implements Page {
         gameCanvasContainer.setBorderColor(ARCADE_PALE);
         gameCanvasContainer.enabledPy.bind(PY_GAME_CANVAS_DECORATED);
         gameCanvasContainer.enabledPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
-
 
         dashboardLayer = new DashboardLayer(context);
         dashboardLayer.addDashboardItem(context.locText("infobox.general.title"), new InfoBoxGeneral());
@@ -207,7 +206,7 @@ public class GamePage extends StackPane implements Page {
         renderer.setCanvas(gameCanvasContainer.canvas());
     }
 
-    protected void setGameScene(GameScene gameScene) {
+    protected void handleGameSceneChange(GameScene gameScene) {
         if (gameScene == null) {
             return; // happens when app is initialized
         }
@@ -224,6 +223,7 @@ public class GamePage extends StackPane implements Page {
         scene2D.scalingPy.bind(gameCanvasContainer.scalingPy);
         gameCanvasContainer.backgroundProperty().bind(scene2D.backgroundColorPy.map(Ufx::coloredBackground));
         adaptCanvasSizeToCurrentWorld();
+        contextMenu.hide();
     }
 
     protected boolean isCurrentGameScene2D() {

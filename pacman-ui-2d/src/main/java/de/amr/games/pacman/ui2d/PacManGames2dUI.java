@@ -374,10 +374,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public boolean currentGameSceneHasID(GameSceneID sceneID) {
+        if (currentGameScene().isEmpty()) {
+            return false;
+        }
         var gameSceneConfig = gameSceneConfiguration(gameVariant());
-        return currentGameScene()
-            .map(gameScene -> gameSceneConfig.gameSceneHasID(gameScene, sceneID))
-            .isPresent();
+        return gameSceneConfig.gameSceneHasID(currentGameScene().get(), sceneID);
     }
 
     @Override
