@@ -1,12 +1,10 @@
 package de.amr.games.pacman.ui2d.scene.pacman_xxl;
 
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.scene.BootScene;
-import de.amr.games.pacman.ui2d.scene.GameSceneConfiguration;
-import de.amr.games.pacman.ui2d.scene.GameSceneID;
-import de.amr.games.pacman.ui2d.scene.PlayScene2D;
+import de.amr.games.pacman.ui2d.scene.*;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameStartScene;
 import de.amr.games.pacman.ui2d.scene.pacman.*;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
@@ -21,6 +19,19 @@ public class PacManGameXXLSceneConfiguration extends GameSceneConfiguration {
         set(GameSceneID.CUT_SCENE_1, new PacManGameCutScene1());
         set(GameSceneID.CUT_SCENE_2, new PacManGameCutScene2());
         set(GameSceneID.CUT_SCENE_3, new PacManGameCutScene3());
+    }
+
+    @Override
+    public GameScene selectGameScene(GameContext context) {
+        GameSceneID sceneID = switch (context.gameState()) {
+            case BOOT               -> GameSceneID.BOOT_SCENE;
+            case STARTING           -> GameSceneID.START_SCENE;
+            case INTRO              -> GameSceneID.INTRO_SCENE;
+            case INTERMISSION       -> cutSceneID(context.game().intermissionNumber(context.game().levelNumber()));
+            case TESTING_CUT_SCENES -> cutSceneID(context.gameState().<Integer>getProperty("intermissionTestNumber"));
+            default                 -> GameSceneID.PLAY_SCENE;
+        };
+        return get(sceneID);
     }
 
     @Override

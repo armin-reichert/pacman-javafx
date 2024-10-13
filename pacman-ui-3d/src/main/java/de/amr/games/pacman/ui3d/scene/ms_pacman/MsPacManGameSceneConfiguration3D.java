@@ -1,12 +1,26 @@
 package de.amr.games.pacman.ui3d.scene.ms_pacman;
 
+import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSceneConfiguration;
 import de.amr.games.pacman.ui3d.PlayScene3D;
+
+import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
 
 public class MsPacManGameSceneConfiguration3D extends MsPacManGameSceneConfiguration {
 
     public MsPacManGameSceneConfiguration3D() {
         set(GameSceneID.PLAY_SCENE_3D, new PlayScene3D());
+    }
+
+    @Override
+    public GameScene selectGameScene(GameContext context) {
+        GameScene gameScene2D = super.selectGameScene(context);
+        if (PY_3D_ENABLED.get() && gameSceneHasID(gameScene2D, GameSceneID.PLAY_SCENE)) {
+            GameScene playScene3D = get(GameSceneID.PLAY_SCENE_3D);
+            return playScene3D != null ? playScene3D : gameScene2D;
+        }
+        return gameScene2D;
     }
 }

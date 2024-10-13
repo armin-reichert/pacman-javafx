@@ -294,27 +294,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         gameScene2D.backgroundColorPy.bind(PY_CANVAS_BG_COLOR);
     }
 
-    protected GameScene gameSceneForCurrentGameState() {
-        GameSceneID sceneID = switch (gameState()) {
-            case BOOT               -> GameSceneID.BOOT_SCENE;
-            case STARTING           -> GameSceneID.START_SCENE;
-            case INTRO              -> GameSceneID.INTRO_SCENE;
-            case INTERMISSION       -> cutSceneID(game().intermissionNumber(game().levelNumber()));
-            case TESTING_CUT_SCENES -> cutSceneID(gameState().<Integer>getProperty("intermissionTestNumber"));
-            default                 -> GameSceneID.PLAY_SCENE;
-        };
-        return gameScene(gameVariant(), sceneID);
-    }
-
-    private GameSceneID cutSceneID(int number) {
-        return switch (number) {
-            case 1 -> GameSceneID.CUT_SCENE_1;
-            case 2 -> GameSceneID.CUT_SCENE_2;
-            case 3 -> GameSceneID.CUT_SCENE_3;
-            default -> null;
-        };
-    }
-
     private void logUpdateResult() {
         var messageList = game().eventLog().createMessageList();
         if (!messageList.isEmpty()) {
@@ -393,14 +372,17 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public boolean currentGameSceneIs(GameSceneID sceneID) {
-        return currentGameScene().isPresent() && hasID(currentGameScene().get(), sceneID);
+    public boolean currentGameSceneHasID(GameSceneID sceneID) {
+        var gameSceneConfig = gameSceneConfiguration(gameVariant());
+        return currentGameScene()
+            .map(gameScene -> gameSceneConfig.gameSceneHasID(gameScene, sceneID))
+            .isPresent();
     }
 
     @Override
     public void updateGameScene(boolean reloadCurrent) {
         GameScene currentGameScene = gameScenePy.get();
-        GameScene nextGameScene = gameSceneForCurrentGameState();
+        GameScene nextGameScene = gameSceneConfiguration(gameVariant()).selectGameScene(this);
         boolean sceneChanging = nextGameScene != currentGameScene;
         if (reloadCurrent || sceneChanging) {
             if (currentGameScene != null) {
@@ -419,7 +401,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             } else {
                 Logger.info("Game scene reloaded: {}", displayName(currentGameScene));
             }
-            if (currentGameSceneIs(GameSceneID.INTRO_SCENE)) {
+            if (currentGameSceneHasID(GameSceneID.INTRO_SCENE)) {
                 gamePage.showSignature();
             } else {
                 gamePage.hideSignature();
@@ -483,24 +465,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             currentPage.rootPane().requestFocus();
             currentPage.onPageSelected();
         }
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // GameScene related
-    // -----------------------------------------------------------------------------------------------------------------
-
-    protected boolean hasID(GameScene gameScene, GameSceneID sceneID) {
-        return gameScene(gameVariant(), sceneID) == gameScene;
-    }
-
-    //TODO maybe return an Optional?
-    protected GameScene gameScene(GameVariant variant, GameSceneID sceneID) {
-        GameScene gameScene = gameSceneConfigByVariant.get(variant).get(sceneID);
-        if (gameScene != null) {
-            return gameScene;
-        }
-        throw new IllegalStateException(
-            String.format("No game scene found for ID %s in game variant %s", sceneID, variant));
     }
 
     // -----------------------------------------------------------------------------------------------------------------

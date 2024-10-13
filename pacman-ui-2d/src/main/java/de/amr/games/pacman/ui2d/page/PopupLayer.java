@@ -50,7 +50,7 @@ public class PopupLayer extends Pane {
         prefWidthProperty().bind(canvas.prefWidthProperty());
 
         borderProperty().bind(Bindings.createObjectBinding(
-            () -> PY_DEBUG_INFO.get() && !context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D)
+            () -> PY_DEBUG_INFO.get() && !context.currentGameSceneHasID(GameSceneID.PLAY_SCENE_3D)
                 ? Ufx.border(Color.GREENYELLOW, 3) : null,
             PY_DEBUG_INFO, context.gameSceneProperty()
         ));

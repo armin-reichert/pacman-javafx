@@ -83,7 +83,7 @@ public interface GameContext {
 
     // Game scenes
     GameSceneConfiguration gameSceneConfiguration(GameVariant variant);
-    boolean currentGameSceneIs(GameSceneID gameSceneID);
+    boolean currentGameSceneHasID(GameSceneID gameSceneID);
     ObjectProperty<GameScene> gameSceneProperty();
     Optional<GameScene> currentGameScene();
     void updateGameScene(boolean reloadCurrent);

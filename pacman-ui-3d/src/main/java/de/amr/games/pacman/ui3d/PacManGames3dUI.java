@@ -17,8 +17,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import org.tinylog.Logger;
 
-import java.util.Map;
-
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
 
@@ -83,15 +81,5 @@ public class PacManGames3dUI extends PacManGames2dUI {
             String displayMode = locText(PY_3D_ENABLED.get() ? "threeD" : "twoD");
             return locText(gameVariantPart + pausedPart, displayMode);
         }, clock.pausedPy, gameVariantPy, PY_3D_ENABLED);
-    }
-
-    @Override
-    protected GameScene gameSceneForCurrentGameState() {
-        GameScene gameScene = super.gameSceneForCurrentGameState();
-        if (PY_3D_ENABLED.get() && hasID(gameScene, GameSceneID.PLAY_SCENE)) {
-            GameScene playScene3D = gameScene(gameVariant(), GameSceneID.PLAY_SCENE_3D);
-            return playScene3D != null ? playScene3D : gameScene;
-        }
-        return gameScene;
     }
 }

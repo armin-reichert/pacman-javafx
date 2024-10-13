@@ -59,7 +59,7 @@ public enum GameAction3D implements GameAction {
             super.execute(context);
             context.currentGameScene().ifPresent(gameScene -> {
                 toggle(PY_3D_ENABLED);
-                if (context.currentGameSceneIs(GameSceneID.PLAY_SCENE) || context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D)) {
+                if (context.currentGameSceneHasID(GameSceneID.PLAY_SCENE) || context.currentGameSceneHasID(GameSceneID.PLAY_SCENE_3D)) {
                     context.updateGameScene(true);
                     context.gameSceneProperty().get().onSceneVariantSwitch(gameScene);
                 }
@@ -76,7 +76,7 @@ public enum GameAction3D implements GameAction {
         public void execute(GameContext context) {
             super.execute(context);
             toggle(PY_PIP_ON);
-            if (!context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D)) {
+            if (!context.currentGameSceneHasID(GameSceneID.PLAY_SCENE_3D)) {
                 context.showFlashMessage(context.locText(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
             }
         }

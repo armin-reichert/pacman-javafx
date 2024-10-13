@@ -54,7 +54,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
         opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
         visibleProperty().bind(Bindings.createObjectBinding(
-            () -> PY_PIP_ON.get() && context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D),
+            () -> PY_PIP_ON.get() && context.currentGameSceneHasID(GameSceneID.PLAY_SCENE_3D),
             PY_PIP_ON, context.gameSceneProperty()
         ));
         visibleProperty().addListener((py,ov,visible) -> {

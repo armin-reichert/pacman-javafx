@@ -38,7 +38,7 @@ public class GamePage3D extends GamePage {
         dashboardLayer.addEntry(3, context.locText("infobox.3D_settings.title"), new InfoBox3D());
         backgroundProperty().bind(Bindings.createObjectBinding(
             () -> {
-                if (!context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D)) {
+                if (!context.currentGameSceneHasID(GameSceneID.PLAY_SCENE_3D)) {
                     return context.assets().get("wallpaper.background"); // little Pac-Man tapestry
                 }
                 return PY_3D_DRAW_MODE.get() == DrawMode.LINE
@@ -59,8 +59,8 @@ public class GamePage3D extends GamePage {
         contextMenu.getItems().clear();
         contextMenu.hide();
 
-        boolean isPlayScene = context.currentGameSceneIs(GameSceneID.PLAY_SCENE)
-            || context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D);
+        boolean isPlayScene = context.currentGameSceneHasID(GameSceneID.PLAY_SCENE)
+            || context.currentGameSceneHasID(GameSceneID.PLAY_SCENE_3D);
         if (!isPlayScene) {
             return;
         }
@@ -68,7 +68,7 @@ public class GamePage3D extends GamePage {
         contextMenu.getItems().add(menuTitleItem(context.locText("scene_display")));
 
         // Toggle 2D-3D
-        boolean is3D = context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D);
+        boolean is3D = context.currentGameSceneHasID(GameSceneID.PLAY_SCENE_3D);
         var item = new MenuItem(context.locText(is3D ? "use_2D_scene" : "use_3D_scene"));
         item.setOnAction(e -> GameAction3D.TOGGLE_PLAY_SCENE_2D_3D.execute(context));
         contextMenu.getItems().add(item);
