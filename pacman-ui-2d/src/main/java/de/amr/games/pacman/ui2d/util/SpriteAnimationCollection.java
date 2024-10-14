@@ -21,78 +21,79 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class SpriteAnimationCollection implements Animations {
 
-    protected final Map<String, SpriteAnimation> animationsByName = new HashMap<>();
-    protected String currentAnimationName;
+    protected final Map<String, SpriteAnimation> animationsByID = new HashMap<>();
+    protected String currentAnimationID;
 
     public void add(Map<String, SpriteAnimation> entries) {
-        animationsByName.putAll(entries);
+        animationsByID.putAll(entries);
     }
 
-    public SpriteAnimation animation(String name) {
-        return animationsByName.get(name);
+    public SpriteAnimation animation(String id) {
+        return animationsByID.get(id);
     }
 
-    @Override
-    public String currentAnimationName() {
-        return currentAnimationName;
-    }
-
-    public boolean currently(String name) {
-        checkNotNull(name);
-        return name.equals(currentAnimationName);
+    public boolean isCurrentAnimationID(String id) {
+        checkNotNull(id);
+        return id.equals(currentAnimationID);
     }
 
     public final RectArea currentSprite(AnimatedEntity animatedEntity) {
-        var currentAnimation = current();
+        var currentAnimation = currentAnimation();
         if (currentAnimation == null) {
             return null;
         }
-        RectArea[] newSelection = selectedSprites(current().spriteSheet(), animatedEntity.entity());
+        RectArea[] newSelection = selectedSprites(currentAnimation().spriteSheet(), animatedEntity.entity());
         if (newSelection != null) {
             currentAnimation.setSprites(newSelection);
         }
         return currentAnimation.currentSprite();
     }
 
+    //TODO passing spritesheet is not necessary
     protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
         return null;
     }
 
     @Override
-    public SpriteAnimation current() {
-        return currentAnimationName != null ? animation(currentAnimationName) : null;
+    public String currentAnimationID() {
+        return currentAnimationID;
     }
 
     @Override
-    public void select(String name, int index) {
-        if (!name.equals(currentAnimationName)) {
-            currentAnimationName = name;
-            if (current() != null) {
-                current().setFrameIndex(0);
+    public SpriteAnimation currentAnimation() {
+        return currentAnimationID != null ? animation(currentAnimationID) : null;
+    }
+
+    @Override
+    public void select(String id, int frameIndex) {
+        if (!id.equals(currentAnimationID)) {
+            currentAnimationID = id;
+            if (currentAnimation() != null) {
+                currentAnimation().setFrameIndex(0);
             } else {
-                Logger.warn("No animation with name {} exists", name);
+                Logger.warn("No animation with ID {} exists", id);
             }
         }
     }
 
     @Override
-    public void startSelected() {
-        if (current() != null) {
-            current().start();
+    public void startCurrentAnimation() {
+        if (currentAnimation() != null) {
+            currentAnimation().start();
         }
     }
 
     @Override
-    public void stopSelected() {
-        if (current() != null) {
-            current().stop();
+    public void stopCurrentAnimation() {
+        if (currentAnimation() != null) {
+            currentAnimation().stop();
         }
     }
 
     @Override
-    public void resetSelected() {
-        if (current() != null) {
-            current().reset();
+    public void resetCurrentAnimation() {
+        if (currentAnimation() != null) {
+            currentAnimation().reset();
         }
     }
 }

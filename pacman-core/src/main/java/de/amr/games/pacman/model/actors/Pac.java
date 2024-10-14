@@ -116,9 +116,9 @@ public class Pac extends Creature implements AnimatedEntity {
             setSpeedPct(game.powerTimer().isRunning() ? level.pacSpeedPoweredPercentage() : level.pacSpeedPercentage());
             tryMoving();
             if (moveInfo.moved) {
-                animations.startSelected();
+                animations.startCurrentAnimation();
             } else {
-                animations.stopSelected();
+                animations.stopCurrentAnimation();
             }
         } else {
             --restingTicks;
@@ -131,14 +131,14 @@ public class Pac extends Creature implements AnimatedEntity {
     public void freeze() {
         setSpeed(0);
         setRestingTicks(Pac.REST_INDEFINITELY);
-        animations.stopSelected();
+        animations.stopCurrentAnimation();
         selectAnimation(GameModel.ANIM_PAC_MUNCHING);
-        animations.resetSelected();
+        animations.resetCurrentAnimation();
     }
 
     public void die() {
         setSpeed(0);
-        animations.stopSelected();
+        animations.stopCurrentAnimation();
         dead = true;
     }
 

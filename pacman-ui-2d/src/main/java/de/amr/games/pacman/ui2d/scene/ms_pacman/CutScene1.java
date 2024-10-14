@@ -16,7 +16,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAssets2D;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.paint.Color;
@@ -144,7 +143,7 @@ public class CutScene1 extends GameScene2D {
             pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
             pacMan.setSpeed(SPEED_PAC_CHASING);
             pacMan.selectAnimation(MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING);
-            pacMan.animations().ifPresent(Animations::startSelected);
+            pacMan.animations().ifPresent(Animations::startCurrentAnimation);
             pacMan.show();
 
             inky.setMoveAndWishDir(Direction.RIGHT);
@@ -158,7 +157,7 @@ public class CutScene1 extends GameScene2D {
             msPac.setPosition(TS * 30, LOWER_LANE_Y);
             msPac.setSpeed(SPEED_PAC_CHASING);
             msPac.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
-            msPac.animations().ifPresent(Animations::startSelected);
+            msPac.animations().ifPresent(Animations::startCurrentAnimation);
             msPac.show();
 
             pinky.setMoveAndWishDir(Direction.LEFT);
@@ -244,13 +243,13 @@ public class CutScene1 extends GameScene2D {
         void enterStateInHeaven() {
             pacMan.setSpeed(0);
             pacMan.setMoveDir(Direction.LEFT);
-            pacMan.animations().ifPresent(Animations::stopSelected);
-            pacMan.animations().ifPresent(Animations::resetSelected);
+            pacMan.animations().ifPresent(Animations::stopCurrentAnimation);
+            pacMan.animations().ifPresent(Animations::resetCurrentAnimation);
 
             msPac.setSpeed(0);
             msPac.setMoveDir(Direction.RIGHT);
-            msPac.animations().ifPresent(Animations::stopSelected);
-            msPac.animations().ifPresent(Animations::resetSelected);
+            msPac.animations().ifPresent(Animations::stopCurrentAnimation);
+            msPac.animations().ifPresent(Animations::resetCurrentAnimation);
 
             inky.setSpeed(0);
             inky.hide();

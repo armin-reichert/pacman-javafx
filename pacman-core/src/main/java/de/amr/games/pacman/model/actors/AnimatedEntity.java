@@ -29,7 +29,7 @@ public interface AnimatedEntity {
 
     default void startAnimation() {
         if (animationSet() != null) {
-            animationSet().startSelected();
+            animationSet().startCurrentAnimation();
         } else {
             Logger.warn("Trying to start animation before animations have been created!");
         }
@@ -37,7 +37,7 @@ public interface AnimatedEntity {
 
     default void stopAnimation() {
         if (animationSet() != null) {
-            animationSet().stopSelected();
+            animationSet().stopCurrentAnimation();
         } else {
             Logger.warn("Trying to stop animation before animations have been created!");
         }
@@ -45,7 +45,7 @@ public interface AnimatedEntity {
 
     default void resetAnimation() {
         if (animationSet() != null) {
-            animationSet().resetSelected();
+            animationSet().resetCurrentAnimation();
         } else {
             Logger.warn("Trying to reset animation before animations have been created!");
         }

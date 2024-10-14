@@ -195,9 +195,9 @@ public class GameRenderer implements GameWorldRenderer {
         }
         pac.animations().ifPresent(animations -> {
             if (animations instanceof SpriteAnimationCollection spriteAnimations) {
-                SpriteAnimation spriteAnimation = spriteAnimations.current();
+                SpriteAnimation spriteAnimation = spriteAnimations.currentAnimation();
                 if (spriteAnimation != null) {
-                    switch (animations.currentAnimationName()) {
+                    switch (animations.currentAnimationID()) {
                         case GameModel.ANIM_PAC_MUNCHING,
                              TengenMsPacManGame.ANIM_PAC_MUNCHING_BOOSTER,
                              MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING,

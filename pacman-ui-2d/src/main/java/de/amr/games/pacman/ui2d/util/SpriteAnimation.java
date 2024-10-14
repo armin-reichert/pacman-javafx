@@ -45,14 +45,14 @@ public class SpriteAnimation {
 
         public SpriteAnimation loop() {
             workPiece.loop = true;
-            workPiece.clock = workPiece.new Clock();
+            workPiece.animator = workPiece.new Animator();
             Logger.debug("New sprite animation '{}'", workPiece.info);
             return workPiece;
         }
 
         public SpriteAnimation end() {
             Logger.debug("New sprite animation '{}'", workPiece.info);
-            workPiece.clock = workPiece.new Clock();
+            workPiece.animator = workPiece.new Animator();
             return workPiece;
         }
     }
@@ -61,8 +61,24 @@ public class SpriteAnimation {
         return new Builder(spriteSheet);
     }
 
+    private class Animator extends Transition {
+
+        private Animator() {
+            setCycleDuration(Duration.seconds(1.0 / FPS * frameTicks));
+            setCycleCount(loop ? Animation.INDEFINITE : sprites.length);
+            setInterpolator(Interpolator.LINEAR);
+        }
+
+        @Override
+        protected void interpolate(double frac) {
+            if (frac >= 1) {
+                nextFrame();
+            }
+        }
+    }
+
     private final GameSpriteSheet spriteSheet;
-    private Animation clock;
+    private Animator animator;
     private String info;
     private RectArea[] sprites;
     private boolean loop;
@@ -82,15 +98,15 @@ public class SpriteAnimation {
     }
 
     public void reset() {
-        clock.stop();
-        clock.jumpTo(Duration.ZERO);
+        animator.stop();
+        animator.jumpTo(Duration.ZERO);
         frameIndex = 0;
     }
 
     public void setFrameTicks(int ticks) {
         if (ticks != frameTicks) {
-            boolean doRestart = clock.getStatus() == Status.RUNNING;
-            clock.stop();
+            boolean doRestart = animator.getStatus() == Status.RUNNING;
+            animator.stop();
             frameTicks = ticks;
             if (doRestart) {
                 start();
@@ -99,11 +115,11 @@ public class SpriteAnimation {
     }
 
     public void start() {
-        clock.play();
+        animator.play();
     }
 
     public void stop() {
-        clock.stop();
+        animator.stop();
     }
 
     public void setFrameIndex(int index) {
@@ -129,23 +145,7 @@ public class SpriteAnimation {
     public void nextFrame() {
         frameIndex++;
         if (frameIndex == sprites.length) {
-            frameIndex = clock.getCycleCount() == Animation.INDEFINITE ? 0 : sprites.length - 1;
-        }
-    }
-
-    private class Clock extends Transition {
-
-        private Clock() {
-            setCycleDuration(Duration.seconds(1.0 / FPS * frameTicks));
-            setCycleCount(loop ? Animation.INDEFINITE : sprites.length);
-            setInterpolator(Interpolator.LINEAR);
-        }
-
-        @Override
-        protected void interpolate(double frac) {
-            if (frac >= 1) {
-                nextFrame();
-            }
+            frameIndex = animator.getCycleCount() == Animation.INDEFINITE ? 0 : sprites.length - 1;
         }
     }
 }

@@ -375,7 +375,7 @@ public abstract class GameModel {
 
     protected void initPacAnimation() {
         pac.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
-        pac.animations().ifPresent(Animations::resetSelected);
+        pac.animations().ifPresent(Animations::resetCurrentAnimation);
     }
 
     public void showGuys() {

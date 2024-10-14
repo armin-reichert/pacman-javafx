@@ -71,13 +71,13 @@ public class PacAnimations extends SpriteAnimationCollection {
     @Override
     protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
         if (entity instanceof Pac msPacMan) {
-            if (currently(GameModel.ANIM_PAC_MUNCHING)) {
+            if (isCurrentAnimationID(GameModel.ANIM_PAC_MUNCHING)) {
                 return TengenMsPacManGameSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT;
             }
-            if (currently(TengenMsPacManGame.ANIM_PAC_MUNCHING_BOOSTER)) {
+            if (isCurrentAnimationID(TengenMsPacManGame.ANIM_PAC_MUNCHING_BOOSTER)) {
                 return TengenMsPacManGameSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER;
             }
-            if (currently(MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING)) {
+            if (isCurrentAnimationID(MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING)) {
                 return ((TengenMsPacManGameSpriteSheet)spriteSheet).pacManMunchingSprites(msPacMan.moveDir());
             }
         }

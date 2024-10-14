@@ -9,15 +9,15 @@ package de.amr.games.pacman.model.actors;
  */
 public interface Animations {
 
-    String currentAnimationName();
+    String currentAnimationID();
 
-    Object current();
+    Object currentAnimation();
 
     void select(String name, int index);
 
-    void startSelected();
+    void startCurrentAnimation();
 
-    void stopSelected();
+    void stopCurrentAnimation();
 
-    void resetSelected();
+    void resetCurrentAnimation();
 }

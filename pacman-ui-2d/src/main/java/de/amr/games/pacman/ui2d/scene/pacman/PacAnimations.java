@@ -40,7 +40,7 @@ public class PacAnimations extends SpriteAnimationCollection {
     @Override
     protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
         if (entity instanceof Pac pac) {
-            if (currently(GameModel.ANIM_PAC_MUNCHING)) {
+            if (isCurrentAnimationID(GameModel.ANIM_PAC_MUNCHING)) {
                 return spriteSheet.pacMunchingSprites(pac.moveDir());
             }
         }

@@ -72,20 +72,20 @@ public class GhostAnimations extends SpriteAnimationCollection {
     }
 
     @Override
-    public void select(String name, int index) {
-        super.select(name, index);
+    public void select(String name, int frameIndex) {
+        super.select(name, frameIndex);
         if (GameModel.ANIM_GHOST_NUMBER.equals(name)) {
-            animation(GameModel.ANIM_GHOST_NUMBER).setFrameIndex(index);
+            animation(GameModel.ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
         }
     }
 
     @Override
     protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
         if (entity instanceof Ghost ghost) {
-            if (currently(GameModel.ANIM_GHOST_NORMAL)) {
+            if (isCurrentAnimationID(GameModel.ANIM_GHOST_NORMAL)) {
                 return spriteSheet.ghostNormalSprites(ghost.id(), ghost.wishDir());
             }
-            if (currently(GameModel.ANIM_GHOST_EYES)) {
+            if (isCurrentAnimationID(GameModel.ANIM_GHOST_EYES)) {
                 return spriteSheet.ghostEyesSprites(ghost.wishDir());
             }
         }

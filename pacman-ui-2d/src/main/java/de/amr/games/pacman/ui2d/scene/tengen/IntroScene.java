@@ -214,7 +214,7 @@ public class IntroScene extends GameScene2D {
                 intro.msPacMan.setSpeed(SPEED);
                 intro.msPacMan.setVisible(true);
                 intro.msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
-                intro.msPacMan.animations().ifPresent(Animations::startSelected);
+                intro.msPacMan.animations().ifPresent(Animations::startCurrentAnimation);
                 for (Ghost ghost : intro.ghosts) {
                     ghost.setPosition(TS * 33.5f, TS * 20);
                     ghost.setMoveAndWishDir(Direction.LEFT);
@@ -286,7 +286,7 @@ public class IntroScene extends GameScene2D {
                 intro.msPacMan.move();
                 if (intro.msPacMan.posX() <= STOP_X_MS_PAC_MAN) {
                     intro.msPacMan.setSpeed(0);
-                    intro.msPacMan.animations().ifPresent(Animations::resetSelected); //TODO check in Tengen, seems not to work!
+                    intro.msPacMan.animations().ifPresent(Animations::resetCurrentAnimation); //TODO check in Tengen, seems not to work!
                 }
                 if (timer().atSecond(8)) {
                     // show demo level

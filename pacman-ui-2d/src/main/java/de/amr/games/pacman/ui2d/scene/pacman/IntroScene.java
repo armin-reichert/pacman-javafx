@@ -273,7 +273,7 @@ public class IntroScene extends GameScene2D {
                 intro.pacMan.setSpeed(CHASE_SPEED);
                 intro.pacMan.show();
                 intro.pacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
-                intro.pacMan.animations().ifPresent(Animations::startSelected);
+                intro.pacMan.animations().ifPresent(Animations::startCurrentAnimation);
                 Stream.of(intro.ghosts).forEach(ghost -> {
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setPosition(intro.pacMan.position().plus(16 * (ghost.id() + 1), 0));

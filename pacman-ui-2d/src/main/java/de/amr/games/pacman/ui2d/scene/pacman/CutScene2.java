@@ -70,7 +70,7 @@ public class CutScene2 extends GameScene2D {
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.15f);
                 pac.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
-                pac.animations().ifPresent(Animations::startSelected);
+                pac.animations().ifPresent(Animations::startCurrentAnimation);
                 pac.show();
             }
             case ANIMATION_START + 111 -> {

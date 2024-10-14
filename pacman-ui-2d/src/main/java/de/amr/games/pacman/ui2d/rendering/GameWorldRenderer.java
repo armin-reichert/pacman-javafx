@@ -164,7 +164,7 @@ public interface GameWorldRenderer {
     default void drawAnimatedEntity(AnimatedEntity character) {
         character.animations().ifPresent(animations -> {
             if (character.isVisible() && animations instanceof SpriteAnimationCollection spriteAnimations) {
-                SpriteAnimation currentAnimation = spriteAnimations.current();
+                SpriteAnimation currentAnimation = spriteAnimations.currentAnimation();
                 if (currentAnimation != null) {
                     drawSprite(character.entity(), spriteAnimations.currentSprite(character));
                 } else {
@@ -218,9 +218,9 @@ public interface GameWorldRenderer {
     default void drawAnimatedCreatureInfo(AnimatedEntity animatedCreature) {
         if (animatedCreature.animations().isPresent() && animatedCreature.animations().get() instanceof SpriteAnimationCollection sa) {
             Creature guy = (Creature) animatedCreature.entity();
-            String animationName = sa.currentAnimationName();
+            String animationName = sa.currentAnimationID();
             if (animationName != null) {
-                String text = animationName + " " + sa.current().frameIndex();
+                String text = animationName + " " + sa.currentAnimation().frameIndex();
                 ctx().setFill(Color.WHITE);
                 ctx().setFont(Font.font("Monospaced", scaled(6)));
                 ctx().fillText(text, scaled(guy.posX() - 4), scaled(guy.posY() - 4));
