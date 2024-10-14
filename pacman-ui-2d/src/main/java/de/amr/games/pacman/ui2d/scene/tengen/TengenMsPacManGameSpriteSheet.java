@@ -225,11 +225,6 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
         return BONUS_VALUE_SPRITES[index];
     }
 
-    public RectArea[] clapperboardSprites() {
-        return CLAPPERBOARD_SPRITES;
-    }
-
-    @Override
     public RectArea[] pacManMunchingSprites(Direction dir) {
         return MR_PAC_MUNCHING_SPRITES_LEFT;
     }

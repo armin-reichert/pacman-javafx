@@ -13,7 +13,7 @@ import de.amr.games.pacman.ui2d.util.AssetStorage;
 
 public class TengenMsPacManGameSceneConfiguration extends GameSceneConfiguration {
 
-    private final GameSpriteSheet spriteSheet;
+    private final TengenMsPacManGameSpriteSheet spriteSheet;
     private final GameRenderer renderer;
 
     public TengenMsPacManGameSceneConfiguration(AssetStorage assets) {

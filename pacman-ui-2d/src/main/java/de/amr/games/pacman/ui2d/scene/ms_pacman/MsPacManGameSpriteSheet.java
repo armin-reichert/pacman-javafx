@@ -37,13 +37,13 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
 
     private static final RectArea LIVES_COUNTER_SPRITE = spriteAt(1, 0);
 
-    private static final RectArea[][] MUNCHING_SPRITES = new RectArea[4][];
+    private static final RectArea[][] MS_PAC_MAN_MUNCHING_SPRITES = new RectArea[4][];
     static {
         for (byte d = 0; d < 4; ++d) {
             var wide = spriteAt(0, d);
             var open = spriteAt(1, d);
             var closed = spriteAt(2, d);
-            MUNCHING_SPRITES[d] = rectArray(open, open, wide, wide, open, open, open, closed, closed);
+            MS_PAC_MAN_MUNCHING_SPRITES[d] = rectArray(open, open, wide, wide, open, open, open, closed, closed);
         }
     }
 
@@ -78,10 +78,10 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
         }
     }
 
-    private static final RectArea[][] PAC_MAN_MUNCHING_SPRITES = new RectArea[4][];
+    private static final RectArea[][] MR_PAC_MAN_MUNCHING_SPRITES = new RectArea[4][];
     static {
         for (byte d = 0; d < 4; ++d) {
-            PAC_MAN_MUNCHING_SPRITES[d] = rectArray(spriteAt(0, 9 + d), spriteAt(1, 9 + d), spriteAt(2, 9));
+            MR_PAC_MAN_MUNCHING_SPRITES[d] = rectArray(spriteAt(0, 9 + d), spriteAt(1, 9 + d), spriteAt(2, 9));
         }
     }
 
@@ -151,18 +151,17 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     @Override
-    public RectArea[] pacManMunchingSprites(Direction dir) {
-        return PAC_MAN_MUNCHING_SPRITES[ORDER.indexOf(dir)];
-    }
-
-    @Override
     public RectArea[] pacMunchingSprites(Direction dir) {
-        return MUNCHING_SPRITES[ORDER.indexOf(dir)];
+        return MS_PAC_MAN_MUNCHING_SPRITES[ORDER.indexOf(dir)];
     }
 
     @Override
     public RectArea[] pacDyingSprites() {
         return MS_PAC_MAN_DYING_SPRITES;
+    }
+
+    public RectArea[] mrPacManMunchingSprites(Direction dir) {
+        return MR_PAC_MAN_MUNCHING_SPRITES[ORDER.indexOf(dir)];
     }
 
     public SpriteAnimation createStorkFlyingAnimation() {

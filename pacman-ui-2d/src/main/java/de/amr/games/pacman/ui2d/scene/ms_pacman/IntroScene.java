@@ -19,7 +19,6 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -87,9 +86,7 @@ public class IntroScene extends GameScene2D {
         ghostIndex = 0;
         waitBeforeRising = 0;
 
-        //TODO use Ms. Pac-Man animations also in Tengen for now
-        GameSpriteSheet spriteSheet = context.assets().get("ms_pacman.spritesheet");
-
+        MsPacManGameSpriteSheet spriteSheet = (MsPacManGameSpriteSheet) context.currentGameSceneConfiguration().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
         for (Ghost ghost : ghosts) {

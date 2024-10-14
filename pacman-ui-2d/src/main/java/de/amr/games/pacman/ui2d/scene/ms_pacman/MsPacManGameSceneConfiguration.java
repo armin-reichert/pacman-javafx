@@ -4,13 +4,12 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.*;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 
 public class MsPacManGameSceneConfiguration extends GameSceneConfiguration {
 
-    private final GameSpriteSheet spriteSheet;
+    private final MsPacManGameSpriteSheet spriteSheet;
     private final GameRenderer renderer;
 
     public MsPacManGameSceneConfiguration(AssetStorage assets) {
@@ -32,7 +31,7 @@ public class MsPacManGameSceneConfiguration extends GameSceneConfiguration {
     }
 
     @Override
-    public GameSpriteSheet spriteSheet() {
+    public MsPacManGameSpriteSheet spriteSheet() {
         return spriteSheet;
     }
 

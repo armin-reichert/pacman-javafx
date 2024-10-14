@@ -39,9 +39,6 @@ public interface GameSpriteSheet {
     RectArea bonusSymbolSprite(byte symbol);
     RectArea bonusValueSprite(byte symbol);
 
-    // Ms. Pac-Man only
-    default RectArea[] pacManMunchingSprites(Direction dir) { return NO_SPRITES; }
-
     // Pac-Man only
     default RectArea ghostFacingRight(byte ghostID) {
         return NO_SPRITE;

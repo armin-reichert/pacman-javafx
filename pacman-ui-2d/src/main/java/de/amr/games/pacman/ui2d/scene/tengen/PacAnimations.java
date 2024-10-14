@@ -23,7 +23,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class PacAnimations extends SpriteAnimationCollection {
 
-    public PacAnimations(GameSpriteSheet spriteSheet) {
+    public PacAnimations(TengenMsPacManGameSpriteSheet spriteSheet) {
         checkNotNull(spriteSheet);
 
         var munching = SpriteAnimation
@@ -78,7 +78,7 @@ public class PacAnimations extends SpriteAnimationCollection {
                 return TengenMsPacManGameSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER;
             }
             if (currently(MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING)) {
-                return spriteSheet.pacManMunchingSprites(msPacMan.moveDir());
+                return ((TengenMsPacManGameSpriteSheet)spriteSheet).pacManMunchingSprites(msPacMan.moveDir());
             }
         }
         return super.selectedSprites(spriteSheet, entity);

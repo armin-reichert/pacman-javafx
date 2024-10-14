@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAssets2D;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.paint.Color;
@@ -55,15 +54,9 @@ public class CutScene2 extends GameScene2D {
         pacMan = new Pac();
         msPacMan = new Pac();
 
-        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
+        MsPacManGameSpriteSheet spriteSheet = (MsPacManGameSpriteSheet) context.currentGameSceneConfiguration().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
-        //TODO use Tengen sprite sheet
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            var msPacManSpriteSheet = context.gameSceneConfiguration(GameVariant.MS_PACMAN).spriteSheet();
-            pacMan.setAnimations(new PacAnimations(msPacManSpriteSheet));
-        } else {
-            pacMan.setAnimations(new PacAnimations(spriteSheet));
-        }
+        pacMan.setAnimations(new PacAnimations(spriteSheet));
 
         clapAnimation = new ClapperboardAnimation("2", "THE CHASE");
         clapAnimation.start();

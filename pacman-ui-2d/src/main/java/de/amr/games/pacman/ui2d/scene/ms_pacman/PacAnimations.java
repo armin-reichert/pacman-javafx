@@ -23,7 +23,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class PacAnimations extends SpriteAnimationCollection {
 
-    public PacAnimations(GameSpriteSheet spriteSheet) {
+    public PacAnimations(MsPacManGameSpriteSheet spriteSheet) {
         checkNotNull(spriteSheet);
 
         var munching = SpriteAnimation
@@ -42,7 +42,7 @@ public class PacAnimations extends SpriteAnimationCollection {
         var husbandMunching = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man's husband munching")
-            .sprites(spriteSheet.pacManMunchingSprites(Direction.LEFT))
+            .sprites(spriteSheet.mrPacManMunchingSprites(Direction.LEFT))
             .frameTicks(2)
             .loop();
 
@@ -60,7 +60,7 @@ public class PacAnimations extends SpriteAnimationCollection {
                 return spriteSheet.pacMunchingSprites(msPacMan.moveDir());
             }
             if (currently(MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING)) {
-                return spriteSheet.pacManMunchingSprites(msPacMan.moveDir());
+                return ((MsPacManGameSpriteSheet) spriteSheet).mrPacManMunchingSprites(msPacMan.moveDir());
             }
         }
         return super.selectedSprites(spriteSheet, entity);
