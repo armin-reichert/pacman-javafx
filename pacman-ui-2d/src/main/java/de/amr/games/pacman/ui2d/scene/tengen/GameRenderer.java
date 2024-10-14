@@ -434,7 +434,7 @@ public class GameRenderer implements GameWorldRenderer {
     }
 
     public void drawClapperBoard(GameSpriteSheet spriteSheet, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
-        var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
+        var sprite = animation.currentSprite(TengenMsPacManGameSpriteSheet.CLAPPERBOARD_SPRITES);
         if (sprite != RectArea.PIXEL) {
             drawSpriteCenteredOverBox(sprite, x, y);
             var numberX = x + 8;

@@ -89,7 +89,7 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
     static final RectArea BLUE_BAG_SPRITE = rect(488, 199, 8, 8);
     static final RectArea JUNIOR_PAC_SPRITE = rect(509, 200, 8, 8);
 
-    private static final RectArea[] CLAPPERBOARD_SPRITES = rectArray(
+    static final RectArea[] CLAPPERBOARD_SPRITES = rectArray(
         rect(456, 208, 32, 32),  // open
         rect(488, 208, 32, 32),  // middle
         rect(520, 208, 32, 32)); // closed
@@ -163,11 +163,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
     @Override
     public RectArea[] pacDyingSprites() {
         return MS_PAC_MAN_DYING_SPRITES;
-    }
-
-    @Override
-    public RectArea[] clapperboardSprites() {
-        return CLAPPERBOARD_SPRITES;
     }
 
     @Override
