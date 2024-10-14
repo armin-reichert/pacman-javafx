@@ -23,7 +23,7 @@ public class BootScene extends GameScene2D {
 
     @Override
     public void init() {
-        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfig().spriteSheet();
         t = 0;
         context.setScoreVisible(false);
         tengenPresentsY = 36 * TS;

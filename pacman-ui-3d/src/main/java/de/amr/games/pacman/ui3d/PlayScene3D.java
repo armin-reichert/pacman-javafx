@@ -214,14 +214,14 @@ public class PlayScene3D implements GameScene {
     @Override
     public void handleInput() {
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            context.execFirstCalledActionOrElse(TENGEN_GAME_ACTIONS.stream(),
-                () -> context.execFirstCalledAction(GAME_ACTIONS));
+            context.execActionOrElse(TENGEN_GAME_ACTIONS.stream(),
+                () -> context.execAction(GAME_ACTIONS));
         } else {
             // add credit is only allowed in demo level
             if (context.isActionCalled(GameAction2D.ADD_CREDIT) && context.game().isDemoLevel()) {
                 GameAction2D.ADD_CREDIT.execute(context);
             } else {
-                context.execFirstCalledAction(GAME_ACTIONS.stream());
+                context.execAction(GAME_ACTIONS.stream());
             }
         }
     }
@@ -266,7 +266,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void onEnterStateGhostDying() {
-        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfig().spriteSheet();
         RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
         context.game().eventLog().killedGhosts.forEach(ghost -> {
             int victimIndex = context.game().victims().indexOf(ghost);
@@ -355,7 +355,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        context.game().bonus().ifPresent(bonus -> level3D.replaceBonus3D(bonus, context.currentGameSceneConfiguration().spriteSheet()));
+        context.game().bonus().ifPresent(bonus -> level3D.replaceBonus3D(bonus, context.currentGameSceneConfig().spriteSheet()));
     }
 
     @Override
@@ -449,7 +449,7 @@ public class PlayScene3D implements GameScene {
         // Place level counter at top right maze corner
         double x = context.game().world().map().terrain().numCols() * TS - 2 * TS;
         double y = 2 * TS;
-        Node levelCounter3D = Factory3D.createLevelCounter3D(context.currentGameSceneConfiguration().spriteSheet(),
+        Node levelCounter3D = Factory3D.createLevelCounter3D(context.currentGameSceneConfig().spriteSheet(),
                 context.game().levelCounter(), x, y);
         level3D.root().getChildren().add(levelCounter3D);
     }

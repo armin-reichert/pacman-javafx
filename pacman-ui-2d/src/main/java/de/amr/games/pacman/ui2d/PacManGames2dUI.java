@@ -200,7 +200,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         try {
             if (currentPage == gamePage) {
                 // 2D scenes only:
-                currentGameScene().ifPresent(gameScene -> gameScene.draw(currentGameSceneConfiguration().renderer()));
+                currentGameScene().ifPresent(gameScene -> gameScene.draw(currentGameSceneConfig().renderer()));
                 gamePage.updateDashboard();
                 flashMessageLayer.update();
             } else {
@@ -279,7 +279,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     private void configureGameScene2D(GameScene2D gameScene2D) {
-        var gameSceneConfig = currentGameSceneConfiguration();
+        var gameSceneConfig = currentGameSceneConfig();
         gamePage.setWorldRenderer(gameSceneConfig.renderer());
         gameScene2D.backgroundColorPy.bind(PY_CANVAS_BG_COLOR);
     }
@@ -309,12 +309,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void execFirstCalledAction(Stream<GameAction> actions) {
+    public void execAction(Stream<GameAction> actions) {
         actions.filter(this::isActionCalled).findFirst().ifPresent(action -> action.execute(this));
     }
 
     @Override
-    public void execFirstCalledActionOrElse(Stream<GameAction> actions, Runnable defaultAction) {
+    public void execActionOrElse(Stream<GameAction> actions, Runnable defaultAction) {
         actions.filter(this::isActionCalled).findFirst().ifPresentOrElse(action -> action.execute(this), defaultAction);
     }
 
@@ -356,7 +356,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public GameSceneConfiguration gameSceneConfiguration(GameVariant variant) {
+    public GameSceneConfiguration gameSceneConfig(GameVariant variant) {
         return gameSceneConfigByVariant.get(variant);
     }
 
@@ -370,13 +370,13 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         if (currentGameScene().isEmpty()) {
             return false;
         }
-        return currentGameSceneConfiguration().gameSceneHasID(currentGameScene().get(), sceneID);
+        return currentGameSceneConfig().gameSceneHasID(currentGameScene().get(), sceneID);
     }
 
     @Override
     public void updateGameScene(boolean reloadCurrent) {
         GameScene currentGameScene = gameScenePy.get();
-        GameScene nextGameScene = currentGameSceneConfiguration().selectGameScene(this);
+        GameScene nextGameScene = currentGameSceneConfig().selectGameScene(this);
         boolean sceneChanging = nextGameScene != currentGameScene;
         if (reloadCurrent || sceneChanging) {
             if (currentGameScene != null) {
@@ -507,7 +507,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public void onLevelCreated(GameEvent event) {
-        currentGameSceneConfiguration().createActorAnimations(game());
+        currentGameSceneConfig().createActorAnimations(game());
         Logger.info("Actor animations created. ({} level #{})", gameVariant(), game().levelNumber());
         if (game().isDemoLevel()) {
             sounds().setEnabled(false);

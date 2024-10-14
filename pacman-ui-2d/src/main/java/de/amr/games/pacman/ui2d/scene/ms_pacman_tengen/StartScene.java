@@ -193,7 +193,7 @@ public class StartScene extends GameScene2D {
         }
 
         else {
-            context.execFirstCalledAction(
+            context.execAction(
                 GameAction2D.TEST_LEVELS_BONI,
                 GameAction2D.TEST_LEVELS_TEASERS,
                 GameAction2D.TEST_CUT_SCENES);

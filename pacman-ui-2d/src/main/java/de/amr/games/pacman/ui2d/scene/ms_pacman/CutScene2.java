@@ -54,7 +54,7 @@ public class CutScene2 extends GameScene2D {
         pacMan = new Pac();
         msPacMan = new Pac();
 
-        MsPacManGameSpriteSheet spriteSheet = (MsPacManGameSpriteSheet) context.currentGameSceneConfiguration().spriteSheet();
+        MsPacManGameSpriteSheet spriteSheet = (MsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
 

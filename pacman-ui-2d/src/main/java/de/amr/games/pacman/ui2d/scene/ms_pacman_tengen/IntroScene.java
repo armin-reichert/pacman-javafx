@@ -66,7 +66,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void init() {
-        TengenMsPacManGameSpriteSheet spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfiguration().spriteSheet();
+        TengenMsPacManGameSpriteSheet spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         context.setScoreVisible(false);
 
         msPacMan = new Pac();
@@ -103,7 +103,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        context.execFirstCalledAction(ACTIONS);
+        context.execAction(ACTIONS);
     }
 
     @Override

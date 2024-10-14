@@ -86,7 +86,7 @@ public class IntroScene extends GameScene2D {
         ghostIndex = 0;
         waitBeforeRising = 0;
 
-        MsPacManGameSpriteSheet spriteSheet = (MsPacManGameSpriteSheet) context.currentGameSceneConfiguration().spriteSheet();
+        MsPacManGameSpriteSheet spriteSheet = (MsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
         for (Ghost ghost : ghosts) {
@@ -108,7 +108,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        context.execFirstCalledAction(ACTIONS);
+        context.execAction(ACTIONS);
     }
 
     @Override

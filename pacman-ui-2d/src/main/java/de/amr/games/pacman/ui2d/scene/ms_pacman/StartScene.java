@@ -36,12 +36,12 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        context.execFirstCalledAction(Stream.of(GameAction2D.ADD_CREDIT, GameAction2D.START_GAME));
+        context.execAction(Stream.of(GameAction2D.ADD_CREDIT, GameAction2D.START_GAME));
     }
 
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
-        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfig().spriteSheet();
         var font8 = renderer.scaledArcadeFont(8);
         var font6 = renderer.scaledArcadeFont(6);
         switch (context.gameVariant()) {

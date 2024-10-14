@@ -66,7 +66,7 @@ public class CutScene3 extends GameScene2D {
         stork = new Entity();
         bag = new Entity();
 
-        TengenMsPacManGameSpriteSheet spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfiguration().spriteSheet();
+        TengenMsPacManGameSpriteSheet spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         mrPacMan.setAnimations(new PacAnimations(spriteSheet));
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
 
@@ -91,7 +91,7 @@ public class CutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
-        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfig().spriteSheet();
         GameRenderer tr = (GameRenderer) renderer;
         String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
         Color color = context.assets().color(assetPrefix + ".color.clapperboard");

@@ -70,7 +70,7 @@ public class CutScene1 extends GameScene2D {
         pinky = Ghost.pinky();
         heart = new Entity();
 
-        TengenMsPacManGameSpriteSheet spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfiguration().spriteSheet();
+        TengenMsPacManGameSpriteSheet spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         msPac.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
         inky.setAnimations(new GhostAnimations(spriteSheet, inky.id()));

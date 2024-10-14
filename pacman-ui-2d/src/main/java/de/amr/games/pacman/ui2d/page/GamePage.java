@@ -148,7 +148,7 @@ public class GamePage extends StackPane implements Page {
 
     @Override
     public void handleInput() {
-        context.execFirstCalledActionOrElse(GAME_ACTIONS.stream(),
+        context.execActionOrElse(GAME_ACTIONS.stream(),
             () -> context.currentGameScene().ifPresent(GameScene::handleInput));
     }
 

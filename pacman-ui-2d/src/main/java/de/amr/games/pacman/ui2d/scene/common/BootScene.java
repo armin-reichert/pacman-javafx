@@ -67,7 +67,7 @@ public class BootScene extends GameScene2D {
     }
 
     private void paintRandomSprites(GameWorldRenderer renderer) {
-        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfig().spriteSheet();
         renderer.clearCanvas();
         for (int row = 0; row < GameModel.ARCADE_MAP_TILES_Y / 2; ++row) {
             if (RND.nextInt(100) > 20) {
