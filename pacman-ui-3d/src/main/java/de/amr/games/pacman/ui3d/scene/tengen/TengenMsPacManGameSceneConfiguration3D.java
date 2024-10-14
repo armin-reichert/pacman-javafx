@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui3d.scene.tengen;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneID;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameSceneConfiguration;
+import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui3d.PlayScene3D;
 

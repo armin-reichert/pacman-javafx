@@ -6,8 +6,8 @@ package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.pacmanxxl.MapSelectionMode;
-import de.amr.games.pacman.model.pacmanxxl.PacManXXLGame;
+import de.amr.games.pacman.model.pacman_xxl.MapSelectionMode;
+import de.amr.games.pacman.model.pacman_xxl.PacManXXLGame;
 import de.amr.games.pacman.ui2d.GameContext;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;

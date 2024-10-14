@@ -9,10 +9,10 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
+import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.model.pacman.PacManArcadeGame;
-import de.amr.games.pacman.model.pacmanxxl.PacManXXLGame;
-import de.amr.games.pacman.model.tengen.TengenMsPacManGame;
+import de.amr.games.pacman.model.pacman_xxl.PacManXXLGame;
+import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import org.tinylog.Logger;
 
 import java.io.File;

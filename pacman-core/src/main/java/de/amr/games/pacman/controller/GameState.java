@@ -13,7 +13,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.pacmanxxl.PacManXXLGame;
+import de.amr.games.pacman.model.pacman_xxl.PacManXXLGame;
 
 import java.util.HashMap;
 import java.util.Map;

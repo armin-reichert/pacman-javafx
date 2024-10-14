@@ -2,11 +2,11 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.scene.tengen;
+package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.tengen.TengenMsPacManGame;
+import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
@@ -16,8 +16,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.scene.tengen.GameRenderer.TENGEN_BABY_BLUE;
-import static de.amr.games.pacman.ui2d.scene.tengen.GameRenderer.TENGEN_YELLOW;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.GameRenderer.TENGEN_BABY_BLUE;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.GameRenderer.TENGEN_YELLOW;
 
 /**
  * @author Armin Reichert

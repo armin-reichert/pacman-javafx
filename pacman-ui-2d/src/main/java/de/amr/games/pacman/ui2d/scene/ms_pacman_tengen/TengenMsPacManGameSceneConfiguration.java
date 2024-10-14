@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui2d.scene.tengen;
+package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;

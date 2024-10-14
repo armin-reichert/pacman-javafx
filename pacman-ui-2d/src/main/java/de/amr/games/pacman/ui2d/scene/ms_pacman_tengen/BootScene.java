@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui2d.scene.tengen;
+package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
@@ -12,7 +12,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.ui2d.scene.tengen.GameRenderer.shadeOfBlue;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.GameRenderer.shadeOfBlue;
 
 public class BootScene extends GameScene2D {
 
