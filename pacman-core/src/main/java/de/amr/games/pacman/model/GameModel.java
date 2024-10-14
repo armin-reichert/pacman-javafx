@@ -38,6 +38,35 @@ public abstract class GameModel {
     public static final int  ARCADE_MAP_SIZE_X = ARCADE_MAP_TILES_X * TS;
     public static final int  ARCADE_MAP_SIZE_Y = ARCADE_MAP_TILES_Y * TS;
 
+    // Animation IDs
+
+    // Common
+    public static final String ANIM_PAC_MUNCHING = "munching";
+    public static final String ANIM_PAC_DYING = "dying";
+
+    // Pac-Man game specific
+    public static final String ANIM_PAC_BIG = "big_pacman";
+
+    // Ms. Pac-Man game specific
+    public static final String ANIM_PAC_HUSBAND_MUNCHING = "husband_munching";
+
+    // Ms. Pac-Man (Tengen) game specific
+    public static final String ANIM_PAC_MUNCHING_BOOSTER = "munching_booster";
+    public static final String ANIM_PAC_HUSBAND_MUNCHING_BOOSTER = "husband_munching_booster";
+
+    // Common ghost animations
+    public static final String ANIM_GHOST_NORMAL     = "normal";
+    public static final String ANIM_GHOST_FRIGHTENED = "frightened";
+    public static final String ANIM_GHOST_EYES       = "eyes";
+    public static final String ANIM_GHOST_FLASHING   = "flashing";
+    public static final String ANIM_GHOST_NUMBER     = "number";
+
+    // Pac-Man game specific
+    public static final String ANIM_BLINKY_DAMAGED   = "damaged";
+    public static final String ANIM_BLINKY_STRETCHED = "stretched";
+    public static final String ANIM_BLINKY_PATCHED   = "patched";
+    public static final String ANIM_BLINKY_NAKED     = "naked";
+
     // Ghost IDs
     public static final byte RED_GHOST = 0, PINK_GHOST = 1, CYAN_GHOST = 2, ORANGE_GHOST = 3;
 
@@ -352,7 +381,7 @@ public abstract class GameModel {
             ghost.setPosition(world.ghostPosition(ghost.id()));
             ghost.setMoveAndWishDir(world.ghostDirection(ghost.id()));
             ghost.setState(LOCKED);
-            ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
+            ghost.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
             ghost.resetAnimation();
         });
         powerTimer.resetIndefinitely();
@@ -361,7 +390,7 @@ public abstract class GameModel {
     }
 
     protected void initPacAnimation() {
-        pac.selectAnimation(Pac.ANIM_MUNCHING);
+        pac.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
         pac.animations().ifPresent(Animations::resetSelected);
     }
 

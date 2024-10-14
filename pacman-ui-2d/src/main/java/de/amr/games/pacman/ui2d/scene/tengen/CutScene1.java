@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
@@ -143,28 +144,28 @@ public class CutScene1 extends GameScene2D {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
             pacMan.setSpeed(SPEED_PAC_CHASING);
-            pacMan.selectAnimation(Pac.ANIM_HUSBAND_MUNCHING);
+            pacMan.selectAnimation(GameModel.ANIM_PAC_HUSBAND_MUNCHING);
             pacMan.animations().ifPresent(Animations::startSelected);
             pacMan.show();
 
             inky.setMoveAndWishDir(Direction.RIGHT);
             inky.setPosition(pacMan.position().minus(TS * 6, 0));
             inky.setSpeed(SPEED_GHOST_CHASING);
-            inky.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
+            inky.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
             inky.startAnimation();
             inky.show();
 
             msPac.setMoveDir(Direction.LEFT);
             msPac.setPosition(TS * 30, LOWER_LANE_Y);
             msPac.setSpeed(SPEED_PAC_CHASING);
-            msPac.selectAnimation(Pac.ANIM_MUNCHING);
+            msPac.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
             msPac.animations().ifPresent(Animations::startSelected);
             msPac.show();
 
             pinky.setMoveAndWishDir(Direction.LEFT);
             pinky.setPosition(msPac.position().plus(TS * 6, 0));
             pinky.setSpeed(SPEED_GHOST_CHASING);
-            pinky.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
+            pinky.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
             pinky.startAnimation();
             pinky.show();
 

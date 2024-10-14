@@ -91,10 +91,10 @@ public class IntroScene extends GameScene2D {
         GameSpriteSheet spriteSheet = context.assets().get("ms_pacman.spritesheet");
 
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
-        msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
+        msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
         for (Ghost ghost : ghosts) {
             ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
-            ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
+            ghost.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
         }
         sceneController.restart(SceneState.STARTING);
     }
@@ -222,7 +222,7 @@ public class IntroScene extends GameScene2D {
                 intro.msPacMan.setMoveDir(Direction.LEFT);
                 intro.msPacMan.setSpeed(SPEED);
                 intro.msPacMan.setVisible(true);
-                intro.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
+                intro.msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
                 intro.msPacMan.animations().ifPresent(Animations::startSelected);
                 for (Ghost ghost : intro.ghosts) {
                     ghost.setPosition(TS * 33.5f, TS * 20);

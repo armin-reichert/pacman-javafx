@@ -296,7 +296,7 @@ public class TengenMsPacManGame extends GameModel {
             baseSpeed *= BOOSTER_FACTOR;
         }
         pac.setBaseSpeed(baseSpeed);
-        pac.selectAnimation(boosterActive ? Pac.ANIM_MUNCHING_BOOSTER : Pac.ANIM_MUNCHING);
+        pac.selectAnimation(boosterActive ? GameModel.ANIM_PAC_MUNCHING_BOOSTER : GameModel.ANIM_PAC_MUNCHING);
         Logger.info("Ms. Pac-Man base speed is {0.00} px/s", baseSpeed);
     }
 
@@ -383,7 +383,7 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     protected void initPacAnimation() {
-        pac.selectAnimation(isBoosterActive() ? Pac.ANIM_MUNCHING_BOOSTER : Pac.ANIM_MUNCHING);
+        pac.selectAnimation(isBoosterActive() ? GameModel.ANIM_PAC_MUNCHING_BOOSTER : GameModel.ANIM_PAC_MUNCHING);
         pac.animations().ifPresent(Animations::resetSelected);
     }
 

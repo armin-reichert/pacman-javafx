@@ -197,11 +197,11 @@ public class GameRenderer implements GameWorldRenderer {
                 SpriteAnimation spriteAnimation = spriteAnimations.current();
                 if (spriteAnimation != null) {
                     switch (animations.currentAnimationName()) {
-                        case Pac.ANIM_MUNCHING,
-                             Pac.ANIM_MUNCHING_BOOSTER,
-                             Pac.ANIM_HUSBAND_MUNCHING,
-                             Pac.ANIM_HUSBAND_MUNCHING_BOOSTER -> drawRotatedTowardsDir(pac, pac.moveDir(), spriteAnimation);
-                        case Pac.ANIM_DYING -> {
+                        case GameModel.ANIM_PAC_MUNCHING,
+                             GameModel.ANIM_PAC_MUNCHING_BOOSTER,
+                             GameModel.ANIM_PAC_HUSBAND_MUNCHING,
+                             GameModel.ANIM_PAC_HUSBAND_MUNCHING_BOOSTER -> drawRotatedTowardsDir(pac, pac.moveDir(), spriteAnimation);
+                        case GameModel.ANIM_PAC_DYING -> {
                             Direction dir = Direction.UP;
                             if (spriteAnimation.frameIndex() < 11) {
                                 dir = switch (spriteAnimation.frameIndex() % 4) {

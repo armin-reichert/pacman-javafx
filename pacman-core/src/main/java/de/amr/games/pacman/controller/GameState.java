@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.pacmanxxl.PacManXXLGame;
 
 import java.util.HashMap;
@@ -246,7 +245,7 @@ public enum GameState implements FsmState<GameModel> {
             }
             else if (timer.currentTick() == TICK_HIDE_GHOSTS) {
                 game.ghosts().forEach(Ghost::hide);
-                game.pac().selectAnimation(Pac.ANIM_DYING);
+                game.pac().selectAnimation(GameModel.ANIM_PAC_DYING);
                 game.pac().resetAnimation();
             }
             else if (timer.currentTick() == TICK_START_PAC_ANIMATION) {

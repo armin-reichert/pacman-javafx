@@ -16,17 +16,6 @@ import de.amr.games.pacman.steering.Steering;
  */
 public class Pac extends Creature implements AnimatedEntity {
 
-    //TODO move these elsewhere
-    public static final String ANIM_MUNCHING = "munching";
-    /** In Tengen there is pac booster node */
-    public static final String ANIM_MUNCHING_BOOSTER = "munching_booster";
-    public static final String ANIM_DYING = "dying";
-    /** In Pac-Man cutscene, a big Pac-Man appears. */
-    public static final String ANIM_BIG_PACMAN = "big_pacman";
-    /** In Ms. Pac-Man cutscenes, also Ms. PacMan's husband appears. */
-    public static final String ANIM_HUSBAND_MUNCHING = "husband_munching";
-    public static final String ANIM_HUSBAND_MUNCHING_BOOSTER = "husband_munching_booster";
-
     public static final byte REST_INDEFINITELY = -1;
 
     private String name;
@@ -98,7 +87,7 @@ public class Pac extends Creature implements AnimatedEntity {
         starvingTicks = 0;
         corneringSpeedUp = 1.5f; // no real cornering implementation but better than nothing
         if (animations != null) {
-            animations.select(ANIM_MUNCHING, 0);
+            animations.select(GameModel.ANIM_PAC_MUNCHING, 0);
         }
     }
 
@@ -143,7 +132,7 @@ public class Pac extends Creature implements AnimatedEntity {
         setSpeed(0);
         setRestingTicks(Pac.REST_INDEFINITELY);
         animations.stopSelected();
-        selectAnimation(Pac.ANIM_MUNCHING);
+        selectAnimation(GameModel.ANIM_PAC_MUNCHING);
         animations.resetSelected();
     }
 

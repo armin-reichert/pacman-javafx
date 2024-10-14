@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.scene.tengen;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -58,11 +59,11 @@ public class GhostAnimations extends SpriteAnimationCollection {
             .end();
 
         add(Map.of(
-            Ghost.ANIM_GHOST_NORMAL, normal,
-            Ghost.ANIM_GHOST_FRIGHTENED, frightened,
-            Ghost.ANIM_GHOST_FLASHING, flashing,
-            Ghost.ANIM_GHOST_EYES, eyes,
-            Ghost.ANIM_GHOST_NUMBER, number));
+            GameModel.ANIM_GHOST_NORMAL, normal,
+            GameModel.ANIM_GHOST_FRIGHTENED, frightened,
+            GameModel.ANIM_GHOST_FLASHING, flashing,
+            GameModel.ANIM_GHOST_EYES, eyes,
+            GameModel.ANIM_GHOST_NUMBER, number));
 
         // TODO check this
         eyes.start();
@@ -73,18 +74,18 @@ public class GhostAnimations extends SpriteAnimationCollection {
     @Override
     public void select(String name, int index) {
         super.select(name, index);
-        if (Ghost.ANIM_GHOST_NUMBER.equals(name)) {
-            animation(Ghost.ANIM_GHOST_NUMBER).setFrameIndex(index);
+        if (GameModel.ANIM_GHOST_NUMBER.equals(name)) {
+            animation(GameModel.ANIM_GHOST_NUMBER).setFrameIndex(index);
         }
     }
 
     @Override
     protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
         if (entity instanceof Ghost ghost) {
-            if (currently(Ghost.ANIM_GHOST_NORMAL)) {
+            if (currently(GameModel.ANIM_GHOST_NORMAL)) {
                 return spriteSheet.ghostNormalSprites(ghost.id(), ghost.wishDir());
             }
-            if (currently(Ghost.ANIM_GHOST_EYES)) {
+            if (currently(GameModel.ANIM_GHOST_EYES)) {
                 return spriteSheet.ghostEyesSprites(ghost.wishDir());
             }
         }

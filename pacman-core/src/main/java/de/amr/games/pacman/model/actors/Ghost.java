@@ -28,16 +28,6 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public class Ghost extends Creature implements AnimatedEntity {
 
-    public static final String ANIM_GHOST_NORMAL     = "normal";
-    public static final String ANIM_GHOST_FRIGHTENED = "frightened";
-    public static final String ANIM_GHOST_EYES       = "eyes";
-    public static final String ANIM_GHOST_FLASHING   = "flashing";
-    public static final String ANIM_GHOST_NUMBER     = "number";
-    public static final String ANIM_BLINKY_DAMAGED   = "damaged";
-    public static final String ANIM_BLINKY_STRETCHED = "stretched";
-    public static final String ANIM_BLINKY_PATCHED   = "patched";
-    public static final String ANIM_BLINKY_NAKED     = "naked";
-
     public static Ghost blinky() {
         var ghost = new Ghost(GameModel.RED_GHOST);
         ghost.setName("Blinky");
@@ -252,9 +242,9 @@ public class Ghost extends Creature implements AnimatedEntity {
         this.state = state;
         // onEntry action:
         switch (state) {
-            case LOCKED, HUNTING_PAC -> selectAnimation(ANIM_GHOST_NORMAL);
-            case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(ANIM_GHOST_EYES);
-            case FRIGHTENED -> selectAnimation(ANIM_GHOST_FRIGHTENED);
+            case LOCKED, HUNTING_PAC -> selectAnimation(GameModel.ANIM_GHOST_NORMAL);
+            case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(GameModel.ANIM_GHOST_EYES);
+            case FRIGHTENED -> selectAnimation(GameModel.ANIM_GHOST_FRIGHTENED);
             case EATEN -> {}
         }
     }
@@ -279,7 +269,7 @@ public class Ghost extends Creature implements AnimatedEntity {
 
     public void eaten(int index) {
         setState(EATEN);
-        selectAnimation(ANIM_GHOST_NUMBER, index);
+        selectAnimation(GameModel.ANIM_GHOST_NUMBER, index);
     }
 
     // --- LOCKED ---
@@ -305,7 +295,7 @@ public class Ghost extends Creature implements AnimatedEntity {
         if (game.powerTimer().isRunning() && !game.victims().contains(this)) {
             updateFrightenedAnimation(game);
         } else {
-            selectAnimation(ANIM_GHOST_NORMAL);
+            selectAnimation(GameModel.ANIM_GHOST_NORMAL);
         }
     }
 
@@ -348,7 +338,7 @@ public class Ghost extends Creature implements AnimatedEntity {
         if (game.powerTimer().isRunning() && !game.victims().contains(this)) {
             updateFrightenedAnimation(game);
         } else {
-            selectAnimation(ANIM_GHOST_NORMAL);
+            selectAnimation(GameModel.ANIM_GHOST_NORMAL);
         }
     }
 
@@ -390,9 +380,9 @@ public class Ghost extends Creature implements AnimatedEntity {
 
     private void updateFrightenedAnimation(GameModel game) {
         if (game.isPowerFadingStarting()) {
-            selectAnimation(ANIM_GHOST_FLASHING);
+            selectAnimation(GameModel.ANIM_GHOST_FLASHING);
         } else if (!game.isPowerFading()) {
-            selectAnimation(ANIM_GHOST_FRIGHTENED);
+            selectAnimation(GameModel.ANIM_GHOST_FRIGHTENED);
         }
     }
 

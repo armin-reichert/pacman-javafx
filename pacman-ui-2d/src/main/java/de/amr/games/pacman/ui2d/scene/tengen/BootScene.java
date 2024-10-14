@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui2d.scene.tengen;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
@@ -29,7 +30,7 @@ public class BootScene extends GameScene2D {
         grayScreen = false;
         ghost = Ghost.blinky();
         ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
-        ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
+        ghost.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
     }
 
     @Override

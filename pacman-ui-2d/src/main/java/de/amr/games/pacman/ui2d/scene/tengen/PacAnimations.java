@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.tengen;
 
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -57,24 +58,24 @@ public class PacAnimations extends SpriteAnimationCollection {
             .loop();
 
         add(Map.of(
-            Pac.ANIM_MUNCHING, munching,
-            Pac.ANIM_MUNCHING_BOOSTER, munchingBooster,
-            Pac.ANIM_DYING, dying,
-            Pac.ANIM_HUSBAND_MUNCHING, husbandMunching,
-            Pac.ANIM_HUSBAND_MUNCHING_BOOSTER, husbandMunchingBooster
+            GameModel.ANIM_PAC_MUNCHING, munching,
+            GameModel.ANIM_PAC_MUNCHING_BOOSTER, munchingBooster,
+            GameModel.ANIM_PAC_DYING, dying,
+            GameModel.ANIM_PAC_HUSBAND_MUNCHING, husbandMunching,
+            GameModel.ANIM_PAC_HUSBAND_MUNCHING_BOOSTER, husbandMunchingBooster
         ));
     }
 
     @Override
     protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
         if (entity instanceof Pac msPacMan) {
-            if (currently(Pac.ANIM_MUNCHING)) {
+            if (currently(GameModel.ANIM_PAC_MUNCHING)) {
                 return TengenMsPacManGameSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT;
             }
-            if (currently(Pac.ANIM_MUNCHING_BOOSTER)) {
+            if (currently(GameModel.ANIM_PAC_MUNCHING_BOOSTER)) {
                 return TengenMsPacManGameSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER;
             }
-            if (currently(Pac.ANIM_HUSBAND_MUNCHING)) {
+            if (currently(GameModel.ANIM_PAC_HUSBAND_MUNCHING)) {
                 return spriteSheet.pacManMunchingSprites(msPacMan.moveDir());
             }
         }

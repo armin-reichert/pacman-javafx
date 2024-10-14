@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
@@ -138,12 +139,12 @@ public class CutScene3 extends GameScene2D {
         void enterStateDeliverJunior() {
             mrPacMan.setMoveDir(Direction.RIGHT);
             mrPacMan.setPosition(TS * 3, LANE_Y - 4);
-            mrPacMan.selectAnimation(Pac.ANIM_HUSBAND_MUNCHING);
+            mrPacMan.selectAnimation(GameModel.ANIM_PAC_HUSBAND_MUNCHING);
             mrPacMan.show();
 
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.setPosition(TS * 5, LANE_Y - 4);
-            msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
+            msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
             msPacMan.show();
 
             stork.setPosition(TS * 30, TS * 12);

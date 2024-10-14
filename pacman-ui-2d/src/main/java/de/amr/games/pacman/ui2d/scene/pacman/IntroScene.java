@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -271,7 +272,7 @@ public class IntroScene extends GameScene2D {
                 intro.pacMan.setMoveDir(Direction.LEFT);
                 intro.pacMan.setSpeed(CHASE_SPEED);
                 intro.pacMan.show();
-                intro.pacMan.selectAnimation(Pac.ANIM_MUNCHING);
+                intro.pacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
                 intro.pacMan.animations().ifPresent(Animations::startSelected);
                 Stream.of(intro.ghosts).forEach(ghost -> {
                     ghost.setState(GhostState.HUNTING_PAC);
@@ -279,7 +280,7 @@ public class IntroScene extends GameScene2D {
                     ghost.setMoveAndWishDir(Direction.LEFT);
                     ghost.setSpeed(CHASE_SPEED);
                     ghost.show();
-                    ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
+                    ghost.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
                     ghost.startAnimation();
                 });
             }
@@ -297,7 +298,7 @@ public class IntroScene extends GameScene2D {
                 else if (intro.pacMan.posX() <= TS * LEFT_TILE_X + HTS) {
                     Stream.of(intro.ghosts).forEach(ghost -> {
                         ghost.setState(FRIGHTENED);
-                        ghost.selectAnimation(Ghost.ANIM_GHOST_FRIGHTENED);
+                        ghost.selectAnimation(GameModel.ANIM_GHOST_FRIGHTENED);
                         ghost.setMoveAndWishDir(Direction.RIGHT);
                         ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
                         ghost.move();
@@ -342,7 +343,7 @@ public class IntroScene extends GameScene2D {
                             ghost.stopAnimation();
                         });
                         victim.setState(EATEN);
-                        victim.selectAnimation(Ghost.ANIM_GHOST_NUMBER, intro.victims.size() - 1);
+                        victim.selectAnimation(GameModel.ANIM_GHOST_NUMBER, intro.victims.size() - 1);
                     });
 
                 // After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on

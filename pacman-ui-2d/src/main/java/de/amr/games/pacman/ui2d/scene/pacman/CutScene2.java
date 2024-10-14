@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.scene.pacman;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
@@ -40,9 +41,9 @@ public class CutScene2 extends GameScene2D {
         pac.setAnimations(new PacAnimations(spriteSheet));
         blinky = Ghost.blinky();
         var blinkyAnimations = new GhostAnimations(spriteSheet, blinky.id());
-        blinkyNormal = blinkyAnimations.animation(Ghost.ANIM_GHOST_NORMAL);
-        blinkyStretching = blinkyAnimations.animation(Ghost.ANIM_BLINKY_STRETCHED);
-        blinkyDamaged = blinkyAnimations.animation(Ghost.ANIM_BLINKY_DAMAGED);
+        blinkyNormal = blinkyAnimations.animation(GameModel.ANIM_GHOST_NORMAL);
+        blinkyStretching = blinkyAnimations.animation(GameModel.ANIM_BLINKY_STRETCHED);
+        blinkyDamaged = blinkyAnimations.animation(GameModel.ANIM_BLINKY_DAMAGED);
         blinky.setAnimations(blinkyAnimations);
         blinky.setSpeed(0);
         blinky.hide();
@@ -67,7 +68,7 @@ public class CutScene2 extends GameScene2D {
                 pac.placeAtTile(28, 20, 0, 0);
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.15f);
-                pac.selectAnimation(Pac.ANIM_MUNCHING);
+                pac.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
                 pac.animations().ifPresent(Animations::startSelected);
                 pac.show();
             }
@@ -75,7 +76,7 @@ public class CutScene2 extends GameScene2D {
                 blinky.placeAtTile(28, 20, -3, 0);
                 blinky.setMoveAndWishDir(Direction.LEFT);
                 blinky.setSpeed(1.25f);
-                blinky.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
+                blinky.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
                 blinky.startAnimation();
                 blinky.show();
             }
@@ -90,7 +91,7 @@ public class CutScene2 extends GameScene2D {
                 blinky.setSpeed(0);
                 blinkyStretching.nextFrame(); // Rapture
             }
-            case ANIMATION_START + 329 -> blinky.selectAnimation(Ghost.ANIM_BLINKY_DAMAGED); // Eyes up
+            case ANIMATION_START + 329 -> blinky.selectAnimation(GameModel.ANIM_BLINKY_DAMAGED); // Eyes up
             case ANIMATION_START + 389 -> blinkyDamaged.nextFrame(); // Eyes right-down
             case ANIMATION_START + 508 -> {
                 blinky.setVisible(false);
