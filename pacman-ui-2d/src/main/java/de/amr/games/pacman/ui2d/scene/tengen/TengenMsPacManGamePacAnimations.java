@@ -46,7 +46,14 @@ public class TengenMsPacManGamePacAnimations extends SpriteAnimationCollection {
         var husbandMunching = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man's husband munching")
-            .sprites(spriteSheet.pacManMunchingSprites(Direction.LEFT))
+            .sprites(TengenMsPacManGameSpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT)
+            .frameTicks(2)
+            .loop();
+
+        var husbandMunchingBooster = SpriteAnimation
+            .spriteSheet(spriteSheet)
+            .info("Ms. Pac-Man's husband munching booster mode")
+            .sprites(TengenMsPacManGameSpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
             .frameTicks(2)
             .loop();
 
@@ -54,7 +61,8 @@ public class TengenMsPacManGamePacAnimations extends SpriteAnimationCollection {
             Pac.ANIM_MUNCHING, munching,
             Pac.ANIM_MUNCHING_BOOSTER, munchingBooster,
             Pac.ANIM_DYING, dying,
-            Pac.ANIM_HUSBAND_MUNCHING, husbandMunching
+            Pac.ANIM_HUSBAND_MUNCHING, husbandMunching,
+            Pac.ANIM_HUSBAND_MUNCHING_BOOSTER, husbandMunchingBooster
         ));
     }
 

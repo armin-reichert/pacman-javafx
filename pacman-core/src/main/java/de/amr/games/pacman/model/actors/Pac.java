@@ -16,6 +16,7 @@ import de.amr.games.pacman.steering.Steering;
  */
 public class Pac extends Creature implements AnimatedEntity {
 
+    //TODO move these elsewhere
     public static final String ANIM_MUNCHING = "munching";
     /** In Tengen there is pac booster node */
     public static final String ANIM_MUNCHING_BOOSTER = "munching_booster";
@@ -24,6 +25,7 @@ public class Pac extends Creature implements AnimatedEntity {
     public static final String ANIM_BIG_PACMAN = "big_pacman";
     /** In Ms. Pac-Man cutscenes, also Ms. PacMan's husband appears. */
     public static final String ANIM_HUSBAND_MUNCHING = "husband_munching";
+    public static final String ANIM_HUSBAND_MUNCHING_BOOSTER = "husband_munching_booster";
 
     public static final byte REST_INDEFINITELY = -1;
 

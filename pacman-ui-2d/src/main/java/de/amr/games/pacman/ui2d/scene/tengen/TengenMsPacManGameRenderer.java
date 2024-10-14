@@ -180,25 +180,27 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     public void drawAnimatedEntity(AnimatedEntity guy) {
         ctx().save();
         ctx().setImageSmoothing(false);
-        if (guy instanceof Pac msPacMan) {
-            drawMsPacMan(msPacMan);
+        if (guy instanceof Pac pac) {
+            drawMsOrMrPacMan(pac);
         } else {
             GameWorldRenderer.super.drawAnimatedEntity(guy);
         }
         ctx().restore();
     }
 
-    private void drawMsPacMan(Pac msPacMan) {
-        if (!msPacMan.isVisible()) {
+    private void drawMsOrMrPacMan(Pac pac) {
+        if (!pac.isVisible()) {
             return;
         }
-        msPacMan.animations().ifPresent(animations -> {
+        pac.animations().ifPresent(animations -> {
             if (animations instanceof SpriteAnimationCollection spriteAnimations) {
                 SpriteAnimation spriteAnimation = spriteAnimations.current();
                 if (spriteAnimation != null) {
                     switch (animations.currentAnimationName()) {
                         case Pac.ANIM_MUNCHING,
-                             Pac.ANIM_MUNCHING_BOOSTER -> drawRotatedTowardsDir(msPacMan, msPacMan.moveDir(), spriteAnimation);
+                             Pac.ANIM_MUNCHING_BOOSTER,
+                             Pac.ANIM_HUSBAND_MUNCHING,
+                             Pac.ANIM_HUSBAND_MUNCHING_BOOSTER -> drawRotatedTowardsDir(pac, pac.moveDir(), spriteAnimation);
                         case Pac.ANIM_DYING -> {
                             Direction dir = Direction.UP;
                             if (spriteAnimation.frameIndex() < 11) {
@@ -209,12 +211,12 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
                                     case 3 -> Direction.RIGHT;
                                 };
                             }
-                            drawRotatedTowardsDir(msPacMan, dir, spriteAnimation);
+                            drawRotatedTowardsDir(pac, dir, spriteAnimation);
                         }
-                        default -> GameWorldRenderer.super.drawAnimatedEntity(msPacMan);
+                        default -> GameWorldRenderer.super.drawAnimatedEntity(pac);
                     }
                 } else {
-                    Logger.error("No current animation for character {}", msPacMan);
+                    Logger.error("No current animation for character {}", pac);
                 }
             }
         });

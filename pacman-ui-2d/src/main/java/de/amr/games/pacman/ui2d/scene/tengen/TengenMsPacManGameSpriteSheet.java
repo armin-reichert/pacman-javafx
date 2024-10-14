@@ -31,15 +31,31 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
     static final RectArea EASY_SPRITE    = rect(229, 149, 18, 7);
 
     static final RectArea[] MS_PAC_MUNCHING_SPRITES_LEFT = {
-        rect(32, 15, 15, 15), // closed
         rect(51, 15, 15, 15), // open
-        rect(66, 15, 15, 15)  // wide open
+        rect(66, 15, 15, 15), // wide open
+        rect(51, 15, 15, 15), // open
+        rect(32, 15, 15, 15), // closed
     };
 
     static final RectArea[] MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER = {
-        rect(86, 15, 15, 15),  // closed
         rect(105, 15, 15, 15), // open
-        rect(120, 15, 15, 15)  // wide open
+        rect(120, 15, 15, 15), // wide open
+        rect(105, 15, 15, 15), // open
+        rect( 86, 15, 15, 15), // closed
+    };
+
+    static final RectArea[] MR_PAC_MUNCHING_SPRITES_LEFT = {
+        rect(51, 42, 15, 15), // open
+        rect(66, 42, 15, 15), // wide open
+        rect(51, 42, 15, 15), // open
+        rect(32, 42, 15, 15), // closed
+    };
+
+    static final RectArea[] MR_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER = {
+        rect(105, 42, 15, 15), // open
+        rect(120, 42, 15, 15), // wide open
+        rect( 86, 42, 15, 15), // closed
+        rect(120, 42, 15, 15), // wide open
     };
 
     // there is only a sprite pointing left in the sprite sheet, renderer makes the animation
@@ -143,10 +159,6 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
         return MS_PAC_MUNCHING_SPRITES_LEFT;
     }
 
-    public RectArea[] pacMunchingSpritesNormal() { return MS_PAC_MUNCHING_SPRITES_LEFT; }
-
-    public RectArea[] pacMunchingSpritesBooster() { return MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER; }
-
     @Override
     public RectArea[] pacDyingSprites() {
         return MS_PAC_ROTATING_SPRITES;
@@ -219,7 +231,7 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
 
     @Override
     public RectArea[] pacManMunchingSprites(Direction dir) {
-        return NO_SPRITES; //TODO
+        return MR_PAC_MUNCHING_SPRITES_LEFT;
     }
 
     @Override

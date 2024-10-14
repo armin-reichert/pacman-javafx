@@ -24,7 +24,7 @@ public class TengenMsPacManGameSceneConfiguration extends GameSceneConfiguration
         set(GameSceneID.INTRO_SCENE, new TengenMsPacManGameIntroScene());
         set(GameSceneID.START_SCENE, new TengenMsPacManGameStartScene());
         set(GameSceneID.PLAY_SCENE,  new PlayScene2D());
-        set(GameSceneID.CUT_SCENE_1, new MsPacManGameCutScene1());
+        set(GameSceneID.CUT_SCENE_1, new TengenMsPacManGameCutScene1());
         set(GameSceneID.CUT_SCENE_2, new MsPacManGameCutScene2());
         set(GameSceneID.CUT_SCENE_3, new MsPacManGameCutScene3());
 

@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.scene.ms_pacman;
+package de.amr.games.pacman.ui2d.scene.tengen;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
@@ -17,6 +17,9 @@ import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
+import de.amr.games.pacman.ui2d.scene.ms_pacman.ClapperboardAnimation;
+import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameGhostAnimations;
+import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGamePacAnimations;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -31,7 +34,7 @@ import static de.amr.games.pacman.lib.Globals.t;
  *
  * @author Armin Reichert
  */
-public class MsPacManGameCutScene1 extends GameScene2D {
+public class TengenMsPacManGameCutScene1 extends GameScene2D {
 
     static final int UPPER_LANE_Y  = TS * 12;
     static final int MIDDLE_LANE_Y = TS * 18;
@@ -69,10 +72,10 @@ public class MsPacManGameCutScene1 extends GameScene2D {
         heart = new Entity();
 
         GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
-        msPac.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
-        pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
-        inky.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, inky.id()));
-        pinky.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, pinky.id()));
+        msPac.setAnimations(new TengenMsPacManGamePacAnimations(spriteSheet));
+        pacMan.setAnimations(new TengenMsPacManGamePacAnimations(spriteSheet));
+        inky.setAnimations(new TengenMsPacManGameGhostAnimations(spriteSheet, inky.id()));
+        pinky.setAnimations(new TengenMsPacManGameGhostAnimations(spriteSheet, pinky.id()));
         clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
         clapAnimation.start();
 
