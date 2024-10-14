@@ -9,13 +9,11 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
-import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfiguration;
-import de.amr.games.pacman.ui2d.scene.common.GameSceneID;
+import de.amr.games.pacman.ui3d.scene.common.GameSceneConfiguration3D;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
-import org.tinylog.Logger;
 
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
@@ -50,18 +48,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
     @Override
     public void setGameSceneConfiguration(GameVariant variant, GameSceneConfiguration gameSceneConfiguration) {
         super.setGameSceneConfiguration(variant, gameSceneConfiguration);
-        // init 3D play scene if present
-        GameScene gameScene = gameSceneConfiguration.get(GameSceneID.PLAY_SCENE_3D);
-        if (gameScene == null) {
-            Logger.error("No play scene 3D has been registered.");
-            return;
-        }
-        if (gameScene instanceof PlayScene3D playScene3D) {
-            playScene3D.setContext(this);
-            playScene3D.widthProperty().bind(sceneRoot.widthProperty());
-            playScene3D.heightProperty().bind(sceneRoot.heightProperty());
-        } else {
-            Logger.error("Something is wrong: Game scene registered as 3D play scene has unsupported class {}", gameScene.getClass());
+        if (gameSceneConfiguration instanceof GameSceneConfiguration3D config3D) {
+            config3D.initPlayScene3D(this, sceneRoot.widthProperty(), sceneRoot.heightProperty());
         }
     }
 

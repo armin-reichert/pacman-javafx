@@ -6,10 +6,12 @@ import de.amr.games.pacman.ui2d.scene.common.GameSceneID;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSceneConfiguration;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui3d.PlayScene3D;
+import de.amr.games.pacman.ui3d.scene.common.GameSceneConfiguration3D;
+import javafx.beans.value.ObservableDoubleValue;
 
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
 
-public class MsPacManGameSceneConfiguration3D extends MsPacManGameSceneConfiguration {
+public class MsPacManGameSceneConfiguration3D extends MsPacManGameSceneConfiguration implements GameSceneConfiguration3D {
 
     public MsPacManGameSceneConfiguration3D(AssetStorage assets) {
         super(assets);
@@ -24,5 +26,13 @@ public class MsPacManGameSceneConfiguration3D extends MsPacManGameSceneConfigura
             return playScene3D != null ? playScene3D : gameScene2D;
         }
         return gameScene2D;
+    }
+
+    @Override
+    public void initPlayScene3D(GameContext context, ObservableDoubleValue widthProperty, ObservableDoubleValue heightProperty) {
+        PlayScene3D playScene3D = (PlayScene3D) get(GameSceneID.PLAY_SCENE_3D);
+        playScene3D.setContext(context);
+        playScene3D.widthProperty().bind(widthProperty);
+        playScene3D.heightProperty().bind(heightProperty);
     }
 }
