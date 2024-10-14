@@ -25,6 +25,10 @@ import static de.amr.games.pacman.maps.editor.TileMapUtil.TILE_SIZE;
  */
 public class TerrainMapRenderer implements TileMapRenderer {
 
+    static final double OUTER_WALL_WIDTH = 5;
+    static final double OUTER_WALL_FILLING_WIDTH = 2;
+    static final double OBSTACLE_STROKE_WIDTH = 1.5;
+
     public DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
 
     private Color mapBackgroundColor = Color.BLACK;
@@ -34,14 +38,16 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
     @Override
     public void drawMap(GraphicsContext g, TileMap map) {
-        double lineWidth = computeLineWidth(g.getCanvas().getHeight());
+        double baseLineWidth = adaptLineWidthToCanvasSize(g.getCanvas().getHeight());
         g.save();
         g.scale(scaling(), scaling());
         map.doubleStrokePaths().forEach(path -> {
-            drawPath(g, map, path, false,  3 * lineWidth, wallStrokeColor, null);
-            drawPath(g, map, path, false,  1.5 * lineWidth, wallFillColor, null);
+            drawPath(g, map, path, false,  OUTER_WALL_WIDTH * baseLineWidth, wallStrokeColor, null);
+            drawPath(g, map, path, false,  OUTER_WALL_FILLING_WIDTH * baseLineWidth, wallFillColor, null);
         });
-        map.singleStrokePaths().forEach(path -> drawPath(g, map, path, true, lineWidth, wallStrokeColor, wallFillColor));
+        map.singleStrokePaths().forEach(
+            path -> drawPath(g, map, path, true, OBSTACLE_STROKE_WIDTH * baseLineWidth, wallStrokeColor, wallFillColor)
+        );
         map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, door, doorColor));
         g.restore();
     }
@@ -76,7 +82,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         this.doorColor = doorColor;
     }
 
-    private double computeLineWidth(double canvasHeight) {
+    private double adaptLineWidthToCanvasSize(double canvasHeight) {
         // increase line width for small display
         if (canvasHeight <  36 * TILE_SIZE * 1.5) {
             return 1.25;
