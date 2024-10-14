@@ -99,120 +99,119 @@ public class TengenMsPacManGame extends GameModel {
     }
 
 
-    // Got this sequence by looking at a YouTube video (https://www.youtube.com/watch?v=cD0oGudVpbw)
+    /**
+     * Got this sequence from YouTube video (https://www.youtube.com/watch?v=cD0oGudVpbw).
+     */
     // TODO: need real data!
     private static List<WorldMap> miniMaps(List<WorldMap> nonArcadeMaps) {
         var miniMaps = new ArrayList<WorldMap>();
 
         // 1-5
-        addMapToList(34, nonArcadeMaps, miniMaps, MapColoring.PINK_DARKRED);
-        addMapToList(35, nonArcadeMaps, miniMaps, MapColoring.LIGHTBLUE_WHITE_YELLOW);
-        addMapToList(34, nonArcadeMaps, miniMaps, MapColoring.ORANGE_WHITE);
-        addMapToList(35, nonArcadeMaps, miniMaps, MapColoring.DARKBLUE_YELLOW);
-        addMapToList(36, nonArcadeMaps, miniMaps, MapColoring.PINK_YELLOW);
+        useMap(34, nonArcadeMaps, miniMaps, MapColoring.PINK_DARKRED);
+        useMap(35, nonArcadeMaps, miniMaps, MapColoring.LIGHTBLUE_WHITE_YELLOW);
+        useMap(34, nonArcadeMaps, miniMaps, MapColoring.ORANGE_WHITE);
+        useMap(35, nonArcadeMaps, miniMaps, MapColoring.DARKBLUE_YELLOW);
+        useMap(36, nonArcadeMaps, miniMaps, MapColoring.PINK_YELLOW);
 
         // 6-10
-        addMapToList(34, nonArcadeMaps, miniMaps, MapColoring.PINK_DARKRED);
-        addMapToList(35, nonArcadeMaps, miniMaps, MapColoring.BROWN2_WHITE);
-        addMapToList(36, nonArcadeMaps, miniMaps, MapColoring.VIOLET_WHITE_YELLOW);
-        addMapToList(30, nonArcadeMaps, miniMaps, MapColoring.BLACK_WHITE_YELLOW);
-        addMapToList(34, nonArcadeMaps, miniMaps, MapColoring.BLACK_DARKBLUE);
+        useMap(34, nonArcadeMaps, miniMaps, MapColoring.PINK_DARKRED);
+        useMap(35, nonArcadeMaps, miniMaps, MapColoring.BROWN2_WHITE);
+        useMap(36, nonArcadeMaps, miniMaps, MapColoring.VIOLET_WHITE_YELLOW);
+        useMap(30, nonArcadeMaps, miniMaps, MapColoring.BLACK_WHITE_YELLOW);
+        useMap(34, nonArcadeMaps, miniMaps, MapColoring.BLACK_DARKBLUE);
 
         // 11-15
-        addMapToList(35, nonArcadeMaps, miniMaps, MapColoring.VIOLET_PINK);
-        addMapToList(36, nonArcadeMaps, miniMaps, MapColoring.RED_WHITE);
-        addMapToList(30, nonArcadeMaps, miniMaps, MapColoring.GREEN_WHITE_WHITE);
-        addMapToList(34, nonArcadeMaps, miniMaps, MapColoring.YELLOW_WHITE_GREEN);
-        addMapToList(35, nonArcadeMaps, miniMaps, MapColoring.GREEN_WHITE_YELLOW);
+        useMap(35, nonArcadeMaps, miniMaps, MapColoring.VIOLET_PINK);
+        useMap(36, nonArcadeMaps, miniMaps, MapColoring.RED_WHITE);
+        useMap(30, nonArcadeMaps, miniMaps, MapColoring.GREEN_WHITE_WHITE);
+        useMap(34, nonArcadeMaps, miniMaps, MapColoring.YELLOW_WHITE_GREEN);
+        useMap(35, nonArcadeMaps, miniMaps, MapColoring.GREEN_WHITE_YELLOW);
 
         // 16-20
-        addMapToList(36, nonArcadeMaps, miniMaps, MapColoring.KHAKI_WHITE);
-        addMapToList(30, nonArcadeMaps, miniMaps, MapColoring.PINK_WHITE);
-        addMapToList(16, nonArcadeMaps, miniMaps, MapColoring.BLUE_WHITE_YELLOW);
-        addMapToList(16, nonArcadeMaps, miniMaps, MapColoring.BROWN_WHITE);
-        addMapToList(30, nonArcadeMaps, miniMaps, MapColoring.RED_PINK);
+        useMap(36, nonArcadeMaps, miniMaps, MapColoring.KHAKI_WHITE);
+        useMap(30, nonArcadeMaps, miniMaps, MapColoring.PINK_WHITE);
+        useMap(16, nonArcadeMaps, miniMaps, MapColoring.BLUE_WHITE_YELLOW);
+        useMap(16, nonArcadeMaps, miniMaps, MapColoring.BROWN_WHITE);
+        useMap(30, nonArcadeMaps, miniMaps, MapColoring.RED_PINK);
 
         // 21-25
-        addMapToList(36, nonArcadeMaps, miniMaps, MapColoring.BLACK_WHITE_GREEN);
-        addMapToList(35, nonArcadeMaps, miniMaps, MapColoring.GREEN_WHITE_WHITE);
-        addMapToList(34, nonArcadeMaps, miniMaps, MapColoring.GREEN_WHITE_VIOLET);
-        addMapToList(37, nonArcadeMaps, miniMaps, MapColoring.VIOLET_WHITE_GREEN);
-        addMapToList(34, nonArcadeMaps, miniMaps, MapColoring.GRAY_WHITE_YELLOW);
+        useMap(36, nonArcadeMaps, miniMaps, MapColoring.BLACK_WHITE_GREEN);
+        useMap(35, nonArcadeMaps, miniMaps, MapColoring.GREEN_WHITE_WHITE);
+        useMap(34, nonArcadeMaps, miniMaps, MapColoring.GREEN_WHITE_VIOLET);
+        useMap(37, nonArcadeMaps, miniMaps, MapColoring.VIOLET_WHITE_GREEN);
+        useMap(34, nonArcadeMaps, miniMaps, MapColoring.GRAY_WHITE_YELLOW);
 
         // 26-30
-        addMapToList(35, nonArcadeMaps, miniMaps, MapColoring.BLUE2_WHITE);
-        addMapToList(36, nonArcadeMaps, miniMaps, MapColoring.VIOLET_WHITE);
-        addMapToList(30, nonArcadeMaps, miniMaps, MapColoring.BROWN2_WHITE);
-        addMapToList(28, nonArcadeMaps, miniMaps, MapColoring.BROWN2_WHITE);
-        addMapToList(35, nonArcadeMaps, miniMaps, MapColoring.BLUE_YELLOW);
+        useMap(35, nonArcadeMaps, miniMaps, MapColoring.BLUE2_WHITE);
+        useMap(36, nonArcadeMaps, miniMaps, MapColoring.VIOLET_WHITE);
+        useMap(30, nonArcadeMaps, miniMaps, MapColoring.BROWN2_WHITE);
+        useMap(28, nonArcadeMaps, miniMaps, MapColoring.BROWN2_WHITE);
+        useMap(35, nonArcadeMaps, miniMaps, MapColoring.BLUE_YELLOW);
 
         // 31-32
-        addMapToList(36, nonArcadeMaps, miniMaps, MapColoring.BLACK_WHITE_GREEN);
-        addMapToList(37, nonArcadeMaps, miniMaps, MapColoring.RED_PINK);
+        useMap(36, nonArcadeMaps, miniMaps, MapColoring.BLACK_WHITE_GREEN);
+        useMap(37, nonArcadeMaps, miniMaps, MapColoring.RED_PINK);
 
         return miniMaps;
     }
 
     /**
      * From this <a href="https://www.youtube.com/watch?v=NoImGoSAL7A">YouTube video</a>.
-     *
-     * @param nonArcadeMaps
-     * @return
      */
     private static List<WorldMap> bigMaps(List<WorldMap> nonArcadeMaps) {
         var bigMaps = new ArrayList<WorldMap>();
 
         // 1-5
-        addMapToList(19, nonArcadeMaps, bigMaps, MapColoring.ROSE_RED);
-        addMapToList(20, nonArcadeMaps, bigMaps, MapColoring.LIGHTBLUE_WHITE_YELLOW);
-        addMapToList(21, nonArcadeMaps, bigMaps, MapColoring.ORANGE_WHITE);
-        addMapToList(19, nonArcadeMaps, bigMaps, MapColoring.BLUE_WHITE_YELLOW);
-        addMapToList(20, nonArcadeMaps, bigMaps, MapColoring.PINK_YELLOW);
+        useMap(19, nonArcadeMaps, bigMaps, MapColoring.ROSE_RED);
+        useMap(20, nonArcadeMaps, bigMaps, MapColoring.LIGHTBLUE_WHITE_YELLOW);
+        useMap(21, nonArcadeMaps, bigMaps, MapColoring.ORANGE_WHITE);
+        useMap(19, nonArcadeMaps, bigMaps, MapColoring.BLUE_WHITE_YELLOW);
+        useMap(20, nonArcadeMaps, bigMaps, MapColoring.PINK_YELLOW);
 
         // 6-10
-        addMapToList(21, nonArcadeMaps, bigMaps, MapColoring.ROSE_RED);
-        addMapToList(22, nonArcadeMaps, bigMaps, MapColoring.ORANGE_WHITE);
-        addMapToList(23, nonArcadeMaps, bigMaps, MapColoring.VIOLET_WHITE_YELLOW);
-        addMapToList(17, nonArcadeMaps, bigMaps, MapColoring.BLACK_WHITE_YELLOW);
-        addMapToList(10, nonArcadeMaps, bigMaps, MapColoring.BLACK_DARKBLUE);
+        useMap(21, nonArcadeMaps, bigMaps, MapColoring.ROSE_RED);
+        useMap(22, nonArcadeMaps, bigMaps, MapColoring.ORANGE_WHITE);
+        useMap(23, nonArcadeMaps, bigMaps, MapColoring.VIOLET_WHITE_YELLOW);
+        useMap(17, nonArcadeMaps, bigMaps, MapColoring.BLACK_WHITE_YELLOW);
+        useMap(10, nonArcadeMaps, bigMaps, MapColoring.BLACK_DARKBLUE);
 
         // 11-15
-        addMapToList(23, nonArcadeMaps, bigMaps, MapColoring.PINK_ROSE);
-        addMapToList(21, nonArcadeMaps, bigMaps, MapColoring.PINK_WHITE);
-        addMapToList(22, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_WHITE);
-        addMapToList(14, nonArcadeMaps, bigMaps, MapColoring.VIOLET_WHITE_GREEN);
-        addMapToList(20, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_YELLOW);
+        useMap(23, nonArcadeMaps, bigMaps, MapColoring.PINK_ROSE);
+        useMap(21, nonArcadeMaps, bigMaps, MapColoring.PINK_WHITE);
+        useMap(22, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_WHITE);
+        useMap(14, nonArcadeMaps, bigMaps, MapColoring.VIOLET_WHITE_GREEN);
+        useMap(20, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_YELLOW);
 
         // 16-20
-        addMapToList(19, nonArcadeMaps, bigMaps, MapColoring.KHAKI_WHITE);
-        addMapToList(10, nonArcadeMaps, bigMaps, MapColoring.PINK_WHITE);
-        addMapToList(17, nonArcadeMaps, bigMaps, MapColoring.BLUE_WHITE_YELLOW);
-        addMapToList(10, nonArcadeMaps, bigMaps, MapColoring.BROWN_WHITE);
-        addMapToList(19, nonArcadeMaps, bigMaps, MapColoring.PINK_ROSE);
+        useMap(19, nonArcadeMaps, bigMaps, MapColoring.KHAKI_WHITE);
+        useMap(10, nonArcadeMaps, bigMaps, MapColoring.PINK_WHITE);
+        useMap(17, nonArcadeMaps, bigMaps, MapColoring.BLUE_WHITE_YELLOW);
+        useMap(10, nonArcadeMaps, bigMaps, MapColoring.BROWN_WHITE);
+        useMap(19, nonArcadeMaps, bigMaps, MapColoring.PINK_ROSE);
 
         // 21-25
-        addMapToList(26, nonArcadeMaps, bigMaps, MapColoring.BLACK_WHITE_GREEN);
-        addMapToList(21, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_WHITE);
-        addMapToList(22, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_VIOLET);
-        addMapToList(23, nonArcadeMaps, bigMaps, MapColoring.VIOLET_WHITE_GREEN);
-        addMapToList(14, nonArcadeMaps, bigMaps, MapColoring.GRAY_WHITE_YELLOW);
+        useMap(26, nonArcadeMaps, bigMaps, MapColoring.BLACK_WHITE_GREEN);
+        useMap(21, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_WHITE);
+        useMap(22, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_VIOLET);
+        useMap(23, nonArcadeMaps, bigMaps, MapColoring.VIOLET_WHITE_GREEN);
+        useMap(14, nonArcadeMaps, bigMaps, MapColoring.GRAY_WHITE_YELLOW);
 
         // 26-30
-        addMapToList(25, nonArcadeMaps, bigMaps, MapColoring.VIOLET_WHITE);
-        addMapToList(14, nonArcadeMaps, bigMaps, MapColoring.PINK_WHITE);
-        addMapToList(23, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_WHITE);
-        addMapToList(26, nonArcadeMaps, bigMaps, MapColoring.LIGHTBLUE_WHITE_YELLOW);
-        addMapToList(20, nonArcadeMaps, bigMaps, MapColoring.PINK_YELLOW);
+        useMap(25, nonArcadeMaps, bigMaps, MapColoring.VIOLET_WHITE);
+        useMap(14, nonArcadeMaps, bigMaps, MapColoring.PINK_WHITE);
+        useMap(23, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_WHITE);
+        useMap(26, nonArcadeMaps, bigMaps, MapColoring.LIGHTBLUE_WHITE_YELLOW);
+        useMap(20, nonArcadeMaps, bigMaps, MapColoring.PINK_YELLOW);
 
         // 31-32
-        addMapToList(25, nonArcadeMaps, bigMaps, MapColoring.PINK_ROSE);
-        addMapToList(33, nonArcadeMaps, bigMaps, MapColoring.PINK_ROSE);
+        useMap(25, nonArcadeMaps, bigMaps, MapColoring.PINK_ROSE);
+        useMap(33, nonArcadeMaps, bigMaps, MapColoring.PINK_ROSE);
 
         return bigMaps;
     }
 
-    private static void addMapToList(int number, List<WorldMap> sourceMaps, List<WorldMap> targetMaps, MapColoring mapColoring) {
-        WorldMap map = new WorldMap(sourceMaps.get(number - 1)); // use a copy?
+    private static void useMap(int number, List<WorldMap> sourceMaps, List<WorldMap> targetMaps, MapColoring mapColoring) {
+        WorldMap map = new WorldMap(sourceMaps.get(number - 1));
         map.setColorScheme(mapColoring.colorScheme());
         targetMaps.add(map);
     }
