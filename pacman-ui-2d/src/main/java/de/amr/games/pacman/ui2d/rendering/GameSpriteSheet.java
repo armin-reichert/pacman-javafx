@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.rendering;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 
@@ -42,7 +41,6 @@ public interface GameSpriteSheet {
 
     // Ms. Pac-Man only
     default RectArea[] pacManMunchingSprites(Direction dir) { return NO_SPRITES; }
-    default SpriteAnimation createStorkFlyingAnimation()  { return null; }
 
     // Pac-Man only
     default RectArea ghostFacingRight(byte ghostID) {

@@ -165,7 +165,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
         return MS_PAC_MAN_DYING_SPRITES;
     }
 
-    @Override
     public SpriteAnimation createStorkFlyingAnimation() {
         return SpriteAnimation
             .spriteSheet(this)

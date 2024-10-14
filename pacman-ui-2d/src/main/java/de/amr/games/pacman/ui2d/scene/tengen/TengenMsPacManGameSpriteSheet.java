@@ -234,7 +234,6 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
         return MR_PAC_MUNCHING_SPRITES_LEFT;
     }
 
-    @Override
     public SpriteAnimation createStorkFlyingAnimation() {
         return SpriteAnimation.spriteSheet(this)
             .sprites(rect(157, 355, 33, 15), rect(198, 356, 33, 15))
