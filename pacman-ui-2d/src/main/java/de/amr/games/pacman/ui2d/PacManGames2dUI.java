@@ -19,7 +19,6 @@ import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfiguration;
-import de.amr.games.pacman.ui2d.scene.common.GameSceneID;
 import de.amr.games.pacman.ui2d.sound.GameSounds;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.FlashMessageView;
@@ -366,7 +365,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public boolean currentGameSceneHasID(GameSceneID sceneID) {
+    public boolean currentGameSceneHasID(String sceneID) {
         if (currentGameScene().isEmpty()) {
             return false;
         }

@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.scene.common.GameSceneID;
 import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import de.amr.games.pacman.ui3d.scene.common.Perspective;
@@ -60,7 +59,8 @@ public enum GameAction3D implements GameAction {
             super.execute(context);
             context.currentGameScene().ifPresent(gameScene -> {
                 toggle(PY_3D_ENABLED);
-                if (context.currentGameSceneHasID(GameSceneID.PLAY_SCENE) || context.currentGameSceneHasID(GameSceneID.PLAY_SCENE_3D)) {
+                if (context.currentGameSceneHasID("PlayScene2D")
+                        || context.currentGameSceneHasID("PlayScene3D")) {
                     context.updateGameScene(true);
                     context.gameSceneProperty().get().onSceneVariantSwitch(gameScene);
                 }
@@ -77,7 +77,7 @@ public enum GameAction3D implements GameAction {
         public void execute(GameContext context) {
             super.execute(context);
             toggle(PY_PIP_ON);
-            if (!context.currentGameSceneHasID(GameSceneID.PLAY_SCENE_3D)) {
+            if (!context.currentGameSceneHasID("PlayScene3D")) {
                 context.showFlashMessage(context.locText(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
             }
         }

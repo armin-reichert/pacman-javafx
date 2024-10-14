@@ -14,7 +14,6 @@ import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfiguration;
-import de.amr.games.pacman.ui2d.scene.common.GameSceneID;
 import de.amr.games.pacman.ui2d.sound.GameSounds;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
@@ -74,7 +73,7 @@ public interface GameContext {
     // Game scenes
     GameSceneConfiguration         gameSceneConfig(GameVariant variant);
     default GameSceneConfiguration currentGameSceneConfig() { return gameSceneConfig(gameVariant()); }
-    boolean                        currentGameSceneHasID(GameSceneID gameSceneID);
+    boolean                        currentGameSceneHasID(String gameSceneID);
     ObjectProperty<GameScene>      gameSceneProperty();
     Optional<GameScene>            currentGameScene();
     void                           updateGameScene(boolean reloadCurrent);

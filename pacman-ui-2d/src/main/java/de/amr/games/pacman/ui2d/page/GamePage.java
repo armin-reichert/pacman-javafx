@@ -14,7 +14,6 @@ import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.common.GameSceneID;
 import de.amr.games.pacman.ui2d.util.TooFancyGameCanvasContainer;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.binding.Bindings;
@@ -154,7 +153,7 @@ public class GamePage extends StackPane implements Page {
 
     @Override
     public void handleContextMenuRequest(ContextMenuEvent event) {
-        if (!context.currentGameSceneHasID(GameSceneID.PLAY_SCENE)) {
+        if (!context.currentGameSceneHasID("PlayScene")) {
             return;
         }
         contextMenu.getItems().clear();

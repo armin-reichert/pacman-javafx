@@ -9,7 +9,6 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.scene.common.GameSceneID;
 import de.amr.games.pacman.ui2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.binding.Bindings;
@@ -54,7 +53,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
         opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
         visibleProperty().bind(Bindings.createObjectBinding(
-            () -> PY_PIP_ON.get() && context.currentGameSceneHasID(GameSceneID.PLAY_SCENE_3D),
+            () -> PY_PIP_ON.get() && context.currentGameSceneHasID("PlayScene3D"),
             PY_PIP_ON, context.gameSceneProperty()
         ));
         visibleProperty().addListener((py,ov,visible) -> {

@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.scene.common.GameSceneID;
 import de.amr.games.pacman.ui2d.util.FadingPane;
 import de.amr.games.pacman.ui2d.util.TooFancyGameCanvasContainer;
 import de.amr.games.pacman.ui2d.util.Ufx;
@@ -50,7 +49,7 @@ public class PopupLayer extends Pane {
         prefWidthProperty().bind(canvas.prefWidthProperty());
 
         borderProperty().bind(Bindings.createObjectBinding(
-            () -> PY_DEBUG_INFO.get() && !context.currentGameSceneHasID(GameSceneID.PLAY_SCENE_3D)
+            () -> PY_DEBUG_INFO.get() && !context.currentGameSceneHasID("PlayScene3D")
                 ? Ufx.border(Color.GREENYELLOW, 3) : null,
             PY_DEBUG_INFO, context.gameSceneProperty()
         ));

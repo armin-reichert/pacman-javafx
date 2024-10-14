@@ -18,13 +18,13 @@ import java.util.stream.Stream;
  */
 public abstract class GameSceneConfiguration {
 
-    private final Map<GameSceneID, GameScene> sceneByID = new HashMap<>();
+    private final Map<String, GameScene> sceneByID = new HashMap<>();
 
-    public void set(GameSceneID id, GameScene gameScene) {
+    public void set(String id, GameScene gameScene) {
         sceneByID.put(id, gameScene);
     }
 
-    public GameScene get(GameSceneID id) {
+    public GameScene get(String id) {
         return sceneByID.get(id);
     }
 
@@ -32,7 +32,7 @@ public abstract class GameSceneConfiguration {
         return sceneByID.values().stream();
     }
 
-    public boolean gameSceneHasID(GameScene gameScene, GameSceneID sceneID) {
+    public boolean gameSceneHasID(GameScene gameScene, String sceneID) {
         return get(sceneID) == gameScene;
     }
 
@@ -44,12 +44,7 @@ public abstract class GameSceneConfiguration {
 
     public abstract GameScene selectGameScene(GameContext context);
 
-    protected GameSceneID cutSceneID(int number) {
-        return switch (number) {
-            case 1 -> GameSceneID.CUT_SCENE_1;
-            case 2 -> GameSceneID.CUT_SCENE_2;
-            case 3 -> GameSceneID.CUT_SCENE_3;
-            default -> null;
-        };
+    protected String cutSceneID(int number) {
+        return "CutScene" + number;
     }
 }
