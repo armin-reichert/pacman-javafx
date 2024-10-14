@@ -104,7 +104,9 @@ public class CutScene3 extends GameScene2D {
         } else {
             renderer.drawSprite(stork, storkAnimation.currentSprite());
         }
-        renderer.drawSprite(bag, bagOpen ? spriteSheet.juniorPacSprite() : spriteSheet.blueBagSprite());
+        renderer.drawSprite(bag, bagOpen
+            ? MsPacManGameSpriteSheet.JUNIOR_PAC_SPRITE
+            : MsPacManGameSpriteSheet.BLUE_BAG_SPRITE);
         drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 

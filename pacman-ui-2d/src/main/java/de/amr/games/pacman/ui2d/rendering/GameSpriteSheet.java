@@ -43,9 +43,6 @@ public interface GameSpriteSheet {
     // Ms. Pac-Man only
     default RectArea[] pacManMunchingSprites(Direction dir) { return NO_SPRITES; }
     default RectArea[] clapperboardSprites() { return NO_SPRITES; }
-    default RectArea heartSprite() { return NO_SPRITE; }
-    default RectArea blueBagSprite() { return NO_SPRITE; }
-    default RectArea juniorPacSprite() { return NO_SPRITE; }
     default SpriteAnimation createStorkFlyingAnimation()  { return null; }
 
     // Pac-Man only

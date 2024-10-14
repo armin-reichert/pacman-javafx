@@ -99,7 +99,9 @@ public class CutScene3 extends GameScene2D {
         renderer.drawAnimatedEntity(msPacMan);
         renderer.drawAnimatedEntity(mrPacMan);
         tr.drawStork(spriteSheet, storkAnimation, stork, bag.acceleration().y() != 0);
-        renderer.drawSprite(bag, bagOpen ? spriteSheet.juniorPacSprite() : spriteSheet.blueBagSprite());
+        renderer.drawSprite(bag, bagOpen
+            ? TengenMsPacManGameSpriteSheet.JUNIOR_PAC_SPRITE
+            : TengenMsPacManGameSpriteSheet.BLUE_BAG_SPRITE);
         drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 

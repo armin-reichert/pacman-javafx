@@ -235,21 +235,6 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     @Override
-    public RectArea heartSprite() {
-        return HEART_SPRITE;
-    }
-
-    @Override
-    public RectArea blueBagSprite() {
-        return BLUE_BAG_SPRITE;
-    }
-
-    @Override
-    public RectArea juniorPacSprite() {
-        return JUNIOR_PAC_SPRITE;
-    }
-
-    @Override
     public SpriteAnimation createStorkFlyingAnimation() {
         return SpriteAnimation.spriteSheet(this)
             .sprites(rect(157, 355, 33, 15), rect(198, 356, 33, 15))
