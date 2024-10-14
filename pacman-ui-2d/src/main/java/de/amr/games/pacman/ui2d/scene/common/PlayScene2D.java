@@ -43,7 +43,11 @@ public class PlayScene2D extends GameScene2D {
 
     private static final List<GameAction> TENGEN_ACTIONS = List.of(
         GameAction2D.TENGEN_TOGGLE_PAC_BOOSTER,
-        GameAction2D.TENGEN_QUIT_PLAY_SCENE
+        GameAction2D.TENGEN_QUIT_PLAY_SCENE,
+        GameAction2D.CHEAT_EAT_ALL,
+        GameAction2D.CHEAT_ADD_LIVES,
+        GameAction2D.CHEAT_NEXT_LEVEL,
+        GameAction2D.CHEAT_KILL_GHOSTS
     );
 
     @Override
@@ -94,17 +98,16 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void handleInput() {
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            // add credit is not available in Tengen Ms. Pac-Man
-            context.doFirstCalledActionOrElse(TENGEN_ACTIONS, () -> context.doFirstCalledAction(ACTIONS));
-            return;
+        switch (context.gameVariant()) {
+            case MS_PACMAN_TENGEN -> context.doFirstCalledAction(TENGEN_ACTIONS);
+            default -> {
+                if (context.isActionCalled(GameAction2D.ADD_CREDIT) && context.game().isDemoLevel()) {
+                    GameAction2D.ADD_CREDIT.execute(context);
+                    return;
+                }
+                context.doFirstCalledAction(ACTIONS);
+            }
         }
-        // add credit is only allowed in demo level
-        if (context.isActionCalled(GameAction2D.ADD_CREDIT) && context.game().isDemoLevel()) {
-            GameAction2D.ADD_CREDIT.execute(context);
-            return;
-        }
-        context.doFirstCalledAction(ACTIONS);
     }
 
     @Override
