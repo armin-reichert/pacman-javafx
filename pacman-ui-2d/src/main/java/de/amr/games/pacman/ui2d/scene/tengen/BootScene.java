@@ -13,7 +13,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer.shadeOfBlue;
 
-public class TengenMsPacManGameBootScene extends GameScene2D {
+public class BootScene extends GameScene2D {
 
     private Ghost ghost;
     private int tengenPresentsY;

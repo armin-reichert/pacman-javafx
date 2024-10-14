@@ -22,7 +22,7 @@ import static de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer.T
 /**
  * @author Armin Reichert
  */
-public class TengenMsPacManGameStartScene extends GameScene2D {
+public class StartScene extends GameScene2D {
 
     static final int COL_ARROW = 0;
     static final int COL_LABEL = 2 * TS;

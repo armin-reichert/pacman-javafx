@@ -18,8 +18,6 @@ import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.ClapperboardAnimation;
-import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameGhostAnimations;
-import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGamePacAnimations;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -34,7 +32,7 @@ import static de.amr.games.pacman.lib.Globals.t;
  *
  * @author Armin Reichert
  */
-public class TengenMsPacManGameCutScene1 extends GameScene2D {
+public class CutScene1 extends GameScene2D {
 
     static final int UPPER_LANE_Y  = TS * 12;
     static final int MIDDLE_LANE_Y = TS * 18;

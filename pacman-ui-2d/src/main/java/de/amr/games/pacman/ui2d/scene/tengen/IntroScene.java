@@ -36,7 +36,7 @@ import static de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer.*
  *
  * @author Armin Reichert
  */
-public class TengenMsPacManGameIntroScene extends GameScene2D {
+public class IntroScene extends GameScene2D {
 
     static final List<GameAction> ACTIONS = List.of(GameAction2D.START_GAME);
 
@@ -48,7 +48,7 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
     static final int      NUM_BULBS = 96;
     static final int      DISTANCE_BETWEEN_ACTIVE_BULBS = 16;
 
-    private final FiniteStateMachine<SceneState, TengenMsPacManGameIntroScene> sceneController;
+    private final FiniteStateMachine<SceneState, IntroScene> sceneController;
 
     private Pac msPacMan;
     private Ghost[] ghosts;
@@ -57,11 +57,11 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
     private int ghostIndex;
     private int waitBeforeRising;
 
-    public TengenMsPacManGameIntroScene() {
+    public IntroScene() {
         sceneController = new FiniteStateMachine<>(SceneState.values()) {
             @Override
-            public TengenMsPacManGameIntroScene context() {
-                return TengenMsPacManGameIntroScene.this;
+            public IntroScene context() {
+                return IntroScene.this;
             }
         };
     }
@@ -196,11 +196,11 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
         g.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 
-    private enum SceneState implements FsmState<TengenMsPacManGameIntroScene> {
+    private enum SceneState implements FsmState<IntroScene> {
 
         WAITING_FOR_START {
             @Override
-            public void onUpdate(TengenMsPacManGameIntroScene intro) {
+            public void onUpdate(IntroScene intro) {
                 if (timer().atSecond(8)) {
                     intro.sceneController.changeState(SHOWING_MARQUEE);
                 }
@@ -209,7 +209,7 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
 
         SHOWING_MARQUEE {
             @Override
-            public void onEnter(TengenMsPacManGameIntroScene intro) {
+            public void onEnter(IntroScene intro) {
                 intro.marqueeTimer.restartIndefinitely();
                 intro.msPacMan.setPosition(TS * 31, TS * 20);
                 intro.msPacMan.setMoveDir(Direction.LEFT);
@@ -229,7 +229,7 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
             }
 
             @Override
-            public void onUpdate(TengenMsPacManGameIntroScene intro) {
+            public void onUpdate(IntroScene intro) {
                 intro.marqueeTimer.tick();
                 if (timer.atSecond(1)) {
                     intro.sceneController.changeState(GHOSTS_MARCHING_IN);
@@ -240,7 +240,7 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
         GHOSTS_MARCHING_IN {
 
             @Override
-            public void onUpdate(TengenMsPacManGameIntroScene intro) {
+            public void onUpdate(IntroScene intro) {
                 intro.marqueeTimer.tick();
                 boolean reachedEndPosition = letGhostMarchIn(intro);
                 if (reachedEndPosition) {
@@ -252,7 +252,7 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
                 }
             }
 
-            boolean letGhostMarchIn(TengenMsPacManGameIntroScene intro) {
+            boolean letGhostMarchIn(IntroScene intro) {
                 Ghost ghost = intro.ghosts[intro.ghostIndex];
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.posX() <= STOP_X_GHOST) {
@@ -283,7 +283,7 @@ public class TengenMsPacManGameIntroScene extends GameScene2D {
 
         MS_PACMAN_MARCHING_IN {
             @Override
-            public void onUpdate(TengenMsPacManGameIntroScene intro) {
+            public void onUpdate(IntroScene intro) {
                 intro.marqueeTimer.tick();
                 intro.msPacMan.move();
                 if (intro.msPacMan.posX() <= STOP_X_MS_PAC_MAN) {
