@@ -6,7 +6,7 @@ import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.*;
-import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameStartScene;
+import de.amr.games.pacman.ui2d.scene.ms_pacman.StartScene;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 
 public class PacManGameSceneConfiguration extends GameSceneConfiguration {
@@ -17,7 +17,7 @@ public class PacManGameSceneConfiguration extends GameSceneConfiguration {
     public PacManGameSceneConfiguration(AssetStorage assets) {
         set(GameSceneID.BOOT_SCENE,  new BootScene());
         set(GameSceneID.INTRO_SCENE, new PacManGameIntroScene());
-        set(GameSceneID.START_SCENE, new MsPacManGameStartScene());
+        set(GameSceneID.START_SCENE, new StartScene());
         set(GameSceneID.PLAY_SCENE,  new PlayScene2D());
         set(GameSceneID.CUT_SCENE_1, new PacManGameCutScene1());
         set(GameSceneID.CUT_SCENE_2, new PacManGameCutScene2());

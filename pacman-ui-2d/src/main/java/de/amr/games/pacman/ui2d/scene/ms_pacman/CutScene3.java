@@ -32,7 +32,7 @@ import static de.amr.games.pacman.lib.Globals.t;
  *
  * @author Armin Reichert
  */
-public class MsPacManGameCutScene3 extends GameScene2D {
+public class CutScene3 extends GameScene2D {
 
     static final int LANE_Y = TS * 24;
 
@@ -65,8 +65,8 @@ public class MsPacManGameCutScene3 extends GameScene2D {
         bag = new Entity();
 
         GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
-        msPacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
-        pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
+        msPacMan.setAnimations(new PacAnimations(spriteSheet));
+        pacMan.setAnimations(new PacAnimations(spriteSheet));
 
         storkAnimation = spriteSheet.createStorkFlyingAnimation();
         storkAnimation.start();

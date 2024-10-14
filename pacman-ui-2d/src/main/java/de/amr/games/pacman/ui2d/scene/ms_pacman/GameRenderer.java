@@ -29,7 +29,7 @@ import static de.amr.games.pacman.ui2d.rendering.GameWorldRenderer.imageArea;
 /**
  * @author Armin Reichert
  */
-public class MsPacManGameRenderer implements GameWorldRenderer {
+public class GameRenderer implements GameWorldRenderer {
 
     private final AssetStorage assets;
     private final GameSpriteSheet spriteSheet;
@@ -43,14 +43,14 @@ public class MsPacManGameRenderer implements GameWorldRenderer {
     private boolean blinkingOn;
     private Canvas canvas;
 
-    public MsPacManGameRenderer(AssetStorage assets) {
+    public GameRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
         spriteSheet = assets.get("ms_pacman.spritesheet");
         flashingMazesImage = assets.get("ms_pacman.flashing_mazes");
     }
 
-    public MsPacManGameRenderer copy() {
-        return new MsPacManGameRenderer(assets);
+    public GameRenderer copy() {
+        return new GameRenderer(assets);
         //TODO which properties to copy?
     }
 

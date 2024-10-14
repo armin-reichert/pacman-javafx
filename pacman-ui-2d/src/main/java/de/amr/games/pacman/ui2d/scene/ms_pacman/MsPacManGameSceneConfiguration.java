@@ -11,23 +11,23 @@ import de.amr.games.pacman.ui2d.util.AssetStorage;
 public class MsPacManGameSceneConfiguration extends GameSceneConfiguration {
 
     private final GameSpriteSheet spriteSheet;
-    private final MsPacManGameRenderer renderer;
+    private final GameRenderer renderer;
 
     public MsPacManGameSceneConfiguration(AssetStorage assets) {
         set(GameSceneID.BOOT_SCENE,   new BootScene());
-        set(GameSceneID.INTRO_SCENE,  new MsPacManGameIntroScene());
-        set(GameSceneID.START_SCENE,  new MsPacManGameStartScene());
+        set(GameSceneID.INTRO_SCENE,  new IntroScene());
+        set(GameSceneID.START_SCENE,  new StartScene());
         set(GameSceneID.PLAY_SCENE,   new PlayScene2D());
-        set(GameSceneID.CUT_SCENE_1,  new MsPacManGameCutScene1());
-        set(GameSceneID.CUT_SCENE_2,  new MsPacManGameCutScene2());
-        set(GameSceneID.CUT_SCENE_3,  new MsPacManGameCutScene3());
+        set(GameSceneID.CUT_SCENE_1,  new CutScene1());
+        set(GameSceneID.CUT_SCENE_2,  new CutScene2());
+        set(GameSceneID.CUT_SCENE_3,  new CutScene3());
 
         spriteSheet = assets.get(GameAssets2D.assetPrefix(GameVariant.MS_PACMAN) + ".spritesheet");
-        renderer = new MsPacManGameRenderer(assets);
+        renderer = new GameRenderer(assets);
     }
 
     @Override
-    public MsPacManGameRenderer renderer() {
+    public GameRenderer renderer() {
         return renderer;
     }
 
@@ -51,7 +51,7 @@ public class MsPacManGameSceneConfiguration extends GameSceneConfiguration {
 
     @Override
     public void createActorAnimations(GameModel game) {
-        game.pac().setAnimations(new MsPacManGamePacAnimations(spriteSheet));
-        game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, ghost.id())));
+        game.pac().setAnimations(new PacAnimations(spriteSheet));
+        game.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id())));
     }
 }

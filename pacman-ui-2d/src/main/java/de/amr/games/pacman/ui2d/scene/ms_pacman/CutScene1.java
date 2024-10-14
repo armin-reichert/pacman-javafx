@@ -31,7 +31,7 @@ import static de.amr.games.pacman.lib.Globals.t;
  *
  * @author Armin Reichert
  */
-public class MsPacManGameCutScene1 extends GameScene2D {
+public class CutScene1 extends GameScene2D {
 
     static final int UPPER_LANE_Y  = TS * 12;
     static final int MIDDLE_LANE_Y = TS * 18;
@@ -69,10 +69,10 @@ public class MsPacManGameCutScene1 extends GameScene2D {
         heart = new Entity();
 
         GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
-        msPac.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
-        pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
-        inky.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, inky.id()));
-        pinky.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, pinky.id()));
+        msPac.setAnimations(new PacAnimations(spriteSheet));
+        pacMan.setAnimations(new PacAnimations(spriteSheet));
+        inky.setAnimations(new GhostAnimations(spriteSheet, inky.id()));
+        pinky.setAnimations(new GhostAnimations(spriteSheet, pinky.id()));
         clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
         clapAnimation.start();
 

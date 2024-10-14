@@ -27,7 +27,7 @@ import static de.amr.games.pacman.lib.Globals.t;
  *
  * @author Armin Reichert
  */
-public class MsPacManGameCutScene2 extends GameScene2D {
+public class CutScene2 extends GameScene2D {
 
     static final int UPPER_LANE_Y = TS * 12;
     static final int MIDDLE_LANE_Y = TS * 18;
@@ -54,13 +54,13 @@ public class MsPacManGameCutScene2 extends GameScene2D {
         msPacMan = new Pac();
 
         GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
-        msPacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
+        msPacMan.setAnimations(new PacAnimations(spriteSheet));
         //TODO use Tengen sprite sheet
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             var msPacManSpriteSheet = context.gameSceneConfiguration(GameVariant.MS_PACMAN).spriteSheet();
-            pacMan.setAnimations(new MsPacManGamePacAnimations(msPacManSpriteSheet));
+            pacMan.setAnimations(new PacAnimations(msPacManSpriteSheet));
         } else {
-            pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
+            pacMan.setAnimations(new PacAnimations(spriteSheet));
         }
 
         clapAnimation = new ClapperboardAnimation("2", "THE CHASE");

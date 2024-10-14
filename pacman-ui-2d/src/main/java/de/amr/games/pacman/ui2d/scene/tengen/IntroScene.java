@@ -19,8 +19,8 @@ import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameGhostAnimations;
-import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGamePacAnimations;
+import de.amr.games.pacman.ui2d.scene.ms_pacman.GhostAnimations;
+import de.amr.games.pacman.ui2d.scene.ms_pacman.PacAnimations;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -83,11 +83,11 @@ public class IntroScene extends GameScene2D {
         ghostIndex = 0;
         waitBeforeRising = 0;
 
-        msPacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
+        msPacMan.setAnimations(new PacAnimations(spriteSheet));
         msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
 
         for (Ghost ghost : ghosts) {
-            ghost.setAnimations(new MsPacManGameGhostAnimations(spriteSheet, ghost.id()));
+            ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
         }
         sceneController.restart(SceneState.WAITING_FOR_START);
