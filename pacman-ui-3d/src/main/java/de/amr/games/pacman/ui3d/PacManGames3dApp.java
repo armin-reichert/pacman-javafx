@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui3d;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui3d.model.Model3D;
+import de.amr.games.pacman.ui3d.scene.common.Perspective;
 import de.amr.games.pacman.ui3d.scene.ms_pacman.MsPacManGameSceneConfiguration3D;
 import de.amr.games.pacman.ui3d.scene.pacman.PacManGameSceneConfiguration3D;
 import de.amr.games.pacman.ui3d.scene.pacman_xxl.PacManGameXXLSceneConfiguration3D;

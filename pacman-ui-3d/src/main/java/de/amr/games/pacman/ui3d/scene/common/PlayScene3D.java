@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui3d;
+package de.amr.games.pacman.ui3d.scene.common;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
@@ -20,6 +20,7 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
+import de.amr.games.pacman.ui3d.GameAction3D;
 import de.amr.games.pacman.ui3d.level.*;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
@@ -214,14 +215,14 @@ public class PlayScene3D implements GameScene {
     @Override
     public void handleInput() {
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            context.execActionOrElse(TENGEN_GAME_ACTIONS.stream(),
-                () -> context.execAction(GAME_ACTIONS));
+            context.doFirstCalledActionOrElse(TENGEN_GAME_ACTIONS.stream(),
+                () -> context.doFirstCalledAction(GAME_ACTIONS));
         } else {
             // add credit is only allowed in demo level
             if (context.isActionCalled(GameAction2D.ADD_CREDIT) && context.game().isDemoLevel()) {
                 GameAction2D.ADD_CREDIT.execute(context);
             } else {
-                context.execAction(GAME_ACTIONS.stream());
+                context.doFirstCalledAction(GAME_ACTIONS.stream());
             }
         }
     }

@@ -96,7 +96,7 @@ public class PlayScene2D extends GameScene2D {
     public void handleInput() {
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             // add credit is not available in Tengen Ms. Pac-Man
-            context.execActionOrElse(TENGEN_ACTIONS, () -> context.execAction(ACTIONS));
+            context.doFirstCalledActionOrElse(TENGEN_ACTIONS, () -> context.doFirstCalledAction(ACTIONS));
             return;
         }
         // add credit is only allowed in demo level
@@ -104,7 +104,7 @@ public class PlayScene2D extends GameScene2D {
             GameAction2D.ADD_CREDIT.execute(context);
             return;
         }
-        context.execAction(ACTIONS);
+        context.doFirstCalledAction(ACTIONS);
     }
 
     @Override

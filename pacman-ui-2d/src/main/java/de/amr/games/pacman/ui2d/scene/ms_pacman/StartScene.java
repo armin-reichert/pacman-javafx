@@ -36,7 +36,7 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        context.execAction(Stream.of(GameAction2D.ADD_CREDIT, GameAction2D.START_GAME));
+        context.doFirstCalledAction(Stream.of(GameAction2D.ADD_CREDIT, GameAction2D.START_GAME));
     }
 
     @Override

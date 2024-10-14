@@ -41,7 +41,7 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        context.execAction(ACTIONS);
+        context.doFirstCalledAction(ACTIONS);
     }
 
     @Override

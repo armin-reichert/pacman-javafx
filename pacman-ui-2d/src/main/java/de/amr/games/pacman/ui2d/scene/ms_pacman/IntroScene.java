@@ -108,7 +108,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        context.execAction(ACTIONS);
+        context.doFirstCalledAction(ACTIONS);
     }
 
     @Override

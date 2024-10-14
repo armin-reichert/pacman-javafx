@@ -12,6 +12,8 @@ import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneID;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
+import de.amr.games.pacman.ui3d.scene.common.Perspective;
+import de.amr.games.pacman.ui3d.scene.common.PlayScene3D;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -50,7 +52,7 @@ public class GamePage3D extends GamePage {
 
     @Override
     public void handleInput() {
-        context.execActionOrElse(
+        context.doFirstCalledActionOrElse(
             Stream.of(GameAction3D.TOGGLE_PIP_VISIBILITY, GameAction3D.TOGGLE_PLAY_SCENE_2D_3D), super::handleInput);
     }
 

@@ -65,11 +65,11 @@ public interface GameContext {
 
     // Actions
     boolean      isActionCalled(GameAction action);
-    void         execAction(Stream<GameAction> actions);
-    default void execAction(Collection<GameAction> actions) { execAction(actions.stream()); }
-    default void execAction(GameAction... actions) { execAction(Stream.of(actions)); }
-    void         execActionOrElse(Stream<GameAction> actions, Runnable defaultAction);
-    default void execActionOrElse(Collection<GameAction> actions, Runnable defaultAction) { execActionOrElse(actions.stream(), defaultAction); }
+    void         doFirstCalledAction(Stream<GameAction> actions);
+    default void doFirstCalledAction(Collection<GameAction> actions) { doFirstCalledAction(actions.stream()); }
+    default void doFirstCalledAction(GameAction... actions) { doFirstCalledAction(Stream.of(actions)); }
+    void         doFirstCalledActionOrElse(Stream<GameAction> actions, Runnable defaultAction);
+    default void doFirstCalledActionOrElse(Collection<GameAction> actions, Runnable defaultAction) { doFirstCalledActionOrElse(actions.stream(), defaultAction); }
 
     // Game scenes
     GameSceneConfiguration         gameSceneConfig(GameVariant variant);

@@ -5,7 +5,7 @@ import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneID;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
-import de.amr.games.pacman.ui3d.PlayScene3D;
+import de.amr.games.pacman.ui3d.scene.common.PlayScene3D;
 import de.amr.games.pacman.ui3d.scene.common.GameSceneConfiguration3D;
 import javafx.beans.value.ObservableDoubleValue;
 
