@@ -14,7 +14,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.scene.GameScene2D;
+import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.tengen.GameRenderer;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.scene.paint.Color;

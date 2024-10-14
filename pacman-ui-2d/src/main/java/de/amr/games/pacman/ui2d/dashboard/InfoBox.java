@@ -8,7 +8,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.WritableObjectValue;

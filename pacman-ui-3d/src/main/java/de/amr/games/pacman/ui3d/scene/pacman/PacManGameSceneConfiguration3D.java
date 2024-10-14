@@ -1,8 +1,8 @@
 package de.amr.games.pacman.ui3d.scene.pacman;
 
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.scene.GameScene;
-import de.amr.games.pacman.ui2d.scene.GameSceneID;
+import de.amr.games.pacman.ui2d.scene.common.GameScene;
+import de.amr.games.pacman.ui2d.scene.common.GameSceneID;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGameSceneConfiguration;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui3d.PlayScene3D;

@@ -18,7 +18,7 @@ import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui3d.level.*;
 import javafx.animation.Animation;

@@ -5,10 +5,10 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.scene.GameScene;
-import de.amr.games.pacman.ui2d.scene.GameSceneConfiguration;
-import de.amr.games.pacman.ui2d.scene.GameSceneID;
-import de.amr.games.pacman.ui2d.scene.PlayScene2D;
+import de.amr.games.pacman.ui2d.scene.common.GameScene;
+import de.amr.games.pacman.ui2d.scene.common.GameSceneConfiguration;
+import de.amr.games.pacman.ui2d.scene.common.GameSceneID;
+import de.amr.games.pacman.ui2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 
 public class TengenMsPacManGameSceneConfiguration extends GameSceneConfiguration {

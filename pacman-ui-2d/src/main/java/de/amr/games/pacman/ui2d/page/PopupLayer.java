@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.scene.GameSceneID;
+import de.amr.games.pacman.ui2d.scene.common.GameSceneID;
 import de.amr.games.pacman.ui2d.util.FadingPane;
 import de.amr.games.pacman.ui2d.util.TooFancyGameCanvasContainer;
 import de.amr.games.pacman.ui2d.util.Ufx;

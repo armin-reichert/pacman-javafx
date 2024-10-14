@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.scene.GameScene2D;
+import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;

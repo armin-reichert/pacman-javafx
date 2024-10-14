@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.scene;
+package de.amr.games.pacman.ui2d.scene.common;
 
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameContext;

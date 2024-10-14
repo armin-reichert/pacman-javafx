@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.scene.GameSceneID;
+import de.amr.games.pacman.ui2d.scene.common.GameSceneID;
 import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.scene.input.KeyCode;

@@ -5,7 +5,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.scene.*;
+import de.amr.games.pacman.ui2d.scene.common.*;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 
 public class MsPacManGameSceneConfiguration extends GameSceneConfiguration {

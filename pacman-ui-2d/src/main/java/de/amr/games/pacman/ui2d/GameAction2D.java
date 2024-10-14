@@ -11,7 +11,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.page.EditorPage;
-import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import de.amr.games.pacman.ui2d.util.Ufx;

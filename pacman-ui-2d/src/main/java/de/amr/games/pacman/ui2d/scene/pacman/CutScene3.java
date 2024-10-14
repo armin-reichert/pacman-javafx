@@ -10,7 +10,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.scene.GameScene2D;
+import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 

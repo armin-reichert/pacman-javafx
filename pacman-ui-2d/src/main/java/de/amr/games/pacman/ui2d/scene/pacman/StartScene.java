@@ -8,7 +8,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.scene.GameScene2D;
+import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 
 import java.util.List;
 
