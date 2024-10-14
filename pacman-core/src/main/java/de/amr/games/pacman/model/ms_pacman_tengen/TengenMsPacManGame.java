@@ -59,86 +59,45 @@ public class TengenMsPacManGame extends GameModel {
 
     //TODO: Colors are from non-original spritsheet and probably not correct
 
-    static final MapColorScheme COLOR_SCHEME_BLACK_WHITE_GREEN = new MapColorScheme(
-        "000000", "ffffff", "ffffff", "007b8c");
+    public enum MapColoring {
+        BLACK_WHITE_GREEN("000000", "ffffff", "ffffff", "007b8c"),
+        BLACK_WHITE_YELLOW("000000", "ffffff", "ffffff", "bdbd00"),
+        BLACK_DARKBLUE("000000", "00298c", "00298c", "ffffff"),
+        BLUE_WHITE_YELLOW("4242ff", "ffffff", "ffffff", "bdbd00"),
+        BLUE2_WHITE("3900a5", "ffffff", "ffffff", "ffffff"),
+        BLUE_YELLOW("00298c", "e7e794", "e7e794", "ffffff"),
+        BROWN_WHITE("522100", "ffffff", "ffffff", "ffffff"),
+        BROWN2_WHITE("9c4a00", "ffffff", "ffffff", "ffffff"),
+        GRAY_WHITE_YELLOW("adadad", "ffffff", "ffffff", "bdbd00"),
+        GREEN_WHITE_YELLOW("109400", "ffffff", "ffffff", "bdbd00"),
+        GREEN_WHITE_WHITE("398400", "ffffff", "ffffff", "ffffff"),
+        GREEN_WHITE_VIOLET("00424a", "ffffff", "ffffff", "9c18ce"),
+        LIGHTBLUE_WHITE_YELLOW("63adff", "ffffff", "ffffff", "bdbd00"),
+        KHAKI_WHITE("6b6b00", "ffffff", "ffffff", "ffffff"),
+        PINK_ROSE("b5217b", "ff6bce", "ff6bce", "ffffff"),
+        PINK_DARKRED("ffc6e7", "b5217b", "b5217b", "ffffff"),
+        PINK_WHITE("ff6bce", "ffffff", "ffffff", "ffffff"),
+        PINK_YELLOW("ffc6e7", "bdbd00", "bdbd00", "ffffff"),
+        ORANGE_WHITE("b53121", "ffffff", "ffffff", "b5217b"),
+        DARKBLUE_YELLOW("00298c", "e7e794", "e7e794", "ffffff"),
+        RED_WHITE("b5217b", "ffffff", "ffffff", "ffffff"),
+        RED_PINK("b5217b", "ff6bce", "ff6bce", "ffc6e7"),
+        ROSE_RED("ffcec6", "b5217b", "b5217b", "ffffff"),
+        VIOLET_PINK("9c18ce", "ff6bce", "ffffff", "ffffff"),
+        VIOLET_WHITE("5a007b", "ffffff", "ffffff", "ffffff"),
+        VIOLET_WHITE_YELLOW("7329ff", "ffffff", "ffffff", "bdbd00"),
+        VIOLET_WHITE_GREEN("c673ff", "ffffff", "ffffff", "42de84"),
+        YELLOW_WHITE_GREEN("bdbd00", "ffffff", "ffffff", "5ae731");
 
-    static final MapColorScheme COLOR_SCHEME_BLACK_WHITE_YELLOW = new MapColorScheme(
-            "000000", "ffffff", "ffffff", "bdbd00");
+        MapColoring(String fill, String stroke, String door, String pellet) {
+            colorScheme = new MapColorScheme(fill, stroke, door, pellet);
+        }
 
-    static final MapColorScheme COLOR_SCHEME_BLACK_DARKBLUE = new MapColorScheme(
-        "000000", "00298c", "00298c", "ffffff");
+        public MapColorScheme colorScheme() { return colorScheme; }
 
-    static final MapColorScheme COLOR_SCHEME_BLUE_WHITE_YELLOW = new MapColorScheme(
-        "4242ff", "ffffff", "ffffff", "bdbd00");
+        private final MapColorScheme colorScheme;
+    }
 
-    static final MapColorScheme COLOR_SCHEME_BLUE2_WHITE = new MapColorScheme(
-        "3900a5", "ffffff", "ffffff", "ffffff");
-
-    static final MapColorScheme COLOR_SCHEME_BLUE_YELLOW = new MapColorScheme(
-        "00298c", "e7e794", "e7e794", "ffffff");
-
-    static final MapColorScheme COLOR_SCHEME_BROWN_WHITE = new MapColorScheme(
-        "522100", "ffffff", "ffffff", "ffffff");
-
-    static final MapColorScheme COLOR_SCHEME_BROWN2_WHITE = new MapColorScheme(
-        "9c4a00", "ffffff", "ffffff", "ffffff");
-
-    static final MapColorScheme COLOR_SCHEME_GRAY_WHITE_YELLOW = new MapColorScheme(
-        "adadad", "ffffff", "ffffff", "bdbd00");
-
-    static final MapColorScheme COLOR_SCHEME_GREEN_WHITE_YELLOW = new MapColorScheme(
-        "109400", "ffffff", "ffffff", "bdbd00");
-
-    static final MapColorScheme COLOR_SCHEME_GREEN_WHITE_WHITE = new MapColorScheme(
-        "398400", "ffffff", "ffffff", "ffffff");
-
-    static final MapColorScheme COLOR_SCHEME_GREEN_WHITE_VIOLET = new MapColorScheme(
-        "00424a", "ffffff", "ffffff", "9c18ce");
-
-    static final MapColorScheme COLOR_SCHEME_LIGHTBLUE_WHITE_YELLOW = new MapColorScheme(
-        "63adff", "ffffff", "ffffff", "bdbd00");
-
-    static final MapColorScheme COLOR_SCHEME_KHAKI_WHITE = new MapColorScheme(
-        "6b6b00", "ffffff", "ffffff", "ffffff");
-
-    static final MapColorScheme COLOR_SCHEME_PINK_ROSE = new MapColorScheme(
-        "b5217b", "ff6bce", "ff6bce", "ffffff");
-
-    static final MapColorScheme COLOR_SCHEME_PINK_DARKRED = new MapColorScheme(
-        "ffc6e7", "b5217b", "b5217b", "ffffff");
-
-    static final MapColorScheme COLOR_SCHEME_PINK_WHITE = new MapColorScheme(
-        "ff6bce", "ffffff", "ffffff", "ffffff");
-
-    static final MapColorScheme COLOR_SCHEME_PINK_YELLOW = new MapColorScheme(
-        "ffc6e7", "bdbd00", "bdbd00", "ffffff");
-
-    static final MapColorScheme COLOR_SCHEME_ORANGE_WHITE = new MapColorScheme(
-        "b53121", "ffffff", "ffffff", "b5217b");
-
-    static final MapColorScheme COLOR_SCHEME_DARKBLUE_YELLOW = new MapColorScheme(
-        "00298c", "e7e794", "e7e794", "ffffff");
-
-    static final MapColorScheme COLOR_SCHEME_RED_PINK = new MapColorScheme(
-        "b5217b", "ff6bce", "ff6bce", "ffc6e7");
-
-    static final MapColorScheme COLOR_SCHEME_ROSE_RED = new MapColorScheme(
-        "ffcec6", "b5217b", "b5217b", "ffffff");
-
-    static final MapColorScheme COLOR_SCHEME_VIOLET_PINK = new MapColorScheme(
-            "9c18ce", "ff6bce", "ffffff", "ffffff");
-
-    static final MapColorScheme COLOR_SCHEME_VIOLET_WHITE = new MapColorScheme(
-        "5a007b", "ffffff", "ffffff", "ffffff");
-
-    static final MapColorScheme COLOR_SCHEME_VIOLET_WHITE_YELLOW = new MapColorScheme(
-        "7329ff", "ffffff", "ffffff", "bdbd00");
-
-    static final MapColorScheme COLOR_SCHEME_VIOLET_WHITE_GREEN = new MapColorScheme(
-        "c673ff", "ffffff", "ffffff", "42de84");
-
-    static final MapColorScheme COLOR_SCHEME_YELLOW_WHITE_GREEN = new MapColorScheme(
-        "bdbd00", "ffffff", "ffffff", "5ae731");
 
     // Got this sequence by looking at a YouTube video (https://www.youtube.com/watch?v=cD0oGudVpbw)
     // TODO: need real data!
@@ -146,50 +105,50 @@ public class TengenMsPacManGame extends GameModel {
         var miniMaps = new ArrayList<WorldMap>();
 
         // 1-5
-        addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_PINK_DARKRED);
-        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_LIGHTBLUE_WHITE_YELLOW);
-        addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_ORANGE_WHITE);
-        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_DARKBLUE_YELLOW);
-        addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_PINK_YELLOW);
+        addMapToList(34, nonArcadeMaps, miniMaps, MapColoring.PINK_DARKRED);
+        addMapToList(35, nonArcadeMaps, miniMaps, MapColoring.LIGHTBLUE_WHITE_YELLOW);
+        addMapToList(34, nonArcadeMaps, miniMaps, MapColoring.ORANGE_WHITE);
+        addMapToList(35, nonArcadeMaps, miniMaps, MapColoring.DARKBLUE_YELLOW);
+        addMapToList(36, nonArcadeMaps, miniMaps, MapColoring.PINK_YELLOW);
 
         // 6-10
-        addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_PINK_DARKRED);
-        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_BROWN2_WHITE);
-        addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_VIOLET_WHITE_YELLOW);
-        addMapToList(30, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLACK_WHITE_YELLOW);
-        addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLACK_DARKBLUE);
+        addMapToList(34, nonArcadeMaps, miniMaps, MapColoring.PINK_DARKRED);
+        addMapToList(35, nonArcadeMaps, miniMaps, MapColoring.BROWN2_WHITE);
+        addMapToList(36, nonArcadeMaps, miniMaps, MapColoring.VIOLET_WHITE_YELLOW);
+        addMapToList(30, nonArcadeMaps, miniMaps, MapColoring.BLACK_WHITE_YELLOW);
+        addMapToList(34, nonArcadeMaps, miniMaps, MapColoring.BLACK_DARKBLUE);
 
         // 11-15
-        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_VIOLET_PINK);
-        addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_PINK_WHITE);
-        addMapToList(30, nonArcadeMaps, miniMaps, COLOR_SCHEME_GREEN_WHITE_WHITE);
-        addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_YELLOW_WHITE_GREEN);
-        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_GREEN_WHITE_YELLOW);
+        addMapToList(35, nonArcadeMaps, miniMaps, MapColoring.VIOLET_PINK);
+        addMapToList(36, nonArcadeMaps, miniMaps, MapColoring.RED_WHITE);
+        addMapToList(30, nonArcadeMaps, miniMaps, MapColoring.GREEN_WHITE_WHITE);
+        addMapToList(34, nonArcadeMaps, miniMaps, MapColoring.YELLOW_WHITE_GREEN);
+        addMapToList(35, nonArcadeMaps, miniMaps, MapColoring.GREEN_WHITE_YELLOW);
 
         // 16-20
-        addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_KHAKI_WHITE);
-        addMapToList(30, nonArcadeMaps, miniMaps, COLOR_SCHEME_PINK_WHITE);
-        addMapToList(16, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLUE_WHITE_YELLOW);
-        addMapToList(16, nonArcadeMaps, miniMaps, COLOR_SCHEME_BROWN_WHITE);
-        addMapToList(30, nonArcadeMaps, miniMaps, COLOR_SCHEME_RED_PINK);
+        addMapToList(36, nonArcadeMaps, miniMaps, MapColoring.KHAKI_WHITE);
+        addMapToList(30, nonArcadeMaps, miniMaps, MapColoring.PINK_WHITE);
+        addMapToList(16, nonArcadeMaps, miniMaps, MapColoring.BLUE_WHITE_YELLOW);
+        addMapToList(16, nonArcadeMaps, miniMaps, MapColoring.BROWN_WHITE);
+        addMapToList(30, nonArcadeMaps, miniMaps, MapColoring.RED_PINK);
 
         // 21-25
-        addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLACK_WHITE_GREEN);
-        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_GREEN_WHITE_WHITE);
-        addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_GREEN_WHITE_VIOLET);
-        addMapToList(37, nonArcadeMaps, miniMaps, COLOR_SCHEME_VIOLET_WHITE_GREEN);
-        addMapToList(34, nonArcadeMaps, miniMaps, COLOR_SCHEME_GRAY_WHITE_YELLOW);
+        addMapToList(36, nonArcadeMaps, miniMaps, MapColoring.BLACK_WHITE_GREEN);
+        addMapToList(35, nonArcadeMaps, miniMaps, MapColoring.GREEN_WHITE_WHITE);
+        addMapToList(34, nonArcadeMaps, miniMaps, MapColoring.GREEN_WHITE_VIOLET);
+        addMapToList(37, nonArcadeMaps, miniMaps, MapColoring.VIOLET_WHITE_GREEN);
+        addMapToList(34, nonArcadeMaps, miniMaps, MapColoring.GRAY_WHITE_YELLOW);
 
         // 26-30
-        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLUE2_WHITE);
-        addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_VIOLET_WHITE);
-        addMapToList(30, nonArcadeMaps, miniMaps, COLOR_SCHEME_BROWN2_WHITE);
-        addMapToList(28, nonArcadeMaps, miniMaps, COLOR_SCHEME_BROWN2_WHITE);
-        addMapToList(35, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLUE_YELLOW);
+        addMapToList(35, nonArcadeMaps, miniMaps, MapColoring.BLUE2_WHITE);
+        addMapToList(36, nonArcadeMaps, miniMaps, MapColoring.VIOLET_WHITE);
+        addMapToList(30, nonArcadeMaps, miniMaps, MapColoring.BROWN2_WHITE);
+        addMapToList(28, nonArcadeMaps, miniMaps, MapColoring.BROWN2_WHITE);
+        addMapToList(35, nonArcadeMaps, miniMaps, MapColoring.BLUE_YELLOW);
 
         // 31-32
-        addMapToList(36, nonArcadeMaps, miniMaps, COLOR_SCHEME_BLACK_WHITE_GREEN);
-        addMapToList(37, nonArcadeMaps, miniMaps, COLOR_SCHEME_RED_PINK);
+        addMapToList(36, nonArcadeMaps, miniMaps, MapColoring.BLACK_WHITE_GREEN);
+        addMapToList(37, nonArcadeMaps, miniMaps, MapColoring.RED_PINK);
 
         return miniMaps;
     }
@@ -204,57 +163,57 @@ public class TengenMsPacManGame extends GameModel {
         var bigMaps = new ArrayList<WorldMap>();
 
         // 1-5
-        addMapToList(19, nonArcadeMaps, bigMaps, COLOR_SCHEME_ROSE_RED);
-        addMapToList(20, nonArcadeMaps, bigMaps, COLOR_SCHEME_LIGHTBLUE_WHITE_YELLOW);
-        addMapToList(21, nonArcadeMaps, bigMaps, COLOR_SCHEME_ORANGE_WHITE);
-        addMapToList(19, nonArcadeMaps, bigMaps, COLOR_SCHEME_BLUE_WHITE_YELLOW);
-        addMapToList(20, nonArcadeMaps, bigMaps, COLOR_SCHEME_PINK_YELLOW);
+        addMapToList(19, nonArcadeMaps, bigMaps, MapColoring.ROSE_RED);
+        addMapToList(20, nonArcadeMaps, bigMaps, MapColoring.LIGHTBLUE_WHITE_YELLOW);
+        addMapToList(21, nonArcadeMaps, bigMaps, MapColoring.ORANGE_WHITE);
+        addMapToList(19, nonArcadeMaps, bigMaps, MapColoring.BLUE_WHITE_YELLOW);
+        addMapToList(20, nonArcadeMaps, bigMaps, MapColoring.PINK_YELLOW);
 
         // 6-10
-        addMapToList(21, nonArcadeMaps, bigMaps, COLOR_SCHEME_ROSE_RED);
-        addMapToList(22, nonArcadeMaps, bigMaps, COLOR_SCHEME_ORANGE_WHITE);
-        addMapToList(23, nonArcadeMaps, bigMaps, COLOR_SCHEME_VIOLET_WHITE_YELLOW);
-        addMapToList(17, nonArcadeMaps, bigMaps, COLOR_SCHEME_BLACK_WHITE_YELLOW);
-        addMapToList(10, nonArcadeMaps, bigMaps, COLOR_SCHEME_BLACK_DARKBLUE);
+        addMapToList(21, nonArcadeMaps, bigMaps, MapColoring.ROSE_RED);
+        addMapToList(22, nonArcadeMaps, bigMaps, MapColoring.ORANGE_WHITE);
+        addMapToList(23, nonArcadeMaps, bigMaps, MapColoring.VIOLET_WHITE_YELLOW);
+        addMapToList(17, nonArcadeMaps, bigMaps, MapColoring.BLACK_WHITE_YELLOW);
+        addMapToList(10, nonArcadeMaps, bigMaps, MapColoring.BLACK_DARKBLUE);
 
         // 11-15
-        addMapToList(23, nonArcadeMaps, bigMaps, COLOR_SCHEME_PINK_ROSE);
-        addMapToList(21, nonArcadeMaps, bigMaps, COLOR_SCHEME_PINK_WHITE);
-        addMapToList(22, nonArcadeMaps, bigMaps, COLOR_SCHEME_GREEN_WHITE_WHITE);
-        addMapToList(14, nonArcadeMaps, bigMaps, COLOR_SCHEME_VIOLET_WHITE_GREEN);
-        addMapToList(20, nonArcadeMaps, bigMaps, COLOR_SCHEME_GREEN_WHITE_YELLOW);
+        addMapToList(23, nonArcadeMaps, bigMaps, MapColoring.PINK_ROSE);
+        addMapToList(21, nonArcadeMaps, bigMaps, MapColoring.PINK_WHITE);
+        addMapToList(22, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_WHITE);
+        addMapToList(14, nonArcadeMaps, bigMaps, MapColoring.VIOLET_WHITE_GREEN);
+        addMapToList(20, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_YELLOW);
 
         // 16-20
-        addMapToList(19, nonArcadeMaps, bigMaps, COLOR_SCHEME_KHAKI_WHITE);
-        addMapToList(10, nonArcadeMaps, bigMaps, COLOR_SCHEME_PINK_WHITE);
-        addMapToList(17, nonArcadeMaps, bigMaps, COLOR_SCHEME_BLUE_WHITE_YELLOW);
-        addMapToList(10, nonArcadeMaps, bigMaps, COLOR_SCHEME_BROWN_WHITE);
-        addMapToList(19, nonArcadeMaps, bigMaps, COLOR_SCHEME_PINK_ROSE);
+        addMapToList(19, nonArcadeMaps, bigMaps, MapColoring.KHAKI_WHITE);
+        addMapToList(10, nonArcadeMaps, bigMaps, MapColoring.PINK_WHITE);
+        addMapToList(17, nonArcadeMaps, bigMaps, MapColoring.BLUE_WHITE_YELLOW);
+        addMapToList(10, nonArcadeMaps, bigMaps, MapColoring.BROWN_WHITE);
+        addMapToList(19, nonArcadeMaps, bigMaps, MapColoring.PINK_ROSE);
 
         // 21-25
-        addMapToList(26, nonArcadeMaps, bigMaps, COLOR_SCHEME_BLACK_WHITE_GREEN);
-        addMapToList(21, nonArcadeMaps, bigMaps, COLOR_SCHEME_GREEN_WHITE_WHITE);
-        addMapToList(22, nonArcadeMaps, bigMaps, COLOR_SCHEME_GREEN_WHITE_VIOLET);
-        addMapToList(23, nonArcadeMaps, bigMaps, COLOR_SCHEME_VIOLET_WHITE_GREEN);
-        addMapToList(14, nonArcadeMaps, bigMaps, COLOR_SCHEME_GRAY_WHITE_YELLOW);
+        addMapToList(26, nonArcadeMaps, bigMaps, MapColoring.BLACK_WHITE_GREEN);
+        addMapToList(21, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_WHITE);
+        addMapToList(22, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_VIOLET);
+        addMapToList(23, nonArcadeMaps, bigMaps, MapColoring.VIOLET_WHITE_GREEN);
+        addMapToList(14, nonArcadeMaps, bigMaps, MapColoring.GRAY_WHITE_YELLOW);
 
         // 26-30
-        addMapToList(25, nonArcadeMaps, bigMaps, COLOR_SCHEME_VIOLET_WHITE);
-        addMapToList(14, nonArcadeMaps, bigMaps, COLOR_SCHEME_PINK_WHITE);
-        addMapToList(23, nonArcadeMaps, bigMaps, COLOR_SCHEME_GREEN_WHITE_WHITE);
-        addMapToList(26, nonArcadeMaps, bigMaps, COLOR_SCHEME_LIGHTBLUE_WHITE_YELLOW);
-        addMapToList(20, nonArcadeMaps, bigMaps, COLOR_SCHEME_PINK_YELLOW);
+        addMapToList(25, nonArcadeMaps, bigMaps, MapColoring.VIOLET_WHITE);
+        addMapToList(14, nonArcadeMaps, bigMaps, MapColoring.PINK_WHITE);
+        addMapToList(23, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_WHITE);
+        addMapToList(26, nonArcadeMaps, bigMaps, MapColoring.LIGHTBLUE_WHITE_YELLOW);
+        addMapToList(20, nonArcadeMaps, bigMaps, MapColoring.PINK_YELLOW);
 
         // 31-32
-        addMapToList(25, nonArcadeMaps, bigMaps, COLOR_SCHEME_PINK_ROSE);
-        addMapToList(33, nonArcadeMaps, bigMaps, COLOR_SCHEME_PINK_ROSE);
+        addMapToList(25, nonArcadeMaps, bigMaps, MapColoring.PINK_ROSE);
+        addMapToList(33, nonArcadeMaps, bigMaps, MapColoring.PINK_ROSE);
 
         return bigMaps;
     }
 
-    private static void addMapToList(int number, List<WorldMap> sourceMaps, List<WorldMap> targetMaps, MapColorScheme colorScheme) {
-        WorldMap map = new WorldMap(sourceMaps.get(number-1)); // use a copy
-        map.setColorScheme(colorScheme);
+    private static void addMapToList(int number, List<WorldMap> sourceMaps, List<WorldMap> targetMaps, MapColoring mapColoring) {
+        WorldMap map = new WorldMap(sourceMaps.get(number - 1)); // use a copy?
+        map.setColorScheme(mapColoring.colorScheme());
         targetMaps.add(map);
     }
 
