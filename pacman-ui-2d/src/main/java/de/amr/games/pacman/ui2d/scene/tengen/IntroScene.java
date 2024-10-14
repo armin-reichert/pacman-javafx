@@ -29,7 +29,7 @@ import java.util.BitSet;
 import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer.*;
+import static de.amr.games.pacman.ui2d.scene.tengen.GameRenderer.*;
 
 /**
  * Intro scene of the Tengen Ms. Pac-Man game.

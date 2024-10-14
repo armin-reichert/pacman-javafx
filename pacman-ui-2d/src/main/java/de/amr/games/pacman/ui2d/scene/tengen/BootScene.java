@@ -11,7 +11,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer.shadeOfBlue;
+import static de.amr.games.pacman.ui2d.scene.tengen.GameRenderer.shadeOfBlue;
 
 public class BootScene extends GameScene2D {
 
@@ -28,7 +28,7 @@ public class BootScene extends GameScene2D {
         tengenPresentsY = 36 * TS;
         grayScreen = false;
         ghost = Ghost.blinky();
-        ghost.setAnimations(new TengenMsPacManGameGhostAnimations(spriteSheet, ghost.id()));
+        ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
         ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
     }
 

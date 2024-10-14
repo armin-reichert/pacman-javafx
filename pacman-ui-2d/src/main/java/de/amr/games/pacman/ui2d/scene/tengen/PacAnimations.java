@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.tengen;
 
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
@@ -19,9 +18,9 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public class TengenMsPacManGamePacAnimations extends SpriteAnimationCollection {
+public class PacAnimations extends SpriteAnimationCollection {
 
-    public TengenMsPacManGamePacAnimations(GameSpriteSheet spriteSheet) {
+    public PacAnimations(GameSpriteSheet spriteSheet) {
         checkNotNull(spriteSheet);
 
         var munching = SpriteAnimation

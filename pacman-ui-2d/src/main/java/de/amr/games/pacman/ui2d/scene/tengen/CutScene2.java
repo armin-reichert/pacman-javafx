@@ -55,8 +55,8 @@ public class CutScene2 extends GameScene2D {
         msPacMan = new Pac();
 
         GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
-        msPacMan.setAnimations(new TengenMsPacManGamePacAnimations(spriteSheet));
-        pacMan.setAnimations(new TengenMsPacManGamePacAnimations(spriteSheet));
+        msPacMan.setAnimations(new PacAnimations(spriteSheet));
+        pacMan.setAnimations(new PacAnimations(spriteSheet));
 
         clapAnimation = new ClapperboardAnimation("2", "THE CHASE");
         clapAnimation.start();

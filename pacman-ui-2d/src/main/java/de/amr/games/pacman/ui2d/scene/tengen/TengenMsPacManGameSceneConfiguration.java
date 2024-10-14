@@ -14,7 +14,7 @@ import de.amr.games.pacman.ui2d.util.AssetStorage;
 public class TengenMsPacManGameSceneConfiguration extends GameSceneConfiguration {
 
     private final GameSpriteSheet spriteSheet;
-    private final TengenMsPacManGameRenderer renderer;
+    private final GameRenderer renderer;
 
     public TengenMsPacManGameSceneConfiguration(AssetStorage assets) {
         set(GameSceneID.BOOT_SCENE,  new BootScene());
@@ -26,11 +26,11 @@ public class TengenMsPacManGameSceneConfiguration extends GameSceneConfiguration
         set(GameSceneID.CUT_SCENE_3, new CutScene3());
 
         spriteSheet = assets.get(GameAssets2D.assetPrefix(GameVariant.MS_PACMAN_TENGEN) + ".spritesheet");
-        renderer = new TengenMsPacManGameRenderer(assets);
+        renderer = new GameRenderer(assets);
     }
 
     @Override
-    public TengenMsPacManGameRenderer renderer() {
+    public GameRenderer renderer() {
         return renderer;
     }
 
@@ -54,7 +54,7 @@ public class TengenMsPacManGameSceneConfiguration extends GameSceneConfiguration
 
     @Override
     public void createActorAnimations(GameModel game) {
-        game.pac().setAnimations(new TengenMsPacManGamePacAnimations(spriteSheet));
-        game.ghosts().forEach(ghost -> ghost.setAnimations(new TengenMsPacManGameGhostAnimations(spriteSheet, ghost.id())));
+        game.pac().setAnimations(new PacAnimations(spriteSheet));
+        game.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id())));
     }
 }

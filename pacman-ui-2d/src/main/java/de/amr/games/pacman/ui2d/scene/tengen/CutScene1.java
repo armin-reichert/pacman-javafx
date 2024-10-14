@@ -70,10 +70,10 @@ public class CutScene1 extends GameScene2D {
         heart = new Entity();
 
         GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
-        msPac.setAnimations(new TengenMsPacManGamePacAnimations(spriteSheet));
-        pacMan.setAnimations(new TengenMsPacManGamePacAnimations(spriteSheet));
-        inky.setAnimations(new TengenMsPacManGameGhostAnimations(spriteSheet, inky.id()));
-        pinky.setAnimations(new TengenMsPacManGameGhostAnimations(spriteSheet, pinky.id()));
+        msPac.setAnimations(new PacAnimations(spriteSheet));
+        pacMan.setAnimations(new PacAnimations(spriteSheet));
+        inky.setAnimations(new GhostAnimations(spriteSheet, inky.id()));
+        pinky.setAnimations(new GhostAnimations(spriteSheet, pinky.id()));
         clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
         clapAnimation.start();
 

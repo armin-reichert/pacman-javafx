@@ -15,7 +15,7 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer;
+import de.amr.games.pacman.ui2d.scene.tengen.GameRenderer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -148,7 +148,7 @@ public class PlayScene2D extends GameScene2D {
         drawLevelCounter(renderer, worldSize);
         //TODO Hack: Tengen has these boxes on the left and on the right showing the current level number
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN && !context.game().isDemoLevel()) {
-            TengenMsPacManGameRenderer tr = (TengenMsPacManGameRenderer) renderer;
+            GameRenderer tr = (GameRenderer) renderer;
             tr.drawLevelNumberBoxes(context.game().levelNumber(), worldSize);
         }
     }

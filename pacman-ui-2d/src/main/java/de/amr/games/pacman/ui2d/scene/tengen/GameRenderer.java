@@ -46,7 +46,7 @@ import static java.util.function.Predicate.not;
 /**
  * @author Armin Reichert
  */
-public class TengenMsPacManGameRenderer implements GameWorldRenderer {
+public class GameRenderer implements GameWorldRenderer {
 
     // all colors picked from NES emulator
     public static final Color TENGEN_BABY_BLUE          = Color.web("#64b0ff");
@@ -121,7 +121,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
     private boolean blinkingOn;
     private Canvas canvas;
 
-    public TengenMsPacManGameRenderer(AssetStorage assets) {
+    public GameRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
         spriteSheet = assets.get("tengen.spritesheet");
         terrainRenderer.scalingPy.bind(scalingPy);
@@ -133,7 +133,7 @@ public class TengenMsPacManGameRenderer implements GameWorldRenderer {
 
     @Override
     public GameWorldRenderer copy() {
-        return new TengenMsPacManGameRenderer(assets);
+        return new GameRenderer(assets);
     }
 
     @Override

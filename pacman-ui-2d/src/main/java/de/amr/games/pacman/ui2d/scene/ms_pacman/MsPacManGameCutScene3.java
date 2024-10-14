@@ -15,7 +15,7 @@ import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.tengen.TengenMsPacManGameRenderer;
+import de.amr.games.pacman.ui2d.scene.tengen.GameRenderer;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.scene.paint.Color;
 
@@ -66,12 +66,7 @@ public class MsPacManGameCutScene3 extends GameScene2D {
 
         GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
         msPacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            var msPacManSpriteSheet = context.gameSceneConfiguration(GameVariant.MS_PACMAN).spriteSheet();
-            pacMan.setAnimations(new MsPacManGamePacAnimations(msPacManSpriteSheet));
-        } else {
-            pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
-        }
+        pacMan.setAnimations(new MsPacManGamePacAnimations(spriteSheet));
 
         storkAnimation = spriteSheet.createStorkFlyingAnimation();
         storkAnimation.start();
@@ -102,7 +97,7 @@ public class MsPacManGameCutScene3 extends GameScene2D {
         renderer.drawAnimatedEntity(pacMan);
         //TODO Hack
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            TengenMsPacManGameRenderer tr = (TengenMsPacManGameRenderer) renderer;
+            GameRenderer tr = (GameRenderer) renderer;
             tr.drawStork(spriteSheet, storkAnimation, stork, bag.acceleration().y() != 0);
         } else {
             renderer.drawSprite(stork, storkAnimation.currentSprite());
