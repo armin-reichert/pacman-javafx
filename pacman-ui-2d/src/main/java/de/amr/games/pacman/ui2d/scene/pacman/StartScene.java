@@ -19,7 +19,7 @@ import static de.amr.games.pacman.ui2d.scene.pacman.PacManGameSpriteSheet.MIDWAY
 /**
  * @author Armin Reichert
  */
-public class PacManGameStartScene extends GameScene2D {
+public class StartScene extends GameScene2D {
 
     static final List<GameAction> ACTIONS = List.of(
         GameAction2D.ADD_CREDIT,

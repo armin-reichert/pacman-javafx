@@ -12,23 +12,23 @@ import de.amr.games.pacman.ui2d.util.AssetStorage;
 public class PacManGameSceneConfiguration extends GameSceneConfiguration {
 
     private final GameSpriteSheet spriteSheet;
-    private final PacManGameRenderer renderer;
+    private final GameRenderer renderer;
 
     public PacManGameSceneConfiguration(AssetStorage assets) {
         set(GameSceneID.BOOT_SCENE,  new BootScene());
-        set(GameSceneID.INTRO_SCENE, new PacManGameIntroScene());
+        set(GameSceneID.INTRO_SCENE, new IntroScene());
         set(GameSceneID.START_SCENE, new StartScene());
         set(GameSceneID.PLAY_SCENE,  new PlayScene2D());
-        set(GameSceneID.CUT_SCENE_1, new PacManGameCutScene1());
-        set(GameSceneID.CUT_SCENE_2, new PacManGameCutScene2());
-        set(GameSceneID.CUT_SCENE_3, new PacManGameCutScene3());
+        set(GameSceneID.CUT_SCENE_1, new CutScene1());
+        set(GameSceneID.CUT_SCENE_2, new CutScene2());
+        set(GameSceneID.CUT_SCENE_3, new CutScene3());
 
         spriteSheet = assets.get(GameAssets2D.assetPrefix(GameVariant.PACMAN) + ".spritesheet");
-        renderer = new PacManGameRenderer(assets);
+        renderer = new GameRenderer(assets);
     }
 
     @Override
-    public PacManGameRenderer renderer() {
+    public GameRenderer renderer() {
         return renderer;
     }
 
@@ -52,7 +52,7 @@ public class PacManGameSceneConfiguration extends GameSceneConfiguration {
 
     @Override
     public void createActorAnimations(GameModel game) {
-        game.pac().setAnimations(new PacManGamePacAnimations(spriteSheet));
-        game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(spriteSheet, ghost.id())));
+        game.pac().setAnimations(new PacAnimations(spriteSheet));
+        game.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id())));
     }
 }

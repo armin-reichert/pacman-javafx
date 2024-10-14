@@ -2,8 +2,10 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.scene.pacman;
+package de.amr.games.pacman.ui2d.scene.pacman_xxl;
 
+import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
+import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -16,35 +18,41 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.lib.Globals.t;
+import static java.util.function.Predicate.not;
 
 /**
+ * As this game variant allows playing arbitrary custom maps, we use a
+ * vector graphics rendering that draws wall and obstacle paths generated from
+ * the map data.
+ *
  * @author Armin Reichert
  */
-public class PacManGameRenderer implements GameWorldRenderer {
+public class GameRenderer implements GameWorldRenderer {
 
     private final AssetStorage assets;
     private final GameSpriteSheet spriteSheet;
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
-    private final Image flashingMazeImage;
+    private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
+    private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
+
     private boolean flashMode;
     private boolean blinkingOn;
     private Canvas canvas;
 
-    public PacManGameRenderer(AssetStorage assets) {
+    public GameRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
-        spriteSheet = assets.get("pacman.spritesheet");
-        flashingMazeImage = assets.image("pacman.flashing_maze");
+        spriteSheet = assets.get("pacman_xxl.spritesheet");
+        terrainRenderer.scalingPy.bind(scalingPy);
+        foodRenderer.scalingPy.bind(scalingPy);
     }
 
     @Override
-    public GameWorldRenderer copy() {
-        return new PacManGameRenderer(assets);
+    public GameRenderer copy() {
+        return new GameRenderer(assets);
     }
 
     @Override
@@ -92,22 +100,26 @@ public class PacManGameRenderer implements GameWorldRenderer {
 
     @Override
     public void drawWorld(GameContext context, GameWorld world) {
-        double originX = 0, originY = t(3);
-        double scaling = scaling();
-        ctx().save();
-        ctx().scale(scaling, scaling);
+        terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
         if (flashMode) {
-            if (blinkingOn) {
-                ctx().drawImage(flashingMazeImage, originX, originY);
-            } else {
-                drawSpriteUnscaled(PacManGameSpriteSheet.EMPTY_MAZE_SPRITE, originX, originY);
-            }
-        } else {
-            drawSpriteUnscaled(PacManGameSpriteSheet.FULL_MAZE_SPRITE, originX, originY);
-            overPaintEatenPellets(world);
-            overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
+            terrainRenderer.setWallStrokeColor(blinkingOn ? Color.WHITE : Color.BLACK);
+            terrainRenderer.setWallFillColor(blinkingOn   ? Color.BLACK : Color.WHITE);
+            terrainRenderer.setDoorColor(Color.BLACK);
+            terrainRenderer.drawMap(ctx(), world.map().terrain());
         }
-        ctx().restore();
+        else {
+            terrainRenderer.setWallStrokeColor(Color.web(world.map().colorSchemeOrDefault().stroke()));
+            terrainRenderer.setWallFillColor(Color.web(world.map().colorSchemeOrDefault().fill()));
+            terrainRenderer.setDoorColor(Color.web(world.map().colorSchemeOrDefault().door()));
+            terrainRenderer.drawMap(ctx(), world.map().terrain());
+            foodRenderer.setPelletColor(Color.web(world.map().colorSchemeOrDefault().pellet()));
+            foodRenderer.setEnergizerColor(Color.web(world.map().colorSchemeOrDefault().pellet()));
+            world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
+                .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
+            if (blinkingOn) {
+                world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
+            }
+        }
         context.game().bonus().ifPresent(bonus -> drawStaticBonus(spriteSheet, bonus));
     }
 

@@ -17,9 +17,9 @@ import java.util.Map;
 /**
  * @author Armin Reichert
  */
-public class PacManGameGhostAnimations extends SpriteAnimationCollection {
+public class GhostAnimations extends SpriteAnimationCollection {
 
-    public PacManGameGhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
+    public GhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
 
         var normal = SpriteAnimation
             .spriteSheet(spriteSheet)

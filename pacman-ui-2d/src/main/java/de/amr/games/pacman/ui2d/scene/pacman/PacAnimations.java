@@ -19,9 +19,9 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public class PacManGamePacAnimations extends SpriteAnimationCollection {
+public class PacAnimations extends SpriteAnimationCollection {
 
-    public PacManGamePacAnimations(GameSpriteSheet spriteSheet) {
+    public PacAnimations(GameSpriteSheet spriteSheet) {
         checkNotNull(spriteSheet);
         add(Map.of(
             Pac.ANIM_MUNCHING,

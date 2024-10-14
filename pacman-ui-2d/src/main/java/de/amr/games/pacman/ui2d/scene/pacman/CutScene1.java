@@ -15,12 +15,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.lib.Globals.v2i;
 
 /**
  * @author Armin Reichert
  */
-public class PacManGameCutScene3 extends GameScene2D {
+public class CutScene1 extends GameScene2D {
 
     static final short ANIMATION_START = 120;
 
@@ -31,11 +30,11 @@ public class PacManGameCutScene3 extends GameScene2D {
     @Override
     public void init() {
         context.setScoreVisible(true);
-        GameSpriteSheet spriteSheet =  context.currentGameSceneConfiguration().spriteSheet();
         pac = new Pac();
-        pac.setAnimations(new PacManGamePacAnimations(spriteSheet));
+        GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
+        pac.setAnimations(new PacAnimations(spriteSheet));
         blinky = Ghost.blinky();
-        blinky.setAnimations(new PacManGameGhostAnimations(spriteSheet, blinky.id()));
+        blinky.setAnimations(new GhostAnimations(spriteSheet, blinky.id()));
         frame = -1;
     }
 
@@ -53,26 +52,35 @@ public class PacManGameCutScene3 extends GameScene2D {
         switch (frame) {
             case ANIMATION_START -> {
                 startMusic();
-                pac.centerOverTile(v2i(29, 20));
+
+                pac.placeAtTile(29, 20, 0, 0);
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.25f);
-                pac.show();
                 pac.selectAnimation(Pac.ANIM_MUNCHING);
                 pac.startAnimation();
-                blinky.centerOverTile(v2i(35, 20));
+                pac.show();
+
+                blinky.placeAtTile(32, 20, 0, 0);
                 blinky.setMoveAndWishDir(Direction.LEFT);
-                blinky.setSpeed(1.25f);
+                blinky.setSpeed(1.3f);
+                blinky.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
+                blinky.startAnimation();
                 blinky.show();
-                blinky.selectAnimation(Ghost.ANIM_BLINKY_PATCHED);
+            }
+            case ANIMATION_START + 260 -> {
+                blinky.placeAtTile(-2, 20, 4, 0);
+                blinky.setMoveAndWishDir(Direction.RIGHT);
+                blinky.setSpeed(0.75f);
+                blinky.selectAnimation(Ghost.ANIM_GHOST_FRIGHTENED);
                 blinky.startAnimation();
             }
             case ANIMATION_START + 400 -> {
-                blinky.centerOverTile(v2i(-1, 20));
-                blinky.setMoveAndWishDir(Direction.RIGHT);
-                blinky.selectAnimation(Ghost.ANIM_BLINKY_NAKED);
-                blinky.startAnimation();
+                pac.placeAtTile(-3, 18, 0, 6.5f);
+                pac.setMoveDir(Direction.RIGHT);
+                pac.selectAnimation(Pac.ANIM_BIG_PACMAN);
+                pac.startAnimation();
             }
-            case ANIMATION_START + 700 -> context.gameState().timer().expire();
+            case ANIMATION_START + 632 -> context.gameState().timer().expire();
             default -> {}
         }
     }

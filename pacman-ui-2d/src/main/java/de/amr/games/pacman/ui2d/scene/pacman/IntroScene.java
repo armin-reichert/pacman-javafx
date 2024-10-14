@@ -38,7 +38,7 @@ import static de.amr.games.pacman.ui2d.GameAssets2D.*;
  *
  * @author Armin Reichert
  */
-public class PacManGameIntroScene extends GameScene2D {
+public class IntroScene extends GameScene2D {
 
     private static final List<GameAction> ACTIONS = List.of(
         GameAction2D.ADD_CREDIT,
@@ -54,7 +54,7 @@ public class PacManGameIntroScene extends GameScene2D {
     static final float GHOST_FRIGHTENED_SPEED = 0.6f;
     static final int LEFT_TILE_X = 4;
 
-    private final FiniteStateMachine<SceneState, PacManGameIntroScene> sceneController;
+    private final FiniteStateMachine<SceneState, IntroScene> sceneController;
 
     private Pulse blinking;
     private Pac pacMan;
@@ -67,11 +67,11 @@ public class PacManGameIntroScene extends GameScene2D {
     private int ghostIndex;
     private long ghostKilledTime;
 
-    public PacManGameIntroScene() {
+    public IntroScene() {
         sceneController = new FiniteStateMachine<>(SceneState.values()) {
             @Override
-            public PacManGameIntroScene context() {
-                return PacManGameIntroScene.this;
+            public IntroScene context() {
+                return IntroScene.this;
             }
         };
     }
@@ -81,10 +81,10 @@ public class PacManGameIntroScene extends GameScene2D {
         GameSpriteSheet spriteSheet = context.currentGameSceneConfiguration().spriteSheet();
         blinking = new Pulse(10, true);
         pacMan = new Pac();
-        pacMan.setAnimations(new PacManGamePacAnimations(spriteSheet));
+        pacMan.setAnimations(new PacAnimations(spriteSheet));
         ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.clyde() };
         for (Ghost ghost : ghosts) {
-            ghost.setAnimations(new PacManGameGhostAnimations(spriteSheet, ghost.id()));
+            ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
         }
         ghostImageVisible     = new boolean[4];
         ghostNicknameVisible  = new boolean[4];
@@ -216,11 +216,11 @@ public class PacManGameIntroScene extends GameScene2D {
         renderer.ctx().restore();
     }
 
-    private enum SceneState implements FsmState<PacManGameIntroScene> {
+    private enum SceneState implements FsmState<IntroScene> {
 
         STARTING {
             @Override
-            public void onUpdate(PacManGameIntroScene intro) {
+            public void onUpdate(IntroScene intro) {
                 if (timer.currentTick() == 3) {
                     intro.titleVisible = true;
                 } else if (timer.atSecond(1)) {
@@ -231,7 +231,7 @@ public class PacManGameIntroScene extends GameScene2D {
 
         PRESENTING_GHOSTS {
             @Override
-            public void onUpdate(PacManGameIntroScene intro) {
+            public void onUpdate(IntroScene intro) {
                 if (timer.currentTick() == 1) {
                     intro.ghostImageVisible[intro.ghostIndex] = true;
                 } else if (timer.atSecond(1.0)) {
@@ -251,12 +251,12 @@ public class PacManGameIntroScene extends GameScene2D {
 
         SHOWING_POINTS {
             @Override
-            public void onEnter(PacManGameIntroScene intro) {
+            public void onEnter(IntroScene intro) {
                 intro.blinking.stop();
             }
 
             @Override
-            public void onUpdate(PacManGameIntroScene intro) {
+            public void onUpdate(IntroScene intro) {
                 if (timer.atSecond(1)) {
                     intro.sceneController.changeState(CHASING_PAC);
                 }
@@ -265,7 +265,7 @@ public class PacManGameIntroScene extends GameScene2D {
 
         CHASING_PAC {
             @Override
-            public void onEnter(PacManGameIntroScene intro) {
+            public void onEnter(IntroScene intro) {
                 timer.restartIndefinitely();
                 intro.pacMan.setPosition(TS * 36, TS * 20);
                 intro.pacMan.setMoveDir(Direction.LEFT);
@@ -285,7 +285,7 @@ public class PacManGameIntroScene extends GameScene2D {
             }
 
             @Override
-            public void onUpdate(PacManGameIntroScene intro) {
+            public void onUpdate(IntroScene intro) {
                 if (timer.atSecond(1)) {
                     intro.blinking.start();
                 }
@@ -313,7 +313,7 @@ public class PacManGameIntroScene extends GameScene2D {
 
         CHASING_GHOSTS {
             @Override
-            public void onEnter(PacManGameIntroScene intro) {
+            public void onEnter(IntroScene intro) {
                 timer.restartIndefinitely();
                 intro.ghostKilledTime = timer.currentTick();
                 intro.pacMan.setMoveDir(Direction.RIGHT);
@@ -322,7 +322,7 @@ public class PacManGameIntroScene extends GameScene2D {
             }
 
             @Override
-            public void onUpdate(PacManGameIntroScene intro) {
+            public void onUpdate(IntroScene intro) {
                 if (Stream.of(intro.ghosts).allMatch(ghost -> ghost.inState(EATEN))) {
                     intro.pacMan.hide();
                     intro.sceneController.changeState(READY_TO_PLAY);
@@ -368,7 +368,7 @@ public class PacManGameIntroScene extends GameScene2D {
 
         READY_TO_PLAY {
             @Override
-            public void onUpdate(PacManGameIntroScene intro) {
+            public void onUpdate(IntroScene intro) {
                 if (timer.atSecond(0.75)) {
                     intro.ghosts[3].hide();
                     if (!intro.context.game().hasCredit()) {
