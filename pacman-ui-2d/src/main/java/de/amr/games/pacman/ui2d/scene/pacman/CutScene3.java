@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
@@ -64,13 +65,13 @@ public class CutScene3 extends GameScene2D {
                 blinky.setMoveAndWishDir(Direction.LEFT);
                 blinky.setSpeed(1.25f);
                 blinky.show();
-                blinky.selectAnimation(GameModel.ANIM_BLINKY_PATCHED);
+                blinky.selectAnimation(PacManArcadeGame.ANIM_BLINKY_PATCHED);
                 blinky.startAnimation();
             }
             case ANIMATION_START + 400 -> {
                 blinky.centerOverTile(v2i(-1, 20));
                 blinky.setMoveAndWishDir(Direction.RIGHT);
-                blinky.selectAnimation(GameModel.ANIM_BLINKY_NAKED);
+                blinky.selectAnimation(PacManArcadeGame.ANIM_BLINKY_NAKED);
                 blinky.startAnimation();
             }
             case ANIMATION_START + 700 -> context.gameState().timer().expire();

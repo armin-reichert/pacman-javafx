@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
@@ -87,10 +88,10 @@ public class GhostAnimations extends SpriteAnimationCollection {
             GameModel.ANIM_GHOST_FLASHING, flashing,
             GameModel.ANIM_GHOST_EYES, eyes,
             GameModel.ANIM_GHOST_NUMBER, number,
-            GameModel.ANIM_BLINKY_DAMAGED, damaged,
-            GameModel.ANIM_BLINKY_STRETCHED, stretching,
-            GameModel.ANIM_BLINKY_PATCHED, patched,
-            GameModel.ANIM_BLINKY_NAKED, naked));
+            PacManArcadeGame.ANIM_BLINKY_DAMAGED, damaged,
+            PacManArcadeGame.ANIM_BLINKY_STRETCHED, stretching,
+            PacManArcadeGame.ANIM_BLINKY_PATCHED, patched,
+            PacManArcadeGame.ANIM_BLINKY_NAKED, naked));
 
         // TODO check this
         eyes.start();

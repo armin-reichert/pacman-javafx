@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
@@ -78,7 +79,7 @@ public class CutScene1 extends GameScene2D {
             case ANIMATION_START + 400 -> {
                 pac.placeAtTile(-3, 18, 0, 6.5f);
                 pac.setMoveDir(Direction.RIGHT);
-                pac.selectAnimation(GameModel.ANIM_PAC_BIG);
+                pac.selectAnimation(PacManArcadeGame.ANIM_PAC_BIG);
                 pac.startAnimation();
             }
             case ANIMATION_START + 632 -> context.gameState().timer().expire();

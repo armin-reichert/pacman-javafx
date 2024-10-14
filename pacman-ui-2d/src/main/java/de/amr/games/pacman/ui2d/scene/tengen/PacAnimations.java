@@ -8,6 +8,8 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
+import de.amr.games.pacman.model.tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
@@ -59,10 +61,10 @@ public class PacAnimations extends SpriteAnimationCollection {
 
         add(Map.of(
             GameModel.ANIM_PAC_MUNCHING, munching,
-            GameModel.ANIM_PAC_MUNCHING_BOOSTER, munchingBooster,
+            TengenMsPacManGame.ANIM_PAC_MUNCHING_BOOSTER, munchingBooster,
             GameModel.ANIM_PAC_DYING, dying,
-            GameModel.ANIM_PAC_HUSBAND_MUNCHING, husbandMunching,
-            GameModel.ANIM_PAC_HUSBAND_MUNCHING_BOOSTER, husbandMunchingBooster
+            MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING, husbandMunching,
+            TengenMsPacManGame.ANIM_PAC_HUSBAND_MUNCHING_BOOSTER, husbandMunchingBooster
         ));
     }
 
@@ -72,10 +74,10 @@ public class PacAnimations extends SpriteAnimationCollection {
             if (currently(GameModel.ANIM_PAC_MUNCHING)) {
                 return TengenMsPacManGameSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT;
             }
-            if (currently(GameModel.ANIM_PAC_MUNCHING_BOOSTER)) {
+            if (currently(TengenMsPacManGame.ANIM_PAC_MUNCHING_BOOSTER)) {
                 return TengenMsPacManGameSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER;
             }
-            if (currently(GameModel.ANIM_PAC_HUSBAND_MUNCHING)) {
+            if (currently(MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING)) {
                 return spriteSheet.pacManMunchingSprites(msPacMan.moveDir());
             }
         }

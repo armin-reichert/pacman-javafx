@@ -45,6 +45,12 @@ import static de.amr.games.pacman.lib.NavPoint.np;
  */
 public class PacManArcadeGame extends GameModel {
 
+    public static final String ANIM_PAC_BIG          = "big_pacman";
+    public static final String ANIM_BLINKY_DAMAGED   = "damaged";
+    public static final String ANIM_BLINKY_STRETCHED = "stretched";
+    public static final String ANIM_BLINKY_PATCHED   = "patched";
+    public static final String ANIM_BLINKY_NAKED     = "naked";
+
     private static final byte HOUSE_X = 10, HOUSE_Y = 15;
 
     // The Pac-Man Arcade game map

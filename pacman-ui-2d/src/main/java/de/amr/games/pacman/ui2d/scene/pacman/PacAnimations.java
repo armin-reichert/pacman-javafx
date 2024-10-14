@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
@@ -31,7 +32,7 @@ public class PacAnimations extends SpriteAnimationCollection {
             GameModel.ANIM_PAC_DYING,
             SpriteAnimation.spriteSheet(spriteSheet).info("Pac-Man dying").sprites(spriteSheet.pacDyingSprites()).frameTicks(8).end(),
 
-            GameModel.ANIM_PAC_BIG,
+            PacManArcadeGame.ANIM_PAC_BIG,
             SpriteAnimation.spriteSheet(spriteSheet).info("BIG Pac-Man munching").sprites(spriteSheet.bigPacManSprites()).frameTicks(3).loop()
         ));
     }

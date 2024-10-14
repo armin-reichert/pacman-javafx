@@ -44,6 +44,9 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class MsPacManArcadeGame extends GameModel {
 
+    // Ms. Pac-Man game specific
+    public static final String ANIM_MR_PACMAN_MUNCHING = "pacman_munching";
+
     private static final byte MAP_COUNT = 6;
     private static final byte HOUSE_X = 10, HOUSE_Y = 15;
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;

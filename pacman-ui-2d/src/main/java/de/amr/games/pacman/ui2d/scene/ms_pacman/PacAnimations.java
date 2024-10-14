@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
@@ -48,7 +49,7 @@ public class PacAnimations extends SpriteAnimationCollection {
         add(Map.of(
             GameModel.ANIM_PAC_MUNCHING, munching,
             GameModel.ANIM_PAC_DYING, dying,
-            GameModel.ANIM_PAC_HUSBAND_MUNCHING, husbandMunching
+            MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING, husbandMunching
         ));
     }
 
@@ -58,7 +59,7 @@ public class PacAnimations extends SpriteAnimationCollection {
             if (currently(GameModel.ANIM_PAC_MUNCHING)) {
                 return spriteSheet.pacMunchingSprites(msPacMan.moveDir());
             }
-            if (currently(GameModel.ANIM_PAC_HUSBAND_MUNCHING)) {
+            if (currently(MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING)) {
                 return spriteSheet.pacManMunchingSprites(msPacMan.moveDir());
             }
         }

@@ -11,6 +11,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
@@ -118,7 +119,7 @@ public class CutScene2 extends GameScene2D {
 
         void enterStateChasing() {
             pacMan.setMoveDir(Direction.RIGHT);
-            pacMan.selectAnimation(GameModel.ANIM_PAC_HUSBAND_MUNCHING);
+            pacMan.selectAnimation(MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING);
             pacMan.animations().ifPresent(Animations::startSelected);
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);

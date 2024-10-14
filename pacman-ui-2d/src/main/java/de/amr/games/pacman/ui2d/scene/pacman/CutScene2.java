@@ -10,6 +10,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
@@ -42,8 +43,8 @@ public class CutScene2 extends GameScene2D {
         blinky = Ghost.blinky();
         var blinkyAnimations = new GhostAnimations(spriteSheet, blinky.id());
         blinkyNormal = blinkyAnimations.animation(GameModel.ANIM_GHOST_NORMAL);
-        blinkyStretching = blinkyAnimations.animation(GameModel.ANIM_BLINKY_STRETCHED);
-        blinkyDamaged = blinkyAnimations.animation(GameModel.ANIM_BLINKY_DAMAGED);
+        blinkyStretching = blinkyAnimations.animation(PacManArcadeGame.ANIM_BLINKY_STRETCHED);
+        blinkyDamaged = blinkyAnimations.animation(PacManArcadeGame.ANIM_BLINKY_DAMAGED);
         blinky.setAnimations(blinkyAnimations);
         blinky.setSpeed(0);
         blinky.hide();
@@ -91,7 +92,7 @@ public class CutScene2 extends GameScene2D {
                 blinky.setSpeed(0);
                 blinkyStretching.nextFrame(); // Rapture
             }
-            case ANIMATION_START + 329 -> blinky.selectAnimation(GameModel.ANIM_BLINKY_DAMAGED); // Eyes up
+            case ANIMATION_START + 329 -> blinky.selectAnimation(PacManArcadeGame.ANIM_BLINKY_DAMAGED); // Eyes up
             case ANIMATION_START + 389 -> blinkyDamaged.nextFrame(); // Eyes right-down
             case ANIMATION_START + 508 -> {
                 blinky.setVisible(false);

@@ -44,6 +44,10 @@ public class TengenMsPacManGame extends GameModel {
     // TODO what is the exact speed increase?
     static final float BOOSTER_FACTOR = 1.5f;
 
+    // Ms. Pac-Man (Tengen) game specific animation IDs
+    public static final String ANIM_PAC_MUNCHING_BOOSTER = "munching_booster";
+    public static final String ANIM_PAC_HUSBAND_MUNCHING_BOOSTER = "husband_munching_booster";
+
     //TODO check how many maps are really used in Tengen game
     static final int ARCADE_MAP_COUNT = 9;
     static final int NON_ARCADE_MAP_COUNT = 37;
@@ -296,7 +300,7 @@ public class TengenMsPacManGame extends GameModel {
             baseSpeed *= BOOSTER_FACTOR;
         }
         pac.setBaseSpeed(baseSpeed);
-        pac.selectAnimation(boosterActive ? GameModel.ANIM_PAC_MUNCHING_BOOSTER : GameModel.ANIM_PAC_MUNCHING);
+        pac.selectAnimation(boosterActive ? ANIM_PAC_MUNCHING_BOOSTER : GameModel.ANIM_PAC_MUNCHING);
         Logger.info("Ms. Pac-Man base speed is {0.00} px/s", baseSpeed);
     }
 
@@ -383,7 +387,7 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     protected void initPacAnimation() {
-        pac.selectAnimation(isBoosterActive() ? GameModel.ANIM_PAC_MUNCHING_BOOSTER : GameModel.ANIM_PAC_MUNCHING);
+        pac.selectAnimation(isBoosterActive() ? ANIM_PAC_MUNCHING_BOOSTER : GameModel.ANIM_PAC_MUNCHING);
         pac.animations().ifPresent(Animations::resetSelected);
     }
 

@@ -16,6 +16,7 @@ import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
 import de.amr.games.pacman.model.tengen.TengenMsPacManGame;
 import de.amr.games.pacman.model.tengen.TengenMsPacManGame.MapCategory;
 import de.amr.games.pacman.model.tengen.TengenMsPacManGame.PacBooster;
@@ -198,9 +199,9 @@ public class GameRenderer implements GameWorldRenderer {
                 if (spriteAnimation != null) {
                     switch (animations.currentAnimationName()) {
                         case GameModel.ANIM_PAC_MUNCHING,
-                             GameModel.ANIM_PAC_MUNCHING_BOOSTER,
-                             GameModel.ANIM_PAC_HUSBAND_MUNCHING,
-                             GameModel.ANIM_PAC_HUSBAND_MUNCHING_BOOSTER -> drawRotatedTowardsDir(pac, pac.moveDir(), spriteAnimation);
+                             TengenMsPacManGame.ANIM_PAC_MUNCHING_BOOSTER,
+                             MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING,
+                             TengenMsPacManGame.ANIM_PAC_HUSBAND_MUNCHING_BOOSTER -> drawRotatedTowardsDir(pac, pac.moveDir(), spriteAnimation);
                         case GameModel.ANIM_PAC_DYING -> {
                             Direction dir = Direction.UP;
                             if (spriteAnimation.frameIndex() < 11) {
