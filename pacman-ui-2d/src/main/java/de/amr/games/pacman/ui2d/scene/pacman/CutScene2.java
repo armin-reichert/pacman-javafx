@@ -106,7 +106,7 @@ public class CutScene2 extends GameScene2D {
         renderer.drawSpriteScaled(blinkyStretching.currentSprite(), t(14), t(19) + 3);
         renderer.drawAnimatedEntity(blinky);
         renderer.drawAnimatedEntity(pac);
-        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
+        renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), context.worldSizeTilesOrDefault());
     }
 
     @Override

@@ -141,7 +141,7 @@ public class IntroScene extends GameScene2D {
         r.drawAnimatedEntity(msPacMan);
         r.drawMsPacManMidwayCopyright(t(6), t(28), ARCADE_RED, font);
         drawCredit(r, context.worldSizeTilesOrDefault());
-        drawLevelCounter(r, context.worldSizeTilesOrDefault());
+        r.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), context.worldSizeTilesOrDefault());
     }
 
     /**

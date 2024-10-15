@@ -56,6 +56,6 @@ public class StartScene extends GameScene2D {
             renderer.drawText(MIDWAY_COPYRIGHT, ARCADE_PINK, renderer.scaledArcadeFont(8), t(4), t(29));
         }
         drawCredit(renderer, context.worldSizeTilesOrDefault());
-        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
+        renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), context.worldSizeTilesOrDefault());
     }
 }

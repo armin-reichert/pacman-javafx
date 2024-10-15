@@ -139,7 +139,7 @@ public class IntroScene extends GameScene2D {
             }
         }
         drawCredit(renderer, context.worldSizeTilesOrDefault());
-        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
+        renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), context.worldSizeTilesOrDefault());
     }
 
     // TODO inspect in MAME what's really going on here

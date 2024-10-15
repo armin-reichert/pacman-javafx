@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -74,11 +73,6 @@ public class StartScene extends GameScene2D {
         renderer.ctx().setFill(TENGEN_BABY_BLUE);
         renderer.ctx().fillRect(0, y + 1, canvas.getWidth(), 6);
         renderer.ctx().restore();
-    }
-
-    @Override
-    protected void drawLevelCounter(GameRenderer renderer, Vector2i worldSize) {
-        // suppress level counter
     }
 
     @Override

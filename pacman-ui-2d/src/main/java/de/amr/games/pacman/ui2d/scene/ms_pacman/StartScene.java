@@ -75,6 +75,6 @@ public class StartScene extends GameScene2D {
             default -> throw new IllegalArgumentException("Unsupported game variant: " + context.gameVariant());
         }
         drawCredit(r, context.worldSizeTilesOrDefault());
-        drawLevelCounter(r, context.worldSizeTilesOrDefault());
+        r.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), context.worldSizeTilesOrDefault());
     }
 }

@@ -60,10 +60,6 @@ public abstract class GameScene2D implements GameScene {
         renderer.drawText("CREDIT %2d".formatted(context.game().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS), x, y);
     }
 
-    protected void drawLevelCounter(GameRenderer renderer, Vector2i worldSize) {
-        renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), worldSize);
-    }
-
     /**
      * Draws additional scene info, e.g. tile structure or debug info.
      */
