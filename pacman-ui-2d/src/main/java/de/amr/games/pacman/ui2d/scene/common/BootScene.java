@@ -36,7 +36,7 @@ public class BootScene extends GameScene2D {
     @Override
     public void draw(GameRenderer renderer) {
         renderer.scalingProperty().set(scalingPy.get());
-        renderer.backgroundColorProperty().set(backgroundColorPy.get());
+        renderer.setBackgroundColor(backgroundColorPy.get());
         var timer = context.gameState().timer();
         if (timer.currentTick() == 1) {
             renderer.clearCanvas();

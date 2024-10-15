@@ -21,17 +21,15 @@ import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame.PacBooster;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -110,13 +108,13 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     private final AssetStorage assets;
     private final TengenMsPacManGameSpriteSheet spriteSheet;
-    private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
     private final Image arcadeMazesImage;
     private final Image nonArcadeMazesImage;
 
+    private Color bgColor = Color.BLACK;
     private ImageArea mapSprite;
     private boolean flashMode;
     private boolean blinkingOn;
@@ -126,7 +124,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         this.assets = checkNotNull(assets);
         spriteSheet = assets.get("tengen.spritesheet");
         terrainRenderer.scalingPy.bind(scalingPy);
-        terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
+        terrainRenderer.setMapBackgroundColor(bgColor);
         foodRenderer.scalingPy.bind(scalingPy);
         arcadeMazesImage = assets.image("tengen.mazes.arcade");
         nonArcadeMazesImage = assets.image("tengen.mazes.non_arcade");
@@ -173,8 +171,13 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public ObjectProperty<Color> backgroundColorProperty() {
-        return backgroundColorPy;
+    public Color backgroundColor() {
+        return bgColor;
+    }
+
+    @Override
+    public void setBackgroundColor(Color color) {
+        bgColor = checkNotNull(color);
     }
 
     @Override
@@ -449,7 +452,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             drawSpriteCenteredOverBox(sprite, x, y);
             var numberX = x + 8;
             var numberY = y + 18; // baseline
-            ctx().setFill(backgroundColorPy.get());
+            ctx().setFill(bgColor);
             ctx().save();
             ctx().scale(scaling(), scaling());
             ctx().fillRect(numberX - 1, numberY - 8, 12, 8);
@@ -475,7 +478,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         // over-paint bag when released from beak
         if (bagReleased) {
             ctx().scale(scaling(), scaling());
-            ctx().setFill(backgroundColorProperty().get());
+            ctx().setFill(bgColor);
             ctx().fillRect(pos.x(), eyeY + 4, scaled(7), scaled(6));
         }
         ctx().restore();
@@ -486,7 +489,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         double cx = tile.x() * TS + TS + offX;
         double cy = tile.y() * TS + HTS + offY;
         double spriteSize = 2 * TS;
-        ctx().setFill(backgroundColorProperty().get());
+        ctx().setFill(bgColor);
         ctx().fillRect(scaled(cx - TS), scaled(cy - TS), scaled(spriteSize), scaled(spriteSize));
     }
 }

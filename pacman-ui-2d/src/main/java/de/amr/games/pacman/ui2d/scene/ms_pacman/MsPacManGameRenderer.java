@@ -15,9 +15,7 @@ import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -33,7 +31,6 @@ public class MsPacManGameRenderer implements GameRenderer {
 
     private final AssetStorage assets;
     private final MsPacManGameSpriteSheet spriteSheet;
-    private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final Image flashingMazesImage;
     private ImageArea mapWithFoodSprite;
@@ -42,6 +39,7 @@ public class MsPacManGameRenderer implements GameRenderer {
     private boolean flashMode;
     private boolean blinkingOn;
     private Canvas canvas;
+    private Color bgColor = Color.BLACK;
 
     public MsPacManGameRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
@@ -90,8 +88,13 @@ public class MsPacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public ObjectProperty<Color> backgroundColorProperty() {
-        return backgroundColorPy;
+    public Color backgroundColor() {
+        return bgColor;
+    }
+
+    @Override
+    public void setBackgroundColor(Color color) {
+        bgColor = checkNotNull(color);
     }
 
     @Override

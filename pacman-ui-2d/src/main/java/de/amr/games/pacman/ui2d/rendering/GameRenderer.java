@@ -10,14 +10,14 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
-import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.model.actors.AnimatedEntity;
+import de.amr.games.pacman.model.actors.Creature;
+import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.scene.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -39,27 +39,19 @@ import static java.util.function.Predicate.not;
 public interface GameRenderer {
 
     void setRendererFor(GameModel game);
-
     GameRenderer copy();
-
     AssetStorage assets();
-
+    Color backgroundColor();
+    void setBackgroundColor(Color color);
     GameSpriteSheet spriteSheet();
-
     Canvas canvas();
-
     void setCanvas(Canvas canvas);
-
     default GraphicsContext ctx() { return canvas().getGraphicsContext2D(); }
-
     DoubleProperty scalingProperty();
-
     default double scaling() { return scalingProperty().get(); }
-
     default double scaled(double factor) {
         return scaling() * factor;
     }
-
     default Font scaledArcadeFont(double size) {
         return assets().font("font.arcade", scaled(size));
     }
@@ -170,8 +162,6 @@ public interface GameRenderer {
         });
     }
 
-    ObjectProperty<Color> backgroundColorProperty();
-
     void drawWorld(GameContext context, GameWorld world);
 
     void setFlashMode(boolean on);
@@ -179,7 +169,7 @@ public interface GameRenderer {
     void setBlinkingOn(boolean on);
 
     default void clearCanvas() {
-        ctx().setFill(backgroundColorProperty().get());
+        ctx().setFill(backgroundColor());
         ctx().fillRect(0, 0, canvas().getWidth(), canvas().getHeight());
     }
 
@@ -207,7 +197,7 @@ public interface GameRenderer {
      */
     private void overPaint(Vector2i tile, double squareSize) {
         double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
-        ctx().setFill(backgroundColorProperty().get());
+        ctx().setFill(backgroundColor());
         ctx().fillRect(centerX - 0.5 * squareSize, centerY - 0.5 * squareSize, squareSize, squareSize);
     }
 

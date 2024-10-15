@@ -10,13 +10,11 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -34,14 +32,13 @@ public class PacManGameXXLRenderer implements GameRenderer {
 
     private final AssetStorage assets;
     private final GameSpriteSheet spriteSheet;
-    private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
-
     private boolean flashMode;
     private boolean blinkingOn;
     private Canvas canvas;
+    private Color bgColor;
 
     public PacManGameXXLRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
@@ -91,8 +88,13 @@ public class PacManGameXXLRenderer implements GameRenderer {
     }
 
     @Override
-    public ObjectProperty<Color> backgroundColorProperty() {
-        return backgroundColorPy;
+    public Color backgroundColor() {
+        return bgColor;
+    }
+
+    @Override
+    public void setBackgroundColor(Color color) {
+        bgColor = checkNotNull(color);
     }
 
     @Override
@@ -100,7 +102,7 @@ public class PacManGameXXLRenderer implements GameRenderer {
 
     @Override
     public void drawWorld(GameContext context, GameWorld world) {
-        terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
+        terrainRenderer.setMapBackgroundColor(bgColor);
         if (flashMode) {
             terrainRenderer.setWallStrokeColor(blinkingOn ? Color.WHITE : Color.BLACK);
             terrainRenderer.setWallFillColor(blinkingOn   ? Color.BLACK : Color.WHITE);

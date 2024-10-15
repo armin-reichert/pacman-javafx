@@ -9,7 +9,6 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -40,10 +39,12 @@ public abstract class GameScene2D implements GameScene {
         return value * scaling();
     }
 
+    protected abstract void drawSceneContent(GameRenderer renderer);
+
     @Override
     public void draw(GameRenderer renderer) {
-        renderer.scalingProperty().set(scalingPy.get());
-        renderer.backgroundColorProperty().set(backgroundColorPy.get());
+        renderer.scalingProperty().set(scaling());
+        renderer.setBackgroundColor(backgroundColorPy.get());
         renderer.clearCanvas();
         if (context.isScoreVisible()) {
             renderer.drawScores(context);
@@ -61,14 +62,6 @@ public abstract class GameScene2D implements GameScene {
 
     protected void drawLevelCounter(GameRenderer renderer, Vector2i worldSize) {
         renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), worldSize);
-    }
-
-    /**
-     * Scenes overwrite this method to draw their specific content.
-     */
-    protected void drawSceneContent(GameRenderer renderer) {
-        Font font = Font.font("Monospaced", 20);
-        renderer.drawText("Implement method drawSceneContent()!", Color.WHITE, font, 10, 100);
     }
 
     /**
