@@ -96,8 +96,8 @@ public class CutScene1 extends GameScene2D {
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer renderer) {
-        renderer.drawTileGrid(context.worldSizeTilesOrDefault());
+    protected void drawDebugInfo(GameRenderer renderer, Vector2f sceneSize) {
+        renderer.drawTileGrid(sceneSize);
         var text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
         renderer.drawText(text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
     }

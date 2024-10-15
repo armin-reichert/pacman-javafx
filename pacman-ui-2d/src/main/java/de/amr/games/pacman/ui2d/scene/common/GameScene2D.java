@@ -40,23 +40,23 @@ public abstract class GameScene2D implements GameScene {
     protected abstract void drawSceneContent(GameRenderer renderer, Vector2f size);
 
     @Override
-    public void draw(GameRenderer renderer, Vector2f size) {
+    public void draw(GameRenderer renderer, Vector2f sceneSize) {
         renderer.scalingProperty().set(scaling());
         renderer.setBackgroundColor(backgroundColorPy.get());
         renderer.clearCanvas();
         if (context.isScoreVisible()) {
             renderer.drawScores(context);
         }
-        drawSceneContent(renderer, size);
+        drawSceneContent(renderer, sceneSize);
         if (debugInfoPy.get()) {
-            drawDebugInfo(renderer);
+            drawDebugInfo(renderer, sceneSize);
         }
     }
 
     /**
      * Draws additional scene info, e.g. tile structure or debug info.
      */
-    protected void drawDebugInfo(GameRenderer renderer) {
-        renderer.drawTileGrid(context.worldSizeTilesOrDefault());
+    protected void drawDebugInfo(GameRenderer renderer, Vector2f sceneSize) {
+        renderer.drawTileGrid(sceneSize);
     }
 }

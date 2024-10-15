@@ -375,7 +375,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     @Override
     public void drawLivesCounter(int numLives, int maxLives, Vector2f sceneSize) {
         ctx().save();
-        ctx().translate(0, -5); // lift a bit
+        ctx().translate(0, -scaled(8)); // lift a bit
         GameRenderer.super.drawLivesCounter(numLives, maxLives, sceneSize);
         ctx().restore();
     }
@@ -383,21 +383,14 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     @Override
     public void drawLevelCounter(int levelNumber, boolean demoLevel, List<Byte> symbols, Vector2f sceneSize) {
         ctx().save();
-        ctx().translate(0, -5);
+        ctx().translate(0, -scaled(8));
         GameRenderer.super.drawLevelCounter(levelNumber, demoLevel, symbols, sceneSize);
         if (!demoLevel) {
-            drawLevelNumberBoxes(levelNumber, sceneSize);
-        }
-        ctx().restore();
-    }
-
-    public void drawLevelNumberBoxes(int levelNumber, Vector2f sceneSize) {
-        ctx().save();
-        ctx().translate(0, -5);
-        if (levelNumber > 0) {
-            double y = sceneSize.y() - 2 * TS;
-            drawLevelNumberBox(levelNumber, 0, y); // left border
-            drawLevelNumberBox(levelNumber, sceneSize.x() - 2 * TS, y); // right border
+            if (levelNumber > 0) {
+                double y = sceneSize.y() - 2 * TS;
+                drawLevelNumberBox(levelNumber, 0, y); // left border
+                drawLevelNumberBox(levelNumber, sceneSize.x() - 2 * TS, y); // right border
+            }
         }
         ctx().restore();
     }

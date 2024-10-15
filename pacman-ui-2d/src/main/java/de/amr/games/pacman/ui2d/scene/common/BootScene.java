@@ -35,7 +35,7 @@ public class BootScene extends GameScene2D {
     }
 
     @Override
-    public void draw(GameRenderer renderer, Vector2f size) {
+    public void draw(GameRenderer renderer, Vector2f sceneSize) {
         renderer.scalingProperty().set(scalingPy.get());
         renderer.setBackgroundColor(backgroundColorPy.get());
         var timer = context.gameState().timer();

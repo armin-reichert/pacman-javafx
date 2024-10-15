@@ -281,14 +281,15 @@ public interface GameRenderer {
         }
     }
 
-    default void drawTileGrid(Vector2i gridSizeTiles) {
+    default void drawTileGrid(Vector2f sceneSize) {
+        int tilesX = (int) (sceneSize.x() / TS), tilesY = (int) (sceneSize.y() / TS);
         ctx().setStroke(Color.LIGHTGRAY);
         ctx().setLineWidth(0.2);
-        for (int row = 0; row <= gridSizeTiles.y(); ++row) {
-            ctx().strokeLine(0, scaled(TS * row), scaled(gridSizeTiles.y() * TS), scaled(TS * row));
+        for (int row = 0; row <= tilesY; ++row) {
+            ctx().strokeLine(0, scaled(TS * row), scaled(tilesY * TS), scaled(TS * row));
         }
-        for (int col = 0; col <= gridSizeTiles.x(); ++col) {
-            ctx().strokeLine(scaled(TS * col), 0, scaled(TS * col), scaled(gridSizeTiles.y() * TS));
+        for (int col = 0; col <= tilesX; ++col) {
+            ctx().strokeLine(scaled(TS * col), 0, scaled(TS * col), scaled(tilesY * TS));
         }
     }
 }
