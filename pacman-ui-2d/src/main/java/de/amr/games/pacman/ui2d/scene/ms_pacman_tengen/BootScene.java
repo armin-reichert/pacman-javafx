@@ -11,8 +11,7 @@ import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.shadeOfBlue;
 
 public class BootScene extends GameScene2D {
@@ -37,8 +36,8 @@ public class BootScene extends GameScene2D {
     @Override
     public void update() {
         if (0 <= t && t < 90) {
-            if (t % 4 == 0 && tengenPresentsY > 17 * TS) {
-                tengenPresentsY -= 2*TS;
+            if (tengenPresentsY > 17 * TS) {
+                tengenPresentsY -= HTS;
             }
         }
         else if (t == 90) {
