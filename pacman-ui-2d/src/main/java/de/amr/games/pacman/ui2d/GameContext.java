@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -23,6 +24,8 @@ import javafx.beans.property.ObjectProperty;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import static de.amr.games.pacman.lib.Globals.TS;
 
 /**
  * @author Armin Reichert
@@ -43,12 +46,17 @@ public interface GameContext {
      */
     default Vector2i worldSizeTilesOrDefault() {
         boolean worldExists = game().world() != null;
-        var size = new Vector2i(
+        return new Vector2i(
             worldExists ? game().world().map().terrain().numCols() : GameModel.ARCADE_MAP_TILES_X,
             worldExists ? game().world().map().terrain().numRows() : GameModel.ARCADE_MAP_TILES_Y
         );
+    }
+
+    default Vector2f sceneSize() {
         // add some vertical space for Tengen worlds to be able to display higher lives/level counters
-        return gameVariant() == GameVariant.MS_PACMAN_TENGEN ? size.plus(0, 1) : size;
+        return gameVariant() == GameVariant.MS_PACMAN_TENGEN
+            ? worldSizeTilesOrDefault().scaled(TS).toVector2f().plus(0, 16)
+            : worldSizeTilesOrDefault().scaled(TS).toVector2f();
     }
 
     // UI

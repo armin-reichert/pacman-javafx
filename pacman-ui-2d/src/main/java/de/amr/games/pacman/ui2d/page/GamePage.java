@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
-import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction;
@@ -34,7 +34,6 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
@@ -91,7 +90,7 @@ public class GamePage extends StackPane implements Page {
         gameCanvasContainer.setUnscaledCanvasHeight(GameModel.ARCADE_MAP_SIZE_Y);
         gameCanvasContainer.setBorderColor(ARCADE_PALE);
         gameCanvasContainer.enabledPy.bind(PY_GAME_CANVAS_DECORATED);
-        gameCanvasContainer.enabledPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
+        gameCanvasContainer.enabledPy.addListener((py, ov, nv) -> adaptCanvasSizeToSceneSize());
 
         dashboardLayer = new DashboardLayer(context);
         dashboardLayer.addDashboardItem(context.locText("infobox.general.title"), new InfoBoxGeneral());
@@ -131,7 +130,7 @@ public class GamePage extends StackPane implements Page {
 
     @Override
     public void onPageSelected() {
-        adaptCanvasSizeToCurrentWorld();
+        adaptCanvasSizeToSceneSize();
         //TODO check if booting is always wanted here
         GameAction2D.BOOT.execute(context);
         if (context.gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
@@ -194,10 +193,10 @@ public class GamePage extends StackPane implements Page {
         contextMenu.requestFocus();
     }
 
-    public void adaptCanvasSizeToCurrentWorld() {
-        Vector2i worldSizePixels = context.worldSizeTilesOrDefault().scaled(TS);
-        gameCanvasContainer.setUnscaledCanvasWidth(worldSizePixels.x());
-        gameCanvasContainer.setUnscaledCanvasHeight(worldSizePixels.y());
+    public void adaptCanvasSizeToSceneSize() {
+        Vector2f sceneSize = context.sceneSize();
+        gameCanvasContainer.setUnscaledCanvasWidth(sceneSize.x());
+        gameCanvasContainer.setUnscaledCanvasHeight(sceneSize.y());
         gameCanvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
     }
 
@@ -221,7 +220,7 @@ public class GamePage extends StackPane implements Page {
         getChildren().set(0, gameCanvasPane);
         scene2D.scalingPy.bind(gameCanvasContainer.scalingPy);
         gameCanvasContainer.backgroundProperty().bind(scene2D.backgroundColorPy.map(Ufx::coloredBackground));
-        adaptCanvasSizeToCurrentWorld();
+        adaptCanvasSizeToSceneSize();
         contextMenu.hide();
     }
 

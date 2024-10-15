@@ -78,14 +78,13 @@ public class PictureInPictureView extends VBox implements GameEventListener {
 
     public void draw() {
         if (isVisible()) {
-            Vector2f size = context.worldSizeTilesOrDefault().scaled(TS).toVector2f();
-            playScene2D.draw(renderer, size);
+            playScene2D.draw(renderer, context.sceneSize());
         }
     }
 
     private double worldAspectRatio() {
-        Vector2i worldTiles = context.worldSizeTilesOrDefault();
-        return (double) worldTiles.x() / (double) worldTiles.y();
+        Vector2f sceneSize = context.sceneSize();
+        return sceneSize.x() / sceneSize.y();
     }
 
     private double standardHeight() {
@@ -99,7 +98,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         canvas.setWidth(aspectRatio * canvasHeight);
         playScene2D.scalingPy.set(canvasHeight / standardHeight());
         layout();
-        Logger.info("Layout recomputed, w={0.00} h={0.00} aspect={0.00}, world size (tiles)={}",
-            getWidth(), getHeight(), aspectRatio, context.worldSizeTilesOrDefault());
+        Logger.info("Layout recomputed, w={0.00} h={0.00} aspect={0.00}, scene size (px)={}",
+            getWidth(), getHeight(), aspectRatio, context.sceneSize());
     }
 }

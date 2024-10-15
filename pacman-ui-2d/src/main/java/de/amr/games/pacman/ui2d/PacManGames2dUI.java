@@ -50,7 +50,6 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
@@ -195,8 +194,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected void runOnEveryTick() {
         try {
             if (currentPage == gamePage) {
-                // 2D scenes only:
-                Vector2f sceneSize = worldSizeTilesOrDefault().scaled(TS).toVector2f(); // TODO check
+                Vector2f sceneSize = sceneSize();
                 currentGameScene().ifPresent(gameScene -> gameScene.draw(currentGameSceneConfig().renderer(), sceneSize));
                 gamePage.updateDashboard();
                 flashMessageLayer.update();
@@ -520,7 +518,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             sounds().setEnabled(true);
         }
         //TODO use data binding?
-        gamePage.adaptCanvasSizeToCurrentWorld();
+        gamePage.adaptCanvasSizeToSceneSize();
     }
 
     @Override
