@@ -13,6 +13,7 @@ import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 
 import java.util.List;
 
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
 import static de.amr.games.pacman.ui2d.scene.pacman.PacManGameSpriteSheet.MIDWAY_COPYRIGHT;
@@ -56,7 +57,7 @@ public class StartScene extends GameScene2D {
         if (context.gameVariant() == GameVariant.PACMAN) {
             renderer.drawText(MIDWAY_COPYRIGHT, ARCADE_PINK, renderer.scaledArcadeFont(8), t(4), t(29));
         }
-        drawCredit(renderer, sceneSize);
+        renderer.drawText("CREDIT %2d".formatted(context.game().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, sceneSize.y() - 2);
         renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), sceneSize);
     }
 }

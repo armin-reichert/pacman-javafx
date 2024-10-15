@@ -5,15 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.common;
 
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 
 /**
  * Base class of all 2D scenes.
@@ -54,11 +51,6 @@ public abstract class GameScene2D implements GameScene {
         if (debugInfoPy.get()) {
             drawDebugInfo(renderer);
         }
-    }
-
-    protected void drawCredit(GameRenderer renderer, Vector2f size) {
-        double x = 2 * TS, y = size.y() - 2;
-        renderer.drawText("CREDIT %2d".formatted(context.game().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS), x, y);
     }
 
     /**

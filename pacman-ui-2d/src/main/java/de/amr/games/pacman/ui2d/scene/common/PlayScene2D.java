@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 
@@ -139,7 +140,7 @@ public class PlayScene2D extends GameScene2D {
         };
 
         if (showCredit) {
-            drawCredit(renderer, size);
+            renderer.drawText("CREDIT %2d".formatted(context.game().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, size.y() - 2);
         } else {
             //TODO: this code looks ugly
             int numLivesShown = context.game().lives() - 1;
