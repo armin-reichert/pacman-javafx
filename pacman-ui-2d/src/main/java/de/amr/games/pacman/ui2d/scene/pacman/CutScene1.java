@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.scene.pacman;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
@@ -87,10 +88,10 @@ public class CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameRenderer renderer) {
+    public void drawSceneContent(GameRenderer renderer, Vector2f sceneSize) {
         renderer.drawAnimatedEntity(pac);
         renderer.drawAnimatedEntity(blinky);
-        renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), context.worldSizeTilesOrDefault());
+        renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), sceneSize);
     }
 
     @Override

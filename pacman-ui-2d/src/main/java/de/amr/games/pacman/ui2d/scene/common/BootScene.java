@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.common;
 
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -34,7 +35,7 @@ public class BootScene extends GameScene2D {
     }
 
     @Override
-    public void draw(GameRenderer renderer) {
+    public void draw(GameRenderer renderer, Vector2f size) {
         renderer.scalingProperty().set(scalingPy.get());
         renderer.setBackgroundColor(backgroundColorPy.get());
         var timer = context.gameState().timer();
@@ -50,8 +51,8 @@ public class BootScene extends GameScene2D {
     }
 
     @Override
-    protected void drawSceneContent(GameRenderer renderer) {
-        // not used here
+    protected void drawSceneContent(GameRenderer renderer, Vector2f sceneSize) {
+        // not used
     }
 
     private void paintRandomHexCodes(GameRenderer renderer) {

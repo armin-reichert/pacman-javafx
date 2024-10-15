@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.pacman_xxl.PacManXXLGame;
@@ -49,6 +50,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
@@ -194,7 +196,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         try {
             if (currentPage == gamePage) {
                 // 2D scenes only:
-                currentGameScene().ifPresent(gameScene -> gameScene.draw(currentGameSceneConfig().renderer()));
+                Vector2f sceneSize = worldSizeTilesOrDefault().scaled(TS).toVector2f(); // TODO check
+                currentGameScene().ifPresent(gameScene -> gameScene.draw(currentGameSceneConfig().renderer(), sceneSize));
                 gamePage.updateDashboard();
                 flashMessageLayer.update();
             } else {

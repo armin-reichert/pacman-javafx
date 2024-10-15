@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.common;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -39,24 +40,24 @@ public abstract class GameScene2D implements GameScene {
         return value * scaling();
     }
 
-    protected abstract void drawSceneContent(GameRenderer renderer);
+    protected abstract void drawSceneContent(GameRenderer renderer, Vector2f size);
 
     @Override
-    public void draw(GameRenderer renderer) {
+    public void draw(GameRenderer renderer, Vector2f size) {
         renderer.scalingProperty().set(scaling());
         renderer.setBackgroundColor(backgroundColorPy.get());
         renderer.clearCanvas();
         if (context.isScoreVisible()) {
             renderer.drawScores(context);
         }
-        drawSceneContent(renderer);
+        drawSceneContent(renderer, size);
         if (debugInfoPy.get()) {
             drawDebugInfo(renderer);
         }
     }
 
-    protected void drawCredit(GameRenderer renderer, Vector2i worldSize) {
-        double x = 2 * TS, y = worldSize.y() * TS - 2;
+    protected void drawCredit(GameRenderer renderer, Vector2f size) {
+        double x = 2 * TS, y = size.y() - 2;
         renderer.drawText("CREDIT %2d".formatted(context.game().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS), x, y);
     }
 

@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.common;
 
 import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 
 /**
@@ -33,7 +34,7 @@ public interface GameScene extends GameEventListener {
      * Draws the scene content using the given renderer (2D-only.
      * @param renderer world renderer (for current game variant)
      */
-    default void draw(GameRenderer renderer) {}
+    default void draw(GameRenderer renderer, Vector2f size) {}
 
     /**
      * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.

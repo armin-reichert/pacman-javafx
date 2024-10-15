@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -39,7 +40,7 @@ public class StartScene extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameRenderer renderer) {
+    public void drawSceneContent(GameRenderer renderer, Vector2f sceneSize) {
         MsPacManGameRenderer r = (MsPacManGameRenderer) renderer;
         GameSpriteSheet spriteSheet = r.spriteSheet();
         Font font8 = r.scaledArcadeFont(8), font6 = r.scaledArcadeFont(6);
@@ -74,7 +75,7 @@ public class StartScene extends GameScene2D {
             }
             default -> throw new IllegalArgumentException("Unsupported game variant: " + context.gameVariant());
         }
-        drawCredit(r, context.worldSizeTilesOrDefault());
-        r.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), context.worldSizeTilesOrDefault());
+        drawCredit(r, sceneSize);
+        r.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), sceneSize);
     }
 }

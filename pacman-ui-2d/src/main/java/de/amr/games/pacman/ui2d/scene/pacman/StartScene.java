@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.pacman;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
@@ -45,7 +46,7 @@ public class StartScene extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameRenderer renderer) {
+    public void drawSceneContent(GameRenderer renderer, Vector2f sceneSize) {
         var font8 = renderer.scaledArcadeFont(8);
         var font6 = renderer.scaledArcadeFont(6);
         renderer.drawText("PUSH START BUTTON", ARCADE_ORANGE, font8, t(6), t(17));
@@ -55,7 +56,7 @@ public class StartScene extends GameScene2D {
         if (context.gameVariant() == GameVariant.PACMAN) {
             renderer.drawText(MIDWAY_COPYRIGHT, ARCADE_PINK, renderer.scaledArcadeFont(8), t(4), t(29));
         }
-        drawCredit(renderer, context.worldSizeTilesOrDefault());
-        renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), context.worldSizeTilesOrDefault());
+        drawCredit(renderer, sceneSize);
+        renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), sceneSize);
     }
 }

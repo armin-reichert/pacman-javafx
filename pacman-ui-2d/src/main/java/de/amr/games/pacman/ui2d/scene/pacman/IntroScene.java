@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.scene.pacman;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.Pulse;
@@ -113,7 +114,7 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameRenderer renderer) {
+    public void drawSceneContent(GameRenderer renderer, Vector2f sceneSize) {
         TickTimer timer = sceneController.state().timer();
         drawGallery(renderer);
         switch (sceneController.state()) {
@@ -138,8 +139,8 @@ public class IntroScene extends GameScene2D {
             default -> {
             }
         }
-        drawCredit(renderer, context.worldSizeTilesOrDefault());
-        renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), context.worldSizeTilesOrDefault());
+        drawCredit(renderer, sceneSize);
+        renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), sceneSize);
     }
 
     // TODO inspect in MAME what's really going on here

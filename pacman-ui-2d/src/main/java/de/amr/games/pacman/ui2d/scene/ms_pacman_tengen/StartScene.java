@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -76,7 +77,7 @@ public class StartScene extends GameScene2D {
     }
 
     @Override
-    protected void drawSceneContent(GameRenderer renderer) {
+    protected void drawSceneContent(GameRenderer renderer, Vector2f sceneSize) {
         Font font = renderer.scaledArcadeFont(TS);
 
         int y = 7 * TS;

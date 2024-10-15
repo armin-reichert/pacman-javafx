@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.scene.common;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -111,7 +112,7 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    protected void drawSceneContent(GameRenderer renderer) {
+    protected void drawSceneContent(GameRenderer renderer, Vector2f size) {
         if (context.game().world() == null) { // This happens on level start
             Logger.warn("Cannot draw scene content, game world not yet available!");
             return;
@@ -137,22 +138,21 @@ public class PlayScene2D extends GameScene2D {
             default -> !context.game().hasCredit() || context.gameState() == GameState.GAME_OVER;
         };
 
-        Vector2i worldSize = context.worldSizeTilesOrDefault();
         if (showCredit) {
-            drawCredit(renderer, worldSize);
+            drawCredit(renderer, size);
         } else {
             //TODO: this code looks ugly
             int numLivesShown = context.game().lives() - 1;
             if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
                 numLivesShown += 1;
             }
-            renderer.drawLivesCounter(numLivesShown, 5, worldSize);
+            renderer.drawLivesCounter(numLivesShown, 5, size);
         }
-        renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), worldSize);
+        renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), size);
         //TODO Hack: Tengen has these boxes on the left and on the right showing the current level number
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN && !context.game().isDemoLevel()) {
             TengenMsPacManGameRenderer tr = (TengenMsPacManGameRenderer) renderer;
-            tr.drawLevelNumberBoxes(context.game().levelNumber(), worldSize);
+            tr.drawLevelNumberBoxes(context.game().levelNumber(), size);
         }
     }
 

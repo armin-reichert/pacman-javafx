@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -77,7 +78,8 @@ public class PictureInPictureView extends VBox implements GameEventListener {
 
     public void draw() {
         if (isVisible()) {
-            playScene2D.draw(renderer);
+            Vector2f size = context.worldSizeTilesOrDefault().scaled(TS).toVector2f();
+            playScene2D.draw(renderer, size);
         }
     }
 

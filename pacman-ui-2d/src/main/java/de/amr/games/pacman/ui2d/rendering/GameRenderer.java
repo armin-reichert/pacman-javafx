@@ -242,12 +242,12 @@ public interface GameRenderer {
         ctx().fillText(text, scaled(x), scaled(y));
     }
 
-    default void drawLivesCounter(int numLives, int maxLives, Vector2i worldSize) {
+    default void drawLivesCounter(int numLives, int maxLives, Vector2f size) {
         if (numLives == 0) {
             return;
         }
         double x = TS * 2;
-        double y = TS * (worldSize.y() - 2);
+        double y = size.y() - 2 *TS;
         for (int i = 0; i < Math.min(numLives, maxLives); ++i) {
             drawSpriteScaled(spriteSheet().livesCounterSprite(), x + TS * (2 * i), y);
         }
@@ -259,8 +259,8 @@ public interface GameRenderer {
         }
     }
 
-    default void drawLevelCounter(int levelNumber, List<Byte> symbols, Vector2i worldSize) {
-        double x = TS * (worldSize.x() - 4), y = TS * (worldSize.y() - 2);
+    default void drawLevelCounter(int levelNumber, List<Byte> symbols, Vector2f sceneSize) {
+        double x = sceneSize.x() - 4 * TS, y = sceneSize.y() - 2 * TS;
         for (byte symbol : symbols) {
             drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;
