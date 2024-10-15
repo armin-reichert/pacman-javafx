@@ -77,7 +77,7 @@ public class TengenMsPacManGame extends GameModel {
         PINK_ROSE("b5217b", "ff6bce", "ff6bce", "ffffff"),
         PINK_DARKRED("feccc5", "b71e7b", "b71e7b", "ffffff"),
         PINK_WHITE("ff6bce", "ffffff", "ffffff", "ffffff"),
-        PINK_YELLOW("ffc6e7", "bdbd00", "bdbd00", "ffffff"),
+        PINK_YELLOW("fec4ea", "bcbe00", "bcbe00", "ffffff"),
         ORANGE_WHITE("b53120", "ffffff", "ffffff", "b71e7b"),
         DARKBLUE_YELLOW("00298c", "e7e794", "e7e794", "ffffff"),
         RED_WHITE("b5217b", "ffffff", "ffffff", "ffffff"),
