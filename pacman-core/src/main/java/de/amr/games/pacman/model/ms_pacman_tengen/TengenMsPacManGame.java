@@ -57,7 +57,7 @@ public class TengenMsPacManGame extends GameModel {
     static final String ARCADE_MAP_PATTERN  = MAPS_ROOT + "arcade/map%02d.world";
     static final String NON_ARCADE_MAP_PATTERN  = MAPS_ROOT + "non_arcade/map%02d.world";
 
-    //TODO: Colors are from non-original spritsheet and probably not correct
+    //TODO: Colors are from a non-original sprite sheet and not correct
 
     public enum MapColoring {
         BLACK_WHITE_GREEN     ("000000", "ffffff", "ffffff", "007b8c"),
@@ -67,7 +67,7 @@ public class TengenMsPacManGame extends GameModel {
         BLUE2_WHITE           ("3900a5", "ffffff", "ffffff", "ffffff"),
         BLUE_YELLOW           ("002a88", "e4e594", "e4e594", "ffffff"),
         BROWN_WHITE           ("522100", "ffffff", "ffffff", "ffffff"),
-        BROWN2_WHITE          ("9c4a00", "ffffff", "ffffff", "ffffff"),
+        BROWN2_WHITE          ("994e00", "ffffff", "ffffff", "ffffff"),
         GRAY_WHITE_YELLOW     ("adadad", "ffffff", "ffffff", "bdbd00"),
         GREEN_WHITE_YELLOW    ("109400", "ffffff", "ffffff", "bdbd00"),
         GREEN_WHITE_WHITE     ("398400", "ffffff", "ffffff", "ffffff"),
