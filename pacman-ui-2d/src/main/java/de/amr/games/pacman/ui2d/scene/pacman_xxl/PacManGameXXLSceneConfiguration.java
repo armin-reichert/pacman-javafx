@@ -14,7 +14,7 @@ import de.amr.games.pacman.ui2d.util.AssetStorage;
 
 public class PacManGameXXLSceneConfiguration extends GameSceneConfiguration {
 
-    private final GameSpriteSheet spriteSheet;
+    private final PacManGameSpriteSheet spriteSheet;
     private final GameRenderer renderer;
 
     public PacManGameXXLSceneConfiguration(AssetStorage assets) {

@@ -79,7 +79,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void init() {
-        GameSpriteSheet spriteSheet = context.currentGameSceneConfig().spriteSheet();
+        PacManGameSpriteSheet spriteSheet = (PacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         blinking = new Pulse(10, true);
         pacMan = new Pac();
         pacMan.setAnimations(new PacAnimations(spriteSheet));
@@ -149,7 +149,7 @@ public class IntroScene extends GameScene2D {
     }
 
     private void drawGallery(GameWorldRenderer renderer) {
-        GameSpriteSheet spriteSheet = context.currentGameSceneConfig().spriteSheet();
+        PacManGameSpriteSheet spriteSheet = (PacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         Font font = renderer.scaledArcadeFont(TS);
         int tx = LEFT_TILE_X;
         if (titleVisible) {

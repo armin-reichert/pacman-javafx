@@ -208,32 +208,26 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
         return GHOST_EYES_SPRITES[ORDER.indexOf(dir)];
     }
 
-    @Override
     public RectArea ghostFacingRight(byte ghostID) {
         return GHOST_FACING_RIGHT_SPRITES[ghostID];
     }
 
-    @Override
     public RectArea[] bigPacManSprites() {
         return BIG_PAC_MAN_SPRITES;
     }
 
-    @Override
     public RectArea[] blinkyStretchedSprites() {
         return BLINKY_STRETCHED_SPRITES;
     }
 
-    @Override
     public RectArea[] blinkyDamagedSprites() {
         return BLINKY_DAMAGED_SPRITES;
     }
 
-    @Override
     public RectArea[] blinkyPatchedSprites() {
         return BLINKY_PATCHED_SPRITES;
     }
 
-    @Override
     public RectArea[] blinkyNakedSprites() {
         return BLINKY_NAKED_SPRITES;
     }

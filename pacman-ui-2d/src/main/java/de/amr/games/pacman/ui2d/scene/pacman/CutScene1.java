@@ -33,7 +33,7 @@ public class CutScene1 extends GameScene2D {
     public void init() {
         context.setScoreVisible(true);
         pac = new Pac();
-        GameSpriteSheet spriteSheet = context.currentGameSceneConfig().spriteSheet();
+        PacManGameSpriteSheet spriteSheet = (PacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         pac.setAnimations(new PacAnimations(spriteSheet));
         blinky = Ghost.blinky();
         blinky.setAnimations(new GhostAnimations(spriteSheet, blinky.id()));

@@ -39,16 +39,6 @@ public interface GameSpriteSheet {
     RectArea bonusSymbolSprite(byte symbol);
     RectArea bonusValueSprite(byte symbol);
 
-    // Pac-Man only
-    default RectArea ghostFacingRight(byte ghostID) {
-        return NO_SPRITE;
-    }
-    default RectArea[] blinkyNakedSprites() { return NO_SPRITES; }
-    default RectArea[] blinkyPatchedSprites() { return NO_SPRITES; }
-    default RectArea[] blinkyDamagedSprites() { return NO_SPRITES; }
-    default RectArea[] blinkyStretchedSprites() { return NO_SPRITES; }
-    default RectArea[] bigPacManSprites() { return NO_SPRITES; }
-
     Image sourceImage();
 
     /**
