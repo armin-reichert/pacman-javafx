@@ -55,9 +55,9 @@ public class StartScene extends GameScene2D {
         renderer.drawText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, font8, t(1), t(25));
         renderer.drawText("PTS", ARCADE_ROSE, font6, t(25), t(25));
         if (context.gameVariant() == GameVariant.PACMAN) {
-            renderer.drawText(MIDWAY_COPYRIGHT, ARCADE_PINK, renderer.scaledArcadeFont(8), t(4), t(29));
+            renderer.drawText(MIDWAY_COPYRIGHT, ARCADE_PINK, font8, t(4), t(29));
         }
-        renderer.drawText("CREDIT %2d".formatted(context.game().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, sceneSize.y() - 2);
+        renderer.drawText("CREDIT %2d".formatted(context.game().credit()), ARCADE_PALE, font8, 2 * TS, sceneSize.y() - 2);
         renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), sceneSize);
     }
 }

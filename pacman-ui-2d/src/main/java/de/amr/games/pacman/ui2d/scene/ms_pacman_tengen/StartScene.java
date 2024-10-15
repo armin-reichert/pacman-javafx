@@ -122,11 +122,11 @@ public class StartScene extends GameScene2D {
         renderer.drawText(String.valueOf(tengenGame.startingLevel()), VALUE_COLOR, font, COL_VALUE + TS, y);
 
         y += 3 * TS + 3;
-        drawCenteredText(renderer, "MOVE ARROW WITH CURSOR KEYS", LABEL_COLOR, font, y);
+        drawCenteredText(renderer, sceneSize, "MOVE ARROW WITH CURSOR KEYS", LABEL_COLOR, font, y);
         y += TS + 1;
-        drawCenteredText(renderer, "CHOOSE OPTIONS WITH TAB", LABEL_COLOR, font, y);
+        drawCenteredText(renderer, sceneSize, "CHOOSE OPTIONS WITH TAB", LABEL_COLOR, font, y);
         y += TS + 1;
-        drawCenteredText(renderer, "PRESS ENTER TO START GAME", LABEL_COLOR, font, y);
+        drawCenteredText(renderer, sceneSize, "PRESS ENTER TO START GAME", LABEL_COLOR, font, y);
 
         y += TS - 3;
         drawBabyBlueBar(renderer, y);
@@ -140,8 +140,9 @@ public class StartScene extends GameScene2D {
         };
     }
 
-    private void drawCenteredText(GameRenderer renderer, String text, Color color, Font font, double y) {
-        renderer.drawText(text, color, font, 0.5 * TS * (28 - text.length()), y);
+    private void drawCenteredText(GameRenderer renderer, Vector2f sceneSize, String text, Color color, Font font, double y) {
+        double x = 0.5 * sceneSize.x() - 0.5 * text.length() * TS; // assume fixed font of size TS
+        renderer.drawText(text, color, font, x, y);
     }
 
     private void drawArrowIfSelected(GameRenderer renderer, int option, int x, int y) {
