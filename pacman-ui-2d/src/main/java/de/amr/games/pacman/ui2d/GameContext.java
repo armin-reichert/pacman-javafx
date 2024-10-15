@@ -25,8 +25,6 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-
 /**
  * @author Armin Reichert
  */
@@ -41,23 +39,7 @@ public interface GameContext {
     default GameModel           game() { return GameController.it().currentGame(); }
     void                        setScoreVisible(boolean visible);
     boolean                     isScoreVisible();
-    /**
-     * @return size (tiles) of current world or size of Arcade world if no current world exists
-     */
-    default Vector2i worldSizeTilesOrDefault() {
-        boolean worldExists = game().world() != null;
-        return new Vector2i(
-            worldExists ? game().world().map().terrain().numCols() : GameModel.ARCADE_MAP_TILES_X,
-            worldExists ? game().world().map().terrain().numRows() : GameModel.ARCADE_MAP_TILES_Y
-        );
-    }
-
-    default Vector2f sceneSize() {
-        // add some vertical space for Tengen worlds to be able to display higher lives/level counters
-        return gameVariant() == GameVariant.MS_PACMAN_TENGEN
-            ? worldSizeTilesOrDefault().scaled(TS).toVector2f().plus(0, 16)
-            : worldSizeTilesOrDefault().scaled(TS).toVector2f();
-    }
+    Vector2i                    worldSizeTilesOrDefault();
 
     // UI
     Keyboard    keyboard();
@@ -69,6 +51,7 @@ public interface GameContext {
     void        showFlashMessage(String message, Object... args);
     void        showFlashMessageSeconds(double seconds, String message, Object... args);
     GameClockFX gameClock();
+    Vector2f    sceneSize();
 
     // Actions
     boolean      isActionCalled(GameAction action);

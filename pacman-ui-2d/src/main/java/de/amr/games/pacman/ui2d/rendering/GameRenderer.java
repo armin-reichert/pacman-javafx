@@ -49,9 +49,7 @@ public interface GameRenderer {
     default GraphicsContext ctx() { return canvas().getGraphicsContext2D(); }
     DoubleProperty scalingProperty();
     default double scaling() { return scalingProperty().get(); }
-    default double scaled(double value) {
-        return scaling() * value;
-    }
+    default double scaled(double value) { return scaling() * value; }
     default Font scaledArcadeFont(double size) {
         return assets().font("font.arcade", scaled(size));
     }

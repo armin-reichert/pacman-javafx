@@ -9,6 +9,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.pacman_xxl.PacManXXLGame;
@@ -50,6 +51,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
@@ -373,6 +375,25 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             return false;
         }
         return currentGameSceneConfig().gameSceneHasID(currentGameScene().get(), sceneID);
+    }
+
+    /**
+     * @return size (tiles) of current world or size of Arcade world if no current world exists
+     */
+    @Override
+    public Vector2i worldSizeTilesOrDefault() {
+        return new Vector2i(
+            game().world() != null ? game().world().map().terrain().numCols() : GameModel.ARCADE_MAP_TILES_X,
+            game().world() != null ? game().world().map().terrain().numRows() : GameModel.ARCADE_MAP_TILES_Y
+        );
+    }
+
+    @Override
+    public Vector2f sceneSize() {
+        // add some vertical space for Tengen scenes to be able to display higher lives/level counters
+        return gameVariant() == GameVariant.MS_PACMAN_TENGEN
+            ? worldSizeTilesOrDefault().scaled(TS).toVector2f().plus(0, 16)
+            : worldSizeTilesOrDefault().scaled(TS).toVector2f();
     }
 
     @Override
