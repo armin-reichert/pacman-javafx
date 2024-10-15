@@ -281,7 +281,7 @@ public enum GameAction2D implements GameAction {
         }
     },
 
-    TENGEN_QUIT_PLAY_SCENE(key(KeyCode.ESCAPE)) {
+    TENGEN_QUIT_PLAY_SCENE(key(KeyCode.S)) {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
