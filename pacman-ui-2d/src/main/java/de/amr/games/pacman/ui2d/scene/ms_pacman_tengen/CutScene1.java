@@ -93,15 +93,16 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameRenderer renderer) {
+        TengenMsPacManGameRenderer r = (TengenMsPacManGameRenderer) renderer;
         String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
-        Color color = context.assets().color(assetPrefix + ".color.clapperboard");
-        renderer.drawClapperBoard(renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
-        renderer.drawAnimatedEntity(msPac);
-        renderer.drawAnimatedEntity(pacMan);
-        renderer.drawAnimatedEntity(inky);
-        renderer.drawAnimatedEntity(pinky);
-        renderer.drawSprite(heart, TengenMsPacManGameSpriteSheet.HEART_SPRITE);
-        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
+        Color color = r.assets().color(assetPrefix + ".color.clapperboard"); //TODO check this
+        r.drawClapperBoard(r.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
+        r.drawAnimatedEntity(msPac);
+        r.drawAnimatedEntity(pacMan);
+        r.drawAnimatedEntity(inky);
+        r.drawAnimatedEntity(pinky);
+        r.drawSprite(heart, TengenMsPacManGameSpriteSheet.HEART_SPRITE);
+        drawLevelCounter(r, context.worldSizeTilesOrDefault());
     }
 
     private class SceneController {

@@ -251,7 +251,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         }
         else if (world.map().colorScheme() != null) {
             if (!context.game().isDemoLevel()) {
-                drawTop(spriteSheet, terrain, tengenGame);
+                drawTop(terrain, tengenGame);
             }
             // default color scheme has been overwritten, use vector rendering
             MapColorScheme colorScheme = world.map().colorScheme();
@@ -277,7 +277,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
                 return;
             }
             if (!context.game().isDemoLevel()) {
-                drawTop(spriteSheet, terrain, tengenGame);
+                drawTop(terrain, tengenGame);
             }
             // Maze #32 has this psychedelic animation effect
             int mapNumber = tengenGame.currentMapNumber();
@@ -333,7 +333,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         ctx().restore();
     }
 
-    private void drawTop(GameSpriteSheet spriteSheet, TileMap terrain, TengenMsPacManGame tengenGame) {
+    private void drawTop(TileMap terrain, TengenMsPacManGame tengenGame) {
         MapCategory category = tengenGame.mapCategory();
         RectArea categorySprite = switch (category) {
             case BIG     -> TengenMsPacManGameSpriteSheet.BIG_SPRITE;
@@ -432,7 +432,17 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         Logger.info("Tengen map # {}: area: {}", mapNumber, mapSprite.area());
     }
 
-    @Override
+    public void drawMovingBonus(GameSpriteSheet spriteSheet, MovingBonus bonus) {
+        ctx().save();
+        ctx().translate(0, bonus.elongationY());
+        switch (bonus.state()) {
+            case Bonus.STATE_EDIBLE -> drawSprite(bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawSprite(bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
+            default -> {}
+        }
+        ctx().restore();
+    }
+
     public void drawClapperBoard(Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
         var sprite = animation.currentSprite(TengenMsPacManGameSpriteSheet.CLAPPERBOARD_SPRITES);
         if (sprite != RectArea.PIXEL) {

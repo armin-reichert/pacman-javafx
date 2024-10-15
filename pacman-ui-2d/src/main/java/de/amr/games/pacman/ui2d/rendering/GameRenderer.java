@@ -301,29 +301,4 @@ public interface GameRenderer {
             ctx().strokeLine(scaled(TS * col), 0, scaled(TS * col), scaled(gridSizeTiles.y() * TS));
         }
     }
-
-    default void drawMovingBonus(GameSpriteSheet spriteSheet, MovingBonus bonus) {
-        ctx().save();
-        ctx().translate(0, bonus.elongationY());
-        switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawSprite(bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawSprite(bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
-            default -> {}
-        }
-        ctx().restore();
-    }
-
-    default void drawClapperBoard(
-        Font font, Color textColor,
-        ClapperboardAnimation animation,
-        double x, double y) {}
-
-    default void drawMsPacManMidwayCopyright(Image image, double x, double y, Color color, Font font) {
-        drawImageScaled(image, x, y + 2, t(4) - 2, t(4));
-        ctx().setFont(font);
-        ctx().setFill(color);
-        ctx().fillText("©", scaled(x + TS * 5), scaled(y + TS * 2 + 2));
-        ctx().fillText("MIDWAY MFG CO", scaled(x + TS * 7), scaled(y + TS * 2));
-        ctx().fillText("1980/1981", scaled(x + TS * 8), scaled(y + TS * 4));
-    }
 }

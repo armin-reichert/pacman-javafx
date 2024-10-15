@@ -11,7 +11,6 @@ import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -113,13 +112,14 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameRenderer renderer) {
-        Font font = renderer.scaledArcadeFont(TS);
+        MsPacManGameRenderer r = (MsPacManGameRenderer) renderer;
+        Font font = r.scaledArcadeFont(TS);
         BitSet marqueeState = computeMarqueeState(marqueeTimer.currentTick());
-        drawMarquee(renderer.ctx(), marqueeState);
-        renderer.drawText("\"MS PAC-MAN\"", ARCADE_ORANGE, font, TITLE_POSITION.x(), TITLE_POSITION.y());
+        drawMarquee(r.ctx(), marqueeState);
+        r.drawText("\"MS PAC-MAN\"", ARCADE_ORANGE, font, TITLE_POSITION.x(), TITLE_POSITION.y());
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
             if (ghostIndex == GameModel.RED_GHOST) {
-                renderer.drawText("WITH", ARCADE_PALE, font, TITLE_POSITION.x(), TOP_Y + t(3));
+                r.drawText("WITH", ARCADE_PALE, font, TITLE_POSITION.x(), TOP_Y + t(3));
             }
             String ghostName = ghosts[ghostIndex].name().toUpperCase();
             Color color = switch (ghostIndex) {
@@ -130,22 +130,18 @@ public class IntroScene extends GameScene2D {
                 default -> throw new IllegalStateException("Illegal ghost index: " + ghostIndex);
             };
             double dx = ghostName.length() < 4 ? t(1) : 0;
-            renderer.drawText(ghostName, color, font, TITLE_POSITION.x() + t(3) + dx, TOP_Y + t(6));
+            r.drawText(ghostName, color, font, TITLE_POSITION.x() + t(3) + dx, TOP_Y + t(6));
         } else if (sceneController.state() == SceneState.MS_PACMAN_MARCHING_IN || sceneController.state() == SceneState.READY_TO_PLAY) {
-            renderer.drawText("STARRING", ARCADE_PALE, font, TITLE_POSITION.x(), TOP_Y + t(3));
-            renderer.drawText("MS PAC-MAN", ARCADE_YELLOW, font, TITLE_POSITION.x(), TOP_Y + t(6));
+            r.drawText("STARRING", ARCADE_PALE, font, TITLE_POSITION.x(), TOP_Y + t(3));
+            r.drawText("MS PAC-MAN", ARCADE_YELLOW, font, TITLE_POSITION.x(), TOP_Y + t(6));
         }
         for (Ghost ghost : ghosts) {
-            renderer.drawAnimatedEntity(ghost);
+            r.drawAnimatedEntity(ghost);
         }
-        renderer.drawAnimatedEntity(msPacMan);
-
-        if (context.gameVariant() == GameVariant.MS_PACMAN) {
-            renderer.drawMsPacManMidwayCopyright(context.assets().get("ms_pacman.logo.midway"),
-                t(6), t(28), ARCADE_RED, renderer.scaledArcadeFont(TS));
-        }
-        drawCredit(renderer, context.worldSizeTilesOrDefault());
-        drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
+        r.drawAnimatedEntity(msPacMan);
+        r.drawMsPacManMidwayCopyright(t(6), t(28), ARCADE_RED, font);
+        drawCredit(r, context.worldSizeTilesOrDefault());
+        drawLevelCounter(r, context.worldSizeTilesOrDefault());
     }
 
     /**
@@ -320,5 +316,4 @@ public class IntroScene extends GameScene2D {
             return timer;
         }
     }
-
 }

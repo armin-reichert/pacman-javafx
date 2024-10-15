@@ -7,10 +7,11 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
@@ -22,8 +23,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.imageArea;
 
 /**
@@ -32,7 +32,7 @@ import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.imageArea;
 public class MsPacManGameRenderer implements GameRenderer {
 
     private final AssetStorage assets;
-    private final GameSpriteSheet spriteSheet;
+    private final MsPacManGameSpriteSheet spriteSheet;
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final Image flashingMazesImage;
@@ -60,7 +60,7 @@ public class MsPacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public GameSpriteSheet spriteSheet() {
+    public MsPacManGameSpriteSheet spriteSheet() {
         return spriteSheet;
     }
 
@@ -135,5 +135,26 @@ public class MsPacManGameRenderer implements GameRenderer {
             var textX = scaled(x + sprite.width());
             ctx().fillText(animation.text(), textX, numberY);
         }
+    }
+
+    public void drawMovingBonus(GameSpriteSheet spriteSheet, MovingBonus bonus) {
+        ctx().save();
+        ctx().translate(0, bonus.elongationY());
+        switch (bonus.state()) {
+            case Bonus.STATE_EDIBLE -> drawSprite(bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawSprite(bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
+            default -> {}
+        }
+        ctx().restore();
+    }
+
+    public void drawMsPacManMidwayCopyright(double x, double y, Color color, Font font) {
+        Image image = assets.get("ms_pacman.logo.midway");
+        drawImageScaled(image, x, y + 2, t(4) - 2, t(4));
+        ctx().setFont(font);
+        ctx().setFill(color);
+        ctx().fillText("©", scaled(x + TS * 5), scaled(y + TS * 2 + 2));
+        ctx().fillText("MIDWAY MFG CO", scaled(x + TS * 7), scaled(y + TS * 2));
+        ctx().fillText("1980/1981", scaled(x + TS * 8), scaled(y + TS * 4));
     }
 }
