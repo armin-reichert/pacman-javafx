@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.ui3d.scene.pacman_xxl;
 
 import de.amr.games.pacman.ui2d.GameContext;
