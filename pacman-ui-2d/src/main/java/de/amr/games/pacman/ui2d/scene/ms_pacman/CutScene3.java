@@ -17,7 +17,6 @@ import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.GameRenderer;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.scene.paint.Color;
 
@@ -97,16 +96,8 @@ public class CutScene3 extends GameScene2D {
         renderer.drawClapperBoard(renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(msPacMan);
         renderer.drawAnimatedEntity(pacMan);
-        //TODO Hack
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            GameRenderer tr = (GameRenderer) renderer;
-            tr.drawStork(spriteSheet, storkAnimation, stork, bag.acceleration().y() != 0);
-        } else {
-            renderer.drawSprite(stork, storkAnimation.currentSprite());
-        }
-        renderer.drawSprite(bag, bagOpen
-            ? MsPacManGameSpriteSheet.JUNIOR_PAC_SPRITE
-            : MsPacManGameSpriteSheet.BLUE_BAG_SPRITE);
+        renderer.drawSprite(stork, storkAnimation.currentSprite());
+        renderer.drawSprite(bag, bagOpen ? MsPacManGameSpriteSheet.JUNIOR_PAC_SPRITE : MsPacManGameSpriteSheet.BLUE_BAG_SPRITE);
         drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 

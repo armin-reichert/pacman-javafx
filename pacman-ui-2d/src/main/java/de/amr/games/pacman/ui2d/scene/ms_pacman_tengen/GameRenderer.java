@@ -109,7 +109,7 @@ public class GameRenderer implements GameWorldRenderer {
     };
 
     private final AssetStorage assets;
-    private final GameSpriteSheet spriteSheet;
+    private final TengenMsPacManGameSpriteSheet spriteSheet;
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
@@ -143,7 +143,7 @@ public class GameRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public GameSpriteSheet spriteSheet() {
+    public TengenMsPacManGameSpriteSheet spriteSheet() {
         return spriteSheet;
     }
 
@@ -389,14 +389,13 @@ public class GameRenderer implements GameWorldRenderer {
         ctx().translate(0, -5);
         if (levelNumber > 0) {
             double y = TS * (worldSize.y() - 2);
-            drawLevelNumberBox(spriteSheet, levelNumber, 0, y); // left border
-            drawLevelNumberBox(spriteSheet, levelNumber, TS * (worldSize.x() - 2), y); // right border
+            drawLevelNumberBox(levelNumber, 0, y); // left border
+            drawLevelNumberBox(levelNumber, TS * (worldSize.x() - 2), y); // right border
         }
         ctx().restore();
     }
 
-    private void drawLevelNumberBox(GameSpriteSheet spriteSheet, int levelNumber, double x, double y) {
-        TengenMsPacManGameSpriteSheet tss = (TengenMsPacManGameSpriteSheet) spriteSheet;
+    private void drawLevelNumberBox(int levelNumber, double x, double y) {
         drawSpriteScaled(TengenMsPacManGameSpriteSheet.LEVEL_BOX_SPRITE, x, y);
         // erase violet area (what is it good for?)
         ctx().setFill(Color.BLACK);
@@ -405,12 +404,12 @@ public class GameRenderer implements GameWorldRenderer {
         ctx().fillRect(x + 10, y + 2, 5, 5);
         ctx().restore();
         if (levelNumber < 10) {
-            drawSpriteScaled(tss.digit(levelNumber), x + 10, y + 2);
+            drawSpriteScaled(spriteSheet.digit(levelNumber), x + 10, y + 2);
         } else if (levelNumber < 100) { // d1 d0
             int d0 = levelNumber % 10;
             int d1 = levelNumber / 10;
-            drawSpriteScaled(tss.digit(d0), x + 10, y + 2);
-            drawSpriteScaled(tss.digit(d1), x + 1,  y + 2);
+            drawSpriteScaled(spriteSheet.digit(d0), x + 10, y + 2);
+            drawSpriteScaled(spriteSheet.digit(d1), x + 1,  y + 2);
         }
     }
 
@@ -433,7 +432,8 @@ public class GameRenderer implements GameWorldRenderer {
         Logger.info("Tengen map # {}: area: {}", mapNumber, mapSprite.area());
     }
 
-    public void drawClapperBoard(GameSpriteSheet spriteSheet, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
+    @Override
+    public void drawClapperBoard(Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
         var sprite = animation.currentSprite(TengenMsPacManGameSpriteSheet.CLAPPERBOARD_SPRITES);
         if (sprite != RectArea.PIXEL) {
             drawSpriteCenteredOverBox(sprite, x, y);
@@ -452,7 +452,7 @@ public class GameRenderer implements GameWorldRenderer {
         }
     }
 
-    public void drawStork(GameSpriteSheet spriteSheet, SpriteAnimation storkAnimation, Entity stork, boolean bagReleased) {
+    public void drawStork(SpriteAnimation storkAnimation, Entity stork, boolean bagReleased) {
         if (!stork.isVisible()) {
             return;
         }

@@ -91,14 +91,13 @@ public class CutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameWorldRenderer renderer) {
-        GameSpriteSheet spriteSheet = context.currentGameSceneConfig().spriteSheet();
         GameRenderer tr = (GameRenderer) renderer;
         String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
         Color color = context.assets().color(assetPrefix + ".color.clapperboard");
         renderer.drawClapperBoard(renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(msPacMan);
         renderer.drawAnimatedEntity(mrPacMan);
-        tr.drawStork(spriteSheet, storkAnimation, stork, bag.acceleration().y() != 0);
+        tr.drawStork(storkAnimation, stork, bag.acceleration().y() != 0);
         renderer.drawSprite(bag, bagOpen
             ? TengenMsPacManGameSpriteSheet.JUNIOR_PAC_SPRITE
             : TengenMsPacManGameSpriteSheet.BLUE_BAG_SPRITE);

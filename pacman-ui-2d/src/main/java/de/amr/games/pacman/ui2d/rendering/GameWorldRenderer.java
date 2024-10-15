@@ -40,10 +40,6 @@ public interface GameWorldRenderer {
 
     void setRendererFor(GameModel game);
 
-    static ImageArea imageArea(Image sourceImage, int x, int y, int width, int height) {
-        return new ImageArea(sourceImage, new RectArea(x, y, width, height));
-    }
-
     GameWorldRenderer copy();
 
     AssetStorage assets();

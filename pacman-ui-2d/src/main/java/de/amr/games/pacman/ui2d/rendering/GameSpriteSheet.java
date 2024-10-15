@@ -9,8 +9,6 @@ import de.amr.games.pacman.lib.RectArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 
-import java.util.stream.IntStream;
-
 /**
  * Sprite sheet interface for all game variants.
  *
@@ -22,10 +20,16 @@ public interface GameSpriteSheet {
         return areas;
     }
 
-    RectArea NO_SPRITE  = RectArea.PIXEL;
-    RectArea[] NO_SPRITES = IntStream.range(0, 10).mapToObj(i -> NO_SPRITE).toArray(RectArea[]::new);
+    static ImageArea imageArea(Image sourceImage, int x, int y, int width, int height) {
+        return new ImageArea(sourceImage, new RectArea(x, y, width, height));
+    }
 
-    // Common
+    default ImageArea imageArea(int x, int y, int width, int height) {
+        return imageArea(sourceImage(), x, y, width, height);
+    }
+
+    RectArea NO_SPRITE  = RectArea.PIXEL;
+
     RectArea[] pacMunchingSprites(Direction dir);
     RectArea[] pacDyingSprites();
 

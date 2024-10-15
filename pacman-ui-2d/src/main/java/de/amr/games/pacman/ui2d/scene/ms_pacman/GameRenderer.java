@@ -24,7 +24,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.ui2d.rendering.GameWorldRenderer.imageArea;
+import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.imageArea;
 
 /**
  * @author Armin Reichert
@@ -97,8 +97,8 @@ public class GameRenderer implements GameWorldRenderer {
     @Override
     public void setRendererFor(GameModel game) {
         int mapNumber = game.currentMapNumber();
-        mapWithFoodSprite    = imageArea(spriteSheet.sourceImage(), 0, (mapNumber - 1) * 248, 226, 248);
-        mapWithoutFoodSprite = imageArea(spriteSheet.sourceImage(), 228, (mapNumber - 1) * 248, 226, 248);
+        mapWithFoodSprite    = spriteSheet.imageArea(0, (mapNumber - 1) * 248, 226, 248);
+        mapWithoutFoodSprite = spriteSheet.imageArea(228, (mapNumber - 1) * 248, 226, 248);
         mapFlashingSprite    = imageArea(flashingMazesImage, 0, (mapNumber - 1) * 248, 226, 248);
     }
 
