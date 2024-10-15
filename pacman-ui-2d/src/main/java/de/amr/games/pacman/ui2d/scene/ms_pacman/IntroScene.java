@@ -19,7 +19,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -112,7 +112,7 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameWorldRenderer renderer) {
+    public void drawSceneContent(GameRenderer renderer) {
         Font font = renderer.scaledArcadeFont(TS);
         BitSet marqueeState = computeMarqueeState(marqueeTimer.currentTick());
         drawMarquee(renderer.ctx(), marqueeState);

@@ -13,7 +13,7 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAssets2D;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.paint.Color;
 
@@ -75,7 +75,7 @@ public class CutScene2 extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameWorldRenderer renderer) {
+    public void drawSceneContent(GameRenderer renderer) {
         String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
         Color color = context.assets().color(assetPrefix + ".color.clapperboard");
         renderer.drawClapperBoard(renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));

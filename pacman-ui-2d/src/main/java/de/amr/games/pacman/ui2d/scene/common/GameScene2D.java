@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.scene.common;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -41,7 +41,7 @@ public abstract class GameScene2D implements GameScene {
     }
 
     @Override
-    public void draw(GameWorldRenderer renderer) {
+    public void draw(GameRenderer renderer) {
         renderer.scalingProperty().set(scalingPy.get());
         renderer.backgroundColorProperty().set(backgroundColorPy.get());
         renderer.clearCanvas();
@@ -54,19 +54,19 @@ public abstract class GameScene2D implements GameScene {
         }
     }
 
-    protected void drawCredit(GameWorldRenderer renderer, Vector2i worldSize) {
+    protected void drawCredit(GameRenderer renderer, Vector2i worldSize) {
         double x = 2 * TS, y = worldSize.y() * TS - 2;
         renderer.drawText("CREDIT %2d".formatted(context.game().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS), x, y);
     }
 
-    protected void drawLevelCounter(GameWorldRenderer renderer, Vector2i worldSize) {
+    protected void drawLevelCounter(GameRenderer renderer, Vector2i worldSize) {
         renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), worldSize);
     }
 
     /**
      * Scenes overwrite this method to draw their specific content.
      */
-    protected void drawSceneContent(GameWorldRenderer renderer) {
+    protected void drawSceneContent(GameRenderer renderer) {
         Font font = Font.font("Monospaced", 20);
         renderer.drawText("Implement method drawSceneContent()!", Color.WHITE, font, 10, 100);
     }
@@ -74,7 +74,7 @@ public abstract class GameScene2D implements GameScene {
     /**
      * Draws additional scene info, e.g. tile structure or debug info.
      */
-    protected void drawDebugInfo(GameWorldRenderer renderer) {
+    protected void drawDebugInfo(GameRenderer renderer) {
         renderer.drawTileGrid(context.worldSizeTilesOrDefault());
     }
 }

@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 
 import java.util.stream.Stream;
@@ -40,7 +40,7 @@ public class StartScene extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameWorldRenderer renderer) {
+    public void drawSceneContent(GameRenderer renderer) {
         GameSpriteSheet spriteSheet = context.currentGameSceneConfig().spriteSheet();
         var font8 = renderer.scaledArcadeFont(8);
         var font6 = renderer.scaledArcadeFont(6);

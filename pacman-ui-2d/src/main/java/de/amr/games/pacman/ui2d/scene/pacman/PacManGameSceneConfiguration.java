@@ -23,7 +23,7 @@ public class PacManGameSceneConfiguration implements GameSceneConfiguration {
 
     private final Map<String, GameScene> scenesByID = new HashMap<>();
     private final PacManGameSpriteSheet spriteSheet;
-    private final GameRenderer renderer;
+    private final PacManGameRenderer renderer;
 
     public PacManGameSceneConfiguration(AssetStorage assets) {
         set("BootScene",  new BootScene());
@@ -35,7 +35,7 @@ public class PacManGameSceneConfiguration implements GameSceneConfiguration {
         set("CutScene3", new CutScene3());
 
         spriteSheet = assets.get(GameAssets2D.assetPrefix(GameVariant.PACMAN) + ".spritesheet");
-        renderer = new GameRenderer(assets);
+        renderer = new PacManGameRenderer(assets);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class PacManGameSceneConfiguration implements GameSceneConfiguration {
     }
 
     @Override
-    public GameRenderer renderer() {
+    public PacManGameRenderer renderer() {
         return renderer;
     }
 

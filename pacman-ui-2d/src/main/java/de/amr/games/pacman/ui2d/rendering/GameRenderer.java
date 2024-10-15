@@ -36,11 +36,11 @@ import static java.util.function.Predicate.not;
 /**
  * @author Armin Reichert
  */
-public interface GameWorldRenderer {
+public interface GameRenderer {
 
     void setRendererFor(GameModel game);
 
-    GameWorldRenderer copy();
+    GameRenderer copy();
 
     AssetStorage assets();
 

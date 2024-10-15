@@ -11,7 +11,7 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -30,7 +30,7 @@ import static java.util.function.Predicate.not;
  *
  * @author Armin Reichert
  */
-public class GameRenderer implements GameWorldRenderer {
+public class PacManGameXXLRenderer implements GameRenderer {
 
     private final AssetStorage assets;
     private final GameSpriteSheet spriteSheet;
@@ -43,7 +43,7 @@ public class GameRenderer implements GameWorldRenderer {
     private boolean blinkingOn;
     private Canvas canvas;
 
-    public GameRenderer(AssetStorage assets) {
+    public PacManGameXXLRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
         spriteSheet = assets.get("pacman_xxl.spritesheet");
         terrainRenderer.scalingPy.bind(scalingPy);
@@ -51,8 +51,8 @@ public class GameRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public GameRenderer copy() {
-        return new GameRenderer(assets);
+    public PacManGameXXLRenderer copy() {
+        return new PacManGameXXLRenderer(assets);
     }
 
     @Override

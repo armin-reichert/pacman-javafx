@@ -8,7 +8,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameAction2D;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
@@ -16,8 +16,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.GameRenderer.TENGEN_BABY_BLUE;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.GameRenderer.TENGEN_YELLOW;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_BABY_BLUE;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_YELLOW;
 
 /**
  * @author Armin Reichert
@@ -65,7 +65,7 @@ public class StartScene extends GameScene2D {
         idleTicks += 1;
     }
 
-    private void drawBabyBlueBar(GameWorldRenderer renderer, double y) {
+    private void drawBabyBlueBar(GameRenderer renderer, double y) {
         Canvas canvas = renderer.canvas();
         renderer.ctx().save();
         renderer.ctx().scale(scaling(), scaling());
@@ -77,12 +77,12 @@ public class StartScene extends GameScene2D {
     }
 
     @Override
-    protected void drawLevelCounter(GameWorldRenderer renderer, Vector2i worldSize) {
+    protected void drawLevelCounter(GameRenderer renderer, Vector2i worldSize) {
         // suppress level counter
     }
 
     @Override
-    protected void drawSceneContent(GameWorldRenderer renderer) {
+    protected void drawSceneContent(GameRenderer renderer) {
         Font font = renderer.scaledArcadeFont(TS);
 
         int y = 7 * TS;
@@ -145,11 +145,11 @@ public class StartScene extends GameScene2D {
         };
     }
 
-    private void drawCenteredText(GameWorldRenderer renderer, String text, Color color, Font font, double y) {
+    private void drawCenteredText(GameRenderer renderer, String text, Color color, Font font, double y) {
         renderer.drawText(text, color, font, 0.5 * TS * (28 - text.length()), y);
     }
 
-    private void drawArrowIfSelected(GameWorldRenderer renderer, int option, int x, int y) {
+    private void drawArrowIfSelected(GameRenderer renderer, int option, int x, int y) {
         if (selectedOption == option) {
             Font font = renderer.scaledArcadeFont(TS);
             renderer.drawText("-", LABEL_COLOR, font, x, y);

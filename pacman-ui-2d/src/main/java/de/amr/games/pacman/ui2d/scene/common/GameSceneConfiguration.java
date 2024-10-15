@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui2d.scene.common;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 
 import java.util.stream.Stream;
 
@@ -22,7 +22,7 @@ public interface GameSceneConfiguration {
         return get(sceneID) == gameScene;
     }
     GameSpriteSheet spriteSheet();
-    GameWorldRenderer renderer();
+    GameRenderer renderer();
     void createActorAnimations(GameModel game);
     GameScene selectGameScene(GameContext context);
 }

@@ -17,7 +17,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -27,7 +27,7 @@ import java.util.BitSet;
 import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.GameRenderer.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.*;
 
 /**
  * Intro scene of the Tengen Ms. Pac-Man game.
@@ -107,7 +107,7 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameWorldRenderer renderer) {
+    public void drawSceneContent(GameRenderer renderer) {
         TickTimer timer = sceneController.state().timer();
         long t = timer.currentTick();
         Font font = renderer.scaledArcadeFont(TS);
@@ -171,7 +171,7 @@ public class IntroScene extends GameScene2D {
     }
 
     // TODO This is too cryptic
-    private void drawMarquee(GameWorldRenderer renderer, Font font, BitSet marqueeState) {
+    private void drawMarquee(GameRenderer renderer, Font font, BitSet marqueeState) {
         renderer.drawText("\"MS PAC-MAN\"", TENGEN_YELLOW, font, TITLE_POSITION.x(), TITLE_POSITION.y());
         double xMin = 60, xMax = 192, yMin = 88, yMax = 148;
         GraphicsContext g = renderer.ctx();

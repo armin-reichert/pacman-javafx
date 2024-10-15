@@ -22,7 +22,7 @@ import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame.MapCategory
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame.PacBooster;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
@@ -47,7 +47,7 @@ import static java.util.function.Predicate.not;
 /**
  * @author Armin Reichert
  */
-public class GameRenderer implements GameWorldRenderer {
+public class TengenMsPacManGameRenderer implements GameRenderer {
 
     // all colors picked from NES emulator
     public static final Color TENGEN_BABY_BLUE          = Color.web("#64b0ff");
@@ -122,7 +122,7 @@ public class GameRenderer implements GameWorldRenderer {
     private boolean blinkingOn;
     private Canvas canvas;
 
-    public GameRenderer(AssetStorage assets) {
+    public TengenMsPacManGameRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
         spriteSheet = assets.get("tengen.spritesheet");
         terrainRenderer.scalingPy.bind(scalingPy);
@@ -133,8 +133,8 @@ public class GameRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public GameWorldRenderer copy() {
-        return new GameRenderer(assets);
+    public GameRenderer copy() {
+        return new TengenMsPacManGameRenderer(assets);
     }
 
     @Override
@@ -184,7 +184,7 @@ public class GameRenderer implements GameWorldRenderer {
         if (guy instanceof Pac pac) {
             drawMsOrMrPacMan(pac);
         } else {
-            GameWorldRenderer.super.drawAnimatedEntity(guy);
+            GameRenderer.super.drawAnimatedEntity(guy);
         }
         ctx().restore();
     }
@@ -214,7 +214,7 @@ public class GameRenderer implements GameWorldRenderer {
                             }
                             drawRotatedTowardsDir(pac, dir, spriteAnimation);
                         }
-                        default -> GameWorldRenderer.super.drawAnimatedEntity(pac);
+                        default -> GameRenderer.super.drawAnimatedEntity(pac);
                     }
                 } else {
                     Logger.error("No current animation for character {}", pac);
@@ -372,7 +372,7 @@ public class GameRenderer implements GameWorldRenderer {
     public void drawLivesCounter(int numLives, int maxLives, Vector2i worldSize) {
         ctx().save();
         ctx().translate(0, -5); // lift a bit
-        GameWorldRenderer.super.drawLivesCounter(numLives, maxLives, worldSize);
+        GameRenderer.super.drawLivesCounter(numLives, maxLives, worldSize);
         ctx().restore();
     }
 
@@ -380,7 +380,7 @@ public class GameRenderer implements GameWorldRenderer {
     public void drawLevelCounter(int levelNumber, List<Byte> symbols, Vector2i worldSize) {
         ctx().save();
         ctx().translate(0, -5);
-        GameWorldRenderer.super.drawLevelCounter(levelNumber, symbols, worldSize);
+        GameRenderer.super.drawLevelCounter(levelNumber, symbols, worldSize);
         ctx().restore();
     }
 

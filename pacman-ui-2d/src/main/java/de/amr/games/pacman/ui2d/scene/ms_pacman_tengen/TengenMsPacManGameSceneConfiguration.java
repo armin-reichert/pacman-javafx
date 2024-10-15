@@ -22,7 +22,7 @@ public class TengenMsPacManGameSceneConfiguration implements GameSceneConfigurat
 
     private final Map<String, GameScene> scenesByID = new HashMap<>();
     private final TengenMsPacManGameSpriteSheet spriteSheet;
-    private final GameRenderer renderer;
+    private final TengenMsPacManGameRenderer renderer;
 
     public TengenMsPacManGameSceneConfiguration(AssetStorage assets) {
         set("BootScene",   new BootScene());
@@ -34,7 +34,7 @@ public class TengenMsPacManGameSceneConfiguration implements GameSceneConfigurat
         set("CutScene3",   new CutScene3());
 
         spriteSheet = assets.get(GameAssets2D.assetPrefix(GameVariant.MS_PACMAN_TENGEN) + ".spritesheet");
-        renderer = new GameRenderer(assets);
+        renderer = new TengenMsPacManGameRenderer(assets);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class TengenMsPacManGameSceneConfiguration implements GameSceneConfigurat
     }
 
     @Override
-    public GameRenderer renderer() {
+    public TengenMsPacManGameRenderer renderer() {
         return renderer;
     }
 

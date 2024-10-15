@@ -5,14 +5,14 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.GameRenderer.shadeOfBlue;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.shadeOfBlue;
 
 public class BootScene extends GameScene2D {
 
@@ -66,7 +66,7 @@ public class BootScene extends GameScene2D {
     }
 
     @Override
-    protected void drawSceneContent(GameWorldRenderer renderer) {
+    protected void drawSceneContent(GameRenderer renderer) {
         if (grayScreen) {
             renderer.ctx().setFill(Color.grayRgb(116));
             renderer.ctx().fillRect(0, 0, renderer.canvas().getWidth(), renderer.canvas().getHeight());

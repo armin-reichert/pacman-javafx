@@ -10,8 +10,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.pacman.PacManArcadeGame;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -80,14 +79,14 @@ public class CutScene3 extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameWorldRenderer renderer) {
+    public void drawSceneContent(GameRenderer renderer) {
         renderer.drawAnimatedEntity(pac);
         renderer.drawAnimatedEntity(blinky);
         drawLevelCounter(renderer, context.worldSizeTilesOrDefault());
     }
 
     @Override
-    protected void drawDebugInfo(GameWorldRenderer renderer) {
+    protected void drawDebugInfo(GameRenderer renderer) {
         renderer.drawTileGrid(context.worldSizeTilesOrDefault());
         var text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
         renderer.drawText(text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));

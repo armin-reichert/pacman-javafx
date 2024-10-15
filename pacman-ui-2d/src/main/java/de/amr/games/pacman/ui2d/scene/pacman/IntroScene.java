@@ -18,8 +18,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -114,7 +113,7 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameWorldRenderer renderer) {
+    public void drawSceneContent(GameRenderer renderer) {
         TickTimer timer = sceneController.state().timer();
         drawGallery(renderer);
         switch (sceneController.state()) {
@@ -148,7 +147,7 @@ public class IntroScene extends GameScene2D {
         return time % 5 < 2 ? 0 : -1;
     }
 
-    private void drawGallery(GameWorldRenderer renderer) {
+    private void drawGallery(GameRenderer renderer) {
         PacManGameSpriteSheet spriteSheet = (PacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         Font font = renderer.scaledArcadeFont(TS);
         int tx = LEFT_TILE_X;
@@ -172,7 +171,7 @@ public class IntroScene extends GameScene2D {
         }
     }
 
-    private void drawGuys(GameWorldRenderer renderer, int shakingAmount) {
+    private void drawGuys(GameRenderer renderer, int shakingAmount) {
         if (shakingAmount == 0) {
             Stream.of(ghosts).forEach(renderer::drawAnimatedEntity);
         } else {
@@ -188,7 +187,7 @@ public class IntroScene extends GameScene2D {
         renderer.drawAnimatedEntity(pacMan);
     }
 
-    private void drawPoints(GameWorldRenderer renderer) {
+    private void drawPoints(GameRenderer renderer) {
         var color = ARCADE_PALE;
         var font8 = renderer.scaledArcadeFont(8);
         var font6 = renderer.scaledArcadeFont(6);
@@ -206,7 +205,7 @@ public class IntroScene extends GameScene2D {
     }
 
     // draw pixelated "circle"
-    private void drawEnergizer(GameWorldRenderer renderer, double x, double y) {
+    private void drawEnergizer(GameRenderer renderer, double x, double y) {
         double scaling = scalingPy.get();
         renderer.ctx().save();
         renderer.ctx().scale(scaling, scaling);

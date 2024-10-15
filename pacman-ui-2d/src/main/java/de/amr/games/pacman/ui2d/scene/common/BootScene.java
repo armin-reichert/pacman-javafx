@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui2d.scene.common;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
@@ -34,7 +34,7 @@ public class BootScene extends GameScene2D {
     }
 
     @Override
-    public void draw(GameWorldRenderer renderer) {
+    public void draw(GameRenderer renderer) {
         renderer.scalingProperty().set(scalingPy.get());
         renderer.backgroundColorProperty().set(backgroundColorPy.get());
         var timer = context.gameState().timer();
@@ -50,11 +50,11 @@ public class BootScene extends GameScene2D {
     }
 
     @Override
-    protected void drawSceneContent(GameWorldRenderer renderer) {
+    protected void drawSceneContent(GameRenderer renderer) {
         // not used here
     }
 
-    private void paintRandomHexCodes(GameWorldRenderer renderer) {
+    private void paintRandomHexCodes(GameRenderer renderer) {
         renderer.clearCanvas();
         renderer.ctx().setFill(ARCADE_PALE);
         renderer.ctx().setFont(renderer.scaledArcadeFont(TS));
@@ -66,7 +66,7 @@ public class BootScene extends GameScene2D {
         }
     }
 
-    private void paintRandomSprites(GameWorldRenderer renderer) {
+    private void paintRandomSprites(GameRenderer renderer) {
         GameSpriteSheet spriteSheet = context.currentGameSceneConfig().spriteSheet();
         renderer.clearCanvas();
         for (int row = 0; row < GameModel.ARCADE_MAP_TILES_Y / 2; ++row) {
@@ -90,7 +90,7 @@ public class BootScene extends GameScene2D {
         return new RectArea(x, y, raster, raster);
     }
 
-    private void paintGrid(GameWorldRenderer renderer) {
+    private void paintGrid(GameRenderer renderer) {
         renderer.clearCanvas();
         double width = t(28), height = t(36), raster = 16;
         var numRows = GameModel.ARCADE_MAP_TILES_Y / 2;

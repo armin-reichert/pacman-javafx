@@ -14,8 +14,8 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.GameRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
+import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -111,7 +111,7 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    protected void drawSceneContent(GameWorldRenderer renderer) {
+    protected void drawSceneContent(GameRenderer renderer) {
         if (context.game().world() == null) { // This happens on level start
             Logger.warn("Cannot draw scene content, game world not yet available!");
             return;
@@ -151,7 +151,7 @@ public class PlayScene2D extends GameScene2D {
         drawLevelCounter(renderer, worldSize);
         //TODO Hack: Tengen has these boxes on the left and on the right showing the current level number
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN && !context.game().isDemoLevel()) {
-            GameRenderer tr = (GameRenderer) renderer;
+            TengenMsPacManGameRenderer tr = (TengenMsPacManGameRenderer) renderer;
             tr.drawLevelNumberBoxes(context.game().levelNumber(), worldSize);
         }
     }
@@ -161,7 +161,7 @@ public class PlayScene2D extends GameScene2D {
             .map(context.game()::ghost);
     }
 
-    private void drawLevelMessage(GameWorldRenderer renderer) {
+    private void drawLevelMessage(GameRenderer renderer) {
         Vector2i houseTopLeftTile = context.game().world().houseTopLeftTile();
         Vector2i houseSize        = context.game().world().houseSize();
         int cx = houseTopLeftTile.x() + houseSize.x() / 2;
@@ -195,7 +195,7 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    protected void drawDebugInfo(GameWorldRenderer renderer) {
+    protected void drawDebugInfo(GameRenderer renderer) {
         renderer.drawTileGrid(context.worldSizeTilesOrDefault());
         if (context.gameVariant() == GameVariant.PACMAN && context.game().world() != null) {
             context.game().ghosts().forEach(ghost -> {

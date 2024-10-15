@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui2d.scene.pacman;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 
 import java.util.List;
@@ -45,7 +45,7 @@ public class StartScene extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameWorldRenderer renderer) {
+    public void drawSceneContent(GameRenderer renderer) {
         var font8 = renderer.scaledArcadeFont(8);
         var font6 = renderer.scaledArcadeFont(6);
         renderer.drawText("PUSH START BUTTON", ARCADE_ORANGE, font8, t(6), t(17));

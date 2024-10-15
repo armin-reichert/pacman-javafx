@@ -10,7 +10,7 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
@@ -29,7 +29,7 @@ import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.imageArea;
 /**
  * @author Armin Reichert
  */
-public class GameRenderer implements GameWorldRenderer {
+public class MsPacManGameRenderer implements GameRenderer {
 
     private final AssetStorage assets;
     private final GameSpriteSheet spriteSheet;
@@ -43,14 +43,14 @@ public class GameRenderer implements GameWorldRenderer {
     private boolean blinkingOn;
     private Canvas canvas;
 
-    public GameRenderer(AssetStorage assets) {
+    public MsPacManGameRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
         spriteSheet = assets.get("ms_pacman.spritesheet");
         flashingMazesImage = assets.get("ms_pacman.flashing_mazes");
     }
 
-    public GameRenderer copy() {
-        return new GameRenderer(assets);
+    public MsPacManGameRenderer copy() {
+        return new MsPacManGameRenderer(assets);
         //TODO which properties to copy?
     }
 

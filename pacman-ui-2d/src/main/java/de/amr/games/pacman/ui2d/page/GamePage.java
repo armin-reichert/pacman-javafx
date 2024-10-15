@@ -11,7 +11,7 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.*;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.util.TooFancyGameCanvasContainer;
@@ -201,7 +201,7 @@ public class GamePage extends StackPane implements Page {
         gameCanvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
     }
 
-    public void setWorldRenderer(GameWorldRenderer renderer) {
+    public void setWorldRenderer(GameRenderer renderer) {
         renderer.setCanvas(gameCanvasContainer.canvas());
     }
 

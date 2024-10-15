@@ -8,7 +8,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.binding.Bindings;
@@ -34,7 +34,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
     private final GameContext context;
     private final Canvas canvas;
     private final PlayScene2D playScene2D;
-    private GameWorldRenderer renderer;
+    private GameRenderer renderer;
 
     public PictureInPictureView(GameContext context) {
         this.context = checkNotNull(context);

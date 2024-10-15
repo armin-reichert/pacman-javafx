@@ -9,7 +9,7 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -25,7 +25,7 @@ import static de.amr.games.pacman.lib.Globals.t;
 /**
  * @author Armin Reichert
  */
-public class GameRenderer implements GameWorldRenderer {
+public class PacManGameRenderer implements GameRenderer {
 
     private final AssetStorage assets;
     private final GameSpriteSheet spriteSheet;
@@ -36,15 +36,15 @@ public class GameRenderer implements GameWorldRenderer {
     private boolean blinkingOn;
     private Canvas canvas;
 
-    public GameRenderer(AssetStorage assets) {
+    public PacManGameRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
         spriteSheet = assets.get("pacman.spritesheet");
         flashingMazeImage = assets.image("pacman.flashing_maze");
     }
 
     @Override
-    public GameWorldRenderer copy() {
-        return new GameRenderer(assets);
+    public GameRenderer copy() {
+        return new PacManGameRenderer(assets);
     }
 
     @Override
