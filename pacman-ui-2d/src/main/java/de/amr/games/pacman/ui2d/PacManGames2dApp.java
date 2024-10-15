@@ -64,10 +64,10 @@ public class PacManGames2dApp extends Application {
     public void start(Stage stage) {
         ui = new PacManGames2dUI();
         ui.loadAssets();
-        ui.setGameSceneConfiguration(GameVariant.MS_PACMAN, new MsPacManGameSceneConfiguration(ui.assets));
-        ui.setGameSceneConfiguration(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacManGameSceneConfiguration(ui.assets));
-        ui.setGameSceneConfiguration(GameVariant.PACMAN, new PacManGameSceneConfiguration(ui.assets));
-        ui.setGameSceneConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLSceneConfiguration(ui.assets));
+        ui.setGameSceneConfig(GameVariant.MS_PACMAN, new MsPacManGameSceneConfiguration(ui.assets));
+        ui.setGameSceneConfig(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacManGameSceneConfiguration(ui.assets));
+        ui.setGameSceneConfig(GameVariant.PACMAN, new PacManGameSceneConfiguration(ui.assets));
+        ui.setGameSceneConfig(GameVariant.PACMAN_XXL, new PacManGameXXLSceneConfiguration(ui.assets));
         ui.createAndStart(stage, initialSize());
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         Logger.info("Assets loaded: {}", ui.assets().summary(

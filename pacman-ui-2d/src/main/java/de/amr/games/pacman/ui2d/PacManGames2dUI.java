@@ -113,9 +113,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         }
     }
 
-    public void setGameSceneConfiguration(GameVariant variant, GameSceneConfiguration gameSceneConfiguration) {
-        gameSceneConfigByVariant.put(variant, gameSceneConfiguration);
-        gameSceneConfiguration.gameScenes().forEach(gameScene -> {
+    public void setGameSceneConfig(GameVariant variant, GameSceneConfiguration gameSceneConfig) {
+        gameSceneConfigByVariant.put(variant, gameSceneConfig);
+        gameSceneConfig.gameScenes().forEach(gameScene -> {
             if (gameScene instanceof GameScene2D gameScene2D) {
                 gameScene2D.setGameContext(this);
                 gameScene2D.debugInfoPy.bind(PY_DEBUG_INFO);

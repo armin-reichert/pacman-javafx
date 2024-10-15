@@ -46,9 +46,9 @@ public class PacManGames3dUI extends PacManGames2dUI {
     }
 
     @Override
-    public void setGameSceneConfiguration(GameVariant variant, GameSceneConfiguration gameSceneConfiguration) {
-        super.setGameSceneConfiguration(variant, gameSceneConfiguration);
-        if (gameSceneConfiguration instanceof GameSceneConfiguration3D config3D) {
+    public void setGameSceneConfig(GameVariant variant, GameSceneConfiguration gameSceneConfig) {
+        super.setGameSceneConfig(variant, gameSceneConfig);
+        if (gameSceneConfig instanceof GameSceneConfiguration3D config3D) {
             config3D.initPlayScene3D(this, sceneRoot.widthProperty(), sceneRoot.heightProperty());
         }
     }

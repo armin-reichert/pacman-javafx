@@ -67,10 +67,10 @@ public class PacManGames3dApp extends Application {
     public void start(Stage stage) {
         ui = new PacManGames3dUI();
         ui.loadAssets();
-        ui.setGameSceneConfiguration(GameVariant.MS_PACMAN, new MsPacManGameSceneConfiguration3D(ui.assets()));
-        ui.setGameSceneConfiguration(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacManGameSceneConfiguration3D(ui.assets()));
-        ui.setGameSceneConfiguration(GameVariant.PACMAN, new PacManGameSceneConfiguration3D(ui.assets()));
-        ui.setGameSceneConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLSceneConfiguration3D(ui.assets()));
+        ui.setGameSceneConfig(GameVariant.MS_PACMAN, new MsPacManGameSceneConfiguration3D(ui.assets()));
+        ui.setGameSceneConfig(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacManGameSceneConfiguration3D(ui.assets()));
+        ui.setGameSceneConfig(GameVariant.PACMAN, new PacManGameSceneConfiguration3D(ui.assets()));
+        ui.setGameSceneConfig(GameVariant.PACMAN_XXL, new PacManGameXXLSceneConfiguration3D(ui.assets()));
         ui.createAndStart(stage, initialSize());
 
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
