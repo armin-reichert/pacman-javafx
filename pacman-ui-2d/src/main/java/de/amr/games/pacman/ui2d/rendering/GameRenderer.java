@@ -259,7 +259,7 @@ public interface GameRenderer {
         }
     }
 
-    default void drawLevelCounter(int levelNumber, List<Byte> symbols, Vector2f sceneSize) {
+    default void drawLevelCounter(int levelNumber, boolean demoLevel, List<Byte> symbols, Vector2f sceneSize) {
         double x = sceneSize.x() - 4 * TS, y = sceneSize.y() - 2 * TS;
         for (byte symbol : symbols) {
             drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);

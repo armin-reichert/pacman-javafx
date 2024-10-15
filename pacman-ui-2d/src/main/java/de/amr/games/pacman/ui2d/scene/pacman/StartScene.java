@@ -58,6 +58,7 @@ public class StartScene extends GameScene2D {
             renderer.drawText(MIDWAY_COPYRIGHT, ARCADE_PINK, font8, t(4), t(29));
         }
         renderer.drawText("CREDIT %2d".formatted(context.game().credit()), ARCADE_PALE, font8, 2 * TS, sceneSize.y() - 2);
-        renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), sceneSize);
+        renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
+            context.game().levelCounter(), sceneSize);
     }
 }

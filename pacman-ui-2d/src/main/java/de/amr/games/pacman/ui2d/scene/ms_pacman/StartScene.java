@@ -75,7 +75,9 @@ public class StartScene extends GameScene2D {
             }
             default -> throw new IllegalArgumentException("Unsupported game variant: " + context.gameVariant());
         }
-        r.drawText("CREDIT %2d".formatted(context.game().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, sceneSize.y() - 2);
-        r.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), sceneSize);
+        r.drawText("CREDIT %2d".formatted(context.game().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS),
+            2 * TS, sceneSize.y() - 2);
+        r.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
+            context.game().levelCounter(), sceneSize);
     }
 }

@@ -140,7 +140,8 @@ public class IntroScene extends GameScene2D {
             }
         }
         renderer.drawText("CREDIT %2d".formatted(context.game().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, sceneSize.y() - 2);
-        renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), sceneSize);
+        renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
+            context.game().levelCounter(), sceneSize);
     }
 
     // TODO inspect in MAME what's really going on here

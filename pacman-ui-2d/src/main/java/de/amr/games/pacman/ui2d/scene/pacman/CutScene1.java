@@ -91,7 +91,8 @@ public class CutScene1 extends GameScene2D {
     public void drawSceneContent(GameRenderer renderer, Vector2f sceneSize) {
         renderer.drawAnimatedEntity(pac);
         renderer.drawAnimatedEntity(blinky);
-        renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), sceneSize);
+        renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
+            context.game().levelCounter(), sceneSize);
     }
 
     @Override

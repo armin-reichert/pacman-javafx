@@ -83,7 +83,8 @@ public class CutScene2 extends GameScene2D {
         r.drawClapperBoard(renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(msPacMan);
         renderer.drawAnimatedEntity(pacMan);
-        renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), sceneSize);
+        renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
+            context.game().levelCounter(), sceneSize);
     }
 
     private class SceneController {

@@ -102,7 +102,8 @@ public class CutScene1 extends GameScene2D {
         r.drawAnimatedEntity(inky);
         r.drawAnimatedEntity(pinky);
         r.drawSprite(heart, TengenMsPacManGameSpriteSheet.HEART_SPRITE);
-        r.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), sceneSize);
+        r.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
+            context.game().levelCounter(), sceneSize);
     }
 
     private class SceneController {

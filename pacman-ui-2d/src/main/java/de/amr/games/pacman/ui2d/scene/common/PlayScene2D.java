@@ -149,12 +149,8 @@ public class PlayScene2D extends GameScene2D {
             }
             renderer.drawLivesCounter(numLivesShown, 5, size);
         }
-        renderer.drawLevelCounter(context.game().levelNumber(), context.game().levelCounter(), size);
-        //TODO Hack: Tengen has these boxes on the left and on the right showing the current level number
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN && !context.game().isDemoLevel()) {
-            TengenMsPacManGameRenderer tr = (TengenMsPacManGameRenderer) renderer;
-            tr.drawLevelNumberBoxes(context.game().levelNumber(), size);
-        }
+        renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
+            context.game().levelCounter(), size);
     }
 
     private Stream<Ghost> ghostsInZOrder() {

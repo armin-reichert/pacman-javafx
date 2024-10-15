@@ -14,6 +14,7 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
@@ -380,10 +381,13 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawLevelCounter(int levelNumber, List<Byte> symbols, Vector2f sceneSize) {
+    public void drawLevelCounter(int levelNumber, boolean demoLevel, List<Byte> symbols, Vector2f sceneSize) {
         ctx().save();
         ctx().translate(0, -5);
-        GameRenderer.super.drawLevelCounter(levelNumber, symbols, sceneSize);
+        GameRenderer.super.drawLevelCounter(levelNumber, demoLevel, symbols, sceneSize);
+        if (!demoLevel) {
+            drawLevelNumberBoxes(levelNumber, sceneSize);
+        }
         ctx().restore();
     }
 
