@@ -133,11 +133,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         this.stage = checkNotNull(stage);
         checkNotNull(initialSize);
 
-        var mutedIcon = createIcon(assets.get("icon.mute"), 48, sounds().mutedProperty());
-        StackPane.setAlignment(mutedIcon, Pos.BOTTOM_RIGHT);
-        var pauseIcon = createIcon(assets.get("icon.pause"), 64, clock.pausedPy);
-        StackPane.setAlignment(pauseIcon, Pos.CENTER);
-        sceneRoot.getChildren().addAll(new Pane(), flashMessageLayer, pauseIcon, mutedIcon);
         Scene mainScene = createMainScene(initialSize);
         stage.setScene(mainScene);
 
@@ -218,6 +213,13 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     protected Scene createMainScene(Dimension2D size) {
         Scene mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
+
+        var mutedIcon = createIcon(assets.get("icon.mute"), 48, sounds().mutedProperty());
+        StackPane.setAlignment(mutedIcon, Pos.BOTTOM_RIGHT);
+        var pauseIcon = createIcon(assets.get("icon.pause"), 64, clock.pausedPy);
+        StackPane.setAlignment(pauseIcon, Pos.CENTER);
+        sceneRoot.getChildren().addAll(new Pane(), flashMessageLayer, pauseIcon, mutedIcon);
+
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, KEYBOARD::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, KEYBOARD::onKeyReleased);
         mainScene.setOnKeyPressed(e -> {
