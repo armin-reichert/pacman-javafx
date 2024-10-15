@@ -248,6 +248,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         if (flashMode) {
             // Flash mode uses vector rendering
             Color wallFillColor = Color.web(world.map().colorSchemeOrDefault().fill());
+            terrainRenderer.setMapBackgroundColor(bgColor);
             terrainRenderer.setWallStrokeColor(Color.WHITE);
             terrainRenderer.setWallFillColor(blinkingOn ? Color.BLACK : wallFillColor);
             terrainRenderer.setDoorColor(Color.BLACK);
@@ -259,6 +260,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             }
             // default color scheme has been overwritten, use vector rendering
             MapColorScheme colorScheme = world.map().colorScheme();
+            terrainRenderer.setMapBackgroundColor(bgColor);
             terrainRenderer.setWallStrokeColor(Color.web(colorScheme.stroke()));
             terrainRenderer.setWallFillColor(Color.web(colorScheme.fill()));
             terrainRenderer.setDoorColor(Color.web(colorScheme.door()));

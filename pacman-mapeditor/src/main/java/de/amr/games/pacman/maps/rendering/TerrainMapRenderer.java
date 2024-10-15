@@ -48,7 +48,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         map.singleStrokePaths().forEach(
             path -> drawPath(g, map, path, true, OBSTACLE_STROKE_WIDTH * baseLineWidth, wallStrokeColor, wallFillColor)
         );
-        map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, door, doorColor));
+        map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, map, door, OBSTACLE_STROKE_WIDTH * baseLineWidth, doorColor));
         g.restore();
     }
 
@@ -97,13 +97,21 @@ public class TerrainMapRenderer implements TileMapRenderer {
         return tile.scaled(TILE_SIZE).plus((float)HALF_TILE_SIZE, (float)HALF_TILE_SIZE);
     }
 
-    private void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
+    // assume we always have a pair of horizontally neighbored doors
+    private void drawDoor(GraphicsContext g, TileMap map, Vector2i tile, double lineWidth, Color doorColor) {
+        boolean leftDoor = map.get(tile.plus(Direction.RIGHT.vector())) == Tiles.DOOR;
+        double height = TILE_SIZE * 0.2; // TODO check this
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
-        double height = TILE_SIZE * 0.2;
-        g.setFill(mapBackgroundColor);
-        g.fillRect(x - 0.5, y + 0.5 * (TILE_SIZE - height) - 2, TILE_SIZE + 1, height + 4);
-        g.setFill(color);
-        g.fillRect(x - 0.5, y + 0.5 * (TILE_SIZE - height), TILE_SIZE + 1, height);
+        double oy = y + 0.5 * (TILE_SIZE - height);
+        if (leftDoor) {
+            g.setFill(mapBackgroundColor);
+            g.fillRect(x, y, 2 * TS, TS);
+            g.setFill(wallStrokeColor);
+            g.fillRect(x - lineWidth, oy, lineWidth, height);
+            g.fillRect(x + 2 * TS, oy, lineWidth, height);
+            g.setFill(doorColor);
+            g.fillRect(x, y + 0.5 * (TILE_SIZE - height), 2 * TILE_SIZE, height);
+        }
     }
 
     private void drawPath(GraphicsContext g, TileMap map, TileMapPath path,

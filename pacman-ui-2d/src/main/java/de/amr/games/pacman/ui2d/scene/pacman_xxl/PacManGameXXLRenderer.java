@@ -44,6 +44,7 @@ public class PacManGameXXLRenderer implements GameRenderer {
         this.assets = checkNotNull(assets);
         spriteSheet = assets.get("pacman_xxl.spritesheet");
         terrainRenderer.scalingPy.bind(scalingPy);
+        terrainRenderer.setMapBackgroundColor(bgColor);
         foodRenderer.scalingPy.bind(scalingPy);
     }
 
@@ -104,12 +105,14 @@ public class PacManGameXXLRenderer implements GameRenderer {
     public void drawWorld(GameContext context, GameWorld world) {
         terrainRenderer.setMapBackgroundColor(bgColor);
         if (flashMode) {
+            terrainRenderer.setMapBackgroundColor(bgColor);
             terrainRenderer.setWallStrokeColor(blinkingOn ? Color.WHITE : Color.BLACK);
             terrainRenderer.setWallFillColor(blinkingOn   ? Color.BLACK : Color.WHITE);
             terrainRenderer.setDoorColor(Color.BLACK);
             terrainRenderer.drawMap(ctx(), world.map().terrain());
         }
         else {
+            terrainRenderer.setMapBackgroundColor(bgColor);
             terrainRenderer.setWallStrokeColor(Color.web(world.map().colorSchemeOrDefault().stroke()));
             terrainRenderer.setWallFillColor(Color.web(world.map().colorSchemeOrDefault().fill()));
             terrainRenderer.setDoorColor(Color.web(world.map().colorSchemeOrDefault().door()));
