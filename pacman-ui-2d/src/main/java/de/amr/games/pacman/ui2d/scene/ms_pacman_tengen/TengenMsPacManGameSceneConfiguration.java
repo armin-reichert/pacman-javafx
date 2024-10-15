@@ -14,22 +14,42 @@ import de.amr.games.pacman.ui2d.scene.common.GameSceneConfiguration;
 import de.amr.games.pacman.ui2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 
-public class TengenMsPacManGameSceneConfiguration extends GameSceneConfiguration {
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Stream;
 
+public class TengenMsPacManGameSceneConfiguration implements GameSceneConfiguration {
+
+    private final Map<String, GameScene> scenesByID = new HashMap<>();
     private final TengenMsPacManGameSpriteSheet spriteSheet;
     private final GameRenderer renderer;
 
     public TengenMsPacManGameSceneConfiguration(AssetStorage assets) {
-        set("BootScene",  new BootScene());
-        set("IntroScene", new IntroScene());
-        set("StartScene", new StartScene());
-        set("PlayScene2D",  new PlayScene2D());
-        set("CutScene1", new CutScene1());
-        set("CutScene2", new CutScene2());
-        set("CutScene3", new CutScene3());
+        set("BootScene",   new BootScene());
+        set("IntroScene",  new IntroScene());
+        set("StartScene",  new StartScene());
+        set("PlayScene2D", new PlayScene2D());
+        set("CutScene1",   new CutScene1());
+        set("CutScene2",   new CutScene2());
+        set("CutScene3",   new CutScene3());
 
         spriteSheet = assets.get(GameAssets2D.assetPrefix(GameVariant.MS_PACMAN_TENGEN) + ".spritesheet");
         renderer = new GameRenderer(assets);
+    }
+
+    @Override
+    public void set(String id, GameScene gameScene) {
+        scenesByID.put(id, gameScene);
+    }
+
+    @Override
+    public GameScene get(String id) {
+        return scenesByID.get(id);
+    }
+
+    @Override
+    public Stream<GameScene> gameScenes() {
+        return scenesByID.values().stream();
     }
 
     @Override
@@ -48,8 +68,8 @@ public class TengenMsPacManGameSceneConfiguration extends GameSceneConfiguration
             case BOOT               -> "BootScene";
             case STARTING           -> "StartScene";
             case INTRO              -> "IntroScene";
-            case INTERMISSION       -> cutSceneID(context.game().intermissionNumber(context.game().levelNumber()));
-            case TESTING_CUT_SCENES -> cutSceneID(context.gameState().<Integer>getProperty("intermissionTestNumber"));
+            case INTERMISSION       -> "CutScene" + context.game().intermissionNumber(context.game().levelNumber());
+            case TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");
             default                 -> "PlayScene2D";
         };
         return get(sceneID);

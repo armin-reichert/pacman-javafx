@@ -14,8 +14,13 @@ import de.amr.games.pacman.ui2d.scene.common.GameSceneConfiguration;
 import de.amr.games.pacman.ui2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 
-public class MsPacManGameSceneConfiguration extends GameSceneConfiguration {
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Stream;
 
+public class MsPacManGameSceneConfiguration implements GameSceneConfiguration {
+
+    private final Map<String, GameScene> scenesByID = new HashMap<>();
     private final MsPacManGameSpriteSheet spriteSheet;
     private final GameRenderer renderer;
 
@@ -30,6 +35,21 @@ public class MsPacManGameSceneConfiguration extends GameSceneConfiguration {
 
         spriteSheet = assets.get(GameAssets2D.assetPrefix(GameVariant.MS_PACMAN) + ".spritesheet");
         renderer = new GameRenderer(assets);
+    }
+
+    @Override
+    public void set(String id, GameScene gameScene) {
+        scenesByID.put(id, gameScene);
+    }
+
+    @Override
+    public GameScene get(String id) {
+        return scenesByID.get(id);
+    }
+
+    @Override
+    public Stream<GameScene> gameScenes() {
+        return scenesByID.values().stream();
     }
 
     @Override
@@ -48,8 +68,8 @@ public class MsPacManGameSceneConfiguration extends GameSceneConfiguration {
             case BOOT               -> "BootScene";
             case STARTING           -> "StartScene";
             case INTRO              -> "IntroScene";
-            case INTERMISSION       -> cutSceneID(context.game().intermissionNumber(context.game().levelNumber()));
-            case TESTING_CUT_SCENES -> cutSceneID(context.gameState().<Integer>getProperty("intermissionTestNumber"));
+            case INTERMISSION       -> "CutScene" + context.game().intermissionNumber(context.game().levelNumber());
+            case TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");
             default                 -> "PlayScene2D";
         };
         return get(sceneID);

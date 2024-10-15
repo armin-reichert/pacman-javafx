@@ -8,8 +8,8 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSceneConfiguration;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
-import de.amr.games.pacman.ui3d.scene.common.PlayScene3D;
 import de.amr.games.pacman.ui3d.scene.common.GameSceneConfiguration3D;
+import de.amr.games.pacman.ui3d.scene.common.PlayScene3D;
 import javafx.beans.value.ObservableDoubleValue;
 
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;

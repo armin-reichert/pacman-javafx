@@ -16,8 +16,13 @@ import de.amr.games.pacman.ui2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui2d.scene.pacman.*;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 
-public class PacManGameXXLSceneConfiguration extends GameSceneConfiguration {
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Stream;
 
+public class PacManGameXXLSceneConfiguration implements GameSceneConfiguration {
+
+    private final Map<String, GameScene> scenesByID = new HashMap<>();
     private final PacManGameSpriteSheet spriteSheet;
     private final GameRenderer renderer;
 
@@ -32,6 +37,21 @@ public class PacManGameXXLSceneConfiguration extends GameSceneConfiguration {
 
         spriteSheet = assets.get(GameAssets2D.assetPrefix(GameVariant.PACMAN_XXL) + ".spritesheet");
         renderer = new GameRenderer(assets);
+    }
+
+    @Override
+    public void set(String id, GameScene gameScene) {
+        scenesByID.put(id, gameScene);
+    }
+
+    @Override
+    public GameScene get(String id) {
+        return scenesByID.get(id);
+    }
+
+    @Override
+    public Stream<GameScene> gameScenes() {
+        return scenesByID.values().stream();
     }
 
     @Override
@@ -50,8 +70,8 @@ public class PacManGameXXLSceneConfiguration extends GameSceneConfiguration {
             case BOOT -> "BootScene";
             case STARTING -> "StartScene";
             case INTRO -> "IntroScene";
-            case INTERMISSION -> cutSceneID(context.game().intermissionNumber(context.game().levelNumber()));
-            case TESTING_CUT_SCENES -> cutSceneID(context.gameState().<Integer>getProperty("intermissionTestNumber"));
+            case INTERMISSION -> "CutScene" + context.game().intermissionNumber(context.game().levelNumber());
+            case TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");
             default -> "PlayScene2D";
         };
         return get(sceneID);
