@@ -440,7 +440,7 @@ public abstract class GameModel {
         int oldScore = score.points();
         int newScore = oldScore + points;
         // score can be enabled in demo level e.g. Tengen Ms. Pac-Man has it
-        if (isDemoLevel() && isScoreEnabledInDemoLevel()) {
+        if (!isDemoLevel() || isScoreEnabledInDemoLevel()) {
             score.setPoints(newScore);
         }
         // high score and extra life are not enabled in demo level
