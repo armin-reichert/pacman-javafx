@@ -396,6 +396,11 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     @Override
+    protected void setActorBaseSpeed(int levelNumber) {
+        super.setActorBaseSpeed(levelNumber); // TODO
+    }
+
+    @Override
     public void buildDemoLevel() {
         levelNumber = 1;
         mapNumber = mapNumberByLevelNumber(levelNumber);

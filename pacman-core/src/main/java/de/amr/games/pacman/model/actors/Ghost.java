@@ -135,6 +135,14 @@ public class Ghost extends Creature implements AnimatedEntity {
         speedReturningToHouse = pixelsPerTick;
     }
 
+    public float speedReturningToHouse() {
+        return speedReturningToHouse;
+    }
+
+    public float speedInsideHouse() {
+        return speedInsideHouse;
+    }
+
     public void setSpeedInsideHouse(float pixelsPerTick) {
         speedInsideHouse = pixelsPerTick;
     }

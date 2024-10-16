@@ -167,29 +167,6 @@ public abstract class GameModel {
         blinking.reset();
     }
 
-    protected void setWorldAndCreatePopulation(GameWorld world) {
-        this.world = world;
-
-        bonusSymbols[0] = computeBonusSymbol();
-        bonusSymbols[1] = computeBonusSymbol();
-
-        pac = createPac();
-        pac.setWorld(world);
-        pac.reset();
-        pac.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
-
-        ghosts = createGhosts();
-        ghosts().forEach(ghost -> {
-            ghost.setWorld(world);
-            ghost.reset();
-            ghost.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
-            ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME * SEC_PER_TICK);
-            ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE * SEC_PER_TICK);
-            ghost.setRevivalPosition(world.ghostPosition(ghost.id()));
-        });
-        ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
-    }
-
     protected void setCruiseElroyEnabled(boolean enabled) {
         if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
             cruiseElroy = (byte) -cruiseElroy;
@@ -318,8 +295,37 @@ public abstract class GameModel {
         }
     }
 
+    protected void setWorldAndCreatePopulation(GameWorld world) {
+        this.world = world;
+
+        bonusSymbols[0] = computeBonusSymbol();
+        bonusSymbols[1] = computeBonusSymbol();
+
+        pac = createPac();
+        pac.setWorld(world);
+        pac.reset();
+
+        ghosts = createGhosts();
+        ghosts().forEach(ghost -> {
+            ghost.setWorld(world);
+            ghost.reset();
+            ghost.setRevivalPosition(world.ghostPosition(ghost.id()));
+        });
+        ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
+    }
+
+    protected void setActorBaseSpeed(int levelNumber) {
+        pac.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
+        ghosts().forEach(ghost -> {
+            ghost.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
+            ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME * SEC_PER_TICK);
+            ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE * SEC_PER_TICK);
+        });
+    }
+
     public void startLevel() {
         gateKeeper.init(levelNumber);
+        setActorBaseSpeed(levelNumber);
         letsGetReadyToRumble();
         levelStartTime = System.currentTimeMillis();
         Logger.info("{} started ({})", demoLevel ? "Demo Level" : "Level " + levelNumber, variant());
