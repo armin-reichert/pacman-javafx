@@ -322,6 +322,7 @@ public abstract class GameModel {
         clearLevel();
         demoLevel = false;
         buildRegularLevel(levelNumber);
+        updateLevelCounter();
         score.setLevelNumber(levelNumber);
         Logger.info("Level {} created", levelNumber);
         publishGameEvent(GameEventType.LEVEL_CREATED);
@@ -335,7 +336,7 @@ public abstract class GameModel {
         publishGameEvent(GameEventType.LEVEL_CREATED);
     }
 
-    public void startLevel() {
+    private void updateLevelCounter() {
         if (levelNumber == 1) {
             levelCounter.clear();
         }
@@ -345,6 +346,9 @@ public abstract class GameModel {
                 levelCounter.removeFirst();
             }
         }
+    }
+
+    public void startLevel() {
         gateKeeper.init(levelNumber);
         letsGetReadyToRumble();
         levelStartTime = System.currentTimeMillis();
