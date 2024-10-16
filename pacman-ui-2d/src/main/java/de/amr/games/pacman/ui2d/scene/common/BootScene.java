@@ -6,9 +6,8 @@ package de.amr.games.pacman.ui2d.scene.common;
 
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
@@ -41,12 +40,12 @@ public class BootScene extends GameScene2D {
         var timer = context.gameState().timer();
         if (timer.currentTick() == 1) {
             renderer.clearCanvas();
-        } else if (timer.betweenSeconds(1, 2) && timer.currentTick() % 4 == 0) {
-            paintRandomHexCodes(renderer);
+        } else if (timer.betweenSeconds(1, 2) && timer.currentTick() % 8 == 0) {
+            paintRandomHexCodes(renderer, sceneSize);
         } else if (timer.betweenSeconds(2, 3.5) && timer.currentTick() % 4 == 0) {
-            paintRandomSprites(renderer);
+            paintRandomSprites(renderer, sceneSize);
         } else if (timer.atSecond(3.5)) {
-            paintGrid(renderer);
+            paintGrid(renderer, sceneSize);
         }
     }
 
@@ -55,27 +54,29 @@ public class BootScene extends GameScene2D {
         // not used
     }
 
-    private void paintRandomHexCodes(GameRenderer renderer) {
+    private void paintRandomHexCodes(GameRenderer renderer, Vector2f sceneSize) {
         renderer.clearCanvas();
         renderer.ctx().setFill(ARCADE_PALE);
         renderer.ctx().setFont(renderer.scaledArcadeFont(TS));
-        for (int row = 0; row < GameModel.ARCADE_MAP_TILES_Y; ++row) {
-            for (int col = 0; col < GameModel.ARCADE_MAP_TILES_X; ++col) {
+        int numRows = (int) (sceneSize.y() / TS), numCols = (int) (sceneSize.x() / TS);
+        for (int row = 0; row < numRows; ++row) {
+            for (int col = 0; col < numCols; ++col) {
                 var hexCode = Integer.toHexString(RND.nextInt(16));
                 renderer.ctx().fillText(hexCode, scaled(t(col)), scaled(t(row + 1)));
             }
         }
     }
 
-    private void paintRandomSprites(GameRenderer renderer) {
+    private void paintRandomSprites(GameRenderer renderer, Vector2f sceneSize) {
         GameSpriteSheet spriteSheet = context.currentGameSceneConfig().spriteSheet();
         renderer.clearCanvas();
-        for (int row = 0; row < GameModel.ARCADE_MAP_TILES_Y / 2; ++row) {
+        int numRows = (int) (sceneSize.y() / TS), numCols = (int) (sceneSize.x() / TS);
+        for (int row = 0; row < numRows / 2; ++row) {
             if (RND.nextInt(100) > 20) {
                 var region1 = randomSpriteSheetTile(spriteSheet);
                 var region2 = randomSpriteSheetTile(spriteSheet);
-                var splitX = GameModel.ARCADE_MAP_TILES_X / 8 + RND.nextInt(GameModel.ARCADE_MAP_TILES_X / 4);
-                for (int col = 0; col < GameModel.ARCADE_MAP_TILES_X / 2; ++col) {
+                var splitX = numCols / 8 + RND.nextInt(numCols / 4);
+                for (int col = 0; col < numCols / 2; ++col) {
                     var region = col < splitX ? region1 : region2;
                     renderer.drawSpriteScaled(region, region.width() * col, region.height() * row);
                 }
@@ -91,11 +92,11 @@ public class BootScene extends GameScene2D {
         return new RectArea(x, y, raster, raster);
     }
 
-    private void paintGrid(GameRenderer renderer) {
+    private void paintGrid(GameRenderer renderer, Vector2f sceneSize) {
         renderer.clearCanvas();
         double width = t(28), height = t(36), raster = 16;
-        var numRows = GameModel.ARCADE_MAP_TILES_Y / 2;
-        var numCols = GameModel.ARCADE_MAP_TILES_X / 2;
+        var numRows = sceneSize.y() / TS / 2;
+        var numCols = sceneSize.x() / TS / 2;
         renderer.ctx().setStroke(ARCADE_PALE);
         renderer.ctx().setLineWidth(scaled(2.0));
         for (int row = 0; row <= numRows; ++row) {

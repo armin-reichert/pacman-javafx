@@ -42,7 +42,7 @@ public abstract class GameModel {
     public static final String ANIM_PAC_MUNCHING = "munching";
     public static final String ANIM_PAC_DYING = "dying";
 
-    // Common ghost animation IDss
+    // Common ghost animation IDs
     public static final String ANIM_GHOST_NORMAL     = "normal";
     public static final String ANIM_GHOST_FRIGHTENED = "frightened";
     public static final String ANIM_GHOST_EYES       = "eyes";
