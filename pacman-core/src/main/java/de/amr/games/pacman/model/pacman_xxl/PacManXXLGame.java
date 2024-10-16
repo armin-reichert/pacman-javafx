@@ -84,7 +84,7 @@ public class PacManXXLGame extends PacManArcadeGame {
         Logger.info("Map selection mode is {}", mapSelectionMode);
         Logger.info("Selected map URL is {}", map.url());
         Logger.info("Selected map colors: {}", map.colorScheme());
-        setWorldAndCreatePopulation(createWorld(map));
+        createWorldAndPopulation(map);
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
@@ -182,7 +182,8 @@ public class PacManXXLGame extends PacManArcadeGame {
         publishGameEvent(GameEventType.CUSTOM_MAPS_CHANGED);
     }
 
-    private GameWorld createWorld(WorldMap map) {
+    @Override
+    protected GameWorld createWorld(WorldMap map) {
         var world = new GameWorld(map);
         if (!map.terrain().hasProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");

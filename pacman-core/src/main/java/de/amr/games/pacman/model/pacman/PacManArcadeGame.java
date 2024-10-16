@@ -164,9 +164,7 @@ public class PacManArcadeGame extends GameModel {
     @Override
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = levelNumber;
-        var world = new GameWorld(WORLD_MAP);
-        world.createArcadeHouse(HOUSE_X, HOUSE_Y);
-        setWorldAndCreatePopulation(world);
+        createWorldAndPopulation(WORLD_MAP);
         pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
@@ -174,6 +172,13 @@ public class PacManArcadeGame extends GameModel {
             ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
             ghost.setCannotMoveUpTiles(CANNOT_MOVE_UP_TILES);
         });
+    }
+
+    @Override
+    protected GameWorld createWorld(WorldMap map) {
+        var world = new GameWorld(map);
+        world.createArcadeHouse(HOUSE_X, HOUSE_Y);
+        return world;
     }
 
     @Override

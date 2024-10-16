@@ -9,6 +9,7 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.*;
@@ -132,6 +133,7 @@ public abstract class GameModel {
     public abstract int currentMapNumber();
     public abstract int mapNumberByLevelNumber(int levelNumber);
     public abstract void activateNextBonus();
+    protected abstract GameWorld createWorld(WorldMap map);
     protected abstract GameLevel levelData(int levelNumber);
     protected abstract Pac createPac();
     protected abstract Ghost[] createGhosts();
@@ -290,11 +292,8 @@ public abstract class GameModel {
         }
     }
 
-    protected void setWorldAndCreatePopulation(GameWorld world) {
-        this.world = world;
-
-        bonusSymbols[0] = computeBonusSymbol();
-        bonusSymbols[1] = computeBonusSymbol();
+    protected void createWorldAndPopulation(WorldMap map) {
+        world = createWorld(map);
 
         pac = createPac();
         pac.setWorld(world);
@@ -307,6 +306,9 @@ public abstract class GameModel {
             ghost.setRevivalPosition(world.ghostPosition(ghost.id()));
         });
         ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
+
+        bonusSymbols[0] = computeBonusSymbol();
+        bonusSymbols[1] = computeBonusSymbol();
     }
 
     protected void setActorBaseSpeed(int levelNumber) {

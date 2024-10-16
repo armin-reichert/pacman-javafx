@@ -85,14 +85,6 @@ public class MsPacManArcadeGame extends GameModel {
 
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
 
-    private static GameWorld createWorld(WorldMap map) {
-        var world = new GameWorld(map);
-        world.createArcadeHouse(HOUSE_X, HOUSE_Y);
-        //TODO: store in map files
-        map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(world.houseTopLeftTile()));
-        return world;
-    }
-
     private int mapNumber;
     public boolean blueMazeBug = false;
 
@@ -171,7 +163,7 @@ public class MsPacManArcadeGame extends GameModel {
         if (blueMazeBug && levelNumber == 1) {
             map.terrain().setProperty(WorldMap.PROPERTY_COLOR_WALL_FILL, "rgb(33,33,255)");
         }
-        setWorldAndCreatePopulation(createWorld(map));
+        createWorldAndPopulation(map);
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
@@ -183,12 +175,19 @@ public class MsPacManArcadeGame extends GameModel {
         levelNumber = 1;
         mapNumber = randomInt(1, MAP_COUNT + 1);
         URL mapURL = getClass().getResource(MAP_PATTERN.formatted(mapNumber));
-        var map = new WorldMap(mapURL);
-        setWorldAndCreatePopulation(createWorld(map));
+        createWorldAndPopulation(new WorldMap(mapURL));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+    }
+
+    protected GameWorld createWorld(WorldMap map) {
+        var world = new GameWorld(map);
+        world.createArcadeHouse(HOUSE_X, HOUSE_Y);
+        //TODO: store in map files
+        map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(world.houseTopLeftTile()));
+        return world;
     }
 
     /** In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly

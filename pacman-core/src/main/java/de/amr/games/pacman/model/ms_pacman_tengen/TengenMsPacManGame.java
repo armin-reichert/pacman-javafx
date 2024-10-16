@@ -365,7 +365,7 @@ public class TengenMsPacManGame extends GameModel {
         this.levelNumber = levelNumber;
         mapNumber = mapNumberByLevelNumber(levelNumber);
         var map = currentMapList.get(mapNumber - 1);
-        setWorldAndCreatePopulation(createWorld(map));
+        createWorldAndPopulation(map);
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
@@ -387,8 +387,9 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     public void buildDemoLevel() {
         levelNumber = 1;
-        mapNumber = mapNumberByLevelNumber(levelNumber);
-        setWorldAndCreatePopulation(createWorld(currentMapList.get(mapNumber - 1)));
+        mapNumber = 1;
+        WorldMap map = currentMapList.getFirst();
+        createWorldAndPopulation(map);
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
@@ -468,14 +469,13 @@ public class TengenMsPacManGame extends GameModel {
         publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
     }
 
-    private GameWorld createWorld(WorldMap map) {
+    @Override
+    protected GameWorld createWorld(WorldMap map) {
         var world = new GameWorld(map);
         Vector2i houseTopLeftTile = map.terrain().getTileProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, v2i(10, 15));
         world.createArcadeHouse(houseTopLeftTile.x(), houseTopLeftTile.y());
         return world;
     }
-
-
 
     /**
      * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
