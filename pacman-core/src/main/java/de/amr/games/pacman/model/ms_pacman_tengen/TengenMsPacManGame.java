@@ -182,6 +182,16 @@ public class TengenMsPacManGame extends GameModel {
         } / 32f;
     };
 
+    private static float ghostTypeSpeedDelta(byte ghostID) {
+        return switch (ghostID) {
+            case RED_GHOST -> 3;
+            case ORANGE_GHOST -> 2;
+            case CYAN_GHOST -> 1;
+            case PINK_GHOST -> 0;
+            default -> throw GameException.illegalGhostID(ghostID);
+        } / 32f;
+    }
+
     private static float pacBaseSpeedInLevel(int levelNumber) {
         int units = 0x20; // default: 32
         if      (inRange(levelNumber, 1, 4))   { units = 0x20; }
@@ -429,7 +439,7 @@ public class TengenMsPacManGame extends GameModel {
         pac.setBaseSpeed(pacBaseSpeedInLevel(levelNumber) + pacDifficultyDelta(difficulty));
         float ghostBaseSpeed = ghostBaseSpeedInLevel(levelNumber) + ghostDifficultyDelta(difficulty);
         for (Ghost ghost : ghosts) {
-            ghost.setBaseSpeed(ghostBaseSpeed);
+            ghost.setBaseSpeed(ghostBaseSpeed + ghostTypeSpeedDelta(ghost.id()));
             ghost.setSpeedReturningHome(2 * ghostBaseSpeed); // TODO check
             ghost.setSpeedInsideHouse(0.5f * ghostBaseSpeed); // TODO check
         }
