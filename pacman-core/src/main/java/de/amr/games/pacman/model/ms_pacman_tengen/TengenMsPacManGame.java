@@ -494,6 +494,10 @@ public class TengenMsPacManGame extends GameModel {
         }
     }
 
+    private byte huntingSpeedPct(Ghost ghost) {
+        return 100; // TODO
+    }
+
     public void activateBooster(boolean on) {
         boosterActive = on;
         float baseSpeed = BASE_SPEED_IN_PX_PER_SEC / FPS + (on ? BOOSTER_INCREMENT : 0);

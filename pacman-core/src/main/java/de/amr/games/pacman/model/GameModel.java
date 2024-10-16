@@ -396,20 +396,6 @@ public abstract class GameModel {
         };
     }
 
-    protected byte huntingSpeedPct(Ghost ghost) {
-        GameLevel level = levelData(levelNumber);
-        if (world.isTunnel(ghost.tile())) {
-            return level.ghostSpeedTunnelPct();
-        }
-        if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
-            return level.elroy1SpeedPct();
-        }
-        if (ghost.id() == RED_GHOST && cruiseElroy == 2) {
-            return level.elroy2SpeedPct();
-        }
-        return level.ghostSpeedPct();
-    }
-
     public GameWorld world() {
         return world;
     }

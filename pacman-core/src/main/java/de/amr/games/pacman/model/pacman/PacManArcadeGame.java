@@ -228,4 +228,18 @@ public class PacManArcadeGame extends GameModel {
         boolean chasing = isChasingPhase(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
         ghost.followTarget(chasing ? chasingTarget(ghost) : scatterTarget(ghost), huntingSpeedPct(ghost));
     }
+
+    private byte huntingSpeedPct(Ghost ghost) {
+        GameLevel level = levelData(levelNumber);
+        if (world.isTunnel(ghost.tile())) {
+            return level.ghostSpeedTunnelPct();
+        }
+        if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
+            return level.elroy1SpeedPct();
+        }
+        if (ghost.id() == RED_GHOST && cruiseElroy == 2) {
+            return level.elroy2SpeedPct();
+        }
+        return level.ghostSpeedPct();
+    }
 }
