@@ -374,7 +374,12 @@ public class TengenMsPacManGame extends GameModel {
     public void startNewGame() {
         reset();
         createLevel(startingLevel);
-        //TODO level counter
+        if (startingLevel > 1) {
+            levelCounter.clear();
+            for (int number = 1; number <= startingLevel; ++number) {
+                levelCounter.add((byte) (number - 1));
+            }
+        }
     }
 
     @Override

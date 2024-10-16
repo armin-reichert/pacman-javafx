@@ -336,7 +336,7 @@ public abstract class GameModel {
         publishGameEvent(GameEventType.LEVEL_CREATED);
     }
 
-    private void updateLevelCounter() {
+    protected void updateLevelCounter() {
         if (levelNumber == 1) {
             levelCounter.clear();
         }
