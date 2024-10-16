@@ -444,6 +444,9 @@ public class TengenMsPacManGame extends GameModel {
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+
+        // TODO for now provide a Level object such that all code that relies on one works
+        currentLevelData = new GameLevel( 100, 100, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0);
     }
 
     @Override
