@@ -382,22 +382,61 @@ public class TengenMsPacManGame extends GameModel {
         //TODO use base speed per level from table
         float baseSpeed = 1f; // px/tick
         // https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/Data/PlayerAndGhostSpeeds.asm
+        float pacBaseSpeed = pacBaseSpeedPerLevel(levelNumber);
         pac.setBaseSpeed(switch (difficulty) {
-            case EASY   -> baseSpeed - 4 / 32f;
-            case NORMAL -> baseSpeed;
-            case HARD   -> baseSpeed + 12 / 32f;
-            case CRAZY  -> baseSpeed + 24 / 32f;
+            case EASY   -> pacBaseSpeed - 4 / 32f;
+            case NORMAL -> pacBaseSpeed;
+            case HARD   -> pacBaseSpeed + 12 / 32f;
+            case CRAZY  -> pacBaseSpeed + 24 / 32f;
         });
+        float ghostBaseSpeed = ghostBaseSpeedPerLevel(levelNumber);
         for (Ghost ghost : ghosts) {
             ghost.setBaseSpeed(switch (difficulty) {
-                case EASY   -> baseSpeed - 8 / 32f;
-                case NORMAL -> baseSpeed;
-                case HARD   -> baseSpeed + 16 / 32f;
-                case CRAZY  -> baseSpeed + 32 / 32f;
+                case EASY   -> ghostBaseSpeed - 8 / 32f;
+                case NORMAL -> ghostBaseSpeed;
+                case HARD   -> ghostBaseSpeed + 16 / 32f;
+                case CRAZY  -> ghostBaseSpeed + 32 / 32f;
             });
-            ghost.setSpeedReturningHome(2 * baseSpeed); // TODO check
-            ghost.setSpeedInsideHouse(0.5f * baseSpeed); // TODO check
+            ghost.setSpeedReturningHome(2 * ghostBaseSpeed); // TODO check
+            ghost.setSpeedInsideHouse(0.5f * ghostBaseSpeed); // TODO check
         }
+    }
+
+    private boolean inRange(int n, int from, int to) {
+        return from <= n && n <= to;
+    }
+
+    private float pacBaseSpeedPerLevel(int levelNumber) {
+        int units = 0;
+        if (inRange(levelNumber,1, 4)) {
+            units = 0x20;
+        } else if (inRange(levelNumber, 5, 12)) {
+            units = 0x24;
+        } else if (inRange(levelNumber, 13, 16)) {
+            units = 0x28;
+        } else if (inRange(levelNumber, 17, 20)) {
+            units = 0x27;
+        } else if (inRange(levelNumber, 21, 24)) {
+            units = 0x26;
+        } else if (inRange(levelNumber, 25, 28)) {
+            units = 0x25;
+        } else if (levelNumber >= 29) {
+            units = 0x24;
+        }
+        return units / 32f;
+    }
+
+    // TODO: do they all have the same base speed? Unclear from disassembly data.
+    private float ghostBaseSpeedPerLevel(int levelNumber) {
+        int units = 0;
+        if (inRange(levelNumber, 1, 4)) {
+            units = 0x18;
+        } else if (inRange(levelNumber, 5, 12)) {
+            units = 0x20 + (levelNumber - 5);
+        } else if (levelNumber >= 13) {
+            units = 0x28;
+        }
+        return units / 32f;
     }
 
     @Override
