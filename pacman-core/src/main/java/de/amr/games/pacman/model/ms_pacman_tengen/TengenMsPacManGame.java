@@ -36,10 +36,8 @@ public class TengenMsPacManGame extends GameModel {
     public static final String ANIM_PAC_MUNCHING_BOOSTER = "munching_booster";
     public static final String ANIM_PAC_HUSBAND_MUNCHING_BOOSTER = "husband_munching_booster";
 
-    //TODO Clarify map order/colors in eacg category
     static final int ARCADE_MAP_COUNT = 9;
     static final int NON_ARCADE_MAP_COUNT = 37;
-
     static final String MAPS_ROOT = "/de/amr/games/pacman/maps/tengen/";
     static final String ARCADE_MAP_PATTERN      = MAPS_ROOT + "arcade/map%02d.world";
     static final String NON_ARCADE_MAP_PATTERN  = MAPS_ROOT + "non_arcade/map%02d.world";
@@ -47,7 +45,6 @@ public class TengenMsPacManGame extends GameModel {
     /**
      * From this <a href="https://www.youtube.com/watch?v=cD0oGudVpbw">YouTube video</a>.
      */
-    // TODO: need real data!
     private static List<WorldMap> miniMaps(List<WorldMap> nonArcadeMaps) {
         var miniMaps = new ArrayList<WorldMap>();
 
@@ -161,12 +158,6 @@ public class TengenMsPacManGame extends GameModel {
         targetMaps.add(map);
     }
 
-    private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
-
-    //TODO: I have no idea about the timing in Tengen, use Ms. Pac-Man Arcade values for now
-    private static final int[] HUNTING_TICKS_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
-    private static final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
-
     // Bonus symbols in Arcade, Mini and Big mazes
     public static final byte BONUS_CHERRY      = 0;
     public static final byte BONUS_STRAWBERRY  = 1;
@@ -203,6 +194,13 @@ public class TengenMsPacManGame extends GameModel {
         BONUS_VALUE_FACTORS[BONUS_RING]          = 90;
         BONUS_VALUE_FACTORS[BONUS_FLOWER]        = 100;
     }
+
+    private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
+
+    //TODO: I have no idea about the timing in Tengen, use Ms. Pac-Man Arcade values for now
+    private static final int[] HUNTING_TICKS_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
+    private static final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
+
 
     private final List<WorldMap> arcadeMaps;
     private final List<WorldMap> strangeMaps;
