@@ -563,7 +563,7 @@ public class TengenMsPacManGame extends GameModel {
 
     public void activateBooster(boolean on) {
         boosterActive = on;
-        float baseSpeed = BASE_SPEED_IN_PX_PER_SEC / TICKS_PER_SECOND + (on ? BOOSTER_INCREMENT : 0);
+        float baseSpeed = pacBaseSpeedInLevel(levelNumber) + pacDifficultyDelta(difficulty) + (on ? BOOSTER_INCREMENT : 0);
         pac.setBaseSpeed(baseSpeed);
         pac.selectAnimation(on ? ANIM_PAC_MUNCHING_BOOSTER : ANIM_PAC_MUNCHING);
         Logger.info("Ms. Pac-Man base speed set to {0.00} px/s", baseSpeed);
