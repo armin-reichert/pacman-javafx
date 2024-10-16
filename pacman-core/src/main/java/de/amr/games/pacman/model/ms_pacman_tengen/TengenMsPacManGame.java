@@ -10,7 +10,10 @@ import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.*;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.Portal;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
@@ -19,7 +22,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -301,11 +303,6 @@ public class TengenMsPacManGame extends GameModel {
         return worldMap.terrain().numRows() > 30; //TODO correct?
     }
 
-    @Override
-    public Optional<GameLevel> levelSettings(int levelNumber) {
-        return Optional.empty();
-    }
-
     public void setPacBooster(BoosterMode boosterMode) {
         this.boosterMode = boosterMode;
     }
@@ -428,13 +425,6 @@ public class TengenMsPacManGame extends GameModel {
         }
     }
 
-    protected byte ghostSpeedPercentage(Ghost ghost) {
-        if (world.isTunnel(ghost.tile())) {
-            return 50; // TODO: check this
-        }
-        return 100;
-    }
-
     public void setPacBoosterActive(boolean state) {
         if (boosterMode == BoosterMode.OFF) {
             Logger.error("Cannot activate booster when mode is {}", boosterMode);
@@ -554,7 +544,7 @@ public class TengenMsPacManGame extends GameModel {
      * only the scatter target of Blinky and Pinky would have been affected. Who knows?
      */
     private void ghostHuntingBehaviour(Ghost ghost) {
-        byte speed = ghostSpeedPercentage(ghost);
+        byte speed = huntingSpeedPct(ghost);
         if (huntingPhaseIndex == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
             ghost.roam(speed);
         } else {

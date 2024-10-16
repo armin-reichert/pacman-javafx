@@ -87,7 +87,7 @@ public class InfoBoxGameControl extends InfoBox {
         comboInitialLives.setDisable(state != GameState.INTRO);
 
         bgLevelActions[GAME_LEVEL_START].setDisable(isBooting() || !canStartLevel());
-        bgLevelActions[GAME_LEVEL_QUIT].setDisable(isBooting() || context.game().levelSettings().isEmpty());
+        bgLevelActions[GAME_LEVEL_QUIT].setDisable(isBooting() || context.game().level().isEmpty());
         bgLevelActions[GAME_LEVEL_NEXT].setDisable(isBooting() || !canEnterNextLevel());
 
         bgCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || state != GameState.INTRO);

@@ -35,15 +35,16 @@ public abstract class GameModel {
 
     public static final byte ARCADE_MAP_TILES_X = 28;
     public static final byte ARCADE_MAP_TILES_Y = 36;
-
     public static final int  ARCADE_MAP_SIZE_X = ARCADE_MAP_TILES_X * TS;
     public static final int  ARCADE_MAP_SIZE_Y = ARCADE_MAP_TILES_Y * TS;
 
-    // Common Pac animation IDs
+    // Animation IDs
+
+    // Common
     public static final String ANIM_PAC_MUNCHING = "munching";
     public static final String ANIM_PAC_DYING = "dying";
 
-    // Common ghost animation IDs
+    // Common ghost animations
     public static final String ANIM_GHOST_NORMAL     = "normal";
     public static final String ANIM_GHOST_FRIGHTENED = "frightened";
     public static final String ANIM_GHOST_EYES       = "eyes";
@@ -61,6 +62,34 @@ public abstract class GameModel {
 
     /** Movement speed in pixel/sec. */
     public static final float BASE_SPEED_IN_PX_PER_SEC = 73.9f; //TODO this should be 75 but that doesn't work yet
+
+    public static final GameLevel[] LEVELS = {
+        /* 1*/ new GameLevel( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0),
+        /* 2*/ new GameLevel( 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5, 1),
+        /* 3*/ new GameLevel( 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5, 0),
+        /* 4*/ new GameLevel( 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5, 0),
+        /* 5*/ new GameLevel(100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5, 2),
+        /* 6*/ new GameLevel(100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5, 0),
+        /* 7*/ new GameLevel(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5, 0),
+        /* 8*/ new GameLevel(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5, 0),
+        /* 9*/ new GameLevel(100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3, 3),
+        /*10*/ new GameLevel(100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5, 0),
+        /*11*/ new GameLevel(100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5, 0),
+        /*12*/ new GameLevel(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3, 0),
+        /*13*/ new GameLevel(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3, 3),
+        /*14*/ new GameLevel(100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5, 0),
+        /*15*/ new GameLevel(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0),
+        /*16*/ new GameLevel(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0),
+        /*17*/ new GameLevel(100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0, 3),
+        /*18*/ new GameLevel(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0),
+        /*19*/ new GameLevel(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0),
+        /*20*/ new GameLevel(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0),
+        /*21*/ new GameLevel( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0)
+    };
+
+    private static GameLevel level(int levelNumber) {
+        return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
+    }
 
     /** Maximum number of coins, as in MAME. */
     public static final byte    MAX_CREDIT = 99;
@@ -254,15 +283,19 @@ public abstract class GameModel {
         return levelNumber;
     }
 
-    public abstract Optional<GameLevel> levelSettings(int levelNumber);
+    public Optional<GameLevel> level() {
+        if (levelNumber == 0) {
+            return Optional.empty();
+        }
+        return Optional.of(level(levelNumber));
+    }
 
     public boolean isDemoLevel() {
         return demoLevel;
     }
 
     public int intermissionNumber(int levelNumber) {
-        Optional<GameLevel> level = levelSettings(levelNumber);
-        return level.isPresent() ? level.get().intermissionNumber() : -1;
+        return level(levelNumber).intermissionNumber();
     }
 
     public byte cruiseElroyState() {
@@ -398,6 +431,20 @@ public abstract class GameModel {
             case ORANGE_GHOST -> ghost.tile().euclideanDistance(pac.tile()) < 8 ? scatterTarget(ghost) : pac.tile();
             default -> throw GameException.illegalGhostID(ghost.id());
         };
+    }
+
+    protected byte huntingSpeedPct(Ghost ghost) {
+        GameLevel level = level(levelNumber);
+        if (world.isTunnel(ghost.tile())) {
+            return level.ghostSpeedTunnelPct();
+        }
+        if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
+            return level.elroy1SpeedPct();
+        }
+        if (ghost.id() == RED_GHOST && cruiseElroy == 2) {
+            return level.elroy2SpeedPct();
+        }
+        return level.ghostSpeedPct();
     }
 
     public GameWorld world() {
@@ -564,14 +611,13 @@ public abstract class GameModel {
                 victims.clear();
                 scorePoints(POINTS_ENERGIZER);
                 Logger.info("Scored {} points for eating energizer", POINTS_ENERGIZER);
-                double pacPowerSeconds = levelSettings(levelNumber).isPresent()
-                    ? levelSettings(levelNumber).get().pacPowerSeconds() : 0;
-                if (pacPowerSeconds > 0) {
+                if (level(levelNumber).pacPowerSeconds() > 0) {
                     eventLog.pacGetsPower = true;
                     huntingTimer.stop();
                     Logger.info("Hunting timer stopped");
-                    powerTimer.restartSeconds(pacPowerSeconds);
-                    Logger.info("Power timer restarted to {} seconds", pacPowerSeconds);
+                    int seconds = level(levelNumber).pacPowerSeconds();
+                    powerTimer.restartSeconds(seconds);
+                    Logger.info("Power timer restarted to {} seconds", seconds);
                     // TODO do already frightened ghosts reverse too?
                     ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
                     ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
@@ -583,14 +629,11 @@ public abstract class GameModel {
             }
             gateKeeper.onPelletOrEnergizerEaten(this);
             world.eatFoodAt(pacTile);
-            // TODO: check if cruise elroy mode exists in Ms. Pac-Man too
-            levelSettings(levelNumber).ifPresent(level -> {
-                if (world.uneatenFoodCount() == level.elroy1DotsLeft()) {
-                    cruiseElroy = 1;
-                } else if (world.uneatenFoodCount() == level.elroy2DotsLeft()) {
-                    cruiseElroy = 2;
-                }
-            });
+            if (world.uneatenFoodCount() == level(levelNumber).elroy1DotsLeft()) {
+                cruiseElroy = 1;
+            } else if (world.uneatenFoodCount() == level(levelNumber).elroy2DotsLeft()) {
+                cruiseElroy = 2;
+            }
             if (isBonusReached()) {
                 activateNextBonus();
                 eventLog.bonusIndex = nextBonusIndex;

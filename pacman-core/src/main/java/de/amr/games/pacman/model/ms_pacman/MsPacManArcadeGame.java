@@ -10,7 +10,10 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.*;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.Portal;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
@@ -21,7 +24,6 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -41,30 +43,6 @@ import static de.amr.games.pacman.lib.Globals.*;
  * @author Armin Reichert
  */
 public class MsPacManArcadeGame extends GameModel {
-
-    private static final GameLevel[] LEVEL_SETTINGS = {
-        /* 1*/ new GameLevel( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0),
-        /* 2*/ new GameLevel( 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5, 1),
-        /* 3*/ new GameLevel( 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5, 0),
-        /* 4*/ new GameLevel( 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5, 0),
-        /* 5*/ new GameLevel(100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5, 2),
-        /* 6*/ new GameLevel(100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5, 0),
-        /* 7*/ new GameLevel(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5, 0),
-        /* 8*/ new GameLevel(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5, 0),
-        /* 9*/ new GameLevel(100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3, 3),
-        /*10*/ new GameLevel(100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5, 0),
-        /*11*/ new GameLevel(100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5, 0),
-        /*12*/ new GameLevel(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3, 0),
-        /*13*/ new GameLevel(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3, 3),
-        /*14*/ new GameLevel(100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5, 0),
-        /*15*/ new GameLevel(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0),
-        /*16*/ new GameLevel(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0),
-        /*17*/ new GameLevel(100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0, 3),
-        /*18*/ new GameLevel(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0),
-        /*19*/ new GameLevel(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0),
-        /*20*/ new GameLevel(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0),
-        /*21*/ new GameLevel( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0)
-    };
 
     // Ms. Pac-Man game specific
     public static final String ANIM_MR_PACMAN_MUNCHING = "pacman_munching";
@@ -99,10 +77,6 @@ public class MsPacManArcadeGame extends GameModel {
         super(gameVariant, userDir);
         initialLives = 3;
         highScoreFile = new File(userDir, "highscore-ms_pacman.xml");
-    }
-
-    public Optional<GameLevel> levelSettings(int levelNumber) {
-        return Optional.of(LEVEL_SETTINGS[Math.min(levelNumber - 1, LEVEL_SETTINGS.length - 1)]);
     }
 
     /**
@@ -302,27 +276,12 @@ public class MsPacManArcadeGame extends GameModel {
      * only the scatter target of Blinky and Pinky would have been affected. Who knows?
      */
     private void ghostHuntingBehaviour(Ghost ghost) {
-        byte speed = ghostSpeedPercentage(ghost);
+        byte speed = huntingSpeedPct(ghost);
         if (huntingPhaseIndex == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
             ghost.roam(speed);
         } else {
             boolean chase = isChasingPhase(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
             ghost.followTarget(chase ? chasingTarget(ghost) : scatterTarget(ghost), speed);
         }
-    }
-
-    /**
-     * @param ghost a ghost
-     * @return the factor in percent (0-100) with which the ghost's base speed has to be multiplied to get the current speed
-     */
-    private byte ghostSpeedPercentage(Ghost ghost) {
-        GameLevel level = levelSettings(levelNumber).orElse(null);
-        if (level == null) {
-            return 100; // should never happen
-        }
-        if (world.isTunnel(ghost.tile())) {
-            return level.ghostSpeedTunnelPercentage();
-        }
-        return level.ghostSpeedPercentage();
     }
 }
