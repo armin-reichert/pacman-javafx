@@ -32,8 +32,8 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
  */
 public class InfoBox3D extends InfoBox {
 
-    private static final int PIP_MIN_HEIGHT = GameModel.ARCADE_MAP_SIZE_Y * 3 / 4;
-    private static final int PIP_MAX_HEIGHT = GameModel.ARCADE_MAP_SIZE_Y * 2;
+    private static final int PIP_MIN_HEIGHT = 200;
+    private static final int PIP_MAX_HEIGHT = 600;
 
     private CheckBox cbUsePlayScene3D;
     private ColorPicker pickerLightColor;

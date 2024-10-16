@@ -35,8 +35,8 @@ public abstract class GameModel {
 
     public static final byte ARCADE_MAP_TILES_X = 28;
     public static final byte ARCADE_MAP_TILES_Y = 36;
-    public static final int  ARCADE_MAP_SIZE_X = ARCADE_MAP_TILES_X * TS;
-    public static final int  ARCADE_MAP_SIZE_Y = ARCADE_MAP_TILES_Y * TS;
+    public static final int  ARCADE_MAP_SIZE_X = 224;
+    public static final int  ARCADE_MAP_SIZE_Y = 288;
 
     // Common Pac animation IDs
     public static final String ANIM_PAC_MUNCHING = "munching";
