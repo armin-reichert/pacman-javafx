@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import org.tinylog.Logger;
 
@@ -370,7 +369,7 @@ public class Ghost extends Creature implements AnimatedEntity {
      */
     private void updateStateFrightened(GameModel game) {
         game.currentLevelData().ifPresent(level -> {
-            byte percentage = world.isTunnel(tile()) ? level.ghostSpeedTunnelPct() : level.ghostSpeedFrightenedPct();
+            byte percentage = world.isTunnel(tile()) ? level.ghostSpeedTunnelPercentage() : level.ghostSpeedFrightenedPercentage();
             float speed = 0.01f * percentage * baseSpeed;
             roam(speed);
             updateFrightenedAnimation(game);

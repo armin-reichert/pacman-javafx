@@ -233,14 +233,14 @@ public class PacManArcadeGame extends GameModel {
     private byte huntingSpeedPercentage(Ghost ghost) {
         GameLevel level = levelData(levelNumber);
         if (world.isTunnel(ghost.tile())) {
-            return level.ghostSpeedTunnelPct();
+            return level.ghostSpeedTunnelPercentage();
         }
         if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
-            return level.elroy1SpeedPct();
+            return level.elroy1SpeedPercentage();
         }
         if (ghost.id() == RED_GHOST && cruiseElroy == 2) {
-            return level.elroy2SpeedPct();
+            return level.elroy2SpeedPercentage();
         }
-        return level.ghostSpeedPct();
+        return level.ghostSpeedPercentage();
     }
 }
