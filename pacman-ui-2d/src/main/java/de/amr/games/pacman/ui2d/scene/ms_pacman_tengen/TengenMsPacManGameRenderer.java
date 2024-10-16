@@ -14,13 +14,12 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame.MapCategory;
-import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame.PacBooster;
+import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame.BoosterMode;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -355,7 +354,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         };
         double centerX = terrain.numCols() * HTS;
         double y = t(2) + HTS;
-        if (tengenGame.pacBooster() != PacBooster.OFF) {
+        if (tengenGame.pacBoosterMode() != BoosterMode.OFF) {
             //TODO: always displayed when TOGGLE_USING_KEY is selected or only if booster is active?
             drawSpriteCenteredOverPosition(TengenMsPacManGameSpriteSheet.BOOSTER_SPRITE, centerX - t(6), y);
         }

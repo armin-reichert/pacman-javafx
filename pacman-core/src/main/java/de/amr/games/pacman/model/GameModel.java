@@ -61,7 +61,7 @@ public abstract class GameModel {
     public static final float SEC_PER_TICK = 1f / FPS;
 
     /** Movement speed in pixel/sec. */
-    public static final float PPS_AT_100_PERCENT = 73.9f; //TODO this should be 75 but that doesn't work yet
+    public static final float BASE_SPEED_IN_PX_PER_SEC = 73.9f; //TODO this should be 75 but that doesn't work yet
 
     public static final GameLevel[] LEVELS = {
         /* 1*/ new GameLevel( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0),
@@ -203,13 +203,13 @@ public abstract class GameModel {
         pac = createPac();
         pac.setWorld(world);
         pac.reset();
-        pac.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
+        pac.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
 
         ghosts = createGhosts();
         ghosts().forEach(ghost -> {
             ghost.setWorld(world);
             ghost.reset();
-            ghost.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
+            ghost.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
             ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME * SEC_PER_TICK);
             ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE * SEC_PER_TICK);
             ghost.setRevivalPosition(world.ghostPosition(ghost.id()));

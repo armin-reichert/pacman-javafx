@@ -98,7 +98,7 @@ public class StartScene extends GameScene2D {
         drawArrowIfSelected(renderer, OPTION_PAC_BOOSTER, COL_ARROW, y);
         renderer.drawText("PAC BOOSTER", LABEL_COLOR, font, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, font, COL_COLON, y);
-        renderer.drawText(pacBoosterText(tengenGame.pacBooster()), VALUE_COLOR, font, COL_VALUE, y);
+        renderer.drawText(pacBoosterText(tengenGame.pacBoosterMode()), VALUE_COLOR, font, COL_VALUE, y);
 
         // Game difficulty
         y += 3 * TS;
@@ -132,11 +132,11 @@ public class StartScene extends GameScene2D {
         drawBabyBlueBar(renderer, y);
     }
 
-    private String pacBoosterText(TengenMsPacManGame.PacBooster pacBooster) {
-        return switch (pacBooster) {
+    private String pacBoosterText(TengenMsPacManGame.BoosterMode boosterMode) {
+        return switch (boosterMode) {
             case OFF -> "OFF";
             case ALWAYS_ON -> "ALWAYS ON";
-            case TOGGLE_USING_KEY -> "KEY A";
+            case ACTIVATED_USING_KEY -> "KEY A";
         };
     }
 
@@ -239,9 +239,9 @@ public class StartScene extends GameScene2D {
     }
 
     private void selectNextPacBoosterValue() {
-        TengenMsPacManGame.PacBooster pacBooster = tengenGame.pacBooster();
-        var values = TengenMsPacManGame.PacBooster.values();
-        int current = pacBooster.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
+        TengenMsPacManGame.BoosterMode boosterMode = tengenGame.pacBoosterMode();
+        var values = TengenMsPacManGame.BoosterMode.values();
+        int current = boosterMode.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame.setPacBooster(values[next]);
         playChangeOptionValueSound();
         resetIdleTimer();

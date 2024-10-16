@@ -39,10 +39,10 @@ public class TengenMsPacManGame extends GameModel {
 
     public enum MapCategory { ARCADE, MINI, BIG, STRANGE }
     public enum Difficulty { NORMAL, EASY, HARD, CRAZY }
-    public enum PacBooster { OFF, TOGGLE_USING_KEY, ALWAYS_ON }
+    public enum BoosterMode { OFF, ACTIVATED_USING_KEY, ALWAYS_ON }
 
     // TODO what is the exact speed increase?
-    static final float BOOSTER_FACTOR = 1.5f;
+    static final float BOOSTER_INCREMENT = 0.5f;
 
     // Ms. Pac-Man (Tengen) game specific animation IDs
     public static final String ANIM_PAC_MUNCHING_BOOSTER = "munching_booster";
@@ -98,7 +98,6 @@ public class TengenMsPacManGame extends GameModel {
         private final MapColorScheme colorScheme;
     }
 
-
     /**
      * Got this sequence from YouTube video (https://www.youtube.com/watch?v=cD0oGudVpbw).
      */
@@ -107,50 +106,50 @@ public class TengenMsPacManGame extends GameModel {
         var miniMaps = new ArrayList<WorldMap>();
 
         // 1-5
-        useMap(34, nonArcadeMaps, miniMaps, MapColoring.PINK_DARKRED);
-        useMap(35, nonArcadeMaps, miniMaps, MapColoring.LIGHTBLUE_WHITE_YELLOW);
-        useMap(34, nonArcadeMaps, miniMaps, MapColoring.ORANGE_WHITE);
-        useMap(35, nonArcadeMaps, miniMaps, MapColoring.BLUE_YELLOW);
-        useMap(36, nonArcadeMaps, miniMaps, MapColoring.PINK_YELLOW);
+        addMap(34, nonArcadeMaps, miniMaps, MapColoring.PINK_DARKRED);
+        addMap(35, nonArcadeMaps, miniMaps, MapColoring.LIGHTBLUE_WHITE_YELLOW);
+        addMap(34, nonArcadeMaps, miniMaps, MapColoring.ORANGE_WHITE);
+        addMap(35, nonArcadeMaps, miniMaps, MapColoring.BLUE_YELLOW);
+        addMap(36, nonArcadeMaps, miniMaps, MapColoring.PINK_YELLOW);
 
         // 6-10
-        useMap(34, nonArcadeMaps, miniMaps, MapColoring.PINK_DARKRED);
-        useMap(35, nonArcadeMaps, miniMaps, MapColoring.BROWN2_WHITE);
-        useMap(36, nonArcadeMaps, miniMaps, MapColoring.VIOLET_WHITE_YELLOW);
-        useMap(30, nonArcadeMaps, miniMaps, MapColoring.BLACK_WHITE_YELLOW);
-        useMap(34, nonArcadeMaps, miniMaps, MapColoring.BLACK_DARKBLUE);
+        addMap(34, nonArcadeMaps, miniMaps, MapColoring.PINK_DARKRED);
+        addMap(35, nonArcadeMaps, miniMaps, MapColoring.BROWN2_WHITE);
+        addMap(36, nonArcadeMaps, miniMaps, MapColoring.VIOLET_WHITE_YELLOW);
+        addMap(30, nonArcadeMaps, miniMaps, MapColoring.BLACK_WHITE_YELLOW);
+        addMap(34, nonArcadeMaps, miniMaps, MapColoring.BLACK_DARKBLUE);
 
         // 11-15
-        useMap(35, nonArcadeMaps, miniMaps, MapColoring.VIOLET_PINK);
-        useMap(36, nonArcadeMaps, miniMaps, MapColoring.RED_WHITE);
-        useMap(30, nonArcadeMaps, miniMaps, MapColoring.GREEN_WHITE_WHITE);
-        useMap(34, nonArcadeMaps, miniMaps, MapColoring.YELLOW_WHITE_GREEN);
-        useMap(35, nonArcadeMaps, miniMaps, MapColoring.GREEN_WHITE_YELLOW);
+        addMap(35, nonArcadeMaps, miniMaps, MapColoring.VIOLET_PINK);
+        addMap(36, nonArcadeMaps, miniMaps, MapColoring.RED_WHITE);
+        addMap(30, nonArcadeMaps, miniMaps, MapColoring.GREEN_WHITE_WHITE);
+        addMap(34, nonArcadeMaps, miniMaps, MapColoring.YELLOW_WHITE_GREEN);
+        addMap(35, nonArcadeMaps, miniMaps, MapColoring.GREEN_WHITE_YELLOW);
 
         // 16-20
-        useMap(36, nonArcadeMaps, miniMaps, MapColoring.KHAKI_WHITE);
-        useMap(30, nonArcadeMaps, miniMaps, MapColoring.PINK_WHITE);
-        useMap(16, nonArcadeMaps, miniMaps, MapColoring.BLUE_WHITE_YELLOW);
-        useMap(16, nonArcadeMaps, miniMaps, MapColoring.BROWN_WHITE);
-        useMap(30, nonArcadeMaps, miniMaps, MapColoring.RED_PINK);
+        addMap(36, nonArcadeMaps, miniMaps, MapColoring.KHAKI_WHITE);
+        addMap(30, nonArcadeMaps, miniMaps, MapColoring.PINK_WHITE);
+        addMap(16, nonArcadeMaps, miniMaps, MapColoring.BLUE_WHITE_YELLOW);
+        addMap(16, nonArcadeMaps, miniMaps, MapColoring.BROWN_WHITE);
+        addMap(30, nonArcadeMaps, miniMaps, MapColoring.RED_PINK);
 
         // 21-25
-        useMap(36, nonArcadeMaps, miniMaps, MapColoring.BLACK_WHITE_GREEN);
-        useMap(35, nonArcadeMaps, miniMaps, MapColoring.GREEN_WHITE_WHITE);
-        useMap(34, nonArcadeMaps, miniMaps, MapColoring.GREEN_WHITE_VIOLET);
-        useMap(37, nonArcadeMaps, miniMaps, MapColoring.VIOLET_WHITE_GREEN);
-        useMap(34, nonArcadeMaps, miniMaps, MapColoring.GRAY_WHITE_YELLOW);
+        addMap(36, nonArcadeMaps, miniMaps, MapColoring.BLACK_WHITE_GREEN);
+        addMap(35, nonArcadeMaps, miniMaps, MapColoring.GREEN_WHITE_WHITE);
+        addMap(34, nonArcadeMaps, miniMaps, MapColoring.GREEN_WHITE_VIOLET);
+        addMap(37, nonArcadeMaps, miniMaps, MapColoring.VIOLET_WHITE_GREEN);
+        addMap(34, nonArcadeMaps, miniMaps, MapColoring.GRAY_WHITE_YELLOW);
 
         // 26-30
-        useMap(35, nonArcadeMaps, miniMaps, MapColoring.BLUE2_WHITE);
-        useMap(36, nonArcadeMaps, miniMaps, MapColoring.VIOLET_WHITE);
-        useMap(30, nonArcadeMaps, miniMaps, MapColoring.BROWN2_WHITE);
-        useMap(28, nonArcadeMaps, miniMaps, MapColoring.BROWN2_WHITE);
-        useMap(35, nonArcadeMaps, miniMaps, MapColoring.BLUE_YELLOW);
+        addMap(35, nonArcadeMaps, miniMaps, MapColoring.BLUE2_WHITE);
+        addMap(36, nonArcadeMaps, miniMaps, MapColoring.VIOLET_WHITE);
+        addMap(30, nonArcadeMaps, miniMaps, MapColoring.BROWN2_WHITE);
+        addMap(28, nonArcadeMaps, miniMaps, MapColoring.BROWN2_WHITE);
+        addMap(35, nonArcadeMaps, miniMaps, MapColoring.BLUE_YELLOW);
 
         // 31-32
-        useMap(36, nonArcadeMaps, miniMaps, MapColoring.BLACK_WHITE_GREEN);
-        useMap(37, nonArcadeMaps, miniMaps, MapColoring.RED_PINK);
+        addMap(36, nonArcadeMaps, miniMaps, MapColoring.BLACK_WHITE_GREEN);
+        addMap(37, nonArcadeMaps, miniMaps, MapColoring.RED_PINK);
 
         return miniMaps;
     }
@@ -162,56 +161,56 @@ public class TengenMsPacManGame extends GameModel {
         var bigMaps = new ArrayList<WorldMap>();
 
         // 1-5
-        useMap(19, nonArcadeMaps, bigMaps, MapColoring.ROSE_RED);
-        useMap(20, nonArcadeMaps, bigMaps, MapColoring.LIGHTBLUE_WHITE_YELLOW);
-        useMap(21, nonArcadeMaps, bigMaps, MapColoring.ORANGE_WHITE);
-        useMap(19, nonArcadeMaps, bigMaps, MapColoring.BLUE_WHITE_YELLOW);
-        useMap(20, nonArcadeMaps, bigMaps, MapColoring.PINK_YELLOW);
+        addMap(19, nonArcadeMaps, bigMaps, MapColoring.ROSE_RED);
+        addMap(20, nonArcadeMaps, bigMaps, MapColoring.LIGHTBLUE_WHITE_YELLOW);
+        addMap(21, nonArcadeMaps, bigMaps, MapColoring.ORANGE_WHITE);
+        addMap(19, nonArcadeMaps, bigMaps, MapColoring.BLUE_WHITE_YELLOW);
+        addMap(20, nonArcadeMaps, bigMaps, MapColoring.PINK_YELLOW);
 
         // 6-10
-        useMap(21, nonArcadeMaps, bigMaps, MapColoring.ROSE_RED);
-        useMap(22, nonArcadeMaps, bigMaps, MapColoring.ORANGE_WHITE);
-        useMap(23, nonArcadeMaps, bigMaps, MapColoring.VIOLET_WHITE_YELLOW);
-        useMap(17, nonArcadeMaps, bigMaps, MapColoring.BLACK_WHITE_YELLOW);
-        useMap(10, nonArcadeMaps, bigMaps, MapColoring.BLACK_DARKBLUE);
+        addMap(21, nonArcadeMaps, bigMaps, MapColoring.ROSE_RED);
+        addMap(22, nonArcadeMaps, bigMaps, MapColoring.ORANGE_WHITE);
+        addMap(23, nonArcadeMaps, bigMaps, MapColoring.VIOLET_WHITE_YELLOW);
+        addMap(17, nonArcadeMaps, bigMaps, MapColoring.BLACK_WHITE_YELLOW);
+        addMap(10, nonArcadeMaps, bigMaps, MapColoring.BLACK_DARKBLUE);
 
         // 11-15
-        useMap(23, nonArcadeMaps, bigMaps, MapColoring.PINK_ROSE);
-        useMap(21, nonArcadeMaps, bigMaps, MapColoring.PINK_WHITE);
-        useMap(22, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_WHITE);
-        useMap(14, nonArcadeMaps, bigMaps, MapColoring.VIOLET_WHITE_GREEN);
-        useMap(20, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_YELLOW);
+        addMap(23, nonArcadeMaps, bigMaps, MapColoring.PINK_ROSE);
+        addMap(21, nonArcadeMaps, bigMaps, MapColoring.PINK_WHITE);
+        addMap(22, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_WHITE);
+        addMap(14, nonArcadeMaps, bigMaps, MapColoring.VIOLET_WHITE_GREEN);
+        addMap(20, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_YELLOW);
 
         // 16-20
-        useMap(19, nonArcadeMaps, bigMaps, MapColoring.KHAKI_WHITE);
-        useMap(10, nonArcadeMaps, bigMaps, MapColoring.PINK_WHITE);
-        useMap(17, nonArcadeMaps, bigMaps, MapColoring.BLUE_WHITE_YELLOW);
-        useMap(10, nonArcadeMaps, bigMaps, MapColoring.BROWN_WHITE);
-        useMap(19, nonArcadeMaps, bigMaps, MapColoring.PINK_ROSE);
+        addMap(19, nonArcadeMaps, bigMaps, MapColoring.KHAKI_WHITE);
+        addMap(10, nonArcadeMaps, bigMaps, MapColoring.PINK_WHITE);
+        addMap(17, nonArcadeMaps, bigMaps, MapColoring.BLUE_WHITE_YELLOW);
+        addMap(10, nonArcadeMaps, bigMaps, MapColoring.BROWN_WHITE);
+        addMap(19, nonArcadeMaps, bigMaps, MapColoring.PINK_ROSE);
 
         // 21-25
-        useMap(26, nonArcadeMaps, bigMaps, MapColoring.BLACK_WHITE_GREEN);
-        useMap(21, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_WHITE);
-        useMap(22, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_VIOLET);
-        useMap(23, nonArcadeMaps, bigMaps, MapColoring.VIOLET_WHITE_GREEN);
-        useMap(14, nonArcadeMaps, bigMaps, MapColoring.GRAY_WHITE_YELLOW);
+        addMap(26, nonArcadeMaps, bigMaps, MapColoring.BLACK_WHITE_GREEN);
+        addMap(21, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_WHITE);
+        addMap(22, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_VIOLET);
+        addMap(23, nonArcadeMaps, bigMaps, MapColoring.VIOLET_WHITE_GREEN);
+        addMap(14, nonArcadeMaps, bigMaps, MapColoring.GRAY_WHITE_YELLOW);
 
         // 26-30
-        useMap(25, nonArcadeMaps, bigMaps, MapColoring.VIOLET_WHITE);
-        useMap(14, nonArcadeMaps, bigMaps, MapColoring.PINK_WHITE);
-        useMap(23, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_WHITE);
-        useMap(26, nonArcadeMaps, bigMaps, MapColoring.LIGHTBLUE_WHITE_YELLOW);
-        useMap(20, nonArcadeMaps, bigMaps, MapColoring.PINK_YELLOW);
+        addMap(25, nonArcadeMaps, bigMaps, MapColoring.VIOLET_WHITE);
+        addMap(14, nonArcadeMaps, bigMaps, MapColoring.PINK_WHITE);
+        addMap(23, nonArcadeMaps, bigMaps, MapColoring.GREEN_WHITE_WHITE);
+        addMap(26, nonArcadeMaps, bigMaps, MapColoring.LIGHTBLUE_WHITE_YELLOW);
+        addMap(20, nonArcadeMaps, bigMaps, MapColoring.PINK_YELLOW);
 
         // 31-32
-        useMap(25, nonArcadeMaps, bigMaps, MapColoring.PINK_ROSE);
-        useMap(33, nonArcadeMaps, bigMaps, MapColoring.PINK_ROSE);
+        addMap(25, nonArcadeMaps, bigMaps, MapColoring.PINK_ROSE);
+        addMap(33, nonArcadeMaps, bigMaps, MapColoring.PINK_ROSE);
 
         return bigMaps;
     }
 
-    private static void useMap(int number, List<WorldMap> sourceMaps, List<WorldMap> targetMaps, MapColoring mapColoring) {
-        WorldMap map = new WorldMap(sourceMaps.get(number - 1));
+    private static void addMap(int mapNumber, List<WorldMap> sourceMaps, List<WorldMap> targetMaps, MapColoring mapColoring) {
+        WorldMap map = new WorldMap(sourceMaps.get(mapNumber - 1));
         map.setColorScheme(mapColoring.colorScheme());
         targetMaps.add(map);
     }
@@ -273,7 +272,7 @@ public class TengenMsPacManGame extends GameModel {
 
     private MapCategory mapCategory;
     private Difficulty difficulty;
-    private PacBooster pacBooster;
+    private BoosterMode boosterMode;
     private boolean boosterActive;
     private byte startingLevel; // 1-7
     private int mapNumber;
@@ -290,7 +289,7 @@ public class TengenMsPacManGame extends GameModel {
         bigMaps = bigMaps(nonArcadeMaps);
 
         setMapCategory(MapCategory.ARCADE);
-        setPacBooster(PacBooster.OFF);
+        setPacBooster(BoosterMode.OFF);
         setDifficulty(Difficulty.NORMAL);
         setStartingLevel(1);
     }
@@ -304,23 +303,23 @@ public class TengenMsPacManGame extends GameModel {
         return worldMap.terrain().numRows() > 30; //TODO correct?
     }
 
-    public void setPacBooster(PacBooster pacBooster) {
-        this.pacBooster = pacBooster;
+    public void setPacBooster(BoosterMode boosterMode) {
+        this.boosterMode = boosterMode;
     }
 
-    public PacBooster pacBooster() {
-        return pacBooster;
+    public BoosterMode pacBoosterMode() {
+        return boosterMode;
     }
 
     public void setBoosterActive(boolean boosterActive) {
         this.boosterActive = boosterActive;
-        float baseSpeed = PPS_AT_100_PERCENT * SEC_PER_TICK; // pixel/sec
+        float baseSpeed = BASE_SPEED_IN_PX_PER_SEC / FPS; // ca 1.25 pixel/sec
         if (boosterActive) {
-            baseSpeed *= BOOSTER_FACTOR;
+            baseSpeed += BOOSTER_INCREMENT;
         }
         pac.setBaseSpeed(baseSpeed);
-        pac.selectAnimation(boosterActive ? ANIM_PAC_MUNCHING_BOOSTER : GameModel.ANIM_PAC_MUNCHING);
-        Logger.info("Ms. Pac-Man base speed is {0.00} px/s", baseSpeed);
+        pac.selectAnimation(boosterActive ? ANIM_PAC_MUNCHING_BOOSTER : ANIM_PAC_MUNCHING);
+        Logger.info("Ms. Pac-Man base speed set to {0.00} px/s", baseSpeed);
     }
 
     public boolean isBoosterActive() {
@@ -505,7 +504,7 @@ public class TengenMsPacManGame extends GameModel {
         byte symbol = bonusSymbols[nextBonusIndex];
         var movingBonus = new MovingBonus(world, symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         movingBonus.setRoute(route, leftToRight);
-        movingBonus.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
+        movingBonus.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
         bonus = movingBonus;
         bonus.setEdible(TickTimer.INDEFINITE);
@@ -528,17 +527,17 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     private void initPacBooster() {
-        switch (pacBooster) {
+        switch (boosterMode) {
             case ALWAYS_ON -> {
-                pac.setBaseSpeed(BOOSTER_FACTOR * PPS_AT_100_PERCENT * SEC_PER_TICK);
+                pac.setBaseSpeed(BOOSTER_INCREMENT * BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
                 setBoosterActive(true);
             }
             case OFF -> {
-                pac.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
+                pac.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
                 setBoosterActive(false);
             }
-            case TOGGLE_USING_KEY -> {
-                pac.setBaseSpeed(BOOSTER_FACTOR * PPS_AT_100_PERCENT * SEC_PER_TICK);
+            case ACTIVATED_USING_KEY -> {
+                pac.setBaseSpeed(BOOSTER_INCREMENT * BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
                 setBoosterActive(false);
             }
         }

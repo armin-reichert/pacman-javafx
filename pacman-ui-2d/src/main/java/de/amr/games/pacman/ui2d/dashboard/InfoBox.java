@@ -40,7 +40,7 @@ import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 public abstract class InfoBox extends TitledPane {
 
     public static String fmtSpeed(byte percentage) {
-        return String.format("%.2f px/s (%d%%)", GameModel.PPS_AT_100_PERCENT * percentage * 0.01f, percentage);
+        return String.format("%.2f px/s (%d%%)", GameModel.BASE_SPEED_IN_PX_PER_SEC * percentage * 0.01f, percentage);
     }
 
     protected static String fontCSS(Font font) {
