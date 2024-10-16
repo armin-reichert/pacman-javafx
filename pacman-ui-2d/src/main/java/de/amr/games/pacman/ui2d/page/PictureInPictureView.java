@@ -42,7 +42,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
 
         canvas = new Canvas();
         canvas.heightProperty().bind(PY_PIP_HEIGHT);
-        canvas.heightProperty().addListener((py,ov,nv) -> recomputeLayout());
+        canvas.heightProperty().addListener((py,ov,nv) -> recomputeLayout(context.sceneSize()));
 
         playScene2D = new PlayScene2D();
         playScene2D.setGameContext(context);
@@ -59,7 +59,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         ));
         visibleProperty().addListener((py,ov,visible) -> {
             if (visible) {
-                recomputeLayout();
+                recomputeLayout(context.sceneSize());
             }
         });
 
@@ -73,7 +73,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
     @Override
     public void onLevelCreated(GameEvent e) {
         renderer.setRendererFor(context.game());
-        recomputeLayout();
+        recomputeLayout(context.sceneSize());
     }
 
     public void draw() {
@@ -82,21 +82,11 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         }
     }
 
-    private double worldAspectRatio() {
-        Vector2f sceneSize = context.sceneSize();
-        return sceneSize.x() / sceneSize.y();
-    }
-
-    private double standardHeight() {
-        Vector2i worldTiles = context.worldSizeTilesOrDefault();
-        return worldTiles.y() * TS;
-    }
-
-    private void recomputeLayout() {
+    private void recomputeLayout(Vector2f sceneSize) {
         double canvasHeight = canvas.getHeight();
-        double aspectRatio = worldAspectRatio();
+        double aspectRatio = sceneSize.x() / sceneSize.y();
         canvas.setWidth(aspectRatio * canvasHeight);
-        playScene2D.scalingPy.set(canvasHeight / standardHeight());
+        playScene2D.scalingPy.set(canvasHeight / sceneSize.y());
         layout();
         Logger.info("Layout recomputed, w={0.00} h={0.00} aspect={0.00}, scene size (px)={}",
             getWidth(), getHeight(), aspectRatio, context.sceneSize());
