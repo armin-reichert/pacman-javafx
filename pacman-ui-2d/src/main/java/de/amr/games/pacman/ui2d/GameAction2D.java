@@ -271,13 +271,7 @@ public enum GameAction2D implements GameAction {
             super.execute(context);
             TengenMsPacManGame tengenGame = (TengenMsPacManGame) context.game();
             if (tengenGame.pacBoosterMode() == BoosterMode.ACTIVATED_USING_KEY) {
-                tengenGame.setBoosterActive(!tengenGame.isBoosterActive());
-                //TODO for now, use flash message, later change sprites
-                if (tengenGame.isBoosterActive()) {
-                    context.showFlashMessage("Pac booster ON");
-                } else {
-                    context.showFlashMessage("Pac booster OFF");
-                }
+                tengenGame.activateBooster(!tengenGame.isBoosterActive());
             }
         }
     },

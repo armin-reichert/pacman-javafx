@@ -267,17 +267,6 @@ public class TengenMsPacManGame extends GameModel {
         return boosterMode;
     }
 
-    public void setBoosterActive(boolean boosterActive) {
-        this.boosterActive = boosterActive;
-        float baseSpeed = BASE_SPEED_IN_PX_PER_SEC / FPS; // ca 1.25 pixel/sec
-        if (boosterActive) {
-            baseSpeed += BOOSTER_INCREMENT;
-        }
-        pac.setBaseSpeed(baseSpeed);
-        pac.selectAnimation(boosterActive ? ANIM_PAC_MUNCHING_BOOSTER : ANIM_PAC_MUNCHING);
-        Logger.info("Ms. Pac-Man base speed set to {0.00} px/s", baseSpeed);
-    }
-
     public boolean isBoosterActive() {
         return boosterActive;
     }
@@ -380,6 +369,9 @@ public class TengenMsPacManGame extends GameModel {
                 levelCounter.add((byte) (number - 1));
             }
         }
+        if (boosterMode == BoosterMode.ALWAYS_ON) {
+            activateBooster(true);
+        }
     }
 
     @Override
@@ -390,7 +382,6 @@ public class TengenMsPacManGame extends GameModel {
         setWorldAndCreatePopulation(createWorld(map));
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
-        initPacBooster();
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
@@ -401,7 +392,6 @@ public class TengenMsPacManGame extends GameModel {
         setWorldAndCreatePopulation(createWorld(currentMapList.get(mapNumber - 1)));
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);
-        initPacBooster();
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
@@ -494,20 +484,11 @@ public class TengenMsPacManGame extends GameModel {
         }
     }
 
-    private void initPacBooster() {
-        switch (boosterMode) {
-            case ALWAYS_ON -> {
-                pac.setBaseSpeed(BOOSTER_INCREMENT * BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
-                setBoosterActive(true);
-            }
-            case OFF -> {
-                pac.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
-                setBoosterActive(false);
-            }
-            case ACTIVATED_USING_KEY -> {
-                pac.setBaseSpeed(BOOSTER_INCREMENT * BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
-                setBoosterActive(false);
-            }
-        }
+    public void activateBooster(boolean on) {
+        boosterActive = on;
+        float baseSpeed = BASE_SPEED_IN_PX_PER_SEC / FPS + (on ? BOOSTER_INCREMENT : 0);
+        pac.setBaseSpeed(baseSpeed);
+        pac.selectAnimation(on ? ANIM_PAC_MUNCHING_BOOSTER : ANIM_PAC_MUNCHING);
+        Logger.info("Ms. Pac-Man base speed set to {0.00} px/s", baseSpeed);
     }
 }
