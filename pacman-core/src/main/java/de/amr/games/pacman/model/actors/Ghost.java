@@ -372,7 +372,7 @@ public class Ghost extends Creature implements AnimatedEntity {
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
     private void updateStateFrightened(GameModel game) {
-        game.level().ifPresent(level -> {
+        game.currentLevelData().ifPresent(level -> {
             roamFrightened(level);
             updateFrightenedAnimation(game);
         });

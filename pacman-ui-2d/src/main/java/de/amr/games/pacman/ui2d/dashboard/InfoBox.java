@@ -96,7 +96,7 @@ public abstract class InfoBox extends TitledPane {
     }
 
     protected Supplier<String> ifLevelPresent(Function<GameLevel, String> fnInfo) {
-        return () -> context.game().level().map(fnInfo).orElse(NO_INFO);
+        return () -> context.game().currentLevelData().map(fnInfo).orElse(NO_INFO);
     }
 
     protected Supplier<String> ifWorldPresent(Function<GameWorld, String> fnInfo) {

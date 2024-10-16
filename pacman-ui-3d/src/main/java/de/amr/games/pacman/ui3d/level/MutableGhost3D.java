@@ -115,7 +115,7 @@ public class MutableGhost3D {
         updateTransform();
         updateLook(context.game());
         updateAnimations();
-        context.game().level().ifPresent(level -> numFlashes = level.numFlashes());
+        context.game().currentLevelData().ifPresent(level -> numFlashes = level.numFlashes());
     }
 
     public Group root() {

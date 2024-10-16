@@ -100,10 +100,10 @@ public class Pac extends Creature implements AnimatedEntity {
     }
 
     public void update(GameModel game) {
-        if (game.level().isEmpty()) {
+        if (game.currentLevelData().isEmpty()) {
             return;
         }
-        GameLevel level = game.level().get();
+        GameLevel level = game.currentLevelData().get();
         if (dead || restingTicks == REST_INDEFINITELY) {
             return;
         }

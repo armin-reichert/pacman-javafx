@@ -10,10 +10,7 @@ import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.Portal;
+import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
@@ -22,6 +19,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -233,6 +231,8 @@ public class TengenMsPacManGame extends GameModel {
     private byte startingLevel; // 1-7
     private int mapNumber;
 
+    private GameLevel currentLevelData;
+
     public TengenMsPacManGame(GameVariant gameVariant, File userDir) {
         super(gameVariant, userDir);
         initialLives = 3;
@@ -383,6 +383,16 @@ public class TengenMsPacManGame extends GameModel {
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+
+        // TODO for now provide a Level object such that all code that relies on one works
+
+        // That's game level #1 in Pac-Man
+        currentLevelData = new GameLevel( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0);
+    }
+
+    @Override
+    protected GameLevel levelData(int levelNumber) {
+        return currentLevelData;
     }
 
     @Override

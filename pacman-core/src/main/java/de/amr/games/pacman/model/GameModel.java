@@ -63,34 +63,6 @@ public abstract class GameModel {
     /** Movement speed in pixel/sec. */
     public static final float BASE_SPEED_IN_PX_PER_SEC = 73.9f; //TODO this should be 75 but that doesn't work yet
 
-    public static final GameLevel[] LEVELS = {
-        /* 1*/ new GameLevel( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0),
-        /* 2*/ new GameLevel( 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5, 1),
-        /* 3*/ new GameLevel( 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5, 0),
-        /* 4*/ new GameLevel( 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5, 0),
-        /* 5*/ new GameLevel(100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5, 2),
-        /* 6*/ new GameLevel(100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5, 0),
-        /* 7*/ new GameLevel(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5, 0),
-        /* 8*/ new GameLevel(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5, 0),
-        /* 9*/ new GameLevel(100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3, 3),
-        /*10*/ new GameLevel(100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5, 0),
-        /*11*/ new GameLevel(100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5, 0),
-        /*12*/ new GameLevel(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3, 0),
-        /*13*/ new GameLevel(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3, 3),
-        /*14*/ new GameLevel(100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5, 0),
-        /*15*/ new GameLevel(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0),
-        /*16*/ new GameLevel(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0),
-        /*17*/ new GameLevel(100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0, 3),
-        /*18*/ new GameLevel(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0),
-        /*19*/ new GameLevel(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0),
-        /*20*/ new GameLevel(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0),
-        /*21*/ new GameLevel( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0)
-    };
-
-    private static GameLevel level(int levelNumber) {
-        return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
-    }
-
     /** Maximum number of coins, as in MAME. */
     public static final byte    MAX_CREDIT = 99;
     public static final byte    POINTS_PELLET = 10;
@@ -165,6 +137,7 @@ public abstract class GameModel {
     public abstract int currentMapNumber();
     public abstract int mapNumberByLevelNumber(int levelNumber);
     public abstract void activateNextBonus();
+    protected abstract GameLevel levelData(int levelNumber);
     protected abstract Pac createPac();
     protected abstract Ghost[] createGhosts();
     protected abstract void buildRegularLevel(int levelNumber);
@@ -287,11 +260,8 @@ public abstract class GameModel {
         return levelNumber;
     }
 
-    public Optional<GameLevel> level() {
-        if (levelNumber == 0) {
-            return Optional.empty();
-        }
-        return Optional.of(level(levelNumber));
+    public Optional<GameLevel> currentLevelData() {
+        return levelNumber == 0 ? Optional.empty() : Optional.of(levelData(levelNumber));
     }
 
     public boolean isDemoLevel() {
@@ -299,7 +269,7 @@ public abstract class GameModel {
     }
 
     public int intermissionNumber(int levelNumber) {
-        return level(levelNumber).intermissionNumber();
+        return levelData(levelNumber).intermissionNumber();
     }
 
     public byte cruiseElroyState() {
@@ -427,7 +397,7 @@ public abstract class GameModel {
     }
 
     protected byte huntingSpeedPct(Ghost ghost) {
-        GameLevel level = level(levelNumber);
+        GameLevel level = levelData(levelNumber);
         if (world.isTunnel(ghost.tile())) {
             return level.ghostSpeedTunnelPct();
         }
@@ -604,11 +574,11 @@ public abstract class GameModel {
                 victims.clear();
                 scorePoints(POINTS_ENERGIZER);
                 Logger.info("Scored {} points for eating energizer", POINTS_ENERGIZER);
-                if (level(levelNumber).pacPowerSeconds() > 0) {
+                if (levelData(levelNumber).pacPowerSeconds() > 0) {
                     eventLog.pacGetsPower = true;
                     huntingTimer.stop();
                     Logger.info("Hunting timer stopped");
-                    int seconds = level(levelNumber).pacPowerSeconds();
+                    int seconds = levelData(levelNumber).pacPowerSeconds();
                     powerTimer.restartSeconds(seconds);
                     Logger.info("Power timer restarted to {} seconds", seconds);
                     // TODO do already frightened ghosts reverse too?
@@ -622,9 +592,9 @@ public abstract class GameModel {
             }
             gateKeeper.onPelletOrEnergizerEaten(this);
             world.eatFoodAt(pacTile);
-            if (world.uneatenFoodCount() == level(levelNumber).elroy1DotsLeft()) {
+            if (world.uneatenFoodCount() == levelData(levelNumber).elroy1DotsLeft()) {
                 cruiseElroy = 1;
-            } else if (world.uneatenFoodCount() == level(levelNumber).elroy2DotsLeft()) {
+            } else if (world.uneatenFoodCount() == levelData(levelNumber).elroy2DotsLeft()) {
                 cruiseElroy = 2;
             }
             if (isBonusReached()) {

@@ -159,7 +159,7 @@ public enum GameState implements FsmState<GameModel> {
             } else if (timer.atSecond(1.5)) {
                 game.ghosts().forEach(Ghost::hide);
             } else if (timer.atSecond(2)) {
-                flashCount = 2 * game.level().orElseThrow().numFlashes();
+                flashCount = 2 * game.currentLevelData().orElseThrow().numFlashes();
                 setProperty("mazeFlashing", true);
                 game.blinking().setStartPhase(Pulse.OFF);
                 game.blinking().restart(flashCount);
@@ -332,7 +332,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            if (game.level().isEmpty()) {
+            if (game.currentLevelData().isEmpty()) {
                 return;
             }
             if (game.levelNumber() > lastLevelNumber) {
@@ -369,7 +369,7 @@ public enum GameState implements FsmState<GameModel> {
             } else if (timer().atSecond(9.5)) {
                 setProperty("mazeFlashing", true);
                 game.blinking().setStartPhase(Pulse.OFF);
-                game.blinking().restart(2 * game.level().get().numFlashes());
+                game.blinking().restart(2 * game.currentLevelData().get().numFlashes());
             } else if (timer().atSecond(12.0)) {
                 timer().restartIndefinitely();
                 game.pac().freeze();
