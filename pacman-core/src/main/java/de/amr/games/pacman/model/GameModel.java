@@ -535,8 +535,13 @@ public abstract class GameModel {
         pac.update(this);
         if (bonus != null) updateBonus();
         updatePacPower();
-        updateHuntingTimer();
+        huntingTimer.tick();
         ghosts(FRIGHTENED).filter(pac::sameTile).forEach(this::killGhost);
+        if (huntingTimer.hasExpired()) {
+            Logger.info("Hunting timer expired, tick={}", huntingTimer.currentTick());
+            startHuntingPhase(huntingPhaseIndex + 1);
+            ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
+        }
         eventLog.pacKilled = checkPacKilled(pac.isImmune());
     }
 
@@ -629,15 +634,6 @@ public abstract class GameModel {
             publishGameEvent(GameEventType.BONUS_EATEN);
         } else {
             bonus.update(this);
-        }
-    }
-
-    private void updateHuntingTimer( ) {
-        huntingTimer.tick();
-        if (huntingTimer.hasExpired()) {
-            Logger.info("Hunting timer expired, tick={}", huntingTimer.currentTick());
-            startHuntingPhase(huntingPhaseIndex + 1);
-            ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
         }
     }
 
