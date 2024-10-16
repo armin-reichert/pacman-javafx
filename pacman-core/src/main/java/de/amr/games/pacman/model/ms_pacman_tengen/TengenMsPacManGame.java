@@ -369,7 +369,7 @@ public class TengenMsPacManGame extends GameModel {
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
         // TODO for now provide a Level object such that all code that relies on one works
-        currentLevelData = new GameLevel( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0);
+        currentLevelData = new GameLevel( 100, 100, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0);
     }
 
     @Override
@@ -379,7 +379,25 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     protected void setActorBaseSpeed(int levelNumber) {
-        super.setActorBaseSpeed(levelNumber); // TODO
+        //TODO use base speed per level from table
+        float baseSpeed = 1f; // px/tick
+        // https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/Data/PlayerAndGhostSpeeds.asm
+        pac.setBaseSpeed(switch (difficulty) {
+            case EASY   -> baseSpeed - 4 / 32f;
+            case NORMAL -> baseSpeed;
+            case HARD   -> baseSpeed + 12 / 32f;
+            case CRAZY  -> baseSpeed + 24 / 32f;
+        });
+        for (Ghost ghost : ghosts) {
+            ghost.setBaseSpeed(switch (difficulty) {
+                case EASY   -> baseSpeed - 8 / 32f;
+                case NORMAL -> baseSpeed;
+                case HARD   -> baseSpeed + 16 / 32f;
+                case CRAZY  -> baseSpeed + 32 / 32f;
+            });
+            ghost.setSpeedReturningHome(2 * baseSpeed); // TODO check
+            ghost.setSpeedInsideHouse(0.5f * baseSpeed); // TODO check
+        }
     }
 
     @Override
@@ -492,7 +510,7 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     private float huntingSpeed(Ghost ghost) {
-        return 1; // TODO
+        return ghost.baseSpeed(); // TODO
     }
 
     public void activateBooster(boolean on) {
