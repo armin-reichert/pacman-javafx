@@ -313,6 +313,11 @@ public abstract class GameModel {
         score.reset();
     }
 
+    public void startNewGame() {
+        reset();
+        createLevel(1);
+    }
+
     public void createLevel(int levelNumber) {
         clearLevel();
         demoLevel = false;

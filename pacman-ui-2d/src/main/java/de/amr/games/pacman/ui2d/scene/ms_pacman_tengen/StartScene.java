@@ -6,6 +6,9 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.model.ms_pacman_tengen.BoosterMode;
+import de.amr.games.pacman.model.ms_pacman_tengen.Difficulty;
+import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -132,7 +135,7 @@ public class StartScene extends GameScene2D {
         drawBabyBlueBar(renderer, y);
     }
 
-    private String pacBoosterText(TengenMsPacManGame.BoosterMode boosterMode) {
+    private String pacBoosterText(BoosterMode boosterMode) {
         return switch (boosterMode) {
             case OFF -> "OFF";
             case ALWAYS_ON -> "ALWAYS ON";
@@ -221,8 +224,8 @@ public class StartScene extends GameScene2D {
     }
 
     private void selectNextMazeSelectionValue() {
-        TengenMsPacManGame.MapCategory category = tengenGame.mapCategory();
-        var values = TengenMsPacManGame.MapCategory.values();
+        MapCategory category = tengenGame.mapCategory();
+        var values = MapCategory.values();
         int current = category.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame.setMapCategory(values[next]);
         playChangeOptionValueSound();
@@ -230,8 +233,8 @@ public class StartScene extends GameScene2D {
     }
 
     private void selectNextDifficultyValue() {
-        TengenMsPacManGame.Difficulty difficulty = tengenGame.difficulty();
-        var values = TengenMsPacManGame.Difficulty.values();
+        Difficulty difficulty = tengenGame.difficulty();
+        var values = Difficulty.values();
         int current = difficulty.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame.setDifficulty(values[next]);
         playChangeOptionValueSound();
@@ -239,8 +242,8 @@ public class StartScene extends GameScene2D {
     }
 
     private void selectNextPacBoosterValue() {
-        TengenMsPacManGame.BoosterMode boosterMode = tengenGame.pacBoosterMode();
-        var values = TengenMsPacManGame.BoosterMode.values();
+        BoosterMode boosterMode = tengenGame.pacBoosterMode();
+        var values = BoosterMode.values();
         int current = boosterMode.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame.setPacBooster(values[next]);
         playChangeOptionValueSound();

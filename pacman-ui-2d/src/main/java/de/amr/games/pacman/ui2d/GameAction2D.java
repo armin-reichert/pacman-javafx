@@ -9,6 +9,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.ms_pacman_tengen.BoosterMode;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
@@ -269,7 +270,7 @@ public enum GameAction2D implements GameAction {
         public void execute(GameContext context) {
             super.execute(context);
             TengenMsPacManGame tengenGame = (TengenMsPacManGame) context.game();
-            if (tengenGame.pacBoosterMode() == TengenMsPacManGame.BoosterMode.ACTIVATED_USING_KEY) {
+            if (tengenGame.pacBoosterMode() == BoosterMode.ACTIVATED_USING_KEY) {
                 tengenGame.setBoosterActive(!tengenGame.isBoosterActive());
                 //TODO for now, use flash message, later change sprites
                 if (tengenGame.isBoosterActive()) {

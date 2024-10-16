@@ -18,8 +18,8 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
-import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame.MapCategory;
-import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame.BoosterMode;
+import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
+import de.amr.games.pacman.model.ms_pacman_tengen.BoosterMode;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -383,34 +383,27 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void drawLevelCounter(int levelNumber, boolean demoLevel, List<Byte> symbols, Vector2f sceneSize) {
+        double symbolX = sceneSize.x() - 4 * TS - 2, y = sceneSize.y() - 2 * TS;
         ctx().save();
         ctx().translate(0, -scaled(8));
-        GameRenderer.super.drawLevelCounter(levelNumber, demoLevel, symbols, sceneSize);
-        if (!demoLevel) {
-            if (levelNumber > 0) {
-                double y = sceneSize.y() - 2 * TS;
-                drawLevelNumberBox(levelNumber, 0, y); // left border
-                drawLevelNumberBox(levelNumber, sceneSize.x() - 2 * TS, y); // right border
-            }
+        if (!demoLevel && levelNumber > 0) {
+            drawLevelNumberBox(levelNumber, 0, y); // left box
+            drawLevelNumberBox(levelNumber, sceneSize.x() - 2 * TS, y); // right box
+        }
+        for (byte symbol : symbols) {
+            drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), symbolX, y);
+            symbolX -= TS * 2;
         }
         ctx().restore();
     }
 
     private void drawLevelNumberBox(int levelNumber, double x, double y) {
         drawSpriteScaled(TengenMsPacManGameSpriteSheet.LEVEL_BOX_SPRITE, x, y);
-        // erase violet area (what is it good for?)
-        ctx().setFill(Color.BLACK);
-        ctx().save();
-        ctx().scale(scaling(), scaling());
-        ctx().fillRect(x + 10, y + 2, 5, 5);
-        ctx().restore();
-        if (levelNumber < 10) {
-            drawSpriteScaled(spriteSheet.digit(levelNumber), x + 10, y + 2);
-        } else if (levelNumber < 100) { // d1 d0
-            int d0 = levelNumber % 10;
-            int d1 = levelNumber / 10;
-            drawSpriteScaled(spriteSheet.digit(d0), x + 10, y + 2);
-            drawSpriteScaled(spriteSheet.digit(d1), x + 1,  y + 2);
+        double digitY = y + 2;
+        int tens = levelNumber / 10, ones = levelNumber % 10;
+        drawSpriteScaled(spriteSheet.digit(ones), x + 10, digitY);
+        if (tens > 0) {
+            drawSpriteScaled(spriteSheet.digit(tens), x + 2,  digitY);
         }
     }
 

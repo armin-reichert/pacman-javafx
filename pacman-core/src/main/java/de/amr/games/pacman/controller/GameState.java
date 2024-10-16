@@ -67,8 +67,6 @@ public enum GameState implements FsmState<GameModel> {
     },
 
     READY {
-        static final short TICK_CREATE_LEVEL             = 1;
-        static final short TICK_START_LEVEL              = 2;
         static final short TICK_NEW_GAME_SHOW_GUYS       = 120;
         static final short TICK_NEW_GAME_START_PLAYING   = 240;
         static final short TICK_DEMO_LEVEL_START_PLAYING = 120;
@@ -86,11 +84,10 @@ public enum GameState implements FsmState<GameModel> {
                 }
             }
             else if (game.hasCredit()) { // start new game
-                if (timer.currentTick() == TICK_CREATE_LEVEL) {
-                    game.reset();
-                    game.createLevel(1);
+                if (timer.currentTick() == 1) {
+                    game.startNewGame();
                 }
-                else if (timer.currentTick() == TICK_START_LEVEL) {
+                else if (timer.currentTick() == 2) {
                     game.startLevel();
                 }
                 else if (timer.currentTick() == TICK_NEW_GAME_SHOW_GUYS) {
@@ -103,7 +100,7 @@ public enum GameState implements FsmState<GameModel> {
                 }
             }
             else { // start demo level
-                if (timer.currentTick() == TICK_CREATE_LEVEL) {
+                if (timer.currentTick() == 1) {
                     game.createDemoLevel();
                     game.startLevel();
                     game.showGuys();

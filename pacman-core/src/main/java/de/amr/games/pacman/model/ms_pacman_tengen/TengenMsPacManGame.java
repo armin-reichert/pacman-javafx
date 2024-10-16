@@ -8,7 +8,6 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
@@ -28,75 +27,31 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 
 /**
- * Ms. Pac-Man Tengen game. Currently, this is just a copy of the Ms. Pac-Man Arcade game with the Tengen mazes.
+ * Ms. Pac-Man Tengen game.
+ *
+ * Currently, this is a copy of the Ms. Pac-Man Arcade game with the Tengen mazes.
  * <p>
- * TODO: use Tengen sprites all over the place
- * TODO: how do the ghosts in Tengen differ from the Arcade game? How can they handle non-Arcade maze structures?
+ * TODO: how does the ghost behaviour in Tengen differ from the Arcade game?
+ * How can they handle non-Arcade maze structures?
  *
  * @author Armin Reichert
  */
 public class TengenMsPacManGame extends GameModel {
 
-    public enum MapCategory { ARCADE, MINI, BIG, STRANGE }
-    public enum Difficulty { NORMAL, EASY, HARD, CRAZY }
-    public enum BoosterMode { OFF, ACTIVATED_USING_KEY, ALWAYS_ON }
-
-    // TODO what is the exact speed increase?
     static final float BOOSTER_INCREMENT = 0.5f;
 
     // Ms. Pac-Man (Tengen) game specific animation IDs
     public static final String ANIM_PAC_MUNCHING_BOOSTER = "munching_booster";
     public static final String ANIM_PAC_HUSBAND_MUNCHING_BOOSTER = "husband_munching_booster";
 
-    //TODO check how many maps are really used in Tengen game
+    //TODO Clarify map order/colors in eacg category
     static final int ARCADE_MAP_COUNT = 9;
     static final int NON_ARCADE_MAP_COUNT = 37;
     static final int MAP_COUNT = ARCADE_MAP_COUNT + NON_ARCADE_MAP_COUNT;
 
     static final String MAPS_ROOT = "/de/amr/games/pacman/maps/tengen/";
-    static final String ARCADE_MAP_PATTERN  = MAPS_ROOT + "arcade/map%02d.world";
+    static final String ARCADE_MAP_PATTERN      = MAPS_ROOT + "arcade/map%02d.world";
     static final String NON_ARCADE_MAP_PATTERN  = MAPS_ROOT + "non_arcade/map%02d.world";
-
-    //TODO: Colors are from a non-original sprite sheet and not correct
-
-    public enum MapColoring {
-        BLACK_WHITE_GREEN     ("000000", "ffffff", "ffffff", "007b8c"),
-        BLACK_WHITE_YELLOW    ("000000", "ffffff", "ffffff", "bdbd00"),
-        BLACK_DARKBLUE        ("000000", "00298c", "00298c", "ffffff"),
-        BLUE_WHITE_YELLOW     ("4242ff", "ffffff", "ffffff", "bdbd00"),
-        BLUE2_WHITE           ("3900a5", "ffffff", "ffffff", "ffffff"),
-        BLUE_YELLOW           ("002a88", "e4e594", "e4e594", "ffffff"),
-        BROWN_WHITE           ("522100", "ffffff", "ffffff", "ffffff"),
-        BROWN2_WHITE          ("994e00", "ffffff", "ffffff", "ffffff"),
-        GRAY_WHITE_YELLOW     ("adadad", "ffffff", "ffffff", "bdbd00"),
-        GREEN_WHITE_YELLOW    ("109400", "ffffff", "ffffff", "bdbd00"),
-        GREEN_WHITE_WHITE     ("398400", "ffffff", "ffffff", "ffffff"),
-        GREEN_WHITE_VIOLET    ("00424a", "ffffff", "ffffff", "9c18ce"),
-        LIGHTBLUE_WHITE_YELLOW("64b0ff", "ffffff", "ffffff", "bcbe00"),
-        KHAKI_WHITE           ("6b6b00", "ffffff", "ffffff", "ffffff"),
-        PINK_ROSE             ("b5217b", "ff6bce", "ff6bce", "ffffff"),
-        PINK_DARKRED          ("feccc5", "b71e7b", "b71e7b", "ffffff"),
-        PINK_WHITE            ("ff6bce", "ffffff", "ffffff", "ffffff"),
-        PINK_YELLOW           ("fec4ea", "bcbe00", "bcbe00", "ffffff"),
-        ORANGE_WHITE          ("b53120", "ffffff", "ffffff", "b71e7b"),
-        DARKBLUE_YELLOW       ("00298c", "e7e794", "e7e794", "ffffff"),
-        RED_WHITE             ("b5217b", "ffffff", "ffffff", "ffffff"),
-        RED_PINK              ("b5217b", "ff6bce", "ff6bce", "ffc6e7"),
-        ROSE_RED              ("ffcec6", "b5217b", "b5217b", "ffffff"),
-        VIOLET_PINK           ("9c18ce", "ff6bce", "ffffff", "ffffff"),
-        VIOLET_WHITE          ("5a007b", "ffffff", "ffffff", "ffffff"),
-        VIOLET_WHITE_YELLOW   ("7329ff", "ffffff", "ffffff", "bdbd00"),
-        VIOLET_WHITE_GREEN    ("c673ff", "ffffff", "ffffff", "42de84"),
-        YELLOW_WHITE_GREEN    ("bdbd00", "ffffff", "ffffff", "5ae731");
-
-        MapColoring(String fill, String stroke, String door, String pellet) {
-            colorScheme = new MapColorScheme(fill, stroke, door, pellet);
-        }
-
-        public MapColorScheme colorScheme() { return colorScheme; }
-
-        private final MapColorScheme colorScheme;
-    }
 
     /**
      * Got this sequence from YouTube video (https://www.youtube.com/watch?v=cD0oGudVpbw).
@@ -217,26 +172,27 @@ public class TengenMsPacManGame extends GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
-    //TODO I have no idea about the hunting times in Tengen, use Ms. Pac-Man Arcade times for now
+    //TODO: I have no idea about the timing in Tengen, use Ms. Pac-Man Arcade values for now
     private static final int[] HUNTING_TICKS_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
     private static final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
 
     // Bonus symbols in Arcade, Mini and Big mazes
-    public static final byte BONUS_CHERRY        = 0;
-    public static final byte BONUS_STRAWBERRY    = 1;
-    public static final byte BONUS_ORANGE        = 2;
-    public static final byte BONUS_PRETZEL       = 3;
-    public static final byte BONUS_APPLE         = 4;
-    public static final byte BONUS_PEAR          = 5;
-    public static final byte BONUS_BANANA        = 6;
+    public static final byte BONUS_CHERRY      = 0;
+    public static final byte BONUS_STRAWBERRY  = 1;
+    public static final byte BONUS_ORANGE      = 2;
+    public static final byte BONUS_PRETZEL     = 3;
+    public static final byte BONUS_APPLE       = 4;
+    public static final byte BONUS_PEAR        = 5;
+    public static final byte BONUS_BANANA      = 6;
+
     // Additional bonus symbols in Strange mazes
-    public static final byte BONUS_MILK          = 7;
-    public static final byte BONUS_ICE_CREAM     = 8;
-    public static final byte BONUS_GLASS_SLIPPER = 9;
-    public static final byte BONUS_STAR          = 10;
-    public static final byte BONUS_HAND          = 11;
-    public static final byte BONUS_RING          = 12;
-    public static final byte BONUS_FLOWER        = 13;
+    public static final byte BONUS_MILK        = 7;
+    public static final byte BONUS_ICE_CREAM   = 8;
+    public static final byte BONUS_HIGH_HEELS  = 9;
+    public static final byte BONUS_STAR        = 10;
+    public static final byte BONUS_HAND        = 11;
+    public static final byte BONUS_RING        = 12;
+    public static final byte BONUS_FLOWER      = 13;
 
     // Bonus value = factor * 100
     static final byte[] BONUS_VALUE_FACTORS = new byte[14];
@@ -250,7 +206,7 @@ public class TengenMsPacManGame extends GameModel {
         BONUS_VALUE_FACTORS[BONUS_BANANA]        = 50; // !!
         BONUS_VALUE_FACTORS[BONUS_MILK]          = 30; // !!
         BONUS_VALUE_FACTORS[BONUS_ICE_CREAM]     = 40; // !!
-        BONUS_VALUE_FACTORS[BONUS_GLASS_SLIPPER] = 60;
+        BONUS_VALUE_FACTORS[BONUS_HIGH_HEELS]    = 60;
         BONUS_VALUE_FACTORS[BONUS_STAR]          = 70;
         BONUS_VALUE_FACTORS[BONUS_HAND]          = 80;
         BONUS_VALUE_FACTORS[BONUS_RING]          = 90;
@@ -412,6 +368,13 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     protected Ghost[] createGhosts() {
         return new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.sue() };
+    }
+
+    @Override
+    public void startNewGame() {
+        reset();
+        createLevel(startingLevel);
+        //TODO level counter
     }
 
     @Override
