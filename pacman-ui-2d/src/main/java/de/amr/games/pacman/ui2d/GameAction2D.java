@@ -62,7 +62,7 @@ public enum GameAction2D implements GameAction {
             context.sounds().stopAll();
             context.currentGameScene().ifPresent(GameScene::end);
             context.game().removeWorld();
-            context.gameClock().setTargetFrameRate(GameModel.FPS);
+            context.gameClock().setTargetFrameRate(GameModel.TICKS_PER_SECOND);
             context.gameController().restart(GameState.BOOT);
         }
     },
@@ -189,7 +189,7 @@ public enum GameAction2D implements GameAction {
             if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
                 context.gameState().onExit(context.game()); //TODO exit other states too?
             }
-            context.gameClock().setTargetFrameRate(GameModel.FPS);
+            context.gameClock().setTargetFrameRate(GameModel.TICKS_PER_SECOND);
             context.gameController().restart(INTRO);
         }
     },
@@ -210,7 +210,7 @@ public enum GameAction2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
-            context.gameClock().setTargetFrameRate(GameModel.FPS);
+            context.gameClock().setTargetFrameRate(GameModel.TICKS_PER_SECOND);
             context.showFlashMessageSeconds(0.75, context.gameClock().getTargetFrameRate() + "Hz");
         }
     },

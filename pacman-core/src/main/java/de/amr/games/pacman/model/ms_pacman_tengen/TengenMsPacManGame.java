@@ -19,7 +19,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -477,7 +476,7 @@ public class TengenMsPacManGame extends GameModel {
         byte symbol = bonusSymbols[nextBonusIndex];
         var movingBonus = new MovingBonus(world, symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         movingBonus.setRoute(route, leftToRight);
-        movingBonus.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
+        movingBonus.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * ONE_TICK_SECONDS);
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
         bonus = movingBonus;
         bonus.setEdible(TickTimer.INDEFINITE);
@@ -506,7 +505,7 @@ public class TengenMsPacManGame extends GameModel {
 
     public void activateBooster(boolean on) {
         boosterActive = on;
-        float baseSpeed = BASE_SPEED_IN_PX_PER_SEC / FPS + (on ? BOOSTER_INCREMENT : 0);
+        float baseSpeed = BASE_SPEED_IN_PX_PER_SEC / TICKS_PER_SECOND + (on ? BOOSTER_INCREMENT : 0);
         pac.setBaseSpeed(baseSpeed);
         pac.selectAnimation(on ? ANIM_PAC_MUNCHING_BOOSTER : ANIM_PAC_MUNCHING);
         Logger.info("Ms. Pac-Man base speed set to {0.00} px/s", baseSpeed);

@@ -292,7 +292,7 @@ public class MsPacManArcadeGame extends GameModel {
         byte symbol = bonusSymbols[nextBonusIndex];
         var movingBonus = new MovingBonus(world, symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         movingBonus.setRoute(route, leftToRight);
-        movingBonus.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
+        movingBonus.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * ONE_TICK_SECONDS);
         Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
         bonus = movingBonus;
         bonus.setEdible(TickTimer.INDEFINITE);

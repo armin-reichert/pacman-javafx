@@ -38,13 +38,11 @@ public abstract class GameModel {
     public static final int  ARCADE_MAP_SIZE_X = ARCADE_MAP_TILES_X * TS;
     public static final int  ARCADE_MAP_SIZE_Y = ARCADE_MAP_TILES_Y * TS;
 
-    // Animation IDs
-
-    // Common
+    // Common Pac animation IDs
     public static final String ANIM_PAC_MUNCHING = "munching";
     public static final String ANIM_PAC_DYING = "dying";
 
-    // Common ghost animations
+    // Common ghost animation IDss
     public static final String ANIM_GHOST_NORMAL     = "normal";
     public static final String ANIM_GHOST_FRIGHTENED = "frightened";
     public static final String ANIM_GHOST_EYES       = "eyes";
@@ -55,10 +53,10 @@ public abstract class GameModel {
     public static final byte RED_GHOST = 0, PINK_GHOST = 1, CYAN_GHOST = 2, ORANGE_GHOST = 3;
 
     /** Game loop frequency, ticks per second. */
-    public static final float FPS = 60;
+    public static final float TICKS_PER_SECOND = 60;
 
     /** Duration of one tick (in seconds). */
-    public static final float SEC_PER_TICK = 1f / FPS;
+    public static final float ONE_TICK_SECONDS = 1f / TICKS_PER_SECOND;
 
     /** Movement speed in pixel/sec. */
     public static final float BASE_SPEED_IN_PX_PER_SEC = 73.9f; //TODO this should be 75 but that doesn't work yet
@@ -210,7 +208,7 @@ public abstract class GameModel {
         String phaseName = isScatterPhase(huntingPhaseIndex) ? "Scattering" : "Chasing";
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds) started. {}",
             huntingPhaseIndex, phaseName,
-            huntingTimer.duration(), (float) huntingTimer.duration() / GameModel.FPS, huntingTimer);
+            huntingTimer.duration(), (float) huntingTimer.duration() / GameModel.TICKS_PER_SECOND, huntingTimer);
     }
 
     public int huntingPhaseIndex() {
@@ -315,11 +313,11 @@ public abstract class GameModel {
     }
 
     protected void setActorBaseSpeed(int levelNumber) {
-        pac.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
+        pac.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * ONE_TICK_SECONDS);
         ghosts().forEach(ghost -> {
-            ghost.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
-            ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME * SEC_PER_TICK);
-            ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE * SEC_PER_TICK);
+            ghost.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * ONE_TICK_SECONDS);
+            ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME * ONE_TICK_SECONDS);
+            ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE * ONE_TICK_SECONDS);
         });
     }
 

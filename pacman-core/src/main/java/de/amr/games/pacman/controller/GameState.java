@@ -339,7 +339,7 @@ public enum GameState implements FsmState<GameModel> {
                 GameController.it().restart(GameState.BOOT);
                 return;
             }
-            if (timer().currentTick() > 2 * GameModel.FPS) {
+            if (timer().currentTick() > 2 * GameModel.TICKS_PER_SECOND) {
                 game.blinking().tick();
                 game.ghosts().forEach(ghost -> ghost.update(game));
                 game.bonus().ifPresent(bonus -> bonus.update(game));
