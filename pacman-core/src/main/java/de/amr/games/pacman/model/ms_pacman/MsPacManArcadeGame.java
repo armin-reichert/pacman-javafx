@@ -136,11 +136,6 @@ public class MsPacManArcadeGame extends GameModel {
         };
     }
 
-    @Override
-    public int mapCount() {
-        return MAP_COUNT;
-    }
-
     /**
      * Used by sprite based renderer to select the image for the maze.
      * @return map number (1-6)

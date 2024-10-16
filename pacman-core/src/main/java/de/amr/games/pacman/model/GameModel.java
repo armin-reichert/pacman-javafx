@@ -52,6 +52,13 @@ public abstract class GameModel {
     // Ghost IDs
     public static final byte RED_GHOST = 0, PINK_GHOST = 1, CYAN_GHOST = 2, ORANGE_GHOST = 3;
 
+    public static byte checkGhostID(byte id) {
+        if (id < 0 || id > 3) {
+            throw GameException.illegalGhostID(id);
+        }
+        return id;
+    }
+
     /** Game loop frequency, ticks per second. */
     public static final float TICKS_PER_SECOND = 60;
 
@@ -75,13 +82,6 @@ public abstract class GameModel {
     public static final byte    PPS_GHOST_INSIDE_HOUSE = 30; // correct?
     public static final byte    PPS_GHOST_RETURNING_HOME = 120; // correct?
     public static final short[] KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
-
-    public static byte checkGhostID(byte id) {
-        if (id < 0 || id > 3) {
-            throw GameException.illegalGhostID(id);
-        }
-        return id;
-    }
 
     protected final GameVariant    gameVariant;
     protected final File           userDir;
@@ -131,7 +131,6 @@ public abstract class GameModel {
     /**
      * @return number of predefined maps
      */
-    public abstract int mapCount();
     public abstract int currentMapNumber();
     public abstract int mapNumberByLevelNumber(int levelNumber);
     public abstract void activateNextBonus();

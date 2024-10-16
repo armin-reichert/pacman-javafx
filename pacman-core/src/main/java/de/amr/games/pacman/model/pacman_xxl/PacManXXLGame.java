@@ -63,11 +63,6 @@ public class PacManXXLGame extends PacManArcadeGame {
         updateCustomMaps();
     }
 
-    @Override
-    public int mapCount() {
-        return MAP_COUNT;
-    }
-
     public void setMapSelectionMode(MapSelectionMode mapSelectionMode) {
         this.mapSelectionMode = checkNotNull(mapSelectionMode);
         Logger.info("Map selection mode is now {}", mapSelectionMode);

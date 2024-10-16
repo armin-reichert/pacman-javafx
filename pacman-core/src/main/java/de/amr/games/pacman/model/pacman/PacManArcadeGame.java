@@ -133,11 +133,6 @@ public class PacManArcadeGame extends GameModel {
     }
 
     @Override
-    public int mapCount() {
-        return 1;
-    }
-
-    @Override
     public int mapNumberByLevelNumber(int levelNumber) {
         return 1;
     }
