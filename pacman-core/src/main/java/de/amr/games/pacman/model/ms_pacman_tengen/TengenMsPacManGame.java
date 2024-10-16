@@ -26,11 +26,6 @@ import static de.amr.games.pacman.lib.Globals.*;
 /**
  * Ms. Pac-Man Tengen game.
  *
- * Currently, this is a copy of the Ms. Pac-Man Arcade game with the Tengen mazes.
- * <p>
- * TODO: how does the ghost behaviour in Tengen differ from the Arcade game?
- * How can they handle non-Arcade maze structures?
- *
  * @author Armin Reichert
  */
 public class TengenMsPacManGame extends GameModel {
@@ -44,14 +39,13 @@ public class TengenMsPacManGame extends GameModel {
     //TODO Clarify map order/colors in eacg category
     static final int ARCADE_MAP_COUNT = 9;
     static final int NON_ARCADE_MAP_COUNT = 37;
-    static final int MAP_COUNT = ARCADE_MAP_COUNT + NON_ARCADE_MAP_COUNT;
 
     static final String MAPS_ROOT = "/de/amr/games/pacman/maps/tengen/";
     static final String ARCADE_MAP_PATTERN      = MAPS_ROOT + "arcade/map%02d.world";
     static final String NON_ARCADE_MAP_PATTERN  = MAPS_ROOT + "non_arcade/map%02d.world";
 
     /**
-     * Got this sequence from YouTube video (https://www.youtube.com/watch?v=cD0oGudVpbw).
+     * From this <a href="https://www.youtube.com/watch?v=cD0oGudVpbw">YouTube video</a>.
      */
     // TODO: need real data!
     private static List<WorldMap> miniMaps(List<WorldMap> nonArcadeMaps) {
@@ -208,13 +202,6 @@ public class TengenMsPacManGame extends GameModel {
         BONUS_VALUE_FACTORS[BONUS_HAND]          = 80;
         BONUS_VALUE_FACTORS[BONUS_RING]          = 90;
         BONUS_VALUE_FACTORS[BONUS_FLOWER]        = 100;
-    }
-
-    private static GameWorld createWorld(WorldMap map) {
-        var world = new GameWorld(map);
-        Vector2i houseTopLeftTile = map.terrain().getTileProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, v2i(10, 15));
-        world.createArcadeHouse(houseTopLeftTile.x(), houseTopLeftTile.y());
-        return world;
     }
 
     private final List<WorldMap> arcadeMaps;
@@ -379,8 +366,6 @@ public class TengenMsPacManGame extends GameModel {
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
         // TODO for now provide a Level object such that all code that relies on one works
-
-        // That's game level #1 in Pac-Man
         currentLevelData = new GameLevel( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0);
     }
 
@@ -477,6 +462,15 @@ public class TengenMsPacManGame extends GameModel {
         bonus.setEdible(TickTimer.INDEFINITE);
         publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
     }
+
+    private GameWorld createWorld(WorldMap map) {
+        var world = new GameWorld(map);
+        Vector2i houseTopLeftTile = map.terrain().getTileProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, v2i(10, 15));
+        world.createArcadeHouse(houseTopLeftTile.x(), houseTopLeftTile.y());
+        return world;
+    }
+
+
 
     /**
      * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
