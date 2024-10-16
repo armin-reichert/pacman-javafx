@@ -29,60 +29,16 @@ import static de.amr.games.pacman.lib.Globals.*;
 /**
  * Ms. Pac-Man Tengen game.
  *
+ * Currently, this is a copy of the Ms. Pac-Man Arcade game with the Tengen mazes.
+ * <p>
+ * TODO: how does the ghost behaviour in Tengen differ from the Arcade game?
+ * How can they handle non-Arcade maze structures?
+ *
  * @author Armin Reichert
  */
 public class TengenMsPacManGame extends GameModel {
 
-    // see https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/Data/PlayerAndGhostSpeeds.asm
-    // "the way the coordinates are handled are 1px = 32 subunits, so if speed is 4, the entity will move 1 pixel in 8 frames."
-    // Value 1 therefore corresponds to 1/32 pixels/tick
-
-    static final byte BOOSTER_INCREMENT = 16;
-
-    static float pacBaseSpeed(int levelNumber) {
-        return 1/32f * switch (levelNumber) {
-            case 1,2,3,4 -> 32;
-            case 5,6,7,8 -> 36;
-            case 9,10,11,12 -> 36;
-            case 13,14,15,16 -> 40;
-            case 17,18,19,20 -> 39;
-            case 21,22,23,24 -> 38;
-            case 25,26,27,28 -> 37;
-            case 29,30,31,32 -> 36;
-            // only accessible with cheats:
-            case 33,34,35,36 -> 35;
-            case 37,38,39,40 -> 34;
-            case 41,42,43,44 -> 32;
-            case 45,46,47,48 -> 31;
-            case 49,50,51,52 -> 30;
-            default -> 28;
-        };
-    };
-
-    static float pacBaseSpeedDiff(Difficulty difficulty) {
-        return 1/32f * switch (difficulty) { case EASY -> -4; case NORMAL -> 0; case HARD -> 12; case CRAZY -> 24; };
-    }
-
-    static float ghostBaseSpeed(int levelNumber) {
-        return 1/32f * switch (levelNumber) {
-            case 1,2,3,4 -> 24;
-            case 5  -> 32;
-            case 6  -> 33;
-            case 7  -> 34;
-            case 8  -> 35;
-            case 9  -> 36;
-            case 10 -> 37;
-            case 11 -> 38;
-            case 12 -> 39;
-            default -> 40;
-        };
-    }
-
-    static float ghostSpeedDiff(Difficulty difficulty) {
-        return switch (difficulty) {
-            case EASY -> -8; case NORMAL -> 0; case HARD -> 16; case CRAZY -> 32;
-        } / 32f;
-    }
+    static final float BOOSTER_INCREMENT = 0.5f;
 
     // Ms. Pac-Man (Tengen) game specific animation IDs
     public static final String ANIM_PAC_MUNCHING_BOOSTER = "munching_booster";
@@ -413,33 +369,8 @@ public class TengenMsPacManGame extends GameModel {
                 levelCounter.add((byte) (number - 1));
             }
         }
-        setActorsBaseSpeed();
-    }
-
-    @Override
-    protected void setActorsBaseSpeed() {
-        pac.setBaseSpeed(pacBaseSpeed(startingLevel) + pacBaseSpeedDiff(difficulty));
-        ghosts().forEach(ghost -> ghost.setBaseSpeed(ghostBaseSpeed(startingLevel) + ghostSpeedDiff(difficulty)));
         if (boosterMode == BoosterMode.ALWAYS_ON) {
-            setPacBoosterActive(true);
-        }
-    }
-
-    public void setPacBoosterActive(boolean state) {
-        if (boosterMode == BoosterMode.OFF) {
-            Logger.error("Cannot activate booster when mode is {}", boosterMode);
-            return;
-        }
-        if (boosterActive != state) {
-            boosterActive = state;
-            if (boosterActive) {
-                pac.setBaseSpeed(pac.baseSpeed() + BOOSTER_INCREMENT / 32f);
-                pac.selectAnimation(ANIM_PAC_MUNCHING_BOOSTER);
-            } else {
-                pac.setBaseSpeed(pac.baseSpeed() - BOOSTER_INCREMENT / 32f);
-                pac.selectAnimation(ANIM_PAC_MUNCHING);
-            }
-            Logger.info("Ms. Pac-Man base speed set to {0.00} px/s", pac.baseSpeed());
+            activateBooster(true);
         }
     }
 
@@ -551,5 +482,13 @@ public class TengenMsPacManGame extends GameModel {
             boolean chase = isChasingPhase(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
             ghost.followTarget(chase ? chasingTarget(ghost) : scatterTarget(ghost), speed);
         }
+    }
+
+    public void activateBooster(boolean on) {
+        boosterActive = on;
+        float baseSpeed = BASE_SPEED_IN_PX_PER_SEC / FPS + (on ? BOOSTER_INCREMENT : 0);
+        pac.setBaseSpeed(baseSpeed);
+        pac.selectAnimation(on ? ANIM_PAC_MUNCHING_BOOSTER : ANIM_PAC_MUNCHING);
+        Logger.info("Ms. Pac-Man base speed set to {0.00} px/s", baseSpeed);
     }
 }

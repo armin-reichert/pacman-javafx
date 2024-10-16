@@ -73,10 +73,6 @@ public abstract class Creature extends Entity {
         baseSpeed = pixelsPerTick;
     }
 
-    public float baseSpeed() {
-        return baseSpeed;
-    }
-
     /**
      * @return readable name, used for UI and logging
      */
