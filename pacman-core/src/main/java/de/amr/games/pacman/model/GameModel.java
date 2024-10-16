@@ -108,8 +108,6 @@ public abstract class GameModel {
     protected byte                 numGhostsKilledInLevel;
     protected byte                 nextBonusIndex; // -1=no bonus, 0=first, 1=second
 
-    protected boolean              overflowBug = true;
-
     protected Pac                  pac;
     protected Ghost[]              ghosts;
     protected Bonus                bonus;
@@ -382,21 +380,25 @@ public abstract class GameModel {
         return world.ghostScatterTile(ghost.id());
     }
 
-    /*
-     * Regarding the overflow bug, see http://www.donhodges.com/pacman_pinky_explanation.htm
-     */
     protected Vector2i chasingTarget(Ghost ghost) {
         return switch (ghost.id()) {
             // Blinky: attacks Pac-Man directly
             case RED_GHOST -> pac.tile();
             // Pinky: ambushes Pac-Man
-            case PINK_GHOST -> pac.tilesAhead(4, overflowBug);
+            case PINK_GHOST -> pac.tilesAhead(4, hasOverflowBug());
             // Inky: attacks from opposite side as Blinky
-            case CYAN_GHOST -> pac.tilesAhead(2, overflowBug).scaled(2).minus(ghost(RED_GHOST).tile());
+            case CYAN_GHOST -> pac.tilesAhead(2, hasOverflowBug()).scaled(2).minus(ghost(RED_GHOST).tile());
             // Clyde/Sue: attacks directly but retreats if Pac is near
             case ORANGE_GHOST -> ghost.tile().euclideanDistance(pac.tile()) < 8 ? scatterTarget(ghost) : pac.tile();
             default -> throw GameException.illegalGhostID(ghost.id());
         };
+    }
+
+    /**
+     * See this <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">explanation</a>.
+     */
+    protected boolean hasOverflowBug() {
+        return true;
     }
 
     public GameWorld world() {
