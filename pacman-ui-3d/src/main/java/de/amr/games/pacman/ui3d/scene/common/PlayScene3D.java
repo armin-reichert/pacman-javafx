@@ -156,7 +156,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void update() {
         var game = context.game();
-        if (game.level().isEmpty() || game.world() == null) {
+        if (game.levelSettings().isEmpty() || game.world() == null) {
             Logger.error("Cannot update 3D play scene, no game level exists!");
             return;
         }
@@ -494,7 +494,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void playLevelCompleteAnimation() {
-        int numFlashes = context.game().level().orElseThrow().numFlashes();
+        int numFlashes = context.game().levelSettings().orElseThrow().numFlashes();
         boolean intermission = context.game().intermissionNumber(context.game().levelNumber()) != 0;
         Animation animation = intermission ? levelCompleteAnimationBeforeIntermission(numFlashes) : levelCompleteAnimation(numFlashes);
         animation.setDelay(Duration.seconds(1.0));

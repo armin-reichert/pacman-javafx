@@ -147,7 +147,7 @@ public class Ghost extends Creature implements AnimatedEntity {
      * @param level game level
      */
     private void roamFrightened(GameLevel level) {
-        roam(world.isTunnel(tile()) ? level.ghostSpeedTunnelPct() : level.ghostSpeedFrightenedPct());
+        roam(world.isTunnel(tile()) ? level.ghostSpeedTunnelPercentage() : level.ghostSpeedFrightenedPercentage());
     }
 
     /**
@@ -372,7 +372,7 @@ public class Ghost extends Creature implements AnimatedEntity {
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
     private void updateStateFrightened(GameModel game) {
-        game.level().ifPresent(level -> {
+        game.levelSettings(game.levelNumber()).ifPresent(level -> {
             roamFrightened(level);
             updateFrightenedAnimation(game);
         });

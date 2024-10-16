@@ -8,6 +8,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -17,6 +18,7 @@ import de.amr.games.pacman.model.pacman_xxl.PacManXXLGame;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Game states of the Pac-Man game variants.
@@ -159,7 +161,8 @@ public enum GameState implements FsmState<GameModel> {
             } else if (timer.atSecond(1.5)) {
                 game.ghosts().forEach(Ghost::hide);
             } else if (timer.atSecond(2)) {
-                flashCount = 2 * game.level().orElseThrow().numFlashes();
+                Optional<GameLevel> levelSettings = game.levelSettings(game.levelNumber());
+                flashCount = levelSettings.map(gameLevel -> 2 * gameLevel.numFlashes()).orElse(0);
                 setProperty("mazeFlashing", true);
                 game.blinking().setStartPhase(Pulse.OFF);
                 game.blinking().restart(flashCount);
@@ -332,8 +335,8 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            if (game.level().isEmpty()) {
-                return;
+            if (game.levelNumber() == 0) {
+                return; // TODO check this
             }
             if (game.levelNumber() > lastLevelNumber) {
                 GameController.it().restart(GameState.BOOT);
@@ -369,7 +372,9 @@ public enum GameState implements FsmState<GameModel> {
             } else if (timer().atSecond(9.5)) {
                 setProperty("mazeFlashing", true);
                 game.blinking().setStartPhase(Pulse.OFF);
-                game.blinking().restart(2 * game.level().get().numFlashes());
+                Optional<GameLevel> level = game.levelSettings(game.levelNumber());
+                int numFlashes = level.isPresent() ? level.get().numFlashes() : 0;
+                game.blinking().restart(2 * numFlashes);
             } else if (timer().atSecond(12.0)) {
                 timer().restartIndefinitely();
                 game.pac().freeze();

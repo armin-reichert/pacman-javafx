@@ -16,7 +16,6 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
-import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -63,7 +62,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        if (context.game().level().isEmpty()) {
+        if (context.game().levelSettings().isEmpty()) {
             Logger.warn("Cannot update PlayScene2D: no game level exists");
             return;
         }
