@@ -203,15 +203,11 @@ public abstract class GameModel {
         pac = createPac();
         pac.setWorld(world);
         pac.reset();
-        pac.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
 
         ghosts = createGhosts();
         ghosts().forEach(ghost -> {
             ghost.setWorld(world);
             ghost.reset();
-            ghost.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
-            ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME * SEC_PER_TICK);
-            ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE * SEC_PER_TICK);
             ghost.setRevivalPosition(world.ghostPosition(ghost.id()));
         });
         ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
@@ -316,6 +312,7 @@ public abstract class GameModel {
     public void startNewGame() {
         reset();
         createLevel(1);
+        setActorsBaseSpeed();
     }
 
     public void createLevel(int levelNumber) {
@@ -332,8 +329,18 @@ public abstract class GameModel {
         clearLevel();
         demoLevel = true;
         buildDemoLevel();
+        setActorsBaseSpeed();
         Logger.info("Demo Level created");
         publishGameEvent(GameEventType.LEVEL_CREATED);
+    }
+
+    protected void setActorsBaseSpeed() {
+        pac.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
+        ghosts().forEach(ghost -> {
+            ghost.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * SEC_PER_TICK);
+            ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME * SEC_PER_TICK);
+            ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE * SEC_PER_TICK);
+        });
     }
 
     protected void updateLevelCounter() {
