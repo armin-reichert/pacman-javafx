@@ -8,7 +8,6 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
@@ -226,10 +225,12 @@ public class PacManArcadeGame extends GameModel {
 
     protected void ghostHuntingBehaviour(Ghost ghost) {
         boolean chasing = isChasingPhase(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
-        ghost.followTarget(chasing ? chasingTarget(ghost) : scatterTarget(ghost), huntingSpeedPct(ghost));
+        Vector2i targetTile = chasing ? chasingTarget(ghost) : scatterTarget(ghost);
+        float speed = 0.01f * huntingSpeedPercentage(ghost) * ghost.baseSpeed();
+        ghost.followTarget(targetTile, speed);
     }
 
-    private byte huntingSpeedPct(Ghost ghost) {
+    private byte huntingSpeedPercentage(Ghost ghost) {
         GameLevel level = levelData(levelNumber);
         if (world.isTunnel(ghost.tile())) {
             return level.ghostSpeedTunnelPct();

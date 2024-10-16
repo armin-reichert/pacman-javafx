@@ -305,7 +305,7 @@ public class MsPacManArcadeGame extends GameModel {
      * only the scatter target of Blinky and Pinky would have been affected. Who knows?
      */
     private void ghostHuntingBehaviour(Ghost ghost) {
-        byte speed = huntingSpeedPct(ghost);
+        float speed = 0.01f * huntingSpeedPercentage(ghost) * ghost.baseSpeed();
         if (huntingPhaseIndex == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
             ghost.roam(speed);
         } else {
@@ -314,7 +314,7 @@ public class MsPacManArcadeGame extends GameModel {
         }
     }
 
-    private byte huntingSpeedPct(Ghost ghost) {
+    private byte huntingSpeedPercentage(Ghost ghost) {
         GameLevel level = levelData(levelNumber);
         if (world.isTunnel(ghost.tile())) {
             return level.ghostSpeedTunnelPct();

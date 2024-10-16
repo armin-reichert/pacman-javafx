@@ -141,33 +141,30 @@ public class Ghost extends Creature implements AnimatedEntity {
     }
 
     /**
-     * Ig frightened, the ghost roams through the maze with frightened speed, except in tunnels,
-     * where he moves even slower.
-     *
-     * @param level game level
-     */
-    private void roamFrightened(GameLevel level) {
-        roam(world.isTunnel(tile()) ? level.ghostSpeedTunnelPct() : level.ghostSpeedFrightenedPct());
-    }
-
-    /**
      * Lets the ghost randomly roam through the world.
      *
-     * @param speedPct the relative speed (in percentage of base speed)
+     * @param speed the speed (in pixels/tick)
      */
-    public void roam(byte speedPct) {
+    public void roam(float speed) {
         Vector2i currentTile = tile();
         if (!world.isPortalAt(currentTile) && (isNewTileEntered() || !moveInfo.moved)) {
-            Direction dir = pseudoRandomDirection();
-            //TODO: this is a critical code location because map with dead-ends can lead to an infinite loop here!
-            while (dir == moveDir().opposite()
-                || !canAccessTile(currentTile.plus(dir.vector()))) {
-                dir = dir.nextClockwise();
-            }
-            setWishDir(dir);
+            setWishDir(determineNextDirection(currentTile));
         }
-        setSpeedPct(speedPct);
+        setSpeed(speed);
         tryMoving();
+    }
+
+    // try a random direction towards an accessible tile, do not turn back unless there is no other way
+    private Direction determineNextDirection(Vector2i currentTile) {
+        Direction dir = pseudoRandomDirection();
+        int turns = 0;
+        while (dir == moveDir.opposite() || !canAccessTile(currentTile.plus(dir.vector()))) {
+            dir = dir.nextClockwise();
+            if (++turns > 4) {
+                return moveDir.opposite();  // avoid endless loop
+            }
+        }
+        return dir;
     }
 
     private Direction pseudoRandomDirection() {
@@ -373,7 +370,9 @@ public class Ghost extends Creature implements AnimatedEntity {
      */
     private void updateStateFrightened(GameModel game) {
         game.currentLevelData().ifPresent(level -> {
-            roamFrightened(level);
+            byte percentage = world.isTunnel(tile()) ? level.ghostSpeedTunnelPct() : level.ghostSpeedFrightenedPct();
+            float speed = 0.01f * percentage * baseSpeed;
+            roam(speed);
             updateFrightenedAnimation(game);
         });
     }

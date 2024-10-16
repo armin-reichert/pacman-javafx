@@ -485,17 +485,18 @@ public class TengenMsPacManGame extends GameModel {
      * only the scatter target of Blinky and Pinky would have been affected. Who knows?
      */
     private void ghostHuntingBehaviour(Ghost ghost) {
-        byte speed = huntingSpeedPct(ghost);
+        float speed = huntingSpeed(ghost);
         if (huntingPhaseIndex == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
             ghost.roam(speed);
         } else {
             boolean chase = isChasingPhase(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
-            ghost.followTarget(chase ? chasingTarget(ghost) : scatterTarget(ghost), speed);
+            Vector2i targetTile = chase ? chasingTarget(ghost) : scatterTarget(ghost);
+            ghost.followTarget(targetTile, speed);
         }
     }
 
-    private byte huntingSpeedPct(Ghost ghost) {
-        return 100; // TODO
+    private float huntingSpeed(Ghost ghost) {
+        return 1; // TODO
     }
 
     public void activateBooster(boolean on) {

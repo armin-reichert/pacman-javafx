@@ -66,6 +66,10 @@ public abstract class Creature extends Entity {
         return moveInfo;
     }
 
+    public float baseSpeed() {
+        return baseSpeed;
+    }
+
     /**
      * @param pixelsPerTick number of pixels the creature moves in one tick
      */
@@ -225,13 +229,13 @@ public abstract class Creature extends Entity {
     /**
      * Sets the absolute speed and updates the velocity vector.
      *
-     * @param pixelSpeed speed in pixels
+     * @param speed speed in pixels/tick
      */
-    public void setSpeed(float pixelSpeed) {
-        if (pixelSpeed < 0) {
-            throw new IllegalArgumentException("Negative pixel speed: " + pixelSpeed);
+    public void setSpeed(float speed) {
+        if (speed < 0) {
+            throw new IllegalArgumentException("Negative pixel speed: " + speed);
         }
-        setVelocity(pixelSpeed == 0 ? Vector2f.ZERO : moveDir.vector().toVector2f().scaled(pixelSpeed));
+        setVelocity(speed == 0 ? Vector2f.ZERO : moveDir.vector().toVector2f().scaled(speed));
     }
 
     public boolean isNewTileEntered() {
@@ -274,10 +278,10 @@ public abstract class Creature extends Entity {
      * Lets a creature follow the given target tile.
      *
      * @param targetTile target tile this creature tries to reach
-     * @param speedPct relative speed (in percentage of base speed)
+     * @param speed speed (in pixels/tick)
      */
-    public void followTarget(Vector2i targetTile, byte speedPct) {
-        setSpeedPct(speedPct);
+    public void followTarget(Vector2i targetTile, float speed) {
+        setSpeed(speed);
         setTargetTile(targetTile);
         navigateTowardsTarget();
         tryMoving();
