@@ -58,9 +58,6 @@ public abstract class GameModel {
     /** Game loop frequency, ticks per second. */
     public static final float TICKS_PER_SECOND = 60;
 
-    /** Maximum number of coins, as in MAME. */
-    public static final byte    POINTS_PELLET = 10;
-    public static final byte    POINTS_ENERGIZER = 50;
     public static final short   POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
     public static final short   EXTRA_LIFE_SCORE = 10_000;
     public static final byte    LEVEL_COUNTER_MAX_SIZE = 7;
@@ -535,8 +532,8 @@ public abstract class GameModel {
                 eventLog.energizerFound = true;
                 pac.setRestingTicks(RESTING_TICKS_ENERGIZER);
                 victims.clear();
-                scorePoints(POINTS_ENERGIZER);
-                Logger.info("Scored {} points for eating energizer", POINTS_ENERGIZER);
+                scorePoints(energizerValue());
+                Logger.info("Scored {} points for eating energizer", energizerValue());
                 if (pacPowerSeconds() > 0) {
                     eventLog.pacGetsPower = true;
                     huntingTimer.stop();
@@ -550,7 +547,7 @@ public abstract class GameModel {
                 }
             } else {
                 pac.setRestingTicks(RESTING_TICKS_PELLET);
-                scorePoints(POINTS_PELLET);
+                scorePoints(pelletValue());
             }
             gateKeeper.onPelletOrEnergizerEaten(this);
             world.eatFoodAt(pacTile);
@@ -564,6 +561,10 @@ public abstract class GameModel {
             pac.starve();
         }
     }
+
+    protected int pelletValue() { return 10; }
+
+    protected int energizerValue() { return 50; }
 
     private void updatePacPower() {
         powerTimer.tick();
