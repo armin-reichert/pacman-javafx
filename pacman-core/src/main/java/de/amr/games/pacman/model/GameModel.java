@@ -255,12 +255,6 @@ public abstract class GameModel {
         }
     }
 
-    public File customMapDir() {
-        return new File(userDir, "maps");
-    }
-
-    public void updateCustomMaps() {}
-
     public void removeWorld() {
         world = null;
     }

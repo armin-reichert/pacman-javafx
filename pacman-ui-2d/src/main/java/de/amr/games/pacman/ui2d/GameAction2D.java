@@ -149,12 +149,20 @@ public enum GameAction2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             super.execute(context);
-            context.currentGameScene().ifPresent(GameScene::end);
-            context.sounds().stopAll();
-            context.gameClock().stop();
-            EditorPage editorPage = context.getOrCreateEditorPage();
-            editorPage.startEditor(context.game().world().map());
-            context.selectPage(editorPage);
+            if (context.game().world() == null) {
+                Logger.error("Map editor cannot be opened because no world is available");
+                return;
+            }
+            if (context.gameVariant() == GameVariant.PACMAN_XXL) {
+                context.currentGameScene().ifPresent(GameScene::end);
+                context.sounds().stopAll();
+                context.gameClock().stop();
+                EditorPage editorPage = context.getOrCreateEditorPage();
+                editorPage.startEditor(context.game().world().map());
+                context.selectPage(editorPage);
+            } else {
+                context.showFlashMessage("This game variant does not support custom maps");
+            }
         }
     },
 

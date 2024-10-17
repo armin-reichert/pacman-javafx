@@ -439,15 +439,18 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public EditorPage getOrCreateEditorPage() {
-        if (editorPage == null) {
-            editorPage = new EditorPage(stage, this, game().customMapDir());
-            editorPage.setCloseAction(editor -> {
-                editor.stop();
-                editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> stage.titleProperty().bind(stageTitleBinding()));
-                game().updateCustomMaps();
-                GameAction2D.BOOT.execute(this);
-                selectStartPage();
-            });
+        if (gameVariant() == GameVariant.PACMAN_XXL) {
+            PacManXXLGame xxlGame = (PacManXXLGame) game();
+            if (editorPage == null) {
+                editorPage = new EditorPage(stage, this, xxlGame.customMapDir());
+                editorPage.setCloseAction(editor -> {
+                    editor.stop();
+                    editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> stage.titleProperty().bind(stageTitleBinding()));
+                    xxlGame.updateCustomMaps();
+                    GameAction2D.BOOT.execute(this);
+                    selectStartPage();
+                });
+            }
         }
         return editorPage;
     }
