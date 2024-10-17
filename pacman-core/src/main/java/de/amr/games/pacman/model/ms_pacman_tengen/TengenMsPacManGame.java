@@ -423,12 +423,6 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     @Override
-    protected void initPacAnimation() {
-        pac.selectAnimation(isBoosterActive() ? ANIM_PAC_MUNCHING_BOOSTER : GameModel.ANIM_PAC_MUNCHING);
-        pac.animations().ifPresent(Animations::resetCurrentAnimation);
-    }
-
-    @Override
     protected Ghost[] createGhosts() {
         return new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.sue() };
     }
@@ -458,6 +452,16 @@ public class TengenMsPacManGame extends GameModel {
             ghost.setSpeedReturningHome(2 * ghostBaseSpeed); // TODO check
             ghost.setSpeedInsideHouse(0.5f); // TODO check
         }
+    }
+
+    @Override
+    protected void initActorAnimations() {
+        pac.selectAnimation(isBoosterActive() ? ANIM_PAC_MUNCHING_BOOSTER : GameModel.ANIM_PAC_MUNCHING);
+        pac.animations().ifPresent(Animations::resetCurrentAnimation);
+        ghosts().forEach(ghost -> {
+            ghost.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
+            ghost.resetAnimation();
+        });
     }
 
     public void activateBooster() {

@@ -261,6 +261,16 @@ public abstract class GameModel {
         }
     }
 
+    public File customMapDir() {
+        return new File(userDir, "maps");
+    }
+
+    public void updateCustomMaps() {}
+
+    public void removeWorld() {
+        world = null;
+    }
+
     protected void createWorldAndPopulation(WorldMap map) {
         world = createWorld(map);
 
@@ -296,16 +306,6 @@ public abstract class GameModel {
         publishGameEvent(GameEventType.LEVEL_STARTED);
     }
 
-    public void removeWorld() {
-        world = null;
-    }
-
-    public File customMapDir() {
-        return new File(userDir, "maps");
-    }
-
-    public void updateCustomMaps() {}
-
     /**
      * Sets each guy to his start position and resets him to his initial state. Note that they are all invisible
      * initially!
@@ -314,23 +314,25 @@ public abstract class GameModel {
         pac.reset(); // invisible!
         pac.setPosition(world.pacPosition());
         pac.setMoveAndWishDir(Direction.LEFT);
-        initPacAnimation();
         ghosts().forEach(ghost -> {
             ghost.reset(); // invisible!
             ghost.setPosition(world.ghostPosition(ghost.id()));
             ghost.setMoveAndWishDir(world.ghostDirection(ghost.id()));
             ghost.setState(LOCKED);
-            ghost.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
-            ghost.resetAnimation();
         });
+        initActorAnimations();
         powerTimer.resetIndefinitely();
         blinking.setStartPhase(Pulse.ON); // Energizers are visible when ON
         blinking.reset();
     }
 
-    protected void initPacAnimation() {
+    protected void initActorAnimations() {
         pac.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
         pac.animations().ifPresent(Animations::resetCurrentAnimation);
+        ghosts().forEach(ghost -> {
+            ghost.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
+            ghost.resetAnimation();
+        });
     }
 
     public void showGuys() {
