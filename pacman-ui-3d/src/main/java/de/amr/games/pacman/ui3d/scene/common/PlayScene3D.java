@@ -197,7 +197,7 @@ public class PlayScene3D implements GameScene {
 
         // Sound
         if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
-            int sirenNumber = 1 + context.game().huntingPhaseIndex() / 2;
+            int sirenNumber = 1 + context.game().huntingControl().phaseIndex() / 2;
             context.sounds().selectSiren(sirenNumber);
             context.sounds().playSiren();
         }

@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
+import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
@@ -24,7 +25,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.LEFT;
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
@@ -70,7 +71,6 @@ public abstract class GameModel {
     protected final Pulse          blinking = new Pulse(10, Pulse.OFF);
     protected final byte[]         bonusSymbols = new byte[2];
     protected final List<Byte>     levelCounter = new ArrayList<>();
-    protected final TickTimer      huntingTimer = new TickTimer("HuntingTimer");
     protected final TickTimer      powerTimer = new TickTimer("PacPowerTimer");
     protected final List<Ghost>    victims = new ArrayList<>();
     protected final Score          score = new Score();
@@ -87,7 +87,7 @@ public abstract class GameModel {
     protected int                  initialLives;
     protected int                  lives;
 
-    protected byte                 huntingPhaseIndex;
+    protected HuntingControl       huntingControl;
     protected byte                 numGhostsKilledInLevel;
     protected byte                 nextBonusIndex; // -1=no bonus, 0=first, 1=second
 
@@ -101,6 +101,7 @@ public abstract class GameModel {
     protected GameModel(GameVariant gameVariant, File userDir) {
         this.gameVariant = checkNotNull(gameVariant);
         this.userDir = checkNotNull(userDir);
+        this.huntingControl = new HuntingControl("HuntingControl-" + getClass().getSimpleName());
     }
 
     public abstract boolean canStartNewGame();
@@ -132,8 +133,7 @@ public abstract class GameModel {
     protected void clearLevel() {
         levelNumber = 0;
         levelStartTime = 0;
-        huntingPhaseIndex = 0;
-        huntingTimer.resetIndefinitely();
+        huntingControl.reset(TickTimer.INDEFINITE);
         numGhostsKilledInLevel = 0;
         bonus = null;
         nextBonusIndex = -1;
@@ -159,9 +159,6 @@ public abstract class GameModel {
         return states.length == 0 ? Stream.of(ghosts) : Stream.of(ghosts).filter(ghost -> ghost.inState(states));
     }
 
-    public TickTimer huntingTimer() {
-        return huntingTimer;
-    }
 
     public TickTimer powerTimer() {
         return powerTimer;
@@ -175,34 +172,25 @@ public abstract class GameModel {
         return blinking;
     }
 
-    public void startHuntingPhase(int phaseIndex) {
-        huntingPhaseIndex = checkHuntingPhaseIndex(phaseIndex);
-        huntingTimer.reset(huntingTicks(levelNumber, huntingPhaseIndex));
-        huntingTimer.start();
-        String phaseName = isScatterPhase(huntingPhaseIndex) ? "Scattering" : "Chasing";
-        Logger.info("Hunting phase {} ({}, {} ticks / {} seconds) started. {}",
-            huntingPhaseIndex, phaseName,
-            huntingTimer.duration(), (float) huntingTimer.duration() / GameModel.TICKS_PER_SECOND, huntingTimer);
+    public void startHunting() {
+        huntingControl.startHuntingPhase(0, HuntingControl.PhaseType.SCATTERING,
+            huntingTicks(levelNumber, 0));
     }
 
-    public int huntingPhaseIndex() {
-        return huntingPhaseIndex;
-    }
-
-    public boolean isScatterPhase(int phaseIndex) {
-        return isEven(phaseIndex);
-    }
-
-    public boolean isChasingPhase(int phaseIndex) {
-        return isOdd(phaseIndex);
+    public HuntingControl huntingControl() {
+        return huntingControl;
     }
 
     public Optional<Integer> scatterPhase() {
-        return isScatterPhase(huntingPhaseIndex) ? Optional.of(huntingPhaseIndex / 2) : Optional.empty();
+        return huntingControl.phaseType() == HuntingControl.PhaseType.SCATTERING
+            ? Optional.of(huntingControl.phaseIndex() / 2) //TODO
+            : Optional.empty();
     }
 
     public Optional<Integer> chasingPhase() {
-        return isChasingPhase(huntingPhaseIndex) ? Optional.of(huntingPhaseIndex / 2) : Optional.empty();
+        return huntingControl.phaseType() == HuntingControl.PhaseType.CHASING
+            ? Optional.of(huntingControl.phaseIndex() / 2) //TODO
+            : Optional.empty();
     }
 
     public int levelNumber() {
@@ -464,7 +452,7 @@ public abstract class GameModel {
         bonus().ifPresent(Bonus::setInactive);
         // when cheating, there might still be food
         world.map().food().tiles().forEach(world::registerFoodEatenAt);
-        huntingTimer.stop();
+        huntingControl.stop();
         Logger.info("Hunting timer stopped");
         powerTimer.stop();
         powerTimer.reset(0);
@@ -496,11 +484,15 @@ public abstract class GameModel {
         pac.update(this);
         if (bonus != null) updateBonus();
         updatePacPower();
-        huntingTimer.tick();
+        huntingControl.update();
         ghosts(FRIGHTENED).filter(pac::sameTile).forEach(this::killGhost);
-        if (huntingTimer.hasExpired()) {
-            Logger.info("Hunting timer expired, tick={}", huntingTimer.currentTick());
-            startHuntingPhase(huntingPhaseIndex + 1);
+        if (huntingControl.hasExpired()) {
+            Logger.info("Hunting timer expired, tick={}", huntingControl.currentTick());
+            int nextPhaseIndex = huntingControl.phaseIndex() + 1;
+            huntingControl.startHuntingPhase(nextPhaseIndex,
+                    huntingControl.phaseType() == HuntingControl.PhaseType.SCATTERING
+                        ? HuntingControl.PhaseType.CHASING : HuntingControl.PhaseType.SCATTERING,
+                    huntingTicks(levelNumber, nextPhaseIndex));
             ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
         }
         eventLog.pacKilled = checkPacKilled(pac.isImmune());
@@ -533,7 +525,7 @@ public abstract class GameModel {
         victims.clear(); // ghosts eaten using this energizer
         if (pacPowerSeconds() > 0) {
             eventLog.pacGetsPower = true;
-            huntingTimer.stop();
+            huntingControl.stop();
             powerTimer.restartSeconds(pacPowerSeconds());
             Logger.info("Hunting paused, power timer restarted, duration={} ticks", powerTimer.duration());
             ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
@@ -556,7 +548,7 @@ public abstract class GameModel {
             powerTimer.reset(0);
             Logger.info("Power timer stopped and reset to zero");
             victims.clear();
-            huntingTimer.start();
+            huntingControl.start();
             Logger.info("Hunting timer started");
             ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
             eventLog.pacLostPower = true;

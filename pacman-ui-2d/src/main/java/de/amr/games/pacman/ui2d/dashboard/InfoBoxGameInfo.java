@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
+import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameWorld;
@@ -58,19 +59,19 @@ public class InfoBoxGameInfo extends InfoBox {
 
     private String fmtHuntingPhase(GameLevel level) {
         var game = context.game();
-        var huntingTimer = game.huntingTimer();
+        HuntingControl huntingControl = game.huntingControl();
         return "%s #%d%s".formatted(
-            game.isChasingPhase(game.huntingPhaseIndex()) ? "Chasing" : "Scattering",
+            huntingControl.phaseType().name(),
             game.scatterPhase().orElse(game.chasingPhase().orElse(42)),
-            huntingTimer.isStopped() ? " STOPPED" : "");
+            huntingControl.isStopped() ? " STOPPED" : "");
     }
 
     private String fmtHuntingTicksRunning(GameLevel level) {
-        return "Running:   %d".formatted(context.game().huntingTimer().currentTick());
+        return "Running:   %d".formatted(context.game().huntingControl().currentTick());
     }
 
     private String fmtHuntingTicksRemaining(GameLevel level) {
-        return "Remaining: %s".formatted(ticksToString(context.game().huntingTimer().remaining()));
+        return "Remaining: %s".formatted(ticksToString(context.game().huntingControl().remaining()));
     }
 
     private String fmtPelletCount(GameWorld world) {

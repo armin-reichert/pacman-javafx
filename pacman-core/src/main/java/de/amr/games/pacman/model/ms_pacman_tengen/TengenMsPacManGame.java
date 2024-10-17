@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model.ms_pacman_tengen;
 
+import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.NavPoint;
@@ -663,7 +664,7 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public void onPacDying() {
-        huntingTimer.stop();
+        huntingControl.stop();
         Logger.info("Hunting timer stopped");
         powerTimer.stop();
         powerTimer.reset(0);
@@ -684,11 +685,11 @@ public class TengenMsPacManGame extends GameModel {
      */
     private void ghostHuntingBehaviour(Ghost ghost) {
         float speed = huntingSpeed(ghost);
-        if (huntingPhaseIndex == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
+        if (huntingControl.phaseIndex() == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
             ghost.roam(speed);
         } else {
-            boolean chase = isChasingPhase(huntingPhaseIndex);
-            Vector2i targetTile = chase ? chasingTarget(ghost) : scatterTarget(ghost);
+            boolean chasing = huntingControl.phaseType() == HuntingControl.PhaseType.CHASING;
+            Vector2i targetTile = chasing ? chasingTarget(ghost) : scatterTarget(ghost);
             ghost.followTarget(targetTile, speed);
         }
     }

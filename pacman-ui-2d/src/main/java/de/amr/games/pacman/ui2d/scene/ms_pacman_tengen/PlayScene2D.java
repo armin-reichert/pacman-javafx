@@ -9,7 +9,6 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
@@ -26,8 +25,7 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 
@@ -73,7 +71,7 @@ public class PlayScene2D extends GameScene2D {
 
     private void updatePlaySceneSound() {
         if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
-            int sirenNumber = 1 + context.game().huntingPhaseIndex() / 2;
+            int sirenNumber = 1 + context.game().huntingControl().phaseIndex() / 2;
             context.sounds().selectSiren(sirenNumber);
             context.sounds().playSiren();
         }

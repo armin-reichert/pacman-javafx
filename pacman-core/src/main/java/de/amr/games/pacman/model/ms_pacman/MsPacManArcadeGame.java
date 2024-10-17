@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.ms_pacman;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
@@ -301,7 +302,7 @@ public class MsPacManArcadeGame extends GameModel {
 
     @Override
     public void onPacDying() {
-        huntingTimer.stop();
+        huntingControl.stop();
         Logger.info("Hunting timer stopped");
         powerTimer.stop();
         powerTimer.reset(0);
@@ -421,11 +422,12 @@ public class MsPacManArcadeGame extends GameModel {
      * only the scatter target of Blinky and Pinky would have been affected. Who knows?
      */
     private void ghostHuntingBehaviour(Ghost ghost) {
-        if (huntingPhaseIndex == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
+        if (huntingControl.phaseIndex() == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
             float speed = huntingSpeed(ghost);
             ghost.roam(speed);
         } else {
-            boolean chasing = isChasingPhase(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
+            boolean chasing = huntingControl.phaseType() == HuntingControl.PhaseType.CHASING
+                || ghost.id() == RED_GHOST && cruiseElroy > 0;
             Vector2i targetTile = chasing ? chasingTarget(ghost) : scatterTarget(ghost);
             float speed = huntingSpeed(ghost);
             ghost.followTarget(targetTile, speed);

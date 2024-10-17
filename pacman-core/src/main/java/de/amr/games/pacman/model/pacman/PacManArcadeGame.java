@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.pacman;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2f;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
+import static de.amr.games.pacman.controller.HuntingControl.checkHuntingPhaseIndex;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
@@ -312,7 +314,7 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     public void onPacDying() {
-        huntingTimer.stop();
+        huntingControl.stop();
         Logger.info("Hunting timer stopped");
         powerTimer.stop();
         powerTimer.reset(0);
@@ -353,7 +355,8 @@ public class PacManArcadeGame extends GameModel {
     }
 
     protected void ghostHuntingBehaviour(Ghost ghost) {
-        boolean chasing = isChasingPhase(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
+        boolean chasing = huntingControl.phaseType() == HuntingControl.PhaseType.CHASING
+            || ghost.id() == RED_GHOST && cruiseElroy > 0;
         Vector2i targetTile = chasing ? chasingTarget(ghost) : scatterTarget(ghost);
         float speed = huntingSpeed(ghost);
         ghost.followTarget(targetTile, speed);

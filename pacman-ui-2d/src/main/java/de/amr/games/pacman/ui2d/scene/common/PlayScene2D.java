@@ -42,15 +42,6 @@ public class PlayScene2D extends GameScene2D {
         GameAction2D.CHEAT_KILL_GHOSTS
     );
 
-    private static final List<GameAction> TENGEN_ACTIONS = List.of(
-        GameAction2D.TENGEN_TOGGLE_PAC_BOOSTER,
-        GameAction2D.TENGEN_QUIT_PLAY_SCENE,
-        GameAction2D.CHEAT_EAT_ALL,
-        GameAction2D.CHEAT_ADD_LIVES,
-        GameAction2D.CHEAT_NEXT_LEVEL,
-        GameAction2D.CHEAT_KILL_GHOSTS
-    );
-
     @Override
     public void init() {
     }
@@ -82,7 +73,7 @@ public class PlayScene2D extends GameScene2D {
 
     private void updatePlaySceneSound() {
         if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
-            int sirenNumber = 1 + context.game().huntingPhaseIndex() / 2;
+            int sirenNumber = 1 + context.game().huntingControl().phaseIndex() / 2;
             context.sounds().selectSiren(sirenNumber);
             context.sounds().playSiren();
         }
