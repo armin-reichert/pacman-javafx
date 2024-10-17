@@ -213,7 +213,7 @@ public class TengenMsPacManGame extends GameModel {
         int units = 0x20; // default: 32
         if      (inRange(levelNumber, 1, 4))  { units = 0x18; }
         else if (inRange(levelNumber, 5, 12)) { units = 0x20 + (levelNumber - 5); } // 0x20-0x27
-        else if (levelNumber >= 13)                    { units = 0x28;}
+        else if (levelNumber >= 13)           { units = 0x28;}
 
         return units / 32f;
     }
