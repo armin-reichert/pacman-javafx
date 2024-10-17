@@ -67,9 +67,6 @@ public class GameAssets2D extends AssetStorage {
 
         assets.store("startpage.arrow.left",            rm.loadImage("graphics/icons/arrow-left.png"));
         assets.store("startpage.arrow.right",           rm.loadImage("graphics/icons/arrow-right.png"));
-        assets.store("startpage.button.bgColor",        Color.rgb(0, 155, 252, 0.6));
-        assets.store("startpage.button.color",          Color.WHITE);
-        assets.store("startpage.button.font",           rm.loadFont("fonts/emulogic.ttf", 32));
 
         assets.store("wallpaper.color",                 Color.rgb(72, 78, 135));
 

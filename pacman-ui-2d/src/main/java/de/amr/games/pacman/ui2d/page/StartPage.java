@@ -47,9 +47,12 @@ public class StartPage extends StackPane implements Page {
     }
 
     private static Node createPlayButton(String buttonText, AssetStorage assets) {
+        Color bgColor = Color.rgb(0, 155, 252, 0.7);
+        Color fillColor = Color.WHITE;
+
         var text = new Text(buttonText);
-        text.setFill(assets.color("startpage.button.color"));
-        text.setFont(assets.font("startpage.button.font"));
+        text.setFill(fillColor);
+        text.setFont(assets.font("font.arcade", 30));
 
         var shadow = new DropShadow();
         shadow.setOffsetY(3.0f);
@@ -60,7 +63,7 @@ public class StartPage extends StackPane implements Page {
         pane.setMaxSize(200, 100);
         pane.setPadding(new Insets(10));
         pane.setCursor(Cursor.HAND);
-        pane.setBackground(coloredRoundedBackground(assets.color("startpage.button.bgColor"), 20));
+        pane.setBackground(coloredRoundedBackground(bgColor, 20));
 
         return pane;
     }
@@ -123,7 +126,12 @@ public class StartPage extends StackPane implements Page {
 
         Node btnPlay = createPlayButton(context.locText("play_button"), context.assets());
         BorderPane.setAlignment(btnPlay, Pos.BOTTOM_CENTER);
-        btnPlay.setTranslateY(-40);
+        switch (context.gameVariant()) {
+            case MS_PACMAN        -> {btnPlay.setTranslateY(-60);}
+            case MS_PACMAN_TENGEN -> {btnPlay.setTranslateY(-60);}
+            case PACMAN           -> {btnPlay.setTranslateY(-60);}
+            case PACMAN_XXL       -> {btnPlay.setTranslateY(-60);}
+        }
         btnPlay.setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY)) {
                 context.selectGamePage();
