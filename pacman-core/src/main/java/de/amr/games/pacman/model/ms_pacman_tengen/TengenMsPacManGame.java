@@ -430,7 +430,7 @@ public class TengenMsPacManGame extends GameModel {
         for (Ghost ghost : ghosts) {
             ghost.setBaseSpeed(ghostBaseSpeed + ghostIDSpeedDelta(ghost.id()));
             ghost.setSpeedReturningHome(2 * ghostBaseSpeed); // TODO check
-            ghost.setSpeedInsideHouse(0.5f * ghostBaseSpeed); // TODO check
+            ghost.setSpeedInsideHouse(0.5f); // TODO check
         }
     }
 
@@ -464,10 +464,24 @@ public class TengenMsPacManGame extends GameModel {
         createWorldAndPopulation(map);
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
+        deactivateBooster(); // gets activated in startLevel() if ALWAYS_ON
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
         // TODO: change this. For now provide a level object such that all code that relies on existing level object still works
-        currentLevelData = new GameLevel( 100, 100, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0);
+        currentLevelData = new GameLevel(
+            100, // Pac speed in % of base speed
+            100, // Ghost speed in % of base speed
+            40, // Ghost speed in tunnel...
+            20, // Dots left for Elroy1
+            105, // Elroy1 speed...
+            10, // Dots left for Elroy2
+            110, // Elroy2 speed
+            110, // Pac (power mode) speed...
+            50, // Frightened ghost speed...
+            6, // pac power time (seconds)
+            5, // Num flashes
+            0 // cut scene after this level
+        );
     }
 
     @Override
@@ -478,10 +492,24 @@ public class TengenMsPacManGame extends GameModel {
         createWorldAndPopulation(map);
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);
+        deactivateBooster(); // gets activated in startLevel() if ALWAYS_ON
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
         // TODO for now provide a Level object such that all code that relies on one works
-        currentLevelData = new GameLevel( 100, 100, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0);
+        currentLevelData = new GameLevel(
+            100, // Pac speed in % of base speed
+            100, // Ghost speed in % of base speed
+            40, // Ghost speed in tunnel...
+            20, // Dots left for Elroy1
+            105, // Elroy1 speed...
+            10, // Dots left for Elroy2
+            110, // Elroy2 speed
+            110, // Pac (power mode) speed...
+            50, // Frightened ghost speed...
+            6, // pac power time (seconds)
+            5, // Num flashes
+            0 // cut scene after this level
+        );
     }
 
     @Override
