@@ -314,10 +314,6 @@ public class TengenMsPacManGame extends GameModel {
         return levelNumber > 0 && !isDemoLevel();
     }
 
-    public Optional<GameLevel> currentLevelData() {
-        return Optional.ofNullable(currentLevelData);
-    }
-
     private boolean isStrangeMap(WorldMap worldMap) {
         int mapNumber = Integer.parseInt(worldMap.terrain().getProperty("map_number"));
         if (mapNumber == 16 || mapNumber == 28 || mapNumber == 30) {
