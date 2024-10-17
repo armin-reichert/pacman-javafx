@@ -56,8 +56,8 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        if (context.game().currentLevelData().isEmpty()) {
-            Logger.warn("Cannot update PlayScene2D: no game level exists");
+        if (context.game().levelNumber() == 0) {
+            Logger.warn("Cannot update PlayScene2D: no game level available");
             return;
         }
         context.setScoreVisible(true);
