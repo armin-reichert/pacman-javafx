@@ -21,6 +21,7 @@ public class InfoBoxGameInfo extends InfoBox {
         super.init(context);
 
         labeledValue("Game Scene", ifGameScenePresent(gameScene -> gameScene.getClass().getSimpleName()));
+        labeledValue("Demo Level", ifGameScenePresent(gameScene -> context.game().isDemoLevel() ? "Yes" : "No"));
         labeledValue("Game State", () -> "%s".formatted(context.gameState()));
         labeledValue("State Timer", this::stateTimerInfo);
         labeledValue("Level Number", ifLevelPresent(level -> "%d".formatted(context.game().levelNumber())));

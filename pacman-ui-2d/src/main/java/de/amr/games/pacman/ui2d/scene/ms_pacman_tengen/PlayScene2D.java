@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
@@ -50,6 +51,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void end() {
         context.sounds().stopAll();
+        ((TengenMsPacManGame) context.game()).setCanStartGame(true);
     }
 
     @Override
