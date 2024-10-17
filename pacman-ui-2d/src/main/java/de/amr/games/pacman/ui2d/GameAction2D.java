@@ -119,7 +119,6 @@ public enum GameAction2D implements GameAction {
         }
     },
 
-    ENTER_GAME_PAGE(key(KeyCode.SPACE), key(KeyCode.ENTER)),
 
     FULLSCREEN(key(KeyCode.F11)),
 
@@ -133,17 +132,6 @@ public enum GameAction2D implements GameAction {
 
     MUTE(alt(KeyCode.M)),
 
-    NEXT_FLYER_PAGE(key(KeyCode.DOWN)),
-
-    NEXT_VARIANT(key(KeyCode.V), key(KeyCode.RIGHT)) {
-        @Override
-        public void execute(GameContext context) {
-            super.execute(context);
-            List<GameVariant> variantsInOrder = PacManGames2dUI.GAME_VARIANTS_IN_ORDER;
-            int nextIndex = variantsInOrder.indexOf(context.gameVariant()) + 1;
-            context.selectGameVariant(variantsInOrder.get(nextIndex == variantsInOrder.size() ? 0 : nextIndex));
-        }
-    },
 
     OPEN_EDITOR(shift_alt(KeyCode.E)) {
         @Override
@@ -166,17 +154,6 @@ public enum GameAction2D implements GameAction {
         }
     },
 
-    PREV_FLYER_PAGE(key(KeyCode.UP)),
-
-    PREV_VARIANT(key(KeyCode.LEFT)) {
-        @Override
-        public void execute(GameContext context) {
-            super.execute(context);
-            List<GameVariant> variantsInOrder = PacManGames2dUI.GAME_VARIANTS_IN_ORDER;
-            int prevIndex = variantsInOrder.indexOf(context.gameVariant()) - 1;
-            context.selectGameVariant(variantsInOrder.get(prevIndex < 0 ? variantsInOrder.size() - 1 : prevIndex));
-        }
-    },
 
     SHOW_START_PAGE(key(KeyCode.Q)) {
         @Override

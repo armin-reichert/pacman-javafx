@@ -1,9 +1,12 @@
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.GameAction2D;
+import de.amr.games.pacman.ui2d.AbstractGameAction;
+import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
+import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -15,14 +18,18 @@ import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.ui2d.util.KeyInput.key;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredRoundedBackground;
 
 /**
@@ -102,7 +109,47 @@ public class StartPage extends StackPane implements Page {
         }
     };
 
+    private final GameAction actionPrevFlyerPage = new AbstractGameAction(KeyInput.key(KeyCode.UP)) {
+        @Override
+        public void execute(GameContext context) {
+            flyer(context.gameVariant()).ifPresent(Flyer::prevPage);
+        }
+    };
+
+    private final GameAction actionNextFlyerPage = new AbstractGameAction(KeyInput.key(KeyCode.DOWN)) {
+        @Override
+        public void execute(GameContext context) {
+            flyer(context.gameVariant()).ifPresent(Flyer::nextPage);
+        }
+    };
+
+    private final GameAction actionPrevVariant = new AbstractGameAction(key(KeyCode.LEFT)) {
+        @Override
+        public void execute(GameContext context) {
+            List<GameVariant> variantsInOrder = PacManGames2dUI.GAME_VARIANTS_IN_ORDER;
+            int prevIndex = variantsInOrder.indexOf(context.gameVariant()) - 1;
+            context.selectGameVariant(variantsInOrder.get(prevIndex < 0 ? variantsInOrder.size() - 1 : prevIndex));
+        }
+    };
+
+    private final GameAction actionNextVariant = new AbstractGameAction(key(KeyCode.V), key(KeyCode.RIGHT)) {
+        @Override
+        public void execute(GameContext context) {
+            List<GameVariant> variantsInOrder = PacManGames2dUI.GAME_VARIANTS_IN_ORDER;
+            int nextIndex = variantsInOrder.indexOf(context.gameVariant()) + 1;
+            context.selectGameVariant(variantsInOrder.get(nextIndex == variantsInOrder.size() ? 0 : nextIndex));
+        }
+    };
+
+    private final GameAction actionEnterGamePage = new AbstractGameAction(key(KeyCode.SPACE), key(KeyCode.ENTER)) {
+        @Override
+        public void execute(GameContext context) {
+            context.selectGamePage();
+        }
+    };
+
     private final GameContext context;
+    private final List<GameAction> actions = new ArrayList<>();
     private final BorderPane layout = new BorderPane();
     private final Flyer msPacManFlyer, pacManFlyer, tengenFlyer;
 
@@ -110,17 +157,20 @@ public class StartPage extends StackPane implements Page {
         this.context = checkNotNull(context);
         AssetStorage assets = context.assets();
 
+        actions.addAll(List.of(actionPrevFlyerPage, actionNextFlyerPage, actionPrevVariant, actionNextVariant, actionEnterGamePage));
+        actions.forEach(action -> context.keyboard().register(action.trigger()));
+
         msPacManFlyer = new Flyer(assets.image("ms_pacman.startpage.image1"), assets.image("ms_pacman.startpage.image2"));
         pacManFlyer   = new Flyer(assets.image("pacman.startpage.image1"),    assets.image("pacman.startpage.image2"));
         tengenFlyer   = new Flyer(assets.image("tengen.startpage.image1"),    assets.image("tengen.startpage.image2"));
 
         Button btnPrevVariant = createCarouselButton(assets.image("startpage.arrow.left"));
-        btnPrevVariant.setOnAction(e -> GameAction2D.PREV_VARIANT.execute(context));
+        btnPrevVariant.setOnAction(e -> actionPrevVariant.execute(context));
         VBox left = new VBox(btnPrevVariant);
         left.setAlignment(Pos.CENTER_LEFT);
 
         Button btnNextVariant = createCarouselButton(assets.image("startpage.arrow.right"));
-        btnNextVariant.setOnAction(e -> GameAction2D.NEXT_VARIANT.execute(context));
+        btnNextVariant.setOnAction(e -> actionNextVariant.execute(context));
         VBox right = new VBox(btnNextVariant);
         right.setAlignment(Pos.CENTER_RIGHT);
 
@@ -193,11 +243,7 @@ public class StartPage extends StackPane implements Page {
 
     @Override
     public void handleInput() {
-        if      (GameAction2D.ENTER_GAME_PAGE.called(context.keyboard())) { context.selectGamePage(); }
-        else if (GameAction2D.NEXT_VARIANT.called(context.keyboard()))    { GameAction2D.NEXT_VARIANT.execute(context); }
-        else if (GameAction2D.PREV_VARIANT.called(context.keyboard()))    { GameAction2D.PREV_VARIANT.execute(context); }
-        else if (GameAction2D.NEXT_FLYER_PAGE.called(context.keyboard())) { flyer(context.gameVariant()).ifPresent(Flyer::nextPage); }
-        else if (GameAction2D.PREV_FLYER_PAGE.called(context.keyboard())) { flyer(context.gameVariant()).ifPresent(Flyer::prevPage); }
+        context.doFirstCalledAction(actions);
     }
 
     @Override
