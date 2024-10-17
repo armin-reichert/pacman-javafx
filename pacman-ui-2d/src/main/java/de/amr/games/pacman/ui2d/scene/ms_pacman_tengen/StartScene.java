@@ -52,6 +52,7 @@ public class StartScene extends GameScene2D {
         context.setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
         tengenGame = (TengenMsPacManGame) context.game();
+        tengenGame.setCanStartGame(true);
         resetIdleTimer();
     }
 

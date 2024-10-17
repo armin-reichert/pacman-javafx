@@ -129,6 +129,8 @@ public abstract class GameModel {
     protected abstract boolean isBonusReached();
     protected abstract boolean isLevelCounterEnabled();
     protected abstract void onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
+    protected abstract boolean isScoreEnabled();
+    protected abstract boolean isHighScoreEnabled();
 
     public final GameVariant variant() { return gameVariant; }
 
@@ -392,19 +394,14 @@ public abstract class GameModel {
         return score;
     }
 
-    protected boolean isScoreEnabledInDemoLevel() {
-        return false;
-    }
-
     public void scorePoints(int points) {
         int oldScore = score.points();
         int newScore = oldScore + points;
-        // score can be enabled in demo level e.g. Tengen Ms. Pac-Man has it
-        if (!isDemoLevel() || isScoreEnabledInDemoLevel()) {
+        if (isScoreEnabled()) {
             score.setPoints(newScore);
         }
         // high score and extra life are not enabled in demo level
-        if (!isDemoLevel()) {
+        if (isHighScoreEnabled()) {
             // New high score?
             if (newScore > highScore.points()) {
                 highScore.setPoints(newScore);

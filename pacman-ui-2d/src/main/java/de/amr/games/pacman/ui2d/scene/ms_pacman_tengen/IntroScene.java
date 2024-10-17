@@ -16,6 +16,7 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -290,7 +291,8 @@ public class IntroScene extends GameScene2D {
                     intro.msPacMan.animations().ifPresent(Animations::resetCurrentAnimation); //TODO check in Tengen, seems not to work!
                 }
                 if (timer().atSecond(8)) {
-                    // show demo level
+                    TengenMsPacManGame tengenGame = (TengenMsPacManGame) intro.context.game();
+                    tengenGame.setCanStartGame(false);
                     intro.context.gameController().changeState(GameState.READY);
                 }
             }

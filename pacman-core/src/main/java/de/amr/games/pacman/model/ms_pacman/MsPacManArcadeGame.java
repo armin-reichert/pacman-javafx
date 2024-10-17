@@ -109,6 +109,16 @@ public class MsPacManArcadeGame extends GameModel {
     }
 
     @Override
+    protected boolean isScoreEnabled() {
+        return levelNumber > 0 && !isDemoLevel();
+    }
+
+    @Override
+    protected boolean isHighScoreEnabled() {
+        return levelNumber > 0 && !isDemoLevel();
+    }
+
+    @Override
     public boolean canStartNewGame() {
         return GameController.it().coinControl().hasCredit();
     }

@@ -295,6 +295,8 @@ public enum GameAction2D implements GameAction {
             context.sounds().stopAll();
             context.currentGameScene().ifPresent(GameScene::end);
             context.game().setPlaying(false);
+            TengenMsPacManGame tengenMsPacManGame = (TengenMsPacManGame) context.game();
+            tengenMsPacManGame.setCanStartGame(true);
             context.gameController().changeState(GameState.STARTING); // shows Tengen settings scene
         }
     },

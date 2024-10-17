@@ -262,7 +262,6 @@ public class TengenMsPacManGame extends GameModel {
     private static final int[] HUNTING_TICKS_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
     private static final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
 
-
     private final List<WorldMap> arcadeMaps;
     private final List<WorldMap> strangeMaps;
     private final List<WorldMap> miniMaps;
@@ -275,6 +274,7 @@ public class TengenMsPacManGame extends GameModel {
     private boolean boosterActive;
     private byte startingLevel; // 1-7
     private int mapNumber;
+    private boolean canStartGame;
 
     private GameLevel currentLevelData;
 
@@ -297,7 +297,21 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public boolean canStartNewGame() {
-        return true; // no coins etc. needed
+        return canStartGame;
+    }
+
+    public void setCanStartGame(boolean canStartGame) {
+        this.canStartGame = canStartGame;
+    }
+
+    @Override
+    protected boolean isScoreEnabled() {
+        return levelNumber > 0;
+    }
+
+    @Override
+    protected boolean isHighScoreEnabled() {
+        return levelNumber > 0 && !isDemoLevel();
     }
 
     public Optional<GameLevel> currentLevelData() {
@@ -563,11 +577,6 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     public int intermissionNumberAfterLevel() {
         return currentLevelData.intermissionNumber();
-    }
-
-    @Override
-    protected boolean isScoreEnabledInDemoLevel() {
-        return true;
     }
 
     /** In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly

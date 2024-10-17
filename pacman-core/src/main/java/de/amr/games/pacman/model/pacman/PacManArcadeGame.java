@@ -140,6 +140,16 @@ public class PacManArcadeGame extends GameModel {
         return GameController.it().coinControl().hasCredit();
     }
 
+    @Override
+    protected boolean isScoreEnabled() {
+        return levelNumber > 0 && !isDemoLevel();
+    }
+
+    @Override
+    protected boolean isHighScoreEnabled() {
+        return levelNumber > 0 && !isDemoLevel();
+    }
+
     public Optional<GameLevel> currentLevelData() {
         return levelNumber > 0 ? Optional.of(levelData(levelNumber)): Optional.empty();
     }
@@ -217,6 +227,13 @@ public class PacManArcadeGame extends GameModel {
     }
 
     @Override
+    public void buildDemoLevel() {
+        buildRegularLevel(1);
+        pac.setAutopilot(new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE)));
+        pac.setUseAutopilot(true);
+    }
+
+    @Override
     protected GameWorld createWorld(WorldMap map) {
         var world = new GameWorld(map);
         world.createArcadeHouse(HOUSE_X, HOUSE_Y);
@@ -264,13 +281,6 @@ public class PacManArcadeGame extends GameModel {
         return levelNumber > 0
             ? levelData(levelNumber).ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed()
             : 0;
-    }
-
-    @Override
-    public void buildDemoLevel() {
-        buildRegularLevel(1);
-        pac.setAutopilot(new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE)));
-        pac.setUseAutopilot(true);
     }
 
     @Override
