@@ -18,7 +18,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.GameAction2D;
+import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -42,11 +42,11 @@ import static de.amr.games.pacman.ui2d.GameAssets2D.*;
 public class IntroScene extends GameScene2D {
 
     static final List<GameAction> ACTIONS = List.of(
-        GameAction2D.ADD_CREDIT,
-        GameAction2D.START_GAME,
-        GameAction2D.TEST_LEVELS_BONI,
-        GameAction2D.TEST_LEVELS_TEASERS,
-        GameAction2D.TEST_CUT_SCENES);
+        GlobalGameActions2D.ADD_CREDIT,
+        GlobalGameActions2D.START_GAME,
+        GlobalGameActions2D.TEST_LEVELS_BONI,
+        GlobalGameActions2D.TEST_LEVELS_TEASERS,
+        GlobalGameActions2D.TEST_CUT_SCENES);
 
     static final float SPEED = 1.1f;
     static final int TOP_Y = TS * 11 + 1;

@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui2d.dashboard;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.GameAction2D;
+import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -60,11 +60,11 @@ public class InfoBoxGameControl extends InfoBox {
             }
         });
 
-        setAction(bgCutScenesTest[CUT_SCENES_TEST_START], () -> GameAction2D.TEST_CUT_SCENES.execute(context));
-        setAction(bgCutScenesTest[CUT_SCENES_TEST_QUIT],  () -> GameAction2D.RESTART_INTRO.execute(context));
-        setAction(bgLevelActions[GAME_LEVEL_START],       () -> GameAction2D.START_GAME.execute(context));
-        setAction(bgLevelActions[GAME_LEVEL_QUIT],        () -> GameAction2D.RESTART_INTRO.execute(context));
-        setAction(bgLevelActions[GAME_LEVEL_NEXT],        () -> GameAction2D.CHEAT_NEXT_LEVEL.execute(context));
+        setAction(bgCutScenesTest[CUT_SCENES_TEST_START], () -> GlobalGameActions2D.TEST_CUT_SCENES.execute(context));
+        setAction(bgCutScenesTest[CUT_SCENES_TEST_QUIT],  () -> GlobalGameActions2D.RESTART_INTRO.execute(context));
+        setAction(bgLevelActions[GAME_LEVEL_START],       () -> GlobalGameActions2D.START_GAME.execute(context));
+        setAction(bgLevelActions[GAME_LEVEL_QUIT],        () -> GlobalGameActions2D.RESTART_INTRO.execute(context));
+        setAction(bgLevelActions[GAME_LEVEL_NEXT],        () -> GlobalGameActions2D.CHEAT_NEXT_LEVEL.execute(context));
         setAction(comboInitialLives,                      () -> context.game().setInitialLives(comboInitialLives.getValue()));
 
         assignEditor(cbAutopilot, PY_AUTOPILOT);

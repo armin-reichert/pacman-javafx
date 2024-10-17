@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui2d.scene.pacman;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.GameAction2D;
+import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 
@@ -24,8 +24,8 @@ import static de.amr.games.pacman.ui2d.scene.pacman.PacManGameSpriteSheet.MIDWAY
 public class StartScene extends GameScene2D {
 
     static final List<GameAction> ACTIONS = List.of(
-        GameAction2D.ADD_CREDIT,
-        GameAction2D.START_GAME
+        GlobalGameActions2D.ADD_CREDIT,
+        GlobalGameActions2D.START_GAME
     );
 
     @Override

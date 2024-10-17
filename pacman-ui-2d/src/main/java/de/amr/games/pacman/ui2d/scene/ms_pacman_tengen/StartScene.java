@@ -10,7 +10,7 @@ import de.amr.games.pacman.model.ms_pacman_tengen.BoosterMode;
 import de.amr.games.pacman.model.ms_pacman_tengen.Difficulty;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
-import de.amr.games.pacman.ui2d.GameAction2D;
+import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.canvas.Canvas;
@@ -193,9 +193,9 @@ public class StartScene extends GameScene2D {
 
         else {
             context.doFirstCalledAction(
-                GameAction2D.TEST_LEVELS_BONI,
-                GameAction2D.TEST_LEVELS_TEASERS,
-                GameAction2D.TEST_CUT_SCENES);
+                GlobalGameActions2D.TEST_LEVELS_BONI,
+                GlobalGameActions2D.TEST_LEVELS_TEASERS,
+                GlobalGameActions2D.TEST_CUT_SCENES);
         }
     }
 

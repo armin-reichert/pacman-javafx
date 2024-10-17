@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.ui2d.GameAction2D;
+import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
@@ -36,7 +36,7 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void handleInput() {
-        context.doFirstCalledAction(GameAction2D.ADD_CREDIT, GameAction2D.START_GAME);
+        context.doFirstCalledAction(GlobalGameActions2D.ADD_CREDIT, GlobalGameActions2D.START_GAME);
     }
 
     @Override

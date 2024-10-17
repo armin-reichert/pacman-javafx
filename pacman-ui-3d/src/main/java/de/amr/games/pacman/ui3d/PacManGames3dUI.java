@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.GameAction2D;
+import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfiguration;
@@ -37,10 +37,10 @@ public class PacManGames3dUI extends PacManGames2dUI {
     }
 
     protected void bindActionsToKeys() {
-        for (GameAction action : GameAction2D.values()) {
+        for (GameAction action : GlobalGameActions2D.values()) {
             KEYBOARD.register(action.trigger());
         }
-        for (GameAction action : GameAction3D.values()) {
+        for (GameAction action : GlobalGameActions3D.values()) {
             KEYBOARD.register(action.trigger());
         }
     }

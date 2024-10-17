@@ -36,6 +36,7 @@ import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -112,7 +113,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     protected void bindActionsToKeys() {
-        for (GameAction action : GameAction2D.values()) {
+        for (GameAction action : GlobalGameActions2D.values()) {
             KEYBOARD.register(action.trigger());
         }
     }
@@ -226,10 +227,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, KEYBOARD::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, KEYBOARD::onKeyReleased);
+        // Global keyboard shortcuts
         mainScene.setOnKeyPressed(e -> {
-            if (GameAction2D.FULLSCREEN.called(KEYBOARD)) {
+            if (e.getCode() == KeyCode.F11) {
                 stage.setFullScreen(true);
-            } else if (GameAction2D.MUTE.called(KEYBOARD)) {
+            } else if (e.getCode() == KeyCode.M && e.isAltDown()) {
                 sounds().toggleMuted();
             } else {
                 currentPage.handleInput();
@@ -447,7 +449,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                     editor.stop();
                     editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> stage.titleProperty().bind(stageTitleBinding()));
                     xxlGame.updateCustomMaps();
-                    GameAction2D.BOOT.execute(this);
+                    GlobalGameActions2D.BOOT.execute(this);
                     selectStartPage();
                 });
             }

@@ -4,11 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.dashboard;
 
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.InfoBox;
 import de.amr.games.pacman.ui2d.dashboard.InfoText;
-import de.amr.games.pacman.ui3d.GameAction3D;
+import de.amr.games.pacman.ui3d.GlobalGameActions3D;
 import de.amr.games.pacman.ui3d.GameAssets3D;
 import de.amr.games.pacman.ui3d.scene.common.Perspective;
 import de.amr.games.pacman.ui3d.scene.common.PlayScene3D;
@@ -90,8 +89,8 @@ public class InfoBox3D extends InfoBox {
         assignEditor(cbAxesVisible, PY_3D_AXES_VISIBLE);
 
         //TODO check these
-        cbUsePlayScene3D.setOnAction(e -> GameAction3D.TOGGLE_PLAY_SCENE_2D_3D.execute(context));
-        cbWireframeMode.setOnAction(e -> GameAction3D.TOGGLE_DRAW_MODE.execute(context));
+        cbUsePlayScene3D.setOnAction(e -> GlobalGameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute(context));
+        cbWireframeMode.setOnAction(e -> GlobalGameActions3D.TOGGLE_DRAW_MODE.execute(context));
     }
 
     private void updateControlsFromProperties() {

@@ -23,7 +23,7 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 /**
  * @author Armin Reichert
  */
-public enum GameAction3D implements GameAction {
+public enum GlobalGameActions3D implements GameAction {
 
     NEXT_PERSPECTIVE(alt(KeyCode.RIGHT)) {
         @Override
@@ -83,7 +83,7 @@ public enum GameAction3D implements GameAction {
         }
     };
 
-    GameAction3D(KeyCodeCombination... combinations) {
+    GlobalGameActions3D(KeyCodeCombination... combinations) {
         trigger = KeyInput.of(combinations);
     }
 

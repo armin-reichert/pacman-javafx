@@ -5,10 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.pacman.PacManArcadeGame;
+import de.amr.games.pacman.ui2d.AbstractGameAction;
 import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.GameAction2D;
+import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -26,6 +28,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -37,28 +40,117 @@ import java.util.List;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
+import static de.amr.games.pacman.ui2d.util.KeyInput.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.border;
+import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 
 /**
  * @author Armin Reichert
  */
 public class GamePage extends StackPane implements Page {
 
-    private static final List<GameAction> GAME_ACTIONS = List.of(
-        GameAction2D.BOOT,
-        GameAction2D.DEBUG_INFO,
-        GameAction2D.HELP,
-        GameAction2D.SIMULATION_1_STEP,
-        GameAction2D.SIMULATION_10_STEPS,
-        GameAction2D.SIMULATION_FASTER,
-        GameAction2D.SIMULATION_SLOWER,
-        GameAction2D.SIMULATION_NORMAL,
-        GameAction2D.SHOW_START_PAGE,
-        GameAction2D.TOGGLE_AUTOPILOT,
-        GameAction2D.TOGGLE_IMMUNITY,
-        GameAction2D.TOGGLE_DASHBOARD,
-        GameAction2D.TOGGLE_PAUSED,
-        GameAction2D.OPEN_EDITOR
+    private final GameAction actionToggleDebugInfo = new AbstractGameAction(alt(KeyCode.D)) {
+        public void execute(GameContext context) {
+            Ufx.toggle(PY_DEBUG_INFO);
+        }
+    };
+
+    private final GameAction actionShowHelp = new AbstractGameAction(key(KeyCode.H)) {
+        @Override
+        public void execute(GameContext context) {
+            context.gamePage().showHelp();
+        }
+    };
+
+    private final GameAction actionSimulationSlower = new AbstractGameAction(alt(KeyCode.MINUS)) {
+        @Override
+        public void execute(GameContext context) {
+            double newRate = context.gameClock().getTargetFrameRate() - 5;
+            if (newRate > 0) {
+                context.gameClock().setTargetFrameRate(newRate);
+                context.showFlashMessageSeconds(0.75, newRate + "Hz");
+            }
+        }
+    };
+
+    private final GameAction actionSimulationFaster = new AbstractGameAction(alt(KeyCode.PLUS)) {
+        @Override
+        public void execute(GameContext context) {
+            double newRate = context.gameClock().getTargetFrameRate() + 5;
+            if (newRate > 0) {
+                context.gameClock().setTargetFrameRate(newRate);
+                context.showFlashMessageSeconds(0.75, newRate + "Hz");
+            }
+        }
+    };
+
+    private final GameAction actionSimulationNormalSpeed = new AbstractGameAction(alt(KeyCode.DIGIT0)) {
+        @Override
+        public void execute(GameContext context) {
+            context.gameClock().setTargetFrameRate(GameModel.TICKS_PER_SECOND);
+            context.showFlashMessageSeconds(0.75, context.gameClock().getTargetFrameRate() + "Hz");
+        }
+    };
+
+    private final GameAction actionSimulationOneStep = new AbstractGameAction(shift(KeyCode.P)) {
+        @Override
+        public void execute(GameContext context) {
+            if (context.gameClock().isPaused()) {
+                context.gameClock().makeStep(true);
+            }
+        }
+    };
+
+    private final GameAction actionSimulationTenSteps = new AbstractGameAction(shift(KeyCode.SPACE)) {
+        @Override
+        public void execute(GameContext context) {
+            if (context.gameClock().isPaused()) {
+                context.gameClock().makeSteps(10, true);
+            }
+        }
+    };
+
+    private final GameAction actionToggleAutopilot = new AbstractGameAction(alt(KeyCode.A)) {
+        @Override
+        public void execute(GameContext context) {
+            toggle(PY_AUTOPILOT);
+            boolean auto = PY_AUTOPILOT.get();
+            context.showFlashMessage(context.locText(auto ? "autopilot_on" : "autopilot_off"));
+            context.sounds().playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
+        }
+    };
+
+    private final GameAction actionToggleDashboard = new AbstractGameAction(key(KeyCode.F1), alt(KeyCode.B)) {
+        @Override
+        public void execute(GameContext context) {
+            context.gamePage().toggleDashboard();
+        }
+    };
+
+    private final GameAction actionToggleImmunity = new AbstractGameAction(alt(KeyCode.I)) {
+        @Override
+        public void execute(GameContext context) {
+            toggle(PY_IMMUNITY);
+            context.showFlashMessage(context.locText(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
+            context.sounds().playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
+        }
+    };
+
+    private final List<GameAction> actions = List.of(
+        GlobalGameActions2D.BOOT,
+        GlobalGameActions2D.SHOW_START_PAGE,
+        GlobalGameActions2D.TOGGLE_PAUSED,
+        GlobalGameActions2D.OPEN_EDITOR,
+        actionToggleDebugInfo,
+        actionShowHelp,
+        actionSimulationOneStep,
+        actionSimulationTenSteps,
+        actionSimulationFaster,
+        actionSimulationSlower,
+        actionSimulationNormalSpeed,
+        actionToggleAutopilot,
+        actionToggleImmunity,
+        actionToggleDashboard
     );
 
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
@@ -80,6 +172,10 @@ public class GamePage extends StackPane implements Page {
     public GamePage(GameContext context, Scene parentScene) {
         this.context = checkNotNull(context);
         this.parentScene = checkNotNull(parentScene);
+
+        for (GameAction action : actions) {
+            context.keyboard().register(action.trigger());
+        }
 
         gameCanvas = new Canvas();
         gameCanvasContainer = new TooFancyGameCanvasContainer(gameCanvas);
@@ -132,7 +228,7 @@ public class GamePage extends StackPane implements Page {
     public void onPageSelected() {
         adaptCanvasSizeToSceneSize();
         //TODO check if booting is always wanted here
-        GameAction2D.BOOT.execute(context);
+        GlobalGameActions2D.BOOT.execute(context);
         if (context.gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
             // Tengen has a settings scene where the game is started instead of a credits scene
             context.sounds().playVoice("voice.explain", 0);
@@ -146,7 +242,7 @@ public class GamePage extends StackPane implements Page {
 
     @Override
     public void handleInput() {
-        context.doFirstCalledActionOrElse(GAME_ACTIONS.stream(),
+        context.doFirstCalledActionOrElse(actions.stream(),
             () -> context.currentGameScene().ifPresent(GameScene::handleInput));
     }
 
@@ -181,12 +277,12 @@ public class GamePage extends StackPane implements Page {
 
         if (context.gameVariant() == GameVariant.PACMAN_XXL || context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
-            miOpenMapEditor.setOnAction(e -> GameAction2D.OPEN_EDITOR.execute(context));
+            miOpenMapEditor.setOnAction(e -> GlobalGameActions2D.OPEN_EDITOR.execute(context));
             contextMenu.getItems().add(miOpenMapEditor);
         }
 
         var miQuit = new MenuItem(context.locText("quit"));
-        miQuit.setOnAction(e -> GameAction2D.SHOW_START_PAGE.execute(context));
+        miQuit.setOnAction(e -> GlobalGameActions2D.SHOW_START_PAGE.execute(context));
         contextMenu.getItems().add(miQuit);
 
         contextMenu.show(this, event.getScreenX(), event.getScreenY());

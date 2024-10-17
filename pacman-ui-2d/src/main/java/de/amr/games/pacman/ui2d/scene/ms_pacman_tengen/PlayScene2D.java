@@ -13,7 +13,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.GameAction2D;
+import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
@@ -36,12 +36,12 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 public class PlayScene2D extends GameScene2D {
 
     private static final List<GameAction> ACTIONS = List.of(
-        GameAction2D.CHEAT_EAT_ALL,
-        GameAction2D.CHEAT_ADD_LIVES,
-        GameAction2D.CHEAT_NEXT_LEVEL,
-        GameAction2D.CHEAT_KILL_GHOSTS,
-        GameAction2D.TENGEN_TOGGLE_PAC_BOOSTER,
-        GameAction2D.TENGEN_QUIT_PLAY_SCENE
+        GlobalGameActions2D.CHEAT_EAT_ALL,
+        GlobalGameActions2D.CHEAT_ADD_LIVES,
+        GlobalGameActions2D.CHEAT_NEXT_LEVEL,
+        GlobalGameActions2D.CHEAT_KILL_GHOSTS,
+        GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER,
+        GlobalGameActions2D.TENGEN_QUIT_PLAY_SCENE
     );
 
     @Override

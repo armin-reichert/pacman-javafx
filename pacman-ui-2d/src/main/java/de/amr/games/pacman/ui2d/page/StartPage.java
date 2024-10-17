@@ -149,7 +149,7 @@ public class StartPage extends StackPane implements Page {
     };
 
     private final GameContext context;
-    private final List<GameAction> actions = new ArrayList<>();
+    private final List<GameAction> actions;
     private final BorderPane layout = new BorderPane();
     private final Flyer msPacManFlyer, pacManFlyer, tengenFlyer;
 
@@ -157,8 +157,10 @@ public class StartPage extends StackPane implements Page {
         this.context = checkNotNull(context);
         AssetStorage assets = context.assets();
 
-        actions.addAll(List.of(actionPrevFlyerPage, actionNextFlyerPage, actionPrevVariant, actionNextVariant, actionEnterGamePage));
-        actions.forEach(action -> context.keyboard().register(action.trigger()));
+        actions = List.of(actionPrevFlyerPage, actionNextFlyerPage, actionPrevVariant, actionNextVariant, actionEnterGamePage);
+        for (GameAction action : actions) {
+            context.keyboard().register(action.trigger());
+        }
 
         msPacManFlyer = new Flyer(assets.image("ms_pacman.startpage.image1"), assets.image("ms_pacman.startpage.image2"));
         pacManFlyer   = new Flyer(assets.image("pacman.startpage.image1"),    assets.image("pacman.startpage.image2"));

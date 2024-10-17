@@ -14,13 +14,13 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.GameAction2D;
+import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
-import de.amr.games.pacman.ui3d.GameAction3D;
+import de.amr.games.pacman.ui3d.GlobalGameActions3D;
 import de.amr.games.pacman.ui3d.level.*;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
@@ -53,18 +53,19 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
  */
 public class PlayScene3D implements GameScene {
 
-    private static final List<GameAction> GAME_ACTIONS = List.of(
-        GameAction3D.PREV_PERSPECTIVE,
-        GameAction3D.NEXT_PERSPECTIVE,
-        GameAction2D.CHEAT_EAT_ALL,
-        GameAction2D.CHEAT_ADD_LIVES,
-        GameAction2D.CHEAT_NEXT_LEVEL,
-        GameAction2D.CHEAT_KILL_GHOSTS
+    private final List<GameAction> actions = List.of(
+        GlobalGameActions3D.PREV_PERSPECTIVE,
+        GlobalGameActions3D.NEXT_PERSPECTIVE,
+        GlobalGameActions2D.CHEAT_EAT_ALL,
+        GlobalGameActions2D.CHEAT_ADD_LIVES,
+        GlobalGameActions2D.CHEAT_NEXT_LEVEL,
+        GlobalGameActions2D.CHEAT_KILL_GHOSTS
     );
 
-    private static final List<GameAction> TENGEN_GAME_ACTIONS = List.of(
-        GameAction2D.TENGEN_TOGGLE_PAC_BOOSTER,
-        GameAction2D.TENGEN_QUIT_PLAY_SCENE
+    //TODO check
+    private final List<GameAction> tengenMsPacManActions = List.of(
+        GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER,
+        GlobalGameActions2D.TENGEN_QUIT_PLAY_SCENE
     );
 
     // Each 3D play scene has its own set of cameras/perspectives
@@ -215,14 +216,14 @@ public class PlayScene3D implements GameScene {
     @Override
     public void handleInput() {
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            context.doFirstCalledActionOrElse(TENGEN_GAME_ACTIONS.stream(),
-                () -> context.doFirstCalledAction(GAME_ACTIONS));
+            context.doFirstCalledActionOrElse(tengenMsPacManActions.stream(),
+                () -> context.doFirstCalledAction(actions));
         } else {
             // add credit is only allowed in demo level
-            if (context.isActionCalled(GameAction2D.ADD_CREDIT) && context.game().isDemoLevel()) {
-                GameAction2D.ADD_CREDIT.execute(context);
+            if (context.isActionCalled(GlobalGameActions2D.ADD_CREDIT) && context.game().isDemoLevel()) {
+                GlobalGameActions2D.ADD_CREDIT.execute(context);
             } else {
-                context.doFirstCalledAction(GAME_ACTIONS.stream());
+                context.doFirstCalledAction(actions.stream());
             }
         }
     }

@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.GameAction2D;
+import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
@@ -52,7 +52,7 @@ public class GamePage3D extends GamePage {
     @Override
     public void handleInput() {
         context.doFirstCalledActionOrElse(
-            Stream.of(GameAction3D.TOGGLE_PIP_VISIBILITY, GameAction3D.TOGGLE_PLAY_SCENE_2D_3D), super::handleInput);
+            Stream.of(GlobalGameActions3D.TOGGLE_PIP_VISIBILITY, GlobalGameActions3D.TOGGLE_PLAY_SCENE_2D_3D), super::handleInput);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class GamePage3D extends GamePage {
         // Toggle 2D-3D
         boolean is3D = context.currentGameSceneHasID("PlayScene3D");
         var item = new MenuItem(context.locText(is3D ? "use_2D_scene" : "use_3D_scene"));
-        item.setOnAction(e -> GameAction3D.TOGGLE_PLAY_SCENE_2D_3D.execute(context));
+        item.setOnAction(e -> GlobalGameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute(context));
         contextMenu.getItems().add(item);
 
         if (!is3D) {
@@ -124,12 +124,12 @@ public class GamePage3D extends GamePage {
 
         if (context.gameVariant() == GameVariant.PACMAN_XXL || context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
-            miOpenMapEditor.setOnAction(e -> GameAction2D.OPEN_EDITOR.execute(context));
+            miOpenMapEditor.setOnAction(e -> GlobalGameActions2D.OPEN_EDITOR.execute(context));
             contextMenu.getItems().add(miOpenMapEditor);
         }
 
         var miQuit = new MenuItem(context.locText("quit"));
-        miQuit.setOnAction(e -> GameAction2D.SHOW_START_PAGE.execute(context));
+        miQuit.setOnAction(e -> GlobalGameActions2D.SHOW_START_PAGE.execute(context));
         contextMenu.getItems().add(miQuit);
 
         contextMenu.show(this, event.getScreenX(), event.getScreenY());
