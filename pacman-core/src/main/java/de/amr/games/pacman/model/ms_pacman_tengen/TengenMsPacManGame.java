@@ -415,6 +415,48 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     @Override
+    protected GameLevel levelData(int levelNumber) {
+        return currentLevelData;
+    }
+
+    @Override
+    protected void setActorBaseSpeed(int levelNumber) {
+        float pacBaseSpeed = pacBaseSpeedInLevel(levelNumber) + pacDifficultySpeedDelta(difficulty);
+        pac.setBaseSpeed(pacBaseSpeed);
+        if (boosterMode == BoosterMode.ALWAYS_ON) {
+            activateBooster();
+        }
+        float ghostBaseSpeed = ghostBaseSpeedInLevel(levelNumber) + ghostDifficultySpeedDelta(difficulty);
+        for (Ghost ghost : ghosts) {
+            ghost.setBaseSpeed(ghostBaseSpeed + ghostIDSpeedDelta(ghost.id()));
+            ghost.setSpeedReturningHome(2 * ghostBaseSpeed); // TODO check
+            ghost.setSpeedInsideHouse(0.5f * ghostBaseSpeed); // TODO check
+        }
+    }
+
+    public void activateBooster() {
+        if (boosterActive) {
+            Logger.warn("Pac booster is already active");
+            return;
+        }
+        boosterActive = true;
+        pac.setBaseSpeed(pacBaseSpeedInLevel(levelNumber) + pacDifficultySpeedDelta(difficulty) + pacBoosterSpeedDelta());
+        pac.selectAnimation(ANIM_PAC_MUNCHING_BOOSTER);
+        Logger.info("Ms. Pac-Man booster activated, base speed set to {0.00} px/s", pac.baseSpeed());
+    }
+
+    public void deactivateBooster() {
+        if (!boosterActive) {
+            Logger.warn("Pac booster is already inactive");
+            return;
+        }
+        boosterActive = false;
+        pac.setBaseSpeed(pacBaseSpeedInLevel(levelNumber) + pacDifficultySpeedDelta(difficulty));
+        pac.selectAnimation(ANIM_PAC_MUNCHING);
+        Logger.info("Ms. Pac-Man booster deactivated, base speed set to {0.00} px/s", pac.baseSpeed());
+    }
+
+    @Override
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = levelNumber;
         mapNumber = mapNumberByLevelNumber(levelNumber);
@@ -426,26 +468,6 @@ public class TengenMsPacManGame extends GameModel {
 
         // TODO: change this. For now provide a level object such that all code that relies on existing level object still works
         currentLevelData = new GameLevel( 100, 100, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0);
-    }
-
-    @Override
-    protected GameLevel levelData(int levelNumber) {
-        return currentLevelData;
-    }
-
-    @Override
-    protected void setActorBaseSpeed(int levelNumber) {
-        float pacBaseSpeed = pacBaseSpeedInLevel(levelNumber) + pacDifficultySpeedDelta(difficulty);
-        if (boosterMode == BoosterMode.ALWAYS_ON) {
-            pacBaseSpeed += pacBoosterSpeedDelta();
-        }
-        pac.setBaseSpeed(pacBaseSpeed);
-        float ghostBaseSpeed = ghostBaseSpeedInLevel(levelNumber) + ghostDifficultySpeedDelta(difficulty);
-        for (Ghost ghost : ghosts) {
-            ghost.setBaseSpeed(ghostBaseSpeed + ghostIDSpeedDelta(ghost.id()));
-            ghost.setSpeedReturningHome(2 * ghostBaseSpeed); // TODO check
-            ghost.setSpeedInsideHouse(0.5f * ghostBaseSpeed); // TODO check
-        }
     }
 
     @Override
@@ -562,16 +584,5 @@ public class TengenMsPacManGame extends GameModel {
 
     private float huntingSpeed(Ghost ghost) {
         return ghost.baseSpeed(); // TODO
-    }
-
-    public void activateBooster(boolean on) {
-        boosterActive = on;
-        float baseSpeed = pacBaseSpeedInLevel(levelNumber) + pacDifficultySpeedDelta(difficulty);
-        if (on) {
-            baseSpeed += pacBoosterSpeedDelta();
-        }
-        pac.setBaseSpeed(baseSpeed);
-        pac.selectAnimation(on ? ANIM_PAC_MUNCHING_BOOSTER : ANIM_PAC_MUNCHING);
-        Logger.info("Booster is {}, Ms. Pac-Man base speed set to {0.00} px/s", (on ? "on" : "off"), baseSpeed);
     }
 }
