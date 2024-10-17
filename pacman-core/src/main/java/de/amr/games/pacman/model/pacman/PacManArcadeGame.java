@@ -235,21 +235,21 @@ public class PacManArcadeGame extends GameModel {
     protected void ghostHuntingBehaviour(Ghost ghost) {
         boolean chasing = isChasingPhase(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
         Vector2i targetTile = chasing ? chasingTarget(ghost) : scatterTarget(ghost);
-        float speed = 0.01f * huntingSpeedPercentage(ghost) * ghost.baseSpeed();
+        float speed = huntingSpeed(ghost);
         ghost.followTarget(targetTile, speed);
     }
 
-    private byte huntingSpeedPercentage(Ghost ghost) {
+    private float huntingSpeed(Ghost ghost) {
         GameLevel level = levelData(levelNumber);
         if (world.isTunnel(ghost.tile())) {
-            return level.ghostSpeedTunnelPercentage();
+            return level.ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
         }
         if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
-            return level.elroy1SpeedPercentage();
+            return level.elroy1SpeedPercentage() * 0.01f * ghost.baseSpeed();
         }
         if (ghost.id() == RED_GHOST && cruiseElroy == 2) {
-            return level.elroy2SpeedPercentage();
+            return level.elroy2SpeedPercentage() * 0.01f * ghost.baseSpeed();
         }
-        return level.ghostSpeedPercentage();
+        return level.ghostSpeedPercentage() * 0.01f * ghost.baseSpeed();
     }
 }

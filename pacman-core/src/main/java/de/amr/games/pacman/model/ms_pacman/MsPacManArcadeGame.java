@@ -309,28 +309,28 @@ public class MsPacManArcadeGame extends GameModel {
      * only the scatter target of Blinky and Pinky would have been affected. Who knows?
      */
     private void ghostHuntingBehaviour(Ghost ghost) {
-        float speed = 0.01f * huntingSpeedPercentage(ghost) * ghost.baseSpeed();
         if (huntingPhaseIndex == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
+            float speed = huntingSpeed(ghost);
             ghost.roam(speed);
         } else {
-            boolean chase = isChasingPhase(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
-            ghost.followTarget(chase ? chasingTarget(ghost) : scatterTarget(ghost), speed);
+            boolean chasing = isChasingPhase(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
+            Vector2i targetTile = chasing ? chasingTarget(ghost) : scatterTarget(ghost);
+            float speed = huntingSpeed(ghost);
+            ghost.followTarget(targetTile, speed);
         }
     }
 
-    private byte huntingSpeedPercentage(Ghost ghost) {
+    private float huntingSpeed(Ghost ghost) {
         GameLevel level = levelData(levelNumber);
         if (world.isTunnel(ghost.tile())) {
-            return level.ghostSpeedTunnelPercentage();
+            return level.ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
         }
         if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
-            return level.elroy1SpeedPercentage();
+            return level.elroy1SpeedPercentage() * 0.01f * ghost.baseSpeed();
         }
         if (ghost.id() == RED_GHOST && cruiseElroy == 2) {
-            return level.elroy2SpeedPercentage();
+            return level.elroy2SpeedPercentage() * 0.01f * ghost.baseSpeed();
         }
-        return level.ghostSpeedPercentage();
+        return level.ghostSpeedPercentage() * 0.01f * ghost.baseSpeed();
     }
-
-
 }
