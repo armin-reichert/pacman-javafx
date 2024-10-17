@@ -260,7 +260,7 @@ public class GameWorld {
         return totalFoodCount - uneatenFoodCount;
     }
 
-    public void eatFoodAt(Vector2i tile) {
+    public void registerFoodEatenAt(Vector2i tile) {
         checkTileNotNull(tile);
         if (isOutsideWorld(tile)) {
             Logger.error("Attempt to eat food from tile outside world");

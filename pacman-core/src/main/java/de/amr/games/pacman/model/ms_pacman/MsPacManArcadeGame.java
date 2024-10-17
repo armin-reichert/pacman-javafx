@@ -278,11 +278,24 @@ public class MsPacManArcadeGame extends GameModel {
     }
 
     @Override
-    protected void onFoodEaten() {
-        if (world.uneatenFoodCount() == levelData(levelNumber).elroy1DotsLeft()) {
+    protected void onPelletOrEnergizerEaten(Vector2i tile, int uneatenFoodCount, boolean energizer) {
+        pac.setRestingTicks(energizer ? 3 : 1);
+        if (uneatenFoodCount == levelData(levelNumber).elroy1DotsLeft()) {
             cruiseElroy = 1;
-        } else if (world.uneatenFoodCount() == levelData(levelNumber).elroy2DotsLeft()) {
+        } else if (uneatenFoodCount == levelData(levelNumber).elroy2DotsLeft()) {
             cruiseElroy = 2;
+        }
+        if (energizer) {
+            processEatenEnergizer();
+            scorePoints(energizerValue());
+            Logger.info("Scored {} points for eating energizer", energizerValue());
+        } else {
+            scorePoints(pelletValue());
+        }
+        gateKeeper.registerFoodEaten(this);
+        if (isBonusReached()) {
+            activateNextBonus();
+            eventLog.bonusIndex = nextBonusIndex;
         }
     }
 

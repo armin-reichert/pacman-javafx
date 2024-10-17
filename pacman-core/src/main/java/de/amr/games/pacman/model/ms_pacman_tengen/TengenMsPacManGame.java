@@ -644,8 +644,21 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     @Override
-    protected void onFoodEaten() {
-        // code that is executed whenever a pellt has been eaten
+    protected void onPelletOrEnergizerEaten(Vector2i tile, int uneatenFoodCount, boolean energizer) {
+        //TODO does Ms. Pac-Man slow down after eating here too?
+        //pac.setRestingTicks(energizer ? 3 : 1);
+        if (energizer) {
+            processEatenEnergizer();
+            scorePoints(energizerValue());
+            Logger.info("Scored {} points for eating energizer", energizerValue());
+        } else {
+            scorePoints(pelletValue());
+        }
+        gateKeeper.registerFoodEaten(this);
+        if (isBonusReached()) {
+            activateNextBonus();
+            eventLog.bonusIndex = nextBonusIndex;
+        }
     }
 
     @Override

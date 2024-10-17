@@ -19,7 +19,7 @@ public class Pac extends Creature implements AnimatedEntity {
 
     private String name;
     private boolean dead;
-    private byte restingTicks;
+    private int restingTicks;
     private long starvingTicks;
     private Steering manualSteering;
     private Steering autopilot;
@@ -141,7 +141,7 @@ public class Pac extends Creature implements AnimatedEntity {
         return !dead;
     }
 
-    public void setRestingTicks(byte ticks) {
+    public void setRestingTicks(int ticks) {
         if (ticks == REST_INDEFINITELY || ticks >= 0) {
             restingTicks = ticks;
         } else {
@@ -160,7 +160,7 @@ public class Pac extends Creature implements AnimatedEntity {
         ++starvingTicks;
     }
 
-    public void onStarvingEnd() {
+    public void endStarving() {
         starvingTicks = 0;
     }
 

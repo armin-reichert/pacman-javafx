@@ -280,7 +280,7 @@ public class PlayScene3D implements GameScene {
         context.sounds().stopAll();
         // if cheat has been used to complete level, food might still exist, so eat it:
         GameWorld world = context.game().world();
-        world.map().food().tiles().forEach(world::eatFoodAt);
+        world.map().food().tiles().forEach(world::registerFoodEatenAt);
         level3D.pellets3D().forEach(Pellet3D::onEaten);
         level3D.energizers3D().forEach(Energizer3D::onEaten);
         level3D.livesCounter3D().shapesRotation().stop();

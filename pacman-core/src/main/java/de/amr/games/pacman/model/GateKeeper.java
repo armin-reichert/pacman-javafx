@@ -141,7 +141,7 @@ public class GateKeeper {
         }
         // check Pac-Man starving time
         if (game.pac().starvingTicks() >= pacStarvingLimit) {
-            game.pac().onStarvingEnd();
+            game.pac().endStarving();
             return String.format("%s reached starving limit (%d ticks)", game.pac().name(), pacStarvingLimit);
         }
         return null;
@@ -153,7 +153,7 @@ public class GateKeeper {
         Logger.info("Global dot counter set to 0 and {}", enabled ? "enabled" : "disabled");
     }
 
-    void onPelletOrEnergizerEaten(GameModel game) {
+    public void registerFoodEaten(GameModel game) {
         if (globalCounterEnabled) {
             if (game.ghost(ORANGE_GHOST).inState(LOCKED) && globalCounter == 32) {
                 Logger.info("{} inside house when global counter reached 32", game.ghost(ORANGE_GHOST).name());

@@ -63,8 +63,6 @@ public abstract class GameModel {
     public static final byte    LEVEL_COUNTER_MAX_SIZE = 7;
     public static final byte    PAC_POWER_FADING_TICKS = 120; // unsure
     public static final byte    BONUS_POINTS_SHOWN_TICKS = 120; // unsure
-    public static final byte    RESTING_TICKS_PELLET = 1;
-    public static final byte    RESTING_TICKS_ENERGIZER = 3;
     public static final short[] KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
 
     protected final GameVariant    gameVariant;
@@ -127,7 +125,7 @@ public abstract class GameModel {
     protected abstract boolean isPacManKillingIgnoredInDemoLevel();
     protected abstract boolean isBonusReached();
     protected abstract boolean isLevelCounterEnabled();
-    protected abstract void onFoodEaten();
+    protected abstract void onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
 
     public final GameVariant variant() { return gameVariant; }
 
@@ -471,7 +469,7 @@ public abstract class GameModel {
         pac.freeze();
         bonus().ifPresent(Bonus::setInactive);
         // when cheating, there might still be food
-        world.map().food().tiles().forEach(world::eatFoodAt);
+        world.map().food().tiles().forEach(world::registerFoodEatenAt);
         huntingTimer.stop();
         Logger.info("Hunting timer stopped");
         powerTimer.stop();
@@ -498,7 +496,7 @@ public abstract class GameModel {
 
     public void doHuntingStep() {
         blinking.tick();
-        checkForFood();
+        checkForFood(pac.tile());
         unlockGhosts();
         ghosts().forEach(ghost -> ghost.update(this));
         pac.update(this);
@@ -523,42 +521,31 @@ public abstract class GameModel {
         }
     }
 
-    private void checkForFood() {
-        final Vector2i pacTile = pac.tile();
-        if (world.hasFoodAt(pacTile)) {
-            eventLog.foodFoundTile = pacTile;
-            pac.onStarvingEnd();
-            if (world.isEnergizerPosition(pacTile)) {
-                eventLog.energizerFound = true;
-                pac.setRestingTicks(RESTING_TICKS_ENERGIZER);
-                victims.clear();
-                scorePoints(energizerValue());
-                Logger.info("Scored {} points for eating energizer", energizerValue());
-                if (pacPowerSeconds() > 0) {
-                    eventLog.pacGetsPower = true;
-                    huntingTimer.stop();
-                    Logger.info("Hunting timer stopped");
-                    powerTimer.restartSeconds(pacPowerSeconds());
-                    Logger.info("Power timer restarted, duration={} ticks", powerTimer.duration());
-                    // TODO do already frightened ghosts reverse too?
-                    ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
-                    ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
-                    publishGameEvent(GameEventType.PAC_GETS_POWER);
-                }
-            } else {
-                pac.setRestingTicks(RESTING_TICKS_PELLET);
-                scorePoints(pelletValue());
-            }
-            gateKeeper.onPelletOrEnergizerEaten(this);
-            world.eatFoodAt(pacTile);
-            onFoodEaten();
-            if (isBonusReached()) {
-                activateNextBonus();
-                eventLog.bonusIndex = nextBonusIndex;
-            }
-            publishGameEvent(GameEventType.PAC_FOUND_FOOD, pacTile);
-        } else {
+    protected void checkForFood(Vector2i tile) {
+        if (!world.hasFoodAt(tile)) {
             pac.starve();
+            return;
+        }
+        pac.endStarving();
+        eventLog.foodFoundTile = tile;
+        eventLog.energizerFound = world.isEnergizerPosition(tile);
+        world.registerFoodEatenAt(tile);
+        // let specific game do its stuff:
+        onPelletOrEnergizerEaten(tile, world.uneatenFoodCount(), eventLog.energizerFound);
+        publishGameEvent(GameEventType.PAC_FOUND_FOOD, tile);
+    }
+
+    protected void processEatenEnergizer() {
+        victims.clear(); // ghosts eaten using this energizer
+        if (pacPowerSeconds() > 0) {
+            eventLog.pacGetsPower = true;
+            huntingTimer.stop();
+            Logger.info("Hunting timer stopped");
+            powerTimer.restartSeconds(pacPowerSeconds());
+            Logger.info("Power timer restarted, duration={} ticks", powerTimer.duration());
+            ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
+            ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
+            publishGameEvent(GameEventType.PAC_GETS_POWER);
         }
     }
 
