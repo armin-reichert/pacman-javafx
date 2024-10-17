@@ -160,6 +160,15 @@ public class PacManArcadeGame extends GameModel {
         return new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.clyde() };
     }
 
+    @Override
+    protected void setActorBaseSpeed(int levelNumber) {
+        pac.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * ONE_TICK_SECONDS);
+        ghosts().forEach(ghost -> {
+            ghost.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * ONE_TICK_SECONDS);
+            ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME * ONE_TICK_SECONDS);
+            ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE * ONE_TICK_SECONDS);
+        });
+    }
 
     @Override
     public void buildRegularLevel(int levelNumber) {

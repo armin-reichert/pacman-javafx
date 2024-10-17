@@ -311,14 +311,7 @@ public abstract class GameModel {
         bonusSymbols[1] = computeBonusSymbol();
     }
 
-    protected void setActorBaseSpeed(int levelNumber) {
-        pac.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * ONE_TICK_SECONDS);
-        ghosts().forEach(ghost -> {
-            ghost.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * ONE_TICK_SECONDS);
-            ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME * ONE_TICK_SECONDS);
-            ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE * ONE_TICK_SECONDS);
-        });
-    }
+    protected abstract void setActorBaseSpeed(int levelNumber);
 
     public void startLevel() {
         gateKeeper.init(levelNumber);
@@ -326,6 +319,11 @@ public abstract class GameModel {
         letsGetReadyToRumble();
         levelStartTime = System.currentTimeMillis();
         Logger.info("{} started ({})", demoLevel ? "Demo Level" : "Level " + levelNumber, variant());
+        Logger.info("{} base speed: {0.00} px/tick", pac.name(), pac.baseSpeed());
+        Logger.info("{} base speed: {0.00} px/tick", ghost(RED_GHOST).name(), ghost(RED_GHOST).baseSpeed());
+        Logger.info("{} base speed: {0.00} px/tick", ghost(PINK_GHOST).name(), ghost(PINK_GHOST).baseSpeed());
+        Logger.info("{} base speed: {0.00} px/tick", ghost(CYAN_GHOST).name(), ghost(CYAN_GHOST).baseSpeed());
+        Logger.info("{} base speed: {0.00} px/tick", ghost(ORANGE_GHOST).name(), ghost(ORANGE_GHOST).baseSpeed());
         publishGameEvent(GameEventType.LEVEL_STARTED);
     }
 
