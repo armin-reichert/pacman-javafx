@@ -100,7 +100,7 @@ public class GameLevel3D {
             .map(ghost -> Factory3D.createMutableGhost3D(variant, context.assets(), ghost, GHOST_SIZE)).toList();
 
         livesCounter3D = Factory3D.createLivesCounter3D(variant, context.assets(), LIVES_COUNTER_MAX, LIVE_SHAPE_SIZE,
-            context.game().hasCredit());
+            context.game().canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCounterPy);
 
         message3D = Factory3D.createMessage3D(context.assets());

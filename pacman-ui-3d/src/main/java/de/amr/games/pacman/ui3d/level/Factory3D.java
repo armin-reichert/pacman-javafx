@@ -48,15 +48,15 @@ public interface Factory3D {
         return ghost3D;
     }
 
-    static LivesCounter3D createLivesCounter3D(GameVariant variant, AssetStorage assets, int maxShapes, double shapeSize, boolean hasCredit) {
+    static LivesCounter3D createLivesCounter3D(GameVariant variant, AssetStorage assets, int maxShapes, double shapeSize, boolean canStartNewGame) {
         Node[] shapes = IntStream.range(0, maxShapes).mapToObj(i -> createLivesCounterShape(variant, assets, shapeSize)).toArray(Node[]::new);
         var counter3D = new LivesCounter3D(shapes, 10);
         counter3D.setTranslateX(2 * TS);
         counter3D.setTranslateY(2 * TS);
-        counter3D.setVisible(hasCredit);
+        counter3D.setVisible(canStartNewGame);
         counter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         counter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
-        counter3D.light().setLightOn(hasCredit);
+        counter3D.light().setLightOn(canStartNewGame);
         return counter3D;
     }
 

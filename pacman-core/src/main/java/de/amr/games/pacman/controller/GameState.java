@@ -83,7 +83,7 @@ public enum GameState implements FsmState<GameModel> {
                     enterState(GameState.HUNTING);
                 }
             }
-            else if (game.hasCredit()) { // start new game
+            else if (game.canStartNewGame()) { // start new game
                 if (timer.currentTick() == 1) {
                     game.startNewGame();
                 }
@@ -273,14 +273,14 @@ public enum GameState implements FsmState<GameModel> {
             timer.reset(TICKS_STATE_DURATION);
             timer.start();
             game.updateHighScore();
-            game.consumeCoin();
+            game.onGameEnded();
         }
 
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 game.removeWorld();
-                enterState(game.hasCredit() ? STARTING : INTRO);
+                enterState(game.canStartNewGame() ? STARTING : INTRO);
             }
         }
 

@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model.ms_pacman;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
@@ -104,6 +105,11 @@ public class MsPacManArcadeGame extends GameModel {
     public void reset() {
         super.reset();
         cruiseElroy = 0;
+    }
+
+    @Override
+    public boolean canStartNewGame() {
+        return GameController.it().coinControl().hasCredit();
     }
 
     protected GameLevel levelData(int levelNumber) {
@@ -264,6 +270,11 @@ public class MsPacManArcadeGame extends GameModel {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onGameEnded() {
+        GameController.it().coinControl().consumeCoin();
     }
 
     @Override

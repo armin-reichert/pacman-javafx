@@ -44,7 +44,7 @@ public enum GameAction2D implements GameAction {
             context.sounds().enabledProperty().set(true); // in demo mode, sound is disabled
             context.sounds().playCreditSound();
             if (!context.game().isPlaying()) {
-                boolean coinInserted = context.game().insertCoin();
+                boolean coinInserted = context.gameController().coinControl().insertCoin();
                 if (coinInserted) {
                     context.game().publishGameEvent(GameEventType.CREDIT_ADDED);
                 }
@@ -175,7 +175,7 @@ public enum GameAction2D implements GameAction {
         public void execute(GameContext context) {
             super.execute(context);
             context.sounds().stopAll();
-            context.game().consumeCoin();
+            context.game().onGameEnded();
             context.selectStartPage();
         }
     },
@@ -254,7 +254,7 @@ public enum GameAction2D implements GameAction {
             super.execute(context);
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 context.gameController().changeState(GameState.STARTING);
-            } else if (context.game().hasCredit()) {
+            } else if (context.game().canStartNewGame()) {
                 context.sounds().stopVoice();
                 if (context.gameState() == GameState.INTRO || context.gameState() == GameState.STARTING) {
                     context.gameController().changeState(GameState.READY);

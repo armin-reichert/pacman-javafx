@@ -109,7 +109,7 @@ public class HelpInfo {
     }
 
     private void addInfoForIntroScene() {
-        if (context.game().hasCredit()) {
+        if (context.game().canStartNewGame()) {
             addRow("help.start_game", "1");
         }
         addRow("help.add_credit", "5");
@@ -117,7 +117,7 @@ public class HelpInfo {
     }
 
     private void addInfoForCreditScene() {
-        if (context.game().hasCredit()) {
+        if (context.game().canStartNewGame()) {
             addRow("help.start_game", "1");
         }
         addRow("help.add_credit", "5");

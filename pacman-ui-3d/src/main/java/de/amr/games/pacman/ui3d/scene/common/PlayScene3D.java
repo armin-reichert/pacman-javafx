@@ -182,7 +182,7 @@ public class PlayScene3D implements GameScene {
 
         // Scores
         scores3D.showHighScore(game.highScore().points(), game.highScore().levelNumber());
-        if (context.game().hasCredit()) {
+        if (context.game().canStartNewGame()) {
             scores3D.showScore(game.score().points(), game.score().levelNumber());
         } else { // demo level or "game over" state
             String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());

@@ -51,7 +51,7 @@ public class InfoBoxGameControl extends InfoBox {
         cbAutopilot        = checkBox("Autopilot");
         cbImmunity         = checkBox("Pac-Man Immune");
 
-        spinnerCredit.valueProperty().addListener((py, ov, number) -> context.game().setNumCoins(number));
+        spinnerCredit.valueProperty().addListener((py, ov, number) -> context.gameController().coinControl().setNumCoins(number));
 
         comboGameVariant.setOnAction(e -> {
             if (comboGameVariant.getValue() != context.gameVariant()) {
@@ -78,7 +78,7 @@ public class InfoBoxGameControl extends InfoBox {
         GameModel game = context.game();
         GameState state = context.gameState();
 
-        spinnerCredit.getValueFactory().setValue(game.credit());
+        spinnerCredit.getValueFactory().setValue(context.gameController().coinControl().credit());
         comboGameVariant.setValue(game.variant());
         comboInitialLives.setValue(game.initialLives());
 
@@ -102,7 +102,7 @@ public class InfoBoxGameControl extends InfoBox {
     }
 
     private boolean canStartLevel() {
-        return context.game().hasCredit() && oneOf(context.gameState(), GameState.INTRO, GameState.STARTING);
+        return context.game().canStartNewGame() && oneOf(context.gameState(), GameState.INTRO, GameState.STARTING);
     }
 
     private boolean canEnterNextLevel() {

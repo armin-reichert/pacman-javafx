@@ -294,6 +294,11 @@ public class TengenMsPacManGame extends GameModel {
         setStartingLevel(1);
     }
 
+    @Override
+    public boolean canStartNewGame() {
+        return true; // no coins etc. needed
+    }
+
     public Optional<GameLevel> currentLevelData() {
         return Optional.ofNullable(currentLevelData);
     }
@@ -631,6 +636,11 @@ public class TengenMsPacManGame extends GameModel {
         Vector2i houseTopLeftTile = map.terrain().getTileProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, v2i(10, 15));
         world.createArcadeHouse(houseTopLeftTile.x(), houseTopLeftTile.y());
         return world;
+    }
+
+    @Override
+    public void onGameEnded() {
+        // nothing to do yet
     }
 
     @Override

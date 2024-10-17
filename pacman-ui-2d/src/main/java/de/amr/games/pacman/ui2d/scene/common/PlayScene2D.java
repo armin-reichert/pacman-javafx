@@ -99,16 +99,11 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void handleInput() {
-        switch (context.gameVariant()) {
-            case MS_PACMAN_TENGEN -> context.doFirstCalledAction(TENGEN_ACTIONS);
-            default -> {
-                if (context.isActionCalled(GameAction2D.ADD_CREDIT) && context.game().isDemoLevel()) {
-                    GameAction2D.ADD_CREDIT.execute(context);
-                    return;
-                }
-                context.doFirstCalledAction(ACTIONS);
-            }
+        if (context.isActionCalled(GameAction2D.ADD_CREDIT) && context.game().isDemoLevel()) {
+            GameAction2D.ADD_CREDIT.execute(context);
+            return;
         }
+        context.doFirstCalledAction(ACTIONS);
     }
 
     @Override
@@ -133,13 +128,9 @@ public class PlayScene2D extends GameScene2D {
             ghostsInZOrder().forEach(renderer::drawAnimatedCreatureInfo);
         }
 
-        boolean showCredit = switch (context.gameVariant()) {
-            case MS_PACMAN_TENGEN -> false;
-            default -> !context.game().hasCredit() || context.gameState() == GameState.GAME_OVER;
-        };
-
-        if (showCredit) {
-            renderer.drawText("CREDIT %2d".formatted(context.game().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, size.y() - 2);
+        if (!context.game().canStartNewGame()) {
+            int credit = context.gameController().coinControl().credit();
+            renderer.drawText("CREDIT %2d".formatted(credit), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, size.y() - 2);
         } else {
             //TODO: this code looks ugly
             int numLivesShown = context.game().lives() - 1;

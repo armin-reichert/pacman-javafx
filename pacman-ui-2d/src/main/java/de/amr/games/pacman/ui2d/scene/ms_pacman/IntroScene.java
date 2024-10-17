@@ -141,7 +141,7 @@ public class IntroScene extends GameScene2D {
         }
         r.drawAnimatedEntity(msPacMan);
         r.drawMsPacManMidwayCopyright(t(6), t(28), ARCADE_RED, font);
-        r.drawText("CREDIT %2d".formatted(context.game().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, sceneSize.y() - 2);
+        r.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, sceneSize.y() - 2);
         r.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
             context.game().levelCounter(), sceneSize);
     }
@@ -303,7 +303,7 @@ public class IntroScene extends GameScene2D {
             @Override
             public void onUpdate(IntroScene intro) {
                 intro.marqueeTimer.tick();
-                if (timer.atSecond(2.0) && !intro.context.game().hasCredit()) {
+                if (timer.atSecond(2.0) && !intro.context.game().canStartNewGame()) {
                     intro.context.gameController().changeState(GameState.READY); // demo level
                 } else if (timer.atSecond(5)) {
                     intro.context.gameController().changeState(GameState.STARTING);

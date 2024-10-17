@@ -7,6 +7,7 @@ package de.amr.games.pacman.controller;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
+import de.amr.games.pacman.model.CoinControl;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
@@ -57,6 +58,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         return THE_ONE;
     }
 
+    private final CoinControl coinControl = new CoinControl();
     private final Map<GameVariant, GameModel> modelsByVariant = new EnumMap<>(GameVariant.class);
     private GameModel currentGame;
 
@@ -109,5 +111,9 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     public void update() {
         currentGame.clearEventLog();
         super.update();
+    }
+
+    public CoinControl coinControl() {
+        return coinControl;
     }
 }

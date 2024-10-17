@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model.pacman;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2f;
@@ -132,12 +133,23 @@ public class PacManArcadeGame extends GameModel {
         highScoreFile = new File(userDir, "highscore-pacman.xml");
     }
 
+    @Override
+    public boolean canStartNewGame() {
+        return GameController.it().coinControl().hasCredit();
+    }
+
     public Optional<GameLevel> currentLevelData() {
         return levelNumber > 0 ? Optional.of(levelData(levelNumber)): Optional.empty();
     }
 
     public byte cruiseElroy() {
         return cruiseElroy;
+    }
+
+    protected void setCruiseElroyEnabled(boolean enabled) {
+        if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
+            cruiseElroy = (byte) -cruiseElroy;
+        }
     }
 
     @Override
@@ -272,10 +284,9 @@ public class PacManArcadeGame extends GameModel {
         }
     }
 
-    protected void setCruiseElroyEnabled(boolean enabled) {
-        if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
-            cruiseElroy = (byte) -cruiseElroy;
-        }
+    @Override
+    public void onGameEnded() {
+        GameController.it().coinControl().consumeCoin();
     }
 
     @Override

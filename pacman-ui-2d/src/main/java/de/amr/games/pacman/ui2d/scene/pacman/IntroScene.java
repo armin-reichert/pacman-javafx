@@ -139,7 +139,7 @@ public class IntroScene extends GameScene2D {
             default -> {
             }
         }
-        renderer.drawText("CREDIT %2d".formatted(context.game().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, sceneSize.y() - 2);
+        renderer.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, sceneSize.y() - 2);
         renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
             context.game().levelCounter(), sceneSize);
     }
@@ -373,7 +373,7 @@ public class IntroScene extends GameScene2D {
             public void onUpdate(IntroScene intro) {
                 if (timer.atSecond(0.75)) {
                     intro.ghosts[3].hide();
-                    if (!intro.context.game().hasCredit()) {
+                    if (!intro.context.game().canStartNewGame()) {
                         intro.context.gameController().changeState(GameState.READY);
                     }
                 } else if (timer.atSecond(5)) {
