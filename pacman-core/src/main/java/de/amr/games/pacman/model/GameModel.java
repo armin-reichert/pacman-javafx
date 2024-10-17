@@ -110,6 +110,8 @@ public abstract class GameModel {
     public abstract int currentMapNumber();
     public abstract void activateNextBonus();
     public abstract int intermissionNumberAfterLevel();
+    public abstract float ghostSpeedReturningToHouse(Ghost ghost);
+    public abstract float ghostSpeedInsideHouse(Ghost ghost);
     public abstract float ghostTunnelSpeed(Ghost ghost);
     public abstract float ghostFrightenedSpeed(Ghost ghost);
     public abstract float pacPowerSpeed();

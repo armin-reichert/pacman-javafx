@@ -413,6 +413,16 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     @Override
+    public float ghostSpeedInsideHouse(Ghost ghost) {
+        return 0.5f;
+    }
+
+    @Override
+    public float ghostSpeedReturningToHouse(Ghost ghost) {
+        return 2;
+    }
+
+    @Override
     public float ghostFrightenedSpeed(Ghost ghost) {
         return currentLevelData.ghostSpeedFrightenedPercentage() * 0.01f * ghost.baseSpeed();
     }
@@ -451,11 +461,9 @@ public class TengenMsPacManGame extends GameModel {
         if (boosterMode == BoosterMode.ALWAYS_ON) {
             activateBooster();
         }
-        float ghostBaseSpeed = ghostBaseSpeedInLevel(levelNumber) + ghostDifficultySpeedDelta(difficulty);
         for (Ghost ghost : ghosts) {
-            ghost.setBaseSpeed(ghostBaseSpeed + ghostIDSpeedDelta(ghost.id()));
-            ghost.setSpeedReturningHome(2 * ghostBaseSpeed); // TODO check
-            ghost.setSpeedInsideHouse(0.5f); // TODO check
+            ghost.setBaseSpeed(ghostBaseSpeedInLevel(levelNumber)
+                + ghostDifficultySpeedDelta(difficulty) + ghostIDSpeedDelta(ghost.id()));
         }
     }
 

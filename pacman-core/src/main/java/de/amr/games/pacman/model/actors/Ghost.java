@@ -61,8 +61,6 @@ public class Ghost extends Creature implements AnimatedEntity {
     private String name;
     private GhostState state;
     private Vector2f revivalPosition;
-    private float speedReturningToHouse;
-    private float speedInsideHouse;
     private Animations animations;
     private Consumer<Ghost> huntingBehaviour = ghost -> {};
     private List<Vector2i> cannotMoveUpTiles = List.of();
@@ -129,22 +127,6 @@ public class Ghost extends Creature implements AnimatedEntity {
 
     public List<Vector2i> cannotMoveUpTiles() {
         return cannotMoveUpTiles;
-    }
-
-    public void setSpeedReturningHome(float pixelsPerTick) {
-        speedReturningToHouse = pixelsPerTick;
-    }
-
-    public float speedReturningToHouse() {
-        return speedReturningToHouse;
-    }
-
-    public float speedInsideHouse() {
-        return speedInsideHouse;
-    }
-
-    public void setSpeedInsideHouse(float pixelsPerTick) {
-        speedInsideHouse = pixelsPerTick;
     }
 
     /**
@@ -266,8 +248,8 @@ public class Ghost extends Creature implements AnimatedEntity {
             case HUNTING_PAC        -> updateStateHuntingPac(game);
             case FRIGHTENED         -> updateStateFrightened(game);
             case EATEN              -> updateStateEaten();
-            case RETURNING_HOME     -> updateStateReturningToHouse();
-            case ENTERING_HOUSE     -> updateStateEnteringHouse();
+            case RETURNING_HOME     -> updateStateReturningToHouse(game);
+            case ENTERING_HOUSE     -> updateStateEnteringHouse(game);
         }
     }
 
@@ -285,7 +267,7 @@ public class Ghost extends Creature implements AnimatedEntity {
     private void updateStateLocked(GameModel game) {
         if (insideHouse()) {
             float minY = revivalPosition.y() - 4, maxY = revivalPosition.y() + 4;
-            setSpeed(speedInsideHouse);
+            setSpeed(game.ghostSpeedInsideHouse(this));
             move();
             if (posY <= minY) {
                 setMoveAndWishDir(DOWN);
@@ -313,6 +295,7 @@ public class Ghost extends Creature implements AnimatedEntity {
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
     private void updateStateLeavingHouse(GameModel game) {
+        float speedInsideHouse = game.ghostSpeedInsideHouse(this);
         Vector2f houseEntryPosition = world.houseEntryPosition();
         if (posY() <= houseEntryPosition.y()) {
             // has raised and is outside house
@@ -404,7 +387,8 @@ public class Ghost extends Creature implements AnimatedEntity {
      * After the short time being displayed by his value, the eaten ghost is displayed by his eyes only and returns
      * to the ghost house to be revived. Hallelujah!
      */
-    private void updateStateReturningToHouse() {
+    private void updateStateReturningToHouse(GameModel game) {
+        float speedReturningToHouse = game.ghostSpeedReturningToHouse(this);
         Vector2f houseEntry = world.houseEntryPosition();
         if (position().almostEquals(houseEntry, 0.5f * speedReturningToHouse, 0)) {
             setPosition(houseEntry);
@@ -424,7 +408,8 @@ public class Ghost extends Creature implements AnimatedEntity {
      * When an eaten ghost has arrived at the ghost house door, he falls down to the center of the house,
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
-    private void updateStateEnteringHouse() {
+    private void updateStateEnteringHouse(GameModel game) {
+        float speedReturningToHouse = game.ghostSpeedReturningToHouse(this);
         if (position().almostEquals(revivalPosition, speedReturningToHouse / 2, speedReturningToHouse / 2)) {
             setPosition(revivalPosition);
             setMoveAndWishDir(UP);

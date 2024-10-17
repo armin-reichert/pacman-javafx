@@ -200,11 +200,7 @@ public class PacManArcadeGame extends GameModel {
     @Override
     protected void setActorBaseSpeed(int levelNumber) {
         pac.setBaseSpeed(73.9f / 60f); // TODO should be 75 but then it doesn't run synchronously to the original game
-        ghosts().forEach(ghost -> {
-            ghost.setBaseSpeed(73.9f / 60f); // TODO see above
-            ghost.setSpeedReturningHome(2.0f);
-            ghost.setSpeedInsideHouse(0.5f);
-        });
+        ghosts().forEach(ghost -> ghost.setBaseSpeed(73.9f / 60f)); // TODO see above
     }
 
     @Override
@@ -244,6 +240,16 @@ public class PacManArcadeGame extends GameModel {
         return levelNumber > 0
             ? levelData(levelNumber).pacSpeedPoweredPercentage() * 0.01f * pac.baseSpeed()
             : 0;
+    }
+
+    @Override
+    public float ghostSpeedInsideHouse(Ghost ghost) {
+        return 0.5f;
+    }
+
+    @Override
+    public float ghostSpeedReturningToHouse(Ghost ghost) {
+        return 2;
     }
 
     @Override
