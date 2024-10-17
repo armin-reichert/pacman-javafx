@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAction2D;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -86,8 +86,8 @@ public class GamePage extends StackPane implements Page {
         gameCanvasPane.setCenter(gameCanvasContainer);
 
         gameCanvasContainer.setMinScaling(0.5);
-        gameCanvasContainer.setUnscaledCanvasWidth(GameModel.ARCADE_MAP_SIZE_X);
-        gameCanvasContainer.setUnscaledCanvasHeight(GameModel.ARCADE_MAP_SIZE_Y);
+        gameCanvasContainer.setUnscaledCanvasWidth(PacManArcadeGame.ARCADE_MAP_SIZE_X);
+        gameCanvasContainer.setUnscaledCanvasHeight(PacManArcadeGame.ARCADE_MAP_SIZE_Y);
         gameCanvasContainer.setBorderColor(ARCADE_PALE);
         gameCanvasContainer.enabledPy.bind(PY_GAME_CANVAS_DECORATED);
         gameCanvasContainer.enabledPy.addListener((py, ov, nv) -> adaptCanvasSizeToSceneSize());

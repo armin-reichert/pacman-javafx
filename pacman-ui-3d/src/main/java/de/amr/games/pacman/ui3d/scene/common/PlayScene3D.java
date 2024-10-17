@@ -495,7 +495,7 @@ public class PlayScene3D implements GameScene {
 
     private void playLevelCompleteAnimation() {
         int numFlashes = context.game().currentLevelData().orElseThrow().numFlashes();
-        boolean intermission = context.game().intermissionNumber(context.game().levelNumber()) != 0;
+        boolean intermission = context.game().intermissionNumberAfterLevel() != 0;
         Animation animation = intermission ? levelCompleteAnimationBeforeIntermission(numFlashes) : levelCompleteAnimation(numFlashes);
         animation.setDelay(Duration.seconds(1.0));
         animation.setOnFinished(e -> context.gameState().timer().expire());

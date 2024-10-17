@@ -147,7 +147,7 @@ public class GateKeeper {
         return null;
     }
 
-    void resetCounterAndSetEnabled(boolean enabled) {
+    public void resetCounterAndSetEnabled(boolean enabled) {
         globalCounter = 0;
         globalCounterEnabled = enabled;
         Logger.info("Global dot counter set to 0 and {}", enabled ? "enabled" : "disabled");

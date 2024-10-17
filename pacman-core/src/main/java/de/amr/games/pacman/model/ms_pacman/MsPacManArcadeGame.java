@@ -21,6 +21,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -85,6 +86,7 @@ public class MsPacManArcadeGame extends GameModel {
 
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
 
+    private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man?
     private int mapNumber;
     public boolean blueMazeBug = false;
 
@@ -95,8 +97,12 @@ public class MsPacManArcadeGame extends GameModel {
     }
 
     @Override
+    public void reset() {
+        super.reset();
+        cruiseElroy = 0;
+    }
+
     protected GameLevel levelData(int levelNumber) {
-        //TODO is this correct in Ms. Pac-Man?
         return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
     }
 
@@ -117,8 +123,7 @@ public class MsPacManArcadeGame extends GameModel {
      * </ul>
      * <p>
      */
-    @Override
-    public int mapNumberByLevelNumber(int levelNumber) {
+    private int mapNumberByLevelNumber(int levelNumber) {
         return switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
@@ -126,6 +131,11 @@ public class MsPacManArcadeGame extends GameModel {
             case 10, 11, 12, 13 -> 4;
             default -> (levelNumber - 14) % 8 < 4 ? 5 : 6;
         };
+    }
+
+    @Override
+    public int intermissionNumberAfterLevel() {
+        return levelNumber > 0 ? levelData(levelNumber).intermissionNumber() : 0;
     }
 
     /**
@@ -192,12 +202,51 @@ public class MsPacManArcadeGame extends GameModel {
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
+    @Override
     protected GameWorld createWorld(WorldMap map) {
         var world = new GameWorld(map);
         world.createArcadeHouse(HOUSE_X, HOUSE_Y);
         //TODO: store in map files
         map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(world.houseTopLeftTile()));
         return world;
+    }
+
+    @Override
+    public Optional<GameLevel> currentLevelData() {
+        return levelNumber > 0 ? Optional.of(levelData(levelNumber)): Optional.empty();
+    }
+
+    @Override
+    public int numFlashes() {
+        return levelNumber > 0 ? levelData(levelNumber).numFlashes() : 0;
+    }
+
+    @Override
+    public float pacNormalSpeed() {
+        return levelNumber > 0
+            ? levelData(levelNumber).pacSpeedPoweredPercentage() * 0.01f * pac.baseSpeed()
+            : 0;
+    }
+
+    @Override
+    public float pacPowerSpeed() {
+        return levelNumber > 0
+            ? levelData(levelNumber).pacSpeedPoweredPercentage() * 0.01f * pac.baseSpeed()
+            : 0;
+    }
+
+    @Override
+    public float ghostFrightenedSpeed(Ghost ghost) {
+        return levelNumber > 0
+            ? levelData(levelNumber).ghostSpeedFrightenedPercentage() * 0.01f * ghost.baseSpeed()
+            : 0;
+    }
+
+    @Override
+    public float ghostTunnelSpeed(Ghost ghost) {
+        return levelNumber > 0
+            ? levelData(levelNumber).ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed()
+            : 0;
     }
 
     /** In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
@@ -219,8 +268,48 @@ public class MsPacManArcadeGame extends GameModel {
     }
 
     @Override
+    protected void onFoodEaten() {
+        if (world.uneatenFoodCount() == levelData(levelNumber).elroy1DotsLeft()) {
+            cruiseElroy = 1;
+        } else if (world.uneatenFoodCount() == levelData(levelNumber).elroy2DotsLeft()) {
+            cruiseElroy = 2;
+        }
+    }
+
+    @Override
+    public void onPacDying() {
+        huntingTimer.stop();
+        Logger.info("Hunting timer stopped");
+        powerTimer.stop();
+        powerTimer.reset(0);
+        Logger.info("Power timer stopped and set to zero");
+        gateKeeper.resetCounterAndSetEnabled(true);
+        setCruiseElroyEnabled(false);
+        pac.die();
+    }
+
+    protected void setCruiseElroyEnabled(boolean enabled) {
+        if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
+            cruiseElroy = (byte) -cruiseElroy;
+        }
+    }
+
+    @Override
+    protected void onGhostReleased(Ghost ghost) {
+        if (ghost.id() == ORANGE_GHOST && cruiseElroy < 0) {
+            Logger.trace("Re-enable cruise elroy mode because {} exits house:", ghost.name());
+            setCruiseElroyEnabled(true);
+        }
+    }
+
+    @Override
     public boolean isBonusReached() {
         return world.eatenFoodCount() == 64 || world.eatenFoodCount() == 176;
+    }
+
+    @Override
+    public int pacPowerSeconds() {
+        return levelNumber > 0 ? levelData(levelNumber).pacPowerSeconds() : 0;
     }
 
     /**

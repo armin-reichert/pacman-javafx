@@ -19,9 +19,11 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.steering.RouteBasedSteering;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
+import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
@@ -45,6 +47,11 @@ import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
 public class PacManArcadeGame extends GameModel {
+
+    public static final byte ARCADE_MAP_TILES_X = 28;
+    public static final byte ARCADE_MAP_TILES_Y = 36;
+    public static final int  ARCADE_MAP_SIZE_X = 224;
+    public static final int  ARCADE_MAP_SIZE_Y = 288;
 
     // Level settings as specified in the dossier
     private static final GameLevel[] LEVELS = {
@@ -116,13 +123,25 @@ public class PacManArcadeGame extends GameModel {
 
     protected static final Vector2f BONUS_POS = halfTileRightOf(13, 20);
 
+
+    private byte cruiseElroy;
+
     public PacManArcadeGame(GameVariant gameVariant, File userDir) {
         super(gameVariant, userDir);
         initialLives = 3;
         highScoreFile = new File(userDir, "highscore-pacman.xml");
     }
 
+    public byte cruiseElroy() {
+        return cruiseElroy;
+    }
+
     @Override
+    public void reset() {
+        super.reset();
+        cruiseElroy = 0;
+    }
+
     protected GameLevel levelData(int levelNumber) {
         return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
     }
@@ -133,8 +152,8 @@ public class PacManArcadeGame extends GameModel {
     }
 
     @Override
-    public int mapNumberByLevelNumber(int levelNumber) {
-        return 1;
+    public int intermissionNumberAfterLevel() {
+        return levelNumber > 0 ? levelData(levelNumber).intermissionNumber() : 0;
     }
 
     @Override
@@ -191,6 +210,44 @@ public class PacManArcadeGame extends GameModel {
     }
 
     @Override
+    public Optional<GameLevel> currentLevelData() {
+        return levelNumber > 0 ? Optional.of(levelData(levelNumber)): Optional.empty();
+    }
+
+    @Override
+    public int numFlashes() {
+        return levelNumber > 0 ? levelData(levelNumber).numFlashes() : 0;
+    }
+
+    @Override
+    public float pacNormalSpeed() {
+        return levelNumber > 0
+            ? levelData(levelNumber).pacSpeedPoweredPercentage() * 0.01f * pac.baseSpeed()
+            : 0;
+    }
+
+    @Override
+    public float pacPowerSpeed() {
+        return levelNumber > 0
+            ? levelData(levelNumber).pacSpeedPoweredPercentage() * 0.01f * pac.baseSpeed()
+            : 0;
+    }
+
+    @Override
+    public float ghostFrightenedSpeed(Ghost ghost) {
+        return levelNumber > 0
+            ? levelData(levelNumber).ghostSpeedFrightenedPercentage() * 0.01f * ghost.baseSpeed()
+            : 0;
+    }
+
+    @Override
+    public float ghostTunnelSpeed(Ghost ghost) {
+        return levelNumber > 0
+            ? levelData(levelNumber).ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed()
+            : 0;
+    }
+
+    @Override
     public void buildDemoLevel() {
         buildRegularLevel(1);
         pac.setAutopilot(new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE)));
@@ -205,6 +262,46 @@ public class PacManArcadeGame extends GameModel {
     @Override
     public boolean isPacManKillingIgnoredInDemoLevel() {
         return false;
+    }
+
+    @Override
+    protected void onFoodEaten() {
+        if (world.uneatenFoodCount() == levelData(levelNumber).elroy1DotsLeft()) {
+            cruiseElroy = 1;
+        } else if (world.uneatenFoodCount() == levelData(levelNumber).elroy2DotsLeft()) {
+            cruiseElroy = 2;
+        }
+    }
+
+    protected void setCruiseElroyEnabled(boolean enabled) {
+        if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
+            cruiseElroy = (byte) -cruiseElroy;
+        }
+    }
+
+    @Override
+    protected void onGhostReleased(Ghost ghost) {
+        if (ghost.id() == ORANGE_GHOST && cruiseElroy < 0) {
+            Logger.trace("Re-enable cruise elroy mode because {} exits house:", ghost.name());
+            setCruiseElroyEnabled(true);
+        }
+    }
+
+    @Override
+    public void onPacDying() {
+        huntingTimer.stop();
+        Logger.info("Hunting timer stopped");
+        powerTimer.stop();
+        powerTimer.reset(0);
+        Logger.info("Power timer stopped and set to zero");
+        gateKeeper.resetCounterAndSetEnabled(true);
+        setCruiseElroyEnabled(false);
+        pac.die();
+    }
+
+    @Override
+    public int pacPowerSeconds() {
+        return levelNumber > 0 ? levelData(levelNumber).pacPowerSeconds() : 0;
     }
 
     @Override

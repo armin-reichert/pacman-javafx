@@ -90,11 +90,6 @@ public class PacManXXLGame extends PacManArcadeGame {
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
-    @Override
-    public int mapNumberByLevelNumber(int levelNumber) {
-        return 42; //TODO
-    }
-
     private WorldMap selectMap(int levelNumber) {
         switch (mapSelectionMode) {
             case NO_CUSTOM_MAPS -> {
@@ -132,11 +127,6 @@ public class PacManXXLGame extends PacManArcadeGame {
         }
         bonus.setEdible(bonusEdibleTicks());
         publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
-    }
-
-    @Override
-    public int intermissionNumber(int levelNumber) {
-        return 0;
     }
 
     public Map<File, WorldMap> customMapsByFile() {

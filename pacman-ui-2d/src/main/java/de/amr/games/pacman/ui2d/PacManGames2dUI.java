@@ -12,6 +12,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.model.pacman_xxl.PacManXXLGame;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import de.amr.games.pacman.ui2d.page.EditorPage;
@@ -167,8 +168,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
         bindActionsToKeys();
 
-        stage.setMinWidth(GameModel.ARCADE_MAP_SIZE_X * 1.25);
-        stage.setMinHeight(GameModel.ARCADE_MAP_SIZE_Y * 1.25);
+        stage.setMinWidth(PacManArcadeGame.ARCADE_MAP_SIZE_X * 1.25);
+        stage.setMinHeight(PacManArcadeGame.ARCADE_MAP_SIZE_Y * 1.25);
         stage.titleProperty().bind(stageTitleBinding());
         stage.centerOnScreen();
         stage.setOnShowing(e-> selectStartPage());
@@ -383,8 +384,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public Vector2i worldSizeTilesOrDefault() {
         return new Vector2i(
-            game().world() != null ? game().world().map().terrain().numCols() : GameModel.ARCADE_MAP_TILES_X,
-            game().world() != null ? game().world().map().terrain().numRows() : GameModel.ARCADE_MAP_TILES_Y
+            game().world() != null ? game().world().map().terrain().numCols() : PacManArcadeGame.ARCADE_MAP_TILES_X,
+            game().world() != null ? game().world().map().terrain().numRows() : PacManArcadeGame.ARCADE_MAP_TILES_Y
         );
     }
 

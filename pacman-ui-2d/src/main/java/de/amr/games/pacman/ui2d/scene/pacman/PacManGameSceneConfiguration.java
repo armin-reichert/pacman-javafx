@@ -69,7 +69,7 @@ public class PacManGameSceneConfiguration implements GameSceneConfiguration {
             case BOOT               -> "BootScene";
             case STARTING           -> "StartScene";
             case INTRO              -> "IntroScene";
-            case INTERMISSION       -> "CutScene" + context.game().intermissionNumber(context.game().levelNumber());
+            case INTERMISSION       -> "CutScene" + context.game().intermissionNumberAfterLevel();
             case TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");
             default                 -> "PlayScene2D";
         };

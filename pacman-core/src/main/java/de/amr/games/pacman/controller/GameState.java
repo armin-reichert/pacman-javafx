@@ -151,7 +151,7 @@ public enum GameState implements FsmState<GameModel> {
                 setProperty("mazeFlashing", false);
                 if (game.isDemoLevel()) { // just in case demo level is completed: back to intro scene
                     enterState(INTRO);
-                } else if (game.intermissionNumber(game.levelNumber()) != 0) {
+                } else if (game.intermissionNumberAfterLevel() != 0) {
                     enterState(INTERMISSION);
                 } else {
                     enterState(LEVEL_TRANSITION);
@@ -159,7 +159,7 @@ public enum GameState implements FsmState<GameModel> {
             } else if (timer.atSecond(1.5)) {
                 game.ghosts().forEach(Ghost::hide);
             } else if (timer.atSecond(2)) {
-                flashCount = 2 * game.currentLevelData().orElseThrow().numFlashes();
+                flashCount = 2 * game.numFlashes();
                 setProperty("mazeFlashing", true);
                 game.blinking().setStartPhase(Pulse.OFF);
                 game.blinking().restart(flashCount);
@@ -332,9 +332,6 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            if (game.currentLevelData().isEmpty()) {
-                return;
-            }
             if (game.levelNumber() > lastLevelNumber) {
                 GameController.it().restart(GameState.BOOT);
                 return;
@@ -369,7 +366,7 @@ public enum GameState implements FsmState<GameModel> {
             } else if (timer().atSecond(9.5)) {
                 setProperty("mazeFlashing", true);
                 game.blinking().setStartPhase(Pulse.OFF);
-                game.blinking().restart(2 * game.currentLevelData().get().numFlashes());
+                game.blinking().restart(2 * game.numFlashes());
             } else if (timer().atSecond(12.0)) {
                 timer().restartIndefinitely();
                 game.pac().freeze();

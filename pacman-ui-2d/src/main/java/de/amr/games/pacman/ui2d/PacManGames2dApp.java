@@ -39,7 +39,7 @@ public class PacManGames2dApp extends Application {
     public static final BooleanProperty PY_DEBUG_INFO                 = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_IMMUNITY                   = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_NIGHT_MODE                 = new SimpleBooleanProperty(false);
-    public static final IntegerProperty PY_PIP_HEIGHT                 = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_Y);
+    public static final IntegerProperty PY_PIP_HEIGHT                 = new SimpleIntegerProperty(8*36);
     public static final BooleanProperty PY_PIP_ON                     = new SimpleBooleanProperty(false);
     public static final IntegerProperty PY_PIP_OPACITY_PERCENT        = new SimpleIntegerProperty(100);
     public static final IntegerProperty PY_SIMULATION_STEPS           = new SimpleIntegerProperty(1);

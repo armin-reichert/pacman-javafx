@@ -19,6 +19,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -182,7 +183,7 @@ public class TengenMsPacManGame extends GameModel {
             case HARD -> 16;
             case CRAZY -> 32;
         } / 32f;
-    };
+    }
 
     private static float ghostIDSpeedDelta(byte ghostID) {
         return switch (ghostID) {
@@ -202,7 +203,7 @@ public class TengenMsPacManGame extends GameModel {
         else if (inRange(levelNumber, 17, 20)) { units = 0x27; }
         else if (inRange(levelNumber, 21, 24)) { units = 0x26; }
         else if (inRange(levelNumber, 25, 28)) { units = 0x25; }
-        else if (levelNumber >= 29)                     { units = 0x24; }
+        else if (levelNumber >= 29)            { units = 0x24; }
 
         return units / 32f;
     }
@@ -348,7 +349,7 @@ public class TengenMsPacManGame extends GameModel {
         }
     }
 
-    public int mapNumberByLevelNumber(int levelNumber) {
+    private int mapNumberByLevelNumber(int levelNumber) {
         int numMaps = currentMapList.size();
         return levelNumber <= numMaps ? levelNumber : Globals.randomInt(1, numMaps + 1);
     }
@@ -387,6 +388,36 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     @Override
+    public Optional<GameLevel> currentLevelData() {
+        return Optional.ofNullable(currentLevelData);
+    }
+
+    @Override
+    public int pacPowerSeconds() {
+        return currentLevelData.pacPowerSeconds();
+    }
+
+    @Override
+    public float pacNormalSpeed() {
+        return pac.baseSpeed();
+    }
+
+    @Override
+    public float pacPowerSpeed() {
+        return currentLevelData.pacSpeedPoweredPercentage() * 0.01f * pac.baseSpeed();
+    }
+
+    @Override
+    public float ghostFrightenedSpeed(Ghost ghost) {
+        return currentLevelData.ghostSpeedFrightenedPercentage() * 0.01f * ghost.baseSpeed();
+    }
+
+    @Override
+    public float ghostTunnelSpeed(Ghost ghost) {
+        return currentLevelData.ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
+    }
+
+    @Override
     protected boolean hasOverflowBug() {
         return false;
     }
@@ -412,11 +443,6 @@ public class TengenMsPacManGame extends GameModel {
                 levelCounter.add((byte) (number - 1));
             }
         }
-    }
-
-    @Override
-    protected GameLevel levelData(int levelNumber) {
-        return currentLevelData;
     }
 
     @Override
@@ -513,6 +539,16 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     @Override
+    public int numFlashes() {
+        return currentLevelData.numFlashes();
+    }
+
+    @Override
+    public int intermissionNumberAfterLevel() {
+        return currentLevelData.intermissionNumber();
+    }
+
+    @Override
     protected boolean isScoreEnabledInDemoLevel() {
         return true;
     }
@@ -594,6 +630,27 @@ public class TengenMsPacManGame extends GameModel {
         return world;
     }
 
+    @Override
+    protected void onFoodEaten() {
+        // code that is executed whenever a pellt has been eaten
+    }
+
+    @Override
+    public void onPacDying() {
+        huntingTimer.stop();
+        Logger.info("Hunting timer stopped");
+        powerTimer.stop();
+        powerTimer.reset(0);
+        Logger.info("Power timer stopped and set to zero");
+        gateKeeper.resetCounterAndSetEnabled(true); // TODO how is that realized in Tengen?
+        pac.die();
+    }
+
+    @Override
+    protected void onGhostReleased(Ghost ghost) {
+        // code that is executed when ghost is relased from prison
+    }
+
     /**
      * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
      * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
@@ -604,7 +661,7 @@ public class TengenMsPacManGame extends GameModel {
         if (huntingPhaseIndex == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
             ghost.roam(speed);
         } else {
-            boolean chase = isChasingPhase(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
+            boolean chase = isChasingPhase(huntingPhaseIndex);
             Vector2i targetTile = chase ? chasingTarget(ghost) : scatterTarget(ghost);
             ghost.followTarget(targetTile, speed);
         }

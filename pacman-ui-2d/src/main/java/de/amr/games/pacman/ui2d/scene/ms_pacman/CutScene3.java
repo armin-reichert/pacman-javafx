@@ -51,7 +51,7 @@ public class CutScene3 extends GameScene2D {
     private void startMusic() {
         int number  = context.gameState() == GameState.TESTING_CUT_SCENES
             ? GameState.TESTING_CUT_SCENES.getProperty("intermissionTestNumber")
-            : context.game().intermissionNumber(context.game().levelNumber());
+            : context.game().intermissionNumberAfterLevel();
         context.sounds().playIntermissionSound(number);
     }
 

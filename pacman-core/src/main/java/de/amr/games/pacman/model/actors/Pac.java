@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.actors;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.steering.Steering;
 
@@ -100,10 +99,6 @@ public class Pac extends Creature implements AnimatedEntity {
     }
 
     public void update(GameModel game) {
-        if (game.currentLevelData().isEmpty()) {
-            return;
-        }
-        GameLevel level = game.currentLevelData().get();
         if (dead || restingTicks == REST_INDEFINITELY) {
             return;
         }
@@ -113,7 +108,7 @@ public class Pac extends Creature implements AnimatedEntity {
             } else {
                 manualSteering.steer(this, game.world());
             }
-            setSpeedPct(game.powerTimer().isRunning() ? level.pacSpeedPoweredPercentage() : level.pacSpeedPercentage());
+            setSpeed(game.powerTimer().isRunning() ? game.pacPowerSpeed() : game.pacNormalSpeed());
             tryMoving();
             if (moveInfo.moved) {
                 animations.startCurrentAnimation();

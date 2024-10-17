@@ -28,16 +28,11 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
- * Common part of all game variants.
+ * Common base class of all game models.
  *
  * @author Armin Reichert
  */
 public abstract class GameModel {
-
-    public static final byte ARCADE_MAP_TILES_X = 28;
-    public static final byte ARCADE_MAP_TILES_Y = 36;
-    public static final int  ARCADE_MAP_SIZE_X = 224;
-    public static final int  ARCADE_MAP_SIZE_Y = 288;
 
     // Common Pac animation IDs
     public static final String ANIM_PAC_MUNCHING = "munching";
@@ -63,9 +58,6 @@ public abstract class GameModel {
     /** Game loop frequency, ticks per second. */
     public static final float TICKS_PER_SECOND = 60;
 
-    /** Duration of one tick (in seconds). */
-    public static final float ONE_TICK_SECONDS = 1f / TICKS_PER_SECOND;
-
     /** Maximum number of coins, as in MAME. */
     public static final byte    MAX_CREDIT = 99;
     public static final byte    POINTS_PELLET = 10;
@@ -89,6 +81,8 @@ public abstract class GameModel {
     protected final List<Ghost>    victims = new ArrayList<>();
     protected final Score          score = new Score();
     protected final Score          highScore = new Score();
+
+    //TODO how is this done in Tengen Ms. Pac-Man?
     protected final GateKeeper     gateKeeper = new GateKeeper();
 
     protected File                 highScoreFile;
@@ -100,7 +94,6 @@ public abstract class GameModel {
     protected int                  lives;
 
     protected byte                 huntingPhaseIndex;
-    protected byte                 cruiseElroy;
     protected byte                 numGhostsKilledInLevel;
     protected byte                 nextBonusIndex; // -1=no bonus, 0=first, 1=second
 
@@ -116,20 +109,16 @@ public abstract class GameModel {
         this.userDir = checkNotNull(userDir);
     }
 
-    public File customMapDir() {
-        return new File(userDir, "maps");
-    }
-
-    public void updateCustomMaps() {}
-
-    /**
-     * @return number of predefined maps
-     */
     public abstract int currentMapNumber();
-    public abstract int mapNumberByLevelNumber(int levelNumber);
     public abstract void activateNextBonus();
+    public abstract int intermissionNumberAfterLevel();
+    public abstract float ghostTunnelSpeed(Ghost ghost);
+    public abstract float ghostFrightenedSpeed(Ghost ghost);
+    public abstract float pacPowerSpeed();
+    public abstract float pacNormalSpeed();
+    public abstract int pacPowerSeconds();
+    public abstract int numFlashes();
     protected abstract GameWorld createWorld(WorldMap map);
-    protected abstract GameLevel levelData(int levelNumber);
     protected abstract Pac createPac();
     protected abstract Ghost[] createGhosts();
     protected abstract void buildRegularLevel(int levelNumber);
@@ -139,6 +128,10 @@ public abstract class GameModel {
     protected abstract boolean isPacManKillingIgnoredInDemoLevel();
     protected abstract boolean isBonusReached();
     protected abstract boolean isLevelCounterEnabled();
+    protected abstract void onFoodEaten();
+
+    //TODO remove
+    public abstract Optional<GameLevel> currentLevelData();
 
     public final GameVariant variant() { return gameVariant; }
 
@@ -148,7 +141,6 @@ public abstract class GameModel {
         huntingPhaseIndex = 0;
         huntingTimer.resetIndefinitely();
         numGhostsKilledInLevel = 0;
-        cruiseElroy = 0;
         bonus = null;
         nextBonusIndex = -1;
         Arrays.fill(bonusSymbols, (byte)-1);
@@ -157,12 +149,6 @@ public abstract class GameModel {
         world = null;
         blinking.stop();
         blinking.reset();
-    }
-
-    protected void setCruiseElroyEnabled(boolean enabled) {
-        if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
-            cruiseElroy = (byte) -cruiseElroy;
-        }
     }
 
     public Pac pac() {
@@ -229,20 +215,8 @@ public abstract class GameModel {
         return levelNumber;
     }
 
-    public Optional<GameLevel> currentLevelData() {
-        return levelNumber == 0 ? Optional.empty() : Optional.of(levelData(levelNumber));
-    }
-
     public boolean isDemoLevel() {
         return demoLevel;
-    }
-
-    public int intermissionNumber(int levelNumber) {
-        return levelData(levelNumber).intermissionNumber();
-    }
-
-    public byte cruiseElroyState() {
-        return cruiseElroy;
     }
 
     public void reset() {
@@ -325,6 +299,12 @@ public abstract class GameModel {
     public void removeWorld() {
         world = null;
     }
+
+    public File customMapDir() {
+        return new File(userDir, "maps");
+    }
+
+    public void updateCustomMaps() {}
 
     /**
      * Sets each guy to his start position and resets him to his initial state. Note that they are all invisible
@@ -485,16 +465,7 @@ public abstract class GameModel {
         return playing;
     }
 
-    public void onPacDying() {
-        huntingTimer.stop();
-        Logger.info("Hunting timer stopped");
-        powerTimer.stop();
-        powerTimer.reset(0);
-        Logger.info("Power timer stopped and set to zero");
-        gateKeeper.resetCounterAndSetEnabled(true);
-        setCruiseElroyEnabled(false);
-        pac.die();
-    }
+    public abstract void onPacDying();
 
     public void onLevelCompleted() {
         blinking.setStartPhase(Pulse.OFF);
@@ -565,13 +536,12 @@ public abstract class GameModel {
                 victims.clear();
                 scorePoints(POINTS_ENERGIZER);
                 Logger.info("Scored {} points for eating energizer", POINTS_ENERGIZER);
-                if (levelData(levelNumber).pacPowerSeconds() > 0) {
+                if (pacPowerSeconds() > 0) {
                     eventLog.pacGetsPower = true;
                     huntingTimer.stop();
                     Logger.info("Hunting timer stopped");
-                    int seconds = levelData(levelNumber).pacPowerSeconds();
-                    powerTimer.restartSeconds(seconds);
-                    Logger.info("Power timer restarted to {} seconds", seconds);
+                    powerTimer.restartSeconds(pacPowerSeconds());
+                    Logger.info("Power timer restarted, duration={} ticks", powerTimer.duration());
                     // TODO do already frightened ghosts reverse too?
                     ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
                     ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
@@ -583,11 +553,7 @@ public abstract class GameModel {
             }
             gateKeeper.onPelletOrEnergizerEaten(this);
             world.eatFoodAt(pacTile);
-            if (world.uneatenFoodCount() == levelData(levelNumber).elroy1DotsLeft()) {
-                cruiseElroy = 1;
-            } else if (world.uneatenFoodCount() == levelData(levelNumber).elroy2DotsLeft()) {
-                cruiseElroy = 2;
-            }
+            onFoodEaten();
             if (isBonusReached()) {
                 activateNextBonus();
                 eventLog.bonusIndex = nextBonusIndex;
@@ -657,13 +623,12 @@ public abstract class GameModel {
                 eventLog.ghostReleaseInfo = releaseInfo;
                 prisoner.setMoveAndWishDir(Direction.UP);
                 prisoner.setState(LEAVING_HOUSE);
-                if (prisoner.id() == ORANGE_GHOST && cruiseElroyState() < 0) {
-                    Logger.trace("Re-enable cruise elroy mode because {} exits house:", prisoner.name());
-                    setCruiseElroyEnabled(true);
-                }
+                onGhostReleased(prisoner);
             }
         }
     }
+
+    protected abstract void onGhostReleased(Ghost ghost);
 
     public void killGhost(Ghost ghost) {
         eventLog.killedGhosts.add(ghost);

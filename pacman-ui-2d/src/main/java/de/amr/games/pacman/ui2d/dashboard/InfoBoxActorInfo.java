@@ -12,6 +12,7 @@ import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
 
@@ -48,7 +49,9 @@ public class InfoBoxActorInfo extends InfoBox {
     }
 
     private Supplier<String> pacInfo(BiFunction<GameModel, Pac, String> fnPacInfo) {
-        return ifLevelPresent(level -> fnPacInfo.apply(context.game(), context.game().pac()));
+        return ifLevelPresent(level -> context.game().pac() != null
+            ? fnPacInfo.apply(context.game(), context.game().pac())
+            : InfoText.NO_INFO);
     }
 
     private String locationInfo(GameModel game, Creature guy) {
@@ -95,8 +98,10 @@ public class InfoBoxActorInfo extends InfoBox {
 
     private String ghostNameAndState(GameModel game, Ghost ghost) {
         String name = ghost.name();
-        if (ghost.id() == GameModel.RED_GHOST && game.cruiseElroyState() > 0) {
-            name = "Elroy" + game.cruiseElroyState();
+        if (game instanceof PacManArcadeGame pacManGame) {
+            if (ghost.id() == GameModel.RED_GHOST && pacManGame.cruiseElroy() > 0) {
+                name = "Elroy" + pacManGame.cruiseElroy();
+            }
         }
         return String.format("%s (%s)", name, ghostState(game, ghost));
     }
