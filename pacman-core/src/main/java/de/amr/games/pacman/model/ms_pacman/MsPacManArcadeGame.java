@@ -156,11 +156,11 @@ public class MsPacManArcadeGame extends GameModel {
 
     @Override
     protected void setActorBaseSpeed(int levelNumber) {
-        pac.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * ONE_TICK_SECONDS);
+        pac.setBaseSpeed(1.25f);
         ghosts().forEach(ghost -> {
-            ghost.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * ONE_TICK_SECONDS);
-            ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME * ONE_TICK_SECONDS);
-            ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE * ONE_TICK_SECONDS);
+            ghost.setBaseSpeed(1.25f);
+            ghost.setSpeedReturningHome(2.0f);
+            ghost.setSpeedInsideHouse(0.5f);
         });
     }
 
@@ -296,7 +296,7 @@ public class MsPacManArcadeGame extends GameModel {
         byte symbol = bonusSymbols[nextBonusIndex];
         var movingBonus = new MovingBonus(world, symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         movingBonus.setRoute(route, leftToRight);
-        movingBonus.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * ONE_TICK_SECONDS);
+        movingBonus.setBaseSpeed(1.25f);
         Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
         bonus = movingBonus;
         bonus.setEdible(TickTimer.INDEFINITE);

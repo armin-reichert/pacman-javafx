@@ -162,11 +162,11 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     protected void setActorBaseSpeed(int levelNumber) {
-        pac.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * ONE_TICK_SECONDS);
+        pac.setBaseSpeed(73.9f / 60f); // TODO should be 75 but then it doesn't run synchronously to the original game
         ghosts().forEach(ghost -> {
-            ghost.setBaseSpeed(BASE_SPEED_IN_PX_PER_SEC * ONE_TICK_SECONDS);
-            ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME * ONE_TICK_SECONDS);
-            ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE * ONE_TICK_SECONDS);
+            ghost.setBaseSpeed(73.9f / 60f); // TODO see above
+            ghost.setSpeedReturningHome(2.0f);
+            ghost.setSpeedInsideHouse(0.5f);
         });
     }
 

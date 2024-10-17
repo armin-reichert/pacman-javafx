@@ -66,9 +66,6 @@ public abstract class GameModel {
     /** Duration of one tick (in seconds). */
     public static final float ONE_TICK_SECONDS = 1f / TICKS_PER_SECOND;
 
-    /** Movement speed in pixel/sec. */
-    public static final float BASE_SPEED_IN_PX_PER_SEC = 73.9f; //TODO this should be 75 but that doesn't work yet
-
     /** Maximum number of coins, as in MAME. */
     public static final byte    MAX_CREDIT = 99;
     public static final byte    POINTS_PELLET = 10;
@@ -80,8 +77,6 @@ public abstract class GameModel {
     public static final byte    BONUS_POINTS_SHOWN_TICKS = 120; // unsure
     public static final byte    RESTING_TICKS_PELLET = 1;
     public static final byte    RESTING_TICKS_ENERGIZER = 3;
-    public static final byte    PPS_GHOST_INSIDE_HOUSE = 30; // correct?
-    public static final byte    PPS_GHOST_RETURNING_HOME = 120; // correct?
     public static final short[] KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
 
     protected final GameVariant    gameVariant;
