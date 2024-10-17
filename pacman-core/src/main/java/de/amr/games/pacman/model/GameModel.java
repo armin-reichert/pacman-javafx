@@ -59,7 +59,6 @@ public abstract class GameModel {
     public static final float TICKS_PER_SECOND = 60;
 
     /** Maximum number of coins, as in MAME. */
-    public static final byte    MAX_CREDIT = 99;
     public static final byte    POINTS_PELLET = 10;
     public static final byte    POINTS_ENERGIZER = 50;
     public static final short   POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;

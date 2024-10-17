@@ -6,7 +6,16 @@ package de.amr.games.pacman.model;
 
 public class CoinControl {
 
+    private int maxCoins = 99;
     private int numCoins = 0;
+
+    public int maxCoins() {
+        return maxCoins;
+    }
+
+    public void setMaxCoins(int maxCoins) {
+        this.maxCoins = maxCoins;
+    }
 
     /**
      * @return number of coins inserted.
@@ -20,13 +29,13 @@ public class CoinControl {
     }
 
     public void setNumCoins(int numCoins) {
-        if (numCoins >= 0 && numCoins <= GameModel.MAX_CREDIT) {
+        if (numCoins >= 0 && numCoins <= maxCoins) {
             this.numCoins = numCoins;
         }
     }
 
     public boolean insertCoin() {
-        if (numCoins < GameModel.MAX_CREDIT) {
+        if (numCoins < maxCoins) {
             ++numCoins;
             return true;
         }

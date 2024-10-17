@@ -43,7 +43,7 @@ public class InfoBoxGameControl extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        spinnerCredit      = integerSpinner("Credit", 0, GameModel.MAX_CREDIT, 0);
+        spinnerCredit      = integerSpinner("Credit", 0, context.gameController().coinControl().maxCoins(), 0);
         comboGameVariant   = comboBox("Variant", GameVariant.values());
         comboInitialLives  = comboBox("Initial Lives", new Integer[] {3, 5});
         bgLevelActions     = buttonList("Game Level", "Start", "Quit", "Next");
