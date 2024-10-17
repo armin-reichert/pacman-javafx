@@ -161,7 +161,7 @@ public enum GameAction2D implements GameAction {
                 editorPage.startEditor(context.game().world().map());
                 context.selectPage(editorPage);
             } else {
-                context.showFlashMessage("This game variant does not support custom maps");
+                context.showFlashMessageSeconds(2, "This game variant does not support custom maps");
             }
         }
     },

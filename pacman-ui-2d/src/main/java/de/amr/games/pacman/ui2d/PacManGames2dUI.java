@@ -488,11 +488,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void showFlashMessage(String message, Object... args) {
-        showFlashMessageSeconds(1, message, args);
-    }
-
-    @Override
     public void showFlashMessageSeconds(double seconds, String message, Object... args) {
         flashMessageLayer.showMessage(String.format(message, args), seconds);
     }

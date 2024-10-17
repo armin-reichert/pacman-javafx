@@ -48,7 +48,9 @@ public interface GameContext {
     void        selectGamePage();
     EditorPage  getOrCreateEditorPage();
     GamePage    gamePage();
-    void        showFlashMessage(String message, Object... args);
+    default void showFlashMessage(String message, Object... args) {
+        showFlashMessageSeconds(1, message, args);
+    };
     void        showFlashMessageSeconds(double seconds, String message, Object... args);
     GameClockFX gameClock();
     Vector2f    sceneSize();
