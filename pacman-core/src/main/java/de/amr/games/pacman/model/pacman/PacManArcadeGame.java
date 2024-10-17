@@ -132,6 +132,10 @@ public class PacManArcadeGame extends GameModel {
         highScoreFile = new File(userDir, "highscore-pacman.xml");
     }
 
+    public Optional<GameLevel> currentLevelData() {
+        return levelNumber > 0 ? Optional.of(levelData(levelNumber)): Optional.empty();
+    }
+
     public byte cruiseElroy() {
         return cruiseElroy;
     }
@@ -207,11 +211,6 @@ public class PacManArcadeGame extends GameModel {
         var world = new GameWorld(map);
         world.createArcadeHouse(HOUSE_X, HOUSE_Y);
         return world;
-    }
-
-    @Override
-    public Optional<GameLevel> currentLevelData() {
-        return levelNumber > 0 ? Optional.of(levelData(levelNumber)): Optional.empty();
     }
 
     @Override

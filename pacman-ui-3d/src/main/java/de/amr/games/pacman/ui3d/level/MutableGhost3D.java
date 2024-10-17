@@ -104,6 +104,7 @@ public class MutableGhost3D {
     }
 
     public void init(GameContext context) {
+        numFlashes = context.game().numFlashes();
         brakeAnimation.stop();
         ghost3D.stopDressAnimation();
         numberCubeRotation.stop();
@@ -115,7 +116,6 @@ public class MutableGhost3D {
         updateTransform();
         updateLook(context.game());
         updateAnimations();
-        context.game().currentLevelData().ifPresent(level -> numFlashes = level.numFlashes());
     }
 
     public Group root() {

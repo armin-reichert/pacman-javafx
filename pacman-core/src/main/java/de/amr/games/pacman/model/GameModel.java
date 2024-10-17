@@ -130,9 +130,6 @@ public abstract class GameModel {
     protected abstract boolean isLevelCounterEnabled();
     protected abstract void onFoodEaten();
 
-    //TODO remove
-    public abstract Optional<GameLevel> currentLevelData();
-
     public final GameVariant variant() { return gameVariant; }
 
     protected void clearLevel() {

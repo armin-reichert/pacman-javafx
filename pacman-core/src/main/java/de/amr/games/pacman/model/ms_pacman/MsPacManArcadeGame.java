@@ -96,6 +96,10 @@ public class MsPacManArcadeGame extends GameModel {
         highScoreFile = new File(userDir, "highscore-ms_pacman.xml");
     }
 
+    public Optional<GameLevel> currentLevelData() {
+        return levelNumber > 0 ? Optional.of(levelData(levelNumber)): Optional.empty();
+    }
+
     @Override
     public void reset() {
         super.reset();
@@ -209,11 +213,6 @@ public class MsPacManArcadeGame extends GameModel {
         //TODO: store in map files
         map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(world.houseTopLeftTile()));
         return world;
-    }
-
-    @Override
-    public Optional<GameLevel> currentLevelData() {
-        return levelNumber > 0 ? Optional.of(levelData(levelNumber)): Optional.empty();
     }
 
     @Override

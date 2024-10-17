@@ -494,12 +494,12 @@ public class PlayScene3D implements GameScene {
     }
 
     private void playLevelCompleteAnimation() {
-        int numFlashes = context.game().currentLevelData().orElseThrow().numFlashes();
-        boolean intermission = context.game().intermissionNumberAfterLevel() != 0;
-        Animation animation = intermission ? levelCompleteAnimationBeforeIntermission(numFlashes) : levelCompleteAnimation(numFlashes);
+        Animation animation = context.game().intermissionNumberAfterLevel() != 0
+            ? levelCompleteAnimationBeforeIntermission(context.game().numFlashes())
+            : levelCompleteAnimation(context.game().numFlashes());
         animation.setDelay(Duration.seconds(1.0));
         animation.setOnFinished(e -> context.gameState().timer().expire());
-        context.gameState().timer().resetIndefinitely();
+        context.gameState().timer().resetIndefinitely(); // block game state until animation has finished
         animation.play();
     }
 

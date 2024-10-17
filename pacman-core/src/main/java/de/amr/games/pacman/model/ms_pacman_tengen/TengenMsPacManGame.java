@@ -294,6 +294,10 @@ public class TengenMsPacManGame extends GameModel {
         setStartingLevel(1);
     }
 
+    public Optional<GameLevel> currentLevelData() {
+        return Optional.ofNullable(currentLevelData);
+    }
+
     private boolean isStrangeMap(WorldMap worldMap) {
         int mapNumber = Integer.parseInt(worldMap.terrain().getProperty("map_number"));
         if (mapNumber == 16 || mapNumber == 28 || mapNumber == 30) {
@@ -385,11 +389,6 @@ public class TengenMsPacManGame extends GameModel {
         Pac msPacMan = new Pac();
         msPacMan.setName("Ms. Pac-Man");
         return msPacMan;
-    }
-
-    @Override
-    public Optional<GameLevel> currentLevelData() {
-        return Optional.ofNullable(currentLevelData);
     }
 
     @Override
