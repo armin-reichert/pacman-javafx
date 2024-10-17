@@ -7,7 +7,6 @@ package de.amr.games.pacman.controller;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
-import de.amr.games.pacman.model.CoinControl;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
