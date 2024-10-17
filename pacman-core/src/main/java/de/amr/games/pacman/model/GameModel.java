@@ -540,9 +540,8 @@ public abstract class GameModel {
         if (pacPowerSeconds() > 0) {
             eventLog.pacGetsPower = true;
             huntingTimer.stop();
-            Logger.info("Hunting timer stopped");
             powerTimer.restartSeconds(pacPowerSeconds());
-            Logger.info("Power timer restarted, duration={} ticks", powerTimer.duration());
+            Logger.info("Hunting paused, power timer restarted, duration={} ticks", powerTimer.duration());
             ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
             publishGameEvent(GameEventType.PAC_GETS_POWER);
