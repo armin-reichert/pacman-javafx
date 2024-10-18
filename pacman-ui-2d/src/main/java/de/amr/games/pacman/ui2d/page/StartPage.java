@@ -178,12 +178,7 @@ public class StartPage extends StackPane implements Page {
 
         Node btnPlay = createPlayButton(context.locText("play_button"), context.assets());
         BorderPane.setAlignment(btnPlay, Pos.BOTTOM_CENTER);
-        switch (context.gameVariant()) {
-            case MS_PACMAN        -> {btnPlay.setTranslateY(-60);}
-            case MS_PACMAN_TENGEN -> {btnPlay.setTranslateY(-60);}
-            case PACMAN           -> {btnPlay.setTranslateY(-60);}
-            case PACMAN_XXL       -> {btnPlay.setTranslateY(-60);}
-        }
+        btnPlay.setTranslateY(-60);
         btnPlay.setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY)) {
                 context.selectGamePage();

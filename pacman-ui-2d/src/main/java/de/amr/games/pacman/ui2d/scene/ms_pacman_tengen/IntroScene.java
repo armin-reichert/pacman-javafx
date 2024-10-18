@@ -68,7 +68,13 @@ public class IntroScene extends GameScene2D {
         TengenMsPacManGameSpriteSheet spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         context.setScoreVisible(false);
 
+        ghostIndex = 0;
+        waitBeforeRising = 0;
+
         msPacMan = new Pac();
+        msPacMan.setAnimations(new PacAnimations(spriteSheet));
+        msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
+
         ghosts = new Ghost[] { Ghost.blinky(), Ghost.inky(), Ghost.pinky(), Ghost.sue() };
         ghostColors = new Color[] {
             context.assets().color("tengen.ghost.0.color.normal.dress"),
@@ -76,22 +82,17 @@ public class IntroScene extends GameScene2D {
             context.assets().color("tengen.ghost.1.color.normal.dress"),
             context.assets().color("tengen.ghost.3.color.normal.dress"),
         };
-        ghostIndex = 0;
-        waitBeforeRising = 0;
-
-        msPacMan.setAnimations(new PacAnimations(spriteSheet));
-        msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
-
         for (Ghost ghost : ghosts) {
             ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
             ghost.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
         }
+
         sceneController.restart(SceneState.WAITING_FOR_START);
     }
 
     @Override
     public void end() {
-        context.sounds().stopVoice();
+        context.sounds().stopVoice(); // TODO check if needed
     }
 
     @Override
@@ -106,18 +107,15 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameRenderer renderer, Vector2f sceneSize) {
+        renderer.ctx().save();
+        renderer.ctx().setImageSmoothing(false);
         TickTimer timer = sceneController.state().timer();
         Font font = renderer.scaledArcadeFont(7);
         switch (sceneController.state()) {
 
             case WAITING_FOR_START -> {
-                // Loop over 3 different shades of blue, 16 frames each
                 renderer.drawText("TENGEN PRESENTS", shadeOfBlue(timer.currentTick(), 16), font, 9 * TS, MARQUEE_TOP_Y - 8);
-                // Draw Tengen logo without image smoothing
-                renderer.ctx().save();
-                renderer.ctx().setImageSmoothing(false);
                 renderer.drawSpriteScaled(TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE, 6 * TS, MARQUEE_TOP_Y);
-                renderer.ctx().restore();
                 // Blink effect TODO: check exact rate
                 if (timer.currentTick() % 60 < 30) {
                     renderer.drawText("PRESS SPACE", Color.WHITE, font, 11 * TS, MARQUEE_TOP_Y + 72);
@@ -154,6 +152,7 @@ public class IntroScene extends GameScene2D {
                 renderer.drawAnimatedEntity(msPacMan);
             }
         }
+        renderer.ctx().restore();
     }
 
     private void drawTitle(GameRenderer renderer, Font font) {
