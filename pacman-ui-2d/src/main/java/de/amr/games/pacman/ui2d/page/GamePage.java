@@ -187,8 +187,6 @@ public class GamePage extends StackPane implements Page {
         gameCanvasContainer.enabledPy.bind(PY_GAME_CANVAS_DECORATED);
         gameCanvasContainer.enabledPy.addListener((py, ov, nv) -> adaptGameCanvasContainerSizeToSceneSize());
 
-        //gameCanvasPane.setBackground(Ufx.coloredBackground(Color.BLUE));
-
         gameCanvasPane.setCenter(gameCanvasContainer);
 
         dashboardLayer = new DashboardLayer(context);
@@ -212,6 +210,8 @@ public class GamePage extends StackPane implements Page {
         setOnMouseClicked(e -> contextMenu.hide());
 
         // Debugging
+        // gameCanvasPane.setBackground(Ufx.coloredBackground(Color.BLUE));
+
         borderProperty().bind(Bindings.createObjectBinding(
             () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? border(Color.RED, 3) : null,
             PY_DEBUG_INFO, context.gameSceneProperty()
@@ -232,10 +232,6 @@ public class GamePage extends StackPane implements Page {
         adaptGameCanvasContainerSizeToSceneSize();
         //TODO check if booting is always wanted here
         GlobalGameActions2D.BOOT.execute(context);
-        if (context.gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
-            // Tengen has a settings scene where the game is started instead of a credits scene
-            context.sounds().playVoice("voice.explain", 0);
-        }
     }
 
     @Override

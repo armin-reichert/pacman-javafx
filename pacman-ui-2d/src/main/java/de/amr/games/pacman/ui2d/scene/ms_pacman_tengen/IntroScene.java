@@ -50,7 +50,6 @@ public class IntroScene extends GameScene2D {
 
     private Pac msPacMan;
     private Ghost[] ghosts;
-    private Color[] ghostColors;
     private int ghostIndex;
     private int waitBeforeRising;
 
@@ -76,12 +75,6 @@ public class IntroScene extends GameScene2D {
         msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
 
         ghosts = new Ghost[] { Ghost.blinky(), Ghost.inky(), Ghost.pinky(), Ghost.sue() };
-        ghostColors = new Color[] {
-            context.assets().color("tengen.ghost.0.color.normal.dress"),
-            context.assets().color("tengen.ghost.2.color.normal.dress"),
-            context.assets().color("tengen.ghost.1.color.normal.dress"),
-            context.assets().color("tengen.ghost.3.color.normal.dress"),
-        };
         for (Ghost ghost : ghosts) {
             ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
             ghost.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
@@ -138,7 +131,8 @@ public class IntroScene extends GameScene2D {
                     renderer.drawText("WITH", Color.WHITE, font,  MARQUEE_TOP_X + 12, MARQUEE_TOP_Y + 23);
                 }
                 String ghostName = ghosts[ghostIndex].name().toUpperCase();
-                renderer.drawText(ghostName, ghostColors[ghostIndex], font, MARQUEE_TOP_X + 44, MARQUEE_TOP_Y + 41);
+                Color ghostColor = context.assets().color("tengen.ghost.%d.color.normal.dress".formatted(ghosts[ghostIndex].id()));
+                renderer.drawText(ghostName, ghostColor, font, MARQUEE_TOP_X + 44, MARQUEE_TOP_Y + 41);
                 for (Ghost ghost : ghosts) { renderer.drawAnimatedEntity(ghost); }
                 renderer.drawAnimatedEntity(msPacMan);
             }

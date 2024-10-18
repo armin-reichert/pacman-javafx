@@ -45,7 +45,7 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGame
  */
 public class PlayScene2D extends GameScene2D implements ScrollableGameScene2D {
 
-    private static final List<GameAction> ACTIONS = List.of(
+    private final List<GameAction> actions = List.of(
         GlobalGameActions2D.CHEAT_EAT_ALL,
         GlobalGameActions2D.CHEAT_ADD_LIVES,
         GlobalGameActions2D.CHEAT_NEXT_LEVEL,
@@ -58,7 +58,6 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene2D {
     private final DoubleProperty availableHeightPy = new SimpleDoubleProperty(288);
 
     private final Canvas canvas = new Canvas(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
-    private final SubScene fxSubScene;
     private final StackPane root = new StackPane();
 
     public PlayScene2D() {
@@ -73,7 +72,7 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene2D {
         root.getChildren().add(canvas);
         StackPane.setAlignment(canvas, Pos.CENTER);
 
-        fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
+        SubScene fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
         fxSubScene.widthProperty().bind(availableWidthPy);
         fxSubScene.heightProperty().bind(availableHeightPy);
     }
@@ -143,7 +142,7 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene2D {
 
     @Override
     public void handleInput() {
-        context.doFirstCalledAction(ACTIONS);
+        context.doFirstCalledAction(actions);
     }
 
     @Override

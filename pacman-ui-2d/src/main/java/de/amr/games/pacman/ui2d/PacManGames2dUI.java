@@ -490,6 +490,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     public void selectGamePage() {
         selectPage(gamePage);
         clock.start();
+        if (gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
+            sounds().playVoice("voice.explain", 0);
+        }
     }
 
     @Override
