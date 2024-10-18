@@ -497,7 +497,7 @@ public abstract class GameModel {
         checkForFood(pac.tile());
         pac.update(this);
         updatePacPower();
-        checkPacKilled(pac.isImmune());
+        checkPacKilled();
         if (eventLog.pacKilled) {
             return;
         }
@@ -511,12 +511,12 @@ public abstract class GameModel {
         if (bonus != null) updateBonus();
     }
 
-    private void checkPacKilled(boolean pacImmune) {
+    private void checkPacKilled() {
         boolean pacMeetsKiller = ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
         if (demoLevel) {
             eventLog.pacKilled = pacMeetsKiller && !isPacManKillingIgnoredInDemoLevel();
         } else {
-            eventLog.pacKilled = pacMeetsKiller && !pacImmune;
+            eventLog.pacKilled = pacMeetsKiller && !pac.isImmune();
         }
     }
 
