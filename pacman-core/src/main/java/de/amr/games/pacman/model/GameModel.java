@@ -496,15 +496,15 @@ public abstract class GameModel {
                     huntingTicks(levelNumber, nextPhaseIndex));
             ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
         }
-        eventLog.pacKilled = checkPacKilled(pac.isImmune());
+        checkPacKilled(pac.isImmune());
     }
 
-    private boolean checkPacKilled(boolean pacImmune) {
+    private void checkPacKilled(boolean pacImmune) {
         boolean pacMeetsKiller = ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
         if (demoLevel) {
-            return pacMeetsKiller && !isPacManKillingIgnoredInDemoLevel();
+            eventLog.pacKilled = pacMeetsKiller && !isPacManKillingIgnoredInDemoLevel();
         } else {
-            return pacMeetsKiller && !pacImmune;
+            eventLog.pacKilled = pacMeetsKiller && !pacImmune;
         }
     }
 
