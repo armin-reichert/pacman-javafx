@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
@@ -478,25 +477,28 @@ public abstract class GameModel {
 
     //TODO check this, is too complicated
     public void doHuntingStep() {
+        if (huntingControl.isCurrentPhaseOver()) {
+            Logger.info("Hunting phase {} ({}) ends, tick={}",
+                huntingControl.phaseIndex(), huntingControl.phaseType(), huntingControl.currentTick());
+            ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
+            int nextPhaseIndex = huntingControl.phaseIndex() + 1;
+            huntingControl.startHuntingPhase(nextPhaseIndex,
+                // alternate between CHASING and SCATTERING
+                huntingControl.phaseType() == HuntingControl.PhaseType.SCATTERING
+                    ? HuntingControl.PhaseType.CHASING : HuntingControl.PhaseType.SCATTERING,
+                huntingTicks(levelNumber, nextPhaseIndex));
+            return;
+        }
         blinking.tick();
         gateKeeper.unlockGhosts();
         ghosts().forEach(ghost -> ghost.update(this));
         checkForFood(pac.tile());
         pac.update(this);
-        if (bonus != null) updateBonus();
+        checkPacKilled(pac.isImmune());
         updatePacPower();
+        if (bonus != null) updateBonus();
         huntingControl.update();
         ghosts(FRIGHTENED).filter(pac::sameTile).forEach(this::killGhost);
-        if (huntingControl.hasExpired()) {
-            Logger.info("Hunting timer expired, tick={}", huntingControl.currentTick());
-            int nextPhaseIndex = huntingControl.phaseIndex() + 1;
-            huntingControl.startHuntingPhase(nextPhaseIndex,
-                    huntingControl.phaseType() == HuntingControl.PhaseType.SCATTERING
-                        ? HuntingControl.PhaseType.CHASING : HuntingControl.PhaseType.SCATTERING,
-                    huntingTicks(levelNumber, nextPhaseIndex));
-            ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
-        }
-        checkPacKilled(pac.isImmune());
     }
 
     private void checkPacKilled(boolean pacImmune) {

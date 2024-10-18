@@ -41,7 +41,7 @@ public class HuntingControl {
         return timer.remaining();
     }
 
-    public boolean hasExpired() {
+    public boolean isCurrentPhaseOver() {
         return timer.hasExpired();
     }
 
