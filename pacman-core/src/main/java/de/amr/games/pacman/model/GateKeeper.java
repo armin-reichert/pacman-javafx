@@ -100,6 +100,8 @@ public class GateKeeper {
     static final byte NO_LIMIT = -1;
     static final byte[] GLOBAL_LIMITS = new byte[] {NO_LIMIT, 7, 17, NO_LIMIT};
 
+    private final GameModel game;
+
     final byte[] limitsByGhost = new byte[4];
     int          pacStarvingLimit;
 
@@ -107,7 +109,11 @@ public class GateKeeper {
     int          globalCounter;
     boolean      globalCounterEnabled;
 
-    void init(int levelNumber) {
+    public GateKeeper(GameModel game) {
+        this.game = game;
+    }
+
+    public void setLevelNumber(int levelNumber) {
         Arrays.fill(limitsByGhost, (byte) 0);
         if (levelNumber == 1) {
             limitsByGhost[CYAN_GHOST]   = 30;
@@ -122,11 +128,10 @@ public class GateKeeper {
     }
 
     /**
-     * @param game the game model
      * @param prisoner the ghost to possibly get released
      * @return description why ghost has been released or {@code null} if ghost is not released
      */
-    String checkReleaseOf(GameModel game, Ghost prisoner) {
+    public String checkReleaseOf(Ghost prisoner) {
         byte id = prisoner.id();
         if (id == RED_GHOST) {
             return "Red ghost gets released unconditionally";

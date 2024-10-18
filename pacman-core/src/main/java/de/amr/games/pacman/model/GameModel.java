@@ -77,7 +77,7 @@ public abstract class GameModel {
     protected final Score          highScore = new Score();
 
     //TODO how is this done in Tengen Ms. Pac-Man?
-    protected final GateKeeper     gateKeeper = new GateKeeper();
+    protected final GateKeeper     gateKeeper = new GateKeeper(this);
 
     protected File                 highScoreFile;
     protected int                  levelNumber; // 1=first level
@@ -273,7 +273,7 @@ public abstract class GameModel {
     protected abstract void setActorBaseSpeed(int levelNumber);
 
     public void startLevel() {
-        gateKeeper.init(levelNumber);
+        gateKeeper.setLevelNumber(levelNumber);
         setActorBaseSpeed(levelNumber);
         letsGetReadyToRumble();
         levelStartTime = System.currentTimeMillis();
@@ -590,7 +590,7 @@ public abstract class GameModel {
         // Ghosts in order PINK, CYAN, ORANGE!
         Ghost prisoner = ghosts(LOCKED).findFirst().orElse(null);
         if (prisoner != null) {
-            String releaseInfo = gateKeeper.checkReleaseOf(this, prisoner);
+            String releaseInfo = gateKeeper.checkReleaseOf(prisoner);
             if (releaseInfo != null) {
                 eventLog.releasedGhost = prisoner;
                 eventLog.ghostReleaseInfo = releaseInfo;
