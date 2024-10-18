@@ -540,7 +540,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             sounds().setEnabled(true);
         }
         //TODO use data binding?
-        gamePage.adaptCanvasSizeToSceneSize();
+        gamePage.adaptGameCanvasContainerSizeToSceneSize();
     }
 
     @Override

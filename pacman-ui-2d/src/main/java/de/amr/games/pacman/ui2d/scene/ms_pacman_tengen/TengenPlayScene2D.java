@@ -13,11 +13,21 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
+import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui2d.scene.common.ScrollableGameScene2D;
+import de.amr.games.pacman.ui2d.util.Ufx;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.SceneAntialiasing;
+import javafx.scene.SubScene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -33,7 +43,7 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 /**
  * @author Armin Reichert
  */
-public class PlayScene2D extends GameScene2D {
+public class TengenPlayScene2D extends GameScene2D implements ScrollableGameScene2D {
 
     private static final List<GameAction> ACTIONS = List.of(
         GlobalGameActions2D.CHEAT_EAT_ALL,
@@ -44,8 +54,46 @@ public class PlayScene2D extends GameScene2D {
         GlobalGameActions2D.TENGEN_QUIT_PLAY_SCENE
     );
 
+    private final DoubleProperty availableWidthPy = new SimpleDoubleProperty(224);
+    private final DoubleProperty availableHeightPy = new SimpleDoubleProperty(288);
+
+    private final Canvas canvas = new Canvas(224, 288);
+    private final SubScene fxSubScene;
+    private final StackPane root = new StackPane();
+
+    public TengenPlayScene2D() {
+        fxSubScene = new SubScene(root, 224, 288, true, SceneAntialiasing.BALANCED);
+        root.getChildren().add(canvas);
+        StackPane.setAlignment(canvas, Pos.CENTER);
+        root.setBackground(Ufx.coloredBackground(Color.BLACK));
+    }
+
+    @Override
+    public DoubleProperty availableHeightProperty() {
+        return availableHeightPy;
+    }
+
+    @Override
+    public DoubleProperty availableWidthProperty() {
+        return availableWidthPy;
+    }
+
+    public Parent root() {
+        return root;
+    }
+
+    @Override
+    public Canvas canvas() {
+        return canvas;
+    }
+
     @Override
     public void init() {
+        Vector2f sceneSize = context.sceneSize();
+        double aspect = sceneSize.x() / sceneSize.y();
+        scalingPy.set(2);
+        canvas.heightProperty().bind(availableHeightPy);
+        canvas().widthProperty().bind(canvas.heightProperty().multiply(aspect));
     }
 
     @Override
@@ -91,6 +139,21 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void handleInput() {
         context.doFirstCalledAction(ACTIONS);
+    }
+
+    @Override
+    public void draw(GameRenderer renderer, Vector2f sceneSize) {
+        renderer.setCanvas(canvas);
+        renderer.scalingProperty().set(scaling());
+        renderer.setBackgroundColor(backgroundColorPy.get());
+        renderer.clearCanvas();
+        if (context.isScoreVisible()) {
+            renderer.drawScores(context);
+        }
+        drawSceneContent(renderer, sceneSize);
+        if (debugInfoPy.get()) {
+            drawDebugInfo(renderer, sceneSize);
+        }
     }
 
     @Override
