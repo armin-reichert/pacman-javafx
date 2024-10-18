@@ -20,7 +20,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -276,7 +275,7 @@ public class TengenMsPacManGame extends GameModel {
     private int mapNumber;
     private boolean canStartGame;
 
-    private GameLevel currentLevelData;
+    private LevelData currentLevelData;
 
     public TengenMsPacManGame(GameVariant gameVariant, File userDir) {
         super(gameVariant, userDir);
@@ -521,7 +520,7 @@ public class TengenMsPacManGame extends GameModel {
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
         // TODO: change this. For now provide a level object such that all code that relies on existing level object still works
-        currentLevelData = new GameLevel(
+        currentLevelData = new LevelData(
             100, // Pac speed in % of base speed
             100, // Ghost speed in % of base speed
             40, // Ghost speed in tunnel...
@@ -549,7 +548,7 @@ public class TengenMsPacManGame extends GameModel {
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
         // TODO for now provide a Level object such that all code that relies on one works
-        currentLevelData = new GameLevel(
+        currentLevelData = new LevelData(
             100, // Pac speed in % of base speed
             100, // Ghost speed in % of base speed
             40, // Ghost speed in tunnel...

@@ -7,7 +7,7 @@ package de.amr.games.pacman.model;
 /**
  * @author Armin Reichert
  */
-public record GameLevel(
+public record LevelData(
     /*
      * Relative Pac-Man speed (percentage of base speed)
      */
@@ -57,7 +57,7 @@ public record GameLevel(
      */
     byte intermissionNumber)
 {
-    public GameLevel(int... data) {
+    public LevelData(int... data) {
         this((byte) data[0], (byte) data[1], (byte) data[2], (byte) data[3], (byte) data[4], (byte) data[5],
             (byte) data[6], (byte) data[7], (byte) data[8], (byte) data[9], (byte) data[10], (byte) data[11]);
     }

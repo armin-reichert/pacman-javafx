@@ -4,8 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
-import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.LevelData;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
@@ -98,7 +97,7 @@ public abstract class InfoBox extends TitledPane {
         return () -> context.currentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> ifLevelPresent(Function<GameLevel, String> fnInfo) {
+    protected Supplier<String> ifLevelPresent(Function<LevelData, String> fnInfo) {
         return () -> {
             if (context.game() instanceof PacManArcadeGame arcadeGame) {
                 return arcadeGame.currentLevelData().map(fnInfo).orElse(NO_INFO);

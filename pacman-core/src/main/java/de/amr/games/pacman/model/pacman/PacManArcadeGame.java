@@ -12,7 +12,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.LevelData;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
@@ -57,28 +57,28 @@ public class PacManArcadeGame extends GameModel {
     public static final int  ARCADE_MAP_SIZE_Y = 288;
 
     // Level settings as specified in the dossier
-    private static final GameLevel[] LEVELS = {
-        /* 1*/ new GameLevel( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0),
-        /* 2*/ new GameLevel( 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5, 1),
-        /* 3*/ new GameLevel( 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5, 0),
-        /* 4*/ new GameLevel( 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5, 0),
-        /* 5*/ new GameLevel(100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5, 2),
-        /* 6*/ new GameLevel(100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5, 0),
-        /* 7*/ new GameLevel(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5, 0),
-        /* 8*/ new GameLevel(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5, 0),
-        /* 9*/ new GameLevel(100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3, 3),
-        /*10*/ new GameLevel(100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5, 0),
-        /*11*/ new GameLevel(100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5, 0),
-        /*12*/ new GameLevel(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3, 0),
-        /*13*/ new GameLevel(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3, 3),
-        /*14*/ new GameLevel(100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5, 0),
-        /*15*/ new GameLevel(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0),
-        /*16*/ new GameLevel(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0),
-        /*17*/ new GameLevel(100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0, 3),
-        /*18*/ new GameLevel(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0),
-        /*19*/ new GameLevel(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0),
-        /*20*/ new GameLevel(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0),
-        /*21*/ new GameLevel( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0)
+    private static final LevelData[] LEVEL_DATA = {
+        /* 1*/ new LevelData( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0),
+        /* 2*/ new LevelData( 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5, 1),
+        /* 3*/ new LevelData( 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5, 0),
+        /* 4*/ new LevelData( 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5, 0),
+        /* 5*/ new LevelData(100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5, 2),
+        /* 6*/ new LevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5, 0),
+        /* 7*/ new LevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5, 0),
+        /* 8*/ new LevelData(100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5, 0),
+        /* 9*/ new LevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3, 3),
+        /*10*/ new LevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5, 0),
+        /*11*/ new LevelData(100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5, 0),
+        /*12*/ new LevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3, 0),
+        /*13*/ new LevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3, 3),
+        /*14*/ new LevelData(100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5, 0),
+        /*15*/ new LevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0),
+        /*16*/ new LevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0),
+        /*17*/ new LevelData(100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0, 3),
+        /*18*/ new LevelData(100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0),
+        /*19*/ new LevelData(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0),
+        /*20*/ new LevelData(100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0),
+        /*21*/ new LevelData( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0)
     };
 
     // Pac-Man game specific animation IDs
@@ -132,11 +132,11 @@ public class PacManArcadeGame extends GameModel {
         worldMap.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, formatTile(v2i(HOUSE_X, HOUSE_Y)));
     }
 
-    protected GameLevel levelData(int levelNumber) {
-        return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
+    protected LevelData levelData(int levelNumber) {
+        return LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)];
     }
 
-    public Optional<GameLevel> currentLevelData() {
+    public Optional<LevelData> currentLevelData() {
         return levelNumber > 0 ? Optional.of(levelData(levelNumber)): Optional.empty();
     }
 
@@ -376,7 +376,7 @@ public class PacManArcadeGame extends GameModel {
     }
 
     private float huntingSpeed(Ghost ghost) {
-        GameLevel level = levelData(levelNumber);
+        LevelData level = levelData(levelNumber);
         if (world.isTunnel(ghost.tile())) {
             return level.ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
         }

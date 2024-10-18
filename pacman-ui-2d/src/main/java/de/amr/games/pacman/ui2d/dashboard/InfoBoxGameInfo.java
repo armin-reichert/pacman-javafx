@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.LevelData;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.GameContext;
 
@@ -58,7 +58,7 @@ public class InfoBoxGameInfo extends InfoBox {
         return "Tick %d of %d. Remaining: %d".formatted(t.currentTick(), t.duration(), t.remaining());
     }
 
-    private String fmtHuntingPhase(GameLevel level) {
+    private String fmtHuntingPhase(LevelData level) {
         var game = context.game();
         HuntingControl huntingControl = game.huntingControl();
         return "%s #%d%s".formatted(
@@ -67,11 +67,11 @@ public class InfoBoxGameInfo extends InfoBox {
             huntingControl.isStopped() ? " STOPPED" : "");
     }
 
-    private String fmtHuntingTicksRunning(GameLevel level) {
+    private String fmtHuntingTicksRunning(LevelData level) {
         return "Running:   %d".formatted(context.game().huntingControl().currentTick());
     }
 
-    private String fmtHuntingTicksRemaining(GameLevel level) {
+    private String fmtHuntingTicksRemaining(LevelData level) {
         return "Remaining: %s".formatted(ticksToString(context.game().huntingControl().remaining()));
     }
 
@@ -79,31 +79,31 @@ public class InfoBoxGameInfo extends InfoBox {
         return "%d of %d (%d energizers)".formatted(world.uneatenFoodCount(), world.totalFoodCount(), world.energizerTiles().count());
     }
 
-    private String fmtGhostSpeed(GameLevel level) {
+    private String fmtGhostSpeed(LevelData level) {
         return fmtSpeed(level.ghostSpeedPercentage());
     }
 
-    private String fmtGhostSpeedFrightened(GameLevel level) {
+    private String fmtGhostSpeedFrightened(LevelData level) {
         return fmtSpeed(level.ghostSpeedFrightenedPercentage());
     }
 
-    private String fmtGhostSpeedTunnel(GameLevel level) {
+    private String fmtGhostSpeedTunnel(LevelData level) {
         return fmtSpeed(level.ghostSpeedTunnelPercentage());
     }
 
-    private String fmtPacSpeed(GameLevel level) {
+    private String fmtPacSpeed(LevelData level) {
         return fmtSpeed(level.pacSpeedPercentage());
     }
 
-    private String fmtPacSpeedPowered(GameLevel level) {
+    private String fmtPacSpeedPowered(LevelData level) {
         return fmtSpeed(level.pacSpeedPoweredPercentage());
     }
 
-    private String fmtPacPowerSeconds(GameLevel level) {
+    private String fmtPacPowerSeconds(LevelData level) {
         return "%d sec".formatted(level.pacPowerSeconds());
     }
 
-    private String fmtNumFlashes(GameLevel level) {
+    private String fmtNumFlashes(LevelData level) {
         return "%d".formatted(level.numFlashes());
     }
 }
