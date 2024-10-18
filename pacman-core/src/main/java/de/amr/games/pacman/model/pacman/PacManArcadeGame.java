@@ -12,10 +12,10 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.LevelData;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.LevelData;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.StaticBonus;
@@ -124,7 +124,8 @@ public class PacManArcadeGame extends GameModel {
     private byte cruiseElroy;
 
     public PacManArcadeGame(GameVariant gameVariant, File userDir) {
-        super(gameVariant, userDir);
+        super(gameVariant);
+        this.userDir = userDir;
         initialLives = 3;
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScore(10_000);

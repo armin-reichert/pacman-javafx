@@ -65,7 +65,6 @@ public abstract class GameModel {
     public static final short[] KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
 
     protected final GameVariant    gameVariant;
-    protected final File           userDir;
     protected final Pulse          blinking = new Pulse(10, Pulse.OFF);
     protected final byte[]         bonusSymbols = new byte[2];
     protected final List<Byte>     levelCounter = new ArrayList<>();
@@ -75,6 +74,7 @@ public abstract class GameModel {
     //TODO how is this done in Tengen Ms. Pac-Man?
     protected final GateKeeper     gateKeeper = new GateKeeper(this);
     protected final ScoreManager   scoreManager = new ScoreManager(this);
+    protected File                 userDir;
     protected int                  levelNumber; // 1=first level
     protected boolean              demoLevel;
     protected long                 levelStartTime;
@@ -93,9 +93,8 @@ public abstract class GameModel {
 
     protected SimulationStepEventLog eventLog;
 
-    protected GameModel(GameVariant gameVariant, File userDir) {
+    protected GameModel(GameVariant gameVariant) {
         this.gameVariant = checkNotNull(gameVariant);
-        this.userDir = checkNotNull(userDir);
         this.huntingControl = new HuntingControl("HuntingControl-" + getClass().getSimpleName());
     }
 

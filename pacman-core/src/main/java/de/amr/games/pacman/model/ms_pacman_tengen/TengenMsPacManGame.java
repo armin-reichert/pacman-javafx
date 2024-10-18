@@ -278,7 +278,8 @@ public class TengenMsPacManGame extends GameModel {
     private LevelData currentLevelData;
 
     public TengenMsPacManGame(GameVariant gameVariant, File userDir) {
-        super(gameVariant, userDir);
+        super(gameVariant);
+        this.userDir = userDir;
         initialLives = 3;
         scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman_tengen.xml"));
         scoreManager.setExtraLifeScore(10_000);
