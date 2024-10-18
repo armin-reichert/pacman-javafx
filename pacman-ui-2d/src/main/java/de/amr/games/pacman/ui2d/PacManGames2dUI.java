@@ -22,7 +22,6 @@ import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfiguration;
-import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration;
 import de.amr.games.pacman.ui2d.sound.GameSounds;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.FlashMessageView;
@@ -100,7 +99,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected EditorPage editorPage;
     protected Page currentPage;
     protected boolean scoreVisible;
-    protected boolean signatureShown;
+    protected boolean signatureShown; //TODO make this work again for all intro screens
 
     public PacManGames2dUI() {
         assets = new AssetStorage();
@@ -115,9 +114,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         sounds().setAssets(assets);
     }
 
-    protected void bindActionsToKeys() {
+    protected void registerGlobalActionsWithKeyboard() {
         for (GameAction action : GlobalGameActions2D.values()) {
-            KEYBOARD.register(action.trigger());
+            keyboard().register(action.trigger());
         }
     }
 
@@ -170,7 +169,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         xxlGame.setMapSelectionMode(PY_MAP_SELECTION_MODE.get());
         PY_MAP_SELECTION_MODE.addListener((py,ov,selectionMode) -> xxlGame.setMapSelectionMode(selectionMode));
 
-        bindActionsToKeys();
+        registerGlobalActionsWithKeyboard();
 
         stage.setMinWidth(PacManArcadeGame.ARCADE_MAP_SIZE_X * 1.25);
         stage.setMinHeight(PacManArcadeGame.ARCADE_MAP_SIZE_Y * 1.25);
@@ -315,7 +314,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public boolean isActionCalled(GameAction action) {
-        return action.called(KEYBOARD);
+        return action.called(keyboard());
     }
 
     @Override
@@ -542,7 +541,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         if (game().isDemoLevel()) {
             sounds().setEnabled(false);
         } else {
-            game().pac().setManualSteering(new KeyboardPacSteering(KEYBOARD));
+            game().pac().setManualSteering(new KeyboardPacSteering(keyboard()));
             sounds().setEnabled(true);
         }
         //TODO use data binding?
