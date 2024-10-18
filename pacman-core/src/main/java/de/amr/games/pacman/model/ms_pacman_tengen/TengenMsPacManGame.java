@@ -280,7 +280,8 @@ public class TengenMsPacManGame extends GameModel {
     public TengenMsPacManGame(GameVariant gameVariant, File userDir) {
         super(gameVariant, userDir);
         initialLives = 3;
-        highScoreFile = new File(userDir, "highscore-ms_pacman_tengen.xml");
+        scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman_tengen.xml"));
+        scoreManager.setExtraLifeScore(10_000);
 
         arcadeMaps = readMaps(ARCADE_MAP_PATTERN, ARCADE_MAP_COUNT);
         List<WorldMap> nonArcadeMaps = readMaps(NON_ARCADE_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
@@ -304,13 +305,9 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     @Override
-    protected boolean isScoreEnabled() {
-        return levelNumber > 0;
-    }
-
-    @Override
-    protected boolean isHighScoreEnabled() {
-        return levelNumber > 0 && !isDemoLevel();
+    protected void initScore(int levelNumber) {
+        scoreManager.setScoreEnabled(levelNumber > 0);
+        scoreManager.setHighScoreEnabled(levelNumber > 0 && !isDemoLevel());
     }
 
     private boolean isStrangeMap(WorldMap worldMap) {
@@ -662,10 +659,10 @@ public class TengenMsPacManGame extends GameModel {
         //pac.setRestingTicks(energizer ? 3 : 1);
         if (energizer) {
             processEatenEnergizer();
-            scorePoints(energizerValue());
+            scoreManager.scorePoints(energizerValue());
             Logger.info("Scored {} points for eating energizer", energizerValue());
         } else {
-            scorePoints(pelletValue());
+            scoreManager.scorePoints(pelletValue());
         }
         gateKeeper.registerFoodEaten();
         if (isBonusReached()) {

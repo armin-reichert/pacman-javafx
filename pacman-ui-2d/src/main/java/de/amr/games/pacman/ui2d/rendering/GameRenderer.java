@@ -266,8 +266,8 @@ public interface GameRenderer {
     }
 
     default void drawScores(GameContext context) {
-        drawScore(context.game().score(),     "SCORE",      t(1),  t(1), scaledArcadeFont(TS), ARCADE_PALE);
-        drawScore(context.game().highScore(), "HIGH SCORE", t(14), t(1), scaledArcadeFont(TS), ARCADE_PALE);
+        drawScore(context.game().scoreManager().score(),     "SCORE",      t(1),  t(1), scaledArcadeFont(TS), ARCADE_PALE);
+        drawScore(context.game().scoreManager().highScore(), "HIGH SCORE", t(14), t(1), scaledArcadeFont(TS), ARCADE_PALE);
     }
 
     default void drawScore(Score score, String title, double x, double y, Font font, Color color) {

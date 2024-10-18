@@ -95,7 +95,8 @@ public class MsPacManArcadeGame extends GameModel {
     public MsPacManArcadeGame(GameVariant gameVariant, File userDir) {
         super(gameVariant, userDir);
         initialLives = 3;
-        highScoreFile = new File(userDir, "highscore-ms_pacman.xml");
+        scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman.xml"));
+        scoreManager.setExtraLifeScore(10_000);
     }
 
     public Optional<LevelData> currentLevelData() {
@@ -109,13 +110,9 @@ public class MsPacManArcadeGame extends GameModel {
     }
 
     @Override
-    protected boolean isScoreEnabled() {
-        return levelNumber > 0 && !isDemoLevel();
-    }
-
-    @Override
-    protected boolean isHighScoreEnabled() {
-        return levelNumber > 0 && !isDemoLevel();
+    protected void initScore(int levelNumber) {
+        scoreManager.setScoreEnabled(levelNumber > 0 && !isDemoLevel());
+        scoreManager.setHighScoreEnabled(levelNumber > 0 && !isDemoLevel());
     }
 
     @Override
@@ -304,10 +301,10 @@ public class MsPacManArcadeGame extends GameModel {
         }
         if (energizer) {
             processEatenEnergizer();
-            scorePoints(energizerValue());
+            scoreManager().scorePoints(energizerValue());
             Logger.info("Scored {} points for eating energizer", energizerValue());
         } else {
-            scorePoints(pelletValue());
+            scoreManager.scorePoints(pelletValue());
         }
         gateKeeper.registerFoodEaten();
         if (isBonusReached()) {

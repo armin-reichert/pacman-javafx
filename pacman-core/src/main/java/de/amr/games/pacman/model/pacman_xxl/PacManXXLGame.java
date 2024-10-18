@@ -52,10 +52,10 @@ public class PacManXXLGame extends PacManArcadeGame {
 
     public PacManXXLGame(GameVariant gameVariant, File userDir) {
         super(gameVariant, userDir);
-        initialLives = 3;
+        // overwrite:
+        scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman_xxl.xml"));
         mapSelectionMode = MapSelectionMode.NO_CUSTOM_MAPS;
         customMapDir = new File(userDir, "maps");
-        highScoreFile = new File(userDir, "highscore-pacman_xxl.xml");
         for (int num = 1; num <= MAP_COUNT; ++num) {
             URL url = getClass().getResource(MAP_PATTERN.formatted(num));
             standardMaps.add(new WorldMap(url));

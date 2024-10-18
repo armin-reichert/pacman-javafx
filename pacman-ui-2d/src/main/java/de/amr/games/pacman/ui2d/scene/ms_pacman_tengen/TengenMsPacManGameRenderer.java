@@ -369,8 +369,8 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         Font font = scaledArcadeFont(TS);
         if (context.gameClock().getTickCount() % 60 < 30) { drawText("1UP", color, font, t(2), t(1)); }
         drawText("HIGH SCORE", color, font, t(9), t(1));
-        drawText("%6d".formatted(context.game().score().points()),     color, font, 0,     t(2));
-        drawText("%6d".formatted(context.game().highScore().points()), color, font, t(11), t(2));
+        drawText("%6d".formatted(context.game().scoreManager().score().points()),     color, font, 0,     t(2));
+        drawText("%6d".formatted(context.game().scoreManager().highScore().points()), color, font, t(11), t(2));
     }
 
     @Override

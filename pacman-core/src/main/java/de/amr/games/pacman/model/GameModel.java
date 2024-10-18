@@ -17,7 +17,6 @@ import de.amr.games.pacman.model.actors.*;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -72,13 +71,10 @@ public abstract class GameModel {
     protected final List<Byte>     levelCounter = new ArrayList<>();
     protected final TickTimer      powerTimer = new TickTimer("PacPowerTimer");
     protected final List<Ghost>    victims = new ArrayList<>();
-    protected final Score          score = new Score();
-    protected final Score          highScore = new Score();
 
     //TODO how is this done in Tengen Ms. Pac-Man?
     protected final GateKeeper     gateKeeper = new GateKeeper(this);
-
-    protected File                 highScoreFile;
+    protected final ScoreManager   scoreManager = new ScoreManager(this);
     protected int                  levelNumber; // 1=first level
     protected boolean              demoLevel;
     protected long                 levelStartTime;
@@ -128,8 +124,6 @@ public abstract class GameModel {
     protected abstract boolean isBonusReached();
     protected abstract boolean isLevelCounterEnabled();
     protected abstract void onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
-    protected abstract boolean isScoreEnabled();
-    protected abstract boolean isHighScoreEnabled();
 
     public final GameVariant variant() { return gameVariant; }
 
@@ -208,7 +202,7 @@ public abstract class GameModel {
         playing = false;
         lives = initialLives;
         clearLevel();
-        score.reset();
+        scoreManager.resetScore();
     }
 
     public void startNewGame() {
@@ -221,7 +215,6 @@ public abstract class GameModel {
         demoLevel = false;
         buildRegularLevel(levelNumber);
         updateLevelCounter();
-        score.setLevelNumber(levelNumber);
         Logger.info("Level {} created", levelNumber);
         publishGameEvent(GameEventType.LEVEL_CREATED);
     }
@@ -271,10 +264,12 @@ public abstract class GameModel {
     }
 
     protected abstract void setActorBaseSpeed(int levelNumber);
+    protected abstract void initScore(int levelNumber);
 
     public void startLevel() {
         gateKeeper.setLevelNumber(levelNumber);
         setActorBaseSpeed(levelNumber);
+        initScore(levelNumber);
         Logger.info("{} base speed: {0.00} px/tick", pac.name(), pac.baseSpeed());
         Logger.info("{} base speed: {0.00} px/tick", ghost(RED_GHOST).name(), ghost(RED_GHOST).baseSpeed());
         Logger.info("{} base speed: {0.00} px/tick", ghost(PINK_GHOST).name(), ghost(PINK_GHOST).baseSpeed());
@@ -390,48 +385,8 @@ public abstract class GameModel {
         return levelCounter;
     }
 
-    public Score score() {
-        return score;
-    }
-
-    public void scorePoints(int points) {
-        int oldScore = score.points();
-        int newScore = oldScore + points;
-        if (isScoreEnabled()) {
-            score.setPoints(newScore);
-        }
-        // high score and extra life are not enabled in demo level
-        if (isHighScoreEnabled()) {
-            // New high score?
-            if (newScore > highScore.points()) {
-                highScore.setPoints(newScore);
-                highScore.setLevelNumber(levelNumber);
-                highScore.setDate(LocalDate.now());
-            }
-            // Extra life?
-            if (oldScore < EXTRA_LIFE_SCORE && newScore >= EXTRA_LIFE_SCORE) {
-                addLives(1);
-                publishGameEvent(GameEventType.EXTRA_LIFE_WON);
-            }
-        }
-    }
-
-    public Score highScore() {
-        return highScore;
-    }
-
-    public void loadHighScore() {
-        highScore.read(highScoreFile);
-        Logger.info("Highscore loaded. File: '{}', {} points, level {}",
-            highScoreFile, highScore.points(), highScore.levelNumber());
-    }
-
-    public void updateHighScore() {
-        var oldHighScore = new Score();
-        oldHighScore.read(highScoreFile);
-        if (highScore.points() > oldHighScore.points()) {
-            highScore.save(highScoreFile, String.format("%s High Score", variant().name()));
-        }
+    public ScoreManager scoreManager() {
+        return scoreManager;
     }
 
     public void setPlaying(boolean playing) {
@@ -581,7 +536,7 @@ public abstract class GameModel {
     private void updateBonus() {
         if (bonus.state() == Bonus.STATE_EDIBLE && pac.sameTile(bonus.entity())) {
             bonus.setEaten(BONUS_POINTS_SHOWN_TICKS);
-            scorePoints(bonus.points());
+            scoreManager.scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
             eventLog.bonusEaten = true;
             publishGameEvent(GameEventType.BONUS_EATEN);
@@ -597,12 +552,12 @@ public abstract class GameModel {
         int killedSoFar = victims.size();
         int points = KILLED_GHOST_VALUES[killedSoFar];
         ghost.eaten(killedSoFar);
-        scorePoints(points);
+        scoreManager.scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
         numGhostsKilledInLevel += 1;
         if (numGhostsKilledInLevel == 16) {
             int extraPoints = POINTS_ALL_GHOSTS_IN_LEVEL;
-            scorePoints(extraPoints);
+            scoreManager.scorePoints(extraPoints);
             Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, levelNumber);
         }
         victims.add(ghost);

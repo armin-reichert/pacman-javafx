@@ -182,9 +182,9 @@ public class PlayScene3D implements GameScene {
         }
 
         // Scores
-        scores3D.showHighScore(game.highScore().points(), game.highScore().levelNumber());
+        scores3D.showHighScore(game.scoreManager().highScore().points(), game.scoreManager().highScore().levelNumber());
         if (context.game().canStartNewGame()) {
-            scores3D.showScore(game.score().points(), game.score().levelNumber());
+            scores3D.showScore(game.scoreManager().score().points(), game.scoreManager().score().levelNumber());
         } else { // demo level or "game over" state
             String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
             Color color = context.assets().color(assetPrefix + ".color.game_over_message");
