@@ -22,6 +22,7 @@ import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfiguration;
+import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration;
 import de.amr.games.pacman.ui2d.sound.GameSounds;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.FlashMessageView;
@@ -57,6 +58,8 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_HEIGHT;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_WIDTH;
 import static de.amr.games.pacman.ui2d.util.Ufx.createIcon;
 
 /**
@@ -395,7 +398,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     public Vector2f sceneSize() {
         // add some vertical space for Tengen scenes to be able to display higher lives/level counters
         return gameVariant() == GameVariant.MS_PACMAN_TENGEN
-            ? worldSizeTilesOrDefault().scaled(TS).toVector2f().plus(0, 16)
+            ? new Vector2f(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT)
             : worldSizeTilesOrDefault().scaled(TS).toVector2f();
     }
 

@@ -39,6 +39,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
 
 /**
  * @author Armin Reichert
@@ -57,15 +58,22 @@ public class TengenPlayScene2D extends GameScene2D implements ScrollableGameScen
     private final DoubleProperty availableWidthPy = new SimpleDoubleProperty(224);
     private final DoubleProperty availableHeightPy = new SimpleDoubleProperty(288);
 
-    private final Canvas canvas = new Canvas(224, 288);
+    private final Canvas canvas = new Canvas(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
     private final SubScene fxSubScene;
     private final StackPane root = new StackPane();
 
     public TengenPlayScene2D() {
-        fxSubScene = new SubScene(root, 224, 288, true, SceneAntialiasing.BALANCED);
+        root.setBackground(Ufx.coloredBackground(Color.BLUE));
+
+        canvas.heightProperty().bind(availableHeightPy.multiply(1));
+        canvas.widthProperty().bind(canvas.heightProperty().multiply(NES_ASPECT));
+
         root.getChildren().add(canvas);
         StackPane.setAlignment(canvas, Pos.CENTER);
-        root.setBackground(Ufx.coloredBackground(Color.BLACK));
+
+        fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
+        fxSubScene.widthProperty().bind(availableWidthPy);
+        fxSubScene.heightProperty().bind(availableHeightPy);
     }
 
     @Override
@@ -89,11 +97,6 @@ public class TengenPlayScene2D extends GameScene2D implements ScrollableGameScen
 
     @Override
     public void init() {
-        Vector2f sceneSize = context.sceneSize();
-        double aspect = sceneSize.x() / sceneSize.y();
-        scalingPy.set(2);
-        canvas.heightProperty().bind(availableHeightPy);
-        canvas().widthProperty().bind(canvas.heightProperty().multiply(aspect));
     }
 
     @Override
@@ -143,10 +146,19 @@ public class TengenPlayScene2D extends GameScene2D implements ScrollableGameScen
 
     @Override
     public void draw(GameRenderer renderer, Vector2f sceneSize) {
+        //TODO use faked scene size until camera is available
+        Vector2i worldSizeInTiles = context.worldSizeTilesOrDefault();
+        sceneSize = worldSizeInTiles.plus(0, 2).scaled(TS).toVector2f();
+        //scalingPy.set(availableHeightPy.get() / NES_SCREEN_HEIGHT);
+        scalingPy.set(availableHeightPy.get() / (sceneSize.y()));
         renderer.setCanvas(canvas);
         renderer.scalingProperty().set(scaling());
         renderer.setBackgroundColor(backgroundColorPy.get());
         renderer.clearCanvas();
+
+        double dx = 0.5 * (canvas.getWidth() - worldSizeInTiles.scaled(TS).x() * scaling());
+        renderer.ctx().save();
+        renderer.ctx().translate(dx, 0);
         if (context.isScoreVisible()) {
             renderer.drawScores(context);
         }
@@ -154,6 +166,8 @@ public class TengenPlayScene2D extends GameScene2D implements ScrollableGameScen
         if (debugInfoPy.get()) {
             drawDebugInfo(renderer, sceneSize);
         }
+        renderer.ctx().restore();
+
     }
 
     @Override

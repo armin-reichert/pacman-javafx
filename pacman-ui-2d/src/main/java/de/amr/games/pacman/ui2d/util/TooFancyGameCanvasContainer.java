@@ -71,9 +71,7 @@ public class TooFancyGameCanvasContainer extends BorderPane {
 
     public TooFancyGameCanvasContainer(Canvas canvas) {
         this.canvas = checkNotNull(canvas);
-
         setCenter(canvas);
-
         canvas.widthProperty().bind(unscaledCanvasWidthPy.multiply(scalingPy));
         canvas.heightProperty().bind(unscaledCanvasHeightPy.multiply(scalingPy));
 

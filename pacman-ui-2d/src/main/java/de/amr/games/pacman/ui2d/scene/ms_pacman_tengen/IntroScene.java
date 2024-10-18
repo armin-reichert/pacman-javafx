@@ -40,11 +40,14 @@ public class IntroScene extends GameScene2D {
 
     static final List<GameAction> ACTIONS = List.of(GlobalGameActions2D.START_GAME);
 
+    // Anchor point for everything
+    static final int MARQUEE_TOP_X = 60;
+    static final int MARQUEE_TOP_Y = 64;
+    static final int ACTOR_Y = MARQUEE_TOP_Y + 72;
+
     static final float    SPEED = 2.2f; //TODO check exact speed
-    static final int      TOP_Y = TS * 11 + 1;
-    static final int      STOP_X_GHOST = TS * 5 + 2;
-    static final int      STOP_X_MS_PAC_MAN = TS * 15 + 2;
-    static final Vector2i TITLE_POSITION = v2i(TS * 10, TS * 8);
+    static final int      STOP_X_GHOST = MARQUEE_TOP_X - 18;
+    static final int      STOP_X_MS_PAC_MAN = MARQUEE_TOP_X + 62;
     static final int      NUM_BULBS = 96;
     static final int      DISTANCE_BETWEEN_ACTIVE_BULBS = 16;
 
@@ -115,39 +118,43 @@ public class IntroScene extends GameScene2D {
         Font font = renderer.scaledArcadeFont(TS);
         BitSet marqueeState = computeMarqueeState(marqueeTimer.currentTick());
         switch (sceneController.state()) {
+
             case WAITING_FOR_START -> {
                 // Loop over 3 different shades of blue, 16 frames each
-                renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t, 16), font, 6 * TS, 11 * TS);
+                renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t, 16), font, 9 * TS, MARQUEE_TOP_Y - 24);
                 // Draw Tengen logo without image smoothing
                 renderer.ctx().save();
                 renderer.ctx().setImageSmoothing(false);
-                renderer.drawSpriteScaled(TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE, 3 * TS, 12 * TS);
+                renderer.drawSpriteScaled(TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE, 6 * TS, MARQUEE_TOP_Y - 16);
                 renderer.ctx().restore();
                 // Blink effect TODO: check exact rate
                 if (t % 60 < 30) {
-                    renderer.drawText("PRESS SPACE", Color.WHITE, font, 8 * TS, 21 * TS);
+                    renderer.drawText("PRESS SPACE", Color.WHITE, font, 11 * TS, MARQUEE_TOP_Y + 56);
                 }
                 Font copyrightFont = renderer.scaledArcadeFont(7.5);
                 Color copyrightColor = TENGEN_PINK;
-                renderer.drawText("MS PAC-MAN TM NAMCO LTD", copyrightColor, copyrightFont, 3 * TS, 27 * TS);
-                renderer.drawText("©1990 TENGEN INC",        copyrightColor, copyrightFont, 5 * TS, 28 * TS);
-                renderer.drawText("ALL RIGHTS RESERVED",     copyrightColor, copyrightFont, 4 * TS, 29 * TS);
+                renderer.drawText("MS PAC-MAN TM NAMCO LTD", copyrightColor, copyrightFont, 6 * TS, MARQUEE_TOP_Y + 13 * TS);
+                renderer.drawText("©1990 TENGEN INC",        copyrightColor, copyrightFont, 8 * TS, MARQUEE_TOP_Y + 14 * TS);
+                renderer.drawText("ALL RIGHTS RESERVED",     copyrightColor, copyrightFont, 7 * TS, MARQUEE_TOP_Y + 15 * TS);
             }
+
             case SHOWING_MARQUEE -> drawMarquee(renderer, font, marqueeState);
+
             case GHOSTS_MARCHING_IN -> {
                 drawMarquee(renderer, font, marqueeState);
                 if (ghostIndex == 0) {
-                    renderer.drawText("WITH", Color.WHITE, font, TITLE_POSITION.x() - TS, TOP_Y + 20);
+                    renderer.drawText("WITH", Color.WHITE, font,  MARQUEE_TOP_X + 12, MARQUEE_TOP_Y + 23);
                 }
                 String ghostName = ghosts[ghostIndex].name().toUpperCase();
-                renderer.drawText(ghostName, ghostColors[ghostIndex], font, TITLE_POSITION.x() + t(3), TOP_Y + 38);
+                renderer.drawText(ghostName, ghostColors[ghostIndex], font, MARQUEE_TOP_X + 44, MARQUEE_TOP_Y + 41);
                 for (Ghost ghost : ghosts) { renderer.drawAnimatedEntity(ghost); }
                 renderer.drawAnimatedEntity(msPacMan);
             }
+
             case MS_PACMAN_MARCHING_IN -> {
                 drawMarquee(renderer, font, marqueeState);
-                renderer.drawText("STARRING",   Color.WHITE, font, TITLE_POSITION.x() - TS, TOP_Y + 20);
-                renderer.drawText("MS PAC-MAN", TENGEN_YELLOW, font, TITLE_POSITION.x() + TS, TOP_Y + 38);
+                renderer.drawText("STARRING",   Color.WHITE, font, MARQUEE_TOP_X + 12, MARQUEE_TOP_Y + 22);
+                renderer.drawText("MS PAC-MAN", TENGEN_YELLOW, font, MARQUEE_TOP_X + 44, MARQUEE_TOP_Y + 38);
                 for (Ghost ghost : ghosts) { renderer.drawAnimatedEntity(ghost); }
                 renderer.drawAnimatedEntity(msPacMan);
             }
@@ -172,22 +179,22 @@ public class IntroScene extends GameScene2D {
         return state;
     }
 
-    // TODO This is too cryptic
     private void drawMarquee(GameRenderer renderer, Font font, BitSet marqueeState) {
-        renderer.drawText("\"MS PAC-MAN\"", TENGEN_YELLOW, font, TITLE_POSITION.x(), TITLE_POSITION.y());
-        double xMin = 60, xMax = 192, yMin = 88, yMax = 148;
+        renderer.drawText("\"MS PAC-MAN\"", TENGEN_YELLOW, font, MARQUEE_TOP_X + 20, MARQUEE_TOP_Y - 18);
+        double xMin = MARQUEE_TOP_X, xMax = xMin + 132, yMin = MARQUEE_TOP_Y, yMax = yMin + 60;
         GraphicsContext g = renderer.ctx();
         for (int i = 0; i < NUM_BULBS; ++i) {
             boolean on = marqueeState.get(i);
             g.setFill(on ? Color.WHITE : TENGEN_MARQUEE_COLOR);
+            // TODO This is too cryptic
             if (i <= 33) { // lower edge left-to-right
                 drawBulb(g, xMin + 4 * i, yMax);
             } else if (i <= 48) { // right edge bottom-to-top
-                drawBulb(g, xMax, 4 * (70 - i));
+                drawBulb(g, xMax, yMax - 4 * (i - 33));
             } else if (i <= 81) { // upper edge right-to-left
-                drawBulb(g, 4 * (96 - i), yMin);
+                drawBulb(g, xMax - 4 * (i-48), yMin);
             } else { // left edge top-to-bottom
-                drawBulb(g, xMin, 4 * (i - 59));
+                drawBulb(g, xMin, yMin + 4 * (i-81));
             }
         }
     }
@@ -211,14 +218,14 @@ public class IntroScene extends GameScene2D {
             @Override
             public void onEnter(IntroScene intro) {
                 intro.marqueeTimer.restartIndefinitely();
-                intro.msPacMan.setPosition(TS * 31, TS * 20);
+                intro.msPacMan.setPosition(TS * 33, ACTOR_Y);
                 intro.msPacMan.setMoveDir(Direction.LEFT);
                 intro.msPacMan.setSpeed(SPEED);
                 intro.msPacMan.setVisible(true);
                 intro.msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
                 intro.msPacMan.animations().ifPresent(Animations::startCurrentAnimation);
                 for (Ghost ghost : intro.ghosts) {
-                    ghost.setPosition(TS * 33.5f, TS * 20);
+                    ghost.setPosition(TS * 33, ACTOR_Y);
                     ghost.setMoveAndWishDir(Direction.LEFT);
                     ghost.setSpeed(SPEED);
                     ghost.setState(GhostState.HUNTING_PAC);
@@ -264,7 +271,7 @@ public class IntroScene extends GameScene2D {
                     }
                 }
                 else if (ghost.moveDir() == Direction.UP) {
-                    int endPositionY = TOP_Y + intro.ghostIndex * 16;
+                    int endPositionY = MARQUEE_TOP_Y + intro.ghostIndex * 16;
                     if (intro.waitBeforeRising > 0) {
                         intro.waitBeforeRising--;
                     }

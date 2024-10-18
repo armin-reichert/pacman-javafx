@@ -27,10 +27,12 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGame
  */
 public class StartScene extends GameScene2D {
 
-    static final int COL_ARROW = 0;
-    static final int COL_LABEL = 2 * TS;
-    static final int COL_COLON = 17 * TS;
-    static final int COL_VALUE = 19 * TS;
+    static final float UNIT = 7;
+
+    static final int COL_ARROW = 3 * TS;
+    static final int COL_LABEL = 5 * TS;
+    static final int COL_COLON = 18 * TS;
+    static final int COL_VALUE = 20 * TS;
 
     static final Color LABEL_COLOR = TENGEN_YELLOW;
     static final Color VALUE_COLOR = Color.WHITE;
@@ -74,65 +76,65 @@ public class StartScene extends GameScene2D {
         renderer.ctx().save();
         renderer.ctx().scale(scaling(), scaling());
         renderer.ctx().setFill(Color.WHITE);
-        renderer.ctx().fillRect(0, y, canvas.getWidth(), 8);
+        renderer.ctx().fillRect(0, y, canvas.getWidth(), UNIT);
         renderer.ctx().setFill(TENGEN_BABY_BLUE);
-        renderer.ctx().fillRect(0, y + 1, canvas.getWidth(), 6);
+        renderer.ctx().fillRect(0, y + 1, canvas.getWidth(), UNIT - 2);
         renderer.ctx().restore();
     }
 
     @Override
     protected void drawSceneContent(GameRenderer renderer, Vector2f sceneSize) {
-        Font font = renderer.scaledArcadeFont(TS);
+        Font font = renderer.scaledArcadeFont(7);
 
-        int y = 7 * TS;
+        float y = 4 * UNIT - 1;
         drawBabyBlueBar(renderer, y);
 
-        y += 3 * TS + 2;
-        renderer.drawText("MS PAC-MAN OPTIONS", LABEL_COLOR, font, 6 * TS, y);
+        y += 3 * UNIT + 2;
+        renderer.drawText("MS PAC-MAN OPTIONS", LABEL_COLOR, font, COL_LABEL + 3 * UNIT, y);
 
         // Players (not implemented)
-        y += 3 * TS;
-        drawArrowIfSelected(renderer, OPTION_PLAYERS, COL_ARROW, y);
+        y += 3 * UNIT;
+        drawArrowIfSelected(renderer, OPTION_PLAYERS, y);
         renderer.drawText("TYPE", LABEL_COLOR, font, COL_LABEL, y);
-        renderer.drawText(":", LABEL_COLOR, font, COL_LABEL + 4 * TS + 4, y);
-        renderer.drawText("1 PLAYER", VALUE_COLOR, font, COL_LABEL + 6 * TS  , y);
+        renderer.drawText(":", LABEL_COLOR, font, COL_LABEL + 4 * UNIT + 4, y);
+        renderer.drawText("1 PLAYER", VALUE_COLOR, font, COL_LABEL + 6 * UNIT  , y);
 
         // Pac-Booster
-        y += 3 * TS;
-        drawArrowIfSelected(renderer, OPTION_PAC_BOOSTER, COL_ARROW, y);
+        y += 3 * UNIT;
+        drawArrowIfSelected(renderer, OPTION_PAC_BOOSTER, y);
         renderer.drawText("PAC BOOSTER", LABEL_COLOR, font, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, font, COL_COLON, y);
         renderer.drawText(pacBoosterText(tengenGame.pacBoosterMode()), VALUE_COLOR, font, COL_VALUE, y);
 
         // Game difficulty
-        y += 3 * TS;
-        drawArrowIfSelected(renderer, OPTION_DIFFICULTY, COL_ARROW, y);
+        y += 3 * UNIT;
+        drawArrowIfSelected(renderer, OPTION_DIFFICULTY, y);
         renderer.drawText("GAME DIFFICULTY", LABEL_COLOR, font, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, font, COL_COLON, y);
         renderer.drawText(tengenGame.difficulty().name(), VALUE_COLOR, font, COL_VALUE, y);
 
         // Maze (type) selection
-        y += 3 * TS;
-        drawArrowIfSelected(renderer, OPTION_MAZE_SELECTION, COL_ARROW, y);
+        y += 3 * UNIT;
+        drawArrowIfSelected(renderer, OPTION_MAZE_SELECTION, y);
         renderer.drawText("MAZE SELECTION", LABEL_COLOR, font, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, font, COL_COLON, y);
         renderer.drawText(tengenGame.mapCategory().name(), VALUE_COLOR, font, COL_VALUE, y);
 
         // Starting level number
-        y += 3 * TS;
-        drawArrowIfSelected(renderer, OPTION_STARTING_LEVEL, COL_ARROW, y);
+        y += 3 * UNIT;
+        drawArrowIfSelected(renderer, OPTION_STARTING_LEVEL, y);
         renderer.drawText("STARTING LEVEL", LABEL_COLOR, font, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, font, COL_COLON, y);
-        renderer.drawText(String.valueOf(tengenGame.startingLevel()), VALUE_COLOR, font, COL_VALUE + TS, y);
+        renderer.drawText(String.valueOf(tengenGame.startingLevel()), VALUE_COLOR, font, COL_VALUE + UNIT, y);
 
-        y += 3 * TS + 3;
+        y += 2.5f * UNIT;
         drawCenteredText(renderer, sceneSize, "MOVE ARROW WITH CURSOR KEYS", LABEL_COLOR, font, y);
-        y += TS + 1;
+        y += UNIT;
         drawCenteredText(renderer, sceneSize, "CHOOSE OPTIONS WITH TAB", LABEL_COLOR, font, y);
-        y += TS + 1;
+        y += UNIT;
         drawCenteredText(renderer, sceneSize, "PRESS ENTER TO START GAME", LABEL_COLOR, font, y);
 
-        y += TS - 3;
+        y += 3;
         drawBabyBlueBar(renderer, y);
     }
 
@@ -145,15 +147,15 @@ public class StartScene extends GameScene2D {
     }
 
     private void drawCenteredText(GameRenderer renderer, Vector2f sceneSize, String text, Color color, Font font, double y) {
-        double x = 0.5 * sceneSize.x() - 0.5 * text.length() * TS; // assume fixed font of size TS
+        double x = 0.5 * sceneSize.x() - 0.5 * text.length() * UNIT; // assume fixed font of size TS
         renderer.drawText(text, color, font, x, y);
     }
 
-    private void drawArrowIfSelected(GameRenderer renderer, int option, int x, int y) {
+    private void drawArrowIfSelected(GameRenderer renderer, int option, float y) {
         if (selectedOption == option) {
-            Font font = renderer.scaledArcadeFont(TS);
-            renderer.drawText("-", LABEL_COLOR, font, x, y);
-            renderer.drawText(">", LABEL_COLOR, font, x + 3, y);
+            Font font = renderer.scaledArcadeFont(UNIT);
+            renderer.drawText("-", LABEL_COLOR, font, COL_ARROW, y);
+            renderer.drawText(">", LABEL_COLOR, font, COL_ARROW + 3, y);
         }
     }
 

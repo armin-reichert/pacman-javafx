@@ -19,6 +19,14 @@ import java.util.stream.Stream;
 
 public class TengenMsPacManGameSceneConfiguration implements GameSceneConfiguration {
 
+    // 32x28 tiles
+    public static final int NES_TILES_X = 32;
+    public static final int NES_TILES_Y = 28;
+
+    public static final int NES_SCREEN_WIDTH = 256;
+    public static final int NES_SCREEN_HEIGHT = 224;
+    public static final float NES_ASPECT = 1f * NES_SCREEN_WIDTH / NES_SCREEN_HEIGHT;
+
     private final Map<String, GameScene> scenesByID = new HashMap<>();
     private final TengenMsPacManGameSpriteSheet spriteSheet;
     private final TengenMsPacManGameRenderer renderer;

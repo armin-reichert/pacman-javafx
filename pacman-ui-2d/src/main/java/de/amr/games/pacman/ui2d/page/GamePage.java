@@ -42,8 +42,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.util.KeyInput.*;
-import static de.amr.games.pacman.ui2d.util.Ufx.border;
-import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
+import static de.amr.games.pacman.ui2d.util.Ufx.*;
 
 /**
  * @author Armin Reichert
@@ -179,15 +178,18 @@ public class GamePage extends StackPane implements Page {
         }
 
         gameCanvas = new Canvas();
-        gameCanvasContainer = new TooFancyGameCanvasContainer(gameCanvas);
-        gameCanvasPane.setCenter(gameCanvasContainer);
 
+        gameCanvasContainer = new TooFancyGameCanvasContainer(gameCanvas);
         gameCanvasContainer.setMinScaling(0.5);
         gameCanvasContainer.setUnscaledCanvasWidth(PacManArcadeGame.ARCADE_MAP_SIZE_X);
         gameCanvasContainer.setUnscaledCanvasHeight(PacManArcadeGame.ARCADE_MAP_SIZE_Y);
         gameCanvasContainer.setBorderColor(ARCADE_PALE);
         gameCanvasContainer.enabledPy.bind(PY_GAME_CANVAS_DECORATED);
         gameCanvasContainer.enabledPy.addListener((py, ov, nv) -> adaptGameCanvasContainerSizeToSceneSize());
+
+        gameCanvasPane.setBackground(Ufx.coloredBackground(Color.BLUE)); //TODO remove again
+
+        gameCanvasPane.setCenter(gameCanvasContainer);
 
         dashboardLayer = new DashboardLayer(context);
         dashboardLayer.addDashboardItem(context.locText("infobox.general.title"), new InfoBoxGeneral());

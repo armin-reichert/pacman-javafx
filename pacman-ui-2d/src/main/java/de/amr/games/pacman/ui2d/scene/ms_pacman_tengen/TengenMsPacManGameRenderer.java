@@ -384,7 +384,8 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void drawLevelCounter(int levelNumber, boolean demoLevel, List<Byte> symbols, Vector2f sceneSize) {
-        double symbolX = sceneSize.x() - 4 * TS - 2, y = sceneSize.y() - 2 * TS;
+        double symbolX = sceneSize.x() - 4 * TS - 2;
+        double y = sceneSize.y() - 2 * TS;
         ctx().save();
         ctx().translate(0, -scaled(8));
         if (!demoLevel && levelNumber > 0) {

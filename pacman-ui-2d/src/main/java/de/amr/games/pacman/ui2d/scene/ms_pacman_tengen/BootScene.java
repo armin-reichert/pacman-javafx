@@ -13,8 +13,13 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.shadeOfBlue;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_TILES_X;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_TILES_Y;
 
 public class BootScene extends GameScene2D {
+
+    static final int TENGEN_PRESENTS_FINAL_Y = 12 * TS;
+    static final float GHOST_Y = 21 * TS - 4;
 
     private Ghost ghost;
     private int tengenPresentsY;
@@ -26,7 +31,7 @@ public class BootScene extends GameScene2D {
         GameSpriteSheet spriteSheet = context.currentGameSceneConfig().spriteSheet();
         t = 0;
         context.setScoreVisible(false);
-        tengenPresentsY = 36 * TS;
+        tengenPresentsY = (NES_TILES_Y + 1) * TS; // just out of screen
         grayScreen = false;
         ghost = Ghost.blinky();
         ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
@@ -36,12 +41,12 @@ public class BootScene extends GameScene2D {
     @Override
     public void update() {
         if (0 <= t && t < 90) {
-            if (tengenPresentsY > 17 * TS) {
+            if (tengenPresentsY > TENGEN_PRESENTS_FINAL_Y) {
                 tengenPresentsY -= HTS;
             }
         }
         else if (t == 90) {
-            ghost.setPosition(t(31), t(25));
+            ghost.setPosition(t(NES_TILES_X + 1), GHOST_Y);
             ghost.setMoveAndWishDir(Direction.LEFT);
             ghost.setSpeed(8); // TODO check speed
             ghost.setVisible(true);
@@ -72,7 +77,7 @@ public class BootScene extends GameScene2D {
             renderer.ctx().fillRect(0, 0, renderer.canvas().getWidth(), renderer.canvas().getHeight());
         } else {
             Font font = renderer.scaledArcadeFont(TS);
-            renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t, 16), font, 6 * TS, tengenPresentsY);
+            renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t, 16), font, 8 * TS, tengenPresentsY);
             renderer.drawAnimatedEntity(ghost);
         }
     }
