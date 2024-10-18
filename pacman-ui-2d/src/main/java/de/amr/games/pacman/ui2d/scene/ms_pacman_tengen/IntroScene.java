@@ -42,7 +42,6 @@ public class IntroScene extends GameScene2D {
     static final int GHOST_STOP_X = MARQUEE_TOP_X - 18;
     static final int MS_PAC_MAN_STOP_X = MARQUEE_TOP_X + 62;
     static final int NUM_BULBS = 96;
-    static final int DISTANCE_BETWEEN_ACTIVE_BULBS = 16;
     static final float SPEED = 2.2f; //TODO check exact speed
 
     private final FiniteStateMachine<SceneState, IntroScene> sceneController;
@@ -120,12 +119,12 @@ public class IntroScene extends GameScene2D {
 
             case SHOWING_MARQUEE -> {
                 drawTitle(renderer, font);
-                drawMarquee(renderer, timer.currentTick());
+                drawMarquee(renderer.ctx(), timer.currentTick());
             }
 
             case GHOSTS_MARCHING_IN -> {
                 drawTitle(renderer, font);
-                drawMarquee(renderer, timer.currentTick());
+                drawMarquee(renderer.ctx(), timer.currentTick());
                 if (ghostIndex == 0) {
                     renderer.drawText("WITH", Color.WHITE, font,  MARQUEE_TOP_X + 12, MARQUEE_TOP_Y + 23);
                 }
@@ -138,7 +137,7 @@ public class IntroScene extends GameScene2D {
 
             case MS_PACMAN_MARCHING_IN -> {
                 drawTitle(renderer, font);
-                drawMarquee(renderer, timer.currentTick());
+                drawMarquee(renderer.ctx(), timer.currentTick());
                 renderer.drawText("STARRING",   Color.WHITE, font, MARQUEE_TOP_X + 12, MARQUEE_TOP_Y + 22);
                 renderer.drawText("MS PAC-MAN", TENGEN_YELLOW, font, MARQUEE_TOP_X + 44, MARQUEE_TOP_Y + 38);
                 for (Ghost ghost : ghosts) { renderer.drawAnimatedEntity(ghost); }
@@ -156,12 +155,13 @@ public class IntroScene extends GameScene2D {
      * 6 of the 96 bulbs are switched on per frame, shifting counter-clockwise every tick.
      * The bulbs on the left border however are switched off every second frame. Bug in original game?
      *
+     * @param t clock tick
      * @return bit set indicating which bulbs are switched on
      */
-    private BitSet marqueeState(long tick) {
+    private BitSet marqueeState(long t) {
         var state = new BitSet(NUM_BULBS);
         for (int b = 0; b < 6; ++b) {
-            state.set((b * DISTANCE_BETWEEN_ACTIVE_BULBS + (int) tick) % NUM_BULBS);
+            state.set((int) (b * 16 + t) % NUM_BULBS);
         }
         // Simulate bug on left border
         for (int i = 81; i < NUM_BULBS; i += 2) {
@@ -170,12 +170,11 @@ public class IntroScene extends GameScene2D {
         return state;
     }
 
-    private void drawMarquee(GameRenderer renderer, long tick) {
-        GraphicsContext g = renderer.ctx();
-        BitSet marqueeState = marqueeState(tick);
+    private void drawMarquee(GraphicsContext g, long t) {
+        BitSet bulbOn = marqueeState(t);
         double xMin = MARQUEE_TOP_X, xMax = xMin + 132, yMin = MARQUEE_TOP_Y, yMax = yMin + 60;
         for (int i = 0; i < NUM_BULBS; ++i) {
-            g.setFill(marqueeState.get(i) ? Color.WHITE : TENGEN_MARQUEE_COLOR);
+            g.setFill(bulbOn.get(i) ? Color.WHITE : TENGEN_MARQUEE_COLOR);
             // TODO This is too cryptic
             if (i <= 33) {
                 // lower border left-to-right
@@ -288,8 +287,8 @@ public class IntroScene extends GameScene2D {
                     intro.msPacMan.animations().ifPresent(Animations::resetCurrentAnimation); //TODO check in Tengen, seems not to work!
                 }
                 if (timer().atSecond(8)) {
-                    TengenMsPacManGame tengenGame = (TengenMsPacManGame) intro.context.game();
-                    tengenGame.setCanStartGame(false);
+                    TengenMsPacManGame game = (TengenMsPacManGame) intro.context.game();
+                    game.setCanStartGame(false); // TODO check this
                     intro.context.gameController().changeState(GameState.READY);
                 }
             }
@@ -302,5 +301,4 @@ public class IntroScene extends GameScene2D {
             return timer;
         }
     }
-
 }
