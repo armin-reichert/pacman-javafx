@@ -4,13 +4,16 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.Ghost;
 import org.tinylog.Logger;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.model.GameModel.*;
-import static de.amr.games.pacman.model.actors.GhostState.LOCKED;
+import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
  * From the Pac-Man dossier:
@@ -173,5 +176,31 @@ public class GateKeeper {
                 Logger.trace("{} dot counter = {}", ghost.name(), countersByGhost[ghost.id()]);
             });
         }
+    }
+
+    public void unlockGhosts() {
+        Ghost blinky = game.ghost(RED_GHOST);
+        if (blinky.inState(LOCKED)) {
+            if (blinky.insideHouse()) {
+                blinky.setMoveAndWishDir(Direction.UP);
+                blinky.setState(LEAVING_HOUSE);
+            } else {
+                blinky.setMoveAndWishDir(LEFT);
+                blinky.setState(HUNTING_PAC);
+            }
+        }
+        Stream.of(PINK_GHOST, CYAN_GHOST, ORANGE_GHOST)
+            .map(game::ghost)
+            .filter(ghost -> ghost.inState(LOCKED))
+            .findFirst().ifPresent(prisoner -> {
+                String releaseInfo = checkReleaseOf(prisoner);
+                if (releaseInfo != null) {
+                    game.eventLog.releasedGhost = prisoner;
+                    game.eventLog.ghostReleaseInfo = releaseInfo;
+                    prisoner.setMoveAndWishDir(Direction.UP);
+                    prisoner.setState(LEAVING_HOUSE);
+                    game.onGhostReleased(prisoner);
+                }
+        });
     }
 }

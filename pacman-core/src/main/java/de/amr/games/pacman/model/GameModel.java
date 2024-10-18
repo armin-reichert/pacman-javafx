@@ -276,14 +276,14 @@ public abstract class GameModel {
     public void startLevel() {
         gateKeeper.setLevelNumber(levelNumber);
         setActorBaseSpeed(levelNumber);
-        letsGetReadyToRumble();
-        levelStartTime = System.currentTimeMillis();
-        Logger.info("{} started ({})", demoLevel ? "Demo Level" : "Level " + levelNumber, variant());
         Logger.info("{} base speed: {0.00} px/tick", pac.name(), pac.baseSpeed());
         Logger.info("{} base speed: {0.00} px/tick", ghost(RED_GHOST).name(), ghost(RED_GHOST).baseSpeed());
         Logger.info("{} base speed: {0.00} px/tick", ghost(PINK_GHOST).name(), ghost(PINK_GHOST).baseSpeed());
         Logger.info("{} base speed: {0.00} px/tick", ghost(CYAN_GHOST).name(), ghost(CYAN_GHOST).baseSpeed());
         Logger.info("{} base speed: {0.00} px/tick", ghost(ORANGE_GHOST).name(), ghost(ORANGE_GHOST).baseSpeed());
+        letsGetReadyToRumble();
+        levelStartTime = System.currentTimeMillis();
+        Logger.info("{} started ({})", demoLevel ? "Demo Level" : "Level " + levelNumber, variant());
         publishGameEvent(GameEventType.LEVEL_STARTED);
     }
 
@@ -476,11 +476,12 @@ public abstract class GameModel {
         return !eventLog.killedGhosts.isEmpty();
     }
 
+    //TODO check this, is too complicated
     public void doHuntingStep() {
         blinking.tick();
-        checkForFood(pac.tile());
-        unlockGhosts();
+        gateKeeper.unlockGhosts();
         ghosts().forEach(ghost -> ghost.update(this));
+        checkForFood(pac.tile());
         pac.update(this);
         if (bonus != null) updateBonus();
         updatePacPower();
@@ -574,31 +575,6 @@ public abstract class GameModel {
             publishGameEvent(GameEventType.BONUS_EATEN);
         } else {
             bonus.update(this);
-        }
-    }
-
-    private void unlockGhosts() {
-        Ghost blinky = ghost(RED_GHOST);
-        if (blinky.inState(LOCKED)) {
-            if (blinky.insideHouse()) {
-                blinky.setMoveAndWishDir(Direction.UP);
-                blinky.setState(LEAVING_HOUSE);
-            } else {
-                blinky.setMoveAndWishDir(LEFT);
-                blinky.setState(HUNTING_PAC);
-            }
-        }
-        // Ghosts in order PINK, CYAN, ORANGE!
-        Ghost prisoner = ghosts(LOCKED).findFirst().orElse(null);
-        if (prisoner != null) {
-            String releaseInfo = gateKeeper.checkReleaseOf(prisoner);
-            if (releaseInfo != null) {
-                eventLog.releasedGhost = prisoner;
-                eventLog.ghostReleaseInfo = releaseInfo;
-                prisoner.setMoveAndWishDir(Direction.UP);
-                prisoner.setState(LEAVING_HOUSE);
-                onGhostReleased(prisoner);
-            }
         }
     }
 
