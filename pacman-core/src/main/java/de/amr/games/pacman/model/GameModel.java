@@ -113,17 +113,21 @@ public abstract class GameModel {
     public abstract float pacNormalSpeed();
     public abstract int pacPowerSeconds();
     public abstract int numFlashes();
+
     protected abstract GameWorld createWorld(WorldMap map);
     protected abstract Pac createPac();
     protected abstract Ghost[] createGhosts();
-    protected abstract void buildRegularLevel(int levelNumber);
+    protected abstract void buildLevel(int levelNumber);
     protected abstract void buildDemoLevel();
+    protected abstract void setActorBaseSpeed(int levelNumber);
+    protected abstract void initScore(int levelNumber);
     protected abstract byte computeBonusSymbol();
     protected abstract long huntingTicks(int levelNumber, int phaseIndex);
     protected abstract boolean isPacManKillingIgnoredInDemoLevel();
     protected abstract boolean isBonusReached();
     protected abstract boolean isLevelCounterEnabled();
     protected abstract void onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
+
 
     public final GameVariant variant() { return gameVariant; }
 
@@ -213,7 +217,7 @@ public abstract class GameModel {
     public void createLevel(int levelNumber) {
         clearLevel();
         demoLevel = false;
-        buildRegularLevel(levelNumber);
+        buildLevel(levelNumber);
         updateLevelCounter();
         Logger.info("Level {} created", levelNumber);
         publishGameEvent(GameEventType.LEVEL_CREATED);
@@ -262,9 +266,6 @@ public abstract class GameModel {
         bonusSymbols[0] = computeBonusSymbol();
         bonusSymbols[1] = computeBonusSymbol();
     }
-
-    protected abstract void setActorBaseSpeed(int levelNumber);
-    protected abstract void initScore(int levelNumber);
 
     public void startLevel() {
         gateKeeper.setLevelNumber(levelNumber);

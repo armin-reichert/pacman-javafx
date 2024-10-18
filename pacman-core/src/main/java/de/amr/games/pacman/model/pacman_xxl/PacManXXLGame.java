@@ -73,7 +73,7 @@ public class PacManXXLGame extends PacManArcadeGame {
     }
 
     @Override
-    public void buildRegularLevel(int levelNumber) {
+    public void buildLevel(int levelNumber) {
         this.levelNumber = levelNumber;
         WorldMap map = selectMap(levelNumber);
         if (standardMaps.contains(map)) {

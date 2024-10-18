@@ -17,9 +17,9 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
-import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
-import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.BoosterMode;
+import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
+import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -242,7 +242,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void drawWorld(GameContext context, GameWorld world) {
-        TengenMsPacManGame tengenGame = (TengenMsPacManGame) context.game();
+        TengenMsPacManGame game = (TengenMsPacManGame) context.game();
         TileMap terrain = world.map().terrain();
         if (flashMode) {
             // Flash mode uses vector rendering
@@ -255,9 +255,10 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         }
         else if (world.map().colorScheme() != null) {
             if (!context.game().isDemoLevel()) {
-                drawTop(terrain, tengenGame);
+                drawTop(terrain, game);
             }
             // default color scheme has been overwritten, use vector rendering
+            // TODO: can we change color palette in maze image instead and use sprite renderer?
             MapColorScheme colorScheme = world.map().colorScheme();
             terrainRenderer.setMapBackgroundColor(bgColor);
             terrainRenderer.setWallStrokeColor(Color.web(colorScheme.stroke()));
@@ -282,10 +283,10 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
                 return;
             }
             if (!context.game().isDemoLevel()) {
-                drawTop(terrain, tengenGame);
+                drawTop(terrain, game);
             }
             // Maze #32 has this psychedelic animation effect
-            int mapNumber = tengenGame.currentMapNumber();
+            int mapNumber = game.currentMapNumber();
             if (mapNumber == 32) {
                 drawAnimatedMaze(context.gameClock().getUpdateCount(), MAP_32_SPRITES);
             } else {
@@ -299,7 +300,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
                 );
             }
             hideActorSprites(terrain);
-            drawFoodUsingMapSprite(tengenGame, world, spriteSheet);
+            drawFoodUsingMapSprite(game, world, spriteSheet);
         }
     }
 

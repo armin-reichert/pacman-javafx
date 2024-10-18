@@ -208,7 +208,7 @@ public class PacManArcadeGame extends GameModel {
     }
 
     @Override
-    public void buildRegularLevel(int levelNumber) {
+    public void buildLevel(int levelNumber) {
         this.levelNumber = levelNumber;
         createWorldAndPopulation(worldMap);
         pac.setName("Pac-Man");
@@ -222,7 +222,7 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     public void buildDemoLevel() {
-        buildRegularLevel(1);
+        buildLevel(1);
         pac.setAutopilot(new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE)));
         pac.setUseAutopilot(true);
     }

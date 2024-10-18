@@ -189,7 +189,7 @@ public class MsPacManArcadeGame extends GameModel {
     }
 
     @Override
-    public void buildRegularLevel(int levelNumber) {
+    public void buildLevel(int levelNumber) {
         this.levelNumber = levelNumber;
         mapNumber = mapNumberByLevelNumber(levelNumber);
         URL mapURL = getClass().getResource(MAP_PATTERN.formatted(mapNumber));

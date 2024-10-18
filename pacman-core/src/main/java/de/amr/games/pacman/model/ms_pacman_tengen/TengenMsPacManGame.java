@@ -506,7 +506,7 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     @Override
-    public void buildRegularLevel(int levelNumber) {
+    public void buildLevel(int levelNumber) {
         this.levelNumber = levelNumber;
         mapNumber = mapNumberByLevelNumber(levelNumber);
         WorldMap map = currentMapList.get(mapNumber - 1);
