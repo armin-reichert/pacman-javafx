@@ -91,13 +91,6 @@ public class PacManArcadeGame extends GameModel {
     // Ghost house tile position in all Arcade mazes
     private static final byte HOUSE_X = 10, HOUSE_Y = 15;
 
-    // The Pac-Man Arcade game map
-    private static final WorldMap WORLD_MAP = new WorldMap(PacManArcadeGame.class.getResource("/de/amr/games/pacman/maps/pacman.world"));
-    static {
-        // just to be sure this property is set
-        WORLD_MAP.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, formatTile(v2i(HOUSE_X, HOUSE_Y)));
-    }
-
     private static final List<Vector2i> CANNOT_MOVE_UP_TILES = List.of(
         v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)
     );
@@ -126,28 +119,21 @@ public class PacManArcadeGame extends GameModel {
 
     protected static final Vector2f BONUS_POS = halfTileRightOf(13, 20);
 
-
+    // The Pac-Man Arcade game map
+    private final WorldMap worldMap;
     private byte cruiseElroy;
 
     public PacManArcadeGame(GameVariant gameVariant, File userDir) {
         super(gameVariant, userDir);
         initialLives = 3;
         highScoreFile = new File(userDir, "highscore-pacman.xml");
+        worldMap = new WorldMap(getClass().getResource("/de/amr/games/pacman/maps/pacman.world"));
+        // just to be sure this property is set
+        worldMap.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, formatTile(v2i(HOUSE_X, HOUSE_Y)));
     }
 
-    @Override
-    public boolean canStartNewGame() {
-        return GameController.it().coinControl().hasCredit();
-    }
-
-    @Override
-    protected boolean isScoreEnabled() {
-        return levelNumber > 0 && !isDemoLevel();
-    }
-
-    @Override
-    protected boolean isHighScoreEnabled() {
-        return levelNumber > 0 && !isDemoLevel();
+    protected GameLevel levelData(int levelNumber) {
+        return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
     }
 
     public Optional<GameLevel> currentLevelData() {
@@ -165,13 +151,24 @@ public class PacManArcadeGame extends GameModel {
     }
 
     @Override
+    public boolean canStartNewGame() {
+        return GameController.it().coinControl().hasCredit();
+    }
+
+    @Override
+    protected boolean isScoreEnabled() {
+        return levelNumber > 0 && !isDemoLevel();
+    }
+
+    @Override
+    protected boolean isHighScoreEnabled() {
+        return levelNumber > 0 && !isDemoLevel();
+    }
+
+    @Override
     public void reset() {
         super.reset();
         cruiseElroy = 0;
-    }
-
-    protected GameLevel levelData(int levelNumber) {
-        return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
     }
 
     @Override
@@ -216,7 +213,7 @@ public class PacManArcadeGame extends GameModel {
     @Override
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = levelNumber;
-        createWorldAndPopulation(WORLD_MAP);
+        createWorldAndPopulation(worldMap);
         pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);

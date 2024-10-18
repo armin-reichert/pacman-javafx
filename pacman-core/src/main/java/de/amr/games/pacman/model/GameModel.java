@@ -266,6 +266,7 @@ public abstract class GameModel {
         });
         ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
 
+        //TODO this might not be appropriate for Tengen Ms. Pac-Man
         bonusSymbols[0] = computeBonusSymbol();
         bonusSymbols[1] = computeBonusSymbol();
     }
