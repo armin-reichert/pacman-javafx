@@ -11,7 +11,6 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
@@ -44,7 +43,7 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGame
 /**
  * @author Armin Reichert
  */
-public class TengenPlayScene2D extends GameScene2D implements ScrollableGameScene2D {
+public class PlayScene2D extends GameScene2D implements ScrollableGameScene2D {
 
     private static final List<GameAction> ACTIONS = List.of(
         GlobalGameActions2D.CHEAT_EAT_ALL,
@@ -62,7 +61,7 @@ public class TengenPlayScene2D extends GameScene2D implements ScrollableGameScen
     private final SubScene fxSubScene;
     private final StackPane root = new StackPane();
 
-    public TengenPlayScene2D() {
+    public PlayScene2D() {
 
         //TODO to see what's going on
         //root.setBackground(Ufx.coloredBackground(Color.BLUE));

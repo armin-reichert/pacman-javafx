@@ -35,7 +35,7 @@ public class TengenMsPacManGameSceneConfiguration implements GameSceneConfigurat
         set("BootScene",   new BootScene());
         set("IntroScene",  new IntroScene());
         set("StartScene",  new StartScene());
-        set("PlayScene2D", new TengenPlayScene2D());
+        set("PlayScene2D", new PlayScene2D());
         set("CutScene1",   new CutScene1());
         set("CutScene2",   new CutScene2());
         set("CutScene3",   new CutScene3());
