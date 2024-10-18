@@ -51,7 +51,6 @@ public class IntroScene extends GameScene2D {
     private Pac msPacMan;
     private Ghost[] ghosts;
     private Color[] ghostColors;
-    private TickTimer marqueeTimer;
     private int ghostIndex;
     private int waitBeforeRising;
 
@@ -77,7 +76,6 @@ public class IntroScene extends GameScene2D {
             context.assets().color("tengen.ghost.1.color.normal.dress"),
             context.assets().color("tengen.ghost.3.color.normal.dress"),
         };
-        marqueeTimer = new TickTimer("marquee-timer");
         ghostIndex = 0;
         waitBeforeRising = 0;
 
@@ -132,12 +130,12 @@ public class IntroScene extends GameScene2D {
 
             case SHOWING_MARQUEE -> {
                 drawTitle(renderer, font);
-                drawMarquee(renderer, marqueeTimer.currentTick());
+                drawMarquee(renderer, timer.currentTick());
             }
 
             case GHOSTS_MARCHING_IN -> {
                 drawTitle(renderer, font);
-                drawMarquee(renderer, marqueeTimer.currentTick());
+                drawMarquee(renderer, timer.currentTick());
                 if (ghostIndex == 0) {
                     renderer.drawText("WITH", Color.WHITE, font,  MARQUEE_TOP_X + 12, MARQUEE_TOP_Y + 23);
                 }
@@ -149,7 +147,7 @@ public class IntroScene extends GameScene2D {
 
             case MS_PACMAN_MARCHING_IN -> {
                 drawTitle(renderer, font);
-                drawMarquee(renderer, marqueeTimer.currentTick());
+                drawMarquee(renderer, timer.currentTick());
                 renderer.drawText("STARRING",   Color.WHITE, font, MARQUEE_TOP_X + 12, MARQUEE_TOP_Y + 22);
                 renderer.drawText("MS PAC-MAN", TENGEN_YELLOW, font, MARQUEE_TOP_X + 44, MARQUEE_TOP_Y + 38);
                 for (Ghost ghost : ghosts) { renderer.drawAnimatedEntity(ghost); }
@@ -221,7 +219,6 @@ public class IntroScene extends GameScene2D {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(IntroScene intro) {
-                intro.marqueeTimer.restartIndefinitely();
                 intro.msPacMan.setPosition(TS * 33, ACTOR_Y);
                 intro.msPacMan.setMoveDir(Direction.LEFT);
                 intro.msPacMan.setSpeed(SPEED);
@@ -241,7 +238,6 @@ public class IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(IntroScene intro) {
-                intro.marqueeTimer.tick();
                 if (timer.atSecond(1)) {
                     intro.sceneController.changeState(GHOSTS_MARCHING_IN);
                 }
@@ -252,7 +248,6 @@ public class IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(IntroScene intro) {
-                intro.marqueeTimer.tick();
                 boolean reachedEndPosition = letGhostMarchIn(intro);
                 if (reachedEndPosition) {
                     if (intro.ghostIndex == 3) {
@@ -295,7 +290,6 @@ public class IntroScene extends GameScene2D {
         MS_PACMAN_MARCHING_IN {
             @Override
             public void onUpdate(IntroScene intro) {
-                intro.marqueeTimer.tick();
                 intro.msPacMan.move();
                 if (intro.msPacMan.posX() <= MS_PAC_MAN_STOP_X) {
                     intro.msPacMan.setSpeed(0);
