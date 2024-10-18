@@ -63,7 +63,10 @@ public class TengenPlayScene2D extends GameScene2D implements ScrollableGameScen
     private final StackPane root = new StackPane();
 
     public TengenPlayScene2D() {
-        root.setBackground(Ufx.coloredBackground(Color.BLUE));
+
+        //TODO to see what's going on
+        //root.setBackground(Ufx.coloredBackground(Color.BLUE));
+        root.setBackground(Ufx.coloredBackground(Color.BLACK));
 
         canvas.heightProperty().bind(availableHeightPy.multiply(1));
         canvas.widthProperty().bind(canvas.heightProperty().multiply(NES_ASPECT));
@@ -102,7 +105,7 @@ public class TengenPlayScene2D extends GameScene2D implements ScrollableGameScen
     @Override
     public void end() {
         context.sounds().stopAll();
-        ((TengenMsPacManGame) context.game()).setCanStartGame(true);
+        //((TengenMsPacManGame) context.game()).setCanStartGame(true);
     }
 
     @Override

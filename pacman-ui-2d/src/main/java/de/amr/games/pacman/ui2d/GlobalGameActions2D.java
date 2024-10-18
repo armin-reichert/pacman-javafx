@@ -54,7 +54,7 @@ public enum GlobalGameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             context.sounds().stopAll();
-            context.currentGameScene().ifPresent(GameScene::end);
+            //context.currentGameScene().ifPresent(GameScene::end);
             context.game().removeWorld();
             context.gameClock().setTargetFrameRate(GameModel.TICKS_PER_SECOND);
             context.gameController().restart(GameState.BOOT);

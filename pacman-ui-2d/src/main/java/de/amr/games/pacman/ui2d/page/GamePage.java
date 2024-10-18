@@ -187,7 +187,7 @@ public class GamePage extends StackPane implements Page {
         gameCanvasContainer.enabledPy.bind(PY_GAME_CANVAS_DECORATED);
         gameCanvasContainer.enabledPy.addListener((py, ov, nv) -> adaptGameCanvasContainerSizeToSceneSize());
 
-        gameCanvasPane.setBackground(Ufx.coloredBackground(Color.BLUE)); //TODO remove again
+        //gameCanvasPane.setBackground(Ufx.coloredBackground(Color.BLUE));
 
         gameCanvasPane.setCenter(gameCanvasContainer);
 
