@@ -489,16 +489,26 @@ public abstract class GameModel {
                 huntingTicks(levelNumber, nextPhaseIndex));
             return;
         }
+        huntingControl.update();
+
         blinking.tick();
         gateKeeper.unlockGhosts();
-        ghosts().forEach(ghost -> ghost.update(this));
+
         checkForFood(pac.tile());
         pac.update(this);
-        checkPacKilled(pac.isImmune());
         updatePacPower();
-        if (bonus != null) updateBonus();
-        huntingControl.update();
+        checkPacKilled(pac.isImmune());
+        if (eventLog.pacKilled) {
+            return;
+        }
+
+        ghosts().forEach(ghost -> ghost.update(this));
         ghosts(FRIGHTENED).filter(pac::sameTile).forEach(this::killGhost);
+        if (!eventLog.killedGhosts.isEmpty()) {
+            return;
+        }
+
+        if (bonus != null) updateBonus();
     }
 
     private void checkPacKilled(boolean pacImmune) {
