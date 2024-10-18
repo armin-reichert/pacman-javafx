@@ -44,12 +44,11 @@ public class IntroScene extends GameScene2D {
     static final int MARQUEE_TOP_X = 60;
     static final int MARQUEE_TOP_Y = 64;
     static final int ACTOR_Y = MARQUEE_TOP_Y + 72;
-
-    static final float    SPEED = 2.2f; //TODO check exact speed
-    static final int      STOP_X_GHOST = MARQUEE_TOP_X - 18;
-    static final int      STOP_X_MS_PAC_MAN = MARQUEE_TOP_X + 62;
-    static final int      NUM_BULBS = 96;
-    static final int      DISTANCE_BETWEEN_ACTIVE_BULBS = 16;
+    static final int   STOP_X_GHOST = MARQUEE_TOP_X - 18;
+    static final int   STOP_X_MS_PAC_MAN = MARQUEE_TOP_X + 62;
+    static final int   NUM_BULBS = 96;
+    static final int   DISTANCE_BETWEEN_ACTIVE_BULBS = 16;
+    static final float SPEED = 2.2f; //TODO check exact speed
 
     private final FiniteStateMachine<SceneState, IntroScene> sceneController;
 
@@ -121,15 +120,15 @@ public class IntroScene extends GameScene2D {
 
             case WAITING_FOR_START -> {
                 // Loop over 3 different shades of blue, 16 frames each
-                renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t, 16), font, 9 * TS, MARQUEE_TOP_Y - 24);
+                renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t, 16), font, 9 * TS, MARQUEE_TOP_Y - 8);
                 // Draw Tengen logo without image smoothing
                 renderer.ctx().save();
                 renderer.ctx().setImageSmoothing(false);
-                renderer.drawSpriteScaled(TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE, 6 * TS, MARQUEE_TOP_Y - 16);
+                renderer.drawSpriteScaled(TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE, 6 * TS, MARQUEE_TOP_Y);
                 renderer.ctx().restore();
                 // Blink effect TODO: check exact rate
                 if (t % 60 < 30) {
-                    renderer.drawText("PRESS SPACE", Color.WHITE, font, 11 * TS, MARQUEE_TOP_Y + 56);
+                    renderer.drawText("PRESS SPACE", Color.WHITE, font, 11 * TS, MARQUEE_TOP_Y + 72);
                 }
                 Font copyrightFont = renderer.scaledArcadeFont(7.5);
                 Color copyrightColor = TENGEN_PINK;
