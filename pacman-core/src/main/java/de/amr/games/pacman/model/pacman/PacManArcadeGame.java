@@ -308,7 +308,7 @@ public class PacManArcadeGame extends GameModel {
         } else {
             scorePoints(pelletValue());
         }
-        gateKeeper.registerFoodEaten(this);
+        gateKeeper.registerFoodEaten();
         if (isBonusReached()) {
             activateNextBonus();
             eventLog.bonusIndex = nextBonusIndex;
