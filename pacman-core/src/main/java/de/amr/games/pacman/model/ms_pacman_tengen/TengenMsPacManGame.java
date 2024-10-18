@@ -196,7 +196,7 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     private static float pacBaseSpeedInLevel(int levelNumber) {
-        int units = 0x20; // default: 32
+        int units = 0;
         if      (inRange(levelNumber, 1, 4))   { units = 0x20; }
         else if (inRange(levelNumber, 5, 12))  { units = 0x24; }
         else if (inRange(levelNumber, 13, 16)) { units = 0x28; }
@@ -518,7 +518,7 @@ public class TengenMsPacManGame extends GameModel {
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
         // TODO: change this. For now provide a level object such that all code that relies on existing level object still works
-        currentLevelData = new LevelData(
+        currentLevelData = new LevelData(new byte[] {
             100, // Pac speed in % of base speed
             100, // Ghost speed in % of base speed
             40, // Ghost speed in tunnel...
@@ -531,7 +531,7 @@ public class TengenMsPacManGame extends GameModel {
             6, // pac power time (seconds)
             5, // Num flashes
             0 // cut scene after this level
-        );
+        });
     }
 
     @Override
@@ -546,7 +546,7 @@ public class TengenMsPacManGame extends GameModel {
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
         // TODO for now provide a Level object such that all code that relies on one works
-        currentLevelData = new LevelData(
+        currentLevelData = new LevelData(new byte[]{
             100, // Pac speed in % of base speed
             100, // Ghost speed in % of base speed
             40, // Ghost speed in tunnel...
@@ -559,7 +559,7 @@ public class TengenMsPacManGame extends GameModel {
             6, // pac power time (seconds)
             5, // Num flashes
             0 // cut scene after this level
-        );
+        });
     }
 
     @Override
