@@ -113,10 +113,9 @@ public class IntroScene extends GameScene2D {
                 if (timer.currentTick() % 60 < 30) {
                     renderer.drawText("PRESS SPACE", Color.WHITE, font, 11 * TS, MARQUEE_TOP_Y + 72);
                 }
-                Color copyrightColor = TENGEN_PINK;
-                renderer.drawText("MS PAC-MAN TM NAMCO LTD", copyrightColor, font, 6 * TS, MARQUEE_TOP_Y + 13 * TS);
-                renderer.drawText("©1990 TENGEN INC",        copyrightColor, font, 8 * TS, MARQUEE_TOP_Y + 14 * TS);
-                renderer.drawText("ALL RIGHTS RESERVED",     copyrightColor, font, 7 * TS, MARQUEE_TOP_Y + 15 * TS);
+                renderer.drawText("MS PAC-MAN TM NAMCO LTD", TENGEN_PINK, font, 6 * TS, MARQUEE_TOP_Y + 13 * TS);
+                renderer.drawText("©1990 TENGEN INC",        TENGEN_PINK, font, 8 * TS, MARQUEE_TOP_Y + 14 * TS);
+                renderer.drawText("ALL RIGHTS RESERVED",     TENGEN_PINK, font, 7 * TS, MARQUEE_TOP_Y + 15 * TS);
             }
 
             case SHOWING_MARQUEE -> {
