@@ -191,7 +191,7 @@ public class GamePage extends StackPane implements Page {
         gameCanvasContainer.decorationEnabledPy.addListener((py, ov, nv) -> embedGameScene(gameScenePy.get()));
 
         gameCanvasPane.setCenter(gameCanvasContainer);
-        gameCanvasPane.setBackground(coloredBackground(Color.GREEN));
+        //gameCanvasPane.setBackground(coloredBackground(Color.GREEN));
 
         dashboardLayer = new DashboardLayer(context);
         dashboardLayer.addDashboardItem(context.locText("infobox.general.title"), new InfoBoxGeneral());

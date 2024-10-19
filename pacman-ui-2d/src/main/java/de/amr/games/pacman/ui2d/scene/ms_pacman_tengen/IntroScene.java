@@ -108,10 +108,11 @@ public class IntroScene extends GameScene2D {
     @Override
     public void drawSceneContent(GameRenderer renderer) {
 
+/*
         renderer.ctx().setLineWidth(2);
         renderer.ctx().setStroke(Color.WHITE);
         renderer.ctx().strokeRect(0, 0, renderer.canvas().getWidth(), renderer.canvas().getHeight());
-
+*/
         renderer.ctx().save();
         renderer.ctx().setImageSmoothing(false);
         TickTimer timer = sceneController.state().timer();

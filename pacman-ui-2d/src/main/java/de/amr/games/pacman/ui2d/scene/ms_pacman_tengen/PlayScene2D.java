@@ -154,7 +154,7 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
             drawDebugInfo(renderer);
         }
 
-        // debug
+        /*
         renderer.ctx().setLineWidth(2);
         renderer.ctx().setStroke(Color.WHITE);
         renderer.ctx().strokeRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -162,6 +162,8 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
         renderer.ctx().setStroke(Color.RED);
         renderer.ctx().setFont(Font.font("Sans", 14));
         renderer.ctx().strokeText("Camera y=%.1f".formatted(cam.getTranslateY()), 0, 320);
+
+         */
     }
 
     @Override

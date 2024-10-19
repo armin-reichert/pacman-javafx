@@ -83,9 +83,11 @@ public class StartScene extends GameScene2D {
         renderer.scalingProperty().set(scaling());
         Font font = renderer.scaledArcadeFont(UNIT);
 
+        /*
         renderer.ctx().setLineWidth(2);
         renderer.ctx().setStroke(Color.WHITE);
         renderer.ctx().strokeRect(0, 0, renderer.canvas().getWidth(), renderer.canvas().getHeight());
+         */
 
         float y = 4 * UNIT - 1;
         drawBabyBlueBar(renderer, y);
