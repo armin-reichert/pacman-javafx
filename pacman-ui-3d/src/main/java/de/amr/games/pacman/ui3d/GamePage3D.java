@@ -5,21 +5,17 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.page.GamePage;
-import de.amr.games.pacman.ui2d.scene.common.GameScene;
-import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.scene.common.Perspective;
-import de.amr.games.pacman.ui3d.scene.common.PlayScene3D;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
-import org.tinylog.Logger;
 
 import java.util.stream.Stream;
 
@@ -134,17 +130,5 @@ public class GamePage3D extends GamePage {
 
         contextMenu.show(this, event.getScreenX(), event.getScreenY());
         contextMenu.requestFocus();
-    }
-
-    @Override
-    public void handleGameSceneChange(GameScene gameScene) {
-        if (gameScene instanceof PlayScene3D playScene3D) {
-            contextMenu.hide();
-            getChildren().set(0, playScene3D.root());
-        } else if (gameScene instanceof GameScene2D scene2D) {
-            setGameScene2D(scene2D);
-        } else {
-            Logger.warn("Cannot embed game scene {}", gameScene);
-        }
     }
 }

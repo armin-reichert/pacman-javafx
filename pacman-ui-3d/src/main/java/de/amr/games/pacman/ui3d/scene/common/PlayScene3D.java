@@ -19,6 +19,7 @@ import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
+import de.amr.games.pacman.ui2d.scene.common.ScrollableGameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui3d.GlobalGameActions3D;
 import de.amr.games.pacman.ui3d.level.*;
@@ -51,7 +52,7 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
  *
  * @author Armin Reichert
  */
-public class PlayScene3D implements GameScene {
+public class PlayScene3D implements GameScene, ScrollableGameScene {
 
     private final List<GameAction> actions = List.of(
         GlobalGameActions3D.PREV_PERSPECTIVE,
@@ -59,11 +60,7 @@ public class PlayScene3D implements GameScene {
         GlobalGameActions2D.CHEAT_EAT_ALL,
         GlobalGameActions2D.CHEAT_ADD_LIVES,
         GlobalGameActions2D.CHEAT_NEXT_LEVEL,
-        GlobalGameActions2D.CHEAT_KILL_GHOSTS
-    );
-
-    //TODO check
-    private final List<GameAction> tengenMsPacManActions = List.of(
+        GlobalGameActions2D.CHEAT_KILL_GHOSTS,
         GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER,
         GlobalGameActions2D.TENGEN_QUIT_PLAY_SCENE
     );
@@ -113,24 +110,28 @@ public class PlayScene3D implements GameScene {
         root.getChildren().setAll(scores3D, coordSystem, ambientLight, new Group());
     }
 
-    public DoubleProperty widthProperty() {
+    @Override
+    public DoubleProperty scrollAreaWidthProperty() {
         return fxSubScene.widthProperty();
     }
 
-    public DoubleProperty heightProperty() {
+    @Override
+    public DoubleProperty scrollAreaHeightProperty() {
         return fxSubScene.heightProperty();
+    }
+
+    @Override
+    public SubScene scrollArea() {
+        return fxSubScene;
+    }
+
+    @Override
+    public Camera camera() {
+        return fxSubScene.getCamera();
     }
 
     public void setContext(GameContext context) {
         this.context = checkNotNull(context);
-    }
-
-    public Node root() {
-        return fxSubScene;
-    }
-
-    public Camera camera() {
-        return fxSubScene.getCamera();
     }
 
     public Perspective perspective() {
@@ -216,14 +217,12 @@ public class PlayScene3D implements GameScene {
     @Override
     public void handleInput() {
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            context.doFirstCalledActionOrElse(tengenMsPacManActions.stream(),
-                () -> context.doFirstCalledAction(actions));
-        } else {
-            // add credit is only allowed in demo level
+            context.doFirstCalledAction(actions);
+        } else { //TODO check this
             if (context.isActionCalled(GlobalGameActions2D.ADD_CREDIT) && context.game().isDemoLevel()) {
                 GlobalGameActions2D.ADD_CREDIT.execute(context);
             } else {
-                context.doFirstCalledAction(actions.stream());
+                context.doFirstCalledAction(actions);
             }
         }
     }

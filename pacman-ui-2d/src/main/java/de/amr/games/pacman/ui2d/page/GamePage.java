@@ -16,7 +16,7 @@ import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.common.ScrollableGameScene2D;
+import de.amr.games.pacman.ui2d.scene.common.ScrollableGameScene;
 import de.amr.games.pacman.ui2d.util.TooFancyGameCanvasContainer;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.binding.Bindings;
@@ -300,29 +300,25 @@ public class GamePage extends StackPane implements Page {
     }
 
     protected void handleGameSceneChange(GameScene gameScene) {
-        if (gameScene == null) {
-            return; // happens when app is initialized
+        if (gameScene != null) {
+            embedGameScene(gameScene);
         }
         contextMenu.hide();
-        if (gameScene instanceof GameScene2D scene2D) {
-            setGameScene2D(scene2D);
-        } else {
-            Logger.error("Cannot embed non-2D game scene: {}", gameScene);
-        }
     }
 
-    protected void setGameScene2D(GameScene2D scene2D) {
-        if (scene2D instanceof ScrollableGameScene2D scrollableGameScene2D) {
-            getChildren().set(0, scrollableGameScene2D.root());
-            scrollableGameScene2D.availableWidthProperty().bind(parentScene.heightProperty());
-            scrollableGameScene2D.availableHeightProperty().bind(parentScene.heightProperty());
-        } else {
+    protected void embedGameScene(GameScene gameScene) {
+        if (gameScene instanceof ScrollableGameScene scrollableGameScene) {
+            getChildren().set(0, scrollableGameScene.scrollArea());
+            scrollableGameScene.scrollAreaWidthProperty().bind(parentScene.widthProperty());
+            scrollableGameScene.scrollAreaHeightProperty().bind(parentScene.heightProperty());
+        } else if (gameScene instanceof GameScene2D gameScene2D ){
             getChildren().set(0, gameCanvasPane);
-            gameCanvasContainer.backgroundProperty().bind(scene2D.backgroundColorPy.map(Ufx::coloredBackground));
+            gameCanvasContainer.backgroundProperty().bind(gameScene2D.backgroundColorPy.map(Ufx::coloredBackground));
             adaptGameCanvasContainerSizeToSceneSize();
-            scene2D.scalingPy.bind(gameCanvasContainer.scalingPy);
+            gameScene2D.scalingPy.bind(gameCanvasContainer.scalingPy);
+        } else {
+            Logger.error("Cannot embed game scene of class {}", gameScene.getClass().getName());
         }
-        contextMenu.hide();
     }
 
     protected boolean isCurrentGameScene2D() {

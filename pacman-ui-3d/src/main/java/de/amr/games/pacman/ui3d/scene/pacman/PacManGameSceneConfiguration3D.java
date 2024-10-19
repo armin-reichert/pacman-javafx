@@ -35,7 +35,5 @@ public class PacManGameSceneConfiguration3D extends PacManGameSceneConfiguration
     public void initPlayScene3D(GameContext context, ObservableDoubleValue widthProperty, ObservableDoubleValue heightProperty) {
         PlayScene3D playScene3D = (PlayScene3D) get("PlayScene3D");
         playScene3D.setContext(context);
-        playScene3D.widthProperty().bind(widthProperty);
-        playScene3D.heightProperty().bind(heightProperty);
     }
 }

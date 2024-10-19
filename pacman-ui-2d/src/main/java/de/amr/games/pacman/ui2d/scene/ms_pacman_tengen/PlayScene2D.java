@@ -17,11 +17,11 @@ import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.common.ScrollableGameScene2D;
+import de.amr.games.pacman.ui2d.scene.common.ScrollableGameScene;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Pos;
+import javafx.scene.Camera;
 import javafx.scene.Parent;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
@@ -43,7 +43,7 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGame
 /**
  * @author Armin Reichert
  */
-public class PlayScene2D extends GameScene2D implements ScrollableGameScene2D {
+public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
 
     private final List<GameAction> actions = List.of(
         GlobalGameActions2D.CHEAT_EAT_ALL,
@@ -54,46 +54,42 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene2D {
         GlobalGameActions2D.TENGEN_QUIT_PLAY_SCENE
     );
 
-    private final DoubleProperty availableWidthPy = new SimpleDoubleProperty(224);
-    private final DoubleProperty availableHeightPy = new SimpleDoubleProperty(288);
-
+    private final SubScene fxSubScene;
     private final Canvas canvas = new Canvas(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
     private final StackPane root = new StackPane();
 
     public PlayScene2D() {
-
         //TODO to see what's going on
         //root.setBackground(Ufx.coloredBackground(Color.BLUE));
         root.setBackground(Ufx.coloredBackground(Color.BLACK));
 
-        canvas.heightProperty().bind(availableHeightPy.multiply(1));
-        canvas.widthProperty().bind(canvas.heightProperty().multiply(NES_ASPECT));
-
         root.getChildren().add(canvas);
         StackPane.setAlignment(canvas, Pos.CENTER);
 
-        SubScene fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
-        fxSubScene.widthProperty().bind(availableWidthPy);
-        fxSubScene.heightProperty().bind(availableHeightPy);
+        fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
+
+        canvas.heightProperty().bind(scrollAreaHeightProperty());
+        canvas.widthProperty().bind(canvas.heightProperty().multiply(NES_ASPECT));
     }
 
     @Override
-    public DoubleProperty availableHeightProperty() {
-        return availableHeightPy;
+    public DoubleProperty scrollAreaWidthProperty() {
+        return fxSubScene.widthProperty();
     }
 
     @Override
-    public DoubleProperty availableWidthProperty() {
-        return availableWidthPy;
+    public DoubleProperty scrollAreaHeightProperty() {
+        return fxSubScene.heightProperty();
     }
 
-    public Parent root() {
+    @Override
+    public Parent scrollArea() {
         return root;
     }
 
     @Override
-    public Canvas canvas() {
-        return canvas;
+    public Camera camera() {
+        return fxSubScene.getCamera();
     }
 
     @Override
@@ -150,8 +146,8 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene2D {
         //TODO use faked scene size until camera is available
         Vector2i worldSizeInTiles = context.worldSizeTilesOrDefault();
         sceneSize = worldSizeInTiles.plus(0, 2).scaled(TS).toVector2f();
-        //scalingPy.set(availableHeightPy.get() / NES_SCREEN_HEIGHT);
-        scalingPy.set(availableHeightPy.get() / (sceneSize.y()));
+        //scalingPy.set(scrollAreaHeightProperty(.get() / NES_SCREEN_HEIGHT);
+        scalingPy.set(scrollAreaHeightProperty().get() / (sceneSize.y()));
         renderer.setCanvas(canvas);
         renderer.scalingProperty().set(scaling());
         renderer.setBackgroundColor(backgroundColorPy.get());

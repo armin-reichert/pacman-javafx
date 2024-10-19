@@ -35,7 +35,5 @@ public class TengenMsPacManGameSceneConfiguration3D extends TengenMsPacManGameSc
     public void initPlayScene3D(GameContext context, ObservableDoubleValue widthProperty, ObservableDoubleValue heightProperty) {
         PlayScene3D playScene3D = (PlayScene3D) get("PlayScene3D");
         playScene3D.setContext(context);
-        playScene3D.widthProperty().bind(widthProperty);
-        playScene3D.heightProperty().bind(heightProperty);
     }
 }
