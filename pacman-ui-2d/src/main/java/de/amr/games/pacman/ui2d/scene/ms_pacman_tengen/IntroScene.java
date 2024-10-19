@@ -65,14 +65,7 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    public ScalingBehaviour scalingBehaviour() {
-        return ScalingBehaviour.FIXED;
-    }
-
-    @Override
     public void init() {
-        setScaling(TengenMsPacManGameSceneConfiguration.SCALING);
-
         TengenMsPacManGameSpriteSheet spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         context.setScoreVisible(false);
 

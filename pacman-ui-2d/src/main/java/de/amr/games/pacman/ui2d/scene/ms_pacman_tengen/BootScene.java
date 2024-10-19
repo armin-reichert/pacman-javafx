@@ -28,13 +28,7 @@ public class BootScene extends GameScene2D {
     private long t;
 
     @Override
-    public ScalingBehaviour scalingBehaviour() {
-        return ScalingBehaviour.FIXED;
-    }
-
-    @Override
     public void init() {
-        setScaling(TengenMsPacManGameSceneConfiguration.SCALING);
         GameSpriteSheet spriteSheet = context.currentGameSceneConfig().spriteSheet();
         t = 0;
         context.setScoreVisible(false);

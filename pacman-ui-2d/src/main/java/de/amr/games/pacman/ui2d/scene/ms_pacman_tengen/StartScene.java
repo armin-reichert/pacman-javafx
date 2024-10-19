@@ -53,13 +53,7 @@ public class StartScene extends GameScene2D {
     private long idleTicks;
 
     @Override
-    public ScalingBehaviour scalingBehaviour() {
-        return ScalingBehaviour.FIXED;
-    }
-
-    @Override
     public void init() {
-        setScaling(TengenMsPacManGameSceneConfiguration.SCALING);
         context.setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
         tengenGame = (TengenMsPacManGame) context.game();
@@ -87,7 +81,7 @@ public class StartScene extends GameScene2D {
     @Override
     protected void drawSceneContent(GameRenderer renderer) {
         renderer.scalingProperty().set(scaling());
-        Font font = renderer.scaledArcadeFont(8);
+        Font font = renderer.scaledArcadeFont(UNIT);
 
         renderer.ctx().setLineWidth(2);
         renderer.ctx().setStroke(Color.WHITE);

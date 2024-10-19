@@ -71,11 +71,6 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
     }
 
     @Override
-    public ScalingBehaviour scalingBehaviour() {
-        return ScalingBehaviour.FIXED;
-    }
-
-    @Override
     public DoubleProperty scrollAreaWidthProperty() {
         return fxSubScene.widthProperty();
     }

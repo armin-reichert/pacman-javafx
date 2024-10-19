@@ -32,6 +32,7 @@ public abstract class GameScene2D implements GameScene {
     }
 
     public void setScaling(double scaling) {
+
         scalingPy.set(scaling);
     }
 
