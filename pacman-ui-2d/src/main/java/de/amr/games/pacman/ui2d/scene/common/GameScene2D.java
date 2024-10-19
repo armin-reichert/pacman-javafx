@@ -10,6 +10,7 @@ import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
@@ -41,13 +42,14 @@ public abstract class GameScene2D implements GameScene {
     }
 
     @Override
-    public void draw(GameRenderer renderer, Vector2f sceneSize) {
+    public void draw(GameRenderer renderer) {
         renderer.scalingProperty().set(scaling());
         renderer.setBackgroundColor(backgroundColorPy.get());
         renderer.clearCanvas();
         if (context.isScoreVisible()) {
             renderer.drawScores(context);
         }
+        Vector2f sceneSize = context.worldSizeTilesOrDefault().scaled(TS).toVector2f();
         drawSceneContent(renderer, sceneSize);
         if (debugInfoPy.get()) {
             drawDebugInfo(renderer, sceneSize);

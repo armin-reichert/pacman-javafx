@@ -53,7 +53,6 @@ public interface GameContext {
     };
     void        showFlashMessageSeconds(double seconds, String message, Object... args);
     GameClockFX gameClock();
-    Vector2f    sceneSize();
 
     // Actions
     boolean      isActionCalled(GameAction action);

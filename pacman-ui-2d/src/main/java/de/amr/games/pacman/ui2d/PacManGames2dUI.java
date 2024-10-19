@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -53,12 +52,9 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_HEIGHT;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_WIDTH;
 import static de.amr.games.pacman.ui2d.util.Ufx.createIcon;
 
 /**
@@ -201,8 +197,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected void runOnEveryTick() {
         try {
             if (currentPage == gamePage) {
-                Vector2f sceneSize = sceneSize();
-                currentGameScene().ifPresent(gameScene -> gameScene.draw(currentGameSceneConfig().renderer(), sceneSize));
+                currentGameScene().ifPresent(gameScene -> gameScene.draw(currentGameSceneConfig().renderer()));
                 gamePage.updateDashboard();
                 flashMessageLayer.update();
             } else {
@@ -392,14 +387,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             game().world() != null ? game().world().map().terrain().numCols() : PacManArcadeGame.ARCADE_MAP_TILES_X,
             game().world() != null ? game().world().map().terrain().numRows() : PacManArcadeGame.ARCADE_MAP_TILES_Y
         );
-    }
-
-    @Override
-    public Vector2f sceneSize() {
-        // add some vertical space for Tengen scenes to be able to display higher lives/level counters
-        return gameVariant() == GameVariant.MS_PACMAN_TENGEN
-            ? new Vector2f(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT)
-            : worldSizeTilesOrDefault().scaled(TS).toVector2f();
     }
 
     @Override

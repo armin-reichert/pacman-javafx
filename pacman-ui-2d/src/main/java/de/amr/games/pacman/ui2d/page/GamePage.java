@@ -38,6 +38,7 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
@@ -290,7 +291,7 @@ public class GamePage extends StackPane implements Page {
     }
 
     public void adaptGameCanvasContainerSizeToSceneSize() {
-        Vector2f sceneSize = context.sceneSize();
+        Vector2f sceneSize = context.worldSizeTilesOrDefault().scaled(TS).toVector2f();
         gameCanvasContainer.setUnscaledCanvasWidth(sceneSize.x());
         gameCanvasContainer.setUnscaledCanvasHeight(sceneSize.y());
         gameCanvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());

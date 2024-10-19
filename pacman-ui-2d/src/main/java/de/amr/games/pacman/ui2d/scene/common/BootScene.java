@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.scene.common;
 
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 
@@ -34,7 +35,8 @@ public class BootScene extends GameScene2D {
     }
 
     @Override
-    public void draw(GameRenderer renderer, Vector2f sceneSize) {
+    public void draw(GameRenderer renderer) {
+        Vector2f sceneSize = new Vector2f(PacManArcadeGame.ARCADE_MAP_SIZE_X, PacManArcadeGame.ARCADE_MAP_SIZE_Y);
         renderer.scalingProperty().set(scalingPy.get());
         renderer.setBackgroundColor(backgroundColorPy.get());
         var timer = context.gameState().timer();

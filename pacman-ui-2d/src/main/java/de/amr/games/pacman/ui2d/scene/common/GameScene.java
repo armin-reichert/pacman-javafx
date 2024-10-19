@@ -37,7 +37,7 @@ public interface GameScene extends GameEventListener {
      * Draws the scene content using the given renderer (2D-only.
      * @param renderer world renderer (for current game variant)
      */
-    default void draw(GameRenderer renderer, Vector2f size) {}
+    default void draw(GameRenderer renderer) {}
 
     /**
      * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.

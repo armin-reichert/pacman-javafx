@@ -21,11 +21,9 @@ import de.amr.games.pacman.ui2d.scene.common.ScrollableGameScene;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Pos;
-import javafx.scene.Camera;
-import javafx.scene.Parent;
-import javafx.scene.SceneAntialiasing;
-import javafx.scene.SubScene;
+import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -55,21 +53,20 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
     );
 
     private final SubScene fxSubScene;
+    private ParallelCamera cam = new ParallelCamera();
     private final Canvas canvas = new Canvas(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
-    private final StackPane root = new StackPane();
+    private final Pane root = new StackPane();
 
     public PlayScene2D() {
-        //TODO to see what's going on
-        //root.setBackground(Ufx.coloredBackground(Color.BLUE));
+        //TODO DEBUG COLOR
+        root.setBackground(Ufx.coloredBackground(Color.BLUE));
         root.setBackground(Ufx.coloredBackground(Color.BLACK));
 
         root.getChildren().add(canvas);
-        StackPane.setAlignment(canvas, Pos.CENTER);
+        //StackPane.setAlignment(canvas, Pos.CENTER);
 
         fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
-
-        canvas.heightProperty().bind(scrollAreaHeightProperty());
-        canvas.widthProperty().bind(canvas.heightProperty().multiply(NES_ASPECT));
+        fxSubScene.setCamera(cam);
     }
 
     @Override
@@ -83,8 +80,8 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
     }
 
     @Override
-    public Parent scrollArea() {
-        return root;
+    public Node scrollArea() {
+        return fxSubScene;
     }
 
     @Override
@@ -94,6 +91,10 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
 
     @Override
     public void init() {
+        //canvas.heightProperty().bind(scalingPy.map(
+            //scaling -> scaling.doubleValue() * context.worldSizeTilesOrDefault().plus(0, 2).scaled(TS).y()));
+        //canvas.widthProperty().bind(canvas.heightProperty().multiply(NES_ASPECT));
+        //scalingPy.bind(fxSubScene.heightProperty().divide(NES_SCREEN_HEIGHT));
     }
 
     @Override
@@ -117,23 +118,9 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
             context.game().pac().setImmune(PY_IMMUNITY.get());
             updatePlaySceneSound();
         }
-    }
 
-    private void updatePlaySceneSound() {
-        if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
-            int sirenNumber = 1 + context.game().huntingControl().phaseIndex() / 2;
-            context.sounds().selectSiren(sirenNumber);
-            context.sounds().playSiren();
-        }
-        if (context.game().pac().starvingTicks() > 8) { // TODO not sure how to do this right
-            context.sounds().stopMunchingSound();
-        }
-        boolean ghostsReturning = context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
-        if (context.game().pac().isAlive() && ghostsReturning) {
-            context.sounds().playGhostReturningHomeSound();
-        } else {
-            context.sounds().stopGhostReturningHomeSound();
-        }
+        //TODO this is trial and error
+        cam.setTranslateY(1.5 * context.game().pac().posY() - 0.3 * fxSubScene.getHeight());
     }
 
     @Override
@@ -142,20 +129,21 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
     }
 
     @Override
-    public void draw(GameRenderer renderer, Vector2f sceneSize) {
-        //TODO use faked scene size until camera is available
-        Vector2i worldSizeInTiles = context.worldSizeTilesOrDefault();
-        sceneSize = worldSizeInTiles.plus(0, 2).scaled(TS).toVector2f();
-        //scalingPy.set(scrollAreaHeightProperty(.get() / NES_SCREEN_HEIGHT);
-        scalingPy.set(scrollAreaHeightProperty().get() / (sceneSize.y()));
+    public void draw(GameRenderer renderer) {
+        Vector2f sceneSize = context.worldSizeTilesOrDefault().plus(0, 2).scaled(TS).toVector2f();
+        scalingPy.set(3);
+        canvas.setWidth(sceneSize.x() * scaling());
+        canvas.setHeight(sceneSize.y() * scaling());
+
+//        Logger.info("Canvas height={0.00}, sub scene height={0.00}, root height={}", canvas.getHeight(), fxSubScene.getHeight(), root.getHeight());
+
+        //sceneSize = new Vector2f((float)canvas.getWidth(), (float)canvas.getHeight());
+
         renderer.setCanvas(canvas);
         renderer.scalingProperty().set(scaling());
         renderer.setBackgroundColor(backgroundColorPy.get());
         renderer.clearCanvas();
 
-        double dx = 0.5 * (canvas.getWidth() - worldSizeInTiles.scaled(TS).x() * scaling());
-        renderer.ctx().save();
-        renderer.ctx().translate(dx, 0);
         if (context.isScoreVisible()) {
             renderer.drawScores(context);
         }
@@ -163,8 +151,10 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
         if (debugInfoPy.get()) {
             drawDebugInfo(renderer, sceneSize);
         }
-        renderer.ctx().restore();
 
+        renderer.ctx().setStroke(Color.WHITE);
+        renderer.ctx().setFont(Font.font("Sans", 20));
+        renderer.ctx().strokeText("Camera y=%s".formatted(cam.getTranslateY()), 50, 0.5 * canvas.getHeight());
     }
 
     @Override
@@ -299,5 +289,22 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
     @Override
     public void onPacLostPower(GameEvent e) {
         context.sounds().stopPacPowerSound();
+    }
+
+    private void updatePlaySceneSound() {
+        if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
+            int sirenNumber = 1 + context.game().huntingControl().phaseIndex() / 2;
+            context.sounds().selectSiren(sirenNumber);
+            context.sounds().playSiren();
+        }
+        if (context.game().pac().starvingTicks() > 8) { // TODO not sure how to do this right
+            context.sounds().stopMunchingSound();
+        }
+        boolean ghostsReturning = context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
+        if (context.game().pac().isAlive() && ghostsReturning) {
+            context.sounds().playGhostReturningHomeSound();
+        } else {
+            context.sounds().stopGhostReturningHomeSound();
+        }
     }
 }
