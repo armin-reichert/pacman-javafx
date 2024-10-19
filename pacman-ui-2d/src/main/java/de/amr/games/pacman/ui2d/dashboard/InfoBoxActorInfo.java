@@ -20,6 +20,7 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import static de.amr.games.pacman.lib.timer.TickTimer.ticksToString;
+import static de.amr.games.pacman.ui2d.dashboard.InfoText.NO_INFO;
 
 /**
  * @author Armin Reichert
@@ -51,7 +52,7 @@ public class InfoBoxActorInfo extends InfoBox {
     private Supplier<String> pacInfo(BiFunction<GameModel, Pac, String> fnPacInfo) {
         return ifLevelPresent(level -> context.game().pac() != null
             ? fnPacInfo.apply(context.game(), context.game().pac())
-            : InfoText.NO_INFO);
+            : NO_INFO);
     }
 
     private String locationInfo(GameModel game, Creature guy) {
@@ -80,10 +81,13 @@ public class InfoBoxActorInfo extends InfoBox {
     }
 
     private Supplier<String> fnGhostInfo(
-        BiFunction<GameModel, Ghost, String> fnGhostInfo, // (game, ghost) -> info text about this ghost
-        byte ghostID)
-    {
-        return ifLevelPresent(level -> fnGhostInfo.apply(context.game(), context.game().ghost(ghostID)));
+        BiFunction<GameModel, Ghost, String> fnGhostInfo, byte ghostID) {
+        return ifLevelPresent(level -> {
+            if (context.game().ghosts().findAny().isPresent()) {
+                return fnGhostInfo.apply(context.game(), context.game().ghost(ghostID));
+            }
+            return NO_INFO;
+        });
     }
 
     private String ghostColorName(byte ghostID) {
@@ -108,10 +112,10 @@ public class InfoBoxActorInfo extends InfoBox {
 
     private String ghostAnimation(GameModel game, Ghost ghost) {
         if (ghost.animations().isEmpty()) {
-            return InfoText.NO_INFO;
+            return NO_INFO;
         }
         SpriteAnimationCollection sa = (SpriteAnimationCollection) ghost.animations().get();
-        return sa.currentAnimationID() != null ? sa.currentAnimationID() : InfoText.NO_INFO;
+        return sa.currentAnimationID() != null ? sa.currentAnimationID() : NO_INFO;
     }
 
     private String ghostState(GameModel game, Ghost ghost) {

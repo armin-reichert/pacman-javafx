@@ -156,9 +156,11 @@ public abstract class GameModel {
 
     public Stream<Ghost> ghosts(GhostState... states) {
         checkNotNull(states);
+        if (ghosts == null) {
+            return Stream.empty();
+        }
         return states.length == 0 ? Stream.of(ghosts) : Stream.of(ghosts).filter(ghost -> ghost.inState(states));
     }
-
 
     public TickTimer powerTimer() {
         return powerTimer;

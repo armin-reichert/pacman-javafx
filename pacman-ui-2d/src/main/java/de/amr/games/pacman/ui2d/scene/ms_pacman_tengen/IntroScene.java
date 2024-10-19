@@ -20,7 +20,6 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.common.ScalingBehaviour;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -107,12 +106,6 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameRenderer renderer) {
-
-/*
-        renderer.ctx().setLineWidth(2);
-        renderer.ctx().setStroke(Color.WHITE);
-        renderer.ctx().strokeRect(0, 0, renderer.canvas().getWidth(), renderer.canvas().getHeight());
-*/
         renderer.ctx().save();
         renderer.ctx().setImageSmoothing(false);
         TickTimer timer = sceneController.state().timer();

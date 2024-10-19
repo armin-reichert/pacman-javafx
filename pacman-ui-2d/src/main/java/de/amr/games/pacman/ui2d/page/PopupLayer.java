@@ -8,7 +8,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.FadingPane;
 import de.amr.games.pacman.ui2d.util.TooFancyGameCanvasContainer;
-import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
@@ -23,7 +22,6 @@ import javafx.util.Duration;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_BLUE;
 import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_RED;
-import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_DEBUG_INFO;
 import static de.amr.games.pacman.ui2d.util.Ufx.opaqueColor;
 
 /**
@@ -47,12 +45,6 @@ public class PopupLayer extends Pane {
         minWidthProperty().bind(canvas.minWidthProperty());
         maxWidthProperty().bind(canvas.maxWidthProperty());
         prefWidthProperty().bind(canvas.prefWidthProperty());
-
-        borderProperty().bind(Bindings.createObjectBinding(
-            () -> PY_DEBUG_INFO.get() && !context.currentGameSceneHasID("PlayScene3D")
-                ? Ufx.border(Color.GREENYELLOW, 3) : null,
-            PY_DEBUG_INFO, context.gameSceneProperty()
-        ));
     }
 
     public void sign(TooFancyGameCanvasContainer gameCanvasContainer, Font font, Color color, String... words) {

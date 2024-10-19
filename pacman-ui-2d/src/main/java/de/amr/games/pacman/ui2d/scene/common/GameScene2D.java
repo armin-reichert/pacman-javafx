@@ -4,15 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.common;
 
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.scene.common.ScalingBehaviour.AUTO;
 
 /**
  * Base class of all 2D scenes.
@@ -26,10 +23,6 @@ public abstract class GameScene2D implements GameScene {
     public final BooleanProperty debugInfoPy = new SimpleBooleanProperty(this, "debugInfo", false);
 
     protected GameContext context;
-
-    public ScalingBehaviour scalingBehaviour() {
-        return AUTO; // default
-    }
 
     public DoubleProperty scalingProperty() {
         return scalingPy;
@@ -67,6 +60,9 @@ public abstract class GameScene2D implements GameScene {
         }
         drawSceneContent(renderer);
         if (debugInfoPy.get()) {
+            renderer.ctx().setLineWidth(2);
+            renderer.ctx().setStroke(Color.WHITE);
+            renderer.ctx().strokeRect(0, 0, renderer.canvas().getWidth(), renderer.canvas().getHeight());
             drawDebugInfo(renderer);
         }
     }

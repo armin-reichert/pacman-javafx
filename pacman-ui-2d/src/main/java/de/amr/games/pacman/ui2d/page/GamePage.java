@@ -16,11 +16,9 @@ import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.common.ScalingBehaviour;
 import de.amr.games.pacman.ui2d.scene.common.ScrollableGameScene;
 import de.amr.games.pacman.ui2d.util.TooFancyGameCanvasContainer;
 import de.amr.games.pacman.ui2d.util.Ufx;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
@@ -43,7 +41,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.util.KeyInput.*;
-import static de.amr.games.pacman.ui2d.util.Ufx.*;
+import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 
 /**
  * @author Armin Reichert
@@ -212,18 +210,6 @@ public class GamePage extends StackPane implements Page {
 
         //TODO is this the recommended way to close an open context-menu?
         setOnMouseClicked(e -> contextMenu.hide());
-
-        // Debugging
-        // gameCanvasPane.setBackground(Ufx.coloredBackground(Color.BLUE));
-
-        borderProperty().bind(Bindings.createObjectBinding(
-            () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? border(Color.RED, 3) : null,
-            PY_DEBUG_INFO, context.gameSceneProperty()
-        ));
-        gameCanvasPane.borderProperty().bind(Bindings.createObjectBinding(
-            () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? border(Color.YELLOW, 3) : null,
-            PY_DEBUG_INFO, context.gameSceneProperty()
-        ));
     }
 
     public TooFancyGameCanvasContainer gameCanvasContainer() {
@@ -303,32 +289,27 @@ public class GamePage extends StackPane implements Page {
     }
 
     public void embedGameScene(GameScene gameScene) {
-        if (gameScene == null) {
-            Logger.error("Cannot embed not existing game scene");
-        }
-        else if (gameScene instanceof ScrollableGameScene scrollableGameScene) {
-            getChildren().set(0, scrollableGameScene.scrollArea());
-            scrollableGameScene.scrollAreaWidthProperty().bind(parentScene.widthProperty());
-            scrollableGameScene.scrollAreaHeightProperty().bind(parentScene.heightProperty());
-            if (gameScene instanceof GameScene2D gameScene2D) {
-                if (gameScene2D.scalingBehaviour() == ScalingBehaviour.AUTO) {
-                    gameScene2D.scalingProperty().bind(gameCanvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), 5)));
+        switch (gameScene) {
+            case null -> Logger.error("Cannot embed not existing game scene");
+            case ScrollableGameScene scrollableGameScene -> {
+                getChildren().set(0, scrollableGameScene.scrollArea());
+                scrollableGameScene.scrollAreaWidthProperty().bind(parentScene.widthProperty());
+                scrollableGameScene.scrollAreaHeightProperty().bind(parentScene.heightProperty());
+                if (gameScene instanceof GameScene2D gameScene2D) {
+                    gameScene2D.scalingProperty().bind(
+                        gameCanvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), 5)));
                 }
             }
-        }
-        else if (gameScene instanceof GameScene2D gameScene2D) {
-            getChildren().set(0, gameCanvasPane);
-            gameCanvasContainer.backgroundProperty().bind(gameScene2D.backgroundColorPy.map(Ufx::coloredBackground));
-            Vector2f sceneSize = gameScene.size();
-            gameCanvasContainer.setUnscaledCanvasWidth(sceneSize.x());
-            gameCanvasContainer.setUnscaledCanvasHeight(sceneSize.y());
-            gameCanvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-            if (gameScene2D.scalingBehaviour() == ScalingBehaviour.AUTO) {
+            case GameScene2D gameScene2D -> {
+                getChildren().set(0, gameCanvasPane);
+                gameCanvasContainer.backgroundProperty().bind(gameScene2D.backgroundColorPy.map(Ufx::coloredBackground));
+                Vector2f sceneSize = gameScene.size();
+                gameCanvasContainer.setUnscaledCanvasWidth(sceneSize.x());
+                gameCanvasContainer.setUnscaledCanvasHeight(sceneSize.y());
+                gameCanvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
                 gameScene2D.scalingProperty().bind(gameCanvasContainer.scalingPy);
             }
-        }
-        else {
-            Logger.error("Cannot embed game scene of class {}", gameScene.getClass().getName());
+            default -> Logger.error("Cannot embed game scene of class {}", gameScene.getClass().getName());
         }
     }
 
