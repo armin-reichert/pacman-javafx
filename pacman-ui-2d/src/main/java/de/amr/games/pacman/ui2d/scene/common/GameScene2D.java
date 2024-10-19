@@ -25,10 +25,6 @@ public abstract class GameScene2D implements GameScene {
 
     protected GameContext context;
 
-    public void setGameContext(GameContext context) {
-        this.context = checkNotNull(context);
-    }
-
     protected double scaling() {
         return scalingPy.get();
     }
@@ -38,6 +34,11 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected abstract void drawSceneContent(GameRenderer renderer, Vector2f size);
+
+    @Override
+    public void setGameContext(GameContext context) {
+        this.context = checkNotNull(context);
+    }
 
     @Override
     public void draw(GameRenderer renderer, Vector2f sceneSize) {

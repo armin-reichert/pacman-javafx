@@ -130,7 +130,8 @@ public class PlayScene3D implements GameScene, ScrollableGameScene {
         return fxSubScene.getCamera();
     }
 
-    public void setContext(GameContext context) {
+    @Override
+    public void setGameContext(GameContext context) {
         this.context = checkNotNull(context);
     }
 

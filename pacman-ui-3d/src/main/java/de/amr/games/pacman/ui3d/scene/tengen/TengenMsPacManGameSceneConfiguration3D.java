@@ -8,12 +8,11 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
-import de.amr.games.pacman.ui3d.scene.common.GameSceneConfiguration3D;
 import de.amr.games.pacman.ui3d.scene.common.PlayScene3D;
 
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
 
-public class TengenMsPacManGameSceneConfiguration3D extends TengenMsPacManGameSceneConfiguration implements GameSceneConfiguration3D {
+public class TengenMsPacManGameSceneConfiguration3D extends TengenMsPacManGameSceneConfiguration {
 
     public TengenMsPacManGameSceneConfiguration3D(AssetStorage assets) {
         super(assets);
@@ -28,11 +27,5 @@ public class TengenMsPacManGameSceneConfiguration3D extends TengenMsPacManGameSc
             return playScene3D != null ? playScene3D : gameScene2D;
         }
         return gameScene2D;
-    }
-
-    @Override
-    public void initPlayScene3D(GameContext context) {
-        PlayScene3D playScene3D = (PlayScene3D) get("PlayScene3D");
-        playScene3D.setContext(context);
     }
 }

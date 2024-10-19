@@ -17,6 +17,9 @@ import java.util.stream.Stream;
 public interface GameSceneConfiguration {
     void set(String id, GameScene gameScene);
     GameScene get(String id);
+    default void initGameScenes(GameContext context) {
+        gameScenes().forEach(gameScene -> gameScene.setGameContext(context));
+    }
     Stream<GameScene> gameScenes();
     default boolean gameSceneHasID(GameScene gameScene, String sceneID) {
         return get(sceneID) == gameScene;
