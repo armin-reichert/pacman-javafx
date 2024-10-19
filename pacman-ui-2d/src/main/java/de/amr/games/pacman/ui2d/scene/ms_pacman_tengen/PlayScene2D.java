@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
@@ -59,6 +60,8 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
     private final ParallelCamera cam = new ParallelCamera();
     private final Canvas canvas = new Canvas(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
 
+    private double targetCameraY;
+
     public PlayScene2D() {
         Pane root = new StackPane();
         root.setBackground(Ufx.coloredBackground(Color.BLACK));
@@ -92,7 +95,6 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
 
     @Override
     public void init() {
-        setScaling(TengenMsPacManGameSceneConfiguration.SCALING);
     }
 
     @Override
@@ -118,7 +120,8 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
         }
 
         //TODO this is trial and error
-        cam.setTranslateY(1.5 * context.game().pac().posY() - 0.3 * fxSubScene.getHeight());
+        targetCameraY = 1.5 * context.game().pac().posY() - 0.3 * fxSubScene.getHeight();
+        cam.setTranslateY(Globals.lerp(cam.getTranslateY(), targetCameraY, 0.1));
     }
 
     @Override

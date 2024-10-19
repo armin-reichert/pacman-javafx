@@ -27,6 +27,10 @@ public abstract class GameScene2D implements GameScene {
 
     protected GameContext context;
 
+    public ScalingBehaviour scalingBehaviour() {
+        return AUTO; // default
+    }
+
     public DoubleProperty scalingProperty() {
         return scalingPy;
     }
@@ -51,11 +55,6 @@ public abstract class GameScene2D implements GameScene {
     @Override
     public void setGameContext(GameContext context) {
         this.context = checkNotNull(context);
-    }
-
-    @Override
-    public ScalingBehaviour scalingBehaviour() {
-        return AUTO; // default
     }
 
     @Override

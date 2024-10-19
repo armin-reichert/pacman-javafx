@@ -310,17 +310,22 @@ public class GamePage extends StackPane implements Page {
             getChildren().set(0, scrollableGameScene.scrollArea());
             scrollableGameScene.scrollAreaWidthProperty().bind(parentScene.widthProperty());
             scrollableGameScene.scrollAreaHeightProperty().bind(parentScene.heightProperty());
+            if (gameScene instanceof GameScene2D gameScene2D) {
+                if (gameScene2D.scalingBehaviour() == ScalingBehaviour.AUTO) {
+                    gameScene2D.scalingProperty().bind(gameCanvasContainer.scalingPy);
+                }
+            }
         }
-        else if (gameScene instanceof GameScene2D gameScene2D ){
+        else if (gameScene instanceof GameScene2D gameScene2D) {
             getChildren().set(0, gameCanvasPane);
             gameCanvasContainer.backgroundProperty().bind(gameScene2D.backgroundColorPy.map(Ufx::coloredBackground));
-            if (gameScene2D.scalingBehaviour() == ScalingBehaviour.AUTO) {
-                gameScene2D.scalingProperty().bind(gameCanvasContainer.scalingPy);
-            }
             Vector2f sceneSize = gameScene.size();
             gameCanvasContainer.setUnscaledCanvasWidth(sceneSize.x());
             gameCanvasContainer.setUnscaledCanvasHeight(sceneSize.y());
             gameCanvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
+            if (gameScene2D.scalingBehaviour() == ScalingBehaviour.AUTO) {
+                gameScene2D.scalingProperty().bind(gameCanvasContainer.scalingPy);
+            }
         }
         else {
             Logger.error("Cannot embed game scene of class {}", gameScene.getClass().getName());

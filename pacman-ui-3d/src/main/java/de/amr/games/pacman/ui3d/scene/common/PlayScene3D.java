@@ -143,11 +143,6 @@ public class PlayScene3D implements GameScene, ScrollableGameScene {
     }
 
     @Override
-    public ScalingBehaviour scalingBehaviour() {
-        return ScalingBehaviour.FIXED;
-    }
-
-    @Override
     public void init() {
         context.setScoreVisible(true);
         scores3D.fontPy.set(context.assets().font("font.arcade", 8));

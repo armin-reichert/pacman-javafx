@@ -8,6 +8,7 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
+import javafx.beans.property.DoubleProperty;
 
 /**
  * Common interface of all game scenes (2D and 3D).
@@ -34,11 +35,6 @@ public interface GameScene extends GameEventListener {
     void end();
 
     Vector2f size();
-
-    /**
-     * @return if this game scene scales with the UI or has fixed scaling.
-     */
-    ScalingBehaviour scalingBehaviour();
 
     /**
      * Draws the scene content using the given renderer (2D-only.
