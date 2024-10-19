@@ -6,8 +6,8 @@ package de.amr.games.pacman.ui2d.scene.common;
 
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 
 import java.util.stream.Stream;
 

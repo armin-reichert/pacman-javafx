@@ -8,9 +8,8 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGameSceneConfiguration;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
-import de.amr.games.pacman.ui3d.scene.common.PlayScene3D;
 import de.amr.games.pacman.ui3d.scene.common.GameSceneConfiguration3D;
-import javafx.beans.value.ObservableDoubleValue;
+import de.amr.games.pacman.ui3d.scene.common.PlayScene3D;
 
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
 
@@ -32,7 +31,7 @@ public class PacManGameSceneConfiguration3D extends PacManGameSceneConfiguration
     }
 
     @Override
-    public void initPlayScene3D(GameContext context, ObservableDoubleValue widthProperty, ObservableDoubleValue heightProperty) {
+    public void initPlayScene3D(GameContext context) {
         PlayScene3D playScene3D = (PlayScene3D) get("PlayScene3D");
         playScene3D.setContext(context);
     }

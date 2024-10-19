@@ -6,8 +6,8 @@ package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.LevelData;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.LevelData;
 import de.amr.games.pacman.ui2d.GameContext;
 
 import static de.amr.games.pacman.lib.timer.TickTimer.ticksToString;

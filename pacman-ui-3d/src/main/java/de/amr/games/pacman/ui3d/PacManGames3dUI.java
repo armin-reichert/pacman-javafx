@@ -6,8 +6,8 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
+import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfiguration;
 import de.amr.games.pacman.ui3d.scene.common.GameSceneConfiguration3D;
@@ -49,7 +49,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
     public void setGameSceneConfig(GameVariant variant, GameSceneConfiguration gameSceneConfig) {
         super.setGameSceneConfig(variant, gameSceneConfig);
         if (gameSceneConfig instanceof GameSceneConfiguration3D config3D) {
-            config3D.initPlayScene3D(this, sceneRoot.widthProperty(), sceneRoot.heightProperty());
+            config3D.initPlayScene3D(this);
         }
     }
 
