@@ -238,6 +238,10 @@ public abstract class Creature extends Entity {
         setVelocity(speed == 0 ? Vector2f.ZERO : moveDir.vector().toVector2f().scaled(speed));
     }
 
+    public float speed() {
+        return velocity().length();
+    }
+
     public boolean isNewTileEntered() {
         return newTileEntered;
     }

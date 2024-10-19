@@ -12,6 +12,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
@@ -60,8 +61,6 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
     private final ParallelCamera cam = new ParallelCamera();
     private final Canvas canvas = new Canvas(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
 
-    private double targetCameraY;
-
     public PlayScene2D() {
         Pane root = new StackPane();
         root.setBackground(Ufx.coloredBackground(Color.BLACK));
@@ -94,8 +93,7 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
     }
 
     @Override
-    public void init() {
-    }
+    public void init() {}
 
     @Override
     public void end() {
@@ -119,10 +117,10 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
             updatePlaySceneSound();
         }
 
+        Pac msPacMan = context.game().pac();
         int worldHeight = context.worldSizeTilesOrDefault().y() * TS;
-        targetCameraY = scaling() * (context.game().pac().posY() - 0.5 * worldHeight);
-        //TODO make camera speed independent from Pac-speed
-        cam.setTranslateY(Globals.lerp(cam.getTranslateY(), targetCameraY, 0.1));
+        double targetCameraY = scaling() * (msPacMan.posY() - 0.5 * worldHeight);
+        cam.setTranslateY(Globals.lerp(cam.getTranslateY(), targetCameraY, 0.015));
     }
 
     @Override
