@@ -185,6 +185,10 @@ public class Globals {
         return (value < min) ? min : Math.min(value, max);
     }
 
+    public static double clamp(double value, double min, double max) {
+        return (value < min) ? min : Math.min(value, max);
+    }
+
     /**
      * @param value some value
      * @param min   lower bound of interval

@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
@@ -35,7 +34,7 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_HEIGHT;
@@ -93,7 +92,10 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
     }
 
     @Override
-    public void init() {}
+    public void init() {
+        camMaxY = Integer.MIN_VALUE;
+        camMinY = Integer.MAX_VALUE;
+    }
 
     @Override
     public void end() {
@@ -118,10 +120,24 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
         }
 
         Pac msPacMan = context.game().pac();
-        int worldHeight = context.worldSizeTilesOrDefault().y() * TS;
-        double targetCameraY = scaling() * (msPacMan.posY() - 0.5 * worldHeight);
-        cam.setTranslateY(Globals.lerp(cam.getTranslateY(), targetCameraY, 0.015));
+        double halfWorldHeight = 0.5 * context.worldSizeTilesOrDefault().y() * TS;
+        double targetCameraY = scaling() * (msPacMan.posY() - halfWorldHeight);
+        double y = lerp(cam.getTranslateY(), targetCameraY, 0.015);
+        double limiter = 0.45 * scaling(); // dependent on aspect of world?
+        y = clamp(y, -halfWorldHeight * limiter, halfWorldHeight * limiter);
+        cam.setTranslateY(y);
+
+        if ((int)cam.getTranslateY() > camMaxY) {
+            camMaxY = (int)cam.getTranslateY();
+            Logger.info("camera max: {}", camMaxY);
+        }
+        if ((int)cam.getTranslateY() < camMinY) {
+            camMinY = (int)cam.getTranslateY();
+            Logger.info("camera min: {}", camMinY);
+        }
     }
+
+    int camMaxY, camMinY;
 
     @Override
     public void handleInput() {
@@ -155,17 +171,6 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
         if (debugInfoPy.get()) {
             drawDebugInfo(renderer);
         }
-
-        /*
-        renderer.ctx().setLineWidth(2);
-        renderer.ctx().setStroke(Color.WHITE);
-        renderer.ctx().strokeRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-        renderer.ctx().setStroke(Color.RED);
-        renderer.ctx().setFont(Font.font("Sans", 14));
-        renderer.ctx().strokeText("Camera y=%.1f".formatted(cam.getTranslateY()), 0, 320);
-
-         */
     }
 
     @Override
