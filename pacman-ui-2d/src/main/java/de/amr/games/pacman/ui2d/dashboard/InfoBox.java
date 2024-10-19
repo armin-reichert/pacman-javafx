@@ -106,8 +106,7 @@ public abstract class InfoBox extends TitledPane {
                 return arcadeGame.currentLevelData().map(fnInfo).orElse(NO_INFO);
             }
             if (context.game() instanceof TengenMsPacManGame tengenGame) {
-                //TODO return Tengen Ms. Pac-Man game info
-                return NO_INFO;
+                return tengenGame.currentLevelData().map(fnInfo).orElse(NO_INFO);
             }
             return NO_INFO;
         };

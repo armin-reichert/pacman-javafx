@@ -20,6 +20,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -294,6 +295,11 @@ public class TengenMsPacManGame extends GameModel {
         setPacBooster(BoosterMode.OFF);
         setDifficulty(Difficulty.NORMAL);
         setStartingLevel(1);
+    }
+
+    // only for info panel in dashboard
+    public Optional<LevelData> currentLevelData() {
+        return Optional.ofNullable(currentLevelData);
     }
 
     @Override
