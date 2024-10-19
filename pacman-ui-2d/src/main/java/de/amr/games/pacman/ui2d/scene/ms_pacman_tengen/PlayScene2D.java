@@ -18,7 +18,6 @@ import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.common.ScalingBehaviour;
 import de.amr.games.pacman.ui2d.scene.common.ScrollableGameScene;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.DoubleProperty;
@@ -38,7 +37,8 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_HEIGHT;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_WIDTH;
 
 /**
  * Tengen play scene, uses vertical scrolling.
@@ -119,8 +119,9 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
             updatePlaySceneSound();
         }
 
-        //TODO this is trial and error
-        targetCameraY = 1.5 * context.game().pac().posY() - 0.3 * fxSubScene.getHeight();
+        int worldHeight = context.worldSizeTilesOrDefault().y() * TS;
+        targetCameraY = scaling() * (context.game().pac().posY() - 0.5 * worldHeight);
+        //TODO make camera speed independent from Pac-speed
         cam.setTranslateY(Globals.lerp(cam.getTranslateY(), targetCameraY, 0.1));
     }
 

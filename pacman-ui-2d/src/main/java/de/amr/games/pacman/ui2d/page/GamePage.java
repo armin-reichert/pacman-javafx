@@ -312,7 +312,7 @@ public class GamePage extends StackPane implements Page {
             scrollableGameScene.scrollAreaHeightProperty().bind(parentScene.heightProperty());
             if (gameScene instanceof GameScene2D gameScene2D) {
                 if (gameScene2D.scalingBehaviour() == ScalingBehaviour.AUTO) {
-                    gameScene2D.scalingProperty().bind(gameCanvasContainer.scalingPy);
+                    gameScene2D.scalingProperty().bind(gameCanvasContainer.scalingPy.map(scaling -> Math.max(scaling.doubleValue(), 3.0)));
                 }
             }
         }
