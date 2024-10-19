@@ -19,6 +19,8 @@ import java.util.stream.Stream;
 
 public class TengenMsPacManGameSceneConfiguration implements GameSceneConfiguration {
 
+    public static final double SCALING = 3.0;
+
     // 32x28 tiles
     public static final int NES_TILES_X = 32;
     public static final int NES_TILES_Y = 28;

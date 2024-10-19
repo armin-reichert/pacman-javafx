@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -39,7 +40,12 @@ public class StartScene extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameRenderer renderer, Vector2f sceneSize) {
+    public Vector2f size() {
+        return new Vector2f(PacManArcadeGame.ARCADE_MAP_SIZE_X, PacManArcadeGame.ARCADE_MAP_SIZE_Y);
+    }
+
+    @Override
+    public void drawSceneContent(GameRenderer renderer) {
         MsPacManGameRenderer r = (MsPacManGameRenderer) renderer;
         GameSpriteSheet spriteSheet = r.spriteSheet();
         Font font8 = r.scaledArcadeFont(8), font6 = r.scaledArcadeFont(6);
@@ -50,8 +56,8 @@ public class StartScene extends GameScene2D {
         r.drawText("PTS", ARCADE_ORANGE, font6, t(25), t(25));
         r.drawMsPacManMidwayCopyright(t(6), t(28), ARCADE_RED, r.scaledArcadeFont(TS));
         r.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS),
-            2 * TS, sceneSize.y() - 2);
+            2 * TS, size().y() - 2);
         r.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
-            context.game().levelCounter(), sceneSize);
+            context.game().levelCounter(), size());
     }
 }

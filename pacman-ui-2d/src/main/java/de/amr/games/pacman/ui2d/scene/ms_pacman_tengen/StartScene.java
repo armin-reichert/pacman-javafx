@@ -13,6 +13,7 @@ import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui2d.scene.common.ScalingBehaviour;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -21,6 +22,8 @@ import javafx.scene.text.Font;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_BABY_BLUE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_YELLOW;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_HEIGHT;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_WIDTH;
 
 /**
  * @author Armin Reichert
@@ -50,7 +53,13 @@ public class StartScene extends GameScene2D {
     private long idleTicks;
 
     @Override
+    public ScalingBehaviour scalingBehaviour() {
+        return ScalingBehaviour.FIXED;
+    }
+
+    @Override
     public void init() {
+        setScaling(TengenMsPacManGameSceneConfiguration.SCALING);
         context.setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
         tengenGame = (TengenMsPacManGame) context.game();
@@ -71,20 +80,18 @@ public class StartScene extends GameScene2D {
         idleTicks += 1;
     }
 
-    private void drawBabyBlueBar(GameRenderer renderer, double y) {
-        Canvas canvas = renderer.canvas();
-        renderer.ctx().save();
-        renderer.ctx().scale(scaling(), scaling());
-        renderer.ctx().setFill(Color.WHITE);
-        renderer.ctx().fillRect(0, y, canvas.getWidth(), UNIT);
-        renderer.ctx().setFill(TENGEN_BABY_BLUE);
-        renderer.ctx().fillRect(0, y + 1, canvas.getWidth(), UNIT - 2);
-        renderer.ctx().restore();
-    }
-
     @Override
-    protected void drawSceneContent(GameRenderer renderer, Vector2f sceneSize) {
-        Font font = renderer.scaledArcadeFont(7);
+    public Vector2f size() {
+        return new Vector2f(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
+    }
+    @Override
+    protected void drawSceneContent(GameRenderer renderer) {
+        renderer.scalingProperty().set(scaling());
+        Font font = renderer.scaledArcadeFont(8);
+
+        renderer.ctx().setLineWidth(2);
+        renderer.ctx().setStroke(Color.WHITE);
+        renderer.ctx().strokeRect(0, 0, renderer.canvas().getWidth(), renderer.canvas().getHeight());
 
         float y = 4 * UNIT - 1;
         drawBabyBlueBar(renderer, y);
@@ -128,14 +135,25 @@ public class StartScene extends GameScene2D {
         renderer.drawText(String.valueOf(tengenGame.startingLevel()), VALUE_COLOR, font, COL_VALUE + UNIT, y);
 
         y += 2.5f * UNIT;
-        drawCenteredText(renderer, sceneSize, "MOVE ARROW WITH CURSOR KEYS", LABEL_COLOR, font, y);
+        drawCenteredText(renderer, size(), "MOVE ARROW WITH CURSOR KEYS", LABEL_COLOR, font, y);
         y += UNIT;
-        drawCenteredText(renderer, sceneSize, "CHOOSE OPTIONS WITH TAB", LABEL_COLOR, font, y);
+        drawCenteredText(renderer, size(), "CHOOSE OPTIONS WITH TAB", LABEL_COLOR, font, y);
         y += UNIT;
-        drawCenteredText(renderer, sceneSize, "PRESS ENTER TO START GAME", LABEL_COLOR, font, y);
+        drawCenteredText(renderer, size(), "PRESS ENTER TO START GAME", LABEL_COLOR, font, y);
 
         y += 3;
         drawBabyBlueBar(renderer, y);
+    }
+
+    private void drawBabyBlueBar(GameRenderer renderer, double y) {
+        Canvas canvas = renderer.canvas();
+        renderer.ctx().save();
+        renderer.ctx().scale(scaling(), scaling());
+        renderer.ctx().setFill(Color.WHITE);
+        renderer.ctx().fillRect(0, y, canvas.getWidth(), UNIT);
+        renderer.ctx().setFill(TENGEN_BABY_BLUE);
+        renderer.ctx().fillRect(0, y + 1, canvas.getWidth(), UNIT - 2);
+        renderer.ctx().restore();
     }
 
     private String pacBoosterText(BoosterMode boosterMode) {

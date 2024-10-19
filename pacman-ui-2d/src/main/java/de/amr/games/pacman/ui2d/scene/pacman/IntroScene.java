@@ -17,6 +17,7 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -114,7 +115,12 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameRenderer renderer, Vector2f sceneSize) {
+    public Vector2f size() {
+        return new Vector2f(PacManArcadeGame.ARCADE_MAP_SIZE_X, PacManArcadeGame.ARCADE_MAP_SIZE_Y);
+    }
+
+    @Override
+    public void drawSceneContent(GameRenderer renderer) {
         TickTimer timer = sceneController.state().timer();
         drawGallery(renderer);
         switch (sceneController.state()) {
@@ -139,9 +145,9 @@ public class IntroScene extends GameScene2D {
             default -> {
             }
         }
-        renderer.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, sceneSize.y() - 2);
+        renderer.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
         renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
-            context.game().levelCounter(), sceneSize);
+            context.game().levelCounter(), size());
     }
 
     // TODO inspect in MAME what's really going on here
@@ -208,9 +214,8 @@ public class IntroScene extends GameScene2D {
 
     // draw pixelated "circle"
     private void drawEnergizer(GameRenderer renderer, double x, double y) {
-        double scaling = scalingPy.get();
         renderer.ctx().save();
-        renderer.ctx().scale(scaling, scaling);
+        renderer.ctx().scale(scaling(), scaling());
         renderer.ctx().setFill(PELLET_COLOR);
         renderer.ctx().fillRect(x + 2, y, 4, 8);
         renderer.ctx().fillRect(x, y + 2, 8, 4);

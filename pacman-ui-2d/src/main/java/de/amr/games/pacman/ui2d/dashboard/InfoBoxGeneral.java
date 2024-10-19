@@ -72,7 +72,6 @@ public class InfoBoxGeneral extends InfoBox {
         setAction(bgSimulation[1], () -> clock.makeSteps(PY_SIMULATION_STEPS.get(), true));
         assignEditor(sliderTargetFPS, clock.targetFrameRatePy);
         assignEditor(pickerCanvasColor, PY_CANVAS_BG_COLOR);
-        assignEditor(cbCanvasDecoration, PY_GAME_CANVAS_DECORATED);
         assignEditor(cbDebugUI, PY_DEBUG_INFO);
         assignEditor(cbTimeMeasured, clock.timeMeasuredPy);
     }

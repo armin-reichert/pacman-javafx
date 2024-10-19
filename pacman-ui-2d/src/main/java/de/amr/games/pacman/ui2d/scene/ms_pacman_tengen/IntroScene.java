@@ -20,6 +20,7 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui2d.scene.common.ScalingBehaviour;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -29,6 +30,8 @@ import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_HEIGHT;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_WIDTH;
 
 /**
  * @author Armin Reichert
@@ -62,7 +65,14 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
+    public ScalingBehaviour scalingBehaviour() {
+        return ScalingBehaviour.FIXED;
+    }
+
+    @Override
     public void init() {
+        setScaling(TengenMsPacManGameSceneConfiguration.SCALING);
+
         TengenMsPacManGameSpriteSheet spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         context.setScoreVisible(false);
 
@@ -98,11 +108,21 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameRenderer renderer, Vector2f sceneSize) {
+    public Vector2f size() {
+        return new Vector2f(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
+    }
+
+    @Override
+    public void drawSceneContent(GameRenderer renderer) {
+
+        renderer.ctx().setLineWidth(2);
+        renderer.ctx().setStroke(Color.WHITE);
+        renderer.ctx().strokeRect(0, 0, renderer.canvas().getWidth(), renderer.canvas().getHeight());
+
         renderer.ctx().save();
         renderer.ctx().setImageSmoothing(false);
         TickTimer timer = sceneController.state().timer();
-        Font font = renderer.scaledArcadeFont(7);
+        Font font = renderer.scaledArcadeFont(8);
         switch (sceneController.state()) {
 
             case WAITING_FOR_START -> {
@@ -113,8 +133,8 @@ public class IntroScene extends GameScene2D {
                     renderer.drawText("PRESS SPACE", Color.WHITE, font, 11 * TS, MARQUEE_TOP_Y + 72);
                 }
                 renderer.drawText("MS PAC-MAN TM NAMCO LTD", TENGEN_PINK, font, 6 * TS, MARQUEE_TOP_Y + 13 * TS);
-                renderer.drawText("©1990 TENGEN INC",        TENGEN_PINK, font, 8 * TS, MARQUEE_TOP_Y + 14 * TS);
-                renderer.drawText("ALL RIGHTS RESERVED",     TENGEN_PINK, font, 7 * TS, MARQUEE_TOP_Y + 15 * TS);
+                renderer.drawText("©1990 TENGEN INC",        TENGEN_PINK, font, 7 * TS, MARQUEE_TOP_Y + 14 * TS);
+                renderer.drawText("ALL RIGHTS RESERVED",     TENGEN_PINK, font, 6 * TS, MARQUEE_TOP_Y + 15 * TS);
             }
 
             case SHOWING_MARQUEE -> {

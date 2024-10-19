@@ -16,6 +16,7 @@ import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui2d.scene.common.ScalingBehaviour;
 import de.amr.games.pacman.ui2d.scene.common.ScrollableGameScene;
 import de.amr.games.pacman.ui2d.util.TooFancyGameCanvasContainer;
 import de.amr.games.pacman.ui2d.util.Ufx;
@@ -38,13 +39,11 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.util.KeyInput.*;
-import static de.amr.games.pacman.ui2d.util.Ufx.border;
-import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
+import static de.amr.games.pacman.ui2d.util.Ufx.*;
 
 /**
  * @author Armin Reichert
@@ -183,13 +182,16 @@ public class GamePage extends StackPane implements Page {
 
         gameCanvasContainer = new TooFancyGameCanvasContainer(gameCanvas);
         gameCanvasContainer.setMinScaling(0.5);
+
+        // default: Arcade aspect
         gameCanvasContainer.setUnscaledCanvasWidth(PacManArcadeGame.ARCADE_MAP_SIZE_X);
         gameCanvasContainer.setUnscaledCanvasHeight(PacManArcadeGame.ARCADE_MAP_SIZE_Y);
+
         gameCanvasContainer.setBorderColor(ARCADE_PALE);
-        gameCanvasContainer.enabledPy.bind(PY_GAME_CANVAS_DECORATED);
-        gameCanvasContainer.enabledPy.addListener((py, ov, nv) -> adaptGameCanvasContainerSizeToSceneSize());
+        gameCanvasContainer.decorationEnabledPy.addListener((py, ov, nv) -> embedGameScene(gameScenePy.get()));
 
         gameCanvasPane.setCenter(gameCanvasContainer);
+        gameCanvasPane.setBackground(coloredBackground(Color.GREEN));
 
         dashboardLayer = new DashboardLayer(context);
         dashboardLayer.addDashboardItem(context.locText("infobox.general.title"), new InfoBoxGeneral());
@@ -224,6 +226,10 @@ public class GamePage extends StackPane implements Page {
         ));
     }
 
+    public TooFancyGameCanvasContainer gameCanvasContainer() {
+        return gameCanvasContainer;
+    }
+
     @Override
     public Pane rootPane() {
         return this;
@@ -231,7 +237,6 @@ public class GamePage extends StackPane implements Page {
 
     @Override
     public void onPageSelected() {
-        adaptGameCanvasContainerSizeToSceneSize();
         //TODO check if booting is always wanted here
         GlobalGameActions2D.BOOT.execute(context);
     }
@@ -255,10 +260,6 @@ public class GamePage extends StackPane implements Page {
         contextMenu.getItems().clear();
 
         contextMenu.getItems().add(Page.menuTitleItem(context.locText("scene_display")));
-
-        var miCanvasDecorated = new CheckMenuItem(context.locText("canvas_decoration"));
-        miCanvasDecorated.selectedProperty().bindBidirectional(PY_GAME_CANVAS_DECORATED);
-        contextMenu.getItems().add(miCanvasDecorated);
 
         contextMenu.getItems().add(Page.menuTitleItem(context.locText("pacman")));
 
@@ -290,13 +291,6 @@ public class GamePage extends StackPane implements Page {
         contextMenu.requestFocus();
     }
 
-    public void adaptGameCanvasContainerSizeToSceneSize() {
-        Vector2f sceneSize = context.worldSizeTilesOrDefault().scaled(TS).toVector2f();
-        gameCanvasContainer.setUnscaledCanvasWidth(sceneSize.x());
-        gameCanvasContainer.setUnscaledCanvasHeight(sceneSize.y());
-        gameCanvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-    }
-
     public void setWorldRenderer(GameRenderer renderer) {
         renderer.setCanvas(gameCanvasContainer.canvas());
     }
@@ -308,17 +302,27 @@ public class GamePage extends StackPane implements Page {
         contextMenu.hide();
     }
 
-    protected void embedGameScene(GameScene gameScene) {
-        if (gameScene instanceof ScrollableGameScene scrollableGameScene) {
+    public void embedGameScene(GameScene gameScene) {
+        if (gameScene == null) {
+            Logger.error("Cannot embed not existing game scene");
+        }
+        else if (gameScene instanceof ScrollableGameScene scrollableGameScene) {
             getChildren().set(0, scrollableGameScene.scrollArea());
             scrollableGameScene.scrollAreaWidthProperty().bind(parentScene.widthProperty());
             scrollableGameScene.scrollAreaHeightProperty().bind(parentScene.heightProperty());
-        } else if (gameScene instanceof GameScene2D gameScene2D ){
+        }
+        else if (gameScene instanceof GameScene2D gameScene2D ){
             getChildren().set(0, gameCanvasPane);
             gameCanvasContainer.backgroundProperty().bind(gameScene2D.backgroundColorPy.map(Ufx::coloredBackground));
-            adaptGameCanvasContainerSizeToSceneSize();
-            gameScene2D.scalingPy.bind(gameCanvasContainer.scalingPy);
-        } else {
+            if (gameScene2D.scalingBehaviour() == ScalingBehaviour.AUTO) {
+                gameScene2D.scalingProperty().bind(gameCanvasContainer.scalingPy);
+            }
+            Vector2f sceneSize = gameScene.size();
+            gameCanvasContainer.setUnscaledCanvasWidth(sceneSize.x());
+            gameCanvasContainer.setUnscaledCanvasHeight(sceneSize.y());
+            gameCanvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
+        }
+        else {
             Logger.error("Cannot embed game scene of class {}", gameScene.getClass().getName());
         }
     }

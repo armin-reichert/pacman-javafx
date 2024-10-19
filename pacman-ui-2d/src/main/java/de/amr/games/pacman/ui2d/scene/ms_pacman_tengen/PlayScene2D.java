@@ -17,6 +17,7 @@ import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui2d.scene.common.ScalingBehaviour;
 import de.amr.games.pacman.ui2d.scene.common.ScrollableGameScene;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.DoubleProperty;
@@ -39,6 +40,8 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
 
 /**
+ * Tengen play scene, uses vertical scrolling.
+ *
  * @author Armin Reichert
  */
 public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
@@ -53,20 +56,23 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
     );
 
     private final SubScene fxSubScene;
-    private ParallelCamera cam = new ParallelCamera();
+    private final ParallelCamera cam = new ParallelCamera();
     private final Canvas canvas = new Canvas(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
-    private final Pane root = new StackPane();
 
     public PlayScene2D() {
-        //TODO DEBUG COLOR
-        root.setBackground(Ufx.coloredBackground(Color.BLUE));
+        Pane root = new StackPane();
         root.setBackground(Ufx.coloredBackground(Color.BLACK));
 
         root.getChildren().add(canvas);
-        //StackPane.setAlignment(canvas, Pos.CENTER);
+        StackPane.setAlignment(canvas, Pos.CENTER);
 
         fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
         fxSubScene.setCamera(cam);
+    }
+
+    @Override
+    public ScalingBehaviour scalingBehaviour() {
+        return ScalingBehaviour.FIXED;
     }
 
     @Override
@@ -91,10 +97,7 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
 
     @Override
     public void init() {
-        //canvas.heightProperty().bind(scalingPy.map(
-            //scaling -> scaling.doubleValue() * context.worldSizeTilesOrDefault().plus(0, 2).scaled(TS).y()));
-        //canvas.widthProperty().bind(canvas.heightProperty().multiply(NES_ASPECT));
-        //scalingPy.bind(fxSubScene.heightProperty().divide(NES_SCREEN_HEIGHT));
+        setScaling(TengenMsPacManGameSceneConfiguration.SCALING);
     }
 
     @Override
@@ -129,15 +132,19 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
     }
 
     @Override
+    public Vector2f size() {
+        return new Vector2f(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
+    }
+
+    @Override
     public void draw(GameRenderer renderer) {
-        Vector2f sceneSize = context.worldSizeTilesOrDefault().plus(0, 2).scaled(TS).toVector2f();
-        scalingPy.set(3);
-        canvas.setWidth(sceneSize.x() * scaling());
-        canvas.setHeight(sceneSize.y() * scaling());
+        renderer.scalingProperty().set(scaling());
 
-//        Logger.info("Canvas height={0.00}, sub scene height={0.00}, root height={}", canvas.getHeight(), fxSubScene.getHeight(), root.getHeight());
+        Vector2f mapSize = context.worldSizeTilesOrDefault().toVector2f().scaled(TS);
 
-        //sceneSize = new Vector2f((float)canvas.getWidth(), (float)canvas.getHeight());
+        Vector2f canvasSize = mapSize.plus(0, 2*TS).scaled((float)scaling());
+        canvas.setWidth(canvasSize.x());
+        canvas.setHeight(canvasSize.y());
 
         renderer.setCanvas(canvas);
         renderer.scalingProperty().set(scaling());
@@ -147,18 +154,23 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
         if (context.isScoreVisible()) {
             renderer.drawScores(context);
         }
-        drawSceneContent(renderer, sceneSize);
+        drawSceneContent(renderer);
         if (debugInfoPy.get()) {
-            drawDebugInfo(renderer, sceneSize);
+            drawDebugInfo(renderer);
         }
 
+        // debug
+        renderer.ctx().setLineWidth(2);
         renderer.ctx().setStroke(Color.WHITE);
-        renderer.ctx().setFont(Font.font("Sans", 20));
-        renderer.ctx().strokeText("Camera y=%s".formatted(cam.getTranslateY()), 50, 0.5 * canvas.getHeight());
+        renderer.ctx().strokeRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        renderer.ctx().setStroke(Color.RED);
+        renderer.ctx().setFont(Font.font("Sans", 14));
+        renderer.ctx().strokeText("Camera y=%.1f".formatted(cam.getTranslateY()), 0, 320);
     }
 
     @Override
-    protected void drawSceneContent(GameRenderer renderer, Vector2f size) {
+    protected void drawSceneContent(GameRenderer renderer) {
         if (context.game().world() == null) { // This happens on level start
             Logger.warn("Cannot draw scene content, game world not yet available!");
             return;
@@ -179,14 +191,15 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
             ghostsInZOrder().forEach(renderer::drawAnimatedCreatureInfo);
         }
 
-        //TODO: this code looks ugly
+        Vector2f mapSize = context.worldSizeTilesOrDefault().toVector2f().scaled(TS);
+        //TODO: this code is ugly
         int numLivesShown = context.game().lives() - 1;
         if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
             numLivesShown += 1;
         }
-        renderer.drawLivesCounter(numLivesShown, 5, size);
+        renderer.drawLivesCounter(numLivesShown, 5, mapSize);
         renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
-            context.game().levelCounter(), size);
+            context.game().levelCounter(), mapSize);
     }
 
     private Stream<Ghost> ghostsInZOrder() {
@@ -217,15 +230,15 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
             Color color = context.assets().color(assetPrefix + ".color.ready_message");
             renderer.drawText(text, color, font, x, y);
         } else if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
-            String text = "TEST    L%03d".formatted(context.game().levelNumber());
+            String text = "TEST    L%02d".formatted(context.game().levelNumber());
             int x = TS * (cx - text.length() / 2);
             renderer.drawText(text, GameAssets2D.ARCADE_PALE, font, x, y);
         }
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer renderer, Vector2f sceneSize) {
-        renderer.drawTileGrid(sceneSize);
+    protected void drawDebugInfo(GameRenderer renderer) {
+        renderer.drawTileGrid(size());
         renderer.ctx().setFill(Color.YELLOW);
         renderer.ctx().setFont(Font.font("Sans", FontWeight.BOLD, 24));
         renderer.ctx().fillText(String.format("%s %d", context.gameState(), context.gameState().timer().currentTick()), 0, 64);

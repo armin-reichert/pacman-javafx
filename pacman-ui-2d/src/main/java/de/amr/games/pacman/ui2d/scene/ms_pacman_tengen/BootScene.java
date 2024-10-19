@@ -5,16 +5,17 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui2d.scene.common.ScalingBehaviour;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.shadeOfBlue;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_TILES_X;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_TILES_Y;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
 
 public class BootScene extends GameScene2D {
 
@@ -27,7 +28,13 @@ public class BootScene extends GameScene2D {
     private long t;
 
     @Override
+    public ScalingBehaviour scalingBehaviour() {
+        return ScalingBehaviour.FIXED;
+    }
+
+    @Override
     public void init() {
+        setScaling(TengenMsPacManGameSceneConfiguration.SCALING);
         GameSpriteSheet spriteSheet = context.currentGameSceneConfig().spriteSheet();
         t = 0;
         context.setScoreVisible(false);
@@ -71,7 +78,13 @@ public class BootScene extends GameScene2D {
     }
 
     @Override
-    protected void drawSceneContent(GameRenderer renderer, Vector2f sceneSize) {
+    public Vector2f size() {
+        return new Vector2f(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
+    }
+
+    @Override
+    protected void drawSceneContent(GameRenderer renderer) {
+        renderer.scalingProperty().set(scaling());
         if (grayScreen) {
             renderer.ctx().setFill(Color.grayRgb(116));
             renderer.ctx().fillRect(0, 0, renderer.canvas().getWidth(), renderer.canvas().getHeight());

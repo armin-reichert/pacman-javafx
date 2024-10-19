@@ -86,7 +86,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         double canvasHeight = canvas.getHeight();
         double aspectRatio = sceneSize.x() / sceneSize.y();
         canvas.setWidth(aspectRatio * canvasHeight);
-        playScene2D.scalingPy.set(canvasHeight / sceneSize.y());
+        playScene2D.setScaling(canvasHeight / sceneSize.y());
         layout();
         Logger.info("Layout recomputed, w={0.00} h={0.00} aspect={0.00}, scene size (px)={}",
             getWidth(), getHeight(), aspectRatio, sceneSize);

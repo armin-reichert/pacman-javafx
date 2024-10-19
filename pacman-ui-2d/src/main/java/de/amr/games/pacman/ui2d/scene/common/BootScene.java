@@ -35,9 +35,14 @@ public class BootScene extends GameScene2D {
     }
 
     @Override
+    public Vector2f size() {
+        return new Vector2f(PacManArcadeGame.ARCADE_MAP_SIZE_X, PacManArcadeGame.ARCADE_MAP_SIZE_Y);
+    }
+
+    @Override
     public void draw(GameRenderer renderer) {
         Vector2f sceneSize = new Vector2f(PacManArcadeGame.ARCADE_MAP_SIZE_X, PacManArcadeGame.ARCADE_MAP_SIZE_Y);
-        renderer.scalingProperty().set(scalingPy.get());
+        renderer.scalingProperty().set(scaling());
         renderer.setBackgroundColor(backgroundColorPy.get());
         var timer = context.gameState().timer();
         if (timer.currentTick() == 1) {
@@ -52,7 +57,7 @@ public class BootScene extends GameScene2D {
     }
 
     @Override
-    protected void drawSceneContent(GameRenderer renderer, Vector2f sceneSize) {
+    protected void drawSceneContent(GameRenderer renderer) {
         // not used
     }
 

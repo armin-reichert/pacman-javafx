@@ -7,18 +7,21 @@ package de.amr.games.pacman.ui3d.scene.common;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
+import de.amr.games.pacman.ui2d.scene.common.ScalingBehaviour;
 import de.amr.games.pacman.ui2d.scene.common.ScrollableGameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui3d.GlobalGameActions3D;
@@ -140,6 +143,11 @@ public class PlayScene3D implements GameScene, ScrollableGameScene {
     }
 
     @Override
+    public ScalingBehaviour scalingBehaviour() {
+        return ScalingBehaviour.FIXED;
+    }
+
+    @Override
     public void init() {
         context.setScoreVisible(true);
         scores3D.fontPy.set(context.assets().font("font.arcade", 8));
@@ -213,6 +221,11 @@ public class PlayScene3D implements GameScene, ScrollableGameScene {
         } else {
             context.sounds().stopGhostReturningHomeSound();
         }
+    }
+
+    @Override
+    public Vector2f size() {
+        return new Vector2f(PacManArcadeGame.ARCADE_MAP_SIZE_X, PacManArcadeGame.ARCADE_MAP_SIZE_Y);
     }
 
     @Override

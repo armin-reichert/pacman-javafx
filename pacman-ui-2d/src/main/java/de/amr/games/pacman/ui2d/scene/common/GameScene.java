@@ -33,6 +33,13 @@ public interface GameScene extends GameEventListener {
      */
     void end();
 
+    Vector2f size();
+
+    /**
+     * @return if this game scene scales with the UI or has fixed scaling.
+     */
+    ScalingBehaviour scalingBehaviour();
+
     /**
      * Draws the scene content using the given renderer (2D-only.
      * @param renderer world renderer (for current game variant)

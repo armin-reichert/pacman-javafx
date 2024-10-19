@@ -258,13 +258,16 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected void handleGameVariantChange(GameVariant variant) {
         String assetPrefix = assetPrefix(variant);
         sceneRoot.setBackground(assets.get(assetPrefix + ".scene_background"));
-        boolean gameCanvasDecorated = variant != GameVariant.MS_PACMAN_TENGEN;
-        PY_GAME_CANVAS_DECORATED.set(gameCanvasDecorated);
         Image icon = assets.image(assetPrefix + ".icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
         }
         sounds().init(variant);
+        if (gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            gamePage.gameCanvasContainer().decorationEnabledPy.set(false);
+        } else {
+            gamePage.gameCanvasContainer().decorationEnabledPy.set(true);
+        }
     }
 
     protected ObservableValue<String> stageTitleBinding() {
@@ -532,8 +535,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             game().pac().setManualSteering(new KeyboardPacSteering(keyboard()));
             sounds().setEnabled(true);
         }
-        //TODO use data binding?
-        gamePage.adaptGameCanvasContainerSizeToSceneSize();
+        // size of world might have changed
+        currentGameScene().ifPresent(gamePage::embedGameScene);
     }
 
     @Override

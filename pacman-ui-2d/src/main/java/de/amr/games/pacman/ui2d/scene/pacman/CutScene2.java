@@ -103,17 +103,22 @@ public class CutScene2 extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameRenderer renderer, Vector2f sceneSize) {
+    public Vector2f size() {
+        return new Vector2f(PacManArcadeGame.ARCADE_MAP_SIZE_X, PacManArcadeGame.ARCADE_MAP_SIZE_Y);
+    }
+
+    @Override
+    public void drawSceneContent(GameRenderer renderer) {
         renderer.drawSpriteScaled(blinkyStretching.currentSprite(), t(14), t(19) + 3);
         renderer.drawAnimatedEntity(blinky);
         renderer.drawAnimatedEntity(pac);
         renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
-            context.game().levelCounter(), sceneSize);
+            context.game().levelCounter(), size());
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer renderer, Vector2f sceneSize) {
-        renderer.drawTileGrid(sceneSize);
+    protected void drawDebugInfo(GameRenderer renderer) {
+        renderer.drawTileGrid(size());
         var text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
         renderer.drawText(text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
     }

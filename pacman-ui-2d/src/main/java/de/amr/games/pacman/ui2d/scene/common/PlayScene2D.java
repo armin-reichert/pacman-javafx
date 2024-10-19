@@ -98,7 +98,12 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    protected void drawSceneContent(GameRenderer renderer, Vector2f size) {
+    public Vector2f size() {
+        return context.worldSizeTilesOrDefault().scaled(TS).toVector2f();
+    }
+
+    @Override
+    protected void drawSceneContent(GameRenderer renderer) {
         if (context.game().world() == null) { // This happens on level start
             Logger.warn("Cannot draw scene content, game world not yet available!");
             return;
@@ -121,17 +126,17 @@ public class PlayScene2D extends GameScene2D {
 
         if (!context.game().canStartNewGame()) {
             int credit = context.gameController().coinControl().credit();
-            renderer.drawText("CREDIT %2d".formatted(credit), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, size.y() - 2);
+            renderer.drawText("CREDIT %2d".formatted(credit), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
         } else {
             //TODO: this code looks ugly
             int numLivesShown = context.game().lives() - 1;
             if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
                 numLivesShown += 1;
             }
-            renderer.drawLivesCounter(numLivesShown, 5, size);
+            renderer.drawLivesCounter(numLivesShown, 5, size());
         }
         renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
-            context.game().levelCounter(), size);
+            context.game().levelCounter(), size());
     }
 
     private Stream<Ghost> ghostsInZOrder() {
@@ -173,8 +178,8 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer renderer, Vector2f sceneSize) {
-        renderer.drawTileGrid(sceneSize);
+    protected void drawDebugInfo(GameRenderer renderer) {
+        renderer.drawTileGrid(size());
         if (context.gameVariant() == GameVariant.PACMAN && context.game().world() != null) {
             context.game().ghosts().forEach(ghost -> {
                 // Are currently the same for each ghost, but who knows what comes...

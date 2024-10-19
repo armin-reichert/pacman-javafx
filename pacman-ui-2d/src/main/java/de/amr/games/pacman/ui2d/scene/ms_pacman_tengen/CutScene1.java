@@ -23,6 +23,8 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_HEIGHT;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_WIDTH;
 
 /**
  * Intermission scene 1: "They meet".
@@ -92,7 +94,12 @@ public class CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameRenderer renderer, Vector2f sceneSize) {
+    public Vector2f size() {
+        return new Vector2f(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
+    }
+
+    @Override
+    public void drawSceneContent(GameRenderer renderer) {
         TengenMsPacManGameRenderer r = (TengenMsPacManGameRenderer) renderer;
         String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
         Color color = r.assets().color(assetPrefix + ".color.clapperboard"); //TODO check this
@@ -103,7 +110,7 @@ public class CutScene1 extends GameScene2D {
         r.drawAnimatedEntity(pinky);
         r.drawSprite(heart, TengenMsPacManGameSpriteSheet.HEART_SPRITE);
         r.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
-            context.game().levelCounter(), sceneSize);
+            context.game().levelCounter(), size());
     }
 
     private class SceneController {

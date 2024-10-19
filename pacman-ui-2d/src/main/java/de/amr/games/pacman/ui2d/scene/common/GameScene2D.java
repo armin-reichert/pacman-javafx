@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.ui2d.scene.common.ScalingBehaviour.AUTO;
 
 /**
  * Base class of all 2D scenes.
@@ -20,25 +21,40 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public abstract class GameScene2D implements GameScene {
 
-    public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
+    private final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
     public final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(this, "backgroundColor", Color.BLACK);
     public final BooleanProperty debugInfoPy = new SimpleBooleanProperty(this, "debugInfo", false);
 
     protected GameContext context;
 
-    protected double scaling() {
+    public DoubleProperty scalingProperty() {
+        return scalingPy;
+    }
+
+    public void setScaling(double scaling) {
+        scalingPy.set(scaling);
+    }
+
+    public double scaling() {
         return scalingPy.get();
     }
 
-    protected double scaled(double value) {
+    public double scaled(double value) {
         return value * scaling();
     }
 
-    protected abstract void drawSceneContent(GameRenderer renderer, Vector2f size);
+    protected abstract void drawSceneContent(GameRenderer renderer);
+
+    protected void drawDebugInfo(GameRenderer renderer) {}
 
     @Override
     public void setGameContext(GameContext context) {
         this.context = checkNotNull(context);
+    }
+
+    @Override
+    public ScalingBehaviour scalingBehaviour() {
+        return AUTO; // default
     }
 
     @Override
@@ -49,17 +65,9 @@ public abstract class GameScene2D implements GameScene {
         if (context.isScoreVisible()) {
             renderer.drawScores(context);
         }
-        Vector2f sceneSize = context.worldSizeTilesOrDefault().scaled(TS).toVector2f();
-        drawSceneContent(renderer, sceneSize);
+        drawSceneContent(renderer);
         if (debugInfoPy.get()) {
-            drawDebugInfo(renderer, sceneSize);
+            drawDebugInfo(renderer);
         }
-    }
-
-    /**
-     * Draws additional scene info, e.g. tile structure or debug info.
-     */
-    protected void drawDebugInfo(GameRenderer renderer, Vector2f sceneSize) {
-        renderer.drawTileGrid(sceneSize);
     }
 }

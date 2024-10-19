@@ -75,7 +75,7 @@ public class PopupLayer extends Pane {
 
         // keep vertical position over intro scene, also when scene gets scaled
         signature.translateYProperty().bind(gameCanvasContainer.scalingPy.map(
-            scaling -> scaling.doubleValue() * (gameCanvasContainer.isEnabled() ? 4*TS : 3*TS)
+            scaling -> scaling.doubleValue() * (gameCanvasContainer.isDecorationEnabled() ? 4*TS : 3*TS)
         ));
     }
 

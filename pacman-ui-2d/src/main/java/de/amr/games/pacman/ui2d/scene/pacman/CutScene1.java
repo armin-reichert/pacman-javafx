@@ -16,6 +16,7 @@ import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
 
 /**
@@ -88,16 +89,21 @@ public class CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameRenderer renderer, Vector2f sceneSize) {
-        renderer.drawAnimatedEntity(pac);
-        renderer.drawAnimatedEntity(blinky);
-        renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
-            context.game().levelCounter(), sceneSize);
+    public Vector2f size() {
+        return new Vector2f(PacManArcadeGame.ARCADE_MAP_SIZE_X, PacManArcadeGame.ARCADE_MAP_SIZE_Y);
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer renderer, Vector2f sceneSize) {
-        renderer.drawTileGrid(sceneSize);
+    public void drawSceneContent(GameRenderer renderer) {
+        renderer.drawAnimatedEntity(pac);
+        renderer.drawAnimatedEntity(blinky);
+        renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
+            context.game().levelCounter(), size());
+    }
+
+    @Override
+    protected void drawDebugInfo(GameRenderer renderer) {
+        renderer.drawTileGrid(size());
         var text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
         renderer.drawText(text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
     }

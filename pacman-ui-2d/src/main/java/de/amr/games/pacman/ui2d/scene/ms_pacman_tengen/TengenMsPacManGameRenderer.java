@@ -242,6 +242,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void drawWorld(GameContext context, GameWorld world) {
+        ctx().setImageSmoothing(false);
         TengenMsPacManGame game = (TengenMsPacManGame) context.game();
         TileMap terrain = world.map().terrain();
         if (flashMode) {
@@ -376,19 +377,19 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void drawLivesCounter(int numLives, int maxLives, Vector2f size) {
-        GameRenderer.super.drawLivesCounter(numLives, maxLives, size.minus(0, TS));
+        GameRenderer.super.drawLivesCounter(numLives, maxLives, size.plus(0, TS));
     }
 
     @Override
-    public void drawLevelCounter(int levelNumber, boolean demoLevel, List<Byte> symbols, Vector2f sceneSize) {
-        sceneSize = sceneSize.minus(0, 3*TS);
-        double symbolX = sceneSize.x() - 4 * TS - 2;
+    public void drawLevelCounter(int levelNumber, boolean demoLevel, List<Byte> symbols, Vector2f size) {
+        double symbolX = size.x() - 4 * TS - 2;
+        double y = size.y() - TS;
         if (!demoLevel && levelNumber > 0) {
-            drawLevelNumberBox(levelNumber, 0, sceneSize.y()); // left box
-            drawLevelNumberBox(levelNumber, sceneSize.x() - 2 * TS, sceneSize.y()); // right box
+            drawLevelNumberBox(levelNumber, 0, y); // left box
+            drawLevelNumberBox(levelNumber, size.x() - 2 * TS, y); // right box
         }
         for (byte symbol : symbols) {
-            drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), symbolX, sceneSize.y());
+            drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), symbolX, y);
             symbolX -= TS * 2;
         }
     }

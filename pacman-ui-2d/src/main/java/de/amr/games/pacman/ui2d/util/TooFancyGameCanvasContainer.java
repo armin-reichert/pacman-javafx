@@ -32,14 +32,14 @@ public class TooFancyGameCanvasContainer extends BorderPane {
 
     public final ObjectProperty<Color> borderColorPy = new SimpleObjectProperty<>(Color.LIGHTBLUE);
 
-    public final BooleanProperty enabledPy = new SimpleBooleanProperty(true) {
+    public final BooleanProperty decorationEnabledPy = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
             doLayout(scaling(), true);
         }
     };
 
-    public final BooleanProperty roundedCornersPy = new SimpleBooleanProperty(true) {
+    private final BooleanProperty roundedCornersPy = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
             doLayout(scaling(), true);
@@ -76,7 +76,7 @@ public class TooFancyGameCanvasContainer extends BorderPane {
         canvas.heightProperty().bind(unscaledCanvasHeightPy.multiply(scalingPy));
 
         clipProperty().bind(Bindings.createObjectBinding(() -> {
-            if (!isEnabled()) {
+            if (!isDecorationEnabled()) {
                 return null;
             }
             Dimension2D size = computeSize();
@@ -87,16 +87,16 @@ public class TooFancyGameCanvasContainer extends BorderPane {
                 clipNode.setArcHeight(arcSize);
             }
             return clipNode;
-        }, enabledPy, roundedCornersPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
+        }, decorationEnabledPy, roundedCornersPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
 
         borderProperty().bind(Bindings.createObjectBinding(() -> {
-            if (!isEnabled() || !isBorderVisible()) {
+            if (!isDecorationEnabled() || !isBorderVisible()) {
                 return null;
             }
             double bw = Math.max(5, Math.ceil(computeSize().getHeight() / 55)); // TODO avoid magic numbers
             CornerRadii cr = hasRoundedCorners() ? new CornerRadii(Math.ceil(10 * scaling())) : null;
             return new Border(new BorderStroke(borderColor(), BorderStrokeStyle.SOLID, cr, new BorderWidths(bw)));
-        }, enabledPy, borderVisiblePy, roundedCornersPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
+        }, decorationEnabledPy, borderVisiblePy, roundedCornersPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
     }
 
     private void doLayout(double newScaling, boolean forced) {
@@ -110,7 +110,7 @@ public class TooFancyGameCanvasContainer extends BorderPane {
         }
         double width = canvas().getWidth();
         double height = canvas().getHeight();
-        if (isEnabled()) {
+        if (isDecorationEnabled()) {
             Dimension2D size = computeSize();
             width = size.getWidth();
             height = size.getHeight();
@@ -120,8 +120,9 @@ public class TooFancyGameCanvasContainer extends BorderPane {
         setPrefSize(width, height);
         setScaling(newScaling);
 
-        Logger.debug("Unscaled canvas size: w={0.0} h={0.0}", unscaledCanvasWidth(), unscaledCanvasHeight());
-        Logger.debug("Canvas size: w={0.0} h={0.0}", canvas().getWidth(), canvas().getHeight());
+        Logger.info("Unscaled canvas size: w={0.0} h={0.0}", unscaledCanvasWidth(), unscaledCanvasHeight());
+        Logger.info("Canvas size: w={0.0} h={0.0} aspect={0.00} scaling={0.00}",
+            canvas.getWidth(), canvas.getHeight(), canvas.getWidth() / canvas.getHeight(), scaling());
     }
 
     public Canvas canvas() {
@@ -164,7 +165,7 @@ public class TooFancyGameCanvasContainer extends BorderPane {
     }
 
     public void resizeTo(double width, double height) {
-        if (isEnabled()) {
+        if (isDecorationEnabled()) {
             double downScaledWidth = width, downScaledHeight = height;
             if (isBorderVisible()) {
                 downScaledWidth = DOWNSCALING_IF_BORDER.x() * width;
@@ -180,12 +181,12 @@ public class TooFancyGameCanvasContainer extends BorderPane {
         }
     }
 
-    public boolean isEnabled() {
-        return enabledPy.get();
+    public boolean isDecorationEnabled() {
+        return decorationEnabledPy.get();
     }
 
     public void setEnabled(boolean enabled) {
-        enabledPy.set(enabled);
+        decorationEnabledPy.set(enabled);
     }
 
     public Color borderColor() {
