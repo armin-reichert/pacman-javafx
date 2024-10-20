@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -17,9 +16,9 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
+import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Pos;
 import javafx.scene.*;
@@ -35,6 +34,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_TILE_SIZE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
@@ -151,11 +151,11 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         int y = (int) cam.getTranslateY();
         if (y > camMaxY) {
             camMaxY = y;
-            Logger.info("New camera max y: {}", y);
+            Logger.debug("New camera max y: {}", y);
         }
         if (y < camMinY) {
             camMinY = y;
-            Logger.info("New camera min y: {}", y);
+            Logger.debug("New camera min y: {}", y);
         }
     }
 
@@ -194,7 +194,13 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             Logger.warn("Cannot draw scene content, game world not yet available!");
             return;
         }
-        drawLevelMessage(renderer); // READY, GAME_OVER etc.
+
+        // Draw level message centered under ghost house
+        Vector2i houseTopLeftTile = context.game().world().houseTopLeftTile();
+        Vector2i houseSize        = context.game().world().houseSize();
+        int cx = houseTopLeftTile.x() + houseSize.x() / 2;
+        int y = TS * (houseTopLeftTile.y() + houseSize.y() + 1);
+        drawLevelMessage(renderer, cx, y); // READY, GAME_OVER etc.
 
         boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         renderer.setFlashMode(flashMode);
@@ -210,50 +216,39 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             ghostsInZOrder().forEach(renderer::drawAnimatedCreatureInfo);
         }
 
-        //TODO: this code is ugly
-        int numLivesShown = context.game().lives() - 1;
+        int livesCounterEntries = context.game().lives() - 1;
         if (context.gameState() == GameState.STARTING_GAME && !context.game().pac().isVisible()) {
-            numLivesShown += 1;
+            // as long as Pac-Man is invisible when the game is started, one entry more appears in the lives counter
+            livesCounterEntries += 1;
         }
-
-        // TODO: This is ugly, maybe change all Tengen maps instead?
-        renderer.drawLivesCounter(numLivesShown, 5, size().minus(0, TS));
+        renderer.drawLivesCounter(livesCounterEntries, 5, size().minus(0, TS)); // TODO: ugly, change maps instead?
 
         renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(), context.game().levelCounter(), size());
     }
 
     private Stream<Ghost> ghostsInZOrder() {
-        return Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
-            .map(context.game()::ghost);
+        return Stream.of(ORANGE_GHOST, CYAN_GHOST, PINK_GHOST, RED_GHOST).map(context.game()::ghost);
     }
 
-    private void drawLevelMessage(GameRenderer renderer) {
-        Vector2i houseTopLeftTile = context.game().world().houseTopLeftTile();
-        Vector2i houseSize        = context.game().world().houseSize();
-        int cx = houseTopLeftTile.x() + houseSize.x() / 2;
-        int y = TS * (houseTopLeftTile.y() + houseSize.y() + 1);
+    private void drawLevelMessage(GameRenderer renderer, int cx, int y) {
         String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
-        Font font = renderer.scaledArcadeFont(TS);
         if (context.game().isDemoLevel()) {
-            String text = "GAME  OVER";
-            int x = TS * (cx - text.length() / 2);
             Color color = Color.web(context.game().world().map().colorSchemeOrDefault().stroke());
-            renderer.drawText(text, color, font, x, y);
+            drawText(renderer, "GAME  OVER", cx, y, color);
         } else if (context.gameState() == GameState.GAME_OVER) {
-            String text = "GAME  OVER";
-            int x = TS * (cx - text.length() / 2);
             Color color = context.assets().color(assetPrefix + ".color.game_over_message");
-            renderer.drawText(text, color, font, x, y);
+            drawText(renderer, "GAME  OVER", cx, y, color);
         } else if (context.gameState() == GameState.STARTING_GAME) {
-            String text = "READY!";
-            int x = TS * (cx - text.length() / 2);
             Color color = context.assets().color(assetPrefix + ".color.ready_message");
-            renderer.drawText(text, color, font, x, y);
+            drawText(renderer, "READY!", cx, y, color);
         } else if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
-            String text = "TEST    L%02d".formatted(context.game().levelNumber());
-            int x = TS * (cx - text.length() / 2);
-            renderer.drawText(text, GameAssets2D.ARCADE_PALE, font, x, y);
+            drawText(renderer, "TEST    L%02d".formatted(context.game().levelNumber()), cx, y, GameAssets2D.ARCADE_PALE);
         }
+    }
+
+    private void drawText(GameRenderer renderer, String text, int cx, int y, Color color) {
+        int x = TS * (cx - text.length() / 2);
+        renderer.drawText(text, color, renderer.scaledArcadeFont(TS), x, y);
     }
 
     @Override
