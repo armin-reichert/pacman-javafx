@@ -11,7 +11,7 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.BootScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
-import de.amr.games.pacman.ui2d.scene.common.GameSceneConfiguration;
+import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
 import de.amr.games.pacman.ui2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 
@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class PacManGameSceneConfiguration implements GameSceneConfiguration {
+public class PacManGameSceneConfiguration implements GameSceneConfig {
 
     private final Map<String, GameScene> scenesByID = new HashMap<>();
     private final PacManGameSpriteSheet spriteSheet;

@@ -17,7 +17,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.VBox;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 
@@ -65,13 +64,13 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         context.gameVariantProperty().addListener((py,ov,variant) -> {
             renderer = context.currentGameSceneConfig().renderer().copy();
             renderer.setCanvas(canvas);
-            renderer.setRendererFor(context.game());
+            renderer.update(context.game());
         });
     }
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        renderer.setRendererFor(context.game());
+        renderer.update(context.game());
         recomputeLayout();
     }
 
@@ -82,7 +81,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
     }
 
     private void recomputeLayout() {
-        Vector2f sceneSize = context.worldSizeTilesOrDefault().scaled(TS).toVector2f();
+        Vector2f sceneSize = playScene2D.size();
         double canvasHeight = canvas.getHeight();
         double aspectRatio = sceneSize.x() / sceneSize.y();
         canvas.setWidth(aspectRatio * canvasHeight);

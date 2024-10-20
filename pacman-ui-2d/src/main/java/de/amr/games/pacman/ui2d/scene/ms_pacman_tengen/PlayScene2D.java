@@ -250,9 +250,9 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
 
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
-        //TODO check this
-        context.currentGameSceneConfig().renderer().setRendererFor(context.game());
         Logger.info("{} entered from {}", this, oldScene);
+        //TODO check this
+        context.updateRenderer();
     }
 
     @Override
@@ -284,7 +284,7 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        context.currentGameSceneConfig().renderer().setRendererFor(context.game());
+        context.updateRenderer();
     }
 
     @Override

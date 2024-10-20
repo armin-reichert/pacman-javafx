@@ -405,21 +405,19 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void setRendererFor(GameModel game) {
+    public void update(GameModel game) {
         TengenMsPacManGame tengenGame = (TengenMsPacManGame) game;
         if (game.world() == null) {
             Logger.warn("Cannot set renderer for game, no world exists");
             return;
         }
         WorldMap worldMap = game.world().map();
-        int mapNumber = game.currentMapNumber();
         int width  = worldMap.terrain().numCols() * TS;
-        int height = worldMap.terrain().numRows() * TS - 5 * TS; // 3 empty rows before and 2 after maze source
-        if (tengenGame.mapCategory() == MapCategory.ARCADE) {
-            mapSprite = new ImageArea(arcadeMazesImage, arcadeMapSprite(mapNumber, width, height));
-        } else {
-            mapSprite = new ImageArea(nonArcadeMazesImage, nonArcadeMapSprite(mapNumber, width, height));
-        }
+        int height = (worldMap.terrain().numRows() - 5) * TS; // 3 empty rows over, 2 under maze image
+        int mapNumber = game.currentMapNumber();
+        mapSprite = tengenGame.mapCategory() == MapCategory.ARCADE
+            ? new ImageArea(arcadeMazesImage, arcadeMapSprite(mapNumber, width, height))
+            : new ImageArea(nonArcadeMazesImage, nonArcadeMapSprite(mapNumber, width, height));
         Logger.info("Tengen map # {}: area: {}", mapNumber, mapSprite.area());
     }
 

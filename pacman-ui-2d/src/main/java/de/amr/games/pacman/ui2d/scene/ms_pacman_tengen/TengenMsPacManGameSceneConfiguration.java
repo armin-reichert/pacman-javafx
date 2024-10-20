@@ -10,14 +10,14 @@ import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
-import de.amr.games.pacman.ui2d.scene.common.GameSceneConfiguration;
+import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class TengenMsPacManGameSceneConfiguration implements GameSceneConfiguration {
+public class TengenMsPacManGameSceneConfiguration implements GameSceneConfig {
 
     public static final double SCALING = 3.0;
 

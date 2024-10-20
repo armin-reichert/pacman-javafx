@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 /**
  * @author Armin Reichert
  */
-public interface GameSceneConfiguration {
+public interface GameSceneConfig {
     void set(String id, GameScene gameScene);
     GameScene get(String id);
     default void initGameScenes(GameContext context) {

@@ -91,7 +91,7 @@ public class PacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void setRendererFor(GameModel game) {}
+    public void update(GameModel game) {}
 
     @Override
     public void drawWorld(GameContext context, GameWorld world) {

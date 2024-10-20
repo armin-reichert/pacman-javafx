@@ -20,7 +20,7 @@ import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.common.GameSceneConfiguration;
+import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
 import de.amr.games.pacman.ui2d.sound.GameSounds;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.FlashMessageView;
@@ -44,10 +44,7 @@ import org.tinylog.Logger;
 
 import java.text.MessageFormat;
 import java.time.LocalTime;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
@@ -87,7 +84,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected final AssetStorage assets;
     protected final FlashMessageView flashMessageLayer;
     protected final GameClockFX clock;
-    protected final Map<GameVariant, GameSceneConfiguration> gameSceneConfigByVariant;
+    protected final Map<GameVariant, GameSceneConfig> gameSceneConfigByVariant;
     protected final StackPane sceneRoot;
     protected Stage stage;
     protected StartPage startPage;
@@ -116,7 +113,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         }
     }
 
-    public void setGameSceneConfig(GameVariant variant, GameSceneConfiguration gameSceneConfig) {
+    public void setGameSceneConfig(GameVariant variant, GameSceneConfig gameSceneConfig) {
         gameSceneConfigByVariant.put(variant, gameSceneConfig);
         gameSceneConfig.initGameScenes(this);
         //TODO check this
@@ -322,8 +319,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void doFirstCalledActionOrElse(Stream<GameAction> actions, Runnable defaultAction) {
-        actions.filter(this::isActionCalled).findFirst().ifPresentOrElse(action -> action.execute(this), defaultAction);
+    public void doFirstCalledActionElse(Collection<GameAction> actions, Runnable defaultAction) {
+        actions.stream().filter(this::isActionCalled).findFirst().ifPresentOrElse(action -> action.execute(this), defaultAction);
     }
 
     @Override
@@ -364,7 +361,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public GameSceneConfiguration gameSceneConfig(GameVariant variant) {
+    public GameSceneConfig gameSceneConfig(GameVariant variant) {
         return gameSceneConfigByVariant.get(variant);
     }
 

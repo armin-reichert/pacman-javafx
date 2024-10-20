@@ -38,7 +38,7 @@ import static java.util.function.Predicate.not;
  */
 public interface GameRenderer {
 
-    void setRendererFor(GameModel game);
+    void update(GameModel game);
     GameRenderer copy();
     AssetStorage assets();
     Color backgroundColor();

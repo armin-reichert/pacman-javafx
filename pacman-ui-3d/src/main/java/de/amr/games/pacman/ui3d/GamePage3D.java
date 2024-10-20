@@ -17,6 +17,7 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
@@ -47,8 +48,9 @@ public class GamePage3D extends GamePage {
 
     @Override
     public void handleInput() {
-        context.doFirstCalledActionOrElse(
-            Stream.of(GlobalGameActions3D.TOGGLE_PIP_VISIBILITY, GlobalGameActions3D.TOGGLE_PLAY_SCENE_2D_3D), super::handleInput);
+        context.doFirstCalledActionElse(
+            List.of(GlobalGameActions3D.TOGGLE_PIP_VISIBILITY, GlobalGameActions3D.TOGGLE_PLAY_SCENE_2D_3D),
+            super::handleInput);
     }
 
     @Override

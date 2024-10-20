@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -14,7 +13,7 @@ import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
-import de.amr.games.pacman.ui2d.scene.common.GameSceneConfiguration;
+import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
 import de.amr.games.pacman.ui2d.sound.GameSounds;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
@@ -42,46 +41,34 @@ public interface GameContext {
     Vector2i                    worldSizeTilesOrDefault();
 
     // UI
-    Keyboard    keyboard();
-    void        selectPage(Page page);
-    void        selectStartPage();
-    void        selectGamePage();
-    EditorPage  getOrCreateEditorPage();
-    GamePage    gamePage();
-    default void showFlashMessage(String message, Object... args) {
-        showFlashMessageSeconds(1, message, args);
-    };
-    void        showFlashMessageSeconds(double seconds, String message, Object... args);
-    GameClockFX gameClock();
+    Keyboard                    keyboard();
+    void                        selectPage(Page page);
+    void                        selectStartPage();
+    void                        selectGamePage();
+    EditorPage                  getOrCreateEditorPage();
+    GamePage                    gamePage();
+    default void                showFlashMessage(String message, Object... args) { showFlashMessageSeconds(1, message, args); }
+    void                        showFlashMessageSeconds(double seconds, String message, Object... args);
+    GameClockFX                 gameClock();
 
     // Actions
-    boolean      isActionCalled(GameAction action);
-    void         doFirstCalledAction(Stream<GameAction> actions);
-    default void doFirstCalledAction(Collection<GameAction> actions) { doFirstCalledAction(actions.stream()); }
-    default void doFirstCalledAction(GameAction... actions) { doFirstCalledAction(Stream.of(actions)); }
-    void         doFirstCalledActionOrElse(Stream<GameAction> actions, Runnable defaultAction);
-    default void doFirstCalledActionOrElse(Collection<GameAction> actions, Runnable defaultAction) { doFirstCalledActionOrElse(actions.stream(), defaultAction); }
+    boolean                     isActionCalled( GameAction action);
+    void                        doFirstCalledAction(Stream<GameAction> actions);
+    default void                doFirstCalledAction(Collection<GameAction> actions) { doFirstCalledAction(actions.stream()); }
+    default void                doFirstCalledAction(GameAction... actions) { doFirstCalledAction(Stream.of(actions)); }
+    void                        doFirstCalledActionElse(Collection<GameAction> actions, Runnable defaultAction);
 
     // Game scenes
-    GameSceneConfiguration         gameSceneConfig(GameVariant variant);
-    default GameSceneConfiguration currentGameSceneConfig() { return gameSceneConfig(gameVariant()); }
-    boolean                        currentGameSceneHasID(String gameSceneID);
-    ObjectProperty<GameScene>      gameSceneProperty();
-    Optional<GameScene>            currentGameScene();
-    void                           updateGameScene(boolean reloadCurrent);
+    GameSceneConfig             gameSceneConfig(GameVariant variant);
+    default GameSceneConfig     currentGameSceneConfig() { return gameSceneConfig(gameVariant()); }
+    boolean                     currentGameSceneHasID(String gameSceneID);
+    ObjectProperty<GameScene>   gameSceneProperty();
+    Optional<GameScene>         currentGameScene();
+    void                        updateGameScene(boolean reloadCurrent);
+    default void                updateRenderer() { currentGameSceneConfig().renderer().update(game()); }
 
     // Resources
-    AssetStorage assets();
-    GameSounds   sounds();
-
-    /**
-     * Returns a translated text (for the current locale).
-     * <p></p>
-     * The key is constructed using the given key pattern and the arguments.
-     *
-     * @param keyOrPattern     key in resource bundle
-     * @param args    optional arguments merged into the key pattern
-     * @return localized text with constructed key or default text if no such key exists
-     */
-    String locText(String keyOrPattern, Object... args);
+    AssetStorage                assets();
+    GameSounds                  sounds();
+    String                      locText(String keyOrPattern, Object... args);
 }
