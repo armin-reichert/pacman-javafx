@@ -378,17 +378,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         return currentGameSceneConfig().gameSceneHasID(currentGameScene().get(), sceneID);
     }
 
-    /**
-     * @return size (tiles) of current world or size of Arcade world if no current world exists
-     */
-    @Override
-    public Vector2i worldSizeTilesOrDefault() {
-        return new Vector2i(
-            game().world() != null ? game().world().map().terrain().numCols() : PacManArcadeGame.ARCADE_MAP_TILES_X,
-            game().world() != null ? game().world().map().terrain().numRows() : PacManArcadeGame.ARCADE_MAP_TILES_Y
-        );
-    }
-
     @Override
     public void updateGameScene(boolean reloadCurrent) {
         GameScene currentGameScene = gameScenePy.get();

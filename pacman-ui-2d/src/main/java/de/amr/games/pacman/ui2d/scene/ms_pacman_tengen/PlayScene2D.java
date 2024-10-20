@@ -9,6 +9,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
@@ -35,6 +36,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_TILE_SIZE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_HEIGHT;
@@ -118,26 +120,38 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
             context.game().pac().setImmune(PY_IMMUNITY.get());
             updatePlaySceneSound();
         }
-
-        Pac msPacMan = context.game().pac();
-        double halfWorldHeight = 0.5 * context.worldSizeTilesOrDefault().y() * TS;
-        double targetCameraY = scaling() * (msPacMan.posY() - halfWorldHeight);
-        double y = lerp(cam.getTranslateY(), targetCameraY, 0.015);
-        double limiter = 0.45 * scaling(); // dependent on aspect of world?
-        y = clamp(y, -halfWorldHeight * limiter, halfWorldHeight * limiter);
-        cam.setTranslateY(y);
-
-        if ((int)cam.getTranslateY() > camMaxY) {
-            camMaxY = (int)cam.getTranslateY();
-            Logger.info("camera max: {}", camMaxY);
-        }
-        if ((int)cam.getTranslateY() < camMinY) {
-            camMinY = (int)cam.getTranslateY();
-            Logger.info("camera min: {}", camMinY);
-        }
+        updateCameraPosition();
     }
 
-    int camMaxY, camMinY;
+    private void updateCameraPosition() {
+        GameWorld world = context.game().world();
+        Pac msPacMan = context.game().pac();
+        if (world == null || msPacMan == null) {
+            cam.setTranslateY(0); // TODO check this
+            return;
+        }
+        double halfWorldHeight = 0.5 * TS * context.worldSizeInTiles(world, ARCADE_MAP_TILE_SIZE).y();
+        double cap = 0.45 * scaling(); // dependent on aspect of world?
+        double speed = 0.015;
+        double y = lerp(cam.getTranslateY(), scaled(msPacMan.posY() - halfWorldHeight), speed);
+        cam.setTranslateY(clamp(y, -halfWorldHeight * cap, halfWorldHeight * cap));
+        captureCameraExtrema();
+    }
+
+    //TODO remove again later
+    private int camMaxY, camMinY;
+
+    private void captureCameraExtrema() {
+        int y = (int) cam.getTranslateY();
+        if (y > camMaxY) {
+            camMaxY = y;
+            Logger.info("New camera max y: {}", y);
+        }
+        if (y < camMinY) {
+            camMinY = y;
+            Logger.info("New camera min y: {}", y);
+        }
+    }
 
     @Override
     public void handleInput() {
@@ -153,11 +167,10 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
     public void draw(GameRenderer renderer) {
         renderer.scalingProperty().set(scaling());
 
-        Vector2f mapSize = context.worldSizeTilesOrDefault().toVector2f().scaled(TS);
+        Vector2f mapSize = context.worldSizeInTiles(context.game().world(), ARCADE_MAP_TILE_SIZE).scaled(TS).toVector2f();
 
-        Vector2f canvasSize = mapSize.plus(0, 2*TS).scaled((float)scaling());
-        canvas.setWidth(canvasSize.x());
-        canvas.setHeight(canvasSize.y());
+        canvas.setWidth(scaled(mapSize.x()));
+        canvas.setHeight(scaled(mapSize.y() + 2 * TS)); // TODO maybe change maps instead?
 
         renderer.setCanvas(canvas);
         renderer.scalingProperty().set(scaling());
@@ -195,13 +208,16 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
             ghostsInZOrder().forEach(renderer::drawAnimatedCreatureInfo);
         }
 
-        Vector2f mapSize = context.worldSizeTilesOrDefault().toVector2f().scaled(TS);
+        //TODO check if this should also be stretched vertically?
+        Vector2f mapSize = context.worldSizeInTiles(context.game().world(), ARCADE_MAP_TILE_SIZE).scaled(TS).toVector2f();
+
         //TODO: this code is ugly
         int numLivesShown = context.game().lives() - 1;
         if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
             numLivesShown += 1;
         }
         renderer.drawLivesCounter(numLivesShown, 5, mapSize);
+
         renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
             context.game().levelCounter(), mapSize);
     }

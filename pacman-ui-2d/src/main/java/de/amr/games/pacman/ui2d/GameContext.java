@@ -9,6 +9,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
@@ -38,7 +39,9 @@ public interface GameContext {
     default GameModel           game() { return GameController.it().currentGame(); }
     void                        setScoreVisible(boolean visible);
     boolean                     isScoreVisible();
-    Vector2i                    worldSizeTilesOrDefault();
+    default Vector2i            worldSizeInTiles(GameWorld world, Vector2i defaultSize) {
+        return world != null ? new Vector2i(world.map().terrain().numCols(), world.map().terrain().numRows()) : defaultSize;
+    }
 
     // UI
     Keyboard                    keyboard();
