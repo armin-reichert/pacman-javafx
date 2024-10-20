@@ -240,7 +240,7 @@ public class GamePage extends StackPane implements Page {
 
     @Override
     public void handleContextMenuRequest(ContextMenuEvent event) {
-        if (!context.currentGameSceneHasID("PlayScene")) {
+        if (!context.currentGameSceneHasID("PlayScene2D")) {
             return;
         }
         contextMenu.getItems().clear();
