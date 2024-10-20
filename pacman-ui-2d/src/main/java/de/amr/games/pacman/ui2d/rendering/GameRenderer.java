@@ -48,6 +48,7 @@ public interface GameRenderer {
     void setCanvas(Canvas canvas);
     default GraphicsContext ctx() { return canvas().getGraphicsContext2D(); }
     DoubleProperty scalingProperty();
+    default void setScaling(double value) { scalingProperty().set(value); }
     default double scaling() { return scalingProperty().get(); }
     default double scaled(double value) { return scaling() * value; }
     default Font scaledArcadeFont(double size) {
@@ -210,7 +211,7 @@ public interface GameRenderer {
                 ctx().fillText(text, scaled(guy.posX() - 4), scaled(guy.posY() - 4));
             }
             if (guy.wishDir() != null) {
-                float scaling = (float) scalingProperty().get();
+                float scaling = (float) scaling();
                 Vector2f arrowHead = guy.center().plus(guy.wishDir().vector().scaled(12f)).scaled(scaling);
                 Vector2f guyCenter = guy.center().scaled(scaling);
                 float radius = scaling * 2, diameter = 2 * radius;

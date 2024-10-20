@@ -14,9 +14,9 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
+import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.util.TooFancyGameCanvasContainer;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.ObjectProperty;
@@ -313,7 +313,7 @@ public class GamePage extends StackPane implements Page {
             }
             case GameScene2D gameScene2D -> {
                 getChildren().set(0, gameCanvasLayer);
-                gameCanvasContainer.backgroundProperty().bind(gameScene2D.backgroundColorPy.map(Ufx::coloredBackground));
+                gameCanvasContainer.backgroundProperty().bind(gameScene2D.backgroundColorProperty().map(Ufx::coloredBackground));
                 Vector2f sceneSize = gameScene.size();
                 gameCanvasContainer.setUnscaledCanvasWidth(sceneSize.x());
                 gameCanvasContainer.setUnscaledCanvasHeight(sceneSize.y());

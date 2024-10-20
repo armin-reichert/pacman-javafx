@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.pacman.PacManArcadeGame;
@@ -286,7 +285,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     private void configureGameScene2D(GameScene2D gameScene2D) {
         var gameSceneConfig = currentGameSceneConfig();
         gamePage.setWorldRenderer(gameSceneConfig.renderer());
-        gameScene2D.backgroundColorPy.bind(PY_CANVAS_BG_COLOR);
+        gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
     }
 
     private void logUpdateResult() {

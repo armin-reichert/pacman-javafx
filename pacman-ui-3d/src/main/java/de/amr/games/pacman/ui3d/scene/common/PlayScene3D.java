@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
@@ -219,7 +220,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     @Override
     public Vector2f size() {
-        return new Vector2f(PacManArcadeGame.ARCADE_MAP_SIZE_X, PacManArcadeGame.ARCADE_MAP_SIZE_Y);
+        return ARCADE_MAP_SIZE;
     }
 
     @Override

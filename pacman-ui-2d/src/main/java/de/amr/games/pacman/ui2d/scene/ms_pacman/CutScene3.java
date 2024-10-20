@@ -22,6 +22,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE;
 
 /**
  * Intermission scene 3: "Junior".
@@ -90,7 +91,7 @@ public class CutScene3 extends GameScene2D {
 
     @Override
     public Vector2f size() {
-        return new Vector2f(PacManArcadeGame.ARCADE_MAP_SIZE_X, PacManArcadeGame.ARCADE_MAP_SIZE_Y);
+        return ARCADE_MAP_SIZE;
     }
 
     @Override

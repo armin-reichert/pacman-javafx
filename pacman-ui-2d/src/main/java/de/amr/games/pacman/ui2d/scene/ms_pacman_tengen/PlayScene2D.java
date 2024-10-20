@@ -174,7 +174,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
         renderer.setCanvas(canvas);
         renderer.scalingProperty().set(scaling());
-        renderer.setBackgroundColor(backgroundColorPy.get());
+        renderer.setBackgroundColor(backgroundColor());
         renderer.clearCanvas();
 
         if (context.isScoreVisible()) {

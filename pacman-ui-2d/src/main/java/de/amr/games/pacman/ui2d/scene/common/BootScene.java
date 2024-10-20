@@ -6,11 +6,11 @@ package de.amr.games.pacman.ui2d.scene.common;
 
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE;
 import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 
 /**
@@ -36,23 +36,22 @@ public class BootScene extends GameScene2D {
 
     @Override
     public Vector2f size() {
-        return new Vector2f(PacManArcadeGame.ARCADE_MAP_SIZE_X, PacManArcadeGame.ARCADE_MAP_SIZE_Y);
+        return ARCADE_MAP_SIZE;
     }
 
     @Override
     public void draw(GameRenderer renderer) {
-        Vector2f sceneSize = new Vector2f(PacManArcadeGame.ARCADE_MAP_SIZE_X, PacManArcadeGame.ARCADE_MAP_SIZE_Y);
-        renderer.scalingProperty().set(scaling());
-        renderer.setBackgroundColor(backgroundColorPy.get());
+        renderer.setScaling(scaling());
+        renderer.setBackgroundColor(backgroundColor());
         var timer = context.gameState().timer();
         if (timer.currentTick() == 1) {
             renderer.clearCanvas();
         } else if (timer.betweenSeconds(1, 2) && timer.currentTick() % 8 == 0) {
-            paintRandomHexCodes(renderer, sceneSize);
+            paintRandomHexCodes(renderer, size());
         } else if (timer.betweenSeconds(2, 3.5) && timer.currentTick() % 4 == 0) {
-            paintRandomSprites(renderer, sceneSize);
+            paintRandomSprites(renderer, size());
         } else if (timer.atSecond(3.5)) {
-            paintGrid(renderer, sceneSize);
+            paintGrid(renderer, size());
         }
     }
 

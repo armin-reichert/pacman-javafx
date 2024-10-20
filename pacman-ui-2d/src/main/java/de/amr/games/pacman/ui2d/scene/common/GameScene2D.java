@@ -19,41 +19,36 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 public abstract class GameScene2D implements GameScene {
 
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
-    public final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(this, "backgroundColor", Color.BLACK);
+    private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(this, "backgroundColor", Color.BLACK);
     public final BooleanProperty debugInfoPy = new SimpleBooleanProperty(this, "debugInfo", false);
 
     protected GameContext context;
-
-    public DoubleProperty scalingProperty() {
-        return scalingPy;
-    }
-
-    public void setScaling(double scaling) {
-
-        scalingPy.set(scaling);
-    }
-
-    public double scaling() {
-        return scalingPy.get();
-    }
-
-    public double scaled(double value) {
-        return value * scaling();
-    }
-
-    protected abstract void drawSceneContent(GameRenderer renderer);
-
-    protected void drawDebugInfo(GameRenderer renderer) {}
 
     @Override
     public void setGameContext(GameContext context) {
         this.context = checkNotNull(context);
     }
 
+    public DoubleProperty scalingProperty() { return scalingPy; }
+    public void setScaling(double scaling) { scalingPy.set(scaling); }
+    public double scaling() {
+        return scalingPy.get();
+    }
+    public double scaled(double value) {
+        return value * scaling();
+    }
+
+    public ObjectProperty<Color> backgroundColorProperty() { return backgroundColorPy; }
+    public void setBackgroundColor(Color color) { backgroundColorPy.set(color); }
+    public Color backgroundColor() { return backgroundColorPy.get(); }
+
+    protected abstract void drawSceneContent(GameRenderer renderer);
+    protected void drawDebugInfo(GameRenderer renderer) {}
+
     @Override
     public void draw(GameRenderer renderer) {
         renderer.scalingProperty().set(scaling());
-        renderer.setBackgroundColor(backgroundColorPy.get());
+        renderer.setBackgroundColor(backgroundColor());
         renderer.clearCanvas();
         if (context.isScoreVisible()) {
             renderer.drawScores(context);

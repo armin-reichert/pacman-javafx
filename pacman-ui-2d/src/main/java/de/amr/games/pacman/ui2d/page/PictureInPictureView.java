@@ -44,7 +44,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
 
         playScene2D = new PlayScene2D();
         playScene2D.setGameContext(context);
-        playScene2D.backgroundColorPy.bind(PY_CANVAS_BG_COLOR);
+        playScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
 
         getChildren().add(canvas);
 

@@ -57,7 +57,7 @@ public class PacManArcadeGame extends GameModel {
 
     public static final int  ARCADE_MAP_SIZE_X = 224;
     public static final int  ARCADE_MAP_SIZE_Y = 288;
-    public static final Vector2i ARCADE_MAP_SIZE = new Vector2i(ARCADE_MAP_SIZE_X, ARCADE_MAP_SIZE_Y);
+    public static final Vector2f ARCADE_MAP_SIZE = new Vector2f(ARCADE_MAP_SIZE_X, ARCADE_MAP_SIZE_Y);
 
     // Level settings as specified in the dossier
     private static final byte[][] LEVEL_DATA = {

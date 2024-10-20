@@ -31,6 +31,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.*;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_HEIGHT;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_WIDTH;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
 
 /**
  * @author Armin Reichert
@@ -109,15 +110,16 @@ public class IntroScene extends GameScene2D {
         renderer.ctx().save();
         renderer.ctx().setImageSmoothing(false);
         TickTimer timer = sceneController.state().timer();
+        long t = timer.currentTick();
         Font font = renderer.scaledArcadeFont(8);
         switch (sceneController.state()) {
 
             case WAITING_FOR_START -> {
-                renderer.drawText("TENGEN PRESENTS", shadeOfBlue(timer.currentTick(), 16), font, 9 * TS, MARQUEE_TOP_Y - 8);
-                renderer.drawSpriteScaled(TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE, 6 * TS, MARQUEE_TOP_Y);
-                // Blink effect TODO: check exact rate
-                if (timer.currentTick() % 60 < 30) {
-                    renderer.drawText("PRESS SPACE", Color.WHITE, font, 11 * TS, MARQUEE_TOP_Y + 72);
+                Color blue = shadeOfBlue(t, 16);
+                renderer.drawText("TENGEN PRESENTS", blue, font, 9 * TS, MARQUEE_TOP_Y - TS);
+                renderer.drawSpriteScaled(MS_PAC_MAN_TITLE_SPRITE, 6 * TS, MARQUEE_TOP_Y);
+                if (t % 60 < 30) {
+                    renderer.drawText("PRESS SPACE", Color.WHITE, font, 11 * TS, MARQUEE_TOP_Y + 9 * TS);
                 }
                 renderer.drawText("MS PAC-MAN TM NAMCO LTD", TENGEN_PINK, font, 6 * TS, MARQUEE_TOP_Y + 13 * TS);
                 renderer.drawText("©1990 TENGEN INC",        TENGEN_PINK, font, 7 * TS, MARQUEE_TOP_Y + 14 * TS);
@@ -126,26 +128,25 @@ public class IntroScene extends GameScene2D {
 
             case SHOWING_MARQUEE -> {
                 drawTitle(renderer, font);
-                drawMarquee(renderer.ctx(), timer.currentTick());
+                drawMarquee(renderer, t);
             }
 
             case GHOSTS_MARCHING_IN -> {
                 drawTitle(renderer, font);
-                drawMarquee(renderer.ctx(), timer.currentTick());
+                drawMarquee(renderer, t);
                 if (ghostIndex == 0) {
-                    renderer.drawText("WITH", Color.WHITE, font,  MARQUEE_TOP_X + 12, MARQUEE_TOP_Y + 23);
+                    renderer.drawText("WITH", Color.WHITE, font, MARQUEE_TOP_X + 12, MARQUEE_TOP_Y + 23);
                 }
                 String ghostName = ghosts[ghostIndex].name().toUpperCase();
                 Color ghostColor = context.assets().color("tengen.ghost.%d.color.normal.dress".formatted(ghosts[ghostIndex].id()));
                 renderer.drawText(ghostName, ghostColor, font, MARQUEE_TOP_X + 44, MARQUEE_TOP_Y + 41);
                 for (Ghost ghost : ghosts) { renderer.drawAnimatedEntity(ghost); }
-                renderer.drawAnimatedEntity(msPacMan);
             }
 
             case MS_PACMAN_MARCHING_IN -> {
                 drawTitle(renderer, font);
-                drawMarquee(renderer.ctx(), timer.currentTick());
-                renderer.drawText("STARRING",   Color.WHITE, font, MARQUEE_TOP_X + 12, MARQUEE_TOP_Y + 22);
+                drawMarquee(renderer, t);
+                renderer.drawText("STARRING", Color.WHITE, font, MARQUEE_TOP_X + 12, MARQUEE_TOP_Y + 22);
                 renderer.drawText("MS PAC-MAN", TENGEN_YELLOW, font, MARQUEE_TOP_X + 44, MARQUEE_TOP_Y + 38);
                 for (Ghost ghost : ghosts) { renderer.drawAnimatedEntity(ghost); }
                 renderer.drawAnimatedEntity(msPacMan);
@@ -177,9 +178,10 @@ public class IntroScene extends GameScene2D {
         return state;
     }
 
-    private void drawMarquee(GraphicsContext g, long t) {
+    private void drawMarquee(GameRenderer renderer, long t) {
         BitSet bulbOn = marqueeState(t);
         double xMin = MARQUEE_TOP_X, xMax = xMin + 132, yMin = MARQUEE_TOP_Y, yMax = yMin + 60;
+        GraphicsContext g = renderer.ctx();
         for (int i = 0; i < NUM_BULBS; ++i) {
             g.setFill(bulbOn.get(i) ? Color.WHITE : TENGEN_MARQUEE_COLOR);
             // TODO This is too cryptic
