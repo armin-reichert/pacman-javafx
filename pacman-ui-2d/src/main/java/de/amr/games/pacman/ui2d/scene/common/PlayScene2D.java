@@ -16,6 +16,7 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -34,7 +35,9 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
  */
 public class PlayScene2D extends GameScene2D {
 
-    private static final List<GameAction> ACTIONS = List.of(
+    public static final Font DEBUG_STATE_FONT = Font.font("Sans", FontWeight.BOLD, 24);
+
+    private final List<GameAction> actions = List.of(
         GlobalGameActions2D.START_GAME,
         GlobalGameActions2D.CHEAT_EAT_ALL,
         GlobalGameActions2D.CHEAT_ADD_LIVES,
@@ -43,8 +46,7 @@ public class PlayScene2D extends GameScene2D {
     );
 
     @Override
-    public void init() {
-    }
+    public void init() {}
 
     @Override
     public void end() {
@@ -94,7 +96,7 @@ public class PlayScene2D extends GameScene2D {
             GlobalGameActions2D.ADD_CREDIT.execute(context);
             return;
         }
-        context.doFirstCalledAction(ACTIONS);
+        context.doFirstCalledAction(actions);
     }
 
     @Override
@@ -135,8 +137,7 @@ public class PlayScene2D extends GameScene2D {
             }
             renderer.drawLivesCounter(numLivesShown, 5, size());
         }
-        renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
-            context.game().levelCounter(), size());
+        renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(), context.game().levelCounter(), size());
     }
 
     private Stream<Ghost> ghostsInZOrder() {
@@ -179,21 +180,22 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     protected void drawDebugInfo(GameRenderer renderer) {
+        GraphicsContext g = renderer.ctx();
         renderer.drawTileGrid(size());
         if (context.gameVariant() == GameVariant.PACMAN && context.game().world() != null) {
             context.game().ghosts().forEach(ghost -> {
                 // Are currently the same for each ghost, but who knows what comes...
                 ghost.cannotMoveUpTiles().forEach(tile -> {
-                    renderer.ctx().setFill(Color.RED);
-                    renderer.ctx().fillOval(scaled(t(tile.x())), scaled(t(tile.y() - 1)), scaled(TS), scaled(TS));
-                    renderer.ctx().setFill(Color.WHITE);
-                    renderer.ctx().fillRect(scaled(t(tile.x()) + 1), scaled(t(tile.y()) - HTS - 1), scaled(TS - 2), scaled(2));
+                    g.setFill(Color.RED);
+                    g.fillOval(scaled(t(tile.x())), scaled(t(tile.y() - 1)), scaled(TS), scaled(TS));
+                    g.setFill(Color.WHITE);
+                    g.fillRect(scaled(t(tile.x()) + 1), scaled(t(tile.y()) - HTS - 1), scaled(TS - 2), scaled(2));
                 });
             });
         }
-        renderer.ctx().setFill(Color.YELLOW);
-        renderer.ctx().setFont(Font.font("Sans", FontWeight.BOLD, 24));
-        renderer.ctx().fillText(String.format("%s %d", context.gameState(), context.gameState().timer().currentTick()), 0, 64);
+        g.setFill(Color.YELLOW);
+        g.setFont(DEBUG_STATE_FONT);
+        g.fillText(String.format("%s %d", context.gameState(), context.gameState().timer().currentTick()), 0, 64);
     }
 
     @Override
@@ -231,9 +233,7 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onLevelCreated(GameEvent e) {
-        context.updateRenderer();
-    }
+    public void onLevelCreated(GameEvent e) { context.updateRenderer(); }
 
     @Override
     public void onPacDied(GameEvent e) {
