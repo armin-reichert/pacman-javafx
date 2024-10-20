@@ -376,18 +376,14 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawLivesCounter(int numLives, int maxLives, Vector2f size) {
-        GameRenderer.super.drawLivesCounter(numLives, maxLives, size.plus(0, TS));
-    }
-
-    @Override
     public void drawLevelCounter(int levelNumber, boolean demoLevel, List<Byte> symbols, Vector2f size) {
-        double symbolX = size.x() - 4 * TS - 2;
-        double y = size.y() - TS;
+        // TODO: This is ugly, maybe change all Tengen maps instead?
+        double y = size.y() - 3 * TS;
         if (!demoLevel && levelNumber > 0) {
             drawLevelNumberBox(levelNumber, 0, y); // left box
             drawLevelNumberBox(levelNumber, size.x() - 2 * TS, y); // right box
         }
+        double symbolX = size.x() - 4 * TS;
         for (byte symbol : symbols) {
             drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), symbolX, y);
             symbolX -= TS * 2;

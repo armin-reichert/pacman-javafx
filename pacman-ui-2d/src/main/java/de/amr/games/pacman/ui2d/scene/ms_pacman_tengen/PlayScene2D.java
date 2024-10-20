@@ -211,18 +211,16 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             ghostsInZOrder().forEach(renderer::drawAnimatedCreatureInfo);
         }
 
-        //TODO check if this should also be stretched vertically?
-        Vector2f mapSize = context.worldSizeInTiles(context.game().world(), ARCADE_MAP_TILE_SIZE).scaled(TS).toVector2f();
-
         //TODO: this code is ugly
         int numLivesShown = context.game().lives() - 1;
         if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
             numLivesShown += 1;
         }
-        renderer.drawLivesCounter(numLivesShown, 5, mapSize);
 
-        renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
-            context.game().levelCounter(), mapSize);
+        // TODO: This is ugly, maybe change all Tengen maps instead?
+        renderer.drawLivesCounter(numLivesShown, 5, size().minus(0, TS));
+
+        renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(), context.game().levelCounter(), size());
     }
 
     private Stream<Ghost> ghostsInZOrder() {
