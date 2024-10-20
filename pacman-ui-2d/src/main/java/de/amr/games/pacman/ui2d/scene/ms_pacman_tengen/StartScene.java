@@ -29,8 +29,6 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGame
  */
 public class StartScene extends GameScene2D {
 
-    static final double UNIT = 8f;
-
     static final int COL_ARROW = 2 * TS;
     static final int COL_LABEL = 4 * TS;
     static final int COL_COLON = 19 * TS;
@@ -80,20 +78,20 @@ public class StartScene extends GameScene2D {
     @Override
     protected void drawSceneContent(GameRenderer renderer) {
         renderer.scalingProperty().set(scaling());
-        Font font = renderer.scaledArcadeFont(UNIT);
+        Font font = renderer.scaledArcadeFont(TS);
 
         double y = 20;
         drawBabyBlueBar(renderer, y);
 
         y += 28;
-        renderer.drawText("MS PAC-MAN OPTIONS", LABEL_COLOR, font, COL_LABEL + 3 * UNIT, y);
+        renderer.drawText("MS PAC-MAN OPTIONS", LABEL_COLOR, font, COL_LABEL + 3 * TS, y);
 
         // Players (not implemented)
         y += 24;
         drawArrowIfSelected(renderer, OPTION_PLAYERS, y);
         renderer.drawText("TYPE", LABEL_COLOR, font, COL_LABEL, y);
-        renderer.drawText(":", LABEL_COLOR, font, COL_LABEL + 4 * UNIT + 4, y);
-        renderer.drawText("1 PLAYER", VALUE_COLOR, font, COL_LABEL + 6 * UNIT  , y);
+        renderer.drawText(":", LABEL_COLOR, font, COL_LABEL + 4 * TS + 4, y);
+        renderer.drawText("1 PLAYER", VALUE_COLOR, font, COL_LABEL + 6 * TS  , y);
 
         // Pac-Booster
         y += 24;
@@ -121,13 +119,13 @@ public class StartScene extends GameScene2D {
         drawArrowIfSelected(renderer, OPTION_STARTING_LEVEL, y);
         renderer.drawText("STARTING LEVEL", LABEL_COLOR, font, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, font, COL_COLON, y);
-        renderer.drawText(String.valueOf(tengenGame.startingLevel()), VALUE_COLOR, font, COL_VALUE + UNIT, y);
+        renderer.drawText(String.valueOf(tengenGame.startingLevel()), VALUE_COLOR, font, COL_VALUE + TS, y);
 
         y += 24;
         drawCenteredText(renderer, size(), "MOVE ARROW WITH CURSOR KEYS", LABEL_COLOR, font, y);
-        y += UNIT;
+        y += TS;
         drawCenteredText(renderer, size(), "CHOOSE OPTIONS WITH TAB", LABEL_COLOR, font, y);
-        y += UNIT;
+        y += TS;
         drawCenteredText(renderer, size(), "PRESS ENTER TO START GAME", LABEL_COLOR, font, y);
 
         y += 4;
@@ -139,9 +137,9 @@ public class StartScene extends GameScene2D {
         renderer.ctx().save();
         renderer.ctx().scale(scaling(), scaling());
         renderer.ctx().setFill(Color.WHITE);
-        renderer.ctx().fillRect(0, y, NES_SCREEN_WIDTH, UNIT);
+        renderer.ctx().fillRect(0, y, NES_SCREEN_WIDTH, TS);
         renderer.ctx().setFill(TENGEN_BABY_BLUE);
-        renderer.ctx().fillRect(0, y + 1, NES_SCREEN_WIDTH, UNIT - 2);
+        renderer.ctx().fillRect(0, y + 1, NES_SCREEN_WIDTH, TS - 2);
         renderer.ctx().restore();
     }
 
@@ -154,13 +152,13 @@ public class StartScene extends GameScene2D {
     }
 
     private void drawCenteredText(GameRenderer renderer, Vector2f sceneSize, String text, Color color, Font font, double y) {
-        double x = 0.5 * sceneSize.x() - 0.5 * text.length() * UNIT; // assume fixed font of size TS
+        double x = 0.5 * sceneSize.x() - 0.5 * text.length() * TS; // assume fixed font of size TS
         renderer.drawText(text, color, font, x, y);
     }
 
     private void drawArrowIfSelected(GameRenderer renderer, int option, double y) {
         if (selectedOption == option) {
-            Font font = renderer.scaledArcadeFont(UNIT);
+            Font font = renderer.scaledArcadeFont(TS);
             renderer.drawText("-", LABEL_COLOR, font, COL_ARROW, y);
             renderer.drawText(">", LABEL_COLOR, font, COL_ARROW + 3, y);
         }

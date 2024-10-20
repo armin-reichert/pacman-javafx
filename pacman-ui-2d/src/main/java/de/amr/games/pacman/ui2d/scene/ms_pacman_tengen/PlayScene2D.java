@@ -48,6 +48,8 @@ import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
  */
 public class PlayScene2D extends GameScene2D implements CameraControlledGameScene {
 
+    static final int CAM_DELAY_BEFORE_MOVE_TICKS = 90;
+
     private final List<GameAction> actions = List.of(
         GlobalGameActions2D.CHEAT_EAT_ALL,
         GlobalGameActions2D.CHEAT_ADD_LIVES,
@@ -60,6 +62,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     private final SubScene fxSubScene;
     private final ParallelCamera cam = new ParallelCamera();
     private final Canvas canvas = new Canvas(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
+    private int camDelay;
 
     public PlayScene2D() {
         Pane root = new StackPane(canvas);
@@ -120,28 +123,45 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     }
 
     private void updateCameraPosition() {
+        if (camDelay > 0) {
+            --camDelay;
+            return;
+        }
         GameWorld world = context.game().world();
         Pac msPacMan = context.game().pac();
         if (world == null || msPacMan == null) {
-            cam.setTranslateY(0); // TODO check this
             return;
         }
         int worldHeightTiles = context.worldSizeInTiles(world, ARCADE_MAP_TILE_SIZE).y();
         double halfWorldHeight = 0.5 * TS * worldHeightTiles;
         double speed = 0.015;
         double y = lerp(cam.getTranslateY(), scaled(msPacMan.posY() - halfWorldHeight), speed);
-        //TODO this is trial and error
-        if (worldHeightTiles > 36) {
-            y = clamp(y, -halfWorldHeight - scaled(30), halfWorldHeight + scaled(25));
-        }
-        else if (worldHeightTiles <= 30) {
-            y = clamp(y, -halfWorldHeight - scaled(2), halfWorldHeight - scaled(15));
-        }
-        else {
-            y = clamp(y, -halfWorldHeight - scaled(15), halfWorldHeight + scaled(6));
-        }
-        cam.setTranslateY(y);
+        cam.setTranslateY(clamp(y, minCamY(world), maxCamY(world)));
         captureCameraExtrema();
+    }
+
+    private double minCamY(GameWorld world) {
+        int worldHeightTiles = context.worldSizeInTiles(world, ARCADE_MAP_TILE_SIZE).y();
+        double halfWorldHeight = 0.5 * TS * worldHeightTiles;
+        if (worldHeightTiles > 36) {
+            return -halfWorldHeight - scaled(30);
+        }
+        if (worldHeightTiles <= 30) {
+            return -halfWorldHeight - scaled(2);
+        }
+        return -halfWorldHeight - scaled(15);
+    }
+
+    private double maxCamY(GameWorld world) {
+        int worldHeightTiles = context.worldSizeInTiles(world, ARCADE_MAP_TILE_SIZE).y();
+        double halfWorldHeight = 0.5 * TS * worldHeightTiles;
+        if (worldHeightTiles > 36) {
+            return halfWorldHeight + scaled(25);
+        }
+        if (worldHeightTiles <= 30) {
+            return halfWorldHeight - scaled(15);
+        }
+        return halfWorldHeight + scaled(6);
     }
 
     //TODO remove again later
@@ -172,9 +192,6 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public void draw(GameRenderer renderer) {
-        Vector2f size = size();
-        canvas.setWidth(scaled(size.x()));
-        canvas.setHeight(scaled(size.y()));
         renderer.setCanvas(canvas);
         renderer.scalingProperty().set(scaling());
         renderer.setBackgroundColor(backgroundColor());
@@ -269,7 +286,12 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     @Override
     public void onGameStateEntry(GameState state) {
         switch (state) {
-            case STARTING_GAME, LEVEL_COMPLETE, PACMAN_DYING -> context.sounds().stopAll();
+            case STARTING_GAME -> {
+                context.sounds().stopAll();
+                cam.setTranslateY(minCamY(context.game().world()));
+                camDelay = CAM_DELAY_BEFORE_MOVE_TICKS;
+            }
+            case LEVEL_COMPLETE, PACMAN_DYING -> context.sounds().stopAll();
             case GAME_OVER -> {
                 context.sounds().stopAll();
                 context.sounds().playGameOverSound();
@@ -296,6 +318,9 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     @Override
     public void onLevelCreated(GameEvent e) {
         context.updateRenderer();
+        Vector2f size = size();
+        canvas.setWidth(scaled(size.x()));
+        canvas.setHeight(scaled(size.y()));
     }
 
     @Override
