@@ -173,17 +173,13 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public void draw(GameRenderer renderer) {
-        renderer.scalingProperty().set(scaling());
-        renderer.setCanvas(canvas);
-        renderer.scalingProperty().set(scaling());
-        renderer.setBackgroundColor(backgroundColor());
-
         Vector2f size = size();
         canvas.setWidth(scaled(size.x()));
         canvas.setHeight(scaled(size.y()));
-
+        renderer.setCanvas(canvas);
+        renderer.scalingProperty().set(scaling());
+        renderer.setBackgroundColor(backgroundColor());
         renderer.clearCanvas();
-
         if (context.isScoreVisible()) {
             renderer.drawScores(context);
         }
