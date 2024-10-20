@@ -130,11 +130,21 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             cam.setTranslateY(0); // TODO check this
             return;
         }
-        double halfWorldHeight = 0.5 * TS * context.worldSizeInTiles(world, ARCADE_MAP_TILE_SIZE).y();
-        double cap = 0.45 * scaling(); // dependent on aspect of world?
+        int worldHeightTiles = context.worldSizeInTiles(world, ARCADE_MAP_TILE_SIZE).y();
+        double halfWorldHeight = 0.5 * TS * worldHeightTiles;
         double speed = 0.015;
         double y = lerp(cam.getTranslateY(), scaled(msPacMan.posY() - halfWorldHeight), speed);
-        cam.setTranslateY(clamp(y, -halfWorldHeight * cap, halfWorldHeight * cap));
+        //TODO this is trial and error
+        if (worldHeightTiles > 36) {
+            y = clamp(y, -halfWorldHeight - scaled(30), halfWorldHeight + scaled(25));
+        }
+        else if (worldHeightTiles <= 30) {
+            y = clamp(y, -halfWorldHeight - scaled(2), halfWorldHeight - scaled(15));
+        }
+        else {
+            y = clamp(y, -halfWorldHeight - scaled(15), halfWorldHeight + scaled(6));
+        }
+        cam.setTranslateY(y);
         captureCameraExtrema();
     }
 
