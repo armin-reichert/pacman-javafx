@@ -19,7 +19,7 @@ import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.common.ScrollableGameScene;
+import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Pos;
@@ -47,7 +47,7 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGame
  *
  * @author Armin Reichert
  */
-public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
+public class PlayScene2D extends GameScene2D implements CameraControlledGameScene {
 
     private final List<GameAction> actions = List.of(
         GlobalGameActions2D.CHEAT_EAT_ALL,
@@ -74,17 +74,17 @@ public class PlayScene2D extends GameScene2D implements ScrollableGameScene {
     }
 
     @Override
-    public DoubleProperty scrollAreaWidthProperty() {
+    public DoubleProperty viewPortWidthProperty() {
         return fxSubScene.widthProperty();
     }
 
     @Override
-    public DoubleProperty scrollAreaHeightProperty() {
+    public DoubleProperty viewPortHeightProperty() {
         return fxSubScene.heightProperty();
     }
 
     @Override
-    public Node scrollArea() {
+    public Node viewPort() {
         return fxSubScene;
     }
 

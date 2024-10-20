@@ -16,7 +16,7 @@ import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.common.ScrollableGameScene;
+import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.util.TooFancyGameCanvasContainer;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.ObjectProperty;
@@ -41,12 +41,14 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.util.KeyInput.*;
-import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
+import static de.amr.games.pacman.ui2d.util.Ufx.*;
 
 /**
  * @author Armin Reichert
  */
 public class GamePage extends StackPane implements Page {
+
+    static final double MAX_SCENE_SCALING = 5;
 
     private final GameAction actionToggleDebugInfo = new AbstractGameAction(alt(KeyCode.D)) {
         public void execute(GameContext context) {
@@ -162,7 +164,7 @@ public class GamePage extends StackPane implements Page {
     protected final GameContext context;
     protected final Scene parentScene;
     protected final Canvas gameCanvas;
-    protected final BorderPane gameCanvasPane = new BorderPane();
+    protected final BorderPane gameCanvasLayer = new BorderPane();
     protected final TooFancyGameCanvasContainer gameCanvasContainer;
     protected final DashboardLayer dashboardLayer; // dashboard, picture-in-picture view
     protected final PopupLayer popupLayer; // help, signature
@@ -188,8 +190,7 @@ public class GamePage extends StackPane implements Page {
         gameCanvasContainer.setBorderColor(ARCADE_PALE);
         gameCanvasContainer.decorationEnabledPy.addListener((py, ov, nv) -> embedGameScene(gameScenePy.get()));
 
-        gameCanvasPane.setCenter(gameCanvasContainer);
-        //gameCanvasPane.setBackground(coloredBackground(Color.GREEN));
+        gameCanvasLayer.setCenter(gameCanvasContainer);
 
         dashboardLayer = new DashboardLayer(context);
         dashboardLayer.addDashboardItem(context.locText("infobox.general.title"), new InfoBoxGeneral());
@@ -206,10 +207,20 @@ public class GamePage extends StackPane implements Page {
             context.assets().font("font.monospaced", 8), Color.LIGHTGRAY,
             context.locText("app.signature"));
 
-        getChildren().addAll(gameCanvasPane, dashboardLayer, popupLayer);
+        getChildren().addAll(gameCanvasLayer, dashboardLayer, popupLayer);
 
         //TODO is this the recommended way to close an open context-menu?
         setOnMouseClicked(e -> contextMenu.hide());
+
+        PY_DEBUG_INFO.addListener((py,ov,debug) -> {
+            if (debug) {
+                gameCanvasLayer.setBackground(coloredBackground(Color.DARKGREEN));
+                gameCanvasLayer.setBorder(border(Color.LIGHTGREEN, 2));
+            } else {
+                gameCanvasLayer.setBackground(null);
+                gameCanvasLayer.setBorder(null);
+            }
+        });
     }
 
     public TooFancyGameCanvasContainer gameCanvasContainer() {
@@ -288,25 +299,27 @@ public class GamePage extends StackPane implements Page {
     }
 
     public void embedGameScene(GameScene gameScene) {
+        // new switch feature
         switch (gameScene) {
-            case null -> Logger.error("Cannot embed not existing game scene");
-            case ScrollableGameScene scrollableGameScene -> {
-                getChildren().set(0, scrollableGameScene.scrollArea());
-                scrollableGameScene.scrollAreaWidthProperty().bind(parentScene.widthProperty());
-                scrollableGameScene.scrollAreaHeightProperty().bind(parentScene.heightProperty());
+            case null -> Logger.error("No game scene to embed");
+            case CameraControlledGameScene cameraControlledGameScene -> {
+                getChildren().set(0, cameraControlledGameScene.viewPort());
+                cameraControlledGameScene.viewPortWidthProperty().bind(parentScene.widthProperty());
+                cameraControlledGameScene.viewPortHeightProperty().bind(parentScene.heightProperty());
                 if (gameScene instanceof GameScene2D gameScene2D) {
                     gameScene2D.scalingProperty().bind(
-                        gameCanvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), 5)));
+                        gameCanvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_SCALING)));
                 }
             }
             case GameScene2D gameScene2D -> {
-                getChildren().set(0, gameCanvasPane);
+                getChildren().set(0, gameCanvasLayer);
                 gameCanvasContainer.backgroundProperty().bind(gameScene2D.backgroundColorPy.map(Ufx::coloredBackground));
                 Vector2f sceneSize = gameScene.size();
                 gameCanvasContainer.setUnscaledCanvasWidth(sceneSize.x());
                 gameCanvasContainer.setUnscaledCanvasHeight(sceneSize.y());
                 gameCanvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-                gameScene2D.scalingProperty().bind(gameCanvasContainer.scalingPy);
+                gameScene2D.scalingProperty().bind(
+                    gameCanvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_SCALING)));
             }
             default -> Logger.error("Cannot embed game scene of class {}", gameScene.getClass().getName());
         }

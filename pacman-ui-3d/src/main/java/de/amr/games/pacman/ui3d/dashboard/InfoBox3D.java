@@ -7,11 +7,10 @@ package de.amr.games.pacman.ui3d.dashboard;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.InfoBox;
 import de.amr.games.pacman.ui2d.dashboard.InfoText;
-import de.amr.games.pacman.ui2d.scene.common.ScrollableGameScene;
+import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui3d.GameAssets3D;
 import de.amr.games.pacman.ui3d.GlobalGameActions3D;
 import de.amr.games.pacman.ui3d.scene.common.Perspective;
-import de.amr.games.pacman.ui3d.scene.common.PlayScene3D;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
@@ -120,7 +119,7 @@ public class InfoBox3D extends InfoBox {
 
     private String currentSceneCameraInfo() {
         if (context.currentGameScene().isPresent()
-            && context.currentGameScene().get() instanceof ScrollableGameScene scrollableGameScene) {
+            && context.currentGameScene().get() instanceof CameraControlledGameScene scrollableGameScene) {
             var cam = scrollableGameScene.camera();
             return String.format("rot=%.0f x=%.0f y=%.0f z=%.0f",
                 cam.getRotate(), cam.getTranslateX(), cam.getTranslateY(), cam.getTranslateZ());

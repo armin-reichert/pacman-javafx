@@ -21,7 +21,7 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
-import de.amr.games.pacman.ui2d.scene.common.ScrollableGameScene;
+import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui3d.GlobalGameActions3D;
 import de.amr.games.pacman.ui3d.level.*;
@@ -54,7 +54,7 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
  *
  * @author Armin Reichert
  */
-public class PlayScene3D implements GameScene, ScrollableGameScene {
+public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     private final List<GameAction> actions = List.of(
         GlobalGameActions3D.PREV_PERSPECTIVE,
@@ -113,17 +113,17 @@ public class PlayScene3D implements GameScene, ScrollableGameScene {
     }
 
     @Override
-    public DoubleProperty scrollAreaWidthProperty() {
+    public DoubleProperty viewPortWidthProperty() {
         return fxSubScene.widthProperty();
     }
 
     @Override
-    public DoubleProperty scrollAreaHeightProperty() {
+    public DoubleProperty viewPortHeightProperty() {
         return fxSubScene.heightProperty();
     }
 
     @Override
-    public SubScene scrollArea() {
+    public SubScene viewPort() {
         return fxSubScene;
     }
 
