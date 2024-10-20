@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui3d.dashboard;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.InfoBox;
 import de.amr.games.pacman.ui2d.dashboard.InfoText;
+import de.amr.games.pacman.ui2d.scene.common.ScrollableGameScene;
 import de.amr.games.pacman.ui3d.GameAssets3D;
 import de.amr.games.pacman.ui3d.GlobalGameActions3D;
 import de.amr.games.pacman.ui3d.scene.common.Perspective;
@@ -112,14 +113,15 @@ public class InfoBox3D extends InfoBox {
 
     @Override
     public void update() {
+        super.update();
         //TODO this should not be necessary on every update, when to initialize controls?
         updateControlsFromProperties();
     }
 
     private String currentSceneCameraInfo() {
         if (context.currentGameScene().isPresent()
-            && context.currentGameScene().get() instanceof PlayScene3D playScene3D) {
-            var cam = playScene3D.camera();
+            && context.currentGameScene().get() instanceof ScrollableGameScene scrollableGameScene) {
+            var cam = scrollableGameScene.camera();
             return String.format("rot=%.0f x=%.0f y=%.0f z=%.0f",
                 cam.getRotate(), cam.getTranslateX(), cam.getTranslateY(), cam.getTranslateZ());
         }

@@ -101,7 +101,11 @@ public class DashboardLayer extends BorderPane {
     }
 
     public void update() {
-        dashboardItems.stream().map(DashboardEntry::infoBox).forEach(InfoBox::update);
-        pip.draw();
+        if (dashboardContainer.isVisible()) {
+            dashboardItems.stream().map(DashboardEntry::infoBox).forEach(InfoBox::update);
+        }
+        if (pip.isVisible()) {
+            pip.draw();
+        }
     }
 }
