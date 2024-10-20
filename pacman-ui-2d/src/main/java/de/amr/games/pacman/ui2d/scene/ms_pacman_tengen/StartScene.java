@@ -197,7 +197,7 @@ public class StartScene extends GameScene2D {
         //TODO make into game action?
         else if (context.keyboard().pressed(KeyCode.ENTER)) { // start playing
             context.sounds().stopAll();
-            context.gameController().changeState(GameState.READY);
+            context.gameController().changeState(GameState.STARTING_GAME);
         }
 
         else {

@@ -298,7 +298,7 @@ public class IntroScene extends GameScene2D {
                 if (timer().atSecond(8)) {
                     TengenMsPacManGame game = (TengenMsPacManGame) intro.context.game();
                     game.setCanStartGame(false); // TODO check this
-                    intro.context.gameController().changeState(GameState.READY);
+                    intro.context.gameController().changeState(GameState.STARTING_GAME);
                 }
             }
         };

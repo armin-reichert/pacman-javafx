@@ -134,7 +134,7 @@ public class PlayScene2D extends GameScene2D {
         } else {
             //TODO: this code looks ugly
             int numLivesShown = context.game().lives() - 1;
-            if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
+            if (context.gameState() == GameState.STARTING_GAME && !context.game().pac().isVisible()) {
                 numLivesShown += 1;
             }
             renderer.drawLivesCounter(numLivesShown, 5, size());
@@ -168,7 +168,7 @@ public class PlayScene2D extends GameScene2D {
             int x = TS * (cx - text.length() / 2);
             Color color = context.assets().color(assetPrefix + ".color.game_over_message");
             renderer.drawText(text, color, font, x, y);
-        } else if (context.gameState() == GameState.READY) {
+        } else if (context.gameState() == GameState.STARTING_GAME) {
             String text = "READY!";
             int x = TS * (cx - text.length() / 2);
             Color color = context.assets().color(assetPrefix + ".color.ready_message");
@@ -210,7 +210,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onGameStateEntry(GameState state) {
         switch (state) {
-            case READY, LEVEL_COMPLETE, PACMAN_DYING -> context.sounds().stopAll();
+            case STARTING_GAME, LEVEL_COMPLETE, PACMAN_DYING -> context.sounds().stopAll();
             case GAME_OVER -> {
                 context.sounds().stopAll();
                 context.sounds().playGameOverSound();

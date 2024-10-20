@@ -17,7 +17,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
-import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -311,9 +310,9 @@ public class IntroScene extends GameScene2D {
             public void onUpdate(IntroScene intro) {
                 intro.marqueeTimer.tick();
                 if (timer.atSecond(2.0) && !intro.context.game().canStartNewGame()) {
-                    intro.context.gameController().changeState(GameState.READY); // demo level
+                    intro.context.gameController().changeState(GameState.STARTING_GAME); // demo level
                 } else if (timer.atSecond(5)) {
-                    intro.context.gameController().changeState(GameState.STARTING);
+                    intro.context.gameController().changeState(GameState.WAITING_FOR_START);
                 }
             }
         };

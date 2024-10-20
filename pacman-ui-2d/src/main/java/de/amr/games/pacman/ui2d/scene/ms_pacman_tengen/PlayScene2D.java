@@ -20,7 +20,6 @@ import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
-import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Pos;
 import javafx.scene.*;
@@ -213,7 +212,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
         //TODO: this code is ugly
         int numLivesShown = context.game().lives() - 1;
-        if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
+        if (context.gameState() == GameState.STARTING_GAME && !context.game().pac().isVisible()) {
             numLivesShown += 1;
         }
 
@@ -245,7 +244,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             int x = TS * (cx - text.length() / 2);
             Color color = context.assets().color(assetPrefix + ".color.game_over_message");
             renderer.drawText(text, color, font, x, y);
-        } else if (context.gameState() == GameState.READY) {
+        } else if (context.gameState() == GameState.STARTING_GAME) {
             String text = "READY!";
             int x = TS * (cx - text.length() / 2);
             Color color = context.assets().color(assetPrefix + ".color.ready_message");
@@ -275,7 +274,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     @Override
     public void onGameStateEntry(GameState state) {
         switch (state) {
-            case READY, LEVEL_COMPLETE, PACMAN_DYING -> context.sounds().stopAll();
+            case STARTING_GAME, LEVEL_COMPLETE, PACMAN_DYING -> context.sounds().stopAll();
             case GAME_OVER -> {
                 context.sounds().stopAll();
                 context.sounds().playGameOverSound();

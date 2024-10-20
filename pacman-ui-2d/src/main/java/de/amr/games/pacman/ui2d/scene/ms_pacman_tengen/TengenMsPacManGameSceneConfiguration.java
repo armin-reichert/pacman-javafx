@@ -75,7 +75,7 @@ public class TengenMsPacManGameSceneConfiguration implements GameSceneConfig {
     public GameScene selectGameScene(GameContext context) {
         String sceneID = switch (context.gameState()) {
             case BOOT               -> "BootScene";
-            case STARTING           -> "StartScene";
+            case WAITING_FOR_START -> "StartScene";
             case INTRO              -> "IntroScene";
             case INTERMISSION       -> "CutScene" + context.game().intermissionNumberAfterLevel();
             case TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");

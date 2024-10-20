@@ -144,7 +144,7 @@ public class GameLevel3D {
         houseOpenPy.set(ghostNearHouseEntry);
 
         int symbolsDisplayed = Math.max(0, context.game().lives() - 1);
-        if (!context.game().pac().isVisible() && context.gameState() == GameState.READY) {
+        if (!context.game().pac().isVisible() && context.gameState() == GameState.STARTING_GAME) {
             livesCounterPy.set(symbolsDisplayed + 1);
         } else {
             livesCounterPy.set(symbolsDisplayed);

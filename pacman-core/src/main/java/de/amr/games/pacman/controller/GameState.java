@@ -54,19 +54,19 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
-                enterState(READY);
+                enterState(STARTING_GAME);
             }
         }
     },
 
-    STARTING {
+    WAITING_FOR_START {
         @Override
         public void onUpdate(GameModel game) {
             // wait for user interaction to leave state
         }
     },
 
-    READY {
+    STARTING_GAME {
         static final short TICK_NEW_GAME_SHOW_GUYS       = 120;
         static final short TICK_NEW_GAME_START_PLAYING   = 240;
         static final short TICK_DEMO_LEVEL_START_PLAYING = 120;
@@ -184,7 +184,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
-                enterState(READY);
+                enterState(STARTING_GAME);
             }
         }
     },
@@ -237,7 +237,7 @@ public enum GameState implements FsmState<GameModel> {
                 if (game.isDemoLevel()) {
                     enterState(INTRO);
                 } else {
-                    enterState(game.lives() == 0 ? GAME_OVER : READY);
+                    enterState(game.lives() == 0 ? GAME_OVER : STARTING_GAME);
                 }
             }
             else if (timer.currentTick() == TICK_HIDE_GHOSTS) {
@@ -280,7 +280,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 game.removeWorld();
-                enterState(game.canStartNewGame() ? STARTING : INTRO);
+                enterState(game.canStartNewGame() ? WAITING_FOR_START : INTRO);
             }
         }
 

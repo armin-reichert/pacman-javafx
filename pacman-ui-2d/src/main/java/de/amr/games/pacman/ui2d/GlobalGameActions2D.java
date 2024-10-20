@@ -43,8 +43,8 @@ public enum GlobalGameActions2D implements GameAction {
                 if (coinInserted) {
                     context.game().publishGameEvent(GameEventType.CREDIT_ADDED);
                 }
-                if (context.gameState() != GameState.STARTING) {
-                    context.gameController().changeState(GameState.STARTING);
+                if (context.gameState() != GameState.WAITING_FOR_START) {
+                    context.gameController().changeState(GameState.WAITING_FOR_START);
                 }
             }
         }
@@ -147,11 +147,11 @@ public enum GlobalGameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                context.gameController().changeState(GameState.STARTING);
+                context.gameController().changeState(GameState.WAITING_FOR_START);
             } else if (context.game().canStartNewGame()) {
                 context.sounds().stopVoice();
-                if (context.gameState() == GameState.INTRO || context.gameState() == GameState.STARTING) {
-                    context.gameController().changeState(GameState.READY);
+                if (context.gameState() == GameState.INTRO || context.gameState() == GameState.WAITING_FOR_START) {
+                    context.gameController().changeState(GameState.STARTING_GAME);
                 } else {
                     Logger.error("Cannot start game play in game state {}", context.gameState());
                 }
@@ -181,7 +181,7 @@ public enum GlobalGameActions2D implements GameAction {
             context.game().setPlaying(false);
             TengenMsPacManGame tengenMsPacManGame = (TengenMsPacManGame) context.game();
             tengenMsPacManGame.setCanStartGame(true);
-            context.gameController().changeState(GameState.STARTING); // shows Tengen settings scene
+            context.gameController().changeState(GameState.WAITING_FOR_START); // shows Tengen settings scene
         }
     },
 

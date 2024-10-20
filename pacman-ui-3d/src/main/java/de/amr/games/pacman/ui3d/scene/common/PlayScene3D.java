@@ -14,7 +14,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -240,7 +239,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     public void onGameStateEntry(GameState state) {
         Logger.info("on game state entry: {}", state);
         switch (state) {
-            case READY            -> onEnterStateReady();
+            case STARTING_GAME -> onEnterStateReady();
             case HUNTING          -> onEnterStateHunting();
             case PACMAN_DYING     -> onEnterStatePacManDying();
             case GHOST_DYING      -> onEnterStateGhostDying();
