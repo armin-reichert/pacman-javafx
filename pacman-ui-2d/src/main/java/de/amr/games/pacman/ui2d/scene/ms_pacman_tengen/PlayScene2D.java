@@ -39,8 +39,8 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_TILE_SIZE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_HEIGHT;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_WIDTH;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
+import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 
 /**
  * Tengen play scene, uses vertical scrolling.
@@ -63,12 +63,9 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     private final Canvas canvas = new Canvas(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
 
     public PlayScene2D() {
-        Pane root = new StackPane();
-        root.setBackground(Ufx.coloredBackground(Color.BLACK));
-
-        root.getChildren().add(canvas);
+        Pane root = new StackPane(canvas);
+        root.setBackground(coloredBackground(Color.TRANSPARENT));
         StackPane.setAlignment(canvas, Pos.CENTER);
-
         fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
         fxSubScene.setCamera(cam);
     }
@@ -170,21 +167,21 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public Vector2f size() {
-        return new Vector2f(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
+        Vector2i worldSizeInTiles = context.worldSizeInTiles(context.game().world(), new Vector2i(NES_TILES_X, NES_TILES_Y));
+        return worldSizeInTiles.plus(0, 2).scaled(TS).toVector2f(); // maybe change all maps to have 4 empty rows under maze?
     }
 
     @Override
     public void draw(GameRenderer renderer) {
         renderer.scalingProperty().set(scaling());
-
-        Vector2f mapSize = context.worldSizeInTiles(context.game().world(), ARCADE_MAP_TILE_SIZE).scaled(TS).toVector2f();
-
-        canvas.setWidth(scaled(mapSize.x()));
-        canvas.setHeight(scaled(mapSize.y() + 2 * TS)); // TODO maybe change maps instead?
-
         renderer.setCanvas(canvas);
         renderer.scalingProperty().set(scaling());
         renderer.setBackgroundColor(backgroundColor());
+
+        Vector2f size = size();
+        canvas.setWidth(scaled(size.x()));
+        canvas.setHeight(scaled(size.y()));
+
         renderer.clearCanvas();
 
         if (context.isScoreVisible()) {
