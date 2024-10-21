@@ -122,8 +122,8 @@ public class IntroScene extends GameScene2D {
                     renderer.drawText("PRESS SPACE", Color.WHITE, font, 11 * TS, MARQUEE_TOP_Y + 9 * TS);
                 }
                 renderer.drawText("MS PAC-MAN TM NAMCO LTD", TENGEN_PINK, font, 6 * TS, MARQUEE_TOP_Y + 13 * TS);
-                renderer.drawText("©1990 TENGEN INC",        TENGEN_PINK, font, 7 * TS, MARQUEE_TOP_Y + 14 * TS);
-                renderer.drawText("ALL RIGHTS RESERVED",     TENGEN_PINK, font, 6 * TS, MARQUEE_TOP_Y + 15 * TS);
+                renderer.drawText("©1990 TENGEN INC",        TENGEN_PINK, font, 8 * TS, MARQUEE_TOP_Y + 14 * TS);
+                renderer.drawText("ALL RIGHTS RESERVED",     TENGEN_PINK, font, 7 * TS, MARQUEE_TOP_Y + 15 * TS);
             }
 
             case SHOWING_MARQUEE -> {
