@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.PlayScene2D;
@@ -17,6 +18,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.VBox;
 import org.tinylog.Logger;
 
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 
@@ -42,7 +44,15 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         canvas.heightProperty().bind(PY_PIP_HEIGHT);
         canvas.heightProperty().addListener((py,ov,nv) -> recomputeLayout());
 
-        playScene2D = new PlayScene2D();
+        playScene2D = new PlayScene2D() {
+            @Override
+            public Vector2f size() {
+                return context.gameVariant() != GameVariant.MS_PACMAN_TENGEN
+                ? super.size()
+                : super.size().plus(0, 2*TS);
+            }
+        };
+
         playScene2D.setGameContext(context);
         playScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
 

@@ -45,7 +45,7 @@ import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
  *
  * @author Armin Reichert
  */
-public class PlayScene2D extends GameScene2D implements CameraControlledGameScene {
+public class TengenPlayScene2D extends GameScene2D implements CameraControlledGameScene {
 
     static final double RADIUS_FACTOR = 0.4;
 
@@ -63,7 +63,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     private final Canvas canvas = new Canvas(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
     private int camDelay;
 
-    public PlayScene2D() {
+    public TengenPlayScene2D() {
         Pane root = new StackPane(canvas);
         root.setBackground(coloredBackground(Color.TRANSPARENT));
         StackPane.setAlignment(canvas, Pos.CENTER);
@@ -216,8 +216,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             // as long as Pac-Man is invisible when the game is started, one entry more appears in the lives counter
             livesCounterEntries += 1;
         }
-        renderer.drawLivesCounter(livesCounterEntries, 5, size().minus(0, TS)); // TODO: ugly, change maps instead?
-
+        renderer.drawLivesCounter(livesCounterEntries, 5, size());
         renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(), context.game().levelCounter(), size());
     }
 
