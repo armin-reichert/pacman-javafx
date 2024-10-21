@@ -42,6 +42,10 @@ public class TengenMsPacManGame extends GameModel {
     static final String ARCADE_MAP_PATTERN      = MAPS_ROOT + "arcade/map%02d.world";
     static final String NON_ARCADE_MAP_PATTERN  = MAPS_ROOT + "non_arcade/map%02d.world";
 
+    private static float speedUnits(float units) {
+        return units / 32f;
+    }
+
     /**
      * From this <a href="https://www.youtube.com/watch?v=cD0oGudVpbw">YouTube video</a>.
      */
@@ -169,31 +173,31 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     private static float pacDifficultySpeedDelta(Difficulty difficulty) {
-        return switch (difficulty) {
+        return speedUnits(switch (difficulty) {
             case EASY -> -4;
             case NORMAL -> 0;
             case HARD -> 12;
             case CRAZY -> 24;
-        } / 32f;
+        });
     }
 
     private static float ghostDifficultySpeedDelta(Difficulty difficulty) {
-        return switch (difficulty) {
+        return speedUnits(switch (difficulty) {
             case EASY -> -8;
             case NORMAL -> 0;
             case HARD -> 16;
             case CRAZY -> 32;
-        } / 32f;
+        });
     }
 
     private static float ghostIDSpeedDelta(byte ghostID) {
-        return switch (ghostID) {
+        return speedUnits(switch (ghostID) {
             case RED_GHOST -> 3;
             case ORANGE_GHOST -> 2;
             case CYAN_GHOST -> 1;
             case PINK_GHOST -> 0;
             default -> throw GameException.illegalGhostID(ghostID);
-        } / 32f;
+        });
     }
 
     private static float pacBaseSpeedInLevel(int levelNumber) {
@@ -206,7 +210,7 @@ public class TengenMsPacManGame extends GameModel {
         else if (inRange(levelNumber, 25, 28)) { units = 0x25; }
         else if (levelNumber >= 29)            { units = 0x24; }
 
-        return units / 32f;
+        return speedUnits(units);
     }
 
     // TODO: do they all have the same base speed? Unclear from disassembly data.
@@ -216,7 +220,7 @@ public class TengenMsPacManGame extends GameModel {
         else if (inRange(levelNumber, 5, 12)) { units = 0x20 + (levelNumber - 5); } // 0x20-0x27
         else if (levelNumber >= 13)           { units = 0x28;}
 
-        return units / 32f;
+        return speedUnits(units);
     }
 
     // Bonus symbols in Arcade, Mini and Big mazes
@@ -710,7 +714,31 @@ public class TengenMsPacManGame extends GameModel {
         }
     }
 
+    /* By @russianmansmwc on Discord:
+       "By the way, there's an additional quirk regarding ghosts' speed.
+       On normal difficulty ONLY and in levels 5 and above, the ghosts become slightly faster if there are few dots remain.
+       if there are 31 or less dots, the speed is increased. the base increase value is 2, which is further increased by 1 for every 8 dots eaten.
+       (i should note it's in subunits. it if was times 2, that would've been crazy)"
+     */
     private float huntingSpeed(Ghost ghost) {
-        return ghost.baseSpeed(); // TODO
+        float speed = ghost.baseSpeed();
+        if (difficulty == Difficulty.NORMAL && levelNumber >= 5) {
+            int dotsLeft = world.uneatenFoodCount();
+            byte increase = 0; // units
+            if (dotsLeft <= 7) {
+                increase = 5;
+            } else if (dotsLeft <= 15) {
+                increase = 4;
+            } else if (dotsLeft <= 23) {
+                increase = 3;
+            } else if (dotsLeft <= 31) {
+                increase = 2;
+            }
+            if (increase > 0) {
+                speed += speedUnits(increase);
+                Logger.info("Ghost speed increased by {0} units to {0.00} px/tick for {}", increase, speed, ghost.name());
+            }
+        }
+        return speed;
     }
 }
