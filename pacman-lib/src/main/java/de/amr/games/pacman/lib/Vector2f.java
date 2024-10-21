@@ -34,8 +34,8 @@ public record Vector2f(float x, float y) {
         return new Vector2f(x - vx, y - vy);
     }
 
-    public Vector2f scaled(float s) {
-        return new Vector2f(s * x, s * y);
+    public Vector2f scaled(double s) {
+        return new Vector2f((float)s * x, (float)s * y);
     }
 
     public Vector2f inverse() {

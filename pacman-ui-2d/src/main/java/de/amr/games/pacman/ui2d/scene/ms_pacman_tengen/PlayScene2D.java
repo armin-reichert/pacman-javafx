@@ -48,8 +48,6 @@ import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
  */
 public class PlayScene2D extends GameScene2D implements CameraControlledGameScene {
 
-    static final int CAM_DELAY_BEFORE_MOVE_TICKS = 90;
-
     private final List<GameAction> actions = List.of(
         GlobalGameActions2D.CHEAT_EAT_ALL,
         GlobalGameActions2D.CHEAT_ADD_LIVES,
@@ -94,8 +92,6 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public void init() {
-        camMaxY = Integer.MIN_VALUE;
-        camMinY = Integer.MAX_VALUE;
     }
 
     @Override
@@ -136,46 +132,35 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         double halfWorldHeight = 0.5 * TS * worldHeightTiles;
         double speed = 0.015;
         double y = lerp(cam.getTranslateY(), scaled(msPacMan.posY() - halfWorldHeight), speed);
-        cam.setTranslateY(clamp(y, minCamY(world), maxCamY(world)));
-        captureCameraExtrema();
+        cam.setTranslateY(clamp(y, topCameraY(world), bottomCameraY(world)));
     }
 
-    private double minCamY(GameWorld world) {
+    private void initCamDelay(int ticks) {
+        camDelay = ticks;
+        cam.setTranslateY(topCameraY(context.game().world())); // set camera to top position
+    }
+
+    private double topCameraY(GameWorld world) {
         int worldHeightTiles = context.worldSizeInTiles(world, ARCADE_MAP_TILE_SIZE).y();
         double halfWorldHeight = 0.5 * TS * worldHeightTiles;
-        if (worldHeightTiles > 36) {
-            return -halfWorldHeight - scaled(30);
-        }
         if (worldHeightTiles <= 30) {
             return -halfWorldHeight - scaled(2);
+        } else if (worldHeightTiles <= 41) {
+            return -halfWorldHeight - scaled(15);
+        } else {
+            return -halfWorldHeight - scaled(30);
         }
-        return -halfWorldHeight - scaled(15);
     }
 
-    private double maxCamY(GameWorld world) {
+    private double bottomCameraY(GameWorld world) {
         int worldHeightTiles = context.worldSizeInTiles(world, ARCADE_MAP_TILE_SIZE).y();
         double halfWorldHeight = 0.5 * TS * worldHeightTiles;
-        if (worldHeightTiles > 36) {
-            return halfWorldHeight + scaled(25);
-        }
         if (worldHeightTiles <= 30) {
             return halfWorldHeight - scaled(15);
-        }
-        return halfWorldHeight + scaled(6);
-    }
-
-    //TODO remove again later
-    private int camMaxY, camMinY;
-
-    private void captureCameraExtrema() {
-        int y = (int) cam.getTranslateY();
-        if (y > camMaxY) {
-            camMaxY = y;
-            Logger.debug("New camera max y: {}", y);
-        }
-        if (y < camMinY) {
-            camMinY = y;
-            Logger.debug("New camera min y: {}", y);
+        } else if (worldHeightTiles <= 41) {
+            return halfWorldHeight + scaled(6);
+        } else {
+            return halfWorldHeight + scaled(25);
         }
     }
 
@@ -286,17 +271,16 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     @Override
     public void onGameStateEntry(GameState state) {
         switch (state) {
-            case STARTING_GAME -> {
-                context.sounds().stopAll();
-                cam.setTranslateY(minCamY(context.game().world()));
-                camDelay = CAM_DELAY_BEFORE_MOVE_TICKS;
-            }
-            case LEVEL_COMPLETE, PACMAN_DYING -> context.sounds().stopAll();
+            //TOD check this. GameState can publish an event to stop all sounds.
+            case STARTING_GAME, LEVEL_COMPLETE, PACMAN_DYING -> context.sounds().stopAll();
             case GAME_OVER -> {
                 context.sounds().stopAll();
                 context.sounds().playGameOverSound();
             }
             default -> {}
+        }
+        if (state == GameState.STARTING_GAME) {
+            initCamDelay(30);
         }
     }
 
@@ -318,9 +302,10 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     @Override
     public void onLevelCreated(GameEvent e) {
         context.updateRenderer();
-        Vector2f size = size();
-        canvas.setWidth(scaled(size.x()));
-        canvas.setHeight(scaled(size.y()));
+        Vector2f canvasSize = size().scaled(scaling());
+        canvas.setWidth(canvasSize.x());
+        canvas.setHeight(canvasSize.y());
+        initCamDelay(90);
     }
 
     @Override
