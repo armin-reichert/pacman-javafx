@@ -179,9 +179,12 @@ public enum GlobalGameActions2D implements GameAction {
             context.sounds().stopAll();
             context.currentGameScene().ifPresent(GameScene::end);
             context.game().setPlaying(false);
+
+            //TODO check this
             TengenMsPacManGame tengenMsPacManGame = (TengenMsPacManGame) context.game();
             tengenMsPacManGame.setCanStartGame(true);
-            context.gameController().changeState(GameState.WAITING_FOR_START); // shows Tengen settings scene
+
+            context.gameController().changeState(GameState.WAITING_FOR_START);
         }
     },
 

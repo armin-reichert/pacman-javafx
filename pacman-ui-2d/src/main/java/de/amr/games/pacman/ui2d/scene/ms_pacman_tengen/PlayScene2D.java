@@ -19,6 +19,7 @@ import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Pos;
 import javafx.scene.*;
@@ -35,9 +36,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
-import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_TILE_SIZE;
-import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
-import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 
@@ -47,6 +46,8 @@ import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
  * @author Armin Reichert
  */
 public class PlayScene2D extends GameScene2D implements CameraControlledGameScene {
+
+    static final double RADIUS_FACTOR = 0.4;
 
     private final List<GameAction> actions = List.of(
         GlobalGameActions2D.CHEAT_EAT_ALL,
@@ -92,6 +93,8 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public void init() {
+        canvas.widthProperty().bind(Bindings.createDoubleBinding(() -> scaled(size().x()), scalingProperty()));
+        canvas.heightProperty().bind(Bindings.createDoubleBinding(() -> scaled(size().y()), scalingProperty()));
     }
 
     @Override
@@ -115,53 +118,33 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             context.game().pac().setImmune(PY_IMMUNITY.get());
             updatePlaySceneSound();
         }
-        updateCameraPosition();
+        updateCamera();
     }
 
-    private void updateCameraPosition() {
-        if (camDelay > 0) {
-            --camDelay;
-            return;
-        }
+    private double cameraRadius() {
+        return 0.5 * scaled(size().y());
+    }
+
+    private void updateCamera() {
         GameWorld world = context.game().world();
         Pac msPacMan = context.game().pac();
         if (world == null || msPacMan == null) {
             return;
         }
-        int worldHeightTiles = context.worldSizeInTiles(world, ARCADE_MAP_TILE_SIZE).y();
-        double halfWorldHeight = 0.5 * TS * worldHeightTiles;
-        double speed = 0.015;
-        double y = lerp(cam.getTranslateY(), scaled(msPacMan.posY() - halfWorldHeight), speed);
-        cam.setTranslateY(clamp(y, topCameraY(world), bottomCameraY(world)));
+        if (camDelay > 0) {
+            --camDelay;
+            return;
+        }
+        double pacPositionY = scaled(msPacMan.posY());
+        double radius = cameraRadius();
+        double y = lerp(cam.getTranslateY(), pacPositionY - radius , 0.02);
+        y = clamp(y, -RADIUS_FACTOR * radius, RADIUS_FACTOR * radius);
+        cam.setTranslateY(y);
     }
 
     private void initCamDelay(int ticks) {
         camDelay = ticks;
-        cam.setTranslateY(topCameraY(context.game().world())); // set camera to top position
-    }
-
-    private double topCameraY(GameWorld world) {
-        int worldHeightTiles = context.worldSizeInTiles(world, ARCADE_MAP_TILE_SIZE).y();
-        double halfWorldHeight = 0.5 * TS * worldHeightTiles;
-        if (worldHeightTiles <= 30) {
-            return -halfWorldHeight - scaled(2);
-        } else if (worldHeightTiles <= 41) {
-            return -halfWorldHeight - scaled(15);
-        } else {
-            return -halfWorldHeight - scaled(30);
-        }
-    }
-
-    private double bottomCameraY(GameWorld world) {
-        int worldHeightTiles = context.worldSizeInTiles(world, ARCADE_MAP_TILE_SIZE).y();
-        double halfWorldHeight = 0.5 * TS * worldHeightTiles;
-        if (worldHeightTiles <= 30) {
-            return halfWorldHeight - scaled(15);
-        } else if (worldHeightTiles <= 41) {
-            return halfWorldHeight + scaled(6);
-        } else {
-            return halfWorldHeight + scaled(25);
-        }
+        cam.setTranslateY(-RADIUS_FACTOR * cameraRadius());
     }
 
     @Override
@@ -187,7 +170,17 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         drawSceneContent(renderer);
         if (debugInfoPy.get()) {
             drawDebugInfo(renderer);
+            drawCameraPosition(renderer);
         }
+    }
+
+    private void drawCameraPosition(GameRenderer renderer) {
+        Color color = Color.YELLOW;
+        Font font = Font.font("Sans", FontWeight.BLACK, (int)scaled(6));
+        String text = "Cam Y: %.2f (radius=%.0f)".formatted(cam.getTranslateY(), cameraRadius());
+        renderer.drawText(text, color, font, 0, 30);
+        renderer.drawText(text, color, font, 0, 0.5 * size().y());
+        renderer.drawText(text, color, font, 0, size().y() - 30);
     }
 
     @Override
@@ -302,9 +295,6 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     @Override
     public void onLevelCreated(GameEvent e) {
         context.updateRenderer();
-        Vector2f canvasSize = size().scaled(scaling());
-        canvas.setWidth(canvasSize.x());
-        canvas.setHeight(canvasSize.y());
         initCamDelay(90);
     }
 
