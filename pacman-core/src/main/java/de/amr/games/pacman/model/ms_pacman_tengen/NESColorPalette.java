@@ -1,9 +1,10 @@
 package de.amr.games.pacman.model.ms_pacman_tengen;
 
-public class MsPacManPaletteColors {
+// Color palette as shown in "Video Options" of Mesen emulator
+// Not sure if this is NES or game-specific
+public class NESColorPalette {
 
-    // as seen in "Video Options" of Mesen emulator
-    public static final String[] PALETTE = {
+    public static final String[] COLORS = {
         // 00, 01, 02, 03, 04, 05, 06, 07
         "666666", "002a88", "1412a7", "3b00a4", "5c007e", "6e0040", "6c0600", "561d00",
 
@@ -30,6 +31,6 @@ public class MsPacManPaletteColors {
     };
 
     public static String c(int index) {
-        return PALETTE[index];
+        return COLORS[index];
     }
 }

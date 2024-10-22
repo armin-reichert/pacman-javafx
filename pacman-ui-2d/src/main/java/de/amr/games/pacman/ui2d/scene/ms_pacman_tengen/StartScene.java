@@ -91,45 +91,45 @@ public class StartScene extends GameScene2D {
 
         // Players (not implemented)
         y += 3 * TS;
-        drawArrowIfSelected(renderer, OPTION_PLAYERS, y);
+        drawArrowIfSelected(renderer, OPTION_PLAYERS, y, font);
         renderer.drawText("TYPE", LABEL_COLOR, font, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, font, COL_LABEL + 4 * TS + 4, y);
         renderer.drawText("1 PLAYER", VALUE_COLOR, font, COL_LABEL + 6 * TS  , y);
 
         // Pac-Booster
         y += 3 * TS;
-        drawArrowIfSelected(renderer, OPTION_PAC_BOOSTER, y);
+        drawArrowIfSelected(renderer, OPTION_PAC_BOOSTER, y, font);
         renderer.drawText("PAC BOOSTER", LABEL_COLOR, font, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, font, COL_COLON, y);
         renderer.drawText(pacBoosterText(tengenGame.pacBoosterMode()), VALUE_COLOR, font, COL_VALUE, y);
 
         // Game difficulty
         y += 3 * TS;
-        drawArrowIfSelected(renderer, OPTION_DIFFICULTY, y);
+        drawArrowIfSelected(renderer, OPTION_DIFFICULTY, y, font);
         renderer.drawText("GAME DIFFICULTY", LABEL_COLOR, font, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, font, COL_COLON, y);
         renderer.drawText(tengenGame.difficulty().name(), VALUE_COLOR, font, COL_VALUE, y);
 
         // Maze (type) selection
         y += 3 * TS;
-        drawArrowIfSelected(renderer, OPTION_MAZE_SELECTION, y);
+        drawArrowIfSelected(renderer, OPTION_MAZE_SELECTION, y, font);
         renderer.drawText("MAZE SELECTION", LABEL_COLOR, font, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, font, COL_COLON, y);
         renderer.drawText(tengenGame.mapCategory().name(), VALUE_COLOR, font, COL_VALUE, y);
 
         // Starting level number
         y += 3 * TS;
-        drawArrowIfSelected(renderer, OPTION_STARTING_LEVEL, y);
+        drawArrowIfSelected(renderer, OPTION_STARTING_LEVEL, y, font);
         renderer.drawText("STARTING LEVEL", LABEL_COLOR, font, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, font, COL_COLON, y);
         renderer.drawText(String.valueOf(tengenGame.startingLevel()), VALUE_COLOR, font, COL_VALUE + TS, y);
 
         y += 3 * TS;
-        drawCenteredText(renderer, "MOVE ARROW WITH CURSOR KEYS", LABEL_COLOR, font, y);
+        drawCenteredText(renderer, "MOVE ARROW WITH CURSOR KEYS", font, y);
         y += TS;
-        drawCenteredText(renderer, "CHOOSE OPTIONS WITH TAB", LABEL_COLOR, font, y);
+        drawCenteredText(renderer, "CHOOSE OPTIONS WITH TAB", font, y);
         y += TS;
-        drawCenteredText(renderer, "PRESS ENTER TO START GAME", LABEL_COLOR, font, y);
+        drawCenteredText(renderer, "PRESS ENTER TO START GAME", font, y);
 
         y += 4;
         drawBabyBlueBar(renderer, y);
@@ -154,15 +154,14 @@ public class StartScene extends GameScene2D {
         };
     }
 
-    private void drawCenteredText(GameRenderer renderer, String text, Color color, Font font, double y) {
+    private void drawCenteredText(GameRenderer renderer, String text, Font font, double y) {
         double sceneWidth = size().x();
         double x = 0.5 * (sceneWidth - text.length() * TS); // assume fixed font of size TS
-        renderer.drawText(text, color, font, x, y);
+        renderer.drawText(text, LABEL_COLOR, font, x, y);
     }
 
-    private void drawArrowIfSelected(GameRenderer renderer, int option, double y) {
+    private void drawArrowIfSelected(GameRenderer renderer, int option, double y, Font font) {
         if (selectedOption == option) {
-            Font font = renderer.scaledArcadeFont(TS);
             renderer.drawText("-", LABEL_COLOR, font, COL_ARROW, y);
             renderer.drawText(">", LABEL_COLOR, font, COL_ARROW + 3, y);
         }
@@ -191,7 +190,7 @@ public class StartScene extends GameScene2D {
                 case OPTION_PAC_BOOSTER    -> selectNextPacBoosterValue();
                 case OPTION_DIFFICULTY     -> selectNextDifficultyValue();
                 case OPTION_MAZE_SELECTION -> selectNextMazeSelectionValue();
-                case OPTION_STARTING_LEVEL -> selectNextStartingLevelValue(MAX_STARTING_LEVEL);
+                case OPTION_STARTING_LEVEL -> selectNextStartingLevelValue();
                 default -> {}
             }
         }
@@ -226,9 +225,9 @@ public class StartScene extends GameScene2D {
         resetIdleTimer();
     }
 
-    private void selectNextStartingLevelValue(int maxValue) {
+    private void selectNextStartingLevelValue() {
         int current = tengenGame.startingLevel();
-        int next = (current < maxValue) ? current + 1 : 1;
+        int next = (current < MAX_STARTING_LEVEL) ? current + 1 : 1;
         tengenGame.setStartingLevel(next);
         playChangeOptionValueSound();
         resetIdleTimer();

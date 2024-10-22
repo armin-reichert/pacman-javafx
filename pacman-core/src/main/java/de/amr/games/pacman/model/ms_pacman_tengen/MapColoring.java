@@ -2,7 +2,7 @@ package de.amr.games.pacman.model.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 
-import static de.amr.games.pacman.model.ms_pacman_tengen.MsPacManPaletteColors.c;
+import static de.amr.games.pacman.model.ms_pacman_tengen.NESColorPalette.c;
 
 //TODO: Colors come from a non-original sprite sheet and are not correct
 // Some colors have been corrected using the Mesen NES emulator
