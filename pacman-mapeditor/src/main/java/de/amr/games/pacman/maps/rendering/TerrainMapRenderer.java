@@ -27,7 +27,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
     static final double OUTER_WALL_WIDTH = 5;
     static final double OUTER_WALL_FILLING_WIDTH = 2;
-    static final double OBSTACLE_STROKE_WIDTH = 1.5;
+    static final double OBSTACLE_STROKE_WIDTH = 1.0;
 
     public DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
 
