@@ -262,14 +262,14 @@ public class TengenMsPacManGame extends GameModel {
 
     private WorldMap currentMap(int levelNumber) {
         return switch (mapCategory) {
-            case ARCADE -> getArcadeMap(levelNumber);
-            case STRANGE -> strangeLevels.get(levelNumber - 1);
-            case MINI -> getMiniMap(levelNumber);
-            case BIG -> getBigMap(levelNumber);
+            case ARCADE -> getArcadeMapInLevel(levelNumber);
+            case STRANGE -> strangeLevels.get(levelNumber - 1); // TODO
+            case MINI -> getMiniMapInLevel(levelNumber);
+            case BIG -> getBigMapInLevel(levelNumber);
         };
     }
 
-    private WorldMap getArcadeMap(int levelNumber) {
+    private WorldMap getArcadeMapInLevel(int levelNumber) {
         return switch (levelNumber) {
             case 1,2         -> coloredMap(arcadeMaps, 1, TengenMapColorSchemes.PINK_DARKRED);
             case 3,4,5       -> coloredMap(arcadeMaps, 2, TengenMapColorSchemes.LIGHTBLUE_WHITE_YELLOW);
@@ -287,7 +287,7 @@ public class TengenMsPacManGame extends GameModel {
     /**
      * From this <a href="https://www.youtube.com/watch?v=cD0oGudVpbw">YouTube video</a>.
      */
-    private WorldMap getMiniMap(int levelNumber) {
+    private WorldMap getMiniMapInLevel(int levelNumber) {
         return switch (levelNumber) {
             case 1  -> coloredMap(nonArcadeMaps, 34, TengenMapColorSchemes.PINK_DARKRED);
             case 2  -> coloredMap(nonArcadeMaps, 35, TengenMapColorSchemes.LIGHTBLUE_WHITE_YELLOW);
@@ -335,7 +335,7 @@ public class TengenMsPacManGame extends GameModel {
     /**
      * From this <a href="https://www.youtube.com/watch?v=NoImGoSAL7A">YouTube video</a>.
      */
-    private WorldMap getBigMap(int levelNumber) {
+    private WorldMap getBigMapInLevel(int levelNumber) {
         return switch (levelNumber) {
             // 1-5
             case 1  -> coloredMap(nonArcadeMaps, 19, TengenMapColorSchemes.ROSE_RED);
