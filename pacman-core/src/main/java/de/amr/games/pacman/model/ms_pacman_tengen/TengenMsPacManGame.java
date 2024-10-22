@@ -9,6 +9,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.*;
@@ -212,9 +213,9 @@ public class TengenMsPacManGame extends GameModel {
         return maps;
     }
 
-    private static void addMap(int mapNumber, List<WorldMap> sourceMaps, List<WorldMap> targetMaps, TengenMapColorSchemes mapColoring) {
+    private static void addMap(int mapNumber, List<WorldMap> sourceMaps, List<WorldMap> targetMaps, MapColorScheme colorScheme) {
         WorldMap map = new WorldMap(sourceMaps.get(mapNumber - 1));
-        map.setColorScheme(mapColoring.colorScheme());
+        map.setColorScheme(colorScheme);
         targetMaps.add(map);
     }
 
