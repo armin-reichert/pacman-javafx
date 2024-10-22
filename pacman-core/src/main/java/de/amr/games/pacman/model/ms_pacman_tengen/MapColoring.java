@@ -8,15 +8,15 @@ import static de.amr.games.pacman.model.ms_pacman_tengen.NESColorPalette.c;
 // Some colors have been corrected using the Mesen NES emulator
 public enum MapColoring {
     BLACK_WHITE_GREEN(c(0x0f), c(0x20), c(0x20), "007b8c"),
-    BLACK_WHITE_YELLOW("000000", c(0x20), c(0x20), "bdbd00"),
+    BLACK_WHITE_YELLOW("000000", c(0x20), c(0x20), c(0x28)),
     BLACK_DARKBLUE("000000", "00298c", "00298c", c(0x20)),
-    BLUE_WHITE_YELLOW("4242ff", c(0x20), c(0x20), "bdbd00"),
-    BLUE2_WHITE("3b00a4", c(0x20), c(0x20), c(0x20)),
-    BLUE_YELLOW("002a88", "e4e594", "e4e594", c(0x20)),
+    BLUE_WHITE_YELLOW("4242ff", c(0x20), c(0x20), c(0x28)),
+    BLUE_WHITE(c(0x03), c(0x20), c(0x20), c(0x20)),
+    BLUE_YELLOW(c(0x01), c(0x38), c(0x38), c(0x20)),
     BROWN_WHITE("522100", c(0x20), c(0x20), c(0x20)),
     BROWN2_WHITE("994e00", c(0x20), c(0x20), c(0x20)),
-    GRAY_WHITE_YELLOW("adadad", c(0x20), c(0x20), "bdbd00"),
-    GREEN_WHITE_YELLOW("109400", c(0x20), c(0x20), "bdbd00"),
+    GRAY_WHITE_YELLOW("adadad", c(0x20), c(0x20), c(0x28)),
+    GREEN_WHITE_YELLOW("109400", c(0x20), c(0x20), c(0x28)),
     GREEN_WHITE_WHITE("398400", c(0x20), c(0x20), c(0x20)),
     GREEN_WHITE_VIOLET("00424a", c(0x20), c(0x20), "9c18ce"),
     LIGHTBLUE_WHITE_YELLOW("64b0ff", c(0x20), c(0x20), "bcbe00"),
@@ -32,9 +32,9 @@ public enum MapColoring {
     ROSE_RED("ffcec6", "b5217b", "b5217b", c(0x20)),
     VIOLET_PINK("9c18ce", "ff6bce", c(0x20), c(0x20)),
     VIOLET_WHITE("5a007b", c(0x20), c(0x20), c(0x20)),
-    VIOLET_WHITE_YELLOW("7329ff", c(0x20), c(0x20), "bdbd00"),
+    VIOLET_WHITE_YELLOW(c(0x13), c(0x20), c(0x20), c(0x28)),
     VIOLET_WHITE_GREEN("c673ff", c(0x20), c(0x20), "42de84"),
-    YELLOW_WHITE_GREEN("bdbd00", c(0x20), c(0x20), "5ae731");
+    YELLOW_WHITE_GREEN(c(0x28), c(0x20), c(0x20), "5ae731");
 
     MapColoring(String fill, String stroke, String door, String pellet) {
         colorScheme = new MapColorScheme(fill, stroke, door, pellet);
