@@ -46,61 +46,6 @@ public class TengenMsPacManGame extends GameModel {
         return units / 32f;
     }
 
-    /**
-     * From this <a href="https://www.youtube.com/watch?v=cD0oGudVpbw">YouTube video</a>.
-     */
-    private static List<WorldMap> createMiniLevels(List<WorldMap> nonArcadeMaps) {
-        var maps = new ArrayList<WorldMap>();
-
-        // 1-5
-        addMap(34, nonArcadeMaps, maps, MapColoring.PINK_DARKRED);
-        addMap(35, nonArcadeMaps, maps, MapColoring.LIGHTBLUE_WHITE_YELLOW);
-        addMap(34, nonArcadeMaps, maps, MapColoring.ORANGE_WHITE);
-        addMap(35, nonArcadeMaps, maps, MapColoring.BLUE_YELLOW);
-        addMap(36, nonArcadeMaps, maps, MapColoring.PINK_YELLOW);
-
-        // 6-10
-        addMap(34, nonArcadeMaps, maps, MapColoring.PINK_DARKRED);
-        addMap(35, nonArcadeMaps, maps, MapColoring.BROWN2_WHITE);
-        addMap(36, nonArcadeMaps, maps, MapColoring.VIOLET_WHITE_YELLOW);
-        addMap(30, nonArcadeMaps, maps, MapColoring.BLACK_WHITE_YELLOW);
-        addMap(34, nonArcadeMaps, maps, MapColoring.BLACK_DARKBLUE);
-
-        // 11-15
-        addMap(35, nonArcadeMaps, maps, MapColoring.VIOLET_PINK);
-        addMap(36, nonArcadeMaps, maps, MapColoring.RED_WHITE);
-        addMap(30, nonArcadeMaps, maps, MapColoring.GREEN_WHITE_WHITE);
-        addMap(34, nonArcadeMaps, maps, MapColoring.YELLOW_WHITE_GREEN);
-        addMap(35, nonArcadeMaps, maps, MapColoring.GREEN_WHITE_YELLOW);
-
-        // 16-20
-        addMap(36, nonArcadeMaps, maps, MapColoring.KHAKI_WHITE);
-        addMap(30, nonArcadeMaps, maps, MapColoring.PINK_WHITE);
-        addMap(16, nonArcadeMaps, maps, MapColoring.BLUE_WHITE_YELLOW);
-        addMap(16, nonArcadeMaps, maps, MapColoring.BROWN_WHITE);
-        addMap(30, nonArcadeMaps, maps, MapColoring.RED_PINK);
-
-        // 21-25
-        addMap(36, nonArcadeMaps, maps, MapColoring.BLACK_WHITE_GREEN);
-        addMap(35, nonArcadeMaps, maps, MapColoring.GREEN_WHITE_WHITE);
-        addMap(34, nonArcadeMaps, maps, MapColoring.GREEN_WHITE_VIOLET);
-        addMap(37, nonArcadeMaps, maps, MapColoring.VIOLET_WHITE_GREEN);
-        addMap(34, nonArcadeMaps, maps, MapColoring.GRAY_WHITE_YELLOW);
-
-        // 26-30
-        addMap(35, nonArcadeMaps, maps, MapColoring.BLUE_WHITE);
-        addMap(36, nonArcadeMaps, maps, MapColoring.VIOLET_WHITE);
-        addMap(30, nonArcadeMaps, maps, MapColoring.BROWN2_WHITE);
-        addMap(28, nonArcadeMaps, maps, MapColoring.BROWN2_WHITE);
-        addMap(35, nonArcadeMaps, maps, MapColoring.BLUE_YELLOW);
-
-        // 31-32
-        addMap(36, nonArcadeMaps, maps, MapColoring.BLACK_WHITE_GREEN);
-        addMap(37, nonArcadeMaps, maps, MapColoring.RED_PINK);
-
-        return maps;
-    }
-
     private static List<WorldMap> createArcadeLevels(List<WorldMap> arcadeMaps) {
         var maps = new ArrayList<WorldMap>();
 
@@ -153,6 +98,61 @@ public class TengenMsPacManGame extends GameModel {
         addMap(3, arcadeMaps, maps, MapColoring.BLACK_WHITE_YELLOW);
         addMap(3, arcadeMaps, maps, MapColoring.BLACK_WHITE_YELLOW);
         addMap(3, arcadeMaps, maps, MapColoring.BLACK_WHITE_YELLOW);
+
+        return maps;
+    }
+
+    /**
+     * From this <a href="https://www.youtube.com/watch?v=cD0oGudVpbw">YouTube video</a>.
+     */
+    private static List<WorldMap> createMiniLevels(List<WorldMap> nonArcadeMaps) {
+        var maps = new ArrayList<WorldMap>();
+
+        // 1-5
+        addMap(34, nonArcadeMaps, maps, MapColoring.PINK_DARKRED);
+        addMap(35, nonArcadeMaps, maps, MapColoring.LIGHTBLUE_WHITE_YELLOW);
+        addMap(34, nonArcadeMaps, maps, MapColoring.ORANGE_WHITE);
+        addMap(35, nonArcadeMaps, maps, MapColoring.BLUE_YELLOW);
+        addMap(36, nonArcadeMaps, maps, MapColoring.PINK_YELLOW);
+
+        // 6-10
+        addMap(34, nonArcadeMaps, maps, MapColoring.PINK_DARKRED);
+        addMap(35, nonArcadeMaps, maps, MapColoring.BROWN2_WHITE);
+        addMap(36, nonArcadeMaps, maps, MapColoring.VIOLET_WHITE_YELLOW);
+        addMap(30, nonArcadeMaps, maps, MapColoring.BLACK_WHITE_YELLOW);
+        addMap(34, nonArcadeMaps, maps, MapColoring.BLACK_DARKBLUE);
+
+        // 11-15
+        addMap(35, nonArcadeMaps, maps, MapColoring.VIOLET_PINK);
+        addMap(36, nonArcadeMaps, maps, MapColoring.RED_WHITE);
+        addMap(30, nonArcadeMaps, maps, MapColoring.GREEN_WHITE_WHITE);
+        addMap(34, nonArcadeMaps, maps, MapColoring.YELLOW_WHITE_GREEN);
+        addMap(35, nonArcadeMaps, maps, MapColoring.GREEN_WHITE_YELLOW);
+
+        // 16-20
+        addMap(36, nonArcadeMaps, maps, MapColoring.KHAKI_WHITE);
+        addMap(30, nonArcadeMaps, maps, MapColoring.PINK_WHITE);
+        addMap(16, nonArcadeMaps, maps, MapColoring.BLUE_WHITE_YELLOW);
+        addMap(16, nonArcadeMaps, maps, MapColoring.BROWN_WHITE);
+        addMap(30, nonArcadeMaps, maps, MapColoring.RED_PINK);
+
+        // 21-25
+        addMap(36, nonArcadeMaps, maps, MapColoring.BLACK_WHITE_GREEN);
+        addMap(35, nonArcadeMaps, maps, MapColoring.GREEN_WHITE_WHITE);
+        addMap(34, nonArcadeMaps, maps, MapColoring.GREEN_WHITE_VIOLET);
+        addMap(37, nonArcadeMaps, maps, MapColoring.VIOLET_WHITE_GREEN);
+        addMap(34, nonArcadeMaps, maps, MapColoring.GRAY_WHITE_YELLOW);
+
+        // 26-30
+        addMap(35, nonArcadeMaps, maps, MapColoring.BLUE_WHITE);
+        addMap(36, nonArcadeMaps, maps, MapColoring.VIOLET_WHITE);
+        addMap(30, nonArcadeMaps, maps, MapColoring.BROWN2_WHITE);
+        addMap(28, nonArcadeMaps, maps, MapColoring.BROWN2_WHITE);
+        addMap(35, nonArcadeMaps, maps, MapColoring.BLUE_YELLOW);
+
+        // 31-32
+        addMap(36, nonArcadeMaps, maps, MapColoring.BLACK_WHITE_GREEN);
+        addMap(37, nonArcadeMaps, maps, MapColoring.RED_PINK);
 
         return maps;
     }
@@ -327,8 +327,6 @@ public class TengenMsPacManGame extends GameModel {
     private final List<WorldMap> miniLevels;
     private final List<WorldMap> bigLevels;
 
-    private List<WorldMap> currentMapList;
-
     private MapCategory mapCategory;
     private Difficulty difficulty;
     private BoosterMode boosterMode;
@@ -407,12 +405,6 @@ public class TengenMsPacManGame extends GameModel {
 
     public void setMapCategory(MapCategory mapCategory) {
         this.mapCategory = checkNotNull(mapCategory);
-        currentMapList = switch (mapCategory) {
-            case ARCADE -> arcadeLevels;
-            case BIG -> bigLevels;
-            case MINI -> miniLevels;
-            case STRANGE -> strangeLevels;
-        };
     }
 
     public Difficulty difficulty() {
@@ -435,9 +427,18 @@ public class TengenMsPacManGame extends GameModel {
         }
     }
 
+    private WorldMap currentMap(int levelNumber) {
+        return switch (mapCategory) {
+            case ARCADE -> arcadeLevels.get(levelNumber - 1);
+            case STRANGE -> strangeLevels.get(levelNumber - 1);
+            case MINI -> miniLevels.get(levelNumber - 1);
+            case BIG -> bigLevels.get(levelNumber - 1);
+        };
+    }
+
     private int mapNumberByLevelNumber(int levelNumber) {
-        int numMaps = currentMapList.size();
-        return levelNumber <= numMaps ? levelNumber : Globals.randomInt(1, numMaps + 1);
+        //TODO after 32 levels the game should end
+        return levelNumber <= 32 ? levelNumber : Globals.randomInt(1, 33);
     }
 
     private List<WorldMap> readMaps(String pattern, int maxNumber) {
@@ -579,7 +580,7 @@ public class TengenMsPacManGame extends GameModel {
     public void buildLevel(int levelNumber) {
         this.levelNumber = levelNumber;
         mapNumber = mapNumberByLevelNumber(levelNumber);
-        WorldMap map = currentMapList.get(mapNumber - 1);
+        WorldMap map = currentMap(levelNumber);
         createWorldAndPopulation(map);
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
@@ -607,7 +608,7 @@ public class TengenMsPacManGame extends GameModel {
     public void buildDemoLevel() {
         levelNumber = 1;
         mapNumber = 1;
-        WorldMap map = currentMapList.getFirst();
+        WorldMap map = currentMap(1);
         createWorldAndPopulation(map);
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);
