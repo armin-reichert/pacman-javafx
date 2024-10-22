@@ -53,12 +53,6 @@ public class TengenMsPacManGame extends GameModel {
         return map;
     }
 
-    private static void addMap(int mapNumber, List<WorldMap> sourceMaps, List<WorldMap> targetMaps, MapColorScheme colorScheme) {
-        WorldMap map = new WorldMap(sourceMaps.get(mapNumber - 1));
-        map.setColorScheme(colorScheme);
-        targetMaps.add(map);
-    }
-
     private static boolean inRange(int n, int from, int to) {
         return from <= n && n <= to;
     }
