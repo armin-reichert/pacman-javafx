@@ -19,6 +19,7 @@ import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.model.ms_pacman_tengen.BoosterMode;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
+import de.amr.games.pacman.model.ms_pacman_tengen.NESColorPalette;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -47,20 +48,26 @@ import static java.util.function.Predicate.not;
  */
 public class TengenMsPacManGameRenderer implements GameRenderer {
 
-    // all colors picked from NES emulator
-    public static final Color TENGEN_BABY_BLUE          = Color.web("#64b0ff");
-    public static final Color TENGEN_PINK               = Color.web("#fe6ecc");
-    public static final Color TENGEN_YELLOW             = Color.web("#bcbe00");
-    public static final Color TENGEN_MARQUEE_COLOR      = Color.web("#b71e7b");
-    public static final Color TENGEN_PAC_COLOR          = TENGEN_YELLOW;
-    public static final Color TENGEN_RED_GHOST_COLOR    = Color.web("#6e0040");
-    public static final Color TENGEN_PINK_GHOST_COLOR   = TENGEN_PINK;
-    public static final Color TENGEN_CYAN_GHOST_COLOR   = Color.web("#155fd9");
-    public static final Color TENGEN_ORANGE_GHOST_COLOR = Color.web("#b53120");
+    static Color paletteColor(int index) {
+        return Color.web(NESColorPalette.c(index));
+    }
+
+    public static final Color TENGEN_BABY_BLUE          = paletteColor(0x21);
+    public static final Color TENGEN_PINK               = paletteColor(0x25);
+    public static final Color TENGEN_YELLOW             = paletteColor(0x28);
+    public static final Color TENGEN_MARQUEE_COLOR      = paletteColor(0x15);
+    public static final Color TENGEN_PAC_COLOR          = paletteColor(0x28);
+    public static final Color TENGEN_RED_GHOST_COLOR    = paletteColor(0x05);
+    public static final Color TENGEN_PINK_GHOST_COLOR   = paletteColor(0x25);
+    public static final Color TENGEN_CYAN_GHOST_COLOR   = paletteColor(0x11);
+    public static final Color TENGEN_ORANGE_GHOST_COLOR = paletteColor(0x16);
 
     // blue colors used in intro, dark to bright
     static final Color[]  SHADES_OF_BLUE = {
-        Color.rgb(0, 42, 136), Color.rgb(21, 95, 217), Color.rgb(100, 176, 255), Color.rgb(192, 223, 255)
+        paletteColor(0x01),
+        paletteColor(0x11),
+        paletteColor(0x21),
+        paletteColor(0x31)
     };
 
     static Color shadeOfBlue(long tick, int ticksPerColor) {
