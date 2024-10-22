@@ -72,17 +72,6 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     // Maze images are taken from files "arcade_mazes.png" and "non_arcade_mazes.png" via AssetStorage
 
     /**
-     * @param mapNumber number of Arcade map (1-9)
-     * @param width map width in pixels
-     * @param height map height in pixels
-     * @return map sprite in Arcade maps sprite sheet
-     */
-    private static RectArea arcadeMapSprite(int mapNumber, int width, int height) {
-        int index = mapNumber - 1;
-        return new RectArea((index % 3) * width, (index / 3) * height, width, height);
-    }
-
-    /**
      * @param mapNumber number of non-Arcade map (1-37)
      * @param width map width in pixels
      * @param height map height in pixels
@@ -242,24 +231,26 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void drawWorld(GameContext context, GameWorld world) {
-        ctx().setImageSmoothing(false);
         TengenMsPacManGame game = (TengenMsPacManGame) context.game();
         TileMap terrain = world.map().terrain();
+
         if (flashMode) {
-            // Flash mode uses vector rendering
             Color wallFillColor = Color.web(world.map().colorSchemeOrDefault().fill());
             terrainRenderer.setMapBackgroundColor(bgColor);
             terrainRenderer.setWallStrokeColor(Color.WHITE);
             terrainRenderer.setWallFillColor(blinkingOn ? Color.BLACK : wallFillColor);
             terrainRenderer.setDoorColor(Color.BLACK);
             terrainRenderer.drawMap(ctx(), terrain);
+            return;
         }
-        else if (world.map().colorScheme() != null) {
-            if (!context.game().isDemoLevel()) {
+
+        boolean useVectorRenderer = game.mapCategory() != MapCategory.ARCADE;
+        boolean isDemoLevel = context.game().isDemoLevel();
+
+        if (useVectorRenderer) {
+            if (!isDemoLevel) {
                 drawTop(terrain, game);
             }
-            // default color scheme has been overwritten, use vector rendering
-            // TODO: can we change color palette in maze image instead and use sprite renderer?
             MapColorScheme colorScheme = world.map().colorScheme();
             terrainRenderer.setMapBackgroundColor(bgColor);
             terrainRenderer.setWallStrokeColor(Color.web(colorScheme.stroke()));
@@ -268,22 +259,18 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             terrainRenderer.drawMap(ctx(), terrain);
             foodRenderer.setPelletColor(Color.web(colorScheme.pellet()));
             foodRenderer.setEnergizerColor(Color.web(colorScheme.pellet()));
-            world.map().food().tiles()
-                .filter(world::hasFoodAt)
-                .filter(not(world::isEnergizerPosition))
+            world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
                 .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
             if (blinkingOn) {
-                world.energizerTiles()
-                    .filter(world::hasFoodAt)
-                    .forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
+                world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
             }
         }
-        else {
+        else { // draw using sprite sheet
             if (mapSprite == null) {
                 Logger.error("No map sprite selected");
                 return;
             }
-            if (!context.game().isDemoLevel()) {
+            if (!isDemoLevel) {
                 drawTop(terrain, game);
             }
             // Maze #32 has this psychedelic animation effect
@@ -416,10 +403,32 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         int width  = worldMap.terrain().numCols() * TS;
         int height = (worldMap.terrain().numRows() - 5) * TS; // 3 empty rows over, 2 under maze image
         int mapNumber = game.currentMapNumber();
-        mapSprite = tengenGame.mapCategory() == MapCategory.ARCADE
-            ? new ImageArea(arcadeMazesImage, arcadeMapSprite(mapNumber, width, height))
-            : new ImageArea(nonArcadeMazesImage, nonArcadeMapSprite(mapNumber, width, height));
+        mapSprite = switch (tengenGame.mapCategory()) {
+            // we have a sprite sheet with the maps in the required color scheme (to be fixed in the sprite sheet image though)
+            case ARCADE -> arcadeMapSprite(game.levelNumber());
+            case BIG, STRANGE, MINI -> new ImageArea(nonArcadeMazesImage, nonArcadeMapSprite(mapNumber, width, height));
+        };
         Logger.info("Tengen map # {}: area: {}", mapNumber, mapSprite.area());
+    }
+
+    private ImageArea arcadeMapSprite(int levelNumber) {
+        return switch (levelNumber) {
+            case 1, 2 -> arcadeMapSprite(0, 0);
+            case 3, 4, 5 -> arcadeMapSprite(0, 1);
+            case 6, 7, 8, 9 -> arcadeMapSprite(0, 2);
+            case 10, 11, 12, 13 -> arcadeMapSprite(1, 0);
+            case 14, 15, 16, 17 -> arcadeMapSprite(1, 1);
+            case 18, 19, 20, 21 -> arcadeMapSprite(1, 2);
+            case 22, 23, 24, 25 -> arcadeMapSprite(2, 0);
+            case 26, 27, 28, 29 -> arcadeMapSprite(2, 1);
+            case 30, 31, 32 -> arcadeMapSprite(2, 2);
+            default -> arcadeMapSprite(2, 2); // should not occur
+        };
+    }
+
+    private ImageArea arcadeMapSprite(int rowIndex, int colIndex) {
+        int width = 28 * TS, height = 31 * TS;
+        return new ImageArea(arcadeMazesImage, new RectArea(colIndex * width, rowIndex * height, width, height));
     }
 
     public void drawMovingBonus(GameSpriteSheet spriteSheet, MovingBonus bonus) {

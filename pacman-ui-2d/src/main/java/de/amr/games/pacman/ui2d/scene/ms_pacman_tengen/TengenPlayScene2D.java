@@ -160,6 +160,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void draw(GameRenderer renderer) {
+        renderer.ctx().setImageSmoothing(false);
         renderer.setCanvas(canvas);
         renderer.scalingProperty().set(scaling());
         renderer.setBackgroundColor(backgroundColor());
