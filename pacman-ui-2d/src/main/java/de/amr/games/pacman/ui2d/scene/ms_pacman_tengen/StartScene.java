@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -45,6 +44,8 @@ public class StartScene extends GameScene2D {
     static final int OPTION_STARTING_LEVEL = 4;
 
     static final int NUM_OPTIONS = 5;
+
+    static final int MAX_STARTING_LEVEL = 7;
 
     private TengenMsPacManGame tengenGame;
     private int selectedOption;
@@ -124,11 +125,11 @@ public class StartScene extends GameScene2D {
         renderer.drawText(String.valueOf(tengenGame.startingLevel()), VALUE_COLOR, font, COL_VALUE + TS, y);
 
         y += 3 * TS;
-        drawCenteredText(renderer, size(), "MOVE ARROW WITH CURSOR KEYS", LABEL_COLOR, font, y);
+        drawCenteredText(renderer, "MOVE ARROW WITH CURSOR KEYS", LABEL_COLOR, font, y);
         y += TS;
-        drawCenteredText(renderer, size(), "CHOOSE OPTIONS WITH TAB", LABEL_COLOR, font, y);
+        drawCenteredText(renderer, "CHOOSE OPTIONS WITH TAB", LABEL_COLOR, font, y);
         y += TS;
-        drawCenteredText(renderer, size(), "PRESS ENTER TO START GAME", LABEL_COLOR, font, y);
+        drawCenteredText(renderer, "PRESS ENTER TO START GAME", LABEL_COLOR, font, y);
 
         y += 4;
         drawBabyBlueBar(renderer, y);
@@ -153,8 +154,9 @@ public class StartScene extends GameScene2D {
         };
     }
 
-    private void drawCenteredText(GameRenderer renderer, Vector2f sceneSize, String text, Color color, Font font, double y) {
-        double x = 0.5 * sceneSize.x() - 0.5 * text.length() * TS; // assume fixed font of size TS
+    private void drawCenteredText(GameRenderer renderer, String text, Color color, Font font, double y) {
+        double sceneWidth = size().x();
+        double x = 0.5 * (sceneWidth - text.length() * TS); // assume fixed font of size TS
         renderer.drawText(text, color, font, x, y);
     }
 
@@ -189,7 +191,7 @@ public class StartScene extends GameScene2D {
                 case OPTION_PAC_BOOSTER    -> selectNextPacBoosterValue();
                 case OPTION_DIFFICULTY     -> selectNextDifficultyValue();
                 case OPTION_MAZE_SELECTION -> selectNextMazeSelectionValue();
-                case OPTION_STARTING_LEVEL -> selectNextStartingLevelValue(7); // max value
+                case OPTION_STARTING_LEVEL -> selectNextStartingLevelValue(MAX_STARTING_LEVEL);
                 default -> {}
             }
         }
