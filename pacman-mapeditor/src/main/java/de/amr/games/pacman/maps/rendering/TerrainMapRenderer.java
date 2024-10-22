@@ -26,7 +26,7 @@ import static de.amr.games.pacman.maps.editor.TileMapUtil.TILE_SIZE;
 public class TerrainMapRenderer implements TileMapRenderer {
 
     static final double OUTER_WALL_WIDTH = 5;
-    static final double OUTER_WALL_FILLING_WIDTH = 2;
+    static final double OUTER_WALL_FILLING_WIDTH = 3;
     static final double OBSTACLE_STROKE_WIDTH = 1.0;
 
     public DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
@@ -100,7 +100,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
     // assume we always have a pair of horizontally neighbored doors
     private void drawDoor(GraphicsContext g, TileMap map, Vector2i tile, double lineWidth, Color doorColor) {
         boolean leftDoor = map.get(tile.plus(Direction.RIGHT.vector())) == Tiles.DOOR;
-        double height = TILE_SIZE * 0.2; // TODO check this
+        double height = OUTER_WALL_FILLING_WIDTH * 0.75; // TODO check this
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         double oy = y + 0.5 * (TILE_SIZE - height);
         if (leftDoor) {
