@@ -332,10 +332,6 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            if (game.levelNumber() > lastLevelNumber) {
-                GameController.it().restart(GameState.BOOT);
-                return;
-            }
             if (timer().currentTick() > 2 * GameModel.TICKS_PER_SECOND) {
                 game.blinking().tick();
                 game.ghosts().forEach(ghost -> ghost.update(game));
@@ -368,14 +364,18 @@ public enum GameState implements FsmState<GameModel> {
                 game.blinking().setStartPhase(Pulse.OFF);
                 game.blinking().restart(2 * game.numFlashes());
             } else if (timer().atSecond(12.0)) {
-                timer().restartIndefinitely();
                 game.pac().freeze();
                 game.bonus().ifPresent(Bonus::setInactive);
                 setProperty("mazeFlashing", false);
                 game.blinking().reset();
-                game.createLevel(game.levelNumber() + 1);
-                game.startLevel();
-                game.showGuys();
+                if (game.levelNumber() == lastLevelNumber) {
+                    GameController.it().restart(GameState.BOOT);
+                } else {
+                    timer().restartIndefinitely();
+                    game.createLevel(game.levelNumber() + 1);
+                    game.startLevel();
+                    game.showGuys();
+                }
             }
         }
 
