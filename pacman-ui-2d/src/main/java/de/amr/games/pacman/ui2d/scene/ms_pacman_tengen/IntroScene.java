@@ -115,7 +115,7 @@ public class IntroScene extends GameScene2D {
         switch (sceneController.state()) {
 
             case WAITING_FOR_START -> {
-                Color blue = shadeOfBlue(t, 16);
+                Color blue = shadeOfBlue(t);
                 renderer.drawText("TENGEN PRESENTS", blue, font, 9 * TS, MARQUEE_TOP_Y - TS);
                 renderer.drawSpriteScaled(MS_PAC_MAN_TITLE_SPRITE, 6 * TS, MARQUEE_TOP_Y);
                 if (t % 60 < 30) {

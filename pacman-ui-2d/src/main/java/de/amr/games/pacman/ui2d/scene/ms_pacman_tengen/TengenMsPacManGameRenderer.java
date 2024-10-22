@@ -62,18 +62,11 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     public static final Color TENGEN_CYAN_GHOST_COLOR   = paletteColor(0x11);
     public static final Color TENGEN_ORANGE_GHOST_COLOR = paletteColor(0x16);
 
-    // blue colors used in intro, dark to bright
-    static final Color[]  SHADES_OF_BLUE = {
-        paletteColor(0x01),
-        paletteColor(0x11),
-        paletteColor(0x21),
-        paletteColor(0x31)
-    };
-
-    static Color shadeOfBlue(long tick, int ticksPerColor) {
-        int ticksPerAnimation = (ticksPerColor * SHADES_OF_BLUE.length);
-        int index = (int) (tick % ticksPerAnimation) / ticksPerColor;
-        return SHADES_OF_BLUE[index];
+    // Blue colors used in intro, dark to brighter blue shade.
+    // Cycles through palette indices 0x01, 0x11, 0x21, 0x31, each frame takes 16 ticks.
+    static Color shadeOfBlue(long tick) {
+        int index = (int) (tick % 64) / 16;
+        return paletteColor(0x01 + 16*index);
     }
 
     // Maze images are taken from files "arcade_mazes.png" and "non_arcade_mazes.png" via AssetStorage
@@ -118,12 +111,12 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     public TengenMsPacManGameRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
+        arcadeMazesImage = assets.image("tengen.mazes.arcade");
+        nonArcadeMazesImage = assets.image("tengen.mazes.non_arcade");
         spriteSheet = assets.get("tengen.spritesheet");
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(bgColor);
         foodRenderer.scalingPy.bind(scalingPy);
-        arcadeMazesImage = assets.image("tengen.mazes.arcade");
-        nonArcadeMazesImage = assets.image("tengen.mazes.non_arcade");
     }
 
     @Override
@@ -420,16 +413,16 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     private ImageArea arcadeMapSprite(int levelNumber) {
         return switch (levelNumber) {
-            case 1, 2 -> arcadeMapSprite(0, 0);
-            case 3, 4, 5 -> arcadeMapSprite(0, 1);
-            case 6, 7, 8, 9 -> arcadeMapSprite(0, 2);
+            case 1, 2           -> arcadeMapSprite(0, 0);
+            case 3, 4, 5        -> arcadeMapSprite(0, 1);
+            case 6, 7, 8, 9     -> arcadeMapSprite(0, 2);
             case 10, 11, 12, 13 -> arcadeMapSprite(1, 0);
             case 14, 15, 16, 17 -> arcadeMapSprite(1, 1);
             case 18, 19, 20, 21 -> arcadeMapSprite(1, 2);
             case 22, 23, 24, 25 -> arcadeMapSprite(2, 0);
             case 26, 27, 28, 29 -> arcadeMapSprite(2, 1);
-            case 30, 31, 32 -> arcadeMapSprite(2, 2);
-            default -> arcadeMapSprite(2, 2); // should not occur
+            case 30, 31, 32     -> arcadeMapSprite(2, 2);
+            default             -> arcadeMapSprite(2, 2); // should not happen
         };
     }
 

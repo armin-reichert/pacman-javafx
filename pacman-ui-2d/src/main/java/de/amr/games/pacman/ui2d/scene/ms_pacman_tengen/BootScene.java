@@ -89,7 +89,7 @@ public class BootScene extends GameScene2D {
             renderer.ctx().fillRect(0, 0, renderer.canvas().getWidth(), renderer.canvas().getHeight());
         } else {
             Font font = renderer.scaledArcadeFont(TS);
-            renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t, 16), font, 8 * TS, tengenPresentsY);
+            renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t), font, 8 * TS, tengenPresentsY);
             renderer.drawAnimatedEntity(ghost);
         }
     }
