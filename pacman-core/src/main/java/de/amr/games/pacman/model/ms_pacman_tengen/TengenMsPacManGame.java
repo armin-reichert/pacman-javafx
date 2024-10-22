@@ -53,61 +53,6 @@ public class TengenMsPacManGame extends GameModel {
         return map;
     }
 
-    /**
-     * From this <a href="https://www.youtube.com/watch?v=NoImGoSAL7A">YouTube video</a>.
-     */
-    private static List<WorldMap> createBigLevels(List<WorldMap> nonArcadeMaps) {
-        var maps = new ArrayList<WorldMap>();
-
-        // 1-5
-        addMap(19, nonArcadeMaps, maps, TengenMapColorSchemes.ROSE_RED);
-        addMap(20, nonArcadeMaps, maps, TengenMapColorSchemes.LIGHTBLUE_WHITE_YELLOW);
-        addMap(21, nonArcadeMaps, maps, TengenMapColorSchemes.ORANGE_WHITE);
-        addMap(19, nonArcadeMaps, maps, TengenMapColorSchemes.BLUE_WHITE_YELLOW);
-        addMap(20, nonArcadeMaps, maps, TengenMapColorSchemes.PINK_YELLOW);
-
-        // 6-10
-        addMap(21, nonArcadeMaps, maps, TengenMapColorSchemes.ROSE_RED);
-        addMap(22, nonArcadeMaps, maps, TengenMapColorSchemes.ORANGE_WHITE);
-        addMap(23, nonArcadeMaps, maps, TengenMapColorSchemes.VIOLET_WHITE_YELLOW);
-        addMap(17, nonArcadeMaps, maps, TengenMapColorSchemes.BLACK_WHITE_YELLOW);
-        addMap(10, nonArcadeMaps, maps, TengenMapColorSchemes.BLACK_DARKBLUE);
-
-        // 11-15
-        addMap(23, nonArcadeMaps, maps, TengenMapColorSchemes.PINK_ROSE);
-        addMap(21, nonArcadeMaps, maps, TengenMapColorSchemes.PINK_WHITE);
-        addMap(22, nonArcadeMaps, maps, TengenMapColorSchemes.GREEN_WHITE_WHITE);
-        addMap(14, nonArcadeMaps, maps, TengenMapColorSchemes.VIOLET_WHITE_GREEN);
-        addMap(20, nonArcadeMaps, maps, TengenMapColorSchemes.GREEN_WHITE_YELLOW);
-
-        // 16-20
-        addMap(19, nonArcadeMaps, maps, TengenMapColorSchemes.KHAKI_WHITE);
-        addMap(10, nonArcadeMaps, maps, TengenMapColorSchemes.PINK_WHITE);
-        addMap(17, nonArcadeMaps, maps, TengenMapColorSchemes.BLUE_WHITE_YELLOW);
-        addMap(10, nonArcadeMaps, maps, TengenMapColorSchemes.BROWN_WHITE);
-        addMap(19, nonArcadeMaps, maps, TengenMapColorSchemes.PINK_ROSE);
-
-        // 21-25
-        addMap(26, nonArcadeMaps, maps, TengenMapColorSchemes.BLACK_WHITE_GREEN);
-        addMap(21, nonArcadeMaps, maps, TengenMapColorSchemes.GREEN_WHITE_WHITE);
-        addMap(22, nonArcadeMaps, maps, TengenMapColorSchemes.GREEN_WHITE_VIOLET);
-        addMap(23, nonArcadeMaps, maps, TengenMapColorSchemes.VIOLET_WHITE_GREEN);
-        addMap(14, nonArcadeMaps, maps, TengenMapColorSchemes.GRAY_WHITE_YELLOW);
-
-        // 26-30
-        addMap(25, nonArcadeMaps, maps, TengenMapColorSchemes.VIOLET_WHITE);
-        addMap(14, nonArcadeMaps, maps, TengenMapColorSchemes.PINK_WHITE);
-        addMap(23, nonArcadeMaps, maps, TengenMapColorSchemes.GREEN_WHITE_WHITE);
-        addMap(26, nonArcadeMaps, maps, TengenMapColorSchemes.LIGHTBLUE_WHITE_YELLOW);
-        addMap(20, nonArcadeMaps, maps, TengenMapColorSchemes.PINK_YELLOW);
-
-        // 31-32
-        addMap(25, nonArcadeMaps, maps, TengenMapColorSchemes.PINK_ROSE);
-        addMap(33, nonArcadeMaps, maps, TengenMapColorSchemes.PINK_ROSE);
-
-        return maps;
-    }
-
     private static void addMap(int mapNumber, List<WorldMap> sourceMaps, List<WorldMap> targetMaps, MapColorScheme colorScheme) {
         WorldMap map = new WorldMap(sourceMaps.get(mapNumber - 1));
         map.setColorScheme(colorScheme);
@@ -222,7 +167,6 @@ public class TengenMsPacManGame extends GameModel {
     private final List<WorldMap> nonArcadeMaps;
 
     private final List<WorldMap> strangeLevels;
-    private final List<WorldMap> bigLevels;
 
     private MapCategory mapCategory;
     private Difficulty difficulty;
@@ -246,7 +190,6 @@ public class TengenMsPacManGame extends GameModel {
 
         // TODO refac
         strangeLevels = nonArcadeMaps.stream().filter(this::isStrangeMap).toList();
-        bigLevels = createBigLevels(nonArcadeMaps);
 
         setMapCategory(MapCategory.ARCADE);
         setPacBooster(BoosterMode.OFF);
@@ -328,7 +271,7 @@ public class TengenMsPacManGame extends GameModel {
             case ARCADE -> getArcadeMap(levelNumber);
             case STRANGE -> strangeLevels.get(levelNumber - 1);
             case MINI -> getMiniMap(levelNumber);
-            case BIG -> bigLevels.get(levelNumber - 1);
+            case BIG -> getBigMap(levelNumber);
         };
     }
 
@@ -394,6 +337,62 @@ public class TengenMsPacManGame extends GameModel {
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
     }
+
+    /**
+     * From this <a href="https://www.youtube.com/watch?v=NoImGoSAL7A">YouTube video</a>.
+     */
+    private WorldMap getBigMap(int levelNumber) {
+        return switch (levelNumber) {
+            // 1-5
+            case 1  -> coloredMap(nonArcadeMaps, 19, TengenMapColorSchemes.ROSE_RED);
+            case 2  -> coloredMap(nonArcadeMaps, 20, TengenMapColorSchemes.LIGHTBLUE_WHITE_YELLOW);
+            case 3  -> coloredMap(nonArcadeMaps, 21, TengenMapColorSchemes.ORANGE_WHITE);
+            case 4  -> coloredMap(nonArcadeMaps, 19, TengenMapColorSchemes.BLUE_WHITE_YELLOW);
+            case 5  -> coloredMap(nonArcadeMaps, 20, TengenMapColorSchemes.PINK_YELLOW);
+
+            // 6-10
+            case 6  -> coloredMap(nonArcadeMaps, 21, TengenMapColorSchemes.ROSE_RED);
+            case 7  -> coloredMap(nonArcadeMaps, 22, TengenMapColorSchemes.ORANGE_WHITE);
+            case 8  -> coloredMap(nonArcadeMaps, 23, TengenMapColorSchemes.VIOLET_WHITE_YELLOW);
+            case 9  -> coloredMap(nonArcadeMaps, 17, TengenMapColorSchemes.BLACK_WHITE_YELLOW);
+            case 10 -> coloredMap(nonArcadeMaps, 10, TengenMapColorSchemes.BLACK_DARKBLUE);
+
+            // 11-15
+            case 11 -> coloredMap(nonArcadeMaps, 23, TengenMapColorSchemes.PINK_ROSE);
+            case 12 -> coloredMap(nonArcadeMaps, 21, TengenMapColorSchemes.PINK_WHITE);
+            case 13 -> coloredMap(nonArcadeMaps, 22, TengenMapColorSchemes.GREEN_WHITE_WHITE);
+            case 14 -> coloredMap(nonArcadeMaps, 14, TengenMapColorSchemes.VIOLET_WHITE_GREEN);
+            case 15 -> coloredMap(nonArcadeMaps, 20, TengenMapColorSchemes.GREEN_WHITE_YELLOW);
+
+            // 16-20
+            case 16 -> coloredMap(nonArcadeMaps, 19, TengenMapColorSchemes.KHAKI_WHITE);
+            case 17 -> coloredMap(nonArcadeMaps, 10, TengenMapColorSchemes.PINK_WHITE);
+            case 18 -> coloredMap(nonArcadeMaps, 17, TengenMapColorSchemes.BLUE_WHITE_YELLOW);
+            case 19 -> coloredMap(nonArcadeMaps, 10, TengenMapColorSchemes.BROWN_WHITE);
+            case 20 -> coloredMap(nonArcadeMaps, 19, TengenMapColorSchemes.PINK_ROSE);
+
+            // 21-25
+            case 21 -> coloredMap(nonArcadeMaps, 26, TengenMapColorSchemes.BLACK_WHITE_GREEN);
+            case 22 -> coloredMap(nonArcadeMaps, 21, TengenMapColorSchemes.GREEN_WHITE_WHITE);
+            case 23 -> coloredMap(nonArcadeMaps, 22, TengenMapColorSchemes.GREEN_WHITE_VIOLET);
+            case 24 -> coloredMap(nonArcadeMaps, 23, TengenMapColorSchemes.VIOLET_WHITE_GREEN);
+            case 25 -> coloredMap(nonArcadeMaps, 14, TengenMapColorSchemes.GRAY_WHITE_YELLOW);
+
+            // 26-30
+            case 26 -> coloredMap(nonArcadeMaps, 25, TengenMapColorSchemes.VIOLET_WHITE);
+            case 27 -> coloredMap(nonArcadeMaps, 14, TengenMapColorSchemes.PINK_WHITE);
+            case 28 -> coloredMap(nonArcadeMaps, 23, TengenMapColorSchemes.GREEN_WHITE_WHITE);
+            case 29 -> coloredMap(nonArcadeMaps, 26, TengenMapColorSchemes.LIGHTBLUE_WHITE_YELLOW);
+            case 30 -> coloredMap(nonArcadeMaps, 20, TengenMapColorSchemes.PINK_YELLOW);
+
+            // 31-32
+            case 31 -> coloredMap(nonArcadeMaps, 25, TengenMapColorSchemes.PINK_ROSE);
+            case 32 -> coloredMap(nonArcadeMaps, 33, TengenMapColorSchemes.PINK_ROSE);
+
+            default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
+        };
+    }
+
 
     private int mapNumberByLevelNumber(int levelNumber) {
         //TODO after 32 levels the game should end
