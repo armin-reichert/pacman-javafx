@@ -103,6 +103,12 @@ public class TengenMsPacManGame extends GameModel {
         return maps;
     }
 
+    private static WorldMap coloredMap(List<WorldMap> maps, int mapNumber, MapColorScheme colorScheme) {
+        WorldMap map = maps.get(mapNumber - 1);
+        map.setColorScheme(colorScheme);
+        return map;
+    }
+
     /**
      * From this <a href="https://www.youtube.com/watch?v=cD0oGudVpbw">YouTube video</a>.
      */
@@ -323,7 +329,7 @@ public class TengenMsPacManGame extends GameModel {
     private static final int[] HUNTING_TICKS_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
     private static final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
 
-    private final List<WorldMap> arcadeLevels;
+    private final List<WorldMap> arcadeMaps;
     private final List<WorldMap> strangeLevels;
     private final List<WorldMap> miniLevels;
     private final List<WorldMap> bigLevels;
@@ -345,8 +351,7 @@ public class TengenMsPacManGame extends GameModel {
         scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman_tengen.xml"));
         scoreManager.setExtraLifeScore(10_000);
 
-        List<WorldMap> arcadeMaps = readMaps(ARCADE_MAP_PATTERN, ARCADE_MAP_COUNT);
-        arcadeLevels = createArcadeLevels(arcadeMaps);
+        arcadeMaps = readMaps(ARCADE_MAP_PATTERN, ARCADE_MAP_COUNT);
         //TODO
         List<WorldMap> nonArcadeMaps = readMaps(NON_ARCADE_MAP_PATTERN, NON_ARCADE_MAP_COUNT);
         strangeLevels = nonArcadeMaps.stream().filter(this::isStrangeMap).toList();
@@ -430,12 +435,29 @@ public class TengenMsPacManGame extends GameModel {
 
     private WorldMap currentMap(int levelNumber) {
         return switch (mapCategory) {
-            case ARCADE -> arcadeLevels.get(levelNumber - 1);
+            case ARCADE -> getArcadeMap(levelNumber);
             case STRANGE -> strangeLevels.get(levelNumber - 1);
             case MINI -> miniLevels.get(levelNumber - 1);
             case BIG -> bigLevels.get(levelNumber - 1);
         };
     }
+
+
+    private WorldMap getArcadeMap(int levelNumber) {
+        return switch (levelNumber) {
+            case 1,2         -> coloredMap(arcadeMaps, 1, TengenMapColorSchemes.PINK_DARKRED);
+            case 3,4,5       -> coloredMap(arcadeMaps, 2, TengenMapColorSchemes.LIGHTBLUE_WHITE_YELLOW);
+            case 6,7,8,9     -> coloredMap(arcadeMaps, 3, TengenMapColorSchemes.ORANGE_WHITE);
+            case 10,11,12,13 -> coloredMap(arcadeMaps, 4, TengenMapColorSchemes.BLUE_YELLOW);
+            case 14,15,16,17 -> coloredMap(arcadeMaps, 3, TengenMapColorSchemes.PINK_YELLOW);
+            case 18,19,20,21 -> coloredMap(arcadeMaps, 4, TengenMapColorSchemes.PINK_DARKRED);
+            case 22,23,24,25 -> coloredMap(arcadeMaps, 3, TengenMapColorSchemes.ORANGE_WHITE);
+            case 26,27,28,29 -> coloredMap(arcadeMaps, 4, TengenMapColorSchemes.VIOLET_WHITE);
+            case 30,31,32    -> coloredMap(arcadeMaps, 3, TengenMapColorSchemes.BLACK_WHITE_YELLOW);
+            default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
+        };
+    }
+
 
     private int mapNumberByLevelNumber(int levelNumber) {
         //TODO after 32 levels the game should end
