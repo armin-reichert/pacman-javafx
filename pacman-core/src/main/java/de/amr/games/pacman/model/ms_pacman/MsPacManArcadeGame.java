@@ -109,7 +109,7 @@ public class MsPacManArcadeGame extends GameModel {
         initialLives = 3;
         scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman.xml"));
         scoreManager.setExtraLifeScore(10_000);
-        for (int number = 1; number <= 6; ++number) {
+        for (int number = 1; number <= 4; ++number) {
             maps.add(new WorldMap(getClass().getResource(MAP_PATTERN.formatted(number))));
         }
         Logger.info("{} maps loaded ({})", maps.size(), variant());
@@ -141,8 +141,7 @@ public class MsPacManArcadeGame extends GameModel {
     }
 
     /**
-     * <p>In Ms. Pac-Man, there are 4 maps and 6 mazes. Let (num_map, num_maze) denote the combination
-     * map #num_map and maze #num_maze.
+     * <p>In Ms. Pac-Man, there are 4 maps and 6 color schemes.
      * </p>
      * <ul>
      * <li>Levels 1-2: (1, 1): pink maze, white dots
@@ -158,13 +157,14 @@ public class MsPacManArcadeGame extends GameModel {
      * <p>
      */
     private void selectMapAndColorScheme(int levelNumber) {
-        int mapNumber = switch (levelNumber) {
+        currentMapNumber = switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
             case 6, 7, 8, 9 -> 3;
             case 10, 11, 12, 13 -> 4;
             default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
         };
+        currentMap = maps.get(currentMapNumber - 1);
         int colorSchemeNumber = switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
@@ -172,8 +172,6 @@ public class MsPacManArcadeGame extends GameModel {
             case 10, 11, 12, 13 -> 4;
             default -> (levelNumber - 14) % 8 < 4 ? 5 : 6;
         };
-        currentMapNumber = mapNumber;
-        currentMap = maps.get(mapNumber - 1);
         currentMapColorScheme = MAP_COLOR_SCHEMES[colorSchemeNumber - 1];
     }
 
