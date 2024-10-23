@@ -428,23 +428,14 @@ public abstract class GameModel {
         return !eventLog.killedGhosts.isEmpty();
     }
 
-    //TODO check this, is too complicated
     public void doHuntingStep() {
         if (huntingControl.isCurrentPhaseOver()) {
-            Logger.info("Hunting phase {} ({}) ends, tick={}",
-                huntingControl.phaseIndex(), huntingControl.phaseType(), huntingControl.currentTick());
+            Logger.info("Hunting phase {} ({}) ends, tick={}", huntingControl.phaseIndex(), huntingControl.phaseType(), huntingControl.currentTick());
             ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
-
-            // TODO move into hunting control class
-            int nextPhaseIndex = huntingControl.phaseIndex() + 1;
-            huntingControl.startHuntingPhase(nextPhaseIndex,
-                // alternate between CHASING and SCATTERING
-                huntingControl.phaseType() == HuntingControl.PhaseType.SCATTERING
-                    ? HuntingControl.PhaseType.CHASING : HuntingControl.PhaseType.SCATTERING,
-                huntingControl.huntingTicks(currentLevelNumber, nextPhaseIndex));
-            return;
+            huntingControl.startNextPhase(currentLevelNumber);
+        } else {
+            huntingControl.update();
         }
-        huntingControl.update();
 
         blinking.tick();
         gateKeeper.unlockGhosts();

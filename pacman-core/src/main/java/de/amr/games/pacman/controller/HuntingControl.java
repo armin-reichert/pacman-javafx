@@ -72,14 +72,22 @@ public abstract class HuntingControl {
         startHuntingPhase(0, PhaseType.SCATTERING, huntingTicks(levelNumber, 0));
     }
 
-    public void startHuntingPhase(int phaseIndex, PhaseType type, long duration) {
+    public void startNextPhase(int levelNumber) {
+        int nextPhaseIndex = phaseIndex + 1;
+        // alternate between CHASING and SCATTERING
+        PhaseType nextPhaseType = phaseType == PhaseType.SCATTERING
+            ? PhaseType.CHASING : PhaseType.SCATTERING;
+        startHuntingPhase(nextPhaseIndex, nextPhaseType, huntingTicks(levelNumber, nextPhaseIndex));
+    }
+
+    private void startHuntingPhase(int phaseIndex, PhaseType type, long duration) {
         this.phaseIndex = checkHuntingPhaseIndex(phaseIndex);
         phaseType = type;
         timer.reset(duration);
         timer.start();
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds) started. {}",
-                this.phaseIndex, phaseType,
-                timer.duration(), (float) timer.duration() / GameModel.TICKS_PER_SECOND, timer);
+            this.phaseIndex, phaseType,
+            timer.duration(), (float) timer.duration() / GameModel.TICKS_PER_SECOND, timer);
     }
 
     public int phaseIndex() {
@@ -101,5 +109,4 @@ public abstract class HuntingControl {
             ? Optional.of(phaseIndex / 2)
             : Optional.empty();
     }
-
 }
