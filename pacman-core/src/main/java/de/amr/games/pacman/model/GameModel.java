@@ -99,7 +99,6 @@ public abstract class GameModel {
 
     protected GameModel(GameVariant gameVariant) {
         this.gameVariant = checkNotNull(gameVariant);
-        this.huntingControl = new HuntingControl("HuntingControl-" + getClass().getSimpleName());
     }
 
     public abstract boolean canStartNewGame();
@@ -124,7 +123,6 @@ public abstract class GameModel {
     protected abstract void setActorBaseSpeed(int levelNumber);
     protected abstract void initScore(int levelNumber);
     protected abstract byte computeBonusSymbol();
-    protected abstract long huntingTicks(int levelNumber, int phaseIndex);
     protected abstract boolean isPacManKillingIgnoredInDemoLevel();
     protected abstract boolean isBonusReached();
     protected abstract boolean isLevelCounterEnabled();
@@ -176,9 +174,12 @@ public abstract class GameModel {
         return blinking;
     }
 
+    //TODO move into hunting control class
     public void startHunting() {
-        huntingControl.startHuntingPhase(0, HuntingControl.PhaseType.SCATTERING,
-            huntingTicks(currentLevelNumber, 0));
+        huntingControl.startHuntingPhase(
+            0,
+            HuntingControl.PhaseType.SCATTERING,
+            huntingControl.huntingTicks(currentLevelNumber, 0));
     }
 
     public HuntingControl huntingControl() {
@@ -441,12 +442,14 @@ public abstract class GameModel {
             Logger.info("Hunting phase {} ({}) ends, tick={}",
                 huntingControl.phaseIndex(), huntingControl.phaseType(), huntingControl.currentTick());
             ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
+
+            // TODO move into hunting control class
             int nextPhaseIndex = huntingControl.phaseIndex() + 1;
             huntingControl.startHuntingPhase(nextPhaseIndex,
                 // alternate between CHASING and SCATTERING
                 huntingControl.phaseType() == HuntingControl.PhaseType.SCATTERING
                     ? HuntingControl.PhaseType.CHASING : HuntingControl.PhaseType.SCATTERING,
-                huntingTicks(currentLevelNumber, nextPhaseIndex));
+                huntingControl.huntingTicks(currentLevelNumber, nextPhaseIndex));
             return;
         }
         huntingControl.update();

@@ -28,7 +28,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.games.pacman.controller.HuntingControl.checkHuntingPhaseIndex;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
@@ -113,11 +112,6 @@ public class PacManArcadeGame extends GameModel {
         np(15, 32), np(12, 32), np(3, 29), np(6, 23)
     };
 
-    // Ticks of scatter and chasing phases, -1 = forever
-    protected static final int[] HUNTING_TICKS_1     = {420, 1200, 420, 1200, 300,  1200, 300, -1};
-    protected static final int[] HUNTING_TICKS_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
-    protected static final int[] HUNTING_TICKS_5     = {300, 1200, 300, 1200, 300, 62262,   1, -1};
-
     // Note: First level number is 1
     protected static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {42, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
     // Bonus value = factor * 100
@@ -133,11 +127,31 @@ public class PacManArcadeGame extends GameModel {
         super(gameVariant);
         this.userDir = userDir;
         initialLives = 3;
+
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScore(10_000);
+
         worldMap = new WorldMap(getClass().getResource("/de/amr/games/pacman/maps/pacman.world"));
         // just to be sure this property is set
         worldMap.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, formatTile(v2i(HOUSE_X, HOUSE_Y)));
+
+        huntingControl = new HuntingControl("HuntingControl-" + getClass().getSimpleName()) {
+            // Ticks of scatter and chasing phases, -1 = forever
+            private static final int[] HUNTING_TICKS_1     = {420, 1200, 420, 1200, 300,  1200, 300, -1};
+            private static final int[] HUNTING_TICKS_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
+            private static final int[] HUNTING_TICKS_5     = {300, 1200, 300, 1200, 300, 62262,   1, -1};
+
+            @Override
+            public long huntingTicks(int levelNumber, int phaseIndex) {
+                checkHuntingPhaseIndex(phaseIndex);
+                long ticks = switch (levelNumber) {
+                    case 1 -> HUNTING_TICKS_1[phaseIndex];
+                    case 2, 3, 4 -> HUNTING_TICKS_2_3_4[phaseIndex];
+                    default -> HUNTING_TICKS_5[phaseIndex];
+                };
+                return ticks != -1 ? ticks : TickTimer.INDEFINITE;
+            }
+        };
     }
 
     protected LevelData levelData(int levelNumber) {
@@ -172,17 +186,6 @@ public class PacManArcadeGame extends GameModel {
     @Override
     public int intermissionNumberAfterLevel() {
         return currentLevelNumber > 0 ? levelData(currentLevelNumber).intermissionNumber() : 0;
-    }
-
-    @Override
-    public long huntingTicks(int levelNumber, int phaseIndex) {
-        checkHuntingPhaseIndex(phaseIndex);
-        long ticks = switch (levelNumber) {
-            case 1 -> HUNTING_TICKS_1[phaseIndex];
-            case 2, 3, 4 -> HUNTING_TICKS_2_3_4[phaseIndex];
-            default -> HUNTING_TICKS_5[phaseIndex];
-        };
-        return ticks != -1 ? ticks : TickTimer.INDEFINITE;
     }
 
     @Override

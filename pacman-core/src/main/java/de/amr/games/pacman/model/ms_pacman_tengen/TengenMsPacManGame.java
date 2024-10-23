@@ -151,10 +151,6 @@ public class TengenMsPacManGame extends GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
-    //TODO: I have no idea about the timing in Tengen, use Ms. Pac-Man Arcade values for now
-    private static final int[] HUNTING_TICKS_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
-    private static final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
-
     private final List<WorldMap> arcadeMaps;
     private final List<WorldMap> miniMaps;
     private final List<WorldMap> strangeOrBigMaps;
@@ -178,6 +174,18 @@ public class TengenMsPacManGame extends GameModel {
         arcadeMaps = readMaps(ARCADE_MAP_PATTERN, ARCADE_MAP_COUNT);
         miniMaps = readMaps(MINI_MAP_PATTERN, MINI_MAP_COUNT);
         strangeOrBigMaps = readMaps(STRANGE_OR_BIG_MAP_PATTERN, STRANGE_OR_BIG_MAP_COUNT);
+
+        huntingControl = new HuntingControl("HuntingControl-" + getClass().getSimpleName()) {
+            //TODO: I have no idea about the timing in Tengen, use Ms. Pac-Man Arcade values for now
+            private static final int[] HUNTING_TICKS_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
+            private static final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
+
+            @Override
+            public long huntingTicks(int levelNumber, int phaseIndex) {
+                long ticks = levelNumber < 5 ? HUNTING_TICKS_1_TO_4[phaseIndex] : HUNTING_TICKS_5_PLUS[phaseIndex];
+                return ticks != -1 ? ticks : TickTimer.INDEFINITE;
+            }
+        };
 
         setMapCategory(MapCategory.ARCADE);
         setPacBooster(BoosterMode.OFF);
@@ -401,12 +409,6 @@ public class TengenMsPacManGame extends GameModel {
             }
         }
         return maps;
-    }
-
-    @Override
-    public long huntingTicks(int levelNumber, int phaseIndex) {
-        long ticks = levelNumber < 5 ? HUNTING_TICKS_1_TO_4[phaseIndex] : HUNTING_TICKS_5_PLUS[phaseIndex];
-        return ticks != -1 ? ticks : TickTimer.INDEFINITE;
     }
 
     @Override

@@ -10,7 +10,7 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-public class HuntingControl {
+public abstract class HuntingControl {
 
     public static byte checkHuntingPhaseIndex(int phaseIndex) {
         if (phaseIndex < 0 || phaseIndex > 7) {
@@ -30,6 +30,8 @@ public class HuntingControl {
         phaseIndex = 0;
         phaseType = PhaseType.SCATTERING;
     }
+
+    public abstract long huntingTicks(int levelNumber, int phaseIndex);
 
     public void update() {
         timer.tick();
