@@ -30,7 +30,7 @@ public class NESColorPalette {
         "e4e594", "cfef96", "bdf4ab", "b3f3cc", "b5ebf2", "b8b8b8", "000000", "000000",
     };
 
-    public static String c(int index) {
+    public static String color(int index) {
         return COLORS[index];
     }
 }

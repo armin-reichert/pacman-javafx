@@ -49,7 +49,7 @@ import static java.util.function.Predicate.not;
 public class TengenMsPacManGameRenderer implements GameRenderer {
 
     static Color paletteColor(int index) {
-        return Color.web(NESColorPalette.c(index));
+        return Color.web(NESColorPalette.color(index));
     }
 
     public static final Color TENGEN_BABY_BLUE          = paletteColor(0x21);
