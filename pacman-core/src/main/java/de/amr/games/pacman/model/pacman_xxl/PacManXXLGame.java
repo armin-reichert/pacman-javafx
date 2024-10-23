@@ -74,43 +74,49 @@ public class PacManXXLGame extends PacManArcadeGame {
 
     @Override
     public void buildLevel(int levelNumber) {
-        this.levelNumber = levelNumber;
-        WorldMap map = selectMap(levelNumber);
-        if (standardMaps.contains(map)) {
-            // try using random color scheme, TODO: avoid repetitions
-            int index = randomInt(0, COLOR_SCHEMES.length);
-            map.setColorScheme(COLOR_SCHEMES[index]);
-        }
-        Logger.info("Map selection mode is {}", mapSelectionMode);
-        Logger.info("Selected map URL is {}", map.url());
-        Logger.info("Selected map colors: {}", map.colorScheme());
-        createWorldAndPopulation(map);
+        this.currentLevelNumber = levelNumber;
+        selectMapAndColorScheme(levelNumber);
+        createWorldAndPopulation(currentMap);
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+        Logger.info("Map selection mode is {}", mapSelectionMode);
+        Logger.info("Selected map URL is {}", currentMap.url());
+        Logger.info("Selected map colors: {}", currentMapColorScheme);
     }
 
-    private WorldMap selectMap(int levelNumber) {
+    private void selectMapAndColorScheme(int levelNumber) {
         switch (mapSelectionMode) {
             case NO_CUSTOM_MAPS -> {
-                return levelNumber <= standardMaps.size()
+                currentMap = levelNumber <= standardMaps.size()
                     ? standardMaps.get(levelNumber - 1)
                     : standardMaps.get(randomInt(0, standardMaps.size()));
             }
             case CUSTOM_MAPS_FIRST -> {
                 List<WorldMap> maps = new ArrayList<>(customMapsSortedByFile());
                 maps.addAll(standardMaps);
-                return levelNumber <= maps.size()
+                currentMap = levelNumber <= maps.size()
                     ? maps.get(levelNumber - 1)
                     : maps.get(randomInt(0, maps.size()));
             }
             case ALL_RANDOM -> {
                 List<WorldMap> maps = new ArrayList<>(customMapsSortedByFile());
                 maps.addAll(standardMaps);
-                return maps.get(randomInt(0, maps.size()));
+                currentMap = maps.get(randomInt(0, maps.size()));
             }
         }
-        throw new IllegalStateException("Illegal map selection mode " + mapSelectionMode);
+        if (standardMaps.contains(currentMap)) {
+            // try using random color scheme, TODO: avoid repetitions
+            int index = randomInt(0, COLOR_SCHEMES.length);
+            currentMapColorScheme = COLOR_SCHEMES[index];
+        } else {
+            currentMapColorScheme = new MapColorScheme(
+                currentMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_FILL, "000000"),
+                currentMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_STROKE, "0000ff"),
+                currentMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_DOOR, "00ffff"),
+                currentMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_FOOD, "ffffff")
+            );
+        }
     }
 
     @Override

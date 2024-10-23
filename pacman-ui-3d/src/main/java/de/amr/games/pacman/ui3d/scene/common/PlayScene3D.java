@@ -161,7 +161,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     @Override
     public void update() {
         var game = context.game();
-        if (game.levelNumber() == 0 || game.world() == null) {
+        if (game.currentLevelNumber() == 0 || game.world() == null) {
             Logger.warn("Cannot update 3D play scene, no game level available");
             return;
         }
@@ -307,7 +307,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         replaceGameLevel3D(true);
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
-        showLevelTestMessage("BONI LEVEL" + context.game().levelNumber());
+        showLevelTestMessage("BONI LEVEL" + context.game().currentLevelNumber());
         PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
     }
 
@@ -315,7 +315,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         replaceGameLevel3D(true);
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
-        showLevelTestMessage("PREVIEW LEVEL " + context.game().levelNumber());
+        showLevelTestMessage("PREVIEW LEVEL " + context.game().currentLevelNumber());
         PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
     }
 
@@ -400,17 +400,17 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     @Override
     public void onLevelStarted(GameEvent event) {
         addLevelCounter();
-        if (context.game().levelNumber() == 1
+        if (context.game().currentLevelNumber() == 1
                 || context.gameState() == GameState.TESTING_LEVEL_BONI
                 || context.gameState() == GameState.TESTING_LEVEL_TEASERS) {
             switch (context.gameState()) {
                 case TESTING_LEVEL_BONI -> {
                     replaceGameLevel3D(false);
-                    showLevelTestMessage("BONI LEVEL " + context.game().levelNumber());
+                    showLevelTestMessage("BONI LEVEL " + context.game().currentLevelNumber());
                 }
                 case TESTING_LEVEL_TEASERS -> {
                     replaceGameLevel3D(false);
-                    showLevelTestMessage("PREVIEW LEVEL " + context.game().levelNumber());
+                    showLevelTestMessage("PREVIEW LEVEL " + context.game().currentLevelNumber());
                 }
                 default -> {
                     if (!context.game().isDemoLevel()){
@@ -473,7 +473,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.root().translateYProperty().subtract(3.5 * TS));
         scores3D.translateZProperty().bind(level3D.root().translateZProperty().subtract(3 * TS));
-        Logger.info("3D game level {} created.", context.game().levelNumber());
+        Logger.info("3D game level {} created.", context.game().currentLevelNumber());
     }
 
     private void showLevelTestMessage(String message) {
@@ -521,7 +521,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     //TODO is there are better way to do this e.g. using a Timeline?
     private Animation levelCompleteAnimation(int numFlashes) {
-        String message = pickerLevelComplete.next() + "\n\n" + context.locText("level_complete", context.game().levelNumber());
+        String message = pickerLevelComplete.next() + "\n\n" + context.locText("level_complete", context.game().currentLevelNumber());
         return new SequentialTransition(
               now(() -> {
                   perspectiveNamePy.unbind();

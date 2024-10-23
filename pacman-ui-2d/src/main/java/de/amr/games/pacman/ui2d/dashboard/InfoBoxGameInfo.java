@@ -24,7 +24,7 @@ public class InfoBoxGameInfo extends InfoBox {
         labeledValue("Demo Level", ifGameScenePresent(gameScene -> context.game().isDemoLevel() ? "Yes" : "No"));
         labeledValue("Game State", () -> "%s".formatted(context.gameState()));
         labeledValue("State Timer", this::stateTimerInfo);
-        labeledValue("Level Number", ifLevelPresent(level -> "%d".formatted(context.game().levelNumber())));
+        labeledValue("Level Number", ifLevelPresent(level -> "%d".formatted(context.game().currentLevelNumber())));
         labeledValue("World Map", ifWorldPresent(world -> {
             String url = world.map().url().toString();
             return url.substring(url.lastIndexOf("/") + 1);

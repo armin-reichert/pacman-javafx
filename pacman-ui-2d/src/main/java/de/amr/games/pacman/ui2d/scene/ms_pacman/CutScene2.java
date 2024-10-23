@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
-import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
@@ -90,7 +89,7 @@ public class CutScene2 extends GameScene2D {
         r.drawClapperBoard(renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(msPacMan);
         renderer.drawAnimatedEntity(pacMan);
-        renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
+        renderer.drawLevelCounter(context.game().currentLevelNumber(), context.game().isDemoLevel(),
             context.game().levelCounter(), size());
     }
 

@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
@@ -30,6 +31,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -111,8 +113,8 @@ public class GameLevel3D {
 
         wallStrokeMaterialPy.bind(wallStrokeColorPy.map(Ufx::coloredMaterial));
 
-        buildWorld3D(context.game().world(), context.assets());
-        addFood3D(context.game().world(), context.assets());
+        buildWorld3D(context.game().world(), context.assets(), context.game().currentMapColorScheme());
+        addFood3D(context.game().world(), context.assets(), context.game().currentMapColorScheme());
 
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
         root.getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
@@ -151,12 +153,12 @@ public class GameLevel3D {
         }
     }
 
-    private void buildWorld3D(GameWorld world, AssetStorage assets) {
+    private void buildWorld3D(GameWorld world, AssetStorage assets, MapColorScheme colorScheme) {
         //TODO check this
         obstacleHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
-        wallStrokeColorPy.set(Color.web(world.map().colorSchemeOrDefault().stroke()));
-        wallFillColorPy.set(Color.web(world.map().colorSchemeOrDefault().fill()));
+        wallStrokeColorPy.set(Color.web(colorScheme.stroke()));
+        wallFillColorPy.set(Color.web(colorScheme.fill()));
 
         TileMap terrain = world.map().terrain();
         Box floor = createFloor(assets.get("floor_textures"), terrain.numCols() * TS - 1, terrain.numRows() * TS - 1);
@@ -206,9 +208,9 @@ public class GameLevel3D {
             : textures.get(textureName);
     }
 
-    private void addFood3D(GameWorld world, AssetStorage assets) {
+    private void addFood3D(GameWorld world, AssetStorage assets, MapColorScheme colorScheme) {
         TileMap foodMap = world.map().food();
-        Color foodColor = Color.web(world.map().colorSchemeOrDefault().pellet());
+        Color foodColor = Color.web(colorScheme.pellet());
         Material foodMaterial = coloredMaterial(foodColor);
         Model3D pelletModel3D = assets.get("model3D.pellet");
         foodMap.tiles().filter(world::hasFoodAt).forEach(tile -> {

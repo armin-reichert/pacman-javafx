@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
-import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
@@ -104,7 +103,7 @@ public class CutScene3 extends GameScene2D {
         renderer.drawAnimatedEntity(pacMan);
         renderer.drawSprite(stork, storkAnimation.currentSprite());
         renderer.drawSprite(bag, bagOpen ? MsPacManGameSpriteSheet.JUNIOR_PAC_SPRITE : MsPacManGameSpriteSheet.BLUE_BAG_SPRITE);
-        renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
+        renderer.drawLevelCounter(context.game().currentLevelNumber(), context.game().isDemoLevel(),
             context.game().levelCounter(), size());
     }
 

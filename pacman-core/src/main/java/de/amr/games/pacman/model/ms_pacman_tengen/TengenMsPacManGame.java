@@ -164,11 +164,7 @@ public class TengenMsPacManGame extends GameModel {
     private BoosterMode boosterMode;
     private boolean boosterActive;
     private byte startingLevel; // 1-7
-    private int mapNumber;
     private boolean canStartGame;
-
-    private WorldMap currentMap;
-    private MapColorScheme currentMapColorScheme;
 
     private LevelData currentLevelData;
 
@@ -408,21 +404,6 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     @Override
-    public int currentMapNumber() {
-        return mapNumber;
-    }
-
-    @Override
-    public WorldMap currentMap() {
-        return currentMap;
-    }
-
-    @Override
-    public MapColorScheme currentMapColorScheme() {
-        return currentMapColorScheme;
-    }
-
-    @Override
     public long huntingTicks(int levelNumber, int phaseIndex) {
         long ticks = levelNumber < 5 ? HUNTING_TICKS_1_TO_4[phaseIndex] : HUNTING_TICKS_5_PLUS[phaseIndex];
         return ticks != -1 ? ticks : TickTimer.INDEFINITE;
@@ -521,7 +502,7 @@ public class TengenMsPacManGame extends GameModel {
             return;
         }
         boosterActive = true;
-        pac.setBaseSpeed(pacBaseSpeedInLevel(levelNumber) + pacDifficultySpeedDelta(difficulty) + pacBoosterSpeedDelta());
+        pac.setBaseSpeed(pacBaseSpeedInLevel(currentLevelNumber) + pacDifficultySpeedDelta(difficulty) + pacBoosterSpeedDelta());
         pac.selectAnimation(ANIM_PAC_MUNCHING_BOOSTER);
         Logger.info("Ms. Pac-Man booster activated, base speed set to {0.00} px/s", pac.baseSpeed());
     }
@@ -532,15 +513,15 @@ public class TengenMsPacManGame extends GameModel {
             return;
         }
         boosterActive = false;
-        pac.setBaseSpeed(pacBaseSpeedInLevel(levelNumber) + pacDifficultySpeedDelta(difficulty));
+        pac.setBaseSpeed(pacBaseSpeedInLevel(currentLevelNumber) + pacDifficultySpeedDelta(difficulty));
         pac.selectAnimation(ANIM_PAC_MUNCHING);
         Logger.info("Ms. Pac-Man booster deactivated, base speed set to {0.00} px/s", pac.baseSpeed());
     }
 
     @Override
     public void buildLevel(int levelNumber) {
-        this.levelNumber = levelNumber;
-        mapNumber = levelNumber;
+        this.currentLevelNumber = levelNumber;
+        currentMapNumber = levelNumber;
         selectMap(levelNumber);
         createWorldAndPopulation(currentMap);
         pac.setAutopilot(new RuleBasedPacSteering(this));
@@ -567,8 +548,8 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public void buildDemoLevel() {
-        levelNumber = 1;
-        mapNumber = 1;
+        currentLevelNumber = 1;
+        currentMapNumber = 1;
         selectMap(1);
         createWorldAndPopulation(currentMap);
         pac.setAutopilot(new RuleBasedPacSteering(this));
@@ -608,7 +589,7 @@ public class TengenMsPacManGame extends GameModel {
      */
     @Override
     protected boolean isLevelCounterEnabled() {
-        return levelNumber < 8 && !demoLevel;
+        return currentLevelNumber < 8 && !demoLevel;
     }
 
     @Override
@@ -630,8 +611,8 @@ public class TengenMsPacManGame extends GameModel {
     public byte computeBonusSymbol() {
         //TODO: I have no idea yet how Tengen does this
         byte maxBonus = mapCategory == MapCategory.STRANGE ? BONUS_FLOWER : BONUS_BANANA;
-        if (levelNumber - 1 <= maxBonus) {
-            return (byte) (levelNumber - 1);
+        if (currentLevelNumber - 1 <= maxBonus) {
+            return (byte) (currentLevelNumber - 1);
         }
         return (byte) randomInt(0, maxBonus);
     }
@@ -743,7 +724,7 @@ public class TengenMsPacManGame extends GameModel {
      */
     private float huntingSpeed(Ghost ghost) {
         float speed = ghost.baseSpeed();
-        if (difficulty == Difficulty.NORMAL && levelNumber >= 5) {
+        if (difficulty == Difficulty.NORMAL && currentLevelNumber >= 5) {
             int dotsLeft = world.uneatenFoodCount();
             byte increase = 0; // units
             if (dotsLeft <= 7) {

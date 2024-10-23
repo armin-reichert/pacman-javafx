@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -58,7 +57,7 @@ public class StartScene extends GameScene2D {
         r.drawMsPacManMidwayCopyright(t(6), t(28), ARCADE_RED, r.scaledArcadeFont(TS));
         r.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS),
             2 * TS, size().y() - 2);
-        r.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
+        r.drawLevelCounter(context.game().currentLevelNumber(), context.game().isDemoLevel(),
             context.game().levelCounter(), size());
     }
 }

@@ -75,7 +75,7 @@ public abstract class GameModel {
     protected final GateKeeper     gateKeeper = new GateKeeper(this);
     protected final ScoreManager   scoreManager = new ScoreManager(this);
     protected File                 userDir;
-    protected int                  levelNumber; // 1=first level
+    protected int currentLevelNumber; // 1=first level
     protected boolean              demoLevel;
     protected long                 levelStartTime;
     protected boolean              playing;
@@ -91,6 +91,10 @@ public abstract class GameModel {
     protected Bonus                bonus;
     protected GameWorld            world;
 
+    protected int                  currentMapNumber;
+    protected WorldMap             currentMap;
+    protected MapColorScheme       currentMapColorScheme;
+
     protected SimulationStepEventLog eventLog;
 
     protected GameModel(GameVariant gameVariant) {
@@ -101,9 +105,6 @@ public abstract class GameModel {
     public abstract boolean canStartNewGame();
     public abstract void onGameEnded();
 
-    public abstract int currentMapNumber();
-    public abstract WorldMap currentMap();
-    public abstract MapColorScheme currentMapColorScheme();
     public abstract void activateNextBonus();
     public abstract int intermissionNumberAfterLevel();
     public abstract float ghostSpeedReturningToHouse(Ghost ghost);
@@ -132,7 +133,7 @@ public abstract class GameModel {
     public final GameVariant variant() { return gameVariant; }
 
     protected void clearLevel() {
-        levelNumber = 0;
+        currentLevelNumber = 0;
         levelStartTime = 0;
         huntingControl.reset(TickTimer.INDEFINITE);
         numGhostsKilledInLevel = 0;
@@ -177,7 +178,7 @@ public abstract class GameModel {
 
     public void startHunting() {
         huntingControl.startHuntingPhase(0, HuntingControl.PhaseType.SCATTERING,
-            huntingTicks(levelNumber, 0));
+            huntingTicks(currentLevelNumber, 0));
     }
 
     public HuntingControl huntingControl() {
@@ -196,9 +197,22 @@ public abstract class GameModel {
             : Optional.empty();
     }
 
-    public int levelNumber() {
-        return levelNumber;
+    public int currentLevelNumber() {
+        return currentLevelNumber;
     }
+
+    public int currentMapNumber() {
+        return currentMapNumber;
+    }
+
+    public WorldMap currentMap() {
+        return currentMap;
+    }
+
+    public MapColorScheme currentMapColorScheme() {
+        return currentMapColorScheme;
+    }
+
 
     public boolean isDemoLevel() {
         return demoLevel;
@@ -234,7 +248,7 @@ public abstract class GameModel {
     }
 
     protected void updateLevelCounter() {
-        if (levelNumber == 1) {
+        if (currentLevelNumber == 1) {
             levelCounter.clear();
         }
         if (isLevelCounterEnabled()) {
@@ -270,9 +284,9 @@ public abstract class GameModel {
     }
 
     public void startLevel() {
-        gateKeeper.setLevelNumber(levelNumber);
-        setActorBaseSpeed(levelNumber);
-        initScore(levelNumber);
+        gateKeeper.setLevelNumber(currentLevelNumber);
+        setActorBaseSpeed(currentLevelNumber);
+        initScore(currentLevelNumber);
         Logger.info("{} base speed: {0.00} px/tick", pac.name(), pac.baseSpeed());
         Logger.info("{} base speed: {0.00} px/tick", ghost(RED_GHOST).name(), ghost(RED_GHOST).baseSpeed());
         Logger.info("{} base speed: {0.00} px/tick", ghost(PINK_GHOST).name(), ghost(PINK_GHOST).baseSpeed());
@@ -280,7 +294,7 @@ public abstract class GameModel {
         Logger.info("{} base speed: {0.00} px/tick", ghost(ORANGE_GHOST).name(), ghost(ORANGE_GHOST).baseSpeed());
         letsGetReadyToRumble();
         levelStartTime = System.currentTimeMillis();
-        Logger.info("{} started ({})", demoLevel ? "Demo Level" : "Level " + levelNumber, variant());
+        Logger.info("{} started ({})", demoLevel ? "Demo Level" : "Level " + currentLevelNumber, variant());
         publishGameEvent(GameEventType.LEVEL_STARTED);
     }
 
@@ -414,7 +428,7 @@ public abstract class GameModel {
         powerTimer.stop();
         powerTimer.reset(0);
         Logger.info("Power timer stopped and reset to zero");
-        Logger.trace("Game level {} completed.", levelNumber);
+        Logger.trace("Game level {} completed.", currentLevelNumber);
     }
 
     public Optional<Bonus> bonus() {
@@ -444,7 +458,7 @@ public abstract class GameModel {
                 // alternate between CHASING and SCATTERING
                 huntingControl.phaseType() == HuntingControl.PhaseType.SCATTERING
                     ? HuntingControl.PhaseType.CHASING : HuntingControl.PhaseType.SCATTERING,
-                huntingTicks(levelNumber, nextPhaseIndex));
+                huntingTicks(currentLevelNumber, nextPhaseIndex));
             return;
         }
         huntingControl.update();
@@ -561,7 +575,7 @@ public abstract class GameModel {
         if (numGhostsKilledInLevel == 16) {
             int extraPoints = POINTS_ALL_GHOSTS_IN_LEVEL;
             scoreManager.scorePoints(extraPoints);
-            Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, levelNumber);
+            Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, currentLevelNumber);
         }
         victims.add(ghost);
     }

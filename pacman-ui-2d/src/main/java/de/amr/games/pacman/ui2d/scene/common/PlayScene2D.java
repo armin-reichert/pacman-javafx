@@ -56,7 +56,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        if (context.game().levelNumber() == 0) {
+        if (context.game().currentLevelNumber() == 0) {
             Logger.warn("Cannot update PlayScene2D: no game level available");
             return;
         }
@@ -139,7 +139,7 @@ public class PlayScene2D extends GameScene2D {
             }
             renderer.drawLivesCounter(numLivesShown, 5, size());
         }
-        renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(), context.game().levelCounter(), size());
+        renderer.drawLevelCounter(context.game().currentLevelNumber(), context.game().isDemoLevel(), context.game().levelCounter(), size());
     }
 
     private Stream<Ghost> ghostsInZOrder() {
@@ -174,7 +174,7 @@ public class PlayScene2D extends GameScene2D {
             Color color = context.assets().color(assetPrefix + ".color.ready_message");
             renderer.drawText(text, color, font, x, y);
         } else if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
-            String text = "TEST    L%03d".formatted(context.game().levelNumber());
+            String text = "TEST    L%03d".formatted(context.game().currentLevelNumber());
             int x = TS * (cx - text.length() / 2);
             renderer.drawText(text, GameAssets2D.ARCADE_PALE, font, x, y);
         }

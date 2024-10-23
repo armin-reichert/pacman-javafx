@@ -60,7 +60,7 @@ public class PacManArcadeGame extends GameModel {
     public static final int  ARCADE_MAP_SIZE_Y = 288;
     public static final Vector2f ARCADE_MAP_SIZE = new Vector2f(ARCADE_MAP_SIZE_X, ARCADE_MAP_SIZE_Y);
 
-    static final MapColorScheme ARCADE_PACMAN_COLOR_SCHEME = new MapColorScheme("#000000", "#2121ff", "#fcb5ff", "febdb4");
+    static final MapColorScheme MAP_COLOR_SCHEME = new MapColorScheme("#000000", "#2121ff", "#fcb5ff", "febdb4");
 
     // Level settings as specified in the dossier
     private static final byte[][] LEVEL_DATA = {
@@ -145,7 +145,7 @@ public class PacManArcadeGame extends GameModel {
     }
 
     public Optional<LevelData> currentLevelData() {
-        return levelNumber > 0 ? Optional.of(levelData(levelNumber)): Optional.empty();
+        return currentLevelNumber > 0 ? Optional.of(levelData(currentLevelNumber)): Optional.empty();
     }
 
     public byte cruiseElroy() {
@@ -170,23 +170,8 @@ public class PacManArcadeGame extends GameModel {
     }
 
     @Override
-    public int currentMapNumber() {
-        return 1;
-    }
-
-    @Override
-    public WorldMap currentMap() {
-        return worldMap;
-    }
-
-    @Override
-    public MapColorScheme currentMapColorScheme() {
-        return ARCADE_PACMAN_COLOR_SCHEME;
-    }
-
-    @Override
     public int intermissionNumberAfterLevel() {
-        return levelNumber > 0 ? levelData(levelNumber).intermissionNumber() : 0;
+        return currentLevelNumber > 0 ? levelData(currentLevelNumber).intermissionNumber() : 0;
     }
 
     @Override
@@ -226,7 +211,9 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     public void buildLevel(int levelNumber) {
-        this.levelNumber = levelNumber;
+        currentLevelNumber = levelNumber;
+        currentMapNumber = 1;
+        currentMapColorScheme = MAP_COLOR_SCHEME;
         createWorldAndPopulation(worldMap);
         pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
@@ -253,20 +240,20 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     public int numFlashes() {
-        return levelNumber > 0 ? levelData(levelNumber).numFlashes() : 0;
+        return currentLevelNumber > 0 ? levelData(currentLevelNumber).numFlashes() : 0;
     }
 
     @Override
     public float pacNormalSpeed() {
-        return levelNumber > 0
-            ? levelData(levelNumber).pacSpeedPoweredPercentage() * 0.01f * pac.baseSpeed()
+        return currentLevelNumber > 0
+            ? levelData(currentLevelNumber).pacSpeedPoweredPercentage() * 0.01f * pac.baseSpeed()
             : 0;
     }
 
     @Override
     public float pacPowerSpeed() {
-        return levelNumber > 0
-            ? levelData(levelNumber).pacSpeedPoweredPercentage() * 0.01f * pac.baseSpeed()
+        return currentLevelNumber > 0
+            ? levelData(currentLevelNumber).pacSpeedPoweredPercentage() * 0.01f * pac.baseSpeed()
             : 0;
     }
 
@@ -282,15 +269,15 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     public float ghostFrightenedSpeed(Ghost ghost) {
-        return levelNumber > 0
-            ? levelData(levelNumber).ghostSpeedFrightenedPercentage() * 0.01f * ghost.baseSpeed()
+        return currentLevelNumber > 0
+            ? levelData(currentLevelNumber).ghostSpeedFrightenedPercentage() * 0.01f * ghost.baseSpeed()
             : 0;
     }
 
     @Override
     public float ghostTunnelSpeed(Ghost ghost) {
-        return levelNumber > 0
-            ? levelData(levelNumber).ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed()
+        return currentLevelNumber > 0
+            ? levelData(currentLevelNumber).ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed()
             : 0;
     }
 
@@ -307,9 +294,9 @@ public class PacManArcadeGame extends GameModel {
     @Override
     protected void onPelletOrEnergizerEaten(Vector2i tile, int uneatenFoodCount, boolean energizer) {
         pac.setRestingTicks(energizer ? 3 : 1);
-        if (uneatenFoodCount == levelData(levelNumber).elroy1DotsLeft()) {
+        if (uneatenFoodCount == levelData(currentLevelNumber).elroy1DotsLeft()) {
             cruiseElroy = 1;
-        } else if (uneatenFoodCount == levelData(levelNumber).elroy2DotsLeft()) {
+        } else if (uneatenFoodCount == levelData(currentLevelNumber).elroy2DotsLeft()) {
             cruiseElroy = 2;
         }
         if (energizer) {
@@ -353,7 +340,7 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     public int pacPowerSeconds() {
-        return levelNumber > 0 ? levelData(levelNumber).pacPowerSeconds() : 0;
+        return currentLevelNumber > 0 ? levelData(currentLevelNumber).pacPowerSeconds() : 0;
     }
 
     @Override
@@ -364,7 +351,7 @@ public class PacManArcadeGame extends GameModel {
     // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
     @Override
     public byte computeBonusSymbol() {
-        return levelNumber > 12 ? 7 : BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber];
+        return currentLevelNumber > 12 ? 7 : BONUS_SYMBOLS_BY_LEVEL_NUMBER[currentLevelNumber];
     }
 
     @Override
@@ -390,7 +377,7 @@ public class PacManArcadeGame extends GameModel {
     }
 
     private float huntingSpeed(Ghost ghost) {
-        LevelData level = levelData(levelNumber);
+        LevelData level = levelData(currentLevelNumber);
         if (world.isTunnel(ghost.tile())) {
             return level.ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
         }

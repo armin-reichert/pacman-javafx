@@ -146,7 +146,7 @@ public class IntroScene extends GameScene2D {
             }
         }
         renderer.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
-        renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
+        renderer.drawLevelCounter(context.game().currentLevelNumber(), context.game().isDemoLevel(),
             context.game().levelCounter(), size());
     }
 

@@ -404,7 +404,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         int mapNumber = game.currentMapNumber();
         mapSprite = switch (tengenGame.mapCategory()) {
             // we have a sprite sheet with the maps in the required color scheme (to be fixed in the sprite sheet image though)
-            case ARCADE -> arcadeMapSprite(game.levelNumber());
+            case ARCADE -> arcadeMapSprite(game.currentLevelNumber());
             case BIG, STRANGE, MINI -> new ImageArea(nonArcadeMazesImage, nonArcadeMapSprite(mapNumber, width, height));
         };
         Logger.info("Tengen map # {}: area: {}", mapNumber, mapSprite.area());

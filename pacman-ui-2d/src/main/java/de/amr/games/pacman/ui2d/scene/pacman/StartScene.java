@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.scene.pacman;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -65,7 +64,7 @@ public class StartScene extends GameScene2D {
             renderer.drawText(MIDWAY_COPYRIGHT, ARCADE_PINK, font8, t(4), t(29));
         }
         renderer.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), ARCADE_PALE, font8, 2 * TS, size().y() - 2);
-        renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
+        renderer.drawLevelCounter(context.game().currentLevelNumber(), context.game().isDemoLevel(),
             context.game().levelCounter(), size());
     }
 }

@@ -176,7 +176,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartSeconds(1);
-            game.createLevel(game.levelNumber() + 1);
+            game.createLevel(game.currentLevelNumber() + 1);
             game.startLevel();
             game.showGuys();
         }
@@ -368,11 +368,11 @@ public enum GameState implements FsmState<GameModel> {
                 game.bonus().ifPresent(Bonus::setInactive);
                 setProperty("mazeFlashing", false);
                 game.blinking().reset();
-                if (game.levelNumber() == lastLevelNumber) {
+                if (game.currentLevelNumber() == lastLevelNumber) {
                     GameController.it().restart(GameState.BOOT);
                 } else {
                     timer().restartIndefinitely();
-                    game.createLevel(game.levelNumber() + 1);
+                    game.createLevel(game.currentLevelNumber() + 1);
                     game.startLevel();
                     game.showGuys();
                 }
@@ -418,7 +418,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             game.doHuntingStep();
             if (timer().hasExpired()) {
-                if (game.levelNumber() == lastLevelNumber) {
+                if (game.currentLevelNumber() == lastLevelNumber) {
                     game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
                     enterState(INTRO);
                 } else {
@@ -427,7 +427,7 @@ public enum GameState implements FsmState<GameModel> {
                     game.bonus().ifPresent(Bonus::setInactive);
                     setProperty("mazeFlashing", false);
                     game.blinking().reset();
-                    game.createLevel(game.levelNumber() + 1);
+                    game.createLevel(game.currentLevelNumber() + 1);
                     game.startLevel();
                     game.showGuys();
                 }

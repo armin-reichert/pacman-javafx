@@ -105,7 +105,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void update() {
-        if (context.game().levelNumber() == 0) {
+        if (context.game().currentLevelNumber() == 0) {
             Logger.warn("Cannot update PlayScene2D: no game level available");
             return;
         }
@@ -218,7 +218,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             livesCounterEntries += 1;
         }
         renderer.drawLivesCounter(livesCounterEntries, 5, size());
-        renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(), context.game().levelCounter(), size());
+        renderer.drawLevelCounter(context.game().currentLevelNumber(), context.game().isDemoLevel(), context.game().levelCounter(), size());
     }
 
     private Stream<Ghost> ghostsInZOrder() {
@@ -237,7 +237,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             Color color = context.assets().color(assetPrefix + ".color.ready_message");
             drawText(renderer, "READY!", cx, y, color);
         } else if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
-            drawText(renderer, "TEST    L%02d".formatted(context.game().levelNumber()), cx, y, GameAssets2D.ARCADE_PALE);
+            drawText(renderer, "TEST    L%02d".formatted(context.game().currentLevelNumber()), cx, y, GameAssets2D.ARCADE_PALE);
         }
     }
 

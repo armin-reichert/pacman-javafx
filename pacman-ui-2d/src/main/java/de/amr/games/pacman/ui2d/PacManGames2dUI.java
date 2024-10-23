@@ -513,7 +513,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public void onLevelCreated(GameEvent event) {
         currentGameSceneConfig().createActorAnimations(game());
-        Logger.info("Actor animations created. ({} level #{})", gameVariant(), game().levelNumber());
+        Logger.info("Actor animations created. ({} level #{})", gameVariant(), game().currentLevelNumber());
         if (game().isDemoLevel()) {
             sounds().setEnabled(false);
         } else {
@@ -530,7 +530,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         PY_NIGHT_MODE.set(hourOfDay >= 21 || hourOfDay <= 4);
         if (gameState() != TESTING_LEVEL_BONI && gameState() != TESTING_LEVEL_TEASERS
                 && !game().isDemoLevel()
-                && game().levelNumber() == 1) {
+                && game().currentLevelNumber() == 1) {
             sounds().playGameReadySound();
         }
     }

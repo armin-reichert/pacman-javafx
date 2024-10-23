@@ -16,7 +16,6 @@ import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE;
 
@@ -98,7 +97,7 @@ public class CutScene1 extends GameScene2D {
     public void drawSceneContent(GameRenderer renderer) {
         renderer.drawAnimatedEntity(pac);
         renderer.drawAnimatedEntity(blinky);
-        renderer.drawLevelCounter(context.game().levelNumber(), context.game().isDemoLevel(),
+        renderer.drawLevelCounter(context.game().currentLevelNumber(), context.game().isDemoLevel(),
             context.game().levelCounter(), size());
     }
 
