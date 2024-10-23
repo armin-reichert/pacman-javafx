@@ -90,8 +90,8 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         return new RectArea(col * width, y, width, height);
     }
 
-    // Map #32 has 3 different images to create a visual effect.
-    private static final RectArea[] MAP_32_SPRITES = {
+    // Map #32 has 3 different images to create an animation effect.
+    private static final RectArea[] MAP_32_ANIMATION_FRAMES = {
         rect(1568, 840, 224, 248), rect(1568, 1088, 224, 248), rect(1568, 1336, 224, 248),
     };
 
@@ -171,14 +171,11 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void drawAnimatedEntity(AnimatedEntity guy) {
-        ctx().save();
-        ctx().setImageSmoothing(false);
         if (guy instanceof Pac pac) {
             drawMsOrMrPacMan(pac);
         } else {
             GameRenderer.super.drawAnimatedEntity(guy);
         }
-        ctx().restore();
     }
 
     private void drawMsOrMrPacMan(Pac pac) {
@@ -282,7 +279,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         // Maze #32 has this psychedelic animation effect
         int mapNumber = game.currentMapNumber();
         if (mapNumber == 32) {
-            drawAnimatedMaze(t, MAP_32_SPRITES);
+            drawAnimatedMaze(t, MAP_32_ANIMATION_FRAMES);
         } else {
             RectArea mapArea = mapSprite.area();
             ctx().drawImage(mapSprite.source(),
@@ -470,8 +467,6 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         Vector2f pos = stork.position();
         // sprites are not vertically aligned in sprite sheet! wtf?
         double eyeY = pos.y() + (storkAnimation.frameIndex() == 1 ? 5 : 1);
-        ctx().save();
-        ctx().setImageSmoothing(false);
         drawSpriteScaled(storkAnimation.currentSprite(), pos.x(), eyeY);
         // over-paint bag when released from beak
         if (bagReleased) {
@@ -479,7 +474,6 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             ctx().setFill(bgColor);
             ctx().fillRect(pos.x(), eyeY + 4, scaled(7), scaled(6));
         }
-        ctx().restore();
     }
 
     private void hideActorSprite(Vector2i tile, double offX, double offY) {
