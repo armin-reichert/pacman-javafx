@@ -79,7 +79,7 @@ public enum GameState implements FsmState<GameModel> {
                     game.letsGetReadyToRumble();
                     game.showGuys();
                 } else if (timer.currentTick() == TICK_RESUME_GAME) {
-                    game.startHunting();
+                    game.huntingControl().startHunting(game.currentLevelNumber());
                     enterState(GameState.HUNTING);
                 }
             }
@@ -95,7 +95,7 @@ public enum GameState implements FsmState<GameModel> {
                 }
                 else if (timer.currentTick() == TICK_NEW_GAME_START_PLAYING) {
                     game.setPlaying(true);
-                    game.startHunting();
+                    game.huntingControl().startHunting(game.currentLevelNumber());
                     enterState(GameState.HUNTING);
                 }
             }
@@ -106,7 +106,7 @@ public enum GameState implements FsmState<GameModel> {
                     game.showGuys();
                 }
                 else if (timer.currentTick() == TICK_DEMO_LEVEL_START_PLAYING) {
-                    game.startHunting();
+                    game.huntingControl().startHunting(game.currentLevelNumber());
                     enterState(GameState.HUNTING);
                 }
             }

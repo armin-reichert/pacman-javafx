@@ -49,9 +49,11 @@ public abstract class HuntingControl {
         return timer.hasExpired();
     }
 
-    public void reset(long duration) {
+    public void reset() {
         phaseIndex = 0;
-        timer.reset(duration);
+        phaseType = PhaseType.SCATTERING;
+        timer.stop();
+        timer.reset(TickTimer.INDEFINITE);
     }
 
     public void start() {
@@ -64,6 +66,10 @@ public abstract class HuntingControl {
 
     public boolean isStopped() {
         return timer.isStopped();
+    }
+
+    public void startHunting(int levelNumber) {
+        startHuntingPhase(0, PhaseType.SCATTERING, huntingTicks(levelNumber, 0));
     }
 
     public void startHuntingPhase(int phaseIndex, PhaseType type, long duration) {

@@ -133,7 +133,7 @@ public abstract class GameModel {
     protected void clearLevel() {
         currentLevelNumber = 0;
         levelStartTime = 0;
-        huntingControl.reset(TickTimer.INDEFINITE);
+        huntingControl.reset();
         numGhostsKilledInLevel = 0;
         bonus = null;
         nextBonusIndex = -1;
@@ -172,14 +172,6 @@ public abstract class GameModel {
 
     public Pulse blinking() {
         return blinking;
-    }
-
-    //TODO move into hunting control class
-    public void startHunting() {
-        huntingControl.startHuntingPhase(
-            0,
-            HuntingControl.PhaseType.SCATTERING,
-            huntingControl.huntingTicks(currentLevelNumber, 0));
     }
 
     public HuntingControl huntingControl() {
