@@ -22,7 +22,7 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
 
     private final Image source;
 
-    static final RectArea FRAME_SPRITE   = rect(175, 125, 126, 7);
+    static final RectArea INFO_FRAME_SPRITE = rect(175, 125, 126, 7);
     static final RectArea STRANGE_SPRITE = rect(261, 133, 26, 6);
     static final RectArea BIG_SPRITE     = rect(261, 141, 26, 6);
     static final RectArea MINI_SPRITE    = rect(261, 149, 26, 6);

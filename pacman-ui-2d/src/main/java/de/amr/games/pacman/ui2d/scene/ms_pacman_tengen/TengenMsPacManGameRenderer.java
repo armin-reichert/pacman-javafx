@@ -250,7 +250,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
         if (useVectorRenderer) {
             if (!isDemoLevel) {
-                drawTop(terrain, game);
+                drawInfoOnTopOfMap(terrain, game);
             }
             MapColorScheme colorScheme = world.map().colorScheme();
             terrainRenderer.setMapBackgroundColor(bgColor);
@@ -268,29 +268,33 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         }
         else { // draw using sprite sheet
             if (mapSprite == null) {
-                Logger.error("No map sprite selected");
+                Logger.error("Cannot draw world: No map sprite selected");
                 return;
             }
-            if (!isDemoLevel) {
-                drawTop(terrain, game);
+            if (!game.isDemoLevel()) {
+                drawInfoOnTopOfMap(game.world().map().terrain(), game);
             }
-            // Maze #32 has this psychedelic animation effect
-            int mapNumber = game.currentMapNumber();
-            if (mapNumber == 32) {
-                drawAnimatedMaze(context.gameClock().getUpdateCount(), MAP_32_SPRITES);
-            } else {
-                RectArea mapArea = mapSprite.area();
-                ctx().drawImage(mapSprite.source(),
-                    //TODO check if these offsets are really needed to avoid rendering noise
-                    mapArea.x() + 0.5, mapArea.y() + 0.5,
-                    mapArea.width() - 1, mapArea.height() - 1,
-                    0, scaled(3 * TS),
-                    scaled(mapArea.width()), scaled(mapArea.height())
-                );
-            }
-            hideActorSprites(terrain);
-            drawFoodUsingMapSprite(game, world, spriteSheet);
+            drawWorldUsingSpriteSheet(game, context.gameClock().getUpdateCount());
         }
+    }
+
+    private void drawWorldUsingSpriteSheet(TengenMsPacManGame game, long t) {
+        // Maze #32 has this psychedelic animation effect
+        int mapNumber = game.currentMapNumber();
+        if (mapNumber == 32) {
+            drawAnimatedMaze(t, MAP_32_SPRITES);
+        } else {
+            RectArea mapArea = mapSprite.area();
+            ctx().drawImage(mapSprite.source(),
+                //TODO check if these offsets are really needed to avoid rendering noise
+                mapArea.x() + 0.5, mapArea.y() + 0.5,
+                mapArea.width() - 1, mapArea.height() - 1,
+                0, scaled(3 * TS),
+                scaled(mapArea.width()), scaled(mapArea.height())
+            );
+        }
+        hideActorSprites(game.world().map().terrain());
+        drawFoodUsingMapSprite(game, game.world(), spriteSheet);
     }
 
     private void hideActorSprites(TileMap terrain) {
@@ -317,18 +321,15 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         long frameTicks = 8; // TODO correct?
         int frameIndex = (int) ( (tick % (sprites.length * frameTicks)) / frameTicks );
         RectArea currentSprite = sprites[frameIndex];
-        ctx().save();
-        ctx().setImageSmoothing(false);
         ctx().drawImage(mapSprite.source(),
             currentSprite.x(), currentSprite.y(),
             currentSprite.width(), currentSprite.height(),
             0, scaled(3 * TS),
             scaled(currentSprite.width()), scaled(currentSprite.height())
         );
-        ctx().restore();
     }
 
-    private void drawTop(TileMap terrain, TengenMsPacManGame tengenGame) {
+    private void drawInfoOnTopOfMap(TileMap terrain, TengenMsPacManGame tengenGame) {
         MapCategory category = tengenGame.mapCategory();
         RectArea categorySprite = switch (category) {
             case BIG     -> TengenMsPacManGameSpriteSheet.BIG_SPRITE;
@@ -350,7 +351,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         }
         drawSpriteCenteredOverPosition(difficultySprite, centerX, y);
         drawSpriteCenteredOverPosition(categorySprite, centerX + t(4.5), y);
-        drawSpriteCenteredOverPosition(TengenMsPacManGameSpriteSheet.FRAME_SPRITE, centerX, y);
+        drawSpriteCenteredOverPosition(TengenMsPacManGameSpriteSheet.INFO_FRAME_SPRITE, centerX, y);
     }
 
     @Override
