@@ -244,7 +244,8 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             return;
         }
 
-        boolean useVectorRenderer = game.mapCategory() != MapCategory.ARCADE;
+        boolean useVectorRenderer = game.mapCategory() != MapCategory.ARCADE
+            && game.mapCategory() != MapCategory.STRANGE;
         boolean isDemoLevel = context.game().isDemoLevel();
 
         if (useVectorRenderer) {

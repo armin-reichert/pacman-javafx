@@ -6,7 +6,6 @@ package de.amr.games.pacman.model.ms_pacman_tengen;
 
 import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.MapColorScheme;
@@ -184,11 +183,24 @@ public class TengenMsPacManGame extends GameModel {
 
         // TODO refac
         strangeLevels = nonArcadeMaps.stream().filter(this::isStrangeMap).toList();
+        for (WorldMap map : strangeLevels) {
+            int mapNumber = Integer.parseInt(map.terrain().getProperty("map_number"));
+            Logger.info("Strange map: {}", mapNumber);
+        }
 
         setMapCategory(MapCategory.ARCADE);
         setPacBooster(BoosterMode.OFF);
         setDifficulty(Difficulty.NORMAL);
         setStartingLevel(1);
+    }
+
+    private boolean isStrangeMap(WorldMap worldMap) {
+        int mapNumber = Integer.parseInt(worldMap.terrain().getProperty("map_number"));
+        if (mapNumber == 16 || mapNumber == 28 || mapNumber == 30) {
+            // 28 and 30 appear with different, random(?) color palette!?
+            return true;
+        }
+        return worldMap.terrain().numRows() > 30; //TODO correct?
     }
 
     // only for info panel in dashboard
@@ -209,15 +221,6 @@ public class TengenMsPacManGame extends GameModel {
     protected void initScore(int levelNumber) {
         scoreManager.setScoreEnabled(levelNumber > 0);
         scoreManager.setHighScoreEnabled(levelNumber > 0 && !isDemoLevel());
-    }
-
-    private boolean isStrangeMap(WorldMap worldMap) {
-        int mapNumber = Integer.parseInt(worldMap.terrain().getProperty("map_number"));
-        if (mapNumber == 16 || mapNumber == 28 || mapNumber == 30) {
-            // 28 and 30 appear with different, random(?) color palette!?
-            return true;
-        }
-        return worldMap.terrain().numRows() > 30; //TODO correct?
     }
 
     public void setPacBooster(BoosterMode boosterMode) {
@@ -387,10 +390,56 @@ public class TengenMsPacManGame extends GameModel {
         };
     }
 
+    private WorldMap getStrangeMapInLevel(int levelNumber) {
+        return switch (levelNumber) {
+            // 1-5
+            case 1  -> coloredMap(nonArcadeMaps, 19, TengenMapColorSchemes.ROSE_RED);
+            case 2  -> coloredMap(nonArcadeMaps, 20, TengenMapColorSchemes.LIGHTBLUE_WHITE_YELLOW);
+            case 3  -> coloredMap(nonArcadeMaps, 21, TengenMapColorSchemes.ORANGE_WHITE);
+            case 4  -> coloredMap(nonArcadeMaps, 19, TengenMapColorSchemes.BLUE_WHITE_YELLOW);
+            case 5  -> coloredMap(nonArcadeMaps, 20, TengenMapColorSchemes.PINK_YELLOW);
 
-    private int mapNumberByLevelNumber(int levelNumber) {
-        //TODO after 32 levels the game should end
-        return levelNumber <= 32 ? levelNumber : Globals.randomInt(1, 33);
+            // 6-10
+            case 6  -> coloredMap(nonArcadeMaps, 21, TengenMapColorSchemes.ROSE_RED);
+            case 7  -> coloredMap(nonArcadeMaps, 22, TengenMapColorSchemes.ORANGE_WHITE);
+            case 8  -> coloredMap(nonArcadeMaps, 23, TengenMapColorSchemes.VIOLET_WHITE_YELLOW);
+            case 9  -> coloredMap(nonArcadeMaps, 17, TengenMapColorSchemes.BLACK_WHITE_YELLOW);
+            case 10 -> coloredMap(nonArcadeMaps, 10, TengenMapColorSchemes.BLACK_DARKBLUE);
+
+            // 11-15
+            case 11 -> coloredMap(nonArcadeMaps, 23, TengenMapColorSchemes.PINK_ROSE);
+            case 12 -> coloredMap(nonArcadeMaps, 21, TengenMapColorSchemes.PINK_WHITE);
+            case 13 -> coloredMap(nonArcadeMaps, 22, TengenMapColorSchemes.GREEN_WHITE_WHITE);
+            case 14 -> coloredMap(nonArcadeMaps, 14, TengenMapColorSchemes.VIOLET_WHITE_GREEN);
+            case 15 -> coloredMap(nonArcadeMaps, 20, TengenMapColorSchemes.GREEN_WHITE_YELLOW);
+
+            // 16-20
+            case 16 -> coloredMap(nonArcadeMaps, 19, TengenMapColorSchemes.KHAKI_WHITE);
+            case 17 -> coloredMap(nonArcadeMaps, 10, TengenMapColorSchemes.PINK_WHITE);
+            case 18 -> coloredMap(nonArcadeMaps, 17, TengenMapColorSchemes.BLUE_WHITE_YELLOW);
+            case 19 -> coloredMap(nonArcadeMaps, 10, TengenMapColorSchemes.BROWN_WHITE);
+            case 20 -> coloredMap(nonArcadeMaps, 19, TengenMapColorSchemes.PINK_ROSE);
+
+            // 21-25
+            case 21 -> coloredMap(nonArcadeMaps, 26, TengenMapColorSchemes.BLACK_WHITE_GREEN);
+            case 22 -> coloredMap(nonArcadeMaps, 21, TengenMapColorSchemes.GREEN_WHITE_WHITE);
+            case 23 -> coloredMap(nonArcadeMaps, 22, TengenMapColorSchemes.GREEN_WHITE_VIOLET);
+            case 24 -> coloredMap(nonArcadeMaps, 23, TengenMapColorSchemes.VIOLET_WHITE_GREEN);
+            case 25 -> coloredMap(nonArcadeMaps, 14, TengenMapColorSchemes.GRAY_WHITE_YELLOW);
+
+            // 26-30
+            case 26 -> coloredMap(nonArcadeMaps, 25, TengenMapColorSchemes.VIOLET_WHITE);
+            case 27 -> coloredMap(nonArcadeMaps, 14, TengenMapColorSchemes.PINK_WHITE);
+            case 28 -> coloredMap(nonArcadeMaps, 23, TengenMapColorSchemes.GREEN_WHITE_WHITE);
+            case 29 -> coloredMap(nonArcadeMaps, 26, TengenMapColorSchemes.LIGHTBLUE_WHITE_YELLOW);
+            case 30 -> coloredMap(nonArcadeMaps, 20, TengenMapColorSchemes.PINK_YELLOW);
+
+            // 31-32
+            case 31 -> coloredMap(nonArcadeMaps, 25, TengenMapColorSchemes.PINK_ROSE);
+            case 32 -> coloredMap(nonArcadeMaps, 33, TengenMapColorSchemes.PINK_ROSE);
+
+            default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
+        };
     }
 
     private List<WorldMap> readMaps(String pattern, int maxNumber) {
@@ -531,7 +580,7 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     public void buildLevel(int levelNumber) {
         this.levelNumber = levelNumber;
-        mapNumber = mapNumberByLevelNumber(levelNumber);
+        mapNumber = levelNumber;
         WorldMap map = currentMap(levelNumber);
         createWorldAndPopulation(map);
         pac.setAutopilot(new RuleBasedPacSteering(this));
