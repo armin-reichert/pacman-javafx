@@ -431,7 +431,6 @@ public abstract class GameModel {
     public void doHuntingStep() {
         if (huntingControl.isCurrentPhaseOver()) {
             Logger.info("Hunting phase {} ({}) ends, tick={}", huntingControl.phaseIndex(), huntingControl.phaseType(), huntingControl.currentTick());
-            ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
             huntingControl.startNextPhase(currentLevelNumber);
         } else {
             huntingControl.update();

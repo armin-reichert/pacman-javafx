@@ -31,6 +31,7 @@ import java.util.Optional;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
+import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
  * Classic Arcade Pac-Man.
@@ -152,6 +153,7 @@ public class PacManArcadeGame extends GameModel {
                 return ticks != -1 ? ticks : TickTimer.INDEFINITE;
             }
         };
+        huntingControl.setOnPhaseChange(() -> ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible));
     }
 
     protected LevelData levelData(int levelNumber) {

@@ -24,6 +24,7 @@ public abstract class HuntingControl {
     private final TickTimer timer;
     private int phaseIndex;
     private PhaseType phaseType;
+    private Runnable phaseChangeAction;
 
     public HuntingControl(String name) {
         timer = new TickTimer(name);
@@ -68,6 +69,10 @@ public abstract class HuntingControl {
         return timer.isStopped();
     }
 
+    public void setOnPhaseChange(Runnable phaseChangeAction) {
+        this.phaseChangeAction = phaseChangeAction;
+    }
+
     public void startHunting(int levelNumber) {
         startHuntingPhase(0, PhaseType.SCATTERING, huntingTicks(levelNumber, 0));
     }
@@ -78,6 +83,9 @@ public abstract class HuntingControl {
         PhaseType nextPhaseType = phaseType == PhaseType.SCATTERING
             ? PhaseType.CHASING : PhaseType.SCATTERING;
         startHuntingPhase(nextPhaseIndex, nextPhaseType, huntingTicks(levelNumber, nextPhaseIndex));
+        if (phaseChangeAction != null) {
+            phaseChangeAction.run();
+        }
     }
 
     private void startHuntingPhase(int phaseIndex, PhaseType type, long duration) {

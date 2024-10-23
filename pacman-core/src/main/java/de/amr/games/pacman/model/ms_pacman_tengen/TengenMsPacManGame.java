@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
  * Ms. Pac-Man Tengen game.
@@ -186,6 +187,7 @@ public class TengenMsPacManGame extends GameModel {
                 return ticks != -1 ? ticks : TickTimer.INDEFINITE;
             }
         };
+        huntingControl.setOnPhaseChange(() -> ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible));
 
         setMapCategory(MapCategory.ARCADE);
         setPacBooster(BoosterMode.OFF);
