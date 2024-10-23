@@ -33,9 +33,7 @@ public record Vector2i(int x, int y) {
         return new Vector2i(s * x, s * y);
     }
 
-    public Vector2f scaled(float s) {
-        return new Vector2f(s * x, s * y);
-    }
+    public Vector2f scaled(double s) { return new Vector2f((float)s * x, (float)s * y); }
 
     public Vector2i plus(Vector2i v) {
         return new Vector2i(x + v.x, y + v.y);

@@ -288,15 +288,17 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
                 scaled(mapArea.width()), scaled(mapArea.height())
             );
         }
-        // clean house inner area
-        Vector2i houseTopLeftTile = game.world().houseTopLeftTile();
-        Vector2i houseSize = game.world().houseSize();
-        ctx().setFill(bgColor);
-        ctx().fillRect(scaled((houseTopLeftTile.x() + 1) * TS), scaled((houseTopLeftTile.y() + 2) * TS),
-            scaled(houseSize.x() - 2) * TS, scaled(2 * TS));
-        hideActorSprite(game.world().map().terrain().getTileProperty("pos_pac", v2i(14, 26)));
-        hideActorSprite(game.world().map().terrain().getTileProperty("pos_ghost_1_red", v2i(13, 14)));
+        cleanHouse(game.world());
         drawFoodUsingMapSprite(game, game.world(), spriteSheet);
+    }
+
+    private void cleanHouse(GameWorld world) {
+        Vector2f topLeftPosition = world.houseTopLeftTile().plus(1, 2).scaled(TS * scaling());
+        Vector2f size = new Vector2i(world.houseSize().x() - 2, 2).scaled(TS * scaling());
+        ctx().setFill(bgColor);
+        ctx().fillRect(topLeftPosition.x(), topLeftPosition.y(), size.x(), size.y());
+        hideActorSprite(world.map().terrain().getTileProperty("pos_pac", v2i(14, 26)));
+        hideActorSprite(world.map().terrain().getTileProperty("pos_ghost_1_red", v2i(13, 14)));
     }
 
     private void drawFoodUsingMapSprite(TengenMsPacManGame game, GameWorld world, GameSpriteSheet spriteSheet) {
