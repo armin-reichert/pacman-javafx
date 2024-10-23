@@ -10,6 +10,7 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -58,7 +59,6 @@ public abstract class GameModel {
     public static final float TICKS_PER_SECOND = 60;
 
     public static final short   POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
-    public static final short   EXTRA_LIFE_SCORE = 10_000;
     public static final byte    LEVEL_COUNTER_MAX_SIZE = 7;
     public static final byte    PAC_POWER_FADING_TICKS = 120; // unsure
     public static final byte    BONUS_POINTS_SHOWN_TICKS = 120; // unsure
@@ -102,6 +102,8 @@ public abstract class GameModel {
     public abstract void onGameEnded();
 
     public abstract int currentMapNumber();
+    public abstract WorldMap currentMap();
+    public abstract MapColorScheme currentMapColorScheme();
     public abstract void activateNextBonus();
     public abstract int intermissionNumberAfterLevel();
     public abstract float ghostSpeedReturningToHouse(Ghost ghost);
@@ -126,7 +128,6 @@ public abstract class GameModel {
     protected abstract boolean isBonusReached();
     protected abstract boolean isLevelCounterEnabled();
     protected abstract void onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
-
 
     public final GameVariant variant() { return gameVariant; }
 

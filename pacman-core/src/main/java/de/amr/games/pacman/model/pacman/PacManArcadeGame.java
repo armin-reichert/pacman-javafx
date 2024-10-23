@@ -10,6 +10,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
@@ -58,6 +59,8 @@ public class PacManArcadeGame extends GameModel {
     public static final int  ARCADE_MAP_SIZE_X = 224;
     public static final int  ARCADE_MAP_SIZE_Y = 288;
     public static final Vector2f ARCADE_MAP_SIZE = new Vector2f(ARCADE_MAP_SIZE_X, ARCADE_MAP_SIZE_Y);
+
+    static final MapColorScheme ARCADE_PACMAN_COLOR_SCHEME = new MapColorScheme("#000000", "#2121ff", "#fcb5ff", "febdb4");
 
     // Level settings as specified in the dossier
     private static final byte[][] LEVEL_DATA = {
@@ -169,6 +172,16 @@ public class PacManArcadeGame extends GameModel {
     @Override
     public int currentMapNumber() {
         return 1;
+    }
+
+    @Override
+    public WorldMap currentMap() {
+        return worldMap;
+    }
+
+    @Override
+    public MapColorScheme currentMapColorScheme() {
+        return ARCADE_PACMAN_COLOR_SCHEME;
     }
 
     @Override

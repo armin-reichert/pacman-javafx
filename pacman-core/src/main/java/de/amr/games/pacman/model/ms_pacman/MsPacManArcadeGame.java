@@ -9,6 +9,7 @@ import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -77,6 +78,16 @@ public class MsPacManArcadeGame extends GameModel {
     private static final byte HOUSE_X = 10, HOUSE_Y = 15;
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
     private static final String MAP_PATTERN = "/de/amr/games/pacman/maps/mspacman/mspacman_%d.world";
+
+    private static final MapColorScheme[] MAP_COLOR_SCHEMES = {
+        new MapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
+        new MapColorScheme("47B7FF", "DEDEFF", "FCB5FF", "FFFF00"),
+        new MapColorScheme("DE9751", "DEDEFF", "FCB5FF", "FF0000"),
+        new MapColorScheme("2121FF", "FFB751", "FCB5FF", "DEDEFF"),
+        new MapColorScheme("FFB7FF", "FFFF00", "FCB5FF", "00FFFF"),
+        new MapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
+    };
+
     /**
      * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
      *
@@ -89,7 +100,6 @@ public class MsPacManArcadeGame extends GameModel {
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
 
     private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man?
-    private int mapNumber;
     public boolean blueMazeBug = false;
 
     public MsPacManArcadeGame(GameVariant gameVariant, File userDir) {
@@ -142,7 +152,8 @@ public class MsPacManArcadeGame extends GameModel {
      * </ul>
      * <p>
      */
-    private int mapNumberByLevelNumber(int levelNumber) {
+    @Override
+    public int currentMapNumber() {
         return switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
@@ -153,16 +164,24 @@ public class MsPacManArcadeGame extends GameModel {
     }
 
     @Override
-    public int intermissionNumberAfterLevel() {
-        return levelNumber > 0 ? levelData(levelNumber).intermissionNumber() : 0;
+    public WorldMap currentMap() {
+        return world.map();
     }
 
-    /**
-     * Used by sprite based renderer to select the image for the maze.
-     * @return map number (1-6)
-     */
-    public int currentMapNumber() {
-        return mapNumber;
+    @Override
+    public MapColorScheme currentMapColorScheme() {
+        return switch (levelNumber) {
+            case 1, 2 -> MAP_COLOR_SCHEMES[0];
+            case 3, 4, 5 -> MAP_COLOR_SCHEMES[1];
+            case 6, 7, 8, 9 -> MAP_COLOR_SCHEMES[2];
+            case 10, 11, 12, 13 -> MAP_COLOR_SCHEMES[3];
+            default -> (levelNumber - 14) % 8 < 4 ? MAP_COLOR_SCHEMES[4] : MAP_COLOR_SCHEMES[5];
+        };
+    }
+
+    @Override
+    public int intermissionNumberAfterLevel() {
+        return levelNumber > 0 ? levelData(levelNumber).intermissionNumber() : 0;
     }
 
     @Override
@@ -192,12 +211,13 @@ public class MsPacManArcadeGame extends GameModel {
     @Override
     public void buildLevel(int levelNumber) {
         this.levelNumber = levelNumber;
-        mapNumber = mapNumberByLevelNumber(levelNumber);
-        URL mapURL = getClass().getResource(MAP_PATTERN.formatted(mapNumber));
+        URL mapURL = getClass().getResource(MAP_PATTERN.formatted(currentMapNumber()));
         var map = new WorldMap(mapURL);
+        /*
         if (blueMazeBug && levelNumber == 1) {
             map.terrain().setProperty(WorldMap.PROPERTY_COLOR_WALL_FILL, "rgb(33,33,255)");
         }
+         */
         createWorldAndPopulation(map);
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
@@ -208,8 +228,7 @@ public class MsPacManArcadeGame extends GameModel {
     @Override
     public void buildDemoLevel() {
         levelNumber = 1;
-        mapNumber = randomInt(1, MAP_COUNT + 1);
-        URL mapURL = getClass().getResource(MAP_PATTERN.formatted(mapNumber));
+        URL mapURL = getClass().getResource(MAP_PATTERN.formatted(1));
         createWorldAndPopulation(new WorldMap(mapURL));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));

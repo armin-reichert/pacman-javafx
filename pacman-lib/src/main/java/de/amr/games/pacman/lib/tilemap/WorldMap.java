@@ -24,12 +24,10 @@ public class WorldMap {
     public static final String PROPERTY_COLOR_WALL_FILL    = "color_wall_fill";
     public static final String PROPERTY_COLOR_DOOR         = "color_door";
 
-    static final MapColorScheme ARCADE_PACMAN_COLOR_SCHEME = new MapColorScheme(
-          "#000000", "#2121ff", "#fcb5ff", "febdb4"
-    );
-
     public static final String TERRAIN_SECTION_START = "!terrain";
     public static final String FOOD_SECTION_START    = "!food";
+
+    static final MapColorScheme DEFAULT_COLOR_SCHEME = new MapColorScheme("#000000", "#2121ff", "#fcb5ff", "febdb4");
 
     private static String tileMapSource(TileMap tileMap) throws IOException {
         StringWriter sw = new StringWriter();
@@ -40,7 +38,7 @@ public class WorldMap {
     private URL url;
     private TileMap terrain;
     private TileMap food;
-    private MapColorScheme defaultColorScheme = ARCADE_PACMAN_COLOR_SCHEME;
+    private MapColorScheme defaultColorScheme = DEFAULT_COLOR_SCHEME;
     private MapColorScheme colorScheme;
 
     /**
@@ -113,10 +111,10 @@ public class WorldMap {
         food = TileMap.parseTileMap(foodSection, tv -> 0 <= tv && tv <= Tiles.ENERGIZER);
 
         defaultColorScheme = new MapColorScheme(
-            terrain.getPropertyOrDefault(PROPERTY_COLOR_WALL_FILL, ARCADE_PACMAN_COLOR_SCHEME.fill()),
-            terrain.getPropertyOrDefault(PROPERTY_COLOR_WALL_STROKE, ARCADE_PACMAN_COLOR_SCHEME.stroke()),
-            terrain.getPropertyOrDefault(PROPERTY_COLOR_DOOR, ARCADE_PACMAN_COLOR_SCHEME.door()),
-            food.getPropertyOrDefault(PROPERTY_COLOR_FOOD, ARCADE_PACMAN_COLOR_SCHEME.pellet())
+            terrain.getPropertyOrDefault(PROPERTY_COLOR_WALL_FILL, DEFAULT_COLOR_SCHEME.fill()),
+            terrain.getPropertyOrDefault(PROPERTY_COLOR_WALL_STROKE, DEFAULT_COLOR_SCHEME.stroke()),
+            terrain.getPropertyOrDefault(PROPERTY_COLOR_DOOR, DEFAULT_COLOR_SCHEME.door()),
+            food.getPropertyOrDefault(PROPERTY_COLOR_FOOD, DEFAULT_COLOR_SCHEME.pellet())
         );
     }
 
