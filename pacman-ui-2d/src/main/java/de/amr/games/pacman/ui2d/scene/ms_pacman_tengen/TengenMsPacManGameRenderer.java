@@ -276,16 +276,14 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     }
 
     private void drawWorldUsingSpriteSheet(TengenMsPacManGame game, long t) {
-        // Maze #32 has this psychedelic animation effect
-        int mapNumber = game.currentMapNumber();
-        if (mapNumber == 32) {
-            drawAnimatedMaze(t, MAP_32_ANIMATION_FRAMES);
+        // Maze #32 has psychedelic animation
+        if (game.currentMapNumber() == 32) {
+            drawAnimatedMap(t, MAP_32_ANIMATION_FRAMES);
         } else {
             RectArea mapArea = mapSprite.area();
             ctx().drawImage(mapSprite.source(),
-                //TODO check if these offsets are really needed to avoid rendering noise
-                mapArea.x() + 0.5, mapArea.y() + 0.5,
-                mapArea.width() - 1, mapArea.height() - 1,
+                mapArea.x(), mapArea.y(),
+                mapArea.width(), mapArea.height(),
                 0, scaled(3 * TS),
                 scaled(mapArea.width()), scaled(mapArea.height())
             );
@@ -296,14 +294,9 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         ctx().setFill(bgColor);
         ctx().fillRect(scaled((houseTopLeftTile.x() + 1) * TS), scaled((houseTopLeftTile.y() + 2) * TS),
             scaled(houseSize.x() - 2) * TS, scaled(2 * TS));
-        hideActorSprites(game.world().map().terrain());
+        hideActorSprite(game.world().map().terrain().getTileProperty("pos_pac", v2i(14, 26)));
+        hideActorSprite(game.world().map().terrain().getTileProperty("pos_ghost_1_red", v2i(13, 14)));
         drawFoodUsingMapSprite(game, game.world(), spriteSheet);
-    }
-
-    // Tengen map sprites contain actor sprites, overpaint them
-    private void hideActorSprites(TileMap terrain) {
-        hideActorSprite(terrain.getTileProperty("pos_pac", v2i(14, 26)));
-        hideActorSprite(terrain.getTileProperty("pos_ghost_1_red", v2i(13, 14)));
     }
 
     private void drawFoodUsingMapSprite(TengenMsPacManGame game, GameWorld world, GameSpriteSheet spriteSheet) {
@@ -315,7 +308,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         game.bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
     }
 
-    private void drawAnimatedMaze(long tick, RectArea[] sprites) {
+    private void drawAnimatedMap(long tick, RectArea[] sprites) {
         long frameTicks = 8; // TODO correct?
         int frameIndex = (int) ( (tick % (sprites.length * frameTicks)) / frameTicks );
         RectArea currentSprite = sprites[frameIndex];

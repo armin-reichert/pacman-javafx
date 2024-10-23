@@ -187,7 +187,7 @@ public interface GameRenderer {
      * Assumes to be called in scaled graphics context!
      */
     default void overPaintEnergizers(GameWorld world, Predicate<Vector2i> condition) {
-        world.energizerTiles().filter(condition).forEach(tile -> overPaint(tile, 9.5));
+        world.energizerTiles().filter(condition).forEach(tile -> overPaint(tile, 10));
     }
 
     /**
