@@ -290,19 +290,20 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
                 scaled(mapArea.width()), scaled(mapArea.height())
             );
         }
+        // clean house inner area
+        Vector2i houseTopLeftTile = game.world().houseTopLeftTile();
+        Vector2i houseSize = game.world().houseSize();
+        ctx().setFill(bgColor);
+        ctx().fillRect(scaled((houseTopLeftTile.x() + 1) * TS), scaled((houseTopLeftTile.y() + 2) * TS),
+            scaled(houseSize.x() - 2) * TS, scaled(2 * TS));
         hideActorSprites(game.world().map().terrain());
         drawFoodUsingMapSprite(game, game.world(), spriteSheet);
     }
 
+    // Tengen map sprites contain actor sprites, overpaint them
     private void hideActorSprites(TileMap terrain) {
-        // Tengen maps contain actor sprites, overpaint them
-        hideActorSprite(terrain.getTileProperty("pos_pac", v2i(14, 26)), 0, 0);
-        hideActorSprite(terrain.getTileProperty("pos_ghost_1_red", v2i(13, 14)), 0, 0);
-        // The ghosts in the house are sitting some pixels below their home position
-        // TODO: check if they really start from the bottom of the house, if yes, change map properties
-        hideActorSprite(terrain.getTileProperty("pos_ghost_2_pink",   v2i(13, 17)), 0, 4);
-        hideActorSprite(terrain.getTileProperty("pos_ghost_3_cyan",   v2i(11, 17)), 0, 4);
-        hideActorSprite(terrain.getTileProperty("pos_ghost_4_orange", v2i(15, 17)), 0, 4);
+        hideActorSprite(terrain.getTileProperty("pos_pac", v2i(14, 26)));
+        hideActorSprite(terrain.getTileProperty("pos_ghost_1_red", v2i(13, 14)));
     }
 
     private void drawFoodUsingMapSprite(TengenMsPacManGame game, GameWorld world, GameSpriteSheet spriteSheet) {
@@ -476,12 +477,12 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         }
     }
 
-    private void hideActorSprite(Vector2i tile, double offX, double offY) {
+    private void hideActorSprite(Vector2i tile) {
         // Parameter tile denotes the left of the two tiles where actor is located between. Compute center position.
-        double cx = tile.x() * TS + TS + offX;
-        double cy = tile.y() * TS + HTS + offY;
+        double cx = tile.x() * TS;
+        double cy = tile.y() * TS - HTS;
         double spriteSize = 2 * TS;
         ctx().setFill(bgColor);
-        ctx().fillRect(scaled(cx - TS), scaled(cy - TS), scaled(spriteSize), scaled(spriteSize));
+        ctx().fillRect(scaled(cx), scaled(cy), scaled(spriteSize), scaled(spriteSize));
     }
 }

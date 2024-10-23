@@ -34,9 +34,9 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public abstract class GameModel {
 
-    // Common Pac animation IDs
-    public static final String ANIM_PAC_MUNCHING = "munching";
-    public static final String ANIM_PAC_DYING = "dying";
+    // Common Pac-Man/Ms. Pac-Man animation IDs
+    public static final String ANIM_PAC_MUNCHING     = "munching";
+    public static final String ANIM_PAC_DYING        = "dying";
 
     // Common ghost animation IDs
     public static final String ANIM_GHOST_NORMAL     = "normal";
@@ -56,13 +56,13 @@ public abstract class GameModel {
     }
 
     /** Game loop frequency, ticks per second. */
-    public static final float TICKS_PER_SECOND = 60;
+    public static final float      TICKS_PER_SECOND = 60;
 
-    public static final short   POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
-    public static final byte    LEVEL_COUNTER_MAX_SIZE = 7;
-    public static final byte    PAC_POWER_FADING_TICKS = 120; // unsure
-    public static final byte    BONUS_POINTS_SHOWN_TICKS = 120; // unsure
-    public static final short[] KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
+    public static final short      POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
+    public static final byte       LEVEL_COUNTER_MAX_SIZE = 7;
+    public static final byte       PAC_POWER_FADING_TICKS = 120; // unsure
+    public static final byte       BONUS_POINTS_SHOWN_TICKS = 120; // unsure
+    public static final short[]    KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
 
     protected final GameVariant    gameVariant;
     protected final Pulse          blinking = new Pulse(10, Pulse.OFF);
@@ -70,63 +70,57 @@ public abstract class GameModel {
     protected final List<Byte>     levelCounter = new ArrayList<>();
     protected final TickTimer      powerTimer = new TickTimer("PacPowerTimer");
     protected final List<Ghost>    victims = new ArrayList<>();
-
-    //TODO how is this done in Tengen Ms. Pac-Man?
     protected final GateKeeper     gateKeeper = new GateKeeper(this);
     protected final ScoreManager   scoreManager = new ScoreManager(this);
+    protected HuntingControl       huntingControl;
     protected File                 userDir;
-    protected int currentLevelNumber; // 1=first level
+    protected int                  currentLevelNumber; // 1=first level
     protected boolean              demoLevel;
     protected long                 levelStartTime;
     protected boolean              playing;
     protected int                  initialLives;
     protected int                  lives;
-
-    protected HuntingControl       huntingControl;
     protected byte                 numGhostsKilledInLevel;
     protected byte                 nextBonusIndex; // -1=no bonus, 0=first, 1=second
-
     protected Pac                  pac;
     protected Ghost[]              ghosts;
     protected Bonus                bonus;
     protected GameWorld            world;
-
     protected int                  currentMapNumber;
     protected WorldMap             currentMap;
     protected MapColorScheme       currentMapColorScheme;
-
     protected SimulationStepEventLog eventLog;
 
     protected GameModel(GameVariant gameVariant) {
         this.gameVariant = checkNotNull(gameVariant);
     }
 
-    public abstract boolean canStartNewGame();
-    public abstract void onGameEnded();
-
-    public abstract void activateNextBonus();
-    public abstract int intermissionNumberAfterLevel();
-    public abstract float ghostSpeedReturningToHouse(Ghost ghost);
-    public abstract float ghostSpeedInsideHouse(Ghost ghost);
-    public abstract float ghostTunnelSpeed(Ghost ghost);
-    public abstract float ghostFrightenedSpeed(Ghost ghost);
-    public abstract float pacPowerSpeed();
-    public abstract float pacNormalSpeed();
-    public abstract int pacPowerSeconds();
-    public abstract int numFlashes();
+    public abstract boolean      canStartNewGame();
+    public abstract void         onGameEnded();
+    public abstract void         onPacDying();
+    public abstract void         activateNextBonus();
+    public abstract int          intermissionNumberAfterLevel();
+    public abstract int          numFlashes();
+    public abstract float        ghostFrightenedSpeed(Ghost ghost);
+    public abstract float        ghostSpeedInsideHouse(Ghost ghost);
+    public abstract float        ghostSpeedReturningToHouse(Ghost ghost);
+    public abstract float        ghostTunnelSpeed(Ghost ghost);
+    public abstract float        pacNormalSpeed();
+    public abstract int          pacPowerSeconds();
+    public abstract float        pacPowerSpeed();
 
     protected abstract GameWorld createWorld(WorldMap map);
-    protected abstract Pac createPac();
-    protected abstract Ghost[] createGhosts();
-    protected abstract void buildLevel(int levelNumber);
-    protected abstract void buildDemoLevel();
-    protected abstract void setActorBaseSpeed(int levelNumber);
-    protected abstract void initScore(int levelNumber);
-    protected abstract byte computeBonusSymbol();
-    protected abstract boolean isPacManKillingIgnoredInDemoLevel();
-    protected abstract boolean isBonusReached();
-    protected abstract boolean isLevelCounterEnabled();
-    protected abstract void onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
+    protected abstract Pac       createPac();
+    protected abstract Ghost[]   createGhosts();
+    protected abstract void      buildLevel(int levelNumber);
+    protected abstract void      buildDemoLevel();
+    protected abstract void      setActorBaseSpeed(int levelNumber);
+    protected abstract void      initScore(int levelNumber);
+    protected abstract byte      computeBonusSymbol();
+    protected abstract boolean   isPacManKillingIgnoredInDemoLevel();
+    protected abstract boolean   isBonusReached();
+    protected abstract boolean   isLevelCounterEnabled();
+    protected abstract void      onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
 
     public final GameVariant variant() { return gameVariant; }
 
@@ -193,7 +187,6 @@ public abstract class GameModel {
     public MapColorScheme currentMapColorScheme() {
         return currentMapColorScheme;
     }
-
 
     public boolean isDemoLevel() {
         return demoLevel;
@@ -268,20 +261,16 @@ public abstract class GameModel {
         gateKeeper.setLevelNumber(currentLevelNumber);
         setActorBaseSpeed(currentLevelNumber);
         initScore(currentLevelNumber);
-        Logger.info("{} base speed: {0.00} px/tick", pac.name(), pac.baseSpeed());
-        Logger.info("{} base speed: {0.00} px/tick", ghost(RED_GHOST).name(), ghost(RED_GHOST).baseSpeed());
-        Logger.info("{} base speed: {0.00} px/tick", ghost(PINK_GHOST).name(), ghost(PINK_GHOST).baseSpeed());
-        Logger.info("{} base speed: {0.00} px/tick", ghost(CYAN_GHOST).name(), ghost(CYAN_GHOST).baseSpeed());
-        Logger.info("{} base speed: {0.00} px/tick", ghost(ORANGE_GHOST).name(), ghost(ORANGE_GHOST).baseSpeed());
         letsGetReadyToRumble();
         levelStartTime = System.currentTimeMillis();
         Logger.info("{} started ({})", demoLevel ? "Demo Level" : "Level " + currentLevelNumber, variant());
+        Logger.info("{} base speed: {0.00} px/tick", pac.name(), pac.baseSpeed());
+        ghosts().forEach(ghost -> Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
         publishGameEvent(GameEventType.LEVEL_STARTED);
     }
 
     /**
-     * Sets each guy to his start position and resets him to his initial state. Note that they are all invisible
-     * initially!
+     * Sets each guy to his start position and resets him to his initial state. The guys are all initially invisible!
      */
     public void letsGetReadyToRumble() {
         pac.reset(); // invisible!
@@ -394,8 +383,6 @@ public abstract class GameModel {
     public boolean isPlaying() {
         return playing;
     }
-
-    public abstract void onPacDying();
 
     public void onLevelCompleted() {
         blinking.setStartPhase(Pulse.OFF);
