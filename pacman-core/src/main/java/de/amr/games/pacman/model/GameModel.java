@@ -185,18 +185,6 @@ public abstract class GameModel {
         return huntingControl;
     }
 
-    public Optional<Integer> scatterPhase() {
-        return huntingControl.phaseType() == HuntingControl.PhaseType.SCATTERING
-            ? Optional.of(huntingControl.phaseIndex() / 2) //TODO
-            : Optional.empty();
-    }
-
-    public Optional<Integer> chasingPhase() {
-        return huntingControl.phaseType() == HuntingControl.PhaseType.CHASING
-            ? Optional.of(huntingControl.phaseIndex() / 2) //TODO
-            : Optional.empty();
-    }
-
     public int currentLevelNumber() {
         return currentLevelNumber;
     }

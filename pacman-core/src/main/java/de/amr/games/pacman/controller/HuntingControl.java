@@ -8,6 +8,8 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
 import org.tinylog.Logger;
 
+import java.util.Optional;
+
 public class HuntingControl {
 
     public static byte checkHuntingPhaseIndex(int phaseIndex) {
@@ -78,6 +80,18 @@ public class HuntingControl {
 
     public PhaseType phaseType() {
         return phaseType;
+    }
+
+    public Optional<Integer> currentScatterPhaseIndex() {
+        return phaseType == HuntingControl.PhaseType.SCATTERING
+            ? Optional.of(phaseIndex / 2)
+            : Optional.empty();
+    }
+
+    public Optional<Integer> currentChasingPhaseIndex() {
+        return phaseType == HuntingControl.PhaseType.CHASING
+            ? Optional.of(phaseIndex / 2)
+            : Optional.empty();
     }
 
 }

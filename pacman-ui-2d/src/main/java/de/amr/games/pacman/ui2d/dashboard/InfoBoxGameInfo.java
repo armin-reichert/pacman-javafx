@@ -63,7 +63,9 @@ public class InfoBoxGameInfo extends InfoBox {
         HuntingControl huntingControl = game.huntingControl();
         return "%s #%d%s".formatted(
             huntingControl.phaseType().name(),
-            game.scatterPhase().orElse(game.chasingPhase().orElse(42)),
+            huntingControl.phaseType() == HuntingControl.PhaseType.CHASING
+                ? huntingControl.currentChasingPhaseIndex().orElse(42)
+                : huntingControl.currentScatterPhaseIndex().orElse(42),
             huntingControl.isStopped() ? " STOPPED" : "");
     }
 
