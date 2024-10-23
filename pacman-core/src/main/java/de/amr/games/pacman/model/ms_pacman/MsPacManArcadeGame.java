@@ -78,7 +78,7 @@ public class MsPacManArcadeGame extends GameModel {
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
     private static final String MAP_PATTERN = "/de/amr/games/pacman/maps/mspacman/mspacman_%d.world";
 
-    private static final MapColorScheme[] MAP_COLOR_SCHEMES = {
+    public static final MapColorScheme[] MAP_COLOR_SCHEMES = {
         new MapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
         new MapColorScheme("47B7FF", "DEDEFF", "FCB5FF", "FFFF00"),
         new MapColorScheme("DE9751", "DEDEFF", "FCB5FF", "FF0000"),
@@ -157,19 +157,16 @@ public class MsPacManArcadeGame extends GameModel {
      * </ul>
      * <p>
      */
-    public void selectMap(int levelNumber) {
+    private void selectMapAndColorScheme(int levelNumber) {
         int mapNumber = switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
             case 6, 7, 8, 9 -> 3;
             case 10, 11, 12, 13 -> 4;
-            default -> (currentLevelNumber - 14) % 8 < 4 ? 5 : 6;
+            default -> (currentLevelNumber - 14) % 8 < 4 ? 3 : 4;
         };
         currentMapNumber = mapNumber;
         currentMap = maps.get(mapNumber - 1);
-    }
-
-    public void selectColorScheme(int levelNumber) {
         int colorSchemeNumber = switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
@@ -212,8 +209,7 @@ public class MsPacManArcadeGame extends GameModel {
     @Override
     public void buildLevel(int levelNumber) {
         this.currentLevelNumber = levelNumber;
-        selectMap(currentLevelNumber);
-        selectColorScheme(currentLevelNumber);
+        selectMapAndColorScheme(currentLevelNumber);
         /*
         if (blueMazeBug && levelNumber == 1) {
             map.terrain().setProperty(WorldMap.PROPERTY_COLOR_WALL_FILL, "rgb(33,33,255)");
@@ -229,8 +225,7 @@ public class MsPacManArcadeGame extends GameModel {
     @Override
     public void buildDemoLevel() {
         currentLevelNumber = 1;
-        selectMap(currentLevelNumber);
-        selectColorScheme(currentLevelNumber);
+        selectMapAndColorScheme(currentLevelNumber);
         createWorldAndPopulation(currentMap);
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));

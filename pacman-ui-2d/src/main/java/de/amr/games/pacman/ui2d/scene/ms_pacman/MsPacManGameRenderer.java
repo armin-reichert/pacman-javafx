@@ -9,6 +9,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
+import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -99,10 +100,15 @@ public class MsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void update(GameModel game) {
-        int mapNumber = game.currentMapNumber();
-        mapWithFoodSprite    = spriteSheet.imageArea(0, (mapNumber - 1) * 248, 226, 248);
-        mapWithoutFoodSprite = spriteSheet.imageArea(228, (mapNumber - 1) * 248, 226, 248);
-        mapFlashingSprite    = imageArea(flashingMazesImage, 0, (mapNumber - 1) * 248, 226, 248);
+        // select map sprite depending on selected map color scheme
+        for (int i = 0; i < 6; ++i) {
+            if (game.currentMapColorScheme().equals(MsPacManArcadeGame.MAP_COLOR_SCHEMES[i])) {
+                mapWithFoodSprite = spriteSheet.imageArea(0, i * 248, 226, 248);
+                mapWithoutFoodSprite = spriteSheet.imageArea(228, i * 248, 226, 248);
+                mapFlashingSprite = imageArea(flashingMazesImage, 0, i * 248, 226, 248);
+                break;
+            }
+        }
     }
 
     @Override
