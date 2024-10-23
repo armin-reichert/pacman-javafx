@@ -230,9 +230,10 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     public void drawWorld(GameContext context, GameWorld world) {
         TengenMsPacManGame game = (TengenMsPacManGame) context.game();
         TileMap terrain = world.map().terrain();
+        MapColorScheme colorScheme = game.currentMapColorScheme(); //TODO check: may be NULL!
 
         if (flashMode) {
-            Color wallFillColor = Color.web(game.currentMapColorScheme().fill());
+            Color wallFillColor = colorScheme != null ? Color.web(colorScheme.fill()) : Color.WHITE; // TODO check
             terrainRenderer.setMapBackgroundColor(bgColor);
             terrainRenderer.setWallStrokeColor(Color.WHITE);
             terrainRenderer.setWallFillColor(blinkingOn ? Color.BLACK : wallFillColor);
@@ -249,7 +250,6 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             if (!isDemoLevel) {
                 drawInfoOnTopOfMap(terrain, game);
             }
-            MapColorScheme colorScheme = game.currentMapColorScheme();
             terrainRenderer.setMapBackgroundColor(bgColor);
             terrainRenderer.setWallStrokeColor(Color.web(colorScheme.stroke()));
             terrainRenderer.setWallFillColor(Color.web(colorScheme.fill()));
