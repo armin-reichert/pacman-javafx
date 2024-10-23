@@ -220,7 +220,7 @@ public enum GlobalGameActions2D implements GameAction {
             if (context.gameClock().isPaused()) {
                 context.sounds().stopAll();
             }
-            Logger.info("Game variant ({}) {}", context.game(), context.gameClock().isPaused() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", context.gameVariant(), context.gameClock().isPaused() ? "paused" : "resumed");
         }
     };
 
