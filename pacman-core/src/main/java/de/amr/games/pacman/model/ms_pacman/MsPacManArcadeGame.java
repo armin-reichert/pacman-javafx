@@ -163,17 +163,17 @@ public class MsPacManArcadeGame extends GameModel {
             case 3, 4, 5 -> 2;
             case 6, 7, 8, 9 -> 3;
             case 10, 11, 12, 13 -> 4;
-            default -> (currentLevelNumber - 14) % 8 < 4 ? 3 : 4;
+            default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
         };
-        currentMapNumber = mapNumber;
-        currentMap = maps.get(mapNumber - 1);
         int colorSchemeNumber = switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
             case 6, 7, 8, 9 -> 3;
             case 10, 11, 12, 13 -> 4;
-            default -> (currentLevelNumber - 14) % 8 < 4 ? 5 : 6;
+            default -> (levelNumber - 14) % 8 < 4 ? 5 : 6;
         };
+        currentMapNumber = mapNumber;
+        currentMap = maps.get(mapNumber - 1);
         currentMapColorScheme = MAP_COLOR_SCHEMES[colorSchemeNumber - 1];
     }
 
