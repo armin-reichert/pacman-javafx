@@ -194,7 +194,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             Color color = context.assets().color(assetPrefix + ".color.game_over_message");
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                    color = Color.web(context.game().world().map().colorSchemeOrDefault().stroke());
+                    color = Color.web(context.game().currentMapColorScheme().stroke());
                 }
             }
             scores3D.showTextAsScore("GAME OVER!", color);

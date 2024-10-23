@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.pacman_xxl;
 
+import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameModel;
@@ -113,12 +114,13 @@ public class PacManGameXXLRenderer implements GameRenderer {
         }
         else {
             terrainRenderer.setMapBackgroundColor(bgColor);
-            terrainRenderer.setWallStrokeColor(Color.web(world.map().colorSchemeOrDefault().stroke()));
-            terrainRenderer.setWallFillColor(Color.web(world.map().colorSchemeOrDefault().fill()));
-            terrainRenderer.setDoorColor(Color.web(world.map().colorSchemeOrDefault().door()));
+            MapColorScheme colorScheme = context.game().currentMapColorScheme();
+            terrainRenderer.setWallStrokeColor(Color.web(colorScheme.stroke()));
+            terrainRenderer.setWallFillColor(Color.web(colorScheme.fill()));
+            terrainRenderer.setDoorColor(Color.web(colorScheme.door()));
             terrainRenderer.drawMap(ctx(), world.map().terrain());
-            foodRenderer.setPelletColor(Color.web(world.map().colorSchemeOrDefault().pellet()));
-            foodRenderer.setEnergizerColor(Color.web(world.map().colorSchemeOrDefault().pellet()));
+            foodRenderer.setPelletColor(Color.web(colorScheme.pellet()));
+            foodRenderer.setEnergizerColor(Color.web(colorScheme.pellet()));
             world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
                 .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
             if (blinkingOn) {

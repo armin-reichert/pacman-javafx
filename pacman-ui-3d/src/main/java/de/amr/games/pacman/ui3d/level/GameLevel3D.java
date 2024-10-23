@@ -31,7 +31,6 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -174,7 +173,7 @@ public class GameLevel3D {
                 obstacleHeightPy, OBSTACLE_THICKNESS, OBSTACLE_COAT_HEIGHT,
                 wallFillMaterialPy, wallStrokeMaterialPy));
 
-        house3D = new House3D(world);
+        house3D = new House3D(world, colorScheme);
         house3D.heightPy.bind(houseHeightPy);
         house3D.fillMaterialPy.bind(wallFillColorPy.map(fillColor -> opaqueColor(fillColor, HOUSE_OPACITY)).map(Ufx::coloredMaterial));
         house3D.strokeMaterialPy.bind(wallStrokeMaterialPy);

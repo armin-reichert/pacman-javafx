@@ -27,8 +27,6 @@ public class WorldMap {
     public static final String TERRAIN_SECTION_START = "!terrain";
     public static final String FOOD_SECTION_START    = "!food";
 
-    static final MapColorScheme DEFAULT_COLOR_SCHEME = new MapColorScheme("#000000", "#2121ff", "#fcb5ff", "febdb4");
-
     private static String tileMapSource(TileMap tileMap) throws IOException {
         StringWriter sw = new StringWriter();
         tileMap.print(sw);
@@ -38,8 +36,6 @@ public class WorldMap {
     private URL url;
     private TileMap terrain;
     private TileMap food;
-    private MapColorScheme defaultColorScheme = DEFAULT_COLOR_SCHEME;
-    private MapColorScheme colorScheme;
 
     /**
      * Creates a world map consisting of copies of the other map's layers.
@@ -51,8 +47,6 @@ public class WorldMap {
         terrain = new TileMap(other.terrain);
         food = new TileMap(other.food);
         url = other.url;
-        defaultColorScheme = other.defaultColorScheme;
-        colorScheme = other.colorScheme;
         terrain.computeTerrainPaths();
     }
 
@@ -109,13 +103,6 @@ public class WorldMap {
         terrain = TileMap.parseTileMap(terrainSection, tv -> 0 <= tv && tv <= Tiles.LAST_TERRAIN_VALUE);
         terrain.computeTerrainPaths();
         food = TileMap.parseTileMap(foodSection, tv -> 0 <= tv && tv <= Tiles.ENERGIZER);
-
-        defaultColorScheme = new MapColorScheme(
-            terrain.getPropertyOrDefault(PROPERTY_COLOR_WALL_FILL, DEFAULT_COLOR_SCHEME.fill()),
-            terrain.getPropertyOrDefault(PROPERTY_COLOR_WALL_STROKE, DEFAULT_COLOR_SCHEME.stroke()),
-            terrain.getPropertyOrDefault(PROPERTY_COLOR_DOOR, DEFAULT_COLOR_SCHEME.door()),
-            food.getPropertyOrDefault(PROPERTY_COLOR_FOOD, DEFAULT_COLOR_SCHEME.pellet())
-        );
     }
 
     public void save(File file) {
@@ -140,29 +127,5 @@ public class WorldMap {
 
     public TileMap food() {
         return food;
-    }
-
-    public MapColorScheme colorScheme() {
-        return colorScheme;
-    }
-
-    public MapColorScheme colorSchemeOrDefault() {
-        return colorScheme != null ? colorScheme : defaultColorScheme;
-    }
-
-    public void setColorScheme(MapColorScheme colorScheme) {
-        this.colorScheme = colorScheme;
-    }
-
-    public MapColorScheme defaultColorScheme() {
-        return defaultColorScheme;
-    }
-
-    public void setDefaultColorScheme(MapColorScheme defaultColorScheme) {
-        this.defaultColorScheme = defaultColorScheme;
-    }
-
-    public void resetColorScheme() {
-        setColorScheme(defaultColorScheme);
     }
 }
