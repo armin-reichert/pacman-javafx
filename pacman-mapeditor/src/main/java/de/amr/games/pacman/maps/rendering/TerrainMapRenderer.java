@@ -48,6 +48,10 @@ public class TerrainMapRenderer implements TileMapRenderer {
         map.singleStrokePaths().forEach(
             path -> drawPath(g, map, path, true, OBSTACLE_STROKE_WIDTH * baseLineWidth, wallStrokeColor, wallFillColor)
         );
+        Color fillColor = wallFillColor;
+        map.fillerPaths().forEach(
+            path -> drawPath(g, map, path, true, OBSTACLE_STROKE_WIDTH * baseLineWidth, fillColor, fillColor)
+        );
         map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, map, door, OBSTACLE_STROKE_WIDTH * baseLineWidth, doorColor));
         g.restore();
     }

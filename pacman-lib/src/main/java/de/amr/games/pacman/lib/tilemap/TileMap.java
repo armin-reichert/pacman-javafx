@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.Writer;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,12 +37,18 @@ public class TileMap {
         private final BitSet exploredSet = new BitSet();
         private List<TileMapPath> singleStrokePaths = new ArrayList<>();
         private List<TileMapPath> doubleStrokePaths = new ArrayList<>();
+        private List<TileMapPath> fillerPaths = new ArrayList<>();
 
         TerrainMapData() {}
 
         TerrainMapData(TerrainMapData other) {
             singleStrokePaths = new ArrayList<>(other.singleStrokePaths);
             doubleStrokePaths = new ArrayList<>(other.doubleStrokePaths);
+            fillerPaths = new ArrayList<>(other.fillerPaths);
+        }
+
+        void clearExploredSet() {
+            exploredSet.clear();
         }
     }
 
@@ -363,8 +370,35 @@ public class TileMap {
             .map(corner -> computePath(corner, LEFT))
             .forEach(terrainMapData.singleStrokePaths::add);
 
-        Logger.debug("Paths computed, {} single wall paths, {} double wall paths",
-            terrainMapData.singleStrokePaths.size(), terrainMapData.doubleStrokePaths.size());
+
+        // create filler paths for concavities from maze border inside maze
+        terrainMapData.clearExploredSet();
+        int topRow = 3, bottomRow = numRows() - 3; // TODO make this more general
+
+        for (int col = 0; col < numCols() - 1; ++col) {
+            if (get(topRow, col) == Tiles.DCORNER_NE && get(topRow, col + 1) == Tiles.DCORNER_NW) {
+                Logger.info("Found concavity entry at top row {} col {}", topRow, col);
+                Vector2i pathStartTile = new Vector2i(col, topRow + 1);
+                TileMapPath path = computePath(pathStartTile, DOWN, tile -> outOfBounds(tile) || tile.equals(pathStartTile.plus(1, -1)));
+                path.add(UP);
+                path.add(LEFT);
+                path.add(DOWN);
+                terrainMapData.fillerPaths.add(path);
+            }
+        }
+        for (int col = 0; col < numCols() - 1; ++col) {
+            if (get(bottomRow, col) == Tiles.DCORNER_SE && get(bottomRow, col + 1) == Tiles.DCORNER_SW) {
+                Logger.info("Found concavity entry at bottom row {} col {}", topRow, col);
+                Vector2i pathStartTile = new Vector2i(col, bottomRow - 1);
+                TileMapPath path = computePath(pathStartTile, UP, tile -> outOfBounds(tile) || tile.equals(pathStartTile.plus(1, 0)));
+                path.add(DOWN);
+                path.add(LEFT);
+                path.add(UP);
+                terrainMapData.fillerPaths.add(path);
+            }
+        }
+        Logger.debug("Paths computed, {} single wall paths, {} double wall paths, {} filler paths",
+            terrainMapData.singleStrokePaths.size(), terrainMapData.doubleStrokePaths.size(), terrainMapData.fillerPaths.size());
     }
 
     public Stream<TileMapPath> singleStrokePaths() {
@@ -375,7 +409,15 @@ public class TileMap {
         return terrainMapData != null ? terrainMapData.doubleStrokePaths.stream() : Stream.empty();
     }
 
+    public Stream<TileMapPath> fillerPaths() {
+        return terrainMapData != null ? terrainMapData.fillerPaths.stream() : Stream.empty();
+    }
+
     private TileMapPath computePath(Vector2i startTile, Direction startDir) {
+        return computePath(startTile, startDir, this::outOfBounds);
+    }
+
+    private TileMapPath computePath(Vector2i startTile, Direction startDir, Predicate<Vector2i> stopCondition) {
         checkNotNull(startTile);
         checkNotNull(startDir);
         if (outOfBounds(startTile)) {
@@ -388,7 +430,7 @@ public class TileMap {
         while (true) {
             dir = exitDirection(dir, get(tile));
             tile = tile.plus(dir.vector());
-            if (outOfBounds(tile)) {
+            if (stopCondition.test(tile)) {
                 break;
             }
             if (isExplored(tile)) {
