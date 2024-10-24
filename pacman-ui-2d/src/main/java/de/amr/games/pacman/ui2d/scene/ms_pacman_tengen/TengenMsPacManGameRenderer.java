@@ -121,14 +121,20 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     @Override
     public void update(GameModel game) {
         if (game.world() == null) {
-            Logger.warn("Cannot set renderer for game, no world exists");
+            Logger.warn("Cannot update renderer for game, no world exists");
             return;
         }
-        int mapNumber    = game.currentMapNumber();
+
+        int mapNumber = game.currentMapNumber();
+        if (mapNumber == 0){
+            Logger.warn("Cannot update renderer for game, no world map selected");
+            return;
+        }
+
+        TengenMsPacManGame tengenGame = (TengenMsPacManGame) game;
         int spriteWidth  = game.world().map().terrain().numCols() * TS;
         int spriteHeight = (game.world().map().terrain().numRows() - 5) * TS; // 5 empty rows in map (top: 3, bottom 2)
 
-        TengenMsPacManGame tengenGame = (TengenMsPacManGame) game;
         mapSprite = switch (tengenGame.mapCategory()) {
             case ARCADE -> arcadeMapSpriteImageArea(mapNumber, spriteWidth, spriteHeight);
             case MINI -> miniMapSpriteImageArea(mapNumber, spriteWidth, spriteHeight);
