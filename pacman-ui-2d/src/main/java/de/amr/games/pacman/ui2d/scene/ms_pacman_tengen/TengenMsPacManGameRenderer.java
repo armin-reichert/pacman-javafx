@@ -31,7 +31,6 @@ import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -71,11 +70,11 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     private final AssetStorage assets;
     private final TengenMsPacManGameSpriteSheet spriteSheet;
+    private final TengenArcadeMapsSpriteSheet arcadeMapsSpriteSheet;
     private final TengenNonArcadeMapsSpriteSheet nonArcadeMapSpriteSheet;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
-    private final Image arcadeMazesImage;
 
     private Color bgColor = Color.BLACK;
     private ImageArea mapSprite;
@@ -85,8 +84,8 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     public TengenMsPacManGameRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
-        arcadeMazesImage = assets.image("tengen.mazes.arcade");
         spriteSheet = assets.get("tengen.spritesheet");
+        arcadeMapsSpriteSheet = new TengenArcadeMapsSpriteSheet(assets);
         nonArcadeMapSpriteSheet = new TengenNonArcadeMapsSpriteSheet(assets);
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(bgColor);
@@ -107,11 +106,8 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         }
 
         TengenMsPacManGame tengenGame = (TengenMsPacManGame) game;
-        int spriteWidth  = game.world().map().terrain().numCols() * TS;
-        int spriteHeight = (game.world().map().terrain().numRows() - 5) * TS; // 5 empty rows in map (top: 3, bottom 2)
-
         mapSprite = switch (tengenGame.mapCategory()) {
-            case ARCADE -> arcadeMapSpriteImageArea(mapNumber, spriteWidth, spriteHeight);
+            case ARCADE -> arcadeMapSpriteImageArea(mapNumber);
             case MINI -> miniMapSpriteImageArea(mapNumber);
             case BIG -> bigMapSpriteImageArea(mapNumber);
             case STRANGE -> nonArcadeMapSpriteSheet.mapSprite(mapNumber);
@@ -244,7 +240,9 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
         // All maps that use a different color scheme than that in the sprite sheet have to be rendered using the
         // generic vector renderer for now. This looks more or less bad for specific maps.
-        boolean useVectorRenderer =  game.mapCategory() != MapCategory.STRANGE;
+        boolean useVectorRenderer =
+                game.mapCategory() != MapCategory.ARCADE &&
+                game.mapCategory() != MapCategory.STRANGE;
 
         boolean isDemoLevel = context.game().isDemoLevel();
 
@@ -389,23 +387,19 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         }
     }
 
-    private ImageArea arcadeMapSpriteImageArea(int levelNumber, int spriteWidth, int spriteHeight) {
+    private ImageArea arcadeMapSpriteImageArea(int levelNumber) {
         return switch (levelNumber) {
-            case 1, 2           -> arcadeMapSpriteImageArea(0, 0, spriteWidth, spriteHeight);
-            case 3, 4, 5        -> arcadeMapSpriteImageArea(0, 1, spriteWidth, spriteHeight);
-            case 6, 7, 8, 9     -> arcadeMapSpriteImageArea(0, 2, spriteWidth, spriteHeight);
-            case 10, 11, 12, 13 -> arcadeMapSpriteImageArea(1, 0, spriteWidth, spriteHeight);
-            case 14, 15, 16, 17 -> arcadeMapSpriteImageArea(1, 1, spriteWidth, spriteHeight);
-            case 18, 19, 20, 21 -> arcadeMapSpriteImageArea(1, 2, spriteWidth, spriteHeight);
-            case 22, 23, 24, 25 -> arcadeMapSpriteImageArea(2, 0, spriteWidth, spriteHeight);
-            case 26, 27, 28, 29 -> arcadeMapSpriteImageArea(2, 1, spriteWidth, spriteHeight);
-            case 30, 31, 32     -> arcadeMapSpriteImageArea(2, 2, spriteWidth, spriteHeight);
-            default             -> arcadeMapSpriteImageArea(2, 2, spriteWidth, spriteHeight); // should not happen
+            case 1, 2           -> arcadeMapsSpriteSheet.mapSprite(0, 0);
+            case 3, 4, 5        -> arcadeMapsSpriteSheet.mapSprite(0, 1);
+            case 6, 7, 8, 9     -> arcadeMapsSpriteSheet.mapSprite(0, 2);
+            case 10, 11, 12, 13 -> arcadeMapsSpriteSheet.mapSprite(1, 0);
+            case 14, 15, 16, 17 -> arcadeMapsSpriteSheet.mapSprite(1, 1);
+            case 18, 19, 20, 21 -> arcadeMapsSpriteSheet.mapSprite(1, 2);
+            case 22, 23, 24, 25 -> arcadeMapsSpriteSheet.mapSprite(2, 0);
+            case 26, 27, 28, 29 -> arcadeMapsSpriteSheet.mapSprite(2, 1);
+            case 30, 31, 32     -> arcadeMapsSpriteSheet.mapSprite(2, 2);
+            default             -> arcadeMapsSpriteSheet.mapSprite(2, 2); // should not happen
         };
-    }
-
-    private ImageArea arcadeMapSpriteImageArea(int rowIndex, int colIndex, int spriteWidth, int spriteHeight) {
-        return new ImageArea(arcadeMazesImage, new RectArea(colIndex * spriteWidth, rowIndex * spriteHeight, spriteWidth, spriteHeight));
     }
 
     private ImageArea miniMapSpriteImageArea(int mapNumber) {

@@ -50,14 +50,14 @@ public class TengenNonArcadeMapsSpriteSheet {
         rect(1568, 840, 224, 248), rect(1568, 1088, 224, 248), rect(1568, 1336, 224, 248),
     };
 
-    private final Image nonArcadeMazesImage;
+    private final Image image;
 
     public TengenNonArcadeMapsSpriteSheet(AssetStorage assets) {
-        nonArcadeMazesImage = assets.image("tengen.mazes.non_arcade");
+        image = assets.image("tengen.mazes.non_arcade");
     }
 
     public ImageArea mapSprite(int spriteNumber) {
         Vector2i size = SPRITE_SIZES[spriteNumber - 1];
-        return new ImageArea(nonArcadeMazesImage, nonArcadeMapSprite(spriteNumber, size.x(), size.y()));
+        return new ImageArea(image, nonArcadeMapSprite(spriteNumber, size.x(), size.y()));
     }
 }
