@@ -192,13 +192,24 @@ public class OptionsScene extends GameScene2D {
 
         else if (context.keyboard().pressed(KeyCode.TAB)) {
             switch (selectedOption) {
-                case OPTION_PAC_BOOSTER    -> selectNextPacBoosterValue();
-                case OPTION_DIFFICULTY     -> selectNextDifficultyValue();
-                case OPTION_MAZE_SELECTION -> selectNextMazeSelectionValue();
-                case OPTION_STARTING_LEVEL -> selectNextStartingLevelValue();
+                case OPTION_PAC_BOOSTER -> {
+                    selectNextPacBoosterValue();
+                    playOptionValueChangedSound();
+                }
+                case OPTION_DIFFICULTY -> {
+                    selectNextDifficultyValue();
+                    playOptionValueChangedSound();
+                }
+                case OPTION_MAZE_SELECTION -> {
+                    selectNextMazeSelectionValue();
+                    playOptionValueChangedSound();
+                }
+                case OPTION_STARTING_LEVEL -> {
+                    selectNextStartingLevelValue();
+                    playOptionValueChangedSound();
+                }
                 default -> {}
             }
-            playOptionValueChangedSound();
             resetIdleTimer();
         }
 
