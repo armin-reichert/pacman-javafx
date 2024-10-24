@@ -4,15 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.GameAssets2D;
-import de.amr.games.pacman.ui2d.GlobalGameActions2D;
-import de.amr.games.pacman.ui2d.PacManGames2dUI;
+import de.amr.games.pacman.ui2d.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_DEBUG_INFO;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
 
 /**
@@ -52,11 +50,13 @@ public class PacManGames3dUI extends PacManGames2dUI {
     @Override
     protected ObservableValue<String> stageTitleBinding() {
         return Bindings.createStringBinding(() -> {
+            String sceneName = currentGameScene().map(gameScene -> gameScene.getClass().getSimpleName()).orElse(null);
+            String sceneNameSuffix = sceneName != null && PY_DEBUG_INFO.get() ? " [%s]".formatted(sceneName) : "";
             // resource key is composed of game variant, paused state and display mode (2D, 3D)
             String gameVariantPart = "app.title." + assetPrefix(gameVariantPy.get());
             String pausedPart = clock.pausedPy.get() ? ".paused" : "";
             String displayMode = locText(PY_3D_ENABLED.get() ? "threeD" : "twoD");
-            return locText(gameVariantPart + pausedPart, displayMode);
-        }, clock.pausedPy, gameVariantPy, PY_3D_ENABLED);
+            return locText(gameVariantPart + pausedPart, displayMode) + sceneNameSuffix;
+        }, clock.pausedPy, gameVariantPy, PY_3D_ENABLED, gameScenePy, PY_DEBUG_INFO);
     }
 }

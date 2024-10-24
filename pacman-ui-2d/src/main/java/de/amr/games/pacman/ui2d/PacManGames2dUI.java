@@ -457,6 +457,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public void selectStartPage() {
         clock.stop();
+        gameSceneProperty().set(null);
         //TODO check this
         gamePage.dashboardLayer().hideDashboard();
         selectPage(startPage);
