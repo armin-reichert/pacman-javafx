@@ -52,6 +52,17 @@ public class TerrainMapRenderer implements TileMapRenderer {
         map.fillerPaths().forEach(
             path -> drawPath(g, map, path, true, OBSTACLE_STROKE_WIDTH * baseLineWidth, fillColor, fillColor)
         );
+        // Fix concavity entries
+        map.topConcavityEntries().forEach(entry -> {
+            double left = entry.x() * TS, right = (entry.x() + 2) * TILE_SIZE;
+            double lineY = entry.y() * TS + 2.5; // TODO what exactly?
+            g.setFill(wallFillColor);
+            g.fillRect(left, lineY, 2*TS, OUTER_WALL_FILLING_WIDTH * 0.75);
+            g.setStroke(wallStrokeColor);
+            g.setLineWidth(baseLineWidth);
+            g.strokeLine(left, lineY, right, lineY);
+        });
+
         map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, map, door, OBSTACLE_STROKE_WIDTH * baseLineWidth, doorColor));
         g.restore();
     }

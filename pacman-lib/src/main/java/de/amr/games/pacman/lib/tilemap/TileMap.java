@@ -38,6 +38,8 @@ public class TileMap {
         private List<TileMapPath> singleStrokePaths = new ArrayList<>();
         private List<TileMapPath> doubleStrokePaths = new ArrayList<>();
         private List<TileMapPath> fillerPaths = new ArrayList<>();
+        private List<Vector2i> topConcavityEntries = new ArrayList<>();
+        private List<Vector2i> bottomConcavityEntries = new ArrayList<>();
 
         TerrainMapData() {}
 
@@ -45,6 +47,8 @@ public class TileMap {
             singleStrokePaths = new ArrayList<>(other.singleStrokePaths);
             doubleStrokePaths = new ArrayList<>(other.doubleStrokePaths);
             fillerPaths = new ArrayList<>(other.fillerPaths);
+            topConcavityEntries = new ArrayList<>(other.topConcavityEntries);
+            bottomConcavityEntries = new ArrayList<>(other.bottomConcavityEntries);
         }
 
         void clearExploredSet() {
@@ -373,30 +377,39 @@ public class TileMap {
 
         // create filler paths for concavities from maze border inside maze
         terrainMapData.clearExploredSet();
-        int topRow = 3, bottomRow = numRows() - 3; // TODO make this more general
 
-        for (int col = 0; col < numCols() - 1; ++col) {
-            if (get(topRow, col) == Tiles.DCORNER_NE && get(topRow, col + 1) == Tiles.DCORNER_NW) {
-                Logger.info("Found concavity entry at top row {} col {}", topRow, col);
-                Vector2i pathStartTile = new Vector2i(col, topRow + 1);
-                TileMapPath path = computePath(pathStartTile, DOWN, tile -> outOfBounds(tile) || tile.equals(pathStartTile.plus(1, -1)));
-                path.add(UP);
-                path.add(LEFT);
-                path.add(DOWN);
-                terrainMapData.fillerPaths.add(path);
+        {
+            int topRow = 3;
+            for (int col = 0; col < numCols() - 1; ++col) {
+                if (get(topRow, col) == Tiles.DCORNER_NE && get(topRow, col + 1) == Tiles.DCORNER_NW) {
+                    terrainMapData.topConcavityEntries.add(new Vector2i(col, topRow));
+                    Logger.info("Found concavity entry at top row {} col {}", topRow, col);
+                    Vector2i pathStartTile = new Vector2i(col, topRow + 1);
+                    TileMapPath path = computePath(pathStartTile, DOWN, tile -> outOfBounds(tile) || tile.equals(pathStartTile.plus(1, -1)));
+                    path.add(UP);
+                    path.add(LEFT);
+                    path.add(DOWN);
+                    terrainMapData.fillerPaths.add(path);
+                }
             }
         }
-        for (int col = 0; col < numCols() - 1; ++col) {
-            if (get(bottomRow, col) == Tiles.DCORNER_SE && get(bottomRow, col + 1) == Tiles.DCORNER_SW) {
-                Logger.info("Found concavity entry at bottom row {} col {}", topRow, col);
-                Vector2i pathStartTile = new Vector2i(col, bottomRow - 1);
-                TileMapPath path = computePath(pathStartTile, UP, tile -> outOfBounds(tile) || tile.equals(pathStartTile.plus(1, 0)));
-                path.add(DOWN);
-                path.add(LEFT);
-                path.add(UP);
-                terrainMapData.fillerPaths.add(path);
+
+        {
+            int bottomRow = numRows() - 3; // TODO make this more general
+            for (int col = 0; col < numCols() - 1; ++col) {
+                if (get(bottomRow, col) == Tiles.DCORNER_SE && get(bottomRow, col + 1) == Tiles.DCORNER_SW) {
+                    terrainMapData.bottomConcavityEntries.add(new Vector2i(col, bottomRow));
+                    Logger.info("Found concavity entry at bottom row {} col {}", bottomRow, col);
+                    Vector2i pathStartTile = new Vector2i(col, bottomRow - 1);
+                    TileMapPath path = computePath(pathStartTile, UP, tile -> outOfBounds(tile) || tile.equals(pathStartTile.plus(1, 0)));
+                    path.add(DOWN);
+                    path.add(LEFT);
+                    path.add(UP);
+                    terrainMapData.fillerPaths.add(path);
+                }
             }
         }
+
         Logger.debug("Paths computed, {} single wall paths, {} double wall paths, {} filler paths",
             terrainMapData.singleStrokePaths.size(), terrainMapData.doubleStrokePaths.size(), terrainMapData.fillerPaths.size());
     }
@@ -411,6 +424,14 @@ public class TileMap {
 
     public Stream<TileMapPath> fillerPaths() {
         return terrainMapData != null ? terrainMapData.fillerPaths.stream() : Stream.empty();
+    }
+
+    public Stream<Vector2i> topConcavityEntries() {
+        return terrainMapData != null ? terrainMapData.topConcavityEntries.stream() : Stream.empty();
+    }
+
+    public Stream<Vector2i> bottomConcavityEntries() {
+        return terrainMapData != null ? terrainMapData.bottomConcavityEntries.stream() : Stream.empty();
     }
 
     private TileMapPath computePath(Vector2i startTile, Direction startDir) {
