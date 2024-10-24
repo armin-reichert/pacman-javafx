@@ -180,6 +180,9 @@ public class GameAssets2D extends AssetStorage {
         assets.store("tengen.ghost.color.flashing.pupils",    Color.rgb(176, 15, 48));
 
         // Clips
+        assets.store("tengen.audio.option.selection_changed", rm.loadAudioClip("sound/tengen/ding_low.wav"));
+        assets.store("tengen.audio.option.value_changed",     rm.loadAudioClip("sound/tengen/ding_high.wav"));
+
         assets.store("tengen.audio.bonus_eaten",        rm.loadAudioClip("sound/tengen/Fruit.mp3"));
         assets.store("tengen.audio.extra_life",         rm.loadAudioClip("sound/tengen/Extra_Life.wav"));
         assets.store("tengen.audio.ghost_eaten",        rm.loadAudioClip("sound/tengen/Ghost_Eaten.mp3"));

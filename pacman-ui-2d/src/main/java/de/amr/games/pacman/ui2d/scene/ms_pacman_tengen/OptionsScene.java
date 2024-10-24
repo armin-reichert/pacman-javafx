@@ -168,24 +168,24 @@ public class OptionsScene extends GameScene2D {
     }
 
     //TODO use right sound
-    private void playChangeOptionSound() {
-        context.sounds().playBonusEatenSound();
+    private void playOptionSelectionChangedSound() {
+        context.sounds().playClipIfEnabled("option.selection_changed");
     }
 
     //TODO use right sound
-    private void playChangeOptionValueSound() {
-        context.sounds().playBonusEatenSound();
+    private void playOptionValueChangedSound() {
+        context.sounds().playClipIfEnabled("option.value_changed");
     }
 
     @Override
     public void handleInput() {
         if (context.keyboard().pressed(KeyCode.DOWN)) {
-            playChangeOptionSound();
+            playOptionSelectionChangedSound();
             selectNextOption();
             resetIdleTimer();
         }
         else if (context.keyboard().pressed(KeyCode.UP)) {
-            playChangeOptionSound();
+            playOptionSelectionChangedSound();
             selectPrevOption();
             resetIdleTimer();
         }
@@ -198,7 +198,7 @@ public class OptionsScene extends GameScene2D {
                 case OPTION_STARTING_LEVEL -> selectNextStartingLevelValue();
                 default -> {}
             }
-            playChangeOptionValueSound();
+            playOptionValueChangedSound();
             resetIdleTimer();
         }
 

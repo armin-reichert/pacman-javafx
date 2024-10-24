@@ -136,7 +136,7 @@ public class GameSounds {
         stop(players(gameVariant).get(key));
     }
 
-    private void playClipIfEnabled(String keySuffix) {
+    public void playClipIfEnabled(String keySuffix) {
         checkNotNull(keySuffix);
         String assetKey = assetPrefix(gameVariant) + ".audio." + keySuffix;
         AudioClip clip = assets.get(assetKey);
