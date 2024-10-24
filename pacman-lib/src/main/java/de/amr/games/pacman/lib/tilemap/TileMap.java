@@ -401,10 +401,9 @@ public class TileMap {
                     terrainMapData.bottomConcavityEntries.add(new Vector2i(col, bottomRow));
                     Logger.info("Found concavity entry at bottom row {} col {}", bottomRow, col);
                     Vector2i pathStartTile = new Vector2i(col, bottomRow - 1);
-                    TileMapPath path = computePath(pathStartTile, UP, tile -> outOfBounds(tile) || tile.equals(pathStartTile.plus(1, 0)));
-                    path.add(DOWN);
+                    TileMapPath path = computePath(pathStartTile, UP,
+                        tile -> outOfBounds(tile) || tile.equals(pathStartTile.plus(1, 1)));
                     path.add(LEFT);
-                    path.add(UP);
                     terrainMapData.fillerPaths.add(path);
                 }
             }
