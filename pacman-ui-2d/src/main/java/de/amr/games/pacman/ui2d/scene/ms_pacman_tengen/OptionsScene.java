@@ -66,7 +66,7 @@ public class OptionsScene extends GameScene2D {
 
     @Override
     public void update() {
-        if (idleTicks == 15*60) {
+        if (idleTicks == 25*60) { // TODO check idle time in disassembly
             context.gameController().changeState(GameState.INTRO);
             return;
         }
@@ -167,22 +167,27 @@ public class OptionsScene extends GameScene2D {
         }
     }
 
+    //TODO use right sound
     private void playChangeOptionSound() {
-        //TODO use right sound
+        context.sounds().playBonusEatenSound();
     }
 
+    //TODO use right sound
     private void playChangeOptionValueSound() {
-        //TODO use right sound
         context.sounds().playBonusEatenSound();
     }
 
     @Override
     public void handleInput() {
         if (context.keyboard().pressed(KeyCode.DOWN)) {
+            playChangeOptionSound();
             selectNextOption();
+            resetIdleTimer();
         }
         else if (context.keyboard().pressed(KeyCode.UP)) {
+            playChangeOptionSound();
             selectPrevOption();
+            resetIdleTimer();
         }
 
         else if (context.keyboard().pressed(KeyCode.TAB)) {
@@ -193,6 +198,8 @@ public class OptionsScene extends GameScene2D {
                 case OPTION_STARTING_LEVEL -> selectNextStartingLevelValue();
                 default -> {}
             }
+            playChangeOptionValueSound();
+            resetIdleTimer();
         }
 
         //TODO make into game action?
@@ -215,22 +222,16 @@ public class OptionsScene extends GameScene2D {
 
     private void selectPrevOption() {
         selectedOption = selectedOption == 0 ? NUM_OPTIONS - 1 : selectedOption - 1;
-        playChangeOptionSound();
-        resetIdleTimer();
     }
 
     private void selectNextOption() {
         selectedOption = (selectedOption < NUM_OPTIONS - 1) ? selectedOption + 1 : 0;
-        playChangeOptionSound();
-        resetIdleTimer();
     }
 
     private void selectNextStartingLevelValue() {
         int current = tengenGame.startingLevel();
         int next = (current < MAX_STARTING_LEVEL) ? current + 1 : 1;
         tengenGame.setStartingLevel(next);
-        playChangeOptionValueSound();
-        resetIdleTimer();
     }
 
     private void selectNextMazeSelectionValue() {
@@ -238,8 +239,6 @@ public class OptionsScene extends GameScene2D {
         var values = MapCategory.values();
         int current = category.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame.setMapCategory(values[next]);
-        playChangeOptionValueSound();
-        resetIdleTimer();
     }
 
     private void selectNextDifficultyValue() {
@@ -247,8 +246,6 @@ public class OptionsScene extends GameScene2D {
         var values = Difficulty.values();
         int current = difficulty.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame.setDifficulty(values[next]);
-        playChangeOptionValueSound();
-        resetIdleTimer();
     }
 
     private void selectNextPacBoosterValue() {
@@ -256,7 +253,5 @@ public class OptionsScene extends GameScene2D {
         var values = BoosterMode.values();
         int current = boosterMode.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame.setPacBooster(values[next]);
-        playChangeOptionValueSound();
-        resetIdleTimer();
     }
 }
