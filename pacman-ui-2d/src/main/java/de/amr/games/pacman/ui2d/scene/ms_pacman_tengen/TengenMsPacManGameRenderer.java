@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.tilemap.TileMap;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameModel;
@@ -72,20 +71,20 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     // Maze images are taken from files "arcade_mazes.png" and "non_arcade_mazes.png" via AssetStorage
 
     /**
-     * @param mapNumber number of non-Arcade map (1-37)
+     * @param spriteNumber number (1 based) of map sprite in sprite sheet (row-wise)
      * @param width map width in pixels
      * @param height map height in pixels
      * @return map sprite in non-Arcade maps sprite sheet
      */
-    private static RectArea nonArcadeMapSprite(int mapNumber, int width, int height) {
+    private static RectArea nonArcadeMapSprite(int spriteNumber, int width, int height) {
         int col, y;
-        switch (mapNumber) {
-            case 1,2,3,4,5,6,7,8            -> { col = (mapNumber - 1);  y = 0;    }
-            case 9,10,11,12,13,14,15,16     -> { col = (mapNumber - 9);  y = 248;  }
-            case 17,18,19,20,21,22,23,24    -> { col = (mapNumber - 17); y = 544;  }
-            case 25,26,27,28,29,30,31,32,33 -> { col = (mapNumber - 25); y = 840;  }
-            case 34,35,36,37                -> { col = (mapNumber - 34); y = 1136; }
-            default -> throw new IllegalArgumentException("Illegal non-Arcade map number: " + mapNumber);
+        switch (spriteNumber) {
+            case 1,2,3,4,5,6,7,8            -> { col = (spriteNumber - 1);  y = 0;    }
+            case 9,10,11,12,13,14,15,16     -> { col = (spriteNumber - 9);  y = 248;  }
+            case 17,18,19,20,21,22,23,24    -> { col = (spriteNumber - 17); y = 544;  }
+            case 25,26,27,28,29,30,31,32,33 -> { col = (spriteNumber - 25); y = 840;  }
+            case 34,35,36,37                -> { col = (spriteNumber - 34); y = 1136; }
+            default -> throw new IllegalArgumentException("Illegal non-Arcade map number: " + spriteNumber);
         }
         return new RectArea(col * width, y, width, height);
     }
@@ -117,6 +116,26 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(bgColor);
         foodRenderer.scalingPy.bind(scalingPy);
+    }
+
+    @Override
+    public void update(GameModel game) {
+        if (game.world() == null) {
+            Logger.warn("Cannot set renderer for game, no world exists");
+            return;
+        }
+        int mapNumber    = game.currentMapNumber();
+        int spriteWidth  = game.world().map().terrain().numCols() * TS;
+        int spriteHeight = (game.world().map().terrain().numRows() - 5) * TS; // 5 empty rows in map (top: 3, bottom 2)
+
+        TengenMsPacManGame tengenGame = (TengenMsPacManGame) game;
+        mapSprite = switch (tengenGame.mapCategory()) {
+            case ARCADE -> arcadeMapSpriteImageArea(mapNumber, spriteWidth, spriteHeight);
+            case MINI -> miniMapSpriteImageArea(mapNumber, spriteWidth, spriteHeight);
+            case BIG -> bigMapSpriteImageArea(mapNumber, spriteWidth, spriteHeight);
+            case STRANGE -> new ImageArea(nonArcadeMazesImage, nonArcadeMapSprite(mapNumber, spriteWidth, spriteHeight));
+        };
+        Logger.info("Tengen map #{} {}", mapNumber, mapSprite.area());
     }
 
     @Override
@@ -242,8 +261,10 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             return;
         }
 
-        boolean useVectorRenderer = game.mapCategory() != MapCategory.ARCADE
-            && game.mapCategory() != MapCategory.STRANGE;
+        // All maps that use a different color scheme than that in the sprite sheet have to be rendered using the
+        // generic vector renderer for now. This looks more or less bad for specific maps.
+        boolean useVectorRenderer = game.mapCategory() != MapCategory.STRANGE;
+
         boolean isDemoLevel = context.game().isDemoLevel();
 
         if (useVectorRenderer) {
@@ -387,43 +408,40 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         }
     }
 
-    @Override
-    public void update(GameModel game) {
-        TengenMsPacManGame tengenGame = (TengenMsPacManGame) game;
-        if (game.world() == null) {
-            Logger.warn("Cannot set renderer for game, no world exists");
-            return;
-        }
-        WorldMap worldMap = game.world().map();
-        int width  = worldMap.terrain().numCols() * TS;
-        int height = (worldMap.terrain().numRows() - 5) * TS; // 3 empty rows over, 2 under maze image
-        int mapNumber = game.currentMapNumber();
-        mapSprite = switch (tengenGame.mapCategory()) {
-            // we have a sprite sheet with the maps in the required color scheme (to be fixed in the sprite sheet image though)
-            case ARCADE -> arcadeMapSprite(game.currentLevelNumber());
-            case BIG, STRANGE, MINI -> new ImageArea(nonArcadeMazesImage, nonArcadeMapSprite(mapNumber, width, height));
-        };
-        Logger.info("Tengen map # {}: area: {}", mapNumber, mapSprite.area());
-    }
-
-    private ImageArea arcadeMapSprite(int levelNumber) {
+    private ImageArea arcadeMapSpriteImageArea(int levelNumber, int spriteWidth, int spriteHeight) {
         return switch (levelNumber) {
-            case 1, 2           -> arcadeMapSprite(0, 0);
-            case 3, 4, 5        -> arcadeMapSprite(0, 1);
-            case 6, 7, 8, 9     -> arcadeMapSprite(0, 2);
-            case 10, 11, 12, 13 -> arcadeMapSprite(1, 0);
-            case 14, 15, 16, 17 -> arcadeMapSprite(1, 1);
-            case 18, 19, 20, 21 -> arcadeMapSprite(1, 2);
-            case 22, 23, 24, 25 -> arcadeMapSprite(2, 0);
-            case 26, 27, 28, 29 -> arcadeMapSprite(2, 1);
-            case 30, 31, 32     -> arcadeMapSprite(2, 2);
-            default             -> arcadeMapSprite(2, 2); // should not happen
+            case 1, 2           -> arcadeMapSpriteImageArea(0, 0, spriteWidth, spriteHeight);
+            case 3, 4, 5        -> arcadeMapSpriteImageArea(0, 1, spriteWidth, spriteHeight);
+            case 6, 7, 8, 9     -> arcadeMapSpriteImageArea(0, 2, spriteWidth, spriteHeight);
+            case 10, 11, 12, 13 -> arcadeMapSpriteImageArea(1, 0, spriteWidth, spriteHeight);
+            case 14, 15, 16, 17 -> arcadeMapSpriteImageArea(1, 1, spriteWidth, spriteHeight);
+            case 18, 19, 20, 21 -> arcadeMapSpriteImageArea(1, 2, spriteWidth, spriteHeight);
+            case 22, 23, 24, 25 -> arcadeMapSpriteImageArea(2, 0, spriteWidth, spriteHeight);
+            case 26, 27, 28, 29 -> arcadeMapSpriteImageArea(2, 1, spriteWidth, spriteHeight);
+            case 30, 31, 32     -> arcadeMapSpriteImageArea(2, 2, spriteWidth, spriteHeight);
+            default             -> arcadeMapSpriteImageArea(2, 2, spriteWidth, spriteHeight); // should not happen
         };
     }
 
-    private ImageArea arcadeMapSprite(int rowIndex, int colIndex) {
-        int width = 28 * TS, height = 31 * TS;
-        return new ImageArea(arcadeMazesImage, new RectArea(colIndex * width, rowIndex * height, width, height));
+    private ImageArea arcadeMapSpriteImageArea(int rowIndex, int colIndex, int spriteWidth, int spriteHeight) {
+        return new ImageArea(arcadeMazesImage, new RectArea(colIndex * spriteWidth, rowIndex * spriteHeight, spriteWidth, spriteHeight));
+    }
+
+    private ImageArea miniMapSpriteImageArea(int mapNumber, int spriteWidth, int spriteHeight) {
+        int spriteNumber = switch (mapNumber) {
+            case 1 -> 34;
+            case 2 -> 35;
+            case 3 -> 36;
+            case 4 -> 30;
+            case 5 -> 28;
+            case 6 -> 37;
+            default -> throw new IllegalArgumentException("Illegal MINI map number: " + mapNumber);
+        };
+        return new ImageArea(nonArcadeMazesImage, nonArcadeMapSprite(spriteNumber, spriteWidth, spriteHeight));
+    }
+
+    private ImageArea bigMapSpriteImageArea(int mapNumber, int spriteWidth, int spriteHeight) {
+        return new ImageArea(nonArcadeMazesImage, nonArcadeMapSprite(mapNumber, spriteWidth, spriteHeight));
     }
 
     public void drawMovingBonus(GameSpriteSheet spriteSheet, MovingBonus bonus) {

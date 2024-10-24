@@ -9,7 +9,6 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.MapColorScheme;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.*;
@@ -257,31 +256,32 @@ public class TengenMsPacManGame extends GameModel {
         }
     }
 
-    private void selectMap(int levelNumber) {
+    private void selectMapForLevel(int levelNumber) {
         switch (mapCategory) {
-            case ARCADE -> selectArcadeMap(levelNumber);
-            case STRANGE -> selectStrangeMap(levelNumber);
-            case MINI -> selectMinMap(levelNumber);
-            case BIG -> selectBigMap(levelNumber);
+            case ARCADE  -> selectArcadeMapForLevel(levelNumber);
+            case STRANGE -> selectStrangeMapForLevel(levelNumber);
+            case MINI    -> selectMiniMapForLevel(levelNumber);
+            case BIG     -> selectBigMapForLevel(levelNumber);
         }
     }
 
-    private void selectCurrentMapAndColorScheme(List<WorldMap> maps, int mapNumber, MapColorScheme colorScheme) {
+    private void setMapAndColorScheme(List<WorldMap> maps, int mapNumber, MapColorScheme colorScheme) {
+        currentMapNumber = mapNumber;
         currentMap = new WorldMap(maps.get(mapNumber - 1));
         currentMapColorScheme = colorScheme;
     }
 
-    private void selectArcadeMap(int levelNumber) {
+    private void selectArcadeMapForLevel(int levelNumber) {
         switch (levelNumber) {
-            case 1,2         -> selectCurrentMapAndColorScheme(arcadeMaps, 1, TengenMapColorSchemes.PINK_DARKRED);
-            case 3,4,5       -> selectCurrentMapAndColorScheme(arcadeMaps, 2, TengenMapColorSchemes.LIGHTBLUE_WHITE_YELLOW);
-            case 6,7,8,9     -> selectCurrentMapAndColorScheme(arcadeMaps, 3, TengenMapColorSchemes.ORANGE_WHITE);
-            case 10,11,12,13 -> selectCurrentMapAndColorScheme(arcadeMaps, 4, TengenMapColorSchemes.BLUE_YELLOW);
-            case 14,15,16,17 -> selectCurrentMapAndColorScheme(arcadeMaps, 3, TengenMapColorSchemes.PINK_YELLOW);
-            case 18,19,20,21 -> selectCurrentMapAndColorScheme(arcadeMaps, 4, TengenMapColorSchemes.PINK_DARKRED);
-            case 22,23,24,25 -> selectCurrentMapAndColorScheme(arcadeMaps, 3, TengenMapColorSchemes.ORANGE_WHITE);
-            case 26,27,28,29 -> selectCurrentMapAndColorScheme(arcadeMaps, 4, TengenMapColorSchemes.VIOLET_WHITE);
-            case 30,31,32    -> selectCurrentMapAndColorScheme(arcadeMaps, 3, TengenMapColorSchemes.BLACK_WHITE_YELLOW);
+            case 1,2         -> setMapAndColorScheme(arcadeMaps, 1, TengenMapColorSchemes.PINK_DARKRED);
+            case 3,4,5       -> setMapAndColorScheme(arcadeMaps, 2, TengenMapColorSchemes.LIGHTBLUE_WHITE_YELLOW);
+            case 6,7,8,9     -> setMapAndColorScheme(arcadeMaps, 3, TengenMapColorSchemes.ORANGE_WHITE);
+            case 10,11,12,13 -> setMapAndColorScheme(arcadeMaps, 4, TengenMapColorSchemes.BLUE_YELLOW);
+            case 14,15,16,17 -> setMapAndColorScheme(arcadeMaps, 3, TengenMapColorSchemes.PINK_YELLOW);
+            case 18,19,20,21 -> setMapAndColorScheme(arcadeMaps, 4, TengenMapColorSchemes.PINK_DARKRED);
+            case 22,23,24,25 -> setMapAndColorScheme(arcadeMaps, 3, TengenMapColorSchemes.ORANGE_WHITE);
+            case 26,27,28,29 -> setMapAndColorScheme(arcadeMaps, 4, TengenMapColorSchemes.VIOLET_WHITE);
+            case 30,31,32    -> setMapAndColorScheme(arcadeMaps, 3, TengenMapColorSchemes.BLACK_WHITE_YELLOW);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
     }
@@ -289,48 +289,48 @@ public class TengenMsPacManGame extends GameModel {
     /**
      * From this <a href="https://www.youtube.com/watch?v=cD0oGudVpbw">YouTube video</a>.
      */
-    private void selectMinMap(int levelNumber) {
+    private void selectMiniMapForLevel(int levelNumber) {
         switch (levelNumber) {
-            case 1  -> selectCurrentMapAndColorScheme(miniMaps, 1, TengenMapColorSchemes.PINK_DARKRED);
-            case 2  -> selectCurrentMapAndColorScheme(miniMaps, 2, TengenMapColorSchemes.LIGHTBLUE_WHITE_YELLOW);
+            case 1  -> setMapAndColorScheme(miniMaps, 1, TengenMapColorSchemes.PINK_DARKRED);
+            case 2  -> setMapAndColorScheme(miniMaps, 2, TengenMapColorSchemes.LIGHTBLUE_WHITE_YELLOW);
 
-            case 3  -> selectCurrentMapAndColorScheme(miniMaps, 1, TengenMapColorSchemes.ORANGE_WHITE);
-            case 4  -> selectCurrentMapAndColorScheme(miniMaps, 2, TengenMapColorSchemes.BLUE_YELLOW);
-            case 5  -> selectCurrentMapAndColorScheme(miniMaps, 3, TengenMapColorSchemes.PINK_YELLOW);
+            case 3  -> setMapAndColorScheme(miniMaps, 1, TengenMapColorSchemes.ORANGE_WHITE);
+            case 4  -> setMapAndColorScheme(miniMaps, 2, TengenMapColorSchemes.BLUE_YELLOW);
+            case 5  -> setMapAndColorScheme(miniMaps, 3, TengenMapColorSchemes.PINK_YELLOW);
 
-            case 6  -> selectCurrentMapAndColorScheme(miniMaps, 1, TengenMapColorSchemes.PINK_DARKRED);
-            case 7  -> selectCurrentMapAndColorScheme(miniMaps, 2, TengenMapColorSchemes.BROWN2_WHITE);
-            case 8  -> selectCurrentMapAndColorScheme(miniMaps, 3, TengenMapColorSchemes.VIOLET_WHITE_YELLOW);
-            case 9  -> selectCurrentMapAndColorScheme(miniMaps, 4, TengenMapColorSchemes.BLACK_WHITE_YELLOW);
+            case 6  -> setMapAndColorScheme(miniMaps, 1, TengenMapColorSchemes.PINK_DARKRED);
+            case 7  -> setMapAndColorScheme(miniMaps, 2, TengenMapColorSchemes.BROWN2_WHITE);
+            case 8  -> setMapAndColorScheme(miniMaps, 3, TengenMapColorSchemes.VIOLET_WHITE_YELLOW);
+            case 9  -> setMapAndColorScheme(miniMaps, 4, TengenMapColorSchemes.BLACK_WHITE_YELLOW);
 
-            case 10 -> selectCurrentMapAndColorScheme(miniMaps, 1, TengenMapColorSchemes.BLACK_DARKBLUE);
-            case 11 -> selectCurrentMapAndColorScheme(miniMaps, 2, TengenMapColorSchemes.VIOLET_PINK);
-            case 12 -> selectCurrentMapAndColorScheme(miniMaps, 3, TengenMapColorSchemes.RED_WHITE);
-            case 13 -> selectCurrentMapAndColorScheme(miniMaps, 4, TengenMapColorSchemes.GREEN_WHITE_WHITE);
+            case 10 -> setMapAndColorScheme(miniMaps, 1, TengenMapColorSchemes.BLACK_DARKBLUE);
+            case 11 -> setMapAndColorScheme(miniMaps, 2, TengenMapColorSchemes.VIOLET_PINK);
+            case 12 -> setMapAndColorScheme(miniMaps, 3, TengenMapColorSchemes.RED_WHITE);
+            case 13 -> setMapAndColorScheme(miniMaps, 4, TengenMapColorSchemes.GREEN_WHITE_WHITE);
 
-            case 14 -> selectCurrentMapAndColorScheme(miniMaps, 1, TengenMapColorSchemes.YELLOW_WHITE_GREEN);
-            case 15 -> selectCurrentMapAndColorScheme(miniMaps, 2, TengenMapColorSchemes.GREEN_WHITE_YELLOW);
-            case 16 -> selectCurrentMapAndColorScheme(miniMaps, 3, TengenMapColorSchemes.KHAKI_WHITE);
-            case 17 -> selectCurrentMapAndColorScheme(miniMaps, 4, TengenMapColorSchemes.PINK_WHITE);
-            case 18 -> selectCurrentMapAndColorScheme(miniMaps, 5, TengenMapColorSchemes.BLUE_WHITE_YELLOW);
+            case 14 -> setMapAndColorScheme(miniMaps, 1, TengenMapColorSchemes.YELLOW_WHITE_GREEN);
+            case 15 -> setMapAndColorScheme(miniMaps, 2, TengenMapColorSchemes.GREEN_WHITE_YELLOW);
+            case 16 -> setMapAndColorScheme(miniMaps, 3, TengenMapColorSchemes.KHAKI_WHITE);
+            case 17 -> setMapAndColorScheme(miniMaps, 4, TengenMapColorSchemes.PINK_WHITE);
+            case 18 -> setMapAndColorScheme(miniMaps, 5, TengenMapColorSchemes.BLUE_WHITE_YELLOW);
 
-            case 19 -> selectCurrentMapAndColorScheme(miniMaps, 5, TengenMapColorSchemes.BROWN_WHITE);
-            case 20 -> selectCurrentMapAndColorScheme(miniMaps, 4, TengenMapColorSchemes.RED_PINK);
-            case 21 -> selectCurrentMapAndColorScheme(miniMaps, 3, TengenMapColorSchemes.BLACK_WHITE_GREEN);
-            case 22 -> selectCurrentMapAndColorScheme(miniMaps, 2, TengenMapColorSchemes.GREEN_WHITE_WHITE);
-            case 23 -> selectCurrentMapAndColorScheme(miniMaps, 1, TengenMapColorSchemes.GREEN_WHITE_VIOLET);
+            case 19 -> setMapAndColorScheme(miniMaps, 5, TengenMapColorSchemes.BROWN_WHITE);
+            case 20 -> setMapAndColorScheme(miniMaps, 4, TengenMapColorSchemes.RED_PINK);
+            case 21 -> setMapAndColorScheme(miniMaps, 3, TengenMapColorSchemes.BLACK_WHITE_GREEN);
+            case 22 -> setMapAndColorScheme(miniMaps, 2, TengenMapColorSchemes.GREEN_WHITE_WHITE);
+            case 23 -> setMapAndColorScheme(miniMaps, 1, TengenMapColorSchemes.GREEN_WHITE_VIOLET);
 
-            case 24 -> selectCurrentMapAndColorScheme(miniMaps, 6, TengenMapColorSchemes.VIOLET_WHITE_GREEN);
+            case 24 -> setMapAndColorScheme(miniMaps, 6, TengenMapColorSchemes.VIOLET_WHITE_GREEN);
 
-            case 25 -> selectCurrentMapAndColorScheme(miniMaps, 1, TengenMapColorSchemes.GRAY_WHITE_YELLOW);
-            case 26 -> selectCurrentMapAndColorScheme(miniMaps, 2, TengenMapColorSchemes.BLUE_WHITE);
-            case 27 -> selectCurrentMapAndColorScheme(miniMaps, 3, TengenMapColorSchemes.VIOLET_WHITE);
-            case 28 -> selectCurrentMapAndColorScheme(miniMaps, 4, TengenMapColorSchemes.BROWN2_WHITE);
-            case 29 -> selectCurrentMapAndColorScheme(miniMaps, 5, TengenMapColorSchemes.BROWN2_WHITE);
+            case 25 -> setMapAndColorScheme(miniMaps, 1, TengenMapColorSchemes.GRAY_WHITE_YELLOW);
+            case 26 -> setMapAndColorScheme(miniMaps, 2, TengenMapColorSchemes.BLUE_WHITE);
+            case 27 -> setMapAndColorScheme(miniMaps, 3, TengenMapColorSchemes.VIOLET_WHITE);
+            case 28 -> setMapAndColorScheme(miniMaps, 4, TengenMapColorSchemes.BROWN2_WHITE);
+            case 29 -> setMapAndColorScheme(miniMaps, 5, TengenMapColorSchemes.BROWN2_WHITE);
 
-            case 30 -> selectCurrentMapAndColorScheme(miniMaps, 2, TengenMapColorSchemes.BLUE_YELLOW);
-            case 31 -> selectCurrentMapAndColorScheme(miniMaps, 3, TengenMapColorSchemes.BLACK_WHITE_GREEN);
-            case 32 -> selectCurrentMapAndColorScheme(miniMaps, 6, TengenMapColorSchemes.RED_PINK);
+            case 30 -> setMapAndColorScheme(miniMaps, 2, TengenMapColorSchemes.BLUE_YELLOW);
+            case 31 -> setMapAndColorScheme(miniMaps, 3, TengenMapColorSchemes.BLACK_WHITE_GREEN);
+            case 32 -> setMapAndColorScheme(miniMaps, 6, TengenMapColorSchemes.RED_PINK);
 
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
@@ -339,59 +339,59 @@ public class TengenMsPacManGame extends GameModel {
     /**
      * From this <a href="https://www.youtube.com/watch?v=NoImGoSAL7A">YouTube video</a>.
      */
-    private void selectBigMap(int levelNumber) {
+    private void selectBigMapForLevel(int levelNumber) {
         switch (levelNumber) {
             // 1-5
-            case 1  -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 19, TengenMapColorSchemes.ROSE_RED);
-            case 2  -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 20, TengenMapColorSchemes.LIGHTBLUE_WHITE_YELLOW);
-            case 3  -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 21, TengenMapColorSchemes.ORANGE_WHITE);
-            case 4  -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 19, TengenMapColorSchemes.BLUE_WHITE_YELLOW);
-            case 5  -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 20, TengenMapColorSchemes.PINK_YELLOW);
+            case 1  -> setMapAndColorScheme(strangeOrBigMaps, 19, TengenMapColorSchemes.ROSE_RED);
+            case 2  -> setMapAndColorScheme(strangeOrBigMaps, 20, TengenMapColorSchemes.LIGHTBLUE_WHITE_YELLOW);
+            case 3  -> setMapAndColorScheme(strangeOrBigMaps, 21, TengenMapColorSchemes.ORANGE_WHITE);
+            case 4  -> setMapAndColorScheme(strangeOrBigMaps, 19, TengenMapColorSchemes.BLUE_WHITE_YELLOW);
+            case 5  -> setMapAndColorScheme(strangeOrBigMaps, 20, TengenMapColorSchemes.PINK_YELLOW);
 
             // 6-10
-            case 6  -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 21, TengenMapColorSchemes.ROSE_RED);
-            case 7  -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 22, TengenMapColorSchemes.ORANGE_WHITE);
-            case 8  -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 23, TengenMapColorSchemes.VIOLET_WHITE_YELLOW);
-            case 9  -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 17, TengenMapColorSchemes.BLACK_WHITE_YELLOW);
-            case 10 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 10, TengenMapColorSchemes.BLACK_DARKBLUE);
+            case 6  -> setMapAndColorScheme(strangeOrBigMaps, 21, TengenMapColorSchemes.ROSE_RED);
+            case 7  -> setMapAndColorScheme(strangeOrBigMaps, 22, TengenMapColorSchemes.ORANGE_WHITE);
+            case 8  -> setMapAndColorScheme(strangeOrBigMaps, 23, TengenMapColorSchemes.VIOLET_WHITE_YELLOW);
+            case 9  -> setMapAndColorScheme(strangeOrBigMaps, 17, TengenMapColorSchemes.BLACK_WHITE_YELLOW);
+            case 10 -> setMapAndColorScheme(strangeOrBigMaps, 10, TengenMapColorSchemes.BLACK_DARKBLUE);
 
             // 11-15
-            case 11 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 23, TengenMapColorSchemes.PINK_ROSE);
-            case 12 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 21, TengenMapColorSchemes.PINK_WHITE);
-            case 13 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 22, TengenMapColorSchemes.GREEN_WHITE_WHITE);
-            case 14 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 14, TengenMapColorSchemes.VIOLET_WHITE_GREEN);
-            case 15 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 20, TengenMapColorSchemes.GREEN_WHITE_YELLOW);
+            case 11 -> setMapAndColorScheme(strangeOrBigMaps, 23, TengenMapColorSchemes.PINK_ROSE);
+            case 12 -> setMapAndColorScheme(strangeOrBigMaps, 21, TengenMapColorSchemes.PINK_WHITE);
+            case 13 -> setMapAndColorScheme(strangeOrBigMaps, 22, TengenMapColorSchemes.GREEN_WHITE_WHITE);
+            case 14 -> setMapAndColorScheme(strangeOrBigMaps, 14, TengenMapColorSchemes.VIOLET_WHITE_GREEN);
+            case 15 -> setMapAndColorScheme(strangeOrBigMaps, 20, TengenMapColorSchemes.GREEN_WHITE_YELLOW);
 
             // 16-20
-            case 16 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 19, TengenMapColorSchemes.KHAKI_WHITE);
-            case 17 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 10, TengenMapColorSchemes.PINK_WHITE);
-            case 18 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 17, TengenMapColorSchemes.BLUE_WHITE_YELLOW);
-            case 19 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 10, TengenMapColorSchemes.BROWN_WHITE);
-            case 20 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 19, TengenMapColorSchemes.PINK_ROSE);
+            case 16 -> setMapAndColorScheme(strangeOrBigMaps, 19, TengenMapColorSchemes.KHAKI_WHITE);
+            case 17 -> setMapAndColorScheme(strangeOrBigMaps, 10, TengenMapColorSchemes.PINK_WHITE);
+            case 18 -> setMapAndColorScheme(strangeOrBigMaps, 17, TengenMapColorSchemes.BLUE_WHITE_YELLOW);
+            case 19 -> setMapAndColorScheme(strangeOrBigMaps, 10, TengenMapColorSchemes.BROWN_WHITE);
+            case 20 -> setMapAndColorScheme(strangeOrBigMaps, 19, TengenMapColorSchemes.PINK_ROSE);
 
             // 21-25
-            case 21 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 26, TengenMapColorSchemes.BLACK_WHITE_GREEN);
-            case 22 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 21, TengenMapColorSchemes.GREEN_WHITE_WHITE);
-            case 23 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 22, TengenMapColorSchemes.GREEN_WHITE_VIOLET);
-            case 24 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 23, TengenMapColorSchemes.VIOLET_WHITE_GREEN);
-            case 25 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 14, TengenMapColorSchemes.GRAY_WHITE_YELLOW);
+            case 21 -> setMapAndColorScheme(strangeOrBigMaps, 26, TengenMapColorSchemes.BLACK_WHITE_GREEN);
+            case 22 -> setMapAndColorScheme(strangeOrBigMaps, 21, TengenMapColorSchemes.GREEN_WHITE_WHITE);
+            case 23 -> setMapAndColorScheme(strangeOrBigMaps, 22, TengenMapColorSchemes.GREEN_WHITE_VIOLET);
+            case 24 -> setMapAndColorScheme(strangeOrBigMaps, 23, TengenMapColorSchemes.VIOLET_WHITE_GREEN);
+            case 25 -> setMapAndColorScheme(strangeOrBigMaps, 14, TengenMapColorSchemes.GRAY_WHITE_YELLOW);
 
             // 26-30
-            case 26 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 25, TengenMapColorSchemes.VIOLET_WHITE);
-            case 27 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 14, TengenMapColorSchemes.PINK_WHITE);
-            case 28 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 23, TengenMapColorSchemes.GREEN_WHITE_WHITE);
-            case 29 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 26, TengenMapColorSchemes.LIGHTBLUE_WHITE_YELLOW);
-            case 30 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 20, TengenMapColorSchemes.PINK_YELLOW);
+            case 26 -> setMapAndColorScheme(strangeOrBigMaps, 25, TengenMapColorSchemes.VIOLET_WHITE);
+            case 27 -> setMapAndColorScheme(strangeOrBigMaps, 14, TengenMapColorSchemes.PINK_WHITE);
+            case 28 -> setMapAndColorScheme(strangeOrBigMaps, 23, TengenMapColorSchemes.GREEN_WHITE_WHITE);
+            case 29 -> setMapAndColorScheme(strangeOrBigMaps, 26, TengenMapColorSchemes.LIGHTBLUE_WHITE_YELLOW);
+            case 30 -> setMapAndColorScheme(strangeOrBigMaps, 20, TengenMapColorSchemes.PINK_YELLOW);
 
             // 31-32
-            case 31 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 25, TengenMapColorSchemes.PINK_ROSE);
-            case 32 -> selectCurrentMapAndColorScheme(strangeOrBigMaps, 33, TengenMapColorSchemes.PINK_ROSE);
+            case 31 -> setMapAndColorScheme(strangeOrBigMaps, 25, TengenMapColorSchemes.PINK_ROSE);
+            case 32 -> setMapAndColorScheme(strangeOrBigMaps, 33, TengenMapColorSchemes.PINK_ROSE);
 
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
     }
 
-    private void selectStrangeMap(int levelNumber) {
+    private void selectStrangeMapForLevel(int levelNumber) {
         if (levelNumber < 1 || levelNumber > 32) {
             throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
@@ -535,8 +535,7 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     public void buildLevel(int levelNumber) {
         this.currentLevelNumber = levelNumber;
-        currentMapNumber = levelNumber;
-        selectMap(levelNumber);
+        selectMapForLevel(levelNumber);
         createWorldAndPopulation(currentMap);
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
@@ -563,8 +562,7 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     public void buildDemoLevel() {
         currentLevelNumber = 1;
-        currentMapNumber = 1;
-        selectMap(1);
+        selectMapForLevel(1);
         createWorldAndPopulation(currentMap);
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);
