@@ -396,18 +396,17 @@ public class TengenMsPacManGame extends GameModel {
             throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
         currentMap = strangeOrBigMaps.get(levelNumber - 1);
-        currentMapColorScheme = createColorSchemeFromMapProperties(currentMap.terrain()); // TODO check this
+        currentMapColorScheme = createColorSchemeFromMapProperties(currentMap); // TODO check this
     }
 
-    private MapColorScheme createColorSchemeFromMapProperties(TileMap tileMap) {
+    private MapColorScheme createColorSchemeFromMapProperties(WorldMap worldMap) {
         return new MapColorScheme(
-            tileMap.getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_FILL, PacManArcadeGame.MAP_COLOR_SCHEME.fill()),
-            tileMap.getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_STROKE, PacManArcadeGame.MAP_COLOR_SCHEME.stroke()),
-            tileMap.getPropertyOrDefault(WorldMap.PROPERTY_COLOR_DOOR, PacManArcadeGame.MAP_COLOR_SCHEME.door()),
-            tileMap.getPropertyOrDefault(WorldMap.PROPERTY_COLOR_FOOD, PacManArcadeGame.MAP_COLOR_SCHEME.pellet())
+            worldMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_FILL, PacManArcadeGame.MAP_COLOR_SCHEME.fill()),
+            worldMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_STROKE, PacManArcadeGame.MAP_COLOR_SCHEME.stroke()),
+            worldMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_DOOR, PacManArcadeGame.MAP_COLOR_SCHEME.door()),
+            worldMap.food().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_FOOD, PacManArcadeGame.MAP_COLOR_SCHEME.pellet())
         );
     }
-
 
     private List<WorldMap> readMaps(String pattern, int maxNumber) {
         List<WorldMap> maps = new ArrayList<>();
