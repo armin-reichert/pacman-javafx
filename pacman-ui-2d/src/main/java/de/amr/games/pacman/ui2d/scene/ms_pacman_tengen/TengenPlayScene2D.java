@@ -296,6 +296,12 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void onLevelCreated(GameEvent e) {
+        //context.updateRenderer();
+        //initCamDelay(90);
+    }
+
+    @Override
+    public void onLevelStarted(GameEvent e) {
         context.updateRenderer();
         initCamDelay(90);
     }

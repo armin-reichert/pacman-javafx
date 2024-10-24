@@ -107,12 +107,50 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
         TengenMsPacManGame tengenGame = (TengenMsPacManGame) game;
         mapSprite = switch (tengenGame.mapCategory()) {
-            case ARCADE -> arcadeMapSpriteImageArea(mapNumber);
-            case MINI -> miniMapSpriteImageArea(mapNumber);
-            case BIG -> bigMapSpriteImageArea(mapNumber);
-            case STRANGE -> nonArcadeMapSpriteSheet.mapSprite(mapNumber);
+            case ARCADE  -> arcadeMapSpriteImageArea(mapNumber);
+            case MINI    -> miniMapSpriteImageArea(mapNumber);
+            case BIG     -> bigMapSpriteImageArea(mapNumber);
+            case STRANGE -> strangeMapSpriteImageArea(mapNumber);
         };
         Logger.info("Tengen map #{} {}", mapNumber, mapSprite.area());
+    }
+
+    private ImageArea arcadeMapSpriteImageArea(int levelNumber) {
+        return switch (levelNumber) {
+            case 1, 2           -> arcadeMapsSpriteSheet.mapSprite(0, 0);
+            case 3, 4, 5        -> arcadeMapsSpriteSheet.mapSprite(0, 1);
+            case 6, 7, 8, 9     -> arcadeMapsSpriteSheet.mapSprite(0, 2);
+            case 10, 11, 12, 13 -> arcadeMapsSpriteSheet.mapSprite(1, 0);
+            case 14, 15, 16, 17 -> arcadeMapsSpriteSheet.mapSprite(1, 1);
+            case 18, 19, 20, 21 -> arcadeMapsSpriteSheet.mapSprite(1, 2);
+            case 22, 23, 24, 25 -> arcadeMapsSpriteSheet.mapSprite(2, 0);
+            case 26, 27, 28, 29 -> arcadeMapsSpriteSheet.mapSprite(2, 1);
+            case 30, 31, 32     -> arcadeMapsSpriteSheet.mapSprite(2, 2);
+            default             -> arcadeMapsSpriteSheet.mapSprite(2, 2); // should not happen
+        };
+    }
+
+    private ImageArea miniMapSpriteImageArea(int mapNumber) {
+        int spriteNumber = switch (mapNumber) {
+            case 1 -> 34;
+            case 2 -> 35;
+            case 3 -> 36;
+            case 4 -> 30;
+            case 5 -> 28;
+            case 6 -> 37;
+            default -> throw new IllegalArgumentException("Illegal MINI map number: " + mapNumber);
+        };
+        return nonArcadeMapSpriteSheet.mapSprite(spriteNumber);
+    }
+
+    private ImageArea bigMapSpriteImageArea(int mapNumber) {
+        int spriteNumber = mapNumber;
+        return nonArcadeMapSpriteSheet.mapSprite(spriteNumber);
+    }
+
+    private ImageArea strangeMapSpriteImageArea(int mapNumber) {
+        int spriteNumber = mapNumber;
+        return nonArcadeMapSpriteSheet.mapSprite(spriteNumber);
     }
 
     @Override
@@ -383,38 +421,6 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         if (tens > 0) {
             drawSpriteScaled(spriteSheet.digit(tens), x + 2,  digitY);
         }
-    }
-
-    private ImageArea arcadeMapSpriteImageArea(int levelNumber) {
-        return switch (levelNumber) {
-            case 1, 2           -> arcadeMapsSpriteSheet.mapSprite(0, 0);
-            case 3, 4, 5        -> arcadeMapsSpriteSheet.mapSprite(0, 1);
-            case 6, 7, 8, 9     -> arcadeMapsSpriteSheet.mapSprite(0, 2);
-            case 10, 11, 12, 13 -> arcadeMapsSpriteSheet.mapSprite(1, 0);
-            case 14, 15, 16, 17 -> arcadeMapsSpriteSheet.mapSprite(1, 1);
-            case 18, 19, 20, 21 -> arcadeMapsSpriteSheet.mapSprite(1, 2);
-            case 22, 23, 24, 25 -> arcadeMapsSpriteSheet.mapSprite(2, 0);
-            case 26, 27, 28, 29 -> arcadeMapsSpriteSheet.mapSprite(2, 1);
-            case 30, 31, 32     -> arcadeMapsSpriteSheet.mapSprite(2, 2);
-            default             -> arcadeMapsSpriteSheet.mapSprite(2, 2); // should not happen
-        };
-    }
-
-    private ImageArea miniMapSpriteImageArea(int mapNumber) {
-        int spriteNumber = switch (mapNumber) {
-            case 1 -> 34;
-            case 2 -> 35;
-            case 3 -> 36;
-            case 4 -> 30;
-            case 5 -> 28;
-            case 6 -> 37;
-            default -> throw new IllegalArgumentException("Illegal MINI map number: " + mapNumber);
-        };
-        return nonArcadeMapSpriteSheet.mapSprite(spriteNumber);
-    }
-
-    private ImageArea bigMapSpriteImageArea(int mapNumber) {
-        return nonArcadeMapSpriteSheet.mapSprite(mapNumber);
     }
 
     public void drawMovingBonus(GameSpriteSheet spriteSheet, MovingBonus bonus) {
