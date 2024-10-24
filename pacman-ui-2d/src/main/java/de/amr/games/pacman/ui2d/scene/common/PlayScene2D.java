@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_TILE_SIZE;
+import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
@@ -102,8 +102,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public Vector2f size() {
-        Vector2i sizeInTiles = context.worldSizeInTiles(context.game().world(), ARCADE_MAP_TILE_SIZE);
-        return sizeInTiles.scaled(TS).toVector2f();
+        return context.worldSizeInTiles(context.game().world(), ARCADE_MAP_SIZE_IN_TILES).scaled(TS).toVector2f();
     }
 
     @Override

@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.AbstractGameAction;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -38,6 +37,7 @@ import org.tinylog.Logger;
 import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.util.KeyInput.*;
@@ -184,8 +184,8 @@ public class GamePage extends StackPane implements Page {
         gameCanvasContainer.setMinScaling(0.5);
 
         // default: Arcade aspect
-        gameCanvasContainer.setUnscaledCanvasWidth(PacManArcadeGame.ARCADE_MAP_SIZE_X);
-        gameCanvasContainer.setUnscaledCanvasHeight(PacManArcadeGame.ARCADE_MAP_SIZE_Y);
+        gameCanvasContainer.setUnscaledCanvasWidth(ARCADE_MAP_SIZE_IN_PIXELS.x());
+        gameCanvasContainer.setUnscaledCanvasHeight(ARCADE_MAP_SIZE_IN_PIXELS.y());
 
         gameCanvasContainer.setBorderColor(ARCADE_PALE);
         gameCanvasContainer.decorationEnabledPy.addListener((py, ov, nv) -> embedGameScene(gameScenePy.get()));

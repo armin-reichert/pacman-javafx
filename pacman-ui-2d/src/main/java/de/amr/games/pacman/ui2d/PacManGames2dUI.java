@@ -10,7 +10,6 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.model.pacman_xxl.PacManXXLGame;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import de.amr.games.pacman.ui2d.page.EditorPage;
@@ -49,6 +48,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.createIcon;
@@ -164,8 +164,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
         registerGlobalActionsWithKeyboard();
 
-        stage.setMinWidth(PacManArcadeGame.ARCADE_MAP_SIZE_X * 1.25);
-        stage.setMinHeight(PacManArcadeGame.ARCADE_MAP_SIZE_Y * 1.25);
+        //TODO This doesn't fit for Tengen screen resolution
+        stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
+        stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
         stage.titleProperty().bind(stageTitleBinding());
         stage.centerOnScreen();
         stage.setOnShowing(e-> selectStartPage());

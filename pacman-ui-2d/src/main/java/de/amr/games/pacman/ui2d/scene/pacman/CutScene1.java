@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE;
+import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
 
 /**
  * @author Armin Reichert
@@ -90,7 +90,7 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public Vector2f size() {
-        return ARCADE_MAP_SIZE;
+        return ARCADE_MAP_SIZE_IN_PIXELS;
     }
 
     @Override

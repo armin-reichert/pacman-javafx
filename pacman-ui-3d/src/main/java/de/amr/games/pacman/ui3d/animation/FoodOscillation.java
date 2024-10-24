@@ -25,22 +25,21 @@ SOFTWARE.
 package de.amr.games.pacman.ui3d.animation;
 
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui3d.level.Pellet3D;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.scene.Group;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.v2f;
+import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
 
 /**
  * @author Armin Reichert
  */
 public class FoodOscillation extends Transition {
 
-    private static final Vector2f CENTER = v2f(0.5f * TS * PacManArcadeGame.ARCADE_MAP_TILES_X, 0.5f * TS * PacManArcadeGame.ARCADE_MAP_TILES_Y);
+    private static final Vector2f CENTER = ARCADE_MAP_SIZE_IN_PIXELS.scaled(HTS);
 
     private final Group foodGroup;
 
