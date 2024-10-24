@@ -55,7 +55,7 @@ public class PacManArcadeGame extends GameModel {
     public static final Vector2i ARCADE_MAP_SIZE_IN_TILES  = new Vector2i(28, 36);
     public static final Vector2f ARCADE_MAP_SIZE_IN_PIXELS = new Vector2f(224, 288);
 
-    static final MapColorScheme MAP_COLOR_SCHEME = new MapColorScheme("#000000", "#2121ff", "#fcb5ff", "febdb4");
+    public static final MapColorScheme MAP_COLOR_SCHEME = new MapColorScheme("#000000", "#2121ff", "#fcb5ff", "febdb4");
 
     // Level settings as specified in the dossier
     private static final byte[][] LEVEL_DATA = {

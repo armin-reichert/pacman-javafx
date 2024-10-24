@@ -9,10 +9,12 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.MapColorScheme;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
@@ -261,14 +263,13 @@ public class TengenMsPacManGame extends GameModel {
             case STRANGE -> selectStrangeMap(levelNumber);
             case MINI -> selectMinMap(levelNumber);
             case BIG -> selectBigMap(levelNumber);
-        };
+        }
     }
 
     private void selectCurrentMapAndColorScheme(List<WorldMap> maps, int mapNumber, MapColorScheme colorScheme) {
         currentMap = new WorldMap(maps.get(mapNumber - 1));
         currentMapColorScheme = colorScheme;
     }
-
 
     private void selectArcadeMap(int levelNumber) {
         switch (levelNumber) {
@@ -395,8 +396,18 @@ public class TengenMsPacManGame extends GameModel {
             throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
         currentMap = strangeOrBigMaps.get(levelNumber - 1);
-        currentMapColorScheme = null; // TODO check this
+        currentMapColorScheme = createColorSchemeFromMapProperties(currentMap.terrain()); // TODO check this
     }
+
+    private MapColorScheme createColorSchemeFromMapProperties(TileMap tileMap) {
+        return new MapColorScheme(
+            tileMap.getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_FILL, PacManArcadeGame.MAP_COLOR_SCHEME.fill()),
+            tileMap.getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_STROKE, PacManArcadeGame.MAP_COLOR_SCHEME.stroke()),
+            tileMap.getPropertyOrDefault(WorldMap.PROPERTY_COLOR_DOOR, PacManArcadeGame.MAP_COLOR_SCHEME.door()),
+            tileMap.getPropertyOrDefault(WorldMap.PROPERTY_COLOR_FOOD, PacManArcadeGame.MAP_COLOR_SCHEME.pellet())
+        );
+    }
+
 
     private List<WorldMap> readMaps(String pattern, int maxNumber) {
         List<WorldMap> maps = new ArrayList<>();
