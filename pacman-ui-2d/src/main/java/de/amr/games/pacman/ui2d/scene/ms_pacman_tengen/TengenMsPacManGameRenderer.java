@@ -39,7 +39,6 @@ import org.tinylog.Logger;
 import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.RectArea.rect;
 import static java.util.function.Predicate.not;
 
 /**
@@ -70,37 +69,13 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     // Maze images are taken from files "arcade_mazes.png" and "non_arcade_mazes.png" via AssetStorage
 
-    /**
-     * @param spriteNumber number (1 based) of map sprite in sprite sheet (row-wise)
-     * @param width map width in pixels
-     * @param height map height in pixels
-     * @return map sprite in non-Arcade maps sprite sheet
-     */
-    private static RectArea nonArcadeMapSprite(int spriteNumber, int width, int height) {
-        int col, y;
-        switch (spriteNumber) {
-            case 1,2,3,4,5,6,7,8            -> { col = (spriteNumber - 1);  y = 0;    }
-            case 9,10,11,12,13,14,15,16     -> { col = (spriteNumber - 9);  y = 248;  }
-            case 17,18,19,20,21,22,23,24    -> { col = (spriteNumber - 17); y = 544;  }
-            case 25,26,27,28,29,30,31,32,33 -> { col = (spriteNumber - 25); y = 840;  }
-            case 34,35,36,37                -> { col = (spriteNumber - 34); y = 1136; }
-            default -> throw new IllegalArgumentException("Illegal non-Arcade map number: " + spriteNumber);
-        }
-        return new RectArea(col * width, y, width, height);
-    }
-
-    // Map #32 has 3 different images to create an animation effect.
-    private static final RectArea[] MAP_32_ANIMATION_FRAMES = {
-        rect(1568, 840, 224, 248), rect(1568, 1088, 224, 248), rect(1568, 1336, 224, 248),
-    };
-
     private final AssetStorage assets;
     private final TengenMsPacManGameSpriteSheet spriteSheet;
+    private final TengenNonArcadeMapsSpriteSheet nonArcadeMapSpriteSheet;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
     private final Image arcadeMazesImage;
-    private final Image nonArcadeMazesImage;
 
     private Color bgColor = Color.BLACK;
     private ImageArea mapSprite;
@@ -111,8 +86,8 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     public TengenMsPacManGameRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
         arcadeMazesImage = assets.image("tengen.mazes.arcade");
-        nonArcadeMazesImage = assets.image("tengen.mazes.non_arcade");
         spriteSheet = assets.get("tengen.spritesheet");
+        nonArcadeMapSpriteSheet = new TengenNonArcadeMapsSpriteSheet(assets);
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(bgColor);
         foodRenderer.scalingPy.bind(scalingPy);
@@ -137,9 +112,9 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
         mapSprite = switch (tengenGame.mapCategory()) {
             case ARCADE -> arcadeMapSpriteImageArea(mapNumber, spriteWidth, spriteHeight);
-            case MINI -> miniMapSpriteImageArea(mapNumber, spriteWidth, spriteHeight);
-            case BIG -> bigMapSpriteImageArea(mapNumber, spriteWidth, spriteHeight);
-            case STRANGE -> new ImageArea(nonArcadeMazesImage, nonArcadeMapSprite(mapNumber, spriteWidth, spriteHeight));
+            case MINI -> miniMapSpriteImageArea(mapNumber);
+            case BIG -> bigMapSpriteImageArea(mapNumber);
+            case STRANGE -> nonArcadeMapSpriteSheet.mapSprite(mapNumber);
         };
         Logger.info("Tengen map #{} {}", mapNumber, mapSprite.area());
     }
@@ -269,7 +244,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
         // All maps that use a different color scheme than that in the sprite sheet have to be rendered using the
         // generic vector renderer for now. This looks more or less bad for specific maps.
-        boolean useVectorRenderer = game.mapCategory() != MapCategory.STRANGE;
+        boolean useVectorRenderer =  game.mapCategory() != MapCategory.STRANGE;
 
         boolean isDemoLevel = context.game().isDemoLevel();
 
@@ -305,7 +280,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     private void drawWorldUsingSpriteSheet(TengenMsPacManGame game, long t) {
         // Maze #32 has psychedelic animation
         if (game.currentMapNumber() == 32) {
-            drawAnimatedMap(t, MAP_32_ANIMATION_FRAMES);
+            drawAnimatedMap(t, TengenNonArcadeMapsSpriteSheet.MAP_32_ANIMATION_FRAMES);
         } else {
             RectArea mapArea = mapSprite.area();
             ctx().drawImage(mapSprite.source(),
@@ -433,7 +408,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         return new ImageArea(arcadeMazesImage, new RectArea(colIndex * spriteWidth, rowIndex * spriteHeight, spriteWidth, spriteHeight));
     }
 
-    private ImageArea miniMapSpriteImageArea(int mapNumber, int spriteWidth, int spriteHeight) {
+    private ImageArea miniMapSpriteImageArea(int mapNumber) {
         int spriteNumber = switch (mapNumber) {
             case 1 -> 34;
             case 2 -> 35;
@@ -443,11 +418,11 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             case 6 -> 37;
             default -> throw new IllegalArgumentException("Illegal MINI map number: " + mapNumber);
         };
-        return new ImageArea(nonArcadeMazesImage, nonArcadeMapSprite(spriteNumber, spriteWidth, spriteHeight));
+        return nonArcadeMapSpriteSheet.mapSprite(spriteNumber);
     }
 
-    private ImageArea bigMapSpriteImageArea(int mapNumber, int spriteWidth, int spriteHeight) {
-        return new ImageArea(nonArcadeMazesImage, nonArcadeMapSprite(mapNumber, spriteWidth, spriteHeight));
+    private ImageArea bigMapSpriteImageArea(int mapNumber) {
+        return nonArcadeMapSpriteSheet.mapSprite(mapNumber);
     }
 
     public void drawMovingBonus(GameSpriteSheet spriteSheet, MovingBonus bonus) {
