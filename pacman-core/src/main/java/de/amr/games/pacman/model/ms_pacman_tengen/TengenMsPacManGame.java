@@ -534,7 +534,7 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public void buildLevel(int levelNumber) {
-        this.currentLevelNumber = levelNumber;
+        currentLevelNumber = levelNumber;
         selectMapForLevel(levelNumber);
         createWorldAndPopulation(currentMap);
         pac.setAutopilot(new RuleBasedPacSteering(this));
