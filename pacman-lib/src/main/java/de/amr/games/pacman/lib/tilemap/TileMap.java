@@ -40,6 +40,8 @@ public class TileMap {
         private List<TileMapPath> fillerPaths = new ArrayList<>();
         private List<Vector2i> topConcavityEntries = new ArrayList<>();
         private List<Vector2i> bottomConcavityEntries = new ArrayList<>();
+        private List<Vector2i> leftConcavityEntries = new ArrayList<>();
+        private List<Vector2i> rightConcavityEntries = new ArrayList<>();
 
         TerrainMapData() {}
 
@@ -49,6 +51,8 @@ public class TileMap {
             fillerPaths = new ArrayList<>(other.fillerPaths);
             topConcavityEntries = new ArrayList<>(other.topConcavityEntries);
             bottomConcavityEntries = new ArrayList<>(other.bottomConcavityEntries);
+            leftConcavityEntries = new ArrayList<>(other.bottomConcavityEntries);
+            rightConcavityEntries = new ArrayList<>(other.bottomConcavityEntries);
         }
 
         void clearExploredSet() {
@@ -409,7 +413,24 @@ public class TileMap {
             }
         }
 
-        Logger.debug("Paths computed, {} single wall paths, {} double wall paths, {} filler paths",
+        {
+            int leftCol = 0;
+            for (int row = 0; row < numRows() - 1; ++row) {
+                boolean roundedEntry = get(row, leftCol) == Tiles.DCORNER_SW && get(row + 1, leftCol) == Tiles.DCORNER_NW;
+                boolean straightEntry = get(row, leftCol) == Tiles.DWALL_H && get(row + 1, leftCol) == Tiles.DWALL_H;
+                if (roundedEntry || straightEntry) {
+                    terrainMapData.leftConcavityEntries.add(new Vector2i(leftCol, row));
+                    Logger.info("Found concavity entry at left border at row {}", row);
+                    Vector2i pathStartTile = new Vector2i(roundedEntry ? 1 : 0, row);
+                    TileMapPath path = computePath(pathStartTile, RIGHT,
+                        tile -> outOfBounds(tile) || tile.equals(pathStartTile.plus(roundedEntry ? -1 : 0, 1)));
+                    path.add(UP);
+                    terrainMapData.fillerPaths.add(path);
+                }
+            }
+        }
+
+        Logger.info("Paths computed, {} single wall paths, {} double wall paths, {} filler paths",
             terrainMapData.singleStrokePaths.size(), terrainMapData.doubleStrokePaths.size(), terrainMapData.fillerPaths.size());
     }
 
@@ -431,6 +452,14 @@ public class TileMap {
 
     public Stream<Vector2i> bottomConcavityEntries() {
         return terrainMapData != null ? terrainMapData.bottomConcavityEntries.stream() : Stream.empty();
+    }
+
+    public Stream<Vector2i> leftConcavityEntries() {
+        return terrainMapData != null ? terrainMapData.leftConcavityEntries.stream() : Stream.empty();
+    }
+
+    public Stream<Vector2i> rightConcavityEntries() {
+        return terrainMapData != null ? terrainMapData.rightConcavityEntries.stream() : Stream.empty();
     }
 
     private TileMapPath computePath(Vector2i startTile, Direction startDir) {

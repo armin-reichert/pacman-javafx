@@ -74,6 +74,9 @@ public class TerrainMapRenderer implements TileMapRenderer {
             g.setLineWidth(baseLineWidth);
             g.strokeLine(left, lineY, right, lineY);
         });
+        map.leftConcavityEntries().forEach(entry -> {
+
+        });
 
         map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, map, door, OBSTACLE_STROKE_WIDTH * baseLineWidth, doorColor));
         g.restore();
