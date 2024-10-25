@@ -53,6 +53,11 @@ public class IntroScene extends GameScene2D {
     private int ghostIndex;
     private int waitBeforeRising;
 
+    @Override
+    public void bindActions() {
+        bindAction(GlobalGameActions2D.START_GAME, KeyCode.SPACE);
+    }
+
     public IntroScene() {
         sceneController = new FiniteStateMachine<>(SceneState.values()) {
             @Override
@@ -64,8 +69,6 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        bindAction(GlobalGameActions2D.START_GAME, KeyCode.SPACE);
-
         TengenMsPacManGameSpriteSheet spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         context.setScoreVisible(false);
 

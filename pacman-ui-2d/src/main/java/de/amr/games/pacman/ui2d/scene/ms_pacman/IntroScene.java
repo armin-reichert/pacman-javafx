@@ -68,13 +68,16 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    public void doInit() {
+    public void bindActions() {
         bindAction(GlobalGameActions2D.ADD_CREDIT,          key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP));
         bindAction(GlobalGameActions2D.START_GAME,          key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1));
         bindAction(GlobalGameActions2D.TEST_CUT_SCENES,     alt(KeyCode.C));
         bindAction(GlobalGameActions2D.TEST_LEVELS_BONI,    alt(KeyCode.T));
         bindAction(GlobalGameActions2D.TEST_LEVELS_TEASERS, shift_alt(KeyCode.T));
+    }
 
+    @Override
+    public void doInit() {
         context.setScoreVisible(true);
 
         //TODO make this work again

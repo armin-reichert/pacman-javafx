@@ -73,13 +73,16 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    public void doInit() {
+    public void bindActions() {
         bindAction(GlobalGameActions2D.ADD_CREDIT,          key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP));
         bindAction(GlobalGameActions2D.START_GAME,          key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1));
         bindAction(GlobalGameActions2D.TEST_CUT_SCENES,     alt(KeyCode.C));
         bindAction(GlobalGameActions2D.TEST_LEVELS_BONI,    alt(KeyCode.T));
         bindAction(GlobalGameActions2D.TEST_LEVELS_TEASERS, shift_alt(KeyCode.T));
+    }
 
+    @Override
+    public void doInit() {
         PacManGameSpriteSheet spriteSheet = (PacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         blinking = new Pulse(10, true);
         pacMan = new Pac();

@@ -44,7 +44,8 @@ public class PlayScene2D extends GameScene2D {
         bindActions();
     }
 
-    private void bindActions() {
+    @Override
+    public void bindActions() {
         bindAction(GlobalGameActions2D.CHEAT_EAT_ALL, alt(KeyCode.E));
         bindAction(GlobalGameActions2D.CHEAT_ADD_LIVES, alt(KeyCode.L));
         bindAction(GlobalGameActions2D.CHEAT_NEXT_LEVEL, alt(KeyCode.N));

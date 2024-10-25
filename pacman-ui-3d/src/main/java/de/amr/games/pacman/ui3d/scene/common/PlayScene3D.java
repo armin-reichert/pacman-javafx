@@ -119,6 +119,36 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         unregister(context().keyboard());
     }
 
+    @Override
+    public void bindActions() {
+        bindAction(GlobalGameActions3D.PREV_PERSPECTIVE,  alt(KeyCode.LEFT));
+        bindAction(GlobalGameActions3D.NEXT_PERSPECTIVE,  alt(KeyCode.RIGHT));
+        bindAction(GlobalGameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
+        bindAction(GlobalGameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
+        bindAction(GlobalGameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
+        bindAction(GlobalGameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            bindAction(GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER, KeyCode.A);
+            bindAction(GlobalGameActions2D.TENGEN_SHOW_OPTIONS,       KeyCode.S);
+        }
+        else if (context.game().isDemoLevel()) {
+            bindAction(GlobalGameActions2D.ADD_CREDIT, key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP));
+        }
+        bindAction(GlobalGameActions3D.PREV_PERSPECTIVE,  alt(KeyCode.LEFT));
+        bindAction(GlobalGameActions3D.NEXT_PERSPECTIVE,  alt(KeyCode.RIGHT));
+        bindAction(GlobalGameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
+        bindAction(GlobalGameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
+        bindAction(GlobalGameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
+        bindAction(GlobalGameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            bindAction(GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER, KeyCode.A);
+            bindAction(GlobalGameActions2D.TENGEN_SHOW_OPTIONS,       KeyCode.S);
+        }
+        else if (context.game().isDemoLevel()) {
+            bindAction(GlobalGameActions2D.ADD_CREDIT, key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP));
+        }
+    }
+
     protected void doInit() {
         bindActions();
         context.setScoreVisible(true);
@@ -127,35 +157,6 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         pickerGameOver = Picker.fromBundle(context.assets().bundles().getLast(), "game.over");
         pickerLevelComplete = Picker.fromBundle(context.assets().bundles().getLast(), "level.complete");
         Logger.info("3D play scene initialized. {}", this);
-    }
-
-    private void bindActions() {
-        bindAction(GlobalGameActions3D.PREV_PERSPECTIVE,  alt(KeyCode.LEFT));
-        bindAction(GlobalGameActions3D.NEXT_PERSPECTIVE,  alt(KeyCode.RIGHT));
-        bindAction(GlobalGameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
-        bindAction(GlobalGameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
-        bindAction(GlobalGameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
-        bindAction(GlobalGameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            bindAction(GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER, KeyCode.A);
-            bindAction(GlobalGameActions2D.TENGEN_SHOW_OPTIONS,       KeyCode.S);
-        }
-        else if (context.game().isDemoLevel()) {
-            bindAction(GlobalGameActions2D.ADD_CREDIT, key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP));
-        }
-        bindAction(GlobalGameActions3D.PREV_PERSPECTIVE,  alt(KeyCode.LEFT));
-        bindAction(GlobalGameActions3D.NEXT_PERSPECTIVE,  alt(KeyCode.RIGHT));
-        bindAction(GlobalGameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
-        bindAction(GlobalGameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
-        bindAction(GlobalGameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
-        bindAction(GlobalGameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            bindAction(GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER, KeyCode.A);
-            bindAction(GlobalGameActions2D.TENGEN_SHOW_OPTIONS,       KeyCode.S);
-        }
-        else if (context.game().isDemoLevel()) {
-            bindAction(GlobalGameActions2D.ADD_CREDIT, key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP));
-        }
     }
 
     protected void doEnd() {

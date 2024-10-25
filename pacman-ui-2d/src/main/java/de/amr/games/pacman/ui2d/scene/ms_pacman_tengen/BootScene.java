@@ -33,6 +33,10 @@ public class BootScene extends GameScene2D {
     private long t;
 
     @Override
+    public void bindActions() {
+    }
+
+    @Override
     public void doInit() {
         GameSpriteSheet spriteSheet = context.currentGameSceneConfig().spriteSheet();
         t = 0;

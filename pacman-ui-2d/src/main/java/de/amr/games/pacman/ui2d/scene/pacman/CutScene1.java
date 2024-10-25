@@ -31,6 +31,10 @@ public class CutScene1 extends GameScene2D {
     private Ghost blinky;
 
     @Override
+    public void bindActions() {
+    }
+
+    @Override
     public void doInit() {
         context.setScoreVisible(true);
         pac = new Pac();

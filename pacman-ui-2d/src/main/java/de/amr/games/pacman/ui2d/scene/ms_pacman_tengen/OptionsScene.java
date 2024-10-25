@@ -54,11 +54,14 @@ public class OptionsScene extends GameScene2D {
     private long idleTicks;
 
     @Override
-    public void doInit() {
+    public void bindActions() {
         bindAction(GlobalGameActions2D.TEST_CUT_SCENES,     alt(KeyCode.C));
         bindAction(GlobalGameActions2D.TEST_LEVELS_BONI,    alt(KeyCode.T));
         bindAction(GlobalGameActions2D.TEST_LEVELS_TEASERS, shift_alt(KeyCode.T));
+    }
 
+    @Override
+    public void doInit() {
         context.setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
         tengenGame = (TengenMsPacManGame) context.game();

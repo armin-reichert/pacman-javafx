@@ -53,11 +53,8 @@ public class CutScene1 extends GameScene2D {
     private Entity heart;
     private ClapperboardAnimation clapAnimation;
 
-    private void startMusic() {
-        int number  = context.gameState() == GameState.TESTING_CUT_SCENES
-            ? GameState.TESTING_CUT_SCENES.getProperty("intermissionTestNumber")
-            : context.game().intermissionNumberAfterLevel();
-        context.sounds().playIntermissionSound(number);
+    @Override
+    public void bindActions() {
     }
 
     @Override
@@ -105,6 +102,13 @@ public class CutScene1 extends GameScene2D {
         renderer.drawSprite(heart, MsPacManGameSpriteSheet.HEART_SPRITE);
         renderer.drawLevelCounter(context.game().currentLevelNumber(), context.game().isDemoLevel(),
             context.game().levelCounter(), size());
+    }
+
+    private void startMusic() {
+        int number  = context.gameState() == GameState.TESTING_CUT_SCENES
+            ? GameState.TESTING_CUT_SCENES.getProperty("intermissionTestNumber")
+            : context.game().intermissionNumberAfterLevel();
+        context.sounds().playIntermissionSound(number);
     }
 
     private class SceneController {

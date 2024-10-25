@@ -32,6 +32,10 @@ public class CutScene3 extends GameScene2D {
     private Ghost blinky;
 
     @Override
+    public void bindActions() {
+    }
+
+    @Override
     public void doInit() {
         context.setScoreVisible(true);
         PacManGameSpriteSheet spriteSheet = (PacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();

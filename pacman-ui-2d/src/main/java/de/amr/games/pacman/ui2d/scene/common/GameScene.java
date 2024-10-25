@@ -36,6 +36,8 @@ public interface GameScene extends GameEventListener, GameActionProvider {
      */
     void end();
 
+    void bindActions();
+
     default void handleInput() {
         context().doFirstCalledAction(this);
     }

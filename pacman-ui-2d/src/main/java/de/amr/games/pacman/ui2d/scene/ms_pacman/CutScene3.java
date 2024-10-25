@@ -50,6 +50,10 @@ public class CutScene3 extends GameScene2D {
     private SpriteAnimation storkAnimation;
 
     @Override
+    public void bindActions() {
+    }
+
+    @Override
     public void doInit() {
         context.setScoreVisible(context.gameVariant() != GameVariant.MS_PACMAN_TENGEN);
 

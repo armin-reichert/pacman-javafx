@@ -64,14 +64,17 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     }
 
     @Override
-    public void doInit() {
+    public void bindActions() {
         bindAction(GlobalGameActions2D.CHEAT_EAT_ALL,              alt(KeyCode.E));
         bindAction(GlobalGameActions2D.CHEAT_ADD_LIVES,            alt(KeyCode.L));
         bindAction(GlobalGameActions2D.CHEAT_NEXT_LEVEL,           alt(KeyCode.N));
         bindAction(GlobalGameActions2D.CHEAT_KILL_GHOSTS,          alt(KeyCode.X));
         bindAction(GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER,  KeyCode.A);
         bindAction(GlobalGameActions2D.TENGEN_SHOW_OPTIONS,        KeyCode.S);
+    }
 
+    @Override
+    public void doInit() {
         canvas.widthProperty().bind(Bindings.createDoubleBinding(() -> scaled(size().x()), scalingProperty()));
         canvas.heightProperty().bind(Bindings.createDoubleBinding(() -> scaled(size().y()), scalingProperty()));
     }

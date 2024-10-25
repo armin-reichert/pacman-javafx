@@ -43,6 +43,10 @@ public class CutScene2 extends GameScene2D {
     private ClapperboardAnimation clapAnimation;
 
     @Override
+    public void bindActions() {
+    }
+
+    @Override
     public void doInit() {
         context.setScoreVisible(context.gameVariant() != GameVariant.MS_PACMAN_TENGEN);
 

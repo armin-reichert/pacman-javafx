@@ -36,6 +36,10 @@ public class CutScene2 extends GameScene2D {
     private SpriteAnimation blinkyDamaged;
 
     @Override
+    public void bindActions() {
+    }
+
+    @Override
     public void doInit() {
         context.setScoreVisible(true);
         pac = new Pac();
