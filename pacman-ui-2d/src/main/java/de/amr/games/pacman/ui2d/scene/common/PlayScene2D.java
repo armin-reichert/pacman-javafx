@@ -40,9 +40,7 @@ public class PlayScene2D extends GameScene2D {
     public static final Font DEBUG_STATE_FONT = Font.font("Sans", FontWeight.BOLD, 24);
 
     @Override
-    public void doInit() {
-        bindActions();
-    }
+    public void doInit() {}
 
     @Override
     public void bindActions() {
