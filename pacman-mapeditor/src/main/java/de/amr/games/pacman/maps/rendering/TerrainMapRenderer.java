@@ -15,8 +15,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.maps.editor.TileMapUtil.HALF_TILE_SIZE;
 import static de.amr.games.pacman.maps.editor.TileMapUtil.TILE_SIZE;
 
@@ -25,11 +23,11 @@ import static de.amr.games.pacman.maps.editor.TileMapUtil.TILE_SIZE;
  */
 public class TerrainMapRenderer implements TileMapRenderer {
 
-    static final double OUTER_WALL_WIDTH = 5;
-    static final double OUTER_WALL_FILLING_WIDTH = 3;
-    static final double OBSTACLE_STROKE_WIDTH = 1.0;
+    static final double DOUBLE_STROKE_OUTER_WIDTH = 5;
+    static final double DOUBLE_STROKE_INNER_WIDTH = 3;
+    static final double SINGLE_STROKE_WIDTH = 1.0;
 
-    public DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
+    public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
 
     private Color mapBackgroundColor = Color.BLACK;
     private Color wallFillColor = Color.BLACK;
@@ -42,43 +40,44 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.save();
         g.scale(scaling(), scaling());
         map.doubleStrokePaths().forEach(path -> {
-            drawPath(g, map, path, false,  OUTER_WALL_WIDTH * baseLineWidth, wallStrokeColor, null);
-            drawPath(g, map, path, false,  OUTER_WALL_FILLING_WIDTH * baseLineWidth, wallFillColor, null);
+            drawPath(g, map, path, false,  DOUBLE_STROKE_OUTER_WIDTH * baseLineWidth, wallStrokeColor, null);
+            drawPath(g, map, path, false,  DOUBLE_STROKE_INNER_WIDTH * baseLineWidth, wallFillColor, null);
         });
-        map.singleStrokePaths().forEach(
-            path -> drawPath(g, map, path, true, OBSTACLE_STROKE_WIDTH * baseLineWidth, wallStrokeColor, wallFillColor)
-        );
-        Color fillColor = wallFillColor;
         map.fillerPaths().forEach(
-            path -> drawPath(g, map, path, true, OBSTACLE_STROKE_WIDTH * baseLineWidth, fillColor, fillColor)
+            path -> drawPath(g, map, path, true, SINGLE_STROKE_WIDTH * baseLineWidth, wallFillColor, wallFillColor)
+        );
+        map.singleStrokePaths().forEach(
+            path -> drawPath(g, map, path, true, SINGLE_STROKE_WIDTH * baseLineWidth, wallStrokeColor, wallFillColor)
         );
 
-        // Fix concavity entry drawing (ugly hack)
+        // Fix concavities drawing (ugly hack)
+        Color fillColor = wallFillColor;
+
         map.topConcavityEntries().forEach(entry -> {
-            double left = entry.x() * TS, right = (entry.x() + 2) * TILE_SIZE;
-            double lineY = entry.y() * TS + 2.5;
-            g.setFill(wallFillColor);
-            g.fillRect(left, lineY, 2*TS, OUTER_WALL_FILLING_WIDTH * 0.75);
+            double left = entry.x() * TILE_SIZE;
+            double y = (entry.y() * TILE_SIZE + HALF_TILE_SIZE - 0.5 * DOUBLE_STROKE_INNER_WIDTH); // TODO check this
+            double w = 2 * TILE_SIZE, h = DOUBLE_STROKE_INNER_WIDTH * 0.75; // TODO check this
+            g.setFill(fillColor);
+            g.fillRect(left, y, w, h);
             g.setStroke(wallStrokeColor);
-            g.setLineWidth(baseLineWidth);
-            g.strokeLine(left, lineY, right, lineY);
+            g.setLineWidth(baseLineWidth * SINGLE_STROKE_WIDTH);
+            g.strokeLine(left, y, left + w, y);
         });
+
         map.bottomConcavityEntries().forEach(entry -> {
-            double left = entry.x() * TS, right = (entry.x() + 2) * TILE_SIZE;
-            double lineY = (entry.y() + 1) * (TS) - 2.5;
-            g.setFill(wallFillColor);
-            g.fillRect(left, lineY - OUTER_WALL_FILLING_WIDTH * 0.75, 2*TS, OUTER_WALL_FILLING_WIDTH * 0.75);
-            g.setFill(wallFillColor);
-            g.fillRect(left + HTS, entry.y() * TS - HTS, TS, TS);
+            double left = entry.x() * TILE_SIZE;
+            double y = (entry.y() * TILE_SIZE + HALF_TILE_SIZE + 0.5 * DOUBLE_STROKE_INNER_WIDTH); // TODO check this
+            double w = 2 * TILE_SIZE, h = DOUBLE_STROKE_INNER_WIDTH * 0.75;
+            g.setFill(fillColor);
+            g.fillRect(left, y - h, w, h);
+            g.fillRect(left + HALF_TILE_SIZE, entry.y() * TILE_SIZE - HALF_TILE_SIZE, TILE_SIZE, TILE_SIZE);
             g.setStroke(wallStrokeColor);
             g.setLineWidth(baseLineWidth);
-            g.strokeLine(left, lineY, right, lineY);
-        });
-        map.leftConcavityEntries().forEach(entry -> {
-
+            g.strokeLine(left, y, left + w, y);
         });
 
-        map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, map, door, OBSTACLE_STROKE_WIDTH * baseLineWidth, doorColor));
+        map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, map, door, SINGLE_STROKE_WIDTH * baseLineWidth, doorColor));
+
         g.restore();
     }
 
@@ -130,15 +129,15 @@ public class TerrainMapRenderer implements TileMapRenderer {
     // assume we always have a pair of horizontally neighbored doors
     private void drawDoor(GraphicsContext g, TileMap map, Vector2i tile, double lineWidth, Color doorColor) {
         boolean leftDoor = map.get(tile.plus(Direction.RIGHT.vector())) == Tiles.DOOR;
-        double height = OUTER_WALL_FILLING_WIDTH * 0.75; // TODO check this
+        double height = DOUBLE_STROKE_INNER_WIDTH * 0.75; // TODO check this
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         double oy = y + 0.5 * (TILE_SIZE - height);
         if (leftDoor) {
             g.setFill(mapBackgroundColor);
-            g.fillRect(x, y, 2 * TS, TS);
+            g.fillRect(x, y, 2 * TILE_SIZE, TILE_SIZE);
             g.setFill(wallStrokeColor);
             g.fillRect(x - lineWidth, oy, lineWidth, height);
-            g.fillRect(x + 2 * TS, oy, lineWidth, height);
+            g.fillRect(x + 2 * TILE_SIZE, oy, lineWidth, height);
             g.setFill(doorColor);
             g.fillRect(x, y + 0.5 * (TILE_SIZE - height), 2 * TILE_SIZE, height);
         }
@@ -162,7 +161,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
     private void buildPath(GraphicsContext g, TileMap map, TileMapPath path) {
         Vector2i tile = path.startTile();
         if (tile.x() == 0) {
-            int cx = HTS, cy = tile.y() * TS + HTS;
+            int cx = HALF_TILE_SIZE, cy = tile.y() * TILE_SIZE + HALF_TILE_SIZE;
             if (map.get(tile) == Tiles.DWALL_V) {
                 g.moveTo(cx, cy);
             } else {
@@ -181,7 +180,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         }
         if (tile.x() == 0 && map.get(tile) == Tiles.DWALL_H) {
             // end path at left border
-            g.lineTo(0, tile.y() * TS + HTS);
+            g.lineTo(0, tile.y() * TILE_SIZE + HALF_TILE_SIZE);
         }
     }
 

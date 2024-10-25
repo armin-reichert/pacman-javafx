@@ -383,7 +383,7 @@ public class TileMap {
         terrainMapData.clearExploredSet();
 
         {
-            int topRow = 3;
+            int topRow = 3; // TODO
             for (int col = 0; col < numCols() - 1; ++col) {
                 if (get(topRow, col) == Tiles.DCORNER_NE && get(topRow, col + 1) == Tiles.DCORNER_NW) {
                     terrainMapData.topConcavityEntries.add(new Vector2i(col, topRow));
@@ -414,17 +414,32 @@ public class TileMap {
         }
 
         {
-            int leftCol = 0;
+            int leftBorderCol = 0;
             for (int row = 0; row < numRows() - 1; ++row) {
-                boolean roundedEntry = get(row, leftCol) == Tiles.DCORNER_SW && get(row + 1, leftCol) == Tiles.DCORNER_NW;
-                boolean straightEntry = get(row, leftCol) == Tiles.DWALL_H && get(row + 1, leftCol) == Tiles.DWALL_H;
+                boolean roundedEntry = false; // get(row, leftBorderCol) == Tiles.DCORNER_SW && get(row + 1, leftBorderCol) == Tiles.DCORNER_NW;
+                boolean straightEntry = get(row, leftBorderCol) == Tiles.DWALL_H && get(row + 1, leftBorderCol) == Tiles.DWALL_H;
                 if (roundedEntry || straightEntry) {
-                    terrainMapData.leftConcavityEntries.add(new Vector2i(leftCol, row));
+                    terrainMapData.leftConcavityEntries.add(new Vector2i(leftBorderCol, row));
                     Logger.info("Found concavity entry at left border at row {}", row);
                     Vector2i pathStartTile = new Vector2i(roundedEntry ? 1 : 0, row);
                     TileMapPath path = computePath(pathStartTile, RIGHT,
-                        tile -> outOfBounds(tile) || tile.equals(pathStartTile.plus(roundedEntry ? -1 : 0, 1)));
-                    path.add(UP);
+                        tile -> tile.equals(pathStartTile.plus(roundedEntry ? 0 : -1, 1)));
+                    terrainMapData.fillerPaths.add(path);
+                }
+            }
+        }
+
+        {
+            int rightBorderCol = numCols() - 1;
+            for (int row = 0; row < numRows() - 1; ++row) {
+                boolean roundedEntry = false; // get(row, rightBorderCol) == Tiles.DCORNER_SE && get(row + 1, rightBorderCol) == Tiles.DCORNER_NE;
+                boolean straightEntry = get(row, rightBorderCol) == Tiles.DWALL_H && get(row + 1, rightBorderCol) == Tiles.DWALL_H;
+                if (roundedEntry || straightEntry) {
+                    terrainMapData.rightConcavityEntries.add(new Vector2i(rightBorderCol, row));
+                    Logger.info("Found concavity entry at right border at row {}", row);
+                    Vector2i pathStartTile = new Vector2i(rightBorderCol - (roundedEntry ? 1 : 0), row);
+                    TileMapPath path = computePath(pathStartTile, LEFT,
+                        tile -> tile.equals(pathStartTile.plus(roundedEntry ? 0 : 1, 1)));
                     terrainMapData.fillerPaths.add(path);
                 }
             }
