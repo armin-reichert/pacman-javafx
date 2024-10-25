@@ -59,14 +59,6 @@ public class IntroScene extends GameScene2D {
     private int ghostIndex;
     private int waitBeforeRising;
 
-    {
-        bindAction(KeyInput.of(key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP)), GlobalGameActions2D.ADD_CREDIT);
-        bindAction(KeyInput.of(key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1)),                  GlobalGameActions2D.START_GAME);
-        bindAction(KeyInput.of(alt(KeyCode.C)),       GlobalGameActions2D.TEST_CUT_SCENES);
-        bindAction(KeyInput.of(alt(KeyCode.T)),       GlobalGameActions2D.TEST_LEVELS_BONI);
-        bindAction(KeyInput.of(shift_alt(KeyCode.T)), GlobalGameActions2D.TEST_LEVELS_TEASERS);
-    }
-
     public IntroScene() {
         sceneController = new FiniteStateMachine<>(SceneState.values()) {
             @Override
@@ -77,7 +69,13 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    public void init() {
+    public void doInit() {
+        bindAction(KeyInput.of(key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP)), GlobalGameActions2D.ADD_CREDIT);
+        bindAction(KeyInput.of(key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1)),                  GlobalGameActions2D.START_GAME);
+        bindAction(KeyInput.of(alt(KeyCode.C)),       GlobalGameActions2D.TEST_CUT_SCENES);
+        bindAction(KeyInput.of(alt(KeyCode.T)),       GlobalGameActions2D.TEST_LEVELS_BONI);
+        bindAction(KeyInput.of(shift_alt(KeyCode.T)), GlobalGameActions2D.TEST_LEVELS_TEASERS);
+
         context.setScoreVisible(true);
 
         //TODO make this work again

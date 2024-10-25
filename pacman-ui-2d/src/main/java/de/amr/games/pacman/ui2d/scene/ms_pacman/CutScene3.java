@@ -49,15 +49,8 @@ public class CutScene3 extends GameScene2D {
     private ClapperboardAnimation clapAnimation;
     private SpriteAnimation storkAnimation;
 
-    private void startMusic() {
-        int number  = context.gameState() == GameState.TESTING_CUT_SCENES
-            ? GameState.TESTING_CUT_SCENES.getProperty("intermissionTestNumber")
-            : context.game().intermissionNumberAfterLevel();
-        context.sounds().playIntermissionSound(number);
-    }
-
     @Override
-    public void init() {
+    public void doInit() {
         context.setScoreVisible(context.gameVariant() != GameVariant.MS_PACMAN_TENGEN);
 
         pacMan = new Pac();
@@ -105,6 +98,13 @@ public class CutScene3 extends GameScene2D {
         renderer.drawSprite(bag, bagOpen ? MsPacManGameSpriteSheet.JUNIOR_PAC_SPRITE : MsPacManGameSpriteSheet.BLUE_BAG_SPRITE);
         renderer.drawLevelCounter(context.game().currentLevelNumber(), context.game().isDemoLevel(),
             context.game().levelCounter(), size());
+    }
+
+    private void startMusic() {
+        int number  = context.gameState() == GameState.TESTING_CUT_SCENES
+                ? GameState.TESTING_CUT_SCENES.getProperty("intermissionTestNumber")
+                : context.game().intermissionNumberAfterLevel();
+        context.sounds().playIntermissionSound(number);
     }
 
     private class SceneController {

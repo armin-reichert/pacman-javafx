@@ -56,15 +56,6 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     private final Canvas canvas = new Canvas(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
     private int camDelay;
 
-    {
-        bindAction(KeyInput.of(alt(KeyCode.E)), GlobalGameActions2D.CHEAT_EAT_ALL);
-        bindAction(KeyInput.of(alt(KeyCode.L)), GlobalGameActions2D.CHEAT_ADD_LIVES);
-        bindAction(KeyInput.of(alt(KeyCode.N)), GlobalGameActions2D.CHEAT_NEXT_LEVEL);
-        bindAction(KeyInput.of(alt(KeyCode.X)), GlobalGameActions2D.CHEAT_KILL_GHOSTS);
-        bindAction(KeyCode.A, GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER);
-        bindAction(KeyCode.Q, GlobalGameActions2D.TENGEN_QUIT_PLAY_SCENE);
-    }
-
     public TengenPlayScene2D() {
         Pane root = new StackPane(canvas);
         root.setBackground(coloredBackground(Color.TRANSPARENT));
@@ -74,27 +65,14 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     }
 
     @Override
-    public DoubleProperty viewPortWidthProperty() {
-        return fxSubScene.widthProperty();
-    }
+    public void doInit() {
+        bindAction(KeyInput.of(alt(KeyCode.E)), GlobalGameActions2D.CHEAT_EAT_ALL);
+        bindAction(KeyInput.of(alt(KeyCode.L)), GlobalGameActions2D.CHEAT_ADD_LIVES);
+        bindAction(KeyInput.of(alt(KeyCode.N)), GlobalGameActions2D.CHEAT_NEXT_LEVEL);
+        bindAction(KeyInput.of(alt(KeyCode.X)), GlobalGameActions2D.CHEAT_KILL_GHOSTS);
+        bindAction(KeyCode.A, GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER);
+        bindAction(KeyCode.Q, GlobalGameActions2D.TENGEN_QUIT_PLAY_SCENE);
 
-    @Override
-    public DoubleProperty viewPortHeightProperty() {
-        return fxSubScene.heightProperty();
-    }
-
-    @Override
-    public Node viewPort() {
-        return fxSubScene;
-    }
-
-    @Override
-    public Camera camera() {
-        return fxSubScene.getCamera();
-    }
-
-    @Override
-    public void init() {
         canvas.widthProperty().bind(Bindings.createDoubleBinding(() -> scaled(size().x()), scalingProperty()));
         canvas.heightProperty().bind(Bindings.createDoubleBinding(() -> scaled(size().y()), scalingProperty()));
     }
@@ -121,6 +99,26 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             updatePlaySceneSound();
         }
         updateCamera();
+    }
+
+    @Override
+    public DoubleProperty viewPortWidthProperty() {
+        return fxSubScene.widthProperty();
+    }
+
+    @Override
+    public DoubleProperty viewPortHeightProperty() {
+        return fxSubScene.heightProperty();
+    }
+
+    @Override
+    public Node viewPort() {
+        return fxSubScene;
+    }
+
+    @Override
+    public Camera camera() {
+        return fxSubScene.getCamera();
     }
 
     private double cameraRadius() {

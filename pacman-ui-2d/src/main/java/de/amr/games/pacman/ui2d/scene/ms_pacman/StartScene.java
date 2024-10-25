@@ -24,13 +24,11 @@ import static de.amr.games.pacman.ui2d.util.KeyInput.key;
  */
 public class StartScene extends GameScene2D {
 
-    {
+    @Override
+    public void doInit() {
         bindAction(KeyInput.of(key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP)), GlobalGameActions2D.ADD_CREDIT);
         bindAction(KeyInput.of(key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1)),                  GlobalGameActions2D.START_GAME);
-    }
 
-    @Override
-    public void init() {
         context.setScoreVisible(true);
     }
 

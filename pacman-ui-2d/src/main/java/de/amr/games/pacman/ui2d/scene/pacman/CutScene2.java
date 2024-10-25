@@ -36,7 +36,7 @@ public class CutScene2 extends GameScene2D {
     private SpriteAnimation blinkyDamaged;
 
     @Override
-    public void init() {
+    public void doInit() {
         context.setScoreVisible(true);
         pac = new Pac();
         PacManGameSpriteSheet spriteSheet = (PacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();

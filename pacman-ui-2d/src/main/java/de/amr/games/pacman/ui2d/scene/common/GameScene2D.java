@@ -62,6 +62,13 @@ public abstract class GameScene2D implements GameScene {
     protected void drawDebugInfo(GameRenderer renderer) {}
 
     @Override
+    public final void init() {
+        doInit();
+    }
+
+    abstract protected void doInit();
+
+    @Override
     public void draw(GameRenderer renderer) {
         renderer.scalingProperty().set(scaling());
         renderer.setBackgroundColor(backgroundColor());

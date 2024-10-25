@@ -61,7 +61,7 @@ public class CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void init() {
+    public void doInit() {
         context.setScoreVisible(context.gameVariant() != GameVariant.MS_PACMAN_TENGEN);
 
         pacMan = new Pac();

@@ -51,14 +51,6 @@ public class IntroScene extends GameScene2D {
     static final float GHOST_FRIGHTENED_SPEED = 0.6f;
     static final int LEFT_TILE_X = 4;
 
-    {
-        bindAction(KeyInput.of(key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP)), GlobalGameActions2D.ADD_CREDIT);
-        bindAction(KeyInput.of(key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1)), GlobalGameActions2D.START_GAME);
-        bindAction(KeyInput.of(alt(KeyCode.C)), GlobalGameActions2D.TEST_CUT_SCENES);
-        bindAction(KeyInput.of(alt(KeyCode.T)), GlobalGameActions2D.TEST_LEVELS_BONI);
-        bindAction(KeyInput.of(shift_alt(KeyCode.T)), GlobalGameActions2D.TEST_LEVELS_TEASERS);
-    }
-
     private final FiniteStateMachine<SceneState, IntroScene> sceneController;
 
     private Pulse blinking;
@@ -82,7 +74,13 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    public void init() {
+    public void doInit() {
+        bindAction(KeyInput.of(key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP)), GlobalGameActions2D.ADD_CREDIT);
+        bindAction(KeyInput.of(key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1)), GlobalGameActions2D.START_GAME);
+        bindAction(KeyInput.of(alt(KeyCode.C)), GlobalGameActions2D.TEST_CUT_SCENES);
+        bindAction(KeyInput.of(alt(KeyCode.T)), GlobalGameActions2D.TEST_LEVELS_BONI);
+        bindAction(KeyInput.of(shift_alt(KeyCode.T)), GlobalGameActions2D.TEST_LEVELS_TEASERS);
+
         PacManGameSpriteSheet spriteSheet = (PacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         blinking = new Pulse(10, true);
         pacMan = new Pac();

@@ -40,15 +40,12 @@ public class PlayScene2D extends GameScene2D {
 
     public static final Font DEBUG_STATE_FONT = Font.font("Sans", FontWeight.BOLD, 24);
 
-    {
+    @Override
+    public void doInit() {
         bindAction(KeyInput.of(alt(KeyCode.E)), GlobalGameActions2D.CHEAT_EAT_ALL);
         bindAction(KeyInput.of(alt(KeyCode.L)), GlobalGameActions2D.CHEAT_ADD_LIVES);
         bindAction(KeyInput.of(alt(KeyCode.N)), GlobalGameActions2D.CHEAT_NEXT_LEVEL);
         bindAction(KeyInput.of(alt(KeyCode.X)), GlobalGameActions2D.CHEAT_KILL_GHOSTS);
-    }
-
-    @Override
-    public void init() {
         if (context.game().isDemoLevel()) {
             bindAction(KeyInput.of(key(KeyCode.DIGIT1)), GlobalGameActions2D.ADD_CREDIT);
         }
