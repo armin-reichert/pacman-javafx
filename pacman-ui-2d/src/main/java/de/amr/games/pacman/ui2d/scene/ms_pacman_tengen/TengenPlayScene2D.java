@@ -71,7 +71,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         bindAction(KeyInput.of(alt(KeyCode.N)), GlobalGameActions2D.CHEAT_NEXT_LEVEL);
         bindAction(KeyInput.of(alt(KeyCode.X)), GlobalGameActions2D.CHEAT_KILL_GHOSTS);
         bindAction(KeyCode.A, GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER);
-        bindAction(KeyCode.Q, GlobalGameActions2D.TENGEN_QUIT_PLAY_SCENE);
+        bindAction(KeyCode.S, GlobalGameActions2D.TENGEN_SHOW_OPTIONS);
 
         canvas.widthProperty().bind(Bindings.createDoubleBinding(() -> scaled(size().x()), scalingProperty()));
         canvas.heightProperty().bind(Bindings.createDoubleBinding(() -> scaled(size().y()), scalingProperty()));

@@ -177,7 +177,7 @@ public enum GlobalGameActions2D implements GameAction {
         }
     },
 
-    TENGEN_QUIT_PLAY_SCENE { // (key(KeyCode.S)) {
+    TENGEN_SHOW_OPTIONS { // (key(KeyCode.S)) {
         @Override
         public void execute(GameContext context) {
             context.sounds().stopAll();

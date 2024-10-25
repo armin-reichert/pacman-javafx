@@ -129,7 +129,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         bindAction(KeyInput.of(alt(KeyCode.X)),     GlobalGameActions2D.CHEAT_KILL_GHOSTS);
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             bindAction(KeyCode.A, GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER);
-            bindAction(KeyCode.S, GlobalGameActions2D.TENGEN_QUIT_PLAY_SCENE);
+            bindAction(KeyCode.S, GlobalGameActions2D.TENGEN_SHOW_OPTIONS);
         }
         else if (context.game().isDemoLevel()) {
             bindAction(KeyInput.of(key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP)), GlobalGameActions2D.ADD_CREDIT);

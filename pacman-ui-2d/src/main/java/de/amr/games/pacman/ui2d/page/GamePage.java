@@ -106,12 +106,12 @@ public class GamePage extends StackPane implements Page {
 
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     {
-        bindAction(KeyInput.of(key(KeyCode.F3)),      GlobalGameActions2D.BOOT);
-        bindAction(KeyInput.of(key(KeyCode.Q)),       GlobalGameActions2D.SHOW_START_PAGE);
-        bindAction(KeyInput.of(key(KeyCode.P)),       GlobalGameActions2D.TOGGLE_PAUSED);
+        bindAction(KeyCode.F3,                        GlobalGameActions2D.BOOT);
+        bindAction(KeyCode.Q,                         GlobalGameActions2D.SHOW_START_PAGE);
+        bindAction(KeyCode.P,                         GlobalGameActions2D.TOGGLE_PAUSED);
         bindAction(KeyInput.of(shift_alt(KeyCode.E)), GlobalGameActions2D.OPEN_EDITOR);
         bindAction(KeyInput.of(alt(KeyCode.D)),       actionToggleDebugInfo);
-        bindAction(KeyInput.of(key(KeyCode.H)),       actionShowHelp);
+        bindAction(KeyCode.H,                         actionShowHelp);
         bindAction(KeyInput.of(alt(KeyCode.MINUS)),   actionSimulationSlower);
         bindAction(KeyInput.of(alt(KeyCode.PLUS)),    actionSimulationFaster);
         bindAction(KeyInput.of(alt(KeyCode.DIGIT0)),  actionSimulationNormalSpeed);
