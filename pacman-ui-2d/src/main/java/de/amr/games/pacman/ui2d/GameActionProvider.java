@@ -47,11 +47,6 @@ public interface GameActionProvider {
         }
     }
 
-    // TODO check if this works for different key object instances
-    default void unbindAction(KeyCode keyCode, GameAction action) {
-        actionBindings().remove(new KeyCodeCombination(keyCode), action);
-    }
-
     default Optional<GameAction> firstMatchedAction(Keyboard keyboard) {
         return actionBindings().entrySet().stream()
             .filter(entry -> keyboard.isRegisteredKeyCombinationPressed(entry.getKey()))
