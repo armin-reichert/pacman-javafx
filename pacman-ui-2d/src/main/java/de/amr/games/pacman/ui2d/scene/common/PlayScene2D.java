@@ -41,6 +41,10 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void doInit() {
+        bindActions();
+    }
+
+    private void bindActions() {
         bindAction(GlobalGameActions2D.CHEAT_EAT_ALL, alt(KeyCode.E));
         bindAction(GlobalGameActions2D.CHEAT_ADD_LIVES, alt(KeyCode.L));
         bindAction(GlobalGameActions2D.CHEAT_NEXT_LEVEL, alt(KeyCode.N));
@@ -194,6 +198,7 @@ public class PlayScene2D extends GameScene2D {
         Logger.info("{} entered from {}", this, oldScene);
         //TODO check this
         context.updateRenderer();
+        bindActions();
     }
 
     @Override
