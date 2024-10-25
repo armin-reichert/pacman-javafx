@@ -16,7 +16,8 @@ import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.lib.Globals.v2i;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
 
 /**
