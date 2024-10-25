@@ -32,10 +32,6 @@ public class StartScene extends GameScene2D {
     }
 
     @Override
-    public void end() {
-    }
-
-    @Override
     public void update() {
     }
 

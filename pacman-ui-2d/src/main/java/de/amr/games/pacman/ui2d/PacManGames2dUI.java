@@ -386,31 +386,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                 nextGameScene.init();
             }
             if (sceneChanging) {
-                removeActionBindings(currentGameScene);
-                addActionBindings(nextGameScene);
                 gameScenePy.set(nextGameScene);
                 Logger.info("Game scene changed to: {}", displayName(gameScenePy.get()));
             } else {
                 Logger.info("Game scene reloaded: {}", displayName(currentGameScene));
             }
-        }
-    }
-
-    private void removeActionBindings(ActionProvider actionProvider) {
-        if (actionProvider == null) {
-            return;
-        }
-        for (KeyCodeCombination keyCodeCombination : actionProvider.actionBindings().keySet()) {
-            keyboard().unregister(keyCodeCombination);
-        }
-    }
-
-    private void addActionBindings(ActionProvider actionProvider) {
-        if (actionProvider == null) {
-            return;
-        }
-        for (KeyCodeCombination keyCodeCombination : actionProvider.actionBindings().keySet()) {
-            keyboard().register(keyCodeCombination);
         }
     }
 
@@ -457,8 +437,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public void selectPage(Page page) {
         if (page != currentPage) {
-            removeActionBindings(currentPage);
-            addActionBindings(page);
+            if (currentPage != null) {
+                currentPage.unregister(keyboard());
+            }
+            page.register(keyboard());
             currentPage = page;
             currentPage.setSize(stage.getScene().getWidth(), stage.getScene().getHeight());
             sceneRoot.getChildren().set(0, currentPage.rootPane());

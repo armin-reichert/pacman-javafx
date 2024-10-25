@@ -12,6 +12,19 @@ public interface ActionProvider {
 
     Map<KeyCodeCombination, GameAction> actionBindings();
 
+    default void unregister(Keyboard keyboard) {
+        for (KeyCodeCombination keyCodeCombination : actionBindings().keySet()) {
+            keyboard.unregister(keyCodeCombination);
+        }
+    }
+
+    default void register(Keyboard keyboard) {
+        for (KeyCodeCombination keyCodeCombination : actionBindings().keySet()) {
+            keyboard.register(keyCodeCombination);
+        }
+
+    }
+
     default void bindAction(KeyInput keyInput, GameAction action) {
         for (KeyCodeCombination kcc : keyInput.getCombinations()) {
             actionBindings().put(kcc, action);

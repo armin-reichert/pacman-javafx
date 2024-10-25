@@ -68,10 +68,6 @@ public class OptionsScene extends GameScene2D {
     }
 
     @Override
-    public void end() {
-    }
-
-    @Override
     public void update() {
         if (idleTicks == 25*60) { // TODO check idle time in disassembly
             context.gameController().changeState(GameState.INTRO);

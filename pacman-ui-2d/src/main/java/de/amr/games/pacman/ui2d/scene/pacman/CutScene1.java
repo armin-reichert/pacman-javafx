@@ -42,10 +42,6 @@ public class CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void end() {
-    }
-
-    @Override
     public void update() {
         ++frame;
         if (frame >= ANIMATION_START) {

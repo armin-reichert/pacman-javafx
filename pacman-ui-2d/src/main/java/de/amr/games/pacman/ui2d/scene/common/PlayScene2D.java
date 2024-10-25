@@ -52,7 +52,7 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void end() {
+    protected void doEnd() {
         context.sounds().stopAll();
     }
 

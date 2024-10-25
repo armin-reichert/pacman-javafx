@@ -58,15 +58,22 @@ public abstract class GameScene2D implements GameScene {
     public void setBackgroundColor(Color color) { backgroundColorPy.set(color); }
     public Color backgroundColor() { return backgroundColorPy.get(); }
 
+    protected abstract void doInit();
+    protected void doEnd() {}
     protected abstract void drawSceneContent(GameRenderer renderer);
     protected void drawDebugInfo(GameRenderer renderer) {}
 
     @Override
     public final void init() {
-        doInit();
+        doInit(); // defines the action bindings!
+        register(context().keyboard());
     }
 
-    abstract protected void doInit();
+    @Override
+    public final void end() {
+        doEnd();
+        unregister(context().keyboard());
+    }
 
     @Override
     public void draw(GameRenderer renderer) {

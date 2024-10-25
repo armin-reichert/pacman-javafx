@@ -78,7 +78,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     }
 
     @Override
-    public void end() {
+    protected void doEnd() {
         context.sounds().stopAll();
         //((TengenMsPacManGame) context.game()).setCanStartGame(true);
     }

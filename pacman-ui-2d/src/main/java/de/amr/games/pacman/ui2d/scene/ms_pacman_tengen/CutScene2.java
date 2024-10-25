@@ -63,10 +63,6 @@ public class CutScene2 extends GameScene2D {
     }
 
     @Override
-    public void end() {
-    }
-
-    @Override
     public void update() {
         sceneController.tick();
     }

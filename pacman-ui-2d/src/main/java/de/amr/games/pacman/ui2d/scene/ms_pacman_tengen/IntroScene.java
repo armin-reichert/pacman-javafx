@@ -88,7 +88,7 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    public void end() {
+    protected void doEnd() {
         context.sounds().stopVoice(); // TODO check if needed
     }
 

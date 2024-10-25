@@ -24,10 +24,6 @@ public class BootScene extends GameScene2D {
     }
 
     @Override
-    public void end() {
-    }
-
-    @Override
     public void update() {
         if (context.gameState().timer().atSecond(4)) {
             context.gameController().terminateCurrentState();

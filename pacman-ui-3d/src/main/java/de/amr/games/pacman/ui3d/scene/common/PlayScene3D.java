@@ -91,15 +91,6 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     private Picker<String> pickerGameOver;
     private Picker<String> pickerLevelComplete;
 
-    {
-        bindAction(KeyInput.of(alt(KeyCode.LEFT)),  GlobalGameActions3D.PREV_PERSPECTIVE);
-        bindAction(KeyInput.of(alt(KeyCode.RIGHT)), GlobalGameActions3D.NEXT_PERSPECTIVE);
-        bindAction(KeyInput.of(alt(KeyCode.E)),     GlobalGameActions2D.CHEAT_EAT_ALL);
-        bindAction(KeyInput.of(alt(KeyCode.L)),     GlobalGameActions2D.CHEAT_ADD_LIVES);
-        bindAction(KeyInput.of(alt(KeyCode.N)),     GlobalGameActions2D.CHEAT_NEXT_LEVEL);
-        bindAction(KeyInput.of(alt(KeyCode.X)),     GlobalGameActions2D.CHEAT_KILL_GHOSTS);
-    }
-
     public PlayScene3D() {
         var ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
@@ -118,46 +109,24 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     @Override
-    public Map<KeyCodeCombination, GameAction> actionBindings() {
-        return actionBindings;
+    public final void init() {
+        register(context().keyboard());
+        doInit();
     }
 
     @Override
-    public DoubleProperty viewPortWidthProperty() {
-        return fxSubScene.widthProperty();
+    public final void end() {
+        doEnd();
+        unregister(context().keyboard());
     }
 
-    @Override
-    public DoubleProperty viewPortHeightProperty() {
-        return fxSubScene.heightProperty();
-    }
-
-    @Override
-    public SubScene viewPort() {
-        return fxSubScene;
-    }
-
-    @Override
-    public Camera camera() {
-        return fxSubScene.getCamera();
-    }
-
-    @Override
-    public GameContext context() {
-        return context;
-    }
-
-    @Override
-    public void setGameContext(GameContext context) {
-        this.context = checkNotNull(context);
-    }
-
-    public Perspective perspective() {
-        return perspectiveMap.get(perspectiveNamePy.get());
-    }
-
-    @Override
-    public void init() {
+    protected void doInit() {
+        bindAction(KeyInput.of(alt(KeyCode.LEFT)),  GlobalGameActions3D.PREV_PERSPECTIVE);
+        bindAction(KeyInput.of(alt(KeyCode.RIGHT)), GlobalGameActions3D.NEXT_PERSPECTIVE);
+        bindAction(KeyInput.of(alt(KeyCode.E)),     GlobalGameActions2D.CHEAT_EAT_ALL);
+        bindAction(KeyInput.of(alt(KeyCode.L)),     GlobalGameActions2D.CHEAT_ADD_LIVES);
+        bindAction(KeyInput.of(alt(KeyCode.N)),     GlobalGameActions2D.CHEAT_NEXT_LEVEL);
+        bindAction(KeyInput.of(alt(KeyCode.X)),     GlobalGameActions2D.CHEAT_KILL_GHOSTS);
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             bindAction(KeyCode.A, GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER);
             bindAction(KeyCode.S, GlobalGameActions2D.TENGEN_QUIT_PLAY_SCENE);
@@ -165,6 +134,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         else if (context.game().isDemoLevel()) {
             bindAction(KeyInput.of(key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP)), GlobalGameActions2D.ADD_CREDIT);
         }
+
         context.setScoreVisible(true);
         scores3D.fontPy.set(context.assets().font("font.arcade", 8));
         perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
@@ -173,8 +143,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         Logger.info("3D play scene initialized. {}", this);
     }
 
-    @Override
-    public void end() {
+    protected void doEnd() {
         perspectiveNamePy.unbind();
         level3D = null;
         Logger.info("3D play scene ended. {}", this);
@@ -237,6 +206,45 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         } else {
             context.sounds().stopGhostReturningHomeSound();
         }
+    }
+
+    @Override
+    public Map<KeyCodeCombination, GameAction> actionBindings() {
+        return actionBindings;
+    }
+
+    @Override
+    public DoubleProperty viewPortWidthProperty() {
+        return fxSubScene.widthProperty();
+    }
+
+    @Override
+    public DoubleProperty viewPortHeightProperty() {
+        return fxSubScene.heightProperty();
+    }
+
+    @Override
+    public SubScene viewPort() {
+        return fxSubScene;
+    }
+
+    @Override
+    public Camera camera() {
+        return fxSubScene.getCamera();
+    }
+
+    @Override
+    public GameContext context() {
+        return context;
+    }
+
+    @Override
+    public void setGameContext(GameContext context) {
+        this.context = checkNotNull(context);
+    }
+
+    public Perspective perspective() {
+        return perspectiveMap.get(perspectiveNamePy.get());
     }
 
     @Override
