@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -100,9 +101,13 @@ public class MsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void update(GameModel game) {
+        MapColorScheme colorScheme = game.currentMapColorScheme();
+        if (colorScheme == null) {
+            return;
+        }
         // select map sprite depending on selected map color scheme
         for (int i = 0; i < 6; ++i) {
-            if (game.currentMapColorScheme().equals(MsPacManArcadeGame.MAP_COLOR_SCHEMES[i])) {
+            if (colorScheme.equals(MsPacManArcadeGame.MAP_COLOR_SCHEMES[i])) {
                 mapWithFoodSprite = spriteSheet.imageArea(0, i * 248, 226, 248);
                 mapWithoutFoodSprite = spriteSheet.imageArea(228, i * 248, 226, 248);
                 mapFlashingSprite = imageArea(flashingMazesImage, 0, i * 248, 226, 248);
