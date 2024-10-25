@@ -19,7 +19,6 @@ import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.util.KeyInput;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -32,7 +31,6 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGame
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_HEIGHT;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_WIDTH;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
-import static de.amr.games.pacman.ui2d.util.KeyInput.key;
 
 /**
  * @author Armin Reichert
@@ -66,7 +64,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        bindAction(KeyInput.of(key(KeyCode.SPACE)), GlobalGameActions2D.START_GAME);
+        bindAction(GlobalGameActions2D.START_GAME, KeyCode.SPACE);
 
         TengenMsPacManGameSpriteSheet spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         context.setScoreVisible(false);

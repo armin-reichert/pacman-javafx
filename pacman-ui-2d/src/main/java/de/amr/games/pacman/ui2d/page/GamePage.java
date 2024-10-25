@@ -15,7 +15,6 @@ import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui2d.util.TooFancyGameCanvasContainer;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.ObjectProperty;
@@ -106,20 +105,20 @@ public class GamePage extends StackPane implements Page {
 
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     {
-        bindAction(KeyCode.F3,                        GlobalGameActions2D.BOOT);
-        bindAction(KeyCode.Q,                         GlobalGameActions2D.SHOW_START_PAGE);
-        bindAction(KeyCode.P,                         GlobalGameActions2D.TOGGLE_PAUSED);
-        bindAction(KeyInput.of(shift_alt(KeyCode.E)), GlobalGameActions2D.OPEN_EDITOR);
-        bindAction(KeyInput.of(alt(KeyCode.D)),       actionToggleDebugInfo);
-        bindAction(KeyCode.H,                         actionShowHelp);
-        bindAction(KeyInput.of(alt(KeyCode.MINUS)),   actionSimulationSlower);
-        bindAction(KeyInput.of(alt(KeyCode.PLUS)),    actionSimulationFaster);
-        bindAction(KeyInput.of(alt(KeyCode.DIGIT0)),  actionSimulationNormalSpeed);
-        bindAction(KeyInput.of(shift(KeyCode.P)),     actionSimulationOneStep);
-        bindAction(KeyInput.of(shift(KeyCode.SPACE)), actionSimulationTenSteps);
-        bindAction(KeyInput.of(alt(KeyCode.A)),       actionToggleAutopilot);
-        bindAction(KeyInput.of(key(KeyCode.F1), alt(KeyCode.B)), actionToggleDashboard);
-        bindAction(KeyInput.of(alt(KeyCode.I)),       actionToggleImmunity);
+        bindAction(GlobalGameActions2D.BOOT,            KeyCode.F3);
+        bindAction(GlobalGameActions2D.SHOW_START_PAGE, KeyCode.Q);
+        bindAction(GlobalGameActions2D.TOGGLE_PAUSED,   KeyCode.P);
+        bindAction(GlobalGameActions2D.OPEN_EDITOR,     shift_alt(KeyCode.E));
+        bindAction(actionToggleDebugInfo,               alt(KeyCode.D));
+        bindAction(actionShowHelp,                      KeyCode.H);
+        bindAction(actionSimulationSlower,              alt(KeyCode.MINUS));
+        bindAction(actionSimulationFaster,              alt(KeyCode.PLUS));
+        bindAction(actionSimulationNormalSpeed,         alt(KeyCode.DIGIT0));
+        bindAction(actionSimulationOneStep,             shift(KeyCode.P));
+        bindAction(actionSimulationTenSteps,            shift(KeyCode.SPACE));
+        bindAction(actionToggleAutopilot,               alt(KeyCode.A));
+        bindAction(actionToggleDashboard,               key(KeyCode.F1), alt(KeyCode.B));
+        bindAction(actionToggleImmunity,                alt(KeyCode.I));
     }
 
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {

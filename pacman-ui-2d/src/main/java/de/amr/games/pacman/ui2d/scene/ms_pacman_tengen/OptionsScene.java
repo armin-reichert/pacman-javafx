@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.util.KeyInput;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -56,9 +55,9 @@ public class OptionsScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        bindAction(KeyInput.of(alt(KeyCode.C)), GlobalGameActions2D.TEST_CUT_SCENES);
-        bindAction(KeyInput.of(alt(KeyCode.T)), GlobalGameActions2D.TEST_LEVELS_BONI);
-        bindAction(KeyInput.of(shift_alt(KeyCode.T)), GlobalGameActions2D.TEST_LEVELS_TEASERS);
+        bindAction(GlobalGameActions2D.TEST_CUT_SCENES,     alt(KeyCode.C));
+        bindAction(GlobalGameActions2D.TEST_LEVELS_BONI,    alt(KeyCode.T));
+        bindAction(GlobalGameActions2D.TEST_LEVELS_TEASERS, shift_alt(KeyCode.T));
 
         context.setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;

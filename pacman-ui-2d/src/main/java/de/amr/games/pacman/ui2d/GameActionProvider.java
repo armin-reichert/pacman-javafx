@@ -24,10 +24,6 @@ public interface GameActionProvider {
         }
     }
 
-    default void register(Keyboard keyboard, KeyCodeCombination kcc) {
-
-    }
-
     default void unregister(Keyboard keyboard) {
         Logger.info("Unregister key bindings for {}", getClass().getSimpleName());
         for (KeyCodeCombination keyCodeCombination : actionBindings().keySet()) {
@@ -35,20 +31,20 @@ public interface GameActionProvider {
         }
     }
 
-    default void bindAction(KeyInput keyInput, GameAction action) {
+    default void bindAction(GameAction action, KeyInput keyInput) {
         for (KeyCodeCombination kcc : keyInput.getCombinations()) {
             actionBindings().put(kcc, action);
         }
     }
 
-    default void unbindAction(KeyInput keyInput, GameAction action) {
-        for (KeyCodeCombination kcc : keyInput.getCombinations()) {
-            actionBindings().remove(kcc, action);
-        }
+    default void bindAction(GameAction action, KeyCodeCombination... combinations) {
+        bindAction(action, KeyInput.of(combinations));
     }
 
-    default void bindAction(KeyCode keyCode, GameAction action) {
-        actionBindings().put(new KeyCodeCombination(keyCode), action);
+    default void bindAction(GameAction action, KeyCode... keyCodes) {
+        for (KeyCode keyCode : keyCodes) {
+            actionBindings().put(new KeyCodeCombination(keyCode), action);
+        }
     }
 
     // TODO check if this works for different key object instances

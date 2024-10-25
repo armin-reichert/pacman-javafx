@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
-import de.amr.games.pacman.ui2d.util.KeyInput;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -42,11 +41,11 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void doInit() {
-        bindAction(KeyInput.of(alt(KeyCode.E)), GlobalGameActions2D.CHEAT_EAT_ALL);
-        bindAction(KeyInput.of(alt(KeyCode.L)), GlobalGameActions2D.CHEAT_ADD_LIVES);
-        bindAction(KeyInput.of(alt(KeyCode.N)), GlobalGameActions2D.CHEAT_NEXT_LEVEL);
-        bindAction(KeyInput.of(alt(KeyCode.X)), GlobalGameActions2D.CHEAT_KILL_GHOSTS);
-        bindAction(KeyInput.of(key(KeyCode.DIGIT1)), GlobalGameActions2D.ADD_CREDIT);
+        bindAction(GlobalGameActions2D.CHEAT_EAT_ALL, alt(KeyCode.E));
+        bindAction(GlobalGameActions2D.CHEAT_ADD_LIVES, alt(KeyCode.L));
+        bindAction(GlobalGameActions2D.CHEAT_NEXT_LEVEL, alt(KeyCode.N));
+        bindAction(GlobalGameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
+        bindAction(GlobalGameActions2D.ADD_CREDIT, key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5));
     }
 
     @Override

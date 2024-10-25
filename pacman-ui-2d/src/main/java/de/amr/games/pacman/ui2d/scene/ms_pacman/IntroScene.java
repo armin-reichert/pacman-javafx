@@ -20,7 +20,6 @@ import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.util.KeyInput;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -70,11 +69,11 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        bindAction(KeyInput.of(key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP)), GlobalGameActions2D.ADD_CREDIT);
-        bindAction(KeyInput.of(key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1)),                  GlobalGameActions2D.START_GAME);
-        bindAction(KeyInput.of(alt(KeyCode.C)),       GlobalGameActions2D.TEST_CUT_SCENES);
-        bindAction(KeyInput.of(alt(KeyCode.T)),       GlobalGameActions2D.TEST_LEVELS_BONI);
-        bindAction(KeyInput.of(shift_alt(KeyCode.T)), GlobalGameActions2D.TEST_LEVELS_TEASERS);
+        bindAction(GlobalGameActions2D.ADD_CREDIT,          key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP));
+        bindAction(GlobalGameActions2D.START_GAME,          key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1));
+        bindAction(GlobalGameActions2D.TEST_CUT_SCENES,     alt(KeyCode.C));
+        bindAction(GlobalGameActions2D.TEST_LEVELS_BONI,    alt(KeyCode.T));
+        bindAction(GlobalGameActions2D.TEST_LEVELS_TEASERS, shift_alt(KeyCode.T));
 
         context.setScoreVisible(true);
 

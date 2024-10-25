@@ -21,7 +21,6 @@ import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
-import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui3d.GlobalGameActions3D;
 import de.amr.games.pacman.ui3d.level.*;
@@ -121,18 +120,18 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     protected void doInit() {
-        bindAction(KeyInput.of(alt(KeyCode.LEFT)),  GlobalGameActions3D.PREV_PERSPECTIVE);
-        bindAction(KeyInput.of(alt(KeyCode.RIGHT)), GlobalGameActions3D.NEXT_PERSPECTIVE);
-        bindAction(KeyInput.of(alt(KeyCode.E)),     GlobalGameActions2D.CHEAT_EAT_ALL);
-        bindAction(KeyInput.of(alt(KeyCode.L)),     GlobalGameActions2D.CHEAT_ADD_LIVES);
-        bindAction(KeyInput.of(alt(KeyCode.N)),     GlobalGameActions2D.CHEAT_NEXT_LEVEL);
-        bindAction(KeyInput.of(alt(KeyCode.X)),     GlobalGameActions2D.CHEAT_KILL_GHOSTS);
+        bindAction(GlobalGameActions3D.PREV_PERSPECTIVE,  alt(KeyCode.LEFT));
+        bindAction(GlobalGameActions3D.NEXT_PERSPECTIVE,  alt(KeyCode.RIGHT));
+        bindAction(GlobalGameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
+        bindAction(GlobalGameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
+        bindAction(GlobalGameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
+        bindAction(GlobalGameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            bindAction(KeyCode.A, GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER);
-            bindAction(KeyCode.S, GlobalGameActions2D.TENGEN_SHOW_OPTIONS);
+            bindAction(GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER, KeyCode.A);
+            bindAction(GlobalGameActions2D.TENGEN_SHOW_OPTIONS,       KeyCode.S);
         }
         else if (context.game().isDemoLevel()) {
-            bindAction(KeyInput.of(key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP)), GlobalGameActions2D.ADD_CREDIT);
+            bindAction(GlobalGameActions2D.ADD_CREDIT, key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP));
         }
 
         context.setScoreVisible(true);

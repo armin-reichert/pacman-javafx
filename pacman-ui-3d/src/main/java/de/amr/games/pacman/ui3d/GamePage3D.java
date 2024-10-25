@@ -8,7 +8,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.page.GamePage;
-import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.scene.common.Perspective;
 import javafx.beans.binding.Bindings;
@@ -32,8 +31,8 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_PERSPECTIVE;
 public class GamePage3D extends GamePage {
 
     {
-        bindAction(KeyCode.F2, GlobalGameActions3D.TOGGLE_PIP_VISIBILITY);
-        bindAction(KeyInput.of(alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3)), GlobalGameActions3D.TOGGLE_PLAY_SCENE_2D_3D);
+        bindAction(GlobalGameActions3D.TOGGLE_PIP_VISIBILITY, KeyCode.F2);
+        bindAction(GlobalGameActions3D.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
     }
 
     public GamePage3D(GameContext context, Scene parentScene) {

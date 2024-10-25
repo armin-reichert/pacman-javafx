@@ -18,7 +18,6 @@ import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.util.KeyInput;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Pos;
@@ -66,12 +65,12 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void doInit() {
-        bindAction(KeyInput.of(alt(KeyCode.E)), GlobalGameActions2D.CHEAT_EAT_ALL);
-        bindAction(KeyInput.of(alt(KeyCode.L)), GlobalGameActions2D.CHEAT_ADD_LIVES);
-        bindAction(KeyInput.of(alt(KeyCode.N)), GlobalGameActions2D.CHEAT_NEXT_LEVEL);
-        bindAction(KeyInput.of(alt(KeyCode.X)), GlobalGameActions2D.CHEAT_KILL_GHOSTS);
-        bindAction(KeyCode.A, GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER);
-        bindAction(KeyCode.S, GlobalGameActions2D.TENGEN_SHOW_OPTIONS);
+        bindAction(GlobalGameActions2D.CHEAT_EAT_ALL,              alt(KeyCode.E));
+        bindAction(GlobalGameActions2D.CHEAT_ADD_LIVES,            alt(KeyCode.L));
+        bindAction(GlobalGameActions2D.CHEAT_NEXT_LEVEL,           alt(KeyCode.N));
+        bindAction(GlobalGameActions2D.CHEAT_KILL_GHOSTS,          alt(KeyCode.X));
+        bindAction(GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER,  KeyCode.A);
+        bindAction(GlobalGameActions2D.TENGEN_SHOW_OPTIONS,        KeyCode.S);
 
         canvas.widthProperty().bind(Bindings.createDoubleBinding(() -> scaled(size().x()), scalingProperty()));
         canvas.heightProperty().bind(Bindings.createDoubleBinding(() -> scaled(size().y()), scalingProperty()));
