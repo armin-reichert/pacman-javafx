@@ -415,7 +415,6 @@ public class TengenMsPacManGame extends GameModel {
             URL url = getClass().getResource(path);
             if (url != null) {
                 WorldMap worldMap = new WorldMap(url);
-                worldMap.terrain().setProperty("map_number", String.valueOf(num));
                 maps.add(worldMap);
                 Logger.info("World map #{} has been read from URL {}", num, url);
             }
