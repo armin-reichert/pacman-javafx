@@ -395,8 +395,8 @@ public class TengenMsPacManGame extends GameModel {
         if (levelNumber < 1 || levelNumber > 32) {
             throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
-        currentMap = strangeOrBigMaps.get(levelNumber - 1);
-        currentMapColorScheme = createColorSchemeFromMapProperties(currentMap); // TODO check this
+        // map number = level number TODO: check this
+        setMapAndColorScheme(strangeOrBigMaps, levelNumber, createColorSchemeFromMapProperties(strangeOrBigMaps.get(levelNumber - 1)));
     }
 
     private MapColorScheme createColorSchemeFromMapProperties(WorldMap worldMap) {
