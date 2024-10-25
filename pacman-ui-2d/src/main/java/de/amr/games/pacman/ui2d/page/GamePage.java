@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.AbstractGameAction;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
@@ -16,6 +15,7 @@ import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui2d.util.TooFancyGameCanvasContainer;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.ObjectProperty;
@@ -28,13 +28,15 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -50,109 +52,75 @@ public class GamePage extends StackPane implements Page {
 
     static final double MAX_SCENE_SCALING = 5;
 
-    private final GameAction actionToggleDebugInfo = new AbstractGameAction(alt(KeyCode.D)) {
-        public void execute(GameContext context) {
-            Ufx.toggle(PY_DEBUG_INFO);
+    private final GameAction actionToggleDebugInfo = context -> Ufx.toggle(PY_DEBUG_INFO);
+
+    private final GameAction actionShowHelp = context -> context.gamePage().showHelp();
+
+    private final GameAction actionSimulationSlower = context -> {
+        double newRate = context.gameClock().getTargetFrameRate() - 5;
+        if (newRate > 0) {
+            context.gameClock().setTargetFrameRate(newRate);
+            context.showFlashMessageSeconds(0.75, newRate + "Hz");
         }
     };
 
-    private final GameAction actionShowHelp = new AbstractGameAction(key(KeyCode.H)) {
-        @Override
-        public void execute(GameContext context) {
-            context.gamePage().showHelp();
+    private final GameAction actionSimulationFaster = context -> {
+        double newRate = context.gameClock().getTargetFrameRate() + 5;
+        if (newRate > 0) {
+            context.gameClock().setTargetFrameRate(newRate);
+            context.showFlashMessageSeconds(0.75, newRate + "Hz");
         }
     };
 
-    private final GameAction actionSimulationSlower = new AbstractGameAction(alt(KeyCode.MINUS)) {
-        @Override
-        public void execute(GameContext context) {
-            double newRate = context.gameClock().getTargetFrameRate() - 5;
-            if (newRate > 0) {
-                context.gameClock().setTargetFrameRate(newRate);
-                context.showFlashMessageSeconds(0.75, newRate + "Hz");
-            }
+    private final GameAction actionSimulationNormalSpeed = context -> {
+        context.gameClock().setTargetFrameRate(GameModel.TICKS_PER_SECOND);
+        context.showFlashMessageSeconds(0.75, context.gameClock().getTargetFrameRate() + "Hz");
+    };
+
+    private final GameAction actionSimulationOneStep = context -> {
+        if (context.gameClock().isPaused()) {
+            context.gameClock().makeStep(true);
         }
     };
 
-    private final GameAction actionSimulationFaster = new AbstractGameAction(alt(KeyCode.PLUS)) {
-        @Override
-        public void execute(GameContext context) {
-            double newRate = context.gameClock().getTargetFrameRate() + 5;
-            if (newRate > 0) {
-                context.gameClock().setTargetFrameRate(newRate);
-                context.showFlashMessageSeconds(0.75, newRate + "Hz");
-            }
+    private final GameAction actionSimulationTenSteps = context -> {
+        if (context.gameClock().isPaused()) {
+            context.gameClock().makeSteps(10, true);
         }
     };
 
-    private final GameAction actionSimulationNormalSpeed = new AbstractGameAction(alt(KeyCode.DIGIT0)) {
-        @Override
-        public void execute(GameContext context) {
-            context.gameClock().setTargetFrameRate(GameModel.TICKS_PER_SECOND);
-            context.showFlashMessageSeconds(0.75, context.gameClock().getTargetFrameRate() + "Hz");
-        }
+    private final GameAction actionToggleAutopilot = context -> {
+        toggle(PY_AUTOPILOT);
+        boolean auto = PY_AUTOPILOT.get();
+        context.showFlashMessage(context.locText(auto ? "autopilot_on" : "autopilot_off"));
+        context.sounds().playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
     };
 
-    private final GameAction actionSimulationOneStep = new AbstractGameAction(shift(KeyCode.P)) {
-        @Override
-        public void execute(GameContext context) {
-            if (context.gameClock().isPaused()) {
-                context.gameClock().makeStep(true);
-            }
-        }
+    private final GameAction actionToggleDashboard = context -> context.gamePage().toggleDashboard();
+
+    private final GameAction actionToggleImmunity = context -> {
+        toggle(PY_IMMUNITY);
+        context.showFlashMessage(context.locText(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
+        context.sounds().playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
     };
 
-    private final GameAction actionSimulationTenSteps = new AbstractGameAction(shift(KeyCode.SPACE)) {
-        @Override
-        public void execute(GameContext context) {
-            if (context.gameClock().isPaused()) {
-                context.gameClock().makeSteps(10, true);
-            }
-        }
-    };
-
-    private final GameAction actionToggleAutopilot = new AbstractGameAction(alt(KeyCode.A)) {
-        @Override
-        public void execute(GameContext context) {
-            toggle(PY_AUTOPILOT);
-            boolean auto = PY_AUTOPILOT.get();
-            context.showFlashMessage(context.locText(auto ? "autopilot_on" : "autopilot_off"));
-            context.sounds().playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
-        }
-    };
-
-    private final GameAction actionToggleDashboard = new AbstractGameAction(key(KeyCode.F1), alt(KeyCode.B)) {
-        @Override
-        public void execute(GameContext context) {
-            context.gamePage().toggleDashboard();
-        }
-    };
-
-    private final GameAction actionToggleImmunity = new AbstractGameAction(alt(KeyCode.I)) {
-        @Override
-        public void execute(GameContext context) {
-            toggle(PY_IMMUNITY);
-            context.showFlashMessage(context.locText(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
-            context.sounds().playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
-        }
-    };
-
-    private final List<GameAction> actions = List.of(
-        GlobalGameActions2D.BOOT,
-        GlobalGameActions2D.SHOW_START_PAGE,
-        GlobalGameActions2D.TOGGLE_PAUSED,
-        GlobalGameActions2D.OPEN_EDITOR,
-        actionToggleDebugInfo,
-        actionShowHelp,
-        actionSimulationOneStep,
-        actionSimulationTenSteps,
-        actionSimulationFaster,
-        actionSimulationSlower,
-        actionSimulationNormalSpeed,
-        actionToggleAutopilot,
-        actionToggleImmunity,
-        actionToggleDashboard
-    );
+    protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
+    {
+        bindAction(KeyInput.of(key(KeyCode.F3)),      GlobalGameActions2D.BOOT);
+        bindAction(KeyInput.of(key(KeyCode.Q)),       GlobalGameActions2D.SHOW_START_PAGE);
+        bindAction(KeyInput.of(key(KeyCode.P)),       GlobalGameActions2D.TOGGLE_PAUSED);
+        bindAction(KeyInput.of(shift_alt(KeyCode.E)), GlobalGameActions2D.OPEN_EDITOR);
+        bindAction(KeyInput.of(alt(KeyCode.D)),       actionToggleDebugInfo);
+        bindAction(KeyInput.of(key(KeyCode.H)),       actionShowHelp);
+        bindAction(KeyInput.of(alt(KeyCode.MINUS)),   actionSimulationSlower);
+        bindAction(KeyInput.of(alt(KeyCode.PLUS)),    actionSimulationFaster);
+        bindAction(KeyInput.of(alt(KeyCode.DIGIT0)),  actionSimulationNormalSpeed);
+        bindAction(KeyInput.of(shift(KeyCode.P)),     actionSimulationOneStep);
+        bindAction(KeyInput.of(shift(KeyCode.SPACE)), actionSimulationTenSteps);
+        bindAction(KeyInput.of(alt(KeyCode.A)),       actionToggleAutopilot);
+        bindAction(KeyInput.of(key(KeyCode.F1), alt(KeyCode.B)), actionToggleDashboard);
+        bindAction(KeyInput.of(alt(KeyCode.I)),       actionToggleImmunity);
+    }
 
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
         @Override
@@ -173,10 +141,6 @@ public class GamePage extends StackPane implements Page {
     public GamePage(GameContext context, Scene parentScene) {
         this.context = checkNotNull(context);
         this.parentScene = checkNotNull(parentScene);
-
-        for (GameAction action : actions) {
-            context.keyboard().register(action.trigger());
-        }
 
         gameCanvas = new Canvas();
 
@@ -223,6 +187,11 @@ public class GamePage extends StackPane implements Page {
         });
     }
 
+    @Override
+    public Map<KeyCodeCombination, GameAction> actionBindings() {
+        return actionBindings;
+    }
+
     public TooFancyGameCanvasContainer gameCanvasContainer() {
         return gameCanvasContainer;
     }
@@ -245,7 +214,7 @@ public class GamePage extends StackPane implements Page {
 
     @Override
     public void handleInput() {
-        context.doFirstCalledActionElse(actions, () -> context.currentGameScene().ifPresent(GameScene::handleInput));
+        context.doFirstCalledActionElse(this, () -> context.currentGameScene().ifPresent(GameScene::handleInput));
     }
 
     @Override

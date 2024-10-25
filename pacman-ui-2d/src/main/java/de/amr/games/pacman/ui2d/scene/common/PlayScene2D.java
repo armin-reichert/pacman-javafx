@@ -12,17 +12,17 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
+import de.amr.games.pacman.ui2d.util.KeyInput;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -30,6 +30,8 @@ import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_
 import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
+import static de.amr.games.pacman.ui2d.util.KeyInput.alt;
+import static de.amr.games.pacman.ui2d.util.KeyInput.key;
 
 /**
  * @author Armin Reichert
@@ -38,16 +40,19 @@ public class PlayScene2D extends GameScene2D {
 
     public static final Font DEBUG_STATE_FONT = Font.font("Sans", FontWeight.BOLD, 24);
 
-    private final List<GameAction> actions = List.of(
-        GlobalGameActions2D.START_GAME,
-        GlobalGameActions2D.CHEAT_EAT_ALL,
-        GlobalGameActions2D.CHEAT_ADD_LIVES,
-        GlobalGameActions2D.CHEAT_NEXT_LEVEL,
-        GlobalGameActions2D.CHEAT_KILL_GHOSTS
-    );
+    {
+        bindAction(KeyInput.of(alt(KeyCode.E)), GlobalGameActions2D.CHEAT_EAT_ALL);
+        bindAction(KeyInput.of(alt(KeyCode.L)), GlobalGameActions2D.CHEAT_ADD_LIVES);
+        bindAction(KeyInput.of(alt(KeyCode.N)), GlobalGameActions2D.CHEAT_NEXT_LEVEL);
+        bindAction(KeyInput.of(alt(KeyCode.X)), GlobalGameActions2D.CHEAT_KILL_GHOSTS);
+    }
 
     @Override
-    public void init() {}
+    public void init() {
+        if (context.game().isDemoLevel()) {
+            bindAction(KeyInput.of(key(KeyCode.DIGIT1)), GlobalGameActions2D.ADD_CREDIT);
+        }
+    }
 
     @Override
     public void end() {
@@ -89,15 +94,6 @@ public class PlayScene2D extends GameScene2D {
         } else {
             context.sounds().stopGhostReturningHomeSound();
         }
-    }
-
-    @Override
-    public void handleInput() {
-        if (context.isActionCalled(GlobalGameActions2D.ADD_CREDIT) && context.game().isDemoLevel()) {
-            GlobalGameActions2D.ADD_CREDIT.execute(context);
-            return;
-        }
-        context.doFirstCalledAction(actions);
     }
 
     @Override

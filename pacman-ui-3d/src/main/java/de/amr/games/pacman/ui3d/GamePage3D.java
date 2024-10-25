@@ -8,20 +8,20 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.page.GamePage;
+import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.scene.common.Perspective;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
-import java.util.List;
-import java.util.stream.Stream;
-
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.page.Page.menuTitleItem;
+import static de.amr.games.pacman.ui2d.util.KeyInput.alt;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_PERSPECTIVE;
@@ -30,6 +30,11 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_PERSPECTIVE;
  * @author Armin Reichert
  */
 public class GamePage3D extends GamePage {
+
+    {
+        bindAction(KeyCode.F2, GlobalGameActions3D.TOGGLE_PIP_VISIBILITY);
+        bindAction(KeyInput.of(alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3)), GlobalGameActions3D.TOGGLE_PLAY_SCENE_2D_3D);
+    }
 
     public GamePage3D(GameContext context, Scene parentScene) {
         super(context, parentScene);
@@ -48,9 +53,7 @@ public class GamePage3D extends GamePage {
 
     @Override
     public void handleInput() {
-        context.doFirstCalledActionElse(
-            List.of(GlobalGameActions3D.TOGGLE_PIP_VISIBILITY, GlobalGameActions3D.TOGGLE_PLAY_SCENE_2D_3D),
-            super::handleInput);
+        context.doFirstCalledActionElse(this, super::handleInput);
     }
 
     @Override

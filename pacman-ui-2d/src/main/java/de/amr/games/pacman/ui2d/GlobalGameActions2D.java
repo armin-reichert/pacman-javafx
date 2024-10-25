@@ -13,16 +13,11 @@ import de.amr.games.pacman.model.ms_pacman_tengen.BoosterMode;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
-import de.amr.games.pacman.ui2d.util.KeyInput;
-import de.amr.games.pacman.ui2d.util.Keyboard;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
-import static de.amr.games.pacman.ui2d.util.KeyInput.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static java.util.function.Predicate.not;
 
@@ -33,7 +28,8 @@ public enum GlobalGameActions2D implements GameAction {
     /**
      * Adds credit (simulates insertion of a coin) and switches to the credit scene.
      */
-    ADD_CREDIT(key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP)) {
+    ADD_CREDIT {
+        //(key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP)) {
         @Override
         public void execute(GameContext context) {
             context.sounds().enabledProperty().set(true); // in demo mode, sound is disabled
@@ -50,7 +46,7 @@ public enum GlobalGameActions2D implements GameAction {
         }
     },
 
-    BOOT(key(KeyCode.F3)) {
+    BOOT { // (key(KeyCode.F3)) {
         @Override
         public void execute(GameContext context) {
             context.sounds().stopAll();
@@ -61,7 +57,7 @@ public enum GlobalGameActions2D implements GameAction {
         }
     },
 
-    CHEAT_ADD_LIVES(alt(KeyCode.L)) {
+    CHEAT_ADD_LIVES { //(alt(KeyCode.L)) {
         @Override
         public void execute(GameContext context) {
             context.game().addLives(3);
@@ -69,7 +65,7 @@ public enum GlobalGameActions2D implements GameAction {
         }
     },
 
-    CHEAT_EAT_ALL(alt(KeyCode.E)) {
+    CHEAT_EAT_ALL { // (alt(KeyCode.E)) {
         @Override
         public void execute(GameContext context) {
             if (context.game().isPlaying() && context.gameState() == GameState.HUNTING) {
@@ -81,7 +77,7 @@ public enum GlobalGameActions2D implements GameAction {
         }
     },
 
-    CHEAT_KILL_GHOSTS(alt(KeyCode.X)) {
+    CHEAT_KILL_GHOSTS { // (alt(KeyCode.X)) {
         @Override
         public void execute(GameContext context) {
             if (context.game().isPlaying() && context.gameState() == GameState.HUNTING) {
@@ -92,7 +88,7 @@ public enum GlobalGameActions2D implements GameAction {
         }
     },
 
-    CHEAT_NEXT_LEVEL(alt(KeyCode.N)) {
+    CHEAT_NEXT_LEVEL { // (alt(KeyCode.N)) {
         @Override
         public void execute(GameContext context) {
             if (context.game().isPlaying() && context.gameState() == GameState.HUNTING) {
@@ -101,7 +97,7 @@ public enum GlobalGameActions2D implements GameAction {
         }
     },
 
-    OPEN_EDITOR(shift_alt(KeyCode.E)) {
+    OPEN_EDITOR { // (shift_alt(KeyCode.E)) {
         @Override
         public void execute(GameContext context) {
             if (context.game().world() == null) {
@@ -121,7 +117,7 @@ public enum GlobalGameActions2D implements GameAction {
         }
     },
 
-    SHOW_START_PAGE(key(KeyCode.Q)) {
+    SHOW_START_PAGE { // (key(KeyCode.Q)) {
         @Override
         public void execute(GameContext context) {
             context.sounds().stopAll();
@@ -130,7 +126,7 @@ public enum GlobalGameActions2D implements GameAction {
         }
     },
 
-    RESTART_INTRO(key(KeyCode.Q)) {
+    RESTART_INTRO { // (key(KeyCode.Q)) {
         @Override
         public void execute(GameContext context) {
             context.sounds().stopAll();
@@ -143,7 +139,7 @@ public enum GlobalGameActions2D implements GameAction {
         }
     },
 
-    START_GAME(key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1), key(KeyCode.SPACE)) {
+    START_GAME { // (key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1), key(KeyCode.SPACE)) {
         @Override
         public void execute(GameContext context) {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
@@ -159,7 +155,7 @@ public enum GlobalGameActions2D implements GameAction {
         }
     },
 
-    TENGEN_TOGGLE_PAC_BOOSTER(key(KeyCode.A)) {
+    TENGEN_TOGGLE_PAC_BOOSTER { // (key(KeyCode.A)) {
         @Override
         public void execute(GameContext context) {
             TengenMsPacManGame tengenGame = (TengenMsPacManGame) context.game();
@@ -173,7 +169,7 @@ public enum GlobalGameActions2D implements GameAction {
         }
     },
 
-    TENGEN_QUIT_PLAY_SCENE(key(KeyCode.S)) {
+    TENGEN_QUIT_PLAY_SCENE { // (key(KeyCode.S)) {
         @Override
         public void execute(GameContext context) {
             context.sounds().stopAll();
@@ -188,7 +184,7 @@ public enum GlobalGameActions2D implements GameAction {
         }
     },
 
-    TEST_CUT_SCENES(alt(KeyCode.C)) {
+    TEST_CUT_SCENES { // (alt(KeyCode.C)) {
         @Override
         public void execute(GameContext context) {
             context.gameController().changeState(GameState.TESTING_CUT_SCENES);
@@ -196,7 +192,7 @@ public enum GlobalGameActions2D implements GameAction {
         }
     },
 
-    TEST_LEVELS_BONI(alt(KeyCode.T)) {
+    TEST_LEVELS_BONI { // (alt(KeyCode.T)) {
         @Override
         public void execute(GameContext context) {
             context.gameController().restart(GameState.TESTING_LEVEL_BONI);
@@ -204,7 +200,7 @@ public enum GlobalGameActions2D implements GameAction {
         }
     },
 
-    TEST_LEVELS_TEASERS(shift_alt(KeyCode.T)) {
+    TEST_LEVELS_TEASERS { // (shift_alt(KeyCode.T)) {
         @Override
         public void execute(GameContext context) {
             context.gameController().restart(GameState.TESTING_LEVEL_TEASERS);
@@ -212,8 +208,7 @@ public enum GlobalGameActions2D implements GameAction {
         }
     },
 
-
-    TOGGLE_PAUSED(key(KeyCode.P)) {
+    TOGGLE_PAUSED { // (key(KeyCode.P)) {
         @Override
         public void execute(GameContext context) {
             toggle(context.gameClock().pausedPy);
@@ -222,24 +217,5 @@ public enum GlobalGameActions2D implements GameAction {
             }
             Logger.info("Game ({}) {}", context.gameVariant(), context.gameClock().isPaused() ? "paused" : "resumed");
         }
-    };
-
-    GlobalGameActions2D(KeyCodeCombination... combinations) {
-        trigger = KeyInput.of(combinations);
     }
-
-    @Override
-    public KeyInput trigger() {
-        return trigger;
-    }
-
-    @Override
-    public boolean called(Keyboard keyboard) {
-        return keyboard.isRegisteredKeyPressed(trigger);
-    }
-
-    @Override
-    public abstract void execute(GameContext context);
-
-    private final KeyInput trigger;
 }

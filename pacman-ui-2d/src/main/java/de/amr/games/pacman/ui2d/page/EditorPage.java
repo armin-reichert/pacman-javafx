@@ -7,11 +7,13 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.editor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -20,6 +22,8 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -29,6 +33,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class EditorPage extends BorderPane implements Page {
 
+    private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     private final Stage stage;
     private final TileMapEditor editor;
     private Consumer<TileMapEditor> closeAction = editor -> {};
@@ -66,6 +71,15 @@ public class EditorPage extends BorderPane implements Page {
                 editor.addLoadMapMenuItem("Pac-Man XXL " + mapNumber, map);
             }
         }
+    }
+
+    @Override
+    public Map<KeyCodeCombination, GameAction> actionBindings() {
+        return actionBindings;
+    }
+
+    @Override
+    public void handleInput() {
     }
 
     public void startEditor(WorldMap map) {

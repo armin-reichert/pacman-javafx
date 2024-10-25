@@ -21,18 +21,25 @@ public class Keyboard {
     private final List<KeyCodeCombination> matchingCombinations = new ArrayList<>(3);
 
     public void register(KeyInput input) {
-        registeredCombinations.addAll(Arrays.asList(input.getCombinations()));
+        for (KeyCodeCombination kcc : input.getCombinations()) {
+            register(kcc);
+        }
+    }
+
+    public void register(KeyCodeCombination kcc) {
+        registeredCombinations.add(kcc);
+        Logger.info("Key combination registered: {}", kcc);
+    }
+
+    public void unregister(KeyCodeCombination kcc) {
+        registeredCombinations.remove(kcc);
+        Logger.info("Key combination unregistered: {}", kcc);
     }
 
     public void onKeyPressed(KeyEvent e) {
         Logger.debug("Key pressed: {}", e.getCode());
-        registeredCombinations.stream().filter(kcc -> kcc.match(e)).forEach(this::addMatch);
+        registeredCombinations.stream().filter(kcc -> kcc.match(e)).forEach(matchingCombinations::add);
         pressedKeys.add(e.getCode());
-    }
-
-    private void addMatch(KeyCodeCombination kcc) {
-        matchingCombinations.add(kcc);
-        Logger.debug("Added matching combination {}", kcc);
     }
 
     public void onKeyReleased(KeyEvent e) {
@@ -49,8 +56,11 @@ public class Keyboard {
         return Arrays.stream(keyInput.getCombinations()).anyMatch(matchingCombinations::contains);
     }
 
+    public boolean isRegisteredKeyCombinationPressed(KeyCodeCombination kcc) {
+        return matchingCombinations.contains(kcc);
+    }
+
     public boolean pressed(KeyCode keyCode) {
-        //return pressed(KeyInput.of(key(keyCode)));
         return pressedKeys.contains(keyCode);
     }
 }

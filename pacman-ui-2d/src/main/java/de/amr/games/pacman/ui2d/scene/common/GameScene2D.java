@@ -4,10 +4,15 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.common;
 
+import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import javafx.beans.property.*;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.paint.Color;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
@@ -22,11 +27,22 @@ public abstract class GameScene2D implements GameScene {
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(this, "backgroundColor", Color.BLACK);
     public final BooleanProperty debugInfoPy = new SimpleBooleanProperty(this, "debugInfo", false);
 
+    protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     protected GameContext context;
+
+    @Override
+    public GameContext context() {
+        return context;
+    }
 
     @Override
     public void setGameContext(GameContext context) {
         this.context = checkNotNull(context);
+    }
+
+    @Override
+    public Map<KeyCodeCombination, GameAction> actionBindings() {
+        return actionBindings;
     }
 
     public DoubleProperty scalingProperty() { return scalingPy; }

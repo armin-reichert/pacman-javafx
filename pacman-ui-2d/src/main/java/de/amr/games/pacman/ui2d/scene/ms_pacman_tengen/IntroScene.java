@@ -16,22 +16,23 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
-import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui2d.util.KeyInput;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.util.BitSet;
-import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.*;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_HEIGHT;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_WIDTH;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
+import static de.amr.games.pacman.ui2d.util.KeyInput.key;
 
 /**
  * @author Armin Reichert
@@ -48,12 +49,15 @@ public class IntroScene extends GameScene2D {
     static final float SPEED = 2.2f; //TODO check exact speed
 
     private final FiniteStateMachine<SceneState, IntroScene> sceneController;
-    private final List<GameAction> actions = List.of(GlobalGameActions2D.START_GAME);
 
     private Pac msPacMan;
     private Ghost[] ghosts;
     private int ghostIndex;
     private int waitBeforeRising;
+
+    {
+        bindAction(KeyInput.of(key(KeyCode.SPACE)), GlobalGameActions2D.START_GAME);
+    }
 
     public IntroScene() {
         sceneController = new FiniteStateMachine<>(SceneState.values()) {
@@ -93,11 +97,6 @@ public class IntroScene extends GameScene2D {
     @Override
     public void update() {
         sceneController.update();
-    }
-
-    @Override
-    public void handleInput() {
-        context.doFirstCalledAction(actions);
     }
 
     @Override

@@ -9,17 +9,25 @@ import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui2d.util.KeyInput;
+import javafx.scene.input.KeyCode;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
+import static de.amr.games.pacman.ui2d.util.KeyInput.key;
 
 /**
  * @author Armin Reichert
  */
 public class StartScene extends GameScene2D {
+
+    {
+        bindAction(KeyInput.of(key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP)), GlobalGameActions2D.ADD_CREDIT);
+        bindAction(KeyInput.of(key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1)),                  GlobalGameActions2D.START_GAME);
+    }
 
     @Override
     public void init() {
@@ -32,11 +40,6 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void update() {
-    }
-
-    @Override
-    public void handleInput() {
-        context.doFirstCalledAction(GlobalGameActions2D.ADD_CREDIT, GlobalGameActions2D.START_GAME);
     }
 
     @Override

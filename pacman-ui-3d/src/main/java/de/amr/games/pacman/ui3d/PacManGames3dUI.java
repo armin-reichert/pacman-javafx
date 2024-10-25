@@ -4,7 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.ui2d.*;
+import de.amr.games.pacman.ui2d.GameAssets2D;
+import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
@@ -29,15 +30,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
         GameAssets2D.addTo(assets);
         GameAssets3D.addTo(assets);
         sounds().setAssets(assets);
-    }
-
-    protected void registerGlobalActionsWithKeyboard() {
-        for (GameAction action : GlobalGameActions2D.values()) {
-            KEYBOARD.register(action.trigger());
-        }
-        for (GameAction action : GlobalGameActions3D.values()) {
-            KEYBOARD.register(action.trigger());
-        }
     }
 
     @Override

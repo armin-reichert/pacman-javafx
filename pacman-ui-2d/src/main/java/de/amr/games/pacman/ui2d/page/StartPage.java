@@ -1,7 +1,6 @@
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.AbstractGameAction;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
@@ -19,12 +18,15 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -108,58 +110,41 @@ public class StartPage extends StackPane implements Page {
         }
     };
 
-    private final GameAction actionPrevFlyerPage = new AbstractGameAction(KeyInput.key(KeyCode.UP)) {
-        @Override
-        public void execute(GameContext context) {
-            flyer(context.gameVariant()).ifPresent(Flyer::prevPage);
-        }
+    private final GameAction actionPrevFlyerPage = context -> flyer(context.gameVariant()).ifPresent(Flyer::prevPage);
+
+    private final GameAction actionNextFlyerPage = context -> flyer(context.gameVariant()).ifPresent(Flyer::nextPage);
+
+    private final GameAction actionPrevVariant = context -> {
+        List<GameVariant> variantsInOrder = PacManGames2dUI.GAME_VARIANTS_IN_ORDER;
+        int prevIndex = variantsInOrder.indexOf(context.gameVariant()) - 1;
+        context.selectGameVariant(variantsInOrder.get(prevIndex < 0 ? variantsInOrder.size() - 1 : prevIndex));
     };
 
-    private final GameAction actionNextFlyerPage = new AbstractGameAction(KeyInput.key(KeyCode.DOWN)) {
-        @Override
-        public void execute(GameContext context) {
-            flyer(context.gameVariant()).ifPresent(Flyer::nextPage);
-        }
+    private final GameAction actionNextVariant = context -> {
+        List<GameVariant> variantsInOrder = PacManGames2dUI.GAME_VARIANTS_IN_ORDER;
+        int nextIndex = variantsInOrder.indexOf(context.gameVariant()) + 1;
+        context.selectGameVariant(variantsInOrder.get(nextIndex == variantsInOrder.size() ? 0 : nextIndex));
     };
 
-    private final GameAction actionPrevVariant = new AbstractGameAction(key(KeyCode.LEFT)) {
-        @Override
-        public void execute(GameContext context) {
-            List<GameVariant> variantsInOrder = PacManGames2dUI.GAME_VARIANTS_IN_ORDER;
-            int prevIndex = variantsInOrder.indexOf(context.gameVariant()) - 1;
-            context.selectGameVariant(variantsInOrder.get(prevIndex < 0 ? variantsInOrder.size() - 1 : prevIndex));
-        }
-    };
+    private final GameAction actionEnterGamePage = GameContext::selectGamePage;
 
-    private final GameAction actionNextVariant = new AbstractGameAction(key(KeyCode.V), key(KeyCode.RIGHT)) {
-        @Override
-        public void execute(GameContext context) {
-            List<GameVariant> variantsInOrder = PacManGames2dUI.GAME_VARIANTS_IN_ORDER;
-            int nextIndex = variantsInOrder.indexOf(context.gameVariant()) + 1;
-            context.selectGameVariant(variantsInOrder.get(nextIndex == variantsInOrder.size() ? 0 : nextIndex));
-        }
-    };
+    private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
+    {
+        bindAction(KeyInput.of(key(KeyCode.UP)),    actionPrevFlyerPage);
+        bindAction(KeyInput.of(key(KeyCode.DOWN)),  actionNextFlyerPage);
+        bindAction(KeyInput.of(key(KeyCode.LEFT)),  actionPrevVariant);
+        bindAction(KeyInput.of(key(KeyCode.RIGHT)), actionNextVariant);
+        bindAction(KeyInput.of(key(KeyCode.SPACE)), actionEnterGamePage);
 
-    private final GameAction actionEnterGamePage = new AbstractGameAction(key(KeyCode.SPACE), key(KeyCode.ENTER)) {
-        @Override
-        public void execute(GameContext context) {
-            context.selectGamePage();
-        }
-    };
+    }
 
     private final GameContext context;
-    private final List<GameAction> actions;
     private final BorderPane layout = new BorderPane();
     private final Flyer msPacManFlyer, pacManFlyer, tengenFlyer;
 
     public StartPage(GameContext context) {
         this.context = checkNotNull(context);
         AssetStorage assets = context.assets();
-
-        actions = List.of(actionPrevFlyerPage, actionNextFlyerPage, actionPrevVariant, actionNextVariant, actionEnterGamePage);
-        for (GameAction action : actions) {
-            context.keyboard().register(action.trigger());
-        }
 
         msPacManFlyer = new Flyer(assets.image("ms_pacman.startpage.image1"), assets.image("ms_pacman.startpage.image2"));
         pacManFlyer   = new Flyer(assets.image("pacman.startpage.image1"),    assets.image("pacman.startpage.image2"));
@@ -193,6 +178,11 @@ public class StartPage extends StackPane implements Page {
 
         setBackground(context.assets().get("wallpaper.pacman"));
         getChildren().add(layout);
+    }
+
+    @Override
+    public Map<KeyCodeCombination, GameAction> actionBindings() {
+        return actionBindings;
     }
 
     private Optional<Flyer> flyer(GameVariant variant) {
@@ -239,7 +229,7 @@ public class StartPage extends StackPane implements Page {
 
     @Override
     public void handleInput() {
-        context.doFirstCalledAction(actions);
+        context.doFirstCalledAction(this);
     }
 
     @Override

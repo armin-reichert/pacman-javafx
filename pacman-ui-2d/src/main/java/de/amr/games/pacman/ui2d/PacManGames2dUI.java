@@ -34,6 +34,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -42,8 +43,10 @@ import org.tinylog.Logger;
 
 import java.text.MessageFormat;
 import java.time.LocalTime;
-import java.util.*;
-import java.util.stream.Stream;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
@@ -106,12 +109,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         sounds().setAssets(assets);
     }
 
-    protected void registerGlobalActionsWithKeyboard() {
-        for (GameAction action : GlobalGameActions2D.values()) {
-            keyboard().register(action.trigger());
-        }
-    }
-
     public void setGameSceneConfig(GameVariant variant, GameSceneConfig gameSceneConfig) {
         gameSceneConfigByVariant.put(variant, gameSceneConfig);
         gameSceneConfig.initGameScenes(this);
@@ -161,8 +158,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         PacManXXLGame xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
         xxlGame.setMapSelectionMode(PY_MAP_SELECTION_MODE.get());
         PY_MAP_SELECTION_MODE.addListener((py,ov,selectionMode) -> xxlGame.setMapSelectionMode(selectionMode));
-
-        registerGlobalActionsWithKeyboard();
 
         //TODO This doesn't fit for Tengen screen resolution
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
@@ -309,18 +304,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public boolean isActionCalled(GameAction action) {
-        return action.called(keyboard());
+    public void doFirstCalledAction(ActionProvider actionProvider) {
+        actionProvider.firstMatchedAction(keyboard()).ifPresent(action -> action.execute(this));
     }
 
     @Override
-    public void doFirstCalledAction(Stream<GameAction> actions) {
-        actions.filter(this::isActionCalled).findFirst().ifPresent(action -> action.execute(this));
-    }
-
-    @Override
-    public void doFirstCalledActionElse(Collection<GameAction> actions, Runnable defaultAction) {
-        actions.stream().filter(this::isActionCalled).findFirst().ifPresentOrElse(action -> action.execute(this), defaultAction);
+    public void doFirstCalledActionElse(ActionProvider actionProvider, Runnable defaultAction) {
+       actionProvider.firstMatchedAction(keyboard())
+           .ifPresentOrElse(action -> action.execute(this), defaultAction);
     }
 
     @Override
@@ -395,11 +386,31 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                 nextGameScene.init();
             }
             if (sceneChanging) {
+                removeActionBindings(currentGameScene);
+                addActionBindings(nextGameScene);
                 gameScenePy.set(nextGameScene);
                 Logger.info("Game scene changed to: {}", displayName(gameScenePy.get()));
             } else {
                 Logger.info("Game scene reloaded: {}", displayName(currentGameScene));
             }
+        }
+    }
+
+    private void removeActionBindings(ActionProvider actionProvider) {
+        if (actionProvider == null) {
+            return;
+        }
+        for (KeyCodeCombination keyCodeCombination : actionProvider.actionBindings().keySet()) {
+            keyboard().unregister(keyCodeCombination);
+        }
+    }
+
+    private void addActionBindings(ActionProvider actionProvider) {
+        if (actionProvider == null) {
+            return;
+        }
+        for (KeyCodeCombination keyCodeCombination : actionProvider.actionBindings().keySet()) {
+            keyboard().register(keyCodeCombination);
         }
     }
 
@@ -446,6 +457,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public void selectPage(Page page) {
         if (page != currentPage) {
+            removeActionBindings(currentPage);
+            addActionBindings(page);
             currentPage = page;
             currentPage.setSize(stage.getScene().getWidth(), stage.getScene().getHeight());
             sceneRoot.getChildren().set(0, currentPage.rootPane());

@@ -21,9 +21,7 @@ import de.amr.games.pacman.ui2d.util.GameClockFX;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.beans.property.ObjectProperty;
 
-import java.util.Collection;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * @author Armin Reichert
@@ -55,11 +53,8 @@ public interface GameContext {
     GameClockFX                 gameClock();
 
     // Actions
-    boolean                     isActionCalled( GameAction action);
-    void                        doFirstCalledAction(Stream<GameAction> actions);
-    default void                doFirstCalledAction(Collection<GameAction> actions) { doFirstCalledAction(actions.stream()); }
-    default void                doFirstCalledAction(GameAction... actions) { doFirstCalledAction(Stream.of(actions)); }
-    void                        doFirstCalledActionElse(Collection<GameAction> actions, Runnable defaultAction);
+    void                        doFirstCalledAction(ActionProvider actionProvider);
+    void                        doFirstCalledActionElse(ActionProvider actionProvider, Runnable defaultAction);
 
     // Game scenes
     GameSceneConfig             gameSceneConfig(GameVariant variant);

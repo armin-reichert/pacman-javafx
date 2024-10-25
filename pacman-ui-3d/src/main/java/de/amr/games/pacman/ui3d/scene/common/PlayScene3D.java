@@ -19,8 +19,9 @@ import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
+import de.amr.games.pacman.ui2d.scene.common.GameScene;
+import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui3d.GlobalGameActions3D;
 import de.amr.games.pacman.ui3d.level.*;
@@ -30,12 +31,14 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.EnumMap;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -43,6 +46,8 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
+import static de.amr.games.pacman.ui2d.util.KeyInput.alt;
+import static de.amr.games.pacman.ui2d.util.KeyInput.key;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 
@@ -55,17 +60,6 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
  * @author Armin Reichert
  */
 public class PlayScene3D implements GameScene, CameraControlledGameScene {
-
-    private final List<GameAction> actions = List.of(
-        GlobalGameActions3D.PREV_PERSPECTIVE,
-        GlobalGameActions3D.NEXT_PERSPECTIVE,
-        GlobalGameActions2D.CHEAT_EAT_ALL,
-        GlobalGameActions2D.CHEAT_ADD_LIVES,
-        GlobalGameActions2D.CHEAT_NEXT_LEVEL,
-        GlobalGameActions2D.CHEAT_KILL_GHOSTS,
-        GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER,
-        GlobalGameActions2D.TENGEN_QUIT_PLAY_SCENE
-    );
 
     // Each 3D play scene has its own set of cameras/perspectives
     private final Map<Perspective.Name, Perspective> perspectiveMap = new EnumMap<>(Perspective.Name.class);
@@ -86,14 +80,25 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         }
     };
 
+    private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
+    private GameContext context;
+
     private final SubScene fxSubScene;
     private final Group root = new Group();
     private final Scores3D scores3D;
 
     private GameLevel3D level3D;
-    private GameContext context;
     private Picker<String> pickerGameOver;
     private Picker<String> pickerLevelComplete;
+
+    {
+        bindAction(KeyInput.of(alt(KeyCode.LEFT)),  GlobalGameActions3D.PREV_PERSPECTIVE);
+        bindAction(KeyInput.of(alt(KeyCode.RIGHT)), GlobalGameActions3D.NEXT_PERSPECTIVE);
+        bindAction(KeyInput.of(alt(KeyCode.E)),     GlobalGameActions2D.CHEAT_EAT_ALL);
+        bindAction(KeyInput.of(alt(KeyCode.L)),     GlobalGameActions2D.CHEAT_ADD_LIVES);
+        bindAction(KeyInput.of(alt(KeyCode.N)),     GlobalGameActions2D.CHEAT_NEXT_LEVEL);
+        bindAction(KeyInput.of(alt(KeyCode.X)),     GlobalGameActions2D.CHEAT_KILL_GHOSTS);
+    }
 
     public PlayScene3D() {
         var ambientLight = new AmbientLight();
@@ -110,6 +115,11 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
         // last child is placeholder for level 3D
         root.getChildren().setAll(scores3D, coordSystem, ambientLight, new Group());
+    }
+
+    @Override
+    public Map<KeyCodeCombination, GameAction> actionBindings() {
+        return actionBindings;
     }
 
     @Override
@@ -133,6 +143,11 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     @Override
+    public GameContext context() {
+        return context;
+    }
+
+    @Override
     public void setGameContext(GameContext context) {
         this.context = checkNotNull(context);
     }
@@ -143,6 +158,13 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     @Override
     public void init() {
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            bindAction(KeyCode.A, GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER);
+            bindAction(KeyCode.S, GlobalGameActions2D.TENGEN_QUIT_PLAY_SCENE);
+        }
+        else if (context.game().isDemoLevel()) {
+            bindAction(KeyInput.of(key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP)), GlobalGameActions2D.ADD_CREDIT);
+        }
         context.setScoreVisible(true);
         scores3D.fontPy.set(context.assets().font("font.arcade", 8));
         perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
@@ -220,19 +242,6 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     @Override
     public Vector2f size() {
         return ARCADE_MAP_SIZE_IN_PIXELS;
-    }
-
-    @Override
-    public void handleInput() {
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            context.doFirstCalledAction(actions);
-        } else { //TODO check this
-            if (context.isActionCalled(GlobalGameActions2D.ADD_CREDIT) && context.game().isDemoLevel()) {
-                GlobalGameActions2D.ADD_CREDIT.execute(context);
-            } else {
-                context.doFirstCalledAction(actions);
-            }
-        }
     }
 
     @Override

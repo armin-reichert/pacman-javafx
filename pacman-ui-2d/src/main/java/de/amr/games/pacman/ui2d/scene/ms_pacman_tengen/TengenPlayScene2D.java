@@ -12,18 +12,19 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui2d.util.KeyInput;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -31,13 +32,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
-import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
+import static de.amr.games.pacman.ui2d.util.KeyInput.alt;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 
 /**
@@ -49,19 +51,19 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     static final double RADIUS_FACTOR = 0.4;
 
-    private final List<GameAction> actions = List.of(
-        GlobalGameActions2D.CHEAT_EAT_ALL,
-        GlobalGameActions2D.CHEAT_ADD_LIVES,
-        GlobalGameActions2D.CHEAT_NEXT_LEVEL,
-        GlobalGameActions2D.CHEAT_KILL_GHOSTS,
-        GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER,
-        GlobalGameActions2D.TENGEN_QUIT_PLAY_SCENE
-    );
-
     private final SubScene fxSubScene;
     private final ParallelCamera cam = new ParallelCamera();
     private final Canvas canvas = new Canvas(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
     private int camDelay;
+
+    {
+        bindAction(KeyInput.of(alt(KeyCode.E)), GlobalGameActions2D.CHEAT_EAT_ALL);
+        bindAction(KeyInput.of(alt(KeyCode.L)), GlobalGameActions2D.CHEAT_ADD_LIVES);
+        bindAction(KeyInput.of(alt(KeyCode.N)), GlobalGameActions2D.CHEAT_NEXT_LEVEL);
+        bindAction(KeyInput.of(alt(KeyCode.X)), GlobalGameActions2D.CHEAT_KILL_GHOSTS);
+        bindAction(KeyCode.A, GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER);
+        bindAction(KeyCode.Q, GlobalGameActions2D.TENGEN_QUIT_PLAY_SCENE);
+    }
 
     public TengenPlayScene2D() {
         Pane root = new StackPane(canvas);
@@ -145,11 +147,6 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     private void initCamDelay(int ticks) {
         camDelay = ticks;
         cam.setTranslateY(-RADIUS_FACTOR * cameraRadius());
-    }
-
-    @Override
-    public void handleInput() {
-        context.doFirstCalledAction(actions);
     }
 
     @Override

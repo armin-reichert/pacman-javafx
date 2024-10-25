@@ -13,6 +13,7 @@ import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui2d.util.KeyInput;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -23,6 +24,8 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGame
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_YELLOW;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_HEIGHT;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_WIDTH;
+import static de.amr.games.pacman.ui2d.util.KeyInput.alt;
+import static de.amr.games.pacman.ui2d.util.KeyInput.shift_alt;
 
 /**
  * @author Armin Reichert
@@ -50,6 +53,12 @@ public class OptionsScene extends GameScene2D {
     private TengenMsPacManGame tengenGame;
     private int selectedOption;
     private long idleTicks;
+
+    {
+        bindAction(KeyInput.of(alt(KeyCode.C)), GlobalGameActions2D.TEST_CUT_SCENES);
+        bindAction(KeyInput.of(alt(KeyCode.T)), GlobalGameActions2D.TEST_LEVELS_BONI);
+        bindAction(KeyInput.of(shift_alt(KeyCode.T)), GlobalGameActions2D.TEST_LEVELS_TEASERS);
+    }
 
     @Override
     public void init() {
@@ -220,10 +229,7 @@ public class OptionsScene extends GameScene2D {
         }
 
         else {
-            context.doFirstCalledAction(
-                GlobalGameActions2D.TEST_LEVELS_BONI,
-                GlobalGameActions2D.TEST_LEVELS_TEASERS,
-                GlobalGameActions2D.TEST_CUT_SCENES);
+            context.doFirstCalledAction(this);
         }
     }
 

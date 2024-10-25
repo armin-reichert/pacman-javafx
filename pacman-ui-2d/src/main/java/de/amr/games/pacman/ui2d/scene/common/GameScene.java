@@ -6,16 +6,18 @@ package de.amr.games.pacman.ui2d.scene.common;
 
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.ui2d.ActionProvider;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
-import javafx.beans.property.DoubleProperty;
 
 /**
  * Common interface of all game scenes (2D and 3D).
  *
  * @author Armin Reichert
  */
-public interface GameScene extends GameEventListener {
+public interface GameScene extends GameEventListener, ActionProvider {
+
+    GameContext context();
 
     void setGameContext(GameContext context);
 
@@ -34,6 +36,10 @@ public interface GameScene extends GameEventListener {
      */
     void end();
 
+    default void handleInput() {
+        context().doFirstCalledAction(this);
+    }
+
     Vector2f size();
 
     /**
@@ -47,8 +53,4 @@ public interface GameScene extends GameEventListener {
      */
     default void onSceneVariantSwitch(GameScene oldScene) {}
 
-    /**
-     * Handles user input like pressed keys.
-     */
-    default void handleInput() {}
 }

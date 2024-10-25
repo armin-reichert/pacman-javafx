@@ -17,10 +17,11 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GlobalGameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui2d.util.KeyInput;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -33,6 +34,7 @@ import static de.amr.games.pacman.model.actors.GhostState.EATEN;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
+import static de.amr.games.pacman.ui2d.util.KeyInput.*;
 
 /**
  * <p>
@@ -42,19 +44,20 @@ import static de.amr.games.pacman.ui2d.GameAssets2D.*;
  */
 public class IntroScene extends GameScene2D {
 
-    private static final List<GameAction> ACTIONS = List.of(
-        GlobalGameActions2D.ADD_CREDIT,
-        GlobalGameActions2D.START_GAME,
-        GlobalGameActions2D.TEST_LEVELS_BONI,
-        GlobalGameActions2D.TEST_LEVELS_TEASERS,
-        GlobalGameActions2D.TEST_CUT_SCENES);
-
     static final String[] GHOST_CHARACTERS = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
     static final Color[] GHOST_COLORS = {ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE};
     static final Color PELLET_COLOR = ARCADE_ROSE;
     static final float CHASE_SPEED = 1.1f;
     static final float GHOST_FRIGHTENED_SPEED = 0.6f;
     static final int LEFT_TILE_X = 4;
+
+    {
+        bindAction(KeyInput.of(key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP)), GlobalGameActions2D.ADD_CREDIT);
+        bindAction(KeyInput.of(key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1)), GlobalGameActions2D.START_GAME);
+        bindAction(KeyInput.of(alt(KeyCode.C)), GlobalGameActions2D.TEST_CUT_SCENES);
+        bindAction(KeyInput.of(alt(KeyCode.T)), GlobalGameActions2D.TEST_LEVELS_BONI);
+        bindAction(KeyInput.of(shift_alt(KeyCode.T)), GlobalGameActions2D.TEST_LEVELS_TEASERS);
+    }
 
     private final FiniteStateMachine<SceneState, IntroScene> sceneController;
 
@@ -107,11 +110,6 @@ public class IntroScene extends GameScene2D {
     @Override
     public void update() {
         sceneController.update();
-    }
-
-    @Override
-    public void handleInput() {
-        context.doFirstCalledAction(ACTIONS);
     }
 
     @Override

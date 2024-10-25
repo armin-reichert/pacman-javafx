@@ -1,5 +1,6 @@
 package de.amr.games.pacman.ui2d.page;
 
+import de.amr.games.pacman.ui2d.ActionProvider;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
@@ -13,7 +14,7 @@ import org.tinylog.Logger;
 /**
  * @author Armin Reichert
  */
-public interface Page {
+public interface Page extends ActionProvider {
 
     Font CONTEXT_MENU_TITLE_FONT = Font.font("Dialog", FontWeight.BLACK, 14);
     Color CONTEXT_MENU_TITLE_BACKGROUND = Color.CORNFLOWERBLUE; // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
@@ -31,12 +32,12 @@ public interface Page {
 
     void setSize(double width, double height);
 
+    void handleInput();
+
     default void handleContextMenuRequest(ContextMenuEvent e) {
         Logger.info("Context menu requested for page " + this);
         if (e.isKeyboardTrigger()) {
             Logger.info("Context menu requested by key");
         }
     }
-
-    default void handleInput() {}
 }
