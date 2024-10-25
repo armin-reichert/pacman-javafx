@@ -58,7 +58,6 @@ public enum GlobalGameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             context.sounds().stopAll();
-            //context.currentGameScene().ifPresent(GameScene::end);
             context.game().removeWorld();
             context.gameClock().setTargetFrameRate(GameModel.TICKS_PER_SECOND);
             context.gameController().restart(GameState.BOOT);
@@ -112,16 +111,17 @@ public enum GlobalGameActions2D implements GameAction {
                 Logger.error("Map editor cannot be opened because no world is available");
                 return;
             }
-            if (context.gameVariant() == GameVariant.PACMAN_XXL) {
-                context.currentGameScene().ifPresent(GameScene::end);
-                context.sounds().stopAll();
-                context.gameClock().stop();
-                EditorPage editorPage = context.getOrCreateEditorPage();
-                editorPage.startEditor(context.game().world().map());
-                context.selectPage(editorPage);
-            } else {
-                context.showFlashMessageSeconds(2, "This game variant does not support custom maps");
-            }
+            context.currentGameScene().ifPresent(GameScene::end);
+            context.sounds().stopAll();
+            context.gameClock().stop();
+            EditorPage editorPage = context.getOrCreateEditorPage();
+            editorPage.startEditor(context.game().world().map());
+            context.selectPage(editorPage);
+        }
+
+        @Override
+        public boolean isEnabled(GameContext context) {
+            return context.gameVariant() == GameVariant.PACMAN_XXL;
         }
     },
 

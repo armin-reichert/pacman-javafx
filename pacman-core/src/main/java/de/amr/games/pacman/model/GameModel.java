@@ -65,6 +65,7 @@ public abstract class GameModel {
     public static final short[]    KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
 
     protected final GameVariant    gameVariant;
+    protected final File           userDir;
     protected final Pulse          blinking = new Pulse(10, Pulse.OFF);
     protected final byte[]         bonusSymbols = new byte[2];
     protected final List<Byte>     levelCounter = new ArrayList<>();
@@ -73,7 +74,7 @@ public abstract class GameModel {
     protected final GateKeeper     gateKeeper = new GateKeeper(this);
     protected final ScoreManager   scoreManager = new ScoreManager(this);
     protected HuntingControl       huntingControl;
-    protected File                 userDir;
+    protected File                 customMapDir;
     protected int                  currentLevelNumber; // 1=first level
     protected boolean              demoLevel;
     protected long                 levelStartTime;
@@ -90,10 +91,6 @@ public abstract class GameModel {
     protected WorldMap             currentMap;
     protected MapColorScheme       currentMapColorScheme;
     protected SimulationStepEventLog eventLog;
-
-    protected GameModel(GameVariant gameVariant) {
-        this.gameVariant = checkNotNull(gameVariant);
-    }
 
     public abstract boolean      canStartNewGame();
     public abstract void         onGameEnded();
@@ -121,6 +118,18 @@ public abstract class GameModel {
     protected abstract boolean   isBonusReached();
     protected abstract boolean   isLevelCounterEnabled();
     protected abstract void      onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
+
+    protected GameModel(GameVariant gameVariant, File userDir) {
+        this.gameVariant = checkNotNull(gameVariant);
+        this.userDir = userDir;
+        this.customMapDir = new File(userDir, "maps");
+    }
+
+    public File customMapDir() {
+        return customMapDir;
+    }
+
+    public void updateCustomMaps() {}
 
     public final GameVariant variant() { return gameVariant; }
 

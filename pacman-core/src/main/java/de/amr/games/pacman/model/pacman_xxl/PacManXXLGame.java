@@ -47,15 +47,12 @@ public class PacManXXLGame extends PacManArcadeGame {
 
     private final List<WorldMap> standardMaps = new ArrayList<>();
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
-    private final File customMapDir;
     private MapSelectionMode mapSelectionMode;
 
     public PacManXXLGame(GameVariant gameVariant, File userDir) {
         super(gameVariant, userDir);
-        // overwrite:
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman_xxl.xml"));
         mapSelectionMode = MapSelectionMode.NO_CUSTOM_MAPS;
-        customMapDir = new File(userDir, "maps");
         for (int num = 1; num <= MAP_COUNT; ++num) {
             URL url = getClass().getResource(MAP_PATTERN.formatted(num));
             standardMaps.add(new WorldMap(url));
@@ -143,10 +140,7 @@ public class PacManXXLGame extends PacManArcadeGame {
         return customMapsByFile.keySet().stream().sorted().map(customMapsByFile::get).toList();
     }
 
-    public File customMapDir() {
-        return customMapDir;
-    }
-
+    @Override
     public void updateCustomMaps() {
         if (customMapDir.exists() && customMapDir.isDirectory()) {
             Logger.info("Custom map directory found: '{}'", customMapDir);

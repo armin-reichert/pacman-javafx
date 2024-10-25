@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.maps.editor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.pacman_xxl.PacManXXLGame;
@@ -304,12 +305,13 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public void doFirstCalledAction(GameActionProvider actionProvider) {
-        actionProvider.firstMatchedAction(keyboard()).ifPresent(action -> action.execute(this));
+        actionProvider.firstMatchedAction(keyboard()).filter(gameAction -> gameAction.isEnabled(this))
+            .ifPresent(action -> action.execute(this));
     }
 
     @Override
     public void doFirstCalledActionElse(GameActionProvider actionProvider, Runnable defaultAction) {
-       actionProvider.firstMatchedAction(keyboard())
+       actionProvider.firstMatchedAction(keyboard()).filter(gameAction -> gameAction.isEnabled(this))
            .ifPresentOrElse(action -> action.execute(this), defaultAction);
     }
 
@@ -410,20 +412,20 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public EditorPage getOrCreateEditorPage() {
-        if (gameVariant() == GameVariant.PACMAN_XXL) {
-            PacManXXLGame xxlGame = (PacManXXLGame) game();
-            if (editorPage == null) {
-                editorPage = new EditorPage(stage, this, xxlGame.customMapDir());
-                editorPage.setCloseAction(editor -> {
-                    editor.stop();
-                    editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> stage.titleProperty().bind(stageTitleBinding()));
-                    xxlGame.updateCustomMaps();
-                    GlobalGameActions2D.BOOT.execute(this);
-                    selectStartPage();
-                });
-            }
+        if (editorPage == null) {
+            editorPage = new EditorPage(stage, this, game().customMapDir());
+            editorPage.setCloseAction(this::closeEditor);
         }
         return editorPage;
+    }
+
+    private void closeEditor(TileMapEditor editor) {
+        editor.stop();
+        editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> stage.titleProperty().bind(stageTitleBinding()));
+        game().updateCustomMaps();
+        gameClock().setTargetFrameRate(GameModel.TICKS_PER_SECOND);
+        gameController().restart(GameState.BOOT);
+        selectStartPage();
     }
 
     @Override
