@@ -4,7 +4,7 @@ package de.amr.games.pacman.model.ms_pacman_tengen;
 // Not sure if this is NES or game-specific
 public class NESColorPalette {
 
-    public static final String[] COLORS = {
+    public static final String[] ENTRIES = {
         // 00, 01, 02, 03, 04, 05, 06, 07
         "666666", "002a88", "1412a7", "3b00a4", "5c007e", "6e0040", "6c0600", "561d00",
 
@@ -30,7 +30,7 @@ public class NESColorPalette {
         "e4e594", "cfef96", "bdf4ab", "b3f3cc", "b5ebf2", "b8b8b8", "000000", "000000",
     };
 
-    public static String color(int index) {
-        return COLORS[index];
+    public static String entry(int index) {
+        return ENTRIES[index];
     }
 }

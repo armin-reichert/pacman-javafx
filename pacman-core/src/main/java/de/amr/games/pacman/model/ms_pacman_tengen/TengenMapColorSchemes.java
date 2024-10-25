@@ -6,13 +6,13 @@ package de.amr.games.pacman.model.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 
-import static de.amr.games.pacman.model.ms_pacman_tengen.NESColorPalette.color;
+import static de.amr.games.pacman.model.ms_pacman_tengen.NESColorPalette.entry;
 
 public class TengenMapColorSchemes {
 
     private static MapColorScheme create(int fillIndex, int strokeIndex, int pelletIndex) {
-        return new MapColorScheme(NESColorPalette.color(fillIndex), NESColorPalette.color(strokeIndex),
-            NESColorPalette.color(strokeIndex), NESColorPalette.color(pelletIndex));
+        return new MapColorScheme(NESColorPalette.entry(fillIndex), NESColorPalette.entry(strokeIndex),
+            NESColorPalette.entry(strokeIndex), NESColorPalette.entry(pelletIndex));
     }
 
     public static final MapColorScheme BLACK_WHITE_GREEN = create(0x0f, 0x20, 0x1c);
@@ -45,7 +45,7 @@ public class TengenMapColorSchemes {
     public static final MapColorScheme YELLOW_WHITE_GREEN= create(0x28, 0x20, 0x2a);
 
     private TengenMapColorSchemes(int fillIndex, int strokeIndex, int pelletIndex) {
-        colorScheme = new MapColorScheme(color(fillIndex), color(strokeIndex), color(strokeIndex), color(pelletIndex));
+        colorScheme = new MapColorScheme(entry(fillIndex), entry(strokeIndex), entry(strokeIndex), entry(pelletIndex));
     }
 
     public MapColorScheme colorScheme() {

@@ -44,11 +44,11 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void bindActions() {
-        bindAction(GlobalGameActions2D.CHEAT_EAT_ALL, alt(KeyCode.E));
-        bindAction(GlobalGameActions2D.CHEAT_ADD_LIVES, alt(KeyCode.L));
-        bindAction(GlobalGameActions2D.CHEAT_NEXT_LEVEL, alt(KeyCode.N));
+        bindAction(GlobalGameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
+        bindAction(GlobalGameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
+        bindAction(GlobalGameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
         bindAction(GlobalGameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
-        bindAction(GlobalGameActions2D.ADD_CREDIT, key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5));
+        bindAction(GlobalGameActions2D.ADD_CREDIT,        key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5));
     }
 
     @Override
