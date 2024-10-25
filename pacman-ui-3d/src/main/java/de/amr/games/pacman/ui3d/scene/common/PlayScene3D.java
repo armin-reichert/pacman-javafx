@@ -110,6 +110,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     @Override
     public final void init() {
         doInit();
+        bindActions();
         register(context().keyboard());
     }
 
@@ -150,7 +151,6 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     protected void doInit() {
-        bindActions();
         context.setScoreVisible(true);
         scores3D.fontPy.set(context.assets().font("font.arcade", 8));
         perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
