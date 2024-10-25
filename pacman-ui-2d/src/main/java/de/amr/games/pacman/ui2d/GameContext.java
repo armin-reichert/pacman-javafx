@@ -53,8 +53,8 @@ public interface GameContext {
     GameClockFX                 gameClock();
 
     // Actions
-    void                        doFirstCalledAction(ActionProvider actionProvider);
-    void                        doFirstCalledActionElse(ActionProvider actionProvider, Runnable defaultAction);
+    void                        doFirstCalledAction(GameActionProvider actionProvider);
+    void                        doFirstCalledActionElse(GameActionProvider actionProvider, Runnable defaultAction);
 
     // Game scenes
     GameSceneConfig             gameSceneConfig(GameVariant variant);

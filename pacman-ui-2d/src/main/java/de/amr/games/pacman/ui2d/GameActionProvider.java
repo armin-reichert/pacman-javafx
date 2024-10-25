@@ -8,7 +8,7 @@ import javafx.scene.input.KeyCodeCombination;
 import java.util.Map;
 import java.util.Optional;
 
-public interface ActionProvider {
+public interface GameActionProvider {
 
     Map<KeyCodeCombination, GameAction> actionBindings();
 

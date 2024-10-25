@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.scene.common;
 
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.ui2d.ActionProvider;
+import de.amr.games.pacman.ui2d.GameActionProvider;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 
@@ -15,7 +15,7 @@ import de.amr.games.pacman.ui2d.rendering.GameRenderer;
  *
  * @author Armin Reichert
  */
-public interface GameScene extends GameEventListener, ActionProvider {
+public interface GameScene extends GameEventListener, GameActionProvider {
 
     GameContext context();
 

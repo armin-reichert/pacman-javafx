@@ -34,7 +34,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -304,12 +303,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void doFirstCalledAction(ActionProvider actionProvider) {
+    public void doFirstCalledAction(GameActionProvider actionProvider) {
         actionProvider.firstMatchedAction(keyboard()).ifPresent(action -> action.execute(this));
     }
 
     @Override
-    public void doFirstCalledActionElse(ActionProvider actionProvider, Runnable defaultAction) {
+    public void doFirstCalledActionElse(GameActionProvider actionProvider, Runnable defaultAction) {
        actionProvider.firstMatchedAction(keyboard())
            .ifPresentOrElse(action -> action.execute(this), defaultAction);
     }
