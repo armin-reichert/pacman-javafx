@@ -46,9 +46,13 @@ public class PlayScene2D extends GameScene2D {
         bindAction(KeyInput.of(alt(KeyCode.L)), GlobalGameActions2D.CHEAT_ADD_LIVES);
         bindAction(KeyInput.of(alt(KeyCode.N)), GlobalGameActions2D.CHEAT_NEXT_LEVEL);
         bindAction(KeyInput.of(alt(KeyCode.X)), GlobalGameActions2D.CHEAT_KILL_GHOSTS);
+        bindAction(KeyInput.of(key(KeyCode.DIGIT1)), GlobalGameActions2D.ADD_CREDIT);
+        //TODO This does not work because level is not yet created at this point in time!
+        /*
         if (context.game().isDemoLevel()) {
             bindAction(KeyInput.of(key(KeyCode.DIGIT1)), GlobalGameActions2D.ADD_CREDIT);
         }
+         */
     }
 
     @Override
@@ -227,7 +231,9 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onLevelCreated(GameEvent e) { context.updateRenderer(); }
+    public void onLevelCreated(GameEvent e) {
+        context.updateRenderer();
+    }
 
     @Override
     public void onPacDied(GameEvent e) {

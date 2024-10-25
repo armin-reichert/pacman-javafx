@@ -27,13 +27,17 @@ public class Keyboard {
     }
 
     public void register(KeyCodeCombination kcc) {
-        registeredCombinations.add(kcc);
-        Logger.info("Key combination registered: {}", kcc);
+        if (!registeredCombinations.contains(kcc)) {
+            registeredCombinations.add(kcc);
+            Logger.info("Key combination registered: {}", kcc);
+        }
     }
 
     public void unregister(KeyCodeCombination kcc) {
-        registeredCombinations.remove(kcc);
-        Logger.info("Key combination unregistered: {}", kcc);
+        if (registeredCombinations.contains(kcc)) {
+            registeredCombinations.remove(kcc);
+            Logger.info("Key combination unregistered: {}", kcc);
+        }
     }
 
     public void onKeyPressed(KeyEvent e) {

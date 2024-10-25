@@ -29,14 +29,22 @@ public enum GlobalGameActions2D implements GameAction {
      * Adds credit (simulates insertion of a coin) and switches to the credit scene.
      */
     ADD_CREDIT {
-        //(key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP)) {
         @Override
         public void execute(GameContext context) {
-            context.sounds().enabledProperty().set(true); // in demo mode, sound is disabled
-            context.sounds().playCreditSound();
+            boolean enabled =
+                context.gameState() == GameState.WAITING_FOR_START ||
+                context.gameState() == INTRO ||
+                context.game().isDemoLevel() ||
+                !context.gameController().coinControl().hasCredit();
+            if (!enabled) {
+                Logger.info("Action ADD_CREDIT is disabled");
+                return;
+            }
             if (!context.game().isPlaying()) {
                 boolean coinInserted = context.gameController().coinControl().insertCoin();
                 if (coinInserted) {
+                    context.sounds().enabledProperty().set(true); // in demo mode, sound is disabled
+                    context.sounds().playCreditSound();
                     context.game().publishGameEvent(GameEventType.CREDIT_ADDED);
                 }
                 if (context.gameState() != GameState.WAITING_FOR_START) {
