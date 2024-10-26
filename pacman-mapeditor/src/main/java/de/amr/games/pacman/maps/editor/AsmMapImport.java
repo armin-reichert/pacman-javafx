@@ -14,7 +14,12 @@ public class AsmMapImport {
 
     public static void main(String[] args) {
         var importer = new AsmMapImport();
-        File[] asmFiles = new File("asm").listFiles();
+        File dir = new File("asm");
+        File[] asmFiles = dir.listFiles();
+        if (asmFiles == null) {
+            Logger.error("No asm files in directory {}", dir);
+            return;
+        }
         try {
             for (File f : asmFiles) {
                 byte[][] mapContent = importer.importTerrainFromAsm(f);
@@ -101,21 +106,23 @@ public class AsmMapImport {
                 rowLength = row.size();
             }
         }
+        rowLength *= 2;
         byte[][] result = new byte[rows.size()][rowLength];
         for (int i = 0; i < rows.size(); ++i) {
             List<Byte> row = rows.get(i);
             int len = row.size();
             result[i] = new byte[rowLength];
-            if (len != rowLength) {
+            if (len != rowLength / 2) {
                 Logger.error("File {}: Row {} has length {}, should be {}", asmFile, i, len, rowLength);
             }
-            for (int j = 0; j < rowLength; ++j) {
+            for (int j = 0; j < rowLength / 2; ++j) {
                 if (j < row.size()) {
                     result[i][j] = row.get(j);
+                    result[i][rowLength - 1 - j] = row.get(j); // TODO mirrored value
                 }
             }
         }
-        Logger.info("{} rows of (half) length {}", rows.size(), rowLength);
+        Logger.info("{} rows of (half) length {}", rows.size(), 2*rowLength);
 
         return result;
     }

@@ -130,8 +130,7 @@ RepeatMazeTile $03, 2
 .byte $61
 .byte $00
 .byte $67
-.byte $82
-.byte $00
+RepeatMazeTile $00, 3
 
 RepeatMazeTile $00, 2
 .byte $47
