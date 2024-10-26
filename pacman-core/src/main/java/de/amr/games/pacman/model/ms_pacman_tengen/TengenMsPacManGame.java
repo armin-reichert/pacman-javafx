@@ -341,15 +341,15 @@ public class TengenMsPacManGame extends GameModel {
     private void selectBigMapForLevel(int levelNumber) {
         switch (levelNumber) {
             // 1-5
-            case 1  -> setMapAndColorScheme(strangeOrBigMaps, 19, TengenMapColorSchemes.ROSE_RED);
+            case 1  -> setMapAndColorScheme(strangeOrBigMaps, 19, TengenMapColorSchemes.PINK_DARKRED);
             case 2  -> setMapAndColorScheme(strangeOrBigMaps, 20, TengenMapColorSchemes.LIGHTBLUE_WHITE_YELLOW);
             case 3  -> setMapAndColorScheme(strangeOrBigMaps, 21, TengenMapColorSchemes.ORANGE_WHITE);
-            case 4  -> setMapAndColorScheme(strangeOrBigMaps, 19, TengenMapColorSchemes.BLUE_WHITE_YELLOW);
+            case 4  -> setMapAndColorScheme(strangeOrBigMaps, 19, TengenMapColorSchemes.BLUE_YELLOW);
             case 5  -> setMapAndColorScheme(strangeOrBigMaps, 20, TengenMapColorSchemes.PINK_YELLOW);
 
             // 6-10
-            case 6  -> setMapAndColorScheme(strangeOrBigMaps, 21, TengenMapColorSchemes.ROSE_RED);
-            case 7  -> setMapAndColorScheme(strangeOrBigMaps, 22, TengenMapColorSchemes.ORANGE_WHITE);
+            case 6  -> setMapAndColorScheme(strangeOrBigMaps, 21, TengenMapColorSchemes.PINK_DARKRED);
+            case 7  -> setMapAndColorScheme(strangeOrBigMaps, 22, TengenMapColorSchemes.BROWN2_WHITE);
             case 8  -> setMapAndColorScheme(strangeOrBigMaps, 23, TengenMapColorSchemes.VIOLET_WHITE_YELLOW);
             case 9  -> setMapAndColorScheme(strangeOrBigMaps, 17, TengenMapColorSchemes.BLACK_WHITE_YELLOW);
             case 10 -> setMapAndColorScheme(strangeOrBigMaps, 10, TengenMapColorSchemes.BLACK_DARKBLUE);
@@ -535,6 +535,9 @@ public class TengenMsPacManGame extends GameModel {
         currentLevelNumber = levelNumber;
         selectMapForLevel(levelNumber);
         createWorldAndPopulation(currentMap);
+
+        Logger.info("World created. Map number: {}, URL: {}", currentMapNumber, currentMap.url());
+
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
         deactivateBooster(); // gets activated in startLevel() if ALWAYS_ON
