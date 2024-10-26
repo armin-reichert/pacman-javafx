@@ -870,6 +870,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     private void drawEditCanvas() {
         GraphicsContext g = editCanvas.getGraphicsContext2D();
+        g.setImageSmoothing(false);
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, editCanvas.getWidth(), editCanvas.getHeight());
         drawGrid(g);
@@ -912,6 +913,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     private void drawPreviewCanvas() {
         GraphicsContext g = previewCanvas.getGraphicsContext2D();
+        g.setImageSmoothing(false);
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, previewCanvas.getWidth(), previewCanvas.getHeight());
         if (terrainVisiblePy.get()) {
