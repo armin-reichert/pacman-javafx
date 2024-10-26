@@ -10,7 +10,7 @@ import de.amr.games.pacman.model.ms_pacman_tengen.BoosterMode;
 import de.amr.games.pacman.model.ms_pacman_tengen.Difficulty;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
-import de.amr.games.pacman.ui2d.GlobalGameActions2D;
+import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -55,9 +55,9 @@ public class OptionsScene extends GameScene2D {
 
     @Override
     public void bindActions() {
-        bindAction(GlobalGameActions2D.TEST_CUT_SCENES,     alt(KeyCode.C));
-        bindAction(GlobalGameActions2D.TEST_LEVELS_BONI,    alt(KeyCode.T));
-        bindAction(GlobalGameActions2D.TEST_LEVELS_TEASERS, shift_alt(KeyCode.T));
+        bindAction(GameActions2D.TEST_CUT_SCENES,     alt(KeyCode.C));
+        bindAction(GameActions2D.TEST_LEVELS_BONI,    alt(KeyCode.T));
+        bindAction(GameActions2D.TEST_LEVELS_TEASERS, shift_alt(KeyCode.T));
     }
 
     @Override

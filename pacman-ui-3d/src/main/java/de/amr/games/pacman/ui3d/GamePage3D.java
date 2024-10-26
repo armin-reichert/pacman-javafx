@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.GlobalGameActions2D;
+import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.scene.common.Perspective;
@@ -31,8 +31,8 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_PERSPECTIVE;
 public class GamePage3D extends GamePage {
 
     {
-        bindAction(GlobalGameActions3D.TOGGLE_PIP_VISIBILITY, KeyCode.F2);
-        bindAction(GlobalGameActions3D.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
+        bindAction(GameActions3D.TOGGLE_PIP_VISIBILITY, KeyCode.F2);
+        bindAction(GameActions3D.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
     }
 
     public GamePage3D(GameContext context, Scene parentScene) {
@@ -71,7 +71,7 @@ public class GamePage3D extends GamePage {
         // Toggle 2D-3D
         boolean is3D = context.currentGameSceneHasID("PlayScene3D");
         var item = new MenuItem(context.locText(is3D ? "use_2D_scene" : "use_3D_scene"));
-        item.setOnAction(e -> GlobalGameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute(context));
+        item.setOnAction(e -> GameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute(context));
         contextMenu.getItems().add(item);
 
         // Toggle picture-in-picture display
@@ -115,14 +115,14 @@ public class GamePage3D extends GamePage {
         miMuted.selectedProperty().bindBidirectional(context.sounds().mutedProperty());
         contextMenu.getItems().add(miMuted);
 
-        GameAction action = GlobalGameActions2D.OPEN_EDITOR;
+        GameAction action = GameActions2D.OPEN_EDITOR;
         var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
         miOpenMapEditor.setOnAction(e -> action.execute(context));
         miOpenMapEditor.setDisable(!action.isEnabled(context));
         contextMenu.getItems().add(miOpenMapEditor);
 
         var miQuit = new MenuItem(context.locText("quit"));
-        miQuit.setOnAction(e -> GlobalGameActions2D.SHOW_START_PAGE.execute(context));
+        miQuit.setOnAction(e -> GameActions2D.SHOW_START_PAGE.execute(context));
         contextMenu.getItems().add(miQuit);
 
         contextMenu.show(this, event.getScreenX(), event.getScreenY());

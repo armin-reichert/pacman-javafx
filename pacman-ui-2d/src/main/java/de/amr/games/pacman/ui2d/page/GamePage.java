@@ -9,7 +9,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.GlobalGameActions2D;
+import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
@@ -105,10 +105,10 @@ public class GamePage extends StackPane implements Page {
 
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     {
-        bindAction(GlobalGameActions2D.BOOT,            KeyCode.F3);
-        bindAction(GlobalGameActions2D.SHOW_START_PAGE, KeyCode.Q);
-        bindAction(GlobalGameActions2D.TOGGLE_PAUSED,   KeyCode.P);
-        bindAction(GlobalGameActions2D.OPEN_EDITOR,     shift_alt(KeyCode.E));
+        bindAction(GameActions2D.BOOT,            KeyCode.F3);
+        bindAction(GameActions2D.SHOW_START_PAGE, KeyCode.Q);
+        bindAction(GameActions2D.TOGGLE_PAUSED,   KeyCode.P);
+        bindAction(GameActions2D.OPEN_EDITOR,     shift_alt(KeyCode.E));
         bindAction(actionToggleDebugInfo,               alt(KeyCode.D));
         bindAction(actionShowHelp,                      KeyCode.H);
         bindAction(actionSimulationSlower,              alt(KeyCode.MINUS));
@@ -203,7 +203,7 @@ public class GamePage extends StackPane implements Page {
     @Override
     public void onPageSelected() {
         //TODO check if booting is always wanted here
-        GlobalGameActions2D.BOOT.execute(context);
+        GameActions2D.BOOT.execute(context);
     }
 
     @Override
@@ -243,12 +243,12 @@ public class GamePage extends StackPane implements Page {
 
         if (context.gameVariant() == GameVariant.PACMAN_XXL || context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
-            miOpenMapEditor.setOnAction(e -> GlobalGameActions2D.OPEN_EDITOR.execute(context));
+            miOpenMapEditor.setOnAction(e -> GameActions2D.OPEN_EDITOR.execute(context));
             contextMenu.getItems().add(miOpenMapEditor);
         }
 
         var miQuit = new MenuItem(context.locText("quit"));
-        miQuit.setOnAction(e -> GlobalGameActions2D.SHOW_START_PAGE.execute(context));
+        miQuit.setOnAction(e -> GameActions2D.SHOW_START_PAGE.execute(context));
         contextMenu.getItems().add(miQuit);
 
         contextMenu.show(this, event.getScreenX(), event.getScreenY());

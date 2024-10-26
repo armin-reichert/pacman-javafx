@@ -16,7 +16,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
-import de.amr.games.pacman.ui2d.GlobalGameActions2D;
+import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -55,7 +55,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void bindActions() {
-        bindAction(GlobalGameActions2D.START_GAME, KeyCode.SPACE);
+        bindAction(GameActions2D.START_GAME, KeyCode.SPACE);
     }
 
     public IntroScene() {

@@ -24,7 +24,7 @@ import static java.util.function.Predicate.not;
 /**
  * @author Armin Reichert
  */
-public enum GlobalGameActions2D implements GameAction {
+public enum GameActions2D implements GameAction {
     /**
      * Adds credit (simulates insertion of a coin) and switches to the credit scene.
      */

@@ -17,12 +17,12 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.GlobalGameActions2D;
+import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
-import de.amr.games.pacman.ui3d.GlobalGameActions3D;
+import de.amr.games.pacman.ui3d.GameActions3D;
 import de.amr.games.pacman.ui3d.level.*;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
@@ -122,31 +122,31 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     @Override
     public void bindActions() {
-        bindAction(GlobalGameActions3D.PREV_PERSPECTIVE,  alt(KeyCode.LEFT));
-        bindAction(GlobalGameActions3D.NEXT_PERSPECTIVE,  alt(KeyCode.RIGHT));
-        bindAction(GlobalGameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
-        bindAction(GlobalGameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
-        bindAction(GlobalGameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
-        bindAction(GlobalGameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
+        bindAction(GameActions3D.PREV_PERSPECTIVE,  alt(KeyCode.LEFT));
+        bindAction(GameActions3D.NEXT_PERSPECTIVE,  alt(KeyCode.RIGHT));
+        bindAction(GameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
+        bindAction(GameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
+        bindAction(GameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
+        bindAction(GameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            bindAction(GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER, KeyCode.A);
-            bindAction(GlobalGameActions2D.TENGEN_SHOW_OPTIONS,       KeyCode.S);
+            bindAction(GameActions2D.TENGEN_TOGGLE_PAC_BOOSTER, KeyCode.A);
+            bindAction(GameActions2D.TENGEN_SHOW_OPTIONS,       KeyCode.S);
         }
         else if (context.game().isDemoLevel()) {
-            bindAction(GlobalGameActions2D.ADD_CREDIT, key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP));
+            bindAction(GameActions2D.ADD_CREDIT, key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP));
         }
-        bindAction(GlobalGameActions3D.PREV_PERSPECTIVE,  alt(KeyCode.LEFT));
-        bindAction(GlobalGameActions3D.NEXT_PERSPECTIVE,  alt(KeyCode.RIGHT));
-        bindAction(GlobalGameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
-        bindAction(GlobalGameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
-        bindAction(GlobalGameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
-        bindAction(GlobalGameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
+        bindAction(GameActions3D.PREV_PERSPECTIVE,  alt(KeyCode.LEFT));
+        bindAction(GameActions3D.NEXT_PERSPECTIVE,  alt(KeyCode.RIGHT));
+        bindAction(GameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
+        bindAction(GameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
+        bindAction(GameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
+        bindAction(GameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            bindAction(GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER, KeyCode.A);
-            bindAction(GlobalGameActions2D.TENGEN_SHOW_OPTIONS,       KeyCode.S);
+            bindAction(GameActions2D.TENGEN_TOGGLE_PAC_BOOSTER, KeyCode.A);
+            bindAction(GameActions2D.TENGEN_SHOW_OPTIONS,       KeyCode.S);
         }
         else if (context.game().isDemoLevel()) {
-            bindAction(GlobalGameActions2D.ADD_CREDIT, key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP));
+            bindAction(GameActions2D.ADD_CREDIT, key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP));
         }
     }
 

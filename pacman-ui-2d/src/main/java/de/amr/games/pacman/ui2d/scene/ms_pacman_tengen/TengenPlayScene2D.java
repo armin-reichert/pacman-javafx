@@ -13,7 +13,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAssets2D;
-import de.amr.games.pacman.ui2d.GlobalGameActions2D;
+import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
@@ -65,12 +65,12 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void bindActions() {
-        bindAction(GlobalGameActions2D.CHEAT_EAT_ALL,              alt(KeyCode.E));
-        bindAction(GlobalGameActions2D.CHEAT_ADD_LIVES,            alt(KeyCode.L));
-        bindAction(GlobalGameActions2D.CHEAT_NEXT_LEVEL,           alt(KeyCode.N));
-        bindAction(GlobalGameActions2D.CHEAT_KILL_GHOSTS,          alt(KeyCode.X));
-        bindAction(GlobalGameActions2D.TENGEN_TOGGLE_PAC_BOOSTER,  KeyCode.A);
-        bindAction(GlobalGameActions2D.TENGEN_SHOW_OPTIONS,        KeyCode.S);
+        bindAction(GameActions2D.CHEAT_EAT_ALL,              alt(KeyCode.E));
+        bindAction(GameActions2D.CHEAT_ADD_LIVES,            alt(KeyCode.L));
+        bindAction(GameActions2D.CHEAT_NEXT_LEVEL,           alt(KeyCode.N));
+        bindAction(GameActions2D.CHEAT_KILL_GHOSTS,          alt(KeyCode.X));
+        bindAction(GameActions2D.TENGEN_TOGGLE_PAC_BOOSTER,  KeyCode.A);
+        bindAction(GameActions2D.TENGEN_SHOW_OPTIONS,        KeyCode.S);
     }
 
     @Override
