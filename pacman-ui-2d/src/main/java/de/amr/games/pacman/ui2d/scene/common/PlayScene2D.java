@@ -12,8 +12,8 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameActions2D;
+import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
@@ -38,9 +38,6 @@ import static de.amr.games.pacman.ui2d.util.KeyInput.key;
 public class PlayScene2D extends GameScene2D {
 
     public static final Font DEBUG_STATE_FONT = Font.font("Sans", FontWeight.BOLD, 24);
-
-    @Override
-    public void doInit() {}
 
     @Override
     public void bindActions() {
@@ -202,11 +199,8 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onEnterGameState(GameState state) {
-        switch (state) {
-            case GAME_OVER -> {
-                context.sounds().playGameOverSound();
-            }
-            default -> {}
+        if (state == GameState.GAME_OVER) {
+            context.sounds().playGameOverSound();
         }
     }
 
