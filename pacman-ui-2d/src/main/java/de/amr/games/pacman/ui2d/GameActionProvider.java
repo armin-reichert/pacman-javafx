@@ -31,6 +31,11 @@ public interface GameActionProvider {
         }
     }
 
+    /**
+     * Hook method where actions are bound to keyboard combinations.
+     */
+    void bindActions();
+
     default void bindAction(GameAction action, KeyInput keyInput) {
         for (KeyCodeCombination kcc : keyInput.getCombinations()) {
             actionBindings().put(kcc, action);

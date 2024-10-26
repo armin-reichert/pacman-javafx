@@ -44,11 +44,6 @@ public interface GameScene extends GameEventListener, GameActionProvider {
     void end();
 
     /**
-     * Hook method where actions are bound to keyboard combinations.
-     */
-    void bindActions();
-
-    /**
      * @return (unscaled) scene size in pixels e.g. 224x288
      */
     Vector2f size();

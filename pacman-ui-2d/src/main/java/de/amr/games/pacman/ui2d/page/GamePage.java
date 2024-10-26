@@ -104,22 +104,6 @@ public class GamePage extends StackPane implements Page {
     };
 
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
-    {
-        bindAction(GameActions2D.BOOT,            KeyCode.F3);
-        bindAction(GameActions2D.SHOW_START_PAGE, KeyCode.Q);
-        bindAction(GameActions2D.TOGGLE_PAUSED,   KeyCode.P);
-        bindAction(GameActions2D.OPEN_EDITOR,     shift_alt(KeyCode.E));
-        bindAction(actionToggleDebugInfo,               alt(KeyCode.D));
-        bindAction(actionShowHelp,                      KeyCode.H);
-        bindAction(actionSimulationSlower,              alt(KeyCode.MINUS));
-        bindAction(actionSimulationFaster,              alt(KeyCode.PLUS));
-        bindAction(actionSimulationNormalSpeed,         alt(KeyCode.DIGIT0));
-        bindAction(actionSimulationOneStep,             shift(KeyCode.P));
-        bindAction(actionSimulationTenSteps,            shift(KeyCode.SPACE));
-        bindAction(actionToggleAutopilot,               alt(KeyCode.A));
-        bindAction(actionToggleDashboard,               key(KeyCode.F1), alt(KeyCode.B));
-        bindAction(actionToggleImmunity,                alt(KeyCode.I));
-    }
 
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
         @Override
@@ -140,6 +124,8 @@ public class GamePage extends StackPane implements Page {
     public GamePage(GameContext context, Scene parentScene) {
         this.context = checkNotNull(context);
         this.parentScene = checkNotNull(parentScene);
+
+        bindActions();
 
         gameCanvas = new Canvas();
 
@@ -184,6 +170,24 @@ public class GamePage extends StackPane implements Page {
                 gameCanvasLayer.setBorder(null);
             }
         });
+    }
+
+    @Override
+    public void bindActions() {
+        bindAction(GameActions2D.BOOT,            KeyCode.F3);
+        bindAction(GameActions2D.SHOW_START_PAGE, KeyCode.Q);
+        bindAction(GameActions2D.TOGGLE_PAUSED,   KeyCode.P);
+        bindAction(GameActions2D.OPEN_EDITOR,     shift_alt(KeyCode.E));
+        bindAction(actionToggleDebugInfo,               alt(KeyCode.D));
+        bindAction(actionShowHelp,                      KeyCode.H);
+        bindAction(actionSimulationSlower,              alt(KeyCode.MINUS));
+        bindAction(actionSimulationFaster,              alt(KeyCode.PLUS));
+        bindAction(actionSimulationNormalSpeed,         alt(KeyCode.DIGIT0));
+        bindAction(actionSimulationOneStep,             shift(KeyCode.P));
+        bindAction(actionSimulationTenSteps,            shift(KeyCode.SPACE));
+        bindAction(actionToggleAutopilot,               alt(KeyCode.A));
+        bindAction(actionToggleDashboard,               key(KeyCode.F1), alt(KeyCode.B));
+        bindAction(actionToggleImmunity,                alt(KeyCode.I));
     }
 
     @Override

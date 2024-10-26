@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction;
+import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
@@ -127,14 +128,6 @@ public class StartPage extends StackPane implements Page {
     private final GameAction actionEnterGamePage = GameContext::selectGamePage;
 
     private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
-    {
-        bindAction(actionPrevFlyerPage, KeyCode.UP);
-        bindAction(actionNextFlyerPage, KeyCode.DOWN);
-        bindAction(actionPrevVariant,   KeyCode.LEFT);
-        bindAction(actionNextVariant,   KeyCode.RIGHT);
-        bindAction(actionEnterGamePage, KeyCode.SPACE);
-    }
-
     private final GameContext context;
     private final BorderPane layout = new BorderPane();
     private final Flyer msPacManFlyer, pacManFlyer, tengenFlyer;
@@ -142,6 +135,8 @@ public class StartPage extends StackPane implements Page {
     public StartPage(GameContext context) {
         this.context = checkNotNull(context);
         AssetStorage assets = context.assets();
+
+        bindActions();
 
         msPacManFlyer = new Flyer(
             assets.image("ms_pacman.startpage.image1"),
@@ -184,6 +179,16 @@ public class StartPage extends StackPane implements Page {
 
         setBackground(context.assets().get("wallpaper.pacman"));
         getChildren().add(layout);
+    }
+
+    @Override
+    public void bindActions() {
+        bindAction(GameActions2D.TOGGLE_PAUSED, KeyCode.P);
+        bindAction(actionPrevFlyerPage,         KeyCode.UP);
+        bindAction(actionNextFlyerPage,         KeyCode.DOWN);
+        bindAction(actionPrevVariant,           KeyCode.LEFT);
+        bindAction(actionNextVariant,           KeyCode.RIGHT);
+        bindAction(actionEnterGamePage,         KeyCode.SPACE);
     }
 
     @Override

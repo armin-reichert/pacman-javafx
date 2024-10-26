@@ -266,7 +266,7 @@ public class Ghost extends Creature implements AnimatedEntity {
      */
     private void updateStateLocked(GameModel game) {
         if (insideHouse()) {
-            float minY = revivalPosition.y() - 4, maxY = revivalPosition.y() + 4;
+            float minY = world.houseCeilingY() + HTS, maxY = world().houseFloorY() - HTS;
             setSpeed(game.ghostSpeedInsideHouse(this));
             move();
             if (posY <= minY) {

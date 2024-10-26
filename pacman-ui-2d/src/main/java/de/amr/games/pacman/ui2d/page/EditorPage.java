@@ -74,6 +74,10 @@ public class EditorPage extends BorderPane implements Page {
     }
 
     @Override
+    public void bindActions() {
+    }
+
+    @Override
     public Map<KeyCodeCombination, GameAction> actionBindings() {
         return actionBindings;
     }
