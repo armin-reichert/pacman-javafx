@@ -78,10 +78,6 @@ public class EditorPage extends BorderPane implements Page {
         return actionBindings;
     }
 
-    @Override
-    public void handleInput() {
-    }
-
     public void startEditor(WorldMap map) {
         if (map != null) {
             editor.setMap(map);

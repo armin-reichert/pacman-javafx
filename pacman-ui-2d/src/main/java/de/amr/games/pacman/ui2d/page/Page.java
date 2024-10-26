@@ -32,8 +32,6 @@ public interface Page extends GameActionProvider {
 
     void setSize(double width, double height);
 
-    void handleInput();
-
     default void handleContextMenuRequest(ContextMenuEvent e) {
         Logger.info("Context menu requested for page " + this);
         if (e.isKeyboardTrigger()) {

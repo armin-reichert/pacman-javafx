@@ -51,11 +51,6 @@ public class GamePage3D extends GamePage {
     }
 
     @Override
-    public void handleInput() {
-        context.doFirstCalledActionElse(this, super::handleInput);
-    }
-
-    @Override
     public void handleContextMenuRequest(ContextMenuEvent event) {
         contextMenu.getItems().clear();
         contextMenu.hide();

@@ -11,6 +11,7 @@ import de.amr.games.pacman.model.ms_pacman_tengen.Difficulty;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameActions2D;
+import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -183,7 +184,7 @@ public class OptionsScene extends GameScene2D {
     }
 
     @Override
-    public void handleInput() {
+    public void handleInput(GameContext context) {
         if (context.keyboard().pressed(KeyCode.DOWN)) {
             playOptionSelectionChangedSound();
             selectNextOption();

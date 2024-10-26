@@ -234,11 +234,6 @@ public class StartPage extends StackPane implements Page {
     }
 
     @Override
-    public void handleInput() {
-        context.doFirstCalledAction(this);
-    }
-
-    @Override
     public void setSize(double width, double height) {
     }
 }

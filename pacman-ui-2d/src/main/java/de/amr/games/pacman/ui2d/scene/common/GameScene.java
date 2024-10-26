@@ -49,13 +49,6 @@ public interface GameScene extends GameEventListener, GameActionProvider {
     void bindActions();
 
     /**
-     * Called on every update tick to handle (keyboard) input.
-     */
-    default void handleInput() {
-        context().doFirstCalledAction(this);
-    }
-
-    /**
      * @return (unscaled) scene size in pixels e.g. 224x288
      */
     Vector2f size();

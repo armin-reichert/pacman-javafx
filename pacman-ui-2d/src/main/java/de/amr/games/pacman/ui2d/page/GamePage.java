@@ -8,8 +8,8 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameActions2D;
+import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
@@ -212,8 +212,9 @@ public class GamePage extends StackPane implements Page {
     }
 
     @Override
-    public void handleInput() {
-        context.doFirstCalledActionElse(this, () -> context.currentGameScene().ifPresent(GameScene::handleInput));
+    public void handleInput(GameContext context) {
+        context.doFirstCalledActionElse(this,
+            () -> context.currentGameScene().ifPresent(gameScene -> gameScene.handleInput(context)));
     }
 
     @Override

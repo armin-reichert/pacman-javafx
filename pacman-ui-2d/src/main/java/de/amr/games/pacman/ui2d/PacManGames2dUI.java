@@ -228,7 +228,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             } else if (e.getCode() == KeyCode.M && e.isAltDown()) {
                 sounds().toggleMuted();
             } else {
-                currentPage.handleInput();
+                currentPage.handleInput(this);
             }
         });
         mainScene.setOnContextMenuRequested(e -> {

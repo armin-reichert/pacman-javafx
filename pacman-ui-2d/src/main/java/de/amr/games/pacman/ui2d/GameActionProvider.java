@@ -53,4 +53,8 @@ public interface GameActionProvider {
             .map(Map.Entry::getValue)
             .findFirst();
     }
+
+    default void handleInput(GameContext context) {
+        context.doFirstCalledAction(this);
+    }
 }
