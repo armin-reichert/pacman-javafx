@@ -203,9 +203,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onEnterGameState(GameState state) {
         switch (state) {
-            case STARTING_GAME, LEVEL_COMPLETE, PACMAN_DYING -> context.sounds().stopAll();
             case GAME_OVER -> {
-                context.sounds().stopAll();
                 context.sounds().playGameOverSound();
             }
             default -> {}

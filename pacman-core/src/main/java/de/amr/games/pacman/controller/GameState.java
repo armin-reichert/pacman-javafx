@@ -73,6 +73,11 @@ public enum GameState implements FsmState<GameModel> {
         static final short TICK_RESUME_GAME              = 105;
 
         @Override
+        public void onEnter(GameModel game) {
+            game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
+        }
+
+        @Override
         public void onUpdate(GameModel game) {
             if (game.isPlaying()) { // resume running game
                 if (timer.currentTick() == 1) {
@@ -143,6 +148,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             timer.restartSeconds(5);
             game.onLevelCompleted();
+            game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
         }
 
         @Override
@@ -228,6 +234,7 @@ public enum GameState implements FsmState<GameModel> {
             timer.reset(240);
             timer.start();
             game.onPacDying();
+            game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
         }
 
         @Override
@@ -274,6 +281,7 @@ public enum GameState implements FsmState<GameModel> {
             timer.start();
             game.scoreManager().updateHighScore();
             game.onGameEnded();
+            game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
         }
 
         @Override

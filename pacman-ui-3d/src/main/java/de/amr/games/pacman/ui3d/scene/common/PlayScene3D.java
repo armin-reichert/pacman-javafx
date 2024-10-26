@@ -15,9 +15,9 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
+import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
@@ -286,7 +286,6 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     private void onEnterStateStartingGame() {
-        context.sounds().stopAll();
         if (level3D != null) {
             stopLevelAnimations();
             level3D.pac3D().init();
