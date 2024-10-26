@@ -4,12 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.dashboard;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.InfoBox;
 import de.amr.games.pacman.ui2d.dashboard.InfoText;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
-import de.amr.games.pacman.ui3d.GameAssets3D;
+import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui3d.GameActions3D;
+import de.amr.games.pacman.ui3d.GameAssets3D;
 import de.amr.games.pacman.ui3d.scene.common.Perspective;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
@@ -58,7 +60,9 @@ public class InfoBox3D extends InfoBox {
         pickerFloorColor     = colorPicker("Floor Color", PY_3D_FLOOR_COLOR.get());
         comboFloorTexture    = comboBox("Floor Texture", floorTextureComboBoxEntries());
         comboPerspectives    = comboBox("Perspective", Perspective.Name.values());
-        labeledValue("Camera", this::currentSceneCameraInfo);
+        labeledValue("Camera",        this::sceneCameraInfo);
+        labeledValue("Viewport Size", this::sceneViewportSizeInfo);
+        labeledValue("Scene Size",    this::sceneSizeInfo);
         cbPiPOn              = checkBox("Picture-In-Picture");
         sliderPiPSceneHeight = slider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get(), false, false);
         sliderPiPOpacity     = slider("- Opacity", 0, 100, PY_PIP_OPACITY_PERCENT.get(), false, false);
@@ -117,7 +121,29 @@ public class InfoBox3D extends InfoBox {
         updateControlsFromProperties();
     }
 
-    private String currentSceneCameraInfo() {
+    private String sceneViewportSizeInfo() {
+        if (context.currentGameScene().isPresent()
+            && context.currentGameScene().get() instanceof CameraControlledGameScene sgs) {
+            return "%.0fx%.0f".formatted(
+                sgs.viewPortWidthProperty().get(),
+                sgs.viewPortHeightProperty().get()
+            );
+        }
+        return InfoText.NO_INFO;
+    }
+
+    private String sceneSizeInfo() {
+        if (context.currentGameScene().isPresent()) {
+            GameScene gameScene = context.currentGameScene().get();
+            Vector2f size = gameScene.size();
+            double scaling = gameScene.scaling();
+            return "%.0fx%.0f (scaled: %.0fx%.0f)".formatted(
+                size.x(), size.y(), size.x() * scaling, size.y() * scaling);
+        }
+        return InfoText.NO_INFO;
+    }
+
+    private String sceneCameraInfo() {
         if (context.currentGameScene().isPresent()
             && context.currentGameScene().get() instanceof CameraControlledGameScene scrollableGameScene) {
             var cam = scrollableGameScene.camera();

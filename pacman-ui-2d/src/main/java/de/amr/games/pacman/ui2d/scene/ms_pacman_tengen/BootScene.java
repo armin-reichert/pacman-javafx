@@ -78,7 +78,7 @@ public class BootScene extends GameScene2D {
 
     @Override
     public Vector2f size() {
-        return new Vector2f(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
+        return new Vector2f(NES_RESOLUTION_X, NES_RESOLUTION_Y);
     }
 
     @Override

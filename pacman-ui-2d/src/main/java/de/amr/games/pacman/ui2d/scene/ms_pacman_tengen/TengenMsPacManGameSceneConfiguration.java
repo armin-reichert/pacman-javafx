@@ -25,9 +25,9 @@ public class TengenMsPacManGameSceneConfiguration implements GameSceneConfig {
     public static final int NES_TILES_X = 32;
     public static final int NES_TILES_Y = 28;
 
-    public static final int NES_SCREEN_WIDTH = 256;
-    public static final int NES_SCREEN_HEIGHT = 224;
-    public static final float NES_ASPECT = 1f * NES_SCREEN_WIDTH / NES_SCREEN_HEIGHT;
+    public static final int NES_RESOLUTION_X = 256;
+    public static final int NES_RESOLUTION_Y = 224;
+    public static final float NES_ASPECT = 1f * NES_RESOLUTION_X / NES_RESOLUTION_Y;
 
     private final Map<String, GameScene> scenesByID = new HashMap<>();
     private final TengenMsPacManGameSpriteSheet spriteSheet;

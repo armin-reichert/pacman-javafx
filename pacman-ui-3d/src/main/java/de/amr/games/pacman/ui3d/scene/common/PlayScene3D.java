@@ -265,7 +265,12 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     @Override
     public Vector2f size() {
-        return ARCADE_MAP_SIZE_IN_PIXELS;
+        return ARCADE_MAP_SIZE_IN_PIXELS; // irrelevant
+    }
+
+    @Override
+    public double scaling() {
+        return 1; // irrelevant
     }
 
     @Override

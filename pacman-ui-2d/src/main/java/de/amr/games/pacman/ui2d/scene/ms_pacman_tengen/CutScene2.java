@@ -21,8 +21,8 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_HEIGHT;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_WIDTH;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_RESOLUTION_Y;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_RESOLUTION_X;
 
 /**
  * Intermission scene 2: "The chase".
@@ -73,7 +73,7 @@ public class CutScene2 extends GameScene2D {
 
     @Override
     public Vector2f size() {
-        return new Vector2f(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
+        return new Vector2f(NES_RESOLUTION_X, NES_RESOLUTION_Y);
     }
 
     @Override

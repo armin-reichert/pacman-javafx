@@ -52,7 +52,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     private final SubScene fxSubScene;
     private final ParallelCamera cam = new ParallelCamera();
-    private final Canvas canvas = new Canvas(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
+    private final Canvas canvas = new Canvas(NES_RESOLUTION_X, NES_RESOLUTION_Y);
     private int camDelay;
 
     public TengenPlayScene2D() {

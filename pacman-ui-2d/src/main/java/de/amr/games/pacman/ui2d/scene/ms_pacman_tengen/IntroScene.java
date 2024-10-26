@@ -28,8 +28,8 @@ import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.*;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_HEIGHT;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_WIDTH;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_RESOLUTION_Y;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_RESOLUTION_X;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
 
 /**
@@ -100,7 +100,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public Vector2f size() {
-        return new Vector2f(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
+        return new Vector2f(NES_RESOLUTION_X, NES_RESOLUTION_Y);
     }
 
     @Override

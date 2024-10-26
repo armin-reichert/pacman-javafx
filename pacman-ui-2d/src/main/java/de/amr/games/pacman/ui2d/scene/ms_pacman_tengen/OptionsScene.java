@@ -22,8 +22,8 @@ import javafx.scene.text.Font;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_BABY_BLUE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_YELLOW;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_HEIGHT;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_SCREEN_WIDTH;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_RESOLUTION_Y;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_RESOLUTION_X;
 import static de.amr.games.pacman.ui2d.util.KeyInput.alt;
 import static de.amr.games.pacman.ui2d.util.KeyInput.shift_alt;
 
@@ -81,7 +81,7 @@ public class OptionsScene extends GameScene2D {
 
     @Override
     public Vector2f size() {
-        return new Vector2f(NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT);
+        return new Vector2f(NES_RESOLUTION_X, NES_RESOLUTION_Y);
     }
     @Override
 
