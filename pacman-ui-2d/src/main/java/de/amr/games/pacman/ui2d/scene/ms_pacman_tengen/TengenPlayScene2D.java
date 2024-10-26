@@ -12,8 +12,8 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameActions2D;
+import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
@@ -47,8 +47,6 @@ import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
  * @author Armin Reichert
  */
 public class TengenPlayScene2D extends GameScene2D implements CameraControlledGameScene {
-
-    static final double RADIUS_FACTOR = 0.4;
 
     private final SubScene fxSubScene;
     private final ParallelCamera cam = new ParallelCamera();
@@ -140,13 +138,20 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         double pacPositionY = scaled(msPacMan.posY());
         double radius = cameraRadius();
         double y = lerp(cam.getTranslateY(), pacPositionY - radius , 0.02);
-        y = clamp(y, -RADIUS_FACTOR * radius, RADIUS_FACTOR * radius);
+        y = clamp(y, -dontAskItsMagic() * radius, dontAskItsMagic() * radius);
         cam.setTranslateY(y);
     }
 
     private void initCamDelay(int ticks) {
         camDelay = ticks;
-        cam.setTranslateY(-RADIUS_FACTOR * cameraRadius());
+        cam.setTranslateY(-dontAskItsMagic() * cameraRadius());
+    }
+
+    private double dontAskItsMagic() {
+        double height = size().y();
+        if (height >= 40*TS) return 0.38;
+        if (height >= 35*TS) return 0.3;
+        return 0.18;
     }
 
     @Override
