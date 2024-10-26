@@ -216,9 +216,9 @@ public class GameAssets2D extends AssetStorage {
         assets.store("pacman.spritesheet",              new PacManGameSpriteSheet(rm.loadImage("graphics/pacman/pacman_spritesheet.png")));
         assets.store("pacman.flashing_maze",            rm.loadImage("graphics/pacman/maze_flashing.png"));
 
-        assets.store("pacman.startpage.image1",         rm.loadImage("graphics/pacman/pacman_flyer1.png"));
-        assets.store("pacman.startpage.image2",         rm.loadImage("graphics/pacman/pacman_flyer2.png"));
-        assets.store("pacman.startpage.image3",         rm.loadImage("graphics/pacman/pacman_flyer3.png"));
+        assets.store("pacman.startpage.image1",         rm.loadImage("graphics/pacman/f1.jpg"));
+        assets.store("pacman.startpage.image2",         rm.loadImage("graphics/pacman/f2.jpg"));
+        assets.store("pacman.startpage.image3",         rm.loadImage("graphics/pacman/f3.jpg"));
 
         assets.store("pacman.helpButton.icon",          rm.loadImage("graphics/icons/help-blue-64.png"));
         assets.store("pacman.icon",                     rm.loadImage("graphics/icons/pacman.png"));
