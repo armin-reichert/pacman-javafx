@@ -16,8 +16,16 @@ import de.amr.games.pacman.ui2d.GameContext;
  */
 public interface GameScene extends GameEventListener, GameActionProvider {
 
+    /**
+     * @return the game scene context
+     */
     GameContext context();
 
+    /**
+     * Sets the game scene context.
+     *
+     * @param context the game scene context
+     */
     void setGameContext(GameContext context);
 
     /**
@@ -35,17 +43,25 @@ public interface GameScene extends GameEventListener, GameActionProvider {
      */
     void end();
 
+    /**
+     * Hook method where actions are bound to keyboard combinations.
+     */
     void bindActions();
 
+    /**
+     * Called on every update tick to handle (keyboard) input.
+     */
     default void handleInput() {
         context().doFirstCalledAction(this);
     }
 
+    /**
+     * @return (unscaled) scene size in pixels e.g. 224x288
+     */
     Vector2f size();
 
     /**
      * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.
      */
     default void onSceneVariantSwitch(GameScene oldScene) {}
-
 }
