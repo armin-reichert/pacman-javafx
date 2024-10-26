@@ -27,9 +27,9 @@ public interface GameEventListener {
             case CUSTOM_MAPS_CHANGED -> onCustomMapsChanged(event);
             case EXTRA_LIFE_WON -> onExtraLifeWon(event);
             case GAME_STATE_CHANGED -> {
-                var changeEvent = (GameStateChangeEvent) event;
-                onGameStateExit(changeEvent.oldState);
-                onGameStateEntry(changeEvent.newState);
+                var stateChangeEvent = (GameStateChangeEvent) event;
+                onExitGameState(stateChangeEvent.oldState);
+                onEnterGameState(stateChangeEvent.newState);
             }
             case GAME_VARIANT_CHANGED -> onGameVariantChanged(event);
             case GHOST_EATEN -> onGhostEaten(event);
@@ -56,8 +56,8 @@ public interface GameEventListener {
     default void onBonusActivated(GameEvent e) {}
     default void onBonusEaten(GameEvent e) {}
     default void onBonusExpired(GameEvent e) {}
-    default void onGameStateExit(GameState state) {}
-    default void onGameStateEntry(GameState state) {}
+    default void onExitGameState(GameState state) {}
+    default void onEnterGameState(GameState state) {}
     default void onGameVariantChanged(GameEvent e) {}
     default void onGhostEaten(GameEvent e) {}
     default void onGhostEntersHouse(GameEvent e) {}

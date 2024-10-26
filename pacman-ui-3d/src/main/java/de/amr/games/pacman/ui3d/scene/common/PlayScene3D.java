@@ -269,23 +269,23 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     @Override
-    public void onGameStateEntry(GameState state) {
-        Logger.info("on game state entry: {}", state);
+    public void onEnterGameState(GameState state) {
+        Logger.info("Entering game state {}", state);
         switch (state) {
-            case STARTING_GAME -> onEnterStateReady();
-            case HUNTING          -> onEnterStateHunting();
-            case PACMAN_DYING     -> onEnterStatePacManDying();
-            case GHOST_DYING      -> onEnterStateGhostDying();
-            case LEVEL_COMPLETE   -> onEnterStateLevelComplete();
-            case LEVEL_TRANSITION -> onEnterStateLevelTransition();
-            case TESTING_LEVEL_BONI -> onEnterStateTestingLevelBoni();
+            case STARTING_GAME         -> onEnterStateStartingGame();
+            case HUNTING               -> onEnterStateHunting();
+            case PACMAN_DYING          -> onEnterStatePacManDying();
+            case GHOST_DYING           -> onEnterStateGhostDying();
+            case LEVEL_COMPLETE        -> onEnterStateLevelComplete();
+            case LEVEL_TRANSITION      -> onEnterStateLevelTransition();
+            case TESTING_LEVEL_BONI    -> onEnterStateTestingLevelBoni();
             case TESTING_LEVEL_TEASERS -> onEnterStateTestingLevelTeasers();
-            case GAME_OVER        -> onEnterStateGameOver();
+            case GAME_OVER             -> onEnterStateGameOver();
             default -> {}
         }
     }
 
-    private void onEnterStateReady() {
+    private void onEnterStateStartingGame() {
         context.sounds().stopAll();
         if (level3D != null) {
             stopLevelAnimations();

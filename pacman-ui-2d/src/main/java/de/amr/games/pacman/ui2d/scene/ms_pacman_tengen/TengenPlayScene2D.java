@@ -261,7 +261,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     }
 
     @Override
-    public void onGameStateEntry(GameState state) {
+    public void onEnterGameState(GameState state) {
         switch (state) {
             //TOD check this. GameState can publish an event to stop all sounds.
             case STARTING_GAME, LEVEL_COMPLETE, PACMAN_DYING -> context.sounds().stopAll();
