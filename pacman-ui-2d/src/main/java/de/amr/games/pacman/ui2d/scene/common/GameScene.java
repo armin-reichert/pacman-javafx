@@ -8,7 +8,6 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.ui2d.GameActionProvider;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 
 /**
  * Common interface of all game scenes (2D and 3D).
@@ -43,12 +42,6 @@ public interface GameScene extends GameEventListener, GameActionProvider {
     }
 
     Vector2f size();
-
-    /**
-     * Draws the scene content using the given renderer (2D-only.
-     * @param renderer world renderer (for current game variant)
-     */
-    default void draw(GameRenderer renderer) {}
 
     /**
      * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.

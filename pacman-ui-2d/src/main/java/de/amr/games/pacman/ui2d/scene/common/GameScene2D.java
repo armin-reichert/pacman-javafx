@@ -58,8 +58,9 @@ public abstract class GameScene2D implements GameScene {
     public void setBackgroundColor(Color color) { backgroundColorPy.set(color); }
     public Color backgroundColor() { return backgroundColorPy.get(); }
 
-    protected abstract void doInit();
+    protected void doInit() {}
     protected void doEnd() {}
+
     protected abstract void drawSceneContent(GameRenderer renderer);
     protected void drawDebugInfo(GameRenderer renderer) {}
 
@@ -76,7 +77,6 @@ public abstract class GameScene2D implements GameScene {
         unregister(context().keyboard());
     }
 
-    @Override
     public void draw(GameRenderer renderer) {
         renderer.scalingProperty().set(scaling());
         renderer.setBackgroundColor(backgroundColor());

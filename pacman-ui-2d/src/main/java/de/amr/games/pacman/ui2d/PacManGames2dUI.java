@@ -189,7 +189,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected void runOnEveryTick() {
         try {
             if (currentPage == gamePage) {
-                currentGameScene().ifPresent(gameScene -> gameScene.draw(currentGameSceneConfig().renderer()));
+                currentGameScene().ifPresent(gameScene -> {
+                    if (gameScene instanceof  GameScene2D gameScene2D) {
+                        gameScene2D.draw(currentGameSceneConfig().renderer());
+                    }
+                });
                 gamePage.updateDashboard();
                 flashMessageLayer.update();
             } else {
