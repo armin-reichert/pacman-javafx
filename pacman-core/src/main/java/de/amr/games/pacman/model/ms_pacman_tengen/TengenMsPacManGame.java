@@ -585,6 +585,17 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     @Override
+    public void letsGetReadyToRumble() {
+        super.letsGetReadyToRumble();
+        // ghosts inside start at floor of house
+        ghosts().forEach(ghost -> {
+           if (ghost.insideHouse()) {
+               ghost.setPosY(world.houseFloorY() - HTS);
+           }
+        });
+    }
+
+    @Override
     public int numFlashes() {
         return currentLevelData.numFlashes();
     }
