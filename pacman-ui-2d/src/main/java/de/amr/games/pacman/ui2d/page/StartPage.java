@@ -143,9 +143,18 @@ public class StartPage extends StackPane implements Page {
         this.context = checkNotNull(context);
         AssetStorage assets = context.assets();
 
-        msPacManFlyer = new Flyer(assets.image("ms_pacman.startpage.image1"), assets.image("ms_pacman.startpage.image2"));
-        pacManFlyer   = new Flyer(assets.image("pacman.startpage.image1"),    assets.image("pacman.startpage.image2"));
-        tengenFlyer   = new Flyer(assets.image("tengen.startpage.image1"),    assets.image("tengen.startpage.image2"));
+        msPacManFlyer = new Flyer(
+            assets.image("ms_pacman.startpage.image1"),
+            assets.image("ms_pacman.startpage.image2"));
+
+        pacManFlyer = new Flyer(
+            assets.image("pacman.startpage.image1"),
+            assets.image("pacman.startpage.image2"),
+            assets.image("pacman.startpage.image3"));
+
+        tengenFlyer = new Flyer(
+            assets.image("tengen.startpage.image1"),
+            assets.image("tengen.startpage.image2"));
 
         Button btnPrevVariant = createCarouselButton(assets.image("startpage.arrow.left"));
         btnPrevVariant.setOnAction(e -> actionPrevVariant.execute(context));
