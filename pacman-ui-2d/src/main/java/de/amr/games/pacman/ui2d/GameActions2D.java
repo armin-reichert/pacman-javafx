@@ -180,14 +180,7 @@ public enum GameActions2D implements GameAction {
     TENGEN_SHOW_OPTIONS { // (key(KeyCode.S)) {
         @Override
         public void execute(GameContext context) {
-            context.sounds().stopAll();
-            context.currentGameScene().ifPresent(GameScene::end);
             context.game().setPlaying(false);
-
-            //TODO check this
-            TengenMsPacManGame tengenMsPacManGame = (TengenMsPacManGame) context.game();
-            tengenMsPacManGame.setCanStartGame(true);
-
             context.gameController().changeState(GameState.WAITING_FOR_START);
         }
     },
