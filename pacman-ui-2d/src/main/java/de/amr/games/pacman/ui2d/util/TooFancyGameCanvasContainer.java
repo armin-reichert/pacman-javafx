@@ -120,7 +120,7 @@ public class TooFancyGameCanvasContainer extends BorderPane {
         setPrefSize(width, height);
         setScaling(newScaling);
 
-        Logger.info("Unscaled canvas size: w={0.0} h={0.0}", unscaledCanvasWidth(), unscaledCanvasHeight());
+        Logger.debug("Unscaled canvas size: w={0.0} h={0.0}", unscaledCanvasWidth(), unscaledCanvasHeight());
         Logger.info("Canvas size: w={0.0} h={0.0} aspect={0.00} scaling={0.00}",
             canvas.getWidth(), canvas.getHeight(), canvas.getWidth() / canvas.getHeight(), scaling());
     }

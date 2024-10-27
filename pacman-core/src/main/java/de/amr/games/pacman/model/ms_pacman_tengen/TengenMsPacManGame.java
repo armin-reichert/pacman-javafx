@@ -313,8 +313,8 @@ public class TengenMsPacManGame extends GameModel {
             case 10,11,12,13 -> setMapAndColorScheme(arcadeMaps, 4, BLUE_YELLOW);
             case 14,15,16,17 -> setMapAndColorScheme(arcadeMaps, 3, PINK_YELLOW);
             case 18,19,20,21 -> setMapAndColorScheme(arcadeMaps, 4, PINK_DARKRED);
-            case 22,23,24,25 -> setMapAndColorScheme(arcadeMaps, 3, ORANGE_WHITE);
-            case 26,27,28,29 -> setMapAndColorScheme(arcadeMaps, 4, VIOLET_WHITE);
+            case 22,23,24,25 -> setMapAndColorScheme(arcadeMaps, 3, BROWN2_WHITE);
+            case 26,27,28,29 -> setMapAndColorScheme(arcadeMaps, 4, VIOLET_WHITE_YELLOW);
             case 30,31,32    -> setMapAndColorScheme(arcadeMaps, 3, BLACK_WHITE_YELLOW);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
@@ -632,7 +632,8 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public int numFlashes() {
-        return currentLevelData.numFlashes();
+        //TODO need to find out what Tengen does
+        return 5;
     }
 
     @Override
