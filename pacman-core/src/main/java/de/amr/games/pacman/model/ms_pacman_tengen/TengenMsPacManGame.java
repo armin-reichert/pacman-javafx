@@ -318,45 +318,37 @@ public class TengenMsPacManGame extends GameModel {
         switch (levelNumber) {
             case 1  -> setMapAndColorScheme(miniMaps, 1, MSC_PINK_36_RED_15_WHITE_20);
             case 2  -> setMapAndColorScheme(miniMaps, 2, MSC_BLUE_21_WHITE_20_YELLOW_28);
-
             case 3  -> setMapAndColorScheme(miniMaps, 1, MSC_ORANGE_16_WHITE_20_RED_15);
             case 4  -> setMapAndColorScheme(miniMaps, 2, MSC_BLUE_01_YELLOW_28_WHITE_20);
             case 5  -> setMapAndColorScheme(miniMaps, 3, MSC_PINK_35_YELLOW_28_WHITE_20);
-
             case 6  -> setMapAndColorScheme(miniMaps, 1, MSC_PINK_36_RED_15_WHITE_20);
             case 7  -> setMapAndColorScheme(miniMaps, 2, MSC_BROWN_17_WHITE_20_WHITE_20);
             case 8  -> setMapAndColorScheme(miniMaps, 3, MSC_VIOLET_13_WHITE_20_YELLOW_28);
             case 9  -> setMapAndColorScheme(miniMaps, 4, MSC_BLACK_0F_WHITE_20_YELLOW_28);
-
             case 10 -> setMapAndColorScheme(miniMaps, 1, MSC_BLACK_0F_BLUE_01_WHITE_20);
             case 11 -> setMapAndColorScheme(miniMaps, 2, MSC_VIOLET_14_PINK_24_WHITE_20);
             case 12 -> setMapAndColorScheme(miniMaps, 3, MSC_RED_15_WHITE_20_WHITE_20);
             case 13 -> setMapAndColorScheme(miniMaps, 4, MSC_GREEN_1B_WHITE_20_WHITE_20);
-
             case 14 -> setMapAndColorScheme(miniMaps, 1, MSC_YELLOW_28_WHITE_20_GREEN_2A);
             case 15 -> setMapAndColorScheme(miniMaps, 2, MSC_GREEN_1A_WHITE_20_YELLOW_28);
             case 16 -> setMapAndColorScheme(miniMaps, 3, MSC_KHAKI_18_WHITE_20_WHITE_20);
             case 17 -> setMapAndColorScheme(miniMaps, 4, MSC_ROSE_25_WHITE_20_WHITE_20);
             case 18 -> setMapAndColorScheme(miniMaps, 5, MSC_BLUE_12_WHITE_20_YELLOW_28);
-
             case 19 -> setMapAndColorScheme(miniMaps, 5, MSC_BROWN_07_WHITE_20_WHITE_20);
             case 20 -> setMapAndColorScheme(miniMaps, 4, MSC_RED_15_ROSE_25_PINK_35);
             case 21 -> setMapAndColorScheme(miniMaps, 3, MSC_BLACK_0F_WHITE_20_GREEN_1C);
             case 22 -> setMapAndColorScheme(miniMaps, 2, MSC_GREEN_1B_WHITE_20_WHITE_20);
             case 23 -> setMapAndColorScheme(miniMaps, 1, MSC_GREEN_0C_WHITE_20_VIOLET_23);
-
             case 24 -> setMapAndColorScheme(miniMaps, 6, MSC_VIOLET_23_WHITE_20_GREEN_2B);
-
             case 25 -> setMapAndColorScheme(miniMaps, 1, MSC_GRAY_10_WHITE_20_YELLOW_28);
-            case 26 -> setMapAndColorScheme(miniMaps, 2, MSC_BLUE_03_WHITE_20_WHITE_20);
+            case 26 -> setMapAndColorScheme(miniMaps, 2, MSC_VIOLET_04_WHITE_20_WHITE_20);
+            //TODO from here on the color schemes differ from the ones for BIG mazes. Are they selected randomly?
             case 27 -> setMapAndColorScheme(miniMaps, 3, MSC_VIOLET_04_WHITE_20_WHITE_20);
             case 28 -> setMapAndColorScheme(miniMaps, 4, MSC_BROWN_17_WHITE_20_WHITE_20);
             case 29 -> setMapAndColorScheme(miniMaps, 5, MSC_BROWN_17_WHITE_20_WHITE_20);
-
             case 30 -> setMapAndColorScheme(miniMaps, 2, MSC_BLUE_01_YELLOW_28_WHITE_20);
             case 31 -> setMapAndColorScheme(miniMaps, 3, MSC_BLACK_0F_WHITE_20_GREEN_1C);
             case 32 -> setMapAndColorScheme(miniMaps, 6, MSC_RED_15_ROSE_25_PINK_35);
-
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
     }
@@ -366,52 +358,39 @@ public class TengenMsPacManGame extends GameModel {
      */
     private void selectBigMapForLevel(int levelNumber) {
         switch (levelNumber) {
-            // 1-5
             case 1  -> setMapAndColorScheme(strangeOrBigMaps, 19, MSC_PINK_36_RED_15_WHITE_20);
             case 2  -> setMapAndColorScheme(strangeOrBigMaps, 20, MSC_BLUE_21_WHITE_20_YELLOW_28);
             case 3  -> setMapAndColorScheme(strangeOrBigMaps, 21, MSC_ORANGE_16_WHITE_20_RED_15);
             case 4  -> setMapAndColorScheme(strangeOrBigMaps, 19, MSC_BLUE_01_YELLOW_28_WHITE_20);
             case 5  -> setMapAndColorScheme(strangeOrBigMaps, 20, MSC_PINK_35_YELLOW_28_WHITE_20);
-
-            // 6-10
             case 6  -> setMapAndColorScheme(strangeOrBigMaps, 21, MSC_PINK_36_RED_15_WHITE_20);
             case 7  -> setMapAndColorScheme(strangeOrBigMaps, 22, MSC_BROWN_17_WHITE_20_WHITE_20);
             case 8  -> setMapAndColorScheme(strangeOrBigMaps, 23, MSC_VIOLET_13_WHITE_20_YELLOW_28);
             case 9  -> setMapAndColorScheme(strangeOrBigMaps, 17, MSC_BLACK_0F_WHITE_20_YELLOW_28);
             case 10 -> setMapAndColorScheme(strangeOrBigMaps, 10, MSC_BLACK_0F_BLUE_01_WHITE_20);
-
-            // 11-15
             case 11 -> setMapAndColorScheme(strangeOrBigMaps, 23, MSC_RED_15_ROSE_25_WHITE_20);
             case 12 -> setMapAndColorScheme(strangeOrBigMaps, 21, MSC_ROSE_25_WHITE_20_WHITE_20);
             case 13 -> setMapAndColorScheme(strangeOrBigMaps, 22, MSC_GREEN_1B_WHITE_20_WHITE_20);
-            case 14 -> setMapAndColorScheme(strangeOrBigMaps, 14, MSC_VIOLET_23_WHITE_20_GREEN_2B);
+            case 14 -> setMapAndColorScheme(strangeOrBigMaps, 14, MSC_YELLOW_28_WHITE_20_GREEN_2A);
             case 15 -> setMapAndColorScheme(strangeOrBigMaps, 20, MSC_GREEN_1A_WHITE_20_YELLOW_28);
-
-            // 16-20
             case 16 -> setMapAndColorScheme(strangeOrBigMaps, 19, MSC_KHAKI_18_WHITE_20_WHITE_20);
             case 17 -> setMapAndColorScheme(strangeOrBigMaps, 10, MSC_ROSE_25_WHITE_20_WHITE_20);
             case 18 -> setMapAndColorScheme(strangeOrBigMaps, 17, MSC_BLUE_12_WHITE_20_YELLOW_28);
             case 19 -> setMapAndColorScheme(strangeOrBigMaps, 10, MSC_BROWN_07_WHITE_20_WHITE_20);
             case 20 -> setMapAndColorScheme(strangeOrBigMaps, 19, MSC_RED_15_ROSE_25_WHITE_20);
-
-            // 21-25
             case 21 -> setMapAndColorScheme(strangeOrBigMaps, 26, MSC_BLACK_0F_WHITE_20_GREEN_1C);
             case 22 -> setMapAndColorScheme(strangeOrBigMaps, 21, MSC_GREEN_1B_WHITE_20_WHITE_20);
             case 23 -> setMapAndColorScheme(strangeOrBigMaps, 22, MSC_GREEN_0C_WHITE_20_VIOLET_23);
             case 24 -> setMapAndColorScheme(strangeOrBigMaps, 23, MSC_VIOLET_23_WHITE_20_GREEN_2B);
             case 25 -> setMapAndColorScheme(strangeOrBigMaps, 14, MSC_GRAY_10_WHITE_20_YELLOW_28);
-
-            // 26-30
             case 26 -> setMapAndColorScheme(strangeOrBigMaps, 25, MSC_VIOLET_04_WHITE_20_WHITE_20);
+            //TODO from here on the color schemes differ from the ones for MINI mazes. Are they selected randomly?
             case 27 -> setMapAndColorScheme(strangeOrBigMaps, 14, MSC_ROSE_25_WHITE_20_WHITE_20);
             case 28 -> setMapAndColorScheme(strangeOrBigMaps, 23, MSC_GREEN_1B_WHITE_20_WHITE_20);
             case 29 -> setMapAndColorScheme(strangeOrBigMaps, 26, MSC_BLUE_21_WHITE_20_YELLOW_28);
             case 30 -> setMapAndColorScheme(strangeOrBigMaps, 20, MSC_PINK_35_YELLOW_28_WHITE_20);
-
-            // 31-32
             case 31 -> setMapAndColorScheme(strangeOrBigMaps, 25, MSC_RED_15_ROSE_25_WHITE_20);
             case 32 -> setMapAndColorScheme(strangeOrBigMaps, 33, MSC_RED_15_ROSE_25_WHITE_20);
-
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
     }
