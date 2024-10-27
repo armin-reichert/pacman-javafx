@@ -6,6 +6,7 @@ package de.amr.games.pacman.model.ms_pacman_tengen;
 
 import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEventType;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.MapColorScheme;
@@ -47,7 +48,6 @@ public class TengenMsPacManGame extends GameModel {
     private static final MapColorScheme MSC_BLACK_0F_WHITE_20_YELLOW_28  = scheme(0x0f, 0x20, 0x28);
     private static final MapColorScheme MSC_BLACK_0F_BLUE_01_WHITE_20    = scheme(0x0f, 0x01, 0x20);
     private static final MapColorScheme MSC_BLUE_01_YELLOW_28_WHITE_20   = scheme(0x01, 0x38, 0x20);
-    private static final MapColorScheme MSC_BLUE_03_WHITE_20_WHITE_20    = scheme(0x03, 0x20, 0x20);
     private static final MapColorScheme MSC_BLUE_12_WHITE_20_YELLOW_28   = scheme(0x12, 0x20, 0x28);
     private static final MapColorScheme MSC_BLUE_21_WHITE_20_YELLOW_28   = scheme(0x21, 0x20, 0x28);
     private static final MapColorScheme MSC_BROWN_07_WHITE_20_WHITE_20   = scheme(0x07, 0x20, 0x20);
@@ -69,6 +69,40 @@ public class TengenMsPacManGame extends GameModel {
     private static final MapColorScheme MSC_VIOLET_14_PINK_24_WHITE_20   = scheme(0x14, 0x24, 0x20);
     private static final MapColorScheme MSC_VIOLET_23_WHITE_20_GREEN_2B  = scheme(0x23, 0x20, 0x2b);
     private static final MapColorScheme MSC_YELLOW_28_WHITE_20_GREEN_2A  = scheme(0x28, 0x20, 0x2a);
+
+    // The order used by the levels
+    private static final MapColorScheme[] MAP_COLOR_SCHEMES = {
+        MSC_PINK_36_RED_15_WHITE_20,
+        MSC_BLUE_21_WHITE_20_YELLOW_28,
+        MSC_ORANGE_16_WHITE_20_RED_15,
+        MSC_BLUE_01_YELLOW_28_WHITE_20,
+        MSC_PINK_35_YELLOW_28_WHITE_20,
+        MSC_PINK_36_RED_15_WHITE_20,
+        MSC_BROWN_17_WHITE_20_WHITE_20,
+        MSC_VIOLET_13_WHITE_20_YELLOW_28,
+        MSC_BLACK_0F_WHITE_20_YELLOW_28,
+        MSC_BLACK_0F_BLUE_01_WHITE_20,
+        MSC_VIOLET_14_PINK_24_WHITE_20,
+        MSC_RED_15_WHITE_20_WHITE_20,
+        MSC_GREEN_1B_WHITE_20_WHITE_20,
+        MSC_YELLOW_28_WHITE_20_GREEN_2A,
+        MSC_GREEN_1A_WHITE_20_YELLOW_28,
+        MSC_KHAKI_18_WHITE_20_WHITE_20,
+        MSC_ROSE_25_WHITE_20_WHITE_20,
+        MSC_BLUE_12_WHITE_20_YELLOW_28,
+        MSC_BROWN_07_WHITE_20_WHITE_20,
+        MSC_RED_15_ROSE_25_PINK_35,
+        MSC_BLACK_0F_WHITE_20_GREEN_1C,
+        MSC_GREEN_1B_WHITE_20_WHITE_20,
+        MSC_GREEN_0C_WHITE_20_VIOLET_23,
+        MSC_VIOLET_23_WHITE_20_GREEN_2B,
+        MSC_GRAY_10_WHITE_20_YELLOW_28,
+        MSC_VIOLET_04_WHITE_20_WHITE_20,
+    };
+
+    private static MapColorScheme randomMapColorScheme() {
+        return MAP_COLOR_SCHEMES[Globals.randomInt(0, MAP_COLOR_SCHEMES.length)];
+    }
 
     static final String MAPS_ROOT = "/de/amr/games/pacman/maps/tengen/";
 
@@ -342,12 +376,12 @@ public class TengenMsPacManGame extends GameModel {
             case 24 -> setMapAndColorScheme(miniMaps, 6, MSC_VIOLET_23_WHITE_20_GREEN_2B);
             case 25 -> setMapAndColorScheme(miniMaps, 1, MSC_GRAY_10_WHITE_20_YELLOW_28);
             case 26 -> setMapAndColorScheme(miniMaps, 2, MSC_VIOLET_04_WHITE_20_WHITE_20);
-            //TODO from here on the color schemes differ from the ones for BIG mazes. Are they selected randomly?
-            case 27 -> setMapAndColorScheme(miniMaps, 3, MSC_VIOLET_04_WHITE_20_WHITE_20);
-            case 28 -> setMapAndColorScheme(miniMaps, 4, MSC_BROWN_17_WHITE_20_WHITE_20);
-            case 29 -> setMapAndColorScheme(miniMaps, 5, MSC_BROWN_17_WHITE_20_WHITE_20);
-            case 30 -> setMapAndColorScheme(miniMaps, 2, MSC_BLUE_01_YELLOW_28_WHITE_20);
-            case 31 -> setMapAndColorScheme(miniMaps, 3, MSC_BLACK_0F_WHITE_20_GREEN_1C);
+            // from here(?) or from 28(?) the color schemes are randomly selected
+            case 27 -> setMapAndColorScheme(miniMaps, 3, randomMapColorScheme());
+            case 28 -> setMapAndColorScheme(miniMaps, 4, randomMapColorScheme());
+            case 29 -> setMapAndColorScheme(miniMaps, 5, randomMapColorScheme());
+            case 30 -> setMapAndColorScheme(miniMaps, 2, randomMapColorScheme());
+            case 31 -> setMapAndColorScheme(miniMaps, 3, randomMapColorScheme());
             case 32 -> setMapAndColorScheme(miniMaps, 6, MSC_RED_15_ROSE_25_PINK_35);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
@@ -385,11 +419,11 @@ public class TengenMsPacManGame extends GameModel {
             case 25 -> setMapAndColorScheme(strangeOrBigMaps, 14, MSC_GRAY_10_WHITE_20_YELLOW_28);
             case 26 -> setMapAndColorScheme(strangeOrBigMaps, 25, MSC_VIOLET_04_WHITE_20_WHITE_20);
             //TODO from here on the color schemes differ from the ones for MINI mazes. Are they selected randomly?
-            case 27 -> setMapAndColorScheme(strangeOrBigMaps, 14, MSC_ROSE_25_WHITE_20_WHITE_20);
-            case 28 -> setMapAndColorScheme(strangeOrBigMaps, 23, MSC_GREEN_1B_WHITE_20_WHITE_20);
-            case 29 -> setMapAndColorScheme(strangeOrBigMaps, 26, MSC_BLUE_21_WHITE_20_YELLOW_28);
-            case 30 -> setMapAndColorScheme(strangeOrBigMaps, 20, MSC_PINK_35_YELLOW_28_WHITE_20);
-            case 31 -> setMapAndColorScheme(strangeOrBigMaps, 25, MSC_RED_15_ROSE_25_WHITE_20);
+            case 27 -> setMapAndColorScheme(strangeOrBigMaps, 14, randomMapColorScheme());
+            case 28 -> setMapAndColorScheme(strangeOrBigMaps, 23, randomMapColorScheme());
+            case 29 -> setMapAndColorScheme(strangeOrBigMaps, 26, randomMapColorScheme());
+            case 30 -> setMapAndColorScheme(strangeOrBigMaps, 20, randomMapColorScheme());
+            case 31 -> setMapAndColorScheme(strangeOrBigMaps, 25, randomMapColorScheme());
             case 32 -> setMapAndColorScheme(strangeOrBigMaps, 33, MSC_RED_15_ROSE_25_WHITE_20);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
