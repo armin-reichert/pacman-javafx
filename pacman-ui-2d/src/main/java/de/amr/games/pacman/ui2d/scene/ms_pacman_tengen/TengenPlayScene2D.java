@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameActions2D;
-import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
@@ -41,6 +40,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
+import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_YELLOW;
@@ -226,17 +226,15 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     }
 
     private void drawLevelMessage(GameRenderer renderer, int cx, int y) {
-        AssetStorage assets = context().assets();
+        AssetStorage assets = context.assets();
         GameState state = context.gameState();
         GameModel game = context.game();
-        String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
-
         if (game.isDemoLevel()) {
             drawText(renderer, "GAME  OVER", cx, y, Color.web(game.currentMapColorScheme().stroke()));
         } else if (state == GameState.GAME_OVER) {
-            drawText(renderer, "GAME  OVER", cx, y, assets.color(assetPrefix + ".color.game_over_message"));
+            drawText(renderer, "GAME  OVER", cx, y, assets.color(assetPrefix(context.gameVariant()) + ".color.game_over_message"));
         } else if (state == GameState.STARTING_GAME) {
-            drawText(renderer, "READY!", cx, y, assets.color(assetPrefix + ".color.ready_message"));
+            drawText(renderer, "READY!", cx, y, assets.color(assetPrefix(context.gameVariant()) + ".color.ready_message"));
         } else if (state == GameState.TESTING_LEVEL_BONI) {
             drawText(renderer, "TEST L%02d".formatted(game.currentLevelNumber()), cx, y, TENGEN_YELLOW);
         }
