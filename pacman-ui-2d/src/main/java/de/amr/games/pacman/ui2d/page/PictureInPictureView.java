@@ -47,9 +47,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         playScene2D = new PlayScene2D() {
             @Override
             public Vector2f size() {
-                return context.gameVariant() != GameVariant.MS_PACMAN_TENGEN
-                ? super.size()
-                : super.size().plus(0, 2*TS);
+            return context.gameVariant() != GameVariant.MS_PACMAN_TENGEN ? super.size() : super.size().plus(0, 2 * TS);
             }
         };
 
@@ -70,12 +68,12 @@ public class PictureInPictureView extends VBox implements GameEventListener {
                 recomputeLayout();
             }
         });
+    }
 
-        context.gameVariantProperty().addListener((py,ov,variant) -> {
-            renderer = context.currentGameSceneConfig().renderer().copy();
-            renderer.setCanvas(canvas);
-            renderer.update(context.game());
-        });
+    public void updateRenderer() {
+        renderer = context.currentGameSceneConfig().renderer().copy();
+        renderer.setCanvas(canvas);
+        renderer.update(context.game());
     }
 
     @Override

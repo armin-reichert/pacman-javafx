@@ -7,9 +7,9 @@ package de.amr.games.pacman.ui2d;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
@@ -30,16 +30,17 @@ public interface GameContext {
 
     // Game model and controller
     default GameController      gameController() { return GameController.it(); }
-    default GameState           gameState() { return GameController.it().state(); }
-    ObjectProperty<GameVariant> gameVariantProperty();
-    default GameVariant         gameVariant() { return GameController.it().currentGame().variant(); }
+    default GameState           gameState() { return gameController().state(); }
+    default GameModel           game() { return gameController().currentGame(); }
+    default GameVariant         gameVariant() { return game().variant(); }
     void                        selectGameVariant(GameVariant variant);
-    default GameModel           game() { return GameController.it().currentGame(); }
+    default Vector2i            worldSizeInTilesOrElse(Vector2i defaultSize) {
+        if (game().world() == null) { return defaultSize; }
+        TileMap terrain = game().world().map().terrain();
+        return new Vector2i(terrain.numCols(), terrain.numRows());
+    }
     void                        setScoreVisible(boolean visible);
     boolean                     isScoreVisible();
-    default Vector2i            worldSizeInTiles(GameWorld world, Vector2i defaultSize) {
-        return world != null ? new Vector2i(world.map().terrain().numCols(), world.map().terrain().numRows()) : defaultSize;
-    }
 
     // UI
     Keyboard                    keyboard();

@@ -269,6 +269,7 @@ public class GamePage extends StackPane implements Page {
             embedGameScene(gameScene);
         }
         contextMenu.hide();
+        dashboardLayer.getPip().updateRenderer();
     }
 
     public void embedGameScene(GameScene gameScene) {

@@ -76,7 +76,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
-    public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
+    protected final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
         @Override
         protected void invalidated() {
             handleGameVariantChange(get());
@@ -259,11 +259,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             stage.getIcons().setAll(icon);
         }
         sounds().init(variant);
-        if (gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            gamePage.gameCanvasContainer().decorationEnabledPy.set(false);
-        } else {
-            gamePage.gameCanvasContainer().decorationEnabledPy.set(true);
-        }
+        gamePage.gameCanvasContainer().decorationEnabledPy.set(gameVariant() != GameVariant.MS_PACMAN_TENGEN);
     }
 
     protected ObservableValue<String> stageTitleBinding() {
@@ -339,11 +335,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public GameClockFX gameClock() {
         return clock;
-    }
-
-    @Override
-    public ObjectProperty<GameVariant> gameVariantProperty() {
-        return gameVariantPy;
     }
 
     @Override

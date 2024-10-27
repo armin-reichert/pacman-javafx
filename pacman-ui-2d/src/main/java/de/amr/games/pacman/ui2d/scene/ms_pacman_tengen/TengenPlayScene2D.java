@@ -18,7 +18,6 @@ import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Pos;
 import javafx.scene.*;
@@ -135,28 +134,27 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             --camDelay;
             return;
         }
-        double pacPositionY = scaled(msPacMan.posY());
+        double pacPositionY = scaled(msPacMan.center().y());
         double radius = cameraRadius();
         double y = lerp(cam.getTranslateY(), pacPositionY - radius , 0.02);
-        y = clamp(y, -dontAskItsMagic() * radius, dontAskItsMagic() * radius);
-        cam.setTranslateY(y);
+        cam.setTranslateY(clamp(y, dontAskItsMagic(-radius), dontAskItsMagic(radius)));
     }
 
     private void initCamDelay(int ticks) {
         camDelay = ticks;
-        cam.setTranslateY(-dontAskItsMagic() * cameraRadius());
+        cam.setTranslateY(dontAskItsMagic(-cameraRadius()));
     }
 
-    private double dontAskItsMagic() {
+    private double dontAskItsMagic(double radius) {
         double height = size().y();
-        if (height >= 40*TS) return 0.38;
-        if (height >= 35*TS) return 0.3;
-        return 0.18;
+        if (height >= 40 * TS) return 0.38 * radius;
+        if (height >= 35 * TS) return 0.30 * radius;
+        return 0.18 * radius;
     }
 
     @Override
     public Vector2f size() {
-        Vector2i worldSizeInTiles = context.worldSizeInTiles(context.game().world(), new Vector2i(NES_TILES_X, NES_TILES_Y));
+        Vector2i worldSizeInTiles = context.worldSizeInTilesOrElse(new Vector2i(NES_TILES_X, NES_TILES_Y));
         return worldSizeInTiles.plus(0, 2).scaled(TS).toVector2f(); // maybe change all maps to have 4 empty rows under maze?
     }
 

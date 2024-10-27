@@ -92,7 +92,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public Vector2f size() {
-        return context.worldSizeInTiles(context.game().world(), ARCADE_MAP_SIZE_IN_TILES).scaled(TS).toVector2f();
+        return context.worldSizeInTilesOrElse(ARCADE_MAP_SIZE_IN_TILES).scaled(TS).toVector2f();
     }
 
     @Override
