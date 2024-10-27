@@ -221,6 +221,7 @@ public class PacManArcadeGame extends GameModel {
             ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
             ghost.setCannotMoveUpTiles(CANNOT_MOVE_UP_TILES);
         });
+        cruiseElroy = 0;
     }
 
     @Override
@@ -228,6 +229,7 @@ public class PacManArcadeGame extends GameModel {
         buildLevel(1);
         pac.setAutopilot(new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE)));
         pac.setUseAutopilot(true);
+        cruiseElroy = 0;
     }
 
     @Override
