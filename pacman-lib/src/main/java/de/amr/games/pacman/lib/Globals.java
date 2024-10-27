@@ -164,6 +164,10 @@ public class Globals {
         return n % 2 != 0;
     }
 
+    public static boolean inRange(int n, int from, int to) {
+        return from <= n && n <= to;
+    }
+
     /**
      * @param value1 value1
      * @param value2 value2
