@@ -469,7 +469,7 @@ public class MsPacManArcadeGame extends GameModel {
 
     private float huntingSpeed(Ghost ghost) {
         LevelData level = levelData(currentLevelNumber);
-        if (world.isTunnel(ghost.tile())) {
+        if (world.isTunnel(ghost.tile()) && currentLevelNumber <= 3) {
             return level.ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
         }
         if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
