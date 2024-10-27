@@ -73,8 +73,8 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void doInit() {
-        canvas.widthProperty().bind(Bindings.createDoubleBinding(() -> scaled(size().x()), scalingProperty()));
-        canvas.heightProperty().bind(Bindings.createDoubleBinding(() -> scaled(size().y()), scalingProperty()));
+        canvas.widthProperty().bind(scalingProperty().map(scaling -> scaled(size().x())));
+        canvas.heightProperty().bind(scalingProperty().map(scaling -> scaled(size().y())));
     }
 
     @Override
