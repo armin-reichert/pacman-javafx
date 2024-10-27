@@ -637,7 +637,12 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public int intermissionNumberAfterLevel() {
-        return currentLevelData.intermissionNumber();
+        return switch (currentLevelNumber) {
+            case 2 -> 1;
+            case 5 -> 2;
+            case 9, 13, 17 -> 3; // TODO not sure what happens in later levels
+            default -> 0;
+        };
     }
 
     /** In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
