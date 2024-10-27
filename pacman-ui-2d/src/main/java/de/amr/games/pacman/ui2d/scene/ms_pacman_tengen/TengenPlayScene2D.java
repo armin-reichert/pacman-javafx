@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
@@ -18,6 +19,7 @@ import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui2d.sound.GameSounds;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Camera;
@@ -75,6 +77,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void doInit() {
+        context.setScoreVisible(true);
         canvas.widthProperty().bind(scalingProperty().map(scaling -> scaled(size().x())));
         canvas.heightProperty().bind(scalingProperty().map(scaling -> scaled(size().y())));
     }
@@ -82,7 +85,6 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     @Override
     protected void doEnd() {
         context.sounds().stopAll();
-        //((TengenMsPacManGame) context.game()).setCanStartGame(true);
     }
 
     @Override
@@ -91,13 +93,14 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             Logger.warn("Cannot update PlayScene2D: no game level available");
             return;
         }
-        context.setScoreVisible(true);
+        //TODO: Can world or Ms. Pac-Man be null here?
+        Pac msPacMan = context.game().pac();
         if (context.game().isDemoLevel()) {
-            context.game().pac().setUseAutopilot(true);
-            context.game().pac().setImmune(false);
+            msPacMan.setUseAutopilot(true);
+            msPacMan.setImmune(false);
         } else {
-            context.game().pac().setUseAutopilot(PY_AUTOPILOT.get());
-            context.game().pac().setImmune(PY_IMMUNITY.get());
+            msPacMan.setUseAutopilot(PY_AUTOPILOT.get());
+            msPacMan.setImmune(PY_IMMUNITY.get());
             updatePlaySceneSound();
         }
         updateCamera();
@@ -315,19 +318,21 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     }
 
     private void updatePlaySceneSound() {
+        GameSounds sounds = context.sounds();
         if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
-            int sirenNumber = 1 + context.game().huntingControl().phaseIndex() / 2;
-            context.sounds().selectSiren(sirenNumber);
-            context.sounds().playSiren();
+            HuntingControl huntingControl = context.game().huntingControl();
+            int sirenNumber = 1 + huntingControl.phaseIndex() / 2; // TODO check how this works in original game
+            sounds.selectSiren(sirenNumber);
+            sounds.playSiren();
         }
         if (context.game().pac().starvingTicks() > 8) { // TODO not sure how to do this right
-            context.sounds().stopMunchingSound();
+            sounds.stopMunchingSound();
         }
         boolean ghostsReturning = context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
         if (context.game().pac().isAlive() && ghostsReturning) {
-            context.sounds().playGhostReturningHomeSound();
+            sounds.playGhostReturningHomeSound();
         } else {
-            context.sounds().stopGhostReturningHomeSound();
+            sounds.stopGhostReturningHomeSound();
         }
     }
 }
