@@ -19,15 +19,12 @@ import java.util.stream.Stream;
 
 public class TengenMsPacManGameSceneConfiguration implements GameSceneConfig {
 
-    public static final double SCALING = 3.0;
-
     // 32x28 tiles or 32x30 tiles? Emulator seems to use 32x30?
     public static final int NES_TILES_X = 32;
     public static final int NES_TILES_Y = 30;
 
     public static final int NES_RESOLUTION_X = 256;
     public static final int NES_RESOLUTION_Y = 240; // see above
-    public static final float NES_ASPECT = 1f * NES_RESOLUTION_X / NES_RESOLUTION_Y;
 
     private final Map<String, GameScene> scenesByID = new HashMap<>();
     private final TengenMsPacManGameSpriteSheet spriteSheet;
@@ -75,7 +72,7 @@ public class TengenMsPacManGameSceneConfiguration implements GameSceneConfig {
     public GameScene selectGameScene(GameContext context) {
         String sceneID = switch (context.gameState()) {
             case BOOT               -> "BootScene";
-            case WAITING_FOR_START -> "StartScene";
+            case WAITING_FOR_START  -> "StartScene";
             case INTRO              -> "IntroScene";
             case INTERMISSION       -> "CutScene" + context.game().intermissionNumberAfterLevel();
             case TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");
