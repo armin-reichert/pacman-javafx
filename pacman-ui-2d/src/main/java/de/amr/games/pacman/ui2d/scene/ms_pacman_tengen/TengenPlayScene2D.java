@@ -57,7 +57,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         Pane root = new StackPane(canvas);
         root.setBackground(coloredBackground(Color.TRANSPARENT));
         StackPane.setAlignment(canvas, Pos.CENTER);
-        fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
+        fxSubScene = new SubScene(root, 42, 42);
         fxSubScene.setCamera(cam);
     }
 
