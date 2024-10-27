@@ -9,6 +9,7 @@ import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -20,6 +21,7 @@ import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.sound.GameSounds;
+import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Camera;
@@ -41,6 +43,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_YELLOW;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
 import static de.amr.games.pacman.ui2d.util.KeyInput.alt;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
@@ -93,8 +96,12 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             Logger.warn("Cannot update PlayScene2D: no game level available");
             return;
         }
-        //TODO: Can world or Ms. Pac-Man be null here?
         Pac msPacMan = context.game().pac();
+        if (context.game().world() == null || msPacMan == null) {
+            //TODO: Can world or Ms. Pac-Man be null here?
+            Logger.warn("Cannot update PlayScene2D: no game world available");
+            return;
+        }
         if (context.game().isDemoLevel()) {
             msPacMan.setUseAutopilot(true);
             msPacMan.setImmune(false);
@@ -103,7 +110,15 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             msPacMan.setImmune(PY_IMMUNITY.get());
             updatePlaySceneSound();
         }
-        updateCamera();
+        if (camDelay > 0) {
+            --camDelay;
+        }
+        else {
+            double msPacManY = scaled(msPacMan.center().y());
+            double r = cameraRadius();
+            double y = lerp(cam.getTranslateY(), msPacManY - r, 0.02);
+            cam.setTranslateY(clamp(y, dontAskItsMagic(-r), dontAskItsMagic(r)));
+        }
     }
 
     @Override
@@ -126,29 +141,13 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         return fxSubScene.getCamera();
     }
 
-    private double cameraRadius() {
-        return 0.5 * scaled(size().y());
-    }
-
-    private void updateCamera() {
-        GameWorld world = context.game().world();
-        Pac msPacMan = context.game().pac();
-        if (world == null || msPacMan == null) {
-            return;
-        }
-        if (camDelay > 0) {
-            --camDelay;
-            return;
-        }
-        double pacPositionY = scaled(msPacMan.center().y());
-        double radius = cameraRadius();
-        double y = lerp(cam.getTranslateY(), pacPositionY - radius , 0.02);
-        cam.setTranslateY(clamp(y, dontAskItsMagic(-radius), dontAskItsMagic(radius)));
-    }
-
     private void initCamDelay(int ticks) {
         camDelay = ticks;
         cam.setTranslateY(dontAskItsMagic(-cameraRadius()));
+    }
+
+    private double cameraRadius() {
+        return 0.5 * scaled(size().y());
     }
 
     private double dontAskItsMagic(double radius) {
@@ -160,8 +159,8 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public Vector2f size() {
-        Vector2i worldSizeInTiles = context.worldSizeInTilesOrElse(new Vector2i(NES_TILES_X, NES_TILES_Y));
-        return worldSizeInTiles.plus(0, 2).scaled(TS).toVector2f(); // maybe change all maps to have 4 empty rows under maze?
+        Vector2i sizeInTiles = context.worldSizeInTilesOrElse(new Vector2i(NES_TILES_X, NES_TILES_Y));
+        return sizeInTiles.plus(0, 2).scaled(TS).toVector2f(); //TODO: change maps instead of inventing rows?
     }
 
     @Override
@@ -182,39 +181,44 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     protected void drawSceneContent(GameRenderer renderer) {
-        if (context.game().world() == null) { // This happens on level start
+        GameState state = context.gameState();
+        GameModel game = context.game();
+        GameWorld world = game.world();
+        Pac msPacMan = game.pac();
+
+        if (world == null) { // This happens on level start
             Logger.warn("Cannot draw scene content, game world not yet available!");
             return;
         }
 
         // Draw level message centered under ghost house
-        Vector2i houseTopLeftTile = context.game().world().houseTopLeftTile();
-        Vector2i houseSize        = context.game().world().houseSize();
+        Vector2i houseTopLeftTile = world.houseTopLeftTile();
+        Vector2i houseSize        = world.houseSize();
         int cx = houseTopLeftTile.x() + houseSize.x() / 2;
         int y = TS * (houseTopLeftTile.y() + houseSize.y() + 1);
         drawLevelMessage(renderer, cx, y); // READY, GAME_OVER etc.
 
-        boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
+        boolean flashMode = Boolean.TRUE.equals(state.getProperty("mazeFlashing"));
         renderer.setFlashMode(flashMode);
-        renderer.setBlinkingOn(context.game().blinking().isOn());
-        renderer.drawWorld(context, context.game().world());
+        renderer.setBlinkingOn(game.blinking().isOn());
+        renderer.drawWorld(context, world);
 
-        renderer.drawAnimatedEntity(context.game().pac());
+        renderer.drawAnimatedEntity(msPacMan);
         ghostsInZOrder().forEach(renderer::drawAnimatedEntity);
 
         // Debug mode info
         if (debugInfoPy.get()) {
-            renderer.drawAnimatedCreatureInfo(context.game().pac());
+            renderer.drawAnimatedCreatureInfo(msPacMan);
             ghostsInZOrder().forEach(renderer::drawAnimatedCreatureInfo);
         }
 
-        int livesCounterEntries = context.game().lives() - 1;
-        if (context.gameState() == GameState.STARTING_GAME && !context.game().pac().isVisible()) {
+        int livesCounterEntries = game.lives() - 1;
+        if (state == GameState.STARTING_GAME && !msPacMan.isVisible()) {
             // as long as Pac-Man is invisible when the game is started, one entry more appears in the lives counter
             livesCounterEntries += 1;
         }
         renderer.drawLivesCounter(livesCounterEntries, 5, size());
-        renderer.drawLevelCounter(context.game().currentLevelNumber(), context.game().isDemoLevel(), context.game().levelCounter(), size());
+        renderer.drawLevelCounter(game.currentLevelNumber(), game.isDemoLevel(), game.levelCounter(), size());
     }
 
     private Stream<Ghost> ghostsInZOrder() {
@@ -222,18 +226,19 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     }
 
     private void drawLevelMessage(GameRenderer renderer, int cx, int y) {
+        AssetStorage assets = context().assets();
+        GameState state = context.gameState();
+        GameModel game = context.game();
         String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
-        if (context.game().isDemoLevel()) {
-            Color color = Color.web(context.game().currentMapColorScheme().stroke());
-            drawText(renderer, "GAME  OVER", cx, y, color);
-        } else if (context.gameState() == GameState.GAME_OVER) {
-            Color color = context.assets().color(assetPrefix + ".color.game_over_message");
-            drawText(renderer, "GAME  OVER", cx, y, color);
-        } else if (context.gameState() == GameState.STARTING_GAME) {
-            Color color = context.assets().color(assetPrefix + ".color.ready_message");
-            drawText(renderer, "READY!", cx, y, color);
-        } else if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
-            drawText(renderer, "TEST    L%02d".formatted(context.game().currentLevelNumber()), cx, y, GameAssets2D.ARCADE_PALE);
+
+        if (game.isDemoLevel()) {
+            drawText(renderer, "GAME  OVER", cx, y, Color.web(game.currentMapColorScheme().stroke()));
+        } else if (state == GameState.GAME_OVER) {
+            drawText(renderer, "GAME  OVER", cx, y, assets.color(assetPrefix + ".color.game_over_message"));
+        } else if (state == GameState.STARTING_GAME) {
+            drawText(renderer, "READY!", cx, y, assets.color(assetPrefix + ".color.ready_message"));
+        } else if (state == GameState.TESTING_LEVEL_BONI) {
+            drawText(renderer, "TEST L%02d".formatted(game.currentLevelNumber()), cx, y, TENGEN_YELLOW);
         }
     }
 
