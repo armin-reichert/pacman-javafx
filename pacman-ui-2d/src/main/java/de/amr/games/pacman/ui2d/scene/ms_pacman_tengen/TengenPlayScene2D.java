@@ -20,7 +20,10 @@ import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Pos;
-import javafx.scene.*;
+import javafx.scene.Camera;
+import javafx.scene.Node;
+import javafx.scene.ParallelCamera;
+import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
@@ -171,17 +174,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         drawSceneContent(renderer);
         if (debugInfoPy.get()) {
             drawDebugInfo(renderer);
-            drawCameraPosition(renderer);
         }
-    }
-
-    private void drawCameraPosition(GameRenderer renderer) {
-        Color color = Color.YELLOW;
-        Font font = Font.font("Sans", FontWeight.BLACK, (int)scaled(6));
-        String text = "Cam Y: %.2f (radius=%.0f)".formatted(cam.getTranslateY(), cameraRadius());
-        renderer.drawText(text, color, font, 0, 30);
-        renderer.drawText(text, color, font, 0, 0.5 * size().y());
-        renderer.drawText(text, color, font, 0, size().y() - 30);
     }
 
     @Override
@@ -292,12 +285,6 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     @Override
     public void onGhostEaten(GameEvent e) {
         context.sounds().playGhostEatenSound();
-    }
-
-    @Override
-    public void onLevelCreated(GameEvent e) {
-        //context.updateRenderer();
-        //initCamDelay(90);
     }
 
     @Override
