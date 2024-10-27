@@ -141,7 +141,9 @@ public class CutScene3 extends GameScene2D {
             if (stateTimer.atSecond(1)) {
                 startMusic();
             } else if (stateTimer.atSecond(3)) {
-                enterStateDeliverJunior();
+                setState(STATE_STORK_LEAVES_SCENE, 3 * 60);
+                //TODO deactivated for now
+                //enterStateDeliverJunior();
             }
         }
 
