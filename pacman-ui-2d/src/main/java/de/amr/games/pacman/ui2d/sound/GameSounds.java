@@ -17,6 +17,7 @@ import org.tinylog.Logger;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.MissingResourceException;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
@@ -97,9 +98,11 @@ public class GameSounds {
         String assetKey = assetPrefix(variant) + ".audio." + keySuffix;
         URL url = assets.get(assetKey);
         if (url == null) {
-            String msg = "Could not load audio resource using asset key: " + assetKey;
-            //Logger.error(msg);
-            return null;
+            if (variant == GameVariant.MS_PACMAN_TENGEN) {
+                return null; // TODO we ignore this for now, change later
+            }
+            throw new MissingResourceException("Could not load audio resource",
+                getClass().getName(), assetKey);
         }
         var player = new MediaPlayer(new Media(url.toExternalForm()));
         player.setCycleCount(loop ? MediaPlayer.INDEFINITE : 1);
@@ -136,7 +139,7 @@ public class GameSounds {
         stop(players(gameVariant).get(key));
     }
 
-    public void playClipIfEnabled(String keySuffix) {
+    public void playClipIfEnabled(String keySuffix, double volume) {
         checkNotNull(keySuffix);
         String assetKey = assetPrefix(gameVariant) + ".audio." + keySuffix;
         AudioClip clip = assets.get(assetKey);
@@ -145,7 +148,7 @@ public class GameSounds {
             return;
         }
         if (isUnMuted() && isEnabled()) {
-            clip.setVolume(0.5);
+            clip.setVolume(volume);
             clip.play();
         }
     }
@@ -226,15 +229,15 @@ public class GameSounds {
     }
 
     public void playBonusEatenSound() {
-        playClipIfEnabled("bonus_eaten");
+        playClipIfEnabled("bonus_eaten", 1);
     }
 
     public void playCreditSound() {
-        playClipIfEnabled("credit");
+        playClipIfEnabled("credit", 1);
     }
 
     public void playExtraLifeSound() {
-        playClipIfEnabled("extra_life");
+        playClipIfEnabled("extra_life", 1);
     }
 
     public void playGameOverSound() {
@@ -246,7 +249,7 @@ public class GameSounds {
     }
 
     public void playGhostEatenSound() {
-        playClipIfEnabled("ghost_eaten");
+        playClipIfEnabled("ghost_eaten", 1);
     }
 
     public void playGhostReturningHomeSound() {
@@ -258,7 +261,7 @@ public class GameSounds {
     }
 
     public void playLevelChangedSound() {
-        playClipIfEnabled("sweep");
+        playClipIfEnabled("sweep", 1);
     }
 
     public void playLevelCompleteSound() {
