@@ -285,7 +285,7 @@ public class GameSounds {
     }
 
     public void stopPacPowerSound() {
-        stop("pac_power");
+        stop("pacman_power");
     }
 
     public void playIntermissionSound(int number) {
