@@ -100,12 +100,14 @@ public class EditController {
     private boolean terrainMapPathsUpToDate;
 
     private boolean dragging = false;
-    private Vector2i dragStartTile;
+
+    private final ObstacleEditor obstacleEditor = new ObstacleEditor();
 
     EditController(TileMapEditorViewModel viewModel) {
         this.viewModel = viewModel;
         this.worldMapPy.bind(viewModel.worldMapProperty());
         viewModel.gridSizeProperty().addListener((py,ov,nv) -> invalidateTerrainMapPaths());
+        obstacleEditor.enabledPy.bind(editingEnabledPy);
         setMode(EditMode.DRAW);
     }
 
@@ -115,15 +117,15 @@ public class EditController {
 
     //TODO data structure
     Vector2i editedContentMinTile() {
-        return ovalEditor.minTile;
+        return obstacleEditor.minTile;
     }
 
     Vector2i editedContentMaxTile() {
-        return ovalEditor.maxTile;
+        return obstacleEditor.maxTile;
     }
 
     byte[][] editedContent() {
-        return ovalEditor.editedContent();
+        return obstacleEditor.editedContent();
     }
 
     void initEventHandlers() {
@@ -149,12 +151,12 @@ public class EditController {
     void onEditCanvasMouseDragged(MouseEvent event) {
         Logger.debug("Mouse dragged {}", event);
         if (!dragging) {
-            dragStartTile = tileAtMousePosition(event.getX(), event.getY());
-            ovalEditor.startEditing(dragStartTile);
+            Vector2i dragStartTile = tileAtMousePosition(event.getX(), event.getY());
+            obstacleEditor.startEditing(dragStartTile);
             dragging = true;
             Logger.info("Dragging started at tile {}", dragStartTile);
         } else {
-            ovalEditor.continueEditing(tileAtMousePosition(event.getX(), event.getY()));
+            obstacleEditor.continueEditing(tileAtMousePosition(event.getX(), event.getY()));
         }
     }
 
@@ -165,7 +167,7 @@ public class EditController {
                 dragging = false;
                 Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
                 Logger.info("Dragging ends at tile {}", tile);
-                ovalEditor.endEditing(tile);
+                obstacleEditor.endEditing(tile);
             } else {
                 editAtMousePosition(event);
             }
@@ -501,20 +503,32 @@ public class EditController {
 
     // Testing
 
-    private class OvalEditor {
+    private class ObstacleEditor {
+
+        private BooleanProperty enabledPy = new SimpleBooleanProperty();
 
         private Vector2i anchor;
         private Vector2i frontier;
         private Vector2i minTile; // top left corner
         private Vector2i maxTile; // bottom right corner
+        private boolean join = true;
 
-        private
+        boolean isDisabled() {
+            return !enabledPy.get();
+        }
+
         void startEditing(Vector2i tile) {
+            if (isDisabled()) {
+                return;
+            }
             Logger.info("Start inserting oval at tile {}", tile);
             minTile = maxTile = anchor = frontier = tile;
         }
 
         void continueEditing(Vector2i tile) {
+            if (isDisabled()) {
+                return;
+            }
             if (tile.equals(frontier)) {
                 return;
             }
@@ -546,6 +560,9 @@ public class EditController {
         }
 
         void endEditing(Vector2i tile) {
+            if (isDisabled()) {
+                return;
+            }
             Logger.info("End inserting oval at tile {}", tile);
             commit();
         }
@@ -553,9 +570,25 @@ public class EditController {
         void commit() {
             byte[][] editedContent = editedContent();
             if (editedContent != null) {
+                if (join) {
+                    editedContent = joinedContent(editedContent, editedContent.length, editedContent[0].length);
+                }
                 copy(editedContent, editedWorldMap().terrain());
             }
             anchor = frontier = minTile = maxTile = null;
+        }
+
+        byte[][] joinedContent(byte[][] editedContent, int numRows, int numCols) {
+            byte[][] newContent = new byte[numRows][numCols];
+            for (int row = 0; row < numRows; ++row) {
+                System.arraycopy(editedContent[row], 0, newContent[row], 0, numCols);
+            }
+            TileMap originalTerrain = editedWorldMap().terrain();
+
+            //TODO
+
+
+            return newContent;
         }
 
         byte[][] editedContent() {
@@ -601,7 +634,5 @@ public class EditController {
             }
         }
     }
-
-    private final OvalEditor ovalEditor = new OvalEditor();
 
 } // EditController

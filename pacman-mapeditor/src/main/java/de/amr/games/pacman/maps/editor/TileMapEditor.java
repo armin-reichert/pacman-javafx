@@ -411,14 +411,15 @@ public class TileMapEditor implements TileMapEditorViewModel {
     private void createEditModeIndicator() {
         editModeIndicator = new Label();
         editModeIndicator.setFont(FONT_STATUS_LINE);
+        editModeIndicator.setTextFill(Color.RED);
         editModeIndicator.textProperty().bind(Bindings.createStringBinding(
                 () -> {
                     if (!editController.editingEnabledPy.get()) {
                         return "Editing disabled";
                     }
                     return switch (editController.modePy.get()) {
-                        case DRAW -> editController.symmetricEditModePy.get() ?  "Symmetric" : "Normal";
-                        case ERASE -> "Erase";
+                        case DRAW -> editController.symmetricEditModePy.get() ?  "Symmetric Mode" : "Normal Mode";
+                        case ERASE -> "Erase Mode";
                     };
 
                 },
