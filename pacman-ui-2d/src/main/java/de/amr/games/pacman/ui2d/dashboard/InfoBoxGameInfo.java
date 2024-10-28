@@ -5,9 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.controller.HuntingControl;
+import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.timer.TickTimer;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.LevelData;
+import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameContext;
 
 import static de.amr.games.pacman.lib.timer.TickTimer.ticksToString;
@@ -28,6 +31,17 @@ public class InfoBoxGameInfo extends InfoBox {
         labeledValue("World Map", ifWorldPresent(world -> {
             String url = world.map().url().toString();
             return url.substring(url.lastIndexOf("/") + 1);
+        }));
+        labeledValue("Color Scheme",            ifWorldPresent(world -> {
+            if (context.gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
+                return InfoText.NO_INFO;
+            }
+            TengenMsPacManGame game = (TengenMsPacManGame) context.game();
+            MapColorScheme colorScheme = game.currentMapColorScheme();
+            if (colorScheme == null) {
+                return InfoText.NO_INFO;
+            }
+            return "fill: %s stroke: %s food: %s".formatted(colorScheme.fill(), colorScheme.stroke(), colorScheme.pellet());
         }));
 
         labeledValue("Lives",           ifLevelPresent(level -> "%d".formatted(context.game().lives())));
