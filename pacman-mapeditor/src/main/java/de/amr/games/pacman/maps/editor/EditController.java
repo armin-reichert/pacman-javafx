@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.maps.editor;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
@@ -515,9 +516,9 @@ public class EditController {
 
         boolean isDisabled() {
             return !(enabledPy.get() &&
-                    viewModel.selectedPaletteID() == PALETTE_ID_TERRAIN &&
-                    viewModel.selectedPalette().getSelectedRow() == 0 &&
-                    viewModel.selectedPalette().getSelectedCol() == 0);
+                viewModel.selectedPaletteID() == PALETTE_ID_TERRAIN &&
+                viewModel.selectedPalette().getSelectedRow() == 0 &&
+                viewModel.selectedPalette().getSelectedCol() == 0);
         }
 
         void startEditing(Vector2i tile) {
@@ -576,7 +577,7 @@ public class EditController {
                 if (join) {
                     editedContent = joinedContent(editedContent, editedContent.length, editedContent[0].length);
                 }
-                copy(editedContent, editedWorldMap().terrain());
+                copy(editedContent, viewModel.worldMapProperty().get().terrain());
             }
             anchor = frontier = minTile = maxTile = null;
         }
@@ -586,10 +587,47 @@ public class EditController {
             for (int row = 0; row < numRows; ++row) {
                 System.arraycopy(editedContent[row], 0, newContent[row], 0, numCols);
             }
-            TileMap originalTerrain = editedWorldMap().terrain();
+            TileMap originalTerrain = viewModel.worldMapProperty().get().terrain();
+            int crossings;
 
-            //TODO
+            crossings = 0;
+            int leftBorder = minTile.x();
+            for (int row = minTile.y(); row < maxTile.y(); ++row) {
+                int x = 0, y = row - minTile.y();
+                if (editedContent[y][x] == Tiles.WALL_V && originalTerrain.get(row, leftBorder) == Tiles.WALL_H) {
+                    newContent[y][x] = Globals.isEven(crossings) ? Tiles.CORNER_SE : Tiles.CORNER_NE;
+                    ++crossings;
+                }
+            }
 
+            crossings = 0;
+            int rightBorder = maxTile.x();
+            for (int row = minTile.y(); row < maxTile.y(); ++row) {
+                int x = rightBorder - minTile.x(), y = row - minTile.y();
+                if (editedContent[y][x] == Tiles.WALL_V && originalTerrain.get(row, leftBorder) == Tiles.WALL_H) {
+                    newContent[y][x] = Globals.isEven(crossings) ? Tiles.CORNER_SW : Tiles.CORNER_NW;
+                    ++crossings;
+                }
+            }
+
+            crossings = 0;
+            int upperBorder = minTile.y(); // upper border
+            for (int col = minTile.x(); col < maxTile.x(); ++col) {
+                int x = col - minTile.x(), y = upperBorder - minTile.y();
+                if (editedContent[y][x] == Tiles.WALL_H && originalTerrain.get(upperBorder, col) == Tiles.WALL_V) {
+                    newContent[y][x] = Globals.isEven(crossings) ? Tiles.CORNER_SE : Tiles.CORNER_SW;
+                    ++crossings;
+                }
+            }
+            crossings = 0;
+            int lowerBorder = maxTile.y(); // lower border
+            for (int col = minTile.x(); col < maxTile.x(); ++col) {
+                int x = col - minTile.x(), y = lowerBorder - minTile.y();
+                if (editedContent[y][x] == Tiles.WALL_H && originalTerrain.get(lowerBorder, col) == Tiles.WALL_V) {
+                    newContent[y][x] = Globals.isEven(crossings) ? Tiles.CORNER_NE : Tiles.CORNER_NW;
+                    ++crossings;
+                }
+            }
 
             return newContent;
         }
