@@ -85,6 +85,14 @@ public class Palette {
         return selectedTool != null;
     }
 
+    public int getSelectedRow() {
+        return selectedRow;
+    }
+
+    public int getSelectedCol() {
+        return selectedCol;
+    }
+
     public Tool selectedTool() {
         return selectedTool;
     }

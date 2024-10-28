@@ -514,7 +514,10 @@ public class EditController {
         private boolean join = true;
 
         boolean isDisabled() {
-            return !enabledPy.get();
+            return !(enabledPy.get() &&
+                    viewModel.selectedPaletteID() == PALETTE_ID_TERRAIN &&
+                    viewModel.selectedPalette().getSelectedRow() == 0 &&
+                    viewModel.selectedPalette().getSelectedCol() == 0);
         }
 
         void startEditing(Vector2i tile) {
