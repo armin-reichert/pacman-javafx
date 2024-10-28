@@ -512,6 +512,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
             } catch (Exception x) {
                 Logger.error(x);
                 drawBlueScreen(x); // TODO this is crap
+                clock.stop();
             }
         }));
         clock.setCycleCount(Animation.INDEFINITE);
@@ -884,6 +885,16 @@ public class TileMapEditor implements TileMapEditorViewModel {
             terrainMapEditRenderer.setWallFillColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(DEFAULT_COLOR_WALL_FILL)));
             terrainMapEditRenderer.setDoorColor(getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(DEFAULT_COLOR_DOOR)));
             terrainMapEditRenderer.drawMap(g, terrainMap);
+
+            byte[][] editedContent = editController.editedContent();
+            if (editedContent != null) {
+                for (int row = 0; row < editedContent.length; ++row) {
+                    for (int col = 0; col < editedContent[0].length; ++col) {
+                        Vector2i tile = editController.editedContentMinTile().plus(col, row);
+                        terrainMapEditRenderer.drawTile(g, tile, editedContent[row][col]);
+                    }
+                }
+            }
         }
         if (foodVisiblePy.get()) {
             Color foodColor = getColorFromMap(map().food(), PROPERTY_COLOR_FOOD, TileMapUtil.parseColor(DEFAULT_COLOR_FOOD));
