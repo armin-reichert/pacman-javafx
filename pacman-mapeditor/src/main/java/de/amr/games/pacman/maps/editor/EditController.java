@@ -13,6 +13,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.*;
@@ -95,9 +96,12 @@ public class EditController {
     final BooleanProperty symmetricEditModePy = new SimpleBooleanProperty(true);
 
     private final TileMapEditorViewModel viewModel;
-
     private boolean unsavedChanges;
     private boolean terrainMapPathsUpToDate;
+
+    private double dragStartX = -1;
+    private double dragStartY = -1;
+    private boolean dragging = false;
 
     EditController(TileMapEditorViewModel viewModel) {
         this.viewModel = viewModel;
@@ -106,102 +110,49 @@ public class EditController {
         setMode(EditMode.DRAW);
     }
 
-    void setNormalDrawMode() {
-        setMode(EditMode.DRAW);
-        symmetricEditModePy.set(false);
-    }
-
-    void setSymmetricDrawMode() {
-        setMode(EditMode.DRAW);
-        symmetricEditModePy.set(true);
-    }
-
-    void setEraseMode() {
-        setMode(EditMode.ERASE);
-    }
-
-    void setMode(EditMode mode) {
-        modePy.set(checkNotNull(mode));
-    }
-
-    boolean hasUnsavedChanges() {
-        return unsavedChanges;
-    }
-
-    void clearUnsavedChanges() {
-        unsavedChanges = false;
-    }
-
-    /**
-     * @param pixels number of pixels
-     * @return number of full tiles spanned by pixels
-     */
-    private int fullTiles(double pixels) {
-        return (int) (pixels / viewModel.gridSizeProperty().get());
-    }
-
-    void invalidateTerrainMapPaths() {
-        terrainMapPathsUpToDate = false;
-    }
-
-    void ensureTerrainMapsPathsUpToDate() {
-        if (!terrainMapPathsUpToDate) {
-            mapPy.get().terrain().computeTerrainPaths();
-            terrainMapPathsUpToDate = true;
-        }
-    }
-
-    void markTileMapEdited(TileMap tileMap) {
-        unsavedChanges = true;
-        WorldMap worldMap = mapPy.get();
-        if (worldMap != null) {
-            viewModel.updateSourceView();
-            if (tileMap == worldMap.terrain()) {
-                invalidateTerrainMapPaths();
-            }
-        }
-    }
-
-    Vector2i tileAtMousePosition(double mouseX, double mouseY) {
-        return new Vector2i(fullTiles(mouseX), fullTiles(mouseY));
-    }
-
-    void editMapTileAtMousePosition(TileMap tileMap, MouseEvent mouse) {
-        var tile = tileAtMousePosition(mouse.getX(), mouse.getY());
-        if (mouse.isControlDown()) { // Control-Click clears tile content
-            eraseTileValue(tileMap, tile);
-        } else if (viewModel.selectedPalette().isToolSelected()) {
-            viewModel.selectedPalette().selectedTool().apply(tileMap, tile);
-        }
+    void initEventHandlers() {
+        Canvas editCanvas = viewModel.canvas();
+        editCanvas.setOnMouseClicked(this::onEditCanvasMouseClicked);
+        editCanvas.setOnMouseReleased(this::onEditCanvasMouseReleased);
+        editCanvas.setOnMouseDragged(this::onEditCanvasMouseDragged);
+        editCanvas.setOnMouseMoved(this::onEditCanvasMouseMoved);
+        editCanvas.setOnKeyPressed(this::onEditCanvasKeyPressed);
     }
 
     void onEditCanvasMouseClicked(MouseEvent event) {
-        viewModel.canvas().requestFocus();
+        Logger.info("Mouse clicked {}", event);
         if (event.getButton() == MouseButton.PRIMARY) {
+            viewModel.canvas().requestFocus();
             viewModel.contextMenu().hide();
-            if (event.getClickCount() == 2) { // double-click
+            if (event.getClickCount() == 2 && !editingEnabledPy.get()) {
                 editingEnabledPy.set(true);
-                viewModel.canvas().requestFocus();
-            } else if (event.getClickCount() == 1) {
-                if (!editingEnabledPy.get()) {
-                    return;
-                }
-                WorldMap worldMap = mapPy.get();
-                switch (viewModel.selectedPaletteID()) {
-                    case PALETTE_ID_TERRAIN -> editMapTileAtMousePosition(worldMap.terrain(), event);
-                    case PALETTE_ID_ACTORS -> {
-                        if (viewModel.selectedPalette().isToolSelected()) {
-                            Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
-                            viewModel.selectedPalette().selectedTool().apply(worldMap.terrain(), tile);
-                            markTileMapEdited(worldMap.terrain());
-                            viewModel.terrainPropertiesEditor().updatePropertyEditorValues();
-                        }
-                    }
-                    case PALETTE_ID_FOOD -> editMapTileAtMousePosition(worldMap.food(), event);
-                    default -> Logger.error("Unknown palette selection");
-                }
             }
         }
+    }
+
+    void onEditCanvasMouseReleased(MouseEvent event) {
+        Logger.info("Mouse released: {}", event);
+        Logger.info("dragStartX={} dragStartY={}", dragStartX, dragStartY);
+
+        if (!dragging) {
+            editAtMousePosition(event);
+            return;
+        }
+
+
+
+        dragging = false;
+        dragStartX = -1;
+        dragStartY = -1;
+
+    }
+
+    void onEditCanvasMouseDragged(MouseEvent event) {
+        Logger.info("Mouse dragged {}", event);
+        dragStartX = event.getX();
+        dragStartY = event.getY();
+        dragging = true;
+        Logger.info("dragStartX={} dragStartY={}", dragStartX, dragStartY);
     }
 
     void onEditCanvasMouseMoved(MouseEvent event) {
@@ -319,6 +270,95 @@ public class EditController {
 
             contextMenu.getItems().setAll(miAddCircle2x2, miAddHouse);
             contextMenu.show(viewModel.canvas(), event.getScreenX(), event.getScreenY());
+        }
+    }
+
+    void setNormalDrawMode() {
+        setMode(EditMode.DRAW);
+        symmetricEditModePy.set(false);
+    }
+
+    void setSymmetricDrawMode() {
+        setMode(EditMode.DRAW);
+        symmetricEditModePy.set(true);
+    }
+
+    void setEraseMode() {
+        setMode(EditMode.ERASE);
+    }
+
+    void setMode(EditMode mode) {
+        modePy.set(checkNotNull(mode));
+    }
+
+    boolean hasUnsavedChanges() {
+        return unsavedChanges;
+    }
+
+    void clearUnsavedChanges() {
+        unsavedChanges = false;
+    }
+
+    /**
+     * @param pixels number of pixels
+     * @return number of full tiles spanned by pixels
+     */
+    private int fullTiles(double pixels) {
+        return (int) (pixels / viewModel.gridSizeProperty().get());
+    }
+
+    void invalidateTerrainMapPaths() {
+        terrainMapPathsUpToDate = false;
+    }
+
+    void ensureTerrainMapsPathsUpToDate() {
+        if (!terrainMapPathsUpToDate) {
+            mapPy.get().terrain().computeTerrainPaths();
+            terrainMapPathsUpToDate = true;
+        }
+    }
+
+    void markTileMapEdited(TileMap tileMap) {
+        unsavedChanges = true;
+        WorldMap worldMap = mapPy.get();
+        if (worldMap != null) {
+            viewModel.updateSourceView();
+            if (tileMap == worldMap.terrain()) {
+                invalidateTerrainMapPaths();
+            }
+        }
+    }
+
+    Vector2i tileAtMousePosition(double mouseX, double mouseY) {
+        return new Vector2i(fullTiles(mouseX), fullTiles(mouseY));
+    }
+
+    void editMapTileAtMousePosition(TileMap tileMap, Vector2i tile, boolean erase) {
+        if (erase) { // Control-Click clears tile content
+            eraseTileValue(tileMap, tile);
+        } else if (viewModel.selectedPalette().isToolSelected()) {
+            viewModel.selectedPalette().selectedTool().apply(tileMap, tile);
+        }
+    }
+
+    void editAtMousePosition(MouseEvent event) {
+        if (!editingEnabledPy.get()) {
+            return;
+        }
+        WorldMap worldMap = mapPy.get();
+        Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
+        boolean erase = event.isControlDown();
+        switch (viewModel.selectedPaletteID()) {
+            case PALETTE_ID_TERRAIN -> editMapTileAtMousePosition(worldMap.terrain(), tile, erase);
+            case PALETTE_ID_ACTORS -> {
+                if (viewModel.selectedPalette().isToolSelected()) {
+                    viewModel.selectedPalette().selectedTool().apply(worldMap.terrain(), tile);
+                    markTileMapEdited(worldMap.terrain());
+                    viewModel.terrainPropertiesEditor().updatePropertyEditorValues();
+                }
+            }
+            case PALETTE_ID_FOOD -> editMapTileAtMousePosition(worldMap.food(), tile, erase);
+            default -> Logger.error("Unknown palette selection");
         }
     }
 

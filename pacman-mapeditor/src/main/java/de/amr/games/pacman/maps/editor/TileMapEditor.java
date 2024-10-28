@@ -26,6 +26,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -291,17 +292,19 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     private void createEditCanvas() {
         editCanvas = new Canvas();
+
+        //TODO check this
         editCanvas.setOnContextMenuRequested(event -> editController.onEditCanvasContextMenuRequested(contextMenu, event));
-        editCanvas.setOnMouseClicked(editController::onEditCanvasMouseClicked);
-        editCanvas.setOnMouseMoved(editController::onEditCanvasMouseMoved);
-        editCanvas.setOnKeyPressed(editController::onEditCanvasKeyPressed);
+        editController.initEventHandlers();
+
         spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);
+
         // Note: this must be done *after* the initial map has been created/loaded!
         editCanvas.heightProperty().bind(Bindings.createDoubleBinding(
-                () -> (double) map().terrain().numRows() * gridSize(), mapPy, gridSizePy));
+            () -> (double) map().terrain().numRows() * gridSize(), mapPy, gridSizePy));
         editCanvas.widthProperty().bind(Bindings.createDoubleBinding(
-                () -> (double) map().terrain().numCols() * gridSize(), mapPy, gridSizePy));
+            () -> (double) map().terrain().numCols() * gridSize(), mapPy, gridSizePy));
     }
 
     private void createPreviewCanvas() {
