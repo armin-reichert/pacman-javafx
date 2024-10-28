@@ -420,6 +420,8 @@ public enum GameState implements FsmState<GameModel> {
             game.createLevel(1);
             game.startLevel();
             game.showGuys();
+            game.pac().startAnimation();
+            game.ghosts().forEach(Ghost::startAnimation);
         }
 
         @Override
