@@ -99,9 +99,13 @@ public class EditController {
     private boolean unsavedChanges;
     private boolean terrainMapPathsUpToDate;
 
-    private double dragStartX = -1;
-    private double dragStartY = -1;
     private boolean dragging = false;
+    private Vector2i dragStartTile;
+
+    private boolean insertOval = true; // TODO just for testing D&D
+    private Vector2i insertOvalStartTile;
+    private Vector2i insertOvalCurrentTile;
+
 
     EditController(TileMapEditorViewModel viewModel) {
         this.viewModel = viewModel;
@@ -130,29 +134,34 @@ public class EditController {
         }
     }
 
-    void onEditCanvasMouseReleased(MouseEvent event) {
-        Logger.info("Mouse released: {}", event);
-        Logger.info("dragStartX={} dragStartY={}", dragStartX, dragStartY);
-
+    void onEditCanvasMouseDragged(MouseEvent event) {
+        Logger.debug("Mouse dragged {}", event);
         if (!dragging) {
-            editAtMousePosition(event);
-            return;
+            dragStartTile = tileAtMousePosition(event.getX(), event.getY());
+            if (insertOval) {
+                startInsertOval(dragStartTile);
+            }
+            dragging = true;
+            Logger.info("Dragging started at tile {}", dragStartTile);
+        } else {
+            if (insertOval) {
+                continueInsertOval(tileAtMousePosition(event.getX(), event.getY()));
+            }
         }
-
-
-
-        dragging = false;
-        dragStartX = -1;
-        dragStartY = -1;
-
     }
 
-    void onEditCanvasMouseDragged(MouseEvent event) {
-        Logger.info("Mouse dragged {}", event);
-        dragStartX = event.getX();
-        dragStartY = event.getY();
-        dragging = true;
-        Logger.info("dragStartX={} dragStartY={}", dragStartX, dragStartY);
+    void onEditCanvasMouseReleased(MouseEvent event) {
+        Logger.info("Mouse released: {}", event);
+        if (dragging) {
+            dragging = false;
+            Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
+            Logger.info("Dragging ends at tile {}", tile);
+            if (insertOval) {
+                endInsertOval(tile);
+            }
+        } else {
+            editAtMousePosition(event);
+        }
     }
 
     void onEditCanvasMouseMoved(MouseEvent event) {
@@ -480,4 +489,28 @@ public class EditController {
         Logger.info("Map created. rows={}, cols={}", tilesY, tilesX);
         return worldMap;
     }
+
+
+    // testing
+
+    void startInsertOval(Vector2i tile) {
+        insertOvalStartTile = tile;
+        Logger.info("Start inserting oval at tile {}", insertOvalStartTile);
+    }
+
+    void continueInsertOval(Vector2i tile) {
+        if (tile.equals(insertOvalCurrentTile)) {
+            return;
+        }
+        insertOvalCurrentTile = tile;
+        Logger.info("Continue inserting oval at tile {}", tile);
+    }
+
+    void endInsertOval(Vector2i tile) {
+        Logger.info("End inserting oval at tile {}", tile);
+        insertOvalStartTile = null;
+    }
+
+
+
 } // EditController
