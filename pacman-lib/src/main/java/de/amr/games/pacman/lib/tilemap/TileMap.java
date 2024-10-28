@@ -115,7 +115,7 @@ public class TileMap {
                         tileMap.data[row][col] = value;
                     } else {
                         tileMap.data[row][col] = Tiles.EMPTY;
-                        Logger.info("Invalid tile map value {} at row {}, col {}", value, row, col);
+                        Logger.error("Invalid tile map value {} at row {}, col {}", value, row, col);
                     }
                 } catch (NumberFormatException x) {
                     Logger.error("Invalid tile map entry {} at row {}, col {}", entry, row, col);
@@ -386,7 +386,7 @@ public class TileMap {
             for (int col = 0; col < numCols() - 1; ++col) {
                 if (get(topRow, col) == Tiles.DCORNER_NE && get(topRow, col + 1) == Tiles.DCORNER_NW) {
                     terrainMapData.topConcavityEntries.add(new Vector2i(col, topRow));
-                    Logger.info("Found concavity entry at top row {} col {}", topRow, col);
+                    Logger.debug("Found concavity entry at top row {} col {}", topRow, col);
                     Vector2i pathStartTile = new Vector2i(col, topRow + 1);
                     TileMapPath path = computePath(pathStartTile, DOWN, tile -> outOfBounds(tile) || tile.equals(pathStartTile.plus(1, -1)));
                     path.add(UP);
@@ -402,7 +402,7 @@ public class TileMap {
             for (int col = 0; col < numCols() - 1; ++col) {
                 if (get(bottomRow, col) == Tiles.DCORNER_SE && get(bottomRow, col + 1) == Tiles.DCORNER_SW) {
                     terrainMapData.bottomConcavityEntries.add(new Vector2i(col, bottomRow));
-                    Logger.info("Found concavity entry at bottom row {} col {}", bottomRow, col);
+                    Logger.debug("Found concavity entry at bottom row {} col {}", bottomRow, col);
                     Vector2i pathStartTile = new Vector2i(col, bottomRow - 1);
                     TileMapPath path = computePath(pathStartTile, UP,
                         tile -> outOfBounds(tile) || tile.equals(pathStartTile.plus(1, 1)));
@@ -419,7 +419,7 @@ public class TileMap {
                 boolean straightEntry = get(row, leftBorderCol) == Tiles.DWALL_H && get(row + 1, leftBorderCol) == Tiles.DWALL_H;
                 if (roundedEntry || straightEntry) {
                     terrainMapData.leftConcavityEntries.add(new Vector2i(leftBorderCol, row));
-                    Logger.info("Found concavity entry at left border at row {}", row);
+                    Logger.debug("Found concavity entry at left border at row {}", row);
                     Vector2i pathStartTile = new Vector2i(roundedEntry ? 1 : 0, row);
                     TileMapPath path = computePath(pathStartTile, RIGHT,
                         tile -> tile.equals(pathStartTile.plus(roundedEntry ? 0 : -1, 1)));
@@ -435,7 +435,7 @@ public class TileMap {
                 boolean straightEntry = get(row, rightBorderCol) == Tiles.DWALL_H && get(row + 1, rightBorderCol) == Tiles.DWALL_H;
                 if (roundedEntry || straightEntry) {
                     terrainMapData.rightConcavityEntries.add(new Vector2i(rightBorderCol, row));
-                    Logger.info("Found concavity entry at right border at row {}", row);
+                    Logger.debug("Found concavity entry at right border at row {}", row);
                     Vector2i pathStartTile = new Vector2i(rightBorderCol - (roundedEntry ? 1 : 0), row);
                     TileMapPath path = computePath(pathStartTile, LEFT,
                         tile -> tile.equals(pathStartTile.plus(roundedEntry ? 0 : 1, 1)));
@@ -444,7 +444,7 @@ public class TileMap {
             }
         }
 
-        Logger.info("Paths computed, {} single wall paths, {} double wall paths, {} filler paths",
+        Logger.debug("Paths computed, {} single wall paths, {} double wall paths, {} filler paths",
             terrainMapData.singleStrokePaths.size(), terrainMapData.doubleStrokePaths.size(), terrainMapData.fillerPaths.size());
     }
 
