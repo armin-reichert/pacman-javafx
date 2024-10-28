@@ -590,6 +590,54 @@ public class EditController {
             TileMap originalTerrain = viewModel.worldMapProperty().get().terrain();
             int crossings;
 
+            if (originalTerrain.get(minTile) == Tiles.CORNER_NE) {
+                newContent[0][0] = Tiles.WALL_H;
+            }
+            if (originalTerrain.get(minTile) == Tiles.CORNER_SW) {
+                newContent[0][0] = Tiles.WALL_V;
+            }
+            if (originalTerrain.get(minTile) == Tiles.WALL_V) {
+                newContent[0][0] = Tiles.CORNER_SW;
+            }
+            if (originalTerrain.get(minTile) == Tiles.WALL_H) {
+                newContent[0][0] = Tiles.CORNER_NE;
+            }
+
+            Vector2i leftLowerCorner = new Vector2i(minTile.x(), maxTile.y());
+            if (originalTerrain.get(leftLowerCorner) == Tiles.WALL_H) {
+                newContent[leftLowerCorner.y() - minTile.y()][leftLowerCorner.x() - minTile.x()] = Tiles.CORNER_SE;
+            }
+            if (originalTerrain.get(leftLowerCorner) == Tiles.WALL_V) {
+                newContent[leftLowerCorner.y() - minTile.y()][leftLowerCorner.x() - minTile.x()] = Tiles.CORNER_NW;
+            }
+            if (originalTerrain.get(leftLowerCorner) == Tiles.CORNER_SE) {
+                newContent[leftLowerCorner.y() - minTile.y()][leftLowerCorner.x() - minTile.x()] = Tiles.WALL_H;
+            }
+            if (originalTerrain.get(leftLowerCorner) == Tiles.CORNER_NW) {
+                newContent[leftLowerCorner.y() - minTile.y()][leftLowerCorner.x() - minTile.x()] = Tiles.WALL_V;
+            }
+
+            Vector2i upperRightCorner = new Vector2i(maxTile.x(), minTile.y());
+            if (originalTerrain.get(upperRightCorner) == Tiles.WALL_V) {
+                newContent[0][upperRightCorner.x() - minTile.x()] = Tiles.CORNER_SE;
+            }
+            if (originalTerrain.get(upperRightCorner) == Tiles.WALL_H) {
+                newContent[0][upperRightCorner.x() - minTile.x()] = Tiles.CORNER_NW;
+            }
+            if (originalTerrain.get(upperRightCorner) == Tiles.CORNER_SE) {
+                newContent[0][upperRightCorner.x() - minTile.x()] = Tiles.WALL_V;
+            }
+
+            if (originalTerrain.get(maxTile) == Tiles.WALL_V) {
+                newContent[numRows-1][numCols-1] = Tiles.CORNER_NE;
+            }
+            if (originalTerrain.get(maxTile) == Tiles.WALL_H) {
+                newContent[numRows-1][numCols-1] = Tiles.CORNER_SW;
+            }
+            if (originalTerrain.get(maxTile) == Tiles.CORNER_SW) {
+                newContent[numRows-1][numCols-1] = Tiles.WALL_H;
+            }
+
             crossings = 0;
             int leftBorder = minTile.x();
             for (int row = minTile.y(); row < maxTile.y(); ++row) {
