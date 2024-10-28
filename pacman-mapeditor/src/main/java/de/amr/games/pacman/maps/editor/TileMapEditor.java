@@ -26,7 +26,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -362,7 +361,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
         tab3.setClosable(false);
         tab3.setUserData(PALETTE_ID_FOOD);
 
-        tabPaneWithPalettes = new TabPane(tab2, tab1, tab3);
+        tabPaneWithPalettes = new TabPane(tab1, tab2, tab3);
         tabPaneWithPalettes.setPadding(new Insets(5, 5, 5, 5));
         tabPaneWithPalettes.setMinHeight(75);
     }

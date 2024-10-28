@@ -627,6 +627,9 @@ public class EditController {
             if (originalTerrain.get(upperRightCorner) == Tiles.CORNER_SE) {
                 newContent[0][upperRightCorner.x() - minTile.x()] = Tiles.WALL_V;
             }
+            if (originalTerrain.get(upperRightCorner) == Tiles.CORNER_NW) {
+                newContent[0][upperRightCorner.x() - minTile.x()] = Tiles.WALL_H;
+            }
 
             if (originalTerrain.get(maxTile) == Tiles.WALL_V) {
                 newContent[numRows-1][numCols-1] = Tiles.CORNER_NE;
@@ -636,6 +639,9 @@ public class EditController {
             }
             if (originalTerrain.get(maxTile) == Tiles.CORNER_SW) {
                 newContent[numRows-1][numCols-1] = Tiles.WALL_H;
+            }
+            if (originalTerrain.get(maxTile) == Tiles.CORNER_NE) {
+                newContent[numRows-1][numCols-1] = Tiles.WALL_V;
             }
 
             crossings = 0;
