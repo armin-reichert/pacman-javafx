@@ -139,13 +139,13 @@ public class EditController {
         if (!dragging) {
             dragStartTile = tileAtMousePosition(event.getX(), event.getY());
             if (insertOval) {
-                startInsertOval(dragStartTile);
+                startInsertOval(mapPy.get(), dragStartTile);
             }
             dragging = true;
             Logger.info("Dragging started at tile {}", dragStartTile);
         } else {
             if (insertOval) {
-                continueInsertOval(tileAtMousePosition(event.getX(), event.getY()));
+                continueInsertOval(mapPy.get(), tileAtMousePosition(event.getX(), event.getY()));
             }
         }
     }
@@ -157,7 +157,7 @@ public class EditController {
             Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
             Logger.info("Dragging ends at tile {}", tile);
             if (insertOval) {
-                endInsertOval(tile);
+                endInsertOval(mapPy.get(), tile);
             }
         } else {
             editAtMousePosition(event);
@@ -493,24 +493,51 @@ public class EditController {
 
     // testing
 
-    void startInsertOval(Vector2i tile) {
+    void startInsertOval(WorldMap map, Vector2i tile) {
+        Logger.info("Start inserting oval at tile {}", tile);
         insertOvalStartTile = tile;
-        Logger.info("Start inserting oval at tile {}", insertOvalStartTile);
+        setTileValue(map.terrain(), insertOvalStartTile, Tiles.CORNER_NW);
     }
 
-    void continueInsertOval(Vector2i tile) {
+    void continueInsertOval(WorldMap map, Vector2i tile) {
         if (tile.equals(insertOvalCurrentTile)) {
             return;
         }
-        insertOvalCurrentTile = tile;
         Logger.info("Continue inserting oval at tile {}", tile);
+        insertOvalCurrentTile = tile;
+
+        Vector2i topLeft = insertOvalStartTile;
+        Vector2i bottomRight = tile;
+        int dx = tile.x() - topLeft.x(), dy = tile.y() - topLeft.y();
+        if (dx + dy > 0) {
+            for (int y = 0; y <= dy; ++y) {
+                for (int x = 0; x <= dx; ++x) {
+                    Vector2i editTile = new Vector2i(topLeft.x() + x, topLeft.y() + y);
+                    byte value = Tiles.EMPTY;
+                    if (x == 0) {
+                        value = y == 0 ? Tiles.CORNER_NW : y == dy ? Tiles.CORNER_SW : Tiles.WALL_V;
+                    } else if (x == dx) {
+                        value = y == 0 ? Tiles.CORNER_NE : y == dy ? Tiles.CORNER_SE : Tiles.WALL_V;
+                    } else if (y == 0 || y == dy) {
+                        value = Tiles.WALL_H;
+                    }
+                    setTileValue(map.terrain(), editTile, value);
+                }
+            }
+        }
     }
 
-    void endInsertOval(Vector2i tile) {
+    void endInsertOval(WorldMap map, Vector2i tile) {
         Logger.info("End inserting oval at tile {}", tile);
+        if (tile.x() > insertOvalStartTile.x() && tile.y() > insertOvalStartTile.y()) {
+            Vector2i bottomRight = tile;
+            Vector2i topRight = new Vector2i(bottomRight.x(), insertOvalStartTile.y());
+            Vector2i bottomLeft = new Vector2i(insertOvalStartTile.x(), bottomRight.y());
+            setTileValue(map.terrain(), topRight, Tiles.CORNER_NE);
+            setTileValue(map.terrain(), bottomLeft, Tiles.CORNER_SW);
+            setTileValue(map.terrain(), bottomRight, Tiles.CORNER_SE);
+        }
         insertOvalStartTile = null;
     }
-
-
 
 } // EditController
