@@ -36,6 +36,10 @@ public class ScoreManager {
         score.reset();
     }
 
+    public boolean isScoreEnabled() {
+        return scoreEnabled;
+    }
+
     public void setScoreEnabled(boolean scoreEnabled) {
         this.scoreEnabled = scoreEnabled;
     }

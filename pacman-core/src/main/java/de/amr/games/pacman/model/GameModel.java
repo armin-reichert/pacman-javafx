@@ -135,6 +135,7 @@ public abstract class GameModel {
 
     protected void clearLevel() {
         currentLevelNumber = 0;
+        scoreManager.setScoreEnabled(false);
         levelStartTime = 0;
         huntingControl.reset();
         numGhostsKilledInLevel = 0;
@@ -217,6 +218,8 @@ public abstract class GameModel {
         clearLevel();
         demoLevel = false;
         buildLevel(levelNumber);
+        scoreManager.setLevelNumber(levelNumber);
+        scoreManager.setScoreEnabled(true);
         updateLevelCounter();
         Logger.info("Level {} created", levelNumber);
         publishGameEvent(GameEventType.LEVEL_CREATED);

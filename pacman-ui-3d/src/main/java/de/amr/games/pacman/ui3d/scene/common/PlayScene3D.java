@@ -194,7 +194,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
         // Scores
         scores3D.showHighScore(game.scoreManager().highScore().points(), game.scoreManager().highScore().levelNumber());
-        if (context.game().canStartNewGame()) {
+        if (context.game().scoreManager().isScoreEnabled()) {
             scores3D.showScore(game.scoreManager().score().points(), game.scoreManager().score().levelNumber());
         } else { // demo level or "game over" state
             String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
