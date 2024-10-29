@@ -30,9 +30,13 @@ public class GameAssets3D {
 
         assets.addBundle(rm.getModuleBundle("de.amr.games.pacman.ui3d.texts.messages"));
 
-        assets.store("model3D.pacman", new Model3D(rm.url("model3D/pacman.obj")));
-        assets.store("model3D.ghost",  new Model3D(rm.url("model3D/ghost.obj")));
-        assets.store("model3D.pellet", new Model3D(rm.url("model3D/fruit.obj")));
+        assets.store("model3D.pacman",                 new Model3D(rm.url("model3D/pacman.obj")));
+        assets.store("model3D.ghost",                  new Model3D(rm.url("model3D/ghost.obj")));
+        assets.store("model3D.pellet",                 new Model3D(rm.url("model3D/fruit.obj")));
+
+        assets.store("model3D.ghost.mesh_id_dress",    "Sphere.004_Sphere.034_light_blue_ghost");
+        assets.store("model3D.ghost.mesh_id_pupils",   "Sphere.010_Sphere.039_grey_wall");
+        assets.store("model3D.ghost.mesh_id_eyeballs", "Sphere.009_Sphere.036_white");
 
         assets.store("wallpaper.day",   Ufx.wallpaperBackground(rm.loadImage("graphics/abstract-wallpaper-1.jpg")));
         assets.store("wallpaper.night", Ufx.wallpaperBackground(rm.loadImage("graphics/abstract-wallpaper-2.jpg")));

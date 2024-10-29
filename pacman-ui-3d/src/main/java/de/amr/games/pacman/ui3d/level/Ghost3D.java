@@ -57,9 +57,10 @@ public class Ghost3D {
     private Color flashingDressColor()      { return color(".ghost.color.flashing.dress"); }
     private Color flashingPupilsColor()     { return color(".ghost.color.flashing.pupils"); }
 
-    public Ghost3D(byte id,
-                   Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
-                   AssetStorage assets, String assetPrefix, double size) {
+    public Ghost3D(
+        byte id,
+        Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
+        AssetStorage assets, String assetPrefix, double size) {
 
         checkGhostID(id);
         requireNonNull(dressShape);
