@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.sound.GameSounds;
@@ -44,6 +43,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 
@@ -53,7 +53,7 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 public class GameLevel3D {
 
     static final int   LIVES_COUNTER_MAX     = 5;
-    static final float LIVE_SHAPE_SIZE       = 10;
+    static final float LIVES_SHAPE_SIZE      = 10.0f;
     static final float FLOOR_THICKNESS       = 0.5f;
     static final float OBSTACLE_HEIGHT       = 5.5f;
     static final float OBSTACLE_COAT_HEIGHT  = 0.1f;
@@ -70,26 +70,26 @@ public class GameLevel3D {
 
     static final PhongMaterial DEFAULT_MATERIAL = new PhongMaterial();
 
-    static Pac3D createPac3D(GameVariant variant, AssetStorage assets, GameSounds sounds, Pac pac, double size) {
-        String prefix = GameAssets2D.assetPrefix(variant) + ".";
+    static Pac3D createPac3D(GameVariant variant, AssetStorage assets, GameSounds sounds, Pac pac) {
+        String prefix = assetPrefix(variant) + ".";
         Pac3D pac3D = switch (variant) {
-            case MS_PACMAN, MS_PACMAN_TENGEN -> new MsPacMan3D(variant, pac, size, assets, sounds);
-            case PACMAN, PACMAN_XXL          -> new PacMan3D(variant, pac, size, assets, sounds);
+            case MS_PACMAN, MS_PACMAN_TENGEN -> new MsPacMan3D(variant, pac, PAC_SIZE, assets, sounds);
+            case PACMAN, PACMAN_XXL          -> new PacMan3D(variant, pac, PAC_SIZE, assets, sounds);
         };
         pac3D.shape3D().light().setColor(assets.color(prefix + "pac.color.head").desaturate());
         pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
         return pac3D;
     }
 
-    static MutableGhost3D createMutableGhost3D(AssetStorage assets, String assetPrefix, Ghost ghost, double size, int numFlashes) {
+    static MutableGhost3D createMutableGhost3D(AssetStorage assets, String assetPrefix, Ghost ghost, int numFlashes) {
         Shape3D dressShape    = new MeshView(assets.get("model3D.ghost.mesh.dress"));
         Shape3D pupilsShape   = new MeshView(assets.get("model3D.ghost.mesh.pupils"));
         Shape3D eyeballsShape = new MeshView(assets.get("model3D.ghost.mesh.eyeballs"));
-        return new MutableGhost3D(dressShape, pupilsShape, eyeballsShape, assets, assetPrefix, ghost, size, numFlashes);
+        return new MutableGhost3D(dressShape, pupilsShape, eyeballsShape, assets, assetPrefix, ghost, GHOST_SIZE, numFlashes);
     }
 
-    static LivesCounter3D createLivesCounter3D(GameVariant variant, AssetStorage assets, int maxShapes, double shapeSize, boolean canStartNewGame) {
-        Node[] shapes = IntStream.range(0, maxShapes).mapToObj(i -> createLivesCounterShape(variant, assets, shapeSize)).toArray(Node[]::new);
+    static LivesCounter3D createLivesCounter3D(GameVariant variant, AssetStorage assets,  boolean canStartNewGame) {
+        Node[] shapes = IntStream.range(0, LIVES_COUNTER_MAX).mapToObj(i -> createLivesCounterShape(variant, assets)).toArray(Node[]::new);
         var counter3D = new LivesCounter3D(shapes, 10);
         counter3D.setTranslateX(2 * TS);
         counter3D.setTranslateY(2 * TS);
@@ -100,17 +100,17 @@ public class GameLevel3D {
         return counter3D;
     }
 
-    static Node createLivesCounterShape(GameVariant variant, AssetStorage assets, double size) {
-        String assetPrefix = GameAssets2D.assetPrefix(variant) + ".";
+    static Node createLivesCounterShape(GameVariant variant, AssetStorage assets) {
+        String assetPrefix = assetPrefix(variant) + ".";
         return switch (variant) {
             case MS_PACMAN, MS_PACMAN_TENGEN -> new Group(
                 PacModel3D.createPacShape(
-                    assets.get("model3D.pacman"), size,
+                    assets.get("model3D.pacman"), LIVES_SHAPE_SIZE,
                     assets.color(assetPrefix + "pac.color.head"),
                     assets.color(assetPrefix + "pac.color.eyes"),
                     assets.color(assetPrefix + "pac.color.palate")
                 ),
-                PacModel3D.createFemaleParts(size,
+                PacModel3D.createFemaleParts(LIVES_SHAPE_SIZE,
                     assets.color(assetPrefix + "pac.color.hairbow"),
                     assets.color(assetPrefix + "pac.color.hairbow.pearls"),
                     assets.color(assetPrefix + "pac.color.boobs")
@@ -118,7 +118,7 @@ public class GameLevel3D {
             );
             case PACMAN, PACMAN_XXL ->
                 PacModel3D.createPacShape(
-                    assets.get("model3D.pacman"), size,
+                    assets.get("model3D.pacman"), LIVES_SHAPE_SIZE,
                     assets.color(assetPrefix + "pac.color.head"),
                     assets.color(assetPrefix + "pac.color.eyes"),
                     assets.color(assetPrefix + "pac.color.palate")
@@ -200,17 +200,10 @@ public class GameLevel3D {
         final GameWorld world = game.world();
         final AssetStorage assets = context.assets();
 
-        pac3D = createPac3D(variant, assets, context.sounds(), game.pac(), PAC_SIZE);
-
-        ghosts3D = game.ghosts()
-            .map(ghost -> createMutableGhost3D(assets, GameAssets2D.assetPrefix(variant),
-                ghost, GHOST_SIZE, game.numFlashes()))
-            .toList();
-
-        livesCounter3D = createLivesCounter3D(variant, assets, LIVES_COUNTER_MAX, LIVE_SHAPE_SIZE,
-            game.canStartNewGame());
+        pac3D = createPac3D(variant, assets, context.sounds(), game.pac());
+        ghosts3D = game.ghosts().map(ghost -> createMutableGhost3D(assets, assetPrefix(variant), ghost, game.numFlashes())).toList();
+        livesCounter3D = createLivesCounter3D(variant, assets, game.canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCounterPy);
-
         message3D = createMessage3D(assets);
 
         wallFillMaterialPy.bind(Bindings.createObjectBinding(
