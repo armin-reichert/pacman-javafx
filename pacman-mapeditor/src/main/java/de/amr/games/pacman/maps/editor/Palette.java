@@ -26,6 +26,7 @@ public class Palette {
 
     private final GraphicsContext g;
 
+    private final byte id;
     private final int toolSize;
     private final int numRows;
     private final int numCols;
@@ -36,7 +37,8 @@ public class Palette {
     private int selectedCol;
     private final Tooltip tooltip;
 
-    public Palette(int toolSize, int numRows, int numCols, TileMapRenderer renderer) {
+    public Palette(byte id, int toolSize, int numRows, int numCols, TileMapRenderer renderer) {
+        this.id = id;
         this.toolSize = toolSize;
         this.numRows = numRows;
         this.numCols = numCols;
@@ -59,6 +61,10 @@ public class Palette {
 
         g = canvas.getGraphicsContext2D();
         Tooltip.install(canvas, tooltip);
+    }
+
+    public byte id() {
+        return id;
     }
 
     public TileValueEditorTool newTileTool(EditController editController, byte value, String description) {
@@ -85,11 +91,11 @@ public class Palette {
         return selectedTool != null;
     }
 
-    public int getSelectedRow() {
+    public int getSelectedEntryRow() {
         return selectedRow;
     }
 
-    public int getSelectedCol() {
+    public int getSelectedEntryCol() {
         return selectedCol;
     }
 

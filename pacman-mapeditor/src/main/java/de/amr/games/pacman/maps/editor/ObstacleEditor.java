@@ -41,10 +41,11 @@ public class ObstacleEditor {
     }
 
     public boolean isDisabled() {
-        return !(enabledPy.get() &&
-            viewModel.selectedPaletteID() == PALETTE_ID_TERRAIN &&
-            viewModel.selectedPalette().getSelectedRow() == 0 &&
-            viewModel.selectedPalette().getSelectedCol() == 0);
+        Palette selectedPalette = viewModel.selectedPalette();
+        boolean emptyTileEntrySelected =
+            selectedPalette.id() == PALETTE_ID_TERRAIN &&
+            selectedPalette.getSelectedEntryRow() == 0 && selectedPalette.getSelectedEntryCol() == 0;
+        return !(enabledPy.get() && emptyTileEntrySelected);
     }
 
     public void startEditing(Vector2i tile) {

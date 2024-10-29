@@ -519,7 +519,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
     }
 
     private Palette createTerrainPalette() {
-        var palette = new Palette(TOOL_SIZE, 1, 19, terrainMapEditRenderer);
+        var palette = new Palette(PALETTE_ID_TERRAIN, TOOL_SIZE, 1, 19, terrainMapEditRenderer);
         palette.addTileTool(editController, Tiles.EMPTY, "Empty Space");
         palette.addTileTool(editController, Tiles.WALL_H, "Horiz. Wall");
         palette.addTileTool(editController, Tiles.WALL_V, "Vert. Wall");
@@ -539,12 +539,12 @@ public class TileMapEditor implements TileMapEditorViewModel {
         palette.addTileTool(editController, Tiles.DCORNER_ANGULAR_SE, "SE Corner");
         palette.addTileTool(editController, Tiles.TUNNEL, "Tunnel");
         palette.addTileTool(editController, Tiles.DOOR, "Door");
-        palette.selectTool(0); // EMPTY
+        palette.selectTool(0); // "No Tile"
         return palette;
     }
 
     private Palette createActorPalette() {
-        var palette = new Palette(TOOL_SIZE, 1, 10, terrainMapEditRenderer);
+        var palette = new Palette(PALETTE_ID_ACTORS, TOOL_SIZE, 1, 10, terrainMapEditRenderer);
         palette.addTileTool(editController, Tiles.EMPTY, "");
         palette.addPropertyTool(PROPERTY_POS_PAC, "Pac-Man");
         palette.addPropertyTool(PROPERTY_POS_RED_GHOST, "Red Ghost");
@@ -555,16 +555,16 @@ public class TileMapEditor implements TileMapEditorViewModel {
         palette.addPropertyTool(PROPERTY_POS_SCATTER_PINK_GHOST, "Pink Ghost Scatter");
         palette.addPropertyTool(PROPERTY_POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter");
         palette.addPropertyTool(PROPERTY_POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter");
-        palette.selectTool(0); // No actor
+        palette.selectTool(0); // "No actor"
         return palette;
     }
 
     private Palette createFoodPalette() {
-        var palette = new Palette(TOOL_SIZE, 1, 3, foodMapRenderer);
+        var palette = new Palette(PALETTE_ID_FOOD, TOOL_SIZE, 1, 3, foodMapRenderer);
         palette.addTileTool(editController, Tiles.EMPTY, "No Food");
         palette.addTileTool(editController, Tiles.PELLET, "Pellet");
         palette.addTileTool(editController, Tiles.ENERGIZER, "Energizer");
-        palette.selectTool(0); // EMPTY
+        palette.selectTool(0); // "No Food"
         return palette;
     }
 
