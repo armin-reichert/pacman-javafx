@@ -132,7 +132,7 @@ public class EditController {
     }
 
     void onEditCanvasMouseClicked(MouseEvent event) {
-        Logger.info("Mouse clicked {}", event);
+        Logger.debug("Mouse clicked {}", event);
         if (event.getButton() == MouseButton.PRIMARY) {
             viewModel.canvas().requestFocus();
             viewModel.contextMenu().hide();
@@ -148,7 +148,7 @@ public class EditController {
             Vector2i dragStartTile = tileAtMousePosition(event.getX(), event.getY());
             obstacleEditor.startEditing(dragStartTile);
             dragging = true;
-            Logger.info("Dragging started at tile {}", dragStartTile);
+            Logger.debug("Dragging started at tile {}", dragStartTile);
         } else {
             obstacleEditor.continueEditing(tileAtMousePosition(event.getX(), event.getY()));
         }
@@ -156,11 +156,11 @@ public class EditController {
 
     void onEditCanvasMouseReleased(MouseEvent event) {
         if (event.getButton() == MouseButton.PRIMARY) {
-            Logger.info("Mouse released: {}", event);
+            Logger.debug("Mouse released: {}", event);
             if (dragging) {
                 dragging = false;
                 Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
-                Logger.info("Dragging ends at tile {}", tile);
+                Logger.debug("Dragging ends at tile {}", tile);
                 obstacleEditor.endEditing(tile);
             } else {
                 editAtMousePosition(event);
