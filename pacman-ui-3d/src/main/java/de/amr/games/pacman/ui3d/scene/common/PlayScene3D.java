@@ -496,7 +496,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         // Place level counter at top right maze corner
         double x = context.game().world().map().terrain().numCols() * TS - 2 * TS;
         double y = 2 * TS;
-        Node levelCounter3D = Factory3D.createLevelCounter3D(context.currentGameSceneConfig().spriteSheet(),
+        Node levelCounter3D = GameLevel3D.createLevelCounter3D(context.currentGameSceneConfig().spriteSheet(),
                 context.game().levelCounter(), x, y);
         level3D.root().getChildren().add(levelCounter3D);
     }

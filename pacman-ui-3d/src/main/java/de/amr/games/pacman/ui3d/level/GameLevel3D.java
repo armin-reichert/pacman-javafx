@@ -8,13 +8,17 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
+import de.amr.games.pacman.ui2d.sound.GameSounds;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.GameAssets3D;
@@ -25,6 +29,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
@@ -33,6 +38,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import java.util.*;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -61,6 +67,99 @@ public class GameLevel3D {
     static final float PELLET_RADIUS         = 1.0f;
 
     static final PhongMaterial DEFAULT_MATERIAL = new PhongMaterial();
+
+    static Pac3D createPac3D(GameVariant variant, AssetStorage assets, GameSounds sounds, Pac pac, double size) {
+        String prefix = GameAssets2D.assetPrefix(variant) + ".";
+        Pac3D pac3D = switch (variant) {
+            case MS_PACMAN, MS_PACMAN_TENGEN -> new MsPacMan3D(variant, pac, size, assets, sounds);
+            case PACMAN, PACMAN_XXL          -> new PacMan3D(variant, pac, size, assets, sounds);
+        };
+        pac3D.shape3D().light().setColor(assets.color(prefix + "pac.color.head").desaturate());
+        pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
+        return pac3D;
+    }
+
+    static MutableGhost3D createMutableGhost3D(AssetStorage assets, String assetPrefix, Ghost ghost, double size, int numFlashes) {
+        var ghost3D = new MutableGhost3D(assets.get("model3D.ghost"), assets, assetPrefix, ghost, size, numFlashes);
+        ghost3D.drawModePy.bind(PY_3D_DRAW_MODE);
+        return ghost3D;
+    }
+
+    static LivesCounter3D createLivesCounter3D(GameVariant variant, AssetStorage assets, int maxShapes, double shapeSize, boolean canStartNewGame) {
+        Node[] shapes = IntStream.range(0, maxShapes).mapToObj(i -> createLivesCounterShape(variant, assets, shapeSize)).toArray(Node[]::new);
+        var counter3D = new LivesCounter3D(shapes, 10);
+        counter3D.setTranslateX(2 * TS);
+        counter3D.setTranslateY(2 * TS);
+        counter3D.setVisible(canStartNewGame);
+        counter3D.drawModePy.bind(PY_3D_DRAW_MODE);
+        counter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
+        counter3D.light().setLightOn(canStartNewGame);
+        return counter3D;
+    }
+
+    static Node createLivesCounterShape(GameVariant variant, AssetStorage assets, double size) {
+        String assetPrefix = GameAssets2D.assetPrefix(variant) + ".";
+        return switch (variant) {
+            case MS_PACMAN, MS_PACMAN_TENGEN -> new Group(
+                PacModel3D.createPacShape(
+                    assets.get("model3D.pacman"), size,
+                    assets.color(assetPrefix + "pac.color.head"),
+                    assets.color(assetPrefix + "pac.color.eyes"),
+                    assets.color(assetPrefix + "pac.color.palate")
+                ),
+                PacModel3D.createFemaleParts(size,
+                    assets.color(assetPrefix + "pac.color.hairbow"),
+                    assets.color(assetPrefix + "pac.color.hairbow.pearls"),
+                    assets.color(assetPrefix + "pac.color.boobs")
+                )
+            );
+            case PACMAN, PACMAN_XXL ->
+                PacModel3D.createPacShape(
+                    assets.get("model3D.pacman"), size,
+                    assets.color(assetPrefix + "pac.color.head"),
+                    assets.color(assetPrefix + "pac.color.eyes"),
+                    assets.color(assetPrefix + "pac.color.palate")
+                );
+        };
+    }
+
+    public static Node createLevelCounter3D(GameSpriteSheet spriteSheet, List<Byte> symbols, double x, double y) {
+        double spacing = 2 * TS;
+        var levelCounter3D = new Group();
+        levelCounter3D.setTranslateX(x);
+        levelCounter3D.setTranslateY(y);
+        levelCounter3D.setTranslateZ(-6);
+        levelCounter3D.getChildren().clear();
+        int n = 0;
+        for (byte symbol : symbols) {
+            Box cube = new Box(TS, TS, TS);
+            cube.setTranslateX(-n * spacing);
+            cube.setTranslateZ(-HTS);
+            levelCounter3D.getChildren().add(cube);
+
+            var material = new PhongMaterial(Color.WHITE);
+            material.setDiffuseMap(spriteSheet.subImage(spriteSheet.bonusSymbolSprite(symbol)));
+            cube.setMaterial(material);
+
+            var spinning = new RotateTransition(Duration.seconds(6), cube);
+            spinning.setAxis(Rotate.X_AXIS);
+            spinning.setCycleCount(Animation.INDEFINITE);
+            spinning.setByAngle(360);
+            spinning.setRate(n % 2 == 0 ? 1 : -1);
+            spinning.setInterpolator(Interpolator.LINEAR);
+            spinning.play();
+
+            n += 1;
+        }
+        return levelCounter3D;
+    }
+
+    static Message3D createMessage3D(AssetStorage assets) {
+        var message3D = new Message3D("", assets.font("font.arcade", 6), Color.YELLOW, Color.WHITE);
+        message3D.setRotation(Rotate.X_AXIS, 90);
+        message3D.setVisible(false);
+        return message3D;
+    }
 
     private final StringProperty floorTextureNamePy = new SimpleStringProperty(this, "floorTextureName", GameAssets3D.NO_TEXTURE);
     private final DoubleProperty borderWallHeightPy = new SimpleDoubleProperty(this, "borderWallHeight", BORDER_WALL_HEIGHT);
@@ -94,18 +193,22 @@ public class GameLevel3D {
 
     public GameLevel3D(GameContext context) {
         final GameVariant variant = context.gameVariant();
+        final GameModel game = context.game();
+        final GameWorld world = game.world();
+        final AssetStorage assets = context.assets();
 
-        pac3D = Factory3D.createPac3D(variant, context.assets(), context.sounds(), context.game().pac(), PAC_SIZE);
+        pac3D = createPac3D(variant, assets, context.sounds(), game.pac(), PAC_SIZE);
 
-        ghosts3D = context.game().ghosts()
-            .map(ghost -> Factory3D.createMutableGhost3D(variant, context.assets(), ghost, GHOST_SIZE, context.game().numFlashes()))
+        ghosts3D = game.ghosts()
+            .map(ghost -> createMutableGhost3D(assets, GameAssets2D.assetPrefix(variant),
+                ghost, GHOST_SIZE, game.numFlashes()))
             .toList();
 
-        livesCounter3D = Factory3D.createLivesCounter3D(variant, context.assets(), LIVES_COUNTER_MAX, LIVE_SHAPE_SIZE,
-            context.game().canStartNewGame());
+        livesCounter3D = createLivesCounter3D(variant, assets, LIVES_COUNTER_MAX, LIVE_SHAPE_SIZE,
+            game.canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCounterPy);
 
-        message3D = Factory3D.createMessage3D(context.assets());
+        message3D = createMessage3D(assets);
 
         wallFillMaterialPy.bind(Bindings.createObjectBinding(
             () -> coloredMaterial(opaqueColor(wallFillColorPy.get(), wallOpacityPy.get())),
@@ -113,8 +216,8 @@ public class GameLevel3D {
 
         wallStrokeMaterialPy.bind(wallStrokeColorPy.map(Ufx::coloredMaterial));
 
-        buildWorld3D(context.game().world(), context.assets(), context.game().currentMapColorScheme());
-        addFood3D(context.game().world(), context.assets(), context.game().currentMapColorScheme());
+        buildWorld3D(world, assets, game.currentMapColorScheme());
+        addFood3D(world, assets, game.currentMapColorScheme());
 
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
         root.getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());

@@ -79,9 +79,9 @@ public class GameAssets3D {
 
         // Pac-Man
 
-        assets.store("pacman.pac.color.head",                     ARCADE_YELLOW);
-        assets.store("pacman.pac.color.eyes",                     Color.grayRgb(33));
-        assets.store("pacman.pac.color.palate",                   Color.rgb(240, 180, 160));
+        assets.store("pacman.pac.color.head",   ARCADE_YELLOW);
+        assets.store("pacman.pac.color.eyes",   Color.grayRgb(33));
+        assets.store("pacman.pac.color.palate", Color.rgb(240, 180, 160));
 
         assets.store("pacman.ghost.0.color.normal.dress", ARCADE_RED);
         assets.store("pacman.ghost.0.color.normal.eyeballs", ARCADE_PALE);

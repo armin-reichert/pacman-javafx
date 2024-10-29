@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
-import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
@@ -45,62 +43,43 @@ public class Ghost3D {
     private final ObjectProperty<Color> pupilsColorPy   = new SimpleObjectProperty<>(this, "pupilsColor", Color.BLUE);
 
     private final byte id;
-    private final String assetPrefix;
     private final AssetStorage assets;
+    private final String assetPrefix;
     private final Group root = new Group();
     private final Shape3D dress;
 
     private final RotateTransition dressAnimation;
     private Animation flashingAnimation;
 
-    private Color normalDressColor() {
-        return assets.color(assetPrefix + "ghost.%d.color.normal.dress".formatted(id));
-    }
+    private Color color(String keySuffix) { return assets.color(assetPrefix + keySuffix); }
 
-    private Color normalPupilsColor() {
-        return assets.color(assetPrefix + "ghost.%d.color.normal.pupils".formatted(id));
-    }
-
-    private Color normalEyeballsColor() {
-        return assets.color(assetPrefix + "ghost.%d.color.normal.eyeballs".formatted(id));
-    }
-
-    private Color frightenedDressColor() {
-        return assets.color(assetPrefix + "ghost.color.frightened.dress");
-    }
-
-    private Color frightenedPupilsColor() {
-        return assets.color(assetPrefix + "ghost.color.frightened.pupils");
-    }
-
+    private Color normalDressColor()        { return color(".ghost.%d.color.normal.dress".formatted(id));  }
+    private Color normalPupilsColor()       { return color(".ghost.%d.color.normal.pupils".formatted(id)); }
+    private Color normalEyeballsColor()     { return color(".ghost.%d.color.normal.eyeballs".formatted(id)); }
+    private Color frightenedDressColor()    { return color(".ghost.color.frightened.dress"); }
+    private Color frightenedPupilsColor()   { return color(".ghost.color.frightened.pupils"); }
     private Color frightenedEyeballsColor() {
-        return assets.color(assetPrefix + "ghost.color.frightened.eyeballs");
+        return color(".ghost.color.frightened.eyeballs");
     }
+    private Color flashingDressColor()      { return color(".ghost.color.flashing.dress"); }
+    private Color flashingPupilsColor()     { return color(".ghost.color.flashing.pupils"); }
 
-    private Color flashingDressColor() {
-        return assets.color(assetPrefix + "ghost.color.flashing.dress");
-    }
-
-    private Color flashingPupilsColor() {
-        return assets.color(assetPrefix + "ghost.color.flashing.pupils");
-    }
-
-    public Ghost3D(GameVariant variant, Model3D model3D, AssetStorage assets, byte id, double size) {
-        requireNonNull(variant);
+    public Ghost3D(Model3D model3D, AssetStorage assets, String assetPrefix, byte id, double size) {
         requireNonNull(model3D);
         requireNonNull(assets);
+        requireNonNull(assetPrefix);
         checkGhostID(id);
         requirePositive(size, "Size must be positive but is %f");
 
         this.assets = assets;
+        this.assetPrefix = assetPrefix;
         this.id = id;
 
-        assetPrefix = GameAssets2D.assetPrefix(variant) + ".";
+        dressColorPy.set(normalDressColor());
 
         dress = new MeshView(model3D.mesh(MESH_ID_GHOST_DRESS));
         dress.setMaterial(coloredMaterial(dressColorPy));
         dress.drawModeProperty().bind(drawModePy);
-        dressColorPy.set(normalDressColor());
 
         var dressGroup = new Group(dress);
 
