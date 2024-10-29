@@ -135,19 +135,6 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         else if (context.game().isDemoLevel()) {
             bindAction(GameActions2D.ADD_CREDIT, key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP));
         }
-        bindAction(GameActions3D.PREV_PERSPECTIVE,  alt(KeyCode.LEFT));
-        bindAction(GameActions3D.NEXT_PERSPECTIVE,  alt(KeyCode.RIGHT));
-        bindAction(GameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
-        bindAction(GameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
-        bindAction(GameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
-        bindAction(GameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            bindAction(GameActions2D.TENGEN_TOGGLE_PAC_BOOSTER, KeyCode.A);
-            bindAction(GameActions2D.TENGEN_SHOW_OPTIONS,       KeyCode.S);
-        }
-        else if (context.game().isDemoLevel()) {
-            bindAction(GameActions2D.ADD_CREDIT, key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP));
-        }
     }
 
     protected void doInit() {
@@ -511,6 +498,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.root().translateYProperty().subtract(3.5 * TS));
         scores3D.translateZProperty().bind(level3D.root().translateZProperty().subtract(3 * TS));
+
         Logger.info("3D game level {} created.", context.game().currentLevelNumber());
     }
 

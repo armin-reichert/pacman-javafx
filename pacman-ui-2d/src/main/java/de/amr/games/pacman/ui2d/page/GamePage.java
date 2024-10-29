@@ -178,16 +178,16 @@ public class GamePage extends StackPane implements Page {
         bindAction(GameActions2D.SHOW_START_PAGE, KeyCode.Q);
         bindAction(GameActions2D.TOGGLE_PAUSED,   KeyCode.P);
         bindAction(GameActions2D.OPEN_EDITOR,     shift_alt(KeyCode.E));
-        bindAction(actionToggleDebugInfo,               alt(KeyCode.D));
-        bindAction(actionShowHelp,                      KeyCode.H);
-        bindAction(actionSimulationSlower,              alt(KeyCode.MINUS));
-        bindAction(actionSimulationFaster,              alt(KeyCode.PLUS));
-        bindAction(actionSimulationNormalSpeed,         alt(KeyCode.DIGIT0));
-        bindAction(actionSimulationOneStep,             shift(KeyCode.P));
-        bindAction(actionSimulationTenSteps,            shift(KeyCode.SPACE));
-        bindAction(actionToggleAutopilot,               alt(KeyCode.A));
-        bindAction(actionToggleDashboard,               key(KeyCode.F1), alt(KeyCode.B));
-        bindAction(actionToggleImmunity,                alt(KeyCode.I));
+        bindAction(actionToggleDebugInfo,         alt(KeyCode.D));
+        bindAction(actionShowHelp,                KeyCode.H);
+        bindAction(actionSimulationSlower,        alt(KeyCode.MINUS));
+        bindAction(actionSimulationFaster,        alt(KeyCode.PLUS));
+        bindAction(actionSimulationNormalSpeed,   alt(KeyCode.DIGIT0));
+        bindAction(actionSimulationOneStep,       shift(KeyCode.P));
+        bindAction(actionSimulationTenSteps,      shift(KeyCode.SPACE));
+        bindAction(actionToggleAutopilot,         alt(KeyCode.A));
+        bindAction(actionToggleDashboard,         key(KeyCode.F1), alt(KeyCode.B));
+        bindAction(actionToggleImmunity,          alt(KeyCode.I));
     }
 
     @Override
