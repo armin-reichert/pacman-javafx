@@ -10,8 +10,6 @@ import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Shape3D;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -33,10 +31,10 @@ public class GameAssets3D {
         assets.addBundle(rm.getModuleBundle("de.amr.games.pacman.ui3d.texts.messages"));
 
         assets.store("model3D.pacman",                 new Model3D(rm.url("model3D/pacman.obj")));
-        assets.store("model3D.ghost",                  new Model3D(rm.url("model3D/ghost.obj")));
         assets.store("model3D.pellet",                 new Model3D(rm.url("model3D/fruit.obj")));
 
-        Model3D ghostModel3D = assets.get("model3D.ghost");
+        Model3D ghostModel3D = new Model3D(rm.url("model3D/ghost.obj"));
+        assets.store("model3D.ghost",               ghostModel3D);
         assets.store("model3D.ghost.mesh.dress",    ghostModel3D.mesh("Sphere.004_Sphere.034_light_blue_ghost"));
         assets.store("model3D.ghost.mesh.pupils",   ghostModel3D.mesh("Sphere.010_Sphere.039_grey_wall"));
         assets.store("model3D.ghost.mesh.eyeballs", ghostModel3D.mesh("Sphere.009_Sphere.036_white"));
