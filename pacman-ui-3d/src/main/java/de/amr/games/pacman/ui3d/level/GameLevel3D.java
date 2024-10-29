@@ -82,13 +82,10 @@ public class GameLevel3D {
     }
 
     static MutableGhost3D createMutableGhost3D(AssetStorage assets, String assetPrefix, Ghost ghost, double size, int numFlashes) {
-        Model3D model3D = assets.get("model3D.ghost");
-        Shape3D dressShape = new MeshView(model3D.mesh(assets.get("model3D.ghost.mesh_id_dress")));
-        Shape3D pupilsShape = new MeshView(model3D.mesh(assets.get("model3D.ghost.mesh_id_pupils")));
-        Shape3D eyeballsShape = new MeshView(model3D.mesh(assets.get("model3D.ghost.mesh_id_eyeballs")));
-        var ghost3D = new MutableGhost3D(dressShape, pupilsShape, eyeballsShape, assets, assetPrefix, ghost, size, numFlashes);
-        ghost3D.drawModePy.bind(PY_3D_DRAW_MODE);
-        return ghost3D;
+        Shape3D dressShape    = new MeshView(assets.get("model3D.ghost.mesh.dress"));
+        Shape3D pupilsShape   = new MeshView(assets.get("model3D.ghost.mesh.pupils"));
+        Shape3D eyeballsShape = new MeshView(assets.get("model3D.ghost.mesh.eyeballs"));
+        return new MutableGhost3D(dressShape, pupilsShape, eyeballsShape, assets, assetPrefix, ghost, size, numFlashes);
     }
 
     static LivesCounter3D createLivesCounter3D(GameVariant variant, AssetStorage assets, int maxShapes, double shapeSize, boolean canStartNewGame) {

@@ -10,6 +10,8 @@ import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.MeshView;
+import javafx.scene.shape.Shape3D;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -34,9 +36,10 @@ public class GameAssets3D {
         assets.store("model3D.ghost",                  new Model3D(rm.url("model3D/ghost.obj")));
         assets.store("model3D.pellet",                 new Model3D(rm.url("model3D/fruit.obj")));
 
-        assets.store("model3D.ghost.mesh_id_dress",    "Sphere.004_Sphere.034_light_blue_ghost");
-        assets.store("model3D.ghost.mesh_id_pupils",   "Sphere.010_Sphere.039_grey_wall");
-        assets.store("model3D.ghost.mesh_id_eyeballs", "Sphere.009_Sphere.036_white");
+        Model3D ghostModel3D = assets.get("model3D.ghost");
+        assets.store("model3D.ghost.mesh.dress",    ghostModel3D.mesh("Sphere.004_Sphere.034_light_blue_ghost"));
+        assets.store("model3D.ghost.mesh.pupils",   ghostModel3D.mesh("Sphere.010_Sphere.039_grey_wall"));
+        assets.store("model3D.ghost.mesh.eyeballs", ghostModel3D.mesh("Sphere.009_Sphere.036_white"));
 
         assets.store("wallpaper.day",   Ufx.wallpaperBackground(rm.loadImage("graphics/abstract-wallpaper-1.jpg")));
         assets.store("wallpaper.night", Ufx.wallpaperBackground(rm.loadImage("graphics/abstract-wallpaper-2.jpg")));
