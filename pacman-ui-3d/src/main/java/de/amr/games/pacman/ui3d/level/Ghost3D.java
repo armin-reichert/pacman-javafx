@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.ui2d.util.AssetStorage;
+import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
 import javafx.animation.Animation.Status;
@@ -25,7 +26,6 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.requirePositive;
 import static de.amr.games.pacman.model.GameModel.checkGhostID;
-import static de.amr.games.pacman.ui2d.util.Ufx.coloredMaterial;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -64,24 +64,41 @@ public class Ghost3D {
     private Color flashingDressColor()      { return color(".ghost.color.flashing.dress"); }
     private Color flashingPupilsColor()     { return color(".ghost.color.flashing.pupils"); }
 
-    public Ghost3D(Model3D model3D, AssetStorage assets, String assetPrefix, byte id, double size) {
+    public Ghost3D(byte id, Model3D model3D, AssetStorage assets, String assetPrefix, double size) {
+        checkGhostID(id);
         requireNonNull(model3D);
         requireNonNull(assets);
         requireNonNull(assetPrefix);
-        checkGhostID(id);
         requirePositive(size, "Size must be positive but is %f");
 
+        this.id = id;
         this.assets = assets;
         this.assetPrefix = assetPrefix;
-        this.id = id;
-
-        dressColorPy.set(normalDressColor());
 
         dress = new MeshView(model3D.mesh(MESH_ID_GHOST_DRESS));
-        dress.setMaterial(coloredMaterial(dressColorPy));
+        dress.materialProperty().bind(dressColorPy.map(Ufx::coloredMaterial));
         dress.drawModeProperty().bind(drawModePy);
 
+        Shape3D pupils = new MeshView(model3D.mesh(MESH_ID_GHOST_PUPILS));
+        pupils.materialProperty().bind(pupilsColorPy.map(Ufx::coloredMaterial));
+        pupils.drawModeProperty().bind(drawModePy);
+
+        Shape3D eyeballs = new MeshView(model3D.mesh(MESH_ID_GHOST_EYEBALLS));
+        eyeballs.materialProperty().bind(eyeballsColorPy.map(Ufx::coloredMaterial));
+        eyeballs.drawModeProperty().bind(drawModePy);
+
+        pupilsColorPy.set(normalPupilsColor());
+        dressColorPy.set(normalDressColor());
+        eyeballsColorPy.set(normalEyeballsColor());
+
+        var eyesGroup = new Group(pupils, eyeballs);
         var dressGroup = new Group(dress);
+        root.getChildren().setAll(dressGroup, eyesGroup);
+
+        Bounds dressBounds = dress.getBoundsInLocal();
+        var centeredOverOrigin = new Translate(-dressBounds.getCenterX(), -dressBounds.getCenterY(), -dressBounds.getCenterZ());
+        dress.getTransforms().add(centeredOverOrigin);
+        eyesGroup.getTransforms().add(centeredOverOrigin);
 
         dressAnimation = new RotateTransition(Duration.seconds(0.3), dressGroup);
         // TODO I expected this should be the z-axis but... (transforms messed-up?)
@@ -89,24 +106,6 @@ public class Ghost3D {
         dressAnimation.setByAngle(30);
         dressAnimation.setCycleCount(Animation.INDEFINITE);
         dressAnimation.setAutoReverse(true);
-
-        var pupils = new MeshView(model3D.mesh(MESH_ID_GHOST_PUPILS));
-        pupils.setMaterial(coloredMaterial(pupilsColorPy));
-        pupils.drawModeProperty().bind(drawModePy);
-        pupilsColorPy.set(normalPupilsColor());
-
-        var eyeballs = new MeshView(model3D.mesh(MESH_ID_GHOST_EYEBALLS));
-        eyeballs.setMaterial(coloredMaterial(eyeballsColorPy));
-        eyeballs.drawModeProperty().bind(drawModePy);
-        eyeballsColorPy.set(normalEyeballsColor());
-
-        var eyesGroup = new Group(pupils, eyeballs);
-        root.getChildren().setAll(dressGroup, eyesGroup);
-
-        Bounds dressBounds = dress.getBoundsInLocal();
-        var centeredOverOrigin = new Translate(-dressBounds.getCenterX(), -dressBounds.getCenterY(), -dressBounds.getCenterZ());
-        dress.getTransforms().add(centeredOverOrigin);
-        eyesGroup.getTransforms().add(centeredOverOrigin);
 
         fixOrientation(root);
         resizeTo(size);

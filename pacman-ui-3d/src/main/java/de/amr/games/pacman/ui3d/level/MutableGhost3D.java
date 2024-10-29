@@ -83,7 +83,7 @@ public class MutableGhost3D {
         this.size = size;
         this.numFlashes = numFlashes;
 
-        ghost3D = new Ghost3D(model3D, assets, assetPrefix, ghost.id(), size);
+        ghost3D = new Ghost3D(ghost.id(), model3D, assets, assetPrefix, size);
         ghost3D.drawModePy.bind(drawModePy);
 
         numberCube = new Box(14, 8, 8);
