@@ -98,7 +98,8 @@ public class GameLevel3D {
         pac3D = Factory3D.createPac3D(variant, context.assets(), context.sounds(), context.game().pac(), PAC_SIZE);
 
         ghosts3D = context.game().ghosts()
-            .map(ghost -> Factory3D.createMutableGhost3D(variant, context.assets(), ghost, GHOST_SIZE)).toList();
+            .map(ghost -> Factory3D.createMutableGhost3D(variant, context.assets(), ghost, GHOST_SIZE, context.game().numFlashes()))
+            .toList();
 
         livesCounter3D = Factory3D.createLivesCounter3D(variant, context.assets(), LIVES_COUNTER_MAX, LIVE_SHAPE_SIZE,
             context.game().canStartNewGame());

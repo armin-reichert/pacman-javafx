@@ -42,8 +42,8 @@ public interface Factory3D {
         return pac3D;
     }
 
-    static MutableGhost3D createMutableGhost3D(GameVariant variant, AssetStorage assets, Ghost ghost, double size) {
-        var ghost3D = new MutableGhost3D(variant, assets.get("model3D.ghost"), assets, ghost, size);
+    static MutableGhost3D createMutableGhost3D(GameVariant variant, AssetStorage assets, Ghost ghost, double size, int numFlashes) {
+        var ghost3D = new MutableGhost3D(variant, assets.get("model3D.ghost"), assets, ghost, size, numFlashes);
         ghost3D.drawModePy.bind(PY_3D_DRAW_MODE);
         return ghost3D;
     }

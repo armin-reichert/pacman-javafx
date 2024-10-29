@@ -71,17 +71,19 @@ public class MutableGhost3D {
     private final RotateTransition numberCubeRotation;
     private final RotateTransition brakeAnimation;
     private final double size;
-    private int numFlashes;
+    private final int numFlashes;
 
-    public MutableGhost3D(GameVariant variant, Model3D model3D, AssetStorage assets, Ghost ghost, double size) {
+    public MutableGhost3D(GameVariant variant, Model3D model3D, AssetStorage assets, Ghost ghost, double size, int numFlashes) {
         requireNonNull(variant);
         requireNonNull(model3D);
         requireNonNull(assets);
         requireNonNull(ghost);
         requirePositive(size);
+        requirePositive(numFlashes);
 
         this.ghost = ghost;
         this.size = size;
+        this.numFlashes = numFlashes;
 
         ghost3D = new Ghost3D(variant, model3D, assets, ghost.id(), size);
         ghost3D.drawModePy.bind(drawModePy);
@@ -104,7 +106,6 @@ public class MutableGhost3D {
     }
 
     public void init(GameContext context) {
-        numFlashes = context.game().numFlashes();
         brakeAnimation.stop();
         ghost3D.stopDressAnimation();
         numberCubeRotation.stop();

@@ -161,14 +161,14 @@ public class Ghost3D {
     }
 
     public void appearFlashing(int numFlashes) {
+        dress.setVisible(true);
         if (numFlashes == 0) {
             appearFrightened();
         } else {
-            dress.setVisible(true);
             // Note: Total flashing time must be shorter than Pac power fading time (2s)!
-            Duration totalFlashingTime = Duration.seconds(2).multiply(0.95);
+            Duration totalFlashingTime = Duration.millis(1966);
             ensureFlashingAnimationIsPlaying(numFlashes, totalFlashingTime);
-            Logger.info("Appear flashing, ghost {}", id);
+            Logger.info("{} is flashing {} times", id, numFlashes);
         }
     }
 
