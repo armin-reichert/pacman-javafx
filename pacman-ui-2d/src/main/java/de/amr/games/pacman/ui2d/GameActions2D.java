@@ -129,6 +129,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             context.sounds().stopAll();
+            context.currentGameScene().ifPresent(GameScene::end);
             context.game().onGameEnded();
             context.selectStartPage();
         }
