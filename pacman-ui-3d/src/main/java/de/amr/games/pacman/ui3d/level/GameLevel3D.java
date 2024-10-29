@@ -34,6 +34,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.MeshView;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -49,6 +51,10 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
  * @author Armin Reichert
  */
 public class GameLevel3D {
+
+    static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
+    static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
+    static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
 
     static final int   LIVES_COUNTER_MAX     = 5;
     static final float LIVE_SHAPE_SIZE       = 10;
@@ -80,7 +86,11 @@ public class GameLevel3D {
     }
 
     static MutableGhost3D createMutableGhost3D(AssetStorage assets, String assetPrefix, Ghost ghost, double size, int numFlashes) {
-        var ghost3D = new MutableGhost3D(assets.get("model3D.ghost"), assets, assetPrefix, ghost, size, numFlashes);
+        Model3D model3D = assets.get("model3D.ghost");
+        Shape3D dressShape = new MeshView(model3D.mesh(MESH_ID_GHOST_DRESS));
+        Shape3D pupilsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_PUPILS));
+        Shape3D eyeballsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_EYEBALLS));
+        var ghost3D = new MutableGhost3D(dressShape, pupilsShape, eyeballsShape, assets, assetPrefix, ghost, size, numFlashes);
         ghost3D.drawModePy.bind(PY_3D_DRAW_MODE);
         return ghost3D;
     }

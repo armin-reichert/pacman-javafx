@@ -10,7 +10,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.Ufx;
-import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
@@ -20,6 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -72,8 +72,13 @@ public class MutableGhost3D {
     private final double size;
     private final int numFlashes;
 
-    public MutableGhost3D(Model3D model3D, AssetStorage assets, String assetPrefix, Ghost ghost, double size, int numFlashes) {
-        requireNonNull(model3D);
+    public MutableGhost3D(
+        Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
+        AssetStorage assets, String assetPrefix, Ghost ghost, double size, int numFlashes) {
+
+        requireNonNull(dressShape);
+        requireNonNull(pupilsShape);
+        requireNonNull(eyeballsShape);
         requireNonNull(assets);
         requireNonNull(ghost);
         requirePositive(size);
@@ -83,7 +88,7 @@ public class MutableGhost3D {
         this.size = size;
         this.numFlashes = numFlashes;
 
-        ghost3D = new Ghost3D(ghost.id(), model3D, assets, assetPrefix, size);
+        ghost3D = new Ghost3D(ghost.id(), dressShape, pupilsShape, eyeballsShape, assets, assetPrefix, size);
         ghost3D.drawModePy.bind(drawModePy);
 
         numberCube = new Box(14, 8, 8);

@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.Ufx;
-import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
 import javafx.animation.Animation.Status;
 import javafx.beans.property.ObjectProperty;
@@ -16,7 +15,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -33,11 +31,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class Ghost3D {
 
-    static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
-    static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
-    static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
-
     public final ObjectProperty<DrawMode> drawModePy    = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+
     private final ObjectProperty<Color> dressColorPy    = new SimpleObjectProperty<>(this, "dressColor", Color.ORANGE);
     private final ObjectProperty<Color> eyeballsColorPy = new SimpleObjectProperty<>(this, "eyeballsColor", Color.WHITE);
     private final ObjectProperty<Color> pupilsColorPy   = new SimpleObjectProperty<>(this, "pupilsColor", Color.BLUE);
@@ -58,15 +53,18 @@ public class Ghost3D {
     private Color normalEyeballsColor()     { return color(".ghost.%d.color.normal.eyeballs".formatted(id)); }
     private Color frightenedDressColor()    { return color(".ghost.color.frightened.dress"); }
     private Color frightenedPupilsColor()   { return color(".ghost.color.frightened.pupils"); }
-    private Color frightenedEyeballsColor() {
-        return color(".ghost.color.frightened.eyeballs");
-    }
+    private Color frightenedEyeballsColor() { return color(".ghost.color.frightened.eyeballs"); }
     private Color flashingDressColor()      { return color(".ghost.color.flashing.dress"); }
     private Color flashingPupilsColor()     { return color(".ghost.color.flashing.pupils"); }
 
-    public Ghost3D(byte id, Model3D model3D, AssetStorage assets, String assetPrefix, double size) {
+    public Ghost3D(byte id,
+                   Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
+                   AssetStorage assets, String assetPrefix, double size) {
+
         checkGhostID(id);
-        requireNonNull(model3D);
+        requireNonNull(dressShape);
+        requireNonNull(pupilsShape);
+        requireNonNull(eyeballsShape);
         requireNonNull(assets);
         requireNonNull(assetPrefix);
         requirePositive(size, "Size must be positive but is %f");
@@ -75,23 +73,21 @@ public class Ghost3D {
         this.assets = assets;
         this.assetPrefix = assetPrefix;
 
-        dress = new MeshView(model3D.mesh(MESH_ID_GHOST_DRESS));
+        dress = dressShape;
         dress.materialProperty().bind(dressColorPy.map(Ufx::coloredMaterial));
         dress.drawModeProperty().bind(drawModePy);
 
-        Shape3D pupils = new MeshView(model3D.mesh(MESH_ID_GHOST_PUPILS));
-        pupils.materialProperty().bind(pupilsColorPy.map(Ufx::coloredMaterial));
-        pupils.drawModeProperty().bind(drawModePy);
+        pupilsShape.materialProperty().bind(pupilsColorPy.map(Ufx::coloredMaterial));
+        pupilsShape.drawModeProperty().bind(drawModePy);
 
-        Shape3D eyeballs = new MeshView(model3D.mesh(MESH_ID_GHOST_EYEBALLS));
-        eyeballs.materialProperty().bind(eyeballsColorPy.map(Ufx::coloredMaterial));
-        eyeballs.drawModeProperty().bind(drawModePy);
+        eyeballsShape.materialProperty().bind(eyeballsColorPy.map(Ufx::coloredMaterial));
+        eyeballsShape.drawModeProperty().bind(drawModePy);
 
         pupilsColorPy.set(normalPupilsColor());
         dressColorPy.set(normalDressColor());
         eyeballsColorPy.set(normalEyeballsColor());
 
-        var eyesGroup = new Group(pupils, eyeballs);
+        var eyesGroup = new Group(pupilsShape, eyeballsShape);
         var dressGroup = new Group(dress);
         root.getChildren().setAll(dressGroup, eyesGroup);
 
