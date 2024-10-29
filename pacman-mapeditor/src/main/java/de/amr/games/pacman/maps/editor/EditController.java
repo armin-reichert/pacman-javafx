@@ -506,7 +506,7 @@ public class EditController {
 
     private class ObstacleEditor {
 
-        private BooleanProperty enabledPy = new SimpleBooleanProperty();
+        private final BooleanProperty enabledPy = new SimpleBooleanProperty();
 
         private Vector2i anchor;
         private Vector2i frontier;
