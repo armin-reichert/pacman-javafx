@@ -111,7 +111,7 @@ public class PacManXXLGame extends PacManArcadeGame {
                 currentMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_FILL, "000000"),
                 currentMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_STROKE, "0000ff"),
                 currentMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_DOOR, "00ffff"),
-                currentMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_FOOD, "ffffff")
+                currentMap.food().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_FOOD, "ffffff")
             );
         }
     }
