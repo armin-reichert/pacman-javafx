@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.MapColorScheme;
+import de.amr.games.pacman.lib.tilemap.Tiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
@@ -91,10 +92,6 @@ public class PacManArcadeGame extends GameModel {
 
     // Ghost house tile position in all Arcade mazes
     private static final byte HOUSE_X = 10, HOUSE_Y = 15;
-
-    private static final List<Vector2i> CANNOT_MOVE_UP_TILES = List.of(
-        v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)
-    );
 
     protected static final NavPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
         np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
@@ -217,9 +214,11 @@ public class PacManArcadeGame extends GameModel {
         pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
+        List<Vector2i> oneWayDownTiles = worldMap.terrain().tiles()
+            .filter(tile -> worldMap.terrain().get(tile) == Tiles.ONE_WAY_DOWN).toList();
         ghosts().forEach(ghost -> {
             ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
-            ghost.setCannotMoveUpTiles(CANNOT_MOVE_UP_TILES);
+            ghost.setSpecialTerrainTiles(oneWayDownTiles);
         });
         cruiseElroy = 0;
     }

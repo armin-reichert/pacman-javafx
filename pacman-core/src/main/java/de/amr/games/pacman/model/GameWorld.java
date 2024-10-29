@@ -37,6 +37,14 @@ public class GameWorld {
     public static final String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
     public static final String PROPERTY_POS_HOUSE_MIN_TILE       = "pos_house_min_tile";
 
+    private static boolean isWallLikeContent(byte content) {
+        return content == WALL_H  || content == WALL_V
+            || content == DWALL_H || content == DWALL_V
+            || content == CORNER_NE  || content == CORNER_NW  || content == CORNER_SE  || content == CORNER_SW
+            || content == DCORNER_NE || content == DCORNER_NW || content == DCORNER_SE || content == DCORNER_SW
+            || content == DCORNER_ANGULAR_NE || content == DCORNER_ANGULAR_NW || content == DCORNER_ANGULAR_SE || content == DCORNER_ANGULAR_SW;
+    }
+
     private final WorldMap map;
     private final Vector2f pacPosition;
     private final Vector2f[] ghostPositions = new Vector2f[4];
@@ -142,15 +150,7 @@ public class GameWorld {
 
     public boolean isBlockedTile(Vector2i tile) {
         checkTileNotNull(tile);
-        return !isOutsideWorld(tile) && isBlockedTerrain(map.terrain().get(tile));
-    }
-
-    private boolean isBlockedTerrain(byte content) {
-        return content == WALL_H  || content == WALL_V
-            || content == DWALL_H || content == DWALL_V
-            || content == CORNER_NE  || content == CORNER_NW  || content == CORNER_SE  || content == CORNER_SW
-            || content == DCORNER_NE || content == DCORNER_NW || content == DCORNER_SE || content == DCORNER_SW
-            || content == DCORNER_ANGULAR_NE || content == DCORNER_ANGULAR_NW || content == DCORNER_ANGULAR_SE || content == DCORNER_ANGULAR_SW;
+        return !isOutsideWorld(tile) && isWallLikeContent(map.terrain().get(tile));
     }
 
     public boolean isTunnel(Vector2i tile) {

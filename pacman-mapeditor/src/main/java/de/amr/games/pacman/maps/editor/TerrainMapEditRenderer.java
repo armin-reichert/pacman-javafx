@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.maps.editor;
 
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
@@ -26,7 +27,7 @@ import static de.amr.games.pacman.maps.editor.TileMapUtil.TILE_SIZE;
  */
 public class TerrainMapEditRenderer implements TileMapRenderer {
 
-    public DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1);
+    public DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
 
     protected Color wallFillColor = Color.BLACK;
     protected Color wallStrokeColor = Color.GREEN;
@@ -34,6 +35,9 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
 
     private final double[] xp = new double[3];
     private final double[] yp = new double[3];
+
+    public TerrainMapEditRenderer() {
+    }
 
     @Override
     public void setScaling(double scaling) {
@@ -76,7 +80,7 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
         g.restore();
     }
 
-    public void drawSpecialTile(GraphicsContext g, String propertyName, Vector2i tile) {
+    public void drawActorRelatedTile(GraphicsContext g, String propertyName, Vector2i tile) {
         switch (propertyName) {
             case PROPERTY_POS_PAC -> drawPacHome(g, tile);
             case PROPERTY_POS_RED_GHOST -> drawGhostHome(g, tile, Color.RED);
@@ -112,6 +116,10 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
                     -> drawDCornerAngular(g, tile, content, xp, yp);
             case Tiles.DOOR -> drawDoor(g, tile, doorColor);
             case Tiles.TUNNEL -> drawTunnel(g, tile);
+            case Tiles.ONE_WAY_UP    -> drawOneWaySign(g, tile, Direction.UP);
+            case Tiles.ONE_WAY_RIGHT -> drawOneWaySign(g, tile, Direction.RIGHT);
+            case Tiles.ONE_WAY_DOWN  -> drawOneWaySign(g, tile, Direction.DOWN);
+            case Tiles.ONE_WAY_LEFT  -> drawOneWaySign(g, tile, Direction.LEFT);
             default -> {}
         }
     }
@@ -132,6 +140,41 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
         g.strokeOval(x + 2, y + 2, TILE_SIZE - 4, TILE_SIZE - 4);
         g.strokeLine(x + 0.5 * TILE_SIZE, y, x + 0.5 * TILE_SIZE, y + TILE_SIZE);
         g.strokeLine(x, y + 0.5 * TILE_SIZE, x + TILE_SIZE, y + 0.5 * TILE_SIZE);
+    }
+
+    private void drawOneWaySign(GraphicsContext g, Vector2i tile, Direction dir) {
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
+        g.save();
+        g.beginPath();
+        switch (dir) {
+            case UP -> {
+                g.moveTo(x, y+8);
+                g.lineTo(x+4, y);
+                g.lineTo(x+8,y+8);
+            }
+            case RIGHT -> {
+                g.moveTo(x, y);
+                g.lineTo(x+8, y+4);
+                g.lineTo(x,y+8);
+            }
+            case DOWN -> {
+                g.moveTo(x, y);
+                g.lineTo(x+4, y+8);
+                g.lineTo(x+8,y);
+            }
+            case LEFT -> {
+                g.moveTo(x+8, y);
+                g.lineTo(x, y+4);
+                g.lineTo(x+8,y+8);
+
+            }
+        }
+        g.closePath();
+        g.setStroke(Color.grayRgb(222));
+        g.setLineWidth(0.4);
+        g.setLineDashes(0.5, 1);
+        g.stroke();
+        g.restore();
     }
 
     private void drawPacHome(GraphicsContext g, Vector2i tile) {

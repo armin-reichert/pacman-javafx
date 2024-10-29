@@ -176,11 +176,10 @@ public class PlayScene2D extends GameScene2D {
         if (context.gameVariant() == GameVariant.PACMAN && context.game().world() != null) {
             context.game().ghosts().forEach(ghost -> {
                 // Are currently the same for each ghost, but who knows what comes...
-                ghost.cannotMoveUpTiles().forEach(tile -> {
+                ghost.specialTerrainTiles().forEach(tile -> {
                     g.setFill(Color.RED);
-                    g.fillOval(scaled(t(tile.x())), scaled(t(tile.y() - 1)), scaled(TS), scaled(TS));
-                    g.setFill(Color.WHITE);
-                    g.fillRect(scaled(t(tile.x()) + 1), scaled(t(tile.y()) - HTS - 1), scaled(TS - 2), scaled(2));
+                    double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
+                    g.fillRect(x, y, size, 2);
                 });
             });
         }

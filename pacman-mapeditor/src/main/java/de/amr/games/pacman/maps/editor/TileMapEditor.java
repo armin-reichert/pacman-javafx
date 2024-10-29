@@ -519,7 +519,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
     }
 
     private Palette createTerrainPalette() {
-        var palette = new Palette(PALETTE_ID_TERRAIN, TOOL_SIZE, 1, 19, terrainMapEditRenderer);
+        var palette = new Palette(PALETTE_ID_TERRAIN, TOOL_SIZE, 1, 23, terrainMapEditRenderer);
         palette.addTileTool(editController, Tiles.EMPTY, "Empty Space");
         palette.addTileTool(editController, Tiles.WALL_H, "Horiz. Wall");
         palette.addTileTool(editController, Tiles.WALL_V, "Vert. Wall");
@@ -539,6 +539,11 @@ public class TileMapEditor implements TileMapEditorViewModel {
         palette.addTileTool(editController, Tiles.DCORNER_ANGULAR_SE, "SE Corner");
         palette.addTileTool(editController, Tiles.TUNNEL, "Tunnel");
         palette.addTileTool(editController, Tiles.DOOR, "Door");
+        palette.addTileTool(editController, Tiles.ONE_WAY_UP, "One-Way Up");
+        palette.addTileTool(editController, Tiles.ONE_WAY_RIGHT, "One-Way Right");
+        palette.addTileTool(editController, Tiles.ONE_WAY_DOWN, "One-Way Down");
+        palette.addTileTool(editController, Tiles.ONE_WAY_LEFT, "One-Way Left");
+
         palette.selectTool(0); // "No Tile"
         return palette;
     }

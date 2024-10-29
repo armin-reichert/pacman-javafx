@@ -50,7 +50,7 @@ public class PropertyValueEditorTool implements Tool {
         if (renderer instanceof TerrainMapEditRenderer tr) {
             g.save();
             g.scale(size / (double) TS, size / (double) TS);
-            tr.drawSpecialTile(g, propertyName, new Vector2i(col, row));
+            tr.drawActorRelatedTile(g, propertyName, new Vector2i(col, row));
             g.restore();
         }
     }

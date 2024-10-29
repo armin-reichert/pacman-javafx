@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.Tiles;
 import de.amr.games.pacman.model.GameModel;
 import org.tinylog.Logger;
 
@@ -63,7 +64,7 @@ public class Ghost extends Creature implements AnimatedEntity {
     private Vector2f revivalPosition;
     private Animations animations;
     private Consumer<Ghost> huntingBehaviour = ghost -> {};
-    private List<Vector2i> cannotMoveUpTiles = List.of();
+    private List<Vector2i> specialTerrainTiles = List.of();
 
     /**
      * Constructs a ghost without associated world like the ones in the cut scenes.
@@ -121,12 +122,12 @@ public class Ghost extends Creature implements AnimatedEntity {
         revivalPosition = position;
     }
 
-    public void setCannotMoveUpTiles(List<Vector2i> tiles) {
-        cannotMoveUpTiles = new ArrayList<>(tiles);
+    public void setSpecialTerrainTiles(List<Vector2i> tiles) {
+        specialTerrainTiles = new ArrayList<>(tiles);
     }
 
-    public List<Vector2i> cannotMoveUpTiles() {
-        return cannotMoveUpTiles;
+    public List<Vector2i> specialTerrainTiles() {
+        return specialTerrainTiles;
     }
 
     /**
@@ -172,11 +173,11 @@ public class Ghost extends Creature implements AnimatedEntity {
         // hunting ghosts cannot move up at certain tiles in Pac-Man game
         if (state == HUNTING_PAC) {
             var currentTile = tile();
-            if (cannotMoveUpTiles.contains(currentTile)) {
-                if (currentTile.plus(UP.vector()).equals(tile)) {
-                    Logger.trace("Hunting {} cannot move up at {}", name, currentTile);
-                    return false;
-                }
+            if (specialTerrainTiles.contains(tile)
+                    && world.map().terrain().get(tile) == Tiles.ONE_WAY_DOWN
+                    && currentTile.equals(tile.plus(DOWN.vector()))) {
+                Logger.info("Hunting {} cannot move up to special tile {}", name, tile);
+                return false;
             }
         }
         if (world.isDoorAt(tile)) {
