@@ -896,6 +896,15 @@ public class TileMapEditor implements TileMapEditorViewModel {
                 }
             }
         }
+        if (editController.symmetricEditModePy.get()) {
+            g.save();
+            g.setStroke(Color.YELLOW);
+            g.setLineWidth(0.75);
+            g.setLineDashes(5, 5);
+            g.strokeLine(canvas().getWidth() / 2, 0, canvas().getWidth() / 2, canvas().getHeight());
+            g.restore();
+        }
+
         if (foodVisiblePy.get()) {
             Color foodColor = getColorFromMap(map().food(), PROPERTY_COLOR_FOOD, TileMapUtil.parseColor(DEFAULT_COLOR_FOOD));
             foodMapRenderer.setScaling(gridSize() / 8.0);
