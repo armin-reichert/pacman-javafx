@@ -329,15 +329,15 @@ public class TengenMsPacManGame extends GameModel {
     private void selectArcadeMapForLevel(int levelNumber) {
         List<WorldMap> maps = getArcadeMaps();
         switch (levelNumber) {
-            case 1,2         -> setMapAndColorScheme(maps, 1, MSC_PINK_36_RED_15_WHITE_20);
-            case 3,4,5       -> setMapAndColorScheme(maps, 2, MSC_BLUE_21_WHITE_20_YELLOW_28);
-            case 6,7,8,9     -> setMapAndColorScheme(maps, 3, MSC_ORANGE_16_WHITE_20_RED_15);
-            case 10,11,12,13 -> setMapAndColorScheme(maps, 4, MSC_BLUE_01_YELLOW_28_WHITE_20);
-            case 14,15,16,17 -> setMapAndColorScheme(maps, 3, MSC_PINK_35_YELLOW_28_WHITE_20);
-            case 18,19,20,21 -> setMapAndColorScheme(maps, 4, MSC_PINK_36_RED_15_WHITE_20);
-            case 22,23,24,25 -> setMapAndColorScheme(maps, 3, MSC_BROWN_17_WHITE_20_WHITE_20);
-            case 26,27,28,29 -> setMapAndColorScheme(maps, 4, MSC_VIOLET_13_WHITE_20_YELLOW_28);
-            case 30,31,32    -> setMapAndColorScheme(maps, 3, MSC_BLACK_0F_WHITE_20_YELLOW_28);
+            case 1,2         -> selectMap(maps, 1, MSC_PINK_36_RED_15_WHITE_20);
+            case 3,4,5       -> selectMap(maps, 2, MSC_BLUE_21_WHITE_20_YELLOW_28);
+            case 6,7,8,9     -> selectMap(maps, 3, MSC_ORANGE_16_WHITE_20_RED_15);
+            case 10,11,12,13 -> selectMap(maps, 4, MSC_BLUE_01_YELLOW_28_WHITE_20);
+            case 14,15,16,17 -> selectMap(maps, 3, MSC_PINK_35_YELLOW_28_WHITE_20);
+            case 18,19,20,21 -> selectMap(maps, 4, MSC_PINK_36_RED_15_WHITE_20);
+            case 22,23,24,25 -> selectMap(maps, 3, MSC_BROWN_17_WHITE_20_WHITE_20);
+            case 26,27,28,29 -> selectMap(maps, 4, MSC_VIOLET_13_WHITE_20_YELLOW_28);
+            case 30,31,32    -> selectMap(maps, 3, MSC_BLACK_0F_WHITE_20_YELLOW_28);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
     }
@@ -348,39 +348,39 @@ public class TengenMsPacManGame extends GameModel {
     private void selectMiniMapForLevel(int levelNumber) {
         List<WorldMap> maps = getMiniMaps();
         switch (levelNumber) {
-            case 1  -> setMapAndColorScheme(maps, 1, MSC_PINK_36_RED_15_WHITE_20);
-            case 2  -> setMapAndColorScheme(maps, 2, MSC_BLUE_21_WHITE_20_YELLOW_28);
-            case 3  -> setMapAndColorScheme(maps, 1, MSC_ORANGE_16_WHITE_20_RED_15);
-            case 4  -> setMapAndColorScheme(maps, 2, MSC_BLUE_01_YELLOW_28_WHITE_20);
-            case 5  -> setMapAndColorScheme(maps, 3, MSC_PINK_35_YELLOW_28_WHITE_20);
-            case 6  -> setMapAndColorScheme(maps, 1, MSC_PINK_36_RED_15_WHITE_20);
-            case 7  -> setMapAndColorScheme(maps, 2, MSC_BROWN_17_WHITE_20_WHITE_20);
-            case 8  -> setMapAndColorScheme(maps, 3, MSC_VIOLET_13_WHITE_20_YELLOW_28);
-            case 9  -> setMapAndColorScheme(maps, 4, MSC_BLACK_0F_WHITE_20_YELLOW_28);
-            case 10 -> setMapAndColorScheme(maps, 1, MSC_BLACK_0F_BLUE_01_WHITE_20);
-            case 11 -> setMapAndColorScheme(maps, 2, MSC_VIOLET_14_PINK_24_WHITE_20);
-            case 12 -> setMapAndColorScheme(maps, 3, MSC_RED_15_WHITE_20_WHITE_20);
-            case 13 -> setMapAndColorScheme(maps, 4, MSC_GREEN_1B_WHITE_20_WHITE_20);
-            case 14 -> setMapAndColorScheme(maps, 1, MSC_YELLOW_28_WHITE_20_GREEN_2A);
-            case 15 -> setMapAndColorScheme(maps, 2, MSC_GREEN_1A_WHITE_20_YELLOW_28);
-            case 16 -> setMapAndColorScheme(maps, 3, MSC_KHAKI_18_WHITE_20_WHITE_20);
-            case 17 -> setMapAndColorScheme(maps, 4, MSC_ROSE_25_WHITE_20_WHITE_20);
-            case 18 -> setMapAndColorScheme(maps, 5, MSC_BLUE_12_WHITE_20_YELLOW_28);
-            case 19 -> setMapAndColorScheme(maps, 5, MSC_BROWN_07_WHITE_20_WHITE_20);
-            case 20 -> setMapAndColorScheme(maps, 4, MSC_RED_15_ROSE_25_PINK_35);
-            case 21 -> setMapAndColorScheme(maps, 3, MSC_BLACK_0F_WHITE_20_GREEN_1C);
-            case 22 -> setMapAndColorScheme(maps, 2, MSC_GREEN_1B_WHITE_20_WHITE_20);
-            case 23 -> setMapAndColorScheme(maps, 1, MSC_GREEN_0C_WHITE_20_VIOLET_23);
-            case 24 -> setMapAndColorScheme(maps, 6, MSC_VIOLET_23_WHITE_20_GREEN_2B);
-            case 25 -> setMapAndColorScheme(maps, 1, MSC_GRAY_10_WHITE_20_YELLOW_28);
-            case 26 -> setMapAndColorScheme(maps, 2, MSC_VIOLET_04_WHITE_20_WHITE_20);
+            case 1  -> selectMap(maps, 1, MSC_PINK_36_RED_15_WHITE_20);
+            case 2  -> selectMap(maps, 2, MSC_BLUE_21_WHITE_20_YELLOW_28);
+            case 3  -> selectMap(maps, 1, MSC_ORANGE_16_WHITE_20_RED_15);
+            case 4  -> selectMap(maps, 2, MSC_BLUE_01_YELLOW_28_WHITE_20);
+            case 5  -> selectMap(maps, 3, MSC_PINK_35_YELLOW_28_WHITE_20);
+            case 6  -> selectMap(maps, 1, MSC_PINK_36_RED_15_WHITE_20);
+            case 7  -> selectMap(maps, 2, MSC_BROWN_17_WHITE_20_WHITE_20);
+            case 8  -> selectMap(maps, 3, MSC_VIOLET_13_WHITE_20_YELLOW_28);
+            case 9  -> selectMap(maps, 4, MSC_BLACK_0F_WHITE_20_YELLOW_28);
+            case 10 -> selectMap(maps, 1, MSC_BLACK_0F_BLUE_01_WHITE_20);
+            case 11 -> selectMap(maps, 2, MSC_VIOLET_14_PINK_24_WHITE_20);
+            case 12 -> selectMap(maps, 3, MSC_RED_15_WHITE_20_WHITE_20);
+            case 13 -> selectMap(maps, 4, MSC_GREEN_1B_WHITE_20_WHITE_20);
+            case 14 -> selectMap(maps, 1, MSC_YELLOW_28_WHITE_20_GREEN_2A);
+            case 15 -> selectMap(maps, 2, MSC_GREEN_1A_WHITE_20_YELLOW_28);
+            case 16 -> selectMap(maps, 3, MSC_KHAKI_18_WHITE_20_WHITE_20);
+            case 17 -> selectMap(maps, 4, MSC_ROSE_25_WHITE_20_WHITE_20);
+            case 18 -> selectMap(maps, 5, MSC_BLUE_12_WHITE_20_YELLOW_28);
+            case 19 -> selectMap(maps, 5, MSC_BROWN_07_WHITE_20_WHITE_20);
+            case 20 -> selectMap(maps, 4, MSC_RED_15_ROSE_25_PINK_35);
+            case 21 -> selectMap(maps, 3, MSC_BLACK_0F_WHITE_20_GREEN_1C);
+            case 22 -> selectMap(maps, 2, MSC_GREEN_1B_WHITE_20_WHITE_20);
+            case 23 -> selectMap(maps, 1, MSC_GREEN_0C_WHITE_20_VIOLET_23);
+            case 24 -> selectMap(maps, 6, MSC_VIOLET_23_WHITE_20_GREEN_2B);
+            case 25 -> selectMap(maps, 1, MSC_GRAY_10_WHITE_20_YELLOW_28);
+            case 26 -> selectMap(maps, 2, MSC_VIOLET_04_WHITE_20_WHITE_20);
             // from here(?) or from 28(?) the color schemes are randomly selected
-            case 27 -> setMapAndColorScheme(maps, 3, randomMapColorScheme());
-            case 28 -> setMapAndColorScheme(maps, 4, randomMapColorScheme());
-            case 29 -> setMapAndColorScheme(maps, 5, randomMapColorScheme());
-            case 30 -> setMapAndColorScheme(maps, 2, randomMapColorScheme());
-            case 31 -> setMapAndColorScheme(maps, 3, randomMapColorScheme());
-            case 32 -> setMapAndColorScheme(maps, 6, MSC_RED_15_ROSE_25_PINK_35);
+            case 27 -> selectMap(maps, 3, randomMapColorScheme());
+            case 28 -> selectMap(maps, 4, randomMapColorScheme());
+            case 29 -> selectMap(maps, 5, randomMapColorScheme());
+            case 30 -> selectMap(maps, 2, randomMapColorScheme());
+            case 31 -> selectMap(maps, 3, randomMapColorScheme());
+            case 32 -> selectMap(maps, 6, MSC_RED_15_ROSE_25_PINK_35);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
     }
@@ -391,39 +391,39 @@ public class TengenMsPacManGame extends GameModel {
     private void selectBigMapForLevel(int levelNumber) {
         List<WorldMap> maps = getStrangeOrBigMaps();
         switch (levelNumber) {
-            case 1  -> setMapAndColorScheme(maps, 19, MSC_PINK_36_RED_15_WHITE_20);
-            case 2  -> setMapAndColorScheme(maps, 20, MSC_BLUE_21_WHITE_20_YELLOW_28);
-            case 3  -> setMapAndColorScheme(maps, 21, MSC_ORANGE_16_WHITE_20_RED_15);
-            case 4  -> setMapAndColorScheme(maps, 19, MSC_BLUE_01_YELLOW_28_WHITE_20);
-            case 5  -> setMapAndColorScheme(maps, 20, MSC_PINK_35_YELLOW_28_WHITE_20);
-            case 6  -> setMapAndColorScheme(maps, 21, MSC_PINK_36_RED_15_WHITE_20);
-            case 7  -> setMapAndColorScheme(maps, 22, MSC_BROWN_17_WHITE_20_WHITE_20);
-            case 8  -> setMapAndColorScheme(maps, 23, MSC_VIOLET_13_WHITE_20_YELLOW_28);
-            case 9  -> setMapAndColorScheme(maps, 17, MSC_BLACK_0F_WHITE_20_YELLOW_28);
-            case 10 -> setMapAndColorScheme(maps, 10, MSC_BLACK_0F_BLUE_01_WHITE_20);
-            case 11 -> setMapAndColorScheme(maps, 23, MSC_RED_15_ROSE_25_WHITE_20);
-            case 12 -> setMapAndColorScheme(maps, 21, MSC_ROSE_25_WHITE_20_WHITE_20);
-            case 13 -> setMapAndColorScheme(maps, 22, MSC_GREEN_1B_WHITE_20_WHITE_20);
-            case 14 -> setMapAndColorScheme(maps, 14, MSC_YELLOW_28_WHITE_20_GREEN_2A);
-            case 15 -> setMapAndColorScheme(maps, 20, MSC_GREEN_1A_WHITE_20_YELLOW_28);
-            case 16 -> setMapAndColorScheme(maps, 19, MSC_KHAKI_18_WHITE_20_WHITE_20);
-            case 17 -> setMapAndColorScheme(maps, 10, MSC_ROSE_25_WHITE_20_WHITE_20);
-            case 18 -> setMapAndColorScheme(maps, 17, MSC_BLUE_12_WHITE_20_YELLOW_28);
-            case 19 -> setMapAndColorScheme(maps, 10, MSC_BROWN_07_WHITE_20_WHITE_20);
-            case 20 -> setMapAndColorScheme(maps, 19, MSC_RED_15_ROSE_25_WHITE_20);
-            case 21 -> setMapAndColorScheme(maps, 26, MSC_BLACK_0F_WHITE_20_GREEN_1C);
-            case 22 -> setMapAndColorScheme(maps, 21, MSC_GREEN_1B_WHITE_20_WHITE_20);
-            case 23 -> setMapAndColorScheme(maps, 22, MSC_GREEN_0C_WHITE_20_VIOLET_23);
-            case 24 -> setMapAndColorScheme(maps, 23, MSC_VIOLET_23_WHITE_20_GREEN_2B);
-            case 25 -> setMapAndColorScheme(maps, 14, MSC_GRAY_10_WHITE_20_YELLOW_28);
-            case 26 -> setMapAndColorScheme(maps, 25, MSC_VIOLET_04_WHITE_20_WHITE_20);
+            case 1  -> selectMap(maps, 19, MSC_PINK_36_RED_15_WHITE_20);
+            case 2  -> selectMap(maps, 20, MSC_BLUE_21_WHITE_20_YELLOW_28);
+            case 3  -> selectMap(maps, 21, MSC_ORANGE_16_WHITE_20_RED_15);
+            case 4  -> selectMap(maps, 19, MSC_BLUE_01_YELLOW_28_WHITE_20);
+            case 5  -> selectMap(maps, 20, MSC_PINK_35_YELLOW_28_WHITE_20);
+            case 6  -> selectMap(maps, 21, MSC_PINK_36_RED_15_WHITE_20);
+            case 7  -> selectMap(maps, 22, MSC_BROWN_17_WHITE_20_WHITE_20);
+            case 8  -> selectMap(maps, 23, MSC_VIOLET_13_WHITE_20_YELLOW_28);
+            case 9  -> selectMap(maps, 17, MSC_BLACK_0F_WHITE_20_YELLOW_28);
+            case 10 -> selectMap(maps, 10, MSC_BLACK_0F_BLUE_01_WHITE_20);
+            case 11 -> selectMap(maps, 23, MSC_RED_15_ROSE_25_WHITE_20);
+            case 12 -> selectMap(maps, 21, MSC_ROSE_25_WHITE_20_WHITE_20);
+            case 13 -> selectMap(maps, 22, MSC_GREEN_1B_WHITE_20_WHITE_20);
+            case 14 -> selectMap(maps, 14, MSC_YELLOW_28_WHITE_20_GREEN_2A);
+            case 15 -> selectMap(maps, 20, MSC_GREEN_1A_WHITE_20_YELLOW_28);
+            case 16 -> selectMap(maps, 19, MSC_KHAKI_18_WHITE_20_WHITE_20);
+            case 17 -> selectMap(maps, 10, MSC_ROSE_25_WHITE_20_WHITE_20);
+            case 18 -> selectMap(maps, 17, MSC_BLUE_12_WHITE_20_YELLOW_28);
+            case 19 -> selectMap(maps, 10, MSC_BROWN_07_WHITE_20_WHITE_20);
+            case 20 -> selectMap(maps, 19, MSC_RED_15_ROSE_25_WHITE_20);
+            case 21 -> selectMap(maps, 26, MSC_BLACK_0F_WHITE_20_GREEN_1C);
+            case 22 -> selectMap(maps, 21, MSC_GREEN_1B_WHITE_20_WHITE_20);
+            case 23 -> selectMap(maps, 22, MSC_GREEN_0C_WHITE_20_VIOLET_23);
+            case 24 -> selectMap(maps, 23, MSC_VIOLET_23_WHITE_20_GREEN_2B);
+            case 25 -> selectMap(maps, 14, MSC_GRAY_10_WHITE_20_YELLOW_28);
+            case 26 -> selectMap(maps, 25, MSC_VIOLET_04_WHITE_20_WHITE_20);
             //TODO from here on the color schemes differ from the ones for MINI mazes. Are they selected randomly?
-            case 27 -> setMapAndColorScheme(maps, 14, randomMapColorScheme());
-            case 28 -> setMapAndColorScheme(maps, 23, randomMapColorScheme());
-            case 29 -> setMapAndColorScheme(maps, 26, randomMapColorScheme());
-            case 30 -> setMapAndColorScheme(maps, 20, randomMapColorScheme());
-            case 31 -> setMapAndColorScheme(maps, 25, randomMapColorScheme());
-            case 32 -> setMapAndColorScheme(maps, 33, MSC_RED_15_ROSE_25_WHITE_20);
+            case 27 -> selectMap(maps, 14, randomMapColorScheme());
+            case 28 -> selectMap(maps, 23, randomMapColorScheme());
+            case 29 -> selectMap(maps, 26, randomMapColorScheme());
+            case 30 -> selectMap(maps, 20, randomMapColorScheme());
+            case 31 -> selectMap(maps, 25, randomMapColorScheme());
+            case 32 -> selectMap(maps, 33, MSC_RED_15_ROSE_25_WHITE_20);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
     }
@@ -432,10 +432,10 @@ public class TengenMsPacManGame extends GameModel {
         List<WorldMap> maps = getStrangeOrBigMaps();
         int mapNumber = levelNumber; // TODO: check this
         WorldMap worldMap = maps.get(mapNumber - 1);
-        setMapAndColorScheme(maps, mapNumber, createColorSchemeFromMap(worldMap));
+        selectMap(maps, mapNumber, createColorSchemeFromMap(worldMap));
     }
 
-    private void setMapAndColorScheme(List<WorldMap> maps, int mapNumber, MapColorScheme colorScheme) {
+    private void selectMap(List<WorldMap> maps, int mapNumber, MapColorScheme colorScheme) {
         currentMapNumber = mapNumber;
         currentMap = new WorldMap(maps.get(mapNumber - 1));
         currentMapColorScheme = colorScheme;
@@ -819,7 +819,7 @@ public class TengenMsPacManGame extends GameModel {
         }
     }
 
-    /* By @russianmansmwc on Discord:
+    /* By @RussianManSMWC on Discord:
        "By the way, there's an additional quirk regarding ghosts' speed.
        On normal difficulty ONLY and in levels 5 and above, the ghosts become slightly faster if there are few dots remain.
        if there are 31 or less dots, the speed is increased. the base increase value is 2, which is further increased by 1 for every 8 dots eaten.

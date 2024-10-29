@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.maps.editor;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
@@ -97,32 +96,26 @@ public class EditController {
     final BooleanProperty symmetricEditModePy = new SimpleBooleanProperty(true);
 
     private final TileMapEditorViewModel viewModel;
+    private final ObstacleEditor obstacleEditor;
     private boolean unsavedChanges;
     private boolean terrainMapPathsUpToDate;
-
     private boolean dragging = false;
-
-    private final ObstacleEditor obstacleEditor = new ObstacleEditor();
 
     EditController(TileMapEditorViewModel viewModel) {
         this.viewModel = viewModel;
         this.worldMapPy.bind(viewModel.worldMapProperty());
         viewModel.gridSizeProperty().addListener((py,ov,nv) -> invalidateTerrainMapPaths());
+        obstacleEditor = new ObstacleEditor(this, viewModel);
         obstacleEditor.enabledPy.bind(editingEnabledPy);
         setMode(EditMode.DRAW);
     }
 
-    WorldMap editedWorldMap() {
-        return worldMapPy.get();
-    }
-
-    //TODO data structure
     Vector2i editedContentMinTile() {
-        return obstacleEditor.minTile;
+        return obstacleEditor.minTile();
     }
 
     Vector2i editedContentMaxTile() {
-        return obstacleEditor.maxTile;
+        return obstacleEditor.maxTile();
     }
 
     byte[][] editedContent() {
@@ -499,235 +492,6 @@ public class EditController {
 
         Logger.info("Map created. rows={}, cols={}", tilesY, tilesX);
         return worldMap;
-    }
-
-
-    // Testing
-
-    private class ObstacleEditor {
-
-        private final BooleanProperty enabledPy = new SimpleBooleanProperty();
-
-        private Vector2i anchor;
-        private Vector2i frontier;
-        private Vector2i minTile; // top left corner
-        private Vector2i maxTile; // bottom right corner
-        private boolean join = true;
-
-        boolean isDisabled() {
-            return !(enabledPy.get() &&
-                viewModel.selectedPaletteID() == PALETTE_ID_TERRAIN &&
-                viewModel.selectedPalette().getSelectedRow() == 0 &&
-                viewModel.selectedPalette().getSelectedCol() == 0);
-        }
-
-        void startEditing(Vector2i tile) {
-            if (isDisabled()) {
-                return;
-            }
-            Logger.info("Start inserting oval at tile {}", tile);
-            minTile = maxTile = anchor = frontier = tile;
-        }
-
-        void continueEditing(Vector2i tile) {
-            if (isDisabled()) {
-                return;
-            }
-            if (tile.equals(frontier)) {
-                return;
-            }
-            Logger.info("Continue inserting oval at tile {}", tile);
-            frontier = tile;
-            int dx = frontier.x() - anchor.x(), dy = frontier.y() - anchor.y();
-            if (dx >= 0) {
-                if (dy >= 0) {
-                    // frontier right-down
-                    minTile = anchor;
-                    maxTile = frontier;
-                } else {
-                    // frontier right-up
-                    minTile = new Vector2i(anchor.x(), frontier.y());
-                    maxTile = new Vector2i(frontier.x(), anchor.y());
-                }
-            } else {
-                if (dy >= 0) {
-                    // frontier left-down
-                    minTile = new Vector2i(frontier.x(), anchor.y());
-                    maxTile = new Vector2i(anchor.x(), frontier.y());
-                } else {
-                    // frontier left-up
-                    minTile = frontier;
-                    maxTile = anchor;
-                }
-            }
-            Logger.info("Min tile {} max tile {}", minTile, maxTile);
-        }
-
-        void endEditing(Vector2i tile) {
-            if (isDisabled()) {
-                return;
-            }
-            Logger.info("End inserting oval at tile {}", tile);
-            commit();
-        }
-
-        void commit() {
-            byte[][] editedContent = editedContent();
-            if (editedContent != null) {
-                if (join) {
-                    editedContent = joinedContent(editedContent, editedContent.length, editedContent[0].length);
-                }
-                copy(editedContent, viewModel.worldMapProperty().get().terrain());
-            }
-            anchor = frontier = minTile = maxTile = null;
-        }
-
-        byte[][] joinedContent(byte[][] editedContent, int numRows, int numCols) {
-            byte[][] newContent = new byte[numRows][numCols];
-            for (int row = 0; row < numRows; ++row) {
-                System.arraycopy(editedContent[row], 0, newContent[row], 0, numCols);
-            }
-            TileMap originalTerrain = viewModel.worldMapProperty().get().terrain();
-            int crossings;
-
-            if (originalTerrain.get(minTile) == Tiles.CORNER_NE) {
-                newContent[0][0] = Tiles.WALL_H;
-            }
-            if (originalTerrain.get(minTile) == Tiles.CORNER_SW) {
-                newContent[0][0] = Tiles.WALL_V;
-            }
-            if (originalTerrain.get(minTile) == Tiles.WALL_V) {
-                newContent[0][0] = Tiles.CORNER_SW;
-            }
-            if (originalTerrain.get(minTile) == Tiles.WALL_H) {
-                newContent[0][0] = Tiles.CORNER_NE;
-            }
-
-            Vector2i leftLowerCorner = new Vector2i(minTile.x(), maxTile.y());
-            if (originalTerrain.get(leftLowerCorner) == Tiles.WALL_H) {
-                newContent[leftLowerCorner.y() - minTile.y()][leftLowerCorner.x() - minTile.x()] = Tiles.CORNER_SE;
-            }
-            if (originalTerrain.get(leftLowerCorner) == Tiles.WALL_V) {
-                newContent[leftLowerCorner.y() - minTile.y()][leftLowerCorner.x() - minTile.x()] = Tiles.CORNER_NW;
-            }
-            if (originalTerrain.get(leftLowerCorner) == Tiles.CORNER_SE) {
-                newContent[leftLowerCorner.y() - minTile.y()][leftLowerCorner.x() - minTile.x()] = Tiles.WALL_H;
-            }
-            if (originalTerrain.get(leftLowerCorner) == Tiles.CORNER_NW) {
-                newContent[leftLowerCorner.y() - minTile.y()][leftLowerCorner.x() - minTile.x()] = Tiles.WALL_V;
-            }
-
-            Vector2i upperRightCorner = new Vector2i(maxTile.x(), minTile.y());
-            if (originalTerrain.get(upperRightCorner) == Tiles.WALL_V) {
-                newContent[0][upperRightCorner.x() - minTile.x()] = Tiles.CORNER_SE;
-            }
-            if (originalTerrain.get(upperRightCorner) == Tiles.WALL_H) {
-                newContent[0][upperRightCorner.x() - minTile.x()] = Tiles.CORNER_NW;
-            }
-            if (originalTerrain.get(upperRightCorner) == Tiles.CORNER_SE) {
-                newContent[0][upperRightCorner.x() - minTile.x()] = Tiles.WALL_V;
-            }
-            if (originalTerrain.get(upperRightCorner) == Tiles.CORNER_NW) {
-                newContent[0][upperRightCorner.x() - minTile.x()] = Tiles.WALL_H;
-            }
-
-            if (originalTerrain.get(maxTile) == Tiles.WALL_V) {
-                newContent[numRows-1][numCols-1] = Tiles.CORNER_NE;
-            }
-            if (originalTerrain.get(maxTile) == Tiles.WALL_H) {
-                newContent[numRows-1][numCols-1] = Tiles.CORNER_SW;
-            }
-            if (originalTerrain.get(maxTile) == Tiles.CORNER_SW) {
-                newContent[numRows-1][numCols-1] = Tiles.WALL_H;
-            }
-            if (originalTerrain.get(maxTile) == Tiles.CORNER_NE) {
-                newContent[numRows-1][numCols-1] = Tiles.WALL_V;
-            }
-
-            crossings = 0;
-            int leftBorder = minTile.x();
-            for (int row = minTile.y(); row < maxTile.y(); ++row) {
-                int x = 0, y = row - minTile.y();
-                if (editedContent[y][x] == Tiles.WALL_V && originalTerrain.get(row, leftBorder) == Tiles.WALL_H) {
-                    newContent[y][x] = Globals.isEven(crossings) ? Tiles.CORNER_SE : Tiles.CORNER_NE;
-                    ++crossings;
-                }
-            }
-
-            crossings = 0;
-            int rightBorder = maxTile.x();
-            for (int row = minTile.y(); row < maxTile.y(); ++row) {
-                int x = rightBorder - minTile.x(), y = row - minTile.y();
-                if (editedContent[y][x] == Tiles.WALL_V && originalTerrain.get(row, leftBorder) == Tiles.WALL_H) {
-                    newContent[y][x] = Globals.isEven(crossings) ? Tiles.CORNER_SW : Tiles.CORNER_NW;
-                    ++crossings;
-                }
-            }
-
-            crossings = 0;
-            int upperBorder = minTile.y(); // upper border
-            for (int col = minTile.x(); col < maxTile.x(); ++col) {
-                int x = col - minTile.x(), y = upperBorder - minTile.y();
-                if (editedContent[y][x] == Tiles.WALL_H && originalTerrain.get(upperBorder, col) == Tiles.WALL_V) {
-                    newContent[y][x] = Globals.isEven(crossings) ? Tiles.CORNER_SE : Tiles.CORNER_SW;
-                    ++crossings;
-                }
-            }
-            crossings = 0;
-            int lowerBorder = maxTile.y(); // lower border
-            for (int col = minTile.x(); col < maxTile.x(); ++col) {
-                int x = col - minTile.x(), y = lowerBorder - minTile.y();
-                if (editedContent[y][x] == Tiles.WALL_H && originalTerrain.get(lowerBorder, col) == Tiles.WALL_V) {
-                    newContent[y][x] = Globals.isEven(crossings) ? Tiles.CORNER_NE : Tiles.CORNER_NW;
-                    ++crossings;
-                }
-            }
-
-            return newContent;
-        }
-
-        byte[][] editedContent() {
-            if (minTile == null || maxTile == null) {
-                return null;
-            }
-            int numRows = maxTile.y() - minTile.y() + 1;
-            int numCols = maxTile.x() - minTile.x() + 1;
-            if (numRows <= 1 || numCols <= 1) {
-                return null;
-            }
-            byte[][] area = new byte[numRows][numCols];
-            for (int row = minTile.y(); row <= maxTile.y(); ++row) {
-                for (int col = minTile.x(); col <= maxTile.x(); ++col) {
-                    byte value = Tiles.EMPTY;
-                    if (row == minTile.y() && col == minTile.x()) {
-                        value = Tiles.CORNER_NW;
-                    } else if (row == minTile.y() && col == maxTile.x()) {
-                        value = Tiles.CORNER_NE;
-                    } else if (row == maxTile.y() && col == minTile.x()) {
-                        value = Tiles.CORNER_SW;
-                    } else if (row == maxTile.y() && col == maxTile.x()) {
-                        value = Tiles.CORNER_SE;
-                    } else if (row == minTile.y() || row == maxTile.y()) {
-                        value = Tiles.WALL_H;
-                    } else if (col == minTile.x() || col == maxTile.x()) {
-                        value = Tiles.WALL_V;
-                    }
-                    area[row - minTile.y()][col - minTile.x()] = value;
-                }
-            }
-            return area;
-        }
-
-        void copy(byte[][] values, TileMap tileMap) {
-            int numRows = values.length;
-            int numCols = values[0].length;
-            for (int row = 0; row < numRows; ++row) {
-                for (int col = 0; col < numCols; ++col) {
-                    Vector2i tile = new Vector2i(minTile.x() + col, minTile.y() + row);
-                    setTileValue(tileMap, tile, values[row][col]);
-                }
-            }
-        }
     }
 
 } // EditController
