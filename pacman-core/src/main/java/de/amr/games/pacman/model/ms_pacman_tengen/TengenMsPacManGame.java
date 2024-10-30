@@ -443,12 +443,15 @@ public class TengenMsPacManGame extends GameModel {
 
     private MapColorScheme createColorSchemeFromMap(WorldMap worldMap) {
         MapColorScheme defaultScheme = MSC_PINK_36_RED_15_WHITE_20;
+        String fill   = worldMap.terrain().getPropertyOrDefault(PROPERTY_COLOR_WALL_FILL, defaultScheme.fill());
+        String stroke = worldMap.terrain().getPropertyOrDefault(PROPERTY_COLOR_WALL_STROKE, defaultScheme.stroke());
+        String door   = worldMap.terrain().getPropertyOrDefault(PROPERTY_COLOR_DOOR, defaultScheme.door());
+        String pellet = worldMap.food().getPropertyOrDefault(PROPERTY_COLOR_FOOD, defaultScheme.pellet());
         return new MapColorScheme(
-            worldMap.terrain().getPropertyOrDefault(PROPERTY_COLOR_WALL_FILL, defaultScheme.fill()),
-            worldMap.terrain().getPropertyOrDefault(PROPERTY_COLOR_WALL_STROKE, defaultScheme.stroke()),
-            worldMap.terrain().getPropertyOrDefault(PROPERTY_COLOR_DOOR, defaultScheme.door()),
-            worldMap.food().getPropertyOrDefault(PROPERTY_COLOR_FOOD, defaultScheme.pellet())
-        );
+            colorToHexFormat(fill).orElse(defaultScheme.fill()),
+            colorToHexFormat(stroke).orElse(defaultScheme.stroke()),
+            colorToHexFormat(door).orElse(defaultScheme.door()),
+            colorToHexFormat(pellet).orElse(defaultScheme.pellet()));
     }
 
     private List<WorldMap> getArcadeMaps() {

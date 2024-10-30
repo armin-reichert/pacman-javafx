@@ -4,9 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Random;
+import org.tinylog.Logger;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Armin Reichert
@@ -237,5 +239,52 @@ public class Globals {
             case 1 -> value.equals(alternatives[0]);
             default -> Arrays.asList(alternatives).contains(value);
         };
+    }
+
+    /**
+     * @param colorSpec color specification in one of the following 3 formats:
+     *                  <ul>
+     *                  <li><code>#rrggbb</code> (hexadecimal digits)</li>
+     *                  <li><code>rrggbb</code>(hexadecimal digits)</li>
+     *                  <li><code>rgb(red,green,blue)</code> (decimal values from 0.255)</li>
+     *                  </ul>
+     * @return color spec in the form <code>rrggbb</code> (hexadecimal digits)
+     */
+    public static Optional<String> colorToHexFormat(String colorSpec) {
+        if (Pattern.matches("#?\\p{XDigit}{6}", colorSpec)) {
+            return Optional.of(colorSpec);
+        }
+        Pattern rgbPattern = Pattern.compile("rgb\\((\\d{1,3}),(\\d{1,3}),(\\d{1,3})\\)");
+        Matcher m = rgbPattern.matcher(colorSpec);
+        if (m.matches()) {
+            String r = m.group(1), g = m.group(2), b = m.group(3);
+            Short red = parseColorComponent(colorSpec, r);
+            Short green = parseColorComponent(colorSpec, g);
+            Short blue = parseColorComponent(colorSpec, b);
+            if (red == null || green == null || blue == null) {
+                return Optional.empty();
+            }
+            HexFormat fmt = HexFormat.of();
+            return Optional.of(fmt.toHexDigits(red).substring(2)
+                + fmt.toHexDigits(green).substring(2)
+                + fmt.toHexDigits(blue).substring(2));
+        } else {
+            Logger.error("'{}': Invalid color format", colorSpec);
+        }
+        return Optional.empty();
+    }
+
+    private static Short parseColorComponent(String color, String comp) {
+        try {
+            short value = Short.parseShort(comp);
+            if (!inRange(value, 0, 255)) {
+                Logger.error("'{}': Component value {} is out of range 0.255", color, value);
+                return null;
+            }
+            return value;
+        } catch (NumberFormatException x) {
+            Logger.error("No valid color component value: '{}'", comp);
+            return null;
+        }
     }
 }
