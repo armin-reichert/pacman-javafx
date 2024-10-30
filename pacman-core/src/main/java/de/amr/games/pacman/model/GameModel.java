@@ -106,6 +106,7 @@ public abstract class GameModel {
     public abstract long         pacPowerTicks();
     public abstract long         pacPowerFadingTicks();
     public abstract float        pacPowerSpeed();
+    public abstract long         gameOverStateTicks();
 
     protected abstract GameWorld createWorld(WorldMap map);
     protected abstract Pac       createPac();

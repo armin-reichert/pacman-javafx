@@ -55,10 +55,46 @@ import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
  */
 public class TengenPlayScene2D extends GameScene2D implements CameraControlledGameScene {
 
+    static final int MESSAGE_ANIMATION_DELAY = 120; // TODO how long?
+    static final double MESSAGE_SPEED = 1;  // TODO how fast?
+
     private final SubScene fxSubScene;
     private final ParallelCamera cam = new ParallelCamera();
     private final Canvas canvas = new Canvas(NES_RESOLUTION_X, NES_RESOLUTION_Y);
     private int camDelay;
+    private final GameOverMessageAnimation gameOverMessageAnimation = new GameOverMessageAnimation();
+
+    private class GameOverMessageAnimation {
+        private double startX;
+        private double currentX;
+        private double speed;
+        private boolean wrapped;
+        private long delay;
+
+        void start(double startX, double speed) {
+            this.startX = startX;
+            this.speed = speed;
+            currentX = startX;
+            wrapped = false;
+            delay = MESSAGE_ANIMATION_DELAY;
+        }
+
+        void update() {
+            if (delay > 0) {
+                --delay;
+                return;
+            }
+            currentX += speed;
+            if (currentX > size().x()) {
+                currentX = 0;
+                wrapped = true;
+            }
+            if (wrapped && currentX >= startX) {
+                speed = 0;
+                currentX = startX;
+            }
+        }
+    }
 
     public TengenPlayScene2D() {
         Pane root = new StackPane(canvas);
@@ -109,6 +145,9 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             msPacMan.setUseAutopilot(PY_AUTOPILOT.get());
             msPacMan.setImmune(PY_IMMUNITY.get());
             updatePlaySceneSound();
+            if (context.gameState() == GameState.GAME_OVER) {
+                gameOverMessageAnimation.update();
+            }
         }
         if (camDelay > 0) {
             --camDelay;
@@ -194,8 +233,8 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         // Draw level message centered under ghost house
         Vector2i houseTopLeftTile = world.houseTopLeftTile();
         Vector2i houseSize        = world.houseSize();
-        int cx = houseTopLeftTile.x() + houseSize.x() / 2;
-        int y = TS * (houseTopLeftTile.y() + houseSize.y() + 1);
+        double cx = TS * (world.houseTopLeftTile().x() + world.houseSize().x() * 0.5);
+        double y = TS * (houseTopLeftTile.y() + houseSize.y() + 1);
         drawLevelMessage(renderer, cx, y); // READY, GAME_OVER etc.
 
         boolean flashMode = Boolean.TRUE.equals(state.getProperty("mazeFlashing"));
@@ -225,14 +264,14 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         return Stream.of(ORANGE_GHOST, CYAN_GHOST, PINK_GHOST, RED_GHOST).map(context.game()::ghost);
     }
 
-    private void drawLevelMessage(GameRenderer renderer, int cx, int y) {
+    private void drawLevelMessage(GameRenderer renderer, double cx, double y) {
         AssetStorage assets = context.assets();
         GameState state = context.gameState();
         GameModel game = context.game();
         if (game.isDemoLevel()) {
             drawText(renderer, "GAME  OVER", cx, y, Color.web(game.currentMapColorScheme().stroke()));
         } else if (state == GameState.GAME_OVER) {
-            drawText(renderer, "GAME  OVER", cx, y, assets.color(assetPrefix(context.gameVariant()) + ".color.game_over_message"));
+            drawText(renderer, "GAME  OVER", gameOverMessageAnimation.currentX, y, assets.color(assetPrefix(context.gameVariant()) + ".color.game_over_message"));
         } else if (state == GameState.STARTING_GAME) {
             drawText(renderer, "READY!", cx, y, assets.color(assetPrefix(context.gameVariant()) + ".color.ready_message"));
         } else if (state == GameState.TESTING_LEVEL_BONI) {
@@ -240,8 +279,8 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         }
     }
 
-    private void drawText(GameRenderer renderer, String text, int cx, int y, Color color) {
-        int x = TS * (cx - text.length() / 2);
+    private void drawText(GameRenderer renderer, String text, double cx, double y, Color color) {
+        double x = (cx - text.length() * 0.5 * TS);
         renderer.drawText(text, color, renderer.scaledArcadeFont(TS), x, y);
     }
 
@@ -270,6 +309,9 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             case GAME_OVER -> {
                 context.sounds().stopAll();
                 context.sounds().playGameOverSound();
+                GameWorld world = context.game().world();
+                double houseCenterX = TS * (world.houseTopLeftTile().x() + 0.5 * world.houseSize().x());
+                gameOverMessageAnimation.start(houseCenterX, MESSAGE_SPEED);
             }
             default -> {}
         }

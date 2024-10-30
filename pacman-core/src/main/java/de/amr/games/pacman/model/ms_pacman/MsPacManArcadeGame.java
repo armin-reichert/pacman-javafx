@@ -148,6 +148,11 @@ public class MsPacManArcadeGame extends GameModel {
         return GameController.it().coinControl().hasCredit();
     }
 
+    @Override
+    public long gameOverStateTicks() {
+        return 150;
+    }
+
     protected LevelData levelData(int levelNumber) {
         return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
     }

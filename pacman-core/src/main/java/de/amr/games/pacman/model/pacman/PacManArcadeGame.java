@@ -171,6 +171,11 @@ public class PacManArcadeGame extends GameModel {
     }
 
     @Override
+    public long gameOverStateTicks() {
+        return 150;
+    }
+
+    @Override
     public void reset() {
         super.reset();
         cruiseElroy = 0;

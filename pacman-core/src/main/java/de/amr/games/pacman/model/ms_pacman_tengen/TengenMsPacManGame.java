@@ -275,6 +275,11 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     @Override
+    public long gameOverStateTicks() {
+        return 600; // TODO how much really?
+    }
+
+    @Override
     protected void initScore(int levelNumber) {
         scoreManager.setScoreEnabled(levelNumber > 0);
         scoreManager.setHighScoreEnabled(levelNumber > 0 && !isDemoLevel());
