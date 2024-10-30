@@ -60,7 +60,6 @@ public abstract class GameModel {
 
     public static final short      POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
     public static final byte       LEVEL_COUNTER_MAX_SIZE = 7;
-    public static final byte       PAC_POWER_FADING_TICKS = 120; // unsure
     public static final byte       BONUS_POINTS_SHOWN_TICKS = 120; // unsure
     public static final short[]    KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
 
@@ -104,6 +103,7 @@ public abstract class GameModel {
     public abstract float        ghostTunnelSpeed(Ghost ghost);
     public abstract float        pacNormalSpeed();
     public abstract int          pacPowerSeconds();
+    public abstract int          pacPowerFadingTicks();
     public abstract float        pacPowerSpeed();
 
     protected abstract GameWorld createWorld(WorldMap map);
@@ -497,7 +497,7 @@ public abstract class GameModel {
 
     private void updatePacPower() {
         powerTimer.tick();
-        if (powerTimer.remaining() == PAC_POWER_FADING_TICKS) {
+        if (powerTimer.remaining() == pacPowerFadingTicks()) {
             eventLog.pacStartsLosingPower = true;
             publishGameEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (powerTimer.hasExpired()) {
@@ -514,12 +514,12 @@ public abstract class GameModel {
     }
 
     public boolean isPowerFading() {
-        return powerTimer.isRunning() && powerTimer.remaining() <= PAC_POWER_FADING_TICKS;
+        return powerTimer.isRunning() && powerTimer.remaining() <= pacPowerFadingTicks();
     }
 
     public boolean isPowerFadingStarting() {
-        return powerTimer.isRunning() && powerTimer.remaining() == PAC_POWER_FADING_TICKS
-            || powerTimer.duration() < PAC_POWER_FADING_TICKS && powerTimer.currentTick() == 1;
+        return powerTimer.isRunning() && powerTimer.remaining() == pacPowerFadingTicks()
+            || powerTimer.duration() < pacPowerFadingTicks() && powerTimer.currentTick() == 1;
     }
 
     private void updateBonus() {

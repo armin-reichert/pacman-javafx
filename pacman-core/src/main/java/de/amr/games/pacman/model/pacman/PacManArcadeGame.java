@@ -344,6 +344,12 @@ public class PacManArcadeGame extends GameModel {
     }
 
     @Override
+    public int pacPowerFadingTicks() {
+        // ghost flashing animation has frame length 14 so one full flash takes 28 ticks
+        return numFlashes() * 28;
+    }
+
+    @Override
     public boolean isBonusReached() {
         return world.eatenFoodCount() == 70 || world.eatenFoodCount() == 170;
     }

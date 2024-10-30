@@ -22,6 +22,10 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class GhostAnimations extends SpriteAnimationCollection {
 
+    public static final int NORMAL_FRAME_TICKS = 8;  // TODO check this in emulator
+    public static final int FRIGHTENED_FRAME_TICKS = 8;  // TODO check this in emulator
+    public static final int FLASH_FRAME_TICKS = 7;  // TODO check this in emulator
+
     public GhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
         checkNotNull(spriteSheet);
 
@@ -29,21 +33,21 @@ public class GhostAnimations extends SpriteAnimationCollection {
             .spriteSheet(spriteSheet)
             .info("Normal ghost")
             .sprites(spriteSheet.ghostNormalSprites(ghostID, Direction.LEFT))
-            .frameTicks(8)
+            .frameTicks(NORMAL_FRAME_TICKS)
             .loop();
 
         var frightened = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Frightened ghost")
             .sprites(spriteSheet.ghostFrightenedSprites())
-            .frameTicks(8)
+            .frameTicks(FRIGHTENED_FRAME_TICKS)
             .loop();
 
         var flashing = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Flashing ghost")
             .sprites(spriteSheet.ghostFlashingSprites())
-            .frameTicks(7)
+            .frameTicks(FLASH_FRAME_TICKS)
             .loop();
 
         var eyes = SpriteAnimation

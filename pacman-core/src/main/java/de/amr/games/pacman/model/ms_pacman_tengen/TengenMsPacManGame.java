@@ -510,6 +510,11 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     @Override
+    public int pacPowerFadingTicks() {
+        return numFlashes() * 28; // TODO check in emulator
+    }
+
+    @Override
     public float pacNormalSpeed() {
         return pac.baseSpeed();
     }
@@ -676,7 +681,7 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public int numFlashes() {
-        //TODO need to find out what Tengen does
+        //TODO need to find out what Tengen really does
         return 5;
     }
 
