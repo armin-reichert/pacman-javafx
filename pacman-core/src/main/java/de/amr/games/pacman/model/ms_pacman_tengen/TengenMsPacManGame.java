@@ -47,57 +47,60 @@ public class TengenMsPacManGame extends GameModel {
     private static final MapColorScheme MSC_BLACK_0F_WHITE_20_GREEN_1C   = scheme(0x0f, 0x20, 0x1c);
     private static final MapColorScheme MSC_BLACK_0F_WHITE_20_YELLOW_28  = scheme(0x0f, 0x20, 0x28);
     private static final MapColorScheme MSC_BLACK_0F_BLUE_01_WHITE_20    = scheme(0x0f, 0x01, 0x20);
-    private static final MapColorScheme MSC_BLUE_01_YELLOW_28_WHITE_20   = scheme(0x01, 0x38, 0x20);
+    private static final MapColorScheme MSC_BLUE_01_YELLOW_38_WHITE_20   = scheme(0x01, 0x38, 0x20);
     private static final MapColorScheme MSC_BLUE_12_WHITE_20_YELLOW_28   = scheme(0x12, 0x20, 0x28);
     private static final MapColorScheme MSC_BLUE_21_WHITE_20_YELLOW_28   = scheme(0x21, 0x20, 0x28);
     private static final MapColorScheme MSC_BROWN_07_WHITE_20_WHITE_20   = scheme(0x07, 0x20, 0x20);
     private static final MapColorScheme MSC_BROWN_17_WHITE_20_WHITE_20   = scheme(0x17, 0x20, 0x20);
     private static final MapColorScheme MSC_GRAY_10_WHITE_20_YELLOW_28   = scheme(0x10, 0x20, 0x28);
-    private static final MapColorScheme MSC_GREEN_0C_WHITE_20_VIOLET_23  = scheme(0x0c, 0x20, 0x23);
+    private static final MapColorScheme MSC_GREEN_0C_WHITE_20_VIOLET_14 = scheme(0x0c, 0x20, 0x14);
+    private static final MapColorScheme MSC_GREEN_19_WHITE_20_WHITE_20   = scheme(0x19, 0x20, 0x20);
     private static final MapColorScheme MSC_GREEN_1A_WHITE_20_YELLOW_28  = scheme(0x1a, 0x20, 0x28);
     private static final MapColorScheme MSC_GREEN_1B_WHITE_20_WHITE_20   = scheme(0x1b, 0x20, 0x20);
     private static final MapColorScheme MSC_KHAKI_18_WHITE_20_WHITE_20   = scheme(0x18, 0x20, 0x20);
     private static final MapColorScheme MSC_ORANGE_16_WHITE_20_RED_15    = scheme(0x16, 0x20, 0x15);
     private static final MapColorScheme MSC_PINK_35_YELLOW_28_WHITE_20   = scheme(0x35, 0x28, 0x20);
     private static final MapColorScheme MSC_PINK_36_RED_15_WHITE_20      = scheme(0x36, 0x15, 0x20);
-    private static final MapColorScheme MSC_RED_15_ROSE_25_PINK_35       = scheme(0x15, 0x25, 0x35);
     private static final MapColorScheme MSC_RED_15_ROSE_25_WHITE_20      = scheme(0x15, 0x25, 0x20);
     private static final MapColorScheme MSC_RED_15_WHITE_20_WHITE_20     = scheme(0x15, 0x20, 0x20);
     private static final MapColorScheme MSC_ROSE_25_WHITE_20_WHITE_20    = scheme(0x25, 0x20, 0x20);
     private static final MapColorScheme MSC_VIOLET_04_WHITE_20_WHITE_20  = scheme(0x04, 0x20, 0x20);
     private static final MapColorScheme MSC_VIOLET_13_WHITE_20_YELLOW_28 = scheme(0x13, 0x20, 0x28);
-    private static final MapColorScheme MSC_VIOLET_14_PINK_24_WHITE_20   = scheme(0x14, 0x24, 0x20);
-    private static final MapColorScheme MSC_VIOLET_23_WHITE_20_GREEN_2B  = scheme(0x23, 0x20, 0x2b);
+    private static final MapColorScheme MSC_VIOLET_14_PINK_25_WHITE_20   = scheme(0x14, 0x25, 0x20);
+    private static final MapColorScheme MSC_VIOLET_03_WHITE_20_WHITE_20  = scheme(0x03, 0x20, 0x20);
     private static final MapColorScheme MSC_YELLOW_28_WHITE_20_GREEN_2A  = scheme(0x28, 0x20, 0x2a);
+    private static final MapColorScheme MSC_VIOLET_23_WHITE_20_GREEN_2B = scheme(0x23, 0x20, 0x2b);
 
     // The order used by the levels
     private static final MapColorScheme[] MAP_COLOR_SCHEMES = {
         MSC_PINK_36_RED_15_WHITE_20,
         MSC_BLUE_21_WHITE_20_YELLOW_28,
         MSC_ORANGE_16_WHITE_20_RED_15,
-        MSC_BLUE_01_YELLOW_28_WHITE_20,
-        MSC_PINK_35_YELLOW_28_WHITE_20,
+        MSC_BLUE_01_YELLOW_38_WHITE_20,
+        MSC_PINK_35_YELLOW_28_WHITE_20, // 5
         MSC_PINK_36_RED_15_WHITE_20,
         MSC_BROWN_17_WHITE_20_WHITE_20,
         MSC_VIOLET_13_WHITE_20_YELLOW_28,
         MSC_BLACK_0F_WHITE_20_YELLOW_28,
-        MSC_BLACK_0F_BLUE_01_WHITE_20,
-        MSC_VIOLET_14_PINK_24_WHITE_20,
+        MSC_BLACK_0F_BLUE_01_WHITE_20,     // 10
+        MSC_VIOLET_14_PINK_25_WHITE_20,
         MSC_RED_15_WHITE_20_WHITE_20,
         MSC_GREEN_1B_WHITE_20_WHITE_20,
         MSC_YELLOW_28_WHITE_20_GREEN_2A,
-        MSC_GREEN_1A_WHITE_20_YELLOW_28,
+        MSC_GREEN_1A_WHITE_20_YELLOW_28,  // 15
         MSC_KHAKI_18_WHITE_20_WHITE_20,
         MSC_ROSE_25_WHITE_20_WHITE_20,
         MSC_BLUE_12_WHITE_20_YELLOW_28,
         MSC_BROWN_07_WHITE_20_WHITE_20,
-        MSC_RED_15_ROSE_25_PINK_35,
+        MSC_RED_15_ROSE_25_WHITE_20,        // 20
         MSC_BLACK_0F_WHITE_20_GREEN_1C,
-        MSC_GREEN_1B_WHITE_20_WHITE_20,
-        MSC_GREEN_0C_WHITE_20_VIOLET_23,
+        MSC_GREEN_19_WHITE_20_WHITE_20,
+        MSC_GREEN_0C_WHITE_20_VIOLET_14,
         MSC_VIOLET_23_WHITE_20_GREEN_2B,
-        MSC_GRAY_10_WHITE_20_YELLOW_28,
+        MSC_GRAY_10_WHITE_20_YELLOW_28, // 25
+        MSC_VIOLET_03_WHITE_20_WHITE_20,
         MSC_VIOLET_04_WHITE_20_WHITE_20,
+
     };
 
     private static MapColorScheme randomMapColorScheme() {
@@ -332,10 +335,11 @@ public class TengenMsPacManGame extends GameModel {
             case 1,2         -> selectMap(maps, 1, MSC_PINK_36_RED_15_WHITE_20);
             case 3,4,5       -> selectMap(maps, 2, MSC_BLUE_21_WHITE_20_YELLOW_28);
             case 6,7,8,9     -> selectMap(maps, 3, MSC_ORANGE_16_WHITE_20_RED_15);
-            case 10,11,12,13 -> selectMap(maps, 4, MSC_BLUE_01_YELLOW_28_WHITE_20);
+            case 10,11,12,13 -> selectMap(maps, 4, MSC_BLUE_01_YELLOW_38_WHITE_20);
             case 14,15,16,17 -> selectMap(maps, 3, MSC_PINK_35_YELLOW_28_WHITE_20);
             case 18,19,20,21 -> selectMap(maps, 4, MSC_PINK_36_RED_15_WHITE_20);
             case 22,23,24,25 -> selectMap(maps, 3, MSC_BROWN_17_WHITE_20_WHITE_20);
+            //TODO also random color schemes from 28 on?
             case 26,27,28,29 -> selectMap(maps, 4, MSC_VIOLET_13_WHITE_20_YELLOW_28);
             case 30,31,32    -> selectMap(maps, 3, MSC_BLACK_0F_WHITE_20_YELLOW_28);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
@@ -351,14 +355,14 @@ public class TengenMsPacManGame extends GameModel {
             case 1  -> selectMap(maps, 1, MSC_PINK_36_RED_15_WHITE_20);
             case 2  -> selectMap(maps, 2, MSC_BLUE_21_WHITE_20_YELLOW_28);
             case 3  -> selectMap(maps, 1, MSC_ORANGE_16_WHITE_20_RED_15);
-            case 4  -> selectMap(maps, 2, MSC_BLUE_01_YELLOW_28_WHITE_20);
+            case 4  -> selectMap(maps, 2, MSC_BLUE_01_YELLOW_38_WHITE_20);
             case 5  -> selectMap(maps, 3, MSC_PINK_35_YELLOW_28_WHITE_20);
             case 6  -> selectMap(maps, 1, MSC_PINK_36_RED_15_WHITE_20);
             case 7  -> selectMap(maps, 2, MSC_BROWN_17_WHITE_20_WHITE_20);
             case 8  -> selectMap(maps, 3, MSC_VIOLET_13_WHITE_20_YELLOW_28);
             case 9  -> selectMap(maps, 4, MSC_BLACK_0F_WHITE_20_YELLOW_28);
             case 10 -> selectMap(maps, 1, MSC_BLACK_0F_BLUE_01_WHITE_20);
-            case 11 -> selectMap(maps, 2, MSC_VIOLET_14_PINK_24_WHITE_20);
+            case 11 -> selectMap(maps, 2, MSC_VIOLET_14_PINK_25_WHITE_20);
             case 12 -> selectMap(maps, 3, MSC_RED_15_WHITE_20_WHITE_20);
             case 13 -> selectMap(maps, 4, MSC_GREEN_1B_WHITE_20_WHITE_20);
             case 14 -> selectMap(maps, 1, MSC_YELLOW_28_WHITE_20_GREEN_2A);
@@ -367,20 +371,19 @@ public class TengenMsPacManGame extends GameModel {
             case 17 -> selectMap(maps, 4, MSC_ROSE_25_WHITE_20_WHITE_20);
             case 18 -> selectMap(maps, 5, MSC_BLUE_12_WHITE_20_YELLOW_28);
             case 19 -> selectMap(maps, 5, MSC_BROWN_07_WHITE_20_WHITE_20);
-            case 20 -> selectMap(maps, 4, MSC_RED_15_ROSE_25_PINK_35);
+            case 20 -> selectMap(maps, 4, MSC_RED_15_ROSE_25_WHITE_20);
             case 21 -> selectMap(maps, 3, MSC_BLACK_0F_WHITE_20_GREEN_1C);
-            case 22 -> selectMap(maps, 2, MSC_GREEN_1B_WHITE_20_WHITE_20);
-            case 23 -> selectMap(maps, 1, MSC_GREEN_0C_WHITE_20_VIOLET_23);
+            case 22 -> selectMap(maps, 2, MSC_GREEN_19_WHITE_20_WHITE_20);
+            case 23 -> selectMap(maps, 1, MSC_GREEN_0C_WHITE_20_VIOLET_14);
             case 24 -> selectMap(maps, 6, MSC_VIOLET_23_WHITE_20_GREEN_2B);
             case 25 -> selectMap(maps, 1, MSC_GRAY_10_WHITE_20_YELLOW_28);
             case 26 -> selectMap(maps, 2, MSC_VIOLET_04_WHITE_20_WHITE_20);
-            // from here(?) or from 28(?) the color schemes are randomly selected
-            case 27 -> selectMap(maps, 3, randomMapColorScheme());
+            case 27 -> selectMap(maps, 3, MSC_VIOLET_04_WHITE_20_WHITE_20);
             case 28 -> selectMap(maps, 4, randomMapColorScheme());
             case 29 -> selectMap(maps, 5, randomMapColorScheme());
             case 30 -> selectMap(maps, 2, randomMapColorScheme());
             case 31 -> selectMap(maps, 3, randomMapColorScheme());
-            case 32 -> selectMap(maps, 6, MSC_RED_15_ROSE_25_PINK_35);
+            case 32 -> selectMap(maps, 6, randomMapColorScheme());
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
     }
@@ -394,7 +397,7 @@ public class TengenMsPacManGame extends GameModel {
             case 1  -> selectMap(maps, 19, MSC_PINK_36_RED_15_WHITE_20);
             case 2  -> selectMap(maps, 20, MSC_BLUE_21_WHITE_20_YELLOW_28);
             case 3  -> selectMap(maps, 21, MSC_ORANGE_16_WHITE_20_RED_15);
-            case 4  -> selectMap(maps, 19, MSC_BLUE_01_YELLOW_28_WHITE_20);
+            case 4  -> selectMap(maps, 19, MSC_BLUE_01_YELLOW_38_WHITE_20);
             case 5  -> selectMap(maps, 20, MSC_PINK_35_YELLOW_28_WHITE_20);
             case 6  -> selectMap(maps, 21, MSC_PINK_36_RED_15_WHITE_20);
             case 7  -> selectMap(maps, 22, MSC_BROWN_17_WHITE_20_WHITE_20);
@@ -412,13 +415,12 @@ public class TengenMsPacManGame extends GameModel {
             case 19 -> selectMap(maps, 10, MSC_BROWN_07_WHITE_20_WHITE_20);
             case 20 -> selectMap(maps, 19, MSC_RED_15_ROSE_25_WHITE_20);
             case 21 -> selectMap(maps, 26, MSC_BLACK_0F_WHITE_20_GREEN_1C);
-            case 22 -> selectMap(maps, 21, MSC_GREEN_1B_WHITE_20_WHITE_20);
-            case 23 -> selectMap(maps, 22, MSC_GREEN_0C_WHITE_20_VIOLET_23);
+            case 22 -> selectMap(maps, 21, MSC_GREEN_19_WHITE_20_WHITE_20);
+            case 23 -> selectMap(maps, 22, MSC_GREEN_0C_WHITE_20_VIOLET_14);
             case 24 -> selectMap(maps, 23, MSC_VIOLET_23_WHITE_20_GREEN_2B);
             case 25 -> selectMap(maps, 14, MSC_GRAY_10_WHITE_20_YELLOW_28);
             case 26 -> selectMap(maps, 25, MSC_VIOLET_04_WHITE_20_WHITE_20);
-            //TODO from here on the color schemes differ from the ones for MINI mazes. Are they selected randomly?
-            case 27 -> selectMap(maps, 14, randomMapColorScheme());
+            case 27 -> selectMap(maps, 14, MSC_VIOLET_04_WHITE_20_WHITE_20);
             case 28 -> selectMap(maps, 23, randomMapColorScheme());
             case 29 -> selectMap(maps, 26, randomMapColorScheme());
             case 30 -> selectMap(maps, 20, randomMapColorScheme());
