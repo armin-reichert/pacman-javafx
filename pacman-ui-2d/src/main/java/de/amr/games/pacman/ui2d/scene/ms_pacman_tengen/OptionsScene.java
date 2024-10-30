@@ -48,7 +48,7 @@ public class OptionsScene extends GameScene2D {
 
     static final int NUM_OPTIONS = 5;
 
-    static final int MAX_STARTING_LEVEL = 7;
+    static final int MAX_STARTING_LEVEL = 32;  //TODO 7
 
     private TengenMsPacManGame tengenGame;
     private int selectedOption;

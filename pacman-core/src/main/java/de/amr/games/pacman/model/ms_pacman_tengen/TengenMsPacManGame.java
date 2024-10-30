@@ -313,11 +313,7 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     public void setStartingLevel(int startingLevel) {
-        if (1 <= startingLevel && startingLevel <= 7) {
-            this.startingLevel = (byte) startingLevel;
-        } else {
-            Logger.error("Starting level must be in interval 1-7");
-        }
+        this.startingLevel = (byte) startingLevel;
     }
 
     private void selectMapForLevel(int levelNumber) {
