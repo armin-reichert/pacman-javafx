@@ -140,17 +140,25 @@ public class TickTimer {
      * Convenience method to reset the timer to {@link TickTimer#INDEFINITE} and start it.
      */
     public void restartIndefinitely() {
-        resetIndefinitely();
-        start();
+        restartTicks(INDEFINITE);
     }
 
     /**
-     * Convenience method to reset the timer to given seconds and start it.
+     * Convenience method to reset the timer to given number of seconds and start it.
      *
      * @param seconds number of seconds
      */
     public void restartSeconds(double seconds) {
-        resetSeconds(seconds);
+        restartTicks(secToTicks(seconds));
+    }
+
+    /**
+     * Convenience method to reset the timer to given number of ticks and start it.
+     *
+     * @param ticks number of ticks
+     */
+    public void restartTicks(long ticks) {
+        reset(ticks);
         start();
     }
 
