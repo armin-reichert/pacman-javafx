@@ -7,9 +7,11 @@ package de.amr.games.pacman.ui2d.dashboard;
 import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.timer.TickTimer;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.LevelData;
+import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameContext;
 
@@ -50,13 +52,13 @@ public class InfoBoxGameInfo extends InfoBox {
         labeledValue("",                ifLevelPresent(this::fmtHuntingTicksRunning));
         labeledValue("",                ifLevelPresent(this::fmtHuntingTicksRemaining));
 
-        labeledValue("Pac-Man speed",   ifLevelPresent(this::fmtPacSpeed));
+        labeledValue("Pac-Man speed",   ifLevelPresent(this::fmtPacNormalSpeed));
         labeledValue("- empowered",     ifLevelPresent(this::fmtPacSpeedPowered));
+        labeledValue("Power Duration",  ifLevelPresent(this::fmtPacPowerTime));
         labeledValue("Pellets",         ifWorldPresent(this::fmtPelletCount));
-        labeledValue("Ghost speed",     ifLevelPresent(this::fmtGhostSpeed));
+        labeledValue("Ghost speed",     ifLevelPresent(this::fmtGhostAttackSpeed));
         labeledValue("- frightened",    ifLevelPresent(this::fmtGhostSpeedFrightened));
         labeledValue("- in tunnel",     ifLevelPresent(this::fmtGhostSpeedTunnel));
-        labeledValue("Frightened time", ifLevelPresent(this::fmtPacPowerSeconds));
         labeledValue("Maze flashings",  ifLevelPresent(this::fmtNumFlashes));
     }
 
@@ -95,28 +97,32 @@ public class InfoBoxGameInfo extends InfoBox {
         return "%d of %d (%d energizers)".formatted(world.uneatenFoodCount(), world.totalFoodCount(), world.energizerTiles().count());
     }
 
-    private String fmtGhostSpeed(LevelData level) {
-        return fmtSpeed(level.ghostSpeedPercentage());
+    private String fmtGhostAttackSpeed(LevelData level) {
+        // use Pinky because Blinky could be in Elroy mode
+        Ghost pinky = context.game().ghost(GameModel.PINK_GHOST);
+        return "%.4f px/s (%d%%)".formatted(context.game().ghostAttackSpeed(pinky), level.pacSpeedPercentage());
     }
 
     private String fmtGhostSpeedFrightened(LevelData level) {
-        return fmtSpeed(level.ghostSpeedFrightenedPercentage());
+        Ghost blinky = context.game().ghost(GameModel.RED_GHOST);
+        return "%.4f px/s (%d%%)".formatted(context.game().ghostFrightenedSpeed(blinky), level.pacSpeedPercentage());
     }
 
     private String fmtGhostSpeedTunnel(LevelData level) {
-        return fmtSpeed(level.ghostSpeedTunnelPercentage());
+        Ghost blinky = context.game().ghost(GameModel.RED_GHOST);
+        return "%.4f px/s (%d%%)".formatted(context.game().ghostTunnelSpeed(blinky), level.pacSpeedPercentage());
     }
 
-    private String fmtPacSpeed(LevelData level) {
-        return fmtSpeed(level.pacSpeedPercentage());
+    private String fmtPacNormalSpeed(LevelData level) {
+        return "%.4f px/s (%d%%)".formatted(context.game().pacNormalSpeed(), level.pacSpeedPercentage());
     }
 
     private String fmtPacSpeedPowered(LevelData level) {
-        return fmtSpeed(level.pacSpeedPoweredPercentage());
+        return "%.4f px/s (%d%%)".formatted(context.game().pacPowerSpeed(), level.pacSpeedPoweredPercentage());
     }
 
-    private String fmtPacPowerSeconds(LevelData level) {
-        return "%d sec".formatted(level.pacPowerSeconds());
+    private String fmtPacPowerTime(LevelData unused) {
+        return "%.2f sec (%d ticks)".formatted(context.game().pacPowerTicks() / 60f, context.game().pacPowerTicks());
     }
 
     private String fmtNumFlashes(LevelData level) {

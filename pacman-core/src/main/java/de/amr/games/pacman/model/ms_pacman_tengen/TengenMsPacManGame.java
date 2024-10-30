@@ -505,13 +505,38 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     @Override
-    public int pacPowerSeconds() {
-        return currentLevelData.pacPowerSeconds();
+    public long pacPowerTicks() {
+        if (!inRange(currentLevelNumber, 1, 32)) {
+            Logger.error("Level number ({}) is out of range", currentLevelNumber);
+            return 0;
+        }
+        double seconds = switch (currentLevelNumber) {
+            case  1 -> 6;
+            case  2 -> 5;
+            case  3 -> 4;
+            case  4 -> 3;
+            case  5 -> 2;
+            case  6 -> 5;
+            case  7 -> 2;
+            case  8 -> 1.75;
+            case  9 -> 1.5;
+            case 10 -> 4;
+            case 11 -> 2;
+            case 12 -> 1.75;
+            case 13 -> 1.5;
+            case 14 -> 2;
+            case 15 -> 1.75;
+            case 16 -> 1.5;
+            case 17 -> 0;
+            case 18 -> 1.5;
+            default -> 2;
+        };
+        return (long) (seconds * 60);
     }
 
     @Override
-    public int pacPowerFadingTicks() {
-        return numFlashes() * 28; // TODO check in emulator
+    public long pacPowerFadingTicks() {
+        return numFlashes() * 28L; // TODO check in emulator
     }
 
     @Override
@@ -521,7 +546,38 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public float pacPowerSpeed() {
-        return currentLevelData.pacSpeedPoweredPercentage() * 0.01f * pac.baseSpeed();
+        float percentage = currentLevelData.pacSpeedPoweredPercentage();
+        return percentage > 0 ? percentage * 0.01f * pac.baseSpeed() : pac.baseSpeed();
+    }
+
+    /*
+    @RussianManSMWC on Discord:
+    By the way, there's an additional quirk regarding ghosts' speed.
+    On normal difficulty ONLY and in levels 5 and above, the ghosts become slightly faster if there are few dots remain.
+    if there are 31 or less dots, the speed is increased. the base increase value is 2, which is further increased by 1 for every 8 dots eaten.
+    (i should note it's in subunits. it if was times 2, that would've been crazy)
+    */
+    @Override
+    public float ghostAttackSpeed(Ghost ghost) {
+        float speed = ghost.baseSpeed();
+        if (difficulty == Difficulty.NORMAL && currentLevelNumber >= 5) {
+            int dotsLeft = world.uneatenFoodCount();
+            byte increase = 0; // units
+            if (dotsLeft <= 7) {
+                increase = 5;
+            } else if (dotsLeft <= 15) {
+                increase = 4;
+            } else if (dotsLeft <= 23) {
+                increase = 3;
+            } else if (dotsLeft <= 31) {
+                increase = 2;
+            }
+            if (increase > 0) {
+                speed += speedUnits(increase);
+                Logger.info("Ghost speed increased by {0} units to {0.00} px/tick for {}", increase, speed, ghost.name());
+            }
+        }
+        return speed;
     }
 
     @Override
@@ -536,7 +592,8 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public float ghostFrightenedSpeed(Ghost ghost) {
-        return currentLevelData.ghostSpeedFrightenedPercentage() * 0.01f * ghost.baseSpeed();
+        float percentage = currentLevelData.ghostSpeedFrightenedPercentage();
+        return percentage > 0 ? percentage * 0.01f * ghost.baseSpeed() : ghost.baseSpeed();
     }
 
     @Override
@@ -817,7 +874,7 @@ public class TengenMsPacManGame extends GameModel {
      * only the scatter target of Blinky and Pinky would have been affected. Who knows?
      */
     private void ghostHuntingBehaviour(Ghost ghost) {
-        float speed = huntingSpeed(ghost);
+        float speed = ghostAttackSpeed(ghost);
         if (huntingControl.phaseIndex() == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
             ghost.roam(speed);
         } else {
@@ -827,31 +884,4 @@ public class TengenMsPacManGame extends GameModel {
         }
     }
 
-    /* By @RussianManSMWC on Discord:
-       "By the way, there's an additional quirk regarding ghosts' speed.
-       On normal difficulty ONLY and in levels 5 and above, the ghosts become slightly faster if there are few dots remain.
-       if there are 31 or less dots, the speed is increased. the base increase value is 2, which is further increased by 1 for every 8 dots eaten.
-       (i should note it's in subunits. it if was times 2, that would've been crazy)"
-     */
-    private float huntingSpeed(Ghost ghost) {
-        float speed = ghost.baseSpeed();
-        if (difficulty == Difficulty.NORMAL && currentLevelNumber >= 5) {
-            int dotsLeft = world.uneatenFoodCount();
-            byte increase = 0; // units
-            if (dotsLeft <= 7) {
-                increase = 5;
-            } else if (dotsLeft <= 15) {
-                increase = 4;
-            } else if (dotsLeft <= 23) {
-                increase = 3;
-            } else if (dotsLeft <= 31) {
-                increase = 2;
-            }
-            if (increase > 0) {
-                speed += speedUnits(increase);
-                Logger.info("Ghost speed increased by {0} units to {0.00} px/tick for {}", increase, speed, ghost.name());
-            }
-        }
-        return speed;
-    }
 }

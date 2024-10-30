@@ -97,13 +97,14 @@ public abstract class GameModel {
     public abstract void         activateNextBonus();
     public abstract int          intermissionNumberAfterLevel();
     public abstract int          numFlashes();
+    public abstract float        ghostAttackSpeed(Ghost ghost);
     public abstract float        ghostFrightenedSpeed(Ghost ghost);
     public abstract float        ghostSpeedInsideHouse(Ghost ghost);
     public abstract float        ghostSpeedReturningToHouse(Ghost ghost);
     public abstract float        ghostTunnelSpeed(Ghost ghost);
     public abstract float        pacNormalSpeed();
-    public abstract int          pacPowerSeconds();
-    public abstract int          pacPowerFadingTicks();
+    public abstract long         pacPowerTicks();
+    public abstract long         pacPowerFadingTicks();
     public abstract float        pacPowerSpeed();
 
     protected abstract GameWorld createWorld(WorldMap map);
@@ -480,10 +481,10 @@ public abstract class GameModel {
 
     protected void processEatenEnergizer() {
         victims.clear(); // ghosts eaten using this energizer
-        if (pacPowerSeconds() > 0) {
+        if (pacPowerTicks() > 0) {
             eventLog.pacGetsPower = true;
             huntingControl.stop();
-            powerTimer.restartSeconds(pacPowerSeconds());
+            powerTimer.restartTicks(pacPowerTicks());
             Logger.info("Hunting paused, power timer restarted, duration={} ticks", powerTimer.duration());
             ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);

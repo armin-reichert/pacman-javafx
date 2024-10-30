@@ -41,10 +41,6 @@ import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
  */
 public abstract class InfoBox extends TitledPane {
 
-    public static String fmtSpeed(byte percentage) {
-        return String.format("%.2f px/s (%d%%)", 1.25f * percentage * 0.01f, percentage);
-    }
-
     protected static String fontCSS(Font font) {
         return String.format("-fx-font: %.0fpx \"%s\";", font.getSize(), font.getFamily());
     }

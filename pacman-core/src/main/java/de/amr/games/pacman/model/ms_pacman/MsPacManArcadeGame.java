@@ -76,7 +76,10 @@ public class MsPacManArcadeGame extends GameModel {
     public static final String ANIM_MR_PACMAN_MUNCHING = "pacman_munching";
 
     private static final byte HOUSE_X = 10, HOUSE_Y = 15;
+
+    // I use a randomly running demo level, to assure it runs at least 20 seconds:
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
+
     private static final String MAP_PATTERN = "/de/amr/games/pacman/maps/mspacman/mspacman_%d.world";
 
     public static final MapColorScheme[] MAP_COLOR_SCHEMES = {
@@ -91,9 +94,7 @@ public class MsPacManArcadeGame extends GameModel {
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
 
     private final List<WorldMap> maps = new ArrayList<>();
-
-    private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man?
-    public boolean blueMazeBug = false;
+    private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man at all?
 
     public MsPacManArcadeGame(GameVariant gameVariant, File userDir) {
         super(gameVariant, userDir);
@@ -155,34 +156,30 @@ public class MsPacManArcadeGame extends GameModel {
      * <p>In Ms. Pac-Man, there are 4 maps and 6 color schemes.
      * </p>
      * <ul>
-     * <li>Levels 1-2: (1, 1): pink maze, white dots
-     * <li>Levels 3-5: (2, 2)): light blue maze, yellow dots
-     * <li>Levels 6-9: (3, 3): orange maze, red dots
-     * <li>Levels 10-13: (4, 4): blue maze, white dots
+     * <li>Levels 1-2: (1, 1): pink wall fill, white dots
+     * <li>Levels 3-5: (2, 2)): light blue wall fill, yellow dots
+     * <li>Levels 6-9: (3, 3): orange wall fill, red dots
+     * <li>Levels 10-13: (4, 4): blue wall fill, white dots
      * </ul>
-     * For level 14 and later, (map, maze) alternates every 4th level between (3, 5) and (4, 6):
+     * For level 14 and later, (map, color_scheme) alternates every 4th level between (3, 5) and (4, 6):
      * <ul>
-     * <li>(3, 5): pink maze, cyan dots
-     * <li>(4, 6): orange maze, white dots
+     * <li>(3, 5): pink wall fill, cyan dots
+     * <li>(4, 6): orange wall fill, white dots
      * </ul>
      * <p>
      */
-    private void selectMapAndColorScheme(int levelNumber) {
-        currentMapNumber = switch (levelNumber) {
+    private void selectMap(int levelNumber) {
+        final int mapNumber = switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
             case 6, 7, 8, 9 -> 3;
             case 10, 11, 12, 13 -> 4;
             default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
         };
-        currentMap = maps.get(currentMapNumber - 1);
-        int colorSchemeNumber = switch (levelNumber) {
-            case 1, 2 -> 1;
-            case 3, 4, 5 -> 2;
-            case 6, 7, 8, 9 -> 3;
-            case 10, 11, 12, 13 -> 4;
-            default -> (levelNumber - 14) % 8 < 4 ? 5 : 6;
-        };
+        final int colorSchemeNumber = levelNumber < 14 ? mapNumber : mapNumber + 2;
+
+        currentMapNumber = mapNumber;
+        currentMap = maps.get(mapNumber - 1);
         currentMapColorScheme = MAP_COLOR_SCHEMES[colorSchemeNumber - 1];
     }
 
@@ -212,12 +209,7 @@ public class MsPacManArcadeGame extends GameModel {
     @Override
     public void buildLevel(int levelNumber) {
         this.currentLevelNumber = levelNumber;
-        selectMapAndColorScheme(currentLevelNumber);
-        /*
-        if (blueMazeBug && levelNumber == 1) {
-            map.terrain().setProperty(WorldMap.PROPERTY_COLOR_WALL_FILL, "rgb(33,33,255)");
-        }
-         */
+        selectMap(currentLevelNumber);
         createWorldAndPopulation(currentMap);
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
@@ -228,7 +220,7 @@ public class MsPacManArcadeGame extends GameModel {
     @Override
     public void buildDemoLevel() {
         currentLevelNumber = 1;
-        selectMapAndColorScheme(currentLevelNumber);
+        selectMap(currentLevelNumber);
         createWorldAndPopulation(currentMap);
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
@@ -252,22 +244,51 @@ public class MsPacManArcadeGame extends GameModel {
 
     @Override
     public float pacNormalSpeed() {
-        return currentLevelNumber > 0
-            ? levelData(currentLevelNumber).pacSpeedPoweredPercentage() * 0.01f * pac.baseSpeed()
-            : 0;
+        if (currentLevelNumber == 0) {
+            return 0;
+        }
+        byte percentage = levelData(currentLevelNumber).pacSpeedPercentage();
+        if (percentage == 0) {
+            percentage = 100;
+        }
+        return percentage * 0.01f * pac.baseSpeed();
     }
 
     @Override
     public float pacPowerSpeed() {
-        return currentLevelNumber > 0
-            ? levelData(currentLevelNumber).pacSpeedPoweredPercentage() * 0.01f * pac.baseSpeed()
-            : 0;
+        if (currentLevelNumber == 0) {
+            return 0;
+        }
+        byte percentage = levelData(currentLevelNumber).pacSpeedPoweredPercentage();
+        if (percentage == 0) {
+            percentage = 100;
+        }
+        return percentage * 0.01f * pac.baseSpeed();
     }
 
     @Override
-    public int pacPowerFadingTicks() {
+    public long pacPowerTicks() {
+        return currentLevelNumber > 0 ? 60 * levelData(currentLevelNumber).pacPowerSeconds() : 0;
+    }
+
+    @Override
+    public long pacPowerFadingTicks() {
         // ghost flashing animation has frame length 14 so one full flash takes 28 ticks
-        return numFlashes() * 28;
+        return numFlashes() * 28L;
+    }
+
+    @Override
+    public float ghostAttackSpeed(Ghost ghost) {
+        if (world.isTunnel(ghost.tile()) && currentLevelNumber <= 3) {
+            return ghostTunnelSpeed(ghost);
+        }
+        if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
+            return levelData(currentLevelNumber).elroy1SpeedPercentage() * 0.01f * ghost.baseSpeed();
+        }
+        if (ghost.id() == RED_GHOST && cruiseElroy == 2) {
+            return levelData(currentLevelNumber).elroy2SpeedPercentage() * 0.01f * ghost.baseSpeed();
+        }
+        return levelData(currentLevelNumber).ghostSpeedPercentage() * 0.01f * ghost.baseSpeed();
     }
 
     @Override
@@ -370,11 +391,6 @@ public class MsPacManArcadeGame extends GameModel {
         return world.eatenFoodCount() == 64 || world.eatenFoodCount() == 176;
     }
 
-    @Override
-    public int pacPowerSeconds() {
-        return currentLevelNumber > 0 ? levelData(currentLevelNumber).pacPowerSeconds() : 0;
-    }
-
     /**
      * <p>Got this information from
      * <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>:
@@ -462,28 +478,12 @@ public class MsPacManArcadeGame extends GameModel {
      */
     private void ghostHuntingBehaviour(Ghost ghost) {
         if (huntingControl.phaseIndex() == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
-            float speed = huntingSpeed(ghost);
-            ghost.roam(speed);
+            ghost.roam(ghostAttackSpeed(ghost));
         } else {
             boolean chasing = huntingControl.phaseType() == HuntingControl.PhaseType.CHASING
                 || ghost.id() == RED_GHOST && cruiseElroy > 0;
             Vector2i targetTile = chasing ? chasingTarget(ghost) : scatterTarget(ghost);
-            float speed = huntingSpeed(ghost);
-            ghost.followTarget(targetTile, speed);
+            ghost.followTarget(targetTile, ghostAttackSpeed(ghost));
         }
-    }
-
-    private float huntingSpeed(Ghost ghost) {
-        LevelData level = levelData(currentLevelNumber);
-        if (world.isTunnel(ghost.tile()) && currentLevelNumber <= 3) {
-            return level.ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
-        }
-        if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
-            return level.elroy1SpeedPercentage() * 0.01f * ghost.baseSpeed();
-        }
-        if (ghost.id() == RED_GHOST && cruiseElroy == 2) {
-            return level.elroy2SpeedPercentage() * 0.01f * ghost.baseSpeed();
-        }
-        return level.ghostSpeedPercentage() * 0.01f * ghost.baseSpeed();
     }
 }

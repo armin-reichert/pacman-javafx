@@ -245,16 +245,35 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     public float pacNormalSpeed() {
-        return currentLevelNumber > 0
-            ? levelData(currentLevelNumber).pacSpeedPoweredPercentage() * 0.01f * pac.baseSpeed()
-            : 0;
+        if (currentLevelNumber == 0) {
+            return 0;
+        }
+        byte percentage = levelData(currentLevelNumber).pacSpeedPercentage();
+        return percentage > 0 ? percentage * 0.01f * pac.baseSpeed() : pac.baseSpeed();
     }
 
     @Override
     public float pacPowerSpeed() {
-        return currentLevelNumber > 0
-            ? levelData(currentLevelNumber).pacSpeedPoweredPercentage() * 0.01f * pac.baseSpeed()
-            : 0;
+        if (currentLevelNumber == 0) {
+            return 0;
+        }
+        byte percentage = levelData(currentLevelNumber).pacSpeedPoweredPercentage();
+        return percentage > 0 ? percentage * 0.01f * pac.baseSpeed() : pacNormalSpeed();
+    }
+
+    @Override
+    public float ghostAttackSpeed(Ghost ghost) {
+        LevelData level = levelData(currentLevelNumber);
+        if (world.isTunnel(ghost.tile())) {
+            return level.ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
+        }
+        if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
+            return level.elroy1SpeedPercentage() * 0.01f * ghost.baseSpeed();
+        }
+        if (ghost.id() == RED_GHOST && cruiseElroy == 2) {
+            return level.elroy2SpeedPercentage() * 0.01f * ghost.baseSpeed();
+        }
+        return level.ghostSpeedPercentage() * 0.01f * ghost.baseSpeed();
     }
 
     @Override
@@ -269,9 +288,11 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     public float ghostFrightenedSpeed(Ghost ghost) {
-        return currentLevelNumber > 0
-            ? levelData(currentLevelNumber).ghostSpeedFrightenedPercentage() * 0.01f * ghost.baseSpeed()
-            : 0;
+        if (currentLevelNumber == 0) {
+            return 0;
+        }
+        float percentage = levelData(currentLevelNumber).ghostSpeedFrightenedPercentage();
+        return percentage > 0 ? percentage * 0.01f * ghost.baseSpeed() : ghost.baseSpeed();
     }
 
     @Override
@@ -339,14 +360,14 @@ public class PacManArcadeGame extends GameModel {
     }
 
     @Override
-    public int pacPowerSeconds() {
-        return currentLevelNumber > 0 ? levelData(currentLevelNumber).pacPowerSeconds() : 0;
+    public long pacPowerTicks() {
+        return currentLevelNumber > 0 ? 60 * levelData(currentLevelNumber).pacPowerSeconds() : 0;
     }
 
     @Override
-    public int pacPowerFadingTicks() {
+    public long pacPowerFadingTicks() {
         // ghost flashing animation has frame length 14 so one full flash takes 28 ticks
-        return numFlashes() * 28;
+        return numFlashes() * 28L;
     }
 
     @Override
@@ -378,21 +399,6 @@ public class PacManArcadeGame extends GameModel {
         boolean chasing = huntingControl.phaseType() == HuntingControl.PhaseType.CHASING
             || ghost.id() == RED_GHOST && cruiseElroy > 0;
         Vector2i targetTile = chasing ? chasingTarget(ghost) : scatterTarget(ghost);
-        float speed = huntingSpeed(ghost);
-        ghost.followTarget(targetTile, speed);
-    }
-
-    private float huntingSpeed(Ghost ghost) {
-        LevelData level = levelData(currentLevelNumber);
-        if (world.isTunnel(ghost.tile())) {
-            return level.ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
-        }
-        if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
-            return level.elroy1SpeedPercentage() * 0.01f * ghost.baseSpeed();
-        }
-        if (ghost.id() == RED_GHOST && cruiseElroy == 2) {
-            return level.elroy2SpeedPercentage() * 0.01f * ghost.baseSpeed();
-        }
-        return level.ghostSpeedPercentage() * 0.01f * ghost.baseSpeed();
+        ghost.followTarget(targetTile, ghostAttackSpeed(ghost));
     }
 }
