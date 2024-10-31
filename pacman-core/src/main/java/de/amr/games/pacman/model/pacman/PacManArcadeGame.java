@@ -223,7 +223,7 @@ public class PacManArcadeGame extends GameModel {
         createWorldAndPopulation(worldMap);
         pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
-        pac.setUseAutopilot(false);
+        pac.setUsingAutopilot(false);
         List<Vector2i> oneWayDownTiles = worldMap.terrain().tiles()
             .filter(tile -> worldMap.terrain().get(tile) == Tiles.ONE_WAY_DOWN).toList();
         ghosts().forEach(ghost -> {
@@ -237,7 +237,7 @@ public class PacManArcadeGame extends GameModel {
     public void buildDemoLevel() {
         buildLevel(1);
         pac.setAutopilot(new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE)));
-        pac.setUseAutopilot(true);
+        pac.setUsingAutopilot(true);
         cruiseElroy = 0;
     }
 

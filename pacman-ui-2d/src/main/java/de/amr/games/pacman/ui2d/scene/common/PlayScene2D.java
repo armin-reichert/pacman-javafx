@@ -30,8 +30,7 @@ import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_
 import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
-import static de.amr.games.pacman.ui2d.util.KeyInput.alt;
-import static de.amr.games.pacman.ui2d.util.KeyInput.key;
+import static de.amr.games.pacman.ui2d.util.KeyInput.*;
 
 /**
  * @author Armin Reichert
@@ -47,6 +46,11 @@ public class PlayScene2D extends GameScene2D {
         bindAction(GameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
         bindAction(GameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
         bindAction(GameActions2D.ADD_CREDIT,        key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5));
+
+        bindAction(GameActions2D.PLAYER_UP,       key(KeyCode.UP),    control(KeyCode.UP));
+        bindAction(GameActions2D.PLAYER_DOWN,     key(KeyCode.DOWN),  control(KeyCode.DOWN));
+        bindAction(GameActions2D.PLAYER_LEFT,     key(KeyCode.LEFT),  control(KeyCode.LEFT));
+        bindAction(GameActions2D.PLAYER_RIGHT,    key(KeyCode.RIGHT), control(KeyCode.RIGHT));
     }
 
     @Override
@@ -61,14 +65,14 @@ public class PlayScene2D extends GameScene2D {
             return;
         }
         if (context.game().isDemoLevel()) {
-            context.game().pac().setUseAutopilot(true);
+            context.game().pac().setUsingAutopilot(true);
             context.game().pac().setImmune(false);
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 context.setScoreVisible(true);
             }
         } else {
             context.setScoreVisible(true);
-            context.game().pac().setUseAutopilot(PY_AUTOPILOT.get());
+            context.game().pac().setUsingAutopilot(PY_AUTOPILOT.get());
             context.game().pac().setImmune(PY_IMMUNITY.get());
             updatePlaySceneSound();
         }
@@ -191,6 +195,7 @@ public class PlayScene2D extends GameScene2D {
         //TODO check this
         context.updateRenderer();
         bindActions();
+        register(context.keyboard());
     }
 
     @Override

@@ -21,9 +21,8 @@ public class Pac extends Creature implements AnimatedEntity {
     private boolean dead;
     private int restingTicks;
     private long starvingTicks;
-    private Steering manualSteering;
     private Steering autopilot;
-    private boolean useAutopilot;
+    private boolean usingAutopilot;
     private Animations animations;
     private boolean immune;
 
@@ -103,13 +102,12 @@ public class Pac extends Creature implements AnimatedEntity {
             return;
         }
         if (restingTicks == 0) {
-            if (useAutopilot) {
+            if (usingAutopilot) {
                 autopilot.steer(this, game.world());
-            } else {
-                manualSteering.steer(this, game.world());
             }
             setSpeed(game.powerTimer().isRunning() ? game.pacPowerSpeed() : game.pacNormalSpeed());
             tryMoving();
+            //Logger.info(moveInfo);
             if (moveInfo.moved) {
                 animations.startCurrentAnimation();
             } else {
@@ -172,15 +170,15 @@ public class Pac extends Creature implements AnimatedEntity {
         return velocity().length() == 0 || !moveInfo.moved || restingTicks == REST_INDEFINITELY;
     }
 
-    public void setManualSteering(Steering steering) {
-        manualSteering = steering;
-    }
-
     public void setAutopilot(Steering steering) {
         autopilot = steering;
     }
 
-    public void setUseAutopilot(boolean value) {
-        useAutopilot = value;
+    public boolean isUsingAutopilot() {
+        return usingAutopilot;
+    }
+
+    public void setUsingAutopilot(boolean value) {
+        usingAutopilot = value;
     }
 }

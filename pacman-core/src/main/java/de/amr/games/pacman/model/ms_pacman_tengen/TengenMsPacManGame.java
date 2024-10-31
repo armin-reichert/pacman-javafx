@@ -649,7 +649,7 @@ public class TengenMsPacManGame extends GameModel {
         Logger.info("World created. Map number: {}, URL: {}", currentMapNumber, currentMap.url());
 
         pac.setAutopilot(new RuleBasedPacSteering(this));
-        pac.setUseAutopilot(false);
+        pac.setUsingAutopilot(false);
         deactivateBooster(); // gets activated in startLevel() if ALWAYS_ON
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
@@ -676,7 +676,7 @@ public class TengenMsPacManGame extends GameModel {
         selectMapForLevel(1);
         createWorldAndPopulation(currentMap);
         pac.setAutopilot(new RuleBasedPacSteering(this));
-        pac.setUseAutopilot(true);
+        pac.setUsingAutopilot(true);
         deactivateBooster(); // gets activated in startLevel() if ALWAYS_ON
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 

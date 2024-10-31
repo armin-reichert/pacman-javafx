@@ -218,7 +218,7 @@ public class MsPacManArcadeGame extends GameModel {
         createWorldAndPopulation(currentMap);
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
-        pac.setUseAutopilot(false);
+        pac.setUsingAutopilot(false);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
@@ -229,7 +229,7 @@ public class MsPacManArcadeGame extends GameModel {
         createWorldAndPopulation(currentMap);
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
-        pac.setUseAutopilot(true);
+        pac.setUsingAutopilot(true);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 

@@ -215,18 +215,6 @@ public abstract class Creature extends Entity {
     }
 
     /**
-     * Sets the speed in percent of the base speed (1.25 pixels/second).
-     *
-     * @param percentage percentage of base speed
-     */
-    public void setSpeedPct(byte percentage) {
-        if (percentage < 0) {
-            throw new IllegalArgumentException("Negative speed percentage: " + percentage);
-        }
-        setSpeed((float) 0.01 * percentage * baseSpeed);
-    }
-
-    /**
      * Sets the absolute speed and updates the velocity vector.
      *
      * @param speed speed in pixels/tick
@@ -235,7 +223,7 @@ public abstract class Creature extends Entity {
         if (speed < 0) {
             throw new IllegalArgumentException("Negative pixel speed: " + speed);
         }
-        setVelocity(speed == 0 ? Vector2f.ZERO : moveDir.vector().toVector2f().scaled(speed));
+        setVelocity(speed == 0 ? Vector2f.ZERO : moveDir.vector().scaled(speed));
     }
 
     public float speed() {
@@ -352,7 +340,7 @@ public abstract class Creature extends Entity {
      *
      * @param dir the direction to move
      */
-    private void tryMoving(Direction dir) {
+    protected void tryMoving(Direction dir) {
         final Vector2i tileBeforeMove = tile();
         final Vector2f dirVector = dir.vector().toVector2f();
         final Vector2f newVelocity = dirVector.scaled(velocity().length());
@@ -370,12 +358,13 @@ public abstract class Creature extends Entity {
 
         if (isTurn) {
             float offset = dir.isHorizontal() ? offset().y() : offset().x();
-            float speed = velocity().length();
-            boolean atTurnPosition = Math.abs(offset) <= 0.5 * speed;
+            boolean atTurnPosition = Math.abs(offset) <= 1.5;
             if (atTurnPosition) {
+                Logger.info(("Reached turn position"));
                 centerOverTile(tile()); // adjust over tile (starts moving around corner)
             } else {
                 moveInfo.log(String.format("Wants to take corner towards %s but not at turn position", dir));
+                Logger.info(moveInfo);
                 return;
             }
         }

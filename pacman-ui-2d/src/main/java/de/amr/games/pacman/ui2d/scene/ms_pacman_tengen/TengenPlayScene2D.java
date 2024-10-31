@@ -46,7 +46,7 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_YELLOW;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
-import static de.amr.games.pacman.ui2d.util.KeyInput.alt;
+import static de.amr.games.pacman.ui2d.util.KeyInput.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 
 /**
@@ -113,6 +113,11 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         bindAction(GameActions2D.CHEAT_KILL_GHOSTS,          alt(KeyCode.X));
         bindAction(GameActions2D.TENGEN_TOGGLE_PAC_BOOSTER,  KeyCode.A);
         bindAction(GameActions2D.TENGEN_SHOW_OPTIONS,        KeyCode.S);
+
+        bindAction(GameActions2D.PLAYER_UP,       key(KeyCode.UP),    control(KeyCode.UP));
+        bindAction(GameActions2D.PLAYER_DOWN,     key(KeyCode.DOWN),  control(KeyCode.DOWN));
+        bindAction(GameActions2D.PLAYER_LEFT,     key(KeyCode.LEFT),  control(KeyCode.LEFT));
+        bindAction(GameActions2D.PLAYER_RIGHT,    key(KeyCode.RIGHT), control(KeyCode.RIGHT));
     }
 
     @Override
@@ -140,10 +145,10 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             return;
         }
         if (context.game().isDemoLevel()) {
-            msPacMan.setUseAutopilot(true);
+            msPacMan.setUsingAutopilot(true);
             msPacMan.setImmune(false);
         } else {
-            msPacMan.setUseAutopilot(PY_AUTOPILOT.get());
+            msPacMan.setUsingAutopilot(PY_AUTOPILOT.get());
             msPacMan.setImmune(PY_IMMUNITY.get());
             updatePlaySceneSound();
             if (context.gameState() == GameState.GAME_OVER) {

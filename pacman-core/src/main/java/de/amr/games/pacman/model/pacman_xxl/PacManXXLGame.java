@@ -74,7 +74,7 @@ public class PacManXXLGame extends PacManArcadeGame {
         selectMapAndColorScheme(levelNumber);
         createWorldAndPopulation(currentMap);
         pac.setAutopilot(new RuleBasedPacSteering(this));
-        pac.setUseAutopilot(false);
+        pac.setUsingAutopilot(false);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         Logger.info("Map selection mode is {}", mapSelectionMode);
         Logger.info("Selected map URL is {}", currentMap.url());

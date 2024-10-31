@@ -45,8 +45,8 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
-import static de.amr.games.pacman.ui2d.util.KeyInput.alt;
-import static de.amr.games.pacman.ui2d.util.KeyInput.key;
+import static de.amr.games.pacman.ui2d.util.KeyInput.*;
+import static de.amr.games.pacman.ui2d.util.KeyInput.control;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 
@@ -135,6 +135,11 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         else if (context.game().isDemoLevel()) {
             bindAction(GameActions2D.ADD_CREDIT, key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5));
         }
+
+        bindAction(GameActions2D.PLAYER_UP,       key(KeyCode.UP),    control(KeyCode.UP));
+        bindAction(GameActions2D.PLAYER_DOWN,     key(KeyCode.DOWN),  control(KeyCode.DOWN));
+        bindAction(GameActions2D.PLAYER_LEFT,     key(KeyCode.LEFT),  control(KeyCode.LEFT));
+        bindAction(GameActions2D.PLAYER_RIGHT,    key(KeyCode.RIGHT), control(KeyCode.RIGHT));
     }
 
     protected void doInit() {
@@ -171,11 +176,11 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         scores3D.setRotate(perspective().getCamera().getRotate());
 
         if (context.game().isDemoLevel()) {
-            context.game().pac().setUseAutopilot(true);
+            context.game().pac().setUsingAutopilot(true);
             context.game().pac().setImmune(false);
         } else {
             context.setScoreVisible(true);
-            context.game().pac().setUseAutopilot(PY_AUTOPILOT.get());
+            context.game().pac().setUsingAutopilot(PY_AUTOPILOT.get());
             context.game().pac().setImmune(PY_IMMUNITY.get());
         }
 
@@ -385,6 +390,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             level3D.livesCounter3D().shapesRotation().play();
         }
         bindActions();
+        register(context.keyboard());
     }
 
     @Override

@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
@@ -100,6 +101,46 @@ public enum GameActions2D implements GameAction {
         public void execute(GameContext context) {
             if (context.game().isPlaying() && context.gameState() == GameState.HUNTING) {
                 context.gameController().changeState(GameState.LEVEL_COMPLETE);
+            }
+        }
+    },
+
+    PLAYER_UP {
+        @Override
+        public void execute(GameContext context) {
+            if (!context.game().pac().isUsingAutopilot()) {
+                Logger.info("Player UP");
+                context.game().pac().setWishDir(Direction.UP);
+            }
+        }
+    },
+
+    PLAYER_DOWN {
+        @Override
+        public void execute(GameContext context) {
+            if (!context.game().pac().isUsingAutopilot()) {
+                Logger.info("Player DOWN");
+                context.game().pac().setWishDir(Direction.DOWN);
+            }
+        }
+    },
+
+    PLAYER_LEFT {
+        @Override
+        public void execute(GameContext context) {
+            if (!context.game().pac().isUsingAutopilot()) {
+                Logger.info("Player LEFT");
+                context.game().pac().setWishDir(Direction.LEFT);
+            }
+        }
+    },
+
+    PLAYER_RIGHT {
+        @Override
+        public void execute(GameContext context) {
+            if (!context.game().pac().isUsingAutopilot()) {
+                Logger.info("Player RIGHT");
+                context.game().pac().setWishDir(Direction.RIGHT);
             }
         }
     },

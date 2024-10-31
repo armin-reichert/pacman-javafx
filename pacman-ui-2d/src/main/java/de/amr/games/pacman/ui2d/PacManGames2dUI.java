@@ -510,7 +510,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         if (game().isDemoLevel()) {
             sounds().setEnabled(false);
         } else {
-            game().pac().setManualSteering(new KeyboardPacSteering(keyboard()));
             sounds().setEnabled(true);
         }
         // size of world might have changed
