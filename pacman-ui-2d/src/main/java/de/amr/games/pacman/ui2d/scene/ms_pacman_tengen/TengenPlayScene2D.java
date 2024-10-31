@@ -15,6 +15,8 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
+import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
@@ -65,15 +67,17 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     private int camDelay;
     private final GameOverMessageAnimation gameOverMessageAnimation = new GameOverMessageAnimation();
 
-    private class GameOverMessageAnimation {
+    private static class GameOverMessageAnimation {
         private double startX;
-        private double currentX;
+        private double rightBorderX;
         private double speed;
+        private double currentX;
         private boolean wrapped;
         private long delay;
 
-        void start(double startX, double speed) {
+        void start(double startX, double rightBorderX, double speed) {
             this.startX = startX;
+            this.rightBorderX = rightBorderX;
             this.speed = speed;
             currentX = startX;
             wrapped = false;
@@ -86,7 +90,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
                 return;
             }
             currentX += speed;
-            if (currentX > size().x()) {
+            if (currentX > rightBorderX) {
                 currentX = 0;
                 wrapped = true;
             }
@@ -134,24 +138,26 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void update() {
-        if (context.game().currentLevelNumber() == 0) {
+        TengenMsPacManGame game = (TengenMsPacManGame) context.game();
+        if (game.currentLevelNumber() == 0) {
             Logger.warn("Cannot update PlayScene2D: no game level available");
             return;
         }
-        Pac msPacMan = context.game().pac();
-        if (context.game().world() == null || msPacMan == null) {
+        Pac msPacMan = game.pac();
+        if (game.world() == null || msPacMan == null) {
             //TODO: Can world or Ms. Pac-Man be null here?
             Logger.warn("Cannot update PlayScene2D: no game world available");
             return;
         }
-        if (context.game().isDemoLevel()) {
+        if (game.isDemoLevel()) {
             msPacMan.setUsingAutopilot(true);
             msPacMan.setImmune(false);
         } else {
             msPacMan.setUsingAutopilot(PY_AUTOPILOT.get());
             msPacMan.setImmune(PY_IMMUNITY.get());
             updatePlaySceneSound();
-            if (context.gameState() == GameState.GAME_OVER) {
+            if (context.gameState() == GameState.GAME_OVER && game.mapCategory() != MapCategory.ARCADE) {
+                // only non-Arcade maps have moving "Game Over" text
                 gameOverMessageAnimation.update();
             }
         }
@@ -320,7 +326,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
                 context.sounds().stopAll();
                 GameWorld world = context.game().world();
                 double houseCenterX = TS * (world.houseTopLeftTile().x() + 0.5 * world.houseSize().x());
-                gameOverMessageAnimation.start(houseCenterX, MESSAGE_SPEED);
+                gameOverMessageAnimation.start(houseCenterX, size().x(), MESSAGE_SPEED);
             }
             default -> {}
         }
