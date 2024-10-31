@@ -346,6 +346,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         game.bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
     }
 
+    // Animation goes forward and backward: Cycle (0, 1, 2, 1)
     private void drawAnimatedMap(long tick, RectArea[] sprites) {
         long frameTicks = 8; // TODO correct?
         int frameIndex = (int) ( (tick % (sprites.length * frameTicks)) / frameTicks );

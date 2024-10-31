@@ -45,9 +45,12 @@ public class TengenNonArcadeMapsSpriteSheet {
         return new RectArea(col * width, y, width, height);
     }
 
-    // Map #32 has 3 different images to create an animation effect.
+    // Map #32 has 3 different images to create an animation effect, frame cycle: (0, 1, 2, 1)+
     static final RectArea[] MAP_32_ANIMATION_FRAMES = {
-        rect(1568, 840, 224, 248), rect(1568, 1088, 224, 248), rect(1568, 1336, 224, 248),
+        rect(1568, 840, 224, 248),  // 0
+        rect(1568, 1088, 224, 248), // 1
+        rect(1568, 1336, 224, 248), // 2
+        rect(1568, 1088, 224, 248), // 1
     };
 
     private final Image image;
