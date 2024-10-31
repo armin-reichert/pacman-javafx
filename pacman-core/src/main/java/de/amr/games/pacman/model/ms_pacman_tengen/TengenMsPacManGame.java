@@ -9,7 +9,6 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.*;
@@ -21,6 +20,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -36,7 +36,7 @@ import static de.amr.games.pacman.model.ms_pacman_tengen.NamedMapColorScheme.*;
  */
 public class TengenMsPacManGame extends GameModel {
 
-    private static final NamedMapColorScheme[] COLOR_SCHEMES_IN_LEVEL_ORDER = {
+    private static final List<NamedMapColorScheme> COLOR_SCHEMES_IN_LEVEL_ORDER = List.of(
         MSC_36_15_20_PINK_RED_WHITE,       // Level 1
         MSC_21_20_28_BLUE_WHITE_YELLOW,
         MSC_16_20_15_ORANGE_WHITE_RED,
@@ -63,12 +63,12 @@ public class TengenMsPacManGame extends GameModel {
         MSC_23_20_2B_VIOLET_WHITE_GREEN,
         MSC_10_20_28_GRAY_WHITE_YELLOW,    // Level 25
         MSC_03_20_20_VIOLET_WHITE_WHITE,
-        MSC_04_20_20_VIOLET_WHITE_WHITE, // TODO clarify when randomization starts
+        MSC_04_20_20_VIOLET_WHITE_WHITE   // TODO clarify when randomization starts
         // Levels 28-32 use randomly selected schemes
-    };
+    );
 
-    private static MapColorScheme randomMapColorScheme() {
-        return COLOR_SCHEMES_IN_LEVEL_ORDER[Globals.randomInt(0, COLOR_SCHEMES_IN_LEVEL_ORDER.length)].get();
+    private static Map<String, String> randomMapColorScheme() {
+        return COLOR_SCHEMES_IN_LEVEL_ORDER.get(Globals.randomInt(0, COLOR_SCHEMES_IN_LEVEL_ORDER.size())).get();
     }
 
     static final String MAPS_ROOT = "/de/amr/games/pacman/maps/tengen/";
@@ -403,23 +403,24 @@ public class TengenMsPacManGame extends GameModel {
         selectMap(maps, mapNumber, createColorSchemeFromMap(worldMap));
     }
 
-    private void selectMap(List<WorldMap> maps, int mapNumber, MapColorScheme mapColorScheme) {
+    private void selectMap(List<WorldMap> maps, int mapNumber, Map<String, String> mapColorScheme) {
         currentMapNumber = mapNumber;
         currentMap = new WorldMap(maps.get(mapNumber - 1));
         currentMapColorScheme = mapColorScheme;
     }
 
-    private MapColorScheme createColorSchemeFromMap(WorldMap worldMap) {
-        MapColorScheme defaultScheme = MSC_36_15_20_PINK_RED_WHITE.get();
-        String fill   = worldMap.terrain().getPropertyOrDefault(PROPERTY_COLOR_WALL_FILL, defaultScheme.fill());
-        String stroke = worldMap.terrain().getPropertyOrDefault(PROPERTY_COLOR_WALL_STROKE, defaultScheme.stroke());
-        String door   = worldMap.terrain().getPropertyOrDefault(PROPERTY_COLOR_DOOR, defaultScheme.door());
-        String pellet = worldMap.food().getPropertyOrDefault(PROPERTY_COLOR_FOOD, defaultScheme.pellet());
-        return new MapColorScheme(
-            colorToHexFormat(fill).orElse(defaultScheme.fill()),
-            colorToHexFormat(stroke).orElse(defaultScheme.stroke()),
-            colorToHexFormat(door).orElse(defaultScheme.door()),
-            colorToHexFormat(pellet).orElse(defaultScheme.pellet()));
+    private Map<String, String> createColorSchemeFromMap(WorldMap worldMap) {
+        Map<String, String> defaultScheme = MSC_36_15_20_PINK_RED_WHITE.get();
+        String fill   = worldMap.terrain().getPropertyOrDefault(PROPERTY_COLOR_WALL_FILL, defaultScheme.get("fill"));
+        String stroke = worldMap.terrain().getPropertyOrDefault(PROPERTY_COLOR_WALL_STROKE, defaultScheme.get("stroke"));
+        String door   = worldMap.terrain().getPropertyOrDefault(PROPERTY_COLOR_DOOR, defaultScheme.get("door"));
+        String pellet = worldMap.food().getPropertyOrDefault(PROPERTY_COLOR_FOOD, defaultScheme.get("pellet"));
+        return Map.of(
+            "fill",   colorToHexFormat(fill).orElse(defaultScheme.get("fill")),
+            "stroke", colorToHexFormat(stroke).orElse(defaultScheme.get("stroke")),
+            "door",   colorToHexFormat(door).orElse(defaultScheme.get("door")),
+            "pellet", colorToHexFormat(pellet).orElse(defaultScheme.get("pellet"))
+        );
     }
 
     private List<WorldMap> getArcadeMaps() {

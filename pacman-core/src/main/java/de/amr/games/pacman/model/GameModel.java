@@ -10,7 +10,6 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -18,10 +17,7 @@ import de.amr.games.pacman.model.actors.*;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -88,8 +84,8 @@ public abstract class GameModel {
     protected GameWorld            world;
     protected int                  currentMapNumber;
     protected WorldMap             currentMap;
-    protected MapColorScheme currentMapColorScheme;
-    protected SimulationStepEventLog eventLog;
+    protected Map<String, String>  currentMapColorScheme;
+    protected SimulationStepLog    eventLog;
 
     public abstract boolean      canStartNewGame();
     public abstract void         onGameEnded();
@@ -196,7 +192,7 @@ public abstract class GameModel {
         return currentMap;
     }
 
-    public MapColorScheme currentMapColorScheme() {
+    public Map<String, String> currentMapColorScheme() {
         return currentMapColorScheme;
     }
 
@@ -321,12 +317,12 @@ public abstract class GameModel {
         ghosts().forEach(ghost -> ghost.setVisible(false));
     }
 
-    public SimulationStepEventLog eventLog() {
+    public SimulationStepLog eventLog() {
         return eventLog;
     }
 
     public void clearEventLog() {
-        eventLog = new SimulationStepEventLog();
+        eventLog = new SimulationStepLog();
     }
 
     protected Vector2i scatterTarget(Ghost ghost) {
@@ -578,5 +574,4 @@ public abstract class GameModel {
         checkNotNull(type);
         publishGameEvent(new GameEvent(type, this, tile));
     }
-
 }

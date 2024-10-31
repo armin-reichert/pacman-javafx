@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author Armin Reichert
  */
-public class SimulationStepEventLog {
+public class SimulationStepLog {
     public Vector2i foodFoundTile = null;
     public boolean  energizerFound = false;
     public byte     bonusIndex = -1;

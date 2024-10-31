@@ -24,7 +24,8 @@ import org.tinylog.Logger;
 
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
@@ -147,10 +148,6 @@ public class PlayScene2D extends GameScene2D {
             String text = "GAME  OVER";
             int x = TS * (cx - text.length() / 2);
             Color color = context.assets().color(assetPrefix + ".color.game_over_message");
-            // Tengen seems to use wall stroke color of current maze. TODO: verify this!
-            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                color = Color.web(context.game().currentMapColorScheme().stroke());
-            }
             renderer.drawText(text, color, font, x, y);
         } else if (context.gameState() == GameState.GAME_OVER) {
             String text = "GAME  OVER";

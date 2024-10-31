@@ -133,7 +133,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             bindAction(GameActions2D.TENGEN_SHOW_OPTIONS,       KeyCode.S);
         }
         else if (context.game().isDemoLevel()) {
-            bindAction(GameActions2D.ADD_CREDIT, key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP));
+            bindAction(GameActions2D.ADD_CREDIT, key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5));
         }
     }
 
@@ -188,7 +188,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             Color color = context.assets().color(assetPrefix + ".color.game_over_message");
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                    color = Color.web(context.game().currentMapColorScheme().stroke());
+                    color = Color.web(context.game().currentMapColorScheme().get("stroke"));
                 }
             }
             scores3D.showTextAsScore("GAME OVER!", color);

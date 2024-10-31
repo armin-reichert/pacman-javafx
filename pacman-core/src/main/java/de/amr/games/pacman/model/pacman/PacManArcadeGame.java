@@ -10,7 +10,6 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.tilemap.Tiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -27,6 +26,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -56,7 +56,12 @@ public class PacManArcadeGame extends GameModel {
     public static final Vector2i ARCADE_MAP_SIZE_IN_TILES  = new Vector2i(28, 36);
     public static final Vector2f ARCADE_MAP_SIZE_IN_PIXELS = new Vector2f(224, 288);
 
-    public static final MapColorScheme MAP_COLOR_SCHEME = new MapColorScheme("#000000", "#2121ff", "#fcb5ff", "febdb4");
+    public static final Map<String, String> MAP_COLOR_SCHEME = Map.of(
+        "fill",   "#000000",
+        "stroke", "#2121ff",
+        "door",   "#fcb5ff",
+        "pellet", "febdb4"
+    );
 
     // Level settings as specified in the dossier
     private static final byte[][] LEVEL_DATA = {

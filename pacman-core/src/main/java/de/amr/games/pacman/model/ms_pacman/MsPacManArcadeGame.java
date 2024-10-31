@@ -9,7 +9,6 @@ import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -24,6 +23,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -82,14 +82,14 @@ public class MsPacManArcadeGame extends GameModel {
 
     private static final String MAP_PATTERN = "/de/amr/games/pacman/maps/mspacman/mspacman_%d.world";
 
-    public static final MapColorScheme[] MAP_COLOR_SCHEMES = {
-        new MapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
-        new MapColorScheme("47B7FF", "DEDEFF", "FCB5FF", "FFFF00"),
-        new MapColorScheme("DE9751", "DEDEFF", "FCB5FF", "FF0000"),
-        new MapColorScheme("2121FF", "FFB751", "FCB5FF", "DEDEFF"),
-        new MapColorScheme("FFB7FF", "FFFF00", "FCB5FF", "00FFFF"),
-        new MapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
-    };
+    public static final List<Map<String, String>> MAP_COLOR_SCHEMES = List.of(
+        Map.of("fill", "FFB7AE", "stroke", "FF0000", "door", "FCB5FF", "pellet", "DEDEFF"),
+        Map.of("fill", "47B7FF", "stroke", "DEDEFF", "door", "FCB5FF", "pellet", "FFFF00"),
+        Map.of("fill", "DE9751", "stroke", "DEDEFF", "door", "FCB5FF", "pellet", "FF0000"),
+        Map.of("fill", "2121FF", "stroke", "FFB751", "door", "FCB5FF", "pellet", "DEDEFF"),
+        Map.of("fill", "FFB7FF", "stroke", "FFFF00", "door", "FCB5FF", "pellet", "00FFFF"),
+        Map.of("fill", "FFB7AE", "stroke", "FF0000", "door", "FCB5FF", "pellet", "DEDEFF")
+    );
 
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
 
@@ -185,7 +185,7 @@ public class MsPacManArcadeGame extends GameModel {
 
         currentMapNumber = mapNumber;
         currentMap = maps.get(mapNumber - 1);
-        currentMapColorScheme = MAP_COLOR_SCHEMES[colorSchemeNumber - 1];
+        currentMapColorScheme = MAP_COLOR_SCHEMES.get(colorSchemeNumber - 1);
     }
 
     @Override

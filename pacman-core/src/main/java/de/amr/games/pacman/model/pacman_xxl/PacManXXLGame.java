@@ -6,7 +6,6 @@ package de.amr.games.pacman.model.pacman_xxl;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameVariant;
@@ -34,16 +33,16 @@ public class PacManXXLGame extends PacManArcadeGame {
     private static final int MAP_COUNT = 8;
     private static final String MAP_PATTERN = "/de/amr/games/pacman/maps/masonic/masonic_%d.world";
 
-    static final MapColorScheme[] COLOR_SCHEMES = {
-        new MapColorScheme("#359c9c", "#85e2ff", "#fcb5ff", "#feb8ae"),
-        new MapColorScheme("#c2b853", "#ffeace", "#fcb5ff", "#feb8ae"),
-        new MapColorScheme("#86669c", "#f6c4e0", "#fcb5ff", "#feb8ae"),
-        new MapColorScheme("#ed0a04", "#f0b4cd", "#fcb5ff", "#feb8ae"),
-        new MapColorScheme("#2067c1", "#65e5bb", "#fcb5ff", "#feb8ae"),
-        new MapColorScheme("#c55994", "#f760c0", "#fcb5ff", "#feb8ae"),
-        new MapColorScheme("#12bc76", "#ade672", "#fcb5ff", "#feb8ae"),
-        new MapColorScheme("#5036d9", "#5f8bcf", "#fcb5ff", "#feb8ae"),
-    };
+    static final List<Map<String, String>> COLOR_SCHEMES = List.of(
+        Map.of("fill", "#359c9c", "stroke", "#85e2ff", "door", "#fcb5ff", "pellet", "#feb8ae"),
+        Map.of("fill", "#c2b853", "stroke", "#ffeace", "door", "#fcb5ff", "pellet", "#feb8ae"),
+        Map.of("fill", "#86669c", "stroke", "#f6c4e0", "door", "#fcb5ff", "pellet", "#feb8ae"),
+        Map.of("fill", "#ed0a04", "stroke", "#f0b4cd", "door", "#fcb5ff", "pellet", "#feb8ae"),
+        Map.of("fill", "#2067c1", "stroke", "#65e5bb", "door", "#fcb5ff", "pellet", "#feb8ae"),
+        Map.of("fill", "#c55994", "stroke", "#f760c0", "door", "#fcb5ff", "pellet", "#feb8ae"),
+        Map.of("fill", "#12bc76", "stroke", "#ade672", "door", "#fcb5ff", "pellet", "#feb8ae"),
+        Map.of("fill", "#5036d9", "stroke", "#5f8bcf", "door", "#fcb5ff", "pellet", "#feb8ae")
+    );
 
     private final List<WorldMap> standardMaps = new ArrayList<>();
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
@@ -104,14 +103,13 @@ public class PacManXXLGame extends PacManArcadeGame {
         }
         if (standardMaps.contains(currentMap)) {
             // try using random color scheme, TODO: avoid repetitions
-            int index = randomInt(0, COLOR_SCHEMES.length);
-            currentMapColorScheme = COLOR_SCHEMES[index];
+            currentMapColorScheme = COLOR_SCHEMES.get(randomInt(0, COLOR_SCHEMES.size()));
         } else {
-            currentMapColorScheme = new MapColorScheme(
-                currentMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_FILL, "000000"),
-                currentMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_STROKE, "0000ff"),
-                currentMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_DOOR, "00ffff"),
-                currentMap.food().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_FOOD, "ffffff")
+            currentMapColorScheme = Map.of(
+                "fill",   currentMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_FILL, "000000"),
+                "stroke", currentMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_STROKE, "0000ff"),
+                "door",   currentMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_DOOR, "00ffff"),
+                "pellet", currentMap.food().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_FOOD, "ffffff")
             );
         }
     }

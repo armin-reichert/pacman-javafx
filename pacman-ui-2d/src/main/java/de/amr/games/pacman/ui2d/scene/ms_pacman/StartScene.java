@@ -25,7 +25,7 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void bindActions() {
-        bindAction(GameActions2D.ADD_CREDIT, key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP));
+        bindAction(GameActions2D.ADD_CREDIT, key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5));
         bindAction(GameActions2D.START_GAME, key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1));
     }
 

@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.pacman_xxl;
 
-import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameModel;
@@ -18,6 +17,8 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
+
+import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static java.util.function.Predicate.not;
@@ -113,14 +114,14 @@ public class PacManGameXXLRenderer implements GameRenderer {
             terrainRenderer.drawMap(ctx(), world.map().terrain());
         }
         else {
+            Map<String, String> mapColorScheme = context.game().currentMapColorScheme();
             terrainRenderer.setMapBackgroundColor(bgColor);
-            MapColorScheme mapColorScheme = context.game().currentMapColorScheme();
-            terrainRenderer.setWallStrokeColor(Color.web(mapColorScheme.stroke()));
-            terrainRenderer.setWallFillColor(Color.web(mapColorScheme.fill()));
-            terrainRenderer.setDoorColor(Color.web(mapColorScheme.door()));
+            terrainRenderer.setWallStrokeColor(Color.web(mapColorScheme.get("stroke")));
+            terrainRenderer.setWallFillColor(Color.web(mapColorScheme.get("fill")));
+            terrainRenderer.setDoorColor(Color.web(mapColorScheme.get("door")));
             terrainRenderer.drawMap(ctx(), world.map().terrain());
-            foodRenderer.setPelletColor(Color.web(mapColorScheme.pellet()));
-            foodRenderer.setEnergizerColor(Color.web(mapColorScheme.pellet()));
+            foodRenderer.setPelletColor(Color.web(mapColorScheme.get("pellet")));
+            foodRenderer.setEnergizerColor(Color.web(mapColorScheme.get("pellet")));
             world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
                 .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
             if (blinkingOn) {

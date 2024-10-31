@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -22,6 +21,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
+import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.imageArea;
@@ -101,19 +102,15 @@ public class MsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void update(GameModel game) {
-        MapColorScheme mapColorScheme = game.currentMapColorScheme();
+        Map<String, String> mapColorScheme = game.currentMapColorScheme();
         if (mapColorScheme == null) {
             return;
         }
-        // select map sprite depending on selected map color scheme
-        for (int i = 0; i < 6; ++i) {
-            if (mapColorScheme.equals(MsPacManArcadeGame.MAP_COLOR_SCHEMES[i])) {
-                mapWithFoodSprite = spriteSheet.imageArea(0, i * 248, 226, 248);
-                mapWithoutFoodSprite = spriteSheet.imageArea(228, i * 248, 226, 248);
-                mapFlashingSprite = imageArea(flashingMazesImage, 0, i * 248, 226, 248);
-                break;
-            }
-        }
+        // select map sprites for selected color scheme
+        int index = MsPacManArcadeGame.MAP_COLOR_SCHEMES.indexOf(mapColorScheme);
+        mapWithFoodSprite    = spriteSheet.imageArea(0, index * 248, 226, 248);
+        mapWithoutFoodSprite = spriteSheet.imageArea(228, index * 248, 226, 248);
+        mapFlashingSprite    = imageArea(flashingMazesImage, 0, index * 248, 226, 248);
     }
 
     @Override

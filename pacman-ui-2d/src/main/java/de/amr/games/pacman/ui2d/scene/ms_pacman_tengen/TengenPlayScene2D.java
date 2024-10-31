@@ -10,6 +10,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -266,14 +267,18 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     private void drawLevelMessage(GameRenderer renderer, double cx, double y) {
         AssetStorage assets = context.assets();
+        String assetPrefix = assetPrefix(GameVariant.MS_PACMAN_TENGEN);
         GameState state = context.gameState();
         GameModel game = context.game();
         if (game.isDemoLevel()) {
-            drawText(renderer, "GAME  OVER", cx, y, Color.web(game.currentMapColorScheme().stroke()));
+            Color color = Color.web(game.currentMapColorScheme().get("stroke"));
+            drawText(renderer, "GAME  OVER", cx, y, color);
         } else if (state == GameState.GAME_OVER) {
-            drawText(renderer, "GAME  OVER", gameOverMessageAnimation.currentX, y, assets.color(assetPrefix(context.gameVariant()) + ".color.game_over_message"));
+            Color color = assets.color(assetPrefix + ".color.game_over_message");
+            drawText(renderer, "GAME  OVER", gameOverMessageAnimation.currentX, y, color);
         } else if (state == GameState.STARTING_GAME) {
-            drawText(renderer, "READY!", cx, y, assets.color(assetPrefix(context.gameVariant()) + ".color.ready_message"));
+            Color color = assets.color(assetPrefix + ".color.ready_message");
+            drawText(renderer, "READY!", cx, y, color);
         } else if (state == GameState.TESTING_LEVEL_BONI) {
             drawText(renderer, "TEST L%02d".formatted(game.currentLevelNumber()), cx, y, TENGEN_YELLOW);
         }

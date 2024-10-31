@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
@@ -36,6 +35,7 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.util.List;
+import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static java.util.function.Predicate.not;
@@ -264,10 +264,11 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     public void drawWorld(GameContext context, GameWorld world) {
         TengenMsPacManGame game = (TengenMsPacManGame) context.game();
         TileMap terrain = world.map().terrain();
-        MapColorScheme mapColorScheme = game.currentMapColorScheme(); //TODO check: may be NULL!
+        Map<String, String> mapColorScheme = game.currentMapColorScheme();
 
+        // TODO There are maze flashing animations with varying fill color
         if (flashMode) {
-            Color wallFillColor = mapColorScheme != null ? Color.web(mapColorScheme.fill()) : Color.WHITE; // TODO check
+            Color wallFillColor = Color.web(mapColorScheme.get("fill"));
             terrainRenderer.setMapBackgroundColor(bgColor);
             terrainRenderer.setWallStrokeColor(Color.WHITE);
             terrainRenderer.setWallFillColor(blinkingOn ? Color.BLACK : wallFillColor);
@@ -278,21 +279,21 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
         // All maps that use a different color scheme than that in the sprite sheet have to be rendered using the
         // generic vector renderer for now. This looks more or less bad for specific maps.
+        // TODO: maps 28-32 also have random color schmes in STRANGE mode
         boolean useVectorRenderer = game.mapCategory() != MapCategory.STRANGE;
 
         boolean isDemoLevel = context.game().isDemoLevel();
-
         if (useVectorRenderer) {
             if (!isDemoLevel) {
                 drawInfoOnTopOfMap(terrain, game);
             }
             terrainRenderer.setMapBackgroundColor(bgColor);
-            terrainRenderer.setWallStrokeColor(Color.web(mapColorScheme.stroke()));
-            terrainRenderer.setWallFillColor(Color.web(mapColorScheme.fill()));
-            terrainRenderer.setDoorColor(Color.web(mapColorScheme.door()));
+            terrainRenderer.setWallStrokeColor(Color.web(mapColorScheme.get("stroke")));
+            terrainRenderer.setWallFillColor(Color.web(mapColorScheme.get("fill")));
+            terrainRenderer.setDoorColor(Color.web(mapColorScheme.get("door")));
             terrainRenderer.drawMap(ctx(), terrain);
-            foodRenderer.setPelletColor(Color.web(mapColorScheme.pellet()));
-            foodRenderer.setEnergizerColor(Color.web(mapColorScheme.pellet()));
+            foodRenderer.setPelletColor(Color.web(mapColorScheme.get("pellet")));
+            foodRenderer.setEnergizerColor(Color.web(mapColorScheme.get("pellet")));
             world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
                 .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
             if (blinkingOn) {

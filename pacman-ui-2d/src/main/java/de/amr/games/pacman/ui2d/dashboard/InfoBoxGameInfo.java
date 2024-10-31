@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.controller.HuntingControl;
-import de.amr.games.pacman.lib.tilemap.MapColorScheme;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -14,6 +13,8 @@ import de.amr.games.pacman.model.LevelData;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameContext;
+
+import java.util.Map;
 
 import static de.amr.games.pacman.lib.timer.TickTimer.ticksToString;
 
@@ -39,11 +40,12 @@ public class InfoBoxGameInfo extends InfoBox {
                 return InfoText.NO_INFO;
             }
             TengenMsPacManGame game = (TengenMsPacManGame) context.game();
-            MapColorScheme mapColorScheme = game.currentMapColorScheme();
+            Map<String, String> mapColorScheme = game.currentMapColorScheme();
             if (mapColorScheme == null) {
                 return InfoText.NO_INFO;
             }
-            return "fill: %s stroke: %s food: %s".formatted(mapColorScheme.fill(), mapColorScheme.stroke(), mapColorScheme.pellet());
+            return "fill/stroke/food: %s %s %s".formatted(
+                mapColorScheme.get("fill"), mapColorScheme.get("stroke"), mapColorScheme.get("pellet"));
         }));
 
         labeledValue("Lives",           ifLevelPresent(level -> "%d".formatted(context.game().lives())));

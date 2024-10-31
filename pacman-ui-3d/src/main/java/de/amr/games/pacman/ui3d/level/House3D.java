@@ -5,8 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.MapColorScheme;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import javafx.beans.property.*;
 import javafx.scene.Group;
@@ -14,6 +12,8 @@ import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+
+import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
@@ -36,9 +36,7 @@ public class House3D {
     private final Group root = new Group();
     private final Door3D door3D;
 
-    public House3D(GameWorld world, MapColorScheme mapColorScheme) {
-        WorldMap map = world.map();
-
+    public House3D(GameWorld world, Map<String, String> mapColorScheme) {
         // tile coordinates
         int xMin = world.houseTopLeftTile().x();
         int xMax = xMin + world.houseSize().x() - 1;
@@ -54,7 +52,7 @@ public class House3D {
             createWall(xMin, yMax, xMax, yMax)
         );
 
-        Color doorColor = Color.web(mapColorScheme.door());
+        Color doorColor = Color.web(mapColorScheme.get("door"));
         door3D = new Door3D(leftDoorTile, rightDoorTile, doorColor);
         door3D.drawModePy.bind(PY_3D_DRAW_MODE);
 
