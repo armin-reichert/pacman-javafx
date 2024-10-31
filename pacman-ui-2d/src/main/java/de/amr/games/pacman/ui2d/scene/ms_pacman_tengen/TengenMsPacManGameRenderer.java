@@ -34,7 +34,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
-import java.util.List;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -401,15 +400,18 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawLevelCounter(int levelNumber, boolean demoLevel, List<Byte> symbols, Vector2f size) {
+    public void drawLevelCounter(GameContext context,  Vector2f size) {
+        TengenMsPacManGame game = (TengenMsPacManGame) context.game();
+        int levelNumber = game.currentLevelNumber();
+        boolean demoLevel = game.isDemoLevel();
         // TODO: This is ugly, maybe change all Tengen maps instead?
         double y = size.y() - 3 * TS;
-        if (!demoLevel && levelNumber > 0) {
+        if (!demoLevel && levelNumber > 0 && game.mapCategory() != MapCategory.ARCADE) {
             drawLevelNumberBox(levelNumber, 0, y); // left box
             drawLevelNumberBox(levelNumber, size.x() - 2 * TS, y); // right box
         }
         double symbolX = size.x() - 4 * TS;
-        for (byte symbol : symbols) {
+        for (byte symbol : game.levelCounter()) {
             drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), symbolX, y);
             symbolX -= TS * 2;
         }

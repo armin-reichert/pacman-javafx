@@ -263,7 +263,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             livesCounterEntries += 1;
         }
         renderer.drawLivesCounter(livesCounterEntries, 5, size());
-        renderer.drawLevelCounter(game.currentLevelNumber(), game.isDemoLevel(), game.levelCounter(), size());
+        renderer.drawLevelCounter(context, size());
     }
 
     private Stream<Ghost> ghostsInZOrder() {

@@ -84,8 +84,7 @@ public class CutScene2 extends GameScene2D {
         r.drawClapperBoard(r.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
         r.drawAnimatedEntity(msPacMan);
         r.drawAnimatedEntity(pacMan);
-        r.drawLevelCounter(context.game().currentLevelNumber(), context.game().isDemoLevel(),
-            context.game().levelCounter(), size());
+        r.drawLevelCounter(context, size());
     }
 
     private void startMusic() {

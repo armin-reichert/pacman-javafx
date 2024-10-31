@@ -100,8 +100,7 @@ public class CutScene1 extends GameScene2D {
         renderer.drawAnimatedEntity(inky);
         renderer.drawAnimatedEntity(pinky);
         renderer.drawSprite(heart, MsPacManGameSpriteSheet.HEART_SPRITE);
-        renderer.drawLevelCounter(context.game().currentLevelNumber(), context.game().isDemoLevel(),
-            context.game().levelCounter(), size());
+        renderer.drawLevelCounter(context, size());
     }
 
     private void startMusic() {

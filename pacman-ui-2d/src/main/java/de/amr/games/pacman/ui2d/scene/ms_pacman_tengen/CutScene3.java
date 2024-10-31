@@ -100,8 +100,7 @@ public class CutScene3 extends GameScene2D {
         r.drawSprite(bag, bagOpen
             ? TengenMsPacManGameSpriteSheet.JUNIOR_PAC_SPRITE
             : TengenMsPacManGameSpriteSheet.BLUE_BAG_SPRITE);
-        r.drawLevelCounter(context.game().currentLevelNumber(), context.game().isDemoLevel(),
-            context.game().levelCounter(), size());
+        r.drawLevelCounter(context, size());
     }
 
     private void startMusic() {
