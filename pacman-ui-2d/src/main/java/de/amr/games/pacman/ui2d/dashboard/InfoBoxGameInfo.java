@@ -39,11 +39,11 @@ public class InfoBoxGameInfo extends InfoBox {
                 return InfoText.NO_INFO;
             }
             TengenMsPacManGame game = (TengenMsPacManGame) context.game();
-            MapColorScheme colorScheme = game.currentMapColorScheme();
-            if (colorScheme == null) {
+            MapColorScheme mapColorScheme = game.currentMapColorScheme();
+            if (mapColorScheme == null) {
                 return InfoText.NO_INFO;
             }
-            return "fill: %s stroke: %s food: %s".formatted(colorScheme.fill(), colorScheme.stroke(), colorScheme.pellet());
+            return "fill: %s stroke: %s food: %s".formatted(mapColorScheme.fill(), mapColorScheme.stroke(), mapColorScheme.pellet());
         }));
 
         labeledValue("Lives",           ifLevelPresent(level -> "%d".formatted(context.game().lives())));

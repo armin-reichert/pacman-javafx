@@ -264,10 +264,10 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     public void drawWorld(GameContext context, GameWorld world) {
         TengenMsPacManGame game = (TengenMsPacManGame) context.game();
         TileMap terrain = world.map().terrain();
-        MapColorScheme colorScheme = game.currentMapColorScheme(); //TODO check: may be NULL!
+        MapColorScheme mapColorScheme = game.currentMapColorScheme(); //TODO check: may be NULL!
 
         if (flashMode) {
-            Color wallFillColor = colorScheme != null ? Color.web(colorScheme.fill()) : Color.WHITE; // TODO check
+            Color wallFillColor = mapColorScheme != null ? Color.web(mapColorScheme.fill()) : Color.WHITE; // TODO check
             terrainRenderer.setMapBackgroundColor(bgColor);
             terrainRenderer.setWallStrokeColor(Color.WHITE);
             terrainRenderer.setWallFillColor(blinkingOn ? Color.BLACK : wallFillColor);
@@ -287,12 +287,12 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
                 drawInfoOnTopOfMap(terrain, game);
             }
             terrainRenderer.setMapBackgroundColor(bgColor);
-            terrainRenderer.setWallStrokeColor(Color.web(colorScheme.stroke()));
-            terrainRenderer.setWallFillColor(Color.web(colorScheme.fill()));
-            terrainRenderer.setDoorColor(Color.web(colorScheme.door()));
+            terrainRenderer.setWallStrokeColor(Color.web(mapColorScheme.stroke()));
+            terrainRenderer.setWallFillColor(Color.web(mapColorScheme.fill()));
+            terrainRenderer.setDoorColor(Color.web(mapColorScheme.door()));
             terrainRenderer.drawMap(ctx(), terrain);
-            foodRenderer.setPelletColor(Color.web(colorScheme.pellet()));
-            foodRenderer.setEnergizerColor(Color.web(colorScheme.pellet()));
+            foodRenderer.setPelletColor(Color.web(mapColorScheme.pellet()));
+            foodRenderer.setEnergizerColor(Color.web(mapColorScheme.pellet()));
             world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
                 .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
             if (blinkingOn) {

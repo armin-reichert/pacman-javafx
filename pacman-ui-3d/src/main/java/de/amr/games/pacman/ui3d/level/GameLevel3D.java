@@ -252,12 +252,12 @@ public class GameLevel3D {
         }
     }
 
-    private void buildWorld3D(GameWorld world, AssetStorage assets, MapColorScheme colorScheme) {
+    private void buildWorld3D(GameWorld world, AssetStorage assets, MapColorScheme mapColorScheme) {
         //TODO check this
         obstacleHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
-        wallStrokeColorPy.set(Color.web(colorScheme.stroke()));
-        wallFillColorPy.set(Color.web(colorScheme.fill()));
+        wallStrokeColorPy.set(Color.web(mapColorScheme.stroke()));
+        wallFillColorPy.set(Color.web(mapColorScheme.fill()));
 
         TileMap terrain = world.map().terrain();
         Box floor = createFloor(assets.get("floor_textures"), terrain.numCols() * TS - 1, terrain.numRows() * TS - 1);
@@ -273,7 +273,7 @@ public class GameLevel3D {
                 obstacleHeightPy, OBSTACLE_THICKNESS, OBSTACLE_COAT_HEIGHT,
                 wallFillMaterialPy, wallStrokeMaterialPy));
 
-        house3D = new House3D(world, colorScheme);
+        house3D = new House3D(world, mapColorScheme);
         house3D.heightPy.bind(houseHeightPy);
         house3D.fillMaterialPy.bind(wallFillColorPy.map(fillColor -> opaqueColor(fillColor, HOUSE_OPACITY)).map(Ufx::coloredMaterial));
         house3D.strokeMaterialPy.bind(wallStrokeMaterialPy);
@@ -307,9 +307,9 @@ public class GameLevel3D {
             : textures.get(textureName);
     }
 
-    private void addFood3D(GameWorld world, AssetStorage assets, MapColorScheme colorScheme) {
+    private void addFood3D(GameWorld world, AssetStorage assets, MapColorScheme mapColorScheme) {
         TileMap foodMap = world.map().food();
-        Color foodColor = Color.web(colorScheme.pellet());
+        Color foodColor = Color.web(mapColorScheme.pellet());
         Material foodMaterial = coloredMaterial(foodColor);
         Model3D pelletModel3D = assets.get("model3D.pellet");
         foodMap.tiles().filter(world::hasFoodAt).forEach(tile -> {

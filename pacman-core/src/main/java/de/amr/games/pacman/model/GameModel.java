@@ -88,7 +88,7 @@ public abstract class GameModel {
     protected GameWorld            world;
     protected int                  currentMapNumber;
     protected WorldMap             currentMap;
-    protected MapColorScheme       currentMapColorScheme;
+    protected MapColorScheme currentMapColorScheme;
     protected SimulationStepEventLog eventLog;
 
     public abstract boolean      canStartNewGame();

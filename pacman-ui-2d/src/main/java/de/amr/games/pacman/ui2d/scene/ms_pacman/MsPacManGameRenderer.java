@@ -101,13 +101,13 @@ public class MsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void update(GameModel game) {
-        MapColorScheme colorScheme = game.currentMapColorScheme();
-        if (colorScheme == null) {
+        MapColorScheme mapColorScheme = game.currentMapColorScheme();
+        if (mapColorScheme == null) {
             return;
         }
         // select map sprite depending on selected map color scheme
         for (int i = 0; i < 6; ++i) {
-            if (colorScheme.equals(MsPacManArcadeGame.MAP_COLOR_SCHEMES[i])) {
+            if (mapColorScheme.equals(MsPacManArcadeGame.MAP_COLOR_SCHEMES[i])) {
                 mapWithFoodSprite = spriteSheet.imageArea(0, i * 248, 226, 248);
                 mapWithoutFoodSprite = spriteSheet.imageArea(228, i * 248, 226, 248);
                 mapFlashingSprite = imageArea(flashingMazesImage, 0, i * 248, 226, 248);
