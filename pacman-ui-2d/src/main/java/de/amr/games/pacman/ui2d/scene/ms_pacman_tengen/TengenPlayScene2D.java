@@ -192,14 +192,14 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     }
 
     private double cameraRadius() {
-        return 0.5 * scaled(size().y());
+        return 0.5 * scaled(size().y() - 24);
     }
 
     private double dontAskItsMagic(double radius) {
         double height = size().y();
         if (height >= 40 * TS) return 0.38 * radius;
         if (height >= 35 * TS) return 0.30 * radius;
-        return 0.18 * radius;
+        return 0.1 * radius;
     }
 
     @Override

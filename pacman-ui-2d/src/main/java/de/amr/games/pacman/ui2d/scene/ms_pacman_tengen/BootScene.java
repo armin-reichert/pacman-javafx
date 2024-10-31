@@ -9,6 +9,10 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.ms_pacman_tengen.BoosterMode;
+import de.amr.games.pacman.model.ms_pacman_tengen.Difficulty;
+import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
+import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
@@ -46,6 +50,13 @@ public class BootScene extends GameScene2D {
         ghost = Ghost.blinky();
         ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
         ghost.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
+
+        // TODO reset game here by now
+        TengenMsPacManGame game = (TengenMsPacManGame) context.game();
+        game.setMapCategory(MapCategory.ARCADE);
+        game.setPacBooster(BoosterMode.OFF);
+        game.setDifficulty(Difficulty.NORMAL);
+        game.setStartingLevel(1);
     }
 
     @Override

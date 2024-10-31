@@ -224,15 +224,6 @@ public class TengenMsPacManGame extends GameModel {
         setStartingLevel(1);
     }
 
-    @Override
-    public void reset() {
-        super.reset();
-        setMapCategory(MapCategory.ARCADE);
-        setPacBooster(BoosterMode.OFF);
-        setDifficulty(Difficulty.NORMAL);
-        setStartingLevel(1);
-    }
-
     // only for info panel in dashboard
     public Optional<LevelData> currentLevelData() {
         return Optional.ofNullable(currentLevelData);
