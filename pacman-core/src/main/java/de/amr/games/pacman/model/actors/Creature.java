@@ -360,7 +360,7 @@ public abstract class Creature extends Entity {
             float offset = dir.isHorizontal() ? offset().y() : offset().x();
             boolean atTurnPosition = Math.abs(offset) <= 1.5;
             if (atTurnPosition) {
-                Logger.info("Reached turn position ({})", name());
+                Logger.trace("Reached turn position ({})", name());
                 centerOverTile(tile()); // adjust over tile (starts moving around corner)
             } else {
                 moveInfo.log(String.format("Wants to take corner towards %s but not at turn position", dir));

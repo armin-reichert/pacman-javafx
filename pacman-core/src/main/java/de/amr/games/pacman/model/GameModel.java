@@ -153,7 +153,7 @@ public abstract class GameModel {
 
     public Ghost ghost(byte id) {
         checkGhostID(id);
-        return ghosts[id];
+        return ghosts != null ? ghosts[id] : null;
     }
 
     public Stream<Ghost> ghosts(GhostState... states) {

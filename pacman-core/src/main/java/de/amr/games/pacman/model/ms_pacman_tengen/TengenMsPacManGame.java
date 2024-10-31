@@ -6,7 +6,6 @@ package de.amr.games.pacman.model.ms_pacman_tengen;
 
 import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
@@ -17,17 +16,12 @@ import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
-import static de.amr.games.pacman.model.ms_pacman_tengen.NamedMapColorScheme.*;
 
 /**
  * Ms. Pac-Man Tengen game.
@@ -35,52 +29,6 @@ import static de.amr.games.pacman.model.ms_pacman_tengen.NamedMapColorScheme.*;
  * @author Armin Reichert
  */
 public class TengenMsPacManGame extends GameModel {
-
-    private static final List<NamedMapColorScheme> COLOR_SCHEMES_IN_LEVEL_ORDER = List.of(
-        MSC_36_15_20_PINK_RED_WHITE,       // Level 1
-        MSC_21_20_28_BLUE_WHITE_YELLOW,
-        MSC_16_20_15_ORANGE_WHITE_RED,
-        MSC_01_38_20_BLUE_YELLOW_WHITE,
-        MSC_35_28_20_PINK_YELLOW_WHITE,    // Level 5
-        MSC_36_15_20_PINK_RED_WHITE,
-        MSC_17_20_20_BROWN_WHITE_WHITE,
-        MSC_13_20_28_VIOLET_WHITE_YELLOW,
-        MSC_0F_20_28_BLACK_WHITE_YELLOW,
-        MSC_0F_01_20_BLACK_BLUE_WHITE,     // Level 10
-        MSC_14_25_20_VIOLET_ROSE_WHITE,
-        MSC_15_20_20_RED_WHITE_WHITE,
-        MSC_1B_20_20_GREEN_WHITE_WHITE,
-        MSC_28_20_2A_YELLOW_WHITE_GREEN,
-        MSC_1A_20_28_GREEN_WHITE_YELLOW,   // Level 15
-        MSC_18_20_20_KHAKI_WHITE_WHITE,
-        MSC_25_20_20_ROSE_WHITE_WHITE,
-        MSC_12_20_28_BLUE_WHITE_YELLOW,
-        MSC_07_20_20_BROWN_WHITE_WHITE,
-        MSC_15_25_20_RED_ROSE_WHITE,       // Level 20
-        MSC_0F_20_1C_BLACK_WHITE_GREEN,
-        MSC_19_20_20_GREEN_WHITE_WHITE,
-        MSC_0C_20_14_GREEN_WHITE_VIOLET,
-        MSC_23_20_2B_VIOLET_WHITE_GREEN,
-        MSC_10_20_28_GRAY_WHITE_YELLOW,    // Level 25
-        MSC_03_20_20_VIOLET_WHITE_WHITE,
-        MSC_04_20_20_VIOLET_WHITE_WHITE   // TODO clarify when randomization starts
-        // Levels 28-32 use randomly selected schemes
-    );
-
-    private static Map<String, String> randomMapColorScheme() {
-        return COLOR_SCHEMES_IN_LEVEL_ORDER.get(Globals.randomInt(0, COLOR_SCHEMES_IN_LEVEL_ORDER.size())).get();
-    }
-
-    static final String MAPS_ROOT = "/de/amr/games/pacman/maps/tengen/";
-
-    static final String ARCADE_MAP_PATTERN = MAPS_ROOT + "arcade%d.world";
-    static final int ARCADE_MAP_COUNT = 4;
-
-    static final String MINI_MAP_PATTERN = MAPS_ROOT + "mini%d.world";
-    static final int MINI_MAP_COUNT = 6;
-
-    static final String STRANGE_OR_BIG_MAP_PATTERN = MAPS_ROOT + "strange_or_big/map%02d.world";
-    static final int STRANGE_OR_BIG_MAP_COUNT = 33;
 
     // Ms. Pac-Man (Tengen) game specific animation IDs
     public static final String ANIM_PAC_MUNCHING_BOOSTER = "munching_booster";
@@ -186,9 +134,7 @@ public class TengenMsPacManGame extends GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
-    private List<WorldMap> arcadeMaps;
-    private List<WorldMap> miniMaps;
-    private List<WorldMap> strangeOrBigMaps; //TODO separate?
+    private final MapConfigurationManager mapConfig = new MapConfigurationManager();
 
     private MapCategory mapCategory;
     private Difficulty difficulty;
@@ -197,7 +143,7 @@ public class TengenMsPacManGame extends GameModel {
     private byte startingLevel; // 1-7
     private boolean canStartGame;
 
-    private LevelData currentLevelData;
+    private LevelData currentLevelData; // TODO
 
     public TengenMsPacManGame(GameVariant gameVariant, File userDir) {
         super(gameVariant, userDir);
@@ -222,6 +168,12 @@ public class TengenMsPacManGame extends GameModel {
         setPacBooster(BoosterMode.OFF);
         setDifficulty(Difficulty.NORMAL);
         setStartingLevel(1);
+    }
+
+    private void configureWorldMap(MapConfigurationManager.MapConfig config) {
+        currentMapNumber = config.mapNumber();
+        currentMap = config.worldMap();
+        currentMapColorScheme = config.colorScheme();
     }
 
     // only for info panel in dashboard
@@ -285,186 +237,6 @@ public class TengenMsPacManGame extends GameModel {
         this.startingLevel = (byte) startingLevel;
     }
 
-    private void selectMapForLevel(int levelNumber) {
-        switch (mapCategory) {
-            case ARCADE  -> selectArcadeMapForLevel(levelNumber);
-            case STRANGE -> selectStrangeMapForLevel(levelNumber);
-            case MINI    -> selectMiniMapForLevel(levelNumber);
-            case BIG     -> selectBigMapForLevel(levelNumber);
-        }
-    }
-
-    private void selectArcadeMapForLevel(int levelNumber) {
-        List<WorldMap> maps = getArcadeMaps();
-        switch (levelNumber) {
-            case 1,2         -> selectMap(maps, 1, MSC_36_15_20_PINK_RED_WHITE.get());
-            case 3,4,5       -> selectMap(maps, 2, MSC_21_20_28_BLUE_WHITE_YELLOW.get());
-            case 6,7,8,9     -> selectMap(maps, 3, MSC_16_20_15_ORANGE_WHITE_RED.get());
-            case 10,11,12,13 -> selectMap(maps, 4, MSC_01_38_20_BLUE_YELLOW_WHITE.get());
-            case 14,15,16,17 -> selectMap(maps, 3, MSC_35_28_20_PINK_YELLOW_WHITE.get());
-            case 18,19,20,21 -> selectMap(maps, 4, MSC_36_15_20_PINK_RED_WHITE.get());
-            case 22,23,24,25 -> selectMap(maps, 3, MSC_17_20_20_BROWN_WHITE_WHITE.get());
-            //TODO also random color schemes from level 28 on?
-            case 26,27       -> selectMap(maps, 4, MSC_13_20_28_VIOLET_WHITE_YELLOW.get());
-            case 28,29       -> selectMap(maps, 4, MSC_13_20_28_VIOLET_WHITE_YELLOW.get());
-            case 30,31,32    -> selectMap(maps, 3, MSC_0F_20_28_BLACK_WHITE_YELLOW.get());
-            default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
-        }
-    }
-
-    /**
-     * From this <a href="https://www.youtube.com/watch?v=cD0oGudVpbw">YouTube video</a>.
-     */
-    private void selectMiniMapForLevel(int levelNumber) {
-        List<WorldMap> maps = getMiniMaps();
-        switch (levelNumber) {
-            case 1  -> selectMap(maps, 1, MSC_36_15_20_PINK_RED_WHITE.get());
-            case 2  -> selectMap(maps, 2, MSC_21_20_28_BLUE_WHITE_YELLOW.get());
-            case 3  -> selectMap(maps, 1, MSC_16_20_15_ORANGE_WHITE_RED.get());
-            case 4  -> selectMap(maps, 2, MSC_01_38_20_BLUE_YELLOW_WHITE.get());
-            case 5  -> selectMap(maps, 3, MSC_35_28_20_PINK_YELLOW_WHITE.get());
-            case 6  -> selectMap(maps, 1, MSC_36_15_20_PINK_RED_WHITE.get());
-            case 7  -> selectMap(maps, 2, MSC_17_20_20_BROWN_WHITE_WHITE.get());
-            case 8  -> selectMap(maps, 3, MSC_13_20_28_VIOLET_WHITE_YELLOW.get());
-            case 9  -> selectMap(maps, 4, MSC_0F_20_28_BLACK_WHITE_YELLOW.get());
-            case 10 -> selectMap(maps, 1, MSC_0F_01_20_BLACK_BLUE_WHITE.get());
-            case 11 -> selectMap(maps, 2, MSC_14_25_20_VIOLET_ROSE_WHITE.get());
-            case 12 -> selectMap(maps, 3, MSC_15_20_20_RED_WHITE_WHITE.get());
-            case 13 -> selectMap(maps, 4, MSC_1B_20_20_GREEN_WHITE_WHITE.get());
-            case 14 -> selectMap(maps, 1, MSC_28_20_2A_YELLOW_WHITE_GREEN.get());
-            case 15 -> selectMap(maps, 2, MSC_1A_20_28_GREEN_WHITE_YELLOW.get());
-            case 16 -> selectMap(maps, 3, MSC_18_20_20_KHAKI_WHITE_WHITE.get());
-            case 17 -> selectMap(maps, 4, MSC_25_20_20_ROSE_WHITE_WHITE.get());
-            case 18 -> selectMap(maps, 5, MSC_12_20_28_BLUE_WHITE_YELLOW.get());
-            case 19 -> selectMap(maps, 5, MSC_07_20_20_BROWN_WHITE_WHITE.get());
-            case 20 -> selectMap(maps, 4, MSC_15_25_20_RED_ROSE_WHITE.get());
-            case 21 -> selectMap(maps, 3, MSC_0F_20_1C_BLACK_WHITE_GREEN.get());
-            case 22 -> selectMap(maps, 2, MSC_19_20_20_GREEN_WHITE_WHITE.get());
-            case 23 -> selectMap(maps, 1, MSC_0C_20_14_GREEN_WHITE_VIOLET.get());
-            case 24 -> selectMap(maps, 6, MSC_23_20_2B_VIOLET_WHITE_GREEN.get());
-            case 25 -> selectMap(maps, 1, MSC_10_20_28_GRAY_WHITE_YELLOW.get());
-            case 26 -> selectMap(maps, 2, MSC_04_20_20_VIOLET_WHITE_WHITE.get());
-            case 27 -> selectMap(maps, 3, MSC_04_20_20_VIOLET_WHITE_WHITE.get());
-            case 28 -> selectMap(maps, 4, randomMapColorScheme());
-            case 29 -> selectMap(maps, 5, randomMapColorScheme());
-            case 30 -> selectMap(maps, 2, randomMapColorScheme());
-            case 31 -> selectMap(maps, 3, randomMapColorScheme());
-            case 32 -> selectMap(maps, 6, randomMapColorScheme());
-            default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
-        }
-    }
-
-    /**
-     * From this <a href="https://www.youtube.com/watch?v=NoImGoSAL7A">YouTube video</a>.
-     */
-    private void selectBigMapForLevel(int levelNumber) {
-        List<WorldMap> maps = getStrangeOrBigMaps();
-        switch (levelNumber) {
-            case 1  -> selectMap(maps, 19, MSC_36_15_20_PINK_RED_WHITE.get());
-            case 2  -> selectMap(maps, 20, MSC_21_20_28_BLUE_WHITE_YELLOW.get());
-            case 3  -> selectMap(maps, 21, MSC_16_20_15_ORANGE_WHITE_RED.get());
-            case 4  -> selectMap(maps, 19, MSC_01_38_20_BLUE_YELLOW_WHITE.get());
-            case 5  -> selectMap(maps, 20, MSC_35_28_20_PINK_YELLOW_WHITE.get());
-            case 6  -> selectMap(maps, 21, MSC_36_15_20_PINK_RED_WHITE.get());
-            case 7  -> selectMap(maps, 22, MSC_17_20_20_BROWN_WHITE_WHITE.get());
-            case 8  -> selectMap(maps, 23, MSC_13_20_28_VIOLET_WHITE_YELLOW.get());
-            case 9  -> selectMap(maps, 17, MSC_0F_20_28_BLACK_WHITE_YELLOW.get());
-            case 10 -> selectMap(maps, 10, MSC_0F_01_20_BLACK_BLUE_WHITE.get());
-            case 11 -> selectMap(maps, 23, MSC_15_25_20_RED_ROSE_WHITE.get());
-            case 12 -> selectMap(maps, 21, MSC_25_20_20_ROSE_WHITE_WHITE.get());
-            case 13 -> selectMap(maps, 22, MSC_1B_20_20_GREEN_WHITE_WHITE.get());
-            case 14 -> selectMap(maps, 14, MSC_28_20_2A_YELLOW_WHITE_GREEN.get());
-            case 15 -> selectMap(maps, 20, MSC_1A_20_28_GREEN_WHITE_YELLOW.get());
-            case 16 -> selectMap(maps, 19, MSC_18_20_20_KHAKI_WHITE_WHITE.get());
-            case 17 -> selectMap(maps, 10, MSC_25_20_20_ROSE_WHITE_WHITE.get());
-            case 18 -> selectMap(maps, 17, MSC_12_20_28_BLUE_WHITE_YELLOW.get());
-            case 19 -> selectMap(maps, 10, MSC_07_20_20_BROWN_WHITE_WHITE.get());
-            case 20 -> selectMap(maps, 19, MSC_15_25_20_RED_ROSE_WHITE.get());
-            case 21 -> selectMap(maps, 26, MSC_0F_20_1C_BLACK_WHITE_GREEN.get());
-            case 22 -> selectMap(maps, 21, MSC_19_20_20_GREEN_WHITE_WHITE.get());
-            case 23 -> selectMap(maps, 22, MSC_0C_20_14_GREEN_WHITE_VIOLET.get());
-            case 24 -> selectMap(maps, 23, MSC_23_20_2B_VIOLET_WHITE_GREEN.get());
-            case 25 -> selectMap(maps, 14, MSC_10_20_28_GRAY_WHITE_YELLOW.get());
-            case 26 -> selectMap(maps, 25, MSC_04_20_20_VIOLET_WHITE_WHITE.get());
-            case 27 -> selectMap(maps, 14, MSC_04_20_20_VIOLET_WHITE_WHITE.get());
-            case 28 -> selectMap(maps, 23, randomMapColorScheme());
-            case 29 -> selectMap(maps, 26, randomMapColorScheme());
-            case 30 -> selectMap(maps, 20, randomMapColorScheme());
-            case 31 -> selectMap(maps, 25, randomMapColorScheme());
-            case 32 -> selectMap(maps, 33, randomMapColorScheme());
-            default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
-        }
-    }
-
-    private void selectStrangeMapForLevel(int levelNumber) {
-        List<WorldMap> maps = getStrangeOrBigMaps();
-        int mapNumber = levelNumber; // TODO: check this
-        WorldMap worldMap = maps.get(mapNumber - 1);
-        selectMap(maps, mapNumber, createColorSchemeFromMap(worldMap));
-    }
-
-    private void selectMap(List<WorldMap> maps, int mapNumber, Map<String, String> mapColorScheme) {
-        currentMapNumber = mapNumber;
-        currentMap = new WorldMap(maps.get(mapNumber - 1));
-        currentMapColorScheme = mapColorScheme;
-    }
-
-    private Map<String, String> createColorSchemeFromMap(WorldMap worldMap) {
-        Map<String, String> defaultScheme = MSC_36_15_20_PINK_RED_WHITE.get();
-        String fill   = worldMap.terrain().getPropertyOrDefault(PROPERTY_COLOR_WALL_FILL, defaultScheme.get("fill"));
-        String stroke = worldMap.terrain().getPropertyOrDefault(PROPERTY_COLOR_WALL_STROKE, defaultScheme.get("stroke"));
-        String door   = worldMap.terrain().getPropertyOrDefault(PROPERTY_COLOR_DOOR, defaultScheme.get("door"));
-        String pellet = worldMap.food().getPropertyOrDefault(PROPERTY_COLOR_FOOD, defaultScheme.get("pellet"));
-        return Map.of(
-            "fill",   colorToHexFormat(fill).orElse(defaultScheme.get("fill")),
-            "stroke", colorToHexFormat(stroke).orElse(defaultScheme.get("stroke")),
-            "door",   colorToHexFormat(door).orElse(defaultScheme.get("door")),
-            "pellet", colorToHexFormat(pellet).orElse(defaultScheme.get("pellet"))
-        );
-    }
-
-    private List<WorldMap> getArcadeMaps() {
-        if (arcadeMaps == null) {
-            Logger.info("Loading ARCADE maps");
-            arcadeMaps = createMaps(ARCADE_MAP_PATTERN, ARCADE_MAP_COUNT);
-            Logger.info("Maps loaded.");
-        }
-        return arcadeMaps;
-    }
-
-    private List<WorldMap> getMiniMaps() {
-        if (miniMaps == null) {
-            Logger.info("Loading MINI maps");
-            miniMaps = createMaps(MINI_MAP_PATTERN, MINI_MAP_COUNT);
-            Logger.info("Maps loaded.");
-        }
-        return miniMaps;
-    }
-
-    private List<WorldMap> getStrangeOrBigMaps() {
-        if (strangeOrBigMaps == null) {
-            Logger.info("Loading STRANGE and BIG maps");
-            strangeOrBigMaps = createMaps(STRANGE_OR_BIG_MAP_PATTERN, STRANGE_OR_BIG_MAP_COUNT);
-            Logger.info("Maps loaded.");
-        }
-        return strangeOrBigMaps;
-    }
-
-    private List<WorldMap> createMaps(String pattern, int maxNumber) {
-        List<WorldMap> maps = new ArrayList<>();
-        for (int num = 1; num <= maxNumber; ++num) {
-            String path = pattern.formatted(num);
-            URL url = getClass().getResource(path);
-            if (url != null) {
-                WorldMap worldMap = new WorldMap(url);
-                maps.add(worldMap);
-                Logger.info("World map #{} has been read from URL {}", num, url);
-            } else {
-                Logger.error("World map #{} could not be read from URL {}", num, url);
-            }
-        }
-        return maps;
-    }
 
     @Override
     protected Pac createPac() {
@@ -476,7 +248,6 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     public long pacPowerTicks() {
         if (!inRange(currentLevelNumber, 1, 32)) {
-            Logger.error("Level number ({}) is out of range", currentLevelNumber);
             return 0;
         }
         double seconds = switch (currentLevelNumber) {
@@ -510,13 +281,16 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public float pacNormalSpeed() {
-        return pac.baseSpeed();
+        return pac != null ? pac.baseSpeed() : 0;
     }
 
     @Override
     public float pacPowerSpeed() {
-        float percentage = currentLevelData.pacSpeedPoweredPercentage();
-        return percentage > 0 ? percentage * 0.01f * pac.baseSpeed() : pac.baseSpeed();
+        if (pac != null) {
+            float percentage = currentLevelData.pacSpeedPoweredPercentage();
+            return percentage > 0 ? percentage * 0.01f * pac.baseSpeed() : pac.baseSpeed();
+        }
+        return 0;
     }
 
     /*
@@ -646,7 +420,7 @@ public class TengenMsPacManGame extends GameModel {
             throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
         currentLevelNumber = levelNumber;
-        selectMapForLevel(levelNumber);
+        configureWorldMap(mapConfig.getMapConfig(mapCategory, levelNumber));
         createWorldAndPopulation(currentMap);
 
         Logger.info("World created. Map number: {}, URL: {}", currentMapNumber, currentMap.url());
@@ -676,7 +450,7 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     public void buildDemoLevel() {
         currentLevelNumber = 1;
-        selectMapForLevel(1);
+        configureWorldMap(mapConfig.getMapConfig(mapCategory, 1));
         createWorldAndPopulation(currentMap);
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUsingAutopilot(true);
