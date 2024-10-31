@@ -486,6 +486,8 @@ public abstract class GameModel {
             ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
             publishGameEvent(GameEventType.PAC_GETS_POWER);
+        } else {
+            ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAsSoonAsPossible);
         }
     }
 
