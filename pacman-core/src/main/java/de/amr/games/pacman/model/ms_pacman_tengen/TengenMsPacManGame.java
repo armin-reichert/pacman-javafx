@@ -528,6 +528,9 @@ public class TengenMsPacManGame extends GameModel {
     */
     @Override
     public float ghostAttackSpeed(Ghost ghost) {
+        if (world.isTunnel(ghost.tile())) {
+            return ghostTunnelSpeed(ghost);
+        }
         float speed = ghost.baseSpeed();
         if (difficulty == Difficulty.NORMAL && currentLevelNumber >= 5) {
             int dotsLeft = world.uneatenFoodCount();
