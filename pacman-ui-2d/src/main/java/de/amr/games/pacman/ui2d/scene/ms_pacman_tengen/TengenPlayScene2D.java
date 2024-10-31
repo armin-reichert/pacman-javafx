@@ -318,7 +318,6 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             case STARTING_GAME, LEVEL_COMPLETE, PACMAN_DYING -> context.sounds().stopAll();
             case GAME_OVER -> {
                 context.sounds().stopAll();
-                context.sounds().playGameOverSound();
                 GameWorld world = context.game().world();
                 double houseCenterX = TS * (world.houseTopLeftTile().x() + 0.5 * world.houseSize().x());
                 gameOverMessageAnimation.start(houseCenterX, MESSAGE_SPEED);
