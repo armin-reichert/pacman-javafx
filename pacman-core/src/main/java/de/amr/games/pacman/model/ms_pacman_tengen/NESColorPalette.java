@@ -1,34 +1,42 @@
 package de.amr.games.pacman.model.ms_pacman_tengen;
 
+import static de.amr.games.pacman.lib.Globals.inRange;
+
 /**
- * Color palette as shown in "Video Options" of Mesen emulator.
- *
- * <p>See also: https://www.emulationonline.com/systems/nes/graphics-palette/#the-nes-palette.
- * However the colors shown on this website slightly differ from the emulator option screen.
+ * NES Color palette (from "Video Options" screen in Mesen emulator).
  */
 public class NESColorPalette {
 
-    // TODO where is transparent color entry?
     public static final String[] ENTRIES = {
-        // 00, 01, 02, 03, 04, 05, 06, 07
+        // 00,     01,      02,        03,      04,       05,       06,       07
         "666666", "002a88", "1412a7", "3b00a4", "5c007e", "6e0040", "6c0600", "561d00",
-        // 08, 09, 0A, 0B, 0C, 0D, 0E, 0F
+
+        // 08,     09,      0A,        0B,      0C,       0D,       0E,       0F
         "333500", "0b4800", "005200", "004f08", "00404d", "000000", "000000", "000000",
-        // 10, 11, 12, 13, 14, 15, 16, 17
+
+        // 10,     11,      12,       13,       14,        15,      16,       17
         "adadad", "155fd9", "4240ff", "7527fe", "a01acc", "b71e7b", "b53120", "994e00",
-        // 18, 19, 1A, 1B, 1C, 1D, 1E, 1F
+
+        // 18,    19,       1A,        1B,       1C,      1D,       1E,       1F
         "6b6d00", "388700", "0c9300", "008f32", "007c8d", "000000", "000000", "000000",
-        // 20, 21, 22, 23, 24, 25, 26, 27
+
+        // 20,    21,       22,       23,       24,       25,       26,       27
         "fffeff", "64b0ff", "9290ff", "c676ff", "f36aff", "fe6ecc", "fe8170", "ea9e22",
-        // 28, 29, 2A, 2B, 2C, 2D, 2E, 2F
+
+        // 28,    29,       2A,       2B,       2C,       2D,       2E,       2F
         "bcbe00", "88d800", "5ce430", "45e082", "48cdde", "4f4f4f", "000000", "000000",
-        // 30, 31, 32, 33, 34, 35, 36, 37
+
+        // 30,    31,       32,       33,       34,       35,       36,        37
         "fffeff", "c0dfff", "d3d2ff", "e8c8ff", "fbc2ff", "fec4ea", "feccc5", "f7d8a5",
-        // 38, 39, 3A, 3B, 3C, 3D, 3E, 3F
+
+        // 38,    39,       3A,       3B,       3C,       3D,       3E,       3F
         "e4e594", "cfef96", "bdf4ab", "b3f3cc", "b5ebf2", "b8b8b8", "000000", "000000",
     };
 
     public static String entry(int index) {
-        return ENTRIES[index];
+        if (inRange(index, 0, ENTRIES.length)) {
+            return ENTRIES[index];
+        }
+        throw new IllegalArgumentException("Illegal NES palette index: " + index);
     }
 }
