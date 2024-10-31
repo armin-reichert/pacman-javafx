@@ -65,7 +65,7 @@ public class InfoBoxActorInfo extends InfoBox {
     }
 
     private String movementInfo(GameModel game, Creature guy) {
-        var speed = guy.velocity().length() * context.gameClock().getActualFrameRate();
+        var speed = guy.velocity().length() * 60f;
         var blocked = !guy.moveInfo().moved;
         var reverseText = guy.gotReverseCommand() ? "REV!" : "";
         return blocked
