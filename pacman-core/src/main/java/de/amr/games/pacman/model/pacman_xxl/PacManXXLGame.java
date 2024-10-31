@@ -76,6 +76,7 @@ public class PacManXXLGame extends PacManArcadeGame {
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUsingAutopilot(false);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+        setCruiseElroy(0);
         Logger.info("Map selection mode is {}", mapSelectionMode);
         Logger.info("Selected map URL is {}", currentMap.url());
         Logger.info("Selected map colors: {}", currentMapColorScheme);

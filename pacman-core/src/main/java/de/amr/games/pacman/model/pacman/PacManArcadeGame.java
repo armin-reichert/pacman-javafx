@@ -164,6 +164,13 @@ public class PacManArcadeGame extends GameModel {
         return cruiseElroy;
     }
 
+    protected void setCruiseElroy(int value) {
+        if (!inRange(value, 0, 2)) {
+            throw new IllegalArgumentException("Allowed Cruise Elroy values are 0, 1, 2, but value is " + value);
+        }
+        cruiseElroy = (byte) value;
+    }
+
     protected void setCruiseElroyEnabled(boolean enabled) {
         if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
             cruiseElroy = (byte) -cruiseElroy;
@@ -183,7 +190,7 @@ public class PacManArcadeGame extends GameModel {
     @Override
     public void reset() {
         super.reset();
-        cruiseElroy = 0;
+        setCruiseElroy(0);
     }
 
     @Override
@@ -230,7 +237,7 @@ public class PacManArcadeGame extends GameModel {
             ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
             ghost.setSpecialTerrainTiles(oneWayDownTiles);
         });
-        cruiseElroy = 0;
+        setCruiseElroy(0);
     }
 
     @Override
@@ -238,7 +245,7 @@ public class PacManArcadeGame extends GameModel {
         buildLevel(1);
         pac.setAutopilot(new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE)));
         pac.setUsingAutopilot(true);
-        cruiseElroy = 0;
+        setCruiseElroy(0);
     }
 
     @Override
@@ -326,9 +333,9 @@ public class PacManArcadeGame extends GameModel {
     protected void onPelletOrEnergizerEaten(Vector2i tile, int uneatenFoodCount, boolean energizer) {
         pac.setRestingTicks(energizer ? 3 : 1);
         if (uneatenFoodCount == levelData(currentLevelNumber).elroy1DotsLeft()) {
-            cruiseElroy = 1;
+            setCruiseElroy(1);
         } else if (uneatenFoodCount == levelData(currentLevelNumber).elroy2DotsLeft()) {
-            cruiseElroy = 2;
+            setCruiseElroy(2);
         }
         if (energizer) {
             processEatenEnergizer();

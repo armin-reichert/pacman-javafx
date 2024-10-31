@@ -166,8 +166,14 @@ public class Globals {
         return n % 2 != 0;
     }
 
-    public static boolean inRange(int n, int from, int to) {
-        return from <= n && n <= to;
+    /**
+     * @param value some value
+     * @param from lower bound (inclusive)
+     * @param to upper bound (inclusive)
+     * @return {@code true} if value is in closed interval {@code [from; to]}
+     */
+    public static boolean inRange(int value, int from, int to) {
+        return from <= value && value <= to;
     }
 
     /**
