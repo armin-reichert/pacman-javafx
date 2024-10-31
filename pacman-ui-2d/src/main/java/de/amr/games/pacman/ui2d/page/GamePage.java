@@ -313,6 +313,9 @@ public class GamePage extends StackPane implements Page {
 
     public void toggleDashboard() {
         dashboardLayer.toggleDashboardVisibility();
+        if (dashboardLayer().isDashboardOpen()) {
+            context.showFlashMessageSeconds(5, "Steer using CTRL+CURSOR_KEY while dashboard is open!");
+        }
     }
 
     public void updateDashboard() {

@@ -71,6 +71,8 @@ public class DashboardLayer extends BorderPane {
         dashboardItems.add(index, createEntry(title, infoBox));
     }
 
+    public boolean isDashboardOpen() { return dashboardContainer.isVisible(); }
+
     public void hideDashboard() {
         dashboardContainer.setVisible(false);
     }
