@@ -208,7 +208,9 @@ public enum GameActions2D implements GameAction {
     TENGEN_SELECT_NEXT_JOYPAD {
         @Override
         public void execute(GameContext context) {
+            context.disableJoypad();
             context.nextJoypad();
+            context.enableJoypad();
             Logger.info("Current joypad: {} ", context.joypad());
         }
     },
