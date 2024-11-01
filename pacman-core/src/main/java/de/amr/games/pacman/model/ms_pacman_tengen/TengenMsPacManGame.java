@@ -236,6 +236,9 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public float ghostAttackSpeed(Ghost ghost) {
+        if (world == null) {
+            return 0;
+        }
         if (world.isTunnel(ghost.tile())) {
             return ghostTunnelSpeed(ghost);
         }
