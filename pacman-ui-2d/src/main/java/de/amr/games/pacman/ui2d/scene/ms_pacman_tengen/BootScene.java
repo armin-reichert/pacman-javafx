@@ -57,7 +57,7 @@ public class BootScene extends GameScene2D {
         game.setDifficulty(Difficulty.NORMAL);
         game.setStartLevelNumber(1);
 
-        context.plugIn_NES_Controller();
+        context.enableJoypad();
     }
 
     @Override

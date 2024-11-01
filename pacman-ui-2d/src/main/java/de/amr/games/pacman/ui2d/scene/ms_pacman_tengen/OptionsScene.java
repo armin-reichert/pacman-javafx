@@ -14,7 +14,6 @@ import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.util.NES_Controller;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -65,7 +64,7 @@ public class OptionsScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        context.plugIn_NES_Controller();
+        context.enableJoypad();
         context.setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
         tengenGame = (TengenMsPacManGame) context.game();
@@ -75,7 +74,7 @@ public class OptionsScene extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        context.plugOut_NES_Controller();
+        context.disableJoypad();
     }
 
     @Override
@@ -193,17 +192,16 @@ public class OptionsScene extends GameScene2D {
 
     @Override
     public void handleInput(GameContext context) {
-        NES_Controller controller = NES_Controller.DEFAULT_CONTROLLER;
 
         // TODO simplify
-        if (context.keyboard().pressedAndRegistered(controller.down())) {
+        if (context.keyboard().pressedAndRegistered(context.joypad().down())) {
             playOptionSelectionChangedSound();
             selectNextOption();
             resetIdleTimer();
         }
 
         // TODO simplify
-        else if (context.keyboard().pressedAndRegistered(controller.up())) {
+        else if (context.keyboard().pressedAndRegistered(context.joypad().up())) {
             playOptionSelectionChangedSound();
             selectPrevOption();
             resetIdleTimer();
@@ -211,7 +209,7 @@ public class OptionsScene extends GameScene2D {
 
         // TODO simplify
         // Button "A" is right of "B": select forwards
-        else if (context.keyboard().pressedAndRegistered(controller.a())) {
+        else if (context.keyboard().pressedAndRegistered(context.joypad().a())) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER -> {
                     selectNextPacBoosterValue();
@@ -235,7 +233,7 @@ public class OptionsScene extends GameScene2D {
         }
 
         // Button "B" is left of "A": select backwards
-        else if (context.keyboard().pressedAndRegistered(controller.b())) {
+        else if (context.keyboard().pressedAndRegistered(context.joypad().b())) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER -> {
                     selectPrevPacBoosterValue();
@@ -258,7 +256,7 @@ public class OptionsScene extends GameScene2D {
             resetIdleTimer();
         }
 
-        else if (context.keyboard().pressedAndRegistered(controller.start())) {
+        else if (context.keyboard().pressedAndRegistered(context.joypad().start())) {
             // start playing
             context.sound().stopAll();
             context.gameController().changeState(GameState.STARTING_GAME);

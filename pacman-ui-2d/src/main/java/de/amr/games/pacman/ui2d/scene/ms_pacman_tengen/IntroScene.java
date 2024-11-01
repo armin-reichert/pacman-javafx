@@ -19,7 +19,6 @@ import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.util.NES_Controller;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -64,12 +63,12 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void defineGameActionKeyBindings() {
-        bindAction(GameActions2D.START_GAME, NES_Controller.DEFAULT_CONTROLLER.start());
+        bindAction(GameActions2D.START_GAME, context.joypad().start());
     }
 
     @Override
     public void doInit() {
-        context.plugIn_NES_Controller();
+        context.enableJoypad();
 
         TengenMsPacManGameSpriteSheet spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         context.setScoreVisible(false);
@@ -93,7 +92,7 @@ public class IntroScene extends GameScene2D {
     @Override
     protected void doEnd() {
         context.sound().stopVoice(); // TODO check if needed
-        context.plugOut_NES_Controller();
+        context.disableJoypad();
     }
 
     @Override

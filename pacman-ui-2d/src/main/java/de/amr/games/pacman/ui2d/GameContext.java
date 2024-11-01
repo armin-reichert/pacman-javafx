@@ -19,6 +19,7 @@ import de.amr.games.pacman.ui2d.sound.GameSound;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
 import de.amr.games.pacman.ui2d.util.Keyboard;
+import de.amr.games.pacman.ui2d.util.Joypad;
 import javafx.beans.property.ObjectProperty;
 
 import java.util.Optional;
@@ -42,10 +43,11 @@ public interface GameContext {
     void                        setScoreVisible(boolean visible);
     boolean                     isScoreVisible();
 
-    // User input
+    // Input
     Keyboard                    keyboard();
-    void                        plugIn_NES_Controller();
-    void                        plugOut_NES_Controller();
+    Joypad                      joypad();
+    void                        enableJoypad();
+    void                        disableJoypad();
 
     // GUI
     void                        selectPage(Page page);
@@ -58,8 +60,8 @@ public interface GameContext {
     GameClockFX                 gameClock();
 
     // Actions
-    void doFirstCalledGameAction(GameActionProvider actionProvider);
-    void                        doFirstCalledActionElse(GameActionProvider actionProvider, Runnable defaultAction);
+    void                        doFirstCalledGameAction(GameActionProvider actionProvider);
+    void                        doFirstCalledGameActionElse(GameActionProvider actionProvider, Runnable defaultAction);
 
     // Game scenes
     GameSceneConfig             gameSceneConfig(GameVariant variant);

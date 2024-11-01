@@ -32,6 +32,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -61,6 +62,22 @@ import static de.amr.games.pacman.ui2d.util.Ufx.createIcon;
 public class PacManGames2dUI implements GameEventListener, GameContext {
 
     protected static final Keyboard KEYBOARD = new Keyboard();
+
+    // My own proposal, might be crap
+    public static final Joypad JOYPAD_CURSOR_KEYS = new JoypadKeyBinding(
+            new KeyCodeCombination(KeyCode.TAB),  new KeyCodeCombination(KeyCode.ENTER),
+            new KeyCodeCombination(KeyCode.B), new KeyCodeCombination(KeyCode.N),
+            new KeyCodeCombination(KeyCode.UP), new KeyCodeCombination(KeyCode.DOWN),
+            new KeyCodeCombination(KeyCode.LEFT), new KeyCodeCombination(KeyCode.RIGHT)
+    );
+
+    // Mesen emulator key set #2
+    public static final Joypad JOYPAD_WASD = new JoypadKeyBinding(
+            new KeyCodeCombination(KeyCode.U),  new KeyCodeCombination(KeyCode.I),
+            new KeyCodeCombination(KeyCode.J), new KeyCodeCombination(KeyCode.K),
+            new KeyCodeCombination(KeyCode.W), new KeyCodeCombination(KeyCode.S),
+            new KeyCodeCombination(KeyCode.A), new KeyCodeCombination(KeyCode.D)
+    );
 
     /**
      * The order here is used by the start page!
@@ -94,7 +111,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected boolean signatureShown; //TODO make this work again for all intro screens
     protected Picker<String> pickerGameOver;
     protected Picker<String> pickerLevelComplete;
-    protected NES_Controller nesController = NES_Controller.DEFAULT_CONTROLLER;
+    protected Joypad currentNESController = JOYPAD_CURSOR_KEYS;
 
     public PacManGames2dUI() {
         assets = new AssetStorage();
@@ -305,16 +322,20 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         return KEYBOARD;
     }
 
-    @Override
-    public void plugIn_NES_Controller() {
-        Logger.info("Plug-in NES controller");
-        nesController.allKeys().forEach(keyboard()::register);
+    public Joypad joypad() {
+        return currentNESController;
     }
 
     @Override
-    public void plugOut_NES_Controller() {
+    public void enableJoypad() {
+        Logger.info("Plug-in NES controller");
+        currentNESController.allKeys().forEach(keyboard()::register);
+    }
+
+    @Override
+    public void disableJoypad() {
         Logger.info("Plug-out NES controller");
-        nesController.allKeys().forEach(keyboard()::unregister);
+        currentNESController.allKeys().forEach(keyboard()::unregister);
     }
 
     @Override
@@ -324,7 +345,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void doFirstCalledActionElse(GameActionProvider actionProvider, Runnable defaultAction) {
+    public void doFirstCalledGameActionElse(GameActionProvider actionProvider, Runnable defaultAction) {
        actionProvider.firstMatchedAction(keyboard()).filter(gameAction -> gameAction.isEnabled(this))
            .ifPresentOrElse(action -> action.execute(this), defaultAction);
     }
