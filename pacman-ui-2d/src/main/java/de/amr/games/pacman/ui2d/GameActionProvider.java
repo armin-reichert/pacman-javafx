@@ -54,7 +54,7 @@ public interface GameActionProvider {
 
     default Optional<GameAction> firstMatchedAction(Keyboard keyboard) {
         return actionBindings().entrySet().stream()
-            .filter(entry -> keyboard.isRegisteredKeyCombinationPressed(entry.getKey()))
+            .filter(entry -> keyboard.pressedAndRegistered(entry.getKey()))
             .map(Map.Entry::getValue)
             .findFirst();
     }

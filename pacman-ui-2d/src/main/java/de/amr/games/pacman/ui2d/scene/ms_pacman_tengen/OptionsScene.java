@@ -196,14 +196,14 @@ public class OptionsScene extends GameScene2D {
         NES_Controller controller = NES_Controller.DEFAULT_CONTROLLER;
 
         // TODO simplify
-        if (context.keyboard().isRegisteredKeyCombinationPressed(controller.down())) {
+        if (context.keyboard().pressedAndRegistered(controller.down())) {
             playOptionSelectionChangedSound();
             selectNextOption();
             resetIdleTimer();
         }
 
         // TODO simplify
-        else if (context.keyboard().isRegisteredKeyCombinationPressed(controller.up())) {
+        else if (context.keyboard().pressedAndRegistered(controller.up())) {
             playOptionSelectionChangedSound();
             selectPrevOption();
             resetIdleTimer();
@@ -211,7 +211,7 @@ public class OptionsScene extends GameScene2D {
 
         // TODO simplify
         // Button "A" is right of "B": select forwards
-        else if (context.keyboard().isRegisteredKeyCombinationPressed(controller.a())) {
+        else if (context.keyboard().pressedAndRegistered(controller.a())) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER -> {
                     selectNextPacBoosterValue();
@@ -235,7 +235,7 @@ public class OptionsScene extends GameScene2D {
         }
 
         // Button "B" is left of "A": select backwards
-        else if (context.keyboard().isRegisteredKeyCombinationPressed(controller.b())) {
+        else if (context.keyboard().pressedAndRegistered(controller.b())) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER -> {
                     selectPrevPacBoosterValue();
@@ -258,7 +258,7 @@ public class OptionsScene extends GameScene2D {
             resetIdleTimer();
         }
 
-        else if (context.keyboard().isRegisteredKeyCombinationPressed(controller.start())) {
+        else if (context.keyboard().pressedAndRegistered(controller.start())) {
             // start playing
             context.sound().stopAll();
             context.gameController().changeState(GameState.STARTING_GAME);

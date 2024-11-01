@@ -56,11 +56,11 @@ public class Keyboard {
      * @param keyInput key input
      * @return tells if any of the registered given key combinations is matched by the current keyboard state
      */
-    public boolean isRegisteredKeyPressed(KeyInput keyInput) {
+    public boolean pressedAndRegistered(KeyInput keyInput) {
         return Arrays.stream(keyInput.getCombinations()).anyMatch(matchingCombinations::contains);
     }
 
-    public boolean isRegisteredKeyCombinationPressed(KeyCodeCombination kcc) {
+    public boolean pressedAndRegistered(KeyCodeCombination kcc) {
         return matchingCombinations.contains(kcc);
     }
 
