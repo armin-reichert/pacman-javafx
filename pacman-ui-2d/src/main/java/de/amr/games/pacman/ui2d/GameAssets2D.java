@@ -181,33 +181,30 @@ public class GameAssets2D extends AssetStorage {
         assets.store("tengen.ghost.color.flashing.eyeballs",  Color.rgb(176, 15, 48));
         assets.store("tengen.ghost.color.flashing.pupils",    Color.rgb(176, 15, 48));
 
-        // Clips
-        assets.store("tengen.audio.option.selection_changed", rm.loadAudioClip("sound/tengen/ding_low.wav"));
-        assets.store("tengen.audio.option.value_changed",     rm.loadAudioClip("sound/tengen/ding_high.wav"));
+        assets.store("tengen.audio.option.selection_changed", rm.loadAudioClip("sound/tengen/ms-select1.wav"));
+        assets.store("tengen.audio.option.value_changed",     rm.loadAudioClip("sound/tengen/ms-select2.wav"));
 
-        assets.store("tengen.audio.bonus_eaten",        rm.loadAudioClip("sound/tengen/Fruit.mp3"));
-        assets.store("tengen.audio.extra_life",         rm.loadAudioClip("sound/tengen/Extra_Life.wav"));
-        assets.store("tengen.audio.ghost_eaten",        rm.loadAudioClip("sound/tengen/Ghost_Eaten.mp3"));
+        assets.store("tengen.audio.bonus_eaten",        rm.loadAudioClip("sound/tengen/ms-fruit.wav"));
+        assets.store("tengen.audio.extra_life",         rm.loadAudioClip("sound/tengen/ms-extralife.wav"));
+        assets.store("tengen.audio.ghost_eaten",        rm.loadAudioClip("sound/tengen/ms-ghosteat.wav"));
 
+        // used only in 3D scene when level is completed:
+        assets.store("tengen.audio.level_complete",     rm.url("sound/common/level-complete.mp3"));
         assets.store("tengen.audio.sweep",              rm.loadAudioClip("sound/common/sweep.mp3"));
 
-        //TODO I need a full set of the Tengen sounds
-
         // Audio played by MediaPlayer
-        assets.store("tengen.audio.game_ready",         rm.url("sound/mspacman/Start.mp3"));
-        assets.store("tengen.audio.game_over",          rm.url("sound/common/game-over.mp3"));
-        assets.store("tengen.audio.intermission.1",     rm.url("sound/tengen/Act_1_They_Meet.mp3"));
-        assets.store("tengen.audio.intermission.2",     rm.url("sound/tengen/Act_2_The_Chase.mp3"));
-        assets.store("tengen.audio.intermission.3",     rm.url("sound/tengen/Act_3_Junior.mp3"));
-        assets.store("tengen.audio.level_complete",     rm.url("sound/common/level-complete.mp3"));
-        assets.store("tengen.audio.pacman_death",       rm.url("sound/tengen/Life_Lost.wav"));
-        //assets.store("tengen.audio.pacman_munch",       rm.url("sound/mspacman/Pill.wav"));
-        assets.store("tengen.audio.pacman_power",       rm.url("sound/tengen/Power_Pellet.mp3"));
-        //assets.store("tengen.audio.siren.1",            rm.url("sound/tengen/GhostNoise1.wav"));
-        //assets.store("tengen.audio.siren.2",            rm.url("sound/tengen/GhostNoise1.wav"));
-        //assets.store("tengen.audio.siren.3",            rm.url("sound/tengen/GhostNoise1.wav"));
-        //assets.store("tengen.audio.siren.4",            rm.url("sound/tengen/GhostNoise1.wav"));
-        //assets.store("tengen.audio.ghost_returns",      rm.url("sound/mspacman/GhostEyes.mp3"));
+        assets.store("tengen.audio.game_ready",         rm.url("sound/tengen/ms-start.wav"));
+        assets.store("tengen.audio.intermission.1",     rm.url("sound/tengen/theymeet.wav"));
+        assets.store("tengen.audio.intermission.2",     rm.url("sound/tengen/thechase.wav"));
+        assets.store("tengen.audio.intermission.3",     rm.url("sound/tengen/junior.wav"));
+        assets.store("tengen.audio.pacman_death",       rm.url("sound/tengen/ms-death.wav"));
+        assets.store("tengen.audio.pacman_munch",       rm.url("sound/tengen/ms-dot.wav"));
+        assets.store("tengen.audio.pacman_power",       rm.url("sound/tengen/ms-power.wav"));
+        assets.store("tengen.audio.siren.1",            rm.url("sound/tengen/ms-siren1.wav"));
+        assets.store("tengen.audio.siren.2",            rm.url("sound/tengen/ms-siren2.wav"));
+        assets.store("tengen.audio.siren.3",            rm.url("sound/tengen/ms-siren2.wav"));
+        assets.store("tengen.audio.siren.4",            rm.url("sound/tengen/ms-siren2.wav"));
+        assets.store("tengen.audio.ghost_returns",      rm.url("sound/tengen/ms-eyes.wav"));
 
         //
         // Pac-Man game
