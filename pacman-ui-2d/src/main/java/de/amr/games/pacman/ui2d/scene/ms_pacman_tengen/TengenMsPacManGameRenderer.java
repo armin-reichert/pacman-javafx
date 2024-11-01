@@ -15,10 +15,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
-import de.amr.games.pacman.model.ms_pacman_tengen.BoosterMode;
-import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
-import de.amr.games.pacman.model.ms_pacman_tengen.NESColorPalette;
-import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
+import de.amr.games.pacman.model.ms_pacman_tengen.*;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -265,7 +262,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         TileMap terrain = world.map().terrain();
         Map<String, String> mapColorScheme = game.currentMapColorScheme();
 
-        // TODO There are maze flashing animations with varying fill color
+        // TODO: Implement these maze flashing animations with varying fill color
         if (flashMode) {
             Color wallFillColor = Color.web(mapColorScheme.get("fill"));
             terrainRenderer.setMapBackgroundColor(bgColor);
@@ -276,6 +273,10 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             return;
         }
 
+        if (!isUsingDefaultGameOptions(game)) {
+            drawGameOptionsInfo(game.world().map().terrain(), game);
+        }
+
         // All maps that use a different color scheme than that in the sprite sheet have to be rendered using the
         // generic vector renderer for now. This looks more or less bad for specific maps.
         // TODO: maps 28-32 also have random color schmes in STRANGE mode
@@ -283,9 +284,6 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
         boolean isDemoLevel = context.game().isDemoLevel();
         if (useVectorRenderer) {
-            if (!isDemoLevel) {
-                drawInfoOnTopOfMap(terrain, game);
-            }
             terrainRenderer.setMapBackgroundColor(bgColor);
             terrainRenderer.setWallStrokeColor(Color.web(mapColorScheme.get("stroke")));
             terrainRenderer.setWallFillColor(Color.web(mapColorScheme.get("fill")));
@@ -304,11 +302,14 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
                 Logger.error("Cannot draw world: No map sprite selected");
                 return;
             }
-            if (!game.isDemoLevel()) {
-                drawInfoOnTopOfMap(game.world().map().terrain(), game);
-            }
             drawWorldUsingSpriteSheet(game, context.gameClock().getUpdateCount());
         }
+    }
+
+    private boolean isUsingDefaultGameOptions(TengenMsPacManGame game) {
+        return game.pacBoosterMode() == BoosterMode.OFF &&
+            game.difficulty() == Difficulty.NORMAL &&
+            game.mapCategory() == MapCategory.ARCADE;
     }
 
     private void drawWorldUsingSpriteSheet(TengenMsPacManGame game, long t) {
@@ -359,7 +360,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         );
     }
 
-    private void drawInfoOnTopOfMap(TileMap terrain, TengenMsPacManGame tengenGame) {
+    private void drawGameOptionsInfo(TileMap terrain, TengenMsPacManGame tengenGame) {
         MapCategory category = tengenGame.mapCategory();
         RectArea categorySprite = switch (category) {
             case BIG     -> TengenMsPacManGameSpriteSheet.BIG_SPRITE;
