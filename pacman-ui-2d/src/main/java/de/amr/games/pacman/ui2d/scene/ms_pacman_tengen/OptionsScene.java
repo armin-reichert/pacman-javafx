@@ -107,7 +107,7 @@ public class OptionsScene extends GameScene2D {
         drawArrowIfSelected(renderer, OPTION_PAC_BOOSTER, y, font);
         renderer.drawText("PAC BOOSTER", LABEL_COLOR, font, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, font, COL_COLON, y);
-        renderer.drawText(pacBoosterText(tengenGame.pacBoosterMode()), VALUE_COLOR, font, COL_VALUE, y);
+        renderer.drawText(pacBoosterText(tengenGame.boosterMode()), VALUE_COLOR, font, COL_VALUE, y);
 
         // Game difficulty
         y += 3 * TS;
@@ -128,7 +128,7 @@ public class OptionsScene extends GameScene2D {
         drawArrowIfSelected(renderer, OPTION_STARTING_LEVEL, y, font);
         renderer.drawText("STARTING LEVEL", LABEL_COLOR, font, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, font, COL_COLON, y);
-        renderer.drawText(String.valueOf(tengenGame.startingLevel()), VALUE_COLOR, font, COL_VALUE + TS, y);
+        renderer.drawText(String.valueOf(tengenGame.startLevelNumber()), VALUE_COLOR, font, COL_VALUE + TS, y);
 
         y += 3 * TS;
         drawCenteredText(renderer, "MOVE ARROW WITH CURSOR KEYS", font, y);
@@ -243,9 +243,9 @@ public class OptionsScene extends GameScene2D {
     }
 
     private void selectNextStartingLevelValue() {
-        int current = tengenGame.startingLevel();
+        int current = tengenGame.startLevelNumber();
         int next = (current < MAX_STARTING_LEVEL) ? current + 1 : 1;
-        tengenGame.setStartingLevel(next);
+        tengenGame.setStartLevelNumber(next);
     }
 
     private void selectNextMazeSelectionValue() {
@@ -263,9 +263,9 @@ public class OptionsScene extends GameScene2D {
     }
 
     private void selectNextPacBoosterValue() {
-        BoosterMode boosterMode = tengenGame.pacBoosterMode();
+        BoosterMode boosterMode = tengenGame.boosterMode();
         var values = BoosterMode.values();
         int current = boosterMode.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
-        tengenGame.setPacBooster(values[next]);
+        tengenGame.setBoosterMode(values[next]);
     }
 }

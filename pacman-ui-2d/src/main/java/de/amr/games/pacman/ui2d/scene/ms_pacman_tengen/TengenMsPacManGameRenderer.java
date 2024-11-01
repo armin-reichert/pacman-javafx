@@ -307,7 +307,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     }
 
     private boolean isUsingDefaultGameOptions(TengenMsPacManGame game) {
-        return game.pacBoosterMode() == BoosterMode.OFF &&
+        return game.boosterMode() == BoosterMode.OFF &&
             game.difficulty() == Difficulty.NORMAL &&
             game.mapCategory() == MapCategory.ARCADE;
     }
@@ -376,7 +376,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         };
         double centerX = terrain.numCols() * HTS;
         double y = t(2) + HTS;
-        if (tengenGame.pacBoosterMode() != BoosterMode.OFF) {
+        if (tengenGame.boosterMode() != BoosterMode.OFF) {
             //TODO: always displayed when TOGGLE_USING_KEY is selected or only if booster is active?
             drawSpriteCenteredOverPosition(TengenMsPacManGameSpriteSheet.BOOSTER_SPRITE, centerX - t(6), y);
         }

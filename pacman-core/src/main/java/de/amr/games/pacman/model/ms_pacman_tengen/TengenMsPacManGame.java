@@ -24,7 +24,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
- * Ms. Pac-Man Tengen game.
+ * Ms. Pac-Man (Tengen).
  *
  * @author Armin Reichert
  */
@@ -134,13 +134,13 @@ public class TengenMsPacManGame extends GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
-    private final MapConfigurationManager mapConfig = new MapConfigurationManager();
+    private final MapConfigurationManager mapConfigMgr = new MapConfigurationManager();
 
     private MapCategory mapCategory;
     private Difficulty difficulty;
     private BoosterMode boosterMode;
     private boolean boosterActive;
-    private byte startingLevel; // 1-7
+    private byte startLevelNumber; // 1-7
     private boolean canStartGame;
 
     private LevelData currentLevelData; // TODO
@@ -165,15 +165,45 @@ public class TengenMsPacManGame extends GameModel {
         huntingControl.setOnPhaseChange(() -> ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible));
 
         setMapCategory(MapCategory.ARCADE);
-        setPacBooster(BoosterMode.OFF);
+        setBoosterMode(BoosterMode.OFF);
         setDifficulty(Difficulty.NORMAL);
-        setStartingLevel(1);
+        setStartLevelNumber(1);
     }
 
-    private void configureWorldMap(MapConfig config) {
-        currentMapNumber = config.mapNumber();
-        currentMap = config.worldMap();
-        currentMapColorScheme = config.colorScheme();
+    public void setBoosterMode(BoosterMode mode) {
+        boosterMode = mode;
+    }
+
+    public BoosterMode boosterMode() {
+        return boosterMode;
+    }
+
+    public boolean isBoosterActive() {
+        return boosterActive;
+    }
+
+    public MapCategory mapCategory() {
+        return mapCategory;
+    }
+
+    public void setMapCategory(MapCategory mapCategory) {
+        this.mapCategory = checkNotNull(mapCategory);
+    }
+
+    public Difficulty difficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public byte startLevelNumber() {
+        return startLevelNumber;
+    }
+
+    public void setStartLevelNumber(int number) {
+        this.startLevelNumber = (byte) number;
     }
 
     // only for info panel in dashboard
@@ -200,43 +230,6 @@ public class TengenMsPacManGame extends GameModel {
         scoreManager.setScoreEnabled(levelNumber > 0);
         scoreManager.setHighScoreEnabled(levelNumber > 0 && !isDemoLevel());
     }
-
-    public void setPacBooster(BoosterMode boosterMode) {
-        this.boosterMode = boosterMode;
-    }
-
-    public BoosterMode pacBoosterMode() {
-        return boosterMode;
-    }
-
-    public boolean isBoosterActive() {
-        return boosterActive;
-    }
-
-    public MapCategory mapCategory() {
-        return mapCategory;
-    }
-
-    public void setMapCategory(MapCategory mapCategory) {
-        this.mapCategory = checkNotNull(mapCategory);
-    }
-
-    public Difficulty difficulty() {
-        return difficulty;
-    }
-
-    public void setDifficulty(Difficulty difficulty) {
-        this.difficulty = difficulty;
-    }
-
-    public byte startingLevel() {
-        return startingLevel;
-    }
-
-    public void setStartingLevel(int startingLevel) {
-        this.startingLevel = (byte) startingLevel;
-    }
-
 
     @Override
     protected Pac createPac() {
@@ -360,10 +353,10 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     public void startNewGame() {
         reset();
-        createLevel(startingLevel);
-        if (startingLevel > 1) {
+        createLevel(startLevelNumber);
+        if (startLevelNumber > 1) {
             levelCounter.clear();
-            for (int number = 1; number <= Math.min(startingLevel, LEVEL_COUNTER_MAX_SIZE); ++number) {
+            for (int number = 1; number <= Math.min(startLevelNumber, LEVEL_COUNTER_MAX_SIZE); ++number) {
                 levelCounter.add((byte) (number - 1));
             }
         }
@@ -420,7 +413,12 @@ public class TengenMsPacManGame extends GameModel {
             throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
         currentLevelNumber = levelNumber;
-        configureWorldMap(mapConfig.getMapConfig(mapCategory, levelNumber));
+
+        MapConfig mapConfig = mapConfigMgr.getMapConfig(mapCategory, currentLevelNumber);
+        currentMapNumber = mapConfig.mapNumber();
+        currentMap = mapConfig.worldMap();
+        currentMapColorScheme = mapConfig.colorScheme();
+
         createWorldAndPopulation(currentMap);
 
         Logger.info("World created. Map number: {}, URL: {}", currentMapNumber, currentMap.url());
@@ -450,11 +448,18 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     public void buildDemoLevel() {
         currentLevelNumber = 1;
-        configureWorldMap(mapConfig.getMapConfig(mapCategory, 1));
+
+        MapConfig mapConfig = mapConfigMgr.getMapConfig(mapCategory, currentLevelNumber);
+        currentMapNumber = mapConfig.mapNumber();
+        currentMap = mapConfig.worldMap();
+        currentMapColorScheme = mapConfig.colorScheme();
+
         createWorldAndPopulation(currentMap);
+
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUsingAutopilot(true);
         deactivateBooster(); // gets activated in startLevel() if ALWAYS_ON
+
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
         // TODO for now provide a Level object such that all code that relies on one works

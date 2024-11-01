@@ -209,7 +209,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             TengenMsPacManGame tengenGame = (TengenMsPacManGame) context.game();
-            if (tengenGame.pacBoosterMode() == BoosterMode.ACTIVATED_USING_KEY) {
+            if (tengenGame.boosterMode() == BoosterMode.ACTIVATED_USING_KEY) {
                 if (tengenGame.isBoosterActive()) {
                     tengenGame.deactivateBooster();
                 } else {

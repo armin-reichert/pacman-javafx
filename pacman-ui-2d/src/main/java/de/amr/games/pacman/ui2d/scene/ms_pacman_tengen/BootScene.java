@@ -54,9 +54,9 @@ public class BootScene extends GameScene2D {
         // TODO reset game here by now
         TengenMsPacManGame game = (TengenMsPacManGame) context.game();
         game.setMapCategory(MapCategory.ARCADE);
-        game.setPacBooster(BoosterMode.OFF);
+        game.setBoosterMode(BoosterMode.OFF);
         game.setDifficulty(Difficulty.NORMAL);
-        game.setStartingLevel(1);
+        game.setStartLevelNumber(1);
     }
 
     @Override
