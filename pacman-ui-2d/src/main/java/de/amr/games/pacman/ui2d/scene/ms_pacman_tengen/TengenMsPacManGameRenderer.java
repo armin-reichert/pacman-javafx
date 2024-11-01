@@ -304,6 +304,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             }
             drawWorldUsingSpriteSheet(game, context.gameClock().getUpdateCount());
         }
+        game.bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
     }
 
     private boolean isUsingDefaultGameOptions(TengenMsPacManGame game) {
@@ -344,7 +345,6 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         overPaintEatenPellets(world);
         overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
         ctx().restore();
-        game.bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
     }
 
     // Animation goes forward and backward: Cycle (0, 1, 2, 1)
