@@ -74,7 +74,7 @@ public class EditorPage extends BorderPane implements Page {
     }
 
     @Override
-    public void bindActions() {
+    public void defineGameActionKeyBindings() {
     }
 
     @Override

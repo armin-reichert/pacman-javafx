@@ -40,17 +40,17 @@ public class PlayScene2D extends GameScene2D {
     public static final Font DEBUG_STATE_FONT = Font.font("Sans", FontWeight.BOLD, 24);
 
     @Override
-    public void bindActions() {
+    public void defineGameActionKeyBindings() {
         bindAction(GameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
         bindAction(GameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
         bindAction(GameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
         bindAction(GameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
-        bindAction(GameActions2D.ADD_CREDIT,        key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5));
+        bindAction(GameActions2D.ADD_CREDIT,        kcc(KeyCode.DIGIT5), kcc(KeyCode.NUMPAD5));
 
-        bindAction(GameActions2D.PLAYER_UP,       key(KeyCode.UP),    control(KeyCode.UP));
-        bindAction(GameActions2D.PLAYER_DOWN,     key(KeyCode.DOWN),  control(KeyCode.DOWN));
-        bindAction(GameActions2D.PLAYER_LEFT,     key(KeyCode.LEFT),  control(KeyCode.LEFT));
-        bindAction(GameActions2D.PLAYER_RIGHT,    key(KeyCode.RIGHT), control(KeyCode.RIGHT));
+        bindAction(GameActions2D.PLAYER_UP,       kcc(KeyCode.UP),    control(KeyCode.UP));
+        bindAction(GameActions2D.PLAYER_DOWN,     kcc(KeyCode.DOWN),  control(KeyCode.DOWN));
+        bindAction(GameActions2D.PLAYER_LEFT,     kcc(KeyCode.LEFT),  control(KeyCode.LEFT));
+        bindAction(GameActions2D.PLAYER_RIGHT,    kcc(KeyCode.RIGHT), control(KeyCode.RIGHT));
     }
 
     @Override
@@ -194,8 +194,8 @@ public class PlayScene2D extends GameScene2D {
         Logger.info("{} entered from {}", this, oldScene);
         //TODO check this
         context.updateRenderer();
-        bindActions();
-        register(context.keyboard());
+        defineGameActionKeyBindings();
+        registerGameActionKeyBindings(context.keyboard());
     }
 
     @Override

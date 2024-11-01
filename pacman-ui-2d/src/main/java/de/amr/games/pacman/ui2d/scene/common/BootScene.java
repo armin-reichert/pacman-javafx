@@ -19,7 +19,7 @@ import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 public class BootScene extends GameScene2D {
 
     @Override
-    public void bindActions() {
+    public void defineGameActionKeyBindings() {
     }
 
     @Override

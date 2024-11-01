@@ -19,8 +19,8 @@ import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui2d.util.NES_Controller;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -53,11 +53,6 @@ public class IntroScene extends GameScene2D {
     private int ghostIndex;
     private int waitBeforeRising;
 
-    @Override
-    public void bindActions() {
-        bindAction(GameActions2D.START_GAME, KeyCode.SPACE);
-    }
-
     public IntroScene() {
         sceneController = new FiniteStateMachine<>(SceneState.values()) {
             @Override
@@ -68,7 +63,14 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
+    public void defineGameActionKeyBindings() {
+        bindAction(GameActions2D.START_GAME, NES_Controller.DEFAULT_CONTROLLER.start());
+    }
+
+    @Override
     public void doInit() {
+        context.plugIn_NES_Controller();
+
         TengenMsPacManGameSpriteSheet spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         context.setScoreVisible(false);
 
@@ -91,6 +93,7 @@ public class IntroScene extends GameScene2D {
     @Override
     protected void doEnd() {
         context.sound().stopVoice(); // TODO check if needed
+        context.plugOut_NES_Controller();
     }
 
     @Override
@@ -116,7 +119,7 @@ public class IntroScene extends GameScene2D {
                 renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t), font, 9 * TS, MARQUEE_TOP_Y - TS);
                 renderer.drawSpriteScaled(MS_PAC_MAN_TITLE_SPRITE, 6 * TS, MARQUEE_TOP_Y);
                 if (t % 60 < 30) {
-                    renderer.drawText("PRESS SPACE", Color.WHITE, font, 11 * TS, MARQUEE_TOP_Y + 9 * TS);
+                    renderer.drawText("PRESS [START]", Color.WHITE, font, 11 * TS, MARQUEE_TOP_Y + 9 * TS);
                 }
                 renderer.drawText("MS PAC-MAN TM NAMCO LTD", TENGEN_PINK, font, 6 * TS, MARQUEE_TOP_Y + 13 * TS);
                 renderer.drawText("©1990 TENGEN INC",        TENGEN_PINK, font, 8 * TS, MARQUEE_TOP_Y + 14 * TS);

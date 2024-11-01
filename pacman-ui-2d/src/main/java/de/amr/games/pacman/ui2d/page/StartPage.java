@@ -136,7 +136,7 @@ public class StartPage extends StackPane implements Page {
         this.context = checkNotNull(context);
         AssetStorage assets = context.assets();
 
-        bindActions();
+        defineGameActionKeyBindings();
 
         msPacManFlyer = new Flyer(
             assets.image("ms_pacman.startpage.image1"),
@@ -182,7 +182,7 @@ public class StartPage extends StackPane implements Page {
     }
 
     @Override
-    public void bindActions() {
+    public void defineGameActionKeyBindings() {
         bindAction(GameActions2D.TOGGLE_PAUSED, KeyCode.P);
         bindAction(actionPrevFlyerPage,         KeyCode.UP);
         bindAction(actionNextFlyerPage,         KeyCode.DOWN);

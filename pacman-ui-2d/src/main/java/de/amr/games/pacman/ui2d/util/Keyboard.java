@@ -36,7 +36,7 @@ public class Keyboard {
     public void unregister(KeyCodeCombination kcc) {
         if (registeredCombinations.contains(kcc)) {
             registeredCombinations.remove(kcc);
-            Logger.debug("Key combination unregistered: {}", kcc);
+            Logger.info("Key combination unregistered: {}", kcc);
         }
     }
 

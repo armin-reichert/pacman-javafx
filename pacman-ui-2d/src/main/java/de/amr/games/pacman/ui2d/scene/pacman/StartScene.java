@@ -16,7 +16,7 @@ import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
 import static de.amr.games.pacman.ui2d.scene.pacman.PacManGameSpriteSheet.MIDWAY_COPYRIGHT;
-import static de.amr.games.pacman.ui2d.util.KeyInput.key;
+import static de.amr.games.pacman.ui2d.util.KeyInput.kcc;
 
 /**
  * @author Armin Reichert
@@ -24,9 +24,9 @@ import static de.amr.games.pacman.ui2d.util.KeyInput.key;
 public class StartScene extends GameScene2D {
 
     @Override
-    public void bindActions() {
-        bindAction(GameActions2D.ADD_CREDIT, key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5));
-        bindAction(GameActions2D.START_GAME, key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1));
+    public void defineGameActionKeyBindings() {
+        bindAction(GameActions2D.ADD_CREDIT, kcc(KeyCode.DIGIT5), kcc(KeyCode.NUMPAD5));
+        bindAction(GameActions2D.START_GAME, kcc(KeyCode.DIGIT1), kcc(KeyCode.NUMPAD1));
     }
 
     @Override

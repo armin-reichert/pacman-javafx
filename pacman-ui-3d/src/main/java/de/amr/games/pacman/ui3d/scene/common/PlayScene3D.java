@@ -106,18 +106,18 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     @Override
     public final void init() {
         doInit();
-        bindActions();
-        register(context().keyboard());
+        defineGameActionKeyBindings();
+        registerGameActionKeyBindings(context().keyboard());
     }
 
     @Override
     public final void end() {
         doEnd();
-        unregister(context().keyboard());
+        unregisterGameActionKeyBindings(context().keyboard());
     }
 
     @Override
-    public void bindActions() {
+    public void defineGameActionKeyBindings() {
         bindAction(GameActions3D.PREV_PERSPECTIVE,  alt(KeyCode.LEFT));
         bindAction(GameActions3D.NEXT_PERSPECTIVE,  alt(KeyCode.RIGHT));
         bindAction(GameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
@@ -129,13 +129,13 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             bindAction(GameActions2D.TENGEN_SHOW_OPTIONS,       KeyCode.S);
         }
         else if (context.game().isDemoLevel()) {
-            bindAction(GameActions2D.ADD_CREDIT, key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5));
+            bindAction(GameActions2D.ADD_CREDIT, kcc(KeyCode.DIGIT5), kcc(KeyCode.NUMPAD5));
         }
 
-        bindAction(GameActions2D.PLAYER_UP,       key(KeyCode.UP),    control(KeyCode.UP));
-        bindAction(GameActions2D.PLAYER_DOWN,     key(KeyCode.DOWN),  control(KeyCode.DOWN));
-        bindAction(GameActions2D.PLAYER_LEFT,     key(KeyCode.LEFT),  control(KeyCode.LEFT));
-        bindAction(GameActions2D.PLAYER_RIGHT,    key(KeyCode.RIGHT), control(KeyCode.RIGHT));
+        bindAction(GameActions2D.PLAYER_UP,       kcc(KeyCode.UP),    control(KeyCode.UP));
+        bindAction(GameActions2D.PLAYER_DOWN,     kcc(KeyCode.DOWN),  control(KeyCode.DOWN));
+        bindAction(GameActions2D.PLAYER_LEFT,     kcc(KeyCode.LEFT),  control(KeyCode.LEFT));
+        bindAction(GameActions2D.PLAYER_RIGHT,    kcc(KeyCode.RIGHT), control(KeyCode.RIGHT));
     }
 
     protected void doInit() {
@@ -383,8 +383,8 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             }
             level3D.livesCounter3D().shapesRotation().play();
         }
-        bindActions();
-        register(context.keyboard());
+        defineGameActionKeyBindings();
+        registerGameActionKeyBindings(context.keyboard());
     }
 
     @Override

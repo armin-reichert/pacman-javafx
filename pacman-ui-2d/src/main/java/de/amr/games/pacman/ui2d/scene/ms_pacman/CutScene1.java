@@ -54,7 +54,7 @@ public class CutScene1 extends GameScene2D {
     private ClapperboardAnimation clapAnimation;
 
     @Override
-    public void bindActions() {
+    public void defineGameActionKeyBindings() {
     }
 
     @Override

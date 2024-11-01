@@ -70,14 +70,14 @@ public abstract class GameScene2D implements GameScene {
     @Override
     public final void init() {
         doInit();
-        bindActions();
-        register(context().keyboard());
+        defineGameActionKeyBindings();
+        registerGameActionKeyBindings(context().keyboard());
     }
 
     @Override
     public final void end() {
         doEnd();
-        unregister(context().keyboard());
+        unregisterGameActionKeyBindings(context().keyboard());
     }
 
     public void draw(GameRenderer renderer) {

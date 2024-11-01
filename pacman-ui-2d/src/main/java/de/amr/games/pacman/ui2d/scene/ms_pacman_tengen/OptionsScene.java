@@ -14,6 +14,7 @@ import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui2d.util.NES_Controller;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -22,8 +23,8 @@ import javafx.scene.text.Font;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_BABY_BLUE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_YELLOW;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_RESOLUTION_Y;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_RESOLUTION_X;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.NES_RESOLUTION_Y;
 import static de.amr.games.pacman.ui2d.util.KeyInput.alt;
 import static de.amr.games.pacman.ui2d.util.KeyInput.shift_alt;
 
@@ -48,14 +49,15 @@ public class OptionsScene extends GameScene2D {
 
     static final int NUM_OPTIONS = 5;
 
-    static final int MAX_STARTING_LEVEL = 32;  //TODO 7
+    static final int MIN_START_LEVEL = 1;
+    static final int MAX_START_LEVEL = 32;  //TODO 7
 
     private TengenMsPacManGame tengenGame;
     private int selectedOption;
     private long idleTicks;
 
     @Override
-    public void bindActions() {
+    public void defineGameActionKeyBindings() {
         bindAction(GameActions2D.TEST_CUT_SCENES,     alt(KeyCode.C));
         bindAction(GameActions2D.TEST_LEVELS_BONI,    alt(KeyCode.T));
         bindAction(GameActions2D.TEST_LEVELS_TEASERS, shift_alt(KeyCode.T));
@@ -63,11 +65,17 @@ public class OptionsScene extends GameScene2D {
 
     @Override
     public void doInit() {
+        context.plugIn_NES_Controller();
         context.setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
         tengenGame = (TengenMsPacManGame) context.game();
         tengenGame.setCanStartGame(true);
         resetIdleTimer();
+    }
+
+    @Override
+    protected void doEnd() {
+        context.plugOut_NES_Controller();
     }
 
     @Override
@@ -133,9 +141,9 @@ public class OptionsScene extends GameScene2D {
         y += 3 * TS;
         drawCenteredText(renderer, "MOVE ARROW WITH CURSOR KEYS", font, y);
         y += TS;
-        drawCenteredText(renderer, "CHOOSE OPTIONS WITH TAB", font, y);
+        drawCenteredText(renderer, "CHOOSE OPTIONS WITH [B] AND [A]", font, y);
         y += TS;
-        drawCenteredText(renderer, "PRESS ENTER TO START GAME", font, y);
+        drawCenteredText(renderer, "PRESS [START] TO START GAME", font, y);
 
         y += 4;
         drawBabyBlueBar(renderer, y);
@@ -185,18 +193,25 @@ public class OptionsScene extends GameScene2D {
 
     @Override
     public void handleInput(GameContext context) {
-        if (context.keyboard().pressed(KeyCode.DOWN)) {
+        NES_Controller controller = NES_Controller.DEFAULT_CONTROLLER;
+
+        // TODO simplify
+        if (context.keyboard().isRegisteredKeyCombinationPressed(controller.down())) {
             playOptionSelectionChangedSound();
             selectNextOption();
             resetIdleTimer();
         }
-        else if (context.keyboard().pressed(KeyCode.UP)) {
+
+        // TODO simplify
+        else if (context.keyboard().isRegisteredKeyCombinationPressed(controller.up())) {
             playOptionSelectionChangedSound();
             selectPrevOption();
             resetIdleTimer();
         }
 
-        else if (context.keyboard().pressed(KeyCode.TAB)) {
+        // TODO simplify
+        // Button "A" is right of "B": select forwards
+        else if (context.keyboard().isRegisteredKeyCombinationPressed(controller.a())) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER -> {
                     selectNextPacBoosterValue();
@@ -207,11 +222,11 @@ public class OptionsScene extends GameScene2D {
                     playOptionValueChangedSound();
                 }
                 case OPTION_MAZE_SELECTION -> {
-                    selectNextMazeSelectionValue();
+                    selectNextMapCategoryValue();
                     playOptionValueChangedSound();
                 }
                 case OPTION_STARTING_LEVEL -> {
-                    selectNextStartingLevelValue();
+                    selectNextStartLevelValue();
                     playOptionValueChangedSound();
                 }
                 default -> {}
@@ -219,14 +234,38 @@ public class OptionsScene extends GameScene2D {
             resetIdleTimer();
         }
 
-        //TODO make into game action?
-        else if (context.keyboard().pressed(KeyCode.ENTER)) { // start playing
+        // Button "B" is left of "A": select backwards
+        else if (context.keyboard().isRegisteredKeyCombinationPressed(controller.b())) {
+            switch (selectedOption) {
+                case OPTION_PAC_BOOSTER -> {
+                    selectPrevPacBoosterValue();
+                    playOptionValueChangedSound();
+                }
+                case OPTION_DIFFICULTY -> {
+                    selectPrevDifficultyValue();
+                    playOptionValueChangedSound();
+                }
+                case OPTION_MAZE_SELECTION -> {
+                    selectPrevMapCategoryValue();
+                    playOptionValueChangedSound();
+                }
+                case OPTION_STARTING_LEVEL -> {
+                    selectPrevStartLevelValue();
+                    playOptionValueChangedSound();
+                }
+                default -> {}
+            }
+            resetIdleTimer();
+        }
+
+        else if (context.keyboard().isRegisteredKeyCombinationPressed(controller.start())) {
+            // start playing
             context.sound().stopAll();
             context.gameController().changeState(GameState.STARTING_GAME);
         }
 
         else {
-            context.doFirstCalledAction(this);
+            context.doFirstCalledGameAction(this);
         }
     }
 
@@ -242,17 +281,37 @@ public class OptionsScene extends GameScene2D {
         selectedOption = (selectedOption < NUM_OPTIONS - 1) ? selectedOption + 1 : 0;
     }
 
-    private void selectNextStartingLevelValue() {
+    private void selectPrevStartLevelValue() {
         int current = tengenGame.startLevelNumber();
-        int next = (current < MAX_STARTING_LEVEL) ? current + 1 : 1;
+        int prev = (current == MIN_START_LEVEL) ? MAX_START_LEVEL : current - 1;
+        tengenGame.setStartLevelNumber(prev);
+    }
+
+    private void selectNextStartLevelValue() {
+        int current = tengenGame.startLevelNumber();
+        int next = (current < MAX_START_LEVEL) ? current + 1 : MIN_START_LEVEL;
         tengenGame.setStartLevelNumber(next);
     }
 
-    private void selectNextMazeSelectionValue() {
+    private void selectPrevMapCategoryValue() {
+        MapCategory category = tengenGame.mapCategory();
+        var values = MapCategory.values();
+        int current = category.ordinal(), prev = (current == 0) ? values.length - 1 :  current - 1;
+        tengenGame.setMapCategory(values[prev]);
+    }
+
+    private void selectNextMapCategoryValue() {
         MapCategory category = tengenGame.mapCategory();
         var values = MapCategory.values();
         int current = category.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame.setMapCategory(values[next]);
+    }
+
+    private void selectPrevDifficultyValue() {
+        Difficulty difficulty = tengenGame.difficulty();
+        var values = Difficulty.values();
+        int current = difficulty.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
+        tengenGame.setDifficulty(values[prev]);
     }
 
     private void selectNextDifficultyValue() {
@@ -260,6 +319,13 @@ public class OptionsScene extends GameScene2D {
         var values = Difficulty.values();
         int current = difficulty.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame.setDifficulty(values[next]);
+    }
+
+    private void selectPrevPacBoosterValue() {
+        BoosterMode boosterMode = tengenGame.boosterMode();
+        var values = BoosterMode.values();
+        int current = boosterMode.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
+        tengenGame.setBoosterMode(values[prev]);
     }
 
     private void selectNextPacBoosterValue() {

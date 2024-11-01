@@ -17,14 +17,14 @@ public interface GameActionProvider {
 
     Map<KeyCodeCombination, GameAction> actionBindings();
 
-    default void register(Keyboard keyboard) {
+    default void registerGameActionKeyBindings(Keyboard keyboard) {
         Logger.info("Register key bindings for {}", getClass().getSimpleName());
         for (KeyCodeCombination keyCodeCombination : actionBindings().keySet()) {
             keyboard.register(keyCodeCombination);
         }
     }
 
-    default void unregister(Keyboard keyboard) {
+    default void unregisterGameActionKeyBindings(Keyboard keyboard) {
         Logger.info("Unregister key bindings for {}", getClass().getSimpleName());
         for (KeyCodeCombination keyCodeCombination : actionBindings().keySet()) {
             keyboard.unregister(keyCodeCombination);
@@ -34,7 +34,7 @@ public interface GameActionProvider {
     /**
      * Hook method where actions are bound to keyboard combinations.
      */
-    void bindActions();
+    void defineGameActionKeyBindings();
 
     default void bindAction(GameAction action, KeyInput keyInput) {
         for (KeyCodeCombination kcc : keyInput.getCombinations()) {
@@ -60,6 +60,6 @@ public interface GameActionProvider {
     }
 
     default void handleInput(GameContext context) {
-        context.doFirstCalledAction(this);
+        context.doFirstCalledGameAction(this);
     }
 }

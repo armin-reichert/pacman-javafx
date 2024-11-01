@@ -36,7 +36,7 @@ public class CutScene2 extends GameScene2D {
     private SpriteAnimation blinkyDamaged;
 
     @Override
-    public void bindActions() {
+    public void defineGameActionKeyBindings() {
     }
 
     @Override

@@ -42,8 +42,12 @@ public interface GameContext {
     void                        setScoreVisible(boolean visible);
     boolean                     isScoreVisible();
 
-    // UI
+    // User input
     Keyboard                    keyboard();
+    void                        plugIn_NES_Controller();
+    void                        plugOut_NES_Controller();
+
+    // GUI
     void                        selectPage(Page page);
     void                        selectStartPage();
     void                        selectGamePage();
@@ -54,7 +58,7 @@ public interface GameContext {
     GameClockFX                 gameClock();
 
     // Actions
-    void                        doFirstCalledAction(GameActionProvider actionProvider);
+    void doFirstCalledGameAction(GameActionProvider actionProvider);
     void                        doFirstCalledActionElse(GameActionProvider actionProvider, Runnable defaultAction);
 
     // Game scenes

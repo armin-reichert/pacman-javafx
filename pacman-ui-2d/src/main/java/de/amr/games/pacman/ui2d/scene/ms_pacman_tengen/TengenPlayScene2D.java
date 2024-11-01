@@ -48,7 +48,9 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_YELLOW;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
-import static de.amr.games.pacman.ui2d.util.KeyInput.*;
+import static de.amr.games.pacman.ui2d.util.KeyInput.alt;
+import static de.amr.games.pacman.ui2d.util.KeyInput.control;
+import static de.amr.games.pacman.ui2d.util.NES_Controller.DEFAULT_CONTROLLER;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 
 /**
@@ -110,22 +112,23 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     }
 
     @Override
-    public void bindActions() {
+    public void defineGameActionKeyBindings() {
         bindAction(GameActions2D.CHEAT_EAT_ALL,              alt(KeyCode.E));
         bindAction(GameActions2D.CHEAT_ADD_LIVES,            alt(KeyCode.L));
         bindAction(GameActions2D.CHEAT_NEXT_LEVEL,           alt(KeyCode.N));
         bindAction(GameActions2D.CHEAT_KILL_GHOSTS,          alt(KeyCode.X));
-        bindAction(GameActions2D.TENGEN_TOGGLE_PAC_BOOSTER,  KeyCode.A);
-        bindAction(GameActions2D.TENGEN_SHOW_OPTIONS,        KeyCode.S);
 
-        bindAction(GameActions2D.PLAYER_UP,       key(KeyCode.UP),    control(KeyCode.UP));
-        bindAction(GameActions2D.PLAYER_DOWN,     key(KeyCode.DOWN),  control(KeyCode.DOWN));
-        bindAction(GameActions2D.PLAYER_LEFT,     key(KeyCode.LEFT),  control(KeyCode.LEFT));
-        bindAction(GameActions2D.PLAYER_RIGHT,    key(KeyCode.RIGHT), control(KeyCode.RIGHT));
+        bindAction(GameActions2D.TENGEN_TOGGLE_PAC_BOOSTER, DEFAULT_CONTROLLER.a(), DEFAULT_CONTROLLER.b());
+        bindAction(GameActions2D.TENGEN_QUIT_DEMO_LEVEL,    DEFAULT_CONTROLLER.start());
+        bindAction(GameActions2D.PLAYER_UP,                 DEFAULT_CONTROLLER.up(),    control(KeyCode.UP));
+        bindAction(GameActions2D.PLAYER_DOWN,               DEFAULT_CONTROLLER.down(),  control(KeyCode.DOWN));
+        bindAction(GameActions2D.PLAYER_LEFT,               DEFAULT_CONTROLLER.left(),  control(KeyCode.LEFT));
+        bindAction(GameActions2D.PLAYER_RIGHT,              DEFAULT_CONTROLLER.right(), control(KeyCode.RIGHT));
     }
 
     @Override
     public void doInit() {
+        context.plugIn_NES_Controller();
         context.setScoreVisible(true);
         canvas.widthProperty().bind(scalingProperty().map(scaling -> scaled(size().x())));
         canvas.heightProperty().bind(scalingProperty().map(scaling -> scaled(size().y())));
@@ -134,6 +137,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     @Override
     protected void doEnd() {
         context.sound().stopAll();
+        context.plugOut_NES_Controller();
     }
 
     @Override

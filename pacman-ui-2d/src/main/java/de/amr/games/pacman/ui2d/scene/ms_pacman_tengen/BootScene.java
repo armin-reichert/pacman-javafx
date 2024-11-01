@@ -37,8 +37,7 @@ public class BootScene extends GameScene2D {
     private long t;
 
     @Override
-    public void bindActions() {
-    }
+    public void defineGameActionKeyBindings() {}
 
     @Override
     public void doInit() {
@@ -57,6 +56,8 @@ public class BootScene extends GameScene2D {
         game.setBoosterMode(BoosterMode.OFF);
         game.setDifficulty(Difficulty.NORMAL);
         game.setStartLevelNumber(1);
+
+        context.plugIn_NES_Controller();
     }
 
     @Override

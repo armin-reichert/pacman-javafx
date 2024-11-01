@@ -219,6 +219,15 @@ public enum GameActions2D implements GameAction {
         }
     },
 
+    TENGEN_QUIT_DEMO_LEVEL {
+        @Override
+        public void execute(GameContext context) {
+            if (context.game().isDemoLevel()) {
+                context.gameController().changeState(GameState.WAITING_FOR_START);
+            }
+        }
+    },
+
     TENGEN_SHOW_OPTIONS { // (key(KeyCode.S)) {
         @Override
         public void execute(GameContext context) {

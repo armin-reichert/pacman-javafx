@@ -31,7 +31,7 @@ public class CutScene1 extends GameScene2D {
     private Ghost blinky;
 
     @Override
-    public void bindActions() {
+    public void defineGameActionKeyBindings() {
     }
 
     @Override

@@ -125,7 +125,7 @@ public class GamePage extends StackPane implements Page {
         this.context = checkNotNull(context);
         this.parentScene = checkNotNull(parentScene);
 
-        bindActions();
+        defineGameActionKeyBindings();
 
         gameCanvas = new Canvas();
 
@@ -173,7 +173,7 @@ public class GamePage extends StackPane implements Page {
     }
 
     @Override
-    public void bindActions() {
+    public void defineGameActionKeyBindings() {
         bindAction(GameActions2D.BOOT,            KeyCode.F3);
         bindAction(GameActions2D.SHOW_START_PAGE, KeyCode.Q);
         bindAction(GameActions2D.TOGGLE_PAUSED,   KeyCode.P);
@@ -186,7 +186,7 @@ public class GamePage extends StackPane implements Page {
         bindAction(actionSimulationOneStep,       shift(KeyCode.P));
         bindAction(actionSimulationTenSteps,      shift(KeyCode.SPACE));
         bindAction(actionToggleAutopilot,         alt(KeyCode.A));
-        bindAction(actionToggleDashboard,         key(KeyCode.F1), alt(KeyCode.B));
+        bindAction(actionToggleDashboard,         kcc(KeyCode.F1), alt(KeyCode.B));
         bindAction(actionToggleImmunity,          alt(KeyCode.I));
     }
 

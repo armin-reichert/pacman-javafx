@@ -73,9 +73,9 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    public void bindActions() {
-        bindAction(GameActions2D.ADD_CREDIT,          key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5));
-        bindAction(GameActions2D.START_GAME,          key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1));
+    public void defineGameActionKeyBindings() {
+        bindAction(GameActions2D.ADD_CREDIT,          kcc(KeyCode.DIGIT5), kcc(KeyCode.NUMPAD5));
+        bindAction(GameActions2D.START_GAME,          kcc(KeyCode.DIGIT1), kcc(KeyCode.NUMPAD1));
         bindAction(GameActions2D.TEST_CUT_SCENES,     alt(KeyCode.C));
         bindAction(GameActions2D.TEST_LEVELS_BONI,    alt(KeyCode.T));
         bindAction(GameActions2D.TEST_LEVELS_TEASERS, shift_alt(KeyCode.T));

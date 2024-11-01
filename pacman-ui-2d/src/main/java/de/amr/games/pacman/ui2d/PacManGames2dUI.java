@@ -94,6 +94,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected boolean signatureShown; //TODO make this work again for all intro screens
     protected Picker<String> pickerGameOver;
     protected Picker<String> pickerLevelComplete;
+    protected NES_Controller nesController = NES_Controller.DEFAULT_CONTROLLER;
 
     public PacManGames2dUI() {
         assets = new AssetStorage();
@@ -305,7 +306,19 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void doFirstCalledAction(GameActionProvider actionProvider) {
+    public void plugIn_NES_Controller() {
+        Logger.info("Plug-in NES controller");
+        nesController.allKeys().forEach(keyboard()::register);
+    }
+
+    @Override
+    public void plugOut_NES_Controller() {
+        Logger.info("Plug-out NES controller");
+        nesController.allKeys().forEach(keyboard()::unregister);
+    }
+
+    @Override
+    public void doFirstCalledGameAction(GameActionProvider actionProvider) {
         actionProvider.firstMatchedAction(keyboard()).filter(gameAction -> gameAction.isEnabled(this))
             .ifPresent(action -> action.execute(this));
     }
@@ -446,9 +459,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     public void selectPage(Page page) {
         if (page != currentPage) {
             if (currentPage != null) {
-                currentPage.unregister(keyboard());
+                currentPage.unregisterGameActionKeyBindings(keyboard());
             }
-            page.register(keyboard());
+            page.registerGameActionKeyBindings(keyboard());
             currentPage = page;
             currentPage.setSize(stage.getScene().getWidth(), stage.getScene().getHeight());
             sceneRoot.getChildren().set(0, currentPage.rootPane());
