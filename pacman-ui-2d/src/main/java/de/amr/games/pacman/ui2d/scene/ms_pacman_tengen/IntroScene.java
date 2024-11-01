@@ -119,7 +119,7 @@ public class IntroScene extends GameScene2D {
                 renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t), font, 9 * TS, MARQUEE_TOP_Y - TS);
                 renderer.drawSpriteScaled(MS_PAC_MAN_TITLE_SPRITE, 6 * TS, MARQUEE_TOP_Y);
                 if (t % 60 < 30) {
-                    renderer.drawText("PRESS [START]", Color.WHITE, font, 11 * TS, MARQUEE_TOP_Y + 9 * TS);
+                    renderer.drawText("PRESS START", Color.WHITE, font, 11 * TS, MARQUEE_TOP_Y + 9 * TS);
                 }
                 renderer.drawText("MS PAC-MAN TM NAMCO LTD", TENGEN_PINK, font, 6 * TS, MARQUEE_TOP_Y + 13 * TS);
                 renderer.drawText("©1990 TENGEN INC",        TENGEN_PINK, font, 8 * TS, MARQUEE_TOP_Y + 14 * TS);

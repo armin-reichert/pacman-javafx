@@ -6,6 +6,7 @@ import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
+import de.amr.games.pacman.ui2d.util.NES_Controller;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -30,6 +31,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.ui2d.util.KeyInput.kcc;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredRoundedBackground;
 
 /**
@@ -188,7 +190,7 @@ public class StartPage extends StackPane implements Page {
         bindAction(actionNextFlyerPage,         KeyCode.DOWN);
         bindAction(actionPrevVariant,           KeyCode.LEFT);
         bindAction(actionNextVariant,           KeyCode.RIGHT);
-        bindAction(actionEnterGamePage,         KeyCode.SPACE);
+        bindAction(actionEnterGamePage,         kcc(KeyCode.SPACE), kcc(KeyCode.ENTER), NES_Controller.DEFAULT_CONTROLLER.start());
     }
 
     @Override

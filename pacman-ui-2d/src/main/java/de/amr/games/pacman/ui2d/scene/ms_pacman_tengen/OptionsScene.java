@@ -139,11 +139,11 @@ public class OptionsScene extends GameScene2D {
         renderer.drawText(String.valueOf(tengenGame.startLevelNumber()), VALUE_COLOR, font, COL_VALUE + TS, y);
 
         y += 3 * TS;
-        drawCenteredText(renderer, "MOVE ARROW WITH CURSOR KEYS", font, y);
+        drawCenteredText(renderer, "MOVE ARROW WITH JOYPAD", font, y);
         y += TS;
-        drawCenteredText(renderer, "CHOOSE OPTIONS WITH [B] AND [A]", font, y);
+        drawCenteredText(renderer, "CHOOSE OPTIONS WITH A AND B", font, y);
         y += TS;
-        drawCenteredText(renderer, "PRESS [START] TO START GAME", font, y);
+        drawCenteredText(renderer, "PRESS START TO START GAME", font, y);
 
         y += 4;
         drawBabyBlueBar(renderer, y);
