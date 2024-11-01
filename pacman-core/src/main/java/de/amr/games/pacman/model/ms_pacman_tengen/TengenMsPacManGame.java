@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
+import static de.amr.games.pacman.model.ms_pacman_tengen.SpeedConfiguration.*;
 
 /**
  * Ms. Pac-Man (Tengen).
@@ -30,70 +31,12 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public class TengenMsPacManGame extends GameModel {
 
+    public static int MIN_LEVEL_NUMBER = 1;
+    public static int MAX_LEVEL_NUMBER = 32;
+
     // Ms. Pac-Man (Tengen) game specific animation IDs
     public static final String ANIM_PAC_MUNCHING_BOOSTER = "munching_booster";
     public static final String ANIM_PAC_HUSBAND_MUNCHING_BOOSTER = "husband_munching_booster";
-
-    private static float speedUnits(float units) {
-        return units / 32f;
-    }
-
-    /* From https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/Data/PlayerAndGhostSpeeds.asm */
-
-    private static float pacBoosterSpeedDelta() {
-        return 0.5f;
-    }
-
-    private static float pacDifficultySpeedDelta(Difficulty difficulty) {
-        return speedUnits(switch (difficulty) {
-            case EASY -> -4;
-            case NORMAL -> 0;
-            case HARD -> 12;
-            case CRAZY -> 24;
-        });
-    }
-
-    private static float ghostDifficultySpeedDelta(Difficulty difficulty) {
-        return speedUnits(switch (difficulty) {
-            case EASY -> -8;
-            case NORMAL -> 0;
-            case HARD -> 16;
-            case CRAZY -> 32;
-        });
-    }
-
-    private static float ghostIDSpeedDelta(byte ghostID) {
-        return speedUnits(switch (ghostID) {
-            case RED_GHOST -> 3;
-            case ORANGE_GHOST -> 2;
-            case CYAN_GHOST -> 1;
-            case PINK_GHOST -> 0;
-            default -> throw GameException.illegalGhostID(ghostID);
-        });
-    }
-
-    private static float pacBaseSpeedInLevel(int levelNumber) {
-        int units = 0;
-        if      (inRange(levelNumber, 1, 4))   { units = 0x20; }
-        else if (inRange(levelNumber, 5, 12))  { units = 0x24; }
-        else if (inRange(levelNumber, 13, 16)) { units = 0x28; }
-        else if (inRange(levelNumber, 17, 20)) { units = 0x27; }
-        else if (inRange(levelNumber, 21, 24)) { units = 0x26; }
-        else if (inRange(levelNumber, 25, 28)) { units = 0x25; }
-        else if (levelNumber >= 29)            { units = 0x24; }
-
-        return speedUnits(units);
-    }
-
-    // TODO: do they all have the same base speed? Unclear from disassembly data.
-    private static float ghostBaseSpeedInLevel(int levelNumber) {
-        int units = 0x20; // default: 32
-        if      (inRange(levelNumber, 1, 4))  { units = 0x18; }
-        else if (inRange(levelNumber, 5, 12)) { units = 0x20 + (levelNumber - 5); } // 0x20-0x27
-        else if (levelNumber >= 13)           { units = 0x28;}
-
-        return speedUnits(units);
-    }
 
     // Bonus symbols in Arcade, Mini and Big mazes
     public static final byte BONUS_CHERRY      = 0;
@@ -147,12 +90,13 @@ public class TengenMsPacManGame extends GameModel {
 
     public TengenMsPacManGame(GameVariant gameVariant, File userDir) {
         super(gameVariant, userDir);
+
         initialLives = 3;
         scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman_tengen.xml"));
         scoreManager.setExtraLifeScore(10_000);
 
+        //TODO: I have no idea about the timing in Tengen, use these inofficial Ms. Pac-Man Arcade values for now
         huntingControl = new HuntingControl("HuntingControl-" + getClass().getSimpleName()) {
-            //TODO: I have no idea about the timing in Tengen, use Ms. Pac-Man Arcade values for now
             private static final int[] HUNTING_TICKS_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
             private static final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
 
@@ -178,32 +122,32 @@ public class TengenMsPacManGame extends GameModel {
         return boosterMode;
     }
 
-    public boolean isBoosterActive() {
-        return boosterActive;
+    public void setMapCategory(MapCategory mapCategory) {
+        this.mapCategory = checkNotNull(mapCategory);
     }
 
     public MapCategory mapCategory() {
         return mapCategory;
     }
 
-    public void setMapCategory(MapCategory mapCategory) {
-        this.mapCategory = checkNotNull(mapCategory);
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
     }
 
     public Difficulty difficulty() {
         return difficulty;
     }
 
-    public void setDifficulty(Difficulty difficulty) {
-        this.difficulty = difficulty;
+    public void setStartLevelNumber(int number) {
+        this.startLevelNumber = (byte) number;
     }
 
     public byte startLevelNumber() {
         return startLevelNumber;
     }
 
-    public void setStartLevelNumber(int number) {
-        this.startLevelNumber = (byte) number;
+    public boolean isBoosterActive() {
+        return boosterActive;
     }
 
     // only for info panel in dashboard
@@ -240,7 +184,7 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public long pacPowerTicks() {
-        if (!inRange(currentLevelNumber, 1, 32)) {
+        if (!inRange(currentLevelNumber, MIN_LEVEL_NUMBER, MAX_LEVEL_NUMBER)) {
             return 0;
         }
         double seconds = switch (currentLevelNumber) {
@@ -286,35 +230,16 @@ public class TengenMsPacManGame extends GameModel {
         return 0;
     }
 
-    /*
-    @RussianManSMWC on Discord:
-    By the way, there's an additional quirk regarding ghosts' speed.
-    On normal difficulty ONLY and in levels 5 and above, the ghosts become slightly faster if there are few dots remain.
-    if there are 31 or less dots, the speed is increased. the base increase value is 2, which is further increased by 1 for every 8 dots eaten.
-    (i should note it's in subunits. it if was times 2, that would've been crazy)
-    */
     @Override
     public float ghostAttackSpeed(Ghost ghost) {
         if (world.isTunnel(ghost.tile())) {
             return ghostTunnelSpeed(ghost);
         }
         float speed = ghost.baseSpeed();
-        if (difficulty == Difficulty.NORMAL && currentLevelNumber >= 5) {
-            int dotsLeft = world.uneatenFoodCount();
-            byte increase = 0; // units
-            if (dotsLeft <= 7) {
-                increase = 5;
-            } else if (dotsLeft <= 15) {
-                increase = 4;
-            } else if (dotsLeft <= 23) {
-                increase = 3;
-            } else if (dotsLeft <= 31) {
-                increase = 2;
-            }
-            if (increase > 0) {
-                speed += speedUnits(increase);
-                Logger.info("Ghost speed increased by {0} units to {0.00} px/tick for {}", increase, speed, ghost.name());
-            }
+        float increase = SpeedConfiguration.ghostSpeedIncreaseByFoodRemaining(this);
+        if (increase > 0) {
+            speed += increase;
+            Logger.info("Ghost speed increased by {0} units to {0.00} px/tick for {}", increase, speed, ghost.name());
         }
         return speed;
     }
@@ -409,7 +334,7 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public void buildLevel(int levelNumber) {
-        if (!inRange(levelNumber, 1, 32)) {
+        if (!inRange(levelNumber, MIN_LEVEL_NUMBER, MAX_LEVEL_NUMBER)) {
             throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
         currentLevelNumber = levelNumber;
@@ -420,12 +345,12 @@ public class TengenMsPacManGame extends GameModel {
         currentMapColorScheme = mapConfig.colorScheme();
 
         createWorldAndPopulation(currentMap);
-
         Logger.info("World created. Map number: {}, URL: {}", currentMapNumber, currentMap.url());
 
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUsingAutopilot(false);
         deactivateBooster(); // gets activated in startLevel() if ALWAYS_ON
+
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
         // TODO: change this. For now provide a level object such that all code that relies on existing level object still works
