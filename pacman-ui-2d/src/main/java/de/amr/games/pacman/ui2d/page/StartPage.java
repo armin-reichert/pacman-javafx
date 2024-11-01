@@ -211,11 +211,6 @@ public class StartPage extends StackPane implements Page {
         switch (variant) {
             case MS_PACMAN, MS_PACMAN_TENGEN, PACMAN -> flyer(variant).ifPresent(flyer -> {
                 flyer.setPage(0);
-                setOnMouseClicked(e -> {
-                    if (e.getButton() == MouseButton.PRIMARY) {
-                        flyer.nextPage();
-                    }
-                });
             });
             case PACMAN_XXL -> {
                 Image xxlGameImage = context.assets().image("pacman_xxl.startpage.source");
@@ -223,7 +218,6 @@ public class StartPage extends StackPane implements Page {
                     BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
                     BackgroundPosition.CENTER, Ufx.FILL_PAGE);
                 layout.setBackground(xxlGameBackground);
-                setOnMouseClicked(null);
             }
         }
     }
