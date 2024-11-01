@@ -53,7 +53,7 @@ public class DashboardLayer extends BorderPane {
         infoBox.setText(title);
         infoBox.setMinLabelWidth(context.assets().get("infobox.min_label_width"));
         infoBox.setTextColor(context.assets().get("infobox.text_color"));
-        infoBox.setTextFont(context.assets().get("infobox.text_font"));
+        infoBox.setContentTextFont(context.assets().get("infobox.text_font"));
         infoBox.setLabelFont(context.assets().get("infobox.label_font"));
         infoBox.init(context);
         return new DashboardEntry(title, infoBox);

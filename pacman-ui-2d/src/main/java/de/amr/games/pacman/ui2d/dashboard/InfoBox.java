@@ -85,7 +85,7 @@ public abstract class InfoBox extends TitledPane {
         this.textColor = textColor;
     }
 
-    public void setTextFont(Font textFont) {
+    public void setContentTextFont(Font textFont) {
         this.textFont = textFont;
     }
 
