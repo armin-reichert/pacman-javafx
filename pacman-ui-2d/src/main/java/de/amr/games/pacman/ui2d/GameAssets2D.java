@@ -144,6 +144,7 @@ public class GameAssets2D extends AssetStorage {
         assets.store("tengen.helpButton.icon",                rm.loadImage("graphics/icons/help-red-64.png"));
         assets.store("tengen.icon",                           rm.loadImage("graphics/icons/mspacman.png"));
         assets.store("tengen.logo.midway",                    rm.loadImage("graphics/mspacman/midway_logo.png"));
+        assets.store("tengen.image.nes-controller",           rm.loadImage("graphics/tengen/nes-controller.jpg"));
 
         assets.store("tengen.color.game_over_message",        TengenMsPacManGameRenderer.TENGEN_CYAN_GHOST_COLOR);
         assets.store("tengen.color.ready_message",            TengenMsPacManGameRenderer.TENGEN_YELLOW);

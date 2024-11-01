@@ -62,6 +62,7 @@ public abstract class InfoBox extends TitledPane {
         setFocusTraversable(false);
         setContent(grid);
         grid.setVgap(2);
+        grid.setHgap(3);
     }
 
     public void init(GameContext context) {

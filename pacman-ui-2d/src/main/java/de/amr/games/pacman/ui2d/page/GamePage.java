@@ -144,7 +144,7 @@ public class GamePage extends StackPane implements Page {
         dashboardLayer = new DashboardLayer(context);
         InfoBox readMeBox = new InfoBoxReadmeFirst();
         readMeBox.setExpanded(true);
-        dashboardLayer.addDashboardItem("", readMeBox);
+        dashboardLayer.addDashboardItem("Welcome to the Pleasuredome!", readMeBox);
         dashboardLayer.addDashboardItem(context.locText("infobox.general.title"), new InfoBoxGeneral());
         dashboardLayer.addDashboardItem(context.locText("infobox.game_control.title"), new InfoBoxGameControl());
         dashboardLayer.addDashboardItem(context.locText("infobox.game_info.title"), new InfoBoxGameInfo());
