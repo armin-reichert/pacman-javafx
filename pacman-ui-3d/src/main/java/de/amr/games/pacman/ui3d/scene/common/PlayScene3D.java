@@ -390,17 +390,29 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     @Override
     public void onBonusActivated(GameEvent event) {
         context.game().bonus().ifPresent(bonus -> level3D.replaceBonus3D(bonus, context.currentGameSceneConfig().spriteSheet()));
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            //TODO also in Ms. Pac-Man!
+            context.sound().playBonusBouncingSound();
+        }
     }
 
     @Override
     public void onBonusEaten(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            //TODO also in Ms. Pac-Man!
+            context.sound().stopBonusBouncingSound();
+        }
         context.sound().playBonusEatenSound();
     }
 
     @Override
     public void onBonusExpired(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::onBonusExpired);
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            //TODO also in Ms. Pac-Man!
+            context.sound().stopBonusBouncingSound();
+        }
     }
 
     @Override

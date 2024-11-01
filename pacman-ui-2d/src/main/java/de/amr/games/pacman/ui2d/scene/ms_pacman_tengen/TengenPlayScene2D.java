@@ -340,8 +340,19 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     }
 
     @Override
+    public void onBonusActivated(GameEvent e) {
+        context.sound().playBonusBouncingSound();
+    }
+
+    @Override
     public void onBonusEaten(GameEvent e) {
+        context.sound().stopBonusBouncingSound();
         context.sound().playBonusEatenSound();
+    }
+
+    @Override
+    public void onBonusExpired(GameEvent e) {
+        context.sound().stopBonusBouncingSound();
     }
 
     @Override

@@ -52,6 +52,7 @@ public class GameSound {
         this.gameVariant = checkNotNull(gameVariant);
         if (playerMapByGameVariant.get(gameVariant) == null) {
             Map<String, MediaPlayer> players = new HashMap<>();
+
             players.put("game_over", createPlayer(gameVariant, assets, "game_over", 0.5, false));
             players.put("game_ready", createPlayer(gameVariant, assets, "game_ready", 0.5, false));
             players.put("ghost_returns", createPlayer(gameVariant, assets, "ghost_returns", 0.5, true));
@@ -59,6 +60,11 @@ public class GameSound {
             players.put("pacman_munch", createPlayer(gameVariant, assets, "pacman_munch", 0.5, true));
             players.put("pacman_death", createPlayer(gameVariant, assets, "pacman_death", 0.5, false));
             players.put("pacman_power", createPlayer(gameVariant, assets, "pacman_power", 0.5, true));
+            MediaPlayer bouncePlayer = createPlayer(gameVariant, assets, "bonus_bouncing", 1, true);
+            if (bouncePlayer != null) {
+                bouncePlayer.setRate(0.25);
+            }
+            players.put("bonus_bouncing", bouncePlayer);
             playerMapByGameVariant.put(gameVariant, players);
             Logger.info("Created media players for game variant {}", gameVariant);
         }
@@ -98,11 +104,8 @@ public class GameSound {
         String assetKey = assetPrefix(variant) + ".audio." + keySuffix;
         URL url = assets.get(assetKey);
         if (url == null) {
-            if (variant == GameVariant.MS_PACMAN_TENGEN) {
-                return null; // TODO we ignore this for now, change later
-            }
-            throw new MissingResourceException("Could not load audio resource",
-                getClass().getName(), assetKey);
+            Logger.warn("Missing audio resource '%s' (%s)".formatted(assetKey, variant));
+            return null;
         }
         var player = new MediaPlayer(new Media(url.toExternalForm()));
         player.setCycleCount(loop ? MediaPlayer.INDEFINITE : 1);
@@ -227,6 +230,10 @@ public class GameSound {
             siren.player().stop();
         }
     }
+
+    public void playBonusBouncingSound() { playIfEnabled("bonus_bouncing"); }
+
+    public void stopBonusBouncingSound() { stop("bonus_bouncing"); }
 
     public void playBonusEatenSound() {
         playClipIfEnabled("bonus_eaten", 1);
