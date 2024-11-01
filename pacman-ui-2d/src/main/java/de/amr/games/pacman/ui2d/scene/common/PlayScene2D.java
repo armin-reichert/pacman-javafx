@@ -55,7 +55,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        context.sounds().stopAll();
+        context.sound().stopAll();
     }
 
     @Override
@@ -81,17 +81,17 @@ public class PlayScene2D extends GameScene2D {
     private void updatePlaySceneSound() {
         if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
             int sirenNumber = 1 + context.game().huntingControl().phaseIndex() / 2;
-            context.sounds().selectSiren(sirenNumber);
-            context.sounds().playSiren();
+            context.sound().selectSiren(sirenNumber);
+            context.sound().playSiren();
         }
         if (context.game().pac().starvingTicks() > 8) { // TODO not sure how to do this right
-            context.sounds().stopMunchingSound();
+            context.sound().stopMunchingSound();
         }
         boolean ghostsReturning = context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
         if (context.game().pac().isAlive() && ghostsReturning) {
-            context.sounds().playGhostReturningHomeSound();
+            context.sound().playGhostReturningHomeSound();
         } else {
-            context.sounds().stopGhostReturningHomeSound();
+            context.sound().stopGhostReturningHomeSound();
         }
     }
 
@@ -201,23 +201,23 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onEnterGameState(GameState state) {
         if (state == GameState.GAME_OVER) {
-            context.sounds().playGameOverSound();
+            context.sound().playGameOverSound();
         }
     }
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        context.sounds().playBonusEatenSound();
+        context.sound().playBonusEatenSound();
     }
 
     @Override
     public void onExtraLifeWon(GameEvent e) {
-        context.sounds().playExtraLifeSound();
+        context.sound().playExtraLifeSound();
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        context.sounds().playGhostEatenSound();
+        context.sound().playGhostEatenSound();
     }
 
     @Override
@@ -227,22 +227,22 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacDied(GameEvent e) {
-        context.sounds().playPacDeathSound();
+        context.sound().playPacDeathSound();
     }
 
     @Override
     public void onPacFoundFood(GameEvent e) {
-        context.sounds().playMunchingSound();
+        context.sound().playMunchingSound();
     }
 
     @Override
     public void onPacGetsPower(GameEvent e) {
-        context.sounds().stopSiren();
-        context.sounds().playPacPowerSound();
+        context.sound().stopSiren();
+        context.sound().playPacPowerSound();
     }
 
     @Override
     public void onPacLostPower(GameEvent e) {
-        context.sounds().stopPacPowerSound();
+        context.sound().stopPacPowerSound();
     }
 }

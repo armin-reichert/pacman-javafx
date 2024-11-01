@@ -21,7 +21,6 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
-import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui3d.GameActions3D;
 import de.amr.games.pacman.ui3d.level.*;
 import javafx.animation.Animation;
@@ -46,7 +45,6 @@ import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.util.KeyInput.*;
-import static de.amr.games.pacman.ui2d.util.KeyInput.control;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 
@@ -87,8 +85,6 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     private final Scores3D scores3D;
 
     private GameLevel3D level3D;
-    private Picker<String> pickerGameOver;
-    private Picker<String> pickerLevelComplete;
 
     public PlayScene3D() {
         var ambientLight = new AmbientLight();
@@ -146,8 +142,6 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         context.setScoreVisible(true);
         scores3D.fontPy.set(context.assets().font("font.arcade", 8));
         perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
-        pickerGameOver = Picker.fromBundle(context.assets().bundles().getLast(), "game.over");
-        pickerLevelComplete = Picker.fromBundle(context.assets().bundles().getLast(), "level.complete");
         Logger.info("3D play scene initialized. {}", this);
     }
 
@@ -202,17 +196,17 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         // Sound
         if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
             int sirenNumber = 1 + context.game().huntingControl().phaseIndex() / 2;
-            context.sounds().selectSiren(sirenNumber);
-            context.sounds().playSiren();
+            context.sound().selectSiren(sirenNumber);
+            context.sound().playSiren();
         }
         if (context.game().pac().starvingTicks() > 8) { // TODO not sure how to do this right
-            context.sounds().stopMunchingSound();
+            context.sound().stopMunchingSound();
         }
         boolean ghostsReturning = context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
         if (context.game().pac().isAlive() && ghostsReturning) {
-            context.sounds().playGhostReturningHomeSound();
+            context.sound().playGhostReturningHomeSound();
         } else {
-            context.sounds().stopGhostReturningHomeSound();
+            context.sound().stopGhostReturningHomeSound();
         }
     }
 
@@ -297,7 +291,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     private void onEnterStatePacManDying() {
-        context.sounds().stopAll();
+        context.sound().stopAll();
         // last update before dying animation
         level3D.pac3D().update(context);
         playPacManDiesAnimation();
@@ -314,7 +308,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     private void onEnterStateLevelComplete() {
-        context.sounds().stopAll();
+        context.sound().stopAll();
         // if cheat has been used to complete level, food might still exist, so eat it:
         GameWorld world = context.game().world();
         world.map().food().tiles().forEach(world::registerFoodEatenAt);
@@ -352,9 +346,9 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         stopLevelAnimations();
         // delay state exit for 3 seconds
         context.gameState().timer().restartSeconds(3);
-        context.showFlashMessageSeconds(3, pickerGameOver.next());
-        context.sounds().stopAll();
-        context.sounds().playGameOverSound();
+        context.showFlashMessageSeconds(3, context.locGameOverMessage());
+        context.sound().stopAll();
+        context.sound().playGameOverSound();
     }
 
     private void stopLevelAnimations() {
@@ -385,7 +379,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
         if (context.gameState() == GameState.HUNTING) {
             if (context.game().powerTimer().isRunning()) {
-                context.sounds().playPacPowerSound();
+                context.sound().playPacPowerSound();
             }
             level3D.livesCounter3D().shapesRotation().play();
         }
@@ -401,7 +395,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     @Override
     public void onBonusEaten(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
-        context.sounds().playBonusEatenSound();
+        context.sound().playBonusEatenSound();
     }
 
     @Override
@@ -411,12 +405,12 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     @Override
     public void onExtraLifeWon(GameEvent e) {
-        context.sounds().playExtraLifeSound();
+        context.sound().playExtraLifeSound();
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        context.sounds().playGhostEatenSound();
+        context.sound().playGhostEatenSound();
     }
 
     @Override
@@ -469,20 +463,20 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             level3D.energizer3D(tile).ifPresent(Energizer3D::onEaten);
             level3D.pellet3D(tile).ifPresent(Pellet3D::onEaten);
         }
-        context.sounds().playMunchingSound();
+        context.sound().playMunchingSound();
     }
 
     @Override
     public void onPacGetsPower(GameEvent event) {
         level3D.pac3D().setPowerMode(true);
-        context.sounds().stopSiren();
-        context.sounds().playPacPowerSound();
+        context.sound().stopSiren();
+        context.sound().playPacPowerSound();
     }
 
     @Override
     public void onPacLostPower(GameEvent event) {
         level3D.pac3D().setPowerMode(false);
-        context.sounds().stopPacPowerSound();
+        context.sound().stopPacPowerSound();
     }
 
     private void addLevelCounter() {
@@ -551,25 +545,23 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         );
     }
 
-    //TODO is there are better way to do this e.g. using a Timeline?
     private Animation levelCompleteAnimation(int numFlashes) {
-        String message = pickerLevelComplete.next() + "\n\n" + context.locText("level_complete", context.game().currentLevelNumber());
         return new SequentialTransition(
               now(() -> {
                   perspectiveNamePy.unbind();
                   perspectiveNamePy.set(Perspective.Name.TOTAL);
                   level3D.livesCounter3D().light().setLightOn(false);
-                  context.showFlashMessageSeconds(3, message);
+                  context.showFlashMessageSeconds(3, context.locLevelCompleteMessage());
               })
             , doAfterSec(2, level3D.mazeFlashAnimation(numFlashes))
             , doAfterSec(1, () -> {
                 context.game().pac().hide();
-                context.sounds().playLevelCompleteSound();
+                context.sound().playLevelCompleteSound();
             })
             , doAfterSec(0.5, level3D.levelRotateAnimation(1.5))
             , level3D.wallsDisappearAnimation(2.0)
             , doAfterSec(1, () -> {
-                context.sounds().playLevelChangedSound();
+                context.sound().playLevelChangedSound();
                 perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
             })
         );

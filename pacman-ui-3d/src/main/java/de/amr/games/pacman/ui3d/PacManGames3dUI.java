@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
+import de.amr.games.pacman.ui2d.util.Picker;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
@@ -29,7 +30,9 @@ public class PacManGames3dUI extends PacManGames2dUI {
     public void loadAssets() {
         GameAssets2D.addTo(assets);
         GameAssets3D.addTo(assets);
-        sounds().setAssets(assets);
+        pickerGameOver = Picker.fromBundle(assets.bundles().getLast(), "game.over");
+        pickerLevelComplete = Picker.fromBundle(assets.bundles().getLast(), "level.complete");
+        sound().setAssets(assets);
     }
 
     @Override

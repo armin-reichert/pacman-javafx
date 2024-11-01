@@ -22,7 +22,7 @@ import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.sound.GameSounds;
+import de.amr.games.pacman.ui2d.sound.GameSound;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Pos;
@@ -133,7 +133,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     protected void doEnd() {
-        context.sounds().stopAll();
+        context.sound().stopAll();
     }
 
     @Override
@@ -321,9 +321,9 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     public void onEnterGameState(GameState state) {
         switch (state) {
             //TOD check this. GameState can publish an event to stop all sounds.
-            case STARTING_GAME, LEVEL_COMPLETE, PACMAN_DYING -> context.sounds().stopAll();
+            case STARTING_GAME, LEVEL_COMPLETE, PACMAN_DYING -> context.sound().stopAll();
             case GAME_OVER -> {
-                context.sounds().stopAll();
+                context.sound().stopAll();
                 GameWorld world = context.game().world();
                 double houseCenterX = TS * (world.houseTopLeftTile().x() + 0.5 * world.houseSize().x());
                 gameOverMessageAnimation.start(houseCenterX, size().x(), MESSAGE_SPEED);
@@ -337,17 +337,17 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        context.sounds().playBonusEatenSound();
+        context.sound().playBonusEatenSound();
     }
 
     @Override
     public void onExtraLifeWon(GameEvent e) {
-        context.sounds().playExtraLifeSound();
+        context.sound().playExtraLifeSound();
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        context.sounds().playGhostEatenSound();
+        context.sound().playGhostEatenSound();
     }
 
     @Override
@@ -358,27 +358,27 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void onPacDied(GameEvent e) {
-        context.sounds().playPacDeathSound();
+        context.sound().playPacDeathSound();
     }
 
     @Override
     public void onPacFoundFood(GameEvent e) {
-        context.sounds().playMunchingSound();
+        context.sound().playMunchingSound();
     }
 
     @Override
     public void onPacGetsPower(GameEvent e) {
-        context.sounds().stopSiren();
-        context.sounds().playPacPowerSound();
+        context.sound().stopSiren();
+        context.sound().playPacPowerSound();
     }
 
     @Override
     public void onPacLostPower(GameEvent e) {
-        context.sounds().stopPacPowerSound();
+        context.sound().stopPacPowerSound();
     }
 
     private void updatePlaySceneSound() {
-        GameSounds sounds = context.sounds();
+        GameSound sounds = context.sound();
         if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
             HuntingControl huntingControl = context.game().huntingControl();
             int sirenNumber = 1 + huntingControl.phaseIndex() / 2; // TODO check how this works in original game

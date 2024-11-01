@@ -20,11 +20,8 @@ import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
-import de.amr.games.pacman.ui2d.sound.GameSounds;
-import de.amr.games.pacman.ui2d.util.AssetStorage;
-import de.amr.games.pacman.ui2d.util.FlashMessageView;
-import de.amr.games.pacman.ui2d.util.GameClockFX;
-import de.amr.games.pacman.ui2d.util.Keyboard;
+import de.amr.games.pacman.ui2d.sound.GameSound;
+import de.amr.games.pacman.ui2d.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -72,7 +69,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN_TENGEN
     );
 
-    private static final GameSounds SOUNDS = new GameSounds();
+    private static final GameSound THE_SOUND = new GameSound();
 
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
@@ -95,6 +92,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected Page currentPage;
     protected boolean scoreVisible;
     protected boolean signatureShown; //TODO make this work again for all intro screens
+    protected Picker<String> pickerGameOver;
+    protected Picker<String> pickerLevelComplete;
 
     public PacManGames2dUI() {
         assets = new AssetStorage();
@@ -106,7 +105,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     public void loadAssets() {
         GameAssets2D.addTo(assets);
-        sounds().setAssets(assets);
+        sound().setAssets(assets);
+        pickerGameOver = Picker.fromBundle(assets.bundles().getFirst(), "game.over");
+        pickerLevelComplete = Picker.fromBundle(assets.bundles().getFirst(), "level.complete");
     }
 
     public void setGameSceneConfig(GameVariant variant, GameSceneConfig gameSceneConfig) {
@@ -213,7 +214,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected Scene createMainScene(Dimension2D size) {
         Scene mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
 
-        var mutedIcon = createIcon(assets.get("icon.mute"), 48, sounds().mutedProperty());
+        var mutedIcon = createIcon(assets.get("icon.mute"), 48, sound().mutedProperty());
         StackPane.setAlignment(mutedIcon, Pos.BOTTOM_RIGHT);
         var pauseIcon = createIcon(assets.get("icon.pause"), 64, clock.pausedPy);
         StackPane.setAlignment(pauseIcon, Pos.CENTER);
@@ -226,7 +227,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             if (e.getCode() == KeyCode.F11) {
                 stage.setFullScreen(true);
             } else if (e.getCode() == KeyCode.M && e.isAltDown()) {
-                sounds().toggleMuted();
+                sound().toggleMuted();
             } else {
                 currentPage.handleInput(this);
             }
@@ -258,7 +259,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         if (icon != null) {
             stage.getIcons().setAll(icon);
         }
-        sounds().init(variant);
+        sound().init(variant);
         gamePage.gameCanvasContainer().decorationEnabledPy.set(gameVariant() != GameVariant.MS_PACMAN_TENGEN);
     }
 
@@ -328,8 +329,19 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public GameSounds sounds() {
-        return SOUNDS;
+    public String locGameOverMessage() {
+        return pickerGameOver.next();
+    }
+
+    @Override
+    public String locLevelCompleteMessage() {
+        return pickerLevelComplete.next() + "\n\n"
+            + locText("level_complete", game().currentLevelNumber());
+    }
+
+    @Override
+    public GameSound sound() {
+        return THE_SOUND;
     }
 
     @Override
@@ -459,7 +471,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         selectPage(gamePage);
         clock.start();
         if (gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
-            sounds().playVoice("voice.explain", 0);
+            sound().playVoice("voice.explain", 0);
         }
     }
 
@@ -507,12 +519,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     public void onLevelCreated(GameEvent event) {
         currentGameSceneConfig().createActorAnimations(game());
         Logger.info("Actor animations created. ({} level #{})", gameVariant(), game().currentLevelNumber());
-        if (game().isDemoLevel()) {
-            sounds().setEnabled(false);
-        } else {
-            sounds().setEnabled(true);
-        }
-        // size of world might have changed
+        sound().setEnabled(!game().isDemoLevel());
+        Logger.info("Sounds {}", sound().isEnabled() ? "enabled" : "disabled");
+        // size of game scene have changed, so re-embed
         currentGameScene().ifPresent(gamePage::embedGameScene);
     }
 
@@ -523,12 +532,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         if (gameState() != TESTING_LEVEL_BONI && gameState() != TESTING_LEVEL_TEASERS
                 && !game().isDemoLevel()
                 && game().currentLevelNumber() == 1) {
-            sounds().playGameReadySound();
+            sound().playGameReadySound();
         }
     }
 
     @Override
     public void onStopAllSounds(GameEvent event) {
-        sounds().stopAll();
+        sound().stopAll();
     }
 }

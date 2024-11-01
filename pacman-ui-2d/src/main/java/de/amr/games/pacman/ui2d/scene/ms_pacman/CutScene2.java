@@ -89,7 +89,7 @@ public class CutScene2 extends GameScene2D {
         int number  = context.gameState() == GameState.TESTING_CUT_SCENES
             ? GameState.TESTING_CUT_SCENES.getProperty("intermissionTestNumber")
             : context.game().intermissionNumberAfterLevel();
-        context.sounds().playIntermissionSound(number);
+        context.sound().playIntermissionSound(number);
     }
 
     private class SceneController {

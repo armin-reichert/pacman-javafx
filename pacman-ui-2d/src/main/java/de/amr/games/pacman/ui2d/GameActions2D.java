@@ -44,8 +44,8 @@ public enum GameActions2D implements GameAction {
             if (!context.game().isPlaying()) {
                 boolean coinInserted = context.gameController().coinControl().insertCoin();
                 if (coinInserted) {
-                    context.sounds().enabledProperty().set(true); // in demo mode, sound is disabled
-                    context.sounds().playCreditSound();
+                    context.sound().enabledProperty().set(true); // in demo mode, sound is disabled
+                    context.sound().playCreditSound();
                     context.game().publishGameEvent(GameEventType.CREDIT_ADDED);
                 }
                 if (context.gameState() != GameState.WAITING_FOR_START) {
@@ -58,7 +58,7 @@ public enum GameActions2D implements GameAction {
     BOOT { // (key(KeyCode.F3)) {
         @Override
         public void execute(GameContext context) {
-            context.sounds().stopAll();
+            context.sound().stopAll();
             context.game().removeWorld();
             context.gameClock().setTargetFrameRate(GameModel.TICKS_PER_SECOND);
             context.gameController().restart(GameState.BOOT);
@@ -80,7 +80,7 @@ public enum GameActions2D implements GameAction {
                 GameWorld world = context.game().world();
                 world.map().food().tiles().filter(not(world::isEnergizerPosition)).forEach(world::registerFoodEatenAt);
                 context.game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
-                context.sounds().stopMunchingSound();
+                context.sound().stopMunchingSound();
             }
         }
     },
@@ -153,7 +153,7 @@ public enum GameActions2D implements GameAction {
                 return;
             }
             context.currentGameScene().ifPresent(GameScene::end);
-            context.sounds().stopAll();
+            context.sound().stopAll();
             context.gameClock().stop();
             EditorPage editorPage = context.getOrCreateEditorPage();
             editorPage.startEditor(context.game().world().map());
@@ -169,7 +169,7 @@ public enum GameActions2D implements GameAction {
     SHOW_START_PAGE { // (key(KeyCode.Q)) {
         @Override
         public void execute(GameContext context) {
-            context.sounds().stopAll();
+            context.sound().stopAll();
             context.currentGameScene().ifPresent(GameScene::end);
             context.game().onGameEnded();
             context.selectStartPage();
@@ -179,7 +179,7 @@ public enum GameActions2D implements GameAction {
     RESTART_INTRO { // (key(KeyCode.Q)) {
         @Override
         public void execute(GameContext context) {
-            context.sounds().stopAll();
+            context.sound().stopAll();
             context.currentGameScene().ifPresent(GameScene::end);
             if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
                 context.gameState().onExit(context.game()); //TODO exit other states too?
@@ -195,7 +195,7 @@ public enum GameActions2D implements GameAction {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 context.gameController().changeState(GameState.WAITING_FOR_START);
             } else if (context.game().canStartNewGame()) {
-                context.sounds().stopVoice();
+                context.sound().stopVoice();
                 if (context.gameState() == GameState.INTRO || context.gameState() == GameState.WAITING_FOR_START) {
                     context.gameController().changeState(GameState.STARTING_GAME);
                 } else {
@@ -256,7 +256,7 @@ public enum GameActions2D implements GameAction {
         public void execute(GameContext context) {
             toggle(context.gameClock().pausedPy);
             if (context.gameClock().isPaused()) {
-                context.sounds().stopAll();
+                context.sound().stopAll();
             }
             Logger.info("Game ({}) {}", context.gameVariant(), context.gameClock().isPaused() ? "paused" : "resumed");
         }

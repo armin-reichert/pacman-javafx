@@ -25,7 +25,7 @@ import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 /**
  * @author Armin Reichert
  */
-public class GameSounds {
+public class GameSound {
 
     private final BooleanProperty enabledPy = new SimpleBooleanProperty(true) {
         @Override

@@ -92,7 +92,7 @@ public class GamePage extends StackPane implements Page {
         toggle(PY_AUTOPILOT);
         boolean auto = PY_AUTOPILOT.get();
         context.showFlashMessage(context.locText(auto ? "autopilot_on" : "autopilot_off"));
-        context.sounds().playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
+        context.sound().playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
     };
 
     private final GameAction actionToggleDashboard = context -> context.gamePage().toggleDashboard();
@@ -100,7 +100,7 @@ public class GamePage extends StackPane implements Page {
     private final GameAction actionToggleImmunity = context -> {
         toggle(PY_IMMUNITY);
         context.showFlashMessage(context.locText(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
-        context.sounds().playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
+        context.sound().playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
     };
 
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
@@ -243,7 +243,7 @@ public class GamePage extends StackPane implements Page {
         contextMenu.getItems().add(new SeparatorMenuItem());
 
         var miMuted = new CheckMenuItem(context.locText("muted"));
-        miMuted.selectedProperty().bindBidirectional(context.sounds().mutedProperty());
+        miMuted.selectedProperty().bindBidirectional(context.sound().mutedProperty());
         contextMenu.getItems().add(miMuted);
 
         if (context.gameVariant() == GameVariant.PACMAN_XXL || context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {

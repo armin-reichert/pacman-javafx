@@ -15,7 +15,7 @@ import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
-import de.amr.games.pacman.ui2d.sound.GameSounds;
+import de.amr.games.pacman.ui2d.sound.GameSound;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
 import de.amr.games.pacman.ui2d.util.Keyboard;
@@ -68,6 +68,8 @@ public interface GameContext {
 
     // Resources
     AssetStorage                assets();
-    GameSounds                  sounds();
+    GameSound sound();
     String                      locText(String keyOrPattern, Object... args);
+    String                      locGameOverMessage();
+    String                      locLevelCompleteMessage();
 }

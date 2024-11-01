@@ -175,12 +175,12 @@ public class OptionsScene extends GameScene2D {
 
     //TODO use right sound
     private void playOptionSelectionChangedSound() {
-        context.sounds().playClipIfEnabled("option.selection_changed", 1);
+        context.sound().playClipIfEnabled("option.selection_changed", 1);
     }
 
     //TODO use right sound
     private void playOptionValueChangedSound() {
-        context.sounds().playClipIfEnabled("option.value_changed", 1);
+        context.sound().playClipIfEnabled("option.value_changed", 1);
     }
 
     @Override
@@ -221,7 +221,7 @@ public class OptionsScene extends GameScene2D {
 
         //TODO make into game action?
         else if (context.keyboard().pressed(KeyCode.ENTER)) { // start playing
-            context.sounds().stopAll();
+            context.sound().stopAll();
             context.gameController().changeState(GameState.STARTING_GAME);
         }
 

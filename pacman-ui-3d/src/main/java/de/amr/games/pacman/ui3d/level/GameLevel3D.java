@@ -16,7 +16,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.sound.GameSounds;
+import de.amr.games.pacman.ui2d.sound.GameSound;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.GameAssets3D;
@@ -69,7 +69,7 @@ public class GameLevel3D {
 
     static final PhongMaterial DEFAULT_MATERIAL = new PhongMaterial();
 
-    static Pac3D createPac3D(GameVariant variant, AssetStorage assets, GameSounds sounds, Pac pac) {
+    static Pac3D createPac3D(GameVariant variant, AssetStorage assets, GameSound sounds, Pac pac) {
         String prefix = assetPrefix(variant) + ".";
         Pac3D pac3D = switch (variant) {
             case MS_PACMAN, MS_PACMAN_TENGEN -> new MsPacMan3D(variant, pac, PAC_SIZE, assets, sounds);
@@ -199,7 +199,7 @@ public class GameLevel3D {
         final GameWorld world = game.world();
         final AssetStorage assets = context.assets();
 
-        pac3D = createPac3D(variant, assets, context.sounds(), game.pac());
+        pac3D = createPac3D(variant, assets, context.sound(), game.pac());
         ghosts3D = game.ghosts().map(ghost -> createMutableGhost3D(assets, assetPrefix(variant), ghost, game.numFlashes())).toList();
         livesCounter3D = createLivesCounter3D(variant, assets, game.canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCounterPy);

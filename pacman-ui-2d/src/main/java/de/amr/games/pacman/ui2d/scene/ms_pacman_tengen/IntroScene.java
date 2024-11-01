@@ -90,7 +90,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        context.sounds().stopVoice(); // TODO check if needed
+        context.sound().stopVoice(); // TODO check if needed
     }
 
     @Override

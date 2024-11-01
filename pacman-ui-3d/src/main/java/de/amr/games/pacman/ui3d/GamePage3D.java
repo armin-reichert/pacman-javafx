@@ -107,7 +107,7 @@ public class GamePage3D extends GamePage {
         contextMenu.getItems().add(new SeparatorMenuItem());
 
         var miMuted = new CheckMenuItem(context.locText("muted"));
-        miMuted.selectedProperty().bindBidirectional(context.sounds().mutedProperty());
+        miMuted.selectedProperty().bindBidirectional(context.sound().mutedProperty());
         contextMenu.getItems().add(miMuted);
 
         GameAction action = GameActions2D.OPEN_EDITOR;
