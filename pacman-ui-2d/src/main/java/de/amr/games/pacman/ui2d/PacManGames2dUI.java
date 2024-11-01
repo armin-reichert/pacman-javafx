@@ -111,7 +111,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected boolean signatureShown; //TODO make this work again for all intro screens
     protected Picker<String> pickerGameOver;
     protected Picker<String> pickerLevelComplete;
-    protected Joypad currentNESController = JOYPAD_CURSOR_KEYS;
+    protected Joypad joypad = JOYPAD_CURSOR_KEYS;
 
     public PacManGames2dUI() {
         assets = new AssetStorage();
@@ -323,19 +323,29 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     public Joypad joypad() {
-        return currentNESController;
+        return joypad;
+    }
+
+    @Override
+    public void nextJoypad() {
+        // TODO should work for any number
+        if (joypad == JOYPAD_WASD) {
+            joypad = JOYPAD_CURSOR_KEYS;
+        } else {
+            joypad = JOYPAD_WASD;
+        }
     }
 
     @Override
     public void enableJoypad() {
         Logger.info("Plug-in NES controller");
-        currentNESController.allKeys().forEach(keyboard()::register);
+        joypad.allKeys().forEach(keyboard()::register);
     }
 
     @Override
     public void disableJoypad() {
         Logger.info("Plug-out NES controller");
-        currentNESController.allKeys().forEach(keyboard()::unregister);
+        joypad.allKeys().forEach(keyboard()::unregister);
     }
 
     @Override

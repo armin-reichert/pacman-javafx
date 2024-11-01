@@ -60,6 +60,7 @@ public class OptionsScene extends GameScene2D {
         bindAction(GameActions2D.TEST_CUT_SCENES,     alt(KeyCode.C));
         bindAction(GameActions2D.TEST_LEVELS_BONI,    alt(KeyCode.T));
         bindAction(GameActions2D.TEST_LEVELS_TEASERS, shift_alt(KeyCode.T));
+        bindAction(GameActions2D.TENGEN_SELECT_NEXT_JOYPAD, alt(KeyCode.J));
     }
 
     @Override

@@ -48,6 +48,7 @@ public interface GameContext {
     Joypad                      joypad();
     void                        enableJoypad();
     void                        disableJoypad();
+    void                        nextJoypad();
 
     // GUI
     void                        selectPage(Page page);

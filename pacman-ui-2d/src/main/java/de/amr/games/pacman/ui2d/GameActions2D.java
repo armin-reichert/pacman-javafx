@@ -205,7 +205,15 @@ public enum GameActions2D implements GameAction {
         }
     },
 
-    TENGEN_TOGGLE_PAC_BOOSTER { // (key(KeyCode.A)) {
+    TENGEN_SELECT_NEXT_JOYPAD {
+        @Override
+        public void execute(GameContext context) {
+            context.nextJoypad();
+            Logger.info("Current joypad: {} ", context.joypad());
+        }
+    },
+
+    TENGEN_TOGGLE_PAC_BOOSTER {
         @Override
         public void execute(GameContext context) {
             TengenMsPacManGame tengenGame = (TengenMsPacManGame) context.game();

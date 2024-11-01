@@ -153,7 +153,7 @@ public class GamePage extends StackPane implements Page {
         dashboardLayer.addDashboardItem(context.locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
         dashboardLayer.addDashboardItem(
             /*context.locText("infobox.keyboard_shortcuts_tengen.title"*/
-            "NES Controller Keys", new InfoBox_NES_Controller());
+            "Joypad Settings", new InfoBoxJoypad());
         dashboardLayer.addDashboardItem(context.locText("infobox.about.title"), new InfoBoxAbout());
 
         popupLayer = new PopupLayer(context, gameCanvasContainer);
