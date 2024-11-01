@@ -18,6 +18,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameActions2D;
+import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
@@ -38,6 +39,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import org.tinylog.Logger;
 
 import java.util.stream.Stream;
@@ -68,6 +70,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     private final Canvas canvas = new Canvas(NES_RESOLUTION_X, NES_RESOLUTION_Y);
     private int camDelay;
     private final GameOverMessageAnimation gameOverMessageAnimation = new GameOverMessageAnimation();
+    private boolean joypadBindingsVisible;
 
     private static class GameOverMessageAnimation {
         private double startX;
@@ -143,6 +146,8 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void update() {
+        joypadBindingsVisible = context.keyboard().pressed(KeyCode.B);
+
         TengenMsPacManGame game = (TengenMsPacManGame) context.game();
         if (game.currentLevelNumber() == 0) {
             Logger.warn("Cannot update PlayScene2D: no game level available");
@@ -234,6 +239,15 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             drawDebugInfo(renderer);
         }
     }
+
+    private String joypadBindingsText() {
+        Joypad joypad = context.joypad();
+        String line1 = "START = %s     SELECT = %s".formatted(joypad.start(), joypad.select());
+        String line2 = "BUTTON B = %s     BUTTON A = %s".formatted(joypad.b(), joypad.a());
+        String line3 = "UP = %s DOWN = %s LEFT = %s RIGHT = %s".formatted(joypad.up(), joypad.down(), joypad.left(), joypad.right());
+        return line1 + "\n" + line2 + "\n" + line3;
+    }
+
 
     @Override
     protected void drawSceneContent(GameRenderer renderer) {
