@@ -126,7 +126,7 @@ public class PacManArcadeGame extends GameModel {
         initialLives = 3;
 
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman.xml"));
-        scoreManager.setExtraLifeScore(10_000);
+        scoreManager.setExtraLifeScores(10_000);
 
         worldMap = new WorldMap(getClass().getResource("/de/amr/games/pacman/maps/pacman.world"));
         // just to be sure this property is set

@@ -93,7 +93,6 @@ public class TengenMsPacManGame extends GameModel {
 
         initialLives = 3;
         scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman_tengen.xml"));
-        scoreManager.setExtraLifeScore(10_000);
 
         //TODO: I have no idea about the timing in Tengen, use these inofficial Ms. Pac-Man Arcade values for now
         huntingControl = new HuntingControl("HuntingControl-" + getClass().getSimpleName()) {
@@ -124,6 +123,11 @@ public class TengenMsPacManGame extends GameModel {
 
     public void setMapCategory(MapCategory mapCategory) {
         this.mapCategory = checkNotNull(mapCategory);
+        if (mapCategory == MapCategory.ARCADE) {
+            scoreManager.setExtraLifeScores(10_000);
+        } else {
+            scoreManager.setExtraLifeScores(10_000, 50_000, 100_000, 300_000);
+        }
     }
 
     public MapCategory mapCategory() {

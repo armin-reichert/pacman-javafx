@@ -9,16 +9,17 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.util.Set;
 
 public class ScoreManager {
 
     private final GameModel game;
     private final Score score = new Score();
     private final Score highScore = new Score();
-    private File highScoreFile;
-    private int extraLifeScore;
+    private Set<Integer> extraLifeScores;
     private boolean scoreEnabled;
     private boolean highScoreEnabled;
+    private File highScoreFile;
 
     public ScoreManager(GameModel game) {
         this.game = game;
@@ -56,8 +57,8 @@ public class ScoreManager {
         score.setLevelNumber(levelNumber);
     }
 
-    public void setExtraLifeScore(int extraLifeScore) {
-        this.extraLifeScore = extraLifeScore;
+    public void setExtraLifeScores(Integer... scores) {
+        extraLifeScores = Set.of(scores);
     }
 
     public void scorePoints(int points) {
@@ -66,18 +67,18 @@ public class ScoreManager {
         if (scoreEnabled) {
             score.setPoints(newScore);
         }
-        // high score and extra life are not enabled in demo level
+        // TODO is highScoreEnabled right for extra lives too?
         if (highScoreEnabled) {
-            // New high score?
             if (newScore > highScore.points()) {
                 highScore.setPoints(newScore);
                 highScore.setLevelNumber(score.levelNumber());
                 highScore.setDate(LocalDate.now());
             }
-            // Extra life?
-            if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
-                game.addLives(1);
-                game.publishGameEvent(GameEventType.EXTRA_LIFE_WON);
+            for (Integer extraLifeScore : extraLifeScores) {
+                if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
+                    game.addLives(1);
+                    game.publishGameEvent(GameEventType.EXTRA_LIFE_WON);
+                }
             }
         }
     }

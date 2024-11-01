@@ -89,7 +89,7 @@ public class MsPacManArcadeGame extends GameModel {
         initialLives = 3;
 
         scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman.xml"));
-        scoreManager.setExtraLifeScore(10_000);
+        scoreManager.setExtraLifeScores(10_000);
 
         huntingControl = new HuntingControl("HuntingControl-" + getClass().getSimpleName()) {
             /*
