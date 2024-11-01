@@ -142,6 +142,9 @@ public class GamePage extends StackPane implements Page {
         gameCanvasLayer.setCenter(gameCanvasContainer);
 
         dashboardLayer = new DashboardLayer(context);
+        InfoBox readMeBox = new InfoBoxReadmeFirst();
+        readMeBox.setExpanded(true);
+        dashboardLayer.addDashboardItem("", readMeBox);
         dashboardLayer.addDashboardItem(context.locText("infobox.general.title"), new InfoBoxGeneral());
         dashboardLayer.addDashboardItem(context.locText("infobox.game_control.title"), new InfoBoxGameControl());
         dashboardLayer.addDashboardItem(context.locText("infobox.game_info.title"), new InfoBoxGameInfo());
@@ -316,9 +319,6 @@ public class GamePage extends StackPane implements Page {
 
     public void toggleDashboard() {
         dashboardLayer.toggleDashboardVisibility();
-        if (dashboardLayer().isDashboardOpen()) {
-            context.showFlashMessageSeconds(5, "Steer using CTRL+CURSOR_KEY while dashboard is open!");
-        }
     }
 
     public void updateDashboard() {

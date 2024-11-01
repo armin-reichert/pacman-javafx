@@ -15,7 +15,9 @@ import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.WritableObjectValue;
 import javafx.collections.FXCollections;
-import javafx.geometry.Insets;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -59,9 +61,7 @@ public abstract class InfoBox extends TitledPane {
         setOpacity(0.7);
         setFocusTraversable(false);
         setContent(grid);
-        grid.setHgap(4);
-        grid.setVgap(3);
-        grid.setPadding(new Insets(5));
+        grid.setVgap(2);
     }
 
     public void init(GameContext context) {
@@ -117,8 +117,8 @@ public abstract class InfoBox extends TitledPane {
         rowIndex = 0;
     }
 
-    protected void addRow(Node rowNode) {
-        grid.add(rowNode, 0, rowIndex, 2, 1);
+    protected void addRow(Node content) {
+        grid.add(content, 0, rowIndex, 2, 1);
         ++rowIndex;
     }
 
