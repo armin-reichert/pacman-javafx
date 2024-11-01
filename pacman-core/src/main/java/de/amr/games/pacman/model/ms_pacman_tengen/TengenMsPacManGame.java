@@ -170,7 +170,7 @@ public class TengenMsPacManGame extends GameModel {
         setStartingLevel(1);
     }
 
-    private void configureWorldMap(MapConfigurationManager.MapConfig config) {
+    private void configureWorldMap(MapConfig config) {
         currentMapNumber = config.mapNumber();
         currentMap = config.worldMap();
         currentMapColorScheme = config.colorScheme();

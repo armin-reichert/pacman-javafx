@@ -6,6 +6,7 @@ package de.amr.games.pacman.model.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.MapConfig;
 import org.tinylog.Logger;
 
 import java.net.URL;
@@ -18,8 +19,6 @@ import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.model.ms_pacman_tengen.NamedMapColorScheme.*;
 
 public class MapConfigurationManager {
-
-    record MapConfig(int mapNumber, WorldMap worldMap, Map<String, String> colorScheme) {}
 
     private static final List<NamedMapColorScheme> COLOR_SCHEMES_IN_LEVEL_ORDER = List.of(
             MSC_36_15_20_PINK_RED_WHITE,       // Level 1

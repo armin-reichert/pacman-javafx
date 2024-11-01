@@ -21,9 +21,7 @@ import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -80,33 +78,18 @@ public class MsPacManArcadeGame extends GameModel {
     // I use a randomly running demo level, to assure it runs at least 20 seconds:
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
-    private static final String MAP_PATTERN = "/de/amr/games/pacman/maps/mspacman/mspacman_%d.world";
-
-    public static final List<Map<String, String>> MAP_COLOR_SCHEMES = List.of(
-        Map.of("fill", "FFB7AE", "stroke", "FF0000", "door", "FCB5FF", "pellet", "DEDEFF"),
-        Map.of("fill", "47B7FF", "stroke", "DEDEFF", "door", "FCB5FF", "pellet", "FFFF00"),
-        Map.of("fill", "DE9751", "stroke", "DEDEFF", "door", "FCB5FF", "pellet", "FF0000"),
-        Map.of("fill", "2121FF", "stroke", "FFB751", "door", "FCB5FF", "pellet", "DEDEFF"),
-        Map.of("fill", "FFB7FF", "stroke", "FFFF00", "door", "FCB5FF", "pellet", "00FFFF"),
-        Map.of("fill", "FFB7AE", "stroke", "FF0000", "door", "FCB5FF", "pellet", "DEDEFF")
-    );
-
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
 
-    private final List<WorldMap> maps = new ArrayList<>();
+    private final MapConfigurationManager mapConfigMgr = new MapConfigurationManager();
     private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man at all?
 
     public MsPacManArcadeGame(GameVariant gameVariant, File userDir) {
         super(gameVariant, userDir);
+
         initialLives = 3;
 
         scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman.xml"));
         scoreManager.setExtraLifeScore(10_000);
-
-        for (int number = 1; number <= 4; ++number) {
-            maps.add(new WorldMap(getClass().getResource(MAP_PATTERN.formatted(number))));
-        }
-        Logger.info("{} maps loaded ({})", maps.size(), variant());
 
         huntingControl = new HuntingControl("HuntingControl-" + getClass().getSimpleName()) {
             /*
@@ -157,35 +140,11 @@ public class MsPacManArcadeGame extends GameModel {
         return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
     }
 
-    /**
-     * <p>In Ms. Pac-Man, there are 4 maps and 6 color schemes.
-     * </p>
-     * <ul>
-     * <li>Levels 1-2: (1, 1): pink wall fill, white dots
-     * <li>Levels 3-5: (2, 2)): light blue wall fill, yellow dots
-     * <li>Levels 6-9: (3, 3): orange wall fill, red dots
-     * <li>Levels 10-13: (4, 4): blue wall fill, white dots
-     * </ul>
-     * For level 14 and later, (map, color_scheme) alternates every 4th level between (3, 5) and (4, 6):
-     * <ul>
-     * <li>(3, 5): pink wall fill, cyan dots
-     * <li>(4, 6): orange wall fill, white dots
-     * </ul>
-     * <p>
-     */
     private void selectMap(int levelNumber) {
-        final int mapNumber = switch (levelNumber) {
-            case 1, 2 -> 1;
-            case 3, 4, 5 -> 2;
-            case 6, 7, 8, 9 -> 3;
-            case 10, 11, 12, 13 -> 4;
-            default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
-        };
-        final int colorSchemeNumber = levelNumber < 14 ? mapNumber : mapNumber + 2;
-
-        currentMapNumber = mapNumber;
-        currentMap = maps.get(mapNumber - 1);
-        currentMapColorScheme = MAP_COLOR_SCHEMES.get(colorSchemeNumber - 1);
+        MapConfig mapConfig = mapConfigMgr.getMapConfig(levelNumber);
+        currentMapNumber = mapConfig.mapNumber();
+        currentMap = mapConfig.worldMap();
+        currentMapColorScheme = mapConfig.colorScheme();
     }
 
     @Override
