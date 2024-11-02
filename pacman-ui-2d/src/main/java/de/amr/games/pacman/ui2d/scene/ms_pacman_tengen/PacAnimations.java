@@ -61,10 +61,10 @@ public class PacAnimations extends SpriteAnimationCollection {
 
         add(Map.of(
             GameModel.ANIM_PAC_MUNCHING, munching,
-            TengenMsPacManGame.ANIM_PAC_MUNCHING_BOOSTER, munchingBooster,
+            TengenMsPacManGame.ANIM_MS_PACMAN_BOOSTER, munchingBooster,
             GameModel.ANIM_PAC_DYING, dying,
             MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING, husbandMunching,
-            TengenMsPacManGame.ANIM_PAC_HUSBAND_MUNCHING_BOOSTER, husbandMunchingBooster
+            TengenMsPacManGame.ANIM_PACMAN_BOOSTER, husbandMunchingBooster
         ));
     }
 
@@ -74,7 +74,7 @@ public class PacAnimations extends SpriteAnimationCollection {
             if (isCurrentAnimationID(GameModel.ANIM_PAC_MUNCHING)) {
                 return TengenMsPacManGameSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT;
             }
-            if (isCurrentAnimationID(TengenMsPacManGame.ANIM_PAC_MUNCHING_BOOSTER)) {
+            if (isCurrentAnimationID(TengenMsPacManGame.ANIM_MS_PACMAN_BOOSTER)) {
                 return TengenMsPacManGameSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER;
             }
             if (isCurrentAnimationID(MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING)) {

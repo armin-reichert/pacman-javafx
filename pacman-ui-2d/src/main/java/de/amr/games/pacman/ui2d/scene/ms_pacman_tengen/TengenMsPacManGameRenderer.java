@@ -218,9 +218,9 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
                 if (spriteAnimation != null) {
                     switch (animations.currentAnimationID()) {
                         case GameModel.ANIM_PAC_MUNCHING,
-                             TengenMsPacManGame.ANIM_PAC_MUNCHING_BOOSTER,
+                             TengenMsPacManGame.ANIM_MS_PACMAN_BOOSTER,
                              MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING,
-                             TengenMsPacManGame.ANIM_PAC_HUSBAND_MUNCHING_BOOSTER -> drawRotatedTowardsDir(pac, pac.moveDir(), spriteAnimation);
+                             TengenMsPacManGame.ANIM_PACMAN_BOOSTER -> drawRotatedTowardsDir(pac, pac.moveDir(), spriteAnimation);
                         case GameModel.ANIM_PAC_DYING -> {
                             Direction dir = Direction.UP;
                             if (spriteAnimation.frameIndex() < 11) {

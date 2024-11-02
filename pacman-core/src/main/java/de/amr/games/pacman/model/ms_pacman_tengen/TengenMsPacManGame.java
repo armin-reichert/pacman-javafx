@@ -21,6 +21,8 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.model.GameModel.ANIM_GHOST_NORMAL;
+import static de.amr.games.pacman.model.GameModel.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 import static de.amr.games.pacman.model.ms_pacman_tengen.SpeedConfiguration.*;
 
@@ -34,9 +36,9 @@ public class TengenMsPacManGame extends GameModel {
     public static int MIN_LEVEL_NUMBER = 1;
     public static int MAX_LEVEL_NUMBER = 32;
 
-    // Ms. Pac-Man (Tengen) game specific animation IDs
-    public static final String ANIM_PAC_MUNCHING_BOOSTER = "munching_booster";
-    public static final String ANIM_PAC_HUSBAND_MUNCHING_BOOSTER = "husband_munching_booster";
+    // Animation IDs specific to this game
+    public static final String ANIM_MS_PACMAN_BOOSTER = "ms_pacman_booster";
+    public static final String ANIM_PACMAN_BOOSTER    = "pacman_booster";
 
     // Bonus symbols in Arcade, Mini and Big mazes
     public static final byte BONUS_CHERRY      = 0;
@@ -309,10 +311,10 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     protected void initActorAnimations() {
-        pac.selectAnimation(isBoosterActive() ? ANIM_PAC_MUNCHING_BOOSTER : GameModel.ANIM_PAC_MUNCHING);
+        pac.selectAnimation(boosterActive ? ANIM_MS_PACMAN_BOOSTER : ANIM_PAC_MUNCHING);
         pac.animations().ifPresent(Animations::resetCurrentAnimation);
         ghosts().forEach(ghost -> {
-            ghost.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
+            ghost.selectAnimation(ANIM_GHOST_NORMAL);
             ghost.resetAnimation();
         });
     }
@@ -324,7 +326,7 @@ public class TengenMsPacManGame extends GameModel {
         }
         boosterActive = true;
         pac.setBaseSpeed(pacBaseSpeedInLevel(currentLevelNumber) + pacDifficultySpeedDelta(difficulty) + pacBoosterSpeedDelta());
-        pac.selectAnimation(ANIM_PAC_MUNCHING_BOOSTER);
+        pac.selectAnimation(ANIM_MS_PACMAN_BOOSTER);
         Logger.info("Ms. Pac-Man booster activated, base speed set to {0.00} px/s", pac.baseSpeed());
     }
 
@@ -447,7 +449,7 @@ public class TengenMsPacManGame extends GameModel {
     public boolean isPacManKillingIgnoredInDemoLevel() {
         float levelRunningSeconds = (System.currentTimeMillis() - levelStartTime) / 1000f;
         if (demoLevel && levelRunningSeconds < DEMO_LEVEL_MIN_DURATION_SEC) {
-            Logger.info("Pac-Man killing ignored, demo level running for {} seconds", levelRunningSeconds);
+            Logger.info("Pac-Man dead ignored, demo level is running since {} seconds", levelRunningSeconds);
             return true;
         }
         return false;
