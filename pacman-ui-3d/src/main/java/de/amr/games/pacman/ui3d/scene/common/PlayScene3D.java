@@ -568,12 +568,10 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
                   perspectiveNamePy.set(Perspective.Name.TOTAL);
                   level3D.livesCounter3D().light().setLightOn(false);
                   context.showFlashMessageSeconds(3, context.locLevelCompleteMessage());
+                  context.sound().playLevelCompleteSound();
               })
-            , doAfterSec(2, level3D.mazeFlashAnimation(numFlashes))
-            , doAfterSec(1, () -> {
-                context.game().pac().hide();
-                context.sound().playLevelCompleteSound();
-            })
+            , doAfterSec(1, level3D.mazeFlashAnimation(numFlashes))
+            , doAfterSec(0.5, () -> context.game().pac().hide())
             , doAfterSec(0.5, level3D.levelRotateAnimation(1.5))
             , level3D.wallsDisappearAnimation(2.0)
             , doAfterSec(1, () -> {
