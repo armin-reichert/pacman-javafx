@@ -57,11 +57,9 @@ public class OptionsScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.TEST_CUT_SCENES,        alt(KeyCode.C));
-        bind(GameActions2D.TEST_LEVELS_BONI,       alt(KeyCode.T));
-        bind(GameActions2D.TEST_LEVELS_TEASERS,    shift_alt(KeyCode.T));
         bind(TengenGameActions.SELECT_NEXT_JOYPAD, alt(KeyCode.J));
         bind(TengenGameActions.START_PLAYING,      context.joypad().start());
+        GameActions2D.setTestActions(this);
     }
 
     @Override

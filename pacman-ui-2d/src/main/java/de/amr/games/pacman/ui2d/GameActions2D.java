@@ -34,9 +34,9 @@ public enum GameActions2D implements GameAction {
         public void execute(GameContext context) {
             boolean enabled =
                 context.gameState() == GameState.WAITING_FOR_START ||
-                context.gameState() == INTRO ||
-                context.game().isDemoLevel() ||
-                !context.gameController().coinControl().hasCredit();
+                    context.gameState() == INTRO ||
+                    context.game().isDemoLevel() ||
+                    !context.gameController().coinControl().hasCredit();
             if (!enabled) {
                 Logger.info("Action ADD_CREDIT is disabled");
                 return;
@@ -241,23 +241,29 @@ public enum GameActions2D implements GameAction {
     };
 
     public static void setDefaultPlayerControlActions(GameActionProvider actionProvider) {
-        actionProvider.bind(GameActions2D.PLAYER_UP,    only(KeyCode.UP));
-        actionProvider.bind(GameActions2D.PLAYER_DOWN,  only(KeyCode.DOWN));
-        actionProvider.bind(GameActions2D.PLAYER_LEFT,  only(KeyCode.LEFT));
+        actionProvider.bind(GameActions2D.PLAYER_UP, only(KeyCode.UP));
+        actionProvider.bind(GameActions2D.PLAYER_DOWN, only(KeyCode.DOWN));
+        actionProvider.bind(GameActions2D.PLAYER_LEFT, only(KeyCode.LEFT));
         actionProvider.bind(GameActions2D.PLAYER_RIGHT, only(KeyCode.RIGHT));
     }
 
     public static void setFallbackPlayerControlActions(GameActionProvider actionProvider) {
-        actionProvider.bind(GameActions2D.PLAYER_UP,    control(KeyCode.UP));
-        actionProvider.bind(GameActions2D.PLAYER_DOWN,  control(KeyCode.DOWN));
-        actionProvider.bind(GameActions2D.PLAYER_LEFT,  control(KeyCode.LEFT));
+        actionProvider.bind(GameActions2D.PLAYER_UP, control(KeyCode.UP));
+        actionProvider.bind(GameActions2D.PLAYER_DOWN, control(KeyCode.DOWN));
+        actionProvider.bind(GameActions2D.PLAYER_LEFT, control(KeyCode.LEFT));
         actionProvider.bind(GameActions2D.PLAYER_RIGHT, control(KeyCode.RIGHT));
     }
 
     public static void setPlaySceneCheatActions(GameActionProvider actionProvider) {
-        actionProvider.bind(GameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
-        actionProvider.bind(GameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
-        actionProvider.bind(GameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
+        actionProvider.bind(GameActions2D.CHEAT_EAT_ALL, alt(KeyCode.E));
+        actionProvider.bind(GameActions2D.CHEAT_ADD_LIVES, alt(KeyCode.L));
+        actionProvider.bind(GameActions2D.CHEAT_NEXT_LEVEL, alt(KeyCode.N));
         actionProvider.bind(GameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
+    }
+
+    public static void setTestActions(GameActionProvider actionProvider) {
+        actionProvider.bind(GameActions2D.TEST_CUT_SCENES,     alt(KeyCode.C));
+        actionProvider.bind(GameActions2D.TEST_LEVELS_BONI,    alt(KeyCode.T));
+        actionProvider.bind(GameActions2D.TEST_LEVELS_TEASERS, shift_alt(KeyCode.T));
     }
 }
