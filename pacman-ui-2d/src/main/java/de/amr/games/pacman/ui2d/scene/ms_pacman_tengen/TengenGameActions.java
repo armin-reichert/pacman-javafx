@@ -62,7 +62,7 @@ public enum TengenGameActions implements GameAction {
     };
 
     public static void bindDefaultJoypadActions(GameActionProvider actionProvider, Joypad joypad) {
-        actionProvider.bind(TengenGameActions.TOGGLE_PAC_BOOSTER, joypad.a());
+        actionProvider.bind(TengenGameActions.TOGGLE_PAC_BOOSTER, joypad.a(), joypad.b());
         actionProvider.bind(GameActions2D.PLAYER_UP,    joypad.up());
         actionProvider.bind(GameActions2D.PLAYER_DOWN,  joypad.down());
         actionProvider.bind(GameActions2D.PLAYER_LEFT,  joypad.left());

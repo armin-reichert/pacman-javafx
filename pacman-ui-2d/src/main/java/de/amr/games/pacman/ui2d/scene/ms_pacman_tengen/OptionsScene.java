@@ -241,7 +241,7 @@ public class OptionsScene extends GameScene2D {
         String pacBoosterText = switch (game.boosterMode()) {
             case OFF -> "OFF";
             case ALWAYS_ON -> "ALWAYS ON";
-            case ACTIVATED_USING_KEY -> "KEY A";
+            case ACTIVATED_USING_KEY -> "USE A OR B";
         };
         renderer.drawText(pacBoosterText, VALUE_COLOR, scaledFont, COL_VALUE, y);
 
