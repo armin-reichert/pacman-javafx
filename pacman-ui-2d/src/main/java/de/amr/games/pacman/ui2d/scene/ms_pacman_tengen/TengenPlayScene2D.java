@@ -116,7 +116,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             bind(QUIT_DEMO_LEVEL, joypad.start());
         } else {
             GameActions2D.bindCheatActions(this);
-            TengenGameActions.setDefaultJoypadActions(this, joypad);
+            TengenGameActions.bindDefaultJoypadActions(this, joypad);
             GameActions2D.bindFallbackPlayerControlActions(this);
         }
     }
