@@ -33,15 +33,16 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.util.KeyInput.*;
 
 /**
+ * 2D play scene for all game variants except Tengen Ms. Pac-Man.
+ *
  * @author Armin Reichert
  */
 public class PlayScene2D extends GameScene2D {
 
-    public static final Font DEBUG_STATE_FONT = Font.font("Sans", FontWeight.BOLD, 24);
+    static final Font DEBUG_STATE_FONT = Font.font("Sans", FontWeight.BOLD, 24);
 
     @Override
     public void bindGameActions() {
-        // TODO create Arcade controller/"joypad"
         if (context.game().isDemoLevel()) {
             bind(GameActions2D.ADD_CREDIT, only(KeyCode.DIGIT5), only(KeyCode.NUMPAD5));
         } else {
@@ -59,15 +60,14 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void update() {
         if (context.game().currentLevelNumber() == 0) {
-            Logger.warn("Cannot update PlayScene2D: no game level available");
+            // scene may be visible for 2 ticks before game level has been created
+            Logger.warn("Cannot update PlayScene2D: game level not (yet) available");
             return;
         }
         if (context.game().isDemoLevel()) {
+            context.setScoreVisible(false);
             context.game().pac().setUsingAutopilot(true);
             context.game().pac().setImmune(false);
-            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                context.setScoreVisible(true);
-            }
         } else {
             context.setScoreVisible(true);
             context.game().pac().setUsingAutopilot(PY_AUTOPILOT.get());
@@ -114,22 +114,21 @@ public class PlayScene2D extends GameScene2D {
         renderer.drawAnimatedEntity(context.game().pac());
         ghostsInZOrder().forEach(renderer::drawAnimatedEntity);
 
-        // Debug mode info
         if (debugInfoPy.get()) {
             renderer.drawAnimatedCreatureInfo(context.game().pac());
             ghostsInZOrder().forEach(renderer::drawAnimatedCreatureInfo);
         }
 
-        if (!context.game().canStartNewGame()) {
-            int credit = context.gameController().coinControl().credit();
-            renderer.drawText("CREDIT %2d".formatted(credit), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
-        } else {
-            //TODO: this code looks ugly
+        if (context.game().canStartNewGame()) {
+            //TODO: this code is ugly
             int numLivesShown = context.game().lives() - 1;
             if (context.gameState() == GameState.STARTING_GAME && !context.game().pac().isVisible()) {
                 numLivesShown += 1;
             }
             renderer.drawLivesCounter(numLivesShown, 5, size());
+        } else {
+            int credit = context.gameController().coinControl().credit();
+            renderer.drawText("CREDIT %2d".formatted(credit), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
         }
         renderer.drawLevelCounter(context, size());
     }
