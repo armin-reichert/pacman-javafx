@@ -13,10 +13,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.pacman_xxl.PacManXXLGame;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
-import de.amr.games.pacman.ui2d.page.EditorPage;
-import de.amr.games.pacman.ui2d.page.GamePage;
-import de.amr.games.pacman.ui2d.page.Page;
-import de.amr.games.pacman.ui2d.page.StartPage;
+import de.amr.games.pacman.ui2d.page.*;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
@@ -542,7 +539,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public void onCustomMapsChanged(GameEvent e) {
-        gamePage.dashboardLayer().getInfoBoxes()
+        //TODO find a cleaner solution
+        gamePage.dashboardLayer().dashboardEntries().stream()
+            .map(DashboardLayer.DashboardEntry::infoBox)
             .filter(infoBox -> infoBox instanceof InfoBoxCustomMaps)
             .findFirst()
             .ifPresent(infoBox -> ((InfoBoxCustomMaps)infoBox).updateTableView());

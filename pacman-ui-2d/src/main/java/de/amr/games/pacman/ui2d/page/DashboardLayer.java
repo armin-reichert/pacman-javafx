@@ -15,7 +15,6 @@ import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_PIP_ON;
 
@@ -24,10 +23,10 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_PIP_ON;
  */
 public class DashboardLayer extends BorderPane {
 
-    private record DashboardEntry(String title, InfoBox infoBox) {}
+    public record DashboardEntry(String title, InfoBox infoBox) {}
 
     private final GameContext context;
-    private final List<DashboardEntry> dashboardItems = new ArrayList<>();
+    private final List<DashboardEntry> dashboardEntries = new ArrayList<>();
     private final VBox dashboardContainer = new VBox();
     private final PictureInPictureView pip;
 
@@ -45,6 +44,10 @@ public class DashboardLayer extends BorderPane {
         ));
     }
 
+    public List<DashboardEntry> dashboardEntries() {
+        return dashboardEntries;
+    }
+
     public PictureInPictureView getPip() {
         return pip;
     }
@@ -60,15 +63,15 @@ public class DashboardLayer extends BorderPane {
     }
 
     public void addDashboardItem(String title, InfoBox infoBox) {
-        dashboardItems.add(createEntry(title, infoBox));
+        dashboardEntries.add(createEntry(title, infoBox));
     }
 
     private void updateDashboardContainer() {
-        dashboardContainer.getChildren().setAll(dashboardItems.stream().map(DashboardEntry::infoBox).toArray(InfoBox[]::new));
+        dashboardContainer.getChildren().setAll(dashboardEntries.stream().map(DashboardEntry::infoBox).toArray(InfoBox[]::new));
     }
 
     public void addEntry(int index, String title, InfoBox infoBox) {
-        dashboardItems.add(index, createEntry(title, infoBox));
+        dashboardEntries.add(index, createEntry(title, infoBox));
     }
 
     public boolean isDashboardOpen() { return dashboardContainer.isVisible(); }
@@ -98,13 +101,9 @@ public class DashboardLayer extends BorderPane {
         }
     }
 
-    public Stream<InfoBox> getInfoBoxes() {
-        return dashboardItems.stream().map(DashboardEntry::infoBox);
-    }
-
     public void update() {
         if (dashboardContainer.isVisible()) {
-            dashboardItems.stream().map(DashboardEntry::infoBox).forEach(InfoBox::update);
+            dashboardEntries.stream().map(DashboardEntry::infoBox).filter(InfoBox::isExpanded).forEach(InfoBox::update);
         }
         if (pip.isVisible()) {
             pip.draw();

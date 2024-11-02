@@ -15,13 +15,14 @@ import javafx.scene.text.Text;
 public class InfoBoxReadmeFirst extends InfoBox {
 
     static final String[] LINES = {
-            "While this dashboard is open, steer Pac-Man by",
-            "pressing Ctrl+[steering key].",
-            "",
-            "This dashboard might also interfere with other keys.",
-            "If you encounter any such issue, close it with key F1.",
-            "",
-            "Relax (and do it)!"
+        "While this dashboard is open, steer Pac-Man",
+        "by pressing Ctrl+[steering key].",
+        "",
+        "This dashboard might also interfere with",
+        "other keys. If you encounter any such issue,",
+        "close it with F1 or Alt+B.",
+        "",
+        "Relax (and do it)!"
     };
 
     @Override
@@ -32,8 +33,7 @@ public class InfoBoxReadmeFirst extends InfoBox {
         readmeText.setFont(Font.font("Serif", 16));
         readmeText.setFill(Color.WHITE);
         Pane pane = new BorderPane(readmeText);
-        //pane.setBackground(Ufx.coloredBackground(Color.WHITE));
-        pane.setBorder(Ufx.border(Color.TRANSPARENT, 10));
+        pane.setBorder(Ufx.border(Color.TRANSPARENT, 5));
         addRow(pane);
     }
 }

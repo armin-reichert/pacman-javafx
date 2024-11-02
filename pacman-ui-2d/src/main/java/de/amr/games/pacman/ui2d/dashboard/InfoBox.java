@@ -71,6 +71,7 @@ public abstract class InfoBox extends TitledPane {
     }
 
     public void update() {
+        // auto update all info texts inside this box
         infoTexts.forEach(InfoText::update);
     }
 
