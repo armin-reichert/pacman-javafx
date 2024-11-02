@@ -21,6 +21,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions.SELECT_NEXT_JOYPAD;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_BABY_BLUE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_YELLOW;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
@@ -60,7 +61,7 @@ public class OptionsScene extends GameScene2D {
         bindAction(GameActions2D.TEST_CUT_SCENES,     alt(KeyCode.C));
         bindAction(GameActions2D.TEST_LEVELS_BONI,    alt(KeyCode.T));
         bindAction(GameActions2D.TEST_LEVELS_TEASERS, shift_alt(KeyCode.T));
-        bindAction(GameActions2D.TENGEN_SELECT_NEXT_JOYPAD, alt(KeyCode.J));
+        bindAction(SELECT_NEXT_JOYPAD, alt(KeyCode.J));
     }
 
     @Override

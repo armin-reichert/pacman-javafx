@@ -205,43 +205,6 @@ public enum GameActions2D implements GameAction {
         }
     },
 
-    TENGEN_SELECT_NEXT_JOYPAD {
-        @Override
-        public void execute(GameContext context) {
-            context.disableJoypad();
-            context.nextJoypad();
-            context.enableJoypad();
-            Logger.info("Current joypad: {} ", context.joypad());
-        }
-    },
-
-    TENGEN_TOGGLE_PAC_BOOSTER {
-        @Override
-        public void execute(GameContext context) {
-            TengenMsPacManGame tengenGame = (TengenMsPacManGame) context.game();
-            if (tengenGame.boosterMode() == BoosterMode.ACTIVATED_USING_KEY) {
-                tengenGame.setBoosterActive(!tengenGame.isBoosterActive()); // toggle state
-            }
-        }
-    },
-
-    TENGEN_QUIT_DEMO_LEVEL {
-        @Override
-        public void execute(GameContext context) {
-            if (context.game().isDemoLevel()) {
-                context.gameController().changeState(GameState.WAITING_FOR_START);
-            }
-        }
-    },
-
-    TENGEN_SHOW_OPTIONS {
-        @Override
-        public void execute(GameContext context) {
-            context.game().setPlaying(false);
-            context.gameController().changeState(GameState.WAITING_FOR_START);
-        }
-    },
-
     TEST_CUT_SCENES {
         @Override
         public void execute(GameContext context) {

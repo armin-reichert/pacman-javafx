@@ -44,6 +44,8 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions.SHOW_OPTIONS;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions.TOGGLE_PAC_BOOSTER;
 import static de.amr.games.pacman.ui2d.util.KeyInput.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
@@ -125,8 +127,8 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         bindAction(GameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
         bindAction(GameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            bindAction(GameActions2D.TENGEN_TOGGLE_PAC_BOOSTER, KeyCode.A);
-            bindAction(GameActions2D.TENGEN_SHOW_OPTIONS,       KeyCode.S);
+            bindAction(TOGGLE_PAC_BOOSTER, KeyCode.A);
+            bindAction(SHOW_OPTIONS,       KeyCode.S);
         }
         else if (context.game().isDemoLevel()) {
             bindAction(GameActions2D.ADD_CREDIT, kcc(KeyCode.DIGIT5), kcc(KeyCode.NUMPAD5));
