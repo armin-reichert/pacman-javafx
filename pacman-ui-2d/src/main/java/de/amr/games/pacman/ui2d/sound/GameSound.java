@@ -301,7 +301,8 @@ public class GameSound {
             return;
         }
         intermissionSound = switch (gameVariant) {
-            case MS_PACMAN, MS_PACMAN_TENGEN -> createPlayer(gameVariant, assets, "intermission." + number, 1, false);
+            case MS_PACMAN,
+                 MS_PACMAN_TENGEN -> createPlayer(gameVariant, assets, "intermission." + number, 1, false);
             case PACMAN, PACMAN_XXL -> {
                 var player = createPlayer(gameVariant, assets, "intermission", 1, false);
                 player.setCycleCount(number == 2 ? 1 : 2);

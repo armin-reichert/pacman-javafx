@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
-import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -18,6 +17,7 @@ import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -51,11 +51,12 @@ public class CutScene1 extends GameScene2D {
     private Ghost inky;
     private Ghost pinky;
     private Entity heart;
+
+    private MediaPlayer music;
     private ClapperboardAnimation clapAnimation;
 
     @Override
-    public void bindGameActions() {
-    }
+    public void bindGameActions() {}
 
     @Override
     public void doInit() {
@@ -67,11 +68,14 @@ public class CutScene1 extends GameScene2D {
         pinky = Ghost.pinky();
         heart = new Entity();
 
-        MsPacManGameSpriteSheet spriteSheet = (MsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
+        music = context.sound().createPlayer(context.gameVariant(), context.assets(), "intermission.1", 1.0, false);
+
+        var spriteSheet = (MsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         msPac.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
         inky.setAnimations(new GhostAnimations(spriteSheet, inky.id()));
         pinky.setAnimations(new GhostAnimations(spriteSheet, pinky.id()));
+
         clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
         clapAnimation.start();
 
@@ -103,13 +107,6 @@ public class CutScene1 extends GameScene2D {
         renderer.drawLevelCounter(context, size());
     }
 
-    private void startMusic() {
-        int number  = context.gameState() == GameState.TESTING_CUT_SCENES
-            ? GameState.TESTING_CUT_SCENES.getProperty("intermissionTestNumber")
-            : context.game().intermissionNumberAfterLevel();
-        context.sound().playIntermissionSound(number);
-    }
-
     private class SceneController {
         static final byte STATE_FLAP = 0;
         static final byte STATE_CHASED_BY_GHOSTS = 1;
@@ -139,7 +136,7 @@ public class CutScene1 extends GameScene2D {
         void updateStateFlap() {
             clapAnimation.tick();
             if (stateTimer.atSecond(1)) {
-                startMusic();
+                music.play();
             } else if (stateTimer.hasExpired()) {
                 enterStateChasedByGhosts();
             }
