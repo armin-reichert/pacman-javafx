@@ -52,7 +52,7 @@ public abstract class GameModel {
     }
 
     /** Game loop frequency, ticks per second. */
-    public static final float      TICKS_PER_SECOND = 60;
+    public static final byte       TICKS_PER_SECOND = 60;
 
     public static final short      POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
     public static final byte       LEVEL_COUNTER_MAX_SIZE = 7;

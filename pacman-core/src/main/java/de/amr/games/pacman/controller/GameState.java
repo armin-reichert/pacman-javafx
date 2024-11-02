@@ -13,10 +13,13 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.model.pacman_xxl.PacManXXLGame;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static de.amr.games.pacman.model.GameModel.TICKS_PER_SECOND;
 
 /**
  * Game states of the Pac-Man game variants.
@@ -325,7 +328,7 @@ public enum GameState implements FsmState<GameModel> {
             }
             lastLevelNumber = switch (game.variant()) {
                 case MS_PACMAN -> 25;
-                case MS_PACMAN_TENGEN -> 32;
+                case MS_PACMAN_TENGEN -> TengenMsPacManGame.MAX_LEVEL_NUMBER;
                 case PACMAN -> 21;
                 case PACMAN_XXL -> 8 + numCustomMaps;
             };
@@ -338,7 +341,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            if (timer().currentTick() > 2 * GameModel.TICKS_PER_SECOND) {
+            if (timer().currentTick() > 2 * TICKS_PER_SECOND) {
                 game.blinking().tick();
                 game.ghosts().forEach(ghost -> ghost.update(game));
                 game.bonus().ifPresent(bonus -> bonus.update(game));
@@ -352,13 +355,13 @@ public enum GameState implements FsmState<GameModel> {
             } else if (timer().atSecond(2.5)) {
                 game.activateNextBonus();
             } else if (timer().atSecond(4.5)) {
-                game.bonus().ifPresent(bonus -> bonus.setEaten(60));
+                game.bonus().ifPresent(bonus -> bonus.setEaten(TICKS_PER_SECOND));
                 game.publishGameEvent(GameEventType.BONUS_EATEN);
             } else if (timer().atSecond(6.5)) {
                 game.bonus().ifPresent(Bonus::setInactive); // needed?
                 game.activateNextBonus();
             } else if (timer().atSecond(7.5)) {
-                game.bonus().ifPresent(bonus -> bonus.setEaten(60));
+                game.bonus().ifPresent(bonus -> bonus.setEaten(TICKS_PER_SECOND));
                 game.publishGameEvent(GameEventType.BONUS_EATEN);
             } else if (timer().atSecond(8.5)) {
                 game.hideGuys();
@@ -392,7 +395,7 @@ public enum GameState implements FsmState<GameModel> {
     },
 
     /**
-     * Play levels for some defined time e.g. 20 seconds.
+     * Runs levels for some fixed time e.g. 10 seconds.
      */
     TESTING_LEVEL_TEASERS {
 
@@ -402,16 +405,14 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
-            int numCustomMaps = 0;
-            if (game.variant() == GameVariant.PACMAN_XXL) {
-                PacManXXLGame xxlGame = (PacManXXLGame) game;
-                numCustomMaps = xxlGame.customMapsSortedByFile().size();
-            }
             lastLevelNumber = switch (game.variant()) {
                 case MS_PACMAN -> 17;
                 case MS_PACMAN_TENGEN -> 32;
                 case PACMAN -> 21;
-                case PACMAN_XXL -> 8 + numCustomMaps;
+                case PACMAN_XXL -> {
+                    PacManXXLGame xxlGame = (PacManXXLGame) game;
+                    yield 8 + xxlGame.customMapsSortedByFile().size();
+                }
             };
             timer.restartSeconds(TEASER_TIME_SECONDS);
             game.reset();
@@ -430,7 +431,6 @@ public enum GameState implements FsmState<GameModel> {
                     game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
                     enterState(INTRO);
                 } else {
-                    timer().restartSeconds(TEASER_TIME_SECONDS);
                     game.pac().freeze();
                     game.bonus().ifPresent(Bonus::setInactive);
                     setProperty("mazeFlashing", false);
@@ -438,10 +438,10 @@ public enum GameState implements FsmState<GameModel> {
                     game.createLevel(game.currentLevelNumber() + 1);
                     game.startLevel();
                     game.showGuys();
+                    timer().restartSeconds(TEASER_TIME_SECONDS);
                 }
             }
             else if (game.isLevelComplete()) {
-                //enterState(LEVEL_COMPLETE);
                 enterState(INTRO);
             } else if (game.isPacManKilled()) {
                 timer.expire();
