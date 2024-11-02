@@ -277,12 +277,16 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             drawGameOptionsInfo(game.world().map().terrain(), game);
         }
 
+        boolean isDemoLevel = context.game().isDemoLevel();
         // All maps that use a different color scheme than that in the sprite sheet have to be rendered using the
         // generic vector renderer for now. This looks more or less bad for specific maps.
         // TODO: maps 28-32 also have random color schmes in STRANGE mode
-        boolean useVectorRenderer = game.mapCategory() != MapCategory.STRANGE;
+        boolean useVectorRenderer =
+                (game.mapCategory() == MapCategory.ARCADE && !isDemoLevel) ||
+                game.mapCategory() == MapCategory.BIG ||
+                game.mapCategory() == MapCategory.MINI ||
+                game.mapCategory() == MapCategory.STRANGE && game.currentLevelNumber() >= 28;
 
-        boolean isDemoLevel = context.game().isDemoLevel();
         if (useVectorRenderer) {
             terrainRenderer.setMapBackgroundColor(bgColor);
             terrainRenderer.setWallStrokeColor(Color.web(mapColorScheme.get("stroke")));
