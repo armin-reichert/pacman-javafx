@@ -38,6 +38,7 @@ public class TengenMsPacManGameSceneConfiguration implements GameSceneConfig {
         set("CutScene1",   new CutScene1());
         set("CutScene2",   new CutScene2());
         set("CutScene3",   new CutScene3());
+        set("CutScene4",   new CutScene4());
 
         spriteSheet = assets.get(GameAssets2D.assetPrefix(GameVariant.MS_PACMAN_TENGEN) + ".spritesheet");
         renderer = new TengenMsPacManGameRenderer(assets);

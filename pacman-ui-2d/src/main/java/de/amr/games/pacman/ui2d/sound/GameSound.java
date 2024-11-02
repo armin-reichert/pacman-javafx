@@ -99,7 +99,7 @@ public class GameSound {
         Logger.info("[{}] {} -> {}, volume {}", key, (oldStatus != null ? oldStatus : "undefined"), newStatus, player.getVolume());
     }
 
-    private MediaPlayer createPlayer(GameVariant variant, AssetStorage assets, String keySuffix, double volume, boolean loop) {
+    public MediaPlayer createPlayer(GameVariant variant, AssetStorage assets, String keySuffix, double volume, boolean loop) {
         String assetKey = assetPrefix(variant) + ".audio." + keySuffix;
         URL url = assets.get(assetKey);
         if (url == null) {
@@ -295,7 +295,8 @@ public class GameSound {
     }
 
     public void playIntermissionSound(int number) {
-        if (number < 1 || number > 3) {
+        int maxIntermissionNumber = gameVariant == GameVariant.MS_PACMAN_TENGEN ? 4 : 3;
+        if (number < 1 || number > maxIntermissionNumber) {
             Logger.error("Intermission number must be from 1..3 but is " + number);
             return;
         }

@@ -19,6 +19,7 @@ import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.ClapperboardAnimation;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -47,7 +48,7 @@ public class CutScene1 extends GameScene2D {
     static final float SPEED_GHOST_CHASING = 1.25f;
 
     private SceneController sceneController;
-
+    private MediaPlayer music;
     private Pac pacMan;
     private Pac msPac;
     private Ghost inky;
@@ -61,7 +62,7 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public void doInit() {
-        context.setScoreVisible(context.gameVariant() != GameVariant.MS_PACMAN_TENGEN);
+        context.setScoreVisible(false);
 
         pacMan = new Pac();
         msPac = new Pac();
@@ -69,13 +70,16 @@ public class CutScene1 extends GameScene2D {
         pinky = Ghost.pinky();
         heart = new Entity();
 
-        TengenMsPacManGameSpriteSheet spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
+        var spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         msPac.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
         inky.setAnimations(new GhostAnimations(spriteSheet, inky.id()));
         pinky.setAnimations(new GhostAnimations(spriteSheet, pinky.id()));
         clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
         clapAnimation.start();
+
+        music = context.sound().createPlayer(context.gameVariant(), context.assets(), "intermission.1",1.0, false);
+
 
         sceneController = new SceneController();
         sceneController.setState(SceneController.STATE_FLAP, 120);
@@ -103,13 +107,6 @@ public class CutScene1 extends GameScene2D {
         r.drawAnimatedEntity(pinky);
         r.drawSprite(heart, TengenMsPacManGameSpriteSheet.HEART_SPRITE);
         r.drawLevelCounter(context, size());
-    }
-
-    private void startMusic() {
-        int number  = context.gameState() == GameState.TESTING_CUT_SCENES
-            ? GameState.TESTING_CUT_SCENES.getProperty("intermissionTestNumber")
-            : context.game().intermissionNumberAfterLevel();
-        context.sound().playIntermissionSound(number);
     }
 
     private class SceneController {
@@ -141,7 +138,7 @@ public class CutScene1 extends GameScene2D {
         void updateStateFlap() {
             clapAnimation.tick();
             if (stateTimer.atSecond(1)) {
-                startMusic();
+                music.play();
             } else if (stateTimer.hasExpired()) {
                 enterStateChasedByGhosts();
             }

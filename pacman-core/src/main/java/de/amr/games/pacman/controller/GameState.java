@@ -468,7 +468,8 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 int number = this.<Integer>getProperty("intermissionTestNumber");
-                if (number < 3) {
+                int last = game.variant() == GameVariant.MS_PACMAN_TENGEN ? 4 : 3;
+                if (number < last) {
                     setProperty("intermissionTestNumber", number + 1);
                     timer.restartIndefinitely();
                     game.publishGameEvent(GameEventType.UNSPECIFIED_CHANGE);

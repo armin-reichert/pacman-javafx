@@ -31,8 +31,8 @@ import static de.amr.games.pacman.model.ms_pacman_tengen.SpeedConfiguration.*;
  */
 public class TengenMsPacManGame extends GameModel {
 
-    public static int MIN_LEVEL_NUMBER = 1;
-    public static int MAX_LEVEL_NUMBER = 32;
+    public static final int MIN_LEVEL_NUMBER = 1;
+    public static final int MAX_LEVEL_NUMBER = 32;
 
     // Animation IDs specific to this game
     public static final String ANIM_MS_PACMAN_BOOSTER = "ms_pacman_booster";
@@ -420,7 +420,8 @@ public class TengenMsPacManGame extends GameModel {
         return switch (currentLevelNumber) {
             case 2 -> 1;
             case 5 -> 2;
-            case 9, 13, 17 -> 3; // TODO not sure what happens in later levels
+            case 9, 13 -> 3; // TODO not sure what happens in later levels
+            case MAX_LEVEL_NUMBER -> 4;
             default -> 0;
         };
     }

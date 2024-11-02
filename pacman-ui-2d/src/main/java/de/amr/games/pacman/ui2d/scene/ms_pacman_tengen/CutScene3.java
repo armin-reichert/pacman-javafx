@@ -18,6 +18,7 @@ import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -40,7 +41,7 @@ public class CutScene3 extends GameScene2D {
     static final int LANE_Y = TS * 24;
 
     private SceneController sceneController;
-
+    private MediaPlayer music;
     private Pac mrPacMan;
     private Pac msPacMan;
     private Entity stork;
@@ -57,14 +58,16 @@ public class CutScene3 extends GameScene2D {
 
     @Override
     public void doInit() {
-        context.setScoreVisible(context.gameVariant() != GameVariant.MS_PACMAN_TENGEN);
+        context.setScoreVisible(false);
 
         mrPacMan = new Pac();
         msPacMan = new Pac();
         stork = new Entity();
         bag = new Entity();
 
-        TengenMsPacManGameSpriteSheet spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
+        music = context.sound().createPlayer(context.gameVariant(), context.assets(), "intermission.3",1.0, false);
+
+        var spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         mrPacMan.setAnimations(new PacAnimations(spriteSheet));
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
 
@@ -103,13 +106,6 @@ public class CutScene3 extends GameScene2D {
         r.drawLevelCounter(context, size());
     }
 
-    private void startMusic() {
-        int number  = context.gameState() == GameState.TESTING_CUT_SCENES
-            ? GameState.TESTING_CUT_SCENES.getProperty("intermissionTestNumber")
-            : context.game().intermissionNumberAfterLevel();
-        context.sound().playIntermissionSound(number);
-    }
-
     private class SceneController {
 
         static final byte STATE_FLAP = 0;
@@ -138,7 +134,7 @@ public class CutScene3 extends GameScene2D {
         void updateStateFlap() {
             clapAnimation.tick();
             if (stateTimer.atSecond(1)) {
-                startMusic();
+                music.play();
             } else if (stateTimer.atSecond(3)) {
                 setState(STATE_STORK_LEAVES_SCENE, 3 * 60);
                 //TODO deactivated for now
