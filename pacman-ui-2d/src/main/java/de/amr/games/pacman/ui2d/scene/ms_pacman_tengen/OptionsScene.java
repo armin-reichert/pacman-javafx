@@ -21,7 +21,6 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions.SELECT_NEXT_JOYPAD;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_BABY_BLUE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_YELLOW;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
@@ -61,7 +60,7 @@ public class OptionsScene extends GameScene2D {
         bind(GameActions2D.TEST_CUT_SCENES,     alt(KeyCode.C));
         bind(GameActions2D.TEST_LEVELS_BONI,    alt(KeyCode.T));
         bind(GameActions2D.TEST_LEVELS_TEASERS, shift_alt(KeyCode.T));
-        bind(SELECT_NEXT_JOYPAD, alt(KeyCode.J));
+        bind(TengenGameActions.SELECT_NEXT_JOYPAD, alt(KeyCode.J));
     }
 
     @Override
@@ -181,79 +180,65 @@ public class OptionsScene extends GameScene2D {
         }
     }
 
-    //TODO use right sound
-    private void playOptionSelectionChangedSound() {
+    private void optionSelectionChanged() {
         context.sound().playClipIfEnabled("option.selection_changed", 1);
+        resetIdleTimer();
     }
 
-    //TODO use right sound
-    private void playOptionValueChangedSound() {
+    private void optionValueChanged() {
         context.sound().playClipIfEnabled("option.value_changed", 1);
+        resetIdleTimer();
     }
 
     @Override
     public void handleInput(GameContext context) {
 
         if (context.keyboard().pressedAndRegistered(context.joypad().down())) {
-            playOptionSelectionChangedSound();
             selectNextOption();
-            resetIdleTimer();
         }
-
         else if (context.keyboard().pressedAndRegistered(context.joypad().up())) {
-            playOptionSelectionChangedSound();
             selectPrevOption();
-            resetIdleTimer();
         }
 
         // Button "A" is right of "B": select forwards
         else if (context.keyboard().pressedAndRegistered(context.joypad().a())) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER -> {
-                    selectNextPacBoosterValue();
-                    playOptionValueChangedSound();
+                    setNextPacBoosterValue();
                 }
                 case OPTION_DIFFICULTY -> {
-                    selectNextDifficultyValue();
-                    playOptionValueChangedSound();
+                    setNextDifficultyValue();
                 }
                 case OPTION_MAZE_SELECTION -> {
-                    selectNextMapCategoryValue();
-                    playOptionValueChangedSound();
+                    setNextMapCategoryValue();
                 }
                 case OPTION_STARTING_LEVEL -> {
-                    selectNextStartLevelValue();
-                    playOptionValueChangedSound();
+                    setNextStartLevelValue();
                 }
                 default -> {}
             }
-            resetIdleTimer();
         }
 
         // Button "B" is left of "A": select backwards
         else if (context.keyboard().pressedAndRegistered(context.joypad().b())) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER -> {
-                    selectPrevPacBoosterValue();
-                    playOptionValueChangedSound();
+                    setPrevPacBoosterValue();
                 }
                 case OPTION_DIFFICULTY -> {
-                    selectPrevDifficultyValue();
-                    playOptionValueChangedSound();
+                    setPrevDifficultyValue();
                 }
                 case OPTION_MAZE_SELECTION -> {
-                    selectPrevMapCategoryValue();
-                    playOptionValueChangedSound();
+                    setPrevMapCategoryValue();
                 }
                 case OPTION_STARTING_LEVEL -> {
-                    selectPrevStartLevelValue();
-                    playOptionValueChangedSound();
+                    setPrevStartLevelValue();
                 }
                 default -> {}
             }
-            resetIdleTimer();
         }
 
+        //TODO use game action
         else if (context.keyboard().pressedAndRegistered(context.joypad().start())) {
             context.sound().stopAll();
             context.gameController().changeState(GameState.STARTING_GAME);
@@ -270,63 +255,73 @@ public class OptionsScene extends GameScene2D {
 
     private void selectPrevOption() {
         selectedOption = selectedOption == 0 ? NUM_OPTIONS - 1 : selectedOption - 1;
+        optionSelectionChanged();
     }
 
     private void selectNextOption() {
         selectedOption = (selectedOption < NUM_OPTIONS - 1) ? selectedOption + 1 : 0;
+        optionSelectionChanged();
     }
 
-    private void selectPrevStartLevelValue() {
+    private void setPrevStartLevelValue() {
         int current = tengenGame.startLevelNumber();
         int prev = (current == MIN_START_LEVEL) ? MAX_START_LEVEL : current - 1;
         tengenGame.setStartLevelNumber(prev);
+        optionValueChanged();
     }
 
-    private void selectNextStartLevelValue() {
+    private void setNextStartLevelValue() {
         int current = tengenGame.startLevelNumber();
         int next = (current < MAX_START_LEVEL) ? current + 1 : MIN_START_LEVEL;
         tengenGame.setStartLevelNumber(next);
+        optionValueChanged();
     }
 
-    private void selectPrevMapCategoryValue() {
+    private void setPrevMapCategoryValue() {
         MapCategory category = tengenGame.mapCategory();
         var values = MapCategory.values();
         int current = category.ordinal(), prev = (current == 0) ? values.length - 1 :  current - 1;
         tengenGame.setMapCategory(values[prev]);
+        optionValueChanged();
     }
 
-    private void selectNextMapCategoryValue() {
+    private void setNextMapCategoryValue() {
         MapCategory category = tengenGame.mapCategory();
         var values = MapCategory.values();
         int current = category.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame.setMapCategory(values[next]);
+        optionValueChanged();
     }
 
-    private void selectPrevDifficultyValue() {
+    private void setPrevDifficultyValue() {
         Difficulty difficulty = tengenGame.difficulty();
         var values = Difficulty.values();
         int current = difficulty.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
         tengenGame.setDifficulty(values[prev]);
+        optionValueChanged();
     }
 
-    private void selectNextDifficultyValue() {
+    private void setNextDifficultyValue() {
         Difficulty difficulty = tengenGame.difficulty();
         var values = Difficulty.values();
         int current = difficulty.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame.setDifficulty(values[next]);
+        optionValueChanged();
     }
 
-    private void selectPrevPacBoosterValue() {
+    private void setPrevPacBoosterValue() {
         BoosterMode boosterMode = tengenGame.boosterMode();
         var values = BoosterMode.values();
         int current = boosterMode.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
         tengenGame.setBoosterMode(values[prev]);
+        optionValueChanged();
     }
 
-    private void selectNextPacBoosterValue() {
+    private void setNextPacBoosterValue() {
         BoosterMode boosterMode = tengenGame.boosterMode();
         var values = BoosterMode.values();
         int current = boosterMode.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame.setBoosterMode(values[next]);
+        optionValueChanged();
     }
 }

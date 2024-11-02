@@ -48,7 +48,6 @@ import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions.QUIT_DEMO_LEVEL;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions.TOGGLE_PAC_BOOSTER;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_YELLOW;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
 import static de.amr.games.pacman.ui2d.util.KeyInput.alt;
@@ -123,13 +122,12 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             bind(GameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
             bind(GameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
             bind(GameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
-            bind(TOGGLE_PAC_BOOSTER,              joypad.a());
+            bind(TengenGameActions.TOGGLE_PAC_BOOSTER, joypad.a());
             bind(GameActions2D.PLAYER_UP,         joypad.up(),    control(KeyCode.UP));
             bind(GameActions2D.PLAYER_DOWN,       joypad.down(),  control(KeyCode.DOWN));
             bind(GameActions2D.PLAYER_LEFT,       joypad.left(),  control(KeyCode.LEFT));
             bind(GameActions2D.PLAYER_RIGHT,      joypad.right(), control(KeyCode.RIGHT));
         }
-
     }
 
     @Override
