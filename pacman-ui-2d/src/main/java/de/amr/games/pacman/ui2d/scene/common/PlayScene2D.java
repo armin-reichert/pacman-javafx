@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
-import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -46,9 +45,9 @@ public class PlayScene2D extends GameScene2D {
         if (context.game().isDemoLevel()) {
             bind(GameActions2D.ADD_CREDIT, only(KeyCode.DIGIT5), only(KeyCode.NUMPAD5));
         } else {
-            GameActions2D.setPlaySceneCheatActions(this);
-            GameActions2D.setDefaultPlayerControlActions(this);
-            GameActions2D.setFallbackPlayerControlActions(this);
+            GameActions2D.bindCheatActions(this);
+            GameActions2D.bindDefaultPlayerControlActions(this);
+            GameActions2D.bindFallbackPlayerControlActions(this);
         }
     }
 

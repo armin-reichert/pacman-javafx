@@ -25,7 +25,6 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGame
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_YELLOW;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
 import static de.amr.games.pacman.ui2d.util.KeyInput.alt;
-import static de.amr.games.pacman.ui2d.util.KeyInput.shift_alt;
 
 /**
  * @author Armin Reichert
@@ -59,7 +58,7 @@ public class OptionsScene extends GameScene2D {
     public void bindGameActions() {
         bind(TengenGameActions.SELECT_NEXT_JOYPAD, alt(KeyCode.J));
         bind(TengenGameActions.START_PLAYING,      context.joypad().start());
-        GameActions2D.setTestActions(this);
+        GameActions2D.bindTestActions(this);
     }
 
     @Override

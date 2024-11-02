@@ -130,14 +130,14 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             }
         }
         else {
-            GameActions2D.setPlaySceneCheatActions(this);
+            GameActions2D.bindCheatActions(this);
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 TengenGameActions.setDefaultJoypadActions(this, context.joypad());
             } else {
                 // TODO create Arcade controller/"joypad"
-                GameActions2D.setDefaultPlayerControlActions(this);
+                GameActions2D.bindDefaultPlayerControlActions(this);
             }
-            GameActions2D.setFallbackPlayerControlActions(this);
+            GameActions2D.bindFallbackPlayerControlActions(this);
         }
     }
 

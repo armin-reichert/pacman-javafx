@@ -69,7 +69,7 @@ public class IntroScene extends GameScene2D {
     public void bindGameActions() {
         bind(GameActions2D.ADD_CREDIT,          only(KeyCode.DIGIT5), only(KeyCode.NUMPAD5));
         bind(GameActions2D.START_GAME,          only(KeyCode.DIGIT1), only(KeyCode.NUMPAD1));
-        GameActions2D.setTestActions(this);
+        GameActions2D.bindTestActions(this);
     }
 
     @Override
