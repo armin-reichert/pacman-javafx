@@ -61,7 +61,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected static final Keyboard KEYBOARD = new Keyboard();
 
     // My own proposal, might be crap
-    public static final Joypad JOYPAD_CURSOR_KEYS = new JoypadKeyBinding(
+    public static final Joypad JOYPAD_CURSOR_KEYS = new JoypadKeys(
             new KeyCodeCombination(KeyCode.TAB),  new KeyCodeCombination(KeyCode.ENTER),
             new KeyCodeCombination(KeyCode.B), new KeyCodeCombination(KeyCode.N),
             new KeyCodeCombination(KeyCode.UP), new KeyCodeCombination(KeyCode.DOWN),
@@ -69,7 +69,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     );
 
     // Mesen emulator key set #2
-    public static final Joypad JOYPAD_WASD = new JoypadKeyBinding(
+    public static final Joypad JOYPAD_WASD = new JoypadKeys(
             new KeyCodeCombination(KeyCode.U),  new KeyCodeCombination(KeyCode.I),
             new KeyCodeCombination(KeyCode.J), new KeyCodeCombination(KeyCode.K),
             new KeyCodeCombination(KeyCode.W), new KeyCodeCombination(KeyCode.S),
