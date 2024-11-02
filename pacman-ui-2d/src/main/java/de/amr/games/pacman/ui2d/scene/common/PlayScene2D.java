@@ -44,10 +44,10 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void bindGameActions() {
         if (context.game().isDemoLevel()) {
-            bind(GameActions2D.ADD_CREDIT, only(KeyCode.DIGIT5), only(KeyCode.NUMPAD5));
+            bind(GameActions2D.ADD_CREDIT, context.arcadeController().coin());
         } else {
             GameActions2D.bindCheatActions(this);
-            GameActions2D.bindDefaultPlayerControlActions(this);
+            GameActions2D.bindDefaultArcadeControllerActions(this, context.arcadeController());
             GameActions2D.bindFallbackPlayerControlActions(this);
         }
     }

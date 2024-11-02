@@ -16,10 +16,7 @@ import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
 import de.amr.games.pacman.ui2d.sound.GameSound;
-import de.amr.games.pacman.ui2d.util.AssetStorage;
-import de.amr.games.pacman.ui2d.util.GameClockFX;
-import de.amr.games.pacman.ui2d.util.Joypad;
-import de.amr.games.pacman.ui2d.util.Keyboard;
+import de.amr.games.pacman.ui2d.util.*;
 import javafx.beans.property.ObjectProperty;
 
 import java.util.Optional;
@@ -45,6 +42,7 @@ public interface GameContext {
 
     // Input
     Keyboard                    keyboard();
+    ArcadeController            arcadeController();
     Joypad                      joypad();
     void                        enableJoypad();
     void                        disableJoypad();

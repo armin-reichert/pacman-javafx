@@ -25,8 +25,8 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.ADD_CREDIT, only(KeyCode.DIGIT5), only(KeyCode.NUMPAD5));
-        bind(GameActions2D.START_GAME, only(KeyCode.DIGIT1), only(KeyCode.NUMPAD1));
+        bind(GameActions2D.ADD_CREDIT, context.arcadeController().coin());
+        bind(GameActions2D.START_GAME, context.arcadeController().start());
     }
 
     @Override

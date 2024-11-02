@@ -32,6 +32,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.EATEN;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.ui2d.GameActions2D.bindTestActions;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
 import static de.amr.games.pacman.ui2d.util.KeyInput.only;
 
@@ -74,9 +75,9 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.ADD_CREDIT,          only(KeyCode.DIGIT5), only(KeyCode.NUMPAD5));
-        bind(GameActions2D.START_GAME,          only(KeyCode.DIGIT1), only(KeyCode.NUMPAD1));
-        GameActions2D.bindTestActions(this);
+        bind(GameActions2D.ADD_CREDIT, context.arcadeController().coin());
+        bind(GameActions2D.START_GAME, context.arcadeController().start());
+        bindTestActions(this);
     }
 
     @Override

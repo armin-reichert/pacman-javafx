@@ -12,6 +12,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
+import de.amr.games.pacman.ui2d.util.ArcadeController;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
@@ -240,11 +241,13 @@ public enum GameActions2D implements GameAction {
         }
     };
 
-    public static void bindDefaultPlayerControlActions(GameActionProvider actionProvider) {
-        actionProvider.bind(GameActions2D.PLAYER_UP, only(KeyCode.UP));
-        actionProvider.bind(GameActions2D.PLAYER_DOWN, only(KeyCode.DOWN));
-        actionProvider.bind(GameActions2D.PLAYER_LEFT, only(KeyCode.LEFT));
-        actionProvider.bind(GameActions2D.PLAYER_RIGHT, only(KeyCode.RIGHT));
+    public static void bindDefaultArcadeControllerActions(GameActionProvider actionProvider, ArcadeController arcadeController) {
+        actionProvider.bind(GameActions2D.ADD_CREDIT,   arcadeController.coin());
+        actionProvider.bind(GameActions2D.START_GAME,   arcadeController.start());
+        actionProvider.bind(GameActions2D.PLAYER_UP,    arcadeController.up());
+        actionProvider.bind(GameActions2D.PLAYER_DOWN,  arcadeController.down());
+        actionProvider.bind(GameActions2D.PLAYER_LEFT,  arcadeController.left());
+        actionProvider.bind(GameActions2D.PLAYER_RIGHT, arcadeController.right());
     }
 
     public static void bindFallbackPlayerControlActions(GameActionProvider actionProvider) {

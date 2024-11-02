@@ -43,8 +43,11 @@ import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.ui2d.GameActions2D.bindDefaultArcadeControllerActions;
+import static de.amr.games.pacman.ui2d.GameActions2D.bindFallbackPlayerControlActions;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions.bindDefaultJoypadActions;
 import static de.amr.games.pacman.ui2d.util.KeyInput.alt;
 import static de.amr.games.pacman.ui2d.util.KeyInput.only;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
@@ -126,19 +129,17 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 bind(TengenGameActions.QUIT_DEMO_LEVEL, context.joypad().start());
             } else {
-                // TODO create Arcade controller/"joypad"
-                bind(GameActions2D.ADD_CREDIT, only(KeyCode.DIGIT5), only(KeyCode.NUMPAD5));
+                bind(GameActions2D.ADD_CREDIT, context.arcadeController().coin());
             }
         }
         else {
-            GameActions2D.bindCheatActions(this);
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                TengenGameActions.bindDefaultJoypadActions(this, context.joypad());
+                bindDefaultJoypadActions(this, context.joypad());
             } else {
-                // TODO create Arcade controller/"joypad"
-                GameActions2D.bindDefaultPlayerControlActions(this);
+                bindDefaultArcadeControllerActions(this, context.arcadeController());
             }
-            GameActions2D.bindFallbackPlayerControlActions(this);
+            bindFallbackPlayerControlActions(this);
+            GameActions2D.bindCheatActions(this);
         }
     }
 

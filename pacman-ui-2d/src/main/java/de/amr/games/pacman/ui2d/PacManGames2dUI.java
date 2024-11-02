@@ -62,18 +62,44 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     // My own proposal, might be crap
     public static final Joypad JOYPAD_CURSOR_KEYS = new JoypadKeys(
-            new KeyCodeCombination(KeyCode.TAB),  new KeyCodeCombination(KeyCode.ENTER),
-            new KeyCodeCombination(KeyCode.B), new KeyCodeCombination(KeyCode.N),
-            new KeyCodeCombination(KeyCode.UP), new KeyCodeCombination(KeyCode.DOWN),
-            new KeyCodeCombination(KeyCode.LEFT), new KeyCodeCombination(KeyCode.RIGHT)
+            new KeyCodeCombination(KeyCode.TAB),
+            new KeyCodeCombination(KeyCode.ENTER),
+            new KeyCodeCombination(KeyCode.B),
+            new KeyCodeCombination(KeyCode.N),
+            new KeyCodeCombination(KeyCode.UP),
+            new KeyCodeCombination(KeyCode.DOWN),
+            new KeyCodeCombination(KeyCode.LEFT),
+            new KeyCodeCombination(KeyCode.RIGHT)
     );
 
     // Mesen emulator key set #2
     public static final Joypad JOYPAD_WASD = new JoypadKeys(
-            new KeyCodeCombination(KeyCode.U),  new KeyCodeCombination(KeyCode.I),
-            new KeyCodeCombination(KeyCode.J), new KeyCodeCombination(KeyCode.K),
-            new KeyCodeCombination(KeyCode.W), new KeyCodeCombination(KeyCode.S),
-            new KeyCodeCombination(KeyCode.A), new KeyCodeCombination(KeyCode.D)
+            new KeyCodeCombination(KeyCode.U),
+            new KeyCodeCombination(KeyCode.I),
+            new KeyCodeCombination(KeyCode.J),
+            new KeyCodeCombination(KeyCode.K),
+            new KeyCodeCombination(KeyCode.W),
+            new KeyCodeCombination(KeyCode.S),
+            new KeyCodeCombination(KeyCode.A),
+            new KeyCodeCombination(KeyCode.D)
+    );
+
+    public static final ArcadeController ARCADE_CONTROLLER_CURSOR_KEYS = new ArcadeControllerKeys(
+            new KeyCodeCombination(KeyCode.DIGIT5),
+            new KeyCodeCombination(KeyCode.DIGIT1),
+            new KeyCodeCombination(KeyCode.UP),
+            new KeyCodeCombination(KeyCode.DOWN),
+            new KeyCodeCombination(KeyCode.LEFT),
+            new KeyCodeCombination(KeyCode.RIGHT)
+    );
+
+    public static final ArcadeController ARCADE_CONTROLLER_CURSOR_KEYS_NUMPAD = new ArcadeControllerKeys(
+            new KeyCodeCombination(KeyCode.NUMPAD5),
+            new KeyCodeCombination(KeyCode.NUMPAD1),
+            new KeyCodeCombination(KeyCode.UP),
+            new KeyCodeCombination(KeyCode.DOWN),
+            new KeyCodeCombination(KeyCode.LEFT),
+            new KeyCodeCombination(KeyCode.RIGHT)
     );
 
     /**
@@ -109,6 +135,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected Picker<String> pickerGameOver;
     protected Picker<String> pickerLevelComplete;
     protected Joypad joypad = JOYPAD_CURSOR_KEYS;
+    protected ArcadeController arcadeController = ARCADE_CONTROLLER_CURSOR_KEYS;
 
     public PacManGames2dUI() {
         assets = new AssetStorage();
@@ -319,6 +346,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         return KEYBOARD;
     }
 
+    @Override
+    public ArcadeController arcadeController() {
+        return arcadeController;
+    }
+
+    @Override
     public Joypad joypad() {
         return joypad;
     }
@@ -335,14 +368,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public void enableJoypad() {
-        Logger.info("Plug-in NES controller");
-        joypad.allKeys().forEach(keyboard()::register);
+        Logger.info("Enable joypad");
+        joypad.register(KEYBOARD);
     }
 
     @Override
     public void disableJoypad() {
-        Logger.info("Plug-out NES controller");
-        joypad.allKeys().forEach(keyboard()::unregister);
+        Logger.info("Disable joypad");
+        joypad.unregister(KEYBOARD);
     }
 
     @Override
