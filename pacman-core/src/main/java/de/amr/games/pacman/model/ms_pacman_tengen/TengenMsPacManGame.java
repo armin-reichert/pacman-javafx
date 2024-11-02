@@ -21,8 +21,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.model.GameModel.ANIM_GHOST_NORMAL;
-import static de.amr.games.pacman.model.GameModel.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 import static de.amr.games.pacman.model.ms_pacman_tengen.SpeedConfiguration.*;
 
@@ -301,7 +299,7 @@ public class TengenMsPacManGame extends GameModel {
         float pacBaseSpeed = pacBaseSpeedInLevel(levelNumber) + pacDifficultySpeedDelta(difficulty);
         pac.setBaseSpeed(pacBaseSpeed);
         if (boosterMode == BoosterMode.ALWAYS_ON) {
-            activateBooster();
+            setBoosterActive(true);
         }
         for (Ghost ghost : ghosts) {
             ghost.setBaseSpeed(ghostBaseSpeedInLevel(levelNumber)
@@ -319,26 +317,16 @@ public class TengenMsPacManGame extends GameModel {
         });
     }
 
-    public void activateBooster() {
-        if (boosterActive) {
-            Logger.warn("Pac booster is already active");
-            return;
+    public void setBoosterActive(boolean active) {
+        if (boosterActive != active) {
+            boosterActive = active;
+            float speed = pacBaseSpeedInLevel(currentLevelNumber) + pacDifficultySpeedDelta(difficulty);
+            if (boosterActive) {
+                speed += pacBoosterSpeedDelta();
+            }
+            pac.setBaseSpeed(speed);
+            pac.selectAnimation(boosterActive ? ANIM_MS_PACMAN_BOOSTER : ANIM_PAC_MUNCHING);
         }
-        boosterActive = true;
-        pac.setBaseSpeed(pacBaseSpeedInLevel(currentLevelNumber) + pacDifficultySpeedDelta(difficulty) + pacBoosterSpeedDelta());
-        pac.selectAnimation(ANIM_MS_PACMAN_BOOSTER);
-        Logger.info("Ms. Pac-Man booster activated, base speed set to {0.00} px/s", pac.baseSpeed());
-    }
-
-    public void deactivateBooster() {
-        if (!boosterActive) {
-            Logger.warn("Pac booster is already inactive");
-            return;
-        }
-        boosterActive = false;
-        pac.setBaseSpeed(pacBaseSpeedInLevel(currentLevelNumber) + pacDifficultySpeedDelta(difficulty));
-        pac.selectAnimation(ANIM_PAC_MUNCHING);
-        Logger.info("Ms. Pac-Man booster deactivated, base speed set to {0.00} px/s", pac.baseSpeed());
     }
 
     @Override
@@ -358,7 +346,7 @@ public class TengenMsPacManGame extends GameModel {
 
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUsingAutopilot(false);
-        deactivateBooster(); // gets activated in startLevel() if ALWAYS_ON
+        setBoosterActive(false); // gets activated in startLevel() if mode is ALWAYS_ON
 
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
@@ -392,7 +380,7 @@ public class TengenMsPacManGame extends GameModel {
 
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUsingAutopilot(true);
-        deactivateBooster(); // gets activated in startLevel() if ALWAYS_ON
+        setBoosterActive(false); // gets activated in startLevel() if mode is ALWAYS_ON
 
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
