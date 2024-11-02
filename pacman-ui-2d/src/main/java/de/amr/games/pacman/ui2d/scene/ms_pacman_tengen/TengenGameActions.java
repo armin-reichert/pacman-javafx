@@ -50,4 +50,11 @@ public enum TengenGameActions implements GameAction {
         }
     },
 
+    START_PLAYING {
+        @Override
+        public void execute(GameContext context) {
+            context.sound().stopAll();
+            context.gameController().changeState(GameState.STARTING_GAME);
+        }
+    }
 }

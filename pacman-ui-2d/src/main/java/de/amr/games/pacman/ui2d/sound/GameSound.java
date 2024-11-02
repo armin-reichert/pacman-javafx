@@ -29,7 +29,7 @@ public class GameSound {
     private final BooleanProperty enabledPy = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
-            Logger.info("Game sound is {}abled", get() ? "en" : "dis");
+            Logger.info("Game sound is {}", get() ? "enabled" : "disabled");
         }
     };
 
@@ -51,19 +51,19 @@ public class GameSound {
         this.gameVariant = checkNotNull(gameVariant);
         if (playerMapByGameVariant.get(gameVariant) == null) {
             Map<String, MediaPlayer> players = new HashMap<>();
-
-            players.put("game_over", createPlayer(gameVariant, assets, "game_over", 0.5, false));
-            players.put("game_ready", createPlayer(gameVariant, assets, "game_ready", 0.5, false));
-            players.put("ghost_returns", createPlayer(gameVariant, assets, "ghost_returns", 0.5, true));
-            players.put("level_complete", createPlayer(gameVariant, assets, "level_complete", 0.5, false));
-            players.put("pacman_munch", createPlayer(gameVariant, assets, "pacman_munch", 0.5, true));
-            players.put("pacman_death", createPlayer(gameVariant, assets, "pacman_death", 0.5, false));
-            players.put("pacman_power", createPlayer(gameVariant, assets, "pacman_power", 0.5, true));
+            players.put("game_over", createPlayer(gameVariant, assets, "game_over", 1, false));
+            players.put("game_ready", createPlayer(gameVariant, assets, "game_ready", 1, false));
+            players.put("ghost_returns", createPlayer(gameVariant, assets, "ghost_returns", 1, true));
+            players.put("level_complete", createPlayer(gameVariant, assets, "level_complete", 1, false));
+            players.put("pacman_munch", createPlayer(gameVariant, assets, "pacman_munch", 1, true));
+            players.put("pacman_death", createPlayer(gameVariant, assets, "pacman_death", 1, false));
+            players.put("pacman_power", createPlayer(gameVariant, assets, "pacman_power", 1, true));
             MediaPlayer bouncePlayer = createPlayer(gameVariant, assets, "bonus_bouncing", 1, true);
             if (bouncePlayer != null) {
                 bouncePlayer.setRate(0.25);
             }
             players.put("bonus_bouncing", bouncePlayer);
+
             playerMapByGameVariant.put(gameVariant, players);
             Logger.info("Created media players for game variant {}", gameVariant);
         }
@@ -300,9 +300,9 @@ public class GameSound {
             return;
         }
         intermissionSound = switch (gameVariant) {
-            case MS_PACMAN, MS_PACMAN_TENGEN -> createPlayer(gameVariant, assets, "intermission." + number, 0.5, false);
+            case MS_PACMAN, MS_PACMAN_TENGEN -> createPlayer(gameVariant, assets, "intermission." + number, 1, false);
             case PACMAN, PACMAN_XXL -> {
-                var player = createPlayer(gameVariant, assets, "intermission", 0.5, false);
+                var player = createPlayer(gameVariant, assets, "intermission", 1, false);
                 player.setCycleCount(number == 2 ? 1 : 2);
                 yield player;
             }

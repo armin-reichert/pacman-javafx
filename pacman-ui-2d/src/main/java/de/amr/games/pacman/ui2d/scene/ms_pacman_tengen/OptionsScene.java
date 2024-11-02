@@ -51,16 +51,17 @@ public class OptionsScene extends GameScene2D {
     static final int MIN_START_LEVEL = 1;
     static final int MAX_START_LEVEL = 32;  //TODO 7
 
-    private TengenMsPacManGame tengenGame;
+    private TengenMsPacManGame game;
     private int selectedOption;
     private long idleTicks;
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.TEST_CUT_SCENES,     alt(KeyCode.C));
-        bind(GameActions2D.TEST_LEVELS_BONI,    alt(KeyCode.T));
-        bind(GameActions2D.TEST_LEVELS_TEASERS, shift_alt(KeyCode.T));
+        bind(GameActions2D.TEST_CUT_SCENES,        alt(KeyCode.C));
+        bind(GameActions2D.TEST_LEVELS_BONI,       alt(KeyCode.T));
+        bind(GameActions2D.TEST_LEVELS_TEASERS,    shift_alt(KeyCode.T));
         bind(TengenGameActions.SELECT_NEXT_JOYPAD, alt(KeyCode.J));
+        bind(TengenGameActions.START_PLAYING,      context.joypad().start());
     }
 
     @Override
@@ -68,8 +69,8 @@ public class OptionsScene extends GameScene2D {
         context.enableJoypad();
         context.setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
-        tengenGame = (TengenMsPacManGame) context.game();
-        tengenGame.setCanStartGame(true);
+        game = (TengenMsPacManGame) context.game();
+        game.setCanStartGame(true);
         resetIdleTimer();
     }
 
@@ -80,7 +81,7 @@ public class OptionsScene extends GameScene2D {
 
     @Override
     public void update() {
-        if (idleTicks == 25*60) { // TODO check idle time in disassembly
+        if (idleTicks == 25*60) { // TODO check exact time in disassembly
             context.gameController().changeState(GameState.INTRO);
             return;
         }
@@ -91,11 +92,135 @@ public class OptionsScene extends GameScene2D {
     public Vector2f size() {
         return new Vector2f(NES_RESOLUTION_X, NES_RESOLUTION_Y);
     }
-    @Override
 
+    private void resetIdleTimer() {
+        idleTicks = 0;
+    }
+
+    private void optionSelectionChanged() {
+        context.sound().playClipIfEnabled("option.selection_changed", 1);
+        resetIdleTimer();
+    }
+
+    private void optionValueChanged() {
+        context.sound().playClipIfEnabled("option.value_changed", 1);
+        resetIdleTimer();
+    }
+
+    @Override
+    public void handleInput(GameContext context) {
+
+        if (context.keyboard().pressedAndRegistered(context.joypad().down())) {
+            selectNextOption();
+        }
+        else if (context.keyboard().pressedAndRegistered(context.joypad().up())) {
+            selectPrevOption();
+        }
+
+        // Button "A" is right of "B": select next value
+        else if (context.keyboard().pressedAndRegistered(context.joypad().a())) {
+            switch (selectedOption) {
+                case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue();
+                case OPTION_DIFFICULTY     -> setNextDifficultyValue();
+                case OPTION_MAZE_SELECTION -> setNextMapCategoryValue();
+                case OPTION_STARTING_LEVEL -> setNextStartLevelValue();
+                default -> {}
+            }
+        }
+
+        // Button "B" is left of "A": select previous value
+        else if (context.keyboard().pressedAndRegistered(context.joypad().b())) {
+            switch (selectedOption) {
+                case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue();
+                case OPTION_DIFFICULTY     -> setPrevDifficultyValue();
+                case OPTION_MAZE_SELECTION -> setPrevMapCategoryValue();
+                case OPTION_STARTING_LEVEL -> setPrevStartLevelValue();
+                default -> {}
+            }
+        }
+
+        else {
+            context.doFirstCalledGameAction(this);
+        }
+    }
+
+    private void selectPrevOption() {
+        selectedOption = selectedOption == 0 ? NUM_OPTIONS - 1 : selectedOption - 1;
+        optionSelectionChanged();
+    }
+
+    private void selectNextOption() {
+        selectedOption = (selectedOption < NUM_OPTIONS - 1) ? selectedOption + 1 : 0;
+        optionSelectionChanged();
+    }
+
+    private void setPrevStartLevelValue() {
+        int current = game.startLevelNumber();
+        int prev = (current == MIN_START_LEVEL) ? MAX_START_LEVEL : current - 1;
+        game.setStartLevelNumber(prev);
+        optionValueChanged();
+    }
+
+    private void setNextStartLevelValue() {
+        int current = game.startLevelNumber();
+        int next = (current < MAX_START_LEVEL) ? current + 1 : MIN_START_LEVEL;
+        game.setStartLevelNumber(next);
+        optionValueChanged();
+    }
+
+    private void setPrevMapCategoryValue() {
+        MapCategory category = game.mapCategory();
+        var values = MapCategory.values();
+        int current = category.ordinal(), prev = (current == 0) ? values.length - 1 :  current - 1;
+        game.setMapCategory(values[prev]);
+        optionValueChanged();
+    }
+
+    private void setNextMapCategoryValue() {
+        MapCategory category = game.mapCategory();
+        var values = MapCategory.values();
+        int current = category.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
+        game.setMapCategory(values[next]);
+        optionValueChanged();
+    }
+
+    private void setPrevDifficultyValue() {
+        Difficulty difficulty = game.difficulty();
+        var values = Difficulty.values();
+        int current = difficulty.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
+        game.setDifficulty(values[prev]);
+        optionValueChanged();
+    }
+
+    private void setNextDifficultyValue() {
+        Difficulty difficulty = game.difficulty();
+        var values = Difficulty.values();
+        int current = difficulty.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
+        game.setDifficulty(values[next]);
+        optionValueChanged();
+    }
+
+    private void setPrevPacBoosterValue() {
+        BoosterMode boosterMode = game.boosterMode();
+        var values = BoosterMode.values();
+        int current = boosterMode.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
+        game.setBoosterMode(values[prev]);
+        optionValueChanged();
+    }
+
+    private void setNextPacBoosterValue() {
+        BoosterMode boosterMode = game.boosterMode();
+        var values = BoosterMode.values();
+        int current = boosterMode.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
+        game.setBoosterMode(values[next]);
+        optionValueChanged();
+    }
+
+    // Drawing
+
+    @Override
     protected void drawSceneContent(GameRenderer renderer) {
         renderer.scalingProperty().set(scaling());
-
         Font scaledFont = renderer.scaledArcadeFont(TS);
 
         double y = 20;
@@ -116,28 +241,33 @@ public class OptionsScene extends GameScene2D {
         drawArrowIfSelected(renderer, OPTION_PAC_BOOSTER, y, scaledFont);
         renderer.drawText("PAC BOOSTER", LABEL_COLOR, scaledFont, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
-        renderer.drawText(pacBoosterText(tengenGame.boosterMode()), VALUE_COLOR, scaledFont, COL_VALUE, y);
+        String pacBoosterText = switch (game.boosterMode()) {
+            case OFF -> "OFF";
+            case ALWAYS_ON -> "ALWAYS ON";
+            case ACTIVATED_USING_KEY -> "KEY A";
+        };
+        renderer.drawText(pacBoosterText, VALUE_COLOR, scaledFont, COL_VALUE, y);
 
         // Game difficulty
         y += 3 * TS;
         drawArrowIfSelected(renderer, OPTION_DIFFICULTY, y, scaledFont);
         renderer.drawText("GAME DIFFICULTY", LABEL_COLOR, scaledFont, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
-        renderer.drawText(tengenGame.difficulty().name(), VALUE_COLOR, scaledFont, COL_VALUE, y);
+        renderer.drawText(game.difficulty().name(), VALUE_COLOR, scaledFont, COL_VALUE, y);
 
         // Maze (type) selection
         y += 3 * TS;
         drawArrowIfSelected(renderer, OPTION_MAZE_SELECTION, y, scaledFont);
         renderer.drawText("MAZE SELECTION", LABEL_COLOR, scaledFont, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
-        renderer.drawText(tengenGame.mapCategory().name(), VALUE_COLOR, scaledFont, COL_VALUE, y);
+        renderer.drawText(game.mapCategory().name(), VALUE_COLOR, scaledFont, COL_VALUE, y);
 
         // Starting level number
         y += 3 * TS;
         drawArrowIfSelected(renderer, OPTION_STARTING_LEVEL, y, scaledFont);
         renderer.drawText("STARTING LEVEL", LABEL_COLOR, scaledFont, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
-        renderer.drawText(String.valueOf(tengenGame.startLevelNumber()), VALUE_COLOR, scaledFont, COL_VALUE + TS, y);
+        renderer.drawText(String.valueOf(game.startLevelNumber()), VALUE_COLOR, scaledFont, COL_VALUE + TS, y);
 
         y += 3 * TS;
         centerLabelText(renderer, "MOVE ARROW WITH JOYPAD", scaledFont, y);
@@ -165,14 +295,6 @@ public class OptionsScene extends GameScene2D {
         g.restore();
     }
 
-    private String pacBoosterText(BoosterMode boosterMode) {
-        return switch (boosterMode) {
-            case OFF -> "OFF";
-            case ALWAYS_ON -> "ALWAYS ON";
-            case ACTIVATED_USING_KEY -> "KEY A";
-        };
-    }
-
     private void drawArrowIfSelected(GameRenderer renderer, int option, double y, Font font) {
         if (selectedOption == option) {
             renderer.drawText("-", LABEL_COLOR, font, COL_ARROW, y);
@@ -180,148 +302,4 @@ public class OptionsScene extends GameScene2D {
         }
     }
 
-    private void optionSelectionChanged() {
-        context.sound().playClipIfEnabled("option.selection_changed", 1);
-        resetIdleTimer();
-    }
-
-    private void optionValueChanged() {
-        context.sound().playClipIfEnabled("option.value_changed", 1);
-        resetIdleTimer();
-    }
-
-    @Override
-    public void handleInput(GameContext context) {
-
-        if (context.keyboard().pressedAndRegistered(context.joypad().down())) {
-            selectNextOption();
-        }
-        else if (context.keyboard().pressedAndRegistered(context.joypad().up())) {
-            selectPrevOption();
-        }
-
-        // Button "A" is right of "B": select forwards
-        else if (context.keyboard().pressedAndRegistered(context.joypad().a())) {
-            switch (selectedOption) {
-                case OPTION_PAC_BOOSTER -> {
-                    setNextPacBoosterValue();
-                }
-                case OPTION_DIFFICULTY -> {
-                    setNextDifficultyValue();
-                }
-                case OPTION_MAZE_SELECTION -> {
-                    setNextMapCategoryValue();
-                }
-                case OPTION_STARTING_LEVEL -> {
-                    setNextStartLevelValue();
-                }
-                default -> {}
-            }
-        }
-
-        // Button "B" is left of "A": select backwards
-        else if (context.keyboard().pressedAndRegistered(context.joypad().b())) {
-            switch (selectedOption) {
-                case OPTION_PAC_BOOSTER -> {
-                    setPrevPacBoosterValue();
-                }
-                case OPTION_DIFFICULTY -> {
-                    setPrevDifficultyValue();
-                }
-                case OPTION_MAZE_SELECTION -> {
-                    setPrevMapCategoryValue();
-                }
-                case OPTION_STARTING_LEVEL -> {
-                    setPrevStartLevelValue();
-                }
-                default -> {}
-            }
-        }
-
-        //TODO use game action
-        else if (context.keyboard().pressedAndRegistered(context.joypad().start())) {
-            context.sound().stopAll();
-            context.gameController().changeState(GameState.STARTING_GAME);
-        }
-
-        else {
-            context.doFirstCalledGameAction(this);
-        }
-    }
-
-    private void resetIdleTimer() {
-        idleTicks = 0;
-    }
-
-    private void selectPrevOption() {
-        selectedOption = selectedOption == 0 ? NUM_OPTIONS - 1 : selectedOption - 1;
-        optionSelectionChanged();
-    }
-
-    private void selectNextOption() {
-        selectedOption = (selectedOption < NUM_OPTIONS - 1) ? selectedOption + 1 : 0;
-        optionSelectionChanged();
-    }
-
-    private void setPrevStartLevelValue() {
-        int current = tengenGame.startLevelNumber();
-        int prev = (current == MIN_START_LEVEL) ? MAX_START_LEVEL : current - 1;
-        tengenGame.setStartLevelNumber(prev);
-        optionValueChanged();
-    }
-
-    private void setNextStartLevelValue() {
-        int current = tengenGame.startLevelNumber();
-        int next = (current < MAX_START_LEVEL) ? current + 1 : MIN_START_LEVEL;
-        tengenGame.setStartLevelNumber(next);
-        optionValueChanged();
-    }
-
-    private void setPrevMapCategoryValue() {
-        MapCategory category = tengenGame.mapCategory();
-        var values = MapCategory.values();
-        int current = category.ordinal(), prev = (current == 0) ? values.length - 1 :  current - 1;
-        tengenGame.setMapCategory(values[prev]);
-        optionValueChanged();
-    }
-
-    private void setNextMapCategoryValue() {
-        MapCategory category = tengenGame.mapCategory();
-        var values = MapCategory.values();
-        int current = category.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
-        tengenGame.setMapCategory(values[next]);
-        optionValueChanged();
-    }
-
-    private void setPrevDifficultyValue() {
-        Difficulty difficulty = tengenGame.difficulty();
-        var values = Difficulty.values();
-        int current = difficulty.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
-        tengenGame.setDifficulty(values[prev]);
-        optionValueChanged();
-    }
-
-    private void setNextDifficultyValue() {
-        Difficulty difficulty = tengenGame.difficulty();
-        var values = Difficulty.values();
-        int current = difficulty.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
-        tengenGame.setDifficulty(values[next]);
-        optionValueChanged();
-    }
-
-    private void setPrevPacBoosterValue() {
-        BoosterMode boosterMode = tengenGame.boosterMode();
-        var values = BoosterMode.values();
-        int current = boosterMode.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
-        tengenGame.setBoosterMode(values[prev]);
-        optionValueChanged();
-    }
-
-    private void setNextPacBoosterValue() {
-        BoosterMode boosterMode = tengenGame.boosterMode();
-        var values = BoosterMode.values();
-        int current = boosterMode.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
-        tengenGame.setBoosterMode(values[next]);
-        optionValueChanged();
-    }
 }
