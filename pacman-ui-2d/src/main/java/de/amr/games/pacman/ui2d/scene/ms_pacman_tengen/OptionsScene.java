@@ -57,11 +57,11 @@ public class OptionsScene extends GameScene2D {
     private long idleTicks;
 
     @Override
-    public void defineGameActionKeyBindings() {
-        bindAction(GameActions2D.TEST_CUT_SCENES,     alt(KeyCode.C));
-        bindAction(GameActions2D.TEST_LEVELS_BONI,    alt(KeyCode.T));
-        bindAction(GameActions2D.TEST_LEVELS_TEASERS, shift_alt(KeyCode.T));
-        bindAction(SELECT_NEXT_JOYPAD, alt(KeyCode.J));
+    public void bindGameActions() {
+        bind(GameActions2D.TEST_CUT_SCENES,     alt(KeyCode.C));
+        bind(GameActions2D.TEST_LEVELS_BONI,    alt(KeyCode.T));
+        bind(GameActions2D.TEST_LEVELS_TEASERS, shift_alt(KeyCode.T));
+        bind(SELECT_NEXT_JOYPAD, alt(KeyCode.J));
     }
 
     @Override

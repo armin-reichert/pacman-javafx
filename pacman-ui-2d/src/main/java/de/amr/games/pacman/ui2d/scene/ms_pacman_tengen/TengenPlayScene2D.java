@@ -114,20 +114,20 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     }
 
     @Override
-    public void defineGameActionKeyBindings() {
+    public void bindGameActions() {
         Joypad joypad = context.joypad();
         if (context.game().isDemoLevel()) {
-            bindAction(QUIT_DEMO_LEVEL,                 joypad.start());
+            bind(QUIT_DEMO_LEVEL,                 joypad.start());
         } else {
-            bindAction(GameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
-            bindAction(GameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
-            bindAction(GameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
-            bindAction(GameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
-            bindAction(TOGGLE_PAC_BOOSTER,              joypad.a());
-            bindAction(GameActions2D.PLAYER_UP,         joypad.up(),    control(KeyCode.UP));
-            bindAction(GameActions2D.PLAYER_DOWN,       joypad.down(),  control(KeyCode.DOWN));
-            bindAction(GameActions2D.PLAYER_LEFT,       joypad.left(),  control(KeyCode.LEFT));
-            bindAction(GameActions2D.PLAYER_RIGHT,      joypad.right(), control(KeyCode.RIGHT));
+            bind(GameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
+            bind(GameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
+            bind(GameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
+            bind(GameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
+            bind(TOGGLE_PAC_BOOSTER,              joypad.a());
+            bind(GameActions2D.PLAYER_UP,         joypad.up(),    control(KeyCode.UP));
+            bind(GameActions2D.PLAYER_DOWN,       joypad.down(),  control(KeyCode.DOWN));
+            bind(GameActions2D.PLAYER_LEFT,       joypad.left(),  control(KeyCode.LEFT));
+            bind(GameActions2D.PLAYER_RIGHT,      joypad.right(), control(KeyCode.RIGHT));
         }
 
     }

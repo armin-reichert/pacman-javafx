@@ -24,9 +24,9 @@ import static de.amr.games.pacman.ui2d.util.KeyInput.kcc;
 public class StartScene extends GameScene2D {
 
     @Override
-    public void defineGameActionKeyBindings() {
-        bindAction(GameActions2D.ADD_CREDIT, kcc(KeyCode.DIGIT5), kcc(KeyCode.NUMPAD5));
-        bindAction(GameActions2D.START_GAME, kcc(KeyCode.DIGIT1), kcc(KeyCode.NUMPAD1));
+    public void bindGameActions() {
+        bind(GameActions2D.ADD_CREDIT, kcc(KeyCode.DIGIT5), kcc(KeyCode.NUMPAD5));
+        bind(GameActions2D.START_GAME, kcc(KeyCode.DIGIT1), kcc(KeyCode.NUMPAD1));
     }
 
     @Override

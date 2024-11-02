@@ -31,8 +31,8 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_PERSPECTIVE;
 public class GamePage3D extends GamePage {
 
     {
-        bindAction(GameActions3D.TOGGLE_PIP_VISIBILITY, KeyCode.F2);
-        bindAction(GameActions3D.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
+        bind(GameActions3D.TOGGLE_PIP_VISIBILITY, KeyCode.F2);
+        bind(GameActions3D.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
     }
 
     public GamePage3D(GameContext context, Scene parentScene) {

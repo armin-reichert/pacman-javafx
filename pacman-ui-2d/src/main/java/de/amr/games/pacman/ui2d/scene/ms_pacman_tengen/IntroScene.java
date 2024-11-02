@@ -62,8 +62,8 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    public void defineGameActionKeyBindings() {
-        bindAction(GameActions2D.START_GAME, context.joypad().start());
+    public void bindGameActions() {
+        bind(GameActions2D.START_GAME, context.joypad().start());
     }
 
     @Override

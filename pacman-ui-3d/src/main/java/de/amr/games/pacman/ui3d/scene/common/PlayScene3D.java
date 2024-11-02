@@ -23,7 +23,6 @@ import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions;
 import de.amr.games.pacman.ui2d.util.Joypad;
-import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui3d.GameActions3D;
 import de.amr.games.pacman.ui3d.level.*;
 import javafx.animation.Animation;
@@ -47,7 +46,6 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions.*;
 import static de.amr.games.pacman.ui2d.util.KeyInput.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
@@ -110,7 +108,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     @Override
     public final void init() {
         doInit();
-        defineGameActionKeyBindings();
+        bindGameActions();
         registerGameActionKeyBindings(context().keyboard());
     }
 
@@ -121,33 +119,33 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     @Override
-    public void defineGameActionKeyBindings() {
-        bindAction(GameActions3D.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
-        bindAction(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
+    public void bindGameActions() {
+        bind(GameActions3D.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
+        bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         if (context.game().isDemoLevel()) {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                bindAction(TengenGameActions.QUIT_DEMO_LEVEL, context.joypad().start());
+                bind(TengenGameActions.QUIT_DEMO_LEVEL, context.joypad().start());
             } else {
-                bindAction(GameActions2D.ADD_CREDIT, kcc(KeyCode.DIGIT5), kcc(KeyCode.NUMPAD5));
+                bind(GameActions2D.ADD_CREDIT, kcc(KeyCode.DIGIT5), kcc(KeyCode.NUMPAD5));
             }
         }
         else {
-            bindAction(GameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
-            bindAction(GameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
-            bindAction(GameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
-            bindAction(GameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
+            bind(GameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
+            bind(GameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
+            bind(GameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
+            bind(GameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 Joypad joypad = context.joypad();
-                bindAction(TengenGameActions.TOGGLE_PAC_BOOSTER, joypad.a());
-                bindAction(GameActions2D.PLAYER_UP,    joypad.up(), control(KeyCode.UP));
-                bindAction(GameActions2D.PLAYER_DOWN,  joypad.down(), control(KeyCode.DOWN));
-                bindAction(GameActions2D.PLAYER_LEFT,  joypad.left(), control(KeyCode.LEFT));
-                bindAction(GameActions2D.PLAYER_RIGHT, joypad.right(), control(KeyCode.RIGHT));
+                bind(TengenGameActions.TOGGLE_PAC_BOOSTER, joypad.a());
+                bind(GameActions2D.PLAYER_UP,    joypad.up(), control(KeyCode.UP));
+                bind(GameActions2D.PLAYER_DOWN,  joypad.down(), control(KeyCode.DOWN));
+                bind(GameActions2D.PLAYER_LEFT,  joypad.left(), control(KeyCode.LEFT));
+                bind(GameActions2D.PLAYER_RIGHT, joypad.right(), control(KeyCode.RIGHT));
             } else {
-                bindAction(GameActions2D.PLAYER_UP,    kcc(KeyCode.UP), control(KeyCode.UP));
-                bindAction(GameActions2D.PLAYER_DOWN,  kcc(KeyCode.DOWN), control(KeyCode.DOWN));
-                bindAction(GameActions2D.PLAYER_LEFT,  kcc(KeyCode.LEFT), control(KeyCode.LEFT));
-                bindAction(GameActions2D.PLAYER_RIGHT, kcc(KeyCode.RIGHT), control(KeyCode.RIGHT));
+                bind(GameActions2D.PLAYER_UP,    kcc(KeyCode.UP), control(KeyCode.UP));
+                bind(GameActions2D.PLAYER_DOWN,  kcc(KeyCode.DOWN), control(KeyCode.DOWN));
+                bind(GameActions2D.PLAYER_LEFT,  kcc(KeyCode.LEFT), control(KeyCode.LEFT));
+                bind(GameActions2D.PLAYER_RIGHT, kcc(KeyCode.RIGHT), control(KeyCode.RIGHT));
             }
         }
     }
@@ -397,7 +395,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             }
             level3D.livesCounter3D().shapesRotation().play();
         }
-        defineGameActionKeyBindings();
+        bindGameActions();
         registerGameActionKeyBindings(context.keyboard());
     }
 

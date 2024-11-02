@@ -37,7 +37,7 @@ public class BootScene extends GameScene2D {
     private long t;
 
     @Override
-    public void defineGameActionKeyBindings() {}
+    public void bindGameActions() {}
 
     @Override
     public void doInit() {

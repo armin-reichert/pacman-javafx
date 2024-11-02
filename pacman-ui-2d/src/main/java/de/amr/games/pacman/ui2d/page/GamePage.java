@@ -125,7 +125,7 @@ public class GamePage extends StackPane implements Page {
         this.context = checkNotNull(context);
         this.parentScene = checkNotNull(parentScene);
 
-        defineGameActionKeyBindings();
+        bindGameActions();
 
         gameCanvas = new Canvas();
 
@@ -179,21 +179,21 @@ public class GamePage extends StackPane implements Page {
     }
 
     @Override
-    public void defineGameActionKeyBindings() {
-        bindAction(GameActions2D.BOOT,            KeyCode.F3);
-        bindAction(GameActions2D.SHOW_START_PAGE, KeyCode.Q);
-        bindAction(GameActions2D.TOGGLE_PAUSED,   KeyCode.P);
-        bindAction(GameActions2D.OPEN_EDITOR,     shift_alt(KeyCode.E));
-        bindAction(actionToggleDebugInfo,         alt(KeyCode.D));
-        bindAction(actionShowHelp,                KeyCode.H);
-        bindAction(actionSimulationSlower,        alt(KeyCode.MINUS));
-        bindAction(actionSimulationFaster,        alt(KeyCode.PLUS));
-        bindAction(actionSimulationNormalSpeed,   alt(KeyCode.DIGIT0));
-        bindAction(actionSimulationOneStep,       shift(KeyCode.P));
-        bindAction(actionSimulationTenSteps,      shift(KeyCode.SPACE));
-        bindAction(actionToggleAutopilot,         alt(KeyCode.A));
-        bindAction(actionToggleDashboard,         kcc(KeyCode.F1), alt(KeyCode.B));
-        bindAction(actionToggleImmunity,          alt(KeyCode.I));
+    public void bindGameActions() {
+        bind(GameActions2D.BOOT,            KeyCode.F3);
+        bind(GameActions2D.SHOW_START_PAGE, KeyCode.Q);
+        bind(GameActions2D.TOGGLE_PAUSED,   KeyCode.P);
+        bind(GameActions2D.OPEN_EDITOR,     shift_alt(KeyCode.E));
+        bind(actionToggleDebugInfo,         alt(KeyCode.D));
+        bind(actionShowHelp,                KeyCode.H);
+        bind(actionSimulationSlower,        alt(KeyCode.MINUS));
+        bind(actionSimulationFaster,        alt(KeyCode.PLUS));
+        bind(actionSimulationNormalSpeed,   alt(KeyCode.DIGIT0));
+        bind(actionSimulationOneStep,       shift(KeyCode.P));
+        bind(actionSimulationTenSteps,      shift(KeyCode.SPACE));
+        bind(actionToggleAutopilot,         alt(KeyCode.A));
+        bind(actionToggleDashboard,         kcc(KeyCode.F1), alt(KeyCode.B));
+        bind(actionToggleImmunity,          alt(KeyCode.I));
     }
 
     @Override
