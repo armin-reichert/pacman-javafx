@@ -11,7 +11,6 @@ import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSceneConfiguration;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGameSceneConfiguration;
 import de.amr.games.pacman.ui2d.scene.pacman_xxl.PacManGameXXLSceneConfiguration;
-import de.amr.games.pacman.ui2d.util.Joypad;
 import javafx.application.Application;
 import javafx.beans.property.*;
 import javafx.geometry.Dimension2D;

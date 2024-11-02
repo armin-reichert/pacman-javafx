@@ -18,8 +18,8 @@ import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
 import de.amr.games.pacman.ui2d.sound.GameSound;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
-import de.amr.games.pacman.ui2d.util.Keyboard;
 import de.amr.games.pacman.ui2d.util.Joypad;
+import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.beans.property.ObjectProperty;
 
 import java.util.Optional;

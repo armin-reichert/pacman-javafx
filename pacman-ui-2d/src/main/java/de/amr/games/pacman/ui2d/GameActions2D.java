@@ -55,7 +55,7 @@ public enum GameActions2D implements GameAction {
         }
     },
 
-    BOOT { // (key(KeyCode.F3)) {
+    BOOT {
         @Override
         public void execute(GameContext context) {
             context.sound().stopAll();
@@ -65,7 +65,7 @@ public enum GameActions2D implements GameAction {
         }
     },
 
-    CHEAT_ADD_LIVES { //(alt(KeyCode.L)) {
+    CHEAT_ADD_LIVES {
         @Override
         public void execute(GameContext context) {
             context.game().addLives(3);
@@ -73,7 +73,7 @@ public enum GameActions2D implements GameAction {
         }
     },
 
-    CHEAT_EAT_ALL { // (alt(KeyCode.E)) {
+    CHEAT_EAT_ALL {
         @Override
         public void execute(GameContext context) {
             if (context.game().isPlaying() && context.gameState() == GameState.HUNTING) {
@@ -85,7 +85,7 @@ public enum GameActions2D implements GameAction {
         }
     },
 
-    CHEAT_KILL_GHOSTS { // (alt(KeyCode.X)) {
+    CHEAT_KILL_GHOSTS {
         @Override
         public void execute(GameContext context) {
             if (context.game().isPlaying() && context.gameState() == GameState.HUNTING) {
@@ -96,7 +96,7 @@ public enum GameActions2D implements GameAction {
         }
     },
 
-    CHEAT_NEXT_LEVEL { // (alt(KeyCode.N)) {
+    CHEAT_NEXT_LEVEL {
         @Override
         public void execute(GameContext context) {
             if (context.game().isPlaying() && context.gameState() == GameState.HUNTING) {
@@ -145,7 +145,7 @@ public enum GameActions2D implements GameAction {
         }
     },
 
-    OPEN_EDITOR { // (shift_alt(KeyCode.E)) {
+    OPEN_EDITOR {
         @Override
         public void execute(GameContext context) {
             if (context.game().world() == null) {
@@ -166,7 +166,7 @@ public enum GameActions2D implements GameAction {
         }
     },
 
-    SHOW_START_PAGE { // (key(KeyCode.Q)) {
+    SHOW_START_PAGE {
         @Override
         public void execute(GameContext context) {
             context.sound().stopAll();
@@ -176,7 +176,7 @@ public enum GameActions2D implements GameAction {
         }
     },
 
-    RESTART_INTRO { // (key(KeyCode.Q)) {
+    RESTART_INTRO {
         @Override
         public void execute(GameContext context) {
             context.sound().stopAll();
@@ -189,7 +189,7 @@ public enum GameActions2D implements GameAction {
         }
     },
 
-    START_GAME { // (key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1), key(KeyCode.SPACE)) {
+    START_GAME {
         @Override
         public void execute(GameContext context) {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
@@ -234,7 +234,7 @@ public enum GameActions2D implements GameAction {
         }
     },
 
-    TENGEN_SHOW_OPTIONS { // (key(KeyCode.S)) {
+    TENGEN_SHOW_OPTIONS {
         @Override
         public void execute(GameContext context) {
             context.game().setPlaying(false);
@@ -242,7 +242,7 @@ public enum GameActions2D implements GameAction {
         }
     },
 
-    TEST_CUT_SCENES { // (alt(KeyCode.C)) {
+    TEST_CUT_SCENES {
         @Override
         public void execute(GameContext context) {
             context.gameController().changeState(GameState.TESTING_CUT_SCENES);
@@ -250,7 +250,7 @@ public enum GameActions2D implements GameAction {
         }
     },
 
-    TEST_LEVELS_BONI { // (alt(KeyCode.T)) {
+    TEST_LEVELS_BONI {
         @Override
         public void execute(GameContext context) {
             context.gameController().restart(GameState.TESTING_LEVEL_BONI);
@@ -258,7 +258,7 @@ public enum GameActions2D implements GameAction {
         }
     },
 
-    TEST_LEVELS_TEASERS { // (shift_alt(KeyCode.T)) {
+    TEST_LEVELS_TEASERS {
         @Override
         public void execute(GameContext context) {
             context.gameController().restart(GameState.TESTING_LEVEL_TEASERS);
@@ -266,7 +266,7 @@ public enum GameActions2D implements GameAction {
         }
     },
 
-    TOGGLE_PAUSED { // (key(KeyCode.P)) {
+    TOGGLE_PAUSED {
         @Override
         public void execute(GameContext context) {
             toggle(context.gameClock().pausedPy);
