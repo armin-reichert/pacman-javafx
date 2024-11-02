@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.pacman;
 
-import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
@@ -15,6 +14,7 @@ import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -34,26 +34,38 @@ public class CutScene2 extends GameScene2D {
     private SpriteAnimation blinkyNormal;
     private SpriteAnimation blinkyStretching;
     private SpriteAnimation blinkyDamaged;
+    private MediaPlayer music;
 
     @Override
-    public void bindGameActions() {
-    }
+    public void bindGameActions() {}
 
     @Override
     public void doInit() {
         context.setScoreVisible(true);
+
         pac = new Pac();
-        PacManGameSpriteSheet spriteSheet = (PacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
-        pac.setAnimations(new PacAnimations(spriteSheet));
         blinky = Ghost.blinky();
+        blinky.setSpeed(0);
+        blinky.hide();
+
+        music = context.sound().createPlayer(context.gameVariant(), context.assets(), "intermission", 1.0, false);
+        music.setCycleCount(1);
+
+        var spriteSheet = (PacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
+        pac.setAnimations(new PacAnimations(spriteSheet));
+
         var blinkyAnimations = new GhostAnimations(spriteSheet, blinky.id());
         blinkyNormal = blinkyAnimations.animation(GameModel.ANIM_GHOST_NORMAL);
         blinkyStretching = blinkyAnimations.animation(PacManArcadeGame.ANIM_BLINKY_STRETCHED);
         blinkyDamaged = blinkyAnimations.animation(PacManArcadeGame.ANIM_BLINKY_DAMAGED);
         blinky.setAnimations(blinkyAnimations);
-        blinky.setSpeed(0);
-        blinky.hide();
+
         frame = -1;
+    }
+
+    @Override
+    protected void doEnd() {
+        music.stop();
     }
 
     @Override
@@ -64,7 +76,7 @@ public class CutScene2 extends GameScene2D {
             blinky.move();
         }
         switch (frame) {
-            case ANIMATION_START -> startMusic();
+            case ANIMATION_START -> music.play();
             case ANIMATION_START + 1 -> blinkyStretching.setFrameIndex(0); // Show nail
             case ANIMATION_START + 25 -> {
                 pac.placeAtTile(28, 20, 0, 0);
@@ -121,12 +133,5 @@ public class CutScene2 extends GameScene2D {
         renderer.drawTileGrid(size());
         var text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
         renderer.drawText(text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
-    }
-
-    private void startMusic() {
-        int number = context.gameState() == GameState.TESTING_CUT_SCENES
-            ? GameState.TESTING_CUT_SCENES.getProperty("intermissionTestNumber")
-            : context.game().intermissionNumberAfterLevel();
-        context.sound().playIntermissionSound(number);
     }
 }

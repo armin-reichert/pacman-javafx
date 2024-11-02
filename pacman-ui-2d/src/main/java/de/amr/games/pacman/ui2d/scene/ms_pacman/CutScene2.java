@@ -68,6 +68,11 @@ public class CutScene2 extends GameScene2D {
     }
 
     @Override
+    protected void doEnd() {
+        music.stop();
+    }
+
+    @Override
     public void update() {
         sceneController.tick();
     }

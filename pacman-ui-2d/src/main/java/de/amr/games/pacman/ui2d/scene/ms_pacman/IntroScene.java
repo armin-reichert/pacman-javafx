@@ -29,7 +29,7 @@ import java.util.BitSet;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
-import static de.amr.games.pacman.ui2d.util.KeyInput.*;
+import static de.amr.games.pacman.ui2d.util.KeyInput.only;
 
 /**
  * Intro scene of the Ms. Pac-Man game.

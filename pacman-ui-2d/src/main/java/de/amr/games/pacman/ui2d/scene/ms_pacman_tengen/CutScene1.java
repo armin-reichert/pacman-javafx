@@ -4,12 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
-import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -83,6 +81,11 @@ public class CutScene1 extends GameScene2D {
 
         sceneController = new SceneController();
         sceneController.setState(SceneController.STATE_FLAP, 120);
+    }
+
+    @Override
+    protected void doEnd() {
+        music.stop();
     }
 
     @Override

@@ -1,8 +1,6 @@
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
-import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.MediaPlayer;
@@ -21,6 +19,11 @@ public class CutScene4 extends GameScene2D {
     protected void doInit() {
         context.setScoreVisible(false);
         music = context.sound().createPlayer(context.gameVariant(), context.assets(),"intermission.4",1.0, false);
+    }
+
+    @Override
+    protected void doEnd() {
+        music.stop();
     }
 
     @Override

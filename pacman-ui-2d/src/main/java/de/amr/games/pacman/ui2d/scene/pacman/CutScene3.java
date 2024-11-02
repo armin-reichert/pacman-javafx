@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.pacman;
 
-import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
@@ -13,6 +12,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -30,20 +30,31 @@ public class CutScene3 extends GameScene2D {
     private int frame;
     private Pac pac;
     private Ghost blinky;
+    private MediaPlayer music;
 
     @Override
-    public void bindGameActions() {
-    }
+    public void bindGameActions() {}
 
     @Override
     public void doInit() {
         context.setScoreVisible(true);
-        PacManGameSpriteSheet spriteSheet = (PacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
+
         pac = new Pac();
-        pac.setAnimations(new PacAnimations(spriteSheet));
         blinky = Ghost.blinky();
+
+        music = context.sound().createPlayer(context.gameVariant(), context.assets(), "intermission", 1.0, true);
+        music.setCycleCount(2);
+
+        var spriteSheet = (PacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
+        pac.setAnimations(new PacAnimations(spriteSheet));
         blinky.setAnimations(new GhostAnimations(spriteSheet, blinky.id()));
+
         frame = -1;
+    }
+
+    @Override
+    protected void doEnd() {
+        music.stop();
     }
 
     @Override
@@ -55,7 +66,7 @@ public class CutScene3 extends GameScene2D {
         }
         switch (frame) {
             case ANIMATION_START -> {
-                startMusic();
+                music.play();
                 pac.centerOverTile(v2i(29, 20));
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.25f);
@@ -97,12 +108,5 @@ public class CutScene3 extends GameScene2D {
         renderer.drawTileGrid(size());
         var text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
         renderer.drawText(text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
-    }
-
-    private void startMusic() {
-        int number = context.gameState() == GameState.TESTING_CUT_SCENES
-            ? GameState.TESTING_CUT_SCENES.getProperty("intermissionTestNumber")
-            : context.game().intermissionNumberAfterLevel();
-        context.sound().playIntermissionSound(number);
     }
 }

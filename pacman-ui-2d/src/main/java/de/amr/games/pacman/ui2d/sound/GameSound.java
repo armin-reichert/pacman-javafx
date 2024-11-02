@@ -42,7 +42,6 @@ public class GameSound {
     private final Map<GameVariant, Map<String, MediaPlayer>> playerMapByGameVariant = new HashMap<>();
 
     // These are created on demand
-    private MediaPlayer intermissionSound;
     private Siren siren;
     private MediaPlayer voice;
 
@@ -67,7 +66,6 @@ public class GameSound {
             playerMapByGameVariant.put(gameVariant, players);
             Logger.info("Created media players for game variant {}", gameVariant);
         }
-        intermissionSound = null;
         siren = null;
         logPlayerStatus();
     }
@@ -80,7 +78,6 @@ public class GameSound {
         for (String key : players(gameVariant).keySet()) {
             logPlayerStatus(players(gameVariant).get(key), key);
         }
-        logPlayerStatus(intermissionSound, "Intermission");
         if (siren != null) {
             logPlayerStatus(siren.player(), "Siren" + siren.number());
         }
@@ -173,7 +170,6 @@ public class GameSound {
         for (MediaPlayer player : players(gameVariant).values()) {
             stop(player);
         }
-        stop(intermissionSound);
         stopSiren();
         stopVoice();
         Logger.info("All sounds stopped ({})", gameVariant);
@@ -292,24 +288,6 @@ public class GameSound {
 
     public void stopPacPowerSound() {
         stop("pacman_power");
-    }
-
-    public void playIntermissionSound(int number) {
-        int maxIntermissionNumber = gameVariant == GameVariant.MS_PACMAN_TENGEN ? 4 : 3;
-        if (number < 1 || number > maxIntermissionNumber) {
-            Logger.error("Intermission number must be from 1..3 but is " + number);
-            return;
-        }
-        intermissionSound = switch (gameVariant) {
-            case MS_PACMAN,
-                 MS_PACMAN_TENGEN -> createPlayer(gameVariant, assets, "intermission." + number, 1, false);
-            case PACMAN, PACMAN_XXL -> {
-                var player = createPlayer(gameVariant, assets, "intermission", 1, false);
-                player.setCycleCount(number == 2 ? 1 : 2);
-                yield player;
-            }
-        };
-        intermissionSound.play();
     }
 
     public void playVoice(String voiceClipID, double delaySeconds) {
