@@ -32,7 +32,6 @@ import javafx.scene.Node;
 import javafx.scene.ParallelCamera;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -50,8 +49,6 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions.QUIT_DEMO_LEVEL;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_YELLOW;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
-import static de.amr.games.pacman.ui2d.util.KeyInput.alt;
-import static de.amr.games.pacman.ui2d.util.KeyInput.control;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 
 /**
@@ -116,17 +113,11 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     public void bindGameActions() {
         Joypad joypad = context.joypad();
         if (context.game().isDemoLevel()) {
-            bind(QUIT_DEMO_LEVEL,                 joypad.start());
+            bind(QUIT_DEMO_LEVEL, joypad.start());
         } else {
-            bind(GameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
-            bind(GameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
-            bind(GameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
-            bind(GameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
-            bind(TengenGameActions.TOGGLE_PAC_BOOSTER, joypad.a());
-            bind(GameActions2D.PLAYER_UP,         joypad.up(),    control(KeyCode.UP));
-            bind(GameActions2D.PLAYER_DOWN,       joypad.down(),  control(KeyCode.DOWN));
-            bind(GameActions2D.PLAYER_LEFT,       joypad.left(),  control(KeyCode.LEFT));
-            bind(GameActions2D.PLAYER_RIGHT,      joypad.right(), control(KeyCode.RIGHT));
+            GameActions2D.setPlaySceneCheatActions(this);
+            TengenGameActions.setDefaultJoypadActions(this, joypad);
+            GameActions2D.setFallbackPlayerControlActions(this);
         }
     }
 

@@ -44,7 +44,7 @@ public class KeyInput {
         return combinations;
     }
 
-    public static KeyCodeCombination kcc(KeyCode code) {
+    public static KeyCodeCombination only(KeyCode code) {
         return new KeyCodeCombination(code);
     }
 

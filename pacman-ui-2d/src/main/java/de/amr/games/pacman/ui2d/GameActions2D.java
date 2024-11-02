@@ -10,15 +10,15 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.ms_pacman_tengen.BoosterMode;
-import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
+import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
+import static de.amr.games.pacman.ui2d.util.KeyInput.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static java.util.function.Predicate.not;
 
@@ -238,5 +238,26 @@ public enum GameActions2D implements GameAction {
             }
             Logger.info("Game ({}) {}", context.gameVariant(), context.gameClock().isPaused() ? "paused" : "resumed");
         }
+    };
+
+    public static void setDefaultPlayerControlActions(GameActionProvider actionProvider) {
+        actionProvider.bind(GameActions2D.PLAYER_UP,    only(KeyCode.UP));
+        actionProvider.bind(GameActions2D.PLAYER_DOWN,  only(KeyCode.DOWN));
+        actionProvider.bind(GameActions2D.PLAYER_LEFT,  only(KeyCode.LEFT));
+        actionProvider.bind(GameActions2D.PLAYER_RIGHT, only(KeyCode.RIGHT));
+    }
+
+    public static void setFallbackPlayerControlActions(GameActionProvider actionProvider) {
+        actionProvider.bind(GameActions2D.PLAYER_UP,    control(KeyCode.UP));
+        actionProvider.bind(GameActions2D.PLAYER_DOWN,  control(KeyCode.DOWN));
+        actionProvider.bind(GameActions2D.PLAYER_LEFT,  control(KeyCode.LEFT));
+        actionProvider.bind(GameActions2D.PLAYER_RIGHT, control(KeyCode.RIGHT));
+    }
+
+    public static void setPlaySceneCheatActions(GameActionProvider actionProvider) {
+        actionProvider.bind(GameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
+        actionProvider.bind(GameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
+        actionProvider.bind(GameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
+        actionProvider.bind(GameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
     }
 }

@@ -8,7 +8,10 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.ms_pacman_tengen.BoosterMode;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameAction;
+import de.amr.games.pacman.ui2d.GameActionProvider;
+import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.util.Joypad;
 import org.tinylog.Logger;
 
 public enum TengenGameActions implements GameAction {
@@ -56,5 +59,13 @@ public enum TengenGameActions implements GameAction {
             context.sound().stopAll();
             context.gameController().changeState(GameState.STARTING_GAME);
         }
+    };
+
+    public static void setDefaultJoypadActions(GameActionProvider actionProvider, Joypad joypad) {
+        actionProvider.bind(TengenGameActions.TOGGLE_PAC_BOOSTER, joypad.a());
+        actionProvider.bind(GameActions2D.PLAYER_UP,    joypad.up());
+        actionProvider.bind(GameActions2D.PLAYER_DOWN,  joypad.down());
+        actionProvider.bind(GameActions2D.PLAYER_LEFT,  joypad.left());
+        actionProvider.bind(GameActions2D.PLAYER_RIGHT, joypad.right());
     }
 }

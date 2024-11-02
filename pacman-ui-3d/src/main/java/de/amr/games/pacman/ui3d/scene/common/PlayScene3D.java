@@ -22,7 +22,6 @@ import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions;
-import de.amr.games.pacman.ui2d.util.Joypad;
 import de.amr.games.pacman.ui3d.GameActions3D;
 import de.amr.games.pacman.ui3d.level.*;
 import javafx.animation.Animation;
@@ -126,27 +125,19 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 bind(TengenGameActions.QUIT_DEMO_LEVEL, context.joypad().start());
             } else {
-                bind(GameActions2D.ADD_CREDIT, kcc(KeyCode.DIGIT5), kcc(KeyCode.NUMPAD5));
+                // TODO create Arcade controller/"joypad"
+                bind(GameActions2D.ADD_CREDIT, only(KeyCode.DIGIT5), only(KeyCode.NUMPAD5));
             }
         }
         else {
-            bind(GameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
-            bind(GameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
-            bind(GameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
-            bind(GameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
+            GameActions2D.setPlaySceneCheatActions(this);
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                Joypad joypad = context.joypad();
-                bind(TengenGameActions.TOGGLE_PAC_BOOSTER, joypad.a());
-                bind(GameActions2D.PLAYER_UP,    joypad.up(), control(KeyCode.UP));
-                bind(GameActions2D.PLAYER_DOWN,  joypad.down(), control(KeyCode.DOWN));
-                bind(GameActions2D.PLAYER_LEFT,  joypad.left(), control(KeyCode.LEFT));
-                bind(GameActions2D.PLAYER_RIGHT, joypad.right(), control(KeyCode.RIGHT));
+                TengenGameActions.setDefaultJoypadActions(this, context.joypad());
             } else {
-                bind(GameActions2D.PLAYER_UP,    kcc(KeyCode.UP), control(KeyCode.UP));
-                bind(GameActions2D.PLAYER_DOWN,  kcc(KeyCode.DOWN), control(KeyCode.DOWN));
-                bind(GameActions2D.PLAYER_LEFT,  kcc(KeyCode.LEFT), control(KeyCode.LEFT));
-                bind(GameActions2D.PLAYER_RIGHT, kcc(KeyCode.RIGHT), control(KeyCode.RIGHT));
+                // TODO create Arcade controller/"joypad"
+                GameActions2D.setDefaultPlayerControlActions(this);
             }
+            GameActions2D.setFallbackPlayerControlActions(this);
         }
     }
 

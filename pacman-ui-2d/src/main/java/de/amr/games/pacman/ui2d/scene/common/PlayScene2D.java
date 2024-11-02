@@ -15,6 +15,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
+import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -41,16 +42,14 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
-        bind(GameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
-        bind(GameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
-        bind(GameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
-        bind(GameActions2D.ADD_CREDIT,        kcc(KeyCode.DIGIT5), kcc(KeyCode.NUMPAD5));
-
-        bind(GameActions2D.PLAYER_UP,       kcc(KeyCode.UP),    control(KeyCode.UP));
-        bind(GameActions2D.PLAYER_DOWN,     kcc(KeyCode.DOWN),  control(KeyCode.DOWN));
-        bind(GameActions2D.PLAYER_LEFT,     kcc(KeyCode.LEFT),  control(KeyCode.LEFT));
-        bind(GameActions2D.PLAYER_RIGHT,    kcc(KeyCode.RIGHT), control(KeyCode.RIGHT));
+        // TODO create Arcade controller/"joypad"
+        if (context.game().isDemoLevel()) {
+            bind(GameActions2D.ADD_CREDIT, only(KeyCode.DIGIT5), only(KeyCode.NUMPAD5));
+        } else {
+            GameActions2D.setPlaySceneCheatActions(this);
+            GameActions2D.setDefaultPlayerControlActions(this);
+            GameActions2D.setFallbackPlayerControlActions(this);
+        }
     }
 
     @Override

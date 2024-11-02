@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.util.KeyInput.kcc;
+import static de.amr.games.pacman.ui2d.util.KeyInput.only;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredRoundedBackground;
 
 /**
@@ -189,7 +189,7 @@ public class StartPage extends StackPane implements Page {
         bind(actionNextFlyerPage,         KeyCode.DOWN);
         bind(actionPrevVariant,           KeyCode.LEFT);
         bind(actionNextVariant,           KeyCode.RIGHT);
-        bind(actionEnterGamePage,         kcc(KeyCode.SPACE), kcc(KeyCode.ENTER), context.joypad().start());
+        bind(actionEnterGamePage,         only(KeyCode.SPACE), only(KeyCode.ENTER), context.joypad().start());
     }
 
     @Override
