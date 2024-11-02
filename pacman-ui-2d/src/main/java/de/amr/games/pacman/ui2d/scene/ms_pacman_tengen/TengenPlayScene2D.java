@@ -70,7 +70,6 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     private final Canvas canvas = new Canvas(NES_RESOLUTION_X, NES_RESOLUTION_Y);
     private int camDelay;
     private final GameOverMessageAnimation gameOverMessageAnimation = new GameOverMessageAnimation();
-    private boolean joypadBindingsVisible;
 
     private static class GameOverMessageAnimation {
         private double startX;
@@ -116,18 +115,18 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void defineGameActionKeyBindings() {
-        bindAction(GameActions2D.CHEAT_EAT_ALL,              alt(KeyCode.E));
-        bindAction(GameActions2D.CHEAT_ADD_LIVES,            alt(KeyCode.L));
-        bindAction(GameActions2D.CHEAT_NEXT_LEVEL,           alt(KeyCode.N));
-        bindAction(GameActions2D.CHEAT_KILL_GHOSTS,          alt(KeyCode.X));
+        bindAction(GameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
+        bindAction(GameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
+        bindAction(GameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
+        bindAction(GameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
 
         Joypad joypad = context.joypad();
-        bindAction(TOGGLE_PAC_BOOSTER,               joypad.a(), joypad.b());
-        bindAction(QUIT_DEMO_LEVEL,                  joypad.start());
-        bindAction(GameActions2D.PLAYER_UP,                 joypad.up(),    control(KeyCode.UP));
-        bindAction(GameActions2D.PLAYER_DOWN,               joypad.down(),  control(KeyCode.DOWN));
-        bindAction(GameActions2D.PLAYER_LEFT,               joypad.left(),  control(KeyCode.LEFT));
-        bindAction(GameActions2D.PLAYER_RIGHT,              joypad.right(), control(KeyCode.RIGHT));
+        bindAction(TOGGLE_PAC_BOOSTER,              joypad.a());
+        bindAction(QUIT_DEMO_LEVEL,                 joypad.start());
+        bindAction(GameActions2D.PLAYER_UP,         joypad.up(),    control(KeyCode.UP));
+        bindAction(GameActions2D.PLAYER_DOWN,       joypad.down(),  control(KeyCode.DOWN));
+        bindAction(GameActions2D.PLAYER_LEFT,       joypad.left(),  control(KeyCode.LEFT));
+        bindAction(GameActions2D.PLAYER_RIGHT,      joypad.right(), control(KeyCode.RIGHT));
     }
 
     @Override
@@ -146,8 +145,6 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void update() {
-        joypadBindingsVisible = context.keyboard().pressed(KeyCode.B);
-
         TengenMsPacManGame game = (TengenMsPacManGame) context.game();
         if (game.currentLevelNumber() == 0) {
             Logger.warn("Cannot update PlayScene2D: no game level available");
