@@ -276,7 +276,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
         // All maps that use a different color scheme than that in the sprite sheet have to be rendered using the
         // generic vector renderer for now. This looks more or less bad for specific maps.
-        boolean mapSpriteExists = mapSpriteExists(game.currentLevelNumber(), game.mapCategory());
+        boolean mapSpriteExists = game.isDemoLevel() || mapSpriteExists(game.currentLevelNumber(), game.mapCategory());
 
         if (!mapSpriteExists) {
             // draw using generic vector renderer
