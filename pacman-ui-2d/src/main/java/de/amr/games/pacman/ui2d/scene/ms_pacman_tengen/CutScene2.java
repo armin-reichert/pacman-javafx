@@ -45,6 +45,7 @@ public class CutScene2 extends GameScene2D {
 
     @Override
     public void bindGameActions() {
+        bind(context -> context.gameController().terminateCurrentState(), context.joypad().start());
     }
 
     @Override

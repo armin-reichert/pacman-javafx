@@ -56,6 +56,7 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public void bindGameActions() {
+        bind(context -> context.gameController().terminateCurrentState(), context.joypad().start());
     }
 
     @Override
@@ -77,7 +78,6 @@ public class CutScene1 extends GameScene2D {
         clapAnimation.start();
 
         music = context.sound().createPlayer(context.gameVariant(), context.assets(), "intermission.1",1.0, false);
-
 
         sceneController = new SceneController();
         sceneController.setState(SceneController.STATE_FLAP, 120);
