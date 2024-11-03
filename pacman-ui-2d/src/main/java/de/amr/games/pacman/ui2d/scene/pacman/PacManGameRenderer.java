@@ -94,19 +94,18 @@ public class PacManGameRenderer implements GameRenderer {
     public void update(GameModel game) {}
 
     @Override
-    public void drawWorld(GameContext context, GameWorld world) {
-        double originX = 0, originY = t(3);
+    public void drawWorld(GameContext context, GameWorld world, double x, double y) {
         double scaling = scaling();
         ctx().save();
         ctx().scale(scaling, scaling);
         if (flashMode) {
             if (blinkingOn) {
-                ctx().drawImage(flashingMazeImage, originX, originY);
+                ctx().drawImage(flashingMazeImage, x, y);
             } else {
-                drawSpriteUnscaled(PacManGameSpriteSheet.EMPTY_MAZE_SPRITE, originX, originY);
+                drawSpriteUnscaled(PacManGameSpriteSheet.EMPTY_MAZE_SPRITE, y, y);
             }
         } else {
-            drawSpriteUnscaled(PacManGameSpriteSheet.FULL_MAZE_SPRITE, originX, originY);
+            drawSpriteUnscaled(PacManGameSpriteSheet.FULL_MAZE_SPRITE, x, y);
             overPaintEatenPellets(world);
             overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
         }

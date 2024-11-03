@@ -160,7 +160,7 @@ public interface GameRenderer {
         });
     }
 
-    void drawWorld(GameContext context, GameWorld world);
+    void drawWorld(GameContext context, GameWorld world, double x, double y);
 
     void setFlashMode(boolean on);
 

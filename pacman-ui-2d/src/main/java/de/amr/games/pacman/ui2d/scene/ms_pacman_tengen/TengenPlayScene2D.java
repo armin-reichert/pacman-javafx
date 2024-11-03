@@ -230,15 +230,6 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         }
     }
 
-    private String joypadBindingsText() {
-        Joypad joypad = context.joypad();
-        String line1 = "START = %s     SELECT = %s".formatted(joypad.start(), joypad.select());
-        String line2 = "BUTTON B = %s     BUTTON A = %s".formatted(joypad.b(), joypad.a());
-        String line3 = "UP = %s DOWN = %s LEFT = %s RIGHT = %s".formatted(joypad.up(), joypad.down(), joypad.left(), joypad.right());
-        return line1 + "\n" + line2 + "\n" + line3;
-    }
-
-
     @Override
     protected void drawSceneContent(GameRenderer renderer) {
         GameState state = context.gameState();
@@ -261,7 +252,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         boolean flashMode = Boolean.TRUE.equals(state.getProperty("mazeFlashing"));
         renderer.setFlashMode(flashMode);
         renderer.setBlinkingOn(game.blinking().isOn());
-        renderer.drawWorld(context, world);
+        renderer.drawWorld(context, world, 0,  3*TS);
 
         renderer.drawAnimatedEntity(msPacMan);
         ghostsInZOrder().forEach(renderer::drawAnimatedEntity);

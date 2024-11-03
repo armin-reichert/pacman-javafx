@@ -254,7 +254,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawWorld(GameContext context, GameWorld world) {
+    public void drawWorld(GameContext context, GameWorld world, double x, double y) {
         TengenMsPacManGame game = (TengenMsPacManGame) context.game();
         TileMap terrain = world.map().terrain();
         Map<String, String> mapColorScheme = game.currentMapColorScheme();
@@ -295,7 +295,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         }
         else {
             // draw using map sprite
-            drawWorldUsingMapSprite(game, context.gameClock().getUpdateCount());
+            drawWorldUsingMapSprite(game, context.gameClock().getUpdateCount(), x, y);
         }
         game.bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
     }
@@ -306,7 +306,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             game.mapCategory() == MapCategory.ARCADE;
     }
 
-    private void drawWorldUsingMapSprite(TengenMsPacManGame game, long t) {
+    private void drawWorldUsingMapSprite(TengenMsPacManGame game, long t, double x, double y) {
         if (mapSprite == null) {
             return; // not yet selected
         }
@@ -318,7 +318,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             ctx().drawImage(mapSprite.source(),
                 mapArea.x(), mapArea.y(),
                 mapArea.width(), mapArea.height(),
-                0, scaled(3 * TS),
+                scaled(x), scaled(y),
                 scaled(mapArea.width()), scaled(mapArea.height())
             );
         }
