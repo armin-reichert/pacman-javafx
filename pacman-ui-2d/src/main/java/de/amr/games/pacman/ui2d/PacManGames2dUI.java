@@ -58,11 +58,29 @@ import static de.amr.games.pacman.ui2d.util.Ufx.createIcon;
  */
 public class PacManGames2dUI implements GameEventListener, GameContext {
 
-    protected static final Keyboard KEYBOARD = new Keyboard();
+    protected static final Keyboard THE_KEYBOARD = new Keyboard();
 
-    // My own proposal, might be crap
+    public static final ArcadeController ARCADE_CONTROLLER_CURSOR_KEYS = new ArcadeControllerKeys(
+        new KeyCodeCombination(KeyCode.DIGIT5),
+        new KeyCodeCombination(KeyCode.DIGIT1),
+        new KeyCodeCombination(KeyCode.UP),
+        new KeyCodeCombination(KeyCode.DOWN),
+        new KeyCodeCombination(KeyCode.LEFT),
+        new KeyCodeCombination(KeyCode.RIGHT)
+    );
+
+    public static final ArcadeController ARCADE_CONTROLLER_CURSOR_KEYS_NUMPAD = new ArcadeControllerKeys(
+        new KeyCodeCombination(KeyCode.NUMPAD5),
+        new KeyCodeCombination(KeyCode.NUMPAD1),
+        new KeyCodeCombination(KeyCode.UP),
+        new KeyCodeCombination(KeyCode.DOWN),
+        new KeyCodeCombination(KeyCode.LEFT),
+        new KeyCodeCombination(KeyCode.RIGHT)
+    );
+
+    // My current bindings, might be crap
     public static final Joypad JOYPAD_CURSOR_KEYS = new JoypadKeys(
-            new KeyCodeCombination(KeyCode.TAB),
+            new KeyCodeCombination(KeyCode.SPACE),
             new KeyCodeCombination(KeyCode.ENTER),
             new KeyCodeCombination(KeyCode.B),
             new KeyCodeCombination(KeyCode.N),
@@ -82,24 +100,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             new KeyCodeCombination(KeyCode.S),
             new KeyCodeCombination(KeyCode.A),
             new KeyCodeCombination(KeyCode.D)
-    );
-
-    public static final ArcadeController ARCADE_CONTROLLER_CURSOR_KEYS = new ArcadeControllerKeys(
-            new KeyCodeCombination(KeyCode.DIGIT5),
-            new KeyCodeCombination(KeyCode.DIGIT1),
-            new KeyCodeCombination(KeyCode.UP),
-            new KeyCodeCombination(KeyCode.DOWN),
-            new KeyCodeCombination(KeyCode.LEFT),
-            new KeyCodeCombination(KeyCode.RIGHT)
-    );
-
-    public static final ArcadeController ARCADE_CONTROLLER_CURSOR_KEYS_NUMPAD = new ArcadeControllerKeys(
-            new KeyCodeCombination(KeyCode.NUMPAD5),
-            new KeyCodeCombination(KeyCode.NUMPAD1),
-            new KeyCodeCombination(KeyCode.UP),
-            new KeyCodeCombination(KeyCode.DOWN),
-            new KeyCodeCombination(KeyCode.LEFT),
-            new KeyCodeCombination(KeyCode.RIGHT)
     );
 
     /**
@@ -262,8 +262,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         StackPane.setAlignment(pauseIcon, Pos.CENTER);
         sceneRoot.getChildren().addAll(new Pane(), flashMessageLayer, pauseIcon, mutedIcon);
 
-        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, KEYBOARD::onKeyPressed);
-        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, KEYBOARD::onKeyReleased);
+        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, THE_KEYBOARD::onKeyPressed);
+        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, THE_KEYBOARD::onKeyReleased);
         // Global keyboard shortcuts
         mainScene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.F11) {
@@ -343,7 +343,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public Keyboard keyboard() {
-        return KEYBOARD;
+        return THE_KEYBOARD;
     }
 
     @Override
@@ -369,13 +369,13 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public void enableJoypad() {
         Logger.info("Enable joypad");
-        joypad.register(KEYBOARD);
+        joypad.register(THE_KEYBOARD);
     }
 
     @Override
     public void disableJoypad() {
         Logger.info("Disable joypad");
-        joypad.unregister(KEYBOARD);
+        joypad.unregister(THE_KEYBOARD);
     }
 
     @Override

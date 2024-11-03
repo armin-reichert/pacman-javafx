@@ -16,7 +16,6 @@ import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -30,7 +29,6 @@ import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_
 import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
-import static de.amr.games.pacman.ui2d.util.KeyInput.only;
 
 /**
  * 2D play scene for all game variants except Tengen Ms. Pac-Man.

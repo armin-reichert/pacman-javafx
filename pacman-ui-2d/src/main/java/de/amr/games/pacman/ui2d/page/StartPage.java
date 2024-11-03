@@ -1,37 +1,25 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.PacManGames2dUI;
-import de.amr.games.pacman.ui2d.util.AssetStorage;
-import de.amr.games.pacman.ui2d.util.Ufx;
+import de.amr.games.pacman.ui2d.util.Carousel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.util.KeyInput.only;
-import static de.amr.games.pacman.ui2d.util.Ufx.coloredRoundedBackground;
+import static de.amr.games.pacman.ui2d.util.KeyInput.naked;
 
 /**
  * Got the flyer images from <a href="https://flyers.arcade-museum.com/">The Arcade Flyer Archive</a>.
@@ -40,185 +28,107 @@ import static de.amr.games.pacman.ui2d.util.Ufx.coloredRoundedBackground;
  */
 public class StartPage extends StackPane implements Page {
 
-    private static Button createCarouselButton(Image image) {
-        ImageView icon = new ImageView(image);
-        icon.setFitHeight(32);
-        icon.setFitWidth(32);
-        var button = new Button();
-        // Without this, button gets input focus after being clicked with the mouse and the LEFT, RIGHT keys stop working!
-        button.setFocusTraversable(false);
-        button.setGraphic(icon);
-        button.setOpacity(0.1);
-        button.setOnMouseEntered(e -> button.setOpacity(0.4));
-        button.setOnMouseExited(e -> button.setOpacity(0.1));
-        return button;
-    }
+    public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant");
 
-    private static Node createPlayButton(String buttonText, AssetStorage assets) {
-        Color bgColor = Color.rgb(0, 155, 252, 0.7);
-        Color fillColor = Color.WHITE;
+    private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
+    private final GameContext context;
+    private final Carousel carousel;
 
-        var text = new Text(buttonText);
-        text.setFill(fillColor);
-        text.setFont(assets.font("font.arcade", 30));
-
-        var shadow = new DropShadow();
-        shadow.setOffsetY(3.0f);
-        shadow.setColor(Color.color(0.2f, 0.2f, 0.2f));
-        text.setEffect(shadow);
-
-        var pane = new BorderPane(text);
-        pane.setMaxSize(200, 100);
-        pane.setPadding(new Insets(10));
-        pane.setCursor(Cursor.HAND);
-        pane.setBackground(coloredRoundedBackground(bgColor, 20));
-
-        return pane;
-    }
-
-    private class Flyer {
-        Image[] images;
-        int index;
-
-        Flyer(Image... images) {
-            this.images = images;
-        }
-
-        void setPage(int index) {
-            this.index = index;
-            layout.setBackground(new Background(new BackgroundImage(images[index],
-                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER, Ufx.FIT_HEIGHT))
-            );
-        }
-
-        void nextPage() {
-            setPage((index + 1) % images.length);
-        }
-
-        void prevPage() {
-            setPage((index - 1 + images.length) % images.length);
-        }
-    }
-
-    public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
-        @Override
-        protected void invalidated() {
-            if (get() != null) {
-                handleGameVariantChange(get());
-            }
-        }
+    private final GameAction actionBrowseFlyerBackwards = context -> {
+        var flyer = (Flyer) currentSlide();
+        flyer.prevFlyerPage();
     };
 
-    private final GameAction actionPrevFlyerPage = context -> flyer(context.gameVariant()).ifPresent(Flyer::prevPage);
-
-    private final GameAction actionNextFlyerPage = context -> flyer(context.gameVariant()).ifPresent(Flyer::nextPage);
-
-    private final GameAction actionPrevVariant = context -> {
-        List<GameVariant> variantsInOrder = PacManGames2dUI.GAME_VARIANTS_IN_ORDER;
-        int prevIndex = variantsInOrder.indexOf(context.gameVariant()) - 1;
-        context.selectGameVariant(variantsInOrder.get(prevIndex < 0 ? variantsInOrder.size() - 1 : prevIndex));
-    };
-
-    private final GameAction actionNextVariant = context -> {
-        List<GameVariant> variantsInOrder = PacManGames2dUI.GAME_VARIANTS_IN_ORDER;
-        int nextIndex = variantsInOrder.indexOf(context.gameVariant()) + 1;
-        context.selectGameVariant(variantsInOrder.get(nextIndex == variantsInOrder.size() ? 0 : nextIndex));
+    private final GameAction actionBrowseFlyerForwards = context -> {
+        var flyer = (Flyer) currentSlide();
+        flyer.nextFlyerPage();
     };
 
     private final GameAction actionEnterGamePage = GameContext::selectGamePage;
 
-    private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
-    private final GameContext context;
-    private final BorderPane layout = new BorderPane();
-    private final Flyer msPacManFlyer, pacManFlyer, tengenFlyer;
-
     public StartPage(GameContext context) {
         this.context = checkNotNull(context);
-        AssetStorage assets = context.assets();
 
-        bindGameActions();
+        var pacManFlyer = new Flyer(
+            context.assets().image("pacman.startpage.image1"),
+            context.assets().image("pacman.startpage.image2"),
+            context.assets().image("pacman.startpage.image3")
+        );
+        pacManFlyer.setUserData(GameVariant.PACMAN);
+        pacManFlyer.selectFlyerPage(0);
 
-        msPacManFlyer = new Flyer(
-            assets.image("ms_pacman.startpage.image1"),
-            assets.image("ms_pacman.startpage.image2"));
+        var msPacManFlyer = new Flyer(
+            context.assets().image("ms_pacman.startpage.image1"),
+            context.assets().image("ms_pacman.startpage.image2")
+        );
+        msPacManFlyer.setUserData(GameVariant.MS_PACMAN);
+        msPacManFlyer.selectFlyerPage(0);
 
-        pacManFlyer = new Flyer(
-            assets.image("pacman.startpage.image1"),
-            assets.image("pacman.startpage.image2"),
-            assets.image("pacman.startpage.image3"));
+        var pacManXXLFlyer = new Flyer(
+            context.assets().image("pacman_xxl.startpage.source")
+        );
+        pacManXXLFlyer.setLayoutMode(0, Flyer.LayoutMode.FILL);
+        pacManXXLFlyer.setUserData(GameVariant.PACMAN_XXL);
+        pacManXXLFlyer.selectFlyerPage(0);
 
-        tengenFlyer = new Flyer(
-            assets.image("tengen.startpage.image1"),
-            assets.image("tengen.startpage.image2"));
-
-        Button btnPrevVariant = createCarouselButton(assets.image("startpage.arrow.left"));
-        btnPrevVariant.setOnAction(e -> actionPrevVariant.execute(context));
-        VBox left = new VBox(btnPrevVariant);
-        left.setAlignment(Pos.CENTER_LEFT);
-
-        Button btnNextVariant = createCarouselButton(assets.image("startpage.arrow.right"));
-        btnNextVariant.setOnAction(e -> actionNextVariant.execute(context));
-        VBox right = new VBox(btnNextVariant);
-        right.setAlignment(Pos.CENTER_RIGHT);
-
-        Node btnPlay = createPlayButton(context.locText("play_button"), context.assets());
-        BorderPane.setAlignment(btnPlay, Pos.BOTTOM_CENTER);
-        btnPlay.setTranslateY(-60);
-        btnPlay.setOnMouseClicked(e -> {
-            if (e.getButton().equals(MouseButton.PRIMARY)) {
-                context.selectGamePage();
-            }
-            e.consume(); // do not propagate event to layout such that source changes
-        });
-        var btnPlayContainer = new BorderPane();
-        btnPlayContainer.setBottom(btnPlay);
-
-        layout.setLeft(left);
-        layout.setRight(right);
-        layout.setCenter(btnPlayContainer);
+        var msPacManTengenFlyer = new Flyer(
+            context.assets().image("tengen.startpage.image1"),
+            context.assets().image("tengen.startpage.image2")
+        );
+        msPacManTengenFlyer.setUserData(GameVariant.MS_PACMAN_TENGEN);
+        msPacManTengenFlyer.selectFlyerPage(0);
 
         setBackground(context.assets().get("wallpaper.pacman"));
-        getChildren().add(layout);
+
+        carousel = new Carousel(context.assets());
+        carousel.selectButtonTextProperty().set(context.locText("play_button"));
+        carousel.addSlide(pacManFlyer);
+        carousel.addSlide(msPacManFlyer);
+        carousel.addSlide(pacManXXLFlyer);
+        carousel.addSlide(msPacManTengenFlyer);
+
+        carousel.setOnPrevSlideSelected(() -> {
+            var variant = (GameVariant) carousel.currentSlide().getUserData();
+            context.selectGameVariant(variant);
+        });
+
+        carousel.setOnNextSlideSelected(() -> {
+            var variant = (GameVariant) carousel.currentSlide().getUserData();
+            context.selectGameVariant(variant);
+        });
+        carousel.setOnSelect(context::selectGamePage);
+
+        carousel.selectedIndexProperty().set(0);
+
+        getChildren().add(carousel);
+        bindGameActions();
+    }
+
+    private Node currentSlide() {
+        return carousel.currentSlide();
     }
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.TOGGLE_PAUSED, KeyCode.P);
-        bind(actionPrevFlyerPage,         KeyCode.UP);
-        bind(actionNextFlyerPage,         KeyCode.DOWN);
-        bind(actionPrevVariant,           KeyCode.LEFT);
-        bind(actionNextVariant,           KeyCode.RIGHT);
-        bind(actionEnterGamePage,         only(KeyCode.SPACE), only(KeyCode.ENTER), context.joypad().start());
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            bind(actionBrowseFlyerBackwards,            context.joypad().up());
+            bind(actionBrowseFlyerForwards,             context.joypad().down());
+            bind(context -> carousel.prevSlide(),    context.joypad().left());
+            bind(context -> carousel.nextSlide(), context.joypad().right());
+            bind(actionEnterGamePage,                   context.joypad().start());
+        } else {
+            bind(actionBrowseFlyerBackwards,            context.arcadeController().up());
+            bind(actionBrowseFlyerForwards,             context.arcadeController().down());
+            bind(context -> carousel.prevSlide(),    context.arcadeController().left());
+            bind(context -> carousel.nextSlide(), context.arcadeController().right());
+            // START key is "1" which might be unclear on start page, so add ENTER
+            bind(actionEnterGamePage,          context.arcadeController().start(), naked(KeyCode.ENTER));
+        }
     }
 
     @Override
     public Map<KeyCodeCombination, GameAction> actionBindings() {
         return actionBindings;
-    }
-
-    private Optional<Flyer> flyer(GameVariant variant) {
-        return Optional.ofNullable(switch (variant) {
-            case PACMAN -> pacManFlyer;
-            case MS_PACMAN -> msPacManFlyer;
-            case MS_PACMAN_TENGEN -> tengenFlyer;
-            default -> null;
-        });
-    }
-
-    private void handleGameVariantChange(GameVariant variant) {
-        switch (variant) {
-            case MS_PACMAN, MS_PACMAN_TENGEN, PACMAN -> flyer(variant).ifPresent(flyer -> {
-                flyer.setPage(0);
-            });
-            case PACMAN_XXL -> {
-                Image xxlGameImage = context.assets().image("pacman_xxl.startpage.source");
-                var xxlGameBackground = Ufx.imageBackground(xxlGameImage,
-                    BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-                    BackgroundPosition.CENTER, Ufx.FILL_PAGE);
-                layout.setBackground(xxlGameBackground);
-            }
-        }
     }
 
     @Override

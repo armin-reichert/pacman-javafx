@@ -192,7 +192,7 @@ public class GamePage extends StackPane implements Page {
         bind(actionSimulationOneStep,       shift(KeyCode.P));
         bind(actionSimulationTenSteps,      shift(KeyCode.SPACE));
         bind(actionToggleAutopilot,         alt(KeyCode.A));
-        bind(actionToggleDashboard,         only(KeyCode.F1), alt(KeyCode.B));
+        bind(actionToggleDashboard,         naked(KeyCode.F1), alt(KeyCode.B));
         bind(actionToggleImmunity,          alt(KeyCode.I));
     }
 

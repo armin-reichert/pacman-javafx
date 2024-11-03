@@ -20,7 +20,6 @@ import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -30,7 +29,6 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GameActions2D.bindTestActions;
 import static de.amr.games.pacman.ui2d.GameAssets2D.*;
-import static de.amr.games.pacman.ui2d.util.KeyInput.only;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
