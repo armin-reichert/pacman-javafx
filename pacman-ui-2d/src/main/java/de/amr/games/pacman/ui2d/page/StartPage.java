@@ -34,8 +34,6 @@ public class StartPage extends StackPane implements Page {
     private final GameContext context;
     private final Carousel carousel;
 
-    private final GameAction actionEnterGamePage = GameContext::selectGamePage;
-
     public StartPage(GameContext context) {
         this.context = checkNotNull(context);
 
@@ -105,14 +103,14 @@ public class StartPage extends StackPane implements Page {
             bind(context -> currentFlyer().nextFlyerPage(),  context.joypad().down());
             bind(context -> carousel.prevSlide(),            context.joypad().left());
             bind(context -> carousel.nextSlide(),            context.joypad().right());
-            bind(actionEnterGamePage,                        context.joypad().start());
+            bind(GameContext::selectGamePage,                context.joypad().start());
         } else {
             bind(context -> currentFlyer().prevFlyerPage(),  context.arcadeController().up());
             bind(context -> currentFlyer().nextFlyerPage(),  context.arcadeController().down());
             bind(context -> carousel.prevSlide(),            context.arcadeController().left());
             bind(context -> carousel.nextSlide(),            context.arcadeController().right());
             // START key is "1" which might be unclear on start page, so add ENTER
-            bind(actionEnterGamePage,                        context.arcadeController().start(), naked(KeyCode.ENTER));
+            bind(GameContext::selectGamePage,                context.arcadeController().start(), naked(KeyCode.ENTER));
         }
     }
 
