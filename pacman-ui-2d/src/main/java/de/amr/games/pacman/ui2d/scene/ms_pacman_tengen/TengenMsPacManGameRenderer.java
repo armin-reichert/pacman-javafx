@@ -88,6 +88,15 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         foodRenderer.scalingPy.bind(scalingPy);
     }
 
+    private boolean mapSpriteExists(int levelNumber, MapCategory mapCategory) {
+        return switch (mapCategory) {
+            case ARCADE -> true; // all available in spritesheet
+            case MINI -> false; // TODO use map sprite if level uses color scheme in sprite sheet
+            case BIG -> false; // TODO use map sprite  if level uses color scheme in sprite sheet
+            case STRANGE -> !inRange(levelNumber, 28, 31);
+        };
+    }
+
     @Override
     public void update(GameModel game) {
         if (game.world() == null) {
@@ -103,12 +112,12 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
         TengenMsPacManGame tengenGame = (TengenMsPacManGame) game;
         mapSprite = switch (tengenGame.mapCategory()) {
-            case ARCADE  -> arcadeMapSpriteImageArea(mapNumber);
+            case ARCADE  -> arcadeMapSpriteImageArea(game.currentLevelNumber());
             case MINI    -> miniMapSpriteImageArea(mapNumber);
             case BIG     -> bigMapSpriteImageArea(mapNumber);
             case STRANGE -> strangeMapSpriteImageArea(mapNumber);
         };
-        Logger.info("Tengen map #{} {}", mapNumber, mapSprite.area());
+        Logger.info("Level {}: Using map sprite area #{}", game.currentLevelNumber(), mapSprite.area());
     }
 
     private ImageArea arcadeMapSpriteImageArea(int levelNumber) {
@@ -140,13 +149,11 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     }
 
     private ImageArea bigMapSpriteImageArea(int mapNumber) {
-        int spriteNumber = mapNumber;
-        return nonArcadeMapSpriteSheet.mapSprite(spriteNumber);
+        return nonArcadeMapSpriteSheet.mapSprite(mapNumber);
     }
 
     private ImageArea strangeMapSpriteImageArea(int mapNumber) {
-        int spriteNumber = mapNumber;
-        return nonArcadeMapSpriteSheet.mapSprite(spriteNumber);
+        return nonArcadeMapSpriteSheet.mapSprite(mapNumber);
     }
 
     @Override
@@ -277,17 +284,12 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             drawGameOptionsInfo(game.world().map().terrain(), game);
         }
 
-        boolean isDemoLevel = context.game().isDemoLevel();
         // All maps that use a different color scheme than that in the sprite sheet have to be rendered using the
         // generic vector renderer for now. This looks more or less bad for specific maps.
-        // TODO: maps 28-32 also have random color schmes in STRANGE mode
-        boolean useVectorRenderer =
-                (game.mapCategory() == MapCategory.ARCADE && !isDemoLevel) ||
-                game.mapCategory() == MapCategory.BIG ||
-                game.mapCategory() == MapCategory.MINI ||
-                game.mapCategory() == MapCategory.STRANGE && game.currentLevelNumber() >= 28;
+        boolean mapSpriteExists = mapSpriteExists(game.currentLevelNumber(), game.mapCategory());
 
-        if (useVectorRenderer) {
+        if (!mapSpriteExists) {
+            // draw using generic vector renderer
             terrainRenderer.setMapBackgroundColor(bgColor);
             terrainRenderer.setWallStrokeColor(Color.web(mapColorScheme.get("stroke")));
             terrainRenderer.setWallFillColor(Color.web(mapColorScheme.get("fill")));
@@ -301,12 +303,9 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
                 world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
             }
         }
-        else { // draw using sprite sheet
-            if (mapSprite == null) {
-                Logger.error("Cannot draw world: No map sprite selected");
-                return;
-            }
-            drawWorldUsingSpriteSheet(game, context.gameClock().getUpdateCount());
+        else {
+            // draw using map sprite
+            drawWorldUsingMapSprite(game, context.gameClock().getUpdateCount());
         }
         game.bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
     }
@@ -317,7 +316,10 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             game.mapCategory() == MapCategory.ARCADE;
     }
 
-    private void drawWorldUsingSpriteSheet(TengenMsPacManGame game, long t) {
+    private void drawWorldUsingMapSprite(TengenMsPacManGame game, long t) {
+        if (mapSprite == null) {
+            return; // not yet selected
+        }
         // Maze #32 has psychedelic animation
         if (game.currentMapNumber() == 32) {
             drawAnimatedMap(t, TengenNonArcadeMapsSpriteSheet.MAP_32_ANIMATION_FRAMES);

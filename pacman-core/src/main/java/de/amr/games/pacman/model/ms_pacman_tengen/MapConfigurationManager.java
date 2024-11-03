@@ -80,19 +80,17 @@ public class MapConfigurationManager {
     }
 
     private MapConfig selectArcadeMapForLevel(int levelNumber) {
-        List<WorldMap> maps = getArcadeMaps();
+        List<WorldMap> arcade = getArcadeMaps();
         return switch (levelNumber) {
-            case 1,2         -> createMapConfig(maps, 1, MSC_36_15_20_PINK_RED_WHITE.get());
-            case 3,4,5       -> createMapConfig(maps, 2, MSC_21_20_28_BLUE_WHITE_YELLOW.get());
-            case 6,7,8,9     -> createMapConfig(maps, 3, MSC_16_20_15_ORANGE_WHITE_RED.get());
-            case 10,11,12,13 -> createMapConfig(maps, 4, MSC_01_38_20_BLUE_YELLOW_WHITE.get());
-            case 14,15,16,17 -> createMapConfig(maps, 3, MSC_35_28_20_PINK_YELLOW_WHITE.get());
-            case 18,19,20,21 -> createMapConfig(maps, 4, MSC_36_15_20_PINK_RED_WHITE.get());
-            case 22,23,24,25 -> createMapConfig(maps, 3, MSC_17_20_20_BROWN_WHITE_WHITE.get());
-            //TODO also random color schemes from level 28 on?
-            case 26,27       -> createMapConfig(maps, 4, MSC_13_20_28_VIOLET_WHITE_YELLOW.get());
-            case 28,29       -> createMapConfig(maps, 4, MSC_13_20_28_VIOLET_WHITE_YELLOW.get());
-            case 30,31,32    -> createMapConfig(maps, 3, MSC_0F_20_28_BLACK_WHITE_YELLOW.get());
+            case 1,2         -> createMapConfig(arcade, 1, MSC_36_15_20_PINK_RED_WHITE.get());
+            case 3,4,5       -> createMapConfig(arcade, 2, MSC_21_20_28_BLUE_WHITE_YELLOW.get());
+            case 6,7,8,9     -> createMapConfig(arcade, 3, MSC_16_20_15_ORANGE_WHITE_RED.get());
+            case 10,11,12,13 -> createMapConfig(arcade, 4, MSC_01_38_20_BLUE_YELLOW_WHITE.get());
+            case 14,15,16,17 -> createMapConfig(arcade, 3, MSC_35_28_20_PINK_YELLOW_WHITE.get());
+            case 18,19,20,21 -> createMapConfig(arcade, 4, MSC_36_15_20_PINK_RED_WHITE.get());
+            case 22,23,24,25 -> createMapConfig(arcade, 3, MSC_17_20_20_BROWN_WHITE_WHITE.get());
+            case 26,27,28,29 -> createMapConfig(arcade, 4, MSC_13_20_28_VIOLET_WHITE_YELLOW.get());
+            case 30,31,32    -> createMapConfig(arcade, 3, MSC_0F_20_28_BLACK_WHITE_YELLOW.get());
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
     }
@@ -101,40 +99,40 @@ public class MapConfigurationManager {
      * From this <a href="https://www.youtube.com/watch?v=cD0oGudVpbw">YouTube video</a>.
      */
     private MapConfig selectMiniMapForLevel(int levelNumber) {
-        List<WorldMap> maps = getMiniMaps();
+        List<WorldMap> mini = getMiniMaps();
         return switch (levelNumber) {
-            case 1  -> createMapConfig(maps, 1, MSC_36_15_20_PINK_RED_WHITE.get());
-            case 2  -> createMapConfig(maps, 2, MSC_21_20_28_BLUE_WHITE_YELLOW.get());
-            case 3  -> createMapConfig(maps, 1, MSC_16_20_15_ORANGE_WHITE_RED.get());
-            case 4  -> createMapConfig(maps, 2, MSC_01_38_20_BLUE_YELLOW_WHITE.get());
-            case 5  -> createMapConfig(maps, 3, MSC_35_28_20_PINK_YELLOW_WHITE.get());
-            case 6  -> createMapConfig(maps, 1, MSC_36_15_20_PINK_RED_WHITE.get());
-            case 7  -> createMapConfig(maps, 2, MSC_17_20_20_BROWN_WHITE_WHITE.get());
-            case 8  -> createMapConfig(maps, 3, MSC_13_20_28_VIOLET_WHITE_YELLOW.get());
-            case 9  -> createMapConfig(maps, 4, MSC_0F_20_28_BLACK_WHITE_YELLOW.get());
-            case 10 -> createMapConfig(maps, 1, MSC_0F_01_20_BLACK_BLUE_WHITE.get());
-            case 11 -> createMapConfig(maps, 2, MSC_14_25_20_VIOLET_ROSE_WHITE.get());
-            case 12 -> createMapConfig(maps, 3, MSC_15_20_20_RED_WHITE_WHITE.get());
-            case 13 -> createMapConfig(maps, 4, MSC_1B_20_20_GREEN_WHITE_WHITE.get());
-            case 14 -> createMapConfig(maps, 1, MSC_28_20_2A_YELLOW_WHITE_GREEN.get());
-            case 15 -> createMapConfig(maps, 2, MSC_1A_20_28_GREEN_WHITE_YELLOW.get());
-            case 16 -> createMapConfig(maps, 3, MSC_18_20_20_KHAKI_WHITE_WHITE.get());
-            case 17 -> createMapConfig(maps, 4, MSC_25_20_20_ROSE_WHITE_WHITE.get());
-            case 18 -> createMapConfig(maps, 5, MSC_12_20_28_BLUE_WHITE_YELLOW.get());
-            case 19 -> createMapConfig(maps, 5, MSC_07_20_20_BROWN_WHITE_WHITE.get());
-            case 20 -> createMapConfig(maps, 4, MSC_15_25_20_RED_ROSE_WHITE.get());
-            case 21 -> createMapConfig(maps, 3, MSC_0F_20_1C_BLACK_WHITE_GREEN.get());
-            case 22 -> createMapConfig(maps, 2, MSC_19_20_20_GREEN_WHITE_WHITE.get());
-            case 23 -> createMapConfig(maps, 1, MSC_0C_20_14_GREEN_WHITE_VIOLET.get());
-            case 24 -> createMapConfig(maps, 6, MSC_23_20_2B_VIOLET_WHITE_GREEN.get());
-            case 25 -> createMapConfig(maps, 1, MSC_10_20_28_GRAY_WHITE_YELLOW.get());
-            case 26 -> createMapConfig(maps, 2, MSC_04_20_20_VIOLET_WHITE_WHITE.get());
-            case 27 -> createMapConfig(maps, 3, MSC_04_20_20_VIOLET_WHITE_WHITE.get());
-            case 28 -> createMapConfig(maps, 4, randomMapColorScheme());
-            case 29 -> createMapConfig(maps, 5, randomMapColorScheme());
-            case 30 -> createMapConfig(maps, 2, randomMapColorScheme());
-            case 31 -> createMapConfig(maps, 3, randomMapColorScheme());
-            case 32 -> createMapConfig(maps, 6, randomMapColorScheme());
+            case 1  -> createMapConfig(mini, 1, MSC_36_15_20_PINK_RED_WHITE.get());
+            case 2  -> createMapConfig(mini, 2, MSC_21_20_28_BLUE_WHITE_YELLOW.get());
+            case 3  -> createMapConfig(mini, 1, MSC_16_20_15_ORANGE_WHITE_RED.get());
+            case 4  -> createMapConfig(mini, 2, MSC_01_38_20_BLUE_YELLOW_WHITE.get());
+            case 5  -> createMapConfig(mini, 3, MSC_35_28_20_PINK_YELLOW_WHITE.get());
+            case 6  -> createMapConfig(mini, 1, MSC_36_15_20_PINK_RED_WHITE.get());
+            case 7  -> createMapConfig(mini, 2, MSC_17_20_20_BROWN_WHITE_WHITE.get());
+            case 8  -> createMapConfig(mini, 3, MSC_13_20_28_VIOLET_WHITE_YELLOW.get());
+            case 9  -> createMapConfig(mini, 4, MSC_0F_20_28_BLACK_WHITE_YELLOW.get());
+            case 10 -> createMapConfig(mini, 1, MSC_0F_01_20_BLACK_BLUE_WHITE.get());
+            case 11 -> createMapConfig(mini, 2, MSC_14_25_20_VIOLET_ROSE_WHITE.get());
+            case 12 -> createMapConfig(mini, 3, MSC_15_20_20_RED_WHITE_WHITE.get());
+            case 13 -> createMapConfig(mini, 4, MSC_1B_20_20_GREEN_WHITE_WHITE.get());
+            case 14 -> createMapConfig(mini, 1, MSC_28_20_2A_YELLOW_WHITE_GREEN.get());
+            case 15 -> createMapConfig(mini, 2, MSC_1A_20_28_GREEN_WHITE_YELLOW.get());
+            case 16 -> createMapConfig(mini, 3, MSC_18_20_20_KHAKI_WHITE_WHITE.get());
+            case 17 -> createMapConfig(mini, 4, MSC_25_20_20_ROSE_WHITE_WHITE.get());
+            case 18 -> createMapConfig(mini, 5, MSC_12_20_28_BLUE_WHITE_YELLOW.get());
+            case 19 -> createMapConfig(mini, 5, MSC_07_20_20_BROWN_WHITE_WHITE.get());
+            case 20 -> createMapConfig(mini, 4, MSC_15_25_20_RED_ROSE_WHITE.get());
+            case 21 -> createMapConfig(mini, 3, MSC_0F_20_1C_BLACK_WHITE_GREEN.get());
+            case 22 -> createMapConfig(mini, 2, MSC_19_20_20_GREEN_WHITE_WHITE.get());
+            case 23 -> createMapConfig(mini, 1, MSC_0C_20_14_GREEN_WHITE_VIOLET.get());
+            case 24 -> createMapConfig(mini, 6, MSC_23_20_2B_VIOLET_WHITE_GREEN.get());
+            case 25 -> createMapConfig(mini, 1, MSC_10_20_28_GRAY_WHITE_YELLOW.get());
+            case 26 -> createMapConfig(mini, 2, MSC_04_20_20_VIOLET_WHITE_WHITE.get());
+            case 27 -> createMapConfig(mini, 3, MSC_04_20_20_VIOLET_WHITE_WHITE.get());
+            case 28 -> createMapConfig(mini, 4, randomMapColorScheme());
+            case 29 -> createMapConfig(mini, 5, randomMapColorScheme());
+            case 30 -> createMapConfig(mini, 2, randomMapColorScheme());
+            case 31 -> createMapConfig(mini, 3, randomMapColorScheme());
+            case 32 -> createMapConfig(mini, 6, MSC_15_25_20_RED_ROSE_WHITE.get());
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
     }
@@ -143,53 +141,53 @@ public class MapConfigurationManager {
      * From this <a href="https://www.youtube.com/watch?v=NoImGoSAL7A">YouTube video</a>.
      */
     private MapConfig selectBigMapForLevel(int levelNumber) {
-        List<WorldMap> maps = getStrangeOrBigMaps();
+        List<WorldMap> big = getStrangeOrBigMaps();
         return switch (levelNumber) {
-            case 1  -> createMapConfig(maps, 19, MSC_36_15_20_PINK_RED_WHITE.get());
-            case 2  -> createMapConfig(maps, 20, MSC_21_20_28_BLUE_WHITE_YELLOW.get());
-            case 3  -> createMapConfig(maps, 21, MSC_16_20_15_ORANGE_WHITE_RED.get());
-            case 4  -> createMapConfig(maps, 19, MSC_01_38_20_BLUE_YELLOW_WHITE.get());
-            case 5  -> createMapConfig(maps, 20, MSC_35_28_20_PINK_YELLOW_WHITE.get());
-            case 6  -> createMapConfig(maps, 21, MSC_36_15_20_PINK_RED_WHITE.get());
-            case 7  -> createMapConfig(maps, 22, MSC_17_20_20_BROWN_WHITE_WHITE.get());
-            case 8  -> createMapConfig(maps, 23, MSC_13_20_28_VIOLET_WHITE_YELLOW.get());
-            case 9  -> createMapConfig(maps, 17, MSC_0F_20_28_BLACK_WHITE_YELLOW.get());
-            case 10 -> createMapConfig(maps, 10, MSC_0F_01_20_BLACK_BLUE_WHITE.get());
-            case 11 -> createMapConfig(maps, 23, MSC_15_25_20_RED_ROSE_WHITE.get());
-            case 12 -> createMapConfig(maps, 21, MSC_25_20_20_ROSE_WHITE_WHITE.get());
-            case 13 -> createMapConfig(maps, 22, MSC_1B_20_20_GREEN_WHITE_WHITE.get());
-            case 14 -> createMapConfig(maps, 14, MSC_28_20_2A_YELLOW_WHITE_GREEN.get());
-            case 15 -> createMapConfig(maps, 20, MSC_1A_20_28_GREEN_WHITE_YELLOW.get());
-            case 16 -> createMapConfig(maps, 19, MSC_18_20_20_KHAKI_WHITE_WHITE.get());
-            case 17 -> createMapConfig(maps, 10, MSC_25_20_20_ROSE_WHITE_WHITE.get());
-            case 18 -> createMapConfig(maps, 17, MSC_12_20_28_BLUE_WHITE_YELLOW.get());
-            case 19 -> createMapConfig(maps, 10, MSC_07_20_20_BROWN_WHITE_WHITE.get());
-            case 20 -> createMapConfig(maps, 19, MSC_15_25_20_RED_ROSE_WHITE.get());
-            case 21 -> createMapConfig(maps, 26, MSC_0F_20_1C_BLACK_WHITE_GREEN.get());
-            case 22 -> createMapConfig(maps, 21, MSC_19_20_20_GREEN_WHITE_WHITE.get());
-            case 23 -> createMapConfig(maps, 22, MSC_0C_20_14_GREEN_WHITE_VIOLET.get());
-            case 24 -> createMapConfig(maps, 23, MSC_23_20_2B_VIOLET_WHITE_GREEN.get());
-            case 25 -> createMapConfig(maps, 14, MSC_10_20_28_GRAY_WHITE_YELLOW.get());
-            case 26 -> createMapConfig(maps, 25, MSC_04_20_20_VIOLET_WHITE_WHITE.get());
-            case 27 -> createMapConfig(maps, 14, MSC_04_20_20_VIOLET_WHITE_WHITE.get());
-            case 28 -> createMapConfig(maps, 23, randomMapColorScheme());
-            case 29 -> createMapConfig(maps, 26, randomMapColorScheme());
-            case 30 -> createMapConfig(maps, 20, randomMapColorScheme());
-            case 31 -> createMapConfig(maps, 25, randomMapColorScheme());
-            case 32 -> createMapConfig(maps, 33, randomMapColorScheme());
+            case 1  -> createMapConfig(big, 19, MSC_36_15_20_PINK_RED_WHITE.get());
+            case 2  -> createMapConfig(big, 20, MSC_21_20_28_BLUE_WHITE_YELLOW.get());
+            case 3  -> createMapConfig(big, 21, MSC_16_20_15_ORANGE_WHITE_RED.get());
+            case 4  -> createMapConfig(big, 19, MSC_01_38_20_BLUE_YELLOW_WHITE.get());
+            case 5  -> createMapConfig(big, 20, MSC_35_28_20_PINK_YELLOW_WHITE.get());
+            case 6  -> createMapConfig(big, 21, MSC_36_15_20_PINK_RED_WHITE.get());
+            case 7  -> createMapConfig(big, 22, MSC_17_20_20_BROWN_WHITE_WHITE.get());
+            case 8  -> createMapConfig(big, 23, MSC_13_20_28_VIOLET_WHITE_YELLOW.get());
+            case 9  -> createMapConfig(big, 17, MSC_0F_20_28_BLACK_WHITE_YELLOW.get());
+            case 10 -> createMapConfig(big, 10, MSC_0F_01_20_BLACK_BLUE_WHITE.get());
+            case 11 -> createMapConfig(big, 23, MSC_15_25_20_RED_ROSE_WHITE.get());
+            case 12 -> createMapConfig(big, 21, MSC_25_20_20_ROSE_WHITE_WHITE.get());
+            case 13 -> createMapConfig(big, 22, MSC_1B_20_20_GREEN_WHITE_WHITE.get());
+            case 14 -> createMapConfig(big, 14, MSC_28_20_2A_YELLOW_WHITE_GREEN.get());
+            case 15 -> createMapConfig(big, 20, MSC_1A_20_28_GREEN_WHITE_YELLOW.get());
+            case 16 -> createMapConfig(big, 19, MSC_18_20_20_KHAKI_WHITE_WHITE.get());
+            case 17 -> createMapConfig(big, 10, MSC_25_20_20_ROSE_WHITE_WHITE.get());
+            case 18 -> createMapConfig(big, 17, MSC_12_20_28_BLUE_WHITE_YELLOW.get());
+            case 19 -> createMapConfig(big, 10, MSC_07_20_20_BROWN_WHITE_WHITE.get());
+            case 20 -> createMapConfig(big, 19, MSC_15_25_20_RED_ROSE_WHITE.get());
+            case 21 -> createMapConfig(big, 26, MSC_0F_20_1C_BLACK_WHITE_GREEN.get());
+            case 22 -> createMapConfig(big, 21, MSC_19_20_20_GREEN_WHITE_WHITE.get());
+            case 23 -> createMapConfig(big, 22, MSC_0C_20_14_GREEN_WHITE_VIOLET.get());
+            case 24 -> createMapConfig(big, 23, MSC_23_20_2B_VIOLET_WHITE_GREEN.get());
+            case 25 -> createMapConfig(big, 14, MSC_10_20_28_GRAY_WHITE_YELLOW.get());
+            case 26 -> createMapConfig(big, 25, MSC_04_20_20_VIOLET_WHITE_WHITE.get());
+            case 27 -> createMapConfig(big, 14, MSC_04_20_20_VIOLET_WHITE_WHITE.get());
+            case 28 -> createMapConfig(big, 23, randomMapColorScheme());
+            case 29 -> createMapConfig(big, 26, randomMapColorScheme());
+            case 30 -> createMapConfig(big, 20, randomMapColorScheme());
+            case 31 -> createMapConfig(big, 25, randomMapColorScheme());
+            case 32 -> createMapConfig(big, 33, MSC_15_25_20_RED_ROSE_WHITE.get());
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
     }
 
-    private MapConfig createMapConfig(List<WorldMap> maps, int mapNumber, Map<String, String> colorScheme) {
-        return new MapConfig(mapNumber, new WorldMap(maps.get(mapNumber - 1)), colorScheme);
+    private MapConfig selectStrangeMapForLevel(int levelNumber) {
+        List<WorldMap> strange = getStrangeOrBigMaps();
+        int mapNumber = levelNumber; // TODO: check this
+        WorldMap worldMap = strange.get(mapNumber - 1);
+        return new MapConfig(mapNumber, worldMap, createColorSchemeFromMap(worldMap));
     }
 
-    private MapConfig selectStrangeMapForLevel(int levelNumber) {
-        List<WorldMap> maps = getStrangeOrBigMaps();
-        int mapNumber = levelNumber; // TODO: check this
-        WorldMap worldMap = maps.get(mapNumber - 1);
-        return new MapConfig(mapNumber, worldMap, createColorSchemeFromMap(worldMap));
+    private MapConfig createMapConfig(List<WorldMap> maps, int mapNumber, Map<String, String> colorScheme) {
+        return new MapConfig(mapNumber, new WorldMap(maps.get(mapNumber - 1)), colorScheme);
     }
 
     private Map<String, String> createColorSchemeFromMap(WorldMap worldMap) {
