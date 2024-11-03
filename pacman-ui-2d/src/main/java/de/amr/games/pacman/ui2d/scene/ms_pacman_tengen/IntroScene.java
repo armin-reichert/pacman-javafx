@@ -182,7 +182,7 @@ public class IntroScene extends GameScene2D {
         double xMin = MARQUEE_TOP_X, xMax = xMin + 132, yMin = MARQUEE_TOP_Y, yMax = yMin + 60;
         GraphicsContext g = renderer.ctx();
         for (int i = 0; i < NUM_BULBS; ++i) {
-            g.setFill(bulbOn.get(i) ? Color.WHITE : paletteColor(0x15));
+            g.setFill(bulbOn.get(i) ? paletteColor(0x20) : paletteColor(0x15));
             if (i <= 33) {
                 // lower border left-to-right
                 drawBulb(g, xMin + 4 * i, yMax);

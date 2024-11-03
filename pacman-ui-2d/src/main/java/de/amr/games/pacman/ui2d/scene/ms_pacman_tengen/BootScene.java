@@ -20,6 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.paletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.shadeOfBlue;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
 
@@ -97,7 +98,7 @@ public class BootScene extends GameScene2D {
     protected void drawSceneContent(GameRenderer renderer) {
         renderer.scalingProperty().set(scaling());
         if (grayScreen) {
-            renderer.ctx().setFill(Color.grayRgb(116));
+            renderer.ctx().setFill(paletteColor(0x10));
             renderer.ctx().fillRect(0, 0, renderer.canvas().getWidth(), renderer.canvas().getHeight());
         } else {
             Font font = renderer.scaledArcadeFont(TS);
