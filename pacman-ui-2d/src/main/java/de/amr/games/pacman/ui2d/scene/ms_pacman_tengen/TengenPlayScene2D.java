@@ -47,7 +47,7 @@ import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions.QUIT_DEMO_LEVEL;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_YELLOW;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.paletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 
@@ -299,7 +299,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             Color color = assets.color(assetPrefix + ".color.ready_message");
             drawText(renderer, "READY!", cx, y, color);
         } else if (state == GameState.TESTING_LEVEL_BONI) {
-            drawText(renderer, "TEST L%02d".formatted(game.currentLevelNumber()), cx, y, TENGEN_YELLOW);
+            drawText(renderer, "TEST L%02d".formatted(game.currentLevelNumber()), cx, y, paletteColor(0x28));
         }
     }
 

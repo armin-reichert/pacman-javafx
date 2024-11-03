@@ -41,19 +41,9 @@ import static java.util.function.Predicate.not;
  */
 public class TengenMsPacManGameRenderer implements GameRenderer {
 
-    static Color paletteColor(int index) {
+    public static Color paletteColor(int index) {
         return Color.web(NESColorPalette.entry(index));
     }
-
-    public static final Color TENGEN_BABY_BLUE          = paletteColor(0x21);
-    public static final Color TENGEN_PINK               = paletteColor(0x25);
-    public static final Color TENGEN_YELLOW             = paletteColor(0x28);
-    public static final Color TENGEN_MARQUEE_COLOR      = paletteColor(0x15);
-    public static final Color TENGEN_PAC_COLOR          = paletteColor(0x28);
-    public static final Color TENGEN_RED_GHOST_COLOR    = paletteColor(0x05);
-    public static final Color TENGEN_PINK_GHOST_COLOR   = paletteColor(0x25);
-    public static final Color TENGEN_CYAN_GHOST_COLOR   = paletteColor(0x11);
-    public static final Color TENGEN_ORANGE_GHOST_COLOR = paletteColor(0x16);
 
     // Blue colors used in intro, dark to brighter blue shade.
     // Cycles through palette indices 0x01, 0x11, 0x21, 0x31, each frame takes 16 ticks.

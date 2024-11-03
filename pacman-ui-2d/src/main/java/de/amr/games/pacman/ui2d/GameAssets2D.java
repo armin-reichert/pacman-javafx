@@ -14,6 +14,7 @@ import de.amr.games.pacman.ui2d.util.ResourceManager;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.paletteColor;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 import static de.amr.games.pacman.ui2d.util.Ufx.imageBackground;
 
@@ -146,41 +147,41 @@ public class GameAssets2D extends AssetStorage {
         assets.store("tengen.logo.midway",                    rm.loadImage("graphics/mspacman/midway_logo.png"));
         assets.store("tengen.image.nes-controller",           rm.loadImage("graphics/tengen/nes-controller.jpg"));
 
-        assets.store("tengen.color.game_over_message",        TengenMsPacManGameRenderer.TENGEN_CYAN_GHOST_COLOR);
-        assets.store("tengen.color.ready_message",            TengenMsPacManGameRenderer.TENGEN_YELLOW);
-        assets.store("tengen.color.clapperboard",             Color.WHITE);
+        assets.store("tengen.color.game_over_message",        paletteColor(0x11));
+        assets.store("tengen.color.ready_message",            paletteColor(0x28));
+        assets.store("tengen.color.clapperboard",             paletteColor(0x20));
 
-        assets.store("tengen.pac.color.head",                 TengenMsPacManGameRenderer.TENGEN_PAC_COLOR);
-        assets.store("tengen.pac.color.eyes",                 Color.rgb(32, 0, 100));
-        assets.store("tengen.pac.color.palate",               Color.grayRgb(66));
-        assets.store("tengen.pac.color.boobs",                TengenMsPacManGameRenderer.TENGEN_PAC_COLOR.deriveColor(0, 1.0, 0.96, 1.0));
-        assets.store("tengen.pac.color.hairbow",              TengenMsPacManGameRenderer.TENGEN_RED_GHOST_COLOR);
-        assets.store("tengen.pac.color.hairbow.pearls",       Color.web("#002a88"));
+        assets.store("tengen.pac.color.head",                 paletteColor(0x28));
+        assets.store("tengen.pac.color.eyes",                 paletteColor(0x02));
+        assets.store("tengen.pac.color.palate",               paletteColor(0x00));
+        assets.store("tengen.pac.color.boobs",                paletteColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
+        assets.store("tengen.pac.color.hairbow",              paletteColor(0x05));
+        assets.store("tengen.pac.color.hairbow.pearls",       paletteColor(0x02));
 
-        assets.store("tengen.ghost.0.color.normal.dress",     TengenMsPacManGameRenderer.TENGEN_RED_GHOST_COLOR);
-        assets.store("tengen.ghost.0.color.normal.eyeballs",  Color.WHITE);
-        assets.store("tengen.ghost.0.color.normal.pupils",    Color.rgb(224, 80, 0));
+        assets.store("tengen.ghost.0.color.normal.dress",     paletteColor(0x05));
+        assets.store("tengen.ghost.0.color.normal.eyeballs",  paletteColor(0x20));
+        assets.store("tengen.ghost.0.color.normal.pupils",    paletteColor(0x16));
 
-        assets.store("tengen.ghost.1.color.normal.dress",     TengenMsPacManGameRenderer.TENGEN_PINK_GHOST_COLOR);
-        assets.store("tengen.ghost.1.color.normal.eyeballs",  Color.WHITE);
-        assets.store("tengen.ghost.1.color.normal.pupils",    Color.rgb(63, 96, 248));
+        assets.store("tengen.ghost.1.color.normal.dress",     paletteColor(0x25));
+        assets.store("tengen.ghost.1.color.normal.eyeballs",  paletteColor(0x20));
+        assets.store("tengen.ghost.1.color.normal.pupils",    paletteColor(0x11));
 
-        assets.store("tengen.ghost.2.color.normal.dress",     TengenMsPacManGameRenderer.TENGEN_CYAN_GHOST_COLOR);
-        assets.store("tengen.ghost.2.color.normal.eyeballs",  Color.WHITE);
-        assets.store("tengen.ghost.2.color.normal.pupils",    Color.rgb(63, 96, 248));
+        assets.store("tengen.ghost.2.color.normal.dress",     paletteColor(0x11));
+        assets.store("tengen.ghost.2.color.normal.eyeballs",  paletteColor(0x20));
+        assets.store("tengen.ghost.2.color.normal.pupils",    paletteColor(0x11));
 
-        assets.store("tengen.ghost.3.color.normal.dress",     TengenMsPacManGameRenderer.TENGEN_ORANGE_GHOST_COLOR);
-        assets.store("tengen.ghost.3.color.normal.eyeballs",  Color.WHITE);
-        assets.store("tengen.ghost.3.color.normal.pupils",    Color.rgb(176, 15, 48));
+        assets.store("tengen.ghost.3.color.normal.dress",     paletteColor(0x16));
+        assets.store("tengen.ghost.3.color.normal.eyeballs",  paletteColor(0x20));
+        assets.store("tengen.ghost.3.color.normal.pupils",    paletteColor(0x05));
 
-        assets.store("tengen.ghost.color.frightened.dress",   Color.rgb(32, 0, 176));
-        assets.store("tengen.ghost.color.frightened.eyeballs", Color.WHITE);
-        assets.store("tengen.ghost.color.frightened.pupils",  Color.WHITE);
+        assets.store("tengen.ghost.color.frightened.dress",   paletteColor(0x01));
+        assets.store("tengen.ghost.color.frightened.eyeballs", paletteColor(0x20));
+        assets.store("tengen.ghost.color.frightened.pupils",  paletteColor(0x20));
 
-        //TODO has two flashing colors
-        assets.store("tengen.ghost.color.flashing.dress",     Color.WHITE);
-        assets.store("tengen.ghost.color.flashing.eyeballs",  Color.rgb(176, 15, 48));
-        assets.store("tengen.ghost.color.flashing.pupils",    Color.rgb(176, 15, 48));
+        //TODO has two flashing colors, when to use which?
+        assets.store("tengen.ghost.color.flashing.dress",     paletteColor(0x20));
+        assets.store("tengen.ghost.color.flashing.eyeballs",  paletteColor(0x20));
+        assets.store("tengen.ghost.color.flashing.pupils",    paletteColor(0x20));
 
         assets.store("tengen.audio.option.selection_changed", rm.loadAudioClip("sound/tengen/ms-select1.wav"));
         assets.store("tengen.audio.option.value_changed",     rm.loadAudioClip("sound/tengen/ms-select2.wav"));

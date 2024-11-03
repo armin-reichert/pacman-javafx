@@ -120,9 +120,9 @@ public class IntroScene extends GameScene2D {
                 if (t % 60 < 30) {
                     renderer.drawText("PRESS START", Color.WHITE, font, 11 * TS, MARQUEE_TOP_Y + 9 * TS);
                 }
-                renderer.drawText("MS PAC-MAN TM NAMCO LTD", TENGEN_PINK, font, 6 * TS, MARQUEE_TOP_Y + 13 * TS);
-                renderer.drawText("©1990 TENGEN INC",        TENGEN_PINK, font, 8 * TS, MARQUEE_TOP_Y + 14 * TS);
-                renderer.drawText("ALL RIGHTS RESERVED",     TENGEN_PINK, font, 7 * TS, MARQUEE_TOP_Y + 15 * TS);
+                renderer.drawText("MS PAC-MAN TM NAMCO LTD", paletteColor(0x25), font, 6 * TS, MARQUEE_TOP_Y + 13 * TS);
+                renderer.drawText("©1990 TENGEN INC",        paletteColor(0x25), font, 8 * TS, MARQUEE_TOP_Y + 14 * TS);
+                renderer.drawText("ALL RIGHTS RESERVED",     paletteColor(0x25), font, 7 * TS, MARQUEE_TOP_Y + 15 * TS);
             }
 
             case SHOWING_MARQUEE -> {
@@ -146,7 +146,7 @@ public class IntroScene extends GameScene2D {
                 drawTitle(renderer, font);
                 drawMarquee(renderer, t);
                 renderer.drawText("STARRING", Color.WHITE, font, MARQUEE_TOP_X + 12, MARQUEE_TOP_Y + 22);
-                renderer.drawText("MS PAC-MAN", TENGEN_YELLOW, font, MARQUEE_TOP_X + 44, MARQUEE_TOP_Y + 38);
+                renderer.drawText("MS PAC-MAN", paletteColor(0x28), font, MARQUEE_TOP_X + 44, MARQUEE_TOP_Y + 38);
                 for (Ghost ghost : ghosts) { renderer.drawAnimatedEntity(ghost); }
                 renderer.drawAnimatedEntity(msPacMan);
             }
@@ -155,7 +155,7 @@ public class IntroScene extends GameScene2D {
     }
 
     private void drawTitle(GameRenderer renderer, Font font) {
-        renderer.drawText("\"MS PAC-MAN\"", TENGEN_YELLOW, font, MARQUEE_TOP_X + 20, MARQUEE_TOP_Y - 18);
+        renderer.drawText("\"MS PAC-MAN\"", paletteColor(0x28), font, MARQUEE_TOP_X + 20, MARQUEE_TOP_Y - 18);
     }
 
     /**
@@ -182,8 +182,7 @@ public class IntroScene extends GameScene2D {
         double xMin = MARQUEE_TOP_X, xMax = xMin + 132, yMin = MARQUEE_TOP_Y, yMax = yMin + 60;
         GraphicsContext g = renderer.ctx();
         for (int i = 0; i < NUM_BULBS; ++i) {
-            g.setFill(bulbOn.get(i) ? Color.WHITE : TENGEN_MARQUEE_COLOR);
-            // TODO This is too cryptic
+            g.setFill(bulbOn.get(i) ? Color.WHITE : paletteColor(0x15));
             if (i <= 33) {
                 // lower border left-to-right
                 drawBulb(g, xMin + 4 * i, yMax);

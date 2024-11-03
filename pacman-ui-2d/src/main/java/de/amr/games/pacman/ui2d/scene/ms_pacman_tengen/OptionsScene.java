@@ -21,8 +21,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_BABY_BLUE;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.TENGEN_YELLOW;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.paletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
 import static de.amr.games.pacman.ui2d.util.KeyInput.alt;
 
@@ -36,8 +35,8 @@ public class OptionsScene extends GameScene2D {
     static final int COL_COLON = 19 * TS;
     static final int COL_VALUE = 21  * TS;
 
-    static final Color LABEL_COLOR = TENGEN_YELLOW;
-    static final Color VALUE_COLOR = Color.WHITE;
+    static final Color LABEL_COLOR = paletteColor(0x28);
+    static final Color VALUE_COLOR = paletteColor(0x20);
 
     static final int OPTION_PLAYERS = 0;
     static final int OPTION_PAC_BOOSTER = 1;
@@ -285,9 +284,9 @@ public class OptionsScene extends GameScene2D {
         GraphicsContext g = renderer.ctx();
         g.save();
         g.scale(scaling(), scaling());
-        g.setFill(Color.WHITE);
+        g.setFill(paletteColor(0x20));
         g.fillRect(0, y, size().x(), TS);
-        g.setFill(TENGEN_BABY_BLUE);
+        g.setFill(paletteColor(0x21));
         g.fillRect(0, y + 1, size().x(), TS - 2);
         g.restore();
     }
@@ -298,5 +297,4 @@ public class OptionsScene extends GameScene2D {
             renderer.drawText(">", LABEL_COLOR, font, COL_ARROW + 3, y);
         }
     }
-
 }
