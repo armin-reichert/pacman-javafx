@@ -10,10 +10,10 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Carousel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,16 +33,6 @@ public class StartPage extends StackPane implements Page {
     private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     private final GameContext context;
     private final Carousel carousel;
-
-    private final GameAction actionBrowseFlyerBackwards = context -> {
-        var flyer = (Flyer) currentSlide();
-        flyer.prevFlyerPage();
-    };
-
-    private final GameAction actionBrowseFlyerForwards = context -> {
-        var flyer = (Flyer) currentSlide();
-        flyer.nextFlyerPage();
-    };
 
     private final GameAction actionEnterGamePage = GameContext::selectGamePage;
 
@@ -104,25 +94,25 @@ public class StartPage extends StackPane implements Page {
         bindGameActions();
     }
 
-    private Node currentSlide() {
-        return carousel.currentSlide();
+    private Flyer currentFlyer() {
+        return (Flyer) carousel.currentSlide();
     }
 
     @Override
     public void bindGameActions() {
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            bind(actionBrowseFlyerBackwards,            context.joypad().up());
-            bind(actionBrowseFlyerForwards,             context.joypad().down());
-            bind(context -> carousel.prevSlide(),    context.joypad().left());
-            bind(context -> carousel.nextSlide(), context.joypad().right());
-            bind(actionEnterGamePage,                   context.joypad().start());
+            bind(context -> currentFlyer().prevFlyerPage(),  context.joypad().up());
+            bind(context -> currentFlyer().nextFlyerPage(),  context.joypad().down());
+            bind(context -> carousel.prevSlide(),            context.joypad().left());
+            bind(context -> carousel.nextSlide(),            context.joypad().right());
+            bind(actionEnterGamePage,                        context.joypad().start());
         } else {
-            bind(actionBrowseFlyerBackwards,            context.arcadeController().up());
-            bind(actionBrowseFlyerForwards,             context.arcadeController().down());
-            bind(context -> carousel.prevSlide(),    context.arcadeController().left());
-            bind(context -> carousel.nextSlide(), context.arcadeController().right());
+            bind(context -> currentFlyer().prevFlyerPage(),  context.arcadeController().up());
+            bind(context -> currentFlyer().nextFlyerPage(),  context.arcadeController().down());
+            bind(context -> carousel.prevSlide(),            context.arcadeController().left());
+            bind(context -> carousel.nextSlide(),            context.arcadeController().right());
             // START key is "1" which might be unclear on start page, so add ENTER
-            bind(actionEnterGamePage,          context.arcadeController().start(), naked(KeyCode.ENTER));
+            bind(actionEnterGamePage,                        context.arcadeController().start(), naked(KeyCode.ENTER));
         }
     }
 
