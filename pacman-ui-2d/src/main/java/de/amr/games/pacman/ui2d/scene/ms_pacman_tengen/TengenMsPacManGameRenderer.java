@@ -263,7 +263,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         if (flashMode) {
             Color wallFillColor = Color.web(mapColorScheme.get("fill"));
             terrainRenderer.setMapBackgroundColor(bgColor);
-            terrainRenderer.setWallStrokeColor(Color.WHITE);
+            terrainRenderer.setWallStrokeColor(paletteColor(0x20));
             terrainRenderer.setWallFillColor(blinkingOn ? Color.BLACK : wallFillColor);
             terrainRenderer.setDoorColor(Color.BLACK);
             terrainRenderer.drawMap(ctx(), terrain);
@@ -383,7 +383,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void drawScores(GameContext context) {
-        Color color = Color.WHITE;
+        Color color = paletteColor(0x20);
         Font font = scaledArcadeFont(TS);
         if (context.gameClock().getTickCount() % 60 < 30) { drawText("1UP", color, font, t(2), t(1)); }
         drawText("HIGH SCORE", color, font, t(9), t(1));
