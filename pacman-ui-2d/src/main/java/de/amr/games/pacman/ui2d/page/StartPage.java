@@ -28,7 +28,12 @@ import static de.amr.games.pacman.ui2d.util.KeyInput.naked;
  */
 public class StartPage extends StackPane implements Page {
 
-    public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant");
+    public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
+        @Override
+        protected void invalidated() {
+            bindGameActions();
+        }
+    };
 
     private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     private final GameContext context;

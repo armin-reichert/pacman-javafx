@@ -12,12 +12,12 @@ public class InfoBoxJoypad extends InfoBox {
 
     public void init(GameContext context) {
         super.init(context);
-        setContentTextFont(Font.font("Sans", 16));
-        String indent = "         "; // Urgh
-        labeledValue("[SELECT]   [START]", () -> "%s%s   %s".formatted(
+        setContentTextFont(Font.font("Monospace", 16));
+        String indent = "  "; // Urgh
+        labeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(
             indent,
             context.joypad().select().getDisplayText(),
-             context.joypad().start().getDisplayText())
+            context.joypad().start().getDisplayText())
         );
         labeledValue("[B]  [A]", () -> "%s%s   %s".formatted(
             indent,
