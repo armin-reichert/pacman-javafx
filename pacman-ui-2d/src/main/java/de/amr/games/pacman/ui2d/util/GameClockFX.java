@@ -60,6 +60,10 @@ public class GameClockFX {
         var tickDuration = Duration.seconds(1.0 / targetFPS);
         timeLine = new Timeline(targetFPS, new KeyFrame(tickDuration, e -> makeStep(!isPaused())));
         timeLine.setCycleCount(Animation.INDEFINITE);
+        timeLine.statusProperty().addListener((py, ov, nv) -> {
+            Logger.info("Clock status: {} -> {}", ov, nv);
+            Logger.info("Clock target frequency: {} Hz", getTargetFrameRate());
+        });
     }
 
     private void handleTargetFrameRateChanged() {
@@ -82,22 +86,11 @@ public class GameClockFX {
     }
 
     public void start() {
-        if (timeLine.getStatus() != Status.RUNNING) {
-            timeLine.play();
-            Logger.info("Clock status: {}", timeLine.getStatus());
-        } else {
-            Logger.info("Clock status remains {}", timeLine.getStatus());
-        }
-        Logger.info("Clock target frequency: {} Hz", getTargetFrameRate());
+        timeLine.play();
     }
 
     public void stop() {
-        if (timeLine.getStatus() == Status.RUNNING) {
-            timeLine.stop();
-            Logger.info("Clock status: {}", timeLine.getStatus());
-        } else {
-            Logger.info("Clock status remains {}", timeLine.getStatus());
-        }
+        timeLine.stop();
     }
 
     public boolean isRunning() {
