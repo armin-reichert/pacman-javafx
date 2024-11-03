@@ -48,7 +48,7 @@ public class MapConfigurationManager {
             MSC_10_20_28_GRAY_WHITE_YELLOW,    // Level 25
             MSC_03_20_20_VIOLET_WHITE_WHITE,
             MSC_04_20_20_VIOLET_WHITE_WHITE   // TODO clarify when randomization starts
-            // Levels 28-32 use randomly selected schemes
+            // Levels 28-31 use randomly selected schemes
     );
 
     private static Map<String, String> randomMapColorScheme() {
