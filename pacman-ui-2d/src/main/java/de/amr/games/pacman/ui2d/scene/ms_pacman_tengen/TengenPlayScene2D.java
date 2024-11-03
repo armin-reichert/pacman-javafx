@@ -113,6 +113,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     public void bindGameActions() {
         Joypad joypad = context.joypad();
         if (context.game().isDemoLevel()) {
+            //TODO This does not work! When this code is executed, level has not yet been created!
             bind(QUIT_DEMO_LEVEL, joypad.start());
         } else {
             GameActions2D.bindCheatActions(this);
@@ -367,6 +368,11 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     @Override
     public void onGhostEaten(GameEvent e) {
         context.sound().playGhostEatenSound();
+    }
+
+    @Override
+    public void onLevelCreated(GameEvent e) {
+        bind(QUIT_DEMO_LEVEL, context.joypad().start());
     }
 
     @Override
