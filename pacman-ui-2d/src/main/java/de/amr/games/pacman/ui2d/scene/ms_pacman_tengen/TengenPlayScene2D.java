@@ -19,7 +19,6 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapConfigurationManager;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
-import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
@@ -49,10 +48,13 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
+import static de.amr.games.pacman.ui2d.GameActions2D.bindCheatActions;
+import static de.amr.games.pacman.ui2d.GameActions2D.bindFallbackPlayerControlActions;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions.QUIT_DEMO_LEVEL;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions.bindDefaultJoypadActions;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.paletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
@@ -131,17 +133,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     }
 
     @Override
-    public void bindGameActions() {
-        JoypadKeyBinding joypad = context.joypadInput();
-        if (context.game().isDemoLevel()) {
-            //TODO This does not work! When this code is executed, level has not yet been created!
-            bind(QUIT_DEMO_LEVEL, joypad.key(NES.Joypad.START));
-        } else {
-            GameActions2D.bindCheatActions(this);
-            TengenGameActions.bindDefaultJoypadActions(this, joypad);
-            GameActions2D.bindFallbackPlayerControlActions(this);
-        }
-    }
+    public void bindGameActions() {}
 
     @Override
     public void doInit() {
@@ -255,19 +247,19 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         boolean randomMapColors = inRange(game.currentLevelNumber(), 28, 31)
                 && (game.mapCategory() == MapCategory.BIG || game.mapCategory() == MapCategory.MINI);
         flashingMapColorSchemes.clear();
-        flashingMapColorSchemes.add(extractColors(game.currentMapColorScheme()));
-        if (randomMapColors) {
-            for (int i = 0; i < 5; ++i) {
-                flashingMapColorSchemes.add(HIGHLIGHT_COLOR_SCHEME);
+        for (int i = 0; i < game.numFlashes(); ++i) {
+            if (randomMapColors) {
                 var randomScheme = MapConfigurationManager.randomMapColorScheme();
                 while (randomScheme.get("fill").equals(NES.Palette.color(0x0f))) {
                     // skip color schemes with black fill color
                     randomScheme = MapConfigurationManager.randomMapColorScheme();
                 }
                 flashingMapColorSchemes.add(extractColors(randomScheme));
+            } else {
+                flashingMapColorSchemes.add(extractColors(game.currentMapColorScheme()));
             }
+            flashingMapColorSchemes.add(HIGHLIGHT_COLOR_SCHEME);
         }
-        flashingMapColorSchemes.add(HIGHLIGHT_COLOR_SCHEME);
         flashingStartTick = -1;
     }
 
@@ -435,7 +427,19 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        bind(QUIT_DEMO_LEVEL, context.joypadInput().key(NES.Joypad.START));
+        JoypadKeyBinding joypad = context.joypadInput();
+        if (context.game().isDemoLevel()) {
+            context.game().pac().setImmune(false);
+            bind(QUIT_DEMO_LEVEL, joypad.key(NES.Joypad.START));
+        } else {
+            context.game().pac().setUsingAutopilot(PY_AUTOPILOT.get());
+            context.game().pac().setImmune(PY_IMMUNITY.get());
+            bindCheatActions(this);
+            bindDefaultJoypadActions(this, joypad);
+            bindFallbackPlayerControlActions(this);
+        }
+        registerGameActionKeyBindings(context.keyboard());
+        context.updateRenderer();
     }
 
     @Override

@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
+import de.amr.games.pacman.ui2d.input.ArcadeController;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.sound.GameSound;
 import javafx.scene.canvas.GraphicsContext;
@@ -52,19 +53,19 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
+        ArcadeController arcadeController = context.arcadeController();
         if (context.game().isDemoLevel()) {
             context.game().pac().setImmune(false);
-            bind(GameActions2D.ADD_CREDIT, context.arcadeController().coin());
-            registerGameActionKeyBindings(context.keyboard());
+            bind(GameActions2D.ADD_CREDIT, arcadeController.coin());
         } else {
             context.game().scoreManager().setScoreEnabled(false);
             context.game().pac().setUsingAutopilot(PY_AUTOPILOT.get());
             context.game().pac().setImmune(PY_IMMUNITY.get());
             bindCheatActions(this);
-            bindDefaultArcadeControllerActions(this, context.arcadeController());
+            bindDefaultArcadeControllerActions(this, arcadeController);
             bindFallbackPlayerControlActions(this);
-            registerGameActionKeyBindings(context.keyboard());
         }
+        registerGameActionKeyBindings(context.keyboard());
         context.updateRenderer();
     }
 
