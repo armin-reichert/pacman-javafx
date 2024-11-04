@@ -134,16 +134,13 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         Logger.info("3D play scene initialized. {}", this);
     }
 
-    @Override
-    public void onLevelCreated(GameEvent event) {
+    private void setGameActions() {
         if (context.game().isDemoLevel()) {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 bind(TengenGameActions.QUIT_DEMO_LEVEL, context.joypadInput().key(NES.Joypad.START));
             } else {
                 bind(GameActions2D.ADD_CREDIT, context.arcadeController().key(Arcade.Controls.COIN));
             }
-            context.game().pac().setUsingAutopilot(true);
-            context.game().pac().setImmune(false);
         }
         else {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
@@ -154,11 +151,13 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             bindFallbackPlayerControlActions(this);
             bindCheatActions(this);
             context.setScoreVisible(true);
-            context.game().pac().setUsingAutopilot(PY_AUTOPILOT.get());
-            context.game().pac().setImmune(PY_IMMUNITY.get());
         }
         registerGameActionKeyBindings(context.keyboard());
+    }
 
+    @Override
+    public void onLevelCreated(GameEvent event) {
+        setGameActions();
         if (level3D == null) {
             replaceGameLevel3D(false); // level counter in model not yet initialized
         } else {
@@ -183,6 +182,15 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             Logger.warn("Cannot update 3D play scene, 3D game level not yet created?");
             return;
         }
+
+        if (context.game().isDemoLevel()) {
+            context.game().pac().setUsingAutopilot(true);
+            context.game().pac().setImmune(false);
+        } else {
+            context.game().pac().setUsingAutopilot(PY_AUTOPILOT.get());
+            context.game().pac().setImmune(PY_IMMUNITY.get());
+        }
+
         level3D.update(context);
 
         // Update camera and rotate the scores such that the viewer always sees them frontally
@@ -372,6 +380,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this.getClass().getSimpleName(), oldScene.getClass().getSimpleName());
+        setGameActions();
         if (level3D == null) {
             replaceGameLevel3D(true);
         }

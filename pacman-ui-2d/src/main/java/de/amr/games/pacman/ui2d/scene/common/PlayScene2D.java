@@ -56,12 +56,9 @@ public class PlayScene2D extends GameScene2D {
     public void onLevelCreated(GameEvent e) {
         ArcadeKeyAdapter arcadeController = context.arcadeController();
         if (context.game().isDemoLevel()) {
-            context.game().pac().setImmune(false);
             bind(GameActions2D.ADD_CREDIT, arcadeController.key(Arcade.Controls.COIN));
         } else {
             context.game().scoreManager().setScoreEnabled(false);
-            context.game().pac().setUsingAutopilot(PY_AUTOPILOT.get());
-            context.game().pac().setImmune(PY_IMMUNITY.get());
             bindCheatActions(this);
             bindDefaultArcadeControllerActions(this, arcadeController);
             bindFallbackPlayerControlActions(this);
@@ -81,6 +78,13 @@ public class PlayScene2D extends GameScene2D {
             // scene may be visible for 2 ticks before game level has been created
             Logger.warn("Cannot update PlayScene2D: game level not (yet) available");
             return;
+        }
+        if (context.game().isDemoLevel()) {
+            context.game().pac().setUsingAutopilot(false);
+            context.game().pac().setImmune(false);
+        } else {
+            context.game().pac().setUsingAutopilot(PY_AUTOPILOT.get());
+            context.game().pac().setImmune(PY_IMMUNITY.get());
         }
         if (!context.game().isDemoLevel()) {
             updateSound(context().sound());
