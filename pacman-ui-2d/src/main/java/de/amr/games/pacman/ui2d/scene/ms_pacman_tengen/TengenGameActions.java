@@ -11,7 +11,7 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameActionProvider;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.util.Joypad;
+import de.amr.games.pacman.ui2d.input.Joypad;
 import org.tinylog.Logger;
 
 public enum TengenGameActions implements GameAction {

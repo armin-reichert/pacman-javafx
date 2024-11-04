@@ -13,6 +13,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.pacman_xxl.PacManXXLGame;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
+import de.amr.games.pacman.ui2d.input.*;
 import de.amr.games.pacman.ui2d.page.*;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;

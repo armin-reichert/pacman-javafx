@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui2d.util;
+package de.amr.games.pacman.ui2d.input;
 
 import javafx.scene.input.KeyCodeCombination;
 

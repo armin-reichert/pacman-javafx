@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d;
 
-import de.amr.games.pacman.ui2d.util.KeyInput;
-import de.amr.games.pacman.ui2d.util.Keyboard;
+import de.amr.games.pacman.ui2d.input.KeyInput;
+import de.amr.games.pacman.ui2d.input.Keyboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import org.tinylog.Logger;

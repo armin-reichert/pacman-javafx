@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.util.KeyInput.naked;
+import static de.amr.games.pacman.ui2d.input.KeyInput.naked;
 
 /**
  * Got the flyer images from <a href="https://flyers.arcade-museum.com/">The Arcade Flyer Archive</a>.
