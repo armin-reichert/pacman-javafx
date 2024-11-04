@@ -18,7 +18,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.lib.Globals.t;
 
 /**
  * @author Armin Reichert

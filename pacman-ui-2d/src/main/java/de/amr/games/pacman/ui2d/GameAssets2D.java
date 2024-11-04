@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSpriteSheet;
-import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.AssetStorage;

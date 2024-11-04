@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.input;
 
 import de.amr.games.pacman.lib.arcade.Arcade;
-import de.amr.games.pacman.lib.nes.NES;
 import javafx.scene.input.KeyCodeCombination;
 
 import java.util.stream.Stream;
