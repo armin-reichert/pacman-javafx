@@ -15,7 +15,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
-import de.amr.games.pacman.ui2d.input.ArcadeKeyBinding;
+import de.amr.games.pacman.ui2d.input.ArcadeKeyAdapter;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.sound.GameSound;
 import javafx.scene.canvas.GraphicsContext;
@@ -54,7 +54,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        ArcadeKeyBinding arcadeController = context.arcadeController();
+        ArcadeKeyAdapter arcadeController = context.arcadeController();
         if (context.game().isDemoLevel()) {
             context.game().pac().setImmune(false);
             bind(GameActions2D.ADD_CREDIT, arcadeController.key(Arcade.Controls.COIN));

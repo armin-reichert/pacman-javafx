@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
+import de.amr.games.pacman.ui2d.input.JoypadKeyAdapter;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 
@@ -14,7 +14,7 @@ public class InfoBoxJoypad extends InfoBox {
 
     public void init(GameContext context) {
         super.init(context);
-        JoypadKeyBinding joypad = context.joypadInput();
+        JoypadKeyAdapter joypad = context.joypadInput();
         setContentTextFont(Font.font("Monospace", 16));
         String indent = "  "; // Urgh
         labeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(

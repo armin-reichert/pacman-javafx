@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 /**
  * @ see <a href="https://www.nesdev.org/wiki/Standard_controller">here</a>
  */
-public interface JoypadKeyBinding {
+public interface JoypadKeyAdapter {
 
     KeyCodeCombination key(NES.Joypad button);
 

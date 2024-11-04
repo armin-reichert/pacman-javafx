@@ -10,8 +10,8 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.input.ArcadeKeyBinding;
-import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
+import de.amr.games.pacman.ui2d.input.ArcadeKeyAdapter;
+import de.amr.games.pacman.ui2d.input.JoypadKeyAdapter;
 import de.amr.games.pacman.ui2d.input.Keyboard;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
@@ -46,8 +46,8 @@ public interface GameContext {
 
     // Input
     Keyboard                    keyboard();
-    ArcadeKeyBinding arcadeController();
-    JoypadKeyBinding            joypadInput();
+    ArcadeKeyAdapter arcadeController();
+    JoypadKeyAdapter joypadInput();
     void                        enableJoypad();
     void                        disableJoypad();
     void                        nextJoypad();

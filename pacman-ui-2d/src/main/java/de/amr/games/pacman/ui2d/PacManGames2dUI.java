@@ -64,7 +64,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     protected static final Keyboard THE_KEYBOARD = new Keyboard();
 
-    public static final ArcadeKeyBinding ARCADE_CONTROLLER_CURSOR_KEYS = new ArcadeControllerKeyBindingData(
+    public static final ArcadeKeyAdapter ARCADE_CONTROLLER_CURSOR_KEYS = new ArcadeKeyAdapterImpl(
         new KeyCodeCombination(KeyCode.DIGIT5),
         new KeyCodeCombination(KeyCode.DIGIT1),
         new KeyCodeCombination(KeyCode.UP),
@@ -73,7 +73,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         new KeyCodeCombination(KeyCode.RIGHT)
     );
 
-    public static final ArcadeKeyBinding ARCADE_CONTROLLER_CURSOR_KEYS_NUMPAD = new ArcadeControllerKeyBindingData(
+    public static final ArcadeKeyAdapter ARCADE_CONTROLLER_CURSOR_KEYS_NUMPAD = new ArcadeKeyAdapterImpl(
         new KeyCodeCombination(KeyCode.NUMPAD5),
         new KeyCodeCombination(KeyCode.NUMPAD1),
         new KeyCodeCombination(KeyCode.UP),
@@ -83,7 +83,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     );
 
     // My current bindings, might be crap
-    public static final JoypadKeyBinding JOYPAD_CURSOR_KEYS = new JoypadKeyBindingData(
+    public static final JoypadKeyAdapter JOYPAD_CURSOR_KEYS = new JoypadKeyAdapterImpl(
             new KeyCodeCombination(KeyCode.SPACE),
             new KeyCodeCombination(KeyCode.ENTER),
             new KeyCodeCombination(KeyCode.B),
@@ -95,7 +95,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     );
 
     // Mesen emulator key set #2
-    public static final JoypadKeyBinding JOYPAD_WASD = new JoypadKeyBindingData(
+    public static final JoypadKeyAdapter JOYPAD_WASD = new JoypadKeyAdapterImpl(
             new KeyCodeCombination(KeyCode.U),
             new KeyCodeCombination(KeyCode.I),
             new KeyCodeCombination(KeyCode.J),
@@ -138,8 +138,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected boolean signatureShown; //TODO make this work again for all intro screens
     protected Picker<String> pickerGameOver;
     protected Picker<String> pickerLevelComplete;
-    protected JoypadKeyBinding joypad = JOYPAD_CURSOR_KEYS;
-    protected ArcadeKeyBinding arcadeController = ARCADE_CONTROLLER_CURSOR_KEYS;
+    protected JoypadKeyAdapter joypad = JOYPAD_CURSOR_KEYS;
+    protected ArcadeKeyAdapter arcadeController = ARCADE_CONTROLLER_CURSOR_KEYS;
 
     public PacManGames2dUI() {
         assets = new AssetStorage();
@@ -351,12 +351,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public ArcadeKeyBinding arcadeController() {
+    public ArcadeKeyAdapter arcadeController() {
         return arcadeController;
     }
 
     @Override
-    public JoypadKeyBinding joypadInput() {
+    public JoypadKeyAdapter joypadInput() {
         return joypad;
     }
 

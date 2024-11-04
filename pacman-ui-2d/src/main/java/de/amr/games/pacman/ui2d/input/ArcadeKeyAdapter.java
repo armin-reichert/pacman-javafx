@@ -9,7 +9,7 @@ import javafx.scene.input.KeyCodeCombination;
 
 import java.util.stream.Stream;
 
-public interface ArcadeKeyBinding {
+public interface ArcadeKeyAdapter {
 
     KeyCodeCombination key(Arcade.Controls control);
 

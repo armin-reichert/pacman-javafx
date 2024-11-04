@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui2d.input;
 import de.amr.games.pacman.lib.nes.NES;
 import javafx.scene.input.KeyCodeCombination;
 
-public record JoypadKeyBindingData(
+public record JoypadKeyAdapterImpl(
     KeyCodeCombination select,
     KeyCodeCombination start,
     KeyCodeCombination b,
@@ -16,7 +16,7 @@ public record JoypadKeyBindingData(
     KeyCodeCombination down,
     KeyCodeCombination left,
     KeyCodeCombination right
-) implements JoypadKeyBinding {
+) implements JoypadKeyAdapter {
 
     @Override
     public KeyCodeCombination key(NES.Joypad button) {

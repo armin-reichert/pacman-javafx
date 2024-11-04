@@ -12,7 +12,7 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameActionProvider;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
+import de.amr.games.pacman.ui2d.input.JoypadKeyAdapter;
 import org.tinylog.Logger;
 
 public enum TengenGameActions implements GameAction {
@@ -62,7 +62,7 @@ public enum TengenGameActions implements GameAction {
         }
     };
 
-    public static void bindDefaultJoypadActions(GameActionProvider actionProvider, JoypadKeyBinding binding) {
+    public static void bindDefaultJoypadActions(GameActionProvider actionProvider, JoypadKeyAdapter binding) {
         actionProvider.bind(TengenGameActions.TOGGLE_PAC_BOOSTER, binding.key(NES.Joypad.A), binding.key(NES.Joypad.B));
         actionProvider.bind(GameActions2D.PLAYER_UP,    binding.key(NES.Joypad.UP));
         actionProvider.bind(GameActions2D.PLAYER_DOWN,  binding.key(NES.Joypad.DOWN));

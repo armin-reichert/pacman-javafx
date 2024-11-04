@@ -19,7 +19,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapConfigurationManager;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
-import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
+import de.amr.games.pacman.ui2d.input.JoypadKeyAdapter;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
@@ -433,7 +433,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        JoypadKeyBinding joypad = context.joypadInput();
+        JoypadKeyAdapter joypad = context.joypadInput();
         if (context.game().isDemoLevel()) {
             context.game().pac().setImmune(false);
             bind(QUIT_DEMO_LEVEL, joypad.key(NES.Joypad.START));

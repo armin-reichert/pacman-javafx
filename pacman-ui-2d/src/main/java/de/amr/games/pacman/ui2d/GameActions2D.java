@@ -11,7 +11,7 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.ui2d.input.ArcadeKeyBinding;
+import de.amr.games.pacman.ui2d.input.ArcadeKeyAdapter;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import javafx.scene.input.KeyCode;
@@ -242,7 +242,7 @@ public enum GameActions2D implements GameAction {
         }
     };
 
-    public static void bindDefaultArcadeControllerActions(GameActionProvider actionProvider, ArcadeKeyBinding arcadeController) {
+    public static void bindDefaultArcadeControllerActions(GameActionProvider actionProvider, ArcadeKeyAdapter arcadeController) {
         actionProvider.bind(GameActions2D.ADD_CREDIT,   arcadeController.key(Arcade.Controls.COIN));
         actionProvider.bind(GameActions2D.START_GAME,   arcadeController.key(Arcade.Controls.START));
         actionProvider.bind(GameActions2D.PLAYER_UP,    arcadeController.key(Arcade.Controls.UP));

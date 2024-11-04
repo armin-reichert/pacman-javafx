@@ -3,14 +3,14 @@ package de.amr.games.pacman.ui2d.input;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import javafx.scene.input.KeyCodeCombination;
 
-public record ArcadeControllerKeyBindingData(
+public record ArcadeKeyAdapterImpl(
     KeyCodeCombination coin,
     KeyCodeCombination start,
     KeyCodeCombination up,
     KeyCodeCombination down,
     KeyCodeCombination left,
     KeyCodeCombination right
-) implements ArcadeKeyBinding {
+) implements ArcadeKeyAdapter {
 
     @Override
     public KeyCodeCombination key(Arcade.Controls control) {
