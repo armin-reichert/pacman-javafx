@@ -15,6 +15,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
+import de.amr.games.pacman.ui2d.sound.GameSound;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -41,6 +42,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void bindGameActions() {
+        //TODO This does not work! When this code runs, level might not yet have been created!
         if (context.game().isDemoLevel()) {
             bind(GameActions2D.ADD_CREDIT, context.arcadeController().coin());
         } else {
@@ -48,6 +50,13 @@ public class PlayScene2D extends GameScene2D {
             GameActions2D.bindDefaultArcadeControllerActions(this, context.arcadeController());
             GameActions2D.bindFallbackPlayerControlActions(this);
         }
+    }
+
+    @Override
+    protected void doInit() {
+        context.setScoreVisible(true);
+        context.game().scoreManager().setScoreEnabled(false);
+        // when non-demo level is created, score will be enabled
     }
 
     @Override
@@ -62,32 +71,25 @@ public class PlayScene2D extends GameScene2D {
             Logger.warn("Cannot update PlayScene2D: game level not (yet) available");
             return;
         }
-        if (context.game().isDemoLevel()) {
-            context.setScoreVisible(false);
-            context.game().pac().setUsingAutopilot(true);
-            context.game().pac().setImmune(false);
-        } else {
-            context.setScoreVisible(true);
-            context.game().pac().setUsingAutopilot(PY_AUTOPILOT.get());
-            context.game().pac().setImmune(PY_IMMUNITY.get());
-            updatePlaySceneSound();
+        if (!context.game().isDemoLevel()) {
+            updatePlaySceneSound(context().sound());
         }
     }
 
-    private void updatePlaySceneSound() {
+    private void updatePlaySceneSound(GameSound sound) {
         if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
             int sirenNumber = 1 + context.game().huntingControl().phaseIndex() / 2;
-            context.sound().selectSiren(sirenNumber);
-            context.sound().playSiren();
+            sound.selectSiren(sirenNumber);
+            sound.playSiren();
         }
         if (context.game().pac().starvingTicks() > 8) { // TODO not sure how to do this right
-            context.sound().stopMunchingSound();
+            sound.stopMunchingSound();
         }
         boolean ghostsReturning = context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
         if (context.game().pac().isAlive() && ghostsReturning) {
-            context.sound().playGhostReturningHomeSound();
+            sound.playGhostReturningHomeSound();
         } else {
-            context.sound().stopGhostReturningHomeSound();
+            sound.stopGhostReturningHomeSound();
         }
     }
 
@@ -217,6 +219,14 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
+        if (context.game().isDemoLevel()) {
+            context.game().pac().setUsingAutopilot(true);
+            context.game().pac().setImmune(false);
+        } else {
+            context.game().scoreManager().setScoreEnabled(false);
+            context.game().pac().setUsingAutopilot(PY_AUTOPILOT.get());
+            context.game().pac().setImmune(PY_IMMUNITY.get());
+        }
         context.updateRenderer();
     }
 
