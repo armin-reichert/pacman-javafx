@@ -141,6 +141,8 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             } else {
                 bind(GameActions2D.ADD_CREDIT, context.arcadeController().coin());
             }
+            context.game().pac().setUsingAutopilot(true);
+            context.game().pac().setImmune(false);
         }
         else {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
@@ -150,6 +152,9 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             }
             bindFallbackPlayerControlActions(this);
             bindCheatActions(this);
+            context.setScoreVisible(true);
+            context.game().pac().setUsingAutopilot(PY_AUTOPILOT.get());
+            context.game().pac().setImmune(PY_IMMUNITY.get());
         }
         registerGameActionKeyBindings(context.keyboard());
 
@@ -183,15 +188,6 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         perspective().update(game.world(), game.pac());
         scores3D.setRotationAxis(perspective().getCamera().getRotationAxis());
         scores3D.setRotate(perspective().getCamera().getRotate());
-
-        if (context.game().isDemoLevel()) {
-            context.game().pac().setUsingAutopilot(true);
-            context.game().pac().setImmune(false);
-        } else {
-            context.setScoreVisible(true);
-            context.game().pac().setUsingAutopilot(PY_AUTOPILOT.get());
-            context.game().pac().setImmune(PY_IMMUNITY.get());
-        }
 
         // Scores
         scores3D.showHighScore(game.scoreManager().highScore().points(), game.scoreManager().highScore().levelNumber());
