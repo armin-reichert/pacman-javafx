@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.input;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
 
@@ -15,6 +16,26 @@ import java.util.*;
  * @author Armin Reichert
  */
 public class Keyboard {
+
+    public static KeyCodeCombination naked(KeyCode code) {
+        return new KeyCodeCombination(code);
+    }
+
+    public static KeyCodeCombination alt(KeyCode code) {
+        return new KeyCodeCombination(code, KeyCombination.ALT_DOWN);
+    }
+
+    public static KeyCodeCombination shift(KeyCode code) {
+        return new KeyCodeCombination(code, KeyCombination.SHIFT_DOWN);
+    }
+
+    public static KeyCodeCombination shift_alt(KeyCode code) {
+        return new KeyCodeCombination(code, KeyCombination.SHIFT_DOWN, KeyCombination.ALT_DOWN);
+    }
+
+    public static KeyCodeCombination control(KeyCode code) {
+        return new KeyCodeCombination(code, KeyCombination.CONTROL_DOWN);
+    }
 
     private final Set<KeyCode> pressedKeys = new HashSet<>();
     private final Set<KeyCodeCombination> registeredCombinations = new HashSet<>();

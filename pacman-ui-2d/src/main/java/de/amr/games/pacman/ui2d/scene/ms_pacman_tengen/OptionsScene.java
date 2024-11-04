@@ -23,7 +23,7 @@ import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.paletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
-import static de.amr.games.pacman.ui2d.input.KeyInput.alt;
+import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
 
 /**
  * @author Armin Reichert

@@ -42,6 +42,7 @@ import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_
 import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.input.KeyInput.*;
+import static de.amr.games.pacman.ui2d.input.Keyboard.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 
 /**

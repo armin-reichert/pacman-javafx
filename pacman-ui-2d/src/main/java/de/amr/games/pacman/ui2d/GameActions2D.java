@@ -10,16 +10,16 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.ui2d.input.ArcadeController;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
-import de.amr.games.pacman.ui2d.input.ArcadeController;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
-import static de.amr.games.pacman.ui2d.input.KeyInput.*;
+import static de.amr.games.pacman.ui2d.input.Keyboard.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static java.util.function.Predicate.not;
 

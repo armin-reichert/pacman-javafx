@@ -18,12 +18,6 @@ public class KeyInput {
 
     private final KeyCodeCombination[] combinations;
 
-    public static KeyInput register(Keyboard keyboard, KeyCodeCombination... combinations) {
-        var keyInput = new KeyInput(combinations);
-        keyboard.register(keyInput);
-        return keyInput;
-    }
-
     public static KeyInput of(KeyCodeCombination... combinations) {
         return new KeyInput(combinations);
     }
@@ -32,35 +26,16 @@ public class KeyInput {
         this.combinations = combinations;
     }
 
+    public KeyCodeCombination[] getCombinations() {
+        return combinations;
+    }
+
+
     @Override
     public String toString() {
         return Arrays.stream(combinations)
             .map(KeyCodeCombination::toString)
             .map(s -> "[" +s + "]")
             .collect(Collectors.joining(", "));
-    }
-
-    public KeyCodeCombination[] getCombinations() {
-        return combinations;
-    }
-
-    public static KeyCodeCombination naked(KeyCode code) {
-        return new KeyCodeCombination(code);
-    }
-
-    public static KeyCodeCombination alt(KeyCode code) {
-        return new KeyCodeCombination(code, KeyCombination.ALT_DOWN);
-    }
-
-    public static KeyCodeCombination shift(KeyCode code) {
-        return new KeyCodeCombination(code, KeyCombination.SHIFT_DOWN);
-    }
-
-    public static KeyCodeCombination shift_alt(KeyCode code) {
-        return new KeyCodeCombination(code, KeyCombination.SHIFT_DOWN, KeyCombination.ALT_DOWN);
-    }
-
-    public static KeyCodeCombination control(KeyCode code) {
-        return new KeyCodeCombination(code, KeyCombination.CONTROL_DOWN);
     }
 }

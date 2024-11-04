@@ -47,8 +47,8 @@ import static de.amr.games.pacman.ui2d.GameActions2D.bindDefaultArcadeController
 import static de.amr.games.pacman.ui2d.GameActions2D.bindFallbackPlayerControlActions;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
+import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions.bindDefaultJoypadActions;
-import static de.amr.games.pacman.ui2d.input.KeyInput.alt;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 
@@ -94,8 +94,8 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         var ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
 
-        var coordSystem = new CoordinateSystem();
-        coordSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
+        var axes = new CoordinateSystem();
+        axes.visibleProperty().bind(PY_3D_AXES_VISIBLE);
 
         scores3D = new Scores3D("SCORE", "HIGH SCORE");
 
@@ -104,7 +104,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         fxSubScene.setFill(null); // transparent
 
         // last child is placeholder for level 3D
-        root.getChildren().setAll(scores3D, coordSystem, ambientLight, new Group());
+        root.getChildren().setAll(scores3D, axes, ambientLight, new Group());
     }
 
     @Override
