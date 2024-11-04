@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -66,8 +67,8 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.ADD_CREDIT, context.arcadeController().coin());
-        bind(GameActions2D.START_GAME, context.arcadeController().start());
+        bind(GameActions2D.ADD_CREDIT, context.arcadeController().key(Arcade.Controls.COIN));
+        bind(GameActions2D.START_GAME, context.arcadeController().key(Arcade.Controls.START));
         bindTestActions(this);
     }
 

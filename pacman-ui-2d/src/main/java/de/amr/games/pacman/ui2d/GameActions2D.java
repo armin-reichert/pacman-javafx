@@ -7,10 +7,11 @@ package de.amr.games.pacman.ui2d;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.ui2d.input.ArcadeController;
+import de.amr.games.pacman.ui2d.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import javafx.scene.input.KeyCode;
@@ -241,13 +242,13 @@ public enum GameActions2D implements GameAction {
         }
     };
 
-    public static void bindDefaultArcadeControllerActions(GameActionProvider actionProvider, ArcadeController arcadeController) {
-        actionProvider.bind(GameActions2D.ADD_CREDIT,   arcadeController.coin());
-        actionProvider.bind(GameActions2D.START_GAME,   arcadeController.start());
-        actionProvider.bind(GameActions2D.PLAYER_UP,    arcadeController.up());
-        actionProvider.bind(GameActions2D.PLAYER_DOWN,  arcadeController.down());
-        actionProvider.bind(GameActions2D.PLAYER_LEFT,  arcadeController.left());
-        actionProvider.bind(GameActions2D.PLAYER_RIGHT, arcadeController.right());
+    public static void bindDefaultArcadeControllerActions(GameActionProvider actionProvider, ArcadeKeyBinding arcadeController) {
+        actionProvider.bind(GameActions2D.ADD_CREDIT,   arcadeController.key(Arcade.Controls.COIN));
+        actionProvider.bind(GameActions2D.START_GAME,   arcadeController.key(Arcade.Controls.START));
+        actionProvider.bind(GameActions2D.PLAYER_UP,    arcadeController.key(Arcade.Controls.UP));
+        actionProvider.bind(GameActions2D.PLAYER_DOWN,  arcadeController.key(Arcade.Controls.DOWN));
+        actionProvider.bind(GameActions2D.PLAYER_LEFT,  arcadeController.key(Arcade.Controls.LEFT));
+        actionProvider.bind(GameActions2D.PLAYER_RIGHT, arcadeController.key(Arcade.Controls.RIGHT));
     }
 
     public static void bindFallbackPlayerControlActions(GameActionProvider actionProvider) {

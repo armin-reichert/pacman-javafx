@@ -61,7 +61,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     protected static final Keyboard THE_KEYBOARD = new Keyboard();
 
-    public static final ArcadeController ARCADE_CONTROLLER_CURSOR_KEYS = new ArcadeControllerKeys(
+    public static final ArcadeKeyBinding ARCADE_CONTROLLER_CURSOR_KEYS = new ArcadeControllerKeyBindingData(
         new KeyCodeCombination(KeyCode.DIGIT5),
         new KeyCodeCombination(KeyCode.DIGIT1),
         new KeyCodeCombination(KeyCode.UP),
@@ -70,7 +70,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         new KeyCodeCombination(KeyCode.RIGHT)
     );
 
-    public static final ArcadeController ARCADE_CONTROLLER_CURSOR_KEYS_NUMPAD = new ArcadeControllerKeys(
+    public static final ArcadeKeyBinding ARCADE_CONTROLLER_CURSOR_KEYS_NUMPAD = new ArcadeControllerKeyBindingData(
         new KeyCodeCombination(KeyCode.NUMPAD5),
         new KeyCodeCombination(KeyCode.NUMPAD1),
         new KeyCodeCombination(KeyCode.UP),
@@ -136,7 +136,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected Picker<String> pickerGameOver;
     protected Picker<String> pickerLevelComplete;
     protected JoypadKeyBinding joypad = JOYPAD_CURSOR_KEYS;
-    protected ArcadeController arcadeController = ARCADE_CONTROLLER_CURSOR_KEYS;
+    protected ArcadeKeyBinding arcadeController = ARCADE_CONTROLLER_CURSOR_KEYS;
 
     public PacManGames2dUI() {
         assets = new AssetStorage();
@@ -348,7 +348,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public ArcadeController arcadeController() {
+    public ArcadeKeyBinding arcadeController() {
         return arcadeController;
     }
 

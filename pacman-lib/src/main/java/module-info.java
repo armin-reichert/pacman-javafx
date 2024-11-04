@@ -4,6 +4,7 @@
 open module de.amr.games.pacman.lib {
     requires org.tinylog.api;
     exports de.amr.games.pacman.lib;
+    exports de.amr.games.pacman.lib.arcade;
     exports de.amr.games.pacman.lib.fsm;
     exports de.amr.games.pacman.lib.graph;
     exports de.amr.games.pacman.lib.nes;

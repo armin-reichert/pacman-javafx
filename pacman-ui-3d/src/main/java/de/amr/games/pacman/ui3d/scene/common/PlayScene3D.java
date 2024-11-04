@@ -9,6 +9,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameVariant;
@@ -139,7 +140,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 bind(TengenGameActions.QUIT_DEMO_LEVEL, context.joypadInput().key(NES.Joypad.START));
             } else {
-                bind(GameActions2D.ADD_CREDIT, context.arcadeController().coin());
+                bind(GameActions2D.ADD_CREDIT, context.arcadeController().key(Arcade.Controls.COIN));
             }
             context.game().pac().setUsingAutopilot(true);
             context.game().pac().setImmune(false);

@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
+import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction;
@@ -112,12 +113,12 @@ public class StartPage extends StackPane implements Page {
             bind(context -> carousel.nextSlide(),            joypad.key(NES.Joypad.RIGHT));
             bind(GameContext::selectGamePage,                joypad.key(NES.Joypad.START));
         } else {
-            bind(context -> currentFlyer().prevFlyerPage(),  context.arcadeController().up());
-            bind(context -> currentFlyer().nextFlyerPage(),  context.arcadeController().down());
-            bind(context -> carousel.prevSlide(),            context.arcadeController().left());
-            bind(context -> carousel.nextSlide(),            context.arcadeController().right());
+            bind(context -> currentFlyer().prevFlyerPage(),  context.arcadeController().key(Arcade.Controls.UP));
+            bind(context -> currentFlyer().nextFlyerPage(),  context.arcadeController().key(Arcade.Controls.DOWN));
+            bind(context -> carousel.prevSlide(),            context.arcadeController().key(Arcade.Controls.LEFT));
+            bind(context -> carousel.nextSlide(),            context.arcadeController().key(Arcade.Controls.RIGHT));
             // START key is "1" which might be unclear on start page, so add ENTER
-            bind(GameContext::selectGamePage,                context.arcadeController().start(), naked(KeyCode.ENTER));
+            bind(GameContext::selectGamePage,                context.arcadeController().key(Arcade.Controls.START), naked(KeyCode.ENTER));
         }
     }
 
