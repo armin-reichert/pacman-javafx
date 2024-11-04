@@ -27,6 +27,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_TILES;
+import static de.amr.games.pacman.ui2d.GameActions2D.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
@@ -41,22 +42,30 @@ public class PlayScene2D extends GameScene2D {
     static final Font DEBUG_STATE_FONT = Font.font("Sans", FontWeight.BOLD, 24);
 
     @Override
-    public void bindGameActions() {
-        //TODO This does not work! When this code runs, level might not yet have been created!
-        if (context.game().isDemoLevel()) {
-            bind(GameActions2D.ADD_CREDIT, context.arcadeController().coin());
-        } else {
-            GameActions2D.bindCheatActions(this);
-            GameActions2D.bindDefaultArcadeControllerActions(this, context.arcadeController());
-            GameActions2D.bindFallbackPlayerControlActions(this);
-        }
-    }
+    public void bindGameActions() {}
 
     @Override
     protected void doInit() {
         context.setScoreVisible(true);
         context.game().scoreManager().setScoreEnabled(false);
-        // when non-demo level is created, score will be enabled
+    }
+
+    @Override
+    public void onLevelCreated(GameEvent e) {
+        if (context.game().isDemoLevel()) {
+            context.game().pac().setImmune(false);
+            bind(GameActions2D.ADD_CREDIT, context.arcadeController().coin());
+            registerGameActionKeyBindings(context.keyboard());
+        } else {
+            context.game().scoreManager().setScoreEnabled(false);
+            context.game().pac().setUsingAutopilot(PY_AUTOPILOT.get());
+            context.game().pac().setImmune(PY_IMMUNITY.get());
+            bindCheatActions(this);
+            bindDefaultArcadeControllerActions(this, context.arcadeController());
+            bindFallbackPlayerControlActions(this);
+            registerGameActionKeyBindings(context.keyboard());
+        }
+        context.updateRenderer();
     }
 
     @Override
@@ -72,11 +81,11 @@ public class PlayScene2D extends GameScene2D {
             return;
         }
         if (!context.game().isDemoLevel()) {
-            updatePlaySceneSound(context().sound());
+            updateSound(context().sound());
         }
     }
 
-    private void updatePlaySceneSound(GameSound sound) {
+    private void updateSound(GameSound sound) {
         if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
             int sirenNumber = 1 + context.game().huntingControl().phaseIndex() / 2;
             sound.selectSiren(sirenNumber);
@@ -215,19 +224,6 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onGhostEaten(GameEvent e) {
         context.sound().playGhostEatenSound();
-    }
-
-    @Override
-    public void onLevelCreated(GameEvent e) {
-        if (context.game().isDemoLevel()) {
-            context.game().pac().setUsingAutopilot(true);
-            context.game().pac().setImmune(false);
-        } else {
-            context.game().scoreManager().setScoreEnabled(false);
-            context.game().pac().setUsingAutopilot(PY_AUTOPILOT.get());
-            context.game().pac().setImmune(PY_IMMUNITY.get());
-        }
-        context.updateRenderer();
     }
 
     @Override

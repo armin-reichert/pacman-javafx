@@ -229,23 +229,28 @@ public class PacManArcadeGame extends GameModel {
         currentMapColorScheme = MAP_COLOR_SCHEME;
         createWorldAndPopulation(worldMap);
         pac.setName("Pac-Man");
+        setCruiseElroy(0);
+
+        //TODO does this belong here?
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUsingAutopilot(false);
+
         List<Vector2i> oneWayDownTiles = worldMap.terrain().tiles()
             .filter(tile -> worldMap.terrain().get(tile) == Tiles.ONE_WAY_DOWN).toList();
         ghosts().forEach(ghost -> {
             ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
             ghost.setSpecialTerrainTiles(oneWayDownTiles);
         });
-        setCruiseElroy(0);
     }
 
     @Override
     public void buildDemoLevel() {
         buildLevel(1);
+        setCruiseElroy(0);
+
+        //TODO does this belong here?
         pac.setAutopilot(new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE)));
         pac.setUsingAutopilot(true);
-        setCruiseElroy(0);
     }
 
     @Override
