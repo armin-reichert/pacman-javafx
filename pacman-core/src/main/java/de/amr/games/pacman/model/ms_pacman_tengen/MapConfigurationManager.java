@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.MapConfig;
 import org.tinylog.Logger;
@@ -19,6 +20,13 @@ import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.model.ms_pacman_tengen.NamedMapColorScheme.*;
 
 public class MapConfigurationManager {
+
+    public static final Map<String, String> HIGHLIGHT_COLOR_SCHEME = Map.of(
+            "fill",   NES.Palette.color(0x0f),
+            "stroke", NES.Palette.color(0x20),
+            "door",   NES.Palette.color(0x0f),
+            "food",   NES.Palette.color(0x0f)
+    );
 
     private static final List<NamedMapColorScheme> COLOR_SCHEMES_IN_LEVEL_ORDER = List.of(
             MSC_36_15_20_PINK_RED_WHITE,       // Level 1

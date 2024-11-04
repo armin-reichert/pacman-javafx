@@ -36,7 +36,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
-import java.util.List;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -58,13 +57,6 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         return paletteColor(0x01 + 16*index);
     }
 
-    // Used for rendering (simple) map flashing
-    public static final Map<String, String> BLACK_WHITE_COLOR_SCHEME  = Map.of(
-        "fill",   NES.Palette.color(0x0f),
-        "stroke", NES.Palette.color(0x20),
-        "door",   NES.Palette.color(0x0f)
-    );
-
     // Maze images are taken from files "arcade_mazes.png" and "non_arcade_mazes.png" via AssetStorage
 
     private final AssetStorage assets;
@@ -77,7 +69,6 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     private Color bgColor = Color.BLACK;
     private ImageArea mapSprite;
-    private boolean flashMode;
     private boolean blinkingOn;
     private Canvas canvas;
 
@@ -185,9 +176,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void setFlashMode(boolean flashMode) {
-        this.flashMode = flashMode;
-    }
+    public void setFlashMode(boolean flashMode) {}
 
     @Override
     public void setBlinkingOn(boolean blinkingOn) {
@@ -335,7 +324,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             );
         }
         cleanHouse(game.world());
-        drawFoodUsingMapSprite(game, game.world(), spriteSheet);
+        drawFoodUsingMapSprite(game.world());
     }
 
     private void cleanHouse(GameWorld world) {
@@ -347,7 +336,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         hideActorSprite(world.map().terrain().getTileProperty("pos_ghost_1_red", v2i(13, 14)));
     }
 
-    private void drawFoodUsingMapSprite(TengenMsPacManGame game, GameWorld world, GameSpriteSheet spriteSheet) {
+    private void drawFoodUsingMapSprite(GameWorld world) {
         ctx().save();
         ctx().scale(scaling(), scaling());
         overPaintEatenPellets(world);
