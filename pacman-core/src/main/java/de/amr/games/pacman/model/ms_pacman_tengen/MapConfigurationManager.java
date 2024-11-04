@@ -51,7 +51,7 @@ public class MapConfigurationManager {
             // Levels 28-31 use randomly selected schemes
     );
 
-    private static Map<String, String> randomMapColorScheme() {
+    public static Map<String, String> randomMapColorScheme() {
         return COLOR_SCHEMES_IN_LEVEL_ORDER.get(Globals.randomInt(0, COLOR_SCHEMES_IN_LEVEL_ORDER.size())).get();
     }
 

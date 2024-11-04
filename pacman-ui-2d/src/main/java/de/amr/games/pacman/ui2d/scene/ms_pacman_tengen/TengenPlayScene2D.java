@@ -17,6 +17,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
+import de.amr.games.pacman.model.ms_pacman_tengen.MapConfigurationManager;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
@@ -40,6 +41,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -67,6 +71,10 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     private final Canvas canvas = new Canvas(NES_RESOLUTION_X, NES_RESOLUTION_Y);
     private int camDelay;
     private final GameOverMessageAnimation gameOverMessageAnimation = new GameOverMessageAnimation();
+
+    private long flashingStartTick;
+    private int currentFlashIndex;
+    private final List<Map<String,String>> flashingMapColorSchemes = new ArrayList<>();
 
     private static class GameOverMessageAnimation {
         private double startX;
@@ -234,7 +242,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     @Override
     protected void drawSceneContent(GameRenderer renderer) {
         GameState state = context.gameState();
-        GameModel game = context.game();
+        TengenMsPacManGame game = (TengenMsPacManGame) context.game();
         GameWorld world = game.world();
         Pac msPacMan = game.pac();
 
@@ -251,9 +259,21 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         drawLevelMessage(renderer, cx, y); // READY, GAME_OVER etc.
 
         boolean flashMode = Boolean.TRUE.equals(state.getProperty("mazeFlashing"));
+        if (flashMode) {
+            TengenMsPacManGameRenderer tr = (TengenMsPacManGameRenderer) renderer;
+            tr.drawEmptyMap(world.map(), game.blinking().isOn()
+                ? TengenMsPacManGameRenderer.BLACK_WHITE_COLOR_SCHEME
+                : flashingMapColorSchemes.get(currentFlashIndex));
+            if ((context.gameClock().getTickCount() - flashingStartTick) % 10 == 0) {
+                ++currentFlashIndex;
+            }
+        } else {
+            renderer.drawWorld(context, world, 0,  3*TS);
+        }
+
+        //TODO needed?
         renderer.setFlashMode(flashMode);
         renderer.setBlinkingOn(game.blinking().isOn());
-        renderer.drawWorld(context, world, 0,  3*TS);
 
         renderer.drawAnimatedEntity(msPacMan);
         ghostsInZOrder().forEach(renderer::drawAnimatedEntity);
@@ -322,7 +342,8 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     public void onEnterGameState(GameState state) {
         switch (state) {
             //TOD check this. GameState can publish an event to stop all sounds.
-            case STARTING_GAME, LEVEL_COMPLETE, PACMAN_DYING -> context.sound().stopAll();
+            case STARTING_GAME, PACMAN_DYING -> context.sound().stopAll();
+            case LEVEL_COMPLETE -> onLevelComplete((TengenMsPacManGame) context.game());
             case GAME_OVER -> {
                 context.sound().stopAll();
                 GameWorld world = context.game().world();
@@ -334,6 +355,24 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         if (state == GameState.STARTING_GAME) {
             initCamDelay(30);
         }
+    }
+
+    private void onLevelComplete(TengenMsPacManGame game) {
+        context.sound().stopAll();
+        flashingMapColorSchemes.clear();
+        flashingMapColorSchemes.add(TengenMsPacManGameRenderer.BLACK_WHITE_COLOR_SCHEME);
+        flashingMapColorSchemes.add(game.currentMapColorScheme());
+        //TODO fixme
+        boolean randomMapColorSchemeUsed = inRange(game.currentLevelNumber(), 28, 31)
+                && (game.mapCategory() == MapCategory.BIG || game.mapCategory() == MapCategory.MINI);
+        if (randomMapColorSchemeUsed) {
+            for (int i = 0; i < 5; ++i) {
+                flashingMapColorSchemes.add(TengenMsPacManGameRenderer.BLACK_WHITE_COLOR_SCHEME);
+                flashingMapColorSchemes.add(MapConfigurationManager.randomMapColorScheme());
+            }
+        }
+        flashingStartTick = context.gameClock().getTickCount();
+        currentFlashIndex = 0; // TODO increment this
     }
 
     @Override

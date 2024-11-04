@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameModel;
@@ -35,6 +36,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
+import java.util.List;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -55,6 +57,13 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         int index = (int) (tick % 64) / 16;
         return paletteColor(0x01 + 16*index);
     }
+
+    // Used for rendering (simple) map flashing
+    public static final Map<String, String> BLACK_WHITE_COLOR_SCHEME  = Map.of(
+        "fill",   NES.Palette.color(0x0f),
+        "stroke", NES.Palette.color(0x20),
+        "door",   NES.Palette.color(0x0f)
+    );
 
     // Maze images are taken from files "arcade_mazes.png" and "non_arcade_mazes.png" via AssetStorage
 
@@ -257,23 +266,22 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         ctx().restore();
     }
 
+    public void drawEmptyMap(WorldMap worldMap, Map<String, String> colorScheme) {
+        Color wallFillColor = Color.web(colorScheme.get("fill"));
+        Color wallStrokeColor = Color.web(colorScheme.get("stroke"));
+        Color doorColor = Color.web(colorScheme.get("door"));
+        terrainRenderer.setMapBackgroundColor(bgColor);
+        terrainRenderer.setWallStrokeColor(wallStrokeColor);
+        terrainRenderer.setWallFillColor(wallFillColor);
+        terrainRenderer.setDoorColor(doorColor);
+        terrainRenderer.drawMap(ctx(), worldMap.terrain());
+    }
+
     @Override
     public void drawWorld(GameContext context, GameWorld world, double x, double y) {
         TengenMsPacManGame game = (TengenMsPacManGame) context.game();
         TileMap terrain = world.map().terrain();
         Map<String, String> mapColorScheme = game.currentMapColorScheme();
-
-        // TODO: Implement these maze flashing animations with varying fill color
-        if (flashMode) {
-            Color wallFillColor = Color.web(mapColorScheme.get("fill"));
-            terrainRenderer.setMapBackgroundColor(bgColor);
-            terrainRenderer.setWallStrokeColor(paletteColor(0x20));
-            terrainRenderer.setWallFillColor(blinkingOn ? Color.BLACK : wallFillColor);
-            terrainRenderer.setDoorColor(Color.BLACK);
-            terrainRenderer.drawMap(ctx(), terrain);
-            return;
-        }
-
         if (!isUsingDefaultGameOptions(game)) {
             drawGameOptionsInfo(game.world().map().terrain(), game);
         }

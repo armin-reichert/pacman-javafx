@@ -149,7 +149,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
-            timer.restartSeconds(5);
+            timer.restartSeconds(5); // TODO let game variant decide
             game.onLevelCompleted();
             game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
         }
