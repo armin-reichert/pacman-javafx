@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
+import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -104,11 +105,12 @@ public class StartPage extends StackPane implements Page {
     @Override
     public void bindGameActions() {
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            bind(context -> currentFlyer().prevFlyerPage(),  context.joypad().up());
-            bind(context -> currentFlyer().nextFlyerPage(),  context.joypad().down());
-            bind(context -> carousel.prevSlide(),            context.joypad().left());
-            bind(context -> carousel.nextSlide(),            context.joypad().right());
-            bind(GameContext::selectGamePage,                context.joypad().start());
+            var joypad = context.joypadInput();
+            bind(context -> currentFlyer().prevFlyerPage(),  joypad.key(NES.Joypad.UP));
+            bind(context -> currentFlyer().nextFlyerPage(),  joypad.key(NES.Joypad.DOWN));
+            bind(context -> carousel.prevSlide(),            joypad.key(NES.Joypad.LEFT));
+            bind(context -> carousel.nextSlide(),            joypad.key(NES.Joypad.RIGHT));
+            bind(GameContext::selectGamePage,                joypad.key(NES.Joypad.START));
         } else {
             bind(context -> currentFlyer().prevFlyerPage(),  context.arcadeController().up());
             bind(context -> currentFlyer().nextFlyerPage(),  context.arcadeController().down());

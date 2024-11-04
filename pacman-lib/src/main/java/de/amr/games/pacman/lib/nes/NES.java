@@ -43,4 +43,8 @@ public interface NES {
             throw new IllegalArgumentException("Illegal NES palette index: " + index);
         }
     }
+
+    enum Joypad {
+        SELECT, START, B, A, UP, DOWN, LEFT, RIGHT;
+    }
 }

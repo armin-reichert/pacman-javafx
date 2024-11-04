@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.input;
 
+import de.amr.games.pacman.lib.nes.NES;
 import javafx.scene.input.KeyCodeCombination;
 
 import java.util.stream.Stream;
@@ -11,18 +12,9 @@ import java.util.stream.Stream;
 /**
  * @ see <a href="https://www.nesdev.org/wiki/Standard_controller">here</a>
  */
-public interface Joypad {
+public interface JoypadKeyBinding {
 
-    KeyCodeCombination select();
-    KeyCodeCombination start();
-
-    KeyCodeCombination a();
-    KeyCodeCombination b();
-
-    KeyCodeCombination up();
-    KeyCodeCombination down();
-    KeyCodeCombination left();
-    KeyCodeCombination right();
+    KeyCodeCombination key(NES.Joypad button);
 
     default void register(Keyboard keyboard) {
         allKeys().forEach(keyboard::register);
@@ -33,6 +25,6 @@ public interface Joypad {
     }
 
     default Stream<KeyCodeCombination> allKeys() {
-        return Stream.of(a(), b(), select(), start(), up(), down(),left(), right());
+        return Stream.of(NES.Joypad.values()).map(this::key);
     }
 }

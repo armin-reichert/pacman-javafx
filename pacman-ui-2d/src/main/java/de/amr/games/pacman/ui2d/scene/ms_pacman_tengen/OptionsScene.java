@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.ms_pacman_tengen.BoosterMode;
 import de.amr.games.pacman.model.ms_pacman_tengen.Difficulty;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
@@ -21,9 +22,9 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.paletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
-import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
 
 /**
  * @author Armin Reichert
@@ -56,7 +57,7 @@ public class OptionsScene extends GameScene2D {
     @Override
     public void bindGameActions() {
         bind(TengenGameActions.SELECT_NEXT_JOYPAD, alt(KeyCode.J));
-        bind(TengenGameActions.START_PLAYING,      context.joypad().start());
+        bind(TengenGameActions.START_PLAYING,      context.joypadInput().key(NES.Joypad.START));
         GameActions2D.bindTestActions(this);
     }
 
@@ -103,18 +104,22 @@ public class OptionsScene extends GameScene2D {
         resetIdleTimer();
     }
 
+    private boolean isJoypadPressed(NES.Joypad button) {
+        return context.keyboard().isMatching(context.joypadInput().key(button));
+    }
+
     @Override
     public void handleInput(GameContext context) {
 
-        if (context.keyboard().isMatching(context.joypad().down())) {
+        if (isJoypadPressed(NES.Joypad.DOWN)) {
             selectNextOption();
         }
-        else if (context.keyboard().isMatching(context.joypad().up())) {
+        else if (isJoypadPressed(NES.Joypad.UP)) {
             selectPrevOption();
         }
 
         // Button "A" is right of "B": select next value
-        else if (context.keyboard().isMatching(context.joypad().a())) {
+        else if (isJoypadPressed(NES.Joypad.A)) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setNextDifficultyValue();
@@ -125,7 +130,7 @@ public class OptionsScene extends GameScene2D {
         }
 
         // Button "B" is left of "A": select previous value
-        else if (context.keyboard().isMatching(context.joypad().b())) {
+        else if (isJoypadPressed(NES.Joypad.B)) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setPrevDifficultyValue();

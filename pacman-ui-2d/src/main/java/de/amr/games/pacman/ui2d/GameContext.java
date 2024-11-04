@@ -11,7 +11,7 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.input.ArcadeController;
-import de.amr.games.pacman.ui2d.input.Joypad;
+import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui2d.input.Keyboard;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
@@ -44,9 +44,9 @@ public interface GameContext {
     boolean                     isScoreVisible();
 
     // Input
-    Keyboard keyboard();
-    ArcadeController arcadeController();
-    Joypad joypad();
+    Keyboard                    keyboard();
+    ArcadeController            arcadeController();
+    JoypadKeyBinding            joypadInput();
     void                        enableJoypad();
     void                        disableJoypad();
     void                        nextJoypad();

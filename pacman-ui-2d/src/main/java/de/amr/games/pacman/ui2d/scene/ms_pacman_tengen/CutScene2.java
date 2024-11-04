@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Animations;
@@ -45,7 +46,7 @@ public class CutScene2 extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(context -> context.gameController().terminateCurrentState(), context.joypad().start());
+        bind(context -> context.gameController().terminateCurrentState(), context.joypadInput().key(NES.Joypad.START));
     }
 
     @Override

@@ -5,13 +5,14 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.ms_pacman_tengen.BoosterMode;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameActionProvider;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.input.Joypad;
+import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import org.tinylog.Logger;
 
 public enum TengenGameActions implements GameAction {
@@ -22,7 +23,7 @@ public enum TengenGameActions implements GameAction {
             context.disableJoypad();
             context.nextJoypad();
             context.enableJoypad();
-            Logger.info("Current joypad: {} ", context.joypad());
+            Logger.info("Current joypad: {} ", context.joypadInput());
         }
     },
 
@@ -61,11 +62,11 @@ public enum TengenGameActions implements GameAction {
         }
     };
 
-    public static void bindDefaultJoypadActions(GameActionProvider actionProvider, Joypad joypad) {
-        actionProvider.bind(TengenGameActions.TOGGLE_PAC_BOOSTER, joypad.a(), joypad.b());
-        actionProvider.bind(GameActions2D.PLAYER_UP,    joypad.up());
-        actionProvider.bind(GameActions2D.PLAYER_DOWN,  joypad.down());
-        actionProvider.bind(GameActions2D.PLAYER_LEFT,  joypad.left());
-        actionProvider.bind(GameActions2D.PLAYER_RIGHT, joypad.right());
+    public static void bindDefaultJoypadActions(GameActionProvider actionProvider, JoypadKeyBinding binding) {
+        actionProvider.bind(TengenGameActions.TOGGLE_PAC_BOOSTER, binding.key(NES.Joypad.A), binding.key(NES.Joypad.B));
+        actionProvider.bind(GameActions2D.PLAYER_UP,    binding.key(NES.Joypad.UP));
+        actionProvider.bind(GameActions2D.PLAYER_DOWN,  binding.key(NES.Joypad.DOWN));
+        actionProvider.bind(GameActions2D.PLAYER_LEFT,  binding.key(NES.Joypad.LEFT));
+        actionProvider.bind(GameActions2D.PLAYER_RIGHT, binding.key(NES.Joypad.RIGHT));
     }
 }

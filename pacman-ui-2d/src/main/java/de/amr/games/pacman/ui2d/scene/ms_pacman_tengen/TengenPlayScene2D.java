@@ -9,6 +9,7 @@ import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
@@ -18,13 +19,13 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameActions2D;
+import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.sound.GameSound;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
-import de.amr.games.pacman.ui2d.input.Joypad;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Camera;
@@ -111,10 +112,10 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void bindGameActions() {
-        Joypad joypad = context.joypad();
+        JoypadKeyBinding joypad = context.joypadInput();
         if (context.game().isDemoLevel()) {
             //TODO This does not work! When this code is executed, level has not yet been created!
-            bind(QUIT_DEMO_LEVEL, joypad.start());
+            bind(QUIT_DEMO_LEVEL, joypad.key(NES.Joypad.START));
         } else {
             GameActions2D.bindCheatActions(this);
             TengenGameActions.bindDefaultJoypadActions(this, joypad);
@@ -363,7 +364,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        bind(QUIT_DEMO_LEVEL, context.joypad().start());
+        bind(QUIT_DEMO_LEVEL, context.joypadInput().key(NES.Joypad.START));
     }
 
     @Override

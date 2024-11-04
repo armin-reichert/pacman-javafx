@@ -9,6 +9,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
@@ -43,8 +44,7 @@ import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui2d.GameActions2D.bindDefaultArcadeControllerActions;
-import static de.amr.games.pacman.ui2d.GameActions2D.bindFallbackPlayerControlActions;
+import static de.amr.games.pacman.ui2d.GameActions2D.*;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
@@ -124,22 +124,6 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     public void bindGameActions() {
         bind(GameActions3D.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
         bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
-        if (context.game().isDemoLevel()) {
-            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                bind(TengenGameActions.QUIT_DEMO_LEVEL, context.joypad().start());
-            } else {
-                bind(GameActions2D.ADD_CREDIT, context.arcadeController().coin());
-            }
-        }
-        else {
-            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                bindDefaultJoypadActions(this, context.joypad());
-            } else {
-                bindDefaultArcadeControllerActions(this, context.arcadeController());
-            }
-            bindFallbackPlayerControlActions(this);
-            GameActions2D.bindCheatActions(this);
-        }
     }
 
     protected void doInit() {
@@ -147,6 +131,33 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         scores3D.fontPy.set(context.assets().font("font.arcade", 8));
         perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
         Logger.info("3D play scene initialized. {}", this);
+    }
+
+    @Override
+    public void onLevelCreated(GameEvent event) {
+        if (context.game().isDemoLevel()) {
+            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                bind(TengenGameActions.QUIT_DEMO_LEVEL, context.joypadInput().key(NES.Joypad.START));
+            } else {
+                bind(GameActions2D.ADD_CREDIT, context.arcadeController().coin());
+            }
+        }
+        else {
+            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                bindDefaultJoypadActions(this, context.joypadInput());
+            } else {
+                bindDefaultArcadeControllerActions(this, context.arcadeController());
+            }
+            bindFallbackPlayerControlActions(this);
+            bindCheatActions(this);
+        }
+        registerGameActionKeyBindings(context.keyboard());
+
+        if (level3D == null) {
+            replaceGameLevel3D(false); // level counter in model not yet initialized
+        } else {
+            Logger.error("3D level already created?");
+        }
     }
 
     protected void doEnd() {
@@ -427,15 +438,6 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     @Override
     public void onGhostEaten(GameEvent e) {
         context.sound().playGhostEatenSound();
-    }
-
-    @Override
-    public void onLevelCreated(GameEvent event) {
-        if (level3D == null) {
-            replaceGameLevel3D(false); // level counter in model not yet initialized
-        } else {
-            Logger.error("3D level already created?");
-        }
     }
 
     @Override
