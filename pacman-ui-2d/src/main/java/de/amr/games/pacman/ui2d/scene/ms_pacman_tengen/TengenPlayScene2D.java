@@ -48,6 +48,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
+import static de.amr.games.pacman.model.ms_pacman_tengen.MapConfigurationManager.randomMapColorScheme;
 import static de.amr.games.pacman.ui2d.GameActions2D.bindCheatActions;
 import static de.amr.games.pacman.ui2d.GameActions2D.bindFallbackPlayerControlActions;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
@@ -244,25 +245,25 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     }
 
     private void initMazeFlashing(TengenMsPacManGame game) {
-        boolean randomMapColors = inRange(game.currentLevelNumber(), 28, 31)
+        Map<String, Color> currentScheme = extractColors(game.currentMapColorScheme());
+        boolean random = inRange(game.currentLevelNumber(), 28, 31)
                 && (game.mapCategory() == MapCategory.BIG || game.mapCategory() == MapCategory.MINI);
         flashingMapColorSchemes.clear();
         for (int i = 0; i < game.numFlashes(); ++i) {
-            if (randomMapColors) {
-                var randomScheme = MapConfigurationManager.randomMapColorScheme();
-                while (randomScheme.get("fill").equals(NES.Palette.color(0x0f))) {
-                    // skip color schemes with black fill color
-                    randomScheme = MapConfigurationManager.randomMapColorScheme();
+            if (random) {
+                var colorScheme = randomMapColorScheme();
+                // skip color schemes with black fill color
+                while (colorScheme.get("fill").equals(NES.Palette.color(0x0f))) {
+                    colorScheme = randomMapColorScheme();
                 }
-                flashingMapColorSchemes.add(extractColors(randomScheme));
+                flashingMapColorSchemes.add(extractColors(colorScheme));
             } else {
-                flashingMapColorSchemes.add(extractColors(game.currentMapColorScheme()));
+                flashingMapColorSchemes.add(currentScheme);
             }
             flashingMapColorSchemes.add(HIGHLIGHT_COLOR_SCHEME);
         }
         flashingStartTick = -1;
     }
-
 
     private void updateMazeFlashing(long t) {
         int phaseTicks = 10; // TODO: how many ticks really?
