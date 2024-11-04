@@ -112,6 +112,14 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             case STRANGE -> strangeMapSpriteImageArea(mapNumber);
         };
         Logger.info("Level {}: Using map sprite area #{}", game.currentLevelNumber(), mapSprite.area());
+
+        Map<String, String> mapColorScheme = game.currentMapColorScheme();
+        terrainRenderer.setMapBackgroundColor(bgColor);
+        terrainRenderer.setWallStrokeColor(Color.web(mapColorScheme.get("stroke")));
+        terrainRenderer.setWallFillColor(Color.web(mapColorScheme.get("fill")));
+        terrainRenderer.setDoorColor(Color.web(mapColorScheme.get("door")));
+        foodRenderer.setPelletColor(Color.web(mapColorScheme.get("pellet")));
+        foodRenderer.setEnergizerColor(Color.web(mapColorScheme.get("pellet")));
     }
 
     private ImageArea arcadeMapSpriteImageArea(int levelNumber) {
@@ -269,8 +277,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     @Override
     public void drawWorld(GameContext context, GameWorld world, double x, double y) {
         TengenMsPacManGame game = (TengenMsPacManGame) context.game();
-        TileMap terrain = world.map().terrain();
-        Map<String, String> mapColorScheme = game.currentMapColorScheme();
+
         if (!isUsingDefaultGameOptions(game)) {
             drawGameOptionsInfo(game.world().map().terrain(), game);
         }
@@ -278,16 +285,8 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         // All maps that use a different color scheme than that in the sprite sheet have to be rendered using the
         // generic vector renderer for now. This looks more or less bad for specific maps.
         boolean mapSpriteExists = game.isDemoLevel() || mapSpriteExists(game.currentLevelNumber(), game.mapCategory());
-
         if (!mapSpriteExists) {
-            // draw using generic vector renderer
-            terrainRenderer.setMapBackgroundColor(bgColor);
-            terrainRenderer.setWallStrokeColor(Color.web(mapColorScheme.get("stroke")));
-            terrainRenderer.setWallFillColor(Color.web(mapColorScheme.get("fill")));
-            terrainRenderer.setDoorColor(Color.web(mapColorScheme.get("door")));
-            terrainRenderer.drawMap(ctx(), terrain);
-            foodRenderer.setPelletColor(Color.web(mapColorScheme.get("pellet")));
-            foodRenderer.setEnergizerColor(Color.web(mapColorScheme.get("pellet")));
+            terrainRenderer.drawMap(ctx(), world.map().terrain());
             world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
                 .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
             if (blinkingOn) {
