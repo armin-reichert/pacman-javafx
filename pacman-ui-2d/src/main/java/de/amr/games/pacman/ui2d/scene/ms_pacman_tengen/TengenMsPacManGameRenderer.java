@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
@@ -15,7 +16,10 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
-import de.amr.games.pacman.model.ms_pacman_tengen.*;
+import de.amr.games.pacman.model.ms_pacman_tengen.BoosterMode;
+import de.amr.games.pacman.model.ms_pacman_tengen.Difficulty;
+import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
+import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -42,7 +46,7 @@ import static java.util.function.Predicate.not;
 public class TengenMsPacManGameRenderer implements GameRenderer {
 
     public static Color paletteColor(int index) {
-        return Color.web(NESColorPalette.entry(index));
+        return Color.web(NES.Palette.color(index));
     }
 
     // Blue colors used in intro, dark to brighter blue shade.

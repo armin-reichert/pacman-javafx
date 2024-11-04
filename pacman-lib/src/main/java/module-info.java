@@ -6,6 +6,7 @@ open module de.amr.games.pacman.lib {
     exports de.amr.games.pacman.lib;
     exports de.amr.games.pacman.lib.fsm;
     exports de.amr.games.pacman.lib.graph;
+    exports de.amr.games.pacman.lib.nes;
     exports de.amr.games.pacman.lib.timer;
     exports de.amr.games.pacman.lib.tilemap;
 }

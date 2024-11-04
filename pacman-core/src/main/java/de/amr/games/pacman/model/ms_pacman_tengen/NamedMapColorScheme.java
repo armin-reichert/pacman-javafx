@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model.ms_pacman_tengen;
 
+import de.amr.games.pacman.lib.nes.NES;
+
 import java.util.Map;
 
 public enum NamedMapColorScheme {
@@ -42,10 +44,10 @@ public enum NamedMapColorScheme {
      */
     NamedMapColorScheme(int fillIndex, int strokeIndex, int pelletIndex) {
         colorScheme = Map.of(
-            "fill",   NESColorPalette.entry(fillIndex),
-            "stroke", NESColorPalette.entry(strokeIndex),
-            "door",   NESColorPalette.entry(strokeIndex),
-            "pellet", NESColorPalette.entry(pelletIndex)
+            "fill",   NES.Palette.color(fillIndex),
+            "stroke", NES.Palette.color(strokeIndex),
+            "door",   NES.Palette.color(strokeIndex),
+            "pellet", NES.Palette.color(pelletIndex)
         );
     }
 
