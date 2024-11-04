@@ -16,7 +16,7 @@ import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 /**
  * @author Armin Reichert
  */
-public class BootScene extends GameScene2D {
+public class ArcadeBootScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {

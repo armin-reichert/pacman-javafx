@@ -9,7 +9,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.scene.common.BootScene;
+import de.amr.games.pacman.ui2d.scene.common.ArcadeBootScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
 import de.amr.games.pacman.ui2d.scene.common.PlayScene2D;
@@ -27,7 +27,7 @@ public class PacManGameXXLSceneConfiguration implements GameSceneConfig {
     private final PacManGameXXLRenderer renderer;
 
     public PacManGameXXLSceneConfiguration(AssetStorage assets) {
-        set("BootScene",  new BootScene());
+        set("BootScene",  new ArcadeBootScene());
         set("IntroScene", new IntroScene());
         set("StartScene", new StartScene());
         set("PlayScene2D", new PlayScene2D());
