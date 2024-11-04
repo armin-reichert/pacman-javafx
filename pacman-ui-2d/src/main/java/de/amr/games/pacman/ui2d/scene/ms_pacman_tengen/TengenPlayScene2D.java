@@ -77,11 +77,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     private final Canvas canvas = new Canvas(NES_RESOLUTION_X, NES_RESOLUTION_Y);
     private int camDelay;
     private final GameOverMessageAnimation gameOverMessageAnimation = new GameOverMessageAnimation();
-
-    private long flashingStartTick;
-    private int currentFlashColorSchemeIndex;
-    private boolean highlightPhase;
-    private final List<Map<String,Color>> flashingMapColorSchemes = new ArrayList<>();
+    private final MazeFlashingAnimation mazeFlashingAnimation = new MazeFlashingAnimation();
 
     private static class GameOverMessageAnimation {
         private double startX;
@@ -114,6 +110,56 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
                 speed = 0;
                 currentX = startX;
             }
+        }
+    }
+
+    private static class MazeFlashingAnimation {
+        private final List<Map<String,Color>> colorSchemes = new ArrayList<>();
+        private long startTick;
+        private int currentIndex;
+        private boolean highlightPhase;
+
+        public void init(TengenMsPacManGame game) {
+            Map<String, Color> currentScheme = extractColors(game.currentMapColorScheme());
+            boolean random = inRange(game.currentLevelNumber(), 28, 31)
+                    && (game.mapCategory() == MapCategory.BIG || game.mapCategory() == MapCategory.MINI);
+            colorSchemes.clear();
+            for (int i = 0; i < game.numFlashes(); ++i) {
+                if (random) {
+                    var colorScheme = randomMapColorScheme();
+                    // skip color schemes with black fill color
+                    while (colorScheme.get("fill").equals(NES.Palette.color(0x0f))) {
+                        colorScheme = randomMapColorScheme();
+                    }
+                    colorSchemes.add(extractColors(colorScheme));
+                } else {
+                    colorSchemes.add(currentScheme);
+                }
+                colorSchemes.add(HIGHLIGHT_COLOR_SCHEME);
+            }
+            startTick = -1;
+        }
+
+        public Map<String, Color> currentColorScheme() {
+            return highlightPhase ? HIGHLIGHT_COLOR_SCHEME : colorSchemes.get(currentIndex);
+        }
+
+        public void update(long t) {
+            int phaseTicks = 10; // TODO: how many ticks really?
+            if (startTick == -1) { // not running yet
+                startTick = t;
+                currentIndex = 0;
+                Logger.info("Maze flashing started at tick {}", startTick);
+            }
+            // single flash phase complete?
+            long flashingTicksSoFar = t - startTick;
+            if (flashingTicksSoFar > 0 && flashingTicksSoFar % phaseTicks == 0) {
+                if (currentIndex < colorSchemes.size() - 1 ) {
+                    ++currentIndex;
+                    Logger.info("Maze flashing index changes to {} at tick {}", currentIndex, t);
+                }
+            }
+            highlightPhase = flashingTicksSoFar % (2*phaseTicks) == 1;
         }
     }
 
@@ -244,45 +290,6 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         }
     }
 
-    private void initMazeFlashing(TengenMsPacManGame game) {
-        Map<String, Color> currentScheme = extractColors(game.currentMapColorScheme());
-        boolean random = inRange(game.currentLevelNumber(), 28, 31)
-                && (game.mapCategory() == MapCategory.BIG || game.mapCategory() == MapCategory.MINI);
-        flashingMapColorSchemes.clear();
-        for (int i = 0; i < game.numFlashes(); ++i) {
-            if (random) {
-                var colorScheme = randomMapColorScheme();
-                // skip color schemes with black fill color
-                while (colorScheme.get("fill").equals(NES.Palette.color(0x0f))) {
-                    colorScheme = randomMapColorScheme();
-                }
-                flashingMapColorSchemes.add(extractColors(colorScheme));
-            } else {
-                flashingMapColorSchemes.add(currentScheme);
-            }
-            flashingMapColorSchemes.add(HIGHLIGHT_COLOR_SCHEME);
-        }
-        flashingStartTick = -1;
-    }
-
-    private void updateMazeFlashing(long t) {
-        int phaseTicks = 10; // TODO: how many ticks really?
-        if (flashingStartTick == -1) { // not running yet
-            flashingStartTick = t;
-            currentFlashColorSchemeIndex = 0;
-            Logger.info("Maze flashing started at tick {}", flashingStartTick);
-        }
-        // single flash phase complete?
-        long flashingTicksSoFar = t - flashingStartTick;
-        if (flashingTicksSoFar > 0 && flashingTicksSoFar % phaseTicks == 0) {
-            if (currentFlashColorSchemeIndex < flashingMapColorSchemes.size() - 1 ) {
-                ++currentFlashColorSchemeIndex;
-                Logger.info("Maze flashing index changes to {} at tick {}", currentFlashColorSchemeIndex, t);
-            }
-        }
-        highlightPhase = flashingTicksSoFar % (2*phaseTicks) == 1;
-    }
-
     @Override
     protected void drawSceneContent(GameRenderer renderer) {
         final long t = context.gameClock().getTickCount();
@@ -307,10 +314,8 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         drawLevelMessage(renderer, cx, y); // READY, GAME_OVER etc.
 
         if (Boolean.TRUE.equals(state.getProperty("mazeFlashing"))) {
-            updateMazeFlashing(t);
-            tr.drawEmptyMap(world.map(), highlightPhase
-                ? HIGHLIGHT_COLOR_SCHEME
-                : flashingMapColorSchemes.get(currentFlashColorSchemeIndex));
+            mazeFlashingAnimation.update(t);
+            tr.drawEmptyMap(world.map(), mazeFlashingAnimation.currentColorScheme());
         } else {
             renderer.drawWorld(context, world, 0,  3*TS);
         }
@@ -385,7 +390,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             case STARTING_GAME, PACMAN_DYING -> context.sound().stopAll();
             case LEVEL_COMPLETE -> {
                 context.sound().stopAll();
-                initMazeFlashing((TengenMsPacManGame) context.game());
+                mazeFlashingAnimation.init((TengenMsPacManGame) context.game());
             }
             case GAME_OVER -> {
                 context.sound().stopAll();
