@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d;
 
-import de.amr.games.pacman.ui2d.input.KeyInput;
 import de.amr.games.pacman.ui2d.input.Keyboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -36,14 +35,10 @@ public interface GameActionProvider {
      */
     void bindGameActions();
 
-    default void bind(GameAction action, KeyInput keyInput) {
-        for (KeyCodeCombination kcc : keyInput.getCombinations()) {
+    default void bind(GameAction action, KeyCodeCombination... combinations) {
+        for (KeyCodeCombination kcc : combinations) {
             actionBindings().put(kcc, action);
         }
-    }
-
-    default void bind(GameAction action, KeyCodeCombination... combinations) {
-        bind(action, KeyInput.of(combinations));
     }
 
     default void bind(GameAction action, KeyCode... keyCodes) {
@@ -54,7 +49,7 @@ public interface GameActionProvider {
 
     default Optional<GameAction> firstMatchedAction(Keyboard keyboard) {
         return actionBindings().entrySet().stream()
-            .filter(entry -> keyboard.pressedAndRegistered(entry.getKey()))
+            .filter(entry -> keyboard.isMatching(entry.getKey()))
             .map(Map.Entry::getValue)
             .findFirst();
     }

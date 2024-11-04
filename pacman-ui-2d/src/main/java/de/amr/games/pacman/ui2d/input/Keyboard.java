@@ -11,6 +11,7 @@ import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Armin Reichert
@@ -37,52 +38,51 @@ public class Keyboard {
         return new KeyCodeCombination(code, KeyCombination.CONTROL_DOWN);
     }
 
-    private final Set<KeyCode> pressedKeys = new HashSet<>();
-    private final Set<KeyCodeCombination> registeredCombinations = new HashSet<>();
-    private final List<KeyCodeCombination> matchingCombinations = new ArrayList<>(3);
-
-    public void register(KeyInput input) {
-        for (KeyCodeCombination kcc : input.getCombinations()) {
-            register(kcc);
-        }
+    public String format(KeyCodeCombination... combinations) {
+        return Arrays.stream(combinations)
+            .map(KeyCodeCombination::toString)
+            .map(s -> "[" + s + "]")
+            .collect(Collectors.joining(", "));
     }
 
+    private final Set<KeyCode> pressedKeys = new HashSet<>();
+    private final Set<KeyCodeCombination> registeredCombinations = new HashSet<>();
+    private final List<KeyCodeCombination> matches = new ArrayList<>(3);
+
     public void register(KeyCodeCombination kcc) {
-        if (!registeredCombinations.contains(kcc)) {
-            registeredCombinations.add(kcc);
-            Logger.info("Key combination registered: {}", kcc);
+        if (registeredCombinations.add(kcc)) {
+            Logger.info("Key code combination registered: {}", kcc);
         }
     }
 
     public void unregister(KeyCodeCombination kcc) {
-        if (registeredCombinations.contains(kcc)) {
-            registeredCombinations.remove(kcc);
-            Logger.info("Key combination unregistered: {}", kcc);
+        if (registeredCombinations.remove(kcc)) {
+            Logger.info("Key code combination unregistered: {}", kcc);
         }
     }
 
-    public void onKeyPressed(KeyEvent e) {
-        Logger.debug("Key pressed: {}", e.getCode());
-        registeredCombinations.stream().filter(kcc -> kcc.match(e)).forEach(matchingCombinations::add);
-        pressedKeys.add(e.getCode());
+    public void onKeyPressed(KeyEvent keyEvent) {
+        Logger.debug("Key pressed: {}", keyEvent.getCode());
+        pressedKeys.add(keyEvent.getCode());
+        registeredCombinations.stream().filter(kcc -> kcc.match(keyEvent)).forEach(matches::add);
     }
 
-    public void onKeyReleased(KeyEvent e) {
-        Logger.debug("Key released: {}", e.getCode());
-        matchingCombinations.clear();
-        pressedKeys.remove(e.getCode());
+    public void onKeyReleased(KeyEvent keyEvent) {
+        Logger.debug("Key released: {}", keyEvent.getCode());
+        pressedKeys.remove(keyEvent.getCode());
+        matches.clear();
     }
 
     /**
-     * @param keyInput key input
-     * @return tells if any of the registered given key combinations is matched by the current keyboard state
+     * @param combinations key code combination
+     * @return tells if any of the combinations is matched by the current keyboard state
      */
-    public boolean pressedAndRegistered(KeyInput keyInput) {
-        return Arrays.stream(keyInput.getCombinations()).anyMatch(matchingCombinations::contains);
+    public boolean isMatching(KeyCodeCombination... combinations) {
+        return Arrays.stream(combinations).anyMatch(matches::contains);
     }
 
-    public boolean pressedAndRegistered(KeyCodeCombination kcc) {
-        return matchingCombinations.contains(kcc);
+    public boolean isMatching(KeyCodeCombination kcc) {
+        return matches.contains(kcc);
     }
 
     public boolean pressed(KeyCode keyCode) {

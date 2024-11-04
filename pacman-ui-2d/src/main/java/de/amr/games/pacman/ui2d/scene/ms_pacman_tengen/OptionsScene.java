@@ -106,15 +106,15 @@ public class OptionsScene extends GameScene2D {
     @Override
     public void handleInput(GameContext context) {
 
-        if (context.keyboard().pressedAndRegistered(context.joypad().down())) {
+        if (context.keyboard().isMatching(context.joypad().down())) {
             selectNextOption();
         }
-        else if (context.keyboard().pressedAndRegistered(context.joypad().up())) {
+        else if (context.keyboard().isMatching(context.joypad().up())) {
             selectPrevOption();
         }
 
         // Button "A" is right of "B": select next value
-        else if (context.keyboard().pressedAndRegistered(context.joypad().a())) {
+        else if (context.keyboard().isMatching(context.joypad().a())) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setNextDifficultyValue();
@@ -125,7 +125,7 @@ public class OptionsScene extends GameScene2D {
         }
 
         // Button "B" is left of "A": select previous value
-        else if (context.keyboard().pressedAndRegistered(context.joypad().b())) {
+        else if (context.keyboard().isMatching(context.joypad().b())) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setPrevDifficultyValue();
