@@ -263,10 +263,10 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         ctx().restore();
     }
 
-    public void drawEmptyMap(WorldMap worldMap, Map<String, String> colorScheme) {
-        Color wallFillColor = Color.web(colorScheme.get("fill"));
-        Color wallStrokeColor = Color.web(colorScheme.get("stroke"));
-        Color doorColor = Color.web(colorScheme.get("door"));
+    public void drawEmptyMap(WorldMap worldMap, Map<String, Color> colorScheme) {
+        Color wallFillColor = colorScheme.get("fill");
+        Color wallStrokeColor = colorScheme.get("stroke");
+        Color doorColor = colorScheme.get("door");
         terrainRenderer.setMapBackgroundColor(bgColor);
         terrainRenderer.setWallStrokeColor(wallStrokeColor);
         terrainRenderer.setWallFillColor(wallFillColor);

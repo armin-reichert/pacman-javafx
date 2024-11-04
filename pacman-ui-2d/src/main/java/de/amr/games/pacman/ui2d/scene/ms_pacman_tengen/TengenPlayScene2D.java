@@ -42,6 +42,7 @@ import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -63,6 +64,8 @@ import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
  */
 public class TengenPlayScene2D extends GameScene2D implements CameraControlledGameScene {
 
+    static final Map<String, Color> HIGHLIGHT_COLOR_SCHEME = extractColors(MapConfigurationManager.HIGHLIGHT_COLOR_SCHEME);
+
     static final int MESSAGE_ANIMATION_DELAY = 120; // TODO how long?
     static final double MESSAGE_SPEED = 1;  // TODO how fast?
 
@@ -75,7 +78,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     private long flashingStartTick;
     private int currentFlashColorSchemeIndex;
     private boolean highlightPhase;
-    private final List<Map<String,String>> flashingMapColorSchemes = new ArrayList<>();
+    private final List<Map<String,Color>> flashingMapColorSchemes = new ArrayList<>();
 
     private static class GameOverMessageAnimation {
         private double startX;
@@ -109,6 +112,14 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
                 currentX = startX;
             }
         }
+    }
+
+    private static Map<String, Color> extractColors(Map<String, String> colorScheme) {
+        Map<String, Color> colorMap = new HashMap<>();
+        for (String key : colorScheme.keySet()) {
+            colorMap.put(key, Color.web(colorScheme.get(key)));
+        }
+        return colorMap;
     }
 
     public TengenPlayScene2D() {
@@ -244,19 +255,19 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         boolean randomMapColors = inRange(game.currentLevelNumber(), 28, 31)
                 && (game.mapCategory() == MapCategory.BIG || game.mapCategory() == MapCategory.MINI);
         flashingMapColorSchemes.clear();
-        flashingMapColorSchemes.add(game.currentMapColorScheme());
+        flashingMapColorSchemes.add(extractColors(game.currentMapColorScheme()));
         if (randomMapColors) {
             for (int i = 0; i < 5; ++i) {
-                flashingMapColorSchemes.add(MapConfigurationManager.HIGHLIGHT_COLOR_SCHEME);
+                flashingMapColorSchemes.add(HIGHLIGHT_COLOR_SCHEME);
                 var randomScheme = MapConfigurationManager.randomMapColorScheme();
                 while (randomScheme.get("fill").equals(NES.Palette.color(0x0f))) {
                     // skip color schemes with black fill color
                     randomScheme = MapConfigurationManager.randomMapColorScheme();
                 }
-                flashingMapColorSchemes.add(randomScheme);
+                flashingMapColorSchemes.add(extractColors(randomScheme));
             }
         }
-        flashingMapColorSchemes.add(MapConfigurationManager.HIGHLIGHT_COLOR_SCHEME);
+        flashingMapColorSchemes.add(HIGHLIGHT_COLOR_SCHEME);
         flashingStartTick = -1;
     }
 
@@ -305,7 +316,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         if (Boolean.TRUE.equals(state.getProperty("mazeFlashing"))) {
             updateMazeFlashing(t);
             tr.drawEmptyMap(world.map(), highlightPhase
-                ? MapConfigurationManager.HIGHLIGHT_COLOR_SCHEME
+                ? HIGHLIGHT_COLOR_SCHEME
                 : flashingMapColorSchemes.get(currentFlashColorSchemeIndex));
         } else {
             renderer.drawWorld(context, world, 0,  3*TS);
