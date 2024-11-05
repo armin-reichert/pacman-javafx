@@ -330,8 +330,10 @@ public class GamePage extends StackPane implements Page {
     }
 
     public void showHelp() {
-        if (isCurrentGameScene2D()) {
-            popupLayer.showHelp(gameCanvasContainer.scaling());
+        if (context.gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
+            if (isCurrentGameScene2D()) {
+                popupLayer.showHelp(gameCanvasContainer.scaling());
+            }
         }
     }
 }

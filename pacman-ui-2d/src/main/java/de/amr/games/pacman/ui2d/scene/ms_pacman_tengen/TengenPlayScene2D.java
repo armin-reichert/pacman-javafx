@@ -46,6 +46,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
+import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.model.ms_pacman_tengen.MapConfigurationManager.randomMapColorScheme;
@@ -456,6 +458,13 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     public void onLevelStarted(GameEvent e) {
         context.updateRenderer();
         initCamDelay(90);
+        boolean silent = context.game().isDemoLevel() ||
+                context.gameState() == TESTING_LEVEL_BONI ||
+                context.gameState() == TESTING_LEVEL_TEASERS;
+        TengenMsPacManGame game = (TengenMsPacManGame) context.game();
+        if (!silent && (context.game().currentLevelNumber() == 1 || game.startLevelNumber() > 1)) {
+            context.sound().playGameReadySound();
+        }
     }
 
     @Override

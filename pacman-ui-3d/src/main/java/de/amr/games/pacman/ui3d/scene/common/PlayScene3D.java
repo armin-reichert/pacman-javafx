@@ -18,6 +18,7 @@ import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.ScoreManager;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -463,9 +464,15 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     @Override
     public void onLevelStarted(GameEvent event) {
         addLevelCounter();
-        if (context.game().currentLevelNumber() == 1
+        boolean firstLevelStart = context.game().currentLevelNumber() == 1
                 || context.gameState() == GameState.TESTING_LEVEL_BONI
-                || context.gameState() == GameState.TESTING_LEVEL_TEASERS) {
+                || context.gameState() == GameState.TESTING_LEVEL_TEASERS;
+        // In Ms. Pac-Man Tengen, game can also be started with level > 1!
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            TengenMsPacManGame game = (TengenMsPacManGame) context.game();
+            firstLevelStart = firstLevelStart || game.startLevelNumber() > 1;
+        }
+        if (firstLevelStart) {
             switch (context.gameState()) {
                 case TESTING_LEVEL_BONI -> {
                     replaceGameLevel3D(false);
@@ -478,6 +485,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
                 default -> {
                     if (!context.game().isDemoLevel()){
                         showReadyMessage();
+                        context.sound().playGameReadySound();
                     }
                 }
             }

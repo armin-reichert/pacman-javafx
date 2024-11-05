@@ -609,11 +609,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     public void onLevelStarted(GameEvent event) {
         int hourOfDay = LocalTime.now().getHour();
         PY_NIGHT_MODE.set(hourOfDay >= 21 || hourOfDay <= 4);
-        if (gameState() != TESTING_LEVEL_BONI && gameState() != TESTING_LEVEL_TEASERS
-                && !game().isDemoLevel()
-                && game().currentLevelNumber() == 1) {
-            sound().playGameReadySound();
-        }
     }
 
     @Override

@@ -26,6 +26,8 @@ import org.tinylog.Logger;
 
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
+import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_TILES;
@@ -64,6 +66,16 @@ public class PlayScene2D extends GameScene2D {
         }
         registerGameActionKeyBindings(context.keyboard());
         context.updateRenderer();
+    }
+
+    @Override
+    public void onLevelStarted(GameEvent e) {
+        boolean silent = context.game().isDemoLevel() ||
+                context.gameState() == TESTING_LEVEL_BONI ||
+                context.gameState() == TESTING_LEVEL_TEASERS;
+        if (!silent && context.game().currentLevelNumber() == 1) {
+            context.sound().playGameReadySound();
+        }
     }
 
     @Override

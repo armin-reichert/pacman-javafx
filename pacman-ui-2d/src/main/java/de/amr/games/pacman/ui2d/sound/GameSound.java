@@ -69,7 +69,7 @@ public class GameSound {
             sounds.put("pacman_power", makeSound("pacman_power", 1, true));
             MediaPlayer bouncePlayer = makeSound("bonus_bouncing", 1, true);
             if (bouncePlayer != null) {
-                bouncePlayer.setRate(0.25);
+                bouncePlayer.setRate(0.5);
             }
             sounds.put("bonus_bouncing", bouncePlayer);
 
