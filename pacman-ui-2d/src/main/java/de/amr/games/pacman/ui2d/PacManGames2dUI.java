@@ -61,9 +61,7 @@ import static de.amr.games.pacman.ui2d.util.Ufx.createIcon;
  */
 public class PacManGames2dUI implements GameEventListener, GameContext {
 
-    protected static final Keyboard THE_KEYBOARD = new Keyboard();
-
-    public static final ArcadeKeyAdapter ARCADE_CONTROLLER_CURSOR_KEYS = new ArcadeKeyAdapterImpl(
+    public static final ArcadeKeyAdapter ARCADE_CURSOR_KEYS = new ArcadeKeyAdapterImpl(
         new KeyCodeCombination(KeyCode.DIGIT5),
         new KeyCodeCombination(KeyCode.DIGIT1),
         new KeyCodeCombination(KeyCode.UP),
@@ -74,31 +72,37 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     // My current bindings, might be crap
     public static final JoypadKeyAdapter JOYPAD_CURSOR_KEYS = new JoypadKeyAdapterImpl(
-            new KeyCodeCombination(KeyCode.SPACE),
-            new KeyCodeCombination(KeyCode.ENTER),
-            new KeyCodeCombination(KeyCode.B),
-            new KeyCodeCombination(KeyCode.N),
-            new KeyCodeCombination(KeyCode.UP),
-            new KeyCodeCombination(KeyCode.DOWN),
-            new KeyCodeCombination(KeyCode.LEFT),
-            new KeyCodeCombination(KeyCode.RIGHT)
+        new KeyCodeCombination(KeyCode.SPACE),
+        new KeyCodeCombination(KeyCode.ENTER),
+        new KeyCodeCombination(KeyCode.B),
+        new KeyCodeCombination(KeyCode.N),
+        new KeyCodeCombination(KeyCode.UP),
+        new KeyCodeCombination(KeyCode.DOWN),
+        new KeyCodeCombination(KeyCode.LEFT),
+        new KeyCodeCombination(KeyCode.RIGHT)
     );
 
     // Mesen emulator key set #2
     public static final JoypadKeyAdapter JOYPAD_WASD = new JoypadKeyAdapterImpl(
-            new KeyCodeCombination(KeyCode.U),
-            new KeyCodeCombination(KeyCode.I),
-            new KeyCodeCombination(KeyCode.J),
-            new KeyCodeCombination(KeyCode.K),
-            new KeyCodeCombination(KeyCode.W),
-            new KeyCodeCombination(KeyCode.S),
-            new KeyCodeCombination(KeyCode.A),
-            new KeyCodeCombination(KeyCode.D)
+        new KeyCodeCombination(KeyCode.U),
+        new KeyCodeCombination(KeyCode.I),
+        new KeyCodeCombination(KeyCode.J),
+        new KeyCodeCombination(KeyCode.K),
+        new KeyCodeCombination(KeyCode.W),
+        new KeyCodeCombination(KeyCode.S),
+        new KeyCodeCombination(KeyCode.A),
+        new KeyCodeCombination(KeyCode.D)
     );
 
-    private static final GameSound THE_SOUND = new GameSound();
+    protected final Keyboard keyboard = new Keyboard();
 
-    public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
+    protected final GameClockFX clock = new GameClockFX();
+
+    protected final AssetStorage assets = new AssetStorage();
+
+    protected final GameSound gameSound = new GameSound();
+
+    protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
     protected final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
         @Override
@@ -107,30 +111,25 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         }
     };
 
-    protected final AssetStorage assets;
-    protected final FlashMessageView flashMessageLayer;
-    protected final GameClockFX clock;
-    protected final Map<GameVariant, GameSceneConfig> gameSceneConfigByVariant;
-    protected final StackPane sceneRoot;
+    protected final Map<GameVariant, GameSceneConfig> gameSceneConfigByVariant = new EnumMap<>(GameVariant.class);
+
+    protected final FlashMessageView flashMessageLayer = new FlashMessageView();
+    protected final StackPane sceneRoot = new StackPane();
     protected Stage stage;
     protected StartPage startPage;
     protected GamePage gamePage;
     protected EditorPage editorPage;
     protected Page currentPage;
+
     protected boolean scoreVisible;
     protected boolean signatureShown; //TODO make this work again for all intro screens
     protected Picker<String> pickerGameOver;
     protected Picker<String> pickerLevelComplete;
-    protected JoypadKeyAdapter joypad = JOYPAD_CURSOR_KEYS;
-    protected ArcadeKeyAdapter arcadeController = ARCADE_CONTROLLER_CURSOR_KEYS;
 
-    public PacManGames2dUI() {
-        assets = new AssetStorage();
-        clock = new GameClockFX();
-        flashMessageLayer = new FlashMessageView();
-        sceneRoot = new StackPane();
-        gameSceneConfigByVariant = new EnumMap<>(GameVariant.class);
-    }
+    protected JoypadKeyAdapter joypad = JOYPAD_CURSOR_KEYS;
+    protected ArcadeKeyAdapter arcade = ARCADE_CURSOR_KEYS;
+
+    public PacManGames2dUI() {}
 
     public void loadAssets() {
         GameAssets2D.addTo(assets);
@@ -249,8 +248,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         StackPane.setAlignment(pauseIcon, Pos.CENTER);
         sceneRoot.getChildren().addAll(new Pane(), flashMessageLayer, pauseIcon, mutedIcon);
 
-        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, THE_KEYBOARD::onKeyPressed);
-        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, THE_KEYBOARD::onKeyReleased);
+        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
+        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
         // Global keyboard shortcuts
         mainScene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.F11) {
@@ -330,12 +329,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public Keyboard keyboard() {
-        return THE_KEYBOARD;
+        return keyboard;
     }
 
     @Override
     public ArcadeKeyAdapter arcadeController() {
-        return arcadeController;
+        return arcade;
     }
 
     @Override
@@ -356,13 +355,13 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public void enableJoypad() {
         Logger.info("Enable joypad");
-        joypad.register(THE_KEYBOARD);
+        joypad.register(keyboard);
     }
 
     @Override
     public void disableJoypad() {
         Logger.info("Disable joypad");
-        joypad.unregister(THE_KEYBOARD);
+        joypad.unregister(keyboard);
     }
 
     @Override
@@ -402,7 +401,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public GameSound sound() {
-        return THE_SOUND;
+        return gameSound;
     }
 
     @Override
