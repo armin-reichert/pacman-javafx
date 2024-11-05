@@ -174,6 +174,10 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         Logger.info("3D play scene ended. {}", this);
     }
 
+    public boolean hasLevel3D() {
+        return level3D != null;
+    }
+
     @Override
     public void update() {
         var game = context.game();

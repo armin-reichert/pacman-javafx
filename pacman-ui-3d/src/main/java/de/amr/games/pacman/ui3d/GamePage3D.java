@@ -10,6 +10,7 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.scene.common.Perspective;
+import de.amr.games.pacman.ui3d.scene.common.PlayScene3D;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -30,11 +31,6 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_PERSPECTIVE;
  */
 public class GamePage3D extends GamePage {
 
-    {
-        bind(GameActions3D.TOGGLE_PIP_VISIBILITY, KeyCode.F2);
-        bind(GameActions3D.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
-    }
-
     public GamePage3D(GameContext context, Scene parentScene) {
         super(context, parentScene);
         dashboardLayer.addEntry(3, context.locText("infobox.3D_settings.title"), new InfoBox3D());
@@ -48,6 +44,13 @@ public class GamePage3D extends GamePage {
                     : context.assets().get(PY_NIGHT_MODE.get() ? "wallpaper.night" : "wallpaper.day");
             }, PY_3D_DRAW_MODE, PY_NIGHT_MODE, context.gameSceneProperty()
         ));
+    }
+
+    @Override
+    public void bindGameActions() {
+        super.bindGameActions();
+        bind(GameActions3D.TOGGLE_PIP_VISIBILITY, KeyCode.F2);
+        bind(GameActions3D.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
     }
 
     @Override
