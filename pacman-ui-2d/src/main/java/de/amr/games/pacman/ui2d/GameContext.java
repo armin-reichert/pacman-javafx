@@ -46,8 +46,8 @@ public interface GameContext {
 
     // Input
     Keyboard                    keyboard();
-    ArcadeKeyAdapter arcadeController();
-    JoypadKeyAdapter joypadInput();
+    ArcadeKeyAdapter            arcadeController();
+    JoypadKeyAdapter            joypadInput();
     void                        enableJoypad();
     void                        disableJoypad();
     void                        nextJoypad();
@@ -74,10 +74,11 @@ public interface GameContext {
     Optional<GameScene>         currentGameScene();
     void                        updateGameScene(boolean reloadCurrent);
     default void                updateRenderer() { currentGameSceneConfig().renderer().update(game()); }
+    void                        togglePlayScene2D3D();
 
     // Resources
     AssetStorage                assets();
-    GameSound sound();
+    GameSound                   sound();
     String                      locText(String keyOrPattern, Object... args);
     String                      locGameOverMessage();
     String                      locLevelCompleteMessage();

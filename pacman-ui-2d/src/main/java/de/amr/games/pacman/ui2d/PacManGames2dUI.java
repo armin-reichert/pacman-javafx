@@ -43,7 +43,6 @@ import org.tinylog.Logger;
 import java.text.MessageFormat;
 import java.time.LocalTime;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -73,15 +72,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         new KeyCodeCombination(KeyCode.RIGHT)
     );
 
-    public static final ArcadeKeyAdapter ARCADE_CONTROLLER_CURSOR_KEYS_NUMPAD = new ArcadeKeyAdapterImpl(
-        new KeyCodeCombination(KeyCode.NUMPAD5),
-        new KeyCodeCombination(KeyCode.NUMPAD1),
-        new KeyCodeCombination(KeyCode.UP),
-        new KeyCodeCombination(KeyCode.DOWN),
-        new KeyCodeCombination(KeyCode.LEFT),
-        new KeyCodeCombination(KeyCode.RIGHT)
-    );
-
     // My current bindings, might be crap
     public static final JoypadKeyAdapter JOYPAD_CURSOR_KEYS = new JoypadKeyAdapterImpl(
             new KeyCodeCombination(KeyCode.SPACE),
@@ -104,13 +94,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             new KeyCodeCombination(KeyCode.S),
             new KeyCodeCombination(KeyCode.A),
             new KeyCodeCombination(KeyCode.D)
-    );
-
-    /**
-     * The order here is used by the start page!
-     */
-    public static List<GameVariant> GAME_VARIANTS_IN_ORDER = List.of(
-        GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN_TENGEN
     );
 
     private static final GameSound THE_SOUND = new GameSound();
@@ -479,6 +462,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             }
         }
     }
+
+    @Override
+    public void togglePlayScene2D3D() {}
 
     @Override
     public AssetStorage assets() {

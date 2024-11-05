@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_DEBUG_INFO;
+import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
 
 /**
@@ -53,5 +54,20 @@ public class PacManGames3dUI extends PacManGames2dUI {
             String displayMode = locText(PY_3D_ENABLED.get() ? "threeD" : "twoD");
             return locText(gameVariantPart + pausedPart, displayMode) + sceneNameSuffix;
         }, clock.pausedPy, gameVariantPy, PY_3D_ENABLED, gameScenePy, PY_DEBUG_INFO);
+    }
+
+    @Override
+    public void togglePlayScene2D3D() {
+        currentGameScene().ifPresent(gameScene -> {
+            toggle(PY_3D_ENABLED);
+            if (currentGameSceneHasID("PlayScene2D") || currentGameSceneHasID("PlayScene3D")) {
+                updateGameScene(true);
+                gameScene.onSceneVariantSwitch(gameScene);
+            }
+            gameController().update();
+            if (!game().isPlaying()) {
+                showFlashMessage(locText(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+            }
+        });
     }
 }

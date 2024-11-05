@@ -11,7 +11,8 @@ import javafx.scene.shape.DrawMode;
 
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_PIP_ON;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
-import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
+import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
+import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_PERSPECTIVE;
 
 /**
  * @author Armin Reichert
@@ -43,21 +44,10 @@ public enum GameActions3D implements GameAction {
         }
     },
 
-    TOGGLE_PLAY_SCENE_2D_3D { // (alt(KeyCode.DIGIT3)) {
+    TOGGLE_PLAY_SCENE_2D_3D {
         @Override
         public void execute(GameContext context) {
-            context.currentGameScene().ifPresent(gameScene -> {
-                toggle(PY_3D_ENABLED);
-                if (context.currentGameSceneHasID("PlayScene2D")
-                        || context.currentGameSceneHasID("PlayScene3D")) {
-                    context.updateGameScene(true);
-                    context.gameSceneProperty().get().onSceneVariantSwitch(gameScene);
-                }
-                context.gameController().update();
-                if (!context.game().isPlaying()) {
-                    context.showFlashMessage(context.locText(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
-                }
-            });
+            context.togglePlayScene2D3D();
         }
     },
 
