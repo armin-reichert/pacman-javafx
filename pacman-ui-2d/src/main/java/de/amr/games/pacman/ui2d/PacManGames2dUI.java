@@ -287,7 +287,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         if (icon != null) {
             stage.getIcons().setAll(icon);
         }
-        sound().init(variant);
+        try {
+            sound().init(variant);
+        } catch (Exception x) {
+            Logger.error(x);
+        }
         gamePage.gameCanvasContainer().decorationEnabledPy.set(gameVariant() != GameVariant.MS_PACMAN_TENGEN);
     }
 

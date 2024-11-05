@@ -40,6 +40,11 @@ public class GameSound {
 
     // These are created when game variant changes
     private final Map<GameVariant, Map<String, MediaPlayer>> playerMapByGameVariant = new HashMap<>();
+    {
+        for (GameVariant variant : GameVariant.values()) {
+            playerMapByGameVariant.put(variant, Map.of());
+        }
+    }
 
     // These are created on demand
     private Siren siren;
@@ -48,13 +53,27 @@ public class GameSound {
     //TODO check volume settings
     public void init(GameVariant gameVariant) {
         this.gameVariant = checkNotNull(gameVariant);
-        if (playerMapByGameVariant.get(gameVariant) == null) {
+        if (playerMapByGameVariant.get(gameVariant).isEmpty()) {
             Map<String, MediaPlayer> players = new HashMap<>();
             players.put("game_over", createPlayer(gameVariant, assets, "game_over", 1, false));
             players.put("game_ready", createPlayer(gameVariant, assets, "game_ready", 1, false));
             players.put("ghost_returns", createPlayer(gameVariant, assets, "ghost_returns", 1, true));
             players.put("level_complete", createPlayer(gameVariant, assets, "level_complete", 1, false));
-            players.put("pacman_munch", createPlayer(gameVariant, assets, "pacman_munch", 1, true));
+
+            MediaPlayer munchPlayer_1 = createPlayer(gameVariant, assets, "pacman_munch", 1, true);
+            munchPlayer_1.setCycleCount(2);
+            MediaPlayer munchPlayer_2 = createPlayer(gameVariant, assets, "pacman_munch_2", 1, true);
+            munchPlayer_2.setCycleCount(2);
+            players.put("pacman_munch", munchPlayer_1);
+            munchPlayer_1.setOnRepeat(() -> {
+                munchPlayer_1.stop();
+                munchPlayer_2.play();
+            });
+            munchPlayer_2.setOnEndOfMedia(() -> {
+                munchPlayer_2.stop();
+                munchPlayer_1.play();
+            });
+
             players.put("pacman_death", createPlayer(gameVariant, assets, "pacman_death", 1, false));
             players.put("pacman_power", createPlayer(gameVariant, assets, "pacman_power", 1, true));
             MediaPlayer bouncePlayer = createPlayer(gameVariant, assets, "bonus_bouncing", 1, true);
@@ -276,6 +295,7 @@ public class GameSound {
 
     public void stopMunchingSound() {
         stop("pacman_munch");
+        stop("pacman_munch_2");
     }
 
     public void playPacDeathSound() {

@@ -113,6 +113,7 @@ public class GameAssets2D extends AssetStorage {
         assets.store("ms_pacman.audio.level_complete",  rm.url("sound/common/level-complete.mp3"));
         assets.store("ms_pacman.audio.pacman_death",    rm.url("sound/mspacman/Died.mp3"));
         assets.store("ms_pacman.audio.pacman_munch",    rm.url("sound/mspacman/Pill.wav"));
+        assets.store("ms_pacman.audio.pacman_munch_2",  rm.url("sound/mspacman/Pill.wav"));
         assets.store("ms_pacman.audio.pacman_power",    rm.url("sound/mspacman/ScaredGhost.mp3"));
         assets.store("ms_pacman.audio.siren.1",         rm.url("sound/mspacman/GhostNoise1.wav"));
         assets.store("ms_pacman.audio.siren.2",         rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
@@ -193,6 +194,7 @@ public class GameAssets2D extends AssetStorage {
         assets.store("tengen.audio.intermission.4",     rm.url("sound/tengen/theend.wav"));
         assets.store("tengen.audio.pacman_death",       rm.url("sound/tengen/ms-death.wav"));
         assets.store("tengen.audio.pacman_munch",       rm.url("sound/tengen/ms-dot.wav"));
+        assets.store("tengen.audio.pacman_munch_2",     rm.url("sound/tengen/ms-dot.wav"));
         assets.store("tengen.audio.pacman_power",       rm.url("sound/tengen/ms-power.wav"));
         assets.store("tengen.audio.siren.1",            rm.url("sound/tengen/ms-siren1.wav"));
         assets.store("tengen.audio.siren.2",            rm.url("sound/tengen/ms-siren2.wav"));
@@ -232,7 +234,8 @@ public class GameAssets2D extends AssetStorage {
         assets.store("pacman.audio.game_over",          rm.url("sound/common/game-over.mp3"));
         assets.store("pacman.audio.intermission",       rm.url("sound/pacman/intermission.mp3"));
         assets.store("pacman.audio.pacman_death",       rm.url("sound/pacman/pacman_death.wav"));
-        assets.store("pacman.audio.pacman_munch",       rm.url("sound/pacman/doublemunch.wav"));
+        assets.store("pacman.audio.pacman_munch",       rm.url("sound/pacman/munch_1.mp3"));
+        assets.store("pacman.audio.pacman_munch_2",     rm.url("sound/pacman/munch_2.mp3"));
         assets.store("pacman.audio.pacman_power",       rm.url("sound/pacman/ghost-turn-to-blue.mp3"));
         assets.store("pacman.audio.level_complete",     rm.url("sound/common/level-complete.mp3"));
         assets.store("pacman.audio.siren.1",            rm.url("sound/pacman/siren_1.mp3"));
