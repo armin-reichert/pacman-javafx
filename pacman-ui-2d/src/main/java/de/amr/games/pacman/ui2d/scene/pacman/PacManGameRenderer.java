@@ -101,7 +101,7 @@ public class PacManGameRenderer implements GameRenderer {
             if (blinkingOn) {
                 ctx().drawImage(flashingMazeImage, x, y);
             } else {
-                drawSpriteUnscaled(PacManGameSpriteSheet.EMPTY_MAZE_SPRITE, y, y);
+                drawSpriteUnscaled(PacManGameSpriteSheet.EMPTY_MAZE_SPRITE, x, y);
             }
         } else {
             drawSpriteUnscaled(PacManGameSpriteSheet.FULL_MAZE_SPRITE, x, y);
