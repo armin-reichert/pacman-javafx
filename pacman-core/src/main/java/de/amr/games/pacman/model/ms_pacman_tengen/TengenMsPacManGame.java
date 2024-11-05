@@ -365,7 +365,6 @@ public class TengenMsPacManGame extends GameModel {
             50, // Frightened ghost speed...
             6, // pac power time (seconds)
             5, // Num flashes
-            0 // cut scene after this level
         });
     }
 
@@ -398,7 +397,6 @@ public class TengenMsPacManGame extends GameModel {
             50, // Frightened ghost speed...
             6, // pac power time (seconds)
             5, // Num flashes
-            0 // cut scene after this level
         });
     }
 

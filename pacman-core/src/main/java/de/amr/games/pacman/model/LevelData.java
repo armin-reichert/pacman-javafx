@@ -18,10 +18,9 @@ public record LevelData(
     byte pacSpeedPoweredPercentage,      // Relative speed of Pac-Man in power mode
     byte ghostSpeedFrightenedPercentage, // Relative speed of frightened ghost
     byte pacPowerSeconds,                // Number of seconds Pac-Man gets power
-    byte numFlashes,                     // Number of maze flashes at end of this level
-    byte intermissionNumber)             // Number of cut-scene played after this level (0=no intermission)
+    byte numFlashes)                     // Number of maze flashes at end of this level
 {
     public LevelData(byte[] data) {
-        this(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11]);
+        this(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10]);
     }
 }
