@@ -88,14 +88,14 @@ public class GameAssets2D extends AssetStorage {
         assets.store("ms_pacman.icon",                  rm.loadImage("graphics/icons/mspacman.png"));
         assets.store("ms_pacman.logo.midway",           rm.loadImage("graphics/mspacman/midway_logo.png"));
 
-        assets.store("ms_pacman.ghost.0.color.normal.dress", Arcade.Palette.RED);
-        assets.store("ms_pacman.ghost.1.color.normal.dress", Arcade.Palette.PINK);
-        assets.store("ms_pacman.ghost.2.color.normal.dress", Arcade.Palette.CYAN);
-        assets.store("ms_pacman.ghost.3.color.normal.dress", Arcade.Palette.ORANGE);
+        assets.store("ms_pacman.ghost.0.color.normal.dress", Color.valueOf(Arcade.Palette.RED));
+        assets.store("ms_pacman.ghost.1.color.normal.dress", Color.valueOf(Arcade.Palette.PINK));
+        assets.store("ms_pacman.ghost.2.color.normal.dress", Color.valueOf(Arcade.Palette.CYAN));
+        assets.store("ms_pacman.ghost.3.color.normal.dress", Color.valueOf(Arcade.Palette.ORANGE));
 
-        assets.store("ms_pacman.color.game_over_message",    Arcade.Palette.RED);
-        assets.store("ms_pacman.color.ready_message",        Arcade.Palette.YELLOW);
-        assets.store("ms_pacman.color.clapperboard",         Arcade.Palette.WHITE);
+        assets.store("ms_pacman.color.game_over_message",    Color.valueOf(Arcade.Palette.RED));
+        assets.store("ms_pacman.color.ready_message",        Color.valueOf(Arcade.Palette.YELLOW));
+        assets.store("ms_pacman.color.clapperboard",         Color.valueOf(Arcade.Palette.WHITE));
 
         // Clips
         assets.store("ms_pacman.audio.bonus_eaten",     rm.loadAudioClip("sound/mspacman/Fruit.mp3"));
