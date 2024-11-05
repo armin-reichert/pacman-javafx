@@ -219,7 +219,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             context.gameController().restart(GameState.TESTING_LEVEL_BONI);
-            context.showFlashMessageSeconds(3, "Level TEST MODE");
+            context.showFlashMessageSec(3, "Level TEST MODE");
         }
     },
 
@@ -227,7 +227,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             context.gameController().restart(GameState.TESTING_LEVEL_TEASERS);
-            context.showFlashMessageSeconds(3, "Level TEST MODE");
+            context.showFlashMessageSec(3, "Level TEST MODE");
         }
     },
 

@@ -137,16 +137,16 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     private void setGameActions() {
         if (context.game().isDemoLevel()) {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                bind(TengenGameActions.QUIT_DEMO_LEVEL, context.joypadInput().key(NES.Joypad.START));
+                bind(TengenGameActions.QUIT_DEMO_LEVEL, context.joypad().key(NES.Joypad.START));
             } else {
-                bind(GameActions2D.ADD_CREDIT, context.arcadeController().key(Arcade.Controls.COIN));
+                bind(GameActions2D.ADD_CREDIT, context.arcade().key(Arcade.Controls.COIN));
             }
         }
         else {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                bindDefaultJoypadActions(this, context.joypadInput());
+                bindDefaultJoypadActions(this, context.joypad());
             } else {
-                bindDefaultArcadeControllerActions(this, context.arcadeController());
+                bindDefaultArcadeControllerActions(this, context.arcade());
             }
             bindFallbackPlayerControlActions(this);
             bindCheatActions(this);
@@ -366,7 +366,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         stopLevelAnimations();
         // delay state exit for 3 seconds
         context.gameState().timer().restartSeconds(3);
-        context.showFlashMessageSeconds(3, context.locGameOverMessage());
+        context.showFlashMessageSec(3, context.locGameOverMessage());
         context.sound().stopAll();
         context.sound().playGameOverSound();
     }
@@ -575,7 +575,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
                   perspectiveNamePy.unbind();
                   perspectiveNamePy.set(Perspective.Name.TOTAL);
                   level3D.livesCounter3D().light().setLightOn(false);
-                  context.showFlashMessageSeconds(3, context.locLevelCompleteMessage());
+                  context.showFlashMessageSec(3, context.locLevelCompleteMessage());
                   context.sound().playLevelCompleteSound();
               })
             , doAfterSec(1, level3D.mazeFlashAnimation(numFlashes))

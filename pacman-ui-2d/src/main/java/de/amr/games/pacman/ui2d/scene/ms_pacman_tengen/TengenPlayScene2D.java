@@ -433,7 +433,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        JoypadKeyAdapter joypad = context.joypadInput();
+        JoypadKeyAdapter joypad = context.joypad();
         if (context.game().isDemoLevel()) {
             context.game().pac().setImmune(false);
             bind(QUIT_DEMO_LEVEL, joypad.key(NES.Joypad.START));

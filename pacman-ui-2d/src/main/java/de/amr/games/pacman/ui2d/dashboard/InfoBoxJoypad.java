@@ -14,7 +14,7 @@ public class InfoBoxJoypad extends InfoBox {
 
     public void init(GameContext context) {
         super.init(context);
-        JoypadKeyAdapter joypad = context.joypadInput();
+        JoypadKeyAdapter joypad = context.joypad();
         setContentTextFont(Font.font("Monospace", 16));
         String indent = "  "; // Urgh
         labeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(

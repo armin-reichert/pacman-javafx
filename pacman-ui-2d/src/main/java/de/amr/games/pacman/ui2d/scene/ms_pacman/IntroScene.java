@@ -29,7 +29,6 @@ import java.util.BitSet;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GameActions2D.bindTestActions;
-import static de.amr.games.pacman.ui2d.GameAssets2D.*;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -67,8 +66,8 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.ADD_CREDIT, context.arcadeController().key(Arcade.Controls.COIN));
-        bind(GameActions2D.START_GAME, context.arcadeController().key(Arcade.Controls.START));
+        bind(GameActions2D.ADD_CREDIT, context.arcade().key(Arcade.Controls.COIN));
+        bind(GameActions2D.START_GAME, context.arcade().key(Arcade.Controls.START));
         bindTestActions(this);
     }
 
@@ -113,31 +112,31 @@ public class IntroScene extends GameScene2D {
         Font font = r.scaledArcadeFont(TS);
         BitSet marqueeState = computeMarqueeState(marqueeTimer.currentTick());
         drawMarquee(r.ctx(), marqueeState);
-        r.drawText("\"MS PAC-MAN\"", ARCADE_ORANGE, font, TITLE_POSITION.x(), TITLE_POSITION.y());
+        r.drawText("\"MS PAC-MAN\"", Color.valueOf(Arcade.Palette.ORANGE), font, TITLE_POSITION.x(), TITLE_POSITION.y());
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
             if (ghostIndex == GameModel.RED_GHOST) {
-                r.drawText("WITH", ARCADE_PALE, font, TITLE_POSITION.x(), TOP_Y + t(3));
+                r.drawText("WITH", Color.valueOf(Arcade.Palette.WHITE), font, TITLE_POSITION.x(), TOP_Y + t(3));
             }
             String ghostName = ghosts[ghostIndex].name().toUpperCase();
             Color color = switch (ghostIndex) {
-                case GameModel.RED_GHOST -> ARCADE_RED;
-                case GameModel.PINK_GHOST -> ARCADE_PINK;
-                case GameModel.CYAN_GHOST -> ARCADE_CYAN;
-                case GameModel.ORANGE_GHOST -> ARCADE_ORANGE;
+                case GameModel.RED_GHOST -> Color.valueOf(Arcade.Palette.RED);
+                case GameModel.PINK_GHOST -> Color.valueOf(Arcade.Palette.PINK);
+                case GameModel.CYAN_GHOST -> Color.valueOf(Arcade.Palette.CYAN);
+                case GameModel.ORANGE_GHOST -> Color.valueOf(Arcade.Palette.ORANGE);
                 default -> throw new IllegalStateException("Illegal ghost index: " + ghostIndex);
             };
             double dx = ghostName.length() < 4 ? t(1) : 0;
             r.drawText(ghostName, color, font, TITLE_POSITION.x() + t(3) + dx, TOP_Y + t(6));
         } else if (sceneController.state() == SceneState.MS_PACMAN_MARCHING_IN || sceneController.state() == SceneState.READY_TO_PLAY) {
-            r.drawText("STARRING", ARCADE_PALE, font, TITLE_POSITION.x(), TOP_Y + t(3));
-            r.drawText("MS PAC-MAN", ARCADE_YELLOW, font, TITLE_POSITION.x(), TOP_Y + t(6));
+            r.drawText("STARRING", Color.valueOf(Arcade.Palette.WHITE), font, TITLE_POSITION.x(), TOP_Y + t(3));
+            r.drawText("MS PAC-MAN", Color.valueOf(Arcade.Palette.YELLOW), font, TITLE_POSITION.x(), TOP_Y + t(6));
         }
         for (Ghost ghost : ghosts) {
             r.drawAnimatedEntity(ghost);
         }
         r.drawAnimatedEntity(msPacMan);
-        r.drawMsPacManMidwayCopyright(t(6), t(28), ARCADE_RED, font);
-        r.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
+        r.drawMsPacManMidwayCopyright(t(6), t(28), Color.valueOf(Arcade.Palette.RED), font);
+        r.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), Color.valueOf(Arcade.Palette.WHITE), renderer.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
         r.drawLevelCounter(context, size());
     }
 
@@ -177,7 +176,7 @@ public class IntroScene extends GameScene2D {
     }
 
     private void drawBulb(GraphicsContext g, double x, double y, boolean on) {
-        g.setFill(on ? ARCADE_PALE : ARCADE_RED);
+        g.setFill(on ? Color.valueOf(Arcade.Palette.WHITE) : Color.valueOf(Arcade.Palette.RED));
         g.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 

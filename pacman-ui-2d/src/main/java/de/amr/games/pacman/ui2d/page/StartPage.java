@@ -106,19 +106,19 @@ public class StartPage extends StackPane implements Page {
     @Override
     public void bindGameActions() {
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            var joypad = context.joypadInput();
+            var joypad = context.joypad();
             bind(context -> currentFlyer().prevFlyerPage(),  joypad.key(NES.Joypad.UP));
             bind(context -> currentFlyer().nextFlyerPage(),  joypad.key(NES.Joypad.DOWN));
             bind(context -> carousel.prevSlide(),            joypad.key(NES.Joypad.LEFT));
             bind(context -> carousel.nextSlide(),            joypad.key(NES.Joypad.RIGHT));
             bind(GameContext::selectGamePage,                joypad.key(NES.Joypad.START));
         } else {
-            bind(context -> currentFlyer().prevFlyerPage(),  context.arcadeController().key(Arcade.Controls.UP));
-            bind(context -> currentFlyer().nextFlyerPage(),  context.arcadeController().key(Arcade.Controls.DOWN));
-            bind(context -> carousel.prevSlide(),            context.arcadeController().key(Arcade.Controls.LEFT));
-            bind(context -> carousel.nextSlide(),            context.arcadeController().key(Arcade.Controls.RIGHT));
+            bind(context -> currentFlyer().prevFlyerPage(),  context.arcade().key(Arcade.Controls.UP));
+            bind(context -> currentFlyer().nextFlyerPage(),  context.arcade().key(Arcade.Controls.DOWN));
+            bind(context -> carousel.prevSlide(),            context.arcade().key(Arcade.Controls.LEFT));
+            bind(context -> carousel.nextSlide(),            context.arcade().key(Arcade.Controls.RIGHT));
             // START key is "1" which might be unclear on start page, so add ENTER
-            bind(GameContext::selectGamePage,                context.arcadeController().key(Arcade.Controls.START), naked(KeyCode.ENTER));
+            bind(GameContext::selectGamePage,                context.arcade().key(Arcade.Controls.START), naked(KeyCode.ENTER));
         }
     }
 

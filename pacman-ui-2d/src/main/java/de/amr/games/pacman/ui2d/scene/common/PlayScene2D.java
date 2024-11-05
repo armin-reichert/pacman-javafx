@@ -30,7 +30,6 @@ import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.games.pacman.ui2d.GameActions2D.*;
-import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 
@@ -54,7 +53,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        ArcadeKeyAdapter arcadeController = context.arcadeController();
+        ArcadeKeyAdapter arcadeController = context.arcade();
         if (context.game().isDemoLevel()) {
             bind(GameActions2D.ADD_CREDIT, arcadeController.key(Arcade.Controls.COIN));
         } else {
@@ -143,7 +142,7 @@ public class PlayScene2D extends GameScene2D {
             renderer.drawLivesCounter(numLivesShown, 5, size());
         } else {
             int credit = context.gameController().coinControl().credit();
-            renderer.drawText("CREDIT %2d".formatted(credit), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
+            renderer.drawText("CREDIT %2d".formatted(credit), Color.valueOf(Arcade.Palette.WHITE), renderer.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
         }
         renderer.drawLevelCounter(context, size());
     }
@@ -178,7 +177,7 @@ public class PlayScene2D extends GameScene2D {
         } else if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
             String text = "TEST    L%03d".formatted(context.game().currentLevelNumber());
             int x = TS * (cx - text.length() / 2);
-            renderer.drawText(text, GameAssets2D.ARCADE_PALE, font, x, y);
+            renderer.drawText(text, Color.valueOf(Arcade.Palette.WHITE), font, x, y);
         }
     }
 

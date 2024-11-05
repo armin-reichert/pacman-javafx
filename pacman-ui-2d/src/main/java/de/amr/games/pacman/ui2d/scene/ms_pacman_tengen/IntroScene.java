@@ -66,7 +66,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.START_GAME, context.joypadInput().key(NES.Joypad.START));
+        bind(GameActions2D.START_GAME, context.joypad().key(NES.Joypad.START));
     }
 
     @Override

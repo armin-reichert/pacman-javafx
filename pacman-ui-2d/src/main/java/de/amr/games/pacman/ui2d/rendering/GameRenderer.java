@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui2d.rendering;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
@@ -29,7 +30,6 @@ import org.tinylog.Logger;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static java.util.function.Predicate.not;
 
 /**
@@ -266,8 +266,10 @@ public interface GameRenderer {
     }
 
     default void drawScores(GameContext context) {
-        drawScore(context.game().scoreManager().score(),     "SCORE",      t(1),  t(1), scaledArcadeFont(TS), ARCADE_PALE);
-        drawScore(context.game().scoreManager().highScore(), "HIGH SCORE", t(14), t(1), scaledArcadeFont(TS), ARCADE_PALE);
+        Color color = Color.valueOf(Arcade.Palette.WHITE);
+        Font font = scaledArcadeFont(TS);
+        drawScore(context.game().scoreManager().score(),     "SCORE",      t(1),  t(1), font, color);
+        drawScore(context.game().scoreManager().highScore(), "HIGH SCORE", t(14), t(1), font, color);
     }
 
     default void drawScore(Score score, String title, double x, double y, Font font, Color color) {

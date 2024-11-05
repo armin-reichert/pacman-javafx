@@ -23,7 +23,7 @@ public enum TengenGameActions implements GameAction {
             context.disableJoypad();
             context.nextJoypad();
             context.enableJoypad();
-            Logger.info("Current joypad: {} ", context.joypadInput());
+            Logger.info("Current joypad: {} ", context.joypad());
         }
     },
 

@@ -7,14 +7,15 @@ package de.amr.games.pacman.ui2d.scene.common;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_TILES;
-import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 
 public class ArcadeBootScene extends GameScene2D {
 
@@ -51,7 +52,7 @@ public class ArcadeBootScene extends GameScene2D {
         } else if (timer.betweenSeconds(2, 3.5) && timer.currentTick() % 4 == 0) {
             paintRandomSprites(context.currentGameSceneConfig().spriteSheet().sourceImage(), renderer, sceneSize);
         } else if (timer.atSecond(3.5)) {
-            paintTestGrid(renderer, sceneSize);
+            paintScreenTestGrid(renderer, sceneSize);
         }
     }
 
@@ -60,7 +61,7 @@ public class ArcadeBootScene extends GameScene2D {
 
     private void paintRandomHexCodes(GameRenderer renderer, Vector2f sceneSize) {
         renderer.clearCanvas();
-        renderer.ctx().setFill(ARCADE_PALE);
+        renderer.ctx().setFill(Color.valueOf(Arcade.Palette.WHITE));
         renderer.ctx().setFont(renderer.scaledArcadeFont(TS));
         int numRows = (int) (sceneSize.y() / TS), numCols = (int) (sceneSize.x() / TS);
         for (int row = 0; row < numRows; ++row) {
@@ -94,12 +95,12 @@ public class ArcadeBootScene extends GameScene2D {
     }
 
     // was probably used to correct screen geometry
-    private void paintTestGrid(GameRenderer renderer, Vector2f sceneSize) {
+    private void paintScreenTestGrid(GameRenderer renderer, Vector2f sceneSize) {
         GraphicsContext g = renderer.ctx();
         renderer.clearCanvas();
         Vector2i sizeInTiles = context.worldSizeInTilesOrElse(ARCADE_MAP_SIZE_IN_TILES);
         int numRows = sizeInTiles.y() / 2, numCols = sizeInTiles.y() / 2;
-        g.setStroke(ARCADE_PALE);
+        g.setStroke(Color.valueOf(Arcade.Palette.WHITE));
         g.setLineWidth(scaled(2.0));
         for (int row = 0; row <= numRows; ++row) {
             g.setLineWidth(row == 0 || row == numRows ? scaled(4.0) : scaled(2.0));

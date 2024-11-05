@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction;
@@ -39,7 +40,6 @@ import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_PALE;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.input.Keyboard.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
@@ -59,7 +59,7 @@ public class GamePage extends StackPane implements Page {
         double newRate = context.gameClock().getTargetFrameRate() - 5;
         if (newRate > 0) {
             context.gameClock().setTargetFrameRate(newRate);
-            context.showFlashMessageSeconds(0.75, newRate + "Hz");
+            context.showFlashMessageSec(0.75, newRate + "Hz");
         }
     };
 
@@ -67,13 +67,13 @@ public class GamePage extends StackPane implements Page {
         double newRate = context.gameClock().getTargetFrameRate() + 5;
         if (newRate > 0) {
             context.gameClock().setTargetFrameRate(newRate);
-            context.showFlashMessageSeconds(0.75, newRate + "Hz");
+            context.showFlashMessageSec(0.75, newRate + "Hz");
         }
     };
 
     private final GameAction actionSimulationNormalSpeed = context -> {
         context.gameClock().setTargetFrameRate(GameModel.TICKS_PER_SECOND);
-        context.showFlashMessageSeconds(0.75, context.gameClock().getTargetFrameRate() + "Hz");
+        context.showFlashMessageSec(0.75, context.gameClock().getTargetFrameRate() + "Hz");
     };
 
     private final GameAction actionSimulationOneStep = context -> {
@@ -136,7 +136,7 @@ public class GamePage extends StackPane implements Page {
         gameCanvasContainer.setUnscaledCanvasWidth(ARCADE_MAP_SIZE_IN_PIXELS.x());
         gameCanvasContainer.setUnscaledCanvasHeight(ARCADE_MAP_SIZE_IN_PIXELS.y());
 
-        gameCanvasContainer.setBorderColor(ARCADE_PALE);
+        gameCanvasContainer.setBorderColor(Color.valueOf(Arcade.Palette.WHITE));
         gameCanvasContainer.decorationEnabledPy.addListener((py, ov, nv) -> embedGameScene(gameScenePy.get()));
 
         gameCanvasLayer.setCenter(gameCanvasContainer);
@@ -223,7 +223,7 @@ public class GamePage extends StackPane implements Page {
 
     @Override
     public void handleInput(GameContext context) {
-        context.doFirstCalledGameActionElse(this,
+        context.ifGameActionRunElse(this,
             () -> context.currentGameScene().ifPresent(gameScene -> gameScene.handleInput(context)));
     }
 

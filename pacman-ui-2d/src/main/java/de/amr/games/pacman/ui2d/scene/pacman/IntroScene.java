@@ -33,7 +33,6 @@ import static de.amr.games.pacman.model.actors.GhostState.EATEN;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GameActions2D.bindTestActions;
-import static de.amr.games.pacman.ui2d.GameAssets2D.*;
 
 /**
  * <p>
@@ -44,8 +43,13 @@ import static de.amr.games.pacman.ui2d.GameAssets2D.*;
 public class IntroScene extends GameScene2D {
 
     static final String[] GHOST_CHARACTERS = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
-    static final Color[] GHOST_COLORS = {ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE};
-    static final Color PELLET_COLOR = ARCADE_ROSE;
+    static final Color[] GHOST_COLORS = {
+        Color.valueOf(Arcade.Palette.RED),
+        Color.valueOf(Arcade.Palette.PINK),
+        Color.valueOf(Arcade.Palette.CYAN),
+        Color.valueOf(Arcade.Palette.ORANGE)
+    };
+    static final Color PELLET_COLOR = Color.valueOf(Arcade.Palette.ROSE);
     static final float CHASE_SPEED = 1.1f;
     static final float GHOST_FRIGHTENED_SPEED = 0.6f;
     static final int LEFT_TILE_X = 4;
@@ -74,8 +78,8 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.ADD_CREDIT, context.arcadeController().key(Arcade.Controls.COIN));
-        bind(GameActions2D.START_GAME, context.arcadeController().key(Arcade.Controls.START));
+        bind(GameActions2D.ADD_CREDIT, context.arcade().key(Arcade.Controls.COIN));
+        bind(GameActions2D.START_GAME, context.arcade().key(Arcade.Controls.START));
         bindTestActions(this);
     }
 
@@ -128,20 +132,20 @@ public class IntroScene extends GameScene2D {
                 }
                 drawGuys(renderer, flutter(timer.currentTick()));
                 if (context.gameVariant() == GameVariant.PACMAN) {
-                    renderer.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, ARCADE_PINK, renderer.scaledArcadeFont(TS),  t(4), t(32));
+                    renderer.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, Color.valueOf(Arcade.Palette.PINK), renderer.scaledArcadeFont(TS),  t(4), t(32));
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints(renderer);
                 drawGuys(renderer, 0);
                 if (context.gameVariant() == GameVariant.PACMAN) {
-                    renderer.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, ARCADE_PINK, renderer.scaledArcadeFont(TS),  t(4), t(32));
+                    renderer.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, Color.valueOf(Arcade.Palette.PINK), renderer.scaledArcadeFont(TS),  t(4), t(32));
                 }
             }
             default -> {
             }
         }
-        renderer.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
+        renderer.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), Color.valueOf(Arcade.Palette.WHITE), renderer.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
         renderer.drawLevelCounter(context, size());
     }
 
@@ -155,7 +159,7 @@ public class IntroScene extends GameScene2D {
         Font font = renderer.scaledArcadeFont(TS);
         int tx = LEFT_TILE_X;
         if (titleVisible) {
-            renderer.drawText("CHARACTER / NICKNAME", ARCADE_PALE, font, t(tx + 3), t(6));
+            renderer.drawText("CHARACTER / NICKNAME", Color.valueOf(Arcade.Palette.WHITE), font, t(tx + 3), t(6));
         }
         for (byte id = 0; id < 4; ++id) {
             if (!ghostImageVisible[id]) {
@@ -191,7 +195,7 @@ public class IntroScene extends GameScene2D {
     }
 
     private void drawPoints(GameRenderer renderer) {
-        var color = ARCADE_PALE;
+        var color = Color.valueOf(Arcade.Palette.WHITE);
         var font8 = renderer.scaledArcadeFont(8);
         var font6 = renderer.scaledArcadeFont(6);
         int tx = LEFT_TILE_X + 6;

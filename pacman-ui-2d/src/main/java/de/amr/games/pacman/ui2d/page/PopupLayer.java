@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
+import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.FadingPane;
@@ -20,8 +21,6 @@ import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_BLUE;
-import static de.amr.games.pacman.ui2d.GameAssets2D.ARCADE_RED;
 import static de.amr.games.pacman.ui2d.util.Ufx.opaqueColor;
 
 /**
@@ -91,7 +90,8 @@ public class PopupLayer extends Pane {
     }
 
     public void showHelp(double scaling) {
-        var bgColor = context.gameVariant() == GameVariant.MS_PACMAN ? ARCADE_RED : ARCADE_BLUE;
+        Color bgColor = Color.valueOf(context.gameVariant() == GameVariant.MS_PACMAN
+            ? Arcade.Palette.RED : Arcade.Palette.BLUE);
         var font = context.assets().font("font.monospaced", Math.max(6, 14 * scaling));
         var helpPane = HelpInfo.build(context).createPane(opaqueColor(bgColor, 0.8), font);
         helpPopUp.setTranslateX(10 * scaling);

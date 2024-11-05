@@ -313,6 +313,30 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
     }
 
+    protected void updateGameScene(boolean reloadCurrent) {
+        GameScene currentGameScene = gameScenePy.get();
+        GameScene nextGameScene = currentGameSceneConfig().selectGameScene(this);
+        boolean sceneChanging = nextGameScene != currentGameScene;
+        if (reloadCurrent || sceneChanging) {
+            if (currentGameScene != null) {
+                currentGameScene.end();
+                Logger.info("Game scene ended: {}", displayName(currentGameScene));
+            }
+            if (nextGameScene != null) {
+                if (nextGameScene instanceof GameScene2D gameScene2D) {
+                    configureGameScene2D(gameScene2D);
+                }
+                nextGameScene.init();
+            }
+            if (sceneChanging) {
+                gameScenePy.set(nextGameScene);
+                Logger.info("Game scene changed to: {}", displayName(gameScenePy.get()));
+            } else {
+                Logger.info("Game scene reloaded: {}", displayName(currentGameScene));
+            }
+        }
+    }
+
     private void logUpdateResult() {
         var messageList = game().eventLog().createMessageList();
         if (!messageList.isEmpty()) {
@@ -333,12 +357,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public ArcadeKeyAdapter arcadeController() {
+    public ArcadeKeyAdapter arcade() {
         return arcade;
     }
 
     @Override
-    public JoypadKeyAdapter joypadInput() {
+    public JoypadKeyAdapter joypad() {
         return joypad;
     }
 
@@ -365,13 +389,13 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void doFirstCalledGameAction(GameActionProvider actionProvider) {
+    public void ifGameActionRun(GameActionProvider actionProvider) {
         actionProvider.firstMatchedAction(keyboard()).filter(gameAction -> gameAction.isEnabled(this))
             .ifPresent(action -> action.execute(this));
     }
 
     @Override
-    public void doFirstCalledGameActionElse(GameActionProvider actionProvider, Runnable defaultAction) {
+    public void ifGameActionRunElse(GameActionProvider actionProvider, Runnable defaultAction) {
        actionProvider.firstMatchedAction(keyboard()).filter(gameAction -> gameAction.isEnabled(this))
            .ifPresentOrElse(action -> action.execute(this), defaultAction);
     }
@@ -435,31 +459,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             return false;
         }
         return currentGameSceneConfig().gameSceneHasID(currentGameScene().get(), sceneID);
-    }
-
-    @Override
-    public void updateGameScene(boolean reloadCurrent) {
-        GameScene currentGameScene = gameScenePy.get();
-        GameScene nextGameScene = currentGameSceneConfig().selectGameScene(this);
-        boolean sceneChanging = nextGameScene != currentGameScene;
-        if (reloadCurrent || sceneChanging) {
-            if (currentGameScene != null) {
-                currentGameScene.end();
-                Logger.info("Game scene ended: {}", displayName(currentGameScene));
-            }
-            if (nextGameScene != null) {
-                if (nextGameScene instanceof GameScene2D gameScene2D) {
-                    configureGameScene2D(gameScene2D);
-                }
-                nextGameScene.init();
-            }
-            if (sceneChanging) {
-                gameScenePy.set(nextGameScene);
-                Logger.info("Game scene changed to: {}", displayName(gameScenePy.get()));
-            } else {
-                Logger.info("Game scene reloaded: {}", displayName(currentGameScene));
-            }
-        }
     }
 
     @Override
@@ -539,7 +538,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void showFlashMessageSeconds(double seconds, String message, Object... args) {
+    public void showFlashMessageSec(double seconds, String message, Object... args) {
         flashMessageLayer.showMessage(String.format(message, args), seconds);
     }
 

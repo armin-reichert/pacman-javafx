@@ -10,12 +10,12 @@ import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui2d.GameAssets2D.*;
 
 /**
  * @author Armin Reichert
@@ -24,8 +24,8 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.ADD_CREDIT, context.arcadeController().key(Arcade.Controls.COIN));
-        bind(GameActions2D.START_GAME, context.arcadeController().key(Arcade.Controls.START));
+        bind(GameActions2D.ADD_CREDIT, context.arcade().key(Arcade.Controls.COIN));
+        bind(GameActions2D.START_GAME, context.arcade().key(Arcade.Controls.START));
     }
 
     @Override
@@ -46,14 +46,15 @@ public class StartScene extends GameScene2D {
     public void drawSceneContent(GameRenderer renderer) {
         MsPacManGameRenderer r = (MsPacManGameRenderer) renderer;
         GameSpriteSheet spriteSheet = r.spriteSheet();
+        Color orange = Color.valueOf(Arcade.Palette.ORANGE), red = Color.valueOf(Arcade.Palette.RED), white = Color.valueOf(Arcade.Palette.WHITE);
         Font font8 = r.scaledArcadeFont(8), font6 = r.scaledArcadeFont(6);
-        r.drawText("PUSH START BUTTON", ARCADE_ORANGE, font8, t(6), t(16));
-        r.drawText("1 PLAYER ONLY", ARCADE_ORANGE, font8, t(8), t(18));
-        r.drawText("ADDITIONAL    AT 10000", ARCADE_ORANGE, font8, t(2), t(25));
+        r.drawText("PUSH START BUTTON", orange, font8, t(6), t(16));
+        r.drawText("1 PLAYER ONLY", orange, font8, t(8), t(18));
+        r.drawText("ADDITIONAL    AT 10000", orange, font8, t(2), t(25));
         r.drawSpriteScaled(spriteSheet.livesCounterSprite(), t(13), t(23) + 1);
-        r.drawText("PTS", ARCADE_ORANGE, font6, t(25), t(25));
-        r.drawMsPacManMidwayCopyright(t(6), t(28), ARCADE_RED, r.scaledArcadeFont(TS));
-        r.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), ARCADE_PALE, renderer.scaledArcadeFont(TS),
+        r.drawText("PTS", orange, font6, t(25), t(25));
+        r.drawMsPacManMidwayCopyright(t(6), t(28), red, r.scaledArcadeFont(TS));
+        r.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), white, renderer.scaledArcadeFont(TS),
             2 * TS, size().y() - 2);
         r.drawLevelCounter(context, size());
     }
