@@ -327,6 +327,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                     configureGameScene2D(gameScene2D);
                 }
                 nextGameScene.init();
+                if (is2D3DSwitch(currentGameScene, nextGameScene)) {
+                    nextGameScene.onSceneVariantSwitch(currentGameScene);
+                }
             }
             if (sceneChanging) {
                 gameScenePy.set(nextGameScene);
@@ -335,6 +338,15 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                 Logger.info("Game scene reloaded: {}", displayName(currentGameScene));
             }
         }
+    }
+
+    private boolean is2D3DSwitch(GameScene oldGameScene, GameScene newGameScene) {
+        var cfg = currentGameSceneConfig();
+        return
+            cfg.gameSceneHasID(oldGameScene, "PlayScene2D") &&
+            cfg.gameSceneHasID(newGameScene, "PlayScene3D") ||
+            cfg.gameSceneHasID(oldGameScene, "PlayScene3D") &&
+            cfg.gameSceneHasID(newGameScene, "PlayScene2D");
     }
 
     private void logUpdateResult() {

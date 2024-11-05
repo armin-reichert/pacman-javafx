@@ -9,7 +9,6 @@ import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.*;
@@ -76,7 +75,7 @@ public class MsPacManArcadeGame extends GameModel {
 
     private static final byte HOUSE_X = 10, HOUSE_Y = 15;
 
-    // I use a randomly running demo level, to assure it runs at least 20 seconds:
+    // To assure that the demo level runs at least 20 seconds:
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
@@ -210,8 +209,6 @@ public class MsPacManArcadeGame extends GameModel {
     protected GameWorld createWorld(WorldMap map) {
         var world = new GameWorld(map);
         world.createArcadeHouse(HOUSE_X, HOUSE_Y);
-        //TODO: store in map files
-        map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(world.houseTopLeftTile()));
         return world;
     }
 

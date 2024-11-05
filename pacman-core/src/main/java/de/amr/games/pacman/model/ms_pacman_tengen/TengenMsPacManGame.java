@@ -487,8 +487,7 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     protected GameWorld createWorld(WorldMap map) {
         var world = new GameWorld(map);
-        Vector2i houseTopLeftTile = map.terrain().getTileProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, v2i(10, 15));
-        world.createArcadeHouse(houseTopLeftTile.x(), houseTopLeftTile.y());
+        world.createArcadeHouse(10, 15);
         return world;
     }
 

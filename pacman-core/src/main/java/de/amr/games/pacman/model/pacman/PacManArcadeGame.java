@@ -32,7 +32,6 @@ import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
-import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
@@ -128,8 +127,6 @@ public class PacManArcadeGame extends GameModel {
         scoreManager.setExtraLifeScores(10_000);
 
         worldMap = new WorldMap(getClass().getResource("/de/amr/games/pacman/maps/pacman.world"));
-        // just to be sure this property is set
-        worldMap.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, formatTile(v2i(HOUSE_X, HOUSE_Y)));
 
         huntingControl = new HuntingControl("HuntingControl-" + getClass().getSimpleName()) {
             // Ticks of scatter and chasing phases, -1 = forever

@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
+import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
@@ -62,7 +63,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
             toggle(PY_3D_ENABLED);
             if (currentGameSceneHasID("PlayScene2D") || currentGameSceneHasID("PlayScene3D")) {
                 updateGameScene(true);
-                gameScene.onSceneVariantSwitch(gameScene);
             }
             gameController().update();
             if (!game().isPlaying()) {
