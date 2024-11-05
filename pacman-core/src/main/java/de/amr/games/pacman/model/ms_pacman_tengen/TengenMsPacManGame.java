@@ -78,6 +78,20 @@ public class TengenMsPacManGame extends GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
+    private static final LevelData DUMMY_LEVEL_DATA = new LevelData(new byte[] {
+        100, // Pac speed in % of base speed
+        100, // Ghost speed in % of base speed
+        40, // Ghost speed in tunnel...
+        20, // Dots left for Elroy1
+        105, // Elroy1 speed...
+        10, // Dots left for Elroy2
+        110, // Elroy2 speed
+        110, // Pac (power mode) speed...
+        50, // Frightened ghost speed...
+        6, // pac power time (seconds)
+        5, // Num flashes
+    });
+
     private final MapConfigurationManager mapConfigMgr = new MapConfigurationManager();
 
     private MapCategory mapCategory;
@@ -86,7 +100,6 @@ public class TengenMsPacManGame extends GameModel {
     private boolean boosterActive;
     private byte startLevelNumber; // 1-7
     private boolean canStartGame;
-    private LevelData currentLevelData; // TODO
 
     private final Steering autopilot = new RuleBasedPacSteering(this);
     private final Steering demoLevelSteering = new RuleBasedPacSteering(this);
@@ -157,9 +170,9 @@ public class TengenMsPacManGame extends GameModel {
         return boosterActive;
     }
 
-    // only for info panel in dashboard
+    //TODO remove this only for info panel in dashboard
     public Optional<LevelData> currentLevelData() {
-        return Optional.ofNullable(currentLevelData);
+        return Optional.of(DUMMY_LEVEL_DATA);
     }
 
     @Override
@@ -231,8 +244,8 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     public float pacPowerSpeed() {
         if (pac != null) {
-            float percentage = currentLevelData.pacSpeedPoweredPercentage();
-            return percentage > 0 ? percentage * 0.01f * pac.baseSpeed() : pac.baseSpeed();
+            //TODO is this correct?
+            return 1.1f * pac.baseSpeed();
         }
         return 0;
     }
@@ -246,7 +259,7 @@ public class TengenMsPacManGame extends GameModel {
             return ghostTunnelSpeed(ghost);
         }
         float speed = ghost.baseSpeed();
-        float increase = SpeedConfiguration.ghostSpeedIncreaseByFoodRemaining(this);
+        float increase = ghostSpeedIncreaseByFoodRemaining(this);
         if (increase > 0) {
             speed += increase;
             Logger.info("Ghost speed increased by {0} units to {0.00} px/tick for {}", increase, speed, ghost.name());
@@ -266,13 +279,14 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public float ghostFrightenedSpeed(Ghost ghost) {
-        float percentage = currentLevelData.ghostSpeedFrightenedPercentage();
-        return percentage > 0 ? percentage * 0.01f * ghost.baseSpeed() : ghost.baseSpeed();
+        //TODO is this correct?
+        return 0.5f * ghost.baseSpeed();
     }
 
     @Override
     public float ghostTunnelSpeed(Ghost ghost) {
-        return currentLevelData.ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
+        //TODO is this correct?
+        return 0.4f * ghost.baseSpeed();
     }
 
     @Override
@@ -351,26 +365,12 @@ public class TengenMsPacManGame extends GameModel {
         setBoosterActive(false); // gets activated in startLevel() if mode is ALWAYS_ON
 
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
-
-        // TODO: change this. For now provide a level object such that all code that relies on existing level object still works
-        currentLevelData = new LevelData(new byte[] {
-            100, // Pac speed in % of base speed
-            100, // Ghost speed in % of base speed
-            40, // Ghost speed in tunnel...
-            20, // Dots left for Elroy1
-            105, // Elroy1 speed...
-            10, // Dots left for Elroy2
-            110, // Elroy2 speed
-            110, // Pac (power mode) speed...
-            50, // Frightened ghost speed...
-            6, // pac power time (seconds)
-            5, // Num flashes
-        });
     }
 
     @Override
     public void buildDemoLevel() {
         currentLevelNumber = 1;
+        demoLevelSteering.init();
 
         MapConfig mapConfig = mapConfigMgr.getMapConfig(mapCategory, currentLevelNumber);
         currentMapNumber = mapConfig.mapNumber();
@@ -380,24 +380,7 @@ public class TengenMsPacManGame extends GameModel {
         createWorldAndPopulation(currentMap);
         setBoosterActive(false); // gets activated in startLevel() if mode is ALWAYS_ON
 
-        demoLevelSteering.init();
-
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
-
-        // TODO for now provide a Level object such that all code that relies on one works
-        currentLevelData = new LevelData(new byte[]{
-            100, // Pac speed in % of base speed
-            100, // Ghost speed in % of base speed
-            40, // Ghost speed in tunnel...
-            20, // Dots left for Elroy1
-            105, // Elroy1 speed...
-            10, // Dots left for Elroy2
-            110, // Elroy2 speed
-            110, // Pac (power mode) speed...
-            50, // Frightened ghost speed...
-            6, // pac power time (seconds)
-            5, // Num flashes
-        });
     }
 
     @Override
