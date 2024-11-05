@@ -63,8 +63,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
             toggle(PY_3D_ENABLED);
             if (currentGameSceneHasID("PlayScene2D") || currentGameSceneHasID("PlayScene3D")) {
                 updateGameScene(true);
+                gameController().update(); //TODO needed anymore?
             }
-            gameController().update();
             if (!game().isPlaying()) {
                 showFlashMessage(locText(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
             }
