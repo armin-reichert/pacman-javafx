@@ -458,11 +458,14 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     public void onLevelStarted(GameEvent e) {
         context.updateRenderer();
         initCamDelay(90);
+    }
+
+    @Override
+    public void onGameStarted(GameEvent e) {
         boolean silent = context.game().isDemoLevel() ||
                 context.gameState() == TESTING_LEVEL_BONI ||
                 context.gameState() == TESTING_LEVEL_TEASERS;
-        TengenMsPacManGame game = (TengenMsPacManGame) context.game();
-        if (!silent && (context.game().currentLevelNumber() == 1 || game.startLevelNumber() > 1)) {
+        if (!silent) {
             context.sound().playGameReadySound();
         }
     }

@@ -69,11 +69,11 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onLevelStarted(GameEvent e) {
+    public void onGameStarted(GameEvent e) {
         boolean silent = context.game().isDemoLevel() ||
                 context.gameState() == TESTING_LEVEL_BONI ||
                 context.gameState() == TESTING_LEVEL_TEASERS;
-        if (!silent && context.game().currentLevelNumber() == 1) {
+        if (!silent) {
             context.sound().playGameReadySound();
         }
     }

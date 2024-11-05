@@ -1,5 +1,6 @@
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
@@ -32,7 +33,7 @@ public class CutScene4 extends GameScene2D {
             music.play();
         }
         else if (context.gameState().timer().atSecond(11)) {
-            context.gameState().timer().expire();
+            context.gameController().changeState(GameState.BOOT);
         }
     }
 

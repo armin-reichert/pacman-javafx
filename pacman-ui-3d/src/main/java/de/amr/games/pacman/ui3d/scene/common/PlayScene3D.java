@@ -46,6 +46,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
+import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GameActions2D.*;
@@ -462,31 +464,30 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     @Override
+    public void onGameStarted(GameEvent e) {
+        boolean silent = context.game().isDemoLevel() ||
+                context.gameState() == TESTING_LEVEL_BONI ||
+                context.gameState() == TESTING_LEVEL_TEASERS;
+        if (!silent) {
+            context.sound().playGameReadySound();
+        }
+    }
+
+    @Override
     public void onLevelStarted(GameEvent event) {
         addLevelCounter();
-        boolean firstLevelStart = context.game().currentLevelNumber() == 1
-                || context.gameState() == GameState.TESTING_LEVEL_BONI
-                || context.gameState() == GameState.TESTING_LEVEL_TEASERS;
-        // In Ms. Pac-Man Tengen, game can also be started with level > 1!
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            TengenMsPacManGame game = (TengenMsPacManGame) context.game();
-            firstLevelStart = firstLevelStart || game.startLevelNumber() > 1;
-        }
-        if (firstLevelStart) {
-            switch (context.gameState()) {
-                case TESTING_LEVEL_BONI -> {
-                    replaceGameLevel3D(false);
-                    showLevelTestMessage("BONI LEVEL " + context.game().currentLevelNumber());
-                }
-                case TESTING_LEVEL_TEASERS -> {
-                    replaceGameLevel3D(false);
-                    showLevelTestMessage("PREVIEW LEVEL " + context.game().currentLevelNumber());
-                }
-                default -> {
-                    if (!context.game().isDemoLevel()){
-                        showReadyMessage();
-                        context.sound().playGameReadySound();
-                    }
+        switch (context.gameState()) {
+            case TESTING_LEVEL_BONI -> {
+                replaceGameLevel3D(false);
+                showLevelTestMessage("BONI LEVEL " + context.game().currentLevelNumber());
+            }
+            case TESTING_LEVEL_TEASERS -> {
+                replaceGameLevel3D(false);
+                showLevelTestMessage("PREVIEW LEVEL " + context.game().currentLevelNumber());
+            }
+            default -> {
+                if (!context.game().isDemoLevel()){
+                    showReadyMessage();
                 }
             }
         }

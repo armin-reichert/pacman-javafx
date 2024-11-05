@@ -474,8 +474,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         // Parameter tile denotes the left of the two tiles where actor is located between. Compute center position.
         double cx = tile.x() * TS;
         double cy = tile.y() * TS - HTS;
-        double spriteSize = 2 * TS;
         ctx().setFill(bgColor);
-        ctx().fillRect(scaled(cx), scaled(cy), scaled(spriteSize), scaled(spriteSize));
+        ctx().fillRect(scaled(cx), scaled(cy), scaled(16), scaled(16));
     }
 }

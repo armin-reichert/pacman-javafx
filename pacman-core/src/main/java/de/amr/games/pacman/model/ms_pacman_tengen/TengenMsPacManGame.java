@@ -309,6 +309,7 @@ public class TengenMsPacManGame extends GameModel {
                 levelCounter.add((byte) (number - 1));
             }
         }
+        publishGameEvent(GameEventType.GAME_STARTED);
     }
 
     @Override
