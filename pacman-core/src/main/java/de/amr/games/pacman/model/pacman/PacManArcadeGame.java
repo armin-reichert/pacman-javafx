@@ -22,6 +22,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.steering.RouteBasedSteering;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
+import de.amr.games.pacman.steering.Steering;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -117,8 +118,9 @@ public class PacManArcadeGame extends GameModel {
 
     protected static final Vector2f BONUS_POS = halfTileRightOf(13, 20);
 
-    // The Pac-Man Arcade game map
     private final WorldMap worldMap;
+    private final Steering autopilot = new RuleBasedPacSteering(this);
+    private final Steering demoLevelSteering = new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE));
     private byte cruiseElroy;
 
     public PacManArcadeGame(GameVariant gameVariant, File userDir) {
@@ -227,13 +229,11 @@ public class PacManArcadeGame extends GameModel {
         currentLevelNumber = levelNumber;
         currentMapNumber = 1;
         currentMapColorScheme = MAP_COLOR_SCHEME;
+
         createWorldAndPopulation(worldMap);
         pac.setName("Pac-Man");
+        pac.setAutopilot(autopilot);
         setCruiseElroy(0);
-
-        //TODO does this belong here?
-        pac.setAutopilot(new RuleBasedPacSteering(this));
-        pac.setUsingAutopilot(false);
 
         List<Vector2i> oneWayDownTiles = worldMap.terrain().tiles()
             .filter(tile -> worldMap.terrain().get(tile) == Tiles.ONE_WAY_DOWN).toList();
@@ -247,10 +247,14 @@ public class PacManArcadeGame extends GameModel {
     public void buildDemoLevel() {
         buildLevel(1);
         setCruiseElroy(0);
+        demoLevelSteering.init();
+    }
 
-        //TODO does this belong here?
-        pac.setAutopilot(new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE)));
+    @Override
+    public void setDemoLevelBehavior() {
+        pac.setAutopilot(demoLevelSteering);
         pac.setUsingAutopilot(true);
+        pac.setImmune(false);
     }
 
     @Override

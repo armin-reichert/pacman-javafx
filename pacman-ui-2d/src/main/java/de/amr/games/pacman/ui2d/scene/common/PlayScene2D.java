@@ -74,19 +74,21 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void update() {
         if (context.game().currentLevelNumber() == 0) {
-            // scene may be visible for 2 ticks before game level has been created
-            Logger.warn("Cannot update PlayScene2D: game level not (yet) available");
+            // Scene is visible for 1 (2?) ticks before game level has been created
+            Logger.warn("Tick {}: Cannot update PlayScene2D: game level not yet available", context.tick());
             return;
         }
+        /*
+         * TODO: I would like to do this only on level start but when scene view is switched
+         *       between 2D and 3D, the other scene has to be updated accordingly.
+         */
         if (context.game().isDemoLevel()) {
-            context.game().pac().setUsingAutopilot(false);
-            context.game().pac().setImmune(false);
-        } else {
+            context.game().setDemoLevelBehavior();
+        }
+        else {
             context.game().pac().setUsingAutopilot(PY_AUTOPILOT.get());
             context.game().pac().setImmune(PY_IMMUNITY.get());
-        }
-        if (!context.game().isDemoLevel()) {
-            updateSound(context().sound());
+            updateSound(context.sound());
         }
     }
 

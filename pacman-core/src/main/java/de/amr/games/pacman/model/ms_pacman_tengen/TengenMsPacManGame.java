@@ -13,6 +13,7 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
+import de.amr.games.pacman.steering.Steering;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -85,8 +86,10 @@ public class TengenMsPacManGame extends GameModel {
     private boolean boosterActive;
     private byte startLevelNumber; // 1-7
     private boolean canStartGame;
-
     private LevelData currentLevelData; // TODO
+
+    private final Steering autopilot = new RuleBasedPacSteering(this);
+    private final Steering demoLevelSteering = new RuleBasedPacSteering(this);
 
     public TengenMsPacManGame(GameVariant gameVariant, File userDir) {
         super(gameVariant, userDir);
@@ -344,8 +347,7 @@ public class TengenMsPacManGame extends GameModel {
         createWorldAndPopulation(currentMap);
         Logger.info("World created. Map number: {}, URL: {}", currentMapNumber, currentMap.url());
 
-        pac.setAutopilot(new RuleBasedPacSteering(this));
-        pac.setUsingAutopilot(false);
+        pac.setAutopilot(autopilot);
         setBoosterActive(false); // gets activated in startLevel() if mode is ALWAYS_ON
 
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
@@ -377,10 +379,9 @@ public class TengenMsPacManGame extends GameModel {
         currentMapColorScheme = mapConfig.colorScheme();
 
         createWorldAndPopulation(currentMap);
-
-        pac.setAutopilot(new RuleBasedPacSteering(this));
-        pac.setUsingAutopilot(true);
         setBoosterActive(false); // gets activated in startLevel() if mode is ALWAYS_ON
+
+        demoLevelSteering.init();
 
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
@@ -399,6 +400,13 @@ public class TengenMsPacManGame extends GameModel {
             5, // Num flashes
             0 // cut scene after this level
         });
+    }
+
+    @Override
+    public void setDemoLevelBehavior() {
+        pac.setAutopilot(demoLevelSteering);
+        pac.setUsingAutopilot(true);
+        pac.setImmune(false);
     }
 
     @Override

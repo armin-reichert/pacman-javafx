@@ -14,16 +14,18 @@ import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.Score;
+import de.amr.games.pacman.model.ScoreManager;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameActions2D;
-import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions;
+import de.amr.games.pacman.ui2d.sound.GameSound;
 import de.amr.games.pacman.ui3d.GameActions3D;
 import de.amr.games.pacman.ui3d.level.*;
 import javafx.animation.Animation;
@@ -46,6 +48,7 @@ import java.util.Optional;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GameActions2D.*;
+import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
@@ -175,58 +178,65 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     public void update() {
         var game = context.game();
         if (game.currentLevelNumber() == 0 || game.world() == null) {
-            Logger.warn("Cannot update 3D play scene, no game level available");
+            // Scene is visible for 1 (2?) ticks before game level has been created
+            Logger.warn("Tick {}: Cannot update PlayScene3D: game level not yet available", context.tick());
             return;
         }
+
+        // TODO: check this
         if (level3D == null) {
             Logger.warn("Cannot update 3D play scene, 3D game level not yet created?");
             return;
         }
+        level3D.update(context);
+        perspective().update(game.world(), game.pac());
+        updateScores();
 
         if (context.game().isDemoLevel()) {
-            context.game().pac().setUsingAutopilot(true);
-            context.game().pac().setImmune(false);
-        } else {
+            context.game().setDemoLevelBehavior();
+        }
+        else {
             context.game().pac().setUsingAutopilot(PY_AUTOPILOT.get());
             context.game().pac().setImmune(PY_IMMUNITY.get());
+            updateSound(context.sound());
         }
+    }
 
-        level3D.update(context);
-
-        // Update camera and rotate the scores such that the viewer always sees them frontally
-        perspective().update(game.world(), game.pac());
+    private void updateScores( ){
         scores3D.setRotationAxis(perspective().getCamera().getRotationAxis());
         scores3D.setRotate(perspective().getCamera().getRotate());
 
-        // Scores
-        scores3D.showHighScore(game.scoreManager().highScore().points(), game.scoreManager().highScore().levelNumber());
-        if (context.game().scoreManager().isScoreEnabled()) {
-            scores3D.showScore(game.scoreManager().score().points(), game.scoreManager().score().levelNumber());
-        } else { // demo level or "game over" state
-            String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
-            Color color = context.assets().color(assetPrefix + ".color.game_over_message");
-            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                    color = Color.web(context.game().currentMapColorScheme().get("stroke"));
-                }
-            }
+        ScoreManager scoreMgr = context.game().scoreManager();
+        Score score = scoreMgr.score(), highScore = scoreMgr.highScore();
+
+        scores3D.showHighScore(highScore.points(), highScore.levelNumber());
+        if (scoreMgr.isScoreEnabled()) {
+            scores3D.showScore(score.points(), score.levelNumber());
+        }
+        else {
+            // when score is disabled, show text "game over"
+            String assetPrefix = assetPrefix(context.gameVariant());
+            Color color = context.gameVariant() == GameVariant.MS_PACMAN_TENGEN
+                ? Color.web(context.game().currentMapColorScheme().get("stroke"))
+                : context.assets().color(assetPrefix + ".color.game_over_message");
             scores3D.showTextAsScore("GAME OVER!", color);
         }
+    }
 
-        // Sound
+    private void updateSound(GameSound sound) {
         if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
             int sirenNumber = 1 + context.game().huntingControl().phaseIndex() / 2;
-            context.sound().selectSiren(sirenNumber);
-            context.sound().playSiren();
+            sound.selectSiren(sirenNumber);
+            sound.playSiren();
         }
         if (context.game().pac().starvingTicks() > 8) { // TODO not sure how to do this right
-            context.sound().stopMunchingSound();
+            sound.stopMunchingSound();
         }
         boolean ghostsReturning = context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
         if (context.game().pac().isAlive() && ghostsReturning) {
-            context.sound().playGhostReturningHomeSound();
+            sound.playGhostReturningHomeSound();
         } else {
-            context.sound().stopGhostReturningHomeSound();
+            sound.stopGhostReturningHomeSound();
         }
     }
 

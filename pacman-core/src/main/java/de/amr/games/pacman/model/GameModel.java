@@ -103,6 +103,7 @@ public abstract class GameModel {
     public abstract long         pacPowerFadingTicks();
     public abstract float        pacPowerSpeed();
     public abstract long         gameOverStateTicks();
+    public abstract void         setDemoLevelBehavior();
 
     protected abstract GameWorld createWorld(WorldMap map);
     protected abstract Pac       createPac();

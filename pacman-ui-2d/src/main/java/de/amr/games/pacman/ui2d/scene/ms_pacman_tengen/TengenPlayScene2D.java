@@ -199,33 +199,37 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     @Override
     public void update() {
         TengenMsPacManGame game = (TengenMsPacManGame) context.game();
+
         if (game.currentLevelNumber() == 0) {
-            Logger.warn("Cannot update PlayScene2D: no game level available");
+            // Scene is visible for 1 (2?) ticks before game level has been created
+            Logger.warn("Tick {}: Cannot update TengenPlayScene2D: game level not yet available", context.tick());
             return;
         }
-        Pac msPacMan = game.pac();
-        if (game.world() == null || msPacMan == null) {
+
+        if (game.world() == null || game.pac() == null) {
             //TODO: Can world or Ms. Pac-Man be null here?
             Logger.warn("Cannot update PlayScene2D: no game world available");
             return;
         }
+
         if (game.isDemoLevel()) {
-            msPacMan.setUsingAutopilot(true);
-            msPacMan.setImmune(false);
-        } else {
-            msPacMan.setUsingAutopilot(PY_AUTOPILOT.get());
-            msPacMan.setImmune(PY_IMMUNITY.get());
+            game.setDemoLevelBehavior();
+        }
+        else {
+            game.pac().setUsingAutopilot(PY_AUTOPILOT.get());
+            game.pac().setImmune(PY_IMMUNITY.get());
             updatePlaySceneSound();
-            if (context.gameState() == GameState.GAME_OVER && game.mapCategory() != MapCategory.ARCADE) {
-                // only non-Arcade maps have moving "Game Over" text
+            if (context.gameState() == GameState.GAME_OVER &&
+                game.mapCategory() != MapCategory.ARCADE) {
                 gameOverMessageAnimation.update();
             }
         }
+
         if (camDelay > 0) {
             --camDelay;
         }
         else {
-            double msPacManY = scaled(msPacMan.center().y());
+            double msPacManY = scaled(game.pac().center().y());
             double r = cameraRadius();
             double y = lerp(cam.getTranslateY(), msPacManY - r, 0.02);
             cam.setTranslateY(clamp(y, dontAskItsMagic(-r), dontAskItsMagic(r)));

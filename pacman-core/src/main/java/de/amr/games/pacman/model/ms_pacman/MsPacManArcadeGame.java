@@ -18,6 +18,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
+import de.amr.games.pacman.steering.Steering;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -81,6 +82,9 @@ public class MsPacManArcadeGame extends GameModel {
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
 
     private final MapConfigurationManager mapConfigMgr = new MapConfigurationManager();
+    private final Steering autopilot = new RuleBasedPacSteering(this);
+    private final Steering demoLevelSteering = new RuleBasedPacSteering(this);
+
     private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man at all?
 
     public MsPacManArcadeGame(GameVariant gameVariant, File userDir) {
@@ -176,8 +180,7 @@ public class MsPacManArcadeGame extends GameModel {
         selectMap(currentLevelNumber);
         createWorldAndPopulation(currentMap);
         pac.setName("Ms. Pac-Man");
-        pac.setAutopilot(new RuleBasedPacSteering(this));
-        pac.setUsingAutopilot(false);
+        pac.setAutopilot(autopilot);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
@@ -187,9 +190,15 @@ public class MsPacManArcadeGame extends GameModel {
         selectMap(currentLevelNumber);
         createWorldAndPopulation(currentMap);
         pac.setName("Ms. Pac-Man");
-        pac.setAutopilot(new RuleBasedPacSteering(this));
-        pac.setUsingAutopilot(true);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+        demoLevelSteering.init();
+    }
+
+    @Override
+    public void setDemoLevelBehavior() {
+        pac.setAutopilot(demoLevelSteering);
+        pac.setUsingAutopilot(true);
+        pac.setImmune(false);
     }
 
     @Override
