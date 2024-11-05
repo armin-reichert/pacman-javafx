@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d;
 
+import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSpriteSheet;
@@ -21,15 +22,6 @@ import static de.amr.games.pacman.ui2d.util.Ufx.imageBackground;
  * @author Armin Reichert
  */
 public class GameAssets2D extends AssetStorage {
-
-    public static final Color ARCADE_RED    = Color.rgb(255, 0, 0);
-    public static final Color ARCADE_YELLOW = Color.rgb(255, 255, 0);
-    public static final Color ARCADE_PINK   = Color.rgb(252, 181, 255);
-    public static final Color ARCADE_CYAN   = Color.rgb(0, 255, 255);
-    public static final Color ARCADE_ORANGE = Color.rgb(251, 190, 88);
-    public static final Color ARCADE_BLUE   = Color.rgb(33, 33, 255);
-    public static final Color ARCADE_PALE   = Color.rgb(222, 222, 255);
-    public static final Color ARCADE_ROSE   = Color.rgb(252, 187, 179);
 
     public static String assetPrefix(GameVariant variant) {
         return switch (variant) {
@@ -96,14 +88,14 @@ public class GameAssets2D extends AssetStorage {
         assets.store("ms_pacman.icon",                  rm.loadImage("graphics/icons/mspacman.png"));
         assets.store("ms_pacman.logo.midway",           rm.loadImage("graphics/mspacman/midway_logo.png"));
 
-        assets.store("ms_pacman.ghost.0.color.normal.dress", ARCADE_RED);
-        assets.store("ms_pacman.ghost.1.color.normal.dress", ARCADE_PINK);
-        assets.store("ms_pacman.ghost.2.color.normal.dress", ARCADE_CYAN);
-        assets.store("ms_pacman.ghost.3.color.normal.dress", ARCADE_ORANGE);
+        assets.store("ms_pacman.ghost.0.color.normal.dress", Arcade.Palette.RED);
+        assets.store("ms_pacman.ghost.1.color.normal.dress", Arcade.Palette.PINK);
+        assets.store("ms_pacman.ghost.2.color.normal.dress", Arcade.Palette.CYAN);
+        assets.store("ms_pacman.ghost.3.color.normal.dress", Arcade.Palette.ORANGE);
 
-        assets.store("ms_pacman.color.game_over_message", Color.RED);
-        assets.store("ms_pacman.color.ready_message",   Color.YELLOW);
-        assets.store("ms_pacman.color.clapperboard", ARCADE_PALE);
+        assets.store("ms_pacman.color.game_over_message",    Arcade.Palette.RED);
+        assets.store("ms_pacman.color.ready_message",        Arcade.Palette.YELLOW);
+        assets.store("ms_pacman.color.clapperboard",         Arcade.Palette.WHITE);
 
         // Clips
         assets.store("ms_pacman.audio.bonus_eaten",     rm.loadAudioClip("sound/mspacman/Fruit.mp3"));

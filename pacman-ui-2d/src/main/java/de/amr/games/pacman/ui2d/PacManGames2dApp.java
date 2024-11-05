@@ -34,7 +34,7 @@ public class PacManGames2dApp extends Application {
     public static final BooleanProperty PY_AUTOPILOT                  = new SimpleBooleanProperty(false);
     public static final ObjectProperty<Color> PY_CANVAS_BG_COLOR      = new SimpleObjectProperty<>(Color.BLACK);
     public static final ObjectProperty<MapSelectionMode> PY_MAP_SELECTION_MODE = new SimpleObjectProperty<>(MapSelectionMode.CUSTOM_MAPS_FIRST);
-    public static final BooleanProperty PY_DEBUG_INFO                 = new SimpleBooleanProperty(false);
+    public static final BooleanProperty PY_DEBUG_INFO_VISIBLE         = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_IMMUNITY                   = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_NIGHT_MODE                 = new SimpleBooleanProperty(false);
     public static final IntegerProperty PY_PIP_HEIGHT                 = new SimpleIntegerProperty(8*36);

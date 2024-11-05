@@ -51,7 +51,7 @@ public class GamePage extends StackPane implements Page {
 
     static final double MAX_SCENE_SCALING = 5;
 
-    private final GameAction actionToggleDebugInfo = context -> Ufx.toggle(PY_DEBUG_INFO);
+    private final GameAction actionToggleDebugInfo = context -> Ufx.toggle(PY_DEBUG_INFO_VISIBLE);
 
     private final GameAction actionShowHelp = context -> context.gamePage().showHelp();
 
@@ -167,7 +167,7 @@ public class GamePage extends StackPane implements Page {
         //TODO is this the recommended way to close an open context-menu?
         setOnMouseClicked(e -> contextMenu.hide());
 
-        PY_DEBUG_INFO.addListener((py,ov,debug) -> {
+        PY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug) -> {
             if (debug) {
                 gameCanvasLayer.setBackground(coloredBackground(Color.DARKGREEN));
                 gameCanvasLayer.setBorder(border(Color.LIGHTGREEN, 2));
