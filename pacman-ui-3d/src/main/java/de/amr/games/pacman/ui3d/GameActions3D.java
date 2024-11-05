@@ -19,7 +19,7 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_PERSPECTIVE;
  */
 public enum GameActions3D implements GameAction {
 
-    NEXT_PERSPECTIVE { // (alt(KeyCode.RIGHT)) {
+    NEXT_PERSPECTIVE {
         @Override
         public void execute(GameContext context) {
             Perspective.Name next = PY_3D_PERSPECTIVE.get().next();
@@ -28,7 +28,7 @@ public enum GameActions3D implements GameAction {
         }
     },
 
-    PREV_PERSPECTIVE { // (alt(KeyCode.LEFT)) {
+    PREV_PERSPECTIVE {
         @Override
         public void execute(GameContext context) {
             Perspective.Name prev = PY_3D_PERSPECTIVE.get().prev();
@@ -37,7 +37,7 @@ public enum GameActions3D implements GameAction {
         }
     },
 
-    TOGGLE_DRAW_MODE { // (alt(KeyCode.W)) {
+    TOGGLE_DRAW_MODE {
         @Override
         public void execute(GameContext context) {
             PY_3D_DRAW_MODE.set(PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
@@ -51,7 +51,7 @@ public enum GameActions3D implements GameAction {
         }
     },
 
-    TOGGLE_PIP_VISIBILITY { // (key(KeyCode.F2)) {
+    TOGGLE_PIP_VISIBILITY {
         @Override
         public void execute(GameContext context) {
             toggle(PY_PIP_ON);
@@ -59,5 +59,5 @@ public enum GameActions3D implements GameAction {
                 context.showFlashMessage(context.locText(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
             }
         }
-    };
+    }
 }
