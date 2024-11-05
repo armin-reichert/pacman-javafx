@@ -68,7 +68,7 @@ public class CutScene1 extends GameScene2D {
         pinky = Ghost.pinky();
         heart = new Entity();
 
-        music = context.sound().createPlayer(context.gameVariant(), context.assets(), "intermission.1", 1.0, false);
+        music = context.sound().makeSound("intermission.1", 1.0, false);
 
         var spriteSheet = (MsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         msPac.setAnimations(new PacAnimations(spriteSheet));

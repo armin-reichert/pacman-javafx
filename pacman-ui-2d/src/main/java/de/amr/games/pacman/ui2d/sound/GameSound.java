@@ -54,35 +54,26 @@ public class GameSound {
     public void init(GameVariant gameVariant) {
         this.gameVariant = checkNotNull(gameVariant);
         if (playerMapByGameVariant.get(gameVariant).isEmpty()) {
-            Map<String, MediaPlayer> players = new HashMap<>();
-            players.put("game_over", createPlayer(gameVariant, assets, "game_over", 1, false));
-            players.put("game_ready", createPlayer(gameVariant, assets, "game_ready", 1, false));
-            players.put("ghost_returns", createPlayer(gameVariant, assets, "ghost_returns", 1, true));
-            players.put("level_complete", createPlayer(gameVariant, assets, "level_complete", 1, false));
+            Map<String, MediaPlayer> sounds = new HashMap<>();
+            sounds.put("game_over", makeSound("game_over", 1, false));
+            sounds.put("game_ready", makeSound("game_ready", 1, false));
+            sounds.put("ghost_returns", makeSound("ghost_returns", 1, true));
+            sounds.put("level_complete", makeSound("level_complete", 1, false));
 
-            MediaPlayer munchPlayer_1 = createPlayer(gameVariant, assets, "pacman_munch", 1, true);
-            munchPlayer_1.setCycleCount(2);
-            MediaPlayer munchPlayer_2 = createPlayer(gameVariant, assets, "pacman_munch_2", 1, true);
-            munchPlayer_2.setCycleCount(2);
-            players.put("pacman_munch", munchPlayer_1);
-            munchPlayer_1.setOnRepeat(() -> {
-                munchPlayer_1.stop();
-                munchPlayer_2.play();
-            });
-            munchPlayer_2.setOnEndOfMedia(() -> {
-                munchPlayer_2.stop();
-                munchPlayer_1.play();
-            });
+            MediaPlayer munch1 = makeSound("pacman_munch", 1, true);
+            sounds.put("pacman_munch", munch1);
+            MediaPlayer munch2 = makeSound("pacman_munch_2", 1, true);
+            sounds.put("pacman_munch_2", munch2);
 
-            players.put("pacman_death", createPlayer(gameVariant, assets, "pacman_death", 1, false));
-            players.put("pacman_power", createPlayer(gameVariant, assets, "pacman_power", 1, true));
-            MediaPlayer bouncePlayer = createPlayer(gameVariant, assets, "bonus_bouncing", 1, true);
+            sounds.put("pacman_death", makeSound("pacman_death", 1, false));
+            sounds.put("pacman_power", makeSound("pacman_power", 1, true));
+            MediaPlayer bouncePlayer = makeSound("bonus_bouncing", 1, true);
             if (bouncePlayer != null) {
                 bouncePlayer.setRate(0.25);
             }
-            players.put("bonus_bouncing", bouncePlayer);
+            sounds.put("bonus_bouncing", bouncePlayer);
 
-            playerMapByGameVariant.put(gameVariant, players);
+            playerMapByGameVariant.put(gameVariant, sounds);
             Logger.info("Created media players for game variant {}", gameVariant);
         }
         siren = null;
@@ -115,11 +106,11 @@ public class GameSound {
         Logger.info("[{}] {} -> {}, volume {}", key, (oldStatus != null ? oldStatus : "undefined"), newStatus, player.getVolume());
     }
 
-    public MediaPlayer createPlayer(GameVariant variant, AssetStorage assets, String keySuffix, double volume, boolean loop) {
-        String assetKey = assetPrefix(variant) + ".audio." + keySuffix;
+    public MediaPlayer makeSound(String keySuffix, double volume, boolean loop) {
+        String assetKey = assetPrefix(gameVariant) + ".audio." + keySuffix;
         URL url = assets.get(assetKey);
         if (url == null) {
-            Logger.warn("Missing audio resource '%s' (%s)".formatted(assetKey, variant));
+            Logger.warn("Missing audio resource '%s' (%s)".formatted(assetKey, gameVariant));
             return null;
         }
         var player = new MediaPlayer(new Media(url.toExternalForm()));
@@ -189,6 +180,7 @@ public class GameSound {
         for (MediaPlayer player : players(gameVariant).values()) {
             stop(player);
         }
+        stopMunchingSound(); // TODO check
         stopSiren();
         stopVoice();
         Logger.info("All sounds stopped ({})", gameVariant);
@@ -223,7 +215,7 @@ public class GameSound {
             if (siren != null) {
                 stop(siren.player());
             }
-            MediaPlayer sirenPlayer = createPlayer(gameVariant, assets, "siren." + number, 0.25, true);
+            MediaPlayer sirenPlayer = makeSound("siren." + number, 0.25, true);
             if (sirenPlayer == null) {
                 //Logger.error("Could not create media player for siren number {}", number);
                 siren = null;
@@ -290,12 +282,30 @@ public class GameSound {
     }
 
     public void playMunchingSound() {
+        MediaPlayer munch1 = players(gameVariant).get("pacman_munch");
+        MediaPlayer munch2 = players(gameVariant).get("pacman_munch_2");
+        munch1.setOnRepeat(() -> {
+            munch1.stop();
+            munch2.play();
+        });
+        munch2.setOnEndOfMedia(() -> {
+            munch2.stop();
+            munch1.play();
+        });
         playIfEnabled("pacman_munch");
     }
 
     public void stopMunchingSound() {
-        stop("pacman_munch");
-        stop("pacman_munch_2");
+        MediaPlayer munch1 = players(gameVariant).get("pacman_munch");
+        MediaPlayer munch2 = players(gameVariant).get("pacman_munch_2");
+        if (munch1 != null) {
+            munch1.setOnRepeat(null);
+            munch1.stop();
+        }
+        if (munch2 != null) {
+            munch2.setOnRepeat(null);
+            munch2.stop();
+        }
     }
 
     public void playPacDeathSound() {

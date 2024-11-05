@@ -18,7 +18,7 @@ public class CutScene4 extends GameScene2D {
     @Override
     protected void doInit() {
         context.setScoreVisible(false);
-        music = context.sound().createPlayer(context.gameVariant(), context.assets(),"intermission.4",1.0, false);
+        music = context.sound().makeSound("intermission.4",1.0, false);
     }
 
     @Override

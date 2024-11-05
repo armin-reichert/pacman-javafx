@@ -63,7 +63,7 @@ public class CutScene2 extends GameScene2D {
         clapAnimation = new ClapperboardAnimation("2", "THE CHASE");
         clapAnimation.start();
 
-        music =context.sound().createPlayer(context.gameVariant(), context.assets(), "intermission.2",1.0, false);
+        music = context.sound().makeSound("intermission.2",1.0, false);
 
         sceneController = new SceneController();
         sceneController.setState(SceneController.STATE_FLAP, 120);

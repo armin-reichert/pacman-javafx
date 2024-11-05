@@ -48,7 +48,7 @@ public class CutScene2 extends GameScene2D {
         blinky.setSpeed(0);
         blinky.hide();
 
-        music = context.sound().createPlayer(context.gameVariant(), context.assets(), "intermission", 1.0, false);
+        music = context.sound().makeSound("intermission", 1.0, false);
         music.setCycleCount(1);
 
         var spriteSheet = (PacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();

@@ -65,7 +65,7 @@ public class CutScene3 extends GameScene2D {
         stork = new Entity();
         bag = new Entity();
 
-        music = context.sound().createPlayer(context.gameVariant(), context.assets(), "intermission.3",1.0, false);
+        music = context.sound().makeSound("intermission.3",1.0, false);
 
         var spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         mrPacMan.setAnimations(new PacAnimations(spriteSheet));
