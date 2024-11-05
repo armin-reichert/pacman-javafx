@@ -11,6 +11,7 @@ import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSceneConfiguration;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGameSceneConfiguration;
 import de.amr.games.pacman.ui2d.scene.pacman_xxl.PacManGameXXLSceneConfiguration;
+import de.amr.games.pacman.ui2d.util.NightMode;
 import javafx.application.Application;
 import javafx.beans.property.*;
 import javafx.geometry.Dimension2D;
@@ -36,7 +37,7 @@ public class PacManGames2dApp extends Application {
     public static final ObjectProperty<MapSelectionMode> PY_MAP_SELECTION_MODE = new SimpleObjectProperty<>(MapSelectionMode.CUSTOM_MAPS_FIRST);
     public static final BooleanProperty PY_DEBUG_INFO_VISIBLE         = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_IMMUNITY                   = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_NIGHT_MODE                 = new SimpleBooleanProperty(false);
+    public static final ObjectProperty<NightMode> PY_NIGHT_MODE       = new SimpleObjectProperty<>(NightMode.AUTO);
     public static final IntegerProperty PY_PIP_HEIGHT                 = new SimpleIntegerProperty(8*36);
     public static final BooleanProperty PY_PIP_ON                     = new SimpleBooleanProperty(false);
     public static final IntegerProperty PY_PIP_OPACITY_PERCENT        = new SimpleIntegerProperty(100);

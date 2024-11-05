@@ -8,9 +8,9 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.page.GamePage;
+import de.amr.games.pacman.ui2d.util.NightMode;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.scene.common.Perspective;
-import de.amr.games.pacman.ui3d.scene.common.PlayScene3D;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -19,6 +19,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
+import java.time.LocalTime;
+
+import static de.amr.games.pacman.lib.Globals.inRange;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
 import static de.amr.games.pacman.ui2d.page.Page.menuTitleItem;
@@ -39,9 +42,16 @@ public class GamePage3D extends GamePage {
                 if (!context.currentGameSceneHasID("PlayScene3D")) {
                     return context.assets().get("wallpaper.background"); // little Pac-Man tapestry
                 }
-                return PY_3D_DRAW_MODE.get() == DrawMode.LINE
-                    ? coloredBackground(Color.rgb(100, 100, 200))
-                    : context.assets().get(PY_NIGHT_MODE.get() ? "wallpaper.night" : "wallpaper.day");
+                if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
+                    return coloredBackground(Color.rgb(100, 100, 200));
+                }
+                NightMode nightMode = PY_NIGHT_MODE.get();
+                int hour = LocalTime.now().getHour();
+                boolean nightTime = inRange(hour, 21, 23) || inRange(hour, 0, 4);
+                if (nightMode == NightMode.ON || nightMode == NightMode.AUTO && nightTime) {
+                    return context.assets().get("wallpaper.night");
+                }
+                return context.assets().get("wallpaper.day");
             }, PY_3D_DRAW_MODE, PY_NIGHT_MODE, context.gameSceneProperty()
         ));
     }

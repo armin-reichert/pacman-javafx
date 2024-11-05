@@ -41,13 +41,10 @@ import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.text.MessageFormat;
-import java.time.LocalTime;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
-import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
@@ -603,12 +600,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         Logger.info("Sounds {}", sound().isEnabled() ? "enabled" : "disabled");
         // size of game scene have changed, so re-embed
         currentGameScene().ifPresent(gamePage::embedGameScene);
-    }
-
-    @Override
-    public void onLevelStarted(GameEvent event) {
-        int hourOfDay = LocalTime.now().getHour();
-        PY_NIGHT_MODE.set(hourOfDay >= 21 || hourOfDay <= 4);
     }
 
     @Override
