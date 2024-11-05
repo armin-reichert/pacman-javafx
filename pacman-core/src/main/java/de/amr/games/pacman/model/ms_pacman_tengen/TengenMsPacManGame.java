@@ -186,7 +186,7 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public long gameOverStateTicks() {
-        return 600; // TODO how much really?
+        return 420; // TODO how much really?
     }
 
     @Override
