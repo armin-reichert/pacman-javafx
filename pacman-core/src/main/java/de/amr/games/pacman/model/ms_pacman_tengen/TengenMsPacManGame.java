@@ -107,6 +107,8 @@ public class TengenMsPacManGame extends GameModel {
     public TengenMsPacManGame(GameVariant gameVariant, File userDir) {
         super(gameVariant, userDir);
 
+        mapConfigMgr.loadMaps();
+
         initialLives = 3;
         scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman_tengen.xml"));
 
