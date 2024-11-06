@@ -26,7 +26,6 @@ import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.sound.GameSound;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
-import javafx.geometry.Pos;
 import javafx.scene.Camera;
 import javafx.scene.Node;
 import javafx.scene.ParallelCamera;
@@ -54,7 +53,6 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions.
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions.bindDefaultJoypadActions;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.paletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
-import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 
 /**
  * Tengen play scene, uses vertical scrolling.
@@ -71,9 +69,10 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     private final MazeFlashingAnimation mazeFlashingAnimation = new MazeFlashingAnimation();
 
     public TengenPlayScene2D() {
+        canvas.widthProperty() .bind(scalingProperty().map(s -> s.doubleValue() * size().x()));
+        canvas.heightProperty().bind(scalingProperty().map(s -> s.doubleValue() * size().y()));
         Pane root = new StackPane(canvas);
-        root.setBackground(coloredBackground(Color.TRANSPARENT));
-        StackPane.setAlignment(canvas, Pos.CENTER);
+        root.setBackground(null);
         fxSubScene = new SubScene(root, 42, 42);
         fxSubScene.setCamera(cam);
     }
@@ -85,8 +84,6 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     public void doInit() {
         context.enableJoypad();
         context.setScoreVisible(true);
-        canvas.widthProperty().bind(scalingProperty().map(scaling -> scaled(size().x())));
-        canvas.heightProperty().bind(scalingProperty().map(scaling -> scaled(size().y())));
     }
 
     @Override
@@ -97,17 +94,15 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void update() {
-        TengenMsPacManGame game = (TengenMsPacManGame) context.game();
-
+        var game = (TengenMsPacManGame) context.game();
         if (game.currentLevelNumber() == 0) {
-            // Scene is visible for 1 (2?) ticks before game level has been created
-            Logger.warn("Tick {}: Cannot update TengenPlayScene2D: game level not yet available", context.tick());
+            // Scene is already visible for 2 ticks before game level gets created
+            Logger.warn("Tick #{}: Cannot update TengenPlayScene2D: game level not yet available", context.tick());
             return;
         }
 
         if (game.world() == null || game.pac() == null) {
-            //TODO: Can world or Ms. Pac-Man be null here?
-            Logger.warn("Cannot update PlayScene2D: no game world available");
+            Logger.warn("Tick #{}: Cannot update PlayScene2D: no game world available", context.tick());
             return;
         }
 
@@ -118,8 +113,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             game.pac().setUsingAutopilot(PY_AUTOPILOT.get());
             game.pac().setImmune(PY_IMMUNITY.get());
             updatePlaySceneSound();
-            if (context.gameState() == GameState.GAME_OVER &&
-                game.mapCategory() != MapCategory.ARCADE) {
+            if (context.gameState() == GameState.GAME_OVER && game.mapCategory() != MapCategory.ARCADE) {
                 gameOverMessageAnimation.update();
             }
         }
@@ -152,11 +146,11 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public Camera camera() {
-        return fxSubScene.getCamera();
+        return cam;
     }
 
-    private void initCamDelay(int ticks) {
-        camDelay = ticks;
+    private void initCamera(int delayTicks) {
+        camDelay = delayTicks;
         cam.setTranslateY(dontAskItsMagic(-cameraRadius()));
     }
 
@@ -173,13 +167,16 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public Vector2f size() {
-        Vector2i sizeInTiles = context.worldSizeInTilesOrElse(new Vector2i(NES_TILES_X, NES_TILES_Y));
-        return sizeInTiles.plus(0, 2).scaled(TS).toVector2f(); //TODO: change maps instead of inventing rows?
+        Vector2i defaultSize = new Vector2i(NES_TILES_X, NES_TILES_Y);
+        if (context == null) {
+            return defaultSize.toVector2f();
+        }
+        //TODO: change maps instead of inventing 2 rows?
+        return context.worldSizeInTilesOrElse(defaultSize).plus(0, 2).scaled(TS).toVector2f();
     }
 
     @Override
     public void draw(GameRenderer renderer) {
-        renderer.ctx().setImageSmoothing(false);
         renderer.setCanvas(canvas);
         renderer.scalingProperty().set(scaling());
         renderer.setBackgroundColor(backgroundColor());
@@ -304,7 +301,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             default -> {}
         }
         if (state == GameState.STARTING_GAME) {
-            initCamDelay(30);
+            initCamera(30);
         }
     }
 
@@ -354,7 +351,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     @Override
     public void onLevelStarted(GameEvent e) {
         context.updateRenderer();
-        initCamDelay(90);
+        initCamera(90);
     }
 
     @Override

@@ -68,6 +68,7 @@ public class PacManGameXXLRenderer implements GameRenderer {
     @Override
     public void setCanvas(Canvas canvas) {
         this.canvas = canvas;
+        canvas.getGraphicsContext2D().setImageSmoothing(true);
     }
 
     @Override

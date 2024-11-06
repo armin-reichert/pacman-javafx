@@ -176,6 +176,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     @Override
     public void setCanvas(Canvas canvas) {
         this.canvas = canvas;
+        canvas.getGraphicsContext2D().setImageSmoothing(false);
     }
 
     @Override

@@ -111,7 +111,6 @@ public class IntroScene extends GameScene2D {
     @Override
     public void drawSceneContent(GameRenderer renderer) {
         renderer.ctx().save();
-        renderer.ctx().setImageSmoothing(false);
         TickTimer timer = sceneController.state().timer();
         long t = timer.currentTick();
         Font font = renderer.scaledArcadeFont(8);
