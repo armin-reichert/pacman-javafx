@@ -14,7 +14,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import org.tinylog.Logger;
 
 import static de.amr.games.pacman.maps.editor.TileMapUtil.HALF_TILE_SIZE;
 import static de.amr.games.pacman.maps.editor.TileMapUtil.TILE_SIZE;

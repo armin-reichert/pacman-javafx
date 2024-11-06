@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
-import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
