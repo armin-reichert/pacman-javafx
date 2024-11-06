@@ -145,7 +145,7 @@ public class GameAssets2D extends AssetStorage {
 
         assets.store("tengen.pac.color.head",                 paletteColor(0x28));
         assets.store("tengen.pac.color.eyes",                 paletteColor(0x02));
-        assets.store("tengen.pac.color.palate",               paletteColor(0x00));
+        assets.store("tengen.pac.color.palate",               paletteColor(0x2d));
         assets.store("tengen.pac.color.boobs",                paletteColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
         assets.store("tengen.pac.color.hairbow",              paletteColor(0x05));
         assets.store("tengen.pac.color.hairbow.pearls",       paletteColor(0x02));

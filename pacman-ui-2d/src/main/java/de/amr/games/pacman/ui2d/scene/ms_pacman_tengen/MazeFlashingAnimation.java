@@ -46,10 +46,10 @@ public class MazeFlashingAnimation {
     }
 
     private Map<String, Color> randomColorfulScheme() {
-        var colorScheme = randomMapColorScheme();
+        var colorScheme = randomMapColorScheme().get();
         // skip color schemes with black fill color
         while (colorScheme.get("fill").equals(NES.Palette.color(0x0f))) {
-            colorScheme = randomMapColorScheme();
+            colorScheme = randomMapColorScheme().get();
         }
         return mapToColors(colorScheme);
     }

@@ -188,7 +188,9 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     }
 
     private ImageArea strangeMapSpriteImageArea(MapConfig config) {
-        return nonArcadeMapSpriteSheet.mapSprite(config.mapNumber());
+        // Dirty hack, don't tell Mommy!
+        int spriteNumber = Integer.parseInt(config.worldMap().terrain().getProperty("levelNumber"));
+        return nonArcadeMapSpriteSheet.mapSprite(spriteNumber);
     }
 
     @Override

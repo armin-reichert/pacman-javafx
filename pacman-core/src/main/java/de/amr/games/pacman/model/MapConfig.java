@@ -9,5 +9,9 @@ import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 
 import java.util.Map;
 
-public record MapConfig(Object mapCategory, int mapNumber, WorldMap worldMap, Map<String, String> colorScheme) {
+public record MapConfig(
+        Object mapCategory,
+        int mapNumber,
+        WorldMap worldMap,
+        Map<String, String> colorScheme) {
 }
