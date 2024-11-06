@@ -178,7 +178,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     @Override
     public void draw(GameRenderer renderer) {
         renderer.setCanvas(canvas);
-        renderer.scalingProperty().set(scaling());
+        renderer.setScaling(scaling());
         renderer.setBackgroundColor(backgroundColor());
         renderer.clearCanvas();
         if (context.isScoreVisible()) {
@@ -192,50 +192,47 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     protected void drawSceneContent(GameRenderer renderer) {
-        final long t = context.gameClock().getTickCount();
-        final GameState state = context.gameState();
         final var game = (TengenMsPacManGame) context.game();
+        final var r = (TengenMsPacManGameRenderer) renderer;
         final GameWorld world = game.world();
         final Pac msPacMan = game.pac();
 
         if (world == null) { // This happens on level start
-            Logger.warn("Cannot draw scene content, game world not yet available!");
+            Logger.warn("Tick #{}: Cannot draw scene content, game world not yet available!", context.tick());
             return;
         }
 
-        var tr = (TengenMsPacManGameRenderer) renderer;
-        tr.setBlinkingOn(game.blinking().isOn());
+        r.setBlinkingOn(game.blinking().isOn());
 
         // Draw level message centered under ghost house
-        Vector2i houseTopLeftTile = world.houseTopLeftTile();
-        Vector2i houseSize        = world.houseSize();
-        double cx = TS * (world.houseTopLeftTile().x() + world.houseSize().x() * 0.5);
-        double y = TS * (houseTopLeftTile.y() + houseSize.y() + 1);
-        drawLevelMessage(renderer, cx, y); // READY, GAME_OVER etc.
+        Vector2i houseTopLeft = world.houseTopLeftTile(), houseSize = world.houseSize();
+        double cx = TS * (houseTopLeft.x() + houseSize.x() * 0.5);
+        double y  = TS * (houseTopLeft.y() + houseSize.y() + 1);
+        drawLevelMessage(renderer, cx, y);
 
-        if (Boolean.TRUE.equals(state.getProperty("mazeFlashing"))) {
-            mazeFlashingAnimation.update(t);
-            tr.drawEmptyMap(world.map(), mazeFlashingAnimation.currentColorScheme());
+        if (Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"))) {
+            mazeFlashingAnimation.update(context.tick());
+            r.drawEmptyMap(world.map(), mazeFlashingAnimation.currentColorScheme());
         } else {
-            renderer.drawWorld(context, world, 0,  3*TS);
+            r.drawWorld(context, world, 0,  3 * TS);
         }
 
-        renderer.drawAnimatedEntity(msPacMan);
-        ghostsInZOrder().forEach(renderer::drawAnimatedEntity);
+        r.drawAnimatedEntity(msPacMan);
+        ghostsInZOrder().forEach(r::drawAnimatedEntity);
 
         // Debug mode info
         if (debugInfoPy.get()) {
-            renderer.drawAnimatedCreatureInfo(msPacMan);
-            ghostsInZOrder().forEach(renderer::drawAnimatedCreatureInfo);
+            r.drawAnimatedCreatureInfo(msPacMan);
+            ghostsInZOrder().forEach(r::drawAnimatedCreatureInfo);
         }
 
         int livesCounterEntries = game.lives() - 1;
-        if (state == GameState.STARTING_GAME && !msPacMan.isVisible()) {
+        if (context.gameState() == GameState.STARTING_GAME && !msPacMan.isVisible()) {
             // as long as Pac-Man is invisible when the game is started, one entry more appears in the lives counter
             livesCounterEntries += 1;
         }
-        renderer.drawLivesCounter(livesCounterEntries, 5, size());
-        renderer.drawLevelCounter(context, size());
+        r.drawLivesCounter(livesCounterEntries, 5, size());
+        r.drawLevelCounter(context, size());
     }
 
     private Stream<Ghost> ghostsInZOrder() {
@@ -272,8 +269,6 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         renderer.ctx().setFill(Color.YELLOW);
         renderer.ctx().setFont(Font.font("Sans", FontWeight.BOLD, 24));
         renderer.ctx().fillText(String.format("%s %d", context.gameState(), context.gameState().timer().currentTick()), 0, 64);
-        renderer.ctx().setFill(Color.GREEN);
-        renderer.ctx().fillRect(0, 0, renderer.canvas().getWidth(), 2);
     }
 
     @Override
@@ -286,22 +281,13 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     @Override
     public void onEnterGameState(GameState state) {
         switch (state) {
-            //TOD check this. GameState can publish an event to stop all sounds.
-            case STARTING_GAME, PACMAN_DYING -> context.sound().stopAll();
-            case LEVEL_COMPLETE -> {
-                context.sound().stopAll();
-                mazeFlashingAnimation.init((TengenMsPacManGame) context.game());
-            }
+            case LEVEL_COMPLETE -> mazeFlashingAnimation.init((TengenMsPacManGame) context.game());
             case GAME_OVER -> {
-                context.sound().stopAll();
                 GameWorld world = context.game().world();
                 double houseCenterX = TS * (world.houseTopLeftTile().x() + 0.5 * world.houseSize().x());
                 gameOverMessageAnimation.start(houseCenterX, size().x());
             }
             default -> {}
-        }
-        if (state == GameState.STARTING_GAME) {
-            initCamera(30);
         }
     }
 
@@ -362,6 +348,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         if (!silent) {
             context.sound().playGameReadySound();
         }
+        initCamera(30);
     }
 
     @Override
