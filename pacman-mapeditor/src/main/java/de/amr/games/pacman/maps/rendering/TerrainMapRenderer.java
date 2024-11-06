@@ -14,6 +14,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import org.tinylog.Logger;
 
 import static de.amr.games.pacman.maps.editor.TileMapUtil.HALF_TILE_SIZE;
 import static de.amr.games.pacman.maps.editor.TileMapUtil.TILE_SIZE;
@@ -55,9 +56,16 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
         map.topConcavityEntries().forEach(entry -> {
             double left = entry.x() * TILE_SIZE;
-            double y = (entry.y() * TILE_SIZE + HALF_TILE_SIZE - 0.5 * DOUBLE_STROKE_INNER_WIDTH); // TODO check this
-            double w = 2 * TILE_SIZE, h = DOUBLE_STROKE_INNER_WIDTH * 0.75; // TODO check this
-            g.setFill(fillColor);
+            double y = entry.y() * TILE_SIZE + 0.5 * (TILE_SIZE - DOUBLE_STROKE_OUTER_WIDTH) + SINGLE_STROKE_WIDTH;
+            //TODO this is a hack:
+            if (scaling() < 2.8) {
+                y -= 0.5;
+            } else if (scaling() < 1.5) {
+                y -= 1.25;
+            }
+            double w = 2 * TILE_SIZE;
+            double h = 0.5 * DOUBLE_STROKE_OUTER_WIDTH; // TODO check this
+            g.setFill(wallFillColor);
             g.fillRect(left, y, w, h);
             g.setStroke(wallStrokeColor);
             g.setLineWidth(baseLineWidth * SINGLE_STROKE_WIDTH);
