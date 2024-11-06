@@ -245,7 +245,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         GameState state = context.gameState();
         GameModel game = context.game();
         if (game.isDemoLevel()) {
-            Color color = Color.web(game.currentMapColorScheme().get("stroke"));
+            Color color = Color.web(game.currentMapConfig().colorScheme().get("stroke"));
             drawText(renderer, "GAME  OVER", cx, y, color);
         } else if (state == GameState.GAME_OVER) {
             Color color = assets.color(assetPrefix + ".color.game_over_message");

@@ -17,7 +17,10 @@ import de.amr.games.pacman.model.actors.*;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -82,9 +85,7 @@ public abstract class GameModel {
     protected Ghost[]              ghosts;
     protected Bonus                bonus;
     protected GameWorld            world;
-    protected int                  currentMapNumber;
-    protected WorldMap             currentMap;
-    protected Map<String, String>  currentMapColorScheme;
+    protected MapConfig            currentMapConfig;
     protected SimulationStepLog    eventLog;
 
     public abstract boolean      canStartNewGame();
@@ -185,16 +186,8 @@ public abstract class GameModel {
         return currentLevelNumber;
     }
 
-    public int currentMapNumber() {
-        return currentMapNumber;
-    }
-
-    public WorldMap currentMap() {
-        return currentMap;
-    }
-
-    public Map<String, String> currentMapColorScheme() {
-        return currentMapColorScheme;
+    public MapConfig currentMapConfig() {
+        return currentMapConfig;
     }
 
     public boolean isDemoLevel() {

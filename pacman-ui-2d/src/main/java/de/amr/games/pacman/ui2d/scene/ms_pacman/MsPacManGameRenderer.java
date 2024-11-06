@@ -102,17 +102,17 @@ public class MsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void update(GameModel game) {
-        if (game.currentMapColorScheme() == null) {
-            return;
-        }
-        // select map sprites for current color scheme
-        int index = MapConfigurationManager.colorSchemeIndex(game.currentMapColorScheme());
-        if (index != -1) {
-            mapWithFoodSprite    = spriteSheet.imageArea(0, index * 248, 226, 248);
-            mapWithoutFoodSprite = spriteSheet.imageArea(228, index * 248, 226, 248);
-            mapFlashingSprite    = imageArea(flashingMazesImage, 0, index * 248, 226, 248);
-        } else {
-            Logger.error("Could not identify color scheme {}", game.currentMapColorScheme());
+        if (game.currentMapConfig() != null) {
+            // select map sprites for current color scheme
+            var colorScheme = game.currentMapConfig().colorScheme();
+            int index = MapConfigurationManager.colorSchemeIndex(colorScheme);
+            if (index != -1) {
+                mapWithFoodSprite = spriteSheet.imageArea(0, index * 248, 226, 248);
+                mapWithoutFoodSprite = spriteSheet.imageArea(228, index * 248, 226, 248);
+                mapFlashingSprite = imageArea(flashingMazesImage, 0, index * 248, 226, 248);
+            } else {
+                Logger.error("Could not identify color scheme {}", colorScheme);
+            }
         }
     }
 

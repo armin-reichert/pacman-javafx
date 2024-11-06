@@ -64,6 +64,6 @@ public class MapConfigurationManager {
             default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
         };
         final int schemeNumber = levelNumber < 14 ? mapNumber : mapNumber + 2;
-        return new MapConfig(mapNumber, new WorldMap(maps.get(mapNumber - 1)), COLOR_SCHEMES.get(schemeNumber - 1));
+        return new MapConfig("Ms Pac-Man Arcade Map", mapNumber, new WorldMap(maps.get(mapNumber - 1)), COLOR_SCHEMES.get(schemeNumber - 1));
     }
 }

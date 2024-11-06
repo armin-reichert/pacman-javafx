@@ -224,7 +224,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             // when score is disabled, show text "game over"
             String assetPrefix = assetPrefix(context.gameVariant());
             Color color = context.gameVariant() == GameVariant.MS_PACMAN_TENGEN
-                ? Color.web(context.game().currentMapColorScheme().get("stroke"))
+                ? Color.web(context.game().currentMapConfig().colorScheme().get("stroke"))
                 : context.assets().color(assetPrefix + ".color.game_over_message");
             scores3D.showTextAsScore("GAME OVER!", color);
         }

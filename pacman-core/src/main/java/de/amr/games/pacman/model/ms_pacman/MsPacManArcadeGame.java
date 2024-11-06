@@ -144,10 +144,7 @@ public class MsPacManArcadeGame extends GameModel {
     }
 
     private void selectMap(int levelNumber) {
-        MapConfig mapConfig = mapConfigMgr.getMapConfig(levelNumber);
-        currentMapNumber = mapConfig.mapNumber();
-        currentMap = mapConfig.worldMap();
-        currentMapColorScheme = mapConfig.colorScheme();
+        currentMapConfig = mapConfigMgr.getMapConfig(levelNumber);
     }
 
     @Override
@@ -182,7 +179,7 @@ public class MsPacManArcadeGame extends GameModel {
     public void buildLevel(int levelNumber) {
         this.currentLevelNumber = levelNumber;
         selectMap(currentLevelNumber);
-        createWorldAndPopulation(currentMap);
+        createWorldAndPopulation(currentMapConfig.worldMap());
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(autopilot);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
@@ -192,7 +189,7 @@ public class MsPacManArcadeGame extends GameModel {
     public void buildDemoLevel() {
         currentLevelNumber = 1;
         selectMap(currentLevelNumber);
-        createWorldAndPopulation(currentMap);
+        createWorldAndPopulation(currentMapConfig.worldMap());
         pac.setName("Ms. Pac-Man");
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         demoLevelSteering.init();

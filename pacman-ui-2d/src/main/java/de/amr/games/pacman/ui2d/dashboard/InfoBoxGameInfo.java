@@ -40,7 +40,7 @@ public class InfoBoxGameInfo extends InfoBox {
                 return InfoText.NO_INFO;
             }
             TengenMsPacManGame game = (TengenMsPacManGame) context.game();
-            Map<String, String> mapColorScheme = game.currentMapColorScheme();
+            Map<String, String> mapColorScheme = game.currentMapConfig().colorScheme();
             if (mapColorScheme == null) {
                 return InfoText.NO_INFO;
             }

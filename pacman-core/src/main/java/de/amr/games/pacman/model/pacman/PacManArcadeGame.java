@@ -13,10 +13,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Tiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.LevelData;
+import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.StaticBonus;
@@ -114,7 +111,6 @@ public class PacManArcadeGame extends GameModel {
 
     protected static final Vector2f BONUS_POS = halfTileRightOf(13, 20);
 
-    private final WorldMap worldMap;
     private final Steering autopilot = new RuleBasedPacSteering(this);
     private final Steering demoLevelSteering = new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE));
     private byte cruiseElroy;
@@ -126,7 +122,9 @@ public class PacManArcadeGame extends GameModel {
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
 
-        worldMap = new WorldMap(getClass().getResource("/de/amr/games/pacman/maps/pacman.world"));
+        // fixed map configuration
+        var worldMap = new WorldMap(getClass().getResource("/de/amr/games/pacman/maps/pacman.world"));
+        currentMapConfig = new MapConfig("Pac-Man Arcade Map", 1, worldMap, MAP_COLOR_SCHEME);
 
         huntingControl = new HuntingControl("HuntingControl-" + getClass().getSimpleName()) {
             // Ticks of scatter and chasing phases, -1 = forever
@@ -226,16 +224,13 @@ public class PacManArcadeGame extends GameModel {
     @Override
     public void buildLevel(int levelNumber) {
         currentLevelNumber = levelNumber;
-        currentMapNumber = 1;
-        currentMapColorScheme = MAP_COLOR_SCHEME;
-
-        createWorldAndPopulation(worldMap);
+        createWorldAndPopulation(currentMapConfig.worldMap());
         pac.setName("Pac-Man");
         pac.setAutopilot(autopilot);
         setCruiseElroy(0);
 
-        List<Vector2i> oneWayDownTiles = worldMap.terrain().tiles()
-            .filter(tile -> worldMap.terrain().get(tile) == Tiles.ONE_WAY_DOWN).toList();
+        List<Vector2i> oneWayDownTiles = currentMapConfig.worldMap().terrain().tiles()
+            .filter(tile -> currentMapConfig.worldMap().terrain().get(tile) == Tiles.ONE_WAY_DOWN).toList();
         ghosts().forEach(ghost -> {
             ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
             ghost.setSpecialTerrainTiles(oneWayDownTiles);

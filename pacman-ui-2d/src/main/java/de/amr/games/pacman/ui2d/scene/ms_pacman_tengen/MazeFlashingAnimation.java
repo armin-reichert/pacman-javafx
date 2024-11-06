@@ -35,7 +35,7 @@ public class MazeFlashingAnimation {
     private boolean highlightPhase;
 
     public void init(TengenMsPacManGame game) {
-        Map<String, Color> currentScheme = mapToColors(game.currentMapColorScheme());
+        Map<String, Color> currentScheme = mapToColors(game.currentMapConfig().colorScheme());
         boolean random = game.mapConfigMgr().isRandomColorSchemeUsed(game.mapCategory(), game.currentLevelNumber());
         colorSchemes.clear();
         for (int i = 0; i < game.numFlashes(); ++i) {

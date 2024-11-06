@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.MapConfig;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
@@ -70,49 +71,51 @@ public class PacManXXLGame extends PacManArcadeGame {
 
     @Override
     public void buildLevel(int levelNumber) {
-        this.currentLevelNumber = levelNumber;
-        selectMapAndColorScheme(levelNumber);
-        createWorldAndPopulation(currentMap);
+        currentLevelNumber = levelNumber;
+        currentMapConfig = createMapConfig(levelNumber);
+        createWorldAndPopulation(currentMapConfig.worldMap());
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUsingAutopilot(false);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         setCruiseElroy(0);
         Logger.info("Map selection mode is {}", mapSelectionMode);
-        Logger.info("Selected map URL is {}", currentMap.url());
-        Logger.info("Selected map colors: {}", currentMapColorScheme);
+        Logger.info("Selected map config: {}, URL: {}", currentMapConfig, currentMapConfig.worldMap().url());
     }
 
-    private void selectMapAndColorScheme(int levelNumber) {
+    private MapConfig createMapConfig(int levelNumber) {
+        WorldMap map = null;
+        Map<String, String> colorScheme;
         switch (mapSelectionMode) {
             case NO_CUSTOM_MAPS -> {
-                currentMap = levelNumber <= standardMaps.size()
+                map = levelNumber <= standardMaps.size()
                     ? standardMaps.get(levelNumber - 1)
                     : standardMaps.get(randomInt(0, standardMaps.size()));
             }
             case CUSTOM_MAPS_FIRST -> {
                 List<WorldMap> maps = new ArrayList<>(customMapsSortedByFile());
                 maps.addAll(standardMaps);
-                currentMap = levelNumber <= maps.size()
+                map = levelNumber <= maps.size()
                     ? maps.get(levelNumber - 1)
                     : maps.get(randomInt(0, maps.size()));
             }
             case ALL_RANDOM -> {
                 List<WorldMap> maps = new ArrayList<>(customMapsSortedByFile());
                 maps.addAll(standardMaps);
-                currentMap = maps.get(randomInt(0, maps.size()));
+                map = maps.get(randomInt(0, maps.size()));
             }
         }
-        if (standardMaps.contains(currentMap)) {
+        if (standardMaps.contains(map)) {
             // try using random color scheme, TODO: avoid repetitions
-            currentMapColorScheme = COLOR_SCHEMES.get(randomInt(0, COLOR_SCHEMES.size()));
+            colorScheme = COLOR_SCHEMES.get(randomInt(0, COLOR_SCHEMES.size()));
         } else {
-            currentMapColorScheme = Map.of(
-                "fill",   currentMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_FILL, "000000"),
-                "stroke", currentMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_STROKE, "0000ff"),
-                "door",   currentMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_DOOR, "00ffff"),
-                "pellet", currentMap.food().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_FOOD, "ffffff")
+            colorScheme = Map.of(
+                "fill",   map.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_FILL, "000000"),
+                "stroke", map.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_STROKE, "0000ff"),
+                "door",   map.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_DOOR, "00ffff"),
+                "pellet", map.food().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_FOOD, "ffffff")
             );
         }
+        return new MapConfig("Pac-Man XXL Map", 42, map, colorScheme);
     }
 
     @Override

@@ -211,8 +211,8 @@ public class GameLevel3D {
 
         wallStrokeMaterialPy.bind(wallStrokeColorPy.map(Ufx::coloredMaterial));
 
-        buildWorld3D(world, assets, game.currentMapColorScheme());
-        addFood3D(world, assets, game.currentMapColorScheme());
+        buildWorld3D(world, assets, game.currentMapConfig().colorScheme());
+        addFood3D(world, assets, game.currentMapConfig().colorScheme());
 
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
         root.getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());

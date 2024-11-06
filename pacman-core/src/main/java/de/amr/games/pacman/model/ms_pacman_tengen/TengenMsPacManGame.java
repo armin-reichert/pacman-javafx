@@ -359,14 +359,9 @@ public class TengenMsPacManGame extends GameModel {
             throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
         currentLevelNumber = levelNumber;
-
-        MapConfig mapConfig = mapConfigMgr.getMapConfig(mapCategory, currentLevelNumber);
-        currentMapNumber = mapConfig.mapNumber();
-        currentMap = mapConfig.worldMap();
-        currentMapColorScheme = mapConfig.colorScheme();
-
-        createWorldAndPopulation(currentMap);
-        Logger.info("World created. Map number: {}, URL: {}", currentMapNumber, currentMap.url());
+        currentMapConfig = mapConfigMgr.getMapConfig(mapCategory, currentLevelNumber);
+        createWorldAndPopulation(currentMapConfig.worldMap());
+        Logger.info("World created. Map config: {}, URL: {}", currentMapConfig, currentMapConfig.worldMap().url());
 
         pac.setAutopilot(autopilot);
         setBoosterActive(false); // gets activated in startLevel() if mode is ALWAYS_ON
@@ -378,15 +373,9 @@ public class TengenMsPacManGame extends GameModel {
     public void buildDemoLevel() {
         currentLevelNumber = 1;
         demoLevelSteering.init();
-
-        MapConfig mapConfig = mapConfigMgr.getMapConfig(mapCategory, currentLevelNumber);
-        currentMapNumber = mapConfig.mapNumber();
-        currentMap = mapConfig.worldMap();
-        currentMapColorScheme = mapConfig.colorScheme();
-
-        createWorldAndPopulation(currentMap);
+        currentMapConfig = mapConfigMgr.getMapConfig(mapCategory, currentLevelNumber);
+        createWorldAndPopulation(currentMapConfig.worldMap());
         setBoosterActive(false); // gets activated in startLevel() if mode is ALWAYS_ON
-
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
