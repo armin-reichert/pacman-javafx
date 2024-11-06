@@ -17,7 +17,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
-import de.amr.games.pacman.model.ms_pacman_tengen.MapConfigurationManager;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.input.JoypadKeyAdapter;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -40,17 +39,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
-import static de.amr.games.pacman.model.ms_pacman_tengen.MapConfigurationManager.randomMapColorScheme;
 import static de.amr.games.pacman.ui2d.GameActions2D.bindCheatActions;
 import static de.amr.games.pacman.ui2d.GameActions2D.bindFallbackPlayerControlActions;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
@@ -69,109 +63,12 @@ import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
  */
 public class TengenPlayScene2D extends GameScene2D implements CameraControlledGameScene {
 
-    static final Map<String, Color> HIGHLIGHT_COLOR_SCHEME = extractColors(MapConfigurationManager.HIGHLIGHT_COLOR_SCHEME);
-
-    static final int MESSAGE_ANIMATION_DELAY = 120; // TODO how long?
-    static final double MESSAGE_SPEED = 1;  // TODO how fast?
-
     private final SubScene fxSubScene;
     private final ParallelCamera cam = new ParallelCamera();
     private final Canvas canvas = new Canvas(NES_RESOLUTION_X, NES_RESOLUTION_Y);
     private int camDelay;
     private final GameOverMessageAnimation gameOverMessageAnimation = new GameOverMessageAnimation();
     private final MazeFlashingAnimation mazeFlashingAnimation = new MazeFlashingAnimation();
-
-    private static class GameOverMessageAnimation {
-        private double startX;
-        private double rightBorderX;
-        private double speed;
-        private double currentX;
-        private boolean wrapped;
-        private long delay;
-
-        void start(double startX, double rightBorderX, double speed) {
-            this.startX = startX;
-            this.rightBorderX = rightBorderX;
-            this.speed = speed;
-            currentX = startX;
-            wrapped = false;
-            delay = MESSAGE_ANIMATION_DELAY;
-        }
-
-        void update() {
-            if (delay > 0) {
-                --delay;
-                return;
-            }
-            currentX += speed;
-            if (currentX > rightBorderX) {
-                currentX = 0;
-                wrapped = true;
-            }
-            if (wrapped && currentX >= startX) {
-                speed = 0;
-                currentX = startX;
-            }
-        }
-    }
-
-    private static class MazeFlashingAnimation {
-        private final List<Map<String,Color>> colorSchemes = new ArrayList<>();
-        private long startTick;
-        private int currentIndex;
-        private boolean highlightPhase;
-
-        public void init(TengenMsPacManGame game) {
-            Map<String, Color> currentScheme = extractColors(game.currentMapColorScheme());
-            boolean random = inRange(game.currentLevelNumber(), 28, 31)
-                    && (game.mapCategory() == MapCategory.BIG || game.mapCategory() == MapCategory.MINI);
-            colorSchemes.clear();
-            for (int i = 0; i < game.numFlashes(); ++i) {
-                if (random) {
-                    var colorScheme = randomMapColorScheme();
-                    // skip color schemes with black fill color
-                    while (colorScheme.get("fill").equals(NES.Palette.color(0x0f))) {
-                        colorScheme = randomMapColorScheme();
-                    }
-                    colorSchemes.add(extractColors(colorScheme));
-                } else {
-                    colorSchemes.add(currentScheme);
-                }
-                colorSchemes.add(HIGHLIGHT_COLOR_SCHEME);
-            }
-            startTick = -1;
-        }
-
-        public Map<String, Color> currentColorScheme() {
-            return highlightPhase ? HIGHLIGHT_COLOR_SCHEME : colorSchemes.get(currentIndex);
-        }
-
-        public void update(long t) {
-            int phaseTicks = 10; // TODO: how many ticks really?
-            if (startTick == -1) { // not running yet
-                startTick = t;
-                currentIndex = 0;
-                Logger.info("Maze flashing started at tick {}", startTick);
-            }
-            // single flash phase complete?
-            long flashingTicksSoFar = t - startTick;
-            if (flashingTicksSoFar > 0 && flashingTicksSoFar % phaseTicks == 0) {
-                if (currentIndex < colorSchemes.size() - 1 ) {
-                    ++currentIndex;
-                    Logger.info("Maze flashing index changes to {} at tick {}", currentIndex, t);
-                }
-            }
-            highlightPhase = flashingTicksSoFar % (2*phaseTicks) == 1;
-        }
-    }
-
-    private static Map<String, Color> extractColors(Map<String, String> colorScheme) {
-        Map<String, Color> colorMap = new HashMap<>();
-        for (String key : colorScheme.keySet()) {
-            colorMap.put(key, Color.web(colorScheme.get(key)));
-        }
-        return colorMap;
-    }
 
     public TengenPlayScene2D() {
         Pane root = new StackPane(canvas);
@@ -358,7 +255,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             drawText(renderer, "GAME  OVER", cx, y, color);
         } else if (state == GameState.GAME_OVER) {
             Color color = assets.color(assetPrefix + ".color.game_over_message");
-            drawText(renderer, "GAME  OVER", gameOverMessageAnimation.currentX, y, color);
+            drawText(renderer, "GAME  OVER", gameOverMessageAnimation.currentX(), y, color);
         } else if (state == GameState.STARTING_GAME) {
             Color color = assets.color(assetPrefix + ".color.ready_message");
             drawText(renderer, "READY!", cx, y, color);
@@ -402,7 +299,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
                 context.sound().stopAll();
                 GameWorld world = context.game().world();
                 double houseCenterX = TS * (world.houseTopLeftTile().x() + 0.5 * world.houseSize().x());
-                gameOverMessageAnimation.start(houseCenterX, size().x(), MESSAGE_SPEED);
+                gameOverMessageAnimation.start(houseCenterX, size().x());
             }
             default -> {}
         }

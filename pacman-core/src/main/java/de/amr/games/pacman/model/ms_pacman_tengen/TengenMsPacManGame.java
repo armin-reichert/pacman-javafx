@@ -131,6 +131,10 @@ public class TengenMsPacManGame extends GameModel {
         setStartLevelNumber(1);
     }
 
+    public MapConfigurationManager mapConfigMgr() {
+        return mapConfigMgr;
+    }
+
     public void setBoosterMode(BoosterMode mode) {
         boosterMode = mode;
     }

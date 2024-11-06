@@ -16,10 +16,13 @@ import java.util.List;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.colorToHexFormat;
+import static de.amr.games.pacman.lib.Globals.inRange;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.model.ms_pacman_tengen.NamedMapColorScheme.*;
 
 public class MapConfigurationManager {
+
+    static final String MAPS_ROOT = "/de/amr/games/pacman/maps/tengen/";
 
     public static final Map<String, String> HIGHLIGHT_COLOR_SCHEME = Map.of(
             "fill",   NES.Palette.color(0x0f),
@@ -63,33 +66,30 @@ public class MapConfigurationManager {
         return COLOR_SCHEMES_IN_LEVEL_ORDER.get(Globals.randomInt(0, COLOR_SCHEMES_IN_LEVEL_ORDER.size())).get();
     }
 
-    static final String MAPS_ROOT = "/de/amr/games/pacman/maps/tengen/";
-
-    static final String ARCADE_MAP_PATTERN = MAPS_ROOT + "arcade%d.world";
-    static final int ARCADE_MAP_COUNT = 4;
-
-    static final String MINI_MAP_PATTERN = MAPS_ROOT + "mini%d.world";
-    static final int MINI_MAP_COUNT = 6;
-
-    static final String STRANGE_OR_BIG_MAP_PATTERN = MAPS_ROOT + "strange_or_big/map%02d.world";
-    static final int STRANGE_OR_BIG_MAP_COUNT = 33;
-
     private List<WorldMap> arcadeMaps;
     private List<WorldMap> miniMaps;
     private List<WorldMap> strangeOrBigMaps; //TODO separate
 
-    void loadMaps() {
-        arcadeMaps = createMaps(ARCADE_MAP_PATTERN, ARCADE_MAP_COUNT);
-        miniMaps = createMaps(MINI_MAP_PATTERN, MINI_MAP_COUNT);
-        strangeOrBigMaps = createMaps(STRANGE_OR_BIG_MAP_PATTERN, STRANGE_OR_BIG_MAP_COUNT);
+    public void loadMaps() {
+        arcadeMaps = createMaps(MAPS_ROOT + "arcade%d.world", 4);
+        miniMaps = createMaps(MAPS_ROOT + "mini%d.world", 5);
+        strangeOrBigMaps = createMaps(MAPS_ROOT + "strange_or_big/map%02d.world", 33);
     }
 
-    MapConfig getMapConfig(MapCategory mapCategory, int levelNumber) {
+    public MapConfig getMapConfig(MapCategory mapCategory, int levelNumber) {
         return switch (mapCategory) {
             case ARCADE  -> arcadeMapForLevel(levelNumber);
             case STRANGE -> strangeMapForLevel(levelNumber);
             case MINI    -> miniMapForLevel(levelNumber);
             case BIG     -> bigMapForLevel(levelNumber);
+        };
+    }
+
+    public boolean isRandomColorSchemeUsed(MapCategory mapCategory, int levelNumber) {
+        return switch (mapCategory) {
+            case ARCADE -> false; // TODO check
+            case BIG, MINI -> inRange(levelNumber, 28, 31);
+            case STRANGE -> false; // TODO not true
         };
     }
 
