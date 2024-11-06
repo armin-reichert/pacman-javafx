@@ -69,10 +69,11 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
 
+    private Canvas canvas;
     private Color bgColor = Color.BLACK;
     private ImageArea mapSprite;
     private boolean blinkingOn;
-    private Canvas canvas;
+    private boolean levelNumberBoxesVisible;
 
     public TengenMsPacManGameRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
@@ -249,6 +250,10 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         } else {
             GameRenderer.super.drawAnimatedEntity(guy);
         }
+    }
+
+    public void setLevelNumberBoxesVisible(boolean levelNumberBoxesVisible) {
+        this.levelNumberBoxesVisible = levelNumberBoxesVisible;
     }
 
     private void drawMsOrMrPacMan(Pac pac) {
@@ -439,7 +444,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         boolean demoLevel = game.isDemoLevel();
         // TODO: This is ugly, maybe change all Tengen maps instead?
         double y = size.y() - 3 * TS;
-        if (!demoLevel && levelNumber > 0 && game.mapCategory() != MapCategory.ARCADE) {
+        if (levelNumberBoxesVisible) {
             drawLevelNumberBox(levelNumber, 0, y); // left box
             drawLevelNumberBox(levelNumber, size.x() - 2 * TS, y); // right box
         }

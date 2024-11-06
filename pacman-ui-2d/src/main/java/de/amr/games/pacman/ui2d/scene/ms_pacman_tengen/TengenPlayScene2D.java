@@ -232,6 +232,8 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             livesCounterEntries += 1;
         }
         r.drawLivesCounter(livesCounterEntries, 5, size());
+
+        r.setLevelNumberBoxesVisible(!game.isDemoLevel() && game.mapCategory() != MapCategory.ARCADE);
         r.drawLevelCounter(context, size());
     }
 
