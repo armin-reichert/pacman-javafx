@@ -20,13 +20,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class PacManGameXXLSceneConfiguration implements GameSceneConfig {
+public class PacManGameXXLSceneConfig implements GameSceneConfig {
 
     private final Map<String, GameScene> scenesByID = new HashMap<>();
     private final PacManGameSpriteSheet spriteSheet;
     private final PacManGameXXLRenderer renderer;
 
-    public PacManGameXXLSceneConfiguration(AssetStorage assets) {
+    public PacManGameXXLSceneConfig(AssetStorage assets) {
         set("BootScene",  new ArcadeBootScene());
         set("IntroScene", new IntroScene());
         set("StartScene", new StartScene());

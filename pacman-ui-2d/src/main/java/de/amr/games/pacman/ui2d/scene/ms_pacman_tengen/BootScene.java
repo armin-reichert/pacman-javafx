@@ -16,12 +16,10 @@ import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.paletteColor;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.shadeOfBlue;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.*;
 
 /**
  * "TENGEN PRESENTS" animation and ghost running through scene.
@@ -95,14 +93,14 @@ public class BootScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent(GameRenderer renderer) {
-        renderer.scalingProperty().set(scaling());
+        TengenMsPacManGameRenderer r = (TengenMsPacManGameRenderer) renderer;
+        r.scalingProperty().set(scaling());
         if (grayScreen) {
-            renderer.ctx().setFill(paletteColor(0x10));
-            renderer.ctx().fillRect(0, 0, renderer.canvas().getWidth(), renderer.canvas().getHeight());
+            r.ctx().setFill(paletteColor(0x10));
+            r.ctx().fillRect(0, 0, r.canvas().getWidth(), r.canvas().getHeight());
         } else {
-            Font font = renderer.scaledArcadeFont(TS);
-            renderer.drawText("TENGEN PRESENTS", shadeOfBlue(t), font, 8 * TS, tengenPresentsY);
-            renderer.drawAnimatedEntity(ghost);
+            r.drawTengenPresents(t, 9 * TS, tengenPresentsY);
+            r.drawAnimatedEntity(ghost);
         }
     }
 }

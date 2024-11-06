@@ -2,13 +2,12 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.scene.pacman;
+package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.ArcadeBootScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
@@ -19,13 +18,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class PacManGameSceneConfiguration implements GameSceneConfig {
+public class MsPacManGameSceneConfig implements GameSceneConfig {
 
     private final Map<String, GameScene> scenesByID = new HashMap<>();
-    private final PacManGameSpriteSheet spriteSheet;
-    private final PacManGameRenderer renderer;
+    private final MsPacManGameSpriteSheet spriteSheet;
+    private final MsPacManGameRenderer renderer;
 
-    public PacManGameSceneConfiguration(AssetStorage assets) {
+    public MsPacManGameSceneConfig(AssetStorage assets) {
         set("BootScene",  new ArcadeBootScene());
         set("IntroScene", new IntroScene());
         set("StartScene", new StartScene());
@@ -34,8 +33,8 @@ public class PacManGameSceneConfiguration implements GameSceneConfig {
         set("CutScene2", new CutScene2());
         set("CutScene3", new CutScene3());
 
-        spriteSheet = assets.get(GameAssets2D.assetPrefix(GameVariant.PACMAN) + ".spritesheet");
-        renderer = new PacManGameRenderer(assets);
+        spriteSheet = assets.get(GameAssets2D.assetPrefix(GameVariant.MS_PACMAN) + ".spritesheet");
+        renderer = new MsPacManGameRenderer(assets);
     }
 
     @Override
@@ -54,12 +53,12 @@ public class PacManGameSceneConfiguration implements GameSceneConfig {
     }
 
     @Override
-    public PacManGameRenderer renderer() {
+    public MsPacManGameRenderer renderer() {
         return renderer;
     }
 
     @Override
-    public GameSpriteSheet spriteSheet() {
+    public MsPacManGameSpriteSheet spriteSheet() {
         return spriteSheet;
     }
 

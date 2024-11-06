@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class TengenMsPacManGameSceneConfiguration implements GameSceneConfig {
+public class TengenMsPacManGameSceneConfig implements GameSceneConfig {
 
     // 32x28 tiles or 32x30 tiles? Emulator seems to use 32x30?
     public static final int NES_TILES_X = 32;
@@ -30,7 +30,7 @@ public class TengenMsPacManGameSceneConfiguration implements GameSceneConfig {
     private final TengenMsPacManGameSpriteSheet spriteSheet;
     private final TengenMsPacManGameRenderer renderer;
 
-    public TengenMsPacManGameSceneConfiguration(AssetStorage assets) {
+    public TengenMsPacManGameSceneConfig(AssetStorage assets) {
         set("BootScene",   new BootScene());
         set("IntroScene",  new IntroScene());
         set("StartScene",  new OptionsScene());

@@ -8,10 +8,10 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import de.amr.games.pacman.ui3d.scene.common.Perspective;
-import de.amr.games.pacman.ui3d.scene.ms_pacman.MsPacManGameSceneConfiguration3D;
-import de.amr.games.pacman.ui3d.scene.pacman.PacManGameSceneConfiguration3D;
-import de.amr.games.pacman.ui3d.scene.pacman_xxl.PacManGameXXLSceneConfiguration3D;
-import de.amr.games.pacman.ui3d.scene.tengen.TengenMsPacManGameSceneConfiguration3D;
+import de.amr.games.pacman.ui3d.scene.ms_pacman.MsPacManGameSceneConfig3D;
+import de.amr.games.pacman.ui3d.scene.pacman.PacManGameSceneConfig3D;
+import de.amr.games.pacman.ui3d.scene.pacman_xxl.PacManGameXXLSceneConfig3D;
+import de.amr.games.pacman.ui3d.scene.tengen.TengenMsPacManGameSceneConfig3D;
 import javafx.application.Application;
 import javafx.beans.property.*;
 import javafx.geometry.Dimension2D;
@@ -67,10 +67,10 @@ public class PacManGames3dApp extends Application {
     public void start(Stage stage) {
         ui = new PacManGames3dUI();
         ui.loadAssets();
-        ui.setGameSceneConfig(GameVariant.MS_PACMAN, new MsPacManGameSceneConfiguration3D(ui.assets()));
-        ui.setGameSceneConfig(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacManGameSceneConfiguration3D(ui.assets()));
-        ui.setGameSceneConfig(GameVariant.PACMAN, new PacManGameSceneConfiguration3D(ui.assets()));
-        ui.setGameSceneConfig(GameVariant.PACMAN_XXL, new PacManGameXXLSceneConfiguration3D(ui.assets()));
+        ui.setGameSceneConfig(GameVariant.MS_PACMAN, new MsPacManGameSceneConfig3D(ui.assets()));
+        ui.setGameSceneConfig(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacManGameSceneConfig3D(ui.assets()));
+        ui.setGameSceneConfig(GameVariant.PACMAN, new PacManGameSceneConfig3D(ui.assets()));
+        ui.setGameSceneConfig(GameVariant.PACMAN_XXL, new PacManGameXXLSceneConfig3D(ui.assets()));
         ui.createAndStart(stage, initialSize());
 
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));

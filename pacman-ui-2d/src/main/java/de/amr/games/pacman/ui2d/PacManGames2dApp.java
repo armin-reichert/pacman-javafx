@@ -7,10 +7,10 @@ package de.amr.games.pacman.ui2d;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.pacman_xxl.MapSelectionMode;
-import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSceneConfiguration;
-import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfiguration;
-import de.amr.games.pacman.ui2d.scene.pacman.PacManGameSceneConfiguration;
-import de.amr.games.pacman.ui2d.scene.pacman_xxl.PacManGameXXLSceneConfiguration;
+import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSceneConfig;
+import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig;
+import de.amr.games.pacman.ui2d.scene.pacman.PacManGameSceneConfig;
+import de.amr.games.pacman.ui2d.scene.pacman_xxl.PacManGameXXLSceneConfig;
 import de.amr.games.pacman.ui2d.util.NightMode;
 import javafx.application.Application;
 import javafx.beans.property.*;
@@ -63,10 +63,10 @@ public class PacManGames2dApp extends Application {
     public void start(Stage stage) {
         ui = new PacManGames2dUI();
         ui.loadAssets();
-        ui.setGameSceneConfig(GameVariant.MS_PACMAN, new MsPacManGameSceneConfiguration(ui.assets));
-        ui.setGameSceneConfig(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacManGameSceneConfiguration(ui.assets));
-        ui.setGameSceneConfig(GameVariant.PACMAN, new PacManGameSceneConfiguration(ui.assets));
-        ui.setGameSceneConfig(GameVariant.PACMAN_XXL, new PacManGameXXLSceneConfiguration(ui.assets));
+        ui.setGameSceneConfig(GameVariant.MS_PACMAN, new MsPacManGameSceneConfig(ui.assets));
+        ui.setGameSceneConfig(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacManGameSceneConfig(ui.assets));
+        ui.setGameSceneConfig(GameVariant.PACMAN, new PacManGameSceneConfig(ui.assets));
+        ui.setGameSceneConfig(GameVariant.PACMAN_XXL, new PacManGameXXLSceneConfig(ui.assets));
         ui.createAndStart(stage, initialSize());
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         Logger.info("Assets loaded: {}", ui.assets().summary(

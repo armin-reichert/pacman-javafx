@@ -52,9 +52,9 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     // Blue colors used in intro, dark to brighter blue shade.
     // Cycles through palette indices 0x01, 0x11, 0x21, 0x31, each frame takes 16 ticks.
-    static Color shadeOfBlue(long tick) {
-        int index = (int) (tick % 64) / 16;
-        return paletteColor(0x01 + 16*index);
+    private static Color shadeOfBlue(long tick) {
+        int i = (int) (tick % 64) / 16;
+        return paletteColor(0x01 + 0x10 * i);
     }
 
     // Maze images are taken from files "arcade_mazes.png" and "non_arcade_mazes.png" via AssetStorage
@@ -413,6 +413,10 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), symbolX, y);
             symbolX -= TS * 2;
         }
+    }
+
+    public void drawTengenPresents(long t, double x, double y) {
+        drawText("TENGEN PRESENTS", shadeOfBlue(t), scaledArcadeFont(TS), x, y);
     }
 
     private void drawLevelNumberBox(int levelNumber, double x, double y) {
