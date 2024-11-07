@@ -189,7 +189,7 @@ public abstract class GameModel {
         setActorBaseSpeed(level.number);
         initScore(level.number);
         letsGetReadyToRumble();
-        level.startTime = System.currentTimeMillis();
+        level.setStartTime(System.currentTimeMillis());
         Logger.info("{} started", level.isDemoLevel() ? "Demo Level" : "Level " + level.number);
         Logger.info("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
         level.ghosts().forEach(ghost -> Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));

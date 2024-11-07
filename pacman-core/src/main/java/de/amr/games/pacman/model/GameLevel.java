@@ -23,7 +23,7 @@ public class GameLevel {
 
     public final int number; // 1=first level
     private boolean demoLevel;
-    public long startTime;
+    private long startTime;
     public int killedGhostCount;
     public GameWorld world;
     private Pac pac;
@@ -45,6 +45,14 @@ public class GameLevel {
 
     public boolean isDemoLevel() {
         return demoLevel;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public long startTime() {
+        return startTime;
     }
 
     public void setPac(Pac pac) {
