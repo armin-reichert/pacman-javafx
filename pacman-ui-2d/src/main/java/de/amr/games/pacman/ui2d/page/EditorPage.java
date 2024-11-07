@@ -56,7 +56,7 @@ public class EditorPage extends BorderPane implements Page {
         editor.getFileMenu().getItems().add(miQuitEditor);
 
         // load maps from core module
-        editor.addLoadMapMenuItem("Pac-Man", loadMap("pacman.world"));
+        editor.addLoadMapMenuItem("Pac-Man", loadMap("pacman/pacman.world"));
         editor.getLoadMapMenu().getItems().add(new SeparatorMenuItem());
         for (int mapNumber = 1; mapNumber <= 6; ++mapNumber) {
             WorldMap map = loadMap("mspacman/mspacman_%d.world".formatted(mapNumber));
@@ -66,7 +66,7 @@ public class EditorPage extends BorderPane implements Page {
         }
         editor.getLoadMapMenu().getItems().add(new SeparatorMenuItem());
         for (int mapNumber = 1; mapNumber <= 8; ++mapNumber) {
-            WorldMap map = loadMap("masonic/masonic_%d.world".formatted(mapNumber));
+            WorldMap map = loadMap("pacman_xxl/masonic_%d.world".formatted(mapNumber));
             if (map != null) {
                 editor.addLoadMapMenuItem("Pac-Man XXL " + mapNumber, map);
             }

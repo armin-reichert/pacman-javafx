@@ -106,9 +106,7 @@ public abstract class GameModel {
     public abstract long         gameOverStateTicks();
     public abstract void         setDemoLevelBehavior();
 
-    protected abstract GameWorld createWorld(WorldMap map);
-    protected abstract Pac       createPac();
-    protected abstract Ghost[]   createGhosts();
+    protected abstract void      createWorldAndPopulation(WorldMap map);
     protected abstract void      buildLevel(int levelNumber);
     protected abstract void      buildDemoLevel();
     protected abstract void      setActorBaseSpeed(int levelNumber);
@@ -240,26 +238,6 @@ public abstract class GameModel {
 
     public void removeWorld() {
         world = null;
-    }
-
-    protected void createWorldAndPopulation(WorldMap map) {
-        world = createWorld(map);
-
-        pac = createPac();
-        pac.setWorld(world);
-        pac.reset();
-
-        ghosts = createGhosts();
-        ghosts().forEach(ghost -> {
-            ghost.setWorld(world);
-            ghost.reset();
-            ghost.setRevivalPosition(world.ghostPosition(ghost.id()));
-        });
-        ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
-
-        //TODO this might not be appropriate for Tengen Ms. Pac-Man
-        bonusSymbols[0] = computeBonusSymbol();
-        bonusSymbols[1] = computeBonusSymbol();
     }
 
     public void startLevel() {

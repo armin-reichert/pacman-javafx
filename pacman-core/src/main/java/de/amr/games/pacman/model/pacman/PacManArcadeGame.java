@@ -197,16 +197,26 @@ public class PacManArcadeGame extends GameModel {
         };
     }
 
-    @Override
-    protected Pac createPac() {
-        Pac pacMan = new Pac();
-        pacMan.setName("Pac-Man");
-        return pacMan;
-    }
+    protected void createWorldAndPopulation(WorldMap map) {
+        world = new GameWorld(map);
+        world.createArcadeHouse(HOUSE_X, HOUSE_Y);
 
-    @Override
-    protected Ghost[] createGhosts() {
-        return new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.clyde() };
+        pac = new Pac();
+        pac.setName("Pac-Man");
+        pac.setWorld(world);
+        pac.reset();
+
+        ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.clyde() };
+        ghosts().forEach(ghost -> {
+            ghost.setWorld(world);
+            ghost.reset();
+            ghost.setRevivalPosition(world.ghostPosition(ghost.id()));
+        });
+        ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
+
+        //TODO this might not be appropriate for Tengen Ms. Pac-Man
+        bonusSymbols[0] = computeBonusSymbol();
+        bonusSymbols[1] = computeBonusSymbol();
     }
 
     @Override
@@ -250,13 +260,6 @@ public class PacManArcadeGame extends GameModel {
         pac.setAutopilot(demoLevelSteering);
         pac.setUsingAutopilot(true);
         pac.setImmune(false);
-    }
-
-    @Override
-    protected GameWorld createWorld(WorldMap map) {
-        var world = new GameWorld(map);
-        world.createArcadeHouse(HOUSE_X, HOUSE_Y);
-        return world;
     }
 
     @Override

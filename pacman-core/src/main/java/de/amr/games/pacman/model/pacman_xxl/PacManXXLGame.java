@@ -70,6 +70,17 @@ public class PacManXXLGame extends PacManArcadeGame {
     }
 
     @Override
+    protected void createWorldAndPopulation(WorldMap map) {
+        super.createWorldAndPopulation(map);
+        if (!map.terrain().hasProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE)) {
+            Logger.warn("No house min tile found in map!");
+            map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(v2i(10, 15)));
+        }
+        Vector2i topLeftTile = map.terrain().getTileProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, null);
+        world.createArcadeHouse(topLeftTile.x(), topLeftTile.y());
+    }
+
+    @Override
     public void buildLevel(int levelNumber) {
         currentLevelNumber = levelNumber;
         currentMapConfig = createMapConfig(levelNumber);
@@ -170,17 +181,5 @@ public class PacManXXLGame extends PacManArcadeGame {
             Logger.info("Custom map loaded from " + mapFile);
         }
         publishGameEvent(GameEventType.CUSTOM_MAPS_CHANGED);
-    }
-
-    @Override
-    protected GameWorld createWorld(WorldMap map) {
-        var world = new GameWorld(map);
-        if (!map.terrain().hasProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE)) {
-            Logger.warn("No house min tile found in map!");
-            map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(v2i(10, 15)));
-        }
-        Vector2i topLeftTile = map.terrain().getTileProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, null);
-        world.createArcadeHouse(topLeftTile.x(), topLeftTile.y());
-        return world;
     }
 }

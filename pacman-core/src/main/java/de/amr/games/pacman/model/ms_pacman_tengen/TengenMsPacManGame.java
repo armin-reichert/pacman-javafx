@@ -202,13 +202,6 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     @Override
-    protected Pac createPac() {
-        Pac msPacMan = new Pac();
-        msPacMan.setName("Ms. Pac-Man");
-        return msPacMan;
-    }
-
-    @Override
     public long pacPowerTicks() {
         if (!inRange(currentLevelNumber, MIN_LEVEL_NUMBER, MAX_LEVEL_NUMBER)) {
             return 0;
@@ -301,11 +294,6 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     @Override
-    protected Ghost[] createGhosts() {
-        return new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.sue() };
-    }
-
-    @Override
     public void startNewGame() {
         reset();
         createLevel(startLevelNumber);
@@ -351,6 +339,28 @@ public class TengenMsPacManGame extends GameModel {
             pac.setBaseSpeed(speed);
             pac.selectAnimation(boosterActive ? ANIM_MS_PACMAN_BOOSTER : ANIM_PAC_MUNCHING);
         }
+    }
+
+    protected void createWorldAndPopulation(WorldMap map) {
+        world = new GameWorld(map);
+        world.createArcadeHouse(10, 15);
+
+        pac = new Pac();
+        pac.setName("Ms. Pac-Man");
+        pac.setWorld(world);
+        pac.reset();
+
+        ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.sue() };
+        ghosts().forEach(ghost -> {
+            ghost.setWorld(world);
+            ghost.reset();
+            ghost.setRevivalPosition(world.ghostPosition(ghost.id()));
+        });
+        ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
+
+        //TODO this might not be appropriate for Tengen Ms. Pac-Man
+        bonusSymbols[0] = computeBonusSymbol();
+        bonusSymbols[1] = computeBonusSymbol();
     }
 
     @Override
@@ -478,13 +488,6 @@ public class TengenMsPacManGame extends GameModel {
         bonus = movingBonus;
         bonus.setEdible(TickTimer.INDEFINITE);
         publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
-    }
-
-    @Override
-    protected GameWorld createWorld(WorldMap map) {
-        var world = new GameWorld(map);
-        world.createArcadeHouse(10, 15);
-        return world;
     }
 
     @Override
