@@ -60,7 +60,6 @@ public abstract class GameModel {
     protected final byte[]         bonusSymbols = new byte[2];
     protected final List<Byte>     levelCounter = new ArrayList<>();
     protected final TickTimer      powerTimer = new TickTimer("PacPowerTimer");
-    protected final List<Ghost>    victims = new ArrayList<>();
     protected final GateKeeper     gateKeeper = new GateKeeper(this);
     protected final ScoreManager   scoreManager = new ScoreManager(this);
     protected HuntingControl       huntingControl;
@@ -69,7 +68,6 @@ public abstract class GameModel {
     protected boolean              playing;
     protected int                  initialLives;
     protected int                  lives;
-    protected MapConfig            currentMapConfig;
     protected SimulationStepLog    eventLog;
 
     protected GameLevel            level;
@@ -124,20 +122,12 @@ public abstract class GameModel {
         return powerTimer;
     }
 
-    public List<Ghost> victims() {
-        return victims;
-    }
-
     public Pulse blinking() {
         return blinking;
     }
 
     public HuntingControl huntingControl() {
         return huntingControl;
-    }
-
-    public MapConfig currentMapConfig() {
-        return currentMapConfig;
     }
 
     public void reset() {
@@ -166,6 +156,7 @@ public abstract class GameModel {
             level.ghosts = null;
             level.bonus = null;
             level.nextBonusIndex = -1;
+            level.victims().clear();
         }
 
         scoreManager.setScoreEnabled(false);
@@ -417,7 +408,7 @@ public abstract class GameModel {
     }
 
     protected void processEatenEnergizer() {
-        victims.clear(); // ghosts eaten using this energizer
+        level.victims.clear(); // ghosts eaten using this energizer
         if (pacPowerTicks() > 0) {
             eventLog.pacGetsPower = true;
             huntingControl.stop();
@@ -440,7 +431,7 @@ public abstract class GameModel {
             powerTimer.stop();
             powerTimer.reset(0);
             Logger.info("Power timer stopped and reset to zero");
-            victims.clear();
+            level.victims.clear();
             huntingControl.start();
             Logger.info("Hunting timer started");
             level.ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
@@ -474,7 +465,7 @@ public abstract class GameModel {
 
     public void killGhost(Ghost ghost) {
         eventLog.killedGhosts.add(ghost);
-        int killedSoFar = victims.size();
+        int killedSoFar = level.victims.size();
         int points = KILLED_GHOST_VALUES[killedSoFar];
         ghost.eaten(killedSoFar);
         scoreManager.scorePoints(points);
@@ -485,7 +476,7 @@ public abstract class GameModel {
             scoreManager.scorePoints(extraPoints);
             Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number);
         }
-        victims.add(ghost);
+        level.victims.add(ghost);
     }
 
     // Game Event Support

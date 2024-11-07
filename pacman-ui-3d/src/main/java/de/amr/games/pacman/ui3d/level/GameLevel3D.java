@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui3d.level;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
@@ -196,11 +197,13 @@ public class GameLevel3D {
     public GameLevel3D(GameContext context) {
         final GameVariant variant = context.currentGameVariant();
         final GameModel game = context.game();
-        final GameWorld world = context.level().world;
+        final GameLevel level = game.level().orElseThrow();
+        final GameWorld world = level.world;
         final AssetStorage assets = context.assets();
 
-        pac3D = createPac3D(variant, assets, context.sound(), context.level().pac());
-        ghosts3D = context.level().ghosts().map(ghost -> createMutableGhost3D(assets, assetPrefix(variant), ghost, game.numFlashes())).toList();
+        pac3D = createPac3D(variant, assets, context.sound(), level.pac());
+        ghosts3D = level.ghosts().map(ghost -> createMutableGhost3D(assets, assetPrefix(variant), ghost,
+                game.numFlashes())).toList();
         livesCounter3D = createLivesCounter3D(variant, assets, game.canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCounterPy);
         message3D = createMessage3D(assets);
@@ -211,8 +214,8 @@ public class GameLevel3D {
 
         wallStrokeMaterialPy.bind(wallStrokeColorPy.map(Ufx::coloredMaterial));
 
-        buildWorld3D(world, assets, game.currentMapConfig().colorScheme());
-        addFood3D(world, assets, game.currentMapConfig().colorScheme());
+        buildWorld3D(world, assets, level.currentMapConfig().colorScheme());
+        addFood3D(world, assets, level.currentMapConfig().colorScheme());
 
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
         root.getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());

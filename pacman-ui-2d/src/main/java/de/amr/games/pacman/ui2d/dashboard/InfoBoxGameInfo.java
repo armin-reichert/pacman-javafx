@@ -6,9 +6,10 @@ package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.*;
+import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameContext;
 
 import java.util.Map;
@@ -32,12 +33,11 @@ public class InfoBoxGameInfo extends InfoBox {
             String url = level.world.map().url().toString();
             return url.substring(url.lastIndexOf("/") + 1);
         }));
-        labeledValue("Color Scheme", ifLevelPresent(world -> {
+        labeledValue("Color Scheme", ifLevelPresent(level -> {
             if (context.currentGameVariant() != GameVariant.MS_PACMAN_TENGEN) {
                 return InfoText.NO_INFO;
             }
-            TengenMsPacManGame game = (TengenMsPacManGame) context.game();
-            Map<String, String> mapColorScheme = game.currentMapConfig().colorScheme();
+            Map<String, String> mapColorScheme = level.currentMapConfig().colorScheme();
             if (mapColorScheme == null) {
                 return InfoText.NO_INFO;
             }

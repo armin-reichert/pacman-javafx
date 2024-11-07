@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -102,9 +103,10 @@ public class MsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void update(GameModel game) {
-        if (game.currentMapConfig() != null) {
+        GameLevel level = game.level().orElseThrow();
+        if (level.currentMapConfig() != null) {
             // select map sprites for current color scheme
-            var colorScheme = game.currentMapConfig().colorScheme();
+            var colorScheme = level.currentMapConfig().colorScheme();
             int index = MapConfigurationManager.colorSchemeIndex(colorScheme);
             if (index != -1) {
                 mapWithFoodSprite = spriteSheet.imageArea(0, index * 248, 226, 248);

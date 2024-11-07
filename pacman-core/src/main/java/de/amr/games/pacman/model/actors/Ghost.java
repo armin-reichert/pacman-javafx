@@ -267,6 +267,7 @@ public class Ghost extends Creature implements AnimatedEntity {
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
     private void updateStateLocked(GameModel game) {
+        GameLevel level = game.level().orElseThrow();
         if (insideHouse()) {
             float minY = world.houseCeilingY() + HTS, maxY = world().houseFloorY() - HTS;
             setSpeed(game.ghostSpeedInsideHouse(this));
@@ -280,7 +281,7 @@ public class Ghost extends Creature implements AnimatedEntity {
         } else {
             setSpeed(0);
         }
-        if (game.powerTimer().isRunning() && !game.victims().contains(this)) {
+        if (game.powerTimer().isRunning() && !level.victims().contains(this)) {
             updateFrightenedAnimation(game);
         } else {
             selectAnimation(GameModel.ANIM_GHOST_NORMAL);
@@ -297,6 +298,7 @@ public class Ghost extends Creature implements AnimatedEntity {
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
     private void updateStateLeavingHouse(GameModel game) {
+        GameLevel level = game.level().orElseThrow();
         float speedInsideHouse = game.ghostSpeedInsideHouse(this);
         Vector2f houseEntryPosition = world.houseEntryPosition();
         if (posY() <= houseEntryPosition.y()) {
@@ -304,7 +306,7 @@ public class Ghost extends Creature implements AnimatedEntity {
             setPosition(houseEntryPosition);
             setMoveAndWishDir(LEFT);
             newTileEntered = false; // force moving left until new tile is entered
-            if (game.powerTimer().isRunning() && !game.victims().contains(this)) {
+            if (game.powerTimer().isRunning() && !level.victims().contains(this)) {
                 setState(FRIGHTENED);
             } else {
                 setState(HUNTING_PAC);
@@ -324,7 +326,7 @@ public class Ghost extends Creature implements AnimatedEntity {
         }
         setSpeed(speedInsideHouse);
         move();
-        if (game.powerTimer().isRunning() && !game.victims().contains(this)) {
+        if (game.powerTimer().isRunning() && !level.victims().contains(this)) {
             updateFrightenedAnimation(game);
         } else {
             selectAnimation(GameModel.ANIM_GHOST_NORMAL);

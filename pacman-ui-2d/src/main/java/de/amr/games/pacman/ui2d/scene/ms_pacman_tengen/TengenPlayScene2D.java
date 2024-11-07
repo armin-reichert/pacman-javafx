@@ -10,6 +10,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.NES;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
@@ -245,8 +246,9 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         String assetPrefix = assetPrefix(GameVariant.MS_PACMAN_TENGEN);
         GameState state = context.gameState();
         GameModel game = context.game();
-        if (context.level().demoLevel) {
-            Color color = Color.web(game.currentMapConfig().colorScheme().get("stroke"));
+        GameLevel level = game.level().orElseThrow();
+        if (level.demoLevel) {
+            Color color = Color.web(level.currentMapConfig().colorScheme().get("stroke"));
             drawText(renderer, "GAME  OVER", cx, y, color);
         } else if (state == GameState.GAME_OVER) {
             Color color = assets.color(assetPrefix + ".color.game_over_message");
@@ -255,7 +257,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             Color color = assets.color(assetPrefix + ".color.ready_message");
             drawText(renderer, "READY!", cx, y, color);
         } else if (state == GameState.TESTING_LEVEL_BONI) {
-            drawText(renderer, "TEST L%02d".formatted(game.level().get().number), cx, y, paletteColor(0x28));
+            drawText(renderer, "TEST L%02d".formatted(level.number), cx, y, paletteColor(0x28));
         }
     }
 

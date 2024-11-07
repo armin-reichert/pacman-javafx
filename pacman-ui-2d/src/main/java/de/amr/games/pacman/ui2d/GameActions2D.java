@@ -91,7 +91,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             if (context.game().isPlaying() && context.gameState() == GameState.HUNTING) {
-                context.game().victims().clear();
+                context.level().victims().clear();
                 context.level().ghosts(FRIGHTENED, HUNTING_PAC).forEach(context.game()::killGhost);
                 context.gameController().changeState(GameState.GHOST_DYING);
             }

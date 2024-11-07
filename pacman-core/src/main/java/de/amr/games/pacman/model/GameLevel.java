@@ -5,6 +5,8 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -26,8 +28,10 @@ public class GameLevel {
     public GameWorld world;
     public Pac pac;
     public Ghost[] ghosts;
+    public final List<Ghost> victims = new ArrayList<>();
     public Bonus bonus;
     public byte nextBonusIndex; // -1=no bonus, 0=first, 1=second
+    public MapConfig currentMapConfig;
 
     public Pac pac() { return pac; }
 
@@ -44,9 +48,15 @@ public class GameLevel {
         return states.length == 0 ? Stream.of(ghosts) : Stream.of(ghosts).filter(ghost -> ghost.inState(states));
     }
 
+    public List<Ghost> victims() {
+        return victims;
+    }
+
     public Optional<Bonus> bonus() {
         return Optional.ofNullable(bonus);
     }
 
+    public MapConfig currentMapConfig() {
+        return currentMapConfig;
+    }
 }
-

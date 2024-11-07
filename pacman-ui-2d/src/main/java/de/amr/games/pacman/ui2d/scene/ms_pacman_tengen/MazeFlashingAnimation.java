@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.nes.NES;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapConfigurationManager;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import javafx.scene.paint.Color;
@@ -35,9 +36,9 @@ public class MazeFlashingAnimation {
     private boolean highlightPhase;
 
     public void init(TengenMsPacManGame game) {
-        Map<String, Color> currentScheme = mapToColors(game.currentMapConfig().colorScheme());
-        boolean random = game.mapConfigMgr().isRandomColorSchemeUsed(game.mapCategory(),
-            game.level().get().number);
+        GameLevel level = game.level().orElseThrow();
+        Map<String, Color> currentScheme = mapToColors(level.currentMapConfig().colorScheme());
+        boolean random = game.mapConfigMgr().isRandomColorSchemeUsed(game.mapCategory(), level.number);
         colorSchemes.clear();
         for (int i = 0; i < game.numFlashes(); ++i) {
             colorSchemes.add(random ? randomColorfulScheme() : currentScheme);

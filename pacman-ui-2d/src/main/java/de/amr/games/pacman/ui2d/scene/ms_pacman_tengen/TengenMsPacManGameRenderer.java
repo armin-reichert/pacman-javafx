@@ -101,9 +101,8 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             Logger.warn("Cannot update renderer for game, no level exists");
             return;
         }
-
-        TengenMsPacManGame tengenGame = (TengenMsPacManGame) game;
-        MapConfig mapConfig = tengenGame.currentMapConfig();
+        GameLevel level = game.level().get();
+        MapConfig mapConfig = level.currentMapConfig();
         MapCategory category = (MapCategory) mapConfig.mapCategory();
         mapSprite = switch (category) {
             case ARCADE  -> arcadeMapSpriteImageArea(mapConfig);
@@ -353,8 +352,8 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         }
         GameLevel level = game.level().orElseThrow();
         // Maze #32 of STRANGE has psychedelic animation
-        if (game.currentMapConfig().mapCategory() == MapCategory.STRANGE &&
-                game.currentMapConfig().mapNumber() == 32) {
+        if (level.currentMapConfig().mapCategory() == MapCategory.STRANGE &&
+                level.currentMapConfig().mapNumber() == 32) {
             drawAnimatedMap(t, TengenNonArcadeMapsSpriteSheet.MAP_32_ANIMATION_FRAMES);
         } else {
             RectArea mapArea = mapSprite.area();

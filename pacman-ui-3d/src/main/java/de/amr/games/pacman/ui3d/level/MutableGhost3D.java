@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -168,6 +169,7 @@ public class MutableGhost3D {
     }
 
     private void updateLook(GameModel game) {
+        GameLevel level = game.level().orElseThrow();
         if (ghost.state() == null) {
             // can this happen?
             lookPy.set(Look.NORMAL);
@@ -176,7 +178,7 @@ public class MutableGhost3D {
         Look newLook = switch (ghost.state()) {
             case LEAVING_HOUSE, LOCKED ->
                 // ghost that have been killed by current energizer will not look frightened
-                game.powerTimer().isRunning() && !game.victims().contains(ghost)
+                game.powerTimer().isRunning() && !level.victims().contains(ghost)
                     ? frightenedOrFlashing(game) : Look.NORMAL;
             case FRIGHTENED -> frightenedOrFlashing(game);
             case ENTERING_HOUSE, RETURNING_HOME -> Look.EYES;

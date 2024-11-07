@@ -117,6 +117,7 @@ public class PacManArcadeGame extends GameModel {
 
     protected static final Vector2f BONUS_POS = halfTileRightOf(13, 20);
 
+    private final MapConfig theMapConfig;
     private final Steering autopilot = new RuleBasedPacSteering(this);
     private final Steering demoLevelSteering = new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE));
     private byte cruiseElroy;
@@ -129,8 +130,8 @@ public class PacManArcadeGame extends GameModel {
         scoreManager.setExtraLifeScores(10_000);
 
         // fixed map configuration
-        var worldMap = new WorldMap(getClass().getResource("/de/amr/games/pacman/maps/pacman/pacman.world"));
-        currentMapConfig = new MapConfig("Pac-Man Arcade Map", 1, worldMap, MAP_COLOR_SCHEME);
+        var theMap = new WorldMap(getClass().getResource("/de/amr/games/pacman/maps/pacman/pacman.world"));
+        theMapConfig = new MapConfig("Pac-Man Arcade Map", 1, theMap, MAP_COLOR_SCHEME);
 
         huntingControl = new HuntingControl("HuntingControl-" + getClass().getSimpleName()) {
             // Ticks of scatter and chasing phases, -1 = forever
@@ -241,15 +242,14 @@ public class PacManArcadeGame extends GameModel {
     public void buildLevel(int levelNumber) {
         level.number = levelNumber;
         levelCounterEnabled = true;
-
-        WorldMap worldMap = currentMapConfig.worldMap();
-        createWorldAndPopulation(worldMap);
+        createWorldAndPopulation(theMapConfig.worldMap());
+        level.currentMapConfig = theMapConfig;
 
         level.pac.setAutopilot(autopilot);
         setCruiseElroy(0);
 
-        List<Vector2i> oneWayDownTiles = worldMap.terrain().tiles()
-            .filter(tile -> worldMap.terrain().get(tile) == Tiles.ONE_WAY_DOWN).toList();
+        List<Vector2i> oneWayDownTiles = theMapConfig.worldMap().terrain().tiles()
+            .filter(tile -> theMapConfig.worldMap().terrain().get(tile) == Tiles.ONE_WAY_DOWN).toList();
         level.ghosts().forEach(ghost -> {
             ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
             ghost.setSpecialTerrainTiles(oneWayDownTiles);
