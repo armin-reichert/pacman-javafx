@@ -7,6 +7,7 @@ package de.amr.games.pacman.model.ms_pacman_tengen;
 import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -375,6 +376,10 @@ public class TengenMsPacManGame extends GameModel {
         pac.setAutopilot(autopilot);
         setBoosterActive(false); // gets activated in startLevel() if mode is ALWAYS_ON
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+        // ghosts inside house start at floor of house
+        ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost -> {
+            world.setGhostPosition(ghost.id(), world.ghostPosition(ghost.id()).plus(0, HTS));
+        });
     }
 
     @Override
@@ -385,6 +390,10 @@ public class TengenMsPacManGame extends GameModel {
         createWorldAndPopulation(currentMapConfig.worldMap());
         setBoosterActive(false); // gets activated in startLevel() if mode is ALWAYS_ON
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+        // ghosts inside house start at floor of house
+        ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost -> {
+            world.setGhostPosition(ghost.id(), world.ghostPosition(ghost.id()).plus(0, HTS));
+        });
         setDemoLevelBehavior();
     }
 
@@ -393,14 +402,6 @@ public class TengenMsPacManGame extends GameModel {
         pac.setAutopilot(demoLevelSteering);
         pac.setUsingAutopilot(true);
         pac.setImmune(false);
-    }
-
-    @Override
-    public void letsGetReadyToRumble() {
-        super.letsGetReadyToRumble();
-        // ghosts inside house start at floor of house
-        float posY = world.houseFloorY() - HTS;
-        ghosts().filter(Ghost::insideHouse).forEach(ghost -> ghost.setPosY(posY));
     }
 
     @Override

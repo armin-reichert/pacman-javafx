@@ -106,7 +106,6 @@ public abstract class GameModel {
     public abstract long         gameOverStateTicks();
     public abstract void         setDemoLevelBehavior();
 
-    protected abstract void      createWorldAndPopulation(WorldMap map);
     protected abstract void      buildLevel(int levelNumber);
     protected abstract void      buildDemoLevel();
     protected abstract void      setActorBaseSpeed(int levelNumber);

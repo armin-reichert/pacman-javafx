@@ -238,6 +238,11 @@ public class GameWorld {
         return pacPosition;
     }
 
+    public void setGhostPosition(byte ghostID, Vector2f position) {
+        checkGhostID(ghostID);
+        ghostPositions[ghostID] = position;
+    }
+
     public Vector2f ghostPosition(byte ghostID) {
         checkGhostID(ghostID);
         return ghostPositions[ghostID];
