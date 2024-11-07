@@ -69,24 +69,26 @@ public class PacManXXLGame extends PacManArcadeGame {
     }
 
     @Override
-    protected void createWorldAndPopulation(WorldMap map) {
-        super.createWorldAndPopulation(map);
-        if (!map.terrain().hasProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE)) {
+    protected void populateLevel(WorldMap worldMap) {
+        super.populateLevel(worldMap);
+        if (!worldMap.terrain().hasProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
-            map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(v2i(10, 15)));
+            worldMap.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(v2i(10, 15)));
         }
-        Vector2i topLeftTile = map.terrain().getTileProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i topLeftTile = worldMap.terrain().getTileProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, null);
         level.world().createArcadeHouse(topLeftTile.x(), topLeftTile.y());
     }
 
     @Override
     public void configureNormalLevel() {
-        level.setMapConfig(createMapConfig(level.number));
-        createWorldAndPopulation(level.mapConfig().worldMap());
-        level.pac().setAutopilot(new RuleBasedPacSteering(this));
+        MapConfig mapConfig = createMapConfig(level.number);
+        level.setMapConfig(mapConfig);
+        populateLevel(mapConfig.worldMap());
+        level.pac().setAutopilot(autopilot);
         level.pac().setUsingAutopilot(false);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         setCruiseElroy(0);
+        levelCounterEnabled = true;
         Logger.info("Map selection mode is {}", mapSelectionMode);
         Logger.info("Selected map config: {}, URL: {}", level.mapConfig(), level.mapConfig().worldMap().url());
     }

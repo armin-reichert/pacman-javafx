@@ -119,9 +119,10 @@ public class PacManArcadeGame extends GameModel {
     protected static final Vector2f BONUS_POS = halfTileRightOf(13, 20);
 
     private final MapConfig theMapConfig;
-    private final Steering autopilot = new RuleBasedPacSteering(this);
-    private final Steering demoLevelSteering = new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE));
-    private byte cruiseElroy;
+
+    protected final Steering autopilot = new RuleBasedPacSteering(this);
+    protected final Steering demoLevelSteering = new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE));
+    protected byte cruiseElroy;
 
     public PacManArcadeGame(File userDir) {
         super(userDir);
@@ -205,9 +206,10 @@ public class PacManArcadeGame extends GameModel {
         };
     }
 
-    protected void createWorldAndPopulation(WorldMap map) {
-        level.setWorld(new GameWorld(map));
-        level.world().createArcadeHouse(HOUSE_X, HOUSE_Y);
+    protected void populateLevel(WorldMap worldMap) {
+        GameWorld world = new GameWorld(worldMap);
+        world.createArcadeHouse(HOUSE_X, HOUSE_Y);
+        level.setWorld(world);
 
         var pac = new Pac();
         pac.setName("Pac-Man");
@@ -243,9 +245,8 @@ public class PacManArcadeGame extends GameModel {
     @Override
     public void configureNormalLevel() {
         levelCounterEnabled = true;
-        createWorldAndPopulation(theMapConfig.worldMap());
         level.setMapConfig(theMapConfig);
-
+        populateLevel(theMapConfig.worldMap());
         level.pac().setAutopilot(autopilot);
         setCruiseElroy(0);
 
