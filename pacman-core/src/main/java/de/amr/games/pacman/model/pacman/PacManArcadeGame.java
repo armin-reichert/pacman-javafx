@@ -104,6 +104,9 @@ public class PacManArcadeGame extends GameModel {
         np(15, 32), np(12, 32), np(3, 29), np(6, 23)
     };
 
+    private static final byte PELLET_VALUE = 10;
+    private final byte ENERGIZER_VALUE = 50;
+
     // Note: First level number is 1
     protected static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {42, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
     // Bonus value = factor * 100
@@ -143,7 +146,7 @@ public class PacManArcadeGame extends GameModel {
                 return ticks != -1 ? ticks : TickTimer.INDEFINITE;
             }
         };
-        huntingControl.setOnPhaseChange(() -> ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible));
+        huntingControl.setOnPhaseChange(() -> ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
     }
 
     protected LevelData levelData(int levelNumber) {
@@ -345,10 +348,10 @@ public class PacManArcadeGame extends GameModel {
         }
         if (energizer) {
             processEatenEnergizer();
-            scoreManager.scorePoints(energizerValue());
-            Logger.info("Scored {} points for eating energizer", energizerValue());
+            scoreManager.scorePoints(ENERGIZER_VALUE);
+            Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         } else {
-            scoreManager.scorePoints(pelletValue());
+            scoreManager.scorePoints(PELLET_VALUE);
         }
         gateKeeper.registerFoodEaten();
         if (isBonusReached()) {

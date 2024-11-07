@@ -10,7 +10,6 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.*;
@@ -434,7 +433,7 @@ public abstract class GameModel {
         }
     }
 
-    protected void checkForFood(Vector2i tile) {
+    private void checkForFood(Vector2i tile) {
         if (!world.hasFoodAt(tile)) {
             pac.starve();
             return;
@@ -456,16 +455,12 @@ public abstract class GameModel {
             powerTimer.restartTicks(pacPowerTicks());
             Logger.info("Hunting paused, power timer restarted, duration={} ticks", powerTimer.duration());
             ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
-            ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
+            ghosts(FRIGHTENED).forEach(Ghost::reverseASAP);
             publishGameEvent(GameEventType.PAC_GETS_POWER);
         } else {
-            ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAsSoonAsPossible);
+            ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseASAP);
         }
     }
-
-    protected int pelletValue() { return 10; }
-
-    protected int energizerValue() { return 50; }
 
     private void updatePacPower() {
         powerTimer.tick();

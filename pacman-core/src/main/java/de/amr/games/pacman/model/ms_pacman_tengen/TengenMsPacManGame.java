@@ -7,7 +7,6 @@ package de.amr.games.pacman.model.ms_pacman_tengen;
 import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -39,6 +38,9 @@ public class TengenMsPacManGame extends GameModel {
     // Animation IDs specific to this game
     public static final String ANIM_MS_PACMAN_BOOSTER = "ms_pacman_booster";
     public static final String ANIM_PACMAN_BOOSTER    = "pacman_booster";
+
+    static final byte PELLET_VALUE = 10;
+    static final byte ENERGIZER_VALUE = 50;
 
     // Bonus symbols in Arcade, Mini and Big mazes
     public static final byte BONUS_CHERRY      = 0;
@@ -124,7 +126,7 @@ public class TengenMsPacManGame extends GameModel {
                 return ticks != -1 ? ticks : TickTimer.INDEFINITE;
             }
         };
-        huntingControl.setOnPhaseChange(() -> ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible));
+        huntingControl.setOnPhaseChange(() -> ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
 
         setMapCategory(MapCategory.ARCADE);
         setBoosterMode(BoosterMode.OFF);
@@ -501,10 +503,10 @@ public class TengenMsPacManGame extends GameModel {
         //pac.setRestingTicks(energizer ? 3 : 1);
         if (energizer) {
             processEatenEnergizer();
-            scoreManager.scorePoints(energizerValue());
-            Logger.info("Scored {} points for eating energizer", energizerValue());
+            scoreManager.scorePoints(ENERGIZER_VALUE);
+            Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         } else {
-            scoreManager.scorePoints(pelletValue());
+            scoreManager.scorePoints(PELLET_VALUE);
         }
         gateKeeper.registerFoodEaten();
         if (isBonusReached()) {

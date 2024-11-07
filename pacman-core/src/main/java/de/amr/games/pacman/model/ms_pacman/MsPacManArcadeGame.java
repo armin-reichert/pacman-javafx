@@ -78,6 +78,9 @@ public class MsPacManArcadeGame extends GameModel {
     // To assure that the demo level runs at least 20 seconds:
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
+    private static final byte PELLET_VALUE = 10;
+    private static final byte ENERGIZER_VALUE = 50;
+
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
 
     private final MapConfigurationManager mapConfigMgr = new MapConfigurationManager();
@@ -110,7 +113,7 @@ public class MsPacManArcadeGame extends GameModel {
                 return ticks != -1 ? ticks : TickTimer.INDEFINITE;
             }
         };
-        huntingControl.setOnPhaseChange(() -> ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible));
+        huntingControl.setOnPhaseChange(() -> ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
     }
 
     public Optional<LevelData> currentLevelData() {
@@ -318,10 +321,10 @@ public class MsPacManArcadeGame extends GameModel {
         }
         if (energizer) {
             processEatenEnergizer();
-            scoreManager().scorePoints(energizerValue());
-            Logger.info("Scored {} points for eating energizer", energizerValue());
+            scoreManager().scorePoints(ENERGIZER_VALUE);
+            Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         } else {
-            scoreManager.scorePoints(pelletValue());
+            scoreManager.scorePoints(PELLET_VALUE);
         }
         gateKeeper.registerFoodEaten();
         if (isBonusReached()) {

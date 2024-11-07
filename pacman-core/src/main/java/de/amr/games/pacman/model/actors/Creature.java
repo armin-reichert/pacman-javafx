@@ -205,7 +205,7 @@ public abstract class Creature extends Entity {
     /**
      * Signals that this creature should reverse its move direction as soon as possible.
      */
-    public void reverseAsSoonAsPossible() {
+    public void reverseASAP() {
         gotReverseCommand = true;
         Logger.debug("Reverse! {}", this);
     }
