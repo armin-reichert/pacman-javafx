@@ -85,7 +85,7 @@ public class PacMan3D implements Pac3D {
     public void update(GameContext context) {
         if (pacMan.isAlive()) {
             shape3D.updatePosition(pacMan);
-            shape3D.updateLight(pacMan, context.game());
+            shape3D.updateLight(pacMan, context.level());
             shape3D.updateVisibility(pacMan, context.level().world());
         }
         if (pacMan.isAlive() && !pacMan.isStandingStill()) {

@@ -178,7 +178,7 @@ public class MutableGhost3D {
         Look newLook = switch (ghost.state()) {
             case LEAVING_HOUSE, LOCKED ->
                 // ghost that have been killed by current energizer will not look frightened
-                game.powerTimer().isRunning() && !level.victims().contains(ghost)
+                level.powerTimer().isRunning() && !level.victims().contains(ghost)
                     ? frightenedOrFlashing(game) : Look.NORMAL;
             case FRIGHTENED -> frightenedOrFlashing(game);
             case ENTERING_HOUSE, RETURNING_HOME -> Look.EYES;

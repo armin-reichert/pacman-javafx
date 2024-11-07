@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui3d.level;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.util.Ufx;
@@ -102,8 +102,8 @@ public class PacShape3D extends Group {
     /**
      * When empowered, Pac-Man is lighted, light range shrinks with ceasing power.
      */
-     public void updateLight(Pac pac, GameModel game) {
-        TickTimer powerTimer = game.powerTimer();
+     public void updateLight(Pac pac, GameLevel level) {
+        TickTimer powerTimer = level.powerTimer();
         if (PY_3D_PAC_LIGHT_ENABLED.get() && powerTimer.isRunning() && pac.isVisible()) {
             light.setLightOn(true);
             double remaining = powerTimer.remaining();

@@ -106,7 +106,7 @@ public class PlayScene2D extends GameScene2D {
     }
 
     private void updateSound(GameSound sound) {
-        if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
+        if (context.gameState() == GameState.HUNTING && !context.level().powerTimer().isRunning()) {
             int sirenNumber = 1 + context.game().huntingControl().phaseIndex() / 2;
             sound.selectSiren(sirenNumber);
             sound.playSiren();

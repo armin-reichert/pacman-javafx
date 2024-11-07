@@ -33,12 +33,12 @@ public class InfoBoxActorInfo extends InfoBox {
         labeledValue("Pac Name", pacInfo((game, pac) -> pac.name()));
         labeledValue("Movement", pacInfo(this::movementInfo));
         labeledValue("Tile",     pacInfo(this::locationInfo));
-        labeledValue("Power", () -> {
-            TickTimer powerTimer = context.game().powerTimer();
+        labeledValue("Power",    ifLevelPresent(level -> {
+            TickTimer powerTimer = level.powerTimer();
             return powerTimer.isRunning()
                 ? "Remaining: %s".formatted(ticksToString(powerTimer.remaining()))
                 : "No Power";
-        });
+        }));
         emptyRow();
         ghostInfo(GameModel.RED_GHOST);
         emptyRow();

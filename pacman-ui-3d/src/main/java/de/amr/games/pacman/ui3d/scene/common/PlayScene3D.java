@@ -230,7 +230,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     private void updateSound(GameSound sound) {
-        if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
+        if (context.gameState() == GameState.HUNTING && !context.level().powerTimer().isRunning()) {
             int sirenNumber = 1 + context.game().huntingControl().phaseIndex() / 2;
             sound.selectSiren(sirenNumber);
             sound.playSiren();
@@ -415,7 +415,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         level3D.pac3D().update(context);
 
         if (context.gameState() == GameState.HUNTING) {
-            if (context.game().powerTimer().isRunning()) {
+            if (context.level().powerTimer().isRunning()) {
                 context.sound().playPacPowerSound();
             }
             level3D.livesCounter3D().shapesRotation().play();

@@ -376,7 +376,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     private void updatePlaySceneSound() {
         GameSound sounds = context.sound();
-        if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
+        if (context.gameState() == GameState.HUNTING && !context.level().powerTimer().isRunning()) {
             HuntingControl huntingControl = context.game().huntingControl();
             int sirenNumber = 1 + huntingControl.phaseIndex() / 2; // TODO check how this works in original game
             sounds.selectSiren(sirenNumber);
