@@ -59,8 +59,9 @@ public class GameLevel {
         killedGhostCount = 0;
     }
 
-    public void addKilledGhost() {
+    public void addKilledGhost(Ghost victim) {
         killedGhostCount += 1;
+        victims.add(victim);
     }
 
     public int killedGhostCount() {
