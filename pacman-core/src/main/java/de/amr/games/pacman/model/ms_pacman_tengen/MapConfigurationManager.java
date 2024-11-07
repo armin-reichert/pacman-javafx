@@ -22,7 +22,7 @@ import static de.amr.games.pacman.model.ms_pacman_tengen.NamedMapColorScheme.*;
 
 public class MapConfigurationManager {
 
-    static final String MAPS_ROOT = "/de/amr/games/pacman/maps/tengen/";
+    static final String MAPS_ROOT = "/de/amr/games/pacman/maps/ms_pacman_tengen/";
 
     public static final Map<String, String> HIGHLIGHT_COLOR_SCHEME = Map.of(
             "fill",   NES.Palette.color(0x0f),

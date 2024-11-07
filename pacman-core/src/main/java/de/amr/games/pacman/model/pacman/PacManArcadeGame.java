@@ -123,7 +123,7 @@ public class PacManArcadeGame extends GameModel {
         scoreManager.setExtraLifeScores(10_000);
 
         // fixed map configuration
-        var worldMap = new WorldMap(getClass().getResource("/de/amr/games/pacman/maps/pacman.world"));
+        var worldMap = new WorldMap(getClass().getResource("/de/amr/games/pacman/maps/pacman/pacman.world"));
         currentMapConfig = new MapConfig("Pac-Man Arcade Map", 1, worldMap, MAP_COLOR_SCHEME);
 
         huntingControl = new HuntingControl("HuntingControl-" + getClass().getSimpleName()) {
@@ -211,8 +211,9 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     protected void setActorBaseSpeed(int levelNumber) {
-        pac.setBaseSpeed(73.9f / 60f); // TODO should be 75 but then it doesn't run synchronously to the original game
-        ghosts().forEach(ghost -> ghost.setBaseSpeed(73.9f / 60f)); // TODO see above
+        float speed = 1.24f; // TODO should be 1.25
+        pac.setBaseSpeed(speed);
+        ghosts().forEach(ghost -> ghost.setBaseSpeed(speed));
     }
 
     @Override
