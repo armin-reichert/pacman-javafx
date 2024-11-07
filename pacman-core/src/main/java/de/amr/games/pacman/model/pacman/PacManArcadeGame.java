@@ -240,7 +240,6 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     public void buildLevel(int levelNumber) {
-        level.number = levelNumber;
         levelCounterEnabled = true;
         createWorldAndPopulation(theMapConfig.worldMap());
         level.currentMapConfig = theMapConfig;

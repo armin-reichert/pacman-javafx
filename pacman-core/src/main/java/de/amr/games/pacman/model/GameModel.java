@@ -142,34 +142,18 @@ public abstract class GameModel {
         publishGameEvent(GameEventType.GAME_STARTED);
     }
 
-    public void clearLevel() {
-        if (level != null) {
-            level.number = 0;
-            level.demoLevel = false;
-            level.startTime = 0;
-            level.killedGhostCount = 0;
-            level.world = null;
-            level.pac = null;
-            level.ghosts = null;
-            level.bonus = null;
-            level.nextBonusIndex = -1;
-            Arrays.fill(level.bonusSymbols, (byte)-1);
-            level.victims().clear();
-        }
-
-        scoreManager.setScoreEnabled(false);
-        huntingControl.reset();
-
-        blinking.stop();
-        blinking.reset();
+    public void deleteLevel() {
+        level = null;
     }
 
     public void createLevel(int levelNumber) {
-        level = new GameLevel();
-        clearLevel();
+        level = new GameLevel(levelNumber);
         buildLevel(levelNumber);
         scoreManager.setLevelNumber(levelNumber);
         scoreManager.setScoreEnabled(true);
+        huntingControl.reset();
+        blinking.stop();
+        blinking.reset();
         updateLevelCounter();
         Logger.info("Level {} created", levelNumber);
         publishGameEvent(GameEventType.LEVEL_CREATED);
@@ -182,10 +166,8 @@ public abstract class GameModel {
     }
 
     public void createDemoLevel() {
-        level = new GameLevel();
+        level = new GameLevel(1);
         level.demoLevel = true;
-
-        clearLevel();
         buildDemoLevel();
         Logger.info("Demo Level created");
         publishGameEvent(GameEventType.LEVEL_CREATED);

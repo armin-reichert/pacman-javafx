@@ -375,7 +375,6 @@ public class TengenMsPacManGame extends GameModel {
         if (!inRange(levelNumber, MIN_LEVEL_NUMBER, MAX_LEVEL_NUMBER)) {
             throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
-        level.number = levelNumber;
         levelCounterEnabled = level.number < 8;
         level.currentMapConfig = mapConfigMgr.getMapConfig(mapCategory, level.number);
         createWorldAndPopulation(level.currentMapConfig.worldMap());
@@ -390,7 +389,6 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public void buildDemoLevel() {
-        level.number = 1;
         levelCounterEnabled = false;
         demoLevelSteering.init();
         level.currentMapConfig = mapConfigMgr.getMapConfig(mapCategory, level.number);

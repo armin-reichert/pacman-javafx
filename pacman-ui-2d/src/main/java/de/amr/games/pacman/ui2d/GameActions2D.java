@@ -61,7 +61,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             context.sound().stopAll();
-            context.game().clearLevel();
+            context.game().deleteLevel();
             context.gameClock().setTargetFrameRate(GameModel.TICKS_PER_SECOND);
             context.gameController().restart(GameState.BOOT);
         }

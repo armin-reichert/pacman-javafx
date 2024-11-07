@@ -297,7 +297,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
-                game.clearLevel();
+                game.deleteLevel();
                 enterState(game.canStartNewGame() ? WAITING_FOR_START : INTRO);
             }
         }

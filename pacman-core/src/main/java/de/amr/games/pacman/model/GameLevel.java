@@ -21,7 +21,7 @@ public class GameLevel {
         return id;
     }
 
-    public int number; // 1=first level
+    public final int number; // 1=first level
     public boolean demoLevel;
     public long startTime;
     public int killedGhostCount;
@@ -33,6 +33,10 @@ public class GameLevel {
     public final byte[] bonusSymbols = new byte[2];
     public byte nextBonusIndex; // -1=no bonus, 0=first, 1=second
     public MapConfig currentMapConfig;
+
+    public GameLevel(int number) {
+        this.number = number;
+    }
 
     public Pac pac() { return pac; }
 
