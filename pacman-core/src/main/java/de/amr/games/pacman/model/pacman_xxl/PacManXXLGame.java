@@ -132,16 +132,16 @@ public class PacManXXLGame extends PacManArcadeGame {
     public void activateNextBonus() {
         nextBonusIndex += 1;
         byte symbol = bonusSymbols[nextBonusIndex];
-        bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
+        level.bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         // in a non-Arcade style custom map, the bonus position must be taken from the terrain map
         if (level.world.map().terrain().hasProperty(GameWorld.PROPERTY_POS_BONUS)) {
             Vector2i bonusTile = level.world.map().terrain().getTileProperty(GameWorld.PROPERTY_POS_BONUS, new Vector2i(13, 20));
-            bonus.entity().setPosition(halfTileRightOf(bonusTile));
+            level.bonus.entity().setPosition(halfTileRightOf(bonusTile));
         } else {
-            bonus.entity().setPosition(BONUS_POS);
+            level.bonus.entity().setPosition(BONUS_POS);
         }
-        bonus.setEdible(bonusEdibleTicks());
-        publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
+        level.bonus.setEdible(bonusEdibleTicks());
+        publishGameEvent(GameEventType.BONUS_ACTIVATED, level.bonus.entity().tile());
     }
 
     public Map<File, WorldMap> customMapsByFile() {

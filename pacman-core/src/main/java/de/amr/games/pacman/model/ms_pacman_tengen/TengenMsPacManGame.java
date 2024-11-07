@@ -456,7 +456,7 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     public void activateNextBonus() {
         //TODO No idea how this behaves in Tengen
-        if (bonus != null && bonus.state() != Bonus.STATE_INACTIVE) {
+        if (level.bonus != null && level.bonus.state() != Bonus.STATE_INACTIVE) {
             Logger.info("Previous bonus is still active, skip this one");
             return;
         }
@@ -484,9 +484,9 @@ public class TengenMsPacManGame extends GameModel {
         movingBonus.setRoute(route, leftToRight);
         movingBonus.setBaseSpeed(1f); // TODO how fast is the bonus really moving?
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
-        bonus = movingBonus;
-        bonus.setEdible(TickTimer.INDEFINITE);
-        publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
+        level.bonus = movingBonus;
+        level.bonus.setEdible(TickTimer.INDEFINITE);
+        publishGameEvent(GameEventType.BONUS_ACTIVATED, level.bonus.entity().tile());
     }
 
     @Override

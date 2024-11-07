@@ -1,10 +1,12 @@
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -25,6 +27,7 @@ public class GameLevel {
     public GameWorld world;
     public Pac pac;
     public Ghost[] ghosts;
+    public Bonus bonus;
 
     public Pac pac() { return pac; }
 
@@ -39,6 +42,10 @@ public class GameLevel {
             return Stream.empty();
         }
         return states.length == 0 ? Stream.of(ghosts) : Stream.of(ghosts).filter(ghost -> ghost.inState(states));
+    }
+
+    public Optional<Bonus> bonus() {
+        return Optional.ofNullable(bonus);
     }
 
 }

@@ -410,7 +410,7 @@ public class MsPacManArcadeGame extends GameModel {
      **/
     @Override
     public void activateNextBonus() {
-        if (bonus != null && bonus.state() != Bonus.STATE_INACTIVE) {
+        if (level.bonus != null && level.bonus.state() != Bonus.STATE_INACTIVE) {
             Logger.info("Previous bonus is still active, skip this one");
             return;
         }
@@ -438,9 +438,9 @@ public class MsPacManArcadeGame extends GameModel {
         movingBonus.setRoute(route, leftToRight);
         movingBonus.setBaseSpeed(1.25f);
         Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
-        bonus = movingBonus;
-        bonus.setEdible(TickTimer.INDEFINITE);
-        publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
+        level.bonus = movingBonus;
+        level.bonus.setEdible(TickTimer.INDEFINITE);
+        publishGameEvent(GameEventType.BONUS_ACTIVATED, level.bonus.entity().tile());
     }
 
     /**

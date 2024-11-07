@@ -278,7 +278,8 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onExit(GameModel game) {
-            game.bonus().ifPresent(Bonus::setInactive);
+            GameLevel level = game.level().orElseThrow();
+            level.bonus().ifPresent(Bonus::setInactive);
         }
     },
 
@@ -354,7 +355,7 @@ public enum GameState implements FsmState<GameModel> {
             if (timer().currentTick() > 2 * TICKS_PER_SECOND) {
                 game.blinking().tick();
                 level.ghosts().forEach(ghost -> ghost.update(game));
-                game.bonus().ifPresent(bonus -> bonus.update(game));
+                level.bonus().ifPresent(bonus -> bonus.update(game));
             }
             if (timer().atSecond(1.0)) {
                 game.letsGetReadyToRumble();
@@ -365,13 +366,13 @@ public enum GameState implements FsmState<GameModel> {
             } else if (timer().atSecond(2.5)) {
                 game.activateNextBonus();
             } else if (timer().atSecond(4.5)) {
-                game.bonus().ifPresent(bonus -> bonus.setEaten(TICKS_PER_SECOND));
+                level.bonus().ifPresent(bonus -> bonus.setEaten(TICKS_PER_SECOND));
                 game.publishGameEvent(GameEventType.BONUS_EATEN);
             } else if (timer().atSecond(6.5)) {
-                game.bonus().ifPresent(Bonus::setInactive); // needed?
+                level.bonus().ifPresent(Bonus::setInactive); // needed?
                 game.activateNextBonus();
             } else if (timer().atSecond(7.5)) {
-                game.bonus().ifPresent(bonus -> bonus.setEaten(TICKS_PER_SECOND));
+                level.bonus().ifPresent(bonus -> bonus.setEaten(TICKS_PER_SECOND));
                 game.publishGameEvent(GameEventType.BONUS_EATEN);
             } else if (timer().atSecond(8.5)) {
                 game.hideGuys();
@@ -384,7 +385,7 @@ public enum GameState implements FsmState<GameModel> {
                 game.blinking().restart(2 * game.numFlashes());
             } else if (timer().atSecond(12.0)) {
                 level.pac().freeze();
-                game.bonus().ifPresent(Bonus::setInactive);
+                level.bonus().ifPresent(Bonus::setInactive);
                 setProperty("mazeFlashing", false);
                 game.blinking().reset();
                 if (level.number == lastLevelNumber) {
@@ -443,7 +444,7 @@ public enum GameState implements FsmState<GameModel> {
                     enterState(INTRO);
                 } else {
                     level.pac().freeze();
-                    game.bonus().ifPresent(Bonus::setInactive);
+                    level.bonus().ifPresent(Bonus::setInactive);
                     setProperty("mazeFlashing", false);
                     game.blinking().reset();
                     game.startNextLevel();

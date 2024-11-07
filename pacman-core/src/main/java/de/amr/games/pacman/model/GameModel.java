@@ -70,7 +70,6 @@ public abstract class GameModel {
     protected int                  initialLives;
     protected int                  lives;
     protected byte                 nextBonusIndex; // -1=no bonus, 0=first, 1=second
-    protected Bonus                bonus;
     protected MapConfig            currentMapConfig;
     protected SimulationStepLog    eventLog;
 
@@ -166,12 +165,12 @@ public abstract class GameModel {
             level.world = null;
             level.pac = null;
             level.ghosts = null;
+            level.bonus = null;
         }
 
         scoreManager.setScoreEnabled(false);
         huntingControl.reset();
 
-        bonus = null;
         nextBonusIndex = -1;
         Arrays.fill(bonusSymbols, (byte)-1);
         blinking.stop();
@@ -344,7 +343,7 @@ public abstract class GameModel {
         blinking.setStartPhase(Pulse.OFF);
         blinking.reset();
         level.pac.freeze();
-        bonus().ifPresent(Bonus::setInactive);
+        level.bonus().ifPresent(Bonus::setInactive);
         // when cheating, there might still be food
         level.world.map().food().tiles().forEach(level.world::registerFoodEatenAt);
         huntingControl.stop();
@@ -353,10 +352,6 @@ public abstract class GameModel {
         powerTimer.reset(0);
         Logger.info("Power timer stopped and reset to zero");
         Logger.trace("Game level {} completed.", level.number);
-    }
-
-    public Optional<Bonus> bonus() {
-        return Optional.ofNullable(bonus);
     }
 
     public boolean isLevelComplete() {
@@ -396,7 +391,7 @@ public abstract class GameModel {
             return;
         }
 
-        if (bonus != null) updateBonus();
+        if (level.bonus != null) updateBonus();
     }
 
     private void checkPacKilled() {
@@ -465,14 +460,14 @@ public abstract class GameModel {
     }
 
     private void updateBonus() {
-        if (bonus.state() == Bonus.STATE_EDIBLE && level.pac.sameTile(bonus.entity())) {
-            bonus.setEaten(BONUS_POINTS_SHOWN_TICKS);
-            scoreManager.scorePoints(bonus.points());
-            Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
+        if (level.bonus.state() == Bonus.STATE_EDIBLE && level.pac.sameTile(level.bonus.entity())) {
+            level.bonus.setEaten(BONUS_POINTS_SHOWN_TICKS);
+            scoreManager.scorePoints(level.bonus.points());
+            Logger.info("Scored {} points for eating bonus {}", level.bonus.points(), level.bonus);
             eventLog.bonusEaten = true;
             publishGameEvent(GameEventType.BONUS_EATEN);
         } else {
-            bonus.update(this);
+            level.bonus.update(this);
         }
     }
 

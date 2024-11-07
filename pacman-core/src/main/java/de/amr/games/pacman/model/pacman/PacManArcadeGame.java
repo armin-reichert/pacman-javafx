@@ -412,10 +412,10 @@ public class PacManArcadeGame extends GameModel {
     public void activateNextBonus() {
         nextBonusIndex += 1;
         byte symbol = bonusSymbols[nextBonusIndex];
-        bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
-        bonus.setEdible(bonusEdibleTicks());
-        bonus.entity().setPosition(BONUS_POS);
-        publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
+        level.bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
+        level.bonus.setEdible(bonusEdibleTicks());
+        level.bonus.entity().setPosition(BONUS_POS);
+        publishGameEvent(GameEventType.BONUS_ACTIVATED, level.bonus.entity().tile());
     }
 
     protected int bonusEdibleTicks() {

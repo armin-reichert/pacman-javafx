@@ -338,7 +338,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             // draw using map sprite
             drawWorldUsingMapSprite(game, context.gameClock().getUpdateCount(), x, y);
         }
-        game.bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
+        context.level().bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
     }
 
     private boolean isUsingDefaultGameOptions(TengenMsPacManGame game) {

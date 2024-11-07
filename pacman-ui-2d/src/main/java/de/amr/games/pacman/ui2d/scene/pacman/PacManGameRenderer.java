@@ -110,7 +110,7 @@ public class PacManGameRenderer implements GameRenderer {
             overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
         }
         ctx().restore();
-        context.game().bonus().ifPresent(bonus -> drawStaticBonus(spriteSheet, bonus));
+        context.level().bonus().ifPresent(bonus -> drawStaticBonus(spriteSheet, bonus));
     }
 
     private void drawStaticBonus(GameSpriteSheet spriteSheet, Bonus bonus) {

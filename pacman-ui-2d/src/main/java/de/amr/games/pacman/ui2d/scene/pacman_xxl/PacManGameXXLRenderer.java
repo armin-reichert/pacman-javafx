@@ -129,7 +129,7 @@ public class PacManGameXXLRenderer implements GameRenderer {
                 world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
             }
         }
-        context.game().bonus().ifPresent(bonus -> drawStaticBonus(spriteSheet, bonus));
+        context.level().bonus().ifPresent(bonus -> drawStaticBonus(spriteSheet, bonus));
     }
 
     private void drawStaticBonus(GameSpriteSheet spriteSheet, Bonus bonus) {
