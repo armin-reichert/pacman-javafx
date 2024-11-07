@@ -9,6 +9,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import org.tinylog.Logger;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.LEFT;
@@ -172,8 +173,7 @@ public class GateKeeper {
         }
     }
 
-    public void unlockGhosts(GameModel game) {
-        GameLevel level = game.level().orElseThrow();
+    public void unlockGhosts(GameLevel level, Consumer<Ghost> onGhostReleased, SimulationStepLog eventLog) {
         Ghost blinky = level.ghost(RED_GHOST);
         if (blinky.inState(LOCKED)) {
             if (blinky.insideHouse()) {
@@ -190,11 +190,11 @@ public class GateKeeper {
             .findFirst().ifPresent(prisoner -> {
                 String releaseInfo = checkReleaseOf(level, prisoner);
                 if (releaseInfo != null) {
-                    game.eventLog.releasedGhost = prisoner;
-                    game.eventLog.ghostReleaseInfo = releaseInfo;
+                    eventLog.releasedGhost = prisoner;
+                    eventLog.ghostReleaseInfo = releaseInfo;
                     prisoner.setMoveAndWishDir(Direction.UP);
                     prisoner.setState(LEAVING_HOUSE);
-                    game.onGhostReleased(prisoner);
+                    onGhostReleased.accept(prisoner);
                 }
         });
     }

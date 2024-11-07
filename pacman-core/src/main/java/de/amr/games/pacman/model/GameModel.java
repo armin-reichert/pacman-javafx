@@ -330,7 +330,7 @@ public abstract class GameModel {
         }
 
         level.blinking().tick();
-        gateKeeper.unlockGhosts(this);
+        gateKeeper.unlockGhosts(level, this::onGhostReleased, eventLog);
 
         checkForFood(level.pac().tile());
         level.pac().update(this);
