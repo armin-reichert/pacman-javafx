@@ -91,7 +91,7 @@ public abstract class GameModel {
     public abstract long         gameOverStateTicks();
     public abstract void         setDemoLevelBehavior();
 
-    protected abstract void      configureNormalLevel(int levelNumber);
+    protected abstract void      configureNormalLevel();
     protected abstract void      configureDemoLevel();
     protected abstract boolean   isPacManKillingIgnored();
     protected abstract void      setActorBaseSpeed(int levelNumber);
@@ -147,7 +147,7 @@ public abstract class GameModel {
 
     public void createLevel(int levelNumber) {
         level = new GameLevel(levelNumber);
-        configureNormalLevel(levelNumber);
+        configureNormalLevel();
         scoreManager.setLevelNumber(levelNumber);
         scoreManager.setScoreEnabled(true);
         huntingControl.reset();

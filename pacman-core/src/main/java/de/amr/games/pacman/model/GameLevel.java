@@ -36,6 +36,7 @@ public class GameLevel {
 
     public GameLevel(int number) {
         this.number = number;
+        nextBonusIndex = -1;
     }
 
     public Pac pac() { return pac; }

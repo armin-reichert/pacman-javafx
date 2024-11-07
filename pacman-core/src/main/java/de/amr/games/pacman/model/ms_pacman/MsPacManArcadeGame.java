@@ -188,7 +188,7 @@ public class MsPacManArcadeGame extends GameModel {
     }
 
     @Override
-    public void configureNormalLevel(int levelNumber) {
+    public void configureNormalLevel() {
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
         levelCounterEnabled = level.number < 8;

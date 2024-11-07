@@ -80,8 +80,8 @@ public class PacManXXLGame extends PacManArcadeGame {
     }
 
     @Override
-    public void configureNormalLevel(int levelNumber) {
-        level.currentMapConfig = createMapConfig(levelNumber);
+    public void configureNormalLevel() {
+        level.currentMapConfig = createMapConfig(level.number);
         createWorldAndPopulation(level.currentMapConfig.worldMap());
         level.pac.setAutopilot(new RuleBasedPacSteering(this));
         level.pac.setUsingAutopilot(false);
