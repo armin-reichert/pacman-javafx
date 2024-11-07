@@ -32,7 +32,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 public class PacManXXLGame extends PacManArcadeGame {
 
     private static final int MAP_COUNT = 8;
-    private static final String MAP_PATTERN = "/de/amr/games/pacman/maps/masonic/masonic_%d.world";
+    private static final String MAP_PATTERN = "/de/amr/games/pacman/maps/pacman_xxl/masonic_%d.world";
 
     static final List<Map<String, String>> COLOR_SCHEMES = List.of(
         Map.of("fill", "#359c9c", "stroke", "#85e2ff", "door", "#fcb5ff", "pellet", "#feb8ae"),
