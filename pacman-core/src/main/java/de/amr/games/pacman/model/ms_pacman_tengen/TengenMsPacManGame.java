@@ -373,6 +373,7 @@ public class TengenMsPacManGame extends GameModel {
             throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
         currentLevelNumber = levelNumber;
+        levelCounterEnabled = currentLevelNumber < 8;
         currentMapConfig = mapConfigMgr.getMapConfig(mapCategory, currentLevelNumber);
         createWorldAndPopulation(currentMapConfig.worldMap());
         pac.setAutopilot(autopilot);
@@ -387,6 +388,7 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     public void buildDemoLevel() {
         currentLevelNumber = 1;
+        levelCounterEnabled = false;
         demoLevelSteering.init();
         currentMapConfig = mapConfigMgr.getMapConfig(mapCategory, currentLevelNumber);
         createWorldAndPopulation(currentMapConfig.worldMap());
@@ -421,14 +423,6 @@ public class TengenMsPacManGame extends GameModel {
             case MAX_LEVEL_NUMBER -> 4;
             default -> 0;
         };
-    }
-
-    /** In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
-     * (also inside a level) whenever a bonus score is reached. At least that's what I was told.
-     */
-    @Override
-    protected boolean isLevelCounterEnabled() {
-        return currentLevelNumber < 8 && !demoLevel;
     }
 
     @Override

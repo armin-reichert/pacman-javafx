@@ -73,6 +73,7 @@ public abstract class GameModel {
     protected HuntingControl       huntingControl;
     protected File                 customMapDir;
     protected int                  currentLevelNumber; // 1=first level
+    protected boolean              levelCounterEnabled;
     protected boolean              demoLevel;
     protected long                 levelStartTime;
     protected boolean              playing;
@@ -91,13 +92,16 @@ public abstract class GameModel {
     public abstract void         endGame();
     public abstract void         onPacKilled();
     public abstract void         activateNextBonus();
+
     public abstract int          intermissionNumberAfterLevel();
     public abstract int          numFlashes();
+
     public abstract float        ghostAttackSpeed(Ghost ghost);
     public abstract float        ghostFrightenedSpeed(Ghost ghost);
     public abstract float        ghostSpeedInsideHouse(Ghost ghost);
     public abstract float        ghostSpeedReturningToHouse(Ghost ghost);
     public abstract float        ghostTunnelSpeed(Ghost ghost);
+
     public abstract float        pacNormalSpeed();
     public abstract long         pacPowerTicks();
     public abstract long         pacPowerFadingTicks();
@@ -107,12 +111,11 @@ public abstract class GameModel {
 
     protected abstract void      buildLevel(int levelNumber);
     protected abstract void      buildDemoLevel();
+    protected abstract boolean   isPacManKillingIgnoredInDemoLevel();
     protected abstract void      setActorBaseSpeed(int levelNumber);
     protected abstract void      initScore(int levelNumber);
-    protected abstract byte      computeBonusSymbol();
-    protected abstract boolean   isPacManKillingIgnoredInDemoLevel();
     protected abstract boolean   isBonusReached();
-    protected abstract boolean   isLevelCounterEnabled();
+    protected abstract byte      computeBonusSymbol();
 
     protected abstract void      onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
 
@@ -227,7 +230,7 @@ public abstract class GameModel {
         if (currentLevelNumber == 1) {
             levelCounter.clear();
         }
-        if (isLevelCounterEnabled()) {
+        if (levelCounterEnabled) {
             levelCounter.add(bonusSymbols[0]);
             if (levelCounter.size() > LEVEL_COUNTER_MAX_SIZE) {
                 levelCounter.removeFirst();
