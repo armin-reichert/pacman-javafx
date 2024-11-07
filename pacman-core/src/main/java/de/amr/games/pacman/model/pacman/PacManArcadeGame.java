@@ -239,7 +239,7 @@ public class PacManArcadeGame extends GameModel {
     }
 
     @Override
-    public void buildLevel(int levelNumber) {
+    public void configureNormalLevel(int levelNumber) {
         levelCounterEnabled = true;
         createWorldAndPopulation(theMapConfig.worldMap());
         level.currentMapConfig = theMapConfig;
@@ -256,8 +256,8 @@ public class PacManArcadeGame extends GameModel {
     }
 
     @Override
-    public void buildDemoLevel() {
-        buildLevel(1);
+    public void configureDemoLevel() {
+        configureNormalLevel(1);
         levelCounterEnabled = false;
         demoLevelSteering.init();
     }

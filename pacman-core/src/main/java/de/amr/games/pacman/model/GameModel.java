@@ -19,7 +19,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -92,8 +91,8 @@ public abstract class GameModel {
     public abstract long         gameOverStateTicks();
     public abstract void         setDemoLevelBehavior();
 
-    protected abstract void      buildLevel(int levelNumber);
-    protected abstract void      buildDemoLevel();
+    protected abstract void      configureNormalLevel(int levelNumber);
+    protected abstract void      configureDemoLevel();
     protected abstract boolean   isPacManKillingIgnored();
     protected abstract void      setActorBaseSpeed(int levelNumber);
     protected abstract void      initScore(int levelNumber);
@@ -148,7 +147,7 @@ public abstract class GameModel {
 
     public void createLevel(int levelNumber) {
         level = new GameLevel(levelNumber);
-        buildLevel(levelNumber);
+        configureNormalLevel(levelNumber);
         scoreManager.setLevelNumber(levelNumber);
         scoreManager.setScoreEnabled(true);
         huntingControl.reset();
@@ -168,7 +167,7 @@ public abstract class GameModel {
     public void createDemoLevel() {
         level = new GameLevel(1);
         level.demoLevel = true;
-        buildDemoLevel();
+        configureDemoLevel();
         Logger.info("Demo Level created");
         publishGameEvent(GameEventType.LEVEL_CREATED);
     }
