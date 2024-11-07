@@ -55,7 +55,7 @@ public class GameLevel {
         return demoLevel;
     }
 
-    public void resetKiledGhostCount() {
+    public void resetKilledGhostCount() {
         killedGhostCount = 0;
     }
 
