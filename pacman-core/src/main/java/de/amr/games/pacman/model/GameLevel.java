@@ -26,9 +26,9 @@ public class GameLevel {
     public long startTime;
     public int killedGhostCount;
     public GameWorld world;
-    public Pac pac;
-    public Ghost[] ghosts;
-    public final List<Ghost> victims = new ArrayList<>();
+    private Pac pac;
+    private Ghost[] ghosts;
+    private final List<Ghost> victims = new ArrayList<>();
     public Bonus bonus;
     public final byte[] bonusSymbols = new byte[2];
     public byte nextBonusIndex; // -1=no bonus, 0=first, 1=second
@@ -39,11 +39,19 @@ public class GameLevel {
         nextBonusIndex = -1;
     }
 
+    public void setPac(Pac pac) {
+        this.pac = pac;
+    }
+
     public Pac pac() { return pac; }
 
     public Ghost ghost(byte id) {
         checkGhostID(id);
         return ghosts != null ? ghosts[id] : null;
+    }
+
+    public void setGhosts(Ghost[] ghosts) {
+        this.ghosts = ghosts;
     }
 
     public Stream<Ghost> ghosts(GhostState... states) {

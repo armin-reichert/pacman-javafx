@@ -103,7 +103,10 @@ public class MsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void update(GameModel game) {
-        GameLevel level = game.level().orElseThrow();
+        if (game.level().isEmpty()) {
+            return;
+        }
+        GameLevel level = game.level().get();
         if (level.currentMapConfig() != null) {
             // select map sprites for current color scheme
             var colorScheme = level.currentMapConfig().colorScheme();

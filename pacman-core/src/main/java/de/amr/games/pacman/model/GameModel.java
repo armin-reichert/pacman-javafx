@@ -191,7 +191,7 @@ public abstract class GameModel {
         letsGetReadyToRumble();
         level.startTime = System.currentTimeMillis();
         Logger.info("{} started", level.demoLevel ? "Demo Level" : "Level " + level.number);
-        Logger.info("{} base speed: {0.00} px/tick", level.pac.name(), level.pac.baseSpeed());
+        Logger.info("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
         level.ghosts().forEach(ghost -> Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
         publishGameEvent(GameEventType.LEVEL_STARTED);
     }
@@ -200,9 +200,9 @@ public abstract class GameModel {
      * Sets each guy to his start position and resets him to his initial state. The guys are all initially invisible!
      */
     public void letsGetReadyToRumble() {
-        level.pac.reset(); // invisible!
-        level.pac.setPosition(level.world.pacPosition());
-        level.pac.setMoveAndWishDir(Direction.LEFT);
+        level.pac().reset(); // invisible!
+        level.pac().setPosition(level.world.pacPosition());
+        level.pac().setMoveAndWishDir(Direction.LEFT);
         level.ghosts().forEach(ghost -> {
             ghost.reset(); // invisible!
             ghost.setPosition(level.world.ghostPosition(ghost.id()));
@@ -216,8 +216,8 @@ public abstract class GameModel {
     }
 
     protected void initActorAnimations() {
-        level.pac.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
-        level.pac.animations().ifPresent(Animations::resetCurrentAnimation);
+        level.pac().selectAnimation(GameModel.ANIM_PAC_MUNCHING);
+        level.pac().animations().ifPresent(Animations::resetCurrentAnimation);
         level.ghosts().forEach(ghost -> {
             ghost.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
             ghost.resetAnimation();
@@ -225,12 +225,12 @@ public abstract class GameModel {
     }
 
     public void showGuys() {
-        level.pac.setVisible(true);
+        level.pac().setVisible(true);
         level.ghosts().forEach(ghost -> ghost.setVisible(true));
     }
 
     public void hideGuys() {
-        level.pac.setVisible(false);
+        level.pac().setVisible(false);
         level.ghosts().forEach(ghost -> ghost.setVisible(false));
     }
 
@@ -249,13 +249,13 @@ public abstract class GameModel {
     protected Vector2i chasingTarget(Ghost ghost) {
         return switch (ghost.id()) {
             // Blinky: attacks Pac-Man directly
-            case RED_GHOST -> level.pac.tile();
+            case RED_GHOST -> level.pac().tile();
             // Pinky: ambushes Pac-Man
-            case PINK_GHOST -> level.pac.tilesAhead(4, hasOverflowBug());
+            case PINK_GHOST -> level.pac().tilesAhead(4, hasOverflowBug());
             // Inky: attacks from opposite side as Blinky
-            case CYAN_GHOST -> level.pac.tilesAhead(2, hasOverflowBug()).scaled(2).minus(level.ghost(RED_GHOST).tile());
+            case CYAN_GHOST -> level.pac().tilesAhead(2, hasOverflowBug()).scaled(2).minus(level.ghost(RED_GHOST).tile());
             // Clyde/Sue: attacks directly but retreats if Pac is near
-            case ORANGE_GHOST -> ghost.tile().euclideanDistance(level.pac.tile()) < 8 ? scatterTarget(ghost) : level.pac.tile();
+            case ORANGE_GHOST -> ghost.tile().euclideanDistance(level.pac().tile()) < 8 ? scatterTarget(ghost) : level.pac().tile();
             default -> throw GameException.illegalGhostID(ghost.id());
         };
     }
@@ -310,7 +310,7 @@ public abstract class GameModel {
     public void onLevelCompleted() {
         blinking.setStartPhase(Pulse.OFF);
         blinking.reset();
-        level.pac.freeze();
+        level.pac().freeze();
         level.bonus().ifPresent(Bonus::setInactive);
         // when cheating, there might still be food
         level.world.map().food().tiles().forEach(level.world::registerFoodEatenAt);
@@ -345,8 +345,8 @@ public abstract class GameModel {
         blinking.tick();
         gateKeeper.unlockGhosts();
 
-        checkForFood(level.pac.tile());
-        level.pac.update(this);
+        checkForFood(level.pac().tile());
+        level.pac().update(this);
         updatePacPower();
         checkPacKilled();
         if (eventLog.pacKilled) {
@@ -354,7 +354,7 @@ public abstract class GameModel {
         }
 
         level.ghosts().forEach(ghost -> ghost.update(this));
-        level.ghosts(FRIGHTENED).filter(level.pac::sameTile).forEach(this::killGhost);
+        level.ghosts(FRIGHTENED).filter(level.pac()::sameTile).forEach(this::killGhost);
         if (!eventLog.killedGhosts.isEmpty()) {
             return;
         }
@@ -363,20 +363,20 @@ public abstract class GameModel {
     }
 
     private void checkPacKilled() {
-        boolean pacMeetsKiller = level.ghosts(HUNTING_PAC).anyMatch(level.pac::sameTile);
+        boolean pacMeetsKiller = level.ghosts(HUNTING_PAC).anyMatch(level.pac()::sameTile);
         if (level.demoLevel) {
             eventLog.pacKilled = pacMeetsKiller && !isPacManKillingIgnored();
         } else {
-            eventLog.pacKilled = pacMeetsKiller && !level.pac.isImmune();
+            eventLog.pacKilled = pacMeetsKiller && !level.pac().isImmune();
         }
     }
 
     private void checkForFood(Vector2i tile) {
         if (!level.world.hasFoodAt(tile)) {
-            level.pac.starve();
+            level.pac().starve();
             return;
         }
-        level.pac.endStarving();
+        level.pac().endStarving();
         eventLog.foodFoundTile = tile;
         eventLog.energizerFound = level.world.isEnergizerPosition(tile);
         level.world.registerFoodEatenAt(tile);
@@ -386,7 +386,7 @@ public abstract class GameModel {
     }
 
     protected void processEatenEnergizer() {
-        level.victims.clear(); // ghosts eaten using this energizer
+        level.victims().clear(); // ghosts eaten using this energizer
         if (pacPowerTicks() > 0) {
             eventLog.pacGetsPower = true;
             huntingControl.stop();
@@ -409,7 +409,7 @@ public abstract class GameModel {
             powerTimer.stop();
             powerTimer.reset(0);
             Logger.info("Power timer stopped and reset to zero");
-            level.victims.clear();
+            level.victims().clear();
             huntingControl.start();
             Logger.info("Hunting timer started");
             level.ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
@@ -428,7 +428,7 @@ public abstract class GameModel {
     }
 
     private void updateBonus() {
-        if (level.bonus.state() == Bonus.STATE_EDIBLE && level.pac.sameTile(level.bonus.entity())) {
+        if (level.bonus.state() == Bonus.STATE_EDIBLE && level.pac().sameTile(level.bonus.entity())) {
             level.bonus.setEaten(BONUS_POINTS_SHOWN_TICKS);
             scoreManager.scorePoints(level.bonus.points());
             Logger.info("Scored {} points for eating bonus {}", level.bonus.points(), level.bonus);
@@ -443,7 +443,7 @@ public abstract class GameModel {
 
     public void killGhost(Ghost ghost) {
         eventLog.killedGhosts.add(ghost);
-        int killedSoFar = level.victims.size();
+        int killedSoFar = level.victims().size();
         int points = KILLED_GHOST_VALUES[killedSoFar];
         ghost.eaten(killedSoFar);
         scoreManager.scorePoints(points);
@@ -454,7 +454,7 @@ public abstract class GameModel {
             scoreManager.scorePoints(extraPoints);
             Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number);
         }
-        level.victims.add(ghost);
+        level.victims().add(ghost);
     }
 
     // Game Event Support

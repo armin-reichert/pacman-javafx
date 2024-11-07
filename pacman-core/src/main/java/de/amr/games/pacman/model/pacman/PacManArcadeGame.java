@@ -29,6 +29,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
@@ -208,27 +209,28 @@ public class PacManArcadeGame extends GameModel {
         level.world = new GameWorld(map);
         level.world.createArcadeHouse(HOUSE_X, HOUSE_Y);
 
-        level.pac = new Pac();
-        level.pac.setName("Pac-Man");
-        level.pac.setWorld(level.world);
-        level.pac.reset();
+        var pac = new Pac();
+        pac.setName("Pac-Man");
+        pac.setWorld(level.world);
+        pac.reset();
+        level.setPac(pac);
 
-        level.ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.clyde() };
-        level.ghosts().forEach(ghost -> {
+        var ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.clyde() };
+        Stream.of(ghosts).forEach(ghost -> {
             ghost.setWorld(level.world);
             ghost.reset();
             ghost.setRevivalPosition(level.world.ghostPosition(ghost.id()));
         });
-        level.ghosts[RED_GHOST].setRevivalPosition(level.world.ghostPosition(PINK_GHOST)); // middle house position
+        ghosts[RED_GHOST].setRevivalPosition(level.world.ghostPosition(PINK_GHOST)); // middle house position
+        level.setGhosts(ghosts);
 
-        //TODO this might not be appropriate for Tengen Ms. Pac-Man
         level.bonusSymbols[0] = computeBonusSymbol();
         level.bonusSymbols[1] = computeBonusSymbol();
     }
 
     @Override
     protected void setActorBaseSpeed(int levelNumber) {
-        level.pac.setBaseSpeed(1.25f);
+        level.pac().setBaseSpeed(1.25f);
         level.ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
     }
 
@@ -244,7 +246,7 @@ public class PacManArcadeGame extends GameModel {
         createWorldAndPopulation(theMapConfig.worldMap());
         level.currentMapConfig = theMapConfig;
 
-        level.pac.setAutopilot(autopilot);
+        level.pac().setAutopilot(autopilot);
         setCruiseElroy(0);
 
         List<Vector2i> oneWayDownTiles = theMapConfig.worldMap().terrain().tiles()
@@ -264,9 +266,9 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     public void setDemoLevelBehavior() {
-        level.pac.setAutopilot(demoLevelSteering);
-        level.pac.setUsingAutopilot(true);
-        level.pac.setImmune(false);
+        level.pac().setAutopilot(demoLevelSteering);
+        level.pac().setUsingAutopilot(true);
+        level.pac().setImmune(false);
     }
 
     @Override
@@ -280,7 +282,7 @@ public class PacManArcadeGame extends GameModel {
             return 0;
         }
         byte percentage = levelData(level.number).pacSpeedPercentage();
-        return percentage > 0 ? percentage * 0.01f * level.pac.baseSpeed() : level.pac.baseSpeed();
+        return percentage > 0 ? percentage * 0.01f * level.pac().baseSpeed() : level.pac().baseSpeed();
     }
 
     @Override
@@ -289,7 +291,7 @@ public class PacManArcadeGame extends GameModel {
             return 0;
         }
         byte percentage = levelData(level.number).pacSpeedPoweredPercentage();
-        return percentage > 0 ? percentage * 0.01f * level.pac.baseSpeed() : pacNormalSpeed();
+        return percentage > 0 ? percentage * 0.01f * level.pac().baseSpeed() : pacNormalSpeed();
     }
 
     @Override
@@ -340,7 +342,7 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     protected void onPelletOrEnergizerEaten(Vector2i tile, int uneatenFoodCount, boolean energizer) {
-        level.pac.setRestingTicks(energizer ? 3 : 1);
+        level.pac().setRestingTicks(energizer ? 3 : 1);
         if (uneatenFoodCount == levelData(level.number).elroy1DotsLeft()) {
             setCruiseElroy(1);
         } else if (uneatenFoodCount == levelData(level.number).elroy2DotsLeft()) {
@@ -382,7 +384,7 @@ public class PacManArcadeGame extends GameModel {
         Logger.info("Power timer stopped and set to zero");
         gateKeeper.resetCounterAndSetEnabled(true);
         setCruiseElroyEnabled(false);
-        level.pac.die();
+        level.pac().die();
     }
 
     @Override

@@ -80,7 +80,7 @@ public class PacManGameSceneConfig implements GameSceneConfig {
     @Override
     public void createActorAnimations(GameModel game) {
         GameLevel level = game.level().orElseThrow();
-        level.pac.setAnimations(new PacAnimations(spriteSheet));
+        level.pac().setAnimations(new PacAnimations(spriteSheet));
         level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id())));
     }
 }
