@@ -257,10 +257,10 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public float ghostAttackSpeed(Ghost ghost) {
-        if (world == null) {
+        if (level == null) {
             return 0;
         }
-        if (world.isTunnel(ghost.tile())) {
+        if (level.world.isTunnel(ghost.tile())) {
             return ghostTunnelSpeed(ghost);
         }
         float speed = ghost.baseSpeed();
@@ -348,22 +348,22 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     protected void createWorldAndPopulation(WorldMap map) {
-        world = new GameWorld(map);
-        world.createArcadeHouse(10, 15);
+        level.world = new GameWorld(map);
+        level.world.createArcadeHouse(10, 15);
         Logger.info("World created. Map config: {}, URL: {}", currentMapConfig, currentMapConfig.worldMap().url());
 
         pac = new Pac();
         pac.setName("Ms. Pac-Man");
-        pac.setWorld(world);
+        pac.setWorld(level.world);
         pac.reset();
 
         ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.sue() };
         ghosts().forEach(ghost -> {
-            ghost.setWorld(world);
+            ghost.setWorld(level.world);
             ghost.reset();
-            ghost.setRevivalPosition(world.ghostPosition(ghost.id()));
+            ghost.setRevivalPosition(level.world.ghostPosition(ghost.id()));
         });
-        ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
+        ghosts[RED_GHOST].setRevivalPosition(level.world.ghostPosition(PINK_GHOST)); // middle house position
 
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
         bonusSymbols[0] = computeBonusSymbol();
@@ -384,7 +384,7 @@ public class TengenMsPacManGame extends GameModel {
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // ghosts inside house start at floor of house
         ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost -> {
-            world.setGhostPosition(ghost.id(), world.ghostPosition(ghost.id()).plus(0, HTS));
+            level.world.setGhostPosition(ghost.id(), level.world.ghostPosition(ghost.id()).plus(0, HTS));
         });
     }
 
@@ -399,7 +399,7 @@ public class TengenMsPacManGame extends GameModel {
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // ghosts inside house start at floor of house
         ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost -> {
-            world.setGhostPosition(ghost.id(), world.ghostPosition(ghost.id()).plus(0, HTS));
+            level.world.setGhostPosition(ghost.id(), level.world.ghostPosition(ghost.id()).plus(0, HTS));
         });
         setDemoLevelBehavior();
     }
@@ -440,7 +440,7 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public boolean isBonusReached() {
-        return world.eatenFoodCount() == 64 || world.eatenFoodCount() == 176;
+        return level.world.eatenFoodCount() == 64 || level.world.eatenFoodCount() == 176;
     }
 
     @Override
@@ -463,9 +463,9 @@ public class TengenMsPacManGame extends GameModel {
         nextBonusIndex += 1;
 
         boolean leftToRight = RND.nextBoolean();
-        Vector2i houseEntry = tileAt(world.houseEntryPosition());
-        Vector2i houseEntryOpposite = houseEntry.plus(0, world.houseSize().y() + 1);
-        List<Portal> portals = world.portals().toList();
+        Vector2i houseEntry = tileAt(level.world.houseEntryPosition());
+        Vector2i houseEntryOpposite = houseEntry.plus(0, level.world.houseSize().y() + 1);
+        List<Portal> portals = level.world.portals().toList();
         if (portals.isEmpty()) {
             return; // there should be no mazes without portal but who knows?
         }
@@ -480,7 +480,7 @@ public class TengenMsPacManGame extends GameModel {
         ).map(NavPoint::np).toList();
 
         byte symbol = bonusSymbols[nextBonusIndex];
-        var movingBonus = new MovingBonus(world, symbol, BONUS_VALUE_FACTORS[symbol] * 100);
+        var movingBonus = new MovingBonus(level.world, symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         movingBonus.setRoute(route, leftToRight);
         movingBonus.setBaseSpeed(1f); // TODO how fast is the bonus really moving?
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");

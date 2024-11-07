@@ -67,8 +67,8 @@ public interface GameContext {
     void showFlashMessageSec(double seconds, String message, Object... args);
     default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1, message, args); }
     default Vector2i worldSizeInTilesOrElse(Vector2i defaultSize) {
-        if (game().world() == null) { return defaultSize; }
-        TileMap terrain = game().world().map().terrain();
+        if (game().level().isEmpty()) { return defaultSize; }
+        TileMap terrain = game().level().get().world.map().terrain();
         return new Vector2i(terrain.numCols(), terrain.numRows());
     }
 

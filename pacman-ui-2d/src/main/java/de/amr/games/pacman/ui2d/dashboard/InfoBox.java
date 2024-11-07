@@ -94,7 +94,7 @@ public abstract class InfoBox extends TitledPane {
     }
 
     protected Supplier<String> ifWorldPresent(Function<GameWorld, String> fnInfo) {
-        return () -> Optional.ofNullable(context.game().world()).map(fnInfo).orElse(NO_INFO);
+        return () -> Optional.ofNullable(context.game().level().get().world).map(fnInfo).orElse(NO_INFO);
     }
 
     protected void clearGrid() {

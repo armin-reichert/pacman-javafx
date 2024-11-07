@@ -133,16 +133,13 @@ public class PlayScene2D extends GameScene2D {
             Logger.warn("Cannot draw scene content, game world not yet available!");
             return;
         }
-        if (context.game().world() == null) {
-            return;
-        }
 
-        drawLevelMessage(renderer, context.game().world()); // READY, GAME_OVER etc.
+        drawLevelMessage(renderer, context.level().world); // READY, GAME_OVER etc.
 
         boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         renderer.setFlashMode(flashMode);
         renderer.setBlinkingOn(context.game().blinking().isOn());
-        renderer.drawWorld(context, context.game().world(), 0, 3 * TS);
+        renderer.drawWorld(context, context.level().world, 0, 3 * TS);
 
         renderer.drawAnimatedEntity(context.game().pac());
         ghostsInZOrder().forEach(renderer::drawAnimatedEntity);
@@ -204,7 +201,7 @@ public class PlayScene2D extends GameScene2D {
     protected void drawDebugInfo(GameRenderer renderer) {
         GraphicsContext g = renderer.ctx();
         renderer.drawTileGrid(size());
-        if (context.currentGameVariant() == GameVariant.PACMAN && context.game().world() != null) {
+        if (context.currentGameVariant() == GameVariant.PACMAN && context.game().level().isPresent()) {
             context.game().ghosts().forEach(ghost -> {
                 // Are currently the same for each ghost, but who knows what comes...
                 ghost.specialTerrainTiles().forEach(tile -> {

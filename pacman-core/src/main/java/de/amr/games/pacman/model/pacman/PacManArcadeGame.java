@@ -204,21 +204,21 @@ public class PacManArcadeGame extends GameModel {
     }
 
     protected void createWorldAndPopulation(WorldMap map) {
-        world = new GameWorld(map);
-        world.createArcadeHouse(HOUSE_X, HOUSE_Y);
+        level.world = new GameWorld(map);
+        level.world.createArcadeHouse(HOUSE_X, HOUSE_Y);
 
         pac = new Pac();
         pac.setName("Pac-Man");
-        pac.setWorld(world);
+        pac.setWorld(level.world);
         pac.reset();
 
         ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.clyde() };
         ghosts().forEach(ghost -> {
-            ghost.setWorld(world);
+            ghost.setWorld(level.world);
             ghost.reset();
-            ghost.setRevivalPosition(world.ghostPosition(ghost.id()));
+            ghost.setRevivalPosition(level.world.ghostPosition(ghost.id()));
         });
-        ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
+        ghosts[RED_GHOST].setRevivalPosition(level.world.ghostPosition(PINK_GHOST)); // middle house position
 
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
         bonusSymbols[0] = computeBonusSymbol();
@@ -296,7 +296,7 @@ public class PacManArcadeGame extends GameModel {
     @Override
     public float ghostAttackSpeed(Ghost ghost) {
         LevelData levelData = levelData(level.number);
-        if (world.isTunnel(ghost.tile())) {
+        if (level.world.isTunnel(ghost.tile())) {
             return levelData.ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
         }
         if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
@@ -399,7 +399,7 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     public boolean isBonusReached() {
-        return world.eatenFoodCount() == 70 || world.eatenFoodCount() == 170;
+        return level.world.eatenFoodCount() == 70 || level.world.eatenFoodCount() == 170;
     }
 
     // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level

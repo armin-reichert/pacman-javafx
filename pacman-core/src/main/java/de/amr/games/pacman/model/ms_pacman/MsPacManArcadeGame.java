@@ -160,21 +160,21 @@ public class MsPacManArcadeGame extends GameModel {
     }
 
     protected void createWorldAndPopulation(WorldMap map) {
-        world = new GameWorld(map);
-        world.createArcadeHouse(HOUSE_X, HOUSE_Y);
+        level.world = new GameWorld(map);
+        level.world.createArcadeHouse(HOUSE_X, HOUSE_Y);
 
         pac = new Pac();
         pac.setName("Ms. Pac-Man");
-        pac.setWorld(world);
+        pac.setWorld(level.world);
         pac.reset();
 
         ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.sue() };
         ghosts().forEach(ghost -> {
-            ghost.setWorld(world);
+            ghost.setWorld(level.world);
             ghost.reset();
-            ghost.setRevivalPosition(world.ghostPosition(ghost.id()));
+            ghost.setRevivalPosition(level.world.ghostPosition(ghost.id()));
         });
-        ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
+        ghosts[RED_GHOST].setRevivalPosition(level.world.ghostPosition(PINK_GHOST)); // middle house position
 
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
         bonusSymbols[0] = computeBonusSymbol();
@@ -259,7 +259,7 @@ public class MsPacManArcadeGame extends GameModel {
 
     @Override
     public float ghostAttackSpeed(Ghost ghost) {
-        if (world.isTunnel(ghost.tile()) && level.number <= 3) {
+        if (level.world.isTunnel(ghost.tile()) && level.number <= 3) {
             return ghostTunnelSpeed(ghost);
         }
         if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
@@ -360,7 +360,7 @@ public class MsPacManArcadeGame extends GameModel {
 
     @Override
     public boolean isBonusReached() {
-        return world.eatenFoodCount() == 64 || world.eatenFoodCount() == 176;
+        return level.world.eatenFoodCount() == 64 || level.world.eatenFoodCount() == 176;
     }
 
     /**
@@ -417,9 +417,9 @@ public class MsPacManArcadeGame extends GameModel {
         nextBonusIndex += 1;
 
         boolean leftToRight = RND.nextBoolean();
-        Vector2i houseEntry = tileAt(world.houseEntryPosition());
-        Vector2i houseEntryOpposite = houseEntry.plus(0, world.houseSize().y() + 1);
-        List<Portal> portals = world.portals().toList();
+        Vector2i houseEntry = tileAt(level.world.houseEntryPosition());
+        Vector2i houseEntryOpposite = houseEntry.plus(0, level.world.houseSize().y() + 1);
+        List<Portal> portals = level.world.portals().toList();
         if (portals.isEmpty()) {
             return; // should not happen but...
         }
@@ -434,7 +434,7 @@ public class MsPacManArcadeGame extends GameModel {
         ).map(NavPoint::np).toList();
 
         byte symbol = bonusSymbols[nextBonusIndex];
-        var movingBonus = new MovingBonus(world, symbol, BONUS_VALUE_FACTORS[symbol] * 100);
+        var movingBonus = new MovingBonus(level.world, symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         movingBonus.setRoute(route, leftToRight);
         movingBonus.setBaseSpeed(1.25f);
         Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");

@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.steering.RouteBasedSteering;
@@ -120,7 +121,8 @@ public class MovingBonus extends Creature implements Bonus {
     }
 
     private void updateStateEdible(GameModel game) {
-        steering.steer(this, game.world());
+        GameLevel level = game.level().orElseThrow();
+        steering.steer(this, level.world);
         if (steering.isComplete()) {
             Logger.trace("Moving bonus reached target: {}", this);
             setInactive();

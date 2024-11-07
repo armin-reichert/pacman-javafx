@@ -79,7 +79,6 @@ public abstract class GameModel {
     protected Pac                  pac;
     protected Ghost[]              ghosts;
     protected Bonus                bonus;
-    protected GameWorld            world;
     protected MapConfig            currentMapConfig;
     protected SimulationStepLog    eventLog;
 
@@ -188,6 +187,7 @@ public abstract class GameModel {
         level.demoLevel = false;
         level.startTime = 0;
         level.killedGhostCount = 0;
+        level.world = null;
 
         scoreManager.setScoreEnabled(false);
         huntingControl.reset();
@@ -197,7 +197,6 @@ public abstract class GameModel {
         Arrays.fill(bonusSymbols, (byte)-1);
         pac = null;
         ghosts = null;
-        world = null;
         blinking.stop();
         blinking.reset();
     }
@@ -244,7 +243,7 @@ public abstract class GameModel {
     }
 
     public void removeWorld() {
-        world = null;
+        level.world = null;
     }
 
     public void startLevel() {
@@ -264,12 +263,12 @@ public abstract class GameModel {
      */
     public void letsGetReadyToRumble() {
         pac.reset(); // invisible!
-        pac.setPosition(world.pacPosition());
+        pac.setPosition(level.world.pacPosition());
         pac.setMoveAndWishDir(Direction.LEFT);
         ghosts().forEach(ghost -> {
             ghost.reset(); // invisible!
-            ghost.setPosition(world.ghostPosition(ghost.id()));
-            ghost.setMoveAndWishDir(world.ghostDirection(ghost.id()));
+            ghost.setPosition(level.world.ghostPosition(ghost.id()));
+            ghost.setMoveAndWishDir(level.world.ghostDirection(ghost.id()));
             ghost.setState(LOCKED);
         });
         initActorAnimations();
@@ -306,7 +305,7 @@ public abstract class GameModel {
     }
 
     protected Vector2i scatterTarget(Ghost ghost) {
-        return world.ghostScatterTile(ghost.id());
+        return level.world.ghostScatterTile(ghost.id());
     }
 
     protected Vector2i chasingTarget(Ghost ghost) {
@@ -328,10 +327,6 @@ public abstract class GameModel {
      */
     protected boolean hasOverflowBug() {
         return true;
-    }
-
-    public GameWorld world() {
-        return world;
     }
 
     public int initialLives() {
@@ -380,7 +375,7 @@ public abstract class GameModel {
         pac.freeze();
         bonus().ifPresent(Bonus::setInactive);
         // when cheating, there might still be food
-        world.map().food().tiles().forEach(world::registerFoodEatenAt);
+        level.world.map().food().tiles().forEach(level.world::registerFoodEatenAt);
         huntingControl.stop();
         Logger.info("Hunting timer stopped");
         powerTimer.stop();
@@ -394,7 +389,7 @@ public abstract class GameModel {
     }
 
     public boolean isLevelComplete() {
-        return world.uneatenFoodCount() == 0;
+        return level.world.uneatenFoodCount() == 0;
     }
 
     public boolean isPacManKilled() {
@@ -443,16 +438,16 @@ public abstract class GameModel {
     }
 
     private void checkForFood(Vector2i tile) {
-        if (!world.hasFoodAt(tile)) {
+        if (!level.world.hasFoodAt(tile)) {
             pac.starve();
             return;
         }
         pac.endStarving();
         eventLog.foodFoundTile = tile;
-        eventLog.energizerFound = world.isEnergizerPosition(tile);
-        world.registerFoodEatenAt(tile);
+        eventLog.energizerFound = level.world.isEnergizerPosition(tile);
+        level.world.registerFoodEatenAt(tile);
         // let specific game do its stuff:
-        onPelletOrEnergizerEaten(tile, world.uneatenFoodCount(), eventLog.energizerFound);
+        onPelletOrEnergizerEaten(tile, level.world.uneatenFoodCount(), eventLog.energizerFound);
         publishGameEvent(GameEventType.PAC_FOUND_FOOD, tile);
     }
 

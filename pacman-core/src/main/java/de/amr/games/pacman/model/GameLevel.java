@@ -5,6 +5,7 @@ public class GameLevel {
     public boolean demoLevel;
     public long startTime;
     public int killedGhostCount;
+    public GameWorld world;
 
 }
 
