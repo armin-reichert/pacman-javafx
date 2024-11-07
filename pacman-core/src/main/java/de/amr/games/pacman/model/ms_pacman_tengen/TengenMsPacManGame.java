@@ -344,6 +344,7 @@ public class TengenMsPacManGame extends GameModel {
     protected void createWorldAndPopulation(WorldMap map) {
         world = new GameWorld(map);
         world.createArcadeHouse(10, 15);
+        Logger.info("World created. Map config: {}, URL: {}", currentMapConfig, currentMapConfig.worldMap().url());
 
         pac = new Pac();
         pac.setName("Ms. Pac-Man");
@@ -371,11 +372,8 @@ public class TengenMsPacManGame extends GameModel {
         currentLevelNumber = levelNumber;
         currentMapConfig = mapConfigMgr.getMapConfig(mapCategory, currentLevelNumber);
         createWorldAndPopulation(currentMapConfig.worldMap());
-        Logger.info("World created. Map config: {}, URL: {}", currentMapConfig, currentMapConfig.worldMap().url());
-
         pac.setAutopilot(autopilot);
         setBoosterActive(false); // gets activated in startLevel() if mode is ALWAYS_ON
-
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
@@ -387,6 +385,7 @@ public class TengenMsPacManGame extends GameModel {
         createWorldAndPopulation(currentMapConfig.worldMap());
         setBoosterActive(false); // gets activated in startLevel() if mode is ALWAYS_ON
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+        setDemoLevelBehavior();
     }
 
     @Override

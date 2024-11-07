@@ -143,10 +143,6 @@ public class MsPacManArcadeGame extends GameModel {
         return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
     }
 
-    private void selectMap(int levelNumber) {
-        currentMapConfig = mapConfigMgr.getMapConfig(levelNumber);
-    }
-
     @Override
     public int intermissionNumberAfterLevel() {
         return switch (currentLevelNumber) {
@@ -187,10 +183,9 @@ public class MsPacManArcadeGame extends GameModel {
 
     @Override
     public void buildLevel(int levelNumber) {
-        this.currentLevelNumber = levelNumber;
-        selectMap(currentLevelNumber);
+        currentLevelNumber = levelNumber;
+        currentMapConfig = mapConfigMgr.getMapConfig(currentLevelNumber);
         createWorldAndPopulation(currentMapConfig.worldMap());
-        pac.setName("Ms. Pac-Man");
         pac.setAutopilot(autopilot);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
@@ -198,11 +193,11 @@ public class MsPacManArcadeGame extends GameModel {
     @Override
     public void buildDemoLevel() {
         currentLevelNumber = 1;
-        selectMap(currentLevelNumber);
+        currentMapConfig = mapConfigMgr.getMapConfig(currentLevelNumber);
         createWorldAndPopulation(currentMapConfig.worldMap());
-        pac.setName("Ms. Pac-Man");
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         demoLevelSteering.init();
+        setDemoLevelBehavior();
     }
 
     @Override

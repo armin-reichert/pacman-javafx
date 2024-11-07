@@ -235,13 +235,14 @@ public class PacManArcadeGame extends GameModel {
     @Override
     public void buildLevel(int levelNumber) {
         currentLevelNumber = levelNumber;
-        createWorldAndPopulation(currentMapConfig.worldMap());
-        pac.setName("Pac-Man");
+        WorldMap worldMap = currentMapConfig.worldMap();
+        createWorldAndPopulation(worldMap);
+
         pac.setAutopilot(autopilot);
         setCruiseElroy(0);
 
-        List<Vector2i> oneWayDownTiles = currentMapConfig.worldMap().terrain().tiles()
-            .filter(tile -> currentMapConfig.worldMap().terrain().get(tile) == Tiles.ONE_WAY_DOWN).toList();
+        List<Vector2i> oneWayDownTiles = worldMap.terrain().tiles()
+            .filter(tile -> worldMap.terrain().get(tile) == Tiles.ONE_WAY_DOWN).toList();
         ghosts().forEach(ghost -> {
             ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
             ghost.setSpecialTerrainTiles(oneWayDownTiles);
@@ -251,7 +252,6 @@ public class PacManArcadeGame extends GameModel {
     @Override
     public void buildDemoLevel() {
         buildLevel(1);
-        setCruiseElroy(0);
         demoLevelSteering.init();
     }
 
