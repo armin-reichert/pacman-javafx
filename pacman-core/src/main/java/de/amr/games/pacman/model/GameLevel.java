@@ -24,7 +24,7 @@ public class GameLevel {
     public final int number; // 1=first level
     private boolean demoLevel;
     private long startTime;
-    public int killedGhostCount;
+    private int killedGhostCount;
     public GameWorld world;
     private Pac pac;
     private Ghost[] ghosts;
@@ -45,6 +45,18 @@ public class GameLevel {
 
     public boolean isDemoLevel() {
         return demoLevel;
+    }
+
+    public void resetKiledGhostCount() {
+        killedGhostCount = 0;
+    }
+
+    public void addKilledGhost() {
+        killedGhostCount += 1;
+    }
+
+    public int killedGhostCount() {
+        return killedGhostCount;
     }
 
     public void setStartTime(long startTime) {

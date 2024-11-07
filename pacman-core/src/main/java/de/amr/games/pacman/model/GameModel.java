@@ -448,8 +448,8 @@ public abstract class GameModel {
         ghost.eaten(killedSoFar);
         scoreManager.scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
-        level.killedGhostCount += 1;
-        if (level.killedGhostCount == 16) {
+        level.addKilledGhost();
+        if (level.killedGhostCount() == 16) {
             int extraPoints = POINTS_ALL_GHOSTS_IN_LEVEL;
             scoreManager.scorePoints(extraPoints);
             Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number);
