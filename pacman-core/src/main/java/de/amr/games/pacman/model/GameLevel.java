@@ -1,6 +1,5 @@
 package de.amr.games.pacman.model;
 
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -28,6 +27,7 @@ public class GameLevel {
     public Pac pac;
     public Ghost[] ghosts;
     public Bonus bonus;
+    public byte nextBonusIndex; // -1=no bonus, 0=first, 1=second
 
     public Pac pac() { return pac; }
 

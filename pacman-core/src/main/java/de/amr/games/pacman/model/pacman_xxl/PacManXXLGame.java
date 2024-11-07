@@ -130,8 +130,8 @@ public class PacManXXLGame extends PacManArcadeGame {
 
     @Override
     public void activateNextBonus() {
-        nextBonusIndex += 1;
-        byte symbol = bonusSymbols[nextBonusIndex];
+        level.nextBonusIndex += 1;
+        byte symbol = bonusSymbols[level.nextBonusIndex];
         level.bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         // in a non-Arcade style custom map, the bonus position must be taken from the terrain map
         if (level.world.map().terrain().hasProperty(GameWorld.PROPERTY_POS_BONUS)) {

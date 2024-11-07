@@ -328,7 +328,7 @@ public class MsPacManArcadeGame extends GameModel {
         gateKeeper.registerFoodEaten();
         if (isBonusReached()) {
             activateNextBonus();
-            eventLog.bonusIndex = nextBonusIndex;
+            eventLog.bonusIndex = level.nextBonusIndex;
         }
     }
 
@@ -414,7 +414,7 @@ public class MsPacManArcadeGame extends GameModel {
             Logger.info("Previous bonus is still active, skip this one");
             return;
         }
-        nextBonusIndex += 1;
+        level.nextBonusIndex += 1;
 
         boolean leftToRight = RND.nextBoolean();
         Vector2i houseEntry = tileAt(level.world.houseEntryPosition());
@@ -433,7 +433,7 @@ public class MsPacManArcadeGame extends GameModel {
             leftToRight ? exitPortal.rightTunnelEnd().plus(1, 0) : exitPortal.leftTunnelEnd().minus(1, 0)
         ).map(NavPoint::np).toList();
 
-        byte symbol = bonusSymbols[nextBonusIndex];
+        byte symbol = bonusSymbols[level.nextBonusIndex];
         var movingBonus = new MovingBonus(level.world, symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         movingBonus.setRoute(route, leftToRight);
         movingBonus.setBaseSpeed(1.25f);

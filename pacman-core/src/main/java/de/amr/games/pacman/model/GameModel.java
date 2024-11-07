@@ -69,7 +69,6 @@ public abstract class GameModel {
     protected boolean              playing;
     protected int                  initialLives;
     protected int                  lives;
-    protected byte                 nextBonusIndex; // -1=no bonus, 0=first, 1=second
     protected MapConfig            currentMapConfig;
     protected SimulationStepLog    eventLog;
 
@@ -166,12 +165,12 @@ public abstract class GameModel {
             level.pac = null;
             level.ghosts = null;
             level.bonus = null;
+            level.nextBonusIndex = -1;
         }
 
         scoreManager.setScoreEnabled(false);
         huntingControl.reset();
 
-        nextBonusIndex = -1;
         Arrays.fill(bonusSymbols, (byte)-1);
         blinking.stop();
         blinking.reset();
