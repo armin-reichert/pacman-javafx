@@ -75,7 +75,6 @@ public abstract class GameModel {
     protected boolean              playing;
     protected int                  initialLives;
     protected int                  lives;
-    protected byte                 numGhostsKilledInLevel;
     protected byte                 nextBonusIndex; // -1=no bonus, 0=first, 1=second
     protected Pac                  pac;
     protected Ghost[]              ghosts;
@@ -184,6 +183,25 @@ public abstract class GameModel {
         publishGameEvent(GameEventType.GAME_STARTED);
     }
 
+    protected void clearLevel() {
+        level.number = 0;
+        level.demoLevel = false;
+        level.startTime = 0;
+        level.killedGhostCount = 0;
+
+        scoreManager.setScoreEnabled(false);
+        huntingControl.reset();
+
+        bonus = null;
+        nextBonusIndex = -1;
+        Arrays.fill(bonusSymbols, (byte)-1);
+        pac = null;
+        ghosts = null;
+        world = null;
+        blinking.stop();
+        blinking.reset();
+    }
+
     public void createLevel(int levelNumber) {
         level = new GameLevel();
         level.demoLevel = false;
@@ -211,23 +229,6 @@ public abstract class GameModel {
         buildDemoLevel();
         Logger.info("Demo Level created");
         publishGameEvent(GameEventType.LEVEL_CREATED);
-    }
-
-    protected void clearLevel() {
-        level.number = 0;
-        level.startTime = 0;
-
-        scoreManager.setScoreEnabled(false);
-        huntingControl.reset();
-        numGhostsKilledInLevel = 0;
-        bonus = null;
-        nextBonusIndex = -1;
-        Arrays.fill(bonusSymbols, (byte)-1);
-        pac = null;
-        ghosts = null;
-        world = null;
-        blinking.stop();
-        blinking.reset();
     }
 
     protected void updateLevelCounter() {
@@ -518,8 +519,8 @@ public abstract class GameModel {
         ghost.eaten(killedSoFar);
         scoreManager.scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
-        numGhostsKilledInLevel += 1;
-        if (numGhostsKilledInLevel == 16) {
+        level.killedGhostCount += 1;
+        if (level.killedGhostCount == 16) {
             int extraPoints = POINTS_ALL_GHOSTS_IN_LEVEL;
             scoreManager.scorePoints(extraPoints);
             Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number);
