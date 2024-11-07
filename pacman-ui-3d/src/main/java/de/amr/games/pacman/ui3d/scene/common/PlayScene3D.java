@@ -140,7 +140,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     private void setGameActions() {
-        if (context.game().isDemoLevel()) {
+        if (context.level().demoLevel) {
             if (context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 bind(TengenGameActions.QUIT_DEMO_LEVEL, context.joypad().key(NES.Joypad.START));
             } else {
@@ -183,7 +183,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     @Override
     public void update() {
         var game = context.game();
-        if (game.currentLevelNumber() == 0 || game.world() == null) {
+        if (game.level().isEmpty() || game.world() == null) {
             // Scene is visible for 1 (2?) ticks before game level has been created
             Logger.warn("Tick {}: Cannot update PlayScene3D: game level not yet available", context.tick());
             return;
@@ -198,7 +198,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         perspective().update(game.world(), game.pac());
         updateScores();
 
-        if (context.game().isDemoLevel()) {
+        if (context.level().demoLevel) {
             context.game().setDemoLevelBehavior();
         }
         else {
@@ -366,7 +366,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         replaceGameLevel3D(true);
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
-        showLevelTestMessage("BONI LEVEL" + context.game().currentLevelNumber());
+        showLevelTestMessage("BONI LEVEL" + context.level().number);
         PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
     }
 
@@ -374,7 +374,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         replaceGameLevel3D(true);
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
-        showLevelTestMessage("PREVIEW LEVEL " + context.game().currentLevelNumber());
+        showLevelTestMessage("PREVIEW LEVEL " + context.level().number);
         PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
     }
 
@@ -464,7 +464,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = context.game().isDemoLevel() ||
+        boolean silent = context.level().demoLevel ||
                 context.gameState() == TESTING_LEVEL_BONI ||
                 context.gameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
@@ -478,14 +478,14 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         switch (context.gameState()) {
             case TESTING_LEVEL_BONI -> {
                 replaceGameLevel3D(false);
-                showLevelTestMessage("BONI LEVEL " + context.game().currentLevelNumber());
+                showLevelTestMessage("BONI LEVEL " + context.level().number);
             }
             case TESTING_LEVEL_TEASERS -> {
                 replaceGameLevel3D(false);
-                showLevelTestMessage("PREVIEW LEVEL " + context.game().currentLevelNumber());
+                showLevelTestMessage("PREVIEW LEVEL " + context.level().number);
             }
             default -> {
-                if (!context.game().isDemoLevel()){
+                if (!context.level().demoLevel){
                     showReadyMessage();
                 }
             }
@@ -545,7 +545,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         scores3D.translateYProperty().bind(level3D.root().translateYProperty().subtract(3.5 * TS));
         scores3D.translateZProperty().bind(level3D.root().translateZProperty().subtract(3 * TS));
 
-        Logger.info("3D game level {} created.", context.game().currentLevelNumber());
+        Logger.info("3D game level {} created.", context.level().number);
     }
 
     private void showLevelTestMessage(String message) {

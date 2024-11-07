@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameActions2D;
@@ -56,7 +57,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onLevelCreated(GameEvent e) {
         ArcadeKeyAdapter arcadeController = context.arcade();
-        if (context.game().isDemoLevel()) {
+        if (context.level().demoLevel) {
             bind(GameActions2D.ADD_CREDIT, arcadeController.key(Arcade.Controls.COIN));
         } else {
             context.game().scoreManager().setScoreEnabled(false);
@@ -70,7 +71,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = context.game().isDemoLevel() ||
+        boolean silent = context.level().demoLevel ||
                 context.gameState() == TESTING_LEVEL_BONI ||
                 context.gameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
@@ -85,7 +86,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        if (context.game().currentLevelNumber() == 0) {
+        if (context.game().level().isEmpty()) {
             // Scene is visible for 1 (2?) ticks before game level has been created
             Logger.warn("Tick {}: Cannot update PlayScene2D: game level not yet available", context.tick());
             return;
@@ -94,7 +95,7 @@ public class PlayScene2D extends GameScene2D {
          * TODO: I would like to do this only on level start but when scene view is switched
          *       between 2D and 3D, the other scene has to be updated accordingly.
          */
-        if (context.game().isDemoLevel()) {
+        if (context.level().demoLevel) {
             context.game().setDemoLevelBehavior();
         }
         else {
@@ -128,11 +129,15 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     protected void drawSceneContent(GameRenderer renderer) {
-        if (context.game().world() == null) { // This happens on level start
+        if (context.game().level().isEmpty()) { // This happens on level start
             Logger.warn("Cannot draw scene content, game world not yet available!");
             return;
         }
-        drawLevelMessage(renderer); // READY, GAME_OVER etc.
+        if (context.game().world() == null) {
+            return;
+        }
+
+        drawLevelMessage(renderer, context.game().world()); // READY, GAME_OVER etc.
 
         boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         renderer.setFlashMode(flashMode);
@@ -166,14 +171,14 @@ public class PlayScene2D extends GameScene2D {
             .map(context.game()::ghost);
     }
 
-    private void drawLevelMessage(GameRenderer renderer) {
-        Vector2i houseTopLeftTile = context.game().world().houseTopLeftTile();
-        Vector2i houseSize        = context.game().world().houseSize();
+    private void drawLevelMessage(GameRenderer renderer, GameWorld world) {
+        Vector2i houseTopLeftTile = world.houseTopLeftTile();
+        Vector2i houseSize        = world.houseSize();
         int cx = houseTopLeftTile.x() + houseSize.x() / 2;
         int y = TS * (houseTopLeftTile.y() + houseSize.y() + 1);
         String assetPrefix = GameAssets2D.assetPrefix(context.currentGameVariant());
         Font font = renderer.scaledArcadeFont(TS);
-        if (context.game().isDemoLevel()) {
+        if (context.level().demoLevel) {
             String text = "GAME  OVER";
             int x = TS * (cx - text.length() / 2);
             Color color = context.assets().color(assetPrefix + ".color.game_over_message");
@@ -189,7 +194,7 @@ public class PlayScene2D extends GameScene2D {
             Color color = context.assets().color(assetPrefix + ".color.ready_message");
             renderer.drawText(text, color, font, x, y);
         } else if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
-            String text = "TEST    L%03d".formatted(context.game().currentLevelNumber());
+            String text = "TEST    L%03d".formatted(context.level().number);
             int x = TS * (cx - text.length() / 2);
             renderer.drawText(text, Color.valueOf(Arcade.Palette.WHITE), font, x, y);
         }

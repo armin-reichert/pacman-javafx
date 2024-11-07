@@ -6,10 +6,7 @@ package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.LevelData;
+import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -27,10 +24,10 @@ public class InfoBoxGameInfo extends InfoBox {
         super.init(context);
 
         labeledValue("Game Scene", ifGameScenePresent(gameScene -> gameScene.getClass().getSimpleName()));
-        labeledValue("Demo Level", ifGameScenePresent(gameScene -> context.game().isDemoLevel() ? "Yes" : "No"));
+        labeledValue("Demo Level", ifLevelPresent(gameScene -> context.level().demoLevel ? "Yes" : "No"));
         labeledValue("Game State", () -> "%s".formatted(context.gameState()));
         labeledValue("State Timer", this::stateTimerInfo);
-        labeledValue("Level Number", ifLevelPresent(level -> "%d".formatted(context.game().currentLevelNumber())));
+        labeledValue("Level Number", ifLevelPresent(level -> "%d".formatted(level.number)));
         labeledValue("World Map", ifWorldPresent(world -> {
             String url = world.map().url().toString();
             return url.substring(url.lastIndexOf("/") + 1);
@@ -76,7 +73,7 @@ public class InfoBoxGameInfo extends InfoBox {
         return "Tick %d of %d. Remaining: %d".formatted(t.currentTick(), t.duration(), t.remaining());
     }
 
-    private String fmtHuntingPhase(LevelData level) {
+    private String fmtHuntingPhase(GameLevel level) {
         var game = context.game();
         HuntingControl huntingControl = game.huntingControl();
         return "%s #%d%s".formatted(
@@ -87,11 +84,11 @@ public class InfoBoxGameInfo extends InfoBox {
             huntingControl.isStopped() ? " STOPPED" : "");
     }
 
-    private String fmtHuntingTicksRunning(LevelData level) {
+    private String fmtHuntingTicksRunning(GameLevel level) {
         return "Running:   %d".formatted(context.game().huntingControl().currentTick());
     }
 
-    private String fmtHuntingTicksRemaining(LevelData level) {
+    private String fmtHuntingTicksRemaining(GameLevel level) {
         return "Remaining: %s".formatted(ticksToString(context.game().huntingControl().remaining()));
     }
 
@@ -99,44 +96,64 @@ public class InfoBoxGameInfo extends InfoBox {
         return "%d of %d (%d energizers)".formatted(world.uneatenFoodCount(), world.totalFoodCount(), world.energizerTiles().count());
     }
 
-    private String fmtGhostAttackSpeed(LevelData level) {
+    private String fmtGhostAttackSpeed(GameLevel level) {
         // use Pinky because Blinky could be in Elroy mode
         Ghost pinky = context.game().ghost(GameModel.PINK_GHOST);
         if (pinky != null) {
-            return "%.4f px/s (%d%%)".formatted(context.game().ghostAttackSpeed(pinky) * 60f, level.pacSpeedPercentage());
+            return "%.4f px/s (%d%%)".formatted(
+                context.game().ghostAttackSpeed(pinky) * 60f,
+                100 //TODO fixme level.pacSpeedPercentage()
+            );
         }
         return InfoText.NO_INFO;
     }
 
-    private String fmtGhostSpeedFrightened(LevelData level) {
+    private String fmtGhostSpeedFrightened(GameLevel level) {
         Ghost blinky = context.game().ghost(GameModel.RED_GHOST);
         if (blinky != null) {
-            return "%.4f px/s (%d%%)".formatted(context.game().ghostFrightenedSpeed(blinky) * 60f, level.pacSpeedPercentage());
+            return "%.4f px/s (%d%%)".formatted(
+                context.game().ghostFrightenedSpeed(blinky) * 60f,
+                100 //TODO fixme level.pacSpeedPercentage()
+            );
         }
         return InfoText.NO_INFO;
     }
 
-    private String fmtGhostSpeedTunnel(LevelData level) {
+    private String fmtGhostSpeedTunnel(GameLevel level) {
         Ghost blinky = context.game().ghost(GameModel.RED_GHOST);
         if (blinky != null) {
-            return "%.4f px/s (%d%%)".formatted(context.game().ghostTunnelSpeed(blinky) * 60f, level.pacSpeedPercentage());
+            return "%.4f px/s (%d%%)".formatted(
+                context.game().ghostTunnelSpeed(blinky) * 60f,
+                100 //TODO fixme level.pacSpeedPercentage()
+            );
         }
         return InfoText.NO_INFO;
     }
 
-    private String fmtPacNormalSpeed(LevelData level) {
-        return "%.4f px/s (%d%%)".formatted(context.game().pacNormalSpeed() * 60f, level.pacSpeedPercentage());
+    private String fmtPacNormalSpeed(GameLevel level) {
+        return "%.4f px/s (%d%%)".formatted(
+            context.game().pacNormalSpeed() * 60f,
+            100 //TODO fixme level.pacSpeedPercentage()
+        );
     }
 
-    private String fmtPacSpeedPowered(LevelData level) {
-        return "%.4f px/s (%d%%)".formatted(context.game().pacPowerSpeed() * 60f, level.pacSpeedPoweredPercentage());
+    private String fmtPacSpeedPowered(GameLevel level) {
+        return "%.4f px/s (%d%%)".formatted(
+            context.game().pacPowerSpeed() * 60f,
+            100 // TODO fixme level.pacSpeedPoweredPercentage()
+        );
     }
 
-    private String fmtPacPowerTime(LevelData unused) {
-        return "%.2f sec (%d ticks)".formatted(context.game().pacPowerTicks() / 60f, context.game().pacPowerTicks());
+    private String fmtPacPowerTime(GameLevel unused) {
+        return "%.2f sec (%d ticks)".formatted(
+            context.game().pacPowerTicks() / 60f,
+            context.game().pacPowerTicks()
+        );
     }
 
-    private String fmtNumFlashes(LevelData level) {
-        return "%d".formatted(level.numFlashes());
+    private String fmtNumFlashes(GameLevel level) {
+        return "%d".formatted(
+            5 //TODO fixme level.numFlashes()
+        );
     }
 }

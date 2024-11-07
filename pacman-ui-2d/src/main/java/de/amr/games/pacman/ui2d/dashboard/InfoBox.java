@@ -4,11 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.LevelData;
-import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
-import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
-import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import javafx.beans.property.*;
@@ -92,19 +89,8 @@ public abstract class InfoBox extends TitledPane {
         return () -> context.currentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> ifLevelPresent(Function<LevelData, String> fnInfo) {
-        return () -> {
-            if (context.game() instanceof PacManArcadeGame arcadeGame) {
-                return arcadeGame.currentLevelData().map(fnInfo).orElse(NO_INFO);
-            }
-            if (context.game() instanceof MsPacManArcadeGame arcadeGame) {
-                return arcadeGame.currentLevelData().map(fnInfo).orElse(NO_INFO);
-            }
-            if (context.game() instanceof TengenMsPacManGame tengenGame) {
-                return tengenGame.currentLevelData().map(fnInfo).orElse(NO_INFO);
-            }
-            return NO_INFO;
-        };
+    protected Supplier<String> ifLevelPresent(Function<GameLevel, String> fnInfo) {
+        return () -> context.game().level().map(fnInfo).orElse(NO_INFO);
     }
 
     protected Supplier<String> ifWorldPresent(Function<GameWorld, String> fnInfo) {

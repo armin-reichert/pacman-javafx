@@ -432,8 +432,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public String locLevelCompleteMessage() {
-        return pickerLevelComplete.next() + "\n\n"
-            + locText("level_complete", game().currentLevelNumber());
+        return pickerLevelComplete.next() + "\n\n" + locText("level_complete", level().number);
     }
 
     @Override
@@ -595,8 +594,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public void onLevelCreated(GameEvent event) {
         currentGameSceneConfig().createActorAnimations(game());
-        Logger.info("Actor animations created. ({} level #{})", currentGameVariant(), game().currentLevelNumber());
-        sound().setEnabled(!game().isDemoLevel());
+        Logger.info("Actor animations created. ({} level #{})", currentGameVariant(), level().number);
+        sound().setEnabled(!level().demoLevel);
         Logger.info("Sounds {}", sound().isEnabled() ? "enabled" : "disabled");
         // size of game scene have changed, so re-embed
         currentGameScene().ifPresent(gamePage::embedGameScene);

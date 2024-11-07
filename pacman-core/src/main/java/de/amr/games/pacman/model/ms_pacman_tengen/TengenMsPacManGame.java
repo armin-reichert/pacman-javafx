@@ -204,15 +204,15 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     protected void initScore(int levelNumber) {
         scoreManager.setScoreEnabled(levelNumber > 0);
-        scoreManager.setHighScoreEnabled(levelNumber > 0 && !isDemoLevel());
+        scoreManager.setHighScoreEnabled(levelNumber > 0 && !level.demoLevel);
     }
 
     @Override
     public long pacPowerTicks() {
-        if (!inRange(currentLevelNumber, MIN_LEVEL_NUMBER, MAX_LEVEL_NUMBER)) {
+        if (!inRange(level.number, MIN_LEVEL_NUMBER, MAX_LEVEL_NUMBER)) {
             return 0;
         }
-        double seconds = switch (currentLevelNumber) {
+        double seconds = switch (level.number) {
             case  1 -> 6;
             case  2 -> 5;
             case  3 -> 4;
@@ -338,7 +338,7 @@ public class TengenMsPacManGame extends GameModel {
     public void setBoosterActive(boolean active) {
         if (boosterActive != active) {
             boosterActive = active;
-            float speed = pacBaseSpeedInLevel(currentLevelNumber) + pacDifficultySpeedDelta(difficulty);
+            float speed = pacBaseSpeedInLevel(level.number) + pacDifficultySpeedDelta(difficulty);
             if (boosterActive) {
                 speed += pacBoosterSpeedDelta();
             }
@@ -375,9 +375,9 @@ public class TengenMsPacManGame extends GameModel {
         if (!inRange(levelNumber, MIN_LEVEL_NUMBER, MAX_LEVEL_NUMBER)) {
             throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
-        currentLevelNumber = levelNumber;
-        levelCounterEnabled = currentLevelNumber < 8;
-        currentMapConfig = mapConfigMgr.getMapConfig(mapCategory, currentLevelNumber);
+        level.number = levelNumber;
+        levelCounterEnabled = level.number < 8;
+        currentMapConfig = mapConfigMgr.getMapConfig(mapCategory, level.number);
         createWorldAndPopulation(currentMapConfig.worldMap());
         pac.setAutopilot(autopilot);
         setBoosterActive(false); // gets activated in startLevel() if mode is ALWAYS_ON
@@ -390,10 +390,10 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public void buildDemoLevel() {
-        currentLevelNumber = 1;
+        level.number = 1;
         levelCounterEnabled = false;
         demoLevelSteering.init();
-        currentMapConfig = mapConfigMgr.getMapConfig(mapCategory, currentLevelNumber);
+        currentMapConfig = mapConfigMgr.getMapConfig(mapCategory, level.number);
         createWorldAndPopulation(currentMapConfig.worldMap());
         setBoosterActive(false); // gets activated in startLevel() if mode is ALWAYS_ON
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
@@ -419,7 +419,7 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public int intermissionNumberAfterLevel() {
-        return switch (currentLevelNumber) {
+        return switch (level.number) {
             case 2 -> 1;
             case 5 -> 2;
             case 9, 13 -> 3; // TODO not sure what happens in later levels
@@ -430,8 +430,8 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public boolean isPacManKillingIgnored() {
-        float levelRunningSeconds = (System.currentTimeMillis() - levelStartTime) / 1000f;
-        if (demoLevel && levelRunningSeconds < DEMO_LEVEL_MIN_DURATION_SEC) {
+        float levelRunningSeconds = (System.currentTimeMillis() - level.startTime) / 1000f;
+        if (level.demoLevel && levelRunningSeconds < DEMO_LEVEL_MIN_DURATION_SEC) {
             Logger.info("Pac-Man dead ignored, demo level is running since {} seconds", levelRunningSeconds);
             return true;
         }
@@ -447,8 +447,8 @@ public class TengenMsPacManGame extends GameModel {
     public byte computeBonusSymbol() {
         //TODO: I have no idea yet how Tengen does this
         byte maxBonus = mapCategory == MapCategory.STRANGE ? BONUS_FLOWER : BONUS_BANANA;
-        if (currentLevelNumber - 1 <= maxBonus) {
-            return (byte) (currentLevelNumber - 1);
+        if (level.number - 1 <= maxBonus) {
+            return (byte) (level.number - 1);
         }
         return (byte) randomInt(0, maxBonus);
     }

@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.ms_pacman_tengen;
 
 import de.amr.games.pacman.model.GameException;
+import de.amr.games.pacman.model.GameLevel;
 
 import static de.amr.games.pacman.lib.Globals.inRange;
 import static de.amr.games.pacman.model.GameModel.*;
@@ -62,8 +63,9 @@ public interface SpeedConfiguration {
      * </p>
      */
     static float ghostSpeedIncreaseByFoodRemaining(TengenMsPacManGame game) {
+        GameLevel level = game.level().orElseThrow();
         byte units = 0;
-        if (game.difficulty() == Difficulty.NORMAL && game.currentLevelNumber() >= 5) {
+        if (game.difficulty() == Difficulty.NORMAL && level.number >= 5) {
             int dotsLeft = game.world().uneatenFoodCount();
             if (dotsLeft <= 7) {
                 units = 5;

@@ -71,10 +71,7 @@ public abstract class GameModel {
     protected final ScoreManager   scoreManager = new ScoreManager(this);
     protected HuntingControl       huntingControl;
     protected File                 customMapDir;
-    protected int                  currentLevelNumber; // 1=first level
     protected boolean              levelCounterEnabled;
-    protected boolean              demoLevel;
-    protected long                 levelStartTime;
     protected boolean              playing;
     protected int                  initialLives;
     protected int                  lives;
@@ -86,6 +83,8 @@ public abstract class GameModel {
     protected GameWorld            world;
     protected MapConfig            currentMapConfig;
     protected SimulationStepLog    eventLog;
+
+    protected GameLevel            level;
 
     public abstract boolean      canStartNewGame();
     public abstract void         endGame();
@@ -123,27 +122,15 @@ public abstract class GameModel {
         this.customMapDir = new File(userDir, "maps");
     }
 
+    public Optional<GameLevel> level() {
+        return Optional.ofNullable(level);
+    }
+
     public File customMapDir() {
         return customMapDir;
     }
 
     public void updateCustomMaps() {}
-
-    protected void clearLevel() {
-        currentLevelNumber = 0;
-        scoreManager.setScoreEnabled(false);
-        levelStartTime = 0;
-        huntingControl.reset();
-        numGhostsKilledInLevel = 0;
-        bonus = null;
-        nextBonusIndex = -1;
-        Arrays.fill(bonusSymbols, (byte)-1);
-        pac = null;
-        ghosts = null;
-        world = null;
-        blinking.stop();
-        blinking.reset();
-    }
 
     public Pac pac() {
         return pac;
@@ -178,22 +165,16 @@ public abstract class GameModel {
         return huntingControl;
     }
 
-    public int currentLevelNumber() {
-        return currentLevelNumber;
-    }
-
     public MapConfig currentMapConfig() {
         return currentMapConfig;
-    }
-
-    public boolean isDemoLevel() {
-        return demoLevel;
     }
 
     public void reset() {
         playing = false;
         lives = initialLives;
-        clearLevel();
+        if (level != null) {
+            clearLevel();
+        }
         scoreManager.resetScore();
     }
 
@@ -204,8 +185,10 @@ public abstract class GameModel {
     }
 
     public void createLevel(int levelNumber) {
+        level = new GameLevel();
+        level.demoLevel = false;
+
         clearLevel();
-        demoLevel = false;
         buildLevel(levelNumber);
         scoreManager.setLevelNumber(levelNumber);
         scoreManager.setScoreEnabled(true);
@@ -215,21 +198,40 @@ public abstract class GameModel {
     }
 
     public void startNextLevel() {
-        createLevel(currentLevelNumber + 1);
+        createLevel(level.number + 1);
         startLevel();
         showGuys();
     }
 
     public void createDemoLevel() {
+        level = new GameLevel();
+        level.demoLevel = true;
+
         clearLevel();
-        demoLevel = true;
         buildDemoLevel();
         Logger.info("Demo Level created");
         publishGameEvent(GameEventType.LEVEL_CREATED);
     }
 
+    protected void clearLevel() {
+        level.number = 0;
+        level.startTime = 0;
+
+        scoreManager.setScoreEnabled(false);
+        huntingControl.reset();
+        numGhostsKilledInLevel = 0;
+        bonus = null;
+        nextBonusIndex = -1;
+        Arrays.fill(bonusSymbols, (byte)-1);
+        pac = null;
+        ghosts = null;
+        world = null;
+        blinking.stop();
+        blinking.reset();
+    }
+
     protected void updateLevelCounter() {
-        if (currentLevelNumber == 1) {
+        if (level.number == 1) {
             levelCounter.clear();
         }
         if (levelCounterEnabled) {
@@ -245,12 +247,12 @@ public abstract class GameModel {
     }
 
     public void startLevel() {
-        gateKeeper.setLevelNumber(currentLevelNumber);
-        setActorBaseSpeed(currentLevelNumber);
-        initScore(currentLevelNumber);
+        gateKeeper.setLevelNumber(level.number);
+        setActorBaseSpeed(level.number);
+        initScore(level.number);
         letsGetReadyToRumble();
-        levelStartTime = System.currentTimeMillis();
-        Logger.info("{} started", demoLevel ? "Demo Level" : "Level " + currentLevelNumber);
+        level.startTime = System.currentTimeMillis();
+        Logger.info("{} started", level.demoLevel ? "Demo Level" : "Level " + level.number);
         Logger.info("{} base speed: {0.00} px/tick", pac.name(), pac.baseSpeed());
         ghosts().forEach(ghost -> Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
         publishGameEvent(GameEventType.LEVEL_STARTED);
@@ -383,7 +385,7 @@ public abstract class GameModel {
         powerTimer.stop();
         powerTimer.reset(0);
         Logger.info("Power timer stopped and reset to zero");
-        Logger.trace("Game level {} completed.", currentLevelNumber);
+        Logger.trace("Game level {} completed.", level.number);
     }
 
     public Optional<Bonus> bonus() {
@@ -405,7 +407,7 @@ public abstract class GameModel {
     public void doHuntingStep() {
         if (huntingControl.isCurrentPhaseOver()) {
             Logger.info("Hunting phase {} ({}) ends, tick={}", huntingControl.phaseIndex(), huntingControl.phaseType(), huntingControl.currentTick());
-            huntingControl.startNextPhase(currentLevelNumber);
+            huntingControl.startNextPhase(level.number);
         } else {
             huntingControl.update();
         }
@@ -432,7 +434,7 @@ public abstract class GameModel {
 
     private void checkPacKilled() {
         boolean pacMeetsKiller = ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
-        if (demoLevel) {
+        if (level.demoLevel) {
             eventLog.pacKilled = pacMeetsKiller && !isPacManKillingIgnored();
         } else {
             eventLog.pacKilled = pacMeetsKiller && !pac.isImmune();
@@ -520,7 +522,7 @@ public abstract class GameModel {
         if (numGhostsKilledInLevel == 16) {
             int extraPoints = POINTS_ALL_GHOSTS_IN_LEVEL;
             scoreManager.scorePoints(extraPoints);
-            Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, currentLevelNumber);
+            Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number);
         }
         victims.add(ghost);
     }

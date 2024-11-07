@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.input.ArcadeKeyAdapter;
@@ -43,6 +44,7 @@ public interface GameContext {
     default GameController gameController() { return GameController.it(); }
     default GameState gameState() { return gameController().state(); }
     default GameModel game() { return gameController().currentGame(); }
+    default GameLevel level() { return game().level().orElseThrow(); }
     default GameVariant currentGameVariant() { return gameController().currentGameVariant(); }
     void selectGameVariant(GameVariant variant);
 

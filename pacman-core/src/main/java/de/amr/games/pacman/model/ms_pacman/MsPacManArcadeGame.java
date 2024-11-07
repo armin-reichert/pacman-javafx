@@ -120,7 +120,7 @@ public class MsPacManArcadeGame extends GameModel {
     }
 
     public Optional<LevelData> currentLevelData() {
-        return currentLevelNumber > 0 ? Optional.of(levelData(currentLevelNumber)): Optional.empty();
+        return level != null ? Optional.of(levelData(level.number)): Optional.empty();
     }
 
     @Override
@@ -131,8 +131,8 @@ public class MsPacManArcadeGame extends GameModel {
 
     @Override
     protected void initScore(int levelNumber) {
-        scoreManager.setScoreEnabled(levelNumber > 0 && !isDemoLevel());
-        scoreManager.setHighScoreEnabled(levelNumber > 0 && !isDemoLevel());
+        scoreManager.setScoreEnabled(levelNumber > 0 && !level.demoLevel);
+        scoreManager.setHighScoreEnabled(levelNumber > 0 && !level.demoLevel);
     }
 
     @Override
@@ -151,7 +151,7 @@ public class MsPacManArcadeGame extends GameModel {
 
     @Override
     public int intermissionNumberAfterLevel() {
-        return switch (currentLevelNumber) {
+        return switch (level.number) {
             case 2 -> 1;
             case 5 -> 2;
             case 9, 13, 17 -> 3;
@@ -189,11 +189,11 @@ public class MsPacManArcadeGame extends GameModel {
 
     @Override
     public void buildLevel(int levelNumber) {
-        currentLevelNumber = levelNumber;
+        level.number = levelNumber;
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        levelCounterEnabled = currentLevelNumber < 8;
-        currentMapConfig = mapConfigMgr.getMapConfig(currentLevelNumber);
+        levelCounterEnabled = level.number < 8;
+        currentMapConfig = mapConfigMgr.getMapConfig(level.number);
         createWorldAndPopulation(currentMapConfig.worldMap());
         pac.setAutopilot(autopilot);
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
@@ -201,9 +201,9 @@ public class MsPacManArcadeGame extends GameModel {
 
     @Override
     public void buildDemoLevel() {
-        currentLevelNumber = 1;
+        level.number = 1;
         levelCounterEnabled = false;
-        currentMapConfig = mapConfigMgr.getMapConfig(currentLevelNumber);
+        currentMapConfig = mapConfigMgr.getMapConfig(level.number);
         createWorldAndPopulation(currentMapConfig.worldMap());
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         demoLevelSteering.init();
@@ -219,15 +219,15 @@ public class MsPacManArcadeGame extends GameModel {
 
     @Override
     public int numFlashes() {
-        return currentLevelNumber > 0 ? levelData(currentLevelNumber).numFlashes() : 0;
+        return level != null ? levelData(level.number).numFlashes() : 0;
     }
 
     @Override
     public float pacNormalSpeed() {
-        if (currentLevelNumber == 0) {
+        if (level == null) {
             return 0;
         }
-        byte percentage = levelData(currentLevelNumber).pacSpeedPercentage();
+        byte percentage = levelData(level.number).pacSpeedPercentage();
         if (percentage == 0) {
             percentage = 100;
         }
@@ -236,10 +236,10 @@ public class MsPacManArcadeGame extends GameModel {
 
     @Override
     public float pacPowerSpeed() {
-        if (currentLevelNumber == 0) {
+        if (level == null) {
             return 0;
         }
-        byte percentage = levelData(currentLevelNumber).pacSpeedPoweredPercentage();
+        byte percentage = levelData(level.number).pacSpeedPoweredPercentage();
         if (percentage == 0) {
             percentage = 100;
         }
@@ -248,7 +248,7 @@ public class MsPacManArcadeGame extends GameModel {
 
     @Override
     public long pacPowerTicks() {
-        return currentLevelNumber > 0 ? 60 * levelData(currentLevelNumber).pacPowerSeconds() : 0;
+        return level != null ? 60 * levelData(level.number).pacPowerSeconds() : 0;
     }
 
     @Override
@@ -259,16 +259,16 @@ public class MsPacManArcadeGame extends GameModel {
 
     @Override
     public float ghostAttackSpeed(Ghost ghost) {
-        if (world.isTunnel(ghost.tile()) && currentLevelNumber <= 3) {
+        if (world.isTunnel(ghost.tile()) && level.number <= 3) {
             return ghostTunnelSpeed(ghost);
         }
         if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
-            return levelData(currentLevelNumber).elroy1SpeedPercentage() * 0.01f * ghost.baseSpeed();
+            return levelData(level.number).elroy1SpeedPercentage() * 0.01f * ghost.baseSpeed();
         }
         if (ghost.id() == RED_GHOST && cruiseElroy == 2) {
-            return levelData(currentLevelNumber).elroy2SpeedPercentage() * 0.01f * ghost.baseSpeed();
+            return levelData(level.number).elroy2SpeedPercentage() * 0.01f * ghost.baseSpeed();
         }
-        return levelData(currentLevelNumber).ghostSpeedPercentage() * 0.01f * ghost.baseSpeed();
+        return levelData(level.number).ghostSpeedPercentage() * 0.01f * ghost.baseSpeed();
     }
 
     @Override
@@ -283,22 +283,22 @@ public class MsPacManArcadeGame extends GameModel {
 
     @Override
     public float ghostFrightenedSpeed(Ghost ghost) {
-        return currentLevelNumber > 0
-            ? levelData(currentLevelNumber).ghostSpeedFrightenedPercentage() * 0.01f * ghost.baseSpeed()
+        return level !=null
+            ? levelData(level.number).ghostSpeedFrightenedPercentage() * 0.01f * ghost.baseSpeed()
             : 0;
     }
 
     @Override
     public float ghostTunnelSpeed(Ghost ghost) {
-        return currentLevelNumber > 0
-            ? levelData(currentLevelNumber).ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed()
+        return level !=null
+            ? levelData(level.number).ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed()
             : 0;
     }
 
     @Override
     public boolean isPacManKillingIgnored() {
-        float levelRunningSeconds = (System.currentTimeMillis() - levelStartTime) / 1000f;
-        if (demoLevel && levelRunningSeconds < DEMO_LEVEL_MIN_DURATION_SEC) {
+        float levelRunningSeconds = (System.currentTimeMillis() - level.startTime) / 1000f;
+        if (level.demoLevel && levelRunningSeconds < DEMO_LEVEL_MIN_DURATION_SEC) {
             Logger.info("Pac-Man killing ignored, demo level running for {} seconds", levelRunningSeconds);
             return true;
         }
@@ -313,9 +313,9 @@ public class MsPacManArcadeGame extends GameModel {
     @Override
     protected void onPelletOrEnergizerEaten(Vector2i tile, int uneatenFoodCount, boolean energizer) {
         pac.setRestingTicks(energizer ? 3 : 1);
-        if (uneatenFoodCount == levelData(currentLevelNumber).elroy1DotsLeft()) {
+        if (uneatenFoodCount == levelData(level.number).elroy1DotsLeft()) {
             cruiseElroy = 1;
-        } else if (uneatenFoodCount == levelData(currentLevelNumber).elroy2DotsLeft()) {
+        } else if (uneatenFoodCount == levelData(level.number).elroy2DotsLeft()) {
             cruiseElroy = 2;
         }
         if (energizer) {
@@ -389,8 +389,8 @@ public class MsPacManArcadeGame extends GameModel {
      */
     @Override
     public byte computeBonusSymbol() {
-        if (currentLevelNumber <= 7) {
-            return (byte) (currentLevelNumber - 1);
+        if (level.number <= 7) {
+            return (byte) (level.number - 1);
         }
         int choice = randomInt(0, 320);
         if (choice <  50) return 0; // 5/32 probability

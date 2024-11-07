@@ -110,7 +110,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             case BIG     -> bigMapSpriteImageArea(mapConfig);
             case STRANGE -> strangeMapSpriteImageArea(mapConfig);
         };
-        Logger.info("Level {}: Using map sprite area #{}", game.currentLevelNumber(), mapSprite.area());
+        Logger.info("Level {}: Using map sprite area #{}", game.level().get().number, mapSprite.area());
 
         Map<String, String> mapColorScheme = mapConfig.colorScheme();
         terrainRenderer.setMapBackgroundColor(bgColor);
@@ -324,7 +324,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
         // All maps that use a different color scheme than that in the sprite sheet have to be rendered using the
         // generic vector renderer for now. This looks more or less bad for specific maps.
-        boolean mapSpriteExists = game.isDemoLevel() || mapSpriteExists(game.currentLevelNumber(), game.mapCategory());
+        boolean mapSpriteExists = context.level().demoLevel || mapSpriteExists(context.level().number, game.mapCategory());
         if (!mapSpriteExists) {
             terrainRenderer.drawMap(ctx(), world.map().terrain());
             world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
@@ -440,8 +440,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     @Override
     public void drawLevelCounter(GameContext context,  Vector2f size) {
         TengenMsPacManGame game = (TengenMsPacManGame) context.game();
-        int levelNumber = game.currentLevelNumber();
-        boolean demoLevel = game.isDemoLevel();
+        int levelNumber = context.level().number;
         // TODO: This is ugly, maybe change all Tengen maps instead?
         double y = size.y() - 3 * TS;
         if (levelNumberBoxesVisible) {

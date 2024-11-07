@@ -8,6 +8,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -87,7 +88,8 @@ public enum GameState implements FsmState<GameModel> {
                     game.letsGetReadyToRumble();
                     game.showGuys();
                 } else if (timer.currentTick() == TICK_RESUME_GAME) {
-                    game.huntingControl().startHunting(game.currentLevelNumber());
+                    GameLevel level = game.level().orElseThrow();
+                    game.huntingControl().startHunting(level.number);
                     enterState(GameState.HUNTING);
                 }
             }
@@ -102,8 +104,9 @@ public enum GameState implements FsmState<GameModel> {
                     game.showGuys();
                 }
                 else if (timer.currentTick() == TICK_NEW_GAME_START_PLAYING) {
+                    GameLevel level = game.level().orElseThrow();
                     game.setPlaying(true);
-                    game.huntingControl().startHunting(game.currentLevelNumber());
+                    game.huntingControl().startHunting(level.number);
                     enterState(GameState.HUNTING);
                 }
             }
@@ -114,7 +117,8 @@ public enum GameState implements FsmState<GameModel> {
                     game.showGuys();
                 }
                 else if (timer.currentTick() == TICK_DEMO_LEVEL_START_PLAYING) {
-                    game.huntingControl().startHunting(game.currentLevelNumber());
+                    GameLevel level = game.level().orElseThrow();
+                    game.huntingControl().startHunting(level.number);
                     enterState(GameState.HUNTING);
                 }
             }
@@ -156,9 +160,10 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
+            GameLevel level = game.level().orElseThrow();
             if (timer.hasExpired()) {
                 setProperty("mazeFlashing", false);
-                if (game.isDemoLevel()) { // just in case demo level is completed: back to intro scene
+                if (level.demoLevel) { // just in case: if demo level is completed, go back to intro scene
                     enterState(INTRO);
                 } else if (game.intermissionNumberAfterLevel() != 0) {
                     enterState(INTERMISSION);
@@ -240,9 +245,10 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
+            GameLevel level = game.level().orElseThrow();
             if (timer.hasExpired()) {
                 game.loseLife();
-                if (game.isDemoLevel()) {
+                if (level.demoLevel) {
                     enterState(INTRO);
                 } else {
                     enterState(game.lives() == 0 ? GAME_OVER : STARTING_GAME);
@@ -340,6 +346,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
+            GameLevel level = game.level().orElseThrow();
             if (timer().currentTick() > 2 * TICKS_PER_SECOND) {
                 game.blinking().tick();
                 game.ghosts().forEach(ghost -> ghost.update(game));
@@ -376,7 +383,7 @@ public enum GameState implements FsmState<GameModel> {
                 game.bonus().ifPresent(Bonus::setInactive);
                 setProperty("mazeFlashing", false);
                 game.blinking().reset();
-                if (game.currentLevelNumber() == lastLevelNumber) {
+                if (level.number == lastLevelNumber) {
                     GameController.it().restart(GameState.BOOT);
                 } else {
                     timer().restartIndefinitely();
@@ -424,8 +431,9 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             game.doHuntingStep();
+            GameLevel level = game.level().orElseThrow();
             if (timer().hasExpired()) {
-                if (game.currentLevelNumber() == lastLevelNumber) {
+                if (level.number == lastLevelNumber) {
                     game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
                     enterState(INTRO);
                 } else {

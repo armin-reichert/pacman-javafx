@@ -95,7 +95,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     @Override
     public void update() {
         var game = (TengenMsPacManGame) context.game();
-        if (game.currentLevelNumber() == 0) {
+        if (game.level().isEmpty()) {
             // Scene is already visible for 2 ticks before game level gets created
             Logger.warn("Tick #{}: Cannot update TengenPlayScene2D: game level not yet available", context.tick());
             return;
@@ -106,7 +106,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             return;
         }
 
-        if (game.isDemoLevel()) {
+        if (context.level().demoLevel) {
             game.setDemoLevelBehavior();
         }
         else {
@@ -233,7 +233,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         }
         r.drawLivesCounter(livesCounterEntries, 5, size());
 
-        r.setLevelNumberBoxesVisible(!game.isDemoLevel() && game.mapCategory() != MapCategory.ARCADE);
+        r.setLevelNumberBoxesVisible(!context.level().demoLevel && game.mapCategory() != MapCategory.ARCADE);
         r.drawLevelCounter(context, size());
     }
 
@@ -246,7 +246,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         String assetPrefix = assetPrefix(GameVariant.MS_PACMAN_TENGEN);
         GameState state = context.gameState();
         GameModel game = context.game();
-        if (game.isDemoLevel()) {
+        if (context.level().demoLevel) {
             Color color = Color.web(game.currentMapConfig().colorScheme().get("stroke"));
             drawText(renderer, "GAME  OVER", cx, y, color);
         } else if (state == GameState.GAME_OVER) {
@@ -256,7 +256,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             Color color = assets.color(assetPrefix + ".color.ready_message");
             drawText(renderer, "READY!", cx, y, color);
         } else if (state == GameState.TESTING_LEVEL_BONI) {
-            drawText(renderer, "TEST L%02d".formatted(game.currentLevelNumber()), cx, y, paletteColor(0x28));
+            drawText(renderer, "TEST L%02d".formatted(game.level().get().number), cx, y, paletteColor(0x28));
         }
     }
 
@@ -322,7 +322,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     @Override
     public void onLevelCreated(GameEvent e) {
         JoypadKeyAdapter joypad = context.joypad();
-        if (context.game().isDemoLevel()) {
+        if (context.level().demoLevel) {
             context.game().pac().setImmune(false);
             bind(QUIT_DEMO_LEVEL, joypad.key(NES.Joypad.START));
         } else {
@@ -344,7 +344,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = context.game().isDemoLevel() ||
+        boolean silent = context.level().demoLevel ||
                 context.gameState() == TESTING_LEVEL_BONI ||
                 context.gameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
