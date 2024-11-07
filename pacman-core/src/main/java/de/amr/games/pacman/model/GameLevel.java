@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.model.actors.Bonus;
@@ -31,7 +35,7 @@ public class GameLevel {
     private final List<Ghost> victims = new ArrayList<>();
     private Bonus bonus;
     public final byte[] bonusSymbols = new byte[2];
-    public byte nextBonusIndex; // -1=no bonus, 0=first, 1=second
+    private byte nextBonusIndex; // -1=no bonus, 0=first, 1=second
     public MapConfig currentMapConfig;
 
     public GameLevel(int number) {
@@ -112,5 +116,13 @@ public class GameLevel {
 
     public MapConfig currentMapConfig() {
         return currentMapConfig;
+    }
+
+    public byte nextBonusIndex() {
+        return nextBonusIndex;
+    }
+
+    public void advanceNextBonus() {
+        nextBonusIndex += 1;
     }
 }

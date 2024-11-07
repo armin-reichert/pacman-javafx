@@ -358,7 +358,7 @@ public class PacManArcadeGame extends GameModel {
         gateKeeper.registerFoodEaten();
         if (isBonusReached()) {
             activateNextBonus();
-            eventLog.bonusIndex = level.nextBonusIndex;
+            eventLog.bonusIndex = level.nextBonusIndex();
         }
     }
 
@@ -411,8 +411,8 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     public void activateNextBonus() {
-        level.nextBonusIndex += 1;
-        byte symbol = level.bonusSymbols[level.nextBonusIndex];
+        level.advanceNextBonus();
+        byte symbol = level.bonusSymbols[level.nextBonusIndex()];
         StaticBonus staticBonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         staticBonus.setEdible(bonusEdibleTicks());
         staticBonus.entity().setPosition(BONUS_POS);

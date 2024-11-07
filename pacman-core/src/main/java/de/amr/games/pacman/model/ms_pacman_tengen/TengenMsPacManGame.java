@@ -457,7 +457,7 @@ public class TengenMsPacManGame extends GameModel {
             Logger.info("Previous bonus is still active, skip this one");
             return;
         }
-        level.nextBonusIndex += 1;
+        level.advanceNextBonus();
 
         boolean leftToRight = RND.nextBoolean();
         Vector2i houseEntry = tileAt(level.world().houseEntryPosition());
@@ -476,7 +476,7 @@ public class TengenMsPacManGame extends GameModel {
             leftToRight ? exitPortal.rightTunnelEnd().plus(1, 0) : exitPortal.leftTunnelEnd().minus(1, 0)
         ).map(NavPoint::np).toList();
 
-        byte symbol = level.bonusSymbols[level.nextBonusIndex];
+        byte symbol = level.bonusSymbols[level.nextBonusIndex()];
         var movingBonus = new MovingBonus(level.world(), symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         movingBonus.setRoute(route, leftToRight);
         movingBonus.setBaseSpeed(1f); // TODO how fast is the bonus really moving?
@@ -505,7 +505,7 @@ public class TengenMsPacManGame extends GameModel {
         gateKeeper.registerFoodEaten();
         if (isBonusReached()) {
             activateNextBonus();
-            eventLog.bonusIndex = level.nextBonusIndex;
+            eventLog.bonusIndex = level.nextBonusIndex();
         }
     }
 
