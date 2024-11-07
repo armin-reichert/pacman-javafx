@@ -177,7 +177,7 @@ public abstract class GameModel {
             levelCounter.clear();
         }
         if (levelCounterEnabled) {
-            levelCounter.add(level.bonusSymbols[0]);
+            levelCounter.add(level.bonusSymbol(0));
             if (levelCounter.size() > LEVEL_COUNTER_MAX_SIZE) {
                 levelCounter.removeFirst();
             }

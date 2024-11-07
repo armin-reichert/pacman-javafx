@@ -224,8 +224,8 @@ public class PacManArcadeGame extends GameModel {
         ghosts[RED_GHOST].setRevivalPosition(level.world().ghostPosition(PINK_GHOST)); // middle house position
         level.setGhosts(ghosts);
 
-        level.bonusSymbols[0] = computeBonusSymbol();
-        level.bonusSymbols[1] = computeBonusSymbol();
+        level.setBonusSymbol(0, computeBonusSymbol());
+        level.setBonusSymbol(1, computeBonusSymbol());
     }
 
     @Override
@@ -412,7 +412,7 @@ public class PacManArcadeGame extends GameModel {
     @Override
     public void activateNextBonus() {
         level.advanceNextBonus();
-        byte symbol = level.bonusSymbols[level.nextBonusIndex()];
+        byte symbol = level.bonusSymbol(level.nextBonusIndex());
         StaticBonus staticBonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         staticBonus.setEdible(bonusEdibleTicks());
         staticBonus.entity().setPosition(BONUS_POS);

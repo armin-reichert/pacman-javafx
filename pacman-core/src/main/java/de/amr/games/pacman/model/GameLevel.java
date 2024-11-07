@@ -34,7 +34,7 @@ public class GameLevel {
     private Ghost[] ghosts;
     private final List<Ghost> victims = new ArrayList<>();
     private Bonus bonus;
-    public final byte[] bonusSymbols = new byte[2];
+    private final byte[] bonusSymbols = new byte[2];
     private byte nextBonusIndex; // -1=no bonus, 0=first, 1=second
     public MapConfig currentMapConfig;
 
@@ -124,5 +124,13 @@ public class GameLevel {
 
     public void advanceNextBonus() {
         nextBonusIndex += 1;
+    }
+
+    public byte bonusSymbol(int i) {
+        return bonusSymbols[i];
+    }
+
+    public void setBonusSymbol(int i, byte symbol) {
+        bonusSymbols[i] = symbol;
     }
 }
