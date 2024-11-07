@@ -214,6 +214,12 @@ public abstract class GameModel {
         publishGameEvent(GameEventType.LEVEL_CREATED);
     }
 
+    public void startNextLevel() {
+        createLevel(currentLevelNumber + 1);
+        startLevel();
+        showGuys();
+    }
+
     public void createDemoLevel() {
         clearLevel();
         demoLevel = true;

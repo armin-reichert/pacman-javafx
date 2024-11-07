@@ -185,9 +185,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartSeconds(1);
-            game.createLevel(game.currentLevelNumber() + 1);
-            game.startLevel();
-            game.showGuys();
+            game.startNextLevel();
         }
 
         @Override
@@ -382,9 +380,7 @@ public enum GameState implements FsmState<GameModel> {
                     GameController.it().restart(GameState.BOOT);
                 } else {
                     timer().restartIndefinitely();
-                    game.createLevel(game.currentLevelNumber() + 1);
-                    game.startLevel();
-                    game.showGuys();
+                    game.startNextLevel();
                 }
             }
         }
@@ -437,9 +433,7 @@ public enum GameState implements FsmState<GameModel> {
                     game.bonus().ifPresent(Bonus::setInactive);
                     setProperty("mazeFlashing", false);
                     game.blinking().reset();
-                    game.createLevel(game.currentLevelNumber() + 1);
-                    game.startLevel();
-                    game.showGuys();
+                    game.startNextLevel();
                     timer().restartSeconds(TEASER_TIME_SECONDS);
                 }
             }
