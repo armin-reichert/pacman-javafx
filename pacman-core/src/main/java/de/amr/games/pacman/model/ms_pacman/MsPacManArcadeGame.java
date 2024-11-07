@@ -293,7 +293,7 @@ public class MsPacManArcadeGame extends GameModel {
     }
 
     @Override
-    public boolean isPacManKillingIgnoredInDemoLevel() {
+    public boolean isPacManKillingIgnored() {
         float levelRunningSeconds = (System.currentTimeMillis() - levelStartTime) / 1000f;
         if (demoLevel && levelRunningSeconds < DEMO_LEVEL_MIN_DURATION_SEC) {
             Logger.info("Pac-Man killing ignored, demo level running for {} seconds", levelRunningSeconds);

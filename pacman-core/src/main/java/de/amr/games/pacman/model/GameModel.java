@@ -111,7 +111,7 @@ public abstract class GameModel {
 
     protected abstract void      buildLevel(int levelNumber);
     protected abstract void      buildDemoLevel();
-    protected abstract boolean   isPacManKillingIgnoredInDemoLevel();
+    protected abstract boolean   isPacManKillingIgnored();
     protected abstract void      setActorBaseSpeed(int levelNumber);
     protected abstract void      initScore(int levelNumber);
     protected abstract boolean   isBonusReached();
@@ -431,7 +431,7 @@ public abstract class GameModel {
     private void checkPacKilled() {
         boolean pacMeetsKiller = ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
         if (demoLevel) {
-            eventLog.pacKilled = pacMeetsKiller && !isPacManKillingIgnoredInDemoLevel();
+            eventLog.pacKilled = pacMeetsKiller && !isPacManKillingIgnored();
         } else {
             eventLog.pacKilled = pacMeetsKiller && !pac.isImmune();
         }

@@ -332,7 +332,7 @@ public class PacManArcadeGame extends GameModel {
     }
 
     @Override
-    public boolean isPacManKillingIgnoredInDemoLevel() {
+    public boolean isPacManKillingIgnored() {
         return false;
     }
 
