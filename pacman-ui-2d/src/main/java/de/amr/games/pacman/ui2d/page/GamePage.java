@@ -252,7 +252,7 @@ public class GamePage extends StackPane implements Page {
         miMuted.selectedProperty().bindBidirectional(context.sound().mutedProperty());
         contextMenu.getItems().add(miMuted);
 
-        if (context.gameVariant() == GameVariant.PACMAN_XXL || context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+        if (context.currentGameVariant() == GameVariant.PACMAN_XXL || context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
             miOpenMapEditor.setOnAction(e -> GameActions2D.OPEN_EDITOR.execute(context));
             contextMenu.getItems().add(miOpenMapEditor);
@@ -330,7 +330,7 @@ public class GamePage extends StackPane implements Page {
     }
 
     public void showHelp() {
-        if (context.gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
+        if (context.currentGameVariant() != GameVariant.MS_PACMAN_TENGEN) {
             if (isCurrentGameScene2D()) {
                 popupLayer.showHelp(gameCanvasContainer.scaling());
             }

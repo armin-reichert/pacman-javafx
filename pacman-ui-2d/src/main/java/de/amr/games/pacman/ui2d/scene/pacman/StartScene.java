@@ -55,7 +55,7 @@ public class StartScene extends GameScene2D {
         renderer.drawText("1 PLAYER ONLY", cyan, font8, t(8), t(21));
         renderer.drawText("BONUS PAC-MAN FOR 10000", rose, font8, t(1), t(25));
         renderer.drawText("PTS", rose, font6, t(25), t(25));
-        if (context.gameVariant() == GameVariant.PACMAN) {
+        if (context.currentGameVariant() == GameVariant.PACMAN) {
             renderer.drawText(MIDWAY_COPYRIGHT, pink, font8, t(4), t(29));
         }
         renderer.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), white, font8, 2 * TS, size().y() - 2);

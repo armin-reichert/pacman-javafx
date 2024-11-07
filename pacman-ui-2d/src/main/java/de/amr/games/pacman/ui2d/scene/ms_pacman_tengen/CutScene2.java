@@ -87,7 +87,7 @@ public class CutScene2 extends GameScene2D {
     @Override
     public void drawSceneContent(GameRenderer renderer) {
         TengenMsPacManGameRenderer r = (TengenMsPacManGameRenderer) renderer;
-        String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
+        String assetPrefix = GameAssets2D.assetPrefix(context.currentGameVariant());
         Color color = r.assets().color(assetPrefix + ".color.clapperboard"); //TODO check
         r.drawClapperBoard(r.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
         r.drawAnimatedEntity(msPacMan);

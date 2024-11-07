@@ -10,7 +10,10 @@ import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.*;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.LevelData;
+import de.amr.games.pacman.model.Portal;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import de.amr.games.pacman.steering.Steering;
@@ -107,8 +110,8 @@ public class TengenMsPacManGame extends GameModel {
     private final Steering autopilot = new RuleBasedPacSteering(this);
     private final Steering demoLevelSteering = new RuleBasedPacSteering(this);
 
-    public TengenMsPacManGame(GameVariant gameVariant, File userDir) {
-        super(gameVariant, userDir);
+    public TengenMsPacManGame(File userDir) {
+        super(userDir);
 
         mapConfigMgr.loadMaps();
 

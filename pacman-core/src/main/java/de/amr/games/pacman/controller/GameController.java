@@ -64,10 +64,10 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     private GameController(File userDir) {
         super(GameState.values());
         checkNotNull(userDir);
-        modelsByVariant.put(GameVariant.MS_PACMAN,        new MsPacManArcadeGame(GameVariant.MS_PACMAN, userDir));
-        modelsByVariant.put(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacManGame(GameVariant.MS_PACMAN_TENGEN, userDir));
-        modelsByVariant.put(GameVariant.PACMAN,           new PacManArcadeGame(GameVariant.PACMAN, userDir));
-        modelsByVariant.put(GameVariant.PACMAN_XXL,       new PacManXXLGame(GameVariant.PACMAN_XXL, userDir));
+        modelsByVariant.put(GameVariant.MS_PACMAN,        new MsPacManArcadeGame(userDir));
+        modelsByVariant.put(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacManGame(userDir));
+        modelsByVariant.put(GameVariant.PACMAN,           new PacManArcadeGame(userDir));
+        modelsByVariant.put(GameVariant.PACMAN_XXL,       new PacManXXLGame(userDir));
         for (var entry : modelsByVariant.entrySet()) {
             Logger.info("Game variant {} => {}", entry.getKey(), entry.getValue());
         }
@@ -94,11 +94,19 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     public void selectGame(GameVariant variant) {
         checkNotNull(variant);
-        GameVariant oldVariant = currentGame != null ? currentGame.variant() : null;
+        GameVariant oldVariant = currentGame != null ? currentGameVariant() : null;
         currentGame = gameModel(variant);
         if (oldVariant != variant) {
             currentGame.publishGameEvent(GameEventType.GAME_VARIANT_CHANGED);
         }
+    }
+
+    public GameVariant currentGameVariant() {
+        return modelsByVariant.entrySet().stream()
+            .filter(entry -> entry.getValue() == currentGame)
+            .findFirst()
+            .map(Map.Entry::getKey)
+            .orElse(null);
     }
 
     @Override

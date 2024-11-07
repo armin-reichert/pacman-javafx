@@ -43,7 +43,7 @@ public interface GameContext {
     default GameController gameController() { return GameController.it(); }
     default GameState gameState() { return gameController().state(); }
     default GameModel game() { return gameController().currentGame(); }
-    default GameVariant gameVariant() { return game().variant(); }
+    default GameVariant currentGameVariant() { return gameController().currentGameVariant(); }
     void selectGameVariant(GameVariant variant);
 
     // Input
@@ -76,7 +76,7 @@ public interface GameContext {
 
     // Game scenes
     GameSceneConfig gameSceneConfig(GameVariant variant);
-    default GameSceneConfig currentGameSceneConfig() { return gameSceneConfig(gameVariant()); }
+    default GameSceneConfig currentGameSceneConfig() { return gameSceneConfig(currentGameVariant()); }
     boolean currentGameSceneHasID(String gameSceneID);
     ObjectProperty<GameScene> gameSceneProperty();
     Optional<GameScene> currentGameScene();

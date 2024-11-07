@@ -176,7 +176,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         }
 
         // init game variant property
-        gameVariantPy.set(gameVariant());
+        gameVariantPy.set(currentGameVariant());
 
         // TODO: Not sure if this belongs here
         // The game models are in project "pacman-core" which has no dependency toJavaFX,
@@ -289,7 +289,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         } catch (Exception x) {
             Logger.error(x);
         }
-        gamePage.gameCanvasContainer().decorationEnabledPy.set(gameVariant() != GameVariant.MS_PACMAN_TENGEN);
+        gamePage.gameCanvasContainer().decorationEnabledPy.set(currentGameVariant() != GameVariant.MS_PACMAN_TENGEN);
     }
 
     protected ObservableValue<String> stageTitleBinding() {
@@ -304,7 +304,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     private String displayName(GameScene gameScene) {
         String text = gameScene != null ? gameScene.getClass().getSimpleName() : "NO GAME SCENE";
-        text += String.format(" (%s)", gameVariant());
+        text += String.format(" (%s)", currentGameVariant());
         return text;
     }
 
@@ -545,7 +545,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     public void selectGamePage() {
         selectPage(gamePage);
         clock.start();
-        if (gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
+        if (currentGameVariant() != GameVariant.MS_PACMAN_TENGEN) {
             sound().playVoice("voice.explain", 0);
         }
     }
@@ -584,7 +584,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public void onGameVariantChanged(GameEvent event) {
-        gameVariantPy.set(event.game.variant());
+        gameVariantPy.set(currentGameVariant());
     }
 
     @Override
@@ -595,7 +595,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public void onLevelCreated(GameEvent event) {
         currentGameSceneConfig().createActorAnimations(game());
-        Logger.info("Actor animations created. ({} level #{})", gameVariant(), game().currentLevelNumber());
+        Logger.info("Actor animations created. ({} level #{})", currentGameVariant(), game().currentLevelNumber());
         sound().setEnabled(!game().isDemoLevel());
         Logger.info("Sounds {}", sound().isEnabled() ? "enabled" : "disabled");
         // size of game scene have changed, so re-embed

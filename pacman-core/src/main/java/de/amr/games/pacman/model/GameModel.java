@@ -61,7 +61,6 @@ public abstract class GameModel {
     public static final byte       BONUS_POINTS_SHOWN_TICKS = 120; // unsure
     public static final short[]    KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
 
-    protected final GameVariant    gameVariant;
     protected final File           userDir;
     protected final Pulse          blinking = new Pulse(10, Pulse.OFF);
     protected final byte[]         bonusSymbols = new byte[2];
@@ -119,8 +118,7 @@ public abstract class GameModel {
 
     protected abstract void      onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
 
-    protected GameModel(GameVariant gameVariant, File userDir) {
-        this.gameVariant = checkNotNull(gameVariant);
+    protected GameModel(File userDir) {
         this.userDir = userDir;
         this.customMapDir = new File(userDir, "maps");
     }
@@ -130,8 +128,6 @@ public abstract class GameModel {
     }
 
     public void updateCustomMaps() {}
-
-    public final GameVariant variant() { return gameVariant; }
 
     protected void clearLevel() {
         currentLevelNumber = 0;
@@ -248,7 +244,7 @@ public abstract class GameModel {
         initScore(currentLevelNumber);
         letsGetReadyToRumble();
         levelStartTime = System.currentTimeMillis();
-        Logger.info("{} started ({})", demoLevel ? "Demo Level" : "Level " + currentLevelNumber, variant());
+        Logger.info("{} started", demoLevel ? "Demo Level" : "Level " + currentLevelNumber);
         Logger.info("{} base speed: {0.00} px/tick", pac.name(), pac.baseSpeed());
         ghosts().forEach(ghost -> Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
         publishGameEvent(GameEventType.LEVEL_STARTED);

@@ -89,11 +89,11 @@ public class ScoreManager {
             highScoreFile, highScore.points(), highScore.levelNumber());
     }
 
-    public void updateHighScore() {
+    public void updateHighScore(GameVariant gameVariant) {
         var oldHighScore = new Score();
         oldHighScore.read(highScoreFile);
         if (highScore.points() > oldHighScore.points()) {
-            highScore.save(highScoreFile, String.format("%s High Score", game.variant().name()));
+            highScore.save(highScoreFile, String.format("%s High Score", gameVariant.name()));
         }
     }
 }

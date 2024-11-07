@@ -36,7 +36,7 @@ public class InfoBoxGameInfo extends InfoBox {
             return url.substring(url.lastIndexOf("/") + 1);
         }));
         labeledValue("Color Scheme",            ifWorldPresent(world -> {
-            if (context.gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
+            if (context.currentGameVariant() != GameVariant.MS_PACMAN_TENGEN) {
                 return InfoText.NO_INFO;
             }
             TengenMsPacManGame game = (TengenMsPacManGame) context.game();

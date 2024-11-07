@@ -8,7 +8,6 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.MapConfig;
 import de.amr.games.pacman.model.actors.StaticBonus;
@@ -49,8 +48,8 @@ public class PacManXXLGame extends PacManArcadeGame {
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
     private MapSelectionMode mapSelectionMode;
 
-    public PacManXXLGame(GameVariant gameVariant, File userDir) {
-        super(gameVariant, userDir);
+    public PacManXXLGame(File userDir) {
+        super(userDir);
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman_xxl.xml"));
         mapSelectionMode = MapSelectionMode.NO_CUSTOM_MAPS;
         for (int num = 1; num <= MAP_COUNT; ++num) {

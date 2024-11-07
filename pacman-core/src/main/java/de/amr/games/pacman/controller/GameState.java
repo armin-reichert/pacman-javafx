@@ -280,7 +280,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             timer.reset(game.gameOverStateTicks());
             timer.start();
-            game.scoreManager().updateHighScore();
+            game.scoreManager().updateHighScore(GameController.it().currentGameVariant());
             game.endGame();
             game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
         }
@@ -321,12 +321,13 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
+            GameVariant gameVariant = GameController.it().currentGameVariant();
             int numCustomMaps = 0;
-            if (game.variant() == GameVariant.PACMAN_XXL) {
+            if (gameVariant == GameVariant.PACMAN_XXL) {
                 PacManXXLGame xxlGame = (PacManXXLGame) game;
                 numCustomMaps = xxlGame.customMapsSortedByFile().size();
             }
-            lastLevelNumber = switch (game.variant()) {
+            lastLevelNumber = switch (gameVariant) {
                 case MS_PACMAN -> 25;
                 case MS_PACMAN_TENGEN -> TengenMsPacManGame.MAX_LEVEL_NUMBER;
                 case PACMAN -> 21;
@@ -405,7 +406,8 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
-            lastLevelNumber = switch (game.variant()) {
+            GameVariant gameVariant = GameController.it().currentGameVariant();
+            lastLevelNumber = switch (gameVariant) {
                 case MS_PACMAN -> 17;
                 case MS_PACMAN_TENGEN -> 32;
                 case PACMAN -> 21;
@@ -466,9 +468,10 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
+            GameVariant gameVariant = GameController.it().currentGameVariant();
             if (timer.hasExpired()) {
                 int number = this.<Integer>getProperty("intermissionTestNumber");
-                int last = game.variant() == GameVariant.MS_PACMAN_TENGEN ? 4 : 3;
+                int last = gameVariant == GameVariant.MS_PACMAN_TENGEN ? 4 : 3;
                 if (number < last) {
                     setProperty("intermissionTestNumber", number + 1);
                     timer.restartIndefinitely();

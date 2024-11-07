@@ -194,7 +194,7 @@ public class GameLevel3D {
     private Bonus3D bonus3D;
 
     public GameLevel3D(GameContext context) {
-        final GameVariant variant = context.gameVariant();
+        final GameVariant variant = context.currentGameVariant();
         final GameModel game = context.game();
         final GameWorld world = game.world();
         final AssetStorage assets = context.assets();
