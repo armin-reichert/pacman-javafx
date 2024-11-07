@@ -201,7 +201,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             return;
         }
 
-        r.setBlinkingOn(game.blinking().isOn());
+        r.setBlinkingOn(context.level().blinking().isOn());
 
         // Draw level message centered under ghost house
         Vector2i houseTopLeft = world.houseTopLeftTile(), houseSize = world.houseSize();

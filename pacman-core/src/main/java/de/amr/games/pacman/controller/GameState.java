@@ -131,8 +131,8 @@ public enum GameState implements FsmState<GameModel> {
             GameLevel level = game.level().orElseThrow();
             level.pac().startAnimation();
             level.ghosts().forEach(Ghost::startAnimation);
-            game.blinking().setStartPhase(Pulse.ON);
-            game.blinking().restart(Integer.MAX_VALUE);
+            level.blinking().setStartPhase(Pulse.ON);
+            level.blinking().restart(Integer.MAX_VALUE);
             game.publishGameEvent(GameEventType.HUNTING_PHASE_STARTED);
         }
 
@@ -176,11 +176,11 @@ public enum GameState implements FsmState<GameModel> {
             } else if (timer.atSecond(2)) {
                 flashCount = 2 * game.numFlashes();
                 setProperty("mazeFlashing", true);
-                game.blinking().setStartPhase(Pulse.OFF);
-                game.blinking().restart(flashCount);
+                level.blinking().setStartPhase(Pulse.OFF);
+                level.blinking().restart(flashCount);
             } else {
-                game.blinking().tick();
-                if (game.blinking().getNumPhasesCompleted() == flashCount) {
+                level.blinking().tick();
+                if (level.blinking().getNumPhasesCompleted() == flashCount) {
                     setProperty("mazeFlashing", false); // maze will be rendered normally again
                 }
             }
@@ -219,7 +219,7 @@ public enum GameState implements FsmState<GameModel> {
                 GameController.it().resumePreviousState();
             } else {
                 level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).forEach(ghost -> ghost.update(game));
-                game.blinking().tick();
+                level.blinking().tick();
             }
         }
 
@@ -271,7 +271,7 @@ public enum GameState implements FsmState<GameModel> {
                 level.pac().hide();
             }
             else {
-                game.blinking().tick();
+                level.blinking().tick();
                 level.pac().update(game);
             }
         }
@@ -353,7 +353,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             GameLevel level = game.level().orElseThrow();
             if (timer().currentTick() > 2 * TICKS_PER_SECOND) {
-                game.blinking().tick();
+                level.blinking().tick();
                 level.ghosts().forEach(ghost -> ghost.update(game));
                 level.bonus().ifPresent(bonus -> bonus.update(game));
             }
@@ -361,8 +361,8 @@ public enum GameState implements FsmState<GameModel> {
                 game.letsGetReadyToRumble();
                 game.showGuys();
             } else if (timer().atSecond(2)) {
-                game.blinking().setStartPhase(Pulse.ON);
-                game.blinking().restart();
+                level.blinking().setStartPhase(Pulse.ON);
+                level.blinking().restart();
             } else if (timer().atSecond(2.5)) {
                 game.activateNextBonus();
             } else if (timer().atSecond(4.5)) {
@@ -376,18 +376,18 @@ public enum GameState implements FsmState<GameModel> {
                 game.publishGameEvent(GameEventType.BONUS_EATEN);
             } else if (timer().atSecond(8.5)) {
                 game.hideGuys();
-                game.blinking().stop();
-                game.blinking().setStartPhase(Pulse.ON);
-                game.blinking().reset();
+                level.blinking().stop();
+                level.blinking().setStartPhase(Pulse.ON);
+                level.blinking().reset();
             } else if (timer().atSecond(9.5)) {
                 setProperty("mazeFlashing", true);
-                game.blinking().setStartPhase(Pulse.OFF);
-                game.blinking().restart(2 * game.numFlashes());
+                level.blinking().setStartPhase(Pulse.OFF);
+                level.blinking().restart(2 * game.numFlashes());
             } else if (timer().atSecond(12.0)) {
                 level.pac().freeze();
                 level.bonus().ifPresent(Bonus::setInactive);
                 setProperty("mazeFlashing", false);
-                game.blinking().reset();
+                level.blinking().reset();
                 if (level.number == lastLevelNumber) {
                     GameController.it().restart(GameState.BOOT);
                 } else {
@@ -446,7 +446,7 @@ public enum GameState implements FsmState<GameModel> {
                     level.pac().freeze();
                     level.bonus().ifPresent(Bonus::setInactive);
                     setProperty("mazeFlashing", false);
-                    game.blinking().reset();
+                    level.blinking().reset();
                     game.startNextLevel();
                     timer().restartSeconds(TEASER_TIME_SECONDS);
                 }

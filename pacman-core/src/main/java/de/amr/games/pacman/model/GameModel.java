@@ -55,7 +55,6 @@ public abstract class GameModel {
     public static final short[]    KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
 
     protected final File           userDir;
-    protected final Pulse          blinking = new Pulse(10, Pulse.OFF);
     protected final List<Byte>     levelCounter = new ArrayList<>();
     protected final TickTimer      powerTimer = new TickTimer("PacPowerTimer");
     protected final GateKeeper     gateKeeper = new GateKeeper(this);
@@ -120,10 +119,6 @@ public abstract class GameModel {
         return powerTimer;
     }
 
-    public Pulse blinking() {
-        return blinking;
-    }
-
     public HuntingControl huntingControl() {
         return huntingControl;
     }
@@ -151,8 +146,6 @@ public abstract class GameModel {
         scoreManager.setLevelNumber(levelNumber);
         scoreManager.setScoreEnabled(true);
         huntingControl.reset();
-        blinking.stop();
-        blinking.reset();
         updateLevelCounter();
         Logger.info("Level {} created", levelNumber);
         publishGameEvent(GameEventType.LEVEL_CREATED);
@@ -211,8 +204,8 @@ public abstract class GameModel {
         });
         initActorAnimations();
         powerTimer.resetIndefinitely();
-        blinking.setStartPhase(Pulse.ON); // Energizers are visible when ON
-        blinking.reset();
+        level.blinking().setStartPhase(Pulse.ON); // Energizers are visible when ON
+        level.blinking().reset();
     }
 
     protected void initActorAnimations() {
@@ -308,8 +301,8 @@ public abstract class GameModel {
     }
 
     public void onLevelCompleted() {
-        blinking.setStartPhase(Pulse.OFF);
-        blinking.reset();
+        level.blinking().setStartPhase(Pulse.OFF);
+        level.blinking().reset();
         level.pac().freeze();
         level.bonus().ifPresent(Bonus::setInactive);
         // when cheating, there might still be food
@@ -342,7 +335,7 @@ public abstract class GameModel {
             huntingControl.update();
         }
 
-        blinking.tick();
+        level.blinking().tick();
         gateKeeper.unlockGhosts();
 
         checkForFood(level.pac().tile());

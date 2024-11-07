@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
+import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -37,6 +38,7 @@ public class GameLevel {
     private final byte[] bonusSymbols = new byte[2];
     private byte nextBonusIndex; // -1=no bonus, 0=first, 1=second
     private MapConfig mapConfig;
+    private final Pulse blinking = new Pulse(10, Pulse.OFF);
 
     public GameLevel(int number) {
         this.number = number;
@@ -136,5 +138,9 @@ public class GameLevel {
 
     public void setBonusSymbol(int i, byte symbol) {
         bonusSymbols[i] = symbol;
+    }
+
+    public Pulse blinking() {
+        return blinking;
     }
 }
