@@ -132,9 +132,7 @@ public abstract class GameModel {
     public void reset() {
         playing = false;
         lives = initialLives;
-        if (level != null) {
-            clearLevel();
-        }
+        level = null;
         scoreManager.resetScore();
     }
 

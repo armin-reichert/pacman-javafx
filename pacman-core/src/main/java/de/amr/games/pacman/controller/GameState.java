@@ -38,6 +38,7 @@ public enum GameState implements FsmState<GameModel> {
             timer.restartIndefinitely();
             game.levelCounter().clear();
             game.scoreManager().loadHighScore();
+            game.reset();
         }
 
         @Override
@@ -52,7 +53,6 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();
-            game.reset(); // TODO check this, in Tengen Ms. Pac-Man this is wrong!
         }
 
         @Override
