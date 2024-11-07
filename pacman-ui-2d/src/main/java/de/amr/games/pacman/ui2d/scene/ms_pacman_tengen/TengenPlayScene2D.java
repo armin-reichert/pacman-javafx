@@ -191,8 +191,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         if (context.game().level().isEmpty()) {
             return;
         }
-        final GameWorld world = context.level().world;
-
+        final GameWorld world = context.level().world();
         final var game = (TengenMsPacManGame) context.game();
         final var r = (TengenMsPacManGameRenderer) renderer;
         final Pac msPacMan = context.level().pac();
@@ -286,7 +285,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         switch (state) {
             case LEVEL_COMPLETE -> mazeFlashingAnimation.init((TengenMsPacManGame) context.game());
             case GAME_OVER -> {
-                GameWorld world = context.level().world;
+                GameWorld world = context.level().world();
                 double houseCenterX = TS * (world.houseTopLeftTile().x() + 0.5 * world.houseSize().x());
                 gameOverMessageAnimation.start(houseCenterX, size().x());
             }

@@ -25,7 +25,7 @@ public class GameLevel {
     private boolean demoLevel;
     private long startTime;
     private int killedGhostCount;
-    public GameWorld world;
+    private GameWorld world;
     private Pac pac;
     private Ghost[] ghosts;
     private final List<Ghost> victims = new ArrayList<>();
@@ -65,6 +65,14 @@ public class GameLevel {
 
     public long startTime() {
         return startTime;
+    }
+
+    public void setWorld(GameWorld world) {
+        this.world = world;
+    }
+
+    public GameWorld world() {
+        return world;
     }
 
     public void setPac(Pac pac) {

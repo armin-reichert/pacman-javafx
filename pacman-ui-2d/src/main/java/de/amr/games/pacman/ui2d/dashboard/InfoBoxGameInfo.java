@@ -30,7 +30,7 @@ public class InfoBoxGameInfo extends InfoBox {
         labeledValue("State Timer", this::stateTimerInfo);
         labeledValue("Level Number", ifLevelPresent(level -> "%d".formatted(level.number)));
         labeledValue("World Map", ifLevelPresent(level -> {
-            String url = level.world.map().url().toString();
+            String url = level.world().map().url().toString();
             return url.substring(url.lastIndexOf("/") + 1);
         }));
         labeledValue("Color Scheme", ifLevelPresent(level -> {
@@ -94,9 +94,9 @@ public class InfoBoxGameInfo extends InfoBox {
 
     private String fmtPelletCount(GameLevel level) {
         return "%d of %d (%d energizers)".formatted(
-                level.world.uneatenFoodCount(),
-                level.world.totalFoodCount(),
-                level.world.energizerTiles().count()
+                level.world().uneatenFoodCount(),
+                level.world().totalFoodCount(),
+                level.world().energizerTiles().count()
         );
     }
 

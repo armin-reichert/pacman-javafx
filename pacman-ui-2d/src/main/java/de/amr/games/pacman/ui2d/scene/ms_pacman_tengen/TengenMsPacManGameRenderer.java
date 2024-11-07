@@ -319,7 +319,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     public void drawWorld(GameContext context, GameWorld world, double x, double y) {
         TengenMsPacManGame game = (TengenMsPacManGame) context.game();
         if (!isUsingDefaultGameOptions(game)) {
-            drawGameOptionsInfo(context.level().world.map().terrain(), game);
+            drawGameOptionsInfo(context.level().world().map().terrain(), game);
         }
 
         // All maps that use a different color scheme than that in the sprite sheet have to be rendered using the
@@ -364,8 +364,8 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
                 scaled(mapArea.width()), scaled(mapArea.height())
             );
         }
-        cleanHouse(level.world);
-        drawFoodUsingMapSprite(level.world);
+        cleanHouse(level.world());
+        drawFoodUsingMapSprite(level.world());
     }
 
     private void cleanHouse(GameWorld world) {

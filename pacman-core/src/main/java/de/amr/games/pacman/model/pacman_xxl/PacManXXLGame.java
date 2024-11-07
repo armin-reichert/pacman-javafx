@@ -76,7 +76,7 @@ public class PacManXXLGame extends PacManArcadeGame {
             map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(v2i(10, 15)));
         }
         Vector2i topLeftTile = map.terrain().getTileProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, null);
-        level.world.createArcadeHouse(topLeftTile.x(), topLeftTile.y());
+        level.world().createArcadeHouse(topLeftTile.x(), topLeftTile.y());
     }
 
     @Override
@@ -133,8 +133,8 @@ public class PacManXXLGame extends PacManArcadeGame {
         byte symbol = level.bonusSymbols[level.nextBonusIndex];
         level.bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         // in a non-Arcade style custom map, the bonus position must be taken from the terrain map
-        if (level.world.map().terrain().hasProperty(GameWorld.PROPERTY_POS_BONUS)) {
-            Vector2i bonusTile = level.world.map().terrain().getTileProperty(GameWorld.PROPERTY_POS_BONUS, new Vector2i(13, 20));
+        if (level.world().map().terrain().hasProperty(GameWorld.PROPERTY_POS_BONUS)) {
+            Vector2i bonusTile = level.world().map().terrain().getTileProperty(GameWorld.PROPERTY_POS_BONUS, new Vector2i(13, 20));
             level.bonus.entity().setPosition(halfTileRightOf(bonusTile));
         } else {
             level.bonus.entity().setPosition(BONUS_POS);

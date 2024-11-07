@@ -66,7 +66,7 @@ public interface SpeedConfiguration {
         GameLevel level = game.level().orElseThrow();
         byte units = 0;
         if (game.difficulty() == Difficulty.NORMAL && level.number >= 5) {
-            int dotsLeft = level.world.uneatenFoodCount();
+            int dotsLeft = level.world().uneatenFoodCount();
             if (dotsLeft <= 7) {
                 units = 5;
             } else if (dotsLeft <= 15) {

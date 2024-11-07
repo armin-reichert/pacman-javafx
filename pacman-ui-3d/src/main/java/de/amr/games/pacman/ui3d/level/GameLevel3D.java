@@ -198,7 +198,7 @@ public class GameLevel3D {
         final GameVariant variant = context.currentGameVariant();
         final GameModel game = context.game();
         final GameLevel level = game.level().orElseThrow();
-        final GameWorld world = level.world;
+        final GameWorld world = level.world();
         final AssetStorage assets = context.assets();
 
         pac3D = createPac3D(variant, assets, context.sound(), level.pac());
@@ -240,7 +240,7 @@ public class GameLevel3D {
 
         boolean ghostNearHouseEntry = context.level()
             .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-            .filter(ghost -> ghost.position().euclideanDistance(context.level().world.houseEntryPosition()) <= HOUSE_SENSITIVITY)
+            .filter(ghost -> ghost.position().euclideanDistance(context.level().world().houseEntryPosition()) <= HOUSE_SENSITIVITY)
             .anyMatch(Ghost::isVisible);
 
         houseUsedPy.set(houseAccessRequired);

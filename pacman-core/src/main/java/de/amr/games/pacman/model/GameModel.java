@@ -201,12 +201,12 @@ public abstract class GameModel {
      */
     public void letsGetReadyToRumble() {
         level.pac().reset(); // invisible!
-        level.pac().setPosition(level.world.pacPosition());
+        level.pac().setPosition(level.world().pacPosition());
         level.pac().setMoveAndWishDir(Direction.LEFT);
         level.ghosts().forEach(ghost -> {
             ghost.reset(); // invisible!
-            ghost.setPosition(level.world.ghostPosition(ghost.id()));
-            ghost.setMoveAndWishDir(level.world.ghostDirection(ghost.id()));
+            ghost.setPosition(level.world().ghostPosition(ghost.id()));
+            ghost.setMoveAndWishDir(level.world().ghostDirection(ghost.id()));
             ghost.setState(LOCKED);
         });
         initActorAnimations();
@@ -243,7 +243,7 @@ public abstract class GameModel {
     }
 
     protected Vector2i scatterTarget(Ghost ghost) {
-        return level.world.ghostScatterTile(ghost.id());
+        return level.world().ghostScatterTile(ghost.id());
     }
 
     protected Vector2i chasingTarget(Ghost ghost) {
@@ -313,7 +313,7 @@ public abstract class GameModel {
         level.pac().freeze();
         level.bonus().ifPresent(Bonus::setInactive);
         // when cheating, there might still be food
-        level.world.map().food().tiles().forEach(level.world::registerFoodEatenAt);
+        level.world().map().food().tiles().forEach(level.world()::registerFoodEatenAt);
         huntingControl.stop();
         Logger.info("Hunting timer stopped");
         powerTimer.stop();
@@ -323,7 +323,7 @@ public abstract class GameModel {
     }
 
     public boolean isLevelComplete() {
-        return level.world.uneatenFoodCount() == 0;
+        return level.world().uneatenFoodCount() == 0;
     }
 
     public boolean isPacManKilled() {
@@ -372,16 +372,16 @@ public abstract class GameModel {
     }
 
     private void checkForFood(Vector2i tile) {
-        if (!level.world.hasFoodAt(tile)) {
+        if (!level.world().hasFoodAt(tile)) {
             level.pac().starve();
             return;
         }
         level.pac().endStarving();
         eventLog.foodFoundTile = tile;
-        eventLog.energizerFound = level.world.isEnergizerPosition(tile);
-        level.world.registerFoodEatenAt(tile);
+        eventLog.energizerFound = level.world().isEnergizerPosition(tile);
+        level.world().registerFoodEatenAt(tile);
         // let specific game do its stuff:
-        onPelletOrEnergizerEaten(tile, level.world.uneatenFoodCount(), eventLog.energizerFound);
+        onPelletOrEnergizerEaten(tile, level.world().uneatenFoodCount(), eventLog.energizerFound);
         publishGameEvent(GameEventType.PAC_FOUND_FOOD, tile);
     }
 

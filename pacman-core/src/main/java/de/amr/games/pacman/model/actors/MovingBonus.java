@@ -122,7 +122,7 @@ public class MovingBonus extends Creature implements Bonus {
 
     private void updateStateEdible(GameModel game) {
         GameLevel level = game.level().orElseThrow();
-        steering.steer(this, level.world);
+        steering.steer(this, level.world());
         if (steering.isComplete()) {
             Logger.trace("Moving bonus reached target: {}", this);
             setInactive();

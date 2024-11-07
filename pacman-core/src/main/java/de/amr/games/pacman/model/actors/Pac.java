@@ -105,7 +105,7 @@ public class Pac extends Creature implements AnimatedEntity {
         }
         if (restingTicks == 0) {
             if (usingAutopilot) {
-                autopilot.steer(this, level.world);
+                autopilot.steer(this, level.world());
             }
             setSpeed(game.powerTimer().isRunning() ? game.pacPowerSpeed() : game.pacNormalSpeed());
             tryMoving();

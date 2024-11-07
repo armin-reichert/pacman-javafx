@@ -79,7 +79,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             if (context.game().isPlaying() && context.gameState() == GameState.HUNTING) {
-                GameWorld world = context.level().world;
+                GameWorld world = context.level().world();
                 world.map().food().tiles().filter(not(world::isEnergizerPosition)).forEach(world::registerFoodEatenAt);
                 context.game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
                 context.sound().stopMunchingSound();
@@ -150,7 +150,7 @@ public enum GameActions2D implements GameAction {
     OPEN_EDITOR {
         @Override
         public void execute(GameContext context) {
-            if (context.level().world == null) {
+            if (context.level().world() == null) {
                 Logger.error("Map editor cannot be opened because no world is available");
                 return;
             }
@@ -158,7 +158,7 @@ public enum GameActions2D implements GameAction {
             context.sound().stopAll();
             context.gameClock().stop();
             EditorPage editorPage = context.getOrCreateEditorPage();
-            editorPage.startEditor(context.level().world.map());
+            editorPage.startEditor(context.level().world().map());
             context.selectPage(editorPage);
         }
 

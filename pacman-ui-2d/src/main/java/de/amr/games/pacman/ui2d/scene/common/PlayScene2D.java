@@ -134,12 +134,12 @@ public class PlayScene2D extends GameScene2D {
             return;
         }
 
-        drawLevelMessage(renderer, context.level().world); // READY, GAME_OVER etc.
+        drawLevelMessage(renderer, context.level().world()); // READY, GAME_OVER etc.
 
         boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         renderer.setFlashMode(flashMode);
         renderer.setBlinkingOn(context.game().blinking().isOn());
-        renderer.drawWorld(context, context.level().world, 0, 3 * TS);
+        renderer.drawWorld(context, context.level().world(), 0, 3 * TS);
 
         renderer.drawAnimatedEntity(context.level().pac());
         ghostsInZOrder().forEach(renderer::drawAnimatedEntity);

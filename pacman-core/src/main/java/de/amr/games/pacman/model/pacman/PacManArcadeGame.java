@@ -206,22 +206,22 @@ public class PacManArcadeGame extends GameModel {
     }
 
     protected void createWorldAndPopulation(WorldMap map) {
-        level.world = new GameWorld(map);
-        level.world.createArcadeHouse(HOUSE_X, HOUSE_Y);
+        level.setWorld(new GameWorld(map));
+        level.world().createArcadeHouse(HOUSE_X, HOUSE_Y);
 
         var pac = new Pac();
         pac.setName("Pac-Man");
-        pac.setWorld(level.world);
+        pac.setWorld(level.world());
         pac.reset();
         level.setPac(pac);
 
         var ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.clyde() };
         Stream.of(ghosts).forEach(ghost -> {
-            ghost.setWorld(level.world);
+            ghost.setWorld(level.world());
             ghost.reset();
-            ghost.setRevivalPosition(level.world.ghostPosition(ghost.id()));
+            ghost.setRevivalPosition(level.world().ghostPosition(ghost.id()));
         });
-        ghosts[RED_GHOST].setRevivalPosition(level.world.ghostPosition(PINK_GHOST)); // middle house position
+        ghosts[RED_GHOST].setRevivalPosition(level.world().ghostPosition(PINK_GHOST)); // middle house position
         level.setGhosts(ghosts);
 
         level.bonusSymbols[0] = computeBonusSymbol();
@@ -297,7 +297,7 @@ public class PacManArcadeGame extends GameModel {
     @Override
     public float ghostAttackSpeed(Ghost ghost) {
         LevelData levelData = levelData(level.number);
-        if (level.world.isTunnel(ghost.tile())) {
+        if (level.world().isTunnel(ghost.tile())) {
             return levelData.ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
         }
         if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
@@ -400,7 +400,7 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     public boolean isBonusReached() {
-        return level.world.eatenFoodCount() == 70 || level.world.eatenFoodCount() == 170;
+        return level.world().eatenFoodCount() == 70 || level.world().eatenFoodCount() == 170;
     }
 
     // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
