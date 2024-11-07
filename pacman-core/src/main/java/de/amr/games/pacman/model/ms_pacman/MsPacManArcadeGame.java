@@ -324,7 +324,7 @@ public class MsPacManArcadeGame extends GameModel {
         } else {
             scoreManager.scorePoints(PELLET_VALUE);
         }
-        gateKeeper.registerFoodEaten();
+        gateKeeper.registerFoodEaten(level);
         if (isBonusReached()) {
             activateNextBonus();
             eventLog.bonusIndex = level.nextBonusIndex();

@@ -55,7 +55,7 @@ public abstract class GameModel {
 
     protected final File           userDir;
     protected final List<Byte>     levelCounter = new ArrayList<>();
-    protected final GateKeeper     gateKeeper = new GateKeeper(this);
+    protected final GateKeeper     gateKeeper = new GateKeeper();
     protected final ScoreManager   scoreManager = new ScoreManager(this);
     protected HuntingControl       huntingControl;
     protected File                 customMapDir;
@@ -330,7 +330,7 @@ public abstract class GameModel {
         }
 
         level.blinking().tick();
-        gateKeeper.unlockGhosts();
+        gateKeeper.unlockGhosts(this);
 
         checkForFood(level.pac().tile());
         level.pac().update(this);

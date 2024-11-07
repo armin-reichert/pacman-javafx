@@ -103,18 +103,12 @@ public class GateKeeper {
     static final byte NO_LIMIT = -1;
     static final byte[] GLOBAL_LIMITS = new byte[] {NO_LIMIT, 7, 17, NO_LIMIT};
 
-    private final GameModel game;
-
     final byte[] limitsByGhost = new byte[4];
     int          pacStarvingLimit;
 
     final int[]  countersByGhost = new int[4];
     int          globalCounter;
     boolean      globalCounterEnabled;
-
-    public GateKeeper(GameModel game) {
-        this.game = game;
-    }
 
     public void setLevelNumber(int levelNumber) {
         Arrays.fill(limitsByGhost, (byte) 0);
@@ -134,8 +128,7 @@ public class GateKeeper {
      * @param prisoner the ghost to possibly get released
      * @return description why ghost has been released or {@code null} if ghost is not released
      */
-    public String checkReleaseOf(Ghost prisoner) {
-        GameLevel level = game.level().orElseThrow();
+    public String checkReleaseOf(GameLevel level, Ghost prisoner) {
         byte id = prisoner.id();
         if (id == RED_GHOST) {
             return "Red ghost gets released unconditionally";
@@ -162,8 +155,7 @@ public class GateKeeper {
         Logger.info("Global dot counter set to 0 and {}", enabled ? "enabled" : "disabled");
     }
 
-    public void registerFoodEaten() {
-        GameLevel level = game.level().orElseThrow();
+    public void registerFoodEaten(GameLevel level) {
         if (globalCounterEnabled) {
             if (level.ghost(ORANGE_GHOST).inState(LOCKED) && globalCounter == 32) {
                 Logger.info("{} inside house when global counter reached 32", level.ghost(ORANGE_GHOST).name());
@@ -180,7 +172,7 @@ public class GateKeeper {
         }
     }
 
-    public void unlockGhosts() {
+    public void unlockGhosts(GameModel game) {
         GameLevel level = game.level().orElseThrow();
         Ghost blinky = level.ghost(RED_GHOST);
         if (blinky.inState(LOCKED)) {
@@ -196,7 +188,7 @@ public class GateKeeper {
             .map(level::ghost)
             .filter(ghost -> ghost.inState(LOCKED))
             .findFirst().ifPresent(prisoner -> {
-                String releaseInfo = checkReleaseOf(prisoner);
+                String releaseInfo = checkReleaseOf(level, prisoner);
                 if (releaseInfo != null) {
                     game.eventLog.releasedGhost = prisoner;
                     game.eventLog.ghostReleaseInfo = releaseInfo;
