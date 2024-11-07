@@ -107,9 +107,9 @@ public class MsPacManGameRenderer implements GameRenderer {
             return;
         }
         GameLevel level = game.level().get();
-        if (level.currentMapConfig() != null) {
+        if (level.mapConfig() != null) {
             // select map sprites for current color scheme
-            var colorScheme = level.currentMapConfig().colorScheme();
+            var colorScheme = level.mapConfig().colorScheme();
             int index = MapConfigurationManager.colorSchemeIndex(colorScheme);
             if (index != -1) {
                 mapWithFoodSprite = spriteSheet.imageArea(0, index * 248, 226, 248);

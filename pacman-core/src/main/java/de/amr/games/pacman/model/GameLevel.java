@@ -36,7 +36,7 @@ public class GameLevel {
     private Bonus bonus;
     private final byte[] bonusSymbols = new byte[2];
     private byte nextBonusIndex; // -1=no bonus, 0=first, 1=second
-    public MapConfig currentMapConfig;
+    private MapConfig mapConfig;
 
     public GameLevel(int number) {
         this.number = number;
@@ -114,8 +114,12 @@ public class GameLevel {
         return Optional.ofNullable(bonus);
     }
 
-    public MapConfig currentMapConfig() {
-        return currentMapConfig;
+    public void setMapConfig(MapConfig mapConfig) {
+        this.mapConfig = mapConfig;
+    }
+
+    public MapConfig mapConfig() {
+        return mapConfig;
     }
 
     public byte nextBonusIndex() {

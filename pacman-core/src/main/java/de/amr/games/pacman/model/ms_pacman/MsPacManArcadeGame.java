@@ -193,8 +193,8 @@ public class MsPacManArcadeGame extends GameModel {
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
         levelCounterEnabled = level.number < 8;
-        level.currentMapConfig = mapConfigMgr.getMapConfig(level.number);
-        createWorldAndPopulation(level.currentMapConfig.worldMap());
+        level.setMapConfig(mapConfigMgr.getMapConfig(level.number));
+        createWorldAndPopulation(level.mapConfig().worldMap());
         level.pac().setAutopilot(autopilot);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
@@ -202,8 +202,8 @@ public class MsPacManArcadeGame extends GameModel {
     @Override
     public void configureDemoLevel() {
         levelCounterEnabled = false;
-        level.currentMapConfig = mapConfigMgr.getMapConfig(level.number);
-        createWorldAndPopulation(level.currentMapConfig.worldMap());
+        level.setMapConfig(mapConfigMgr.getMapConfig(level.number));
+        createWorldAndPopulation(level.mapConfig().worldMap());
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         demoLevelSteering.init();
         setDemoLevelBehavior();

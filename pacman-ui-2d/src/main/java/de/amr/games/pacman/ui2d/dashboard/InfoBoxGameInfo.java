@@ -37,7 +37,7 @@ public class InfoBoxGameInfo extends InfoBox {
             if (context.currentGameVariant() != GameVariant.MS_PACMAN_TENGEN) {
                 return InfoText.NO_INFO;
             }
-            Map<String, String> mapColorScheme = level.currentMapConfig().colorScheme();
+            Map<String, String> mapColorScheme = level.mapConfig().colorScheme();
             if (mapColorScheme == null) {
                 return InfoText.NO_INFO;
             }

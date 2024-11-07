@@ -244,7 +244,7 @@ public class PacManArcadeGame extends GameModel {
     public void configureNormalLevel() {
         levelCounterEnabled = true;
         createWorldAndPopulation(theMapConfig.worldMap());
-        level.currentMapConfig = theMapConfig;
+        level.setMapConfig(theMapConfig);
 
         level.pac().setAutopilot(autopilot);
         setCruiseElroy(0);

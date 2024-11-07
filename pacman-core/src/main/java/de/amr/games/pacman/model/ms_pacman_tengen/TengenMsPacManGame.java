@@ -350,7 +350,7 @@ public class TengenMsPacManGame extends GameModel {
     protected void createWorldAndPopulation(WorldMap map) {
         level.setWorld(new GameWorld(map));
         level.world().createArcadeHouse(10, 15);
-        Logger.info("World created. Map config: {}, URL: {}", level.currentMapConfig, level.currentMapConfig.worldMap().url());
+        Logger.info("World created. Map config: {}, URL: {}", level.mapConfig(), level.mapConfig().worldMap().url());
 
         var pac = new Pac();
         pac.setName("Ms. Pac-Man");
@@ -375,8 +375,8 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     public void configureNormalLevel() {
         levelCounterEnabled = level.number < 8;
-        level.currentMapConfig = mapConfigMgr.getMapConfig(mapCategory, level.number);
-        createWorldAndPopulation(level.currentMapConfig.worldMap());
+        level.setMapConfig(mapConfigMgr.getMapConfig(mapCategory, level.number));
+        createWorldAndPopulation(level.mapConfig().worldMap());
         level.pac().setAutopilot(autopilot);
         setBoosterActive(false); // gets activated in startLevel() if mode is ALWAYS_ON
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
@@ -390,8 +390,8 @@ public class TengenMsPacManGame extends GameModel {
     public void configureDemoLevel() {
         levelCounterEnabled = false;
         demoLevelSteering.init();
-        level.currentMapConfig = mapConfigMgr.getMapConfig(mapCategory, level.number);
-        createWorldAndPopulation(level.currentMapConfig.worldMap());
+        level.setMapConfig(mapConfigMgr.getMapConfig(mapCategory, level.number));
+        createWorldAndPopulation(level.mapConfig().worldMap());
         setBoosterActive(false); // gets activated in startLevel() if mode is ALWAYS_ON
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // ghosts inside house start at floor of house
