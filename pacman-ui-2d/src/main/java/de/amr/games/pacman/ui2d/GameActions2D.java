@@ -173,7 +173,7 @@ public enum GameActions2D implements GameAction {
         public void execute(GameContext context) {
             context.sound().stopAll();
             context.currentGameScene().ifPresent(GameScene::end);
-            context.game().onGameEnded();
+            context.game().endGame();
             context.selectStartPage();
         }
     },

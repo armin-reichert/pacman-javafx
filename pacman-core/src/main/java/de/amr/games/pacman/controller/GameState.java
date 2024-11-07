@@ -236,7 +236,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             timer.reset(240);
             timer.start();
-            game.onPacDying();
+            game.onPacKilled();
             game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
         }
 
@@ -281,7 +281,7 @@ public enum GameState implements FsmState<GameModel> {
             timer.reset(game.gameOverStateTicks());
             timer.start();
             game.scoreManager().updateHighScore();
-            game.onGameEnded();
+            game.endGame();
             game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
         }
 

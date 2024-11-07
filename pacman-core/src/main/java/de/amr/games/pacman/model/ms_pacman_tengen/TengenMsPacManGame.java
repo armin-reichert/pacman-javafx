@@ -493,7 +493,7 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     @Override
-    public void onGameEnded() {
+    public void endGame() {
         // nothing to do yet
     }
 
@@ -516,7 +516,7 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     @Override
-    public void onPacDying() {
+    public void onPacKilled() {
         huntingControl.stop();
         Logger.info("Hunting timer stopped");
         powerTimer.stop();

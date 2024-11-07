@@ -88,8 +88,8 @@ public abstract class GameModel {
     protected SimulationStepLog    eventLog;
 
     public abstract boolean      canStartNewGame();
-    public abstract void         onGameEnded();
-    public abstract void         onPacDying();
+    public abstract void         endGame();
+    public abstract void         onPacKilled();
     public abstract void         activateNextBonus();
     public abstract int          intermissionNumberAfterLevel();
     public abstract int          numFlashes();
@@ -113,6 +113,7 @@ public abstract class GameModel {
     protected abstract boolean   isPacManKillingIgnoredInDemoLevel();
     protected abstract boolean   isBonusReached();
     protected abstract boolean   isLevelCounterEnabled();
+
     protected abstract void      onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
 
     protected GameModel(GameVariant gameVariant, File userDir) {
