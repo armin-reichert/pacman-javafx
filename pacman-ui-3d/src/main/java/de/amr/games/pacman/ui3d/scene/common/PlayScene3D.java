@@ -83,7 +83,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             Perspective.Name name = get();
             Perspective perspective = perspectiveMap.get(name);
             fxSubScene.setCamera(perspective.getCamera());
-            perspective.init(context.level().world);
+            context.game().level().ifPresent(level -> perspective.init(level.world));
         }
     };
 
