@@ -595,7 +595,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     public void onLevelCreated(GameEvent event) {
         currentGameSceneConfig().createActorAnimations(game());
         Logger.info("Actor animations created. ({} level #{})", currentGameVariant(), level().number);
-        sound().setEnabled(!level().demoLevel);
+        sound().setEnabled(!level().isDemoLevel());
         Logger.info("Sounds {}", sound().isEnabled() ? "enabled" : "disabled");
         // size of game scene have changed, so re-embed
         currentGameScene().ifPresent(gamePage::embedGameScene);

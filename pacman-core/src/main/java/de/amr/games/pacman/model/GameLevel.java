@@ -22,7 +22,7 @@ public class GameLevel {
     }
 
     public final int number; // 1=first level
-    public boolean demoLevel;
+    private boolean demoLevel;
     public long startTime;
     public int killedGhostCount;
     public GameWorld world;
@@ -37,6 +37,14 @@ public class GameLevel {
     public GameLevel(int number) {
         this.number = number;
         nextBonusIndex = -1;
+    }
+
+    public void setDemoLevel(boolean demoLevel) {
+        this.demoLevel = demoLevel;
+    }
+
+    public boolean isDemoLevel() {
+        return demoLevel;
     }
 
     public void setPac(Pac pac) {

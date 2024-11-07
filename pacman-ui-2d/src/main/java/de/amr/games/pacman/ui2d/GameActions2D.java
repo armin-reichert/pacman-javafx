@@ -37,7 +37,7 @@ public enum GameActions2D implements GameAction {
             boolean enabled =
                 context.gameState() == GameState.WAITING_FOR_START ||
                     context.gameState() == INTRO ||
-                    context.level().demoLevel ||
+                    context.level().isDemoLevel() ||
                     !context.gameController().coinControl().hasCredit();
             if (!enabled) {
                 Logger.info("Action ADD_CREDIT is disabled");

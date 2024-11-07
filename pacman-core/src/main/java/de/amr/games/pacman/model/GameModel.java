@@ -166,7 +166,7 @@ public abstract class GameModel {
 
     public void createDemoLevel() {
         level = new GameLevel(1);
-        level.demoLevel = true;
+        level.setDemoLevel(true);
         configureDemoLevel();
         Logger.info("Demo Level created");
         publishGameEvent(GameEventType.LEVEL_CREATED);
@@ -190,7 +190,7 @@ public abstract class GameModel {
         initScore(level.number);
         letsGetReadyToRumble();
         level.startTime = System.currentTimeMillis();
-        Logger.info("{} started", level.demoLevel ? "Demo Level" : "Level " + level.number);
+        Logger.info("{} started", level.isDemoLevel() ? "Demo Level" : "Level " + level.number);
         Logger.info("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
         level.ghosts().forEach(ghost -> Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
         publishGameEvent(GameEventType.LEVEL_STARTED);
@@ -364,7 +364,7 @@ public abstract class GameModel {
 
     private void checkPacKilled() {
         boolean pacMeetsKiller = level.ghosts(HUNTING_PAC).anyMatch(level.pac()::sameTile);
-        if (level.demoLevel) {
+        if (level.isDemoLevel()) {
             eventLog.pacKilled = pacMeetsKiller && !isPacManKillingIgnored();
         } else {
             eventLog.pacKilled = pacMeetsKiller && !level.pac().isImmune();

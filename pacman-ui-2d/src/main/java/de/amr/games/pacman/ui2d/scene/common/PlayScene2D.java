@@ -57,7 +57,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onLevelCreated(GameEvent e) {
         ArcadeKeyAdapter arcadeController = context.arcade();
-        if (context.level().demoLevel) {
+        if (context.level().isDemoLevel()) {
             bind(GameActions2D.ADD_CREDIT, arcadeController.key(Arcade.Controls.COIN));
         } else {
             context.game().scoreManager().setScoreEnabled(false);
@@ -71,7 +71,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = context.level().demoLevel ||
+        boolean silent = context.level().isDemoLevel() ||
                 context.gameState() == TESTING_LEVEL_BONI ||
                 context.gameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
@@ -95,7 +95,7 @@ public class PlayScene2D extends GameScene2D {
          * TODO: I would like to do this only on level start but when scene view is switched
          *       between 2D and 3D, the other scene has to be updated accordingly.
          */
-        if (context.level().demoLevel) {
+        if (context.level().isDemoLevel()) {
             context.game().setDemoLevelBehavior();
         }
         else {
@@ -175,7 +175,7 @@ public class PlayScene2D extends GameScene2D {
         int y = TS * (houseTopLeftTile.y() + houseSize.y() + 1);
         String assetPrefix = GameAssets2D.assetPrefix(context.currentGameVariant());
         Font font = renderer.scaledArcadeFont(TS);
-        if (context.level().demoLevel) {
+        if (context.level().isDemoLevel()) {
             String text = "GAME  OVER";
             int x = TS * (cx - text.length() / 2);
             Color color = context.assets().color(assetPrefix + ".color.game_over_message");

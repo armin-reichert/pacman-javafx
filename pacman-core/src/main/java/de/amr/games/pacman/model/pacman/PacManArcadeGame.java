@@ -236,8 +236,8 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     protected void initScore(int levelNumber) {
-        scoreManager.setScoreEnabled(levelNumber > 0 && !level.demoLevel);
-        scoreManager.setHighScoreEnabled(levelNumber > 0 && !level.demoLevel);
+        scoreManager.setScoreEnabled(levelNumber > 0 && !level.isDemoLevel());
+        scoreManager.setHighScoreEnabled(levelNumber > 0 && !level.isDemoLevel());
     }
 
     @Override

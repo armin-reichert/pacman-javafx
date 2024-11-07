@@ -140,7 +140,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     private void setGameActions() {
-        if (context.level().demoLevel) {
+        if (context.level().isDemoLevel()) {
             if (context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 bind(TengenGameActions.QUIT_DEMO_LEVEL, context.joypad().key(NES.Joypad.START));
             } else {
@@ -198,7 +198,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         perspective().update(context.level().world, context.level().pac());
         updateScores();
 
-        if (context.level().demoLevel) {
+        if (context.level().isDemoLevel()) {
             context.game().setDemoLevelBehavior();
         }
         else {
@@ -464,7 +464,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = context.level().demoLevel ||
+        boolean silent = context.level().isDemoLevel() ||
                 context.gameState() == TESTING_LEVEL_BONI ||
                 context.gameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
@@ -485,7 +485,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
                 showLevelTestMessage("PREVIEW LEVEL " + context.level().number);
             }
             default -> {
-                if (!context.level().demoLevel){
+                if (!context.level().isDemoLevel()){
                     showReadyMessage();
                 }
             }

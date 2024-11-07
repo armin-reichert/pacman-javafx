@@ -102,7 +102,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             return;
         }
 
-        if (context.level().demoLevel) {
+        if (context.level().isDemoLevel()) {
             game.setDemoLevelBehavior();
         }
         else {
@@ -233,7 +233,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         }
         r.drawLivesCounter(livesCounterEntries, 5, size());
 
-        r.setLevelNumberBoxesVisible(!context.level().demoLevel && game.mapCategory() != MapCategory.ARCADE);
+        r.setLevelNumberBoxesVisible(!context.level().isDemoLevel() && game.mapCategory() != MapCategory.ARCADE);
         r.drawLevelCounter(context, size());
     }
 
@@ -247,7 +247,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         GameState state = context.gameState();
         GameModel game = context.game();
         GameLevel level = game.level().orElseThrow();
-        if (level.demoLevel) {
+        if (level.isDemoLevel()) {
             Color color = Color.web(level.currentMapConfig().colorScheme().get("stroke"));
             drawText(renderer, "GAME  OVER", cx, y, color);
         } else if (state == GameState.GAME_OVER) {
@@ -323,7 +323,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     @Override
     public void onLevelCreated(GameEvent e) {
         JoypadKeyAdapter joypad = context.joypad();
-        if (context.level().demoLevel) {
+        if (context.level().isDemoLevel()) {
             context.level().pac().setImmune(false);
             bind(QUIT_DEMO_LEVEL, joypad.key(NES.Joypad.START));
         } else {
@@ -345,7 +345,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = context.level().demoLevel ||
+        boolean silent = context.level().isDemoLevel() ||
                 context.gameState() == TESTING_LEVEL_BONI ||
                 context.gameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {

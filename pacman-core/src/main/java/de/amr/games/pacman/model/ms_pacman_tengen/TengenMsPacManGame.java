@@ -204,7 +204,7 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     protected void initScore(int levelNumber) {
         scoreManager.setScoreEnabled(levelNumber > 0);
-        scoreManager.setHighScoreEnabled(levelNumber > 0 && !level.demoLevel);
+        scoreManager.setHighScoreEnabled(levelNumber > 0 && !level.isDemoLevel());
     }
 
     @Override
@@ -428,7 +428,7 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     public boolean isPacManKillingIgnored() {
         float levelRunningSeconds = (System.currentTimeMillis() - level.startTime) / 1000f;
-        if (level.demoLevel && levelRunningSeconds < DEMO_LEVEL_MIN_DURATION_SEC) {
+        if (level.isDemoLevel() && levelRunningSeconds < DEMO_LEVEL_MIN_DURATION_SEC) {
             Logger.info("Pac-Man dead ignored, demo level is running since {} seconds", levelRunningSeconds);
             return true;
         }

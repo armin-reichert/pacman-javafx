@@ -164,7 +164,7 @@ public enum GameState implements FsmState<GameModel> {
             GameLevel level = game.level().orElseThrow();
             if (timer.hasExpired()) {
                 setProperty("mazeFlashing", false);
-                if (level.demoLevel) { // just in case: if demo level is completed, go back to intro scene
+                if (level.isDemoLevel()) { // just in case: if demo level is completed, go back to intro scene
                     enterState(INTRO);
                 } else if (game.intermissionNumberAfterLevel() != 0) {
                     enterState(INTERMISSION);
@@ -252,7 +252,7 @@ public enum GameState implements FsmState<GameModel> {
             GameLevel level = game.level().orElseThrow();
             if (timer.hasExpired()) {
                 game.loseLife();
-                if (level.demoLevel) {
+                if (level.isDemoLevel()) {
                     enterState(INTRO);
                 } else {
                     enterState(game.lives() == 0 ? GAME_OVER : STARTING_GAME);
