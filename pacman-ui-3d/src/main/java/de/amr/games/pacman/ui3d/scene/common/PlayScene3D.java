@@ -83,7 +83,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             Perspective.Name name = get();
             Perspective perspective = perspectiveMap.get(name);
             fxSubScene.setCamera(perspective.getCamera());
-            perspective.init(context.game().world());
+            perspective.init(context.level().world);
         }
     };
 
@@ -183,7 +183,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     @Override
     public void update() {
         var game = context.game();
-        if (game.level().isEmpty() || game.world() == null) {
+        if (game.level().isEmpty()) {
             // Scene is visible for 1 (2?) ticks before game level has been created
             Logger.warn("Tick {}: Cannot update PlayScene3D: game level not yet available", context.tick());
             return;
@@ -195,15 +195,15 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             return;
         }
         level3D.update(context);
-        perspective().update(game.world(), game.pac());
+        perspective().update(context.level().world, context.level().pac());
         updateScores();
 
         if (context.level().demoLevel) {
             context.game().setDemoLevelBehavior();
         }
         else {
-            context.game().pac().setUsingAutopilot(PY_AUTOPILOT.get());
-            context.game().pac().setImmune(PY_IMMUNITY.get());
+            context.level().pac().setUsingAutopilot(PY_AUTOPILOT.get());
+            context.level().pac().setImmune(PY_IMMUNITY.get());
             updateSound(context.sound());
         }
     }
@@ -235,11 +235,11 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             sound.selectSiren(sirenNumber);
             sound.playSiren();
         }
-        if (context.game().pac().starvingTicks() > 8) { // TODO not sure how to do this right
+        if (context.level().pac().starvingTicks() > 8) { // TODO not sure how to do this right
             sound.stopMunchingSound();
         }
-        boolean ghostsReturning = context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
-        if (context.game().pac().isAlive() && ghostsReturning) {
+        boolean ghostsReturning = context.level().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
+        if (context.level().pac().isAlive() && ghostsReturning) {
             sound.playGhostReturningHomeSound();
         } else {
             sound.stopGhostReturningHomeSound();
@@ -346,7 +346,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     private void onEnterStateLevelComplete() {
         context.sound().stopAll();
         // if cheat has been used to complete level, food might still exist, so eat it:
-        GameWorld world = context.game().world();
+        GameWorld world = context.level().world;
         world.map().food().tiles().forEach(world::registerFoodEatenAt);
         level3D.pellets3D().forEach(Pellet3D::onEaten);
         level3D.energizers3D().forEach(Energizer3D::onEaten);
@@ -359,7 +359,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         context.gameState().timer().restartSeconds(3);
         replaceGameLevel3D(true);
         level3D.pac3D().init();
-        perspective().init(context.game().world());
+        perspective().init(context.level().world);
     }
 
     private void onEnterStateTestingLevelBoni() {
@@ -401,16 +401,16 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             replaceGameLevel3D(true);
         }
         level3D.pellets3D().forEach(
-            pellet3D -> pellet3D.shape3D().setVisible(!context.game().world().hasEatenFoodAt(pellet3D.tile()))
+            pellet3D -> pellet3D.shape3D().setVisible(!context.level().world.hasEatenFoodAt(pellet3D.tile()))
         );
         level3D.energizers3D().forEach(
-            energizer3D -> energizer3D.shape3D().setVisible(!context.game().world().hasEatenFoodAt(energizer3D.tile()))
+            energizer3D -> energizer3D.shape3D().setVisible(!context.level().world.hasEatenFoodAt(energizer3D.tile()))
         );
         if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
             level3D.energizers3D().filter(energizer3D -> energizer3D.shape3D().isVisible()).forEach(Energizer3D::startPumping);
         }
-        context.game().pac().show();
-        context.game().ghosts().forEach(Ghost::show);
+        context.level().pac().show();
+        context.level().ghosts().forEach(Ghost::show);
         level3D.pac3D().init();
         level3D.pac3D().update(context);
 
@@ -490,12 +490,12 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
                 }
             }
         }
-        perspective().init(context.game().world());
+        perspective().init(context.level().world);
     }
 
     @Override
     public void onPacFoundFood(GameEvent event) {
-        GameWorld world = context.game().world();
+        GameWorld world = context.level().world;
         if (event.tile().isEmpty()) {
             // When cheat "eat all pellets" has been used, no tile is present in the event.
             // In that case, ensure that the 3D representations are in sync with the game model.
@@ -527,7 +527,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     private void addLevelCounter() {
         // Place level counter at top right maze corner
-        double x = context.game().world().map().terrain().numCols() * TS - 2 * TS;
+        double x = context.level().world.map().terrain().numCols() * TS - 2 * TS;
         double y = 2 * TS;
         Node levelCounter3D = GameLevel3D.createLevelCounter3D(context.currentGameSceneConfig().spriteSheet(),
                 context.game().levelCounter(), x, y);
@@ -549,14 +549,14 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     private void showLevelTestMessage(String message) {
-        TileMap terrainMap = context.game().world().map().terrain();
+        TileMap terrainMap = context.level().world.map().terrain();
         double x = terrainMap.numCols() * HTS;
         double y = (terrainMap.numRows() - 2) * TS;
         level3D.showAnimatedMessage(message, 5, x, y);
     }
 
     private void showReadyMessage() {
-        GameWorld world = context.game().world();
+        GameWorld world = context.level().world;
         Vector2i houseTopLeft = world.houseTopLeftTile();
         Vector2i houseSize = world.houseSize();
         double x = TS * (houseTopLeft.x() + 0.5 * houseSize.x());
@@ -587,7 +587,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         return new SequentialTransition(
             pauseSec(1)
             , level3D.mazeFlashAnimation(numFlashes)
-            , doAfterSec(2.5, () -> context.game().pac().hide())
+            , doAfterSec(2.5, () -> context.level().pac().hide())
         );
     }
 
@@ -601,7 +601,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
                   context.sound().playLevelCompleteSound();
               })
             , doAfterSec(1, level3D.mazeFlashAnimation(numFlashes))
-            , doAfterSec(0.5, () -> context.game().pac().hide())
+            , doAfterSec(0.5, () -> context.level().pac().hide())
             , doAfterSec(0.5, level3D.levelRotateAnimation(1.5))
             , level3D.wallsDisappearAnimation(2.0)
             , doAfterSec(1, () -> {

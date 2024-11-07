@@ -108,7 +108,7 @@ public class PacManArcadeGame extends GameModel {
     };
 
     private static final byte PELLET_VALUE = 10;
-    private final byte ENERGIZER_VALUE = 50;
+    private static final byte ENERGIZER_VALUE = 50;
 
     // Note: First level number is 1
     protected static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {42, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
@@ -149,7 +149,7 @@ public class PacManArcadeGame extends GameModel {
                 return ticks != -1 ? ticks : TickTimer.INDEFINITE;
             }
         };
-        huntingControl.setOnPhaseChange(() -> ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
+        huntingControl.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
     }
 
     protected LevelData levelData(int levelNumber) {
@@ -207,18 +207,18 @@ public class PacManArcadeGame extends GameModel {
         level.world = new GameWorld(map);
         level.world.createArcadeHouse(HOUSE_X, HOUSE_Y);
 
-        pac = new Pac();
-        pac.setName("Pac-Man");
-        pac.setWorld(level.world);
-        pac.reset();
+        level.pac = new Pac();
+        level.pac.setName("Pac-Man");
+        level.pac.setWorld(level.world);
+        level.pac.reset();
 
-        ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.clyde() };
-        ghosts().forEach(ghost -> {
+        level.ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.clyde() };
+        level.ghosts().forEach(ghost -> {
             ghost.setWorld(level.world);
             ghost.reset();
             ghost.setRevivalPosition(level.world.ghostPosition(ghost.id()));
         });
-        ghosts[RED_GHOST].setRevivalPosition(level.world.ghostPosition(PINK_GHOST)); // middle house position
+        level.ghosts[RED_GHOST].setRevivalPosition(level.world.ghostPosition(PINK_GHOST)); // middle house position
 
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
         bonusSymbols[0] = computeBonusSymbol();
@@ -227,8 +227,8 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     protected void setActorBaseSpeed(int levelNumber) {
-        pac.setBaseSpeed(1.25f);
-        ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
+        level.pac.setBaseSpeed(1.25f);
+        level.ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
     }
 
     @Override
@@ -245,12 +245,12 @@ public class PacManArcadeGame extends GameModel {
         WorldMap worldMap = currentMapConfig.worldMap();
         createWorldAndPopulation(worldMap);
 
-        pac.setAutopilot(autopilot);
+        level.pac.setAutopilot(autopilot);
         setCruiseElroy(0);
 
         List<Vector2i> oneWayDownTiles = worldMap.terrain().tiles()
             .filter(tile -> worldMap.terrain().get(tile) == Tiles.ONE_WAY_DOWN).toList();
-        ghosts().forEach(ghost -> {
+        level.ghosts().forEach(ghost -> {
             ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
             ghost.setSpecialTerrainTiles(oneWayDownTiles);
         });
@@ -265,9 +265,9 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     public void setDemoLevelBehavior() {
-        pac.setAutopilot(demoLevelSteering);
-        pac.setUsingAutopilot(true);
-        pac.setImmune(false);
+        level.pac.setAutopilot(demoLevelSteering);
+        level.pac.setUsingAutopilot(true);
+        level.pac.setImmune(false);
     }
 
     @Override
@@ -281,7 +281,7 @@ public class PacManArcadeGame extends GameModel {
             return 0;
         }
         byte percentage = levelData(level.number).pacSpeedPercentage();
-        return percentage > 0 ? percentage * 0.01f * pac.baseSpeed() : pac.baseSpeed();
+        return percentage > 0 ? percentage * 0.01f * level.pac.baseSpeed() : level.pac.baseSpeed();
     }
 
     @Override
@@ -290,7 +290,7 @@ public class PacManArcadeGame extends GameModel {
             return 0;
         }
         byte percentage = levelData(level.number).pacSpeedPoweredPercentage();
-        return percentage > 0 ? percentage * 0.01f * pac.baseSpeed() : pacNormalSpeed();
+        return percentage > 0 ? percentage * 0.01f * level.pac.baseSpeed() : pacNormalSpeed();
     }
 
     @Override
@@ -341,7 +341,7 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     protected void onPelletOrEnergizerEaten(Vector2i tile, int uneatenFoodCount, boolean energizer) {
-        pac.setRestingTicks(energizer ? 3 : 1);
+        level.pac.setRestingTicks(energizer ? 3 : 1);
         if (uneatenFoodCount == levelData(level.number).elroy1DotsLeft()) {
             setCruiseElroy(1);
         } else if (uneatenFoodCount == levelData(level.number).elroy2DotsLeft()) {
@@ -383,7 +383,7 @@ public class PacManArcadeGame extends GameModel {
         Logger.info("Power timer stopped and set to zero");
         gateKeeper.resetCounterAndSetEnabled(true);
         setCruiseElroyEnabled(false);
-        pac.die();
+        level.pac.die();
     }
 
     @Override

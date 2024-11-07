@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import javafx.beans.property.*;
@@ -23,7 +22,6 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -91,10 +89,6 @@ public abstract class InfoBox extends TitledPane {
 
     protected Supplier<String> ifLevelPresent(Function<GameLevel, String> fnInfo) {
         return () -> context.game().level().map(fnInfo).orElse(NO_INFO);
-    }
-
-    protected Supplier<String> ifWorldPresent(Function<GameWorld, String> fnInfo) {
-        return () -> Optional.ofNullable(context.game().level().get().world).map(fnInfo).orElse(NO_INFO);
     }
 
     protected void clearGrid() {

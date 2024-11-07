@@ -129,7 +129,7 @@ public class TengenMsPacManGame extends GameModel {
                 return ticks != -1 ? ticks : TickTimer.INDEFINITE;
             }
         };
-        huntingControl.setOnPhaseChange(() -> ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
+        huntingControl.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
 
         setMapCategory(MapCategory.ARCADE);
         setBoosterMode(BoosterMode.OFF);
@@ -243,14 +243,14 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public float pacNormalSpeed() {
-        return pac != null ? pac.baseSpeed() : 0;
+        return level.pac != null ? level.pac.baseSpeed() : 0;
     }
 
     @Override
     public float pacPowerSpeed() {
-        if (pac != null) {
+        if (level != null) {
             //TODO is this correct?
-            return 1.1f * pac.baseSpeed();
+            return 1.1f * level.pac.baseSpeed();
         }
         return 0;
     }
@@ -315,11 +315,11 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     protected void setActorBaseSpeed(int levelNumber) {
         float pacBaseSpeed = pacBaseSpeedInLevel(levelNumber) + pacDifficultySpeedDelta(difficulty);
-        pac.setBaseSpeed(pacBaseSpeed);
+        level.pac.setBaseSpeed(pacBaseSpeed);
         if (boosterMode == BoosterMode.ALWAYS_ON) {
             setBoosterActive(true);
         }
-        for (Ghost ghost : ghosts) {
+        for (Ghost ghost : level.ghosts) {
             ghost.setBaseSpeed(ghostBaseSpeedInLevel(levelNumber)
                 + ghostDifficultySpeedDelta(difficulty) + ghostIDSpeedDelta(ghost.id()));
         }
@@ -327,9 +327,9 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     protected void initActorAnimations() {
-        pac.selectAnimation(boosterActive ? ANIM_MS_PACMAN_BOOSTER : ANIM_PAC_MUNCHING);
-        pac.animations().ifPresent(Animations::resetCurrentAnimation);
-        ghosts().forEach(ghost -> {
+        level.pac.selectAnimation(boosterActive ? ANIM_MS_PACMAN_BOOSTER : ANIM_PAC_MUNCHING);
+        level.pac.animations().ifPresent(Animations::resetCurrentAnimation);
+        level.ghosts().forEach(ghost -> {
             ghost.selectAnimation(ANIM_GHOST_NORMAL);
             ghost.resetAnimation();
         });
@@ -342,8 +342,8 @@ public class TengenMsPacManGame extends GameModel {
             if (boosterActive) {
                 speed += pacBoosterSpeedDelta();
             }
-            pac.setBaseSpeed(speed);
-            pac.selectAnimation(boosterActive ? ANIM_MS_PACMAN_BOOSTER : ANIM_PAC_MUNCHING);
+            level.pac.setBaseSpeed(speed);
+            level.pac.selectAnimation(boosterActive ? ANIM_MS_PACMAN_BOOSTER : ANIM_PAC_MUNCHING);
         }
     }
 
@@ -352,18 +352,18 @@ public class TengenMsPacManGame extends GameModel {
         level.world.createArcadeHouse(10, 15);
         Logger.info("World created. Map config: {}, URL: {}", currentMapConfig, currentMapConfig.worldMap().url());
 
-        pac = new Pac();
-        pac.setName("Ms. Pac-Man");
-        pac.setWorld(level.world);
-        pac.reset();
+        level.pac = new Pac();
+        level.pac.setName("Ms. Pac-Man");
+        level.pac.setWorld(level.world);
+        level.pac.reset();
 
-        ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.sue() };
-        ghosts().forEach(ghost -> {
+        level.ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.sue() };
+        level.ghosts().forEach(ghost -> {
             ghost.setWorld(level.world);
             ghost.reset();
             ghost.setRevivalPosition(level.world.ghostPosition(ghost.id()));
         });
-        ghosts[RED_GHOST].setRevivalPosition(level.world.ghostPosition(PINK_GHOST)); // middle house position
+        level.ghosts[RED_GHOST].setRevivalPosition(level.world.ghostPosition(PINK_GHOST)); // middle house position
 
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
         bonusSymbols[0] = computeBonusSymbol();
@@ -379,11 +379,11 @@ public class TengenMsPacManGame extends GameModel {
         levelCounterEnabled = level.number < 8;
         currentMapConfig = mapConfigMgr.getMapConfig(mapCategory, level.number);
         createWorldAndPopulation(currentMapConfig.worldMap());
-        pac.setAutopilot(autopilot);
+        level.pac.setAutopilot(autopilot);
         setBoosterActive(false); // gets activated in startLevel() if mode is ALWAYS_ON
-        ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+        level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // ghosts inside house start at floor of house
-        ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost -> {
+        level.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost -> {
             level.world.setGhostPosition(ghost.id(), level.world.ghostPosition(ghost.id()).plus(0, HTS));
         });
     }
@@ -396,9 +396,9 @@ public class TengenMsPacManGame extends GameModel {
         currentMapConfig = mapConfigMgr.getMapConfig(mapCategory, level.number);
         createWorldAndPopulation(currentMapConfig.worldMap());
         setBoosterActive(false); // gets activated in startLevel() if mode is ALWAYS_ON
-        ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+        level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // ghosts inside house start at floor of house
-        ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost -> {
+        level.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost -> {
             level.world.setGhostPosition(ghost.id(), level.world.ghostPosition(ghost.id()).plus(0, HTS));
         });
         setDemoLevelBehavior();
@@ -406,9 +406,9 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public void setDemoLevelBehavior() {
-        pac.setAutopilot(demoLevelSteering);
-        pac.setUsingAutopilot(true);
-        pac.setImmune(false);
+        level.pac.setAutopilot(demoLevelSteering);
+        level.pac.setUsingAutopilot(true);
+        level.pac.setImmune(false);
     }
 
     @Override
@@ -520,7 +520,7 @@ public class TengenMsPacManGame extends GameModel {
         powerTimer.reset(0);
         Logger.info("Power timer stopped and set to zero");
         gateKeeper.resetCounterAndSetEnabled(true); // TODO how is that realized in Tengen?
-        pac.die();
+        level.pac.die();
     }
 
     @Override

@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.pacman_xxl;
 
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAssets2D;
@@ -79,7 +80,8 @@ public class PacManGameXXLSceneConfig implements GameSceneConfig {
 
     @Override
     public void createActorAnimations(GameModel game) {
-        game.pac().setAnimations(new PacAnimations(spriteSheet));
-        game.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id())));
+        GameLevel level = game.level().orElseThrow();
+        level.pac().setAnimations(new PacAnimations(spriteSheet));
+        level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id())));
     }
 }

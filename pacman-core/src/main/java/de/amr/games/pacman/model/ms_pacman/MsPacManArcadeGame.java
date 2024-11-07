@@ -116,7 +116,7 @@ public class MsPacManArcadeGame extends GameModel {
                 return ticks != -1 ? ticks : TickTimer.INDEFINITE;
             }
         };
-        huntingControl.setOnPhaseChange(() -> ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
+        huntingControl.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
     }
 
     public Optional<LevelData> currentLevelData() {
@@ -163,18 +163,18 @@ public class MsPacManArcadeGame extends GameModel {
         level.world = new GameWorld(map);
         level.world.createArcadeHouse(HOUSE_X, HOUSE_Y);
 
-        pac = new Pac();
-        pac.setName("Ms. Pac-Man");
-        pac.setWorld(level.world);
-        pac.reset();
+        level.pac = new Pac();
+        level.pac.setName("Ms. Pac-Man");
+        level.pac.setWorld(level.world);
+        level.pac.reset();
 
-        ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.sue() };
-        ghosts().forEach(ghost -> {
+        level.ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.sue() };
+        level.ghosts().forEach(ghost -> {
             ghost.setWorld(level.world);
             ghost.reset();
             ghost.setRevivalPosition(level.world.ghostPosition(ghost.id()));
         });
-        ghosts[RED_GHOST].setRevivalPosition(level.world.ghostPosition(PINK_GHOST)); // middle house position
+        level.ghosts[RED_GHOST].setRevivalPosition(level.world.ghostPosition(PINK_GHOST)); // middle house position
 
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
         bonusSymbols[0] = computeBonusSymbol();
@@ -183,8 +183,8 @@ public class MsPacManArcadeGame extends GameModel {
 
     @Override
     protected void setActorBaseSpeed(int levelNumber) {
-        pac.setBaseSpeed(1.25f);
-        ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
+        level.pac.setBaseSpeed(1.25f);
+        level.ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
     }
 
     @Override
@@ -195,8 +195,8 @@ public class MsPacManArcadeGame extends GameModel {
         levelCounterEnabled = level.number < 8;
         currentMapConfig = mapConfigMgr.getMapConfig(level.number);
         createWorldAndPopulation(currentMapConfig.worldMap());
-        pac.setAutopilot(autopilot);
-        ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+        level.pac.setAutopilot(autopilot);
+        level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
     @Override
@@ -205,16 +205,16 @@ public class MsPacManArcadeGame extends GameModel {
         levelCounterEnabled = false;
         currentMapConfig = mapConfigMgr.getMapConfig(level.number);
         createWorldAndPopulation(currentMapConfig.worldMap());
-        ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+        level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         demoLevelSteering.init();
         setDemoLevelBehavior();
     }
 
     @Override
     public void setDemoLevelBehavior() {
-        pac.setAutopilot(demoLevelSteering);
-        pac.setUsingAutopilot(true);
-        pac.setImmune(false);
+        level.pac.setAutopilot(demoLevelSteering);
+        level.pac.setUsingAutopilot(true);
+        level.pac.setImmune(false);
     }
 
     @Override
@@ -231,7 +231,7 @@ public class MsPacManArcadeGame extends GameModel {
         if (percentage == 0) {
             percentage = 100;
         }
-        return percentage * 0.01f * pac.baseSpeed();
+        return percentage * 0.01f * level.pac.baseSpeed();
     }
 
     @Override
@@ -243,7 +243,7 @@ public class MsPacManArcadeGame extends GameModel {
         if (percentage == 0) {
             percentage = 100;
         }
-        return percentage * 0.01f * pac.baseSpeed();
+        return percentage * 0.01f * level.pac.baseSpeed();
     }
 
     @Override
@@ -312,7 +312,7 @@ public class MsPacManArcadeGame extends GameModel {
 
     @Override
     protected void onPelletOrEnergizerEaten(Vector2i tile, int uneatenFoodCount, boolean energizer) {
-        pac.setRestingTicks(energizer ? 3 : 1);
+        level.pac.setRestingTicks(energizer ? 3 : 1);
         if (uneatenFoodCount == levelData(level.number).elroy1DotsLeft()) {
             cruiseElroy = 1;
         } else if (uneatenFoodCount == levelData(level.number).elroy2DotsLeft()) {
@@ -341,7 +341,7 @@ public class MsPacManArcadeGame extends GameModel {
         Logger.info("Power timer stopped and set to zero");
         gateKeeper.resetCounterAndSetEnabled(true);
         setCruiseElroyEnabled(false);
-        pac.die();
+        level.pac.die();
     }
 
     protected void setCruiseElroyEnabled(boolean enabled) {

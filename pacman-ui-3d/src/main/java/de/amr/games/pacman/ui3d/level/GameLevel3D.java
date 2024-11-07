@@ -196,11 +196,11 @@ public class GameLevel3D {
     public GameLevel3D(GameContext context) {
         final GameVariant variant = context.currentGameVariant();
         final GameModel game = context.game();
-        final GameWorld world = game.world();
+        final GameWorld world = context.level().world;
         final AssetStorage assets = context.assets();
 
-        pac3D = createPac3D(variant, assets, context.sound(), game.pac());
-        ghosts3D = game.ghosts().map(ghost -> createMutableGhost3D(assets, assetPrefix(variant), ghost, game.numFlashes())).toList();
+        pac3D = createPac3D(variant, assets, context.sound(), context.level().pac());
+        ghosts3D = context.level().ghosts().map(ghost -> createMutableGhost3D(assets, assetPrefix(variant), ghost, game.numFlashes())).toList();
         livesCounter3D = createLivesCounter3D(variant, assets, game.canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCounterPy);
         message3D = createMessage3D(assets);
@@ -231,20 +231,20 @@ public class GameLevel3D {
         ghosts3D().forEach(ghost3D -> ghost3D.update(context));
         bonus3D().ifPresent(bonus -> bonus.update(context));
 
-        boolean houseAccessRequired = context.game()
+        boolean houseAccessRequired = context.level()
             .ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .anyMatch(Ghost::isVisible);
 
-        boolean ghostNearHouseEntry = context.game()
+        boolean ghostNearHouseEntry = context.level()
             .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-            .filter(ghost -> ghost.position().euclideanDistance(context.game().world().houseEntryPosition()) <= HOUSE_SENSITIVITY)
+            .filter(ghost -> ghost.position().euclideanDistance(context.level().world.houseEntryPosition()) <= HOUSE_SENSITIVITY)
             .anyMatch(Ghost::isVisible);
 
         houseUsedPy.set(houseAccessRequired);
         houseOpenPy.set(ghostNearHouseEntry);
 
         int symbolsDisplayed = Math.max(0, context.game().lives() - 1);
-        if (!context.game().pac().isVisible() && context.gameState() == GameState.STARTING_GAME) {
+        if (!context.level().pac().isVisible() && context.gameState() == GameState.STARTING_GAME) {
             livesCounterPy.set(symbolsDisplayed + 1);
         } else {
             livesCounterPy.set(symbolsDisplayed);

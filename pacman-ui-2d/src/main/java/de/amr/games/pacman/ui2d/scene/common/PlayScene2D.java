@@ -99,8 +99,8 @@ public class PlayScene2D extends GameScene2D {
             context.game().setDemoLevelBehavior();
         }
         else {
-            context.game().pac().setUsingAutopilot(PY_AUTOPILOT.get());
-            context.game().pac().setImmune(PY_IMMUNITY.get());
+            context.level().pac().setUsingAutopilot(PY_AUTOPILOT.get());
+            context.level().pac().setImmune(PY_IMMUNITY.get());
             updateSound(context.sound());
         }
     }
@@ -111,11 +111,11 @@ public class PlayScene2D extends GameScene2D {
             sound.selectSiren(sirenNumber);
             sound.playSiren();
         }
-        if (context.game().pac().starvingTicks() > 8) { // TODO not sure how to do this right
+        if (context.level().pac().starvingTicks() > 8) { // TODO not sure how to do this right
             sound.stopMunchingSound();
         }
-        boolean ghostsReturning = context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
-        if (context.game().pac().isAlive() && ghostsReturning) {
+        boolean ghostsReturning = context.level().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
+        if (context.level().pac().isAlive() && ghostsReturning) {
             sound.playGhostReturningHomeSound();
         } else {
             sound.stopGhostReturningHomeSound();
@@ -141,18 +141,18 @@ public class PlayScene2D extends GameScene2D {
         renderer.setBlinkingOn(context.game().blinking().isOn());
         renderer.drawWorld(context, context.level().world, 0, 3 * TS);
 
-        renderer.drawAnimatedEntity(context.game().pac());
+        renderer.drawAnimatedEntity(context.level().pac());
         ghostsInZOrder().forEach(renderer::drawAnimatedEntity);
 
         if (debugInfoPy.get()) {
-            renderer.drawAnimatedCreatureInfo(context.game().pac());
+            renderer.drawAnimatedCreatureInfo(context.level().pac());
             ghostsInZOrder().forEach(renderer::drawAnimatedCreatureInfo);
         }
 
         if (context.game().canStartNewGame()) {
             //TODO: this code is ugly
             int numLivesShown = context.game().lives() - 1;
-            if (context.gameState() == GameState.STARTING_GAME && !context.game().pac().isVisible()) {
+            if (context.gameState() == GameState.STARTING_GAME && !context.level().pac().isVisible()) {
                 numLivesShown += 1;
             }
             renderer.drawLivesCounter(numLivesShown, 5, size());
@@ -165,7 +165,7 @@ public class PlayScene2D extends GameScene2D {
 
     private Stream<Ghost> ghostsInZOrder() {
         return Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
-            .map(context.game()::ghost);
+            .map(context.level()::ghost);
     }
 
     private void drawLevelMessage(GameRenderer renderer, GameWorld world) {
@@ -202,7 +202,7 @@ public class PlayScene2D extends GameScene2D {
         GraphicsContext g = renderer.ctx();
         renderer.drawTileGrid(size());
         if (context.currentGameVariant() == GameVariant.PACMAN && context.game().level().isPresent()) {
-            context.game().ghosts().forEach(ghost -> {
+            context.level().ghosts().forEach(ghost -> {
                 // Are currently the same for each ghost, but who knows what comes...
                 ghost.specialTerrainTiles().forEach(tile -> {
                     g.setFill(Color.RED);

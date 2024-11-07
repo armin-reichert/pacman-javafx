@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Tiles;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import org.tinylog.Logger;
 
@@ -18,7 +19,6 @@ import java.util.function.Consumer;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.model.GameModel.checkGhostID;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
@@ -71,7 +71,7 @@ public class Ghost extends Creature implements AnimatedEntity {
      * @param id ghost ID
      */
     private Ghost(byte id) {
-        this.id = checkGhostID(id);
+        this.id = GameLevel.checkGhostID(id);
         corneringSpeedUp = -1f;
     }
 

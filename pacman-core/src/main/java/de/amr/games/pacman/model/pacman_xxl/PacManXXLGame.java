@@ -84,9 +84,9 @@ public class PacManXXLGame extends PacManArcadeGame {
         level.number = levelNumber;
         currentMapConfig = createMapConfig(levelNumber);
         createWorldAndPopulation(currentMapConfig.worldMap());
-        pac.setAutopilot(new RuleBasedPacSteering(this));
-        pac.setUsingAutopilot(false);
-        ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+        level.pac.setAutopilot(new RuleBasedPacSteering(this));
+        level.pac.setUsingAutopilot(false);
+        level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         setCruiseElroy(0);
         Logger.info("Map selection mode is {}", mapSelectionMode);
         Logger.info("Selected map config: {}, URL: {}", currentMapConfig, currentMapConfig.worldMap().url());

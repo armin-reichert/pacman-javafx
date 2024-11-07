@@ -28,11 +28,11 @@ public class InfoBoxGameInfo extends InfoBox {
         labeledValue("Game State", () -> "%s".formatted(context.gameState()));
         labeledValue("State Timer", this::stateTimerInfo);
         labeledValue("Level Number", ifLevelPresent(level -> "%d".formatted(level.number)));
-        labeledValue("World Map", ifWorldPresent(world -> {
-            String url = world.map().url().toString();
+        labeledValue("World Map", ifLevelPresent(level -> {
+            String url = level.world.map().url().toString();
             return url.substring(url.lastIndexOf("/") + 1);
         }));
-        labeledValue("Color Scheme",            ifWorldPresent(world -> {
+        labeledValue("Color Scheme", ifLevelPresent(world -> {
             if (context.currentGameVariant() != GameVariant.MS_PACMAN_TENGEN) {
                 return InfoText.NO_INFO;
             }
@@ -54,7 +54,7 @@ public class InfoBoxGameInfo extends InfoBox {
         labeledValue("Pac-Man speed",   ifLevelPresent(this::fmtPacNormalSpeed));
         labeledValue("- empowered",     ifLevelPresent(this::fmtPacSpeedPowered));
         labeledValue("Power Duration",  ifLevelPresent(this::fmtPacPowerTime));
-        labeledValue("Pellets",         ifWorldPresent(this::fmtPelletCount));
+        labeledValue("Pellets",         ifLevelPresent(this::fmtPelletCount));
         labeledValue("Ghost speed",     ifLevelPresent(this::fmtGhostAttackSpeed));
         labeledValue("- frightened",    ifLevelPresent(this::fmtGhostSpeedFrightened));
         labeledValue("- in tunnel",     ifLevelPresent(this::fmtGhostSpeedTunnel));
@@ -92,13 +92,17 @@ public class InfoBoxGameInfo extends InfoBox {
         return "Remaining: %s".formatted(ticksToString(context.game().huntingControl().remaining()));
     }
 
-    private String fmtPelletCount(GameWorld world) {
-        return "%d of %d (%d energizers)".formatted(world.uneatenFoodCount(), world.totalFoodCount(), world.energizerTiles().count());
+    private String fmtPelletCount(GameLevel level) {
+        return "%d of %d (%d energizers)".formatted(
+                level.world.uneatenFoodCount(),
+                level.world.totalFoodCount(),
+                level.world.energizerTiles().count()
+        );
     }
 
     private String fmtGhostAttackSpeed(GameLevel level) {
         // use Pinky because Blinky could be in Elroy mode
-        Ghost pinky = context.game().ghost(GameModel.PINK_GHOST);
+        Ghost pinky = level.ghost(GameModel.PINK_GHOST);
         if (pinky != null) {
             return "%.4f px/s (%d%%)".formatted(
                 context.game().ghostAttackSpeed(pinky) * 60f,
@@ -109,7 +113,7 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtGhostSpeedFrightened(GameLevel level) {
-        Ghost blinky = context.game().ghost(GameModel.RED_GHOST);
+        Ghost blinky = level.ghost(GameModel.RED_GHOST);
         if (blinky != null) {
             return "%.4f px/s (%d%%)".formatted(
                 context.game().ghostFrightenedSpeed(blinky) * 60f,
@@ -120,7 +124,7 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtGhostSpeedTunnel(GameLevel level) {
-        Ghost blinky = context.game().ghost(GameModel.RED_GHOST);
+        Ghost blinky = level.ghost(GameModel.RED_GHOST);
         if (blinky != null) {
             return "%.4f px/s (%d%%)".formatted(
                 context.game().ghostTunnelSpeed(blinky) * 60f,

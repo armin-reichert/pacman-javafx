@@ -135,6 +135,7 @@ public class GateKeeper {
      * @return description why ghost has been released or {@code null} if ghost is not released
      */
     public String checkReleaseOf(Ghost prisoner) {
+        GameLevel level = game.level().orElseThrow();
         byte id = prisoner.id();
         if (id == RED_GHOST) {
             return "Red ghost gets released unconditionally";
@@ -148,9 +149,9 @@ public class GateKeeper {
             return String.format("Global dot counter reached limit (%d)", GLOBAL_LIMITS[id]);
         }
         // check Pac-Man starving time
-        if (game.pac().starvingTicks() >= pacStarvingLimit) {
-            game.pac().endStarving();
-            return String.format("%s reached starving limit (%d ticks)", game.pac().name(), pacStarvingLimit);
+        if (level.pac().starvingTicks() >= pacStarvingLimit) {
+            level.pac().endStarving();
+            return String.format("%s reached starving limit (%d ticks)", level.pac().name(), pacStarvingLimit);
         }
         return null;
     }
@@ -162,16 +163,17 @@ public class GateKeeper {
     }
 
     public void registerFoodEaten() {
+        GameLevel level = game.level().orElseThrow();
         if (globalCounterEnabled) {
-            if (game.ghost(ORANGE_GHOST).inState(LOCKED) && globalCounter == 32) {
-                Logger.info("{} inside house when global counter reached 32", game.ghost(ORANGE_GHOST).name());
+            if (level.ghost(ORANGE_GHOST).inState(LOCKED) && globalCounter == 32) {
+                Logger.info("{} inside house when global counter reached 32", level.ghost(ORANGE_GHOST).name());
                 resetCounterAndSetEnabled(false);
             } else {
                 globalCounter++;
                 Logger.trace("Global dot counter = {}", globalCounter);
             }
         } else {
-            game.ghosts(LOCKED).filter(Ghost::insideHouse).findFirst().ifPresent(ghost -> {
+            level.ghosts(LOCKED).filter(Ghost::insideHouse).findFirst().ifPresent(ghost -> {
                 countersByGhost[ghost.id()]++;
                 Logger.trace("{} dot counter = {}", ghost.name(), countersByGhost[ghost.id()]);
             });
@@ -179,7 +181,8 @@ public class GateKeeper {
     }
 
     public void unlockGhosts() {
-        Ghost blinky = game.ghost(RED_GHOST);
+        GameLevel level = game.level().orElseThrow();
+        Ghost blinky = level.ghost(RED_GHOST);
         if (blinky.inState(LOCKED)) {
             if (blinky.insideHouse()) {
                 blinky.setMoveAndWishDir(Direction.UP);
@@ -190,7 +193,7 @@ public class GateKeeper {
             }
         }
         Stream.of(PINK_GHOST, CYAN_GHOST, ORANGE_GHOST)
-            .map(game::ghost)
+            .map(level::ghost)
             .filter(ghost -> ghost.inState(LOCKED))
             .findFirst().ifPresent(prisoner -> {
                 String releaseInfo = checkReleaseOf(prisoner);

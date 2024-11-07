@@ -12,7 +12,9 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.model.actors.Animations;
+import de.amr.games.pacman.model.actors.Bonus;
+import de.amr.games.pacman.model.actors.Ghost;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -20,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.actors.GhostState.*;
@@ -46,13 +47,6 @@ public abstract class GameModel {
     // Ghost IDs
     public static final byte RED_GHOST = 0, PINK_GHOST = 1, CYAN_GHOST = 2, ORANGE_GHOST = 3;
 
-    public static byte checkGhostID(byte id) {
-        if (id < 0 || id > 3) {
-            throw GameException.illegalGhostID(id);
-        }
-        return id;
-    }
-
     /** Game loop frequency, ticks per second. */
     public static final byte       TICKS_PER_SECOND = 60;
 
@@ -76,8 +70,6 @@ public abstract class GameModel {
     protected int                  initialLives;
     protected int                  lives;
     protected byte                 nextBonusIndex; // -1=no bonus, 0=first, 1=second
-    protected Pac                  pac;
-    protected Ghost[]              ghosts;
     protected Bonus                bonus;
     protected MapConfig            currentMapConfig;
     protected SimulationStepLog    eventLog;
@@ -130,23 +122,6 @@ public abstract class GameModel {
 
     public void updateCustomMaps() {}
 
-    public Pac pac() {
-        return pac;
-    }
-
-    public Ghost ghost(byte id) {
-        checkGhostID(id);
-        return ghosts != null ? ghosts[id] : null;
-    }
-
-    public Stream<Ghost> ghosts(GhostState... states) {
-        checkNotNull(states);
-        if (ghosts == null) {
-            return Stream.empty();
-        }
-        return states.length == 0 ? Stream.of(ghosts) : Stream.of(ghosts).filter(ghost -> ghost.inState(states));
-    }
-
     public TickTimer powerTimer() {
         return powerTimer;
     }
@@ -182,12 +157,16 @@ public abstract class GameModel {
         publishGameEvent(GameEventType.GAME_STARTED);
     }
 
-    protected void clearLevel() {
-        level.number = 0;
-        level.demoLevel = false;
-        level.startTime = 0;
-        level.killedGhostCount = 0;
-        level.world = null;
+    public void clearLevel() {
+        if (level != null) {
+            level.number = 0;
+            level.demoLevel = false;
+            level.startTime = 0;
+            level.killedGhostCount = 0;
+            level.world = null;
+            level.pac = null;
+            level.ghosts = null;
+        }
 
         scoreManager.setScoreEnabled(false);
         huntingControl.reset();
@@ -195,16 +174,12 @@ public abstract class GameModel {
         bonus = null;
         nextBonusIndex = -1;
         Arrays.fill(bonusSymbols, (byte)-1);
-        pac = null;
-        ghosts = null;
         blinking.stop();
         blinking.reset();
     }
 
     public void createLevel(int levelNumber) {
         level = new GameLevel();
-        level.demoLevel = false;
-
         clearLevel();
         buildLevel(levelNumber);
         scoreManager.setLevelNumber(levelNumber);
@@ -242,10 +217,6 @@ public abstract class GameModel {
         }
     }
 
-    public void removeWorld() {
-        level.world = null;
-    }
-
     public void startLevel() {
         gateKeeper.setLevelNumber(level.number);
         setActorBaseSpeed(level.number);
@@ -253,8 +224,8 @@ public abstract class GameModel {
         letsGetReadyToRumble();
         level.startTime = System.currentTimeMillis();
         Logger.info("{} started", level.demoLevel ? "Demo Level" : "Level " + level.number);
-        Logger.info("{} base speed: {0.00} px/tick", pac.name(), pac.baseSpeed());
-        ghosts().forEach(ghost -> Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
+        Logger.info("{} base speed: {0.00} px/tick", level.pac.name(), level.pac.baseSpeed());
+        level.ghosts().forEach(ghost -> Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
         publishGameEvent(GameEventType.LEVEL_STARTED);
     }
 
@@ -262,10 +233,10 @@ public abstract class GameModel {
      * Sets each guy to his start position and resets him to his initial state. The guys are all initially invisible!
      */
     public void letsGetReadyToRumble() {
-        pac.reset(); // invisible!
-        pac.setPosition(level.world.pacPosition());
-        pac.setMoveAndWishDir(Direction.LEFT);
-        ghosts().forEach(ghost -> {
+        level.pac.reset(); // invisible!
+        level.pac.setPosition(level.world.pacPosition());
+        level.pac.setMoveAndWishDir(Direction.LEFT);
+        level.ghosts().forEach(ghost -> {
             ghost.reset(); // invisible!
             ghost.setPosition(level.world.ghostPosition(ghost.id()));
             ghost.setMoveAndWishDir(level.world.ghostDirection(ghost.id()));
@@ -278,22 +249,22 @@ public abstract class GameModel {
     }
 
     protected void initActorAnimations() {
-        pac.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
-        pac.animations().ifPresent(Animations::resetCurrentAnimation);
-        ghosts().forEach(ghost -> {
+        level.pac.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
+        level.pac.animations().ifPresent(Animations::resetCurrentAnimation);
+        level.ghosts().forEach(ghost -> {
             ghost.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
             ghost.resetAnimation();
         });
     }
 
     public void showGuys() {
-        pac.setVisible(true);
-        ghosts().forEach(ghost -> ghost.setVisible(true));
+        level.pac.setVisible(true);
+        level.ghosts().forEach(ghost -> ghost.setVisible(true));
     }
 
     public void hideGuys() {
-        pac.setVisible(false);
-        ghosts().forEach(ghost -> ghost.setVisible(false));
+        level.pac.setVisible(false);
+        level.ghosts().forEach(ghost -> ghost.setVisible(false));
     }
 
     public SimulationStepLog eventLog() {
@@ -311,13 +282,13 @@ public abstract class GameModel {
     protected Vector2i chasingTarget(Ghost ghost) {
         return switch (ghost.id()) {
             // Blinky: attacks Pac-Man directly
-            case RED_GHOST -> pac.tile();
+            case RED_GHOST -> level.pac.tile();
             // Pinky: ambushes Pac-Man
-            case PINK_GHOST -> pac.tilesAhead(4, hasOverflowBug());
+            case PINK_GHOST -> level.pac.tilesAhead(4, hasOverflowBug());
             // Inky: attacks from opposite side as Blinky
-            case CYAN_GHOST -> pac.tilesAhead(2, hasOverflowBug()).scaled(2).minus(ghost(RED_GHOST).tile());
+            case CYAN_GHOST -> level.pac.tilesAhead(2, hasOverflowBug()).scaled(2).minus(level.ghost(RED_GHOST).tile());
             // Clyde/Sue: attacks directly but retreats if Pac is near
-            case ORANGE_GHOST -> ghost.tile().euclideanDistance(pac.tile()) < 8 ? scatterTarget(ghost) : pac.tile();
+            case ORANGE_GHOST -> ghost.tile().euclideanDistance(level.pac.tile()) < 8 ? scatterTarget(ghost) : level.pac.tile();
             default -> throw GameException.illegalGhostID(ghost.id());
         };
     }
@@ -372,7 +343,7 @@ public abstract class GameModel {
     public void onLevelCompleted() {
         blinking.setStartPhase(Pulse.OFF);
         blinking.reset();
-        pac.freeze();
+        level.pac.freeze();
         bonus().ifPresent(Bonus::setInactive);
         // when cheating, there might still be food
         level.world.map().food().tiles().forEach(level.world::registerFoodEatenAt);
@@ -411,16 +382,16 @@ public abstract class GameModel {
         blinking.tick();
         gateKeeper.unlockGhosts();
 
-        checkForFood(pac.tile());
-        pac.update(this);
+        checkForFood(level.pac.tile());
+        level.pac.update(this);
         updatePacPower();
         checkPacKilled();
         if (eventLog.pacKilled) {
             return;
         }
 
-        ghosts().forEach(ghost -> ghost.update(this));
-        ghosts(FRIGHTENED).filter(pac::sameTile).forEach(this::killGhost);
+        level.ghosts().forEach(ghost -> ghost.update(this));
+        level.ghosts(FRIGHTENED).filter(level.pac::sameTile).forEach(this::killGhost);
         if (!eventLog.killedGhosts.isEmpty()) {
             return;
         }
@@ -429,20 +400,20 @@ public abstract class GameModel {
     }
 
     private void checkPacKilled() {
-        boolean pacMeetsKiller = ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
+        boolean pacMeetsKiller = level.ghosts(HUNTING_PAC).anyMatch(level.pac::sameTile);
         if (level.demoLevel) {
             eventLog.pacKilled = pacMeetsKiller && !isPacManKillingIgnored();
         } else {
-            eventLog.pacKilled = pacMeetsKiller && !pac.isImmune();
+            eventLog.pacKilled = pacMeetsKiller && !level.pac.isImmune();
         }
     }
 
     private void checkForFood(Vector2i tile) {
         if (!level.world.hasFoodAt(tile)) {
-            pac.starve();
+            level.pac.starve();
             return;
         }
-        pac.endStarving();
+        level.pac.endStarving();
         eventLog.foodFoundTile = tile;
         eventLog.energizerFound = level.world.isEnergizerPosition(tile);
         level.world.registerFoodEatenAt(tile);
@@ -458,11 +429,11 @@ public abstract class GameModel {
             huntingControl.stop();
             powerTimer.restartTicks(pacPowerTicks());
             Logger.info("Hunting paused, power timer restarted, duration={} ticks", powerTimer.duration());
-            ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
-            ghosts(FRIGHTENED).forEach(Ghost::reverseASAP);
+            level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
+            level.ghosts(FRIGHTENED).forEach(Ghost::reverseASAP);
             publishGameEvent(GameEventType.PAC_GETS_POWER);
         } else {
-            ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseASAP);
+            level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseASAP);
         }
     }
 
@@ -478,7 +449,7 @@ public abstract class GameModel {
             victims.clear();
             huntingControl.start();
             Logger.info("Hunting timer started");
-            ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
+            level.ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
             eventLog.pacLostPower = true;
             publishGameEvent(GameEventType.PAC_LOST_POWER);
         }
@@ -494,7 +465,7 @@ public abstract class GameModel {
     }
 
     private void updateBonus() {
-        if (bonus.state() == Bonus.STATE_EDIBLE && pac.sameTile(bonus.entity())) {
+        if (bonus.state() == Bonus.STATE_EDIBLE && level.pac.sameTile(bonus.entity())) {
             bonus.setEaten(BONUS_POINTS_SHOWN_TICKS);
             scoreManager.scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);

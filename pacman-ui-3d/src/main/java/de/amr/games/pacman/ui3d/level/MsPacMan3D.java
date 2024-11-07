@@ -93,7 +93,7 @@ public class MsPacMan3D implements Pac3D {
         if (msPacMan.isAlive()) {
             shape3D.updatePosition(msPacMan);
             shape3D.updateLight(msPacMan, context.game());
-            shape3D.updateVisibility(msPacMan, context.game().world());
+            shape3D.updateVisibility(msPacMan, context.level().world);
         }
         if (msPacMan.isAlive() && !msPacMan.isStandingStill()) {
             swayHips();

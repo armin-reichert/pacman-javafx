@@ -128,8 +128,9 @@ public enum GameState implements FsmState<GameModel> {
     HUNTING {
         @Override
         public void onEnter(GameModel game) {
-            game.pac().startAnimation();
-            game.ghosts().forEach(Ghost::startAnimation);
+            GameLevel level = game.level().orElseThrow();
+            level.pac().startAnimation();
+            level.ghosts().forEach(Ghost::startAnimation);
             game.blinking().setStartPhase(Pulse.ON);
             game.blinking().restart(Integer.MAX_VALUE);
             game.publishGameEvent(GameEventType.HUNTING_PHASE_STARTED);
@@ -171,7 +172,7 @@ public enum GameState implements FsmState<GameModel> {
                     enterState(LEVEL_TRANSITION);
                 }
             } else if (timer.atSecond(1.5)) {
-                game.ghosts().forEach(Ghost::hide);
+                level.ghosts().forEach(Ghost::hide);
             } else if (timer.atSecond(2)) {
                 flashCount = 2 * game.numFlashes();
                 setProperty("mazeFlashing", true);
@@ -204,27 +205,30 @@ public enum GameState implements FsmState<GameModel> {
     GHOST_DYING {
         @Override
         public void onEnter(GameModel game) {
+            GameLevel level = game.level().orElseThrow();
             timer.restartSeconds(1);
-            game.pac().hide();
-            game.ghosts().forEach(Ghost::stopAnimation);
+            level.pac().hide();
+            level.ghosts().forEach(Ghost::stopAnimation);
             game.publishGameEvent(GameEventType.GHOST_EATEN);
         }
 
         @Override
         public void onUpdate(GameModel game) {
+            GameLevel level = game.level().orElseThrow();
             if (timer.hasExpired()) {
                 GameController.it().resumePreviousState();
             } else {
-                game.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).forEach(ghost -> ghost.update(game));
+                level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).forEach(ghost -> ghost.update(game));
                 game.blinking().tick();
             }
         }
 
         @Override
         public void onExit(GameModel game) {
-            game.pac().show();
-            game.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
-            game.ghosts().forEach(Ghost::startAnimation);
+            GameLevel level = game.level().orElseThrow();
+            level.pac().show();
+            level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
+            level.ghosts().forEach(Ghost::startAnimation);
         }
     },
 
@@ -255,20 +259,20 @@ public enum GameState implements FsmState<GameModel> {
                 }
             }
             else if (timer.currentTick() == TICK_HIDE_GHOSTS) {
-                game.ghosts().forEach(Ghost::hide);
-                game.pac().selectAnimation(GameModel.ANIM_PAC_DYING);
-                game.pac().resetAnimation();
+                level.ghosts().forEach(Ghost::hide);
+                level.pac().selectAnimation(GameModel.ANIM_PAC_DYING);
+                level.pac().resetAnimation();
             }
             else if (timer.currentTick() == TICK_START_PAC_ANIMATION) {
-                game.pac().startAnimation();
-                game.publishGameEvent(GameEventType.PAC_DYING, game.pac().tile());
+                level.pac().startAnimation();
+                game.publishGameEvent(GameEventType.PAC_DYING, level.pac().tile());
             }
             else if (timer.currentTick() == TICK_HIDE_PAC) {
-                game.pac().hide();
+                level.pac().hide();
             }
             else {
                 game.blinking().tick();
-                game.pac().update(game);
+                level.pac().update(game);
             }
         }
 
@@ -292,7 +296,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
-                game.removeWorld();
+                game.clearLevel();
                 enterState(game.canStartNewGame() ? WAITING_FOR_START : INTRO);
             }
         }
@@ -349,7 +353,7 @@ public enum GameState implements FsmState<GameModel> {
             GameLevel level = game.level().orElseThrow();
             if (timer().currentTick() > 2 * TICKS_PER_SECOND) {
                 game.blinking().tick();
-                game.ghosts().forEach(ghost -> ghost.update(game));
+                level.ghosts().forEach(ghost -> ghost.update(game));
                 game.bonus().ifPresent(bonus -> bonus.update(game));
             }
             if (timer().atSecond(1.0)) {
@@ -379,7 +383,7 @@ public enum GameState implements FsmState<GameModel> {
                 game.blinking().setStartPhase(Pulse.OFF);
                 game.blinking().restart(2 * game.numFlashes());
             } else if (timer().atSecond(12.0)) {
-                game.pac().freeze();
+                level.pac().freeze();
                 game.bonus().ifPresent(Bonus::setInactive);
                 setProperty("mazeFlashing", false);
                 game.blinking().reset();
@@ -409,6 +413,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
+            GameLevel level = game.level().orElseThrow();
             GameVariant gameVariant = GameController.it().currentGameVariant();
             lastLevelNumber = switch (gameVariant) {
                 case MS_PACMAN -> 17;
@@ -424,8 +429,8 @@ public enum GameState implements FsmState<GameModel> {
             game.createLevel(1);
             game.startLevel();
             game.showGuys();
-            game.pac().startAnimation();
-            game.ghosts().forEach(Ghost::startAnimation);
+            level.pac().startAnimation();
+            level.ghosts().forEach(Ghost::startAnimation);
         }
 
         @Override
@@ -437,7 +442,7 @@ public enum GameState implements FsmState<GameModel> {
                     game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
                     enterState(INTRO);
                 } else {
-                    game.pac().freeze();
+                    level.pac().freeze();
                     game.bonus().ifPresent(Bonus::setInactive);
                     setProperty("mazeFlashing", false);
                     game.blinking().reset();

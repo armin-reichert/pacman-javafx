@@ -101,17 +101,12 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             return;
         }
 
-        if (game.world() == null || game.pac() == null) {
-            Logger.warn("Tick #{}: Cannot update PlayScene2D: no game world available", context.tick());
-            return;
-        }
-
         if (context.level().demoLevel) {
             game.setDemoLevelBehavior();
         }
         else {
-            game.pac().setUsingAutopilot(PY_AUTOPILOT.get());
-            game.pac().setImmune(PY_IMMUNITY.get());
+            context.level().pac().setUsingAutopilot(PY_AUTOPILOT.get());
+            context.level().pac().setImmune(PY_IMMUNITY.get());
             updatePlaySceneSound();
             if (context.gameState() == GameState.GAME_OVER && game.mapCategory() != MapCategory.ARCADE) {
                 gameOverMessageAnimation.update();
@@ -122,7 +117,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             --camDelay;
         }
         else {
-            double msPacManY = scaled(game.pac().center().y());
+            double msPacManY = scaled(context.level().pac().center().y());
             double r = cameraRadius();
             double y = lerp(cam.getTranslateY(), msPacManY - r, 0.02);
             cam.setTranslateY(clamp(y, dontAskItsMagic(-r), dontAskItsMagic(r)));
@@ -192,10 +187,14 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     protected void drawSceneContent(GameRenderer renderer) {
+        if (context.game().level().isEmpty()) {
+            return;
+        }
+        final GameWorld world = context.level().world;
+
         final var game = (TengenMsPacManGame) context.game();
         final var r = (TengenMsPacManGameRenderer) renderer;
-        final GameWorld world = game.world();
-        final Pac msPacMan = game.pac();
+        final Pac msPacMan = context.level().pac();
 
         if (world == null) { // This happens on level start
             Logger.warn("Tick #{}: Cannot draw scene content, game world not yet available!", context.tick());
@@ -238,7 +237,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     }
 
     private Stream<Ghost> ghostsInZOrder() {
-        return Stream.of(ORANGE_GHOST, CYAN_GHOST, PINK_GHOST, RED_GHOST).map(context.game()::ghost);
+        return Stream.of(ORANGE_GHOST, CYAN_GHOST, PINK_GHOST, RED_GHOST).map(context.level()::ghost);
     }
 
     private void drawLevelMessage(GameRenderer renderer, double cx, double y) {
@@ -285,7 +284,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         switch (state) {
             case LEVEL_COMPLETE -> mazeFlashingAnimation.init((TengenMsPacManGame) context.game());
             case GAME_OVER -> {
-                GameWorld world = context.game().world();
+                GameWorld world = context.level().world;
                 double houseCenterX = TS * (world.houseTopLeftTile().x() + 0.5 * world.houseSize().x());
                 gameOverMessageAnimation.start(houseCenterX, size().x());
             }
@@ -323,11 +322,11 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     public void onLevelCreated(GameEvent e) {
         JoypadKeyAdapter joypad = context.joypad();
         if (context.level().demoLevel) {
-            context.game().pac().setImmune(false);
+            context.level().pac().setImmune(false);
             bind(QUIT_DEMO_LEVEL, joypad.key(NES.Joypad.START));
         } else {
-            context.game().pac().setUsingAutopilot(PY_AUTOPILOT.get());
-            context.game().pac().setImmune(PY_IMMUNITY.get());
+            context.level().pac().setUsingAutopilot(PY_AUTOPILOT.get());
+            context.level().pac().setImmune(PY_IMMUNITY.get());
             bindCheatActions(this);
             bindDefaultJoypadActions(this, joypad);
             bindFallbackPlayerControlActions(this);
@@ -382,11 +381,11 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             sounds.selectSiren(sirenNumber);
             sounds.playSiren();
         }
-        if (context.game().pac().starvingTicks() > 8) { // TODO not sure how to do this right
+        if (context.level().pac().starvingTicks() > 8) { // TODO not sure how to do this right
             sounds.stopMunchingSound();
         }
-        boolean ghostsReturning = context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
-        if (context.game().pac().isAlive() && ghostsReturning) {
+        boolean ghostsReturning = context.level().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
+        if (context.level().pac().isAlive() && ghostsReturning) {
             sounds.playGhostReturningHomeSound();
         } else {
             sounds.stopGhostReturningHomeSound();

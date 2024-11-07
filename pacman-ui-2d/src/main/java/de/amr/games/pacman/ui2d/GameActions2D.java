@@ -61,7 +61,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             context.sound().stopAll();
-            context.game().removeWorld();
+            context.game().clearLevel();
             context.gameClock().setTargetFrameRate(GameModel.TICKS_PER_SECOND);
             context.gameController().restart(GameState.BOOT);
         }
@@ -79,7 +79,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             if (context.game().isPlaying() && context.gameState() == GameState.HUNTING) {
-                GameWorld world = context.game().world();
+                GameWorld world = context.level().world;
                 world.map().food().tiles().filter(not(world::isEnergizerPosition)).forEach(world::registerFoodEatenAt);
                 context.game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
                 context.sound().stopMunchingSound();
@@ -92,7 +92,7 @@ public enum GameActions2D implements GameAction {
         public void execute(GameContext context) {
             if (context.game().isPlaying() && context.gameState() == GameState.HUNTING) {
                 context.game().victims().clear();
-                context.game().ghosts(FRIGHTENED, HUNTING_PAC).forEach(context.game()::killGhost);
+                context.level().ghosts(FRIGHTENED, HUNTING_PAC).forEach(context.game()::killGhost);
                 context.gameController().changeState(GameState.GHOST_DYING);
             }
         }
@@ -110,9 +110,9 @@ public enum GameActions2D implements GameAction {
     PLAYER_UP {
         @Override
         public void execute(GameContext context) {
-            if (!context.game().pac().isUsingAutopilot()) {
+            if (!context.level().pac().isUsingAutopilot()) {
                 Logger.info("Player UP");
-                context.game().pac().setWishDir(Direction.UP);
+                context.level().pac().setWishDir(Direction.UP);
             }
         }
     },
@@ -120,9 +120,9 @@ public enum GameActions2D implements GameAction {
     PLAYER_DOWN {
         @Override
         public void execute(GameContext context) {
-            if (!context.game().pac().isUsingAutopilot()) {
+            if (!context.level().pac().isUsingAutopilot()) {
                 Logger.info("Player DOWN");
-                context.game().pac().setWishDir(Direction.DOWN);
+                context.level().pac().setWishDir(Direction.DOWN);
             }
         }
     },
@@ -130,9 +130,9 @@ public enum GameActions2D implements GameAction {
     PLAYER_LEFT {
         @Override
         public void execute(GameContext context) {
-            if (!context.game().pac().isUsingAutopilot()) {
+            if (!context.level().pac().isUsingAutopilot()) {
                 Logger.info("Player LEFT");
-                context.game().pac().setWishDir(Direction.LEFT);
+                context.level().pac().setWishDir(Direction.LEFT);
             }
         }
     },
@@ -140,9 +140,9 @@ public enum GameActions2D implements GameAction {
     PLAYER_RIGHT {
         @Override
         public void execute(GameContext context) {
-            if (!context.game().pac().isUsingAutopilot()) {
+            if (!context.level().pac().isUsingAutopilot()) {
                 Logger.info("Player RIGHT");
-                context.game().pac().setWishDir(Direction.RIGHT);
+                context.level().pac().setWishDir(Direction.RIGHT);
             }
         }
     },
@@ -150,7 +150,7 @@ public enum GameActions2D implements GameAction {
     OPEN_EDITOR {
         @Override
         public void execute(GameContext context) {
-            if (context.game().world() == null) {
+            if (context.level().world == null) {
                 Logger.error("Map editor cannot be opened because no world is available");
                 return;
             }
@@ -158,7 +158,7 @@ public enum GameActions2D implements GameAction {
             context.sound().stopAll();
             context.gameClock().stop();
             EditorPage editorPage = context.getOrCreateEditorPage();
-            editorPage.startEditor(context.game().world().map());
+            editorPage.startEditor(context.level().world.map());
             context.selectPage(editorPage);
         }
 

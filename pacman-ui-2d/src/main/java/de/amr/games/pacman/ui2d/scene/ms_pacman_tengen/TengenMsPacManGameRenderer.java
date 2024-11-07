@@ -13,6 +13,7 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.MapConfig;
@@ -96,8 +97,8 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void update(GameModel game) {
-        if (game.world() == null) {
-            Logger.warn("Cannot update renderer for game, no world exists");
+        if (game.level().isEmpty()) {
+            Logger.warn("Cannot update renderer for game, no level exists");
             return;
         }
 
@@ -319,7 +320,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     public void drawWorld(GameContext context, GameWorld world, double x, double y) {
         TengenMsPacManGame game = (TengenMsPacManGame) context.game();
         if (!isUsingDefaultGameOptions(game)) {
-            drawGameOptionsInfo(game.world().map().terrain(), game);
+            drawGameOptionsInfo(context.level().world.map().terrain(), game);
         }
 
         // All maps that use a different color scheme than that in the sprite sheet have to be rendered using the
@@ -350,6 +351,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         if (mapSprite == null) {
             return; // not yet selected
         }
+        GameLevel level = game.level().orElseThrow();
         // Maze #32 of STRANGE has psychedelic animation
         if (game.currentMapConfig().mapCategory() == MapCategory.STRANGE &&
                 game.currentMapConfig().mapNumber() == 32) {
@@ -363,8 +365,8 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
                 scaled(mapArea.width()), scaled(mapArea.height())
             );
         }
-        cleanHouse(game.world());
-        drawFoodUsingMapSprite(game.world());
+        cleanHouse(level.world);
+        drawFoodUsingMapSprite(level.world);
     }
 
     private void cleanHouse(GameWorld world) {
