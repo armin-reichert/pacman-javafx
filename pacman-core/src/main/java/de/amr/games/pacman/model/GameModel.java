@@ -358,8 +358,7 @@ public abstract class GameModel {
         if (!eventLog.killedGhosts.isEmpty()) {
             return;
         }
-
-        if (level.bonus != null) updateBonus();
+        level.bonus().ifPresent(this::updateBonus);
     }
 
     private void checkPacKilled() {
@@ -427,15 +426,15 @@ public abstract class GameModel {
             || powerTimer.duration() < pacPowerFadingTicks() && powerTimer.currentTick() == 1;
     }
 
-    private void updateBonus() {
-        if (level.bonus.state() == Bonus.STATE_EDIBLE && level.pac().sameTile(level.bonus.entity())) {
-            level.bonus.setEaten(BONUS_POINTS_SHOWN_TICKS);
-            scoreManager.scorePoints(level.bonus.points());
-            Logger.info("Scored {} points for eating bonus {}", level.bonus.points(), level.bonus);
+    private void updateBonus(Bonus bonus) {
+        if (bonus.state() == Bonus.STATE_EDIBLE && level.pac().sameTile(bonus.entity())) {
+            bonus.setEaten(BONUS_POINTS_SHOWN_TICKS);
+            scoreManager.scorePoints(bonus.points());
+            Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
             eventLog.bonusEaten = true;
             publishGameEvent(GameEventType.BONUS_EATEN);
         } else {
-            level.bonus.update(this);
+            bonus.update(this);
         }
     }
 

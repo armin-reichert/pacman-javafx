@@ -29,7 +29,7 @@ public class GameLevel {
     private Pac pac;
     private Ghost[] ghosts;
     private final List<Ghost> victims = new ArrayList<>();
-    public Bonus bonus;
+    private Bonus bonus;
     public final byte[] bonusSymbols = new byte[2];
     public byte nextBonusIndex; // -1=no bonus, 0=first, 1=second
     public MapConfig currentMapConfig;
@@ -100,6 +100,10 @@ public class GameLevel {
 
     public List<Ghost> victims() {
         return victims;
+    }
+
+    public void setBonus(Bonus bonus) {
+        this.bonus = bonus;
     }
 
     public Optional<Bonus> bonus() {
