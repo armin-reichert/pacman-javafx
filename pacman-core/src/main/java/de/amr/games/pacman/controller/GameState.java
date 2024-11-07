@@ -73,7 +73,7 @@ public enum GameState implements FsmState<GameModel> {
         static final short TICK_NEW_GAME_SHOW_GUYS       = 120;
         static final short TICK_NEW_GAME_START_PLAYING   = 240;
         static final short TICK_DEMO_LEVEL_START_PLAYING = 120;
-        static final short TICK_RESUME_GAME              = 105;
+        static final short TICK_RESUME_GAME              =  90;
 
         @Override
         public void onEnter(GameModel game) {

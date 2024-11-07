@@ -358,7 +358,7 @@ public abstract class Creature extends Entity {
 
         if (isTurn) {
             float offset = dir.isHorizontal() ? offset().y() : offset().x();
-            boolean atTurnPosition = Math.abs(offset) <= 1.5;
+            boolean atTurnPosition = Math.abs(offset) <= 1;
             if (atTurnPosition) {
                 Logger.trace("Reached turn position ({})", name());
                 centerOverTile(tile()); // adjust over tile (starts moving around corner)
@@ -368,7 +368,7 @@ public abstract class Creature extends Entity {
             }
         }
 
-        if (isTurn && corneringSpeedUp > 0) {
+        if (isTurn && corneringSpeedUp != 0) {
             setVelocity(newVelocity.plus(dirVector.scaled(corneringSpeedUp)));
             Logger.trace("{} velocity around corner: {}", name(), velocity().length());
             move();

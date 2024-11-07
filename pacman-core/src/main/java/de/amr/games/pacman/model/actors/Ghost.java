@@ -72,6 +72,7 @@ public class Ghost extends Creature implements AnimatedEntity {
      */
     private Ghost(byte id) {
         this.id = checkGhostID(id);
+        corneringSpeedUp = -1f;
     }
 
     public void setHuntingBehaviour(Consumer<Ghost> huntingBehaviour) {

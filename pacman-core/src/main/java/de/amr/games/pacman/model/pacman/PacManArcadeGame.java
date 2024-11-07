@@ -178,7 +178,7 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     public long gameOverStateTicks() {
-        return 150;
+        return 90;
     }
 
     @Override
@@ -221,9 +221,8 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     protected void setActorBaseSpeed(int levelNumber) {
-        float speed = 1.24f; // TODO should be 1.25
-        pac.setBaseSpeed(speed);
-        ghosts().forEach(ghost -> ghost.setBaseSpeed(speed));
+        pac.setBaseSpeed(1.25f);
+        ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
     }
 
     @Override
