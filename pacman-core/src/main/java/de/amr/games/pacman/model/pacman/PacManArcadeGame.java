@@ -222,8 +222,8 @@ public class PacManArcadeGame extends GameModel {
         level.ghosts[RED_GHOST].setRevivalPosition(level.world.ghostPosition(PINK_GHOST)); // middle house position
 
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
-        bonusSymbols[0] = computeBonusSymbol();
-        bonusSymbols[1] = computeBonusSymbol();
+        level.bonusSymbols[0] = computeBonusSymbol();
+        level.bonusSymbols[1] = computeBonusSymbol();
     }
 
     @Override
@@ -411,7 +411,7 @@ public class PacManArcadeGame extends GameModel {
     @Override
     public void activateNextBonus() {
         level.nextBonusIndex += 1;
-        byte symbol = bonusSymbols[level.nextBonusIndex];
+        byte symbol = level.bonusSymbols[level.nextBonusIndex];
         level.bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         level.bonus.setEdible(bonusEdibleTicks());
         level.bonus.entity().setPosition(BONUS_POS);

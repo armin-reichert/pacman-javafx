@@ -57,7 +57,6 @@ public abstract class GameModel {
 
     protected final File           userDir;
     protected final Pulse          blinking = new Pulse(10, Pulse.OFF);
-    protected final byte[]         bonusSymbols = new byte[2];
     protected final List<Byte>     levelCounter = new ArrayList<>();
     protected final TickTimer      powerTimer = new TickTimer("PacPowerTimer");
     protected final GateKeeper     gateKeeper = new GateKeeper(this);
@@ -156,13 +155,13 @@ public abstract class GameModel {
             level.ghosts = null;
             level.bonus = null;
             level.nextBonusIndex = -1;
+            Arrays.fill(level.bonusSymbols, (byte)-1);
             level.victims().clear();
         }
 
         scoreManager.setScoreEnabled(false);
         huntingControl.reset();
 
-        Arrays.fill(bonusSymbols, (byte)-1);
         blinking.stop();
         blinking.reset();
     }
@@ -199,7 +198,7 @@ public abstract class GameModel {
             levelCounter.clear();
         }
         if (levelCounterEnabled) {
-            levelCounter.add(bonusSymbols[0]);
+            levelCounter.add(level.bonusSymbols[0]);
             if (levelCounter.size() > LEVEL_COUNTER_MAX_SIZE) {
                 levelCounter.removeFirst();
             }

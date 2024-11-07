@@ -414,7 +414,6 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
-            GameLevel level = game.level().orElseThrow();
             GameVariant gameVariant = GameController.it().currentGameVariant();
             lastLevelNumber = switch (gameVariant) {
                 case MS_PACMAN -> 17;
@@ -430,6 +429,7 @@ public enum GameState implements FsmState<GameModel> {
             game.createLevel(1);
             game.startLevel();
             game.showGuys();
+            GameLevel level = game.level().orElseThrow();
             level.pac().startAnimation();
             level.ghosts().forEach(Ghost::startAnimation);
         }

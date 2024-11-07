@@ -30,6 +30,7 @@ public class GameLevel {
     public Ghost[] ghosts;
     public final List<Ghost> victims = new ArrayList<>();
     public Bonus bonus;
+    public final byte[] bonusSymbols = new byte[2];
     public byte nextBonusIndex; // -1=no bonus, 0=first, 1=second
     public MapConfig currentMapConfig;
 
