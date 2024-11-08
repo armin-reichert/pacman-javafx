@@ -59,12 +59,7 @@ public class GameSound {
             sounds.put("game_ready", makeSound("game_ready", 1, false));
             sounds.put("ghost_returns", makeSound("ghost_returns", 1, true));
             sounds.put("level_complete", makeSound("level_complete", 1, false));
-
-            MediaPlayer munch1 = makeSound("pacman_munch", 1, true);
-            sounds.put("pacman_munch", munch1);
-            MediaPlayer munch2 = makeSound("pacman_munch_2", 1, true);
-            sounds.put("pacman_munch_2", munch2);
-
+            sounds.put("pacman_munch", makeSound("pacman_munch", 1, true));
             sounds.put("pacman_death", makeSound("pacman_death", 1, false));
             sounds.put("pacman_power", makeSound("pacman_power", 1, true));
             MediaPlayer bouncePlayer = makeSound("bonus_bouncing", 1, true);
@@ -282,30 +277,11 @@ public class GameSound {
     }
 
     public void playMunchingSound() {
-        MediaPlayer munch1 = players(gameVariant).get("pacman_munch");
-        MediaPlayer munch2 = players(gameVariant).get("pacman_munch_2");
-        munch1.setOnRepeat(() -> {
-            munch1.stop();
-            munch2.play();
-        });
-        munch2.setOnEndOfMedia(() -> {
-            munch2.stop();
-            munch1.play();
-        });
         playIfEnabled("pacman_munch");
     }
 
     public void stopMunchingSound() {
-        MediaPlayer munch1 = players(gameVariant).get("pacman_munch");
-        MediaPlayer munch2 = players(gameVariant).get("pacman_munch_2");
-        if (munch1 != null) {
-            munch1.setOnRepeat(null);
-            munch1.stop();
-        }
-        if (munch2 != null) {
-            munch2.setOnRepeat(null);
-            munch2.stop();
-        }
+        stop("pacman_munch");
     }
 
     public void playPacDeathSound() {
