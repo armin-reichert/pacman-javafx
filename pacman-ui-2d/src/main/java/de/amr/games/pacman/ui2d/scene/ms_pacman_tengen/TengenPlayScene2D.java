@@ -276,8 +276,8 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
-        //TODO check this
         context.updateRenderer();
+        setKeyBindings();
     }
 
     @Override
@@ -321,19 +321,26 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        JoypadKeyAdapter joypad = context.joypad();
         if (context.level().isDemoLevel()) {
             context.level().pac().setImmune(false);
-            bind(QUIT_DEMO_LEVEL, joypad.key(NES.Joypad.START));
         } else {
             context.level().pac().setUsingAutopilot(PY_AUTOPILOT.get());
             context.level().pac().setImmune(PY_IMMUNITY.get());
+        }
+        setKeyBindings();
+        context.updateRenderer();
+    }
+
+    private void setKeyBindings() {
+        JoypadKeyAdapter joypad = context.joypad();
+        if (context.level().isDemoLevel()) {
+            bind(QUIT_DEMO_LEVEL, joypad.key(NES.Joypad.START));
+        } else {
             bindCheatActions(this);
             bindDefaultJoypadActions(this, joypad);
             bindFallbackPlayerControlActions(this);
         }
         registerGameActionKeyBindings(context.keyboard());
-        context.updateRenderer();
     }
 
     @Override

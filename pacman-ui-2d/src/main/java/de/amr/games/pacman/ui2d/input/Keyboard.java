@@ -46,25 +46,28 @@ public class Keyboard {
     }
 
     private final Set<KeyCode> pressedKeys = new HashSet<>();
-    private final Set<KeyCodeCombination> registeredCombinations = new HashSet<>();
+    private final Map<KeyCodeCombination, Object> registeredCombinations = new HashMap<>();
     private final List<KeyCodeCombination> matches = new ArrayList<>(3);
 
-    public void register(KeyCodeCombination kcc) {
-        if (registeredCombinations.add(kcc)) {
-            Logger.info("Key code combination registered: {}", kcc);
+    public void register(KeyCodeCombination kcc, Object owner) {
+        if (registeredCombinations.get(kcc) == owner) {
+            Logger.info("Key code combination {} already registered by {}", kcc, owner);
         }
+        registeredCombinations.put(kcc, owner);
+        Logger.info("Key code combination {} registered by {}", kcc, owner);
     }
 
-    public void unregister(KeyCodeCombination kcc) {
-        if (registeredCombinations.remove(kcc)) {
-            Logger.info("Key code combination unregistered: {}", kcc);
+    public void unregister(KeyCodeCombination kcc, Object owner) {
+        boolean removed = registeredCombinations.remove(kcc, owner);
+        if (removed) {
+            Logger.info("Key code combination {} removed by {}", kcc, owner);
         }
     }
 
     public void onKeyPressed(KeyEvent keyEvent) {
         Logger.debug("Key pressed: {}", keyEvent.getCode());
         pressedKeys.add(keyEvent.getCode());
-        registeredCombinations.stream().filter(kcc -> kcc.match(keyEvent)).forEach(matches::add);
+        registeredCombinations.keySet().stream().filter(kcc -> kcc.match(keyEvent)).forEach(matches::add);
     }
 
     public void onKeyReleased(KeyEvent keyEvent) {

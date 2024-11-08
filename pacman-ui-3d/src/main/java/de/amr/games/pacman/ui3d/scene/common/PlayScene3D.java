@@ -196,8 +196,8 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
         GameLevel level = context.level();
 
-        level3D.update(context);
         perspective().update(level.world(), level.pac());
+        level3D.update(context);
 
         //TODO check if this has to de done on every tick
         if (level.isDemoLevel()) {

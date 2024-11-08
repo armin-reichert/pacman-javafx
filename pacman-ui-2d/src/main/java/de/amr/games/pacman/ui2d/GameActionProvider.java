@@ -19,14 +19,14 @@ public interface GameActionProvider {
     default void registerGameActionKeyBindings(Keyboard keyboard) {
         Logger.info("Register key bindings for {}", getClass().getSimpleName());
         for (KeyCodeCombination keyCodeCombination : actionBindings().keySet()) {
-            keyboard.register(keyCodeCombination);
+            keyboard.register(keyCodeCombination, this);
         }
     }
 
     default void unregisterGameActionKeyBindings(Keyboard keyboard) {
         Logger.info("Unregister key bindings for {}", getClass().getSimpleName());
         for (KeyCodeCombination keyCodeCombination : actionBindings().keySet()) {
-            keyboard.unregister(keyCodeCombination);
+            keyboard.unregister(keyCodeCombination, this);
         }
     }
 

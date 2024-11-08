@@ -17,11 +17,11 @@ public interface JoypadKeyAdapter {
     KeyCodeCombination key(NES.Joypad button);
 
     default void register(Keyboard keyboard) {
-        allKeys().forEach(keyboard::register);
+        allKeys().forEach(kcc -> keyboard.register(kcc, this));
     }
 
     default void unregister(Keyboard keyboard) {
-        allKeys().forEach(keyboard::unregister);
+        allKeys().forEach(kcc -> keyboard.unregister(kcc, this));
     }
 
     default Stream<KeyCodeCombination> allKeys() {
