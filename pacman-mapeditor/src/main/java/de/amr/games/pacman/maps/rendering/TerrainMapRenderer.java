@@ -46,6 +46,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         map.fillerPaths().forEach(
             path -> drawPath(g, map, path, true, SINGLE_STROKE_WIDTH * baseLineWidth, wallFillColor, wallFillColor)
         );
+
         map.singleStrokePaths().forEach(
             path -> drawPath(g, map, path, true, SINGLE_STROKE_WIDTH * baseLineWidth, wallStrokeColor, wallFillColor)
         );
@@ -147,6 +148,39 @@ public class TerrainMapRenderer implements TileMapRenderer {
             g.fillRect(x + 2 * TILE_SIZE, oy, lineWidth, height);
             g.setFill(doorColor);
             g.fillRect(x, y + 0.5 * (TILE_SIZE - height), 2 * TILE_SIZE, height);
+        }
+    }
+
+    private void drawSSPath(GraphicsContext g, TileMap map, TileMapPath path,
+        boolean fill, double lineWidth, Color strokeColor, Color fillColor)
+    {
+        g.beginPath();
+        drawSSPath(g, map, path);
+        if (fill) {
+            g.setFill(fillColor);
+            g.fill();
+        }
+        g.setLineWidth(lineWidth);
+        g.setStroke(strokeColor);
+        g.stroke();
+    }
+
+    private void drawSSPath(GraphicsContext g, TileMap map, TileMapPath path) {
+        Vector2i tile = path.startTile();
+        Vector2f point = tile.scaled(8f).plus(8,6);
+        g.moveTo(point.x(), point.y());
+        int orientation = 1; // counter clockwise
+        for (Direction dir : path) {
+            byte content = map.get(tile);
+            point = switch (content) {
+                case Tiles.CORNER_NW -> point.plus(-2, 2).scaled(orientation);
+                case Tiles.CORNER_SW -> point.plus(2, 2).scaled(orientation);
+                case Tiles.CORNER_SE -> point.plus(2, -2).scaled(orientation);
+                case Tiles.CORNER_NE -> point.plus(-2, -2).scaled(orientation);
+                default -> point.plus(dir.vector().scaled(8f));
+            };
+            g.lineTo(point.x(), point.y());
+            tile = tile.plus(dir.vector());
         }
     }
 
