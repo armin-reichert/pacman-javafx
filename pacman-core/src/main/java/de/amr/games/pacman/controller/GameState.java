@@ -88,8 +88,6 @@ public enum GameState implements FsmState<GameModel> {
                     game.letsGetReadyToRumble();
                     game.showGuys();
                 } else if (timer.currentTick() == TICK_RESUME_GAME) {
-                    GameLevel level = game.level().orElseThrow();
-                    game.huntingControl().startHunting(level.number);
                     enterState(GameState.HUNTING);
                 }
             }
@@ -104,9 +102,7 @@ public enum GameState implements FsmState<GameModel> {
                     game.showGuys();
                 }
                 else if (timer.currentTick() == TICK_NEW_GAME_START_PLAYING) {
-                    GameLevel level = game.level().orElseThrow();
                     game.setPlaying(true);
-                    game.huntingControl().startHunting(level.number);
                     enterState(GameState.HUNTING);
                 }
             }
@@ -117,8 +113,6 @@ public enum GameState implements FsmState<GameModel> {
                     game.showGuys();
                 }
                 else if (timer.currentTick() == TICK_DEMO_LEVEL_START_PLAYING) {
-                    GameLevel level = game.level().orElseThrow();
-                    game.huntingControl().startHunting(level.number);
                     enterState(GameState.HUNTING);
                 }
             }
@@ -128,12 +122,7 @@ public enum GameState implements FsmState<GameModel> {
     HUNTING {
         @Override
         public void onEnter(GameModel game) {
-            GameLevel level = game.level().orElseThrow();
-            level.pac().startAnimation();
-            level.ghosts().forEach(Ghost::startAnimation);
-            level.blinking().setStartPhase(Pulse.ON);
-            level.blinking().restart(Integer.MAX_VALUE);
-            game.publishGameEvent(GameEventType.HUNTING_PHASE_STARTED);
+            game.startHunting();
         }
 
         @Override

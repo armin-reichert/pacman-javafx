@@ -319,6 +319,15 @@ public abstract class GameModel {
         return !eventLog.killedGhosts.isEmpty();
     }
 
+    public void startHunting() {
+        level.pac().startAnimation();
+        level.ghosts().forEach(Ghost::startAnimation);
+        level.blinking().setStartPhase(Pulse.ON);
+        level.blinking().restart(Integer.MAX_VALUE);
+        huntingControl.startHunting(level.number);
+        publishGameEvent(GameEventType.HUNTING_PHASE_STARTED);
+    }
+
     public void doHuntingStep() {
         if (huntingControl.isCurrentPhaseOver()) {
             Logger.info("Hunting phase {} ({}) ends, tick={}", huntingControl.phaseIndex(), huntingControl.phaseType(), huntingControl.currentTick());
