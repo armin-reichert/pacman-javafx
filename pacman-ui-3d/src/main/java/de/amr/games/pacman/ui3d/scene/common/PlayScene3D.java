@@ -12,10 +12,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.tilemap.TileMap;
-import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.Score;
-import de.amr.games.pacman.model.ScoreManager;
+import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
@@ -121,6 +118,13 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         registerGameActionKeyBindings(context().keyboard());
     }
 
+    protected void doInit() {
+        context.setScoreVisible(true);
+        scores3D.fontPy.set(context.assets().font("font.arcade", 8));
+        perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
+        Logger.info("3D play scene initialized. {}", this);
+    }
+
     @Override
     public final void end() {
         doEnd();
@@ -131,13 +135,6 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     public void bindGameActions() {
         bind(GameActions3D.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
         bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
-    }
-
-    protected void doInit() {
-        context.setScoreVisible(true);
-        scores3D.fontPy.set(context.assets().font("font.arcade", 8));
-        perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
-        Logger.info("3D play scene initialized. {}", this);
     }
 
     private void setGameActions() {
@@ -164,7 +161,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     @Override
     public void onLevelCreated(GameEvent event) {
         setGameActions();
-        if (level3D == null) {
+        if (!hasLevel3D()) {
             replaceGameLevel3D(false); // level counter in model not yet initialized
         } else {
             Logger.error("3D level already created?");
@@ -186,28 +183,30 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     @Override
     public void update() {
-        var game = context.game();
-        if (game.level().isEmpty()) {
+        if (context.game().level().isEmpty()) {
             // Scene is visible for 1 (2?) ticks before game level has been created
-            Logger.warn("Tick {}: Cannot update PlayScene3D: game level not yet available", context.tick());
+            Logger.warn("Tick #{}: Cannot update PlayScene3D: game level not yet available", context.tick());
             return;
         }
-
         // TODO: check this
-        if (level3D == null) {
-            Logger.warn("Cannot update 3D play scene, 3D game level not yet created?");
+        if (!hasLevel3D()) {
+            Logger.warn("Tick #{}: Cannot update 3D play scene, 3D game level not yet created?", context.tick());
             return;
         }
-        level3D.update(context);
-        perspective().update(context.level().world(), context.level().pac());
-        updateScores();
 
-        if (context.level().isDemoLevel()) {
+        GameLevel level = context.level();
+
+        level3D.update(context);
+        perspective().update(level.world(), level.pac());
+
+        //TODO check if this has to de done on every tick
+        if (level.isDemoLevel()) {
             context.game().setDemoLevelBehavior();
         }
         else {
-            context.level().pac().setUsingAutopilot(PY_AUTOPILOT.get());
-            context.level().pac().setImmune(PY_IMMUNITY.get());
+            level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
+            level.pac().setImmune(PY_IMMUNITY.get());
+            updateScores();
             updateSound(context.sound());
         }
     }
@@ -317,7 +316,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     private void onEnterStateStartingGame() {
-        if (level3D != null) {
+        if (hasLevel3D()) {
             stopLevelAnimations();
             level3D.pac3D().init();
             level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
@@ -398,34 +397,34 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     @Override
-    public void onSceneVariantSwitch(GameScene oldScene) {
-        Logger.info("{} entered from {}", this.getClass().getSimpleName(), oldScene.getClass().getSimpleName());
+    public void onSceneVariantSwitch(GameScene fromScene) {
+        Logger.info("{} entered from {}", getClass().getSimpleName(), fromScene.getClass().getSimpleName());
+
+        bindGameActions();
+        registerGameActionKeyBindings(context.keyboard());
         setGameActions();
-        if (level3D == null) {
+
+        if (!hasLevel3D()) {
             replaceGameLevel3D(true);
         }
-        level3D.pellets3D().forEach(
-            pellet3D -> pellet3D.shape3D().setVisible(!context.level().world().hasEatenFoodAt(pellet3D.tile()))
-        );
-        level3D.energizers3D().forEach(
-            energizer3D -> energizer3D.shape3D().setVisible(!context.level().world().hasEatenFoodAt(energizer3D.tile()))
-        );
-        if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
-            level3D.energizers3D().filter(energizer3D -> energizer3D.shape3D().isVisible()).forEach(Energizer3D::startPumping);
+
+        GameLevel level = context.level();
+        level3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!level.world().hasEatenFoodAt(pellet.tile())));
+        level3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!level.world().hasEatenFoodAt(energizer.tile())));
+        if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
+            level3D.energizers3D().filter(energizer -> energizer.shape3D().isVisible()).forEach(Energizer3D::startPumping);
         }
-        context.level().pac().show();
-        context.level().ghosts().forEach(Ghost::show);
+        level.pac().show();
         level3D.pac3D().init();
+        level.ghosts().forEach(Ghost::show);
         level3D.pac3D().update(context);
 
         if (context.gameState() == GameState.HUNTING) {
-            if (context.level().powerTimer().isRunning()) {
+            if (level.powerTimer().isRunning()) {
                 context.sound().playPacPowerSound();
             }
             level3D.livesCounter3D().shapesRotation().play();
         }
-        bindGameActions();
-        registerGameActionKeyBindings(context.keyboard());
     }
 
     @Override

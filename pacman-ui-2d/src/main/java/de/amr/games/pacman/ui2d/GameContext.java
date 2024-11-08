@@ -44,6 +44,7 @@ public interface GameContext {
     default GameController gameController() { return GameController.it(); }
     default GameState gameState() { return gameController().state(); }
     default GameModel game() { return gameController().currentGame(); }
+    /** @return game level (which must exist!) */
     default GameLevel level() { return game().level().orElseThrow(); }
     default GameVariant currentGameVariant() { return gameController().currentGameVariant(); }
     void selectGameVariant(GameVariant variant);

@@ -141,7 +141,6 @@ public abstract class GameModel {
         scoreManager.setScoreEnabled(true);
         huntingControl.reset();
         updateLevelCounter();
-        Logger.info("Level {} created", levelNumber);
         publishGameEvent(GameEventType.LEVEL_CREATED);
     }
 
@@ -155,7 +154,6 @@ public abstract class GameModel {
         level = new GameLevel(1);
         level.setDemoLevel(true);
         configureDemoLevel();
-        Logger.info("Demo Level created");
         publishGameEvent(GameEventType.LEVEL_CREATED);
     }
 
