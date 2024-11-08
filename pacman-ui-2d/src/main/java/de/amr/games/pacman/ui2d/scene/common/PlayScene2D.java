@@ -58,7 +58,7 @@ public class PlayScene2D extends GameScene2D {
     public void onLevelCreated(GameEvent e) {
         ArcadeKeyAdapter arcadeController = context.arcade();
         if (context.level().isDemoLevel()) {
-            bind(GameActions2D.ADD_CREDIT, arcadeController.key(Arcade.Controls.COIN));
+            bind(GameActions2D.ADD_CREDIT, arcadeController.mapControlToKey(Arcade.Controls.COIN));
         } else {
             context.game().scoreManager().setScoreEnabled(false);
             bindCheatActions(this);

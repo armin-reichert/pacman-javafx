@@ -19,20 +19,20 @@ public class InfoBoxJoypad extends InfoBox {
         String indent = "  "; // Urgh
         labeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(
             indent,
-            joypad.key(NES.Joypad.SELECT).getDisplayText(),
-            joypad.key(NES.Joypad.START).getDisplayText())
+            joypad.mapControToKey(NES.Joypad.SELECT).getDisplayText(),
+            joypad.mapControToKey(NES.Joypad.START).getDisplayText())
         );
         labeledValue("[B]  [A]", () -> "%s%s   %s".formatted(
             indent,
-            joypad.key(NES.Joypad.B).getDisplayText(),
-            joypad.key(NES.Joypad.A).getDisplayText())
+            joypad.mapControToKey(NES.Joypad.B).getDisplayText(),
+            joypad.mapControToKey(NES.Joypad.A).getDisplayText())
         );
         labeledValue("UP/DOWN/LEFT/RIGHT", () -> "%s%s  %s  %s  %s".formatted(
             indent,
-            joypad.key(NES.Joypad.UP).getDisplayText(),
-            joypad.key(NES.Joypad.DOWN).getDisplayText(),
-            joypad.key(NES.Joypad.LEFT).getDisplayText(),
-            joypad.key(NES.Joypad.RIGHT).getDisplayText())
+            joypad.mapControToKey(NES.Joypad.UP).getDisplayText(),
+            joypad.mapControToKey(NES.Joypad.DOWN).getDisplayText(),
+            joypad.mapControToKey(NES.Joypad.LEFT).getDisplayText(),
+            joypad.mapControToKey(NES.Joypad.RIGHT).getDisplayText())
         );
         addRow(new ImageView(context.assets().image("tengen.image.nes-controller")));
     }

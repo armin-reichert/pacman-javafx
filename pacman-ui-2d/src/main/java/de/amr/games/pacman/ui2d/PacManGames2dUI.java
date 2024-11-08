@@ -13,7 +13,9 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.pacman_xxl.PacManXXLGame;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
-import de.amr.games.pacman.ui2d.input.*;
+import de.amr.games.pacman.ui2d.input.ArcadeKeyAdapter;
+import de.amr.games.pacman.ui2d.input.JoypadKeyAdapter;
+import de.amr.games.pacman.ui2d.input.Keyboard;
 import de.amr.games.pacman.ui2d.page.*;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
@@ -58,7 +60,7 @@ import static de.amr.games.pacman.ui2d.util.Ufx.createIcon;
  */
 public class PacManGames2dUI implements GameEventListener, GameContext {
 
-    public static final ArcadeKeyAdapter ARCADE_CURSOR_KEYS = new ArcadeKeyAdapterImpl(
+    public static final ArcadeKeyAdapter ARCADE_CURSOR_KEYS = new ArcadeKeyAdapter.Definition(
         new KeyCodeCombination(KeyCode.DIGIT5),
         new KeyCodeCombination(KeyCode.DIGIT1),
         new KeyCodeCombination(KeyCode.UP),
@@ -68,7 +70,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     );
 
     // My current bindings, might be crap
-    public static final JoypadKeyAdapter JOYPAD_CURSOR_KEYS = new JoypadKeyAdapterImpl(
+    public static final JoypadKeyAdapter JOYPAD_CURSOR_KEYS = new JoypadKeyAdapter.Definition(
         new KeyCodeCombination(KeyCode.SPACE),
         new KeyCodeCombination(KeyCode.ENTER),
         new KeyCodeCombination(KeyCode.B),
@@ -80,7 +82,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     );
 
     // Mesen emulator key set #2
-    public static final JoypadKeyAdapter JOYPAD_WASD = new JoypadKeyAdapterImpl(
+    public static final JoypadKeyAdapter JOYPAD_WASD = new JoypadKeyAdapter.Definition(
         new KeyCodeCombination(KeyCode.U),
         new KeyCodeCombination(KeyCode.I),
         new KeyCodeCombination(KeyCode.J),

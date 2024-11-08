@@ -64,10 +64,10 @@ public enum TengenGameActions implements GameAction {
     };
 
     public static void bindDefaultJoypadActions(GameActionProvider actionProvider, JoypadKeyAdapter binding) {
-        actionProvider.bind(TengenGameActions.TOGGLE_PAC_BOOSTER, binding.key(NES.Joypad.A), binding.key(NES.Joypad.B));
-        actionProvider.bind(GameActions2D.PLAYER_UP,    binding.key(NES.Joypad.UP));
-        actionProvider.bind(GameActions2D.PLAYER_DOWN,  binding.key(NES.Joypad.DOWN));
-        actionProvider.bind(GameActions2D.PLAYER_LEFT,  binding.key(NES.Joypad.LEFT));
-        actionProvider.bind(GameActions2D.PLAYER_RIGHT, binding.key(NES.Joypad.RIGHT));
+        actionProvider.bind(TengenGameActions.TOGGLE_PAC_BOOSTER, binding.mapControToKey(NES.Joypad.A), binding.mapControToKey(NES.Joypad.B));
+        actionProvider.bind(GameActions2D.PLAYER_UP,    binding.mapControToKey(NES.Joypad.UP));
+        actionProvider.bind(GameActions2D.PLAYER_DOWN,  binding.mapControToKey(NES.Joypad.DOWN));
+        actionProvider.bind(GameActions2D.PLAYER_LEFT,  binding.mapControToKey(NES.Joypad.LEFT));
+        actionProvider.bind(GameActions2D.PLAYER_RIGHT, binding.mapControToKey(NES.Joypad.RIGHT));
     }
 }

@@ -14,7 +14,32 @@ import java.util.stream.Stream;
  */
 public interface JoypadKeyAdapter {
 
-    KeyCodeCombination key(NES.Joypad button);
+    record Definition(
+        KeyCodeCombination select,
+        KeyCodeCombination start,
+        KeyCodeCombination b,
+        KeyCodeCombination a,
+        KeyCodeCombination up,
+        KeyCodeCombination down,
+        KeyCodeCombination left,
+        KeyCodeCombination right) implements JoypadKeyAdapter
+    {
+        @Override
+        public KeyCodeCombination mapControToKey(NES.Joypad button) {
+            return switch (button) {
+                case SELECT -> select;
+                case START -> start;
+                case B -> b;
+                case A -> a;
+                case UP -> up;
+                case DOWN -> down;
+                case LEFT -> left;
+                case RIGHT -> right;
+            };
+        }
+    }
+
+    KeyCodeCombination mapControToKey(NES.Joypad control);
 
     default void register(Keyboard keyboard) {
         allKeys().forEach(kcc -> keyboard.register(kcc, this));
@@ -25,6 +50,6 @@ public interface JoypadKeyAdapter {
     }
 
     default Stream<KeyCodeCombination> allKeys() {
-        return Stream.of(NES.Joypad.values()).map(this::key);
+        return Stream.of(NES.Joypad.values()).map(this::mapControToKey);
     }
 }

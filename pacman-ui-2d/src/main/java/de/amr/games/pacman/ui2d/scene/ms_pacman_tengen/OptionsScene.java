@@ -57,7 +57,7 @@ public class OptionsScene extends GameScene2D {
     @Override
     public void bindGameActions() {
         bind(TengenGameActions.SELECT_NEXT_JOYPAD, alt(KeyCode.J));
-        bind(TengenGameActions.START_PLAYING,      context.joypad().key(NES.Joypad.START));
+        bind(TengenGameActions.START_PLAYING,      context.joypad().mapControToKey(NES.Joypad.START));
         GameActions2D.bindTestActions(this);
     }
 
@@ -105,7 +105,7 @@ public class OptionsScene extends GameScene2D {
     }
 
     private boolean isJoypadPressed(NES.Joypad button) {
-        return context.keyboard().isMatching(context.joypad().key(button));
+        return context.keyboard().isMatching(context.joypad().mapControToKey(button));
     }
 
     @Override

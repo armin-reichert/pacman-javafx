@@ -11,7 +11,23 @@ import java.util.stream.Stream;
 
 public interface ArcadeKeyAdapter {
 
-    KeyCodeCombination key(Arcade.Controls control);
+    record Definition(KeyCodeCombination coin, KeyCodeCombination start, KeyCodeCombination up, KeyCodeCombination down,
+        KeyCodeCombination left, KeyCodeCombination right) implements ArcadeKeyAdapter {
+
+        @Override
+        public KeyCodeCombination mapControlToKey(Arcade.Controls control) {
+            return switch (control) {
+                case START -> start;
+                case COIN -> coin;
+                case UP -> up;
+                case DOWN -> down;
+                case LEFT ->  left;
+                case RIGHT -> right;
+            };
+        }
+    }
+
+    KeyCodeCombination mapControlToKey(Arcade.Controls control);
 
     default void register(Keyboard keyboard) {
         allKeys().forEach(kcc -> keyboard.register(kcc, this));
@@ -22,6 +38,6 @@ public interface ArcadeKeyAdapter {
     }
 
     default Stream<KeyCodeCombination> allKeys() {
-        return Stream.of(Arcade.Controls.values()).map(this::key);
+        return Stream.of(Arcade.Controls.values()).map(this::mapControlToKey);
     }
 }

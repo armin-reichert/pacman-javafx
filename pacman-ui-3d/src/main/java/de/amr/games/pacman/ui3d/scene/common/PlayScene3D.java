@@ -140,9 +140,9 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     private void setGameActions() {
         if (context.level().isDemoLevel()) {
             if (context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                bind(TengenGameActions.QUIT_DEMO_LEVEL, context.joypad().key(NES.Joypad.START));
+                bind(TengenGameActions.QUIT_DEMO_LEVEL, context.joypad().mapControToKey(NES.Joypad.START));
             } else {
-                bind(GameActions2D.ADD_CREDIT, context.arcade().key(Arcade.Controls.COIN));
+                bind(GameActions2D.ADD_CREDIT, context.arcade().mapControlToKey(Arcade.Controls.COIN));
             }
         }
         else {

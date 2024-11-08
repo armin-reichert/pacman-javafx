@@ -334,7 +334,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     private void setKeyBindings() {
         JoypadKeyAdapter joypad = context.joypad();
         if (context.level().isDemoLevel()) {
-            bind(QUIT_DEMO_LEVEL, joypad.key(NES.Joypad.START));
+            bind(QUIT_DEMO_LEVEL, joypad.mapControToKey(NES.Joypad.START));
         } else {
             bindCheatActions(this);
             bindDefaultJoypadActions(this, joypad);
