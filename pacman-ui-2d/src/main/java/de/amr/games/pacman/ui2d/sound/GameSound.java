@@ -210,7 +210,7 @@ public class GameSound {
             if (siren != null) {
                 stop(siren.player());
             }
-            MediaPlayer sirenPlayer = makeSound("siren." + number, 0.25, true);
+            MediaPlayer sirenPlayer = makeSound("siren." + number, 1, true);
             if (sirenPlayer == null) {
                 //Logger.error("Could not create media player for siren number {}", number);
                 siren = null;
