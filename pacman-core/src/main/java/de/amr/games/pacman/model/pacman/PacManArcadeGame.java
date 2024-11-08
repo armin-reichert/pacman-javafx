@@ -242,12 +242,6 @@ public class PacManArcadeGame extends GameModel {
     }
 
     @Override
-    protected void initScore(int levelNumber) {
-        scoreManager.setScoreEnabled(levelNumber > 0 && !level.isDemoLevel());
-        scoreManager.setHighScoreEnabled(levelNumber > 0 && !level.isDemoLevel());
-    }
-
-    @Override
     public void configureNormalLevel() {
         levelCounterEnabled = true;
         level.setMapConfig(theMapConfig);

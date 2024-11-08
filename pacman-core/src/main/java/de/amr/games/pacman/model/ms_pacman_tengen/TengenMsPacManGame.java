@@ -202,9 +202,9 @@ public class TengenMsPacManGame extends GameModel {
     }
 
     @Override
-    protected void initScore(int levelNumber) {
-        scoreManager.setScoreEnabled(levelNumber > 0);
-        scoreManager.setHighScoreEnabled(levelNumber > 0 && !level.isDemoLevel());
+    public void startLevel() {
+        super.startLevel();
+        scoreManager.setScoreEnabled(true);
     }
 
     @Override

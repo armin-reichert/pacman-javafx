@@ -93,7 +93,6 @@ public abstract class GameModel {
     protected abstract void      configureDemoLevel();
     protected abstract boolean   isPacManKillingIgnored();
     protected abstract void      setActorBaseSpeed(int levelNumber);
-    protected abstract void      initScore(int levelNumber);
     protected abstract boolean   isBonusReached();
     protected abstract byte      computeBonusSymbol();
 
@@ -173,12 +172,14 @@ public abstract class GameModel {
 
     public void startLevel() {
         gateKeeper.setLevelNumber(level.number);
-        setActorBaseSpeed(level.number);
-        initScore(level.number);
+        scoreManager.setLevelNumber(level.number);
+        scoreManager.setScoreEnabled(!level.isDemoLevel());
+        scoreManager.setHighScoreEnabled(!level.isDemoLevel());
         letsGetReadyToRumble();
+        setActorBaseSpeed(level.number);
+        Logger.info("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
         level.setStartTime(System.currentTimeMillis());
         Logger.info("{} started", level.isDemoLevel() ? "Demo Level" : "Level " + level.number);
-        Logger.info("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
         level.ghosts().forEach(ghost -> Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
         publishGameEvent(GameEventType.LEVEL_STARTED);
     }
