@@ -4,13 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.scene.common;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Entity;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.lerp;
+import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * Play scene perspectives.
@@ -101,8 +101,11 @@ public abstract class Perspective {
         public void update(GameWorld world, Entity spottedEntity) {
             double speedX = 0.03;
             double speedY = 0.06;
-            cam.setTranslateX(lerp(cam.getTranslateX(), spottedEntity.position().x(), speedX));
-            cam.setTranslateY(lerp(cam.getTranslateY(), spottedEntity.position().y() + 150, speedY));
+            double worldWidth = world.map().terrain().numCols() * TS;
+            double targetX = clamp(spottedEntity.posX(), 100, worldWidth - 100);
+            double targetY = spottedEntity.posY() + 150;
+            cam.setTranslateX(lerp(cam.getTranslateX(), targetX, speedX));
+            cam.setTranslateY(lerp(cam.getTranslateY(), targetY, speedY));
         }
     }
 
@@ -120,11 +123,13 @@ public abstract class Perspective {
 
         @Override
         public void update(GameWorld world, Entity spottedEntity) {
-            double speed = 0.02;
-            double x = lerp(cam.getTranslateX(), spottedEntity.position().x(), speed);
-            double y = lerp(cam.getTranslateY(), spottedEntity.position().y() + 150, speed);
-            cam.setTranslateX(x);
-            cam.setTranslateY(y);
+            double speedX = 0.04;
+            double speedY = 0.04;
+            double worldWidth = world.map().terrain().numCols() * TS;
+            double targetX = clamp(spottedEntity.posX(), 40, worldWidth - 40);
+            double targetY = spottedEntity.position().y() + 100;
+            cam.setTranslateX(lerp(cam.getTranslateX(), targetX, speedX));
+            cam.setTranslateY(lerp(cam.getTranslateY(), targetY, speedY));
             cam.setTranslateZ(-40);
         }
     };
