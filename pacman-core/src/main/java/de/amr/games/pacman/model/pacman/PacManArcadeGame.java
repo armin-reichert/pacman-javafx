@@ -186,6 +186,11 @@ public class PacManArcadeGame extends GameModel {
     }
 
     @Override
+    public boolean isOver() {
+        return lives == 0;
+    }
+
+    @Override
     public long gameOverStateTicks() {
         return 90;
     }

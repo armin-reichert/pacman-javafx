@@ -106,7 +106,7 @@ public class TengenMsPacManGame extends GameModel {
     private boolean boosterActive;
     private byte startLevelNumber; // 1-7
     private boolean canStartGame;
-
+    private int numContinues;
     private final Steering autopilot = new RuleBasedPacSteering(this);
     private final Steering demoLevelSteering = new RuleBasedPacSteering(this);
 
@@ -116,6 +116,7 @@ public class TengenMsPacManGame extends GameModel {
         mapConfigMgr.loadMaps();
 
         initialLives = 3;
+        numContinues = 3;
         scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman_tengen.xml"));
 
         //TODO: I have no idea about the timing in Tengen, use these inofficial Ms. Pac-Man Arcade values for now
@@ -195,8 +196,7 @@ public class TengenMsPacManGame extends GameModel {
     public void setCanStartGame(boolean canStartGame) {
         this.canStartGame = canStartGame;
     }
-
-    @Override
+   @Override
     public long gameOverStateTicks() {
         return 420; // TODO how much really?
     }
@@ -297,6 +297,29 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     protected boolean hasOverflowBug() {
         return false;
+    }
+
+    @Override
+    public void reset() {
+        playing = false;
+        lives = initialLives;
+        numContinues = 3;
+        level = null;
+        scoreManager.resetScore();
+    }
+
+    @Override
+    public void loseLife() {
+        if (lives > 0) {
+            --lives;
+        } else if (numContinues > 0) {
+            --numContinues;
+        }
+    }
+
+    @Override
+    public boolean isOver() {
+        return lives == 0 && numContinues == 0;
     }
 
     @Override

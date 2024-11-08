@@ -68,6 +68,7 @@ public abstract class GameModel {
     protected GameLevel            level;
 
     public abstract boolean      canStartNewGame();
+    public abstract boolean      isOver();
     public abstract void         endGame();
     public abstract void         onPacKilled();
     public abstract void         activateNextBonus();
@@ -97,6 +98,7 @@ public abstract class GameModel {
     protected abstract byte      computeBonusSymbol();
 
     protected abstract void      onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
+    protected abstract void      onGhostReleased(Ghost ghost);
 
     protected GameModel(File userDir) {
         this.userDir = userDir;
@@ -431,8 +433,6 @@ public abstract class GameModel {
             bonus.update(this);
         }
     }
-
-    protected abstract void onGhostReleased(Ghost ghost);
 
     public void killGhost(Ghost ghost) {
         eventLog.killedGhosts.add(ghost);

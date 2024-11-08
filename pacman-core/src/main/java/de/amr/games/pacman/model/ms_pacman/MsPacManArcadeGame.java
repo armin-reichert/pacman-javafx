@@ -141,6 +141,11 @@ public class MsPacManArcadeGame extends GameModel {
     }
 
     @Override
+    public boolean isOver() {
+        return lives == 0;
+    }
+
+    @Override
     public long gameOverStateTicks() {
         return 150;
     }

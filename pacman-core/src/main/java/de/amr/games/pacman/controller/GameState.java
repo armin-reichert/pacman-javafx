@@ -244,7 +244,7 @@ public enum GameState implements FsmState<GameModel> {
                 if (level.isDemoLevel()) {
                     enterState(INTRO);
                 } else {
-                    enterState(game.lives() == 0 ? GAME_OVER : STARTING_GAME);
+                    enterState(game.isOver() ? GAME_OVER : STARTING_GAME);
                 }
             }
             else if (timer.currentTick() == TICK_HIDE_GHOSTS) {
