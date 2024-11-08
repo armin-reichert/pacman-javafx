@@ -127,6 +127,7 @@ public class PacManArcadeGame extends GameModel {
     public PacManArcadeGame(File userDir) {
         super(userDir);
         initialLives = 3;
+        simulateOverflowBug = true;
 
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);

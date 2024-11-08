@@ -113,11 +113,12 @@ public class TengenMsPacManGame extends GameModel {
     public TengenMsPacManGame(File userDir) {
         super(userDir);
 
+        scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman_tengen.xml"));
         mapConfigMgr.loadMaps();
 
         initialLives = 3;
         numContinues = 3;
-        scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman_tengen.xml"));
+        simulateOverflowBug = false;
 
         //TODO: I have no idea about the timing in Tengen, use these inofficial Ms. Pac-Man Arcade values for now
         huntingControl = new HuntingControl("HuntingControl-" + getClass().getSimpleName()) {
@@ -292,11 +293,6 @@ public class TengenMsPacManGame extends GameModel {
     public float ghostTunnelSpeed(Ghost ghost) {
         //TODO is this correct?
         return 0.4f * ghost.baseSpeed();
-    }
-
-    @Override
-    protected boolean hasOverflowBug() {
-        return false;
     }
 
     @Override
