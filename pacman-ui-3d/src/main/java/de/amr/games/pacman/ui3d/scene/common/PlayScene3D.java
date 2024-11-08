@@ -95,6 +95,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     private final Scores3D scores3D;
 
     private GameLevel3D level3D;
+    private Animation levelCompleteAnimation;
 
     public PlayScene3D() {
         var ambientLight = new AmbientLight();
@@ -172,6 +173,9 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     protected void doEnd() {
         perspectiveNamePy.unbind();
+        if (levelCompleteAnimation != null) {
+            levelCompleteAnimation.stop();
+        }
         level3D = null;
         Logger.info("3D play scene ended. {}", this);
     }
@@ -574,13 +578,13 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     private void playLevelCompleteAnimation() {
-        Animation animation = context.game().intermissionNumberAfterLevel() != 0
+        context.gameState().timer().resetIndefinitely(); // block game state until animation has finished
+        levelCompleteAnimation = context.game().intermissionNumberAfterLevel() != 0
             ? levelCompleteAnimationBeforeIntermission(context.game().numFlashes())
             : levelCompleteAnimation(context.game().numFlashes());
-        animation.setDelay(Duration.seconds(1.0));
-        animation.setOnFinished(e -> context.gameState().timer().expire());
-        context.gameState().timer().resetIndefinitely(); // block game state until animation has finished
-        animation.play();
+        levelCompleteAnimation.setDelay(Duration.seconds(1.0));
+        levelCompleteAnimation.setOnFinished(e -> context.gameState().timer().expire());
+        levelCompleteAnimation.play();
     }
 
     private Animation levelCompleteAnimationBeforeIntermission(int numFlashes) {
