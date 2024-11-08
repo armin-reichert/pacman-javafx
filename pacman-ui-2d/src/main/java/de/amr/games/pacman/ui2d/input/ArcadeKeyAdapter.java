@@ -15,7 +15,7 @@ public interface ArcadeKeyAdapter {
         KeyCodeCombination left, KeyCodeCombination right) implements ArcadeKeyAdapter {
 
         @Override
-        public KeyCodeCombination mapControlToKey(Arcade.Controls control) {
+        public KeyCodeCombination keyCombination(Arcade.Controls control) {
             return switch (control) {
                 case START -> start;
                 case COIN -> coin;
@@ -27,7 +27,7 @@ public interface ArcadeKeyAdapter {
         }
     }
 
-    KeyCodeCombination mapControlToKey(Arcade.Controls control);
+    KeyCodeCombination keyCombination(Arcade.Controls control);
 
     default void register(Keyboard keyboard) {
         allKeys().forEach(kcc -> keyboard.register(kcc, this));
@@ -38,6 +38,6 @@ public interface ArcadeKeyAdapter {
     }
 
     default Stream<KeyCodeCombination> allKeys() {
-        return Stream.of(Arcade.Controls.values()).map(this::mapControlToKey);
+        return Stream.of(Arcade.Controls.values()).map(this::keyCombination);
     }
 }

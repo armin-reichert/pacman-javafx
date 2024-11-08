@@ -25,8 +25,8 @@ public interface JoypadKeyAdapter {
         KeyCodeCombination right) implements JoypadKeyAdapter
     {
         @Override
-        public KeyCodeCombination mapControToKey(NES.Joypad button) {
-            return switch (button) {
+        public KeyCodeCombination keyCombination(NES.Joypad control) {
+            return switch (control) {
                 case SELECT -> select;
                 case START -> start;
                 case B -> b;
@@ -39,7 +39,7 @@ public interface JoypadKeyAdapter {
         }
     }
 
-    KeyCodeCombination mapControToKey(NES.Joypad control);
+    KeyCodeCombination keyCombination(NES.Joypad control);
 
     default void register(Keyboard keyboard) {
         allKeys().forEach(kcc -> keyboard.register(kcc, this));
@@ -50,6 +50,6 @@ public interface JoypadKeyAdapter {
     }
 
     default Stream<KeyCodeCombination> allKeys() {
-        return Stream.of(NES.Joypad.values()).map(this::mapControToKey);
+        return Stream.of(NES.Joypad.values()).map(this::keyCombination);
     }
 }

@@ -107,18 +107,18 @@ public class StartPage extends StackPane implements Page {
     public void bindGameActions() {
         if (context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             var joypad = context.joypad();
-            bind(context -> currentFlyer().prevFlyerPage(),  joypad.mapControToKey(NES.Joypad.UP));
-            bind(context -> currentFlyer().nextFlyerPage(),  joypad.mapControToKey(NES.Joypad.DOWN));
-            bind(context -> carousel.prevSlide(),            joypad.mapControToKey(NES.Joypad.LEFT));
-            bind(context -> carousel.nextSlide(),            joypad.mapControToKey(NES.Joypad.RIGHT));
-            bind(GameContext::selectGamePage,                joypad.mapControToKey(NES.Joypad.START));
+            bind(context -> currentFlyer().prevFlyerPage(),  joypad.keyCombination(NES.Joypad.UP));
+            bind(context -> currentFlyer().nextFlyerPage(),  joypad.keyCombination(NES.Joypad.DOWN));
+            bind(context -> carousel.prevSlide(),            joypad.keyCombination(NES.Joypad.LEFT));
+            bind(context -> carousel.nextSlide(),            joypad.keyCombination(NES.Joypad.RIGHT));
+            bind(GameContext::selectGamePage,                joypad.keyCombination(NES.Joypad.START));
         } else {
-            bind(context -> currentFlyer().prevFlyerPage(),  context.arcade().mapControlToKey(Arcade.Controls.UP));
-            bind(context -> currentFlyer().nextFlyerPage(),  context.arcade().mapControlToKey(Arcade.Controls.DOWN));
-            bind(context -> carousel.prevSlide(),            context.arcade().mapControlToKey(Arcade.Controls.LEFT));
-            bind(context -> carousel.nextSlide(),            context.arcade().mapControlToKey(Arcade.Controls.RIGHT));
+            bind(context -> currentFlyer().prevFlyerPage(),  context.arcade().keyCombination(Arcade.Controls.UP));
+            bind(context -> currentFlyer().nextFlyerPage(),  context.arcade().keyCombination(Arcade.Controls.DOWN));
+            bind(context -> carousel.prevSlide(),            context.arcade().keyCombination(Arcade.Controls.LEFT));
+            bind(context -> carousel.nextSlide(),            context.arcade().keyCombination(Arcade.Controls.RIGHT));
             // START key is "1" which might be unclear on start page, so add ENTER
-            bind(GameContext::selectGamePage,                context.arcade().mapControlToKey(Arcade.Controls.START), naked(KeyCode.ENTER));
+            bind(GameContext::selectGamePage,                context.arcade().keyCombination(Arcade.Controls.START), naked(KeyCode.ENTER));
         }
     }
 
