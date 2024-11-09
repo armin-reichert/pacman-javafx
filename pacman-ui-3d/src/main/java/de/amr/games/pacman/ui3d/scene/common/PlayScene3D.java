@@ -106,7 +106,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         root.getChildren().addAll(scores3D, axes, ambientLight, new Group());
         // initial size is irrelevant as it is bound to parent scene later
         fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
-        fxSubScene.setFill(null); // transparent
+        fxSubScene.setFill(Color.TRANSPARENT);
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
         axes.visibleProperty().bind(PY_3D_AXES_VISIBLE);
     }
