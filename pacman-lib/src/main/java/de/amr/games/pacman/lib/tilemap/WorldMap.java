@@ -47,7 +47,7 @@ public class WorldMap {
         terrain = new TileMap(other.terrain);
         food = new TileMap(other.food);
         url = other.url;
-        terrain.computeTerrainPaths();
+        terrain.setTerrainMapData(TerrainAnalyzer.computeTerrainPaths(terrain));
     }
 
     // Used by map editor
@@ -101,7 +101,7 @@ public class WorldMap {
             }
         }
         terrain = TileMap.parseTileMap(terrainSection, tv -> 0 <= tv && tv <= Tiles.LAST_TERRAIN_VALUE);
-        terrain.computeTerrainPaths();
+        terrain.setTerrainMapData(TerrainAnalyzer.computeTerrainPaths(terrain));
         food = TileMap.parseTileMap(foodSection, tv -> 0 <= tv && tv <= Tiles.ENERGIZER);
     }
 

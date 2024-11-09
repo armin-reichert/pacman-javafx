@@ -7,6 +7,7 @@ package de.amr.games.pacman.model;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.TerrainAnalyzer;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import org.tinylog.Logger;
@@ -66,8 +67,7 @@ public class GameWorld {
     public GameWorld(WorldMap map) {
         this.map = checkNotNull(map);
         TileMap terrain = map.terrain(), food = map.food();
-
-        terrain.computeTerrainPaths();
+        terrain.setTerrainMapData(TerrainAnalyzer.computeTerrainPaths(terrain));
 
         var portalList = new ArrayList<Portal>();
         int firstColumn = 0, lastColumn = terrain.numCols() - 1;

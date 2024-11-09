@@ -6,6 +6,7 @@ package de.amr.games.pacman.maps.editor;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.TerrainAnalyzer;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
@@ -326,7 +327,8 @@ public class EditController {
 
     void ensureTerrainMapsPathsUpToDate() {
         if (!terrainMapPathsUpToDate) {
-            worldMapPy.get().terrain().computeTerrainPaths();
+            TileMap terrain = worldMapPy.get().terrain();
+            terrain.setTerrainMapData(TerrainAnalyzer.computeTerrainPaths(terrain));
             terrainMapPathsUpToDate = true;
         }
     }

@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.Writer;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,9 +22,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.*;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.v2i;
-import static java.util.function.Predicate.not;
 
 /**
  * @author Armin Reichert
@@ -30,34 +30,6 @@ import static java.util.function.Predicate.not;
 public class TileMap {
 
     public static final String DATA_SECTION_START = "!data";
-
-    // only used in terrain maps for computing and storing contours
-    private static class TerrainMapData {
-        private final BitSet exploredSet = new BitSet();
-        private List<TileMapPath> singleStrokePaths = new ArrayList<>();
-        private List<TileMapPath> doubleStrokePaths = new ArrayList<>();
-        private List<TileMapPath> fillerPaths = new ArrayList<>();
-        private List<Vector2i> topConcavityEntries = new ArrayList<>();
-        private List<Vector2i> bottomConcavityEntries = new ArrayList<>();
-        private List<Vector2i> leftConcavityEntries = new ArrayList<>();
-        private List<Vector2i> rightConcavityEntries = new ArrayList<>();
-
-        TerrainMapData() {}
-
-        TerrainMapData(TerrainMapData other) {
-            singleStrokePaths = new ArrayList<>(other.singleStrokePaths);
-            doubleStrokePaths = new ArrayList<>(other.doubleStrokePaths);
-            fillerPaths = new ArrayList<>(other.fillerPaths);
-            topConcavityEntries = new ArrayList<>(other.topConcavityEntries);
-            bottomConcavityEntries = new ArrayList<>(other.bottomConcavityEntries);
-            leftConcavityEntries = new ArrayList<>(other.bottomConcavityEntries);
-            rightConcavityEntries = new ArrayList<>(other.bottomConcavityEntries);
-        }
-
-        void clearExploredSet() {
-            exploredSet.clear();
-        }
-    }
 
     public static Vector2i parseVector2i(String text) {
         Pattern pattern = Pattern.compile("\\((\\d+),(\\d+)\\)");
@@ -127,6 +99,7 @@ public class TileMap {
 
     private final Properties properties = new Properties();
     private final byte[][] data;
+
     private TerrainMapData terrainMapData;
 
     public TileMap(TileMap other) {
@@ -139,6 +112,10 @@ public class TileMap {
         if (other.terrainMapData != null) {
             terrainMapData = new TerrainMapData(other.terrainMapData);
         }
+    }
+
+    public void setTerrainMapData(TerrainMapData terrainMapData) {
+        this.terrainMapData = terrainMapData;
     }
 
     public TileMap(int numRows, int numCols) {
@@ -308,146 +285,6 @@ public class TileMap {
         pw.flush();
     }
 
-    // How the move direction changes when "traversing" a tile
-    private static Direction exitDirection(Direction incomingDir, byte tileType) {
-        return switch (tileType) {
-            case Tiles.CORNER_NW, Tiles.DCORNER_NW, Tiles.DCORNER_ANGULAR_NW -> incomingDir == LEFT  ? DOWN  : RIGHT;
-            case Tiles.CORNER_NE, Tiles.DCORNER_NE, Tiles.DCORNER_ANGULAR_NE -> incomingDir == RIGHT ? DOWN  : LEFT;
-            case Tiles.CORNER_SE, Tiles.DCORNER_SE, Tiles.DCORNER_ANGULAR_SE -> incomingDir == DOWN  ? LEFT  : UP;
-            case Tiles.CORNER_SW, Tiles.DCORNER_SW, Tiles.DCORNER_ANGULAR_SW -> incomingDir == DOWN  ? RIGHT : UP;
-            default -> incomingDir;
-        };
-    }
-
-    /**
-     * Computes the contour paths created by terrain tiles which are then used by the renderer. Outer paths like the
-     * maze border are double-stroked, inner paths like normal obstacles are single-stroked. The ghost house is
-     * double-stroked and uses angular corner tiles.
-     */
-    public void computeTerrainPaths() {
-        terrainMapData = new TerrainMapData();
-
-        int firstCol = 0, lastCol = numCols() - 1;
-        Direction startDir;
-        // Paths starting at left maze border leading inside maze
-        for (int row = 0; row < numRows(); ++row) {
-            byte firstColContent = get(row, firstCol);
-            startDir = switch (firstColContent) {
-                case Tiles.DWALL_H -> RIGHT;
-                case Tiles.DCORNER_SE, Tiles.DCORNER_ANGULAR_SE -> UP; // tunnel entry, path continues upwards
-                case Tiles.DCORNER_NE, Tiles.DCORNER_ANGULAR_NE -> RIGHT; // ??? why not down?
-                default -> null; // should never happen
-            };
-            if (startDir != null) {
-                addDoubleStrokePath(new Vector2i(firstCol, row), startDir);
-            }
-        }
-        // Paths starting at right maze border leading inside maze
-        for (int row = 0; row < numRows(); ++row) {
-            byte lastColContent = get(row, lastCol);
-            startDir = switch (lastColContent) {
-                case Tiles.DWALL_H -> LEFT;
-                case Tiles.DCORNER_SW, Tiles.DCORNER_ANGULAR_SW -> UP; // tunnel entry, path continues upwards
-                case Tiles.DCORNER_NW, Tiles.DCORNER_ANGULAR_NW -> DOWN; // tunnel entry, path continues downwards
-                default -> null; // should never happen
-            };
-            if (startDir != null) {
-                addDoubleStrokePath(new Vector2i(lastCol, row), startDir);
-            }
-        }
-
-        // Other closed double-stroke paths
-        for (int row = 0; row < numRows(); ++row) {
-            for (int col = 0; col < numCols(); ++col) {
-                if (get(row, col) == Tiles.DWALL_V) {
-                    addDoubleStrokePath(new Vector2i(col, row), DOWN);
-                }
-            }
-        }
-
-        // find ghost house, doors are included as walls!
-        tiles(Tiles.DCORNER_ANGULAR_NW)
-            .filter(not(this::isExplored))
-            .filter(tile -> tile.x() > firstCol && tile.x() < lastCol)
-            .map(corner -> computePath(corner, LEFT))
-            .forEach(terrainMapData.doubleStrokePaths::add);
-
-        // add paths for obstacles inside maze, start with top-left corner of obstacle
-        tiles(Tiles.CORNER_NW).filter(not(this::isExplored))
-            .map(corner -> computePath(corner, LEFT))
-            .forEach(terrainMapData.singleStrokePaths::add);
-
-
-        // create filler paths for concavities from maze border inside maze
-        terrainMapData.clearExploredSet();
-
-        {
-            int topRow = 3; // TODO
-            for (int col = 0; col < numCols() - 1; ++col) {
-                if (get(topRow, col) == Tiles.DCORNER_NE && get(topRow, col + 1) == Tiles.DCORNER_NW) {
-                    terrainMapData.topConcavityEntries.add(new Vector2i(col, topRow));
-                    Logger.debug("Found concavity entry at top row {} col {}", topRow, col);
-                    Vector2i pathStartTile = new Vector2i(col, topRow + 1);
-                    TileMapPath path = computePath(pathStartTile, DOWN, tile -> outOfBounds(tile) || tile.equals(pathStartTile.plus(1, -1)));
-                    path.add(UP);
-                    path.add(LEFT);
-                    path.add(DOWN);
-                    terrainMapData.fillerPaths.add(path);
-                }
-            }
-        }
-
-        {
-            int bottomRow = numRows() - 3; // TODO make this more general
-            for (int col = 0; col < numCols() - 1; ++col) {
-                if (get(bottomRow, col) == Tiles.DCORNER_SE && get(bottomRow, col + 1) == Tiles.DCORNER_SW) {
-                    terrainMapData.bottomConcavityEntries.add(new Vector2i(col, bottomRow));
-                    Logger.debug("Found concavity entry at bottom row {} col {}", bottomRow, col);
-                    Vector2i pathStartTile = new Vector2i(col, bottomRow - 1);
-                    TileMapPath path = computePath(pathStartTile, UP,
-                        tile -> outOfBounds(tile) || tile.equals(pathStartTile.plus(1, 1)));
-                    path.add(LEFT);
-                    terrainMapData.fillerPaths.add(path);
-                }
-            }
-        }
-
-        {
-            int leftBorderCol = 0;
-            for (int row = 0; row < numRows() - 1; ++row) {
-                boolean roundedEntry = false; // get(row, leftBorderCol) == Tiles.DCORNER_SW && get(row + 1, leftBorderCol) == Tiles.DCORNER_NW;
-                boolean straightEntry = get(row, leftBorderCol) == Tiles.DWALL_H && get(row + 1, leftBorderCol) == Tiles.DWALL_H;
-                if (roundedEntry || straightEntry) {
-                    terrainMapData.leftConcavityEntries.add(new Vector2i(leftBorderCol, row));
-                    Logger.debug("Found concavity entry at left border at row {}", row);
-                    Vector2i pathStartTile = new Vector2i(roundedEntry ? 1 : 0, row);
-                    TileMapPath path = computePath(pathStartTile, RIGHT,
-                        tile -> tile.equals(pathStartTile.plus(roundedEntry ? 0 : -1, 1)));
-                    terrainMapData.fillerPaths.add(path);
-                }
-            }
-        }
-
-        {
-            int rightBorderCol = numCols() - 1;
-            for (int row = 0; row < numRows() - 1; ++row) {
-                boolean roundedEntry = false; // get(row, rightBorderCol) == Tiles.DCORNER_SE && get(row + 1, rightBorderCol) == Tiles.DCORNER_NE;
-                boolean straightEntry = get(row, rightBorderCol) == Tiles.DWALL_H && get(row + 1, rightBorderCol) == Tiles.DWALL_H;
-                if (roundedEntry || straightEntry) {
-                    terrainMapData.rightConcavityEntries.add(new Vector2i(rightBorderCol, row));
-                    Logger.debug("Found concavity entry at right border at row {}", row);
-                    Vector2i pathStartTile = new Vector2i(rightBorderCol - (roundedEntry ? 1 : 0), row);
-                    TileMapPath path = computePath(pathStartTile, LEFT,
-                        tile -> tile.equals(pathStartTile.plus(roundedEntry ? 0 : 1, 1)));
-                    terrainMapData.fillerPaths.add(path);
-                }
-            }
-        }
-
-        Logger.debug("Paths computed, {} single wall paths, {} double wall paths, {} filler paths",
-            terrainMapData.singleStrokePaths.size(), terrainMapData.doubleStrokePaths.size(), terrainMapData.fillerPaths.size());
-    }
-
     public Stream<TileMapPath> singleStrokePaths() {
         return terrainMapData != null ? terrainMapData.singleStrokePaths.stream() : Stream.empty();
     }
@@ -474,49 +311,5 @@ public class TileMap {
 
     public Stream<Vector2i> rightConcavityEntries() {
         return terrainMapData != null ? terrainMapData.rightConcavityEntries.stream() : Stream.empty();
-    }
-
-    private TileMapPath computePath(Vector2i startTile, Direction startDir) {
-        return computePath(startTile, startDir, this::outOfBounds);
-    }
-
-    private TileMapPath computePath(Vector2i startTile, Direction startDir, Predicate<Vector2i> stopCondition) {
-        checkNotNull(startTile);
-        checkNotNull(startDir);
-        if (outOfBounds(startTile)) {
-            throw new IllegalArgumentException("Start tile of path must be inside map");
-        }
-        TileMapPath path = new TileMapPath(startTile);
-        setExplored(startTile);
-        var tile = startTile;
-        var dir = startDir;
-        while (true) {
-            dir = exitDirection(dir, get(tile));
-            tile = tile.plus(dir.vector());
-            if (stopCondition.test(tile)) {
-                break;
-            }
-            if (isExplored(tile)) {
-                path.add(dir);
-                break;
-            }
-            path.add(dir);
-            setExplored(tile);
-        }
-        return path;
-    }
-
-    private void addDoubleStrokePath(Vector2i startTile, Direction startDir) {
-        if (!isExplored(startTile)) {
-            terrainMapData.doubleStrokePaths.add(computePath(startTile, startDir));
-        }
-    }
-
-    private boolean isExplored(Vector2i tile) {
-        return terrainMapData.exploredSet.get(index(tile));
-    }
-
-    private void setExplored(Vector2i tile) {
-        terrainMapData.exploredSet.set(index(tile));
     }
 }
