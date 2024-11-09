@@ -91,9 +91,9 @@ public class GameSound {
 
     private void logPlayerStatus(MediaPlayer player, String key) {
         if (player != null) {
-            Logger.info("[{}] state={} volume={}", key, player.getStatus() != null ? player.getStatus() : "UNDEFINED", player.getVolume());
+            Logger.debug("[{}] state={} volume={}", key, player.getStatus() != null ? player.getStatus() : "UNDEFINED", player.getVolume());
         } else {
-            Logger.info("No player exists for key {}", key);
+            Logger.debug("No player exists for key {}", key);
         }
     }
 

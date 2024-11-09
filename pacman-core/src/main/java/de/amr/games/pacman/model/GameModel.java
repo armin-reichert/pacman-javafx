@@ -454,7 +454,11 @@ public abstract class GameModel {
 
     public void addGameEventListener(GameEventListener listener) {
         checkNotNull(listener);
-        gameEventListeners.add(listener);
+        if (!gameEventListeners.contains(listener)) {
+            gameEventListeners.add(listener);
+        } else {
+            Logger.warn("Game event listener already registered: {}", listener);
+        }
     }
 
     public void publishGameEvent(GameEvent event) {

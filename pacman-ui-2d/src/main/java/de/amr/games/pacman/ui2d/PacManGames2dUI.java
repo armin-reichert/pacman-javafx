@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
@@ -169,23 +168,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         clock.setPauseableCallback(this::runIfNotPausedOnEveryTick);
         clock.setPermanentCallback(this::runOnEveryTick);
 
-        // attach game event listeners to game model
-        for (var variant : GameVariant.values()) {
-            GameModel game = GameController.it().gameModel(variant);
-            game.addGameEventListener(this);
-            // TODO: find better way for this:
-            game.addGameEventListener(gamePage.dashboardLayer().getPip());
-        }
-
         // init game variant property
         gameVariantPy.set(currentGameVariant());
-
-        // TODO: Not sure if this belongs here
-        // The game models are in project "pacman-core" which has no dependency toJavaFX,
-        // therefore we cannot use data binding to the model classes.
-        PacManXXLGame xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
-        xxlGame.setMapSelectionMode(PY_MAP_SELECTION_MODE.get());
-        PY_MAP_SELECTION_MODE.addListener((py,ov,selectionMode) -> xxlGame.setMapSelectionMode(selectionMode));
 
         //TODO This doesn't fit for Tengen screen resolution
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
@@ -194,6 +178,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         stage.centerOnScreen();
         stage.setOnShowing(e-> selectStartPage());
         stage.show();
+    }
+
+    private void addMyselfAsGameListener(GameModel game) {
+        game.addGameEventListener(this);
+        game.addGameEventListener(gamePage.dashboardLayer().getPip());
     }
 
     /**
@@ -280,6 +269,22 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     protected void handleGameVariantChange(GameVariant variant) {
+        gameController().selectGame(variant);
+        gameController().restart(GameState.BOOT);
+        Logger.info("Selected game variant: {}", variant);
+
+        GameModel game = gameController().gameModel(variant);
+        addMyselfAsGameListener(game);
+
+        // TODO: Not sure if this belongs here
+        if (variant == GameVariant.PACMAN_XXL) {
+            // We cannot use data binding to the game model classes because the game models are in project
+            // "pacman-core" which has no dependency to JavaFX data binding.
+            PacManXXLGame xxlGame = (PacManXXLGame) game;
+            xxlGame.setMapSelectionMode(PY_MAP_SELECTION_MODE.get());
+            PY_MAP_SELECTION_MODE.addListener((py, ov, selectionMode) -> xxlGame.setMapSelectionMode(selectionMode));
+        }
+
         String assetPrefix = assetPrefix(variant);
         sceneRoot.setBackground(assets.get(assetPrefix + ".scene_background"));
         Image icon = assets.image(assetPrefix + ".icon");
@@ -513,9 +518,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public void selectGameVariant(GameVariant variant) {
-        gameController().selectGame(variant);
-        gameController().restart(GameState.BOOT);
-        Logger.info("Selected game variant: {}", variant);
+        gameVariantPy.set(variant);
     }
 
     @Override
