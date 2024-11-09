@@ -71,12 +71,12 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     static final String GAME_OVER_TEXT = "GAME OVER!";
 
     // Each 3D play scene has its own set of cameras/perspectives
-    private final Map<Perspective.Name, Perspective> perspectiveMap = new EnumMap<>(Perspective.Name.class);
+    private final Map<Perspective.Name, Perspective> namePerspectiveMap = new EnumMap<>(Perspective.Name.class);
     {
-        perspectiveMap.put(Perspective.Name.DRONE, new Perspective.DronePerspective());
-        perspectiveMap.put(Perspective.Name.TOTAL, new Perspective.TotalPerspective());
-        perspectiveMap.put(Perspective.Name.FOLLOWING_PLAYER, new Perspective.FollowingPlayerPerspective());
-        perspectiveMap.put(Perspective.Name.NEAR_PLAYER, new Perspective.NearPlayerPerspective());
+        namePerspectiveMap.put(Perspective.Name.DRONE, new Perspective.Drone());
+        namePerspectiveMap.put(Perspective.Name.TOTAL, new Perspective.Total());
+        namePerspectiveMap.put(Perspective.Name.FOLLOWING_PLAYER, new Perspective.FollowingPlayer());
+        namePerspectiveMap.put(Perspective.Name.NEAR_PLAYER, new Perspective.NearPlayer());
     }
 
     public final ObjectProperty<Perspective.Name> perspectiveNamePy = new SimpleObjectProperty<>() {
@@ -185,7 +185,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             }
         }
         updateScores();
-        perspectiveMap.forEach((name, perspective) -> perspective.init(level.world()));
+        namePerspectiveMap.forEach((name, perspective) -> perspective.init(level.world()));
     }
 
     @Override
@@ -331,7 +331,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     public Perspective perspective() {
-        return perspectiveMap.get(perspectiveNamePy.get());
+        return namePerspectiveMap.get(perspectiveNamePy.get());
     }
 
     @Override

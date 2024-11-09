@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.scene.common;
 
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Entity;
 import javafx.scene.PerspectiveCamera;
@@ -33,7 +32,7 @@ public abstract class Perspective {
         }
     }
 
-    public static class DronePerspective extends Perspective {
+    public static class Drone extends Perspective {
         static final int HEIGHT = 200;
 
         @Override
@@ -62,7 +61,7 @@ public abstract class Perspective {
         }
     };
 
-    public static class TotalPerspective extends Perspective {
+    public static class Total extends Perspective {
         @Override
         public String toString() {
             return "Total";
@@ -84,7 +83,7 @@ public abstract class Perspective {
         }
     }
 
-    public static class FollowingPlayerPerspective extends Perspective {
+    public static class FollowingPlayer extends Perspective {
         @Override
         public String toString() {
             return "Following Player";
@@ -109,7 +108,7 @@ public abstract class Perspective {
         }
     }
 
-    public static class NearPlayerPerspective extends Perspective {
+    public static class NearPlayer extends Perspective {
         @Override
         public String toString() {
             return "Near Player";
