@@ -65,6 +65,10 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
  */
 public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
+    //TODO localize?
+    static final String SCORE_TEXT = "SCORE";
+    static final String HIGH_SCORE_TEXT = "HIGH SCORE";
+
     // Each 3D play scene has its own set of cameras/perspectives
     private final Map<Perspective.Name, Perspective> perspectiveMap = new EnumMap<>(Perspective.Name.class);
     {
@@ -96,39 +100,36 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     public PlayScene3D() {
         var ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
-
         var axes = new CoordinateSystem();
-        axes.visibleProperty().bind(PY_3D_AXES_VISIBLE);
-
-        scores3D = new Scores3D("SCORE", "HIGH SCORE");
-
+        scores3D = new Scores3D(SCORE_TEXT, HIGH_SCORE_TEXT);
+        // last child is placeholder for level 3D
+        root.getChildren().addAll(scores3D, axes, ambientLight, new Group());
         // initial size is irrelevant as it is bound to parent scene later
         fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
         fxSubScene.setFill(null); // transparent
-
-        // last child is placeholder for level 3D
-        root.getChildren().setAll(scores3D, axes, ambientLight, new Group());
+        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
+        axes.visibleProperty().bind(PY_3D_AXES_VISIBLE);
     }
 
     @Override
     public final void init() {
-        doInit();
-        bindGameActions();
-        registerGameActionKeyBindings(context().keyboard());
-    }
-
-    protected void doInit() {
         context.setScoreVisible(true);
         scores3D.fontPy.set(context.assets().font("font.arcade", 8));
         perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
+        bindGameActions();
+        registerGameActionKeyBindings(context().keyboard());
         Logger.info("3D play scene initialized. {}", this);
     }
 
     @Override
     public final void end() {
-        doEnd();
+        perspectiveNamePy.unbind();
+        if (levelCompleteAnimation != null) {
+            levelCompleteAnimation.stop();
+        }
+        level3D = null;
         unregisterGameActionKeyBindings(context().keyboard());
+        Logger.info("3D play scene ended. {}", this);
     }
 
     @Override
@@ -190,15 +191,6 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         perspective().init(context.level().world());
     }
 
-    protected void doEnd() {
-        perspectiveNamePy.unbind();
-        if (levelCompleteAnimation != null) {
-            levelCompleteAnimation.stop();
-        }
-        level3D = null;
-        Logger.info("3D play scene ended. {}", this);
-    }
-
     public boolean hasLevel3D() {
         return level3D != null;
     }
@@ -219,10 +211,6 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         GameLevel level = context.level();
         level3D.update(context);
 
-        perspective().update(level.world(), level.pac());
-        scores3D.setRotationAxis(perspective().getCamera().getRotationAxis());
-        scores3D.setRotate(perspective().getCamera().getRotate());
-
         //TODO check if this has to de done on every tick
         if (level.isDemoLevel()) {
             context.game().setDemoLevelBehavior();
@@ -233,9 +221,16 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             updateScores();
             updateSound(context.sound());
         }
+        updatePerspective(level);
     }
 
-    private void updateScores( ){
+    private void updatePerspective(GameLevel level) {
+        perspective().update(level.world(), level.pac());
+        scores3D.setRotationAxis(perspective().getCamera().getRotationAxis());
+        scores3D.setRotate(perspective().getCamera().getRotate());
+    }
+
+    private void updateScores() {
         ScoreManager scoreMgr = context.game().scoreManager();
         Score score = scoreMgr.score(), highScore = scoreMgr.highScore();
 
