@@ -98,7 +98,7 @@ public class GameSound {
     }
 
     private void logPlayerStatusChange(MediaPlayer player, String key, MediaPlayer.Status oldStatus, MediaPlayer.Status newStatus) {
-        Logger.info("[{}] {} -> {}, volume {}", key, (oldStatus != null ? oldStatus : "undefined"), newStatus, player.getVolume());
+        Logger.debug("[{}] {} -> {}, volume {}", key, (oldStatus != null ? oldStatus : "undefined"), newStatus, player.getVolume());
     }
 
     public MediaPlayer makeSound(String keySuffix, double volume, boolean loop) {

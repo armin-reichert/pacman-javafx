@@ -16,6 +16,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import org.tinylog.Logger;
 
 import java.io.File;
 
@@ -60,7 +61,12 @@ public class InfoBoxCustomMaps extends InfoBox {
             column.setReorderable(false);
         });
 
-        updateTableView();
+        expandedProperty().addListener((py,ov,nv) -> {
+            if (nv) {
+                updateTableView();
+                Logger.info("Custom map table updated");
+            }
+        });
     }
 
     public void updateTableView() {
