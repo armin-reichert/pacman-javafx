@@ -23,7 +23,6 @@ import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions;
 import de.amr.games.pacman.ui2d.sound.GameSound;
-import de.amr.games.pacman.ui3d.GameActions3D;
 import de.amr.games.pacman.ui3d.level.*;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
@@ -31,7 +30,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -50,7 +48,6 @@ import static de.amr.games.pacman.ui2d.GameActions2D.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
-import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions.bindDefaultJoypadActions;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
@@ -134,11 +131,6 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions3D.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
-        bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
-    }
-
-    private void setGameActions() {
         if (context.level().isDemoLevel()) {
             if (context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 bind(TengenGameActions.QUIT_DEMO_LEVEL, context.joypad().keyCombination(NES.Joypad.START));
@@ -162,7 +154,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     @Override
     public void onLevelStarted(GameEvent event) {
         GameLevel level = context.level();
-        setGameActions();
+        bindGameActions();
         if (!hasLevel3D()) {
             replaceGameLevel3D();
             level3D.addLevelCounter();
@@ -192,10 +184,8 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     public void onSceneVariantSwitch(GameScene fromScene) {
         Logger.info("{} entered from {}", getClass().getSimpleName(), fromScene.getClass().getSimpleName());
 
-        //TODO that's ugly
         bindGameActions();
         registerGameActionKeyBindings(context.keyboard());
-        setGameActions();
 
         if (!hasLevel3D()) {
             replaceGameLevel3D();
