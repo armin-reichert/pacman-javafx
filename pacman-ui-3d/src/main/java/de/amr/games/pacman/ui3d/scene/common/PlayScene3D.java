@@ -68,6 +68,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     //TODO localize?
     static final String SCORE_TEXT = "SCORE";
     static final String HIGH_SCORE_TEXT = "HIGH SCORE";
+    static final String GAME_OVER_TEXT = "GAME OVER!";
 
     // Each 3D play scene has its own set of cameras/perspectives
     private final Map<Perspective.Name, Perspective> perspectiveMap = new EnumMap<>(Perspective.Name.class);
@@ -78,13 +79,11 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         perspectiveMap.put(Perspective.Name.NEAR_PLAYER, new Perspective.NearPlayerPerspective());
     }
 
-    public final ObjectProperty<Perspective.Name> perspectiveNamePy = new SimpleObjectProperty<>(Perspective.Name.TOTAL) {
+    public final ObjectProperty<Perspective.Name> perspectiveNamePy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
-            Perspective.Name name = get();
-            Perspective perspective = perspectiveMap.get(name);
-            fxSubScene.setCamera(perspective.getCamera());
-            context.game().level().ifPresent(level -> perspective.init(level.world()));
+            Logger.info("Perspective named changed to {}", get());
+            context.game().level().ifPresent(level -> perspective().init(level.world()));
         }
     };
 
@@ -107,6 +106,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         // initial size is irrelevant, it is bound to parent scene later
         fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
         fxSubScene.setFill(Color.TRANSPARENT);
+        fxSubScene.cameraProperty().bind(perspectiveNamePy.map(name -> perspective().getCamera()));
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
         axes.visibleProperty().bind(PY_3D_AXES_VISIBLE);
     }
@@ -115,9 +115,9 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     public final void init() {
         context.setScoreVisible(true); //TODO check this
         scores3D.setFont(context.assets().font("font.arcade", 8));
-        perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
         bindGameActions();
         registerGameActionKeyBindings(context().keyboard());
+        perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
         Logger.info("3D play scene initialized. {}", this);
     }
 
@@ -161,6 +161,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     @Override
     public void onLevelStarted(GameEvent event) {
+        GameLevel level = context.level();
         setGameActions();
         if (!hasLevel3D()) {
             replaceGameLevel3D();
@@ -171,20 +172,54 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         switch (context.gameState()) {
             case TESTING_LEVEL_BONI -> {
                 replaceGameLevel3D();
-                showLevelTestMessage("BONI LEVEL " + context.level().number);
+                showLevelTestMessage("BONI LEVEL " + level.number);
             }
             case TESTING_LEVEL_TEASERS -> {
                 replaceGameLevel3D();
-                showLevelTestMessage("PREVIEW LEVEL " + context.level().number);
+                showLevelTestMessage("PREVIEW LEVEL " + level.number);
             }
             default -> {
-                if (!context.level().isDemoLevel()){
+                if (!level.isDemoLevel()){
                     showReadyMessage();
                 }
             }
         }
         updateScores();
-        perspective().init(context.level().world());
+        perspectiveMap.forEach((name, perspective) -> perspective.init(level.world()));
+    }
+
+    @Override
+    public void onSceneVariantSwitch(GameScene fromScene) {
+        Logger.info("{} entered from {}", getClass().getSimpleName(), fromScene.getClass().getSimpleName());
+
+        //TODO that's ugly
+        bindGameActions();
+        registerGameActionKeyBindings(context.keyboard());
+        setGameActions();
+
+        if (!hasLevel3D()) {
+            replaceGameLevel3D();
+            level3D.addLevelCounter();
+        }
+
+        GameLevel level = context.level();
+        level3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!level.world().hasEatenFoodAt(pellet.tile())));
+        level3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!level.world().hasEatenFoodAt(energizer.tile())));
+        if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
+            level3D.energizers3D().filter(energizer -> energizer.shape3D().isVisible()).forEach(Energizer3D::startPumping);
+        }
+        level.pac().show();
+        level3D.pac3D().init();
+        level.ghosts().forEach(Ghost::show);
+        level3D.pac3D().update(context);
+
+        if (context.gameState() == GameState.HUNTING) {
+            if (level.powerTimer().isRunning()) {
+                context.sound().playPacPowerSound();
+            }
+            level3D.livesCounter3D().shapesRotation().play();
+        }
+        updateScores();
     }
 
     public boolean hasLevel3D() {
@@ -222,25 +257,24 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     private void updatePerspective(GameLevel level) {
         perspective().update(level.world(), level.pac());
-        scores3D.setRotationAxis(perspective().getCamera().getRotationAxis());
-        scores3D.setRotate(perspective().getCamera().getRotate());
+        Camera camera = perspective().getCamera();
+        scores3D.rotationAxisProperty().set(camera.getRotationAxis());
+        scores3D.rotateProperty().set(camera.getRotate());
     }
 
     private void updateScores() {
-        ScoreManager scoreMgr = context.game().scoreManager();
-        Score score = scoreMgr.score(), highScore = scoreMgr.highScore();
+        ScoreManager manager = context.game().scoreManager();
+        Score score = manager.score(), highScore = manager.highScore();
 
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
-        if (scoreMgr.isScoreEnabled()) {
+        if (manager.isScoreEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         }
-        else {
-            // when score is disabled, show text "game over"
-            String assetPrefix = assetPrefix(context.currentGameVariant());
+        else { // when score is disabled, show text "game over"
             Color color = context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN
-                ? Color.web(context.level().mapConfig().colorScheme().get("stroke"))
-                : context.assets().color(assetPrefix + ".color.game_over_message");
-            scores3D.showTextAsScore("GAME OVER!", color);
+                ? Color.valueOf(context.level().mapConfig().colorScheme().get("stroke"))
+                : context.assets().color(assetPrefix(context.currentGameVariant()) + ".color.game_over_message");
+            scores3D.showTextAsScore(GAME_OVER_TEXT, color);
         }
     }
 
@@ -409,41 +443,6 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         level3D.energizers3D().forEach(Energizer3D::stopPumping);
         level3D.livesCounter3D().shapesRotation().stop();
         level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-    }
-
-    @Override
-    public void onSceneVariantSwitch(GameScene fromScene) {
-        Logger.info("{} entered from {}", getClass().getSimpleName(), fromScene.getClass().getSimpleName());
-
-        //TODO that's ugly
-        bindGameActions();
-        registerGameActionKeyBindings(context.keyboard());
-        setGameActions();
-
-        if (!hasLevel3D()) {
-            replaceGameLevel3D();
-            level3D.addLevelCounter();
-        }
-
-        GameLevel level = context.level();
-        level3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!level.world().hasEatenFoodAt(pellet.tile())));
-        level3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!level.world().hasEatenFoodAt(energizer.tile())));
-        if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
-            level3D.energizers3D().filter(energizer -> energizer.shape3D().isVisible()).forEach(Energizer3D::startPumping);
-        }
-        level.pac().show();
-        level3D.pac3D().init();
-        level.ghosts().forEach(Ghost::show);
-        level3D.pac3D().update(context);
-
-        if (context.gameState() == GameState.HUNTING) {
-            if (level.powerTimer().isRunning()) {
-                context.sound().playPacPowerSound();
-            }
-            level3D.livesCounter3D().shapesRotation().play();
-        }
-
-        updateScores();
     }
 
     @Override
