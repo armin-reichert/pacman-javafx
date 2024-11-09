@@ -51,7 +51,6 @@ public class PlayScene2D extends GameScene2D {
     @Override
     protected void doInit() {
         context.setScoreVisible(true);
-        context.game().scoreManager().setScoreEnabled(false);
     }
 
     @Override
@@ -60,7 +59,6 @@ public class PlayScene2D extends GameScene2D {
         if (context.level().isDemoLevel()) {
             bind(GameActions2D.ADD_CREDIT, arcadeController.keyCombination(Arcade.Controls.COIN));
         } else {
-            context.game().scoreManager().setScoreEnabled(false);
             bindCheatActions(this);
             bindDefaultArcadeControllerActions(this, arcadeController);
             bindFallbackPlayerControlActions(this);

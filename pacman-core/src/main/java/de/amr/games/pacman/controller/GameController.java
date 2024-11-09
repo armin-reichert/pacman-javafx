@@ -64,6 +64,9 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     private GameController(File userDir) {
         super(GameState.values());
         checkNotNull(userDir);
+        if (!userDir.exists() || !userDir.isDirectory()) {
+            throw new IllegalArgumentException("Specified user directory is invalid: " + userDir);
+        }
         modelsByVariant.put(GameVariant.MS_PACMAN,        new MsPacManArcadeGame(userDir));
         modelsByVariant.put(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacManGame(userDir));
         modelsByVariant.put(GameVariant.PACMAN,           new PacManArcadeGame(userDir));

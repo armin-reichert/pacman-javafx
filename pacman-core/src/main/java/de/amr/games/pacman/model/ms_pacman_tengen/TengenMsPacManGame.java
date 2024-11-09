@@ -516,10 +516,10 @@ public class TengenMsPacManGame extends GameModel {
         //pac.setRestingTicks(energizer ? 3 : 1);
         if (energizer) {
             processEatenEnergizer();
-            scoreManager.scorePoints(ENERGIZER_VALUE);
+            scoreManager.scorePoints(this, ENERGIZER_VALUE);
             Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         } else {
-            scoreManager.scorePoints(PELLET_VALUE);
+            scoreManager.scorePoints(this, PELLET_VALUE);
         }
         gateKeeper.registerFoodEaten(level);
         if (isBonusReached()) {

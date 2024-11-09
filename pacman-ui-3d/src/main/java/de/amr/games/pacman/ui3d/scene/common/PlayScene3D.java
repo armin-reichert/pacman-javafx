@@ -168,6 +168,28 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         }
     }
 
+    @Override
+    public void onLevelStarted(GameEvent event) {
+        addLevelCounter();
+        switch (context.gameState()) {
+            case TESTING_LEVEL_BONI -> {
+                replaceGameLevel3D(false);
+                showLevelTestMessage("BONI LEVEL " + context.level().number);
+            }
+            case TESTING_LEVEL_TEASERS -> {
+                replaceGameLevel3D(false);
+                showLevelTestMessage("PREVIEW LEVEL " + context.level().number);
+            }
+            default -> {
+                if (!context.level().isDemoLevel()){
+                    showReadyMessage();
+                }
+            }
+        }
+        updateScores();
+        perspective().init(context.level().world());
+    }
+
     protected void doEnd() {
         perspectiveNamePy.unbind();
         if (levelCompleteAnimation != null) {
@@ -195,9 +217,11 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         }
 
         GameLevel level = context.level();
+        level3D.update(context);
 
         perspective().update(level.world(), level.pac());
-        level3D.update(context);
+        scores3D.setRotationAxis(perspective().getCamera().getRotationAxis());
+        scores3D.setRotate(perspective().getCamera().getRotate());
 
         //TODO check if this has to de done on every tick
         if (level.isDemoLevel()) {
@@ -212,9 +236,6 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     private void updateScores( ){
-        scores3D.setRotationAxis(perspective().getCamera().getRotationAxis());
-        scores3D.setRotate(perspective().getCamera().getRotate());
-
         ScoreManager scoreMgr = context.game().scoreManager();
         Score score = scoreMgr.score(), highScore = scoreMgr.highScore();
 
@@ -425,6 +446,8 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             }
             level3D.livesCounter3D().shapesRotation().play();
         }
+
+        updateScores();
     }
 
     @Override
@@ -473,27 +496,6 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         if (!silent) {
             context.sound().playGameReadySound();
         }
-    }
-
-    @Override
-    public void onLevelStarted(GameEvent event) {
-        addLevelCounter();
-        switch (context.gameState()) {
-            case TESTING_LEVEL_BONI -> {
-                replaceGameLevel3D(false);
-                showLevelTestMessage("BONI LEVEL " + context.level().number);
-            }
-            case TESTING_LEVEL_TEASERS -> {
-                replaceGameLevel3D(false);
-                showLevelTestMessage("PREVIEW LEVEL " + context.level().number);
-            }
-            default -> {
-                if (!context.level().isDemoLevel()){
-                    showReadyMessage();
-                }
-            }
-        }
-        perspective().init(context.level().world());
     }
 
     @Override

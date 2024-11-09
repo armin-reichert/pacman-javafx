@@ -329,6 +329,8 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         }
         setKeyBindings();
         context.updateRenderer();
+        context.enableJoypad();
+        registerGameActionKeyBindings(context.keyboard());
     }
 
     private void setKeyBindings() {

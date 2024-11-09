@@ -13,17 +13,12 @@ import java.util.Set;
 
 public class ScoreManager {
 
-    private final GameModel game;
     private final Score score = new Score();
     private final Score highScore = new Score();
     private Set<Integer> extraLifeScores;
     private boolean scoreEnabled;
     private boolean highScoreEnabled;
     private File highScoreFile;
-
-    public ScoreManager(GameModel game) {
-        this.game = game;
-    }
 
     public Score score() {
         return score;
@@ -61,24 +56,26 @@ public class ScoreManager {
         extraLifeScores = Set.of(scores);
     }
 
-    public void scorePoints(int points) {
+    public void scorePoints(GameModel game, int points) {
+        if (!scoreEnabled) {
+            return;
+        }
         int oldScore = score.points();
         int newScore = oldScore + points;
-        if (scoreEnabled) {
-            score.setPoints(newScore);
-        }
-        // TODO is highScoreEnabled right for extra lives too?
+        score.setPoints(newScore);
         if (highScoreEnabled) {
             if (newScore > highScore.points()) {
                 highScore.setPoints(newScore);
                 highScore.setLevelNumber(score.levelNumber());
                 highScore.setDate(LocalDate.now());
             }
-            for (Integer extraLifeScore : extraLifeScores) {
-                if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
-                    game.addLives(1);
-                    game.publishGameEvent(GameEventType.EXTRA_LIFE_WON);
-                }
+        }
+        //TODO: this does not belong here
+        for (Integer extraLifeScore : extraLifeScores) {
+            if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
+                game.addLives(1);
+                game.publishGameEvent(GameEventType.EXTRA_LIFE_WON);
+                break;
             }
         }
     }

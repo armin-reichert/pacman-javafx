@@ -53,10 +53,9 @@ public abstract class GameModel {
     public static final byte       BONUS_POINTS_SHOWN_TICKS = 120; // unsure
     public static final short[]    KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
 
-    protected final File           userDir;
     protected final List<Byte>     levelCounter = new ArrayList<>();
     protected final GateKeeper     gateKeeper = new GateKeeper();
-    protected final ScoreManager   scoreManager = new ScoreManager(this);
+    protected final ScoreManager   scoreManager = new ScoreManager();
     protected HuntingControl       huntingControl;
     protected File                 customMapDir;
     protected boolean              levelCounterEnabled;
@@ -68,41 +67,43 @@ public abstract class GameModel {
 
     protected GameLevel            level;
 
-    public abstract boolean      canStartNewGame();
-    public abstract boolean      isOver();
-    public abstract void         endGame();
-    public abstract void         onPacKilled();
-    public abstract void         activateNextBonus();
+    public abstract boolean        canStartNewGame();
+    public abstract boolean        isOver();
+    public abstract void           endGame();
+    public abstract void           onPacKilled();
+    public abstract void           activateNextBonus();
 
-    public abstract int          intermissionNumberAfterLevel();
-    public abstract int          numFlashes();
+    public abstract int            intermissionNumberAfterLevel();
+    public abstract int            numFlashes();
 
-    public abstract float        ghostAttackSpeed(Ghost ghost);
-    public abstract float        ghostFrightenedSpeed(Ghost ghost);
-    public abstract float        ghostSpeedInsideHouse(Ghost ghost);
-    public abstract float        ghostSpeedReturningToHouse(Ghost ghost);
-    public abstract float        ghostTunnelSpeed(Ghost ghost);
+    public abstract float          ghostAttackSpeed(Ghost ghost);
+    public abstract float          ghostFrightenedSpeed(Ghost ghost);
+    public abstract float          ghostSpeedInsideHouse(Ghost ghost);
+    public abstract float          ghostSpeedReturningToHouse(Ghost ghost);
+    public abstract float          ghostTunnelSpeed(Ghost ghost);
 
-    public abstract float        pacNormalSpeed();
-    public abstract long         pacPowerTicks();
-    public abstract long         pacPowerFadingTicks();
-    public abstract float        pacPowerSpeed();
-    public abstract long         gameOverStateTicks();
-    public abstract void         setDemoLevelBehavior();
+    public abstract float          pacNormalSpeed();
+    public abstract long           pacPowerTicks();
+    public abstract long           pacPowerFadingTicks();
+    public abstract float          pacPowerSpeed();
+    public abstract long           gameOverStateTicks();
+    public abstract void           setDemoLevelBehavior();
 
-    protected abstract void      configureNormalLevel();
-    protected abstract void      configureDemoLevel();
-    protected abstract boolean   isPacManKillingIgnored();
-    protected abstract void      setActorBaseSpeed(int levelNumber);
-    protected abstract boolean   isBonusReached();
-    protected abstract byte      computeBonusSymbol();
+    protected abstract void        configureNormalLevel();
+    protected abstract void        configureDemoLevel();
+    protected abstract boolean     isPacManKillingIgnored();
+    protected abstract void        setActorBaseSpeed(int levelNumber);
+    protected abstract boolean     isBonusReached();
+    protected abstract byte        computeBonusSymbol();
 
-    protected abstract void      onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
-    protected abstract void      onGhostReleased(Ghost ghost);
+    protected abstract void        onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
+    protected abstract void        onGhostReleased(Ghost ghost);
 
     protected GameModel(File userDir) {
-        this.userDir = userDir;
-        this.customMapDir = new File(userDir, "maps");
+        customMapDir = new File(userDir, "maps");
+        if (customMapDir.mkdir()) {
+            Logger.info("Created custom map directory {}", customMapDir);
+        }
     }
 
     public Optional<GameLevel> level() {
@@ -140,7 +141,6 @@ public abstract class GameModel {
         level = new GameLevel(levelNumber);
         configureNormalLevel();
         scoreManager.setLevelNumber(levelNumber);
-        scoreManager.setScoreEnabled(true);
         huntingControl.reset();
         updateLevelCounter();
         publishGameEvent(GameEventType.LEVEL_CREATED);
@@ -423,7 +423,7 @@ public abstract class GameModel {
     private void updateBonus(Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE && level.pac().sameTile(bonus.entity())) {
             bonus.setEaten(BONUS_POINTS_SHOWN_TICKS);
-            scoreManager.scorePoints(bonus.points());
+            scoreManager.scorePoints(this, bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
             eventLog.bonusEaten = true;
             publishGameEvent(GameEventType.BONUS_EATEN);
@@ -436,14 +436,14 @@ public abstract class GameModel {
         eventLog.killedGhosts.add(ghost);
         int killedSoFar = level.victims().size();
         int points = KILLED_GHOST_VALUES[killedSoFar];
-        ghost.eaten(killedSoFar);
-        scoreManager.scorePoints(points);
-        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
         level.addKilledGhost(ghost);
+        ghost.eaten(killedSoFar);
+        scoreManager.scorePoints(this, points);
+        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
         //TODO if this behavior is specific to certain game variants, it has to be factored out
         if (level.killedGhostCount() == 16) {
             int extraPoints = POINTS_ALL_GHOSTS_IN_LEVEL;
-            scoreManager.scorePoints(extraPoints);
+            scoreManager.scorePoints(this, extraPoints);
             Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number);
         }
     }
