@@ -15,7 +15,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.*;
-import static de.amr.games.pacman.lib.Direction.UP;
 import static java.util.function.Predicate.not;
 
 /**
@@ -200,25 +199,27 @@ public class TerrainData {
     }
 
 
-    final BitSet exploredSet = new BitSet();
-    List<TileMapPath> singleStrokePaths = new ArrayList<>();
-    List<TileMapPath> doubleStrokePaths = new ArrayList<>();
-    List<TileMapPath> fillerPaths = new ArrayList<>();
-    List<Vector2i> topConcavityEntries = new ArrayList<>();
-    List<Vector2i> bottomConcavityEntries = new ArrayList<>();
-    List<Vector2i> leftConcavityEntries = new ArrayList<>();
-    List<Vector2i> rightConcavityEntries = new ArrayList<>();
+    private final BitSet exploredSet = new BitSet();
+    private List<TileMapPath> singleStrokePaths = new ArrayList<>();
+    private List<TileMapPath> doubleStrokePaths = new ArrayList<>();
+    private List<TileMapPath> fillerPaths = new ArrayList<>();
+    private List<Vector2i> topConcavityEntries = new ArrayList<>();
+    private List<Vector2i> bottomConcavityEntries = new ArrayList<>();
+    private List<Vector2i> leftConcavityEntries = new ArrayList<>();
+    private List<Vector2i> rightConcavityEntries = new ArrayList<>();
 
-    TerrainData() {}
+    private TerrainData() {}
 
-    TerrainData(TerrainData other) {
-        singleStrokePaths = new ArrayList<>(other.singleStrokePaths);
-        doubleStrokePaths = new ArrayList<>(other.doubleStrokePaths);
-        fillerPaths = new ArrayList<>(other.fillerPaths);
-        topConcavityEntries = new ArrayList<>(other.topConcavityEntries);
-        bottomConcavityEntries = new ArrayList<>(other.bottomConcavityEntries);
-        leftConcavityEntries = new ArrayList<>(other.bottomConcavityEntries);
-        rightConcavityEntries = new ArrayList<>(other.bottomConcavityEntries);
+    public TerrainData copy() {
+        var copy = new TerrainData();
+        copy.singleStrokePaths = new ArrayList<>(singleStrokePaths);
+        copy.doubleStrokePaths = new ArrayList<>(doubleStrokePaths);
+        copy.fillerPaths = new ArrayList<>(fillerPaths);
+        copy.topConcavityEntries = new ArrayList<>(topConcavityEntries);
+        copy.bottomConcavityEntries = new ArrayList<>(bottomConcavityEntries);
+        copy.leftConcavityEntries = new ArrayList<>(leftConcavityEntries);
+        copy.rightConcavityEntries = new ArrayList<>(rightConcavityEntries);
+        return copy;
     }
 
     boolean isExplored(TileMap terrain, Vector2i tile) {

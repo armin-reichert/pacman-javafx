@@ -109,7 +109,7 @@ public class TileMap {
             data[row] = Arrays.copyOf(other.data[row], numCols);
         }
         if (other.terrainData != null) {
-            terrainData = new TerrainData(other.terrainData);
+            terrainData = other.terrainData.copy();
         }
     }
 
