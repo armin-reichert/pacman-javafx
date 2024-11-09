@@ -16,8 +16,8 @@ import static java.util.function.Predicate.not;
  */
 public interface TerrainAnalyzer {
 
-    static TerrainMapData computeTerrainPaths(TileMap terrain) {
-        var data = new TerrainMapData();
+    static TerrainData computeTerrainPaths(TileMap terrain) {
+        var data = new TerrainData();
 
         int firstCol = 0, lastCol = terrain.numCols() - 1;
         Direction startDir;
@@ -155,7 +155,7 @@ public interface TerrainAnalyzer {
     }
 
     private static TileMapPath computePath(
-            TileMap terrain, TerrainMapData data, Vector2i startTile, Direction startDir,
+            TileMap terrain, TerrainData data, Vector2i startTile, Direction startDir,
             Predicate<Vector2i> stopCondition) {
         if (terrain.outOfBounds(startTile)) {
             throw new IllegalArgumentException("Start tile of path must be inside map");
@@ -180,11 +180,11 @@ public interface TerrainAnalyzer {
         return path;
     }
 
-    private static TileMapPath computePath(TileMap terrain, TerrainMapData data, Vector2i startTile, Direction startDir) {
+    private static TileMapPath computePath(TileMap terrain, TerrainData data, Vector2i startTile, Direction startDir) {
         return computePath(terrain, data, startTile, startDir, terrain::outOfBounds);
     }
 
-    private static void addDoubleStrokePath(TileMap terrain, TerrainMapData data, Vector2i startTile, Direction startDir) {
+    private static void addDoubleStrokePath(TileMap terrain, TerrainData data, Vector2i startTile, Direction startDir) {
         if (!data.isExplored(terrain, startTile)) {
             data.doubleStrokePaths.add(computePath(terrain, data, startTile, startDir));
         }

@@ -277,16 +277,18 @@ public class GameLevel3D {
         TileMap terrain = world.map().terrain();
         Box floor = createFloor(assets.get("floor_textures"), terrain.numCols() * TS - 1, terrain.numRows() * TS - 1);
 
-        terrain.doubleStrokePaths()
-            .filter(path -> !world.isPartOfHouse(path.startTile()))
-            .forEach(path -> WallBuilder.buildWallAlongPath(mazeGroup, path,
-                borderWallHeightPy, BORDER_WALL_THICKNESS, OBSTACLE_COAT_HEIGHT,
-                wallFillMaterialPy, wallStrokeMaterialPy));
+        terrain.terrainData().ifPresent(terrainData -> {
+            terrainData.doubleStrokePaths()
+                .filter(path -> !world.isPartOfHouse(path.startTile()))
+                .forEach(path -> WallBuilder.buildWallAlongPath(mazeGroup, path,
+                    borderWallHeightPy, BORDER_WALL_THICKNESS, OBSTACLE_COAT_HEIGHT,
+                    wallFillMaterialPy, wallStrokeMaterialPy));
 
-        terrain.singleStrokePaths()
-            .forEach(path -> WallBuilder.buildWallAlongPath(mazeGroup, path,
-                obstacleHeightPy, OBSTACLE_THICKNESS, OBSTACLE_COAT_HEIGHT,
-                wallFillMaterialPy, wallStrokeMaterialPy));
+            terrainData.singleStrokePaths()
+                .forEach(path -> WallBuilder.buildWallAlongPath(mazeGroup, path,
+                    obstacleHeightPy, OBSTACLE_THICKNESS, OBSTACLE_COAT_HEIGHT,
+                    wallFillMaterialPy, wallStrokeMaterialPy));
+        });
 
         house3D = new House3D(world, mapColorScheme);
         house3D.heightPy.bind(houseHeightPy);

@@ -99,7 +99,7 @@ public class TileMap {
     private final Properties properties = new Properties();
     private final byte[][] data;
 
-    private TerrainMapData terrainMapData;
+    private TerrainData terrainData;
 
     public TileMap(TileMap other) {
         int numRows = other.numRows(), numCols = other.numCols();
@@ -108,17 +108,17 @@ public class TileMap {
         for (int row = 0; row < numRows; ++row) {
             data[row] = Arrays.copyOf(other.data[row], numCols);
         }
-        if (other.terrainMapData != null) {
-            terrainMapData = new TerrainMapData(other.terrainMapData);
+        if (other.terrainData != null) {
+            terrainData = new TerrainData(other.terrainData);
         }
     }
 
-    public void computeTerrainMapData() {
-        terrainMapData = TerrainAnalyzer.computeTerrainPaths(this);
+    public void computeTerrainData() {
+        terrainData = TerrainAnalyzer.computeTerrainPaths(this);
     }
 
-    public Optional<TerrainMapData> terrainMapData() {
-        return Optional.ofNullable(terrainMapData);
+    public Optional<TerrainData> terrainData() {
+        return Optional.ofNullable(terrainData);
     }
 
     public TileMap(int numRows, int numCols) {
@@ -288,31 +288,4 @@ public class TileMap {
         pw.flush();
     }
 
-    public Stream<TileMapPath> singleStrokePaths() {
-        return terrainMapData != null ? terrainMapData.singleStrokePaths.stream() : Stream.empty();
-    }
-
-    public Stream<TileMapPath> doubleStrokePaths() {
-        return terrainMapData != null ? terrainMapData.doubleStrokePaths.stream() : Stream.empty();
-    }
-
-    public Stream<TileMapPath> fillerPaths() {
-        return terrainMapData != null ? terrainMapData.fillerPaths.stream() : Stream.empty();
-    }
-
-    public Stream<Vector2i> topConcavityEntries() {
-        return terrainMapData != null ? terrainMapData.topConcavityEntries.stream() : Stream.empty();
-    }
-
-    public Stream<Vector2i> bottomConcavityEntries() {
-        return terrainMapData != null ? terrainMapData.bottomConcavityEntries.stream() : Stream.empty();
-    }
-
-    public Stream<Vector2i> leftConcavityEntries() {
-        return terrainMapData != null ? terrainMapData.leftConcavityEntries.stream() : Stream.empty();
-    }
-
-    public Stream<Vector2i> rightConcavityEntries() {
-        return terrainMapData != null ? terrainMapData.rightConcavityEntries.stream() : Stream.empty();
-    }
 }

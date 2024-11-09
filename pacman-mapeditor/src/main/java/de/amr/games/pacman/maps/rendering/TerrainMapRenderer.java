@@ -7,6 +7,7 @@ package de.amr.games.pacman.maps.rendering;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.TerrainData;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.TileMapPath;
 import de.amr.games.pacman.lib.tilemap.Tiles;
@@ -36,25 +37,30 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
     @Override
     public void drawMap(GraphicsContext g, TileMap map) {
-        double baseLineWidth = adaptLineWidthToCanvasSize(g.getCanvas().getHeight());
-        g.save();
-        g.scale(scaling(), scaling());
-        map.doubleStrokePaths().forEach(path -> {
-            drawPath(g, map, path, false,  DOUBLE_STROKE_OUTER_WIDTH * baseLineWidth, wallStrokeColor, null);
-            drawPath(g, map, path, false,  DOUBLE_STROKE_INNER_WIDTH * baseLineWidth, wallFillColor, null);
+        map.terrainData().ifPresent(terrainData -> {
+            double baseLineWidth = adaptLineWidthToCanvasSize(g.getCanvas().getHeight());
+            g.save();
+            g.scale(scaling(), scaling());
+            terrainData.doubleStrokePaths().forEach(path -> {
+                drawPath(g, map, path, false,  DOUBLE_STROKE_OUTER_WIDTH * baseLineWidth, wallStrokeColor, null);
+                drawPath(g, map, path, false,  DOUBLE_STROKE_INNER_WIDTH * baseLineWidth, wallFillColor, null);
+            });
+            terrainData.fillerPaths().forEach(
+                path -> drawPath(g, map, path, true, SINGLE_STROKE_WIDTH * baseLineWidth, wallFillColor, wallFillColor)
+            );
+            terrainData.singleStrokePaths().forEach(
+                path -> drawPath(g, map, path, true, SINGLE_STROKE_WIDTH * baseLineWidth, wallStrokeColor, wallFillColor)
+            );
+            map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, map, door, SINGLE_STROKE_WIDTH * baseLineWidth, doorColor));
+            uglyConcavityHack(g, terrainData, baseLineWidth);
+            g.restore();
         });
-        map.fillerPaths().forEach(
-            path -> drawPath(g, map, path, true, SINGLE_STROKE_WIDTH * baseLineWidth, wallFillColor, wallFillColor)
-        );
+    }
 
-        map.singleStrokePaths().forEach(
-            path -> drawPath(g, map, path, true, SINGLE_STROKE_WIDTH * baseLineWidth, wallStrokeColor, wallFillColor)
-        );
-
-        // Fix concavities drawing (ugly hack)
+    // Fix concavities drawing (ugly hack)
+    private void uglyConcavityHack(GraphicsContext g, TerrainData terrainData, double baseLineWidth) {
         Color fillColor = wallFillColor;
-
-        map.topConcavityEntries().forEach(entry -> {
+        terrainData.topConcavityEntries().forEach(entry -> {
             double left = entry.x() * TILE_SIZE;
             double y = entry.y() * TILE_SIZE + 0.5 * (TILE_SIZE - DOUBLE_STROKE_OUTER_WIDTH) + SINGLE_STROKE_WIDTH;
             //TODO this is a hack:
@@ -72,7 +78,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
             g.strokeLine(left, y, left + w, y);
         });
 
-        map.bottomConcavityEntries().forEach(entry -> {
+        terrainData.bottomConcavityEntries().forEach(entry -> {
             double left = entry.x() * TILE_SIZE;
             double y = (entry.y() * TILE_SIZE + HALF_TILE_SIZE + 0.5 * DOUBLE_STROKE_INNER_WIDTH); // TODO check this
             double w = 2 * TILE_SIZE, h = DOUBLE_STROKE_INNER_WIDTH * 0.75;
@@ -83,10 +89,6 @@ public class TerrainMapRenderer implements TileMapRenderer {
             g.setLineWidth(baseLineWidth);
             g.strokeLine(left, y, left + w, y);
         });
-
-        map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, map, door, SINGLE_STROKE_WIDTH * baseLineWidth, doorColor));
-
-        g.restore();
     }
 
     @Override

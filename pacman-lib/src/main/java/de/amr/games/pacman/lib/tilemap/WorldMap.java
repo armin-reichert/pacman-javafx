@@ -100,7 +100,7 @@ public class WorldMap {
             }
         }
         terrain = TileMap.parseTileMap(terrainSection, tv -> 0 <= tv && tv <= Tiles.LAST_TERRAIN_VALUE);
-        terrain.computeTerrainMapData();
+        terrain.computeTerrainData();
         food = TileMap.parseTileMap(foodSection, tv -> 0 <= tv && tv <= Tiles.ENERGIZER);
     }
 

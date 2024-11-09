@@ -327,7 +327,7 @@ public class EditController {
     void ensureTerrainMapsPathsUpToDate() {
         if (!terrainMapDataUpToDate) {
             TileMap terrain = worldMapPy.get().terrain();
-            terrain.computeTerrainMapData();
+            terrain.computeTerrainData();
             terrainMapDataUpToDate = true;
         }
     }

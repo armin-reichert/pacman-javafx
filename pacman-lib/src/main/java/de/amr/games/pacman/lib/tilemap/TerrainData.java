@@ -4,17 +4,17 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib.tilemap;
 
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Data describing paths/obstacles in terrain maps.
  */
-public class TerrainMapData {
+public class TerrainData {
     final BitSet exploredSet = new BitSet();
     List<TileMapPath> singleStrokePaths = new ArrayList<>();
     List<TileMapPath> doubleStrokePaths = new ArrayList<>();
@@ -24,9 +24,9 @@ public class TerrainMapData {
     List<Vector2i> leftConcavityEntries = new ArrayList<>();
     List<Vector2i> rightConcavityEntries = new ArrayList<>();
 
-    TerrainMapData() {}
+    TerrainData() {}
 
-    TerrainMapData(TerrainMapData other) {
+    TerrainData(TerrainData other) {
         singleStrokePaths = new ArrayList<>(other.singleStrokePaths);
         doubleStrokePaths = new ArrayList<>(other.doubleStrokePaths);
         fillerPaths = new ArrayList<>(other.fillerPaths);
@@ -48,4 +48,31 @@ public class TerrainMapData {
         exploredSet.clear();
     }
 
+    public Stream<TileMapPath> singleStrokePaths() {
+        return singleStrokePaths.stream();
+    }
+
+    public Stream<TileMapPath> doubleStrokePaths() {
+        return doubleStrokePaths.stream();
+    }
+
+    public Stream<TileMapPath> fillerPaths() {
+        return fillerPaths.stream();
+    }
+
+    public Stream<Vector2i> topConcavityEntries() {
+        return topConcavityEntries.stream();
+    }
+
+    public Stream<Vector2i> bottomConcavityEntries() {
+        return bottomConcavityEntries.stream();
+    }
+
+    public Stream<Vector2i> leftConcavityEntries() {
+        return leftConcavityEntries.stream();
+    }
+
+    public Stream<Vector2i> rightConcavityEntries() {
+        return rightConcavityEntries.stream();
+    }
 }
