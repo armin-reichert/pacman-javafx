@@ -114,7 +114,7 @@ public class TileMap {
     }
 
     public void computeTerrainData() {
-        terrainData = TerrainAnalyzer.computeTerrainPaths(this);
+        terrainData = TerrainData.computeTerrainPaths(this);
     }
 
     public Optional<TerrainData> terrainData() {
