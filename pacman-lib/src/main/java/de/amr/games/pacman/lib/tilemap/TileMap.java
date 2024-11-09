@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib.tilemap;
 
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import org.tinylog.Logger;
 
@@ -14,6 +13,7 @@ import java.io.StringReader;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -21,7 +21,6 @@ import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.v2i;
 
 /**
@@ -114,8 +113,12 @@ public class TileMap {
         }
     }
 
-    public void setTerrainMapData(TerrainMapData terrainMapData) {
-        this.terrainMapData = terrainMapData;
+    public void computeTerrainMapData() {
+        terrainMapData = TerrainAnalyzer.computeTerrainPaths(this);
+    }
+
+    public Optional<TerrainMapData> terrainMapData() {
+        return Optional.ofNullable(terrainMapData);
     }
 
     public TileMap(int numRows, int numCols) {

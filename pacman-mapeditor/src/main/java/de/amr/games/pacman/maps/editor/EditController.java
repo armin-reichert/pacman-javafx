@@ -6,7 +6,6 @@ package de.amr.games.pacman.maps.editor;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.TerrainAnalyzer;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
@@ -79,7 +78,7 @@ public class EditController {
             if (viewModel.terrainPropertiesEditor() != null) {
                 viewModel.terrainPropertiesEditor().setTileMap(map.terrain());
             }
-            invalidateTerrainMapPaths();
+            invalidateTerrainMapData();
             viewModel.updateSourceView();
         }
     };
@@ -99,13 +98,13 @@ public class EditController {
     private final TileMapEditorViewModel viewModel;
     private final ObstacleEditor obstacleEditor;
     private boolean unsavedChanges;
-    private boolean terrainMapPathsUpToDate;
+    private boolean terrainMapDataUpToDate;
     private boolean dragging = false;
 
     EditController(TileMapEditorViewModel viewModel) {
         this.viewModel = viewModel;
         this.worldMapPy.bind(viewModel.worldMapProperty());
-        viewModel.gridSizeProperty().addListener((py,ov,nv) -> invalidateTerrainMapPaths());
+        viewModel.gridSizeProperty().addListener((py,ov,nv) -> invalidateTerrainMapData());
         obstacleEditor = new ObstacleEditor(this, viewModel);
         obstacleEditor.enabledPy.bind(editingEnabledPy);
         setMode(EditMode.DRAW);
@@ -321,15 +320,15 @@ public class EditController {
         return (int) (pixels / viewModel.gridSizeProperty().get());
     }
 
-    void invalidateTerrainMapPaths() {
-        terrainMapPathsUpToDate = false;
+    void invalidateTerrainMapData() {
+        terrainMapDataUpToDate = false;
     }
 
     void ensureTerrainMapsPathsUpToDate() {
-        if (!terrainMapPathsUpToDate) {
+        if (!terrainMapDataUpToDate) {
             TileMap terrain = worldMapPy.get().terrain();
-            terrain.setTerrainMapData(TerrainAnalyzer.computeTerrainPaths(terrain));
-            terrainMapPathsUpToDate = true;
+            terrain.computeTerrainMapData();
+            terrainMapDataUpToDate = true;
         }
     }
 
@@ -339,7 +338,7 @@ public class EditController {
         if (worldMap != null) {
             viewModel.updateSourceView();
             if (tileMap == worldMap.terrain()) {
-                invalidateTerrainMapPaths();
+                invalidateTerrainMapData();
             }
         }
     }
@@ -488,7 +487,7 @@ public class EditController {
         terrain.setProperty(PROPERTY_POS_SCATTER_CYAN_GHOST, formatTile(v2i(tilesX - 1, tilesY - 2)));
         terrain.setProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(v2i(0, tilesY - 2)));
 
-        invalidateTerrainMapPaths();
+        invalidateTerrainMapData();
 
         worldMap.food().setProperty(PROPERTY_COLOR_FOOD, DEFAULT_COLOR_FOOD);
 
