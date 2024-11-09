@@ -57,20 +57,17 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         return THE_ONE;
     }
 
+    private final File userDir;
     private final CoinControl coinControl = new CoinControl();
     private final Map<GameVariant, GameModel> modelsByVariant = new EnumMap<>(GameVariant.class);
     private GameModel currentGame;
 
     private GameController(File userDir) {
         super(GameState.values());
-        checkNotNull(userDir);
+        this.userDir = checkNotNull(userDir);
         if (!userDir.exists() || !userDir.isDirectory()) {
             throw new IllegalArgumentException("Specified user directory is invalid: " + userDir);
         }
-        modelsByVariant.put(GameVariant.MS_PACMAN,        new MsPacManArcadeGame(userDir));
-        modelsByVariant.put(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacManGame(userDir));
-        modelsByVariant.put(GameVariant.PACMAN,           new PacManArcadeGame(userDir));
-        modelsByVariant.put(GameVariant.PACMAN_XXL,       new PacManXXLGame(userDir));
         for (var entry : modelsByVariant.entrySet()) {
             Logger.info("Game variant {} => {}", entry.getKey(), entry.getValue());
         }
@@ -89,8 +86,13 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     public <T extends GameModel> T gameModel(GameVariant variant) {
         checkNotNull(variant);
         if (!modelsByVariant.containsKey(variant)) {
-            Logger.error("No game model for variant {} exists", variant);
-            throw new IllegalArgumentException();
+            GameModel model = switch (variant) {
+                case MS_PACMAN        -> new MsPacManArcadeGame(userDir);
+                case MS_PACMAN_TENGEN -> new TengenMsPacManGame(userDir);
+                case PACMAN           -> new PacManArcadeGame(userDir);
+                case PACMAN_XXL       -> new PacManXXLGame(userDir);
+            };
+            modelsByVariant.put(variant, model);
         }
         return (T) modelsByVariant.get(variant);
     }
