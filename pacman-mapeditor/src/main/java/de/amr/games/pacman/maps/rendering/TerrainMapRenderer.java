@@ -20,80 +20,29 @@ import static de.amr.games.pacman.maps.editor.TileMapUtil.HALF_TILE_SIZE;
 import static de.amr.games.pacman.maps.editor.TileMapUtil.TILE_SIZE;
 
 /**
- * @author Armin Reichert
+ * Vector renderer for terrain tile maps.
  */
 public class TerrainMapRenderer implements TileMapRenderer {
 
-    static final double DOUBLE_STROKE_OUTER_WIDTH = 5;
-    static final double DOUBLE_STROKE_INNER_WIDTH = 3;
-    static final double SINGLE_STROKE_WIDTH = 1.0;
-
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
 
-    private Color mapBackgroundColor = Color.BLACK;
-    private Color wallFillColor = Color.BLACK;
-    private Color wallStrokeColor = Color.GREEN;
-    private Color doorColor = Color.PINK;
+    private double doubleStrokeOuterWidth;
+    private double doubleStrokeInnerWidth;
+    private double singleStrokeWidth;
 
-    @Override
-    public void drawMap(GraphicsContext g, TileMap map) {
-        map.terrainData().ifPresent(terrainData -> {
-            double baseLineWidth = adaptLineWidthToCanvasSize(g.getCanvas().getHeight());
-            g.save();
-            g.scale(scaling(), scaling());
-            terrainData.doubleStrokePaths().forEach(path -> {
-                drawPath(g, map, path, false,  DOUBLE_STROKE_OUTER_WIDTH * baseLineWidth, wallStrokeColor, null);
-                drawPath(g, map, path, false,  DOUBLE_STROKE_INNER_WIDTH * baseLineWidth, wallFillColor, null);
-            });
-            terrainData.fillerPaths().forEach(
-                path -> drawPath(g, map, path, true, SINGLE_STROKE_WIDTH * baseLineWidth, wallFillColor, wallFillColor)
-            );
-            terrainData.singleStrokePaths().forEach(
-                path -> drawPath(g, map, path, true, SINGLE_STROKE_WIDTH * baseLineWidth, wallStrokeColor, wallFillColor)
-            );
-            map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, map, door, SINGLE_STROKE_WIDTH * baseLineWidth, doorColor));
-            uglyConcavityHack(g, terrainData, baseLineWidth);
-            g.restore();
-        });
-    }
+    private Color mapBackgroundColor;
+    private Color wallFillColor;
+    private Color wallStrokeColor;
+    private Color doorColor;
 
-    // Fix concavities drawing (ugly hack)
-    private void uglyConcavityHack(GraphicsContext g, TerrainData terrainData, double baseLineWidth) {
-        Color fillColor = wallFillColor;
-        terrainData.topConcavityEntries().forEach(entry -> {
-            double left = entry.x() * TILE_SIZE;
-            double y = entry.y() * TILE_SIZE + 0.5 * (TILE_SIZE - DOUBLE_STROKE_OUTER_WIDTH) + SINGLE_STROKE_WIDTH;
-            //TODO this is a hack:
-            if (scaling() < 2.8) {
-                y -= 0.5;
-            } else if (scaling() < 1.5) {
-                y -= 1.25;
-            }
-            double w = 2 * TILE_SIZE;
-            double h = 0.5 * DOUBLE_STROKE_OUTER_WIDTH; // TODO check this
-            g.setFill(wallFillColor);
-            g.fillRect(left, y, w, h);
-            g.setStroke(wallStrokeColor);
-            g.setLineWidth(baseLineWidth * SINGLE_STROKE_WIDTH);
-            g.strokeLine(left, y, left + w, y);
-        });
-
-        terrainData.bottomConcavityEntries().forEach(entry -> {
-            double left = entry.x() * TILE_SIZE;
-            double y = (entry.y() * TILE_SIZE + HALF_TILE_SIZE + 0.5 * DOUBLE_STROKE_INNER_WIDTH); // TODO check this
-            double w = 2 * TILE_SIZE, h = DOUBLE_STROKE_INNER_WIDTH * 0.75;
-            g.setFill(fillColor);
-            g.fillRect(left, y - h, w, h);
-            g.fillRect(left + HALF_TILE_SIZE, entry.y() * TILE_SIZE - HALF_TILE_SIZE, TILE_SIZE, TILE_SIZE);
-            g.setStroke(wallStrokeColor);
-            g.setLineWidth(baseLineWidth);
-            g.strokeLine(left, y, left + w, y);
-        });
-    }
-
-    @Override
-    public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
-        // this renderer doesn't draw tiles individually but computes contour paths and draws these
+    public TerrainMapRenderer() {
+        mapBackgroundColor = Color.BLACK;
+        wallFillColor = Color.BLACK;
+        wallStrokeColor = Color.GREEN;
+        doorColor = Color.PINK;
+        doubleStrokeOuterWidth = 5;
+        doubleStrokeInnerWidth = 3;
+        singleStrokeWidth = 1;
     }
 
     @Override
@@ -121,6 +70,79 @@ public class TerrainMapRenderer implements TileMapRenderer {
         this.doorColor = doorColor;
     }
 
+    public void setDoubleStrokeInnerWidth(double doubleStrokeInnerWidth) {
+        this.doubleStrokeInnerWidth = doubleStrokeInnerWidth;
+    }
+
+    public void setDoubleStrokeOuterWidth(double doubleStrokeOuterWidth) {
+        this.doubleStrokeOuterWidth = doubleStrokeOuterWidth;
+    }
+
+    public void setSingleStrokeWidth(double singleStrokeWidth) {
+        this.singleStrokeWidth = singleStrokeWidth;
+    }
+
+    @Override
+    public void drawMap(GraphicsContext g, TileMap map) {
+        map.terrainData().ifPresent(terrainData -> {
+            double baseLineWidth = adaptLineWidthToCanvasSize(g.getCanvas().getHeight());
+            g.save();
+            g.scale(scaling(), scaling());
+            terrainData.doubleStrokePaths().forEach(path -> {
+                drawPath(g, map, path, false,  doubleStrokeOuterWidth * baseLineWidth, wallStrokeColor, null);
+                drawPath(g, map, path, false,  doubleStrokeInnerWidth * baseLineWidth, wallFillColor, null);
+            });
+            terrainData.fillerPaths().forEach(
+                    path -> drawPath(g, map, path, true, singleStrokeWidth * baseLineWidth, wallFillColor, wallFillColor)
+            );
+            terrainData.singleStrokePaths().forEach(
+                    path -> drawPath(g, map, path, true, singleStrokeWidth * baseLineWidth, wallStrokeColor, wallFillColor)
+            );
+            map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, map, door, singleStrokeWidth * baseLineWidth, doorColor));
+            uglyConcavityHack(g, terrainData, baseLineWidth);
+            g.restore();
+        });
+    }
+
+    // Fix concavities drawing (ugly hack)
+    private void uglyConcavityHack(GraphicsContext g, TerrainData terrainData, double baseLineWidth) {
+        Color fillColor = wallFillColor;
+        terrainData.topConcavityEntries().forEach(entry -> {
+            double left = entry.x() * TILE_SIZE;
+            double y = entry.y() * TILE_SIZE + 0.5 * (TILE_SIZE - doubleStrokeOuterWidth) + singleStrokeWidth;
+            //TODO this is a hack:
+            if (scaling() < 2.8) {
+                y -= 0.5;
+            } else if (scaling() < 1.5) {
+                y -= 1.25;
+            }
+            double w = 2 * TILE_SIZE;
+            double h = 0.5 * doubleStrokeOuterWidth; // TODO check this
+            g.setFill(wallFillColor);
+            g.fillRect(left, y, w, h);
+            g.setStroke(wallStrokeColor);
+            g.setLineWidth(baseLineWidth * singleStrokeWidth);
+            g.strokeLine(left, y, left + w, y);
+        });
+
+        terrainData.bottomConcavityEntries().forEach(entry -> {
+            double left = entry.x() * TILE_SIZE;
+            double y = (entry.y() * TILE_SIZE + HALF_TILE_SIZE + 0.5 * doubleStrokeInnerWidth); // TODO check this
+            double w = 2 * TILE_SIZE, h = doubleStrokeInnerWidth * 0.75;
+            g.setFill(fillColor);
+            g.fillRect(left, y - h, w, h);
+            g.fillRect(left + HALF_TILE_SIZE, entry.y() * TILE_SIZE - HALF_TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            g.setStroke(wallStrokeColor);
+            g.setLineWidth(baseLineWidth);
+            g.strokeLine(left, y, left + w, y);
+        });
+    }
+
+    @Override
+    public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
+        // this renderer doesn't draw tiles individually but computes contour paths and draws these
+    }
+
     private double adaptLineWidthToCanvasSize(double canvasHeight) {
         // increase line width for small display
         if (canvasHeight <  36 * TILE_SIZE * 1.5) {
@@ -139,7 +161,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
     // assume we always have a pair of horizontally neighbored doors
     private void drawDoor(GraphicsContext g, TileMap map, Vector2i tile, double lineWidth, Color doorColor) {
         boolean leftDoor = map.get(tile.plus(Direction.RIGHT.vector())) == Tiles.DOOR;
-        double height = DOUBLE_STROKE_INNER_WIDTH * 0.75; // TODO check this
+        double height = doubleStrokeInnerWidth * 0.75; // TODO check this
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         double oy = y + 0.5 * (TILE_SIZE - height);
         if (leftDoor) {
@@ -227,6 +249,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         }
     }
 
+    //TODO clean up and simplify this mess
     private void extendPath(GraphicsContext g, byte tileValue, Vector2f center, boolean left, boolean right, boolean up, boolean down) {
         float r = HALF_TILE_SIZE;
         float cx = center.x(), cy = center.y();
