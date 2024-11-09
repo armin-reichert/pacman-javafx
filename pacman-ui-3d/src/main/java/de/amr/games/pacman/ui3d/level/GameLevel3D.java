@@ -126,7 +126,7 @@ public class GameLevel3D {
         };
     }
 
-    public static Node createLevelCounter3D(GameSpriteSheet spriteSheet, List<Byte> symbols, double x, double y) {
+    private static Node createLevelCounter3D(GameSpriteSheet spriteSheet, List<Byte> symbols, double x, double y) {
         double spacing = 2 * TS;
         var levelCounter3D = new Group();
         levelCounter3D.setTranslateX(x);
@@ -182,6 +182,8 @@ public class GameLevel3D {
 
     public final IntegerProperty livesCounterPy = new SimpleIntegerProperty(0);
 
+    private final GameContext context;
+
     private final Group root = new Group();
     private final Group worldGroup = new Group();
     private final Group mazeGroup = new Group();
@@ -190,11 +192,12 @@ public class GameLevel3D {
     private final List<MutableGhost3D> ghosts3D;
     private final Map<Vector2i, Pellet3D> pellets3D = new HashMap<>();
     private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
-    private House3D house3D;
     private final LivesCounter3D livesCounter3D;
+    private House3D house3D;
     private Bonus3D bonus3D;
 
     public GameLevel3D(GameContext context) {
+        this.context = context;
         final GameVariant variant = context.currentGameVariant();
         final GameModel game = context.game();
         final GameLevel level = game.level().orElseThrow();
@@ -224,6 +227,16 @@ public class GameLevel3D {
 
         PY_3D_WALL_HEIGHT.addListener((py,ov,nv) -> obstacleHeightPy.set(nv.doubleValue()));
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+    }
+
+    public void addLevelCounter() {
+        // Place level counter at top right maze corner
+        double x = context.level().world().map().terrain().numCols() * TS - 2 * TS;
+        double y = 2 * TS;
+        Node levelCounter3D = createLevelCounter3D(
+            context.currentGameSceneConfig().spriteSheet(),
+            context.game().levelCounter(), x, y);
+        root.getChildren().add(levelCounter3D);
     }
 
     /**

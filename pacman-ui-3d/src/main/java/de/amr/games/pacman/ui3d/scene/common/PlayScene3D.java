@@ -92,7 +92,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     private GameContext context;
 
     private final SubScene fxSubScene;
-    private final Group root = new Group();
+    private final Group root;
     private final Scores3D scores3D;
 
     private GameLevel3D level3D;
@@ -103,8 +103,8 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         var axes = new CoordinateSystem();
         scores3D = new Scores3D(SCORE_TEXT, HIGH_SCORE_TEXT);
         // last child is placeholder for level 3D
-        root.getChildren().addAll(scores3D, axes, ambientLight, new Group());
-        // initial size is irrelevant as it is bound to parent scene later
+        root = new Group(scores3D, axes, ambientLight, new Group());
+        // initial size is irrelevant, it is bound to parent scene later
         fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
         fxSubScene.setFill(Color.TRANSPARENT);
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
@@ -113,8 +113,8 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     @Override
     public final void init() {
-        context.setScoreVisible(true);
-        scores3D.fontPy.set(context.assets().font("font.arcade", 8));
+        context.setScoreVisible(true); //TODO check this
+        scores3D.setFont(context.assets().font("font.arcade", 8));
         perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
         bindGameActions();
         registerGameActionKeyBindings(context().keyboard());
@@ -154,31 +154,27 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             }
             bindFallbackPlayerControlActions(this);
             bindCheatActions(this);
-            context.setScoreVisible(true);
+            context.setScoreVisible(true); //TODO check this
         }
         registerGameActionKeyBindings(context.keyboard());
     }
 
     @Override
-    public void onLevelCreated(GameEvent event) {
+    public void onLevelStarted(GameEvent event) {
         setGameActions();
         if (!hasLevel3D()) {
-            replaceGameLevel3D(false); // level counter in model not yet initialized
+            replaceGameLevel3D();
+            level3D.addLevelCounter();
         } else {
             Logger.error("3D level already created?");
         }
-    }
-
-    @Override
-    public void onLevelStarted(GameEvent event) {
-        addLevelCounter();
         switch (context.gameState()) {
             case TESTING_LEVEL_BONI -> {
-                replaceGameLevel3D(false);
+                replaceGameLevel3D();
                 showLevelTestMessage("BONI LEVEL " + context.level().number);
             }
             case TESTING_LEVEL_TEASERS -> {
-                replaceGameLevel3D(false);
+                replaceGameLevel3D();
                 showLevelTestMessage("PREVIEW LEVEL " + context.level().number);
             }
             default -> {
@@ -376,13 +372,15 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     private void onEnterStateLevelTransition() {
         context.gameState().timer().restartSeconds(3);
-        replaceGameLevel3D(true);
+        replaceGameLevel3D();
+        level3D.addLevelCounter();
         level3D.pac3D().init();
         perspective().init(context.level().world());
     }
 
     private void onEnterStateTestingLevelBoni() {
-        replaceGameLevel3D(true);
+        replaceGameLevel3D();
+        level3D.addLevelCounter();
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
         showLevelTestMessage("BONI LEVEL" + context.level().number);
@@ -390,7 +388,8 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     private void onEnterStateTestingLevelTeasers() {
-        replaceGameLevel3D(true);
+        replaceGameLevel3D();
+        level3D.addLevelCounter();
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
         showLevelTestMessage("PREVIEW LEVEL " + context.level().number);
@@ -416,12 +415,14 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     public void onSceneVariantSwitch(GameScene fromScene) {
         Logger.info("{} entered from {}", getClass().getSimpleName(), fromScene.getClass().getSimpleName());
 
+        //TODO that's ugly
         bindGameActions();
         registerGameActionKeyBindings(context.keyboard());
         setGameActions();
 
         if (!hasLevel3D()) {
-            replaceGameLevel3D(true);
+            replaceGameLevel3D();
+            level3D.addLevelCounter();
         }
 
         GameLevel level = context.level();
@@ -525,26 +526,13 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         context.sound().stopPacPowerSound();
     }
 
-    private void addLevelCounter() {
-        // Place level counter at top right maze corner
-        double x = context.level().world().map().terrain().numCols() * TS - 2 * TS;
-        double y = 2 * TS;
-        Node levelCounter3D = GameLevel3D.createLevelCounter3D(context.currentGameSceneConfig().spriteSheet(),
-                context.game().levelCounter(), x, y);
-        level3D.root().getChildren().add(levelCounter3D);
-    }
-
-    private void replaceGameLevel3D(boolean createLevelCounter) {
+    private void replaceGameLevel3D() {
         level3D = new GameLevel3D(context);
-        if (createLevelCounter) {
-            addLevelCounter();
-        }
         int lastIndex = root.getChildren().size() - 1;
         root.getChildren().set(lastIndex, level3D.root());
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.root().translateYProperty().subtract(3.5 * TS));
         scores3D.translateZProperty().bind(level3D.root().translateZProperty().subtract(3 * TS));
-
         Logger.info("3D game level {} created.", context.level().number);
     }
 

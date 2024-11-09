@@ -14,14 +14,13 @@ import javafx.scene.text.Text;
 import static de.amr.games.pacman.lib.Globals.TS;
 
 /**
- * Displays the score and high score.
+ * Displays score and high score in 3D play scene.
  *
  * @author Armin Reichert
  */
 public class Scores3D extends GridPane {
 
-    public ObjectProperty<Font> fontPy = new SimpleObjectProperty<>(this, "font", Font.font("Courier", 12));
-
+    private final ObjectProperty<Font> fontPy = new SimpleObjectProperty<>(Font.font("Monospace", 12));
     private final Text txtLeft;
     private final Text txtRight;
 
@@ -46,6 +45,10 @@ public class Scores3D extends GridPane {
         add(txtLeft,       0,1);
         add(txtRightTitle,1,0);
         add(txtRight,     1,1);
+    }
+
+    public void setFont(Font font) {
+        fontPy.set(font);
     }
 
     public void showScore(int score, int levelNumber) {
