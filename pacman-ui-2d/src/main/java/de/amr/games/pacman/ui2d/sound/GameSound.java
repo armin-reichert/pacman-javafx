@@ -38,45 +38,63 @@ public class GameSound {
     private GameVariant gameVariant;
     private AssetStorage assets;
 
-    // These are created when game variant changes
-    private final Map<GameVariant, Map<String, MediaPlayer>> playerMapByGameVariant = new HashMap<>();
+    private final Map<GameVariant, Map<String, MediaPlayer>> soundsByGameVariant = new HashMap<>();
     {
         for (GameVariant variant : GameVariant.values()) {
-            playerMapByGameVariant.put(variant, Map.of());
+            soundsByGameVariant.put(variant, Map.of());
         }
     }
 
-    // These are created on demand
     private Siren siren;
     private MediaPlayer voice;
+
+    private String soundURL(String keySuffix) {
+        String assetKey = assetPrefix(gameVariant) + ".audio." + keySuffix;
+        URL url = assets.get(assetKey);
+        return url != null ? url.toExternalForm() : null;
+    }
+
+    public MediaPlayer makeSound(String keySuffix, double volume, boolean loop) {
+        String url = soundURL(keySuffix);
+        if (url == null) {
+            Logger.warn("Missing audio resource '%s' (%s)".formatted(keySuffix, gameVariant));
+            return null;
+        }
+        var player = new MediaPlayer(new Media(url));
+        player.setCycleCount(loop ? MediaPlayer.INDEFINITE : 1);
+        player.setVolume(volume);
+        player.muteProperty().bind(mutedPy);
+        player.statusProperty().addListener((py,ov,nv) -> logPlayerStatusChange(player, keySuffix, ov, nv));
+        Logger.info("Media player created from URL {}", url);
+        return player;
+    }
 
     //TODO check volume settings
     public void init(GameVariant gameVariant) {
         this.gameVariant = checkNotNull(gameVariant);
-        if (playerMapByGameVariant.get(gameVariant).isEmpty()) {
+        if (soundsByGameVariant.get(gameVariant).isEmpty()) {
             Map<String, MediaPlayer> sounds = new HashMap<>();
-            sounds.put("game_over", makeSound("game_over", 1, false));
-            sounds.put("game_ready", makeSound("game_ready", 1, false));
-            sounds.put("ghost_returns", makeSound("ghost_returns", 1, true));
+            soundsByGameVariant.put(gameVariant, sounds);
+            sounds.put("game_over",      makeSound("game_over", 1, false));
+            sounds.put("game_ready",     makeSound("game_ready", 1, false));
+            sounds.put("ghost_returns",  makeSound("ghost_returns", 1, true));
             sounds.put("level_complete", makeSound("level_complete", 1, false));
-            sounds.put("pacman_munch", makeSound("pacman_munch", 1, true));
-            sounds.put("pacman_death", makeSound("pacman_death", 1, false));
-            sounds.put("pacman_power", makeSound("pacman_power", 1, true));
-            MediaPlayer bouncePlayer = makeSound("bonus_bouncing", 1, true);
-            if (bouncePlayer != null) {
-                bouncePlayer.setRate(0.5);
+            sounds.put("pacman_munch",   makeSound("pacman_munch", 1, true));
+            sounds.put("pacman_death",   makeSound("pacman_death", 1, false));
+            sounds.put("pacman_power",   makeSound("pacman_power", 1, true));
+            MediaPlayer bouncePlayer =   makeSound("bonus_bouncing", 1, true);
+            if (gameVariant == GameVariant.MS_PACMAN_TENGEN && bouncePlayer != null) {
+                bouncePlayer.setRate(0.25); //TODO why is this needed?
             }
             sounds.put("bonus_bouncing", bouncePlayer);
-
-            playerMapByGameVariant.put(gameVariant, sounds);
-            Logger.info("Created media players for game variant {}", gameVariant);
+            Logger.info("Created sounds for game variant {}", gameVariant);
         }
         siren = null;
         logPlayerStatus();
     }
 
     private Map<String, MediaPlayer> players(GameVariant gameVariant) {
-        return playerMapByGameVariant.get(gameVariant);
+        return soundsByGameVariant.get(gameVariant);
     }
 
     private void logPlayerStatus() {
@@ -99,22 +117,6 @@ public class GameSound {
 
     private void logPlayerStatusChange(MediaPlayer player, String key, MediaPlayer.Status oldStatus, MediaPlayer.Status newStatus) {
         Logger.debug("[{}] {} -> {}, volume {}", key, (oldStatus != null ? oldStatus : "undefined"), newStatus, player.getVolume());
-    }
-
-    public MediaPlayer makeSound(String keySuffix, double volume, boolean loop) {
-        String assetKey = assetPrefix(gameVariant) + ".audio." + keySuffix;
-        URL url = assets.get(assetKey);
-        if (url == null) {
-            Logger.warn("Missing audio resource '%s' (%s)".formatted(assetKey, gameVariant));
-            return null;
-        }
-        var player = new MediaPlayer(new Media(url.toExternalForm()));
-        player.setCycleCount(loop ? MediaPlayer.INDEFINITE : 1);
-        player.setVolume(volume);
-        player.muteProperty().bind(mutedPy);
-        player.statusProperty().addListener((py,ov,nv) -> logPlayerStatusChange(player, keySuffix, ov, nv));
-        Logger.info("Media player created from URL {}", url);
-        return player;
     }
 
     private void playIfEnabled(MediaPlayer player) {
@@ -240,7 +242,7 @@ public class GameSound {
         playClipIfEnabled("bonus_eaten", 1);
     }
 
-    public void playCreditSound() {
+    public void playInsertCoinSound() {
         playClipIfEnabled("credit", 1);
     }
 

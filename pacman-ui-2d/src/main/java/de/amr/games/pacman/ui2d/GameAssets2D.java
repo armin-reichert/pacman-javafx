@@ -119,6 +119,9 @@ public class GameAssets2D extends AssetStorage {
         assets.store("ms_pacman.audio.siren.3",         rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
         assets.store("ms_pacman.audio.siren.4",         rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
         assets.store("ms_pacman.audio.ghost_returns",   rm.url("sound/mspacman/GhostEyes.mp3"));
+        assets.store("ms_pacman.audio.bonus_bouncing",  rm.url("sound/mspacman/Fruit Bounce.mp3"));
+
+        assets.store("tengen.audio.bonus_bouncing",     rm.url("sound/tengen/fruitbounce.wav"));
 
         //
         // Ms. Pac-Man game Tengen

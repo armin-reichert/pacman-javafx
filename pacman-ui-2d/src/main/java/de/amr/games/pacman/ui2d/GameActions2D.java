@@ -47,7 +47,7 @@ public enum GameActions2D implements GameAction {
                 boolean coinInserted = context.gameController().coinControl().insertCoin();
                 if (coinInserted) {
                     context.sound().enabledProperty().set(true); // in demo mode, sound is disabled
-                    context.sound().playCreditSound();
+                    context.sound().playInsertCoinSound();
                     context.game().publishGameEvent(GameEventType.CREDIT_ADDED);
                 }
                 if (context.gameState() != GameState.WAITING_FOR_START) {
