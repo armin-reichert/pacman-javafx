@@ -49,11 +49,6 @@ public interface GameScene extends GameEventListener, GameActionProvider {
     Vector2f size();
 
     /**
-     * @return screen scaling
-     */
-    double scaling();
-
-    /**
      * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.
      */
     default void onSceneVariantSwitch(GameScene oldScene) {}

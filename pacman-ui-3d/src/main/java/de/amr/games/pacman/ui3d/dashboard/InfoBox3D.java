@@ -10,6 +10,7 @@ import de.amr.games.pacman.ui2d.dashboard.InfoBox;
 import de.amr.games.pacman.ui2d.dashboard.InfoText;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
+import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.util.NightMode;
 import de.amr.games.pacman.ui3d.GameActions3D;
 import de.amr.games.pacman.ui3d.GameAssets3D;
@@ -137,9 +138,13 @@ public class InfoBox3D extends InfoBox {
         if (context.currentGameScene().isPresent()) {
             GameScene gameScene = context.currentGameScene().get();
             Vector2f size = gameScene.size();
-            double scaling = gameScene.scaling();
-            return "%.0fx%.0f (scaled: %.0fx%.0f)".formatted(
-                size.x(), size.y(), size.x() * scaling, size.y() * scaling);
+            if (gameScene instanceof GameScene2D gameScene2D) {
+                double scaling = gameScene2D.scaling();
+                return "%.0fx%.0f (scaled: %.0fx%.0f)".formatted(
+                        size.x(), size.y(), size.x() * scaling, size.y() * scaling);
+            } else {
+                return "%.0fx%.0f".formatted(size.x(), size.y());
+            }
         }
         return InfoText.NO_INFO;
     }

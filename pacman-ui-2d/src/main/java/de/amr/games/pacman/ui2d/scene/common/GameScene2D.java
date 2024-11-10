@@ -48,7 +48,6 @@ public abstract class GameScene2D implements GameScene {
     public DoubleProperty scalingProperty() { return scalingPy; }
     public void setScaling(double scaling) { scalingPy.set(scaling); }
 
-    @Override
     public double scaling() {
         return scalingPy.get();
     }

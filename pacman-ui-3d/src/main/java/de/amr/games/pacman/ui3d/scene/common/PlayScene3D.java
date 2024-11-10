@@ -337,11 +337,6 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     @Override
-    public double scaling() {
-        return 1; // irrelevant
-    }
-
-    @Override
     public void onEnterGameState(GameState state) {
         Logger.info("Entering game state {}", state);
         switch (state) {
