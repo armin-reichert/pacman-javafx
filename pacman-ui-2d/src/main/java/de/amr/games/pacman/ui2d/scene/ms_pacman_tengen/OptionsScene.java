@@ -15,6 +15,7 @@ import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -268,7 +269,10 @@ public class OptionsScene extends GameScene2D {
         drawArrowIfSelected(renderer, OPTION_STARTING_LEVEL, y, scaledFont);
         renderer.drawText("STARTING LEVEL", LABEL_COLOR, scaledFont, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
-        renderer.drawText(String.valueOf(game.startLevelNumber()), VALUE_COLOR, scaledFont, COL_VALUE + TS, y);
+        renderer.drawText(String.valueOf(game.startLevelNumber()), VALUE_COLOR, scaledFont, COL_VALUE, y);
+        if (game.numContinues() < 4) {
+            renderer.drawSpriteScaled(TengenMsPacManGameSpriteSheet.CONTINUES_SPRITES[game.numContinues()], COL_VALUE + 3 * TS, y - TS);
+        }
 
         y += 3 * TS;
         centerLabelText(renderer, "MOVE ARROW WITH JOYPAD", scaledFont, y);

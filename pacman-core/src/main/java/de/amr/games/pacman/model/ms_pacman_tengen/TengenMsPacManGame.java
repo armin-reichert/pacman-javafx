@@ -106,7 +106,7 @@ public class TengenMsPacManGame extends GameModel {
     private boolean boosterActive;
     private byte startLevelNumber; // 1-7
     private boolean canStartGame;
-    private int numContinues;
+    private byte numContinues;
     private final Steering autopilot = new RuleBasedPacSteering(this);
     private final Steering demoLevelSteering = new RuleBasedPacSteering(this);
 
@@ -115,9 +115,6 @@ public class TengenMsPacManGame extends GameModel {
 
         scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman_tengen.xml"));
         mapConfigMgr.loadMaps();
-
-        initialLives = 3;
-        numContinues = 3;
         simulateOverflowBug = false;
 
         //TODO: I have no idea about the timing in Tengen, use these inofficial Ms. Pac-Man Arcade values for now
@@ -137,6 +134,18 @@ public class TengenMsPacManGame extends GameModel {
         setBoosterMode(BoosterMode.OFF);
         setDifficulty(Difficulty.NORMAL);
         setStartLevelNumber(1);
+        setNumContinues(4);
+        setInitialLives(3);
+    }
+
+    @Override
+    public void reset() {
+        //TODO clarify what "reset" means
+        playing = false;
+        scoreManager.resetScore();
+        lives = initialLives;
+        numContinues = 4;
+        level = null;
     }
 
     public MapConfigurationManager mapConfigMgr() {
@@ -180,6 +189,14 @@ public class TengenMsPacManGame extends GameModel {
         return startLevelNumber;
     }
 
+    public void setNumContinues(int numContinues) {
+        this.numContinues = (byte) numContinues;
+    }
+
+    public byte numContinues() {
+        return numContinues;
+    }
+
     public boolean isBoosterActive() {
         return boosterActive;
     }
@@ -197,7 +214,8 @@ public class TengenMsPacManGame extends GameModel {
     public void setCanStartGame(boolean canStartGame) {
         this.canStartGame = canStartGame;
     }
-   @Override
+
+    @Override
     public long gameOverStateTicks() {
         return 420; // TODO how much really?
     }
@@ -293,15 +311,6 @@ public class TengenMsPacManGame extends GameModel {
     public float ghostTunnelSpeed(Ghost ghost) {
         //TODO is this correct?
         return 0.4f * ghost.baseSpeed();
-    }
-
-    @Override
-    public void reset() {
-        playing = false;
-        lives = initialLives;
-        numContinues = 3;
-        level = null;
-        scoreManager.resetScore();
     }
 
     @Override
