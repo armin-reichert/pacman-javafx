@@ -136,22 +136,24 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     public void bindGameActions() {
         bind(GameActions3D.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
         bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
-        if (context.level().isDemoLevel()) {
-            if (context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                bind(TengenGameActions.QUIT_DEMO_LEVEL, context.joypad().keyCombination(NES.Joypad.START));
-            } else {
-                bind(GameActions2D.ADD_CREDIT, context.arcade().keyCombination(Arcade.Controls.COIN));
+        if (context.game().level().isPresent()) {
+            if (context.level().isDemoLevel()) {
+                if (context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                    bind(TengenGameActions.QUIT_DEMO_LEVEL, context.joypad().keyCombination(NES.Joypad.START));
+                } else {
+                    bind(GameActions2D.ADD_CREDIT, context.arcade().keyCombination(Arcade.Controls.COIN));
+                }
             }
-        }
-        else {
-            if (context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                bindDefaultJoypadActions(this, context.joypad());
-            } else {
-                bindDefaultArcadeControllerActions(this, context.arcade());
+            else {
+                if (context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                    bindDefaultJoypadActions(this, context.joypad());
+                } else {
+                    bindDefaultArcadeControllerActions(this, context.arcade());
+                }
+                bindFallbackPlayerControlActions(this);
+                bindCheatActions(this);
+                context.setScoreVisible(true); //TODO check this
             }
-            bindFallbackPlayerControlActions(this);
-            bindCheatActions(this);
-            context.setScoreVisible(true); //TODO check this
         }
         registerGameActionKeyBindings(context.keyboard());
     }

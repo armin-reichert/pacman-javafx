@@ -51,6 +51,10 @@ public class PlayScene2D extends GameScene2D {
     @Override
     protected void doInit() {
         context.setScoreVisible(true);
+        ArcadeKeyAdapter arcadeController = context.arcade();
+        bindDefaultArcadeControllerActions(this, arcadeController);
+        bindFallbackPlayerControlActions(this);
+        registerGameActionKeyBindings(context.keyboard());
     }
 
     @Override
