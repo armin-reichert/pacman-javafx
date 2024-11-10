@@ -72,7 +72,7 @@ public class Ghost extends Creature implements AnimatedEntity {
      */
     private Ghost(byte id) {
         this.id = GameLevel.checkGhostID(id);
-        corneringSpeedUp = -1f;
+        corneringSpeedUp = -1.25f;
     }
 
     public void setHuntingBehaviour(Consumer<Ghost> huntingBehaviour) {
