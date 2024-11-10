@@ -324,7 +324,7 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public boolean isOver() {
-        return lives == 0 && numContinues == 0;
+        return lives == 0;
     }
 
     @Override
@@ -516,7 +516,6 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public void endGame() {
-        // nothing to do yet
     }
 
     @Override
