@@ -26,8 +26,8 @@ public abstract class HuntingControl {
     private PhaseType phaseType;
     private Runnable phaseChangeAction;
 
-    public HuntingControl(String name) {
-        timer = new TickTimer(name);
+    protected HuntingControl() {
+        timer = new TickTimer("HuntingTimer-" + getClass().getSimpleName());
         phaseIndex = 0;
         phaseType = PhaseType.SCATTERING;
     }

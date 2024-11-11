@@ -32,7 +32,7 @@ public enum TengenGameActions implements GameAction {
         public void execute(GameContext context) {
             TengenMsPacManGame tengenGame = (TengenMsPacManGame) context.game();
             if (tengenGame.boosterMode() == BoosterMode.ACTIVATED_USING_KEY) {
-                tengenGame.setBoosterActive(!tengenGame.isBoosterActive()); // toggle state
+                tengenGame.activatePacBooster(!tengenGame.isBoosterActive()); // toggle state
             }
         }
     },

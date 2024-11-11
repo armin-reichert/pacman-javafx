@@ -115,13 +115,18 @@ public class PacManArcadeGame extends GameModel {
     protected static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {42, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
     // Bonus value = factor * 100
     protected static final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
-
     protected static final Vector2f BONUS_POS = halfTileRightOf(13, 20);
+
+    // Ticks of scatter and chasing phases, -1=INDEFINITE
+    protected static final int[] HUNTING_TICKS_LEVEL_1 = {420, 1200, 420, 1200, 300,  1200, 300, -1};
+    protected static final int[] HUNTING_TICKS_LEVEL_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
+    protected static final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 300, 1200, 300, 62262,   1, -1};
 
     private final MapConfig theMapConfig;
 
     protected final Steering autopilot = new RuleBasedPacSteering(this);
     protected final Steering demoLevelSteering = new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE));
+
     protected byte cruiseElroy;
 
     public PacManArcadeGame(File userDir) {
@@ -136,19 +141,14 @@ public class PacManArcadeGame extends GameModel {
         var theMap = new WorldMap(getClass().getResource("/de/amr/games/pacman/maps/pacman/pacman.world"));
         theMapConfig = new MapConfig("Pac-Man Arcade Map", 1, theMap, MAP_COLOR_SCHEME);
 
-        huntingControl = new HuntingControl("HuntingControl-" + getClass().getSimpleName()) {
-            // Ticks of scatter and chasing phases, -1 = forever
-            private static final int[] HUNTING_TICKS_1     = {420, 1200, 420, 1200, 300,  1200, 300, -1};
-            private static final int[] HUNTING_TICKS_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
-            private static final int[] HUNTING_TICKS_5     = {300, 1200, 300, 1200, 300, 62262,   1, -1};
-
+        huntingControl = new HuntingControl() {
             @Override
             public long huntingTicks(int levelNumber, int phaseIndex) {
                 checkHuntingPhaseIndex(phaseIndex);
                 long ticks = switch (levelNumber) {
-                    case 1 -> HUNTING_TICKS_1[phaseIndex];
-                    case 2, 3, 4 -> HUNTING_TICKS_2_3_4[phaseIndex];
-                    default -> HUNTING_TICKS_5[phaseIndex];
+                    case 1 -> HUNTING_TICKS_LEVEL_1[phaseIndex];
+                    case 2, 3, 4 -> HUNTING_TICKS_LEVEL_2_3_4[phaseIndex];
+                    default -> HUNTING_TICKS_LEVEL_5_PLUS[phaseIndex];
                 };
                 return ticks != -1 ? ticks : TickTimer.INDEFINITE;
             }
@@ -198,8 +198,13 @@ public class PacManArcadeGame extends GameModel {
 
     @Override
     public void reset() {
-        super.reset();
+        playing = false;
+        lives = initialLives;
+        level = null;
         setCruiseElroy(0);
+        levelCounter().clear();
+        scoreManager().loadHighScore();
+        scoreManager.resetScore();
     }
 
     @Override
@@ -366,6 +371,8 @@ public class PacManArcadeGame extends GameModel {
     @Override
     public void endGame() {
         GameController.it().coinControl().consumeCoin();
+        scoreManager().updateHighScore(GameController.it().currentGameVariant());
+        scoreManager.resetScore();
     }
 
     @Override

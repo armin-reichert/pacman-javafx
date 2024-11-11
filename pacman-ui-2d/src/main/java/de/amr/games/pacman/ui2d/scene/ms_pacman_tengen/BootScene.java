@@ -48,12 +48,13 @@ public class BootScene extends GameScene2D {
         ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
         ghost.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
 
-        // TODO reset game here by now
+        // TODO reset game using model method
         TengenMsPacManGame game = (TengenMsPacManGame) context.game();
         game.setMapCategory(MapCategory.ARCADE);
         game.setBoosterMode(BoosterMode.OFF);
         game.setDifficulty(Difficulty.NORMAL);
         game.setStartLevelNumber(1);
+        game.setNumContinues(4);
 
         context.enableJoypad();
     }

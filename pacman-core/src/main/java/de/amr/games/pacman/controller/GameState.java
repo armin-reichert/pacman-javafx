@@ -36,8 +36,6 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();
-            game.levelCounter().clear();
-            game.scoreManager().loadHighScore();
             game.reset();
         }
 
@@ -277,7 +275,6 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             timer.reset(game.gameOverStateTicks());
             timer.start();
-            game.scoreManager().updateHighScore(GameController.it().currentGameVariant());
             game.endGame();
             game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
         }

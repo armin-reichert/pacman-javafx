@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model.ms_pacman_tengen;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
@@ -99,7 +100,6 @@ public class TengenMsPacManGame extends GameModel {
     });
 
     private final MapConfigurationManager mapConfigMgr = new MapConfigurationManager();
-
     private MapCategory mapCategory;
     private Difficulty difficulty;
     private BoosterMode boosterMode;
@@ -112,41 +112,43 @@ public class TengenMsPacManGame extends GameModel {
 
     public TengenMsPacManGame(File userDir) {
         super(userDir);
-
         scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman_tengen.xml"));
-        mapConfigMgr.loadMaps();
         simulateOverflowBug = false;
 
-        //TODO: I have no idea about the timing in Tengen, use these inofficial Ms. Pac-Man Arcade values for now
-        huntingControl = new HuntingControl("HuntingControl-" + getClass().getSimpleName()) {
-            private static final int[] HUNTING_TICKS_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
-            private static final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
+        //TODO: I have no info about the exact timing so far, so I use these (inofficial) Arcade game values for now
+        huntingControl = new HuntingControl() {
+            static final int[] TICKS_LEVEL_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
+            static final int[] TICKS_LEVEL_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
 
             @Override
             public long huntingTicks(int levelNumber, int phaseIndex) {
-                long ticks = levelNumber < 5 ? HUNTING_TICKS_1_TO_4[phaseIndex] : HUNTING_TICKS_5_PLUS[phaseIndex];
+                long ticks = levelNumber < 5 ? TICKS_LEVEL_1_TO_4[phaseIndex] : TICKS_LEVEL_5_PLUS[phaseIndex];
                 return ticks != -1 ? ticks : TickTimer.INDEFINITE;
             }
         };
         huntingControl.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
 
-        setMapCategory(MapCategory.ARCADE);
-        setBoosterMode(BoosterMode.OFF);
-        setDifficulty(Difficulty.NORMAL);
-        setStartLevelNumber(1);
-        setNumContinues(4);
-        setInitialLives(3);
+        mapConfigMgr.loadMaps();
+        reset();
     }
 
     @Override
     public void reset() {
-        //TODO clarify what "reset" means
-        playing = false;
-        scoreManager.resetScore();
-        lives = initialLives;
-        numContinues = 4;
         level = null;
+        playing = false;
+        lives = initialLives;
+        boosterActive = false;
+        setMapCategory(MapCategory.ARCADE);
+        setBoosterMode(BoosterMode.OFF);
+        setDifficulty(Difficulty.NORMAL);
+        setStartLevelNumber(1);
+        setInitialLives(3);
+        setNumContinues(4);
+        levelCounter().clear();
+        scoreManager().loadHighScore();
+        scoreManager.resetScore();
     }
+
 
     public MapConfigurationManager mapConfigMgr() {
         return mapConfigMgr;
@@ -345,7 +347,7 @@ public class TengenMsPacManGame extends GameModel {
         float pacBaseSpeed = pacBaseSpeedInLevel(levelNumber) + pacDifficultySpeedDelta(difficulty);
         level.pac().setBaseSpeed(pacBaseSpeed);
         if (boosterMode == BoosterMode.ALWAYS_ON) {
-            setBoosterActive(true);
+            activatePacBooster(true);
         }
         level.ghosts().forEach(ghost -> {
             ghost.setBaseSpeed(ghostBaseSpeedInLevel(levelNumber)
@@ -363,7 +365,7 @@ public class TengenMsPacManGame extends GameModel {
         });
     }
 
-    public void setBoosterActive(boolean active) {
+    public void activatePacBooster(boolean active) {
         if (boosterActive != active) {
             boosterActive = active;
             float speed = pacBaseSpeedInLevel(level.number) + pacDifficultySpeedDelta(difficulty);
@@ -406,7 +408,7 @@ public class TengenMsPacManGame extends GameModel {
         level.setMapConfig(mapConfigMgr.getMapConfig(mapCategory, level.number));
         createWorldAndPopulation(level.mapConfig().worldMap());
         level.pac().setAutopilot(autopilot);
-        setBoosterActive(false); // gets activated in startLevel() if mode is ALWAYS_ON
+        activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // ghosts inside house start at floor of house
         level.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost -> {
@@ -420,7 +422,7 @@ public class TengenMsPacManGame extends GameModel {
         demoLevelSteering.init();
         level.setMapConfig(mapConfigMgr.getMapConfig(mapCategory, level.number));
         createWorldAndPopulation(level.mapConfig().worldMap());
-        setBoosterActive(false); // gets activated in startLevel() if mode is ALWAYS_ON
+        activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // ghosts inside house start at floor of house
         level.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost -> {
@@ -516,6 +518,8 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public void endGame() {
+        scoreManager().updateHighScore(GameController.it().currentGameVariant());
+        scoreManager.resetScore();
     }
 
     @Override

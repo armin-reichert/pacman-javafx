@@ -67,6 +67,7 @@ public abstract class GameModel {
 
     protected GameLevel            level;
 
+    public abstract void           reset();
     public abstract boolean        canStartNewGame();
     public abstract boolean        isOver();
     public abstract void           endGame();
@@ -118,13 +119,6 @@ public abstract class GameModel {
 
     public HuntingControl huntingControl() {
         return huntingControl;
-    }
-
-    public void reset() {
-        playing = false;
-        lives = initialLives;
-        level = null;
-        scoreManager.resetScore();
     }
 
     public void startNewGame() {

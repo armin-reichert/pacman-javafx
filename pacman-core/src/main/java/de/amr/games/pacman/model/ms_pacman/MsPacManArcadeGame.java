@@ -73,6 +73,17 @@ public class MsPacManArcadeGame extends GameModel {
         /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
     };
 
+    /*
+     * These numbers are from a conversation with @damselindis on Reddit.
+     *
+     * I am not sure if they are correct.
+     *
+     * @see <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>
+     * @see <a href="https://github.com/armin-reichert/pacman-basic/blob/main/doc/mspacman-details-reddit-user-damselindis.md">GitHub</a>
+     */
+    private static final int[] HUNTING_TICKS_LEVEL_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
+    private static final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
+
     // Ms. Pac-Man game specific
     public static final String ANIM_MR_PACMAN_MUNCHING = "pacman_munching";
 
@@ -101,19 +112,10 @@ public class MsPacManArcadeGame extends GameModel {
         scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
 
-        huntingControl = new HuntingControl("HuntingControl-" + getClass().getSimpleName()) {
-            /*
-             * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
-             *
-             * @see <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>
-             * @see <a href="https://github.com/armin-reichert/pacman-basic/blob/main/doc/mspacman-details-reddit-user-damselindis.md">GitHub</a>
-             */
-            private static final int[] HUNTING_TICKS_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
-            private static final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
-
+        huntingControl = new HuntingControl() {
             @Override
             public long huntingTicks(int levelNumber, int phaseIndex) {
-                long ticks = levelNumber < 5 ? HUNTING_TICKS_1_TO_4[phaseIndex] : HUNTING_TICKS_5_PLUS[phaseIndex];
+                long ticks = levelNumber < 5 ? HUNTING_TICKS_LEVEL_1_TO_4[phaseIndex] : HUNTING_TICKS_LEVEL_5_PLUS[phaseIndex];
                 return ticks != -1 ? ticks : TickTimer.INDEFINITE;
             }
         };
@@ -126,8 +128,13 @@ public class MsPacManArcadeGame extends GameModel {
 
     @Override
     public void reset() {
-        super.reset();
+        lives = initialLives;
+        level = null;
+        playing = false;
         cruiseElroy = 0;
+        levelCounter().clear();
+        scoreManager().loadHighScore();
+        scoreManager.resetScore();
     }
 
     @Override
@@ -307,6 +314,8 @@ public class MsPacManArcadeGame extends GameModel {
     @Override
     public void endGame() {
         GameController.it().coinControl().consumeCoin();
+        scoreManager().updateHighScore(GameController.it().currentGameVariant());
+        scoreManager.resetScore();
     }
 
     @Override
