@@ -34,6 +34,7 @@ import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -467,6 +468,17 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         if (tens > 0) {
             drawSpriteScaled(spriteSheet.digit(tens), x + 2,  digitY);
         }
+    }
+
+    public void drawBar(Color outlineColor, Color barColor, double width, double y) {
+        double scaling = scaling();
+        ctx().save();
+        ctx().scale(scaling, scaling);
+        ctx().setFill(outlineColor);
+        ctx().fillRect(0, y, width, TS);
+        ctx().setFill(barColor);
+        ctx().fillRect(0, y + 1, width, TS - 2);
+        ctx().restore();
     }
 
     public void drawMovingBonus(GameSpriteSheet spriteSheet, MovingBonus bonus) {

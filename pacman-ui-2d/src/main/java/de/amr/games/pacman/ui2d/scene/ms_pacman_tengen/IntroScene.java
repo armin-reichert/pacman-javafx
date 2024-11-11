@@ -155,8 +155,8 @@ public class IntroScene extends GameScene2D {
             }
 
             case CREDITS -> {
-                drawVioletBar(r, 20);
-                drawVioletBar(r, 212);
+                r.drawBar(paletteColor(0x20), paletteColor(0x13), size().x(), 20);
+                r.drawBar(paletteColor(0x20), paletteColor(0x13), size().x(), 212);
                 int y = 7 * TS;
                 r.drawText("CREDITS FOR MS PAC-MAN", paletteColor(0x20), scaledFont, 3 * TS, y);
                 y += 4 * TS;
@@ -181,17 +181,6 @@ public class IntroScene extends GameScene2D {
 
     private void centerLabelText(GameRenderer renderer, String text, Font font, Color color, double y) {
         renderer.drawText(text, color, font, (NES_TILES_X - text.length()) * HTS, y);
-    }
-
-    private void drawVioletBar(GameRenderer renderer, double y) {
-        GraphicsContext g = renderer.ctx();
-        g.save();
-        g.scale(scaling(), scaling());
-        g.setFill(paletteColor(0x20));
-        g.fillRect(0, y, size().x(), TS);
-        g.setFill(paletteColor(0x13));
-        g.fillRect(0, y + 1, size().x(), TS - 2);
-        g.restore();
     }
 
     /**

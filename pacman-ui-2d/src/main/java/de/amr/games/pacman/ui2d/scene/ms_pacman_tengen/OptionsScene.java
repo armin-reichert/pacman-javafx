@@ -15,7 +15,6 @@ import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -221,11 +220,13 @@ public class OptionsScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent(GameRenderer renderer) {
-        renderer.scalingProperty().set(scaling());
-        Font scaledFont = renderer.scaledArcadeFont(TS);
+        TengenMsPacManGameRenderer r = (TengenMsPacManGameRenderer) renderer;
+
+        r.scalingProperty().set(scaling());
+        Font scaledFont = r.scaledArcadeFont(TS);
 
         double y = 20;
-        drawBabyBlueBar(renderer, y);
+        r.drawBar(paletteColor(0x20), paletteColor(0x21), size().x(), y);
 
         y += 28;
         renderer.drawText("MS PAC-MAN OPTIONS", LABEL_COLOR, scaledFont, COL_LABEL + 3 * TS, y);
@@ -281,22 +282,11 @@ public class OptionsScene extends GameScene2D {
         centerLabelText(renderer, "PRESS START TO START GAME", scaledFont, y);
 
         y += 4;
-        drawBabyBlueBar(renderer, y);
+        r.drawBar(paletteColor(0x20), paletteColor(0x21), size().x(), y);
     }
 
     private void centerLabelText(GameRenderer renderer, String text, Font font, double y) {
         renderer.drawText(text, LABEL_COLOR, font, (NES_TILES_X - text.length()) * HTS, y);
-    }
-
-    private void drawBabyBlueBar(GameRenderer renderer, double y) {
-        GraphicsContext g = renderer.ctx();
-        g.save();
-        g.scale(scaling(), scaling());
-        g.setFill(paletteColor(0x20));
-        g.fillRect(0, y, size().x(), TS);
-        g.setFill(paletteColor(0x21));
-        g.fillRect(0, y + 1, size().x(), TS - 2);
-        g.restore();
     }
 
     private void drawArrowIfSelected(GameRenderer renderer, int option, double y, Font font) {
