@@ -172,7 +172,7 @@ public class Globals {
      * @param to upper bound (inclusive)
      * @return {@code true} if value is in closed interval {@code [from; to]}
      */
-    public static boolean inRange(int value, int from, int to) {
+    public static boolean inRange(long value, long from, long to) {
         return from <= value && value <= to;
     }
 
