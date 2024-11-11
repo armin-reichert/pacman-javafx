@@ -68,6 +68,13 @@ public enum GameState implements FsmState<GameModel> {
         }
     },
 
+    SHOWING_CREDITS {
+        @Override
+        public void onUpdate(GameModel context) {
+
+        }
+    },
+
     STARTING_GAME {
         static final short TICK_NEW_GAME_SHOW_GUYS       = 120;
         static final short TICK_NEW_GAME_START_PLAYING   = 240;
@@ -291,8 +298,15 @@ public enum GameState implements FsmState<GameModel> {
                         enterState(INTRO);
                     }
                 } else {
+                    boolean wasDemoLevel = game.level().get().isDemoLevel();
                     game.deleteLevel();
-                    enterState(game.canStartNewGame() ? WAITING_FOR_START : INTRO);
+                    if (game.canStartNewGame()) {
+                        enterState(WAITING_FOR_START);
+                    } else if (wasDemoLevel && GameController.it().currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                        enterState(SHOWING_CREDITS);
+                    } else {
+                        enterState(INTRO);
+                    }
                 }
             }
         }

@@ -32,17 +32,32 @@ public class TengenMsPacManGameSceneConfig implements GameSceneConfig {
     private final TengenMsPacManGameRenderer renderer;
 
     public TengenMsPacManGameSceneConfig(AssetStorage assets) {
-        set("BootScene",   new BootScene());
-        set("IntroScene",  new IntroScene());
-        set("StartScene",  new OptionsScene());
-        set("PlayScene2D", new TengenPlayScene2D());
-        set("CutScene1",   new CutScene1());
-        set("CutScene2",   new CutScene2());
-        set("CutScene3",   new CutScene3());
-        set("CutScene4",   new CutScene4());
+        set("BootScene",      new BootScene());
+        set("IntroScene",     new IntroScene());
+        set("StartScene",     new OptionsScene());
+        set("ShowingCredits", new CreditsScene());
+        set("PlayScene2D",    new TengenPlayScene2D());
+        set("CutScene1",      new CutScene1());
+        set("CutScene2",      new CutScene2());
+        set("CutScene3",      new CutScene3());
+        set("CutScene4",      new CutScene4());
 
         spriteSheet = assets.get(GameAssets2D.assetPrefix(GameVariant.MS_PACMAN_TENGEN) + ".spritesheet");
         renderer = new TengenMsPacManGameRenderer(assets);
+    }
+
+    @Override
+    public GameScene selectGameScene(GameContext context) {
+        String sceneID = switch (context.gameState()) {
+            case BOOT               -> "BootScene";
+            case WAITING_FOR_START  -> "StartScene";
+            case SHOWING_CREDITS    -> "ShowingCredits";
+            case INTRO              -> "IntroScene";
+            case INTERMISSION       -> "CutScene" + context.game().intermissionNumberAfterLevel();
+            case TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");
+            default                 -> "PlayScene2D";
+        };
+        return get(sceneID);
     }
 
     @Override
@@ -68,19 +83,6 @@ public class TengenMsPacManGameSceneConfig implements GameSceneConfig {
     @Override
     public GameSpriteSheet spriteSheet() {
         return spriteSheet;
-    }
-
-    @Override
-    public GameScene selectGameScene(GameContext context) {
-        String sceneID = switch (context.gameState()) {
-            case BOOT               -> "BootScene";
-            case WAITING_FOR_START  -> "StartScene";
-            case INTRO              -> "IntroScene";
-            case INTERMISSION       -> "CutScene" + context.game().intermissionNumberAfterLevel();
-            case TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");
-            default                 -> "PlayScene2D";
-        };
-        return get(sceneID);
     }
 
     @Override

@@ -27,10 +27,10 @@ import org.tinylog.Logger;
 
 import java.util.BitSet;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.paletteColor;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.NES_RESOLUTION_X;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.NES_RESOLUTION_Y;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
 
 /**
@@ -73,7 +73,7 @@ public class IntroScene extends GameScene2D {
     public void doInit() {
         context.setScoreVisible(false);
         context.enableJoypad();
-        sceneController.changeState(SceneState.WAITING_FOR_START);
+        sceneController.restart(SceneState.WAITING_FOR_START);
     }
 
     @Override
@@ -138,34 +138,7 @@ public class IntroScene extends GameScene2D {
                 for (Ghost ghost : ghosts) { r.drawAnimatedEntity(ghost); }
                 r.drawAnimatedEntity(msPacMan);
             }
-
-            case CREDITS -> {
-                r.drawBar(paletteColor(0x20), paletteColor(0x13), size().x(), 20);
-                r.drawBar(paletteColor(0x20), paletteColor(0x13), size().x(), 212);
-                int y = 7 * TS;
-                r.drawText("CREDITS FOR MS PAC-MAN", paletteColor(0x20), scaledFont, 3 * TS, y);
-                y += 4 * TS;
-                r.drawText("GAME PROGRAMMER:", paletteColor(0x23), scaledFont, 4 * TS, y);
-                y += 2 * TS;
-                r.drawText("FRANZ LANZINGER", paletteColor(0x23), scaledFont, 10 * TS, y);
-                y += 3 * TS;
-                r.drawText("SPECIAL THANKS:", paletteColor(0x23), scaledFont, 4 * TS, y);
-                y += 2 * TS;
-                r.drawText("JEFF YONAN", paletteColor(0x23), scaledFont, 10 * TS, y);
-                y += TS;
-                r.drawText("DAVE O'RIVA", paletteColor(0x23), scaledFont, 10 * TS, y);
-                y += 4 * TS;
-                centerLabelText(r, "MS PAC-MAN TM NAMCO LTD", scaledFont, paletteColor(0x19), y);
-                y += TS;
-                centerLabelText(r, "©1990 TENGEN IBC", scaledFont, paletteColor(0x19), y);
-                y += TS;
-                centerLabelText(r, "ALL RIGHTS RESERVED", scaledFont, paletteColor(0x19), y);
-            }
         }
-    }
-
-    private void centerLabelText(GameRenderer renderer, String text, Font font, Color color, double y) {
-        renderer.drawText(text, color, font, (NES_TILES_X - text.length()) * HTS, y);
     }
 
     /**
@@ -227,7 +200,7 @@ public class IntroScene extends GameScene2D {
             public void onUpdate(IntroScene intro) {
                 if (timer.atSecond(7.8)) {
                     intro.dark = true;
-                } else if (timer.atSecond(8.5)) {
+                } else if (timer.atSecond(9)) {
                     intro.dark = false;
                     intro.sceneController.changeState(SHOWING_MARQUEE);
                 }
@@ -240,6 +213,7 @@ public class IntroScene extends GameScene2D {
                 timer.restartTicks(TickTimer.INDEFINITE);
 
                 intro.msPacMan = new Pac();
+                intro.msPacMan.setName("Ms. Pac-Man");
                 intro.msPacMan.setPosition(TS * 33, ACTOR_Y);
                 intro.msPacMan.setMoveDir(Direction.LEFT);
                 intro.msPacMan.setSpeed(SPEED);
@@ -297,7 +271,7 @@ public class IntroScene extends GameScene2D {
 
             boolean letGhostMarchIn(IntroScene intro) {
                 Ghost ghost = intro.ghosts[intro.ghostIndex];
-                Logger.info("Tick {}: {} marching in", intro.context.tick(), ghost.name());
+                Logger.debug("Tick {}: {} marching in", intro.context.tick(), ghost.name());
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.posX() <= GHOST_STOP_X) {
                         ghost.setPosX(GHOST_STOP_X);
@@ -305,7 +279,7 @@ public class IntroScene extends GameScene2D {
                         intro.waitBeforeRising = 2;
                     } else {
                         ghost.move();
-                        Logger.info("{} moves {} x={}", ghost.name(), ghost.moveDir(), ghost.posX());
+                        Logger.debug("{} moves {} x={}", ghost.name(), ghost.moveDir(), ghost.posX());
                     }
                 }
                 else if (ghost.moveDir() == Direction.UP) {
@@ -320,7 +294,7 @@ public class IntroScene extends GameScene2D {
                     }
                     else {
                         ghost.move();
-                        Logger.info("{} moves {}", ghost.name(), ghost.moveDir());
+                        Logger.debug("{} moves {}", ghost.name(), ghost.moveDir());
                     }
                 }
                 return false;
@@ -335,30 +309,14 @@ public class IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(IntroScene intro) {
-                Logger.info("Tick {}: {} marching in", intro.context.tick(), intro.msPacMan.name());
+                Logger.debug("Tick {}: {} marching in", intro.context.tick(), intro.msPacMan.name());
                 intro.msPacMan.move();
                 if (intro.msPacMan.posX() <= MS_PAC_MAN_STOP_X) {
                     intro.msPacMan.setSpeed(0);
                     intro.msPacMan.animations().ifPresent(Animations::resetCurrentAnimation); //TODO check in Tengen, seems not to work!
                 }
                 if (timer.atSecond(7.5)) {
-                    TengenMsPacManGame game = (TengenMsPacManGame) intro.context.game();
-                    game.setCanStartGame(false); // TODO check this
                     intro.context.gameController().restart(GameState.STARTING_GAME);
-                }
-            }
-        },
-
-        CREDITS {
-            @Override
-            public void onEnter(IntroScene context) {
-                timer.restartTicks(TickTimer.INDEFINITE);
-            }
-
-            @Override
-            public void onUpdate(IntroScene intro) {
-                if (timer.atSecond(3)) {
-                    intro.sceneController.restart(WAITING_FOR_START);
                 }
             }
         };
