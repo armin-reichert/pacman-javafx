@@ -88,7 +88,9 @@ public class IntroScene extends GameScene2D {
             ghost.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
         }
 
-        sceneController.restart(SceneState.WAITING_FOR_START);
+        sceneController.restart(context.game().level().isEmpty()
+            ? SceneState.WAITING_FOR_START
+            : SceneState.CREDITS);
     }
 
     @Override
@@ -241,7 +243,7 @@ public class IntroScene extends GameScene2D {
             public void onUpdate(IntroScene intro) {
                 if (timer().atSecond(7.8)) {
                     intro.dark = true;
-                } else if (timer().atSecond(8.0)) {
+                } else if (timer().atSecond(8.5)) {
                     intro.dark = false;
                     intro.sceneController.changeState(SHOWING_MARQUEE);
                 }
@@ -327,10 +329,10 @@ public class IntroScene extends GameScene2D {
                     intro.msPacMan.setSpeed(0);
                     intro.msPacMan.animations().ifPresent(Animations::resetCurrentAnimation); //TODO check in Tengen, seems not to work!
                 }
-                if (timer().atSecond(4.5)) {
+                if (timer().atSecond(7.5)) {
                     TengenMsPacManGame game = (TengenMsPacManGame) intro.context.game();
                     game.setCanStartGame(false); // TODO check this
-                    intro.sceneController.changeState(CREDITS);
+                    intro.context.gameController().changeState(GameState.STARTING_GAME);
                 }
             }
         },
@@ -338,8 +340,8 @@ public class IntroScene extends GameScene2D {
         CREDITS {
             @Override
             public void onUpdate(IntroScene intro) {
-                if (timer.atSecond(5)) {
-                    intro.context.gameController().changeState(GameState.STARTING_GAME);
+                if (timer.atSecond(10)) {
+                    intro.context.gameController().restart(GameState.INTRO);
                 }
             }
         };
