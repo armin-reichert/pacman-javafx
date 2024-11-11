@@ -289,21 +289,23 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
+                boolean wasDemoLevel = game.level().get().isDemoLevel();
+                game.deleteLevel();
                 if (GameController.it().currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                    TengenMsPacManGame tengenGame = (TengenMsPacManGame) game;
-                    if (tengenGame.startLevelNumber() >= 10 && tengenGame.numContinues() > 0) {
-                        tengenGame.setNumContinues(tengenGame.numContinues() - 1);
-                        enterState(WAITING_FOR_START);
+                    if (wasDemoLevel) {
+                        enterState(SHOWING_CREDITS);
                     } else {
-                        enterState(INTRO);
+                        TengenMsPacManGame tengenGame = (TengenMsPacManGame) game;
+                        if (tengenGame.startLevelNumber() >= 10 && tengenGame.numContinues() > 0) {
+                            tengenGame.setNumContinues(tengenGame.numContinues() - 1);
+                            enterState(WAITING_FOR_START);
+                        } else {
+                            enterState(INTRO);
+                        }
                     }
                 } else {
-                    boolean wasDemoLevel = game.level().get().isDemoLevel();
-                    game.deleteLevel();
                     if (game.canStartNewGame()) {
                         enterState(WAITING_FOR_START);
-                    } else if (wasDemoLevel && GameController.it().currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                        enterState(SHOWING_CREDITS);
                     } else {
                         enterState(INTRO);
                     }

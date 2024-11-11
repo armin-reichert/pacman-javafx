@@ -54,11 +54,16 @@ public class CreditsScene extends GameScene2D {
         y += TS;
         r.drawText("DAVE O'RIVA", paletteColor(0x23), scaledFont, 10 * TS, y);
         y += 4 * TS;
-        centerLabelText(r, "MS PAC-MAN TM NAMCO LTD", scaledFont, paletteColor(0x19), y);
+        r.drawText("MS PAC-MAN TM NAMCO LTD", paletteColor(0x19), scaledFont, centerX(23), y);
         y += TS;
-        centerLabelText(r, "©1990 TENGEN IBC", scaledFont, paletteColor(0x19), y);
+        r.drawText("©1990 TENGEN INC", paletteColor(0x19), scaledFont, centerX(16), y);
         y += TS;
         centerLabelText(r, "ALL RIGHTS RESERVED", scaledFont, paletteColor(0x19), y);
+        r.drawText("ALL RIGHTS RESERVED", paletteColor(0x19), scaledFont, centerX(19), y);
+    }
+
+    private double centerX(int textLength) {
+        return (NES_TILES_X - textLength) * HTS;
     }
 
     private void centerLabelText(GameRenderer renderer, String text, Font font, Color color, double y) {
