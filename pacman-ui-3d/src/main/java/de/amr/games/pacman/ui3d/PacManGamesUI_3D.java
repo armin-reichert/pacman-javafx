@@ -5,10 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.ui2d.GameAssets2D;
-import de.amr.games.pacman.ui2d.PacManGames2dUI;
+import de.amr.games.pacman.ui2d.PacManGamesUI;
+import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.util.Picker;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.binding.StringBinding;
 import javafx.scene.Scene;
 
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
@@ -26,7 +27,7 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
  *
  * @author Armin Reichert
  */
-public class PacManGames3dUI extends PacManGames2dUI {
+public class PacManGamesUI_3D extends PacManGamesUI {
 
     public void loadAssets() {
         GameAssets2D.addTo(assets);
@@ -44,7 +45,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
     }
 
     @Override
-    protected ObservableValue<String> stageTitleBinding() {
+    protected StringBinding stageTitleBinding() {
         return Bindings.createStringBinding(() -> {
             String sceneName = currentGameScene().map(gameScene -> gameScene.getClass().getSimpleName()).orElse(null);
             String sceneNameSuffix = sceneName != null && PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(sceneName) : "";
@@ -52,8 +53,15 @@ public class PacManGames3dUI extends PacManGames2dUI {
             String gameVariantPart = "app.title." + assetPrefix(gameVariantPy.get());
             String pausedPart = clock.pausedPy.get() ? ".paused" : "";
             String displayMode = locText(PY_3D_ENABLED.get() ? "threeD" : "twoD");
-            return locText(gameVariantPart + pausedPart, displayMode) + sceneNameSuffix;
-        }, clock.pausedPy, gameVariantPy, PY_3D_ENABLED, gameScenePy, PY_DEBUG_INFO_VISIBLE);
+            String scalingPart = "";
+            // Just in case:
+            if (currentGameScene().isPresent() && currentGameScene().get() instanceof GameScene2D gameScene2D) {
+                scalingPart = " (%.2fx)".formatted(gameScene2D.scaling());
+            }
+            return locText(gameVariantPart + pausedPart, displayMode) + sceneNameSuffix + scalingPart;
+        },
+        clock.pausedPy, gameVariantPy, gameScenePy, gamePage.heightProperty(),
+        PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE);
     }
 
     @Override

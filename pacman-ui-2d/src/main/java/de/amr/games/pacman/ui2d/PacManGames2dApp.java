@@ -50,7 +50,7 @@ public class PacManGames2dApp extends Application {
         return new Dimension2D(aspect * height, height);
     }
 
-    private PacManGames2dUI ui;
+    private PacManGamesUI ui;
 
     @Override
     public void init() {
@@ -61,7 +61,7 @@ public class PacManGames2dApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        ui = new PacManGames2dUI();
+        ui = new PacManGamesUI();
         ui.loadAssets();
         ui.setGameSceneConfig(GameVariant.MS_PACMAN, new MsPacManGameSceneConfig(ui.assets));
         ui.setGameSceneConfig(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacManGameSceneConfig(ui.assets));

@@ -25,6 +25,7 @@ import de.amr.games.pacman.ui2d.util.FlashMessageView;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
 import de.amr.games.pacman.ui2d.util.Picker;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -53,11 +54,11 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.createIcon;
 
 /**
- * 2D user interface for all Pac-Man game variants.
+ * User interface for all Pac-Man game variants (2D only).
  *
  * @author Armin Reichert
  */
-public class PacManGames2dUI implements GameEventListener, GameContext {
+public class PacManGamesUI implements GameEventListener, GameContext {
 
     public static final ArcadeKeyAdapter ARCADE_CURSOR_KEYS = new ArcadeKeyAdapter.Definition(
         new KeyCodeCombination(KeyCode.DIGIT5),
@@ -127,7 +128,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected JoypadKeyAdapter joypad = JOYPAD_CURSOR_KEYS;
     protected ArcadeKeyAdapter arcade = ARCADE_CURSOR_KEYS;
 
-    public PacManGames2dUI() {}
+    public PacManGamesUI() {}
 
     public void loadAssets() {
         GameAssets2D.addTo(assets);
@@ -299,14 +300,19 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         gamePage.gameCanvasContainer().decorationEnabledPy.set(currentGameVariant() != GameVariant.MS_PACMAN_TENGEN);
     }
 
-    protected ObservableValue<String> stageTitleBinding() {
+    protected StringBinding stageTitleBinding() {
         return Bindings.createStringBinding(
             () -> {
                 String gameVariantPart = "app.title." + assetPrefix(gameVariantPy.get());
                 String pausedPart = clock.pausedPy.get() ? ".paused" : "";
-                return locText(gameVariantPart + pausedPart, "2D");
+                String scalingPart = "";
+                // Just in case:
+                if (currentGameScene().isPresent() && currentGameScene().get() instanceof GameScene2D gameScene2D) {
+                    scalingPart = " (%.2fx)".formatted(gameScene2D.scaling());
+                }
+                return locText(gameVariantPart + pausedPart + scalingPart, "2D");
             },
-            clock.pausedPy, gameVariantPy);
+            clock.pausedPy, gameVariantPy, gameScenePy, gamePage.heightProperty());
     }
 
     private String displayName(GameScene gameScene) {
