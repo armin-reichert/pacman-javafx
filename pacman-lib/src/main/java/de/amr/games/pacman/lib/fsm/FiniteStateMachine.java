@@ -129,14 +129,14 @@ public abstract class FiniteStateMachine<S extends FsmState<C>, C> {
         C context = context();
         if (currentState != null) {
             currentState.onExit(context);
-            Logger.trace("Exit  state {} timer={}", currentState, currentState.timer());
+            Logger.info("Exit  state {} timer={}", currentState, currentState.timer());
         }
         prevState = currentState;
         currentState = newState;
         currentState.timer().resetIndefinitely();
-        Logger.trace("Enter state {} timer={}", currentState, currentState.timer());
+        Logger.info("Enter state {} timer={}", currentState, currentState.timer());
         currentState.onEnter(context);
-        Logger.trace("After Enter state {} timer={}", currentState, currentState.timer());
+        Logger.info("After Enter state {} timer={}", currentState, currentState.timer());
         stateChangeListeners.forEach(listener -> listener.onStateChange(prevState, currentState));
     }
 
@@ -147,7 +147,7 @@ public abstract class FiniteStateMachine<S extends FsmState<C>, C> {
         if (prevState == null) {
             throw new IllegalStateException("State machine cannot resume previous state because there is none");
         }
-        Logger.trace("Resume state {}, timer= {}", prevState, prevState.timer());
+        Logger.info("Resume state {}, timer= {}", prevState, prevState.timer());
         state().onExit(context());
         currentState = prevState;
     }

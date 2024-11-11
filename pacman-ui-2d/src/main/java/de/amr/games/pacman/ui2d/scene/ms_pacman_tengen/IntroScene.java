@@ -23,6 +23,7 @@ import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.tinylog.Logger;
 
 import java.util.BitSet;
 
@@ -72,25 +73,7 @@ public class IntroScene extends GameScene2D {
     public void doInit() {
         context.setScoreVisible(false);
         context.enableJoypad();
-
-        ghostIndex = 0;
-        waitBeforeRising = 0;
-
-        msPacMan = new Pac();
-        ghosts = new Ghost[] { Ghost.blinky(), Ghost.inky(), Ghost.pinky(), Ghost.sue() };
-
-        var spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
-        msPacMan.setAnimations(new PacAnimations(spriteSheet));
-        msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
-
-        for (Ghost ghost : ghosts) {
-            ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
-            ghost.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
-        }
-
-        sceneController.restart(context.game().level().isEmpty()
-            ? SceneState.WAITING_FOR_START
-            : SceneState.CREDITS);
+        sceneController.changeState(SceneState.WAITING_FOR_START);
     }
 
     @Override
@@ -236,14 +219,15 @@ public class IntroScene extends GameScene2D {
 
             @Override
             public void onEnter(IntroScene intro) {
+                timer.restartTicks(TickTimer.INDEFINITE);
                 intro.dark = false;
             }
 
             @Override
             public void onUpdate(IntroScene intro) {
-                if (timer().atSecond(7.8)) {
+                if (timer.atSecond(7.8)) {
                     intro.dark = true;
-                } else if (timer().atSecond(8.5)) {
+                } else if (timer.atSecond(8.5)) {
                     intro.dark = false;
                     intro.sceneController.changeState(SHOWING_MARQUEE);
                 }
@@ -253,21 +237,34 @@ public class IntroScene extends GameScene2D {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(IntroScene intro) {
+                timer.restartTicks(TickTimer.INDEFINITE);
+
+                intro.msPacMan = new Pac();
                 intro.msPacMan.setPosition(TS * 33, ACTOR_Y);
                 intro.msPacMan.setMoveDir(Direction.LEFT);
                 intro.msPacMan.setSpeed(SPEED);
                 intro.msPacMan.setVisible(true);
-                intro.msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
-                intro.msPacMan.animations().ifPresent(Animations::startCurrentAnimation);
+
+                intro.ghosts = new Ghost[] { Ghost.blinky(), Ghost.inky(), Ghost.pinky(), Ghost.sue() };
                 for (Ghost ghost : intro.ghosts) {
                     ghost.setPosition(TS * 33, ACTOR_Y);
                     ghost.setMoveAndWishDir(Direction.LEFT);
                     ghost.setSpeed(SPEED);
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setVisible(true);
-                    ghost.startAnimation();
                 }
                 intro.ghostIndex = 0;
+
+                var spriteSheet = (TengenMsPacManGameSpriteSheet) intro.context.currentGameSceneConfig().spriteSheet();
+                intro.msPacMan.setAnimations(new PacAnimations(spriteSheet));
+                intro.msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
+                intro.msPacMan.animations().ifPresent(Animations::startCurrentAnimation);
+
+                for (Ghost ghost : intro.ghosts) {
+                    ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
+                    ghost.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
+                    ghost.startAnimation();
+                }
             }
 
             @Override
@@ -279,11 +276,17 @@ public class IntroScene extends GameScene2D {
         },
 
         GHOSTS_MARCHING_IN {
+            @Override
+            public void onEnter(IntroScene intro) {
+                timer.restartTicks(TickTimer.INDEFINITE);
+                intro.waitBeforeRising = 0;
+            }
 
             @Override
             public void onUpdate(IntroScene intro) {
                 boolean reachedEndPosition = letGhostMarchIn(intro);
                 if (reachedEndPosition) {
+                    Logger.info("Reached end position");
                     if (intro.ghostIndex == 3) {
                         intro.sceneController.changeState(MS_PACMAN_MARCHING_IN);
                     } else {
@@ -294,6 +297,7 @@ public class IntroScene extends GameScene2D {
 
             boolean letGhostMarchIn(IntroScene intro) {
                 Ghost ghost = intro.ghosts[intro.ghostIndex];
+                Logger.info("Tick {}: {} marching in", intro.context.tick(), ghost.name());
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.posX() <= GHOST_STOP_X) {
                         ghost.setPosX(GHOST_STOP_X);
@@ -301,6 +305,7 @@ public class IntroScene extends GameScene2D {
                         intro.waitBeforeRising = 2;
                     } else {
                         ghost.move();
+                        Logger.info("{} moves {} x={}", ghost.name(), ghost.moveDir(), ghost.posX());
                     }
                 }
                 else if (ghost.moveDir() == Direction.UP) {
@@ -315,6 +320,7 @@ public class IntroScene extends GameScene2D {
                     }
                     else {
                         ghost.move();
+                        Logger.info("{} moves {}", ghost.name(), ghost.moveDir());
                     }
                 }
                 return false;
@@ -323,25 +329,36 @@ public class IntroScene extends GameScene2D {
 
         MS_PACMAN_MARCHING_IN {
             @Override
+            public void onEnter(IntroScene context) {
+                timer.restartTicks(TickTimer.INDEFINITE);
+            }
+
+            @Override
             public void onUpdate(IntroScene intro) {
+                Logger.info("Tick {}: {} marching in", intro.context.tick(), intro.msPacMan.name());
                 intro.msPacMan.move();
                 if (intro.msPacMan.posX() <= MS_PAC_MAN_STOP_X) {
                     intro.msPacMan.setSpeed(0);
                     intro.msPacMan.animations().ifPresent(Animations::resetCurrentAnimation); //TODO check in Tengen, seems not to work!
                 }
-                if (timer().atSecond(7.5)) {
+                if (timer.atSecond(7.5)) {
                     TengenMsPacManGame game = (TengenMsPacManGame) intro.context.game();
                     game.setCanStartGame(false); // TODO check this
-                    intro.context.gameController().changeState(GameState.STARTING_GAME);
+                    intro.context.gameController().restart(GameState.STARTING_GAME);
                 }
             }
         },
 
         CREDITS {
             @Override
+            public void onEnter(IntroScene context) {
+                timer.restartTicks(TickTimer.INDEFINITE);
+            }
+
+            @Override
             public void onUpdate(IntroScene intro) {
-                if (timer.atSecond(10)) {
-                    intro.context.gameController().restart(GameState.INTRO);
+                if (timer.atSecond(3)) {
+                    intro.sceneController.restart(WAITING_FOR_START);
                 }
             }
         };

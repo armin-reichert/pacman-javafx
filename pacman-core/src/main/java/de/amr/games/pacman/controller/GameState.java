@@ -55,10 +55,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            if (GameController.it().currentGameVariant() == GameVariant.MS_PACMAN_TENGEN &&
-                timer.atSecond(10)) {
-                GameController.it().restart(STARTING_GAME);
-            } else if (timer.hasExpired()) {
+            if (timer.hasExpired()) {
                 enterState(STARTING_GAME);
             }
         }
