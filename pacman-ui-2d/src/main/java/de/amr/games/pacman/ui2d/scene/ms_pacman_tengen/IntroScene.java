@@ -26,10 +26,10 @@ import javafx.scene.text.Font;
 
 import java.util.BitSet;
 
+import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.paletteColor;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.NES_RESOLUTION_X;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.NES_RESOLUTION_Y;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.*;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
 
 /**
@@ -112,7 +112,7 @@ public class IntroScene extends GameScene2D {
         TengenMsPacManGameRenderer r = (TengenMsPacManGameRenderer) renderer;
         TickTimer timer = sceneController.state().timer();
         long t = timer.currentTick();
-        Font font = renderer.scaledArcadeFont(8);
+        Font scaledFont = renderer.scaledArcadeFont(8);
         switch (sceneController.state()) {
 
             case WAITING_FOR_START -> {
@@ -120,40 +120,78 @@ public class IntroScene extends GameScene2D {
                     r.drawTengenPresents(t, 9 * TS, MARQUEE_Y - TS);
                     r.drawSpriteScaled(MS_PAC_MAN_TITLE_SPRITE, 6 * TS, MARQUEE_Y);
                     if (t % 60 < 30) {
-                        r.drawText("PRESS START", paletteColor(0x20), font, 11 * TS, MARQUEE_Y + 9 * TS);
+                        r.drawText("PRESS START", paletteColor(0x20), scaledFont, 11 * TS, MARQUEE_Y + 9 * TS);
                     }
-                    r.drawText("MS PAC-MAN TM NAMCO LTD", paletteColor(0x25), font, 6 * TS, MARQUEE_Y + 13 * TS);
-                    r.drawText("©1990 TENGEN INC", paletteColor(0x25), font, 8 * TS, MARQUEE_Y + 14 * TS);
-                    r.drawText("ALL RIGHTS RESERVED", paletteColor(0x25), font, 7 * TS, MARQUEE_Y + 15 * TS);
+                    r.drawText("MS PAC-MAN TM NAMCO LTD", paletteColor(0x25), scaledFont, 6 * TS, MARQUEE_Y + 15 * TS);
+                    r.drawText("©1990 TENGEN INC",        paletteColor(0x25), scaledFont, 8 * TS, MARQUEE_Y + 16 * TS);
+                    r.drawText("ALL RIGHTS RESERVED",     paletteColor(0x25), scaledFont, 7 * TS, MARQUEE_Y + 17 * TS);
                 }
             }
 
             case SHOWING_MARQUEE -> {
                 drawMarquee(r, t);
-                r.drawText("\"MS PAC-MAN\"", paletteColor(0x28), font, MARQUEE_X + 20, MARQUEE_Y - 18);
+                r.drawText("\"MS PAC-MAN\"", paletteColor(0x28), scaledFont, MARQUEE_X + 20, MARQUEE_Y - 18);
             }
 
             case GHOSTS_MARCHING_IN -> {
                 drawMarquee(r, t);
-                r.drawText("\"MS PAC-MAN\"", paletteColor(0x28), font, MARQUEE_X + 20, MARQUEE_Y - 18);
+                r.drawText("\"MS PAC-MAN\"", paletteColor(0x28), scaledFont, MARQUEE_X + 20, MARQUEE_Y - 18);
                 if (ghostIndex == 0) {
-                    r.drawText("WITH", paletteColor(0x20), font, MARQUEE_X + 12, MARQUEE_Y + 23);
+                    r.drawText("WITH", paletteColor(0x20), scaledFont, MARQUEE_X + 12, MARQUEE_Y + 23);
                 }
                 Ghost currentGhost = ghosts[ghostIndex];
                 Color ghostColor = context.assets().color("tengen.ghost.%d.color.normal.dress".formatted(currentGhost.id()));
-                r.drawText(currentGhost.name().toUpperCase(), ghostColor, font, MARQUEE_X + 44, MARQUEE_Y + 41);
+                r.drawText(currentGhost.name().toUpperCase(), ghostColor, scaledFont, MARQUEE_X + 44, MARQUEE_Y + 41);
                 for (Ghost ghost : ghosts) { r.drawAnimatedEntity(ghost); }
             }
 
             case MS_PACMAN_MARCHING_IN -> {
                 drawMarquee(r, t);
-                r.drawText("\"MS PAC-MAN\"", paletteColor(0x28), font, MARQUEE_X + 20, MARQUEE_Y - 18);
-                r.drawText("STARRING", paletteColor(0x20), font, MARQUEE_X + 12, MARQUEE_Y + 22);
-                r.drawText("MS PAC-MAN", paletteColor(0x28), font, MARQUEE_X + 44, MARQUEE_Y + 38);
+                r.drawText("\"MS PAC-MAN\"", paletteColor(0x28), scaledFont, MARQUEE_X + 20, MARQUEE_Y - 18);
+                r.drawText("STARRING", paletteColor(0x20), scaledFont, MARQUEE_X + 12, MARQUEE_Y + 22);
+                r.drawText("MS PAC-MAN", paletteColor(0x28), scaledFont, MARQUEE_X + 44, MARQUEE_Y + 38);
                 for (Ghost ghost : ghosts) { r.drawAnimatedEntity(ghost); }
                 r.drawAnimatedEntity(msPacMan);
             }
+
+            case CREDITS -> {
+                drawVioletBar(r, 20);
+                drawVioletBar(r, 212);
+                int y = 7 * TS;
+                r.drawText("CREDITS FOR MS PAC-MAN", paletteColor(0x20), scaledFont, 3 * TS, y);
+                y += 4 * TS;
+                r.drawText("GAME PROGRAMMER:", paletteColor(0x23), scaledFont, 4 * TS, y);
+                y += 2 * TS;
+                r.drawText("FRANZ LANZINGER", paletteColor(0x23), scaledFont, 10 * TS, y);
+                y += 3 * TS;
+                r.drawText("SPECIAL THANKS:", paletteColor(0x23), scaledFont, 4 * TS, y);
+                y += 2 * TS;
+                r.drawText("JEFF YONAN", paletteColor(0x23), scaledFont, 10 * TS, y);
+                y += TS;
+                r.drawText("DAVE O'RIVA", paletteColor(0x23), scaledFont, 10 * TS, y);
+                y += 4 * TS;
+                centerLabelText(r, "MS PAC-MAN TM NAMCO LTD", scaledFont, paletteColor(0x19), y);
+                y += TS;
+                centerLabelText(r, "©1990 TENGEN IBC", scaledFont, paletteColor(0x19), y);
+                y += TS;
+                centerLabelText(r, "ALL RIGHTS RESERVED", scaledFont, paletteColor(0x19), y);
+            }
         }
+    }
+
+    private void centerLabelText(GameRenderer renderer, String text, Font font, Color color, double y) {
+        renderer.drawText(text, color, font, (NES_TILES_X - text.length()) * HTS, y);
+    }
+
+    private void drawVioletBar(GameRenderer renderer, double y) {
+        GraphicsContext g = renderer.ctx();
+        g.save();
+        g.scale(scaling(), scaling());
+        g.setFill(paletteColor(0x20));
+        g.fillRect(0, y, size().x(), TS);
+        g.setFill(paletteColor(0x13));
+        g.fillRect(0, y + 1, size().x(), TS - 2);
+        g.restore();
     }
 
     /**
@@ -303,6 +341,15 @@ public class IntroScene extends GameScene2D {
                 if (timer().atSecond(4.5)) {
                     TengenMsPacManGame game = (TengenMsPacManGame) intro.context.game();
                     game.setCanStartGame(false); // TODO check this
+                    intro.sceneController.changeState(CREDITS);
+                }
+            }
+        },
+
+        CREDITS {
+            @Override
+            public void onUpdate(IntroScene intro) {
+                if (timer.atSecond(5)) {
                     intro.context.gameController().changeState(GameState.STARTING_GAME);
                 }
             }

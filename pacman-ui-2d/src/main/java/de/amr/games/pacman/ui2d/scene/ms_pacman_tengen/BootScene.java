@@ -22,9 +22,9 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGame
  */
 public class BootScene extends GameScene2D {
 
-    static final int TENGEN_PRESENTS_FINAL_Y = 12 * TS;
+    static final int TENGEN_PRESENTS_FINAL_Y = 13 * TS;
     static final int TENGEN_PRESENTS_X = 9 * TS;
-    static final float GHOST_Y = 20.5f * TS;
+    static final float GHOST_Y = 21.5f * TS;
 
     private Ghost ghost;
     private int tengenPresentsY;
