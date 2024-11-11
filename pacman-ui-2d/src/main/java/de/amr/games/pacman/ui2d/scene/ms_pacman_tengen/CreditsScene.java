@@ -58,7 +58,6 @@ public class CreditsScene extends GameScene2D {
         y += TS;
         r.drawText("©1990 TENGEN INC", paletteColor(0x19), scaledFont, centerX(16), y);
         y += TS;
-        centerLabelText(r, "ALL RIGHTS RESERVED", scaledFont, paletteColor(0x19), y);
         r.drawText("ALL RIGHTS RESERVED", paletteColor(0x19), scaledFont, centerX(19), y);
     }
 
