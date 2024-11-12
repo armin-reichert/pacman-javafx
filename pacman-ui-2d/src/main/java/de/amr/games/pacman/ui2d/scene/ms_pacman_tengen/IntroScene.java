@@ -152,36 +152,35 @@ public class IntroScene extends GameScene2D {
             for (int b = 0; b < 6; ++b) {
                 marqueeState.set((int) (b * 16 + marqueeTick) % NUM_BULBS);
             }
+            /*
             // Simulate bug on left border
             for (int i = 81; i < NUM_BULBS; i += 2) {
-//                marqueeState.clear(i);
+                marqueeState.clear(i);
             }
+             */
         }
     }
 
     private void drawMarquee(GameRenderer renderer, long t) {
         double xMin = MARQUEE_X, xMax = xMin + 132, yMin = MARQUEE_Y, yMax = yMin + 60;
+        double bulbSize = scaled(2);
         GraphicsContext g = renderer.ctx();
         for (int i = 0; i < NUM_BULBS; ++i) {
             g.setFill(marqueeState.get(i) ? paletteColor(0x20) : paletteColor(0x15));
-            if (i <= 33) {
-                // lower border left-to-right
-                drawBulb(g, xMin + 4 * i, yMax);
-            } else if (i <= 48) {
-                // right border bottom-to-top
-                drawBulb(g, xMax, yMax - 4 * (i - 33));
-            } else if (i <= 81) {
-                // upper border right-to-left
-                drawBulb(g, xMax - 4 * (i - 48), yMin);
-            } else {
-                // left border top-to-bottom
-                drawBulb(g, xMin, yMin + 4 * (i - 81));
+            if (i <= 33) { // lower border left-to-right
+                drawBulb(g, xMin + 4 * i, yMax, bulbSize);
+            } else if (i <= 48) { // right border bottom-to-top
+                drawBulb(g, xMax, yMax - 4 * (i - 33), bulbSize);
+            } else if (i <= 81) { // upper border right-to-left
+                drawBulb(g, xMax - 4 * (i - 48), yMin, bulbSize);
+            } else { // left border top-to-bottom
+                drawBulb(g, xMin, yMin + 4 * (i - 81), bulbSize);
             }
         }
     }
 
-    private void drawBulb(GraphicsContext g, double x, double y) {
-        g.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
+    private void drawBulb(GraphicsContext g, double x, double y, double size) {
+        g.fillRect(scaled(x), scaled(y), size, size);
     }
 
     private enum SceneState implements FsmState<IntroScene> {

@@ -18,7 +18,7 @@ import java.util.Map;
 
 import static de.amr.games.pacman.model.ms_pacman_tengen.MapConfigurationManager.randomMapColorScheme;
 
-public class MazeFlashingAnimation {
+public class MazeFlashing {
 
     private static final Map<String, Color> HIGHLIGHT_COLOR_SCHEME = mapToColors(MapConfigurationManager.HIGHLIGHT_COLOR_SCHEME);
 

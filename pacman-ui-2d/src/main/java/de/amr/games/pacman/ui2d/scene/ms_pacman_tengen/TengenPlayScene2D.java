@@ -60,8 +60,8 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     private final ParallelCamera cam = new ParallelCamera();
     private final Canvas canvas = new Canvas(NES_RESOLUTION_X, NES_RESOLUTION_Y);
     private int camDelay;
-    private final MessageAnimation messageAnimation = new MessageAnimation();
-    private final MazeFlashingAnimation mazeFlashingAnimation = new MazeFlashingAnimation();
+    private final MessageMovement messageMovement = new MessageMovement();
+    private final MazeFlashing mazeFlashing = new MazeFlashing();
 
     public TengenPlayScene2D() {
         canvas.widthProperty() .bind(scalingProperty().map(s -> s.doubleValue() * size().x()));
@@ -104,7 +104,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             context.level().pac().setImmune(PY_IMMUNITY.get());
             updatePlaySceneSound();
             if (context.gameState() == GameState.GAME_OVER && game.mapCategory() != MapCategory.ARCADE) {
-                messageAnimation.update();
+                messageMovement.update();
             }
         }
 
@@ -185,9 +185,10 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         if (context.game().level().isEmpty()) {
             return;
         }
-        final GameWorld world = context.level().world();
-        final var game = (TengenMsPacManGame) context.game();
         final var r = (TengenMsPacManGameRenderer) renderer;
+        final var game = (TengenMsPacManGame) context.game();
+
+        final GameWorld world = context.level().world();
         final Pac msPacMan = context.level().pac();
 
         if (world == null) { // This happens on level start
@@ -200,16 +201,16 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         Vector2i houseTopLeft = world.houseTopLeftTile(), houseSize = world.houseSize();
         float mx = TS * (houseTopLeft.x() + houseSize.x() * 0.5f);
         float my = TS * (houseTopLeft.y() + houseSize.y() + 1);
-        r.setMessagePosition(messageAnimation.isRunning()
-            ? new Vector2f(messageAnimation.currentX(), my)
+        r.setMessagePosition(messageMovement.isRunning()
+            ? new Vector2f(messageMovement.currentX(), my)
             : new Vector2f(mx, my)
         );
 
         if (Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"))) {
-            mazeFlashingAnimation.update(context.tick());
-            r.drawEmptyMap(world.map(), mazeFlashingAnimation.currentColorScheme());
+            mazeFlashing.update(context.tick());
+            r.drawEmptyMap(world.map(), mazeFlashing.currentColorScheme());
         } else {
-            r.drawWorld(context, world, 0,  3 * TS, messageAnimation.currentX());
+            r.drawWorld(context, world, 0,  3 * TS, messageMovement.currentX());
         }
 
         r.drawAnimatedEntity(msPacMan);
@@ -254,11 +255,11 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     @Override
     public void onEnterGameState(GameState state) {
         switch (state) {
-            case LEVEL_COMPLETE -> mazeFlashingAnimation.init((TengenMsPacManGame) context.game());
+            case LEVEL_COMPLETE -> mazeFlashing.init((TengenMsPacManGame) context.game());
             case GAME_OVER -> {
                 GameWorld world = context.level().world();
                 float houseCenterX = TS * (world.houseTopLeftTile().x() + 0.5f * world.houseSize().x());
-                messageAnimation.start(houseCenterX, size().x());
+                messageMovement.start(houseCenterX, size().x());
             }
             default -> {}
         }

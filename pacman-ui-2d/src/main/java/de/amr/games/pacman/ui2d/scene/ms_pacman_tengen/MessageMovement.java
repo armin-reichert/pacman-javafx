@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
-public class MessageAnimation {
+public class MessageMovement {
 
     static final int DELAY_TICKS = 120; // TODO how long?
     static final float SPEED = 1;  // TODO how fast?
