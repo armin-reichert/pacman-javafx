@@ -4,25 +4,27 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
-public class GameOverMessageAnimation {
+public class MessageAnimation {
 
     static final int DELAY_TICKS = 120; // TODO how long?
     static final float SPEED = 1;  // TODO how fast?
 
-    private double startX;
-    private double rightBorderX;
-    private double speed;
-    private double currentX;
+    private boolean running;
+    private float startX;
+    private float rightBorderX;
+    private float speed;
+    private float currentX;
     private boolean wrapped;
     private long delayBeforeMoving;
 
-    public void start(double startX, double rightBorderX) {
+    public void start(float startX, float rightBorderX) {
         this.startX = startX;
         this.rightBorderX = rightBorderX;
         this.speed = SPEED;
         currentX = startX;
         wrapped = false;
         delayBeforeMoving = DELAY_TICKS;
+        running = true;
     }
 
     public void update() {
@@ -38,10 +40,15 @@ public class GameOverMessageAnimation {
         if (wrapped && currentX >= startX) {
             speed = 0;
             currentX = startX;
+            running = false;
         }
     }
 
-    public double currentX() {
+    public boolean isRunning() {
+        return running;
+    }
+
+    public float currentX() {
         return currentX;
     }
 }

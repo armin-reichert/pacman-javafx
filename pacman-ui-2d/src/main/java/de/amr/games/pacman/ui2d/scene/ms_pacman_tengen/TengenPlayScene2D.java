@@ -10,9 +10,6 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.NES;
-import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -25,7 +22,6 @@ import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.sound.GameSound;
-import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.Camera;
 import javafx.scene.Node;
@@ -47,12 +43,10 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.ui2d.GameActions2D.bindCheatActions;
 import static de.amr.games.pacman.ui2d.GameActions2D.bindFallbackPlayerControlActions;
-import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions.QUIT_DEMO_LEVEL;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions.bindDefaultJoypadActions;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.paletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.*;
 
 /**
@@ -66,7 +60,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     private final ParallelCamera cam = new ParallelCamera();
     private final Canvas canvas = new Canvas(NES_RESOLUTION_X, NES_RESOLUTION_Y);
     private int camDelay;
-    private final GameOverMessageAnimation gameOverMessageAnimation = new GameOverMessageAnimation();
+    private final MessageAnimation messageAnimation = new MessageAnimation();
     private final MazeFlashingAnimation mazeFlashingAnimation = new MazeFlashingAnimation();
 
     public TengenPlayScene2D() {
@@ -110,7 +104,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             context.level().pac().setImmune(PY_IMMUNITY.get());
             updatePlaySceneSound();
             if (context.gameState() == GameState.GAME_OVER && game.mapCategory() != MapCategory.ARCADE) {
-                gameOverMessageAnimation.update();
+                messageAnimation.update();
             }
         }
 
@@ -203,11 +197,19 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
         r.setBlinkingOn(context.level().blinking().isOn());
 
+        Vector2i houseTopLeft = world.houseTopLeftTile(), houseSize = world.houseSize();
+        float mx = TS * (houseTopLeft.x() + houseSize.x() * 0.5f);
+        float my = TS * (houseTopLeft.y() + houseSize.y() + 1);
+        r.setMessagePosition(messageAnimation.isRunning()
+            ? new Vector2f(messageAnimation.currentX(), my)
+            : new Vector2f(mx, my)
+        );
+
         if (Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"))) {
             mazeFlashingAnimation.update(context.tick());
             r.drawEmptyMap(world.map(), mazeFlashingAnimation.currentColorScheme());
         } else {
-            r.drawWorld(context, world, 0,  3 * TS, gameOverMessageAnimation.currentX());
+            r.drawWorld(context, world, 0,  3 * TS, messageAnimation.currentX());
         }
 
         r.drawAnimatedEntity(msPacMan);
@@ -255,8 +257,8 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             case LEVEL_COMPLETE -> mazeFlashingAnimation.init((TengenMsPacManGame) context.game());
             case GAME_OVER -> {
                 GameWorld world = context.level().world();
-                double houseCenterX = TS * (world.houseTopLeftTile().x() + 0.5 * world.houseSize().x());
-                gameOverMessageAnimation.start(houseCenterX, size().x());
+                float houseCenterX = TS * (world.houseTopLeftTile().x() + 0.5f * world.houseSize().x());
+                messageAnimation.start(houseCenterX, size().x());
             }
             default -> {}
         }

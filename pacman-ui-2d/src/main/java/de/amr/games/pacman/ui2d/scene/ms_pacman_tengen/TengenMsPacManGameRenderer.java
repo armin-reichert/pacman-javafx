@@ -74,6 +74,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     private ImageArea mapSprite;
     private boolean blinkingOn;
     private boolean levelNumberBoxesVisible;
+    private Vector2f messagePosition;
 
     public TengenMsPacManGameRenderer(AssetStorage assets) {
         this.assets = checkNotNull(assets);
@@ -251,6 +252,10 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         }
     }
 
+    public void setMessagePosition(Vector2f messagePosition) {
+        this.messagePosition = messagePosition;
+    }
+
     public void setLevelNumberBoxesVisible(boolean levelNumberBoxesVisible) {
         this.levelNumberBoxesVisible = levelNumberBoxesVisible;
     }
@@ -326,31 +331,15 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             drawGameOptionsInfo(context.level().world().map().terrain(), game);
         }
 
-        // All maps that use a different color scheme than that in the sprite sheet have to be rendered using the
-        // generic vector renderer for now. This looks more or less bad for specific maps.
+        // All maps with a different color scheme than that in the sprite sheet have to be rendered using the
+        // generic vector renderer for now.
+        // TODO: Improve renderer because this currently looks bad for specific maps.
         boolean mapSpriteExists = context.game().isDemoLevel() || mapSpriteExists(context.level().number, game.mapCategory());
-        if (!mapSpriteExists) {
-            // Food first
-            world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
-                .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
-            if (blinkingOn) {
-                world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
-            }
-
-            // Draw level message either centered under house or at moving x position
-            drawLevelMessage(context, messageX);
-
-            // Maze last
-            terrainRenderer.drawMap(ctx(), world.map().terrain());
-        }
-        else {
-            // Draw level message either centered under house or at moving x position
-            drawLevelMessage(context, messageX);
-
-            // draw using map sprite
+        if (mapSpriteExists)
+        {
+            drawLevelMessage(context);
             // Maze #32 of STRANGE has psychedelic animation
-            if (level.mapConfig().mapCategory() == MapCategory.STRANGE &&
-                level.mapConfig().mapNumber() == 32) {
+            if (level.mapConfig().mapCategory() == MapCategory.STRANGE && level.mapConfig().mapNumber() == 32) {
                 drawAnimatedMap(context.tick(), TengenNonArcadeMapsSpriteSheet.MAP_32_ANIMATION_FRAMES);
             } else {
                 RectArea mapArea = mapSprite.area();
@@ -362,9 +351,44 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
                 );
             }
             cleanHouse(level.world());
-            drawFoodUsingMapSprite(level.world());
+            ctx().save();
+            ctx().scale(scaling(), scaling());
+            overPaintEatenPellets(world);
+            overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
+            ctx().restore();
+        }
+        else {
+            world.map().food().tiles()
+                .filter(world::hasFoodAt)
+                .filter(not(world::isEnergizerPosition))
+                .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
+            if (blinkingOn) {
+                world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
+            }
+            // in Tengen Ms. Pac-Man the level message appears under the maze image, wtf?
+            drawLevelMessage(context);
+            terrainRenderer.drawMap(ctx(), world.map().terrain());
         }
         context.level().bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
+    }
+
+    //TODO too much game logic in here
+    public void drawLevelMessage(GameContext context) {
+        GameLevel level = context.level();
+        GameWorld world = level.world();
+        String assetPrefix = assetPrefix(GameVariant.MS_PACMAN_TENGEN);
+        if (context.game().isDemoLevel()) {
+            Color color = Color.web(level.mapConfig().colorScheme().get("stroke"));
+            drawText("GAME  OVER", messagePosition.x(), messagePosition.y(), color);
+        } else if (context.gameState() == GameState.GAME_OVER) {
+            Color color = assets.color(assetPrefix + ".color.game_over_message");
+            drawText("GAME  OVER", messagePosition.x(), messagePosition.y(), color);
+        } else if (context.gameState() == GameState.STARTING_GAME) {
+            Color color = assets.color(assetPrefix + ".color.ready_message");
+            drawText("READY!", messagePosition.x(), messagePosition.y(), color);
+        } else if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
+            drawText("TEST L%02d".formatted(level.number), messagePosition.x(), messagePosition.y(), paletteColor(0x28));
+        }
     }
 
     private boolean isUsingDefaultGameOptions(TengenMsPacManGame game) {
@@ -380,14 +404,6 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         ctx().fillRect(topLeftPosition.x(), topLeftPosition.y(), size.x(), size.y());
         hideActorSprite(world.map().terrain().getTileProperty("pos_pac", v2i(14, 26)));
         hideActorSprite(world.map().terrain().getTileProperty("pos_ghost_1_red", v2i(13, 14)));
-    }
-
-    private void drawFoodUsingMapSprite(GameWorld world) {
-        ctx().save();
-        ctx().scale(scaling(), scaling());
-        overPaintEatenPellets(world);
-        overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
-        ctx().restore();
     }
 
     // Animation goes forward and backward: Cycle (0, 1, 2, 1)
@@ -542,27 +558,5 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     private void drawText(String text, double cx, double y, Color color) {
         double x = (cx - text.length() * 0.5 * TS);
         drawText(text, color, scaledArcadeFont(TS), x, y);
-    }
-
-    //TODO too much game logic in here
-    public void drawLevelMessage(GameContext context, double messageX) {
-        GameLevel level = context.level();
-        GameWorld world = level.world();
-        Vector2i houseTopLeft = world.houseTopLeftTile(), houseSize = world.houseSize();
-        double cx = TS * (houseTopLeft.x() + houseSize.x() * 0.5);
-        double y  = TS * (houseTopLeft.y() + houseSize.y() + 1);
-        String assetPrefix = assetPrefix(GameVariant.MS_PACMAN_TENGEN);
-        if (context.game().isDemoLevel()) {
-            Color color = Color.web(level.mapConfig().colorScheme().get("stroke"));
-            drawText("GAME  OVER", cx, y, color);
-        } else if (context.gameState() == GameState.GAME_OVER) {
-            Color color = assets.color(assetPrefix + ".color.game_over_message");
-            drawText("GAME  OVER", messageX, y, color);
-        } else if (context.gameState() == GameState.STARTING_GAME) {
-            Color color = assets.color(assetPrefix + ".color.ready_message");
-            drawText("READY!", cx, y, color);
-        } else if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
-            drawText("TEST L%02d".formatted(level.number), cx, y, paletteColor(0x28));
-        }
     }
 }
