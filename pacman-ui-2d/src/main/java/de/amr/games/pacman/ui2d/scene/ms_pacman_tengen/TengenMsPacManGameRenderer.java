@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
@@ -13,10 +14,7 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
-import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.MapConfig;
+import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.model.ms_pacman_tengen.BoosterMode;
@@ -34,7 +32,6 @@ import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -43,6 +40,7 @@ import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.ms_pacman_tengen.NamedMapColorScheme.*;
+import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static java.util.function.Predicate.not;
 
 /**
@@ -318,7 +316,12 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void drawWorld(GameContext context, GameWorld world, double x, double y) {
+        // use own method with additional parameter for moving message x position
+    }
+
+    public void drawWorld(GameContext context, GameWorld world, double x, double y, double messageX) {
         TengenMsPacManGame game = (TengenMsPacManGame) context.game();
+        GameLevel level = game.level().orElseThrow();
         if (!isUsingDefaultGameOptions(game)) {
             drawGameOptionsInfo(context.level().world().map().terrain(), game);
         }
@@ -327,16 +330,39 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         // generic vector renderer for now. This looks more or less bad for specific maps.
         boolean mapSpriteExists = context.game().isDemoLevel() || mapSpriteExists(context.level().number, game.mapCategory());
         if (!mapSpriteExists) {
-            terrainRenderer.drawMap(ctx(), world.map().terrain());
+            // Food first
             world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
                 .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
             if (blinkingOn) {
                 world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
             }
+
+            // Draw level message either centered under house or at moving x position
+            drawLevelMessage(context, messageX);
+
+            // Maze last
+            terrainRenderer.drawMap(ctx(), world.map().terrain());
         }
         else {
+            // Draw level message either centered under house or at moving x position
+            drawLevelMessage(context, messageX);
+
             // draw using map sprite
-            drawWorldUsingMapSprite(game, context.gameClock().getUpdateCount(), x, y);
+            // Maze #32 of STRANGE has psychedelic animation
+            if (level.mapConfig().mapCategory() == MapCategory.STRANGE &&
+                level.mapConfig().mapNumber() == 32) {
+                drawAnimatedMap(context.tick(), TengenNonArcadeMapsSpriteSheet.MAP_32_ANIMATION_FRAMES);
+            } else {
+                RectArea mapArea = mapSprite.area();
+                ctx().drawImage(mapSprite.source(),
+                    mapArea.x(), mapArea.y(),
+                    mapArea.width(), mapArea.height(),
+                    scaled(x), scaled(y),
+                    scaled(mapArea.width()), scaled(mapArea.height())
+                );
+            }
+            cleanHouse(level.world());
+            drawFoodUsingMapSprite(level.world());
         }
         context.level().bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
     }
@@ -345,28 +371,6 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         return game.boosterMode() == BoosterMode.OFF &&
             game.difficulty() == Difficulty.NORMAL &&
             game.mapCategory() == MapCategory.ARCADE;
-    }
-
-    private void drawWorldUsingMapSprite(TengenMsPacManGame game, long t, double x, double y) {
-        if (mapSprite == null) {
-            return; // not yet selected
-        }
-        GameLevel level = game.level().orElseThrow();
-        // Maze #32 of STRANGE has psychedelic animation
-        if (level.mapConfig().mapCategory() == MapCategory.STRANGE &&
-                level.mapConfig().mapNumber() == 32) {
-            drawAnimatedMap(t, TengenNonArcadeMapsSpriteSheet.MAP_32_ANIMATION_FRAMES);
-        } else {
-            RectArea mapArea = mapSprite.area();
-            ctx().drawImage(mapSprite.source(),
-                mapArea.x(), mapArea.y(),
-                mapArea.width(), mapArea.height(),
-                scaled(x), scaled(y),
-                scaled(mapArea.width()), scaled(mapArea.height())
-            );
-        }
-        cleanHouse(level.world());
-        drawFoodUsingMapSprite(level.world());
     }
 
     private void cleanHouse(GameWorld world) {
@@ -533,5 +537,32 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         double cy = tile.y() * TS - HTS;
         ctx().setFill(bgColor);
         ctx().fillRect(scaled(cx), scaled(cy), scaled(16), scaled(16));
+    }
+
+    private void drawText(String text, double cx, double y, Color color) {
+        double x = (cx - text.length() * 0.5 * TS);
+        drawText(text, color, scaledArcadeFont(TS), x, y);
+    }
+
+    //TODO too much game logic in here
+    public void drawLevelMessage(GameContext context, double messageX) {
+        GameLevel level = context.level();
+        GameWorld world = level.world();
+        Vector2i houseTopLeft = world.houseTopLeftTile(), houseSize = world.houseSize();
+        double cx = TS * (houseTopLeft.x() + houseSize.x() * 0.5);
+        double y  = TS * (houseTopLeft.y() + houseSize.y() + 1);
+        String assetPrefix = assetPrefix(GameVariant.MS_PACMAN_TENGEN);
+        if (context.game().isDemoLevel()) {
+            Color color = Color.web(level.mapConfig().colorScheme().get("stroke"));
+            drawText("GAME  OVER", cx, y, color);
+        } else if (context.gameState() == GameState.GAME_OVER) {
+            Color color = assets.color(assetPrefix + ".color.game_over_message");
+            drawText("GAME  OVER", messageX, y, color);
+        } else if (context.gameState() == GameState.STARTING_GAME) {
+            Color color = assets.color(assetPrefix + ".color.ready_message");
+            drawText("READY!", cx, y, color);
+        } else if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
+            drawText("TEST L%02d".formatted(level.number), cx, y, paletteColor(0x28));
+        }
     }
 }

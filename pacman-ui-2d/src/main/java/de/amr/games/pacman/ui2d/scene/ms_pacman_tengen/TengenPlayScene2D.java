@@ -203,17 +203,11 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
         r.setBlinkingOn(context.level().blinking().isOn());
 
-        // Draw level message centered under ghost house
-        Vector2i houseTopLeft = world.houseTopLeftTile(), houseSize = world.houseSize();
-        double cx = TS * (houseTopLeft.x() + houseSize.x() * 0.5);
-        double y  = TS * (houseTopLeft.y() + houseSize.y() + 1);
-        drawLevelMessage(renderer, cx, y);
-
         if (Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"))) {
             mazeFlashingAnimation.update(context.tick());
             r.drawEmptyMap(world.map(), mazeFlashingAnimation.currentColorScheme());
         } else {
-            r.drawWorld(context, world, 0,  3 * TS);
+            r.drawWorld(context, world, 0,  3 * TS, gameOverMessageAnimation.currentX());
         }
 
         r.drawAnimatedEntity(msPacMan);
@@ -238,31 +232,6 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     private Stream<Ghost> ghostsInZOrder() {
         return Stream.of(ORANGE_GHOST, CYAN_GHOST, PINK_GHOST, RED_GHOST).map(context.level()::ghost);
-    }
-
-    private void drawLevelMessage(GameRenderer renderer, double cx, double y) {
-        AssetStorage assets = context.assets();
-        String assetPrefix = assetPrefix(GameVariant.MS_PACMAN_TENGEN);
-        GameState state = context.gameState();
-        GameModel game = context.game();
-        GameLevel level = game.level().orElseThrow();
-        if (game.isDemoLevel()) {
-            Color color = Color.web(level.mapConfig().colorScheme().get("stroke"));
-            drawText(renderer, "GAME  OVER", cx, y, color);
-        } else if (state == GameState.GAME_OVER) {
-            Color color = assets.color(assetPrefix + ".color.game_over_message");
-            drawText(renderer, "GAME  OVER", gameOverMessageAnimation.currentX(), y, color);
-        } else if (state == GameState.STARTING_GAME) {
-            Color color = assets.color(assetPrefix + ".color.ready_message");
-            drawText(renderer, "READY!", cx, y, color);
-        } else if (state == GameState.TESTING_LEVEL_BONI) {
-            drawText(renderer, "TEST L%02d".formatted(level.number), cx, y, paletteColor(0x28));
-        }
-    }
-
-    private void drawText(GameRenderer renderer, String text, double cx, double y, Color color) {
-        double x = (cx - text.length() * 0.5 * TS);
-        renderer.drawText(text, color, renderer.scaledArcadeFont(TS), x, y);
     }
 
     @Override
