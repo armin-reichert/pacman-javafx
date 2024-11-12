@@ -27,7 +27,7 @@ public class TickTimer {
     public static final long INDEFINITE = Long.MAX_VALUE; // TODO use -1?
 
     private static boolean isValidTickNumber(long ticks) {
-        return ticks > 0 || ticks == INDEFINITE;
+        return ticks >= 0 || ticks == INDEFINITE;
     }
 
     /**
