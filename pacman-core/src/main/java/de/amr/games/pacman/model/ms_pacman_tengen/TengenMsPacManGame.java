@@ -147,6 +147,11 @@ public class TengenMsPacManGame extends GameModel {
         scoreManager.resetScore();
     }
 
+    @Override
+    public void endGame() {
+        scoreManager().updateHighScore();
+        publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
+    }
 
     public MapConfigurationManager mapConfigMgr() {
         return mapConfigMgr;
@@ -512,12 +517,6 @@ public class TengenMsPacManGame extends GameModel {
         level.setBonus(movingBonus);
         movingBonus.setEdible(TickTimer.INDEFINITE);
         publishGameEvent(GameEventType.BONUS_ACTIVATED, movingBonus.entity().tile());
-    }
-
-    @Override
-    public void endGame() {
-        scoreManager().updateHighScore();
-        scoreManager.resetScore();
     }
 
     @Override

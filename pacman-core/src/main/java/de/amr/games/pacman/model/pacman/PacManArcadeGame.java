@@ -206,6 +206,13 @@ public class PacManArcadeGame extends GameModel {
     }
 
     @Override
+    public void endGame() {
+        GameController.it().coinControl().consumeCoin();
+        scoreManager().updateHighScore();
+        publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
+    }
+
+    @Override
     public int intermissionNumberAfterLevel() {
         return switch (level.number) {
             case 2 -> 1;
@@ -364,13 +371,6 @@ public class PacManArcadeGame extends GameModel {
             activateNextBonus();
             eventLog.bonusIndex = level.nextBonusIndex();
         }
-    }
-
-    @Override
-    public void endGame() {
-        GameController.it().coinControl().consumeCoin();
-        scoreManager().updateHighScore();
-        scoreManager.resetScore();
     }
 
     @Override

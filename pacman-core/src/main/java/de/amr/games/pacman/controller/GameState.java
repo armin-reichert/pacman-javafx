@@ -282,7 +282,6 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             timer.restartTicks(game.gameOverStateTicks());
             game.endGame();
-            game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
         }
 
         @Override

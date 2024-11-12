@@ -136,6 +136,14 @@ public class MsPacManArcadeGame extends GameModel {
     }
 
     @Override
+    public void endGame() {
+        GameController.it().coinControl().consumeCoin();
+        scoreManager().updateHighScore();
+        publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
+    }
+
+
+    @Override
     public boolean canStartNewGame() {
         return GameController.it().coinControl().hasCredit();
     }
@@ -307,13 +315,6 @@ public class MsPacManArcadeGame extends GameModel {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void endGame() {
-        GameController.it().coinControl().consumeCoin();
-        scoreManager().updateHighScore();
-        scoreManager.resetScore();
     }
 
     @Override
