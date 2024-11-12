@@ -28,7 +28,7 @@ public class CreditsScene extends GameScene2D {
 
     @Override
     public void update() {
-        if (context.gameState().timer().atSecond(10)) {
+        if (context.gameState().timer().atSecond(12)) {
             context.gameController().changeState(GameState.STARTING_GAME);
         }
     }
@@ -40,11 +40,12 @@ public class CreditsScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent(GameRenderer renderer) {
-        TengenMsPacManGameRenderer r = (TengenMsPacManGameRenderer) renderer;
-        Font scaledFont = renderer.scaledArcadeFont(8);
-        r.drawBar(paletteColor(0x20), paletteColor(0x13), size().x(), 20);
-        r.drawBar(paletteColor(0x20), paletteColor(0x13), size().x(), 212);
-        if (context.gameState().timer().betweenSeconds(5, 10)) {
+        var r = (TengenMsPacManGameRenderer) renderer;
+        Font scaledFont = renderer.scaledArcadeFont(TS);
+        double width = size().x();
+        r.drawBar(paletteColor(0x20), paletteColor(0x13), width, 20);
+        r.drawBar(paletteColor(0x20), paletteColor(0x13), width, 212);
+        if (context.gameState().timer().betweenSeconds(6, 12)) {
             drawJavaFXVersionAuthors(r, scaledFont);
         } else {
             drawOriginalGameAuthors(r, scaledFont);
