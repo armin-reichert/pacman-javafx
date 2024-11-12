@@ -41,7 +41,7 @@ public class InfoBoxGameInfo extends InfoBox {
             if (mapColorScheme == null) {
                 return InfoText.NO_INFO;
             }
-            return "fill/stroke/food: %s %s %s".formatted(
+            return "fill/stroke/food: %s/%s/%s".formatted(
                 mapColorScheme.get("fill"), mapColorScheme.get("stroke"), mapColorScheme.get("pellet"));
         }));
 
@@ -103,61 +103,32 @@ public class InfoBoxGameInfo extends InfoBox {
     private String fmtGhostAttackSpeed(GameLevel level) {
         // use Pinky because Blinky could be in Elroy mode
         Ghost pinky = level.ghost(GameModel.PINK_GHOST);
-        if (pinky != null) {
-            return "%.4f px/s (%d%%)".formatted(
-                context.game().ghostAttackSpeed(pinky) * 60f,
-                100 //TODO fixme level.pacSpeedPercentage()
-            );
-        }
-        return InfoText.NO_INFO;
+        return (pinky != null) ? "%.4f px/s".formatted(context.game().ghostAttackSpeed(pinky) * 60) : InfoText.NO_INFO;
     }
 
     private String fmtGhostSpeedFrightened(GameLevel level) {
         Ghost blinky = level.ghost(GameModel.RED_GHOST);
-        if (blinky != null) {
-            return "%.4f px/s (%d%%)".formatted(
-                context.game().ghostFrightenedSpeed(blinky) * 60f,
-                100 //TODO fixme level.pacSpeedPercentage()
-            );
-        }
-        return InfoText.NO_INFO;
+        return (blinky != null) ? "%.4f px/s".formatted(context.game().ghostFrightenedSpeed(blinky) * 60) : InfoText.NO_INFO;
     }
 
     private String fmtGhostSpeedTunnel(GameLevel level) {
         Ghost blinky = level.ghost(GameModel.RED_GHOST);
-        if (blinky != null) {
-            return "%.4f px/s (%d%%)".formatted(
-                context.game().ghostTunnelSpeed(blinky) * 60f,
-                100 //TODO fixme level.pacSpeedPercentage()
-            );
-        }
-        return InfoText.NO_INFO;
+        return (blinky != null) ? "%.4f px/s".formatted(context.game().ghostTunnelSpeed(blinky) * 60) : InfoText.NO_INFO;
     }
 
     private String fmtPacNormalSpeed(GameLevel level) {
-        return "%.4f px/s (%d%%)".formatted(
-            context.game().pacNormalSpeed() * 60f,
-            100 //TODO fixme level.pacSpeedPercentage()
-        );
+        return "%.4f px/s".formatted(context.game().pacNormalSpeed() * 60);
     }
 
     private String fmtPacSpeedPowered(GameLevel level) {
-        return "%.4f px/s (%d%%)".formatted(
-            context.game().pacPowerSpeed() * 60f,
-            100 // TODO fixme level.pacSpeedPoweredPercentage()
-        );
+        return "%.4f px/s".formatted(context.game().pacPowerSpeed() * 60);
     }
 
     private String fmtPacPowerTime(GameLevel unused) {
-        return "%.2f sec (%d ticks)".formatted(
-            context.game().pacPowerTicks() / 60f,
-            context.game().pacPowerTicks()
-        );
+        return "%.2f sec (%d ticks)".formatted(context.game().pacPowerTicks() / 60f, context.game().pacPowerTicks());
     }
 
     private String fmtNumFlashes(GameLevel level) {
-        return "%d".formatted(
-            5 //TODO fixme level.numFlashes()
-        );
+        return "%d".formatted(context.game().numFlashes());
     }
 }

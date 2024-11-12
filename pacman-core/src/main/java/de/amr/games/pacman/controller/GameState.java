@@ -72,7 +72,7 @@ public enum GameState implements FsmState<GameModel> {
     SHOWING_CREDITS {
         @Override
         public void onEnter(GameModel context) {
-            timer.restartSeconds(8);
+            timer.restartIndefinitely();
         }
 
         @Override
