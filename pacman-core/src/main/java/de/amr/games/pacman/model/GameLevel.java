@@ -28,7 +28,6 @@ public class GameLevel {
     }
 
     public final int number; // 1=first level
-    private boolean demoLevel;
     private long startTime;
     private int killedGhostCount;
     private GameWorld world;
@@ -45,14 +44,6 @@ public class GameLevel {
     public GameLevel(int number) {
         this.number = number;
         nextBonusIndex = -1;
-    }
-
-    public void setDemoLevel(boolean demoLevel) {
-        this.demoLevel = demoLevel;
-    }
-
-    public boolean isDemoLevel() {
-        return demoLevel;
     }
 
     public void resetKilledGhostCount() {

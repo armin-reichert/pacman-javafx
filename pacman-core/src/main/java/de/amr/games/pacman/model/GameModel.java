@@ -64,6 +64,7 @@ public abstract class GameModel {
     protected int                  initialLives;
     protected int                  lives;
     protected SimulationStepLog    eventLog;
+    protected boolean              demoLevel;
 
     protected GameLevel            level;
 
@@ -111,6 +112,14 @@ public abstract class GameModel {
         return Optional.ofNullable(level);
     }
 
+    public void setDemoLevel(boolean demoLevel) {
+        this.demoLevel = demoLevel;
+    }
+
+    public boolean isDemoLevel() {
+        return demoLevel;
+    }
+
     public File customMapDir() {
         return customMapDir;
     }
@@ -127,11 +136,8 @@ public abstract class GameModel {
         publishGameEvent(GameEventType.GAME_STARTED);
     }
 
-    public void deleteLevel() {
-        level = null;
-    }
-
     public void createLevel(int levelNumber) {
+        setDemoLevel(false);
         level = new GameLevel(levelNumber);
         configureNormalLevel();
         scoreManager.setLevelNumber(levelNumber);
@@ -147,8 +153,8 @@ public abstract class GameModel {
     }
 
     public void createDemoLevel() {
+        setDemoLevel(true);
         level = new GameLevel(1);
-        level.setDemoLevel(true);
         configureDemoLevel();
         publishGameEvent(GameEventType.LEVEL_CREATED);
     }
@@ -168,13 +174,13 @@ public abstract class GameModel {
     public void startLevel() {
         gateKeeper.setLevelNumber(level.number);
         scoreManager.setLevelNumber(level.number);
-        scoreManager.setScoreEnabled(!level.isDemoLevel());
-        scoreManager.setHighScoreEnabled(!level.isDemoLevel());
+        scoreManager.setScoreEnabled(!isDemoLevel());
+        scoreManager.setHighScoreEnabled(!isDemoLevel());
         letsGetReadyToRumble();
         setActorBaseSpeed(level.number);
         Logger.info("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
         level.setStartTime(System.currentTimeMillis());
-        Logger.info("{} started", level.isDemoLevel() ? "Demo Level" : "Level " + level.number);
+        Logger.info("{} started", isDemoLevel() ? "Demo Level" : "Level " + level.number);
         level.ghosts().forEach(ghost -> Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
         publishGameEvent(GameEventType.LEVEL_STARTED);
     }
@@ -351,7 +357,7 @@ public abstract class GameModel {
 
     private void checkPacKilled() {
         boolean pacMeetsKiller = level.ghosts(HUNTING_PAC).anyMatch(level.pac()::sameTile);
-        if (level.isDemoLevel()) {
+        if (isDemoLevel()) {
             eventLog.pacKilled = pacMeetsKiller && !isPacManKillingIgnored();
         } else {
             eventLog.pacKilled = pacMeetsKiller && !level.pac().isImmune();

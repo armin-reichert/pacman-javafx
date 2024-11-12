@@ -11,10 +11,7 @@ import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.LevelData;
-import de.amr.games.pacman.model.Portal;
+import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import de.amr.games.pacman.steering.Steering;
@@ -135,6 +132,7 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     public void reset() {
         level = null;
+        demoLevel = false;
         playing = false;
         lives = initialLives;
         boosterActive = false;
@@ -458,7 +456,7 @@ public class TengenMsPacManGame extends GameModel {
     @Override
     public boolean isPacManKillingIgnored() {
         float levelRunningSeconds = (System.currentTimeMillis() - level.startTime()) / 1000f;
-        if (level.isDemoLevel() && levelRunningSeconds < DEMO_LEVEL_MIN_DURATION_SEC) {
+        if (isDemoLevel() && levelRunningSeconds < DEMO_LEVEL_MIN_DURATION_SEC) {
             Logger.info("Pac-Man dead ignored, demo level is running since {} seconds", levelRunningSeconds);
             return true;
         }
@@ -518,7 +516,7 @@ public class TengenMsPacManGame extends GameModel {
 
     @Override
     public void endGame() {
-        scoreManager().updateHighScore(GameController.it().currentGameVariant());
+        scoreManager().updateHighScore();
         scoreManager.resetScore();
     }
 

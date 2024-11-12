@@ -325,7 +325,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
         // All maps that use a different color scheme than that in the sprite sheet have to be rendered using the
         // generic vector renderer for now. This looks more or less bad for specific maps.
-        boolean mapSpriteExists = context.level().isDemoLevel() || mapSpriteExists(context.level().number, game.mapCategory());
+        boolean mapSpriteExists = context.game().isDemoLevel() || mapSpriteExists(context.level().number, game.mapCategory());
         if (!mapSpriteExists) {
             terrainRenderer.drawMap(ctx(), world.map().terrain());
             world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))

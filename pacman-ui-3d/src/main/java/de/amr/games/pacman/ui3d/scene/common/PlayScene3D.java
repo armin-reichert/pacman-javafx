@@ -136,24 +136,22 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     public void bindGameActions() {
         bind(GameActions3D.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
         bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
-        if (context.game().level().isPresent()) {
-            if (context.level().isDemoLevel()) {
-                if (context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                    bind(TengenGameActions.QUIT_DEMO_LEVEL, context.joypad().keyCombination(NES.Joypad.START));
-                } else {
-                    bind(GameActions2D.ADD_CREDIT, context.arcade().keyCombination(Arcade.Controls.COIN));
-                }
+        if (context.game().isDemoLevel()) {
+            if (context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                bind(TengenGameActions.QUIT_DEMO_LEVEL, context.joypad().keyCombination(NES.Joypad.START));
+            } else {
+                bind(GameActions2D.ADD_CREDIT, context.arcade().keyCombination(Arcade.Controls.COIN));
             }
-            else {
-                if (context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                    bindDefaultJoypadActions(this, context.joypad());
-                } else {
-                    bindDefaultArcadeControllerActions(this, context.arcade());
-                }
-                bindFallbackPlayerControlActions(this);
-                bindCheatActions(this);
-                context.setScoreVisible(true); //TODO check this
+        }
+        else {
+            if (context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                bindDefaultJoypadActions(this, context.joypad());
+            } else {
+                bindDefaultArcadeControllerActions(this, context.arcade());
             }
+            bindFallbackPlayerControlActions(this);
+            bindCheatActions(this);
+            context.setScoreVisible(true); //TODO check this
         }
         registerGameActionKeyBindings(context.keyboard());
     }
@@ -178,7 +176,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
                 showLevelTestMessage("PREVIEW LEVEL " + level.number);
             }
             default -> {
-                if (!level.isDemoLevel()){
+                if (!context.game().isDemoLevel()){
                     showReadyMessage();
                 }
             }
@@ -240,7 +238,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         level3D.update(context);
 
         //TODO check if this has to de done on every tick
-        if (level.isDemoLevel()) {
+        if (context.game().isDemoLevel()) {
             context.game().setDemoLevelBehavior();
         }
         else {
@@ -477,7 +475,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = context.level().isDemoLevel() ||
+        boolean silent = context.game().isDemoLevel() ||
                 context.gameState() == TESTING_LEVEL_BONI ||
                 context.gameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {

@@ -40,7 +40,7 @@ public enum TengenGameActions implements GameAction {
     QUIT_DEMO_LEVEL {
         @Override
         public void execute(GameContext context) {
-            if (context.level().isDemoLevel()) {
+            if (context.game().isDemoLevel()) {
                 context.gameController().changeState(GameState.WAITING_FOR_START);
             }
         }

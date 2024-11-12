@@ -102,7 +102,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             return;
         }
 
-        if (context.level().isDemoLevel()) {
+        if (context.game().isDemoLevel()) {
             game.setDemoLevelBehavior();
         }
         else {
@@ -232,7 +232,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         }
         r.drawLivesCounter(livesCounterEntries, 5, size());
 
-        r.setLevelNumberBoxesVisible(!context.level().isDemoLevel() && game.mapCategory() != MapCategory.ARCADE);
+        r.setLevelNumberBoxesVisible(!context.game().isDemoLevel() && game.mapCategory() != MapCategory.ARCADE);
         r.drawLevelCounter(context, size());
     }
 
@@ -246,7 +246,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         GameState state = context.gameState();
         GameModel game = context.game();
         GameLevel level = game.level().orElseThrow();
-        if (level.isDemoLevel()) {
+        if (game.isDemoLevel()) {
             Color color = Color.web(level.mapConfig().colorScheme().get("stroke"));
             drawText(renderer, "GAME  OVER", cx, y, color);
         } else if (state == GameState.GAME_OVER) {
@@ -321,7 +321,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        if (context.level().isDemoLevel()) {
+        if (context.game().isDemoLevel()) {
             context.level().pac().setImmune(false);
         } else {
             context.level().pac().setUsingAutopilot(PY_AUTOPILOT.get());
@@ -335,7 +335,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     private void setKeyBindings() {
         JoypadKeyAdapter joypad = context.joypad();
-        if (context.level().isDemoLevel()) {
+        if (context.game().isDemoLevel()) {
             bind(QUIT_DEMO_LEVEL, joypad.keyCombination(NES.Joypad.START));
         } else {
             bindCheatActions(this);
@@ -353,7 +353,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = context.level().isDemoLevel() ||
+        boolean silent = context.game().isDemoLevel() ||
                 context.gameState() == TESTING_LEVEL_BONI ||
                 context.gameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {

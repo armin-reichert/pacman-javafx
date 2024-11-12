@@ -9,6 +9,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Set;
 
 public class ScoreManager {
@@ -86,11 +87,11 @@ public class ScoreManager {
             highScoreFile, highScore.points(), highScore.levelNumber());
     }
 
-    public void updateHighScore(GameVariant gameVariant) {
+    public void updateHighScore() {
         var oldHighScore = new Score();
         oldHighScore.read(highScoreFile);
         if (highScore.points() > oldHighScore.points()) {
-            highScore.save(highScoreFile, String.format("%s High Score", gameVariant.name()));
+            highScore.save(highScoreFile, "High Score, last update %s".formatted(LocalTime.now()));
         }
     }
 }

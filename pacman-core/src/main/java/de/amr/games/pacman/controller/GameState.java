@@ -158,7 +158,7 @@ public enum GameState implements FsmState<GameModel> {
             GameLevel level = game.level().orElseThrow();
             if (timer.hasExpired()) {
                 setProperty("mazeFlashing", false);
-                if (level.isDemoLevel()) { // just in case: if demo level is completed, go back to intro scene
+                if (game.isDemoLevel()) { // just in case: if demo level is completed, go back to intro scene
                     enterState(INTRO);
                 } else if (game.intermissionNumberAfterLevel() != 0) {
                     enterState(INTERMISSION);
@@ -245,10 +245,10 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             GameLevel level = game.level().orElseThrow();
             if (timer.hasExpired()) {
-                game.loseLife();
-                if (level.isDemoLevel()) {
-                    enterState(INTRO);
+                if (game.isDemoLevel()) {
+                    enterState(GAME_OVER);
                 } else {
+                    game.loseLife();
                     enterState(game.isOver() ? GAME_OVER : STARTING_GAME);
                 }
             }
@@ -280,8 +280,7 @@ public enum GameState implements FsmState<GameModel> {
     GAME_OVER {
         @Override
         public void onEnter(GameModel game) {
-            timer.reset(game.gameOverStateTicks());
-            timer.start();
+            timer.restartTicks(game.gameOverStateTicks());
             game.endGame();
             game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
         }
@@ -289,10 +288,9 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
-                boolean wasDemoLevel = game.level().get().isDemoLevel();
-                game.deleteLevel();
+                game.reset();
                 if (GameController.it().currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                    if (wasDemoLevel) {
+                    if (game.isDemoLevel()) {
                         enterState(SHOWING_CREDITS);
                     } else {
                         TengenMsPacManGame tengenGame = (TengenMsPacManGame) game;

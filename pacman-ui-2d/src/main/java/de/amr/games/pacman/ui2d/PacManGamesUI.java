@@ -29,7 +29,6 @@ import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -606,7 +605,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     public void onLevelCreated(GameEvent event) {
         currentGameSceneConfig().createActorAnimations(game());
         Logger.info("Actor animations created. ({} level #{})", currentGameVariant(), level().number);
-        sound().setEnabled(!level().isDemoLevel());
+        sound().setEnabled(!game().isDemoLevel());
         Logger.info("Sounds {}", sound().isEnabled() ? "enabled" : "disabled");
         // size of game scene have changed, so re-embed
         currentGameScene().ifPresent(gamePage::embedGameScene);

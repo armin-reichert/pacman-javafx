@@ -4,10 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model.pacman_xxl;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.MapConfig;
 import de.amr.games.pacman.model.actors.StaticBonus;
