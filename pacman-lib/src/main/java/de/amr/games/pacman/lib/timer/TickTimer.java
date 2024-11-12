@@ -26,13 +26,22 @@ public class TickTimer {
 
     public static final long INDEFINITE = Long.MAX_VALUE; // TODO use -1?
 
-    /**
-     * @param sec seconds
-     */
-    public static long secToTicks(double sec) {
-        return Math.round(sec * 60);
+    private static boolean isValidTickNumber(long ticks) {
+        return ticks > 0 || ticks == INDEFINITE;
     }
 
+    /**
+     * @param seconds seconds
+     * @return number of ticks corresponding to given seconds at 60Hz
+     */
+    public static long secToTicks(double seconds) {
+        return Math.round(seconds * 60);
+    }
+
+    /**
+     * @param ticks number of ticks
+     * @return string representation of ticks
+     */
     public static String ticksToString(long ticks) {
         return ticks == INDEFINITE ? "indefinite" : "" + ticks;
     }
@@ -45,26 +54,33 @@ public class TickTimer {
 
     public TickTimer(String name) {
         this.name = name != null ? name : "unnamed";
-        resetIndefinitely();
+        resetIndefiniteTime();
     }
 
     @Override
     public String toString() {
-        return String.format("[%s %s tick: %s remaining: %s total: %s]", name, state, ticksToString(tickCount),
-            ticksToString(remaining()), ticksToString(duration));
+        return "[%s %s tick: %s remaining: %s total: %s]".formatted(name, state,
+            ticksToString(tickCount),
+            ticksToString(remainingTicks()),
+            ticksToString(duration)
+        );
     }
 
     /**
-     * Sets the timer to given duration and its state to {@link State#READY}. The timer is not running after this call!
+     * Sets the timer to the given duration and sets the state to {@link State#READY}.
+     * The timer is not yet running after this call.
      *
-     * @param duration timer duration in ticks
+     * @param ticks timer duration in ticks
      */
-    public void reset(long duration) {
-        this.duration = duration;
+    public void reset(long ticks) {
+        if (!isValidTickNumber(ticks)) {
+            throw new IllegalArgumentException("Invalid tick number: " + ticks);
+        }
+        duration = ticks;
         tickCount = 0;
         state = READY;
         Logger.trace("{} reset", this);
-        publishEvent(new TickTimerEvent(Type.RESET, duration));
+        publishEvent(new TickTimerEvent(Type.RESET, ticks));
     }
 
     /**
@@ -80,7 +96,7 @@ public class TickTimer {
      * Sets the timer to run for an indefinite amount of time. The timer can be forced to expire by calling
      * {@link #expire()}.
      */
-    public void resetIndefinitely() {
+    public void resetIndefiniteTime() {
         reset(INDEFINITE);
     }
 
@@ -113,7 +129,7 @@ public class TickTimer {
     /**
      * Advances the timer by one step, if it is running. Does nothing, else.
      */
-    public void tick() {
+    public void doTick() {
         if (state == RUNNING) {
             if (tickCount == duration) {
                 expire();
@@ -158,6 +174,9 @@ public class TickTimer {
      * @param ticks number of ticks
      */
     public void restartTicks(long ticks) {
+        if (!isValidTickNumber(ticks)) {
+            throw new IllegalArgumentException("Invalid tick number: " + ticks);
+        }
         reset(ticks);
         start();
     }
@@ -186,23 +205,41 @@ public class TickTimer {
         return state == STOPPED;
     }
 
-    public long duration() {
+    /**
+     * @return timer duration in number of ticks at 60Hz
+     */
+    public long durationTicks() {
         return duration;
     }
 
-    public long currentTick() {
+    /**
+     * @return the current tick (starting at 0)
+     */
+    public long tickCount() {
         return tickCount;
     }
 
-    public boolean atSecond(double seconds) {
-        return tickCount == secToTicks(seconds);
+    /**
+     * @param second time instant
+     * @return if timer is at instant
+     */
+    public boolean atSecond(double second) {
+        return tickCount == secToTicks(second);
     }
 
+    /**
+     * @param begin start second (inclusive)
+     * @param end end second (exclusive)
+     * @return if timer is in current range
+     */
     public boolean betweenSeconds(double begin, double end) {
         return secToTicks(begin) <= tickCount && tickCount < secToTicks(end);
     }
 
-    public long remaining() {
+    /**
+     * @return number of ticks remaining until timer duration, {@code INDEFINITE} if duration is indefinite
+     */
+    public long remainingTicks() {
         return duration == INDEFINITE ? INDEFINITE : duration - tickCount;
     }
 
@@ -219,9 +256,9 @@ public class TickTimer {
         }
     }
 
-    private void publishEvent(TickTimerEvent e) {
+    private void publishEvent(TickTimerEvent event) {
         if (listeners != null) {
-            listeners.forEach(subscriber -> subscriber.accept(e));
+            listeners.forEach(subscriber -> subscriber.accept(event));
         }
     }
 }

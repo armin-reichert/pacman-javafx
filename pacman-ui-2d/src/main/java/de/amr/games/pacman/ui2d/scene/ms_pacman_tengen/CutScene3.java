@@ -134,7 +134,7 @@ public class CutScene3 extends GameScene2D {
                 case STATE_STORK_LEAVES_SCENE -> updateStateStorkLeavesScene();
                 default -> throw new IllegalStateException("Illegal state: " + state);
             }
-            stateTimer.tick();
+            stateTimer.doTick();
         }
 
         void updateStateFlap() {

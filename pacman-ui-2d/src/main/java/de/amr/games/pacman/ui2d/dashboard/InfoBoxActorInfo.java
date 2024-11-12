@@ -36,7 +36,7 @@ public class InfoBoxActorInfo extends InfoBox {
         labeledValue("Power",    ifLevelPresent(level -> {
             TickTimer powerTimer = level.powerTimer();
             return powerTimer.isRunning()
-                ? "Remaining: %s".formatted(ticksToString(powerTimer.remaining()))
+                ? "Remaining: %s".formatted(ticksToString(powerTimer.remainingTicks()))
                 : "No Power";
         }));
         emptyRow();

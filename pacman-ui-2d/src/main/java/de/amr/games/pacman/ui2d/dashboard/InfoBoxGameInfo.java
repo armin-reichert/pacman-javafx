@@ -63,14 +63,14 @@ public class InfoBoxGameInfo extends InfoBox {
 
     private String stateTimerInfo() {
         TickTimer t = context.gameState().timer();
-        boolean indefinite = t.duration() == TickTimer.INDEFINITE;
+        boolean indefinite = t.durationTicks() == TickTimer.INDEFINITE;
         if (t.isStopped()) {
-            return "Stopped at tick %s of %s".formatted(t.currentTick(), indefinite ? "∞" : t.duration());
+            return "Stopped at tick %s of %s".formatted(t.tickCount(), indefinite ? "∞" : t.durationTicks());
         }
         if (indefinite) {
-            return "Tick %s of ∞".formatted(t.currentTick());
+            return "Tick %s of ∞".formatted(t.tickCount());
         }
-        return "Tick %d of %d. Remaining: %d".formatted(t.currentTick(), t.duration(), t.remaining());
+        return "Tick %d of %d. Remaining: %d".formatted(t.tickCount(), t.durationTicks(), t.remainingTicks());
     }
 
     private String fmtHuntingPhase(GameLevel level) {

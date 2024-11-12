@@ -106,8 +106,8 @@ public class PacShape3D extends Group {
         TickTimer powerTimer = level.powerTimer();
         if (PY_3D_PAC_LIGHT_ENABLED.get() && powerTimer.isRunning() && pac.isVisible()) {
             light.setLightOn(true);
-            double remaining = powerTimer.remaining();
-            double maxRange = (remaining / powerTimer.duration()) * 60 + 30;
+            double remaining = powerTimer.remainingTicks();
+            double maxRange = (remaining / powerTimer.durationTicks()) * 60 + 30;
             light.setMaxRange(maxRange);
             Logger.debug("Power remaining: {}, light max range: {0.00}", remaining, maxRange);
         } else {

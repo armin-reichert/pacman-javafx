@@ -543,7 +543,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     private void playPacManDiesAnimation() {
-        context.gameState().timer().resetIndefinitely();
+        context.gameState().timer().resetIndefiniteTime();
         Animation animation = level3D.pac3D().createDyingAnimation();
         animation.setDelay(Duration.seconds(1));
         animation.setOnFinished(e -> context.gameState().timer().expire());
@@ -551,7 +551,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     }
 
     private void playLevelCompleteAnimation() {
-        context.gameState().timer().resetIndefinitely(); // block game state until animation has finished
+        context.gameState().timer().resetIndefiniteTime(); // block game state until animation has finished
         levelCompleteAnimation = context.game().intermissionNumberAfterLevel() != 0
             ? levelCompleteAnimationBeforeIntermission(context.game().numFlashes())
             : levelCompleteAnimation(context.game().numFlashes());

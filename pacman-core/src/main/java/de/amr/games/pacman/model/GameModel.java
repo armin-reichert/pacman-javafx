@@ -199,7 +199,7 @@ public abstract class GameModel {
             ghost.setState(LOCKED);
         });
         initActorAnimations();
-        level.powerTimer().resetIndefinitely();
+        level.powerTimer().resetIndefiniteTime();
         level.blinking().setStartPhase(Pulse.ON); // Energizers are visible when ON
         level.blinking().reset();
     }
@@ -384,7 +384,7 @@ public abstract class GameModel {
             eventLog.pacGetsPower = true;
             huntingControl.stop();
             level.powerTimer().restartTicks(pacPowerTicks());
-            Logger.info("Hunting paused, power timer restarted, duration={} ticks", level.powerTimer().duration());
+            Logger.info("Hunting paused, power timer restarted, duration={} ticks", level.powerTimer().durationTicks());
             level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             level.ghosts(FRIGHTENED).forEach(Ghost::reverseASAP);
             publishGameEvent(GameEventType.PAC_GETS_POWER);
@@ -394,8 +394,8 @@ public abstract class GameModel {
     }
 
     private void updatePacPower() {
-        level.powerTimer().tick();
-        if (level.powerTimer().remaining() == pacPowerFadingTicks()) {
+        level.powerTimer().doTick();
+        if (level.powerTimer().remainingTicks() == pacPowerFadingTicks()) {
             eventLog.pacStartsLosingPower = true;
             publishGameEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (level.powerTimer().hasExpired()) {
@@ -412,12 +412,12 @@ public abstract class GameModel {
     }
 
     public boolean isPowerFading() {
-        return level.powerTimer().isRunning() && level.powerTimer().remaining() <= pacPowerFadingTicks();
+        return level.powerTimer().isRunning() && level.powerTimer().remainingTicks() <= pacPowerFadingTicks();
     }
 
     public boolean isPowerFadingStarting() {
-        return level.powerTimer().isRunning() && level.powerTimer().remaining() == pacPowerFadingTicks()
-            || level.powerTimer().duration() < pacPowerFadingTicks() && level.powerTimer().currentTick() == 1;
+        return level.powerTimer().isRunning() && level.powerTimer().remainingTicks() == pacPowerFadingTicks()
+            || level.powerTimer().durationTicks() < pacPowerFadingTicks() && level.powerTimer().tickCount() == 1;
     }
 
     private void updateBonus(Bonus bonus) {

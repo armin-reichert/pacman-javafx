@@ -89,7 +89,7 @@ public abstract class FiniteStateMachine<S extends FsmState<C>, C> {
      */
     public void resetTimers() {
         for (S state : states) {
-            state.timer().resetIndefinitely();
+            state.timer().resetIndefiniteTime();
         }
     }
 
@@ -133,7 +133,7 @@ public abstract class FiniteStateMachine<S extends FsmState<C>, C> {
         }
         prevState = currentState;
         currentState = newState;
-        currentState.timer().resetIndefinitely();
+        currentState.timer().resetIndefiniteTime();
         Logger.info("Enter state {} timer={}", currentState, currentState.timer());
         currentState.onEnter(context);
         Logger.info("After Enter state {} timer={}", currentState, currentState.timer());
@@ -162,7 +162,7 @@ public abstract class FiniteStateMachine<S extends FsmState<C>, C> {
         if (currentState.timer().state() == State.READY) {
             currentState.timer().start();
         } else {
-            currentState.timer().tick();
+            currentState.timer().doTick();
         }
     }
 }

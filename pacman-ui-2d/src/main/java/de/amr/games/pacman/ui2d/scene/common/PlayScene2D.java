@@ -215,7 +215,7 @@ public class PlayScene2D extends GameScene2D {
         }
         g.setFill(Color.YELLOW);
         g.setFont(DEBUG_STATE_FONT);
-        g.fillText(String.format("%s %d", context.gameState(), context.gameState().timer().currentTick()), 0, 64);
+        g.fillText(String.format("%s %d", context.gameState(), context.gameState().timer().tickCount()), 0, 64);
     }
 
     @Override

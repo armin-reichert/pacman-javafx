@@ -16,7 +16,6 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
@@ -96,7 +95,7 @@ public class IntroScene extends GameScene2D {
     public void drawSceneContent(GameRenderer renderer) {
         TengenMsPacManGameRenderer r = (TengenMsPacManGameRenderer) renderer;
         TickTimer timer = sceneController.state().timer();
-        long t = timer.currentTick();
+        long t = timer.tickCount();
         Font scaledFont = renderer.scaledArcadeFont(8);
         switch (sceneController.state()) {
 

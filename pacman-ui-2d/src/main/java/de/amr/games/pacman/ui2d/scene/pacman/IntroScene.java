@@ -130,7 +130,7 @@ public class IntroScene extends GameScene2D {
                 if (blinking.isOn()) {
                     drawEnergizer(renderer, t(LEFT_TILE_X), t(20));
                 }
-                drawGuys(renderer, flutter(timer.currentTick()));
+                drawGuys(renderer, flutter(timer.tickCount()));
                 if (context.currentGameVariant() == GameVariant.PACMAN) {
                     renderer.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, Color.valueOf(Arcade.Palette.PINK), renderer.scaledArcadeFont(TS),  t(4), t(32));
                 }
@@ -227,7 +227,7 @@ public class IntroScene extends GameScene2D {
         STARTING {
             @Override
             public void onUpdate(IntroScene intro) {
-                if (timer.currentTick() == 3) {
+                if (timer.tickCount() == 3) {
                     intro.titleVisible = true;
                 } else if (timer.atSecond(1)) {
                     intro.sceneController.changeState(PRESENTING_GHOSTS);
@@ -238,7 +238,7 @@ public class IntroScene extends GameScene2D {
         PRESENTING_GHOSTS {
             @Override
             public void onUpdate(IntroScene intro) {
-                if (timer.currentTick() == 1) {
+                if (timer.tickCount() == 1) {
                     intro.ghostImageVisible[intro.ghostIndex] = true;
                 } else if (timer.atSecond(1.0)) {
                     intro.ghostCharacterVisible[intro.ghostIndex] = true;
@@ -246,7 +246,7 @@ public class IntroScene extends GameScene2D {
                     intro.ghostNicknameVisible[intro.ghostIndex] = true;
                 } else if (timer.atSecond(2.0)) {
                     if (intro.ghostIndex < intro.ghosts.length - 1) {
-                        timer.resetIndefinitely();
+                        timer.resetIndefiniteTime();
                     }
                     intro.ghostIndex += 1;
                 } else if (timer.atSecond(2.5)) {
@@ -321,7 +321,7 @@ public class IntroScene extends GameScene2D {
             @Override
             public void onEnter(IntroScene intro) {
                 timer.restartIndefinitely();
-                intro.ghostKilledTime = timer.currentTick();
+                intro.ghostKilledTime = timer.tickCount();
                 intro.pacMan.setMoveDir(Direction.RIGHT);
                 intro.pacMan.setSpeed(CHASE_SPEED);
                 intro.victims.clear();
@@ -340,7 +340,7 @@ public class IntroScene extends GameScene2D {
                     .findFirst()
                     .ifPresent(victim -> {
                         intro.victims.add(victim);
-                        intro.ghostKilledTime = timer.currentTick();
+                        intro.ghostKilledTime = timer.tickCount();
                         intro.pacMan.hide();
                         intro.pacMan.setSpeed(0);
                         Stream.of(intro.ghosts).forEach(ghost -> {
@@ -352,7 +352,7 @@ public class IntroScene extends GameScene2D {
                     });
 
                 // After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on
-                if (timer.currentTick() == intro.ghostKilledTime + 50) {
+                if (timer.tickCount() == intro.ghostKilledTime + 50) {
                     intro.pacMan.show();
                     intro.pacMan.setSpeed(CHASE_SPEED);
                     Stream.of(intro.ghosts).forEach(ghost -> {

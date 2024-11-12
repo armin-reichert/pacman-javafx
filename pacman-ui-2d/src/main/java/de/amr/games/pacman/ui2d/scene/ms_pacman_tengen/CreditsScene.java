@@ -25,7 +25,7 @@ public class CreditsScene extends GameScene2D {
 
     @Override
     public void update() {
-        if (context.gameState().timer().atSecond(9)) {
+        if (context.gameState().timer().atSecond(10)) {
             context.gameController().changeState(GameState.STARTING_GAME);
         }
     }
@@ -41,6 +41,14 @@ public class CreditsScene extends GameScene2D {
         Font scaledFont = renderer.scaledArcadeFont(8);
         r.drawBar(paletteColor(0x20), paletteColor(0x13), size().x(), 20);
         r.drawBar(paletteColor(0x20), paletteColor(0x13), size().x(), 212);
+        if (context.gameState().timer().betweenSeconds(5, 10)) {
+            drawJavaFXVersionAuthors(r, scaledFont);
+        } else {
+            drawOriginalGameAuthors(r, scaledFont);
+        }
+    }
+
+    private void drawOriginalGameAuthors(TengenMsPacManGameRenderer r, Font scaledFont) {
         int y = 7 * TS;
         r.drawText("CREDITS FOR MS PAC-MAN", paletteColor(0x20), scaledFont, 3 * TS, y);
         y += 4 * TS;
@@ -61,11 +69,30 @@ public class CreditsScene extends GameScene2D {
         r.drawText("ALL RIGHTS RESERVED", paletteColor(0x19), scaledFont, centerX(19), y);
     }
 
-    private double centerX(int textLength) {
-        return (NES_TILES_X - textLength) * HTS;
+    private void drawJavaFXVersionAuthors(TengenMsPacManGameRenderer r, Font scaledFont) {
+        int y = 7 * TS;
+        r.drawText("CREDITS FOR JAVAFX REMAKE", paletteColor(0x20), scaledFont, 3 * TS, y);
+        y += 4 * TS;
+        r.drawText("GAME PROGRAMMER:", paletteColor(0x23), scaledFont, 4 * TS, y);
+        y += 2 * TS;
+        r.drawText("ARMIN REICHERT", paletteColor(0x23), scaledFont, 10 * TS, y);
+        y += 3 * TS;
+        r.drawText("SPECIAL THANKS:", paletteColor(0x23), scaledFont, 4 * TS, y);
+        y += 2 * TS;
+        r.drawText("RUSSIANMANSMWC", paletteColor(0x23), scaledFont, 10 * TS, y);
+        y += TS;
+        r.drawText("ANDYANA JONSEPH", paletteColor(0x23), scaledFont, 10 * TS, y);
+        y += TS;
+        r.drawText("FLICKY1211", paletteColor(0x23), scaledFont, 10 * TS, y);
+        y += 2 * TS;
+        r.drawText("MS PAC-MAN TM NAMCO LTD", paletteColor(0x19), scaledFont, centerX(23), y);
+        y += TS;
+        r.drawText("©1990 TENGEN INC", paletteColor(0x19), scaledFont, centerX(16), y);
+        y += TS;
+        r.drawText("ALL RIGHTS RESERVED", paletteColor(0x19), scaledFont, centerX(19), y);
     }
 
-    private void centerLabelText(GameRenderer renderer, String text, Font font, Color color, double y) {
-        renderer.drawText(text, color, font, (NES_TILES_X - text.length()) * HTS, y);
+    private double centerX(int textLength) {
+        return (NES_TILES_X - textLength) * HTS;
     }
 }

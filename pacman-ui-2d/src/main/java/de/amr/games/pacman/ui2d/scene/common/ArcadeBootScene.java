@@ -45,11 +45,11 @@ public class ArcadeBootScene extends GameScene2D {
         renderer.setScaling(scaling());
         renderer.setBackgroundColor(backgroundColor());
         var timer = context.gameState().timer();
-        if (timer.currentTick() == 1) {
+        if (timer.tickCount() == 1) {
             renderer.clearCanvas();
-        } else if (timer.betweenSeconds(1, 2) && timer.currentTick() % 8 == 0) {
+        } else if (timer.betweenSeconds(1, 2) && timer.tickCount() % 8 == 0) {
             paintRandomHexCodes(renderer, sceneSize);
-        } else if (timer.betweenSeconds(2, 3.5) && timer.currentTick() % 4 == 0) {
+        } else if (timer.betweenSeconds(2, 3.5) && timer.tickCount() % 4 == 0) {
             paintRandomSprites(context.currentGameSceneConfig().spriteSheet().sourceImage(), renderer, sceneSize);
         } else if (timer.atSecond(3.5)) {
             paintScreenTestGrid(renderer, sceneSize);

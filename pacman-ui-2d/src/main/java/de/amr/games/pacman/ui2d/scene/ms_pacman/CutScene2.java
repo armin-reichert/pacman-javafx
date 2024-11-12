@@ -113,7 +113,7 @@ public class CutScene2 extends GameScene2D {
                 case STATE_CHASING -> updateStateChasing();
                 default -> throw new IllegalStateException("Illegal state: " + state);
             }
-            stateTimer.tick();
+            stateTimer.doTick();
         }
 
         void updateStateFlap() {

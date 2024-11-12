@@ -110,7 +110,7 @@ public class IntroScene extends GameScene2D {
     public void drawSceneContent(GameRenderer renderer) {
         MsPacManGameRenderer r = (MsPacManGameRenderer) renderer;
         Font font = r.scaledArcadeFont(TS);
-        BitSet marqueeState = computeMarqueeState(marqueeTimer.currentTick());
+        BitSet marqueeState = computeMarqueeState(marqueeTimer.tickCount());
         drawMarquee(r.ctx(), marqueeState);
         r.drawText("\"MS PAC-MAN\"", Color.valueOf(Arcade.Palette.ORANGE), font, TITLE_POSITION.x(), TITLE_POSITION.y());
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
@@ -207,7 +207,7 @@ public class IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(IntroScene intro) {
-                intro.marqueeTimer.tick();
+                intro.marqueeTimer.doTick();
                 if (timer.atSecond(1)) {
                     intro.sceneController.changeState(GHOSTS_MARCHING_IN);
                 }
@@ -218,7 +218,7 @@ public class IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(IntroScene intro) {
-                intro.marqueeTimer.tick();
+                intro.marqueeTimer.doTick();
                 boolean reachedEndPosition = letGhostMarchIn(intro);
                 if (reachedEndPosition) {
                     if (intro.ghostIndex == 3) {
@@ -263,7 +263,7 @@ public class IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(IntroScene intro) {
-                intro.marqueeTimer.tick();
+                intro.marqueeTimer.doTick();
                 intro.msPacMan.move();
                 if (intro.msPacMan.posX() <= STOP_X_MS_PAC_MAN) {
                     intro.msPacMan.setSpeed(0);
@@ -277,7 +277,7 @@ public class IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(IntroScene intro) {
-                intro.marqueeTimer.tick();
+                intro.marqueeTimer.doTick();
                 if (timer.atSecond(2.0) && !intro.context.game().canStartNewGame()) {
                     intro.context.gameController().changeState(GameState.STARTING_GAME); // demo level
                 } else if (timer.atSecond(5)) {

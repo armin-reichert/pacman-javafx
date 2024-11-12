@@ -137,7 +137,7 @@ public class CutScene1 extends GameScene2D {
                 case STATE_IN_HEAVEN -> updateStateInHeaven();
                 default -> throw new IllegalStateException("Illegal state: " + state);
             }
-            stateTimer.tick();
+            stateTimer.doTick();
         }
 
         void updateStateFlap() {

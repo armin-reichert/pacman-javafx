@@ -35,15 +35,15 @@ public abstract class HuntingControl {
     public abstract long huntingTicks(int levelNumber, int phaseIndex);
 
     public void update() {
-        timer.tick();
+        timer.doTick();
     }
 
     public long currentTick() {
-        return timer.currentTick();
+        return timer.tickCount();
     }
 
     public long remaining() {
-        return timer.remaining();
+        return timer.remainingTicks();
     }
 
     public boolean isCurrentPhaseOver() {
@@ -95,7 +95,7 @@ public abstract class HuntingControl {
         timer.start();
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds) started. {}",
             this.phaseIndex, phaseType,
-            timer.duration(), (float) timer.duration() / GameModel.TICKS_PER_SECOND, timer);
+            timer.durationTicks(), (float) timer.durationTicks() / GameModel.TICKS_PER_SECOND, timer);
     }
 
     public int phaseIndex() {

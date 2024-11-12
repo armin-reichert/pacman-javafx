@@ -270,7 +270,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         renderer.drawTileGrid(size());
         renderer.ctx().setFill(Color.YELLOW);
         renderer.ctx().setFont(Font.font("Sans", FontWeight.BOLD, 24));
-        renderer.ctx().fillText(String.format("%s %d", context.gameState(), context.gameState().timer().currentTick()), 0, 64);
+        renderer.ctx().fillText(String.format("%s %d", context.gameState(), context.gameState().timer().tickCount()), 0, 64);
     }
 
     @Override
