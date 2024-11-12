@@ -137,7 +137,7 @@ public class IntroScene extends GameScene2D {
                 drawMarquee(r, t);
                 r.drawText("\"MS PAC-MAN\"", paletteColor(0x28), scaledFont, MARQUEE_X + 20, MARQUEE_Y - 18);
                 r.drawText("STARRING", paletteColor(0x20), scaledFont, MARQUEE_X + 12, MARQUEE_Y + 22);
-                r.drawText("MS PAC-MAN", paletteColor(0x28), scaledFont, MARQUEE_X + 44, MARQUEE_Y + 38);
+                r.drawText("MS PAC-MAN", paletteColor(0x28), scaledFont, MARQUEE_X + 28, MARQUEE_Y + 38);
                 for (Ghost ghost : ghosts) { r.drawAnimatedEntity(ghost); }
                 r.drawAnimatedEntity(msPacMan);
             }
@@ -316,7 +316,7 @@ public class IntroScene extends GameScene2D {
                     intro.msPacMan.setSpeed(0);
                     intro.msPacMan.animations().ifPresent(Animations::resetCurrentAnimation); //TODO check in Tengen, seems not to work!
                 }
-                if (timer.atSecond(7.5)) {
+                if (timer.atSecond(7)) {
                     intro.context.gameController().restart(GameState.STARTING_GAME);
                 }
             }

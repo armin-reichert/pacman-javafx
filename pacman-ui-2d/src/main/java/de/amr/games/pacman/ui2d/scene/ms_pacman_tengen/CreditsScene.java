@@ -89,7 +89,7 @@ public class CreditsScene extends GameScene2D {
         r.drawText("ANDYANA JONSEPH", paletteColor(0x23), scaledFont, 10 * TS, y);
         y += TS;
         r.drawText("FLICKY1211", paletteColor(0x23), scaledFont, 10 * TS, y);
-        y += 2 * TS;
+        y += 3 * TS;
         r.drawText("MS PAC-MAN TM NAMCO LTD", paletteColor(0x19), scaledFont, centerX(23), y);
         y += TS;
         r.drawText("©1990 TENGEN INC", paletteColor(0x19), scaledFont, centerX(16), y);
