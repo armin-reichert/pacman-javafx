@@ -37,6 +37,11 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();
             game.reset();
+            //TODO ugly
+            if (GameController.it().currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                TengenMsPacManGame tengenGame = (TengenMsPacManGame) game;
+                tengenGame.resetOptions();
+            }
             game.levelCounter().clear();
         }
 

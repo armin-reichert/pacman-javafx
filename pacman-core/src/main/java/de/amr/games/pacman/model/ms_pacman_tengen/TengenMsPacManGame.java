@@ -131,6 +131,13 @@ public class TengenMsPacManGame extends GameModel {
         reset();
     }
 
+    public void resetOptions() {
+        setMapCategory(MapCategory.ARCADE);
+        setBoosterMode(BoosterMode.OFF);
+        setDifficulty(Difficulty.NORMAL);
+        setStartLevelNumber(1);
+    }
+
     @Override
     public void reset() {
         level = null;
@@ -138,10 +145,6 @@ public class TengenMsPacManGame extends GameModel {
         playing = false;
         lives = initialLives;
         boosterActive = false;
-        setMapCategory(MapCategory.ARCADE);
-        setBoosterMode(BoosterMode.OFF);
-        setDifficulty(Difficulty.NORMAL);
-        setStartLevelNumber(1);
         setInitialLives(3);
         setNumContinues(4);
         scoreManager().loadHighScore();

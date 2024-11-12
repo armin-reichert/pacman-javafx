@@ -131,7 +131,6 @@ public abstract class GameModel {
     }
 
     public void startNewGame() {
-        reset();
         createLevel(1);
         publishGameEvent(GameEventType.GAME_STARTED);
     }
