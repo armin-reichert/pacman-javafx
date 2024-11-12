@@ -48,6 +48,10 @@ public class IntroScene extends GameScene2D {
 
     private final FiniteStateMachine<SceneState, IntroScene> sceneController;
 
+    private record MarqueeState(long t, BitSet bits) {}
+
+    private long marqueeTick;
+    private final BitSet marqueeState = new BitSet(NUM_BULBS);
     private Pac msPacMan;
     private Ghost[] ghosts;
     private int ghostIndex;
@@ -94,7 +98,7 @@ public class IntroScene extends GameScene2D {
     @Override
     public void drawSceneContent(GameRenderer renderer) {
         TengenMsPacManGameRenderer r = (TengenMsPacManGameRenderer) renderer;
-        TickTimer timer = sceneController.state().timer();
+        TickTimer timer = sceneController.state().timer;
         long t = timer.tickCount();
         Font scaledFont = renderer.scaledArcadeFont(8);
         switch (sceneController.state()) {
@@ -140,31 +144,26 @@ public class IntroScene extends GameScene2D {
         }
     }
 
-    /**
-     * 6 of the 96 bulbs are switched on per frame, shifting counter-clockwise every tick.
-     * The bulbs on the left border however are switched off every second frame. Bug in original game?
-     *
-     * @param t clock tick
-     * @return bit set indicating which bulbs are switched on
-     */
-    private BitSet marqueeState(long t) {
-        var state = new BitSet(NUM_BULBS);
-        for (int b = 0; b < 6; ++b) {
-            state.set((int) (b * 16 + t) % NUM_BULBS);
+    private void updateMarqueeState() {
+        long t = sceneController.state().timer().tickCount();
+        if (t % 4 == 0) {
+            marqueeTick += 2;
+            marqueeState.clear();
+            for (int b = 0; b < 6; ++b) {
+                marqueeState.set((int) (b * 16 + marqueeTick) % NUM_BULBS);
+            }
+            // Simulate bug on left border
+            for (int i = 81; i < NUM_BULBS; i += 2) {
+//                marqueeState.clear(i);
+            }
         }
-        // Simulate bug on left border
-        for (int i = 81; i < NUM_BULBS; i += 2) {
-            state.clear(i);
-        }
-        return state;
     }
 
     private void drawMarquee(GameRenderer renderer, long t) {
-        BitSet bulbOn = marqueeState(t);
         double xMin = MARQUEE_X, xMax = xMin + 132, yMin = MARQUEE_Y, yMax = yMin + 60;
         GraphicsContext g = renderer.ctx();
         for (int i = 0; i < NUM_BULBS; ++i) {
-            g.setFill(bulbOn.get(i) ? paletteColor(0x20) : paletteColor(0x15));
+            g.setFill(marqueeState.get(i) ? paletteColor(0x20) : paletteColor(0x15));
             if (i <= 33) {
                 // lower border left-to-right
                 drawBulb(g, xMin + 4 * i, yMax);
@@ -242,6 +241,7 @@ public class IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(IntroScene intro) {
+                intro.updateMarqueeState();
                 if (timer.atSecond(1)) {
                     intro.sceneController.changeState(GHOSTS_MARCHING_IN);
                 }
@@ -257,6 +257,7 @@ public class IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(IntroScene intro) {
+                intro.updateMarqueeState();
                 boolean reachedEndPosition = letGhostMarchIn(intro);
                 if (reachedEndPosition) {
                     Logger.info("Reached end position");
@@ -308,6 +309,7 @@ public class IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(IntroScene intro) {
+                intro.updateMarqueeState();
                 Logger.debug("Tick {}: {} marching in", intro.context.tick(), intro.msPacMan.name());
                 intro.msPacMan.move();
                 if (intro.msPacMan.posX() <= MS_PAC_MAN_STOP_X) {
