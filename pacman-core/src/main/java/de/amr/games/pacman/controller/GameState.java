@@ -37,6 +37,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();
             game.reset();
+            game.levelCounter().clear();
         }
 
         @Override
@@ -70,8 +71,15 @@ public enum GameState implements FsmState<GameModel> {
 
     SHOWING_CREDITS {
         @Override
-        public void onUpdate(GameModel context) {
+        public void onEnter(GameModel context) {
+            timer.restartSeconds(8);
+        }
 
+        @Override
+        public void onUpdate(GameModel context) {
+            if (timer.hasExpired()) {
+                enterState(INTRO);
+            }
         }
     },
 
@@ -287,7 +295,6 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
-                game.reset();
                 if (GameController.it().currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                     if (game.isDemoLevel()) {
                         enterState(SHOWING_CREDITS);
@@ -301,6 +308,7 @@ public enum GameState implements FsmState<GameModel> {
                         }
                     }
                 } else {
+                    game.reset();
                     if (game.canStartNewGame()) {
                         enterState(WAITING_FOR_START);
                     } else {

@@ -4,14 +4,16 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model.ms_pacman_tengen;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.*;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.LevelData;
+import de.amr.games.pacman.model.Portal;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import de.amr.games.pacman.steering.Steering;
@@ -142,7 +144,6 @@ public class TengenMsPacManGame extends GameModel {
         setStartLevelNumber(1);
         setInitialLives(3);
         setNumContinues(4);
-        levelCounter().clear();
         scoreManager().loadHighScore();
         scoreManager.resetScore();
     }

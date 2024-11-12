@@ -13,7 +13,10 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Tiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.*;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.LevelData;
+import de.amr.games.pacman.model.MapConfig;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.StaticBonus;
@@ -25,7 +28,6 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -157,10 +159,6 @@ public class PacManArcadeGame extends GameModel {
         return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
     }
 
-    public Optional<LevelData> currentLevelData() {
-        return level != null ? Optional.of(levelData(level.number)): Optional.empty();
-    }
-
     public byte cruiseElroy() {
         return cruiseElroy;
     }
@@ -199,7 +197,7 @@ public class PacManArcadeGame extends GameModel {
         lives = initialLives;
         level = null;
         demoLevel = false;
-        setCruiseElroy(0);
+        cruiseElroy = 0;
         levelCounter().clear();
         scoreManager().loadHighScore();
         scoreManager.resetScore();

@@ -11,7 +11,10 @@ import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.*;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.LevelData;
+import de.amr.games.pacman.model.Portal;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
@@ -22,7 +25,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -119,16 +121,12 @@ public class MsPacManArcadeGame extends GameModel {
         huntingControl.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
     }
 
-    public Optional<LevelData> currentLevelData() {
-        return level != null ? Optional.of(levelData(level.number)): Optional.empty();
-    }
-
     @Override
     public void reset() {
+        playing = false;
         lives = initialLives;
         level = null;
         demoLevel = false;
-        playing = false;
         cruiseElroy = 0;
         levelCounter().clear();
         scoreManager().loadHighScore();
