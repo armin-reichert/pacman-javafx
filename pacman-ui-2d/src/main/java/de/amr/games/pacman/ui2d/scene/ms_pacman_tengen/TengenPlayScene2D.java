@@ -210,7 +210,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             mazeFlashing.update(context.tick());
             r.drawEmptyMap(world.map(), mazeFlashing.currentColorScheme());
         } else {
-            r.drawWorld(context, world, 0,  3 * TS, messageMovement.currentX());
+            r.drawWorld(context, world, 0,  3 * TS);
         }
 
         r.drawAnimatedEntity(msPacMan);

@@ -321,10 +321,6 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void drawWorld(GameContext context, GameWorld world, double x, double y) {
-        // use own method with additional parameter for moving message x position
-    }
-
-    public void drawWorld(GameContext context, GameWorld world, double x, double y, double messageX) {
         TengenMsPacManGame game = (TengenMsPacManGame) context.game();
         GameLevel level = game.level().orElseThrow();
         if (!isUsingDefaultGameOptions(game)) {
@@ -375,7 +371,6 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     //TODO too much game logic in here
     public void drawLevelMessage(GameContext context) {
         GameLevel level = context.level();
-        GameWorld world = level.world();
         String assetPrefix = assetPrefix(GameVariant.MS_PACMAN_TENGEN);
         if (context.game().isDemoLevel()) {
             Color color = Color.web(level.mapConfig().colorScheme().get("stroke"));
