@@ -16,6 +16,7 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
@@ -47,8 +48,6 @@ public class IntroScene extends GameScene2D {
     static final float SPEED = 2.2f; //TODO check exact speed
 
     private final FiniteStateMachine<SceneState, IntroScene> sceneController;
-
-    private record MarqueeState(long t, BitSet bits) {}
 
     private long marqueeTick;
     private final BitSet marqueeState = new BitSet(NUM_BULBS);
@@ -152,12 +151,6 @@ public class IntroScene extends GameScene2D {
             for (int b = 0; b < 6; ++b) {
                 marqueeState.set((int) (b * 16 + marqueeTick) % NUM_BULBS);
             }
-            /*
-            // Simulate bug on left border
-            for (int i = 81; i < NUM_BULBS; i += 2) {
-                marqueeState.clear(i);
-            }
-             */
         }
     }
 
@@ -316,6 +309,9 @@ public class IntroScene extends GameScene2D {
                     intro.msPacMan.animations().ifPresent(Animations::resetCurrentAnimation); //TODO check in Tengen, seems not to work!
                 }
                 if (timer.atSecond(7)) {
+                    // start demo level
+                    TengenMsPacManGame tengenGame = (TengenMsPacManGame) intro.context.game();
+                    tengenGame.setCanStartGame(false);
                     intro.context.gameController().restart(GameState.STARTING_GAME);
                 }
             }
