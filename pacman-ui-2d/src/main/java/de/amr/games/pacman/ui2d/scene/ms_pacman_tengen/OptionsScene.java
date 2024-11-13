@@ -24,6 +24,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameRenderer.paletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSpriteSheet.CONTINUES_SPRITES;
 
 /**
  * @author Armin Reichert
@@ -271,7 +272,7 @@ public class OptionsScene extends GameScene2D {
         renderer.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
         renderer.drawText(String.valueOf(game.startLevelNumber()), VALUE_COLOR, scaledFont, COL_VALUE, y);
         if (game.numContinues() < 4) {
-            renderer.drawSpriteScaled(TengenMsPacManGameSpriteSheet.CONTINUES_SPRITES[game.numContinues()], COL_VALUE + 3 * TS, y - TS);
+            renderer.drawSpriteScaled(CONTINUES_SPRITES[game.numContinues()], COL_VALUE + 3 * TS, y - TS);
         }
 
         y += 3 * TS;

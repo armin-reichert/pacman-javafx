@@ -12,7 +12,6 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.LevelData;
 import de.amr.games.pacman.model.Portal;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
@@ -21,7 +20,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -84,20 +82,6 @@ public class TengenMsPacManGame extends GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
-    private static final LevelData DUMMY_LEVEL_DATA = new LevelData(new byte[] {
-        100, // Pac speed in % of base speed
-        100, // Ghost speed in % of base speed
-        40, // Ghost speed in tunnel...
-        20, // Dots left for Elroy1
-        105, // Elroy1 speed...
-        10, // Dots left for Elroy2
-        110, // Elroy2 speed
-        110, // Pac (power mode) speed...
-        50, // Frightened ghost speed...
-        6, // pac power time (seconds)
-        5, // Num flashes
-    });
-
     private final MapConfigurationManager mapConfigMgr = new MapConfigurationManager();
     private MapCategory mapCategory;
     private Difficulty difficulty;
@@ -136,6 +120,7 @@ public class TengenMsPacManGame extends GameModel {
         setBoosterMode(BoosterMode.OFF);
         setDifficulty(Difficulty.NORMAL);
         setStartLevelNumber(1);
+        setNumContinues(4);
     }
 
     @Override
@@ -146,7 +131,7 @@ public class TengenMsPacManGame extends GameModel {
         lives = initialLives;
         boosterActive = false;
         setInitialLives(3);
-        setNumContinues(4);
+        //setNumContinues(4);
         scoreManager().loadHighScore();
         scoreManager.resetScore();
     }
@@ -206,13 +191,12 @@ public class TengenMsPacManGame extends GameModel {
         return numContinues;
     }
 
-    public boolean isBoosterActive() {
-        return boosterActive;
+    public void subtractOneContinue() {
+        numContinues -= 1;
     }
 
-    //TODO remove this only for info panel in dashboard
-    public Optional<LevelData> currentLevelData() {
-        return Optional.of(DUMMY_LEVEL_DATA);
+    public boolean isBoosterActive() {
+        return boosterActive;
     }
 
     @Override
@@ -326,8 +310,6 @@ public class TengenMsPacManGame extends GameModel {
     public void loseLife() {
         if (lives > 0) {
             --lives;
-        } else if (numContinues > 0) {
-            --numContinues;
         }
     }
 
@@ -358,7 +340,8 @@ public class TengenMsPacManGame extends GameModel {
         }
         level.ghosts().forEach(ghost -> {
             ghost.setBaseSpeed(ghostBaseSpeedInLevel(levelNumber)
-                + ghostDifficultySpeedDelta(difficulty) + ghostIDSpeedDelta(ghost.id()));
+                + ghostDifficultySpeedDelta(difficulty)
+                + ghostIDSpeedDelta(ghost.id()));
         });
     }
 

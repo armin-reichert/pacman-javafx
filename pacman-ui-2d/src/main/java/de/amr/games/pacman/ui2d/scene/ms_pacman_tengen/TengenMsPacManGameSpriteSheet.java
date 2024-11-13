@@ -134,10 +134,10 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     static final RectArea[] CONTINUES_SPRITES = {
-        rect(180, 243, 40, 8),
-        rect(180, 234, 40, 8),
-        rect(180, 225, 40, 8),
-        rect(180, 216, 40, 8),
+        rect(180, 243, 40, 8), // Continues:0
+        rect(180, 234, 40, 8), // Continues:1
+        rect(180, 225, 40, 8), // Continues:2
+        rect(180, 216, 40, 8), // Continues:3
     };
 
     static final RectArea LEVEL_BOX_SPRITE = rect(200, 164, 16, 16);

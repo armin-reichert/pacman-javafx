@@ -133,13 +133,17 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     }
 
     private double minCameraY(GameWorld world) {
-        int numRows = world.map().terrain().numRows() + 2;
-        return -scaled(0.5 * (numRows - 29) * TS);
+        int tilesVertically = world.map().terrain().numRows();
+        // This lets the camera stop when one tile over the world area is still empty
+        // Note: The world area is the map area + 2 vertical rows below (room for the level counter etc.)
+        return scaled((26 - tilesVertically) * HTS);
     }
 
     private double maxCameraY(GameWorld world) {
-        int numRows = world.map().terrain().numRows() + 2;
-        return scaled(0.5 * (numRows - 31) * TS);
+        int tilesVertically = world.map().terrain().numRows();
+        // This lets the camera stop when half a tile under the world area is still empty
+        // Note: The world area is the map area + 2 vertical rows below (room for the level counter etc.)
+        return scaled((tilesVertically - 29) * HTS);
     }
 
     @Override
