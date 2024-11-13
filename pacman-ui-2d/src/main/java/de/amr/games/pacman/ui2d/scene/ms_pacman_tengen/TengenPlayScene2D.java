@@ -10,14 +10,13 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.NES;
-import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
-import de.amr.games.pacman.ui2d.input.JoypadKeyAdapter;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
@@ -338,7 +337,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         }
 
         r.drawAnimatedEntity(msPacMan);
-        ghostsInZOrder().forEach(r::drawAnimatedEntity);
+        ghostsInZOrder(context.level()).forEach(r::drawAnimatedEntity);
 
         int livesCounterEntries = game.lives() - 1;
         if (context.gameState() == GameState.STARTING_GAME && !msPacMan.isVisible()) {
@@ -352,7 +351,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         // Debug mode info
         if (debugInfoPy.get()) {
             r.drawAnimatedCreatureInfo(msPacMan);
-            ghostsInZOrder().forEach(r::drawAnimatedCreatureInfo);
+            ghostsInZOrder(context.level()).forEach(r::drawAnimatedCreatureInfo);
             drawDebugInfo(gr);
         }
     }
@@ -372,7 +371,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         return new Vector2f(x, y);
     }
 
-    private Stream<Ghost> ghostsInZOrder() {
-        return Stream.of(ORANGE_GHOST, CYAN_GHOST, PINK_GHOST, RED_GHOST).map(context.level()::ghost);
+    private Stream<Ghost> ghostsInZOrder(GameLevel level) {
+        return Stream.of(ORANGE_GHOST, CYAN_GHOST, PINK_GHOST, RED_GHOST).map(level::ghost);
     }
 }
