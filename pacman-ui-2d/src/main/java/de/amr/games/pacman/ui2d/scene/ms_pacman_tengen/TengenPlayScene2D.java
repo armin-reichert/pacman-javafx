@@ -111,12 +111,25 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             --camDelay;
         }
         else {
-            int numRows = level.world().map().terrain().numRows() + 2;
-            double targetTileY = level.pac().tile().y() - 0.5 * numRows;
-            double targetY = scaled(targetTileY * TS);
-            double y = lerp(camera.getTranslateY(), targetY, 0.02);
-            camera.setTranslateY(clamp(y, minCameraY(level.world()), maxCameraY(level.world())));
+            double minY = minCameraY(level.world()), maxY = maxCameraY(level.world());
+            if (context.gameState() != GameState.GAME_OVER) {
+                moveCamera(playerFocusY(level), minY, maxY);
+            } else {
+                moveCamera(minY, minY, maxY);
+            }
         }
+    }
+
+    private void moveCamera(double targetY, double cameraMinY, double cameraMaxY) {
+        double cameraY = lerp(camera.getTranslateY(), targetY, 0.02);
+        cameraY = clamp(cameraY, cameraMinY, cameraMaxY);
+        camera.setTranslateY(cameraY);
+    }
+
+    private double playerFocusY(GameLevel level) {
+        int numRows = level.world().map().terrain().numRows() + 2;
+        double targetTileY = level.pac().tile().y() - 0.5 * numRows;
+        return scaled(targetTileY * TS);
     }
 
     private double minCameraY(GameWorld world) {
