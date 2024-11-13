@@ -119,16 +119,14 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         }
     }
 
-    //TODO still not perfect
     private double minCameraY(GameWorld world) {
         int numRows = world.map().terrain().numRows() + 2;
-        return -scaled(0.5 * (numRows - 28) * TS);
+        return -scaled(0.5 * (numRows - 29) * TS);
     }
 
-    //TODO still not perfect
     private double maxCameraY(GameWorld world) {
         int numRows = world.map().terrain().numRows() + 2;
-        return scaled(0.5 * (numRows - 28) * TS);
+        return scaled(0.5 * (numRows - 31) * TS);
     }
 
     @Override
