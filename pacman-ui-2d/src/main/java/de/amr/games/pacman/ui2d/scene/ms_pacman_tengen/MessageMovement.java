@@ -4,36 +4,39 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
+/**
+ * Message starts at house center, moves to the right maze border, wraps around and moves to the house center again.
+ */
 public class MessageMovement {
 
-    static final int DELAY_TICKS = 120; // TODO how long?
-    static final float SPEED = 1;  // TODO how fast?
-
-    private boolean running;
     private float startX;
-    private float rightBorderX;
+    private float wrappingX;
     private float speed;
     private float currentX;
     private boolean wrapped;
     private long delayBeforeMoving;
+    private boolean running;
 
-    public void start(float startX, float rightBorderX) {
+    public void start(long delay, float startX, float wrappingX) {
         this.startX = startX;
-        this.rightBorderX = rightBorderX;
-        this.speed = SPEED;
+        this.wrappingX = wrappingX;
+        this.speed = 1; //TODO how fast exactly?
         currentX = startX;
         wrapped = false;
-        delayBeforeMoving = DELAY_TICKS;
+        delayBeforeMoving = delay; //TODO how long exactly?
         running = true;
     }
 
     public void update() {
+        if (!running) {
+            return;
+        }
         if (delayBeforeMoving > 0) {
             --delayBeforeMoving;
             return;
         }
         currentX += speed;
-        if (currentX > rightBorderX) {
+        if (currentX > wrappingX) {
             currentX = 0;
             wrapped = true;
         }
@@ -48,6 +51,9 @@ public class MessageMovement {
         return running;
     }
 
+    /**
+     * @return current move position (x), message is centered horizontally over this position
+     */
     public float currentX() {
         return currentX;
     }
