@@ -320,7 +320,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawWorld(GameContext context, GameWorld world, double x, double y) {
+    public void drawWorld(GameContext context, GameWorld world, double mazeX, double mazeY) {
         TengenMsPacManGame game = (TengenMsPacManGame) context.game();
         GameLevel level = game.level().orElseThrow();
         if (!isUsingDefaultGameOptions(game)) {
@@ -342,7 +342,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
                 ctx().drawImage(mapSprite.source(),
                     mapArea.x(), mapArea.y(),
                     mapArea.width(), mapArea.height(),
-                    scaled(x), scaled(y),
+                    scaled(mazeX), scaled(mazeY),
                     scaled(mapArea.width()), scaled(mapArea.height())
                 );
             }
@@ -369,7 +369,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     }
 
     //TODO too much game logic in here
-    public void drawLevelMessage(GameContext context) {
+    private void drawLevelMessage(GameContext context) {
         GameLevel level = context.level();
         String assetPrefix = assetPrefix(GameVariant.MS_PACMAN_TENGEN);
         if (context.game().isDemoLevel()) {

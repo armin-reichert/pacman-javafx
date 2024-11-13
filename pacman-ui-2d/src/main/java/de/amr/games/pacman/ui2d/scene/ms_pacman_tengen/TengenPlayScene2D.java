@@ -198,12 +198,10 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
         r.setBlinkingOn(context.level().blinking().isOn());
 
-        Vector2i houseTopLeft = world.houseTopLeftTile(), houseSize = world.houseSize();
-        float mx = TS * (houseTopLeft.x() + houseSize.x() * 0.5f);
-        float my = TS * (houseTopLeft.y() + houseSize.y() + 1);
+        Vector2f messageCenterPosition = centerBelowHouse(world);
         r.setMessagePosition(messageMovement.isRunning()
-            ? new Vector2f(messageMovement.currentX(), my)
-            : new Vector2f(mx, my)
+            ? new Vector2f(messageMovement.currentX(), messageCenterPosition.y())
+            : messageCenterPosition
         );
 
         if (Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"))) {
@@ -231,6 +229,13 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
         r.setLevelNumberBoxesVisible(!context.game().isDemoLevel() && game.mapCategory() != MapCategory.ARCADE);
         r.drawLevelCounter(context, size());
+    }
+
+    private Vector2f centerBelowHouse(GameWorld world) {
+        Vector2i houseTopLeft = world.houseTopLeftTile(), houseSize = world.houseSize();
+        float x = TS * (houseTopLeft.x() + houseSize.x() * 0.5f);
+        float y = TS * (houseTopLeft.y() + houseSize.y() + 1);
+        return new Vector2f(x, y);
     }
 
     private Stream<Ghost> ghostsInZOrder() {
