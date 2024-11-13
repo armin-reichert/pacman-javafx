@@ -103,7 +103,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             context.level().pac().setUsingAutopilot(PY_AUTOPILOT.get());
             context.level().pac().setImmune(PY_IMMUNITY.get());
             messageMovement.update();
-            updatePlaySceneSound();
+            updatePlaySceneSound(context.level());
         }
 
         if (camDelay > 0) {
@@ -275,22 +275,22 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         context.sound().stopPacPowerSound();
     }
 
-    private void updatePlaySceneSound() {
-        GameSound sounds = context.sound();
-        if (context.gameState() == GameState.HUNTING && !context.level().powerTimer().isRunning()) {
+    private void updatePlaySceneSound(GameLevel level) {
+        GameSound sound = context.sound();
+        if (context.gameState() == GameState.HUNTING && !level.powerTimer().isRunning()) {
             HuntingControl huntingControl = context.game().huntingControl();
             int sirenNumber = 1 + huntingControl.phaseIndex() / 2; // TODO check how this works in original game
-            sounds.selectSiren(sirenNumber);
-            sounds.playSiren();
+            sound.selectSiren(sirenNumber);
+            sound.playSiren();
         }
-        if (context.level().pac().starvingTicks() > 8) { // TODO not sure how to do this right
-            sounds.stopMunchingSound();
+        if (level.pac().starvingTicks() > 8) { // TODO not sure how to do this right
+            sound.stopMunchingSound();
         }
-        boolean ghostsReturning = context.level().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
-        if (context.level().pac().isAlive() && ghostsReturning) {
-            sounds.playGhostReturningHomeSound();
+        boolean ghostsReturning = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
+        if (level.pac().isAlive() && ghostsReturning) {
+            sound.playGhostReturningHomeSound();
         } else {
-            sounds.stopGhostReturningHomeSound();
+            sound.stopGhostReturningHomeSound();
         }
     }
 
