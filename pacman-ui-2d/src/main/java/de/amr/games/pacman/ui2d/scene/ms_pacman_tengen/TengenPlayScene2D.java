@@ -95,13 +95,14 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             // Scene is already visible for 2 ticks before game level is created
             return;
         }
+        GameLevel level = context.level();
 
         if (context.game().isDemoLevel()) {
             context.game().setDemoLevelBehavior();
         }
         else {
-            context.level().pac().setUsingAutopilot(PY_AUTOPILOT.get());
-            context.level().pac().setImmune(PY_IMMUNITY.get());
+            level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
+            level.pac().setImmune(PY_IMMUNITY.get());
             messageMovement.update();
             updatePlaySceneSound(context.level());
         }
@@ -110,11 +111,24 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             --camDelay;
         }
         else {
-            double msPacManY = scaled(context.level().pac().center().y());
-            double r = cameraRadius();
-            double y = lerp(camera.getTranslateY(), msPacManY - r, 0.02);
-            camera.setTranslateY(clamp(y, dontAskItsMagic(-r), dontAskItsMagic(r)));
+            int numRows = level.world().map().terrain().numRows() + 2;
+            double targetTileY = level.pac().tile().y() - 0.5 * numRows;
+            double targetY = scaled(targetTileY * TS);
+            double y = lerp(camera.getTranslateY(), targetY, 0.02);
+            camera.setTranslateY(clamp(y, minCameraY(level.world()), maxCameraY(level.world())));
         }
+    }
+
+    //TODO still not perfect
+    private double minCameraY(GameWorld world) {
+        int numRows = world.map().terrain().numRows() + 2;
+        return -scaled(0.5 * (numRows - 28) * TS);
+    }
+
+    //TODO still not perfect
+    private double maxCameraY(GameWorld world) {
+        int numRows = world.map().terrain().numRows() + 2;
+        return scaled(0.5 * (numRows - 28) * TS);
     }
 
     @Override
@@ -137,22 +151,9 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         return camera;
     }
 
-    private void initCamera(int delayTicks) {
-        camDelay = delayTicks;
-        // set camera at top
-        camera.setTranslateY(dontAskItsMagic(-cameraRadius()));
-    }
-
-    private double cameraRadius() {
-        return 0.5 * scaled(size().y() - 24);
-    }
-
-    //TODO replace black magic with science
-    private double dontAskItsMagic(double radius) {
-        double height = size().y();
-        if (height >= 40 * TS) return 0.38 * radius;
-        if (height >= 35 * TS) return 0.30 * radius;
-        return 0.1 * radius;
+    private void initCamera(GameWorld world) {
+        camDelay = 90;
+        camera.setTranslateY(minCameraY(world));
     }
 
     @Override
@@ -172,7 +173,6 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         if (!silent) {
             context.sound().playGameReadySound();
         }
-        initCamera(30);
     }
 
     @Override
@@ -190,7 +190,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void onLevelStarted(GameEvent e) {
-        initCamera(90);
+        initCamera(context.level().world());
     }
 
     @Override
