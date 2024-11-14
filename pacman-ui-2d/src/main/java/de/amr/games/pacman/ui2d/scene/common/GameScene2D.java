@@ -11,6 +11,7 @@ import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.paint.Color;
+import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -79,9 +80,11 @@ public abstract class GameScene2D implements GameScene {
     protected void doEnd() {}
 
     public Canvas canvas() { return canvas; }
+
     public void setCanvas(Canvas canvas) {
         this.canvas = canvas;
         gr = context.currentGameSceneConfig().createRenderer(canvas);
+        Logger.info("Game renderer created: {}", gr);
     }
 
     protected abstract void drawSceneContent(GameRenderer renderer);

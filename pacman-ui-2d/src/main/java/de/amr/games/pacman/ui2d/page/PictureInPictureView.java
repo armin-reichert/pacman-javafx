@@ -9,7 +9,6 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.binding.Bindings;
@@ -19,7 +18,6 @@ import javafx.scene.layout.VBox;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 
 /**
@@ -32,14 +30,10 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
  */
 public class PictureInPictureView extends VBox implements GameEventListener {
 
-    private final GameContext context;
-    private final Canvas canvas;
+    private final Canvas canvas = new Canvas();
     private final PlayScene2D playScene2D;
 
     public PictureInPictureView(GameContext context) {
-        this.context = checkNotNull(context);
-
-        canvas = new Canvas();
         canvas.heightProperty().bind(PY_PIP_HEIGHT);
         canvas.heightProperty().addListener((py,ov,nv) -> recomputeLayout());
 
@@ -88,7 +82,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         canvas.setWidth(aspectRatio * canvasHeight);
         playScene2D.setScaling(canvasHeight / sceneSize.y());
         layout();
-        Logger.info("Layout recomputed, w={0.00} h={0.00} aspect={0.00}, scene size (px)={}",
+        Logger.debug("Layout recomputed, w={0.00} h={0.00} aspect={0.00}, scene size (px)={}",
             getWidth(), getHeight(), aspectRatio, sceneSize);
     }
 }

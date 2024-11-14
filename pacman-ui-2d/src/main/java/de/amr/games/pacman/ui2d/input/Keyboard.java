@@ -51,16 +51,16 @@ public class Keyboard {
 
     public void register(KeyCodeCombination kcc, Object owner) {
         if (registeredCombinations.get(kcc) == owner) {
-            Logger.info("Key code combination {} already registered by {}", kcc, owner);
+            Logger.info("Key code combination '{}' already registered: {}", kcc, owner);
         }
         registeredCombinations.put(kcc, owner);
-        Logger.info("Key code combination {} registered by {}", kcc, owner);
+        Logger.info("Key code combination '{}' registered: {}", kcc, owner);
     }
 
     public void unregister(KeyCodeCombination kcc, Object owner) {
         boolean removed = registeredCombinations.remove(kcc, owner);
         if (removed) {
-            Logger.info("Key code combination {} removed by {}", kcc, owner);
+            Logger.info("Key code combination '{}' removed: {}", kcc, owner);
         }
     }
 
@@ -74,14 +74,6 @@ public class Keyboard {
         Logger.debug("Key released: {}", keyEvent.getCode());
         pressedKeys.remove(keyEvent.getCode());
         matches.clear();
-    }
-
-    /**
-     * @param combinations key code combination
-     * @return tells if any of the combinations is matched by the current keyboard state
-     */
-    public boolean isMatching(KeyCodeCombination... combinations) {
-        return Arrays.stream(combinations).anyMatch(matches::contains);
     }
 
     public boolean isMatching(KeyCodeCombination kcc) {
