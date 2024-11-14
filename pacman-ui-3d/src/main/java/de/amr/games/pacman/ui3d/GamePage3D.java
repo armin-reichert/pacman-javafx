@@ -68,42 +68,44 @@ public class GamePage3D extends GamePage {
         contextMenu.getItems().clear();
         contextMenu.hide();
 
-        boolean isPlayScene = context.currentGameSceneHasID("PlayScene2D")
-            || context.currentGameSceneHasID("PlayScene3D");
+        boolean isPlayScene = context.currentGameSceneHasID("PlayScene2D") ||
+                context.currentGameSceneHasID("PlayScene3D");
         if (!isPlayScene) {
             return;
         }
+        boolean is3D = context.currentGameSceneHasID("PlayScene3D");
 
         contextMenu.getItems().add(menuTitleItem(context.locText("scene_display")));
 
         // Toggle 2D-3D
-        boolean is3D = context.currentGameSceneHasID("PlayScene3D");
         var item = new MenuItem(context.locText(is3D ? "use_2D_scene" : "use_3D_scene"));
         item.setOnAction(e -> GameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute(context));
         contextMenu.getItems().add(item);
 
-        // Toggle picture-in-picture display
-        var miPiP = new CheckMenuItem(context.locText("pip"));
-        miPiP.selectedProperty().bindBidirectional(PY_PIP_ON);
-        contextMenu.getItems().add(miPiP);
+        if (is3D) {
+            // Toggle picture-in-picture display
+            var miPiP = new CheckMenuItem(context.locText("pip"));
+            miPiP.selectedProperty().bindBidirectional(PY_PIP_ON);
+            contextMenu.getItems().add(miPiP);
 
-        contextMenu.getItems().add(menuTitleItem(context.locText("select_perspective")));
+            contextMenu.getItems().add(menuTitleItem(context.locText("select_perspective")));
 
-        // Camera perspective selection
-        var perspectivesGroup = new ToggleGroup();
-        for (var perspective : Perspective.Name.values()) {
-            var miPerspective = new RadioMenuItem(context.locText(perspective.name()));
-            miPerspective.setToggleGroup(perspectivesGroup);
-            // keep global property in sync with selection
-            miPerspective.selectedProperty().addListener((py, ov, selected) -> {
-                if (selected) {
-                    PY_3D_PERSPECTIVE.set(perspective);
-                }
-            });
-            // keep selection in sync with global property value
-            PY_3D_PERSPECTIVE.addListener((py, ov, newPerspective) -> miPerspective.setSelected(newPerspective == perspective));
-            miPerspective.setSelected(perspective == PY_3D_PERSPECTIVE.get()); // == is allowed for enum comparison
-            contextMenu.getItems().add(miPerspective);
+            // Camera perspective selection
+            var perspectivesGroup = new ToggleGroup();
+            for (var perspective : Perspective.Name.values()) {
+                var miPerspective = new RadioMenuItem(context.locText(perspective.name()));
+                miPerspective.setToggleGroup(perspectivesGroup);
+                // keep global property in sync with selection
+                miPerspective.selectedProperty().addListener((py, ov, selected) -> {
+                    if (selected) {
+                        PY_3D_PERSPECTIVE.set(perspective);
+                    }
+                });
+                // keep selection in sync with global property value
+                PY_3D_PERSPECTIVE.addListener((py, ov, newPerspective) -> miPerspective.setSelected(newPerspective == perspective));
+                miPerspective.setSelected(perspective == PY_3D_PERSPECTIVE.get()); // == is allowed for enum comparison
+                contextMenu.getItems().add(miPerspective);
+            }
         }
 
         // Common items

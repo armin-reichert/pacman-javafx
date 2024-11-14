@@ -61,8 +61,8 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     private final SubScene fxSubScene;
     private final ParallelCamera camera = new ParallelCamera();
     private final Canvas canvas = new Canvas(NES_RESOLUTION_X, NES_RESOLUTION_Y);
-    private final MessageMovement messageMovement = new MessageMovement();
-    private final MazeFlashing mazeFlashing = new MazeFlashing();
+    private MessageMovement messageMovement;
+    private MazeFlashing mazeFlashing;
     private int camDelay;
 
     public TengenPlayScene2D() {
@@ -79,6 +79,8 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void doInit() {
+        mazeFlashing = new MazeFlashing();
+        messageMovement = new MessageMovement();
         context.enableJoypad();
         context.setScoreVisible(true);
         setCanvas(canvas); // do not use common canvas from game page
