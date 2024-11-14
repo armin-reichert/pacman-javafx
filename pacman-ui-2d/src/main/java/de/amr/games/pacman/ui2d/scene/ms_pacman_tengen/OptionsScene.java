@@ -223,7 +223,7 @@ public class OptionsScene extends GameScene2D {
     protected void drawSceneContent(GameRenderer renderer) {
         TengenMsPacManGameRenderer r = (TengenMsPacManGameRenderer) renderer;
 
-        r.scalingProperty().set(scaling());
+        r.setScaling(scaling());
         Font scaledFont = r.scaledArcadeFont(TS);
 
         double y = 20;

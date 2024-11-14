@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.pacman;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -17,6 +18,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
@@ -83,6 +85,11 @@ public class PacManGameRenderer implements GameRenderer {
 
     @Override
     public void update(GameModel game) {}
+
+    @Override
+    public Vector2f getMessageAnchorPosition() {
+        return new Vector2f(14f * TS, 21 * TS);
+    }
 
     @Override
     public void drawWorld(GameContext context, GameWorld world, double x, double y) {

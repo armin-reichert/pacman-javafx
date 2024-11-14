@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.pacman_xxl;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameModel;
@@ -20,6 +21,7 @@ import javafx.scene.paint.Color;
 
 import java.util.Map;
 
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static java.util.function.Predicate.not;
 
@@ -89,6 +91,11 @@ public class PacManGameXXLRenderer implements GameRenderer {
     @Override
     public void setBackgroundColor(Color color) {
         bgColor = checkNotNull(color);
+    }
+
+    @Override
+    public Vector2f getMessageAnchorPosition() {
+        return new Vector2f(14f * TS, 21 * TS);
     }
 
     @Override

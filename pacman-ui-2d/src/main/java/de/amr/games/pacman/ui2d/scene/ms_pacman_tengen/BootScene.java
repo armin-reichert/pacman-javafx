@@ -84,7 +84,7 @@ public class BootScene extends GameScene2D {
     @Override
     protected void drawSceneContent(GameRenderer renderer) {
         var r = (TengenMsPacManGameRenderer) renderer;
-        r.scalingProperty().set(scaling());
+        r.setScaling(scaling());
         if (grayScreen) {
             r.ctx().setFill(paletteColor(0x10));
             r.ctx().fillRect(0, 0, r.canvas().getWidth(), r.canvas().getHeight());

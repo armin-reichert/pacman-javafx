@@ -86,7 +86,7 @@ public abstract class GameScene2D implements GameScene {
     public void draw() {
         GameRenderer gr = context.currentGameSceneConfig().createRenderer(canvas);
         gr.update(context.game());
-        gr.scalingProperty().set(scaling());
+        gr.setScaling(scaling());
         gr.setBackgroundColor(backgroundColor());
         gr.clearCanvas();
         if (context.isScoreVisible()) {

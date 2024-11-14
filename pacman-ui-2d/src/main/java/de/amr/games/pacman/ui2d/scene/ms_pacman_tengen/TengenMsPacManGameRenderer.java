@@ -75,13 +75,23 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     private boolean levelNumberBoxesVisible;
     private Vector2f messagePosition;
 
-    public TengenMsPacManGameRenderer(AssetStorage assets, Canvas canvas) {
+    public TengenMsPacManGameRenderer(
+            AssetStorage assets,
+            TengenMsPacManGameSpriteSheet spriteSheet,
+            TengenArcadeMapsSpriteSheet arcadeMapsSpriteSheet,
+            TengenNonArcadeMapsSpriteSheet nonArcadeMapSpriteSheet,
+            Canvas canvas) {
+
         this.assets = checkNotNull(assets);
         this.canvas = checkNotNull(canvas);
+        this.spriteSheet = spriteSheet;
+        this.arcadeMapsSpriteSheet = arcadeMapsSpriteSheet;
+        this.nonArcadeMapSpriteSheet = nonArcadeMapSpriteSheet;
+
+        // set default value
+        messagePosition = new Vector2f(14f * TS, 20 * TS);
+
         canvas.getGraphicsContext2D().setImageSmoothing(false);
-        spriteSheet = assets.get("tengen.spritesheet");
-        arcadeMapsSpriteSheet = new TengenArcadeMapsSpriteSheet(assets);
-        nonArcadeMapSpriteSheet = new TengenNonArcadeMapsSpriteSheet(assets);
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(bgColor);
         foodRenderer.scalingPy.bind(scalingPy);
@@ -242,6 +252,10 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         }
     }
 
+    public Vector2f getMessageAnchorPosition() {
+        return messagePosition;
+    }
+
     public void setMessagePosition(Vector2f messagePosition) {
         this.messagePosition = messagePosition;
     }
@@ -362,17 +376,18 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     private void drawLevelMessage(GameContext context) {
         GameLevel level = context.level();
         String assetPrefix = assetPrefix(GameVariant.MS_PACMAN_TENGEN);
+        float x = getMessageAnchorPosition().x(), y = getMessageAnchorPosition().y();
         if (context.game().isDemoLevel()) {
             Color color = Color.web(level.mapConfig().colorScheme().get("stroke"));
-            drawText("GAME  OVER", messagePosition.x(), messagePosition.y(), color);
+            drawText("GAME  OVER", x, y, color);
         } else if (context.gameState() == GameState.GAME_OVER) {
             Color color = assets.color(assetPrefix + ".color.game_over_message");
-            drawText("GAME  OVER", messagePosition.x(), messagePosition.y(), color);
+            drawText("GAME  OVER", x, y, color);
         } else if (context.gameState() == GameState.STARTING_GAME) {
             Color color = assets.color(assetPrefix + ".color.ready_message");
-            drawText("READY!", messagePosition.x(), messagePosition.y(), color);
+            drawText("READY!", x, y, color);
         } else if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
-            drawText("TEST L%02d".formatted(level.number), messagePosition.x(), messagePosition.y(), paletteColor(0x28));
+            drawText("TEST L%02d".formatted(level.number), x, y, paletteColor(0x28));
         }
     }
 

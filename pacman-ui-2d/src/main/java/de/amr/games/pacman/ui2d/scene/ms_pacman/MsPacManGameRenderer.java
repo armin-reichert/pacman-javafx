@@ -5,12 +5,15 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.ms_pacman.MapConfigurationManager;
+import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -89,6 +92,11 @@ public class MsPacManGameRenderer implements GameRenderer {
     @Override
     public void setBackgroundColor(Color color) {
         bgColor = checkNotNull(color);
+    }
+
+    @Override
+    public Vector2f getMessageAnchorPosition() {
+        return new Vector2f(14 * TS, 21 * TS);
     }
 
     @Override

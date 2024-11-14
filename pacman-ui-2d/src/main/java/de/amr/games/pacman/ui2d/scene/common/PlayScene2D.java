@@ -7,11 +7,9 @@ package de.amr.games.pacman.ui2d.scene.common;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameActions2D;
@@ -135,7 +133,7 @@ public class PlayScene2D extends GameScene2D {
             return;
         }
 
-        drawLevelMessage(renderer, context.level().world()); // READY, GAME_OVER etc.
+        drawLevelMessage(renderer); // READY, GAME_OVER etc.
 
         boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         renderer.setFlashMode(flashMode);
@@ -169,32 +167,28 @@ public class PlayScene2D extends GameScene2D {
             .map(context.level()::ghost);
     }
 
-    private void drawLevelMessage(GameRenderer renderer, GameWorld world) {
-        Vector2i houseTopLeftTile = world.houseTopLeftTile();
-        Vector2i houseSize        = world.houseSize();
-        int cx = houseTopLeftTile.x() + houseSize.x() / 2;
-        int y = TS * (houseTopLeftTile.y() + houseSize.y() + 1);
+    private void drawLevelMessage(GameRenderer renderer) {
+        float x = renderer.getMessageAnchorPosition().x(), y = renderer.getMessageAnchorPosition().y();
         String assetPrefix = GameAssets2D.assetPrefix(context.currentGameVariant());
         Font font = renderer.scaledArcadeFont(TS);
+        Color color = null;
+        String text = null;
         if (context.game().isDemoLevel()) {
-            String text = "GAME  OVER";
-            int x = TS * (cx - text.length() / 2);
-            Color color = context.assets().color(assetPrefix + ".color.game_over_message");
-            renderer.drawText(text, color, font, x, y);
+            text = "GAME  OVER";
+            color = context.assets().color(assetPrefix + ".color.game_over_message");
         } else if (context.gameState() == GameState.GAME_OVER) {
-            String text = "GAME  OVER";
-            int x = TS * (cx - text.length() / 2);
-            Color color = context.assets().color(assetPrefix + ".color.game_over_message");
-            renderer.drawText(text, color, font, x, y);
+            text = "GAME  OVER";
+            color = context.assets().color(assetPrefix + ".color.game_over_message");
         } else if (context.gameState() == GameState.STARTING_GAME) {
-            String text = "READY!";
-            int x = TS * (cx - text.length() / 2);
-            Color color = context.assets().color(assetPrefix + ".color.ready_message");
-            renderer.drawText(text, color, font, x, y);
+            text = "READY!";
+            color = context.assets().color(assetPrefix + ".color.ready_message");
         } else if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
-            String text = "TEST    L%03d".formatted(context.level().number);
-            int x = TS * (cx - text.length() / 2);
-            renderer.drawText(text, Color.valueOf(Arcade.Palette.WHITE), font, x, y);
+            text = "TEST    L%03d".formatted(context.level().number);
+            color = Color.valueOf(Arcade.Palette.WHITE);
+        }
+        if (text != null) {
+            double mx = x - (text.length() * HTS); // TODO this assumes fixed width font of one tile size
+            renderer.drawText(text, color, font, mx, y);
         }
     }
 
