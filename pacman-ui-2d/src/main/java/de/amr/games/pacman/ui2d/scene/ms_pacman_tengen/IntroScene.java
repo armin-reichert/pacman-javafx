@@ -252,7 +252,6 @@ public class IntroScene extends GameScene2D {
                 intro.updateMarqueeState();
                 boolean reachedEndPosition = letGhostMarchIn(intro);
                 if (reachedEndPosition) {
-                    Logger.info("Reached end position");
                     if (intro.ghostIndex == 3) {
                         intro.sceneController.changeState(MS_PACMAN_MARCHING_IN);
                     } else {
