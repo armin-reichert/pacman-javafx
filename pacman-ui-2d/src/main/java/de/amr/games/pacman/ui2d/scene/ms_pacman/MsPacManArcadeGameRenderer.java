@@ -46,7 +46,6 @@ public class MsPacManArcadeGameRenderer implements GameRenderer {
     public MsPacManArcadeGameRenderer(AssetStorage assets, Canvas canvas) {
         this.assets = checkNotNull(assets);
         this.canvas = checkNotNull(canvas);
-        canvas.getGraphicsContext2D().setImageSmoothing(false);
     }
 
     @Override

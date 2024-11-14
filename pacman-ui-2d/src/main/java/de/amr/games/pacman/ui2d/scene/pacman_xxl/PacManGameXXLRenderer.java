@@ -48,7 +48,6 @@ public class PacManGameXXLRenderer implements GameRenderer {
         this.assets = checkNotNull(assets);
         this.canvas = checkNotNull(canvas);
         spriteSheet = assets.get("pacman_xxl.spritesheet");
-        canvas.getGraphicsContext2D().setImageSmoothing(false);
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(bgColor);
         foodRenderer.scalingPy.bind(scalingPy);

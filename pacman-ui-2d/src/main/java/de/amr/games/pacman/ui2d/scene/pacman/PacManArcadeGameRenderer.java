@@ -15,7 +15,6 @@ import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -27,9 +26,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 public class PacManArcadeGameRenderer implements GameRenderer {
 
     private final AssetStorage assets;
-    private final GameSpriteSheet spriteSheet;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
-    private final Image flashingMazeImage;
     private final Canvas canvas;
     private boolean flashMode;
     private boolean blinkingOn;
@@ -38,9 +35,6 @@ public class PacManArcadeGameRenderer implements GameRenderer {
     public PacManArcadeGameRenderer(AssetStorage assets, Canvas canvas) {
         this.assets = checkNotNull(assets);
         this.canvas = checkNotNull(canvas);
-        canvas.getGraphicsContext2D().setImageSmoothing(false);
-        spriteSheet = assets.get("pacman.spritesheet");
-        flashingMazeImage = assets.image("pacman.flashing_maze");
     }
 
     @Override
@@ -50,7 +44,7 @@ public class PacManArcadeGameRenderer implements GameRenderer {
 
     @Override
     public GameSpriteSheet spriteSheet() {
-        return spriteSheet;
+        return assets.get("pacman.spritesheet");
     }
 
     @Override
@@ -98,7 +92,7 @@ public class PacManArcadeGameRenderer implements GameRenderer {
         ctx().scale(scaling, scaling);
         if (flashMode) {
             if (blinkingOn) {
-                ctx().drawImage(flashingMazeImage, x, y);
+                ctx().drawImage(assets.image("pacman.flashing_maze"), x, y);
             } else {
                 drawSpriteUnscaled(PacManGameSpriteSheet.EMPTY_MAZE_SPRITE, x, y);
             }
@@ -108,7 +102,7 @@ public class PacManArcadeGameRenderer implements GameRenderer {
             overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
         }
         ctx().restore();
-        context.level().bonus().ifPresent(bonus -> drawStaticBonus(spriteSheet, bonus));
+        context.level().bonus().ifPresent(bonus -> drawStaticBonus(spriteSheet(), bonus));
     }
 
     private void drawStaticBonus(GameSpriteSheet spriteSheet, Bonus bonus) {

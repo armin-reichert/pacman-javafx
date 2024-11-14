@@ -127,6 +127,8 @@ public class GamePage extends StackPane implements Page {
         bindGameActions();
 
         gameCanvas = new Canvas();
+        //TODO make configurable?
+        gameCanvas.getGraphicsContext2D().setImageSmoothing(false);
 
         gameCanvasContainer = new TooFancyGameCanvasContainer(gameCanvas);
         gameCanvasContainer.setMinScaling(0.5);
