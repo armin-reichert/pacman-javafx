@@ -92,58 +92,56 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     @Override
     public void update() {
         if (context.game().level().isEmpty()) {
-            // Scene is already visible for 2 ticks before game level is created
-            return;
+            return; // Scene is already visible for 2 ticks before game level gets created
         }
-        GameLevel level = context.level();
-
         if (context.game().isDemoLevel()) {
             context.game().setDemoLevelBehavior();
         }
-        else {
-            level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
-            level.pac().setImmune(PY_IMMUNITY.get());
+        else { // TODO: add/remove listener to global properties instead?
+            context.level().pac().setUsingAutopilot(PY_AUTOPILOT.get());
+            context.level().pac().setImmune(PY_IMMUNITY.get());
             messageMovement.update();
-            updatePlaySceneSound(context.level());
+            updateSound();
         }
+        updateCamera();
+    }
 
+    private void updateCamera() {
         if (camDelay > 0) {
-            --camDelay;
+            --camDelay; // initial delay before camera starts moving
         }
         else {
-            double minY = minCameraY(level.world()), maxY = maxCameraY(level.world());
-            if (context.gameState() != GameState.GAME_OVER) {
-                moveCamera(playerFocusY(level), minY, maxY);
+            int mapHeightInTiles = context.level().world().map().terrain().numRows();
+            double top = topCameraPosition(mapHeightInTiles), bottom = bottomCameraPosition(mapHeightInTiles);
+            if (context.gameState() == GameState.GAME_OVER) {
+                moveCamera(top, top, bottom);
             } else {
-                moveCamera(minY, minY, maxY);
+                Vector2i playerTile = context.level().pac().tile();
+                moveCamera(focusPlayer(mapHeightInTiles, playerTile), top, bottom);
             }
         }
     }
 
-    private void moveCamera(double targetY, double cameraMinY, double cameraMaxY) {
-        double cameraY = lerp(camera.getTranslateY(), targetY, 0.02);
-        cameraY = clamp(cameraY, cameraMinY, cameraMaxY);
-        camera.setTranslateY(cameraY);
+    private void moveCamera(double targetY, double top, double bottom) {
+        double y = lerp(camera.getTranslateY(), targetY, 0.02);
+        camera.setTranslateY(clamp(y, top, bottom));
     }
 
-    private double playerFocusY(GameLevel level) {
-        int numRows = level.world().map().terrain().numRows() + 2;
-        double targetTileY = level.pac().tile().y() - 0.5 * numRows;
+    private double focusPlayer(int numVerticalTiles, Vector2i playerTile) {
+        double targetTileY = playerTile.y() - 0.5 * numVerticalTiles;
         return scaled(targetTileY * TS);
     }
 
-    private double minCameraY(GameWorld world) {
-        int tilesVertically = world.map().terrain().numRows();
-        // This lets the camera stop when one tile over the world area is still empty
-        // Note: The world area is the map area + 2 vertical rows below (room for the level counter etc.)
-        return scaled((26 - tilesVertically) * HTS);
+    // One tile over the world area.
+    // Note: The world area is the map area + 2 vertical rows below (room for the level counter etc.)
+    private double topCameraPosition(int numVerticalTiles) {
+        return scaled((26 - numVerticalTiles) * HTS);
     }
 
-    private double maxCameraY(GameWorld world) {
-        int tilesVertically = world.map().terrain().numRows();
-        // This lets the camera stop when half a tile under the world area is still empty
-        // Note: The world area is the map area + 2 vertical rows below (room for the level counter etc.)
-        return scaled((tilesVertically - 29) * HTS);
+    // Half a tile under the world area.
+    // Note: The world area is the map area + 2 vertical rows below (room for the level counter etc.)
+    private double bottomCameraPosition(int numVerticalTiles) {
+        return scaled((numVerticalTiles - 29) * HTS);
     }
 
     @Override
@@ -166,9 +164,9 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         return camera;
     }
 
-    private void initCamera(GameWorld world) {
+    private void initCamera(int numVerticalTiles) {
         camDelay = 90;
-        camera.setTranslateY(minCameraY(world));
+        camera.setTranslateY(topCameraPosition(numVerticalTiles));
     }
 
     @Override
@@ -205,7 +203,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void onLevelStarted(GameEvent e) {
-        initCamera(context.level().world());
+        initCamera(context.level().world().map().terrain().numRows());
     }
 
     @Override
@@ -290,7 +288,8 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         context.sound().stopPacPowerSound();
     }
 
-    private void updatePlaySceneSound(GameLevel level) {
+    private void updateSound() {
+        GameLevel level = context.level();
         GameSound sound = context.sound();
         if (context.gameState() == GameState.HUNTING && !level.powerTimer().isRunning()) {
             HuntingControl huntingControl = context.game().huntingControl();
