@@ -128,8 +128,8 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     }
 
     private double focusPlayer(int numVerticalTiles, Vector2i playerTile) {
-        double targetTileY = playerTile.y() - 0.5 * numVerticalTiles;
-        return scaled(targetTileY * TS);
+        double targetY = playerTile.y() * TS - numVerticalTiles * HTS;
+        return scaled(targetY);
     }
 
     // One tile over the world area.
