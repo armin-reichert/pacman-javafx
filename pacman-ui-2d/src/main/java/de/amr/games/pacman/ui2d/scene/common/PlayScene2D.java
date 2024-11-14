@@ -129,7 +129,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     protected void drawSceneContent(GameRenderer renderer) {
         if (context.game().level().isEmpty()) { // This happens on level start
-            Logger.warn("Cannot draw scene content, game world not yet available!");
+            Logger.warn("Tick {}: Cannot draw scene content: game world not yet available!", context.tick());
             return;
         }
 
