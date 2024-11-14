@@ -316,15 +316,14 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         gr.setScaling(scaling());
         gr.setBackgroundColor(backgroundColor());
         gr.clearCanvas();
+        if (context.isScoreVisible()) {
+            gr.drawScores(context);
+        }
         drawSceneContent(gr);
     }
 
     @Override
     protected void drawSceneContent(GameRenderer gr) {
-        if (context.isScoreVisible()) {
-            gr.drawScores(context);
-        }
-
         if (context.game().level().isEmpty()) {
             Logger.warn("Tick #{}: Cannot draw scene content, game level not yet available!", context.tick());
             return;
@@ -363,7 +362,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         r.drawLevelCounter(context, size());
 
         // Debug mode info
-        if (debugInfoPy.get()) {
+        if (debugInfoVisiblePy.get()) {
             r.drawAnimatedCreatureInfo(msPacMan);
             ghostsInZOrder(context.level()).forEach(r::drawAnimatedCreatureInfo);
             drawDebugInfo(gr);

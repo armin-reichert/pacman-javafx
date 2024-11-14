@@ -40,19 +40,19 @@ public class ArcadeBootScene extends GameScene2D {
     }
 
     @Override
-    public void draw(GameRenderer renderer) {
+    public void draw(GameRenderer gr) {
         Vector2f sceneSize = size();
-        renderer.setScaling(scaling());
-        renderer.setBackgroundColor(backgroundColor());
+        gr.setScaling(scaling());
+        gr.setBackgroundColor(backgroundColor());
         var timer = context.gameState().timer();
         if (timer.tickCount() == 1) {
-            renderer.clearCanvas();
+            gr.clearCanvas();
         } else if (timer.betweenSeconds(1, 2) && timer.tickCount() % 8 == 0) {
-            paintRandomHexCodes(renderer, sceneSize);
+            paintRandomHexCodes(gr, sceneSize);
         } else if (timer.betweenSeconds(2, 3.5) && timer.tickCount() % 4 == 0) {
-            paintRandomSprites(context.currentGameSceneConfig().spriteSheet().sourceImage(), renderer, sceneSize);
+            paintRandomSprites(context.currentGameSceneConfig().spriteSheet().sourceImage(), gr, sceneSize);
         } else if (timer.atSecond(3.5)) {
-            paintScreenTestGrid(renderer, sceneSize);
+            paintScreenTestGrid(gr, sceneSize);
         }
     }
 

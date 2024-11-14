@@ -146,7 +146,7 @@ public class PlayScene2D extends GameScene2D {
         renderer.drawAnimatedEntity(context.level().pac());
         ghostsInZOrder().forEach(renderer::drawAnimatedEntity);
 
-        if (debugInfoPy.get()) {
+        if (debugInfoVisiblePy.get()) {
             renderer.drawAnimatedCreatureInfo(context.level().pac());
             ghostsInZOrder().forEach(renderer::drawAnimatedCreatureInfo);
         }
