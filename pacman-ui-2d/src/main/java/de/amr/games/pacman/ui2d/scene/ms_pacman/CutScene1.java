@@ -60,7 +60,7 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public void doInit() {
-        context.setScoreVisible(context.currentGameVariant() != GameVariant.MS_PACMAN_TENGEN);
+        context.setScoreVisible(context.gameVariant() != GameVariant.MS_PACMAN_TENGEN);
 
         pacMan = new Pac();
         msPac = new Pac();
@@ -101,7 +101,7 @@ public class CutScene1 extends GameScene2D {
     @Override
     public void drawSceneContent(GameRenderer renderer) {
         MsPacManArcadeGameRenderer r = (MsPacManArcadeGameRenderer) renderer;
-        String assetPrefix = GameAssets2D.assetPrefix(context.currentGameVariant());
+        String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
         Color color = context.assets().color(assetPrefix + ".color.clapperboard");
         r.drawClapperBoard(renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(msPac);

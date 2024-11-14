@@ -34,7 +34,7 @@ public class InfoBoxGameInfo extends InfoBox {
             return url.substring(url.lastIndexOf("/") + 1);
         }));
         addLabeledValue("Color Scheme", ifLevelPresent(level -> {
-            if (context.currentGameVariant() != GameVariant.MS_PACMAN_TENGEN) {
+            if (context.gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
                 return InfoText.NO_INFO;
             }
             Map<String, String> mapColorScheme = level.mapConfig().colorScheme();

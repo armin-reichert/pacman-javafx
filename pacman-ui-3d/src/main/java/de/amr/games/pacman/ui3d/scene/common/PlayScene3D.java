@@ -137,14 +137,14 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         bind(GameActions3D.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
         bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         if (context.game().isDemoLevel()) {
-            if (context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 bind(TengenGameActions.QUIT_DEMO_LEVEL, context.joypad().keyCombination(NES.Joypad.START));
             } else {
                 bind(GameActions2D.ADD_CREDIT, context.arcade().keyCombination(Arcade.Controls.COIN));
             }
         }
         else {
-            if (context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 bindDefaultJoypadActions(this, context.joypad());
             } else {
                 bindDefaultArcadeControllerActions(this, context.arcade());
@@ -266,9 +266,9 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // when score is disabled, show text "game over"
-            Color color = context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN
+            Color color = context.gameVariant() == GameVariant.MS_PACMAN_TENGEN
                 ? Color.valueOf(context.level().mapConfig().colorScheme().get("stroke"))
-                : context.assets().color(assetPrefix(context.currentGameVariant()) + ".color.game_over_message");
+                : context.assets().color(assetPrefix(context.gameVariant()) + ".color.game_over_message");
             scores3D.showTextAsScore(GAME_OVER_TEXT, color);
         }
     }
@@ -438,7 +438,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     @Override
     public void onBonusActivated(GameEvent event) {
         context.level().bonus().ifPresent(bonus -> level3D.replaceBonus3D(bonus, context.currentGameSceneConfig().spriteSheet()));
-        if (context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             //TODO also in Ms. Pac-Man!
             context.sound().playBonusBouncingSound();
         }
@@ -447,7 +447,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     @Override
     public void onBonusEaten(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
-        if (context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             //TODO also in Ms. Pac-Man!
             context.sound().stopBonusBouncingSound();
         }
@@ -457,7 +457,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
     @Override
     public void onBonusExpired(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::onBonusExpired);
-        if (context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             //TODO also in Ms. Pac-Man!
             context.sound().stopBonusBouncingSound();
         }

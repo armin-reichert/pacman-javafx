@@ -163,7 +163,7 @@ public enum GameActions2D implements GameAction {
 
         @Override
         public boolean isEnabled(GameContext context) {
-            return context.currentGameVariant() == GameVariant.PACMAN_XXL;
+            return context.gameVariant() == GameVariant.PACMAN_XXL;
         }
     },
 
@@ -193,7 +193,7 @@ public enum GameActions2D implements GameAction {
     START_GAME {
         @Override
         public void execute(GameContext context) {
-            if (context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 context.gameController().changeState(GameState.WAITING_FOR_START);
             } else if (context.game().canStartNewGame()) {
                 context.sound().stopVoice();
@@ -237,7 +237,7 @@ public enum GameActions2D implements GameAction {
             if (context.gameClock().isPaused()) {
                 context.sound().stopAll();
             }
-            Logger.info("Game ({}) {}", context.currentGameVariant(), context.gameClock().isPaused() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", context.gameVariant(), context.gameClock().isPaused() ? "paused" : "resumed");
         }
     };
 

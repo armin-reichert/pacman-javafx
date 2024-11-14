@@ -169,7 +169,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         clock.setPermanentCallback(this::runOnEveryTick);
 
         // init game variant property
-        gameVariantPy.set(currentGameVariant());
+        gameVariantPy.set(gameVariant());
 
         //TODO This doesn't fit for Tengen screen resolution
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
@@ -296,7 +296,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         } catch (Exception x) {
             Logger.error(x);
         }
-        gamePage.gameCanvasContainer().decorationEnabledPy.set(currentGameVariant() != GameVariant.MS_PACMAN_TENGEN);
+        gamePage.gameCanvasContainer().decorationEnabledPy.set(gameVariant() != GameVariant.MS_PACMAN_TENGEN);
     }
 
     protected StringBinding stageTitleBinding() {
@@ -316,7 +316,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     private String displayName(GameScene gameScene) {
         String text = gameScene != null ? gameScene.getClass().getSimpleName() : "NO GAME SCENE";
-        text += String.format(" (%s)", currentGameVariant());
+        text += String.format(" (%s)", gameVariant());
         return text;
     }
 
@@ -553,7 +553,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     public void selectGamePage() {
         selectPage(gamePage);
         clock.start();
-        if (currentGameVariant() != GameVariant.MS_PACMAN_TENGEN) {
+        if (gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
             sound().playVoice("voice.explain", 0);
         }
     }
@@ -592,7 +592,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     @Override
     public void onGameVariantChanged(GameEvent event) {
-        gameVariantPy.set(currentGameVariant());
+        gameVariantPy.set(gameVariant());
     }
 
     @Override
@@ -603,7 +603,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     @Override
     public void onLevelCreated(GameEvent event) {
         currentGameSceneConfig().createActorAnimations(game());
-        Logger.info("Actor animations created. ({} level #{})", currentGameVariant(), level().number);
+        Logger.info("Actor animations created. ({} level #{})", gameVariant(), level().number);
         sound().setEnabled(!game().isDemoLevel());
         Logger.info("Sounds {}", sound().isEnabled() ? "enabled" : "disabled");
         // size of game scene have changed, so re-embed

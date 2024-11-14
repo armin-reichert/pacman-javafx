@@ -105,7 +105,7 @@ public class StartPage extends StackPane implements Page {
 
     @Override
     public void bindGameActions() {
-        if (context.currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             var joypad = context.joypad();
             bind(context -> currentFlyer().prevFlyerPage(),  joypad.keyCombination(NES.Joypad.UP));
             bind(context -> currentFlyer().nextFlyerPage(),  joypad.keyCombination(NES.Joypad.DOWN));

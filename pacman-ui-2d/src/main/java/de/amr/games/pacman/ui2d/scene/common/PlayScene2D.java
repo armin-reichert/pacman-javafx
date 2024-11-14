@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameActions2D;
-import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.input.ArcadeKeyAdapter;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.sound.GameSound;
@@ -31,6 +30,7 @@ import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.games.pacman.ui2d.GameActions2D.*;
+import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 
@@ -168,26 +168,26 @@ public class PlayScene2D extends GameScene2D {
     }
 
     private void drawLevelMessage(GameRenderer renderer) {
-        float x = renderer.getMessageAnchorPosition().x(), y = renderer.getMessageAnchorPosition().y();
-        String assetPrefix = GameAssets2D.assetPrefix(context.currentGameVariant());
-        Font font = renderer.scaledArcadeFont(TS);
         Color color = null;
         String text = null;
-        if (context.game().isDemoLevel()) {
+        if (context.game().isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
             text = "GAME  OVER";
+            String assetPrefix = assetPrefix(context.gameVariant());
             color = context.assets().color(assetPrefix + ".color.game_over_message");
-        } else if (context.gameState() == GameState.GAME_OVER) {
-            text = "GAME  OVER";
-            color = context.assets().color(assetPrefix + ".color.game_over_message");
-        } else if (context.gameState() == GameState.STARTING_GAME) {
+        }
+        else if (context.gameState() == GameState.STARTING_GAME) {
             text = "READY!";
+            String assetPrefix = assetPrefix(context.gameVariant());
             color = context.assets().color(assetPrefix + ".color.ready_message");
-        } else if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
+        }
+        else if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
             text = "TEST    L%03d".formatted(context.level().number);
             color = Color.valueOf(Arcade.Palette.WHITE);
         }
         if (text != null) {
+            float x = renderer.getMessageAnchorPosition().x(), y = renderer.getMessageAnchorPosition().y();
             double mx = x - (text.length() * HTS); // TODO this assumes fixed width font of one tile size
+            Font font = renderer.scaledArcadeFont(TS);
             renderer.drawText(text, color, font, mx, y);
         }
     }
@@ -196,7 +196,7 @@ public class PlayScene2D extends GameScene2D {
     protected void drawDebugInfo(GameRenderer renderer) {
         GraphicsContext g = renderer.ctx();
         renderer.drawTileGrid(size());
-        if (context.currentGameVariant() == GameVariant.PACMAN && context.game().level().isPresent()) {
+        if (context.gameVariant() == GameVariant.PACMAN && context.game().level().isPresent()) {
             context.level().ghosts().forEach(ghost -> {
                 // Are currently the same for each ghost, but who knows what comes...
                 ghost.specialTerrainTiles().forEach(tile -> {

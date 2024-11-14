@@ -198,7 +198,7 @@ public class GameLevel3D {
 
     public GameLevel3D(GameContext context) {
         this.context = context;
-        final GameVariant variant = context.currentGameVariant();
+        final GameVariant variant = context.gameVariant();
         final GameModel game = context.game();
         final GameLevel level = game.level().orElseThrow();
         final GameWorld world = level.world();
