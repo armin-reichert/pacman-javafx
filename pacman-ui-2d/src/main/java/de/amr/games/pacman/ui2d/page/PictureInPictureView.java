@@ -50,7 +50,6 @@ public class PictureInPictureView extends VBox implements GameEventListener {
             return context.currentGameVariant() != GameVariant.MS_PACMAN_TENGEN ? super.size() : super.size().plus(0, 2 * TS);
             }
         };
-        playScene2D.setCanvas(canvas);
         playScene2D.setGameContext(context);
         playScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
 
@@ -73,6 +72,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
     @Override
     public void onLevelCreated(GameEvent e) {
         recomputeLayout();
+        playScene2D.setCanvas(canvas);
     }
 
     public void draw() {

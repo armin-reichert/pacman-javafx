@@ -6,14 +6,12 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.ms_pacman.MapConfigurationManager;
-import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -36,7 +34,6 @@ import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.imageArea;
 public class MsPacManGameRenderer implements GameRenderer {
 
     private final AssetStorage assets;
-    private final MsPacManGameSpriteSheet spriteSheet;
     private final Canvas canvas;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final Image flashingMazesImage;
@@ -50,7 +47,6 @@ public class MsPacManGameRenderer implements GameRenderer {
     public MsPacManGameRenderer(AssetStorage assets, Canvas canvas) {
         this.assets = checkNotNull(assets);
         this.canvas = checkNotNull(canvas);
-        spriteSheet = assets.get("ms_pacman.spritesheet");
         flashingMazesImage = assets.get("ms_pacman.flashing_mazes");
     }
 
@@ -61,7 +57,7 @@ public class MsPacManGameRenderer implements GameRenderer {
 
     @Override
     public MsPacManGameSpriteSheet spriteSheet() {
-        return spriteSheet;
+        return assets.get("ms_pacman.spritesheet");
     }
 
     @Override
@@ -110,8 +106,8 @@ public class MsPacManGameRenderer implements GameRenderer {
             var colorScheme = level.mapConfig().colorScheme();
             int index = MapConfigurationManager.colorSchemeIndex(colorScheme);
             if (index != -1) {
-                mapWithFoodSprite = spriteSheet.imageArea(0, index * 248, 226, 248);
-                mapWithoutFoodSprite = spriteSheet.imageArea(228, index * 248, 226, 248);
+                mapWithFoodSprite = spriteSheet().imageArea(0, index * 248, 226, 248);
+                mapWithoutFoodSprite = spriteSheet().imageArea(228, index * 248, 226, 248);
                 mapFlashingSprite = imageArea(flashingMazesImage, 0, index * 248, 226, 248);
             } else {
                 Logger.error("Could not identify color scheme {}", colorScheme);
@@ -135,7 +131,7 @@ public class MsPacManGameRenderer implements GameRenderer {
             overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
             ctx().restore();
         }
-        context.level().bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
+        context.level().bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet(), (MovingBonus) bonus));
     }
 
     public void drawClapperBoard(Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
