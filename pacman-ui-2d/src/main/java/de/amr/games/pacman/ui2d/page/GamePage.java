@@ -21,6 +21,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -32,6 +33,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -127,8 +129,11 @@ public class GamePage extends StackPane implements Page {
         bindGameActions();
 
         gameCanvas = new Canvas();
-        //TODO make configurable?
-        gameCanvas.getGraphicsContext2D().setImageSmoothing(false);
+        GraphicsContext g = gameCanvas.getGraphicsContext2D();
+        g.setFontSmoothingType(FontSmoothingType.GRAY);
+        g.setImageSmoothing(false);
+        PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, nv) -> g.setFontSmoothingType(nv ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
+        PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, nv) -> g.setImageSmoothing(nv));
 
         gameCanvasContainer = new TooFancyGameCanvasContainer(gameCanvas);
         gameCanvasContainer.setMinScaling(0.5);

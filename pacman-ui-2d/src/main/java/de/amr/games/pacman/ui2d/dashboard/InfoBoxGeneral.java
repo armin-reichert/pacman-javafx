@@ -26,7 +26,8 @@ public class InfoBoxGeneral extends InfoBox {
     private Spinner<Integer> spinnerSimulationSteps;
     private Slider sliderTargetFPS;
     private ColorPicker pickerCanvasColor;
-    private CheckBox cbCanvasDecoration;
+    private CheckBox cbCanvasImageSmoothing;
+    private CheckBox cbCanvasFontSmoothing;
     private CheckBox cbDebugUI;
     private CheckBox cbTimeMeasured;
 
@@ -53,7 +54,8 @@ public class InfoBoxGeneral extends InfoBox {
         labeledValue("",               () -> "FPS: %.1f (Tgt: %.1f)".formatted(clock.getActualFrameRate(), clock.getTargetFrameRate()));
         labeledValue("Total Updates",  clock::getUpdateCount);
         pickerCanvasColor              = colorPicker("Canvas Color", PY_CANVAS_BG_COLOR.get());
-        cbCanvasDecoration             = checkBox("Canvas Decoration");
+        cbCanvasImageSmoothing         = checkBox("Image Smoothing");
+        cbCanvasFontSmoothing          = checkBox("Font Smoothing");
         cbDebugUI                      = checkBox("Show Debug Info");
         cbTimeMeasured                 = checkBox("Time Measured");
 
@@ -72,6 +74,8 @@ public class InfoBoxGeneral extends InfoBox {
         setAction(bgSimulation[1], () -> clock.makeSteps(PY_SIMULATION_STEPS.get(), true));
         assignEditor(sliderTargetFPS, clock.targetFrameRatePy);
         assignEditor(pickerCanvasColor, PY_CANVAS_BG_COLOR);
+        assignEditor(cbCanvasImageSmoothing, PY_CANVAS_IMAGE_SMOOTHING);
+        assignEditor(cbCanvasFontSmoothing, PY_CANVAS_FONT_SMOOTHING);
         assignEditor(cbDebugUI, PY_DEBUG_INFO_VISIBLE);
         assignEditor(cbTimeMeasured, clock.timeMeasuredPy);
     }
