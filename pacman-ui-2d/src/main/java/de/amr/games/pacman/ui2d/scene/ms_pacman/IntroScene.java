@@ -108,7 +108,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameRenderer renderer) {
-        MsPacManGameRenderer r = (MsPacManGameRenderer) renderer;
+        MsPacManArcadeGameRenderer r = (MsPacManArcadeGameRenderer) renderer;
         Font font = r.scaledArcadeFont(TS);
         BitSet marqueeState = computeMarqueeState(marqueeTimer.tickCount());
         drawMarquee(r.ctx(), marqueeState);

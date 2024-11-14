@@ -58,8 +58,8 @@ public class PacManGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public PacManGameRenderer createRenderer(Canvas canvas) {
-        return new PacManGameRenderer(assets, canvas);
+    public PacManArcadeGameRenderer createRenderer(Canvas canvas) {
+        return new PacManArcadeGameRenderer(assets, canvas);
     }
 
     @Override

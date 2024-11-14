@@ -56,8 +56,8 @@ public class MsPacManGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public MsPacManGameRenderer createRenderer(Canvas canvas) {
-        return new MsPacManGameRenderer(assets, canvas);
+    public MsPacManArcadeGameRenderer createRenderer(Canvas canvas) {
+        return new MsPacManArcadeGameRenderer(assets, canvas);
     }
 
     @Override

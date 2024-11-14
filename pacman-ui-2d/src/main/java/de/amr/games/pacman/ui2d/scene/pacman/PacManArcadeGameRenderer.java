@@ -17,7 +17,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -25,7 +24,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public class PacManGameRenderer implements GameRenderer {
+public class PacManArcadeGameRenderer implements GameRenderer {
 
     private final AssetStorage assets;
     private final GameSpriteSheet spriteSheet;
@@ -36,7 +35,7 @@ public class PacManGameRenderer implements GameRenderer {
     private boolean blinkingOn;
     private Color bgColor = Color.BLACK;
 
-    public PacManGameRenderer(AssetStorage assets, Canvas canvas) {
+    public PacManArcadeGameRenderer(AssetStorage assets, Canvas canvas) {
         this.assets = checkNotNull(assets);
         this.canvas = checkNotNull(canvas);
         canvas.getGraphicsContext2D().setImageSmoothing(false);

@@ -31,7 +31,7 @@ import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.imageArea;
 /**
  * @author Armin Reichert
  */
-public class MsPacManGameRenderer implements GameRenderer {
+public class MsPacManArcadeGameRenderer implements GameRenderer {
 
     private final AssetStorage assets;
     private final Canvas canvas;
@@ -44,7 +44,7 @@ public class MsPacManGameRenderer implements GameRenderer {
     private boolean blinkingOn;
     private Color bgColor = Color.BLACK;
 
-    public MsPacManGameRenderer(AssetStorage assets, Canvas canvas) {
+    public MsPacManArcadeGameRenderer(AssetStorage assets, Canvas canvas) {
         this.assets = checkNotNull(assets);
         this.canvas = checkNotNull(canvas);
         flashingMazesImage = assets.get("ms_pacman.flashing_mazes");
