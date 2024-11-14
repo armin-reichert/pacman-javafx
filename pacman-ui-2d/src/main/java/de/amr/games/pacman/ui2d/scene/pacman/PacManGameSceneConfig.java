@@ -15,28 +15,31 @@ import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
 import de.amr.games.pacman.ui2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
+import javafx.scene.canvas.Canvas;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+
 public class PacManGameSceneConfig implements GameSceneConfig {
 
-    private final Map<String, GameScene> scenesByID = new HashMap<>();
+    private final AssetStorage assets;
     private final PacManGameSpriteSheet spriteSheet;
-    private final PacManGameRenderer renderer;
+    private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public PacManGameSceneConfig(AssetStorage assets) {
-        set("BootScene",  new ArcadeBootScene());
-        set("IntroScene", new IntroScene());
-        set("StartScene", new StartScene());
-        set("PlayScene2D", new PlayScene2D());
-        set("CutScene1", new CutScene1());
-        set("CutScene2", new CutScene2());
-        set("CutScene3", new CutScene3());
-
+        this.assets = checkNotNull(assets);
         spriteSheet = assets.get(GameAssets2D.assetPrefix(GameVariant.PACMAN) + ".spritesheet");
-        renderer = new PacManGameRenderer(assets);
+
+        set("BootScene",   new ArcadeBootScene());
+        set("IntroScene",  new IntroScene());
+        set("StartScene",  new StartScene());
+        set("PlayScene2D", new PlayScene2D());
+        set("CutScene1",   new CutScene1());
+        set("CutScene2",   new CutScene2());
+        set("CutScene3",   new CutScene3());
     }
 
     @Override
@@ -55,8 +58,8 @@ public class PacManGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public PacManGameRenderer renderer() {
-        return renderer;
+    public PacManGameRenderer createRenderer(Canvas canvas) {
+        return new PacManGameRenderer(assets, canvas);
     }
 
     @Override

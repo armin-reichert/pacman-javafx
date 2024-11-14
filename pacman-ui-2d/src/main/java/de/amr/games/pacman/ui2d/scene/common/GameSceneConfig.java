@@ -8,6 +8,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
+import javafx.scene.canvas.Canvas;
 
 import java.util.stream.Stream;
 
@@ -25,7 +26,7 @@ public interface GameSceneConfig {
         return get(sceneID) == gameScene;
     }
     GameSpriteSheet spriteSheet();
-    GameRenderer renderer();
+    GameRenderer createRenderer(Canvas canvas);
     void createActorAnimations(GameModel game);
     GameScene selectGameScene(GameContext context);
 }

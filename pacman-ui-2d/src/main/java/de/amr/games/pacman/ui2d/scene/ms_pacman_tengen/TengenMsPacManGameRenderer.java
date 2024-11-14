@@ -68,16 +68,17 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
-
-    private Canvas canvas;
+    private final Canvas canvas;
     private Color bgColor = Color.BLACK;
     private ImageArea mapSprite;
     private boolean blinkingOn;
     private boolean levelNumberBoxesVisible;
     private Vector2f messagePosition;
 
-    public TengenMsPacManGameRenderer(AssetStorage assets) {
+    public TengenMsPacManGameRenderer(AssetStorage assets, Canvas canvas) {
         this.assets = checkNotNull(assets);
+        this.canvas = checkNotNull(canvas);
+        canvas.getGraphicsContext2D().setImageSmoothing(false);
         spriteSheet = assets.get("tengen.spritesheet");
         arcadeMapsSpriteSheet = new TengenArcadeMapsSpriteSheet(assets);
         nonArcadeMapSpriteSheet = new TengenNonArcadeMapsSpriteSheet(assets);
@@ -98,7 +99,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     @Override
     public void update(GameModel game) {
         if (game.level().isEmpty()) {
-            Logger.warn("Cannot update renderer for game, no level exists");
+            Logger.debug("Cannot update renderer for game, no level exists");
             return;
         }
         GameLevel level = game.level().get();
@@ -110,7 +111,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             case BIG     -> bigMapSpriteImageArea(mapConfig);
             case STRANGE -> strangeMapSpriteImageArea(mapConfig);
         };
-        Logger.info("Level {}: Using map sprite area #{}", game.level().get().number, mapSprite.area());
+        Logger.debug("Level {}: Using map sprite area #{}", game.level().get().number, mapSprite.area());
 
         Map<String, String> mapColorScheme = mapConfig.colorScheme();
         terrainRenderer.setMapBackgroundColor(bgColor);
@@ -195,11 +196,6 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public GameRenderer copy() {
-        return new TengenMsPacManGameRenderer(assets);
-    }
-
-    @Override
     public AssetStorage assets() {
         return assets;
     }
@@ -207,12 +203,6 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     @Override
     public TengenMsPacManGameSpriteSheet spriteSheet() {
         return spriteSheet;
-    }
-
-    @Override
-    public void setCanvas(Canvas canvas) {
-        this.canvas = canvas;
-        canvas.getGraphicsContext2D().setImageSmoothing(false);
     }
 
     @Override

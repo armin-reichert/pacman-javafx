@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.pacman_xxl;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -16,28 +17,31 @@ import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
 import de.amr.games.pacman.ui2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui2d.scene.pacman.*;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
+import javafx.scene.canvas.Canvas;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+
 public class PacManGameXXLSceneConfig implements GameSceneConfig {
 
-    private final Map<String, GameScene> scenesByID = new HashMap<>();
+    private final AssetStorage assets;
     private final PacManGameSpriteSheet spriteSheet;
-    private final PacManGameXXLRenderer renderer;
+    private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public PacManGameXXLSceneConfig(AssetStorage assets) {
-        set("BootScene",  new ArcadeBootScene());
-        set("IntroScene", new IntroScene());
-        set("StartScene", new StartScene());
-        set("PlayScene2D", new PlayScene2D());
-        set("CutScene1", new CutScene1());
-        set("CutScene2", new CutScene2());
-        set("CutScene3", new CutScene3());
-
+        this.assets = checkNotNull(assets);
         spriteSheet = assets.get(GameAssets2D.assetPrefix(GameVariant.PACMAN_XXL) + ".spritesheet");
-        renderer = new PacManGameXXLRenderer(assets);
+
+        set("BootScene",   new ArcadeBootScene());
+        set("IntroScene",  new IntroScene());
+        set("StartScene",  new StartScene());
+        set("PlayScene2D", new PlayScene2D());
+        set("CutScene1",   new CutScene1());
+        set("CutScene2",   new CutScene2());
+        set("CutScene3",   new CutScene3());
     }
 
     @Override
@@ -56,8 +60,8 @@ public class PacManGameXXLSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public PacManGameXXLRenderer renderer() {
-        return renderer;
+    public PacManGameXXLRenderer createRenderer(Canvas canvas) {
+        return new PacManGameXXLRenderer(assets, canvas);
     }
 
     @Override

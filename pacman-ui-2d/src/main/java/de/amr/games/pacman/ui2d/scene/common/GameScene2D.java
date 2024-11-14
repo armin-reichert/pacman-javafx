@@ -8,6 +8,7 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import javafx.beans.property.*;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.paint.Color;
 
@@ -28,6 +29,7 @@ public abstract class GameScene2D implements GameScene {
     protected final BooleanProperty debugInfoVisiblePy = new SimpleBooleanProperty(this, "debugInfoVisible", false);
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     protected GameContext context;
+    protected Canvas canvas;
 
     @Override
     public final void init() {
@@ -75,10 +77,15 @@ public abstract class GameScene2D implements GameScene {
     protected void doInit() {}
     protected void doEnd() {}
 
+    public Canvas canvas() { return canvas; }
+    public void setCanvas(Canvas canvas) { this.canvas = canvas; }
+
     protected abstract void drawSceneContent(GameRenderer renderer);
     protected void drawDebugInfo(GameRenderer renderer) {}
 
-    public void draw(GameRenderer gr) {
+    public void draw() {
+        GameRenderer gr = context.currentGameSceneConfig().createRenderer(canvas);
+        gr.update(context.game());
         gr.scalingProperty().set(scaling());
         gr.setBackgroundColor(backgroundColor());
         gr.clearCanvas();

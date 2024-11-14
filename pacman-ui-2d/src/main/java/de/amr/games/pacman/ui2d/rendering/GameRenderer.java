@@ -38,13 +38,11 @@ import static java.util.function.Predicate.not;
 public interface GameRenderer {
 
     void update(GameModel game);
-    GameRenderer copy();
     AssetStorage assets();
     Color backgroundColor();
     void setBackgroundColor(Color color);
     GameSpriteSheet spriteSheet();
     Canvas canvas();
-    void setCanvas(Canvas canvas);
     default GraphicsContext ctx() { return canvas().getGraphicsContext2D(); }
     DoubleProperty scalingProperty();
     default void setScaling(double value) { scalingProperty().set(value); }

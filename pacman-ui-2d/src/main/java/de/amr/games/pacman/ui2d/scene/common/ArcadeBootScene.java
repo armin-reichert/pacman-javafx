@@ -40,7 +40,8 @@ public class ArcadeBootScene extends GameScene2D {
     }
 
     @Override
-    public void draw(GameRenderer gr) {
+    public void draw() {
+        GameRenderer gr = context.currentGameSceneConfig().createRenderer(canvas);
         Vector2f sceneSize = size();
         gr.setScaling(scaling());
         gr.setBackgroundColor(backgroundColor());

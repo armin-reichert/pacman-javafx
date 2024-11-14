@@ -12,7 +12,6 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.*;
-import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
@@ -266,16 +265,11 @@ public class GamePage extends StackPane implements Page {
         contextMenu.requestFocus();
     }
 
-    public void setWorldRenderer(GameRenderer renderer) {
-        renderer.setCanvas(gameCanvasContainer.canvas());
-    }
-
     protected void handleGameSceneChange(GameScene gameScene) {
         if (gameScene != null) {
             embedGameScene(gameScene);
         }
         contextMenu.hide();
-        dashboardLayer.getPip().updateRenderer();
     }
 
     public void embedGameScene(GameScene gameScene) {
@@ -298,6 +292,7 @@ public class GamePage extends StackPane implements Page {
                 gameCanvasContainer.setUnscaledCanvasWidth(sceneSize.x());
                 gameCanvasContainer.setUnscaledCanvasHeight(sceneSize.y());
                 gameCanvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
+                gameScene2D.setCanvas(gameCanvas);
                 gameScene2D.scalingProperty().bind(
                     gameCanvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_SCALING)));
             }

@@ -14,28 +14,30 @@ import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
 import de.amr.games.pacman.ui2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
+import javafx.scene.canvas.Canvas;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+
 public class MsPacManGameSceneConfig implements GameSceneConfig {
 
-    private final Map<String, GameScene> scenesByID = new HashMap<>();
+    private final AssetStorage assets;
     private final MsPacManGameSpriteSheet spriteSheet;
-    private final MsPacManGameRenderer renderer;
+    private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public MsPacManGameSceneConfig(AssetStorage assets) {
-        set("BootScene",  new ArcadeBootScene());
-        set("IntroScene", new IntroScene());
-        set("StartScene", new StartScene());
-        set("PlayScene2D", new PlayScene2D());
-        set("CutScene1", new CutScene1());
-        set("CutScene2", new CutScene2());
-        set("CutScene3", new CutScene3());
-
+        this.assets = checkNotNull(assets);
         spriteSheet = assets.get(GameAssets2D.assetPrefix(GameVariant.MS_PACMAN) + ".spritesheet");
-        renderer = new MsPacManGameRenderer(assets);
+        set("BootScene",   new ArcadeBootScene());
+        set("IntroScene",  new IntroScene());
+        set("StartScene",  new StartScene());
+        set("PlayScene2D", new PlayScene2D());
+        set("CutScene1",   new CutScene1());
+        set("CutScene2",   new CutScene2());
+        set("CutScene3",   new CutScene3());
     }
 
     @Override
@@ -54,8 +56,8 @@ public class MsPacManGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public MsPacManGameRenderer renderer() {
-        return renderer;
+    public MsPacManGameRenderer createRenderer(Canvas canvas) {
+        return new MsPacManGameRenderer(assets, canvas);
     }
 
     @Override

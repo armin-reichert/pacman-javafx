@@ -208,7 +208,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             if (currentPage == gamePage) {
                 currentGameScene().ifPresent(gameScene -> {
                     if (gameScene instanceof  GameScene2D gameScene2D) {
-                        gameScene2D.draw(currentGameSceneConfig().renderer());
+                        gameScene2D.draw();
                     }
                 });
                 gamePage.updateDashboard();
@@ -322,7 +322,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     private void configureGameScene2D(GameScene2D gameScene2D) {
         var gameSceneConfig = currentGameSceneConfig();
-        gamePage.setWorldRenderer(gameSceneConfig.renderer());
         gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
     }
 

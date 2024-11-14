@@ -68,7 +68,6 @@ public class PlayScene2D extends GameScene2D {
             bindFallbackPlayerControlActions(this);
         }
         registerGameActionKeyBindings(context.keyboard());
-        context.updateRenderer();
     }
 
     @Override
@@ -221,8 +220,6 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
-        //TODO check this
-        context.updateRenderer();
         bindGameActions();
         registerGameActionKeyBindings(context.keyboard());
     }

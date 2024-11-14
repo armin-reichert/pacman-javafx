@@ -13,10 +13,13 @@ import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
+import javafx.scene.canvas.Canvas;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
+
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 public class TengenMsPacManGameSceneConfig implements GameSceneConfig {
 
@@ -27,11 +30,14 @@ public class TengenMsPacManGameSceneConfig implements GameSceneConfig {
     public static final int NES_RESOLUTION_X = 256;
     public static final int NES_RESOLUTION_Y = 240; // see above
 
-    private final Map<String, GameScene> scenesByID = new HashMap<>();
+    private final AssetStorage assets;
     private final TengenMsPacManGameSpriteSheet spriteSheet;
-    private final TengenMsPacManGameRenderer renderer;
+    private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public TengenMsPacManGameSceneConfig(AssetStorage assets) {
+        this.assets = checkNotNull(assets);
+        spriteSheet = assets.get(GameAssets2D.assetPrefix(GameVariant.MS_PACMAN_TENGEN) + ".spritesheet");
+
         set("BootScene",      new BootScene());
         set("IntroScene",     new IntroScene());
         set("StartScene",     new OptionsScene());
@@ -41,9 +47,6 @@ public class TengenMsPacManGameSceneConfig implements GameSceneConfig {
         set("CutScene2",      new CutScene2());
         set("CutScene3",      new CutScene3());
         set("CutScene4",      new CutScene4());
-
-        spriteSheet = assets.get(GameAssets2D.assetPrefix(GameVariant.MS_PACMAN_TENGEN) + ".spritesheet");
-        renderer = new TengenMsPacManGameRenderer(assets);
     }
 
     @Override
@@ -76,8 +79,8 @@ public class TengenMsPacManGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public TengenMsPacManGameRenderer renderer() {
-        return renderer;
+    public TengenMsPacManGameRenderer createRenderer(Canvas canvas) {
+        return new TengenMsPacManGameRenderer(assets, canvas);
     }
 
     @Override

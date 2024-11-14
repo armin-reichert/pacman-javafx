@@ -34,25 +34,21 @@ public class PacManGameXXLRenderer implements GameRenderer {
 
     private final AssetStorage assets;
     private final GameSpriteSheet spriteSheet;
+    private final Canvas canvas;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
     private boolean flashMode;
     private boolean blinkingOn;
-    private Canvas canvas;
     private Color bgColor;
 
-    public PacManGameXXLRenderer(AssetStorage assets) {
+    public PacManGameXXLRenderer(AssetStorage assets, Canvas canvas) {
         this.assets = checkNotNull(assets);
+        this.canvas = checkNotNull(canvas);
         spriteSheet = assets.get("pacman_xxl.spritesheet");
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(bgColor);
         foodRenderer.scalingPy.bind(scalingPy);
-    }
-
-    @Override
-    public PacManGameXXLRenderer copy() {
-        return new PacManGameXXLRenderer(assets);
     }
 
     @Override
@@ -63,12 +59,6 @@ public class PacManGameXXLRenderer implements GameRenderer {
     @Override
     public GameSpriteSheet spriteSheet() {
         return spriteSheet;
-    }
-
-    @Override
-    public void setCanvas(Canvas canvas) {
-        this.canvas = canvas;
-        canvas.getGraphicsContext2D().setImageSmoothing(true);
     }
 
     @Override

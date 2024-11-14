@@ -35,7 +35,6 @@ public class PictureInPictureView extends VBox implements GameEventListener {
     private final GameContext context;
     private final Canvas canvas;
     private final PlayScene2D playScene2D;
-    private GameRenderer renderer;
 
     public PictureInPictureView(GameContext context) {
         this.context = checkNotNull(context);
@@ -44,13 +43,14 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         canvas.heightProperty().bind(PY_PIP_HEIGHT);
         canvas.heightProperty().addListener((py,ov,nv) -> recomputeLayout());
 
+        //TODO this is crap
         playScene2D = new PlayScene2D() {
             @Override
             public Vector2f size() {
             return context.currentGameVariant() != GameVariant.MS_PACMAN_TENGEN ? super.size() : super.size().plus(0, 2 * TS);
             }
         };
-
+        playScene2D.setCanvas(canvas);
         playScene2D.setGameContext(context);
         playScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
 
@@ -70,21 +70,14 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         });
     }
 
-    public void updateRenderer() {
-        renderer = context.currentGameSceneConfig().renderer().copy();
-        renderer.setCanvas(canvas);
-        renderer.update(context.game());
-    }
-
     @Override
     public void onLevelCreated(GameEvent e) {
-        renderer.update(context.game());
         recomputeLayout();
     }
 
     public void draw() {
         if (isVisible()) {
-            playScene2D.draw(renderer);
+            playScene2D.draw();
         }
     }
 

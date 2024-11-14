@@ -84,5 +84,4 @@ public interface GameContext {
     ObjectProperty<GameScene> gameSceneProperty();
     Optional<GameScene> currentGameScene();
     void togglePlayScene2D3D();
-    default void updateRenderer() { currentGameSceneConfig().renderer().update(game()); }
 }

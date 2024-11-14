@@ -28,20 +28,17 @@ public class PacManGameRenderer implements GameRenderer {
     private final GameSpriteSheet spriteSheet;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final Image flashingMazeImage;
+    private final Canvas canvas;
     private boolean flashMode;
     private boolean blinkingOn;
-    private Canvas canvas;
     private Color bgColor = Color.BLACK;
 
-    public PacManGameRenderer(AssetStorage assets) {
+    public PacManGameRenderer(AssetStorage assets, Canvas canvas) {
         this.assets = checkNotNull(assets);
+        this.canvas = checkNotNull(canvas);
+        canvas.getGraphicsContext2D().setImageSmoothing(true);
         spriteSheet = assets.get("pacman.spritesheet");
         flashingMazeImage = assets.image("pacman.flashing_maze");
-    }
-
-    @Override
-    public GameRenderer copy() {
-        return new PacManGameRenderer(assets);
     }
 
     @Override
@@ -52,12 +49,6 @@ public class PacManGameRenderer implements GameRenderer {
     @Override
     public GameSpriteSheet spriteSheet() {
         return spriteSheet;
-    }
-
-    @Override
-    public void setCanvas(Canvas canvas) {
-        this.canvas = canvas;
-        canvas.getGraphicsContext2D().setImageSmoothing(true);
     }
 
     @Override

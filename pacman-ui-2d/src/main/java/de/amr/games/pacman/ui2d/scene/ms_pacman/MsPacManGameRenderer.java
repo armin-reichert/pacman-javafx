@@ -34,6 +34,7 @@ public class MsPacManGameRenderer implements GameRenderer {
 
     private final AssetStorage assets;
     private final MsPacManGameSpriteSheet spriteSheet;
+    private final Canvas canvas;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final Image flashingMazesImage;
     private ImageArea mapWithFoodSprite;
@@ -41,18 +42,13 @@ public class MsPacManGameRenderer implements GameRenderer {
     private ImageArea mapFlashingSprite;
     private boolean flashMode;
     private boolean blinkingOn;
-    private Canvas canvas;
     private Color bgColor = Color.BLACK;
 
-    public MsPacManGameRenderer(AssetStorage assets) {
+    public MsPacManGameRenderer(AssetStorage assets, Canvas canvas) {
         this.assets = checkNotNull(assets);
+        this.canvas = checkNotNull(canvas);
         spriteSheet = assets.get("ms_pacman.spritesheet");
         flashingMazesImage = assets.get("ms_pacman.flashing_mazes");
-    }
-
-    public MsPacManGameRenderer copy() {
-        return new MsPacManGameRenderer(assets);
-        //TODO which properties to copy?
     }
 
     @Override
@@ -63,12 +59,6 @@ public class MsPacManGameRenderer implements GameRenderer {
     @Override
     public MsPacManGameSpriteSheet spriteSheet() {
         return spriteSheet;
-    }
-
-    @Override
-    public void setCanvas(Canvas canvas) {
-        this.canvas = canvas;
-        canvas.getGraphicsContext2D().setImageSmoothing(true);
     }
 
     @Override
