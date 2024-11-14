@@ -36,7 +36,6 @@ public class MsPacManArcadeGameRenderer implements GameRenderer {
     private final AssetStorage assets;
     private final Canvas canvas;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
-    private final Image flashingMazesImage;
     private ImageArea mapWithFoodSprite;
     private ImageArea mapWithoutFoodSprite;
     private ImageArea mapFlashingSprite;
@@ -47,7 +46,6 @@ public class MsPacManArcadeGameRenderer implements GameRenderer {
     public MsPacManArcadeGameRenderer(AssetStorage assets, Canvas canvas) {
         this.assets = checkNotNull(assets);
         this.canvas = checkNotNull(canvas);
-        flashingMazesImage = assets.get("ms_pacman.flashing_mazes");
         canvas.getGraphicsContext2D().setImageSmoothing(false);
     }
 
@@ -109,7 +107,7 @@ public class MsPacManArcadeGameRenderer implements GameRenderer {
             if (index != -1) {
                 mapWithFoodSprite = spriteSheet().imageArea(0, index * 248, 226, 248);
                 mapWithoutFoodSprite = spriteSheet().imageArea(228, index * 248, 226, 248);
-                mapFlashingSprite = imageArea(flashingMazesImage, 0, index * 248, 226, 248);
+                mapFlashingSprite = imageArea(assets.get("ms_pacman.flashing_mazes"), 0, index * 248, 226, 248);
             } else {
                 Logger.error("Could not identify color scheme {}", colorScheme);
             }
