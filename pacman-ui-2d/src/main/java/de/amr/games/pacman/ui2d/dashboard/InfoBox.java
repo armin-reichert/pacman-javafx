@@ -121,7 +121,7 @@ public abstract class InfoBox extends TitledPane {
         addRow(label, right);
     }
 
-    protected void labeledValue(String labelText, Supplier<?> fnValue) {
+    protected void addLabeledValue(String labelText, Supplier<?> fnValue) {
         var info = new InfoText(fnValue);
         info.setFill(textColor);
         info.setFont(textFont);
@@ -129,15 +129,15 @@ public abstract class InfoBox extends TitledPane {
         addRow(labelText, info);
     }
 
-    protected void labeledValue(String labelText, String value) {
-        labeledValue(labelText, () -> value);
+    protected void addLabeledValue(String labelText, String value) {
+        addLabeledValue(labelText, () -> value);
     }
 
-    protected void emptyRow() {
-        labeledValue("", "");
+    protected void addEmptyRow() {
+        addLabeledValue("", "");
     }
 
-    protected Button[] buttonList(String labelText, String... buttonTexts) {
+    protected Button[] addButtonList(String labelText, String... buttonTexts) {
         var hbox = new HBox();
         var buttons = new Button[buttonTexts.length];
         for (int i = 0; i < buttonTexts.length; ++i) {
@@ -156,52 +156,52 @@ public abstract class InfoBox extends TitledPane {
         return cb;
     }
 
-    protected CheckBox checkBox(String labelText, String cbText) {
+    protected CheckBox addCheckBox(String labelText, String cbText) {
         var cb = createCheckBox(cbText);
         addRow(labelText, cb);
         return cb;
     }
 
-    protected CheckBox checkBox(String labelText) {
+    protected CheckBox addCheckBox(String labelText) {
         var cb = createCheckBox("");
         addRow(labelText, cb);
         return cb;
     }
 
-    protected <T> ComboBox<T> comboBox(String labelText, T[] items) {
+    protected <T> ComboBox<T> addComboBox(String labelText, T[] items) {
         var combo = new ComboBox<>(FXCollections.observableArrayList(items));
         combo.setStyle(fontCSS(textFont));
         addRow(labelText, combo);
         return combo;
     }
 
-    protected ColorPicker colorPicker(String labelText, Color color) {
+    protected ColorPicker addColorPicker(String labelText, Color color) {
         var colorPicker = new ColorPicker(color);
         addRow(labelText, colorPicker);
         return colorPicker;
     }
 
-    protected void assignEditor(CheckBox checkBox, BooleanProperty property) {
+    protected void setEditor(CheckBox checkBox, BooleanProperty property) {
         checkBox.selectedProperty().bindBidirectional(property);
     }
 
-    protected void assignEditor(ColorPicker picker, ObjectProperty<Color> property) {
+    protected void setEditor(ColorPicker picker, ObjectProperty<Color> property) {
         picker.setOnAction(e -> property.set(picker.getValue()));
     }
 
-    protected <T> void assignEditor(ComboBox<T> combo, WritableObjectValue<T> property) {
+    protected <T> void setEditor(ComboBox<T> combo, WritableObjectValue<T> property) {
         combo.setOnAction(e -> property.set(combo.getValue()));
     }
 
-    protected void assignEditor(ComboBox<String> combo, StringProperty property) {
+    protected void setEditor(ComboBox<String> combo, StringProperty property) {
         combo.setOnAction(e -> property.set(combo.getValue()));
     }
 
-    protected void assignEditor(Slider slider, Property<Number> property) {
+    protected void setEditor(Slider slider, Property<Number> property) {
         slider.valueProperty().bindBidirectional(property);
     }
 
-    protected Slider slider(String labelText, int min, int max, double initialValue, boolean tickMarks,  boolean tickLabels) {
+    protected Slider adddSlider(String labelText, int min, int max, double initialValue, boolean tickMarks, boolean tickLabels) {
         var slider = new Slider(min, max, initialValue);
         slider.setShowTickMarks(tickMarks);
         slider.setShowTickLabels(tickLabels);
@@ -215,14 +215,14 @@ public abstract class InfoBox extends TitledPane {
         return slider;
     }
 
-    protected Spinner<Integer> integerSpinner(String labelText, int min, int max, int initialValue) {
+    protected Spinner<Integer> addIntSpinner(String labelText, int min, int max, int initialValue) {
         var spinner = new Spinner<Integer>(min, max, initialValue);
         spinner.setStyle(fontCSS(textFont));
         addRow(labelText, spinner);
         return spinner;
     }
 
-    protected Spinner<Integer> integerSpinner(String labelText, int min, int max, IntegerProperty property) {
+    protected Spinner<Integer> addIntSpinner(String labelText, int min, int max, IntegerProperty property) {
         var spinner = new Spinner<Integer>(min, max, property.getValue());
         spinner.getValueFactory().valueProperty().bindBidirectional(property.asObject());
         spinner.valueProperty().addListener((py, ov, newValue) -> property.set(newValue));
@@ -238,6 +238,7 @@ public abstract class InfoBox extends TitledPane {
     protected void setAction(CheckBox checkBox, Runnable action) {
         checkBox.setOnAction(e -> action.run());
     }
+
     protected void setAction(ComboBox<?> combo, Runnable action) {
         combo.setOnAction(e -> action.run());
     }

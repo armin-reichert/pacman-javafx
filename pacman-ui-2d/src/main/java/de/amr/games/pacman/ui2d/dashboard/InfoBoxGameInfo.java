@@ -24,16 +24,16 @@ public class InfoBoxGameInfo extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        labeledValue("Game Scene", ifGameScenePresent(gameScene -> gameScene.getClass().getSimpleName()));
-        labeledValue("Demo Level", ifLevelPresent(gameScene -> context.game().isDemoLevel() ? "Yes" : "No"));
-        labeledValue("Game State", () -> "%s".formatted(context.gameState()));
-        labeledValue("State Timer", this::stateTimerInfo);
-        labeledValue("Level Number", ifLevelPresent(level -> "%d".formatted(level.number)));
-        labeledValue("World Map", ifLevelPresent(level -> {
+        addLabeledValue("Game Scene", ifGameScenePresent(gameScene -> gameScene.getClass().getSimpleName()));
+        addLabeledValue("Demo Level", ifLevelPresent(gameScene -> context.game().isDemoLevel() ? "Yes" : "No"));
+        addLabeledValue("Game State", () -> "%s".formatted(context.gameState()));
+        addLabeledValue("State Timer", this::stateTimerInfo);
+        addLabeledValue("Level Number", ifLevelPresent(level -> "%d".formatted(level.number)));
+        addLabeledValue("World Map", ifLevelPresent(level -> {
             String url = level.world().map().url().toString();
             return url.substring(url.lastIndexOf("/") + 1);
         }));
-        labeledValue("Color Scheme", ifLevelPresent(level -> {
+        addLabeledValue("Color Scheme", ifLevelPresent(level -> {
             if (context.currentGameVariant() != GameVariant.MS_PACMAN_TENGEN) {
                 return InfoText.NO_INFO;
             }
@@ -45,20 +45,20 @@ public class InfoBoxGameInfo extends InfoBox {
                 mapColorScheme.get("fill"), mapColorScheme.get("stroke"), mapColorScheme.get("pellet"));
         }));
 
-        labeledValue("Lives",           ifLevelPresent(level -> "%d".formatted(context.game().lives())));
+        addLabeledValue("Lives",           ifLevelPresent(level -> "%d".formatted(context.game().lives())));
 
-        labeledValue("Hunting Phase",   ifLevelPresent(this::fmtHuntingPhase));
-        labeledValue("",                ifLevelPresent(this::fmtHuntingTicksRunning));
-        labeledValue("",                ifLevelPresent(this::fmtHuntingTicksRemaining));
+        addLabeledValue("Hunting Phase",   ifLevelPresent(this::fmtHuntingPhase));
+        addLabeledValue("",                ifLevelPresent(this::fmtHuntingTicksRunning));
+        addLabeledValue("",                ifLevelPresent(this::fmtHuntingTicksRemaining));
 
-        labeledValue("Pac-Man speed",   ifLevelPresent(this::fmtPacNormalSpeed));
-        labeledValue("- empowered",     ifLevelPresent(this::fmtPacSpeedPowered));
-        labeledValue("Power Duration",  ifLevelPresent(this::fmtPacPowerTime));
-        labeledValue("Pellets",         ifLevelPresent(this::fmtPelletCount));
-        labeledValue("Ghost speed",     ifLevelPresent(this::fmtGhostAttackSpeed));
-        labeledValue("- frightened",    ifLevelPresent(this::fmtGhostSpeedFrightened));
-        labeledValue("- in tunnel",     ifLevelPresent(this::fmtGhostSpeedTunnel));
-        labeledValue("Maze flashings",  ifLevelPresent(this::fmtNumFlashes));
+        addLabeledValue("Pac-Man speed",   ifLevelPresent(this::fmtPacNormalSpeed));
+        addLabeledValue("- empowered",     ifLevelPresent(this::fmtPacSpeedPowered));
+        addLabeledValue("Power Duration",  ifLevelPresent(this::fmtPacPowerTime));
+        addLabeledValue("Pellets",         ifLevelPresent(this::fmtPelletCount));
+        addLabeledValue("Ghost speed",     ifLevelPresent(this::fmtGhostAttackSpeed));
+        addLabeledValue("- frightened",    ifLevelPresent(this::fmtGhostSpeedFrightened));
+        addLabeledValue("- in tunnel",     ifLevelPresent(this::fmtGhostSpeedTunnel));
+        addLabeledValue("Maze flashings",  ifLevelPresent(this::fmtNumFlashes));
     }
 
     private String stateTimerInfo() {

@@ -16,25 +16,25 @@ public class InfoBoxKeys extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        labeledValue("F1, Alt+B", "Dashboard On/Off");
-        labeledValue("F2", "Pic-in-Pic On/Off");
-        labeledValue("F3", "Reboot");
-        labeledValue("Alt+A", "Autopilot On/Off");
-        labeledValue("Alt+C", "Play Cut-Scenes");
-        labeledValue("Alt+E", "Eat All Pellets");
-        labeledValue("Alt+I", "Player Immunity On/Off");
-        labeledValue("Alt+M", "Mute On/Off");
-        labeledValue("Alt+L", "Add 3 Lives");
-        labeledValue("Alt+N", "Next Level");
-        labeledValue("Alt+X", "Kill Hunting Ghosts");
-        labeledValue("Alt+3", "3D Play Scene On/Off");
-        labeledValue("P", "Pause On/Off");
-        labeledValue("Shift+P, SPACE", "Single Step");
-        labeledValue("Q", "Return to Intro");
+        addLabeledValue("F1, Alt+B", "Dashboard On/Off");
+        addLabeledValue("F2", "Pic-in-Pic On/Off");
+        addLabeledValue("F3", "Reboot");
+        addLabeledValue("Alt+A", "Autopilot On/Off");
+        addLabeledValue("Alt+C", "Play Cut-Scenes");
+        addLabeledValue("Alt+E", "Eat All Pellets");
+        addLabeledValue("Alt+I", "Player Immunity On/Off");
+        addLabeledValue("Alt+M", "Mute On/Off");
+        addLabeledValue("Alt+L", "Add 3 Lives");
+        addLabeledValue("Alt+N", "Next Level");
+        addLabeledValue("Alt+X", "Kill Hunting Ghosts");
+        addLabeledValue("Alt+3", "3D Play Scene On/Off");
+        addLabeledValue("P", "Pause On/Off");
+        addLabeledValue("Shift+P, SPACE", "Single Step");
+        addLabeledValue("Q", "Return to Intro");
 
-        labeledValue("Start Screen Keys:", "");
-        labeledValue("V, RIGHT, LEFT", "Switch Game Variant");
-        labeledValue("1", "Start Playing");
-        labeledValue("5", "Add Credit");
+        addLabeledValue("Start Screen Keys:", "");
+        addLabeledValue("V, RIGHT, LEFT", "Switch Game Variant");
+        addLabeledValue("1", "Start Playing");
+        addLabeledValue("5", "Add Credit");
     }
 }

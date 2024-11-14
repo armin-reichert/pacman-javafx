@@ -17,17 +17,17 @@ public class InfoBoxJoypad extends InfoBox {
         JoypadKeyAdapter joypad = context.joypad();
         setContentTextFont(Font.font("Monospace", 16));
         String indent = "  "; // Urgh
-        labeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(
+        addLabeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(
             indent,
             joypad.keyCombination(NES.Joypad.SELECT).getDisplayText(),
             joypad.keyCombination(NES.Joypad.START).getDisplayText())
         );
-        labeledValue("[B]  [A]", () -> "%s%s   %s".formatted(
+        addLabeledValue("[B]  [A]", () -> "%s%s   %s".formatted(
             indent,
             joypad.keyCombination(NES.Joypad.B).getDisplayText(),
             joypad.keyCombination(NES.Joypad.A).getDisplayText())
         );
-        labeledValue("UP/DOWN/LEFT/RIGHT", () -> "%s%s  %s  %s  %s".formatted(
+        addLabeledValue("UP/DOWN/LEFT/RIGHT", () -> "%s%s  %s  %s  %s".formatted(
             indent,
             joypad.keyCombination(NES.Joypad.UP).getDisplayText(),
             joypad.keyCombination(NES.Joypad.DOWN).getDisplayText(),

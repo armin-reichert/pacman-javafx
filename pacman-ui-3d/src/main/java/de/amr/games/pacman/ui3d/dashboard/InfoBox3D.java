@@ -57,42 +57,42 @@ public class InfoBox3D extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        cbUsePlayScene3D     = checkBox("3D Play Scene");
-        pickerLightColor     = colorPicker("Light Color", PY_3D_LIGHT_COLOR.get());
-        pickerFloorColor     = colorPicker("Floor Color", PY_3D_FLOOR_COLOR.get());
-        comboFloorTexture    = comboBox("Floor Texture", floorTextureComboBoxEntries());
-        comboPerspectives    = comboBox("Perspective", Perspective.Name.values());
-        labeledValue("Camera",        this::sceneCameraInfo);
-        labeledValue("Viewport Size", this::sceneViewportSizeInfo);
-        labeledValue("Scene Size",    this::sceneSizeInfo);
-        cbPiPOn              = checkBox("Picture-In-Picture");
-        sliderPiPSceneHeight = slider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get(), false, false);
-        sliderPiPOpacity     = slider("- Opacity", 0, 100, PY_PIP_OPACITY_PERCENT.get(), false, false);
-        sliderWallHeight     = slider("Obstacle Height", 0, 16, PY_3D_WALL_HEIGHT.get(), false, false);
-        sliderWallOpacity    = slider("Wall Opacity", 0, 1, PY_3D_WALL_OPACITY.get(), false, false);
-        cbEnergizerExplodes  = checkBox("Energizer Explosion");
-        comboNightMode       = comboBox("Night Mode", NightMode.values());
-        cbPacLighted         = checkBox("Pac-Man Lighted");
-        cbAxesVisible        = checkBox("Show Axes");
-        cbWireframeMode      = checkBox("Wireframe Mode");
+        cbUsePlayScene3D     = addCheckBox("3D Play Scene");
+        pickerLightColor     = addColorPicker("Light Color", PY_3D_LIGHT_COLOR.get());
+        pickerFloorColor     = addColorPicker("Floor Color", PY_3D_FLOOR_COLOR.get());
+        comboFloorTexture    = addComboBox("Floor Texture", floorTextureComboBoxEntries());
+        comboPerspectives    = addComboBox("Perspective", Perspective.Name.values());
+        addLabeledValue("Camera",        this::sceneCameraInfo);
+        addLabeledValue("Viewport Size", this::sceneViewportSizeInfo);
+        addLabeledValue("Scene Size",    this::sceneSizeInfo);
+        cbPiPOn              = addCheckBox("Picture-In-Picture");
+        sliderPiPSceneHeight = adddSlider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get(), false, false);
+        sliderPiPOpacity     = adddSlider("- Opacity", 0, 100, PY_PIP_OPACITY_PERCENT.get(), false, false);
+        sliderWallHeight     = adddSlider("Obstacle Height", 0, 16, PY_3D_WALL_HEIGHT.get(), false, false);
+        sliderWallOpacity    = adddSlider("Wall Opacity", 0, 1, PY_3D_WALL_OPACITY.get(), false, false);
+        cbEnergizerExplodes  = addCheckBox("Energizer Explosion");
+        comboNightMode       = addComboBox("Night Mode", NightMode.values());
+        cbPacLighted         = addCheckBox("Pac-Man Lighted");
+        cbAxesVisible        = addCheckBox("Show Axes");
+        cbWireframeMode      = addCheckBox("Wireframe Mode");
 
         setTooltip(sliderPiPSceneHeight, sliderPiPSceneHeight.valueProperty(), "%.0f px");
         setTooltip(sliderPiPOpacity, sliderPiPOpacity.valueProperty(), "%.0f %%");
 
-        assignEditor(pickerLightColor, PY_3D_LIGHT_COLOR);
-        assignEditor(pickerFloorColor, PY_3D_FLOOR_COLOR);
-        assignEditor(pickerLightColor, PY_3D_LIGHT_COLOR);
-        assignEditor(comboFloorTexture, PY_3D_FLOOR_TEXTURE);
-        assignEditor(sliderPiPSceneHeight, PY_PIP_HEIGHT);
-        assignEditor(sliderPiPOpacity, PY_PIP_OPACITY_PERCENT);
-        assignEditor(sliderWallHeight, PY_3D_WALL_HEIGHT);
-        assignEditor(sliderWallOpacity, PY_3D_WALL_OPACITY);
-        assignEditor(cbPiPOn, PY_PIP_ON);
-        assignEditor(comboPerspectives, PY_3D_PERSPECTIVE);
-        assignEditor(cbEnergizerExplodes, PY_3D_ENERGIZER_EXPLODES);
-        assignEditor(comboNightMode, PY_NIGHT_MODE);
-        assignEditor(cbPacLighted, PY_3D_PAC_LIGHT_ENABLED);
-        assignEditor(cbAxesVisible, PY_3D_AXES_VISIBLE);
+        setEditor(pickerLightColor, PY_3D_LIGHT_COLOR);
+        setEditor(pickerFloorColor, PY_3D_FLOOR_COLOR);
+        setEditor(pickerLightColor, PY_3D_LIGHT_COLOR);
+        setEditor(comboFloorTexture, PY_3D_FLOOR_TEXTURE);
+        setEditor(sliderPiPSceneHeight, PY_PIP_HEIGHT);
+        setEditor(sliderPiPOpacity, PY_PIP_OPACITY_PERCENT);
+        setEditor(sliderWallHeight, PY_3D_WALL_HEIGHT);
+        setEditor(sliderWallOpacity, PY_3D_WALL_OPACITY);
+        setEditor(cbPiPOn, PY_PIP_ON);
+        setEditor(comboPerspectives, PY_3D_PERSPECTIVE);
+        setEditor(cbEnergizerExplodes, PY_3D_ENERGIZER_EXPLODES);
+        setEditor(comboNightMode, PY_NIGHT_MODE);
+        setEditor(cbPacLighted, PY_3D_PAC_LIGHT_ENABLED);
+        setEditor(cbAxesVisible, PY_3D_AXES_VISIBLE);
 
         //TODO check these
         cbUsePlayScene3D.setOnAction(e -> GameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute(context));

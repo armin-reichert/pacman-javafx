@@ -43,13 +43,13 @@ public class InfoBoxGameControl extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        spinnerCredit      = integerSpinner("Credit", 0, context.gameController().coinControl().maxCoins(), 0);
-        comboGameVariant   = comboBox("Variant", GameVariant.values());
-        comboInitialLives  = comboBox("Initial Lives", new Integer[] {3, 5});
-        bgLevelActions     = buttonList("Game Level", "Start", "Quit", "Next");
-        bgCutScenesTest    = buttonList("Cut Scenes Test", "Start", "Quit");
-        cbAutopilot        = checkBox("Autopilot");
-        cbImmunity         = checkBox("Pac-Man Immune");
+        spinnerCredit      = addIntSpinner("Credit", 0, context.gameController().coinControl().maxCoins(), 0);
+        comboGameVariant   = addComboBox("Variant", GameVariant.values());
+        comboInitialLives  = addComboBox("Initial Lives", new Integer[] {3, 5});
+        bgLevelActions     = addButtonList("Game Level", "Start", "Quit", "Next");
+        bgCutScenesTest    = addButtonList("Cut Scenes Test", "Start", "Quit");
+        cbAutopilot        = addCheckBox("Autopilot");
+        cbImmunity         = addCheckBox("Pac-Man Immune");
 
         spinnerCredit.valueProperty().addListener((py, ov, number) -> context.gameController().coinControl().setNumCoins(number));
 
@@ -67,8 +67,8 @@ public class InfoBoxGameControl extends InfoBox {
         setAction(bgLevelActions[GAME_LEVEL_NEXT],        () -> GameActions2D.CHEAT_NEXT_LEVEL.execute(context));
         setAction(comboInitialLives,                      () -> context.game().setInitialLives(comboInitialLives.getValue()));
 
-        assignEditor(cbAutopilot, PY_AUTOPILOT);
-        assignEditor(cbImmunity, PY_IMMUNITY);
+        setEditor(cbAutopilot, PY_AUTOPILOT);
+        setEditor(cbImmunity, PY_IMMUNITY);
     }
 
     @Override

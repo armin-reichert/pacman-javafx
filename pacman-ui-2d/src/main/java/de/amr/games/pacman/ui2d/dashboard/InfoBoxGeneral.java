@@ -7,7 +7,8 @@ package de.amr.games.pacman.ui2d.dashboard;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
@@ -23,13 +24,6 @@ public class InfoBoxGeneral extends InfoBox {
     public static final int MAX_FRAME_RATE = 120;
 
     private Button[] bgSimulation;
-    private Spinner<Integer> spinnerSimulationSteps;
-    private Slider sliderTargetFPS;
-    private ColorPicker pickerCanvasColor;
-    private CheckBox cbCanvasImageSmoothing;
-    private CheckBox cbCanvasFontSmoothing;
-    private CheckBox cbDebugUI;
-    private CheckBox cbTimeMeasured;
 
     private final Tooltip tooltipPlay = new Tooltip("Play");
     private final Tooltip tooltipStop = new Tooltip("Stop");
@@ -46,18 +40,18 @@ public class InfoBoxGeneral extends InfoBox {
         iconStop = new ImageView(context.assets().image("icon.stop"));
         iconStep = new ImageView(context.assets().image("icon.step"));
 
-        labeledValue("Java Version",   Runtime.version().toString());
-        labeledValue("JavaFX Version", System.getProperty("javafx.runtime.version"));
-        bgSimulation                   = buttonList("Simulation", "Pause", "Step(s)");
-        spinnerSimulationSteps         = integerSpinner("Num Steps", 1, 50, PY_SIMULATION_STEPS);
-        sliderTargetFPS                = slider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
-        labeledValue("",               () -> "FPS: %.1f (Tgt: %.1f)".formatted(clock.getActualFrameRate(), clock.getTargetFrameRate()));
-        labeledValue("Total Updates",  clock::getUpdateCount);
-        pickerCanvasColor              = colorPicker("Canvas Color", PY_CANVAS_BG_COLOR.get());
-        cbCanvasImageSmoothing         = checkBox("Image Smoothing");
-        cbCanvasFontSmoothing          = checkBox("Font Smoothing");
-        cbDebugUI                      = checkBox("Show Debug Info");
-        cbTimeMeasured                 = checkBox("Time Measured");
+        addLabeledValue("Java Version",   Runtime.version().toString());
+        addLabeledValue("JavaFX Version", System.getProperty("javafx.runtime.version"));
+        bgSimulation = addButtonList("Simulation", "Pause", "Step(s)");
+        addIntSpinner("Num Steps", 1, 50, PY_SIMULATION_STEPS);
+        var sliderTargetFPS = adddSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
+        addLabeledValue("", () -> "FPS: %.1f (Tgt: %.1f)".formatted(clock.getActualFrameRate(), clock.getTargetFrameRate()));
+        addLabeledValue("Total Updates",  clock::getUpdateCount);
+        var pickerCanvasColor = addColorPicker("Canvas Color", PY_CANVAS_BG_COLOR.get());
+        var cbCanvasImageSmoothing = addCheckBox("Image Smoothing");
+        var cbCanvasFontSmoothing = addCheckBox("Font Smoothing");
+        var cbDebugUI = addCheckBox("Show Debug Info");
+        var cbTimeMeasured = addCheckBox("Time Measured");
 
         Button btnPlayPause = bgSimulation[0];
         btnPlayPause.setGraphic(iconPlay);
@@ -72,12 +66,12 @@ public class InfoBoxGeneral extends InfoBox {
 
         setAction(bgSimulation[0], () -> GameActions2D.TOGGLE_PAUSED.execute(context));
         setAction(bgSimulation[1], () -> clock.makeSteps(PY_SIMULATION_STEPS.get(), true));
-        assignEditor(sliderTargetFPS, clock.targetFrameRatePy);
-        assignEditor(pickerCanvasColor, PY_CANVAS_BG_COLOR);
-        assignEditor(cbCanvasImageSmoothing, PY_CANVAS_IMAGE_SMOOTHING);
-        assignEditor(cbCanvasFontSmoothing, PY_CANVAS_FONT_SMOOTHING);
-        assignEditor(cbDebugUI, PY_DEBUG_INFO_VISIBLE);
-        assignEditor(cbTimeMeasured, clock.timeMeasuredPy);
+        setEditor(sliderTargetFPS, clock.targetFrameRatePy);
+        setEditor(pickerCanvasColor, PY_CANVAS_BG_COLOR);
+        setEditor(cbCanvasImageSmoothing, PY_CANVAS_IMAGE_SMOOTHING);
+        setEditor(cbCanvasFontSmoothing, PY_CANVAS_FONT_SMOOTHING);
+        setEditor(cbDebugUI, PY_DEBUG_INFO_VISIBLE);
+        setEditor(cbTimeMeasured, clock.timeMeasuredPy);
     }
 
     @Override

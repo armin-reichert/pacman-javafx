@@ -30,22 +30,22 @@ public class InfoBoxActorInfo extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        labeledValue("Pac Name", pacInfo((game, pac) -> pac.name()));
-        labeledValue("Movement", pacInfo(this::movementInfo));
-        labeledValue("Tile",     pacInfo(this::locationInfo));
-        labeledValue("Power",    ifLevelPresent(level -> {
+        addLabeledValue("Pac Name", pacInfo((game, pac) -> pac.name()));
+        addLabeledValue("Movement", pacInfo(this::movementInfo));
+        addLabeledValue("Tile",     pacInfo(this::locationInfo));
+        addLabeledValue("Power",    ifLevelPresent(level -> {
             TickTimer powerTimer = level.powerTimer();
             return powerTimer.isRunning()
                 ? "Remaining: %s".formatted(ticksToString(powerTimer.remainingTicks()))
                 : "No Power";
         }));
-        emptyRow();
+        addEmptyRow();
         ghostInfo(GameModel.RED_GHOST);
-        emptyRow();
+        addEmptyRow();
         ghostInfo(GameModel.PINK_GHOST);
-        emptyRow();
+        addEmptyRow();
         ghostInfo(GameModel.CYAN_GHOST);
-        emptyRow();
+        addEmptyRow();
         ghostInfo(GameModel.ORANGE_GHOST);
     }
 
@@ -74,10 +74,10 @@ public class InfoBoxActorInfo extends InfoBox {
     }
 
     private void ghostInfo(byte ghostID) {
-        labeledValue(ghostColorName(ghostID) + " Ghost", fnGhostInfo(this::ghostNameAndState, ghostID));
-        labeledValue("Animation",      fnGhostInfo(this::ghostAnimation, ghostID));
-        labeledValue("Movement",       fnGhostInfo(this::movementInfo, ghostID));
-        labeledValue("Tile",           fnGhostInfo(this::locationInfo, ghostID));
+        addLabeledValue(ghostColorName(ghostID) + " Ghost", fnGhostInfo(this::ghostNameAndState, ghostID));
+        addLabeledValue("Animation",      fnGhostInfo(this::ghostAnimation, ghostID));
+        addLabeledValue("Movement",       fnGhostInfo(this::movementInfo, ghostID));
+        addLabeledValue("Tile",           fnGhostInfo(this::locationInfo, ghostID));
     }
 
     private Supplier<String> fnGhostInfo(
