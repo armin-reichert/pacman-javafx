@@ -38,7 +38,7 @@ public class PacManGameRenderer implements GameRenderer {
     public PacManGameRenderer(AssetStorage assets, Canvas canvas) {
         this.assets = checkNotNull(assets);
         this.canvas = checkNotNull(canvas);
-        canvas.getGraphicsContext2D().setImageSmoothing(true);
+        canvas.getGraphicsContext2D().setImageSmoothing(false);
         spriteSheet = assets.get("pacman.spritesheet");
         flashingMazeImage = assets.image("pacman.flashing_maze");
     }

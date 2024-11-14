@@ -48,6 +48,7 @@ public class MsPacManGameRenderer implements GameRenderer {
         this.assets = checkNotNull(assets);
         this.canvas = checkNotNull(canvas);
         flashingMazesImage = assets.get("ms_pacman.flashing_mazes");
+        canvas.getGraphicsContext2D().setImageSmoothing(false);
     }
 
     @Override
