@@ -74,6 +74,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
     private final Canvas canvas;
+
     private Color bgColor = Color.BLACK;
     private ImageArea mapSprite;
     private boolean blinkingOn;
@@ -228,7 +229,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             case 6 -> 37;
             default -> throw new IllegalArgumentException("Illegal MINI map number: " + config.mapNumber());
         };
-        return nonArcadeMap(spriteNumber);
+        return nonArcadeMapSprite(spriteNumber);
     }
 
     private ImageArea bigMapSprite(MapConfig config) {
@@ -246,20 +247,20 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             case 11 -> 33;
             default -> throw new IllegalArgumentException("Illegal BIG map number: " + config.mapNumber());
         };
-        return nonArcadeMap(spriteNumber);
+        return nonArcadeMapSprite(spriteNumber);
     }
 
     private ImageArea strangeMapSprite(MapConfig config) {
         // Dirty hack, don't tell Mommy! See MapConfigurationManager.
         int spriteNumber = Integer.parseInt(config.worldMap().terrain().getProperty("levelNumber"));
-        return nonArcadeMap(spriteNumber);
+        return nonArcadeMapSprite(spriteNumber);
     }
 
     /**
      * @param spriteNumber number (1 based) of map sprite in sprite sheet (row-wise)
      * @return map sprite in non-Arcade maps sprite sheet
      */
-    private ImageArea nonArcadeMap(int spriteNumber) {
+    private ImageArea nonArcadeMapSprite(int spriteNumber) {
         int columnIndex, y;
         switch (spriteNumber) {
             case 1,2,3,4,5,6,7,8            -> { columnIndex = (spriteNumber - 1);  y = 0;    }
@@ -351,24 +352,21 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
         // All maps with a different color scheme than that in the sprite sheet have to be rendered using the
         // generic vector renderer for now.
-        // TODO: Improve renderer because this currently looks bad for specific maps.
+        // TODO: Improve renderer because vector rendering still looks really bad for some maps.
         boolean mapSpriteExists = context.game().isDemoLevel() || isMapImageAvailable(context.level().number, game.mapCategory());
-        if (mapSpriteExists)
-        {
-            drawLevelMessage(context);
-            // Strange map #15 has psychedelic animation
-            if (level.mapConfig().mapCategory() == MapCategory.STRANGE && level.mapConfig().mapNumber() == 15) {
-                drawStrangeMap15(context.tick(), 8, mazeX, mazeY);
-            } else {
-                RectArea sprite = mapSprite.area();
-                ctx().drawImage(mapSprite.source(),
-                    sprite.x(), sprite.y(),
-                    sprite.width(), sprite.height(),
-                    scaled(mazeX), scaled(mazeY),
-                    scaled(sprite.width()), scaled(sprite.height())
-                );
-            }
-            cleanHouse(level.world());
+        if (mapSpriteExists) {
+            drawLevelMessage(context); // message appears behind map!
+            RectArea sprite = level.mapConfig().mapCategory() == MapCategory.STRANGE && level.mapConfig().mapNumber() == 15
+                ? STRANGE_MAP_15_SPRITES[strangeMap15AnimationFrame(context.tick())] // Strange map #15 psychedelic animation
+                : mapSprite.area();
+            ctx().drawImage(mapSprite.source(),
+                sprite.x(), sprite.y(),
+                sprite.width(), sprite.height(),
+                scaled(mazeX), scaled(mazeY),
+                scaled(sprite.width()), scaled(sprite.height())
+            );
+            overPaintActors(level.world());
+            //TODO over-painting pellets also over-paints moving message!
             ctx().save();
             ctx().scale(scaling(), scaling());
             overPaintEatenPellets(world);
@@ -391,13 +389,8 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     }
 
     // Animation frames: (0, 1, 2, 1)+
-    private void drawStrangeMap15(long tick, int frameTicks, double x, double y) {
-        int frameIndex = (int) ( (tick % (STRANGE_MAP_15_SPRITES.length * frameTicks)) / frameTicks );
-        RectArea sprite = STRANGE_MAP_15_SPRITES[frameIndex];
-        ctx().drawImage(mapSprite.source(),
-            sprite.x(), sprite.y(), sprite.width(), sprite.height(),
-            scaled(x), scaled(y), scaled(sprite.width()), scaled(sprite.height())
-        );
+    private int strangeMap15AnimationFrame(long tick) {
+        return (int) ( (tick % (STRANGE_MAP_15_SPRITES.length * 8)) / 8);
     }
 
     //TODO too much game logic in here
@@ -425,7 +418,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             game.mapCategory() == MapCategory.ARCADE;
     }
 
-    private void cleanHouse(GameWorld world) {
+    private void overPaintActors(GameWorld world) {
         Vector2f topLeftPosition = world.houseTopLeftTile().plus(1, 2).scaled(TS * scaling());
         Vector2f size = new Vector2i(world.houseSize().x() - 2, 2).scaled(TS * scaling());
         ctx().setFill(bgColor);
