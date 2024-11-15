@@ -92,8 +92,11 @@ public abstract class GameScene2D implements GameScene {
     protected void drawDebugInfo(GameRenderer renderer) {}
 
     public void draw() {
-        //TODO updating the renderer on every draw call is very inefficient
+        long start = System.nanoTime();
         context.game().level().ifPresent(gr::update);
+        long duration = System.nanoTime() - start;
+        Logger.debug(() -> "Update renderer took %.3f millis".formatted(duration * 1e-6));
+
         gr.setScaling(scaling());
         gr.setBackgroundColor(backgroundColor());
         gr.clearCanvas();

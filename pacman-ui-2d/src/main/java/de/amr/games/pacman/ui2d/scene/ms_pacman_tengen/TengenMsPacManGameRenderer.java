@@ -105,6 +105,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void update(GameLevel level) {
+        // this method should be fast because it is called in every frame
         MapConfig mapConfig = level.mapConfig();
         MapCategory category = (MapCategory) mapConfig.mapCategory();
         mapSprite = switch (category) {
