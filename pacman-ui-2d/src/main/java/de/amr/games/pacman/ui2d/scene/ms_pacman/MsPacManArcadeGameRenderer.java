@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
@@ -94,11 +93,7 @@ public class MsPacManArcadeGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void update(GameModel game) {
-        if (game.level().isEmpty()) {
-            return;
-        }
-        GameLevel level = game.level().get();
+    public void update(GameLevel level) {
         if (level.mapConfig() != null) {
             // select map sprites for current color scheme
             var colorScheme = level.mapConfig().colorScheme();

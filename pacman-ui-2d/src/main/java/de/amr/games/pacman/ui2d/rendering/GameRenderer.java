@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
@@ -37,7 +38,7 @@ import static java.util.function.Predicate.not;
  */
 public interface GameRenderer {
 
-    void update(GameModel game);
+    void update(GameLevel level);
     AssetStorage assets();
     Color backgroundColor();
     void setBackgroundColor(Color color);

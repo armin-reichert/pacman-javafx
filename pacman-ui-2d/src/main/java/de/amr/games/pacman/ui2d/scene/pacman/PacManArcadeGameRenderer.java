@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.pacman;
 
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -78,7 +79,7 @@ public class PacManArcadeGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void update(GameModel game) {}
+    public void update(GameLevel level) {}
 
     @Override
     public Vector2f getMessageAnchorPosition() {

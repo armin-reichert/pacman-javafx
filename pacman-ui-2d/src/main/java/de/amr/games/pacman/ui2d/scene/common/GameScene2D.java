@@ -88,10 +88,12 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected abstract void drawSceneContent(GameRenderer renderer);
+
     protected void drawDebugInfo(GameRenderer renderer) {}
 
     public void draw() {
-        gr.update(context.game());
+        //TODO updating the renderer on every draw call is very inefficient
+        context.game().level().ifPresent(gr::update);
         gr.setScaling(scaling());
         gr.setBackgroundColor(backgroundColor());
         gr.clearCanvas();

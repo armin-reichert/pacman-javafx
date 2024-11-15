@@ -104,12 +104,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void update(GameModel game) {
-        if (game.level().isEmpty()) {
-            Logger.debug("Cannot update renderer, no game level exists");
-            return;
-        }
-        GameLevel level = game.level().get();
+    public void update(GameLevel level) {
         MapConfig mapConfig = level.mapConfig();
         MapCategory category = (MapCategory) mapConfig.mapCategory();
         mapSprite = switch (category) {

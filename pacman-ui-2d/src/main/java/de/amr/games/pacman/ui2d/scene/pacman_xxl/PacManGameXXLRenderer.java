@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui2d.scene.pacman_xxl;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -99,7 +100,7 @@ public class PacManGameXXLRenderer implements GameRenderer {
     }
 
     @Override
-    public void update(GameModel game) {}
+    public void update(GameLevel level) {}
 
     @Override
     public void drawWorld(GameContext context, GameWorld world, double x, double y) {

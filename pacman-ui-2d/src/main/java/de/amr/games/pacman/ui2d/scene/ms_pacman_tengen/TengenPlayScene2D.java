@@ -313,7 +313,8 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void draw() {
-        gr.update(context.game());
+        //TODO updating the renderer on every draw call is very inefficient
+        context.game().level().ifPresent(gr::update);
         gr.setScaling(scaling());
         gr.setBackgroundColor(backgroundColor());
         gr.clearCanvas();
