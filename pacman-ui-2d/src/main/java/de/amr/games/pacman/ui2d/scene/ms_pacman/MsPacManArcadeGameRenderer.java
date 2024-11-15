@@ -32,6 +32,33 @@ import static de.amr.games.pacman.lib.RectArea.rect;
  */
 public class MsPacManArcadeGameRenderer implements GameRenderer {
 
+    private static final RectArea[] MAPS_WITH_FOOD_SPRITES = {
+            rect(0,     0, 226, 248),
+            rect(0,   248, 226, 248),
+            rect(0, 2*248, 226, 248),
+            rect(0, 3*248, 226, 248),
+            rect(0, 4*248, 226, 248),
+            rect(0, 5*248, 226, 248),
+    };
+
+    private static final RectArea[] MAPS_WITHOUT_FOOD_SPRITES = {
+            rect(228,     0, 226, 248),
+            rect(228,   248, 226, 248),
+            rect(228, 2*248, 226, 248),
+            rect(228, 3*248, 226, 248),
+            rect(228, 4*248, 226, 248),
+            rect(228, 5*258, 226, 248),
+    };
+
+    private static final RectArea[] FLASHING_MAP_SPRITES = {
+            rect(0,     0, 226, 248),
+            rect(0,   248, 226, 248),
+            rect(0, 2*248, 226, 248),
+            rect(0, 3*248, 226, 248),
+            rect(0, 4*248, 226, 248),
+            rect(0, 5*248, 226, 248),
+    };
+
     private final AssetStorage assets;
     private final Canvas canvas;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
@@ -109,33 +136,6 @@ public class MsPacManArcadeGameRenderer implements GameRenderer {
             }
         }
     }
-
-    private static final RectArea[] MAPS_WITH_FOOD_SPRITES = {
-            rect(0,     0, 226, 248),
-            rect(0,   248, 226, 248),
-            rect(0, 2*248, 226, 248),
-            rect(0, 3*248, 226, 248),
-            rect(0, 4*248, 226, 248),
-            rect(0, 5*248, 226, 248),
-    };
-
-    private static final RectArea[] MAPS_WITHOUT_FOOD_SPRITES = {
-            rect(228,     0, 226, 248),
-            rect(228,   248, 226, 248),
-            rect(228, 2*248, 226, 248),
-            rect(228, 3*248, 226, 248),
-            rect(228, 4*248, 226, 248),
-            rect(228, 5*258, 226, 248),
-    };
-
-    private static final RectArea[] FLASHING_MAP_SPRITES = {
-            rect(0,     0, 226, 248),
-            rect(0,   248, 226, 248),
-            rect(0, 2*248, 226, 248),
-            rect(0, 3*248, 226, 248),
-            rect(0, 4*248, 226, 248),
-            rect(0, 5*248, 226, 248),
-    };
 
     @Override
     public void drawWorld(GameContext context, GameWorld world, double x, double y) {
