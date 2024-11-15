@@ -25,7 +25,7 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.imageArea;
+import static de.amr.games.pacman.lib.RectArea.rect;
 
 /**
  * @author Armin Reichert
@@ -35,8 +35,9 @@ public class MsPacManArcadeGameRenderer implements GameRenderer {
     private final AssetStorage assets;
     private final Canvas canvas;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
-    private ImageArea mapWithFoodSprite;
-    private ImageArea mapWithoutFoodSprite;
+    private final Image flashingMazesImage;
+    private RectArea mapWithFoodSprite;
+    private RectArea mapWithoutFoodSprite;
     private ImageArea mapFlashingSprite;
     private boolean flashMode;
     private boolean blinkingOn;
@@ -45,6 +46,7 @@ public class MsPacManArcadeGameRenderer implements GameRenderer {
     public MsPacManArcadeGameRenderer(AssetStorage assets, Canvas canvas) {
         this.assets = checkNotNull(assets);
         this.canvas = checkNotNull(canvas);
+        flashingMazesImage = assets.get("ms_pacman.flashing_mazes");
     }
 
     @Override
@@ -99,14 +101,41 @@ public class MsPacManArcadeGameRenderer implements GameRenderer {
             var colorScheme = level.mapConfig().colorScheme();
             int index = MapConfigurationManager.colorSchemeIndex(colorScheme);
             if (index != -1) {
-                mapWithFoodSprite = spriteSheet().imageArea(0, index * 248, 226, 248);
-                mapWithoutFoodSprite = spriteSheet().imageArea(228, index * 248, 226, 248);
-                mapFlashingSprite = imageArea(assets.get("ms_pacman.flashing_mazes"), 0, index * 248, 226, 248);
+                mapWithFoodSprite    = MAPS_WITH_FOOD_SPRITES[index];
+                mapWithoutFoodSprite = MAPS_WITHOUT_FOOD_SPRITES[index];
+                mapFlashingSprite    =  new ImageArea(flashingMazesImage, FLASHING_MAP_SPRITES[index]);
             } else {
                 Logger.error("Could not identify color scheme {}", colorScheme);
             }
         }
     }
+
+    private static final RectArea[] MAPS_WITH_FOOD_SPRITES = {
+            rect(0,     0, 226, 248),
+            rect(0,   248, 226, 248),
+            rect(0, 2*248, 226, 248),
+            rect(0, 3*248, 226, 248),
+            rect(0, 4*248, 226, 248),
+            rect(0, 5*248, 226, 248),
+    };
+
+    private static final RectArea[] MAPS_WITHOUT_FOOD_SPRITES = {
+            rect(228,     0, 226, 248),
+            rect(228,   248, 226, 248),
+            rect(228, 2*248, 226, 248),
+            rect(228, 3*248, 226, 248),
+            rect(228, 4*248, 226, 248),
+            rect(228, 5*258, 226, 248),
+    };
+
+    private static final RectArea[] FLASHING_MAP_SPRITES = {
+            rect(0,     0, 226, 248),
+            rect(0,   248, 226, 248),
+            rect(0, 2*248, 226, 248),
+            rect(0, 3*248, 226, 248),
+            rect(0, 4*248, 226, 248),
+            rect(0, 5*248, 226, 248),
+    };
 
     @Override
     public void drawWorld(GameContext context, GameWorld world, double x, double y) {
@@ -114,12 +143,12 @@ public class MsPacManArcadeGameRenderer implements GameRenderer {
             if (blinkingOn) {
                 drawSubImageScaled(mapFlashingSprite.source(), mapFlashingSprite.area(), x - 3, y); //TODO: WTF
             } else {
-                drawSubImageScaled(mapWithoutFoodSprite.source(), mapWithoutFoodSprite.area(), x, y);
+                drawSpriteScaled(mapWithoutFoodSprite, x, y);
             }
         } else {
             ctx().save();
             ctx().scale(scalingPy.get(), scalingPy.get());
-            drawSpriteUnscaled(mapWithFoodSprite.area(), x, y);
+            drawSpriteUnscaled(mapWithFoodSprite, x, y);
             overPaintEatenPellets(world);
             overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
             ctx().restore();
