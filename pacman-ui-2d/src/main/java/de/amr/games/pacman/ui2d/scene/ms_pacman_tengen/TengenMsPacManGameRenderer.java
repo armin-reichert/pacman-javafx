@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
@@ -32,6 +31,7 @@ import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -39,6 +39,7 @@ import org.tinylog.Logger;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.RectArea.rect;
 import static de.amr.games.pacman.model.ms_pacman_tengen.NamedMapColorScheme.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static java.util.function.Predicate.not;
@@ -48,23 +49,27 @@ import static java.util.function.Predicate.not;
  */
 public class TengenMsPacManGameRenderer implements GameRenderer {
 
-    public static Color paletteColor(int index) {
-        return Color.web(NES.Palette.color(index));
-    }
+    // Strange map #15 (level 32) has 3 different images to create an animation effect, frame cycle: (0, 1, 2, 1)+
+    private static final RectArea[] STRANGE_MAP_15_SPRITES = {
+        rect(1568,  840, 224, 248), // 0
+        rect(1568, 1088, 224, 248), // 1
+        rect(1568, 1336, 224, 248), // 2
+        rect(1568, 1088, 224, 248), // 1
+    };
 
-    // Blue colors used in intro, dark to brighter blue shade.
-    // Cycles through palette indices 0x01, 0x11, 0x21, 0x31, each frame takes 16 ticks.
-    private static Color shadeOfBlue(long tick) {
-        int i = (int) (tick % 64) / 16;
-        return paletteColor(0x01 + 0x10 * i);
-    }
-
-    // Maze images are taken from files "arcade_mazes.png" and "non_arcade_mazes.png" via AssetStorage
+    // Strange map row counts as they appear in the sprite sheet
+    private static final byte[] MAP_ROW_COUNTS = {
+        31, 31, 31, 31, 31, 31, 30, 31,
+        31, 37, 31, 31, 31, 37, 31, 25,
+        37, 31, 37, 37, 37, 37, 37, 31,
+        37, 37, 31, 25, 31, 25, 31, 31, 37,
+        25, 25, 25, 25,
+    };
 
     private final AssetStorage assets;
     private final TengenMsPacManGameSpriteSheet spriteSheet;
-    private final TengenArcadeMapsSpriteSheet arcadeMapsSpriteSheet;
-    private final TengenNonArcadeMapsSpriteSheet nonArcadeMapSpriteSheet;
+    private final Image arcadeMazeImages;
+    private final Image nonArcadeMazeImages;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
@@ -73,136 +78,47 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     private ImageArea mapSprite;
     private boolean blinkingOn;
     private boolean levelNumberBoxesVisible;
-    private Vector2f messagePosition;
+    private Vector2f messageAnchorPosition;
 
-    public TengenMsPacManGameRenderer(
-            AssetStorage assets,
-            TengenMsPacManGameSpriteSheet spriteSheet,
-            TengenArcadeMapsSpriteSheet arcadeMapsSpriteSheet,
-            TengenNonArcadeMapsSpriteSheet nonArcadeMapSpriteSheet,
-            Canvas canvas) {
-
+    public TengenMsPacManGameRenderer(AssetStorage assets, TengenMsPacManGameSpriteSheet spriteSheet, Canvas canvas) {
         this.assets = checkNotNull(assets);
+        this.spriteSheet = checkNotNull(spriteSheet);
         this.canvas = checkNotNull(canvas);
-        this.spriteSheet = spriteSheet;
-        this.arcadeMapsSpriteSheet = arcadeMapsSpriteSheet;
-        this.nonArcadeMapSpriteSheet = nonArcadeMapSpriteSheet;
-
-        // set default value
-        messagePosition = new Vector2f(14f * TS, 20 * TS);
-
         canvas.getGraphicsContext2D().setImageSmoothing(false);
+        arcadeMazeImages = assets.image("tengen.mazes.arcade");
+        nonArcadeMazeImages = assets.image("tengen.mazes.non_arcade");
+        // set default value
+        messageAnchorPosition = new Vector2f(14f * TS, 20 * TS);
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(bgColor);
         foodRenderer.scalingPy.bind(scalingPy);
     }
 
-    private boolean mapSpriteExists(int levelNumber, MapCategory mapCategory) {
-        return switch (mapCategory) {
-            case ARCADE -> true; // all available in spritesheet
-            case MINI -> false; // TODO use map sprite if level uses color scheme in sprite sheet
-            case BIG -> false; // TODO use map sprite  if level uses color scheme in sprite sheet
-            case STRANGE -> !inRange(levelNumber, 28, 31);
-        };
-    }
-
     @Override
     public void update(GameModel game) {
         if (game.level().isEmpty()) {
-            Logger.debug("Cannot update renderer for game, no level exists");
+            Logger.debug("Cannot update renderer, no game level exists");
             return;
         }
         GameLevel level = game.level().get();
         MapConfig mapConfig = level.mapConfig();
         MapCategory category = (MapCategory) mapConfig.mapCategory();
         mapSprite = switch (category) {
-            case ARCADE  -> arcadeMapSpriteImageArea(mapConfig);
-            case MINI    -> miniMapSpriteImageArea(mapConfig);
-            case BIG     -> bigMapSpriteImageArea(mapConfig);
-            case STRANGE -> strangeMapSpriteImageArea(mapConfig);
+            case ARCADE  -> arcadeMapSprite(mapConfig);
+            case MINI    -> miniMapSprite(mapConfig);
+            case BIG     -> bigMapSprite(mapConfig);
+            case STRANGE -> strangeMapSprite(mapConfig);
         };
-        Logger.debug("Level {}: Using map sprite area #{}", game.level().get().number, mapSprite.area());
+        Logger.debug("Level {}: Using map sprite with area #{}", level.number, mapSprite.area());
 
-        Map<String, String> mapColorScheme = mapConfig.colorScheme();
+        Map<String, String> colorScheme = mapConfig.colorScheme();
         terrainRenderer.setMapBackgroundColor(bgColor);
-        terrainRenderer.setWallStrokeColor(Color.web(mapColorScheme.get("stroke")));
-        terrainRenderer.setWallFillColor(Color.web(mapColorScheme.get("fill")));
-        terrainRenderer.setDoorColor(Color.web(mapColorScheme.get("door")));
-        foodRenderer.setPelletColor(Color.web(mapColorScheme.get("pellet")));
-        foodRenderer.setEnergizerColor(Color.web(mapColorScheme.get("pellet")));
-    }
+        terrainRenderer.setWallStrokeColor(Color.valueOf(colorScheme.get("stroke")));
+        terrainRenderer.setWallFillColor(Color.valueOf(colorScheme.get("fill")));
+        terrainRenderer.setDoorColor(Color.valueOf(colorScheme.get("door")));
 
-    private ImageArea arcadeMapSpriteImageArea(MapConfig config) {
-        var colorScheme = config.colorScheme();
-        return switch (config.mapNumber()) {
-            case 1 -> arcadeMapsSpriteSheet.mapSprite(0, 0);
-            case 2 -> arcadeMapsSpriteSheet.mapSprite(0, 1);
-            case 3 -> {
-                if (colorScheme == MCS_16_20_15_ORANGE_WHITE_RED.get()) {
-                    yield arcadeMapsSpriteSheet.mapSprite(0, 2);
-                }
-                if (colorScheme == MCS_35_28_20_PINK_YELLOW_WHITE.get()) {
-                    yield arcadeMapsSpriteSheet.mapSprite(1, 1);
-                }
-                if (colorScheme == MCS_17_20_20_BROWN_WHITE_WHITE.get()) {
-                    yield arcadeMapsSpriteSheet.mapSprite(2, 0);
-                }
-                if (colorScheme == MCS_0F_20_28_BLACK_WHITE_YELLOW.get()) {
-                    yield arcadeMapsSpriteSheet.mapSprite(2, 2);
-                }
-                throw new IllegalArgumentException("Unknown color scheme for map 3: " + colorScheme);
-            }
-            case 4 -> {
-                if (colorScheme == MCS_01_38_20_BLUE_YELLOW_WHITE.get()) {
-                    yield arcadeMapsSpriteSheet.mapSprite(1, 0);
-                }
-                if (colorScheme == MCS_36_15_20_PINK_RED_WHITE.get()) {
-                    yield arcadeMapsSpriteSheet.mapSprite(1, 2);
-                }
-                if (colorScheme == MCS_13_20_28_VIOLET_WHITE_YELLOW.get()) {
-                    yield arcadeMapsSpriteSheet.mapSprite(2, 1);
-                }
-                throw new IllegalArgumentException("Unknown color scheme for map 4: " + colorScheme);
-            }
-            default -> throw new IllegalArgumentException("Illegal Arcade map number: " + config.mapNumber());
-        };
-    }
-
-    private ImageArea miniMapSpriteImageArea(MapConfig config) {
-        int spriteNumber = switch (config.mapNumber()) {
-            case 1 -> 34;
-            case 2 -> 35;
-            case 3 -> 36;
-            case 4 -> 30;
-            case 5 -> 28;
-            case 6 -> 37;
-            default -> throw new IllegalArgumentException("Illegal MINI map number: " + config.mapNumber());
-        };
-        return nonArcadeMapSpriteSheet.mapSprite(spriteNumber);
-    }
-
-    private ImageArea bigMapSpriteImageArea(MapConfig config) {
-        int spriteNumber = switch (config.mapNumber()) {
-            case  1 -> 19;
-            case  2 -> 20;
-            case  3 -> 21;
-            case  4 -> 22;
-            case  5 -> 23;
-            case  6 -> 17;
-            case  7 -> 10;
-            case  8 -> 14;
-            case  9 -> 26;
-            case 10 -> 25;
-            case 11 -> 33;
-            default -> throw new IllegalArgumentException("Illegal BIG map number: " + config.mapNumber());
-        };
-        return nonArcadeMapSpriteSheet.mapSprite(spriteNumber);
-    }
-
-    private ImageArea strangeMapSpriteImageArea(MapConfig config) {
-        // Dirty hack, don't tell Mommy!
-        int spriteNumber = Integer.parseInt(config.worldMap().terrain().getProperty("levelNumber"));
-        return nonArcadeMapSpriteSheet.mapSprite(spriteNumber);
+        foodRenderer.setPelletColor(Color.valueOf(colorScheme.get("pellet")));
+        foodRenderer.setEnergizerColor(Color.valueOf(colorScheme.get("pellet")));
     }
 
     @Override
@@ -253,15 +169,117 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     }
 
     public Vector2f getMessageAnchorPosition() {
-        return messagePosition;
+        return messageAnchorPosition;
     }
 
-    public void setMessagePosition(Vector2f messagePosition) {
-        this.messagePosition = messagePosition;
+    public void setMessageAnchorPosition(Vector2f position) {
+        messageAnchorPosition = position;
     }
 
-    public void setLevelNumberBoxesVisible(boolean levelNumberBoxesVisible) {
-        this.levelNumberBoxesVisible = levelNumberBoxesVisible;
+    public void setLevelNumberBoxesVisible(boolean visible) {
+        levelNumberBoxesVisible = visible;
+    }
+
+    private ImageArea arcadeMapSprite(MapConfig config) {
+        var colorScheme = config.colorScheme();
+        Vector2i coordinate = switch (config.mapNumber()) {
+            case 1 -> v2i(0, 0);
+            case 2 -> v2i(0, 1);
+            case 3 -> {
+                if (colorScheme == MCS_16_20_15_ORANGE_WHITE_RED.get()) {
+                    yield v2i(0, 2);
+                }
+                if (colorScheme == MCS_35_28_20_PINK_YELLOW_WHITE.get()) {
+                    yield v2i(1, 1);
+                }
+                if (colorScheme == MCS_17_20_20_BROWN_WHITE_WHITE.get()) {
+                    yield v2i(2, 0);
+                }
+                if (colorScheme == MCS_0F_20_28_BLACK_WHITE_YELLOW.get()) {
+                    yield v2i(2, 2);
+                }
+                throw new IllegalArgumentException("Unknown color scheme for map 3: " + colorScheme);
+            }
+            case 4 -> {
+                if (colorScheme == MCS_01_38_20_BLUE_YELLOW_WHITE.get()) {
+                    yield v2i(1, 0);
+                }
+                if (colorScheme == MCS_36_15_20_PINK_RED_WHITE.get()) {
+                    yield v2i(1, 2);
+                }
+                if (colorScheme == MCS_13_20_28_VIOLET_WHITE_YELLOW.get()) {
+                    yield v2i(2, 1);
+                }
+                throw new IllegalArgumentException("Unknown color scheme for map #4: " + colorScheme);
+            }
+            default -> throw new IllegalArgumentException("Illegal Arcade map number: " + config.mapNumber());
+        };
+        int width = 28*8, height = 31*8;
+        return new ImageArea(arcadeMazeImages, new RectArea(coordinate.x() * width, coordinate.y() * height, width, height));
+    }
+
+    private ImageArea miniMapSprite(MapConfig config) {
+        int spriteNumber = switch (config.mapNumber()) {
+            case 1 -> 34;
+            case 2 -> 35;
+            case 3 -> 36;
+            case 4 -> 30;
+            case 5 -> 28;
+            case 6 -> 37;
+            default -> throw new IllegalArgumentException("Illegal MINI map number: " + config.mapNumber());
+        };
+        return nonArcadeMap(spriteNumber);
+    }
+
+    private ImageArea bigMapSprite(MapConfig config) {
+        int spriteNumber = switch (config.mapNumber()) {
+            case  1 -> 19;
+            case  2 -> 20;
+            case  3 -> 21;
+            case  4 -> 22;
+            case  5 -> 23;
+            case  6 -> 17;
+            case  7 -> 10;
+            case  8 -> 14;
+            case  9 -> 26;
+            case 10 -> 25;
+            case 11 -> 33;
+            default -> throw new IllegalArgumentException("Illegal BIG map number: " + config.mapNumber());
+        };
+        return nonArcadeMap(spriteNumber);
+    }
+
+    private ImageArea strangeMapSprite(MapConfig config) {
+        // Dirty hack, don't tell Mommy! See MapConfigurationManager.
+        int spriteNumber = Integer.parseInt(config.worldMap().terrain().getProperty("levelNumber"));
+        return nonArcadeMap(spriteNumber);
+    }
+
+    /**
+     * @param spriteNumber number (1 based) of map sprite in sprite sheet (row-wise)
+     * @return map sprite in non-Arcade maps sprite sheet
+     */
+    private ImageArea nonArcadeMap(int spriteNumber) {
+        int columnIndex, y;
+        switch (spriteNumber) {
+            case 1,2,3,4,5,6,7,8            -> { columnIndex = (spriteNumber - 1);  y = 0;    }
+            case 9,10,11,12,13,14,15,16     -> { columnIndex = (spriteNumber - 9);  y = 248;  }
+            case 17,18,19,20,21,22,23,24    -> { columnIndex = (spriteNumber - 17); y = 544;  }
+            case 25,26,27,28,29,30,31,32,33 -> { columnIndex = (spriteNumber - 25); y = 840;  }
+            case 34,35,36,37                -> { columnIndex = (spriteNumber - 34); y = 1136; }
+            default -> throw new IllegalArgumentException("Illegal non-Arcade map number: " + spriteNumber);
+        }
+        int width = 28 * TS, height = MAP_ROW_COUNTS[spriteNumber - 1] * TS;
+        return new ImageArea(nonArcadeMazeImages, new RectArea(columnIndex * width, y, width, height));
+    }
+
+    private boolean isMapImageAvailable(int levelNumber, MapCategory mapCategory) {
+        return switch (mapCategory) {
+            case ARCADE -> true; // all available in sprite sheet
+            case MINI -> false; // TODO use map sprite if level uses color scheme in sprite sheet
+            case BIG -> false; // TODO use map sprite  if level uses color scheme in sprite sheet
+            case STRANGE -> !inRange(levelNumber, 28, 31); // all except those with random color scheme
+        };
     }
 
     private void drawMsOrMrPacMan(Pac pac) {
@@ -334,20 +352,20 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         // All maps with a different color scheme than that in the sprite sheet have to be rendered using the
         // generic vector renderer for now.
         // TODO: Improve renderer because this currently looks bad for specific maps.
-        boolean mapSpriteExists = context.game().isDemoLevel() || mapSpriteExists(context.level().number, game.mapCategory());
+        boolean mapSpriteExists = context.game().isDemoLevel() || isMapImageAvailable(context.level().number, game.mapCategory());
         if (mapSpriteExists)
         {
             drawLevelMessage(context);
-            // Maze #32 of STRANGE has psychedelic animation
-            if (level.mapConfig().mapCategory() == MapCategory.STRANGE && level.mapConfig().mapNumber() == 32) {
-                drawAnimatedMap(context.tick(), TengenNonArcadeMapsSpriteSheet.MAP_32_ANIMATION_FRAMES);
+            // Strange map #15 has psychedelic animation
+            if (level.mapConfig().mapCategory() == MapCategory.STRANGE && level.mapConfig().mapNumber() == 15) {
+                drawStrangeMap15(context.tick(), 8, mazeX, mazeY);
             } else {
-                RectArea mapArea = mapSprite.area();
+                RectArea sprite = mapSprite.area();
                 ctx().drawImage(mapSprite.source(),
-                    mapArea.x(), mapArea.y(),
-                    mapArea.width(), mapArea.height(),
+                    sprite.x(), sprite.y(),
+                    sprite.width(), sprite.height(),
                     scaled(mazeX), scaled(mazeY),
-                    scaled(mapArea.width()), scaled(mapArea.height())
+                    scaled(sprite.width()), scaled(sprite.height())
                 );
             }
             cleanHouse(level.world());
@@ -372,13 +390,23 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         context.level().bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
     }
 
+    // Animation frames: (0, 1, 2, 1)+
+    private void drawStrangeMap15(long tick, int frameTicks, double x, double y) {
+        int frameIndex = (int) ( (tick % (STRANGE_MAP_15_SPRITES.length * frameTicks)) / frameTicks );
+        RectArea sprite = STRANGE_MAP_15_SPRITES[frameIndex];
+        ctx().drawImage(mapSprite.source(),
+            sprite.x(), sprite.y(), sprite.width(), sprite.height(),
+            scaled(x), scaled(y), scaled(sprite.width()), scaled(sprite.height())
+        );
+    }
+
     //TODO too much game logic in here
     private void drawLevelMessage(GameContext context) {
         GameLevel level = context.level();
         String assetPrefix = assetPrefix(GameVariant.MS_PACMAN_TENGEN);
         float x = getMessageAnchorPosition().x(), y = getMessageAnchorPosition().y();
         if (context.game().isDemoLevel()) {
-            Color color = Color.web(level.mapConfig().colorScheme().get("stroke"));
+            Color color = Color.valueOf(level.mapConfig().colorScheme().get("stroke"));
             drawText("GAME  OVER", x, y, color);
         } else if (context.gameState() == GameState.GAME_OVER) {
             Color color = assets.color(assetPrefix + ".color.game_over_message");
@@ -387,7 +415,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             Color color = assets.color(assetPrefix + ".color.ready_message");
             drawText("READY!", x, y, color);
         } else if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
-            drawText("TEST L%02d".formatted(level.number), x, y, paletteColor(0x28));
+            drawText("TEST L%02d".formatted(level.number), x, y, TengenMsPacManGameSceneConfig.paletteColor(0x28));
         }
     }
 
@@ -404,19 +432,6 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         ctx().fillRect(topLeftPosition.x(), topLeftPosition.y(), size.x(), size.y());
         hideActorSprite(world.map().terrain().getTileProperty("pos_pac", v2i(14, 26)));
         hideActorSprite(world.map().terrain().getTileProperty("pos_ghost_1_red", v2i(13, 14)));
-    }
-
-    // Animation goes forward and backward: Cycle (0, 1, 2, 1)
-    private void drawAnimatedMap(long tick, RectArea[] sprites) {
-        long frameTicks = 8; // TODO correct?
-        int frameIndex = (int) ( (tick % (sprites.length * frameTicks)) / frameTicks );
-        RectArea currentSprite = sprites[frameIndex];
-        ctx().drawImage(mapSprite.source(),
-            currentSprite.x(), currentSprite.y(),
-            currentSprite.width(), currentSprite.height(),
-            0, scaled(3 * TS),
-            scaled(currentSprite.width()), scaled(currentSprite.height())
-        );
     }
 
     private void drawGameOptionsInfo(TileMap terrain, TengenMsPacManGame tengenGame) {
@@ -446,7 +461,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void drawScores(GameContext context) {
-        Color color = paletteColor(0x20);
+        Color color = TengenMsPacManGameSceneConfig.paletteColor(0x20);
         Font font = scaledArcadeFont(TS);
         if (context.gameClock().getTickCount() % 60 < 30) { drawText("1UP", color, font, t(2), t(1)); }
         drawText("HIGH SCORE", color, font, t(9), t(1));
@@ -478,6 +493,13 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     public void drawTengenPresents(long t, double x, double y) {
         drawText("TENGEN PRESENTS", shadeOfBlue(t), scaledArcadeFont(TS), x, y);
+    }
+
+    // Blue colors used in intro, dark to brighter blue shade.
+    // Cycles through palette indices 0x01, 0x11, 0x21, 0x31, each frame takes 16 ticks.
+    private Color shadeOfBlue(long tick) {
+        int i = (int) (tick % 64) / 16;
+        return TengenMsPacManGameSceneConfig.paletteColor(0x01 + 0x10 * i);
     }
 
     private void drawLevelNumberBox(int levelNumber, double x, double y) {

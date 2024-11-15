@@ -338,7 +338,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         r.setBlinkingOn(context.level().blinking().isOn());
 
         Vector2f messageCenterPosition = centerBelowHouse(world);
-        r.setMessagePosition(messageMovement.isRunning()
+        r.setMessageAnchorPosition(messageMovement.isRunning()
             ? new Vector2f(messageMovement.currentX(), messageCenterPosition.y())
             : messageCenterPosition
         );

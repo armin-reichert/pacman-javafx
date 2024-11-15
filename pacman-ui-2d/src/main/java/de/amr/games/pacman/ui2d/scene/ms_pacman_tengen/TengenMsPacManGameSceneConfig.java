@@ -4,16 +4,16 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
+import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,15 +32,11 @@ public class TengenMsPacManGameSceneConfig implements GameSceneConfig {
 
     private final AssetStorage assets;
     private final TengenMsPacManGameSpriteSheet spriteSheet;
-    private final TengenArcadeMapsSpriteSheet arcadeMapsSpriteSheet;
-    private final TengenNonArcadeMapsSpriteSheet nonArcadeMapSpriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public TengenMsPacManGameSceneConfig(AssetStorage assets) {
         this.assets = checkNotNull(assets);
         spriteSheet = assets.get("tengen.spritesheet");
-        arcadeMapsSpriteSheet = new TengenArcadeMapsSpriteSheet(assets);
-        nonArcadeMapSpriteSheet = new TengenNonArcadeMapsSpriteSheet(assets);
 
         set("BootScene",      new BootScene());
         set("IntroScene",     new IntroScene());
@@ -51,6 +47,10 @@ public class TengenMsPacManGameSceneConfig implements GameSceneConfig {
         set("CutScene2",      new CutScene2());
         set("CutScene3",      new CutScene3());
         set("CutScene4",      new CutScene4());
+    }
+
+    public static Color paletteColor(int index) {
+        return Color.web(NES.Palette.color(index));
     }
 
     @Override
@@ -84,7 +84,7 @@ public class TengenMsPacManGameSceneConfig implements GameSceneConfig {
 
     @Override
     public TengenMsPacManGameRenderer createRenderer(Canvas canvas) {
-        return new TengenMsPacManGameRenderer(assets, spriteSheet, arcadeMapsSpriteSheet, nonArcadeMapSpriteSheet, canvas);
+        return new TengenMsPacManGameRenderer(assets, spriteSheet, canvas);
     }
 
     @Override

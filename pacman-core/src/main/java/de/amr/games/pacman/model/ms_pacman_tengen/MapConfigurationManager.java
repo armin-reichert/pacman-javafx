@@ -220,7 +220,7 @@ public class MapConfigurationManager {
             case 32 -> createMapConfig(MapCategory.STRANGE, strangeMaps, 15);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
-        // Hack: put level number into map config such that renderer can very easily determine map sprite
+        // Hack: Store level number in map such that the renderer can very easily determine the map sprite
         mapConfig.worldMap().terrain().setProperty("levelNumber", String.valueOf(levelNumber));
         return mapConfig;
     }
