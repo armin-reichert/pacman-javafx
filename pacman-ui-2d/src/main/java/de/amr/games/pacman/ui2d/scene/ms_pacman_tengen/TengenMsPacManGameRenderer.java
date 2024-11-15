@@ -49,13 +49,21 @@ import static java.util.function.Predicate.not;
  */
 public class TengenMsPacManGameRenderer implements GameRenderer {
 
-    // Strange map #15 (level 32) has 3 different images to create an animation effect, frame cycle: (0, 1, 2, 1)+
+    // Strange map #15 (level 32) has 3 different images to create an animation effect
     private static final RectArea[] STRANGE_MAP_15_SPRITES = {
-        rect(1568,  840, 224, 248), // 0
-        rect(1568, 1088, 224, 248), // 1
-        rect(1568, 1336, 224, 248), // 2
-        rect(1568, 1088, 224, 248), // 1
+        rect(1568,  840, 224, 248),
+        rect(1568, 1088, 224, 248),
+        rect(1568, 1336, 224, 248),
     };
+
+    // Create  (00000000 11111111 22222222 11111111)*
+    private static RectArea currentSpriteForStrangeMap15(long tick) {
+        int numFrames = 4, frameDuration = 8;
+        int index = (int)((tick % (numFrames * frameDuration)) / frameDuration);
+        // map frames (0, 1, 2, 3) to sprites (0, 1, 2, 1)
+        int spriteIndex = index == 3 ? 1 : index;
+        return STRANGE_MAP_15_SPRITES[spriteIndex];
+    }
 
     // Strange map row counts as they appear in the sprite sheet
     private static final byte[] MAP_ROW_COUNTS = {
@@ -357,7 +365,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         if (mapSpriteExists) {
             drawLevelMessage(context); // message appears behind map!
             RectArea sprite = level.mapConfig().mapCategory() == MapCategory.STRANGE && level.mapConfig().mapNumber() == 15
-                ? STRANGE_MAP_15_SPRITES[strangeMap15AnimationFrame(context.tick())] // Strange map #15 psychedelic animation
+                ? currentSpriteForStrangeMap15(context.tick()) // Strange map #15: psychedelic animation
                 : mapSprite.area();
             ctx().drawImage(mapSprite.source(),
                 sprite.x(), sprite.y(),
@@ -386,11 +394,6 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             terrainRenderer.drawMap(ctx(), world.map().terrain());
         }
         context.level().bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
-    }
-
-    // Animation frames: (0, 1, 2, 1)+
-    private int strangeMap15AnimationFrame(long tick) {
-        return (int) ( (tick % (STRANGE_MAP_15_SPRITES.length * 8)) / 8);
     }
 
     //TODO too much game logic in here
