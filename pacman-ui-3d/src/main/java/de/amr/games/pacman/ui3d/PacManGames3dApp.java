@@ -58,6 +58,9 @@ public class PacManGames3dApp extends Application {
     @Override
     public void init() {
         File userDir = new File(System.getProperty("user.home"), ".pacmanfx");
+        if (userDir.mkdir()) {
+            Logger.info("User dir '{}' created", userDir);
+        }
         GameController.create(userDir);
         GameController.it().selectGame(GameVariant.PACMAN);
         PY_3D_ENABLED.set(false);
