@@ -189,16 +189,16 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         var colorScheme = config.colorScheme();
         Vector2i coordinate = switch (config.mapNumber()) {
             case 1 -> v2i(0, 0);
-            case 2 -> v2i(0, 1);
+            case 2 -> v2i(1, 0);
             case 3 -> {
                 if (colorScheme == MCS_16_20_15_ORANGE_WHITE_RED.get()) {
-                    yield v2i(0, 2);
+                    yield v2i(2, 0);
                 }
                 if (colorScheme == MCS_35_28_20_PINK_YELLOW_WHITE.get()) {
                     yield v2i(1, 1);
                 }
                 if (colorScheme == MCS_17_20_20_BROWN_WHITE_WHITE.get()) {
-                    yield v2i(2, 0);
+                    yield v2i(0, 2);
                 }
                 if (colorScheme == MCS_0F_20_28_BLACK_WHITE_YELLOW.get()) {
                     yield v2i(2, 2);
@@ -207,13 +207,13 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             }
             case 4 -> {
                 if (colorScheme == MCS_01_38_20_BLUE_YELLOW_WHITE.get()) {
-                    yield v2i(1, 0);
+                    yield v2i(0, 1);
                 }
                 if (colorScheme == MCS_36_15_20_PINK_RED_WHITE.get()) {
-                    yield v2i(1, 2);
+                    yield v2i(2, 1);
                 }
                 if (colorScheme == MCS_13_20_28_VIOLET_WHITE_YELLOW.get()) {
-                    yield v2i(2, 1);
+                    yield v2i(1, 2);
                 }
                 throw new IllegalArgumentException("Unknown color scheme for map #4: " + colorScheme);
             }
