@@ -48,16 +48,15 @@ public class MsPacManArcadeGame extends GameModel {
     private static final String MAP_PATTERN = "/de/amr/games/pacman/maps/mspacman/mspacman_%d.world";
 
     public static final List<Map<String, String>> COLOR_MAPS = List.of(
-            Map.of("fill", "FFB7AE", "stroke", "FF0000", "door", "FCB5FF", "pellet", "DEDEFF"),
-            Map.of("fill", "47B7FF", "stroke", "DEDEFF", "door", "FCB5FF", "pellet", "FFFF00"),
-            Map.of("fill", "DE9751", "stroke", "DEDEFF", "door", "FCB5FF", "pellet", "FF0000"),
-            Map.of("fill", "2121FF", "stroke", "FFB751", "door", "FCB5FF", "pellet", "DEDEFF"),
-            Map.of("fill", "FFB7FF", "stroke", "FFFF00", "door", "FCB5FF", "pellet", "00FFFF"),
-            Map.of("fill", "FFB7AE", "stroke", "FF0000", "door", "FCB5FF", "pellet", "DEDEFF")
+        Map.of("fill", "FFB7AE", "stroke", "FF0000", "door", "FCB5FF", "pellet", "DEDEFF"),
+        Map.of("fill", "47B7FF", "stroke", "DEDEFF", "door", "FCB5FF", "pellet", "FFFF00"),
+        Map.of("fill", "DE9751", "stroke", "DEDEFF", "door", "FCB5FF", "pellet", "FF0000"),
+        Map.of("fill", "2121FF", "stroke", "FFB751", "door", "FCB5FF", "pellet", "DEDEFF"),
+        Map.of("fill", "FFB7FF", "stroke", "FFFF00", "door", "FCB5FF", "pellet", "00FFFF"),
+        Map.of("fill", "FFB7AE", "stroke", "FF0000", "door", "FCB5FF", "pellet", "DEDEFF")
     );
 
     private final List<WorldMap> maps = new ArrayList<>();
-
 
     // These are the Pac-Man level data as given in the Pac-Man dossier.
     // I have no information that Ms. Pac-Man uses different data.
@@ -188,7 +187,6 @@ public class MsPacManArcadeGame extends GameModel {
         scoreManager().updateHighScore();
         publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
     }
-
 
     @Override
     public boolean canStartNewGame() {
