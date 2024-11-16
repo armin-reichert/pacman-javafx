@@ -96,7 +96,7 @@ public class MsPacManArcadeGame extends GameModel {
 
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
 
-    private final MapConfigurationManager mapConfigMgr = new MapConfigurationManager();
+    private final MsPacManArcadeGameMapConfigMgr mapConfigMgr = new MsPacManArcadeGameMapConfigMgr();
     private final Steering autopilot = new RuleBasedPacSteering(this);
     private final Steering demoLevelSteering = new RuleBasedPacSteering(this);
 
@@ -205,7 +205,8 @@ public class MsPacManArcadeGame extends GameModel {
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
         levelCounterEnabled = level.number < 8;
         level.setMapConfig(mapConfigMgr.getMapConfig(level.number));
-        createWorldAndPopulation(level.mapConfig().worldMap());
+        WorldMap worldMap = (WorldMap) level.mapConfig().get("worldMap");
+        createWorldAndPopulation(worldMap);
         level.pac().setAutopilot(autopilot);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
@@ -214,7 +215,8 @@ public class MsPacManArcadeGame extends GameModel {
     public void configureDemoLevel() {
         levelCounterEnabled = false;
         level.setMapConfig(mapConfigMgr.getMapConfig(level.number));
-        createWorldAndPopulation(level.mapConfig().worldMap());
+        WorldMap worldMap = (WorldMap) level.mapConfig().get("worldMap");
+        createWorldAndPopulation(worldMap);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         demoLevelSteering.init();
         setDemoLevelBehavior();

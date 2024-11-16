@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.ms_pacman_tengen.MapConfigurationManager;
+import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGameMapConfigMgr;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import javafx.scene.paint.Color;
@@ -17,12 +17,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static de.amr.games.pacman.model.ms_pacman_tengen.MapConfigurationManager.COLOR_MAPS_OF_NES_COLOR_SCHEMES;
-import static de.amr.games.pacman.model.ms_pacman_tengen.MapConfigurationManager.random_NES_colorScheme;
+import static de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGameMapConfigMgr.COLOR_MAPS_OF_NES_COLOR_SCHEMES;
+import static de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGameMapConfigMgr.random_NES_colorScheme;
 
 public class MazeFlashing {
 
-    private static final Map<String, Color> HIGHLIGHT_COLOR_SCHEME = mapStringToColorValues(MapConfigurationManager.HIGHLIGHT_COLOR_SCHEME);
+    private static final Map<String, Color> HIGHLIGHT_COLOR_SCHEME = mapStringToColorValues(TengenMsPacManGameMapConfigMgr.HIGHLIGHT_COLOR_SCHEME);
 
     private static Map<String, Color> mapStringToColorValues(Map<String, String> colorScheme) {
         Map<String, Color> colorMap = new HashMap<>();
@@ -39,7 +39,7 @@ public class MazeFlashing {
 
     public void init(TengenMsPacManGame game) {
         GameLevel level = game.level().orElseThrow();
-        NES_ColorScheme currentScheme = (NES_ColorScheme) level.mapConfig().colorScheme();
+        NES_ColorScheme currentScheme = (NES_ColorScheme) level.mapConfig().get("newColorScheme");
         Map<String, Color> currentColorMap = mapStringToColorValues(COLOR_MAPS_OF_NES_COLOR_SCHEMES.get(currentScheme));
         boolean random = game.mapConfigMgr().isRandomColorSchemeUsed(game.mapCategory(), level.number);
         colorSchemes.clear();

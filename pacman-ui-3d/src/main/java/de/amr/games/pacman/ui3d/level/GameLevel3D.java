@@ -15,7 +15,8 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.ms_pacman_tengen.MapConfigurationManager;
+import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGameMapConfigMgr;
+import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGameMapConfigMgr;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -219,7 +220,7 @@ public class GameLevel3D {
 
         wallStrokeMaterialPy.bind(wallStrokeColorPy.map(Ufx::coloredMaterial));
 
-        Map<String, String> colorMap = buildColorMap(level.mapConfig().colorScheme());
+        Map<String, String> colorMap = buildColorMap(level.mapConfig());
         buildWorld3D(world, assets, colorMap);
         addFood3D(world, assets, colorMap);
 
@@ -234,11 +235,11 @@ public class GameLevel3D {
 
     //TODO this should be done elsewhere
     @SuppressWarnings("unchecked")
-    private Map<String, String> buildColorMap(Object colorScheme) {
+    private Map<String, String> buildColorMap(Map<String, Object> mapConfig) {
         return switch (context.gameVariant()) {
-            case PACMAN, PACMAN_XXL -> (Map<String, String>) colorScheme;
-            case MS_PACMAN -> de.amr.games.pacman.model.ms_pacman.MapConfigurationManager.COLOR_SCHEMES.get((int) colorScheme);
-            case MS_PACMAN_TENGEN -> MapConfigurationManager.COLOR_MAPS_OF_NES_COLOR_SCHEMES.get((NES_ColorScheme) colorScheme);
+            case PACMAN, PACMAN_XXL -> (Map<String, String>) mapConfig.get("colorMap");
+            case MS_PACMAN -> MsPacManArcadeGameMapConfigMgr.COLOR_MAPS.get((int) mapConfig.get("colorSchemeIndex"));
+            case MS_PACMAN_TENGEN -> TengenMsPacManGameMapConfigMgr.COLOR_MAPS_OF_NES_COLOR_SCHEMES.get((NES_ColorScheme) mapConfig.get("nesColorScheme"));
         };
     }
 

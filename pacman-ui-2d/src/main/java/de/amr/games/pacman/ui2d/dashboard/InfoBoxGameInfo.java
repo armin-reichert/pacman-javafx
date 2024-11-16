@@ -34,7 +34,7 @@ public class InfoBoxGameInfo extends InfoBox {
             return url.substring(url.lastIndexOf("/") + 1);
         }));
         addLabeledValue("Color Scheme", ifLevelPresent(level -> {
-            var colorScheme = level.mapConfig().colorScheme();
+            var colorScheme = level.mapConfig().get("colorScheme");
             if (colorScheme instanceof NES_ColorScheme nesColorScheme) {
                 return "fill/stroke/food: %s/%s/%s".formatted(
                         nesColorScheme.fillColor(), nesColorScheme.strokeColor(), nesColorScheme.pelletColor());

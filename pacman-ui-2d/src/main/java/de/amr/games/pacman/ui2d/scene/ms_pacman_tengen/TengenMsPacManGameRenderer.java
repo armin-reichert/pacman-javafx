@@ -102,9 +102,9 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void update(GameLevel level) {
-        // this method should be fast because it is called in every frame
-        MapConfig mapConfig = level.mapConfig();
-        MapCategory category = (MapCategory) mapConfig.mapCategory();
+        Map<String, Object> mapConfig = level.mapConfig();
+        MapCategory category = (MapCategory) mapConfig.get("mapCategory");
+        NES_ColorScheme nesColorScheme = (NES_ColorScheme) mapConfig.get("nesColorScheme");
         mapSprite = switch (category) {
             case ARCADE  -> arcadeMapSprite(mapConfig);
             case MINI    -> miniMapSprite(mapConfig);
@@ -113,8 +113,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         };
         Logger.debug("Level {}: Using map sprite with area #{}", level.number, mapSprite.area());
 
-        var nesColorScheme = (NES_ColorScheme) mapConfig.colorScheme();
-        Map<String, String> colorMap = MapConfigurationManager.COLOR_MAPS_OF_NES_COLOR_SCHEMES.get(nesColorScheme);
+        Map<String, String> colorMap = TengenMsPacManGameMapConfigMgr.COLOR_MAPS_OF_NES_COLOR_SCHEMES.get(nesColorScheme);
 
         terrainRenderer.setMapBackgroundColor(bgColor);
         terrainRenderer.setWallStrokeColor(Color.valueOf(colorMap.get("stroke")));
@@ -185,9 +184,10 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         levelNumberBoxesVisible = visible;
     }
 
-    private ImageArea arcadeMapSprite(MapConfig config) {
-        var colorScheme = config.colorScheme();
-        Vector2i coordinate = switch (config.mapNumber()) {
+    private ImageArea arcadeMapSprite(Map<String, Object> mapConfig) {
+        int mapNumber = (int) mapConfig.get("mapNumber");
+        NES_ColorScheme colorScheme = (NES_ColorScheme) mapConfig.get("nesColorScheme");
+        Vector2i coordinate = switch (mapNumber) {
             case 1 -> v2i(0, 0);
             case 2 -> v2i(1, 0);
             case 3 -> {
@@ -217,27 +217,29 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
                 }
                 throw new IllegalArgumentException("Unknown color scheme for map #4: " + colorScheme);
             }
-            default -> throw new IllegalArgumentException("Illegal Arcade map number: " + config.mapNumber());
+            default -> throw new IllegalArgumentException("Illegal Arcade map number: " + mapNumber);
         };
         int width = 28*8, height = 31*8;
         return new ImageArea(arcadeMazeImages, new RectArea(coordinate.x() * width, coordinate.y() * height, width, height));
     }
 
-    private ImageArea miniMapSprite(MapConfig config) {
-        int spriteNumber = switch (config.mapNumber()) {
+    private ImageArea miniMapSprite(Map<String, Object> mapConfig) {
+        int mapNumber = (int) mapConfig.get("mapNumber");
+        int spriteNumber = switch (mapNumber) {
             case 1 -> 34;
             case 2 -> 35;
             case 3 -> 36;
             case 4 -> 30;
             case 5 -> 28;
             case 6 -> 37;
-            default -> throw new IllegalArgumentException("Illegal MINI map number: " + config.mapNumber());
+            default -> throw new IllegalArgumentException("Illegal MINI map number: " + mapNumber);
         };
         return nonArcadeMapSprite(spriteNumber);
     }
 
-    private ImageArea bigMapSprite(MapConfig config) {
-        int spriteNumber = switch (config.mapNumber()) {
+    private ImageArea bigMapSprite(Map<String, Object> mapConfig) {
+        int mapNumber = (int) mapConfig.get("mapNumber");
+        int spriteNumber = switch (mapNumber) {
             case  1 -> 19;
             case  2 -> 20;
             case  3 -> 21;
@@ -249,14 +251,15 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             case  9 -> 26;
             case 10 -> 25;
             case 11 -> 33;
-            default -> throw new IllegalArgumentException("Illegal BIG map number: " + config.mapNumber());
+            default -> throw new IllegalArgumentException("Illegal BIG map number: " + mapNumber);
         };
         return nonArcadeMapSprite(spriteNumber);
     }
 
-    private ImageArea strangeMapSprite(MapConfig config) {
+    private ImageArea strangeMapSprite(Map<String, Object> mapConfig) {
+        WorldMap worldMap = (WorldMap) mapConfig.get("worldMap");
         // Dirty hack, don't tell Mommy! See MapConfigurationManager.
-        int spriteNumber = Integer.parseInt(config.worldMap().terrain().getProperty("levelNumber"));
+        int spriteNumber = Integer.parseInt(worldMap.terrain().getProperty("levelNumber"));
         return nonArcadeMapSprite(spriteNumber);
     }
 
@@ -359,8 +362,10 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         // TODO: Improve renderer because vector rendering still looks really bad for some maps.
         boolean mapSpriteExists = context.game().isDemoLevel() || isMapImageAvailable(context.level().number, game.mapCategory());
         if (mapSpriteExists) {
+            int mapNumber = (int) level.mapConfig().get("mapNumber");
+            MapCategory mapCategory = (MapCategory) level.mapConfig().get("mapCategory");
             drawLevelMessage(context); // message appears behind map!
-            RectArea sprite = level.mapConfig().mapCategory() == MapCategory.STRANGE && level.mapConfig().mapNumber() == 15
+            RectArea sprite = mapCategory == MapCategory.STRANGE && mapNumber == 15
                 ? currentSpriteForStrangeMap15(context.tick()) // Strange map #15: psychedelic animation
                 : mapSprite.area();
             ctx().drawImage(mapSprite.source(),
@@ -398,7 +403,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         String assetPrefix = assetPrefix(GameVariant.MS_PACMAN_TENGEN);
         float x = getMessageAnchorPosition().x(), y = getMessageAnchorPosition().y();
         if (context.game().isDemoLevel()) {
-            NES_ColorScheme nesColorScheme = (NES_ColorScheme) level.mapConfig().colorScheme();
+            NES_ColorScheme nesColorScheme = (NES_ColorScheme) level.mapConfig().get("nesColorScheme");
             Color color = Color.valueOf(nesColorScheme.strokeColor());
             drawText("GAME  OVER", x, y, color);
         } else if (context.gameState() == GameState.GAME_OVER) {

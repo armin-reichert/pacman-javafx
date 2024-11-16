@@ -6,18 +6,17 @@ package de.amr.games.pacman.model.ms_pacman;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.MapConfig;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class MapConfigurationManager {
+public class MsPacManArcadeGameMapConfigMgr {
 
     private static final String MAP_PATTERN = "/de/amr/games/pacman/maps/mspacman/mspacman_%d.world";
 
-    public static final List<Map<String, String>> COLOR_SCHEMES = List.of(
+    public static final List<Map<String, String>> COLOR_MAPS = List.of(
         Map.of("fill", "FFB7AE", "stroke", "FF0000", "door", "FCB5FF", "pellet", "DEDEFF"),
         Map.of("fill", "47B7FF", "stroke", "DEDEFF", "door", "FCB5FF", "pellet", "FFFF00"),
         Map.of("fill", "DE9751", "stroke", "DEDEFF", "door", "FCB5FF", "pellet", "FF0000"),
@@ -28,7 +27,7 @@ public class MapConfigurationManager {
 
     private final List<WorldMap> maps = new ArrayList<>();
 
-    public MapConfigurationManager() {
+    public MsPacManArcadeGameMapConfigMgr() {
         for (int number = 1; number <= 4; ++number) {
             maps.add(new WorldMap(getClass().getResource(MAP_PATTERN.formatted(number))));
         }
@@ -51,7 +50,7 @@ public class MapConfigurationManager {
      * </ul>
      * <p>
      */
-    MapConfig getMapConfig(int levelNumber) {
+    Map<String, Object> getMapConfig(int levelNumber) {
         final int mapNumber = switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
@@ -60,6 +59,11 @@ public class MapConfigurationManager {
             default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
         };
         int colorSchemeIndex = levelNumber < 14 ? mapNumber - 1 : mapNumber + 2 - 1;
-        return new MapConfig("Ms Pac-Man Arcade Map", mapNumber, new WorldMap(maps.get(mapNumber - 1)), colorSchemeIndex);
+        //return new MapConfig("Ms Pac-Man Arcade Map", mapNumber, new WorldMap(maps.get(mapNumber - 1)), colorSchemeIndex);
+        return Map.of(
+            "mapNumber", mapNumber,
+            "worldMap",  new WorldMap(maps.get(mapNumber - 1)),
+            "colorSchemeIndex", colorSchemeIndex
+        );
     }
 }

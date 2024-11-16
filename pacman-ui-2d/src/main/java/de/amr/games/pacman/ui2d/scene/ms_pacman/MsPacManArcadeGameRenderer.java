@@ -123,7 +123,7 @@ public class MsPacManArcadeGameRenderer implements GameRenderer {
     @Override
     public void update(GameLevel level) {
         if (level.mapConfig() != null) {
-            int index = (int) level.mapConfig().colorScheme();
+            int index = (int) level.mapConfig().get("colorSchemeIndex");
             if (index != -1) {
                 mapWithFoodSprite    = MAPS_WITH_FOOD_SPRITES[index];
                 mapWithoutFoodSprite = MAPS_WITHOUT_FOOD_SPRITES[index];

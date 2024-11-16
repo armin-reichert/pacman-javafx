@@ -82,7 +82,7 @@ public class TengenMsPacManGame extends GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
-    private final MapConfigurationManager mapConfigMgr = new MapConfigurationManager();
+    private final TengenMsPacManGameMapConfigMgr mapConfigMgr = new TengenMsPacManGameMapConfigMgr();
     private MapCategory mapCategory;
     private Difficulty difficulty;
     private BoosterMode boosterMode;
@@ -142,7 +142,7 @@ public class TengenMsPacManGame extends GameModel {
         publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
     }
 
-    public MapConfigurationManager mapConfigMgr() {
+    public TengenMsPacManGameMapConfigMgr mapConfigMgr() {
         return mapConfigMgr;
     }
 
@@ -370,7 +370,7 @@ public class TengenMsPacManGame extends GameModel {
     protected void createWorldAndPopulation(WorldMap map) {
         level.setWorld(new GameWorld(map));
         level.world().createArcadeHouse(10, 15);
-        Logger.info("World created. Map config: {}, URL: {}", level.mapConfig(), level.mapConfig().worldMap().url());
+        Logger.info("World created. Map config: {}", level.mapConfig());
 
         var pac = new Pac();
         pac.setName("Ms. Pac-Man");
@@ -396,7 +396,8 @@ public class TengenMsPacManGame extends GameModel {
     public void configureNormalLevel() {
         levelCounterEnabled = level.number < 8;
         level.setMapConfig(mapConfigMgr.getMapConfig(mapCategory, level.number));
-        createWorldAndPopulation(level.mapConfig().worldMap());
+        WorldMap worldMap = (WorldMap) level.mapConfig().get("worldMap");
+        createWorldAndPopulation(worldMap);
         level.pac().setAutopilot(autopilot);
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
@@ -411,7 +412,8 @@ public class TengenMsPacManGame extends GameModel {
         levelCounterEnabled = false;
         demoLevelSteering.init();
         level.setMapConfig(mapConfigMgr.getMapConfig(mapCategory, level.number));
-        createWorldAndPopulation(level.mapConfig().worldMap());
+        WorldMap worldMap = (WorldMap) level.mapConfig().get("worldMap");
+        createWorldAndPopulation(worldMap);
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // ghosts inside house start at floor of house

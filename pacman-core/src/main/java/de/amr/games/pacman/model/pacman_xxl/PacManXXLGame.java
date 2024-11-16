@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.MapConfig;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import org.tinylog.Logger;
@@ -80,52 +79,53 @@ public class PacManXXLGame extends PacManArcadeGame {
 
     @Override
     public void configureNormalLevel() {
-        MapConfig mapConfig = createMapConfig(level.number);
+        Map<String, Object> mapConfig = createMapConfig(level.number);
         level.setMapConfig(mapConfig);
-        populateLevel(mapConfig.worldMap());
+        WorldMap worldMap = (WorldMap) mapConfig.get("worldMap");
+        populateLevel(worldMap);
         level.pac().setAutopilot(autopilot);
         level.pac().setUsingAutopilot(false);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         setCruiseElroy(0);
         levelCounterEnabled = true;
         Logger.info("Map selection mode is {}", mapSelectionMode);
-        Logger.info("Selected map config: {}, URL: {}", level.mapConfig(), level.mapConfig().worldMap().url());
+        Logger.info("Selected map config: {}, URL: {}", level.mapConfig(), worldMap.url());
     }
 
-    private MapConfig createMapConfig(int levelNumber) {
-        WorldMap map = null;
-        Map<String, String> colorScheme;
+    private Map<String, Object> createMapConfig(int levelNumber) {
+        WorldMap worldMap = null;
+        Map<String, String> colorMap;
         switch (mapSelectionMode) {
             case NO_CUSTOM_MAPS -> {
-                map = levelNumber <= standardMaps.size()
+                worldMap = levelNumber <= standardMaps.size()
                     ? standardMaps.get(levelNumber - 1)
                     : standardMaps.get(randomInt(0, standardMaps.size()));
             }
             case CUSTOM_MAPS_FIRST -> {
                 List<WorldMap> maps = new ArrayList<>(customMapsSortedByFile());
                 maps.addAll(standardMaps);
-                map = levelNumber <= maps.size()
+                worldMap = levelNumber <= maps.size()
                     ? maps.get(levelNumber - 1)
                     : maps.get(randomInt(0, maps.size()));
             }
             case ALL_RANDOM -> {
                 List<WorldMap> maps = new ArrayList<>(customMapsSortedByFile());
                 maps.addAll(standardMaps);
-                map = maps.get(randomInt(0, maps.size()));
+                worldMap = maps.get(randomInt(0, maps.size()));
             }
         }
-        if (standardMaps.contains(map)) {
+        if (standardMaps.contains(worldMap)) {
             // try using random color scheme, TODO: avoid repetitions
-            colorScheme = COLOR_MAPS.get(randomInt(0, COLOR_MAPS.size()));
+            colorMap = COLOR_MAPS.get(randomInt(0, COLOR_MAPS.size()));
         } else {
-            colorScheme = Map.of(
-                "fill",   map.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_FILL, "000000"),
-                "stroke", map.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_STROKE, "0000ff"),
-                "door",   map.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_DOOR, "00ffff"),
-                "pellet", map.food().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_FOOD, "ffffff")
+            colorMap = Map.of(
+                "fill",   worldMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_FILL, "000000"),
+                "stroke", worldMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_STROKE, "0000ff"),
+                "door",   worldMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_DOOR, "00ffff"),
+                "pellet", worldMap.food().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_FOOD, "ffffff")
             );
         }
-        return new MapConfig("Pac-Man XXL Map", 42, map, colorScheme);
+        return Map.of("worldMap", worldMap, "colorMap", colorMap);
     }
 
     @Override

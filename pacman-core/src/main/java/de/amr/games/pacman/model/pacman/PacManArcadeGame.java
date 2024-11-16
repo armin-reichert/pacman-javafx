@@ -16,7 +16,6 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.LevelData;
-import de.amr.games.pacman.model.MapConfig;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.StaticBonus;
@@ -56,7 +55,7 @@ public class PacManArcadeGame extends GameModel {
     public static final Vector2i ARCADE_MAP_SIZE_IN_TILES  = new Vector2i(28, 36);
     public static final Vector2f ARCADE_MAP_SIZE_IN_PIXELS = new Vector2f(224, 288);
 
-    public static final Map<String, String> MAP_COLOR_SCHEME = Map.of(
+    public static final Map<String, String> THE_COLOR_MAP = Map.of(
         "fill", "#000000", "stroke", "#2121ff", "door", "#fcb5ff", "pellet", "febdb4"
     );
 
@@ -121,7 +120,7 @@ public class PacManArcadeGame extends GameModel {
     protected static final int[] HUNTING_TICKS_LEVEL_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
     protected static final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 300, 1200, 300, 62262,   1, -1};
 
-    private final MapConfig theMapConfig;
+    private final Map<String, Object> theMapConfig;
 
     protected final Steering autopilot = new RuleBasedPacSteering(this);
     protected final Steering demoLevelSteering = new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE));
@@ -138,7 +137,7 @@ public class PacManArcadeGame extends GameModel {
 
         // fixed map configuration
         var theMap = new WorldMap(getClass().getResource("/de/amr/games/pacman/maps/pacman/pacman.world"));
-        theMapConfig = new MapConfig("Pac-Man Arcade Map", 1, theMap, MAP_COLOR_SCHEME);
+        theMapConfig = Map.of("mapNumber", 1, "worldMap", theMap, "colorMap", THE_COLOR_MAP);
 
         huntingControl = new HuntingControl() {
             @Override
@@ -254,12 +253,12 @@ public class PacManArcadeGame extends GameModel {
     public void configureNormalLevel() {
         levelCounterEnabled = true;
         level.setMapConfig(theMapConfig);
-        populateLevel(theMapConfig.worldMap());
+        WorldMap worldMap = (WorldMap) theMapConfig.get("worldMap");
+        populateLevel(worldMap);
         level.pac().setAutopilot(autopilot);
         setCruiseElroy(0);
-
-        List<Vector2i> oneWayDownTiles = theMapConfig.worldMap().terrain().tiles()
-            .filter(tile -> theMapConfig.worldMap().terrain().get(tile) == Tiles.ONE_WAY_DOWN).toList();
+        List<Vector2i> oneWayDownTiles = worldMap.terrain().tiles()
+            .filter(tile -> worldMap.terrain().get(tile) == Tiles.ONE_WAY_DOWN).toList();
         level.ghosts().forEach(ghost -> {
             ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
             ghost.setSpecialTerrainTiles(oneWayDownTiles);

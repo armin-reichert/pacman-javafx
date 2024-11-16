@@ -13,6 +13,7 @@ import de.amr.games.pacman.model.actors.Pac;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -37,7 +38,7 @@ public class GameLevel {
     private Bonus bonus;
     private final byte[] bonusSymbols = new byte[2];
     private byte nextBonusIndex; // -1=no bonus, 0=first, 1=second
-    private MapConfig mapConfig;
+    private Map<String, Object> mapConfig;
     private final Pulse blinking = new Pulse(10, Pulse.OFF);
     private final TickTimer powerTimer = new TickTimer("PacPowerTimer");
 
@@ -110,11 +111,11 @@ public class GameLevel {
         return Optional.ofNullable(bonus);
     }
 
-    public void setMapConfig(MapConfig mapConfig) {
+    public void setMapConfig(Map<String, Object> mapConfig) {
         this.mapConfig = mapConfig;
     }
 
-    public MapConfig mapConfig() {
+    public Map<String, Object> mapConfig() {
         return mapConfig;
     }
 

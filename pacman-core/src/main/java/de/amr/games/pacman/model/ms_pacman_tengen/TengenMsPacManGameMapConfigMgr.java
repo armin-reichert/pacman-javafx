@@ -7,7 +7,6 @@ package de.amr.games.pacman.model.ms_pacman_tengen;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.MapConfig;
 import org.tinylog.Logger;
 
 import java.net.URL;
@@ -22,7 +21,7 @@ import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.model.ms_pacman_tengen.MapCategory.*;
 import static de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme.*;
 
-public class MapConfigurationManager {
+public class TengenMsPacManGameMapConfigMgr {
 
     static final String MAPS_ROOT = "/de/amr/games/pacman/maps/ms_pacman_tengen/";
 
@@ -97,7 +96,7 @@ public class MapConfigurationManager {
         strangeMaps = createMaps(MAPS_ROOT + "strange%d.world", 15);
     }
 
-    public MapConfig getMapConfig(MapCategory mapCategory, int levelNumber) {
+    public Map<String, Object> getMapConfig(MapCategory mapCategory, int levelNumber) {
         return switch (mapCategory) {
             case ARCADE  -> arcadeMap(levelNumber);
             case STRANGE -> strangeMap(levelNumber);
@@ -114,7 +113,7 @@ public class MapConfigurationManager {
         };
     }
 
-    private MapConfig arcadeMap(int levelNumber) {
+    private Map<String, Object> arcadeMap(int levelNumber) {
         return switch (levelNumber) {
             case 1,2         -> createMapConfig(ARCADE, arcadeMaps, 1, MCS_36_15_20_PINK_RED_WHITE);
             case 3,4,5       -> createMapConfig(ARCADE, arcadeMaps, 2, MCS_21_20_28_BLUE_WHITE_YELLOW);
@@ -132,7 +131,7 @@ public class MapConfigurationManager {
     /**
      * From this <a href="https://www.youtube.com/watch?v=cD0oGudVpbw">YouTube video</a>.
      */
-    private MapConfig miniMap(int levelNumber) {
+    private Map<String, Object> miniMap(int levelNumber) {
         return switch (levelNumber) {
             case 1  -> createMapConfig(MINI, miniMaps, 1, MCS_36_15_20_PINK_RED_WHITE);
             case 2  -> createMapConfig(MINI, miniMaps, 2, MCS_21_20_28_BLUE_WHITE_YELLOW);
@@ -173,7 +172,7 @@ public class MapConfigurationManager {
     /**
      * From this <a href="https://www.youtube.com/watch?v=NoImGoSAL7A">YouTube video</a>.
      */
-    private MapConfig bigMap(int levelNumber) {
+    private Map<String, Object> bigMap(int levelNumber) {
         return switch (levelNumber) {
             case 1  -> createMapConfig(BIG, bigMaps,  1, MCS_36_15_20_PINK_RED_WHITE);
             case 2  -> createMapConfig(BIG, bigMaps,  2, MCS_21_20_28_BLUE_WHITE_YELLOW);
@@ -211,8 +210,8 @@ public class MapConfigurationManager {
         };
     }
 
-    private MapConfig strangeMap(int levelNumber) {
-        MapConfig mapConfig = switch (levelNumber) {
+    private Map<String, Object> strangeMap(int levelNumber) {
+        Map<String, Object> mapConfig = switch (levelNumber) {
             case  1 -> createMapConfig(STRANGE, strangeMaps,  1, MCS_36_15_20_PINK_RED_WHITE);
             case  2 -> createMapConfig(STRANGE, strangeMaps,  2, MCS_21_20_28_BLUE_WHITE_YELLOW);
             case  3 -> createMapConfig(STRANGE, strangeMaps,  3, MCS_16_20_15_ORANGE_WHITE_RED);
@@ -247,14 +246,21 @@ public class MapConfigurationManager {
             case 32 -> createMapConfig(STRANGE, strangeMaps, 15, MCS_15_25_20_RED_ROSE_WHITE);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
-        // Hack: Store level number in map such that the renderer can very easily determine the map sprite
-        mapConfig.worldMap().terrain().setProperty("levelNumber", String.valueOf(levelNumber));
+        // TODO: Hack: Store level number in map such that the renderer can very easily determine the map sprite
+        WorldMap worldMap = (WorldMap) mapConfig.get("worldMap");
+        worldMap.terrain().setProperty("levelNumber", String.valueOf(levelNumber));
         return mapConfig;
     }
 
-    private MapConfig createMapConfig(MapCategory mapCategory, List<WorldMap> maps, int mapNumber, NES_ColorScheme nesColorScheme) {
+    private Map<String, Object> createMapConfig(MapCategory mapCategory, List<WorldMap> maps, int mapNumber, NES_ColorScheme nesColorScheme) {
         WorldMap worldMap = new WorldMap(maps.get(mapNumber - 1));
-        return new MapConfig(mapCategory, mapNumber, worldMap, nesColorScheme);
+        return Map.of(
+            "mapCategory", mapCategory,
+            "mapNumber", mapNumber,
+            "worldMap", worldMap,
+            "nesColorScheme", nesColorScheme
+        );
+        //return new MapConfig(mapCategory, mapNumber, worldMap, nesColorScheme);
     }
 
     private Map<String, String> createColorSchemeFromMap(WorldMap worldMap) {

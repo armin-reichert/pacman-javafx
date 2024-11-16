@@ -121,7 +121,7 @@ public class PacManGameXXLRenderer implements GameRenderer {
         }
         else {
             @SuppressWarnings("unchecked")
-            Map<String, String> mapColorScheme = (Map<String, String>) context.level().mapConfig().colorScheme();
+            Map<String, String> mapColorScheme = (Map<String, String>) context.level().mapConfig().get("colorMap");
             terrainRenderer.setMapBackgroundColor(bgColor);
             terrainRenderer.setWallStrokeColor(Color.web(mapColorScheme.get("stroke")));
             terrainRenderer.setWallFillColor(Color.web(mapColorScheme.get("fill")));
