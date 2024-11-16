@@ -10,7 +10,7 @@ import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.ms_pacman_tengen.BoosterMode;
 import de.amr.games.pacman.model.ms_pacman_tengen.Difficulty;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
-import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
+import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManTengenGame;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -22,9 +22,9 @@ import javafx.scene.text.Font;
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.nesPaletteColor;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.*;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSpriteSheet.CONTINUES_SPRITES;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.nesPaletteColor;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSpriteSheet.CONTINUES_SPRITES;
 
 /**
  * @author Armin Reichert
@@ -50,14 +50,14 @@ public class OptionsScene extends GameScene2D {
     static final int MIN_START_LEVEL = 1;
     static final int MAX_START_LEVEL = 32;  //TODO 7
 
-    private TengenMsPacManGame game;
+    private MsPacManTengenGame game;
     private int selectedOption;
     private long idleTicks;
 
     @Override
     public void bindGameActions() {
-        bind(TengenGameActions.SELECT_NEXT_JOYPAD, alt(KeyCode.J));
-        bind(TengenGameActions.START_PLAYING,      context.joypad().keyCombination(NES.Joypad.START));
+        bind(MsPacManTengenGameActions.SELECT_NEXT_JOYPAD, alt(KeyCode.J));
+        bind(MsPacManTengenGameActions.START_PLAYING,      context.joypad().keyCombination(NES.Joypad.START));
         GameActions2D.bindTestActions(this);
     }
 
@@ -66,7 +66,7 @@ public class OptionsScene extends GameScene2D {
         context.enableJoypad();
         context.setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
-        game = (TengenMsPacManGame) context.game();
+        game = (MsPacManTengenGame) context.game();
         game.setCanStartGame(true);
         resetIdleTimer();
     }
@@ -221,7 +221,7 @@ public class OptionsScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent(GameRenderer renderer) {
-        TengenMsPacManGameRenderer r = (TengenMsPacManGameRenderer) renderer;
+        MsPacManTengenGameRenderer r = (MsPacManTengenGameRenderer) renderer;
 
         r.setScaling(scaling());
         Font scaledFont = r.scaledArcadeFont(TS);

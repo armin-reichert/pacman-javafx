@@ -16,7 +16,7 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
+import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManTengenGame;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
@@ -28,10 +28,10 @@ import org.tinylog.Logger;
 import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.nesPaletteColor;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.NES_RESOLUTION_X;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.NES_RESOLUTION_Y;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.nesPaletteColor;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.NES_RESOLUTION_X;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.NES_RESOLUTION_Y;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
 
 /**
  * @author Armin Reichert
@@ -96,7 +96,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameRenderer renderer) {
-        TengenMsPacManGameRenderer r = (TengenMsPacManGameRenderer) renderer;
+        MsPacManTengenGameRenderer r = (MsPacManTengenGameRenderer) renderer;
         TickTimer timer = sceneController.state().timer;
         long t = timer.tickCount();
         Font scaledFont = renderer.scaledArcadeFont(8);
@@ -219,7 +219,7 @@ public class IntroScene extends GameScene2D {
                 }
                 intro.ghostIndex = 0;
 
-                var spriteSheet = (TengenMsPacManGameSpriteSheet) intro.context.currentGameSceneConfig().spriteSheet();
+                var spriteSheet = (MsPacManTengenGameSpriteSheet) intro.context.currentGameSceneConfig().spriteSheet();
                 intro.msPacMan.setAnimations(new PacAnimations(spriteSheet));
                 intro.msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
                 intro.msPacMan.animations().ifPresent(Animations::startCurrentAnimation);
@@ -309,7 +309,7 @@ public class IntroScene extends GameScene2D {
                 }
                 if (timer.atSecond(7)) {
                     // start demo level
-                    TengenMsPacManGame tengenGame = (TengenMsPacManGame) intro.context.game();
+                    MsPacManTengenGame tengenGame = (MsPacManTengenGame) intro.context.game();
                     tengenGame.setCanStartGame(false);
                     intro.context.gameController().restart(GameState.STARTING_GAME);
                 }

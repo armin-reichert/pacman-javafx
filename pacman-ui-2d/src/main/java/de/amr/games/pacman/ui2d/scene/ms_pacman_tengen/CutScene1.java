@@ -23,8 +23,8 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.NES_RESOLUTION_X;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.NES_RESOLUTION_Y;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.NES_RESOLUTION_X;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.NES_RESOLUTION_Y;
 
 /**
  * Intermission scene 1: "They meet".
@@ -70,7 +70,7 @@ public class CutScene1 extends GameScene2D {
         pinky = Ghost.pinky();
         heart = new Entity();
 
-        var spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
+        var spriteSheet = (MsPacManTengenGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         msPac.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
         inky.setAnimations(new GhostAnimations(spriteSheet, inky.id()));
@@ -101,7 +101,7 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameRenderer renderer) {
-        TengenMsPacManGameRenderer r = (TengenMsPacManGameRenderer) renderer;
+        MsPacManTengenGameRenderer r = (MsPacManTengenGameRenderer) renderer;
         String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
         Color color = r.assets().color(assetPrefix + ".color.clapperboard"); //TODO check this
         r.drawClapperBoard(r.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
@@ -109,7 +109,7 @@ public class CutScene1 extends GameScene2D {
         r.drawAnimatedEntity(pacMan);
         r.drawAnimatedEntity(inky);
         r.drawAnimatedEntity(pinky);
-        r.drawSprite(heart, TengenMsPacManGameSpriteSheet.HEART_SPRITE);
+        r.drawSprite(heart, MsPacManTengenGameSpriteSheet.HEART_SPRITE);
         r.setLevelNumberBoxesVisible(false);
         r.drawLevelCounter(context, size());
     }

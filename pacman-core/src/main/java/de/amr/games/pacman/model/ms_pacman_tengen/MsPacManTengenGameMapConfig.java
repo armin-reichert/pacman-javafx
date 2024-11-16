@@ -21,9 +21,9 @@ import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.model.ms_pacman_tengen.MapCategory.*;
 import static de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme.*;
 
-public class TengenMsPacManGameMapConfigMgr {
+public class MsPacManTengenGameMapConfig {
 
-    static final String MAPS_ROOT = "/de/amr/games/pacman/maps/ms_pacman_tengen/";
+    private static final String MAPS_ROOT = "/de/amr/games/pacman/maps/ms_pacman_tengen/";
 
     public static final Map<String, String> HIGHLIGHT_COLOR_SCHEME = Map.of(
         "fill",   NES.Palette.color(0x0f),

@@ -31,7 +31,7 @@ import static de.amr.games.pacman.model.ms_pacman_tengen.SpeedConfiguration.*;
  *
  * @author Armin Reichert
  */
-public class TengenMsPacManGame extends GameModel {
+public class MsPacManTengenGame extends GameModel {
 
     public static final int MIN_LEVEL_NUMBER = 1;
     public static final int MAX_LEVEL_NUMBER = 32;
@@ -82,7 +82,7 @@ public class TengenMsPacManGame extends GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
-    private final TengenMsPacManGameMapConfigMgr mapConfigMgr = new TengenMsPacManGameMapConfigMgr();
+    private final MsPacManTengenGameMapConfig mapConfigMgr = new MsPacManTengenGameMapConfig();
     private MapCategory mapCategory;
     private Difficulty difficulty;
     private BoosterMode boosterMode;
@@ -93,7 +93,7 @@ public class TengenMsPacManGame extends GameModel {
     private final Steering autopilot = new RuleBasedPacSteering(this);
     private final Steering demoLevelSteering = new RuleBasedPacSteering(this);
 
-    public TengenMsPacManGame(File userDir) {
+    public MsPacManTengenGame(File userDir) {
         super(userDir);
         scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman_tengen.xml"));
         simulateOverflowBug = false;
@@ -142,7 +142,7 @@ public class TengenMsPacManGame extends GameModel {
         publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
     }
 
-    public TengenMsPacManGameMapConfigMgr mapConfigMgr() {
+    public MsPacManTengenGameMapConfig mapConfigMgr() {
         return mapConfigMgr;
     }
 

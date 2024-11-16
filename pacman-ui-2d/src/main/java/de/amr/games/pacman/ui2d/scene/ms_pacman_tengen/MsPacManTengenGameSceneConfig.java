@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
@@ -22,7 +21,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
-public class TengenMsPacManGameSceneConfig implements GameSceneConfig {
+public class MsPacManTengenGameSceneConfig implements GameSceneConfig {
 
     // 32x28 tiles or 32x30 tiles? Emulator seems to use 32x30?
     public static final int NES_TILES_X = 32;
@@ -32,10 +31,10 @@ public class TengenMsPacManGameSceneConfig implements GameSceneConfig {
     public static final int NES_RESOLUTION_Y = 240; // see above
 
     private final AssetStorage assets;
-    private final TengenMsPacManGameSpriteSheet spriteSheet;
+    private final MsPacManTengenGameSpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public TengenMsPacManGameSceneConfig(AssetStorage assets) {
+    public MsPacManTengenGameSceneConfig(AssetStorage assets) {
         this.assets = checkNotNull(assets);
         spriteSheet = assets.get("tengen.spritesheet");
 
@@ -43,7 +42,7 @@ public class TengenMsPacManGameSceneConfig implements GameSceneConfig {
         set("IntroScene",     new IntroScene());
         set("StartScene",     new OptionsScene());
         set("ShowingCredits", new CreditsScene());
-        set("PlayScene2D",    new TengenPlayScene2D());
+        set("PlayScene2D",    new PlayScene2D());
         set("CutScene1",      new CutScene1());
         set("CutScene2",      new CutScene2());
         set("CutScene3",      new CutScene3());
@@ -84,8 +83,8 @@ public class TengenMsPacManGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public TengenMsPacManGameRenderer createRenderer(Canvas canvas) {
-        return new TengenMsPacManGameRenderer(assets, spriteSheet, canvas);
+    public MsPacManTengenGameRenderer createRenderer(Canvas canvas) {
+        return new MsPacManTengenGameRenderer(assets, spriteSheet, canvas);
     }
 
     @Override

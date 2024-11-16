@@ -11,7 +11,7 @@ import de.amr.games.pacman.ui3d.scene.common.Perspective;
 import de.amr.games.pacman.ui3d.scene.ms_pacman.MsPacManGameSceneConfig3D;
 import de.amr.games.pacman.ui3d.scene.pacman.PacManGameSceneConfig3D;
 import de.amr.games.pacman.ui3d.scene.pacman_xxl.PacManGameXXLSceneConfig3D;
-import de.amr.games.pacman.ui3d.scene.tengen.TengenMsPacManGameSceneConfig3D;
+import de.amr.games.pacman.ui3d.scene.tengen.MsPacManTengenGameSceneConfig3D;
 import javafx.application.Application;
 import javafx.beans.property.*;
 import javafx.geometry.Dimension2D;
@@ -71,7 +71,7 @@ public class PacManGames3dApp extends Application {
         ui = new PacManGamesUI_3D();
         ui.loadAssets();
         ui.setGameSceneConfig(GameVariant.MS_PACMAN, new MsPacManGameSceneConfig3D(ui.assets()));
-        ui.setGameSceneConfig(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacManGameSceneConfig3D(ui.assets()));
+        ui.setGameSceneConfig(GameVariant.MS_PACMAN_TENGEN, new MsPacManTengenGameSceneConfig3D(ui.assets()));
         ui.setGameSceneConfig(GameVariant.PACMAN, new PacManGameSceneConfig3D(ui.assets()));
         ui.setGameSceneConfig(GameVariant.PACMAN_XXL, new PacManGameXXLSceneConfig3D(ui.assets()));
         ui.createAndStart(stage, initialSize());

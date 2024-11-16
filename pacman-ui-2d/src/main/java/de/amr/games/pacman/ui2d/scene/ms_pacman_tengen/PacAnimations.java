@@ -9,7 +9,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
-import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
+import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManTengenGame;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
@@ -23,19 +23,19 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class PacAnimations extends SpriteAnimationCollection {
 
-    public PacAnimations(TengenMsPacManGameSpriteSheet spriteSheet) {
+    public PacAnimations(MsPacManTengenGameSpriteSheet spriteSheet) {
         checkNotNull(spriteSheet);
 
         var munching = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man munching")
-            .sprites(TengenMsPacManGameSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT)
+            .sprites(MsPacManTengenGameSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT)
             .loop();
 
         var munchingBooster = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man munching booster mode")
-            .sprites(TengenMsPacManGameSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
+            .sprites(MsPacManTengenGameSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
             .loop();
 
         var dying = SpriteAnimation
@@ -48,23 +48,23 @@ public class PacAnimations extends SpriteAnimationCollection {
         var husbandMunching = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man's husband munching")
-            .sprites(TengenMsPacManGameSpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT)
+            .sprites(MsPacManTengenGameSpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT)
             .frameTicks(2)
             .loop();
 
         var husbandMunchingBooster = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man's husband munching booster mode")
-            .sprites(TengenMsPacManGameSpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
+            .sprites(MsPacManTengenGameSpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
             .frameTicks(2)
             .loop();
 
         add(Map.of(
             GameModel.ANIM_PAC_MUNCHING, munching,
-            TengenMsPacManGame.ANIM_MS_PACMAN_BOOSTER, munchingBooster,
+            MsPacManTengenGame.ANIM_MS_PACMAN_BOOSTER, munchingBooster,
             GameModel.ANIM_PAC_DYING, dying,
             MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING, husbandMunching,
-            TengenMsPacManGame.ANIM_PACMAN_BOOSTER, husbandMunchingBooster
+            MsPacManTengenGame.ANIM_PACMAN_BOOSTER, husbandMunchingBooster
         ));
     }
 
@@ -72,13 +72,13 @@ public class PacAnimations extends SpriteAnimationCollection {
     protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
         if (entity instanceof Pac msPacMan) {
             if (isCurrentAnimationID(GameModel.ANIM_PAC_MUNCHING)) {
-                return TengenMsPacManGameSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT;
+                return MsPacManTengenGameSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT;
             }
-            if (isCurrentAnimationID(TengenMsPacManGame.ANIM_MS_PACMAN_BOOSTER)) {
-                return TengenMsPacManGameSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER;
+            if (isCurrentAnimationID(MsPacManTengenGame.ANIM_MS_PACMAN_BOOSTER)) {
+                return MsPacManTengenGameSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER;
             }
             if (isCurrentAnimationID(MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING)) {
-                return ((TengenMsPacManGameSpriteSheet)spriteSheet).pacManMunchingSprites(msPacMan.moveDir());
+                return ((MsPacManTengenGameSpriteSheet)spriteSheet).pacManMunchingSprites(msPacMan.moveDir());
             }
         }
         return super.selectedSprites(spriteSheet, entity);

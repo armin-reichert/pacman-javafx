@@ -16,7 +16,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
-import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
+import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManTengenGame;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
@@ -45,16 +45,16 @@ import static de.amr.games.pacman.ui2d.GameActions2D.bindCheatActions;
 import static de.amr.games.pacman.ui2d.GameActions2D.bindFallbackPlayerControlActions;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions.QUIT_DEMO_LEVEL;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenGameActions.bindDefaultJoypadActions;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameActions.QUIT_DEMO_LEVEL;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameActions.bindDefaultJoypadActions;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.*;
 
 /**
  * Tengen play scene, uses vertical scrolling.
  *
  * @author Armin Reichert
  */
-public class TengenPlayScene2D extends GameScene2D implements CameraControlledGameScene {
+public class PlayScene2D extends GameScene2D implements CameraControlledGameScene {
 
     private static final int MOVING_MESSAGE_DELAY = 120;
 
@@ -65,7 +65,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
     private MazeFlashing mazeFlashing;
     private int camDelay;
 
-    public TengenPlayScene2D() {
+    public PlayScene2D() {
         canvas.widthProperty() .bind(scalingProperty().map(s -> s.doubleValue() * size().x()));
         canvas.heightProperty().bind(scalingProperty().map(s -> s.doubleValue() * size().y()));
         Pane root = new StackPane(canvas);
@@ -229,7 +229,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
 
     @Override
     public void onEnterGameState(GameState state) {
-        TengenMsPacManGame game = (TengenMsPacManGame) context.game();
+        MsPacManTengenGame game = (MsPacManTengenGame) context.game();
         switch (state) {
             case LEVEL_COMPLETE -> mazeFlashing.init(game);
             case GAME_OVER -> {
@@ -334,10 +334,10 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
             return;
         }
 
-        final var game = (TengenMsPacManGame) context.game();
+        final var game = (MsPacManTengenGame) context.game();
         final GameWorld world = context.level().world();
         final Pac msPacMan = context.level().pac();
-        final var r = (TengenMsPacManGameRenderer) gr;
+        final var r = (MsPacManTengenGameRenderer) gr;
 
         r.setBlinkingOn(context.level().blinking().isOn());
 

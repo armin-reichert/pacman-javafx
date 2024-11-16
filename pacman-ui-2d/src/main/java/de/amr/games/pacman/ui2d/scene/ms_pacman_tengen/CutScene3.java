@@ -22,8 +22,8 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.NES_RESOLUTION_X;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.NES_RESOLUTION_Y;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.NES_RESOLUTION_X;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.NES_RESOLUTION_Y;
 
 /**
  * Intermission scene 3: "Junior".
@@ -67,7 +67,7 @@ public class CutScene3 extends GameScene2D {
 
         music = context.sound().makeSound("intermission.3",1.0, false);
 
-        var spriteSheet = (TengenMsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
+        var spriteSheet = (MsPacManTengenGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         mrPacMan.setAnimations(new PacAnimations(spriteSheet));
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
 
@@ -98,7 +98,7 @@ public class CutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameRenderer renderer) {
-        TengenMsPacManGameRenderer r = (TengenMsPacManGameRenderer) renderer;
+        MsPacManTengenGameRenderer r = (MsPacManTengenGameRenderer) renderer;
         String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
         Color color = r.assets().color(assetPrefix + ".color.clapperboard");
         r.drawClapperBoard(r.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
@@ -106,8 +106,8 @@ public class CutScene3 extends GameScene2D {
         r.drawAnimatedEntity(mrPacMan);
         r.drawStork(storkAnimation, stork, bag.acceleration().y() != 0);
         r.drawSprite(bag, bagOpen
-            ? TengenMsPacManGameSpriteSheet.JUNIOR_PAC_SPRITE
-            : TengenMsPacManGameSpriteSheet.BLUE_BAG_SPRITE);
+            ? MsPacManTengenGameSpriteSheet.JUNIOR_PAC_SPRITE
+            : MsPacManTengenGameSpriteSheet.BLUE_BAG_SPRITE);
         r.setLevelNumberBoxesVisible(false);
         r.drawLevelCounter(context, size());
     }

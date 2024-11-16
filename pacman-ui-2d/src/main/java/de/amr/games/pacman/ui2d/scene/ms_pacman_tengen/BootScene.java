@@ -14,8 +14,8 @@ import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.nesPaletteColor;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.nesPaletteColor;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.*;
 
 /**
  * Animated "TENGEN PRESENTS" text and ghost running through scene.
@@ -83,7 +83,7 @@ public class BootScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent(GameRenderer renderer) {
-        var r = (TengenMsPacManGameRenderer) renderer;
+        var r = (MsPacManTengenGameRenderer) renderer;
         r.setScaling(scaling());
         if (grayScreen) {
             r.ctx().setFill(nesPaletteColor(0x10));
