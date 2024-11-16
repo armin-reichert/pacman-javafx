@@ -14,7 +14,7 @@ import de.amr.games.pacman.ui2d.util.ResourceManager;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.paletteColor;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.nesPaletteColor;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 import static de.amr.games.pacman.ui2d.util.Ufx.imageBackground;
 
@@ -141,41 +141,41 @@ public class GameAssets2D extends AssetStorage {
         assets.store("tengen.logo.midway",                    rm.loadImage("graphics/mspacman/midway_logo.png"));
         assets.store("tengen.image.nes-controller",           rm.loadImage("graphics/tengen/nes-controller.jpg"));
 
-        assets.store("tengen.color.game_over_message",        paletteColor(0x11));
-        assets.store("tengen.color.ready_message",            paletteColor(0x28));
-        assets.store("tengen.color.clapperboard",             paletteColor(0x20));
+        assets.store("tengen.color.game_over_message",        nesPaletteColor(0x11));
+        assets.store("tengen.color.ready_message",            nesPaletteColor(0x28));
+        assets.store("tengen.color.clapperboard",             nesPaletteColor(0x20));
 
-        assets.store("tengen.pac.color.head",                 paletteColor(0x28));
-        assets.store("tengen.pac.color.eyes",                 paletteColor(0x02));
-        assets.store("tengen.pac.color.palate",               paletteColor(0x2d));
-        assets.store("tengen.pac.color.boobs",                paletteColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
-        assets.store("tengen.pac.color.hairbow",              paletteColor(0x05));
-        assets.store("tengen.pac.color.hairbow.pearls",       paletteColor(0x02));
+        assets.store("tengen.pac.color.head",                 nesPaletteColor(0x28));
+        assets.store("tengen.pac.color.eyes",                 nesPaletteColor(0x02));
+        assets.store("tengen.pac.color.palate",               nesPaletteColor(0x2d));
+        assets.store("tengen.pac.color.boobs",                nesPaletteColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
+        assets.store("tengen.pac.color.hairbow",              nesPaletteColor(0x05));
+        assets.store("tengen.pac.color.hairbow.pearls",       nesPaletteColor(0x02));
 
-        assets.store("tengen.ghost.0.color.normal.dress",     paletteColor(0x05));
-        assets.store("tengen.ghost.0.color.normal.eyeballs",  paletteColor(0x20));
-        assets.store("tengen.ghost.0.color.normal.pupils",    paletteColor(0x16));
+        assets.store("tengen.ghost.0.color.normal.dress",     nesPaletteColor(0x05));
+        assets.store("tengen.ghost.0.color.normal.eyeballs",  nesPaletteColor(0x20));
+        assets.store("tengen.ghost.0.color.normal.pupils",    nesPaletteColor(0x16));
 
-        assets.store("tengen.ghost.1.color.normal.dress",     paletteColor(0x25));
-        assets.store("tengen.ghost.1.color.normal.eyeballs",  paletteColor(0x20));
-        assets.store("tengen.ghost.1.color.normal.pupils",    paletteColor(0x11));
+        assets.store("tengen.ghost.1.color.normal.dress",     nesPaletteColor(0x25));
+        assets.store("tengen.ghost.1.color.normal.eyeballs",  nesPaletteColor(0x20));
+        assets.store("tengen.ghost.1.color.normal.pupils",    nesPaletteColor(0x11));
 
-        assets.store("tengen.ghost.2.color.normal.dress",     paletteColor(0x11));
-        assets.store("tengen.ghost.2.color.normal.eyeballs",  paletteColor(0x20));
-        assets.store("tengen.ghost.2.color.normal.pupils",    paletteColor(0x11));
+        assets.store("tengen.ghost.2.color.normal.dress",     nesPaletteColor(0x11));
+        assets.store("tengen.ghost.2.color.normal.eyeballs",  nesPaletteColor(0x20));
+        assets.store("tengen.ghost.2.color.normal.pupils",    nesPaletteColor(0x11));
 
-        assets.store("tengen.ghost.3.color.normal.dress",     paletteColor(0x16));
-        assets.store("tengen.ghost.3.color.normal.eyeballs",  paletteColor(0x20));
-        assets.store("tengen.ghost.3.color.normal.pupils",    paletteColor(0x05));
+        assets.store("tengen.ghost.3.color.normal.dress",     nesPaletteColor(0x16));
+        assets.store("tengen.ghost.3.color.normal.eyeballs",  nesPaletteColor(0x20));
+        assets.store("tengen.ghost.3.color.normal.pupils",    nesPaletteColor(0x05));
 
-        assets.store("tengen.ghost.color.frightened.dress",   paletteColor(0x01));
-        assets.store("tengen.ghost.color.frightened.eyeballs", paletteColor(0x20));
-        assets.store("tengen.ghost.color.frightened.pupils",  paletteColor(0x20));
+        assets.store("tengen.ghost.color.frightened.dress",   nesPaletteColor(0x01));
+        assets.store("tengen.ghost.color.frightened.eyeballs", nesPaletteColor(0x20));
+        assets.store("tengen.ghost.color.frightened.pupils",  nesPaletteColor(0x20));
 
         //TODO has two flashing colors, when to use which?
-        assets.store("tengen.ghost.color.flashing.dress",     paletteColor(0x20));
-        assets.store("tengen.ghost.color.flashing.eyeballs",  paletteColor(0x20));
-        assets.store("tengen.ghost.color.flashing.pupils",    paletteColor(0x20));
+        assets.store("tengen.ghost.color.flashing.dress",     nesPaletteColor(0x20));
+        assets.store("tengen.ghost.color.flashing.eyeballs",  nesPaletteColor(0x20));
+        assets.store("tengen.ghost.color.flashing.pupils",    nesPaletteColor(0x20));
 
         assets.store("tengen.audio.option.selection_changed", rm.loadAudioClip("sound/tengen/ms-select1.wav"));
         assets.store("tengen.audio.option.value_changed",     rm.loadAudioClip("sound/tengen/ms-select2.wav"));

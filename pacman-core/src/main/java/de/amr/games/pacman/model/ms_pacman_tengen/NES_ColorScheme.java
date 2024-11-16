@@ -6,9 +6,10 @@ package de.amr.games.pacman.model.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.nes.NES;
 
-import java.util.Map;
-
-public enum NamedMapColorScheme {
+/**
+ * The color schemes used in the Tengen Ms. Pac-Man maps.
+ */
+public enum NES_ColorScheme {
 
     MCS_0F_20_1C_BLACK_WHITE_GREEN   (0x0f, 0x20, 0x1c),
     MCS_0F_20_28_BLACK_WHITE_YELLOW  (0x0f, 0x20, 0x28),
@@ -37,23 +38,25 @@ public enum NamedMapColorScheme {
     MCS_13_20_28_VIOLET_WHITE_YELLOW (0x13, 0x20, 0x28),
     MCS_28_20_2A_YELLOW_WHITE_GREEN  (0x28, 0x20, 0x2a);
 
-    /**
-     * @param fillIndex index in NES palette of wall fill color
-     * @param strokeIndex index in NES palette of wall stroke (and door) color
-     * @param pelletIndex index in NES palette of pellet color
-     */
-    NamedMapColorScheme(int fillIndex, int strokeIndex, int pelletIndex) {
-        colorScheme = Map.of(
-            "fill",   NES.Palette.color(fillIndex),
-            "stroke", NES.Palette.color(strokeIndex),
-            "door",   NES.Palette.color(strokeIndex),
-            "pellet", NES.Palette.color(pelletIndex)
-        );
+    NES_ColorScheme(int fillIndex, int strokeIndex, int pelletIndex) {
+        fillColor = NES.Palette.color(fillIndex);
+        strokeColor = NES.Palette.color(strokeIndex);
+        pelletColor = NES.Palette.color(pelletIndex);
     }
 
-    public Map<String, String> get() {
-        return colorScheme;
+    public String fillColor() {
+        return fillColor;
     }
 
-    private final Map<String, String> colorScheme;
+    public String strokeColor() {
+        return strokeColor;
+    }
+
+    public String pelletColor() {
+        return pelletColor;
+    }
+
+    private final String fillColor;
+    private final String strokeColor;
+    private final String pelletColor;
 }

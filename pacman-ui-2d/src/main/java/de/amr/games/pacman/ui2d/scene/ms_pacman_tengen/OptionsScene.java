@@ -22,7 +22,7 @@ import javafx.scene.text.Font;
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.paletteColor;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.nesPaletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.*;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSpriteSheet.CONTINUES_SPRITES;
 
@@ -36,8 +36,8 @@ public class OptionsScene extends GameScene2D {
     static final int COL_COLON = 19 * TS;
     static final int COL_VALUE = 21  * TS;
 
-    static final Color LABEL_COLOR = paletteColor(0x28);
-    static final Color VALUE_COLOR = paletteColor(0x20);
+    static final Color LABEL_COLOR = nesPaletteColor(0x28);
+    static final Color VALUE_COLOR = nesPaletteColor(0x20);
 
     static final int OPTION_PLAYERS = 0;
     static final int OPTION_PAC_BOOSTER = 1;
@@ -227,7 +227,7 @@ public class OptionsScene extends GameScene2D {
         Font scaledFont = r.scaledArcadeFont(TS);
 
         double y = 20;
-        r.drawBar(paletteColor(0x20), paletteColor(0x21), size().x(), y);
+        r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), size().x(), y);
 
         y += 28;
         renderer.drawText("MS PAC-MAN OPTIONS", LABEL_COLOR, scaledFont, COL_LABEL + 3 * TS, y);
@@ -283,7 +283,7 @@ public class OptionsScene extends GameScene2D {
         centerLabelText(renderer, "PRESS START TO START GAME", scaledFont, y);
 
         y += 4;
-        r.drawBar(paletteColor(0x20), paletteColor(0x21), size().x(), y);
+        r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), size().x(), y);
     }
 
     private void centerLabelText(GameRenderer renderer, String text, Font font, double y) {

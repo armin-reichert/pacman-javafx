@@ -4,12 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model.pacman_xxl;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.MapConfig;
 import de.amr.games.pacman.model.actors.StaticBonus;
@@ -34,7 +32,7 @@ public class PacManXXLGame extends PacManArcadeGame {
     private static final int MAP_COUNT = 8;
     private static final String MAP_PATTERN = "/de/amr/games/pacman/maps/pacman_xxl/masonic_%d.world";
 
-    static final List<Map<String, String>> COLOR_SCHEMES = List.of(
+    static final List<Map<String, String>> COLOR_MAPS = List.of(
         Map.of("fill", "#359c9c", "stroke", "#85e2ff", "door", "#fcb5ff", "pellet", "#feb8ae"),
         Map.of("fill", "#c2b853", "stroke", "#ffeace", "door", "#fcb5ff", "pellet", "#feb8ae"),
         Map.of("fill", "#86669c", "stroke", "#f6c4e0", "door", "#fcb5ff", "pellet", "#feb8ae"),
@@ -118,7 +116,7 @@ public class PacManXXLGame extends PacManArcadeGame {
         }
         if (standardMaps.contains(map)) {
             // try using random color scheme, TODO: avoid repetitions
-            colorScheme = COLOR_SCHEMES.get(randomInt(0, COLOR_SCHEMES.size()));
+            colorScheme = COLOR_MAPS.get(randomInt(0, COLOR_MAPS.size()));
         } else {
             colorScheme = Map.of(
                 "fill",   map.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_FILL, "000000"),

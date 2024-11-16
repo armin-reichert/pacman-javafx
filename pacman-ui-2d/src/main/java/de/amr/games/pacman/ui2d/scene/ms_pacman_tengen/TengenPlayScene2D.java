@@ -316,7 +316,7 @@ public class TengenPlayScene2D extends GameScene2D implements CameraControlledGa
         long start = System.nanoTime();
         context.game().level().ifPresent(gr::update);
         long duration = System.nanoTime() - start;
-        Logger.info(() -> "Update renderer took %.3f millis".formatted(duration * 1e-6));
+        Logger.debug(() -> "Update renderer took %.3f millis".formatted(duration * 1e-6));
 
         gr.setScaling(scaling());
         gr.setBackgroundColor(backgroundColor());

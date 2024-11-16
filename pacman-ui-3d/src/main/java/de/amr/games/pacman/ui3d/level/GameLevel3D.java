@@ -15,6 +15,8 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.ms_pacman_tengen.MapConfigurationManager;
+import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.sound.GameSound;
@@ -217,8 +219,9 @@ public class GameLevel3D {
 
         wallStrokeMaterialPy.bind(wallStrokeColorPy.map(Ufx::coloredMaterial));
 
-        buildWorld3D(world, assets, level.mapConfig().colorScheme());
-        addFood3D(world, assets, level.mapConfig().colorScheme());
+        Map<String, String> colorMap = buildColorMap(level.mapConfig().colorScheme());
+        buildWorld3D(world, assets, colorMap);
+        addFood3D(world, assets, colorMap);
 
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
         root.getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
@@ -227,6 +230,16 @@ public class GameLevel3D {
 
         PY_3D_WALL_HEIGHT.addListener((py,ov,nv) -> obstacleHeightPy.set(nv.doubleValue()));
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+    }
+
+    //TODO this should be done elsewhere
+    @SuppressWarnings("unchecked")
+    private Map<String, String> buildColorMap(Object colorScheme) {
+        return switch (context.gameVariant()) {
+            case PACMAN, PACMAN_XXL -> (Map<String, String>) colorScheme;
+            case MS_PACMAN -> de.amr.games.pacman.model.ms_pacman.MapConfigurationManager.COLOR_SCHEMES.get((int) colorScheme);
+            case MS_PACMAN_TENGEN -> MapConfigurationManager.COLOR_MAPS_OF_NES_COLOR_SCHEMES.get((NES_ColorScheme) colorScheme);
+        };
     }
 
     public void addLevelCounter() {

@@ -14,7 +14,7 @@ import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.paletteColor;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.nesPaletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.*;
 
 /**
@@ -86,7 +86,7 @@ public class BootScene extends GameScene2D {
         var r = (TengenMsPacManGameRenderer) renderer;
         r.setScaling(scaling());
         if (grayScreen) {
-            r.ctx().setFill(paletteColor(0x10));
+            r.ctx().setFill(nesPaletteColor(0x10));
             r.ctx().fillRect(0, 0, r.canvas().getWidth(), r.canvas().getHeight());
         } else {
             r.drawTengenPresents(t, TENGEN_PRESENTS_X, tengenPresentsY);

@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapConfigurationManager;
+import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -16,13 +17,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static de.amr.games.pacman.model.ms_pacman_tengen.MapConfigurationManager.randomMapColorScheme;
+import static de.amr.games.pacman.model.ms_pacman_tengen.MapConfigurationManager.COLOR_MAPS_OF_NES_COLOR_SCHEMES;
+import static de.amr.games.pacman.model.ms_pacman_tengen.MapConfigurationManager.random_NES_colorScheme;
 
 public class MazeFlashing {
 
-    private static final Map<String, Color> HIGHLIGHT_COLOR_SCHEME = mapToColors(MapConfigurationManager.HIGHLIGHT_COLOR_SCHEME);
+    private static final Map<String, Color> HIGHLIGHT_COLOR_SCHEME = mapStringToColorValues(MapConfigurationManager.HIGHLIGHT_COLOR_SCHEME);
 
-    private static Map<String, Color> mapToColors(Map<String, String> colorScheme) {
+    private static Map<String, Color> mapStringToColorValues(Map<String, String> colorScheme) {
         Map<String, Color> colorMap = new HashMap<>();
         for (String key : colorScheme.keySet()) {
             colorMap.put(key, Color.valueOf(colorScheme.get(key)));
@@ -37,23 +39,24 @@ public class MazeFlashing {
 
     public void init(TengenMsPacManGame game) {
         GameLevel level = game.level().orElseThrow();
-        Map<String, Color> currentScheme = mapToColors(level.mapConfig().colorScheme());
+        NES_ColorScheme currentScheme = (NES_ColorScheme) level.mapConfig().colorScheme();
+        Map<String, Color> currentColorMap = mapStringToColorValues(COLOR_MAPS_OF_NES_COLOR_SCHEMES.get(currentScheme));
         boolean random = game.mapConfigMgr().isRandomColorSchemeUsed(game.mapCategory(), level.number);
         colorSchemes.clear();
         for (int i = 0; i < game.numFlashes(); ++i) {
-            colorSchemes.add(random ? randomColorfulScheme() : currentScheme);
+            colorSchemes.add(random ? randomColorfulScheme() : currentColorMap);
             colorSchemes.add(HIGHLIGHT_COLOR_SCHEME);
         }
         startTick = -1;
     }
 
     private Map<String, Color> randomColorfulScheme() {
-        var colorScheme = randomMapColorScheme().get();
-        // skip color schemes with black fill color
-        while (colorScheme.get("fill").equals(NES.Palette.color(0x0f))) {
-            colorScheme = randomMapColorScheme().get();
+        NES_ColorScheme nesColorScheme = random_NES_colorScheme();
+        // ignore color schemes with black fill color
+        while (nesColorScheme.fillColor().equals(NES.Palette.color(0x0f))) {
+            nesColorScheme = random_NES_colorScheme();
         }
-        return mapToColors(colorScheme);
+        return mapStringToColorValues(COLOR_MAPS_OF_NES_COLOR_SCHEMES.get(nesColorScheme));
     }
 
     public Map<String, Color> currentColorScheme() {

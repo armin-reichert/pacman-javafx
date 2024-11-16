@@ -10,7 +10,6 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
-import de.amr.games.pacman.model.ms_pacman.MapConfigurationManager;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -124,15 +123,13 @@ public class MsPacManArcadeGameRenderer implements GameRenderer {
     @Override
     public void update(GameLevel level) {
         if (level.mapConfig() != null) {
-            // select map sprites for current color scheme
-            var colorScheme = level.mapConfig().colorScheme();
-            int index = MapConfigurationManager.colorSchemeIndex(colorScheme);
+            int index = (int) level.mapConfig().colorScheme();
             if (index != -1) {
                 mapWithFoodSprite    = MAPS_WITH_FOOD_SPRITES[index];
                 mapWithoutFoodSprite = MAPS_WITHOUT_FOOD_SPRITES[index];
                 mapFlashingSprite    =  new ImageArea(flashingMazesImage, FLASHING_MAP_SPRITES[index]);
             } else {
-                Logger.error("Could not identify color scheme {}", colorScheme);
+                Logger.error("Could not identify color scheme with index {}", index);
             }
         }
     }

@@ -13,7 +13,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.paletteColor;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.nesPaletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.*;
 
 public class CreditsScene extends GameScene2D {
@@ -44,8 +44,8 @@ public class CreditsScene extends GameScene2D {
         var r = (TengenMsPacManGameRenderer) renderer;
         Font scaledFont = renderer.scaledArcadeFont(TS);
         double width = size().x();
-        r.drawBar(paletteColor(0x20), paletteColor(0x13), width, 20);
-        r.drawBar(paletteColor(0x20), paletteColor(0x13), width, 212);
+        r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), width, 20);
+        r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), width, 212);
         if (context.gameState().timer().betweenSeconds(0.5*DISPLAY_SECONDS, DISPLAY_SECONDS)) {
             drawJavaFXVersionAuthors(r, scaledFont);
         } else {
@@ -55,46 +55,46 @@ public class CreditsScene extends GameScene2D {
 
     private void drawOriginalGameAuthors(TengenMsPacManGameRenderer r, Font scaledFont) {
         int y = 7 * TS;
-        r.drawText("CREDITS FOR MS PAC-MAN", paletteColor(0x20), scaledFont, 3 * TS, y);
+        r.drawText("CREDITS FOR MS PAC-MAN", nesPaletteColor(0x20), scaledFont, 3 * TS, y);
         y += 4 * TS;
-        r.drawText("GAME PROGRAMMER:", paletteColor(0x23), scaledFont, 4 * TS, y);
+        r.drawText("GAME PROGRAMMER:", nesPaletteColor(0x23), scaledFont, 4 * TS, y);
         y += 2 * TS;
-        r.drawText("FRANZ LANZINGER", paletteColor(0x23), scaledFont, 10 * TS, y);
+        r.drawText("FRANZ LANZINGER", nesPaletteColor(0x23), scaledFont, 10 * TS, y);
         y += 3 * TS;
-        r.drawText("SPECIAL THANKS:", paletteColor(0x23), scaledFont, 4 * TS, y);
+        r.drawText("SPECIAL THANKS:", nesPaletteColor(0x23), scaledFont, 4 * TS, y);
         y += 2 * TS;
-        r.drawText("JEFF YONAN", paletteColor(0x23), scaledFont, 10 * TS, y);
+        r.drawText("JEFF YONAN", nesPaletteColor(0x23), scaledFont, 10 * TS, y);
         y += TS;
-        r.drawText("DAVE O'RIVA", paletteColor(0x23), scaledFont, 10 * TS, y);
+        r.drawText("DAVE O'RIVA", nesPaletteColor(0x23), scaledFont, 10 * TS, y);
         y += 4 * TS;
-        r.drawText("MS PAC-MAN TM NAMCO LTD", paletteColor(0x19), scaledFont, centerX(23), y);
+        r.drawText("MS PAC-MAN TM NAMCO LTD", nesPaletteColor(0x19), scaledFont, centerX(23), y);
         y += TS;
-        r.drawText("©1990 TENGEN INC", paletteColor(0x19), scaledFont, centerX(16), y);
+        r.drawText("©1990 TENGEN INC", nesPaletteColor(0x19), scaledFont, centerX(16), y);
         y += TS;
-        r.drawText("ALL RIGHTS RESERVED", paletteColor(0x19), scaledFont, centerX(19), y);
+        r.drawText("ALL RIGHTS RESERVED", nesPaletteColor(0x19), scaledFont, centerX(19), y);
     }
 
     private void drawJavaFXVersionAuthors(TengenMsPacManGameRenderer r, Font scaledFont) {
         int y = 7 * TS;
-        r.drawText("CREDITS FOR JAVAFX REMAKE", paletteColor(0x20), scaledFont, 3 * TS, y);
+        r.drawText("CREDITS FOR JAVAFX REMAKE", nesPaletteColor(0x20), scaledFont, 3 * TS, y);
         y += 4 * TS;
-        r.drawText("GAME PROGRAMMER:", paletteColor(0x23), scaledFont, 4 * TS, y);
+        r.drawText("GAME PROGRAMMER:", nesPaletteColor(0x23), scaledFont, 4 * TS, y);
         y += 2 * TS;
-        r.drawText("ARMIN REICHERT", paletteColor(0x23), scaledFont, 10 * TS, y);
+        r.drawText("ARMIN REICHERT", nesPaletteColor(0x23), scaledFont, 10 * TS, y);
         y += 3 * TS;
-        r.drawText("SPECIAL THANKS:", paletteColor(0x23), scaledFont, 4 * TS, y);
+        r.drawText("SPECIAL THANKS:", nesPaletteColor(0x23), scaledFont, 4 * TS, y);
         y += 2 * TS;
-        r.drawText("RUSSIANMANSMWC", paletteColor(0x23), scaledFont, 10 * TS, y);
+        r.drawText("RUSSIANMANSMWC", nesPaletteColor(0x23), scaledFont, 10 * TS, y);
         y += TS;
-        r.drawText("ANDYANA JONSEPH", paletteColor(0x23), scaledFont, 10 * TS, y);
+        r.drawText("ANDYANA JONSEPH", nesPaletteColor(0x23), scaledFont, 10 * TS, y);
         y += TS;
-        r.drawText("FLICKY1211", paletteColor(0x23), scaledFont, 10 * TS, y);
+        r.drawText("FLICKY1211", nesPaletteColor(0x23), scaledFont, 10 * TS, y);
         y += 3 * TS;
-        r.drawText("MS PAC-MAN TM NAMCO LTD", paletteColor(0x19), scaledFont, centerX(23), y);
+        r.drawText("MS PAC-MAN TM NAMCO LTD", nesPaletteColor(0x19), scaledFont, centerX(23), y);
         y += TS;
-        r.drawText("©1990 TENGEN INC", paletteColor(0x19), scaledFont, centerX(16), y);
+        r.drawText("©1990 TENGEN INC", nesPaletteColor(0x19), scaledFont, centerX(16), y);
         y += TS;
-        r.drawText("ALL RIGHTS RESERVED", paletteColor(0x19), scaledFont, centerX(19), y);
+        r.drawText("ALL RIGHTS RESERVED", nesPaletteColor(0x19), scaledFont, centerX(19), y);
     }
 
     private double centerX(int textLength) {

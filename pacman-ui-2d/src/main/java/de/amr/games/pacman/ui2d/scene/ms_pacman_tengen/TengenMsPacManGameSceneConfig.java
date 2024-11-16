@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
@@ -49,7 +50,7 @@ public class TengenMsPacManGameSceneConfig implements GameSceneConfig {
         set("CutScene4",      new CutScene4());
     }
 
-    public static Color paletteColor(int index) {
+    public static Color nesPaletteColor(int index) {
         return Color.web(NES.Palette.color(index));
     }
 

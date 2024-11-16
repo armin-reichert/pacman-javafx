@@ -28,7 +28,7 @@ import org.tinylog.Logger;
 import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.paletteColor;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.nesPaletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.NES_RESOLUTION_X;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSceneConfig.NES_RESOLUTION_Y;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.TengenMsPacManGameSpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
@@ -107,24 +107,24 @@ public class IntroScene extends GameScene2D {
                     r.drawTengenPresents(t, 9 * TS, MARQUEE_Y - TS);
                     r.drawSpriteScaled(MS_PAC_MAN_TITLE_SPRITE, 6 * TS, MARQUEE_Y);
                     if (t % 60 < 30) {
-                        r.drawText("PRESS START", paletteColor(0x20), scaledFont, 11 * TS, MARQUEE_Y + 9 * TS);
+                        r.drawText("PRESS START", nesPaletteColor(0x20), scaledFont, 11 * TS, MARQUEE_Y + 9 * TS);
                     }
-                    r.drawText("MS PAC-MAN TM NAMCO LTD", paletteColor(0x25), scaledFont, 6 * TS, MARQUEE_Y + 15 * TS);
-                    r.drawText("©1990 TENGEN INC",        paletteColor(0x25), scaledFont, 8 * TS, MARQUEE_Y + 16 * TS);
-                    r.drawText("ALL RIGHTS RESERVED",     paletteColor(0x25), scaledFont, 7 * TS, MARQUEE_Y + 17 * TS);
+                    r.drawText("MS PAC-MAN TM NAMCO LTD", nesPaletteColor(0x25), scaledFont, 6 * TS, MARQUEE_Y + 15 * TS);
+                    r.drawText("©1990 TENGEN INC",        nesPaletteColor(0x25), scaledFont, 8 * TS, MARQUEE_Y + 16 * TS);
+                    r.drawText("ALL RIGHTS RESERVED",     nesPaletteColor(0x25), scaledFont, 7 * TS, MARQUEE_Y + 17 * TS);
                 }
             }
 
             case SHOWING_MARQUEE -> {
                 drawMarquee(r, t);
-                r.drawText("\"MS PAC-MAN\"", paletteColor(0x28), scaledFont, MARQUEE_X + 20, MARQUEE_Y - 18);
+                r.drawText("\"MS PAC-MAN\"", nesPaletteColor(0x28), scaledFont, MARQUEE_X + 20, MARQUEE_Y - 18);
             }
 
             case GHOSTS_MARCHING_IN -> {
                 drawMarquee(r, t);
-                r.drawText("\"MS PAC-MAN\"", paletteColor(0x28), scaledFont, MARQUEE_X + 20, MARQUEE_Y - 18);
+                r.drawText("\"MS PAC-MAN\"", nesPaletteColor(0x28), scaledFont, MARQUEE_X + 20, MARQUEE_Y - 18);
                 if (ghostIndex == 0) {
-                    r.drawText("WITH", paletteColor(0x20), scaledFont, MARQUEE_X + 12, MARQUEE_Y + 23);
+                    r.drawText("WITH", nesPaletteColor(0x20), scaledFont, MARQUEE_X + 12, MARQUEE_Y + 23);
                 }
                 Ghost currentGhost = ghosts[ghostIndex];
                 Color ghostColor = context.assets().color("tengen.ghost.%d.color.normal.dress".formatted(currentGhost.id()));
@@ -134,9 +134,9 @@ public class IntroScene extends GameScene2D {
 
             case MS_PACMAN_MARCHING_IN -> {
                 drawMarquee(r, t);
-                r.drawText("\"MS PAC-MAN\"", paletteColor(0x28), scaledFont, MARQUEE_X + 20, MARQUEE_Y - 18);
-                r.drawText("STARRING", paletteColor(0x20), scaledFont, MARQUEE_X + 12, MARQUEE_Y + 22);
-                r.drawText("MS PAC-MAN", paletteColor(0x28), scaledFont, MARQUEE_X + 28, MARQUEE_Y + 38);
+                r.drawText("\"MS PAC-MAN\"", nesPaletteColor(0x28), scaledFont, MARQUEE_X + 20, MARQUEE_Y - 18);
+                r.drawText("STARRING", nesPaletteColor(0x20), scaledFont, MARQUEE_X + 12, MARQUEE_Y + 22);
+                r.drawText("MS PAC-MAN", nesPaletteColor(0x28), scaledFont, MARQUEE_X + 28, MARQUEE_Y + 38);
                 for (Ghost ghost : ghosts) { r.drawAnimatedEntity(ghost); }
                 r.drawAnimatedEntity(msPacMan);
             }
@@ -159,7 +159,7 @@ public class IntroScene extends GameScene2D {
         double bulbSize = scaled(2);
         GraphicsContext g = renderer.ctx();
         for (int i = 0; i < NUM_BULBS; ++i) {
-            g.setFill(marqueeState.get(i) ? paletteColor(0x20) : paletteColor(0x15));
+            g.setFill(marqueeState.get(i) ? nesPaletteColor(0x20) : nesPaletteColor(0x15));
             if (i <= 33) { // lower border left-to-right
                 drawBulb(g, xMin + 4 * i, yMax, bulbSize);
             } else if (i <= 48) { // right border bottom-to-top

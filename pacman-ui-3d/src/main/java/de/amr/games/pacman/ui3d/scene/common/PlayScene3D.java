@@ -15,6 +15,7 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -266,9 +267,11 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // when score is disabled, show text "game over"
-            Color color = context.gameVariant() == GameVariant.MS_PACMAN_TENGEN
-                ? Color.valueOf(context.level().mapConfig().colorScheme().get("stroke"))
-                : context.assets().color(assetPrefix(context.gameVariant()) + ".color.game_over_message");
+            Color color = context.assets().color(assetPrefix(context.gameVariant()) + ".color.game_over_message");
+            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                NES_ColorScheme nesColorScheme = (NES_ColorScheme) context.level().mapConfig().colorScheme();
+                color = Color.valueOf(nesColorScheme.fillColor());
+            }
             scores3D.showTextAsScore(GAME_OVER_TEXT, color);
         }
     }

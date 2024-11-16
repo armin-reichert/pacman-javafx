@@ -6,11 +6,9 @@ package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 
-import java.util.Map;
-
 public record MapConfig(
         Object mapCategory,
         int mapNumber,
         WorldMap worldMap,
-        Map<String, String> colorScheme) {
+        Object colorScheme) {
 }

@@ -16,10 +16,7 @@ import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
-import de.amr.games.pacman.model.ms_pacman_tengen.BoosterMode;
-import de.amr.games.pacman.model.ms_pacman_tengen.Difficulty;
-import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
-import de.amr.games.pacman.model.ms_pacman_tengen.TengenMsPacManGame;
+import de.amr.games.pacman.model.ms_pacman_tengen.*;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -40,7 +37,7 @@ import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.RectArea.rect;
-import static de.amr.games.pacman.model.ms_pacman_tengen.NamedMapColorScheme.*;
+import static de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static java.util.function.Predicate.not;
 
@@ -116,14 +113,16 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         };
         Logger.debug("Level {}: Using map sprite with area #{}", level.number, mapSprite.area());
 
-        Map<String, String> colorScheme = mapConfig.colorScheme();
-        terrainRenderer.setMapBackgroundColor(bgColor);
-        terrainRenderer.setWallStrokeColor(Color.valueOf(colorScheme.get("stroke")));
-        terrainRenderer.setWallFillColor(Color.valueOf(colorScheme.get("fill")));
-        terrainRenderer.setDoorColor(Color.valueOf(colorScheme.get("door")));
+        var nesColorScheme = (NES_ColorScheme) mapConfig.colorScheme();
+        Map<String, String> colorMap = MapConfigurationManager.COLOR_MAPS_OF_NES_COLOR_SCHEMES.get(nesColorScheme);
 
-        foodRenderer.setPelletColor(Color.valueOf(colorScheme.get("pellet")));
-        foodRenderer.setEnergizerColor(Color.valueOf(colorScheme.get("pellet")));
+        terrainRenderer.setMapBackgroundColor(bgColor);
+        terrainRenderer.setWallStrokeColor(Color.valueOf(colorMap.get("stroke")));
+        terrainRenderer.setWallFillColor(Color.valueOf(colorMap.get("fill")));
+        terrainRenderer.setDoorColor(Color.valueOf(colorMap.get("door")));
+
+        foodRenderer.setPelletColor(Color.valueOf(colorMap.get("pellet")));
+        foodRenderer.setEnergizerColor(Color.valueOf(colorMap.get("pellet")));
     }
 
     @Override
@@ -191,28 +190,28 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             case 1 -> v2i(0, 0);
             case 2 -> v2i(1, 0);
             case 3 -> {
-                if (colorScheme == MCS_16_20_15_ORANGE_WHITE_RED.get()) {
+                if (colorScheme == MCS_16_20_15_ORANGE_WHITE_RED) {
                     yield v2i(2, 0);
                 }
-                if (colorScheme == MCS_35_28_20_PINK_YELLOW_WHITE.get()) {
+                if (colorScheme == MCS_35_28_20_PINK_YELLOW_WHITE) {
                     yield v2i(1, 1);
                 }
-                if (colorScheme == MCS_17_20_20_BROWN_WHITE_WHITE.get()) {
+                if (colorScheme == MCS_17_20_20_BROWN_WHITE_WHITE) {
                     yield v2i(0, 2);
                 }
-                if (colorScheme == MCS_0F_20_28_BLACK_WHITE_YELLOW.get()) {
+                if (colorScheme == MCS_0F_20_28_BLACK_WHITE_YELLOW) {
                     yield v2i(2, 2);
                 }
                 throw new IllegalArgumentException("Unknown color scheme for map 3: " + colorScheme);
             }
             case 4 -> {
-                if (colorScheme == MCS_01_38_20_BLUE_YELLOW_WHITE.get()) {
+                if (colorScheme == MCS_01_38_20_BLUE_YELLOW_WHITE) {
                     yield v2i(0, 1);
                 }
-                if (colorScheme == MCS_36_15_20_PINK_RED_WHITE.get()) {
+                if (colorScheme == MCS_36_15_20_PINK_RED_WHITE) {
                     yield v2i(2, 1);
                 }
-                if (colorScheme == MCS_13_20_28_VIOLET_WHITE_YELLOW.get()) {
+                if (colorScheme == MCS_13_20_28_VIOLET_WHITE_YELLOW) {
                     yield v2i(1, 2);
                 }
                 throw new IllegalArgumentException("Unknown color scheme for map #4: " + colorScheme);
@@ -398,7 +397,8 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         String assetPrefix = assetPrefix(GameVariant.MS_PACMAN_TENGEN);
         float x = getMessageAnchorPosition().x(), y = getMessageAnchorPosition().y();
         if (context.game().isDemoLevel()) {
-            Color color = Color.valueOf(level.mapConfig().colorScheme().get("stroke"));
+            NES_ColorScheme nesColorScheme = (NES_ColorScheme) level.mapConfig().colorScheme();
+            Color color = Color.valueOf(nesColorScheme.strokeColor());
             drawText("GAME  OVER", x, y, color);
         } else if (context.gameState() == GameState.GAME_OVER) {
             Color color = assets.color(assetPrefix + ".color.game_over_message");
@@ -407,7 +407,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
             Color color = assets.color(assetPrefix + ".color.ready_message");
             drawText("READY!", x, y, color);
         } else if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
-            drawText("TEST L%02d".formatted(level.number), x, y, TengenMsPacManGameSceneConfig.paletteColor(0x28));
+            drawText("TEST L%02d".formatted(level.number), x, y, TengenMsPacManGameSceneConfig.nesPaletteColor(0x28));
         }
     }
 
@@ -453,7 +453,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void drawScores(GameContext context) {
-        Color color = TengenMsPacManGameSceneConfig.paletteColor(0x20);
+        Color color = TengenMsPacManGameSceneConfig.nesPaletteColor(0x20);
         Font font = scaledArcadeFont(TS);
         if (context.gameClock().getTickCount() % 60 < 30) { drawText("1UP", color, font, t(2), t(1)); }
         drawText("HIGH SCORE", color, font, t(9), t(1));
@@ -491,7 +491,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
     // Cycles through palette indices 0x01, 0x11, 0x21, 0x31, each frame takes 16 ticks.
     private Color shadeOfBlue(long tick) {
         int i = (int) (tick % 64) / 16;
-        return TengenMsPacManGameSceneConfig.paletteColor(0x01 + 0x10 * i);
+        return TengenMsPacManGameSceneConfig.nesPaletteColor(0x01 + 0x10 * i);
     }
 
     private void drawLevelNumberBox(int levelNumber, double x, double y) {

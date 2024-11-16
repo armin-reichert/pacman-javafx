@@ -8,8 +8,8 @@ import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameContext;
 
 import java.util.Map;
@@ -34,15 +34,16 @@ public class InfoBoxGameInfo extends InfoBox {
             return url.substring(url.lastIndexOf("/") + 1);
         }));
         addLabeledValue("Color Scheme", ifLevelPresent(level -> {
-            if (context.gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
+            var colorScheme = level.mapConfig().colorScheme();
+            if (colorScheme instanceof NES_ColorScheme nesColorScheme) {
+                return "fill/stroke/food: %s/%s/%s".formatted(
+                        nesColorScheme.fillColor(), nesColorScheme.strokeColor(), nesColorScheme.pelletColor());
+            } else if (colorScheme instanceof Map<?,?> colorMap) {
+                return "fill/stroke/food: %s/%s/%s".formatted(
+                        colorMap.get("fill"), colorMap.get("stroke"), colorMap.get("pellet"));
+            } else {
                 return InfoText.NO_INFO;
             }
-            Map<String, String> mapColorScheme = level.mapConfig().colorScheme();
-            if (mapColorScheme == null) {
-                return InfoText.NO_INFO;
-            }
-            return "fill/stroke/food: %s/%s/%s".formatted(
-                mapColorScheme.get("fill"), mapColorScheme.get("stroke"), mapColorScheme.get("pellet"));
         }));
 
         addLabeledValue("Lives",           ifLevelPresent(level -> "%d".formatted(context.game().lives())));

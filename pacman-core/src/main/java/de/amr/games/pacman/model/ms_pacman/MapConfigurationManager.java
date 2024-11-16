@@ -17,7 +17,7 @@ public class MapConfigurationManager {
 
     private static final String MAP_PATTERN = "/de/amr/games/pacman/maps/mspacman/mspacman_%d.world";
 
-    private static final List<Map<String, String>> COLOR_SCHEMES = List.of(
+    public static final List<Map<String, String>> COLOR_SCHEMES = List.of(
         Map.of("fill", "FFB7AE", "stroke", "FF0000", "door", "FCB5FF", "pellet", "DEDEFF"),
         Map.of("fill", "47B7FF", "stroke", "DEDEFF", "door", "FCB5FF", "pellet", "FFFF00"),
         Map.of("fill", "DE9751", "stroke", "DEDEFF", "door", "FCB5FF", "pellet", "FF0000"),
@@ -27,10 +27,6 @@ public class MapConfigurationManager {
     );
 
     private final List<WorldMap> maps = new ArrayList<>();
-
-    public static int colorSchemeIndex(Map<String, String> colorScheme) {
-        return COLOR_SCHEMES.indexOf(colorScheme);
-    }
 
     public MapConfigurationManager() {
         for (int number = 1; number <= 4; ++number) {
@@ -63,7 +59,7 @@ public class MapConfigurationManager {
             case 10, 11, 12, 13 -> 4;
             default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
         };
-        final int schemeNumber = levelNumber < 14 ? mapNumber : mapNumber + 2;
-        return new MapConfig("Ms Pac-Man Arcade Map", mapNumber, new WorldMap(maps.get(mapNumber - 1)), COLOR_SCHEMES.get(schemeNumber - 1));
+        int colorSchemeIndex = levelNumber < 14 ? mapNumber - 1 : mapNumber + 2 - 1;
+        return new MapConfig("Ms Pac-Man Arcade Map", mapNumber, new WorldMap(maps.get(mapNumber - 1)), colorSchemeIndex);
     }
 }
