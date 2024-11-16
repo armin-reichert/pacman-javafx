@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -35,12 +34,15 @@ import static java.util.function.Predicate.not;
  */
 public class PacManGameXXLRenderer implements GameRenderer {
 
+    static final Vector2f DEFAULT_MESSAGE_ANCHOR_POSITION = new Vector2f(14f * TS, 21 * TS);
+
     private final AssetStorage assets;
     private final GameSpriteSheet spriteSheet;
     private final Canvas canvas;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
+    private Vector2f messageAnchorPosition;
     private boolean flashMode;
     private boolean blinkingOn;
     private Color bgColor;
@@ -52,6 +54,7 @@ public class PacManGameXXLRenderer implements GameRenderer {
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(bgColor);
         foodRenderer.scalingPy.bind(scalingPy);
+        messageAnchorPosition = DEFAULT_MESSAGE_ANCHOR_POSITION;
     }
 
     @Override
@@ -96,7 +99,11 @@ public class PacManGameXXLRenderer implements GameRenderer {
 
     @Override
     public Vector2f getMessageAnchorPosition() {
-        return new Vector2f(14f * TS, 21 * TS);
+        return messageAnchorPosition;
+    }
+
+    public void setMessageAnchorPosition(Vector2f messageAnchorPosition) {
+        this.messageAnchorPosition = messageAnchorPosition;
     }
 
     @Override
@@ -113,6 +120,7 @@ public class PacManGameXXLRenderer implements GameRenderer {
             terrainRenderer.drawMap(ctx(), world.map().terrain());
         }
         else {
+            @SuppressWarnings("unchecked")
             Map<String, String> mapColorScheme = (Map<String, String>) context.level().mapConfig().colorScheme();
             terrainRenderer.setMapBackgroundColor(bgColor);
             terrainRenderer.setWallStrokeColor(Color.web(mapColorScheme.get("stroke")));

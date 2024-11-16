@@ -172,6 +172,7 @@ public class TengenMsPacManGameRenderer implements GameRenderer {
         }
     }
 
+    @Override
     public Vector2f getMessageAnchorPosition() {
         return messageAnchorPosition;
     }

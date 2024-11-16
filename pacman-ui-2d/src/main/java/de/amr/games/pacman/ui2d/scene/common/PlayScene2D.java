@@ -7,14 +7,17 @@ package de.amr.games.pacman.ui2d.scene.common;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.input.ArcadeKeyAdapter;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
+import de.amr.games.pacman.ui2d.scene.pacman_xxl.PacManGameXXLRenderer;
 import de.amr.games.pacman.ui2d.sound.GameSound;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -133,6 +136,11 @@ public class PlayScene2D extends GameScene2D {
             return;
         }
 
+        //TODO use more general solution
+        if (context.gameVariant() == GameVariant.PACMAN_XXL) {
+            PacManGameXXLRenderer r = (PacManGameXXLRenderer) renderer;
+            r.setMessageAnchorPosition(centerBelowHouse(context.level().world()));
+        }
         drawLevelMessage(renderer); // READY, GAME_OVER etc.
 
         boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
@@ -160,6 +168,13 @@ public class PlayScene2D extends GameScene2D {
             renderer.drawText("CREDIT %2d".formatted(credit), Color.valueOf(Arcade.Palette.WHITE), renderer.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
         }
         renderer.drawLevelCounter(context, size());
+    }
+
+    private Vector2f centerBelowHouse(GameWorld world) {
+        Vector2i houseTopLeft = world.houseTopLeftTile(), houseSize = world.houseSize();
+        float x = TS * (houseTopLeft.x() + houseSize.x() * 0.5f);
+        float y = TS * (houseTopLeft.y() + houseSize.y() + 1);
+        return new Vector2f(x, y);
     }
 
     private Stream<Ghost> ghostsInZOrder() {
