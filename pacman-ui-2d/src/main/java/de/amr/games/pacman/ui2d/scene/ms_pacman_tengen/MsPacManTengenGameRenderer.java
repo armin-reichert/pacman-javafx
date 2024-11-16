@@ -13,7 +13,10 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
-import de.amr.games.pacman.model.*;
+import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.model.ms_pacman_tengen.*;
@@ -37,7 +40,6 @@ import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.RectArea.rect;
-import static de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static java.util.function.Predicate.not;
 
@@ -190,34 +192,20 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
         Vector2i coordinate = switch (mapNumber) {
             case 1 -> v2i(0, 0);
             case 2 -> v2i(1, 0);
-            case 3 -> {
-                if (colorScheme == MCS_16_20_15_ORANGE_WHITE_RED) {
-                    yield v2i(2, 0);
-                }
-                if (colorScheme == MCS_35_28_20_PINK_YELLOW_WHITE) {
-                    yield v2i(1, 1);
-                }
-                if (colorScheme == MCS_17_20_20_BROWN_WHITE_WHITE) {
-                    yield v2i(0, 2);
-                }
-                if (colorScheme == MCS_0F_20_28_BLACK_WHITE_YELLOW) {
-                    yield v2i(2, 2);
-                }
-                throw new IllegalArgumentException("Unknown color scheme for map 3: " + colorScheme);
-            }
-            case 4 -> {
-                if (colorScheme == MCS_01_38_20_BLUE_YELLOW_WHITE) {
-                    yield v2i(0, 1);
-                }
-                if (colorScheme == MCS_36_15_20_PINK_RED_WHITE) {
-                    yield v2i(2, 1);
-                }
-                if (colorScheme == MCS_13_20_28_VIOLET_WHITE_YELLOW) {
-                    yield v2i(1, 2);
-                }
-                throw new IllegalArgumentException("Unknown color scheme for map #4: " + colorScheme);
-            }
-            default -> throw new IllegalArgumentException("Illegal Arcade map number: " + mapNumber);
+            case 3 -> switch (colorScheme) {
+                case MCS_16_20_15_ORANGE_WHITE_RED   -> v2i(2, 0);
+                case MCS_35_28_20_PINK_YELLOW_WHITE  -> v2i(1, 1);
+                case MCS_17_20_20_BROWN_WHITE_WHITE  -> v2i(0, 2);
+                case MCS_0F_20_28_BLACK_WHITE_YELLOW -> v2i(2, 2);
+                default -> throw new IllegalArgumentException("Unknown color scheme for map 3: " + colorScheme);
+            };
+            case 4 -> switch (colorScheme) {
+                case MCS_01_38_20_BLUE_YELLOW_WHITE   -> v2i(0, 1);
+                case MCS_36_15_20_PINK_RED_WHITE      -> v2i(2, 1);
+                case MCS_13_20_28_VIOLET_WHITE_YELLOW -> v2i(1, 2);
+                default -> throw new IllegalArgumentException("Unknown color scheme for map #4: " + colorScheme);
+            };
+            default -> throw new IllegalArgumentException("Illegal map number: " + mapNumber);
         };
         int width = 28*8, height = 31*8;
         return new ImageArea(arcadeMazeImages, new RectArea(coordinate.x() * width, coordinate.y() * height, width, height));
