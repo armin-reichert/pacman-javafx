@@ -246,10 +246,8 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     }
 
     private ImageArea strangeMapSprite(Map<String, Object> mapConfig) {
-        WorldMap worldMap = (WorldMap) mapConfig.get("worldMap");
-        // Dirty hack, don't tell Mommy! See MapConfigurationManager.
-        int spriteNumber = Integer.parseInt(worldMap.terrain().getProperty("levelNumber"));
-        return nonArcadeMapSprite(spriteNumber);
+        int levelNumber = (int) mapConfig.get("levelNumber");
+        return nonArcadeMapSprite(levelNumber);
     }
 
     /**

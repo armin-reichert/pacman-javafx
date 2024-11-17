@@ -39,7 +39,7 @@ public class MazeFlashing {
 
     public void init(MsPacManTengenGame game) {
         GameLevel level = game.level().orElseThrow();
-        NES_ColorScheme currentScheme = (NES_ColorScheme) level.mapConfig().get("newColorScheme");
+        NES_ColorScheme currentScheme = (NES_ColorScheme) level.mapConfig().get("nesColorScheme");
         Map<String, Color> currentColorMap = mapStringToColorValues(COLOR_MAPS.get(currentScheme));
         boolean random = game.mapConfigMgr().isRandomColorSchemeUsed(game.mapCategory(), level.number);
         colorSchemes.clear();

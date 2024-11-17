@@ -9,10 +9,7 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import org.tinylog.Logger;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
@@ -209,10 +206,10 @@ public class MsPacManTengenGameMapConfig {
             case 32 -> cfg(STRANGE, strangeMaps, 15, MCS_15_25_20_RED_ROSE_WHITE);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
-        // TODO: Hack: Store level number in map such that the renderer can very easily determine the map sprite
-        WorldMap worldMap = (WorldMap) mapConfig.get("worldMap");
-        worldMap.terrain().setProperty("levelNumber", String.valueOf(levelNumber));
-        return mapConfig;
+        // TODO: Hack: Store level number in map config such that the renderer can easily determine the map sprite
+        Map<String, Object> extConfig = new HashMap<>(mapConfig);
+        extConfig.put("levelNumber", levelNumber);
+        return extConfig;
     }
 
     private Map<String, Object> cfg(MapCategory mapCategory, List<WorldMap> maps, int mapNumber, NES_ColorScheme nesColorScheme) {
