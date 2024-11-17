@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.ClapperboardAnimation;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
@@ -60,7 +59,7 @@ public class CutScene2 extends GameScene2D {
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
 
-        clapAnimation = new ClapperboardAnimation("2", "THE CHASE");
+        clapAnimation = new ClapperboardAnimation();
         clapAnimation.start();
 
         music = context.sound().makeSound("intermission.2",1.0, false);
@@ -89,7 +88,7 @@ public class CutScene2 extends GameScene2D {
         MsPacManTengenGameRenderer r = (MsPacManTengenGameRenderer) renderer;
         String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
         Color color = r.assets().color(assetPrefix + ".color.clapperboard"); //TODO check
-        r.drawClapperBoard(r.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
+        r.drawClapperBoard(clapAnimation, "THE CHASE", 2, r.scaledArcadeFont(TS), color, t(3), t(10));
         r.drawAnimatedEntity(msPacMan);
         r.drawAnimatedEntity(pacMan);
         r.setLevelNumberBoxesVisible(false);

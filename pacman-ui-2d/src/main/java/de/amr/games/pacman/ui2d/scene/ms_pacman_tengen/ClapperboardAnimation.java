@@ -15,8 +15,6 @@ public class ClapperboardAnimation {
     private static final byte OPEN = 1;
     private static final byte CLOSED = 2;
 
-    private final String number;
-    private final String text;
     private final RectArea[] sprites;
 
     private boolean textVisible;
@@ -24,18 +22,8 @@ public class ClapperboardAnimation {
     private int tick;
     private boolean running;
 
-    public ClapperboardAnimation(String number, String text) {
-        this.number = number;
-        this.text = text;
+    public ClapperboardAnimation() {
         sprites = MsPacManTengenGameSpriteSheet.CLAPPERBOARD_SPRITES;
-    }
-
-    public String number() {
-        return number;
-    }
-
-    public String text() {
-        return text;
     }
 
     public boolean isTextVisible() {

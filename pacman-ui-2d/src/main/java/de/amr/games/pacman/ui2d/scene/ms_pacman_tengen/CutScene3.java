@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -74,7 +73,7 @@ public class CutScene3 extends GameScene2D {
         storkAnimation = spriteSheet.createStorkFlyingAnimation();
         storkAnimation.start();
 
-        clapAnimation = new ClapperboardAnimation("3", "JUNIOR");
+        clapAnimation = new ClapperboardAnimation();
         clapAnimation.start();
 
         sceneController = new SceneController();
@@ -101,7 +100,7 @@ public class CutScene3 extends GameScene2D {
         MsPacManTengenGameRenderer r = (MsPacManTengenGameRenderer) renderer;
         String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
         Color color = r.assets().color(assetPrefix + ".color.clapperboard");
-        r.drawClapperBoard(r.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
+        r.drawClapperBoard(clapAnimation, "JUNIOR", 3, r.scaledArcadeFont(TS), color, t(3), t(10));
         r.drawAnimatedEntity(msPacMan);
         r.drawAnimatedEntity(mrPacMan);
         r.drawStork(storkAnimation, stork, bag.acceleration().y() != 0);
