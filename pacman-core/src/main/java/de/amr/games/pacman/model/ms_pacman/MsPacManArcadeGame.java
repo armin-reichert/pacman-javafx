@@ -165,7 +165,7 @@ public class MsPacManArcadeGame extends GameModel {
         return Map.of(
             "mapNumber", mapNumber,
             "worldMap",  new WorldMap(maps.get(mapNumber - 1)),
-            "colorSchemeIndex", colorSchemeIndex
+            "colorMapIndex", colorSchemeIndex
         );
     }
 

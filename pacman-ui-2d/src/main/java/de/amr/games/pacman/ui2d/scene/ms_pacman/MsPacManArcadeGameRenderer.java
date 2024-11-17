@@ -21,7 +21,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.RectArea.rect;
@@ -32,30 +31,30 @@ import static de.amr.games.pacman.lib.RectArea.rect;
 public class MsPacManArcadeGameRenderer implements GameRenderer {
 
     private static final RectArea[] MAPS_WITH_FOOD_SPRITES = {
-            rect(0,     0, 226, 248),
-            rect(0,   248, 226, 248),
-            rect(0, 2*248, 226, 248),
-            rect(0, 3*248, 226, 248),
-            rect(0, 4*248, 226, 248),
-            rect(0, 5*248, 226, 248),
+        rect(0,     0, 226, 248),
+        rect(0,   248, 226, 248),
+        rect(0, 2*248, 226, 248),
+        rect(0, 3*248, 226, 248),
+        rect(0, 4*248, 226, 248),
+        rect(0, 5*248, 226, 248),
     };
 
     private static final RectArea[] MAPS_WITHOUT_FOOD_SPRITES = {
-            rect(228,     0, 226, 248),
-            rect(228,   248, 226, 248),
-            rect(228, 2*248, 226, 248),
-            rect(228, 3*248, 226, 248),
-            rect(228, 4*248, 226, 248),
-            rect(228, 5*258, 226, 248),
+        rect(228,     0, 226, 248),
+        rect(228,   248, 226, 248),
+        rect(228, 2*248, 226, 248),
+        rect(228, 3*248, 226, 248),
+        rect(228, 4*248, 226, 248),
+        rect(228, 5*258, 226, 248),
     };
 
     private static final RectArea[] FLASHING_MAP_SPRITES = {
-            rect(0,     0, 226, 248),
-            rect(0,   248, 226, 248),
-            rect(0, 2*248, 226, 248),
-            rect(0, 3*248, 226, 248),
-            rect(0, 4*248, 226, 248),
-            rect(0, 5*248, 226, 248),
+        rect(0,     0, 226, 248),
+        rect(0,   248, 226, 248),
+        rect(0, 2*248, 226, 248),
+        rect(0, 3*248, 226, 248),
+        rect(0, 4*248, 226, 248),
+        rect(0, 5*248, 226, 248),
     };
 
     private final AssetStorage assets;
@@ -66,7 +65,7 @@ public class MsPacManArcadeGameRenderer implements GameRenderer {
     private RectArea mapWithoutFoodSprite;
     private ImageArea mapFlashingSprite;
     private boolean flashMode;
-    private boolean blinkingOn;
+    private boolean blinking;
     private Color bgColor = Color.BLACK;
 
     public MsPacManArcadeGameRenderer(AssetStorage assets, Canvas canvas) {
@@ -97,7 +96,7 @@ public class MsPacManArcadeGameRenderer implements GameRenderer {
 
     @Override
     public void setBlinking(boolean blinking) {
-        this.blinkingOn = blinking;
+        this.blinking = blinking;
     }
 
     @Override
@@ -122,22 +121,16 @@ public class MsPacManArcadeGameRenderer implements GameRenderer {
 
     @Override
     public void update(GameLevel level) {
-        if (level.mapConfig() != null) {
-            int index = (int) level.mapConfig().get("colorSchemeIndex");
-            if (index != -1) {
-                mapWithFoodSprite    = MAPS_WITH_FOOD_SPRITES[index];
-                mapWithoutFoodSprite = MAPS_WITHOUT_FOOD_SPRITES[index];
-                mapFlashingSprite    =  new ImageArea(flashingMazesImage, FLASHING_MAP_SPRITES[index]);
-            } else {
-                Logger.error("Could not identify color scheme with index {}", index);
-            }
-        }
+        int index = (int) level.mapConfig().get("colorMapIndex");
+        mapWithFoodSprite    = MAPS_WITH_FOOD_SPRITES[index];
+        mapWithoutFoodSprite = MAPS_WITHOUT_FOOD_SPRITES[index];
+        mapFlashingSprite    =  new ImageArea(flashingMazesImage, FLASHING_MAP_SPRITES[index]);
     }
 
     @Override
     public void drawWorld(GameContext context, GameWorld world, double x, double y) {
         if (flashMode) {
-            if (blinkingOn) {
+            if (blinking) {
                 drawSubImageScaled(mapFlashingSprite.source(), mapFlashingSprite.area(), x - 3, y); //TODO: WTF
             } else {
                 drawSpriteScaled(mapWithoutFoodSprite, x, y);
@@ -147,7 +140,7 @@ public class MsPacManArcadeGameRenderer implements GameRenderer {
             ctx().scale(scalingPy.get(), scalingPy.get());
             drawSpriteUnscaled(mapWithFoodSprite, x, y);
             overPaintEatenPellets(world);
-            overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
+            overPaintEnergizers(world, tile -> !blinking || world.hasEatenFoodAt(tile));
             ctx().restore();
         }
         context.level().bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet(), (MovingBonus) bonus));
