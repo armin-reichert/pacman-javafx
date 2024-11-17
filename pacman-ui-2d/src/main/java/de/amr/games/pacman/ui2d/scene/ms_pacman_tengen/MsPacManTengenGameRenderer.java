@@ -290,7 +290,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
                         case GameModel.ANIM_PAC_MUNCHING,
                              MsPacManTengenGame.ANIM_MS_PACMAN_BOOSTER,
                              MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING,
-                             MsPacManTengenGame.ANIM_PACMAN_BOOSTER -> drawRotatedTowardsDir(pac, pac.moveDir(), spriteAnimation);
+                             MsPacManTengenGame.ANIM_PACMAN_BOOSTER -> drawGuyHeading(pac, pac.moveDir(), spriteAnimation);
                         case GameModel.ANIM_PAC_DYING -> {
                             Direction dir = Direction.UP;
                             if (spriteAnimation.frameIndex() < 11) {
@@ -301,7 +301,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
                                     case 3 -> Direction.RIGHT;
                                 };
                             }
-                            drawRotatedTowardsDir(pac, dir, spriteAnimation);
+                            drawGuyHeading(pac, dir, spriteAnimation);
                         }
                         default -> GameRenderer.super.drawAnimatedEntity(pac);
                     }
@@ -312,7 +312,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
         });
     }
 
-    private void drawRotatedTowardsDir(Creature guy, Direction dir, SpriteAnimation spriteAnimation) {
+    private void drawGuyHeading(Creature guy, Direction dir, SpriteAnimation spriteAnimation) {
         Vector2f center = guy.center().scaled((float) scaling());
         ctx().save();
         ctx().translate(center.x(), center.y());
@@ -339,33 +339,34 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawWorld(GameContext context, GameWorld world, double mazeX, double mazeY) {
-        ctx().setImageSmoothing(false);
-        MsPacManTengenGame game = (MsPacManTengenGame) context.game();
+    public void drawWorld(GameContext context, GameWorld world, double mapX, double mapY) {
+        var game = (MsPacManTengenGame) context.game();
         GameLevel level = game.level().orElseThrow();
+        MapCategory mapCategory = (MapCategory) level.mapConfig().get("mapCategory");
+
         if (!isUsingDefaultGameOptions(game)) {
-            drawGameOptionsInfo(context.level().world().map().terrain(), game);
+            drawGameOptionsInfo(world.map().terrain(), game);
         }
 
         // All maps with a different color scheme than that in the sprite sheet have to be rendered using the
         // generic vector renderer for now.
-        // TODO: Improve renderer because vector rendering still looks really bad for some maps.
-        boolean mapSpriteExists = context.game().isDemoLevel() || isMapImageAvailable(context.level().number, game.mapCategory());
-        if (mapSpriteExists) {
+        // TODO: vector rendering still looks really bad for some maps.
+        boolean mapImageExists = game.isDemoLevel() || isMapImageAvailable(level.number, mapCategory);
+        if (mapImageExists) {
+            drawLevelMessage(context); // message appears under map image!
             int mapNumber = (int) level.mapConfig().get("mapNumber");
-            MapCategory mapCategory = (MapCategory) level.mapConfig().get("mapCategory");
-            drawLevelMessage(context); // message appears behind map!
-            RectArea sprite = mapCategory == MapCategory.STRANGE && mapNumber == 15
+            RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
                 ? strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
                 : mapSprite.area();
+            ctx().setImageSmoothing(false);
             ctx().drawImage(mapSprite.source(),
-                sprite.x(), sprite.y(),
-                sprite.width(), sprite.height(),
-                scaled(mazeX), scaled(mazeY),
-                scaled(sprite.width()), scaled(sprite.height())
+                area.x(), area.y(),
+                area.width(), area.height(),
+                scaled(mapX), scaled(mapY),
+                scaled(area.width()), scaled(area.height())
             );
-            overPaintActors(level.world());
-            //TODO over-painting pellets also over-paints moving message!
+            overPaintActors(world);
+            //TODO: fixme over-painting pellets also over-paints moving message!
             ctx().save();
             ctx().scale(scaling(), scaling());
             overPaintEatenPellets(world);
@@ -380,7 +381,6 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
             if (blinking) {
                 world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
             }
-            // in Tengen Ms. Pac-Man the level message appears under the maze image, wtf?
             drawLevelMessage(context);
             terrainRenderer.drawMap(ctx(), world.map().terrain());
         }
@@ -515,8 +515,8 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     }
 
     public void drawMovingBonus(GameSpriteSheet spriteSheet, MovingBonus bonus) {
-        ctx().setImageSmoothing(false);
         ctx().save();
+        ctx().setImageSmoothing(false);
         ctx().translate(0, bonus.elongationY());
         switch (bonus.state()) {
             case Bonus.STATE_EDIBLE -> drawSprite(bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
@@ -527,9 +527,9 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     }
 
     public void drawClapperBoard(Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
-        ctx().setImageSmoothing(false);
         var sprite = animation.currentSprite(MsPacManTengenGameSpriteSheet.CLAPPERBOARD_SPRITES);
         if (sprite != RectArea.PIXEL) {
+            ctx().setImageSmoothing(false);
             drawSpriteCenteredOverBox(sprite, x, y);
             var numberX = x + 8;
             var numberY = y + 18; // baseline
@@ -547,13 +547,13 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     }
 
     public void drawStork(SpriteAnimation storkAnimation, Entity stork, boolean bagReleased) {
-        ctx().setImageSmoothing(false);
         if (!stork.isVisible()) {
             return;
         }
         Vector2f pos = stork.position();
         // sprites are not vertically aligned in sprite sheet! wtf?
         double eyeY = pos.y() + (storkAnimation.frameIndex() == 1 ? 5 : 1);
+        ctx().setImageSmoothing(false);
         drawSpriteScaled(storkAnimation.currentSprite(), pos.x(), eyeY);
         // over-paint bag when released from beak
         if (bagReleased) {
