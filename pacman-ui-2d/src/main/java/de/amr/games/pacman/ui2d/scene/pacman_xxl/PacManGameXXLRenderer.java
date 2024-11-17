@@ -78,8 +78,8 @@ public class PacManGameXXLRenderer implements GameRenderer {
     }
 
     @Override
-    public void setBlinkingOn(boolean blinkingOn) {
-        this.blinkingOn = blinkingOn;
+    public void setBlinking(boolean blinking) {
+        this.blinkingOn = blinking;
     }
 
     @Override

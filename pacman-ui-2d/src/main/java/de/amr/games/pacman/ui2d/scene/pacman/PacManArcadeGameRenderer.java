@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.scene.pacman;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -59,8 +58,8 @@ public class PacManArcadeGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void setBlinkingOn(boolean blinkingOn) {
-        this.blinkingOn = blinkingOn;
+    public void setBlinking(boolean blinking) {
+        this.blinkingOn = blinking;
     }
 
     @Override

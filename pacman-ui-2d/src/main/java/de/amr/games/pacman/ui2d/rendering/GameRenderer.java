@@ -169,7 +169,7 @@ public interface GameRenderer {
 
     void setFlashMode(boolean on);
 
-    void setBlinkingOn(boolean on);
+    void setBlinking(boolean on);
 
     default void clearCanvas() {
         ctx().setFill(backgroundColor());

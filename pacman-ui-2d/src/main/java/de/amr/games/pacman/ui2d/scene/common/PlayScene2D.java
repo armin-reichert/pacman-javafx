@@ -145,7 +145,7 @@ public class PlayScene2D extends GameScene2D {
 
         boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         renderer.setFlashMode(flashMode);
-        renderer.setBlinkingOn(context.level().blinking().isOn());
+        renderer.setBlinking(context.level().blinking().isOn());
         renderer.drawWorld(context, context.level().world(), 0, 3 * TS);
 
         renderer.drawAnimatedEntity(context.level().pac());

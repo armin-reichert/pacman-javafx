@@ -339,7 +339,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         final Pac msPacMan = context.level().pac();
         final var r = (MsPacManTengenGameRenderer) gr;
 
-        r.setBlinkingOn(context.level().blinking().isOn());
+        r.setBlinking(context.level().blinking().isOn());
 
         Vector2f messageCenterPosition = centerBelowHouse(world);
         r.setMessageAnchorPosition(messageMovement.isRunning()

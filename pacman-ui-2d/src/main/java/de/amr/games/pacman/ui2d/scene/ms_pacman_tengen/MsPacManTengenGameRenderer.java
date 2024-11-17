@@ -49,23 +49,24 @@ import static java.util.function.Predicate.not;
 public class MsPacManTengenGameRenderer implements GameRenderer {
 
     // Strange map #15 (level 32) has 3 different images to create an animation effect
-    private static final RectArea[] STRANGE_MAP_15_SPRITES = {
+    // Image file "non_arcade_mazes.png"
+    static final RectArea[] STRANGE_MAP_15_SPRITES = {
         rect(1568,  840, 224, 248),
         rect(1568, 1088, 224, 248),
         rect(1568, 1336, 224, 248),
     };
 
-    // Create  (00000000 11111111 22222222 11111111)*
-    private static RectArea currentSpriteForStrangeMap15(long tick) {
+    // Creates pattern (00000000 11111111 22222222 11111111)...
+    private static RectArea strangeMap15Sprite(long tick) {
         int numFrames = 4, frameDuration = 8;
-        int index = (int)((tick % (numFrames * frameDuration)) / frameDuration);
-        // map frames (0, 1, 2, 3) to sprites (0, 1, 2, 1)
+        int index = (int) ((tick % (numFrames * frameDuration)) / frameDuration);
+        // (0, 1, 2, 3) -> (0, 1, 2, 1)
         int spriteIndex = index == 3 ? 1 : index;
         return STRANGE_MAP_15_SPRITES[spriteIndex];
     }
 
     // Strange map row counts as they appear in the sprite sheet
-    private static final byte[] MAP_ROW_COUNTS = {
+    private static final byte[] STRANGE_MAPS_ROW_COUNTS = {
         31, 31, 31, 31, 31, 31, 30, 31,
         31, 37, 31, 31, 31, 37, 31, 25,
         37, 31, 37, 37, 37, 37, 37, 31,
@@ -84,7 +85,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
 
     private Color bgColor = Color.BLACK;
     private ImageArea mapSprite;
-    private boolean blinkingOn;
+    private boolean blinking;
     private boolean levelNumberBoxesVisible;
     private Vector2f messageAnchorPosition;
 
@@ -92,7 +93,6 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
         this.assets = checkNotNull(assets);
         this.spriteSheet = checkNotNull(spriteSheet);
         this.canvas = checkNotNull(canvas);
-        canvas.getGraphicsContext2D().setImageSmoothing(false);
         arcadeMazeImages = assets.image("tengen.mazes.arcade");
         nonArcadeMazeImages = assets.image("tengen.mazes.non_arcade");
         // set default value
@@ -145,8 +145,8 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     public void setFlashMode(boolean flashMode) {}
 
     @Override
-    public void setBlinkingOn(boolean blinkingOn) {
-        this.blinkingOn = blinkingOn;
+    public void setBlinking(boolean blinking) {
+        this.blinking = blinking;
     }
 
     @Override
@@ -166,6 +166,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
 
     @Override
     public void drawAnimatedEntity(AnimatedEntity guy) {
+        ctx().setImageSmoothing(false);
         if (guy instanceof Pac pac) {
             drawMsOrMrPacMan(pac);
         } else {
@@ -265,7 +266,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
             case 34,35,36,37                -> { columnIndex = (spriteNumber - 34); y = 1136; }
             default -> throw new IllegalArgumentException("Illegal non-Arcade map number: " + spriteNumber);
         }
-        int width = 28 * TS, height = MAP_ROW_COUNTS[spriteNumber - 1] * TS;
+        int width = 28 * TS, height = STRANGE_MAPS_ROW_COUNTS[spriteNumber - 1] * TS;
         return new ImageArea(nonArcadeMazeImages, new RectArea(columnIndex * width, y, width, height));
     }
 
@@ -282,6 +283,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
         if (!pac.isVisible()) {
             return;
         }
+        ctx().setImageSmoothing(false);
         pac.animations().ifPresent(animations -> {
             if (animations instanceof SpriteAnimationCollection spriteAnimations) {
                 SpriteAnimation spriteAnimation = spriteAnimations.currentAnimation();
@@ -327,6 +329,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     }
 
     public void drawEmptyMap(WorldMap worldMap, Map<String, Color> colorScheme) {
+        ctx().setImageSmoothing(false);
         Color wallFillColor = colorScheme.get("fill");
         Color wallStrokeColor = colorScheme.get("stroke");
         Color doorColor = colorScheme.get("door");
@@ -339,6 +342,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
 
     @Override
     public void drawWorld(GameContext context, GameWorld world, double mazeX, double mazeY) {
+        ctx().setImageSmoothing(false);
         MsPacManTengenGame game = (MsPacManTengenGame) context.game();
         GameLevel level = game.level().orElseThrow();
         if (!isUsingDefaultGameOptions(game)) {
@@ -354,7 +358,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
             MapCategory mapCategory = (MapCategory) level.mapConfig().get("mapCategory");
             drawLevelMessage(context); // message appears behind map!
             RectArea sprite = mapCategory == MapCategory.STRANGE && mapNumber == 15
-                ? currentSpriteForStrangeMap15(context.tick()) // Strange map #15: psychedelic animation
+                ? strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
                 : mapSprite.area();
             ctx().drawImage(mapSprite.source(),
                 sprite.x(), sprite.y(),
@@ -367,7 +371,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
             ctx().save();
             ctx().scale(scaling(), scaling());
             overPaintEatenPellets(world);
-            overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
+            overPaintEnergizers(world, tile -> !blinking || world.hasEatenFoodAt(tile));
             ctx().restore();
         }
         else {
@@ -375,7 +379,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
                 .filter(world::hasFoodAt)
                 .filter(not(world::isEnergizerPosition))
                 .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
-            if (blinkingOn) {
+            if (blinking) {
                 world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
             }
             // in Tengen Ms. Pac-Man the level message appears under the maze image, wtf?
@@ -457,11 +461,13 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
 
     @Override
     public void drawLivesCounter(int numLives, int maxLives, Vector2f size) {
+        ctx().setImageSmoothing(false);
         GameRenderer.super.drawLivesCounter(numLives, maxLives, size.minus(0, TS)); //TODO this is ugly
     }
 
     @Override
     public void drawLevelCounter(GameContext context,  Vector2f size) {
+        ctx().setImageSmoothing(false);
         MsPacManTengenGame game = (MsPacManTengenGame) context.game();
         int levelNumber = context.level().number;
         // TODO: This is ugly, maybe change all Tengen maps instead?
@@ -489,6 +495,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     }
 
     private void drawLevelNumberBox(int levelNumber, double x, double y) {
+        ctx().setImageSmoothing(false);
         drawSpriteScaled(MsPacManTengenGameSpriteSheet.LEVEL_BOX_SPRITE, x, y);
         double digitY = y + 2;
         int tens = levelNumber / 10, ones = levelNumber % 10;
@@ -510,6 +517,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     }
 
     public void drawMovingBonus(GameSpriteSheet spriteSheet, MovingBonus bonus) {
+        ctx().setImageSmoothing(false);
         ctx().save();
         ctx().translate(0, bonus.elongationY());
         switch (bonus.state()) {
@@ -521,6 +529,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     }
 
     public void drawClapperBoard(Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
+        ctx().setImageSmoothing(false);
         var sprite = animation.currentSprite(MsPacManTengenGameSpriteSheet.CLAPPERBOARD_SPRITES);
         if (sprite != RectArea.PIXEL) {
             drawSpriteCenteredOverBox(sprite, x, y);
@@ -540,6 +549,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     }
 
     public void drawStork(SpriteAnimation storkAnimation, Entity stork, boolean bagReleased) {
+        ctx().setImageSmoothing(false);
         if (!stork.isVisible()) {
             return;
         }
