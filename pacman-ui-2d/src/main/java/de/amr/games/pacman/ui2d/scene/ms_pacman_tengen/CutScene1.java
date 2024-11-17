@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
-import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.MediaPlayer;
@@ -23,7 +22,8 @@ import javafx.scene.text.Font;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.NES_SIZE;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.NES_TILES_X;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSpriteSheet.HEART_SPRITE;
 
 /**
@@ -37,9 +37,9 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGame
  */
 public class CutScene1 extends GameScene2D {
 
-    static final int UPPER_LANE_Y  = TS * 12;
-    static final int MIDDLE_LANE_Y = TS * 18;
-    static final int LOWER_LANE_Y  = TS * 24;
+    static final int UPPER_LANE_Y = TS * 8;
+    static final int LOWER_LANE_Y = TS * 24;
+    static final int MIDDLE_LANE_Y = TS * 16;
 
     static final float SPEED_PAC_CHASING = 2f;
     static final float SPEED_PAC_RISING = 1f;
