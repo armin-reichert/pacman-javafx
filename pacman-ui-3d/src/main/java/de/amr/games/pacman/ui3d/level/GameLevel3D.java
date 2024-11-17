@@ -239,7 +239,7 @@ public class GameLevel3D {
         return switch (context.gameVariant()) {
             case PACMAN, PACMAN_XXL -> (Map<String, String>) mapConfig.get("colorMap");
             case MS_PACMAN -> MsPacManArcadeGame.COLOR_MAPS.get((int) mapConfig.get("colorSchemeIndex"));
-            case MS_PACMAN_TENGEN -> MsPacManTengenGameMapConfig.COLOR_MAPS_OF_NES_COLOR_SCHEMES.get((NES_ColorScheme) mapConfig.get("nesColorScheme"));
+            case MS_PACMAN_TENGEN -> MsPacManTengenGameMapConfig.COLOR_MAPS.get((NES_ColorScheme) mapConfig.get("nesColorScheme"));
         };
     }
 

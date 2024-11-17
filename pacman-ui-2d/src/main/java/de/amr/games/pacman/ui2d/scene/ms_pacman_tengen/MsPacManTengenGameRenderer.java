@@ -115,7 +115,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
         };
         Logger.debug("Level {}: Using map sprite with area #{}", level.number, mapSprite.area());
 
-        Map<String, String> colorMap = MsPacManTengenGameMapConfig.COLOR_MAPS_OF_NES_COLOR_SCHEMES.get(nesColorScheme);
+        Map<String, String> colorMap = MsPacManTengenGameMapConfig.COLOR_MAPS.get(nesColorScheme);
 
         terrainRenderer.setMapBackgroundColor(bgColor);
         terrainRenderer.setWallStrokeColor(Color.valueOf(colorMap.get("stroke")));
