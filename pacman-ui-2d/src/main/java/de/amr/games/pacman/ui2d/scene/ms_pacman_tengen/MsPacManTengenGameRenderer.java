@@ -538,8 +538,9 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
             ctx().setFill(textColor);
             ctx().fillText(animation.number(), scaled(numberX), scaled(numberY));
             if (animation.isTextVisible()) {
-                var textX = scaled(x + animation.sprite().width());
-                ctx().fillText(animation.text(), textX, scaled(numberY -  2*TS));
+                double textX = x + animation.sprite().width();
+                double textY = y + 2;
+                ctx().fillText(animation.text(), scaled(textX), scaled(textY));
             }
         }
     }

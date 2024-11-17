@@ -46,6 +46,7 @@ public class CutScene1 extends GameScene2D {
     static final float SPEED_GHOST_CHASING = 1.25f;
 
     private SceneController sceneController;
+
     private MediaPlayer music;
     private Pac pacMan;
     private Pac msPac;
