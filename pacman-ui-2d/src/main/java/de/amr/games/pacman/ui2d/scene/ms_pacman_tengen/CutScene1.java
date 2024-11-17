@@ -22,7 +22,9 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSpriteSheet.HEART_SPRITE;
 
 /**
  * Intermission scene 1: "They meet".
@@ -191,21 +193,21 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public Vector2f size() {
-        return new Vector2f(NES_RESOLUTION_X, NES_RESOLUTION_Y);
+        return NES_SIZE;
     }
 
     @Override
     public void drawSceneContent(GameRenderer renderer) {
+        String assetPrefix = assetPrefix(context.gameVariant());
+        Color color = context.assets().color(assetPrefix + ".color.clapperboard");
         var r = (MsPacManTengenGameRenderer) renderer;
-        String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
-        Color color = r.assets().color(assetPrefix + ".color.clapperboard"); //TODO check this
+        r.setLevelNumberBoxesVisible(false);
         r.drawClapperBoard(clapAnimation, "THEY MEET", 1, r.scaledArcadeFont(TS), color, t(3), t(10));
         r.drawAnimatedEntity(msPac);
         r.drawAnimatedEntity(pacMan);
         r.drawAnimatedEntity(inky);
         r.drawAnimatedEntity(pinky);
-        r.drawSprite(heart, MsPacManTengenGameSpriteSheet.HEART_SPRITE);
-        r.setLevelNumberBoxesVisible(false);
+        r.drawSprite(heart, HEART_SPRITE);
         if (context.game().level().isPresent()) {
             // avoid exception in cut scene test mode
             r.drawLevelCounter(context, size());

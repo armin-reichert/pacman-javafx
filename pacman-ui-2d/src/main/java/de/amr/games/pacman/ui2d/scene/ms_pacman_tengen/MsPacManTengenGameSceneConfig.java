@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
@@ -29,6 +30,8 @@ public class MsPacManTengenGameSceneConfig implements GameSceneConfig {
 
     public static final int NES_RESOLUTION_X = 256;
     public static final int NES_RESOLUTION_Y = 240; // see above
+
+    public static final Vector2f NES_SIZE = new Vector2f(NES_RESOLUTION_X, NES_RESOLUTION_Y);
 
     private final AssetStorage assets;
     private final MsPacManTengenGameSpriteSheet spriteSheet;

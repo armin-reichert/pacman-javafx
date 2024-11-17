@@ -21,8 +21,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.NES_RESOLUTION_X;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.NES_RESOLUTION_Y;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.*;
 
 /**
  * Intermission scene 3: "Junior".
@@ -92,7 +91,7 @@ public class CutScene3 extends GameScene2D {
 
     @Override
     public Vector2f size() {
-        return new Vector2f(NES_RESOLUTION_X, NES_RESOLUTION_Y);
+        return NES_SIZE;
     }
 
     @Override
