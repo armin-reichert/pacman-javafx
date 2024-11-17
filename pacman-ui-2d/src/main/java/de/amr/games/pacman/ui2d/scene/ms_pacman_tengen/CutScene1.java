@@ -19,11 +19,11 @@ import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.NES_RESOLUTION_X;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.NES_RESOLUTION_Y;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.*;
 
 /**
  * Intermission scene 1: "They meet".
@@ -40,10 +40,10 @@ public class CutScene1 extends GameScene2D {
     static final int MIDDLE_LANE_Y = TS * 18;
     static final int LOWER_LANE_Y  = TS * 24;
 
-    static final float SPEED_PAC_CHASING = 1.125f;
-    static final float SPEED_PAC_RISING = 0.75f;
-    static final float SPEED_GHOST_AFTER_COLLISION = 0.3f;
-    static final float SPEED_GHOST_CHASING = 1.25f;
+    static final float SPEED_PAC_CHASING = 2f;
+    static final float SPEED_PAC_RISING = 1f;
+    static final float SPEED_GHOST_AFTER_COLLISION = 1f;
+    static final float SPEED_GHOST_CHASING = 2f;
 
     private SceneController sceneController;
 
@@ -55,6 +55,8 @@ public class CutScene1 extends GameScene2D {
     private Entity heart;
     private ClapperboardAnimation clapAnimation;
 
+    private int t = 0;
+
     @Override
     public void bindGameActions() {
         bind(context -> context.gameController().terminateCurrentState(), context.joypad().keyCombination(NES.Joypad.START));
@@ -62,6 +64,7 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public void doInit() {
+        t = 0;
         context.setScoreVisible(false);
 
         pacMan = new Pac();
@@ -70,15 +73,15 @@ public class CutScene1 extends GameScene2D {
         pinky = Ghost.pinky();
         heart = new Entity();
 
+        music = context.sound().makeSound("intermission.1",1.0, false);
+
         var spriteSheet = (MsPacManTengenGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         msPac.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
         inky.setAnimations(new GhostAnimations(spriteSheet, inky.id()));
         pinky.setAnimations(new GhostAnimations(spriteSheet, pinky.id()));
-        clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
-        clapAnimation.start();
 
-        music = context.sound().makeSound("intermission.1",1.0, false);
+        clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
 
         sceneController = new SceneController();
         sceneController.setState(SceneController.STATE_FLAP, TickTimer.INDEFINITE);
@@ -91,7 +94,105 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public void update() {
-        sceneController.tick();
+        if (t == 0) {
+            clapAnimation.start();
+            music.play();
+        }
+        else if (t == 130) {
+            pacMan.setMoveDir(Direction.RIGHT);
+            pacMan.setPosition(2*TS, UPPER_LANE_Y);
+            pacMan.setSpeed(SPEED_PAC_CHASING);
+            pacMan.selectAnimation(MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING);
+            pacMan.animations().ifPresent(Animations::startCurrentAnimation);
+            pacMan.show();
+
+            msPac.setMoveDir(Direction.LEFT);
+            msPac.setPosition(TS * (NES_TILES_X-2), LOWER_LANE_Y);
+            msPac.setSpeed(SPEED_PAC_CHASING);
+            msPac.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
+            msPac.animations().ifPresent(Animations::startCurrentAnimation);
+            msPac.show();
+        }
+        else if (t == 160) {
+            inky.setMoveAndWishDir(Direction.RIGHT);
+            inky.setPosition(2*TS, UPPER_LANE_Y);
+            inky.setSpeed(SPEED_GHOST_CHASING);
+            inky.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
+            inky.startAnimation();
+            inky.show();
+
+            pinky.setMoveAndWishDir(Direction.LEFT);
+            pinky.setPosition(TS * (NES_TILES_X - 2), LOWER_LANE_Y);
+            pinky.setSpeed(SPEED_GHOST_CHASING);
+            pinky.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
+            pinky.startAnimation();
+            pinky.show();
+        }
+        else if (t == 400) {
+            msPac.setPosition(TS, MIDDLE_LANE_Y);
+            msPac.setMoveDir(Direction.RIGHT);
+
+            pacMan.setPosition(TS * (NES_TILES_X - 1), MIDDLE_LANE_Y);
+            pacMan.setMoveDir(Direction.LEFT);
+
+            pinky.setPosition(msPac.position().minus(TS * 11, 0));
+            pinky.setMoveAndWishDir(Direction.RIGHT);
+
+            inky.setPosition(pacMan.position().plus(TS * 11, 0));
+            inky.setMoveAndWishDir(Direction.LEFT);
+        }
+        else if (t == 455) {
+            pacMan.setMoveDir(Direction.UP);
+            pacMan.setSpeed(SPEED_PAC_RISING);
+            msPac.setMoveDir(Direction.UP);
+            msPac.setSpeed(SPEED_PAC_RISING);
+        }
+        else if (t == 500) {
+            inky.setMoveAndWishDir(Direction.RIGHT);
+            inky.setSpeed(SPEED_GHOST_AFTER_COLLISION);
+            //inky.setVelocity(inky.velocity().minus(0, 2.0f));
+            //inky.setAcceleration(0, 0.4f);
+
+            pinky.setMoveAndWishDir(Direction.LEFT);
+            pinky.setSpeed(SPEED_GHOST_AFTER_COLLISION);
+            //pinky.setVelocity(pinky.velocity().minus(0, 2.0f));
+            //pinky.setAcceleration(0, 0.4f);
+        }
+        else if (t == 530) {
+            inky.hide();
+            pinky.hide();
+            pacMan.setSpeed(0);
+            pacMan.setMoveDir(Direction.LEFT);
+            msPac.setSpeed(0);
+            msPac.setMoveDir(Direction.RIGHT);
+        }
+        else if (t == 545) {
+            pacMan.animations().ifPresent(Animations::stopCurrentAnimation);
+            pacMan.animations().ifPresent(Animations::resetCurrentAnimation);
+            msPac.animations().ifPresent(Animations::stopCurrentAnimation);
+            msPac.animations().ifPresent(Animations::resetCurrentAnimation);
+        }
+        else if (t == 560) {
+            heart.setPosition((pacMan.posX() + msPac.posX()) / 2, pacMan.posY() - TS * (2));
+            heart.show();
+        }
+        else if (t == 760) {
+            pacMan.hide();
+            msPac.hide();
+            heart.hide();
+        }
+        else if (t == 775) {
+            context.gameController().terminateCurrentState();
+            return;
+        }
+
+        pacMan.move();
+        msPac.move();
+        inky.move();
+        pinky.move();
+
+        clapAnimation.tick();
+        ++t;
     }
 
     @Override
@@ -115,6 +216,14 @@ public class CutScene1 extends GameScene2D {
             // avoid exception in cut scene test mode
             r.drawLevelCounter(context, size());
         }
+    }
+
+    @Override
+    protected void drawDebugInfo(GameRenderer renderer) {
+        renderer.drawTileGrid(size());
+        renderer.ctx().setFill(Color.WHITE);
+        renderer.ctx().setFont(Font.font(20));
+        renderer.ctx().fillText("Tick " + t, 20, 20);
     }
 
     private class SceneController {
@@ -160,19 +269,19 @@ public class CutScene1 extends GameScene2D {
             pacMan.animations().ifPresent(Animations::startCurrentAnimation);
             pacMan.show();
 
-            inky.setMoveAndWishDir(Direction.RIGHT);
-            inky.setPosition(pacMan.position().minus(TS * 6, 0));
-            inky.setSpeed(SPEED_GHOST_CHASING);
-            inky.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
-            inky.startAnimation();
-            inky.show();
-
             msPac.setMoveDir(Direction.LEFT);
             msPac.setPosition(TS * 30, LOWER_LANE_Y);
             msPac.setSpeed(SPEED_PAC_CHASING);
             msPac.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
             msPac.animations().ifPresent(Animations::startCurrentAnimation);
             msPac.show();
+
+            inky.setMoveAndWishDir(Direction.RIGHT);
+            inky.setPosition(pacMan.position().minus(TS * 6, 0));
+            inky.setSpeed(SPEED_GHOST_CHASING);
+            inky.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
+            inky.startAnimation();
+            inky.show();
 
             pinky.setMoveAndWishDir(Direction.LEFT);
             pinky.setPosition(msPac.position().plus(TS * 6, 0));
@@ -200,11 +309,11 @@ public class CutScene1 extends GameScene2D {
             msPac.setPosition(TS * (-3), MIDDLE_LANE_Y);
             msPac.setMoveDir(Direction.RIGHT);
 
-            pinky.setPosition(msPac.position().minus(TS * 5, 0));
-            pinky.setMoveAndWishDir(Direction.RIGHT);
-
             pacMan.setPosition(TS * 31, MIDDLE_LANE_Y);
             pacMan.setMoveDir(Direction.LEFT);
+
+            pinky.setPosition(msPac.position().minus(TS * 5, 0));
+            pinky.setMoveAndWishDir(Direction.RIGHT);
 
             inky.setPosition(pacMan.position().plus(TS * 5, 0));
             inky.setMoveAndWishDir(Direction.LEFT);
