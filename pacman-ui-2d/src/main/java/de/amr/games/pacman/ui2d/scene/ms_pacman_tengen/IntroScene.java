@@ -143,6 +143,11 @@ public class IntroScene extends GameScene2D {
         }
     }
 
+    @Override
+    protected void drawDebugInfo(GameRenderer renderer) {
+        renderer.drawTileGrid(size());
+    }
+
     private void updateMarqueeState() {
         long t = sceneController.state().timer().tickCount();
         if (t % 4 == 0) {

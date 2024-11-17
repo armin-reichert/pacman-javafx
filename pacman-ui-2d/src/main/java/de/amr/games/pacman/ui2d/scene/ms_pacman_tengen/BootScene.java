@@ -12,6 +12,8 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.nesPaletteColor;
@@ -93,4 +95,13 @@ public class BootScene extends GameScene2D {
             r.drawAnimatedEntity(ghost);
         }
     }
+
+    @Override
+    protected void drawDebugInfo(GameRenderer renderer) {
+        renderer.drawTileGrid(size());
+        renderer.ctx().setFill(Color.WHITE);
+        renderer.ctx().setFont(Font.font(20));
+        renderer.ctx().fillText("Tick " + t, 20, 20);
+    }
+
 }

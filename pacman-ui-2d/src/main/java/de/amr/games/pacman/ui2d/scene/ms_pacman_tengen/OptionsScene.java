@@ -286,6 +286,11 @@ public class OptionsScene extends GameScene2D {
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), size().x(), y);
     }
 
+    @Override
+    protected void drawDebugInfo(GameRenderer renderer) {
+        renderer.drawTileGrid(size());
+    }
+
     private void centerLabelText(GameRenderer renderer, String text, Font font, double y) {
         renderer.drawText(text, LABEL_COLOR, font, (NES_TILES_X - text.length()) * HTS, y);
     }
