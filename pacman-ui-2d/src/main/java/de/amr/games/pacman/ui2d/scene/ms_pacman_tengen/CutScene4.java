@@ -47,6 +47,11 @@ public class CutScene4 extends GameScene2D {
 
     @Override
     protected void drawSceneContent(GameRenderer renderer) {
+        MsPacManTengenGameRenderer r = (MsPacManTengenGameRenderer) renderer;
         renderer.drawText("CUT SCENE 4", Color.WHITE, Font.font(30), 14*TS, 2*TS);
+        if (context.game().level().isPresent()) {
+            // avoid exception in cut scene test mode
+            r.drawLevelCounter(context, size());
+        }
     }
 }

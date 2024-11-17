@@ -109,7 +109,10 @@ public class CutScene3 extends GameScene2D {
             ? MsPacManTengenGameSpriteSheet.JUNIOR_PAC_SPRITE
             : MsPacManTengenGameSpriteSheet.BLUE_BAG_SPRITE);
         r.setLevelNumberBoxesVisible(false);
-        r.drawLevelCounter(context, size());
+        if (context.game().level().isPresent()) {
+            // avoid exception in cut scene test mode
+            r.drawLevelCounter(context, size());
+        }
     }
 
     private class SceneController {
