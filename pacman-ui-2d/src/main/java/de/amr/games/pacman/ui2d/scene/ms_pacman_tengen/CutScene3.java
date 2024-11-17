@@ -18,6 +18,7 @@ import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
@@ -37,6 +38,7 @@ public class CutScene3 extends GameScene2D {
 
     static final int LANE_Y = TS * 24;
 
+    private int t;
     private SceneController sceneController;
     private MediaPlayer music;
     private Pac mrPacMan;
@@ -56,6 +58,7 @@ public class CutScene3 extends GameScene2D {
 
     @Override
     public void doInit() {
+        t = 0;
         context.setScoreVisible(false);
 
         mrPacMan = new Pac();
@@ -87,6 +90,7 @@ public class CutScene3 extends GameScene2D {
     @Override
     public void update() {
         sceneController.tick();
+        ++t;
     }
 
     @Override
@@ -102,15 +106,26 @@ public class CutScene3 extends GameScene2D {
         r.drawClapperBoard(clapAnimation, "JUNIOR", 3, r.scaledArcadeFont(TS), color, t(3), t(10));
         r.drawAnimatedEntity(msPacMan);
         r.drawAnimatedEntity(mrPacMan);
+        /*
         r.drawStork(storkAnimation, stork, bag.acceleration().y() != 0);
         r.drawSprite(bag, bagOpen
             ? MsPacManTengenGameSpriteSheet.JUNIOR_PAC_SPRITE
             : MsPacManTengenGameSpriteSheet.BLUE_BAG_SPRITE);
+
+         */
         r.setLevelNumberBoxesVisible(false);
         if (context.game().level().isPresent()) {
             // avoid exception in cut scene test mode
             r.drawLevelCounter(context, size());
         }
+    }
+
+    @Override
+    protected void drawDebugInfo(GameRenderer renderer) {
+        renderer.drawTileGrid(size());
+        renderer.ctx().setFill(Color.WHITE);
+        renderer.ctx().setFont(Font.font(20));
+        renderer.ctx().fillText("Tick " + t, 20, 20);
     }
 
     private class SceneController {

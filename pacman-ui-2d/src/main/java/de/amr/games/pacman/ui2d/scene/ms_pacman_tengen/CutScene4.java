@@ -13,10 +13,12 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGame
 
 public class CutScene4 extends GameScene2D {
 
+    private int t;
     private MediaPlayer music;
 
     @Override
     protected void doInit() {
+        t = 0;
         context.setScoreVisible(false);
         music = context.sound().makeSound("intermission.4",1.0, false);
     }
@@ -28,12 +30,13 @@ public class CutScene4 extends GameScene2D {
 
     @Override
     public void update() {
-        if (context.gameState().timer().atSecond(1)) {
+        if (t == 0) {
             music.play();
         }
-        else if (context.gameState().timer().atSecond(11)) {
+        else if (t == 11*60) {
             context.gameController().changeState(GameState.BOOT);
         }
+        ++t;
     }
 
     @Override
@@ -53,4 +56,13 @@ public class CutScene4 extends GameScene2D {
             r.drawLevelCounter(context, size());
         }
     }
+
+    @Override
+    protected void drawDebugInfo(GameRenderer renderer) {
+        renderer.drawTileGrid(size());
+        renderer.ctx().setFill(Color.WHITE);
+        renderer.ctx().setFont(Font.font(20));
+        renderer.ctx().fillText("Tick " + t, 20, 20);
+    }
+
 }

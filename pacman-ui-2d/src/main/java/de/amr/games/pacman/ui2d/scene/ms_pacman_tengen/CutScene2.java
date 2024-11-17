@@ -17,6 +17,7 @@ import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
@@ -36,6 +37,7 @@ public class CutScene2 extends GameScene2D {
     static final int MIDDLE_LANE_Y = TS * 18;
     static final int LOWER_LANE_Y = TS * 24;
 
+    private int t;
     private Pac pacMan;
     private Pac msPacMan;
     private MediaPlayer music;
@@ -49,6 +51,7 @@ public class CutScene2 extends GameScene2D {
 
     @Override
     public void doInit() {
+        t = 0;
         context.setScoreVisible(false);
 
         pacMan = new Pac();
@@ -75,6 +78,7 @@ public class CutScene2 extends GameScene2D {
     @Override
     public void update() {
         sceneController.tick();
+        ++t;
     }
 
     @Override
@@ -95,6 +99,14 @@ public class CutScene2 extends GameScene2D {
             // avoid exception in cut scene test mode
             r.drawLevelCounter(context, size());
         }
+    }
+
+    @Override
+    protected void drawDebugInfo(GameRenderer renderer) {
+        renderer.drawTileGrid(size());
+        renderer.ctx().setFill(Color.WHITE);
+        renderer.ctx().setFont(Font.font(20));
+        renderer.ctx().fillText("Tick " + t, 20, 20);
     }
 
     private class SceneController {
