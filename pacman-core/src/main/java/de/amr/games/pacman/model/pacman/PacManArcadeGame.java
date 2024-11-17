@@ -25,8 +25,10 @@ import de.amr.games.pacman.steering.Steering;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -54,10 +56,6 @@ public class PacManArcadeGame extends GameModel {
 
     public static final Vector2i ARCADE_MAP_SIZE_IN_TILES  = new Vector2i(28, 36);
     public static final Vector2f ARCADE_MAP_SIZE_IN_PIXELS = new Vector2f(224, 288);
-
-    public static final Map<String, String> THE_COLOR_MAP = Map.of(
-        "fill", "#000000", "stroke", "#2121ff", "door", "#fcb5ff", "pellet", "febdb4"
-    );
 
     // Level settings as specified in the dossier
     private static final byte[][] LEVEL_DATA = {
@@ -120,7 +118,7 @@ public class PacManArcadeGame extends GameModel {
     protected static final int[] HUNTING_TICKS_LEVEL_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
     protected static final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 300, 1200, 300, 62262,   1, -1};
 
-    private final Map<String, Object> theMapConfig;
+    private final Map<String, Object> mapConfig;
 
     protected final Steering autopilot = new RuleBasedPacSteering(this);
     protected final Steering demoLevelSteering = new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE));
@@ -135,9 +133,20 @@ public class PacManArcadeGame extends GameModel {
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
 
-        // fixed map configuration
-        var theMap = new WorldMap(getClass().getResource("/de/amr/games/pacman/maps/pacman/pacman.world"));
-        theMapConfig = Map.of("mapNumber", 1, "worldMap", theMap, "colorMap", THE_COLOR_MAP);
+        String path = "/de/amr/games/pacman/maps/pacman/pacman.world";
+        URL mapURL = getClass().getResource(path);
+        if (mapURL == null) {
+            throw new MissingResourceException("Map not found", getClass().getName(), path);
+        }
+        mapConfig = Map.of(
+            "mapNumber", 1,
+            "worldMap", new WorldMap(mapURL),
+            "colorMap", Map.of(
+                "fill", "#000000",
+                "stroke", "#2121ff",
+                "door", "#fcb5ff",
+                "pellet", "febdb4")
+        );
 
         huntingControl = new HuntingControl() {
             @Override
@@ -252,8 +261,8 @@ public class PacManArcadeGame extends GameModel {
     @Override
     public void configureNormalLevel() {
         levelCounterEnabled = true;
-        level.setMapConfig(theMapConfig);
-        WorldMap worldMap = (WorldMap) theMapConfig.get("worldMap");
+        level.setMapConfig(mapConfig);
+        WorldMap worldMap = (WorldMap) mapConfig.get("worldMap");
         populateLevel(worldMap);
         level.pac().setAutopilot(autopilot);
         setCruiseElroy(0);
