@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
@@ -21,6 +20,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
+import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.RectArea.rect;
@@ -120,8 +121,8 @@ public class MsPacManArcadeGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void update(GameLevel level) {
-        int index = (int) level.mapConfig().get("colorMapIndex");
+    public void update(Map<String, Object> mapConfig) {
+        int index = (int) mapConfig.get("colorMapIndex");
         mapWithFoodSprite    = MAPS_WITH_FOOD_SPRITES[index];
         mapWithoutFoodSprite = MAPS_WITHOUT_FOOD_SPRITES[index];
         mapFlashingSprite    =  new ImageArea(flashingMazesImage, FLASHING_MAP_SPRITES[index]);

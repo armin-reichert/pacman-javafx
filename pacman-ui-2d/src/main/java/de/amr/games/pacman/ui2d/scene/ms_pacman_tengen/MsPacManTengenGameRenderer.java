@@ -103,8 +103,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void update(GameLevel level) {
-        Map<String, Object> mapConfig = level.mapConfig();
+    public void update(Map<String, Object> mapConfig) {
         MapCategory category = (MapCategory) mapConfig.get("mapCategory");
         NES_ColorScheme nesColorScheme = (NES_ColorScheme) mapConfig.get("nesColorScheme");
         mapSprite = switch (category) {
@@ -113,10 +112,8 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
             case BIG     -> bigMapSprite(mapConfig);
             case STRANGE -> strangeMapSprite(mapConfig);
         };
-        Logger.debug("Level {}: Using map sprite with area #{}", level.number, mapSprite.area());
 
         Map<String, String> colorMap = MsPacManTengenGameMapConfig.COLOR_MAPS.get(nesColorScheme);
-
         terrainRenderer.setMapBackgroundColor(bgColor);
         terrainRenderer.setWallStrokeColor(Color.valueOf(colorMap.get("stroke")));
         terrainRenderer.setWallFillColor(Color.valueOf(colorMap.get("fill")));

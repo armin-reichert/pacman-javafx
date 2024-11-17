@@ -28,6 +28,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
+import java.util.Map;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -38,7 +39,7 @@ import static java.util.function.Predicate.not;
  */
 public interface GameRenderer {
 
-    void update(GameLevel level);
+    default void update(Map<String, Object> mapConfig) {}
     AssetStorage assets();
     Color backgroundColor();
     void setBackgroundColor(Color color);

@@ -107,9 +107,6 @@ public class PacManGameXXLRenderer implements GameRenderer {
     }
 
     @Override
-    public void update(GameLevel level) {}
-
-    @Override
     public void drawWorld(GameContext context, GameWorld world, double x, double y) {
         terrainRenderer.setMapBackgroundColor(bgColor);
         if (flashMode) {

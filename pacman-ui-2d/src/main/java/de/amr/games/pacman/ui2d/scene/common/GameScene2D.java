@@ -93,7 +93,7 @@ public abstract class GameScene2D implements GameScene {
 
     public void draw() {
         long start = System.nanoTime();
-        context.game().level().ifPresent(gr::update);
+        context.game().level().ifPresent(level -> gr.update(level.mapConfig()));
         long duration = System.nanoTime() - start;
         Logger.debug(() -> "Update renderer took %.3f millis".formatted(duration * 1e-6));
 

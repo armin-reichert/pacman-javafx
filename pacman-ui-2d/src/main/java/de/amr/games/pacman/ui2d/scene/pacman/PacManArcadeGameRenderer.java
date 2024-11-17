@@ -78,9 +78,6 @@ public class PacManArcadeGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void update(GameLevel level) {}
-
-    @Override
     public Vector2f getMessageAnchorPosition() {
         return new Vector2f(14f * TS, 21 * TS);
     }
