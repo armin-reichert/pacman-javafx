@@ -17,7 +17,6 @@ import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.ms_pacman.ClapperboardAnimation;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
@@ -81,7 +80,7 @@ public class CutScene1 extends GameScene2D {
         music = context.sound().makeSound("intermission.1",1.0, false);
 
         sceneController = new SceneController();
-        sceneController.setState(SceneController.STATE_FLAP, 120);
+        sceneController.setState(SceneController.STATE_FLAP, TickTimer.INDEFINITE);
     }
 
     @Override
@@ -145,9 +144,9 @@ public class CutScene1 extends GameScene2D {
 
         void updateStateFlap() {
             clapAnimation.tick();
-            if (stateTimer.atSecond(1)) {
+            if (stateTimer.atSecond(0)) {
                 music.play();
-            } else if (stateTimer.hasExpired()) {
+            } else if (!clapAnimation.isRunning()) {
                 enterStateChasedByGhosts();
             }
         }

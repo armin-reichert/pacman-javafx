@@ -15,7 +15,7 @@ import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.ms_pacman.ClapperboardAnimation;
+import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -142,12 +142,10 @@ public class CutScene3 extends GameScene2D {
 
         void updateStateFlap() {
             clapAnimation.tick();
-            if (stateTimer.atSecond(1)) {
+            if (stateTimer.atSecond(0)) {
                 music.play();
-            } else if (stateTimer.atSecond(3)) {
-                setState(STATE_STORK_LEAVES_SCENE, 3 * 60);
-                //TODO deactivated for now
-                //enterStateDeliverJunior();
+            } else if (!clapAnimation.isRunning()) {
+                enterStateDeliverJunior();
             }
         }
 

@@ -24,7 +24,7 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.ImageArea;
-import de.amr.games.pacman.ui2d.scene.ms_pacman.ClapperboardAnimation;
+import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
@@ -524,10 +524,9 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     }
 
     public void drawClapperBoard(Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
-        var sprite = animation.currentSprite(MsPacManTengenGameSpriteSheet.CLAPPERBOARD_SPRITES);
-        if (sprite != RectArea.PIXEL) {
+        if (animation.sprite() != RectArea.PIXEL) {
             ctx().setImageSmoothing(false);
-            drawSpriteCenteredOverBox(sprite, x, y);
+            drawSpriteCenteredOverBox(animation.sprite(), x, y);
             var numberX = x + 8;
             var numberY = y + 18; // baseline
             ctx().setFill(bgColor);
@@ -538,8 +537,10 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
             ctx().setFont(font);
             ctx().setFill(textColor);
             ctx().fillText(animation.number(), scaled(numberX), scaled(numberY));
-            var textX = scaled(x + sprite.width());
-            ctx().fillText(animation.text(), textX, numberY);
+            if (animation.isTextVisible()) {
+                var textX = scaled(x + animation.sprite().width());
+                ctx().fillText(animation.text(), textX, scaled(numberY -  2*TS));
+            }
         }
     }
 
