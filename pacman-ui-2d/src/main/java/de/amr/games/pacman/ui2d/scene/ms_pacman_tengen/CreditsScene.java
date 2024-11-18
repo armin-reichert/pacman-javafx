@@ -13,7 +13,6 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.nesPaletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.*;
 
 public class CreditsScene extends GameScene2D {
@@ -36,7 +35,7 @@ public class CreditsScene extends GameScene2D {
 
     @Override
     public Vector2f size() {
-        return new Vector2f(NES_RESOLUTION_X, NES_RESOLUTION_Y);
+        return NES_SIZE;
     }
 
     @Override
@@ -51,6 +50,11 @@ public class CreditsScene extends GameScene2D {
         } else {
             drawOriginalGameAuthors(r, scaledFont);
         }
+    }
+
+    @Override
+    protected void drawDebugInfo(GameRenderer renderer) {
+        renderer.drawTileGrid(size());
     }
 
     private void drawOriginalGameAuthors(MsPacManTengenGameRenderer r, Font scaledFont) {
@@ -84,11 +88,11 @@ public class CreditsScene extends GameScene2D {
         y += 3 * TS;
         r.drawText("SPECIAL THANKS:", nesPaletteColor(0x23), scaledFont, 4 * TS, y);
         y += 2 * TS;
-        r.drawText("RUSSIANMANSMWC", nesPaletteColor(0x23), scaledFont, 10 * TS, y);
+        r.drawText("@RUSSIANMANSMWC", nesPaletteColor(0x23), scaledFont, 10 * TS, y);
+        y += TS;
+        r.drawText("@FLICKY1211", nesPaletteColor(0x23), scaledFont, 10 * TS, y);
         y += TS;
         r.drawText("ANDYANA JONSEPH", nesPaletteColor(0x23), scaledFont, 10 * TS, y);
-        y += TS;
-        r.drawText("FLICKY1211", nesPaletteColor(0x23), scaledFont, 10 * TS, y);
         y += 3 * TS;
         r.drawText("MS PAC-MAN TM NAMCO LTD", nesPaletteColor(0x19), scaledFont, centerX(23), y);
         y += TS;
