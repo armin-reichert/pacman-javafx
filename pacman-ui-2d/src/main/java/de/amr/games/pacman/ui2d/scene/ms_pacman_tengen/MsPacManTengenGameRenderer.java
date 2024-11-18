@@ -191,16 +191,16 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
             case 1 -> v2i(0, 0);
             case 2 -> v2i(1, 0);
             case 3 -> switch (colorScheme) {
-                case MCS_16_20_15_ORANGE_WHITE_RED   -> v2i(2, 0);
-                case MCS_35_28_20_PINK_YELLOW_WHITE  -> v2i(1, 1);
-                case MCS_17_20_20_BROWN_WHITE_WHITE  -> v2i(0, 2);
-                case MCS_0F_20_28_BLACK_WHITE_YELLOW -> v2i(2, 2);
+                case _16_20_15_ORANGE_WHITE_RED   -> v2i(2, 0);
+                case _35_28_20_PINK_YELLOW_WHITE  -> v2i(1, 1);
+                case _17_20_20_BROWN_WHITE_WHITE  -> v2i(0, 2);
+                case _0F_20_28_BLACK_WHITE_YELLOW -> v2i(2, 2);
                 default -> throw new IllegalArgumentException("Unknown color scheme for map 3: " + colorScheme);
             };
             case 4 -> switch (colorScheme) {
-                case MCS_01_38_20_BLUE_YELLOW_WHITE   -> v2i(0, 1);
-                case MCS_36_15_20_PINK_RED_WHITE      -> v2i(2, 1);
-                case MCS_13_20_28_VIOLET_WHITE_YELLOW -> v2i(1, 2);
+                case _01_38_20_BLUE_YELLOW_WHITE   -> v2i(0, 1);
+                case _36_15_20_PINK_RED_WHITE      -> v2i(2, 1);
+                case _13_20_28_VIOLET_WHITE_YELLOW -> v2i(1, 2);
                 default -> throw new IllegalArgumentException("Unknown color scheme for map #4: " + colorScheme);
             };
             default -> throw new IllegalArgumentException("Illegal map number: " + mapNumber);
