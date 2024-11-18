@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES;
-import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
@@ -33,9 +32,12 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGame
  */
 public class CutScene2 extends GameScene2D {
 
-    static final int UPPER_LANE_Y = TS * 8;
-    static final int LOWER_LANE_Y = TS * 22;
-    static final int MIDDLE_LANE_Y = TS * 10;
+    static final int UPPER_LANE = TS * 8;
+    static final int LOWER_LANE = TS * 22;
+    static final int MIDDLE_LANE = TS * 10;
+
+    static final int LEFT_BORDER = TS;
+    static final int RIGHT_BORDER = TS * (NES_TILES_X - 2);
 
     private int t;
     private Pac pacMan;
@@ -72,64 +74,64 @@ public class CutScene2 extends GameScene2D {
             clapAnimation.start();
             music.play();
         }
-        else if (t == 272) {
-            msPacMan.setPosition(2*TS, UPPER_LANE_Y);
+        else if (t == 270) {
+            msPacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
             msPacMan.animations().ifPresent(Animations::startCurrentAnimation);
             msPacMan.setSpeed(2.0f);
             msPacMan.show();
         }
-        else if (t == 321) {
+        else if (t == 320) {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.selectAnimation(MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING);
             pacMan.animations().ifPresent(Animations::startCurrentAnimation);
-            pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
+            pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setSpeed(2.0f);
             pacMan.show();
         }
-        else if (t == 519) {
-            pacMan.setPosition(TS * (NES_TILES_X - 2), LOWER_LANE_Y);
+        else if (t == 520) {
+            pacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
             pacMan.setMoveDir(Direction.LEFT);
             pacMan.setSpeed(2.0f);
         }
-        else if (t == 568) {
-            msPacMan.setPosition(TS * (NES_TILES_X - 2), LOWER_LANE_Y);
+        else if (t == 570) {
+            msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
             msPacMan.setMoveDir(Direction.LEFT);
             msPacMan.setSpeed(2.0f);
         }
-        else if (t == 783) {
-            msPacMan.setPosition(TS * 2, MIDDLE_LANE_Y);
+        else if (t == 780) {
+            msPacMan.setPosition(LEFT_BORDER, MIDDLE_LANE);
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.setSpeed(2.0f);
         }
-        else if (t == 831) {
-            pacMan.setPosition(TS * 2, MIDDLE_LANE_Y);
+        else if (t == 830) {
+            pacMan.setPosition(LEFT_BORDER, MIDDLE_LANE);
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setSpeed(2.0f);
         }
-        else if (t == 1039) {
-            pacMan.setPosition(TS * (NES_TILES_X - 2), UPPER_LANE_Y);
+        else if (t == 1040) {
+            pacMan.setPosition(RIGHT_BORDER, UPPER_LANE);
             pacMan.setMoveDir(Direction.LEFT);
             pacMan.setSpeed(4.0f); //TODO correct?
         }
         else if (t == 1055) {
-            msPacMan.setPosition(TS * (NES_TILES_X - 2), UPPER_LANE_Y);
+            msPacMan.setPosition(RIGHT_BORDER, UPPER_LANE);
             msPacMan.setMoveDir(Direction.LEFT);
             msPacMan.setSpeed(4.0f);
         }
-        else if (t == 1103) {
-            msPacMan.setPosition(TS * 2, LOWER_LANE_Y);
+        else if (t == 1105) {
+            msPacMan.setPosition(LEFT_BORDER, LOWER_LANE);
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.setSpeed(4.0f);
         }
-        else if (t == 1118) {
-            pacMan.setPosition(TS * 2, LOWER_LANE_Y);
+        else if (t == 1120) {
+            pacMan.setPosition(LEFT_BORDER, LOWER_LANE);
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setSpeed(4.0f);
         }
-        else if (t == 1376) {
+        else if (t == 1380) {
             context.gameController().terminateCurrentState();
             return;
         }
@@ -153,8 +155,7 @@ public class CutScene2 extends GameScene2D {
         r.drawClapperBoard(clapAnimation, "THE CHASE", 2, r.scaledArcadeFont(TS), color, t(3), t(10));
         r.drawAnimatedEntity(msPacMan);
         r.drawAnimatedEntity(pacMan);
-        if (context.game().level().isPresent()) {
-            // avoid exception in cut scene test mode
+        if (context.game().level().isPresent()) { // avoid exception in cut scene test mode
             r.drawLevelCounter(context, size());
         }
     }
