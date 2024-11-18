@@ -44,16 +44,29 @@ public class MsPacManTengenGameMapConfig {
         return all[randomInt(0, all.length)];
     }
 
-    private List<WorldMap> arcadeMaps;
-    private List<WorldMap> miniMaps;
-    private List<WorldMap> bigMaps;
-    private List<WorldMap> strangeMaps;
+    private static List<WorldMap> createMaps(Class<?> loadingClass, String pattern, int maxNumber) {
+        List<WorldMap> maps = new ArrayList<>();
+        for (int num = 1; num <= maxNumber; ++num) {
+            String path = pattern.formatted(num);
+            URL url = loadingClass.getResource(path);
+            if (url != null) {
+                WorldMap worldMap = new WorldMap(url);
+                maps.add(worldMap);
+                Logger.info("World map #{} has been read from URL {}", num, url);
+            } else {
+                Logger.error("World map #{} could not be read from URL {}", num, url);
+            }
+        }
+        return maps;
+    }
+
+    private List<WorldMap> arcadeMaps, miniMaps, bigMaps, strangeMaps;
 
     public void loadMaps() {
-        arcadeMaps  = createMaps(MAPS_ROOT + "arcade%d.world", 4);
-        miniMaps    = createMaps(MAPS_ROOT + "mini%d.world", 6);
-        bigMaps     = createMaps(MAPS_ROOT + "big%d.world", 11);
-        strangeMaps = createMaps(MAPS_ROOT + "strange%d.world", 15);
+        arcadeMaps  = createMaps(getClass(), MAPS_ROOT + "arcade%d.world", 4);
+        miniMaps    = createMaps(getClass(), MAPS_ROOT + "mini%d.world", 6);
+        bigMaps     = createMaps(getClass(), MAPS_ROOT + "big%d.world", 11);
+        strangeMaps = createMaps(getClass(), MAPS_ROOT + "strange%d.world", 15);
     }
 
     public Map<String, Object> getMapConfig(MapCategory mapCategory, int levelNumber) {
@@ -220,7 +233,6 @@ public class MsPacManTengenGameMapConfig {
             "worldMap", worldMap,
             "nesColorScheme", nesColorScheme
         );
-        //return new MapConfig(mapCategory, mapNumber, worldMap, nesColorScheme);
     }
 
     private Map<String, String> createColorSchemeFromMap(WorldMap worldMap) {
@@ -230,27 +242,10 @@ public class MsPacManTengenGameMapConfig {
         String door   = worldMap.terrain().getPropertyOrDefault(PROPERTY_COLOR_DOOR, defaultColorMap.get("door"));
         String pellet = worldMap.food().getPropertyOrDefault(PROPERTY_COLOR_FOOD, defaultColorMap.get("pellet"));
         return Map.of(
-                "fill",   colorToHexFormat(fill).orElse(defaultColorMap.get("fill")),
-                "stroke", colorToHexFormat(stroke).orElse(defaultColorMap.get("stroke")),
-                "door",   colorToHexFormat(door).orElse(defaultColorMap.get("door")),
-                "pellet", colorToHexFormat(pellet).orElse(defaultColorMap.get("pellet"))
+            "fill",   colorToHexFormat(fill).orElse(defaultColorMap.get("fill")),
+            "stroke", colorToHexFormat(stroke).orElse(defaultColorMap.get("stroke")),
+            "door",   colorToHexFormat(door).orElse(defaultColorMap.get("door")),
+            "pellet", colorToHexFormat(pellet).orElse(defaultColorMap.get("pellet"))
         );
     }
-
-    private List<WorldMap> createMaps(String pattern, int maxNumber) {
-        List<WorldMap> maps = new ArrayList<>();
-        for (int num = 1; num <= maxNumber; ++num) {
-            String path = pattern.formatted(num);
-            URL url = getClass().getResource(path);
-            if (url != null) {
-                WorldMap worldMap = new WorldMap(url);
-                maps.add(worldMap);
-                Logger.info("World map #{} has been read from URL {}", num, url);
-            } else {
-                Logger.error("World map #{} could not be read from URL {}", num, url);
-            }
-        }
-        return maps;
-    }
-
 }
