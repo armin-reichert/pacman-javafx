@@ -55,6 +55,7 @@ public class CutScene3 extends GameScene2D {
 
     private MsPacManTengenGameSpriteSheet spriteSheet;
     private ClapperboardAnimation clapAnimation;
+    private Color clapTextColor;
     private SpriteAnimation storkAnimation;
 
     private int t;
@@ -74,11 +75,12 @@ public class CutScene3 extends GameScene2D {
         stork = new Entity();
         bagOrJunior = new Entity();
 
-        music = context.sound().makeSound("intermission.3",1.0, false);
-
         spriteSheet = (MsPacManTengenGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         mrPacMan.setAnimations(new PacAnimations(spriteSheet));
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
+
+        music = context.sound().makeSound("intermission.3",1.0, false);
+        clapTextColor = context.assets().color(assetPrefix(context.gameVariant()) + ".color.clapperboard");
     }
 
     @Override
@@ -165,10 +167,9 @@ public class CutScene3 extends GameScene2D {
         if (darkness) {
             return;
         }
-        String assetPrefix = assetPrefix(context.gameVariant());
-        Color color = context.assets().color(assetPrefix + ".color.clapperboard");
         var r = (MsPacManTengenGameRenderer) renderer;
-        r.drawClapperBoard(clapAnimation, "JUNIOR", 3, r.scaledArcadeFont(TS), color, CLAP_TILE_X, CLAP_TILE_Y);
+        r.drawClapperBoard(clapAnimation, "JUNIOR", 3,
+            r.scaledArcadeFont(TS), clapTextColor, CLAP_TILE_X, CLAP_TILE_Y);
         r.drawAnimatedEntity(msPacMan);
         r.drawAnimatedEntity(mrPacMan);
         r.drawStork(storkAnimation, stork, bagReleased);
@@ -182,8 +183,8 @@ public class CutScene3 extends GameScene2D {
         } else {
             r.drawSprite(bagOrJunior, BLUE_BAG_SPRITE);
         }
-        r.setLevelNumberBoxesVisible(false);
         if (context.game().level().isPresent()) { // avoid exception in cut scene test mode
+            r.setLevelNumberBoxesVisible(false);
             r.drawLevelCounter(context, size());
         }
     }

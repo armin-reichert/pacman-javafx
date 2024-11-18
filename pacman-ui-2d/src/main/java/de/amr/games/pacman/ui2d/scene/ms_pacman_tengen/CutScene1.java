@@ -19,7 +19,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.NES_SIZE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.NES_TILES_X;
@@ -77,14 +76,13 @@ public class CutScene1 extends GameScene2D {
         pinky = Ghost.pinky();
         heart = new Entity();
 
-        music = context.sound().makeSound("intermission.1", 1.0, false);
-
         var spriteSheet = (MsPacManTengenGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         mrPacMan.setAnimations(new PacAnimations(spriteSheet));
         inky.setAnimations(new GhostAnimations(spriteSheet, inky.id()));
         pinky.setAnimations(new GhostAnimations(spriteSheet, pinky.id()));
 
+        music = context.sound().makeSound("intermission.1", 1.0, false);
         clapTextColor = context.assets().color(assetPrefix(context.gameVariant()) + ".color.clapperboard");
     }
 
