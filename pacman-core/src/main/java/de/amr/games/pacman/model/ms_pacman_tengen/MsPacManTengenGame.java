@@ -85,7 +85,7 @@ public class MsPacManTengenGame extends GameModel {
     private final MsPacManTengenGameMapConfig mapConfigMgr = new MsPacManTengenGameMapConfig();
     private MapCategory mapCategory;
     private Difficulty difficulty;
-    private BoosterMode boosterMode;
+    private PacBooster pacBooster;
     private boolean boosterActive;
     private byte startLevelNumber; // 1-7
     private boolean canStartGame;
@@ -117,7 +117,7 @@ public class MsPacManTengenGame extends GameModel {
 
     public void resetOptions() {
         setMapCategory(MapCategory.ARCADE);
-        setBoosterMode(BoosterMode.OFF);
+        setBoosterMode(PacBooster.OFF);
         setDifficulty(Difficulty.NORMAL);
         setStartLevelNumber(1);
         setNumContinues(4);
@@ -146,12 +146,12 @@ public class MsPacManTengenGame extends GameModel {
         return mapConfigMgr;
     }
 
-    public void setBoosterMode(BoosterMode mode) {
-        boosterMode = mode;
+    public void setBoosterMode(PacBooster mode) {
+        pacBooster = mode;
     }
 
-    public BoosterMode boosterMode() {
-        return boosterMode;
+    public PacBooster boosterMode() {
+        return pacBooster;
     }
 
     public void setMapCategory(MapCategory mapCategory) {
@@ -335,7 +335,7 @@ public class MsPacManTengenGame extends GameModel {
     protected void setActorBaseSpeed(int levelNumber) {
         float pacBaseSpeed = pacBaseSpeedInLevel(levelNumber) + pacDifficultySpeedDelta(difficulty);
         level.pac().setBaseSpeed(pacBaseSpeed);
-        if (boosterMode == BoosterMode.ALWAYS_ON) {
+        if (pacBooster == PacBooster.ALWAYS_ON) {
             activatePacBooster(true);
         }
         level.ghosts().forEach(ghost -> {

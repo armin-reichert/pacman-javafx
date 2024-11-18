@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.nes.NES;
-import de.amr.games.pacman.model.ms_pacman_tengen.BoosterMode;
+import de.amr.games.pacman.model.ms_pacman_tengen.PacBooster;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManTengenGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameActionProvider;
@@ -31,7 +31,7 @@ public enum MsPacManTengenGameActions implements GameAction {
         @Override
         public void execute(GameContext context) {
             MsPacManTengenGame tengenGame = (MsPacManTengenGame) context.game();
-            if (tengenGame.boosterMode() == BoosterMode.ACTIVATED_USING_KEY) {
+            if (tengenGame.boosterMode() == PacBooster.USE_A_OR_B) {
                 tengenGame.activatePacBooster(!tengenGame.isBoosterActive()); // toggle state
             }
         }

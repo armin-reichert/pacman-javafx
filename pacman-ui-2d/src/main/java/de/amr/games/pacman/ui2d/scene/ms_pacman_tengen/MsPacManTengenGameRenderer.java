@@ -24,7 +24,6 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.ImageArea;
-import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
@@ -405,7 +404,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     }
 
     private boolean isUsingDefaultGameOptions(MsPacManTengenGame game) {
-        return game.boosterMode() == BoosterMode.OFF &&
+        return game.boosterMode() == PacBooster.OFF &&
             game.difficulty() == Difficulty.NORMAL &&
             game.mapCategory() == MapCategory.ARCADE;
     }
@@ -435,7 +434,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
         };
         double centerX = terrain.numCols() * HTS;
         double y = t(2) + HTS;
-        if (tengenGame.boosterMode() != BoosterMode.OFF) {
+        if (tengenGame.boosterMode() != PacBooster.OFF) {
             //TODO: always displayed when TOGGLE_USING_KEY is selected or only if booster is active?
             drawSpriteCenteredOverPosition(MsPacManTengenGameSpriteSheet.BOOSTER_SPRITE, centerX - t(6), y);
         }

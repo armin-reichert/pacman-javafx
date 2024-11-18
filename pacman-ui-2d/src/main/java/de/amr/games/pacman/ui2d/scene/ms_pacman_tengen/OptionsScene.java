@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES;
-import de.amr.games.pacman.model.ms_pacman_tengen.BoosterMode;
+import de.amr.games.pacman.model.ms_pacman_tengen.PacBooster;
 import de.amr.games.pacman.model.ms_pacman_tengen.Difficulty;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManTengenGame;
@@ -29,7 +29,7 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGame
 /**
  * Options scene for Ms. Pac-Man Tengen.
  *
- * <p></p>The highscore is cleared if map type, start level or difficulty are
+ * <p></p>The highscore is cleared if player type (1 player, 2 players etc), map category or difficulty are
  * changed, see https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/MsPacManTENGENDis.asm:9545.
  *
  * @author Armin Reichert
@@ -164,7 +164,6 @@ public class OptionsScene extends GameScene2D {
         int current = game.startLevelNumber();
         int prev = (current == MIN_START_LEVEL) ? MAX_START_LEVEL : current - 1;
         game.setStartLevelNumber(prev);
-        game.scoreManager().resetHighScore();
         optionValueChanged();
     }
 
@@ -172,7 +171,6 @@ public class OptionsScene extends GameScene2D {
         int current = game.startLevelNumber();
         int next = (current < MAX_START_LEVEL) ? current + 1 : MIN_START_LEVEL;
         game.setStartLevelNumber(next);
-        game.scoreManager().resetHighScore();
         optionValueChanged();
     }
 
@@ -213,17 +211,17 @@ public class OptionsScene extends GameScene2D {
     }
 
     private void setPrevPacBoosterValue() {
-        BoosterMode boosterMode = game.boosterMode();
-        var values = BoosterMode.values();
-        int current = boosterMode.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
+        PacBooster pacBooster = game.boosterMode();
+        var values = PacBooster.values();
+        int current = pacBooster.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
         game.setBoosterMode(values[prev]);
         optionValueChanged();
     }
 
     private void setNextPacBoosterValue() {
-        BoosterMode boosterMode = game.boosterMode();
-        var values = BoosterMode.values();
-        int current = boosterMode.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
+        PacBooster pacBooster = game.boosterMode();
+        var values = PacBooster.values();
+        int current = pacBooster.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         game.setBoosterMode(values[next]);
         optionValueChanged();
     }
@@ -258,7 +256,7 @@ public class OptionsScene extends GameScene2D {
         String pacBoosterText = switch (game.boosterMode()) {
             case OFF -> "OFF";
             case ALWAYS_ON -> "ALWAYS ON";
-            case ACTIVATED_USING_KEY -> "USE A OR B";
+            case USE_A_OR_B -> "USE A OR B";
         };
         renderer.drawText(pacBoosterText, VALUE_COLOR, scaledFont, COL_VALUE, y);
 
