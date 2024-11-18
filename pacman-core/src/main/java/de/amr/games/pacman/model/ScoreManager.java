@@ -49,6 +49,10 @@ public class ScoreManager {
         this.highScoreFile = highScoreFile;
     }
 
+    public void resetHighScore() {
+        new Score().save(highScoreFile, "High Score, reset at %s".formatted(LocalTime.now()));
+    }
+
     public void setLevelNumber(int levelNumber) {
         score.setLevelNumber(levelNumber);
     }

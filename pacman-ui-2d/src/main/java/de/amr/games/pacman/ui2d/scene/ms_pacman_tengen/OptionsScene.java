@@ -27,6 +27,11 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGame
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSpriteSheet.CONTINUES_SPRITES;
 
 /**
+ * Options scene for Ms. Pac-Man Tengen.
+ *
+ * <p></p>The highscore is cleared if map type, start level or difficulty are
+ * changed, see https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/MsPacManTENGENDis.asm:9545.
+ *
  * @author Armin Reichert
  */
 public class OptionsScene extends GameScene2D {
@@ -159,6 +164,7 @@ public class OptionsScene extends GameScene2D {
         int current = game.startLevelNumber();
         int prev = (current == MIN_START_LEVEL) ? MAX_START_LEVEL : current - 1;
         game.setStartLevelNumber(prev);
+        game.scoreManager().resetHighScore();
         optionValueChanged();
     }
 
@@ -166,6 +172,7 @@ public class OptionsScene extends GameScene2D {
         int current = game.startLevelNumber();
         int next = (current < MAX_START_LEVEL) ? current + 1 : MIN_START_LEVEL;
         game.setStartLevelNumber(next);
+        game.scoreManager().resetHighScore();
         optionValueChanged();
     }
 
@@ -174,6 +181,7 @@ public class OptionsScene extends GameScene2D {
         var values = MapCategory.values();
         int current = category.ordinal(), prev = (current == 0) ? values.length - 1 :  current - 1;
         game.setMapCategory(values[prev]);
+        game.scoreManager().resetHighScore();
         optionValueChanged();
     }
 
@@ -182,6 +190,7 @@ public class OptionsScene extends GameScene2D {
         var values = MapCategory.values();
         int current = category.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         game.setMapCategory(values[next]);
+        game.scoreManager().resetHighScore();
         optionValueChanged();
     }
 
@@ -190,6 +199,7 @@ public class OptionsScene extends GameScene2D {
         var values = Difficulty.values();
         int current = difficulty.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
         game.setDifficulty(values[prev]);
+        game.scoreManager().resetHighScore();
         optionValueChanged();
     }
 
@@ -198,6 +208,7 @@ public class OptionsScene extends GameScene2D {
         var values = Difficulty.values();
         int current = difficulty.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         game.setDifficulty(values[next]);
+        game.scoreManager().resetHighScore();
         optionValueChanged();
     }
 
