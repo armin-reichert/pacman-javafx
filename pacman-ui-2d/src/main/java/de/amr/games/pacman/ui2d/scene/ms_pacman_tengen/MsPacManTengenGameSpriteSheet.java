@@ -47,17 +47,17 @@ public class MsPacManTengenGameSpriteSheet implements GameSpriteSheet {
     };
 
     static final RectArea[] MR_PAC_MUNCHING_SPRITES_LEFT = {
-        rect(51, 42, 15, 15), // open
-        rect(66, 42, 15, 15), // wide open
-        rect(51, 42, 15, 15), // open
-        rect(32, 42, 15, 15), // closed
+        rect(51, 41, 15, 15), // open
+        rect(66, 41, 15, 15), // wide open
+        rect(51, 41, 15, 15), // open
+        rect(32, 41, 15, 15), // closed
     };
 
     static final RectArea[] MR_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER = {
-        rect(105, 42, 15, 15), // open
-        rect(120, 42, 15, 15), // wide open
-        rect( 86, 42, 15, 15), // closed
-        rect(120, 42, 15, 15), // wide open
+        rect(105, 41, 15, 15), // open
+        rect(120, 41, 15, 15), // wide open
+        rect( 86, 4, 15, 15), // closed
+        rect(120, 41, 15, 15), // wide open
     };
 
     // there is only a sprite pointing left in the sprite sheet, renderer makes the animation
