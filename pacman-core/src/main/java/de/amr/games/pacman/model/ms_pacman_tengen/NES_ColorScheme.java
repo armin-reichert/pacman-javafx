@@ -6,6 +6,8 @@ package de.amr.games.pacman.model.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.nes.NES;
 
+import static de.amr.games.pacman.lib.Globals.randomInt;
+
 /**
  * The color schemes used in the Tengen Ms. Pac-Man maps.
  */
@@ -42,6 +44,11 @@ public enum NES_ColorScheme {
         fillColor = NES.Palette.color(fillIndex);
         strokeColor = NES.Palette.color(strokeIndex);
         pelletColor = NES.Palette.color(pelletIndex);
+    }
+
+    public static NES_ColorScheme random() {
+        var all = NES_ColorScheme.values();
+        return all[randomInt(0, all.length)];
     }
 
     public String fillColor() {

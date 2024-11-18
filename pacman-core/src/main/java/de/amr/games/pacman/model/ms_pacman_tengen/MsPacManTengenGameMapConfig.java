@@ -4,28 +4,20 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model.ms_pacman_tengen;
 
-import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import org.tinylog.Logger;
 
 import java.net.URL;
 import java.util.*;
 
-import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
+import static de.amr.games.pacman.lib.Globals.inRange;
+import static de.amr.games.pacman.lib.Globals.randomInt;
 import static de.amr.games.pacman.model.ms_pacman_tengen.MapCategory.*;
 import static de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme.*;
 
 public class MsPacManTengenGameMapConfig {
 
     private static final String MAPS_ROOT = "/de/amr/games/pacman/maps/ms_pacman_tengen/";
-
-    public static final Map<String, String> BLACK_WHITE_COLOR_MAP = Map.of(
-        "fill",   NES.Palette.color(0x0f),
-        "stroke", NES.Palette.color(0x20),
-        "door",   NES.Palette.color(0x0f),
-        "food",   NES.Palette.color(0x0f)
-    );
 
     public static EnumMap<NES_ColorScheme, Map<String, String>> COLOR_MAPS = new EnumMap<>(NES_ColorScheme.class);
     static {
@@ -37,11 +29,6 @@ public class MsPacManTengenGameMapConfig {
                 "pellet", nesColorScheme.pelletColor()
             ));
         }
-    }
-
-    public static NES_ColorScheme random_NES_ColorScheme() {
-        var all = NES_ColorScheme.values();
-        return all[randomInt(0, all.length)];
     }
 
     private static List<WorldMap> createMaps(Class<?> loadingClass, String pattern, int maxNumber) {
@@ -133,10 +120,10 @@ public class MsPacManTengenGameMapConfig {
             case 25 -> cfg(MINI, miniMaps, 1, MCS_10_20_28_GRAY_WHITE_YELLOW);
             case 26 -> cfg(MINI, miniMaps, 2, MCS_04_20_20_VIOLET_WHITE_WHITE);
             case 27 -> cfg(MINI, miniMaps, 3, MCS_04_20_20_VIOLET_WHITE_WHITE);
-            case 28 -> cfg(MINI, miniMaps, 4, random_NES_ColorScheme());
-            case 29 -> cfg(MINI, miniMaps, 5, random_NES_ColorScheme());
-            case 30 -> cfg(MINI, miniMaps, 2, random_NES_ColorScheme());
-            case 31 -> cfg(MINI, miniMaps, 3, random_NES_ColorScheme());
+            case 28 -> cfg(MINI, miniMaps, 4, NES_ColorScheme.random());
+            case 29 -> cfg(MINI, miniMaps, 5, NES_ColorScheme.random());
+            case 30 -> cfg(MINI, miniMaps, 2, NES_ColorScheme.random());
+            case 31 -> cfg(MINI, miniMaps, 3, NES_ColorScheme.random());
             case 32 -> cfg(MINI, miniMaps, 6, MCS_15_25_20_RED_ROSE_WHITE);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
@@ -174,10 +161,10 @@ public class MsPacManTengenGameMapConfig {
             case 25 -> cfg(BIG, bigMaps,  8, MCS_10_20_28_GRAY_WHITE_YELLOW);
             case 26 -> cfg(BIG, bigMaps, 10, MCS_04_20_20_VIOLET_WHITE_WHITE);
             case 27 -> cfg(BIG, bigMaps,  8, MCS_04_20_20_VIOLET_WHITE_WHITE);
-            case 28 -> cfg(BIG, bigMaps,  5, random_NES_ColorScheme());
-            case 29 -> cfg(BIG, bigMaps,  9, random_NES_ColorScheme());
-            case 30 -> cfg(BIG, bigMaps,  2, random_NES_ColorScheme());
-            case 31 -> cfg(BIG, bigMaps, 10, random_NES_ColorScheme());
+            case 28 -> cfg(BIG, bigMaps,  5, NES_ColorScheme.random());
+            case 29 -> cfg(BIG, bigMaps,  9, NES_ColorScheme.random());
+            case 30 -> cfg(BIG, bigMaps,  2, NES_ColorScheme.random());
+            case 31 -> cfg(BIG, bigMaps, 10, NES_ColorScheme.random());
             case 32 -> cfg(BIG, bigMaps, 11, MCS_15_25_20_RED_ROSE_WHITE);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
@@ -212,10 +199,10 @@ public class MsPacManTengenGameMapConfig {
             case 25 -> cfg(BIG,     bigMaps,     10, MCS_10_20_28_GRAY_WHITE_YELLOW);
             case 26 -> cfg(BIG,     bigMaps,      9, MCS_03_20_20_VIOLET_WHITE_WHITE);
             case 27 -> cfg(STRANGE, strangeMaps, 14, MCS_04_20_20_VIOLET_WHITE_WHITE);
-            case 28 -> cfg(MINI,    miniMaps,     5, random_NES_ColorScheme());
-            case 29 -> cfg(STRANGE, strangeMaps,  8, random_NES_ColorScheme());
-            case 30 -> cfg(MINI,    miniMaps,     4, random_NES_ColorScheme());
-            case 31 -> cfg(STRANGE, strangeMaps, 12, random_NES_ColorScheme());
+            case 28 -> cfg(MINI,    miniMaps,     5, NES_ColorScheme.random());
+            case 29 -> cfg(STRANGE, strangeMaps,  8, NES_ColorScheme.random());
+            case 30 -> cfg(MINI,    miniMaps,     4, NES_ColorScheme.random());
+            case 31 -> cfg(STRANGE, strangeMaps, 12, NES_ColorScheme.random());
             case 32 -> cfg(STRANGE, strangeMaps, 15, MCS_15_25_20_RED_ROSE_WHITE);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
@@ -225,27 +212,12 @@ public class MsPacManTengenGameMapConfig {
         return extConfig;
     }
 
-    private Map<String, Object> cfg(MapCategory mapCategory, List<WorldMap> maps, int mapNumber, NES_ColorScheme nesColorScheme) {
-        WorldMap worldMap = new WorldMap(maps.get(mapNumber - 1));
+    private Map<String, Object> cfg(MapCategory category, List<WorldMap> maps, int number, NES_ColorScheme colorScheme) {
         return Map.of(
-            "mapCategory", mapCategory,
-            "mapNumber", mapNumber,
-            "worldMap", worldMap,
-            "nesColorScheme", nesColorScheme
-        );
-    }
-
-    private Map<String, String> createColorSchemeFromMap(WorldMap worldMap) {
-        Map<String, String> defaultColorMap = COLOR_MAPS.get(MCS_36_15_20_PINK_RED_WHITE);
-        String fill   = worldMap.terrain().getPropertyOrDefault(PROPERTY_COLOR_WALL_FILL, defaultColorMap.get("fill"));
-        String stroke = worldMap.terrain().getPropertyOrDefault(PROPERTY_COLOR_WALL_STROKE, defaultColorMap.get("stroke"));
-        String door   = worldMap.terrain().getPropertyOrDefault(PROPERTY_COLOR_DOOR, defaultColorMap.get("door"));
-        String pellet = worldMap.food().getPropertyOrDefault(PROPERTY_COLOR_FOOD, defaultColorMap.get("pellet"));
-        return Map.of(
-            "fill",   colorToHexFormat(fill).orElse(defaultColorMap.get("fill")),
-            "stroke", colorToHexFormat(stroke).orElse(defaultColorMap.get("stroke")),
-            "door",   colorToHexFormat(door).orElse(defaultColorMap.get("door")),
-            "pellet", colorToHexFormat(pellet).orElse(defaultColorMap.get("pellet"))
+            "mapCategory", category,
+            "mapNumber", number,
+            "worldMap", new WorldMap(maps.get(number - 1)),
+            "nesColorScheme", colorScheme
         );
     }
 }
