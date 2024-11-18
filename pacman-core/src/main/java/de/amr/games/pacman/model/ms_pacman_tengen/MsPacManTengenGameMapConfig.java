@@ -52,9 +52,9 @@ public class MsPacManTengenGameMapConfig {
             if (url != null) {
                 WorldMap worldMap = new WorldMap(url);
                 maps.add(worldMap);
-                Logger.info("World map #{} has been read from URL {}", num, url);
+                Logger.info("World map #{} read. URL='{}'", num, url);
             } else {
-                Logger.error("World map #{} could not be read from URL {}", num, url);
+                Logger.error("World map #{} could not be read from URL '{}'", num, url);
             }
         }
         return maps;
