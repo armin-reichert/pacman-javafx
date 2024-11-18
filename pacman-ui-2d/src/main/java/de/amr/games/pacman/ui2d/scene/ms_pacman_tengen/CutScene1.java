@@ -37,9 +37,12 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGame
  */
 public class CutScene1 extends GameScene2D {
 
-    static final int UPPER_LANE_Y = TS * 8;
-    static final int LOWER_LANE_Y = TS * 24;
-    static final int MIDDLE_LANE_Y = TS * 16;
+    static final int UPPER_LANE  = TS * 8;
+    static final int LOWER_LANE  = TS * 24;
+    static final int MIDDLE_LANE = TS * 16;
+
+    static final int LEFT_BORDER = TS;
+    static final int RIGHT_BORDER = TS * (NES_TILES_X - 2);
 
     static final float SPEED_PAC_CHASING = 2f;
     static final float SPEED_PAC_RISING = 1f;
@@ -54,7 +57,7 @@ public class CutScene1 extends GameScene2D {
     private Entity heart;
     private ClapperboardAnimation clapAnimation;
 
-    private int t = 0;
+    private int t;
 
     @Override
     public void bindGameActions() {
@@ -72,14 +75,13 @@ public class CutScene1 extends GameScene2D {
         pinky = Ghost.pinky();
         heart = new Entity();
 
-        music = context.sound().makeSound("intermission.1",1.0, false);
+        music = context.sound().makeSound("intermission.1", 1.0, false);
 
         var spriteSheet = (MsPacManTengenGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         msPac.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
         inky.setAnimations(new GhostAnimations(spriteSheet, inky.id()));
         pinky.setAnimations(new GhostAnimations(spriteSheet, pinky.id()));
-
     }
 
     @Override
@@ -96,14 +98,14 @@ public class CutScene1 extends GameScene2D {
         }
         else if (t == 130) {
             pacMan.setMoveDir(Direction.RIGHT);
-            pacMan.setPosition(2*TS, UPPER_LANE_Y);
+            pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             pacMan.setSpeed(SPEED_PAC_CHASING);
             pacMan.selectAnimation(MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING);
             pacMan.animations().ifPresent(Animations::startCurrentAnimation);
             pacMan.show();
 
             msPac.setMoveDir(Direction.LEFT);
-            msPac.setPosition(TS * (NES_TILES_X-2), LOWER_LANE_Y);
+            msPac.setPosition(RIGHT_BORDER, LOWER_LANE);
             msPac.setSpeed(SPEED_PAC_CHASING);
             msPac.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
             msPac.animations().ifPresent(Animations::startCurrentAnimation);
@@ -111,24 +113,24 @@ public class CutScene1 extends GameScene2D {
         }
         else if (t == 160) {
             inky.setMoveAndWishDir(Direction.RIGHT);
-            inky.setPosition(2*TS, UPPER_LANE_Y);
+            inky.setPosition(LEFT_BORDER, UPPER_LANE);
             inky.setSpeed(SPEED_GHOST_CHASING);
             inky.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
             inky.startAnimation();
             inky.show();
 
             pinky.setMoveAndWishDir(Direction.LEFT);
-            pinky.setPosition(TS * (NES_TILES_X - 2), LOWER_LANE_Y);
+            pinky.setPosition(RIGHT_BORDER, LOWER_LANE);
             pinky.setSpeed(SPEED_GHOST_CHASING);
             pinky.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
             pinky.startAnimation();
             pinky.show();
         }
         else if (t == 400) {
-            msPac.setPosition(TS, MIDDLE_LANE_Y);
+            msPac.setPosition(LEFT_BORDER, MIDDLE_LANE);
             msPac.setMoveDir(Direction.RIGHT);
 
-            pacMan.setPosition(TS * (NES_TILES_X - 1), MIDDLE_LANE_Y);
+            pacMan.setPosition(RIGHT_BORDER, MIDDLE_LANE);
             pacMan.setMoveDir(Direction.LEFT);
 
             pinky.setPosition(msPac.position().minus(TS * 11, 0));
@@ -137,13 +139,13 @@ public class CutScene1 extends GameScene2D {
             inky.setPosition(pacMan.position().plus(TS * 11, 0));
             inky.setMoveAndWishDir(Direction.LEFT);
         }
-        else if (t == 455) {
+        else if (t == 454) {
             pacMan.setMoveDir(Direction.UP);
             pacMan.setSpeed(SPEED_PAC_RISING);
             msPac.setMoveDir(Direction.UP);
             msPac.setSpeed(SPEED_PAC_RISING);
         }
-        else if (t == 500) {
+        else if (t == 498) {
             inky.setMoveAndWishDir(Direction.RIGHT);
             inky.setSpeed(SPEED_GHOST_AFTER_COLLISION);
             //inky.setVelocity(inky.velocity().minus(0, 2.0f));
