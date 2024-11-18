@@ -441,7 +441,7 @@ public class MsPacManTengenGame extends GameModel {
         return switch (level.number) {
             case 2 -> 1;
             case 5 -> 2;
-            case 9, 13 -> 3; // TODO not sure what happens in later levels
+            case 9, 13 -> 3;
             case MAX_LEVEL_NUMBER -> 4;
             default -> 0;
         };

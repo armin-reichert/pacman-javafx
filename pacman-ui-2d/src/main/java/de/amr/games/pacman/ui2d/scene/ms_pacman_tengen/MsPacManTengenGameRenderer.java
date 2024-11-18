@@ -549,20 +549,16 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
         }
     }
 
-    public void drawStork(SpriteAnimation storkAnimation, Entity stork, boolean bagReleased) {
+    public void drawStork(SpriteAnimation storkAnimation, Entity stork, boolean hideBag) {
         if (!stork.isVisible()) {
             return;
         }
         Vector2f pos = stork.position();
-        // sprites are not vertically aligned in sprite sheet! wtf?
-        double eyeY = pos.y() + (storkAnimation.frameIndex() == 1 ? 5 : 1);
         ctx().setImageSmoothing(false);
-        drawSpriteScaled(storkAnimation.currentSprite(), pos.x(), eyeY);
-        // over-paint bag when released from beak
-        if (bagReleased) {
-            ctx().scale(scaling(), scaling());
+        drawSpriteScaled(storkAnimation.currentSprite(), pos.x(), pos.y());
+        if (hideBag) { // over-paint bag under beak
             ctx().setFill(bgColor);
-            ctx().fillRect(pos.x(), eyeY + 4, scaled(7), scaled(6));
+            ctx().fillRect(scaled(pos.x()), scaled(pos.y() + 7), scaled(7), scaled(9));
         }
     }
 

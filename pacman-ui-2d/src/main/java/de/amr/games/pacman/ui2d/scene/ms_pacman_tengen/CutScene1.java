@@ -12,7 +12,6 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.MediaPlayer;
@@ -50,8 +49,8 @@ public class CutScene1 extends GameScene2D {
     static final float SPEED_GHOST_CHASING = 2f;
 
     private MediaPlayer music;
-    private Pac pacMan;
-    private Pac msPac;
+    private Pac mrPacMan;
+    private Pac msPacMan;
     private Ghost inky;
     private Ghost pinky;
     private Entity heart;
@@ -69,8 +68,8 @@ public class CutScene1 extends GameScene2D {
         t = 0;
         context.setScoreVisible(false);
 
-        pacMan = new Pac();
-        msPac = new Pac();
+        mrPacMan = new Pac();
+        msPacMan = new Pac();
         inky = Ghost.inky();
         pinky = Ghost.pinky();
         heart = new Entity();
@@ -78,8 +77,8 @@ public class CutScene1 extends GameScene2D {
         music = context.sound().makeSound("intermission.1", 1.0, false);
 
         var spriteSheet = (MsPacManTengenGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
-        msPac.setAnimations(new PacAnimations(spriteSheet));
-        pacMan.setAnimations(new PacAnimations(spriteSheet));
+        msPacMan.setAnimations(new PacAnimations(spriteSheet));
+        mrPacMan.setAnimations(new PacAnimations(spriteSheet));
         inky.setAnimations(new GhostAnimations(spriteSheet, inky.id()));
         pinky.setAnimations(new GhostAnimations(spriteSheet, pinky.id()));
     }
@@ -97,19 +96,19 @@ public class CutScene1 extends GameScene2D {
             music.play();
         }
         else if (t == 130) {
-            pacMan.setMoveDir(Direction.RIGHT);
-            pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
-            pacMan.setSpeed(SPEED_PAC_CHASING);
-            pacMan.selectAnimation(MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING);
-            pacMan.animations().ifPresent(Animations::startCurrentAnimation);
-            pacMan.show();
+            mrPacMan.setMoveDir(Direction.RIGHT);
+            mrPacMan.setPosition(LEFT_BORDER, UPPER_LANE);
+            mrPacMan.setSpeed(SPEED_PAC_CHASING);
+            mrPacMan.selectAnimation("pacman_munching");
+            mrPacMan.animations().ifPresent(Animations::startCurrentAnimation);
+            mrPacMan.show();
 
-            msPac.setMoveDir(Direction.LEFT);
-            msPac.setPosition(RIGHT_BORDER, LOWER_LANE);
-            msPac.setSpeed(SPEED_PAC_CHASING);
-            msPac.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
-            msPac.animations().ifPresent(Animations::startCurrentAnimation);
-            msPac.show();
+            msPacMan.setMoveDir(Direction.LEFT);
+            msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
+            msPacMan.setSpeed(SPEED_PAC_CHASING);
+            msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
+            msPacMan.animations().ifPresent(Animations::startCurrentAnimation);
+            msPacMan.show();
         }
         else if (t == 160) {
             inky.setMoveAndWishDir(Direction.RIGHT);
@@ -127,23 +126,23 @@ public class CutScene1 extends GameScene2D {
             pinky.show();
         }
         else if (t == 400) {
-            msPac.setPosition(LEFT_BORDER, MIDDLE_LANE);
-            msPac.setMoveDir(Direction.RIGHT);
+            msPacMan.setPosition(LEFT_BORDER, MIDDLE_LANE);
+            msPacMan.setMoveDir(Direction.RIGHT);
 
-            pacMan.setPosition(RIGHT_BORDER, MIDDLE_LANE);
-            pacMan.setMoveDir(Direction.LEFT);
+            mrPacMan.setPosition(RIGHT_BORDER, MIDDLE_LANE);
+            mrPacMan.setMoveDir(Direction.LEFT);
 
-            pinky.setPosition(msPac.position().minus(TS * 11, 0));
+            pinky.setPosition(msPacMan.position().minus(TS * 11, 0));
             pinky.setMoveAndWishDir(Direction.RIGHT);
 
-            inky.setPosition(pacMan.position().plus(TS * 11, 0));
+            inky.setPosition(mrPacMan.position().plus(TS * 11, 0));
             inky.setMoveAndWishDir(Direction.LEFT);
         }
         else if (t == 454) {
-            pacMan.setMoveDir(Direction.UP);
-            pacMan.setSpeed(SPEED_PAC_RISING);
-            msPac.setMoveDir(Direction.UP);
-            msPac.setSpeed(SPEED_PAC_RISING);
+            mrPacMan.setMoveDir(Direction.UP);
+            mrPacMan.setSpeed(SPEED_PAC_RISING);
+            msPacMan.setMoveDir(Direction.UP);
+            msPacMan.setSpeed(SPEED_PAC_RISING);
         }
         else if (t == 498) {
             inky.setMoveAndWishDir(Direction.RIGHT);
@@ -159,24 +158,24 @@ public class CutScene1 extends GameScene2D {
         else if (t == 530) {
             inky.hide();
             pinky.hide();
-            pacMan.setSpeed(0);
-            pacMan.setMoveDir(Direction.LEFT);
-            msPac.setSpeed(0);
-            msPac.setMoveDir(Direction.RIGHT);
+            mrPacMan.setSpeed(0);
+            mrPacMan.setMoveDir(Direction.LEFT);
+            msPacMan.setSpeed(0);
+            msPacMan.setMoveDir(Direction.RIGHT);
         }
         else if (t == 545) {
-            pacMan.animations().ifPresent(Animations::stopCurrentAnimation);
-            pacMan.animations().ifPresent(Animations::resetCurrentAnimation);
-            msPac.animations().ifPresent(Animations::stopCurrentAnimation);
-            msPac.animations().ifPresent(Animations::resetCurrentAnimation);
+            mrPacMan.animations().ifPresent(Animations::stopCurrentAnimation);
+            mrPacMan.animations().ifPresent(Animations::resetCurrentAnimation);
+            msPacMan.animations().ifPresent(Animations::stopCurrentAnimation);
+            msPacMan.animations().ifPresent(Animations::resetCurrentAnimation);
         }
         else if (t == 560) {
-            heart.setPosition((pacMan.posX() + msPac.posX()) / 2, pacMan.posY() - TS * (2));
+            heart.setPosition((mrPacMan.posX() + msPacMan.posX()) / 2, mrPacMan.posY() - TS * (2));
             heart.show();
         }
         else if (t == 760) {
-            pacMan.hide();
-            msPac.hide();
+            mrPacMan.hide();
+            msPacMan.hide();
             heart.hide();
         }
         else if (t == 775) {
@@ -184,8 +183,8 @@ public class CutScene1 extends GameScene2D {
             return;
         }
 
-        pacMan.move();
-        msPac.move();
+        mrPacMan.move();
+        msPacMan.move();
         inky.move();
         pinky.move();
 
@@ -205,8 +204,8 @@ public class CutScene1 extends GameScene2D {
         var r = (MsPacManTengenGameRenderer) renderer;
         r.setLevelNumberBoxesVisible(false);
         r.drawClapperBoard(clapAnimation, "THEY MEET", 1, r.scaledArcadeFont(TS), color, t(3), t(10));
-        r.drawAnimatedEntity(msPac);
-        r.drawAnimatedEntity(pacMan);
+        r.drawAnimatedEntity(msPacMan);
+        r.drawAnimatedEntity(mrPacMan);
         r.drawAnimatedEntity(inky);
         r.drawAnimatedEntity(pinky);
         r.drawSprite(heart, HEART_SPRITE);
