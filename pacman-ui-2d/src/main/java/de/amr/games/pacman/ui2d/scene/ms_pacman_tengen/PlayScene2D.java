@@ -231,7 +231,10 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     public void onEnterGameState(GameState state) {
         MsPacManTengenGame game = (MsPacManTengenGame) context.game();
         switch (state) {
-            case LEVEL_COMPLETE -> mazeFlashing.init(game);
+            case LEVEL_COMPLETE -> mazeFlashing.init(
+                context.level().mapConfig(),
+                game.numFlashes(),
+                game.mapConfigMgr().isRandomColorSchemeUsed(game.mapCategory(), context.level().number));
             case GAME_OVER -> {
                 if (game.mapCategory() != MapCategory.ARCADE) {
                     Vector2f belowHouse = centerBelowHouse(context.level().world());
@@ -349,7 +352,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
         if (Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"))) {
             mazeFlashing.update(context.tick());
-            r.drawEmptyMap(world.map(), mazeFlashing.currentColorScheme());
+            r.drawEmptyMap(world.map(), mazeFlashing.currentColorMap());
         } else {
             r.drawWorld(context, world, 0,  3 * TS);
         }
