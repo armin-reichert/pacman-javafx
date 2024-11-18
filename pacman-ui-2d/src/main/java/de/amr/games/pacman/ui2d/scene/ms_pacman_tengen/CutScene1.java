@@ -36,6 +36,9 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGame
  */
 public class CutScene1 extends GameScene2D {
 
+    static final int CLAP_TILE_X = TS * 3;
+    static final int CLAP_TILE_Y = TS * 10;
+
     static final int UPPER_LANE  = TS * 8;
     static final int LOWER_LANE  = TS * 24;
     static final int MIDDLE_LANE = TS * 16;
@@ -43,10 +46,9 @@ public class CutScene1 extends GameScene2D {
     static final int LEFT_BORDER = TS;
     static final int RIGHT_BORDER = TS * (NES_TILES_X - 2);
 
-    static final float SPEED_PAC_CHASING = 2f;
+    static final float SPEED_CHASING = 2f;
     static final float SPEED_PAC_RISING = 1f;
     static final float SPEED_GHOST_AFTER_COLLISION = 1f;
-    static final float SPEED_GHOST_CHASING = 2f;
 
     private MediaPlayer music;
     private Pac mrPacMan;
@@ -55,6 +57,7 @@ public class CutScene1 extends GameScene2D {
     private Ghost pinky;
     private Entity heart;
     private ClapperboardAnimation clapAnimation;
+    private Color clapTextColor;
 
     private int t;
 
@@ -81,6 +84,8 @@ public class CutScene1 extends GameScene2D {
         mrPacMan.setAnimations(new PacAnimations(spriteSheet));
         inky.setAnimations(new GhostAnimations(spriteSheet, inky.id()));
         pinky.setAnimations(new GhostAnimations(spriteSheet, pinky.id()));
+
+        clapTextColor = context.assets().color(assetPrefix(context.gameVariant()) + ".color.clapperboard");
     }
 
     @Override
@@ -98,14 +103,14 @@ public class CutScene1 extends GameScene2D {
         else if (t == 130) {
             mrPacMan.setMoveDir(Direction.RIGHT);
             mrPacMan.setPosition(LEFT_BORDER, UPPER_LANE);
-            mrPacMan.setSpeed(SPEED_PAC_CHASING);
+            mrPacMan.setSpeed(SPEED_CHASING);
             mrPacMan.selectAnimation("pacman_munching");
             mrPacMan.animations().ifPresent(Animations::startCurrentAnimation);
             mrPacMan.show();
 
             msPacMan.setMoveDir(Direction.LEFT);
             msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
-            msPacMan.setSpeed(SPEED_PAC_CHASING);
+            msPacMan.setSpeed(SPEED_CHASING);
             msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
             msPacMan.animations().ifPresent(Animations::startCurrentAnimation);
             msPacMan.show();
@@ -113,14 +118,14 @@ public class CutScene1 extends GameScene2D {
         else if (t == 160) {
             inky.setMoveAndWishDir(Direction.RIGHT);
             inky.setPosition(LEFT_BORDER, UPPER_LANE);
-            inky.setSpeed(SPEED_GHOST_CHASING);
+            inky.setSpeed(SPEED_CHASING);
             inky.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
             inky.startAnimation();
             inky.show();
 
             pinky.setMoveAndWishDir(Direction.LEFT);
             pinky.setPosition(RIGHT_BORDER, LOWER_LANE);
-            pinky.setSpeed(SPEED_GHOST_CHASING);
+            pinky.setSpeed(SPEED_CHASING);
             pinky.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
             pinky.startAnimation();
             pinky.show();
@@ -199,11 +204,10 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameRenderer renderer) {
-        String assetPrefix = assetPrefix(context.gameVariant());
-        Color color = context.assets().color(assetPrefix + ".color.clapperboard");
         var r = (MsPacManTengenGameRenderer) renderer;
         r.setLevelNumberBoxesVisible(false);
-        r.drawClapperBoard(clapAnimation, "THEY MEET", 1, r.scaledArcadeFont(TS), color, t(3), t(10));
+        r.drawClapperBoard(clapAnimation, "THEY MEET", 1,
+            r.scaledArcadeFont(TS), clapTextColor, CLAP_TILE_X, CLAP_TILE_Y);
         r.drawAnimatedEntity(msPacMan);
         r.drawAnimatedEntity(mrPacMan);
         r.drawAnimatedEntity(inky);

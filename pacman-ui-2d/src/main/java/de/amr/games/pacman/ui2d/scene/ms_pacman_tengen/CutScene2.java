@@ -32,6 +32,9 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGame
  */
 public class CutScene2 extends GameScene2D {
 
+    static final int CLAP_TILE_X = TS * 3;
+    static final int CLAP_TILE_Y = TS * 10;
+
     static final int UPPER_LANE = TS * 8;
     static final int LOWER_LANE = TS * 22;
     static final int MIDDLE_LANE = TS * 10;
@@ -152,7 +155,8 @@ public class CutScene2 extends GameScene2D {
         Color color = context.assets().color(assetPrefix + ".color.clapperboard"); //TODO check
         var r = (MsPacManTengenGameRenderer) renderer;
         r.setLevelNumberBoxesVisible(false);
-        r.drawClapperBoard(clapAnimation, "THE CHASE", 2, r.scaledArcadeFont(TS), color, t(3), t(10));
+        r.drawClapperBoard(clapAnimation, "THE CHASE", 2,
+            r.scaledArcadeFont(TS), color, CLAP_TILE_X, CLAP_TILE_Y);
         r.drawAnimatedEntity(msPacMan);
         r.drawAnimatedEntity(pacMan);
         if (context.game().level().isPresent()) { // avoid exception in cut scene test mode

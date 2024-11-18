@@ -17,7 +17,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.NES_SIZE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.NES_TILES_X;
@@ -35,6 +35,9 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGame
  * @author Armin Reichert
  */
 public class CutScene3 extends GameScene2D {
+
+    static final int CLAP_TILE_X = TS * 3;
+    static final int CLAP_TILE_Y = TS * 10;
 
     static final int STORK_Y = TS * 7;
     static final int GROUND_Y = TS * 24;
@@ -165,7 +168,7 @@ public class CutScene3 extends GameScene2D {
         String assetPrefix = assetPrefix(context.gameVariant());
         Color color = context.assets().color(assetPrefix + ".color.clapperboard");
         var r = (MsPacManTengenGameRenderer) renderer;
-        r.drawClapperBoard(clapAnimation, "JUNIOR", 3, r.scaledArcadeFont(TS), color, t(3), t(10));
+        r.drawClapperBoard(clapAnimation, "JUNIOR", 3, r.scaledArcadeFont(TS), color, CLAP_TILE_X, CLAP_TILE_Y);
         r.drawAnimatedEntity(msPacMan);
         r.drawAnimatedEntity(mrPacMan);
         r.drawStork(storkAnimation, stork, bagReleased);
@@ -178,7 +181,6 @@ public class CutScene3 extends GameScene2D {
             r.ctx().restore();
         } else {
             r.drawSprite(bagOrJunior, BLUE_BAG_SPRITE);
-
         }
         r.setLevelNumberBoxesVisible(false);
         if (context.game().level().isPresent()) { // avoid exception in cut scene test mode
