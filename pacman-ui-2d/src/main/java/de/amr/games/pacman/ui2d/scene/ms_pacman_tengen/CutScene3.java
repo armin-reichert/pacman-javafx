@@ -35,6 +35,7 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGame
  */
 public class CutScene3 extends GameScene2D {
 
+    static final int STORK_Y = TS * 7;
     static final int LANE_Y = TS * 24;
     static final int RIGHT_BORDER = TS * (NES_TILES_X - 2);
 
@@ -102,7 +103,7 @@ public class CutScene3 extends GameScene2D {
 
             juniorVisible = false;
 
-            stork.setPosition(RIGHT_BORDER, TS * 12);
+            stork.setPosition(RIGHT_BORDER, STORK_Y);
             stork.setVelocity(-0.8f, 0);
             stork.show();
             storkAnimation = spriteSheet.createStorkFlyingAnimation();
@@ -110,10 +111,15 @@ public class CutScene3 extends GameScene2D {
             bagReleased = false;
         }
         else if (t == 267) {
+            // start falling
             bagReleased = true;
+            bagOrJunior.setPosition(stork.posX(), stork.posY() + 4);
+            bagOrJunior.setVelocity(-0.2f, 2.0f);
+            bagOrJunior.show();
         }
         else if (t == 327) {
-            bagOrJunior.setVelocity(-1, 0); // TODO bounce
+            // reaches ground
+            bagOrJunior.setVelocity(-0.1f, 0); // TODO bounce
         }
         else if (t == 360) {
             juniorVisible = true;
@@ -127,9 +133,8 @@ public class CutScene3 extends GameScene2D {
             return;
         }
 
-        if (stork != null) {
-            stork.move();
-        }
+        stork.move();
+        bagOrJunior.move();
         clapAnimation.tick();
         ++t;
     }

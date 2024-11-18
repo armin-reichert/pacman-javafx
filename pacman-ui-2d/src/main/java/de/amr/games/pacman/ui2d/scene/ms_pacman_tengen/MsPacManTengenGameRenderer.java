@@ -558,7 +558,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
         drawSpriteScaled(storkAnimation.currentSprite(), pos.x(), pos.y());
         if (hideBag) { // over-paint bag under beak
             ctx().setFill(bgColor);
-            ctx().fillRect(scaled(pos.x()), scaled(pos.y() + 7), scaled(7), scaled(9));
+            ctx().fillRect(scaled(pos.x() - 1), scaled(pos.y() + 7), scaled(9), scaled(9));
         }
     }
 
