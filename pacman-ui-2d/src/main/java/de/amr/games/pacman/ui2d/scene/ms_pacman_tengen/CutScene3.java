@@ -17,11 +17,12 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.NES_SIZE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.NES_TILES_X;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSpriteSheet.BLUE_BAG_SPRITE;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSpriteSheet.JUNIOR_PAC_SPRITE;
 
 /**
  * Intermission scene 3: "Junior".
@@ -36,7 +37,7 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGame
 public class CutScene3 extends GameScene2D {
 
     static final int STORK_Y = TS * 7;
-    static final int LANE_Y = TS * 24;
+    static final int GROUND_Y = TS * 24;
     static final int RIGHT_BORDER = TS * (NES_TILES_X - 2);
 
     private MediaPlayer music;
@@ -92,12 +93,12 @@ public class CutScene3 extends GameScene2D {
         }
         else if (t == 130) {
             mrPacMan.setMoveDir(Direction.RIGHT);
-            mrPacMan.setPosition(TS * 3, LANE_Y - 4);
+            mrPacMan.setPosition(TS * 3, GROUND_Y - 4);
             mrPacMan.selectAnimation("pacman_munching");
             mrPacMan.show();
 
             msPacMan.setMoveDir(Direction.RIGHT);
-            msPacMan.setPosition(TS * 5, LANE_Y - 4);
+            msPacMan.setPosition(TS * 5, GROUND_Y - 4);
             msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
             msPacMan.show();
 
@@ -110,20 +111,23 @@ public class CutScene3 extends GameScene2D {
             storkAnimation.start();
             bagReleased = false;
         }
-        else if (t == 267) {
-            // start falling
+        else if (t == 270) {
+            // stork releases bag, bag starts falling
+            stork.setVelocity(-1f, 0);
             bagReleased = true;
-            bagOrJunior.setPosition(stork.posX(), stork.posY() + 4);
-            bagOrJunior.setVelocity(-0.2f, 2.0f);
+            bagOrJunior.setPosition(stork.posX(), stork.posY() + 8);
+            bagOrJunior.setVelocity(-0.25f, 0);
+            bagOrJunior.setAcceleration(0, 0.1f);
             bagOrJunior.show();
         }
-        else if (t == 327) {
-            // reaches ground
-            bagOrJunior.setVelocity(-0.1f, 0); // TODO bounce
+        else if (t == 320) {
+            // reaches ground, starts bouncing
+            bagOrJunior.setVelocity(-1.0f, bagOrJunior.velocity().y());
         }
-        else if (t == 360) {
+        else if (t == 380) {
             juniorVisible = true;
             bagOrJunior.setVelocity(Vector2f.ZERO);
+            bagOrJunior.setAcceleration(Vector2f.ZERO);
         }
         else if (t == 642) {
             darkness = true;
@@ -134,7 +138,16 @@ public class CutScene3 extends GameScene2D {
         }
 
         stork.move();
-        bagOrJunior.move();
+
+        if (t < 380) {
+            bagOrJunior.move();
+            Vector2f bagVelocity = bagOrJunior.velocity();
+            if (bagOrJunior.position().y() > GROUND_Y) {
+                bagOrJunior.setPosY(GROUND_Y);
+                bagOrJunior.setVelocity(0.9f * bagVelocity.x(), -0.3f * bagVelocity.y());
+            }
+        }
+
         clapAnimation.tick();
         ++t;
     }
@@ -156,9 +169,17 @@ public class CutScene3 extends GameScene2D {
         r.drawAnimatedEntity(msPacMan);
         r.drawAnimatedEntity(mrPacMan);
         r.drawStork(storkAnimation, stork, bagReleased);
-        r.drawSprite(bagOrJunior, juniorVisible
-            ? MsPacManTengenGameSpriteSheet.JUNIOR_PAC_SPRITE
-            : MsPacManTengenGameSpriteSheet.BLUE_BAG_SPRITE);
+        if (juniorVisible) {
+            r.ctx().save();
+            //TODO fix sprite sheet instead
+            r.ctx().translate(scaled(bagOrJunior.center().x()), scaled(bagOrJunior.center().y()));
+            r.ctx().scale(-1, 1);
+            r.drawSpriteCenteredOverPosition(JUNIOR_PAC_SPRITE, 0, 0);
+            r.ctx().restore();
+        } else {
+            r.drawSprite(bagOrJunior, BLUE_BAG_SPRITE);
+
+        }
         r.setLevelNumberBoxesVisible(false);
         if (context.game().level().isPresent()) { // avoid exception in cut scene test mode
             r.drawLevelCounter(context, size());
