@@ -57,6 +57,7 @@ public class PropertyEditorPane extends BorderPane {
         return matchesDeleteCommand(s) ? chop(s, DELETE_COMMAND) : s;
     }
 
+
     public final BooleanProperty enabledPy = new SimpleBooleanProperty(this, "enabled", true);
 
     private final ObjectProperty<TileMap> tileMapPy = new SimpleObjectProperty<>(this, "tileMap") {
@@ -100,11 +101,7 @@ public class PropertyEditorPane extends BorderPane {
             if (matchesDeleteCommand(editedName)) {
                 String deletePropertyName = chopDeleteCommand(editedName);
                 if (deletePropertyName.equals(propertyName)) {
-                    tileMap().getProperties().remove(propertyName);
-                    Logger.debug("Property {} deleted", propertyName);
-                    editController.markTileMapEdited(tileMap());
-                    rebuildPropertyEditors(); //TODO check
-                    editController.showInfoMessage("Property %s deleted".formatted(propertyName), 1);
+                    deleteProperty(propertyName);
                 } else {
                     nameEditor.setText(propertyName);
                     editController.showErrorMessage("Cannot delete other property %s".formatted(deletePropertyName), 2);
@@ -320,7 +317,19 @@ public class PropertyEditorPane extends BorderPane {
         for (var propertyEditor : propertyEditors) {
             grid.add(propertyEditor.nameEditor(), 0, row);
             grid.add(propertyEditor.valueEditor(), 1, row);
+            var btnDelete = new Button("X");
+            btnDelete.disableProperty().bind(enabledPy.not());
+            btnDelete.setOnAction(e -> deleteProperty(propertyEditor.propertyName));
+            grid.add(btnDelete, 2, row);
             ++row;
         }
+    }
+
+    void deleteProperty(String propertyName) {
+        tileMap().getProperties().remove(propertyName);
+        editController.markTileMapEdited(tileMap());
+        rebuildPropertyEditors(); //TODO check
+        editController.showInfoMessage("Property %s deleted".formatted(propertyName), 3);
+        Logger.debug("Property {} deleted", propertyName);
     }
 }
