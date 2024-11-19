@@ -47,7 +47,7 @@ public class CutScene1 extends GameScene2D {
 
     static final float SPEED_CHASING = 2f;
     static final float SPEED_PAC_RISING = 1f;
-    static final float SPEED_GHOST_AFTER_COLLISION = 1f;
+    static final float SPEED_GHOST_AFTER_COLLISION = 0.5f;
 
     private MediaPlayer music;
     private Pac mrPacMan;
@@ -57,6 +57,7 @@ public class CutScene1 extends GameScene2D {
     private Entity heart;
     private ClapperboardAnimation clapAnimation;
     private Color clapTextColor;
+    private boolean collided;
 
     private int t;
 
@@ -127,6 +128,8 @@ public class CutScene1 extends GameScene2D {
             pinky.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
             pinky.startAnimation();
             pinky.show();
+
+            collided = false;
         }
         else if (t == 400) {
             msPacMan.setPosition(LEFT_BORDER, MIDDLE_LANE);
@@ -148,15 +151,17 @@ public class CutScene1 extends GameScene2D {
             msPacMan.setSpeed(SPEED_PAC_RISING);
         }
         else if (t == 498) {
+            collided = true;
+
             inky.setMoveAndWishDir(Direction.RIGHT);
             inky.setSpeed(SPEED_GHOST_AFTER_COLLISION);
-            //inky.setVelocity(inky.velocity().minus(0, 2.0f));
-            //inky.setAcceleration(0, 0.4f);
+            inky.setVelocity(inky.velocity().minus(0, 2.0f));
+            inky.setAcceleration(0, 0.4f);
 
             pinky.setMoveAndWishDir(Direction.LEFT);
             pinky.setSpeed(SPEED_GHOST_AFTER_COLLISION);
-            //pinky.setVelocity(pinky.velocity().minus(0, 2.0f));
-            //pinky.setAcceleration(0, 0.4f);
+            pinky.setVelocity(pinky.velocity().minus(0, 2.0f));
+            pinky.setAcceleration(0, 0.4f);
         }
         else if (t == 530) {
             inky.hide();
@@ -188,8 +193,17 @@ public class CutScene1 extends GameScene2D {
 
         mrPacMan.move();
         msPacMan.move();
+
         inky.move();
         pinky.move();
+        if (collided) {
+            if (inky.posY() > MIDDLE_LANE) {
+                inky.setPosition(inky.posX(), MIDDLE_LANE);
+            }
+            if (pinky.posY() > MIDDLE_LANE) {
+                pinky.setPosition(pinky.posX(), MIDDLE_LANE);
+            }
+        }
 
         clapAnimation.tick();
         ++t;
