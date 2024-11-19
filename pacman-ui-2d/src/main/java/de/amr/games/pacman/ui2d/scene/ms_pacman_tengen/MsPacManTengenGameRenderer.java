@@ -60,8 +60,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
         int numFrames = 4, frameDuration = 8;
         int index = (int) ((tick % (numFrames * frameDuration)) / frameDuration);
         // (0, 1, 2, 3) -> (0, 1, 2, 1)
-        int spriteIndex = index == 3 ? 1 : index;
-        return STRANGE_MAP_15_SPRITES[spriteIndex];
+        return STRANGE_MAP_15_SPRITES[index == 3 ? 1 : index];
     }
 
     // Strange map row counts as they appear in the sprite sheet
@@ -94,7 +93,6 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
         this.canvas = checkNotNull(canvas);
         arcadeMazeImages = assets.image("tengen.mazes.arcade");
         nonArcadeMazeImages = assets.image("tengen.mazes.non_arcade");
-        // set default value
         messageAnchorPosition = new Vector2f(14f * TS, 20 * TS);
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(bgColor);
