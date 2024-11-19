@@ -531,7 +531,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     {
         animation.sprite().ifPresent(sprite -> {
             ctx().setImageSmoothing(false);
-            drawSpriteCenteredOverBox(sprite, x, y);
+            drawSpriteCenteredOverTile(sprite, x, y);
             var numberX = x + 8;
             var numberY = y + 18; // baseline
             ctx().setFill(bgColor);

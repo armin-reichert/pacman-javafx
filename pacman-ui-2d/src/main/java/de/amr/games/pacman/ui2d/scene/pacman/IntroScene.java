@@ -166,7 +166,7 @@ public class IntroScene extends GameScene2D {
                 continue;
             }
             int ty = 7 + 3 * id;
-            renderer.drawSpriteCenteredOverBox(spriteSheet.ghostFacingRight(id), t(tx) + 4, t(ty));
+            renderer.drawSpriteCenteredOverTile(spriteSheet.ghostFacingRight(id), t(tx) + 4, t(ty));
             if (ghostCharacterVisible[id]) {
                 String text = "-" + GHOST_CHARACTERS[id];
                 renderer.drawText(text, GHOST_COLORS[id], font, t(tx + 3), t(ty + 1));

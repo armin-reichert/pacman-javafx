@@ -8,8 +8,6 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
-import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
@@ -120,16 +118,18 @@ public interface GameRenderer {
     }
 
     /**
-     * Draws a sprite centered over a one "square tile" large box (bounding box of creature). The position specifies the
-     * left-upper corner of the bounding box. Note that the sprites for Pac-Man and the ghosts are 16 pixels wide but the
-     * bounding box is only 8 pixels (one square tile) wide.
+     * Draws a sprite centered over a tile (e.g. the collision box of creature).
+     * <p>
+     * The position specifies the left-upper corner of the tile. Note that the sprites for
+     * Pac-Man and the ghosts are larger than one tile but their collision box is exactly one tile large.
+     * </p>
      *
-     * @param sprite    sprite sheet region (can be null)
-     * @param x         x-coordinate of left-upper corner of bounding box
-     * @param y         y-coordinate of left-upper corner of bounding box
+     * @param sprite sprite (region in sprite sheet) (may be null)
+     * @param tileX  x-coordinate of left-upper corner of bounding box
+     * @param tileY  y-coordinate of left-upper corner of bounding box
      */
-    default void drawSpriteCenteredOverBox(RectArea sprite, double x, double y) {
-        drawSpriteCenteredOverPosition(sprite, x + HTS, y + HTS);
+    default void drawSpriteCenteredOverTile(RectArea sprite, double tileX, double tileY) {
+        drawSpriteCenteredOverPosition(sprite, tileX + HTS, tileY + HTS);
     }
 
     default void drawSpriteCenteredOverPosition(RectArea sprite, double x, double y) {
@@ -144,7 +144,7 @@ public interface GameRenderer {
      */
     default void drawSprite(Entity entity, RectArea sprite) {
         if (entity.isVisible()) {
-            drawSpriteCenteredOverBox(sprite, entity.posX(), entity.posY());
+            drawSpriteCenteredOverTile(sprite, entity.posX(), entity.posY());
         }
     }
 
