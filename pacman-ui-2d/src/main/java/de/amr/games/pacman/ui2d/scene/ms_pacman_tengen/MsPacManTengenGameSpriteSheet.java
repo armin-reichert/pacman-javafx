@@ -52,7 +52,7 @@ public class MsPacManTengenGameSpriteSheet implements GameSpriteSheet {
     };
 
     static final RectArea[] MS_PAC_TURNING_AWAY = {
-        rect(186, 10, 15, 15),
+        rect(186, 15, 15, 15),
         rect(205, 20, 8, 8),
         rect(218, 21, 5, 5),
     };
@@ -77,7 +77,7 @@ public class MsPacManTengenGameSpriteSheet implements GameSpriteSheet {
     };
 
     static final RectArea[] MR_PAC_TURNING_AWAY = {
-        rect(186, 41, 15, 15),
+        rect(186, 42, 15, 15),
         rect(205, 46, 8, 8),
         rect(218, 47, 5, 5),
     };

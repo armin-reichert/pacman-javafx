@@ -4,13 +4,8 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.nes.NES;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.actors.Animations;
-import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManTengenGame;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
@@ -164,7 +159,7 @@ public class CutScene4 extends GameScene2D {
         AudioClip clip = context.assets().get(prefix + ".audio.intermission.4.junior." + rnd);
         junior.setPosition((float) randomX, size().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
-        junior.setSpeed(1);
+        junior.setSpeed(2);
         junior.setAnimations(new PacAnimations(spriteSheet));
         junior.selectAnimation(ANIM_JUNIOR_PACMAN);
         junior.show();
@@ -179,14 +174,34 @@ public class CutScene4 extends GameScene2D {
         int creationTime = juniorCreationTime.get(index);
         int lifeTime = t - creationTime;
         if (lifeTime> 0 && lifeTime % 10 == 0) {
-            Direction oldMoveDir = junior.moveDir();
-            Direction newMoveDir = Direction.shuffled().getFirst();
-            while (junior.tile().plus(newMoveDir.vector()).y() <= 0 && oldMoveDir == newMoveDir.opposite()) {
-                newMoveDir = Direction.shuffled().getFirst();
-            }
-            junior.setMoveDir(newMoveDir);
+            computeNewMoveDir(junior);
         }
         junior.move();
+        if (junior.posX() > size().x()) {
+            junior.setPosX(0);
+        }
+        if (junior.posX() < 0) {
+            junior.setPosX(size().x());
+        }
+    }
+
+    private void computeNewMoveDir(Pac junior) {
+        Direction oldMoveDir = junior.moveDir();
+        List<Direction> possibleDirs = new ArrayList<>(List.of(Direction.values()));
+        possibleDirs.remove(oldMoveDir.opposite());
+        List<Direction> dirsByMinCenterDist = possibleDirs.stream().sorted((d1, d2) -> bySmallestDistanceToToCenter(junior, d1, d2)).toList();
+        Direction bestDir = dirsByMinCenterDist.getFirst();
+        Direction randomDir = possibleDirs.get(Globals.randomInt(0, possibleDirs.size()));
+        boolean chooseBestDir = Globals.randomInt(0, 100) < 40;
+        junior.setMoveDir(chooseBestDir ? bestDir : randomDir);
+    }
+
+    private int bySmallestDistanceToToCenter(Pac junior, Direction dir1, Direction dir2) {
+        Vector2f pos1 = junior.tile().plus(dir1.vector()).scaled(TS).toVector2f();
+        Vector2f pos2 = junior.tile().plus(dir2.vector()).scaled(TS).toVector2f();
+        Vector2f center = size().scaled(0.5);
+        double dist1 = pos1.euclideanDistance(center), dist2 = pos2.euclideanDistance(center);
+        return Double.compare(dist1, dist2);
     }
 
     @Override
