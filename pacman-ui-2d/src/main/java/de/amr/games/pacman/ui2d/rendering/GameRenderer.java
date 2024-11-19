@@ -213,12 +213,15 @@ public interface GameRenderer {
         ctx().fillRect(centerX - 0.5 * squareSize, centerY - 0.5 * squareSize, squareSize, squareSize);
     }
 
+    /**
+     * @param animatedCreature animated entity (must contain an entity of type {@link Creature}
+     */
     default void drawAnimatedCreatureInfo(AnimatedEntity animatedCreature) {
-        if (animatedCreature.animations().isPresent() && animatedCreature.animations().get() instanceof SpriteAnimationCollection sa) {
-            Creature guy = (Creature) animatedCreature.entity();
-            String animationName = sa.currentAnimationID();
-            if (animationName != null) {
-                String text = animationName + " " + sa.currentAnimation().frameIndex();
+        animatedCreature.animations().map(SpriteAnimationCollection.class::cast).ifPresent(animations -> {
+            var guy = (Creature) animatedCreature.entity();
+            String animID = animations.currentAnimationID();
+            if (animID != null) {
+                String text = animID + " " + animations.currentAnimation().frameIndex();
                 ctx().setFill(Color.WHITE);
                 ctx().setFont(Font.font("Monospaced", scaled(6)));
                 ctx().fillText(text, scaled(guy.posX() - 4), scaled(guy.posY() - 4));
@@ -228,15 +231,13 @@ public interface GameRenderer {
                 Vector2f arrowHead = guy.center().plus(guy.wishDir().vector().scaled(12f)).scaled(scaling);
                 Vector2f guyCenter = guy.center().scaled(scaling);
                 float radius = scaling * 2, diameter = 2 * radius;
-
                 ctx().setStroke(Color.WHITE);
                 ctx().setLineWidth(0.5);
                 ctx().strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
-
                 ctx().setFill(guy.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
                 ctx().fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
             }
-        }
+        });
     }
 
     /**
@@ -298,11 +299,12 @@ public interface GameRenderer {
     default void drawTileGrid(Vector2f sceneSize) {
         int tilesX = (int) (sceneSize.x() / TS), tilesY = (int) (sceneSize.y() / TS);
         ctx().setStroke(Color.LIGHTGRAY);
-        ctx().setLineWidth(0.3);
         for (int row = 0; row <= tilesY; ++row) {
+            ctx().setLineWidth(row % 10 == 0 ? 0.8 : row % 5 == 0? 0.4 : 0.2);
             ctx().strokeLine(0, scaled(TS * row), scaled(tilesX * TS), scaled(TS * row));
         }
         for (int col = 0; col <= tilesX; ++col) {
+            ctx().setLineWidth(col % 10 == 0 ? 0.8 : col % 5 == 0? 0.4 : 0.2);
             ctx().strokeLine(scaled(TS * col), 0, scaled(TS * col), scaled(tilesY * TS));
         }
     }
