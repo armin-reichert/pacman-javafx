@@ -524,14 +524,14 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     }
 
     public void drawClapperBoard(
-            ClapperboardAnimation animation,
-            String text,
-            int number,
-            Font font, Color textColor,
-            double x, double y) {
-        if (animation.sprite() != RectArea.PIXEL) {
+        ClapperboardAnimation animation,
+        String text, int number,
+        Font font, Color textColor,
+        double x, double y)
+    {
+        animation.sprite().ifPresent(sprite -> {
             ctx().setImageSmoothing(false);
-            drawSpriteCenteredOverBox(animation.sprite(), x, y);
+            drawSpriteCenteredOverBox(sprite, x, y);
             var numberX = x + 8;
             var numberY = y + 18; // baseline
             ctx().setFill(bgColor);
@@ -543,11 +543,11 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
             ctx().setFill(textColor);
             ctx().fillText(String.valueOf(number), scaled(numberX), scaled(numberY));
             if (animation.isTextVisible()) {
-                double textX = x + animation.sprite().width();
+                double textX = x + sprite.width();
                 double textY = y + 2;
                 ctx().fillText(text, scaled(textX), scaled(textY));
             }
-        }
+        });
     }
 
     public void drawStork(SpriteAnimation storkAnimation, Entity stork, boolean hideBag) {
