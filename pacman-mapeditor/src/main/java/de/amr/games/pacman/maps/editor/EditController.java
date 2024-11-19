@@ -205,10 +205,12 @@ public class EditController {
     void onKeyPressed(KeyEvent event) {
         if (event.isAltDown()) {
             if (event.getCode() == KeyCode.LEFT) {
+                event.consume();
                 viewModel.readPrevMapFileInDirectory().ifPresentOrElse(
                     file -> showInfoMessage("Previous map file read: %s".formatted(file.getName()), 3),
                     () -> showErrorMessage("Previous file not available", 1));
             } else if (event.getCode() == KeyCode.RIGHT) {
+                event.consume();
                 viewModel.readNextMapFileInDirectory().ifPresentOrElse(
                     file -> showInfoMessage("Next map file read: %s".formatted(file.getName()), 3),
                     () -> showErrorMessage("Next file not available", 1));
