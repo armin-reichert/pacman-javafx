@@ -39,6 +39,9 @@ import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.RectArea.rect;
+import static de.amr.games.pacman.model.GameModel.ANIM_PAC_MUNCHING;
+import static de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING;
+import static de.amr.games.pacman.model.ms_pacman_tengen.MsPacManTengenGame.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static java.util.function.Predicate.not;
 
@@ -282,10 +285,11 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
                 SpriteAnimation spriteAnimation = spriteAnimations.currentAnimation();
                 if (spriteAnimation != null) {
                     switch (animations.currentAnimationID()) {
-                        case GameModel.ANIM_PAC_MUNCHING,
-                             MsPacManTengenGame.ANIM_MS_PACMAN_BOOSTER,
-                             MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING,
-                             MsPacManTengenGame.ANIM_MR_PACMAN_BOOSTER -> drawGuyHeading(pac, pac.moveDir(), spriteAnimation);
+                        case ANIM_PAC_MUNCHING,
+                             ANIM_MS_PACMAN_BOOSTER,
+                             ANIM_MR_PACMAN_MUNCHING,
+                             ANIM_MR_PACMAN_BOOSTER -> drawGuyHeading(pac, pac.moveDir(), spriteAnimation);
+                        case ANIM_JUNIOR_PACMAN -> drawGuyHeading(pac, pac.moveDir(), spriteAnimation);
                         case GameModel.ANIM_PAC_DYING -> {
                             Direction dir = Direction.UP;
                             if (spriteAnimation.frameIndex() < 11) {

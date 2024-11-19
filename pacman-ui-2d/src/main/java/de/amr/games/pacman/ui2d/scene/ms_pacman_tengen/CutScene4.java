@@ -6,6 +6,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Animations;
+import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManTengenGame;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -13,6 +14,9 @@ import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.GameModel.ANIM_PAC_MUNCHING;
@@ -32,9 +36,11 @@ public class CutScene4 extends GameScene2D {
 
     private Pac mrPacMan;
     private Pac msPacMan;
+    private List<Pac> juniors;
 
     private MediaPlayer music;
     private ClapperboardAnimation clapAnimation;
+    private MsPacManTengenGameSpriteSheet spriteSheet;
     private Color clapTextColor;
 
     private int t;
@@ -42,12 +48,14 @@ public class CutScene4 extends GameScene2D {
     @Override
     protected void doInit() {
         t = 0;
+
         context.setScoreVisible(false);
 
         mrPacMan = new Pac();
         msPacMan = new Pac();
+        juniors = new ArrayList<>();
 
-        var spriteSheet = (MsPacManTengenGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
+        spriteSheet = (MsPacManTengenGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         mrPacMan.setAnimations(new PacAnimations(spriteSheet));
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
 
@@ -116,8 +124,8 @@ public class CutScene4 extends GameScene2D {
             mrPacMan.hide();
             msPacMan.hide();
         }
-        else if (t == 904) {
-            // Juniors start to appear
+        else if (isJuniorSpawnTime()) {
+            spawnJunior();
         }
         else if (t == 2016) {
             context.gameController().changeState(GameState.WAITING_FOR_START);
@@ -125,8 +133,29 @@ public class CutScene4 extends GameScene2D {
 
         mrPacMan.move();
         msPacMan.move();
+        juniors.forEach(Entity::move);
         clapAnimation.tick();
         ++t;
+    }
+
+    private boolean isJuniorSpawnTime() {
+        for (int i = 0; i < 8; ++i) {
+            if (t == 904 + 64*i) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void spawnJunior() {
+        var junior = new Pac();
+        junior.setPosition(0.5f * size().x(), size().y() - 4 * TS);
+        junior.setMoveDir(Direction.LEFT);
+        junior.setSpeed(1);
+        junior.setAnimations(new PacAnimations(spriteSheet));
+        junior.selectAnimation(ANIM_JUNIOR_PACMAN);
+        junior.show();
+        juniors.add(junior);
     }
 
     @Override
@@ -144,6 +173,7 @@ public class CutScene4 extends GameScene2D {
                 r.scaledArcadeFont(TS), clapTextColor, CLAP_TILE_X, CLAP_TILE_Y);
         r.drawAnimatedEntity(msPacMan);
         r.drawAnimatedEntity(mrPacMan);
+        juniors.forEach(r::drawAnimatedEntity);
 
         if (context.game().level().isPresent()) { // avoid exception in cut scene test mode
             r.setLevelNumberBoxesVisible(false);

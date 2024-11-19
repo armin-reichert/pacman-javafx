@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
@@ -87,6 +88,12 @@ public class PacAnimations extends SpriteAnimationCollection {
                 .frameTicks(15)
                 .end();
 
+        var junior = SpriteAnimation
+            .spriteSheet(spriteSheet)
+            .info("Junior Pac-Man")
+            .sprites(MsPacManTengenGameSpriteSheet.JUNIOR_PAC_SPRITE)
+            .end();
+
         add(Map.of(
             GameModel.ANIM_PAC_DYING, msPacmanDying,
             GameModel.ANIM_PAC_MUNCHING, msPacManMunching,
@@ -97,7 +104,8 @@ public class PacAnimations extends SpriteAnimationCollection {
             MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING, mrPacManMunching,
             MsPacManTengenGame.ANIM_MR_PACMAN_BOOSTER, mrPacManMunchingBooster,
             MsPacManTengenGame.ANIM_MR_PACMAN_WAVING_HAND, mrPacManWavingHand,
-            MsPacManTengenGame.ANIM_MR_PACMAN_TURNING_AWAY, mrPacManTurningAway
+            MsPacManTengenGame.ANIM_MR_PACMAN_TURNING_AWAY, mrPacManTurningAway,
+            MsPacManTengenGame.ANIM_JUNIOR_PACMAN, junior
         ));
     }
 

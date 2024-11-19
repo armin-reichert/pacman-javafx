@@ -176,7 +176,7 @@ public class MsPacManTengenGameSpriteSheet implements GameSpriteSheet {
 
     static final RectArea HEART_SPRITE = rect(162, 270, 18, 18);
     static final RectArea BLUE_BAG_SPRITE = rect(241, 363, 7, 8);
-    static final RectArea JUNIOR_PAC_SPRITE = rect(166, 304, 7, 8);
+    static final RectArea JUNIOR_PAC_SPRITE = rect(176, 304, 7, 8);
 
     public MsPacManTengenGameSpriteSheet(Image source) {
         this.source = source;

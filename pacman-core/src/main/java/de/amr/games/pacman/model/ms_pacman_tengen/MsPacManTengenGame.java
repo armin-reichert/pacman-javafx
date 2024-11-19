@@ -43,6 +43,7 @@ public class MsPacManTengenGame extends GameModel {
     public static final String ANIM_MR_PACMAN_WAVING_HAND = "mr_pacman_waving_hand";
     public static final String ANIM_MS_PACMAN_TURNING_AWAY = "ms_pacman_turning_away";
     public static final String ANIM_MR_PACMAN_TURNING_AWAY = "mr_pacman_turning_away";
+    public static final String ANIM_JUNIOR_PACMAN = "junior";
 
     static final byte PELLET_VALUE = 10;
     static final byte ENERGIZER_VALUE = 50;

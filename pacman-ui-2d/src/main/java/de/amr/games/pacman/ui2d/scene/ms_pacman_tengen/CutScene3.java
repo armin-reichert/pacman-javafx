@@ -174,13 +174,7 @@ public class CutScene3 extends GameScene2D {
         r.drawAnimatedEntity(mrPacMan);
         if (bagWithJunior.isVisible()) {
             if (bagOpen) {
-                //TODO: Junior looks into wrong direction, fix sprite sheet instead of this:
-                Vector2f center = bagWithJunior.center().scaled(scaling());
-                r.ctx().save();
-                r.ctx().translate(center.x(), center.y());
-                r.ctx().scale(-1, 1);
-                r.drawSpriteCenteredOverPosition(JUNIOR_PAC_SPRITE, 0, 0);
-                r.ctx().restore();
+                r.drawEntitySprite(bagWithJunior, JUNIOR_PAC_SPRITE);
             } else {
                 r.drawEntitySprite(bagWithJunior, BLUE_BAG_SPRITE);
             }
