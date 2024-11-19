@@ -194,15 +194,15 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
                 case _35_28_20_PINK_YELLOW_WHITE  -> 4;
                 case _17_20_20_BROWN_WHITE_WHITE  -> 6;
                 case _0F_20_28_BLACK_WHITE_YELLOW -> 8;
-                default -> throw new IllegalArgumentException("Unknown color scheme for map 3: " + colorScheme);
+                default -> throw new IllegalArgumentException("No image found for map #3 and color scheme: " + colorScheme);
             };
             case 4 -> switch (colorScheme) {
                 case _01_38_20_BLUE_YELLOW_WHITE   -> 3;
                 case _36_15_20_PINK_RED_WHITE      -> 5;
                 case _13_20_28_VIOLET_WHITE_YELLOW -> 7;
-                default -> throw new IllegalArgumentException("Unknown color scheme for map #4: " + colorScheme);
+                default -> throw new IllegalArgumentException("No image found for map #4 and color scheme: " + colorScheme);
             };
-            default -> throw new IllegalArgumentException("Illegal map number: " + mapNumber);
+            default -> throw new IllegalArgumentException("Illegal Arcade map number: " + mapNumber);
         };
         int col = index % 3, row = index / 3;
         int width = 28*8, height = 31*8;
