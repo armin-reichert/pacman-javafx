@@ -46,6 +46,17 @@ public class MsPacManTengenGameSpriteSheet implements GameSpriteSheet {
         rect( 86, 15, 15, 15), // closed
     };
 
+    static final RectArea[] MS_PAC_WAVING_HAND = {
+        rect(140, 10, 20, 20),
+        rect(163, 10, 20, 20),
+    };
+
+    static final RectArea[] MS_PAC_TURNING_AWAY = {
+        rect(186, 10, 15, 15),
+        rect(205, 20, 8, 8),
+        rect(218, 21, 5, 5),
+    };
+
     static final RectArea[] MR_PAC_MUNCHING_SPRITES_LEFT = {
         rect(51, 41, 15, 15), // open
         rect(66, 41, 15, 15), // wide open
@@ -58,6 +69,17 @@ public class MsPacManTengenGameSpriteSheet implements GameSpriteSheet {
         rect(120, 41, 15, 15), // wide open
         rect( 86, 4, 15, 15), // closed
         rect(120, 41, 15, 15), // wide open
+    };
+
+    static final RectArea[] MR_PAC_WAVING_HAND = {
+        rect(140, 36, 20, 20),
+        rect(163, 36, 20, 20),
+    };
+
+    static final RectArea[] MR_PAC_TURNING_AWAY = {
+        rect(186, 41, 15, 15),
+        rect(205, 46, 8, 8),
+        rect(218, 47, 5, 5),
     };
 
     // there is only a sprite pointing left in the sprite sheet, renderer makes the animation

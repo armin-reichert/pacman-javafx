@@ -38,7 +38,11 @@ public class MsPacManTengenGame extends GameModel {
 
     // Animation IDs specific to this game
     public static final String ANIM_MS_PACMAN_BOOSTER = "ms_pacman_booster";
-    public static final String ANIM_PACMAN_BOOSTER    = "pacman_booster";
+    public static final String ANIM_MR_PACMAN_BOOSTER = "pacman_booster";
+    public static final String ANIM_MS_PACMAN_WAVING_HAND = "ms_pacman_waving_hand";
+    public static final String ANIM_MR_PACMAN_WAVING_HAND = "mr_pacman_waving_hand";
+    public static final String ANIM_MS_PACMAN_TURNING_AWAY = "ms_pacman_turning_away";
+    public static final String ANIM_MR_PACMAN_TURNING_AWAY = "mr_pacman_turning_away";
 
     static final byte PELLET_VALUE = 10;
     static final byte ENERGIZER_VALUE = 50;

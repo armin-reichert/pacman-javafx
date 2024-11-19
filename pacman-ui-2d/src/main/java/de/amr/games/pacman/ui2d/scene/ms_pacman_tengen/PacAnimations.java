@@ -26,45 +26,78 @@ public class PacAnimations extends SpriteAnimationCollection {
     public PacAnimations(MsPacManTengenGameSpriteSheet spriteSheet) {
         checkNotNull(spriteSheet);
 
-        var munching = SpriteAnimation
+        var msPacManMunching = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man munching")
             .sprites(MsPacManTengenGameSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT)
             .loop();
 
-        var munchingBooster = SpriteAnimation
+        var msPacManMunchingBooster = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man munching booster mode")
             .sprites(MsPacManTengenGameSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
             .loop();
 
-        var dying = SpriteAnimation
+        var msPacManWavingHand = SpriteAnimation
+            .spriteSheet(spriteSheet)
+            .info("Ms. Pac-Man waving hand")
+            .sprites(MsPacManTengenGameSpriteSheet.MS_PAC_WAVING_HAND)
+            .frameTicks(8)
+            .loop();
+
+        var msPacManTurningAway = SpriteAnimation
+            .spriteSheet(spriteSheet)
+            .info("Ms. Pac-Man turning away")
+            .sprites(MsPacManTengenGameSpriteSheet.MS_PAC_TURNING_AWAY)
+            .frameTicks(15)
+            .end();
+
+        var msPacmanDying = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man dying")
             .sprites(spriteSheet.pacDyingSprites())
             .frameTicks(8)
             .end();
 
-        var husbandMunching = SpriteAnimation
+        var mrPacManMunching = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man's husband munching")
             .sprites(MsPacManTengenGameSpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT)
             .frameTicks(2)
             .loop();
 
-        var husbandMunchingBooster = SpriteAnimation
+        var mrPacManMunchingBooster = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man's husband munching booster mode")
             .sprites(MsPacManTengenGameSpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
             .frameTicks(2)
             .loop();
 
+        var mrPacManWavingHand = SpriteAnimation
+            .spriteSheet(spriteSheet)
+            .info("Pac-Man waving hand")
+            .sprites(MsPacManTengenGameSpriteSheet.MR_PAC_WAVING_HAND)
+            .frameTicks(8)
+            .loop();
+
+        var mrPacManTurningAway = SpriteAnimation
+                .spriteSheet(spriteSheet)
+                .info("Mr. Pac-Man turning away")
+                .sprites(MsPacManTengenGameSpriteSheet.MR_PAC_TURNING_AWAY)
+                .frameTicks(15)
+                .end();
+
         add(Map.of(
-            GameModel.ANIM_PAC_MUNCHING, munching,
-            MsPacManTengenGame.ANIM_MS_PACMAN_BOOSTER, munchingBooster,
-            GameModel.ANIM_PAC_DYING, dying,
-            MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING, husbandMunching,
-            MsPacManTengenGame.ANIM_PACMAN_BOOSTER, husbandMunchingBooster
+            GameModel.ANIM_PAC_DYING, msPacmanDying,
+            GameModel.ANIM_PAC_MUNCHING, msPacManMunching,
+            MsPacManTengenGame.ANIM_MS_PACMAN_BOOSTER, msPacManMunchingBooster,
+            MsPacManTengenGame.ANIM_MS_PACMAN_WAVING_HAND, msPacManWavingHand,
+            MsPacManTengenGame.ANIM_MS_PACMAN_TURNING_AWAY, msPacManTurningAway,
+
+            MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING, mrPacManMunching,
+            MsPacManTengenGame.ANIM_MR_PACMAN_BOOSTER, mrPacManMunchingBooster,
+            MsPacManTengenGame.ANIM_MR_PACMAN_WAVING_HAND, mrPacManWavingHand,
+            MsPacManTengenGame.ANIM_MR_PACMAN_TURNING_AWAY, mrPacManTurningAway
         ));
     }
 
