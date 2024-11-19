@@ -288,8 +288,9 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
                         case ANIM_PAC_MUNCHING,
                              ANIM_MS_PACMAN_BOOSTER,
                              ANIM_MR_PACMAN_MUNCHING,
-                             ANIM_MR_PACMAN_BOOSTER -> drawGuyHeading(pac, pac.moveDir(), spriteAnimation);
-                        case ANIM_JUNIOR_PACMAN -> drawGuyHeading(pac, pac.moveDir(), spriteAnimation);
+                             ANIM_MR_PACMAN_BOOSTER,
+                             ANIM_JUNIOR_PACMAN
+                                -> drawGuyHeading(pac, pac.moveDir(), spriteAnimation);
                         case GameModel.ANIM_PAC_DYING -> {
                             Direction dir = Direction.UP;
                             if (spriteAnimation.frameIndex() < 11) {

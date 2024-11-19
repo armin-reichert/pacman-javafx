@@ -14,6 +14,7 @@ import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,7 @@ public class CutScene4 extends GameScene2D {
     private Pac mrPacMan;
     private Pac msPacMan;
     private List<Pac> juniors;
+    private List<Integer> juniorCreationTime;
 
     private MediaPlayer music;
     private ClapperboardAnimation clapAnimation;
@@ -54,6 +56,7 @@ public class CutScene4 extends GameScene2D {
         mrPacMan = new Pac();
         msPacMan = new Pac();
         juniors = new ArrayList<>();
+        juniorCreationTime = new ArrayList<>();
 
         spriteSheet = (MsPacManTengenGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         mrPacMan.setAnimations(new PacAnimations(spriteSheet));
@@ -133,7 +136,9 @@ public class CutScene4 extends GameScene2D {
 
         mrPacMan.move();
         msPacMan.move();
-        juniors.forEach(Entity::move);
+        for (int i = 0; i < juniors.size(); ++i) {
+            updateJunior(i);
+        }
         clapAnimation.tick();
         ++t;
     }
@@ -149,13 +154,31 @@ public class CutScene4 extends GameScene2D {
 
     private void spawnJunior() {
         var junior = new Pac();
-        junior.setPosition(0.5f * size().x(), size().y() - 4 * TS);
-        junior.setMoveDir(Direction.LEFT);
+        double randomX = 2 * TS + (size().x() - 4 * TS) * Math.random();
+        junior.setPosition((float) randomX, size().y() - 4 * TS);
+        junior.setMoveDir(Direction.UP);
         junior.setSpeed(1);
         junior.setAnimations(new PacAnimations(spriteSheet));
         junior.selectAnimation(ANIM_JUNIOR_PACMAN);
         junior.show();
         juniors.add(junior);
+        juniorCreationTime.add(t);
+        Logger.info("Junior spawned at tick {}", t);
+    }
+
+    private void updateJunior(int index) {
+        Pac junior = juniors.get(index);
+        int creationTime = juniorCreationTime.get(index);
+        int lifeTime = t - creationTime;
+        if (lifeTime> 0 && lifeTime % 10 == 0) {
+            Direction oldMoveDir = junior.moveDir();
+            Direction newMoveDir = Direction.shuffled().getFirst();
+            while (junior.tile().plus(newMoveDir.vector()).y() <= 0 && oldMoveDir == newMoveDir.opposite()) {
+                newMoveDir = Direction.shuffled().getFirst();
+            }
+            junior.setMoveDir(newMoveDir);
+        }
+        junior.move();
     }
 
     @Override
