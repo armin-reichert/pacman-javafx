@@ -186,26 +186,27 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     private ImageArea arcadeMapSprite(Map<String, Object> mapConfig) {
         int mapNumber = (int) mapConfig.get("mapNumber");
         NES_ColorScheme colorScheme = (NES_ColorScheme) mapConfig.get("nesColorScheme");
-        Vector2i coordinate = switch (mapNumber) {
-            case 1 -> v2i(0, 0);
-            case 2 -> v2i(1, 0);
+        int index = switch (mapNumber) {
+            case 1 -> 0;
+            case 2 -> 1;
             case 3 -> switch (colorScheme) {
-                case _16_20_15_ORANGE_WHITE_RED   -> v2i(2, 0);
-                case _35_28_20_PINK_YELLOW_WHITE  -> v2i(1, 1);
-                case _17_20_20_BROWN_WHITE_WHITE  -> v2i(0, 2);
-                case _0F_20_28_BLACK_WHITE_YELLOW -> v2i(2, 2);
+                case _16_20_15_ORANGE_WHITE_RED   -> 2;
+                case _35_28_20_PINK_YELLOW_WHITE  -> 4;
+                case _17_20_20_BROWN_WHITE_WHITE  -> 6;
+                case _0F_20_28_BLACK_WHITE_YELLOW -> 8;
                 default -> throw new IllegalArgumentException("Unknown color scheme for map 3: " + colorScheme);
             };
             case 4 -> switch (colorScheme) {
-                case _01_38_20_BLUE_YELLOW_WHITE   -> v2i(0, 1);
-                case _36_15_20_PINK_RED_WHITE      -> v2i(2, 1);
-                case _13_20_28_VIOLET_WHITE_YELLOW -> v2i(1, 2);
+                case _01_38_20_BLUE_YELLOW_WHITE   -> 3;
+                case _36_15_20_PINK_RED_WHITE      -> 5;
+                case _13_20_28_VIOLET_WHITE_YELLOW -> 7;
                 default -> throw new IllegalArgumentException("Unknown color scheme for map #4: " + colorScheme);
             };
             default -> throw new IllegalArgumentException("Illegal map number: " + mapNumber);
         };
+        int col = index % 3, row = index / 3;
         int width = 28*8, height = 31*8;
-        return new ImageArea(arcadeMazeImages, new RectArea(coordinate.x() * width, coordinate.y() * height, width, height));
+        return new ImageArea(arcadeMazeImages, new RectArea(col * width, row * height, width, height));
     }
 
     private ImageArea miniMapSprite(Map<String, Object> mapConfig) {
