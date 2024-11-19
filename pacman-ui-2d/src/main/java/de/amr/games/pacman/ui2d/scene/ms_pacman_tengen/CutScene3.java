@@ -74,6 +74,7 @@ public class CutScene3 extends GameScene2D {
         msPacMan = new Pac();
         stork = new Entity();
         bagOrJunior = new Entity();
+        bagOrJunior.hide();
 
         spriteSheet = (MsPacManTengenGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         mrPacMan.setAnimations(new PacAnimations(spriteSheet));
