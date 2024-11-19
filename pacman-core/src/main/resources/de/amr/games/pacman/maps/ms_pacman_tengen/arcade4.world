@@ -1,7 +1,6 @@
 !terrain
 #
 #Mon Oct 21 22:10:50 CEST 2024
-RENAME_ME=any text
 color_door=rgb(228,229,148)
 color_wall_fill=rgb(0,42,136)
 color_wall_stroke=rgb(228,229,148)

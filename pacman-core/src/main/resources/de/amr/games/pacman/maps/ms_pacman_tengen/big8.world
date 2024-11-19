@@ -1,9 +1,9 @@
 !terrain
 #
 #Tue Oct 29 04:49:51 CET 2024
-color_door=rgb(255,255,255)
+color_door=rgb(255,254,255)
 color_wall_fill=rgb(189,189,0)
-color_wall_stroke=rgb(255,255,255)
+color_wall_stroke=rgb(255,254,255)
 pos_bonus=(13,20)
 pos_ghost_1_red=(13,14)
 pos_ghost_2_pink=(13,17)
