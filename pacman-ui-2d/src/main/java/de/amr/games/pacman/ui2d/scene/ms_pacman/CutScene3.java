@@ -99,8 +99,8 @@ public class CutScene3 extends GameScene2D {
         r.drawClapperBoard(renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
         renderer.drawAnimatedEntity(msPacMan);
         renderer.drawAnimatedEntity(pacMan);
-        renderer.drawSprite(stork, storkAnimation.currentSprite());
-        renderer.drawSprite(bag, bagOpen ? MsPacManGameSpriteSheet.JUNIOR_PAC_SPRITE : MsPacManGameSpriteSheet.BLUE_BAG_SPRITE);
+        renderer.drawEntitySprite(stork, storkAnimation.currentSprite());
+        renderer.drawEntitySprite(bag, bagOpen ? MsPacManGameSpriteSheet.JUNIOR_PAC_SPRITE : MsPacManGameSpriteSheet.BLUE_BAG_SPRITE);
         renderer.drawLevelCounter(context, size());
     }
 

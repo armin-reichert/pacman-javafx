@@ -224,7 +224,7 @@ public class CutScene1 extends GameScene2D {
         r.drawAnimatedEntity(mrPacMan);
         r.drawAnimatedEntity(inky);
         r.drawAnimatedEntity(pinky);
-        r.drawSprite(heart, HEART_SPRITE);
+        r.drawEntitySprite(heart, HEART_SPRITE);
         if (context.game().level().isPresent()) {
             // avoid exception in cut scene test mode
             r.drawLevelCounter(context, size());

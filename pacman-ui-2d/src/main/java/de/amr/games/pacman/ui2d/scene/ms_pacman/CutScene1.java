@@ -108,7 +108,7 @@ public class CutScene1 extends GameScene2D {
         renderer.drawAnimatedEntity(pacMan);
         renderer.drawAnimatedEntity(inky);
         renderer.drawAnimatedEntity(pinky);
-        renderer.drawSprite(heart, MsPacManGameSpriteSheet.HEART_SPRITE);
+        renderer.drawEntitySprite(heart, MsPacManGameSpriteSheet.HEART_SPRITE);
         renderer.drawLevelCounter(context, size());
     }
 

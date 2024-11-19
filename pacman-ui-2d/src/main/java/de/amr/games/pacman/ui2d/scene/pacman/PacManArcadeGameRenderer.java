@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.pacman;
 
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -104,9 +103,9 @@ public class PacManArcadeGameRenderer implements GameRenderer {
 
     private void drawStaticBonus(GameSpriteSheet spriteSheet, Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
-            drawSprite(bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            drawEntitySprite(bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
         } else if (bonus.state() == Bonus.STATE_EATEN) {
-            drawSprite(bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
+            drawEntitySprite(bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
         }
     }
 }

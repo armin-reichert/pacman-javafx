@@ -132,18 +132,26 @@ public interface GameRenderer {
         drawSpriteCenteredOverPosition(sprite, tileX + HTS, tileY + HTS);
     }
 
+    /**
+     * Draws a sprite centered over a position.
+     *
+     * @param sprite sprite (region in sprite sheet) (may be null)
+     * @param x  x-coordinate of the position
+     * @param y  y-coordinate of the position
+     */
     default void drawSpriteCenteredOverPosition(RectArea sprite, double x, double y) {
         drawSpriteScaled(sprite, x - 0.5 * sprite.width(), y - 0.5 * sprite.height());
     }
 
     /**
-     * Draws the sprite over the bounding box of the given entity (if visible).
+     * Draws the sprite over the collision box (one tile large) of the given entity (if visible).
      *
-     * @param entity    an entity like Pac-Man or a ghost
-     * @param sprite    sprite sheet region (can be null)
+     * @param entity an entity e.g. Pac-Man or a ghost
+     * @param sprite sprite sheet region (can be null)
      */
-    default void drawSprite(Entity entity, RectArea sprite) {
-        if (entity.isVisible()) {
+    default void drawEntitySprite(Entity entity, RectArea sprite) {
+        checkNotNull(entity);
+        if (entity.isVisible() && sprite != null) {
             drawSpriteCenteredOverTile(sprite, entity.posX(), entity.posY());
         }
     }
@@ -158,7 +166,7 @@ public interface GameRenderer {
             if (character.isVisible() && animations instanceof SpriteAnimationCollection spriteAnimations) {
                 SpriteAnimation currentAnimation = spriteAnimations.currentAnimation();
                 if (currentAnimation != null) {
-                    drawSprite(character.entity(), spriteAnimations.currentSprite(character));
+                    drawEntitySprite(character.entity(), spriteAnimations.currentSprite(character));
                 } else {
                     Logger.error("No current animation for character {}", character);
                 }

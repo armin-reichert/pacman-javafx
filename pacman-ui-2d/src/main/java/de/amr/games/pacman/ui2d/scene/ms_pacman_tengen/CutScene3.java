@@ -182,7 +182,7 @@ public class CutScene3 extends GameScene2D {
                 r.drawSpriteCenteredOverPosition(JUNIOR_PAC_SPRITE, 0, 0);
                 r.ctx().restore();
             } else {
-                r.drawSprite(bagWithJunior, BLUE_BAG_SPRITE);
+                r.drawEntitySprite(bagWithJunior, BLUE_BAG_SPRITE);
             }
         }
         if (context.game().level().isPresent()) { // avoid exception in cut scene test mode
