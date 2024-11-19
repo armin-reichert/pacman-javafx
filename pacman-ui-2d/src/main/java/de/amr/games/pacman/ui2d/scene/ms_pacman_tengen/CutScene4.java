@@ -95,8 +95,10 @@ public class CutScene4 extends GameScene2D {
         else if (t == 230) {
             mrPacMan.setSpeed(0);
             mrPacMan.stopAnimation();
+            mrPacMan.resetAnimation();
             msPacMan.setSpeed(0);
             msPacMan.stopAnimation();
+            msPacMan.resetAnimation();
         }
         else if (t == 400) {
             mrPacMan.startAnimation();
@@ -117,19 +119,19 @@ public class CutScene4 extends GameScene2D {
             msPacMan.startAnimation();
         }
         else if (t == 650) {
-            mrPacMan.setSpeed(2); // TODO not sure
+            mrPacMan.setSpeed(1.5f); // TODO not sure
             mrPacMan.setMoveDir(Direction.UP);
-            msPacMan.setSpeed(2); // TODO not sure
+            msPacMan.setSpeed(1.5f); // TODO not sure
             msPacMan.setMoveDir(Direction.UP);
         }
-        else if (t == 696) {
+        else if (t == 720) {
             mrPacMan.hide();
             msPacMan.hide();
         }
         else if (isJuniorSpawnTime()) {
             spawnJunior();
         }
-        else if (t == 2016) {
+        else if (t == 1512) {
             context.gameController().changeState(GameState.WAITING_FOR_START);
         }
 
@@ -153,7 +155,7 @@ public class CutScene4 extends GameScene2D {
 
     private void spawnJunior() {
         var junior = new Pac();
-        double randomX = 2 * TS + (size().x() - 4 * TS) * Math.random();
+        double randomX = 8 * TS + (8 * TS) * Math.random();
         int rnd = Globals.randomInt(1, 3);
         String prefix = GameAssets2D.assetPrefix(GameVariant.MS_PACMAN_TENGEN);
         AudioClip clip = context.assets().get(prefix + ".audio.intermission.4.junior." + rnd);
