@@ -232,7 +232,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
     public void stop() {
         clock.stop();
         editController.editingEnabledPy.set(false);
-        editController.clearUnsavedChanges();
+        //editController.clearUnsavedChanges();
     }
 
     public WorldMap map() {

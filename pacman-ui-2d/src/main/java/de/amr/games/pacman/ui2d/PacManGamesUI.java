@@ -512,10 +512,10 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     private void closeEditor(TileMapEditor editor) {
-        editor.stop();
         editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> stage.titleProperty().bind(stageTitleBinding()));
+        editor.stop();
         game().updateCustomMaps();
-        gameClock().setTargetFrameRate(GameModel.TICKS_PER_SECOND);
+        clock.setTargetFrameRate(GameModel.TICKS_PER_SECOND);
         gameController().restart(GameState.BOOT);
         selectStartPage();
     }
