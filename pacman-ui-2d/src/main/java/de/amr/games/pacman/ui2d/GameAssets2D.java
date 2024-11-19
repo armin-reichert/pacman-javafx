@@ -184,6 +184,10 @@ public class GameAssets2D extends AssetStorage {
         assets.store("tengen.audio.extra_life",         rm.loadAudioClip("sound/tengen/ms-extralife.wav"));
         assets.store("tengen.audio.ghost_eaten",        rm.loadAudioClip("sound/tengen/ms-ghosteat.wav"));
 
+        assets.store("tengen.audio.intermission.4.junior.1", rm.loadAudioClip("sound/tengen/ms-theend1.wav"));
+        assets.store("tengen.audio.intermission.4.junior.2", rm.loadAudioClip("sound/tengen/ms-theend2.wav"));
+
+
         // used only in 3D scene when level is completed:
         assets.store("tengen.audio.level_complete",     rm.url("sound/common/level-complete.mp3"));
         assets.store("tengen.audio.sweep",              rm.loadAudioClip("sound/common/sweep.mp3"));

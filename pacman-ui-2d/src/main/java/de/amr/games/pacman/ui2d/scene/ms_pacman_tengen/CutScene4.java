@@ -2,15 +2,19 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManTengenGame;
+import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import javafx.scene.media.AudioClip;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -155,6 +159,9 @@ public class CutScene4 extends GameScene2D {
     private void spawnJunior() {
         var junior = new Pac();
         double randomX = 2 * TS + (size().x() - 4 * TS) * Math.random();
+        int rnd = Globals.randomInt(1, 3);
+        String prefix = GameAssets2D.assetPrefix(GameVariant.MS_PACMAN_TENGEN);
+        AudioClip clip = context.assets().get(prefix + ".audio.intermission.4.junior." + rnd);
         junior.setPosition((float) randomX, size().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(1);
@@ -163,6 +170,7 @@ public class CutScene4 extends GameScene2D {
         junior.show();
         juniors.add(junior);
         juniorCreationTime.add(t);
+        clip.play();
         Logger.info("Junior spawned at tick {}", t);
     }
 
