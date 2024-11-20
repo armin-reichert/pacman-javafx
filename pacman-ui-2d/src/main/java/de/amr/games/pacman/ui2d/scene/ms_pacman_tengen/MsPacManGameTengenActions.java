@@ -31,7 +31,7 @@ public enum MsPacManGameTengenActions implements GameAction {
         @Override
         public void execute(GameContext context) {
             MsPacManGameTengen tengenGame = (MsPacManGameTengen) context.game();
-            if (tengenGame.boosterMode() == PacBooster.USE_A_OR_B) {
+            if (tengenGame.pacBooster() == PacBooster.USE_A_OR_B) {
                 tengenGame.activatePacBooster(!tengenGame.isBoosterActive()); // toggle state
             }
         }

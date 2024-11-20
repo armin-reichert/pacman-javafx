@@ -72,7 +72,7 @@ public class OptionsScene extends GameScene2D {
         context.setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
         game = (MsPacManGameTengen) context.game();
-        game.setCanStartGame(true);
+        game.setCanStartNewGame(true);
         resetIdleTimer();
     }
 
@@ -211,18 +211,18 @@ public class OptionsScene extends GameScene2D {
     }
 
     private void setPrevPacBoosterValue() {
-        PacBooster pacBooster = game.boosterMode();
+        PacBooster pacBooster = game.pacBooster();
         var values = PacBooster.values();
         int current = pacBooster.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
-        game.setBoosterMode(values[prev]);
+        game.setPacBooster(values[prev]);
         optionValueChanged();
     }
 
     private void setNextPacBoosterValue() {
-        PacBooster pacBooster = game.boosterMode();
+        PacBooster pacBooster = game.pacBooster();
         var values = PacBooster.values();
         int current = pacBooster.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
-        game.setBoosterMode(values[next]);
+        game.setPacBooster(values[next]);
         optionValueChanged();
     }
 
@@ -253,7 +253,7 @@ public class OptionsScene extends GameScene2D {
         drawArrowIfSelected(renderer, OPTION_PAC_BOOSTER, y, scaledFont);
         renderer.drawText("PAC BOOSTER", LABEL_COLOR, scaledFont, COL_LABEL, y);
         renderer.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
-        String pacBoosterText = switch (game.boosterMode()) {
+        String pacBoosterText = switch (game.pacBooster()) {
             case OFF -> "OFF";
             case ALWAYS_ON -> "ALWAYS ON";
             case USE_A_OR_B -> "USE A OR B";

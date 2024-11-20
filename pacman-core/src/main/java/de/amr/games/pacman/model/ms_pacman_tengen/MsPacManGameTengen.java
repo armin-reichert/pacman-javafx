@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
+import de.amr.games.pacman.model.GameException;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Portal;
@@ -33,8 +34,8 @@ import static de.amr.games.pacman.model.ms_pacman_tengen.SpeedConfiguration.*;
  */
 public class MsPacManGameTengen extends GameModel {
 
-    public static final int MIN_LEVEL_NUMBER = 1;
-    public static final int MAX_LEVEL_NUMBER = 32;
+    public static final byte MIN_LEVEL_NUMBER = 1;
+    public static final byte MAX_LEVEL_NUMBER = 32;
 
     // Animation IDs specific to this game
     public static final String ANIM_MS_PACMAN_BOOSTER = "ms_pacman_booster";
@@ -87,76 +88,81 @@ public class MsPacManGameTengen extends GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
-    private final MsPacManGameTengenMapConfig mapConfigMgr;
+    private static final String HIGH_SCORE_FILENAME = "highscore-ms_pacman_tengen.xml";
+    private static final String MAPS_ROOT = "/de/amr/games/pacman/maps/ms_pacman_tengen/";
+
+    private final MsPacManGameTengenMapConfig mapConfig;
 
     private MapCategory mapCategory;
     private Difficulty difficulty;
     private PacBooster pacBooster;
     private boolean boosterActive;
     private byte startLevelNumber; // 1-7
-    private boolean canStartGame;
+    private boolean canStartNewGame;
     private byte numContinues;
     private final Steering autopilot = new RuleBasedPacSteering(this);
     private final Steering demoLevelSteering = new RuleBasedPacSteering(this);
 
-    public MsPacManGameTengen(File userDir) {
-        super(userDir);
-        scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman_tengen.xml"));
-        simulateOverflowBug = false;
+    //TODO: I have no info about the exact timing so far, so I use these (inofficial) Arcade game values for now
+    private class MsPacManGameTengenHuntingControl extends HuntingControl
+    {
+        static final long[] TICKS_LEVEL_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, TickTimer.INDEFINITE };
+        static final long[] TICKS_LEVEL_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, TickTimer.INDEFINITE };
 
-        //TODO: I have no info about the exact timing so far, so I use these (inofficial) Arcade game values for now
-        huntingControl = new HuntingControl() {
-            static final int[] TICKS_LEVEL_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
-            static final int[] TICKS_LEVEL_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
+        public MsPacManGameTengenHuntingControl() {
+            setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
+        }
 
-            @Override
-            public long huntingTicks(int levelNumber, int phaseIndex) {
-                long ticks = levelNumber < 5 ? TICKS_LEVEL_1_TO_4[phaseIndex] : TICKS_LEVEL_5_PLUS[phaseIndex];
-                return ticks != -1 ? ticks : TickTimer.INDEFINITE;
-            }
-        };
-        huntingControl.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
-
-        mapConfigMgr = new MsPacManGameTengenMapConfig();
-        reset();
+        @Override
+        public long huntingTicks(int levelNumber, int phaseIndex) {
+            return levelNumber <= 4 ? TICKS_LEVEL_1_TO_4[phaseIndex] : TICKS_LEVEL_5_PLUS[phaseIndex];
+        }
     }
 
-    public void resetOptions() {
-        setMapCategory(MapCategory.ARCADE);
-        setBoosterMode(PacBooster.OFF);
-        setDifficulty(Difficulty.NORMAL);
-        setStartLevelNumber(1);
-        setNumContinues(4);
+    public MsPacManGameTengen(File userDir) {
+        super(userDir);
+        scoreManager.setHighScoreFile(new File(userDir, HIGH_SCORE_FILENAME));
+        huntingControl = new MsPacManGameTengenHuntingControl();
+        mapConfig = new MsPacManGameTengenMapConfig(MAPS_ROOT);
+        setInitialLives(3);
+        simulateOverflowBug = false; //TODO check this
+        reset();
     }
 
     @Override
     public void reset() {
+        lives = initialLives;
         level = null;
         demoLevel = false;
         playing = false;
-        lives = initialLives;
         boosterActive = false;
-        setInitialLives(3);
-        //setNumContinues(4);
-        scoreManager().loadHighScore();
+        scoreManager.loadHighScore();
         scoreManager.resetScore();
     }
 
     @Override
     public void endGame() {
-        scoreManager().updateHighScore();
+        scoreManager.updateHighScore();
         publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
     }
 
-    public MsPacManGameTengenMapConfig mapConfigMgr() {
-        return mapConfigMgr;
+    public void resetOptions() {
+        setPacBooster(PacBooster.OFF);
+        setDifficulty(Difficulty.NORMAL);
+        setMapCategory(MapCategory.ARCADE);
+        setStartLevelNumber(1);
+        setNumContinues(4);
     }
 
-    public void setBoosterMode(PacBooster mode) {
+    public MsPacManGameTengenMapConfig mapConfig() {
+        return mapConfig;
+    }
+
+    public void setPacBooster(PacBooster mode) {
         pacBooster = mode;
     }
 
-    public PacBooster boosterMode() {
+    public PacBooster pacBooster() {
         return pacBooster;
     }
 
@@ -182,15 +188,21 @@ public class MsPacManGameTengen extends GameModel {
     }
 
     public void setStartLevelNumber(int number) {
-        this.startLevelNumber = (byte) number;
+        if (number < MIN_LEVEL_NUMBER || number > MAX_LEVEL_NUMBER) {
+            throw GameException.illegalLevelNumber(number);
+        }
+        startLevelNumber = (byte) number;
     }
 
     public byte startLevelNumber() {
         return startLevelNumber;
     }
 
-    public void setNumContinues(int numContinues) {
-        this.numContinues = (byte) numContinues;
+    public void setNumContinues(int number) {
+        if (numContinues < 0 || numContinues > 4) {
+            throw new IllegalArgumentException("Number of continues must be 0..4 but is " + number);
+        }
+        numContinues = (byte) number;
     }
 
     public byte numContinues() {
@@ -198,6 +210,9 @@ public class MsPacManGameTengen extends GameModel {
     }
 
     public void subtractOneContinue() {
+        if (numContinues == 0) {
+            throw new IllegalStateException("Cannot decrement number of continues");
+        }
         numContinues -= 1;
     }
 
@@ -207,11 +222,11 @@ public class MsPacManGameTengen extends GameModel {
 
     @Override
     public boolean canStartNewGame() {
-        return canStartGame;
+        return canStartNewGame;
     }
 
-    public void setCanStartGame(boolean canStartGame) {
-        this.canStartGame = canStartGame;
+    public void setCanStartNewGame(boolean canStartNewGame) {
+        this.canStartNewGame = canStartNewGame;
     }
 
     @Override
@@ -222,14 +237,16 @@ public class MsPacManGameTengen extends GameModel {
     @Override
     public void startLevel() {
         super.startLevel();
+        // Score runs also in demo level in contrast to Arcade games
         scoreManager.setScoreEnabled(true);
     }
 
     @Override
     public long pacPowerTicks() {
-        if (!inRange(level.number, MIN_LEVEL_NUMBER, MAX_LEVEL_NUMBER)) {
+        if (level == null) {
             return 0;
         }
+        // Got this info by @RussianManSMWC who did the disassembly
         double seconds = switch (level.number) {
             case  1 -> 6;
             case  2 -> 5;
@@ -401,7 +418,7 @@ public class MsPacManGameTengen extends GameModel {
     @Override
     public void configureNormalLevel() {
         levelCounterEnabled = level.number < 8;
-        level.setMapConfig(mapConfigMgr.getMapConfig(mapCategory, level.number));
+        level.setMapConfig(mapConfig.getMapConfig(mapCategory, level.number));
         WorldMap worldMap = (WorldMap) level.mapConfig().get("worldMap");
         createWorldAndPopulation(worldMap);
         level.pac().setAutopilot(autopilot);
@@ -417,7 +434,7 @@ public class MsPacManGameTengen extends GameModel {
     public void configureDemoLevel() {
         levelCounterEnabled = false;
         demoLevelSteering.init();
-        level.setMapConfig(mapConfigMgr.getMapConfig(mapCategory, level.number));
+        level.setMapConfig(mapConfig.getMapConfig(mapCategory, level.number));
         WorldMap worldMap = (WorldMap) level.mapConfig().get("worldMap");
         createWorldAndPopulation(worldMap);
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON

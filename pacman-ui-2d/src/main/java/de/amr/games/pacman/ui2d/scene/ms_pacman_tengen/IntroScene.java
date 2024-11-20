@@ -315,7 +315,7 @@ public class IntroScene extends GameScene2D {
                 if (timer.atSecond(7)) {
                     // start demo level
                     MsPacManGameTengen tengenGame = (MsPacManGameTengen) intro.context.game();
-                    tengenGame.setCanStartGame(false);
+                    tengenGame.setCanStartNewGame(false);
                     intro.context.gameController().restart(GameState.STARTING_GAME);
                 }
             }

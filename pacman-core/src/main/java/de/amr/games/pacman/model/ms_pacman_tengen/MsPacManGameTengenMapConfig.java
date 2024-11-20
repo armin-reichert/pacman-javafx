@@ -16,8 +16,6 @@ import static de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme.*;
 
 public class MsPacManGameTengenMapConfig {
 
-    private static final String MAPS_ROOT = "/de/amr/games/pacman/maps/ms_pacman_tengen/";
-
     public static EnumMap<NES_ColorScheme, Map<String, String>> COLOR_MAPS = new EnumMap<>(NES_ColorScheme.class);
     static {
         for (var nesColorScheme : NES_ColorScheme.values()) {
@@ -48,11 +46,11 @@ public class MsPacManGameTengenMapConfig {
 
     private final List<WorldMap> arcadeMaps, miniMaps, bigMaps, strangeMaps;
 
-    public MsPacManGameTengenMapConfig() {
-        arcadeMaps  = createMaps(getClass(), MAPS_ROOT + "arcade%d.world", 4);
-        miniMaps    = createMaps(getClass(), MAPS_ROOT + "mini%d.world", 6);
-        bigMaps     = createMaps(getClass(), MAPS_ROOT + "big%d.world", 11);
-        strangeMaps = createMaps(getClass(), MAPS_ROOT + "strange%d.world", 15);
+    public MsPacManGameTengenMapConfig(String mapsRoot) {
+        arcadeMaps  = createMaps(getClass(), mapsRoot + "arcade%d.world", 4);
+        miniMaps    = createMaps(getClass(), mapsRoot + "mini%d.world", 6);
+        bigMaps     = createMaps(getClass(), mapsRoot + "big%d.world", 11);
+        strangeMaps = createMaps(getClass(), mapsRoot + "strange%d.world", 15);
     }
 
     public Map<String, Object> getMapConfig(MapCategory mapCategory, int levelNumber) {

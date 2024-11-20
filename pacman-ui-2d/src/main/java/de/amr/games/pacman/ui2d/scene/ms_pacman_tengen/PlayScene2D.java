@@ -234,7 +234,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             case LEVEL_COMPLETE -> mazeFlashing.init(
                 context.level().mapConfig(),
                 game.numFlashes(),
-                game.mapConfigMgr().isRandomColorSchemeUsed(game.mapCategory(), context.level().number));
+                game.mapConfig().isRandomColorSchemeUsed(game.mapCategory(), context.level().number));
             case GAME_OVER -> {
                 if (game.mapCategory() != MapCategory.ARCADE) {
                     Vector2f belowHouse = centerBelowHouse(context.level().world());
