@@ -33,9 +33,9 @@ public class WorldMap {
         return sw.toString();
     }
 
-    private URL url;
     private TileMap terrain;
     private TileMap food;
+    private final URL url;
 
     /**
      * Creates a world map consisting of copies of the other map's layers.
@@ -56,28 +56,19 @@ public class WorldMap {
         url = null;
     }
 
-    public WorldMap(URL url) {
-        checkNotNull(url);
-        try {
-            this.url = url;
-            var r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
-            parse(r.lines());
-        } catch (Exception x) {
-            Logger.error(x);
-        }
+    public WorldMap(URL url) throws IOException {
+        this.url = checkNotNull(url);
+        var r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
+        parse(r.lines());
     }
 
-    public WorldMap(File file)  {
-        try {
-            url = file.toURI().toURL();
-            var r = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
-            parse(r.lines());
-        } catch (Exception x) {
-            Logger.error(x);
-        }
+    public WorldMap(File file) throws IOException {
+        url = file.toURI().toURL();
+        var r = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
+        parse(r.lines());
     }
 
-    public String makeSource() throws IOException {
+    public String sourceCode() throws IOException {
         return TERRAIN_SECTION_START + "\n" + tileMapSource(terrain) + FOOD_SECTION_START + "\n" + tileMapSource(food);
     }
 
@@ -104,15 +95,16 @@ public class WorldMap {
         food = TileMap.parseTileMap(foodSection, tv -> 0 <= tv && tv <= Tiles.ENERGIZER);
     }
 
-    public void save(File file) {
+    public boolean save(File file) {
         try (PrintWriter w = new PrintWriter(file, StandardCharsets.UTF_8)) {
             w.println(TERRAIN_SECTION_START);
             terrain.print(w);
             w.println(FOOD_SECTION_START);
             food.print(w);
-            Logger.info("World map saved to file '{}'.", file);
+            return true;
         } catch (Exception x) {
             Logger.error(x);
+            return false;
         }
     }
 

@@ -13,7 +13,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.tinylog.Logger;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.games.pacman.maps.editor.TileMapEditorViewModel.tt;
@@ -80,15 +84,36 @@ public class TileMapEditorApp extends Application  {
         editor.start();
     }
 
-    private void loadSampleMaps() {
-        mapPacManGame = new WorldMap(getClass().getResource(SAMPLE_MAPS_PATH + "pacman.world"));
-        mapsMsPacManGame = rangeClosed(1, 6)
-            .mapToObj(mapNumber -> getClass().getResource(SAMPLE_MAPS_PATH + "mspacman/mspacman_" + mapNumber + ".world"))
-            .map(WorldMap::new)
-            .toList();
-        mapsPacManXXLGame = rangeClosed(1, 8)
-            .mapToObj(mapNumber -> getClass().getResource(SAMPLE_MAPS_PATH + "masonic/masonic_" + mapNumber + ".world"))
-            .map(WorldMap::new)
-            .toList();
+    private void loadSampleMaps() throws IOException {
+        mapPacManGame = loadSampleMap("pacman.world", 1);
+
+        mapsMsPacManGame = new ArrayList<>(6);
+        for (int num = 1; num <= 6; ++num) {
+            WorldMap worldMap = loadSampleMap("mspacman/mspacman_%d.world", num);
+            if (worldMap != null) {
+                mapsMsPacManGame.add(worldMap);
+            }
+        }
+        mapsPacManXXLGame = new ArrayList<>(8);
+        for (int num = 1; num <= 8; ++num) {
+            WorldMap worldMap = loadSampleMap("masonic/masonic_%d.world", num);
+            if (worldMap != null) {
+                mapsPacManXXLGame.add(worldMap);
+            }
+        }
+    }
+
+    private WorldMap loadSampleMap(String pattern, int number) {
+        URL url = getClass().getResource(SAMPLE_MAPS_PATH + pattern.formatted(number));
+        if (url != null) {
+            try {
+                return new WorldMap(url);
+            } catch (IOException x) {
+                Logger.error(x);
+                return null;
+            }
+        }
+        Logger.error("Could not load world map, pattern={}, number={}", pattern, number);
+        return null;
     }
 }

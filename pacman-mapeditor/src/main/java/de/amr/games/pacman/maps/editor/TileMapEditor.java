@@ -38,6 +38,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
@@ -712,11 +713,15 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     private boolean readMapFile(File file) {
         if (file.getName().endsWith(".world")) {
-            loadMap(new WorldMap(file));
-            lastUsedDir = file.getParentFile();
-            currentFilePy.set(file);
-            Logger.info("Map read from file {}", file);
-            return true;
+            try {
+                loadMap(new WorldMap(file));
+                lastUsedDir = file.getParentFile();
+                currentFilePy.set(file);
+                Logger.info("Map read from file {}", file);
+            } catch (IOException x) {
+                Logger.error(x);
+                Logger.info("Map could not be read from file {}", file);
+            }
         }
         return false;
     }
@@ -831,7 +836,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
             return;
         }
         try {
-            String source = map.makeSource();
+            String source = map.sourceCode();
             String[] lines = source.split("\n");
             for (int i = 0; i < lines.length; ++i) {
                 lines[i] = "%5d:   %s".formatted(i+1, lines[i]);

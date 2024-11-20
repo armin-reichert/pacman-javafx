@@ -141,12 +141,11 @@ public class MazeMapGenerator {
         MazeMapGenerator mg = new MazeMapGenerator();
         //WorldMap mazeMap = new WorldMap(new File("maze.world"));
         for (int i = 0; i < 5; ++i) {
-            try {
-                WorldMap mazeMap = mg.createMazeMap(10, 10);
-                File file = new File("maze_%d.world".formatted(i));
-                mazeMap.save(file);
-            } catch (Exception x) {
-                Logger.error(x);
+            WorldMap mazeMap = mg.createMazeMap(10, 10);
+            File file = new File("maze_%d.world".formatted(i));
+            boolean saved = mazeMap.save(file);
+            if (!saved) {
+                Logger.error("Could not save map file {}", file);
             }
         }
     }
