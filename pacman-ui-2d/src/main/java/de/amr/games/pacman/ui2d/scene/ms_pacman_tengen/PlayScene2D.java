@@ -193,12 +193,19 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        if (context.game().isDemoLevel()) {
-            context.level().pac().setImmune(false);
+        MsPacManGameTengen game = (MsPacManGameTengen) context.game();
+        GameLevel level = context.level();
+        if (game.isDemoLevel()) {
+            level.pac().setImmune(false);
         } else {
-            context.level().pac().setUsingAutopilot(PY_AUTOPILOT.get());
-            context.level().pac().setImmune(PY_IMMUNITY.get());
+            level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
+            level.pac().setImmune(PY_IMMUNITY.get());
         }
+        mazeFlashing.init(
+            level.mapConfig(),
+            level.numFlashes(),
+            game.mapConfig().isRandomColorSchemeUsed(game.mapCategory(), level.number));
+
         context.enableJoypad();
         setKeyBindings();
     }
