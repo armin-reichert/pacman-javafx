@@ -29,7 +29,7 @@ import static de.amr.games.pacman.lib.RectArea.rect;
 /**
  * @author Armin Reichert
  */
-public class MsPacManArcadeGameRenderer implements GameRenderer {
+public class MsPacManGameRenderer implements GameRenderer {
 
     private static final RectArea[] MAPS_WITH_FOOD_SPRITES = {
         rect(0,     0, 226, 248),
@@ -69,7 +69,7 @@ public class MsPacManArcadeGameRenderer implements GameRenderer {
     private boolean blinking;
     private Color bgColor = Color.BLACK;
 
-    public MsPacManArcadeGameRenderer(AssetStorage assets, Canvas canvas) {
+    public MsPacManGameRenderer(AssetStorage assets, Canvas canvas) {
         this.assets = checkNotNull(assets);
         this.canvas = checkNotNull(canvas);
         flashingMazesImage = assets.get("ms_pacman.flashing_mazes");

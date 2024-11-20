@@ -13,7 +13,7 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
+import de.amr.games.pacman.model.ms_pacman.MsPacManGame;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
@@ -22,7 +22,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
 
 /**
  * Intermission scene 1: "They meet".
@@ -100,7 +100,7 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameRenderer renderer) {
-        MsPacManArcadeGameRenderer r = (MsPacManArcadeGameRenderer) renderer;
+        MsPacManGameRenderer r = (MsPacManGameRenderer) renderer;
         String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
         Color color = context.assets().color(assetPrefix + ".color.clapperboard");
         r.drawClapperBoard(renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
@@ -151,7 +151,7 @@ public class CutScene1 extends GameScene2D {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
             pacMan.setSpeed(SPEED_PAC_CHASING);
-            pacMan.selectAnimation(MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING);
+            pacMan.selectAnimation(MsPacManGame.ANIM_MR_PACMAN_MUNCHING);
             pacMan.animations().ifPresent(Animations::startCurrentAnimation);
             pacMan.show();
 

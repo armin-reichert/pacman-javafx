@@ -10,7 +10,7 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.StaticBonus;
-import de.amr.games.pacman.model.pacman.PacManArcadeGame;
+import de.amr.games.pacman.model.pacman.PacManGame;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -26,7 +26,7 @@ import static de.amr.games.pacman.lib.Globals.*;
  * Extension of Arcade Pac-Man with 8 additional mazes (thanks to the one and only
  * <a href="https://github.com/masonicGIT/pacman">Shaun Williams</a>).
  */
-public class PacManXXLGame extends PacManArcadeGame {
+public class PacManGameXXL extends PacManGame {
 
     private static final int MAP_COUNT = 8;
     private static final String MAP_PATTERN = "/de/amr/games/pacman/maps/pacman_xxl/masonic_%d.world";
@@ -46,7 +46,7 @@ public class PacManXXLGame extends PacManArcadeGame {
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
     private MapSelectionMode mapSelectionMode;
 
-    public PacManXXLGame(File userDir) {
+    public PacManGameXXL(File userDir) {
         super(userDir);
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman_xxl.xml"));
         mapSelectionMode = MapSelectionMode.NO_CUSTOM_MAPS;

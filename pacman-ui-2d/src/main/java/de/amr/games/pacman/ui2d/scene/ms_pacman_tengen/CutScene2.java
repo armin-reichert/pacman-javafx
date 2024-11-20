@@ -10,7 +10,7 @@ import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
+import de.amr.games.pacman.model.ms_pacman.MsPacManGame;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.MediaPlayer;
@@ -86,7 +86,7 @@ public class CutScene2 extends GameScene2D {
         }
         else if (t == 320) {
             pacMan.setMoveDir(Direction.RIGHT);
-            pacMan.selectAnimation(MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING);
+            pacMan.selectAnimation(MsPacManGame.ANIM_MR_PACMAN_MUNCHING);
             pacMan.animations().ifPresent(Animations::startCurrentAnimation);
             pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             pacMan.setMoveDir(Direction.RIGHT);

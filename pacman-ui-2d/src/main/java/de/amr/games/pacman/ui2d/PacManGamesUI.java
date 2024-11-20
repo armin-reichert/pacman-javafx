@@ -10,7 +10,7 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.maps.editor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.pacman_xxl.PacManXXLGame;
+import de.amr.games.pacman.model.pacman_xxl.PacManGameXXL;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import de.amr.games.pacman.ui2d.input.ArcadeKeyAdapter;
 import de.amr.games.pacman.ui2d.input.JoypadKeyAdapter;
@@ -47,7 +47,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.createIcon;
@@ -280,7 +280,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         if (variant == GameVariant.PACMAN_XXL) {
             // We cannot use data binding to the game model classes because the game models are in project
             // "pacman-core" which has no dependency to JavaFX data binding.
-            PacManXXLGame xxlGame = (PacManXXLGame) game;
+            PacManGameXXL xxlGame = (PacManGameXXL) game;
             xxlGame.setMapSelectionMode(PY_MAP_SELECTION_MODE.get());
             PY_MAP_SELECTION_MODE.addListener((py, ov, selectionMode) -> xxlGame.setMapSelectionMode(selectionMode));
         }

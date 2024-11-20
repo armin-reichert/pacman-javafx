@@ -15,7 +15,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
 
 /**
  * @author Armin Reichert
@@ -44,7 +44,7 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameRenderer renderer) {
-        MsPacManArcadeGameRenderer r = (MsPacManArcadeGameRenderer) renderer;
+        MsPacManGameRenderer r = (MsPacManGameRenderer) renderer;
         GameSpriteSheet spriteSheet = r.spriteSheet();
         Color orange = Color.valueOf(Arcade.Palette.ORANGE), red = Color.valueOf(Arcade.Palette.RED), white = Color.valueOf(Arcade.Palette.WHITE);
         Font font8 = r.scaledArcadeFont(8), font6 = r.scaledArcadeFont(6);

@@ -22,7 +22,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public class PacManArcadeGameRenderer implements GameRenderer {
+public class PacManGameRenderer implements GameRenderer {
 
     private final AssetStorage assets;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
@@ -31,7 +31,7 @@ public class PacManArcadeGameRenderer implements GameRenderer {
     private boolean blinkingOn;
     private Color bgColor = Color.BLACK;
 
-    public PacManArcadeGameRenderer(AssetStorage assets, Canvas canvas) {
+    public PacManGameRenderer(AssetStorage assets, Canvas canvas) {
         this.assets = checkNotNull(assets);
         this.canvas = checkNotNull(canvas);
     }

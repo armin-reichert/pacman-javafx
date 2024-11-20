@@ -32,7 +32,7 @@ import javafx.scene.Group;
 import javafx.util.Duration;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
 
 /**
  * @author Armin Reichert

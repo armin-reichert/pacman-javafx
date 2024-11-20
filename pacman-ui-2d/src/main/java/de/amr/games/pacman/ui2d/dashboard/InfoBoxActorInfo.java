@@ -12,7 +12,7 @@ import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.pacman.PacManArcadeGame;
+import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
 
@@ -102,7 +102,7 @@ public class InfoBoxActorInfo extends InfoBox {
 
     private String ghostNameAndState(GameModel game, Ghost ghost) {
         String name = ghost.name();
-        if (game instanceof PacManArcadeGame pacManGame) {
+        if (game instanceof PacManGame pacManGame) {
             if (ghost.id() == GameModel.RED_GHOST && pacManGame.cruiseElroy() > 0) {
                 name = "Elroy" + pacManGame.cruiseElroy();
             }

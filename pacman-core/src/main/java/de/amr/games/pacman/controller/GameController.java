@@ -9,10 +9,10 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
+import de.amr.games.pacman.model.ms_pacman.MsPacManGame;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
-import de.amr.games.pacman.model.pacman.PacManArcadeGame;
-import de.amr.games.pacman.model.pacman_xxl.PacManXXLGame;
+import de.amr.games.pacman.model.pacman.PacManGame;
+import de.amr.games.pacman.model.pacman_xxl.PacManGameXXL;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -87,10 +87,10 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         checkNotNull(variant);
         if (!modelsByVariant.containsKey(variant)) {
             GameModel model = switch (variant) {
-                case MS_PACMAN        -> new MsPacManArcadeGame(userDir);
+                case MS_PACMAN        -> new MsPacManGame(userDir);
                 case MS_PACMAN_TENGEN -> new MsPacManGameTengen(userDir);
-                case PACMAN           -> new PacManArcadeGame(userDir);
-                case PACMAN_XXL       -> new PacManXXLGame(userDir);
+                case PACMAN           -> new PacManGame(userDir);
+                case PACMAN_XXL       -> new PacManGameXXL(userDir);
             };
             modelsByVariant.put(variant, model);
         }

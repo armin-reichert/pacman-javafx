@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
+import de.amr.games.pacman.model.ms_pacman.MsPacManGame;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
@@ -100,7 +100,7 @@ public class PacAnimations extends SpriteAnimationCollection {
             MsPacManGameTengen.ANIM_MS_PACMAN_WAVING_HAND, msPacManWavingHand,
             MsPacManGameTengen.ANIM_MS_PACMAN_TURNING_AWAY, msPacManTurningAway,
 
-            MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING, mrPacManMunching,
+            MsPacManGame.ANIM_MR_PACMAN_MUNCHING, mrPacManMunching,
             MsPacManGameTengen.ANIM_MR_PACMAN_BOOSTER, mrPacManMunchingBooster,
             MsPacManGameTengen.ANIM_MR_PACMAN_WAVING_HAND, mrPacManWavingHand,
             MsPacManGameTengen.ANIM_MR_PACMAN_TURNING_AWAY, mrPacManTurningAway,
@@ -117,7 +117,7 @@ public class PacAnimations extends SpriteAnimationCollection {
             if (isCurrentAnimationID(MsPacManGameTengen.ANIM_MS_PACMAN_BOOSTER)) {
                 return MsPacManGameTengenSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER;
             }
-            if (isCurrentAnimationID(MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING)) {
+            if (isCurrentAnimationID(MsPacManGame.ANIM_MR_PACMAN_MUNCHING)) {
                 return ((MsPacManGameTengenSpriteSheet)spriteSheet).pacManMunchingSprites(msPacMan.moveDir());
             }
         }

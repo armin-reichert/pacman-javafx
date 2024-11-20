@@ -43,7 +43,7 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  *
  * @author Armin Reichert
  */
-public class MsPacManArcadeGame extends GameModel {
+public class MsPacManGame extends GameModel {
 
     private static final String MAP_PATTERN = "/de/amr/games/pacman/maps/mspacman/mspacman_%d.world";
 
@@ -113,7 +113,7 @@ public class MsPacManArcadeGame extends GameModel {
 
     private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man at all?
 
-    public MsPacManArcadeGame(File userDir) {
+    public MsPacManGame(File userDir) {
         super(userDir);
 
         for (int number = 1; number <= 4; ++number) {

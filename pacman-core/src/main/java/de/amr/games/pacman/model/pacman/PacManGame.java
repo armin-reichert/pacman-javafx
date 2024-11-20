@@ -52,7 +52,7 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  *
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
-public class PacManArcadeGame extends GameModel {
+public class PacManGame extends GameModel {
 
     public static final Vector2i ARCADE_MAP_SIZE_IN_TILES  = new Vector2i(28, 36);
     public static final Vector2f ARCADE_MAP_SIZE_IN_PIXELS = new Vector2f(224, 288);
@@ -125,7 +125,7 @@ public class PacManArcadeGame extends GameModel {
 
     protected byte cruiseElroy;
 
-    public PacManArcadeGame(File userDir) {
+    public PacManGame(File userDir) {
         super(userDir);
         initialLives = 3;
         simulateOverflowBug = true;

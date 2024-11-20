@@ -27,7 +27,7 @@ import javafx.scene.text.Font;
 import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.model.pacman.PacManArcadeGame.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GameActions2D.bindTestActions;
 
 /**
@@ -108,7 +108,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent(GameRenderer renderer) {
-        MsPacManArcadeGameRenderer r = (MsPacManArcadeGameRenderer) renderer;
+        MsPacManGameRenderer r = (MsPacManGameRenderer) renderer;
         Font font = r.scaledArcadeFont(TS);
         BitSet marqueeState = computeMarqueeState(marqueeTimer.tickCount());
         drawMarquee(r.ctx(), marqueeState);
