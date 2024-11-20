@@ -16,7 +16,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
-import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManTengenGame;
+import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
@@ -45,9 +45,9 @@ import static de.amr.games.pacman.ui2d.GameActions2D.bindCheatActions;
 import static de.amr.games.pacman.ui2d.GameActions2D.bindFallbackPlayerControlActions;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameActions.QUIT_DEMO_LEVEL;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameActions.bindDefaultJoypadActions;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenActions.QUIT_DEMO_LEVEL;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenActions.bindDefaultJoypadActions;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.*;
 
 /**
  * Tengen play scene, uses vertical scrolling.
@@ -229,7 +229,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public void onEnterGameState(GameState state) {
-        MsPacManTengenGame game = (MsPacManTengenGame) context.game();
+        MsPacManGameTengen game = (MsPacManGameTengen) context.game();
         switch (state) {
             case LEVEL_COMPLETE -> mazeFlashing.init(
                 context.level().mapConfig(),
@@ -337,10 +337,10 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             return;
         }
 
-        final var game = (MsPacManTengenGame) context.game();
+        final var game = (MsPacManGameTengen) context.game();
         final GameWorld world = context.level().world();
         final Pac msPacMan = context.level().pac();
-        final var r = (MsPacManTengenGameRenderer) gr;
+        final var r = (MsPacManGameTengenRenderer) gr;
 
         r.setBlinking(context.level().blinking().isOn());
 

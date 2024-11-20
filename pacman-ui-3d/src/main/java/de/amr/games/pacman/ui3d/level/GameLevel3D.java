@@ -16,7 +16,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
-import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManTengenGameMapConfig;
+import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengenMapConfig;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -239,7 +239,7 @@ public class GameLevel3D {
         return switch (context.gameVariant()) {
             case PACMAN, PACMAN_XXL -> (Map<String, String>) mapConfig.get("colorMap");
             case MS_PACMAN -> MsPacManArcadeGame.COLOR_MAPS.get((int) mapConfig.get("colorMapIndex"));
-            case MS_PACMAN_TENGEN -> MsPacManTengenGameMapConfig.COLOR_MAPS.get((NES_ColorScheme) mapConfig.get("nesColorScheme"));
+            case MS_PACMAN_TENGEN -> MsPacManGameTengenMapConfig.COLOR_MAPS.get((NES_ColorScheme) mapConfig.get("nesColorScheme"));
         };
     }
 

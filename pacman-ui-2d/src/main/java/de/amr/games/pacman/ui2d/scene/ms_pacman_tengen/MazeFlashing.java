@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static de.amr.games.pacman.model.ms_pacman_tengen.MsPacManTengenGameMapConfig.COLOR_MAPS;
+import static de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengenMapConfig.COLOR_MAPS;
 
 public class MazeFlashing {
 

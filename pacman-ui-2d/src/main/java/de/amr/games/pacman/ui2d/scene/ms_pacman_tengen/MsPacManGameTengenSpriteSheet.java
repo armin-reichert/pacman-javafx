@@ -5,7 +5,7 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManTengenGame;
+import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.scene.image.Image;
@@ -18,7 +18,7 @@ import static de.amr.games.pacman.model.GameModel.*;
 /**
  * @author Armin Reichert
  */
-public class MsPacManTengenGameSpriteSheet implements GameSpriteSheet {
+public class MsPacManGameTengenSpriteSheet implements GameSpriteSheet {
 
     private final Image source;
 
@@ -178,7 +178,7 @@ public class MsPacManTengenGameSpriteSheet implements GameSpriteSheet {
     static final RectArea BLUE_BAG_SPRITE = rect(241, 363, 7, 8);
     static final RectArea JUNIOR_PAC_SPRITE = rect(176, 304, 7, 8);
 
-    public MsPacManTengenGameSpriteSheet(Image source) {
+    public MsPacManGameTengenSpriteSheet(Image source) {
         this.source = source;
     }
 
@@ -250,9 +250,9 @@ public class MsPacManTengenGameSpriteSheet implements GameSpriteSheet {
     public RectArea bonusValueSprite(byte symbol) {
         // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000
         int index = switch (symbol) {
-            case MsPacManTengenGame.BONUS_BANANA -> 8; // 5000!
-            case MsPacManTengenGame.BONUS_MILK -> 6; // 3000!
-            case MsPacManTengenGame.BONUS_ICE_CREAM -> 7; // 4000!
+            case MsPacManGameTengen.BONUS_BANANA -> 8; // 5000!
+            case MsPacManGameTengen.BONUS_MILK -> 6; // 3000!
+            case MsPacManGameTengen.BONUS_ICE_CREAM -> 7; // 4000!
             default -> symbol;
         };
         return BONUS_VALUE_SPRITES[index];

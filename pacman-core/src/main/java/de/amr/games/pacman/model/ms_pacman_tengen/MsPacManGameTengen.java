@@ -31,7 +31,7 @@ import static de.amr.games.pacman.model.ms_pacman_tengen.SpeedConfiguration.*;
  *
  * @author Armin Reichert
  */
-public class MsPacManTengenGame extends GameModel {
+public class MsPacManGameTengen extends GameModel {
 
     public static final int MIN_LEVEL_NUMBER = 1;
     public static final int MAX_LEVEL_NUMBER = 32;
@@ -87,7 +87,8 @@ public class MsPacManTengenGame extends GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
-    private final MsPacManTengenGameMapConfig mapConfigMgr = new MsPacManTengenGameMapConfig();
+    private final MsPacManGameTengenMapConfig mapConfigMgr;
+
     private MapCategory mapCategory;
     private Difficulty difficulty;
     private PacBooster pacBooster;
@@ -98,7 +99,7 @@ public class MsPacManTengenGame extends GameModel {
     private final Steering autopilot = new RuleBasedPacSteering(this);
     private final Steering demoLevelSteering = new RuleBasedPacSteering(this);
 
-    public MsPacManTengenGame(File userDir) {
+    public MsPacManGameTengen(File userDir) {
         super(userDir);
         scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman_tengen.xml"));
         simulateOverflowBug = false;
@@ -116,7 +117,7 @@ public class MsPacManTengenGame extends GameModel {
         };
         huntingControl.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
 
-        mapConfigMgr.loadMaps();
+        mapConfigMgr = new MsPacManGameTengenMapConfig();
         reset();
     }
 
@@ -147,7 +148,7 @@ public class MsPacManTengenGame extends GameModel {
         publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
     }
 
-    public MsPacManTengenGameMapConfig mapConfigMgr() {
+    public MsPacManGameTengenMapConfig mapConfigMgr() {
         return mapConfigMgr;
     }
 

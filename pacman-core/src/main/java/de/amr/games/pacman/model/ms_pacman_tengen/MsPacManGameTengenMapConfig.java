@@ -11,11 +11,10 @@ import java.net.URL;
 import java.util.*;
 
 import static de.amr.games.pacman.lib.Globals.inRange;
-import static de.amr.games.pacman.lib.Globals.randomInt;
 import static de.amr.games.pacman.model.ms_pacman_tengen.MapCategory.*;
 import static de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme.*;
 
-public class MsPacManTengenGameMapConfig {
+public class MsPacManGameTengenMapConfig {
 
     private static final String MAPS_ROOT = "/de/amr/games/pacman/maps/ms_pacman_tengen/";
 
@@ -32,24 +31,24 @@ public class MsPacManTengenGameMapConfig {
     }
 
     private static List<WorldMap> createMaps(Class<?> loadingClass, String pattern, int maxNumber) {
-        List<WorldMap> maps = new ArrayList<>();
+        ArrayList<WorldMap> maps = new ArrayList<>();
         for (int num = 1; num <= maxNumber; ++num) {
             String path = pattern.formatted(num);
             URL url = loadingClass.getResource(path);
             if (url != null) {
-                WorldMap worldMap = new WorldMap(url);
-                maps.add(worldMap);
+                maps.add(new WorldMap(url));
                 Logger.info("World map #{} read. URL='{}'", num, url);
             } else {
-                Logger.error("World map #{} could not be read from URL '{}'", num, url);
+                Logger.error("World map #{} could not be read. URL='{}'", num, url);
             }
         }
+        maps.trimToSize();
         return maps;
     }
 
-    private List<WorldMap> arcadeMaps, miniMaps, bigMaps, strangeMaps;
+    private final List<WorldMap> arcadeMaps, miniMaps, bigMaps, strangeMaps;
 
-    public void loadMaps() {
+    public MsPacManGameTengenMapConfig() {
         arcadeMaps  = createMaps(getClass(), MAPS_ROOT + "arcade%d.world", 4);
         miniMaps    = createMaps(getClass(), MAPS_ROOT + "mini%d.world", 6);
         bigMaps     = createMaps(getClass(), MAPS_ROOT + "big%d.world", 11);

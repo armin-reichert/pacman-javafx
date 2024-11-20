@@ -18,9 +18,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.*;
 
 /**
  * Intermission scene 2: "The chase".
@@ -59,7 +58,7 @@ public class CutScene2 extends GameScene2D {
         context.setScoreVisible(false);
         pacMan = new Pac();
         msPacMan = new Pac();
-        var spriteSheet = (MsPacManTengenGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
+        var spriteSheet = (MsPacManGameTengenSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
         music = context.sound().makeSound("intermission.2",1.0, false);
@@ -153,7 +152,7 @@ public class CutScene2 extends GameScene2D {
     public void drawSceneContent(GameRenderer renderer) {
         String assetPrefix = assetPrefix(context.gameVariant());
         Color color = context.assets().color(assetPrefix + ".color.clapperboard"); //TODO check
-        var r = (MsPacManTengenGameRenderer) renderer;
+        var r = (MsPacManGameTengenRenderer) renderer;
         r.setLevelNumberBoxesVisible(false);
         r.drawClapperBoard(clapAnimation, "THE CHASE", 2,
             r.scaledArcadeFont(TS), color, CLAP_TILE_X, CLAP_TILE_Y);

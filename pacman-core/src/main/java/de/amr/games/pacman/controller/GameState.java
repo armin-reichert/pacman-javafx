@@ -14,7 +14,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManTengenGame;
+import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.model.pacman_xxl.PacManXXLGame;
 
 import java.util.HashMap;
@@ -39,7 +39,7 @@ public enum GameState implements FsmState<GameModel> {
             game.reset();
             //TODO ugly
             if (GameController.it().currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                MsPacManTengenGame tengenGame = (MsPacManTengenGame) game;
+                MsPacManGameTengen tengenGame = (MsPacManGameTengen) game;
                 tengenGame.resetOptions();
             }
             game.levelCounter().clear();
@@ -300,15 +300,15 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
-                if (game instanceof MsPacManTengenGame msPacManTengenGame) {
+                if (game instanceof MsPacManGameTengen msPacManGameTengen) {
                     if (game.isDemoLevel()) {
                         enterState(SHOWING_CREDITS);
                     } else {
-                        if (msPacManTengenGame.startLevelNumber() >= 10 && msPacManTengenGame.numContinues() > 0) {
-                            msPacManTengenGame.subtractOneContinue();
+                        if (msPacManGameTengen.startLevelNumber() >= 10 && msPacManGameTengen.numContinues() > 0) {
+                            msPacManGameTengen.subtractOneContinue();
                             enterState(WAITING_FOR_START);
                         } else {
-                            msPacManTengenGame.setNumContinues(4);
+                            msPacManGameTengen.setNumContinues(4);
                             enterState(INTRO);
                         }
                     }
@@ -359,7 +359,7 @@ public enum GameState implements FsmState<GameModel> {
             }
             lastLevelNumber = switch (gameVariant) {
                 case MS_PACMAN -> 25;
-                case MS_PACMAN_TENGEN -> MsPacManTengenGame.MAX_LEVEL_NUMBER;
+                case MS_PACMAN_TENGEN -> MsPacManGameTengen.MAX_LEVEL_NUMBER;
                 case PACMAN -> 21;
                 case PACMAN_XXL -> 8 + numCustomMaps;
             };

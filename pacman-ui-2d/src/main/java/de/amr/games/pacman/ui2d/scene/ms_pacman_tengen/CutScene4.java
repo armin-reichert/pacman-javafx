@@ -20,9 +20,9 @@ import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.GameModel.ANIM_PAC_MUNCHING;
-import static de.amr.games.pacman.model.ms_pacman_tengen.MsPacManTengenGame.*;
+import static de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.*;
 
 public class CutScene4 extends GameScene2D {
 
@@ -41,7 +41,7 @@ public class CutScene4 extends GameScene2D {
 
     private MediaPlayer music;
     private ClapperboardAnimation clapAnimation;
-    private MsPacManTengenGameSpriteSheet spriteSheet;
+    private MsPacManGameTengenSpriteSheet spriteSheet;
     private Color clapTextColor;
 
     private int t;
@@ -57,7 +57,7 @@ public class CutScene4 extends GameScene2D {
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
 
-        spriteSheet = (MsPacManTengenGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
+        spriteSheet = (MsPacManGameTengenSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         mrPacMan.setAnimations(new PacAnimations(spriteSheet));
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
 
@@ -216,7 +216,7 @@ public class CutScene4 extends GameScene2D {
 
     @Override
     protected void drawSceneContent(GameRenderer renderer) {
-        var r = (MsPacManTengenGameRenderer) renderer;
+        var r = (MsPacManGameTengenRenderer) renderer;
         r.drawClapperBoard(clapAnimation, "THE END", 4,
                 r.scaledArcadeFont(TS), clapTextColor, CLAP_TILE_X, CLAP_TILE_Y);
         r.drawAnimatedEntity(msPacMan);

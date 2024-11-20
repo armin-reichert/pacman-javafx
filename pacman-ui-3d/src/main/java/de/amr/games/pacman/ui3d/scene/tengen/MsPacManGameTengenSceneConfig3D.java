@@ -6,15 +6,15 @@ package de.amr.games.pacman.ui3d.scene.tengen;
 
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
-import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig;
+import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui3d.scene.common.PlayScene3D;
 
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
 
-public class MsPacManTengenGameSceneConfig3D extends MsPacManTengenGameSceneConfig {
+public class MsPacManGameTengenSceneConfig3D extends MsPacManGameTengenSceneConfig {
 
-    public MsPacManTengenGameSceneConfig3D(AssetStorage assets) {
+    public MsPacManGameTengenSceneConfig3D(AssetStorage assets) {
         super(assets);
         set("PlayScene3D", new PlayScene3D());
     }

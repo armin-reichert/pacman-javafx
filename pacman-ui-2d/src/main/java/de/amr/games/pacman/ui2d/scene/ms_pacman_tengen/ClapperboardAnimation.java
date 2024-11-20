@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.RectArea;
 
 import java.util.Optional;
 
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSpriteSheet.CLAPPERBOARD_SPRITES;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet.CLAPPERBOARD_SPRITES;
 
 /**
  * @author Armin Reichert

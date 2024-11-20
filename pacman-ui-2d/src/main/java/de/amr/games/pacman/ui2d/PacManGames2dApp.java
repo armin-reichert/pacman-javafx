@@ -8,7 +8,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.pacman_xxl.MapSelectionMode;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSceneConfig;
-import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig;
+import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGameSceneConfig;
 import de.amr.games.pacman.ui2d.scene.pacman_xxl.PacManGameXXLSceneConfig;
 import de.amr.games.pacman.ui2d.util.NightMode;
@@ -69,7 +69,7 @@ public class PacManGames2dApp extends Application {
         ui = new PacManGamesUI();
         ui.loadAssets();
         ui.setGameSceneConfig(GameVariant.MS_PACMAN, new MsPacManGameSceneConfig(ui.assets));
-        ui.setGameSceneConfig(GameVariant.MS_PACMAN_TENGEN, new MsPacManTengenGameSceneConfig(ui.assets));
+        ui.setGameSceneConfig(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenSceneConfig(ui.assets));
         ui.setGameSceneConfig(GameVariant.PACMAN, new PacManGameSceneConfig(ui.assets));
         ui.setGameSceneConfig(GameVariant.PACMAN_XXL, new PacManGameXXLSceneConfig(ui.assets));
         ui.createAndStart(stage, initialSize());

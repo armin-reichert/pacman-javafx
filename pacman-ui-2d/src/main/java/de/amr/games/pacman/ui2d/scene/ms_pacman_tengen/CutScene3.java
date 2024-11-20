@@ -19,10 +19,10 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.NES_SIZE;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.NES_TILES_X;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSpriteSheet.BLUE_BAG_SPRITE;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSpriteSheet.JUNIOR_PAC_SPRITE;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_SIZE;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_TILES_X;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet.BLUE_BAG_SPRITE;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet.JUNIOR_PAC_SPRITE;
 
 /**
  * Intermission scene 3: "Junior".
@@ -53,7 +53,7 @@ public class CutScene3 extends GameScene2D {
     private boolean bagOpen;
     private boolean darkness;
 
-    private MsPacManTengenGameSpriteSheet spriteSheet;
+    private MsPacManGameTengenSpriteSheet spriteSheet;
     private ClapperboardAnimation clapAnimation;
     private Color clapTextColor;
     private SpriteAnimation storkAnimation;
@@ -76,7 +76,7 @@ public class CutScene3 extends GameScene2D {
         bagWithJunior = new Entity();
         bagWithJunior.hide();
 
-        spriteSheet = (MsPacManTengenGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
+        spriteSheet = (MsPacManGameTengenSpriteSheet) context.currentGameSceneConfig().spriteSheet();
         mrPacMan.setAnimations(new PacAnimations(spriteSheet));
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
 
@@ -167,7 +167,7 @@ public class CutScene3 extends GameScene2D {
         if (darkness) {
             return;
         }
-        var r = (MsPacManTengenGameRenderer) renderer;
+        var r = (MsPacManGameTengenRenderer) renderer;
         r.drawClapperBoard(clapAnimation, "JUNIOR", 3, r.scaledArcadeFont(TS), clapTextColor, CLAP_TILE_X, CLAP_TILE_Y);
         r.drawStork(storkAnimation, stork, bagReleased);
         r.drawAnimatedEntity(msPacMan);

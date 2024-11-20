@@ -7,14 +7,14 @@ package de.amr.games.pacman.ui2d;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSpriteSheet;
-import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSpriteSheet;
+import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManTengenGameSceneConfig.nesPaletteColor;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.nesPaletteColor;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 import static de.amr.games.pacman.ui2d.util.Ufx.imageBackground;
 
@@ -129,7 +129,7 @@ public class GameAssets2D extends AssetStorage {
 
         assets.store("tengen.scene_background",               coloredBackground(Color.BLACK));
 
-        assets.store("tengen.spritesheet",                    new MsPacManTengenGameSpriteSheet(rm.loadImage("graphics/tengen/spritesheet.png")));
+        assets.store("tengen.spritesheet",                    new MsPacManGameTengenSpriteSheet(rm.loadImage("graphics/tengen/spritesheet.png")));
         assets.store("tengen.mazes.arcade",                   rm.loadImage("graphics/tengen/arcade_mazes.png"));
         assets.store("tengen.mazes.non_arcade",               rm.loadImage("graphics/tengen/non_arcade_mazes.png"));
 

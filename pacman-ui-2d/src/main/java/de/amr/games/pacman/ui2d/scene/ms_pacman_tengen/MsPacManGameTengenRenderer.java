@@ -18,7 +18,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
-import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
 import de.amr.games.pacman.model.ms_pacman_tengen.*;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -41,14 +40,14 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.RectArea.rect;
 import static de.amr.games.pacman.model.GameModel.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame.ANIM_MR_PACMAN_MUNCHING;
-import static de.amr.games.pacman.model.ms_pacman_tengen.MsPacManTengenGame.*;
+import static de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static java.util.function.Predicate.not;
 
 /**
  * @author Armin Reichert
  */
-public class MsPacManTengenGameRenderer implements GameRenderer {
+public class MsPacManGameTengenRenderer implements GameRenderer {
 
     // Strange map #15 (level 32) has 3 different images to create an animation effect
     // Image file "non_arcade_mazes.png"
@@ -76,7 +75,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     };
 
     private final AssetStorage assets;
-    private final MsPacManTengenGameSpriteSheet spriteSheet;
+    private final MsPacManGameTengenSpriteSheet spriteSheet;
     private final Image arcadeMazeImages;
     private final Image nonArcadeMazeImages;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
@@ -90,7 +89,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     private boolean levelNumberBoxesVisible;
     private Vector2f messageAnchorPosition;
 
-    public MsPacManTengenGameRenderer(AssetStorage assets, MsPacManTengenGameSpriteSheet spriteSheet, Canvas canvas) {
+    public MsPacManGameTengenRenderer(AssetStorage assets, MsPacManGameTengenSpriteSheet spriteSheet, Canvas canvas) {
         this.assets = checkNotNull(assets);
         this.spriteSheet = checkNotNull(spriteSheet);
         this.canvas = checkNotNull(canvas);
@@ -113,7 +112,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
             case STRANGE -> strangeMapSprite(mapConfig);
         };
 
-        Map<String, String> colorMap = MsPacManTengenGameMapConfig.COLOR_MAPS.get(nesColorScheme);
+        Map<String, String> colorMap = MsPacManGameTengenMapConfig.COLOR_MAPS.get(nesColorScheme);
         terrainRenderer.setMapBackgroundColor(bgColor);
         terrainRenderer.setWallStrokeColor(Color.valueOf(colorMap.get("stroke")));
         terrainRenderer.setWallFillColor(Color.valueOf(colorMap.get("fill")));
@@ -129,7 +128,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     }
 
     @Override
-    public MsPacManTengenGameSpriteSheet spriteSheet() {
+    public MsPacManGameTengenSpriteSheet spriteSheet() {
         return spriteSheet;
     }
 
@@ -340,7 +339,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
 
     @Override
     public void drawWorld(GameContext context, GameWorld world, double mapX, double mapY) {
-        var game = (MsPacManTengenGame) context.game();
+        var game = (MsPacManGameTengen) context.game();
         GameLevel level = game.level().orElseThrow();
         MapCategory mapCategory = (MapCategory) level.mapConfig().get("mapCategory");
 
@@ -403,11 +402,11 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
             Color color = assets.color(assetPrefix + ".color.ready_message");
             drawText("READY!", x, y, color);
         } else if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
-            drawText("TEST L%02d".formatted(level.number), x, y, MsPacManTengenGameSceneConfig.nesPaletteColor(0x28));
+            drawText("TEST L%02d".formatted(level.number), x, y, MsPacManGameTengenSceneConfig.nesPaletteColor(0x28));
         }
     }
 
-    private boolean isUsingDefaultGameOptions(MsPacManTengenGame game) {
+    private boolean isUsingDefaultGameOptions(MsPacManGameTengen game) {
         return game.boosterMode() == PacBooster.OFF &&
             game.difficulty() == Difficulty.NORMAL &&
             game.mapCategory() == MapCategory.ARCADE;
@@ -422,34 +421,34 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
         hideActorSprite(world.map().terrain().getTileProperty("pos_ghost_1_red", v2i(13, 14)));
     }
 
-    private void drawGameOptionsInfo(TileMap terrain, MsPacManTengenGame tengenGame) {
+    private void drawGameOptionsInfo(TileMap terrain, MsPacManGameTengen tengenGame) {
         MapCategory category = tengenGame.mapCategory();
         RectArea categorySprite = switch (category) {
-            case BIG     -> MsPacManTengenGameSpriteSheet.BIG_SPRITE;
-            case MINI    -> MsPacManTengenGameSpriteSheet.MINI_SPRITE;
-            case STRANGE -> MsPacManTengenGameSpriteSheet.STRANGE_SPRITE;
-            case ARCADE  -> MsPacManTengenGameSpriteSheet.NO_SPRITE;
+            case BIG     -> MsPacManGameTengenSpriteSheet.BIG_SPRITE;
+            case MINI    -> MsPacManGameTengenSpriteSheet.MINI_SPRITE;
+            case STRANGE -> MsPacManGameTengenSpriteSheet.STRANGE_SPRITE;
+            case ARCADE  -> MsPacManGameTengenSpriteSheet.NO_SPRITE;
         };
         RectArea difficultySprite = switch (tengenGame.difficulty()) {
-            case EASY   -> MsPacManTengenGameSpriteSheet.EASY_SPRITE;
-            case HARD   -> MsPacManTengenGameSpriteSheet.HARD_SPRITE;
-            case CRAZY  -> MsPacManTengenGameSpriteSheet.CRAZY_SPRITE;
-            case NORMAL -> MsPacManTengenGameSpriteSheet.NO_SPRITE;
+            case EASY   -> MsPacManGameTengenSpriteSheet.EASY_SPRITE;
+            case HARD   -> MsPacManGameTengenSpriteSheet.HARD_SPRITE;
+            case CRAZY  -> MsPacManGameTengenSpriteSheet.CRAZY_SPRITE;
+            case NORMAL -> MsPacManGameTengenSpriteSheet.NO_SPRITE;
         };
         double centerX = terrain.numCols() * HTS;
         double y = t(2) + HTS;
         if (tengenGame.boosterMode() != PacBooster.OFF) {
             //TODO: always displayed when TOGGLE_USING_KEY is selected or only if booster is active?
-            drawSpriteCenteredOverPosition(MsPacManTengenGameSpriteSheet.BOOSTER_SPRITE, centerX - t(6), y);
+            drawSpriteCenteredOverPosition(MsPacManGameTengenSpriteSheet.BOOSTER_SPRITE, centerX - t(6), y);
         }
         drawSpriteCenteredOverPosition(difficultySprite, centerX, y);
         drawSpriteCenteredOverPosition(categorySprite, centerX + t(4.5), y);
-        drawSpriteCenteredOverPosition(MsPacManTengenGameSpriteSheet.INFO_FRAME_SPRITE, centerX, y);
+        drawSpriteCenteredOverPosition(MsPacManGameTengenSpriteSheet.INFO_FRAME_SPRITE, centerX, y);
     }
 
     @Override
     public void drawScores(GameContext context) {
-        Color color = MsPacManTengenGameSceneConfig.nesPaletteColor(0x20);
+        Color color = MsPacManGameTengenSceneConfig.nesPaletteColor(0x20);
         Font font = scaledArcadeFont(TS);
         if (context.gameClock().getTickCount() % 60 < 30) { drawText("1UP", color, font, t(2), t(1)); }
         drawText("HIGH SCORE", color, font, t(9), t(1));
@@ -466,7 +465,7 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     @Override
     public void drawLevelCounter(GameContext context,  Vector2f size) {
         ctx().setImageSmoothing(false);
-        MsPacManTengenGame game = (MsPacManTengenGame) context.game();
+        MsPacManGameTengen game = (MsPacManGameTengen) context.game();
         int levelNumber = context.level().number;
         // TODO: This is ugly, maybe change all Tengen maps instead?
         double y = size.y() - 3 * TS;
@@ -489,12 +488,12 @@ public class MsPacManTengenGameRenderer implements GameRenderer {
     // Cycles through palette indices 0x01, 0x11, 0x21, 0x31, each frame takes 16 ticks.
     private Color shadeOfBlue(long tick) {
         int i = (int) (tick % 64) / 16;
-        return MsPacManTengenGameSceneConfig.nesPaletteColor(0x01 + 0x10 * i);
+        return MsPacManGameTengenSceneConfig.nesPaletteColor(0x01 + 0x10 * i);
     }
 
     private void drawLevelNumberBox(int levelNumber, double x, double y) {
         ctx().setImageSmoothing(false);
-        drawSpriteScaled(MsPacManTengenGameSpriteSheet.LEVEL_BOX_SPRITE, x, y);
+        drawSpriteScaled(MsPacManGameTengenSpriteSheet.LEVEL_BOX_SPRITE, x, y);
         double digitY = y + 2;
         int tens = levelNumber / 10, ones = levelNumber % 10;
         drawSpriteScaled(spriteSheet.digit(ones), x + 10, digitY);

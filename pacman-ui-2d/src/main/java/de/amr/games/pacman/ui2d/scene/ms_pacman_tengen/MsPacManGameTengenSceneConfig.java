@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
-public class MsPacManTengenGameSceneConfig implements GameSceneConfig {
+public class MsPacManGameTengenSceneConfig implements GameSceneConfig {
 
     // 32x28 tiles or 32x30 tiles? Emulator seems to use 32x30?
     public static final int NES_TILES_X = 32;
@@ -34,10 +34,10 @@ public class MsPacManTengenGameSceneConfig implements GameSceneConfig {
     public static final Vector2f NES_SIZE = new Vector2f(NES_RESOLUTION_X, NES_RESOLUTION_Y);
 
     private final AssetStorage assets;
-    private final MsPacManTengenGameSpriteSheet spriteSheet;
+    private final MsPacManGameTengenSpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public MsPacManTengenGameSceneConfig(AssetStorage assets) {
+    public MsPacManGameTengenSceneConfig(AssetStorage assets) {
         this.assets = checkNotNull(assets);
         spriteSheet = assets.get("tengen.spritesheet");
 
@@ -86,8 +86,8 @@ public class MsPacManTengenGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public MsPacManTengenGameRenderer createRenderer(Canvas canvas) {
-        return new MsPacManTengenGameRenderer(assets, spriteSheet, canvas);
+    public MsPacManGameTengenRenderer createRenderer(Canvas canvas) {
+        return new MsPacManGameTengenRenderer(assets, spriteSheet, canvas);
     }
 
     @Override

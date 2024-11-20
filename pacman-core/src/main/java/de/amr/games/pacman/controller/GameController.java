@@ -10,7 +10,7 @@ import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.ms_pacman.MsPacManArcadeGame;
-import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManTengenGame;
+import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.model.pacman_xxl.PacManXXLGame;
 import org.tinylog.Logger;
@@ -88,7 +88,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         if (!modelsByVariant.containsKey(variant)) {
             GameModel model = switch (variant) {
                 case MS_PACMAN        -> new MsPacManArcadeGame(userDir);
-                case MS_PACMAN_TENGEN -> new MsPacManTengenGame(userDir);
+                case MS_PACMAN_TENGEN -> new MsPacManGameTengen(userDir);
                 case PACMAN           -> new PacManArcadeGame(userDir);
                 case PACMAN_XXL       -> new PacManXXLGame(userDir);
             };

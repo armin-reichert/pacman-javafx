@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.ms_pacman_tengen.PacBooster;
-import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManTengenGame;
+import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameActionProvider;
 import de.amr.games.pacman.ui2d.GameActions2D;
@@ -15,7 +15,7 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.input.JoypadKeyAdapter;
 import org.tinylog.Logger;
 
-public enum MsPacManTengenGameActions implements GameAction {
+public enum MsPacManGameTengenActions implements GameAction {
 
     SELECT_NEXT_JOYPAD {
         @Override
@@ -30,7 +30,7 @@ public enum MsPacManTengenGameActions implements GameAction {
     TOGGLE_PAC_BOOSTER {
         @Override
         public void execute(GameContext context) {
-            MsPacManTengenGame tengenGame = (MsPacManTengenGame) context.game();
+            MsPacManGameTengen tengenGame = (MsPacManGameTengen) context.game();
             if (tengenGame.boosterMode() == PacBooster.USE_A_OR_B) {
                 tengenGame.activatePacBooster(!tengenGame.isBoosterActive()); // toggle state
             }
@@ -64,7 +64,7 @@ public enum MsPacManTengenGameActions implements GameAction {
     };
 
     public static void bindDefaultJoypadActions(GameActionProvider actionProvider, JoypadKeyAdapter binding) {
-        actionProvider.bind(MsPacManTengenGameActions.TOGGLE_PAC_BOOSTER, binding.keyCombination(NES.Joypad.A), binding.keyCombination(NES.Joypad.B));
+        actionProvider.bind(MsPacManGameTengenActions.TOGGLE_PAC_BOOSTER, binding.keyCombination(NES.Joypad.A), binding.keyCombination(NES.Joypad.B));
         actionProvider.bind(GameActions2D.PLAYER_UP,    binding.keyCombination(NES.Joypad.UP));
         actionProvider.bind(GameActions2D.PLAYER_DOWN,  binding.keyCombination(NES.Joypad.DOWN));
         actionProvider.bind(GameActions2D.PLAYER_LEFT,  binding.keyCombination(NES.Joypad.LEFT));
