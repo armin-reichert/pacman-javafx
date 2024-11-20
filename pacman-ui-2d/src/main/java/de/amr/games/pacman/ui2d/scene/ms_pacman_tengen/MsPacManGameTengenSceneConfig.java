@@ -60,7 +60,7 @@ public class MsPacManGameTengenSceneConfig implements GameSceneConfig {
     public GameScene selectGameScene(GameContext context) {
         String sceneID = switch (context.gameState()) {
             case BOOT               -> "BootScene";
-            case WAITING_FOR_START  -> "StartScene";
+            case SETTING_OPTIONS -> "StartScene";
             case SHOWING_CREDITS    -> "ShowingCredits";
             case INTRO              -> "IntroScene";
             case INTERMISSION       -> "CutScene" + context.level().intermissionNumber();

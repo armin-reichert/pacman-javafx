@@ -381,7 +381,7 @@ public class IntroScene extends GameScene2D {
                         intro.context.gameController().changeState(GameState.STARTING_GAME);
                     }
                 } else if (timer.atSecond(5)) {
-                    intro.context.gameController().changeState(GameState.WAITING_FOR_START);
+                    intro.context.gameController().changeState(GameState.SETTING_OPTIONS);
                 }
             }
         };

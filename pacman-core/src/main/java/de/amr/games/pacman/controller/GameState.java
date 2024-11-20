@@ -62,7 +62,7 @@ public enum GameState implements FsmState<GameModel> {
         }
     },
 
-    WAITING_FOR_START {
+    SETTING_OPTIONS {
         @Override
         public void onUpdate(GameModel game) {
             // wait for user interaction to leave state
@@ -306,7 +306,7 @@ public enum GameState implements FsmState<GameModel> {
                         var msPacManGameTengen = (MsPacManGameTengen) game;
                         if (msPacManGameTengen.startLevelNumber() >= 10 && msPacManGameTengen.numContinues() > 0) {
                             msPacManGameTengen.subtractOneContinue();
-                            enterState(WAITING_FOR_START);
+                            enterState(SETTING_OPTIONS);
                         } else {
                             msPacManGameTengen.setNumContinues(4);
                             enterState(INTRO);
@@ -315,7 +315,7 @@ public enum GameState implements FsmState<GameModel> {
                 } else {
                     game.reset();
                     if (game.canStartNewGame()) {
-                        enterState(WAITING_FOR_START);
+                        enterState(SETTING_OPTIONS);
                     } else {
                         enterState(INTRO);
                     }

@@ -35,7 +35,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             boolean enabled =
-                context.gameState() == GameState.WAITING_FOR_START ||
+                context.gameState() == GameState.SETTING_OPTIONS ||
                     context.gameState() == INTRO ||
                     context.game().isDemoLevel() ||
                     !context.gameController().coinControl().hasCredit();
@@ -50,8 +50,8 @@ public enum GameActions2D implements GameAction {
                     context.sound().playInsertCoinSound();
                     context.game().publishGameEvent(GameEventType.CREDIT_ADDED);
                 }
-                if (context.gameState() != GameState.WAITING_FOR_START) {
-                    context.gameController().changeState(GameState.WAITING_FOR_START);
+                if (context.gameState() != GameState.SETTING_OPTIONS) {
+                    context.gameController().changeState(GameState.SETTING_OPTIONS);
                 }
             }
         }
@@ -194,10 +194,10 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                context.gameController().changeState(GameState.WAITING_FOR_START);
+                context.gameController().changeState(GameState.SETTING_OPTIONS);
             } else if (context.game().canStartNewGame()) {
                 context.sound().stopVoice();
-                if (context.gameState() == GameState.INTRO || context.gameState() == GameState.WAITING_FOR_START) {
+                if (context.gameState() == GameState.INTRO || context.gameState() == GameState.SETTING_OPTIONS) {
                     context.gameController().changeState(GameState.STARTING_GAME);
                 } else {
                     Logger.error("Cannot start game play in game state {}", context.gameState());

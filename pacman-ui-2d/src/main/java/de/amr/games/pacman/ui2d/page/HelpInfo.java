@@ -30,7 +30,7 @@ public class HelpInfo {
         HelpInfo help = new HelpInfo(context);
         switch (context.gameState()) {
             case INTRO -> help.addInfoForIntroScene();
-            case WAITING_FOR_START -> help.addInfoForCreditScene();
+            case SETTING_OPTIONS -> help.addInfoForCreditScene();
             case STARTING_GAME, HUNTING, PACMAN_DYING, GHOST_DYING -> {
                 if (context.game().isDemoLevel()) {
                     help.addInfoForDemoLevelPlayScene();

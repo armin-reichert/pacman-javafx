@@ -132,7 +132,7 @@ public class CutScene4 extends GameScene2D {
             spawnJunior();
         }
         else if (t == 1512) {
-            context.gameController().changeState(GameState.WAITING_FOR_START);
+            context.gameController().changeState(GameState.SETTING_OPTIONS);
         }
 
         mrPacMan.move();

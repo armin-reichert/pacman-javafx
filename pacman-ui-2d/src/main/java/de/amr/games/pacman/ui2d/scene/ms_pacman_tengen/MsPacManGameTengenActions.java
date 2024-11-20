@@ -41,7 +41,7 @@ public enum MsPacManGameTengenActions implements GameAction {
         @Override
         public void execute(GameContext context) {
             if (context.game().isDemoLevel()) {
-                context.gameController().changeState(GameState.WAITING_FOR_START);
+                context.gameController().changeState(GameState.SETTING_OPTIONS);
             }
         }
     },
@@ -50,7 +50,7 @@ public enum MsPacManGameTengenActions implements GameAction {
         @Override
         public void execute(GameContext context) {
             context.game().setPlaying(false);
-            context.gameController().changeState(GameState.WAITING_FOR_START);
+            context.gameController().changeState(GameState.SETTING_OPTIONS);
         }
     },
 
