@@ -285,11 +285,11 @@ public class OptionsScene extends GameScene2D {
         }
 
         y += 3 * TS;
-        centerLabelText(renderer, "MOVE ARROW WITH JOYPAD", scaledFont, y);
+        renderer.drawText("MOVE ARROW WITH JOYPAD", LABEL_COLOR, scaledFont, 4 * TS,  y);
         y += TS;
-        centerLabelText(renderer, "CHOOSE OPTIONS WITH A AND B", scaledFont, y);
+        renderer.drawText("CHOOSE OPTIONS WITH A AND B", LABEL_COLOR, scaledFont, 2 * TS,  y);
         y += TS;
-        centerLabelText(renderer, "PRESS START TO START GAME", scaledFont, y);
+        renderer.drawText("PRESS START TO START GAME", LABEL_COLOR, scaledFont, 3 * TS,  y);
 
         y += 4;
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), size().x(), y);
@@ -298,10 +298,6 @@ public class OptionsScene extends GameScene2D {
     @Override
     protected void drawDebugInfo(GameRenderer renderer) {
         renderer.drawTileGrid(size());
-    }
-
-    private void centerLabelText(GameRenderer renderer, String text, Font font, double y) {
-        renderer.drawText(text, LABEL_COLOR, font, (NES_TILES_X - text.length()) * HTS, y);
     }
 
     private void drawArrowIfSelected(GameRenderer renderer, int option, double y, Font font) {
