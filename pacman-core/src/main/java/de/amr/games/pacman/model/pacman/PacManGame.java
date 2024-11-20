@@ -25,6 +25,7 @@ import de.amr.games.pacman.steering.Steering;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -134,19 +135,21 @@ public class PacManGame extends GameModel {
         scoreManager.setExtraLifeScores(10_000);
 
         String path = "/de/amr/games/pacman/maps/pacman/pacman.world";
-        URL mapURL = getClass().getResource(path);
-        if (mapURL == null) {
+        URL url = getClass().getResource(path);
+        if (url == null) {
             throw new MissingResourceException("Map not found", getClass().getName(), path);
         }
-        mapConfig = Map.of(
-            "mapNumber", 1,
-            "worldMap", new WorldMap(mapURL),
-            "colorMap", Map.of(
-                "fill", "#000000",
-                "stroke", "#2121ff",
-                "door", "#fcb5ff",
-                "pellet", "febdb4")
-        );
+        try {
+            WorldMap worldMap = new WorldMap(url);
+            mapConfig = Map.of(
+                "mapNumber", 1,
+                "worldMap", worldMap,
+                "colorMap", Map.of("fill", "#000000", "stroke", "#2121ff", "door", "#fcb5ff", "pellet", "febdb4")
+            );
+        } catch (IOException x) {
+            Logger.error("Could not create world map, url={}", url);
+            throw new RuntimeException(x);
+        }
 
         huntingControl = new HuntingControl() {
             @Override

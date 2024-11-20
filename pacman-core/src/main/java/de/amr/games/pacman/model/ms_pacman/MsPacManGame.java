@@ -21,6 +21,8 @@ import de.amr.games.pacman.steering.Steering;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -116,8 +118,19 @@ public class MsPacManGame extends GameModel {
     public MsPacManGame(File userDir) {
         super(userDir);
 
-        for (int number = 1; number <= 4; ++number) {
-            maps.add(new WorldMap(getClass().getResource(MAP_PATTERN.formatted(number))));
+        for (int num = 1; num <= 4; ++num) {
+            URL url = getClass().getResource(MAP_PATTERN.formatted(num));
+            if (url != null) {
+                try {
+                    WorldMap worldMap = new WorldMap(url);
+                    maps.add(worldMap);
+                } catch (IOException x) {
+                    Logger.error(x);
+                    Logger.error("Could not create world map, url={}", url);
+                }
+            } else {
+                Logger.error("Could not load world map, pattern={}, number={}", MAP_PATTERN, num);
+            }
         }
         Logger.info("{} maps loaded ({})", maps.size(), GameVariant.MS_PACMAN);
 

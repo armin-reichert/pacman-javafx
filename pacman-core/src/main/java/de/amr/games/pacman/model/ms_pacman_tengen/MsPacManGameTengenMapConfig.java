@@ -7,6 +7,7 @@ package de.amr.games.pacman.model.ms_pacman_tengen;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import org.tinylog.Logger;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -34,8 +35,14 @@ public class MsPacManGameTengenMapConfig {
             String path = pattern.formatted(num);
             URL url = loadingClass.getResource(path);
             if (url != null) {
-                maps.add(new WorldMap(url));
-                Logger.info("World map #{} read. URL='{}'", num, url);
+                try {
+                    WorldMap worldMap = new WorldMap(url);
+                    Logger.info("World map #{} read. URL='{}'", num, url);
+                    maps.add(worldMap);
+                } catch (IOException x) {
+                    Logger.error(x);
+                    Logger.error("Could not create world map, url={}", url);
+                }
             } else {
                 Logger.error("World map #{} could not be read. URL='{}'", num, url);
             }

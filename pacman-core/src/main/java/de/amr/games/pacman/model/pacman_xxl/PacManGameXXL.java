@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.pacman.PacManGame;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +53,13 @@ public class PacManGameXXL extends PacManGame {
         mapSelectionMode = MapSelectionMode.NO_CUSTOM_MAPS;
         for (int num = 1; num <= MAP_COUNT; ++num) {
             URL url = getClass().getResource(MAP_PATTERN.formatted(num));
-            standardMaps.add(new WorldMap(url));
+            try {
+                WorldMap worldMap = new WorldMap(url);
+                standardMaps.add(worldMap);
+            } catch (IOException x) {
+                Logger.error("Could not create world map, url={}", url);
+                throw new RuntimeException(x);
+            }
         }
         updateCustomMaps();
     }
@@ -177,8 +184,14 @@ public class PacManGameXXL extends PacManGame {
         }
         customMapsByFile.clear();
         for (File mapFile : mapFiles) {
-            customMapsByFile.put(mapFile, new WorldMap(mapFile));
-            Logger.info("Custom map loaded from " + mapFile);
+            try {
+                WorldMap worldMap = new WorldMap(mapFile);
+                customMapsByFile.put(mapFile, worldMap);
+                Logger.info("Custom map loaded from file {}", mapFile);
+            } catch (IOException x) {
+                Logger.error(x);
+                Logger.error("Could not read custom map from file {}", mapFile);
+            }
         }
         publishGameEvent(GameEventType.CUSTOM_MAPS_CHANGED);
     }

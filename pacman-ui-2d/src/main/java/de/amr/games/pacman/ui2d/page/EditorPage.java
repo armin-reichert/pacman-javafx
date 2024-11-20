@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -97,9 +98,15 @@ public class EditorPage extends BorderPane implements Page {
         ResourceManager core = () -> GameModel.class;
         URL url = core.url("/de/amr/games/pacman/maps/" + relativeMapPath);
         if (url != null) {
-            WorldMap map = new WorldMap(url);
-            Logger.info("Map loaded from URL {}", url);
-            return map;
+            try {
+                WorldMap map = new WorldMap(url);
+                Logger.info("Map loaded from URL {}", url);
+                return map;
+            } catch (IOException x) {
+                Logger.error(x);
+                Logger.error("Could not load map at path {}", relativeMapPath);
+                return null;
+            }
         }
         Logger.error("Could not find map at path {}", relativeMapPath);
         return null;
