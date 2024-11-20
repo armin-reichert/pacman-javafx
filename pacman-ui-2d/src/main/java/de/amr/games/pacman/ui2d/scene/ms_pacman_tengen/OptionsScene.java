@@ -55,6 +55,8 @@ public class OptionsScene extends GameScene2D {
     static final int MIN_START_LEVEL = 1;
     static final int MAX_START_LEVEL = 32;  //TODO 7
 
+    static final int IDLE_TIMEOUT = 22 * 60; // TODO correct?
+
     private MsPacManGameTengen game;
     private int selectedOption;
     private long idleTicks;
@@ -83,7 +85,7 @@ public class OptionsScene extends GameScene2D {
 
     @Override
     public void update() {
-        if (idleTicks == 25*60) { // TODO check exact time in disassembly
+        if (idleTicks == IDLE_TIMEOUT) {
             context.gameController().changeState(GameState.BOOT);
             return;
         }
