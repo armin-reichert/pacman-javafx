@@ -49,6 +49,14 @@ public class MsPacManGameTengen extends GameModel {
     static final byte PELLET_VALUE = 10;
     static final byte ENERGIZER_VALUE = 50;
 
+    // See https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/Data/PowerPelletTimes.asm
+    // Hex value divided by 16 gives the duration in seconds
+    static final byte[] POWER_PELLET_TIMES = {
+        0x60, 0x50, 0x40, 0x30, 0x20, 0x50, 0x20, 0x1C, // levels 1-8
+        0x18, 0x40, 0x20, 0x1C, 0x18, 0x20, 0x1C, 0x18, // levels 9-16
+        0x00, 0x18, 0x20                                // levels 17, 18, then 19+
+    };
+
     // Bonus symbols in Arcade, Mini and Big mazes
     public static final byte BONUS_CHERRY      = 0;
     public static final byte BONUS_STRAWBERRY  = 1;
@@ -246,29 +254,9 @@ public class MsPacManGameTengen extends GameModel {
         if (level == null) {
             return 0;
         }
-        // Got this info by @RussianManSMWC who did the disassembly
-        double seconds = switch (level.number) {
-            case  1 -> 6;
-            case  2 -> 5;
-            case  3 -> 4;
-            case  4 -> 3;
-            case  5 -> 2;
-            case  6 -> 5;
-            case  7 -> 2;
-            case  8 -> 1.75;
-            case  9 -> 1.5;
-            case 10 -> 4;
-            case 11 -> 2;
-            case 12 -> 1.75;
-            case 13 -> 1.5;
-            case 14 -> 2;
-            case 15 -> 1.75;
-            case 16 -> 1.5;
-            case 17 -> 0;
-            case 18 -> 1.5;
-            default -> 2;
-        };
-        return (long) (seconds * 60);
+        int index = level.number <= 19 ? level.number - 1 : 18;
+        double seconds = POWER_PELLET_TIMES[index] / 16.0;
+        return (long) (seconds * 60); // 60 ticks/sec
     }
 
     @Override

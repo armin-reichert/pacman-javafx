@@ -379,7 +379,9 @@ public abstract class GameModel {
 
     protected void processEatenEnergizer() {
         level.victims().clear(); // ghosts eaten using this energizer
-        if (pacPowerTicks() > 0) {
+        long powerTicks = pacPowerTicks();
+        if (powerTicks > 0) {
+            Logger.info("Power: {} ticks ({0.00} sec)", powerTicks, powerTicks / 60.0);
             eventLog.pacGetsPower = true;
             huntingControl.stop();
             level.powerTimer().restartTicks(pacPowerTicks());
