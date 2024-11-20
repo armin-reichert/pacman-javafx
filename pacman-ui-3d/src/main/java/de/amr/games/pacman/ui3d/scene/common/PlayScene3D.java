@@ -394,7 +394,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         level3D.energizers3D().forEach(Energizer3D::onEaten);
         level3D.livesCounter3D().shapesRotation().stop();
         level3D.house3D().door3D().setVisible(false);
-        playLevelCompleteAnimation();
+        playLevelCompleteAnimation(context.level());
     }
 
     private void onEnterStateLevelTransition() {
@@ -553,11 +553,11 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         animation.play();
     }
 
-    private void playLevelCompleteAnimation() {
+    private void playLevelCompleteAnimation(GameLevel level) {
         context.gameState().timer().resetIndefiniteTime(); // block game state until animation has finished
         levelCompleteAnimation = context.game().intermissionNumberAfterLevel() != 0
-            ? levelCompleteAnimationBeforeIntermission(context.game().numFlashes())
-            : levelCompleteAnimation(context.game().numFlashes());
+            ? levelCompleteAnimationBeforeIntermission(level.numFlashes())
+            : levelCompleteAnimation(level.numFlashes());
         levelCompleteAnimation.setDelay(Duration.seconds(1.0));
         levelCompleteAnimation.setOnFinished(e -> context.gameState().timer().expire());
         levelCompleteAnimation.play();

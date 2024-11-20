@@ -265,6 +265,7 @@ public class PacManGame extends GameModel {
     public void configureNormalLevel() {
         levelCounterEnabled = true;
         level.setMapConfig(mapConfig);
+        level.setNumFlashes(levelData(level.number).numFlashes());
         WorldMap worldMap = (WorldMap) mapConfig.get("worldMap");
         populateLevel(worldMap);
         level.pac().setAutopilot(autopilot);
@@ -289,11 +290,6 @@ public class PacManGame extends GameModel {
         level.pac().setAutopilot(demoLevelSteering);
         level.pac().setUsingAutopilot(true);
         level.pac().setImmune(false);
-    }
-
-    @Override
-    public int numFlashes() {
-        return level != null ? levelData(level.number).numFlashes() : 0;
     }
 
     @Override
@@ -410,7 +406,7 @@ public class PacManGame extends GameModel {
     @Override
     public long pacPowerFadingTicks() {
         // ghost flashing animation has frame length 14 so one full flash takes 28 ticks
-        return numFlashes() * 28L;
+        return level != null ? level.numFlashes() * 28L : 0;
     }
 
     @Override

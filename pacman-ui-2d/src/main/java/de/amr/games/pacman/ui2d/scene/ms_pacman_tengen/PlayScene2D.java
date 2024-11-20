@@ -233,7 +233,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         switch (state) {
             case LEVEL_COMPLETE -> mazeFlashing.init(
                 context.level().mapConfig(),
-                game.numFlashes(),
+                context.level().numFlashes(),
                 game.mapConfig().isRandomColorSchemeUsed(game.mapCategory(), context.level().number));
             case GAME_OVER -> {
                 if (game.mapCategory() != MapCategory.ARCADE) {

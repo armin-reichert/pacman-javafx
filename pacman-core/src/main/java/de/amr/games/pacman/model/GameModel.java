@@ -76,7 +76,6 @@ public abstract class GameModel {
     public abstract void           activateNextBonus();
 
     public abstract int            intermissionNumberAfterLevel();
-    public abstract int            numFlashes();
 
     public abstract float          ghostAttackSpeed(Ghost ghost);
     public abstract float          ghostFrightenedSpeed(Ghost ghost);
@@ -131,11 +130,11 @@ public abstract class GameModel {
     }
 
     public void startNewGame() {
-        createLevel(1);
+        createNormalLevel(1);
         publishGameEvent(GameEventType.GAME_STARTED);
     }
 
-    public void createLevel(int levelNumber) {
+    public void createNormalLevel(int levelNumber) {
         setDemoLevel(false);
         level = new GameLevel(levelNumber);
         configureNormalLevel();
@@ -146,7 +145,7 @@ public abstract class GameModel {
     }
 
     public void startNextLevel() {
-        createLevel(level.number + 1);
+        createNormalLevel(level.number + 1);
         startLevel();
         showGuys();
     }

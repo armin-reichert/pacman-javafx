@@ -208,8 +208,9 @@ public class GameLevel3D {
         final AssetStorage assets = context.assets();
 
         pac3D = createPac3D(variant, assets, context.sound(), level.pac());
-        ghosts3D = level.ghosts().map(ghost -> createMutableGhost3D(assets, assetPrefix(variant), ghost,
-                game.numFlashes())).toList();
+        ghosts3D = level.ghosts()
+            .map(ghost -> createMutableGhost3D(assets, assetPrefix(variant), ghost, level.numFlashes()))
+            .toList();
         livesCounter3D = createLivesCounter3D(variant, assets, game.canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCounterPy);
         message3D = createMessage3D(assets);

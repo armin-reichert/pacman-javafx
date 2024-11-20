@@ -265,6 +265,7 @@ public class MsPacManGame extends GameModel {
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
         levelCounterEnabled = level.number < 8;
+        level.setNumFlashes(levelData(level.number).numFlashes());
         level.setMapConfig(getMapConfig(level.number));
         WorldMap worldMap = (WorldMap) level.mapConfig().get("worldMap");
         createWorldAndPopulation(worldMap);
@@ -288,11 +289,6 @@ public class MsPacManGame extends GameModel {
         level.pac().setAutopilot(demoLevelSteering);
         level.pac().setUsingAutopilot(true);
         level.pac().setImmune(false);
-    }
-
-    @Override
-    public int numFlashes() {
-        return level != null ? levelData(level.number).numFlashes() : 0;
     }
 
     @Override
@@ -326,8 +322,9 @@ public class MsPacManGame extends GameModel {
 
     @Override
     public long pacPowerFadingTicks() {
-        // ghost flashing animation has frame length 14 so one full flash takes 28 ticks
-        return numFlashes() * 28L;
+        //TODO find better solution.
+        // Ghost flashing animation has frame length 14 so one full flash takes 28 ticks
+        return level != null ? level.numFlashes() * 28L : 0;
     }
 
     @Override
@@ -474,8 +471,8 @@ public class MsPacManGame extends GameModel {
      * Bonus symbol enters the world at some tunnel entry, walks to the house entry, takes a tour around the
      * house and finally leaves the world through a tunnel on the opposite side of the world.
      * <p>
-     * According to https://strategywiki.org/wiki/Ms._Pac-Man/Walkthrough, some maps
-     * have a fixed entry tile for the bonus.
+     * According to <a href="https://strategywiki.org/wiki/Ms._Pac-Man/Walkthrough">this</a> Wiki,
+     * some maps have a fixed entry tile for the bonus.
      * TODO: Not sure if that's correct.
      *
      * <p>

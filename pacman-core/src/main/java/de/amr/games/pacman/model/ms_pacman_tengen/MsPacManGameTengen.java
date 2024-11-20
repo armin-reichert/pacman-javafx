@@ -261,7 +261,7 @@ public class MsPacManGameTengen extends GameModel {
 
     @Override
     public long pacPowerFadingTicks() {
-        return numFlashes() * 28L; // TODO check in emulator
+        return level != null ? level.numFlashes() * 28L : 0; // TODO check in emulator
     }
 
     @Override
@@ -332,7 +332,7 @@ public class MsPacManGameTengen extends GameModel {
     @Override
     public void startNewGame() {
         reset();
-        createLevel(startLevelNumber);
+        createNormalLevel(startLevelNumber);
         if (startLevelNumber > 1) {
             levelCounter.clear();
             for (int number = 1; number <= Math.min(startLevelNumber, LEVEL_COUNTER_MAX_SIZE); ++number) {
@@ -406,6 +406,7 @@ public class MsPacManGameTengen extends GameModel {
     @Override
     public void configureNormalLevel() {
         levelCounterEnabled = level.number < 8;
+        level.setNumFlashes(5); // TODO check this
         level.setMapConfig(mapConfig.getMapConfig(mapCategory, level.number));
         WorldMap worldMap = (WorldMap) level.mapConfig().get("worldMap");
         createWorldAndPopulation(worldMap);
@@ -422,6 +423,7 @@ public class MsPacManGameTengen extends GameModel {
     public void configureDemoLevel() {
         levelCounterEnabled = false;
         demoLevelSteering.init();
+        level.setNumFlashes(5); // TODO check this
         level.setMapConfig(mapConfig.getMapConfig(mapCategory, level.number));
         WorldMap worldMap = (WorldMap) level.mapConfig().get("worldMap");
         createWorldAndPopulation(worldMap);
@@ -439,12 +441,6 @@ public class MsPacManGameTengen extends GameModel {
         level.pac().setAutopilot(demoLevelSteering);
         level.pac().setUsingAutopilot(true);
         level.pac().setImmune(false);
-    }
-
-    @Override
-    public int numFlashes() {
-        //TODO need to find out what Tengen really does
-        return 5;
     }
 
     @Override
