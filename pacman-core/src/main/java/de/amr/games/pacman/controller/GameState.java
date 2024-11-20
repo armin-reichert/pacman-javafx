@@ -37,11 +37,6 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();
             game.reset();
-            //TODO ugly
-            if (GameController.it().currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                MsPacManGameTengen tengenGame = (MsPacManGameTengen) game;
-                tengenGame.resetOptions();
-            }
             game.levelCounter().clear();
         }
 
@@ -169,6 +164,10 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             GameLevel level = game.level().orElseThrow();
+            if (gameController().currentGameVariant() == GameVariant.MS_PACMAN_TENGEN && game.isDemoLevel()) {
+                enterState(SHOWING_CREDITS);
+                return;
+            }
             if (timer.hasExpired()) {
                 setProperty("mazeFlashing", false);
                 if (game.isDemoLevel()) { // just in case: if demo level is completed, go back to intro scene
@@ -300,10 +299,11 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
-                if (game instanceof MsPacManGameTengen msPacManGameTengen) {
+                if (gameController().currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                     if (game.isDemoLevel()) {
                         enterState(SHOWING_CREDITS);
                     } else {
+                        var msPacManGameTengen = (MsPacManGameTengen) game;
                         if (msPacManGameTengen.startLevelNumber() >= 10 && msPacManGameTengen.numContinues() > 0) {
                             msPacManGameTengen.subtractOneContinue();
                             enterState(WAITING_FOR_START);
@@ -525,6 +525,8 @@ public enum GameState implements FsmState<GameModel> {
         }
         return propertyMap;
     }
+
+    GameController gameController() { return GameController.it(); }
 
     @SuppressWarnings("unchecked")
     public <T> T getProperty(String key) {

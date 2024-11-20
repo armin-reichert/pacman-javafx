@@ -144,6 +144,7 @@ public class MsPacManGameTengen extends GameModel {
         setInitialLives(3);
         simulateOverflowBug = false; //TODO check this
         reset();
+        resetOptions();
     }
 
     @Override

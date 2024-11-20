@@ -84,7 +84,7 @@ public class OptionsScene extends GameScene2D {
     @Override
     public void update() {
         if (idleTicks == 25*60) { // TODO check exact time in disassembly
-            context.gameController().changeState(GameState.INTRO);
+            context.gameController().changeState(GameState.BOOT);
             return;
         }
         idleTicks += 1;
