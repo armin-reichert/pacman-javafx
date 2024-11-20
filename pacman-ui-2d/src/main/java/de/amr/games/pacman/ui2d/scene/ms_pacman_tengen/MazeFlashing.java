@@ -67,14 +67,14 @@ public class MazeFlashing {
         if (startTick == -1) { // not running yet
             startTick = t;
             currentIndex = 0;
-            Logger.info("Maze flashing started at tick {}", startTick);
+            Logger.debug("Maze flashing started at tick {}", startTick);
         }
         // single flash phase complete?
         long flashingTicksSoFar = t - startTick;
         if (flashingTicksSoFar > 0 && flashingTicksSoFar % phaseTicks == 0) {
             if (currentIndex < colorMaps.size() - 1) {
                 ++currentIndex;
-                Logger.info("Maze flashing index changes to {} at tick {}", currentIndex, t);
+                Logger.debug("Maze flashing index changes to {} at tick {}", currentIndex, t);
             }
         }
         highlightPhase = flashingTicksSoFar % (2 * phaseTicks) == 1;
