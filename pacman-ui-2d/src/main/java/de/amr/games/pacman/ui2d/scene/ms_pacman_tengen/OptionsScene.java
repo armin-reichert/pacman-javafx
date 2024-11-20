@@ -7,10 +7,10 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES;
-import de.amr.games.pacman.model.ms_pacman_tengen.PacBooster;
 import de.amr.games.pacman.model.ms_pacman_tengen.Difficulty;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
+import de.amr.games.pacman.model.ms_pacman_tengen.PacBooster;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -19,18 +19,17 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_SIZE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.nesPaletteColor;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.*;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet.CONTINUES_SPRITES;
 
 /**
  * Options scene for Ms. Pac-Man Tengen.
  *
  * <p></p>The highscore is cleared if player type (1 player, 2 players etc), map category or difficulty are
- * changed, see https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/MsPacManTENGENDis.asm:9545.
+ * changed, see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/MsPacManTENGENDis.asm:9545">disassembly</a>.
  *
  * @author Armin Reichert
  */
@@ -241,57 +240,57 @@ public class OptionsScene extends GameScene2D {
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), size().x(), y);
 
         y += 28;
-        renderer.drawText("MS PAC-MAN OPTIONS", LABEL_COLOR, scaledFont, COL_LABEL + 3 * TS, y);
+        r.drawText("MS PAC-MAN OPTIONS", LABEL_COLOR, scaledFont, COL_LABEL + 3 * TS, y);
 
         // Players (not implemented)
         y += 3 * TS;
-        drawArrowIfSelected(renderer, OPTION_PLAYERS, y, scaledFont);
-        renderer.drawText("TYPE", LABEL_COLOR, scaledFont, COL_LABEL, y);
-        renderer.drawText(":", LABEL_COLOR, scaledFont, COL_LABEL + 4 * TS + 4, y);
-        renderer.drawText("1 PLAYER", VALUE_COLOR, scaledFont, COL_LABEL + 6 * TS  , y);
+        drawArrowIfSelected(r, OPTION_PLAYERS, y, scaledFont);
+        r.drawText("TYPE", LABEL_COLOR, scaledFont, COL_LABEL, y);
+        r.drawText(":", LABEL_COLOR, scaledFont, COL_LABEL + 4 * TS + 4, y);
+        r.drawText("1 PLAYER", VALUE_COLOR, scaledFont, COL_LABEL + 6 * TS  , y);
 
         // Pac-Booster
         y += 3 * TS;
-        drawArrowIfSelected(renderer, OPTION_PAC_BOOSTER, y, scaledFont);
-        renderer.drawText("PAC BOOSTER", LABEL_COLOR, scaledFont, COL_LABEL, y);
-        renderer.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
+        drawArrowIfSelected(r, OPTION_PAC_BOOSTER, y, scaledFont);
+        r.drawText("PAC BOOSTER", LABEL_COLOR, scaledFont, COL_LABEL, y);
+        r.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
         String pacBoosterText = switch (game.pacBooster()) {
             case OFF -> "OFF";
             case ALWAYS_ON -> "ALWAYS ON";
             case USE_A_OR_B -> "USE A OR B";
         };
-        renderer.drawText(pacBoosterText, VALUE_COLOR, scaledFont, COL_VALUE, y);
+        r.drawText(pacBoosterText, VALUE_COLOR, scaledFont, COL_VALUE, y);
 
         // Game difficulty
         y += 3 * TS;
-        drawArrowIfSelected(renderer, OPTION_DIFFICULTY, y, scaledFont);
-        renderer.drawText("GAME DIFFICULTY", LABEL_COLOR, scaledFont, COL_LABEL, y);
-        renderer.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
-        renderer.drawText(game.difficulty().name(), VALUE_COLOR, scaledFont, COL_VALUE, y);
+        drawArrowIfSelected(r, OPTION_DIFFICULTY, y, scaledFont);
+        r.drawText("GAME DIFFICULTY", LABEL_COLOR, scaledFont, COL_LABEL, y);
+        r.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
+        r.drawText(game.difficulty().name(), VALUE_COLOR, scaledFont, COL_VALUE, y);
 
         // Maze (type) selection
         y += 3 * TS;
-        drawArrowIfSelected(renderer, OPTION_MAZE_SELECTION, y, scaledFont);
-        renderer.drawText("MAZE SELECTION", LABEL_COLOR, scaledFont, COL_LABEL, y);
-        renderer.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
-        renderer.drawText(game.mapCategory().name(), VALUE_COLOR, scaledFont, COL_VALUE, y);
+        drawArrowIfSelected(r, OPTION_MAZE_SELECTION, y, scaledFont);
+        r.drawText("MAZE SELECTION", LABEL_COLOR, scaledFont, COL_LABEL, y);
+        r.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
+        r.drawText(game.mapCategory().name(), VALUE_COLOR, scaledFont, COL_VALUE, y);
 
         // Starting level number
         y += 3 * TS;
-        drawArrowIfSelected(renderer, OPTION_STARTING_LEVEL, y, scaledFont);
-        renderer.drawText("STARTING LEVEL", LABEL_COLOR, scaledFont, COL_LABEL, y);
-        renderer.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
-        renderer.drawText(String.valueOf(game.startLevelNumber()), VALUE_COLOR, scaledFont, COL_VALUE, y);
+        drawArrowIfSelected(r, OPTION_STARTING_LEVEL, y, scaledFont);
+        r.drawText("STARTING LEVEL", LABEL_COLOR, scaledFont, COL_LABEL, y);
+        r.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
+        r.drawText(String.valueOf(game.startLevelNumber()), VALUE_COLOR, scaledFont, COL_VALUE, y);
         if (game.numContinues() < 4) {
-            renderer.drawSpriteScaled(CONTINUES_SPRITES[game.numContinues()], COL_VALUE + 3 * TS, y - TS);
+            r.drawSpriteScaled(CONTINUES_SPRITES[game.numContinues()], COL_VALUE + 3 * TS, y - TS);
         }
 
         y += 3 * TS;
-        renderer.drawText("MOVE ARROW WITH JOYPAD", LABEL_COLOR, scaledFont, 4 * TS,  y);
+        r.drawText("MOVE ARROW WITH JOYPAD", LABEL_COLOR, scaledFont, 4 * TS,  y);
         y += TS;
-        renderer.drawText("CHOOSE OPTIONS WITH A AND B", LABEL_COLOR, scaledFont, 2 * TS,  y);
+        r.drawText("CHOOSE OPTIONS WITH A AND B", LABEL_COLOR, scaledFont, 2 * TS,  y);
         y += TS;
-        renderer.drawText("PRESS START TO START GAME", LABEL_COLOR, scaledFont, 3 * TS,  y);
+        r.drawText("PRESS START TO START GAME", LABEL_COLOR, scaledFont, 3 * TS,  y);
 
         y += 4;
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), size().x(), y);
