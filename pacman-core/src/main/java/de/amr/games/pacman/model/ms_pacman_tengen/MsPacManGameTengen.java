@@ -99,6 +99,15 @@ public class MsPacManGameTengen extends GameModel {
     private static final String HIGH_SCORE_FILENAME = "highscore-ms_pacman_tengen.xml";
     private static final String MAPS_ROOT = "/de/amr/games/pacman/maps/ms_pacman_tengen/";
 
+    private static int intermissionNumberAfterLevel(int number) {
+        return switch (number) {
+            case 2 -> 1;
+            case 5 -> 2;
+            case 9, 13, 17 -> 3;
+            default -> 0;
+        };
+    }
+
     private final MsPacManGameTengenMapConfig mapConfig;
 
     private MapCategory mapCategory;
@@ -349,11 +358,11 @@ public class MsPacManGameTengen extends GameModel {
         if (pacBooster == PacBooster.ALWAYS_ON) {
             activatePacBooster(true);
         }
-        level.ghosts().forEach(ghost -> {
+        level.ghosts().forEach(ghost ->
             ghost.setBaseSpeed(ghostBaseSpeedInLevel(levelNumber)
                 + ghostDifficultySpeedDelta(difficulty)
-                + ghostIDSpeedDelta(ghost.id()));
-        });
+                + ghostIDSpeedDelta(ghost.id()))
+        );
     }
 
     @Override
@@ -407,6 +416,7 @@ public class MsPacManGameTengen extends GameModel {
     public void configureNormalLevel() {
         levelCounterEnabled = level.number < 8;
         level.setNumFlashes(5); // TODO check this
+        level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
         level.setMapConfig(mapConfig.getMapConfig(mapCategory, level.number));
         WorldMap worldMap = (WorldMap) level.mapConfig().get("worldMap");
         createWorldAndPopulation(worldMap);
@@ -414,9 +424,9 @@ public class MsPacManGameTengen extends GameModel {
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // ghosts inside house start at floor of house
-        level.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost -> {
-            level.world().setGhostPosition(ghost.id(), level.world().ghostPosition(ghost.id()).plus(0, HTS));
-        });
+        level.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost ->
+            level.world().setGhostPosition(ghost.id(), level.world().ghostPosition(ghost.id()).plus(0, HTS))
+        );
     }
 
     @Override
@@ -424,15 +434,16 @@ public class MsPacManGameTengen extends GameModel {
         levelCounterEnabled = false;
         demoLevelSteering.init();
         level.setNumFlashes(5); // TODO check this
+        level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
         level.setMapConfig(mapConfig.getMapConfig(mapCategory, level.number));
         WorldMap worldMap = (WorldMap) level.mapConfig().get("worldMap");
         createWorldAndPopulation(worldMap);
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // ghosts inside house start at floor of house
-        level.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost -> {
-            level.world().setGhostPosition(ghost.id(), level.world().ghostPosition(ghost.id()).plus(0, HTS));
-        });
+        level.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost ->
+            level.world().setGhostPosition(ghost.id(), level.world().ghostPosition(ghost.id()).plus(0, HTS))
+        );
         setDemoLevelBehavior();
     }
 
@@ -441,17 +452,6 @@ public class MsPacManGameTengen extends GameModel {
         level.pac().setAutopilot(demoLevelSteering);
         level.pac().setUsingAutopilot(true);
         level.pac().setImmune(false);
-    }
-
-    @Override
-    public int intermissionNumberAfterLevel() {
-        return switch (level.number) {
-            case 2 -> 1;
-            case 5 -> 2;
-            case 9, 13 -> 3;
-            case MAX_LEVEL_NUMBER -> 4;
-            default -> 0;
-        };
     }
 
     @Override

@@ -63,7 +63,7 @@ public class MsPacManGameTengenSceneConfig implements GameSceneConfig {
             case WAITING_FOR_START  -> "StartScene";
             case SHOWING_CREDITS    -> "ShowingCredits";
             case INTRO              -> "IntroScene";
-            case INTERMISSION       -> "CutScene" + context.game().intermissionNumberAfterLevel();
+            case INTERMISSION       -> "CutScene" + context.level().intermissionNumber();
             case TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");
             default                 -> "PlayScene2D";
         };

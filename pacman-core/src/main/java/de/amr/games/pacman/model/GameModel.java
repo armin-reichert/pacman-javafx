@@ -75,8 +75,6 @@ public abstract class GameModel {
     public abstract void           onPacKilled();
     public abstract void           activateNextBonus();
 
-    public abstract int            intermissionNumberAfterLevel();
-
     public abstract float          ghostAttackSpeed(Ghost ghost);
     public abstract float          ghostFrightenedSpeed(Ghost ghost);
     public abstract float          ghostSpeedInsideHouse(Ghost ghost);

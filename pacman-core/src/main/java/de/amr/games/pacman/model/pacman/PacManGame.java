@@ -83,6 +83,15 @@ public class PacManGame extends GameModel {
         /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
     };
 
+    protected static int intermissionNumberAfterLevel(int number) {
+        return switch (number) {
+            case 2 -> 1;
+            case 5 -> 2;
+            case 9, 13, 17 -> 3;
+            default -> 0;
+        };
+    }
+
     // Pac-Man game specific animation IDs
     public static final String ANIM_PAC_BIG          = "big_pacman";
     public static final String ANIM_BLINKY_DAMAGED   = "damaged";
@@ -221,16 +230,6 @@ public class PacManGame extends GameModel {
         publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
     }
 
-    @Override
-    public int intermissionNumberAfterLevel() {
-        return switch (level.number) {
-            case 2 -> 1;
-            case 5 -> 2;
-            case 9, 13, 17 -> 3;
-            default -> 0;
-        };
-    }
-
     protected void populateLevel(WorldMap worldMap) {
         GameWorld world = new GameWorld(worldMap);
         world.createArcadeHouse(HOUSE_X, HOUSE_Y);
@@ -266,6 +265,7 @@ public class PacManGame extends GameModel {
         levelCounterEnabled = true;
         level.setMapConfig(mapConfig);
         level.setNumFlashes(levelData(level.number).numFlashes());
+        level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
         WorldMap worldMap = (WorldMap) mapConfig.get("worldMap");
         populateLevel(worldMap);
         level.pac().setAutopilot(autopilot);
@@ -277,6 +277,7 @@ public class PacManGame extends GameModel {
             ghost.setSpecialTerrainTiles(oneWayDownTiles);
         });
     }
+
 
     @Override
     public void configureDemoLevel() {

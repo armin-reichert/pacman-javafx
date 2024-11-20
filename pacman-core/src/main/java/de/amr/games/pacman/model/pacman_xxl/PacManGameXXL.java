@@ -87,6 +87,7 @@ public class PacManGameXXL extends PacManGame {
     @Override
     public void configureNormalLevel() {
         level.setNumFlashes(levelData(level.number).numFlashes());
+        level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
         Map<String, Object> mapConfig = createMapConfig(level.number);
         level.setMapConfig(mapConfig);
         WorldMap worldMap = (WorldMap) mapConfig.get("worldMap");

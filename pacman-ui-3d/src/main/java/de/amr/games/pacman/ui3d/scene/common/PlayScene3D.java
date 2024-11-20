@@ -555,7 +555,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     private void playLevelCompleteAnimation(GameLevel level) {
         context.gameState().timer().resetIndefiniteTime(); // block game state until animation has finished
-        levelCompleteAnimation = context.game().intermissionNumberAfterLevel() != 0
+        levelCompleteAnimation = level.intermissionNumber() != 0
             ? levelCompleteAnimationBeforeIntermission(level.numFlashes())
             : levelCompleteAnimation(level.numFlashes());
         levelCompleteAnimation.setDelay(Duration.seconds(1.0));

@@ -32,6 +32,7 @@ public class GameLevel {
     private long startTime;
     private int killedGhostCount;
     private int numFlashes;
+    private int intermissionNumber;
 
     private Map<String, Object> mapConfig;
     private GameWorld world;
@@ -87,6 +88,14 @@ public class GameLevel {
 
     public int numFlashes() {
         return numFlashes;
+    }
+
+    public void setIntermissionNumber(int number) {
+        this.intermissionNumber = number;
+    }
+
+    public int intermissionNumber() {
+        return intermissionNumber;
     }
 
     public void setPac(Pac pac) {

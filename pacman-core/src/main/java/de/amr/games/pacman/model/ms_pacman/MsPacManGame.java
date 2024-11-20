@@ -87,6 +87,15 @@ public class MsPacManGame extends GameModel {
         /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
     };
 
+    private static int intermissionNumberAfterLevel(int number) {
+        return switch (number) {
+            case 2 -> 1;
+            case 5 -> 2;
+            case 9, 13, 17 -> 3;
+            default -> 0;
+        };
+    }
+
     /*
      * These numbers are from a conversation with @damselindis on Reddit.
      *
@@ -221,16 +230,6 @@ public class MsPacManGame extends GameModel {
         return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
     }
 
-    @Override
-    public int intermissionNumberAfterLevel() {
-        return switch (level.number) {
-            case 2 -> 1;
-            case 5 -> 2;
-            case 9, 13, 17 -> 3;
-            default -> 0;
-        };
-    }
-
     protected void createWorldAndPopulation(WorldMap map) {
         level.setWorld(new GameWorld(map));
         level.world().createArcadeHouse(HOUSE_X, HOUSE_Y);
@@ -265,6 +264,7 @@ public class MsPacManGame extends GameModel {
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
         levelCounterEnabled = level.number < 8;
+        level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
         level.setNumFlashes(levelData(level.number).numFlashes());
         level.setMapConfig(getMapConfig(level.number));
         WorldMap worldMap = (WorldMap) level.mapConfig().get("worldMap");
