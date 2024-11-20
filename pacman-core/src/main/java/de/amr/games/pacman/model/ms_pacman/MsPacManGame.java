@@ -9,6 +9,7 @@ import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.*;
@@ -470,10 +471,15 @@ public class MsPacManGame extends GameModel {
     }
 
     /**
-     * Bonus symbol enters the world at a random portal, walks to the house entry, takes a tour around the
-     * house and finally leaves the world through a random portal on the opposite side of the world.
+     * Bonus symbol enters the world at some tunnel entry, walks to the house entry, takes a tour around the
+     * house and finally leaves the world through a tunnel on the opposite side of the world.
      * <p>
-     * Note: This is not the exact behavior from the original Arcade game.
+     * According to https://strategywiki.org/wiki/Ms._Pac-Man/Walkthrough, some maps
+     * have a fixed entry tile for the bonus.
+     * TODO: Not sure if that's correct.
+     *
+     * <p>
+     * Note: This is not the exact behavior from the original Arcade game that uses fruit paths.
      **/
     @Override
     public void activateNextBonus() {
@@ -483,30 +489,51 @@ public class MsPacManGame extends GameModel {
         }
         level.advanceNextBonus();
 
-        boolean leftToRight = RND.nextBoolean();
-        Vector2i houseEntry = tileAt(level.world().houseEntryPosition());
-        Vector2i houseEntryOpposite = houseEntry.plus(0, level.world().houseSize().y() + 1);
         List<Portal> portals = level.world().portals().toList();
         if (portals.isEmpty()) {
-            return; // should not happen but...
+            return; // should not happen
         }
-        Portal entryPortal = portals.get(RND.nextInt(portals.size()));
-        Portal exitPortal  = portals.get(RND.nextInt(portals.size()));
-        List<NavPoint> route = Stream.of(
-            leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd(),
-            houseEntry,
-            houseEntryOpposite,
-            houseEntry,
-            leftToRight ? exitPortal.rightTunnelEnd().plus(1, 0) : exitPortal.leftTunnelEnd().minus(1, 0)
-        ).map(NavPoint::np).toList();
+
+        Vector2i entryTile, exitTile;
+        boolean crossMazeLeftToRight;
+
+        TileMap terrainMap = level.world().map().terrain();
+        if (terrainMap.hasProperty("pos_bonus")) {
+            // use entry tile stored in terrain map
+            entryTile = terrainMap.getTileProperty("pos_bonus", null);
+            if (entryTile.x() == 0) {
+                // start tile is at left maze border
+                exitTile = portals.get(RND.nextInt(portals.size())).rightTunnelEnd().plus(1, 0);
+                crossMazeLeftToRight = true;
+            } else {
+                // start tile is at right maze border
+                exitTile = portals.get(RND.nextInt(portals.size())).leftTunnelEnd().minus(1, 0);
+                crossMazeLeftToRight = false;
+            }
+        }
+        else { // choose random portals for entry and exit
+            crossMazeLeftToRight = RND.nextBoolean();
+            if (crossMazeLeftToRight) {
+                entryTile = portals.get(RND.nextInt(portals.size())).leftTunnelEnd();
+                exitTile  = portals.get(RND.nextInt(portals.size())).rightTunnelEnd().plus(1, 0);
+            } else {
+                entryTile = portals.get(RND.nextInt(portals.size())).rightTunnelEnd();
+                exitTile = portals.get(RND.nextInt(portals.size())).leftTunnelEnd().minus(1, 0);
+            }
+        }
+
+        Vector2i houseEntry = tileAt(level.world().houseEntryPosition());
+        Vector2i behindHouse = houseEntry.plus(0, level.world().houseSize().y() + 1);
+        List<NavPoint> route = Stream.of(entryTile, houseEntry, behindHouse, houseEntry, exitTile).map(NavPoint::np).toList();
 
         byte symbol = level.bonusSymbol(level.nextBonusIndex());
         var movingBonus = new MovingBonus(level.world(), symbol, BONUS_VALUE_FACTORS[symbol] * 100);
-        movingBonus.setRoute(route, leftToRight);
-        movingBonus.setBaseSpeed(1.25f);
-        Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
-        level.setBonus(movingBonus);
         movingBonus.setEdible(TickTimer.INDEFINITE);
+        movingBonus.setRoute(route, crossMazeLeftToRight);
+        movingBonus.setBaseSpeed(1.25f);
+        Logger.info("Moving bonus created, route: {} ({})", route, crossMazeLeftToRight ? "left to right" : "right to left");
+
+        level.setBonus(movingBonus);
         publishGameEvent(GameEventType.BONUS_ACTIVATED, movingBonus.entity().tile());
     }
 
