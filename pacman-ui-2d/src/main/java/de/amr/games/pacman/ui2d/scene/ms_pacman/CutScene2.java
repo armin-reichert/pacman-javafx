@@ -21,6 +21,7 @@ import javafx.scene.paint.Color;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 
 /**
  * Intermission scene 2: "The chase".
@@ -85,12 +86,12 @@ public class CutScene2 extends GameScene2D {
     @Override
     public void drawSceneContent(GameRenderer renderer) {
         MsPacManGameRenderer r = (MsPacManGameRenderer) renderer;
-        String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
+        String assetPrefix = assetPrefix(context.gameVariant());
         Color color = context.assets().color(assetPrefix + ".color.clapperboard");
-        r.drawClapperBoard(renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
-        renderer.drawAnimatedEntity(msPacMan);
-        renderer.drawAnimatedEntity(pacMan);
-        renderer.drawLevelCounter(context, size());
+        r.drawClapperBoard(r.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
+        r.drawAnimatedEntity(msPacMan);
+        r.drawAnimatedEntity(pacMan);
+        r.drawLevelCounter(context, size());
     }
 
     private class SceneController {

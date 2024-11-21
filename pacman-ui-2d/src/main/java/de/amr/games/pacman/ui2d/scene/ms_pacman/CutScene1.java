@@ -23,6 +23,8 @@ import javafx.scene.paint.Color;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSpriteSheet.HEART_SPRITE;
 
 /**
  * Intermission scene 1: "They meet".
@@ -101,15 +103,15 @@ public class CutScene1 extends GameScene2D {
     @Override
     public void drawSceneContent(GameRenderer renderer) {
         MsPacManGameRenderer r = (MsPacManGameRenderer) renderer;
-        String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
+        String assetPrefix = assetPrefix(context.gameVariant());
         Color color = context.assets().color(assetPrefix + ".color.clapperboard");
-        r.drawClapperBoard(renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
-        renderer.drawAnimatedEntity(msPac);
-        renderer.drawAnimatedEntity(pacMan);
-        renderer.drawAnimatedEntity(inky);
-        renderer.drawAnimatedEntity(pinky);
-        renderer.drawEntitySprite(heart, MsPacManGameSpriteSheet.HEART_SPRITE);
-        renderer.drawLevelCounter(context, size());
+        r.drawClapperBoard(r.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
+        r.drawAnimatedEntity(msPac);
+        r.drawAnimatedEntity(pacMan);
+        r.drawAnimatedEntity(inky);
+        r.drawAnimatedEntity(pinky);
+        r.drawEntitySprite(heart, HEART_SPRITE);
+        r.drawLevelCounter(context, size());
     }
 
     private class SceneController {

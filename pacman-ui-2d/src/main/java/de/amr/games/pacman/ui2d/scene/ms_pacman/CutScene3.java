@@ -12,7 +12,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman.MsPacManGame;
-import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
@@ -22,6 +21,7 @@ import javafx.scene.paint.Color;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 
 /**
  * Intermission scene 3: "Junior".
@@ -94,14 +94,14 @@ public class CutScene3 extends GameScene2D {
     @Override
     public void drawSceneContent(GameRenderer renderer) {
         MsPacManGameRenderer r = (MsPacManGameRenderer) renderer;
-        String assetPrefix = GameAssets2D.assetPrefix(context.gameVariant());
+        String assetPrefix = assetPrefix(context.gameVariant());
         Color color = context.assets().color(assetPrefix + ".color.clapperboard");
-        r.drawClapperBoard(renderer.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
-        renderer.drawAnimatedEntity(msPacMan);
-        renderer.drawAnimatedEntity(pacMan);
-        renderer.drawEntitySprite(stork, storkAnimation.currentSprite());
-        renderer.drawEntitySprite(bag, bagOpen ? MsPacManGameSpriteSheet.JUNIOR_PAC_SPRITE : MsPacManGameSpriteSheet.BLUE_BAG_SPRITE);
-        renderer.drawLevelCounter(context, size());
+        r.drawClapperBoard(r.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
+        r.drawAnimatedEntity(msPacMan);
+        r.drawAnimatedEntity(pacMan);
+        r.drawEntitySprite(stork, storkAnimation.currentSprite());
+        r.drawEntitySprite(bag, bagOpen ? MsPacManGameSpriteSheet.JUNIOR_PAC_SPRITE : MsPacManGameSpriteSheet.BLUE_BAG_SPRITE);
+        r.drawLevelCounter(context, size());
     }
 
     private class SceneController {
