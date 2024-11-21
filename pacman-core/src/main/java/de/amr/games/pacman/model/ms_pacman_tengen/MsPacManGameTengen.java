@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.model.actors.Animations.ANIM_MS_PACMAN_BOOSTER;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 import static de.amr.games.pacman.model.ms_pacman_tengen.SpeedConfiguration.*;
 
@@ -36,15 +37,6 @@ public class MsPacManGameTengen extends GameModel {
 
     public static final byte MIN_LEVEL_NUMBER = 1;
     public static final byte MAX_LEVEL_NUMBER = 32;
-
-    // Animation IDs specific to this game
-    public static final String ANIM_MS_PACMAN_BOOSTER = "ms_pacman_booster";
-    public static final String ANIM_MR_PACMAN_BOOSTER = "pacman_booster";
-    public static final String ANIM_MS_PACMAN_WAVING_HAND = "ms_pacman_waving_hand";
-    public static final String ANIM_MR_PACMAN_WAVING_HAND = "mr_pacman_waving_hand";
-    public static final String ANIM_MS_PACMAN_TURNING_AWAY = "ms_pacman_turning_away";
-    public static final String ANIM_MR_PACMAN_TURNING_AWAY = "mr_pacman_turning_away";
-    public static final String ANIM_JUNIOR_PACMAN = "junior";
 
     static final byte PELLET_VALUE = 10;
     static final byte ENERGIZER_VALUE = 50;

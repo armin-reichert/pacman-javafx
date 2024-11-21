@@ -37,8 +37,7 @@ import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.RectArea.rect;
-import static de.amr.games.pacman.model.actors.Animations.ANIM_MR_PACMAN_MUNCHING;
-import static de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen.*;
+import static de.amr.games.pacman.model.actors.Animations.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static java.util.function.Predicate.not;
 
