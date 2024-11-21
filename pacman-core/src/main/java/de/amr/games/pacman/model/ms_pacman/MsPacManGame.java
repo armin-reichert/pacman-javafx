@@ -226,11 +226,11 @@ public class MsPacManGame extends GameModel {
         return 150;
     }
 
-    protected LevelData levelData(int levelNumber) {
+    private LevelData levelData(int levelNumber) {
         return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
     }
 
-    protected void createWorldAndPopulation(WorldMap worldMap) {
+    private void createWorldAndPopulation(WorldMap worldMap) {
         GameWorld world = new GameWorld(worldMap);
         world.createArcadeHouse(HOUSE_X, HOUSE_Y);
 
@@ -413,7 +413,7 @@ public class MsPacManGame extends GameModel {
         level.pac().die();
     }
 
-    protected void setCruiseElroyEnabled(boolean enabled) {
+    private void setCruiseElroyEnabled(boolean enabled) {
         if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
             cruiseElroy = (byte) -cruiseElroy;
         }
