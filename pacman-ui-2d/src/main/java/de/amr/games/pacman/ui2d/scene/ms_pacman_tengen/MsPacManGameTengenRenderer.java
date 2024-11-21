@@ -33,6 +33,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
+import java.util.EnumMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -45,6 +46,18 @@ import static java.util.function.Predicate.not;
  * @author Armin Reichert
  */
 public class MsPacManGameTengenRenderer implements GameRenderer {
+
+    public static EnumMap<NES_ColorScheme, Map<String, String>> COLOR_MAPS = new EnumMap<>(NES_ColorScheme.class);
+    static {
+        for (var nesColorScheme : NES_ColorScheme.values()) {
+            COLOR_MAPS.put(nesColorScheme, Map.of(
+                "fill",   nesColorScheme.fillColor(),
+                "stroke", nesColorScheme.strokeColor(),
+                "door",   nesColorScheme.strokeColor(),
+                "pellet", nesColorScheme.pelletColor()
+            ));
+        }
+    }
 
     // Strange map #15 (level 32) has 3 different images to create an animation effect
     // Image file "non_arcade_mazes.png"
@@ -109,7 +122,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             case STRANGE -> strangeMapSprite(mapConfig);
         };
 
-        Map<String, String> colorMap = MsPacManGameTengenMapConfig.COLOR_MAPS.get(nesColorScheme);
+        Map<String, String> colorMap = COLOR_MAPS.get(nesColorScheme);
         terrainRenderer.setMapBackgroundColor(bgColor);
         terrainRenderer.setWallStrokeColor(Color.valueOf(colorMap.get("stroke")));
         terrainRenderer.setWallFillColor(Color.valueOf(colorMap.get("fill")));

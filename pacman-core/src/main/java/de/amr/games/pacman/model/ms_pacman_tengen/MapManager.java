@@ -9,25 +9,18 @@ import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static de.amr.games.pacman.lib.Globals.inRange;
 import static de.amr.games.pacman.model.ms_pacman_tengen.MapCategory.*;
 import static de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme.*;
 
-public class MsPacManGameTengenMapConfig {
-
-    public static EnumMap<NES_ColorScheme, Map<String, String>> COLOR_MAPS = new EnumMap<>(NES_ColorScheme.class);
-    static {
-        for (var nesColorScheme : NES_ColorScheme.values()) {
-            COLOR_MAPS.put(nesColorScheme, Map.of(
-                "fill",   nesColorScheme.fillColor(),
-                "stroke", nesColorScheme.strokeColor(),
-                "door",   nesColorScheme.strokeColor(),
-                "pellet", nesColorScheme.pelletColor()
-            ));
-        }
-    }
+/**
+ * Package-private class encapsulating map management.
+ */
+class MapManager {
 
     private static List<WorldMap> createMaps(Class<?> loadingClass, String pattern, int maxNumber) {
         ArrayList<WorldMap> maps = new ArrayList<>();
@@ -53,7 +46,7 @@ public class MsPacManGameTengenMapConfig {
 
     private final List<WorldMap> arcadeMaps, miniMaps, bigMaps, strangeMaps;
 
-    public MsPacManGameTengenMapConfig(String mapsRoot) {
+    public MapManager(String mapsRoot) {
         arcadeMaps  = createMaps(getClass(), mapsRoot + "arcade%d.world", 4);
         miniMaps    = createMaps(getClass(), mapsRoot + "mini%d.world", 6);
         bigMaps     = createMaps(getClass(), mapsRoot + "big%d.world", 11);
@@ -66,14 +59,6 @@ public class MsPacManGameTengenMapConfig {
             case STRANGE -> strangeMapConfig(levelNumber);
             case MINI    -> miniMapConfig(levelNumber);
             case BIG     -> bigMapConfig(levelNumber);
-        };
-    }
-
-    public boolean isRandomColorSchemeUsed(MapCategory mapCategory, int levelNumber) {
-        return switch (mapCategory) {
-            case ARCADE -> false; // TODO check
-            case BIG, MINI -> inRange(levelNumber, 28, 31);
-            case STRANGE -> false; // TODO not true
         };
     }
 
@@ -124,10 +109,10 @@ public class MsPacManGameTengenMapConfig {
             case 25 -> cfg(MINI, miniMaps, 1, _10_20_28_GRAY_WHITE_YELLOW);
             case 26 -> cfg(MINI, miniMaps, 2, _04_20_20_VIOLET_WHITE_WHITE);
             case 27 -> cfg(MINI, miniMaps, 3, _04_20_20_VIOLET_WHITE_WHITE);
-            case 28 -> cfg(MINI, miniMaps, 4, NES_ColorScheme.random());
-            case 29 -> cfg(MINI, miniMaps, 5, NES_ColorScheme.random());
-            case 30 -> cfg(MINI, miniMaps, 2, NES_ColorScheme.random());
-            case 31 -> cfg(MINI, miniMaps, 3, NES_ColorScheme.random());
+            case 28 -> cfg(MINI, miniMaps, 4, NES_ColorScheme.random(), true);
+            case 29 -> cfg(MINI, miniMaps, 5, NES_ColorScheme.random(), true);
+            case 30 -> cfg(MINI, miniMaps, 2, NES_ColorScheme.random(), true);
+            case 31 -> cfg(MINI, miniMaps, 3, NES_ColorScheme.random(), true);
             case 32 -> cfg(MINI, miniMaps, 6, _15_25_20_RED_ROSE_WHITE);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
@@ -165,10 +150,10 @@ public class MsPacManGameTengenMapConfig {
             case 25 -> cfg(BIG, bigMaps,  8, _10_20_28_GRAY_WHITE_YELLOW);
             case 26 -> cfg(BIG, bigMaps, 10, _04_20_20_VIOLET_WHITE_WHITE);
             case 27 -> cfg(BIG, bigMaps,  8, _04_20_20_VIOLET_WHITE_WHITE);
-            case 28 -> cfg(BIG, bigMaps,  5, NES_ColorScheme.random());
-            case 29 -> cfg(BIG, bigMaps,  9, NES_ColorScheme.random());
-            case 30 -> cfg(BIG, bigMaps,  2, NES_ColorScheme.random());
-            case 31 -> cfg(BIG, bigMaps, 10, NES_ColorScheme.random());
+            case 28 -> cfg(BIG, bigMaps,  5, NES_ColorScheme.random(), true);
+            case 29 -> cfg(BIG, bigMaps,  9, NES_ColorScheme.random(), true);
+            case 30 -> cfg(BIG, bigMaps,  2, NES_ColorScheme.random(), true);
+            case 31 -> cfg(BIG, bigMaps, 10, NES_ColorScheme.random(), true);
             case 32 -> cfg(BIG, bigMaps, 11, _15_25_20_RED_ROSE_WHITE);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
@@ -203,10 +188,10 @@ public class MsPacManGameTengenMapConfig {
             case 25 -> cfg(BIG,     bigMaps,     10, _10_20_28_GRAY_WHITE_YELLOW);
             case 26 -> cfg(BIG,     bigMaps,      9, _03_20_20_VIOLET_WHITE_WHITE);
             case 27 -> cfg(STRANGE, strangeMaps, 14, _04_20_20_VIOLET_WHITE_WHITE);
-            case 28 -> cfg(MINI,    miniMaps,     5, NES_ColorScheme.random());
-            case 29 -> cfg(STRANGE, strangeMaps,  8, NES_ColorScheme.random());
-            case 30 -> cfg(MINI,    miniMaps,     4, NES_ColorScheme.random());
-            case 31 -> cfg(STRANGE, strangeMaps, 12, NES_ColorScheme.random());
+            case 28 -> cfg(MINI,    miniMaps,     5, NES_ColorScheme.random(), true);
+            case 29 -> cfg(STRANGE, strangeMaps,  8, NES_ColorScheme.random(), true);
+            case 30 -> cfg(MINI,    miniMaps,     4, NES_ColorScheme.random(), true);
+            case 31 -> cfg(STRANGE, strangeMaps, 12, NES_ColorScheme.random(), true);
             case 32 -> cfg(STRANGE, strangeMaps, 15, _15_25_20_RED_ROSE_WHITE);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
@@ -216,12 +201,17 @@ public class MsPacManGameTengenMapConfig {
         return extConfig;
     }
 
-    private Map<String, Object> cfg(MapCategory category, List<WorldMap> maps, int number, NES_ColorScheme colorScheme) {
+    private Map<String, Object> cfg(MapCategory category, List<WorldMap> maps, int number, NES_ColorScheme colorScheme, boolean randomColorScheme) {
         return Map.of(
             "mapCategory", category,
             "mapNumber", number,
-            "worldMap", new WorldMap(maps.get(number - 1)),
-            "nesColorScheme", colorScheme
+            "worldMap", new WorldMap(maps.get(number - 1)), //TODO is copy really needed?
+            "nesColorScheme", colorScheme,
+            "randomColorScheme", randomColorScheme
         );
+    }
+
+    private Map<String, Object> cfg(MapCategory category, List<WorldMap> maps, int number, NES_ColorScheme colorScheme) {
+        return cfg(category, maps, number, colorScheme, false);
     }
 }

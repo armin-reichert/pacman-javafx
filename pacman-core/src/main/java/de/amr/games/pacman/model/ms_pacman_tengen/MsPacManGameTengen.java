@@ -21,6 +21,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -100,8 +101,7 @@ public class MsPacManGameTengen extends GameModel {
         };
     }
 
-    private final MsPacManGameTengenMapConfig mapConfig;
-
+    private final MapManager mapManager;
     private MapCategory mapCategory;
     private Difficulty difficulty;
     private PacBooster pacBooster;
@@ -132,7 +132,7 @@ public class MsPacManGameTengen extends GameModel {
         super(userDir);
         scoreManager.setHighScoreFile(new File(userDir, HIGH_SCORE_FILENAME));
         huntingControl = new MsPacManGameTengenHuntingControl();
-        mapConfig = new MsPacManGameTengenMapConfig(MAPS_ROOT);
+        mapManager = new MapManager(MAPS_ROOT);
         setInitialLives(3);
         simulateOverflowBug = false; //TODO check this
         reset();
@@ -162,10 +162,6 @@ public class MsPacManGameTengen extends GameModel {
         setMapCategory(MapCategory.ARCADE);
         setStartLevelNumber(1);
         setNumContinues(4);
-    }
-
-    public MsPacManGameTengenMapConfig mapConfig() {
-        return mapConfig;
     }
 
     public void setPacBooster(PacBooster mode) {
@@ -409,19 +405,21 @@ public class MsPacManGameTengen extends GameModel {
 
     @Override
     public void configureNormalLevel() {
-        levelCounterEnabled = level.number < 8;
+        Map<String, Object> mapConfig = mapManager.getMapConfig(mapCategory, level.number);
+        WorldMap worldMap = (WorldMap) mapConfig.get("worldMap");
+        createWorldAndPopulation(worldMap);
+
+        level.setMapConfig(mapConfig);
         level.setNumFlashes(5); // TODO check this
         level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
-        level.setMapConfig(mapConfig.getMapConfig(mapCategory, level.number));
-        WorldMap worldMap = (WorldMap) level.mapConfig().get("worldMap");
-        createWorldAndPopulation(worldMap);
         level.pac().setAutopilot(autopilot);
-        activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
-        // ghosts inside house start at floor of house
+        // Ghosts inside house start at bottom of house instead at middle
         level.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost ->
             level.world().setGhostPosition(ghost.id(), level.world().ghostPosition(ghost.id()).plus(0, HTS))
         );
+        levelCounterEnabled = level.number < 8;
+        activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
     }
 
     @Override
@@ -430,7 +428,7 @@ public class MsPacManGameTengen extends GameModel {
         demoLevelSteering.init();
         level.setNumFlashes(5); // TODO check this
         level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
-        level.setMapConfig(mapConfig.getMapConfig(mapCategory, level.number));
+        level.setMapConfig(mapManager.getMapConfig(mapCategory, level.number));
         WorldMap worldMap = (WorldMap) level.mapConfig().get("worldMap");
         createWorldAndPopulation(worldMap);
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON

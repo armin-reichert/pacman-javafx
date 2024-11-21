@@ -201,11 +201,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
             level.pac().setImmune(PY_IMMUNITY.get());
         }
-        mazeFlashing.init(
-            level.mapConfig(),
-            level.numFlashes(),
-            game.mapConfig().isRandomColorSchemeUsed(game.mapCategory(), level.number));
-
+        mazeFlashing.init(level.mapConfig(), level.numFlashes());
         context.enableJoypad();
         setKeyBindings();
     }
@@ -240,8 +236,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         switch (state) {
             case LEVEL_COMPLETE -> mazeFlashing.init(
                 context.level().mapConfig(),
-                context.level().numFlashes(),
-                game.mapConfig().isRandomColorSchemeUsed(game.mapCategory(), context.level().number));
+                context.level().numFlashes());
             case GAME_OVER -> {
                 if (game.mapCategory() != MapCategory.ARCADE) {
                     Vector2f belowHouse = centerBelowHouse(context.level().world());

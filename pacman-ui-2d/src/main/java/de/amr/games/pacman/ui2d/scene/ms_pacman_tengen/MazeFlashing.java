@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengenMapConfig.COLOR_MAPS;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenRenderer.COLOR_MAPS;
 
 public class MazeFlashing {
 
@@ -38,12 +38,13 @@ public class MazeFlashing {
     private int currentIndex;
     private boolean highlightPhase;
 
-    public void init(Map<String, Object> mapConfig, int numFlashes, boolean randomColors) {
+    public void init(Map<String, Object> mapConfig, int numFlashes) {
         NES_ColorScheme nesColorScheme = (NES_ColorScheme) mapConfig.get("nesColorScheme");
+        boolean randomColorScheme = (boolean) mapConfig.get("randomColorScheme");
         Map<String, Color> worldMapColorMap = colorMapFromScheme(COLOR_MAPS.get(nesColorScheme));
         colorMaps.clear();
         for (int i = 0; i < numFlashes; ++i) {
-            colorMaps.add(randomColors ? randomColorMap() : worldMapColorMap);
+            colorMaps.add(randomColorScheme ? randomColorMap() : worldMapColorMap);
             colorMaps.add(BLACK_WHITE_COLOR_MAP);
         }
         startTick = -1;
