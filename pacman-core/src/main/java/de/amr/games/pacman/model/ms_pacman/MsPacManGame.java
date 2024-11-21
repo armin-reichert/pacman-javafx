@@ -247,14 +247,11 @@ public class MsPacManGame extends GameModel {
         });
         ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
 
-        byte firstBonus = computeBonusSymbol();
-        byte secondsBonus = computeBonusSymbol();
-
         level.setWorld(world);
         level.setPac(pac);
         level.setGhosts(ghosts);
-        level.setBonusSymbol(0, firstBonus);
-        level.setBonusSymbol(1, secondsBonus);
+        level.setBonusSymbol(0, computeBonusSymbol());
+        level.setBonusSymbol(1, computeBonusSymbol());
     }
 
     @Override

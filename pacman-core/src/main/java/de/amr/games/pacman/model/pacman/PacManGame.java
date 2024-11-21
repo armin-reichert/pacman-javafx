@@ -233,23 +233,23 @@ public class PacManGame extends GameModel {
     protected void populateLevel(WorldMap worldMap) {
         GameWorld world = new GameWorld(worldMap);
         world.createArcadeHouse(HOUSE_X, HOUSE_Y);
-        level.setWorld(world);
 
         var pac = new Pac();
         pac.setName("Pac-Man");
-        pac.setWorld(level.world());
+        pac.setWorld(world);
         pac.reset();
-        level.setPac(pac);
 
         var ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.clyde() };
         Stream.of(ghosts).forEach(ghost -> {
-            ghost.setWorld(level.world());
+            ghost.setWorld(world);
+            ghost.setRevivalPosition(world.ghostPosition(ghost.id()));
             ghost.reset();
-            ghost.setRevivalPosition(level.world().ghostPosition(ghost.id()));
         });
-        ghosts[RED_GHOST].setRevivalPosition(level.world().ghostPosition(PINK_GHOST)); // middle house position
-        level.setGhosts(ghosts);
+        ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
 
+        level.setWorld(world);
+        level.setPac(pac);
+        level.setGhosts(ghosts);
         level.setBonusSymbol(0, computeBonusSymbol());
         level.setBonusSymbol(1, computeBonusSymbol());
     }
