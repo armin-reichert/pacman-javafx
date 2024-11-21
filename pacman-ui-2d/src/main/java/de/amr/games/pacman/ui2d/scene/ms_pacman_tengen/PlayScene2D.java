@@ -56,6 +56,7 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengen
  */
 public class PlayScene2D extends GameScene2D implements CameraControlledGameScene {
 
+    static final Vector2i CANVAS_SIZE = new Vector2i(NES_TILES_X * TS, 44 * TS);
     private static final int MOVING_MESSAGE_DELAY = 120;
 
     private final SubScene fxSubScene;
@@ -66,8 +67,8 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     private int camDelay;
 
     public PlayScene2D() {
-        canvas.widthProperty() .bind(scalingProperty().map(s -> s.doubleValue() * size().x()));
-        canvas.heightProperty().bind(scalingProperty().map(s -> s.doubleValue() * size().y()));
+        canvas.widthProperty().bind(scalingProperty().multiply(CANVAS_SIZE.x()));
+        canvas.heightProperty().bind(scalingProperty().multiply(CANVAS_SIZE.y()));
         Pane root = new StackPane(canvas);
         root.setBackground(null);
         fxSubScene = new SubScene(root, 42, 42);
@@ -114,37 +115,42 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             --camDelay; // initial delay before camera starts moving
         }
         else {
-            int mapHeightInTiles = context.level().world().map().terrain().numRows();
-            double top = topCameraPosition(mapHeightInTiles), bottom = bottomCameraPosition(mapHeightInTiles);
+
+            double top = topCameraPosition(), bottom = bottomCameraPosition();
             if (context.gameState() == GameState.GAME_OVER) {
                 moveCamera(top, top, bottom);
             } else {
-                Vector2i playerTile = context.level().pac().tile();
-                moveCamera(focusPlayer(mapHeightInTiles, playerTile), top, bottom);
+                int mazeHeightTiles = context.worldSizeInTilesOrElse(new Vector2i(NES_TILES_X, NES_TILES_Y)).y();
+                moveCamera(focusPlayer(context.level().pac(), mazeHeightTiles), top, bottom);
             }
         }
     }
 
     private void moveCamera(double targetY, double top, double bottom) {
-        double y = lerp(camera.getTranslateY(), targetY, 0.02);
+        double y = lerp(camera.getTranslateY(), targetY, 0.025);
         camera.setTranslateY(clamp(y, top, bottom));
+        Logger.info("Camera: y={0.00} target={} top={} bottom={}", camera.getTranslateY(), targetY, top, bottom);
     }
 
-    private double focusPlayer(int numVerticalTiles, Vector2i playerTile) {
-        double targetY = playerTile.y() * TS - numVerticalTiles * HTS;
-        return scaled(targetY);
+    //TODO make dependent from map height
+    static int CAM_MIN = -72, CAM_MAX = 8;
+
+    private double focusPlayer(Pac player, double mazeHeightTiles) {
+        double t = player.tile().y() / mazeHeightTiles;
+        if (t < 0.4) {
+            t = 0;
+        } else if (t > 0.6) {
+            t = 1.0;
+        }
+        return scaled(lerp(CAM_MIN, CAM_MAX, t));
     }
 
-    // One tile over the world area.
-    // Note: The world area is the map area + 2 vertical rows below (room for the level counter etc.)
-    private double topCameraPosition(int numVerticalTiles) {
-        return scaled((26 - numVerticalTiles) * HTS);
+    private double topCameraPosition() {
+        return scaled(CAM_MIN);
     }
 
-    // Half a tile under the world area.
-    // Note: The world area is the map area + 2 vertical rows below (room for the level counter etc.)
-    private double bottomCameraPosition(int numVerticalTiles) {
-        return scaled((numVerticalTiles - 29) * HTS);
+    private double bottomCameraPosition() {
+        return scaled(CAM_MAX);
     }
 
     @Override
@@ -167,9 +173,9 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         return camera;
     }
 
-    private void initCamera(int numVerticalTiles) {
+    private void initCamera() {
         camDelay = 90;
-        camera.setTranslateY(topCameraPosition(numVerticalTiles));
+        camera.setTranslateY(topCameraPosition());
     }
 
     @Override
@@ -208,7 +214,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public void onLevelStarted(GameEvent e) {
-        initCamera(context.level().world().map().terrain().numRows());
+        initCamera();
     }
 
     @Override
@@ -326,9 +332,6 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         gr.setScaling(scaling());
         gr.setBackgroundColor(backgroundColor());
         gr.clearCanvas();
-        if (context.isScoreVisible()) {
-            gr.drawScores(context);
-        }
         drawSceneContent(gr);
     }
 
@@ -346,6 +349,12 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
         r.setBlinking(context.level().blinking().isOn());
 
+        gr.ctx().save();
+        gr.ctx().translate(scaled(2 * TS), 0);
+
+        if (context.isScoreVisible()) {
+            gr.drawScores(context);
+        }
         Vector2f messageCenterPosition = centerBelowHouse(world);
         r.setMessageAnchorPosition(messageMovement.isRunning()
             ? new Vector2f(messageMovement.currentX(), messageCenterPosition.y())
@@ -371,6 +380,8 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         r.setLevelNumberBoxesVisible(!context.game().isDemoLevel() && game.mapCategory() != MapCategory.ARCADE);
         r.drawLevelCounter(context, size());
 
+        gr.ctx().restore();
+
         // Debug mode info
         if (debugInfoVisiblePy.get()) {
             r.drawAnimatedCreatureInfo(msPacMan);
@@ -381,7 +392,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     protected void drawDebugInfo(GameRenderer gr) {
-        gr.drawTileGrid(size());
+        gr.drawTileGrid(Vector2f.fromDouble(canvas.getWidth(), canvas.getHeight()));
         gr.ctx().setFill(Color.YELLOW);
         gr.ctx().setFont(Font.font("Sans", FontWeight.BOLD, 24));
         gr.ctx().fillText(String.format("%s %d", context.gameState(), context.gameState().timer().tickCount()), 0, 64);
