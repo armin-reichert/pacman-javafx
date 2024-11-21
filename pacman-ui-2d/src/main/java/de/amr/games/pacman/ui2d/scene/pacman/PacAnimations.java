@@ -23,17 +23,22 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class PacAnimations extends SpriteAnimationCollection {
 
+    public static final String ANIM_PAC_BIG = "big_pacman";
+
     public PacAnimations(PacManGameSpriteSheet spriteSheet) {
         checkNotNull(spriteSheet);
         add(Map.of(
             GameModel.ANIM_PAC_MUNCHING,
-            SpriteAnimation.spriteSheet(spriteSheet).info("Pac-Man munching").sprites(spriteSheet.pacMunchingSprites(Direction.LEFT)).loop(),
+            SpriteAnimation.spriteSheet(spriteSheet).info("Pac-Man munching")
+                .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT)).loop(),
 
             GameModel.ANIM_PAC_DYING,
-            SpriteAnimation.spriteSheet(spriteSheet).info("Pac-Man dying").sprites(spriteSheet.pacDyingSprites()).frameTicks(8).end(),
+            SpriteAnimation.spriteSheet(spriteSheet).info("Pac-Man dying")
+                .sprites(spriteSheet.pacDyingSprites()).frameTicks(8).end(),
 
-            PacManGame.ANIM_PAC_BIG,
-            SpriteAnimation.spriteSheet(spriteSheet).info("BIG Pac-Man munching").sprites(spriteSheet.bigPacManSprites()).frameTicks(3).loop()
+            ANIM_PAC_BIG,
+            SpriteAnimation.spriteSheet(spriteSheet).info("BIG Pac-Man munching")
+                .sprites(spriteSheet.bigPacManSprites()).frameTicks(3).loop()
         ));
     }
 

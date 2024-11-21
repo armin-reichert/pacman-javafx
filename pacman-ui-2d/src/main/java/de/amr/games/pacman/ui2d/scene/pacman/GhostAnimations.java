@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
@@ -20,6 +19,11 @@ import java.util.Map;
  * @author Armin Reichert
  */
 public class GhostAnimations extends SpriteAnimationCollection {
+
+    public static final String ANIM_BLINKY_DAMAGED   = "damaged";
+    public static final String ANIM_BLINKY_STRETCHED = "stretched";
+    public static final String ANIM_BLINKY_PATCHED   = "patched";
+    public static final String ANIM_BLINKY_NAKED     = "naked";
 
     public GhostAnimations(PacManGameSpriteSheet spriteSheet, byte ghostID) {
 
@@ -88,10 +92,10 @@ public class GhostAnimations extends SpriteAnimationCollection {
             GameModel.ANIM_GHOST_FLASHING, flashing,
             GameModel.ANIM_GHOST_EYES, eyes,
             GameModel.ANIM_GHOST_NUMBER, number,
-            PacManGame.ANIM_BLINKY_DAMAGED, damaged,
-            PacManGame.ANIM_BLINKY_STRETCHED, stretching,
-            PacManGame.ANIM_BLINKY_PATCHED, patched,
-            PacManGame.ANIM_BLINKY_NAKED, naked));
+            ANIM_BLINKY_DAMAGED, damaged,
+            ANIM_BLINKY_STRETCHED, stretching,
+            ANIM_BLINKY_PATCHED, patched,
+            ANIM_BLINKY_NAKED, naked));
 
         // TODO check this
         eyes.start();

@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.MediaPlayer;
@@ -90,7 +89,7 @@ public class CutScene1 extends GameScene2D {
             case ANIMATION_START + 400 -> {
                 pac.placeAtTile(-3, 18, 0, 6.5f);
                 pac.setMoveDir(Direction.RIGHT);
-                pac.selectAnimation(PacManGame.ANIM_PAC_BIG);
+                pac.selectAnimation(PacAnimations.ANIM_PAC_BIG);
                 pac.startAnimation();
             }
             case ANIMATION_START + 632 -> context.gameState().timer().expire();

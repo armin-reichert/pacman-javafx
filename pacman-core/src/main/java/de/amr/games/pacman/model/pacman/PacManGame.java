@@ -92,13 +92,6 @@ public class PacManGame extends GameModel {
         };
     }
 
-    // Pac-Man game specific animation IDs
-    public static final String ANIM_PAC_BIG          = "big_pacman";
-    public static final String ANIM_BLINKY_DAMAGED   = "damaged";
-    public static final String ANIM_BLINKY_STRETCHED = "stretched";
-    public static final String ANIM_BLINKY_PATCHED   = "patched";
-    public static final String ANIM_BLINKY_NAKED     = "naked";
-
     // Ghost house tile position in all Arcade mazes
     private static final byte HOUSE_X = 10, HOUSE_Y = 15;
 
@@ -128,11 +121,9 @@ public class PacManGame extends GameModel {
     protected static final int[] HUNTING_TICKS_LEVEL_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
     protected static final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 300, 1200, 300, 62262,   1, -1};
 
-    private final Map<String, Object> mapConfig;
-
+    protected final Map<String, Object> mapConfig;
     protected final Steering autopilot = new RuleBasedPacSteering(this);
     protected final Steering demoLevelSteering = new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE));
-
     protected byte cruiseElroy;
 
     public PacManGame(File userDir) {
@@ -277,7 +268,6 @@ public class PacManGame extends GameModel {
             ghost.setSpecialTerrainTiles(oneWayDownTiles);
         });
     }
-
 
     @Override
     public void configureDemoLevel() {
