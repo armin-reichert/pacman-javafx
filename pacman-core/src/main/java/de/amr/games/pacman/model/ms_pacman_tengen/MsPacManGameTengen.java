@@ -368,10 +368,11 @@ public class MsPacManGameTengen extends GameModel {
 
     @Override
     protected void initActorAnimations() {
-        level.pac().selectAnimation(boosterActive ? ANIM_MS_PACMAN_BOOSTER : ANIM_PAC_MUNCHING);
+        level.pac().selectAnimation(boosterActive
+            ? ANIM_MS_PACMAN_BOOSTER : Animations.ANIM_PAC_MUNCHING);
         level.pac().animations().ifPresent(Animations::resetCurrentAnimation);
         level.ghosts().forEach(ghost -> {
-            ghost.selectAnimation(ANIM_GHOST_NORMAL);
+            ghost.selectAnimation(Animations.ANIM_GHOST_NORMAL);
             ghost.resetAnimation();
         });
     }
@@ -384,7 +385,8 @@ public class MsPacManGameTengen extends GameModel {
                 speed += pacBoosterSpeedDelta();
             }
             level.pac().setBaseSpeed(speed);
-            level.pac().selectAnimation(boosterActive ? ANIM_MS_PACMAN_BOOSTER : ANIM_PAC_MUNCHING);
+            level.pac().selectAnimation(boosterActive
+                ? ANIM_MS_PACMAN_BOOSTER : Animations.ANIM_PAC_MUNCHING);
         }
     }
 

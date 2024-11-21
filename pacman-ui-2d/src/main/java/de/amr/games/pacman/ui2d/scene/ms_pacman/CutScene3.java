@@ -7,11 +7,9 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.ms_pacman.MsPacManGame;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
@@ -20,6 +18,8 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.model.actors.Animations.ANIM_MR_PACMAN_MUNCHING;
+import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 
@@ -141,12 +141,12 @@ public class CutScene3 extends GameScene2D {
         void enterStateDeliverJunior() {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setPosition(TS * 3, LANE_Y - 4);
-            pacMan.selectAnimation(MsPacManGame.ANIM_MR_PACMAN_MUNCHING);
+            pacMan.selectAnimation(ANIM_MR_PACMAN_MUNCHING);
             pacMan.show();
 
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.setPosition(TS * 5, LANE_Y - 4);
-            msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
+            msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
             msPacMan.show();
 
             stork.setPosition(TS * 30, TS * 12);

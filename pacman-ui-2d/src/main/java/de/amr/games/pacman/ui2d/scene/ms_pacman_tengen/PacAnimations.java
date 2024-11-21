@@ -5,10 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.ms_pacman.MsPacManGame;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
@@ -94,13 +93,13 @@ public class PacAnimations extends SpriteAnimationCollection {
             .end();
 
         add(Map.of(
-            GameModel.ANIM_PAC_DYING, msPacmanDying,
-            GameModel.ANIM_PAC_MUNCHING, msPacManMunching,
+            Animations.ANIM_PAC_DYING, msPacmanDying,
+            Animations.ANIM_PAC_MUNCHING, msPacManMunching,
             MsPacManGameTengen.ANIM_MS_PACMAN_BOOSTER, msPacManMunchingBooster,
             MsPacManGameTengen.ANIM_MS_PACMAN_WAVING_HAND, msPacManWavingHand,
             MsPacManGameTengen.ANIM_MS_PACMAN_TURNING_AWAY, msPacManTurningAway,
 
-            MsPacManGame.ANIM_MR_PACMAN_MUNCHING, mrPacManMunching,
+            Animations.ANIM_MR_PACMAN_MUNCHING, mrPacManMunching,
             MsPacManGameTengen.ANIM_MR_PACMAN_BOOSTER, mrPacManMunchingBooster,
             MsPacManGameTengen.ANIM_MR_PACMAN_WAVING_HAND, mrPacManWavingHand,
             MsPacManGameTengen.ANIM_MR_PACMAN_TURNING_AWAY, mrPacManTurningAway,
@@ -111,13 +110,13 @@ public class PacAnimations extends SpriteAnimationCollection {
     @Override
     protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
         if (entity instanceof Pac msPacMan) {
-            if (isCurrentAnimationID(GameModel.ANIM_PAC_MUNCHING)) {
+            if (isCurrentAnimationID(Animations.ANIM_PAC_MUNCHING)) {
                 return MsPacManGameTengenSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT;
             }
             if (isCurrentAnimationID(MsPacManGameTengen.ANIM_MS_PACMAN_BOOSTER)) {
                 return MsPacManGameTengenSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER;
             }
-            if (isCurrentAnimationID(MsPacManGame.ANIM_MR_PACMAN_MUNCHING)) {
+            if (isCurrentAnimationID(Animations.ANIM_MR_PACMAN_MUNCHING)) {
                 return ((MsPacManGameTengenSpriteSheet)spriteSheet).pacManMunchingSprites(msPacMan.moveDir());
             }
         }

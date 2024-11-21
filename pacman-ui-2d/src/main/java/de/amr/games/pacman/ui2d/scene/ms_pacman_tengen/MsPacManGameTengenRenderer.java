@@ -14,7 +14,6 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
@@ -38,8 +37,7 @@ import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.RectArea.rect;
-import static de.amr.games.pacman.model.GameModel.ANIM_PAC_MUNCHING;
-import static de.amr.games.pacman.model.ms_pacman.MsPacManGame.ANIM_MR_PACMAN_MUNCHING;
+import static de.amr.games.pacman.model.actors.Animations.ANIM_MR_PACMAN_MUNCHING;
 import static de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static java.util.function.Predicate.not;
@@ -284,13 +282,13 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
                 SpriteAnimation spriteAnimation = spriteAnimations.currentAnimation();
                 if (spriteAnimation != null) {
                     switch (animations.currentAnimationID()) {
-                        case ANIM_PAC_MUNCHING,
+                        case Animations.ANIM_PAC_MUNCHING,
                              ANIM_MS_PACMAN_BOOSTER,
                              ANIM_MR_PACMAN_MUNCHING,
                              ANIM_MR_PACMAN_BOOSTER,
                              ANIM_JUNIOR_PACMAN
                                 -> drawGuyHeading(pac, pac.moveDir(), spriteAnimation);
-                        case GameModel.ANIM_PAC_DYING -> {
+                        case Animations.ANIM_PAC_DYING -> {
                             Direction dir = Direction.UP;
                             if (spriteAnimation.frameIndex() < 11) {
                                 dir = switch (spriteAnimation.frameIndex() % 4) {

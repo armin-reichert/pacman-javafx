@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -19,6 +18,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.model.actors.Animations.ANIM_GHOST_NORMAL;
+import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_SIZE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_TILES_X;
@@ -110,7 +111,7 @@ public class CutScene1 extends GameScene2D {
             msPacMan.setMoveDir(Direction.LEFT);
             msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
             msPacMan.setSpeed(SPEED_CHASING);
-            msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
+            msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
             msPacMan.animations().ifPresent(Animations::startCurrentAnimation);
             msPacMan.show();
         }
@@ -118,14 +119,14 @@ public class CutScene1 extends GameScene2D {
             inky.setMoveAndWishDir(Direction.RIGHT);
             inky.setPosition(LEFT_BORDER, UPPER_LANE);
             inky.setSpeed(SPEED_CHASING);
-            inky.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
+            inky.selectAnimation(ANIM_GHOST_NORMAL);
             inky.startAnimation();
             inky.show();
 
             pinky.setMoveAndWishDir(Direction.LEFT);
             pinky.setPosition(RIGHT_BORDER, LOWER_LANE);
             pinky.setSpeed(SPEED_CHASING);
-            pinky.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
+            pinky.selectAnimation(ANIM_GHOST_NORMAL);
             pinky.startAnimation();
             pinky.show();
 

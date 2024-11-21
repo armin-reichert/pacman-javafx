@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.scene.pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -16,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.model.actors.Animations.*;
 import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
 
 /**
@@ -68,14 +68,14 @@ public class CutScene1 extends GameScene2D {
                 pac.placeAtTile(29, 20, 0, 0);
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.25f);
-                pac.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
+                pac.selectAnimation(ANIM_PAC_MUNCHING);
                 pac.startAnimation();
                 pac.show();
 
                 blinky.placeAtTile(32, 20, 0, 0);
                 blinky.setMoveAndWishDir(Direction.LEFT);
                 blinky.setSpeed(1.3f);
-                blinky.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
+                blinky.selectAnimation(ANIM_GHOST_NORMAL);
                 blinky.startAnimation();
                 blinky.show();
             }
@@ -83,7 +83,7 @@ public class CutScene1 extends GameScene2D {
                 blinky.placeAtTile(-2, 20, 4, 0);
                 blinky.setMoveAndWishDir(Direction.RIGHT);
                 blinky.setSpeed(0.75f);
-                blinky.selectAnimation(GameModel.ANIM_GHOST_FRIGHTENED);
+                blinky.selectAnimation(ANIM_GHOST_FRIGHTENED);
                 blinky.startAnimation();
             }
             case ANIMATION_START + 400 -> {

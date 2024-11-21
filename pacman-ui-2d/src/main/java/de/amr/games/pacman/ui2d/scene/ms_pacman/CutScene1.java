@@ -7,14 +7,11 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.ms_pacman.MsPacManGame;
-import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.MediaPlayer;
@@ -22,6 +19,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.model.actors.Animations.*;
 import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSpriteSheet.HEART_SPRITE;
@@ -153,28 +151,28 @@ public class CutScene1 extends GameScene2D {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
             pacMan.setSpeed(SPEED_PAC_CHASING);
-            pacMan.selectAnimation(MsPacManGame.ANIM_MR_PACMAN_MUNCHING);
+            pacMan.selectAnimation(ANIM_MR_PACMAN_MUNCHING);
             pacMan.animations().ifPresent(Animations::startCurrentAnimation);
             pacMan.show();
 
             inky.setMoveAndWishDir(Direction.RIGHT);
             inky.setPosition(pacMan.position().minus(TS * 6, 0));
             inky.setSpeed(SPEED_GHOST_CHASING);
-            inky.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
+            inky.selectAnimation(ANIM_GHOST_NORMAL);
             inky.startAnimation();
             inky.show();
 
             msPac.setMoveDir(Direction.LEFT);
             msPac.setPosition(TS * 30, LOWER_LANE_Y);
             msPac.setSpeed(SPEED_PAC_CHASING);
-            msPac.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
+            msPac.selectAnimation(ANIM_PAC_MUNCHING);
             msPac.animations().ifPresent(Animations::startCurrentAnimation);
             msPac.show();
 
             pinky.setMoveAndWishDir(Direction.LEFT);
             pinky.setPosition(msPac.position().plus(TS * 6, 0));
             pinky.setSpeed(SPEED_GHOST_CHASING);
-            pinky.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
+            pinky.selectAnimation(ANIM_GHOST_NORMAL);
             pinky.startAnimation();
             pinky.show();
 

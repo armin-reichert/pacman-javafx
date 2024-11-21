@@ -230,9 +230,9 @@ public class Ghost extends Creature implements AnimatedEntity {
         this.state = state;
         // onEntry action:
         switch (state) {
-            case LOCKED, HUNTING_PAC -> selectAnimation(GameModel.ANIM_GHOST_NORMAL);
-            case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(GameModel.ANIM_GHOST_EYES);
-            case FRIGHTENED -> selectAnimation(GameModel.ANIM_GHOST_FRIGHTENED);
+            case LOCKED, HUNTING_PAC -> selectAnimation(Animations.ANIM_GHOST_NORMAL);
+            case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(Animations.ANIM_GHOST_EYES);
+            case FRIGHTENED -> selectAnimation(Animations.ANIM_GHOST_FRIGHTENED);
             case EATEN -> {}
         }
     }
@@ -257,7 +257,7 @@ public class Ghost extends Creature implements AnimatedEntity {
 
     public void eaten(int index) {
         setState(EATEN);
-        selectAnimation(GameModel.ANIM_GHOST_NUMBER, index);
+        selectAnimation(Animations.ANIM_GHOST_NUMBER, index);
     }
 
     // --- LOCKED ---
@@ -284,7 +284,7 @@ public class Ghost extends Creature implements AnimatedEntity {
         if (level.powerTimer().isRunning() && !level.victims().contains(this)) {
             updateFrightenedAnimation(game);
         } else {
-            selectAnimation(GameModel.ANIM_GHOST_NORMAL);
+            selectAnimation(Animations.ANIM_GHOST_NORMAL);
         }
     }
 
@@ -329,7 +329,7 @@ public class Ghost extends Creature implements AnimatedEntity {
         if (level.powerTimer().isRunning() && !level.victims().contains(this)) {
             updateFrightenedAnimation(game);
         } else {
-            selectAnimation(GameModel.ANIM_GHOST_NORMAL);
+            selectAnimation(Animations.ANIM_GHOST_NORMAL);
         }
     }
 
@@ -370,9 +370,9 @@ public class Ghost extends Creature implements AnimatedEntity {
 
     private void updateFrightenedAnimation(GameModel game) {
         if (game.isPowerFadingStarting()) {
-            selectAnimation(GameModel.ANIM_GHOST_FLASHING);
+            selectAnimation(Animations.ANIM_GHOST_FLASHING);
         } else if (!game.isPowerFading()) {
-            selectAnimation(GameModel.ANIM_GHOST_FRIGHTENED);
+            selectAnimation(Animations.ANIM_GHOST_FRIGHTENED);
         }
     }
 

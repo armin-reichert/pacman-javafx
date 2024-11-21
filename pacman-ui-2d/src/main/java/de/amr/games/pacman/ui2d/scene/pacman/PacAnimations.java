@@ -6,10 +6,8 @@ package de.amr.games.pacman.ui2d.scene.pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
@@ -23,16 +21,14 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class PacAnimations extends SpriteAnimationCollection {
 
-    public static final String ANIM_PAC_BIG = "big_pacman";
-
     public PacAnimations(PacManGameSpriteSheet spriteSheet) {
         checkNotNull(spriteSheet);
         add(Map.of(
-            GameModel.ANIM_PAC_MUNCHING,
+            ANIM_PAC_MUNCHING,
             SpriteAnimation.spriteSheet(spriteSheet).info("Pac-Man munching")
                 .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT)).loop(),
 
-            GameModel.ANIM_PAC_DYING,
+            ANIM_PAC_DYING,
             SpriteAnimation.spriteSheet(spriteSheet).info("Pac-Man dying")
                 .sprites(spriteSheet.pacDyingSprites()).frameTicks(8).end(),
 
@@ -45,7 +41,7 @@ public class PacAnimations extends SpriteAnimationCollection {
     @Override
     protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
         if (entity instanceof Pac pac) {
-            if (isCurrentAnimationID(GameModel.ANIM_PAC_MUNCHING)) {
+            if (isCurrentAnimationID(ANIM_PAC_MUNCHING)) {
                 return spriteSheet.pacMunchingSprites(pac.moveDir());
             }
         }

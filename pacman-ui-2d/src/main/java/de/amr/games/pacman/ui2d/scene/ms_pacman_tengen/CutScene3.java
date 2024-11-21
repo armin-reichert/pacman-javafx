@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -18,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_SIZE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_TILES_X;
@@ -105,7 +105,7 @@ public class CutScene3 extends GameScene2D {
 
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.setPosition(TS * 5, GROUND_Y - 4);
-            msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
+            msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
             msPacMan.show();
 
             bagOpen = false;

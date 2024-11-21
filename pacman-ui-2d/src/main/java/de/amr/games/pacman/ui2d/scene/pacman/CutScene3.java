@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.scene.pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -17,6 +16,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.lib.Globals.v2i;
+import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
 
 /**
@@ -70,7 +70,7 @@ public class CutScene3 extends GameScene2D {
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.25f);
                 pac.show();
-                pac.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
+                pac.selectAnimation(ANIM_PAC_MUNCHING);
                 pac.startAnimation();
                 blinky.centerOverTile(v2i(35, 20));
                 blinky.setMoveAndWishDir(Direction.LEFT);

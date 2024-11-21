@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -59,11 +59,11 @@ public class GhostAnimations extends SpriteAnimationCollection {
             .end();
 
         add(Map.of(
-            GameModel.ANIM_GHOST_NORMAL, normal,
-            GameModel.ANIM_GHOST_FRIGHTENED, frightened,
-            GameModel.ANIM_GHOST_FLASHING, flashing,
-            GameModel.ANIM_GHOST_EYES, eyes,
-            GameModel.ANIM_GHOST_NUMBER, number));
+            Animations.ANIM_GHOST_NORMAL, normal,
+            Animations.ANIM_GHOST_FRIGHTENED, frightened,
+            Animations.ANIM_GHOST_FLASHING, flashing,
+            Animations.ANIM_GHOST_EYES, eyes,
+            Animations.ANIM_GHOST_NUMBER, number));
 
         // TODO check this
         eyes.start();
@@ -74,18 +74,18 @@ public class GhostAnimations extends SpriteAnimationCollection {
     @Override
     public void select(String name, int frameIndex) {
         super.select(name, frameIndex);
-        if (GameModel.ANIM_GHOST_NUMBER.equals(name)) {
-            animation(GameModel.ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
+        if (Animations.ANIM_GHOST_NUMBER.equals(name)) {
+            animation(Animations.ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
         }
     }
 
     @Override
     protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
         if (entity instanceof Ghost ghost) {
-            if (isCurrentAnimationID(GameModel.ANIM_GHOST_NORMAL)) {
+            if (isCurrentAnimationID(Animations.ANIM_GHOST_NORMAL)) {
                 return spriteSheet.ghostNormalSprites(ghost.id(), ghost.wishDir());
             }
-            if (isCurrentAnimationID(GameModel.ANIM_GHOST_EYES)) {
+            if (isCurrentAnimationID(Animations.ANIM_GHOST_EYES)) {
                 return spriteSheet.ghostEyesSprites(ghost.wishDir());
             }
         }

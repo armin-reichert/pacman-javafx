@@ -31,17 +31,6 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public abstract class GameModel {
 
-    // Common Pac-Man/Ms. Pac-Man animation IDs
-    public static final String ANIM_PAC_MUNCHING     = "munching";
-    public static final String ANIM_PAC_DYING        = "dying";
-
-    // Common ghost animation IDs
-    public static final String ANIM_GHOST_NORMAL     = "normal";
-    public static final String ANIM_GHOST_FRIGHTENED = "frightened";
-    public static final String ANIM_GHOST_EYES       = "eyes";
-    public static final String ANIM_GHOST_FLASHING   = "flashing";
-    public static final String ANIM_GHOST_NUMBER     = "number";
-
     // Ghost IDs
     public static final byte RED_GHOST = 0, PINK_GHOST = 1, CYAN_GHOST = 2, ORANGE_GHOST = 3;
 
@@ -201,10 +190,10 @@ public abstract class GameModel {
     }
 
     protected void initActorAnimations() {
-        level.pac().selectAnimation(GameModel.ANIM_PAC_MUNCHING);
+        level.pac().selectAnimation(Animations.ANIM_PAC_MUNCHING);
         level.pac().animations().ifPresent(Animations::resetCurrentAnimation);
         level.ghosts().forEach(ghost -> {
-            ghost.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
+            ghost.selectAnimation(Animations.ANIM_GHOST_NORMAL);
             ghost.resetAnimation();
         });
     }

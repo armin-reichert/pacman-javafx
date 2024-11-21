@@ -19,10 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.model.GameModel.ANIM_PAC_MUNCHING;
+import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_SIZE;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_TILES_X;
 
 public class CutScene4 extends GameScene2D {
 

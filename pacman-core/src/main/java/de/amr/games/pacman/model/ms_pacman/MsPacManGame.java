@@ -107,9 +107,6 @@ public class MsPacManGame extends GameModel {
     private static final int[] HUNTING_TICKS_LEVEL_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
     private static final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
 
-    // Ms. Pac-Man game specific
-    public static final String ANIM_MR_PACMAN_MUNCHING = "pacman_munching";
-
     private static final byte HOUSE_X = 10, HOUSE_Y = 15;
 
     // To assure that the demo level runs at least 20 seconds:

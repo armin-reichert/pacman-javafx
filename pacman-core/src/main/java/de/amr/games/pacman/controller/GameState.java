@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -238,9 +239,9 @@ public enum GameState implements FsmState<GameModel> {
         }
     },
 
+    //TODO trying to control animations from here is crap, change this
     PACMAN_DYING {
 
-        //TODO this is crap, should depend on sprite animation time
         static final int TICK_HIDE_GHOSTS = 60;
         static final int TICK_START_PAC_ANIMATION = 90;
         static final int TICK_HIDE_PAC = 210;
@@ -266,7 +267,8 @@ public enum GameState implements FsmState<GameModel> {
             }
             else if (timer.tickCount() == TICK_HIDE_GHOSTS) {
                 level.ghosts().forEach(Ghost::hide);
-                level.pac().selectAnimation(GameModel.ANIM_PAC_DYING);
+                //TODO this does not belong here
+                level.pac().selectAnimation(Animations.ANIM_PAC_DYING);
                 level.pac().resetAnimation();
             }
             else if (timer.tickCount() == TICK_START_PAC_ANIMATION) {

@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.scene.pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -19,11 +18,6 @@ import java.util.Map;
  * @author Armin Reichert
  */
 public class GhostAnimations extends SpriteAnimationCollection {
-
-    public static final String ANIM_BLINKY_DAMAGED   = "damaged";
-    public static final String ANIM_BLINKY_STRETCHED = "stretched";
-    public static final String ANIM_BLINKY_PATCHED   = "patched";
-    public static final String ANIM_BLINKY_NAKED     = "naked";
 
     public GhostAnimations(PacManGameSpriteSheet spriteSheet, byte ghostID) {
 
@@ -87,11 +81,11 @@ public class GhostAnimations extends SpriteAnimationCollection {
             .loop();
 
         add(Map.of(
-            GameModel.ANIM_GHOST_NORMAL, normal,
-            GameModel.ANIM_GHOST_FRIGHTENED, frightened,
-            GameModel.ANIM_GHOST_FLASHING, flashing,
-            GameModel.ANIM_GHOST_EYES, eyes,
-            GameModel.ANIM_GHOST_NUMBER, number,
+            ANIM_GHOST_NORMAL, normal,
+            ANIM_GHOST_FRIGHTENED, frightened,
+            ANIM_GHOST_FLASHING, flashing,
+            ANIM_GHOST_EYES, eyes,
+            ANIM_GHOST_NUMBER, number,
             ANIM_BLINKY_DAMAGED, damaged,
             ANIM_BLINKY_STRETCHED, stretching,
             ANIM_BLINKY_PATCHED, patched,
@@ -106,18 +100,18 @@ public class GhostAnimations extends SpriteAnimationCollection {
     @Override
     public void select(String name, int frameIndex) {
         super.select(name, frameIndex);
-        if (GameModel.ANIM_GHOST_NUMBER.equals(name)) {
-            animation(GameModel.ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
+        if (ANIM_GHOST_NUMBER.equals(name)) {
+            animation(ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
         }
     }
 
     @Override
     protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
         if (entity instanceof Ghost ghost) {
-            if (isCurrentAnimationID(GameModel.ANIM_GHOST_NORMAL)) {
+            if (isCurrentAnimationID(ANIM_GHOST_NORMAL)) {
                 return spriteSheet.ghostNormalSprites(ghost.id(), ghost.wishDir());
             }
-            if (isCurrentAnimationID(GameModel.ANIM_GHOST_EYES)) {
+            if (isCurrentAnimationID(ANIM_GHOST_EYES)) {
                 return spriteSheet.ghostEyesSprites(ghost.wishDir());
             }
         }

@@ -6,10 +6,9 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.ms_pacman.MsPacManGame;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
@@ -47,19 +46,19 @@ public class PacAnimations extends SpriteAnimationCollection {
             .loop();
 
         add(Map.of(
-            GameModel.ANIM_PAC_MUNCHING, munching,
-            GameModel.ANIM_PAC_DYING, dying,
-            MsPacManGame.ANIM_MR_PACMAN_MUNCHING, husbandMunching
+            Animations.ANIM_PAC_MUNCHING, munching,
+            Animations.ANIM_PAC_DYING, dying,
+            Animations.ANIM_MR_PACMAN_MUNCHING, husbandMunching
         ));
     }
 
     @Override
     protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
         if (entity instanceof Pac msPacMan) {
-            if (isCurrentAnimationID(GameModel.ANIM_PAC_MUNCHING)) {
+            if (isCurrentAnimationID(Animations.ANIM_PAC_MUNCHING)) {
                 return spriteSheet.pacMunchingSprites(msPacMan.moveDir());
             }
-            if (isCurrentAnimationID(MsPacManGame.ANIM_MR_PACMAN_MUNCHING)) {
+            if (isCurrentAnimationID(Animations.ANIM_MR_PACMAN_MUNCHING)) {
                 return ((MsPacManGameSpriteSheet) spriteSheet).mrPacManMunchingSprites(msPacMan.moveDir());
             }
         }

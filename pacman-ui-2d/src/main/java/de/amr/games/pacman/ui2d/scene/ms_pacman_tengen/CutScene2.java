@@ -7,10 +7,8 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.ms_pacman.MsPacManGame;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.MediaPlayer;
@@ -18,8 +16,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.model.actors.Animations.ANIM_MR_PACMAN_MUNCHING;
+import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_SIZE;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_TILES_X;
 
 /**
  * Intermission scene 2: "The chase".
@@ -79,14 +80,14 @@ public class CutScene2 extends GameScene2D {
         else if (t == 270) {
             msPacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             msPacMan.setMoveDir(Direction.RIGHT);
-            msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
+            msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
             msPacMan.animations().ifPresent(Animations::startCurrentAnimation);
             msPacMan.setSpeed(2.0f);
             msPacMan.show();
         }
         else if (t == 320) {
             pacMan.setMoveDir(Direction.RIGHT);
-            pacMan.selectAnimation(MsPacManGame.ANIM_MR_PACMAN_MUNCHING);
+            pacMan.selectAnimation(ANIM_MR_PACMAN_MUNCHING);
             pacMan.animations().ifPresent(Animations::startCurrentAnimation);
             pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             pacMan.setMoveDir(Direction.RIGHT);

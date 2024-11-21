@@ -86,7 +86,7 @@ public class Pac extends Creature implements AnimatedEntity {
         starvingTicks = 0;
         corneringSpeedUp = 1.5f; // no real cornering implementation but better than nothing
         if (animations != null) {
-            animations.select(GameModel.ANIM_PAC_MUNCHING, 0);
+            animations.select(Animations.ANIM_PAC_MUNCHING, 0);
         }
     }
 
@@ -127,7 +127,7 @@ public class Pac extends Creature implements AnimatedEntity {
         setSpeed(0);
         setRestingTicks(Pac.REST_INDEFINITELY);
         animations.stopCurrentAnimation();
-        selectAnimation(GameModel.ANIM_PAC_MUNCHING);
+        selectAnimation(Animations.ANIM_PAC_MUNCHING);
         animations.resetCurrentAnimation();
     }
 

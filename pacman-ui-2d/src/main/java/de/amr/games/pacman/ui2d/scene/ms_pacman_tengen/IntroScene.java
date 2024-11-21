@@ -11,7 +11,6 @@ import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -28,9 +27,9 @@ import org.tinylog.Logger;
 import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.nesPaletteColor;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_RESOLUTION_X;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_RESOLUTION_Y;
+import static de.amr.games.pacman.model.actors.Animations.ANIM_GHOST_NORMAL;
+import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.*;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
 
 /**
@@ -226,12 +225,12 @@ public class IntroScene extends GameScene2D {
 
                 var spriteSheet = (MsPacManGameTengenSpriteSheet) intro.context.currentGameSceneConfig().spriteSheet();
                 intro.msPacMan.setAnimations(new PacAnimations(spriteSheet));
-                intro.msPacMan.selectAnimation(GameModel.ANIM_PAC_MUNCHING);
+                intro.msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
                 intro.msPacMan.animations().ifPresent(Animations::startCurrentAnimation);
 
                 for (Ghost ghost : intro.ghosts) {
                     ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
-                    ghost.selectAnimation(GameModel.ANIM_GHOST_NORMAL);
+                    ghost.selectAnimation(ANIM_GHOST_NORMAL);
                     ghost.startAnimation();
                 }
             }
