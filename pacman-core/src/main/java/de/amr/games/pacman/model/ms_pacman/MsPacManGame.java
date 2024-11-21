@@ -230,27 +230,31 @@ public class MsPacManGame extends GameModel {
         return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
     }
 
-    protected void createWorldAndPopulation(WorldMap map) {
-        level.setWorld(new GameWorld(map));
-        level.world().createArcadeHouse(HOUSE_X, HOUSE_Y);
+    protected void createWorldAndPopulation(WorldMap worldMap) {
+        GameWorld world = new GameWorld(worldMap);
+        world.createArcadeHouse(HOUSE_X, HOUSE_Y);
 
         var pac = new Pac();
         pac.setName("Ms. Pac-Man");
-        pac.setWorld(level.world());
+        pac.setWorld(world);
         pac.reset();
-        level.setPac(pac);
 
         var ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.sue() };
         Stream.of(ghosts).forEach(ghost -> {
-            ghost.setWorld(level.world());
+            ghost.setWorld(world);
+            ghost.setRevivalPosition(world.ghostPosition(ghost.id()));
             ghost.reset();
-            ghost.setRevivalPosition(level.world().ghostPosition(ghost.id()));
         });
-        ghosts[RED_GHOST].setRevivalPosition(level.world().ghostPosition(PINK_GHOST)); // middle house position
-        level.setGhosts(ghosts);
+        ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
 
-        level.setBonusSymbol(0, computeBonusSymbol());
-        level.setBonusSymbol(1, computeBonusSymbol());
+        byte firstBonus = computeBonusSymbol();
+        byte secondsBonus = computeBonusSymbol();
+
+        level.setWorld(world);
+        level.setPac(pac);
+        level.setGhosts(ghosts);
+        level.setBonusSymbol(0, firstBonus);
+        level.setBonusSymbol(1, secondsBonus);
     }
 
     @Override
