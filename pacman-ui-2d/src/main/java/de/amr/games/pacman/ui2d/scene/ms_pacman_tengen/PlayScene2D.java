@@ -136,7 +136,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     private void moveCamera(double targetY, int tilesY) {
         double y = lerp(camera.getTranslateY(), targetY, CAM_NORMAL_SPEED);
         camera.setTranslateY(clamp(y, camMin(), camMax(tilesY)));
-        Logger.info("Camera: y={0.00} target={} top={} bottom={}", camera.getTranslateY(), targetY, camMin(), camMax(tilesY));
+        Logger.debug("Camera: y={0.00} target={} top={} bottom={}", camera.getTranslateY(), targetY, camMin(), camMax(tilesY));
     }
 
     private double keepInFocus(Creature guy, int tilesY) {
