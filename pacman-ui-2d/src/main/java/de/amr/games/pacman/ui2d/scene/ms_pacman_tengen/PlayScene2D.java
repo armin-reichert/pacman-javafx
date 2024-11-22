@@ -12,6 +12,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
@@ -56,12 +57,18 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengen
  */
 public class PlayScene2D extends GameScene2D implements CameraControlledGameScene {
 
-    static final Vector2i CANVAS_SIZE = new Vector2i(NES_TILES_X * TS, 44 * TS);
+    private static final Vector2i CANVAS_SIZE = new Vector2i(NES_TILES_X * TS, 44 * TS);
+
+    private static final float CAM_NORMAL_SPEED = 0.03f;
+    private static final int CAM_MIN = -72;
+    //TODO make dependent from map height
+    private static final int CAM_MAX = 8;
+
     private static final int MOVING_MESSAGE_DELAY = 120;
 
     private final SubScene fxSubScene;
     private final ParallelCamera camera = new ParallelCamera();
-    private final Canvas canvas = new Canvas(NES_RESOLUTION_X, NES_RESOLUTION_Y);
+    private final Canvas canvas = new Canvas(CANVAS_SIZE.x(), CANVAS_SIZE.y());
     private MessageMovement messageMovement;
     private MazeFlashing mazeFlashing;
     private int camDelay;
@@ -107,49 +114,44 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             messageMovement.update();
             updateSound();
         }
-        updateCamera();
+        updateCamera(context.level().world(), context.level().pac());
     }
 
-    private void updateCamera() {
+    private void updateCamera(GameWorld world, Pac pac) {
         if (camDelay > 0) {
             --camDelay; // initial delay before camera starts moving
         }
         else {
-
-            double top = topCameraPosition(), bottom = bottomCameraPosition();
             if (context.gameState() == GameState.GAME_OVER) {
-                moveCamera(top, top, bottom);
+                moveCamera(camTop(), CAM_NORMAL_SPEED);
             } else {
-                int mazeHeightTiles = context.worldSizeInTilesOrElse(new Vector2i(NES_TILES_X, NES_TILES_Y)).y();
-                moveCamera(focusPlayer(context.level().pac(), mazeHeightTiles), top, bottom);
+                moveCamera(keepInFocus(pac, world.map().terrain().numRows()), CAM_NORMAL_SPEED);
             }
         }
     }
 
-    private void moveCamera(double targetY, double top, double bottom) {
-        double y = lerp(camera.getTranslateY(), targetY, 0.025);
-        camera.setTranslateY(clamp(y, top, bottom));
-        Logger.info("Camera: y={0.00} target={} top={} bottom={}", camera.getTranslateY(), targetY, top, bottom);
+    private void initCamera() {
+        camDelay = 90;
+        camera.setTranslateY(camTop());
     }
 
-    //TODO make dependent from map height
-    static int CAM_MIN = -72, CAM_MAX = 8;
+    private void moveCamera(double targetY, double speed) {
+        double y = lerp(camera.getTranslateY(), targetY, speed);
+        camera.setTranslateY(clamp(y, camTop(), camBottom()));
+        Logger.info("Camera: y={0.00} target={} top={} bottom={}", camera.getTranslateY(), targetY, camTop(), camBottom());
+    }
 
-    private double focusPlayer(Pac player, double mazeHeightTiles) {
-        double t = player.tile().y() / mazeHeightTiles;
-        if (t < 0.4) {
-            t = 0;
-        } else if (t > 0.6) {
-            t = 1.0;
-        }
+    private double keepInFocus(Creature guy, double mazeHeightTiles) {
+        double t = (double) guy.tile().y() / mazeHeightTiles;
+        if (t < 0.4) { t = 0; } else if (t > 0.6) { t = 1.0; }
         return scaled(lerp(CAM_MIN, CAM_MAX, t));
     }
 
-    private double topCameraPosition() {
+    private double camTop() {
         return scaled(CAM_MIN);
     }
 
-    private double bottomCameraPosition() {
+    private double camBottom() {
         return scaled(CAM_MAX);
     }
 
@@ -171,11 +173,6 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     @Override
     public Camera camera() {
         return camera;
-    }
-
-    private void initCamera() {
-        camDelay = 90;
-        camera.setTranslateY(topCameraPosition());
     }
 
     @Override

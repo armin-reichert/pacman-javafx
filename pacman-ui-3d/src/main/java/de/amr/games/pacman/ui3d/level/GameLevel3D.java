@@ -208,6 +208,7 @@ public class GameLevel3D {
         final GameLevel level = game.level().orElseThrow();
         final GameWorld world = level.world();
         final AssetStorage assets = context.assets();
+        final Map<String, Color> colorMap = extractColorMap(level.mapConfig());
 
         pac3D = createPac3D(variant, assets, context.sound(), level.pac());
         ghosts3D = level.ghosts()
@@ -223,7 +224,6 @@ public class GameLevel3D {
 
         wallStrokeMaterialPy.bind(wallStrokeColorPy.map(Ufx::coloredMaterial));
 
-        Map<String, Color> colorMap = extractColorMap(level.mapConfig());
         buildWorld3D(world, assets, colorMap);
         addFood3D(world, assets, colorMap);
 
