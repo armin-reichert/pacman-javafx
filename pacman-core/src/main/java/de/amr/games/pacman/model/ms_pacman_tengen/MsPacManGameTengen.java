@@ -437,6 +437,8 @@ public class MsPacManGameTengen extends GameModel {
             level.world().setGhostPosition(ghost.id(), level.world().ghostPosition(ghost.id()).plus(0, HTS))
         );
         levelCounterEnabled = true;
+        levelCounter.clear();
+        levelCounter.add((byte)0);
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
         setDemoLevelBehavior();
         demoLevelSteering.init();

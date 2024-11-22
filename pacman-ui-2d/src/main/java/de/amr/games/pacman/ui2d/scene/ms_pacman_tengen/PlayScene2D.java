@@ -22,6 +22,7 @@ import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.sound.GameSound;
+import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.Camera;
 import javafx.scene.Node;
@@ -78,6 +79,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         root.setBackground(null);
         fxSubScene = new SubScene(root, 42, 42);
         fxSubScene.setCamera(camera);
+        fxSubScene.setFill(nesPaletteColor(0x0f));
     }
 
     @Override
