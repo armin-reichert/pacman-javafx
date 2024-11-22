@@ -16,6 +16,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
+import java.util.Map;
+
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
@@ -23,6 +25,13 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  * @author Armin Reichert
  */
 public class PacManGameRenderer implements GameRenderer {
+
+    public static final Map<String, Color> COLOR_MAP = Map.of(
+        "fill",   Color.valueOf("#000000"),
+        "stroke", Color.valueOf("#2121ff"),
+        "door",   Color.valueOf("#fcb5ff"),
+        "pellet", Color.valueOf("febdb4")
+    );
 
     private final AssetStorage assets;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);

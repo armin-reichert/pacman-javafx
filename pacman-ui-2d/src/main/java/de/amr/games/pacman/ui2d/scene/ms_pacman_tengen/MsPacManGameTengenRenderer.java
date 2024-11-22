@@ -47,14 +47,14 @@ import static java.util.function.Predicate.not;
  */
 public class MsPacManGameTengenRenderer implements GameRenderer {
 
-    public static EnumMap<NES_ColorScheme, Map<String, String>> COLOR_MAPS = new EnumMap<>(NES_ColorScheme.class);
+    public static EnumMap<NES_ColorScheme, Map<String, Color>> COLOR_MAPS = new EnumMap<>(NES_ColorScheme.class);
     static {
         for (var nesColorScheme : NES_ColorScheme.values()) {
             COLOR_MAPS.put(nesColorScheme, Map.of(
-                "fill",   nesColorScheme.fillColor(),
-                "stroke", nesColorScheme.strokeColor(),
-                "door",   nesColorScheme.strokeColor(),
-                "pellet", nesColorScheme.pelletColor()
+                "fill",   Color.valueOf(nesColorScheme.fillColor()),
+                "stroke", Color.valueOf(nesColorScheme.strokeColor()),
+                "door",   Color.valueOf(nesColorScheme.strokeColor()),
+                "pellet", Color.valueOf(nesColorScheme.pelletColor())
             ));
         }
     }
@@ -122,14 +122,14 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             case STRANGE -> strangeMapSprite(mapConfig);
         };
 
-        Map<String, String> colorMap = COLOR_MAPS.get(nesColorScheme);
+        Map<String, Color> colorMap = COLOR_MAPS.get(nesColorScheme);
         terrainRenderer.setMapBackgroundColor(bgColor);
-        terrainRenderer.setWallStrokeColor(Color.valueOf(colorMap.get("stroke")));
-        terrainRenderer.setWallFillColor(Color.valueOf(colorMap.get("fill")));
-        terrainRenderer.setDoorColor(Color.valueOf(colorMap.get("door")));
+        terrainRenderer.setWallStrokeColor(colorMap.get("stroke"));
+        terrainRenderer.setWallFillColor(colorMap.get("fill"));
+        terrainRenderer.setDoorColor(colorMap.get("door"));
 
-        foodRenderer.setPelletColor(Color.valueOf(colorMap.get("pellet")));
-        foodRenderer.setEnergizerColor(Color.valueOf(colorMap.get("pellet")));
+        foodRenderer.setPelletColor(colorMap.get("pellet"));
+        foodRenderer.setEnergizerColor(colorMap.get("pellet"));
     }
 
     @Override

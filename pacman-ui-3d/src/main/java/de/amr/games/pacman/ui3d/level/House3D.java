@@ -36,7 +36,7 @@ public class House3D {
     private final Group root = new Group();
     private final Door3D door3D;
 
-    public House3D(GameWorld world, Map<String, String> mapColorScheme) {
+    public House3D(GameWorld world, Map<String, Color> colorMap) {
         // tile coordinates
         int xMin = world.houseTopLeftTile().x();
         int xMax = xMin + world.houseSize().x() - 1;
@@ -52,7 +52,7 @@ public class House3D {
             createWall(xMin, yMax, xMax, yMax)
         );
 
-        Color doorColor = Color.web(mapColorScheme.get("door"));
+        Color doorColor = colorMap.get("door");
         door3D = new Door3D(leftDoorTile, rightDoorTile, doorColor);
         door3D.drawModePy.bind(PY_3D_DRAW_MODE);
 

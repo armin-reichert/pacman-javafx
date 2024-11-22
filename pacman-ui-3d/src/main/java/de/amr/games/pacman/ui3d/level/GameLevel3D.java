@@ -15,11 +15,13 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.ms_pacman.MsPacManGame;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
+import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenRenderer;
+import de.amr.games.pacman.ui2d.scene.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui2d.sound.GameSound;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.Ufx;
@@ -221,7 +223,7 @@ public class GameLevel3D {
 
         wallStrokeMaterialPy.bind(wallStrokeColorPy.map(Ufx::coloredMaterial));
 
-        Map<String, String> colorMap = buildColorMap(level.mapConfig());
+        Map<String, Color> colorMap = extractColorMap(level.mapConfig());
         buildWorld3D(world, assets, colorMap);
         addFood3D(world, assets, colorMap);
 
@@ -236,10 +238,11 @@ public class GameLevel3D {
 
     //TODO this should be done elsewhere
     @SuppressWarnings("unchecked")
-    private Map<String, String> buildColorMap(Map<String, Object> mapConfig) {
+    private Map<String, Color> extractColorMap(Map<String, Object> mapConfig) {
         return switch (context.gameVariant()) {
-            case PACMAN, PACMAN_XXL -> (Map<String, String>) mapConfig.get("colorMap");
-            case MS_PACMAN -> MsPacManGame.COLOR_MAPS.get((int) mapConfig.get("colorMapIndex"));
+            case PACMAN           -> PacManGameRenderer.COLOR_MAP;
+            case PACMAN_XXL       -> GameRenderer.toColorMap((Map<String, String>) mapConfig.get("colorMap"));
+            case MS_PACMAN        -> MsPacManGameRenderer.COLOR_MAPS.get((int) mapConfig.get("colorMapIndex"));
             case MS_PACMAN_TENGEN -> MsPacManGameTengenRenderer.COLOR_MAPS.get((NES_ColorScheme) mapConfig.get("nesColorScheme"));
         };
     }
@@ -282,12 +285,12 @@ public class GameLevel3D {
         }
     }
 
-    private void buildWorld3D(GameWorld world, AssetStorage assets, Map<String, String> mapColorScheme) {
+    private void buildWorld3D(GameWorld world, AssetStorage assets, Map<String, Color> colorMap) {
         //TODO check this
         obstacleHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
-        wallStrokeColorPy.set(Color.web(mapColorScheme.get("stroke")));
-        wallFillColorPy.set(Color.web(mapColorScheme.get("fill")));
+        wallStrokeColorPy.set(colorMap.get("stroke"));
+        wallFillColorPy.set(colorMap.get("fill"));
 
         TileMap terrain = world.map().terrain();
         Box floor = createFloor(assets.get("floor_textures"), terrain.numCols() * TS - 1, terrain.numRows() * TS - 1);
@@ -305,7 +308,7 @@ public class GameLevel3D {
                     wallFillMaterialPy, wallStrokeMaterialPy));
         });
 
-        house3D = new House3D(world, mapColorScheme);
+        house3D = new House3D(world, colorMap);
         house3D.heightPy.bind(houseHeightPy);
         house3D.fillMaterialPy.bind(wallFillColorPy.map(fillColor -> opaqueColor(fillColor, HOUSE_OPACITY)).map(Ufx::coloredMaterial));
         house3D.strokeMaterialPy.bind(wallStrokeMaterialPy);
@@ -339,9 +342,9 @@ public class GameLevel3D {
             : textures.get(textureName);
     }
 
-    private void addFood3D(GameWorld world, AssetStorage assets, Map<String, String> mapColorScheme) {
+    private void addFood3D(GameWorld world, AssetStorage assets, Map<String, Color> colorMap) {
         TileMap foodMap = world.map().food();
-        Color foodColor = Color.web(mapColorScheme.get("pellet"));
+        Color foodColor = colorMap.get("pellet");
         Material foodMaterial = coloredMaterial(foodColor);
         Model3D pelletModel3D = assets.get("model3D.pellet");
         foodMap.tiles().filter(world::hasFoodAt).forEach(tile -> {

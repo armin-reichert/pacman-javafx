@@ -37,6 +37,15 @@ import static java.util.function.Predicate.not;
  */
 public interface GameRenderer {
 
+    static Map<String, Color> toColorMap(Map<String, String> sourceMap) {
+        return Map.of(
+            "fill",   Color.valueOf(sourceMap.get("fill")),
+            "stroke", Color.valueOf(sourceMap.get("stroke")),
+            "door",   Color.valueOf(sourceMap.get("door")),
+            "pellet", Color.valueOf(sourceMap.get("pellet"))
+        );
+    }
+
     default void update(Map<String, Object> mapConfig) {}
     AssetStorage assets();
     Color backgroundColor();

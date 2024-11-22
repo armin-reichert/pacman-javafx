@@ -10,7 +10,6 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,14 +24,6 @@ public class MazeFlashing {
         "food",   Color.valueOf(NES.Palette.color(0x0f))
     );
 
-    private static Map<String, Color> colorMapFromScheme(Map<String, String> colorScheme) {
-        Map<String, Color> colorMap = new HashMap<>();
-        for (String key : colorScheme.keySet()) {
-            colorMap.put(key, Color.valueOf(colorScheme.get(key)));
-        }
-        return colorMap;
-    }
-
     private final List<Map<String, Color>> colorMaps = new ArrayList<>();
     private long startTick;
     private int currentIndex;
@@ -41,7 +32,7 @@ public class MazeFlashing {
     public void init(Map<String, Object> mapConfig, int numFlashes) {
         NES_ColorScheme nesColorScheme = (NES_ColorScheme) mapConfig.get("nesColorScheme");
         boolean randomColorScheme = (boolean) mapConfig.get("randomColorScheme");
-        Map<String, Color> worldMapColorMap = colorMapFromScheme(COLOR_MAPS.get(nesColorScheme));
+        Map<String, Color> worldMapColorMap = COLOR_MAPS.get(nesColorScheme);
         colorMaps.clear();
         for (int i = 0; i < numFlashes; ++i) {
             colorMaps.add(randomColorScheme ? randomColorMap() : worldMapColorMap);
@@ -56,7 +47,7 @@ public class MazeFlashing {
         while (nesColorScheme.fillColor().equals(NES.Palette.color(0x0f))) {
             nesColorScheme = NES_ColorScheme.random();
         }
-        return colorMapFromScheme(COLOR_MAPS.get(nesColorScheme));
+        return COLOR_MAPS.get(nesColorScheme);
     }
 
     public Map<String, Color> currentColorMap() {

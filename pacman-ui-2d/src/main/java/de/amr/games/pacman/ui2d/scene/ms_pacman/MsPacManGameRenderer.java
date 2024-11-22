@@ -21,15 +21,26 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import java.util.List;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.RectArea.rect;
+import static de.amr.games.pacman.ui2d.rendering.GameRenderer.toColorMap;
 
 /**
  * @author Armin Reichert
  */
 public class MsPacManGameRenderer implements GameRenderer {
+
+    public static final List<Map<String, Color>> COLOR_MAPS = List.of(
+        toColorMap(Map.of("fill", "FFB7AE", "stroke", "FF0000", "door", "FCB5FF", "pellet", "DEDEFF")),
+        toColorMap(Map.of("fill", "47B7FF", "stroke", "DEDEFF", "door", "FCB5FF", "pellet", "FFFF00")),
+        toColorMap(Map.of("fill", "DE9751", "stroke", "DEDEFF", "door", "FCB5FF", "pellet", "FF0000")),
+        toColorMap(Map.of("fill", "2121FF", "stroke", "FFB751", "door", "FCB5FF", "pellet", "DEDEFF")),
+        toColorMap(Map.of("fill", "FFB7FF", "stroke", "FFFF00", "door", "FCB5FF", "pellet", "00FFFF")),
+        toColorMap(Map.of("fill", "FFB7AE", "stroke", "FF0000", "door", "FCB5FF", "pellet", "DEDEFF"))
+    );
 
     private static final RectArea[] MAPS_WITH_FOOD_SPRITES = {
         rect(0,     0, 226, 248),
