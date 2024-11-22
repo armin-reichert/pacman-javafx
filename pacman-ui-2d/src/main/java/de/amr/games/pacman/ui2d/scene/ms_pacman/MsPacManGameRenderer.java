@@ -26,7 +26,6 @@ import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.RectArea.rect;
-import static de.amr.games.pacman.ui2d.rendering.GameRenderer.toColorMap;
 
 /**
  * @author Armin Reichert
@@ -34,12 +33,12 @@ import static de.amr.games.pacman.ui2d.rendering.GameRenderer.toColorMap;
 public class MsPacManGameRenderer implements GameRenderer {
 
     public static final List<Map<String, Color>> COLOR_MAPS = List.of(
-        toColorMap(Map.of("fill", "FFB7AE", "stroke", "FF0000", "door", "FCB5FF", "pellet", "DEDEFF")),
-        toColorMap(Map.of("fill", "47B7FF", "stroke", "DEDEFF", "door", "FCB5FF", "pellet", "FFFF00")),
-        toColorMap(Map.of("fill", "DE9751", "stroke", "DEDEFF", "door", "FCB5FF", "pellet", "FF0000")),
-        toColorMap(Map.of("fill", "2121FF", "stroke", "FFB751", "door", "FCB5FF", "pellet", "DEDEFF")),
-        toColorMap(Map.of("fill", "FFB7FF", "stroke", "FFFF00", "door", "FCB5FF", "pellet", "00FFFF")),
-        toColorMap(Map.of("fill", "FFB7AE", "stroke", "FF0000", "door", "FCB5FF", "pellet", "DEDEFF"))
+        Map.of("fill", Color.valueOf("FFB7AE"), "stroke", Color.valueOf("FF0000"), "door", Color.valueOf("FCB5FF"), "pellet", Color.valueOf("DEDEFF")),
+        Map.of("fill", Color.valueOf("47B7FF"), "stroke", Color.valueOf("DEDEFF"), "door", Color.valueOf("FCB5FF"), "pellet", Color.valueOf("FFFF00")),
+        Map.of("fill", Color.valueOf("DE9751"), "stroke", Color.valueOf("DEDEFF"), "door", Color.valueOf("FCB5FF"), "pellet", Color.valueOf("FF0000")),
+        Map.of("fill", Color.valueOf("2121FF"), "stroke", Color.valueOf("FFB751"), "door", Color.valueOf("FCB5FF"), "pellet", Color.valueOf("DEDEFF")),
+        Map.of("fill", Color.valueOf("FFB7FF"), "stroke", Color.valueOf("FFFF00"), "door", Color.valueOf("FCB5FF"), "pellet", Color.valueOf("00FFFF")),
+        Map.of("fill", Color.valueOf("FFB7AE"), "stroke", Color.valueOf("FF0000"), "door", Color.valueOf("FCB5FF"), "pellet", Color.valueOf("DEDEFF"))
     );
 
     private static final RectArea[] MAPS_WITH_FOOD_SPRITES = {
