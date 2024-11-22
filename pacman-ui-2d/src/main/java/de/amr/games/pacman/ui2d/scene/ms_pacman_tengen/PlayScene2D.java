@@ -131,10 +131,12 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     private void camToTop() {
         cameraTargetY = camMinY();
+        focusPlayer = false;
     }
 
     private void camToBottom() {
         cameraTargetY = camMaxY();
+        focusPlayer = false;
     }
 
     private double camMinY() {
@@ -396,6 +398,9 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         gr.ctx().setFill(Color.YELLOW);
         gr.ctx().setFont(Font.font("Sans", FontWeight.BOLD, 24));
         gr.ctx().fillText(String.format("%s %d", context.gameState(), context.gameState().timer().tickCount()), 0, 64);
+        gr.ctx().fillText("Camera target=%.2f position=%.2f Scene width=%.0f height=%.0f".formatted(
+            cameraTargetY, camera.getTranslateY(), scaled(size().x()), scaled(size().y()) ),
+            scaled(20), scaled(0.5 * size().y() + 20));
     }
 
     private Vector2f centerBelowHouse(GameWorld world) {
