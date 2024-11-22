@@ -11,7 +11,6 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
@@ -154,30 +153,29 @@ public class MsPacManGameRenderer implements GameRenderer {
             overPaintEnergizers(world, tile -> !blinking || world.hasEatenFoodAt(tile));
             ctx().restore();
         }
-        context.level().bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet(), (MovingBonus) bonus));
+        context.level().bonus().ifPresent(bonus -> drawMovingBonus((MovingBonus) bonus));
     }
 
-    public void drawClapperBoard(Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
-        var sprite = animation.currentSprite(MsPacManGameSpriteSheet.CLAPPERBOARD_SPRITES);
-        if (sprite != RectArea.PIXEL) {
+    public void drawClapperBoard(Font font, Color textColor, ClapperboardAnimation clapperboardAnimation, double x, double y) {
+        clapperboardAnimation.currentSprite().ifPresent(sprite -> {
             drawSpriteCenteredOverTile(sprite, x, y);
             ctx().setFont(font);
             ctx().setFill(textColor.darker());
             var numberX = scaled(x + sprite.width() - 25);
             var numberY = scaled(y + 18);
             ctx().setFill(textColor);
-            ctx().fillText(animation.number(), numberX, numberY);
+            ctx().fillText(clapperboardAnimation.number(), numberX, numberY);
             var textX = scaled(x + sprite.width());
-            ctx().fillText(animation.text(), textX, numberY);
-        }
+            ctx().fillText(clapperboardAnimation.text(), textX, numberY);
+        });
     }
 
-    public void drawMovingBonus(GameSpriteSheet spriteSheet, MovingBonus bonus) {
+    private void drawMovingBonus(MovingBonus bonus) {
         ctx().save();
         ctx().translate(0, bonus.elongationY());
         switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawEntitySprite(bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawEntitySprite(bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
+            case Bonus.STATE_EDIBLE -> drawEntitySprite(bonus.entity(), spriteSheet().bonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawEntitySprite(bonus.entity(), spriteSheet().bonusValueSprite(bonus.symbol()));
             default -> {}
         }
         ctx().restore();

@@ -6,6 +6,10 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
 import de.amr.games.pacman.lib.RectArea;
 
+import java.util.Optional;
+
+import static de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSpriteSheet.CLAPPERBOARD_SPRITES;
+
 /**
  * @author Armin Reichert
  */
@@ -45,22 +49,22 @@ public class ClapperboardAnimation {
         }
     }
 
-    public RectArea currentSprite(RectArea[] sprites) {
+    public Optional<RectArea> currentSprite() {
         if (tick == 0) {
-            return sprites[CLOSED];
+            return Optional.of(CLAPPERBOARD_SPRITES[CLOSED]);
         }
         if (tick <= 47) {
-            return sprites[WIDE];
+            return Optional.of(CLAPPERBOARD_SPRITES[WIDE]);
         }
         if (tick <= 53) {
-            return sprites[OPEN];
+            return Optional.of(CLAPPERBOARD_SPRITES[OPEN]);
         }
         if (tick <= 58) {
-            return sprites[CLOSED];
+            return Optional.of(CLAPPERBOARD_SPRITES[CLOSED]);
         }
         if (tick <= 87) {
-            return sprites[WIDE];
+            return Optional.of(CLAPPERBOARD_SPRITES[WIDE]);
         }
-        return RectArea.PIXEL;
+        return Optional.empty();
     }
 }
