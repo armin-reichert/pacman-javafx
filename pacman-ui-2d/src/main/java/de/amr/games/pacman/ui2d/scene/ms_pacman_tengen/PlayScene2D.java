@@ -61,8 +61,6 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     private static final float CAM_NORMAL_SPEED = 0.03f;
     private static final int CAM_MIN = -72;
-    //TODO make dependent from map height
-    private static final int CAM_MAX = 8;
 
     private static final int MOVING_MESSAGE_DELAY = 120;
 
@@ -122,37 +120,34 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             --camDelay; // initial delay before camera starts moving
         }
         else {
+            int tilesY = world.map().terrain().numRows();
             if (context.gameState() == GameState.GAME_OVER) {
-                moveCamera(camTop(), CAM_NORMAL_SPEED);
+                moveCamera(scaled(CAM_MIN), tilesY);
             } else {
-                moveCamera(keepInFocus(pac, world.map().terrain().numRows()), CAM_NORMAL_SPEED);
+                moveCamera(keepInFocus(pac, tilesY), tilesY);
             }
         }
     }
 
     private void initCamera() {
         camDelay = 90;
-        camera.setTranslateY(camTop());
+        camera.setTranslateY(scaled(CAM_MIN));
     }
 
-    private void moveCamera(double targetY, double speed) {
-        double y = lerp(camera.getTranslateY(), targetY, speed);
-        camera.setTranslateY(clamp(y, camTop(), camBottom()));
-        Logger.info("Camera: y={0.00} target={} top={} bottom={}", camera.getTranslateY(), targetY, camTop(), camBottom());
+    private void moveCamera(double targetY, int tilesY) {
+        double y = lerp(camera.getTranslateY(), targetY, CAM_NORMAL_SPEED);
+        camera.setTranslateY(clamp(y, scaled(CAM_MIN), scaled(camMax(tilesY))));
+        Logger.info("Camera: y={0.00} target={} top={} bottom={}", camera.getTranslateY(), targetY, scaled(CAM_MIN), camMax(tilesY));
     }
 
-    private double keepInFocus(Creature guy, double mazeHeightTiles) {
-        double t = (double) guy.tile().y() / mazeHeightTiles;
-        if (t < 0.4) { t = 0; } else if (t > 0.6) { t = 1.0; }
-        return scaled(lerp(CAM_MIN, CAM_MAX, t));
+    private double keepInFocus(Creature guy, int tilesY) {
+        double frac = (double) guy.tile().y() / tilesY;
+        if (frac < 0.4) { frac = 0; } else if (frac > 0.6) { frac = 1.0; }
+        return scaled(lerp(CAM_MIN, camMax(tilesY), frac));
     }
 
-    private double camTop() {
-        return scaled(CAM_MIN);
-    }
-
-    private double camBottom() {
-        return scaled(CAM_MAX);
+    private double camMax(int tilesY) {
+        return (tilesY - 35) * TS;
     }
 
     @Override
@@ -177,11 +172,9 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public Vector2f size() {
-        Vector2i nesSizeInTiles = new Vector2i(NES_TILES_X, NES_TILES_Y);
-        //TODO: change map definitions instead of inventing 2 additional rows here?
-        return (context == null)
-            ? nesSizeInTiles.toVector2f()
-            : context.worldSizeInTilesOrElse(nesSizeInTiles).plus(0, 2).scaled((float) TS);
+        return context == null
+            ? NES_SIZE
+            : context.worldSizeInTilesOrElse(new Vector2i(NES_TILES_X, NES_TILES_Y)).scaled((float) TS);
     }
 
     @Override
@@ -373,7 +366,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             // as long as Pac-Man is invisible when the game is started, one entry more appears in the lives counter
             livesCounterEntries += 1;
         }
-        r.drawLivesCounter(livesCounterEntries, 5, size());
+        r.drawLivesCounter(livesCounterEntries, 5, 2 * TS, size().y() - TS);
         r.setLevelNumberBoxesVisible(!context.game().isDemoLevel() && game.mapCategory() != MapCategory.ARCADE);
         r.drawLevelCounter(context, size());
 

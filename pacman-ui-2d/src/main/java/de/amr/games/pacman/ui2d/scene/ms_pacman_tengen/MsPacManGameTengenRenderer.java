@@ -40,6 +40,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.RectArea.rect;
 import static de.amr.games.pacman.model.actors.Animations.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet.LEVEL_BOX_SPRITE;
 import static java.util.function.Predicate.not;
 
 /**
@@ -467,30 +468,33 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawLivesCounter(int numLives, int maxLives, Vector2f size) {
-        ctx().setImageSmoothing(false);
-        GameRenderer.super.drawLivesCounter(numLives, maxLives, size.minus(0, TS)); //TODO this is ugly
-    }
-
-    @Override
-    public void drawLevelCounter(GameContext context,  Vector2f size) {
+    public void drawLevelCounter(GameContext context, Vector2f worldMapSize) {
+        double y = worldMapSize.y() - TS;
         ctx().setImageSmoothing(false);
         MsPacManGameTengen game = (MsPacManGameTengen) context.game();
         int levelNumber = context.level().number;
-        // TODO: This is ugly, maybe change all Tengen maps instead?
-        double y = size.y() - 3 * TS;
         if (levelNumberBoxesVisible) {
             drawLevelNumberBox(levelNumber, 0, y); // left box
-            drawLevelNumberBox(levelNumber, size.x() - 2 * TS, y); // right box
+            drawLevelNumberBox(levelNumber, worldMapSize.x() - 2 * TS, y); // right box
         }
-        double symbolX = size.x() - 4 * TS;
+        double symbolX = worldMapSize.x() - 4 * TS;
         for (byte symbol : game.levelCounter()) {
             drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), symbolX, y);
             symbolX -= TS * 2;
         }
     }
 
-    public void drawTengenPresents(long t, double x, double y) {
+    private void drawLevelNumberBox(int levelNumber, double x, double y) {
+        drawSpriteScaled(LEVEL_BOX_SPRITE, x, y);
+        double digitY = y + 2;
+        int tens = levelNumber / 10, ones = levelNumber % 10;
+        drawSpriteScaled(spriteSheet.digit(ones), x + 10, digitY);
+        if (tens > 0) {
+            drawSpriteScaled(spriteSheet.digit(tens), x + 2,  digitY);
+        }
+    }
+
+    public void drawAnimatedTengenPresentsText(long t, double x, double y) {
         drawText("TENGEN PRESENTS", shadeOfBlue(t), scaledArcadeFont(TS), x, y);
     }
 
@@ -499,17 +503,6 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     private Color shadeOfBlue(long tick) {
         int i = (int) (tick % 64) / 16;
         return MsPacManGameTengenSceneConfig.nesPaletteColor(0x01 + 0x10 * i);
-    }
-
-    private void drawLevelNumberBox(int levelNumber, double x, double y) {
-        ctx().setImageSmoothing(false);
-        drawSpriteScaled(MsPacManGameTengenSpriteSheet.LEVEL_BOX_SPRITE, x, y);
-        double digitY = y + 2;
-        int tens = levelNumber / 10, ones = levelNumber % 10;
-        drawSpriteScaled(spriteSheet.digit(ones), x + 10, digitY);
-        if (tens > 0) {
-            drawSpriteScaled(spriteSheet.digit(tens), x + 2,  digitY);
-        }
     }
 
     public void drawBar(Color outlineColor, Color barColor, double width, double y) {

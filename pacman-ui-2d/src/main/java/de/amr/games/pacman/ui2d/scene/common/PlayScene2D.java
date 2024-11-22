@@ -162,7 +162,7 @@ public class PlayScene2D extends GameScene2D {
             if (context.gameState() == GameState.STARTING_GAME && !context.level().pac().isVisible()) {
                 numLivesShown += 1;
             }
-            renderer.drawLivesCounter(numLivesShown, 5, size());
+            renderer.drawLivesCounter(numLivesShown, 5, 2 * TS, size().y() - 2 * TS);
         } else {
             int credit = context.gameController().coinControl().credit();
             renderer.drawText("CREDIT %2d".formatted(credit), Color.valueOf(Arcade.Palette.WHITE), renderer.scaledArcadeFont(TS), 2 * TS, size().y() - 2);

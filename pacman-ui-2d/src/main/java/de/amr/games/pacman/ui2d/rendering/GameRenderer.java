@@ -264,12 +264,10 @@ public interface GameRenderer {
         ctx().fillText(text, scaled(x), scaled(y));
     }
 
-    default void drawLivesCounter(int numLives, int maxLives, Vector2f size) {
+    default void drawLivesCounter(int numLives, int maxLives, double x, double y) {
         if (numLives == 0) {
             return;
         }
-        double x = TS * 2;
-        double y = size.y() - 2 *TS;
         for (int i = 0; i < Math.min(numLives, maxLives); ++i) {
             drawSpriteScaled(spriteSheet().livesCounterSprite(), x + TS * (2 * i), y);
         }
