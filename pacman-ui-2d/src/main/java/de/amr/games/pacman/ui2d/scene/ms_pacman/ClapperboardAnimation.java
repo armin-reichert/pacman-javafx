@@ -15,15 +15,17 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSpriteSheet.C
  */
 public class ClapperboardAnimation {
 
-    private static final byte WIDE = 0;
-    private static final byte OPEN = 1;
-    private static final byte CLOSED = 2;
+    private static final RectArea
+        WIDE_SPRITE = CLAPPERBOARD_SPRITES[0],
+        OPEN_SPRITE = CLAPPERBOARD_SPRITES[1],
+        CLOSED_SPRITE = CLAPPERBOARD_SPRITES[2];
 
     private final String number;
     private final String text;
 
-    private long tick;
+    private int tick;
     private boolean running;
+    private RectArea currentSprite;
 
     public ClapperboardAnimation(String number, String text) {
         this.number = number;
@@ -40,6 +42,7 @@ public class ClapperboardAnimation {
 
     public void start() {
         tick = 0;
+        currentSprite = CLOSED_SPRITE;
         running = true;
     }
 
@@ -50,21 +53,16 @@ public class ClapperboardAnimation {
     }
 
     public Optional<RectArea> currentSprite() {
-        if (tick == 0) {
-            return Optional.of(CLAPPERBOARD_SPRITES[CLOSED]);
+        switch (tick) {
+            case  1 -> currentSprite = WIDE_SPRITE;
+            case 48 -> currentSprite = OPEN_SPRITE;
+            case 54 -> currentSprite = CLOSED_SPRITE;
+            case 59 -> currentSprite = WIDE_SPRITE;
+            case 88 -> {
+                currentSprite = null;
+                running = false;
+            }
         }
-        if (tick <= 47) {
-            return Optional.of(CLAPPERBOARD_SPRITES[WIDE]);
-        }
-        if (tick <= 53) {
-            return Optional.of(CLAPPERBOARD_SPRITES[OPEN]);
-        }
-        if (tick <= 58) {
-            return Optional.of(CLAPPERBOARD_SPRITES[CLOSED]);
-        }
-        if (tick <= 87) {
-            return Optional.of(CLAPPERBOARD_SPRITES[WIDE]);
-        }
-        return Optional.empty();
+        return Optional.ofNullable(currentSprite);
     }
 }
