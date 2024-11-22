@@ -60,7 +60,6 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     private static final Vector2i CANVAS_SIZE = new Vector2i(NES_TILES_X * TS, 44 * TS);
 
     private static final float CAM_NORMAL_SPEED = 0.03f;
-    private static final int CAM_MIN = -72;
 
     private static final int MOVING_MESSAGE_DELAY = 120;
 
@@ -122,7 +121,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         else {
             int tilesY = world.map().terrain().numRows();
             if (context.gameState() == GameState.GAME_OVER) {
-                moveCamera(scaled(CAM_MIN), tilesY);
+                moveCamera(camMin(), tilesY);
             } else {
                 moveCamera(keepInFocus(pac, tilesY), tilesY);
             }
@@ -131,23 +130,27 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     private void initCamera() {
         camDelay = 90;
-        camera.setTranslateY(scaled(CAM_MIN));
+        camera.setTranslateY(camMin());
     }
 
     private void moveCamera(double targetY, int tilesY) {
         double y = lerp(camera.getTranslateY(), targetY, CAM_NORMAL_SPEED);
-        camera.setTranslateY(clamp(y, scaled(CAM_MIN), scaled(camMax(tilesY))));
-        Logger.info("Camera: y={0.00} target={} top={} bottom={}", camera.getTranslateY(), targetY, scaled(CAM_MIN), camMax(tilesY));
+        camera.setTranslateY(clamp(y, camMin(), camMax(tilesY)));
+        Logger.info("Camera: y={0.00} target={} top={} bottom={}", camera.getTranslateY(), targetY, camMin(), camMax(tilesY));
     }
 
     private double keepInFocus(Creature guy, int tilesY) {
         double frac = (double) guy.tile().y() / tilesY;
         if (frac < 0.4) { frac = 0; } else if (frac > 0.6) { frac = 1.0; }
-        return scaled(lerp(CAM_MIN, camMax(tilesY), frac));
+        return lerp(camMin(), camMax(tilesY), frac);
+    }
+
+    private double camMin() {
+        return scaled(-9 * TS);
     }
 
     private double camMax(int tilesY) {
-        return (tilesY - 35) * TS;
+        return scaled((tilesY - 35) * TS);
     }
 
     @Override
