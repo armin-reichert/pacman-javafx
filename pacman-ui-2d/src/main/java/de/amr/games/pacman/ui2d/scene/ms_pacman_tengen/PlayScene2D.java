@@ -118,6 +118,10 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             --camDelay; // initial delay before camera starts moving
         }
         else {
+            //TODO hack: in case we come here by switching from 3D scene, focusPlayer might be false if it should be true
+            if (context.gameState() == GameState.HUNTING) {
+                focusPlayer = true;
+            }
             if (focusPlayer) {
                 double frac = (double) context.level().pac().tile().y() / mapTilesY();
                 if (frac < 0.4) { frac = 0; } else if (frac > 0.6) { frac = 1.0; }

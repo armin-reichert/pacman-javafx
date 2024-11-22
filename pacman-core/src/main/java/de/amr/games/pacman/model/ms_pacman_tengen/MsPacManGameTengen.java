@@ -424,20 +424,22 @@ public class MsPacManGameTengen extends GameModel {
 
     @Override
     public void configureDemoLevel() {
-        levelCounterEnabled = false;
-        demoLevelSteering.init();
-        level.setNumFlashes(5); // TODO check this
-        level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
-        level.setMapConfig(mapManager.getMapConfig(mapCategory, level.number));
-        WorldMap worldMap = (WorldMap) level.mapConfig().get("worldMap");
+        Map<String, Object> mapConfig = mapManager.getMapConfig(mapCategory, level.number);
+        WorldMap worldMap = (WorldMap) mapConfig.get("worldMap");
         createWorldAndPopulation(worldMap);
-        activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
+
+        level.setMapConfig(mapConfig);
+        level.setNumFlashes(5); // TODO check this
+        level.setIntermissionNumber(0);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // ghosts inside house start at floor of house
         level.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost ->
             level.world().setGhostPosition(ghost.id(), level.world().ghostPosition(ghost.id()).plus(0, HTS))
         );
+        levelCounterEnabled = true;
+        activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
         setDemoLevelBehavior();
+        demoLevelSteering.init();
     }
 
     @Override
