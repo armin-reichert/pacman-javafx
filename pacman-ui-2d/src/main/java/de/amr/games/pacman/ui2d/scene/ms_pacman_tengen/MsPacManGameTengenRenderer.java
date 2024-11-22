@@ -289,7 +289,6 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         if (!pac.isVisible()) {
             return;
         }
-        ctx().setImageSmoothing(false);
         pac.animations().ifPresent(animations -> {
             if (animations instanceof SpriteAnimationCollection spriteAnimations) {
                 SpriteAnimation spriteAnimation = spriteAnimations.currentAnimation();
@@ -336,39 +335,37 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         ctx().restore();
     }
 
-    public void drawEmptyMap(WorldMap worldMap, Map<String, Color> colorScheme) {
-        ctx().setImageSmoothing(false);
-        Color wallFillColor = colorScheme.get("fill");
-        Color wallStrokeColor = colorScheme.get("stroke");
-        Color doorColor = colorScheme.get("door");
+    public void drawEmptyMap(WorldMap worldMap, Map<String, Color> colorMap) {
         terrainRenderer.setMapBackgroundColor(bgColor);
-        terrainRenderer.setWallStrokeColor(wallStrokeColor);
-        terrainRenderer.setWallFillColor(wallFillColor);
-        terrainRenderer.setDoorColor(doorColor);
+        terrainRenderer.setWallStrokeColor(colorMap.get("stroke"));
+        terrainRenderer.setWallFillColor(colorMap.get("fill"));
+        terrainRenderer.setDoorColor(colorMap.get("door"));
         terrainRenderer.drawMap(ctx(), worldMap.terrain());
     }
 
     @Override
     public void drawWorld(GameContext context, GameWorld world, double mapX, double mapY) {
+        ctx().setImageSmoothing(false);
+
         var game = (MsPacManGameTengen) context.game();
         GameLevel level = game.level().orElseThrow();
-        MapCategory mapCategory = (MapCategory) level.mapConfig().get("mapCategory");
+        Map<String, Object> mapConfig = level.mapConfig();
 
         if (!isUsingDefaultGameOptions(game)) {
             drawGameOptionsInfo(world.map().terrain(), game);
         }
 
-        // All maps with a different color scheme than that in the sprite sheet have to be rendered using the
-        // generic vector renderer for now.
-        // TODO: vector rendering still looks really bad for some maps.
+        // Maps with a color scheme differing from that in the sprite sheet have to be rendered using the
+        // vector renderer for now.
+        // TODO: vector rendering looks really bad for some maps.
+        var mapCategory = (MapCategory) mapConfig.get("mapCategory");
+        int mapNumber = (int) mapConfig.get("mapNumber");
         boolean mapImageExists = game.isDemoLevel() || isMapImageAvailable(level.number, mapCategory);
         if (mapImageExists) {
-            drawLevelMessage(context); // message appears under map image!
-            int mapNumber = (int) level.mapConfig().get("mapNumber");
+            drawLevelMessage(context); // message appears under map image so draw it first
             RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
                 ? strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
                 : mapSprite.area();
-            ctx().setImageSmoothing(false);
             ctx().drawImage(mapSprite.source(),
                 area.x(), area.y(),
                 area.width(), area.height(),
@@ -384,9 +381,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             ctx().restore();
         }
         else {
-            world.map().food().tiles()
-                .filter(world::hasFoodAt)
-                .filter(not(world::isEnergizerPosition))
+            world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
                 .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
             if (blinking) {
                 world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
