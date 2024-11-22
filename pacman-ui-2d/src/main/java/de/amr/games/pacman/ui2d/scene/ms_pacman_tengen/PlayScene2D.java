@@ -12,7 +12,6 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
@@ -69,6 +68,8 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     private MessageMovement messageMovement;
     private MazeFlashing mazeFlashing;
     private int camDelay;
+    private double cameraTargetY;
+    private boolean focusPlayer;
 
     public PlayScene2D() {
         canvas.widthProperty().bind(scalingProperty().multiply(CANVAS_SIZE.x()));
@@ -84,6 +85,8 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public void doInit() {
+        camToTop();
+        focusPlayer = false;
         mazeFlashing = new MazeFlashing();
         messageMovement = new MessageMovement();
         context.enableJoypad();
@@ -111,46 +114,35 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             messageMovement.update();
             updateSound();
         }
-        updateCamera(context.level().world(), context.level().pac());
-    }
-
-    private void updateCamera(GameWorld world, Pac pac) {
         if (camDelay > 0) {
             --camDelay; // initial delay before camera starts moving
         }
         else {
-            int tilesY = world.map().terrain().numRows();
-            if (context.gameState() == GameState.GAME_OVER) {
-                moveCamera(camMin(), tilesY);
-            } else {
-                moveCamera(keepInFocus(pac, tilesY), tilesY);
+            if (focusPlayer) {
+                double frac = (double) context.level().pac().tile().y() / mapTilesY();
+                if (frac < 0.4) { frac = 0; } else if (frac > 0.6) { frac = 1.0; }
+                cameraTargetY = lerp(camMinY(), camMaxY(), frac);
             }
+            double y = lerp(camera.getTranslateY(), cameraTargetY, CAM_NORMAL_SPEED);
+            camera.setTranslateY(clamp(y, camMinY(), camMaxY()));
+            Logger.debug("Camera: y={0.00} target={} top={} bottom={}", camera.getTranslateY(), cameraTargetY, camMinY(), camMaxY());
         }
     }
 
-    private void initCamera() {
-        camDelay = 90;
-        camera.setTranslateY(camMin());
+    private void camToTop() {
+        cameraTargetY = camMinY();
     }
 
-    private void moveCamera(double targetY, int tilesY) {
-        double y = lerp(camera.getTranslateY(), targetY, CAM_NORMAL_SPEED);
-        camera.setTranslateY(clamp(y, camMin(), camMax(tilesY)));
-        Logger.debug("Camera: y={0.00} target={} top={} bottom={}", camera.getTranslateY(), targetY, camMin(), camMax(tilesY));
+    private void camToBottom() {
+        cameraTargetY = camMaxY();
     }
 
-    private double keepInFocus(Creature guy, int tilesY) {
-        double frac = (double) guy.tile().y() / tilesY;
-        if (frac < 0.4) { frac = 0; } else if (frac > 0.6) { frac = 1.0; }
-        return lerp(camMin(), camMax(tilesY), frac);
-    }
-
-    private double camMin() {
+    private double camMinY() {
         return scaled(-9 * TS);
     }
 
-    private double camMax(int tilesY) {
-        return scaled((tilesY - 35) * TS);
+    private double camMaxY() {
+        return scaled((mapTilesY() - 35) * TS);
     }
 
     @Override
@@ -203,11 +195,17 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         mazeFlashing.init(level.mapConfig(), level.numFlashes());
         context.enableJoypad();
         setKeyBindings();
+        camera.setTranslateY(camMinY());
     }
 
     @Override
     public void onLevelStarted(GameEvent e) {
-        initCamera();
+        camDelay = 90;
+        camToBottom();
+    }
+
+    private int mapTilesY() {
+        return context.level().world().map().terrain().numRows();
     }
 
     @Override
@@ -233,6 +231,9 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     public void onEnterGameState(GameState state) {
         MsPacManGameTengen game = (MsPacManGameTengen) context.game();
         switch (state) {
+            case HUNTING -> {
+                focusPlayer = true;
+            }
             case LEVEL_COMPLETE -> mazeFlashing.init(
                 context.level().mapConfig(),
                 context.level().numFlashes());
@@ -241,6 +242,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
                     Vector2f belowHouse = centerBelowHouse(context.level().world());
                     messageMovement.start(MOVING_MESSAGE_DELAY, belowHouse.x(), size().x());
                 }
+                camToTop();
             }
             default -> {}
         }
@@ -273,7 +275,12 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     }
 
     @Override
-    public void onPacDied(GameEvent e) {
+    public void onPacDead(GameEvent e) {
+        camToTop();
+    }
+
+    @Override
+    public void onPacDying(GameEvent e) {
         context.sound().playPacDeathSound();
     }
 

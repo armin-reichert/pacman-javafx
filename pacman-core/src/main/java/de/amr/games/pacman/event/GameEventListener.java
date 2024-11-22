@@ -39,7 +39,8 @@ public interface GameEventListener {
             case HUNTING_PHASE_STARTED -> onHuntingPhaseStarted(event);
             case LEVEL_CREATED -> onLevelCreated(event);
             case LEVEL_STARTED -> onLevelStarted(event);
-            case PAC_DYING -> onPacDied(event);
+            case PAC_DEAD -> onPacDead(event);
+            case PAC_DYING -> onPacDying(event);
             case PAC_FOUND_FOOD -> onPacFoundFood(event);
             case PAC_GETS_POWER -> onPacGetsPower(event);
             case PAC_LOST_POWER -> onPacLostPower(event);
@@ -68,7 +69,8 @@ public interface GameEventListener {
     default void onIntermissionStarted(GameEvent e) {}
     default void onLevelCreated(GameEvent e) {}
     default void onLevelStarted(GameEvent e) {}
-    default void onPacDied(GameEvent e) {}
+    default void onPacDead(GameEvent e) {}
+    default void onPacDying(GameEvent e) {}
     default void onPacFoundFood(GameEvent e) {}
     default void onPacGetsExtraLife(GameEvent e) {}
     default void onPacGetsPower(GameEvent e) {}

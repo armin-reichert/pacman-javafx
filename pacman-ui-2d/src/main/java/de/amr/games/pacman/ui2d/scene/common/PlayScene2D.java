@@ -267,7 +267,7 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onPacDied(GameEvent e) {
+    public void onPacDying(GameEvent e) {
         context.sound().playPacDeathSound();
     }
 

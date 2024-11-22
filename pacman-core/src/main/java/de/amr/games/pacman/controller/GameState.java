@@ -248,7 +248,8 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
-            timer.reset(240);
+            //TODO find a better solution
+            timer.reset(gameController().currentGameVariant() == GameVariant.MS_PACMAN_TENGEN ? 300 : 240);
             timer.start();
             game.onPacKilled();
             game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
@@ -277,6 +278,7 @@ public enum GameState implements FsmState<GameModel> {
             }
             else if (timer.tickCount() == TICK_HIDE_PAC) {
                 level.pac().hide();
+                game.publishGameEvent(GameEventType.PAC_DEAD);
             }
             else {
                 level.blinking().tick();
