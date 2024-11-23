@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
@@ -55,7 +54,7 @@ public class MsPacManGameTengenSceneConfig implements GameSceneConfig {
     public GameScene selectGameScene(GameContext context) {
         String sceneID = switch (context.gameState()) {
             case BOOT               -> "BootScene";
-            case SETTING_OPTIONS -> "StartScene";
+            case SETTING_OPTIONS    -> "StartScene";
             case SHOWING_CREDITS    -> "ShowingCredits";
             case INTRO              -> "IntroScene";
             case INTERMISSION       -> "CutScene" + context.level().intermissionNumber();
@@ -91,8 +90,7 @@ public class MsPacManGameTengenSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public void createActorAnimations(GameModel game) {
-        GameLevel level = game.level().orElseThrow();
+    public void createActorAnimations(GameLevel level) {
         level.pac().setAnimations(new PacAnimations(spriteSheet));
         level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id())));
     }

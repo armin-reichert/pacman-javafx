@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.common;
 
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -27,6 +28,6 @@ public interface GameSceneConfig {
     }
     GameSpriteSheet spriteSheet();
     GameRenderer createRenderer(Canvas canvas);
-    void createActorAnimations(GameModel game);
+    void createActorAnimations(GameLevel level);
     GameScene selectGameScene(GameContext context);
 }

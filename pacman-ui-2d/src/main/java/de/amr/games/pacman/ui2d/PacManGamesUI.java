@@ -321,7 +321,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     private void configureGameScene2D(GameScene2D gameScene2D) {
-        var gameSceneConfig = currentGameSceneConfig();
         gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
     }
 
@@ -602,7 +601,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     @Override
     public void onLevelCreated(GameEvent event) {
-        currentGameSceneConfig().createActorAnimations(game());
+        currentGameSceneConfig().createActorAnimations(level());
         Logger.info("Actor animations created. ({} level #{})", gameVariant(), level().number);
         sound().setEnabled(!game().isDemoLevel());
         Logger.info("Sounds {}", sound().isEnabled() ? "enabled" : "disabled");
