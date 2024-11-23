@@ -210,7 +210,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     protected void drawDebugInfo(GameRenderer renderer) {
         GraphicsContext g = renderer.ctx();
-        renderer.drawTileGrid(size());
+        renderer.drawTileGrid(size().x(), size().y());
         if (context.gameVariant() == GameVariant.PACMAN && context.game().level().isPresent()) {
             context.level().ghosts().forEach(ghost -> {
                 // Are currently the same for each ghost, but who knows what comes...

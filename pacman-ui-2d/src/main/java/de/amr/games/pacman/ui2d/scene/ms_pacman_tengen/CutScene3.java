@@ -186,10 +186,10 @@ public class CutScene3 extends GameScene2D {
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer renderer) {
-        renderer.drawTileGrid(size());
-        renderer.ctx().setFill(Color.WHITE);
-        renderer.ctx().setFont(Font.font(20));
-        renderer.ctx().fillText("Tick " + t, 20, 20);
+    protected void drawDebugInfo(GameRenderer gr) {
+        gr.drawTileGrid(size().x(), size().y());
+        gr.ctx().setFill(Color.WHITE);
+        gr.ctx().setFont(Font.font(20));
+        gr.ctx().fillText("Tick " + t, 20, 20);
     }
 }

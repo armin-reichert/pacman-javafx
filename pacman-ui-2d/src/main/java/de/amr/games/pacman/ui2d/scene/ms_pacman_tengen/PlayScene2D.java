@@ -418,7 +418,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     protected void drawDebugInfo(GameRenderer gr) {
-        gr.drawTileGrid(Vector2f.fromDouble(canvas.getWidth(), canvas.getHeight()));
+        gr.drawTileGrid(canvas.getWidth(), canvas.getHeight());
         gr.ctx().setFill(Color.YELLOW);
         gr.ctx().setFont(Font.font("Sans", FontWeight.BOLD, 24));
         gr.ctx().fillText(String.format("%s %d", context.gameState(), context.gameState().timer().tickCount()), 0, 64);

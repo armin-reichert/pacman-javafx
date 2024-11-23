@@ -230,8 +230,8 @@ public class OptionsScene extends GameScene2D {
     // Drawing
 
     @Override
-    protected void drawSceneContent(GameRenderer renderer) {
-        MsPacManGameTengenRenderer r = (MsPacManGameTengenRenderer) renderer;
+    protected void drawSceneContent(GameRenderer gr) {
+        MsPacManGameTengenRenderer r = (MsPacManGameTengenRenderer) gr;
 
         r.setScaling(scaling());
         Font scaledFont = r.scaledArcadeFont(TS);
@@ -297,14 +297,14 @@ public class OptionsScene extends GameScene2D {
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer renderer) {
-        renderer.drawTileGrid(size());
+    protected void drawDebugInfo(GameRenderer gr) {
+        gr.drawTileGrid(size().x(), size().y());
     }
 
-    private void drawArrowIfSelected(GameRenderer renderer, int option, double y, Font font) {
+    private void drawArrowIfSelected(GameRenderer gr, int option, double y, Font font) {
         if (selectedOption == option) {
-            renderer.drawText("-", LABEL_COLOR, font, COL_ARROW, y);
-            renderer.drawText(">", LABEL_COLOR, font, COL_ARROW + 3, y);
+            gr.drawText("-", LABEL_COLOR, font, COL_ARROW, y);
+            gr.drawText(">", LABEL_COLOR, font, COL_ARROW + 3, y);
         }
     }
 }

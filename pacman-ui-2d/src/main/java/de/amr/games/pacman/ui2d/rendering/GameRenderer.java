@@ -303,8 +303,8 @@ public interface GameRenderer {
         }
     }
 
-    default void drawTileGrid(Vector2f sceneSize) {
-        int tilesX = (int) (sceneSize.x() / TS), tilesY = (int) (sceneSize.y() / TS);
+    default void drawTileGrid(double sizeX, double sizeY) {
+        int tilesX = (int) (sizeX / TS), tilesY = (int) (sizeY / TS);
         ctx().setStroke(Color.LIGHTGRAY);
         for (int row = 0; row <= tilesY; ++row) {
             ctx().setLineWidth(row % 10 == 0 ? 0.8 : row % 5 == 0? 0.4 : 0.2);

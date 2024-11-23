@@ -53,8 +53,8 @@ public class CreditsScene extends GameScene2D {
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer renderer) {
-        renderer.drawTileGrid(size());
+    protected void drawDebugInfo(GameRenderer gr) {
+        gr.drawTileGrid(size().x(), size().y());
     }
 
     private void drawOriginalGameAuthors(MsPacManGameTengenRenderer r, Font scaledFont) {

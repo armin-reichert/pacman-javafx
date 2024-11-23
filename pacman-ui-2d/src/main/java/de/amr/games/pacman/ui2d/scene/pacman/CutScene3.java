@@ -96,16 +96,16 @@ public class CutScene3 extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameRenderer renderer) {
-        renderer.drawAnimatedEntity(pac);
-        renderer.drawAnimatedEntity(blinky);
-        renderer.drawLevelCounter(context, size());
+    public void drawSceneContent(GameRenderer gr) {
+        gr.drawAnimatedEntity(pac);
+        gr.drawAnimatedEntity(blinky);
+        gr.drawLevelCounter(context, size());
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer renderer) {
-        renderer.drawTileGrid(size());
+    protected void drawDebugInfo(GameRenderer gr) {
+        gr.drawTileGrid(size().x(), size().y());
         var text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        renderer.drawText(text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
+        gr.drawText(text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
     }
 }
