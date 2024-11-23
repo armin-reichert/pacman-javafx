@@ -153,29 +153,29 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public void update() {
-        if (context.game().level().isEmpty()) {
-            return; // Scene is already visible for 2 ticks before game level gets created
-        }
-        if (context.game().isDemoLevel()) {
-            context.game().setDemoLevelBehavior();
-        }
-        else { // TODO: add/remove listener to global properties instead?
-            context.level().pac().setUsingAutopilot(PY_AUTOPILOT.get());
-            context.level().pac().setImmune(PY_IMMUNITY.get());
-            messageMovement.update();
-            updateSound();
-        }
-        //TODO hack: in case we are switching from 3D scene, focusPlayer might be false even if it should be true
-        if (context.gameState() == GameState.HUNTING) {
-            camera().focusPlayer(true);
-        }
-        if (camDelay > 0) {
-            --camDelay;
-        } else {
-            // do it on every update because on level creation/start the 3D scene might have been active
-            camera().setVerticalRangeTiles(context.level().world().map().terrain().numRows());
-            camera().update(context.level().pac());
-        }
+        var game = (MsPacManGameTengen) context.game();
+        game.level().ifPresent(level -> {
+            if (game.isDemoLevel()) {
+                game.setDemoLevelBehavior();
+            }
+            else { // TODO: add/remove listener to global properties instead?
+                level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
+                level.pac().setImmune(PY_IMMUNITY.get());
+                messageMovement.update();
+                updateSound();
+            }
+            //TODO hack: in case we are switching from 3D scene, focusPlayer might be false even if it should be true
+            if (context.gameState() == GameState.HUNTING) {
+                camera().focusPlayer(true);
+            }
+            if (camDelay > 0) {
+                --camDelay;
+            } else {
+                // do it on every update because on level creation/start the 3D scene might have been active
+                camera().setVerticalRangeTiles(level.world().map().terrain().numRows());
+                camera().update(level.pac());
+            }
+        });
     }
 
     @Override
