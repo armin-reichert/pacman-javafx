@@ -157,7 +157,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
-            timer.restartSeconds(5); // TODO let game variant decide
+            timer.restartIndefinitely(); // UI expires state
             game.onLevelCompleted();
             game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
         }
@@ -178,6 +178,7 @@ public enum GameState implements FsmState<GameModel> {
                 } else {
                     enterState(LEVEL_TRANSITION);
                 }
+/*
             } else if (timer.atSecond(1.5)) {
                 level.ghosts().forEach(Ghost::hide);
             } else if (timer.atSecond(2)) {
@@ -190,6 +191,7 @@ public enum GameState implements FsmState<GameModel> {
                 if (level.blinking().getNumPhasesCompleted() == flashCount) {
                     setProperty("mazeFlashing", false); // maze will be rendered normally again
                 }
+ */
             }
         }
     },

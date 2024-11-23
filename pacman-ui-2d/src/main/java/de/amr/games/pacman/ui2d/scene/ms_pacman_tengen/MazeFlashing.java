@@ -25,11 +25,12 @@ public class MazeFlashing {
     );
 
     private final List<Map<String, Color>> colorMaps = new ArrayList<>();
+    private boolean running;
     private long startTick;
     private int currentIndex;
     private boolean highlightPhase;
 
-    public void init(Map<String, Object> mapConfig, int numFlashes) {
+    public MazeFlashing(Map<String, Object> mapConfig, int numFlashes) {
         NES_ColorScheme nesColorScheme = (NES_ColorScheme) mapConfig.get("nesColorScheme");
         boolean randomColorScheme = (boolean) mapConfig.get("randomColorScheme");
         Map<String, Color> worldMapColorMap = COLOR_MAPS.get(nesColorScheme);
@@ -39,6 +40,7 @@ public class MazeFlashing {
             colorMaps.add(BLACK_WHITE_COLOR_MAP);
         }
         startTick = -1;
+        running = false;
     }
 
     private Map<String, Color> randomColorMap() {
@@ -54,19 +56,25 @@ public class MazeFlashing {
         return highlightPhase ? BLACK_WHITE_COLOR_MAP : colorMaps.get(currentIndex);
     }
 
-    public void update(long t) {
+    public void startAt(long tick) {
+        running = true;
+        startTick = tick;
+        currentIndex = 0;
+        Logger.debug("Maze flashing started at tick {}", startTick);
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void update(long tick) {
         int phaseTicks = 10; // TODO: how many ticks really?
-        if (startTick == -1) { // not running yet
-            startTick = t;
-            currentIndex = 0;
-            Logger.debug("Maze flashing started at tick {}", startTick);
-        }
         // single flash phase complete?
-        long flashingTicksSoFar = t - startTick;
+        long flashingTicksSoFar = tick - startTick;
         if (flashingTicksSoFar > 0 && flashingTicksSoFar % phaseTicks == 0) {
             if (currentIndex < colorMaps.size() - 1) {
                 ++currentIndex;
-                Logger.debug("Maze flashing index changes to {} at tick {}", currentIndex, t);
+                Logger.debug("Maze flashing index changes to {} at tick {}", currentIndex, tick);
             }
         }
         highlightPhase = flashingTicksSoFar % (2 * phaseTicks) == 1;

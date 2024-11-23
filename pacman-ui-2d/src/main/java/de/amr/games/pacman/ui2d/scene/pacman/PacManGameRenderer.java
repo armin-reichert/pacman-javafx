@@ -96,15 +96,15 @@ public class PacManGameRenderer implements GameRenderer {
         ctx().save();
         ctx().scale(scaling, scaling);
         if (flashMode) {
-            if (blinkingOn) {
-                ctx().drawImage(assets.image("pacman.flashing_maze"), x, y);
-            } else {
-                drawSpriteUnscaled(PacManGameSpriteSheet.EMPTY_MAZE_SPRITE, x, y);
-            }
+            ctx().drawImage(assets.image("pacman.flashing_maze"), x, y);
         } else {
-            drawSpriteUnscaled(PacManGameSpriteSheet.FULL_MAZE_SPRITE, x, y);
-            overPaintEatenPellets(world);
-            overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
+            if (world.uneatenFoodCount() == 0) {
+                drawSpriteUnscaled(PacManGameSpriteSheet.EMPTY_MAZE_SPRITE, x, y);
+            } else {
+                drawSpriteUnscaled(PacManGameSpriteSheet.FULL_MAZE_SPRITE, x, y);
+                overPaintEatenPellets(world);
+                overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
+            }
         }
         ctx().restore();
         context.level().bonus().ifPresent(bonus -> drawStaticBonus(spriteSheet(), bonus));

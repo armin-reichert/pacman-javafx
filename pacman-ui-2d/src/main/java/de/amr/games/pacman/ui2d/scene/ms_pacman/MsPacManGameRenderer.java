@@ -140,11 +140,9 @@ public class MsPacManGameRenderer implements GameRenderer {
     @Override
     public void drawWorld(GameContext context, GameWorld world, double x, double y) {
         if (flashMode) {
-            if (blinking) {
-                drawSubImageScaled(mapFlashingSprite.source(), mapFlashingSprite.area(), x - 3, y); //TODO: WTF
-            } else {
-                drawSpriteScaled(mapWithoutFoodSprite, x, y);
-            }
+            drawSubImageScaled(mapFlashingSprite.source(), mapFlashingSprite.area(), x - 3, y); //TODO: WTF
+        } else if (world.uneatenFoodCount() == 0) {
+            drawSpriteScaled(mapWithoutFoodSprite, x, y);
         } else {
             ctx().save();
             ctx().scale(scalingPy.get(), scalingPy.get());

@@ -29,8 +29,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.games.pacman.ui2d.GameActions2D.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
@@ -45,6 +44,8 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 public class PlayScene2D extends GameScene2D {
 
     static final Font DEBUG_STATE_FONT = Font.font("Sans", FontWeight.BOLD, 24);
+
+    private LevelCompleteAnimation levelCompleteAnimation;
 
     @Override
     public void bindGameActions() {}
@@ -105,6 +106,9 @@ public class PlayScene2D extends GameScene2D {
             context.level().pac().setImmune(PY_IMMUNITY.get());
             updateSound(context.sound());
         }
+        if (context.gameState() == GameState.LEVEL_COMPLETE) {
+            levelCompleteAnimation.update();
+        }
     }
 
     private void updateSound(GameSound sound) {
@@ -143,7 +147,7 @@ public class PlayScene2D extends GameScene2D {
         }
         drawLevelMessage(renderer); // READY, GAME_OVER etc.
 
-        boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
+        boolean flashMode = levelCompleteAnimation != null && levelCompleteAnimation.isHighlightMaze();
         renderer.setFlashMode(flashMode);
         renderer.setBlinking(context.level().blinking().isOn());
         renderer.drawWorld(context, context.level().world(), 0, 3 * TS);
@@ -237,6 +241,12 @@ public class PlayScene2D extends GameScene2D {
     public void onEnterGameState(GameState state) {
         if (state == GameState.GAME_OVER) {
             context.sound().playGameOverSound();
+        }
+        else if (state == GameState.LEVEL_COMPLETE) {
+            levelCompleteAnimation = new LevelCompleteAnimation(context.level().numFlashes(), 10);
+            levelCompleteAnimation.setOnHideGhosts(() -> context.level().ghosts().forEach(Ghost::hide));
+            levelCompleteAnimation.setOnFinished(() -> state.timer().expire());
+            levelCompleteAnimation.start();
         }
     }
 

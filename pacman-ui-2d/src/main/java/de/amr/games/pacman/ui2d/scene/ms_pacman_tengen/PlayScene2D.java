@@ -21,6 +21,7 @@ import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui2d.scene.common.LevelCompleteAnimation;
 import de.amr.games.pacman.ui2d.sound.GameSound;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -63,7 +64,10 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     private final Canvas canvas;
 
     private MessageMovement messageMovement;
+
+    //TODO remove
     private MazeFlashing mazeFlashing;
+    private LevelCompleteAnimation levelCompleteAnimation;
 
     public static class PlaySceneCamera extends ParallelCamera {
         private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
@@ -145,7 +149,6 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public void doInit() {
-        mazeFlashing = new MazeFlashing();
         messageMovement = new MessageMovement();
         camera().focusTopOfScene();
         context.enableJoypad();
@@ -171,6 +174,9 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
                 level.pac().setImmune(PY_IMMUNITY.get());
                 messageMovement.update();
                 updateSound();
+            }
+            if (context.gameState() == GameState.LEVEL_COMPLETE) {
+                levelCompleteAnimation.update();
             }
             //TODO hack: in case we are switching from 3D scene, focusPlayer might be false even if it should be true
             if (context.gameState() == GameState.HUNTING) {
@@ -229,7 +235,6 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
             level.pac().setImmune(PY_IMMUNITY.get());
         }
-        mazeFlashing.init(level.mapConfig(), level.numFlashes());
     }
 
     @Override
@@ -261,7 +266,13 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     public void onEnterGameState(GameState state) {
         switch (state) {
             case HUNTING -> camera().focusPlayer(true);
-            case LEVEL_COMPLETE -> mazeFlashing.init(context.level().mapConfig(), context.level().numFlashes());
+            case LEVEL_COMPLETE -> {
+                levelCompleteAnimation = new LevelCompleteAnimation(context.level().numFlashes(), 10);
+                levelCompleteAnimation.setOnHideGhosts(() -> context.level().ghosts().forEach(Ghost::hide));
+                levelCompleteAnimation.setOnFinished(() -> state.timer().expire());
+                levelCompleteAnimation.start();
+
+            }
             case GAME_OVER -> {
                 var game = (MsPacManGameTengen) context.game();
                 if (game.mapCategory() != MapCategory.ARCADE) {
@@ -387,9 +398,10 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             : messageCenterPosition
         );
 
-        if (Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"))) {
-            mazeFlashing.update(context.tick());
-            r.drawEmptyMap(world.map(), mazeFlashing.currentColorMap());
+        boolean flashMode = levelCompleteAnimation != null && levelCompleteAnimation.isHighlightMaze();
+        if (flashMode) {
+            //TODO
+            //r.drawEmptyMap(world.map(), mazeFlashing.currentColorMap());
         } else {
             r.drawWorld(context, world, 0,  3 * TS);
         }
