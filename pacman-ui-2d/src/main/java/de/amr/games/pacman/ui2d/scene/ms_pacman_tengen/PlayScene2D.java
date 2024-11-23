@@ -420,11 +420,15 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     protected void drawDebugInfo(GameRenderer gr) {
         gr.drawTileGrid(canvas.getWidth(), canvas.getHeight());
         gr.ctx().setFill(Color.YELLOW);
-        gr.ctx().setFont(Font.font("Sans", FontWeight.BOLD, 24));
+        gr.ctx().setFont(Font.font("Sans", FontWeight.BOLD, 20));
         gr.ctx().fillText(String.format("%s %d", context.gameState(), context.gameState().timer().tickCount()), 0, 64);
-        gr.ctx().fillText("Camera target=%.2f position=%.2f Scene width=%.0f height=%.0f".formatted(
-            camera().targetY, camera().getTranslateY(), scaled(size().x()), scaled(size().y()) ),
-            scaled(20), scaled(0.5 * size().y() + 20));
+        gr.ctx().setFill(Color.grayRgb(100, 0.5));
+        double y = scaled(0.5 * size().y() + 20);
+        gr.ctx().fillRect(0, y - 30, canvas.getWidth(), 40);
+        gr.ctx().setFill(Color.YELLOW);
+        gr.ctx().fillText("Camera targetY=%.2f y=%.2f minY=%.2f maxY=%.2f".formatted(
+            camera().targetY, camera().getTranslateY(), camera().camMinY(), camera().camMaxY()),
+            scaled(20), y);
     }
 
     private Vector2f centerPosBelowHouse(GameWorld world) {
