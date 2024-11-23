@@ -101,7 +101,7 @@ public class CutScene3 extends GameScene2D {
         r.drawAnimatedEntity(pacMan);
         r.drawEntitySprite(stork, storkAnimation.currentSprite());
         r.drawEntitySprite(bag, bagOpen ? MsPacManGameSpriteSheet.JUNIOR_PAC_SPRITE : MsPacManGameSpriteSheet.BLUE_BAG_SPRITE);
-        r.drawLevelCounter(context, size());
+        r.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 
     private class SceneController {

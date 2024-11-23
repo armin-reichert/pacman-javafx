@@ -171,7 +171,7 @@ public class PlayScene2D extends GameScene2D {
             int credit = context.gameController().coinControl().credit();
             renderer.drawText("CREDIT %2d".formatted(credit), Color.valueOf(Arcade.Palette.WHITE), renderer.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
         }
-        renderer.drawLevelCounter(context, size());
+        renderer.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 
     private Vector2f centerBelowHouse(GameWorld world) {

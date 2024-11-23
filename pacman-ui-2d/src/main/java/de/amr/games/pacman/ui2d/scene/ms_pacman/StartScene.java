@@ -56,6 +56,6 @@ public class StartScene extends GameScene2D {
         r.drawMsPacManMidwayCopyright(t(6), t(28), red, r.scaledArcadeFont(TS));
         r.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), white, renderer.scaledArcadeFont(TS),
             2 * TS, size().y() - 2);
-        r.drawLevelCounter(context, size());
+        r.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 }

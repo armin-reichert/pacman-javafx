@@ -463,16 +463,17 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawLevelCounter(GameContext context, Vector2f worldMapSize) {
-        double y = worldMapSize.y() - TS;
+    public void drawLevelCounter(GameContext context, double x, double y) {
+        //double x = worldMapSize.x() - 2 * TS;
+        //double y = worldMapSize.y() - TS;
         ctx().setImageSmoothing(false);
         MsPacManGameTengen game = (MsPacManGameTengen) context.game();
         int levelNumber = context.level().number;
         if (levelNumberBoxesVisible) {
             drawLevelNumberBox(levelNumber, 0, y); // left box
-            drawLevelNumberBox(levelNumber, worldMapSize.x() - 2 * TS, y); // right box
+            drawLevelNumberBox(levelNumber, x, y); // right box
         }
-        double symbolX = worldMapSize.x() - 4 * TS;
+        double symbolX = x - 2 * TS;
         for (byte symbol : game.levelCounter()) {
             drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), symbolX, y);
             symbolX -= TS * 2;

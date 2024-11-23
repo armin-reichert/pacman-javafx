@@ -59,6 +59,6 @@ public class StartScene extends GameScene2D {
             renderer.drawText(MIDWAY_COPYRIGHT, pink, font8, t(4), t(29));
         }
         renderer.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), white, font8, 2 * TS, size().y() - 2);
-        renderer.drawLevelCounter(context, size());
+        renderer.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 }

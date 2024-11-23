@@ -146,7 +146,7 @@ public class IntroScene extends GameScene2D {
             }
         }
         renderer.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), Color.valueOf(Arcade.Palette.WHITE), renderer.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
-        renderer.drawLevelCounter(context, size());
+        renderer.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 
     // TODO inspect in MAME what's really going on here

@@ -137,7 +137,7 @@ public class IntroScene extends GameScene2D {
         r.drawAnimatedEntity(msPacMan);
         r.drawMsPacManMidwayCopyright(t(6), t(28), Color.valueOf(Arcade.Palette.RED), font);
         r.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), Color.valueOf(Arcade.Palette.WHITE), renderer.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
-        r.drawLevelCounter(context, size());
+        r.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 
     /**

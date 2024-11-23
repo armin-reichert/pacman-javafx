@@ -225,7 +225,7 @@ public class CutScene4 extends GameScene2D {
 
         if (context.game().level().isPresent()) { // avoid exception in cut scene test mode
             r.setLevelNumberBoxesVisible(false);
-            r.drawLevelCounter(context, size());
+            r.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 3 * TS);
         }
     }
 

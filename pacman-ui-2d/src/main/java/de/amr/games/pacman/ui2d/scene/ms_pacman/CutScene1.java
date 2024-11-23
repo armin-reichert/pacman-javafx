@@ -109,7 +109,7 @@ public class CutScene1 extends GameScene2D {
         r.drawAnimatedEntity(inky);
         r.drawAnimatedEntity(pinky);
         r.drawEntitySprite(heart, HEART_SPRITE);
-        r.drawLevelCounter(context, size());
+        r.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 
     private class SceneController {

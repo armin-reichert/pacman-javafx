@@ -228,7 +228,7 @@ public class CutScene1 extends GameScene2D {
         r.drawEntitySprite(heart, HEART_SPRITE);
         if (context.game().level().isPresent()) {
             // avoid exception in cut scene test mode
-            r.drawLevelCounter(context, size());
+            r.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 3 * TS);
         }
     }
 

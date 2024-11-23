@@ -413,7 +413,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         }
         r.drawLivesCounter(livesCounterEntries, 5, 2 * TS, size().y() - TS);
         r.setLevelNumberBoxesVisible(!context.game().isDemoLevel() && game.mapCategory() != MapCategory.ARCADE);
-        r.drawLevelCounter(context, size());
+        r.drawLevelCounter(context, size().x() - 2 * TS, size().y() - TS);
 
         gr.ctx().restore();
 

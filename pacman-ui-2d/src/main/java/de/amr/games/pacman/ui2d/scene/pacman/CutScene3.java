@@ -14,8 +14,8 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.lib.Globals.v2i;
+import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
 
@@ -99,7 +99,7 @@ public class CutScene3 extends GameScene2D {
     public void drawSceneContent(GameRenderer gr) {
         gr.drawAnimatedEntity(pac);
         gr.drawAnimatedEntity(blinky);
-        gr.drawLevelCounter(context, size());
+        gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 
     @Override
