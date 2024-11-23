@@ -40,11 +40,11 @@ public class BootScene extends GameScene2D {
         t = 0;
         context.enableJoypad();
         context.setScoreVisible(false);
-        tengenPresentsY = (NES_TILES_Y + 1) * TS; // just out of visible area
+        tengenPresentsY = (NES_TILES.y() + 1) * TS; // just out of visible area
         grayScreen = false;
 
         ghost = Ghost.blinky();
-        ghost.setPosition((NES_TILES_X + 1) * TS, GHOST_Y);
+        ghost.setPosition((NES_TILES.x() + 1) * TS, GHOST_Y);
         ghost.setMoveAndWishDir(Direction.LEFT);
         ghost.setSpeed(8); // TODO check speed
         ghost.setVisible(true);
@@ -79,7 +79,7 @@ public class BootScene extends GameScene2D {
 
     @Override
     public Vector2f size() {
-        return new Vector2f(NES_RESOLUTION_X, NES_RESOLUTION_Y);
+        return NES_SIZE.toVector2f();
     }
 
     @Override

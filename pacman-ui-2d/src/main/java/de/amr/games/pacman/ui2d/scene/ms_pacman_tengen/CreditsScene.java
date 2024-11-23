@@ -35,7 +35,7 @@ public class CreditsScene extends GameScene2D {
 
     @Override
     public Vector2f size() {
-        return NES_SIZE;
+        return NES_SIZE.toVector2f();
     }
 
     @Override
@@ -102,6 +102,6 @@ public class CreditsScene extends GameScene2D {
     }
 
     private double centerX(int textLength) {
-        return (NES_TILES_X - textLength) * HTS;
+        return (NES_TILES.x() - textLength) * HTS;
     }
 }

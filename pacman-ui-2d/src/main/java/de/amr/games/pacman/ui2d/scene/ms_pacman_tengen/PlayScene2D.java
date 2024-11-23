@@ -22,7 +22,6 @@ import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.sound.GameSound;
-import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.Camera;
 import javafx.scene.Node;
@@ -57,10 +56,8 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengen
  */
 public class PlayScene2D extends GameScene2D implements CameraControlledGameScene {
 
-    private static final Vector2i CANVAS_SIZE = new Vector2i(NES_TILES_X * TS, 44 * TS);
-
-    private static final float CAM_NORMAL_SPEED = 0.03f;
-
+    private static final Vector2i CANVAS_SIZE = NES_SIZE.plus(0, 14 * TS);
+    private static final float CAM_SPEED = 0.03f;
     private static final int MOVING_MESSAGE_DELAY = 120;
 
     private final SubScene fxSubScene;
@@ -129,7 +126,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
                 if (frac < 0.4) { frac = 0; } else if (frac > 0.6) { frac = 1.0; }
                 cameraTargetY = lerp(camMinY(), camMaxY(), frac);
             }
-            double y = lerp(camera.getTranslateY(), cameraTargetY, CAM_NORMAL_SPEED);
+            double y = lerp(camera.getTranslateY(), cameraTargetY, CAM_SPEED);
             camera.setTranslateY(clamp(y, camMinY(), camMaxY()));
             Logger.debug("Camera: y={0.00} target={} top={} bottom={}", camera.getTranslateY(), cameraTargetY, camMinY(), camMaxY());
         }
@@ -175,9 +172,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public Vector2f size() {
-        return context == null
-            ? NES_SIZE
-            : context.worldSizeInTilesOrElse(new Vector2i(NES_TILES_X, NES_TILES_Y)).scaled((float) TS);
+        return context.worldSizeInTilesOrElse(NES_TILES).toVector2f().scaled(TS);
     }
 
     @Override

@@ -93,7 +93,7 @@ public class OptionsScene extends GameScene2D {
 
     @Override
     public Vector2f size() {
-        return NES_SIZE;
+        return NES_SIZE.toVector2f();
     }
 
     private void resetIdleTimer() {

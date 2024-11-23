@@ -20,7 +20,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_SIZE;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_TILES_X;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_TILES;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet.BLUE_BAG_SPRITE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet.JUNIOR_PAC_SPRITE;
 
@@ -41,7 +41,7 @@ public class CutScene3 extends GameScene2D {
 
     static final int STORK_Y = TS * 7;
     static final int GROUND_Y = TS * 24;
-    static final int RIGHT_BORDER = TS * (NES_TILES_X - 2);
+    static final int RIGHT_BORDER = TS * (NES_TILES.x() - 2);
 
     private MediaPlayer music;
     private Pac mrPacMan;
@@ -159,7 +159,7 @@ public class CutScene3 extends GameScene2D {
 
     @Override
     public Vector2f size() {
-        return NES_SIZE;
+        return NES_SIZE.toVector2f();
     }
 
     @Override

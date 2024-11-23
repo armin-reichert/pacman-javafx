@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
-import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
@@ -20,18 +20,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 public class MsPacManGameTengenSceneConfig implements GameSceneConfig {
 
-    // 32x28 tiles or 32x30 tiles? Emulator seems to use 32x30?
-    public static final int NES_TILES_X = 32;
-    public static final int NES_TILES_Y = 30;
-
-    public static final int NES_RESOLUTION_X = 256;
-    public static final int NES_RESOLUTION_Y = 240; // see above
-
-    public static final Vector2f NES_SIZE = new Vector2f(NES_RESOLUTION_X, NES_RESOLUTION_Y);
+    public static final Vector2i NES_TILES = new Vector2i(32, 30);
+    public static final Vector2i NES_SIZE = NES_TILES.scaled(TS);
 
     private final AssetStorage assets;
     private final MsPacManGameTengenSpriteSheet spriteSheet;

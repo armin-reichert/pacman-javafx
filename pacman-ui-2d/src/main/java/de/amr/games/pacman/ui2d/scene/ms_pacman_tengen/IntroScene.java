@@ -90,7 +90,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public Vector2f size() {
-        return new Vector2f(NES_RESOLUTION_X, NES_RESOLUTION_Y);
+        return NES_SIZE.toVector2f();
     }
 
     @Override

@@ -20,7 +20,7 @@ import static de.amr.games.pacman.model.actors.Animations.ANIM_MR_PACMAN_MUNCHIN
 import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_SIZE;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_TILES_X;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_TILES;
 
 /**
  * Intermission scene 2: "The chase".
@@ -40,7 +40,7 @@ public class CutScene2 extends GameScene2D {
     static final int MIDDLE_LANE = TS * 10;
 
     static final int LEFT_BORDER = TS;
-    static final int RIGHT_BORDER = TS * (NES_TILES_X - 2);
+    static final int RIGHT_BORDER = TS * (NES_TILES.x() - 2);
 
     private int t;
     private Pac pacMan;
@@ -146,7 +146,7 @@ public class CutScene2 extends GameScene2D {
 
     @Override
     public Vector2f size() {
-        return NES_SIZE;
+        return NES_SIZE.toVector2f();
     }
 
     @Override

@@ -22,12 +22,12 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.actors.Animations.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_SIZE;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_TILES_X;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_TILES;
 
 public class CutScene4 extends GameScene2D {
 
     static final int LEFT_BORDER = TS;
-    static final int RIGHT_BORDER = TS * (NES_TILES_X - 2);
+    static final int RIGHT_BORDER = TS * (NES_TILES.x() - 2);
 
     static final int CLAP_TILE_X = TS * 3; // TODO not sure
     static final int CLAP_TILE_Y = TS * 10; // TODO not sure
@@ -208,7 +208,7 @@ public class CutScene4 extends GameScene2D {
 
     @Override
     public Vector2f size() {
-        return NES_SIZE;
+        return NES_SIZE.toVector2f();
     }
 
     @Override

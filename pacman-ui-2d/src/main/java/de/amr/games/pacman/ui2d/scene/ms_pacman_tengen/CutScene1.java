@@ -22,7 +22,7 @@ import static de.amr.games.pacman.model.actors.Animations.ANIM_GHOST_NORMAL;
 import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_SIZE;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_TILES_X;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_TILES;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet.HEART_SPRITE;
 
 /**
@@ -44,7 +44,7 @@ public class CutScene1 extends GameScene2D {
     static final int MIDDLE_LANE = TS * 16;
 
     static final int LEFT_BORDER = TS;
-    static final int RIGHT_BORDER = TS * (NES_TILES_X - 2);
+    static final int RIGHT_BORDER = TS * (NES_TILES.x() - 2);
 
     static final float SPEED_CHASING = 2f;
     static final float SPEED_PAC_RISING = 1f;
@@ -212,7 +212,7 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public Vector2f size() {
-        return NES_SIZE;
+        return NES_SIZE.toVector2f();
     }
 
     @Override
