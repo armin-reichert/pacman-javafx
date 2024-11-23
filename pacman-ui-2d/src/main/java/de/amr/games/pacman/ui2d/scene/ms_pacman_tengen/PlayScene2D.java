@@ -64,10 +64,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     private final Canvas canvas;
 
     private MessageMovement messageMovement;
-
-    //TODO remove
-    private MazeFlashing mazeFlashing;
-    private LevelCompleteAnimation levelCompleteAnimation;
+    private LevelCompleteAnimationTengen levelCompleteAnimation;
 
     public static class PlaySceneCamera extends ParallelCamera {
         private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
@@ -267,7 +264,8 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         switch (state) {
             case HUNTING -> camera().focusPlayer(true);
             case LEVEL_COMPLETE -> {
-                levelCompleteAnimation = new LevelCompleteAnimation(context.level().numFlashes(), 10);
+                levelCompleteAnimation = new LevelCompleteAnimationTengen(
+                    context.level().mapConfig(), context.level().numFlashes(), 10);
                 levelCompleteAnimation.setOnHideGhosts(() -> context.level().ghosts().forEach(Ghost::hide));
                 levelCompleteAnimation.setOnFinished(() -> state.timer().expire());
                 levelCompleteAnimation.start();
@@ -398,10 +396,9 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             : messageCenterPosition
         );
 
-        boolean flashMode = levelCompleteAnimation != null && levelCompleteAnimation.isHighlightMaze();
+        boolean flashMode = levelCompleteAnimation != null && levelCompleteAnimation.isFlashing();
         if (flashMode) {
-            //TODO
-            //r.drawEmptyMap(world.map(), mazeFlashing.currentColorMap());
+            r.drawEmptyMap(world.map(), levelCompleteAnimation.currentColorMap());
         } else {
             r.drawWorld(context, world, 0,  3 * TS);
         }

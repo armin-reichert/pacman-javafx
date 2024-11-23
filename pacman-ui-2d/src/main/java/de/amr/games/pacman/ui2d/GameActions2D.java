@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.ui2d.input.ArcadeKeyAdapter;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
@@ -100,9 +101,15 @@ public enum GameActions2D implements GameAction {
     CHEAT_NEXT_LEVEL {
         @Override
         public void execute(GameContext context) {
-            if (context.game().isPlaying() && context.gameState() == GameState.HUNTING) {
-                context.gameController().changeState(GameState.LEVEL_COMPLETE);
+            context.gameController().changeState(GameState.LEVEL_COMPLETE);
+        }
+
+        @Override
+        public boolean isEnabled(GameContext context) {
+            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                return context.level().number < MsPacManGameTengen.MAX_LEVEL_NUMBER;
             }
+            return context.game().isPlaying() && context.gameState() == GameState.HUNTING;
         }
     },
 

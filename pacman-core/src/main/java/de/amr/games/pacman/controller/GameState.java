@@ -170,7 +170,6 @@ public enum GameState implements FsmState<GameModel> {
                 return;
             }
             if (timer.hasExpired()) {
-                setProperty("mazeFlashing", false);
                 if (game.isDemoLevel()) { // just in case: if demo level is completed, go back to intro scene
                     enterState(INTRO);
                 } else if (level.intermissionNumber() != 0) {
@@ -178,20 +177,6 @@ public enum GameState implements FsmState<GameModel> {
                 } else {
                     enterState(LEVEL_TRANSITION);
                 }
-/*
-            } else if (timer.atSecond(1.5)) {
-                level.ghosts().forEach(Ghost::hide);
-            } else if (timer.atSecond(2)) {
-                flashCount = 2 * level.numFlashes();
-                setProperty("mazeFlashing", true);
-                level.blinking().setStartPhase(Pulse.OFF);
-                level.blinking().restart(flashCount);
-            } else {
-                level.blinking().tick();
-                if (level.blinking().getNumPhasesCompleted() == flashCount) {
-                    setProperty("mazeFlashing", false); // maze will be rendered normally again
-                }
- */
             }
         }
     },
