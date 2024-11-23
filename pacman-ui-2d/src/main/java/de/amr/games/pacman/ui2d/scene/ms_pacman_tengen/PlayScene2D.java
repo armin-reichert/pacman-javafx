@@ -265,7 +265,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             case GAME_OVER -> {
                 var game = (MsPacManGameTengen) context.game();
                 if (game.mapCategory() != MapCategory.ARCADE) {
-                    float belowHouse = centerBelowHouse(context.level().world()).x();
+                    float belowHouse = centerPosBelowHouse(context.level().world()).x();
                     messageMovement.start(MOVING_MESSAGE_DELAY, belowHouse, size().x());
                 }
                 camera().focusTopOfScene();
@@ -381,7 +381,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         if (context.isScoreVisible()) {
             gr.drawScores(context);
         }
-        Vector2f messageCenterPosition = centerBelowHouse(world);
+        Vector2f messageCenterPosition = centerPosBelowHouse(world);
         r.setMessageAnchorPosition(messageMovement.isRunning()
             ? new Vector2f(messageMovement.currentX(), messageCenterPosition.y())
             : messageCenterPosition
@@ -427,11 +427,8 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             scaled(20), scaled(0.5 * size().y() + 20));
     }
 
-    private Vector2f centerBelowHouse(GameWorld world) {
-        Vector2i houseTopLeft = world.houseTopLeftTile(), houseSize = world.houseSize();
-        float x = TS * (houseTopLeft.x() + houseSize.x() * 0.5f);
-        float y = TS * (houseTopLeft.y() + houseSize.y() + 1);
-        return new Vector2f(x, y);
+    private Vector2f centerPosBelowHouse(GameWorld world) {
+        return world.houseTopLeftTile().plus(0.5f * world.houseSize().x(), world.houseSize().y() + 1).scaled(TS);
     }
 
     private Stream<Ghost> ghostsInZOrder(GameLevel level) {
