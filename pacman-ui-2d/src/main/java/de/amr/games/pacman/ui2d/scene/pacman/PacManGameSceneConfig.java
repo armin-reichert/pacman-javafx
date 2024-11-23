@@ -70,7 +70,7 @@ public class PacManGameSceneConfig implements GameSceneConfig {
     public GameScene selectGameScene(GameContext context) {
         String sceneID = switch (context.gameState()) {
             case BOOT               -> "BootScene";
-            case SETTING_OPTIONS -> "StartScene";
+            case SETTING_OPTIONS    -> "StartScene";
             case INTRO              -> "IntroScene";
             case INTERMISSION       -> "CutScene" + context.level().intermissionNumber();
             case TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");
