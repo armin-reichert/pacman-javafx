@@ -304,15 +304,19 @@ public interface GameRenderer {
     }
 
     default void drawTileGrid(double sizeX, double sizeY) {
-        int tilesX = (int) (sizeX / TS), tilesY = (int) (sizeY / TS);
+        double thin = 0.2, medium = 0.4, thick = 0.8;
+        int numCols = (int) (sizeX / TS), numRows = (int) (sizeY / TS);
+        double width = scaled(numCols * TS), height = scaled(numRows * TS);
         ctx().setStroke(Color.LIGHTGRAY);
-        for (int row = 0; row <= tilesY; ++row) {
-            ctx().setLineWidth(row % 10 == 0 ? 0.8 : row % 5 == 0? 0.4 : 0.2);
-            ctx().strokeLine(0, scaled(TS * row), scaled(tilesX * TS), scaled(TS * row));
+        for (int row = 0; row <= numRows; ++row) {
+            double y = scaled(row * TS);
+            ctx().setLineWidth(row % 10 == 0 ? thick : row % 5 == 0 ? medium : thin);
+            ctx().strokeLine(0, y, width, y);
         }
-        for (int col = 0; col <= tilesX; ++col) {
-            ctx().setLineWidth(col % 10 == 0 ? 0.8 : col % 5 == 0? 0.4 : 0.2);
-            ctx().strokeLine(scaled(TS * col), 0, scaled(TS * col), scaled(tilesY * TS));
+        for (int col = 0; col <= numCols; ++col) {
+            double x = scaled(col * TS);
+            ctx().setLineWidth(col % 10 == 0 ? thick : col % 5 == 0? medium : thin);
+            ctx().strokeLine(x, 0, x, height);
         }
     }
 }
