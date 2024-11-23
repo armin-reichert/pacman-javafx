@@ -28,7 +28,6 @@ import javafx.scene.Node;
 import javafx.scene.ParallelCamera;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -61,8 +60,8 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     private static final int MOVING_MESSAGE_DELAY = 120;
 
     private final SubScene fxSubScene;
-    private final ParallelCamera camera = new ParallelCamera();
-    private final Canvas canvas = new Canvas(CANVAS_SIZE.x(), CANVAS_SIZE.y());
+    private final Canvas canvas;
+
     private MessageMovement messageMovement;
     private MazeFlashing mazeFlashing;
     private int camDelay;
@@ -70,13 +69,14 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     private boolean focusPlayer;
 
     public PlayScene2D() {
+        canvas = new Canvas();
         canvas.widthProperty().bind(scalingProperty().multiply(CANVAS_SIZE.x()));
         canvas.heightProperty().bind(scalingProperty().multiply(CANVAS_SIZE.y()));
-        Pane root = new StackPane(canvas);
+        var root = new StackPane(canvas);
         root.setBackground(null);
         fxSubScene = new SubScene(root, 42, 42);
-        fxSubScene.setCamera(camera);
         fxSubScene.setFill(nesPaletteColor(0x0f));
+        fxSubScene.setCamera(new ParallelCamera());
     }
 
     @Override
@@ -126,9 +126,9 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
                 if (frac < 0.4) { frac = 0; } else if (frac > 0.6) { frac = 1.0; }
                 cameraTargetY = lerp(camMinY(), camMaxY(), frac);
             }
-            double y = lerp(camera.getTranslateY(), cameraTargetY, CAM_SPEED);
-            camera.setTranslateY(clamp(y, camMinY(), camMaxY()));
-            Logger.debug("Camera: y={0.00} target={} top={} bottom={}", camera.getTranslateY(), cameraTargetY, camMinY(), camMaxY());
+            double y = lerp(camera().getTranslateY(), cameraTargetY, CAM_SPEED);
+            camera().setTranslateY(clamp(y, camMinY(), camMaxY()));
+            Logger.debug("Camera: y={0.00} target={} top={} bottom={}", camera().getTranslateY(), cameraTargetY, camMinY(), camMaxY());
         }
     }
 
@@ -167,7 +167,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public Camera camera() {
-        return camera;
+        return fxSubScene.getCamera();
     }
 
     @Override
@@ -198,7 +198,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         mazeFlashing.init(level.mapConfig(), level.numFlashes());
         context.enableJoypad();
         setKeyBindings();
-        camera.setTranslateY(camMinY());
+        camera().setTranslateY(camMinY());
     }
 
     @Override
@@ -400,7 +400,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         gr.ctx().setFont(Font.font("Sans", FontWeight.BOLD, 24));
         gr.ctx().fillText(String.format("%s %d", context.gameState(), context.gameState().timer().tickCount()), 0, 64);
         gr.ctx().fillText("Camera target=%.2f position=%.2f Scene width=%.0f height=%.0f".formatted(
-            cameraTargetY, camera.getTranslateY(), scaled(size().x()), scaled(size().y()) ),
+            cameraTargetY, camera().getTranslateY(), scaled(size().x()), scaled(size().y()) ),
             scaled(20), scaled(0.5 * size().y() + 20));
     }
 
