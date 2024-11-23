@@ -64,14 +64,18 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     private MessageMovement messageMovement;
     private MazeFlashing mazeFlashing;
-    private int camDelay;
 
     public static class PlaySceneCamera extends ParallelCamera {
         private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
 
+        private int idleTicks;
         private int verticalRangeTiles;
         private double targetY;
         private boolean focusPlayer;
+
+        public void setIdleTicks(int ticks) {
+            idleTicks = ticks;
+        }
 
         public void setVerticalRangeTiles(int numTiles) {
             verticalRangeTiles = numTiles;
@@ -108,6 +112,10 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         }
 
         public void update(Pac pac) {
+            if (idleTicks > 0) {
+                --idleTicks;
+                return;
+            }
             if (focusPlayer) {
                 double frac = (double) pac.tile().y() / verticalRangeTiles;
                 if (frac < 0.4) { frac = 0; } else if (frac > 0.6) { frac = 1.0; }
@@ -168,13 +176,9 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             if (context.gameState() == GameState.HUNTING) {
                 camera().focusPlayer(true);
             }
-            if (camDelay > 0) {
-                --camDelay;
-            } else {
-                // do it on every update because on level creation/start the 3D scene might have been active
-                camera().setVerticalRangeTiles(level.world().map().terrain().numRows());
-                camera().update(level.pac());
-            }
+            // do it on every update because on level creation/start the 3D scene might have been active
+            camera().setVerticalRangeTiles(level.world().map().terrain().numRows());
+            camera().update(level.pac());
         });
     }
 
@@ -232,7 +236,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     public void onLevelStarted(GameEvent e) {
         camera().setCameraToTopOfScene();
         camera().focusBottomOfScene();
-        camDelay = 90;
+        camera().setIdleTicks(90);
     }
 
     @Override
@@ -240,7 +244,6 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         Logger.info("{} entered from {}", this, oldScene);
         context.enableJoypad();
         setKeyBindings();
-        //TODO what else?
     }
 
     private void setKeyBindings() {
