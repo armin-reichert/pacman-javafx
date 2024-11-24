@@ -104,6 +104,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         this.assets = checkNotNull(assets);
         this.spriteSheet = checkNotNull(spriteSheet);
         this.canvas = checkNotNull(canvas);
+
         arcadeMazeImages = assets.image("tengen.mazes.arcade");
         nonArcadeMazeImages = assets.image("tengen.mazes.non_arcade");
         messageAnchorPosition = new Vector2f(14f * TS, 20 * TS);

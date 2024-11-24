@@ -21,7 +21,6 @@ import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.common.LevelCompleteAnimation;
 import de.amr.games.pacman.ui2d.sound.GameSound;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -31,6 +30,7 @@ import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
@@ -59,6 +59,8 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     private static final Vector2i CANVAS_SIZE = NES_SIZE.plus(0, 14 * TS);
     private static final float CAM_SPEED = 0.03f;
     private static final int MOVING_MESSAGE_DELAY = 120;
+
+    private static final Font DEBUG_FONT = Font.font("Sans", FontWeight.BOLD, 20);
 
     private final SubScene fxSubScene;
     private final Canvas canvas;
@@ -132,6 +134,15 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         canvas = new Canvas();
         canvas.widthProperty().bind(scalingProperty().multiply(CANVAS_SIZE.x()));
         canvas.heightProperty().bind(scalingProperty().multiply(CANVAS_SIZE.y()));
+
+        // maze is drawn centered in canvas, clip left and right vertical stripes of 2 tiles width
+        var clip = new Rectangle();
+        clip.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(2*TS)));
+        clip.yProperty().bind(canvas.translateYProperty());
+        clip.widthProperty().bind(canvas.widthProperty().subtract(scalingPy.multiply(4*TS)));
+        clip.heightProperty().bind(canvas.heightProperty());
+        canvas.setClip(clip);
+
         var root = new StackPane(canvas);
         root.setBackground(null);
         fxSubScene = new SubScene(root, 42, 42);
@@ -359,15 +370,16 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public void draw() {
+        var r = (MsPacManGameTengenRenderer) gr;
         long start = System.nanoTime();
         context.game().level().ifPresent(level -> gr.update(level.mapConfig()));
         long duration = System.nanoTime() - start;
         Logger.debug(() -> "Update renderer took %.3f millis".formatted(duration * 1e-6));
 
-        gr.setScaling(scaling());
-        gr.setBackgroundColor(backgroundColor());
-        gr.clearCanvas();
-        drawSceneContent(gr);
+        r.setScaling(scaling());
+        r.setBackgroundColor(backgroundColor());
+        r.clearCanvas();
+        drawSceneContent(r);
     }
 
     @Override
@@ -429,8 +441,9 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     protected void drawDebugInfo(GameRenderer gr) {
         gr.drawTileGrid(canvas.getWidth(), canvas.getHeight());
         gr.ctx().setFill(Color.YELLOW);
-        gr.ctx().setFont(Font.font("Sans", FontWeight.BOLD, 20));
-        gr.ctx().fillText(String.format("%s %d", context.gameState(), context.gameState().timer().tickCount()), 0, 64);
+        gr.ctx().setFont(DEBUG_FONT);
+        gr.ctx().fillText(String.format("%s %d", context.gameState(), context.gameState().timer().tickCount()),
+            scaled(2*TS), scaled(3*TS));
         gr.ctx().setFill(Color.grayRgb(100, 0.5));
         double y = scaled(0.5 * size().y() + 20);
         gr.ctx().fillRect(0, y - 30, canvas.getWidth(), 40);
