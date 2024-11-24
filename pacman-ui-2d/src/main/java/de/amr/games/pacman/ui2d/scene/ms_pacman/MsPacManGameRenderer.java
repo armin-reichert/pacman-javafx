@@ -40,7 +40,7 @@ public class MsPacManGameRenderer implements GameRenderer {
         Map.of("fill", Color.valueOf("FFB7AE"), "stroke", Color.valueOf("FF0000"), "door", Color.valueOf("FCB5FF"), "pellet", Color.valueOf("DEDEFF"))
     );
 
-    private static final RectArea[] MAPS_WITH_FOOD_SPRITES = {
+    private static final RectArea[] FULL_MAPS_SPRITES = {
         rect(0,     0, 224, 248),
         rect(0,   248, 224, 248),
         rect(0, 2*248, 224, 248),
@@ -49,7 +49,7 @@ public class MsPacManGameRenderer implements GameRenderer {
         rect(0, 5*248, 224, 248),
     };
 
-    private static final RectArea[] MAPS_WITHOUT_FOOD_SPRITES = {
+    private static final RectArea[] EMPTY_MAPS_SPRITES = {
         rect(228,     0, 224, 248),
         rect(228,   248, 224, 248),
         rect(228, 2*248, 224, 248),
@@ -71,9 +71,9 @@ public class MsPacManGameRenderer implements GameRenderer {
     private final Canvas canvas;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final Image flashingMazesImage;
-    private RectArea mapWithFoodSprite;
-    private RectArea mapWithoutFoodSprite;
-    private ImageArea mapFlashingSprite;
+    private RectArea fullMapSprite;
+    private RectArea emptyMapSprite;
+    private ImageArea flashingMapSprite;
     private boolean flashMode;
     private boolean blinking;
     private Color bgColor = Color.BLACK;
@@ -132,26 +132,37 @@ public class MsPacManGameRenderer implements GameRenderer {
     @Override
     public void update(Map<String, Object> mapConfig) {
         int index = (int) mapConfig.get("colorMapIndex");
-        mapWithFoodSprite    = MAPS_WITH_FOOD_SPRITES[index];
-        mapWithoutFoodSprite = MAPS_WITHOUT_FOOD_SPRITES[index];
-        mapFlashingSprite    =  new ImageArea(flashingMazesImage, FLASHING_MAP_SPRITES[index]);
+        fullMapSprite = FULL_MAPS_SPRITES[index];
+        emptyMapSprite = EMPTY_MAPS_SPRITES[index];
+        flashingMapSprite = new ImageArea(flashingMazesImage, FLASHING_MAP_SPRITES[index]);
     }
 
     @Override
     public void drawWorld(GameContext context, GameWorld world, double x, double y) {
         if (flashMode) {
-            drawSubImageScaled(mapFlashingSprite.source(), mapFlashingSprite.area(), x, y);
+            drawSubImageScaled(flashingMapSprite.source(), flashingMapSprite.area(), x, y);
         } else if (world.uneatenFoodCount() == 0) {
-            drawSpriteScaled(mapWithoutFoodSprite, x, y);
+            drawSpriteScaled(emptyMapSprite, x, y);
         } else {
             ctx().save();
-            ctx().scale(scalingPy.get(), scalingPy.get());
-            drawSpriteUnscaled(mapWithFoodSprite, x, y);
+            ctx().scale(scaling(), scaling());
+            drawSpriteUnscaled(fullMapSprite, x, y);
             overPaintEatenPellets(world);
             overPaintEnergizers(world, tile -> !blinking || world.hasEatenFoodAt(tile));
             ctx().restore();
         }
-        context.level().bonus().ifPresent(bonus -> drawMovingBonus((MovingBonus) bonus));
+        context.level().bonus().ifPresent(this::drawBonus);
+    }
+
+    private void drawBonus(Bonus bonus) {
+        MovingBonus movingBonus = (MovingBonus) bonus;
+        ctx().save();
+        ctx().translate(0, movingBonus.elongationY());
+        switch (bonus.state()) {
+            case Bonus.STATE_EDIBLE -> drawEntitySprite(bonus.entity(), spriteSheet().bonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawEntitySprite(bonus.entity(), spriteSheet().bonusValueSprite(bonus.symbol()));
+        }
+        ctx().restore();
     }
 
     public void drawClapperBoard(Font font, Color textColor, ClapperboardAnimation clapperboardAnimation, double x, double y) {
@@ -166,17 +177,6 @@ public class MsPacManGameRenderer implements GameRenderer {
             var textX = scaled(x + sprite.width());
             ctx().fillText(clapperboardAnimation.text(), textX, numberY);
         });
-    }
-
-    private void drawMovingBonus(MovingBonus bonus) {
-        ctx().save();
-        ctx().translate(0, bonus.elongationY());
-        switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawEntitySprite(bonus.entity(), spriteSheet().bonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawEntitySprite(bonus.entity(), spriteSheet().bonusValueSprite(bonus.symbol()));
-            default -> {}
-        }
-        ctx().restore();
     }
 
     public void drawMsPacManMidwayCopyright(double x, double y, Color color, Font font) {
