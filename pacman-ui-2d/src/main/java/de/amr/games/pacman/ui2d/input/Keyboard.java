@@ -52,9 +52,10 @@ public class Keyboard {
     public void register(KeyCodeCombination kcc, Object owner) {
         if (registeredCombinations.get(kcc) == owner) {
             Logger.info("Key code combination '{}' already registered: {}", kcc, owner);
+        } else {
+            registeredCombinations.put(kcc, owner);
+            Logger.info("Key code combination '{}' registered: {}", kcc, owner);
         }
-        registeredCombinations.put(kcc, owner);
-        Logger.info("Key code combination '{}' registered: {}", kcc, owner);
     }
 
     public void unregister(KeyCodeCombination kcc, Object owner) {

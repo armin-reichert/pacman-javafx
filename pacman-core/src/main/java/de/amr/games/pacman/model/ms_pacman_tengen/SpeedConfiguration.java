@@ -7,7 +7,7 @@ package de.amr.games.pacman.model.ms_pacman_tengen;
 import de.amr.games.pacman.model.GameException;
 import de.amr.games.pacman.model.GameLevel;
 
-import static de.amr.games.pacman.lib.Globals.inRange;
+import static de.amr.games.pacman.lib.Globals.inClosedRange;
 import static de.amr.games.pacman.model.GameModel.*;
 
 /**
@@ -82,12 +82,12 @@ public interface SpeedConfiguration {
 
     static float pacBaseSpeedInLevel(int levelNumber) {
         int units = 0;
-        if      (inRange(levelNumber, 1, 4))   { units = 0x20; }
-        else if (inRange(levelNumber, 5, 12))  { units = 0x24; }
-        else if (inRange(levelNumber, 13, 16)) { units = 0x28; }
-        else if (inRange(levelNumber, 17, 20)) { units = 0x27; }
-        else if (inRange(levelNumber, 21, 24)) { units = 0x26; }
-        else if (inRange(levelNumber, 25, 28)) { units = 0x25; }
+        if      (inClosedRange(levelNumber, 1, 4))   { units = 0x20; }
+        else if (inClosedRange(levelNumber, 5, 12))  { units = 0x24; }
+        else if (inClosedRange(levelNumber, 13, 16)) { units = 0x28; }
+        else if (inClosedRange(levelNumber, 17, 20)) { units = 0x27; }
+        else if (inClosedRange(levelNumber, 21, 24)) { units = 0x26; }
+        else if (inClosedRange(levelNumber, 25, 28)) { units = 0x25; }
         else if (levelNumber >= 29)            { units = 0x24; }
 
         return speedUnitsToPixels(units);
@@ -96,8 +96,8 @@ public interface SpeedConfiguration {
     // TODO: do they all have the same base speed? Unclear from disassembly data.
     static float ghostBaseSpeedInLevel(int levelNumber) {
         int units = 0x20; // default: 32
-        if      (inRange(levelNumber, 1, 4))  { units = 0x18; }
-        else if (inRange(levelNumber, 5, 12)) { units = 0x20 + (levelNumber - 5); } // 0x20-0x27
+        if      (inClosedRange(levelNumber, 1, 4))  { units = 0x18; }
+        else if (inClosedRange(levelNumber, 5, 12)) { units = 0x20 + (levelNumber - 5); } // 0x20-0x27
         else if (levelNumber >= 13)           { units = 0x28;}
 
         return speedUnitsToPixels(units);

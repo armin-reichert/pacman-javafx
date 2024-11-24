@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib.nes;
 
-import static de.amr.games.pacman.lib.Globals.inRange;
+import static de.amr.games.pacman.lib.Globals.inClosedRange;
 
 public interface NES {
 
@@ -37,7 +37,7 @@ public interface NES {
         };
 
         public static String color(int index) {
-            if (inRange(index, 0, COLORS.length)) {
+            if (inClosedRange(index, 0, COLORS.length)) {
                 return COLORS[index];
             }
             throw new IllegalArgumentException("Illegal NES palette index: " + index);

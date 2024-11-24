@@ -6,54 +6,66 @@ package de.amr.games.pacman.ui2d.scene.common;
 
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.lib.Globals.inRange;
+import static de.amr.games.pacman.lib.Globals.inClosedRange;
 
 public class LevelCompleteAnimation {
 
-    private int ticksBeforeFlashing = 120;
+    private int flashingStartTick = 120;
     private int ticksAfterFlashing = 60;
-    private int tickGhostsHidden = 90;
-    private final int highlightDuration;
-    private final int flashingStartTick;
+    private int ghostsHiddenTick = 90;
+    private final int singleFlashDuration;
     private final int flashingEndTick;
     private final int lastTick;
     private int flashingIndex;
 
     private int t;
     private boolean running;
-    private Runnable onFinished = () -> {
-    };
-    private Runnable onHideGhosts = () -> {
-    };
+    private Runnable onFinished;
+    private Runnable onHideGhosts;
 
     public LevelCompleteAnimation(int numFlashes, int highlightDuration) {
-        this.highlightDuration = highlightDuration;
-        flashingStartTick = ticksBeforeFlashing;
-        int totalFlashingDuration = numFlashes * 2 * highlightDuration;
-        flashingEndTick = flashingStartTick + totalFlashingDuration - 1;
-        lastTick = ticksBeforeFlashing + totalFlashingDuration + ticksAfterFlashing - 1;
+        singleFlashDuration = 2 * highlightDuration;
+        flashingEndTick = flashingStartTick + numFlashes * singleFlashDuration - 1;
+        lastTick = flashingEndTick + ticksAfterFlashing;
         t = 0;
         flashingIndex = 0;
         running = false;
-        Logger.info("Level complete animation created, flashes={} total ticks={} flashing index={}",
-            numFlashes, lastTick + 1, flashingIndex);
+        Logger.info("Created: flashes={} f-duration={} f-start={} f-after={} total={} index={}",
+            numFlashes, 2*highlightDuration, flashingStartTick, ticksAfterFlashing, lastTick + 1, flashingIndex);
     }
 
     public void start() {
         running = true;
     }
 
-    public void setTicksBeforeFlashing(int ticksBeforeFlashing) {
-        this.ticksBeforeFlashing = ticksBeforeFlashing;
+    public void update() {
+        if (running) {
+            if (t == lastTick) {
+                running = false;
+                if (onFinished != null)  onFinished.run();
+                return;
+            }
+            if (t == ghostsHiddenTick) {
+                if (onHideGhosts != null) onHideGhosts.run();
+            }
+            if (isFlashing()) {
+                int flashingTick = t - flashingStartTick;
+                if (flashingTick > 0 && flashingTick % singleFlashDuration == 0) {
+                    flashingIndex += 1;
+                    Logger.info("Flashing index ->{} tick {}", flashingIndex, t);
+                }
+            }
+            ++t;
+            Logger.debug("Tick {}: Level complete animation: {} {}",  t,
+                    isFlashing() ? "flashing" : "", isInHighlightPhase() ? "highlight" : "");
+        }
     }
 
-    public void setTicksAfterFlashing(int ticksAfterFlashing) {
-        this.ticksAfterFlashing = ticksAfterFlashing;
-    }
+    public void setFlashingStartTick(int tick) { flashingStartTick = tick; }
 
-    public void setTickGhostsHidden(int tickGhostsHidden) {
-        this.tickGhostsHidden = tickGhostsHidden;
-    }
+    public void setTicksAfterFlashing(int ticks) { ticksAfterFlashing = ticks; }
+
+    public void setGhostsHiddenTick(int tick) { ghostsHiddenTick = tick; }
 
     public void setOnHideGhosts(Runnable onHideGhosts) {
         this.onHideGhosts = onHideGhosts;
@@ -64,37 +76,12 @@ public class LevelCompleteAnimation {
     }
 
     public boolean isFlashing() {
-        return inRange(t, flashingStartTick, flashingEndTick);
+        return inClosedRange(t, flashingStartTick, flashingEndTick);
     }
 
-    public int flashingIndex() {
-        return flashingIndex;
-    }
+    public int flashingIndex() { return flashingIndex; }
 
-    public boolean isHighlightMaze() {
-        return isFlashing() && (t - flashingStartTick) % (2 * highlightDuration) >= highlightDuration;
-    }
-
-    public void update() {
-        if (running) {
-            if (t == lastTick) {
-                running = false;
-                onFinished.run();
-                return;
-            }
-            if (t == tickGhostsHidden) {
-                onHideGhosts.run();
-            }
-            if (isFlashing()) {
-                int flashingTick = t - flashingStartTick;
-                if (flashingTick > 0 && flashingTick % (2 * highlightDuration) == 0) {
-                    flashingIndex += 1;
-                    Logger.info("Flashing index ->{} tick {}", flashingIndex, t);
-                }
-            }
-            ++t;
-            Logger.debug("Level complete animation: tick {}: {} {}",
-                t, isFlashing() ? "flashing" : "", isHighlightMaze() ? "highlight" : "");
-        }
+    public boolean isInHighlightPhase() {
+        return isFlashing() && (t - flashingStartTick) % singleFlashDuration >= singleFlashDuration / 2;
     }
 }

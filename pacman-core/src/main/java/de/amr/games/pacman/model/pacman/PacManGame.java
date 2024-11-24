@@ -193,7 +193,7 @@ public class PacManGame extends GameModel {
     }
 
     protected void setCruiseElroy(int value) {
-        if (!inRange(value, 0, 2)) {
+        if (!inClosedRange(value, 0, 2)) {
             throw new IllegalArgumentException("Allowed Cruise Elroy values are 0, 1, 2, but value is " + value);
         }
         cruiseElroy = (byte) value;

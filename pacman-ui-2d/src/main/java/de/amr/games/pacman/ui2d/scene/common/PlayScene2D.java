@@ -145,7 +145,7 @@ public class PlayScene2D extends GameScene2D {
         }
         drawLevelMessage(gr); // READY, GAME_OVER etc.
 
-        boolean flashMode = levelCompleteAnimation != null && levelCompleteAnimation.isHighlightMaze();
+        boolean flashMode = levelCompleteAnimation != null && levelCompleteAnimation.isInHighlightPhase();
         gr.setFlashMode(flashMode);
         gr.setBlinking(context.level().blinking().isOn());
         gr.drawWorld(context, context.level().world(), 0, 3 * TS);

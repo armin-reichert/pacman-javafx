@@ -55,6 +55,6 @@ public class LevelCompleteAnimationTengen extends LevelCompleteAnimation {
     }
 
     public Map<String, Color> currentColorMap() {
-        return isHighlightMaze() ? BLACK_WHITE_COLOR_MAP : colorMaps.get(flashingIndex());
+        return isInHighlightPhase() ? BLACK_WHITE_COLOR_MAP : colorMaps.get(flashingIndex());
     }
 }

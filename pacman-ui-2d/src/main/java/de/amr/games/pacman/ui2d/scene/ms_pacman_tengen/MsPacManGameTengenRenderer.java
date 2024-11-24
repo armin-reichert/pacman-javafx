@@ -281,7 +281,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             case ARCADE -> true; // all available in sprite sheet
             case MINI -> false; // TODO use map sprite if level uses color scheme in sprite sheet
             case BIG -> false; // TODO use map sprite  if level uses color scheme in sprite sheet
-            case STRANGE -> !inRange(levelNumber, 28, 31); // all except those with random color scheme
+            case STRANGE -> !inClosedRange(levelNumber, 28, 31); // all except those with random color scheme
         };
     }
 

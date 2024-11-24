@@ -172,7 +172,7 @@ public class Globals {
      * @param to upper bound (inclusive)
      * @return {@code true} if value is in closed interval {@code [from; to]}
      */
-    public static boolean inRange(long value, long from, long to) {
+    public static boolean inClosedRange(long value, long from, long to) {
         return from <= value && value <= to;
     }
 
@@ -283,7 +283,7 @@ public class Globals {
     private static Short parseColorComponent(String color, String comp) {
         try {
             short value = Short.parseShort(comp);
-            if (!inRange(value, 0, 255)) {
+            if (!inClosedRange(value, 0, 255)) {
                 Logger.error("'{}': Component value {} is out of range 0.255", color, value);
                 return null;
             }

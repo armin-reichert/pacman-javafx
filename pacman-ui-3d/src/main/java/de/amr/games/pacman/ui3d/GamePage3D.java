@@ -21,7 +21,7 @@ import javafx.scene.shape.DrawMode;
 
 import java.time.LocalTime;
 
-import static de.amr.games.pacman.lib.Globals.inRange;
+import static de.amr.games.pacman.lib.Globals.inClosedRange;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
 import static de.amr.games.pacman.ui2d.page.Page.menuTitleItem;
@@ -47,7 +47,7 @@ public class GamePage3D extends GamePage {
                 }
                 NightMode nightMode = PY_NIGHT_MODE.get();
                 int hour = LocalTime.now().getHour();
-                boolean nightTime = inRange(hour, 21, 23) || inRange(hour, 0, 4);
+                boolean nightTime = inClosedRange(hour, 21, 23) || inClosedRange(hour, 0, 4);
                 if (nightMode == NightMode.ON || nightMode == NightMode.AUTO && nightTime) {
                     return context.assets().get("wallpaper.night");
                 }
