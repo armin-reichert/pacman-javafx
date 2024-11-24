@@ -196,6 +196,7 @@ public class MsPacManGame extends GameModel {
         scoreManager().loadHighScore();
         scoreManager.resetScore();
         gateKeeper.reset();
+        huntingControl.reset();
     }
 
     @Override

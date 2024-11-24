@@ -12,14 +12,14 @@ import java.util.Optional;
 
 public abstract class HuntingControl {
 
-    public static byte checkHuntingPhaseIndex(int phaseIndex) {
+    public enum PhaseType { SCATTERING, CHASING }
+
+    private static byte checkHuntingPhaseIndex(int phaseIndex) {
         if (phaseIndex < 0 || phaseIndex > 7) {
             throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + phaseIndex);
         }
         return (byte) phaseIndex;
     }
-
-    public enum PhaseType { SCATTERING, CHASING }
 
     private final TickTimer timer;
     private int phaseIndex;
@@ -28,6 +28,13 @@ public abstract class HuntingControl {
 
     protected HuntingControl() {
         timer = new TickTimer("HuntingTimer-" + getClass().getSimpleName());
+        phaseIndex = 0;
+        phaseType = PhaseType.SCATTERING;
+    }
+
+    public void reset() {
+        timer.stop();
+        timer.reset(TickTimer.INDEFINITE);
         phaseIndex = 0;
         phaseType = PhaseType.SCATTERING;
     }
@@ -48,13 +55,6 @@ public abstract class HuntingControl {
 
     public boolean isCurrentPhaseOver() {
         return timer.hasExpired();
-    }
-
-    public void reset() {
-        phaseIndex = 0;
-        phaseType = PhaseType.SCATTERING;
-        timer.stop();
-        timer.reset(TickTimer.INDEFINITE);
     }
 
     public void start() {

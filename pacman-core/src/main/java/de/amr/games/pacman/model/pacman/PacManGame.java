@@ -153,7 +153,6 @@ public class PacManGame extends GameModel {
         huntingControl = new HuntingControl() {
             @Override
             public long huntingTicks(int levelNumber, int phaseIndex) {
-                checkHuntingPhaseIndex(phaseIndex);
                 long ticks = switch (levelNumber) {
                     case 1 -> HUNTING_TICKS_LEVEL_1[phaseIndex];
                     case 2, 3, 4 -> HUNTING_TICKS_LEVEL_2_3_4[phaseIndex];
@@ -181,6 +180,7 @@ public class PacManGame extends GameModel {
         scoreManager().loadHighScore();
         scoreManager.resetScore();
         gateKeeper.reset();
+        huntingControl.reset();
     }
 
     protected LevelData levelData(int levelNumber) {

@@ -26,10 +26,10 @@ public class InfoBoxGameInfo extends InfoBox {
         super.init(context);
 
         addLabeledValue("Game Scene", ifGameScenePresent(gameScene -> gameScene.getClass().getSimpleName()));
-        addLabeledValue("Demo Level", ifLevelPresent(gameScene -> context.game().isDemoLevel() ? "Yes" : "No"));
         addLabeledValue("Game State", () -> "%s".formatted(context.gameState()));
         addLabeledValue("State Timer", this::stateTimerInfo);
         addLabeledValue("Level Number", ifLevelPresent(level -> "%d".formatted(level.number)));
+        addLabeledValue("Demo Level", ifLevelPresent(gameScene -> context.game().isDemoLevel() ? "Yes" : "No"));
         addLabeledValue("World Map", ifLevelPresent(level -> {
             String url = level.world().map().url().toString();
             return url.substring(url.lastIndexOf("/") + 1);
