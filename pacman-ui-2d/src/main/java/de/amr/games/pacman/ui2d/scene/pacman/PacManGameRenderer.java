@@ -20,6 +20,8 @@ import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.ui2d.scene.pacman.PacManGameSpriteSheet.EMPTY_MAZE_SPRITE;
+import static de.amr.games.pacman.ui2d.scene.pacman.PacManGameSpriteSheet.FULL_MAZE_SPRITE;
 
 /**
  * @author Armin Reichert
@@ -99,22 +101,22 @@ public class PacManGameRenderer implements GameRenderer {
             ctx().drawImage(assets.image("pacman.flashing_maze"), x, y);
         } else {
             if (world.uneatenFoodCount() == 0) {
-                drawSpriteUnscaled(PacManGameSpriteSheet.EMPTY_MAZE_SPRITE, x, y);
+                drawSpriteUnscaled(EMPTY_MAZE_SPRITE, x, y);
             } else {
-                drawSpriteUnscaled(PacManGameSpriteSheet.FULL_MAZE_SPRITE, x, y);
+                drawSpriteUnscaled(FULL_MAZE_SPRITE, x, y);
                 overPaintEatenPellets(world);
                 overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
             }
         }
         ctx().restore();
-        context.level().bonus().ifPresent(bonus -> drawStaticBonus(spriteSheet(), bonus));
+        context.level().bonus().ifPresent(this::drawBonus);
     }
 
-    private void drawStaticBonus(GameSpriteSheet spriteSheet, Bonus bonus) {
+    private void drawBonus(Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
-            drawEntitySprite(bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            drawEntitySprite(bonus.entity(), spriteSheet().bonusSymbolSprite(bonus.symbol()));
         } else if (bonus.state() == Bonus.STATE_EATEN) {
-            drawEntitySprite(bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
+            drawEntitySprite(bonus.entity(), spriteSheet().bonusValueSprite(bonus.symbol()));
         }
     }
 }
