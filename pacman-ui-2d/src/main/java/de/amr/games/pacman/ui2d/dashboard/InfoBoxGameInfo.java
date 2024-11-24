@@ -8,10 +8,13 @@ import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameRenderer;
+import de.amr.games.pacman.ui2d.scene.pacman.PacManGameRenderer;
+import javafx.scene.paint.Color;
 
 import java.util.Map;
 
@@ -40,15 +43,17 @@ public class InfoBoxGameInfo extends InfoBox {
                 return "fill/stroke/food: %s/%s/%s".formatted(
                     nesColorScheme.fillColor(), nesColorScheme.strokeColor(), nesColorScheme.pelletColor());
             } else if (level.mapConfig().containsKey("colorMap")) {
+                // Pac-Man XXL game
                 @SuppressWarnings("unchecked")
                 var colorMap = (Map<String, String>) level.mapConfig().get("colorMap");
                 return "fill/stroke/food: %s/%s/%s".formatted(
                     colorMap.get("fill"), colorMap.get("stroke"), colorMap.get("pellet"));
             } else if (level.mapConfig().containsKey("colorMapIndex")) {
-                // Ms. Pac-Man Arcade stores index in map config
                 int colorMapIndex = (int) level.mapConfig().get("colorMapIndex");
-                var colorMap = MsPacManGameRenderer.COLOR_MAPS.get(colorMapIndex);
-                return "fill/stroke/food: %s/%s/%s".formatted(colorMap.get("fill"), colorMap.get("stroke"), colorMap.get("pellet"));
+                Map<String, Color> colorMap = context.gameVariant() == GameVariant.PACMAN
+                    ? PacManGameRenderer.COLOR_MAP
+                    : MsPacManGameRenderer.COLOR_MAPS.get(colorMapIndex);
+                return formatColorMap(colorMap.get("fill"), colorMap.get("stroke"), colorMap.get("pellet"));
             } else {
                 return InfoText.NO_INFO;
             }
@@ -68,6 +73,14 @@ public class InfoBoxGameInfo extends InfoBox {
         addLabeledValue("- frightened",    ifLevelPresent(this::fmtGhostSpeedFrightened));
         addLabeledValue("- in tunnel",     ifLevelPresent(this::fmtGhostSpeedTunnel));
         addLabeledValue("Maze flashings",  ifLevelPresent(this::fmtNumFlashes));
+    }
+
+    private String formatColorMap(Color fillColor, Color strokeColor, Color pelletColor) {
+        // chop opacity
+        String fill   = "#" + fillColor.toString().substring(2, 8);
+        String stroke = "#" + strokeColor.toString().substring(2, 8);
+        String pellet = "#" + pelletColor.toString().substring(2, 8);
+        return "fill/stroke/pellet: %s/%s/%s".formatted(fill, stroke, pellet);
     }
 
     private String stateTimerInfo() {
