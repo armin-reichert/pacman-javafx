@@ -41,30 +41,30 @@ public class MsPacManGameRenderer implements GameRenderer {
     );
 
     private static final RectArea[] MAPS_WITH_FOOD_SPRITES = {
-        rect(0,     0, 226, 248),
-        rect(0,   248, 226, 248),
-        rect(0, 2*248, 226, 248),
-        rect(0, 3*248, 226, 248),
-        rect(0, 4*248, 226, 248),
-        rect(0, 5*248, 226, 248),
+        rect(0,     0, 224, 248),
+        rect(0,   248, 224, 248),
+        rect(0, 2*248, 224, 248),
+        rect(0, 3*248, 224, 248),
+        rect(0, 4*248, 224, 248),
+        rect(0, 5*248, 224, 248),
     };
 
     private static final RectArea[] MAPS_WITHOUT_FOOD_SPRITES = {
-        rect(228,     0, 226, 248),
-        rect(228,   248, 226, 248),
-        rect(228, 2*248, 226, 248),
-        rect(228, 3*248, 226, 248),
-        rect(228, 4*248, 226, 248),
-        rect(228, 5*258, 226, 248),
+        rect(228,     0, 224, 248),
+        rect(228,   248, 224, 248),
+        rect(228, 2*248, 224, 248),
+        rect(228, 3*248, 224, 248),
+        rect(228, 4*248, 224, 248),
+        rect(228, 5*258, 224, 248),
     };
 
     private static final RectArea[] FLASHING_MAP_SPRITES = {
-        rect(0,     0, 226, 248),
-        rect(0,   248, 226, 248),
-        rect(0, 2*248, 226, 248),
-        rect(0, 3*248, 226, 248),
-        rect(0, 4*248, 226, 248),
-        rect(0, 5*248, 226, 248),
+        rect(0,     0, 224, 248),
+        rect(0,   248, 224, 248),
+        rect(0, 2*248, 224, 248),
+        rect(0, 3*248, 224, 248),
+        rect(0, 4*248, 224, 248),
+        rect(0, 5*248, 224, 248),
     };
 
     private final AssetStorage assets;
@@ -140,7 +140,7 @@ public class MsPacManGameRenderer implements GameRenderer {
     @Override
     public void drawWorld(GameContext context, GameWorld world, double x, double y) {
         if (flashMode) {
-            drawSubImageScaled(mapFlashingSprite.source(), mapFlashingSprite.area(), x - 3, y); //TODO: WTF
+            drawSubImageScaled(mapFlashingSprite.source(), mapFlashingSprite.area(), x, y);
         } else if (world.uneatenFoodCount() == 0) {
             drawSpriteScaled(mapWithoutFoodSprite, x, y);
         } else {
