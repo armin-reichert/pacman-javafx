@@ -85,7 +85,7 @@ public class TileMapEditorApp extends Application  {
     }
 
     private void loadSampleMaps() throws IOException {
-        mapPacManGame = loadSampleMap("pacman.world", 1);
+        mapPacManGame = loadSampleMap("pacman/pacman.world", 1);
 
         mapsMsPacManGame = new ArrayList<>(6);
         for (int num = 1; num <= 6; ++num) {
@@ -96,7 +96,7 @@ public class TileMapEditorApp extends Application  {
         }
         mapsPacManXXLGame = new ArrayList<>(8);
         for (int num = 1; num <= 8; ++num) {
-            WorldMap worldMap = loadSampleMap("masonic/masonic_%d.world", num);
+            WorldMap worldMap = loadSampleMap("pacman_xxl/masonic_%d.world", num);
             if (worldMap != null) {
                 mapsPacManXXLGame.add(worldMap);
             }

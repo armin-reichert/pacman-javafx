@@ -90,14 +90,12 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void update() {
         if (context.game().level().isEmpty()) {
-            // Scene is visible for 1 (2?) ticks before game level has been created
+            // Scene is already visible for 2 ticks before game level has been created
             Logger.warn("Tick {}: Cannot update PlayScene2D: game level not yet available", context.tick());
             return;
         }
-        /*
-         * TODO: I would like to do this only on level start but when scene view is switched
-         *       between 2D and 3D, the other scene has to be updated accordingly.
-         */
+        /* TODO: I would like to do this only on level start but when scene view is switched
+                 between 2D and 3D, the other scene has to be updated accordingly. */
         if (context.game().isDemoLevel()) {
             context.game().setDemoLevelBehavior();
         }
@@ -140,7 +138,7 @@ public class PlayScene2D extends GameScene2D {
             return;
         }
 
-        //TODO use more general solution
+        //TODO use more general solution, maybe terrain map property?
         if (context.gameVariant() == GameVariant.PACMAN_XXL) {
             PacManGameXXLRenderer r = (PacManGameXXLRenderer) renderer;
             r.setMessageAnchorPosition(centerBelowHouse(context.level().world()));
