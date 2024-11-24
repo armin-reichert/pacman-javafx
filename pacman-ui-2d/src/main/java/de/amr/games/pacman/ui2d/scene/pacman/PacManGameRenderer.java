@@ -32,7 +32,7 @@ public class PacManGameRenderer implements GameRenderer {
         "fill",   Color.valueOf("#000000"),
         "stroke", Color.valueOf("#2121ff"),
         "door",   Color.valueOf("#fcb5ff"),
-        "pellet", Color.valueOf("febdb4")
+        "pellet", Color.valueOf("#febdb4")
     );
 
     private final AssetStorage assets;

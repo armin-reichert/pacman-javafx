@@ -143,7 +143,8 @@ public class PacManGame extends GameModel {
             WorldMap worldMap = new WorldMap(url);
             mapConfig = Map.of(
                 "mapNumber", 1,
-                "worldMap", worldMap
+                "worldMap", worldMap,
+                "colorMapIndex", 0
             );
         } catch (IOException x) {
             Logger.error("Could not create world map, url={}", url);

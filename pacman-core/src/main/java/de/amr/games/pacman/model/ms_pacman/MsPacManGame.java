@@ -102,11 +102,11 @@ public class MsPacManGame extends GameModel {
             case 10, 11, 12, 13 -> 4;
             default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
         };
-        int colorSchemeIndex = levelNumber < 14 ? mapNumber - 1 : mapNumber + 2 - 1;
+        int colorMapIndex = levelNumber < 14 ? mapNumber - 1 : mapNumber + 2 - 1;
         return Map.of(
             "mapNumber", mapNumber,
             "worldMap",  new WorldMap(maps.get(mapNumber - 1)),
-            "colorMapIndex", colorSchemeIndex
+            "colorMapIndex", colorMapIndex
         );
     }
 
