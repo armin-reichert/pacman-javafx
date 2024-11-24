@@ -565,7 +565,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     private Animation levelCompleteAnimationBeforeIntermission(int numFlashes) {
         return new SequentialTransition(
-            pauseSec(1)
+            doAfterSec(1.0, () -> context.level().ghosts().forEach(Ghost::hide))
             , level3D.mazeFlashAnimation(numFlashes)
             , doAfterSec(2.5, () -> context.level().pac().hide())
         );
@@ -580,7 +580,8 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
                   context.showFlashMessageSec(3, context.locLevelCompleteMessage());
                   context.sound().playLevelCompleteSound();
               })
-            , doAfterSec(1, level3D.mazeFlashAnimation(numFlashes))
+            , doAfterSec(1.0, () -> context.level().ghosts().forEach(Ghost::hide))
+            , doAfterSec(1.0, level3D.mazeFlashAnimation(numFlashes))
             , doAfterSec(0.5, () -> context.level().pac().hide())
             , doAfterSec(0.5, level3D.levelRotateAnimation(1.5))
             , level3D.wallsDisappearAnimation(2.0)
