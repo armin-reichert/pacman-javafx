@@ -57,7 +57,8 @@ public abstract class GameModel {
 
     protected GameLevel            level;
 
-    public abstract void           reset();
+    public abstract void           resetEverything();
+    public abstract void           resetForStartingNewGame();
     public abstract boolean        canStartNewGame();
     public abstract boolean        isOver();
     public abstract void           endGame();

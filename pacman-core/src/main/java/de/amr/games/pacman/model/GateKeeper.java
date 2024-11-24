@@ -101,15 +101,22 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  * @author Armin Reichert
  */
 public class GateKeeper {
-    static final byte NO_LIMIT = -1;
-    static final byte[] GLOBAL_LIMITS = new byte[] {NO_LIMIT, 7, 17, NO_LIMIT};
+    private static final byte NO_LIMIT = -1;
+    private static final byte[] GLOBAL_LIMITS = new byte[] {NO_LIMIT, 7, 17, NO_LIMIT};
 
-    final byte[] limitsByGhost = new byte[4];
-    int          pacStarvingLimit;
+    private final byte[] limitsByGhost = new byte[4];
+    private int          pacStarvingLimit;
+    private final int[]  countersByGhost = new int[4];
+    private int          globalCounter;
+    private boolean      globalCounterEnabled;
 
-    final int[]  countersByGhost = new int[4];
-    int          globalCounter;
-    boolean      globalCounterEnabled;
+    public void reset() {
+        Arrays.fill(limitsByGhost, (byte)0);
+        pacStarvingLimit = 0;
+        Arrays.fill(countersByGhost, 0);
+        globalCounter = 0;
+        globalCounterEnabled = false;
+    }
 
     public void setLevelNumber(int levelNumber) {
         Arrays.fill(limitsByGhost, (byte) 0);

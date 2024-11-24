@@ -132,7 +132,7 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    protected void drawSceneContent(GameRenderer renderer) {
+    protected void drawSceneContent(GameRenderer gr) {
         if (context.game().level().isEmpty()) { // This happens on level start
             Logger.warn("Tick {}: Cannot draw scene content: game world not yet available!", context.tick());
             return;
@@ -140,22 +140,22 @@ public class PlayScene2D extends GameScene2D {
 
         //TODO use more general solution, maybe terrain map property?
         if (context.gameVariant() == GameVariant.PACMAN_XXL) {
-            PacManGameXXLRenderer r = (PacManGameXXLRenderer) renderer;
+            PacManGameXXLRenderer r = (PacManGameXXLRenderer) gr;
             r.setMessageAnchorPosition(centerBelowHouse(context.level().world()));
         }
-        drawLevelMessage(renderer); // READY, GAME_OVER etc.
+        drawLevelMessage(gr); // READY, GAME_OVER etc.
 
         boolean flashMode = levelCompleteAnimation != null && levelCompleteAnimation.isHighlightMaze();
-        renderer.setFlashMode(flashMode);
-        renderer.setBlinking(context.level().blinking().isOn());
-        renderer.drawWorld(context, context.level().world(), 0, 3 * TS);
+        gr.setFlashMode(flashMode);
+        gr.setBlinking(context.level().blinking().isOn());
+        gr.drawWorld(context, context.level().world(), 0, 3 * TS);
 
-        renderer.drawAnimatedEntity(context.level().pac());
-        ghostsInZOrder().forEach(renderer::drawAnimatedEntity);
+        gr.drawAnimatedEntity(context.level().pac());
+        ghostsInZOrder().forEach(gr::drawAnimatedEntity);
 
         if (debugInfoVisiblePy.get()) {
-            renderer.drawAnimatedCreatureInfo(context.level().pac());
-            ghostsInZOrder().forEach(renderer::drawAnimatedCreatureInfo);
+            gr.drawAnimatedCreatureInfo(context.level().pac());
+            ghostsInZOrder().forEach(gr::drawAnimatedCreatureInfo);
         }
 
         if (context.game().canStartNewGame()) {
@@ -164,12 +164,12 @@ public class PlayScene2D extends GameScene2D {
             if (context.gameState() == GameState.STARTING_GAME && !context.level().pac().isVisible()) {
                 numLivesShown += 1;
             }
-            renderer.drawLivesCounter(numLivesShown, 5, 2 * TS, size().y() - 2 * TS);
+            gr.drawLivesCounter(numLivesShown, 5, 2 * TS, size().y() - 2 * TS);
         } else {
             int credit = context.gameController().coinControl().credit();
-            renderer.drawText("CREDIT %2d".formatted(credit), Color.valueOf(Arcade.Palette.WHITE), renderer.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
+            gr.drawText("CREDIT %2d".formatted(credit), Color.valueOf(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
         }
-        renderer.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
+        gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 
     private Vector2f centerBelowHouse(GameWorld world) {

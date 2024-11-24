@@ -135,12 +135,18 @@ public class MsPacManGameTengen extends GameModel {
         mapManager = new MapManager(MAPS_ROOT);
         setInitialLives(3);
         simulateOverflowBug = false; //TODO check this
-        reset();
+        resetForStartingNewGame();
         resetOptions();
     }
 
     @Override
-    public void reset() {
+    public void resetEverything() {
+        resetForStartingNewGame();
+        resetOptions();
+    }
+
+    @Override
+    public void resetForStartingNewGame() {
         lives = initialLives;
         level = null;
         demoLevel = false;
@@ -148,6 +154,7 @@ public class MsPacManGameTengen extends GameModel {
         boosterActive = false;
         scoreManager.loadHighScore();
         scoreManager.resetScore();
+        gateKeeper.reset();
     }
 
     @Override
@@ -329,7 +336,7 @@ public class MsPacManGameTengen extends GameModel {
 
     @Override
     public void startNewGame() {
-        reset();
+        resetForStartingNewGame();
         createNormalLevel(startLevelNumber);
         if (startLevelNumber > 1) {
             levelCounter.clear();

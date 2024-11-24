@@ -165,6 +165,24 @@ public class PacManGame extends GameModel {
         huntingControl.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
     }
 
+    @Override
+    public void resetEverything() {
+        resetForStartingNewGame();
+    }
+
+    @Override
+    public void resetForStartingNewGame() {
+        playing = false;
+        lives = initialLives;
+        level = null;
+        demoLevel = false;
+        cruiseElroy = 0;
+        levelCounter().clear();
+        scoreManager().loadHighScore();
+        scoreManager.resetScore();
+        gateKeeper.reset();
+    }
+
     protected LevelData levelData(int levelNumber) {
         return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
     }
@@ -199,18 +217,6 @@ public class PacManGame extends GameModel {
     @Override
     public long gameOverStateTicks() {
         return 90;
-    }
-
-    @Override
-    public void reset() {
-        playing = false;
-        lives = initialLives;
-        level = null;
-        demoLevel = false;
-        cruiseElroy = 0;
-        levelCounter().clear();
-        scoreManager().loadHighScore();
-        scoreManager.resetScore();
     }
 
     @Override

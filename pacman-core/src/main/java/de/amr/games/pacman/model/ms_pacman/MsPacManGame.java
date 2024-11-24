@@ -78,6 +78,38 @@ public class MsPacManGame extends GameModel {
         /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
     };
 
+    /**
+     * <p>In Ms. Pac-Man, there are 4 maps and 6 color schemes.
+     * </p>
+     * <ul>
+     * <li>Levels 1-2: (1, 1): pink wall fill, white dots
+     * <li>Levels 3-5: (2, 2)): light blue wall fill, yellow dots
+     * <li>Levels 6-9: (3, 3): orange wall fill, red dots
+     * <li>Levels 10-13: (4, 4): blue wall fill, white dots
+     * </ul>
+     * For level 14 and later, (map, color_scheme) alternates every 4th level between (3, 5) and (4, 6):
+     * <ul>
+     * <li>(3, 5): pink wall fill, cyan dots
+     * <li>(4, 6): orange wall fill, white dots
+     * </ul>
+     * <p>
+     */
+    private static Map<String, Object> getMapConfig(List<WorldMap> maps, int levelNumber) {
+        final int mapNumber = switch (levelNumber) {
+            case 1, 2 -> 1;
+            case 3, 4, 5 -> 2;
+            case 6, 7, 8, 9 -> 3;
+            case 10, 11, 12, 13 -> 4;
+            default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
+        };
+        int colorSchemeIndex = levelNumber < 14 ? mapNumber - 1 : mapNumber + 2 - 1;
+        return Map.of(
+            "mapNumber", mapNumber,
+            "worldMap",  new WorldMap(maps.get(mapNumber - 1)),
+            "colorMapIndex", colorSchemeIndex
+        );
+    }
+
     private static int intermissionNumberAfterLevel(int number) {
         return switch (number) {
             case 2 -> 1;
@@ -148,40 +180,13 @@ public class MsPacManGame extends GameModel {
         huntingControl.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
     }
 
-    /**
-     * <p>In Ms. Pac-Man, there are 4 maps and 6 color schemes.
-     * </p>
-     * <ul>
-     * <li>Levels 1-2: (1, 1): pink wall fill, white dots
-     * <li>Levels 3-5: (2, 2)): light blue wall fill, yellow dots
-     * <li>Levels 6-9: (3, 3): orange wall fill, red dots
-     * <li>Levels 10-13: (4, 4): blue wall fill, white dots
-     * </ul>
-     * For level 14 and later, (map, color_scheme) alternates every 4th level between (3, 5) and (4, 6):
-     * <ul>
-     * <li>(3, 5): pink wall fill, cyan dots
-     * <li>(4, 6): orange wall fill, white dots
-     * </ul>
-     * <p>
-     */
-    private Map<String, Object> getMapConfig(int levelNumber) {
-        final int mapNumber = switch (levelNumber) {
-            case 1, 2 -> 1;
-            case 3, 4, 5 -> 2;
-            case 6, 7, 8, 9 -> 3;
-            case 10, 11, 12, 13 -> 4;
-            default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
-        };
-        int colorSchemeIndex = levelNumber < 14 ? mapNumber - 1 : mapNumber + 2 - 1;
-        return Map.of(
-            "mapNumber", mapNumber,
-            "worldMap",  new WorldMap(maps.get(mapNumber - 1)),
-            "colorMapIndex", colorSchemeIndex
-        );
+    @Override
+    public void resetEverything() {
+        resetForStartingNewGame();
     }
 
     @Override
-    public void reset() {
+    public void resetForStartingNewGame() {
         playing = false;
         lives = initialLives;
         level = null;
@@ -190,6 +195,7 @@ public class MsPacManGame extends GameModel {
         levelCounter().clear();
         scoreManager().loadHighScore();
         scoreManager.resetScore();
+        gateKeeper.reset();
     }
 
     @Override
@@ -255,7 +261,7 @@ public class MsPacManGame extends GameModel {
         levelCounterEnabled = level.number < 8;
         level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
         level.setNumFlashes(levelData(level.number).numFlashes());
-        level.setMapConfig(getMapConfig(level.number));
+        level.setMapConfig(getMapConfig(maps, level.number));
         WorldMap worldMap = (WorldMap) level.mapConfig().get("worldMap");
         createWorldAndPopulation(worldMap);
         level.pac().setAutopilot(autopilot);
@@ -265,7 +271,7 @@ public class MsPacManGame extends GameModel {
     @Override
     public void configureDemoLevel() {
         levelCounterEnabled = false;
-        level.setMapConfig(getMapConfig(level.number));
+        level.setMapConfig(getMapConfig(maps, level.number));
         WorldMap worldMap = (WorldMap) level.mapConfig().get("worldMap");
         createWorldAndPopulation(worldMap);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));

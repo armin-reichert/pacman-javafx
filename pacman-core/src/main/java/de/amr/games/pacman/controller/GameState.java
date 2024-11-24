@@ -37,8 +37,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();
-            game.reset();
-            game.levelCounter().clear();
+            game.resetEverything();
         }
 
         @Override
@@ -310,7 +309,7 @@ public enum GameState implements FsmState<GameModel> {
                         }
                     }
                 } else {
-                    game.reset();
+                    game.resetForStartingNewGame();
                     if (game.canStartNewGame()) {
                         gameController().changeState(SETTING_OPTIONS);
                     } else {
@@ -363,7 +362,7 @@ public enum GameState implements FsmState<GameModel> {
                 case PACMAN_XXL -> 8 + numCustomMaps;
             };
             timer.restartIndefinitely();
-            game.reset();
+            game.resetForStartingNewGame();
             game.createNormalLevel(1);
             game.startLevel();
             game.showGuys();
@@ -446,7 +445,7 @@ public enum GameState implements FsmState<GameModel> {
                 }
             };
             timer.restartSeconds(TEASER_TIME_SECONDS);
-            game.reset();
+            game.resetForStartingNewGame();
             game.createNormalLevel(1);
             game.startLevel();
             game.showGuys();
