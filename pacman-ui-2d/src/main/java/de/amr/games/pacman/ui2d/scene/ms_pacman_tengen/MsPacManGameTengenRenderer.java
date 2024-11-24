@@ -358,7 +358,8 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         // Maps with a color scheme differing from that in the sprite sheet have to be rendered using the
         // vector renderer for now.
         // TODO: vector rendering looks really bad for some maps.
-        var mapCategory = (MapCategory) mapConfig.get("mapCategory");
+        //var mapCategory = (MapCategory) mapConfig.get("mapCategory");
+        MapCategory mapCategory = game.mapCategory(); // must use this one because e.g. STRANGE maps use maps from BIG map set etc.
         int mapNumber = (int) mapConfig.get("mapNumber");
         boolean mapImageExists = game.isDemoLevel() || isMapImageAvailable(level.number, mapCategory);
         if (mapImageExists) {
@@ -464,8 +465,6 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
 
     @Override
     public void drawLevelCounter(GameContext context, double x, double y) {
-        //double x = worldMapSize.x() - 2 * TS;
-        //double y = worldMapSize.y() - TS;
         ctx().setImageSmoothing(false);
         MsPacManGameTengen game = (MsPacManGameTengen) context.game();
         int levelNumber = context.level().number;
