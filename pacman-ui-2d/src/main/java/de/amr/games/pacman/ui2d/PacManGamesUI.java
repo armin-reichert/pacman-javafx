@@ -36,6 +36,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -231,10 +232,16 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         Scene mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
 
         var mutedIcon = createIcon(assets.get("icon.mute"), 48, sound().mutedProperty());
-        StackPane.setAlignment(mutedIcon, Pos.BOTTOM_RIGHT);
+        var autoIcon = createIcon(assets.get("icon.auto"), 48, PY_AUTOPILOT);
         var pauseIcon = createIcon(assets.get("icon.pause"), 64, clock.pausedPy);
+
+        var bottomRightIcons = new HBox(autoIcon, mutedIcon);
+        bottomRightIcons.setMaxWidth(128);
+        bottomRightIcons.setMaxHeight(64);
+        StackPane.setAlignment(bottomRightIcons, Pos.BOTTOM_RIGHT);
         StackPane.setAlignment(pauseIcon, Pos.CENTER);
-        sceneRoot.getChildren().addAll(new Pane(), flashMessageLayer, pauseIcon, mutedIcon);
+
+        sceneRoot.getChildren().addAll(new Pane(), flashMessageLayer, pauseIcon, bottomRightIcons);
 
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
