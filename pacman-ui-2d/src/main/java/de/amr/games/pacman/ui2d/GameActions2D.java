@@ -117,7 +117,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             if (!context.level().pac().isUsingAutopilot()) {
-                Logger.info("Player UP");
+                Logger.debug("Player UP");
                 context.level().pac().setWishDir(Direction.UP);
             }
         }
@@ -127,7 +127,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             if (!context.level().pac().isUsingAutopilot()) {
-                Logger.info("Player DOWN");
+                Logger.debug("Player DOWN");
                 context.level().pac().setWishDir(Direction.DOWN);
             }
         }
@@ -137,7 +137,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             if (!context.level().pac().isUsingAutopilot()) {
-                Logger.info("Player LEFT");
+                Logger.debug("Player LEFT");
                 context.level().pac().setWishDir(Direction.LEFT);
             }
         }
@@ -147,7 +147,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             if (!context.level().pac().isUsingAutopilot()) {
-                Logger.info("Player RIGHT");
+                Logger.debug("Player RIGHT");
                 context.level().pac().setWishDir(Direction.RIGHT);
             }
         }
@@ -258,16 +258,16 @@ public enum GameActions2D implements GameAction {
     }
 
     public static void bindFallbackPlayerControlActions(GameActionProvider actionProvider) {
-        actionProvider.bind(GameActions2D.PLAYER_UP, control(KeyCode.UP));
-        actionProvider.bind(GameActions2D.PLAYER_DOWN, control(KeyCode.DOWN));
-        actionProvider.bind(GameActions2D.PLAYER_LEFT, control(KeyCode.LEFT));
+        actionProvider.bind(GameActions2D.PLAYER_UP,    control(KeyCode.UP));
+        actionProvider.bind(GameActions2D.PLAYER_DOWN,  control(KeyCode.DOWN));
+        actionProvider.bind(GameActions2D.PLAYER_LEFT,  control(KeyCode.LEFT));
         actionProvider.bind(GameActions2D.PLAYER_RIGHT, control(KeyCode.RIGHT));
     }
 
     public static void bindCheatActions(GameActionProvider actionProvider) {
-        actionProvider.bind(GameActions2D.CHEAT_EAT_ALL, alt(KeyCode.E));
-        actionProvider.bind(GameActions2D.CHEAT_ADD_LIVES, alt(KeyCode.L));
-        actionProvider.bind(GameActions2D.CHEAT_NEXT_LEVEL, alt(KeyCode.N));
+        actionProvider.bind(GameActions2D.CHEAT_EAT_ALL,     alt(KeyCode.E));
+        actionProvider.bind(GameActions2D.CHEAT_ADD_LIVES,   alt(KeyCode.L));
+        actionProvider.bind(GameActions2D.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
         actionProvider.bind(GameActions2D.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
     }
 
