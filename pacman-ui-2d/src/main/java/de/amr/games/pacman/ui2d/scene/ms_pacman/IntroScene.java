@@ -66,8 +66,8 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.ADD_CREDIT, context.arcade().keyCombination(Arcade.Controls.COIN));
-        bind(GameActions2D.START_GAME, context.arcade().keyCombination(Arcade.Controls.START));
+        bind(GameActions2D.ADD_CREDIT, context.arcade().key(Arcade.Button.COIN));
+        bind(GameActions2D.START_GAME, context.arcade().key(Arcade.Button.START));
         bindTestActions(this);
     }
 

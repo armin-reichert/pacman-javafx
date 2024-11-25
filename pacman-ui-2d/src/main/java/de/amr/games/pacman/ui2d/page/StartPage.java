@@ -113,12 +113,12 @@ public class StartPage extends StackPane implements Page {
             bind(context -> carousel.nextSlide(),            joypad.key(NES.JoypadButton.BTN_RIGHT));
             bind(GameContext::selectGamePage,                joypad.key(NES.JoypadButton.BTN_START));
         } else {
-            bind(context -> currentFlyer().prevFlyerPage(),  context.arcade().keyCombination(Arcade.Controls.UP));
-            bind(context -> currentFlyer().nextFlyerPage(),  context.arcade().keyCombination(Arcade.Controls.DOWN));
-            bind(context -> carousel.prevSlide(),            context.arcade().keyCombination(Arcade.Controls.LEFT));
-            bind(context -> carousel.nextSlide(),            context.arcade().keyCombination(Arcade.Controls.RIGHT));
+            bind(context -> currentFlyer().prevFlyerPage(),  context.arcade().key(Arcade.Button.UP));
+            bind(context -> currentFlyer().nextFlyerPage(),  context.arcade().key(Arcade.Button.DOWN));
+            bind(context -> carousel.prevSlide(),            context.arcade().key(Arcade.Button.LEFT));
+            bind(context -> carousel.nextSlide(),            context.arcade().key(Arcade.Button.RIGHT));
             // START key is "1" which might be unclear on start page, so add ENTER
-            bind(GameContext::selectGamePage,                context.arcade().keyCombination(Arcade.Controls.START), naked(KeyCode.ENTER));
+            bind(GameContext::selectGamePage,                context.arcade().key(Arcade.Button.START), naked(KeyCode.ENTER));
         }
     }
 

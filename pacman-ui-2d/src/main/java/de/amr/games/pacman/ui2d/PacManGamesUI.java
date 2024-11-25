@@ -12,7 +12,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.pacman_xxl.PacManGameXXL;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
-import de.amr.games.pacman.ui2d.input.ArcadeKeyAdapter;
+import de.amr.games.pacman.ui2d.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui2d.input.JoypadBindings;
 import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui2d.input.Keyboard;
@@ -35,7 +35,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -59,15 +58,6 @@ import static de.amr.games.pacman.ui2d.util.Ufx.createIcon;
  * @author Armin Reichert
  */
 public class PacManGamesUI implements GameEventListener, GameContext {
-
-    public static final ArcadeKeyAdapter ARCADE_CURSOR_KEYS = new ArcadeKeyAdapter.Definition(
-        new KeyCodeCombination(KeyCode.DIGIT5),
-        new KeyCodeCombination(KeyCode.DIGIT1),
-        new KeyCodeCombination(KeyCode.UP),
-        new KeyCodeCombination(KeyCode.DOWN),
-        new KeyCodeCombination(KeyCode.LEFT),
-        new KeyCodeCombination(KeyCode.RIGHT)
-    );
 
     private final JoypadKeyBinding[] joypadBindings = {
         JoypadBindings.JOYPAD_CURSOR_KEYS, JoypadBindings.JOYPAD_WASD
@@ -107,7 +97,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected Picker<String> pickerLevelComplete;
 
     protected int selectedJoypadIndex;
-    protected ArcadeKeyAdapter arcade = ARCADE_CURSOR_KEYS;
+    protected ArcadeKeyBinding arcade = ArcadeKeyBinding.DEFAULT_BINDING;
 
     public PacManGamesUI() {}
 
@@ -368,7 +358,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public ArcadeKeyAdapter arcade() {
+    public ArcadeKeyBinding arcade() {
         return arcade;
     }
 
@@ -564,11 +554,12 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     @Override
     public void onLevelCreated(GameEvent event) {
         currentGameSceneConfig().createActorAnimations(level());
-        Logger.info("Actor animations created. ({} level #{})", gameVariant(), level().number);
         sound().setEnabled(!game().isDemoLevel());
-        Logger.info("Sounds {}", sound().isEnabled() ? "enabled" : "disabled");
         // size of game scene have changed, so re-embed
         currentGameScene().ifPresent(gamePage::embedGameScene);
+        Logger.info("Game level {} ({}) created", level().number, gameVariant());
+        Logger.info("Actor animations created");
+        Logger.info("Sounds {}", sound().isEnabled() ? "enabled" : "disabled");
     }
 
     @Override

@@ -14,7 +14,7 @@ public interface Arcade {
         String ROSE   = "rgb(252, 187, 179)";
     }
 
-    enum Controls {
+    enum Button {
         START, COIN, UP, DOWN, LEFT, RIGHT;
     }
 }
