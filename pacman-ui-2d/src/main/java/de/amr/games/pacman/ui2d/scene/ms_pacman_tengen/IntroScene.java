@@ -312,10 +312,14 @@ public class IntroScene extends GameScene2D {
                     intro.msPacMan.animations().ifPresent(Animations::resetCurrentAnimation);
                 }
                 if (timer.atSecond(7)) {
-                    // start demo level
+                    // start demo level or show options
                     MsPacManGameTengen game = (MsPacManGameTengen) intro.context.game();
-                    game.setCanStartNewGame(false);
-                    intro.context.gameController().restart(GameState.STARTING_GAME);
+                    if (game.hasDefaultOptionValues()) {
+                        game.setCanStartNewGame(false); // TODO check this
+                        intro.context.gameController().restart(GameState.STARTING_GAME);
+                    } else {
+                        intro.context.gameController().changeState(GameState.SETTING_OPTIONS);
+                    }
                 }
             }
         };

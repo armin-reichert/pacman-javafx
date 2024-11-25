@@ -171,6 +171,14 @@ public class MsPacManGameTengen extends GameModel {
         setNumContinues(4);
     }
 
+    public boolean hasDefaultOptionValues() {
+        return pacBooster == PacBooster.OFF &&
+                difficulty == Difficulty.NORMAL &&
+                mapCategory == MapCategory.ARCADE &&
+                startLevelNumber == 1 &&
+                numContinues == 4;
+    }
+
     public void setPacBooster(PacBooster mode) {
         pacBooster = mode;
     }

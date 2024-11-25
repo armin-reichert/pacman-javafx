@@ -85,7 +85,7 @@ public class OptionsScene extends GameScene2D {
     @Override
     public void update() {
         if (idleTicks == IDLE_TIMEOUT) {
-            context.gameController().changeState(GameState.BOOT);
+            context.gameController().changeState(GameState.INTRO);
             return;
         }
         idleTicks += 1;
