@@ -63,7 +63,7 @@ public class OptionsScene extends GameScene2D {
     @Override
     public void bindGameActions() {
         bind(MsPacManGameTengenActions.SELECT_NEXT_JOYPAD, alt(KeyCode.J));
-        bind(MsPacManGameTengenActions.START_PLAYING,      context.joypad().keyCombination(NES.Joypad.START));
+        bind(MsPacManGameTengenActions.START_PLAYING,      context.joypad().key(NES.JoypadButton.BTN_START));
         GameActions2D.bindTestActions(this);
     }
 
@@ -110,22 +110,22 @@ public class OptionsScene extends GameScene2D {
         resetIdleTimer();
     }
 
-    private boolean isJoypadPressed(NES.Joypad button) {
-        return context.keyboard().isMatching(context.joypad().keyCombination(button));
+    private boolean isJoypadPressed(NES.JoypadButton button) {
+        return context.keyboard().isMatching(context.joypad().key(button));
     }
 
     @Override
     public void handleInput(GameContext context) {
 
-        if (isJoypadPressed(NES.Joypad.DOWN)) {
+        if (isJoypadPressed(NES.JoypadButton.BTN_DOWN)) {
             selectNextOption();
         }
-        else if (isJoypadPressed(NES.Joypad.UP)) {
+        else if (isJoypadPressed(NES.JoypadButton.BTN_UP)) {
             selectPrevOption();
         }
 
         // Button "A" is right of "B": select next value
-        else if (isJoypadPressed(NES.Joypad.A)) {
+        else if (isJoypadPressed(NES.JoypadButton.BTN_A)) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setNextDifficultyValue();
@@ -136,7 +136,7 @@ public class OptionsScene extends GameScene2D {
         }
 
         // Button "B" is left of "A": select previous value
-        else if (isJoypadPressed(NES.Joypad.B)) {
+        else if (isJoypadPressed(NES.JoypadButton.BTN_B)) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setPrevDifficultyValue();

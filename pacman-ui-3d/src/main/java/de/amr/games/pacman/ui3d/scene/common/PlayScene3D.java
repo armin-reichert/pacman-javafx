@@ -52,7 +52,7 @@ import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenActions.bindDefaultJoypadActions;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenActions.setDefaultJoypadBinding;
 import static de.amr.games.pacman.ui2d.util.Ufx.doAfterSec;
 import static de.amr.games.pacman.ui2d.util.Ufx.now;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
@@ -140,14 +140,14 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         if (context.game().isDemoLevel()) {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                bind(MsPacManGameTengenActions.QUIT_DEMO_LEVEL, context.joypad().keyCombination(NES.Joypad.START));
+                bind(MsPacManGameTengenActions.QUIT_DEMO_LEVEL, context.joypad().key(NES.JoypadButton.BTN_START));
             } else {
                 bind(GameActions2D.ADD_CREDIT, context.arcade().keyCombination(Arcade.Controls.COIN));
             }
         }
         else {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                bindDefaultJoypadActions(this, context.joypad());
+                setDefaultJoypadBinding(this, context.joypad());
             } else {
                 bindDefaultArcadeControllerActions(this, context.arcade());
             }

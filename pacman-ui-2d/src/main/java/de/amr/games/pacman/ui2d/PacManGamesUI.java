@@ -13,7 +13,8 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.pacman_xxl.PacManGameXXL;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import de.amr.games.pacman.ui2d.input.ArcadeKeyAdapter;
-import de.amr.games.pacman.ui2d.input.JoypadKeyAdapter;
+import de.amr.games.pacman.ui2d.input.JoypadBindings;
+import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui2d.input.Keyboard;
 import de.amr.games.pacman.ui2d.page.*;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
@@ -68,29 +69,10 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         new KeyCodeCombination(KeyCode.RIGHT)
     );
 
-    // My current bindings, might be crap
-    public static final JoypadKeyAdapter JOYPAD_CURSOR_KEYS = new JoypadKeyAdapter.Binding(
-        new KeyCodeCombination(KeyCode.SPACE),
-        new KeyCodeCombination(KeyCode.ENTER),
-        new KeyCodeCombination(KeyCode.B),
-        new KeyCodeCombination(KeyCode.N),
-        new KeyCodeCombination(KeyCode.UP),
-        new KeyCodeCombination(KeyCode.DOWN),
-        new KeyCodeCombination(KeyCode.LEFT),
-        new KeyCodeCombination(KeyCode.RIGHT)
-    );
+    private final JoypadKeyBinding[] joypadBindings = {
+        JoypadBindings.JOYPAD_CURSOR_KEYS, JoypadBindings.JOYPAD_WASD
+    };
 
-    // Mesen emulator key set #2
-    public static final JoypadKeyAdapter JOYPAD_WASD = new JoypadKeyAdapter.Binding(
-        new KeyCodeCombination(KeyCode.U),
-        new KeyCodeCombination(KeyCode.I),
-        new KeyCodeCombination(KeyCode.J),
-        new KeyCodeCombination(KeyCode.K),
-        new KeyCodeCombination(KeyCode.W),
-        new KeyCodeCombination(KeyCode.S),
-        new KeyCodeCombination(KeyCode.A),
-        new KeyCodeCombination(KeyCode.D)
-    );
 
     protected final Keyboard keyboard = new Keyboard();
 
@@ -124,7 +106,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected Picker<String> pickerGameOver;
     protected Picker<String> pickerLevelComplete;
 
-    protected JoypadKeyAdapter joypad = JOYPAD_CURSOR_KEYS;
+    protected int selectedJoypadIndex;
     protected ArcadeKeyAdapter arcade = ARCADE_CURSOR_KEYS;
 
     public PacManGamesUI() {}
@@ -171,7 +153,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         // init game variant property
         gameVariantPy.set(gameVariant());
 
-        //TODO This doesn't fit for Tengen screen resolution
+        //TODO This doesn't fit for NES aspect ratio
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
         stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
         stage.titleProperty().bind(stageTitleBinding());
@@ -391,30 +373,28 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public JoypadKeyAdapter joypad() {
-        return joypad;
+    public JoypadKeyBinding joypad() {
+        return joypadBindings[selectedJoypadIndex];
     }
 
     @Override
-    public void nextJoypadKeyBinding() {
-        // TODO should work for any number
-        if (joypad == JOYPAD_WASD) {
-            joypad = JOYPAD_CURSOR_KEYS;
-        } else {
-            joypad = JOYPAD_WASD;
+    public void selectNextJoypadBinding() {
+        selectedJoypadIndex = selectedJoypadIndex + 1;
+        if (selectedJoypadIndex == joypadBindings.length) {
+            selectedJoypadIndex = 0;
         }
     }
 
     @Override
     public void enableJoypad() {
-        Logger.info("Enable joypad {}", joypad);
-        joypad.register(keyboard);
+        Logger.info("Enable joypad {}", joypad());
+        joypad().register(keyboard);
     }
 
     @Override
     public void disableJoypad() {
-        Logger.info("Disable joypad {}", joypad);
-        joypad.unregister(keyboard);
+        Logger.info("Disable joypad {}", joypad());
+        joypad().unregister(keyboard);
     }
 
     @Override

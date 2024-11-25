@@ -12,7 +12,7 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameActionProvider;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.input.JoypadKeyAdapter;
+import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import org.tinylog.Logger;
 
 public enum MsPacManGameTengenActions implements GameAction {
@@ -21,18 +21,18 @@ public enum MsPacManGameTengenActions implements GameAction {
         @Override
         public void execute(GameContext context) {
             context.disableJoypad();
-            context.nextJoypadKeyBinding();
+            context.selectNextJoypadBinding();
             context.enableJoypad();
-            Logger.info("Current joypad: {} ", context.joypad());
+            Logger.info("Selected joypad: {} ", context.joypad());
         }
     },
 
     TOGGLE_PAC_BOOSTER {
         @Override
         public void execute(GameContext context) {
-            MsPacManGameTengen tengenGame = (MsPacManGameTengen) context.game();
-            if (tengenGame.pacBooster() == PacBooster.USE_A_OR_B) {
-                tengenGame.activatePacBooster(!tengenGame.isBoosterActive()); // toggle state
+            MsPacManGameTengen game = (MsPacManGameTengen) context.game();
+            if (game.pacBooster() == PacBooster.USE_A_OR_B) {
+                game.activatePacBooster(!game.isBoosterActive());
             }
         }
     },
@@ -63,11 +63,13 @@ public enum MsPacManGameTengenActions implements GameAction {
         }
     };
 
-    public static void bindDefaultJoypadActions(GameActionProvider actionProvider, JoypadKeyAdapter binding) {
-        actionProvider.bind(MsPacManGameTengenActions.TOGGLE_PAC_BOOSTER, binding.keyCombination(NES.Joypad.A), binding.keyCombination(NES.Joypad.B));
-        actionProvider.bind(GameActions2D.PLAYER_UP,    binding.keyCombination(NES.Joypad.UP));
-        actionProvider.bind(GameActions2D.PLAYER_DOWN,  binding.keyCombination(NES.Joypad.DOWN));
-        actionProvider.bind(GameActions2D.PLAYER_LEFT,  binding.keyCombination(NES.Joypad.LEFT));
-        actionProvider.bind(GameActions2D.PLAYER_RIGHT, binding.keyCombination(NES.Joypad.RIGHT));
+    public static void setDefaultJoypadBinding(GameActionProvider actionProvider, JoypadKeyBinding binding) {
+        actionProvider.bind(MsPacManGameTengenActions.TOGGLE_PAC_BOOSTER,
+            binding.key(NES.JoypadButton.BTN_A),
+            binding.key(NES.JoypadButton.BTN_B));
+        actionProvider.bind(GameActions2D.PLAYER_UP,    binding.key(NES.JoypadButton.BTN_UP));
+        actionProvider.bind(GameActions2D.PLAYER_DOWN,  binding.key(NES.JoypadButton.BTN_DOWN));
+        actionProvider.bind(GameActions2D.PLAYER_LEFT,  binding.key(NES.JoypadButton.BTN_LEFT));
+        actionProvider.bind(GameActions2D.PLAYER_RIGHT, binding.key(NES.JoypadButton.BTN_RIGHT));
     }
 }

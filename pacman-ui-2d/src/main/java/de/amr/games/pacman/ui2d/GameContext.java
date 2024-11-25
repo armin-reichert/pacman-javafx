@@ -12,7 +12,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.input.ArcadeKeyAdapter;
-import de.amr.games.pacman.ui2d.input.JoypadKeyAdapter;
+import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui2d.input.Keyboard;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
@@ -67,10 +67,10 @@ public interface GameContext {
     // Input
     Keyboard keyboard();
     ArcadeKeyAdapter arcade();
-    JoypadKeyAdapter joypad();
+    JoypadKeyBinding joypad();
     void enableJoypad();
     void disableJoypad();
-    void nextJoypadKeyBinding();
+    void selectNextJoypadBinding();
 
     // GUI
     void setScoreVisible(boolean visible);

@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.input.JoypadKeyAdapter;
+import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 
@@ -14,25 +14,25 @@ public class InfoBoxJoypad extends InfoBox {
 
     public void init(GameContext context) {
         super.init(context);
-        JoypadKeyAdapter joypad = context.joypad();
+        JoypadKeyBinding joypad = context.joypad();
         setContentTextFont(Font.font("Monospace", 16));
         String indent = "  "; // Urgh
         addLabeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(
             indent,
-            joypad.keyCombination(NES.Joypad.SELECT).getDisplayText(),
-            joypad.keyCombination(NES.Joypad.START).getDisplayText())
+            joypad.key(NES.JoypadButton.BTN_SELECT).getDisplayText(),
+            joypad.key(NES.JoypadButton.BTN_START).getDisplayText())
         );
         addLabeledValue("[B]  [A]", () -> "%s%s   %s".formatted(
             indent,
-            joypad.keyCombination(NES.Joypad.B).getDisplayText(),
-            joypad.keyCombination(NES.Joypad.A).getDisplayText())
+            joypad.key(NES.JoypadButton.BTN_B).getDisplayText(),
+            joypad.key(NES.JoypadButton.BTN_A).getDisplayText())
         );
         addLabeledValue("UP/DOWN/LEFT/RIGHT", () -> "%s%s  %s  %s  %s".formatted(
             indent,
-            joypad.keyCombination(NES.Joypad.UP).getDisplayText(),
-            joypad.keyCombination(NES.Joypad.DOWN).getDisplayText(),
-            joypad.keyCombination(NES.Joypad.LEFT).getDisplayText(),
-            joypad.keyCombination(NES.Joypad.RIGHT).getDisplayText())
+            joypad.key(NES.JoypadButton.BTN_UP).getDisplayText(),
+            joypad.key(NES.JoypadButton.BTN_DOWN).getDisplayText(),
+            joypad.key(NES.JoypadButton.BTN_LEFT).getDisplayText(),
+            joypad.key(NES.JoypadButton.BTN_RIGHT).getDisplayText())
         );
         addRow(new ImageView(context.assets().image("tengen.image.nes-controller")));
     }

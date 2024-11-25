@@ -107,11 +107,11 @@ public class StartPage extends StackPane implements Page {
     public void bindGameActions() {
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             var joypad = context.joypad();
-            bind(context -> currentFlyer().prevFlyerPage(),  joypad.keyCombination(NES.Joypad.UP));
-            bind(context -> currentFlyer().nextFlyerPage(),  joypad.keyCombination(NES.Joypad.DOWN));
-            bind(context -> carousel.prevSlide(),            joypad.keyCombination(NES.Joypad.LEFT));
-            bind(context -> carousel.nextSlide(),            joypad.keyCombination(NES.Joypad.RIGHT));
-            bind(GameContext::selectGamePage,                joypad.keyCombination(NES.Joypad.START));
+            bind(context -> currentFlyer().prevFlyerPage(),  joypad.key(NES.JoypadButton.BTN_UP));
+            bind(context -> currentFlyer().nextFlyerPage(),  joypad.key(NES.JoypadButton.BTN_DOWN));
+            bind(context -> carousel.prevSlide(),            joypad.key(NES.JoypadButton.BTN_LEFT));
+            bind(context -> carousel.nextSlide(),            joypad.key(NES.JoypadButton.BTN_RIGHT));
+            bind(GameContext::selectGamePage,                joypad.key(NES.JoypadButton.BTN_START));
         } else {
             bind(context -> currentFlyer().prevFlyerPage(),  context.arcade().keyCombination(Arcade.Controls.UP));
             bind(context -> currentFlyer().nextFlyerPage(),  context.arcade().keyCombination(Arcade.Controls.DOWN));

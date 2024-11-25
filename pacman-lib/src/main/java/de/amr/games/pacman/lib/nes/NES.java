@@ -36,7 +36,7 @@ public interface NES {
             "e4e594", "cfef96", "bdf4ab", "b3f3cc", "b5ebf2", "b8b8b8", "000000", "000000",
         };
 
-        public static String color(int index) {
+        static String color(int index) {
             if (inClosedRange(index, 0, COLORS.length)) {
                 return COLORS[index];
             }
@@ -44,7 +44,7 @@ public interface NES {
         }
     }
 
-    enum Joypad {
-        SELECT, START, B, A, UP, DOWN, LEFT, RIGHT;
+    enum JoypadButton {
+        BTN_SELECT, BTN_START, BTN_B, BTN_A, BTN_UP, BTN_DOWN, BTN_LEFT, BTN_RIGHT
     }
 }
