@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMapPath;
 import javafx.beans.property.DoubleProperty;
@@ -64,8 +63,7 @@ public interface WallBuilder {
         top.materialProperty().bind(strokeMaterialPy);
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
-        var wall = new Group(base, top);
-        return wall;
+        return new Group(base, top);
     }
 
     static void buildWallAlongPath(
@@ -74,16 +72,16 @@ public interface WallBuilder {
         Property<PhongMaterial> wallFillMaterialPy, Property<PhongMaterial> wallStrokeMaterialPy)
     {
         Vector2i startTile = path.startTile(), endTile = startTile;
-        Direction prevDir = null;
+        Vector2i prev = null;
         Node segment;
-        for (Direction dir : path) {
-            if (prevDir != dir) {
+        for (Vector2i vector : path) {
+            if (!vector.equals(prev)) {
                 segment = createWall(startTile, endTile, thickness, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
                 parent.getChildren().add(segment);
                 startTile = endTile;
             }
-            endTile = endTile.plus(dir.vector());
-            prevDir = dir;
+            endTile = endTile.plus(vector);
+            prev = vector;
         }
         segment = createWall(startTile, endTile, thickness, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
         parent.getChildren().add(segment);

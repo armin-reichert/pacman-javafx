@@ -194,17 +194,17 @@ public class TerrainMapRenderer implements TileMapRenderer {
         Vector2f point = tile.scaled(8f).plus(8,6);
         g.moveTo(point.x(), point.y());
         int orientation = 1; // counter clockwise
-        for (Direction dir : path) {
+        for (Vector2i vector : path) {
             byte content = map.get(tile);
             point = switch (content) {
                 case Tiles.CORNER_NW -> point.plus(-2, 2).scaled(orientation);
                 case Tiles.CORNER_SW -> point.plus(2, 2).scaled(orientation);
                 case Tiles.CORNER_SE -> point.plus(2, -2).scaled(orientation);
                 case Tiles.CORNER_NE -> point.plus(-2, -2).scaled(orientation);
-                default -> point.plus(dir.vector().scaled(8f));
+                default -> point.plus(vector.scaled(8f));
             };
             g.lineTo(point.x(), point.y());
-            tile = tile.plus(dir.vector());
+            tile = tile.plus(vector);
         }
     }
 
@@ -239,9 +239,13 @@ public class TerrainMapRenderer implements TileMapRenderer {
         }
         //TODO this is unclear
         extendPath(g, map.get(tile), center(tile), true, true, tile.x() != 0, true);
-        for (Direction dir : path) {
-            tile = tile.plus(dir.vector());
-            extendPath(g, map.get(tile), center(tile), dir == Direction.LEFT, dir == Direction.RIGHT, dir == Direction.UP, dir == Direction.DOWN);
+        for (Vector2i vector : path) {
+            tile = tile.plus(vector);
+            extendPath(g, map.get(tile), center(tile),
+               vector.x() < 0 && vector.y() == 0,
+               vector.x() > 0 && vector.y() == 0,
+               vector.x() == 0 && vector.y() < 0,
+               vector.x() == 0 && vector.y() > 0);
         }
         if (tile.x() == 0 && map.get(tile) == Tiles.DWALL_H) {
             // end path at left border

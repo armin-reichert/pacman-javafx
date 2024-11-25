@@ -15,10 +15,10 @@ import java.util.Objects;
 /**
  * @author Armin Reichert
  */
-public class TileMapPath implements Iterable<Direction> {
+public class TileMapPath implements Iterable<Vector2i> {
 
     private final Vector2i startTile;
-    private final List<Direction> directions = new ArrayList<>();
+    private final List<Vector2i> vectors = new ArrayList<>();
 
     public TileMapPath(Vector2i startTile) {
         this.startTile = Objects.requireNonNull(startTile);
@@ -29,20 +29,20 @@ public class TileMapPath implements Iterable<Direction> {
     }
 
     public int size() {
-        return directions.size();
+        return vectors.size();
     }
 
     public void add(Direction dir) {
         Objects.requireNonNull(dir);
-        directions.add(dir);
+        vectors.add(dir.vector());
     }
 
-    public Direction dir(int i) {
-        return directions.get(i);
+    public Vector2i vector(int i) {
+        return vectors.get(i);
     }
 
     @Override
-    public Iterator<Direction> iterator() {
-        return directions.iterator();
+    public Iterator<Vector2i> iterator() {
+        return vectors.iterator();
     }
 }
