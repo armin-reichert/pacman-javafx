@@ -419,37 +419,13 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void ifGameActionRun(GameActionProvider actionProvider) {
-        actionProvider.firstMatchedAction(keyboard()).filter(gameAction -> gameAction.isEnabled(this))
-            .ifPresent(action -> action.execute(this));
-    }
-
-    @Override
-    public void ifGameActionRunElse(GameActionProvider actionProvider, Runnable defaultAction) {
-       actionProvider.firstMatchedAction(keyboard()).filter(gameAction -> gameAction.isEnabled(this))
-           .ifPresentOrElse(action -> action.execute(this), defaultAction);
-    }
-
-    @Override
-    public String locText(String keyOrPattern, Object... args) {
-        checkNotNull(keyOrPattern);
-        for (var bundle : assets.bundles()) {
-            if (bundle.containsKey(keyOrPattern)) {
-                return MessageFormat.format(bundle.getString(keyOrPattern), args);
-            }
-        }
-        Logger.error("Missing localized text for key {}", keyOrPattern);
-        return null;
-    }
-
-    @Override
     public String locGameOverMessage() {
         return pickerGameOver.next();
     }
 
     @Override
-    public String locLevelCompleteMessage() {
-        return pickerLevelComplete.next() + "\n\n" + locText("level_complete", level().number);
+    public String locLevelCompleteMessage(int levelNumber) {
+        return pickerLevelComplete.next() + "\n\n" + locText("level_complete", levelNumber);
     }
 
     @Override

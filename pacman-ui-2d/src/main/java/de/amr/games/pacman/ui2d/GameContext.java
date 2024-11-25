@@ -23,8 +23,12 @@ import de.amr.games.pacman.ui2d.sound.GameSound;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
 import javafx.beans.property.ObjectProperty;
+import org.tinylog.Logger;
 
+import java.text.MessageFormat;
 import java.util.Optional;
+
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * @author Armin Reichert
@@ -34,9 +38,20 @@ public interface GameContext {
     // Assets
     AssetStorage assets();
     GameSound sound();
-    String locText(String keyOrPattern, Object... args);
+
+    default String locText(String keyOrPattern, Object... args) {
+        checkNotNull(keyOrPattern);
+        for (var bundle : assets().bundles()) {
+            if (bundle.containsKey(keyOrPattern)) {
+                return MessageFormat.format(bundle.getString(keyOrPattern), args);
+            }
+        }
+        Logger.error("Missing localized text for key {}", keyOrPattern);
+        return "[" + keyOrPattern + "]";
+    }
+
     String locGameOverMessage();
-    String locLevelCompleteMessage();
+    String locLevelCompleteMessage(int levelNumber);
 
     // Game model and controller
     GameClockFX gameClock();
@@ -74,8 +89,17 @@ public interface GameContext {
     }
 
     // Actions
-    void ifGameActionRun(GameActionProvider actionProvider);
-    void ifGameActionRunElse(GameActionProvider actionProvider, Runnable defaultAction);
+    default void ifGameActionRun(GameActionProvider actionProvider) {
+        actionProvider.firstMatchedAction(keyboard())
+            .filter(gameAction -> gameAction.isEnabled(this))
+            .ifPresent(action -> action.execute(this));
+    }
+
+    default void ifGameActionRunElse(GameActionProvider actionProvider, Runnable defaultAction) {
+        actionProvider.firstMatchedAction(keyboard())
+            .filter(gameAction -> gameAction.isEnabled(this))
+            .ifPresentOrElse(action -> action.execute(this), defaultAction);
+    }
 
     // Game scenes
     GameSceneConfig gameSceneConfig(GameVariant variant);

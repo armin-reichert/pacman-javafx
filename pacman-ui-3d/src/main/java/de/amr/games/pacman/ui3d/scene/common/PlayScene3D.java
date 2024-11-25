@@ -53,7 +53,8 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenActions.bindDefaultJoypadActions;
-import static de.amr.games.pacman.ui2d.util.Ufx.*;
+import static de.amr.games.pacman.ui2d.util.Ufx.doAfterSec;
+import static de.amr.games.pacman.ui2d.util.Ufx.now;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 
 /**
@@ -577,7 +578,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
                   perspectiveNamePy.unbind();
                   perspectiveNamePy.set(Perspective.Name.TOTAL);
                   level3D.livesCounter3D().light().setLightOn(false);
-                  context.showFlashMessageSec(3, context.locLevelCompleteMessage());
+                  context.showFlashMessageSec(3, context.locLevelCompleteMessage(context.level().number));
                   context.sound().playLevelCompleteSound();
               })
             , doAfterSec(1.0, () -> context.level().ghosts().forEach(Ghost::hide))
