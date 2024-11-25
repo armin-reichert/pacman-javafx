@@ -70,11 +70,11 @@ public class CreditsScene extends GameScene2D {
         y += TS;
         r.drawText("DAVE O'RIVA", nesPaletteColor(0x23), scaledFont, 10 * TS, y);
         y += 4 * TS;
-        r.drawText("MS PAC-MAN TM NAMCO LTD", nesPaletteColor(0x19), scaledFont, centerX(23), y);
+        r.drawText("MS PAC-MAN TM NAMCO LTD", nesPaletteColor(0x19), scaledFont, 5 * TS, y);
         y += TS;
-        r.drawText("©1990 TENGEN INC", nesPaletteColor(0x19), scaledFont, centerX(16), y);
+        r.drawText("©1990 TENGEN INC", nesPaletteColor(0x19), scaledFont, 7 * TS, y);
         y += TS;
-        r.drawText("ALL RIGHTS RESERVED", nesPaletteColor(0x19), scaledFont, centerX(19), y);
+        r.drawText("ALL RIGHTS RESERVED", nesPaletteColor(0x19), scaledFont, 6 * TS, y);
     }
 
     private void drawJavaFXVersionAuthors(MsPacManGameTengenRenderer r, Font scaledFont) {
@@ -93,14 +93,10 @@ public class CreditsScene extends GameScene2D {
         y += TS;
         r.drawText("ANDYANA JONSEPH", nesPaletteColor(0x23), scaledFont, 10 * TS, y);
         y += 3 * TS;
-        r.drawText("MS PAC-MAN TM NAMCO LTD", nesPaletteColor(0x19), scaledFont, centerX(23), y);
+        r.drawText("GITHUB.COM/ARMIN-REICHERT", nesPaletteColor(0x19), scaledFont, 3 * TS, y);
         y += TS;
-        r.drawText("©1990 TENGEN INC", nesPaletteColor(0x19), scaledFont, centerX(16), y);
+        r.drawText("©2024 MIT LICENSE", nesPaletteColor(0x19), scaledFont, 6 * TS, y);
         y += TS;
-        r.drawText("ALL RIGHTS RESERVED", nesPaletteColor(0x19), scaledFont, centerX(19), y);
-    }
-
-    private double centerX(int textLength) {
-        return (NES_TILES.x() - textLength) * HTS;
+        r.drawText("ALL RIGHTS GRANTED", nesPaletteColor(0x19), scaledFont, 5 * TS, y);
     }
 }
