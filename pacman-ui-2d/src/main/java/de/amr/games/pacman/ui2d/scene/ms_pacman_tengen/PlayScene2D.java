@@ -135,11 +135,12 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         canvas.widthProperty().bind(scalingProperty().multiply(CANVAS_SIZE.x()));
         canvas.heightProperty().bind(scalingProperty().multiply(CANVAS_SIZE.y()));
 
-        // maze is drawn centered in canvas, clip left and right vertical stripes of 2 tiles width
+        // maze is drawn centered inside canvas: clip left and right vertical stripes (2 tiles wide each)
         var clip = new Rectangle();
-        clip.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(2*TS)));
+        int stripeWidth = 2 * TS;
+        clip.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(stripeWidth)));
         clip.yProperty().bind(canvas.translateYProperty());
-        clip.widthProperty().bind(canvas.widthProperty().subtract(scalingPy.multiply(4*TS)));
+        clip.widthProperty().bind(canvas.widthProperty().subtract(scalingPy.multiply(2 * stripeWidth)));
         clip.heightProperty().bind(canvas.heightProperty());
         canvas.setClip(clip);
 
