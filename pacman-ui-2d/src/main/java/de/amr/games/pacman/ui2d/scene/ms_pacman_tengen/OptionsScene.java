@@ -28,7 +28,7 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengen
 /**
  * Options scene for Ms. Pac-Man Tengen.
  *
- * <p></p>The highscore is cleared if player type (1 player, 2 players etc), map category or difficulty are
+ * <p></p>The highscore is cleared if player type (1 player, 2 players etc.), map category or difficulty are
  * changed, see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/MsPacManTENGENDis.asm:9545">disassembly</a>.
  *
  * @author Armin Reichert
@@ -230,7 +230,7 @@ public class OptionsScene extends GameScene2D {
     // Drawing
 
     @Override
-    protected void drawSceneContent(GameRenderer gr) {
+    protected void drawSceneContent() {
         MsPacManGameTengenRenderer r = (MsPacManGameTengenRenderer) gr;
 
         r.setScaling(scaling());
@@ -297,7 +297,7 @@ public class OptionsScene extends GameScene2D {
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer gr) {
+    protected void drawDebugInfo() {
         gr.drawTileGrid(size().x(), size().y());
     }
 

@@ -8,14 +8,12 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
 
@@ -96,14 +94,14 @@ public class CutScene3 extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameRenderer gr) {
+    public void drawSceneContent() {
         gr.drawAnimatedEntity(pac);
         gr.drawAnimatedEntity(blinky);
         gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer gr) {
+    protected void drawDebugInfo() {
         gr.drawTileGrid(size().x(), size().y());
         var text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
         gr.drawText(text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));

@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -150,10 +149,10 @@ public class CutScene2 extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameRenderer renderer) {
+    public void drawSceneContent() {
         String assetPrefix = assetPrefix(context.gameVariant());
         Color color = context.assets().color(assetPrefix + ".color.clapperboard"); //TODO check
-        var r = (MsPacManGameTengenRenderer) renderer;
+        var r = (MsPacManGameTengenRenderer) gr;
         r.setLevelNumberBoxesVisible(false);
         r.drawClapperBoard(clapAnimation, "THE CHASE", 2,
             r.scaledArcadeFont(TS), color, CLAP_TILE_X, CLAP_TILE_Y);
@@ -165,7 +164,7 @@ public class CutScene2 extends GameScene2D {
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer gr) {
+    protected void drawDebugInfo() {
         gr.drawTileGrid(size().x(), size().y());
         gr.ctx().setFill(Color.WHITE);
         gr.ctx().setFont(Font.font(20));

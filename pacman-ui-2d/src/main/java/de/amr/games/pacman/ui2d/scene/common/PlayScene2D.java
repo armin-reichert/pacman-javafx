@@ -29,7 +29,8 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.games.pacman.ui2d.GameActions2D.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
@@ -132,7 +133,7 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    protected void drawSceneContent(GameRenderer gr) {
+    protected void drawSceneContent() {
         if (context.game().level().isEmpty()) { // This happens on level start
             Logger.warn("Tick {}: Cannot draw scene content: game world not yet available!", context.tick());
             return;
@@ -210,9 +211,9 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer renderer) {
-        GraphicsContext g = renderer.ctx();
-        renderer.drawTileGrid(size().x(), size().y());
+    protected void drawDebugInfo() {
+        GraphicsContext g = gr.ctx();
+        gr.drawTileGrid(size().x(), size().y());
         if (context.gameVariant() == GameVariant.PACMAN && context.game().level().isPresent()) {
             context.level().ghosts().forEach(ghost -> {
                 // Are currently the same for each ghost, but who knows what comes...

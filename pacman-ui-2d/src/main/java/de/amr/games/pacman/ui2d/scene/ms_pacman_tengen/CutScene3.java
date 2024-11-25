@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
@@ -163,11 +162,11 @@ public class CutScene3 extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameRenderer renderer) {
+    public void drawSceneContent() {
         if (darkness) {
             return;
         }
-        var r = (MsPacManGameTengenRenderer) renderer;
+        var r = (MsPacManGameTengenRenderer) gr;
         r.drawClapperBoard(clapAnimation, "JUNIOR", 3, r.scaledArcadeFont(TS), clapTextColor, CLAP_TILE_X, CLAP_TILE_Y);
         r.drawStork(storkAnimation, stork, bagReleased);
         r.drawAnimatedEntity(msPacMan);
@@ -186,7 +185,7 @@ public class CutScene3 extends GameScene2D {
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer gr) {
+    protected void drawDebugInfo() {
         gr.drawTileGrid(size().x(), size().y());
         gr.ctx().setFill(Color.WHITE);
         gr.ctx().setFont(Font.font(20));

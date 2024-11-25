@@ -18,7 +18,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameActions2D;
-import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -107,8 +106,8 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameRenderer renderer) {
-        MsPacManGameRenderer r = (MsPacManGameRenderer) renderer;
+    public void drawSceneContent() {
+        MsPacManGameRenderer r = (MsPacManGameRenderer) gr;
         Font font = r.scaledArcadeFont(TS);
         BitSet marqueeState = computeMarqueeState(marqueeTimer.tickCount());
         drawMarquee(r.ctx(), marqueeState);
@@ -136,7 +135,7 @@ public class IntroScene extends GameScene2D {
         }
         r.drawAnimatedEntity(msPacMan);
         r.drawMsPacManMidwayCopyright(t(6), t(28), Color.valueOf(Arcade.Palette.RED), font);
-        r.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), Color.valueOf(Arcade.Palette.WHITE), renderer.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
+        r.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), Color.valueOf(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
         r.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 

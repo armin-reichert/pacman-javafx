@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.ui2d.GameActions2D;
-import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.text.Font;
 
@@ -39,9 +38,9 @@ public class CreditsScene extends GameScene2D {
     }
 
     @Override
-    protected void drawSceneContent(GameRenderer renderer) {
-        var r = (MsPacManGameTengenRenderer) renderer;
-        Font scaledFont = renderer.scaledArcadeFont(TS);
+    protected void drawSceneContent() {
+        var r = (MsPacManGameTengenRenderer) gr;
+        Font scaledFont = r.scaledArcadeFont(TS);
         double width = size().x();
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), width, 20);
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), width, 212);
@@ -53,7 +52,7 @@ public class CreditsScene extends GameScene2D {
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer gr) {
+    protected void drawDebugInfo() {
         gr.drawTileGrid(size().x(), size().y());
     }
 

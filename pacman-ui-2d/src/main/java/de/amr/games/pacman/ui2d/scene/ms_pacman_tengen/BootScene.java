@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.paint.Color;
@@ -83,8 +82,8 @@ public class BootScene extends GameScene2D {
     }
 
     @Override
-    protected void drawSceneContent(GameRenderer renderer) {
-        var r = (MsPacManGameTengenRenderer) renderer;
+    protected void drawSceneContent() {
+        var r = (MsPacManGameTengenRenderer) gr;
         r.setScaling(scaling());
         if (grayScreen) {
             r.ctx().setFill(nesPaletteColor(0x10));
@@ -96,11 +95,10 @@ public class BootScene extends GameScene2D {
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer gr) {
+    protected void drawDebugInfo() {
         gr.drawTileGrid(size().x(), size().y());
         gr.ctx().setFill(Color.WHITE);
         gr.ctx().setFont(Font.font(20));
         gr.ctx().fillText("Tick " + t, 20, 20);
     }
-
 }

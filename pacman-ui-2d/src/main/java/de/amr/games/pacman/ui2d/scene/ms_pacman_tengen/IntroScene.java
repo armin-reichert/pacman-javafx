@@ -17,7 +17,6 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.ui2d.GameActions2D;
-import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -29,7 +28,8 @@ import java.util.BitSet;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.actors.Animations.ANIM_GHOST_NORMAL;
 import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_SIZE;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.nesPaletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
 
 /**
@@ -94,11 +94,11 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameRenderer renderer) {
-        MsPacManGameTengenRenderer r = (MsPacManGameTengenRenderer) renderer;
+    public void drawSceneContent() {
+        MsPacManGameTengenRenderer r = (MsPacManGameTengenRenderer) gr;
         TickTimer timer = sceneController.state().timer;
         long t = timer.tickCount();
-        Font scaledFont = renderer.scaledArcadeFont(8);
+        Font scaledFont = r.scaledArcadeFont(8);
         switch (sceneController.state()) {
 
             case WAITING_FOR_START -> {
@@ -115,12 +115,12 @@ public class IntroScene extends GameScene2D {
             }
 
             case SHOWING_MARQUEE -> {
-                drawMarquee(r, t);
+                drawMarquee();
                 r.drawText("\"MS PAC-MAN\"", nesPaletteColor(0x28), scaledFont, MARQUEE_X + 20, MARQUEE_Y - 18);
             }
 
             case GHOSTS_MARCHING_IN -> {
-                drawMarquee(r, t);
+                drawMarquee();
                 r.drawText("\"MS PAC-MAN\"", nesPaletteColor(0x28), scaledFont, MARQUEE_X + 20, MARQUEE_Y - 18);
                 if (ghostIndex == 0) {
                     r.drawText("WITH", nesPaletteColor(0x20), scaledFont, MARQUEE_X + 12, MARQUEE_Y + 23);
@@ -132,7 +132,7 @@ public class IntroScene extends GameScene2D {
             }
 
             case MS_PACMAN_MARCHING_IN -> {
-                drawMarquee(r, t);
+                drawMarquee();
                 r.drawText("\"MS PAC-MAN\"", nesPaletteColor(0x28), scaledFont, MARQUEE_X + 20, MARQUEE_Y - 18);
                 r.drawText("STARRING", nesPaletteColor(0x20), scaledFont, MARQUEE_X + 12, MARQUEE_Y + 22);
                 r.drawText("MS PAC-MAN", nesPaletteColor(0x28), scaledFont, MARQUEE_X + 28, MARQUEE_Y + 38);
@@ -143,7 +143,7 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer gr) {
+    protected void drawDebugInfo() {
         gr.drawTileGrid(size().x(), size().y());
     }
 
@@ -158,10 +158,10 @@ public class IntroScene extends GameScene2D {
         }
     }
 
-    private void drawMarquee(GameRenderer renderer, long t) {
+    private void drawMarquee() {
         double xMin = MARQUEE_X, xMax = xMin + 132, yMin = MARQUEE_Y, yMax = yMin + 60;
         double bulbSize = scaled(2);
-        GraphicsContext g = renderer.ctx();
+        GraphicsContext g = gr.ctx();
         for (int i = 0; i < NUM_BULBS; ++i) {
             g.setFill(marqueeState.get(i) ? nesPaletteColor(0x20) : nesPaletteColor(0x15));
             if (i <= 33) { // lower border left-to-right
@@ -309,12 +309,12 @@ public class IntroScene extends GameScene2D {
                 intro.msPacMan.move();
                 if (intro.msPacMan.posX() <= MS_PAC_MAN_STOP_X) {
                     intro.msPacMan.setSpeed(0);
-                    intro.msPacMan.animations().ifPresent(Animations::resetCurrentAnimation); //TODO check in Tengen, seems not to work!
+                    intro.msPacMan.animations().ifPresent(Animations::resetCurrentAnimation);
                 }
                 if (timer.atSecond(7)) {
                     // start demo level
-                    MsPacManGameTengen tengenGame = (MsPacManGameTengen) intro.context.game();
-                    tengenGame.setCanStartNewGame(false);
+                    MsPacManGameTengen game = (MsPacManGameTengen) intro.context.game();
+                    game.setCanStartNewGame(false);
                     intro.context.gameController().restart(GameState.STARTING_GAME);
                 }
             }

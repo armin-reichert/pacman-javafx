@@ -18,7 +18,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameActions2D;
-import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -120,33 +119,32 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameRenderer renderer) {
+    public void drawSceneContent() {
         TickTimer timer = sceneController.state().timer();
-        drawGallery(renderer);
+        drawGallery();
         switch (sceneController.state()) {
-            case SHOWING_POINTS -> drawPoints(renderer);
+            case SHOWING_POINTS -> drawPoints();
             case CHASING_PAC -> {
-                drawPoints(renderer);
+                drawPoints();
                 if (blinking.isOn()) {
-                    drawEnergizer(renderer, t(LEFT_TILE_X), t(20));
+                    drawEnergizer(t(LEFT_TILE_X), t(20));
                 }
-                drawGuys(renderer, flutter(timer.tickCount()));
+                drawGuys(flutter(timer.tickCount()));
                 if (context.gameVariant() == GameVariant.PACMAN) {
-                    renderer.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, Color.valueOf(Arcade.Palette.PINK), renderer.scaledArcadeFont(TS),  t(4), t(32));
+                    gr.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, Color.valueOf(Arcade.Palette.PINK), gr.scaledArcadeFont(TS),  t(4), t(32));
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
-                drawPoints(renderer);
-                drawGuys(renderer, 0);
+                drawPoints();
+                drawGuys(0);
                 if (context.gameVariant() == GameVariant.PACMAN) {
-                    renderer.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, Color.valueOf(Arcade.Palette.PINK), renderer.scaledArcadeFont(TS),  t(4), t(32));
+                    gr.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, Color.valueOf(Arcade.Palette.PINK), gr.scaledArcadeFont(TS),  t(4), t(32));
                 }
             }
-            default -> {
-            }
+            default -> {}
         }
-        renderer.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), Color.valueOf(Arcade.Palette.WHITE), renderer.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
-        renderer.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
+        gr.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), Color.valueOf(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
+        gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 
     // TODO inspect in MAME what's really going on here
@@ -154,72 +152,72 @@ public class IntroScene extends GameScene2D {
         return time % 5 < 2 ? 0 : -1;
     }
 
-    private void drawGallery(GameRenderer renderer) {
+    private void drawGallery() {
         PacManGameSpriteSheet spriteSheet = (PacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
-        Font font = renderer.scaledArcadeFont(TS);
+        Font font = gr.scaledArcadeFont(TS);
         int tx = LEFT_TILE_X;
         if (titleVisible) {
-            renderer.drawText("CHARACTER / NICKNAME", Color.valueOf(Arcade.Palette.WHITE), font, t(tx + 3), t(6));
+            gr.drawText("CHARACTER / NICKNAME", Color.valueOf(Arcade.Palette.WHITE), font, t(tx + 3), t(6));
         }
         for (byte id = 0; id < 4; ++id) {
             if (!ghostImageVisible[id]) {
                 continue;
             }
             int ty = 7 + 3 * id;
-            renderer.drawSpriteCenteredOverTile(spriteSheet.ghostFacingRight(id), t(tx) + 4, t(ty));
+            gr.drawSpriteCenteredOverTile(spriteSheet.ghostFacingRight(id), t(tx) + 4, t(ty));
             if (ghostCharacterVisible[id]) {
                 String text = "-" + GHOST_CHARACTERS[id];
-                renderer.drawText(text, GHOST_COLORS[id], font, t(tx + 3), t(ty + 1));
+                gr.drawText(text, GHOST_COLORS[id], font, t(tx + 3), t(ty + 1));
             }
             if (ghostNicknameVisible[id]) {
                 String text = '"' + ghosts[id].name().toUpperCase() + '"';
-                renderer.drawText(text, GHOST_COLORS[id], font, t(tx + 14), t(ty + 1));
+                gr.drawText(text, GHOST_COLORS[id], font, t(tx + 14), t(ty + 1));
             }
         }
     }
 
-    private void drawGuys(GameRenderer renderer, int shakingAmount) {
+    private void drawGuys(int shakingAmount) {
         if (shakingAmount == 0) {
-            Stream.of(ghosts).forEach(renderer::drawAnimatedEntity);
+            Stream.of(ghosts).forEach(gr::drawAnimatedEntity);
         } else {
-            renderer.drawAnimatedEntity(ghosts[0]);
-            renderer.drawAnimatedEntity(ghosts[3]);
+            gr.drawAnimatedEntity(ghosts[0]);
+            gr.drawAnimatedEntity(ghosts[3]);
             // shaking ghosts effect, not quite as in original game
-            renderer.ctx().save();
-            renderer.ctx().translate(shakingAmount, 0);
-            renderer.drawAnimatedEntity(ghosts[1]);
-            renderer.drawAnimatedEntity(ghosts[2]);
-            renderer.ctx().restore();
+            gr.ctx().save();
+            gr.ctx().translate(shakingAmount, 0);
+            gr.drawAnimatedEntity(ghosts[1]);
+            gr.drawAnimatedEntity(ghosts[2]);
+            gr.ctx().restore();
         }
-        renderer.drawAnimatedEntity(pacMan);
+        gr.drawAnimatedEntity(pacMan);
     }
 
-    private void drawPoints(GameRenderer renderer) {
+    private void drawPoints() {
         var color = Color.valueOf(Arcade.Palette.WHITE);
-        var font8 = renderer.scaledArcadeFont(8);
-        var font6 = renderer.scaledArcadeFont(6);
+        var font8 = gr.scaledArcadeFont(8);
+        var font6 = gr.scaledArcadeFont(6);
         int tx = LEFT_TILE_X + 6;
         int ty = 25;
-        renderer.ctx().setFill(PELLET_COLOR);
-        renderer.ctx().fillRect(scaled(t(tx) + 4), scaled(t(ty - 1) + 4), scaled(2), scaled(2));
+        gr.ctx().setFill(PELLET_COLOR);
+        gr.ctx().fillRect(scaled(t(tx) + 4), scaled(t(ty - 1) + 4), scaled(2), scaled(2));
         if (blinking.isOn()) {
-            drawEnergizer(renderer, t(tx), t(ty + 1));
+            drawEnergizer(t(tx), t(ty + 1));
         }
-        renderer.drawText("10",  color, font8, t(tx + 2), t(ty));
-        renderer.drawText("PTS", color, font6, t(tx + 5), t(ty));
-        renderer.drawText("50",  color, font8, t(tx + 2), t(ty + 2));
-        renderer.drawText("PTS", color, font6, t(tx + 5), t(ty + 2));
+        gr.drawText("10",  color, font8, t(tx + 2), t(ty));
+        gr.drawText("PTS", color, font6, t(tx + 5), t(ty));
+        gr.drawText("50",  color, font8, t(tx + 2), t(ty + 2));
+        gr.drawText("PTS", color, font6, t(tx + 5), t(ty + 2));
     }
 
     // draw pixelated "circle"
-    private void drawEnergizer(GameRenderer renderer, double x, double y) {
-        renderer.ctx().save();
-        renderer.ctx().scale(scaling(), scaling());
-        renderer.ctx().setFill(PELLET_COLOR);
-        renderer.ctx().fillRect(x + 2, y, 4, 8);
-        renderer.ctx().fillRect(x, y + 2, 8, 4);
-        renderer.ctx().fillRect(x + 1, y + 1, 6, 6);
-        renderer.ctx().restore();
+    private void drawEnergizer(double x, double y) {
+        gr.ctx().save();
+        gr.ctx().scale(scaling(), scaling());
+        gr.ctx().setFill(PELLET_COLOR);
+        gr.ctx().fillRect(x + 2, y, 4, 8);
+        gr.ctx().fillRect(x, y + 2, 8, 4);
+        gr.ctx().fillRect(x + 1, y + 1, 6, 6);
+        gr.ctx().restore();
     }
 
     private enum SceneState implements FsmState<IntroScene> {

@@ -11,7 +11,6 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -216,8 +215,8 @@ public class CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameRenderer renderer) {
-        var r = (MsPacManGameTengenRenderer) renderer;
+    public void drawSceneContent() {
+        var r = (MsPacManGameTengenRenderer) gr;
         r.setLevelNumberBoxesVisible(false);
         r.drawClapperBoard(clapAnimation, "THEY MEET", 1,
             r.scaledArcadeFont(TS), clapTextColor, CLAP_TILE_X, CLAP_TILE_Y);
@@ -233,7 +232,7 @@ public class CutScene1 extends GameScene2D {
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer gr) {
+    protected void drawDebugInfo() {
         gr.drawTileGrid(size().x(), size().y());
         gr.ctx().setFill(Color.WHITE);
         gr.ctx().setFont(Font.font(20));

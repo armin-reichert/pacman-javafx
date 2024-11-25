@@ -7,7 +7,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAssets2D;
-import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.MediaPlayer;
@@ -215,8 +214,8 @@ public class CutScene4 extends GameScene2D {
     public void bindGameActions() {}
 
     @Override
-    protected void drawSceneContent(GameRenderer renderer) {
-        var r = (MsPacManGameTengenRenderer) renderer;
+    protected void drawSceneContent() {
+        var r = (MsPacManGameTengenRenderer) gr;
         r.drawClapperBoard(clapAnimation, "THE END", 4,
                 r.scaledArcadeFont(TS), clapTextColor, CLAP_TILE_X, CLAP_TILE_Y);
         r.drawAnimatedEntity(msPacMan);
@@ -230,7 +229,7 @@ public class CutScene4 extends GameScene2D {
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer gr) {
+    protected void drawDebugInfo() {
         gr.drawTileGrid(size().x(), size().y());
         gr.ctx().setFill(Color.WHITE);
         gr.ctx().setFont(Font.font(20));

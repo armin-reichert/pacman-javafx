@@ -87,9 +87,9 @@ public abstract class GameScene2D implements GameScene {
         Logger.info("Game renderer created: {}", gr);
     }
 
-    protected abstract void drawSceneContent(GameRenderer renderer);
+    protected abstract void drawSceneContent();
 
-    protected void drawDebugInfo(GameRenderer renderer) {}
+    protected void drawDebugInfo() {}
 
     public void draw() {
         long start = System.nanoTime();
@@ -103,9 +103,9 @@ public abstract class GameScene2D implements GameScene {
         if (context.isScoreVisible()) {
             gr.drawScores(context);
         }
-        drawSceneContent(gr);
+        drawSceneContent();
         if (debugInfoVisiblePy.get()) {
-            drawDebugInfo(gr);
+            drawDebugInfo();
         }
     }
 }

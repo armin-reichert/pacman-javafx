@@ -17,7 +17,6 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
-import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
@@ -158,11 +157,11 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public void doInit() {
+        setCanvas(canvas); // do not use common canvas from game page
         messageMovement = new MessageMovement();
-        camera().focusTopOfScene();
         context.enableJoypad();
         context.setScoreVisible(true);
-        setCanvas(canvas); // do not use common canvas from game page
+        camera().focusTopOfScene();
     }
 
     @Override
@@ -380,11 +379,11 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         r.setScaling(scaling());
         r.setBackgroundColor(backgroundColor());
         r.clearCanvas();
-        drawSceneContent(r);
+        drawSceneContent();
     }
 
     @Override
-    protected void drawSceneContent(GameRenderer gr) {
+    protected void drawSceneContent() {
         if (context.game().level().isEmpty()) {
             Logger.warn("Tick #{}: Cannot draw scene content, game level not yet available!", context.tick());
             return;
@@ -434,12 +433,12 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         if (debugInfoVisiblePy.get()) {
             r.drawAnimatedCreatureInfo(msPacMan);
             ghostsInZOrder(context.level()).forEach(r::drawAnimatedCreatureInfo);
-            drawDebugInfo(gr);
+            drawDebugInfo();
         }
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer gr) {
+    protected void drawDebugInfo() {
         gr.drawTileGrid(canvas.getWidth(), canvas.getHeight());
         gr.ctx().setFill(Color.YELLOW);
         gr.ctx().setFont(DEBUG_FONT);

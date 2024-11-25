@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
@@ -121,7 +120,7 @@ public class CutScene2 extends GameScene2D {
     }
 
     @Override
-    public void drawSceneContent(GameRenderer gr) {
+    public void drawSceneContent() {
         gr.drawSpriteScaled(blinkyStretching.currentSprite(), t(14), t(19) + 3);
         gr.drawAnimatedEntity(blinky);
         gr.drawAnimatedEntity(pac);
@@ -129,7 +128,7 @@ public class CutScene2 extends GameScene2D {
     }
 
     @Override
-    protected void drawDebugInfo(GameRenderer gr) {
+    protected void drawDebugInfo() {
         gr.drawTileGrid(size().x(), size().y());
         var text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
         gr.drawText(text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
