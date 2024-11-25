@@ -70,7 +70,7 @@ public interface GameContext {
     JoypadKeyAdapter joypad();
     void enableJoypad();
     void disableJoypad();
-    void nextJoypad();
+    void nextJoypadKeyBinding();
 
     // GUI
     void setScoreVisible(boolean visible);

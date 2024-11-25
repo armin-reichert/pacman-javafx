@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  */
 public interface JoypadKeyAdapter {
 
-    record Definition(
+    record Binding(
         KeyCodeCombination select,
         KeyCodeCombination start,
         KeyCodeCombination b,

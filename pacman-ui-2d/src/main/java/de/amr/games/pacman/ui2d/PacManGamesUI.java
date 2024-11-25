@@ -42,7 +42,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.text.MessageFormat;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
@@ -70,7 +69,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     );
 
     // My current bindings, might be crap
-    public static final JoypadKeyAdapter JOYPAD_CURSOR_KEYS = new JoypadKeyAdapter.Definition(
+    public static final JoypadKeyAdapter JOYPAD_CURSOR_KEYS = new JoypadKeyAdapter.Binding(
         new KeyCodeCombination(KeyCode.SPACE),
         new KeyCodeCombination(KeyCode.ENTER),
         new KeyCodeCombination(KeyCode.B),
@@ -82,7 +81,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     );
 
     // Mesen emulator key set #2
-    public static final JoypadKeyAdapter JOYPAD_WASD = new JoypadKeyAdapter.Definition(
+    public static final JoypadKeyAdapter JOYPAD_WASD = new JoypadKeyAdapter.Binding(
         new KeyCodeCombination(KeyCode.U),
         new KeyCodeCombination(KeyCode.I),
         new KeyCodeCombination(KeyCode.J),
@@ -397,7 +396,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void nextJoypad() {
+    public void nextJoypadKeyBinding() {
         // TODO should work for any number
         if (joypad == JOYPAD_WASD) {
             joypad = JOYPAD_CURSOR_KEYS;
@@ -408,13 +407,13 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     @Override
     public void enableJoypad() {
-        Logger.info("Enable joypad");
+        Logger.info("Enable joypad {}", joypad);
         joypad.register(keyboard);
     }
 
     @Override
     public void disableJoypad() {
-        Logger.info("Disable joypad");
+        Logger.info("Disable joypad {}", joypad);
         joypad.unregister(keyboard);
     }
 
