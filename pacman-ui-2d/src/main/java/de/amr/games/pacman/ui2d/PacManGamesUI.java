@@ -29,7 +29,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -62,7 +61,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     private final JoypadKeyBinding[] joypadBindings = {
         JoypadBindings.JOYPAD_CURSOR_KEYS, JoypadBindings.JOYPAD_WASD
     };
-
 
     protected final Keyboard keyboard = new Keyboard();
 
@@ -230,14 +228,15 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             currentPage.handleContextMenuRequest(e);
             e.consume();
         });
-        ChangeListener<Number> sizeListener = (py,ov,nv) -> {
-            if (currentPage != null) {
-                currentPage.setSize(mainScene.getWidth(), mainScene.getHeight());
-            }
-        };
-        mainScene.widthProperty().addListener(sizeListener);
-        mainScene.heightProperty().addListener(sizeListener);
+        mainScene.widthProperty().addListener((py,ov,nv) -> adaptPageSizeToMainScene(mainScene));
+        mainScene.heightProperty().addListener((py,ov,nv) -> adaptPageSizeToMainScene(mainScene));
         return mainScene;
+    }
+
+    private void adaptPageSizeToMainScene(Scene mainScene) {
+        if (currentPage != null) {
+            currentPage.setSize(mainScene.getWidth(), mainScene.getHeight());
+        }
     }
 
     protected GamePage createGamePage(Scene parentScene) {
