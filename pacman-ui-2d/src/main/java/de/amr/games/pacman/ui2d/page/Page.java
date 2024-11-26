@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.ui2d.GameActionProvider;
@@ -35,7 +39,7 @@ public interface Page extends GameActionProvider {
     default void handleContextMenuRequest(ContextMenuEvent e) {
         Logger.info("Context menu requested for page " + this);
         if (e.isKeyboardTrigger()) {
-            Logger.info("Context menu requested by key");
+            Logger.info("Keyboard trigger detected, event={}", e);
         }
     }
 }
