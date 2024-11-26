@@ -213,13 +213,6 @@ public class GamePage extends StackPane implements Page, GameActionProvider {
         return gameCanvasContainer;
     }
 
-    @Override
-    public void enterPage() {
-        //TODO check if booting is always wanted here
-        GameActions2D.BOOT.execute(context);
-    }
-
-    @Override
     public void setSize(double width, double height) {
         gameCanvasContainer.resizeTo(width, height);
     }

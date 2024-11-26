@@ -241,15 +241,13 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 }
             }
         });
-        mainScene.widthProperty().addListener((py,ov,nv) -> adaptPageSizeToMainScene(mainScene));
-        mainScene.heightProperty().addListener((py,ov,nv) -> adaptPageSizeToMainScene(mainScene));
+        mainScene.widthProperty().addListener((py,ov,nv) -> adaptGamePageSizeToMainScene(mainScene));
+        mainScene.heightProperty().addListener((py,ov,nv) -> adaptGamePageSizeToMainScene(mainScene));
         return mainScene;
     }
 
-    private void adaptPageSizeToMainScene(Scene mainScene) {
-        if (currentPage != null) {
-            currentPage.setSize(mainScene.getWidth(), mainScene.getHeight());
-        }
+    private void adaptGamePageSizeToMainScene(Scene mainScene) {
+        gamePage.setSize(mainScene.getWidth(), mainScene.getHeight());
     }
 
     protected GamePage createGamePage(Scene parentScene) {
@@ -491,10 +489,9 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 actionProvider.registerGameActionKeyBindings(keyboard());
             }
             currentPage = page;
-            currentPage.setSize(stage.getScene().getWidth(), stage.getScene().getHeight());
+            gamePage.setSize(stage.getScene().getWidth(), stage.getScene().getHeight());
             sceneRoot.getChildren().set(0, currentPage.root());
             currentPage.root().requestFocus();
-            currentPage.enterPage();
         }
     }
 
@@ -514,6 +511,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         if (gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
             sound().playVoice("voice.explain", 0);
         }
+        GameActions2D.BOOT.execute(this);
     }
 
     @Override

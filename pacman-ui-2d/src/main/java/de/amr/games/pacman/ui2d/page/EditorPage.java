@@ -112,8 +112,4 @@ public class EditorPage extends BorderPane implements Page, GameActionProvider {
         Logger.error("Could not find map at path {}", relativeMapPath);
         return null;
     }
-
-    @Override
-    public void setSize(double width, double height) {
-    }
 }

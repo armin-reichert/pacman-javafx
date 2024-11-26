@@ -126,11 +126,4 @@ public class StartPage extends StackPane implements Page, GameActionProvider {
     public Map<KeyCodeCombination, GameAction> actionBindings() {
         return actionBindings;
     }
-
-    @Override
-    public void enterPage() {
-        if (context.gameClock().isRunning()) {
-            context.gameClock().stop();
-        }
-    }
 }
