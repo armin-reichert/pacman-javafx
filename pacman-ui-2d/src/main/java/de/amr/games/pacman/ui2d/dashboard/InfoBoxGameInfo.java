@@ -37,23 +37,21 @@ public class InfoBoxGameInfo extends InfoBox {
             String url = level.world().map().url().toString();
             return url.substring(url.lastIndexOf("/") + 1);
         }));
-        addLabeledValue("Color Scheme", ifLevelPresent(level -> {
+        addLabeledValue("Fill/Stroke/Pellet", ifLevelPresent(level -> {
             if (level.mapConfig().containsKey("nesColorScheme")) {
-                var nesColorScheme = (NES_ColorScheme) level.mapConfig().get("nesColorScheme");
-                return "fill/stroke/food: %s/%s/%s".formatted(
-                    nesColorScheme.fillColor(), nesColorScheme.strokeColor(), nesColorScheme.pelletColor());
+                var ncs = (NES_ColorScheme) level.mapConfig().get("nesColorScheme");
+                return "%s %s %s".formatted(ncs.fillColor(), ncs.strokeColor(), ncs.pelletColor());
             } else if (level.mapConfig().containsKey("colorMap")) {
                 // Pac-Man XXL game
                 @SuppressWarnings("unchecked")
-                var colorMap = (Map<String, String>) level.mapConfig().get("colorMap");
-                return "fill/stroke/food: %s/%s/%s".formatted(
-                    colorMap.get("fill"), colorMap.get("stroke"), colorMap.get("pellet"));
+                var cm = (Map<String, String>) level.mapConfig().get("colorMap");
+                return "%s %s %s".formatted(cm.get("fill"), cm.get("stroke"), cm.get("pellet"));
             } else if (level.mapConfig().containsKey("colorMapIndex")) {
                 int colorMapIndex = (int) level.mapConfig().get("colorMapIndex");
-                Map<String, Color> colorMap = context.gameVariant() == GameVariant.PACMAN
+                Map<String, Color> cm = context.gameVariant() == GameVariant.PACMAN
                     ? PacManGameRenderer.COLOR_MAP
                     : MsPacManGameRenderer.COLOR_MAPS.get(colorMapIndex);
-                return formatColorMap(colorMap.get("fill"), colorMap.get("stroke"), colorMap.get("pellet"));
+                return formatColorMap(cm.get("fill"), cm.get("stroke"), cm.get("pellet"));
             } else {
                 return InfoText.NO_INFO;
             }
@@ -80,7 +78,7 @@ public class InfoBoxGameInfo extends InfoBox {
         String fill   = "#" + fillColor.toString().substring(2, 8);
         String stroke = "#" + strokeColor.toString().substring(2, 8);
         String pellet = "#" + pelletColor.toString().substring(2, 8);
-        return "fill/stroke/pellet: %s/%s/%s".formatted(fill, stroke, pellet);
+        return "%s %s %s".formatted(fill, stroke, pellet);
     }
 
     private String stateTimerInfo() {
