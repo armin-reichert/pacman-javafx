@@ -18,7 +18,6 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -38,13 +37,12 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengen
 public class IntroScene extends GameScene2D {
 
     // Anchor point for everything
-    static final int MARQUEE_X = 60, MARQUEE_Y = 64;
-
-    static final int ACTOR_Y = MARQUEE_Y + 72;
-    static final int GHOST_STOP_X = MARQUEE_X - 18;
-    static final int MS_PAC_MAN_STOP_X = MARQUEE_X + 62;
-    static final int NUM_BULBS = 96;
-    static final float SPEED = 2.2f; //TODO check exact speed
+    private static final int MARQUEE_X = 60, MARQUEE_Y = 64;
+    private static final int ACTOR_Y = MARQUEE_Y + 72;
+    private static final int GHOST_STOP_X = MARQUEE_X - 18;
+    private static final int MS_PAC_MAN_STOP_X = MARQUEE_X + 62;
+    private static final int NUM_BULBS = 96;
+    private static final float SPEED = 2.2f; //TODO check exact speed
 
     private final FiniteStateMachine<SceneState, IntroScene> sceneController;
 
@@ -100,7 +98,6 @@ public class IntroScene extends GameScene2D {
         long t = timer.tickCount();
         Font scaledFont = r.scaledArcadeFont(8);
         switch (sceneController.state()) {
-
             case WAITING_FOR_START -> {
                 if (!dark) {
                     r.drawAnimatedTengenPresentsText(t, 9 * TS, MARQUEE_Y - TS);
@@ -113,12 +110,10 @@ public class IntroScene extends GameScene2D {
                     r.drawText("ALL RIGHTS RESERVED",     nesPaletteColor(0x25), scaledFont, 7 * TS, MARQUEE_Y + 17 * TS);
                 }
             }
-
             case SHOWING_MARQUEE -> {
                 drawMarquee();
                 r.drawText("\"MS PAC-MAN\"", nesPaletteColor(0x28), scaledFont, MARQUEE_X + 20, MARQUEE_Y - 18);
             }
-
             case GHOSTS_MARCHING_IN -> {
                 drawMarquee();
                 r.drawText("\"MS PAC-MAN\"", nesPaletteColor(0x28), scaledFont, MARQUEE_X + 20, MARQUEE_Y - 18);
@@ -130,7 +125,6 @@ public class IntroScene extends GameScene2D {
                 r.drawText(currentGhost.name().toUpperCase(), ghostColor, scaledFont, MARQUEE_X + 44, MARQUEE_Y + 41);
                 for (Ghost ghost : ghosts) { r.drawAnimatedEntity(ghost); }
             }
-
             case MS_PACMAN_MARCHING_IN -> {
                 drawMarquee();
                 r.drawText("\"MS PAC-MAN\"", nesPaletteColor(0x28), scaledFont, MARQUEE_X + 20, MARQUEE_Y - 18);
@@ -160,24 +154,22 @@ public class IntroScene extends GameScene2D {
 
     private void drawMarquee() {
         double xMin = MARQUEE_X, xMax = xMin + 132, yMin = MARQUEE_Y, yMax = yMin + 60;
-        double bulbSize = scaled(2);
-        GraphicsContext g = gr.ctx();
         for (int i = 0; i < NUM_BULBS; ++i) {
-            g.setFill(marqueeState.get(i) ? nesPaletteColor(0x20) : nesPaletteColor(0x15));
+            gr.ctx().setFill(marqueeState.get(i) ? nesPaletteColor(0x20) : nesPaletteColor(0x15));
             if (i <= 33) { // lower border left-to-right
-                drawBulb(g, xMin + 4 * i, yMax, bulbSize);
+                drawBulb(xMin + 4 * i, yMax);
             } else if (i <= 48) { // right border bottom-to-top
-                drawBulb(g, xMax, yMax - 4 * (i - 33), bulbSize);
+                drawBulb(xMax, yMax - 4 * (i - 33));
             } else if (i <= 81) { // upper border right-to-left
-                drawBulb(g, xMax - 4 * (i - 48), yMin, bulbSize);
+                drawBulb(xMax - 4 * (i - 48), yMin);
             } else { // left border top-to-bottom
-                drawBulb(g, xMin, yMin + 4 * (i - 81), bulbSize);
+                drawBulb(xMin, yMin + 4 * (i - 81));
             }
         }
     }
 
-    private void drawBulb(GraphicsContext g, double x, double y, double size) {
-        g.fillRect(scaled(x), scaled(y), size, size);
+    private void drawBulb(double x, double y) {
+        gr.ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 
     private enum SceneState implements FsmState<IntroScene> {
