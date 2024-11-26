@@ -31,12 +31,18 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -56,6 +62,16 @@ import static de.amr.games.pacman.ui2d.util.Ufx.createIcon;
  * @author Armin Reichert
  */
 public class PacManGamesUI implements GameEventListener, GameContext {
+
+    private static final Font  CONTEXT_MENU_TITLE_FONT = Font.font("Dialog", FontWeight.BLACK, 14);
+    private static final Color CONTEXT_MENU_TITLE_BACKGROUND = Color.CORNFLOWERBLUE; // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
+
+    public static MenuItem contextMenuTitleItem(String title) {
+        var text = new Text(title);
+        text.setFont(CONTEXT_MENU_TITLE_FONT);
+        text.setFill(CONTEXT_MENU_TITLE_BACKGROUND);
+        return new CustomMenuItem(text);
+    }
 
     private final JoypadKeyBinding[] joypadBindings = {
         JoypadBindings.JOYPAD_CURSOR_KEYS, JoypadBindings.JOYPAD_WASD

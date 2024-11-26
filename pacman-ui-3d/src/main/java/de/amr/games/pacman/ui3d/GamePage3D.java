@@ -23,8 +23,8 @@ import java.time.LocalTime;
 
 import static de.amr.games.pacman.lib.Globals.inClosedRange;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
+import static de.amr.games.pacman.ui2d.PacManGamesUI.contextMenuTitleItem;
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
-import static de.amr.games.pacman.ui2d.page.Page.menuTitleItem;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_PERSPECTIVE;
@@ -75,7 +75,7 @@ public class GamePage3D extends GamePage {
         }
         boolean is3D = context.currentGameSceneHasID("PlayScene3D");
 
-        contextMenu.getItems().add(menuTitleItem(context.locText("scene_display")));
+        contextMenu.getItems().add(contextMenuTitleItem(context.locText("scene_display")));
 
         // Toggle 2D-3D
         var item = new MenuItem(context.locText(is3D ? "use_2D_scene" : "use_3D_scene"));
@@ -88,7 +88,7 @@ public class GamePage3D extends GamePage {
             miPiP.selectedProperty().bindBidirectional(PY_PIP_ON);
             contextMenu.getItems().add(miPiP);
 
-            contextMenu.getItems().add(menuTitleItem(context.locText("select_perspective")));
+            contextMenu.getItems().add(contextMenuTitleItem(context.locText("select_perspective")));
 
             // Camera perspective selection
             var perspectivesGroup = new ToggleGroup();
@@ -109,7 +109,7 @@ public class GamePage3D extends GamePage {
         }
 
         // Common items
-        contextMenu.getItems().add(menuTitleItem(context.locText("pacman")));
+        contextMenu.getItems().add(contextMenuTitleItem(context.locText("pacman")));
 
         var miAutopilot = new CheckMenuItem(context.locText("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);

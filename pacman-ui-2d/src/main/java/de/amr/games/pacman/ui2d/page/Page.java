@@ -19,20 +19,7 @@ import org.tinylog.Logger;
  * @author Armin Reichert
  */
 public interface Page extends GameActionProvider {
-
-    Font CONTEXT_MENU_TITLE_FONT = Font.font("Dialog", FontWeight.BLACK, 14);
-    Color CONTEXT_MENU_TITLE_BACKGROUND = Color.CORNFLOWERBLUE; // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
-
-    static MenuItem menuTitleItem(String titleText) {
-        var text = new Text(titleText);
-        text.setFont(CONTEXT_MENU_TITLE_FONT);
-        text.setFill(CONTEXT_MENU_TITLE_BACKGROUND);
-        return new CustomMenuItem(text);
-    }
-
     Pane rootPane();
-
     void onPageSelected();
-
     void setSize(double width, double height);
 }

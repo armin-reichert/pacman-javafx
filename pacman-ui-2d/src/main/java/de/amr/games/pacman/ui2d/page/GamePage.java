@@ -42,6 +42,7 @@ import java.util.Map;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
+import static de.amr.games.pacman.ui2d.PacManGamesUI.contextMenuTitleItem;
 import static de.amr.games.pacman.ui2d.input.Keyboard.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 
@@ -240,9 +241,9 @@ public class GamePage extends StackPane implements Page {
         }
         contextMenu.getItems().clear();
 
-        contextMenu.getItems().add(Page.menuTitleItem(context.locText("scene_display")));
+        contextMenu.getItems().add(contextMenuTitleItem(context.locText("scene_display")));
 
-        contextMenu.getItems().add(Page.menuTitleItem(context.locText("pacman")));
+        contextMenu.getItems().add(contextMenuTitleItem(context.locText("pacman")));
 
         var miAutopilot = new CheckMenuItem(context.locText("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
