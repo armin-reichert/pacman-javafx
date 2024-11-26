@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
-import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
@@ -364,7 +363,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         int mapNumber = (int) mapConfig.get("mapNumber");
         boolean mapImageExists = game.isDemoLevel() || isMapImageAvailable(level.number, mapCategory);
         if (mapImageExists) {
-            drawLevelMessage(context); // message appears under map image so draw it first
+            drawLevelMessage(level, game.isDemoLevel()); // message appears under map image so draw it first
             RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
                 ? strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
                 : mapSprite.area();
@@ -388,29 +387,38 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             if (blinking) {
                 world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
             }
-            drawLevelMessage(context);
+            drawLevelMessage(level, game.isDemoLevel());
             terrainRenderer.drawMap(ctx(), world.map().terrain());
         }
         context.level().bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
     }
 
-    //TODO too much game logic in here
-    private void drawLevelMessage(GameContext context) {
-        GameLevel level = context.level();
-        String assetPrefix = assetPrefix(GameVariant.MS_PACMAN_TENGEN);
-        float x = getMessageAnchorPosition().x(), y = getMessageAnchorPosition().y();
-        if (context.game().isDemoLevel()) {
-            NES_ColorScheme nesColorScheme = (NES_ColorScheme) level.mapConfig().get("nesColorScheme");
-            Color color = Color.valueOf(nesColorScheme.strokeColor());
-            drawText("GAME  OVER", x, y, color);
-        } else if (context.gameState() == GameState.GAME_OVER) {
-            Color color = assets.color(assetPrefix + ".color.game_over_message");
-            drawText("GAME  OVER", x, y, color);
-        } else if (context.gameState() == GameState.STARTING_GAME) {
-            Color color = assets.color(assetPrefix + ".color.ready_message");
-            drawText("READY!", x, y, color);
-        } else if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
-            drawText("TEST L%02d".formatted(level.number), x, y, MsPacManGameTengenSceneConfig.nesPaletteColor(0x28));
+    private void drawLevelMessage(GameLevel level, boolean demoLevel) {
+        if (level.message() != null) {
+            String assetPrefix = assetPrefix(GameVariant.MS_PACMAN_TENGEN);
+            float x = getMessageAnchorPosition().x(), y = getMessageAnchorPosition().y();
+            Color color = null;
+            String text = null;
+            switch (level.message().type()) {
+                case READY -> {
+                    color = assets.color(assetPrefix + ".color.ready_message");
+                    text = "READY!";
+                }
+                case GAME_OVER -> {
+                    if (demoLevel) {
+                        NES_ColorScheme nesColorScheme = (NES_ColorScheme) level.mapConfig().get("nesColorScheme");
+                        color = Color.valueOf(nesColorScheme.strokeColor());
+                    } else {
+                        color = assets.color(assetPrefix + ".color.game_over_message");
+                    }
+                    text = "GAME OVER";
+                }
+                case TEST_LEVEL -> {
+                    color = MsPacManGameTengenSceneConfig.nesPaletteColor(0x28);
+                    text = "TEST L%02d".formatted(level.number);
+                }
+            }
+            drawText(text, x, y, color);
         }
     }
 

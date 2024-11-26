@@ -252,7 +252,7 @@ public class MsPacManGameTengen extends GameModel {
 
     @Override
     public long gameOverStateTicks() {
-        return 420; // TODO how much really?
+        return isDemoLevel() ? 120 : 420; // TODO how much really?
     }
 
     @Override

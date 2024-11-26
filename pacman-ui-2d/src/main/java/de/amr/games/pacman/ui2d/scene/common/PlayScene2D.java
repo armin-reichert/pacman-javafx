@@ -186,10 +186,10 @@ public class PlayScene2D extends GameScene2D {
     }
 
     private void drawLevelMessage(GameLevel.Message message) {
-        String assetPrefix = assetPrefix(context.gameVariant());
-        Color color = null;
-        String text = null;
         if (message != null) {
+            String assetPrefix = assetPrefix(context.gameVariant());
+            Color color = null;
+            String text = null;
             switch (message.type()) {
                 case GAME_OVER -> {
                     color = context.assets().color(assetPrefix + ".color.game_over_message");
@@ -204,8 +204,6 @@ public class PlayScene2D extends GameScene2D {
                     text = "TEST    L%03d".formatted(context.level().number);
                 }
             }
-        }
-        if (text != null) {
             // this assumes fixed width font of one tile size
             double x = gr.getMessageAnchorPosition().x() - (text.length() * HTS);
             gr.drawText(text, color, gr.scaledArcadeFont(TS), x, gr.getMessageAnchorPosition().y());
