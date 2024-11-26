@@ -17,16 +17,17 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_SIZE;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.nesPaletteColor;
 
 /**
  * Animated "TENGEN PRESENTS" text and ghost running through scene.
  */
 public class BootScene extends GameScene2D {
 
-    static final int TENGEN_PRESENTS_FINAL_Y = 13 * TS;
-    static final int TENGEN_PRESENTS_X = 9 * TS;
-    static final float GHOST_Y = 21.5f * TS;
+    private static final int TENGEN_PRESENTS_FINAL_Y = 13 * TS;
+    private static final int TENGEN_PRESENTS_X = 9 * TS;
+    private static final float GHOST_Y = 21.5f * TS;
 
     private long t;
     private Ghost ghost;
@@ -39,7 +40,6 @@ public class BootScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        context.enableJoypad();
         context.setScoreVisible(false);
         t = -1;
     }
@@ -49,7 +49,7 @@ public class BootScene extends GameScene2D {
         t += 1;
         if (t == 0) {
             grayScreen = false;
-            tengenPresentsY = (NES_TILES.y() + 1) * TS; // just out of visible area
+            tengenPresentsY = size().y() + TS;  // just out of visible area
             tengenPresentsSpeed = 0;
             ghost = Ghost.blinky();
             ghost.setSpeed(0);
@@ -78,7 +78,7 @@ public class BootScene extends GameScene2D {
         else if (t == 113) {
             ghost.setPosition(size().x() - TS, GHOST_Y);
             ghost.setMoveAndWishDir(Direction.LEFT);
-            ghost.setSpeed(TS); // TODO check speed
+            ghost.setSpeed(TS);
             ghost.setVisible(true);
         }
         else if (t == 181) {
