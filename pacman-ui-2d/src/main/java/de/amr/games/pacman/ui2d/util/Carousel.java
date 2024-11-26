@@ -102,6 +102,10 @@ public class Carousel extends StackPane {
         getChildren().add(buttonsLayer);
     }
 
+    public Node getBtnSelect() {
+        return btnSelect;
+    }
+
     public IntegerProperty selectedIndexProperty() {
         return selectedIndexPy;
     }
