@@ -11,6 +11,7 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -42,6 +43,14 @@ public class BootScene extends GameScene2D {
     public void doInit() {
         context.setScoreVisible(false);
         t = -1;
+    }
+
+    @Override
+    public void setCanvas(Canvas canvas) {
+        super.setCanvas(canvas);
+        // avoid garbage inside canvas before restarting game
+        canvas.getGraphicsContext2D().setFill(Color.BLACK);
+        canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
     @Override
