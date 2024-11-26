@@ -105,6 +105,7 @@ public enum GameState implements FsmState<GameModel> {
                 if (timer.tickCount() == 1) {
                     game.letsGetReadyToRumble();
                     game.showGuys();
+                    game.level().ifPresent(level -> level.setMessage(new GameLevel.Message(GameLevel.MessageType.READY)));
                 } else if (timer.tickCount() == TICK_RESUME_GAME) {
                     gameController().changeState(GameState.HUNTING);
                 }
@@ -115,6 +116,7 @@ public enum GameState implements FsmState<GameModel> {
                 }
                 else if (timer.tickCount() == 2) {
                     game.startLevel();
+                    game.level().ifPresent(level -> level.setMessage(new GameLevel.Message(GameLevel.MessageType.READY)));
                 }
                 else if (timer.tickCount() == TICK_NEW_GAME_SHOW_GUYS) {
                     game.showGuys();
@@ -129,6 +131,7 @@ public enum GameState implements FsmState<GameModel> {
                     game.createDemoLevel();
                     game.startLevel();
                     game.showGuys();
+                    game.level().ifPresent(level -> level.setMessage(new GameLevel.Message(GameLevel.MessageType.GAME_OVER)));
                 }
                 else if (timer.tickCount() == TICK_DEMO_LEVEL_START_PLAYING) {
                     gameController().changeState(GameState.HUNTING);
@@ -139,13 +142,23 @@ public enum GameState implements FsmState<GameModel> {
 
 
     HUNTING {
+        int delay;
+
         @Override
         public void onEnter(GameModel game) {
-            game.startHunting();
+            delay = 60;
         }
 
         @Override
         public void onUpdate(GameModel game) {
+            GameLevel level = game.level().orElseThrow();
+            if (timer.tickCount() < delay) {
+                return;
+            }
+            if (timer.tickCount() == delay) {
+                game.startHunting();
+                level.setMessage(null);
+            }
             game.doHuntingStep();
             if (game.isLevelComplete()) {
                 gameController().changeState(LEVEL_COMPLETE);
@@ -154,6 +167,12 @@ public enum GameState implements FsmState<GameModel> {
             } else if (game.areGhostsKilled()) {
                 gameController().changeState(GHOST_DYING);
             }
+        }
+
+        @Override
+        public void onExit(GameModel game) {
+            GameLevel level = game.level().orElseThrow();
+            level.setMessage(null);
         }
     },
 
@@ -291,6 +310,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             timer.restartTicks(game.gameOverStateTicks());
             game.endGame();
+            game.level().ifPresent(level -> level.setMessage(new GameLevel.Message(GameLevel.MessageType.GAME_OVER)));
         }
 
         @Override
@@ -323,6 +343,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onExit(GameModel game) {
             game.setPlaying(false);
+            game.level().ifPresent(level -> level.setMessage(null));
         }
     },
 

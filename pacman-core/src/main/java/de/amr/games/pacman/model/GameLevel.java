@@ -21,6 +21,9 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 public class GameLevel {
 
+    public enum MessageType { READY, GAME_OVER, TEST_LEVEL }
+    public record Message(MessageType type) {}
+
     public static byte checkGhostID(byte id) {
         if (id < 0 || id > 3) {
             throw GameException.illegalGhostID(id);
@@ -43,7 +46,7 @@ public class GameLevel {
     private Bonus bonus;
     private final byte[] bonusSymbols = new byte[2];
     private byte nextBonusIndex; // -1=no bonus, 0=first, 1=second
-
+    private Message message;
 
     private final Pulse blinking = new Pulse(10, Pulse.OFF);
     private final TickTimer powerTimer = new TickTimer("PacPowerTimer");
@@ -96,6 +99,14 @@ public class GameLevel {
 
     public int intermissionNumber() {
         return intermissionNumber;
+    }
+
+    public void setMessage(Message message) {
+        this.message = message;
+    }
+
+    public Message message() {
+        return message;
     }
 
     public void setPac(Pac pac) {
