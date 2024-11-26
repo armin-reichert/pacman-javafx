@@ -34,14 +34,16 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class EditorPage extends BorderPane implements Page {
 
+    private static final String MAP_ROOT_PATH = "/de/amr/games/pacman/maps/";
+
     private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
-    private final Stage stage;
     private final TileMapEditor editor;
     private Consumer<TileMapEditor> closeAction = editor -> {};
 
     public EditorPage(Stage stage, GameContext context, File customMapDir) {
-        this.stage = checkNotNull(stage);
+        checkNotNull(stage);
         checkNotNull(context);
+        checkNotNull(customMapDir);
 
         // without this, Pac-Man wallpaper shines through
         setBackground(Ufx.coloredBackground(Color.web("#dddddd"))); // JavaFX default grey
@@ -56,7 +58,6 @@ public class EditorPage extends BorderPane implements Page {
         miQuitEditor.setOnAction(e -> closeAction.accept(editor));
         editor.getFileMenu().getItems().add(miQuitEditor);
 
-        // load maps from core module
         editor.addLoadMapMenuItem("Pac-Man", loadMap("pacman/pacman.world"));
         editor.getLoadMapMenu().getItems().add(new SeparatorMenuItem());
         for (int mapNumber = 1; mapNumber <= 6; ++mapNumber) {
@@ -95,8 +96,8 @@ public class EditorPage extends BorderPane implements Page {
     }
 
     private WorldMap loadMap(String relativeMapPath) {
-        ResourceManager core = () -> GameModel.class;
-        URL url = core.url("/de/amr/games/pacman/maps/" + relativeMapPath);
+        ResourceManager rm = () -> GameModel.class;
+        URL url = rm.url(MAP_ROOT_PATH + relativeMapPath);
         if (url != null) {
             try {
                 WorldMap map = new WorldMap(url);
