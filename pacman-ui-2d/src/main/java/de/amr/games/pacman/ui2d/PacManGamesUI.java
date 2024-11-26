@@ -279,14 +279,13 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected StringBinding stageTitleBinding() {
         return Bindings.createStringBinding(
             () -> {
-                String gameVariantPart = "app.title." + assetPrefix(gameVariantPy.get());
-                String pausedPart = clock.pausedPy.get() ? ".paused" : "";
-                String scalingPart = "";
-                // Just in case:
+                // e.g. "app.title.pacman" vs. "app.title.pacman.paused"
+                String key = "app.title." + assetPrefix(gameVariant());
+                if (clock.isPaused()) { key += ".paused"; }
                 if (currentGameScene().isPresent() && currentGameScene().get() instanceof GameScene2D gameScene2D) {
-                    scalingPart = " (%.2fx)".formatted(gameScene2D.scaling());
+                    return locText(key, "2D") + " (%.2fx)".formatted(gameScene2D.scaling());
                 }
-                return locText(gameVariantPart + pausedPart + scalingPart, "2D");
+                return locText(key, "2D");
             },
             clock.pausedPy, gameVariantPy, gameScenePy, gamePage.heightProperty());
     }
@@ -554,7 +553,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     public void onLevelCreated(GameEvent event) {
         currentGameSceneConfig().createActorAnimations(level());
         sound().setEnabled(!game().isDemoLevel());
-        // size of game scene have changed, so re-embed
+        // size of game scene might have changed, so re-embed
         currentGameScene().ifPresent(gamePage::embedGameScene);
         Logger.info("Game level {} ({}) created", level().number, gameVariant());
         Logger.info("Actor animations created");

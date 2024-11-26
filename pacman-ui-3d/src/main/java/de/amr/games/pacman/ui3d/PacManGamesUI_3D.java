@@ -48,17 +48,17 @@ public class PacManGamesUI_3D extends PacManGamesUI {
     protected StringBinding stageTitleBinding() {
         return Bindings.createStringBinding(() -> {
             String sceneName = currentGameScene().map(gameScene -> gameScene.getClass().getSimpleName()).orElse(null);
-            String sceneNameSuffix = sceneName != null && PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(sceneName) : "";
+            String sceneNameText = sceneName != null && PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(sceneName) : "";
             // resource key is composed of game variant, paused state and display mode (2D, 3D)
-            String gameVariantPart = "app.title." + assetPrefix(gameVariantPy.get());
-            String pausedPart = clock.pausedPy.get() ? ".paused" : "";
-            String displayMode = locText(PY_3D_ENABLED.get() ? "threeD" : "twoD");
-            String scalingPart = "";
-            // Just in case:
-            if (currentGameScene().isPresent() && currentGameScene().get() instanceof GameScene2D gameScene2D) {
-                scalingPart = " (%.2fx)".formatted(gameScene2D.scaling());
+            String key = "app.title." + assetPrefix(gameVariant());
+            if (clock.isPaused()) {
+                key += ".paused";
             }
-            return locText(gameVariantPart + pausedPart, displayMode) + sceneNameSuffix + scalingPart;
+            String modeKey = locText(PY_3D_ENABLED.get() ? "threeD" : "twoD");
+            if (currentGameScene().isPresent() && currentGameScene().get() instanceof GameScene2D gameScene2D) {
+                return locText(key, modeKey) + sceneNameText + " (%.2fx)".formatted(gameScene2D.scaling());
+            }
+            return locText(key, modeKey) + sceneNameText;
         },
         clock.pausedPy, gameVariantPy, gameScenePy, gamePage.heightProperty(),
         PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE);

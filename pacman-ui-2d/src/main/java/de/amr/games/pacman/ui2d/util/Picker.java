@@ -27,29 +27,28 @@ public class Picker<T> {
             .toArray(String[]::new));
     }
 
-    private final List<T> entries;
+    private List<T> entries = List.of();
     private int current;
 
     @SuppressWarnings("unchecked")
     public Picker(T... items) {
-        if (items.length == 0) {
-            throw new IllegalArgumentException("Must provide at least one item to select");
+        if (items.length > 0) {
+            entries = Arrays.asList(Arrays.copyOf(items, items.length));
+            Collections.shuffle(entries);
         }
-        this.entries = Arrays.asList(Arrays.copyOf(items, items.length));
-        Collections.shuffle(entries);
         current = 0;
     }
 
     public T next() {
         if (entries.size() == 1) {
-            return entries.get(0);
+            return entries.getFirst();
         }
         T result = entries.get(current);
         if (++current == entries.size()) {
-            T last = entries.get(entries.size() - 1);
+            T last = entries.getLast();
             do {
                 Collections.shuffle(entries);
-            } while (last.equals(entries.get(0)));
+            } while (last.equals(entries.getFirst()));
             current = 0;
         }
         return result;
