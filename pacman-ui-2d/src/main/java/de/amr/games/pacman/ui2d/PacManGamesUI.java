@@ -301,29 +301,27 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     protected void updateGameScene(boolean reloadCurrent) {
-        GameScene currentGameScene = gameScenePy.get();
+        GameScene prevGameScene = gameScenePy.get();
         GameScene nextGameScene = currentGameSceneConfig().selectGameScene(this);
-        boolean sceneChanging = nextGameScene != currentGameScene;
+        boolean sceneChanging = nextGameScene != prevGameScene;
         if (reloadCurrent || sceneChanging) {
-            if (currentGameScene != null) {
-                currentGameScene.end();
-                Logger.info("Game scene ended: {}", displayName(currentGameScene));
+            if (prevGameScene != null) {
+                prevGameScene.end();
+                Logger.info("Game scene ended: {}", displayName(prevGameScene));
             }
             if (nextGameScene != null) {
                 if (nextGameScene instanceof GameScene2D gameScene2D) {
                     configureGameScene2D(gameScene2D);
                 }
                 nextGameScene.init();
-                if (is2D3DSwitch(currentGameScene, nextGameScene)) {
-                    nextGameScene.onSceneVariantSwitch(currentGameScene);
+                if (is2D3DSwitch(prevGameScene, nextGameScene)) {
+                    nextGameScene.onSceneVariantSwitch(prevGameScene);
                 }
             }
             if (sceneChanging) {
                 gameScenePy.set(nextGameScene);
-                Logger.info("Game scene changed to: {}", displayName(gameScenePy.get()));
-            } else {
-                Logger.info("Game scene reloaded: {}", displayName(currentGameScene));
             }
+            Logger.info("Game scene is now: {}", displayName(nextGameScene));
         }
     }
 
@@ -455,18 +453,15 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     public EditorPage getOrCreateEditorPage() {
         if (editorPage == null) {
             editorPage = new EditorPage(stage, this, game().customMapDir());
-            editorPage.setCloseAction(this::closeEditor);
+            editorPage.setCloseAction(editor -> {
+                editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> stage.titleProperty().bind(stageTitleBinding()));
+                editor.stop();
+                clock.setTargetFrameRate(GameModel.TICKS_PER_SECOND);
+                gameController().restart(GameState.BOOT);
+                selectStartPage();
+            });
         }
         return editorPage;
-    }
-
-    private void closeEditor(TileMapEditor editor) {
-        editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> stage.titleProperty().bind(stageTitleBinding()));
-        editor.stop();
-        game().updateCustomMaps();
-        clock.setTargetFrameRate(GameModel.TICKS_PER_SECOND);
-        gameController().restart(GameState.BOOT);
-        selectStartPage();
     }
 
     @Override
