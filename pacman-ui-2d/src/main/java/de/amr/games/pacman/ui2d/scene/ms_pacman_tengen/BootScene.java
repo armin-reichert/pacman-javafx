@@ -13,7 +13,9 @@ import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.tinylog.Logger;
 
+import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.*;
 
@@ -26,54 +28,73 @@ public class BootScene extends GameScene2D {
     static final int TENGEN_PRESENTS_X = 9 * TS;
     static final float GHOST_Y = 21.5f * TS;
 
-    private Ghost ghost;
-    private int tengenPresentsY;
-    private boolean grayScreen;
     private long t;
+    private Ghost ghost;
+    private boolean grayScreen;
+    private float tengenPresentsY;
+    private float tengenPresentsSpeed;
 
     @Override
     public void bindGameActions() {}
 
     @Override
     public void doInit() {
-        t = 0;
         context.enableJoypad();
         context.setScoreVisible(false);
-        tengenPresentsY = (NES_TILES.y() + 1) * TS; // just out of visible area
-        grayScreen = false;
-
-        ghost = Ghost.blinky();
-        ghost.setPosition((NES_TILES.x() + 1) * TS, GHOST_Y);
-        ghost.setMoveAndWishDir(Direction.LEFT);
-        ghost.setSpeed(8); // TODO check speed
-        ghost.setVisible(true);
-        GameSpriteSheet spriteSheet = context.currentGameSceneConfig().spriteSheet();
-        ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
-        ghost.selectAnimation(Animations.ANIM_GHOST_NORMAL);
+        t = -1;
     }
 
     @Override
     public void update() {
-        if (t < 90) {
-            if (tengenPresentsY > TENGEN_PRESENTS_FINAL_Y) {
-                // move up, stop at final y
-                tengenPresentsY = Math.max(tengenPresentsY - TS, TENGEN_PRESENTS_FINAL_Y);
-            }
+        t += 1;
+        if (t == 0) {
+            grayScreen = false;
+            tengenPresentsY = (NES_TILES.y() + 1) * TS; // just out of visible area
+            tengenPresentsSpeed = 0;
+            ghost = Ghost.blinky();
+            ghost.setSpeed(0);
+            ghost.hide();
+            GameSpriteSheet spriteSheet = context.currentGameSceneConfig().spriteSheet();
+            ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
+            ghost.selectAnimation(Animations.ANIM_GHOST_NORMAL);
         }
-        else if (t < 150) {
-            ghost.move();
-        }
-        else if (t < 180) {
-            // move down again
-            if (t % 2 == 0) { tengenPresentsY += TS; }
-        }
-        else if (t == 180) {
+        if (t == 7) {
             grayScreen = true;
         }
-        else if (t == 185) {
+        else if (t == 12) {
+            grayScreen = false;
+        }
+        else if (t == 21) {
+            tengenPresentsY = size().y();
+            tengenPresentsSpeed = -HTS;
+        }
+        else if (t == 55) {
+            tengenPresentsSpeed = 0;
+            if (tengenPresentsY != TENGEN_PRESENTS_FINAL_Y) {
+                Logger.error("Tengen presents text not at final position {} but at y={}", TENGEN_PRESENTS_FINAL_Y, tengenPresentsY);
+            }
+            tengenPresentsY = TENGEN_PRESENTS_FINAL_Y;
+        }
+        else if (t == 113) {
+            ghost.setPosition(size().x() - TS, GHOST_Y);
+            ghost.setMoveAndWishDir(Direction.LEFT);
+            ghost.setSpeed(TS); // TODO check speed
+            ghost.setVisible(true);
+        }
+        else if (t == 181) {
+            tengenPresentsSpeed = TS;
+        }
+        else if (t == 203) {
+            grayScreen = true;
+        }
+        else if (t == 214) {
+            grayScreen = false;
+        }
+        else if (t == 220) {
             context.gameController().changeState(GameState.INTRO);
         }
-        t += 1;
+        ghost.move();
+        tengenPresentsY += tengenPresentsSpeed;
     }
 
     @Override
