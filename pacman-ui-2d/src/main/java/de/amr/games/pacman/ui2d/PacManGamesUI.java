@@ -236,7 +236,9 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             } else if (e.getCode() == KeyCode.M && e.isAltDown()) {
                 sound().toggleMuted();
             } else {
-                currentPage.handleInput(this);
+                if (currentPage instanceof GameActionProvider actionProvider) {
+                    actionProvider.handleInput(this);
+                }
             }
         });
         mainScene.widthProperty().addListener((py,ov,nv) -> adaptPageSizeToMainScene(mainScene));
@@ -482,10 +484,12 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     @Override
     public void selectPage(Page page) {
         if (page != currentPage) {
-            if (currentPage != null) {
-                currentPage.unregisterGameActionKeyBindings(keyboard());
+            if (currentPage instanceof GameActionProvider actionProvider) {
+                actionProvider.unregisterGameActionKeyBindings(keyboard());
             }
-            page.registerGameActionKeyBindings(keyboard());
+            if (page instanceof GameActionProvider actionProvider) {
+                actionProvider.registerGameActionKeyBindings(keyboard());
+            }
             currentPage = page;
             currentPage.setSize(stage.getScene().getWidth(), stage.getScene().getHeight());
             sceneRoot.getChildren().set(0, currentPage.root());

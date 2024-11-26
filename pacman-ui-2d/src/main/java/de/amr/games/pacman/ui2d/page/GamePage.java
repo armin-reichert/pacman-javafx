@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction;
+import de.amr.games.pacman.ui2d.GameActionProvider;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.*;
@@ -48,7 +49,7 @@ import static de.amr.games.pacman.ui2d.util.Ufx.*;
 /**
  * @author Armin Reichert
  */
-public class GamePage extends StackPane implements Page {
+public class GamePage extends StackPane implements Page, GameActionProvider {
 
     static final double MAX_SCENE_SCALING = 5;
 

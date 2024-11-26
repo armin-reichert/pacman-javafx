@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction;
+import de.amr.games.pacman.ui2d.GameActionProvider;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Carousel;
 import javafx.beans.property.ObjectProperty;
@@ -27,7 +28,7 @@ import static de.amr.games.pacman.ui2d.input.Keyboard.naked;
  *
  * @author Armin Reichert
  */
-public class StartPage extends StackPane implements Page {
+public class StartPage extends StackPane implements Page, GameActionProvider {
 
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
         @Override
