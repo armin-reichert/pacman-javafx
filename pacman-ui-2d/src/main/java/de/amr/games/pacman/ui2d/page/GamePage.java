@@ -49,7 +49,7 @@ import static de.amr.games.pacman.ui2d.util.Ufx.*;
 /**
  * @author Armin Reichert
  */
-public class GamePage extends StackPane implements Page, GameActionProvider {
+public class GamePage extends StackPane implements GameActionProvider {
 
     static final double MAX_SCENE_SCALING = 5;
 

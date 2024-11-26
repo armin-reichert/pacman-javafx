@@ -16,13 +16,13 @@ import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui2d.input.Keyboard;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
-import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
 import de.amr.games.pacman.ui2d.sound.GameSound;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
 import javafx.beans.property.ObjectProperty;
+import javafx.scene.Node;
 import org.tinylog.Logger;
 
 import java.text.MessageFormat;
@@ -75,7 +75,7 @@ public interface GameContext {
     // GUI
     void setScoreVisible(boolean visible);
     boolean isScoreVisible();
-    void selectPage(Page page);
+    void selectPage(Node page);
     void selectStartPage();
     void selectGamePage();
     EditorPage getOrCreateEditorPage();

@@ -15,7 +15,10 @@ import de.amr.games.pacman.ui2d.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui2d.input.JoypadBindings;
 import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui2d.input.Keyboard;
-import de.amr.games.pacman.ui2d.page.*;
+import de.amr.games.pacman.ui2d.page.DashboardLayer;
+import de.amr.games.pacman.ui2d.page.EditorPage;
+import de.amr.games.pacman.ui2d.page.GamePage;
+import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
@@ -30,6 +33,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.MenuItem;
@@ -102,7 +106,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected StartPage startPage;
     protected GamePage gamePage;
     protected EditorPage editorPage;
-    protected Page currentPage;
+    protected Node currentPage;
 
     protected boolean scoreVisible;
     protected boolean signatureShown; //TODO make this work again for all intro screens
@@ -480,7 +484,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void selectPage(Page page) {
+    public void selectPage(Node page) {
         if (page != currentPage) {
             if (currentPage instanceof GameActionProvider actionProvider) {
                 actionProvider.unregisterGameActionKeyBindings(keyboard());
@@ -490,8 +494,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             }
             currentPage = page;
             gamePage.setSize(stage.getScene().getWidth(), stage.getScene().getHeight());
-            sceneRoot.getChildren().set(0, currentPage.root());
-            currentPage.root().requestFocus();
+            sceneRoot.getChildren().set(0, currentPage);
+            currentPage.requestFocus();
         }
     }
 

@@ -28,7 +28,7 @@ import static de.amr.games.pacman.ui2d.input.Keyboard.naked;
  *
  * @author Armin Reichert
  */
-public class StartPage extends StackPane implements Page, GameActionProvider {
+public class StartPage extends StackPane implements GameActionProvider {
 
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
         @Override

@@ -32,7 +32,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public class EditorPage extends BorderPane implements Page, GameActionProvider {
+public class EditorPage extends BorderPane implements GameActionProvider {
 
     private static final String MAP_ROOT_PATH = "/de/amr/games/pacman/maps/";
 
