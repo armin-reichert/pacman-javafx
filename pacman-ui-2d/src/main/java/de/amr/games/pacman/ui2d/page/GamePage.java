@@ -127,6 +127,7 @@ public class GamePage extends StackPane implements Page {
         this.parentScene = checkNotNull(parentScene);
 
         bindGameActions();
+        setOnContextMenuRequested(this::handleContextMenuRequest);
 
         gameCanvas = new Canvas();
         GraphicsContext g = gameCanvas.getGraphicsContext2D();
@@ -233,8 +234,7 @@ public class GamePage extends StackPane implements Page {
             () -> context.currentGameScene().ifPresent(gameScene -> gameScene.handleInput(context)));
     }
 
-    @Override
-    public void handleContextMenuRequest(ContextMenuEvent event) {
+    private void handleContextMenuRequest(ContextMenuEvent event) {
         if (!context.currentGameSceneHasID("PlayScene2D")) {
             return;
         }
@@ -270,6 +270,7 @@ public class GamePage extends StackPane implements Page {
 
         contextMenu.show(this, event.getScreenX(), event.getScreenY());
         contextMenu.requestFocus();
+        event.consume();
     }
 
     protected void handleGameSceneChange(GameScene gameScene) {

@@ -54,6 +54,7 @@ public class GamePage3D extends GamePage {
                 return context.assets().get("wallpaper.day");
             }, PY_3D_DRAW_MODE, PY_NIGHT_MODE, context.gameSceneProperty()
         ));
+        setOnContextMenuRequested(this::handleContextMenuRequest);
     }
 
     @Override
@@ -63,8 +64,7 @@ public class GamePage3D extends GamePage {
         bind(GameActions3D.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
     }
 
-    @Override
-    public void handleContextMenuRequest(ContextMenuEvent event) {
+    private void handleContextMenuRequest(ContextMenuEvent event) {
         contextMenu.getItems().clear();
         contextMenu.hide();
 
@@ -137,5 +137,6 @@ public class GamePage3D extends GamePage {
 
         contextMenu.show(this, event.getScreenX(), event.getScreenY());
         contextMenu.requestFocus();
+        event.consume();
     }
 }

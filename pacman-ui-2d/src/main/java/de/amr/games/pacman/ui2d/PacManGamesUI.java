@@ -223,10 +223,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 currentPage.handleInput(this);
             }
         });
-        mainScene.setOnContextMenuRequested(e -> {
-            currentPage.handleContextMenuRequest(e);
-            e.consume();
-        });
         mainScene.widthProperty().addListener((py,ov,nv) -> adaptPageSizeToMainScene(mainScene));
         mainScene.heightProperty().addListener((py,ov,nv) -> adaptPageSizeToMainScene(mainScene));
         return mainScene;

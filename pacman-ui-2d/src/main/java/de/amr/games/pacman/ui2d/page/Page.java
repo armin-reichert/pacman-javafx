@@ -35,11 +35,4 @@ public interface Page extends GameActionProvider {
     void onPageSelected();
 
     void setSize(double width, double height);
-
-    default void handleContextMenuRequest(ContextMenuEvent e) {
-        Logger.info("Context menu requested for page " + this);
-        if (e.isKeyboardTrigger()) {
-            Logger.info("Keyboard trigger detected, event={}", e);
-        }
-    }
 }
