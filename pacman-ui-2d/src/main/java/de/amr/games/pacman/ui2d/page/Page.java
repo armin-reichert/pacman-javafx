@@ -11,6 +11,6 @@ import javafx.scene.Node;
  */
 public interface Page {
     default Node root() { return (Node) this; }
-    void onPageSelected();
-    void setSize(double width, double height);
+    default void enterPage() {}
+    default void setSize(double width, double height) {}
 }

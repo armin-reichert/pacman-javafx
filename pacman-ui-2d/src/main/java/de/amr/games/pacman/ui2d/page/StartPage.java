@@ -128,13 +128,9 @@ public class StartPage extends StackPane implements Page, GameActionProvider {
     }
 
     @Override
-    public void onPageSelected() {
+    public void enterPage() {
         if (context.gameClock().isRunning()) {
             context.gameClock().stop();
         }
-    }
-
-    @Override
-    public void setSize(double width, double height) {
     }
 }

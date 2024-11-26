@@ -114,10 +114,6 @@ public class EditorPage extends BorderPane implements Page, GameActionProvider {
     }
 
     @Override
-    public void onPageSelected() {
-    }
-
-    @Override
     public void setSize(double width, double height) {
     }
 }

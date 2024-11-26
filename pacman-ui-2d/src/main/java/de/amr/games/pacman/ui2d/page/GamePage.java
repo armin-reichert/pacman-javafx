@@ -214,7 +214,7 @@ public class GamePage extends StackPane implements Page, GameActionProvider {
     }
 
     @Override
-    public void onPageSelected() {
+    public void enterPage() {
         //TODO check if booting is always wanted here
         GameActions2D.BOOT.execute(context);
     }

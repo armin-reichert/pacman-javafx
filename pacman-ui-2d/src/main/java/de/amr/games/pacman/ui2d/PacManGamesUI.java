@@ -494,7 +494,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             currentPage.setSize(stage.getScene().getWidth(), stage.getScene().getHeight());
             sceneRoot.getChildren().set(0, currentPage.root());
             currentPage.root().requestFocus();
-            currentPage.onPageSelected();
+            currentPage.enterPage();
         }
     }
 
