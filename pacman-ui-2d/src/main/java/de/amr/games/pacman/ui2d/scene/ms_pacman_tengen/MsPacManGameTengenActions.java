@@ -21,9 +21,9 @@ public enum MsPacManGameTengenActions implements GameAction {
         @Override
         public void execute(GameContext context) {
             context.disableJoypad();
-            context.selectNextJoypadBinding();
+            context.nextJoypadKeys();
             context.enableJoypad();
-            Logger.info("Selected joypad: {} ", context.joypad());
+            Logger.info("Selected joypad: {} ", context.joypadKeys());
         }
     },
 

@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameActionProvider;
+import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Carousel;
 import javafx.beans.property.ObjectProperty;
@@ -43,56 +44,64 @@ public class StartPage extends StackPane implements GameActionProvider {
 
     public StartPage(GameContext context) {
         this.context = checkNotNull(context);
-
-        var pacManFlyer = new Flyer(
-            context.assets().image("pacman.startpage.image1"),
-            context.assets().image("pacman.startpage.image2"),
-            context.assets().image("pacman.startpage.image3")
-        );
-        pacManFlyer.setUserData(GameVariant.PACMAN);
-        pacManFlyer.selectFlyerPage(0);
-
-        var msPacManFlyer = new Flyer(
-            context.assets().image("ms_pacman.startpage.image1"),
-            context.assets().image("ms_pacman.startpage.image2")
-        );
-        msPacManFlyer.setUserData(GameVariant.MS_PACMAN);
-        msPacManFlyer.selectFlyerPage(0);
-
-        var pacManXXLFlyer = new Flyer(
-            context.assets().image("pacman_xxl.startpage.source")
-        );
-        pacManXXLFlyer.setLayoutMode(0, Flyer.LayoutMode.FILL);
-        pacManXXLFlyer.setUserData(GameVariant.PACMAN_XXL);
-        pacManXXLFlyer.selectFlyerPage(0);
-
-        var msPacManTengenFlyer = new Flyer(
-            context.assets().image("tengen.startpage.image1"),
-            context.assets().image("tengen.startpage.image2")
-        );
-        msPacManTengenFlyer.setUserData(GameVariant.MS_PACMAN_TENGEN);
-        msPacManTengenFlyer.selectFlyerPage(0);
-
         setBackground(context.assets().get("wallpaper.pacman"));
 
         carousel = new Carousel(context.assets());
         carousel.selectButtonTextProperty().set(context.locText("play_button"));
-        carousel.addSlide(pacManFlyer);
-        carousel.addSlide(msPacManFlyer);
-        carousel.addSlide(pacManXXLFlyer);
-        carousel.addSlide(msPacManTengenFlyer);
+
+        {
+            String prefix = GameAssets2D.assetPrefix(GameVariant.PACMAN);
+            var pacManFlyer = new Flyer(
+                context.assets().image(prefix + ".startpage.image1"),
+                context.assets().image(prefix + ".startpage.image2"),
+                context.assets().image(prefix + ".startpage.image3")
+            );
+            pacManFlyer.setUserData(GameVariant.PACMAN);
+            pacManFlyer.selectFlyerPage(0);
+            carousel.addSlide(pacManFlyer);
+        }
+
+        {
+            String prefix = GameAssets2D.assetPrefix(GameVariant.MS_PACMAN);
+            var msPacManFlyer = new Flyer(
+                context.assets().image(prefix + ".startpage.image1"),
+                context.assets().image(prefix + ".startpage.image2")
+            );
+            msPacManFlyer.setUserData(GameVariant.MS_PACMAN);
+            msPacManFlyer.selectFlyerPage(0);
+            carousel.addSlide(msPacManFlyer);
+        }
+
+        {
+            String prefix = GameAssets2D.assetPrefix(GameVariant.PACMAN_XXL);
+            var pacManXXLFlyer = new Flyer(context.assets().image(prefix + ".startpage.image1"));
+            pacManXXLFlyer.setLayoutMode(0, Flyer.LayoutMode.FILL);
+            pacManXXLFlyer.setUserData(GameVariant.PACMAN_XXL);
+            pacManXXLFlyer.selectFlyerPage(0);
+            carousel.addSlide(pacManXXLFlyer);
+        }
+
+        {
+            String prefix = GameAssets2D.assetPrefix(GameVariant.MS_PACMAN_TENGEN);
+            var msPacManTengenFlyer = new Flyer(
+                context.assets().image(prefix + ".startpage.image1"),
+                context.assets().image(prefix + ".startpage.image2")
+            );
+            msPacManTengenFlyer.setUserData(GameVariant.MS_PACMAN_TENGEN);
+            msPacManTengenFlyer.selectFlyerPage(0);
+            carousel.addSlide(msPacManTengenFlyer);
+        }
+
 
         carousel.setOnPrevSlideSelected(() -> {
             var variant = (GameVariant) carousel.currentSlide().getUserData();
             context.selectGameVariant(variant);
         });
-
         carousel.setOnNextSlideSelected(() -> {
             var variant = (GameVariant) carousel.currentSlide().getUserData();
             context.selectGameVariant(variant);
         });
         carousel.setOnSelect(context::selectGamePage);
-
         carousel.selectedIndexProperty().set(0);
 
         getChildren().add(carousel);
@@ -106,19 +115,19 @@ public class StartPage extends StackPane implements GameActionProvider {
     @Override
     public void bindGameActions() {
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            var joypad = context.joypad();
-            bind(context -> currentFlyer().prevFlyerPage(),  joypad.key(NES.JoypadButton.BTN_UP));
-            bind(context -> currentFlyer().nextFlyerPage(),  joypad.key(NES.JoypadButton.BTN_DOWN));
-            bind(context -> carousel.prevSlide(),            joypad.key(NES.JoypadButton.BTN_LEFT));
-            bind(context -> carousel.nextSlide(),            joypad.key(NES.JoypadButton.BTN_RIGHT));
-            bind(GameContext::selectGamePage,                joypad.key(NES.JoypadButton.BTN_START));
+            var joypadKeys = context.joypadKeys();
+            bind(context -> currentFlyer().prevFlyerPage(),  joypadKeys.key(NES.JoypadButton.BTN_UP));
+            bind(context -> currentFlyer().nextFlyerPage(),  joypadKeys.key(NES.JoypadButton.BTN_DOWN));
+            bind(context -> carousel.prevSlide(),            joypadKeys.key(NES.JoypadButton.BTN_LEFT));
+            bind(context -> carousel.nextSlide(),            joypadKeys.key(NES.JoypadButton.BTN_RIGHT));
+            bind(GameContext::selectGamePage,                joypadKeys.key(NES.JoypadButton.BTN_START));
         } else {
-            bind(context -> currentFlyer().prevFlyerPage(),  context.arcade().key(Arcade.Button.UP));
-            bind(context -> currentFlyer().nextFlyerPage(),  context.arcade().key(Arcade.Button.DOWN));
-            bind(context -> carousel.prevSlide(),            context.arcade().key(Arcade.Button.LEFT));
-            bind(context -> carousel.nextSlide(),            context.arcade().key(Arcade.Button.RIGHT));
+            bind(context -> currentFlyer().prevFlyerPage(),  context.arcadeKeys().key(Arcade.Button.UP));
+            bind(context -> currentFlyer().nextFlyerPage(),  context.arcadeKeys().key(Arcade.Button.DOWN));
+            bind(context -> carousel.prevSlide(),            context.arcadeKeys().key(Arcade.Button.LEFT));
+            bind(context -> carousel.nextSlide(),            context.arcadeKeys().key(Arcade.Button.RIGHT));
             // START key is "1" which might be unclear on start page, so add ENTER
-            bind(GameContext::selectGamePage,                context.arcade().key(Arcade.Button.START), naked(KeyCode.ENTER));
+            bind(GameContext::selectGamePage,                context.arcadeKeys().key(Arcade.Button.START), naked(KeyCode.ENTER));
         }
     }
 

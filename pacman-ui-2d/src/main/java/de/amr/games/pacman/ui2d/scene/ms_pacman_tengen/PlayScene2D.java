@@ -261,9 +261,9 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     private void setKeyBindings() {
         if (context.game().isDemoLevel()) {
-            bind(QUIT_DEMO_LEVEL, context.joypad().key(NES.JoypadButton.BTN_START));
+            bind(QUIT_DEMO_LEVEL, context.joypadKeys().key(NES.JoypadButton.BTN_START));
         } else {
-            setDefaultJoypadBinding(this, context.joypad());
+            setDefaultJoypadBinding(this, context.joypadKeys());
             bindFallbackPlayerControlActions(this);
             bindCheatActions(this);
         }

@@ -66,11 +66,11 @@ public interface GameContext {
 
     // Input
     Keyboard keyboard();
-    ArcadeKeyBinding arcade();
-    JoypadKeyBinding joypad();
+    ArcadeKeyBinding arcadeKeys();
+    JoypadKeyBinding joypadKeys();
     void enableJoypad();
     void disableJoypad();
-    void selectNextJoypadBinding();
+    void nextJoypadKeys();
 
     // GUI
     void setScoreVisible(boolean visible);

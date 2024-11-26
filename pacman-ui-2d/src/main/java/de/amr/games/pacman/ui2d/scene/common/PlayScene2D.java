@@ -54,7 +54,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     protected void doInit() {
         context.setScoreVisible(true);
-        ArcadeKeyBinding arcadeController = context.arcade();
+        ArcadeKeyBinding arcadeController = context.arcadeKeys();
         bindDefaultArcadeControllerActions(this, arcadeController);
         bindFallbackPlayerControlActions(this);
         registerGameActionKeyBindings(context.keyboard());
@@ -62,7 +62,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        ArcadeKeyBinding arcadeController = context.arcade();
+        ArcadeKeyBinding arcadeController = context.arcadeKeys();
         if (context.game().isDemoLevel()) {
             bind(GameActions2D.ADD_CREDIT, arcadeController.key(Arcade.Button.COIN));
         } else {

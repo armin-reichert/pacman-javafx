@@ -61,7 +61,7 @@ public class CutScene3 extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(context -> context.gameController().terminateCurrentState(), context.joypad().key(NES.JoypadButton.BTN_START));
+        bind(context -> context.gameController().terminateCurrentState(), context.joypadKeys().key(NES.JoypadButton.BTN_START));
     }
 
     @Override

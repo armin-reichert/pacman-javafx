@@ -22,7 +22,7 @@ public class CreditsScene extends GameScene2D {
     public void bindGameActions() {
         context.setScoreVisible(false);
         context.enableJoypad();
-        bind(GameActions2D.START_GAME, context.joypad().key(NES.JoypadButton.BTN_START));
+        bind(GameActions2D.START_GAME, context.joypadKeys().key(NES.JoypadButton.BTN_START));
     }
 
     @Override

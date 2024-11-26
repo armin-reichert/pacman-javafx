@@ -368,17 +368,17 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public ArcadeKeyBinding arcade() {
+    public ArcadeKeyBinding arcadeKeys() {
         return arcade;
     }
 
     @Override
-    public JoypadKeyBinding joypad() {
+    public JoypadKeyBinding joypadKeys() {
         return joypadBindings[selectedJoypadIndex];
     }
 
     @Override
-    public void selectNextJoypadBinding() {
+    public void nextJoypadKeys() {
         selectedJoypadIndex = selectedJoypadIndex + 1;
         if (selectedJoypadIndex == joypadBindings.length) {
             selectedJoypadIndex = 0;
@@ -387,14 +387,14 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     @Override
     public void enableJoypad() {
-        Logger.info("Enable joypad {}", joypad());
-        joypad().register(keyboard);
+        Logger.info("Enable joypad {}", joypadKeys());
+        joypadKeys().register(keyboard);
     }
 
     @Override
     public void disableJoypad() {
-        Logger.info("Disable joypad {}", joypad());
-        joypad().unregister(keyboard);
+        Logger.info("Disable joypad {}", joypadKeys());
+        joypadKeys().unregister(keyboard);
     }
 
     @Override

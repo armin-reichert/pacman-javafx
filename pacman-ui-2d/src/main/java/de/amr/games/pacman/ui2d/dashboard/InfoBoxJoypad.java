@@ -5,6 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.lib.nes.NES;
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import javafx.scene.image.ImageView;
@@ -14,7 +16,7 @@ public class InfoBoxJoypad extends InfoBox {
 
     public void init(GameContext context) {
         super.init(context);
-        JoypadKeyBinding joypad = context.joypad();
+        JoypadKeyBinding joypad = context.joypadKeys();
         setContentTextFont(Font.font("Monospace", 16));
         String indent = "  "; // Urgh
         addLabeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(
@@ -34,6 +36,7 @@ public class InfoBoxJoypad extends InfoBox {
             joypad.key(NES.JoypadButton.BTN_LEFT).getDisplayText(),
             joypad.key(NES.JoypadButton.BTN_RIGHT).getDisplayText())
         );
-        addRow(new ImageView(context.assets().image("tengen.image.nes-controller")));
+        String prefix = GameAssets2D.assetPrefix(GameVariant.MS_PACMAN_TENGEN);
+        addRow(new ImageView(context.assets().image(prefix + ".image.nes-controller")));
     }
 }
