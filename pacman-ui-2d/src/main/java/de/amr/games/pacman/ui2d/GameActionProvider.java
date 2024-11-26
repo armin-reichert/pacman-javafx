@@ -55,6 +55,6 @@ public interface GameActionProvider {
     }
 
     default void handleInput(GameContext context) {
-        context.ifGameActionRun(this);
+        context.ifGameActionTriggeredRunIt(this);
     }
 }

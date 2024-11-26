@@ -89,13 +89,13 @@ public interface GameContext {
     }
 
     // Actions
-    default void ifGameActionRun(GameActionProvider actionProvider) {
+    default void ifGameActionTriggeredRunIt(GameActionProvider actionProvider) {
         actionProvider.firstMatchedAction(keyboard())
             .filter(gameAction -> gameAction.isEnabled(this))
             .ifPresent(action -> action.execute(this));
     }
 
-    default void ifGameActionRunElse(GameActionProvider actionProvider, Runnable defaultAction) {
+    default void ifGameActionTriggeredRunItElse(GameActionProvider actionProvider, Runnable defaultAction) {
         actionProvider.firstMatchedAction(keyboard())
             .filter(gameAction -> gameAction.isEnabled(this))
             .ifPresentOrElse(action -> action.execute(this), defaultAction);

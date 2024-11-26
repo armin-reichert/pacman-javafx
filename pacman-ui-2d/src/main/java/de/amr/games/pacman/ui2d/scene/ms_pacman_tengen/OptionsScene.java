@@ -147,7 +147,7 @@ public class OptionsScene extends GameScene2D {
         }
 
         else {
-            context.ifGameActionRun(this);
+            context.ifGameActionTriggeredRunIt(this);
         }
     }
 

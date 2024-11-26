@@ -219,7 +219,7 @@ public class GamePage extends StackPane implements GameActionProvider {
 
     @Override
     public void handleInput(GameContext context) {
-        context.ifGameActionRunElse(this,
+        context.ifGameActionTriggeredRunItElse(this,
             () -> context.currentGameScene().ifPresent(gameScene -> gameScene.handleInput(context)));
     }
 
