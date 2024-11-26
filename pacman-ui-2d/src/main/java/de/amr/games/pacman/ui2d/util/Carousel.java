@@ -92,7 +92,7 @@ public class Carousel extends StackPane {
         btnNextSlide.setOnAction(e -> nextSlide());
 
         btnSelect = createSelectButton(assets);
-        btnSelect.setTranslateY(-40);
+        btnSelect.setTranslateY(-50);
 
         StackPane.setAlignment(btnPrevSlide, Pos.CENTER_LEFT);
         StackPane.setAlignment(btnNextSlide, Pos.CENTER_RIGHT);
