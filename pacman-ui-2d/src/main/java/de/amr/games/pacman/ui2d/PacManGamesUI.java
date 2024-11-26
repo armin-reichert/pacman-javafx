@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.maps.editor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.pacman_xxl.PacManGameXXL;
@@ -290,12 +289,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             clock.pausedPy, gameVariantPy, gameScenePy, gamePage.heightProperty());
     }
 
-    private String displayName(GameScene gameScene) {
-        String text = gameScene != null ? gameScene.getClass().getSimpleName() : "NO GAME SCENE";
-        text += String.format(" (%s)", gameVariant());
-        return text;
-    }
-
     private void configureGameScene2D(GameScene2D gameScene2D) {
         gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
     }
@@ -307,7 +300,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         if (reloadCurrent || sceneChanging) {
             if (prevGameScene != null) {
                 prevGameScene.end();
-                Logger.info("Game scene ended: {}", displayName(prevGameScene));
+                Logger.info("Game scene ended: {}", sceneDisplayName(prevGameScene));
             }
             if (nextGameScene != null) {
                 if (nextGameScene instanceof GameScene2D gameScene2D) {
@@ -321,8 +314,13 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             if (sceneChanging) {
                 gameScenePy.set(nextGameScene);
             }
-            Logger.info("Game scene is now: {}", displayName(nextGameScene));
+            Logger.info("Game scene is now: {}", sceneDisplayName(nextGameScene));
         }
+    }
+
+    private String sceneDisplayName(GameScene gameScene) {
+        String text = gameScene != null ? gameScene.getClass().getSimpleName() : "NO GAME SCENE";
+        return text + " (%s)".formatted(gameVariant());
     }
 
     private boolean is2D3DSwitch(GameScene oldGameScene, GameScene newGameScene) {
