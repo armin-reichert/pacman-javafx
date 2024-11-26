@@ -30,7 +30,6 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
@@ -211,11 +210,6 @@ public class GamePage extends StackPane implements Page {
 
     public TooFancyGameCanvasContainer gameCanvasContainer() {
         return gameCanvasContainer;
-    }
-
-    @Override
-    public Pane rootPane() {
-        return this;
     }
 
     @Override

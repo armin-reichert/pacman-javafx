@@ -488,8 +488,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             page.registerGameActionKeyBindings(keyboard());
             currentPage = page;
             currentPage.setSize(stage.getScene().getWidth(), stage.getScene().getHeight());
-            sceneRoot.getChildren().set(0, currentPage.rootPane());
-            currentPage.rootPane().requestFocus();
+            sceneRoot.getChildren().set(0, currentPage.root());
+            currentPage.root().requestFocus();
             currentPage.onPageSelected();
         }
     }

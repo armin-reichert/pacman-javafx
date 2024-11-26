@@ -14,7 +14,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 import java.util.HashMap;
@@ -125,11 +124,6 @@ public class StartPage extends StackPane implements Page {
     @Override
     public Map<KeyCodeCombination, GameAction> actionBindings() {
         return actionBindings;
-    }
-
-    @Override
-    public Pane rootPane() {
-        return this;
     }
 
     @Override

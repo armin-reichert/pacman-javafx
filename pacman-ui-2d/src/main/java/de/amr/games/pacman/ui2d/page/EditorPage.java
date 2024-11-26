@@ -15,7 +15,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
@@ -111,11 +110,6 @@ public class EditorPage extends BorderPane implements Page {
         }
         Logger.error("Could not find map at path {}", relativeMapPath);
         return null;
-    }
-
-    @Override
-    public Pane rootPane() {
-        return this;
     }
 
     @Override
