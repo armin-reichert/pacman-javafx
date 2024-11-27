@@ -23,10 +23,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -229,8 +226,13 @@ public class GamePage extends StackPane implements GameActionProvider {
         }
         contextMenu.getItems().clear();
 
-        contextMenu.getItems().add(contextMenuTitleItem(context.locText("scene_display")));
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            contextMenu.getItems().add(contextMenuTitleItem(context.locText("scene_display")));
 
+            var miFullSceneView = new RadioMenuItem(context.locText("scaled_to_fit"));
+            miFullSceneView.selectedProperty().bindBidirectional(PY_TENGEN_FULL_SCENE_VIEW);
+            contextMenu.getItems().add(miFullSceneView);
+        }
         contextMenu.getItems().add(contextMenuTitleItem(context.locText("pacman")));
 
         var miAutopilot = new CheckMenuItem(context.locText("autopilot"));

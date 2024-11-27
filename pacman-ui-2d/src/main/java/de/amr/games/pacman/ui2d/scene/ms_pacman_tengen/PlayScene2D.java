@@ -204,6 +204,9 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
         setCurrentCamera(PY_TENGEN_FULL_SCENE_VIEW.get() ? fixedCamera : movingCamera);
         currentCamera().focusTopOfScene();
+        PY_TENGEN_FULL_SCENE_VIEW.addListener((py,ov,nv) -> {
+            setCurrentCamera(nv ? fixedCamera : movingCamera);
+        });
     }
 
     @Override
