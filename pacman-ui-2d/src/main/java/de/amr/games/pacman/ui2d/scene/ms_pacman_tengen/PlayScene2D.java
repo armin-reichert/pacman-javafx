@@ -47,8 +47,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.ui2d.GameActions2D.bindCheatActions;
 import static de.amr.games.pacman.ui2d.GameActions2D.bindFallbackPlayerControlActions;
-import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
-import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenActions.QUIT_DEMO_LEVEL;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenActions.setDefaultJoypadBinding;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.*;
@@ -175,7 +174,6 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         movingCamera.scalingProperty().bind(scalingProperty());
 
         fixedCamera = new FixedCamera();
-        // set camera in doInit
     }
 
     private PlaySceneCamera currentCamera() {
@@ -188,8 +186,9 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     }
 
     private void switchCameras(GameContext context) {
-        setCurrentCamera(currentCamera == movingCamera ? fixedCamera : movingCamera);
-    };
+        PY_TENGEN_FULL_SCENE_VIEW.set(!PY_TENGEN_FULL_SCENE_VIEW.get());
+        setCurrentCamera(PY_TENGEN_FULL_SCENE_VIEW.get() ? fixedCamera : movingCamera);
+    }
 
     @Override
     public void bindGameActions() {
@@ -202,7 +201,8 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         messageMovement = new MessageMovement();
         context.enableJoypad();
         context.setScoreVisible(true);
-        setCurrentCamera(movingCamera);
+
+        setCurrentCamera(PY_TENGEN_FULL_SCENE_VIEW.get() ? fixedCamera : movingCamera);
         currentCamera().focusTopOfScene();
     }
 
@@ -417,7 +417,8 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         } else {
             double s = visibleHeight / (size().y() + 3 * TS);
             setScaling(s);
-            int worldHeightTiles = context.level().world().map().terrain().numRows();
+            int worldHeightTiles = context.game().level().isPresent()
+                ? context.level().world().map().terrain().numRows() : NES_TILES.y();
             double dy = s * (0.5 * worldHeightTiles - 21.5) * TS;
             fixedCamera.setTranslateY(dy);
         }
@@ -500,16 +501,6 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         gr.ctx().setFont(DEBUG_FONT);
         gr.ctx().fillText(String.format("%s %d", context.gameState(), context.gameState().timer().tickCount()),
             scaled(2*TS), scaled(3*TS));
-        /*
-        gr.ctx().setFill(Color.grayRgb(100, 0.5));
-        double y = scaled(0.5 * size().y() + 20);
-        gr.ctx().fillRect(0, y - 30, canvas.getWidth(), 40);
-        gr.ctx().setFill(Color.YELLOW);
-        gr.ctx().fillText("Camera targetY=%.2f y=%.2f minY=%.2f maxY=%.2f".formatted(
-            currentCamera().targetY, currentCamera().getTranslateY(), currentCamera().camMinY(), currentCamera().camMaxY()),
-            scaled(20), y);
-
-         */
     }
 
     private Vector2f centerPosBelowHouse(GameWorld world) {

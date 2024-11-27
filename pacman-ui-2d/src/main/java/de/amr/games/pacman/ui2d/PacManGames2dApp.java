@@ -44,6 +44,7 @@ public class PacManGames2dApp extends Application {
     public static final BooleanProperty PY_PIP_ON                     = new SimpleBooleanProperty(false);
     public static final IntegerProperty PY_PIP_OPACITY_PERCENT        = new SimpleIntegerProperty(100);
     public static final IntegerProperty PY_SIMULATION_STEPS           = new SimpleIntegerProperty(1);
+    public static final BooleanProperty PY_TENGEN_FULL_SCENE_VIEW     = new SimpleBooleanProperty(false);
 
     private static Dimension2D initialSize() {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
