@@ -11,6 +11,8 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.model.pacman.PacManGame;
+import de.amr.games.pacman.steering.RouteBasedSteering;
+import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -98,6 +100,14 @@ public class PacManGameXXL extends PacManGame {
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
         Logger.info("Map config: {}, URL: {}", mapConfig, worldMap.url());
+    }
+
+    @Override
+    public void configureDemoLevel() {
+        configureNormalLevel();
+        levelCounterEnabled = false;
+        demoLevelSteering = new RuleBasedPacSteering(this);
+        setDemoLevelBehavior();
     }
 
     private Map<String, Object> createMapConfig(int levelNumber) {
