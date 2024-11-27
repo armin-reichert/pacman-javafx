@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -75,8 +76,9 @@ public class GamePage3D extends GamePage {
         }
         boolean is3D = context.currentGameSceneHasID("PlayScene3D");
 
-        contextMenu.getItems().add(contextMenuTitleItem(context.locText("scene_display")));
+        // build menu
 
+        contextMenu.getItems().add(contextMenuTitleItem(context.locText("scene_display")));
         // Toggle 2D-3D
         var item = new MenuItem(context.locText(is3D ? "use_2D_scene" : "use_3D_scene"));
         item.setOnAction(e -> GameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute(context));
@@ -106,7 +108,14 @@ public class GamePage3D extends GamePage {
                 miPerspective.setSelected(perspective == PY_3D_PERSPECTIVE.get()); // == is allowed for enum comparison
                 contextMenu.getItems().add(miPerspective);
             }
+        } else {
+            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                var miFullSceneView = new RadioMenuItem(context.locText("scaled_to_fit"));
+                miFullSceneView.selectedProperty().bindBidirectional(PY_TENGEN_FULL_SCENE_VIEW);
+                contextMenu.getItems().add(miFullSceneView);
+            }
         }
+
 
         // Common items
         contextMenu.getItems().add(contextMenuTitleItem(context.locText("pacman")));
