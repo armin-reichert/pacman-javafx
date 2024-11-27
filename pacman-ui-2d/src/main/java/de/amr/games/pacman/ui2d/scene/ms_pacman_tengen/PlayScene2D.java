@@ -23,6 +23,7 @@ import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.sound.GameSound;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.Camera;
 import javafx.scene.Node;
 import javafx.scene.ParallelCamera;
 import javafx.scene.SubScene;
@@ -63,11 +64,27 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     private final SubScene fxSubScene;
     private final Canvas canvas;
+    private final MovingCamera movingCamera;
+    private final FixedCamera fixedCamera;
+    private PlaySceneCamera currentCamera;
 
     private MessageMovement messageMovement;
     private LevelCompleteAnimationTengen levelCompleteAnimation;
 
-    public static class PlaySceneCamera extends ParallelCamera {
+    public interface PlaySceneCamera {
+        default Camera castFxCamera() { return (Camera) this; }
+        default void focusTopOfScene() {}
+        default void focusBottomOfScene() {}
+        default void focusPlayer(boolean focus) {}
+        default void setVerticalRangeTiles(int numTiles) {}
+        default void update(Pac pac) {}
+        default void setCameraToTopOfScene() {}
+        default void setIdleTicks(int ticks) {}
+    }
+
+    public static class FixedCamera extends ParallelCamera implements PlaySceneCamera {}
+
+    public static class MovingCamera extends ParallelCamera implements PlaySceneCamera {
         private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
 
         private int idleTicks;
@@ -145,11 +162,30 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
         var root = new StackPane(canvas);
         root.setBackground(null);
+
         fxSubScene = new SubScene(root, 42, 42);
         fxSubScene.setFill(nesPaletteColor(0x0f));
-        PlaySceneCamera camera = new PlaySceneCamera();
-        camera.scalingProperty().bind(scalingProperty());
-        fxSubScene.setCamera(camera);
+
+        movingCamera = new MovingCamera();
+        movingCamera.scalingProperty().bind(scalingProperty());
+
+        fixedCamera = new FixedCamera();
+        // set camera in doInit
+    }
+
+    private PlaySceneCamera currentCamera() {
+        return currentCamera;
+    }
+
+    private void setCurrentCamera(PlaySceneCamera currentCamera) {
+        this.currentCamera = currentCamera;
+        if (currentCamera == fixedCamera) {
+            scalingProperty().unbind();
+            setScaling(2.0);
+        } else {
+            //TODO rebind or what?
+        }
+        fxSubScene.setCamera(currentCamera.castFxCamera());
     }
 
     @Override
@@ -161,7 +197,8 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         messageMovement = new MessageMovement();
         context.enableJoypad();
         context.setScoreVisible(true);
-        camera().focusTopOfScene();
+        setCurrentCamera(movingCamera);
+        currentCamera().focusTopOfScene();
     }
 
     @Override
@@ -188,11 +225,11 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             }
             //TODO hack: in case we are switching from 3D scene, focusPlayer might be false even if it should be true
             if (context.gameState() == GameState.HUNTING) {
-                camera().focusPlayer(true);
+                currentCamera().focusPlayer(true);
             }
             // do it on every update because on level creation/start the 3D scene might have been active
-            camera().setVerticalRangeTiles(level.world().map().terrain().numRows());
-            camera().update(level.pac());
+            currentCamera().setVerticalRangeTiles(level.world().map().terrain().numRows());
+            currentCamera().update(level.pac());
         });
     }
 
@@ -212,8 +249,8 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     }
 
     @Override
-    public PlaySceneCamera camera() {
-        return (PlaySceneCamera) fxSubScene.getCamera();
+    public Camera camera() {
+        return fxSubScene.getCamera();
     }
 
     @Override
@@ -247,9 +284,9 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public void onLevelStarted(GameEvent e) {
-        camera().setCameraToTopOfScene();
-        camera().focusBottomOfScene();
-        camera().setIdleTicks(90);
+        currentCamera().setCameraToTopOfScene();
+        currentCamera().focusBottomOfScene();
+        currentCamera().setIdleTicks(90);
     }
 
     @Override
@@ -273,7 +310,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     @Override
     public void onEnterGameState(GameState state) {
         switch (state) {
-            case HUNTING -> camera().focusPlayer(true);
+            case HUNTING -> currentCamera().focusPlayer(true);
             case LEVEL_COMPLETE -> {
                 levelCompleteAnimation = new LevelCompleteAnimationTengen(
                     context.level().mapConfig(), context.level().numFlashes(), 10);
@@ -288,7 +325,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
                     float belowHouse = centerPosBelowHouse(context.level().world()).x();
                     messageMovement.start(MOVING_MESSAGE_DELAY, belowHouse, size().x());
                 }
-                camera().focusTopOfScene();
+                currentCamera().focusTopOfScene();
             }
             default -> {}
         }
@@ -322,7 +359,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public void onPacDead(GameEvent e) {
-        camera().focusTopOfScene();
+        currentCamera().focusTopOfScene();
     }
 
     @Override
@@ -376,6 +413,11 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         long duration = System.nanoTime() - start;
         Logger.debug(() -> "Update renderer took %.3f millis".formatted(duration * 1e-6));
 
+        //TODO
+        if (currentCamera == fixedCamera) {
+            scalingProperty().unbind();
+            setScaling(2.0);
+        }
         r.setScaling(scaling());
         r.setBackgroundColor(backgroundColor());
         r.clearCanvas();
@@ -448,9 +490,12 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         double y = scaled(0.5 * size().y() + 20);
         gr.ctx().fillRect(0, y - 30, canvas.getWidth(), 40);
         gr.ctx().setFill(Color.YELLOW);
+        /*
         gr.ctx().fillText("Camera targetY=%.2f y=%.2f minY=%.2f maxY=%.2f".formatted(
-            camera().targetY, camera().getTranslateY(), camera().camMinY(), camera().camMaxY()),
+            currentCamera().targetY, currentCamera().getTranslateY(), currentCamera().camMinY(), currentCamera().camMaxY()),
             scaled(20), y);
+
+         */
     }
 
     private Vector2f centerPosBelowHouse(GameWorld world) {
