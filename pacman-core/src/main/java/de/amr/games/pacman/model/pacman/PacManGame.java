@@ -280,6 +280,7 @@ public class PacManGame extends GameModel {
         configureNormalLevel();
         levelCounterEnabled = false;
         demoLevelSteering.init();
+        setDemoLevelBehavior();
     }
 
     @Override

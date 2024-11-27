@@ -86,19 +86,18 @@ public class PacManGameXXL extends PacManGame {
 
     @Override
     public void configureNormalLevel() {
-        level.setNumFlashes(levelData(level.number).numFlashes());
-        level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
+        levelCounterEnabled = true;
         Map<String, Object> mapConfig = createMapConfig(level.number);
         level.setMapConfig(mapConfig);
+        level.setNumFlashes(levelData(level.number).numFlashes());
+        level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
         WorldMap worldMap = (WorldMap) mapConfig.get("worldMap");
         populateLevel(worldMap);
         level.pac().setAutopilot(autopilot);
-        level.pac().setUsingAutopilot(false);
-        level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         setCruiseElroy(0);
-        levelCounterEnabled = true;
-        Logger.info("Map selection mode is {}", mapSelectionMode);
-        Logger.info("Selected map config: {}, URL: {}", level.mapConfig(), worldMap.url());
+        level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+
+        Logger.info("Map config: {}, URL: {}", mapConfig, worldMap.url());
     }
 
     private Map<String, Object> createMapConfig(int levelNumber) {

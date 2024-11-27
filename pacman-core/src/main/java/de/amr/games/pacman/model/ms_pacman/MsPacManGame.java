@@ -271,13 +271,10 @@ public class MsPacManGame extends GameModel {
 
     @Override
     public void configureDemoLevel() {
+        configureNormalLevel();
         levelCounterEnabled = false;
-        level.setMapConfig(getMapConfig(maps, level.number));
-        WorldMap worldMap = (WorldMap) level.mapConfig().get("worldMap");
-        createWorldAndPopulation(worldMap);
-        level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
-        demoLevelSteering.init();
         setDemoLevelBehavior();
+        demoLevelSteering.init();
     }
 
     @Override
