@@ -123,7 +123,7 @@ public class PacManGame extends GameModel {
 
     protected final Map<String, Object> mapConfig;
     protected final Steering autopilot = new RuleBasedPacSteering(this);
-    protected final Steering demoLevelSteering = new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE));
+    protected Steering demoLevelSteering;
     protected byte cruiseElroy;
 
     public PacManGame(File userDir) {
@@ -279,7 +279,7 @@ public class PacManGame extends GameModel {
     public void configureDemoLevel() {
         configureNormalLevel();
         levelCounterEnabled = false;
-        demoLevelSteering.init();
+        demoLevelSteering = new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE));
         setDemoLevelBehavior();
     }
 
