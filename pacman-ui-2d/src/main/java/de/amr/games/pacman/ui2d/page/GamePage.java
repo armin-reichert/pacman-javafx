@@ -277,10 +277,12 @@ public class GamePage extends StackPane implements GameActionProvider {
                 getChildren().set(0, cameraControlledGameScene.viewPort());
                 cameraControlledGameScene.viewPortWidthProperty().bind(parentScene.widthProperty());
                 cameraControlledGameScene.viewPortHeightProperty().bind(parentScene.heightProperty());
+                /*
                 if (gameScene instanceof GameScene2D gameScene2D) {
                     gameScene2D.scalingProperty().bind(
                         gameCanvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_SCALING)));
                 }
+                */
             }
             case GameScene2D gameScene2D -> {
                 getChildren().set(0, gameCanvasLayer);

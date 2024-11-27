@@ -17,6 +17,9 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
+import de.amr.games.pacman.ui2d.GameAction;
+import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.input.Keyboard;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
@@ -28,6 +31,7 @@ import javafx.scene.Node;
 import javafx.scene.ParallelCamera;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -59,17 +63,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     private static final Vector2i CANVAS_SIZE = NES_SIZE.plus(0, 14 * TS);
     private static final float CAM_SPEED = 0.03f;
     private static final int MOVING_MESSAGE_DELAY = 120;
-
     private static final Font DEBUG_FONT = Font.font("Sans", FontWeight.BOLD, 20);
-
-    private final SubScene fxSubScene;
-    private final Canvas canvas;
-    private final MovingCamera movingCamera;
-    private final FixedCamera fixedCamera;
-    private PlaySceneCamera currentCamera;
-
-    private MessageMovement messageMovement;
-    private LevelCompleteAnimationTengen levelCompleteAnimation;
 
     public interface PlaySceneCamera {
         default Camera castFxCamera() { return (Camera) this; }
@@ -146,6 +140,17 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         }
     }
 
+    private final SubScene fxSubScene;
+    private final Canvas canvas;
+    private final MovingCamera movingCamera;
+    private final FixedCamera fixedCamera;
+    private PlaySceneCamera currentCamera;
+
+    private MessageMovement messageMovement;
+    private LevelCompleteAnimationTengen levelCompleteAnimation;
+
+    private final GameAction actionSwitchCameras = this::switchCameras;
+
     public PlayScene2D() {
         canvas = new Canvas();
         canvas.widthProperty().bind(scalingProperty().multiply(CANVAS_SIZE.x()));
@@ -179,17 +184,17 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     private void setCurrentCamera(PlaySceneCamera currentCamera) {
         this.currentCamera = currentCamera;
-        if (currentCamera == fixedCamera) {
-            scalingProperty().unbind();
-            setScaling(2.0);
-        } else {
-            //TODO rebind or what?
-        }
         fxSubScene.setCamera(currentCamera.castFxCamera());
     }
 
+    private void switchCameras(GameContext context) {
+        setCurrentCamera(currentCamera == movingCamera ? fixedCamera : movingCamera);
+    };
+
     @Override
-    public void bindGameActions() {}
+    public void bindGameActions() {
+        bind(actionSwitchCameras, Keyboard.alt(KeyCode.C));
+    }
 
     @Override
     public void doInit() {
@@ -405,6 +410,19 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     // drawing
 
+    private void updateScaling() {
+        double visibleHeight = viewPortHeightProperty().get();
+        if (currentCamera == movingCamera) {
+            setScaling(visibleHeight / NES_SIZE.y());
+        } else {
+            double s = visibleHeight / (size().y() + 3 * TS);
+            setScaling(s);
+            int worldHeightTiles = context.level().world().map().terrain().numRows();
+            double dy = s * (0.5 * worldHeightTiles - 21.5) * TS;
+            fixedCamera.setTranslateY(dy);
+        }
+    }
+
     @Override
     public void draw() {
         var r = (MsPacManGameTengenRenderer) gr;
@@ -413,11 +431,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         long duration = System.nanoTime() - start;
         Logger.debug(() -> "Update renderer took %.3f millis".formatted(duration * 1e-6));
 
-        //TODO
-        if (currentCamera == fixedCamera) {
-            scalingProperty().unbind();
-            setScaling(2.0);
-        }
+        updateScaling();
         r.setScaling(scaling());
         r.setBackgroundColor(backgroundColor());
         r.clearCanvas();
@@ -486,11 +500,11 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         gr.ctx().setFont(DEBUG_FONT);
         gr.ctx().fillText(String.format("%s %d", context.gameState(), context.gameState().timer().tickCount()),
             scaled(2*TS), scaled(3*TS));
+        /*
         gr.ctx().setFill(Color.grayRgb(100, 0.5));
         double y = scaled(0.5 * size().y() + 20);
         gr.ctx().fillRect(0, y - 30, canvas.getWidth(), 40);
         gr.ctx().setFill(Color.YELLOW);
-        /*
         gr.ctx().fillText("Camera targetY=%.2f y=%.2f minY=%.2f maxY=%.2f".formatted(
             currentCamera().targetY, currentCamera().getTranslateY(), currentCamera().camMinY(), currentCamera().camMaxY()),
             scaled(20), y);
