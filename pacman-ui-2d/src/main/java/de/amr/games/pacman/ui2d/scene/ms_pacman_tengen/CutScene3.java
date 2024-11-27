@@ -167,6 +167,7 @@ public class CutScene3 extends GameScene2D {
             return;
         }
         var r = (MsPacManGameTengenRenderer) gr;
+        r.drawSceneBorders();
         r.drawClapperBoard(clapAnimation, "JUNIOR", 3, r.scaledArcadeFont(TS), clapTextColor, CLAP_TILE_X, CLAP_TILE_Y);
         r.drawStork(storkAnimation, stork, bagReleased);
         r.drawAnimatedEntity(msPacMan);

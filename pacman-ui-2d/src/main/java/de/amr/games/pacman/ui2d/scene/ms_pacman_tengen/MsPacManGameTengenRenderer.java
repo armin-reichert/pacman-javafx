@@ -335,6 +335,13 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         ctx().restore();
     }
 
+    public void drawSceneBorders() {
+        ctx().setLineWidth(0.5);
+        ctx().setStroke(Color.grayRgb(50));
+        ctx().strokeLine(0.5, 0, 0.5, canvas.getHeight());
+        ctx().strokeLine(canvas.getWidth() - 0.5, 0, canvas.getWidth() - 0.5, canvas.getHeight());
+    }
+
     public void drawEmptyMap(WorldMap worldMap, Map<String, Color> colorMap) {
         terrainRenderer.setMapBackgroundColor(bgColor);
         terrainRenderer.setWallStrokeColor(colorMap.get("stroke"));

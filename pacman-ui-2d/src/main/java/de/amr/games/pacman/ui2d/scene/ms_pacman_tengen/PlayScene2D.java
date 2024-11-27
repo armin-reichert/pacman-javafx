@@ -427,6 +427,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     @Override
     public void draw() {
         var r = (MsPacManGameTengenRenderer) gr;
+        r.drawSceneBorders();
         long start = System.nanoTime();
         context.game().level().ifPresent(level -> gr.update(level.mapConfig()));
         long duration = System.nanoTime() - start;

@@ -94,6 +94,7 @@ public class IntroScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         MsPacManGameTengenRenderer r = (MsPacManGameTengenRenderer) gr;
+        r.drawSceneBorders();
         TickTimer timer = sceneController.state().timer;
         long t = timer.tickCount();
         Font scaledFont = r.scaledArcadeFont(8);

@@ -153,6 +153,7 @@ public class CutScene2 extends GameScene2D {
         String assetPrefix = assetPrefix(context.gameVariant());
         Color color = context.assets().color(assetPrefix + ".color.clapperboard"); //TODO check
         var r = (MsPacManGameTengenRenderer) gr;
+        r.drawSceneBorders();
         r.setLevelNumberBoxesVisible(false);
         r.drawClapperBoard(clapAnimation, "THE CHASE", 2,
             r.scaledArcadeFont(TS), color, CLAP_TILE_X, CLAP_TILE_Y);
