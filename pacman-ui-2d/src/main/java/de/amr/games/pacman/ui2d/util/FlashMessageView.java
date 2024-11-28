@@ -52,10 +52,10 @@ public class FlashMessageView extends VBox {
 
     private final Deque<FlashMessage> activeMessages = new ArrayDeque<>();
     private final Text textView = new Text();
-    private Color textColor = Color.WHEAT;
-    private Font textFont = Font.font("Sans", FontWeight.BOLD, 30);
+    private final Color textColor = Color.WHEAT;
 
     public FlashMessageView() {
+        Font textFont = Font.font("Sans", FontWeight.BOLD, 30);
         textView.setFont(textFont);
         textView.setTextAlignment(TextAlignment.CENTER);
         setAlignment(Pos.CENTER);

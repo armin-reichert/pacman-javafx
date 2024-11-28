@@ -131,6 +131,6 @@ public class CutScene2 extends GameScene2D {
     protected void drawDebugInfo() {
         gr.drawTileGrid(size().x(), size().y());
         var text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        gr.drawText(text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
+        gr.drawText(text, Color.YELLOW, DEBUG_FONT, t(1), t(5));
     }
 }
