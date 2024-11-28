@@ -47,16 +47,19 @@ import static java.util.function.Predicate.not;
  */
 public class MsPacManGameTengenRenderer implements GameRenderer {
 
-    public static EnumMap<NES_ColorScheme, Map<String, Color>> COLOR_MAPS = new EnumMap<>(NES_ColorScheme.class);
-    static {
-        for (var nesColorScheme : NES_ColorScheme.values()) {
-            COLOR_MAPS.put(nesColorScheme, Map.of(
-                "fill",   Color.valueOf(nesColorScheme.fillColor()),
-                "stroke", Color.valueOf(nesColorScheme.strokeColor()),
-                "door",   Color.valueOf(nesColorScheme.strokeColor()),
-                "pellet", Color.valueOf(nesColorScheme.pelletColor())
+    private static final Map<NES_ColorScheme, Map<String, Color>> COLOR_MAPS_BY_NES_SCHEME = new EnumMap<>(NES_ColorScheme.class);
+
+    public static Map<String, Color> getColorMap(NES_ColorScheme ncs) {
+        if (!COLOR_MAPS_BY_NES_SCHEME.containsKey(ncs)) {
+            COLOR_MAPS_BY_NES_SCHEME.put(ncs, Map.of(
+                "fill",   Color.valueOf(ncs.fillColor()),
+                "stroke", Color.valueOf(ncs.strokeColor()),
+                "door",   Color.valueOf(ncs.strokeColor()),
+                "pellet", Color.valueOf(ncs.pelletColor())
             ));
+            Logger.info("Color map created for NES color scheme {}", ncs);
         }
+        return COLOR_MAPS_BY_NES_SCHEME.get(ncs);
     }
 
     // Strange map #15 (level 32) has 3 different images to create an animation effect
@@ -123,7 +126,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             case STRANGE -> strangeMapSprite(mapConfig);
         };
 
-        Map<String, Color> colorMap = COLOR_MAPS.get(nesColorScheme);
+        Map<String, Color> colorMap = getColorMap(nesColorScheme);
         terrainRenderer.setMapBackgroundColor(bgColor);
         terrainRenderer.setWallStrokeColor(colorMap.get("stroke"));
         terrainRenderer.setWallFillColor(colorMap.get("fill"));

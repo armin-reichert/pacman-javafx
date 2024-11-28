@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenRenderer.COLOR_MAPS;
-
 /**
  * In Tengen Ms. Pac-Man, maze flashing animations in levels 28-31 (non-Arcade mazes) use
  * different colors, not just switching to black-and-white.
@@ -41,7 +39,7 @@ public class LevelCompleteAnimationTengen extends LevelCompleteAnimation {
         }
         colorMaps.clear();
         for (var scheme : schemes) {
-            colorMaps.add(COLOR_MAPS.get(scheme));
+            colorMaps.add(MsPacManGameTengenRenderer.getColorMap(scheme));
         }
     }
 

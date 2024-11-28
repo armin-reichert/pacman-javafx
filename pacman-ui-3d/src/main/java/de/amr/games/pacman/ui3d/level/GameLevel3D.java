@@ -243,7 +243,7 @@ public class GameLevel3D {
             case PACMAN           -> PacManGameRenderer.COLOR_MAP;
             case PACMAN_XXL       -> GameRenderer.toColorMap((Map<String, String>) mapConfig.get("colorMap"));
             case MS_PACMAN        -> MsPacManGameRenderer.COLOR_MAPS.get((int) mapConfig.get("colorMapIndex"));
-            case MS_PACMAN_TENGEN -> MsPacManGameTengenRenderer.COLOR_MAPS.get((NES_ColorScheme) mapConfig.get("nesColorScheme"));
+            case MS_PACMAN_TENGEN -> MsPacManGameTengenRenderer.getColorMap((NES_ColorScheme) mapConfig.get("nesColorScheme"));
         };
     }
 
