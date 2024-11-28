@@ -49,8 +49,7 @@ public class BootScene extends GameScene2D {
     public void setCanvas(Canvas canvas) {
         super.setCanvas(canvas);
         // avoid garbage inside canvas before restarting game
-        canvas.getGraphicsContext2D().setFill(Color.BLACK);
-        canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gr.clearCanvas();
     }
 
     @Override
