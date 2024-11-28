@@ -455,13 +455,12 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         final Pac msPacMan = context.level().pac();
         final var r = (MsPacManGameTengenRenderer) gr;
 
-        r.setBlinking(context.level().blinking().isOn());
 
-        gr.ctx().save();
-        gr.ctx().translate(scaled(2 * TS), 0);
+        r.ctx().save();
+        r.ctx().translate(scaled(2 * TS), 0);
 
         if (context.isScoreVisible()) {
-            gr.drawScores(context);
+            r.drawScores(context);
         }
         Vector2f messageCenterPosition = centerPosBelowHouse(world);
         r.setMessageAnchorPosition(messageMovement.isRunning()
@@ -469,8 +468,9 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             : messageCenterPosition
         );
 
-        boolean flashMode = levelCompleteAnimation != null && levelCompleteAnimation.isFlashing();
-        if (flashMode) {
+        r.setBlinking(context.level().blinking().isOn());
+        boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.isFlashing();
+        if (flashing) {
             r.drawEmptyMap(world.map(), levelCompleteAnimation.currentColorMap());
         } else {
             r.drawWorld(context, world, 0,  3 * TS);
@@ -488,7 +488,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         r.setLevelNumberBoxesVisible(!context.game().isDemoLevel() && game.mapCategory() != MapCategory.ARCADE);
         r.drawLevelCounter(context, size().x() - 2 * TS, size().y() - TS);
 
-        gr.ctx().restore();
+        r.ctx().restore();
 
         // Debug mode info
         if (debugInfoVisiblePy.get()) {
