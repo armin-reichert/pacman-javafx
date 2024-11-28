@@ -204,9 +204,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
         setCurrentCamera(PY_TENGEN_FULL_SCENE_VIEW.get() ? fixedCamera : movingCamera);
         currentCamera().focusTopOfScene();
-        PY_TENGEN_FULL_SCENE_VIEW.addListener((py,ov,nv) -> {
-            setCurrentCamera(nv ? fixedCamera : movingCamera);
-        });
+        PY_TENGEN_FULL_SCENE_VIEW.addListener((py,ov,nv) -> setCurrentCamera(nv ? fixedCamera : movingCamera));
     }
 
     @Override
@@ -430,34 +428,25 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     @Override
     public void draw() {
         var r = (MsPacManGameTengenRenderer) gr;
-        r.drawSceneBorders();
-        long start = System.nanoTime();
-        context.game().level().ifPresent(level -> gr.update(level.mapConfig()));
-        long duration = System.nanoTime() - start;
-        Logger.debug(() -> "Update renderer took %.3f millis".formatted(duration * 1e-6));
-
         updateScaling();
         r.setScaling(scaling());
-        r.setBackgroundColor(backgroundColor());
         r.clearCanvas();
-        drawSceneContent();
+        context.game().level().ifPresent(level -> {
+            r.update(level.mapConfig());
+            r.ctx().save();
+            r.ctx().translate(scaled(2 * TS), 0);
+            drawSceneContent();
+            r.ctx().restore();
+        });
     }
 
     @Override
     protected void drawSceneContent() {
-        if (context.game().level().isEmpty()) {
-            Logger.warn("Tick #{}: Cannot draw scene content, game level not yet available!", context.tick());
-            return;
-        }
 
         final var game = (MsPacManGameTengen) context.game();
         final GameWorld world = context.level().world();
         final Pac msPacMan = context.level().pac();
         final var r = (MsPacManGameTengenRenderer) gr;
-
-
-        r.ctx().save();
-        r.ctx().translate(scaled(2 * TS), 0);
 
         if (context.isScoreVisible()) {
             r.drawScores(context);
@@ -488,9 +477,6 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         r.setLevelNumberBoxesVisible(!context.game().isDemoLevel() && game.mapCategory() != MapCategory.ARCADE);
         r.drawLevelCounter(context, size().x() - 2 * TS, size().y() - TS);
 
-        r.ctx().restore();
-
-        // Debug mode info
         if (debugInfoVisiblePy.get()) {
             r.drawAnimatedCreatureInfo(msPacMan);
             ghostsInZOrder(context.level()).forEach(r::drawAnimatedCreatureInfo);
@@ -503,8 +489,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         gr.drawTileGrid(canvas.getWidth(), canvas.getHeight());
         gr.ctx().setFill(Color.YELLOW);
         gr.ctx().setFont(DEBUG_FONT);
-        gr.ctx().fillText(String.format("%s %d", context.gameState(), context.gameState().timer().tickCount()),
-            scaled(2*TS), scaled(3*TS));
+        gr.ctx().fillText("%s %d".formatted(context.gameState(), context.gameState().timer().tickCount()), 0, scaled(3 * TS));
     }
 
     private Vector2f centerPosBelowHouse(GameWorld world) {
