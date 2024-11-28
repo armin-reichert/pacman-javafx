@@ -51,11 +51,6 @@ public class CreditsScene extends GameScene2D {
         }
     }
 
-    @Override
-    protected void drawDebugInfo() {
-        gr.drawTileGrid(size().x(), size().y());
-    }
-
     private void drawOriginalGameAuthors(MsPacManGameTengenRenderer r, Font scaledFont) {
         int y = 7 * TS;
         r.drawText("CREDITS FOR MS PAC-MAN", nesPaletteColor(0x20), scaledFont, 3 * TS, y);

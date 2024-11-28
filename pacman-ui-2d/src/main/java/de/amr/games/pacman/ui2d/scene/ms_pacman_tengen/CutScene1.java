@@ -236,7 +236,7 @@ public class CutScene1 extends GameScene2D {
     protected void drawDebugInfo() {
         gr.drawTileGrid(size().x(), size().y());
         gr.ctx().setFill(Color.WHITE);
-        gr.ctx().setFont(Font.font(20));
+        gr.ctx().setFont(DEBUG_FONT);
         gr.ctx().fillText("Tick " + t, 20, 20);
     }
 }

@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.model.ms_pacman_tengen.PacBooster;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -245,14 +244,14 @@ public class OptionsScene extends GameScene2D {
 
         // Players (not implemented)
         y += 3 * TS;
-        drawArrowIfSelected(r, OPTION_PLAYERS, y, scaledFont);
+        drawArrowIfSelected(OPTION_PLAYERS, y, scaledFont);
         r.drawText("TYPE", LABEL_COLOR, scaledFont, COL_LABEL, y);
         r.drawText(":", LABEL_COLOR, scaledFont, COL_LABEL + 4 * TS + 4, y);
         r.drawText("1 PLAYER", VALUE_COLOR, scaledFont, COL_LABEL + 6 * TS  , y);
 
         // Pac-Booster
         y += 3 * TS;
-        drawArrowIfSelected(r, OPTION_PAC_BOOSTER, y, scaledFont);
+        drawArrowIfSelected(OPTION_PAC_BOOSTER, y, scaledFont);
         r.drawText("PAC BOOSTER", LABEL_COLOR, scaledFont, COL_LABEL, y);
         r.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
         String pacBoosterText = switch (game.pacBooster()) {
@@ -264,21 +263,21 @@ public class OptionsScene extends GameScene2D {
 
         // Game difficulty
         y += 3 * TS;
-        drawArrowIfSelected(r, OPTION_DIFFICULTY, y, scaledFont);
+        drawArrowIfSelected(OPTION_DIFFICULTY, y, scaledFont);
         r.drawText("GAME DIFFICULTY", LABEL_COLOR, scaledFont, COL_LABEL, y);
         r.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
         r.drawText(game.difficulty().name(), VALUE_COLOR, scaledFont, COL_VALUE, y);
 
         // Maze (type) selection
         y += 3 * TS;
-        drawArrowIfSelected(r, OPTION_MAZE_SELECTION, y, scaledFont);
+        drawArrowIfSelected(OPTION_MAZE_SELECTION, y, scaledFont);
         r.drawText("MAZE SELECTION", LABEL_COLOR, scaledFont, COL_LABEL, y);
         r.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
         r.drawText(game.mapCategory().name(), VALUE_COLOR, scaledFont, COL_VALUE, y);
 
         // Starting level number
         y += 3 * TS;
-        drawArrowIfSelected(r, OPTION_STARTING_LEVEL, y, scaledFont);
+        drawArrowIfSelected(OPTION_STARTING_LEVEL, y, scaledFont);
         r.drawText("STARTING LEVEL", LABEL_COLOR, scaledFont, COL_LABEL, y);
         r.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
         r.drawText(String.valueOf(game.startLevelNumber()), VALUE_COLOR, scaledFont, COL_VALUE, y);
@@ -297,12 +296,7 @@ public class OptionsScene extends GameScene2D {
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), size().x(), y);
     }
 
-    @Override
-    protected void drawDebugInfo() {
-        gr.drawTileGrid(size().x(), size().y());
-    }
-
-    private void drawArrowIfSelected(GameRenderer gr, int option, double y, Font font) {
+    private void drawArrowIfSelected(int option, double y, Font font) {
         if (selectedOption == option) {
             gr.drawText("-", LABEL_COLOR, font, COL_ARROW, y);
             gr.drawText(">", LABEL_COLOR, font, COL_ARROW + 3, y);
