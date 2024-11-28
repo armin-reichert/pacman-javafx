@@ -411,24 +411,22 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     // drawing
 
-    private void updateScaling() {
-        double visibleHeight = viewPortHeightProperty().get();
+    private void updateScaling(double visibleHeight) {
         if (currentCamera == movingCamera) {
             setScaling(visibleHeight / NES_SIZE.y());
         } else {
-            double s = visibleHeight / (size().y() + 3 * TS);
-            setScaling(s);
-            int worldHeightTiles = context.game().level().isPresent()
-                ? context.level().world().map().terrain().numRows() : NES_TILES.y();
-            double dy = s * (0.5 * worldHeightTiles - 21.5) * TS;
+            int worldTilesY = context.game().level().map(level -> level.world().map().terrain().numRows()).orElse(NES_TILES.y());
+            double s = visibleHeight / (size().y() + 3 * TS); // TODO check this
+            double dy = s * (0.5 * worldTilesY - 21.5) * TS;
             fixedCamera.setTranslateY(dy);
+            setScaling(s);
         }
     }
 
     @Override
     public void draw() {
         var r = (MsPacManGameTengenRenderer) gr;
-        updateScaling();
+        updateScaling(viewPortHeightProperty().get());
         r.setScaling(scaling());
         r.clearCanvas();
         context.game().level().ifPresent(level -> {
@@ -442,11 +440,12 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     protected void drawSceneContent() {
+        var r = (MsPacManGameTengenRenderer) gr;
 
-        final var game = (MsPacManGameTengen) context.game();
-        final GameWorld world = context.level().world();
-        final Pac msPacMan = context.level().pac();
-        final var r = (MsPacManGameTengenRenderer) gr;
+        MsPacManGameTengen game = (MsPacManGameTengen) context.game();
+        GameLevel level = context.level();
+        GameWorld world = level.world();
+        Pac msPacMan = level.pac();
 
         if (context.isScoreVisible()) {
             r.drawScores(context);
@@ -457,7 +456,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             : messageCenterPosition
         );
 
-        r.setBlinking(context.level().blinking().isOn());
+        r.setBlinking(level.blinking().isOn());
         boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.isFlashing();
         if (flashing) {
             r.drawEmptyMap(world.map(), levelCompleteAnimation.currentColorMap());
@@ -466,7 +465,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         }
 
         r.drawAnimatedEntity(msPacMan);
-        ghostsInZOrder(context.level()).forEach(r::drawAnimatedEntity);
+        ghostsInZOrder(level).forEach(r::drawAnimatedEntity);
 
         int livesCounterEntries = game.lives() - 1;
         if (context.gameState() == GameState.STARTING_GAME && !msPacMan.isVisible()) {
@@ -474,12 +473,12 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             livesCounterEntries += 1;
         }
         r.drawLivesCounter(livesCounterEntries, 5, 2 * TS, size().y() - TS);
-        r.setLevelNumberBoxesVisible(!context.game().isDemoLevel() && game.mapCategory() != MapCategory.ARCADE);
+        r.setLevelNumberBoxesVisible(!game.isDemoLevel() && game.mapCategory() != MapCategory.ARCADE);
         r.drawLevelCounter(context, size().x() - 2 * TS, size().y() - TS);
 
         if (debugInfoVisiblePy.get()) {
             r.drawAnimatedCreatureInfo(msPacMan);
-            ghostsInZOrder(context.level()).forEach(r::drawAnimatedCreatureInfo);
+            ghostsInZOrder(level).forEach(r::drawAnimatedCreatureInfo);
             drawDebugInfo();
         }
     }
@@ -489,7 +488,8 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         gr.drawTileGrid(canvas.getWidth(), canvas.getHeight());
         gr.ctx().setFill(Color.YELLOW);
         gr.ctx().setFont(DEBUG_FONT);
-        gr.ctx().fillText("%s %d".formatted(context.gameState(), context.gameState().timer().tickCount()), 0, scaled(3 * TS));
+        GameState state = context().gameState();
+        gr.ctx().fillText("%s %d".formatted(state, state.timer().tickCount()), 0, scaled(3 * TS));
     }
 
     private Vector2f centerPosBelowHouse(GameWorld world) {
