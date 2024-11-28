@@ -37,7 +37,9 @@ import java.util.Map;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.Animations.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet.LEVEL_BOX_SPRITE;
+import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.NO_SPRITE;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.nesPaletteColor;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet.*;
 import static java.util.function.Predicate.not;
 
 /**
@@ -298,28 +300,18 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         if (level.message() != null) {
             String assetPrefix = assetPrefix(GameVariant.MS_PACMAN_TENGEN);
             float x = getMessageAnchorPosition().x(), y = getMessageAnchorPosition().y();
-            Color color = null;
-            String text = null;
             switch (level.message().type()) {
-                case READY -> {
-                    color = assets.color(assetPrefix + ".color.ready_message");
-                    text = "READY!";
-                }
+                case READY -> drawText("READY!", x, y, assets.color(assetPrefix + ".color.ready_message"));
                 case GAME_OVER -> {
+                    Color color = assets.color(assetPrefix + ".color.game_over_message");
                     if (demoLevel) {
-                        NES_ColorScheme nesColorScheme = (NES_ColorScheme) level.mapConfig().get("nesColorScheme");
+                        var nesColorScheme = (NES_ColorScheme) level.mapConfig().get("nesColorScheme");
                         color = Color.valueOf(nesColorScheme.strokeColor());
-                    } else {
-                        color = assets.color(assetPrefix + ".color.game_over_message");
                     }
-                    text = "GAME OVER";
+                    drawText("GAME OVER", x, y, color);
                 }
-                case TEST_LEVEL -> {
-                    color = MsPacManGameTengenSceneConfig.nesPaletteColor(0x28);
-                    text = "TEST L%02d".formatted(level.number);
-                }
+                case TEST_LEVEL -> drawText("TEST L%02d".formatted(level.number), x, y, nesPaletteColor(0x28));
             }
-            drawText(text, x, y, color);
         }
     }
 
@@ -338,38 +330,36 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         hideActorSprite(world.map().terrain().getTileProperty("pos_ghost_1_red", v2i(13, 14)));
     }
 
-    private void drawGameOptionsInfo(TileMap terrain, MsPacManGameTengen tengenGame) {
-        MapCategory category = tengenGame.mapCategory();
-        RectArea categorySprite = switch (category) {
-            case BIG     -> MsPacManGameTengenSpriteSheet.BIG_SPRITE;
-            case MINI    -> MsPacManGameTengenSpriteSheet.MINI_SPRITE;
-            case STRANGE -> MsPacManGameTengenSpriteSheet.STRANGE_SPRITE;
-            case ARCADE  -> MsPacManGameTengenSpriteSheet.NO_SPRITE;
+    private void drawGameOptionsInfo(TileMap terrain, MsPacManGameTengen game) {
+        RectArea categorySprite = switch (game.mapCategory()) {
+            case BIG     -> BIG_SPRITE;
+            case MINI    -> MINI_SPRITE;
+            case STRANGE -> STRANGE_SPRITE;
+            case ARCADE  -> NO_SPRITE;
         };
-        RectArea difficultySprite = switch (tengenGame.difficulty()) {
-            case EASY   -> MsPacManGameTengenSpriteSheet.EASY_SPRITE;
-            case HARD   -> MsPacManGameTengenSpriteSheet.HARD_SPRITE;
-            case CRAZY  -> MsPacManGameTengenSpriteSheet.CRAZY_SPRITE;
-            case NORMAL -> MsPacManGameTengenSpriteSheet.NO_SPRITE;
+        RectArea difficultySprite = switch (game.difficulty()) {
+            case EASY   -> EASY_SPRITE;
+            case HARD   -> HARD_SPRITE;
+            case CRAZY  -> CRAZY_SPRITE;
+            case NORMAL -> NO_SPRITE;
         };
         double centerX = terrain.numCols() * HTS;
         double y = t(2) + HTS;
-        if (tengenGame.pacBooster() != PacBooster.OFF) {
-            //TODO: always displayed when TOGGLE_USING_KEY is selected or only if booster is active?
-            drawSpriteCenteredOverPosition(MsPacManGameTengenSpriteSheet.BOOSTER_SPRITE, centerX - t(6), y);
+        if (game.pacBooster() != PacBooster.OFF) {
+            drawSpriteCenteredOverPosition(BOOSTER_SPRITE, centerX - t(6), y);
         }
         drawSpriteCenteredOverPosition(difficultySprite, centerX, y);
         drawSpriteCenteredOverPosition(categorySprite, centerX + t(4.5), y);
-        drawSpriteCenteredOverPosition(MsPacManGameTengenSpriteSheet.INFO_FRAME_SPRITE, centerX, y);
+        drawSpriteCenteredOverPosition(INFO_FRAME_SPRITE, centerX, y);
     }
 
     @Override
     public void drawScores(GameContext context) {
-        Color color = MsPacManGameTengenSceneConfig.nesPaletteColor(0x20);
+        Color color = nesPaletteColor(0x20);
         Font font = scaledArcadeFont(TS);
         if (context.gameClock().getTickCount() % 60 < 30) { drawText("1UP", color, font, t(2), t(1)); }
         drawText("HIGH SCORE", color, font, t(9), t(1));
-        drawText("%6d".formatted(context.game().scoreManager().score().points()),     color, font, 0,     t(2));
+        drawText("%6d".formatted(context.game().scoreManager().score().points()), color, font, 0, t(2));
         drawText("%6d".formatted(context.game().scoreManager().highScore().points()), color, font, t(11), t(2));
     }
 
@@ -407,7 +397,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     // Cycles through palette indices 0x01, 0x11, 0x21, 0x31, each frame takes 16 ticks.
     private Color shadeOfBlue(long tick) {
         int i = (int) (tick % 64) / 16;
-        return MsPacManGameTengenSceneConfig.nesPaletteColor(0x01 + 0x10 * i);
+        return nesPaletteColor(0x01 + 0x10 * i);
     }
 
     public void drawBar(Color outlineColor, Color barColor, double width, double y) {
