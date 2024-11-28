@@ -86,6 +86,7 @@ public abstract class GameScene2D implements GameScene {
     public void setCanvas(Canvas canvas) {
         this.canvas = canvas;
         gr = context.currentGameSceneConfig().createRenderer(canvas);
+        gr.clearCanvas();
         Logger.info("Game renderer created: {}", gr);
     }
 

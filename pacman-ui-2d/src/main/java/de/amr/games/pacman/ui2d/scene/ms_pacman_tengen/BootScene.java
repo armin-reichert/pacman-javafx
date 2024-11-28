@@ -46,13 +46,6 @@ public class BootScene extends GameScene2D {
     }
 
     @Override
-    public void setCanvas(Canvas canvas) {
-        super.setCanvas(canvas);
-        // avoid garbage inside canvas before restarting game
-        gr.clearCanvas();
-    }
-
-    @Override
     public void update() {
         t += 1;
         if (t == 0) {
