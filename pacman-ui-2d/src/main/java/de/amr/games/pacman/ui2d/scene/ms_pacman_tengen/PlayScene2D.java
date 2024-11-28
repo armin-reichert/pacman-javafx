@@ -59,8 +59,9 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengen
  */
 public class PlayScene2D extends GameScene2D implements CameraControlledGameScene {
 
-    private static final Vector2i CANVAS_SIZE = NES_SIZE.plus(0, 14 * TS);
-    private static final float CAM_SPEED = 0.03f;
+    // max space needed (NES screen width, BIG map height (42 tiles) + 2 extra tile rows)
+    private static final Vector2i CANVAS_SIZE = v2i(NES_SIZE.x(), 44 * TS);
+
     private static final int MOVING_MESSAGE_DELAY = 120;
     private static final Font DEBUG_FONT = Font.font("Sans", FontWeight.BOLD, 20);
 
@@ -78,6 +79,8 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     public static class FixedCamera extends ParallelCamera implements PlaySceneCamera {}
 
     public static class MovingCamera extends ParallelCamera implements PlaySceneCamera {
+        private static final float CAM_SPEED = 0.03f;
+
         private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
 
         private int idleTicks;
@@ -411,22 +414,26 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     // drawing
 
-    private void updateScaling(double visibleHeight) {
-        if (currentCamera == movingCamera) {
-            setScaling(visibleHeight / NES_SIZE.y());
-        } else {
-            int worldTilesY = context.game().level().map(level -> level.world().map().terrain().numRows()).orElse(NES_TILES.y());
-            double s = visibleHeight / (size().y() + 3 * TS); // TODO check this
-            double dy = s * (0.5 * worldTilesY - 21.5) * TS;
-            fixedCamera.setTranslateY(dy);
-            setScaling(s);
-        }
+    private double computeScaling() {
+        double unscaledHeight = currentCamera == movingCamera ? NES_SIZE.y() : (size().y() + 3 * TS);
+        return viewPortHeightProperty().get() / unscaledHeight;
+    }
+
+    private void updateCameraPosition(double scaling) {
+        int worldTilesY = context.game().level().map(level -> level.world().map().terrain().numRows()).orElse(NES_TILES.y());
+        double dy = scaling * (worldTilesY - 43) * HTS;
+        fixedCamera.setTranslateY(dy);
+
     }
 
     @Override
     public void draw() {
+        // do this here because it should be run also when game is paused
+        double s = computeScaling();
+        setScaling(s);
+        updateCameraPosition(s);
+
         var r = (MsPacManGameTengenRenderer) gr;
-        updateScaling(viewPortHeightProperty().get());
         r.setScaling(scaling());
         r.clearCanvas();
         context.game().level().ifPresent(level -> {
