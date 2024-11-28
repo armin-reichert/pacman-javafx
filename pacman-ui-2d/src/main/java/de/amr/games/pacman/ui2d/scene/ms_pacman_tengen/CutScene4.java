@@ -11,7 +11,6 @@ import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;

@@ -21,8 +21,6 @@ import de.amr.games.pacman.ui2d.scene.pacman_xxl.PacManGameXXLRenderer;
 import de.amr.games.pacman.ui2d.sound.GameSound;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
 import java.util.stream.Stream;

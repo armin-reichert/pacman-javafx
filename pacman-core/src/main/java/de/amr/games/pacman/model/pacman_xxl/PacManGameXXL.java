@@ -11,7 +11,6 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.model.pacman.PacManGame;
-import de.amr.games.pacman.steering.RouteBasedSteering;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 

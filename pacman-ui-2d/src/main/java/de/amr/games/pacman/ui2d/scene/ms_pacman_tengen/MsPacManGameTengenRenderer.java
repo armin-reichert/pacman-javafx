@@ -36,7 +36,6 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.RectArea.rect;
 import static de.amr.games.pacman.model.actors.Animations.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet.LEVEL_BOX_SPRITE;
@@ -52,45 +51,20 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     public static Map<String, Color> getColorMap(NES_ColorScheme ncs) {
         if (!COLOR_MAPS_BY_NES_SCHEME.containsKey(ncs)) {
             COLOR_MAPS_BY_NES_SCHEME.put(ncs, Map.of(
-                "fill",   Color.valueOf(ncs.fillColor()),
-                "stroke", Color.valueOf(ncs.strokeColor()),
-                "door",   Color.valueOf(ncs.strokeColor()),
-                "pellet", Color.valueOf(ncs.pelletColor())
+                    "fill",   Color.valueOf(ncs.fillColor()),
+                    "stroke", Color.valueOf(ncs.strokeColor()),
+                    "door",   Color.valueOf(ncs.strokeColor()),
+                    "pellet", Color.valueOf(ncs.pelletColor())
             ));
             Logger.info("Color map created for NES color scheme {}", ncs);
         }
         return COLOR_MAPS_BY_NES_SCHEME.get(ncs);
     }
 
-    // Strange map #15 (level 32) has 3 different images to create an animation effect
-    // Image file "non_arcade_mazes.png"
-    static final RectArea[] STRANGE_MAP_15_SPRITES = {
-        rect(1568,  840, 224, 248),
-        rect(1568, 1088, 224, 248),
-        rect(1568, 1336, 224, 248),
-    };
-
-    // Creates pattern (00000000 11111111 22222222 11111111)...
-    private static RectArea strangeMap15Sprite(long tick) {
-        int numFrames = 4, frameDuration = 8;
-        int index = (int) ((tick % (numFrames * frameDuration)) / frameDuration);
-        // (0, 1, 2, 3) -> (0, 1, 2, 1)
-        return STRANGE_MAP_15_SPRITES[index == 3 ? 1 : index];
-    }
-
-    // Strange map row counts as they appear in the sprite sheet
-    private static final byte[] STRANGE_MAPS_ROW_COUNTS = {
-        31, 31, 31, 31, 31, 31, 30, 31,
-        31, 37, 31, 31, 31, 37, 31, 25,
-        37, 31, 37, 37, 37, 37, 37, 31,
-        37, 37, 31, 25, 31, 25, 31, 31, 37,
-        25, 25, 25, 25,
-    };
-
     private final AssetStorage assets;
     private final MsPacManGameTengenSpriteSheet spriteSheet;
+    private final NonArcadeMaps nonArcadeMaps;
     private final Image arcadeMazeImages;
-    private final Image nonArcadeMazeImages;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
@@ -108,7 +82,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         this.canvas = checkNotNull(canvas);
 
         arcadeMazeImages = assets.image("tengen.mazes.arcade");
-        nonArcadeMazeImages = assets.image("tengen.mazes.non_arcade");
+        nonArcadeMaps = new NonArcadeMaps(assets);
         messageAnchorPosition = new Vector2f(14f * TS, 20 * TS);
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(bgColor);
@@ -121,9 +95,9 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         NES_ColorScheme nesColorScheme = (NES_ColorScheme) mapConfig.get("nesColorScheme");
         mapSprite = switch (category) {
             case ARCADE  -> arcadeMapSprite(mapConfig);
-            case MINI    -> miniMapSprite(mapConfig);
-            case BIG     -> bigMapSprite(mapConfig);
-            case STRANGE -> strangeMapSprite(mapConfig);
+            case MINI    -> nonArcadeMaps.miniMapSprite(mapConfig);
+            case BIG     -> nonArcadeMaps.bigMapSprite(mapConfig);
+            case STRANGE -> nonArcadeMaps.strangeMapSprite(mapConfig);
         };
 
         Map<String, Color> colorMap = getColorMap(nesColorScheme);
@@ -223,62 +197,6 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         return new ImageArea(arcadeMazeImages, new RectArea(col * width, row * height, width, height));
     }
 
-    private ImageArea miniMapSprite(Map<String, Object> mapConfig) {
-        int mapNumber = (int) mapConfig.get("mapNumber");
-        int spriteNumber = switch (mapNumber) {
-            case 1 -> 34;
-            case 2 -> 35;
-            case 3 -> 36;
-            case 4 -> 30;
-            case 5 -> 28;
-            case 6 -> 37;
-            default -> throw new IllegalArgumentException("Illegal MINI map number: " + mapNumber);
-        };
-        return nonArcadeMapSprite(spriteNumber);
-    }
-
-    private ImageArea bigMapSprite(Map<String, Object> mapConfig) {
-        int mapNumber = (int) mapConfig.get("mapNumber");
-        int spriteNumber = switch (mapNumber) {
-            case  1 -> 19;
-            case  2 -> 20;
-            case  3 -> 21;
-            case  4 -> 22;
-            case  5 -> 23;
-            case  6 -> 17;
-            case  7 -> 10;
-            case  8 -> 14;
-            case  9 -> 26;
-            case 10 -> 25;
-            case 11 -> 33;
-            default -> throw new IllegalArgumentException("Illegal BIG map number: " + mapNumber);
-        };
-        return nonArcadeMapSprite(spriteNumber);
-    }
-
-    private ImageArea strangeMapSprite(Map<String, Object> mapConfig) {
-        int levelNumber = (int) mapConfig.get("levelNumber");
-        return nonArcadeMapSprite(levelNumber);
-    }
-
-    /**
-     * @param spriteNumber number (1 based) of map sprite in sprite sheet (row-wise)
-     * @return map sprite in non-Arcade maps sprite sheet
-     */
-    private ImageArea nonArcadeMapSprite(int spriteNumber) {
-        int columnIndex, y;
-        switch (spriteNumber) {
-            case 1,2,3,4,5,6,7,8            -> { columnIndex = (spriteNumber - 1);  y = 0;    }
-            case 9,10,11,12,13,14,15,16     -> { columnIndex = (spriteNumber - 9);  y = 248;  }
-            case 17,18,19,20,21,22,23,24    -> { columnIndex = (spriteNumber - 17); y = 544;  }
-            case 25,26,27,28,29,30,31,32,33 -> { columnIndex = (spriteNumber - 25); y = 840;  }
-            case 34,35,36,37                -> { columnIndex = (spriteNumber - 34); y = 1136; }
-            default -> throw new IllegalArgumentException("Illegal non-Arcade map number: " + spriteNumber);
-        }
-        int width = 28 * TS, height = STRANGE_MAPS_ROW_COUNTS[spriteNumber - 1] * TS;
-        return new ImageArea(nonArcadeMazeImages, new RectArea(columnIndex * width, y, width, height));
-    }
-
     private boolean isMapImageAvailable(int levelNumber, MapCategory mapCategory) {
         return switch (mapCategory) {
             case ARCADE -> true; // all available in sprite sheet
@@ -375,7 +293,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         if (mapImageExists) {
             drawLevelMessage(level, game.isDemoLevel()); // message appears under map image so draw it first
             RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
-                ? strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
+                ? nonArcadeMaps.strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
                 : mapSprite.area();
             ctx().drawImage(mapSprite.source(),
                 area.x(), area.y(),
