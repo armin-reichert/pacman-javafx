@@ -17,7 +17,6 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
-import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.input.Keyboard;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
@@ -58,11 +57,11 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengen
 public class PlayScene2D extends GameScene2D implements CameraControlledGameScene {
 
     // (NES screen width, BIG map height (42 tiles) + 2 extra tile rows)
-    private static final Vector2i CANVAS_SIZE = v2i(NES_SIZE.x(), 44 * TS);
+    private static final Vector2i UNSCALED_CANVAS_SIZE = v2i(NES_SIZE.x(), 44 * TS);
 
     private static final int MOVING_MESSAGE_DELAY = 120;
 
-    public static class MovingCamera extends ParallelCamera {
+    private static class MovingCamera extends ParallelCamera {
         private static final float CAM_SPEED = 0.03f;
 
         private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
@@ -134,12 +133,10 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     private MessageMovement messageMovement;
     private LevelCompleteAnimationTengen levelCompleteAnimation;
 
-    private final GameAction actionSwitchCameras = this::switchCameras;
-
     public PlayScene2D() {
         canvas = new Canvas();
-        canvas.widthProperty().bind(scalingProperty().multiply(CANVAS_SIZE.x()));
-        canvas.heightProperty().bind(scalingProperty().multiply(CANVAS_SIZE.y()));
+        canvas.widthProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_SIZE.x()));
+        canvas.heightProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_SIZE.y()));
 
         // maze is drawn centered inside canvas: clip left and right vertical stripes (2 tiles wide each)
         var clip = new Rectangle();
@@ -182,7 +179,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public void bindGameActions() {
-        bind(actionSwitchCameras, Keyboard.alt(KeyCode.C));
+        bind(this::switchCameras, Keyboard.alt(KeyCode.C));
     }
 
     @Override
