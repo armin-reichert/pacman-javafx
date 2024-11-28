@@ -27,7 +27,6 @@ import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -64,7 +63,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     private final AssetStorage assets;
     private final MsPacManGameTengenSpriteSheet spriteSheet;
     private final NonArcadeMaps nonArcadeMaps;
-    private final Image arcadeMazeImages;
+    private final ArcadeMaps arcadeMaps;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
@@ -81,7 +80,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         this.spriteSheet = checkNotNull(spriteSheet);
         this.canvas = checkNotNull(canvas);
 
-        arcadeMazeImages = assets.image("tengen.mazes.arcade");
+        arcadeMaps = new ArcadeMaps(assets);
         nonArcadeMaps = new NonArcadeMaps(assets);
         messageAnchorPosition = new Vector2f(14f * TS, 20 * TS);
         terrainRenderer.scalingPy.bind(scalingPy);
@@ -94,7 +93,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         MapCategory category = (MapCategory) mapConfig.get("mapCategory");
         NES_ColorScheme nesColorScheme = (NES_ColorScheme) mapConfig.get("nesColorScheme");
         mapSprite = switch (category) {
-            case ARCADE  -> arcadeMapSprite(mapConfig);
+            case ARCADE  -> arcadeMaps.sprite(mapConfig);
             case MINI    -> nonArcadeMaps.miniMapSprite(mapConfig);
             case BIG     -> nonArcadeMaps.bigMapSprite(mapConfig);
             case STRANGE -> nonArcadeMaps.strangeMapSprite(mapConfig);
@@ -169,32 +168,6 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
 
     public void setLevelNumberBoxesVisible(boolean visible) {
         levelNumberBoxesVisible = visible;
-    }
-
-    private ImageArea arcadeMapSprite(Map<String, Object> mapConfig) {
-        int mapNumber = (int) mapConfig.get("mapNumber");
-        NES_ColorScheme colorScheme = (NES_ColorScheme) mapConfig.get("nesColorScheme");
-        int index = switch (mapNumber) {
-            case 1 -> 0;
-            case 2 -> 1;
-            case 3 -> switch (colorScheme) {
-                case _16_20_15_ORANGE_WHITE_RED   -> 2;
-                case _35_28_20_PINK_YELLOW_WHITE  -> 4;
-                case _17_20_20_BROWN_WHITE_WHITE  -> 6;
-                case _0F_20_28_BLACK_WHITE_YELLOW -> 8;
-                default -> throw new IllegalArgumentException("No image found for map #3 and color scheme: " + colorScheme);
-            };
-            case 4 -> switch (colorScheme) {
-                case _01_38_20_BLUE_YELLOW_WHITE   -> 3;
-                case _36_15_20_PINK_RED_WHITE      -> 5;
-                case _13_20_28_VIOLET_WHITE_YELLOW -> 7;
-                default -> throw new IllegalArgumentException("No image found for map #4 and color scheme: " + colorScheme);
-            };
-            default -> throw new IllegalArgumentException("Illegal Arcade map number: " + mapNumber);
-        };
-        int col = index % 3, row = index / 3;
-        int width = 28*8, height = 31*8;
-        return new ImageArea(arcadeMazeImages, new RectArea(col * width, row * height, width, height));
     }
 
     private boolean isMapImageAvailable(int levelNumber, MapCategory mapCategory) {

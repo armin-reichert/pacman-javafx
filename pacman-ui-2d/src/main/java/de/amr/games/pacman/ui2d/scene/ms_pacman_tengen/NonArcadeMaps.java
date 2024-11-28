@@ -4,6 +4,8 @@
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.scene.image.Image;
@@ -32,17 +34,17 @@ public class NonArcadeMaps {
             25, 25, 25, 25,
     };
 
-    private final Image nonArcadeMazeImages;
+    private final Image image;
 
     public NonArcadeMaps(AssetStorage assets) {
-        nonArcadeMazeImages = assets.image("tengen.mazes.non_arcade");
+        image = assets.image(GameAssets2D.assetPrefix(GameVariant.MS_PACMAN_TENGEN) + ".mazes.non_arcade");
     }
 
     /**
      * @param spriteNumber number (1 based) of map sprite in sprite sheet (row-wise)
      * @return map sprite in non-Arcade maps sprite sheet
      */
-    public ImageArea nonArcadeMapSprite(int spriteNumber) {
+    public ImageArea sprite(int spriteNumber) {
         int columnIndex, y;
         switch (spriteNumber) {
             case 1,2,3,4,5,6,7,8            -> { columnIndex = (spriteNumber - 1);  y = 0;    }
@@ -53,7 +55,7 @@ public class NonArcadeMaps {
             default -> throw new IllegalArgumentException("Illegal non-Arcade map number: " + spriteNumber);
         }
         int width = 28 * TS, height = STRANGE_MAPS_ROW_COUNTS[spriteNumber - 1] * TS;
-        return new ImageArea(nonArcadeMazeImages, new RectArea(columnIndex * width, y, width, height));
+        return new ImageArea(image, new RectArea(columnIndex * width, y, width, height));
     }
 
     // Creates pattern (00000000 11111111 22222222 11111111)...
@@ -75,7 +77,7 @@ public class NonArcadeMaps {
             case 6 -> 37;
             default -> throw new IllegalArgumentException("Illegal MINI map number: " + mapNumber);
         };
-        return nonArcadeMapSprite(spriteNumber);
+        return sprite(spriteNumber);
     }
 
     public ImageArea bigMapSprite(Map<String, Object> mapConfig) {
@@ -94,11 +96,11 @@ public class NonArcadeMaps {
             case 11 -> 33;
             default -> throw new IllegalArgumentException("Illegal BIG map number: " + mapNumber);
         };
-        return nonArcadeMapSprite(spriteNumber);
+        return sprite(spriteNumber);
     }
 
     public ImageArea strangeMapSprite(Map<String, Object> mapConfig) {
         int levelNumber = (int) mapConfig.get("levelNumber");
-        return nonArcadeMapSprite(levelNumber);
+        return sprite(levelNumber);
     }
 }
