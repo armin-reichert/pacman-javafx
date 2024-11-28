@@ -65,20 +65,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     private static final int MOVING_MESSAGE_DELAY = 120;
     private static final Font DEBUG_FONT = Font.font("Sans", FontWeight.BOLD, 20);
 
-    public interface PlaySceneCamera {
-        default Camera castFxCamera() { return (Camera) this; }
-        default void focusTopOfScene() {}
-        default void focusBottomOfScene() {}
-        default void focusPlayer(boolean focus) {}
-        default void setVerticalRangeTiles(int numTiles) {}
-        default void update(Pac pac) {}
-        default void setCameraToTopOfScene() {}
-        default void setIdleTicks(int ticks) {}
-    }
-
-    public static class FixedCamera extends ParallelCamera implements PlaySceneCamera {}
-
-    public static class MovingCamera extends ParallelCamera implements PlaySceneCamera {
+    public static class MovingCamera extends ParallelCamera {
         private static final float CAM_SPEED = 0.03f;
 
         private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
@@ -145,8 +132,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     private final SubScene fxSubScene;
     private final Canvas canvas;
     private final MovingCamera movingCamera;
-    private final FixedCamera fixedCamera;
-    private PlaySceneCamera currentCamera;
+    private final ParallelCamera fixedCamera;
 
     private MessageMovement messageMovement;
     private LevelCompleteAnimationTengen levelCompleteAnimation;
@@ -176,21 +162,13 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         movingCamera = new MovingCamera();
         movingCamera.scalingProperty().bind(scalingProperty());
 
-        fixedCamera = new FixedCamera();
-    }
-
-    private PlaySceneCamera currentCamera() {
-        return currentCamera;
-    }
-
-    private void setCurrentCamera(PlaySceneCamera currentCamera) {
-        this.currentCamera = currentCamera;
-        fxSubScene.setCamera(currentCamera.castFxCamera());
+        fixedCamera = new ParallelCamera();
+        fxSubScene.setCamera(fixedCamera);
     }
 
     private void switchCameras(GameContext context) {
         PY_TENGEN_FULL_SCENE_VIEW.set(!PY_TENGEN_FULL_SCENE_VIEW.get());
-        setCurrentCamera(PY_TENGEN_FULL_SCENE_VIEW.get() ? fixedCamera : movingCamera);
+        fxSubScene.setCamera(PY_TENGEN_FULL_SCENE_VIEW.get() ? fixedCamera : movingCamera);
     }
 
     @Override
@@ -205,9 +183,9 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         context.enableJoypad();
         context.setScoreVisible(true);
 
-        setCurrentCamera(PY_TENGEN_FULL_SCENE_VIEW.get() ? fixedCamera : movingCamera);
-        currentCamera().focusTopOfScene();
-        PY_TENGEN_FULL_SCENE_VIEW.addListener((py,ov,nv) -> setCurrentCamera(nv ? fixedCamera : movingCamera));
+        fxSubScene.setCamera(PY_TENGEN_FULL_SCENE_VIEW.get() ? fixedCamera : movingCamera);
+        movingCamera.focusTopOfScene();
+        PY_TENGEN_FULL_SCENE_VIEW.addListener((py,ov,nv) -> fxSubScene.setCamera(nv ? fixedCamera : movingCamera));
     }
 
     @Override
@@ -232,13 +210,13 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             if (context.gameState() == GameState.LEVEL_COMPLETE) {
                 levelCompleteAnimation.update();
             }
-            //TODO hack: in case we are switching from 3D scene, focusPlayer might be false even if it should be true
-            if (context.gameState() == GameState.HUNTING) {
-                currentCamera().focusPlayer(true);
+            if (fxSubScene.getCamera() == movingCamera) {
+                if (context.gameState() == GameState.HUNTING) {
+                    movingCamera.focusPlayer(true);
+                }
+                movingCamera.setVerticalRangeTiles(level.world().map().terrain().numRows());
+                movingCamera.update(level.pac());
             }
-            // do it on every update because on level creation/start the 3D scene might have been active
-            currentCamera().setVerticalRangeTiles(level.world().map().terrain().numRows());
-            currentCamera().update(level.pac());
         });
     }
 
@@ -293,9 +271,9 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public void onLevelStarted(GameEvent e) {
-        currentCamera().setCameraToTopOfScene();
-        currentCamera().focusBottomOfScene();
-        currentCamera().setIdleTicks(90);
+        movingCamera.setCameraToTopOfScene();
+        movingCamera.focusBottomOfScene();
+        movingCamera.setIdleTicks(90);
     }
 
     @Override
@@ -319,7 +297,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     @Override
     public void onEnterGameState(GameState state) {
         switch (state) {
-            case HUNTING -> currentCamera().focusPlayer(true);
+            case HUNTING -> movingCamera.focusPlayer(true);
             case LEVEL_COMPLETE -> {
                 levelCompleteAnimation = new LevelCompleteAnimationTengen(
                     context.level().mapConfig(), context.level().numFlashes(), 10);
@@ -334,7 +312,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
                     float belowHouse = centerPosBelowHouse(context.level().world()).x();
                     messageMovement.start(MOVING_MESSAGE_DELAY, belowHouse, size().x());
                 }
-                currentCamera().focusTopOfScene();
+                movingCamera.focusTopOfScene();
             }
             default -> {}
         }
@@ -368,7 +346,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public void onPacDead(GameEvent e) {
-        currentCamera().focusTopOfScene();
+        movingCamera.focusTopOfScene();
     }
 
     @Override
@@ -415,7 +393,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     // drawing
 
     private double computeScaling() {
-        double unscaledHeight = currentCamera == movingCamera ? NES_SIZE.y() : (size().y() + 3 * TS);
+        double unscaledHeight = fxSubScene.getCamera() == movingCamera ? NES_SIZE.y() : (size().y() + 3 * TS);
         return viewPortHeightProperty().get() / unscaledHeight;
     }
 
