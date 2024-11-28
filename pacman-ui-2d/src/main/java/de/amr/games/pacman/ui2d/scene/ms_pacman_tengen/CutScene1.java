@@ -68,7 +68,7 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public void doInit() {
-        t = 0;
+        t = -1;
         context.setScoreVisible(false);
 
         mrPacMan = new Pac();
@@ -94,6 +94,7 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public void update() {
+        t += 1;
         if (t == 0) {
             clapAnimation = new ClapperboardAnimation();
             clapAnimation.start();
@@ -206,7 +207,6 @@ public class CutScene1 extends GameScene2D {
         }
 
         clapAnimation.tick();
-        ++t;
     }
 
     @Override

@@ -47,7 +47,7 @@ public class CutScene4 extends GameScene2D {
 
     @Override
     protected void doInit() {
-        t = 0;
+        t = -1;
 
         context.setScoreVisible(false);
 
@@ -71,6 +71,7 @@ public class CutScene4 extends GameScene2D {
 
     @Override
     public void update() {
+        t += 1;
         if (t == 0) {
             clapAnimation = new ClapperboardAnimation();
             clapAnimation.start();
@@ -140,7 +141,6 @@ public class CutScene4 extends GameScene2D {
             updateJunior(i);
         }
         clapAnimation.tick();
-        ++t;
     }
 
     private boolean isJuniorSpawnTime() {
