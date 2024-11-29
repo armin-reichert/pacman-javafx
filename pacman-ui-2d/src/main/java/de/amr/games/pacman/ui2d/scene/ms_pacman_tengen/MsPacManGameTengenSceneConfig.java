@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.PacManGames2dApp;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
@@ -44,6 +45,10 @@ public class MsPacManGameTengenSceneConfig implements GameSceneConfig {
         set("CutScene2",      new CutScene2());
         set("CutScene3",      new CutScene3());
         set("CutScene4",      new CutScene4());
+
+        //TODO where is the best place to do that?
+        PlayScene2D playScene2D = (PlayScene2D) get("PlayScene2D");
+        playScene2D.displayModeProperty().bind(PacManGames2dApp.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE);
     }
 
     public static Color nesPaletteColor(int index) {

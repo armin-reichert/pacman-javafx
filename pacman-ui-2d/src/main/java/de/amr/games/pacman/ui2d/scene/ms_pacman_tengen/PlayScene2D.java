@@ -17,14 +17,15 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
-import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.input.Keyboard;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.sound.GameSound;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Camera;
 import javafx.scene.Node;
 import javafx.scene.ParallelCamera;
@@ -44,7 +45,8 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.ui2d.GameActions2D.bindCheatActions;
 import static de.amr.games.pacman.ui2d.GameActions2D.bindFallbackPlayerControlActions;
-import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenActions.QUIT_DEMO_LEVEL;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenActions.setDefaultJoypadBinding;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.*;
@@ -129,6 +131,13 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     private final Canvas canvas;
     private final MovingCamera movingCamera;
     private final ParallelCamera fixedCamera;
+    private final ObjectProperty<SceneDisplayMode> displayModePy = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING) {
+        @Override
+        protected void invalidated() {
+            SceneDisplayMode mode = get();
+            fxSubScene.setCamera(mode == SceneDisplayMode.SCROLLING ? movingCamera : fixedCamera);
+        }
+    };
 
     private MessageMovement messageMovement;
     private LevelCompleteAnimationTengen levelCompleteAnimation;
@@ -160,9 +169,8 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         fxSubScene.setCamera(fixedCamera);
     }
 
-    private void switchCameras(GameContext context) {
-        PY_TENGEN_FULL_SCENE_VIEW.set(!PY_TENGEN_FULL_SCENE_VIEW.get());
-        fxSubScene.setCamera(PY_TENGEN_FULL_SCENE_VIEW.get() ? fixedCamera : movingCamera);
+    public ObjectProperty<SceneDisplayMode> displayModeProperty() {
+        return displayModePy;
     }
 
     private void updateScaling() {
@@ -179,7 +187,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public void bindGameActions() {
-        bind(this::switchCameras, Keyboard.alt(KeyCode.C));
+        bind(MsPacManGameTengenActions.TOGGLE_DISPLAY_MODE, Keyboard.alt(KeyCode.C));
     }
 
     @Override
@@ -188,10 +196,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         messageMovement = new MessageMovement();
         context.enableJoypad();
         context.setScoreVisible(true);
-
-        fxSubScene.setCamera(PY_TENGEN_FULL_SCENE_VIEW.get() ? fixedCamera : movingCamera);
         movingCamera.focusTopOfScene();
-        PY_TENGEN_FULL_SCENE_VIEW.addListener((py,ov,nv) -> fxSubScene.setCamera(nv ? fixedCamera : movingCamera));
     }
 
     @Override
@@ -202,12 +207,11 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
 
     @Override
     public void update() {
-        var game = (MsPacManGameTengen) context.game();
-        game.level().ifPresent(level -> {
-            if (game.isDemoLevel()) {
-                game.setDemoLevelBehavior();
+        context.game().level().ifPresent(level -> {
+            if (context.game().isDemoLevel()) {
+                context.game().setDemoLevelBehavior();
             }
-            else { // TODO: add/remove listener to global properties instead?
+            else {
                 level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
                 level.pac().setImmune(PY_IMMUNITY.get());
                 messageMovement.update();

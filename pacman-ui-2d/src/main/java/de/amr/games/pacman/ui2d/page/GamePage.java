@@ -16,6 +16,7 @@ import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.SceneDisplayMode;
 import de.amr.games.pacman.ui2d.util.TooFancyGameCanvasContainer;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.ObjectProperty;
@@ -228,10 +229,27 @@ public class GamePage extends StackPane implements GameActionProvider {
 
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             contextMenu.getItems().add(contextMenuTitleItem(context.locText("scene_display")));
+            // Switching scene display mode
+            var miScaledToFit = new RadioMenuItem(context.locText("scaled_to_fit"));
+            miScaledToFit.selectedProperty().addListener(
+                (py,ov,nv) -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCALED_TO_FIT:SceneDisplayMode.SCROLLING));
+            PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py,ov,nv) -> miScaledToFit.setSelected(nv == SceneDisplayMode.SCALED_TO_FIT));
+            contextMenu.getItems().add(miScaledToFit);
 
-            var miFullSceneView = new RadioMenuItem(context.locText("scaled_to_fit"));
-            miFullSceneView.selectedProperty().bindBidirectional(PY_TENGEN_FULL_SCENE_VIEW);
-            contextMenu.getItems().add(miFullSceneView);
+            var miScrolling = new RadioMenuItem(context.locText("scrolling"));
+            miScrolling.selectedProperty().addListener(
+                (py,ov,nv) -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCROLLING:SceneDisplayMode.SCALED_TO_FIT));
+            PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py,ov,nv) -> miScrolling.setSelected(nv == SceneDisplayMode.SCROLLING));
+            contextMenu.getItems().add(miScrolling);
+
+            ToggleGroup exclusion = new ToggleGroup();
+            miScaledToFit.setToggleGroup(exclusion);
+            miScrolling.setToggleGroup(exclusion);
+            if (PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get() == SceneDisplayMode.SCALED_TO_FIT) {
+                miScaledToFit.setSelected(true);
+            } else {
+                miScrolling.setSelected(true);
+            }
         }
         contextMenu.getItems().add(contextMenuTitleItem(context.locText("pacman")));
 

@@ -8,12 +8,11 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.model.ms_pacman_tengen.PacBooster;
-import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.GameActionProvider;
-import de.amr.games.pacman.ui2d.GameActions2D;
-import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.*;
 import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import org.tinylog.Logger;
+
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
 
 public enum MsPacManGameTengenActions implements GameAction {
 
@@ -24,16 +23,6 @@ public enum MsPacManGameTengenActions implements GameAction {
             context.nextJoypadKeys();
             context.enableJoypad();
             Logger.info("Selected joypad: {} ", context.joypadKeys());
-        }
-    },
-
-    TOGGLE_PAC_BOOSTER {
-        @Override
-        public void execute(GameContext context) {
-            MsPacManGameTengen game = (MsPacManGameTengen) context.game();
-            if (game.pacBooster() == PacBooster.USE_A_OR_B) {
-                game.activatePacBooster(!game.isBoosterActive());
-            }
         }
     },
 
@@ -60,6 +49,25 @@ public enum MsPacManGameTengenActions implements GameAction {
             context.sound().stopAll();
             context.game().setPlaying(false);
             context.gameController().changeState(GameState.STARTING_GAME);
+        }
+    },
+
+    TOGGLE_DISPLAY_MODE {
+        @Override
+        public void execute(GameContext context) {
+            SceneDisplayMode mode = PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get();
+            PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(mode == SceneDisplayMode.SCROLLING
+                ? SceneDisplayMode.SCALED_TO_FIT : SceneDisplayMode.SCROLLING);
+        }
+    },
+
+    TOGGLE_PAC_BOOSTER {
+        @Override
+        public void execute(GameContext context) {
+            MsPacManGameTengen game = (MsPacManGameTengen) context.game();
+            if (game.pacBooster() == PacBooster.USE_A_OR_B) {
+                game.activatePacBooster(!game.isBoosterActive());
+            }
         }
     };
 

@@ -9,6 +9,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.pacman_xxl.MapSelectionMode;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSceneConfig;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig;
+import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.SceneDisplayMode;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGameSceneConfig;
 import de.amr.games.pacman.ui2d.scene.pacman_xxl.PacManGameXXLSceneConfig;
 import de.amr.games.pacman.ui2d.util.NightMode;
@@ -44,7 +45,8 @@ public class PacManGames2dApp extends Application {
     public static final BooleanProperty PY_PIP_ON                     = new SimpleBooleanProperty(false);
     public static final IntegerProperty PY_PIP_OPACITY_PERCENT        = new SimpleIntegerProperty(100);
     public static final IntegerProperty PY_SIMULATION_STEPS           = new SimpleIntegerProperty(1);
-    public static final BooleanProperty PY_TENGEN_FULL_SCENE_VIEW     = new SimpleBooleanProperty(false);
+
+    public static final ObjectProperty<SceneDisplayMode> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
 
     private static Dimension2D initialSize() {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
