@@ -9,6 +9,7 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.binding.Bindings;
@@ -31,21 +32,15 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 public class PictureInPictureView extends VBox implements GameEventListener {
 
     private final Canvas canvas = new Canvas();
-    private final PlayScene2D playScene2D;
+    private final GameScene2D scene2D;
 
     public PictureInPictureView(GameContext context) {
         canvas.heightProperty().bind(PY_PIP_HEIGHT);
         canvas.heightProperty().addListener((py,ov,nv) -> recomputeLayout());
 
-        //TODO this is crap
-        playScene2D = new PlayScene2D() {
-            @Override
-            public Vector2f size() {
-            return context.gameVariant() != GameVariant.MS_PACMAN_TENGEN ? super.size() : super.size().plus(0, 2 * TS);
-            }
-        };
-        playScene2D.setGameContext(context);
-        playScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
+        scene2D = new PlayScene2D();
+        scene2D.setGameContext(context);
+        scene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
 
         getChildren().add(canvas);
 
@@ -66,21 +61,21 @@ public class PictureInPictureView extends VBox implements GameEventListener {
     @Override
     public void onLevelCreated(GameEvent e) {
         recomputeLayout();
-        playScene2D.setCanvas(canvas);
+        scene2D.setCanvas(canvas);
     }
 
     public void draw() {
         if (isVisible()) {
-            playScene2D.draw();
+            scene2D.draw();
         }
     }
 
     private void recomputeLayout() {
-        Vector2f sceneSize = playScene2D.size();
+        Vector2f sceneSize = scene2D.size();
         double canvasHeight = canvas.getHeight();
         double aspectRatio = sceneSize.x() / sceneSize.y();
         canvas.setWidth(aspectRatio * canvasHeight);
-        playScene2D.setScaling(canvasHeight / sceneSize.y());
+        scene2D.setScaling(canvasHeight / sceneSize.y());
         layout();
         Logger.debug("Layout recomputed, w={0.00} h={0.00} aspect={0.00}, scene size (px)={}",
             getWidth(), getHeight(), aspectRatio, sceneSize);
