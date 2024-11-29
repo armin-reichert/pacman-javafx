@@ -20,7 +20,6 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameRenderer;
-import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenRenderer;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui2d.sound.GameSound;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
@@ -243,7 +242,15 @@ public class GameLevel3D {
             case PACMAN           -> PacManGameRenderer.COLOR_MAP;
             case PACMAN_XXL       -> GameRenderer.toColorMap((Map<String, String>) mapConfig.get("colorMap"));
             case MS_PACMAN        -> MsPacManGameRenderer.COLOR_MAPS.get((int) mapConfig.get("colorMapIndex"));
-            case MS_PACMAN_TENGEN -> MsPacManGameTengenRenderer.getColorMap((NES_ColorScheme) mapConfig.get("nesColorScheme"));
+            case MS_PACMAN_TENGEN -> {
+                NES_ColorScheme ncs = (NES_ColorScheme) mapConfig.get("nesColorScheme");
+                yield Map.of(
+                    "fill", Color.valueOf(ncs.fillColor()),
+                    "stroke", Color.valueOf(ncs.strokeColor()),
+                    "door", Color.valueOf(ncs.strokeColor()),
+                    "pellet", Color.valueOf(ncs.pelletColor())
+                );
+            }
         };
     }
 
