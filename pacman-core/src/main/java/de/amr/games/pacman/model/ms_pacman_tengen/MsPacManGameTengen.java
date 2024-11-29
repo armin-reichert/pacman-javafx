@@ -197,7 +197,6 @@ public class MsPacManGameTengen extends GameModel {
             This was most likely done to simulate the Arcade game only giving one extra life per game.
             */
             scoreManager.setExtraLifeScores(10_000, 970_000, 980_000, 990_000);
-             */
         } else {
             scoreManager.setExtraLifeScores(10_000, 50_000, 100_000, 300_000);
         }
