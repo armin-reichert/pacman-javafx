@@ -46,23 +46,6 @@ import static java.util.function.Predicate.not;
  */
 public class MsPacManGameTengenRenderer implements GameRenderer {
 
-/*
-    private static final Map<NES_ColorScheme, Map<String, Color>> COLOR_MAPS_BY_NES_SCHEME = new EnumMap<>(NES_ColorScheme.class);
-
-    public static Map<String, Color> getColorMap(NES_ColorScheme ncs) {
-        if (!COLOR_MAPS_BY_NES_SCHEME.containsKey(ncs)) {
-            COLOR_MAPS_BY_NES_SCHEME.put(ncs, Map.of(
-                "fill",   Color.valueOf(ncs.fillColor()),
-                "stroke", Color.valueOf(ncs.strokeColor()),
-                "door",   Color.valueOf(ncs.strokeColor()),
-                "pellet", Color.valueOf(ncs.pelletColor())
-            ));
-            Logger.info("Color map created for NES color scheme {}", ncs);
-        }
-        return COLOR_MAPS_BY_NES_SCHEME.get(ncs);
-    }
-*/
-
     private final AssetStorage assets;
     private final MsPacManGameTengenSpriteSheet spriteSheet;
     private final NonArcadeMaps nonArcadeMaps;
