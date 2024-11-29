@@ -173,7 +173,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         return displayModePy;
     }
 
-    private void updateScaling() {
+    protected void updateScaling() {
         double unscaledHeight = fxSubScene.getCamera() == movingCamera ? NES_SIZE.y() : (size().y() + 3 * TS);
         setScaling(viewPortHeightProperty().get() / unscaledHeight);
     }
@@ -433,10 +433,14 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             r.drawScores(context);
         }
         Vector2f messageCenterPosition = centerPosBelowHouse(world);
-        r.setMessageAnchorPosition(messageMovement.isRunning()
-            ? new Vector2f(messageMovement.currentX(), messageCenterPosition.y())
-            : messageCenterPosition
-        );
+        if (messageMovement != null) {
+            r.setMessageAnchorPosition(messageMovement.isRunning()
+                    ? new Vector2f(messageMovement.currentX(), messageCenterPosition.y())
+                    : messageCenterPosition
+            );
+        } else {
+            r.setMessageAnchorPosition(messageCenterPosition);
+        }
 
         r.setBlinking(level.blinking().isOn());
         boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.isFlashing();

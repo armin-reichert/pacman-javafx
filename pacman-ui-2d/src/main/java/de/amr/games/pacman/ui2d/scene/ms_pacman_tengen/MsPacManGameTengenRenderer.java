@@ -70,7 +70,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
 
         arcadeMaps = new ArcadeMaps(assets);
         nonArcadeMaps = new NonArcadeMaps(assets);
-        messageAnchorPosition = new Vector2f(14f * TS, 20 * TS);
+        messageAnchorPosition = new Vector2f(14f * TS, 21 * TS);
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(bgColor);
         foodRenderer.scalingPy.bind(scalingPy);
