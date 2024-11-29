@@ -19,27 +19,15 @@ import java.util.Map;
  */
 public class LevelCompleteAnimationTengen extends LevelCompleteAnimation {
 
-    private static final Map<String, Color> BLACK_WHITE_COLOR_MAP = Map.of(
-        "fill",   Color.valueOf(NES.Palette.color(0x0f)),
-        "stroke", Color.valueOf(NES.Palette.color(0x20)),
-        "door",   Color.valueOf(NES.Palette.color(0x0f)),
-        "food",   Color.valueOf(NES.Palette.color(0x0f))
-    );
-
-    private final List<Map<String, Color>> colorMaps = new ArrayList<>();
+    private final List<NES_ColorScheme> colorSchemes = new ArrayList<>();
 
     public LevelCompleteAnimationTengen(Map<String, Object> mapConfig, int numFlashes, int highlightPhaseDuration) {
         super(numFlashes, highlightPhaseDuration);
         var nesColorScheme = (NES_ColorScheme) mapConfig.get("nesColorScheme");
         var randomColorScheme = (boolean) mapConfig.get("randomColorScheme");
-        List<NES_ColorScheme> schemes = new ArrayList<>();
         for (int i = 0; i < numFlashes; ++i) {
-            NES_ColorScheme previous = i > 0 ? schemes.get(i-1) : null;
-            schemes.add(randomColorScheme ? chooseRandomColorScheme(previous) : nesColorScheme);
-        }
-        colorMaps.clear();
-        for (var scheme : schemes) {
-            colorMaps.add(MsPacManGameTengenRenderer.getColorMap(scheme));
+            NES_ColorScheme previous = i > 0 ? colorSchemes.get(i-1) : null;
+            colorSchemes.add(randomColorScheme ? chooseRandomColorScheme(previous) : nesColorScheme);
         }
     }
 
@@ -52,7 +40,11 @@ public class LevelCompleteAnimationTengen extends LevelCompleteAnimation {
         return nesColorScheme;
     }
 
-    public Map<String, Color> currentColorMap() {
-        return isInHighlightPhase() ? BLACK_WHITE_COLOR_MAP : colorMaps.get(flashingIndex());
+    public Color currentFillColor() {
+        return Color.valueOf(isInHighlightPhase() ? NES.Palette.color(0x0f) : colorSchemes.get(flashingIndex()).fillColor());
+    }
+
+    public Color currentStrokeColor() {
+        return Color.valueOf(isInHighlightPhase() ? NES.Palette.color(0x20) : colorSchemes.get(flashingIndex()).strokeColor());
     }
 }

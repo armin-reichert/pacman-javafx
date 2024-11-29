@@ -31,7 +31,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
-import java.util.EnumMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -47,20 +46,22 @@ import static java.util.function.Predicate.not;
  */
 public class MsPacManGameTengenRenderer implements GameRenderer {
 
+/*
     private static final Map<NES_ColorScheme, Map<String, Color>> COLOR_MAPS_BY_NES_SCHEME = new EnumMap<>(NES_ColorScheme.class);
 
     public static Map<String, Color> getColorMap(NES_ColorScheme ncs) {
         if (!COLOR_MAPS_BY_NES_SCHEME.containsKey(ncs)) {
             COLOR_MAPS_BY_NES_SCHEME.put(ncs, Map.of(
-                    "fill",   Color.valueOf(ncs.fillColor()),
-                    "stroke", Color.valueOf(ncs.strokeColor()),
-                    "door",   Color.valueOf(ncs.strokeColor()),
-                    "pellet", Color.valueOf(ncs.pelletColor())
+                "fill",   Color.valueOf(ncs.fillColor()),
+                "stroke", Color.valueOf(ncs.strokeColor()),
+                "door",   Color.valueOf(ncs.strokeColor()),
+                "pellet", Color.valueOf(ncs.pelletColor())
             ));
             Logger.info("Color map created for NES color scheme {}", ncs);
         }
         return COLOR_MAPS_BY_NES_SCHEME.get(ncs);
     }
+*/
 
     private final AssetStorage assets;
     private final MsPacManGameTengenSpriteSheet spriteSheet;
@@ -101,14 +102,13 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             case STRANGE -> nonArcadeMaps.strangeMapSprite(mapConfig);
         };
 
-        Map<String, Color> colorMap = getColorMap(nesColorScheme);
         terrainRenderer.setMapBackgroundColor(bgColor);
-        terrainRenderer.setWallStrokeColor(colorMap.get("stroke"));
-        terrainRenderer.setWallFillColor(colorMap.get("fill"));
-        terrainRenderer.setDoorColor(colorMap.get("door"));
+        terrainRenderer.setWallStrokeColor(Color.valueOf(nesColorScheme.strokeColor()));
+        terrainRenderer.setWallFillColor(Color.valueOf(nesColorScheme.fillColor()));
+        terrainRenderer.setDoorColor(Color.valueOf(nesColorScheme.strokeColor()));
 
-        foodRenderer.setPelletColor(colorMap.get("pellet"));
-        foodRenderer.setEnergizerColor(colorMap.get("pellet"));
+        foodRenderer.setPelletColor(Color.valueOf(nesColorScheme.pelletColor()));
+        foodRenderer.setEnergizerColor(Color.valueOf(nesColorScheme.pelletColor()));
     }
 
     @Override
@@ -238,11 +238,11 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         ctx().strokeLine(canvas.getWidth() - 0.5, 0, canvas.getWidth() - 0.5, canvas.getHeight());
     }
 
-    public void drawEmptyMap(WorldMap worldMap, Map<String, Color> colorMap) {
+    public void drawEmptyMap(WorldMap worldMap, Color fillColor, Color strokeColor) {
         terrainRenderer.setMapBackgroundColor(bgColor);
-        terrainRenderer.setWallStrokeColor(colorMap.get("stroke"));
-        terrainRenderer.setWallFillColor(colorMap.get("fill"));
-        terrainRenderer.setDoorColor(colorMap.get("door"));
+        terrainRenderer.setWallFillColor(fillColor);
+        terrainRenderer.setWallStrokeColor(strokeColor);
+        terrainRenderer.setDoorColor(strokeColor);
         terrainRenderer.drawMap(ctx(), worldMap.terrain());
     }
 

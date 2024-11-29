@@ -441,7 +441,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         r.setBlinking(level.blinking().isOn());
         boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.isFlashing();
         if (flashing) {
-            r.drawEmptyMap(world.map(), levelCompleteAnimation.currentColorMap());
+            r.drawEmptyMap(world.map(), levelCompleteAnimation.currentFillColor(), levelCompleteAnimation.currentStrokeColor());
         } else {
             r.drawWorld(context, world, 0,  3 * TS);
         }
