@@ -19,7 +19,6 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.ms_pacman_tengen.*;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.input.JoypadBindings;
 import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -176,13 +175,10 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
                 SpriteAnimation spriteAnimation = spriteAnimations.currentAnimation();
                 if (spriteAnimation != null) {
                     switch (animations.currentAnimationID()) {
-                        case Animations.ANIM_PAC_MUNCHING,
-                             ANIM_MS_PACMAN_BOOSTER,
-                             ANIM_MR_PACMAN_MUNCHING,
-                             ANIM_MR_PACMAN_BOOSTER,
-                             ANIM_JUNIOR_PACMAN
-                                -> drawGuyHeading(pac, pac.moveDir(), spriteAnimation);
-                        case Animations.ANIM_PAC_DYING -> {
+                        case ANIM_PAC_MUNCHING, ANIM_MS_PACMAN_BOOSTER,
+                             ANIM_MR_PACMAN_MUNCHING, ANIM_MR_PACMAN_BOOSTER,
+                             ANIM_JUNIOR_PACMAN -> drawGuyHeading(pac, pac.moveDir(), spriteAnimation);
+                        case ANIM_PAC_DYING -> {
                             Direction dir = Direction.UP;
                             if (spriteAnimation.frameIndex() < 11) {
                                 dir = switch (spriteAnimation.frameIndex() % 4) {
