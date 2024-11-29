@@ -17,6 +17,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.ui2d.GameActions2D;
+import de.amr.games.pacman.ui2d.PacManGames2dApp;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -27,6 +28,7 @@ import java.util.BitSet;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.actors.Animations.ANIM_GHOST_NORMAL;
 import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenActions.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_SIZE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.nesPaletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
@@ -66,6 +68,7 @@ public class IntroScene extends GameScene2D {
     @Override
     public void bindGameActions() {
         bind(GameActions2D.START_GAME, context.joypadKeys().key(NES.JoypadButton.BTN_START));
+        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, context.joypadKeys().key(NES.JoypadButton.BTN_SELECT));
     }
 
     @Override
@@ -134,6 +137,10 @@ public class IntroScene extends GameScene2D {
                 for (Ghost ghost : ghosts) { r.drawAnimatedEntity(ghost); }
                 r.drawAnimatedEntity(msPacMan);
             }
+        }
+
+        if (PacManGames2dApp.PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED.get()) {
+            r.drawJoypadBindings(context.joypadKeys());
         }
     }
 

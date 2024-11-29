@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
@@ -18,6 +19,8 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.ms_pacman_tengen.*;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.input.JoypadBindings;
+import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.ImageArea;
@@ -444,6 +447,26 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             ctx().setFill(bgColor);
             ctx().fillRect(scaled(pos.x() - 1), scaled(pos.y() + 7), scaled(9), scaled(9));
         }
+    }
+
+    public void drawJoypadBindings(JoypadKeyBinding binding) {
+        String line1 = " [SELECT]=%s   [START]=%s   [BUTTON B]=%s   [BUTTON A]=%s";
+        String line2 = " [UP]=%s   [DOWN]=%s   [LEFT]=%s   [RIGHT]=%s";
+        ctx().setFont(Font.font("Sans", scaled(TS)));
+        ctx().setStroke(Color.WHITE);
+        ctx().strokeText(line1.formatted(
+            binding.key(NES.JoypadButton.BTN_SELECT),
+            binding.key(NES.JoypadButton.BTN_START),
+            binding.key(NES.JoypadButton.BTN_B),
+            binding.key(NES.JoypadButton.BTN_A)
+        ), 0, scaled(1*TS));
+        ctx().strokeText(line2.formatted(
+                binding.key(NES.JoypadButton.BTN_UP),
+                binding.key(NES.JoypadButton.BTN_DOWN),
+                binding.key(NES.JoypadButton.BTN_LEFT),
+                binding.key(NES.JoypadButton.BTN_RIGHT)
+        ), 0, scaled(2*TS));
+
     }
 
     private void hideActorSprite(Vector2i tile) {

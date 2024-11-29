@@ -12,7 +12,9 @@ import de.amr.games.pacman.ui2d.*;
 import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import org.tinylog.Logger;
 
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
+import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 
 public enum MsPacManGameTengenActions implements GameAction {
 
@@ -58,6 +60,13 @@ public enum MsPacManGameTengenActions implements GameAction {
             SceneDisplayMode mode = PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get();
             PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(mode == SceneDisplayMode.SCROLLING
                 ? SceneDisplayMode.SCALED_TO_FIT : SceneDisplayMode.SCROLLING);
+        }
+    },
+
+    TOGGLE_JOYPAD_BINDINGS_DISPLAYED {
+        @Override
+        public void execute(GameContext context) {
+            toggle(PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED);
         }
     },
 
