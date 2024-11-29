@@ -270,7 +270,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         else { // when score is disabled, show text "game over"
             Color color = context.assets().color(assetPrefix(context.gameVariant()) + ".color.game_over_message");
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                var nesColorScheme = (NES_ColorScheme) context.level().mapConfig().get("newColorScheme");
+                var nesColorScheme = (NES_ColorScheme) context.level().mapConfig().get("nesColorScheme");
                 color = Color.valueOf(nesColorScheme.fillColor());
             }
             scores3D.showTextAsScore(GAME_OVER_TEXT, color);
