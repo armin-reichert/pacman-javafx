@@ -132,7 +132,7 @@ public class MsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void update(WorldMap worldMap) {
-        int index = (int) worldMap.terrain().getProperties().get("colorMapIndex");
+        int index = worldMap.getConfigValue("colorMapIndex");
         fullMapSprite = FULL_MAPS_SPRITES[index];
         emptyMapSprite = EMPTY_MAPS_SPRITES[index];
         flashingMapSprite = new ImageArea(flashingMazesImage, FLASHING_MAP_SPRITES[index]);
