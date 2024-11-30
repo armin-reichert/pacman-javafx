@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.actors.Pac;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -37,9 +36,7 @@ public class GameLevel {
     private int numFlashes;
     private int intermissionNumber;
 
-    private Map<String, Object> mapConfig;
     private GameWorld world;
-
     private Pac pac;
     private Ghost[] ghosts;
     private final List<Ghost> victims = new ArrayList<>();
