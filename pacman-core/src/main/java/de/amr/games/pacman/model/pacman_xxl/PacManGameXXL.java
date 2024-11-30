@@ -137,8 +137,7 @@ public class PacManGameXXL extends PacManGame {
                 "pellet", worldMap.food().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_FOOD, "ffffff")
             );
         }
-        Properties p = worldMap.terrain().getProperties();
-        p.put("colorMap", colorMap);
+        worldMap.setConfigValue("colorMap", colorMap);
         return worldMap;
     }
 

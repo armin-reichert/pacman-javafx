@@ -12,6 +12,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -38,7 +39,10 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
@@ -267,8 +271,8 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         else { // when score is disabled, show text "game over"
             Color color = context.assets().color(assetPrefix(context.gameVariant()) + ".color.game_over_message");
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                Properties p = context.level().world().map().terrain().getProperties();
-                var nesColorScheme = (NES_ColorScheme) p.get("nesColorScheme");
+                WorldMap worldMap = context.level().world().map();
+                NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
                 color = Color.valueOf(nesColorScheme.fillColor());
             }
             scores3D.showTextAsScore(GAME_OVER_TEXT, color);

@@ -104,9 +104,8 @@ public class MsPacManGame extends GameModel {
         };
         int colorMapIndex = levelNumber < 14 ? mapNumber - 1 : mapNumber + 2 - 1;
         WorldMap worldMap = new WorldMap(maps.get(mapNumber - 1));
-        Properties p = worldMap.terrain().getProperties();
-        p.put("mapNumber", mapNumber);
-        p.put("colorMapIndex", colorMapIndex);
+        worldMap.setConfigValue("mapNumber", mapNumber);
+        worldMap.setConfigValue("colorMapIndex", colorMapIndex);
         return worldMap;
     }
 

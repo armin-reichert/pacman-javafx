@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.pacman_xxl;
 
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameWorld;
@@ -19,7 +20,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 import java.util.Map;
-import java.util.Properties;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -117,9 +117,8 @@ public class PacManGameXXLRenderer implements GameRenderer {
             terrainRenderer.drawMap(ctx(), world.map().terrain());
         }
         else {
-            Properties p = world.map().terrain().getProperties();
-            @SuppressWarnings("unchecked")
-            Map<String, String> mapColorScheme = (Map<String, String>) p.get("colorMap");
+            WorldMap worldMap = world.map();
+            Map<String, String> mapColorScheme = worldMap.getConfigValue("colorMap");
             terrainRenderer.setMapBackgroundColor(bgColor);
             terrainRenderer.setWallStrokeColor(Color.web(mapColorScheme.get("stroke")));
             terrainRenderer.setWallFillColor(Color.web(mapColorScheme.get("fill")));

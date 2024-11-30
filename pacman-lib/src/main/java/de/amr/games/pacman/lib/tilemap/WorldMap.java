@@ -119,4 +119,22 @@ public class WorldMap {
     public TileMap food() {
         return food;
     }
+
+    // "abuse" properties to store non-string configuration data used by UI
+    public void setConfigValue(String key, Object value) {
+        terrain.getProperties().put(configKey(key), value);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getConfigValue(String key) {
+        return (T) terrain.getProperties().get(configKey(key));
+    }
+
+    public boolean hasConfigValue(String key) {
+        return terrain.getProperties().containsKey(configKey(key));
+    }
+
+    private String configKey(String key) {
+        return "_config." + key;
+    }
 }

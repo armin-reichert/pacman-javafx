@@ -237,15 +237,13 @@ public class GameLevel3D {
     }
 
     //TODO this should be done elsewhere
-    @SuppressWarnings("unchecked")
     private Map<String, Color> extractColorMap(WorldMap worldMap) {
-        Properties p = worldMap.terrain().getProperties();
         return switch (context.gameVariant()) {
             case PACMAN           -> PacManGameRenderer.COLOR_MAP;
-            case PACMAN_XXL       -> GameRenderer.toColorMap((Map<String, String>) p.get("colorMap"));
-            case MS_PACMAN        -> MsPacManGameRenderer.COLOR_MAPS.get((int) p.get("colorMapIndex"));
+            case PACMAN_XXL       -> GameRenderer.toColorMap(worldMap.getConfigValue("colorMap"));
+            case MS_PACMAN        -> MsPacManGameRenderer.COLOR_MAPS.get(worldMap.getConfigValue("colorMapIndex"));
             case MS_PACMAN_TENGEN -> {
-                NES_ColorScheme ncs = (NES_ColorScheme) p.get("nesColorScheme");
+                NES_ColorScheme ncs = worldMap.getConfigValue("nesColorScheme");
                 yield Map.of(
                     "fill", Color.valueOf(ncs.fillColor()),
                     "stroke", Color.valueOf(ncs.strokeColor()),

@@ -9,7 +9,10 @@ import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 import static de.amr.games.pacman.model.ms_pacman_tengen.MapCategory.*;
 import static de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme.*;
@@ -193,18 +196,16 @@ class MapManager {
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
         // TODO: Hack: Store level number in map such that the renderer can easily determine the map sprite
-        Properties p = worldMap.terrain().getProperties();
-        p.put("levelNumber", levelNumber);
+        worldMap.setConfigValue("levelNumber", levelNumber);
         return worldMap;
     }
 
     private WorldMap configureWorldMap(MapCategory category, int number, NES_ColorScheme colorScheme, boolean randomColorScheme) {
         WorldMap worldMap = new WorldMap(mapRepository.get(category).get(number - 1));
-        Properties p = worldMap.terrain().getProperties();
-        p.put("mapCategory", category);
-        p.put("mapNumber", number);
-        p.put("nesColorScheme", colorScheme);
-        p.put("randomColorScheme", randomColorScheme);
+        worldMap.setConfigValue("mapCategory", category);
+        worldMap.setConfigValue("mapNumber", number);
+        worldMap.setConfigValue("nesColorScheme", colorScheme);
+        worldMap.setConfigValue("randomColorScheme", randomColorScheme);
         return worldMap;
     }
 

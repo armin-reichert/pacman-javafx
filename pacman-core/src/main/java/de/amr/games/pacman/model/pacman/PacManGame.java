@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.MissingResourceException;
-import java.util.Properties;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -141,9 +140,8 @@ public class PacManGame extends GameModel {
         }
         try {
             theWorldMap = new WorldMap(url);
-            Properties p = theWorldMap.terrain().getProperties();
-            p.put("mapNumber", 1);
-            p.put("colorMapIndex", 0);
+            theWorldMap.setConfigValue("mapNumber", 1);
+            theWorldMap.setConfigValue("colorMapIndex", 0);
         } catch (IOException x) {
             Logger.error("Could not create world map, url={}", url);
             throw new RuntimeException(x);

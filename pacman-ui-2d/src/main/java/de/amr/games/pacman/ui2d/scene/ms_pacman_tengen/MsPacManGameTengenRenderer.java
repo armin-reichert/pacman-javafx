@@ -33,8 +33,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
-import java.util.Properties;
-
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.Animations.*;
 import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
@@ -78,9 +76,8 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
 
     @Override
     public void update(WorldMap worldMap) {
-        Properties p = worldMap.terrain().getProperties();
-        MapCategory category = (MapCategory) p.get("mapCategory");
-        NES_ColorScheme nesColorScheme = (NES_ColorScheme) p.get("nesColorScheme");
+        MapCategory category = worldMap.getConfigValue("mapCategory");
+        NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
         mapSprite = switch (category) {
             case ARCADE  -> arcadeMaps.sprite(worldMap);
             case MINI    -> nonArcadeMaps.miniMapSprite(worldMap);
@@ -243,9 +240,8 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         // Maps with a color scheme differing from that in the sprite sheet have to be rendered using the
         // vector renderer for now.
         // TODO: vector rendering looks really bad for some maps.
-        //var mapCategory = (MapCategory) mapConfig.get("mapCategory");
         MapCategory mapCategory = game.mapCategory(); // must use this one because e.g. STRANGE maps use maps from BIG map set etc.
-        int mapNumber = (int) world.map().terrain().getProperties().get("mapNumber");
+        int mapNumber = world.map().getConfigValue("mapNumber");
         boolean mapImageExists = game.isDemoLevel() || isMapImageAvailable(level.number, mapCategory);
         if (mapImageExists) {
             drawLevelMessage(level, game.isDemoLevel()); // message appears under map image so draw it first
@@ -287,8 +283,8 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
                 case GAME_OVER -> {
                     Color color = assets.color(assetPrefix + ".color.game_over_message");
                     if (demoLevel) {
-                        Properties p = level.world().map().terrain().getProperties();
-                        var nesColorScheme = (NES_ColorScheme) p.get("nesColorScheme");
+                        WorldMap worldMap = level.world().map();
+                        NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
                         color = Color.valueOf(nesColorScheme.strokeColor());
                     }
                     drawText("GAME OVER", x, y, color);

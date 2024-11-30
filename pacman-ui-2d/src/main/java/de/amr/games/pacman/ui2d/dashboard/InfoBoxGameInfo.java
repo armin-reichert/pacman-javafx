@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.controller.HuntingControl;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
@@ -17,7 +18,6 @@ import de.amr.games.pacman.ui2d.scene.pacman.PacManGameRenderer;
 import javafx.scene.paint.Color;
 
 import java.util.Map;
-import java.util.Properties;
 
 import static de.amr.games.pacman.lib.timer.TickTimer.ticksToString;
 
@@ -39,21 +39,20 @@ public class InfoBoxGameInfo extends InfoBox {
             return url.substring(url.lastIndexOf("/") + 1);
         }));
         addLabeledValue("Fill/Stroke/Pellet", ifLevelPresent(level -> {
-            Properties p = level.world().map().terrain().getProperties();
-            if (p.containsKey("nesColorScheme")) {
-                var ncs = (NES_ColorScheme) p.get("nesColorScheme");
+            WorldMap worldMap = level.world().map();
+            if (worldMap.hasConfigValue("nesColorScheme")) {
+                var ncs = (NES_ColorScheme) worldMap.getConfigValue("nesColorScheme");
                 return "%s %s %s".formatted(ncs.fillColor(), ncs.strokeColor(), ncs.pelletColor());
-            } else if (p.containsKey("colorMap")) {
+            } else if (worldMap.hasConfigValue("colorMap")) {
                 // Pac-Man XXL game
-                @SuppressWarnings("unchecked")
-                var cm = (Map<String, String>) p.get("colorMap");
-                return "%s %s %s".formatted(cm.get("fill"), cm.get("stroke"), cm.get("pellet"));
-            } else if (p.containsKey("colorMapIndex")) {
-                int colorMapIndex = (int) p.get("colorMapIndex");
-                Map<String, Color> cm = context.gameVariant() == GameVariant.PACMAN
+                Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
+                return "%s %s %s".formatted(colorMap.get("fill"), colorMap.get("stroke"), colorMap.get("pellet"));
+            } else if (worldMap.hasConfigValue("colorMapIndex")) {
+                int colorMapIndex = worldMap.getConfigValue("colorMapIndex");
+                Map<String, Color> colorMap = context.gameVariant() == GameVariant.PACMAN
                     ? PacManGameRenderer.COLOR_MAP
                     : MsPacManGameRenderer.COLOR_MAPS.get(colorMapIndex);
-                return formatColorMap(cm.get("fill"), cm.get("stroke"), cm.get("pellet"));
+                return formatColorMap(colorMap.get("fill"), colorMap.get("stroke"), colorMap.get("pellet"));
             } else {
                 return InfoText.NO_INFO;
             }

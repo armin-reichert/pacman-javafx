@@ -12,8 +12,6 @@ import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.scene.image.Image;
 
-import java.util.Properties;
-
 public class ArcadeMaps {
 
     private final Image image;
@@ -23,9 +21,8 @@ public class ArcadeMaps {
     }
 
     public ImageArea sprite(WorldMap worldMap) {
-        Properties p = worldMap.terrain().getProperties();
-        int mapNumber = (int) p.get("mapNumber");
-        NES_ColorScheme colorScheme = (NES_ColorScheme) p.get("nesColorScheme");
+        int mapNumber = worldMap.getConfigValue("mapNumber");
+        NES_ColorScheme colorScheme = worldMap.getConfigValue("nesColorScheme");
         int index = switch (mapNumber) {
             case 1 -> 0;
             case 2 -> 1;

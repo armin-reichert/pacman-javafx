@@ -12,7 +12,6 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * In Tengen Ms. Pac-Man, maze flashing animations in levels 28-31 (non-Arcade mazes) use
@@ -24,9 +23,8 @@ public class LevelCompleteAnimationTengen extends LevelCompleteAnimation {
 
     public LevelCompleteAnimationTengen(WorldMap worldMap, int numFlashes, int highlightPhaseDuration) {
         super(numFlashes, highlightPhaseDuration);
-        Properties p = worldMap.terrain().getProperties();
-        var nesColorScheme = (NES_ColorScheme) p.get("nesColorScheme");
-        var randomize = (boolean) p.get("randomColorScheme");
+        NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
+        boolean randomize = worldMap.getConfigValue("randomColorScheme");
         for (int i = 0; i < numFlashes; ++i) {
             NES_ColorScheme previous = i > 0 ? colorSchemes.get(i-1) : null;
             colorSchemes.add(randomize ? randomColorSchemeNotRepeating(previous) : nesColorScheme);

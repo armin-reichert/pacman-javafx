@@ -11,8 +11,6 @@ import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.scene.image.Image;
 
-import java.util.Properties;
-
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.RectArea.rect;
 
@@ -68,8 +66,7 @@ public class NonArcadeMaps {
     }
 
     public ImageArea miniMapSprite(WorldMap worldMap) {
-        Properties p = worldMap.terrain().getProperties();
-        int mapNumber = (int) p.get("mapNumber");
+        int mapNumber = worldMap.getConfigValue("mapNumber");
         int spriteNumber = switch (mapNumber) {
             case 1 -> 34;
             case 2 -> 35;
@@ -83,8 +80,7 @@ public class NonArcadeMaps {
     }
 
     public ImageArea bigMapSprite(WorldMap worldMap) {
-        Properties p = worldMap.terrain().getProperties();
-        int mapNumber = (int) p.get("mapNumber");
+        int mapNumber = worldMap.getConfigValue("mapNumber");
         int spriteNumber = switch (mapNumber) {
             case  1 -> 19;
             case  2 -> 20;
@@ -103,8 +99,7 @@ public class NonArcadeMaps {
     }
 
     public ImageArea strangeMapSprite(WorldMap worldMap) {
-        Properties p = worldMap.terrain().getProperties();
-        int levelNumber = (int) p.get("levelNumber");
+        int levelNumber = worldMap.getConfigValue("levelNumber");
         return sprite(levelNumber);
     }
 }
