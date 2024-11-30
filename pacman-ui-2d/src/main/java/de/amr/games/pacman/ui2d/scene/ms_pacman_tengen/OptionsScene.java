@@ -55,11 +55,13 @@ public class OptionsScene extends GameScene2D {
     static final int MIN_START_LEVEL = 1;
     static final int MAX_START_LEVEL = 32;  //TODO 7
 
-    static final int IDLE_TIMEOUT = 22 * 60; // TODO correct?
+    static final int INITIAL_DELAY = 20; //TODO verify
+    static final int IDLE_TIMEOUT = 22 * 60; // TODO verify
 
     private MsPacManGameTengen game;
     private int selectedOption;
     private long idleTicks;
+    private int initialDelay;
 
     @Override
     public void bindGameActions() {
@@ -77,6 +79,7 @@ public class OptionsScene extends GameScene2D {
         game = (MsPacManGameTengen) context.game();
         game.setCanStartNewGame(true);
         resetIdleTimer();
+        initialDelay = INITIAL_DELAY;
     }
 
     @Override
@@ -86,6 +89,10 @@ public class OptionsScene extends GameScene2D {
 
     @Override
     public void update() {
+        if (initialDelay > 0) {
+            --initialDelay;
+            return;
+        }
         if (idleTicks == IDLE_TIMEOUT) {
             context.gameController().changeState(GameState.INTRO);
             return;
@@ -236,6 +243,9 @@ public class OptionsScene extends GameScene2D {
         MsPacManGameTengenRenderer r = (MsPacManGameTengenRenderer) gr;
         r.drawSceneBorders();
 
+        if (initialDelay > 0) {
+            return;
+        }
         r.setScaling(scaling());
         Font scaledFont = r.scaledArcadeFont(TS);
 
