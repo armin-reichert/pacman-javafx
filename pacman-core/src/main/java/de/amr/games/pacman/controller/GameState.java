@@ -146,7 +146,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
-            delay = 60;
+            delay = gameController().currentGameVariant() == GameVariant.MS_PACMAN_TENGEN ? 60 : 0;
         }
 
         @Override
