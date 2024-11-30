@@ -21,7 +21,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -426,7 +425,7 @@ public class MsPacManGameTengen extends GameModel {
 
     @Override
     public void configureNormalLevel() {
-        WorldMap worldMap = mapManager.getMapConfig(mapCategory, level.number);
+        WorldMap worldMap = mapManager.configureWorldMap(mapCategory, level.number);
         createWorldAndPopulation(worldMap);
         level.setNumFlashes(5); // TODO check this
         level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
@@ -442,7 +441,7 @@ public class MsPacManGameTengen extends GameModel {
 
     @Override
     public void configureDemoLevel() {
-        WorldMap worldMap = mapManager.getMapConfig(mapCategory, level.number);
+        WorldMap worldMap = mapManager.configureWorldMap(mapCategory, level.number);
         createWorldAndPopulation(worldMap);
         level.setNumFlashes(5); // TODO check this
         level.setIntermissionNumber(0);

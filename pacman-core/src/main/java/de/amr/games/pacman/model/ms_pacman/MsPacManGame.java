@@ -94,7 +94,7 @@ public class MsPacManGame extends GameModel {
      * </ul>
      * <p>
      */
-    private static WorldMap getMapConfig(List<WorldMap> maps, int levelNumber) {
+    private static WorldMap configureWorldMap(List<WorldMap> maps, int levelNumber) {
         final int mapNumber = switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
@@ -263,7 +263,7 @@ public class MsPacManGame extends GameModel {
         levelCounterEnabled = level.number < 8;
         level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
         level.setNumFlashes(levelData(level.number).numFlashes());
-        WorldMap worldMap = getMapConfig(maps, level.number);
+        WorldMap worldMap = configureWorldMap(maps, level.number);
         createWorldAndPopulation(worldMap);
         level.pac().setAutopilot(autopilot);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));

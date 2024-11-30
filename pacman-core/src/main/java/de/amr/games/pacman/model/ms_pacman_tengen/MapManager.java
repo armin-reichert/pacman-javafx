@@ -52,26 +52,26 @@ class MapManager {
         strangeMaps = createMaps(getClass(), mapsRoot + "strange%d.world", 15);
     }
 
-    public WorldMap getMapConfig(MapCategory mapCategory, int levelNumber) {
+    public WorldMap configureWorldMap(MapCategory mapCategory, int levelNumber) {
         return switch (mapCategory) {
-            case ARCADE  -> arcadeMapConfig(levelNumber);
-            case STRANGE -> strangeMapConfig(levelNumber);
-            case MINI    -> miniMapConfig(levelNumber);
-            case BIG     -> bigMapConfig(levelNumber);
+            case ARCADE  -> configureArcadeWorldMap(levelNumber);
+            case STRANGE -> configureStrangeWorldMap(levelNumber);
+            case MINI    -> configureMiniWorldMap(levelNumber);
+            case BIG     -> configureBigWorldMap(levelNumber);
         };
     }
 
-    private WorldMap arcadeMapConfig(int levelNumber) {
+    private WorldMap configureArcadeWorldMap(int levelNumber) {
         return switch (levelNumber) {
-            case 1,2         -> decoratedWorldMap(ARCADE, arcadeMaps, 1, _36_15_20_PINK_RED_WHITE);
-            case 3,4,5       -> decoratedWorldMap(ARCADE, arcadeMaps, 2, _21_20_28_BLUE_WHITE_YELLOW);
-            case 6,7,8,9     -> decoratedWorldMap(ARCADE, arcadeMaps, 3, _16_20_15_ORANGE_WHITE_RED);
-            case 10,11,12,13 -> decoratedWorldMap(ARCADE, arcadeMaps, 4, _01_38_20_BLUE_YELLOW_WHITE);
-            case 14,15,16,17 -> decoratedWorldMap(ARCADE, arcadeMaps, 3, _35_28_20_PINK_YELLOW_WHITE);
-            case 18,19,20,21 -> decoratedWorldMap(ARCADE, arcadeMaps, 4, _36_15_20_PINK_RED_WHITE);
-            case 22,23,24,25 -> decoratedWorldMap(ARCADE, arcadeMaps, 3, _17_20_20_BROWN_WHITE_WHITE);
-            case 26,27,28,29 -> decoratedWorldMap(ARCADE, arcadeMaps, 4, _13_20_28_VIOLET_WHITE_YELLOW);
-            case 30,31,32    -> decoratedWorldMap(ARCADE, arcadeMaps, 3, _0F_20_28_BLACK_WHITE_YELLOW);
+            case 1,2         -> configureWorldMap(ARCADE, arcadeMaps, 1, _36_15_20_PINK_RED_WHITE);
+            case 3,4,5       -> configureWorldMap(ARCADE, arcadeMaps, 2, _21_20_28_BLUE_WHITE_YELLOW);
+            case 6,7,8,9     -> configureWorldMap(ARCADE, arcadeMaps, 3, _16_20_15_ORANGE_WHITE_RED);
+            case 10,11,12,13 -> configureWorldMap(ARCADE, arcadeMaps, 4, _01_38_20_BLUE_YELLOW_WHITE);
+            case 14,15,16,17 -> configureWorldMap(ARCADE, arcadeMaps, 3, _35_28_20_PINK_YELLOW_WHITE);
+            case 18,19,20,21 -> configureWorldMap(ARCADE, arcadeMaps, 4, _36_15_20_PINK_RED_WHITE);
+            case 22,23,24,25 -> configureWorldMap(ARCADE, arcadeMaps, 3, _17_20_20_BROWN_WHITE_WHITE);
+            case 26,27,28,29 -> configureWorldMap(ARCADE, arcadeMaps, 4, _13_20_28_VIOLET_WHITE_YELLOW);
+            case 30,31,32    -> configureWorldMap(ARCADE, arcadeMaps, 3, _0F_20_28_BLACK_WHITE_YELLOW);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
     }
@@ -79,40 +79,40 @@ class MapManager {
     /**
      * From this <a href="https://www.youtube.com/watch?v=cD0oGudVpbw">YouTube video</a>.
      */
-    private WorldMap miniMapConfig(int levelNumber) {
+    private WorldMap configureMiniWorldMap(int levelNumber) {
         return switch (levelNumber) {
-            case 1  -> decoratedWorldMap(MINI, miniMaps, 1, _36_15_20_PINK_RED_WHITE);
-            case 2  -> decoratedWorldMap(MINI, miniMaps, 2, _21_20_28_BLUE_WHITE_YELLOW);
-            case 3  -> decoratedWorldMap(MINI, miniMaps, 1, _16_20_15_ORANGE_WHITE_RED);
-            case 4  -> decoratedWorldMap(MINI, miniMaps, 2, _01_38_20_BLUE_YELLOW_WHITE);
-            case 5  -> decoratedWorldMap(MINI, miniMaps, 3, _35_28_20_PINK_YELLOW_WHITE);
-            case 6  -> decoratedWorldMap(MINI, miniMaps, 1, _36_15_20_PINK_RED_WHITE);
-            case 7  -> decoratedWorldMap(MINI, miniMaps, 2, _17_20_20_BROWN_WHITE_WHITE);
-            case 8  -> decoratedWorldMap(MINI, miniMaps, 3, _13_20_28_VIOLET_WHITE_YELLOW);
-            case 9  -> decoratedWorldMap(MINI, miniMaps, 4, _0F_20_28_BLACK_WHITE_YELLOW);
-            case 10 -> decoratedWorldMap(MINI, miniMaps, 1, _0F_01_20_BLACK_BLUE_WHITE);
-            case 11 -> decoratedWorldMap(MINI, miniMaps, 2, _14_25_20_VIOLET_ROSE_WHITE);
-            case 12 -> decoratedWorldMap(MINI, miniMaps, 3, _15_20_20_RED_WHITE_WHITE);
-            case 13 -> decoratedWorldMap(MINI, miniMaps, 4, _1B_20_20_GREEN_WHITE_WHITE);
-            case 14 -> decoratedWorldMap(MINI, miniMaps, 1, _28_20_2A_YELLOW_WHITE_GREEN);
-            case 15 -> decoratedWorldMap(MINI, miniMaps, 2, _1A_20_28_GREEN_WHITE_YELLOW);
-            case 16 -> decoratedWorldMap(MINI, miniMaps, 3, _18_20_20_KHAKI_WHITE_WHITE);
-            case 17 -> decoratedWorldMap(MINI, miniMaps, 4, _25_20_20_ROSE_WHITE_WHITE);
-            case 18 -> decoratedWorldMap(MINI, miniMaps, 5, _12_20_28_BLUE_WHITE_YELLOW);
-            case 19 -> decoratedWorldMap(MINI, miniMaps, 5, _07_20_20_BROWN_WHITE_WHITE);
-            case 20 -> decoratedWorldMap(MINI, miniMaps, 4, _15_25_20_RED_ROSE_WHITE);
-            case 21 -> decoratedWorldMap(MINI, miniMaps, 3, _0F_20_1C_BLACK_WHITE_GREEN);
-            case 22 -> decoratedWorldMap(MINI, miniMaps, 2, _19_20_20_GREEN_WHITE_WHITE);
-            case 23 -> decoratedWorldMap(MINI, miniMaps, 1, _0C_20_14_GREEN_WHITE_VIOLET);
-            case 24 -> decoratedWorldMap(MINI, miniMaps, 6, _23_20_2B_VIOLET_WHITE_GREEN);
-            case 25 -> decoratedWorldMap(MINI, miniMaps, 1, _10_20_28_GRAY_WHITE_YELLOW);
-            case 26 -> decoratedWorldMap(MINI, miniMaps, 2, _04_20_20_VIOLET_WHITE_WHITE);
-            case 27 -> decoratedWorldMap(MINI, miniMaps, 3, _04_20_20_VIOLET_WHITE_WHITE);
-            case 28 -> decoratedWorldMap(MINI, miniMaps, 4, NES_ColorScheme.random(), true);
-            case 29 -> decoratedWorldMap(MINI, miniMaps, 5, NES_ColorScheme.random(), true);
-            case 30 -> decoratedWorldMap(MINI, miniMaps, 2, NES_ColorScheme.random(), true);
-            case 31 -> decoratedWorldMap(MINI, miniMaps, 3, NES_ColorScheme.random(), true);
-            case 32 -> decoratedWorldMap(MINI, miniMaps, 6, _15_25_20_RED_ROSE_WHITE);
+            case 1  -> configureWorldMap(MINI, miniMaps, 1, _36_15_20_PINK_RED_WHITE);
+            case 2  -> configureWorldMap(MINI, miniMaps, 2, _21_20_28_BLUE_WHITE_YELLOW);
+            case 3  -> configureWorldMap(MINI, miniMaps, 1, _16_20_15_ORANGE_WHITE_RED);
+            case 4  -> configureWorldMap(MINI, miniMaps, 2, _01_38_20_BLUE_YELLOW_WHITE);
+            case 5  -> configureWorldMap(MINI, miniMaps, 3, _35_28_20_PINK_YELLOW_WHITE);
+            case 6  -> configureWorldMap(MINI, miniMaps, 1, _36_15_20_PINK_RED_WHITE);
+            case 7  -> configureWorldMap(MINI, miniMaps, 2, _17_20_20_BROWN_WHITE_WHITE);
+            case 8  -> configureWorldMap(MINI, miniMaps, 3, _13_20_28_VIOLET_WHITE_YELLOW);
+            case 9  -> configureWorldMap(MINI, miniMaps, 4, _0F_20_28_BLACK_WHITE_YELLOW);
+            case 10 -> configureWorldMap(MINI, miniMaps, 1, _0F_01_20_BLACK_BLUE_WHITE);
+            case 11 -> configureWorldMap(MINI, miniMaps, 2, _14_25_20_VIOLET_ROSE_WHITE);
+            case 12 -> configureWorldMap(MINI, miniMaps, 3, _15_20_20_RED_WHITE_WHITE);
+            case 13 -> configureWorldMap(MINI, miniMaps, 4, _1B_20_20_GREEN_WHITE_WHITE);
+            case 14 -> configureWorldMap(MINI, miniMaps, 1, _28_20_2A_YELLOW_WHITE_GREEN);
+            case 15 -> configureWorldMap(MINI, miniMaps, 2, _1A_20_28_GREEN_WHITE_YELLOW);
+            case 16 -> configureWorldMap(MINI, miniMaps, 3, _18_20_20_KHAKI_WHITE_WHITE);
+            case 17 -> configureWorldMap(MINI, miniMaps, 4, _25_20_20_ROSE_WHITE_WHITE);
+            case 18 -> configureWorldMap(MINI, miniMaps, 5, _12_20_28_BLUE_WHITE_YELLOW);
+            case 19 -> configureWorldMap(MINI, miniMaps, 5, _07_20_20_BROWN_WHITE_WHITE);
+            case 20 -> configureWorldMap(MINI, miniMaps, 4, _15_25_20_RED_ROSE_WHITE);
+            case 21 -> configureWorldMap(MINI, miniMaps, 3, _0F_20_1C_BLACK_WHITE_GREEN);
+            case 22 -> configureWorldMap(MINI, miniMaps, 2, _19_20_20_GREEN_WHITE_WHITE);
+            case 23 -> configureWorldMap(MINI, miniMaps, 1, _0C_20_14_GREEN_WHITE_VIOLET);
+            case 24 -> configureWorldMap(MINI, miniMaps, 6, _23_20_2B_VIOLET_WHITE_GREEN);
+            case 25 -> configureWorldMap(MINI, miniMaps, 1, _10_20_28_GRAY_WHITE_YELLOW);
+            case 26 -> configureWorldMap(MINI, miniMaps, 2, _04_20_20_VIOLET_WHITE_WHITE);
+            case 27 -> configureWorldMap(MINI, miniMaps, 3, _04_20_20_VIOLET_WHITE_WHITE);
+            case 28 -> configureWorldMap(MINI, miniMaps, 4, NES_ColorScheme.random(), true);
+            case 29 -> configureWorldMap(MINI, miniMaps, 5, NES_ColorScheme.random(), true);
+            case 30 -> configureWorldMap(MINI, miniMaps, 2, NES_ColorScheme.random(), true);
+            case 31 -> configureWorldMap(MINI, miniMaps, 3, NES_ColorScheme.random(), true);
+            case 32 -> configureWorldMap(MINI, miniMaps, 6, _15_25_20_RED_ROSE_WHITE);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
     }
@@ -120,78 +120,78 @@ class MapManager {
     /**
      * From this <a href="https://www.youtube.com/watch?v=NoImGoSAL7A">YouTube video</a>.
      */
-    private WorldMap bigMapConfig(int levelNumber) {
+    private WorldMap configureBigWorldMap(int levelNumber) {
         return switch (levelNumber) {
-            case 1  -> decoratedWorldMap(BIG, bigMaps,  1, _36_15_20_PINK_RED_WHITE);
-            case 2  -> decoratedWorldMap(BIG, bigMaps,  2, _21_20_28_BLUE_WHITE_YELLOW);
-            case 3  -> decoratedWorldMap(BIG, bigMaps,  3, _16_20_15_ORANGE_WHITE_RED);
-            case 4  -> decoratedWorldMap(BIG, bigMaps,  1, _01_38_20_BLUE_YELLOW_WHITE);
-            case 5  -> decoratedWorldMap(BIG, bigMaps,  2, _35_28_20_PINK_YELLOW_WHITE);
-            case 6  -> decoratedWorldMap(BIG, bigMaps,  3, _36_15_20_PINK_RED_WHITE);
-            case 7  -> decoratedWorldMap(BIG, bigMaps,  4, _17_20_20_BROWN_WHITE_WHITE);
-            case 8  -> decoratedWorldMap(BIG, bigMaps,  5, _13_20_28_VIOLET_WHITE_YELLOW);
-            case 9  -> decoratedWorldMap(BIG, bigMaps,  6, _0F_20_28_BLACK_WHITE_YELLOW);
-            case 10 -> decoratedWorldMap(BIG, bigMaps,  7, _0F_01_20_BLACK_BLUE_WHITE);
-            case 11 -> decoratedWorldMap(BIG, bigMaps,  5, _15_25_20_RED_ROSE_WHITE);
-            case 12 -> decoratedWorldMap(BIG, bigMaps,  3, _25_20_20_ROSE_WHITE_WHITE);
-            case 13 -> decoratedWorldMap(BIG, bigMaps,  4, _1B_20_20_GREEN_WHITE_WHITE);
-            case 14 -> decoratedWorldMap(BIG, bigMaps,  8, _28_20_2A_YELLOW_WHITE_GREEN);
-            case 15 -> decoratedWorldMap(BIG, bigMaps,  2, _1A_20_28_GREEN_WHITE_YELLOW);
-            case 16 -> decoratedWorldMap(BIG, bigMaps,  1, _18_20_20_KHAKI_WHITE_WHITE);
-            case 17 -> decoratedWorldMap(BIG, bigMaps,  7, _25_20_20_ROSE_WHITE_WHITE);
-            case 18 -> decoratedWorldMap(BIG, bigMaps,  6, _12_20_28_BLUE_WHITE_YELLOW);
-            case 19 -> decoratedWorldMap(BIG, bigMaps,  7, _07_20_20_BROWN_WHITE_WHITE);
-            case 20 -> decoratedWorldMap(BIG, bigMaps,  1, _15_25_20_RED_ROSE_WHITE);
-            case 21 -> decoratedWorldMap(BIG, bigMaps,  9, _0F_20_1C_BLACK_WHITE_GREEN);
-            case 22 -> decoratedWorldMap(BIG, bigMaps,  3, _19_20_20_GREEN_WHITE_WHITE);
-            case 23 -> decoratedWorldMap(BIG, bigMaps,  4, _0C_20_14_GREEN_WHITE_VIOLET);
-            case 24 -> decoratedWorldMap(BIG, bigMaps,  5, _23_20_2B_VIOLET_WHITE_GREEN);
-            case 25 -> decoratedWorldMap(BIG, bigMaps,  8, _10_20_28_GRAY_WHITE_YELLOW);
-            case 26 -> decoratedWorldMap(BIG, bigMaps, 10, _04_20_20_VIOLET_WHITE_WHITE);
-            case 27 -> decoratedWorldMap(BIG, bigMaps,  8, _04_20_20_VIOLET_WHITE_WHITE);
-            case 28 -> decoratedWorldMap(BIG, bigMaps,  5, NES_ColorScheme.random(), true);
-            case 29 -> decoratedWorldMap(BIG, bigMaps,  9, NES_ColorScheme.random(), true);
-            case 30 -> decoratedWorldMap(BIG, bigMaps,  2, NES_ColorScheme.random(), true);
-            case 31 -> decoratedWorldMap(BIG, bigMaps, 10, NES_ColorScheme.random(), true);
-            case 32 -> decoratedWorldMap(BIG, bigMaps, 11, _15_25_20_RED_ROSE_WHITE);
+            case 1  -> configureWorldMap(BIG, bigMaps,  1, _36_15_20_PINK_RED_WHITE);
+            case 2  -> configureWorldMap(BIG, bigMaps,  2, _21_20_28_BLUE_WHITE_YELLOW);
+            case 3  -> configureWorldMap(BIG, bigMaps,  3, _16_20_15_ORANGE_WHITE_RED);
+            case 4  -> configureWorldMap(BIG, bigMaps,  1, _01_38_20_BLUE_YELLOW_WHITE);
+            case 5  -> configureWorldMap(BIG, bigMaps,  2, _35_28_20_PINK_YELLOW_WHITE);
+            case 6  -> configureWorldMap(BIG, bigMaps,  3, _36_15_20_PINK_RED_WHITE);
+            case 7  -> configureWorldMap(BIG, bigMaps,  4, _17_20_20_BROWN_WHITE_WHITE);
+            case 8  -> configureWorldMap(BIG, bigMaps,  5, _13_20_28_VIOLET_WHITE_YELLOW);
+            case 9  -> configureWorldMap(BIG, bigMaps,  6, _0F_20_28_BLACK_WHITE_YELLOW);
+            case 10 -> configureWorldMap(BIG, bigMaps,  7, _0F_01_20_BLACK_BLUE_WHITE);
+            case 11 -> configureWorldMap(BIG, bigMaps,  5, _15_25_20_RED_ROSE_WHITE);
+            case 12 -> configureWorldMap(BIG, bigMaps,  3, _25_20_20_ROSE_WHITE_WHITE);
+            case 13 -> configureWorldMap(BIG, bigMaps,  4, _1B_20_20_GREEN_WHITE_WHITE);
+            case 14 -> configureWorldMap(BIG, bigMaps,  8, _28_20_2A_YELLOW_WHITE_GREEN);
+            case 15 -> configureWorldMap(BIG, bigMaps,  2, _1A_20_28_GREEN_WHITE_YELLOW);
+            case 16 -> configureWorldMap(BIG, bigMaps,  1, _18_20_20_KHAKI_WHITE_WHITE);
+            case 17 -> configureWorldMap(BIG, bigMaps,  7, _25_20_20_ROSE_WHITE_WHITE);
+            case 18 -> configureWorldMap(BIG, bigMaps,  6, _12_20_28_BLUE_WHITE_YELLOW);
+            case 19 -> configureWorldMap(BIG, bigMaps,  7, _07_20_20_BROWN_WHITE_WHITE);
+            case 20 -> configureWorldMap(BIG, bigMaps,  1, _15_25_20_RED_ROSE_WHITE);
+            case 21 -> configureWorldMap(BIG, bigMaps,  9, _0F_20_1C_BLACK_WHITE_GREEN);
+            case 22 -> configureWorldMap(BIG, bigMaps,  3, _19_20_20_GREEN_WHITE_WHITE);
+            case 23 -> configureWorldMap(BIG, bigMaps,  4, _0C_20_14_GREEN_WHITE_VIOLET);
+            case 24 -> configureWorldMap(BIG, bigMaps,  5, _23_20_2B_VIOLET_WHITE_GREEN);
+            case 25 -> configureWorldMap(BIG, bigMaps,  8, _10_20_28_GRAY_WHITE_YELLOW);
+            case 26 -> configureWorldMap(BIG, bigMaps, 10, _04_20_20_VIOLET_WHITE_WHITE);
+            case 27 -> configureWorldMap(BIG, bigMaps,  8, _04_20_20_VIOLET_WHITE_WHITE);
+            case 28 -> configureWorldMap(BIG, bigMaps,  5, NES_ColorScheme.random(), true);
+            case 29 -> configureWorldMap(BIG, bigMaps,  9, NES_ColorScheme.random(), true);
+            case 30 -> configureWorldMap(BIG, bigMaps,  2, NES_ColorScheme.random(), true);
+            case 31 -> configureWorldMap(BIG, bigMaps, 10, NES_ColorScheme.random(), true);
+            case 32 -> configureWorldMap(BIG, bigMaps, 11, _15_25_20_RED_ROSE_WHITE);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
     }
 
-    private WorldMap strangeMapConfig(int levelNumber) {
+    private WorldMap configureStrangeWorldMap(int levelNumber) {
         WorldMap worldMap = switch (levelNumber) {
-            case  1 -> decoratedWorldMap(STRANGE, strangeMaps,  1, _36_15_20_PINK_RED_WHITE);
-            case  2 -> decoratedWorldMap(STRANGE, strangeMaps,  2, _21_20_28_BLUE_WHITE_YELLOW);
-            case  3 -> decoratedWorldMap(STRANGE, strangeMaps,  3, _16_20_15_ORANGE_WHITE_RED);
-            case  4 -> decoratedWorldMap(STRANGE, strangeMaps,  4, _01_38_20_BLUE_YELLOW_WHITE);
-            case  5 -> decoratedWorldMap(STRANGE, strangeMaps,  5, _35_28_20_PINK_YELLOW_WHITE);
-            case  6 -> decoratedWorldMap(STRANGE, strangeMaps,  6, _36_15_20_PINK_RED_WHITE);
-            case  7 -> decoratedWorldMap(STRANGE, strangeMaps,  7, _17_20_20_BROWN_WHITE_WHITE);
-            case  8 -> decoratedWorldMap(STRANGE, strangeMaps,  8, _13_20_28_VIOLET_WHITE_YELLOW);
-            case  9 -> decoratedWorldMap(STRANGE, strangeMaps,  9, _0F_20_28_BLACK_WHITE_YELLOW);
-            case 10 -> decoratedWorldMap(BIG,     bigMaps,      7, _0F_01_20_BLACK_BLUE_WHITE);
-            case 11 -> decoratedWorldMap(STRANGE, strangeMaps, 10, _14_25_20_VIOLET_ROSE_WHITE);
-            case 12 -> decoratedWorldMap(STRANGE, strangeMaps, 11, _15_20_20_RED_WHITE_WHITE);
-            case 13 -> decoratedWorldMap(STRANGE, strangeMaps,  6, _1B_20_20_GREEN_WHITE_WHITE);
-            case 14 -> decoratedWorldMap(BIG,     bigMaps,      8, _28_20_2A_YELLOW_WHITE_GREEN);
-            case 15 -> decoratedWorldMap(STRANGE, strangeMaps, 12, _1A_20_28_GREEN_WHITE_YELLOW);
-            case 16 -> decoratedWorldMap(MINI,    miniMaps,     5, _18_20_20_KHAKI_WHITE_WHITE);
-            case 17 -> decoratedWorldMap(BIG,     bigMaps,      6, _25_20_20_ROSE_WHITE_WHITE);
-            case 18 -> decoratedWorldMap(STRANGE, strangeMaps, 13, _12_20_28_BLUE_WHITE_YELLOW);
-            case 19 -> decoratedWorldMap(BIG,     bigMaps,      1, _07_20_20_BROWN_WHITE_WHITE);
-            case 20 -> decoratedWorldMap(BIG,     bigMaps,      2, _15_25_20_RED_ROSE_WHITE);
-            case 21 -> decoratedWorldMap(BIG,     bigMaps,      3, _0F_20_1C_BLACK_WHITE_GREEN);
-            case 22 -> decoratedWorldMap(BIG,     bigMaps,      4, _19_20_20_GREEN_WHITE_WHITE);
-            case 23 -> decoratedWorldMap(BIG,     bigMaps,      5, _0C_20_14_GREEN_WHITE_VIOLET);
-            case 24 -> decoratedWorldMap(STRANGE, strangeMaps,  4, _23_20_2B_VIOLET_WHITE_GREEN);
-            case 25 -> decoratedWorldMap(BIG,     bigMaps,     10, _10_20_28_GRAY_WHITE_YELLOW);
-            case 26 -> decoratedWorldMap(BIG,     bigMaps,      9, _03_20_20_VIOLET_WHITE_WHITE);
-            case 27 -> decoratedWorldMap(STRANGE, strangeMaps, 14, _04_20_20_VIOLET_WHITE_WHITE);
-            case 28 -> decoratedWorldMap(MINI,    miniMaps,     5, NES_ColorScheme.random(), true);
-            case 29 -> decoratedWorldMap(STRANGE, strangeMaps,  8, NES_ColorScheme.random(), true);
-            case 30 -> decoratedWorldMap(MINI,    miniMaps,     4, NES_ColorScheme.random(), true);
-            case 31 -> decoratedWorldMap(STRANGE, strangeMaps, 12, NES_ColorScheme.random(), true);
-            case 32 -> decoratedWorldMap(STRANGE, strangeMaps, 15, _15_25_20_RED_ROSE_WHITE);
+            case  1 -> configureWorldMap(STRANGE, strangeMaps,  1, _36_15_20_PINK_RED_WHITE);
+            case  2 -> configureWorldMap(STRANGE, strangeMaps,  2, _21_20_28_BLUE_WHITE_YELLOW);
+            case  3 -> configureWorldMap(STRANGE, strangeMaps,  3, _16_20_15_ORANGE_WHITE_RED);
+            case  4 -> configureWorldMap(STRANGE, strangeMaps,  4, _01_38_20_BLUE_YELLOW_WHITE);
+            case  5 -> configureWorldMap(STRANGE, strangeMaps,  5, _35_28_20_PINK_YELLOW_WHITE);
+            case  6 -> configureWorldMap(STRANGE, strangeMaps,  6, _36_15_20_PINK_RED_WHITE);
+            case  7 -> configureWorldMap(STRANGE, strangeMaps,  7, _17_20_20_BROWN_WHITE_WHITE);
+            case  8 -> configureWorldMap(STRANGE, strangeMaps,  8, _13_20_28_VIOLET_WHITE_YELLOW);
+            case  9 -> configureWorldMap(STRANGE, strangeMaps,  9, _0F_20_28_BLACK_WHITE_YELLOW);
+            case 10 -> configureWorldMap(BIG,     bigMaps,      7, _0F_01_20_BLACK_BLUE_WHITE);
+            case 11 -> configureWorldMap(STRANGE, strangeMaps, 10, _14_25_20_VIOLET_ROSE_WHITE);
+            case 12 -> configureWorldMap(STRANGE, strangeMaps, 11, _15_20_20_RED_WHITE_WHITE);
+            case 13 -> configureWorldMap(STRANGE, strangeMaps,  6, _1B_20_20_GREEN_WHITE_WHITE);
+            case 14 -> configureWorldMap(BIG,     bigMaps,      8, _28_20_2A_YELLOW_WHITE_GREEN);
+            case 15 -> configureWorldMap(STRANGE, strangeMaps, 12, _1A_20_28_GREEN_WHITE_YELLOW);
+            case 16 -> configureWorldMap(MINI,    miniMaps,     5, _18_20_20_KHAKI_WHITE_WHITE);
+            case 17 -> configureWorldMap(BIG,     bigMaps,      6, _25_20_20_ROSE_WHITE_WHITE);
+            case 18 -> configureWorldMap(STRANGE, strangeMaps, 13, _12_20_28_BLUE_WHITE_YELLOW);
+            case 19 -> configureWorldMap(BIG,     bigMaps,      1, _07_20_20_BROWN_WHITE_WHITE);
+            case 20 -> configureWorldMap(BIG,     bigMaps,      2, _15_25_20_RED_ROSE_WHITE);
+            case 21 -> configureWorldMap(BIG,     bigMaps,      3, _0F_20_1C_BLACK_WHITE_GREEN);
+            case 22 -> configureWorldMap(BIG,     bigMaps,      4, _19_20_20_GREEN_WHITE_WHITE);
+            case 23 -> configureWorldMap(BIG,     bigMaps,      5, _0C_20_14_GREEN_WHITE_VIOLET);
+            case 24 -> configureWorldMap(STRANGE, strangeMaps,  4, _23_20_2B_VIOLET_WHITE_GREEN);
+            case 25 -> configureWorldMap(BIG,     bigMaps,     10, _10_20_28_GRAY_WHITE_YELLOW);
+            case 26 -> configureWorldMap(BIG,     bigMaps,      9, _03_20_20_VIOLET_WHITE_WHITE);
+            case 27 -> configureWorldMap(STRANGE, strangeMaps, 14, _04_20_20_VIOLET_WHITE_WHITE);
+            case 28 -> configureWorldMap(MINI,    miniMaps,     5, NES_ColorScheme.random(), true);
+            case 29 -> configureWorldMap(STRANGE, strangeMaps,  8, NES_ColorScheme.random(), true);
+            case 30 -> configureWorldMap(MINI,    miniMaps,     4, NES_ColorScheme.random(), true);
+            case 31 -> configureWorldMap(STRANGE, strangeMaps, 12, NES_ColorScheme.random(), true);
+            case 32 -> configureWorldMap(STRANGE, strangeMaps, 15, _15_25_20_RED_ROSE_WHITE);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
         // TODO: Hack: Store level number in map such that the renderer can easily determine the map sprite
@@ -200,18 +200,17 @@ class MapManager {
         return worldMap;
     }
 
-    private WorldMap decoratedWorldMap(MapCategory category, List<WorldMap> maps, int number, NES_ColorScheme colorScheme, boolean randomColorScheme) {
-        WorldMap worldMap = new WorldMap(maps.get(number - 1));
+    private WorldMap configureWorldMap(MapCategory category, List<WorldMap> mapRepository, int number, NES_ColorScheme colorScheme, boolean randomColorScheme) {
+        WorldMap worldMap = new WorldMap(mapRepository.get(number - 1));
         Properties p = worldMap.terrain().getProperties();
         p.put("mapCategory", category);
         p.put("mapNumber", number);
-        p.put("worldMap", worldMap); //TODO is copy really needed?
         p.put("nesColorScheme", colorScheme);
         p.put("randomColorScheme", randomColorScheme);
         return worldMap;
     }
 
-    private WorldMap decoratedWorldMap(MapCategory category, List<WorldMap> maps, int number, NES_ColorScheme colorScheme) {
-        return decoratedWorldMap(category, maps, number, colorScheme, false);
+    private WorldMap configureWorldMap(MapCategory category, List<WorldMap> mapRepository, int number, NES_ColorScheme colorScheme) {
+        return configureWorldMap(category, mapRepository, number, colorScheme, false);
     }
 }
