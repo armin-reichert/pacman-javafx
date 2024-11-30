@@ -425,7 +425,7 @@ public class MsPacManGameTengen extends GameModel {
 
     @Override
     public void configureNormalLevel() {
-        WorldMap worldMap = mapManager.configureWorldMap(mapCategory, level.number);
+        WorldMap worldMap = mapManager.coloredMap(mapCategory, level.number);
         createWorldAndPopulation(worldMap);
         level.setNumFlashes(5); // TODO check this
         level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
@@ -441,7 +441,7 @@ public class MsPacManGameTengen extends GameModel {
 
     @Override
     public void configureDemoLevel() {
-        WorldMap worldMap = mapManager.configureWorldMap(mapCategory, level.number);
+        WorldMap worldMap = mapManager.coloredMap(mapCategory, level.number);
         createWorldAndPopulation(worldMap);
         level.setNumFlashes(5); // TODO check this
         level.setIntermissionNumber(0);
