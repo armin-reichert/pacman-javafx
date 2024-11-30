@@ -37,7 +37,7 @@ class MapManager {
                     Logger.error("Could not create world map, url={}", url);
                 }
             } else {
-                Logger.error("World map #{} could not be read. URL='{}'", num, url);
+                Logger.error("World map #{} could not be read. path='{}'", num, path);
             }
         }
         maps.trimToSize();
@@ -133,8 +133,8 @@ class MapManager {
             case 8  -> coloredMap(BIG,  5, _13_20_28_VIOLET_WHITE_YELLOW);
             case 9  -> coloredMap(BIG,  6, _0F_20_28_BLACK_WHITE_YELLOW);
             case 10 -> coloredMap(BIG,  7, _0F_01_20_BLACK_BLUE_WHITE);
-            case 11 -> coloredMap(BIG,  5, _15_25_20_RED_ROSE_WHITE);
-            case 12 -> coloredMap(BIG,  3, _25_20_20_ROSE_WHITE_WHITE);
+            case 11 -> coloredMap(BIG,  5, _14_25_20_VIOLET_ROSE_WHITE);
+            case 12 -> coloredMap(BIG,  3, _15_20_20_RED_WHITE_WHITE);
             case 13 -> coloredMap(BIG,  4, _1B_20_20_GREEN_WHITE_WHITE);
             case 14 -> coloredMap(BIG,  8, _28_20_2A_YELLOW_WHITE_GREEN);
             case 15 -> coloredMap(BIG,  2, _1A_20_28_GREEN_WHITE_YELLOW);
