@@ -174,7 +174,8 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     }
 
     protected void updateScaling() {
-        double unscaledHeight = fxSubScene.getCamera() == movingCamera ? NES_SIZE.y() : size().y() + 3*TS;
+        SceneDisplayMode displayMode = displayModePy.get();
+        double unscaledHeight = displayMode == SceneDisplayMode.SCROLLING ? NES_SIZE.y() : size().y() + 3*TS;
         setScaling(viewPortHeightProperty().get() / unscaledHeight);
     }
 
@@ -182,7 +183,6 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         int worldTilesY = context.game().level().map(level -> level.world().map().terrain().numRows()).orElse(NES_TILES.y());
         double dy = scaling * (worldTilesY - 43) * HTS;
         fixedCamera.setTranslateY(dy);
-
     }
 
     @Override
