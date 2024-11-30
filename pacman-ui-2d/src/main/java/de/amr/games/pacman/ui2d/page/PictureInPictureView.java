@@ -53,10 +53,9 @@ public class PictureInPictureView extends VBox implements GameEventListener {
 
     private void createScene() {
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.PlayScene2D playScene2D = new de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.PlayScene2D() {
+            var playScene2D = new de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.PlayScene2D() {
                 public void draw() {
-                    // do this here because it should be run also when game is paused
-                    updateScaling();
+                    setScaling(canvas.getHeight() / (size().y() + 3*TS) );
                     var r = (MsPacManGameTengenRenderer) gr;
                     r.setScaling(scaling());
                     r.clearCanvas();
