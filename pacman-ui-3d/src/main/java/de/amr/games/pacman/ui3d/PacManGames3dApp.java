@@ -47,7 +47,7 @@ public class PacManGames3dApp extends Application {
 
     private static Dimension2D initialSize() {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
-        double aspect = screenSize.getWidth() / screenSize.getHeight();
+        double aspect = 1.6;
         double height = 0.8 * screenSize.getHeight();
         double width = aspect * height;
         return new Dimension2D(width, height);
