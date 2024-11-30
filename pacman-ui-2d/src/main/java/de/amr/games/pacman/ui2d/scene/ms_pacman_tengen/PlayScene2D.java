@@ -174,7 +174,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     }
 
     protected void updateScaling() {
-        double unscaledHeight = fxSubScene.getCamera() == movingCamera ? NES_SIZE.y() : (size().y() + 3 * TS);
+        double unscaledHeight = fxSubScene.getCamera() == movingCamera ? NES_SIZE.y() : (size().y());
         setScaling(viewPortHeightProperty().get() / unscaledHeight);
     }
 
