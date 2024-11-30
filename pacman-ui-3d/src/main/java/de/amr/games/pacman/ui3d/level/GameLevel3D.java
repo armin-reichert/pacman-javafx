@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui3d.level;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -207,7 +208,7 @@ public class GameLevel3D {
         final GameLevel level = game.level().orElseThrow();
         final GameWorld world = level.world();
         final AssetStorage assets = context.assets();
-        final Map<String, Color> colorMap = extractColorMap(level.mapConfig());
+        final Map<String, Color> colorMap = extractColorMap(world.map());
 
         pac3D = createPac3D(variant, assets, context.sound(), level.pac());
         ghosts3D = level.ghosts()
@@ -237,13 +238,14 @@ public class GameLevel3D {
 
     //TODO this should be done elsewhere
     @SuppressWarnings("unchecked")
-    private Map<String, Color> extractColorMap(Map<String, Object> mapConfig) {
+    private Map<String, Color> extractColorMap(WorldMap worldMap) {
+        Properties p = worldMap.terrain().getProperties();
         return switch (context.gameVariant()) {
             case PACMAN           -> PacManGameRenderer.COLOR_MAP;
-            case PACMAN_XXL       -> GameRenderer.toColorMap((Map<String, String>) mapConfig.get("colorMap"));
-            case MS_PACMAN        -> MsPacManGameRenderer.COLOR_MAPS.get((int) mapConfig.get("colorMapIndex"));
+            case PACMAN_XXL       -> GameRenderer.toColorMap((Map<String, String>) p.get("colorMap"));
+            case MS_PACMAN        -> MsPacManGameRenderer.COLOR_MAPS.get((int) p.get("colorMapIndex"));
             case MS_PACMAN_TENGEN -> {
-                NES_ColorScheme ncs = (NES_ColorScheme) mapConfig.get("nesColorScheme");
+                NES_ColorScheme ncs = (NES_ColorScheme) p.get("nesColorScheme");
                 yield Map.of(
                     "fill", Color.valueOf(ncs.fillColor()),
                     "stroke", Color.valueOf(ncs.strokeColor()),

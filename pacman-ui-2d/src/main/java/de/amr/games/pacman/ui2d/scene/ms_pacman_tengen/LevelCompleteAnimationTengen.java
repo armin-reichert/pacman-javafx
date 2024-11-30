@@ -5,13 +5,14 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.nes.NES;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.scene.common.LevelCompleteAnimation;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Properties;
 
 /**
  * In Tengen Ms. Pac-Man, maze flashing animations in levels 28-31 (non-Arcade mazes) use
@@ -21,10 +22,11 @@ public class LevelCompleteAnimationTengen extends LevelCompleteAnimation {
 
     private final List<NES_ColorScheme> colorSchemes = new ArrayList<>();
 
-    public LevelCompleteAnimationTengen(Map<String, Object> mapConfig, int numFlashes, int highlightPhaseDuration) {
+    public LevelCompleteAnimationTengen(WorldMap worldMap, int numFlashes, int highlightPhaseDuration) {
         super(numFlashes, highlightPhaseDuration);
-        var nesColorScheme = (NES_ColorScheme) mapConfig.get("nesColorScheme");
-        var randomize = (boolean) mapConfig.get("randomColorScheme");
+        Properties p = worldMap.terrain().getProperties();
+        var nesColorScheme = (NES_ColorScheme) p.get("nesColorScheme");
+        var randomize = (boolean) p.get("randomColorScheme");
         for (int i = 0; i < numFlashes; ++i) {
             NES_ColorScheme previous = i > 0 ? colorSchemes.get(i-1) : null;
             colorSchemes.add(randomize ? randomColorSchemeNotRepeating(previous) : nesColorScheme);

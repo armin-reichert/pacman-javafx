@@ -28,8 +28,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 import java.util.MissingResourceException;
+import java.util.Properties;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -121,7 +121,7 @@ public class PacManGame extends GameModel {
     protected static final int[] HUNTING_TICKS_LEVEL_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
     protected static final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 300, 1200, 300, 62262,   1, -1};
 
-    protected final Map<String, Object> mapConfig;
+    protected final WorldMap theWorldMap;
     protected final Steering autopilot = new RuleBasedPacSteering(this);
     protected Steering demoLevelSteering;
     protected byte cruiseElroy;
@@ -140,12 +140,11 @@ public class PacManGame extends GameModel {
             throw new MissingResourceException("Map not found", getClass().getName(), path);
         }
         try {
-            WorldMap worldMap = new WorldMap(url);
-            mapConfig = Map.of(
-                "mapNumber", 1,
-                "worldMap", worldMap,
-                "colorMapIndex", 0
-            );
+            theWorldMap = new WorldMap(url);
+            Properties p = theWorldMap.terrain().getProperties();
+            p.put("mapNumber", 1);
+            p.put("worldMap", theWorldMap); // TODO remove
+            p.put("colorMapIndex", 0);
         } catch (IOException x) {
             Logger.error("Could not create world map, url={}", url);
             throw new RuntimeException(x);
@@ -260,15 +259,13 @@ public class PacManGame extends GameModel {
     @Override
     public void configureNormalLevel() {
         levelCounterEnabled = true;
-        level.setMapConfig(mapConfig);
         level.setNumFlashes(levelData(level.number).numFlashes());
         level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
-        WorldMap worldMap = (WorldMap) mapConfig.get("worldMap");
-        populateLevel(worldMap);
+        populateLevel(theWorldMap);
         level.pac().setAutopilot(autopilot);
         setCruiseElroy(0);
-        List<Vector2i> oneWayDownTiles = worldMap.terrain().tiles()
-            .filter(tile -> worldMap.terrain().get(tile) == Tiles.ONE_WAY_DOWN).toList();
+        List<Vector2i> oneWayDownTiles = theWorldMap.terrain().tiles()
+            .filter(tile -> theWorldMap.terrain().get(tile) == Tiles.ONE_WAY_DOWN).toList();
         level.ghosts().forEach(ghost -> {
             ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
             ghost.setSpecialTerrainTiles(oneWayDownTiles);

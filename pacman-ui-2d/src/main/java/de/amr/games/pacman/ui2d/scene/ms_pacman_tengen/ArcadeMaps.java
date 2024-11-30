@@ -4,6 +4,7 @@
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameAssets2D;
@@ -11,7 +12,7 @@ import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.scene.image.Image;
 
-import java.util.Map;
+import java.util.Properties;
 
 public class ArcadeMaps {
 
@@ -21,9 +22,10 @@ public class ArcadeMaps {
         image = assets.image(GameAssets2D.assetPrefix(GameVariant.MS_PACMAN_TENGEN) + ".mazes.arcade");
     }
 
-    public ImageArea sprite(Map<String, Object> mapConfig) {
-        int mapNumber = (int) mapConfig.get("mapNumber");
-        NES_ColorScheme colorScheme = (NES_ColorScheme) mapConfig.get("nesColorScheme");
+    public ImageArea sprite(WorldMap worldMap) {
+        Properties p = worldMap.terrain().getProperties();
+        int mapNumber = (int) p.get("mapNumber");
+        NES_ColorScheme colorScheme = (NES_ColorScheme) p.get("nesColorScheme");
         int index = switch (mapNumber) {
             case 1 -> 0;
             case 2 -> 1;

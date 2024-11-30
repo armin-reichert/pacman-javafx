@@ -38,10 +38,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
@@ -270,7 +267,8 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
         else { // when score is disabled, show text "game over"
             Color color = context.assets().color(assetPrefix(context.gameVariant()) + ".color.game_over_message");
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                var nesColorScheme = (NES_ColorScheme) context.level().mapConfig().get("nesColorScheme");
+                Properties p = context.level().world().map().terrain().getProperties();
+                var nesColorScheme = (NES_ColorScheme) p.get("nesColorScheme");
                 color = Color.valueOf(nesColorScheme.fillColor());
             }
             scores3D.showTextAsScore(GAME_OVER_TEXT, color);

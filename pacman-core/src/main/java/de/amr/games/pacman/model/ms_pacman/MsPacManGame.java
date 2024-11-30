@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Properties;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -94,7 +94,7 @@ public class MsPacManGame extends GameModel {
      * </ul>
      * <p>
      */
-    private static Map<String, Object> getMapConfig(List<WorldMap> maps, int levelNumber) {
+    private static WorldMap getMapConfig(List<WorldMap> maps, int levelNumber) {
         final int mapNumber = switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
@@ -103,11 +103,12 @@ public class MsPacManGame extends GameModel {
             default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
         };
         int colorMapIndex = levelNumber < 14 ? mapNumber - 1 : mapNumber + 2 - 1;
-        return Map.of(
-            "mapNumber", mapNumber,
-            "worldMap",  new WorldMap(maps.get(mapNumber - 1)),
-            "colorMapIndex", colorMapIndex
-        );
+        WorldMap worldMap = new WorldMap(maps.get(mapNumber - 1));
+        Properties p = worldMap.terrain().getProperties();
+        p.put("mapNumber", mapNumber);
+        p.put("worldMap",  worldMap); // TODO remove
+        p.put("colorMapIndex", colorMapIndex);
+        return worldMap;
     }
 
     private static int intermissionNumberAfterLevel(int number) {
@@ -262,8 +263,7 @@ public class MsPacManGame extends GameModel {
         levelCounterEnabled = level.number < 8;
         level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
         level.setNumFlashes(levelData(level.number).numFlashes());
-        level.setMapConfig(getMapConfig(maps, level.number));
-        WorldMap worldMap = (WorldMap) level.mapConfig().get("worldMap");
+        WorldMap worldMap = getMapConfig(maps, level.number);
         createWorldAndPopulation(worldMap);
         level.pac().setAutopilot(autopilot);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));

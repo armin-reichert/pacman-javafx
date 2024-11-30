@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
@@ -46,7 +47,7 @@ public interface GameRenderer {
         );
     }
 
-    default void update(Map<String, Object> mapConfig) {}
+    default void update(WorldMap mapConfig) {}
     AssetStorage assets();
     Color backgroundColor();
     void setBackgroundColor(Color color);

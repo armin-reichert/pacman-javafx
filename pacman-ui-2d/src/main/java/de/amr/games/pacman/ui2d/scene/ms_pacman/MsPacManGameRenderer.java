@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
@@ -130,8 +131,8 @@ public class MsPacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void update(Map<String, Object> mapConfig) {
-        int index = (int) mapConfig.get("colorMapIndex");
+    public void update(WorldMap worldMap) {
+        int index = (int) worldMap.terrain().getProperties().get("colorMapIndex");
         fullMapSprite = FULL_MAPS_SPRITES[index];
         emptyMapSprite = EMPTY_MAPS_SPRITES[index];
         flashingMapSprite = new ImageArea(flashingMazesImage, FLASHING_MAP_SPRITES[index]);

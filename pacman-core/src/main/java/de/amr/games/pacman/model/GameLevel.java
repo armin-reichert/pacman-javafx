@@ -144,15 +144,6 @@ public class GameLevel {
         return Optional.ofNullable(bonus);
     }
 
-    public void setMapConfig(Map<String, Object> mapConfig) {
-        this.mapConfig = mapConfig;
-    }
-
-    //TODO better naming
-    public Map<String, Object> mapConfig() {
-        return mapConfig;
-    }
-
     public byte nextBonusIndex() {
         return nextBonusIndex;
     }

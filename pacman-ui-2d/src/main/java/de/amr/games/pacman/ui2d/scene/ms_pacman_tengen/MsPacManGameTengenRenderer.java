@@ -33,7 +33,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
-import java.util.Map;
+import java.util.Properties;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.Animations.*;
@@ -77,14 +77,15 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     }
 
     @Override
-    public void update(Map<String, Object> mapConfig) {
-        MapCategory category = (MapCategory) mapConfig.get("mapCategory");
-        NES_ColorScheme nesColorScheme = (NES_ColorScheme) mapConfig.get("nesColorScheme");
+    public void update(WorldMap worldMap) {
+        Properties p = worldMap.terrain().getProperties();
+        MapCategory category = (MapCategory) p.get("mapCategory");
+        NES_ColorScheme nesColorScheme = (NES_ColorScheme) p.get("nesColorScheme");
         mapSprite = switch (category) {
-            case ARCADE  -> arcadeMaps.sprite(mapConfig);
-            case MINI    -> nonArcadeMaps.miniMapSprite(mapConfig);
-            case BIG     -> nonArcadeMaps.bigMapSprite(mapConfig);
-            case STRANGE -> nonArcadeMaps.strangeMapSprite(mapConfig);
+            case ARCADE  -> arcadeMaps.sprite(worldMap);
+            case MINI    -> nonArcadeMaps.miniMapSprite(worldMap);
+            case BIG     -> nonArcadeMaps.bigMapSprite(worldMap);
+            case STRANGE -> nonArcadeMaps.strangeMapSprite(worldMap);
         };
 
         terrainRenderer.setMapBackgroundColor(bgColor);
@@ -234,7 +235,6 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
 
         var game = (MsPacManGameTengen) context.game();
         GameLevel level = game.level().orElseThrow();
-        Map<String, Object> mapConfig = level.mapConfig();
 
         if (!isUsingDefaultGameOptions(game)) {
             drawGameOptionsInfo(world.map().terrain(), game);
@@ -245,7 +245,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         // TODO: vector rendering looks really bad for some maps.
         //var mapCategory = (MapCategory) mapConfig.get("mapCategory");
         MapCategory mapCategory = game.mapCategory(); // must use this one because e.g. STRANGE maps use maps from BIG map set etc.
-        int mapNumber = (int) mapConfig.get("mapNumber");
+        int mapNumber = (int) world.map().terrain().getProperties().get("mapNumber");
         boolean mapImageExists = game.isDemoLevel() || isMapImageAvailable(level.number, mapCategory);
         if (mapImageExists) {
             drawLevelMessage(level, game.isDemoLevel()); // message appears under map image so draw it first
@@ -287,7 +287,8 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
                 case GAME_OVER -> {
                     Color color = assets.color(assetPrefix + ".color.game_over_message");
                     if (demoLevel) {
-                        var nesColorScheme = (NES_ColorScheme) level.mapConfig().get("nesColorScheme");
+                        Properties p = level.world().map().terrain().getProperties();
+                        var nesColorScheme = (NES_ColorScheme) p.get("nesColorScheme");
                         color = Color.valueOf(nesColorScheme.strokeColor());
                     }
                     drawText("GAME OVER", x, y, color);
@@ -455,7 +456,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             binding.key(NES.JoypadButton.BTN_START),
             binding.key(NES.JoypadButton.BTN_B),
             binding.key(NES.JoypadButton.BTN_A)
-        ), 0, scaled(1*TS));
+        ), 0, scaled(TS));
         ctx().strokeText(line2.formatted(
                 binding.key(NES.JoypadButton.BTN_UP),
                 binding.key(NES.JoypadButton.BTN_DOWN),

@@ -310,7 +310,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             case HUNTING -> movingCamera.focusPlayer(true);
             case LEVEL_COMPLETE -> {
                 levelCompleteAnimation = new LevelCompleteAnimationTengen(
-                    context.level().mapConfig(), context.level().numFlashes(), 10);
+                    context.level().world().map(), context.level().numFlashes(), 10);
                 levelCompleteAnimation.setOnHideGhosts(() -> context.level().ghosts().forEach(Ghost::hide));
                 levelCompleteAnimation.setOnFinished(() -> state.timer().expire());
                 levelCompleteAnimation.start();
@@ -412,7 +412,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         r.setScaling(scaling());
         r.clearCanvas();
         context.game().level().ifPresent(level -> {
-            r.update(level.mapConfig());
+            r.update(level.world().map());
             r.ctx().save();
             r.ctx().translate(scaled(2 * TS), 0);
             drawSceneContent();

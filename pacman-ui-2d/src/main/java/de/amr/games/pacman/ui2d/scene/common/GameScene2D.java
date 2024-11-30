@@ -103,7 +103,7 @@ public abstract class GameScene2D implements GameScene {
         if (context.isScoreVisible()) {
             gr.drawScores(context);
         }
-        context.game().level().ifPresent(level -> gr.update(level.mapConfig()));
+        context.game().level().ifPresent(level -> gr.update(level.world().map()));
         drawSceneContent();
         if (debugInfoVisiblePy.get()) {
             drawDebugInfo();

@@ -4,13 +4,14 @@
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.scene.image.Image;
 
-import java.util.Map;
+import java.util.Properties;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.RectArea.rect;
@@ -66,8 +67,9 @@ public class NonArcadeMaps {
         return STRANGE_MAP_15_SPRITES[index == 3 ? 1 : index];
     }
 
-    public ImageArea miniMapSprite(Map<String, Object> mapConfig) {
-        int mapNumber = (int) mapConfig.get("mapNumber");
+    public ImageArea miniMapSprite(WorldMap worldMap) {
+        Properties p = worldMap.terrain().getProperties();
+        int mapNumber = (int) p.get("mapNumber");
         int spriteNumber = switch (mapNumber) {
             case 1 -> 34;
             case 2 -> 35;
@@ -80,8 +82,9 @@ public class NonArcadeMaps {
         return sprite(spriteNumber);
     }
 
-    public ImageArea bigMapSprite(Map<String, Object> mapConfig) {
-        int mapNumber = (int) mapConfig.get("mapNumber");
+    public ImageArea bigMapSprite(WorldMap worldMap) {
+        Properties p = worldMap.terrain().getProperties();
+        int mapNumber = (int) p.get("mapNumber");
         int spriteNumber = switch (mapNumber) {
             case  1 -> 19;
             case  2 -> 20;
@@ -99,8 +102,9 @@ public class NonArcadeMaps {
         return sprite(spriteNumber);
     }
 
-    public ImageArea strangeMapSprite(Map<String, Object> mapConfig) {
-        int levelNumber = (int) mapConfig.get("levelNumber");
+    public ImageArea strangeMapSprite(WorldMap worldMap) {
+        Properties p = worldMap.terrain().getProperties();
+        int levelNumber = (int) p.get("levelNumber");
         return sprite(levelNumber);
     }
 }

@@ -19,6 +19,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 import java.util.Map;
+import java.util.Properties;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -116,8 +117,9 @@ public class PacManGameXXLRenderer implements GameRenderer {
             terrainRenderer.drawMap(ctx(), world.map().terrain());
         }
         else {
+            Properties p = world.map().terrain().getProperties();
             @SuppressWarnings("unchecked")
-            Map<String, String> mapColorScheme = (Map<String, String>) context.level().mapConfig().get("colorMap");
+            Map<String, String> mapColorScheme = (Map<String, String>) p.get("colorMap");
             terrainRenderer.setMapBackgroundColor(bgColor);
             terrainRenderer.setWallStrokeColor(Color.web(mapColorScheme.get("stroke")));
             terrainRenderer.setWallFillColor(Color.web(mapColorScheme.get("fill")));

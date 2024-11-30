@@ -426,11 +426,8 @@ public class MsPacManGameTengen extends GameModel {
 
     @Override
     public void configureNormalLevel() {
-        Map<String, Object> mapConfig = mapManager.getMapConfig(mapCategory, level.number);
-        WorldMap worldMap = (WorldMap) mapConfig.get("worldMap");
+        WorldMap worldMap = mapManager.getMapConfig(mapCategory, level.number);
         createWorldAndPopulation(worldMap);
-
-        level.setMapConfig(mapConfig);
         level.setNumFlashes(5); // TODO check this
         level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
         level.pac().setAutopilot(autopilot);
@@ -445,11 +442,8 @@ public class MsPacManGameTengen extends GameModel {
 
     @Override
     public void configureDemoLevel() {
-        Map<String, Object> mapConfig = mapManager.getMapConfig(mapCategory, level.number);
-        WorldMap worldMap = (WorldMap) mapConfig.get("worldMap");
+        WorldMap worldMap = mapManager.getMapConfig(mapCategory, level.number);
         createWorldAndPopulation(worldMap);
-
-        level.setMapConfig(mapConfig);
         level.setNumFlashes(5); // TODO check this
         level.setIntermissionNumber(0);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));

@@ -17,10 +17,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static de.amr.games.pacman.lib.Globals.*;
 
@@ -88,17 +85,15 @@ public class PacManGameXXL extends PacManGame {
     @Override
     public void configureNormalLevel() {
         levelCounterEnabled = true;
-        Map<String, Object> mapConfig = createMapConfig(level.number);
-        level.setMapConfig(mapConfig);
+        WorldMap worldMap = createMapConfig(level.number);
         level.setNumFlashes(levelData(level.number).numFlashes());
         level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
-        WorldMap worldMap = (WorldMap) mapConfig.get("worldMap");
         populateLevel(worldMap);
         level.pac().setAutopilot(autopilot);
         setCruiseElroy(0);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
-        Logger.info("Map config: {}, URL: {}", mapConfig, worldMap.url());
+        Logger.info("World map properties: {}, URL: {}", worldMap.terrain().getProperties(), worldMap.url());
     }
 
     @Override
@@ -109,26 +104,26 @@ public class PacManGameXXL extends PacManGame {
         setDemoLevelBehavior();
     }
 
-    private Map<String, Object> createMapConfig(int levelNumber) {
+    private WorldMap createMapConfig(int levelNumber) {
         WorldMap worldMap = null;
         Map<String, String> colorMap;
         switch (mapSelectionMode) {
             case NO_CUSTOM_MAPS -> {
                 worldMap = levelNumber <= standardMaps.size()
-                    ? standardMaps.get(levelNumber - 1)
-                    : standardMaps.get(randomInt(0, standardMaps.size()));
+                    ? new WorldMap(standardMaps.get(levelNumber - 1))
+                    : new WorldMap(standardMaps.get(randomInt(0, standardMaps.size())));
             }
             case CUSTOM_MAPS_FIRST -> {
                 List<WorldMap> maps = new ArrayList<>(customMapsSortedByFile());
                 maps.addAll(standardMaps);
                 worldMap = levelNumber <= maps.size()
-                    ? maps.get(levelNumber - 1)
-                    : maps.get(randomInt(0, maps.size()));
+                    ? new WorldMap(maps.get(levelNumber - 1))
+                    : new WorldMap(maps.get(randomInt(0, maps.size())));
             }
             case ALL_RANDOM -> {
                 List<WorldMap> maps = new ArrayList<>(customMapsSortedByFile());
                 maps.addAll(standardMaps);
-                worldMap = maps.get(randomInt(0, maps.size()));
+                worldMap = new WorldMap(maps.get(randomInt(0, maps.size())));
             }
         }
         if (standardMaps.contains(worldMap)) {
@@ -142,7 +137,9 @@ public class PacManGameXXL extends PacManGame {
                 "pellet", worldMap.food().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_FOOD, "ffffff")
             );
         }
-        return Map.of("worldMap", worldMap, "colorMap", colorMap);
+        Properties p = worldMap.terrain().getProperties();
+        p.put("colorMap", colorMap);
+        return worldMap;
     }
 
     @Override

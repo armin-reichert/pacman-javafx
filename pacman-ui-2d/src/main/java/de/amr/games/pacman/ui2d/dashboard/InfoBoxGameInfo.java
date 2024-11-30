@@ -17,6 +17,7 @@ import de.amr.games.pacman.ui2d.scene.pacman.PacManGameRenderer;
 import javafx.scene.paint.Color;
 
 import java.util.Map;
+import java.util.Properties;
 
 import static de.amr.games.pacman.lib.timer.TickTimer.ticksToString;
 
@@ -38,16 +39,17 @@ public class InfoBoxGameInfo extends InfoBox {
             return url.substring(url.lastIndexOf("/") + 1);
         }));
         addLabeledValue("Fill/Stroke/Pellet", ifLevelPresent(level -> {
-            if (level.mapConfig().containsKey("nesColorScheme")) {
-                var ncs = (NES_ColorScheme) level.mapConfig().get("nesColorScheme");
+            Properties p = level.world().map().terrain().getProperties();
+            if (p.containsKey("nesColorScheme")) {
+                var ncs = (NES_ColorScheme) p.get("nesColorScheme");
                 return "%s %s %s".formatted(ncs.fillColor(), ncs.strokeColor(), ncs.pelletColor());
-            } else if (level.mapConfig().containsKey("colorMap")) {
+            } else if (p.containsKey("colorMap")) {
                 // Pac-Man XXL game
                 @SuppressWarnings("unchecked")
-                var cm = (Map<String, String>) level.mapConfig().get("colorMap");
+                var cm = (Map<String, String>) p.get("colorMap");
                 return "%s %s %s".formatted(cm.get("fill"), cm.get("stroke"), cm.get("pellet"));
-            } else if (level.mapConfig().containsKey("colorMapIndex")) {
-                int colorMapIndex = (int) level.mapConfig().get("colorMapIndex");
+            } else if (p.containsKey("colorMapIndex")) {
+                int colorMapIndex = (int) p.get("colorMapIndex");
                 Map<String, Color> cm = context.gameVariant() == GameVariant.PACMAN
                     ? PacManGameRenderer.COLOR_MAP
                     : MsPacManGameRenderer.COLOR_MAPS.get(colorMapIndex);
