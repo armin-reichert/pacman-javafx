@@ -550,7 +550,7 @@ public class PlayScene3D implements GameScene, CameraControlledGameScene {
 
     private void playPacManDiesAnimation() {
         context.gameState().timer().resetIndefiniteTime();
-        Animation animation = level3D.pac3D().createDyingAnimation();
+        Animation animation = level3D.pac3D().createDyingAnimation(context.sound());
         animation.setDelay(Duration.seconds(1));
         animation.setOnFinished(e -> context.gameState().timer().expire());
         animation.play();

@@ -30,7 +30,6 @@ import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
  */
 public class MsPacMan3D implements Pac3D {
 
-    private final GameSound sounds;
     private final Pac msPacMan;
     private final PacShape3D shape3D;
     private RotateTransition hipSwayingAnimation;
@@ -42,13 +41,11 @@ public class MsPacMan3D implements Pac3D {
      * @param msPacMan Ms. Pac-Man instance
      * @param size diameter of Pac-Man
      * @param assets asset storage
-     * @param sounds game sounds
      */
-    public MsPacMan3D(GameVariant variant, Pac msPacMan, double size, AssetStorage assets, GameSound sounds) {
+    public MsPacMan3D(GameVariant variant, Pac msPacMan, double size, AssetStorage assets) {
         checkNotNull(variant);
         this.msPacMan = checkNotNull(msPacMan);
         checkNotNull(assets);
-        this.sounds = checkNotNull(sounds);
 
         String assetPrefix = GameAssets2D.assetPrefix(variant) + ".";
         Model3D model3D = assets.get("model3D.pacman");
@@ -110,7 +107,7 @@ public class MsPacMan3D implements Pac3D {
     }
 
     @Override
-    public Animation createDyingAnimation() {
+    public Animation createDyingAnimation(GameSound sounds) {
         //TODO use Timeline?
         var spinning = new RotateTransition(Duration.seconds(0.25), shape3D);
         spinning.setAxis(Rotate.Z_AXIS);

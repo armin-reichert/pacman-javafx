@@ -28,7 +28,6 @@ import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
  */
 public class PacMan3D implements Pac3D {
 
-    private final GameSound sounds;
     private final Pac pacMan;
     private final PacShape3D shape3D;
     private RotateTransition headBanging;
@@ -40,13 +39,11 @@ public class PacMan3D implements Pac3D {
      * @param pacMan Pac-Man instance
      * @param size diameter of Pac-Man
      * @param assets asset map
-     * @param sounds game sounds
      */
-    public PacMan3D(GameVariant variant, Pac pacMan, double size, AssetStorage assets, GameSound sounds) {
+    public PacMan3D(GameVariant variant, Pac pacMan, double size, AssetStorage assets) {
         checkNotNull(variant);
         this.pacMan = checkNotNull(pacMan);
         checkNotNull(assets);
-        this.sounds = sounds;
 
         String assetPrefix = GameAssets2D.assetPrefix(variant) + ".";
 
@@ -103,7 +100,7 @@ public class PacMan3D implements Pac3D {
     }
 
     @Override
-    public Animation createDyingAnimation() {
+    public Animation createDyingAnimation(GameSound sounds) {
         Duration duration = Duration.seconds(1.5);
         byte numSpins = 6;
 

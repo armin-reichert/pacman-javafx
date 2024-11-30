@@ -22,7 +22,6 @@ import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGameRenderer;
-import de.amr.games.pacman.ui2d.sound.GameSound;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.GameAssets3D;
@@ -75,11 +74,11 @@ public class GameLevel3D {
 
     static final PhongMaterial DEFAULT_MATERIAL = new PhongMaterial();
 
-    static Pac3D createPac3D(GameVariant variant, AssetStorage assets, GameSound sounds, Pac pac) {
+    static Pac3D createPac3D(GameVariant variant, AssetStorage assets, Pac pac) {
         String prefix = assetPrefix(variant) + ".";
         Pac3D pac3D = switch (variant) {
-            case MS_PACMAN, MS_PACMAN_TENGEN -> new MsPacMan3D(variant, pac, PAC_SIZE, assets, sounds);
-            case PACMAN, PACMAN_XXL          -> new PacMan3D(variant, pac, PAC_SIZE, assets, sounds);
+            case MS_PACMAN, MS_PACMAN_TENGEN -> new MsPacMan3D(variant, pac, PAC_SIZE, assets);
+            case PACMAN, PACMAN_XXL          -> new PacMan3D(variant, pac, PAC_SIZE, assets);
         };
         pac3D.shape3D().light().setColor(assets.color(prefix + "pac.color.head").desaturate());
         pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
@@ -210,7 +209,7 @@ public class GameLevel3D {
         final AssetStorage assets = context.assets();
         final Map<String, Color> colorMap = extractColorMap(world.map());
 
-        pac3D = createPac3D(variant, assets, context.sound(), level.pac());
+        pac3D = createPac3D(variant, assets, level.pac());
         ghosts3D = level.ghosts()
             .map(ghost -> createMutableGhost3D(assets, assetPrefix(variant), ghost, level.numFlashes()))
             .toList();
