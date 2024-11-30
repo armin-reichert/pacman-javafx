@@ -106,7 +106,6 @@ public class MsPacManGame extends GameModel {
         WorldMap worldMap = new WorldMap(maps.get(mapNumber - 1));
         Properties p = worldMap.terrain().getProperties();
         p.put("mapNumber", mapNumber);
-        p.put("worldMap",  worldMap); // TODO remove
         p.put("colorMapIndex", colorMapIndex);
         return worldMap;
     }
