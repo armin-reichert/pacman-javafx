@@ -227,11 +227,14 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     }
 
     @Override
+    public void drawWorld(GameWorld world, double x, double y) {
+    }
+
     public void drawWorld(GameContext context, GameWorld world, double mapX, double mapY) {
         ctx().setImageSmoothing(false);
 
-        var game = (MsPacManGameTengen) context.game();
-        GameLevel level = game.level().orElseThrow();
+        MsPacManGameTengen game = (MsPacManGameTengen) context.game();
+        GameLevel level = context.level();
 
         if (!isUsingDefaultGameOptions(game)) {
             drawGameOptionsInfo(world.map().terrain(), game);
@@ -271,7 +274,19 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             drawLevelMessage(level, game.isDemoLevel());
             terrainRenderer.drawMap(ctx(), world.map().terrain());
         }
-        context.level().bonus().ifPresent(bonus -> drawMovingBonus(spriteSheet, (MovingBonus) bonus));
+    }
+
+    @Override
+    public void drawBonus(Bonus bonus) {
+        ctx().save();
+        ctx().setImageSmoothing(false);
+        ctx().translate(0, ((MovingBonus) bonus).elongationY());
+        switch (bonus.state()) {
+            case Bonus.STATE_EDIBLE -> drawEntitySprite(bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawEntitySprite(bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
+            default -> {}
+        }
+        ctx().restore();
     }
 
     private void drawLevelMessage(GameLevel level, boolean demoLevel) {
@@ -387,18 +402,6 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         ctx().fillRect(0, y, width, TS);
         ctx().setFill(barColor);
         ctx().fillRect(0, y + 1, width, TS - 2);
-        ctx().restore();
-    }
-
-    public void drawMovingBonus(GameSpriteSheet spriteSheet, MovingBonus bonus) {
-        ctx().save();
-        ctx().setImageSmoothing(false);
-        ctx().translate(0, bonus.elongationY());
-        switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawEntitySprite(bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawEntitySprite(bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
-            default -> {}
-        }
         ctx().restore();
     }
 

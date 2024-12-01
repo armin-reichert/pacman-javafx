@@ -93,7 +93,7 @@ public class PacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawWorld(GameContext context, GameWorld world, double x, double y) {
+    public void drawWorld(GameWorld world, double x, double y) {
         double scaling = scaling();
         ctx().save();
         ctx().scale(scaling, scaling);
@@ -109,10 +109,9 @@ public class PacManGameRenderer implements GameRenderer {
             }
         }
         ctx().restore();
-        context.level().bonus().ifPresent(this::drawBonus);
     }
 
-    private void drawBonus(Bonus bonus) {
+    public void drawBonus(Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
             drawEntitySprite(bonus.entity(), spriteSheet().bonusSymbolSprite(bonus.symbol()));
         } else if (bonus.state() == Bonus.STATE_EATEN) {

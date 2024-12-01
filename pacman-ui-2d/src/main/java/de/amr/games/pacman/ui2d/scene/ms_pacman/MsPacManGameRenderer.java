@@ -139,7 +139,7 @@ public class MsPacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawWorld(GameContext context, GameWorld world, double x, double y) {
+    public void drawWorld(GameWorld world, double x, double y) {
         if (flashMode) {
             drawSubImageScaled(flashingMapSprite.source(), flashingMapSprite.area(), x, y);
         } else if (world.uneatenFoodCount() == 0) {
@@ -152,10 +152,9 @@ public class MsPacManGameRenderer implements GameRenderer {
             overPaintEnergizers(world, tile -> !blinking || world.hasEatenFoodAt(tile));
             ctx().restore();
         }
-        context.level().bonus().ifPresent(this::drawBonus);
     }
 
-    private void drawBonus(Bonus bonus) {
+    public void drawBonus(Bonus bonus) {
         MovingBonus movingBonus = (MovingBonus) bonus;
         ctx().save();
         ctx().translate(0, movingBonus.elongationY());

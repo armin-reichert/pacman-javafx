@@ -450,6 +450,8 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
             r.drawWorld(context, world, 0,  3 * TS);
         }
 
+        context.level().bonus().ifPresent(r::drawBonus);
+
         r.drawAnimatedEntity(msPacMan);
         ghostsInZOrder(level).forEach(r::drawAnimatedEntity);
 

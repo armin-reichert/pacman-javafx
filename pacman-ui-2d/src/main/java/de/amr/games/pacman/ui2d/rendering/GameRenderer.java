@@ -12,6 +12,7 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
+import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -184,7 +185,9 @@ public interface GameRenderer {
         });
     }
 
-    void drawWorld(GameContext context, GameWorld world, double x, double y);
+    void drawBonus(Bonus bonus);
+
+    void drawWorld(GameWorld world, double x, double y);
 
     void setFlashMode(boolean on);
 

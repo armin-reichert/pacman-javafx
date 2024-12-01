@@ -107,7 +107,7 @@ public class PacManGameXXLRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawWorld(GameContext context, GameWorld world, double x, double y) {
+    public void drawWorld(GameWorld world, double x, double y) {
         terrainRenderer.setMapBackgroundColor(bgColor);
         if (flashMode) {
             terrainRenderer.setMapBackgroundColor(bgColor);
@@ -132,10 +132,9 @@ public class PacManGameXXLRenderer implements GameRenderer {
                 world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
             }
         }
-        context.level().bonus().ifPresent(bonus -> drawStaticBonus(spriteSheet, bonus));
     }
 
-    private void drawStaticBonus(GameSpriteSheet spriteSheet, Bonus bonus) {
+    public void drawBonus(Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
             drawEntitySprite(bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
         } else if (bonus.state() == Bonus.STATE_EATEN) {

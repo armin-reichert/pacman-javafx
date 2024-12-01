@@ -134,31 +134,33 @@ public class PlayScene2D extends GameScene2D {
             Logger.warn("Tick {}: Cannot draw scene content: game world not yet available!", context.tick());
             return;
         }
+        GameLevel level = context.level();
 
         //TODO use more general solution, maybe terrain map property?
         if (context.gameVariant() == GameVariant.PACMAN_XXL) {
             PacManGameXXLRenderer r = (PacManGameXXLRenderer) gr;
-            r.setMessageAnchorPosition(centerBelowHouse(context.level().world()));
+            r.setMessageAnchorPosition(centerBelowHouse(level.world()));
         }
-        drawLevelMessage(context.level().message());
+        drawLevelMessage(level.message());
 
         boolean flashMode = levelCompleteAnimation != null && levelCompleteAnimation.isInHighlightPhase();
         gr.setFlashMode(flashMode);
-        gr.setBlinking(context.level().blinking().isOn());
-        gr.drawWorld(context, context.level().world(), 0, 3 * TS);
+        gr.setBlinking(level.blinking().isOn());
+        gr.drawWorld(level.world(), 0, 3 * TS);
+        level.bonus().ifPresent(gr::drawBonus);
 
-        gr.drawAnimatedEntity(context.level().pac());
+        gr.drawAnimatedEntity(level.pac());
         ghostsInZOrder().forEach(gr::drawAnimatedEntity);
 
         if (debugInfoVisiblePy.get()) {
-            gr.drawAnimatedCreatureInfo(context.level().pac());
+            gr.drawAnimatedCreatureInfo(level.pac());
             ghostsInZOrder().forEach(gr::drawAnimatedCreatureInfo);
         }
 
         if (context.game().canStartNewGame()) {
             //TODO: this code is ugly
             int numLivesShown = context.game().lives() - 1;
-            if (context.gameState() == GameState.STARTING_GAME && !context.level().pac().isVisible()) {
+            if (context.gameState() == GameState.STARTING_GAME && !level.pac().isVisible()) {
                 numLivesShown += 1;
             }
             gr.drawLivesCounter(numLivesShown, 5, 2 * TS, size().y() - 2 * TS);
