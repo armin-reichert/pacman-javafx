@@ -274,7 +274,17 @@ public class TileMap {
 
     public void print(Writer w) throws IOException {
         var pw = new PrintWriter(w);
-        properties.store(w, "");
+        // use Properties as raw map
+        for (Object key : properties.keySet()) {
+            Object value = properties.get(key);
+            if (value instanceof String) {
+                pw.println(key + "=" + value);
+            } else {
+                pw.println("#" + key + "=" + "value of non-string type ");
+            }
+        }
+        // This throws exception for non-string values
+        //properties.store(w, "");
         pw.println(DATA_SECTION_START);
         for (int row = 0; row < numRows(); ++row) {
             for (int col = 0; col < numCols(); ++col) {
