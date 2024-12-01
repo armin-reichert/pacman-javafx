@@ -12,6 +12,8 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Cylinder;
+import javafx.scene.transform.Rotate;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -66,11 +68,45 @@ public interface WallBuilder {
         return new Group(base, top);
     }
 
+    static void createCircularWall(
+        Group parent, TileMapPath path,
+        DoubleProperty wallHeightPy, double coatHeight,
+        Property<PhongMaterial> wallFillMaterialPy, Property<PhongMaterial> wallStrokeMaterialPy) {
+
+        Vector2i center = path.startTile().plus(1, 1).scaled(TS);
+
+        Cylinder base = new Cylinder(HTS, wallHeightPy.get());
+        base.setRotationAxis(Rotate.X_AXIS);
+        base.setRotate(90);
+        base.setTranslateX(center.x());
+        base.setTranslateY(center.y());
+        base.translateZProperty().bind(wallHeightPy.multiply(-0.5).add(2*coatHeight));
+        base.heightProperty().bind(wallHeightPy);
+        base.materialProperty().bind(wallFillMaterialPy);
+        base.drawModeProperty().bind(PY_3D_DRAW_MODE);
+
+        Cylinder top = new Cylinder(HTS, coatHeight);
+        top.setRotationAxis(Rotate.X_AXIS);
+        top.setRotate(90);
+        top.translateXProperty().bind(base.translateXProperty());
+        top.translateYProperty().bind(base.translateYProperty());
+        top.translateZProperty().bind(wallHeightPy.add(0.5*coatHeight).multiply(-1).add(2*coatHeight));
+        top.materialProperty().bind(wallStrokeMaterialPy);
+        top.drawModeProperty().bind(PY_3D_DRAW_MODE);
+
+        parent.getChildren().add(new Group(base, top));
+    }
+
     static void buildWallAlongPath(
         Group parent, TileMapPath path,
         DoubleProperty wallHeightPy, double thickness, double coatHeight,
         Property<PhongMaterial> wallFillMaterialPy, Property<PhongMaterial> wallStrokeMaterialPy)
     {
+        if (path.size() == 4) {
+            createCircularWall(parent, path, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+            return;
+        }
+
         Vector2i startTile = path.startTile(), endTile = startTile;
         Vector2i prev = null;
         Node segment;
