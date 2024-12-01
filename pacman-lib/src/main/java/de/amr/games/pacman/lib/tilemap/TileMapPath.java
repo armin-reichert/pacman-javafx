@@ -19,6 +19,7 @@ public class TileMapPath implements Iterable<Vector2i> {
 
     private final Vector2i startTile;
     private final List<Vector2i> vectors = new ArrayList<>();
+    private boolean closed;
 
     public TileMapPath(Vector2i startTile) {
         this.startTile = Objects.requireNonNull(startTile);
@@ -32,9 +33,12 @@ public class TileMapPath implements Iterable<Vector2i> {
         return vectors.size();
     }
 
+    public boolean isClosed() { return closed; }
+
     public void add(Direction dir) {
         Objects.requireNonNull(dir);
         vectors.add(dir.vector());
+        checkClosed();
     }
 
     public Vector2i vector(int i) {
@@ -44,5 +48,13 @@ public class TileMapPath implements Iterable<Vector2i> {
     @Override
     public Iterator<Vector2i> iterator() {
         return vectors.iterator();
+    }
+
+    private void checkClosed() {
+        Vector2i tile = startTile;
+        for (Vector2i vector : vectors) {
+            tile = tile.plus(vector);
+        }
+        closed = tile.equals(startTile);
     }
 }

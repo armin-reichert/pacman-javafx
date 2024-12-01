@@ -102,7 +102,7 @@ public interface WallBuilder {
         DoubleProperty wallHeightPy, double thickness, double coatHeight,
         Property<PhongMaterial> wallFillMaterialPy, Property<PhongMaterial> wallStrokeMaterialPy)
     {
-        if (path.size() == 4) {
+        if (path.size() == 4 && path.isClosed()) {
             createCircularWall(parent, path, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
             return;
         }
