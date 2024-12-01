@@ -21,7 +21,6 @@ import de.amr.games.pacman.model.ms_pacman_tengen.*;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;

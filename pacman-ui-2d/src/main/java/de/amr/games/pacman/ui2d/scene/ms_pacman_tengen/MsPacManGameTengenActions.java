@@ -8,7 +8,10 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.model.ms_pacman_tengen.PacBooster;
-import de.amr.games.pacman.ui2d.*;
+import de.amr.games.pacman.ui2d.GameAction;
+import de.amr.games.pacman.ui2d.GameActionProvider;
+import de.amr.games.pacman.ui2d.GameActions2D;
+import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import org.tinylog.Logger;
 

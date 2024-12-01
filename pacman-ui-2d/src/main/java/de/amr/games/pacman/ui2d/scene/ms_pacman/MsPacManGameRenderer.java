@@ -10,9 +10,9 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
-import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.ImageArea;
+import de.amr.games.pacman.ui2d.scene.common.WorldMapColoring;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -22,7 +22,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.util.List;
-import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.RectArea.rect;
@@ -32,13 +31,13 @@ import static de.amr.games.pacman.lib.RectArea.rect;
  */
 public class MsPacManGameRenderer implements GameRenderer {
 
-    public static final List<Map<String, Color>> COLOR_MAPS = List.of(
-        Map.of("fill", Color.valueOf("FFB7AE"), "stroke", Color.valueOf("FF0000"), "door", Color.valueOf("FCB5FF"), "pellet", Color.valueOf("DEDEFF")),
-        Map.of("fill", Color.valueOf("47B7FF"), "stroke", Color.valueOf("DEDEFF"), "door", Color.valueOf("FCB5FF"), "pellet", Color.valueOf("FFFF00")),
-        Map.of("fill", Color.valueOf("DE9751"), "stroke", Color.valueOf("DEDEFF"), "door", Color.valueOf("FCB5FF"), "pellet", Color.valueOf("FF0000")),
-        Map.of("fill", Color.valueOf("2121FF"), "stroke", Color.valueOf("FFB751"), "door", Color.valueOf("FCB5FF"), "pellet", Color.valueOf("DEDEFF")),
-        Map.of("fill", Color.valueOf("FFB7FF"), "stroke", Color.valueOf("FFFF00"), "door", Color.valueOf("FCB5FF"), "pellet", Color.valueOf("00FFFF")),
-        Map.of("fill", Color.valueOf("FFB7AE"), "stroke", Color.valueOf("FF0000"), "door", Color.valueOf("FCB5FF"), "pellet", Color.valueOf("DEDEFF"))
+    public static final List<WorldMapColoring> WORLD_MAP_COLORINGS = List.of(
+        new WorldMapColoring("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
+        new WorldMapColoring("47B7FF", "DEDEFF", "FCB5FF","FFFF00"),
+        new WorldMapColoring("DE9751", "DEDEFF", "FCB5FF","FF0000"),
+        new WorldMapColoring("2121FF", "FFB751", "FCB5FF","DEDEFF"),
+        new WorldMapColoring("FFB7FF", "FFFF00", "FCB5FF","00FFFF"),
+        new WorldMapColoring("FFB7AE", "FF0000", "FCB5FF","DEDEFF")
     );
 
     private static final RectArea[] FULL_MAPS_SPRITES = {

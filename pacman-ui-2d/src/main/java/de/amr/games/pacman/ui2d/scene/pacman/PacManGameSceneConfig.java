@@ -4,15 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.pacman;
 
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.scene.common.BootScene;
-import de.amr.games.pacman.ui2d.scene.common.GameScene;
-import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
-import de.amr.games.pacman.ui2d.scene.common.PlayScene2D;
+import de.amr.games.pacman.ui2d.scene.common.*;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.scene.canvas.Canvas;
 
@@ -59,6 +57,11 @@ public class PacManGameSceneConfig implements GameSceneConfig {
     @Override
     public PacManGameRenderer createRenderer(Canvas canvas) {
         return new PacManGameRenderer(assets, canvas);
+    }
+
+    @Override
+    public WorldMapColoring worldMapColoring(WorldMap worldMap) {
+        return PacManGameRenderer.WORLDMAP_COLORING;
     }
 
     @Override

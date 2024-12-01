@@ -4,14 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.scene.common.BootScene;
-import de.amr.games.pacman.ui2d.scene.common.GameScene;
-import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
-import de.amr.games.pacman.ui2d.scene.common.PlayScene2D;
+import de.amr.games.pacman.ui2d.scene.common.*;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.scene.canvas.Canvas;
 
@@ -52,6 +50,11 @@ public class MsPacManGameSceneConfig implements GameSceneConfig {
     @Override
     public Stream<GameScene> gameScenes() {
         return scenesByID.values().stream();
+    }
+
+    @Override
+    public WorldMapColoring worldMapColoring(WorldMap worldMap) {
+        return MsPacManGameRenderer.WORLD_MAP_COLORINGS.get(worldMap.getConfigValue("colorMapIndex"));
     }
 
     @Override

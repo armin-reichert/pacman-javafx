@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.common;
 
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -12,9 +13,6 @@ import javafx.scene.canvas.Canvas;
 
 import java.util.stream.Stream;
 
-/**
- * @author Armin Reichert
- */
 public interface GameSceneConfig {
     void set(String id, GameScene gameScene);
     GameScene get(String id);
@@ -27,6 +25,7 @@ public interface GameSceneConfig {
     }
     GameSpriteSheet spriteSheet();
     GameRenderer createRenderer(Canvas canvas);
+    WorldMapColoring worldMapColoring(WorldMap worldMap);
     void createActorAnimations(GameLevel level);
     GameScene selectGameScene(GameContext context);
 }

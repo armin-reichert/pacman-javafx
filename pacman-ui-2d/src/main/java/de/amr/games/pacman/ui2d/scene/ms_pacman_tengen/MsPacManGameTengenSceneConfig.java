@@ -6,12 +6,15 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.NES;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.PacManGames2dApp;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
+import de.amr.games.pacman.ui2d.scene.common.WorldMapColoring;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -85,13 +88,18 @@ public class MsPacManGameTengenSceneConfig implements GameSceneConfig {
     }
 
     @Override
+    public GameSpriteSheet spriteSheet() {
+        return spriteSheet;
+    }
+
+    @Override
     public MsPacManGameTengenRenderer createRenderer(Canvas canvas) {
         return new MsPacManGameTengenRenderer(assets, spriteSheet, canvas);
     }
 
     @Override
-    public GameSpriteSheet spriteSheet() {
-        return spriteSheet;
+    public WorldMapColoring worldMapColoring(WorldMap worldMap) {
+        return new WorldMapColoring((NES_ColorScheme) worldMap.getConfigValue("nesColorScheme"));
     }
 
     @Override

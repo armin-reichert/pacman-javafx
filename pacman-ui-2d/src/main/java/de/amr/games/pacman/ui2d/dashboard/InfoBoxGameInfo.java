@@ -13,6 +13,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.scene.common.WorldMapColoring;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui2d.scene.pacman.PacManGameRenderer;
 import javafx.scene.paint.Color;
@@ -48,11 +49,11 @@ public class InfoBoxGameInfo extends InfoBox {
                 Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
                 return "%s %s %s".formatted(colorMap.get("fill"), colorMap.get("stroke"), colorMap.get("pellet"));
             } else if (worldMap.hasConfigValue("colorMapIndex")) {
-                int colorMapIndex = worldMap.getConfigValue("colorMapIndex");
-                Map<String, Color> colorMap = context.gameVariant() == GameVariant.PACMAN
-                    ? PacManGameRenderer.COLOR_MAP
-                    : MsPacManGameRenderer.COLOR_MAPS.get(colorMapIndex);
-                return formatColorMap(colorMap.get("fill"), colorMap.get("stroke"), colorMap.get("pellet"));
+                int index = worldMap.getConfigValue("colorMapIndex");
+                WorldMapColoring coloring = context.gameVariant() == GameVariant.PACMAN
+                    ? PacManGameRenderer.WORLDMAP_COLORING
+                    : MsPacManGameRenderer.WORLD_MAP_COLORINGS.get(index);
+                return formatColorMap(coloring.fill(), coloring.stroke(), coloring.pellet());
             } else {
                 return InfoText.NO_INFO;
             }

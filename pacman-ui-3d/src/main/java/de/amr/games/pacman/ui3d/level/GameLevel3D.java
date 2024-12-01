@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui3d.level;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -16,12 +15,9 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameRenderer;
-import de.amr.games.pacman.ui2d.scene.pacman.PacManGameRenderer;
+import de.amr.games.pacman.ui2d.scene.common.WorldMapColoring;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.GameAssets3D;
@@ -202,12 +198,13 @@ public class GameLevel3D {
 
     public GameLevel3D(GameContext context) {
         this.context = context;
+
+        final AssetStorage assets = context.assets();
         final GameVariant variant = context.gameVariant();
         final GameModel game = context.game();
-        final GameLevel level = game.level().orElseThrow();
+        final GameLevel level = context.level();
         final GameWorld world = level.world();
-        final AssetStorage assets = context.assets();
-        final Map<String, Color> colorMap = extractColorMap(world.map());
+        final WorldMapColoring coloring = context.gameSceneConfig(variant).worldMapColoring(world.map());
 
         pac3D = createPac3D(variant, assets, level.pac());
         ghosts3D = level.ghosts()
@@ -223,8 +220,8 @@ public class GameLevel3D {
 
         wallStrokeMaterialPy.bind(wallStrokeColorPy.map(Ufx::coloredMaterial));
 
-        buildWorld3D(world, assets, colorMap);
-        addFood3D(world, assets, colorMap);
+        buildWorld3D(world, assets, coloring);
+        addFood3D(world, assets, coloring);
 
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
         root.getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
@@ -233,24 +230,6 @@ public class GameLevel3D {
 
         PY_3D_WALL_HEIGHT.addListener((py,ov,nv) -> obstacleHeightPy.set(nv.doubleValue()));
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
-    }
-
-    //TODO this should be done elsewhere
-    private Map<String, Color> extractColorMap(WorldMap worldMap) {
-        return switch (context.gameVariant()) {
-            case PACMAN           -> PacManGameRenderer.COLOR_MAP;
-            case PACMAN_XXL       -> GameRenderer.toColorMap(worldMap.getConfigValue("colorMap"));
-            case MS_PACMAN        -> MsPacManGameRenderer.COLOR_MAPS.get(worldMap.getConfigValue("colorMapIndex"));
-            case MS_PACMAN_TENGEN -> {
-                NES_ColorScheme ncs = worldMap.getConfigValue("nesColorScheme");
-                yield Map.of(
-                    "fill", Color.valueOf(ncs.fillColor()),
-                    "stroke", Color.valueOf(ncs.strokeColor()),
-                    "door", Color.valueOf(ncs.strokeColor()),
-                    "pellet", Color.valueOf(ncs.pelletColor())
-                );
-            }
-        };
     }
 
     public void addLevelCounter() {
@@ -291,12 +270,12 @@ public class GameLevel3D {
         }
     }
 
-    private void buildWorld3D(GameWorld world, AssetStorage assets, Map<String, Color> colorMap) {
+    private void buildWorld3D(GameWorld world, AssetStorage assets, WorldMapColoring coloring) {
         //TODO check this
         obstacleHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
-        wallStrokeColorPy.set(colorMap.get("stroke"));
-        wallFillColorPy.set(colorMap.get("fill"));
+        wallStrokeColorPy.set(coloring.stroke());
+        wallFillColorPy.set(coloring.fill());
 
         TileMap terrain = world.map().terrain();
         Box floor = createFloor(assets.get("floor_textures"), terrain.numCols() * TS - 1, terrain.numRows() * TS - 1);
@@ -314,7 +293,7 @@ public class GameLevel3D {
                     wallFillMaterialPy, wallStrokeMaterialPy));
         });
 
-        house3D = new House3D(world, colorMap);
+        house3D = new House3D(world, coloring);
         house3D.heightPy.bind(houseHeightPy);
         house3D.fillMaterialPy.bind(wallFillColorPy.map(fillColor -> opaqueColor(fillColor, HOUSE_OPACITY)).map(Ufx::coloredMaterial));
         house3D.strokeMaterialPy.bind(wallStrokeMaterialPy);
@@ -348,10 +327,9 @@ public class GameLevel3D {
             : textures.get(textureName);
     }
 
-    private void addFood3D(GameWorld world, AssetStorage assets, Map<String, Color> colorMap) {
+    private void addFood3D(GameWorld world, AssetStorage assets, WorldMapColoring coloring) {
         TileMap foodMap = world.map().food();
-        Color foodColor = colorMap.get("pellet");
-        Material foodMaterial = coloredMaterial(foodColor);
+        Material foodMaterial = coloredMaterial(coloring.pellet());
         Model3D pelletModel3D = assets.get("model3D.pellet");
         foodMap.tiles().filter(world::hasFoodAt).forEach(tile -> {
             Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);

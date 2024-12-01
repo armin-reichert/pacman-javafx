@@ -28,7 +28,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
-import java.util.Map;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -38,15 +37,6 @@ import static java.util.function.Predicate.not;
  * @author Armin Reichert
  */
 public interface GameRenderer {
-
-    static Map<String, Color> toColorMap(Map<String, String> sourceMap) {
-        return Map.of(
-            "fill",   Color.valueOf(sourceMap.get("fill")),
-            "stroke", Color.valueOf(sourceMap.get("stroke")),
-            "door",   Color.valueOf(sourceMap.get("door")),
-            "pellet", Color.valueOf(sourceMap.get("pellet"))
-        );
-    }
 
     default void update(WorldMap mapConfig) {}
     AssetStorage assets();
