@@ -148,9 +148,9 @@ public class TerrainData {
                     Vector2i pathStartTile = new Vector2i(col, topRow + 1);
                     TileMapPath path = computePath(exploredSet, terrain, pathStartTile, DOWN,
                             tile -> terrain.outOfBounds(tile) || tile.equals(pathStartTile.plus(1, -1)));
-                    path.add(UP);
-                    path.add(LEFT);
-                    path.add(DOWN);
+                    path.add(UP.vector());
+                    path.add(LEFT.vector());
+                    path.add(DOWN.vector());
                     fillerPaths.add(path);
                 }
             }
@@ -165,7 +165,7 @@ public class TerrainData {
                     Vector2i pathStartTile = new Vector2i(col, bottomRow - 1);
                     TileMapPath path = computePath(exploredSet, terrain, pathStartTile, UP,
                             tile -> terrain.outOfBounds(tile) || tile.equals(pathStartTile.plus(1, 1)));
-                    path.add(LEFT);
+                    path.add(LEFT.vector());
                     fillerPaths.add(path);
                 }
             }
@@ -240,10 +240,10 @@ public class TerrainData {
                 break;
             }
             if (isExplored(exploredSet, terrain, tile)) {
-                path.add(dir);
+                path.add(dir.vector());
                 break;
             }
-            path.add(dir);
+            path.add(dir.vector());
             setExplored(exploredSet, terrain, tile);
         }
         return path;

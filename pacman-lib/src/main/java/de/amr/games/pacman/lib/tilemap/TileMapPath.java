@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib.tilemap;
 
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 
 import java.util.ArrayList;
@@ -35,9 +34,9 @@ public class TileMapPath implements Iterable<Vector2i> {
 
     public boolean isClosed() { return closed; }
 
-    public void add(Direction dir) {
-        Objects.requireNonNull(dir);
-        vectors.add(dir.vector());
+    public void add(Vector2i vector) {
+        Objects.requireNonNull(vector);
+        vectors.add(vector);
         checkClosed();
     }
 
