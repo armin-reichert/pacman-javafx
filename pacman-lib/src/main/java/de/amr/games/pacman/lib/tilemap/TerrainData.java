@@ -219,21 +219,16 @@ public class TerrainData {
         };
     }
 
-    private TileMapPath computePath(
-        BitSet exploredSet,
-        TileMap terrain,
-        Vector2i startTile,
-        Direction startDir,
-        Predicate<Vector2i> stopCondition)
-    {
+    private TileMapPath computePath(BitSet exploredSet, TileMap terrain,
+        Vector2i startTile, Direction startDir, Predicate<Vector2i> stopCondition) {
         if (terrain.outOfBounds(startTile)) {
             throw new IllegalArgumentException("Start tile of path must be inside map");
         }
         TileMapPath path = new TileMapPath(startTile);
-        setExplored(exploredSet, terrain, startTile);
         var tile = startTile;
         var dir = startDir;
         while (true) {
+            setExplored(exploredSet, terrain, tile);
             dir = exitDirection(dir, terrain.get(tile));
             tile = tile.plus(dir.vector());
             if (stopCondition.test(tile)) {
@@ -244,7 +239,6 @@ public class TerrainData {
                 break;
             }
             path.add(dir.vector());
-            setExplored(exploredSet, terrain, tile);
         }
         return path;
     }
