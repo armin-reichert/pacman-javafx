@@ -101,24 +101,25 @@ public interface WallBuilder {
         Property<PhongMaterial> wallFillMaterialPy, Property<PhongMaterial> wallStrokeMaterialPy)
     {
         if (path.size() == 4 && path.isClosed()) {
+            // start_tile is left upper corner and path goes counter-clockwise: center = start_tile + (1,1)
             Vector2i center = path.startTile().plus(1, 1).scaled(TS);
             createCircularWall(parent, center, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
             return;
         }
 
         Vector2i startTile = path.startTile(), endTile = startTile;
-        Vector2i prev = null;
-        Node segment;
-        for (Vector2i vector : path) {
-            if (!vector.equals(prev)) {
-                segment = createWall(startTile, endTile, thickness, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+        Vector2i prevDir = null;
+        for (Vector2i dir : path) {
+            if (!dir.equals(prevDir)) {
+                // path changes direction, yield wall segment and start new segment
+                var segment = createWall(startTile, endTile, thickness, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
                 parent.getChildren().add(segment);
                 startTile = endTile;
             }
-            endTile = endTile.plus(vector);
-            prev = vector;
+            endTile = endTile.plus(dir); // prolong segment
+            prevDir = dir;
         }
-        segment = createWall(startTile, endTile, thickness, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
-        parent.getChildren().add(segment);
+        var lastSegment = createWall(startTile, endTile, thickness, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+        parent.getChildren().add(lastSegment);
     }
 }
