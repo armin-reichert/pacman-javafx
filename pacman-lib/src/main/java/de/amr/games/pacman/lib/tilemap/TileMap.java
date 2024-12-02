@@ -7,14 +7,9 @@ package de.amr.games.pacman.lib.tilemap;
 import de.amr.games.pacman.lib.Vector2i;
 import org.tinylog.Logger;
 
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringReader;
 import java.io.Writer;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -72,7 +67,7 @@ public class TileMap {
 
         // Second pass: read data and build new tile map
         var tileMap = new TileMap(new byte[numDataRows][numDataCols]);
-        tileMap.loadPropertiesFromText(propertySection.toString());
+        tileMap.parseProperties(propertySection.toString());
 
         for (int lineIndex = dataSectionStartIndex; lineIndex < lines.size(); ++lineIndex) {
             String line = lines.get(lineIndex);
@@ -96,7 +91,7 @@ public class TileMap {
         return tileMap;
     }
 
-    private final Properties properties = new Properties();
+    private final Map<String, Object> properties = new HashMap<>();
     private final byte[][] data;
 
     private TerrainData terrainData;
@@ -175,41 +170,49 @@ public class TileMap {
         return row < 0 || row >= numRows() || col < 0 || col >= numCols();
     }
 
-    public void setProperty(String name, String value) {
+    public void setProperty(String name, Object value) {
         properties.put(name, value);
     }
 
     public String getProperty(String key) {
-        return properties.getProperty(key);
+        return String.valueOf(properties.get(key));
     }
 
     public String getPropertyOrDefault(String key, String defaultValue) {
-        return properties.getProperty(key, defaultValue);
+        return String.valueOf(properties.getOrDefault(key, defaultValue));
     }
 
     public boolean hasProperty(String name) {
         return properties.containsKey(name);
     }
 
-    public Properties getProperties() {
+    public Map<String, Object> getProperties() {
         return properties;
+    }
+
+    public Stream<String> stringPropertyKeys() {
+        return properties.keySet().stream().filter(key -> properties.get(key) instanceof String);
     }
 
     public Vector2i getTileProperty(String key, Vector2i defaultTile) {
         if (hasProperty(key)) {
-            Vector2i tile = parseVector2i(getProperty(key));
+            Vector2i tile = parseVector2i(String.valueOf(getProperty(key)));
             return tile != null ? tile : defaultTile;
         }
         return defaultTile;
     }
 
-    public void loadPropertiesFromText(String text) {
-        StringReader r = new StringReader(text);
-        try {
-            properties.load(r);
-        } catch (IOException x) {
-            Logger.error("Could not read properties from text {}", text);
-            Logger.error(x);
+    private void parseProperties(String text) {
+        String[] lines = text.split("\n");
+        for (String line : lines) {
+            if (line.startsWith("#")) continue;
+            String[] sides = line.split("=");
+            if (sides.length != 2) {
+                Logger.error("Invalid line inside property section: {}", line);
+            } else {
+                String lhs = sides[0].trim(), rhs = sides[1].trim();
+                properties.put(lhs, rhs);
+            }
         }
     }
 
@@ -274,15 +277,7 @@ public class TileMap {
 
     public void print(Writer w) {
         var pw = new PrintWriter(w);
-        // use Properties as raw map
-        for (Object key : properties.keySet()) {
-            Object value = properties.get(key);
-            if (value instanceof String) {
-                pw.println(key + "=" + value);
-            } else {
-                pw.println("#" + key + "=" + "value of non-string type ");
-            }
-        }
+        stringPropertyKeys().sorted().map(key -> key + "=" + getProperty(key)).forEach(pw::println);
         pw.println(DATA_SECTION_START);
         for (int row = 0; row < numRows(); ++row) {
             for (int col = 0; col < numCols(); ++col) {

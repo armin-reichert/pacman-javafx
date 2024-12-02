@@ -156,7 +156,7 @@ public class PropertyEditorPane extends BorderPane {
 
         @Override
         void updateEditorFromProperty() {
-            textEditor.setText(tileMap().getProperties().getProperty(propertyName));
+            textEditor.setText(tileMap().getProperty(propertyName));
         }
 
         @Override
@@ -184,7 +184,7 @@ public class PropertyEditorPane extends BorderPane {
 
         @Override
         void updateEditorFromProperty() {
-            String propertyValue = tileMap().getProperties().getProperty(propertyName);
+            String propertyValue = tileMap().getProperty(propertyName);
             colorPicker.setValue(parseColor(propertyValue));
         }
 
@@ -230,7 +230,7 @@ public class PropertyEditorPane extends BorderPane {
 
         @Override
         protected void updateEditorFromProperty() {
-            String propertyValue = tileMap().getProperties().getProperty(propertyName);
+            String propertyValue = tileMap().getProperty(propertyName);
             Vector2i tile = parseVector2i(propertyValue);
             if (tile != null) {
                 spinnerX.getValueFactory().setValue(tile.x());
@@ -300,7 +300,7 @@ public class PropertyEditorPane extends BorderPane {
     public void rebuildPropertyEditors() {
         Logger.debug("Rebuild editors");
         propertyEditors.clear();
-        tileMap().getProperties().stringPropertyNames().stream().sorted().forEach(propertyName -> {
+        tileMap().stringPropertyKeys().sorted().forEach(propertyName -> {
             String propertyValue = tileMap().getProperty(propertyName);
             // primitive way of discriminating but fulfills its purpose
             if (propertyName.startsWith("color_")) {
