@@ -32,6 +32,32 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
  */
 public class PictureInPictureView extends VBox implements GameEventListener {
 
+    private static class TengenPlayScene extends de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.PlayScene2D {
+
+        private final Canvas canvas;
+
+        public TengenPlayScene(Canvas canvas) {
+            this.canvas = canvas;
+            viewPortHeightProperty().bind(canvas.heightProperty());
+            viewPortWidthProperty().bind(canvas.widthProperty());
+        }
+
+        @Override
+        public void draw() {
+            setScaling(canvas.getHeight() / (size().y() + 3 * TS));
+            var r = (MsPacManGameTengenRenderer) gr;
+            r.setScaling(scaling());
+            r.clearCanvas();
+            context.game().level().ifPresent(level -> {
+                r.update(level.world().map());
+                r.ctx().save();
+                r.ctx().translate(scaled(TS), 0);
+                drawSceneContent();
+                r.ctx().restore();
+            });
+        }
+    }
+
     private final Canvas canvas = new Canvas();
     private final GameContext context;
     private GameScene2D scene2D;
@@ -52,28 +78,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
     }
 
     private void createScene() {
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            var playScene2D = new de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.PlayScene2D() {
-                public void draw() {
-                    setScaling(canvas.getHeight() / (size().y() + 3*TS) );
-                    var r = (MsPacManGameTengenRenderer) gr;
-                    r.setScaling(scaling());
-                    r.clearCanvas();
-                    context.game().level().ifPresent(level -> {
-                        r.update(level.world().map());
-                        r.ctx().save();
-                        r.ctx().translate(scaled(TS), 0);
-                        drawSceneContent();
-                        r.ctx().restore();
-                    });
-                }
-            };
-            playScene2D.viewPortHeightProperty().bind(canvas.heightProperty());
-            playScene2D.viewPortWidthProperty().bind(canvas.widthProperty());
-            scene2D = playScene2D;
-        } else {
-            scene2D = new PlayScene2D();
-        }
+        scene2D = context.gameVariant() == GameVariant.MS_PACMAN_TENGEN ? new TengenPlayScene(canvas) : new PlayScene2D();
         scene2D.setGameContext(context);
         scene2D.setCanvas(canvas);
         scene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
