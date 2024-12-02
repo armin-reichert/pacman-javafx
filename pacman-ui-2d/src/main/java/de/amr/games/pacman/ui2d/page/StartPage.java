@@ -7,10 +7,7 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.GameActionProvider;
-import de.amr.games.pacman.ui2d.GameAssets2D;
-import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.*;
 import de.amr.games.pacman.ui2d.util.Carousel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -35,6 +32,18 @@ public class StartPage extends StackPane implements GameActionProvider {
         @Override
         protected void invalidated() {
             bindGameActions();
+        }
+    };
+
+    private final GameAction actionSelectGamePage = new GameAction() {
+        @Override
+        public void execute(GameContext context) {
+            context.selectGamePage();
+        }
+
+        @Override
+        public boolean isEnabled(GameContext context) {
+            return !context.gameClock().isPaused();
         }
     };
 
@@ -120,15 +129,16 @@ public class StartPage extends StackPane implements GameActionProvider {
             bind(context -> currentFlyer().nextFlyerPage(),  joypadKeys.key(NES.JoypadButton.BTN_DOWN));
             bind(context -> carousel.prevSlide(),            joypadKeys.key(NES.JoypadButton.BTN_LEFT));
             bind(context -> carousel.nextSlide(),            joypadKeys.key(NES.JoypadButton.BTN_RIGHT));
-            bind(GameContext::selectGamePage,                joypadKeys.key(NES.JoypadButton.BTN_START));
+            bind(actionSelectGamePage,                       joypadKeys.key(NES.JoypadButton.BTN_START));
         } else {
             bind(context -> currentFlyer().prevFlyerPage(),  context.arcadeKeys().key(Arcade.Button.UP));
             bind(context -> currentFlyer().nextFlyerPage(),  context.arcadeKeys().key(Arcade.Button.DOWN));
             bind(context -> carousel.prevSlide(),            context.arcadeKeys().key(Arcade.Button.LEFT));
             bind(context -> carousel.nextSlide(),            context.arcadeKeys().key(Arcade.Button.RIGHT));
             // START key is "1" which might be unclear on start page, so add ENTER
-            bind(GameContext::selectGamePage,                context.arcadeKeys().key(Arcade.Button.START), naked(KeyCode.ENTER));
+            bind(actionSelectGamePage,                       context.arcadeKeys().key(Arcade.Button.START), naked(KeyCode.ENTER));
         }
+        bind(GameActions2D.TOGGLE_PAUSED, KeyCode.P);
     }
 
     @Override

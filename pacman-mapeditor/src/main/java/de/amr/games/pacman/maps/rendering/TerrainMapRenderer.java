@@ -21,6 +21,7 @@ import static de.amr.games.pacman.maps.editor.TileMapUtil.TILE_SIZE;
 
 /**
  * Vector renderer for terrain tile maps.
+ * TODO: needs total rewrite
  */
 public class TerrainMapRenderer implements TileMapRenderer {
 
@@ -93,10 +94,10 @@ public class TerrainMapRenderer implements TileMapRenderer {
                 drawPath(g, map, path, false,  doubleStrokeInnerWidth * baseLineWidth, wallFillColor, null);
             });
             terrainData.fillerPaths().forEach(
-                    path -> drawPath(g, map, path, true, singleStrokeWidth * baseLineWidth, wallFillColor, wallFillColor)
+                path -> drawPath(g, map, path, true, singleStrokeWidth * baseLineWidth, wallFillColor, wallFillColor)
             );
             terrainData.singleStrokePaths().forEach(
-                    path -> drawPath(g, map, path, true, singleStrokeWidth * baseLineWidth, wallStrokeColor, wallFillColor)
+                path -> drawPath(g, map, path, true, singleStrokeWidth * baseLineWidth, wallStrokeColor, wallFillColor)
             );
             map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, map, door, singleStrokeWidth * baseLineWidth, doorColor));
             uglyConcavityHack(g, terrainData, baseLineWidth);

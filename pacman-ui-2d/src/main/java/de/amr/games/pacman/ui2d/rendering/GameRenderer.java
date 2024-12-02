@@ -163,8 +163,11 @@ public interface GameRenderer {
      * @param character the animated entity
      */
     default void drawAnimatedEntity(AnimatedEntity character) {
+        if (character == null || !character.isVisible()) {
+            return;
+        }
         character.animations().ifPresent(animations -> {
-            if (character.isVisible() && animations instanceof SpriteAnimationCollection spriteAnimations) {
+            if (animations instanceof SpriteAnimationCollection spriteAnimations) {
                 SpriteAnimation currentAnimation = spriteAnimations.currentAnimation();
                 if (currentAnimation != null) {
                     drawEntitySprite(character.entity(), spriteAnimations.currentSprite(character));
