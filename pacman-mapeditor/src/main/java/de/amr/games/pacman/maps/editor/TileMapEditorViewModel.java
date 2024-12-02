@@ -61,7 +61,7 @@ public interface TileMapEditorViewModel {
 
     ObjectProperty<WorldMap> worldMapProperty();
 
-    default WorldMap worldMap() { return worldMapProperty().get(); }
+    WorldMap worldMap();
 
     IntegerProperty gridSizeProperty();
 

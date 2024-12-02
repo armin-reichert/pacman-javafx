@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import org.tinylog.Logger;
 
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.*;
 import java.util.function.Predicate;
@@ -291,4 +292,9 @@ public class TileMap {
         pw.flush();
     }
 
+    public String sourceCode() {
+        StringWriter sw = new StringWriter();
+        print(sw);
+        return sw.toString();
+    }
 }

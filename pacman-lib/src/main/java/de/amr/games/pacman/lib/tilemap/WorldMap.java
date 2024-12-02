@@ -27,10 +27,8 @@ public class WorldMap {
     public static final String TERRAIN_SECTION_START = "!terrain";
     public static final String FOOD_SECTION_START    = "!food";
 
-    private static String tileMapSource(TileMap tileMap) throws IOException {
-        StringWriter sw = new StringWriter();
-        tileMap.print(sw);
-        return sw.toString();
+    private static String configKey(String key) {
+        return "_config." + key;
     }
 
     private TileMap terrain;
@@ -68,8 +66,8 @@ public class WorldMap {
         parse(r.lines());
     }
 
-    public String sourceCode() throws IOException {
-        return TERRAIN_SECTION_START + "\n" + tileMapSource(terrain) + FOOD_SECTION_START + "\n" + tileMapSource(food);
+    public String sourceCode() {
+        return TERRAIN_SECTION_START + "\n" + terrain.sourceCode() + FOOD_SECTION_START + "\n" + food.sourceCode();
     }
 
     private void parse(Stream<String> lines) {
@@ -132,9 +130,5 @@ public class WorldMap {
 
     public boolean hasConfigValue(String key) {
         return terrain.getProperties().containsKey(configKey(key));
-    }
-
-    private String configKey(String key) {
-        return "_config." + key;
     }
 }

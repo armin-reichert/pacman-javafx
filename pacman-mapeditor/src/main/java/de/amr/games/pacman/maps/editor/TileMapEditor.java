@@ -76,7 +76,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
     final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
     final IntegerProperty gridSizePy = new SimpleIntegerProperty(16);
     final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
-    final ObjectProperty<WorldMap> mapPy = new SimpleObjectProperty<>();
+    final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>();
     final BooleanProperty previewVisiblePy = new SimpleBooleanProperty(true);
     final BooleanProperty propertyEditorsVisiblePy = new SimpleBooleanProperty(true) {
         @Override
@@ -136,7 +136,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
         titlePy.bind(createTitleBinding());
         spriteSheet = new Image(urlString("graphics/pacman_spritesheet.png"));
         rubberCursor = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
-        setMap(new WorldMap(36, 28));
+        setWorldMap(new WorldMap(36, 28));
     }
 
     private String urlString(String resourcePath) {
@@ -146,7 +146,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     @Override
     public ObjectProperty<WorldMap> worldMapProperty() {
-        return mapPy;
+        return worldMapPy;
     }
 
     @Override
@@ -186,7 +186,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     @Override
     public void updateSourceView() {
-        updateSourceView(map());
+        updateSourceView(worldMap());
     }
 
     @Override
@@ -220,7 +220,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
         spEditCanvas.heightProperty().addListener((py,ov,nv) -> {
             if (ov.doubleValue() == 0) { // initial resize
                 Logger.info("Canvas scrollpane height {0.00}", spEditCanvas.getHeight());
-                double gridSize = spEditCanvas.getHeight() / map().terrain().numRows();
+                double gridSize = spEditCanvas.getHeight() / worldMap().terrain().numRows();
                 gridSize = (int) Math.max(gridSize, MIN_GRID_SIZE);
                 Logger.info("Grid size {0.00}", gridSize);
                 gridSizePy.set((int) gridSize);
@@ -236,12 +236,13 @@ public class TileMapEditor implements TileMapEditorViewModel {
         //editController.clearUnsavedChanges();
     }
 
-    public WorldMap map() {
-        return mapPy.get();
+    @Override
+    public WorldMap worldMap() {
+        return worldMapPy.get();
     }
 
-    public void setMap(WorldMap map) {
-        mapPy.set(checkNotNull(map));
+    public void setWorldMap(WorldMap map) {
+        worldMapPy.set(checkNotNull(map));
     }
 
     public void createUI(Stage stage) {
@@ -302,9 +303,9 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
         // Note: this must be done *after* the initial map has been created/loaded!
         editCanvas.heightProperty().bind(Bindings.createDoubleBinding(
-            () -> (double) map().terrain().numRows() * gridSize(), mapPy, gridSizePy));
+            () -> (double) worldMap().terrain().numRows() * gridSize(), worldMapPy, gridSizePy));
         editCanvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> (double) map().terrain().numCols() * gridSize(), mapPy, gridSizePy));
+            () -> (double) worldMap().terrain().numCols() * gridSize(), worldMapPy, gridSizePy));
     }
 
     private void createPreviewCanvas() {
@@ -413,18 +414,18 @@ public class TileMapEditor implements TileMapEditorViewModel {
         editModeIndicator.setFont(FONT_STATUS_LINE);
         editModeIndicator.setTextFill(Color.RED);
         editModeIndicator.textProperty().bind(Bindings.createStringBinding(
-                () -> {
-                    if (!editController.editingEnabledPy.get()) {
-                        return "Editing disabled";
-                    }
-                    return switch (editController.modePy.get()) {
-                        case DRAW -> editController.symmetricEditModePy.get() ?  "Symmetric Mode" : "Normal Mode";
-                        case ERASE -> "Erase Mode";
-                    };
+            () -> {
+                if (!editController.editingEnabledPy.get()) {
+                    return "Editing disabled";
+                }
+                return switch (editController.modePy.get()) {
+                    case DRAW -> editController.symmetricEditModePy.get() ?  "Symmetric Mode" : "Normal Mode";
+                    case ERASE -> "Erase Mode";
+                };
 
-                },
-                editController.modePy, editController.editingEnabledPy, editController.symmetricEditModePy
-        ));
+            },
+            editController.modePy, editController.editingEnabledPy, editController.symmetricEditModePy
+    ));
     }
 
     private void createMessageDisplay() {
@@ -469,21 +470,21 @@ public class TileMapEditor implements TileMapEditorViewModel {
     private StringBinding createTitleBinding() {
         return Bindings.createStringBinding(() -> {
                 File currentFile = currentFilePy.get();
-                WorldMap currentMap = map();
+                WorldMap worldMap = worldMap();
                 String desc = "";
                 if (currentFile != null) {
                     desc = "[%s] - %s".formatted(currentFile.getName(), currentFile.getPath());
-                } else if (currentMap != null && currentMap.url() != null) {
-                    desc = "[%s]".formatted(currentMap.url());
+                } else if (worldMap != null && worldMap.url() != null) {
+                    desc = "[%s]".formatted(worldMap.url());
                 } else {
                     desc = "[%s]".formatted(tt("unsaved_map"));
                 }
-                if (currentMap != null) {
-                    String prefix = "(%d rows, %d cols)".formatted(currentMap.terrain().numRows(), currentMap.terrain().numCols());
+                if (worldMap != null) {
+                    String prefix = "(%d rows, %d cols)".formatted(worldMap.terrain().numRows(), worldMap.terrain().numCols());
                     desc = prefix + " " + desc;
                 }
                 return tt("map_editor") + ": " + desc;
-            }, currentFilePy, mapPy
+            }, currentFilePy, worldMapPy
         );
     }
 
@@ -600,16 +601,16 @@ public class TileMapEditor implements TileMapEditorViewModel {
         miSymmetricMode.selectedProperty().bindBidirectional(editController.symmetricEditModePy);
 
         var miAddBorder = new MenuItem(tt("menu.edit.add_border"));
-        miAddBorder.setOnAction(e -> editController.addBorder(map().terrain(), 3, 2));
+        miAddBorder.setOnAction(e -> editController.addBorder(worldMap().terrain(), 3, 2));
 
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
-            editController.clearTerrain(map());
-            editController.markTileMapEdited(map().terrain());
+            editController.clearTerrain(worldMap());
+            editController.markTileMapEdited(worldMap().terrain());
         });
 
         var miClearFood = new MenuItem(tt("menu.edit.clear_food"));
-        miClearFood.setOnAction(e -> editController.clearFood(map()));
+        miClearFood.setOnAction(e -> editController.clearFood(worldMap()));
 
         menuEdit = new Menu(tt("menu.edit"), NO_GRAPHIC,
             miSymmetricMode,
@@ -662,11 +663,11 @@ public class TileMapEditor implements TileMapEditorViewModel {
         checkNotNull(worldMap);
         if (editController.hasUnsavedChanges()) {
             showSaveConfirmationDialog(this::showSaveDialog, () -> {
-                setMap(new WorldMap(worldMap));
+                setWorldMap(new WorldMap(worldMap));
                 currentFilePy.set(null);
             });
         } else {
-            setMap(new WorldMap(worldMap));
+            setWorldMap(new WorldMap(worldMap));
             currentFilePy.set(null);
         }
     }
@@ -680,7 +681,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
             Vector2i size = parseSize(text);
             if (size != null) {
                 WorldMap map = editController.createPreconfiguredMap(size.x(), size.y());
-                setMap(map);
+                setWorldMap(map);
                 currentFilePy.set(null);
             }
         });
@@ -772,7 +773,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
         if (file != null) {
             lastUsedDir = file.getParentFile();
             if (file.getName().endsWith(".world")) {
-                map().save(file);
+                worldMap().save(file);
                 editController.clearUnsavedChanges();
                 readMapFile(file);
             } else {
@@ -830,13 +831,13 @@ public class TileMapEditor implements TileMapEditorViewModel {
         return gridSizePy.get();
     }
 
-    private void updateSourceView(WorldMap map) {
+    private void updateSourceView(WorldMap worldMap) {
         if (sourceView == null) {
             Logger.warn("Cannot update source view as it doesn't exist yet");
             return;
         }
         try {
-            String source = map.sourceCode();
+            String source = worldMap.sourceCode();
             String[] lines = source.split("\n");
             for (int i = 0; i < lines.length; ++i) {
                 lines[i] = "%5d:   %s".formatted(i+1, lines[i]);
@@ -889,7 +890,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
         g.fillRect(0, 0, editCanvas.getWidth(), editCanvas.getHeight());
         drawGrid(g);
         if (terrainVisiblePy.get()) {
-            TileMap terrainMap = map().terrain();
+            TileMap terrainMap = worldMap().terrain();
             terrainMapEditRenderer.setScaling(gridSize() / 8.0);
             terrainMapEditRenderer.setWallStrokeColor(getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_STROKE, parseColor(DEFAULT_COLOR_WALL_STROKE)));
             terrainMapEditRenderer.setWallFillColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(DEFAULT_COLOR_WALL_FILL)));
@@ -916,11 +917,11 @@ public class TileMapEditor implements TileMapEditorViewModel {
         }
 
         if (foodVisiblePy.get()) {
-            Color foodColor = getColorFromMap(map().food(), PROPERTY_COLOR_FOOD, TileMapUtil.parseColor(DEFAULT_COLOR_FOOD));
+            Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, TileMapUtil.parseColor(DEFAULT_COLOR_FOOD));
             foodMapRenderer.setScaling(gridSize() / 8.0);
             foodMapRenderer.setEnergizerColor(foodColor);
             foodMapRenderer.setPelletColor(foodColor);
-            foodMapRenderer.drawMap(g, map().food());
+            foodMapRenderer.drawMap(g, worldMap().food());
         }
         drawActorSprites(g);
         if (!editController.editingEnabledPy.get()) {
@@ -950,7 +951,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, previewCanvas.getWidth(), previewCanvas.getHeight());
         if (terrainVisiblePy.get()) {
-            TileMap terrainMap = map().terrain();
+            TileMap terrainMap = worldMap().terrain();
             editController.ensureTerrainMapsPathsUpToDate();
             terrainMapPreviewRenderer.setScaling(gridSize() / 8.0);
             terrainMapPreviewRenderer.setWallStrokeColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(DEFAULT_COLOR_WALL_STROKE)));
@@ -960,16 +961,16 @@ public class TileMapEditor implements TileMapEditorViewModel {
         }
         if (foodVisiblePy.get()) {
             foodMapRenderer.setScaling(gridSize() / 8.0);
-            Color foodColor = getColorFromMap(map().food(), PROPERTY_COLOR_FOOD, TileMapUtil.parseColor(DEFAULT_COLOR_FOOD));
+            Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, TileMapUtil.parseColor(DEFAULT_COLOR_FOOD));
             foodMapRenderer.setEnergizerColor(foodColor);
             foodMapRenderer.setPelletColor(foodColor);
-            foodMapRenderer.drawMap(g, map().food());
+            foodMapRenderer.drawMap(g, worldMap().food());
         }
         drawActorSprites(g);
     }
 
     private void drawSprite(GraphicsContext g, String tilePropertyName, RectArea sprite, Vector2i defaultTile) {
-        var tile = getTileFromMap(map().terrain(), tilePropertyName, defaultTile);
+        var tile = getTileFromMap(worldMap().terrain(), tilePropertyName, defaultTile);
         if (tile != null) {
             drawSprite(g, sprite, tile.x() * gridSize() + 0.5 * gridSize(), tile.y() * gridSize(), 1.75 * gridSize(), 1.75 * gridSize());
         }
@@ -998,10 +999,10 @@ public class TileMapEditor implements TileMapEditorViewModel {
             g.setStroke(Color.LIGHTGRAY);
             g.setLineWidth(0.25);
             double gridSize = gridSize();
-            for (int row = 1; row < map().terrain().numRows(); ++row) {
+            for (int row = 1; row < worldMap().terrain().numRows(); ++row) {
                 g.strokeLine(0, row * gridSize, editCanvas.getWidth(), row * gridSize);
             }
-            for (int col = 1; col < map().terrain().numCols(); ++col) {
+            for (int col = 1; col < worldMap().terrain().numCols(); ++col) {
                 g.strokeLine(col * gridSize, 0, col * gridSize, editCanvas.getHeight());
             }
             g.restore();

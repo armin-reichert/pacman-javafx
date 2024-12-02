@@ -86,7 +86,7 @@ public class EditorPage extends BorderPane implements GameActionProvider {
 
     public void startEditor(WorldMap map) {
         if (map != null) {
-            editor.setMap(map);
+            editor.setWorldMap(map);
         }
         editor.start();
     }
