@@ -191,8 +191,8 @@ public class TileMap {
         return properties;
     }
 
-    public Stream<String> stringPropertyKeys() {
-        return properties.keySet().stream().filter(key -> properties.get(key) instanceof String);
+    public Stream<String> stringPropertyNames() {
+        return properties.keySet().stream().filter(key -> properties.get(key) instanceof String).sorted();
     }
 
     public Vector2i getTileProperty(String key, Vector2i defaultTile) {
@@ -278,7 +278,7 @@ public class TileMap {
 
     public void print(Writer w) {
         var pw = new PrintWriter(w);
-        stringPropertyKeys().sorted().map(key -> key + "=" + getProperty(key)).forEach(pw::println);
+        stringPropertyNames().map(key -> key + "=" + getProperty(key)).forEach(pw::println);
         pw.println(DATA_SECTION_START);
         for (int row = 0; row < numRows(); ++row) {
             for (int col = 0; col < numCols(); ++col) {
@@ -293,7 +293,7 @@ public class TileMap {
     }
 
     public String sourceCode() {
-        StringWriter sw = new StringWriter();
+        var sw = new StringWriter();
         print(sw);
         return sw.toString();
     }

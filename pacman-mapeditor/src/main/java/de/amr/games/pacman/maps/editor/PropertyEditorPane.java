@@ -300,7 +300,7 @@ public class PropertyEditorPane extends BorderPane {
     public void rebuildPropertyEditors() {
         Logger.debug("Rebuild editors");
         propertyEditors.clear();
-        tileMap().stringPropertyKeys().sorted().forEach(propertyName -> {
+        tileMap().stringPropertyNames().forEach(propertyName -> {
             String propertyValue = tileMap().getProperty(propertyName);
             // primitive way of discriminating but fulfills its purpose
             if (propertyName.startsWith("color_")) {
