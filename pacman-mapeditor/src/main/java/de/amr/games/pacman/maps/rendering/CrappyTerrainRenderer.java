@@ -7,10 +7,7 @@ package de.amr.games.pacman.maps.rendering;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.TerrainData;
-import de.amr.games.pacman.lib.tilemap.TileMap;
-import de.amr.games.pacman.lib.tilemap.TileMapPath;
-import de.amr.games.pacman.lib.tilemap.Tiles;
+import de.amr.games.pacman.lib.tilemap.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
@@ -95,13 +92,45 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
         terrainData.fillerPaths().forEach(
             path -> drawPath(g, map, path, true, singleStrokeWidth * baseLineWidth, wallFillColor, wallFillColor)
         );
+        /*
         terrainData.singleStrokePaths().forEach(
             path -> drawPath(g, map, path, true, singleStrokeWidth * baseLineWidth, wallStrokeColor, wallFillColor)
         );
+         */
+        terrainData.obstacles().forEach(obstacle -> drawObstacle(g, obstacle, true));
+
         map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, map, door, singleStrokeWidth * baseLineWidth, doorColor));
         uglyConcavityHack(g, terrainData, baseLineWidth);
         g.restore();
     }
+
+    private void drawObstacle(GraphicsContext g, Obstacle obstacle, boolean fill) {
+        g.beginPath();
+        g.moveTo(obstacle.startPoint().x(), obstacle.startPoint().y());
+        Vector2f p = obstacle.startPoint();
+        for (Vector2f segment : obstacle.segments()) {
+            p = p.plus(segment);
+            if (segment.x() != 0 && segment.y() != 0) {
+                g.lineTo(p.x(), p.y());
+            } else {
+                g.lineTo(p.x(), p.y());
+            }
+        }
+        if (fill) {
+            g.setFill(wallFillColor);
+            g.fill();
+        }
+        g.setLineWidth(1);
+        g.setStroke(wallStrokeColor);
+        g.stroke();
+    }
+
+
+
+
+
+
+
 
     // Fix concavities drawing (ugly hack)
     private void uglyConcavityHack(GraphicsContext g, TerrainData terrainData, double baseLineWidth) {

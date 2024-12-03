@@ -10,6 +10,7 @@ import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -31,6 +32,14 @@ public class TerrainData {
     private List<Vector2i> bottomConcavityEntries = new ArrayList<>();
     private List<Vector2i> leftConcavityEntries = new ArrayList<>();
     private List<Vector2i> rightConcavityEntries = new ArrayList<>();
+
+
+    // New data structure
+    private List<Obstacle> obstacles = new ArrayList<>();
+
+    public List<Obstacle> obstacles() {
+        return Collections.unmodifiableList(obstacles);
+    }
 
     private TerrainData() {}
 
@@ -83,6 +92,13 @@ public class TerrainData {
     }
 
     public TerrainData(TileMap terrain) {
+
+        // new
+        obstacles = new ObstacleDetector(terrain).detectObstacles();
+
+
+        // old
+
         BitSet exploredSet = new BitSet();
 
         int firstCol = 0, lastCol = terrain.numCols() - 1;

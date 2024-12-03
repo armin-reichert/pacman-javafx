@@ -10,6 +10,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -60,12 +61,14 @@ public class WorldMap {
         this.url = checkNotNull(url);
         var r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
         parse(r.lines());
+        updateTerrainData();
     }
 
     public WorldMap(File file) throws IOException {
         url = file.toURI().toURL();
         var r = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
         parse(r.lines());
+        updateTerrainData();
     }
 
     public String sourceCode() {
@@ -91,7 +94,6 @@ public class WorldMap {
             }
         }
         terrain = TileMap.parseTileMap(terrainSection, tv -> 0 <= tv && tv <= Tiles.LAST_TERRAIN_VALUE);
-        updateTerrainData();
         food = TileMap.parseTileMap(foodSection, tv -> 0 <= tv && tv <= Tiles.ENERGIZER);
     }
 
