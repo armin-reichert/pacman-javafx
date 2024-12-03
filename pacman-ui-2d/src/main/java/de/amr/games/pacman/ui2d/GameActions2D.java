@@ -30,31 +30,30 @@ import static java.util.function.Predicate.not;
  */
 public enum GameActions2D implements GameAction {
     /**
-     * Adds credit (simulates insertion of a coin) and switches to the credit scene.
+     * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
      */
-    ADD_CREDIT {
+    INSERT_COIN {
         @Override
         public void execute(GameContext context) {
-            boolean enabled =
-                context.gameState() == GameState.SETTING_OPTIONS ||
-                    context.gameState() == INTRO ||
-                    context.game().isDemoLevel() ||
-                    !context.gameController().coinControl().hasCredit();
-            if (!enabled) {
-                Logger.info("Action ADD_CREDIT is disabled");
-                return;
+            boolean coinInserted = context.gameController().coinControl().insertCoin();
+            if (coinInserted) {
+                context.sound().enabledProperty().set(true);
+                context.game().publishGameEvent(GameEventType.CREDIT_ADDED);
             }
-            if (!context.game().isPlaying()) {
-                boolean coinInserted = context.gameController().coinControl().insertCoin();
-                if (coinInserted) {
-                    context.sound().enabledProperty().set(true); // in demo mode, sound is disabled
-                    context.sound().playInsertCoinSound();
-                    context.game().publishGameEvent(GameEventType.CREDIT_ADDED);
-                }
-                if (context.gameState() != GameState.SETTING_OPTIONS) {
-                    context.gameController().changeState(GameState.SETTING_OPTIONS);
-                }
+            if (context.gameState() != GameState.SETTING_OPTIONS) {
+                context.gameController().changeState(GameState.SETTING_OPTIONS);
             }
+        }
+
+        @Override
+        public boolean isEnabled(GameContext context) {
+            if (context.game().isPlaying()) {
+                return false;
+            }
+            return context.gameState() == GameState.SETTING_OPTIONS ||
+                context.gameState() == INTRO ||
+                context.game().isDemoLevel() ||
+                !context.gameController().coinControl().hasCredit();
         }
     },
 
@@ -249,7 +248,7 @@ public enum GameActions2D implements GameAction {
     };
 
     public static void bindDefaultArcadeControllerActions(GameActionProvider actionProvider, ArcadeKeyBinding arcadeController) {
-        actionProvider.bind(GameActions2D.ADD_CREDIT,   arcadeController.key(Arcade.Button.COIN));
+        actionProvider.bind(GameActions2D.INSERT_COIN,   arcadeController.key(Arcade.Button.COIN));
         actionProvider.bind(GameActions2D.START_GAME,   arcadeController.key(Arcade.Button.START));
         actionProvider.bind(GameActions2D.PLAYER_UP,    arcadeController.key(Arcade.Button.UP));
         actionProvider.bind(GameActions2D.PLAYER_DOWN,  arcadeController.key(Arcade.Button.DOWN));

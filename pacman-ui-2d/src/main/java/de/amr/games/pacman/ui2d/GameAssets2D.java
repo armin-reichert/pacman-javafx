@@ -100,7 +100,7 @@ public class GameAssets2D extends AssetStorage {
 
         // Clips
         assets.store("ms_pacman.audio.bonus_eaten",     rm.loadAudioClip("sound/mspacman/Fruit.mp3"));
-        assets.store("ms_pacman.audio.credit",          rm.loadAudioClip("sound/mspacman/Credit.mp3"));
+        assets.store("ms_pacman.audio.credit",          rm.loadAudioClip("sound/mspacman/credit.wav"));
         assets.store("ms_pacman.audio.extra_life",      rm.loadAudioClip("sound/mspacman/ExtraLife.mp3"));
         assets.store("ms_pacman.audio.ghost_eaten",     rm.loadAudioClip("sound/mspacman/Ghost.mp3"));
         assets.store("ms_pacman.audio.sweep",           rm.loadAudioClip("sound/common/sweep.mp3"));

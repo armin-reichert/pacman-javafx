@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.pacman;
 
+import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
@@ -23,7 +24,7 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.ADD_CREDIT, context.arcadeKeys().key(Arcade.Button.COIN));
+        bind(GameActions2D.INSERT_COIN, context.arcadeKeys().key(Arcade.Button.COIN));
         bind(GameActions2D.START_GAME, context.arcadeKeys().key(Arcade.Button.START));
     }
 
@@ -59,5 +60,10 @@ public class StartScene extends GameScene2D {
         }
         gr.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), white, font8, 2 * TS, size().y() - 2);
         gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
+    }
+
+    @Override
+    public void onCreditAdded(GameEvent e) {
+        context.sound().playInsertCoinSound();
     }
 }

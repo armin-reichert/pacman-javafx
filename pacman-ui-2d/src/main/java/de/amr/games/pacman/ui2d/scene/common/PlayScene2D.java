@@ -60,7 +60,7 @@ public class PlayScene2D extends GameScene2D {
     public void onLevelCreated(GameEvent e) {
         ArcadeKeyBinding arcadeController = context.arcadeKeys();
         if (context.game().isDemoLevel()) {
-            bind(GameActions2D.ADD_CREDIT, arcadeController.key(Arcade.Button.COIN));
+            bind(GameActions2D.INSERT_COIN, arcadeController.key(Arcade.Button.COIN));
         } else {
             bindCheatActions(this);
             bindDefaultArcadeControllerActions(this, arcadeController);
@@ -261,6 +261,11 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onBonusExpired(GameEvent e) {
         context.sound().stopBonusBouncingSound();
+    }
+
+    @Override
+    public void onCreditAdded(GameEvent e) {
+        context.sound().playInsertCoinSound();
     }
 
     @Override

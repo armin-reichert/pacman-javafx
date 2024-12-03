@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene.ms_pacman;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
@@ -65,7 +66,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.ADD_CREDIT, context.arcadeKeys().key(Arcade.Button.COIN));
+        bind(GameActions2D.INSERT_COIN, context.arcadeKeys().key(Arcade.Button.COIN));
         bind(GameActions2D.START_GAME, context.arcadeKeys().key(Arcade.Button.START));
         bindTestActions(this);
     }
@@ -103,6 +104,11 @@ public class IntroScene extends GameScene2D {
     @Override
     public Vector2f size() {
         return ARCADE_MAP_SIZE_IN_PIXELS;
+    }
+
+    @Override
+    public void onCreditAdded(GameEvent e) {
+        context.sound().playInsertCoinSound();
     }
 
     @Override
