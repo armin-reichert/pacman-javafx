@@ -84,25 +84,23 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
     }
 
     @Override
-    public void drawMap(GraphicsContext g, TileMap map) {
-        map.terrainData().ifPresent(terrainData -> {
-            double baseLineWidth = adaptLineWidthToCanvasSize(g.getCanvas().getHeight());
-            g.save();
-            g.scale(scaling(), scaling());
-            terrainData.doubleStrokePaths().forEach(path -> {
-                drawPath(g, map, path, false,  doubleStrokeOuterWidth * baseLineWidth, wallStrokeColor, null);
-                drawPath(g, map, path, false,  doubleStrokeInnerWidth * baseLineWidth, wallFillColor, null);
-            });
-            terrainData.fillerPaths().forEach(
-                path -> drawPath(g, map, path, true, singleStrokeWidth * baseLineWidth, wallFillColor, wallFillColor)
-            );
-            terrainData.singleStrokePaths().forEach(
-                path -> drawPath(g, map, path, true, singleStrokeWidth * baseLineWidth, wallStrokeColor, wallFillColor)
-            );
-            map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, map, door, singleStrokeWidth * baseLineWidth, doorColor));
-            uglyConcavityHack(g, terrainData, baseLineWidth);
-            g.restore();
+    public void drawTerrain(GraphicsContext g, TileMap map, TerrainData terrainData) {
+        double baseLineWidth = adaptLineWidthToCanvasSize(g.getCanvas().getHeight());
+        g.save();
+        g.scale(scaling(), scaling());
+        terrainData.doubleStrokePaths().forEach(path -> {
+            drawPath(g, map, path, false,  doubleStrokeOuterWidth * baseLineWidth, wallStrokeColor, null);
+            drawPath(g, map, path, false,  doubleStrokeInnerWidth * baseLineWidth, wallFillColor, null);
         });
+        terrainData.fillerPaths().forEach(
+            path -> drawPath(g, map, path, true, singleStrokeWidth * baseLineWidth, wallFillColor, wallFillColor)
+        );
+        terrainData.singleStrokePaths().forEach(
+            path -> drawPath(g, map, path, true, singleStrokeWidth * baseLineWidth, wallStrokeColor, wallFillColor)
+        );
+        map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, map, door, singleStrokeWidth * baseLineWidth, doorColor));
+        uglyConcavityHack(g, terrainData, baseLineWidth);
+        g.restore();
     }
 
     // Fix concavities drawing (ugly hack)

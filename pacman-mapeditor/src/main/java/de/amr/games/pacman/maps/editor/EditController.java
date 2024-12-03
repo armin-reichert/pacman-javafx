@@ -78,7 +78,7 @@ public class EditController {
             if (viewModel.terrainPropertiesEditor() != null) {
                 viewModel.terrainPropertiesEditor().setTileMap(map.terrain());
             }
-            invalidateTerrainMapData();
+            invalidateTerrainData();
             viewModel.updateSourceView();
         }
     };
@@ -98,13 +98,13 @@ public class EditController {
     private final TileMapEditorViewModel viewModel;
     private final ObstacleEditor obstacleEditor;
     private boolean unsavedChanges;
-    private boolean terrainMapDataUpToDate;
+    private boolean terrainDataUpToDate;
     private boolean dragging = false;
 
     EditController(TileMapEditorViewModel viewModel) {
         this.viewModel = viewModel;
         this.worldMapPy.bind(viewModel.worldMapProperty());
-        viewModel.gridSizeProperty().addListener((py,ov,nv) -> invalidateTerrainMapData());
+        viewModel.gridSizeProperty().addListener((py,ov,nv) -> invalidateTerrainData());
         obstacleEditor = new ObstacleEditor(this, viewModel);
         obstacleEditor.enabledPy.bind(editingEnabledPy);
         setMode(EditMode.DRAW);
@@ -322,15 +322,15 @@ public class EditController {
         return (int) (pixels / viewModel.gridSizeProperty().get());
     }
 
-    void invalidateTerrainMapData() {
-        terrainMapDataUpToDate = false;
+    void invalidateTerrainData() {
+        terrainDataUpToDate = false;
     }
 
     void ensureTerrainMapsPathsUpToDate() {
-        if (!terrainMapDataUpToDate) {
-            TileMap terrain = worldMapPy.get().terrain();
-            terrain.computeTerrainData();
-            terrainMapDataUpToDate = true;
+        if (!terrainDataUpToDate) {
+            WorldMap worldMap = worldMapPy.get();
+            worldMap.updateTerrainData();
+            terrainDataUpToDate = true;
         }
     }
 
@@ -340,7 +340,7 @@ public class EditController {
         if (worldMap != null) {
             viewModel.updateSourceView();
             if (tileMap == worldMap.terrain()) {
-                invalidateTerrainMapData();
+                invalidateTerrainData();
             }
         }
     }
@@ -489,7 +489,7 @@ public class EditController {
         terrain.setProperty(PROPERTY_POS_SCATTER_CYAN_GHOST, formatTile(v2i(tilesX - 1, tilesY - 2)));
         terrain.setProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(v2i(0, tilesY - 2)));
 
-        invalidateTerrainMapData();
+        invalidateTerrainData();
 
         worldMap.food().setProperty(PROPERTY_COLOR_FOOD, DEFAULT_COLOR_FOOD);
 

@@ -32,6 +32,7 @@ public class WorldMap {
     }
 
     private TileMap terrain;
+    private TerrainData terrainData;
     private TileMap food;
     private final URL url;
 
@@ -43,6 +44,7 @@ public class WorldMap {
     public WorldMap(WorldMap other) {
         checkNotNull(other);
         terrain = new TileMap(other.terrain);
+        terrainData = other.terrainData;
         food = new TileMap(other.food);
         url = other.url;
     }
@@ -89,8 +91,16 @@ public class WorldMap {
             }
         }
         terrain = TileMap.parseTileMap(terrainSection, tv -> 0 <= tv && tv <= Tiles.LAST_TERRAIN_VALUE);
-        terrain.computeTerrainData();
+        updateTerrainData();
         food = TileMap.parseTileMap(foodSection, tv -> 0 <= tv && tv <= Tiles.ENERGIZER);
+    }
+
+    public void updateTerrainData() {
+        terrainData = new TerrainData(terrain);
+    }
+
+    public TerrainData terrainData() {
+        return terrainData;
     }
 
     public boolean save(File file) {

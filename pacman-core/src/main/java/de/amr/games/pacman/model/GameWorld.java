@@ -66,7 +66,6 @@ public class GameWorld {
     public GameWorld(WorldMap map) {
         this.map = checkNotNull(map);
         TileMap terrain = map.terrain(), food = map.food();
-        terrain.computeTerrainData();
 
         var portalList = new ArrayList<Portal>();
         int firstColumn = 0, lastColumn = terrain.numCols() - 1;

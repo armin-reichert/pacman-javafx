@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.maps.rendering;
 
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.TerrainData;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
 import javafx.beans.property.FloatProperty;
@@ -44,7 +45,11 @@ public class FoodMapRenderer implements TileMapRenderer {
     }
 
     @Override
-    public void drawMap(GraphicsContext g, TileMap map) {
+    public void drawTerrain(GraphicsContext g, TileMap terrainMap, TerrainData terrainData) {
+    }
+
+    @Override
+    public void drawFood(GraphicsContext g, TileMap map) {
         map.tiles().forEach(tile -> drawTile(g, tile, map.get(tile)));
     }
 

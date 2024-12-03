@@ -221,7 +221,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         terrainRenderer.setWallFillColor(fillColor);
         terrainRenderer.setWallStrokeColor(strokeColor);
         terrainRenderer.setDoorColor(strokeColor);
-        terrainRenderer.drawMap(ctx(), worldMap.terrain());
+        terrainRenderer.drawTerrain(ctx(), worldMap.terrain(), worldMap.terrainData());
     }
 
     @Override
@@ -270,7 +270,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
                 world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
             }
             drawLevelMessage(level, game.isDemoLevel());
-            terrainRenderer.drawMap(ctx(), world.map().terrain());
+            terrainRenderer.drawTerrain(ctx(), world.map().terrain(), world.map().terrainData());
         }
     }
 

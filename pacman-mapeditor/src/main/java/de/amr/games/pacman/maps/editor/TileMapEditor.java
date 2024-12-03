@@ -920,7 +920,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
             tileMapEditorTerrainRenderer.setWallStrokeColor(getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_STROKE, parseColor(DEFAULT_COLOR_WALL_STROKE)));
             tileMapEditorTerrainRenderer.setWallFillColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(DEFAULT_COLOR_WALL_FILL)));
             tileMapEditorTerrainRenderer.setDoorColor(getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(DEFAULT_COLOR_DOOR)));
-            tileMapEditorTerrainRenderer.drawMap(g, terrainMap);
+            tileMapEditorTerrainRenderer.drawTerrain(g, terrainMap, worldMap().terrainData());
 
             byte[][] editedContent = editController.editedContent();
             if (editedContent != null) {
@@ -946,7 +946,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
             foodMapRenderer.setScaling(gridSize() / 8.0);
             foodMapRenderer.setEnergizerColor(foodColor);
             foodMapRenderer.setPelletColor(foodColor);
-            foodMapRenderer.drawMap(g, worldMap().food());
+            foodMapRenderer.drawFood(g, worldMap().food());
         }
         drawActorSprites(g);
         if (!editController.editingEnabledPy.get()) {
@@ -982,14 +982,14 @@ public class TileMapEditor implements TileMapEditorViewModel {
             terrainMapPreviewRenderer.setWallStrokeColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(DEFAULT_COLOR_WALL_STROKE)));
             terrainMapPreviewRenderer.setWallFillColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(DEFAULT_COLOR_WALL_FILL)));
             terrainMapPreviewRenderer.setDoorColor(getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(DEFAULT_COLOR_DOOR)));
-            terrainMapPreviewRenderer.drawMap(g, terrainMap);
+            terrainMapPreviewRenderer.drawTerrain(g, terrainMap, worldMap().terrainData());
         }
         if (foodVisiblePy.get()) {
             foodMapRenderer.setScaling(gridSize() / 8.0);
             Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, parseColor(DEFAULT_COLOR_FOOD));
             foodMapRenderer.setEnergizerColor(foodColor);
             foodMapRenderer.setPelletColor(foodColor);
-            foodMapRenderer.drawMap(g, worldMap().food());
+            foodMapRenderer.drawFood(g, worldMap().food());
         }
         drawActorSprites(g);
     }

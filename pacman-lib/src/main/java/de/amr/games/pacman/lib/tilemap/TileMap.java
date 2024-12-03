@@ -10,7 +10,10 @@ import org.tinylog.Logger;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -95,7 +98,6 @@ public class TileMap {
     private final Map<String, Object> properties = new HashMap<>();
     private final byte[][] data;
 
-    private TerrainData terrainData;
 
     public TileMap(TileMap other) {
         int numRows = other.numRows(), numCols = other.numCols();
@@ -104,17 +106,6 @@ public class TileMap {
         for (int row = 0; row < numRows; ++row) {
             data[row] = Arrays.copyOf(other.data[row], numCols);
         }
-        if (other.terrainData != null) {
-            terrainData = other.terrainData.copy();
-        }
-    }
-
-    public void computeTerrainData() {
-        terrainData = new TerrainData(this);
-    }
-
-    public Optional<TerrainData> terrainData() {
-        return Optional.ofNullable(terrainData);
     }
 
     public TileMap(int numRows, int numCols) {

@@ -6,6 +6,7 @@ package de.amr.games.pacman.maps.editor;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.TerrainData;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
 import de.amr.games.pacman.maps.rendering.TileMapRenderer;
@@ -61,7 +62,7 @@ public class TileMapEditorTerrainRenderer implements TileMapRenderer {
     }
 
     @Override
-    public void drawMap(GraphicsContext g, TileMap terrainMap) {
+    public void drawTerrain(GraphicsContext g, TileMap terrainMap, TerrainData terrainData) {
         g.save();
         g.scale(scaling(), scaling());
         terrainMap.tiles().forEach(tile -> drawTileUnscaled(g, tile, terrainMap.get(tile)));
