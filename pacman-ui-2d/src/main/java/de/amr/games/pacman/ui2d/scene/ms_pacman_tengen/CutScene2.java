@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -16,7 +17,6 @@ import javafx.scene.paint.Color;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.actors.Animations.ANIM_MR_PACMAN_MUNCHING;
 import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
-import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_SIZE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_TILES;
 
@@ -149,8 +149,7 @@ public class CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        String assetPrefix = assetPrefix(context.gameVariant());
-        Color color = context.assets().color(assetPrefix + ".color.clapperboard"); //TODO check
+        Color color = context.assets().color(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".color.clapperboard"); //TODO check
         var r = (MsPacManGameTengenRenderer) gr;
         r.drawSceneBorders();
         r.setLevelNumberBoxesVisible(false);

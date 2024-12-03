@@ -11,10 +11,9 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.CrappyTerrainRenderer;
+import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.ms_pacman_tengen.*;
@@ -34,7 +33,7 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.Animations.*;
-import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
+import static de.amr.games.pacman.ui2d.GameAssets2D.PFX_MS_PACMAN_TENGEN;
 import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.NO_SPRITE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.nesPaletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet.*;
@@ -290,12 +289,11 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
 
     private void drawLevelMessage(GameLevel level, boolean demoLevel) {
         if (level.message() != null) {
-            String assetPrefix = assetPrefix(GameVariant.MS_PACMAN_TENGEN);
             float x = getMessageAnchorPosition().x(), y = getMessageAnchorPosition().y();
             switch (level.message().type()) {
-                case READY -> drawText("READY!", x, y, assets.color(assetPrefix + ".color.ready_message"));
+                case READY -> drawText("READY!", x, y, assets.color(PFX_MS_PACMAN_TENGEN + ".color.ready_message"));
                 case GAME_OVER -> {
-                    Color color = assets.color(assetPrefix + ".color.game_over_message");
+                    Color color = assets.color(PFX_MS_PACMAN_TENGEN + ".color.game_over_message");
                     if (demoLevel) {
                         WorldMap worldMap = level.world().map();
                         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");

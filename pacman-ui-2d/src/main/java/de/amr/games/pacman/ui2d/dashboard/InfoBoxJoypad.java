@@ -12,6 +12,8 @@ import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 
+import static de.amr.games.pacman.ui2d.GameAssets2D.PFX_MS_PACMAN_TENGEN;
+
 public class InfoBoxJoypad extends InfoBox {
 
     public void init(GameContext context) {
@@ -36,7 +38,6 @@ public class InfoBoxJoypad extends InfoBox {
             joypad.key(NES.JoypadButton.BTN_LEFT).getDisplayText(),
             joypad.key(NES.JoypadButton.BTN_RIGHT).getDisplayText())
         );
-        String prefix = GameAssets2D.assetPrefix(GameVariant.MS_PACMAN_TENGEN);
-        addRow(new ImageView(context.assets().image(prefix + ".image.nes-controller")));
+        addRow(new ImageView(context.assets().image(PFX_MS_PACMAN_TENGEN + ".image.nes-controller")));
     }
 }

@@ -277,9 +277,9 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             PY_MAP_SELECTION_MODE.addListener((py, ov, selectionMode) -> xxlGame.setMapSelectionMode(selectionMode));
         }
 
-        String assetPrefix = assetPrefix(variant);
-        sceneRoot.setBackground(assets.get(assetPrefix + ".scene_background"));
-        Image icon = assets.image(assetPrefix + ".icon");
+        String prefix = assetPrefix(variant);
+        sceneRoot.setBackground(assets.get(prefix + ".scene_background"));
+        Image icon = assets.image(prefix + ".icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
         }

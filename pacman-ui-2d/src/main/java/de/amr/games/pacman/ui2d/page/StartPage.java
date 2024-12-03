@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.ui2d.GameAssets2D.*;
 import static de.amr.games.pacman.ui2d.input.Keyboard.naked;
 
 /**
@@ -59,11 +60,10 @@ public class StartPage extends StackPane implements GameActionProvider {
         carousel.selectButtonTextProperty().set(context.locText("play_button"));
 
         {
-            String prefix = GameAssets2D.assetPrefix(GameVariant.PACMAN);
             var pacManFlyer = new Flyer(
-                context.assets().image(prefix + ".startpage.image1"),
-                context.assets().image(prefix + ".startpage.image2"),
-                context.assets().image(prefix + ".startpage.image3")
+                context.assets().image(PFX_PACMAN + ".startpage.image1"),
+                context.assets().image(PFX_PACMAN + ".startpage.image2"),
+                context.assets().image(PFX_PACMAN + ".startpage.image3")
             );
             pacManFlyer.setUserData(GameVariant.PACMAN);
             pacManFlyer.selectFlyerPage(0);
@@ -71,10 +71,9 @@ public class StartPage extends StackPane implements GameActionProvider {
         }
 
         {
-            String prefix = GameAssets2D.assetPrefix(GameVariant.MS_PACMAN);
             var msPacManFlyer = new Flyer(
-                context.assets().image(prefix + ".startpage.image1"),
-                context.assets().image(prefix + ".startpage.image2")
+                context.assets().image(PFX_MS_PACMAN + ".startpage.image1"),
+                context.assets().image(PFX_MS_PACMAN + ".startpage.image2")
             );
             msPacManFlyer.setUserData(GameVariant.MS_PACMAN);
             msPacManFlyer.selectFlyerPage(0);
@@ -82,8 +81,7 @@ public class StartPage extends StackPane implements GameActionProvider {
         }
 
         {
-            String prefix = GameAssets2D.assetPrefix(GameVariant.PACMAN_XXL);
-            var pacManXXLFlyer = new Flyer(context.assets().image(prefix + ".startpage.image1"));
+            var pacManXXLFlyer = new Flyer(context.assets().image(PFX_PACMAN_XXL + ".startpage.image1"));
             pacManXXLFlyer.setLayoutMode(0, Flyer.LayoutMode.FILL);
             pacManXXLFlyer.setUserData(GameVariant.PACMAN_XXL);
             pacManXXLFlyer.selectFlyerPage(0);
@@ -91,10 +89,9 @@ public class StartPage extends StackPane implements GameActionProvider {
         }
 
         {
-            String prefix = GameAssets2D.assetPrefix(GameVariant.MS_PACMAN_TENGEN);
             var msPacManTengenFlyer = new Flyer(
-                context.assets().image(prefix + ".startpage.image1"),
-                context.assets().image(prefix + ".startpage.image2")
+                context.assets().image(PFX_MS_PACMAN_TENGEN + ".startpage.image1"),
+                context.assets().image(PFX_MS_PACMAN_TENGEN + ".startpage.image2")
             );
             msPacManTengenFlyer.setUserData(GameVariant.MS_PACMAN_TENGEN);
             msPacManTengenFlyer.selectFlyerPage(0);

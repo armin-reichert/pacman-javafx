@@ -47,27 +47,27 @@ public class MsPacMan3D implements Pac3D {
         this.msPacMan = checkNotNull(msPacMan);
         checkNotNull(assets);
 
-        String assetPrefix = GameAssets2D.assetPrefix(variant) + ".";
+        String prefix = GameAssets2D.assetPrefix(variant);
         Model3D model3D = assets.get("model3D.pacman");
 
         shape3D = new PacShape3D(model3D, size,
-            assets.color(assetPrefix + "pac.color.head"),
-            assets.color(assetPrefix + "pac.color.palate"));
+            assets.color(prefix + ".pac.color.head"),
+            assets.color(prefix + ".pac.color.palate"));
 
         Group body = PacModel3D.createPacShape(
             model3D, size,
-            assets.color(assetPrefix + "pac.color.head"),
-            assets.color(assetPrefix + "pac.color.eyes"),
-            assets.color(assetPrefix + "pac.color.palate"));
+            assets.color(prefix + ".pac.color.head"),
+            assets.color(prefix + ".pac.color.eyes"),
+            assets.color(prefix + ".pac.color.palate"));
 
         meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(shape3D.drawModeProperty());
         meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(shape3D.drawModeProperty());
         meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(shape3D.drawModeProperty());
 
         Group femaleParts = PacModel3D.createFemaleParts(size,
-            assets.color(assetPrefix + "pac.color.hairbow"),
-            assets.color(assetPrefix + "pac.color.hairbow.pearls"),
-            assets.color(assetPrefix + "pac.color.boobs"));
+            assets.color(prefix + ".pac.color.hairbow"),
+            assets.color(prefix + ".pac.color.hairbow.pearls"),
+            assets.color(prefix + ".pac.color.boobs"));
 
         shape3D.getChildren().addAll(body, femaleParts);
         createHipSwayingAnimation(shape3D);

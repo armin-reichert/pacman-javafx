@@ -17,7 +17,7 @@ public class ArcadeMaps {
     private final Image image;
 
     public ArcadeMaps(AssetStorage assets) {
-        image = assets.image(GameAssets2D.assetPrefix(GameVariant.MS_PACMAN_TENGEN) + ".mazes.arcade");
+        image = assets.image(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".mazes.arcade");
     }
 
     public ImageArea sprite(WorldMap worldMap) {

@@ -36,7 +36,7 @@ public class NonArcadeMaps {
     private final Image image;
 
     public NonArcadeMaps(AssetStorage assets) {
-        image = assets.image(GameAssets2D.assetPrefix(GameVariant.MS_PACMAN_TENGEN) + ".mazes.non_arcade");
+        image = assets.image(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".mazes.non_arcade");
     }
 
     /**

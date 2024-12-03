@@ -71,12 +71,12 @@ public class GameLevel3D {
     static final PhongMaterial DEFAULT_MATERIAL = new PhongMaterial();
 
     static Pac3D createPac3D(GameVariant variant, AssetStorage assets, Pac pac) {
-        String prefix = assetPrefix(variant) + ".";
         Pac3D pac3D = switch (variant) {
             case MS_PACMAN, MS_PACMAN_TENGEN -> new MsPacMan3D(variant, pac, PAC_SIZE, assets);
             case PACMAN, PACMAN_XXL          -> new PacMan3D(variant, pac, PAC_SIZE, assets);
         };
-        pac3D.shape3D().light().setColor(assets.color(prefix + "pac.color.head").desaturate());
+        String prefix = assetPrefix(variant);
+        pac3D.shape3D().light().setColor(assets.color(prefix + ".pac.color.head").desaturate());
         pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
         return pac3D;
     }
@@ -101,27 +101,27 @@ public class GameLevel3D {
     }
 
     static Node createLivesCounterShape(GameVariant variant, AssetStorage assets) {
-        String assetPrefix = assetPrefix(variant) + ".";
+        String prefix = assetPrefix(variant);
         return switch (variant) {
             case MS_PACMAN, MS_PACMAN_TENGEN -> new Group(
                 PacModel3D.createPacShape(
                     assets.get("model3D.pacman"), LIVES_SHAPE_SIZE,
-                    assets.color(assetPrefix + "pac.color.head"),
-                    assets.color(assetPrefix + "pac.color.eyes"),
-                    assets.color(assetPrefix + "pac.color.palate")
+                    assets.color(prefix + ".pac.color.head"),
+                    assets.color(prefix + ".pac.color.eyes"),
+                    assets.color(prefix + ".pac.color.palate")
                 ),
                 PacModel3D.createFemaleParts(LIVES_SHAPE_SIZE,
-                    assets.color(assetPrefix + "pac.color.hairbow"),
-                    assets.color(assetPrefix + "pac.color.hairbow.pearls"),
-                    assets.color(assetPrefix + "pac.color.boobs")
+                    assets.color(prefix + ".pac.color.hairbow"),
+                    assets.color(prefix + ".pac.color.hairbow.pearls"),
+                    assets.color(prefix + ".pac.color.boobs")
                 )
             );
             case PACMAN, PACMAN_XXL ->
                 PacModel3D.createPacShape(
                     assets.get("model3D.pacman"), LIVES_SHAPE_SIZE,
-                    assets.color(assetPrefix + "pac.color.head"),
-                    assets.color(assetPrefix + "pac.color.eyes"),
-                    assets.color(assetPrefix + "pac.color.palate")
+                    assets.color(prefix + ".pac.color.head"),
+                    assets.color(prefix + ".pac.color.eyes"),
+                    assets.color(prefix + ".pac.color.palate")
                 );
         };
     }

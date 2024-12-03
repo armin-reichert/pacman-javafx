@@ -4,7 +4,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
@@ -18,7 +17,6 @@ import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.actors.Animations.*;
-import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_SIZE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.NES_TILES;
 
@@ -60,7 +58,7 @@ public class CutScene4 extends GameScene2D {
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
 
         music = context.sound().makeSound("intermission.4",1.0, false);
-        clapTextColor = context.assets().color(assetPrefix(context.gameVariant()) + ".color.clapperboard");
+        clapTextColor = context.assets().color(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".color.clapperboard");
     }
 
     @Override
@@ -155,8 +153,7 @@ public class CutScene4 extends GameScene2D {
         var junior = new Pac();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         int rnd = Globals.randomInt(1, 3);
-        String prefix = GameAssets2D.assetPrefix(GameVariant.MS_PACMAN_TENGEN);
-        AudioClip clip = context.assets().get(prefix + ".audio.intermission.4.junior." + rnd);
+        AudioClip clip = context.assets().get(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".audio.intermission.4.junior." + rnd);
         junior.setPosition((float) randomX, size().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
