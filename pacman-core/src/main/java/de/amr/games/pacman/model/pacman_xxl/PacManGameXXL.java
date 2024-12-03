@@ -95,8 +95,6 @@ public class PacManGameXXL extends PacManGame {
         level.pac().setAutopilot(autopilot);
         setCruiseElroy(0);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
-
-        Logger.info("World map properties: {}, URL: {}", worldMap.terrain().getProperties(), worldMap.url());
     }
 
     @Override

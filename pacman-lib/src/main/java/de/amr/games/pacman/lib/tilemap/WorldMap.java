@@ -27,7 +27,7 @@ public class WorldMap {
     public static final String TERRAIN_SECTION_START = "!terrain";
     public static final String FOOD_SECTION_START    = "!food";
 
-    private static String configKey(String key) {
+    private static String toConfigNamespace(String key) {
         return "_config." + key;
     }
 
@@ -118,17 +118,17 @@ public class WorldMap {
         return food;
     }
 
-    // "abuse" properties to store non-string configuration data used by UI
+    // store non-string configuration data used by UI in own "namespace"
     public void setConfigValue(String key, Object value) {
-        terrain.getProperties().put(configKey(key), value);
+        terrain.setProperty(toConfigNamespace(key), value);
     }
 
     @SuppressWarnings("unchecked")
     public <T> T getConfigValue(String key) {
-        return (T) terrain.getProperties().get(configKey(key));
+        return (T) terrain.getProperty(toConfigNamespace(key));
     }
 
     public boolean hasConfigValue(String key) {
-        return terrain.getProperties().containsKey(configKey(key));
+        return terrain.hasProperty(toConfigNamespace(key));
     }
 }

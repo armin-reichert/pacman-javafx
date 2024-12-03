@@ -175,29 +175,29 @@ public class TileMap {
         properties.put(name, value);
     }
 
-    public String getProperty(String key) {
-        return String.valueOf(properties.get(key));
+    public void removeProperty(String name) {
+        properties.remove(name);
     }
 
-    public String getPropertyOrDefault(String key, String defaultValue) {
-        return String.valueOf(properties.getOrDefault(key, defaultValue));
+    public String getProperty(String name) {
+        return String.valueOf(properties.get(name));
+    }
+
+    public String getPropertyOrDefault(String name, String defaultValue) {
+        return String.valueOf(properties.getOrDefault(name, defaultValue));
     }
 
     public boolean hasProperty(String name) {
         return properties.containsKey(name);
     }
 
-    public Map<String, Object> getProperties() {
-        return properties;
-    }
-
     public Stream<String> stringPropertyNames() {
-        return properties.keySet().stream().filter(key -> properties.get(key) instanceof String).sorted();
+        return properties.keySet().stream().filter(name -> properties.get(name) instanceof String).sorted();
     }
 
-    public Vector2i getTileProperty(String key, Vector2i defaultTile) {
-        if (hasProperty(key)) {
-            Vector2i tile = parseVector2i(String.valueOf(getProperty(key)));
+    public Vector2i getTileProperty(String name, Vector2i defaultTile) {
+        if (hasProperty(name)) {
+            Vector2i tile = parseVector2i(String.valueOf(getProperty(name)));
             return tile != null ? tile : defaultTile;
         }
         return defaultTile;
@@ -278,7 +278,7 @@ public class TileMap {
 
     public void print(Writer w) {
         var pw = new PrintWriter(w);
-        stringPropertyNames().map(key -> key + "=" + getProperty(key)).forEach(pw::println);
+        stringPropertyNames().map(name -> name + "=" + getProperty(name)).forEach(pw::println);
         pw.println(DATA_SECTION_START);
         for (int row = 0; row < numRows(); ++row) {
             for (int col = 0; col < numCols(); ++col) {

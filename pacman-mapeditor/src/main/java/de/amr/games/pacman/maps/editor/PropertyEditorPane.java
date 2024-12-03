@@ -113,13 +113,13 @@ public class PropertyEditorPane extends BorderPane {
                 editController.showErrorMessage("Property name %s is invalid".formatted(editedName), 2);
                 return;
             }
-            if (tileMap().getProperties().get(editedName) != null) {
+            if (tileMap().hasProperty(editedName)) {
                 editController.showErrorMessage("Property name already used", 2);
                 nameEditor.setText(propertyName);
                 return;
             }
-            tileMap().getProperties().remove(propertyName);
-            tileMap().getProperties().put(editedName, formattedPropertyValue());
+            tileMap().removeProperty(propertyName);
+            tileMap().setProperty(editedName, formattedPropertyValue());
             editController.showInfoMessage("Property %s renamed to %s".formatted(propertyName, editedName), 2);
             propertyName = editedName;
             rebuildPropertyEditors(); // sort order might have changed
@@ -127,7 +127,7 @@ public class PropertyEditorPane extends BorderPane {
         }
 
         void storePropertyValue() {
-            tileMap().getProperties().put(propertyName, formattedPropertyValue());
+            tileMap().setProperty(propertyName, formattedPropertyValue());
             editController.markTileMapEdited(tileMap());
         }
 
@@ -255,7 +255,7 @@ public class PropertyEditorPane extends BorderPane {
         var btnAddColorEntry = new Button("Color");
         btnAddColorEntry.setOnAction(e -> {
             String propertyName = "color_RENAME_ME";
-            tileMap().getProperties().put(propertyName, "green");
+            tileMap().setProperty(propertyName, "green");
             editController.showInfoMessage("New property %s added".formatted(propertyName), 1);
             rebuildPropertyEditors();
         });
@@ -264,7 +264,7 @@ public class PropertyEditorPane extends BorderPane {
         var btnAddPosEntry = new Button("Position");
         btnAddPosEntry.setOnAction(e -> {
             String propertyName = "pos_RENAME_ME";
-            tileMap().getProperties().put(propertyName, "(0,0)");
+            tileMap().setProperty(propertyName, "(0,0)");
             editController.showInfoMessage("New property %s added".formatted(propertyName), 1);
             rebuildPropertyEditors();
         });
@@ -273,7 +273,7 @@ public class PropertyEditorPane extends BorderPane {
         var btnAddGenericEntry = new Button("Text");
         btnAddGenericEntry.setOnAction(e -> {
             String propertyName = "RENAME_ME";
-            tileMap().getProperties().put(propertyName, "any text");
+            tileMap().setProperty(propertyName, "any text");
             editController.showInfoMessage("New property %s added".formatted(propertyName), 1);
             rebuildPropertyEditors();
         });
@@ -326,7 +326,7 @@ public class PropertyEditorPane extends BorderPane {
     }
 
     void deleteProperty(String propertyName) {
-        tileMap().getProperties().remove(propertyName);
+        tileMap().removeProperty(propertyName);
         editController.markTileMapEdited(tileMap());
         rebuildPropertyEditors(); //TODO check
         editController.showInfoMessage("Property %s deleted".formatted(propertyName), 3);
