@@ -29,7 +29,7 @@ public interface TileMapUtil {
 
     static Color getColorFromMap(TileMap map, String key, Color defaultColor) {
         if (map.hasProperty(key)) {
-            String colorSpec = map.getProperty(key);
+            String colorSpec = map.getStringProperty(key);
             try {
                 return Color.web(colorSpec);
             } catch (Exception x) {
@@ -42,7 +42,7 @@ public interface TileMapUtil {
 
     static Vector2i getTileFromMap(TileMap map, String key, Vector2i defaultTile) {
         if (map.hasProperty(key)) {
-            String spec = map.getProperty(key);
+            String spec = map.getStringProperty(key);
             try {
                 return TileMap.parseVector2i(spec);
             } catch (Exception x) {

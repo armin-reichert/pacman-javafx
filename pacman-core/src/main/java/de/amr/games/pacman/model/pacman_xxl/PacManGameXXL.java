@@ -132,10 +132,10 @@ public class PacManGameXXL extends PacManGame {
             colorMap = COLOR_MAPS.get(randomInt(0, COLOR_MAPS.size()));
         } else {
             colorMap = Map.of(
-                "fill",   worldMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_FILL, "000000"),
-                "stroke", worldMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_STROKE, "0000ff"),
-                "door",   worldMap.terrain().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_DOOR, "00ffff"),
-                "pellet", worldMap.food().getPropertyOrDefault(WorldMap.PROPERTY_COLOR_FOOD, "ffffff")
+                "fill",   worldMap.terrain().getStringPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_FILL, "000000"),
+                "stroke", worldMap.terrain().getStringPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_STROKE, "0000ff"),
+                "door",   worldMap.terrain().getStringPropertyOrDefault(WorldMap.PROPERTY_COLOR_DOOR, "00ffff"),
+                "pellet", worldMap.food().getStringPropertyOrDefault(WorldMap.PROPERTY_COLOR_FOOD, "ffffff")
             );
         }
         worldMap.setConfigValue("colorMap", colorMap);

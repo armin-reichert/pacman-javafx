@@ -179,11 +179,15 @@ public class TileMap {
         properties.remove(name);
     }
 
-    public String getProperty(String name) {
+    public Object getProperty(String name) {
+        return properties.get(name);
+    }
+
+    public String getStringProperty(String name) {
         return String.valueOf(properties.get(name));
     }
 
-    public String getPropertyOrDefault(String name, String defaultValue) {
+    public String getStringPropertyOrDefault(String name, String defaultValue) {
         return String.valueOf(properties.getOrDefault(name, defaultValue));
     }
 
@@ -197,7 +201,7 @@ public class TileMap {
 
     public Vector2i getTileProperty(String name, Vector2i defaultTile) {
         if (hasProperty(name)) {
-            Vector2i tile = parseVector2i(String.valueOf(getProperty(name)));
+            Vector2i tile = parseVector2i(getStringProperty(name));
             return tile != null ? tile : defaultTile;
         }
         return defaultTile;
@@ -278,7 +282,7 @@ public class TileMap {
 
     public void print(Writer w) {
         var pw = new PrintWriter(w);
-        stringPropertyNames().map(name -> name + "=" + getProperty(name)).forEach(pw::println);
+        stringPropertyNames().map(name -> name + "=" + getStringProperty(name)).forEach(pw::println);
         pw.println(DATA_SECTION_START);
         for (int row = 0; row < numRows(); ++row) {
             for (int col = 0; col < numCols(); ++col) {

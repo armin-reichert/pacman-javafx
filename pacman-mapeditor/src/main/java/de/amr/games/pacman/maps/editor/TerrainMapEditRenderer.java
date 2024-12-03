@@ -97,7 +97,7 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
 
     private Optional<Vector2i> specialTile(TileMap terrainMap, String propertyName) {
         if (terrainMap.hasProperty(propertyName)) {
-            Vector2i tile = parseVector2i(terrainMap.getProperty(propertyName));
+            Vector2i tile = parseVector2i(terrainMap.getStringProperty(propertyName));
             return Optional.ofNullable(tile);
         }
         return Optional.empty();
