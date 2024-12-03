@@ -12,8 +12,8 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import static de.amr.games.pacman.maps.editor.TileMapUtil.HALF_TILE_SIZE;
-import static de.amr.games.pacman.maps.editor.TileMapUtil.TILE_SIZE;
+import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.TS;
 
 /**
  * @author Armin Reichert
@@ -58,24 +58,24 @@ public class FoodMapRenderer implements TileMapRenderer {
     }
 
     public void drawPellet(GraphicsContext g, Vector2i tile) {
-        double offset = 0.5 * (TILE_SIZE - PELLET_SIZE);
+        double offset = 0.5 * (TS - PELLET_SIZE);
         g.save();
         g.scale(scaling(), scaling());
         g.setFill(pelletColor);
-        g.fillRect(tile.x() * TILE_SIZE + offset, tile.y() * TILE_SIZE + offset, PELLET_SIZE, PELLET_SIZE);
+        g.fillRect(tile.x() * TS + offset, tile.y() * TS + offset, PELLET_SIZE, PELLET_SIZE);
         g.restore();
     }
 
     public void drawEnergizer(GraphicsContext g, Vector2i tile) {
-        double size = TILE_SIZE;
-        double offset = 0.5 * (HALF_TILE_SIZE);
-        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
+        double size = TS;
+        double offset = 0.5 * (HTS);
+        double x = tile.x() * TS, y = tile.y() * TS;
         g.save();
         g.scale(scaling(), scaling());
         g.setFill(energizerColor);
         // draw pixelized "circle"
-        g.fillRect(x + offset, y, HALF_TILE_SIZE, size);
-        g.fillRect(x, y + offset, size, HALF_TILE_SIZE);
+        g.fillRect(x + offset, y, HTS, size);
+        g.fillRect(x, y + offset, size, HTS);
         g.fillRect(x + 1, y + 1, size - 2, size - 2);
         g.restore();
     }
