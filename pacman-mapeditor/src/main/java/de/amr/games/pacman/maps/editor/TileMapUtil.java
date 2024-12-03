@@ -39,17 +39,4 @@ public interface TileMapUtil {
         }
         return defaultColor;
     }
-
-    static Vector2i getTileFromMap(TileMap map, String key, Vector2i defaultTile) {
-        if (map.hasProperty(key)) {
-            String spec = map.getStringProperty(key);
-            try {
-                return TileMap.parseVector2i(spec);
-            } catch (Exception x) {
-                Logger.error("Could not create Vector2i from value '{}'", spec);
-                return defaultTile;
-            }
-        }
-        return defaultTile;
-    }
 }

@@ -49,7 +49,8 @@ import java.util.Optional;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.maps.editor.TileMapEditorViewModel.tt;
-import static de.amr.games.pacman.maps.editor.TileMapUtil.*;
+import static de.amr.games.pacman.maps.editor.TileMapUtil.getColorFromMap;
+import static de.amr.games.pacman.maps.editor.TileMapUtil.parseColor;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -970,7 +971,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
     }
 
     private void drawSprite(GraphicsContext g, String tilePropertyName, RectArea sprite, Vector2i defaultTile) {
-        var tile = getTileFromMap(worldMap().terrain(), tilePropertyName, defaultTile);
+        Vector2i tile = worldMap().terrain().getTileProperty(tilePropertyName, defaultTile);
         if (tile != null) {
             drawSprite(g, sprite, tile.x() * gridSize() + 0.5 * gridSize(), tile.y() * gridSize(), 1.75 * gridSize(), 1.75 * gridSize());
         }
