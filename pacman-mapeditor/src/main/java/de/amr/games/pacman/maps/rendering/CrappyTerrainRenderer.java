@@ -108,13 +108,23 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
         g.beginPath();
         g.moveTo(obstacle.startPoint().x(), obstacle.startPoint().y());
         Vector2f p = obstacle.startPoint();
-        for (Vector2f segment : obstacle.segments()) {
-            p = p.plus(segment);
-            if (segment.x() != 0 && segment.y() != 0) {
+        for (Vector2f seg : obstacle.segments()) {
+            p = p.plus(seg);
+
+            //debugging:
+            //g.setFill(p.equals(obstacle.startPoint()) ? Color.GREEN : Color.YELLOW);
+            //g.fillOval(p.x()-1, p.y()-1, 2, 2);
+
+            float dx = seg.x(), dy = seg.y();
+            if (dx == 0 || dy == 0) {
                 g.lineTo(p.x(), p.y());
             } else {
+                //TODO arcs
                 g.lineTo(p.x(), p.y());
             }
+        }
+        if (obstacle.isClosed()) {
+            g.closePath();
         }
         if (fill) {
             g.setFill(wallFillColor);
@@ -124,8 +134,6 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
         g.setStroke(wallStrokeColor);
         g.stroke();
     }
-
-
 
 
 

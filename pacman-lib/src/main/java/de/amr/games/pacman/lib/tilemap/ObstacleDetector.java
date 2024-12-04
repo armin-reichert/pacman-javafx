@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.lib.tilemap;
 
 import de.amr.games.pacman.lib.Direction;
@@ -12,15 +16,27 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Direction.*;
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.v2f;
 
 public class ObstacleDetector {
 
-    private Set<Vector2i> explored = new HashSet<>();
-    private TileMap terrain;
-    private List<Obstacle> obstacles = new ArrayList<>();
+    private static final float DX = 4.0f;
+    private static final float DY = 4.0f;
+    private static final Vector2f SEG_CORNER_NW_UP   = v2f(DX,-DY);
+    private static final Vector2f SEG_CORNER_NW_DOWN = SEG_CORNER_NW_UP.inverse();
+    private static final Vector2f SEG_CORNER_SW_UP   = v2f(-DX,-DY);
+    private static final Vector2f SEG_CORNER_SW_DOWN = SEG_CORNER_SW_UP.inverse();
+    private static final Vector2f SEG_CORNER_SE_UP   = v2f(DX,-DY);
+    private static final Vector2f SEG_CORNER_SE_DOWN = SEG_CORNER_SE_UP.inverse();
+    private static final Vector2f SEG_CORNER_NE_UP   = v2f(-DX,-DY);
+    private static final Vector2f SEG_CORNER_NE_DOWN = SEG_CORNER_NE_UP.inverse();
 
-    private List<Vector2i> obstacleTiles = new ArrayList<>();
+    private final TileMap terrain;
+    private final List<Obstacle> obstacles = new ArrayList<>();
+    private final Set<Vector2i> exploredTiles = new HashSet<>();
+
+    private final List<Vector2i> obstacleTiles = new ArrayList<>();
     private Vector2i cursor;
 
     public ObstacleDetector(TileMap terrain) {
@@ -34,21 +50,10 @@ public class ObstacleDetector {
 
     private void detectObstaclesInside() {
         terrain.tiles(Tiles.CORNER_NW)
-            .filter(Predicate.not(explored::contains))
+            .filter(Predicate.not(exploredTiles::contains))
             .map(this::detectObstacle)
             .forEach(obstacles::add);
     }
-
-    private static final float DX = 4.0f;
-    private static final float DY = 4.0f;
-    private static final Vector2f SEG_CORNER_NW_UP   = v2f(DX,-DY);
-    private static final Vector2f SEG_CORNER_NW_DOWN = SEG_CORNER_NW_UP.inverse();
-    private static final Vector2f SEG_CORNER_SW_UP   = v2f(-DX,-DY);
-    private static final Vector2f SEG_CORNER_SW_DOWN = SEG_CORNER_SW_UP.inverse();
-    private static final Vector2f SEG_CORNER_SE_UP   = v2f(DX,-DY);
-    private static final Vector2f SEG_CORNER_SE_DOWN = SEG_CORNER_SE_UP.inverse();
-    private static final Vector2f SEG_CORNER_NE_UP   = v2f(-DX,-DY);
-    private static final Vector2f SEG_CORNER_NE_DOWN = SEG_CORNER_NE_UP.inverse();
 
     private Obstacle detectObstacle(Vector2i cornerNW) {
         Logger.info("Detect obstacle with top-left corner {}, map ID={}", cornerNW, terrain.hashCode());
@@ -66,10 +71,10 @@ public class ObstacleDetector {
         while (bailout < 1000) {
             ++bailout;
             byte content = terrain.get(cursor);
-            if (explored.contains(cursor)) {
+            if (exploredTiles.contains(cursor)) {
                 break;
             }
-            explored.add(cursor);
+            exploredTiles.add(cursor);
             switch (content) {
 
                 case Tiles.WALL_V -> {
