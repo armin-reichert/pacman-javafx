@@ -51,11 +51,11 @@ public class ObstacleDetector {
     private void detectObstaclesInside() {
         terrain.tiles(Tiles.CORNER_NW)
             .filter(Predicate.not(exploredTiles::contains))
-            .map(this::detectObstacle)
+            .map(this::detectClosedObstacle)
             .forEach(obstacles::add);
     }
 
-    private void traverse(Obstacle obstacle, Vector2i startTile, Direction orientation) {
+    private void buildObstacle(Obstacle obstacle, Vector2i startTile, Direction orientation) {
         int bailout = 0;
         while (bailout < 1000) {
             ++bailout;
@@ -156,23 +156,23 @@ public class ObstacleDetector {
                 break;
             }
         }
-
     }
 
-    private Obstacle detectObstacle(Vector2i cornerNW) {
-        Logger.info("Detect obstacle with top-left corner {}, map ID={}", cornerNW, terrain.hashCode());
-        predecessorTile = cornerNW;
-        cursorTile = cornerNW;
-
+    private Obstacle detectClosedObstacle(Vector2i cornerNW) {
         // start polygon at right edge of start tile
         Vector2f startPoint = cornerNW.scaled((float)TS).plus(TS, TS-DY);
         Obstacle obstacle = new Obstacle(startPoint);
+        predecessorTile = null;
+        cursorTile = cornerNW;
         obstacle.addSegment(SEG_CORNER_NW_DOWN, LEFT, terrain.get(cursorTile));
         moveCursor(DOWN);
-
-        traverse(obstacle, cornerNW, LEFT);
-
-        Logger.info("{}{}", obstacle.isClosed()? "Closed " : "", obstacle);
+        buildObstacle(obstacle, cornerNW, LEFT);
+        if (obstacle.isClosed()) {
+            Logger.info("Found closed obstacle, top-left tile={}, map ID={}:", cornerNW, terrain.hashCode());
+            Logger.info(obstacle);
+        } else {
+            Logger.error("Could not identify closed obstacle, top-left tile={}, map ID={}", cornerNW, terrain.hashCode());
+        }
         return obstacle;
     }
 
