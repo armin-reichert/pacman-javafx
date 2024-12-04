@@ -3,7 +3,6 @@ package de.amr.games.pacman.lib.tilemap;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.graph.Dir;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ public class ObstacleDetector {
     private List<Obstacle> obstacles = new ArrayList<>();
 
     private List<Vector2i> obstacleTiles = new ArrayList<>();
-    private Vector2i currentTile;
+    private Vector2i cursor;
 
     public ObstacleDetector(TileMap terrain) {
         this.terrain = terrain;
@@ -40,127 +39,134 @@ public class ObstacleDetector {
             .forEach(obstacles::add);
     }
 
-    private Obstacle detectObstacle(Vector2i topLeftCornerTile) {
-        Logger.info("Detect obstacle with top-left corner {}, map ID={}", topLeftCornerTile, terrain.hashCode());
-        obstacleTiles.clear();
-        obstacleTiles.add(topLeftCornerTile);
-        currentTile = topLeftCornerTile;
-        move(DOWN);
+    private static final float DX = 4.0f;
+    private static final float DY = 4.0f;
+    private static final Vector2f SEG_CORNER_NW_UP   = v2f(DX,-DY);
+    private static final Vector2f SEG_CORNER_NW_DOWN = SEG_CORNER_NW_UP.inverse();
+    private static final Vector2f SEG_CORNER_SW_UP   = v2f(-DX,-DY);
+    private static final Vector2f SEG_CORNER_SW_DOWN = SEG_CORNER_SW_UP.inverse();
+    private static final Vector2f SEG_CORNER_SE_UP   = v2f(DX,-DY);
+    private static final Vector2f SEG_CORNER_SE_DOWN = SEG_CORNER_SE_UP.inverse();
+    private static final Vector2f SEG_CORNER_NE_UP   = v2f(-DX,-DY);
+    private static final Vector2f SEG_CORNER_NE_DOWN = SEG_CORNER_NE_UP.inverse();
 
-        Vector2f startPoint = topLeftCornerTile.scaled(TS).plus(TS, HTS).toVector2f();
+    private Obstacle detectObstacle(Vector2i cornerNW) {
+        Logger.info("Detect obstacle with top-left corner {}, map ID={}", cornerNW, terrain.hashCode());
+        obstacleTiles.clear();
+        obstacleTiles.add(cornerNW);
+        cursor = cornerNW;
+
+        // start polygon at right edge of start tile
+        Vector2f startPoint = cornerNW.scaled((float)TS).plus(TS, TS-DY);
         Obstacle obstacle = new Obstacle(startPoint);
-        obstacle.addSegment(v2f(-HTS, HTS));
+        obstacle.addSegment(SEG_CORNER_NW_DOWN);
+
+        moveCursor(DOWN);
         int bailout = 0;
         while (bailout < 1000) {
             ++bailout;
-            byte content = terrain.get(currentTile);
-            if (explored.contains(currentTile)) {
+            byte content = terrain.get(cursor);
+            if (explored.contains(cursor)) {
                 break;
             }
-            explored.add(currentTile);
+            explored.add(cursor);
             switch (content) {
+
                 case Tiles.WALL_V -> {
                     if (isGoing(DOWN)) {
                         obstacle.addSegment(oneTile(DOWN));
-                        move(DOWN);
+                        moveCursor(DOWN);
                     } else if (isGoing(UP)) {
                         obstacle.addSegment(oneTile(UP));
-                        move(UP);
+                        moveCursor(UP);
                     } else {
                         //error
                     }
                 }
+
                 case Tiles.WALL_H -> {
                     if (isGoing(RIGHT)) {
                         obstacle.addSegment(oneTile(RIGHT));
-                        move(RIGHT);
+                        moveCursor(RIGHT);
                     } else if (isGoing(LEFT)) {
                         obstacle.addSegment(oneTile(LEFT));
-                        move(LEFT);
+                        moveCursor(LEFT);
                     } else {
                         //error
                     }
                 }
+
                 case Tiles.CORNER_SW -> {
                     if (isGoing(DOWN)) {
-                        if (isGoing(LEFT)) {
-                            obstacle.addSegment(v2f(HTS, HTS));
-                            move(RIGHT);
-                        } else {
-                            obstacle.addSegment(v2f(HTS, HTS));
-                            move(RIGHT);
-                        }
+                        obstacle.addSegment(SEG_CORNER_SW_DOWN);
+                        moveCursor(RIGHT);
                     } else if (isGoing(LEFT)) {
-                        obstacle.addSegment(v2f(-HTS, -HTS));
-                        move(UP);
+                        obstacle.addSegment(SEG_CORNER_SW_UP);
+                        moveCursor(UP);
                     } else {
                         //error
                     }
                 }
+
                 case Tiles.CORNER_SE -> {
-                    if (isGoing(RIGHT)) {
-                        if (isGoing(DOWN)) {
-                            obstacle.addSegment(v2f(-HTS, HTS));
-                            move(LEFT);
-                        } else {
-                            obstacle.addSegment(v2f(HTS, -HTS));
-                            move(UP);
-                        }
-                    } else if (isGoing(DOWN)) {
-                        obstacle.addSegment(v2f(-HTS, HTS));
-                        move(LEFT);
-                    } else {
+                    if (isGoing(DOWN)) {
+                        obstacle.addSegment(SEG_CORNER_SE_DOWN);
+                        moveCursor(LEFT);
+                    }
+                    else if (isGoing(RIGHT)) {
+                        obstacle.addSegment(SEG_CORNER_SE_UP);
+                        moveCursor(UP);
+                    }
+                    else {
                         //error
                     }
                 }
+
                 case Tiles.CORNER_NE -> {
-                    if (isGoing(RIGHT)) {
-                        if (isGoing(UP)) {
-                            obstacle.addSegment(v2f(-HTS, -HTS));
-                            move(LEFT);
-                        } else {
-                            obstacle.addSegment(v2f(HTS, HTS));
-                            move(DOWN);
-                        }
-                    } else if (isGoing(UP)) {
-                        obstacle.addSegment(v2f(-HTS, -HTS));
-                        move(LEFT);
-                    } else {
+                    if (isGoing(UP)) {
+                        obstacle.addSegment(SEG_CORNER_NE_UP);
+                        moveCursor(LEFT);
+                    }
+                    else if (isGoing(RIGHT)) {
+                        obstacle.addSegment(SEG_CORNER_NE_DOWN);
+                        moveCursor(DOWN);
+                    }
+                    else {
                         //error
                     }
                 }
+
                 case Tiles.CORNER_NW -> {
-                    if (isGoing(LEFT)) {
-                        if (isGoing(UP)) {
-                            obstacle.addSegment(v2f(HTS, -HTS));
-                            move(RIGHT);
-                        } else {
-                            obstacle.addSegment(v2f(-HTS, HTS));
-                            move(DOWN);
-                        }
-                    } else if (isGoing(UP)) {
-                        obstacle.addSegment(v2f(HTS, -HTS));
-                        move(RIGHT);
-                    } else {
+                    if (isGoing(UP)) {
+                        obstacle.addSegment(SEG_CORNER_NW_UP);
+                        moveCursor(RIGHT);
+                    }
+                    else if (isGoing(LEFT)) {
+                        obstacle.addSegment(SEG_CORNER_NW_DOWN);
+                        moveCursor(DOWN);
+                    }
+                    else {
                         //error
                     }
                 }
             }
-            if (currentTile.equals(topLeftCornerTile)) {
+
+            if (cursor.equals(cornerNW) || terrain.outOfBounds(cursor)) {
                 break;
             }
         }
+
         Logger.info("{}{}", obstacle.isClosed()? "Closed " : "", obstacle);
         return obstacle;
     }
 
     private boolean isGoing(Direction dir) {
-        return obstacleTiles.getLast().plus(dir.vector()).equals(currentTile);
+        return obstacleTiles.getLast().plus(dir.vector()).equals(cursor);
     }
 
-    private void move(Direction dir) {
-        obstacleTiles.add(currentTile);
-        currentTile = currentTile.plus(dir.vector());
+    private void moveCursor(Direction dir) {
+        obstacleTiles.add(cursor);
+        cursor = cursor.plus(dir.vector());
     }
 
     private Vector2f oneTile(Direction dir) {
