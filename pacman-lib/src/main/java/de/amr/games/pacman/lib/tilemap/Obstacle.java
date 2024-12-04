@@ -17,6 +17,16 @@ public class Obstacle {
         endPoint = startPoint;
     }
 
+    @Override
+    public String toString() {
+        return "Obstacle{" +
+            "startPoint=" + startPoint +
+            ", endPoint=" + endPoint +
+            ", segment count=" + segments.size() +
+            ", segments=" + segments +
+            '}';
+    }
+
     public void addSegment(Vector2f segment) {
         segments.add(segment);
         endPoint = endPoint.plus(segment);

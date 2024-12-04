@@ -36,11 +36,12 @@ public class ObstacleDetector {
     private void detectObstaclesInside() {
         terrain.tiles(Tiles.CORNER_NW)
             .filter(Predicate.not(explored::contains))
-            .forEach(topLeftCornerTile -> obstacles.add(detectObstacle(topLeftCornerTile)));
+            .map(this::detectObstacle)
+            .forEach(obstacles::add);
     }
 
     private Obstacle detectObstacle(Vector2i topLeftCornerTile) {
-        Logger.info("Detect obstacle with top-left corner tile {}. Map {}", topLeftCornerTile, terrain);
+        Logger.info("Detect obstacle with top-left corner {}, map ID={}", topLeftCornerTile, terrain.hashCode());
         obstacleTiles.clear();
         obstacleTiles.add(topLeftCornerTile);
         currentTile = topLeftCornerTile;
@@ -149,6 +150,7 @@ public class ObstacleDetector {
                 break;
             }
         }
+        Logger.info("{}{}", obstacle.isClosed()? "Closed " : "", obstacle);
         return obstacle;
     }
 
