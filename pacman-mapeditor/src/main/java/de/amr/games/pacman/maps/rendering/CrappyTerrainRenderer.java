@@ -105,21 +105,34 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
     }
 
     private void drawObstacle(GraphicsContext g, Obstacle obstacle, boolean fill) {
+        int r = HTS;
         g.beginPath();
         g.moveTo(obstacle.startPoint().x(), obstacle.startPoint().y());
         Vector2f p = obstacle.startPoint();
-        for (Vector2f seg : obstacle.segments()) {
+        for (int i = 0; i < obstacle.segments().size(); ++i) {
+            Vector2f seg = obstacle.segment(i);
+            byte content = obstacle.content(i);
+            boolean counterClockwise = obstacle.orientation(i) == Direction.LEFT;
             p = p.plus(seg);
-
-            //debugging:
-            //g.setFill(p.equals(obstacle.startPoint()) ? Color.GREEN : Color.YELLOW);
-            //g.fillOval(p.x()-1, p.y()-1, 2, 2);
-
-            float dx = seg.x(), dy = seg.y();
-            if (dx == 0 || dy == 0) {
+            if (seg.x() == 0 || seg.y() == 0) {
                 g.lineTo(p.x(), p.y());
             } else {
-                //TODO arcs
+                if (content == Tiles.CORNER_NW) { // NW corner
+                    if (counterClockwise) g.arc(p.x()+r, p.y(), r, r, 90, 90);
+                    else                  g.arc(p.x(), p.y()+r, r, r, 180, -90);
+                }
+                else if (content == Tiles.CORNER_SW) { // SW corner
+                    if (counterClockwise) g.arc(p.x(),p.y()-r, r, r, 180, 90);
+                    else                  g.arc(p.x()+r, p.y(), r, r, 270, -90);
+                }
+                else if (content == Tiles.CORNER_SE) { // SE corner
+                    if (counterClockwise) g.arc(p.x()-r, p.y(), r, r, 270, 90);
+                    else                  g.arc(p.x(), p.y()-r, r, r, 0, -90);
+                }
+                else if (content == Tiles.CORNER_NE) { // NE corner
+                    if (counterClockwise) g.arc(p.x(), p.y()+r, r, r, 0, 90);
+                    else                  g.arc(p.x()-r, p.y(), r, r, 90, -90);
+                }
                 g.lineTo(p.x(), p.y());
             }
         }

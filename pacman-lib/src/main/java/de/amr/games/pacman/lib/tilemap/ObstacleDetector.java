@@ -60,29 +60,29 @@ public class ObstacleDetector {
         obstacleTiles.clear();
         obstacleTiles.add(cornerNW);
         cursor = cornerNW;
+        Direction orientation = LEFT; // LEFT = counter clock-wise, RIGHT = clockwise
 
         // start polygon at right edge of start tile
         Vector2f startPoint = cornerNW.scaled((float)TS).plus(TS, TS-DY);
         Obstacle obstacle = new Obstacle(startPoint);
-        obstacle.addSegment(SEG_CORNER_NW_DOWN);
+        obstacle.addSegment(SEG_CORNER_NW_DOWN, orientation, terrain.get(cursor));
 
         moveCursor(DOWN);
         int bailout = 0;
         while (bailout < 1000) {
             ++bailout;
-            byte content = terrain.get(cursor);
             if (exploredTiles.contains(cursor)) {
                 break;
             }
             exploredTiles.add(cursor);
-            switch (content) {
+            switch (terrain.get(cursor)) {
 
                 case Tiles.WALL_V -> {
                     if (isGoing(DOWN)) {
-                        obstacle.addSegment(oneTile(DOWN));
+                        obstacle.addSegment(oneTile(DOWN), orientation, terrain.get(cursor));
                         moveCursor(DOWN);
                     } else if (isGoing(UP)) {
-                        obstacle.addSegment(oneTile(UP));
+                        obstacle.addSegment(oneTile(UP), orientation, terrain.get(cursor));
                         moveCursor(UP);
                     } else {
                         //error
@@ -91,10 +91,10 @@ public class ObstacleDetector {
 
                 case Tiles.WALL_H -> {
                     if (isGoing(RIGHT)) {
-                        obstacle.addSegment(oneTile(RIGHT));
+                        obstacle.addSegment(oneTile(RIGHT), orientation, terrain.get(cursor));
                         moveCursor(RIGHT);
                     } else if (isGoing(LEFT)) {
-                        obstacle.addSegment(oneTile(LEFT));
+                        obstacle.addSegment(oneTile(LEFT), orientation, terrain.get(cursor));
                         moveCursor(LEFT);
                     } else {
                         //error
@@ -103,10 +103,12 @@ public class ObstacleDetector {
 
                 case Tiles.CORNER_SW -> {
                     if (isGoing(DOWN)) {
-                        obstacle.addSegment(SEG_CORNER_SW_DOWN);
+                        orientation = LEFT;
+                        obstacle.addSegment(SEG_CORNER_SW_DOWN, orientation, terrain.get(cursor));
                         moveCursor(RIGHT);
                     } else if (isGoing(LEFT)) {
-                        obstacle.addSegment(SEG_CORNER_SW_UP);
+                        orientation = RIGHT;
+                        obstacle.addSegment(SEG_CORNER_SW_UP, orientation, terrain.get(cursor));
                         moveCursor(UP);
                     } else {
                         //error
@@ -115,11 +117,13 @@ public class ObstacleDetector {
 
                 case Tiles.CORNER_SE -> {
                     if (isGoing(DOWN)) {
-                        obstacle.addSegment(SEG_CORNER_SE_DOWN);
+                        orientation = RIGHT;
+                        obstacle.addSegment(SEG_CORNER_SE_DOWN, orientation, terrain.get(cursor));
                         moveCursor(LEFT);
                     }
                     else if (isGoing(RIGHT)) {
-                        obstacle.addSegment(SEG_CORNER_SE_UP);
+                        orientation = LEFT;
+                        obstacle.addSegment(SEG_CORNER_SE_UP, orientation, terrain.get(cursor));
                         moveCursor(UP);
                     }
                     else {
@@ -129,11 +133,13 @@ public class ObstacleDetector {
 
                 case Tiles.CORNER_NE -> {
                     if (isGoing(UP)) {
-                        obstacle.addSegment(SEG_CORNER_NE_UP);
+                        orientation = LEFT;
+                        obstacle.addSegment(SEG_CORNER_NE_UP, orientation, terrain.get(cursor));
                         moveCursor(LEFT);
                     }
                     else if (isGoing(RIGHT)) {
-                        obstacle.addSegment(SEG_CORNER_NE_DOWN);
+                        orientation = RIGHT;
+                        obstacle.addSegment(SEG_CORNER_NE_DOWN, orientation, terrain.get(cursor));
                         moveCursor(DOWN);
                     }
                     else {
@@ -143,11 +149,13 @@ public class ObstacleDetector {
 
                 case Tiles.CORNER_NW -> {
                     if (isGoing(UP)) {
-                        obstacle.addSegment(SEG_CORNER_NW_UP);
+                        orientation = RIGHT;
+                        obstacle.addSegment(SEG_CORNER_NW_UP, orientation, terrain.get(cursor));
                         moveCursor(RIGHT);
                     }
                     else if (isGoing(LEFT)) {
-                        obstacle.addSegment(SEG_CORNER_NW_DOWN);
+                        orientation = LEFT;
+                        obstacle.addSegment(SEG_CORNER_NW_DOWN, orientation, terrain.get(cursor));
                         moveCursor(DOWN);
                     }
                     else {
