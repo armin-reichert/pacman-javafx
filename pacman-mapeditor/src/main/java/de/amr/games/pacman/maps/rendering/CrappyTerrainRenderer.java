@@ -85,6 +85,7 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
         double baseLineWidth = adaptLineWidthToCanvasSize(g.getCanvas().getHeight());
         g.save();
         g.scale(scaling(), scaling());
+
         terrainData.doubleStrokePaths().forEach(path -> {
             drawPath(g, map, path, false,  doubleStrokeOuterWidth * baseLineWidth, wallStrokeColor, null);
             drawPath(g, map, path, false,  doubleStrokeInnerWidth * baseLineWidth, wallFillColor, null);
@@ -92,19 +93,16 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
         terrainData.fillerPaths().forEach(
             path -> drawPath(g, map, path, true, singleStrokeWidth * baseLineWidth, wallFillColor, wallFillColor)
         );
-        /*
-        terrainData.singleStrokePaths().forEach(
-            path -> drawPath(g, map, path, true, singleStrokeWidth * baseLineWidth, wallStrokeColor, wallFillColor)
-        );
-         */
-        terrainData.obstacles().forEach(obstacle -> drawObstacle(g, obstacle, true));
-
         map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, map, door, singleStrokeWidth * baseLineWidth, doorColor));
         uglyConcavityHack(g, terrainData, baseLineWidth);
+
+        // new rendering
+        terrainData.obstacles().forEach(obstacle -> drawObstacle(g, obstacle, true, singleStrokeWidth * baseLineWidth));
+
         g.restore();
     }
 
-    private void drawObstacle(GraphicsContext g, Obstacle obstacle, boolean fill) {
+    private void drawObstacle(GraphicsContext g, Obstacle obstacle, boolean fill, double lineWidth) {
         int r = HTS;
         g.beginPath();
         g.moveTo(obstacle.startPoint().x(), obstacle.startPoint().y());
@@ -143,7 +141,7 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
             g.setFill(wallFillColor);
             g.fill();
         }
-        g.setLineWidth(1);
+        g.setLineWidth(lineWidth);
         g.setStroke(wallStrokeColor);
         g.stroke();
     }
@@ -221,39 +219,6 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
             g.fillRect(x + 2 * TS, oy, lineWidth, height);
             g.setFill(doorColor);
             g.fillRect(x, y + 0.5 * (TS - height), 2 * TS, height);
-        }
-    }
-
-    private void drawSSPath(GraphicsContext g, TileMap map, TileMapPath path,
-        boolean fill, double lineWidth, Color strokeColor, Color fillColor)
-    {
-        g.beginPath();
-        drawSSPath(g, map, path);
-        if (fill) {
-            g.setFill(fillColor);
-            g.fill();
-        }
-        g.setLineWidth(lineWidth);
-        g.setStroke(strokeColor);
-        g.stroke();
-    }
-
-    private void drawSSPath(GraphicsContext g, TileMap map, TileMapPath path) {
-        Vector2i tile = path.startTile();
-        Vector2f point = tile.scaled(8f).plus(8,6);
-        g.moveTo(point.x(), point.y());
-        int orientation = 1; // counter clockwise
-        for (Vector2i vector : path) {
-            byte content = map.get(tile);
-            point = switch (content) {
-                case Tiles.CORNER_NW -> point.plus(-2, 2).scaled(orientation);
-                case Tiles.CORNER_SW -> point.plus(2, 2).scaled(orientation);
-                case Tiles.CORNER_SE -> point.plus(2, -2).scaled(orientation);
-                case Tiles.CORNER_NE -> point.plus(-2, -2).scaled(orientation);
-                default -> point.plus(vector.scaled(8f));
-            };
-            g.lineTo(point.x(), point.y());
-            tile = tile.plus(vector);
         }
     }
 
