@@ -16,22 +16,28 @@ import java.util.List;
 public class Obstacle {
 
     public record Segment(Vector2f vector, boolean ccw, byte mapContent) {
-        public boolean isNWCorner() { return mapContent == Tiles.CORNER_NW || mapContent == Tiles.DCORNER_NW; }
-        public boolean isSWCorner() { return mapContent == Tiles.CORNER_SW || mapContent == Tiles.DCORNER_SW; }
-        public boolean isSECorner() { return mapContent == Tiles.CORNER_SE || mapContent == Tiles.DCORNER_SE; }
-        public boolean isNECorner() { return mapContent == Tiles.CORNER_NE || mapContent == Tiles.DCORNER_NE; }
-        public boolean isVerticalLine() { return vector.y() == 0; }
-        public boolean isHorizontalLine() { return vector.x() == 0; }
-        public boolean isStraightLine() { return isVerticalLine() || isHorizontalLine(); }
+        public boolean isRoundedNWCorner() { return mapContent == Tiles.CORNER_NW || mapContent == Tiles.DCORNER_NW; }
+        public boolean isRoundedSWCorner() { return mapContent == Tiles.CORNER_SW || mapContent == Tiles.DCORNER_SW; }
+        public boolean isRoundedSECorner() { return mapContent == Tiles.CORNER_SE || mapContent == Tiles.DCORNER_SE; }
+        public boolean isRoundedNECorner() { return mapContent == Tiles.CORNER_NE || mapContent == Tiles.DCORNER_NE; }
+        public boolean isAngularNWCorner() { return mapContent == Tiles.DCORNER_ANGULAR_NW; }
+        public boolean isAngularSWCorner() { return mapContent == Tiles.DCORNER_ANGULAR_SW; }
+        public boolean isAngularSECorner() { return mapContent == Tiles.DCORNER_ANGULAR_SE; }
+        public boolean isAngularNECorner() { return mapContent == Tiles.DCORNER_ANGULAR_NE; }
+        public boolean isVerticalLine()    {  return mapContent == Tiles.WALL_V || mapContent == Tiles.DWALL_V; }
+        public boolean isHorizontalLine()  { return mapContent == Tiles.WALL_H || mapContent == Tiles.DWALL_H; }
+        public boolean isStraightLine()    { return isVerticalLine() || isHorizontalLine(); }
     }
 
     private final List<Segment> segments = new ArrayList<>();
     private final Vector2f startPoint;
     private Vector2f endPoint;
+    private final boolean doubleWalls;
 
-    public Obstacle(Vector2f startPoint) {
+    public Obstacle(Vector2f startPoint, boolean doubleWalls) {
         this.startPoint = startPoint;
         endPoint = startPoint;
+        this.doubleWalls = doubleWalls;
     }
 
     @Override
@@ -55,6 +61,10 @@ public class Obstacle {
 
     public boolean isClosed() {
         return startPoint.equals(endPoint); // TODO use almost equals?
+    }
+
+    public boolean hasDoubleWalls() {
+        return doubleWalls;
     }
 
     public List<Segment> segments() {

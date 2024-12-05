@@ -45,6 +45,10 @@ public interface Tiles {
 
     byte LAST_TERRAIN_VALUE = 23; // Adapt when adding new tiles!
 
+    static boolean isDoubleWall(byte content) {
+        return 8 <= content && content <= 13 || 16 <= content && content <= 19;
+    }
+
     // Food tiles
     byte PELLET = 1;
     byte ENERGIZER = 2;

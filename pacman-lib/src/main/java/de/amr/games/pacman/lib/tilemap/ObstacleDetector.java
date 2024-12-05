@@ -9,28 +9,21 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Direction.*;
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.v2f;
+import static de.amr.games.pacman.lib.Globals.*;
 
 public class ObstacleDetector {
 
-    private static final float DX = 4.0f;
-    private static final float DY = 4.0f;
-
-    private static final Vector2f SEG_CORNER_NW_UP   = v2f(DX,-DY);
+    private static final Vector2f SEG_CORNER_NW_UP   = v2f(HTS, -HTS);
     private static final Vector2f SEG_CORNER_NW_DOWN = SEG_CORNER_NW_UP.inverse();
-    private static final Vector2f SEG_CORNER_SW_UP   = v2f(-DX,-DY);
+    private static final Vector2f SEG_CORNER_SW_UP   = v2f(-HTS, -HTS);
     private static final Vector2f SEG_CORNER_SW_DOWN = SEG_CORNER_SW_UP.inverse();
-    private static final Vector2f SEG_CORNER_SE_UP   = v2f(DX,-DY);
+    private static final Vector2f SEG_CORNER_SE_UP   = v2f(HTS, -HTS);
     private static final Vector2f SEG_CORNER_SE_DOWN = SEG_CORNER_SE_UP.inverse();
-    private static final Vector2f SEG_CORNER_NE_UP   = v2f(-DX,-DY);
+    private static final Vector2f SEG_CORNER_NE_UP   = v2f(-HTS, -HTS);
     private static final Vector2f SEG_CORNER_NE_DOWN = SEG_CORNER_NE_UP.inverse();
 
     private final TileMap terrain;
@@ -45,20 +38,93 @@ public class ObstacleDetector {
     }
 
     public List<Obstacle> detectObstacles() {
-        detectObstaclesInside();
-        return obstacles;
-    }
+        // Note: order of detection matters! Otherwise, when searching for closed
+        // obstacles first, each failed attempt must set its visited tile set to unvisited!
+        terrain.tiles()
+            .filter(tile -> tile.x() == 0 || tile.x() == terrain.numCols() - 1)
+            .filter(Predicate.not(exploredTiles::contains))
+            .map(tile -> detectOpenObstacle(tile, tile.x() == 0))
+            .filter(Objects::nonNull)
+            .forEach(obstacles::add);
 
-    private void detectObstaclesInside() {
-        terrain.tiles(Tiles.CORNER_NW)
+        terrain.tiles()
+            .filter(tile ->
+                terrain.get(tile) == Tiles.CORNER_NW ||
+                terrain.get(tile) == Tiles.DCORNER_NW ||
+                terrain.get(tile) == Tiles.DCORNER_ANGULAR_NW) // house top-left corner
             .filter(Predicate.not(exploredTiles::contains))
             .map(this::detectClosedObstacle)
             .forEach(obstacles::add);
+
+        return obstacles;
     }
 
-    private void buildObstacle(Obstacle obstacle, Vector2i startTile, boolean ccw) {
+    private Obstacle detectClosedObstacle(Vector2i cornerNW) {
+        predecessorTile = null;
+        cursorTile = cornerNW;
+
+        Vector2f startPoint = cornerNW.scaled((float)TS).plus(TS, HTS);
+        byte startTileContent = terrain.get(cornerNW);
+        boolean doubleWalls = startTileContent == Tiles.DCORNER_NW ||
+            startTileContent == Tiles.DCORNER_ANGULAR_NW;
+        Obstacle obstacle = new Obstacle(startPoint, doubleWalls);
+        obstacle.addSegment(SEG_CORNER_NW_DOWN, true, startTileContent);
+        moveCursor(DOWN);
+
+        finishObstacle(obstacle, cornerNW, true);
+
+        if (obstacle.isClosed()) {
+            Logger.info("Found closed obstacle, top-left tile={}, map ID={}:", cornerNW, terrain.hashCode());
+            Logger.info(obstacle);
+        } else {
+            Logger.error("Could not identify closed obstacle, top-left tile={}, map ID={}", cornerNW, terrain.hashCode());
+        }
+        return obstacle;
+    }
+
+    private Obstacle detectOpenObstacle(Vector2i startTile, boolean startsAtLeftBorder) {
+        predecessorTile = null;
+        cursorTile = startTile;
+
+        Vector2f startPoint = startTile.scaled((float) TS).plus(startsAtLeftBorder ? 0 : TS, HTS);
+        byte startTileContent = terrain.get(startTile);
+        boolean doubleWall = Tiles.isDoubleWall(startTileContent);
+        var obstacle = new Obstacle(startPoint, doubleWall);
+        if (startTileContent == Tiles.DWALL_H) {
+            Direction initialDir = startsAtLeftBorder ? RIGHT : LEFT;
+            obstacle.addSegment(oneTile(initialDir), true, Tiles.DWALL_H);
+            moveCursor(initialDir);
+        }
+        else if (startsAtLeftBorder && startTileContent == Tiles.DCORNER_SE) {
+            obstacle.addSegment(SEG_CORNER_SE_UP, true, Tiles.DCORNER_SE);
+            moveCursor(UP);
+        }
+        else if (startsAtLeftBorder && startTileContent == Tiles.DCORNER_NE) {
+            obstacle.addSegment(SEG_CORNER_NE_DOWN, false, Tiles.DCORNER_NE);
+            moveCursor(DOWN);
+        }
+        else if (!startsAtLeftBorder && startTileContent == Tiles.DCORNER_SW) {
+            obstacle.addSegment(SEG_CORNER_SW_UP, false, Tiles.DCORNER_SW);
+            moveCursor(UP);
+        }
+        else if (!startsAtLeftBorder && startTileContent == Tiles.DCORNER_NW) {
+            obstacle.addSegment(SEG_CORNER_NW_DOWN, true, Tiles.DCORNER_NW);
+            moveCursor(DOWN);
+        }
+        else {
+            return null;
+        }
+
+        finishObstacle(obstacle, startTile, true);
+        Logger.info("Found open obstacle, start tile={}, segment count={}, map ID={}:",
+            startTile, obstacle.segments().size(), terrain.hashCode());
+        Logger.info(obstacle);
+        return obstacle;
+    }
+
+    private void finishObstacle(Obstacle obstacle, Vector2i startTile, boolean ccw) {
         int bailout = 0;
-        while (bailout < 1000) {
+        while (bailout < 2000) {
             ++bailout;
             if (exploredTiles.contains(cursorTile)) {
                 break;
@@ -66,7 +132,7 @@ public class ObstacleDetector {
             exploredTiles.add(cursorTile);
             switch (terrain.get(cursorTile)) {
 
-                case Tiles.WALL_V -> {
+                case Tiles.WALL_V, Tiles.DWALL_V -> {
                     if (isGoing(DOWN)) {
                         obstacle.addSegment(oneTile(DOWN), ccw, terrain.get(cursorTile));
                         moveCursor(DOWN);
@@ -78,7 +144,7 @@ public class ObstacleDetector {
                     }
                 }
 
-                case Tiles.WALL_H -> {
+                case Tiles.WALL_H, Tiles.DWALL_H, Tiles.DOOR -> {
                     if (isGoing(RIGHT)) {
                         obstacle.addSegment(oneTile(RIGHT), ccw, terrain.get(cursorTile));
                         moveCursor(RIGHT);
@@ -90,7 +156,7 @@ public class ObstacleDetector {
                     }
                 }
 
-                case Tiles.CORNER_SW -> {
+                case Tiles.CORNER_SW, Tiles.DCORNER_SW, Tiles.DCORNER_ANGULAR_SW -> {
                     if (isGoing(DOWN)) {
                         ccw = true;
                         obstacle.addSegment(SEG_CORNER_SW_DOWN, ccw, terrain.get(cursorTile));
@@ -104,7 +170,7 @@ public class ObstacleDetector {
                     }
                 }
 
-                case Tiles.CORNER_SE -> {
+                case Tiles.CORNER_SE, Tiles.DCORNER_SE, Tiles.DCORNER_ANGULAR_SE -> {
                     if (isGoing(DOWN)) {
                         ccw = false;
                         obstacle.addSegment(SEG_CORNER_SE_DOWN, ccw, terrain.get(cursorTile));
@@ -120,7 +186,7 @@ public class ObstacleDetector {
                     }
                 }
 
-                case Tiles.CORNER_NE -> {
+                case Tiles.CORNER_NE, Tiles.DCORNER_NE, Tiles.DCORNER_ANGULAR_NE -> {
                     if (isGoing(UP)) {
                         ccw = true;
                         obstacle.addSegment(SEG_CORNER_NE_UP, ccw, terrain.get(cursorTile));
@@ -136,7 +202,7 @@ public class ObstacleDetector {
                     }
                 }
 
-                case Tiles.CORNER_NW -> {
+                case Tiles.CORNER_NW, Tiles.DCORNER_NW, Tiles.DCORNER_ANGULAR_NW -> {
                     if (isGoing(UP)) {
                         ccw = false;
                         obstacle.addSegment(SEG_CORNER_NW_UP, ccw, terrain.get(cursorTile));
@@ -157,24 +223,6 @@ public class ObstacleDetector {
                 break;
             }
         }
-    }
-
-    private Obstacle detectClosedObstacle(Vector2i cornerNW) {
-        // start polygon at right edge of start tile
-        Vector2f startPoint = cornerNW.scaled((float)TS).plus(TS, TS-DY);
-        Obstacle obstacle = new Obstacle(startPoint);
-        predecessorTile = null;
-        cursorTile = cornerNW;
-        obstacle.addSegment(SEG_CORNER_NW_DOWN, true, terrain.get(cursorTile));
-        moveCursor(DOWN);
-        buildObstacle(obstacle, cornerNW, true);
-        if (obstacle.isClosed()) {
-            Logger.info("Found closed obstacle, top-left tile={}, map ID={}:", cornerNW, terrain.hashCode());
-            Logger.info(obstacle);
-        } else {
-            Logger.error("Could not identify closed obstacle, top-left tile={}, map ID={}", cornerNW, terrain.hashCode());
-        }
-        return obstacle;
     }
 
     private boolean isGoing(Direction dir) {

@@ -96,7 +96,6 @@ public class TerrainData {
         // new
         obstacles = new ObstacleDetector(terrain).detectObstacles();
 
-
         // old
 
         BitSet exploredSet = new BitSet();

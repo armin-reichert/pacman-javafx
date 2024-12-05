@@ -86,6 +86,7 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
         g.save();
         g.scale(scaling(), scaling());
 
+ /*
         terrainData.doubleStrokePaths().forEach(path -> {
             drawPath(g, terrainMap, path, false,  doubleStrokeOuterWidth, wallStrokeColor, null);
             drawPath(g, terrainMap, path, false,  doubleStrokeInnerWidth, wallFillColor, null);
@@ -94,11 +95,11 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
             path -> drawPath(g, terrainMap, path, true, singleStrokeWidth, wallFillColor, wallFillColor)
         );
         uglyConcavityHack(g, terrainData);
-
-        terrainMap.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, terrainMap, door, singleStrokeWidth, doorColor));
+*/
 
         // new rendering
-        terrainData.obstacles().forEach(obstacle -> drawObstacle(g, obstacle, true, singleStrokeWidth));
+        terrainData.obstacles().forEach(obstacle -> drawObstacle(g, obstacle, singleStrokeWidth, !obstacle.hasDoubleWalls()));
+        terrainMap.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, terrainMap, door, singleStrokeWidth, doorColor));
 
         g.restore();
     }
@@ -137,7 +138,7 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
         });
     }
 
-    private void drawObstacle(GraphicsContext g, Obstacle obstacle, boolean fill, double lineWidth) {
+    private void drawObstacle(GraphicsContext g, Obstacle obstacle, double lineWidth, boolean fill) {
         int r = HTS;
         Vector2f p = obstacle.startPoint();
         g.beginPath();
@@ -148,28 +149,47 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
             if (seg.isStraightLine()) {
                 g.lineTo(p.x(), p.y());
             } else {
-                if (seg.isNWCorner()) {
+                if (seg.isRoundedNWCorner()) {
                     if (seg.ccw()) g.arc(p.x()+r, p.y(),   r, r,  90, 90);
                     else           g.arc(p.x(),   p.y()+r, r, r, 180, -90);
                 }
-                else if (seg.isSWCorner()) {
+                else if (seg.isRoundedSWCorner()) {
                     if (seg.ccw()) g.arc(p.x(),   p.y()-r, r, r, 180, 90);
                     else           g.arc(p.x()+r, p.y(),   r, r, 270, -90);
                 }
-                else if (seg.isSECorner()) {
+                else if (seg.isRoundedSECorner()) {
                     if (seg.ccw()) g.arc(p.x()-r, p.y(),   r, r, 270, 90);
                     else           g.arc(p.x(),   p.y()-r, r, r, 0, -90);
                 }
-                else if (seg.isNECorner()) {
+                else if (seg.isRoundedNECorner()) {
                     if (seg.ccw()) g.arc(p.x(),   p.y()+r, r, r, 0, 90);
                     else           g.arc(p.x()-r, p.y(),   r, r, 90, -90);
                 }
+                else if (seg.isAngularNWCorner()) {
+                    if (seg.ccw()) g.lineTo(p.x(),   p.y()-r);
+                    else           g.lineTo(p.x()-r, p.y());
+                    g.lineTo(p.x(), p.y());
+                }
+                else if (seg.isAngularSWCorner()) {
+                    if (seg.ccw()) g.lineTo(p.x()-r, p.y());
+                    else           g.lineTo(p.x(), p.y()+r);
+                    g.lineTo(p.x(), p.y());
+                }
+                else if (seg.isAngularSECorner()) {
+                    if (seg.ccw()) g.lineTo(p.x(), p.y()+r);
+                    else           g.lineTo(p.x()-r, p.y());
+                    g.lineTo(p.x(), p.y());
+                }
+                else if (seg.isAngularNECorner()) {
+                    if (seg.ccw()) g.lineTo(p.x()+r, p.y());
+                    else           g.lineTo(p.x()-r, p.y()-r);
+                    g.lineTo(p.x(), p.y());
+
+                }
             }
         }
-        if (obstacle.isClosed()) {
-            g.closePath();
-        }
         if (fill) {
+            g.closePath();
             g.setFill(wallFillColor);
             g.fill();
         }
