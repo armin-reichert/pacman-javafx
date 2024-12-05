@@ -23,6 +23,7 @@ public class ObstacleDetector {
 
     private static final float DX = 4.0f;
     private static final float DY = 4.0f;
+
     private static final Vector2f SEG_CORNER_NW_UP   = v2f(DX,-DY);
     private static final Vector2f SEG_CORNER_NW_DOWN = SEG_CORNER_NW_UP.inverse();
     private static final Vector2f SEG_CORNER_SW_UP   = v2f(-DX,-DY);
@@ -55,7 +56,7 @@ public class ObstacleDetector {
             .forEach(obstacles::add);
     }
 
-    private void buildObstacle(Obstacle obstacle, Vector2i startTile, Direction orientation) {
+    private void buildObstacle(Obstacle obstacle, Vector2i startTile, boolean ccw) {
         int bailout = 0;
         while (bailout < 1000) {
             ++bailout;
@@ -67,10 +68,10 @@ public class ObstacleDetector {
 
                 case Tiles.WALL_V -> {
                     if (isGoing(DOWN)) {
-                        obstacle.addSegment(oneTile(DOWN), orientation, terrain.get(cursorTile));
+                        obstacle.addSegment(oneTile(DOWN), ccw, terrain.get(cursorTile));
                         moveCursor(DOWN);
                     } else if (isGoing(UP)) {
-                        obstacle.addSegment(oneTile(UP), orientation, terrain.get(cursorTile));
+                        obstacle.addSegment(oneTile(UP), ccw, terrain.get(cursorTile));
                         moveCursor(UP);
                     } else {
                         //error
@@ -79,10 +80,10 @@ public class ObstacleDetector {
 
                 case Tiles.WALL_H -> {
                     if (isGoing(RIGHT)) {
-                        obstacle.addSegment(oneTile(RIGHT), orientation, terrain.get(cursorTile));
+                        obstacle.addSegment(oneTile(RIGHT), ccw, terrain.get(cursorTile));
                         moveCursor(RIGHT);
                     } else if (isGoing(LEFT)) {
-                        obstacle.addSegment(oneTile(LEFT), orientation, terrain.get(cursorTile));
+                        obstacle.addSegment(oneTile(LEFT), ccw, terrain.get(cursorTile));
                         moveCursor(LEFT);
                     } else {
                         //error
@@ -91,12 +92,12 @@ public class ObstacleDetector {
 
                 case Tiles.CORNER_SW -> {
                     if (isGoing(DOWN)) {
-                        orientation = LEFT;
-                        obstacle.addSegment(SEG_CORNER_SW_DOWN, orientation, terrain.get(cursorTile));
+                        ccw = true;
+                        obstacle.addSegment(SEG_CORNER_SW_DOWN, ccw, terrain.get(cursorTile));
                         moveCursor(RIGHT);
                     } else if (isGoing(LEFT)) {
-                        orientation = RIGHT;
-                        obstacle.addSegment(SEG_CORNER_SW_UP, orientation, terrain.get(cursorTile));
+                        ccw = false;
+                        obstacle.addSegment(SEG_CORNER_SW_UP, ccw, terrain.get(cursorTile));
                         moveCursor(UP);
                     } else {
                         //error
@@ -105,13 +106,13 @@ public class ObstacleDetector {
 
                 case Tiles.CORNER_SE -> {
                     if (isGoing(DOWN)) {
-                        orientation = RIGHT;
-                        obstacle.addSegment(SEG_CORNER_SE_DOWN, orientation, terrain.get(cursorTile));
+                        ccw = false;
+                        obstacle.addSegment(SEG_CORNER_SE_DOWN, ccw, terrain.get(cursorTile));
                         moveCursor(LEFT);
                     }
                     else if (isGoing(RIGHT)) {
-                        orientation = LEFT;
-                        obstacle.addSegment(SEG_CORNER_SE_UP, orientation, terrain.get(cursorTile));
+                        ccw = true;
+                        obstacle.addSegment(SEG_CORNER_SE_UP, ccw, terrain.get(cursorTile));
                         moveCursor(UP);
                     }
                     else {
@@ -121,13 +122,13 @@ public class ObstacleDetector {
 
                 case Tiles.CORNER_NE -> {
                     if (isGoing(UP)) {
-                        orientation = LEFT;
-                        obstacle.addSegment(SEG_CORNER_NE_UP, orientation, terrain.get(cursorTile));
+                        ccw = true;
+                        obstacle.addSegment(SEG_CORNER_NE_UP, ccw, terrain.get(cursorTile));
                         moveCursor(LEFT);
                     }
                     else if (isGoing(RIGHT)) {
-                        orientation = RIGHT;
-                        obstacle.addSegment(SEG_CORNER_NE_DOWN, orientation, terrain.get(cursorTile));
+                        ccw = false;
+                        obstacle.addSegment(SEG_CORNER_NE_DOWN, ccw, terrain.get(cursorTile));
                         moveCursor(DOWN);
                     }
                     else {
@@ -137,13 +138,13 @@ public class ObstacleDetector {
 
                 case Tiles.CORNER_NW -> {
                     if (isGoing(UP)) {
-                        orientation = RIGHT;
-                        obstacle.addSegment(SEG_CORNER_NW_UP, orientation, terrain.get(cursorTile));
+                        ccw = false;
+                        obstacle.addSegment(SEG_CORNER_NW_UP, ccw, terrain.get(cursorTile));
                         moveCursor(RIGHT);
                     }
                     else if (isGoing(LEFT)) {
-                        orientation = LEFT;
-                        obstacle.addSegment(SEG_CORNER_NW_DOWN, orientation, terrain.get(cursorTile));
+                        ccw = true;
+                        obstacle.addSegment(SEG_CORNER_NW_DOWN, ccw, terrain.get(cursorTile));
                         moveCursor(DOWN);
                     }
                     else {
@@ -164,9 +165,9 @@ public class ObstacleDetector {
         Obstacle obstacle = new Obstacle(startPoint);
         predecessorTile = null;
         cursorTile = cornerNW;
-        obstacle.addSegment(SEG_CORNER_NW_DOWN, LEFT, terrain.get(cursorTile));
+        obstacle.addSegment(SEG_CORNER_NW_DOWN, true, terrain.get(cursorTile));
         moveCursor(DOWN);
-        buildObstacle(obstacle, cornerNW, LEFT);
+        buildObstacle(obstacle, cornerNW, true);
         if (obstacle.isClosed()) {
             Logger.info("Found closed obstacle, top-left tile={}, map ID={}:", cornerNW, terrain.hashCode());
             Logger.info(obstacle);

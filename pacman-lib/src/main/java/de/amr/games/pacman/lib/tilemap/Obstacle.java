@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib.tilemap;
 
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 
 import java.util.ArrayList;
@@ -16,10 +15,10 @@ import java.util.List;
  */
 public class Obstacle {
 
+    public record Segment(Vector2f vector, boolean ccw, byte mapContent) {}
+
+    private final List<Segment> segments = new ArrayList<>();
     private final Vector2f startPoint;
-    private final List<Vector2f> segments = new ArrayList<>();
-    private final List<Direction> orientations = new ArrayList<>();
-    private final List<Byte> contents = new ArrayList<>();
     private Vector2f endPoint;
 
     public Obstacle(Vector2f startPoint) {
@@ -37,11 +36,9 @@ public class Obstacle {
             '}';
     }
 
-    public void addSegment(Vector2f segment, Direction orientation, byte content) {
-        segments.add(segment);
-        orientations.add(orientation);
-        contents.add(content);
-        endPoint = endPoint.plus(segment);
+    public void addSegment(Vector2f vector, boolean ccw, byte content) {
+        segments.add(new Segment(vector, ccw, content));
+        endPoint = endPoint.plus(vector);
     }
 
     public Vector2f startPoint() {
@@ -52,19 +49,11 @@ public class Obstacle {
         return startPoint.equals(endPoint); // TODO use almost equals?
     }
 
-    public List<Vector2f> segments() {
+    public List<Segment> segments() {
         return Collections.unmodifiableList(segments);
     }
 
-    public Vector2f segment(int i) {
+    public Segment segment(int i) {
         return segments.get(i);
-    }
-
-    public byte content(int i) {
-        return contents.get(i);
-    }
-
-    public Direction orientation(int i) {
-        return orientations.get(i);
     }
 }
