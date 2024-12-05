@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMapPath;
 import javafx.beans.property.DoubleProperty;
@@ -32,14 +33,14 @@ public interface WallBuilder {
         if (beginTile.y() == endTile.y()) { // horizontal wall
             Vector2i left  = beginTile.x() < endTile.x() ? beginTile : endTile;
             Vector2i right = beginTile.x() < endTile.x() ? endTile : beginTile;
-            Vector2i center = left.plus(right).scaled(HTS).plus(HTS, HTS);
+            Vector2f center = left.plus(right).scaled((float) HTS).plus(HTS, HTS);
             int length = right.minus(left).scaled(TS).x();
             return createWall(center, length + thickness, thickness, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
         }
         else if (beginTile.x() == endTile.x()) { // vertical wall
             Vector2i top    = beginTile.y() < endTile.y() ? beginTile : endTile;
             Vector2i bottom = beginTile.y() < endTile.y() ? endTile : beginTile;
-            Vector2i center = top.plus(bottom).scaled(HTS).plus(HTS, HTS);
+            Vector2f center = top.plus(bottom).scaled((float) HTS).plus(HTS, HTS);
             int length = bottom.minus(top).scaled(TS).y();
             return createWall(center, thickness, length, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
         }
@@ -47,8 +48,8 @@ public interface WallBuilder {
     }
 
     static Node createWall(
-        Vector2i center, double sizeX, double sizeY, DoubleProperty wallHeightPy, double coatHeight,
-        Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy) {
+            Vector2f center, double sizeX, double sizeY, DoubleProperty wallHeightPy, double coatHeight,
+            Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy) {
 
         var base = new Box(sizeX, sizeY, wallHeightPy.get());
         base.setTranslateX(center.x());
