@@ -35,19 +35,19 @@ public interface WallBuilder {
             Vector2i right = beginTile.x() < endTile.x() ? endTile : beginTile;
             Vector2f center = left.plus(right).scaled((float) HTS).plus(HTS, HTS);
             int length = right.minus(left).scaled(TS).x();
-            return createWallAroundCenter(center, length + thickness, thickness, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
+            return createWallWithCenter(center, length + thickness, thickness, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
         }
         else if (beginTile.x() == endTile.x()) { // vertical wall
             Vector2i top    = beginTile.y() < endTile.y() ? beginTile : endTile;
             Vector2i bottom = beginTile.y() < endTile.y() ? endTile : beginTile;
             Vector2f center = top.plus(bottom).scaled((float) HTS).plus(HTS, HTS);
             int length = bottom.minus(top).scaled(TS).y();
-            return createWallAroundCenter(center, thickness, length, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
+            return createWallWithCenter(center, thickness, length, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
         }
         throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(beginTile, endTile));
     }
 
-    static Node createWallAroundCenter(
+    static Node createWallWithCenter(
             Vector2f center, double sizeX, double sizeY, DoubleProperty wallHeightPy, double coatHeight,
             Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy) {
 
