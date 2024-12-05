@@ -18,6 +18,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 
 /**
  * Vector renderer for terrain tile maps.
+ *
  * TODO: needs total rewrite
  */
 public class CrappyTerrainRenderer implements TileMapRenderer {
@@ -81,75 +82,29 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
     }
 
     @Override
-    public void drawTerrain(GraphicsContext g, TileMap map, TerrainData terrainData) {
-        double baseLineWidth = adaptLineWidthToCanvasSize(g.getCanvas().getHeight());
+    public void drawTerrain(GraphicsContext g, TileMap terrainMap, TerrainData terrainData) {
         g.save();
         g.scale(scaling(), scaling());
 
         terrainData.doubleStrokePaths().forEach(path -> {
-            drawPath(g, map, path, false,  doubleStrokeOuterWidth * baseLineWidth, wallStrokeColor, null);
-            drawPath(g, map, path, false,  doubleStrokeInnerWidth * baseLineWidth, wallFillColor, null);
+            drawPath(g, terrainMap, path, false,  doubleStrokeOuterWidth, wallStrokeColor, null);
+            drawPath(g, terrainMap, path, false,  doubleStrokeInnerWidth, wallFillColor, null);
         });
         terrainData.fillerPaths().forEach(
-            path -> drawPath(g, map, path, true, singleStrokeWidth * baseLineWidth, wallFillColor, wallFillColor)
+            path -> drawPath(g, terrainMap, path, true, singleStrokeWidth, wallFillColor, wallFillColor)
         );
-        map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, map, door, singleStrokeWidth * baseLineWidth, doorColor));
-        uglyConcavityHack(g, terrainData, baseLineWidth);
+        uglyConcavityHack(g, terrainData);
+
+        terrainMap.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, terrainMap, door, singleStrokeWidth, doorColor));
 
         // new rendering
-        terrainData.obstacles().forEach(obstacle -> drawObstacle(g, obstacle, true, singleStrokeWidth * baseLineWidth));
+        terrainData.obstacles().forEach(obstacle -> drawObstacle(g, obstacle, true, singleStrokeWidth));
 
         g.restore();
     }
 
-    private void drawObstacle(GraphicsContext g, Obstacle obstacle, boolean fill, double lineWidth) {
-        int r = HTS;
-        Vector2f p = obstacle.startPoint();
-        g.beginPath();
-        g.moveTo(p.x(), p.y());
-        for (int i = 0; i < obstacle.segments().size(); ++i) {
-            Obstacle.Segment seg = obstacle.segment(i);
-            p = p.plus(seg.vector());
-            if (seg.isStraightLine()) {
-                g.lineTo(p.x(), p.y());
-            } else {
-                if (seg.isNWCorner()) {
-                    if (seg.ccw()) g.arc(p.x()+r, p.y(), r, r, 90, 90);
-                    else           g.arc(p.x(), p.y()+r, r, r, 180, -90);
-                }
-                else if (seg.isSWCorner()) {
-                    if (seg.ccw()) g.arc(p.x(),p.y()-r, r, r, 180, 90);
-                    else           g.arc(p.x()+r, p.y(), r, r, 270, -90);
-                }
-                else if (seg.isSECorner()) {
-                    if (seg.ccw()) g.arc(p.x()-r, p.y(), r, r, 270, 90);
-                    else           g.arc(p.x(), p.y()-r, r, r, 0, -90);
-                }
-                else if (seg.isNECorner()) {
-                    if (seg.ccw()) g.arc(p.x(), p.y()+r, r, r, 0, 90);
-                    else           g.arc(p.x()-r, p.y(), r, r, 90, -90);
-                }
-            }
-        }
-        if (obstacle.isClosed()) {
-            g.closePath();
-        }
-        if (fill) {
-            g.setFill(wallFillColor);
-            g.fill();
-        }
-        g.setLineWidth(lineWidth);
-        g.setStroke(wallStrokeColor);
-        g.stroke();
-    }
-
-
-
-
-
-
     // Fix concavities drawing (ugly hack)
-    private void uglyConcavityHack(GraphicsContext g, TerrainData terrainData, double baseLineWidth) {
+    private void uglyConcavityHack(GraphicsContext g, TerrainData terrainData) {
         Color fillColor = wallFillColor;
         terrainData.topConcavityEntries().forEach(entry -> {
             double left = entry.x() * TS;
@@ -165,7 +120,7 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
             g.setFill(wallFillColor);
             g.fillRect(left, y, w, h);
             g.setStroke(wallStrokeColor);
-            g.setLineWidth(baseLineWidth * singleStrokeWidth);
+            g.setLineWidth(singleStrokeWidth);
             g.strokeLine(left, y, left + w, y);
         });
 
@@ -177,25 +132,55 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
             g.fillRect(left, y - h, w, h);
             g.fillRect(left + HTS, entry.y() * TS - HTS, TS, TS);
             g.setStroke(wallStrokeColor);
-            g.setLineWidth(baseLineWidth);
+            g.setLineWidth(singleStrokeWidth);
             g.strokeLine(left, y, left + w, y);
         });
     }
 
-    @Override
-    public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
-        // this renderer doesn't draw tiles individually but computes contour paths and draws these
+    private void drawObstacle(GraphicsContext g, Obstacle obstacle, boolean fill, double lineWidth) {
+        int r = HTS;
+        Vector2f p = obstacle.startPoint();
+        g.beginPath();
+        g.moveTo(p.x(), p.y());
+        for (int i = 0; i < obstacle.segments().size(); ++i) {
+            Obstacle.Segment seg = obstacle.segment(i);
+            p = p.plus(seg.vector());
+            if (seg.isStraightLine()) {
+                g.lineTo(p.x(), p.y());
+            } else {
+                if (seg.isNWCorner()) {
+                    if (seg.ccw()) g.arc(p.x()+r, p.y(),   r, r,  90, 90);
+                    else           g.arc(p.x(),   p.y()+r, r, r, 180, -90);
+                }
+                else if (seg.isSWCorner()) {
+                    if (seg.ccw()) g.arc(p.x(),   p.y()-r, r, r, 180, 90);
+                    else           g.arc(p.x()+r, p.y(),   r, r, 270, -90);
+                }
+                else if (seg.isSECorner()) {
+                    if (seg.ccw()) g.arc(p.x()-r, p.y(),   r, r, 270, 90);
+                    else           g.arc(p.x(),   p.y()-r, r, r, 0, -90);
+                }
+                else if (seg.isNECorner()) {
+                    if (seg.ccw()) g.arc(p.x(),   p.y()+r, r, r, 0, 90);
+                    else           g.arc(p.x()-r, p.y(),   r, r, 90, -90);
+                }
+            }
+        }
+        if (obstacle.isClosed()) {
+            g.closePath();
+        }
+        if (fill) {
+            g.setFill(wallFillColor);
+            g.fill();
+        }
+        g.setLineWidth(lineWidth);
+        g.setStroke(wallStrokeColor);
+        g.stroke();
     }
 
-    private double adaptLineWidthToCanvasSize(double canvasHeight) {
-        // increase line width for small display
-        if (canvasHeight <  36 * TS * 1.5) {
-            return 1.25;
-        }
-        if (canvasHeight < 36 * TS * 2.5) {
-            return 1;
-        }
-        return 0.75;
+    @Override
+    public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
+        // this renderer doesn't draw tiles individually but draws precomputed paths
     }
 
     private Vector2f center(Vector2i tile) {
