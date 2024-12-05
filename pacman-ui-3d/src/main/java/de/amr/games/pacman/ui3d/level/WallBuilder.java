@@ -114,12 +114,14 @@ public interface WallBuilder {
             Vector2f q = p.plus(seg.vector());
             if (seg.isVerticalLine()) {
                 Vector2f center = p.plus(seg.vector().scaled(0.5f));
-                Node wall = createWallWithCenter(center, thickness, seg.vector().length(), wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+                double length = seg.vector().length();
+                Node wall = createWallWithCenter(center, thickness, length, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
                 parent.getChildren().add(wall);
             }
             else if (seg.isHorizontalLine()) {
                 Vector2f center = p.plus(seg.vector().scaled(0.5f));
-                Node wall = createWallWithCenter(center, seg.vector().length() + thickness, thickness, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+                double length = seg.vector().length();
+                Node wall = createWallWithCenter(center, length + thickness, thickness, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
                 parent.getChildren().add(wall);
             }
             else if (seg.isNWCorner()) {
