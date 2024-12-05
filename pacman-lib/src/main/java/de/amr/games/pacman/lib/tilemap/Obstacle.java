@@ -71,6 +71,10 @@ public class Obstacle {
         return Collections.unmodifiableList(segments);
     }
 
+    public int numSegments() {
+        return segments.size();
+    }
+
     public Segment segment(int i) {
         return segments.get(i);
     }

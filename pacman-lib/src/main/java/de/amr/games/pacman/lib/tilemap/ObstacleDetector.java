@@ -56,6 +56,7 @@ public class ObstacleDetector {
             .map(this::detectClosedObstacle)
             .forEach(obstacles::add);
 
+        optimizeObstacles();
         return obstacles;
     }
 
@@ -236,5 +237,42 @@ public class ObstacleDetector {
 
     private Vector2f oneTile(Direction dir) {
         return dir.vector().scaled((float) TS);
+    }
+
+    private void optimizeObstacles() {
+        List<Obstacle> optimizedObstacles = new ArrayList<>();
+        for (Obstacle obstacle : obstacles) {
+            Obstacle optimized = new Obstacle(obstacle.startPoint(), obstacle.hasDoubleWalls());
+            optimizedObstacles.add(optimized);
+            boolean merging = false;
+            Vector2f mergedVector = null;
+            boolean mergedCCW = false;
+            byte mergedMapContent = -1;
+            for (int i = 0; i < obstacle.numSegments(); ++i) {
+                Obstacle.Segment segment = obstacle.segment(i);
+                if (segment.isStraightLine()) {
+                    if (merging) { // continue merging
+                        mergedVector = mergedVector.plus(segment.vector());
+                    } else { // start merging
+                        mergedVector = segment.vector();
+                        mergedCCW = segment.ccw();
+                        mergedMapContent = segment.mapContent();
+                        merging = true;
+                    }
+                }
+                else {
+                    if (merging) {
+                        optimized.addSegment(mergedVector, mergedCCW, mergedMapContent);
+                        merging = false;
+                    }
+                    optimized.addSegment(segment.vector(), segment.ccw(), segment.mapContent());
+                }
+            }
+            if (merging) {
+                optimized.addSegment(mergedVector, mergedCCW, mergedMapContent);
+            }
+        }
+        obstacles.clear();
+        obstacles.addAll(optimizedObstacles);
     }
 }

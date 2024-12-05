@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.TileMapPath;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.Property;
@@ -70,7 +71,7 @@ public interface WallBuilder {
     }
 
     static void createCircularWall(
-        Group parent, Vector2i center,
+        Group parent, Vector2f center,
         DoubleProperty wallHeightPy, double coatHeight,
         Property<PhongMaterial> wallFillMaterialPy, Property<PhongMaterial> wallStrokeMaterialPy) {
 
@@ -103,7 +104,7 @@ public interface WallBuilder {
     {
         if (path.size() == 4 && path.isClosed()) {
             // start_tile is left upper corner and path goes counter-clockwise: center = start_tile + (1,1)
-            Vector2i center = path.startTile().plus(1, 1).scaled(TS);
+            Vector2f center = path.startTile().plus(1, 1).scaled((float) TS);
             createCircularWall(parent, center, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
             return;
         }
@@ -122,5 +123,24 @@ public interface WallBuilder {
         }
         var lastSegment = createWallBetweenTiles(startTile, endTile, thickness, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
         parent.getChildren().add(lastSegment);
+    }
+
+    static void buildObstacleWalls(
+        Group parent,
+        Obstacle obstacle,
+        DoubleProperty wallHeightPy, double thickness, double coatHeight,
+        Property<PhongMaterial> wallFillMaterialPy, Property<PhongMaterial> wallStrokeMaterialPy)
+    {
+        if (obstacle.isClosed() && obstacle.numSegments() == 4) {
+            Vector2f center = obstacle.startPoint().minus(HTS, 0);
+            createCircularWall(parent, center, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+            return;
+        }
+        for (int i = 0; i < obstacle.numSegments(); ++i) {
+            Obstacle.Segment seg = obstacle.segment(i);
+            if (seg.isStraightLine()) {
+            }
+        }
+
     }
 }
