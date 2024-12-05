@@ -7,7 +7,10 @@ package de.amr.games.pacman.maps.rendering;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.*;
+import de.amr.games.pacman.lib.tilemap.Obstacle;
+import de.amr.games.pacman.lib.tilemap.TerrainData;
+import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.lib.tilemap.Tiles;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
@@ -20,8 +23,6 @@ import static de.amr.games.pacman.lib.Globals.TS;
 
 /**
  * Vector renderer for terrain tile maps.
- *
- * TODO: needs total rewrite
  */
 public class CrappyTerrainRenderer implements TileMapRenderer {
 
@@ -41,8 +42,8 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
         wallFillColor = Color.BLACK;
         wallStrokeColor = Color.GREEN;
         doorColor = Color.PINK;
-        doubleStrokeOuterWidth = 5;
-        doubleStrokeInnerWidth = 3;
+        doubleStrokeOuterWidth = 4;
+        doubleStrokeInnerWidth = 2;
         singleStrokeWidth = 1;
     }
 
@@ -232,105 +233,6 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
             g.fillRect(x + 2 * TS, oy, lineWidth, height);
             g.setFill(doorColor);
             g.fillRect(x, y + 0.5 * (TS - height), 2 * TS, height);
-        }
-    }
-
-    private void drawPath(GraphicsContext g, TileMap map, TileMapPath path,
-        boolean fill, double lineWidth, Color strokeColor, Color fillColor)
-    {
-        g.beginPath();
-        buildPath(g, map, path);
-        if (fill) {
-            g.setFill(fillColor);
-            g.fill();
-        }
-        g.setLineWidth(lineWidth);
-        g.setStroke(strokeColor);
-        g.stroke();
-    }
-
-    //TODO: Needs to be cleaned up or even reimplemented. Maybe we should represent a path by points instead of directions?
-    private void buildPath(GraphicsContext g, TileMap map, TileMapPath path) {
-        Vector2i tile = path.startTile();
-        if (tile.x() == 0) {
-            int cx = HTS, cy = tile.y() * TS + HTS;
-            if (map.get(tile) == Tiles.DWALL_V) {
-                g.moveTo(cx, cy);
-            } else {
-                // start path at left border, not at tile center
-                g.moveTo(0, cy);
-                if (map.get(tile) == Tiles.DWALL_H) {
-                    g.lineTo(cx, cy);
-                }
-            }
-        }
-        //TODO this is unclear
-        extendPath(g, map.get(tile), center(tile), true, true, tile.x() != 0, true);
-        for (Vector2i vector : path) {
-            tile = tile.plus(vector);
-            extendPath(g, map.get(tile), center(tile),
-               vector.x() < 0 && vector.y() == 0,
-               vector.x() > 0 && vector.y() == 0,
-               vector.x() == 0 && vector.y() < 0,
-               vector.x() == 0 && vector.y() > 0);
-        }
-        if (tile.x() == 0 && map.get(tile) == Tiles.DWALL_H) {
-            // end path at left border
-            g.lineTo(0, tile.y() * TS + HTS);
-        }
-    }
-
-    //TODO clean up and simplify this mess
-    private void extendPath(GraphicsContext g, byte tileValue, Vector2f center, boolean left, boolean right, boolean up, boolean down) {
-        float r = HTS;
-        float cx = center.x(), cy = center.y();
-        switch (tileValue) {
-            case Tiles.WALL_H,
-                 Tiles.DWALL_H    -> g.lineTo(cx + r, cy);
-            case Tiles.WALL_V,
-                 Tiles.DWALL_V    -> g.lineTo(cx, cy + r);
-            //TODO: Should we use arcTo() instead?
-            case Tiles.CORNER_NW,
-                 Tiles.DCORNER_NW -> g.arc(cx + r, cy + r, r, r, left?   90:180, left?  90:-90);
-            case Tiles.CORNER_SW,
-                 Tiles.DCORNER_SW -> g.arc(cx + r, cy - r, r, r, down?  180:270, down?  90:-90);
-            case Tiles.CORNER_NE,
-                 Tiles.DCORNER_NE -> g.arc(cx - r, cy + r, r, r, up?      0: 90, up?    90:-90);
-            case Tiles.CORNER_SE,
-                 Tiles.DCORNER_SE -> g.arc(cx - r, cy - r, r, r, right? 270:  0, right? 90:-90);
-            case Tiles.DCORNER_ANGULAR_NW -> {
-                g.lineTo(cx, cy);
-                if (left) {
-                    g.lineTo(cx, cy + r);
-                } else if (up) {
-                    g.lineTo(cx + r, cy);
-                }
-            }
-            case Tiles.DCORNER_ANGULAR_SW -> {
-                g.lineTo(cx, cy);
-                if (left) {
-                    g.lineTo(cx, cy);
-                } else if (down) {
-                    g.lineTo(cx + r, cy);
-                }
-            }
-            case Tiles.DCORNER_ANGULAR_NE -> {
-                g.lineTo(cx, cy);
-                if (right) {
-                    g.lineTo(cx, cy + r);
-                } else if (up) {
-                    g.lineTo(cx - r, cy);
-                }
-            }
-            case Tiles.DCORNER_ANGULAR_SE -> {
-                g.lineTo(cx, cy);
-                if (right) {
-                    g.lineTo(cx, cy - r);
-                } else if (down) {
-                    g.lineTo(cx - r, cy);
-                }
-            }
-            default -> {}
         }
     }
 }
