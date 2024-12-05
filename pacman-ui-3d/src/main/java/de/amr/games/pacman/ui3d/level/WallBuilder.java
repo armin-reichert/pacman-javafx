@@ -35,21 +35,21 @@ public interface WallBuilder {
             Vector2i right = beginTile.x() < endTile.x() ? endTile : beginTile;
             Vector2f center = left.plus(right).scaled((float) HTS).plus(HTS, HTS);
             int length = right.minus(left).scaled(TS).x();
-            return createWallWithCenter(center, length + thickness, thickness, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
+            return wallCenteredAt(center, length + thickness, thickness, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
         }
         else if (beginTile.x() == endTile.x()) { // vertical wall
             Vector2i top    = beginTile.y() < endTile.y() ? beginTile : endTile;
             Vector2i bottom = beginTile.y() < endTile.y() ? endTile : beginTile;
             Vector2f center = top.plus(bottom).scaled((float) HTS).plus(HTS, HTS);
             int length = bottom.minus(top).scaled(TS).y();
-            return createWallWithCenter(center, thickness, length, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
+            return wallCenteredAt(center, thickness, length, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
         }
         throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(beginTile, endTile));
     }
 
-    static Node createWallWithCenter(
-            Vector2f center, double sizeX, double sizeY, DoubleProperty wallHeightPy, double coatHeight,
-            Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy) {
+    static Node wallCenteredAt(Vector2f center, double sizeX, double sizeY,
+                               DoubleProperty wallHeightPy, double coatHeight,
+                               Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy) {
 
         var base = new Box(sizeX, sizeY, wallHeightPy.get());
         base.setTranslateX(center.x());
@@ -67,6 +67,21 @@ public interface WallBuilder {
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         return new Group(base, top);
+    }
+
+
+    static Node hWall(Vector2f p, Vector2f q,
+                      DoubleProperty wallHeightPy, double thickness, double coatHeight,
+                      Property<PhongMaterial> wallFillMaterialPy, Property<PhongMaterial> wallStrokeMaterialPy) {
+        return wallCenteredAt(p.plus(q).scaled(0.5f), q.minus(p).length() + thickness, thickness,
+                wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+    }
+
+    static Node vWall(Vector2f p, Vector2f q,
+                      DoubleProperty wallHeightPy, double thickness, double coatHeight,
+                      Property<PhongMaterial> wallFillMaterialPy, Property<PhongMaterial> wallStrokeMaterialPy) {
+        return wallCenteredAt(p.plus(q).scaled(0.5f), thickness, q.minus(p).length(),
+                wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
     }
 
     static void createCircularWall(
@@ -115,13 +130,13 @@ public interface WallBuilder {
             if (seg.isVerticalLine()) {
                 Vector2f center = p.plus(seg.vector().scaled(0.5f));
                 double length = seg.vector().length();
-                Node wall = createWallWithCenter(center, thickness, length, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+                Node wall = wallCenteredAt(center, thickness, length, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
                 parent.getChildren().add(wall);
             }
             else if (seg.isHorizontalLine()) {
                 Vector2f center = p.plus(seg.vector().scaled(0.5f));
                 double length = seg.vector().length();
-                Node wall = createWallWithCenter(center, length + thickness, thickness, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+                Node wall = wallCenteredAt(center, length + thickness, thickness, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
                 parent.getChildren().add(wall);
             }
             else if (seg.isNWCorner()) {
@@ -178,22 +193,5 @@ public interface WallBuilder {
             }
             p = q;
         }
-
-    }
-
-    static Node hWall(Vector2f p, Vector2f q,
-            DoubleProperty wallHeightPy, double thickness, double coatHeight,
-            Property<PhongMaterial> wallFillMaterialPy, Property<PhongMaterial> wallStrokeMaterialPy) {
-        Vector2f center = p.plus(q).scaled(0.5f);
-        double length = q.minus(p).length();
-        return createWallWithCenter(center, length + thickness, thickness, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
-    }
-
-    static Node vWall(Vector2f p, Vector2f q,
-          DoubleProperty wallHeightPy, double thickness, double coatHeight,
-          Property<PhongMaterial> wallFillMaterialPy, Property<PhongMaterial> wallStrokeMaterialPy) {
-        Vector2f center = p.plus(q).scaled(0.5f);
-        double length = q.minus(p).length();
-        return createWallWithCenter(center, thickness, length, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
     }
 }
