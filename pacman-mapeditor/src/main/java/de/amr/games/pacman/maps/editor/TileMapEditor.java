@@ -10,7 +10,7 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
-import de.amr.games.pacman.maps.rendering.NotSoCrappyAnymoreTerrainRenderer;
+import de.amr.games.pacman.maps.rendering.TerrainRenderer;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -144,7 +144,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
     private PropertyEditorPane     terrainMapPropertiesEditor;
     private PropertyEditorPane     foodMapPropertiesEditor;
     private TileMapEditorTerrainRenderer tileMapEditorTerrainRenderer;
-    private NotSoCrappyAnymoreTerrainRenderer terrainMapPreviewRenderer;
+    private TerrainRenderer terrainMapPreviewRenderer;
     private FoodMapRenderer        foodMapRenderer;
 
     private File lastUsedDir;
@@ -298,7 +298,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
         tileMapEditorTerrainRenderer.setWallStrokeColor(parseColor(DEFAULT_COLOR_WALL_STROKE));
         tileMapEditorTerrainRenderer.setWallFillColor(parseColor(DEFAULT_COLOR_WALL_FILL));
 
-        terrainMapPreviewRenderer = new NotSoCrappyAnymoreTerrainRenderer();
+        terrainMapPreviewRenderer = new TerrainRenderer();
         terrainMapPreviewRenderer.setWallStrokeColor(parseColor(DEFAULT_COLOR_WALL_STROKE));
         terrainMapPreviewRenderer.setWallFillColor(parseColor(DEFAULT_COLOR_WALL_FILL));
 

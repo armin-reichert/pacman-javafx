@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui2d.scene.pacman_xxl;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
-import de.amr.games.pacman.maps.rendering.NotSoCrappyAnymoreTerrainRenderer;
+import de.amr.games.pacman.maps.rendering.TerrainRenderer;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
@@ -39,7 +39,7 @@ public class PacManGameXXLRenderer implements GameRenderer {
     private final GameSpriteSheet spriteSheet;
     private final Canvas canvas;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
-    private final NotSoCrappyAnymoreTerrainRenderer terrainRenderer = new NotSoCrappyAnymoreTerrainRenderer();
+    private final TerrainRenderer terrainRenderer = new TerrainRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
     private Vector2f messageAnchorPosition;
     private boolean flashMode;

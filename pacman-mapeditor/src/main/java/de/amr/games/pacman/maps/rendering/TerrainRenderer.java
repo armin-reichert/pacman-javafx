@@ -24,7 +24,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 /**
  * Vector renderer for terrain tile maps.
  */
-public class NotSoCrappyAnymoreTerrainRenderer implements TileMapRenderer {
+public class TerrainRenderer implements TileMapRenderer {
 
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
 
@@ -37,7 +37,7 @@ public class NotSoCrappyAnymoreTerrainRenderer implements TileMapRenderer {
     private Color wallStrokeColor;
     private Color doorColor;
 
-    public NotSoCrappyAnymoreTerrainRenderer() {
+    public TerrainRenderer() {
         mapBackgroundColor = Color.BLACK;
         wallFillColor = Color.BLACK;
         wallStrokeColor = Color.GREEN;
@@ -167,10 +167,6 @@ public class NotSoCrappyAnymoreTerrainRenderer implements TileMapRenderer {
     @Override
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
         // this renderer doesn't draw tiles individually but draws precomputed paths
-    }
-
-    private Vector2f center(Vector2i tile) {
-        return tile.scaled(TS).plus((float)HTS, (float)HTS);
     }
 
     // assume we always have a pair of horizontally neighbored doors

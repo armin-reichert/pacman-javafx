@@ -11,7 +11,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.maps.rendering.NotSoCrappyAnymoreTerrainRenderer;
+import de.amr.games.pacman.maps.rendering.TerrainRenderer;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameWorld;
@@ -49,7 +49,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     private final NonArcadeMaps nonArcadeMaps;
     private final ArcadeMaps arcadeMaps;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
-    private final NotSoCrappyAnymoreTerrainRenderer terrainRenderer = new NotSoCrappyAnymoreTerrainRenderer();
+    private final TerrainRenderer terrainRenderer = new TerrainRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
     private final Canvas canvas;
 
