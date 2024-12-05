@@ -113,21 +113,21 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
             if (seg.vector().x() == 0 || seg.vector().y() == 0) {
                 g.lineTo(p.x(), p.y());
             } else {
-                if (seg.mapContent() == Tiles.CORNER_NW) { // NW corner
+                if (seg.isNWCorner()) {
                     if (seg.ccw()) g.arc(p.x()+r, p.y(), r, r, 90, 90);
-                    else                  g.arc(p.x(), p.y()+r, r, r, 180, -90);
+                    else           g.arc(p.x(), p.y()+r, r, r, 180, -90);
                 }
-                else if (seg.mapContent() == Tiles.CORNER_SW) { // SW corner
+                else if (seg.isSWCorner()) {
                     if (seg.ccw()) g.arc(p.x(),p.y()-r, r, r, 180, 90);
-                    else                  g.arc(p.x()+r, p.y(), r, r, 270, -90);
+                    else           g.arc(p.x()+r, p.y(), r, r, 270, -90);
                 }
-                else if (seg.mapContent() == Tiles.CORNER_SE) { // SE corner
+                else if (seg.isSECorner()) {
                     if (seg.ccw()) g.arc(p.x()-r, p.y(), r, r, 270, 90);
-                    else                  g.arc(p.x(), p.y()-r, r, r, 0, -90);
+                    else           g.arc(p.x(), p.y()-r, r, r, 0, -90);
                 }
-                else if (seg.mapContent() == Tiles.CORNER_NE) { // NE corner
+                else if (seg.isNECorner()) {
                     if (seg.ccw()) g.arc(p.x(), p.y()+r, r, r, 0, 90);
-                    else                  g.arc(p.x()-r, p.y(), r, r, 90, -90);
+                    else           g.arc(p.x()-r, p.y(), r, r, 90, -90);
                 }
                 g.lineTo(p.x(), p.y());
             }

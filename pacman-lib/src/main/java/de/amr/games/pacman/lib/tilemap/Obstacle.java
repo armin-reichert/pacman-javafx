@@ -15,7 +15,12 @@ import java.util.List;
  */
 public class Obstacle {
 
-    public record Segment(Vector2f vector, boolean ccw, byte mapContent) {}
+    public record Segment(Vector2f vector, boolean ccw, byte mapContent) {
+        public boolean isNWCorner() { return mapContent == Tiles.CORNER_NW || mapContent == Tiles.DCORNER_NW; }
+        public boolean isSWCorner() { return mapContent == Tiles.CORNER_SW || mapContent == Tiles.DCORNER_SW; }
+        public boolean isSECorner() { return mapContent == Tiles.CORNER_SE || mapContent == Tiles.DCORNER_SE; }
+        public boolean isNECorner() { return mapContent == Tiles.CORNER_NE || mapContent == Tiles.DCORNER_NE; }
+    }
 
     private final List<Segment> segments = new ArrayList<>();
     private final Vector2f startPoint;
