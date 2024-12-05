@@ -104,13 +104,13 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
 
     private void drawObstacle(GraphicsContext g, Obstacle obstacle, boolean fill, double lineWidth) {
         int r = HTS;
-        g.beginPath();
-        g.moveTo(obstacle.startPoint().x(), obstacle.startPoint().y());
         Vector2f p = obstacle.startPoint();
+        g.beginPath();
+        g.moveTo(p.x(), p.y());
         for (int i = 0; i < obstacle.segments().size(); ++i) {
             Obstacle.Segment seg = obstacle.segment(i);
             p = p.plus(seg.vector());
-            if (seg.vector().x() == 0 || seg.vector().y() == 0) {
+            if (seg.isStraightLine()) {
                 g.lineTo(p.x(), p.y());
             } else {
                 if (seg.isNWCorner()) {
@@ -129,7 +129,6 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
                     if (seg.ccw()) g.arc(p.x(), p.y()+r, r, r, 0, 90);
                     else           g.arc(p.x()-r, p.y(), r, r, 90, -90);
                 }
-                g.lineTo(p.x(), p.y());
             }
         }
         if (obstacle.isClosed()) {

@@ -20,6 +20,9 @@ public class Obstacle {
         public boolean isSWCorner() { return mapContent == Tiles.CORNER_SW || mapContent == Tiles.DCORNER_SW; }
         public boolean isSECorner() { return mapContent == Tiles.CORNER_SE || mapContent == Tiles.DCORNER_SE; }
         public boolean isNECorner() { return mapContent == Tiles.CORNER_NE || mapContent == Tiles.DCORNER_NE; }
+        public boolean isVerticalLine() { return vector.y() == 0; }
+        public boolean isHorizontalLine() { return vector.x() == 0; }
+        public boolean isStraightLine() { return isVerticalLine() || isHorizontalLine(); }
     }
 
     private final List<Segment> segments = new ArrayList<>();
