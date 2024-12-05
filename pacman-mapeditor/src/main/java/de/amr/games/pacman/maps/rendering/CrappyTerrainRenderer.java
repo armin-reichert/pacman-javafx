@@ -13,6 +13,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.util.function.Predicate;
+
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 
@@ -98,7 +100,17 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
 */
 
         // new rendering
-        terrainData.obstacles().forEach(obstacle -> drawObstacle(g, obstacle, singleStrokeWidth, !obstacle.hasDoubleWalls()));
+        terrainData.obstacles().stream()
+            .filter(Obstacle::hasDoubleWalls)
+            .forEach(obstacle -> {
+                drawObstacle(g, obstacle, doubleStrokeOuterWidth, false, wallStrokeColor);
+                drawObstacle(g, obstacle, doubleStrokeInnerWidth, false, wallFillColor);
+            });
+
+        terrainData.obstacles().stream()
+            .filter(Predicate.not(Obstacle::hasDoubleWalls))
+            .forEach(obstacle -> drawObstacle(g, obstacle, singleStrokeWidth, true, wallStrokeColor));
+
         terrainMap.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, terrainMap, door, singleStrokeWidth, doorColor));
 
         g.restore();
@@ -138,7 +150,7 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
         });
     }
 
-    private void drawObstacle(GraphicsContext g, Obstacle obstacle, double lineWidth, boolean fill) {
+    private void drawObstacle(GraphicsContext g, Obstacle obstacle, double lineWidth, boolean fill, Color strokeColor) {
         int r = HTS;
         Vector2f p = obstacle.startPoint();
         g.beginPath();
@@ -184,7 +196,6 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
                     if (seg.ccw()) g.lineTo(p.x()+r, p.y());
                     else           g.lineTo(p.x()-r, p.y()-r);
                     g.lineTo(p.x(), p.y());
-
                 }
             }
         }
@@ -194,7 +205,7 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
             g.fill();
         }
         g.setLineWidth(lineWidth);
-        g.setStroke(wallStrokeColor);
+        g.setStroke(strokeColor);
         g.stroke();
     }
 
