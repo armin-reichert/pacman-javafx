@@ -25,7 +25,7 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
  */
 public interface WallBuilder {
 
-    static Node createWall(
+    static Node createWallBetweenTiles(
         Vector2i beginTile, Vector2i endTile,
         double thickness, DoubleProperty wallHeightPy, double coatHeight,
         Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy)
@@ -35,19 +35,19 @@ public interface WallBuilder {
             Vector2i right = beginTile.x() < endTile.x() ? endTile : beginTile;
             Vector2f center = left.plus(right).scaled((float) HTS).plus(HTS, HTS);
             int length = right.minus(left).scaled(TS).x();
-            return createWall(center, length + thickness, thickness, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
+            return createWallAroundCenter(center, length + thickness, thickness, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
         }
         else if (beginTile.x() == endTile.x()) { // vertical wall
             Vector2i top    = beginTile.y() < endTile.y() ? beginTile : endTile;
             Vector2i bottom = beginTile.y() < endTile.y() ? endTile : beginTile;
             Vector2f center = top.plus(bottom).scaled((float) HTS).plus(HTS, HTS);
             int length = bottom.minus(top).scaled(TS).y();
-            return createWall(center, thickness, length, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
+            return createWallAroundCenter(center, thickness, length, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
         }
         throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(beginTile, endTile));
     }
 
-    static Node createWall(
+    static Node createWallAroundCenter(
             Vector2f center, double sizeX, double sizeY, DoubleProperty wallHeightPy, double coatHeight,
             Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy) {
 
@@ -113,14 +113,14 @@ public interface WallBuilder {
         for (Vector2i dir : path) {
             if (!dir.equals(prevDir)) {
                 // path changes direction, yield wall segment and start new segment
-                var segment = createWall(startTile, endTile, thickness, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+                var segment = createWallBetweenTiles(startTile, endTile, thickness, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
                 parent.getChildren().add(segment);
                 startTile = endTile;
             }
             endTile = endTile.plus(dir); // prolong segment
             prevDir = dir;
         }
-        var lastSegment = createWall(startTile, endTile, thickness, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+        var lastSegment = createWallBetweenTiles(startTile, endTile, thickness, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
         parent.getChildren().add(lastSegment);
     }
 }

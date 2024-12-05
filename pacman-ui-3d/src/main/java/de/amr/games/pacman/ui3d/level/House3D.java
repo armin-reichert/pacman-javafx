@@ -75,7 +75,7 @@ public class House3D {
     }
 
     private Node createWall(int x1, int y1, int x2, int y2) {
-        return WallBuilder.createWall(v2i(x1, y1), v2i(x2, y2),
+        return WallBuilder.createWallBetweenTiles(v2i(x1, y1), v2i(x2, y2),
             wallThicknessPy.get(), heightPy, WALL_COAT_HEIGHT,
             fillMaterialPy, strokeMaterialPy);
     }
