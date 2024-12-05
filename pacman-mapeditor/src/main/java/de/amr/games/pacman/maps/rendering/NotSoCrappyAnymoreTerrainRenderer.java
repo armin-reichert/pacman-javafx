@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
-import de.amr.games.pacman.lib.tilemap.TerrainData;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
 import javafx.beans.property.DoubleProperty;
@@ -16,6 +15,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
@@ -24,7 +24,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 /**
  * Vector renderer for terrain tile maps.
  */
-public class CrappyTerrainRenderer implements TileMapRenderer {
+public class NotSoCrappyAnymoreTerrainRenderer implements TileMapRenderer {
 
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
 
@@ -37,7 +37,7 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
     private Color wallStrokeColor;
     private Color doorColor;
 
-    public CrappyTerrainRenderer() {
+    public NotSoCrappyAnymoreTerrainRenderer() {
         mapBackgroundColor = Color.BLACK;
         wallFillColor = Color.BLACK;
         wallStrokeColor = Color.GREEN;
@@ -85,70 +85,24 @@ public class CrappyTerrainRenderer implements TileMapRenderer {
     }
 
     @Override
-    public void drawTerrain(GraphicsContext g, TileMap terrainMap, TerrainData terrainData) {
+    public void drawTerrain(GraphicsContext g, TileMap terrainMap, List<Obstacle> obstacles) {
         g.save();
         g.scale(scaling(), scaling());
 
- /*
-        terrainData.doubleStrokePaths().forEach(path -> {
-            drawPath(g, terrainMap, path, false,  doubleStrokeOuterWidth, wallStrokeColor, null);
-            drawPath(g, terrainMap, path, false,  doubleStrokeInnerWidth, wallFillColor, null);
-        });
-        terrainData.fillerPaths().forEach(
-            path -> drawPath(g, terrainMap, path, true, singleStrokeWidth, wallFillColor, wallFillColor)
-        );
-        uglyConcavityHack(g, terrainData);
-*/
-
-        // new rendering
-        terrainData.obstacles().stream()
+        obstacles.stream()
             .filter(Obstacle::hasDoubleWalls)
             .forEach(obstacle -> {
                 drawObstacle(g, obstacle, doubleStrokeOuterWidth, false, wallStrokeColor);
                 drawObstacle(g, obstacle, doubleStrokeInnerWidth, false, wallFillColor);
             });
 
-        terrainData.obstacles().stream()
+        obstacles.stream()
             .filter(Predicate.not(Obstacle::hasDoubleWalls))
             .forEach(obstacle -> drawObstacle(g, obstacle, singleStrokeWidth, true, wallStrokeColor));
 
         terrainMap.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, terrainMap, door, singleStrokeWidth, doorColor));
 
         g.restore();
-    }
-
-    // Fix concavities drawing (ugly hack)
-    private void uglyConcavityHack(GraphicsContext g, TerrainData terrainData) {
-        Color fillColor = wallFillColor;
-        terrainData.topConcavityEntries().forEach(entry -> {
-            double left = entry.x() * TS;
-            double y = entry.y() * TS + 0.5 * (TS - doubleStrokeOuterWidth) + singleStrokeWidth;
-            //TODO this is a hack:
-            if (scaling() < 2.8) {
-                y -= 0.5;
-            } else if (scaling() < 1.5) {
-                y -= 1.25;
-            }
-            double w = 2 * TS;
-            double h = 0.5 * doubleStrokeOuterWidth; // TODO check this
-            g.setFill(wallFillColor);
-            g.fillRect(left, y, w, h);
-            g.setStroke(wallStrokeColor);
-            g.setLineWidth(singleStrokeWidth);
-            g.strokeLine(left, y, left + w, y);
-        });
-
-        terrainData.bottomConcavityEntries().forEach(entry -> {
-            double left = entry.x() * TS;
-            double y = (entry.y() * TS + HTS + 0.5 * doubleStrokeInnerWidth); // TODO check this
-            double w = 2 * TS, h = doubleStrokeInnerWidth * 0.75;
-            g.setFill(fillColor);
-            g.fillRect(left, y - h, w, h);
-            g.fillRect(left + HTS, entry.y() * TS - HTS, TS, TS);
-            g.setStroke(wallStrokeColor);
-            g.setLineWidth(singleStrokeWidth);
-            g.strokeLine(left, y, left + w, y);
-        });
     }
 
     private void drawObstacle(GraphicsContext g, Obstacle obstacle, double lineWidth, boolean fill, Color strokeColor) {

@@ -24,6 +24,10 @@ public class Obstacle {
         public boolean isAngularSWCorner() { return mapContent == Tiles.DCORNER_ANGULAR_SW; }
         public boolean isAngularSECorner() { return mapContent == Tiles.DCORNER_ANGULAR_SE; }
         public boolean isAngularNECorner() { return mapContent == Tiles.DCORNER_ANGULAR_NE; }
+        public boolean isNWCorner() { return isRoundedNWCorner() || isAngularNWCorner(); }
+        public boolean isSWCorner() { return isRoundedSWCorner() || isAngularSWCorner(); }
+        public boolean isSECorner() { return isRoundedSECorner() || isAngularSECorner();}
+        public boolean isNECorner() { return isRoundedNECorner() || isAngularNECorner(); }
         public boolean isVerticalLine()    {  return mapContent == Tiles.WALL_V || mapContent == Tiles.DWALL_V; }
         public boolean isHorizontalLine()  { return mapContent == Tiles.WALL_H || mapContent == Tiles.DWALL_H; }
         public boolean isStraightLine()    { return isVerticalLine() || isHorizontalLine(); }

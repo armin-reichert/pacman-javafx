@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
@@ -280,16 +281,15 @@ public class GameLevel3D {
         TileMap terrain = world.map().terrain();
         Box floor = createFloor(assets.get("floor_textures"), terrain.numCols() * TS - 1, terrain.numRows() * TS - 1);
 
-        world.map().terrainData().doubleStrokePaths()
-            .filter(path -> !world.isPartOfHouse(path.startTile()))
-            .forEach(path -> WallBuilder.buildWallAlongPath(mazeGroup, path,
-                borderWallHeightPy, BORDER_WALL_THICKNESS, OBSTACLE_COAT_HEIGHT,
-                wallFillMaterialPy, wallStrokeMaterialPy));
-
-        world.map().terrainData().singleStrokePaths()
-            .forEach(path -> WallBuilder.buildWallAlongPath(mazeGroup, path,
-                obstacleHeightPy, OBSTACLE_THICKNESS, OBSTACLE_COAT_HEIGHT,
-                wallFillMaterialPy, wallStrokeMaterialPy));
+        for (Obstacle obstacle : world.map().obstacles()) {
+            if (world.isPartOfHouse(tileAt(obstacle.startPoint()))) {
+                continue;
+            }
+            WallBuilder.buildObstacleWalls(mazeGroup, obstacle, obstacleHeightPy,
+                obstacle.hasDoubleWalls() ? BORDER_WALL_THICKNESS : OBSTACLE_THICKNESS,
+                OBSTACLE_COAT_HEIGHT,
+                wallFillMaterialPy, wallStrokeMaterialPy);
+        }
 
         house3D = new House3D(world, coloring);
         house3D.heightPy.bind(houseHeightPy);

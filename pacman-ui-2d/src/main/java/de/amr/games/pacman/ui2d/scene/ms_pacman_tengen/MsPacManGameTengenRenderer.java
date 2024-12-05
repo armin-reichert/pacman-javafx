@@ -11,7 +11,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.maps.rendering.CrappyTerrainRenderer;
+import de.amr.games.pacman.maps.rendering.NotSoCrappyAnymoreTerrainRenderer;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameWorld;
@@ -49,7 +49,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     private final NonArcadeMaps nonArcadeMaps;
     private final ArcadeMaps arcadeMaps;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
-    private final CrappyTerrainRenderer terrainRenderer = new CrappyTerrainRenderer();
+    private final NotSoCrappyAnymoreTerrainRenderer terrainRenderer = new NotSoCrappyAnymoreTerrainRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
     private final Canvas canvas;
 
@@ -221,7 +221,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         terrainRenderer.setWallFillColor(fillColor);
         terrainRenderer.setWallStrokeColor(strokeColor);
         terrainRenderer.setDoorColor(strokeColor);
-        terrainRenderer.drawTerrain(ctx(), worldMap.terrain(), worldMap.terrainData());
+        terrainRenderer.drawTerrain(ctx(), worldMap.terrain(), worldMap.obstacles());
     }
 
     @Override
@@ -270,7 +270,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
                 world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
             }
             drawLevelMessage(level, game.isDemoLevel());
-            terrainRenderer.drawTerrain(ctx(), world.map().terrain(), world.map().terrainData());
+            terrainRenderer.drawTerrain(ctx(), world.map().terrain(), world.map().obstacles());
         }
     }
 

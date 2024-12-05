@@ -10,7 +10,7 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
-import de.amr.games.pacman.maps.rendering.CrappyTerrainRenderer;
+import de.amr.games.pacman.maps.rendering.NotSoCrappyAnymoreTerrainRenderer;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -144,7 +144,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
     private PropertyEditorPane     terrainMapPropertiesEditor;
     private PropertyEditorPane     foodMapPropertiesEditor;
     private TileMapEditorTerrainRenderer tileMapEditorTerrainRenderer;
-    private CrappyTerrainRenderer terrainMapPreviewRenderer;
+    private NotSoCrappyAnymoreTerrainRenderer terrainMapPreviewRenderer;
     private FoodMapRenderer        foodMapRenderer;
 
     private File lastUsedDir;
@@ -298,7 +298,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
         tileMapEditorTerrainRenderer.setWallStrokeColor(parseColor(DEFAULT_COLOR_WALL_STROKE));
         tileMapEditorTerrainRenderer.setWallFillColor(parseColor(DEFAULT_COLOR_WALL_FILL));
 
-        terrainMapPreviewRenderer = new CrappyTerrainRenderer();
+        terrainMapPreviewRenderer = new NotSoCrappyAnymoreTerrainRenderer();
         terrainMapPreviewRenderer.setWallStrokeColor(parseColor(DEFAULT_COLOR_WALL_STROKE));
         terrainMapPreviewRenderer.setWallFillColor(parseColor(DEFAULT_COLOR_WALL_FILL));
 
@@ -920,7 +920,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
             tileMapEditorTerrainRenderer.setWallStrokeColor(getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_STROKE, parseColor(DEFAULT_COLOR_WALL_STROKE)));
             tileMapEditorTerrainRenderer.setWallFillColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(DEFAULT_COLOR_WALL_FILL)));
             tileMapEditorTerrainRenderer.setDoorColor(getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(DEFAULT_COLOR_DOOR)));
-            tileMapEditorTerrainRenderer.drawTerrain(g, terrainMap, worldMap().terrainData());
+            tileMapEditorTerrainRenderer.drawTerrain(g, terrainMap, worldMap().obstacles());
 
             byte[][] editedContent = editController.editedContent();
             if (editedContent != null) {
@@ -982,7 +982,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
             terrainMapPreviewRenderer.setWallStrokeColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(DEFAULT_COLOR_WALL_STROKE)));
             terrainMapPreviewRenderer.setWallFillColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(DEFAULT_COLOR_WALL_FILL)));
             terrainMapPreviewRenderer.setDoorColor(getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(DEFAULT_COLOR_DOOR)));
-            terrainMapPreviewRenderer.drawTerrain(g, terrainMap, worldMap().terrainData());
+            terrainMapPreviewRenderer.drawTerrain(g, terrainMap, worldMap().obstacles());
         }
         if (foodVisiblePy.get()) {
             foodMapRenderer.setScaling(gridSize() / 8.0);

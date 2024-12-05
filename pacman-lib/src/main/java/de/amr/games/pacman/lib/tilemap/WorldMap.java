@@ -10,6 +10,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -33,7 +34,7 @@ public class WorldMap {
     }
 
     private TileMap terrain;
-    private TerrainData terrainData;
+    private List<Obstacle> obstacles;
     private TileMap food;
     private final URL url;
 
@@ -45,7 +46,7 @@ public class WorldMap {
     public WorldMap(WorldMap other) {
         checkNotNull(other);
         terrain = new TileMap(other.terrain);
-        terrainData = other.terrainData;
+        obstacles = new ArrayList<>(other.obstacles);
         food = new TileMap(other.food);
         url = other.url;
     }
@@ -98,11 +99,11 @@ public class WorldMap {
     }
 
     public void updateTerrainData() {
-        terrainData = new TerrainData(terrain);
+        obstacles = new ObstacleDetector(terrain).detectObstacles();
     }
 
-    public TerrainData terrainData() {
-        return terrainData;
+    public List<Obstacle> obstacles() {
+        return Collections.unmodifiableList(obstacles);
     }
 
     public boolean save(File file) {

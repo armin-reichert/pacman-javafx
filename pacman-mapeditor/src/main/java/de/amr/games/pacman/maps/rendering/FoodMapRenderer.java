@@ -5,13 +5,15 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.maps.rendering;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.TerrainData;
+import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+
+import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -45,7 +47,7 @@ public class FoodMapRenderer implements TileMapRenderer {
     }
 
     @Override
-    public void drawTerrain(GraphicsContext g, TileMap terrainMap, TerrainData terrainData) {
+    public void drawTerrain(GraphicsContext g, TileMap terrainMap, List<Obstacle> obstacles) {
     }
 
     @Override

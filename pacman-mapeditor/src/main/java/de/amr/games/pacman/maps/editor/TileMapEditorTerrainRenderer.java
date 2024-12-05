@@ -6,7 +6,7 @@ package de.amr.games.pacman.maps.editor;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.TerrainData;
+import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
 import de.amr.games.pacman.maps.rendering.TileMapRenderer;
@@ -16,6 +16,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 
+import java.util.List;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
@@ -62,7 +63,7 @@ public class TileMapEditorTerrainRenderer implements TileMapRenderer {
     }
 
     @Override
-    public void drawTerrain(GraphicsContext g, TileMap terrainMap, TerrainData terrainData) {
+    public void drawTerrain(GraphicsContext g, TileMap terrainMap, List<Obstacle> obstacles) {
         g.save();
         g.scale(scaling(), scaling());
         terrainMap.tiles().forEach(tile -> drawTileUnscaled(g, tile, terrainMap.get(tile)));
