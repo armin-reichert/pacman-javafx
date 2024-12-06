@@ -14,6 +14,7 @@ import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.tilemap.Tiles.isDoubleWall;
 
 public class ObstacleBuilder {
 
@@ -47,14 +48,20 @@ public class ObstacleBuilder {
     private final TileMap terrain;
     private final List<Obstacle> obstacles = new ArrayList<>();
     private final Set<Vector2i> exploredTiles = new HashSet<>();
-
+    private final List<Vector2i> tilesWithErrors = new ArrayList<>();
     private Cursor cursor;
 
     public ObstacleBuilder(TileMap terrain) {
         this.terrain = terrain;
     }
 
+    public List<Vector2i> tilesWithErrors() {
+        return Collections.unmodifiableList(tilesWithErrors);
+    }
+
     public List<Obstacle> buildObstacles() {
+        tilesWithErrors.clear();
+
         Logger.info("Find obstacles in map ID={} size={}x{}", terrain.hashCode(), terrain.numRows(), terrain.numCols());
         // Note: order of detection matters! Otherwise, when searching for closed
         // obstacles first, each failed attempt must set its visited tile set to unvisited!
@@ -105,7 +112,7 @@ public class ObstacleBuilder {
         cursor = new Cursor(null, startTile);
         Vector2f startPoint = startTile.scaled((float) TS).plus(startsAtLeftBorder ? 0 : TS, HTS);
         byte startTileContent = terrain.get(startTile);
-        boolean doubleWall = Tiles.isDoubleWall(startTileContent);
+        boolean doubleWall = isDoubleWall(startTileContent);
         var obstacle = new Obstacle(startPoint, doubleWall);
         if (startTileContent == Tiles.DWALL_H) {
             Direction initialDir = startsAtLeftBorder ? RIGHT : LEFT;
@@ -139,6 +146,11 @@ public class ObstacleBuilder {
         return obstacle;
     }
 
+    private void errorAtCurrentTile() {
+        Logger.error("Did not expect content {} at tile {}", terrain.get(cursor.currentTile), cursor.currentTile);
+        tilesWithErrors.add(cursor.currentTile);
+    }
+
     private void buildRestOfObstacle(Obstacle obstacle, Vector2i startTile, boolean ccw) {
         int bailout = 0;
         while (bailout < 1000) {
@@ -148,6 +160,13 @@ public class ObstacleBuilder {
             }
             exploredTiles.add(cursor.currentTile);
             byte tileContent = terrain.get(cursor.currentTile);
+            boolean doubleWall = isDoubleWall(tileContent);
+            if (tileContent != Tiles.DOOR &&
+                (obstacle.hasDoubleWalls() && !doubleWall || !obstacle.hasDoubleWalls() && doubleWall)) {
+                errorAtCurrentTile();
+                break;
+            }
+
             switch (tileContent) {
 
                 case Tiles.WALL_V, Tiles.DWALL_V -> {
@@ -158,7 +177,7 @@ public class ObstacleBuilder {
                         obstacle.addSegment(arrow(UP, TS), ccw, tileContent);
                         cursor.move(UP);
                     } else {
-                        Logger.error("Did not expect content {} at tile {}", tileContent, cursor.currentTile);
+                        errorAtCurrentTile();
                     }
                 }
 
@@ -170,7 +189,7 @@ public class ObstacleBuilder {
                         obstacle.addSegment(arrow(LEFT, TS), ccw, tileContent);
                         cursor.move(LEFT);
                     } else {
-                        Logger.error("Did not expect content {} at tile {}", tileContent, cursor.currentTile);
+                        errorAtCurrentTile();
                     }
                 }
 
@@ -184,7 +203,7 @@ public class ObstacleBuilder {
                         obstacle.addSegment(SEG_CORNER_SW_UP, ccw, tileContent);
                         cursor.move(UP);
                     } else {
-                        Logger.error("Did not expect content {} at tile {}", tileContent, cursor.currentTile);
+                        errorAtCurrentTile();
                     }
                 }
 
@@ -200,7 +219,7 @@ public class ObstacleBuilder {
                         cursor.move(UP);
                     }
                     else {
-                        Logger.error("Did not expect content {} at tile {}", tileContent, cursor.currentTile);
+                        errorAtCurrentTile();
                     }
                 }
 
@@ -216,7 +235,7 @@ public class ObstacleBuilder {
                         cursor.move(DOWN);
                     }
                     else {
-                        Logger.error("Did not expect content {} at tile {}", tileContent, cursor.currentTile);
+                        errorAtCurrentTile();
                     }
                 }
 
@@ -232,9 +251,11 @@ public class ObstacleBuilder {
                         cursor.move(DOWN);
                     }
                     else {
-                        Logger.error("Did not expect content {} at tile {}", tileContent, cursor.currentTile);
+                        errorAtCurrentTile();
                     }
                 }
+
+                default -> errorAtCurrentTile();
             }
 
             if (cursor.currentTile.equals(startTile) || terrain.outOfBounds(cursor.currentTile)) {
