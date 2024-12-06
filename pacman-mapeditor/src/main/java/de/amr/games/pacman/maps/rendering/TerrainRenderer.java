@@ -154,8 +154,10 @@ public class TerrainRenderer implements TileMapRenderer {
                 }
             }
         }
-        if (fill) {
+        if (obstacle.isClosed()) {
             g.closePath();
+        }
+        if (fill) {
             g.setFill(wallFillColor);
             g.fill();
         }
