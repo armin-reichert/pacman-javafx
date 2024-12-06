@@ -38,6 +38,7 @@ public class ObstacleDetector {
     }
 
     public List<Obstacle> detectObstacles() {
+        Logger.info("Find obstacles in map ID={} size={}x{}", terrain.hashCode(), terrain.numRows(), terrain.numCols());
         // Note: order of detection matters! Otherwise, when searching for closed
         // obstacles first, each failed attempt must set its visited tile set to unvisited!
         terrain.tiles()
@@ -56,7 +57,9 @@ public class ObstacleDetector {
             .map(this::detectClosedObstacle)
             .forEach(obstacles::add);
 
+        Logger.info("Found {} obstacles", obstacles.size());
         optimizeObstacles();
+        Logger.info("Optimized {} obstacles", obstacles.size());
         return obstacles;
     }
 
@@ -75,8 +78,8 @@ public class ObstacleDetector {
         finishObstacle(obstacle, cornerNW, true);
 
         if (obstacle.isClosed()) {
-            Logger.info("Found closed obstacle, top-left tile={}, map ID={}:", cornerNW, terrain.hashCode());
-            Logger.info(obstacle);
+            Logger.debug("Found closed obstacle, top-left tile={}, map ID={}:", cornerNW, terrain.hashCode());
+            Logger.debug(obstacle);
         } else {
             Logger.error("Could not identify closed obstacle, top-left tile={}, map ID={}", cornerNW, terrain.hashCode());
         }
@@ -117,7 +120,7 @@ public class ObstacleDetector {
         }
 
         finishObstacle(obstacle, startTile, true);
-        Logger.info("Found open obstacle, start tile={}, segment count={}, map ID={}:",
+        Logger.debug("Found open obstacle, start tile={}, segment count={}, map ID={}:",
             startTile, obstacle.segments().size(), terrain.hashCode());
         Logger.info(obstacle);
         return obstacle;
