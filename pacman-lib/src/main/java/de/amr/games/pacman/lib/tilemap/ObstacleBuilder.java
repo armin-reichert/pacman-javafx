@@ -45,15 +45,20 @@ public class ObstacleBuilder {
     private static final Vector2f SEG_CORNER_NE_UP   = v2f(-HTS, -HTS);
     private static final Vector2f SEG_CORNER_NE_DOWN = SEG_CORNER_NE_UP.inverse();
 
+    public static List<Obstacle> buildObstacles(TileMap terrain, List<Vector2i> tilesWithErrors) {
+        var ob = new ObstacleBuilder(terrain);
+        return ob.buildObstacles(tilesWithErrors);
+    }
+
     private final TileMap terrain;
     private final Set<Vector2i> exploredTiles = new HashSet<>();
     private Cursor cursor;
 
-    public ObstacleBuilder(TileMap terrain) {
+    private ObstacleBuilder(TileMap terrain) {
         this.terrain = terrain;
     }
 
-    public List<Obstacle> buildObstacles(List<Vector2i> tilesWithErrors) {
+    private List<Obstacle> buildObstacles(List<Vector2i> tilesWithErrors) {
         tilesWithErrors.clear();
         List<Obstacle> obstacles = new ArrayList<>();
 
