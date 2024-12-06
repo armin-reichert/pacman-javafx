@@ -235,6 +235,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
         bottomRightIcons.visibleProperty().bind(
                 Bindings.createBooleanBinding(() -> pagePy.get() != editorPage, pagePy));
+        pauseIcon.visibleProperty().bind(
+                Bindings.createBooleanBinding(() -> pagePy.get() != editorPage && clock.isPaused(), pagePy, clock.pausedPy));
 
         sceneRoot.getChildren().addAll(new Pane(), flashMessageLayer, pauseIcon, bottomRightIcons);
 
