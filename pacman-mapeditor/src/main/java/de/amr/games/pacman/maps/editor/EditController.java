@@ -329,7 +329,7 @@ public class EditController {
     void ensureTerrainMapsPathsUpToDate() {
         if (!terrainDataUpToDate) {
             WorldMap worldMap = worldMapPy.get();
-            worldMap.updateTerrainData();
+            worldMap.updateObstacleList();
             terrainDataUpToDate = true;
         }
     }

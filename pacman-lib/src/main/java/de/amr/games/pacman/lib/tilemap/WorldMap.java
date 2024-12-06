@@ -62,14 +62,14 @@ public class WorldMap {
         this.url = checkNotNull(url);
         var r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
         parse(r.lines());
-        updateTerrainData();
+        updateObstacleList();
     }
 
     public WorldMap(File file) throws IOException {
         url = file.toURI().toURL();
         var r = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
         parse(r.lines());
-        updateTerrainData();
+        updateObstacleList();
     }
 
     public String sourceCode() {
@@ -98,8 +98,8 @@ public class WorldMap {
         food = TileMap.parseTileMap(foodSection, tv -> 0 <= tv && tv <= Tiles.ENERGIZER);
     }
 
-    public void updateTerrainData() {
-        obstacles = new ObstacleDetector(terrain).detectObstacles();
+    public void updateObstacleList() {
+        obstacles = new ObstacleBuilder(terrain).buildObstacles();
     }
 
     public List<Obstacle> obstacles() {

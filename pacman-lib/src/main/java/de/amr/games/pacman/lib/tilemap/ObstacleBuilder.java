@@ -15,7 +15,7 @@ import java.util.function.Predicate;
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
 
-public class ObstacleDetector {
+public class ObstacleBuilder {
 
     private static final Vector2f SEG_CORNER_NW_UP   = v2f(HTS, -HTS);
     private static final Vector2f SEG_CORNER_NW_DOWN = SEG_CORNER_NW_UP.inverse();
@@ -33,18 +33,18 @@ public class ObstacleDetector {
     private Vector2i predecessorTile;
     private Vector2i cursorTile;
 
-    public ObstacleDetector(TileMap terrain) {
+    public ObstacleBuilder(TileMap terrain) {
         this.terrain = terrain;
     }
 
-    public List<Obstacle> detectObstacles() {
+    public List<Obstacle> buildObstacles() {
         Logger.info("Find obstacles in map ID={} size={}x{}", terrain.hashCode(), terrain.numRows(), terrain.numCols());
         // Note: order of detection matters! Otherwise, when searching for closed
         // obstacles first, each failed attempt must set its visited tile set to unvisited!
         terrain.tiles()
             .filter(tile -> tile.x() == 0 || tile.x() == terrain.numCols() - 1)
             .filter(Predicate.not(exploredTiles::contains))
-            .map(tile -> detectOpenObstacle(tile, tile.x() == 0))
+            .map(tile -> buildOpenObstacle(tile, tile.x() == 0))
             .filter(Objects::nonNull)
             .forEach(obstacles::add);
 
@@ -54,7 +54,7 @@ public class ObstacleDetector {
                 terrain.get(tile) == Tiles.DCORNER_NW ||
                 terrain.get(tile) == Tiles.DCORNER_ANGULAR_NW) // house top-left corner
             .filter(Predicate.not(exploredTiles::contains))
-            .map(this::detectClosedObstacle)
+            .map(this::buildClosedObstacle)
             .forEach(obstacles::add);
 
         Logger.info("Found {} obstacles", obstacles.size());
@@ -63,7 +63,7 @@ public class ObstacleDetector {
         return obstacles;
     }
 
-    private Obstacle detectClosedObstacle(Vector2i cornerNW) {
+    private Obstacle buildClosedObstacle(Vector2i cornerNW) {
         predecessorTile = null;
         cursorTile = cornerNW;
 
@@ -75,7 +75,7 @@ public class ObstacleDetector {
         obstacle.addSegment(SEG_CORNER_NW_DOWN, true, startTileContent);
         moveCursor(DOWN);
 
-        finishObstacle(obstacle, cornerNW, true);
+        buildRestOfObstacle(obstacle, cornerNW, true);
 
         if (obstacle.isClosed()) {
             Logger.debug("Found closed obstacle, top-left tile={}, map ID={}:", cornerNW, terrain.hashCode());
@@ -86,7 +86,7 @@ public class ObstacleDetector {
         return obstacle;
     }
 
-    private Obstacle detectOpenObstacle(Vector2i startTile, boolean startsAtLeftBorder) {
+    private Obstacle buildOpenObstacle(Vector2i startTile, boolean startsAtLeftBorder) {
         predecessorTile = null;
         cursorTile = startTile;
 
@@ -119,14 +119,14 @@ public class ObstacleDetector {
             return null;
         }
 
-        finishObstacle(obstacle, startTile, true);
+        buildRestOfObstacle(obstacle, startTile, true);
         Logger.debug("Found open obstacle, start tile={}, segment count={}, map ID={}:",
             startTile, obstacle.segments().size(), terrain.hashCode());
         Logger.info(obstacle);
         return obstacle;
     }
 
-    private void finishObstacle(Obstacle obstacle, Vector2i startTile, boolean ccw) {
+    private void buildRestOfObstacle(Obstacle obstacle, Vector2i startTile, boolean ccw) {
         int bailout = 0;
         while (bailout < 2000) {
             ++bailout;
