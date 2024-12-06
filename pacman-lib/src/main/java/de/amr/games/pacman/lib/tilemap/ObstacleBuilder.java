@@ -94,10 +94,10 @@ public class ObstacleBuilder {
         buildRestOfObstacle(obstacle, cornerNW, true);
 
         if (obstacle.isClosed()) {
-            Logger.debug("Found closed obstacle, top-left tile={}, map ID={}:", cornerNW, terrain.hashCode());
+            Logger.debug("Closed obstacle, top-left tile={}, map ID={}:", cornerNW, terrain.hashCode());
             Logger.debug(obstacle);
         } else {
-            Logger.error("Could not identify closed obstacle, top-left tile={}, map ID={}", cornerNW, terrain.hashCode());
+            Logger.error("Could not build closed obstacle, top-left tile={}, map ID={}", cornerNW, terrain.hashCode());
         }
         return obstacle;
     }
@@ -134,7 +134,7 @@ public class ObstacleBuilder {
         }
 
         buildRestOfObstacle(obstacle, startTile, true);
-        Logger.debug("Found open obstacle, start tile={}, segment count={}, map ID={}:",
+        Logger.debug("Open obstacle, start tile={}, segment count={}, map ID={}:",
             startTile, obstacle.segments().size(), terrain.hashCode());
         Logger.info(obstacle);
         return obstacle;
@@ -142,20 +142,21 @@ public class ObstacleBuilder {
 
     private void buildRestOfObstacle(Obstacle obstacle, Vector2i startTile, boolean ccw) {
         int bailout = 0;
-        while (bailout < 2000) {
+        while (bailout < 1000) {
             ++bailout;
             if (exploredTiles.contains(cursor.currentTile)) {
                 break;
             }
             exploredTiles.add(cursor.currentTile);
-            switch (terrain.get(cursor.currentTile)) {
+            byte tileContent = terrain.get(cursor.currentTile);
+            switch (tileContent) {
 
                 case Tiles.WALL_V, Tiles.DWALL_V -> {
                     if (cursor.isMoving(DOWN)) {
-                        obstacle.addSegment(oneTileTowards(DOWN), ccw, terrain.get(cursor.currentTile));
+                        obstacle.addSegment(oneTileTowards(DOWN), ccw, tileContent);
                         cursor.move(DOWN);
                     } else if (cursor.isMoving(UP)) {
-                        obstacle.addSegment(oneTileTowards(UP), ccw, terrain.get(cursor.currentTile));
+                        obstacle.addSegment(oneTileTowards(UP), ccw, tileContent);
                         cursor.move(UP);
                     } else {
                         //error
@@ -164,10 +165,10 @@ public class ObstacleBuilder {
 
                 case Tiles.WALL_H, Tiles.DWALL_H, Tiles.DOOR -> {
                     if (cursor.isMoving(RIGHT)) {
-                        obstacle.addSegment(oneTileTowards(RIGHT), ccw, terrain.get(cursor.currentTile));
+                        obstacle.addSegment(oneTileTowards(RIGHT), ccw, tileContent);
                         cursor.move(RIGHT);
                     } else if (cursor.isMoving(LEFT)) {
-                        obstacle.addSegment(oneTileTowards(LEFT), ccw, terrain.get(cursor.currentTile));
+                        obstacle.addSegment(oneTileTowards(LEFT), ccw, tileContent);
                         cursor.move(LEFT);
                     } else {
                         //error
@@ -177,11 +178,11 @@ public class ObstacleBuilder {
                 case Tiles.CORNER_SW, Tiles.DCORNER_SW, Tiles.DCORNER_ANGULAR_SW -> {
                     if (cursor.isMoving(DOWN)) {
                         ccw = true;
-                        obstacle.addSegment(SEG_CORNER_SW_DOWN, ccw, terrain.get(cursor.currentTile));
+                        obstacle.addSegment(SEG_CORNER_SW_DOWN, ccw, tileContent);
                         cursor.move(RIGHT);
                     } else if (cursor.isMoving(LEFT)) {
                         ccw = false;
-                        obstacle.addSegment(SEG_CORNER_SW_UP, ccw, terrain.get(cursor.currentTile));
+                        obstacle.addSegment(SEG_CORNER_SW_UP, ccw, tileContent);
                         cursor.move(UP);
                     } else {
                         //error
@@ -191,12 +192,12 @@ public class ObstacleBuilder {
                 case Tiles.CORNER_SE, Tiles.DCORNER_SE, Tiles.DCORNER_ANGULAR_SE -> {
                     if (cursor.isMoving(DOWN)) {
                         ccw = false;
-                        obstacle.addSegment(SEG_CORNER_SE_DOWN, ccw, terrain.get(cursor.currentTile));
+                        obstacle.addSegment(SEG_CORNER_SE_DOWN, ccw, tileContent);
                         cursor.move(LEFT);
                     }
                     else if (cursor.isMoving(RIGHT)) {
                         ccw = true;
-                        obstacle.addSegment(SEG_CORNER_SE_UP, ccw, terrain.get(cursor.currentTile));
+                        obstacle.addSegment(SEG_CORNER_SE_UP, ccw, tileContent);
                         cursor.move(UP);
                     }
                     else {
@@ -207,12 +208,12 @@ public class ObstacleBuilder {
                 case Tiles.CORNER_NE, Tiles.DCORNER_NE, Tiles.DCORNER_ANGULAR_NE -> {
                     if (cursor.isMoving(UP)) {
                         ccw = true;
-                        obstacle.addSegment(SEG_CORNER_NE_UP, ccw, terrain.get(cursor.currentTile));
+                        obstacle.addSegment(SEG_CORNER_NE_UP, ccw, tileContent);
                         cursor.move(LEFT);
                     }
                     else if (cursor.isMoving(RIGHT)) {
                         ccw = false;
-                        obstacle.addSegment(SEG_CORNER_NE_DOWN, ccw, terrain.get(cursor.currentTile));
+                        obstacle.addSegment(SEG_CORNER_NE_DOWN, ccw, tileContent);
                         cursor.move(DOWN);
                     }
                     else {
@@ -223,12 +224,12 @@ public class ObstacleBuilder {
                 case Tiles.CORNER_NW, Tiles.DCORNER_NW, Tiles.DCORNER_ANGULAR_NW -> {
                     if (cursor.isMoving(UP)) {
                         ccw = false;
-                        obstacle.addSegment(SEG_CORNER_NW_UP, ccw, terrain.get(cursor.currentTile));
+                        obstacle.addSegment(SEG_CORNER_NW_UP, ccw, tileContent);
                         cursor.move(RIGHT);
                     }
                     else if (cursor.isMoving(LEFT)) {
                         ccw = true;
-                        obstacle.addSegment(SEG_CORNER_NW_DOWN, ccw, terrain.get(cursor.currentTile));
+                        obstacle.addSegment(SEG_CORNER_NW_DOWN, ccw, tileContent);
                         cursor.move(DOWN);
                     }
                     else {
