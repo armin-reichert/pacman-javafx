@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib.tilemap;
 
+import de.amr.games.pacman.lib.Vector2i;
 import org.tinylog.Logger;
 
 import java.io.*;
@@ -34,7 +35,7 @@ public class WorldMap {
     }
 
     private TileMap terrain;
-    private List<Obstacle> obstacles;
+    private List<Obstacle> obstacles = List.of();
     private TileMap food;
     private final URL url;
 
@@ -98,8 +99,10 @@ public class WorldMap {
         food = TileMap.parseTileMap(foodSection, tv -> 0 <= tv && tv <= Tiles.ENERGIZER);
     }
 
-    public void updateObstacleList() {
-        obstacles = new ObstacleBuilder(terrain).buildObstacles();
+    public List<Vector2i> updateObstacleList() {
+        var ob = new ObstacleBuilder(terrain);
+        obstacles = ob.buildObstacles();
+        return ob.tilesWithErrors();
     }
 
     public List<Obstacle> obstacles() {

@@ -43,7 +43,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -930,6 +932,16 @@ public class TileMapEditor implements TileMapEditorViewModel {
                         tileMapEditorTerrainRenderer.drawTile(g, tile, editedContent[row][col]);
                     }
                 }
+            }
+        }
+        double gs = gridSize();
+        for (Vector2i tile : editController.tilesWithErrors()) {
+            g.setFont(Font.font("sans", gs-2));
+            g.setFill(Color.grayRgb(200, 0.8));
+            g.fillText("?", tile.x() * gs + 0.25 * gs, tile.y() * gs + 0.8*gs);
+            if (editController.symmetricEditModePy.get()) {
+                int x = worldMap().terrain().numCols() - tile.x() - 1;
+                g.fillText("?", x * gs + 0.25 * gs, tile.y() * gs + 0.8*gs);
             }
         }
         if (editController.symmetricEditModePy.get()) {

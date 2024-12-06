@@ -19,6 +19,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.input.*;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.v2i;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
@@ -100,6 +103,7 @@ public class EditController {
     private boolean unsavedChanges;
     private boolean terrainDataUpToDate;
     private boolean dragging = false;
+    private final List<Vector2i> tilesWithErrors = new ArrayList<>();
 
     EditController(TileMapEditorViewModel viewModel) {
         this.viewModel = viewModel;
@@ -329,7 +333,8 @@ public class EditController {
     void ensureTerrainMapsPathsUpToDate() {
         if (!terrainDataUpToDate) {
             WorldMap worldMap = worldMapPy.get();
-            worldMap.updateObstacleList();
+            tilesWithErrors.clear();
+            tilesWithErrors.addAll(worldMap.updateObstacleList());
             terrainDataUpToDate = true;
         }
     }
@@ -380,6 +385,10 @@ public class EditController {
 
     void clearTerrain(WorldMap worldMap) {
         worldMap.terrain().clear();
+    }
+
+    public List<Vector2i> tilesWithErrors() {
+        return tilesWithErrors;
     }
 
     void clearFood(WorldMap worldMap) {
