@@ -71,7 +71,7 @@ public class ObstacleBuilder {
                 terrain.get(tile) == Tiles.DCORNER_NW ||
                 terrain.get(tile) == Tiles.DCORNER_ANGULAR_NW) // house top-left corner
             .filter(Predicate.not(exploredTiles::contains))
-            .map(this::buildClosedObstacle)
+            .map(this::buildClosedObstacleWithTopLeftTile)
             .forEach(obstacles::add);
 
         Logger.info("Found {} obstacles", obstacles.size());
@@ -80,11 +80,10 @@ public class ObstacleBuilder {
         return obstacles;
     }
 
-    private Obstacle buildClosedObstacle(Vector2i cornerNW) {
+    private Obstacle buildClosedObstacleWithTopLeftTile(Vector2i cornerNW) {
         Vector2f startPoint = cornerNW.scaled((float)TS).plus(TS, HTS);
         byte startTileContent = terrain.get(cornerNW);
-        boolean doubleWalls = startTileContent == Tiles.DCORNER_NW ||
-            startTileContent == Tiles.DCORNER_ANGULAR_NW;
+        boolean doubleWalls = startTileContent == Tiles.DCORNER_NW || startTileContent == Tiles.DCORNER_ANGULAR_NW;
         Obstacle obstacle = new Obstacle(startPoint, doubleWalls);
         obstacle.addSegment(SEG_CORNER_NW_DOWN, true, startTileContent);
 
@@ -110,7 +109,7 @@ public class ObstacleBuilder {
         var obstacle = new Obstacle(startPoint, doubleWall);
         if (startTileContent == Tiles.DWALL_H) {
             Direction initialDir = startsAtLeftBorder ? RIGHT : LEFT;
-            obstacle.addSegment(oneTileTowards(initialDir), true, Tiles.DWALL_H);
+            obstacle.addSegment(arrow(initialDir, TS), true, Tiles.DWALL_H);
             cursor.move(initialDir);
         }
         else if (startsAtLeftBorder && startTileContent == Tiles.DCORNER_SE) {
@@ -136,7 +135,7 @@ public class ObstacleBuilder {
         buildRestOfObstacle(obstacle, startTile, true);
         Logger.debug("Open obstacle, start tile={}, segment count={}, map ID={}:",
             startTile, obstacle.segments().size(), terrain.hashCode());
-        Logger.info(obstacle);
+        Logger.debug(obstacle);
         return obstacle;
     }
 
@@ -153,25 +152,25 @@ public class ObstacleBuilder {
 
                 case Tiles.WALL_V, Tiles.DWALL_V -> {
                     if (cursor.isMoving(DOWN)) {
-                        obstacle.addSegment(oneTileTowards(DOWN), ccw, tileContent);
+                        obstacle.addSegment(arrow(DOWN, TS), ccw, tileContent);
                         cursor.move(DOWN);
                     } else if (cursor.isMoving(UP)) {
-                        obstacle.addSegment(oneTileTowards(UP), ccw, tileContent);
+                        obstacle.addSegment(arrow(UP, TS), ccw, tileContent);
                         cursor.move(UP);
                     } else {
-                        //error
+                        Logger.error("Did not expect content {} at tile {}", tileContent, cursor.currentTile);
                     }
                 }
 
                 case Tiles.WALL_H, Tiles.DWALL_H, Tiles.DOOR -> {
                     if (cursor.isMoving(RIGHT)) {
-                        obstacle.addSegment(oneTileTowards(RIGHT), ccw, tileContent);
+                        obstacle.addSegment(arrow(RIGHT, TS), ccw, tileContent);
                         cursor.move(RIGHT);
                     } else if (cursor.isMoving(LEFT)) {
-                        obstacle.addSegment(oneTileTowards(LEFT), ccw, tileContent);
+                        obstacle.addSegment(arrow(LEFT, TS), ccw, tileContent);
                         cursor.move(LEFT);
                     } else {
-                        //error
+                        Logger.error("Did not expect content {} at tile {}", tileContent, cursor.currentTile);
                     }
                 }
 
@@ -185,7 +184,7 @@ public class ObstacleBuilder {
                         obstacle.addSegment(SEG_CORNER_SW_UP, ccw, tileContent);
                         cursor.move(UP);
                     } else {
-                        //error
+                        Logger.error("Did not expect content {} at tile {}", tileContent, cursor.currentTile);
                     }
                 }
 
@@ -201,7 +200,7 @@ public class ObstacleBuilder {
                         cursor.move(UP);
                     }
                     else {
-                        //error
+                        Logger.error("Did not expect content {} at tile {}", tileContent, cursor.currentTile);
                     }
                 }
 
@@ -217,7 +216,7 @@ public class ObstacleBuilder {
                         cursor.move(DOWN);
                     }
                     else {
-                        //error
+                        Logger.error("Did not expect content {} at tile {}", tileContent, cursor.currentTile);
                     }
                 }
 
@@ -233,7 +232,7 @@ public class ObstacleBuilder {
                         cursor.move(DOWN);
                     }
                     else {
-                        //error
+                        Logger.error("Did not expect content {} at tile {}", tileContent, cursor.currentTile);
                     }
                 }
             }
@@ -244,8 +243,8 @@ public class ObstacleBuilder {
         }
     }
 
-    private Vector2f oneTileTowards(Direction dir) {
-        return dir.vector().scaled((float) TS);
+    private Vector2f arrow(Direction dir, float length) {
+        return dir.vector().scaled(length);
     }
 
     private void optimizeObstacles() {
