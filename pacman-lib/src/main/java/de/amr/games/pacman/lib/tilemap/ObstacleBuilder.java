@@ -96,7 +96,7 @@ public class ObstacleBuilder {
 
         cursor = new Cursor(null, cornerNW);
         cursor.move(DOWN);
-
+        exploredTiles.add(cornerNW);
         buildRestOfObstacle(obstacle, cornerNW, true, tilesWithErrors);
 
         if (obstacle.isClosed()) {
@@ -138,7 +138,7 @@ public class ObstacleBuilder {
         else {
             return null;
         }
-
+        exploredTiles.add(startTile);
         buildRestOfObstacle(obstacle, startTile, true, tilesWithErrors);
         Logger.debug("Open obstacle, start tile={}, segment count={}, map ID={}:",
             startTile, obstacle.segments().size(), terrain.hashCode());
