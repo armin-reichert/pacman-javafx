@@ -46,7 +46,6 @@ public class ObstacleBuilder {
     private static final Vector2f SEG_CORNER_NE_DOWN = SEG_CORNER_NE_UP.inverse();
 
     private final TileMap terrain;
-    private final List<Obstacle> obstacles = new ArrayList<>();
     private final Set<Vector2i> exploredTiles = new HashSet<>();
     private final List<Vector2i> tilesWithErrors = new ArrayList<>();
     private Cursor cursor;
@@ -61,6 +60,7 @@ public class ObstacleBuilder {
 
     public List<Obstacle> buildObstacles() {
         tilesWithErrors.clear();
+        List<Obstacle> obstacles = new ArrayList<>();
 
         Logger.info("Find obstacles in map ID={} size={}x{}", terrain.hashCode(), terrain.numRows(), terrain.numCols());
         // Note: order of detection matters! Otherwise, when searching for closed
@@ -82,7 +82,7 @@ public class ObstacleBuilder {
             .forEach(obstacles::add);
 
         Logger.info("Found {} obstacles", obstacles.size());
-        optimizeObstacles();
+        obstacles = optimize(obstacles);
         Logger.info("Optimized {} obstacles", obstacles.size());
         return obstacles;
     }
@@ -268,7 +268,7 @@ public class ObstacleBuilder {
         return dir.vector().scaled(length);
     }
 
-    private void optimizeObstacles() {
+    private List<Obstacle> optimize(List<Obstacle> obstacles) {
         List<Obstacle> optimizedObstacles = new ArrayList<>();
         for (Obstacle obstacle : obstacles) {
             Obstacle optimized = new Obstacle(obstacle.startPoint(), obstacle.hasDoubleWalls());
@@ -301,7 +301,6 @@ public class ObstacleBuilder {
                 optimized.addSegment(mergedVector, mergedCCW, mergedMapContent);
             }
         }
-        obstacles.clear();
-        obstacles.addAll(optimizedObstacles);
+        return optimizedObstacles;
     }
 }
