@@ -47,10 +47,11 @@ public interface WallBuilder {
         throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(beginTile, endTile));
     }
 
-    static Node wallCenteredAt(Vector2f center, double sizeX, double sizeY,
-                               DoubleProperty wallHeightPy, double coatHeight,
-                               Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy) {
-
+    static Node wallCenteredAt(
+        Vector2f center, double sizeX, double sizeY,
+        DoubleProperty wallHeightPy, double coatHeight,
+        Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy)
+    {
         var base = new Box(sizeX, sizeY, wallHeightPy.get());
         base.setTranslateX(center.x());
         base.setTranslateY(center.y());
@@ -70,24 +71,28 @@ public interface WallBuilder {
     }
 
 
-    static Node hWall(Vector2f p, Vector2f q,
-                      DoubleProperty wallHeightPy, double thickness, double coatHeight,
-                      Property<PhongMaterial> wallFillMaterialPy, Property<PhongMaterial> wallStrokeMaterialPy) {
+    static Node hWall(
+        Vector2f p, Vector2f q,
+        DoubleProperty wallHeightPy, double thickness, double coatHeight,
+        Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy)
+    {
         return wallCenteredAt(p.plus(q).scaled(0.5f), q.minus(p).length() + thickness, thickness,
-                wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+            wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
     }
 
-    static Node vWall(Vector2f p, Vector2f q,
-                      DoubleProperty wallHeightPy, double thickness, double coatHeight,
-                      Property<PhongMaterial> wallFillMaterialPy, Property<PhongMaterial> wallStrokeMaterialPy) {
+    static Node vWall(
+        Vector2f p, Vector2f q,
+        DoubleProperty wallHeightPy, double thickness, double coatHeight,
+        Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy)
+    {
         return wallCenteredAt(p.plus(q).scaled(0.5f), thickness, q.minus(p).length(),
-                wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+            wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
     }
 
     static void createCircularWall(
         Group parent, Vector2f center,
         DoubleProperty wallHeightPy, double coatHeight,
-        Property<PhongMaterial> wallFillMaterialPy, Property<PhongMaterial> wallStrokeMaterialPy) {
+        Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy) {
 
         Cylinder base = new Cylinder(HTS, wallHeightPy.get());
         base.setRotationAxis(Rotate.X_AXIS);
@@ -96,7 +101,7 @@ public interface WallBuilder {
         base.setTranslateY(center.y());
         base.translateZProperty().bind(wallHeightPy.multiply(-0.5).add(2*coatHeight));
         base.heightProperty().bind(wallHeightPy);
-        base.materialProperty().bind(wallFillMaterialPy);
+        base.materialProperty().bind(fillMaterialPy);
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         Cylinder top = new Cylinder(HTS, coatHeight);
@@ -105,7 +110,7 @@ public interface WallBuilder {
         top.translateXProperty().bind(base.translateXProperty());
         top.translateYProperty().bind(base.translateYProperty());
         top.translateZProperty().bind(wallHeightPy.add(0.5*coatHeight).multiply(-1).add(2*coatHeight));
-        top.materialProperty().bind(wallStrokeMaterialPy);
+        top.materialProperty().bind(strokeMaterialPy);
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         parent.getChildren().add(new Group(base, top));
@@ -115,11 +120,11 @@ public interface WallBuilder {
         Group parent,
         Obstacle obstacle,
         DoubleProperty wallHeightPy, double thickness, double coatHeight,
-        Property<PhongMaterial> wallFillMaterialPy, Property<PhongMaterial> wallStrokeMaterialPy)
+        Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy)
     {
         if (obstacle.isClosed() && obstacle.numSegments() == 4) {
             Vector2f center = obstacle.startPoint().minus(HTS, 0);
-            createCircularWall(parent, center, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+            createCircularWall(parent, center, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
             return;
         }
         int r = HTS;
@@ -130,64 +135,64 @@ public interface WallBuilder {
             if (seg.isVerticalLine()) {
                 Vector2f center = p.plus(seg.vector().scaled(0.5f));
                 double length = seg.vector().length();
-                Node wall = wallCenteredAt(center, thickness, length, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+                Node wall = wallCenteredAt(center, thickness, length, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
                 parent.getChildren().add(wall);
             }
             else if (seg.isHorizontalLine()) {
                 Vector2f center = p.plus(seg.vector().scaled(0.5f));
                 double length = seg.vector().length();
-                Node wall = wallCenteredAt(center, length + thickness, thickness, wallHeightPy, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+                Node wall = wallCenteredAt(center, length + thickness, thickness, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
                 parent.getChildren().add(wall);
             }
             else if (seg.isNWCorner()) {
                 if (seg.ccw()) {
                     Vector2f corner = p.plus(-r, 0);
-                    Node hWall = hWall(corner, p, wallHeightPy, thickness, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
-                    Node vWall = vWall(corner, q, wallHeightPy, thickness, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+                    Node hWall = hWall(corner, p, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
+                    Node vWall = vWall(corner, q, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
                     parent.getChildren().addAll(hWall, vWall);
                 } else {
                     Vector2f corner = p.plus(0, -r);
-                    Node hWall = hWall(corner, q, wallHeightPy, thickness, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
-                    Node vWall = vWall(corner, p, wallHeightPy, thickness, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+                    Node hWall = hWall(corner, q, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
+                    Node vWall = vWall(corner, p, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
                     parent.getChildren().addAll(hWall, vWall);
                 }
             }
             else if (seg.isSWCorner()) {
                 if (seg.ccw()) {
                     Vector2f corner = p.plus(0, r);
-                    Node hWall = hWall(corner, q, wallHeightPy, thickness, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
-                    Node vWall = vWall(corner, p, wallHeightPy, thickness, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+                    Node hWall = hWall(corner, q, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
+                    Node vWall = vWall(corner, p, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
                     parent.getChildren().addAll(hWall, vWall);
                 } else {
                     Vector2f corner = p.plus(-r, 0);
-                    Node hWall = hWall(corner, p, wallHeightPy, thickness, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
-                    Node vWall = vWall(corner, q, wallHeightPy, thickness, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+                    Node hWall = hWall(corner, p, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
+                    Node vWall = vWall(corner, q, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
                     parent.getChildren().addAll(hWall, vWall);
                 }
             }
             else if (seg.isSECorner()) {
                 if (seg.ccw()) {
                     Vector2f corner = p.plus(r, 0);
-                    Node hWall = hWall(corner, p, wallHeightPy, thickness, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
-                    Node vWall = vWall(corner, q, wallHeightPy, thickness, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+                    Node hWall = hWall(corner, p, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
+                    Node vWall = vWall(corner, q, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
                     parent.getChildren().addAll(hWall, vWall);
                 } else {
                     Vector2f corner = p.plus(0, r);
-                    Node hWall = hWall(corner, q, wallHeightPy, thickness, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
-                    Node vWall = vWall(corner, p, wallHeightPy, thickness, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+                    Node hWall = hWall(corner, q, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
+                    Node vWall = vWall(corner, p, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
                     parent.getChildren().addAll(hWall, vWall);
                 }
             }
             else if (seg.isNECorner()) {
                 if (seg.ccw()) {
                     Vector2f corner = p.plus(0, -r);
-                    Node hWall = hWall(corner, q, wallHeightPy, thickness, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
-                    Node vWall = vWall(corner, p, wallHeightPy, thickness, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+                    Node hWall = hWall(corner, q, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
+                    Node vWall = vWall(corner, p, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
                     parent.getChildren().addAll(hWall, vWall);
                 } else {
                     Vector2f corner = p.plus(r, 0);
-                    Node hWall = hWall(corner, p, wallHeightPy, thickness, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
-                    Node vWall = vWall(corner, q, wallHeightPy, thickness, coatHeight, wallFillMaterialPy, wallStrokeMaterialPy);
+                    Node hWall = hWall(corner, p, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
+                    Node vWall = vWall(corner, q, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
                     parent.getChildren().addAll(hWall, vWall);
                 }
             }
