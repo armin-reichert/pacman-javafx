@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 public interface TileMapEditorViewModel {
 
     byte MIN_GRID_SIZE = 8;
-    byte MAX_GRID_SIZE = 48;
+    byte MAX_GRID_SIZE = 64;
 
     byte PALETTE_ID_ACTORS  = 0;
     byte PALETTE_ID_TERRAIN = 1;

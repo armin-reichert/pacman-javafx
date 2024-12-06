@@ -113,44 +113,41 @@ public class TerrainRenderer implements TileMapRenderer {
         for (int i = 0; i < obstacle.segments().size(); ++i) {
             Obstacle.Segment seg = obstacle.segment(i);
             p = p.plus(seg.vector());
+            double x = p.x(), y = p.y();
             if (seg.isStraightLine()) {
-                g.lineTo(p.x(), p.y());
+                g.lineTo(x, y);
             } else {
                 if (seg.isRoundedNWCorner()) {
-                    if (seg.ccw()) g.arc(p.x()+r, p.y(),   r, r,  90, 90);
-                    else           g.arc(p.x(),   p.y()+r, r, r, 180, -90);
+                    if (seg.ccw()) g.arc(x+r, y,   r, r,  90, 90);
+                    else           g.arc(x,   y+r, r, r, 180, -90);
                 }
                 else if (seg.isRoundedSWCorner()) {
-                    if (seg.ccw()) g.arc(p.x(),   p.y()-r, r, r, 180, 90);
-                    else           g.arc(p.x()+r, p.y(),   r, r, 270, -90);
+                    if (seg.ccw()) g.arc(x,   y-r, r, r, 180, 90);
+                    else           g.arc(x+r, y,   r, r, 270, -90);
                 }
                 else if (seg.isRoundedSECorner()) {
-                    if (seg.ccw()) g.arc(p.x()-r, p.y(),   r, r, 270, 90);
-                    else           g.arc(p.x(),   p.y()-r, r, r, 0, -90);
+                    if (seg.ccw()) g.arc(x-r, y,   r, r, 270, 90);
+                    else           g.arc(x,   y-r, r, r, 0, -90);
                 }
                 else if (seg.isRoundedNECorner()) {
-                    if (seg.ccw()) g.arc(p.x(),   p.y()+r, r, r, 0, 90);
-                    else           g.arc(p.x()-r, p.y(),   r, r, 90, -90);
+                    if (seg.ccw()) g.arc(x,   y+r, r, r, 0, 90);
+                    else           g.arc(x-r, y,   r, r, 90, -90);
                 }
                 else if (seg.isAngularNWCorner()) {
-                    if (seg.ccw()) g.lineTo(p.x(),   p.y()-r);
-                    else           g.lineTo(p.x()-r, p.y());
-                    g.lineTo(p.x(), p.y());
+                    if (seg.ccw()) g.lineTo(x,y-r); else g.lineTo(x-r, y);
+                    g.lineTo(x, y);
                 }
                 else if (seg.isAngularSWCorner()) {
-                    if (seg.ccw()) g.lineTo(p.x()-r, p.y());
-                    else           g.lineTo(p.x(), p.y()+r);
-                    g.lineTo(p.x(), p.y());
+                    if (seg.ccw()) g.lineTo(x-r, y); else g.lineTo(x, y+r);
+                    g.lineTo(x, y);
                 }
                 else if (seg.isAngularSECorner()) {
-                    if (seg.ccw()) g.lineTo(p.x(), p.y()+r);
-                    else           g.lineTo(p.x()-r, p.y());
-                    g.lineTo(p.x(), p.y());
+                    if (seg.ccw()) g.lineTo(x,y+r); else g.lineTo(x-r, y);
+                    g.lineTo(x, y);
                 }
                 else if (seg.isAngularNECorner()) {
-                    if (seg.ccw()) g.lineTo(p.x()+r, p.y());
-                    else           g.lineTo(p.x()-r, p.y()-r);
-                    g.lineTo(p.x(), p.y());
+                    if (seg.ccw()) g.lineTo(x+r, y); else g.lineTo(x-r, y-r);
+                    g.lineTo(x, y);
                 }
             }
         }
@@ -173,18 +170,16 @@ public class TerrainRenderer implements TileMapRenderer {
 
     // assume we always have a pair of horizontally neighbored doors
     private void drawDoor(GraphicsContext g, TileMap map, Vector2i tile, double lineWidth, Color doorColor) {
-        boolean leftDoor = map.get(tile.plus(Direction.RIGHT.vector())) == Tiles.DOOR;
-        double height = doubleStrokeInnerWidth * 0.75; // TODO check this
-        double x = tile.x() * TS, y = tile.y() * TS;
-        double oy = y + 0.5 * (TS - height);
+        boolean leftDoor = map.get(tile.y(), tile.x() + 1) == Tiles.DOOR;
+        double x = tile.x() * TS, y = tile.y() * TS + 3;
         if (leftDoor) {
             g.setFill(mapBackgroundColor);
-            g.fillRect(x, y, 2 * TS, TS);
-            g.setFill(wallStrokeColor);
-            g.fillRect(x - lineWidth, oy, lineWidth, height);
-            g.fillRect(x + 2 * TS, oy, lineWidth, height);
+            g.fillRect(x, y - 1, 2*TS, 4);
             g.setFill(doorColor);
-            g.fillRect(x, y + 0.5 * (TS - height), 2 * TS, height);
+            g.fillRect(x, y, 2*TS, 2);
+            g.setFill(wallStrokeColor);
+            g.fillRect(x-1, y-1, 1, 3);
+            g.fillRect(x+2*TS, y-1, 1, 3);
         }
     }
 }
