@@ -47,18 +47,13 @@ public class ObstacleBuilder {
 
     private final TileMap terrain;
     private final Set<Vector2i> exploredTiles = new HashSet<>();
-    private final List<Vector2i> tilesWithErrors = new ArrayList<>();
     private Cursor cursor;
 
     public ObstacleBuilder(TileMap terrain) {
         this.terrain = terrain;
     }
 
-    public List<Vector2i> tilesWithErrors() {
-        return Collections.unmodifiableList(tilesWithErrors);
-    }
-
-    public List<Obstacle> buildObstacles() {
+    public List<Obstacle> buildObstacles(List<Vector2i> tilesWithErrors) {
         tilesWithErrors.clear();
         List<Obstacle> obstacles = new ArrayList<>();
 
@@ -68,7 +63,7 @@ public class ObstacleBuilder {
         terrain.tiles()
             .filter(tile -> tile.x() == 0 || tile.x() == terrain.numCols() - 1)
             .filter(Predicate.not(exploredTiles::contains))
-            .map(tile -> buildOpenObstacle(tile, tile.x() == 0))
+            .map(tile -> buildOpenObstacle(tile, tile.x() == 0, tilesWithErrors))
             .filter(Objects::nonNull)
             .forEach(obstacles::add);
 
@@ -78,7 +73,7 @@ public class ObstacleBuilder {
                 terrain.get(tile) == Tiles.DCORNER_NW ||
                 terrain.get(tile) == Tiles.DCORNER_ANGULAR_NW) // house top-left corner
             .filter(Predicate.not(exploredTiles::contains))
-            .map(this::buildClosedObstacleWithTopLeftTile)
+            .map(cornerNW -> buildClosedObstacle(cornerNW, tilesWithErrors))
             .forEach(obstacles::add);
 
         Logger.info("Found {} obstacles", obstacles.size());
@@ -87,7 +82,7 @@ public class ObstacleBuilder {
         return obstacles;
     }
 
-    private Obstacle buildClosedObstacleWithTopLeftTile(Vector2i cornerNW) {
+    private Obstacle buildClosedObstacle(Vector2i cornerNW, List<Vector2i> tilesWithErrors) {
         Vector2f startPoint = cornerNW.scaled((float)TS).plus(TS, HTS);
         byte startTileContent = terrain.get(cornerNW);
         boolean doubleWalls = startTileContent == Tiles.DCORNER_NW || startTileContent == Tiles.DCORNER_ANGULAR_NW;
@@ -97,7 +92,7 @@ public class ObstacleBuilder {
         cursor = new Cursor(null, cornerNW);
         cursor.move(DOWN);
 
-        buildRestOfObstacle(obstacle, cornerNW, true);
+        buildRestOfObstacle(obstacle, cornerNW, true, tilesWithErrors);
 
         if (obstacle.isClosed()) {
             Logger.debug("Closed obstacle, top-left tile={}, map ID={}:", cornerNW, terrain.hashCode());
@@ -108,7 +103,7 @@ public class ObstacleBuilder {
         return obstacle;
     }
 
-    private Obstacle buildOpenObstacle(Vector2i startTile, boolean startsAtLeftBorder) {
+    private Obstacle buildOpenObstacle(Vector2i startTile, boolean startsAtLeftBorder, List<Vector2i> tilesWithErrors) {
         cursor = new Cursor(null, startTile);
         Vector2f startPoint = startTile.scaled((float) TS).plus(startsAtLeftBorder ? 0 : TS, HTS);
         byte startTileContent = terrain.get(startTile);
@@ -139,19 +134,19 @@ public class ObstacleBuilder {
             return null;
         }
 
-        buildRestOfObstacle(obstacle, startTile, true);
+        buildRestOfObstacle(obstacle, startTile, true, tilesWithErrors);
         Logger.debug("Open obstacle, start tile={}, segment count={}, map ID={}:",
             startTile, obstacle.segments().size(), terrain.hashCode());
         Logger.debug(obstacle);
         return obstacle;
     }
 
-    private void errorAtCurrentTile() {
+    private void errorAtCurrentTile(List<Vector2i> tilesWithErrors) {
         Logger.error("Did not expect content {} at tile {}", terrain.get(cursor.currentTile), cursor.currentTile);
         tilesWithErrors.add(cursor.currentTile);
     }
 
-    private void buildRestOfObstacle(Obstacle obstacle, Vector2i startTile, boolean ccw) {
+    private void buildRestOfObstacle(Obstacle obstacle, Vector2i startTile, boolean ccw, List<Vector2i> tilesWithErrors) {
         int bailout = 0;
         while (bailout < 1000) {
             ++bailout;
@@ -163,7 +158,7 @@ public class ObstacleBuilder {
             boolean doubleWall = isDoubleWall(tileContent);
             if (tileContent != Tiles.DOOR &&
                 (obstacle.hasDoubleWalls() && !doubleWall || !obstacle.hasDoubleWalls() && doubleWall)) {
-                errorAtCurrentTile();
+                errorAtCurrentTile(tilesWithErrors);
                 break;
             }
 
@@ -177,7 +172,7 @@ public class ObstacleBuilder {
                         obstacle.addSegment(arrow(UP, TS), ccw, tileContent);
                         cursor.move(UP);
                     } else {
-                        errorAtCurrentTile();
+                        errorAtCurrentTile(tilesWithErrors);
                     }
                 }
 
@@ -189,7 +184,7 @@ public class ObstacleBuilder {
                         obstacle.addSegment(arrow(LEFT, TS), ccw, tileContent);
                         cursor.move(LEFT);
                     } else {
-                        errorAtCurrentTile();
+                        errorAtCurrentTile(tilesWithErrors);
                     }
                 }
 
@@ -203,7 +198,7 @@ public class ObstacleBuilder {
                         obstacle.addSegment(SEG_CORNER_SW_UP, ccw, tileContent);
                         cursor.move(UP);
                     } else {
-                        errorAtCurrentTile();
+                        errorAtCurrentTile(tilesWithErrors);
                     }
                 }
 
@@ -219,7 +214,7 @@ public class ObstacleBuilder {
                         cursor.move(UP);
                     }
                     else {
-                        errorAtCurrentTile();
+                        errorAtCurrentTile(tilesWithErrors);
                     }
                 }
 
@@ -235,7 +230,7 @@ public class ObstacleBuilder {
                         cursor.move(DOWN);
                     }
                     else {
-                        errorAtCurrentTile();
+                        errorAtCurrentTile(tilesWithErrors);
                     }
                 }
 
@@ -251,11 +246,11 @@ public class ObstacleBuilder {
                         cursor.move(DOWN);
                     }
                     else {
-                        errorAtCurrentTile();
+                        errorAtCurrentTile(tilesWithErrors);
                     }
                 }
 
-                default -> errorAtCurrentTile();
+                default -> errorAtCurrentTile(tilesWithErrors);
             }
 
             if (cursor.currentTile.equals(startTile) || terrain.outOfBounds(cursor.currentTile)) {

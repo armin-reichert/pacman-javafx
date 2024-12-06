@@ -101,8 +101,9 @@ public class WorldMap {
 
     public List<Vector2i> updateObstacleList() {
         var ob = new ObstacleBuilder(terrain);
-        obstacles = ob.buildObstacles();
-        return ob.tilesWithErrors();
+        List<Vector2i> tilesWithErrors = new ArrayList<>();
+        obstacles = ob.buildObstacles(tilesWithErrors);
+        return tilesWithErrors;
     }
 
     public List<Obstacle> obstacles() {
