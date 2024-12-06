@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.maps.rendering;
 
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
@@ -100,7 +99,8 @@ public class TerrainRenderer implements TileMapRenderer {
             .filter(Predicate.not(Obstacle::hasDoubleWalls))
             .forEach(obstacle -> drawObstacle(g, obstacle, singleStrokeWidth, true, wallStrokeColor));
 
-        terrainMap.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, terrainMap, door, singleStrokeWidth, doorColor));
+        terrainMap.tiles(Tiles.DOOR)
+            .forEach(doorTile -> drawDoor(g, doorTile, terrainMap.get(doorTile.y(), doorTile.x() + 1) == Tiles.DOOR));
 
         g.restore();
     }
@@ -153,10 +153,10 @@ public class TerrainRenderer implements TileMapRenderer {
         }
         if (obstacle.isClosed()) {
             g.closePath();
-        }
-        if (fill) {
-            g.setFill(wallFillColor);
-            g.fill();
+            if (fill) {
+                g.setFill(wallFillColor);
+                g.fill();
+            }
         }
         g.setLineWidth(lineWidth);
         g.setStroke(strokeColor);
@@ -169,8 +169,7 @@ public class TerrainRenderer implements TileMapRenderer {
     }
 
     // assume we always have a pair of horizontally neighbored doors
-    private void drawDoor(GraphicsContext g, TileMap map, Vector2i tile, double lineWidth, Color doorColor) {
-        boolean leftDoor = map.get(tile.y(), tile.x() + 1) == Tiles.DOOR;
+    private void drawDoor(GraphicsContext g, Vector2i tile, boolean leftDoor) {
         double x = tile.x() * TS, y = tile.y() * TS + 3;
         if (leftDoor) {
             g.setFill(mapBackgroundColor);

@@ -28,6 +28,7 @@ import de.amr.games.pacman.ui2d.util.FlashMessageView;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
 import de.amr.games.pacman.ui2d.util.Picker;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -38,6 +39,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
@@ -98,6 +100,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         }
     };
 
+    protected ObjectProperty<Node> pagePy = new SimpleObjectProperty<>();
+
     protected final Map<GameVariant, GameSceneConfig> gameSceneConfigByVariant = new EnumMap<>(GameVariant.class);
 
     protected final FlashMessageView flashMessageLayer = new FlashMessageView();
@@ -106,7 +110,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected StartPage startPage;
     protected GamePage gamePage;
     protected EditorPage editorPage;
-    protected Node currentPage;
 
     protected boolean scoreVisible;
     protected boolean signatureShown; //TODO make this work again for all intro screens
@@ -194,7 +197,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
      */
     protected void runOnEveryTick() {
         try {
-            if (currentPage == gamePage) {
+            if (pagePy.get() == gamePage) {
                 currentGameScene().ifPresent(gameScene -> {
                     if (gameScene instanceof  GameScene2D gameScene2D) {
                         gameScene2D.draw();
@@ -219,15 +222,19 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected Scene createMainScene(Dimension2D size) {
         Scene mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
 
-        var mutedIcon = createIcon(assets.get("icon.mute"), 48, sound().mutedProperty());
-        var autoIcon = createIcon(assets.get("icon.auto"), 48, PY_AUTOPILOT);
-        var pauseIcon = createIcon(assets.get("icon.pause"), 64, clock.pausedPy);
-
+        ImageView mutedIcon = createIcon(assets.get("icon.mute"), 48, sound().mutedProperty());
+        ImageView autoIcon = createIcon(assets.get("icon.auto"), 48, PY_AUTOPILOT);
         var bottomRightIcons = new HBox(autoIcon, mutedIcon);
+
+        ImageView pauseIcon = createIcon(assets.get("icon.pause"), 64, clock.pausedPy);
+
         bottomRightIcons.setMaxWidth(128);
         bottomRightIcons.setMaxHeight(64);
         StackPane.setAlignment(bottomRightIcons, Pos.BOTTOM_RIGHT);
         StackPane.setAlignment(pauseIcon, Pos.CENTER);
+
+        bottomRightIcons.visibleProperty().bind(
+                Bindings.createBooleanBinding(() -> pagePy.get() != editorPage, pagePy));
 
         sceneRoot.getChildren().addAll(new Pane(), flashMessageLayer, pauseIcon, bottomRightIcons);
 
@@ -240,7 +247,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             } else if (e.getCode() == KeyCode.M && e.isAltDown()) {
                 sound().toggleMuted();
             } else {
-                if (currentPage instanceof GameActionProvider actionProvider) {
+                if (pagePy.get() instanceof GameActionProvider actionProvider) {
                     actionProvider.handleInput(this);
                 }
             }
@@ -485,17 +492,18 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     @Override
     public void selectPage(Node page) {
-        if (page != currentPage) {
-            if (currentPage instanceof GameActionProvider actionProvider) {
+        Node selectedPage = pagePy.get();
+        if (page != selectedPage) {
+            if (selectedPage instanceof GameActionProvider actionProvider) {
                 actionProvider.unregisterGameActionKeyBindings(keyboard());
             }
             if (page instanceof GameActionProvider actionProvider) {
                 actionProvider.registerGameActionKeyBindings(keyboard());
             }
-            currentPage = page;
+            pagePy.set(page);
             gamePage.setSize(stage.getScene().getWidth(), stage.getScene().getHeight());
-            sceneRoot.getChildren().set(0, currentPage);
-            currentPage.requestFocus();
+            sceneRoot.getChildren().set(0, page);
+            page.requestFocus();
         }
     }
 
@@ -532,7 +540,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         Logger.trace("Received: {}", event);
         // call event specific hook method:
         GameEventListener.super.onGameEvent(event);
-        if (currentPage == gamePage) {
+        if (pagePy.get() == gamePage) {
             updateGameScene(false);
             // dispatch event to current game scene if any
             currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));

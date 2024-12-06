@@ -463,7 +463,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
     }
 
     private void createZoomSlider() {
-        var sliderZoom = new Slider(MIN_GRID_SIZE, MAX_GRID_SIZE, 2 * MIN_GRID_SIZE);
+        var sliderZoom = new Slider(MIN_GRID_SIZE, MAX_GRID_SIZE, 0.5 * (MIN_GRID_SIZE + MAX_GRID_SIZE));
         sliderZoom.valueProperty().bindBidirectional(gridSizePy);
         sliderZoom.setShowTickLabels(false);
         sliderZoom.setShowTickMarks(true);
