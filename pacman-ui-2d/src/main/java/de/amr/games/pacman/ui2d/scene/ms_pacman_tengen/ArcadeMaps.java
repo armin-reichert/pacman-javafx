@@ -18,7 +18,7 @@ public class ArcadeMaps {
         image = assets.image(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".mazes.arcade");
     }
 
-    public ImageArea sprite(int mapNumber, NES_ColorScheme colorScheme) {
+    public ImageAreaWithColorScheme sprite(int mapNumber, NES_ColorScheme colorScheme) {
         int index = switch (mapNumber) {
             case 1 -> 0;
             case 2 -> 1;
@@ -39,6 +39,6 @@ public class ArcadeMaps {
         };
         int col = index % 3, row = index / 3;
         int width = 28*8, height = 31*8;
-        return new ImageArea(image, new RectArea(col * width, row * height, width, height));
+        return new ImageAreaWithColorScheme(image, new RectArea(col * width, row * height, width, height), colorScheme);
     }
 }

@@ -54,7 +54,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     private final Canvas canvas;
 
     private Color bgColor = Color.BLACK;
-    private ImageArea mapSprite;
+    private ImageAreaWithColorScheme mapSprite;
     private boolean blinking;
     private boolean levelNumberBoxesVisible;
     private Vector2f messageAnchorPosition;
@@ -82,7 +82,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             case MINI    -> nonArcadeMaps.miniMapSprite(mapNumber, nesColorScheme);
             case BIG     -> nonArcadeMaps.bigMapSprite(mapNumber, nesColorScheme);
             // Hack for easy STRANGE map sprite identification:
-            case STRANGE -> nonArcadeMaps.strangeMapSprite( worldMap.getConfigValue("levelNumber"));
+            case STRANGE -> nonArcadeMaps.strangeMapSprite(worldMap.getConfigValue("levelNumber"));
         };
 
         terrainRenderer.setMapBackgroundColor(bgColor);

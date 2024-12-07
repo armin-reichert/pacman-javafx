@@ -4,16 +4,14 @@
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameAssets2D;
-import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.scene.image.Image;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.RectArea.rect;
+import static de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme.*;
 
 public class NonArcadeMaps {
 
@@ -40,11 +38,7 @@ public class NonArcadeMaps {
         image = assets.image(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".mazes.non_arcade");
     }
 
-    /**
-     * @param spriteNumber number (1 based) of map sprite in sprite sheet (row-wise)
-     * @return map sprite in non-Arcade maps sprite sheet
-     */
-    public ImageArea sprite(int spriteNumber) {
+    private ImageAreaWithColorScheme sprite(int spriteNumber, NES_ColorScheme colorScheme) {
         int columnIndex, y;
         switch (spriteNumber) {
             case 1,2,3,4,5,6,7,8            -> { columnIndex = (spriteNumber - 1);  y = 0;    }
@@ -55,7 +49,8 @@ public class NonArcadeMaps {
             default -> throw new IllegalArgumentException("Illegal non-Arcade map number: " + spriteNumber);
         }
         int width = 28 * TS, height = STRANGE_MAPS_ROW_COUNTS[spriteNumber - 1] * TS;
-        return new ImageArea(image, new RectArea(columnIndex * width, y, width, height));
+        RectArea area = new RectArea(columnIndex * width, y, width, height);
+        return new ImageAreaWithColorScheme(image, area, colorScheme);
     }
 
     // Creates pattern (00000000 11111111 22222222 11111111)...
@@ -66,7 +61,7 @@ public class NonArcadeMaps {
         return STRANGE_MAP_15_SPRITES[index == 3 ? 1 : index];
     }
 
-    public ImageArea miniMapSprite(int mapNumber, NES_ColorScheme colorScheme) {
+    public ImageAreaWithColorScheme miniMapSprite(int mapNumber, NES_ColorScheme colorScheme) {
         int spriteNumber = switch (mapNumber) {
             case 1 -> 34;
             case 2 -> 35;
@@ -76,10 +71,19 @@ public class NonArcadeMaps {
             case 6 -> 37;
             default -> throw new IllegalArgumentException("Illegal MINI map number: " + mapNumber);
         };
-        return sprite(spriteNumber);
+        NES_ColorScheme colorSchemeInSheet = switch (mapNumber) {
+            case 1 -> _36_15_20_PINK_RED_WHITE;
+            case 2 -> _21_20_28_BLUE_WHITE_YELLOW;
+            case 3 -> _35_28_20_PINK_YELLOW_WHITE;
+            case 4 -> _28_16_20_YELLOW_RED_WHITE;
+            case 5 -> _00_2A_24_GRAY_GREEN_PINK;
+            case 6 -> _23_20_2B_VIOLET_WHITE_GREEN;
+            default -> null;
+        };
+        return sprite(spriteNumber, colorScheme.equals(colorSchemeInSheet) ? colorScheme : null);
     }
 
-    public ImageArea bigMapSprite(int mapNumber, NES_ColorScheme colorScheme) {
+    public ImageAreaWithColorScheme bigMapSprite(int mapNumber, NES_ColorScheme colorScheme) {
         int spriteNumber = switch (mapNumber) {
             case  1 -> 19;
             case  2 -> 20;
@@ -94,10 +98,24 @@ public class NonArcadeMaps {
             case 11 -> 33;
             default -> throw new IllegalArgumentException("Illegal BIG map number: " + mapNumber);
         };
-        return sprite(spriteNumber);
+        NES_ColorScheme colorSchemeInSheet = switch (mapNumber) {
+            case  1 -> _07_20_20_BROWN_WHITE_WHITE;
+            case  2 -> _15_25_20_RED_ROSE_WHITE;
+            case  3 -> _0F_20_1C_BLACK_WHITE_GREEN;
+            case  4 -> _19_20_20_GREEN_WHITE_WHITE;
+            case  5 -> _0C_20_14_GREEN_WHITE_VIOLET;
+            case  6 -> _25_20_20_ROSE_WHITE_WHITE;
+            case  7 -> _0F_01_20_BLACK_BLUE_WHITE;
+            case  8 -> _28_20_2A_YELLOW_WHITE_GREEN;
+            case  9 -> _03_20_20_VIOLET_WHITE_WHITE;
+            case 10 -> _10_20_28_GRAY_WHITE_YELLOW;
+            case 11 -> _15_25_20_RED_ROSE_WHITE;
+            default -> null;
+        };
+        return sprite(spriteNumber, colorScheme.equals(colorSchemeInSheet) ? colorScheme : null);
     }
 
-    public ImageArea strangeMapSprite(int levelNumber) {
-        return sprite(levelNumber);
+    public ImageAreaWithColorScheme strangeMapSprite(int levelNumber) {
+        return sprite(levelNumber, null); // TODO
     }
 }

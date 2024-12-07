@@ -22,6 +22,7 @@ public enum NES_ColorScheme {
     _07_20_20_BROWN_WHITE_WHITE   (0x07, 0x20, 0x20),
     _17_20_20_BROWN_WHITE_WHITE   (0x17, 0x20, 0x20),
     _10_20_28_GRAY_WHITE_YELLOW   (0x10, 0x20, 0x28),
+    _00_2A_24_GRAY_GREEN_PINK     (0x00, 0x2a, 0x24),
     _0C_20_14_GREEN_WHITE_VIOLET  (0x0c, 0x20, 0x14),
     _19_20_20_GREEN_WHITE_WHITE   (0x19, 0x20, 0x20),
     _1A_20_28_GREEN_WHITE_YELLOW  (0x1a, 0x20, 0x28),
@@ -38,6 +39,7 @@ public enum NES_ColorScheme {
     _03_20_20_VIOLET_WHITE_WHITE  (0x03, 0x20, 0x20),
     _04_20_20_VIOLET_WHITE_WHITE  (0x04, 0x20, 0x20),
     _13_20_28_VIOLET_WHITE_YELLOW (0x13, 0x20, 0x28),
+    _28_16_20_YELLOW_RED_WHITE    (0x28, 0x16, 0x20),
     _28_20_2A_YELLOW_WHITE_GREEN  (0x28, 0x20, 0x2a);
 
     NES_ColorScheme(int fillIndex, int strokeIndex, int pelletIndex) {
