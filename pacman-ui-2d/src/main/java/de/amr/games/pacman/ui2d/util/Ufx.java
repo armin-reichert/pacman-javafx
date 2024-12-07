@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.util;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.Transition;
@@ -210,5 +211,14 @@ public interface Ufx {
             }
         }
         return target;
+    }
+
+    static Image exchange_NESColorScheme(Image source, NES_ColorScheme from, NES_ColorScheme to) {
+        Map<String, ColorChange> changes = Map.of(
+            "fill", new ColorChange(Color.valueOf(from.fillColor()), Color.valueOf(to.fillColor())),
+            "stroke", new ColorChange(Color.valueOf(from.strokeColor()), Color.valueOf(to.strokeColor())),
+            "pellet", new ColorChange(Color.valueOf(from.pelletColor()), Color.valueOf(to.pelletColor()))
+        );
+        return exchangeColors(changes, source);
     }
 }
