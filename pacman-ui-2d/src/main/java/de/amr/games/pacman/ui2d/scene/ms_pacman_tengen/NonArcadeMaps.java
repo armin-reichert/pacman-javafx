@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.rendering.ImageArea;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
@@ -65,8 +66,7 @@ public class NonArcadeMaps {
         return STRANGE_MAP_15_SPRITES[index == 3 ? 1 : index];
     }
 
-    public ImageArea miniMapSprite(WorldMap worldMap) {
-        int mapNumber = worldMap.getConfigValue("mapNumber");
+    public ImageArea miniMapSprite(int mapNumber, NES_ColorScheme colorScheme) {
         int spriteNumber = switch (mapNumber) {
             case 1 -> 34;
             case 2 -> 35;
@@ -79,8 +79,7 @@ public class NonArcadeMaps {
         return sprite(spriteNumber);
     }
 
-    public ImageArea bigMapSprite(WorldMap worldMap) {
-        int mapNumber = worldMap.getConfigValue("mapNumber");
+    public ImageArea bigMapSprite(int mapNumber, NES_ColorScheme colorScheme) {
         int spriteNumber = switch (mapNumber) {
             case  1 -> 19;
             case  2 -> 20;
@@ -98,8 +97,7 @@ public class NonArcadeMaps {
         return sprite(spriteNumber);
     }
 
-    public ImageArea strangeMapSprite(WorldMap worldMap) {
-        int levelNumber = worldMap.getConfigValue("levelNumber");
+    public ImageArea strangeMapSprite(int levelNumber) {
         return sprite(levelNumber);
     }
 }
