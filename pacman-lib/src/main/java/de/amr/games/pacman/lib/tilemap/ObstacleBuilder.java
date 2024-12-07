@@ -21,12 +21,12 @@ public class ObstacleBuilder {
     static class Cursor {
         private Vector2i prevTile, currentTile;
         
-        Cursor(Vector2i prevTile, Vector2i currentTile) {
-            this.prevTile = prevTile;
-            this.currentTile = currentTile;
+        Cursor(Vector2i tile) {
+            prevTile = null;
+            currentTile = tile;
         }
         
-        boolean isMoving(Direction dir) {
+        boolean points(Direction dir) {
             return prevTile.plus(dir.vector()).equals(currentTile);
         }
 
@@ -90,15 +90,12 @@ public class ObstacleBuilder {
     private Obstacle buildClosedObstacle(Vector2i cornerNW, List<Vector2i> tilesWithErrors) {
         Vector2f startPoint = cornerNW.scaled((float)TS).plus(TS, HTS);
         byte startTileContent = terrain.get(cornerNW);
-        boolean doubleWalls = startTileContent == Tiles.DCORNER_NW || startTileContent == Tiles.DCORNER_ANGULAR_NW;
-        Obstacle obstacle = new Obstacle(startPoint, doubleWalls);
+        Obstacle obstacle = new Obstacle(startPoint, isDoubleWall(startTileContent));
         obstacle.addSegment(SEG_CORNER_NW_DOWN, true, startTileContent);
-
-        cursor = new Cursor(null, cornerNW);
+        cursor = new Cursor(cornerNW);
         cursor.move(DOWN);
         exploredTiles.add(cornerNW);
         buildRestOfObstacle(obstacle, cornerNW, true, tilesWithErrors);
-
         if (obstacle.isClosed()) {
             Logger.debug("Closed obstacle, top-left tile={}, map ID={}:", cornerNW, terrain.hashCode());
             Logger.debug(obstacle);
@@ -109,15 +106,14 @@ public class ObstacleBuilder {
     }
 
     private Obstacle buildOpenObstacle(Vector2i startTile, boolean startsAtLeftBorder, List<Vector2i> tilesWithErrors) {
-        cursor = new Cursor(null, startTile);
         Vector2f startPoint = startTile.scaled((float) TS).plus(startsAtLeftBorder ? 0 : TS, HTS);
         byte startTileContent = terrain.get(startTile);
-        boolean doubleWall = isDoubleWall(startTileContent);
-        var obstacle = new Obstacle(startPoint, doubleWall);
+        var obstacle = new Obstacle(startPoint, isDoubleWall(startTileContent));
+        cursor = new Cursor(startTile);
         if (startTileContent == Tiles.DWALL_H) {
-            Direction initialDir = startsAtLeftBorder ? RIGHT : LEFT;
-            obstacle.addSegment(arrow(initialDir, TS), true, Tiles.DWALL_H);
-            cursor.move(initialDir);
+            Direction startDir = startsAtLeftBorder ? RIGHT : LEFT;
+            obstacle.addSegment(arrow(startDir, TS), true, Tiles.DWALL_H);
+            cursor.move(startDir);
         }
         else if (startsAtLeftBorder && startTileContent == Tiles.DCORNER_SE) {
             obstacle.addSegment(SEG_CORNER_SE_UP, true, Tiles.DCORNER_SE);
@@ -139,7 +135,7 @@ public class ObstacleBuilder {
             return null;
         }
         exploredTiles.add(startTile);
-        buildRestOfObstacle(obstacle, startTile, true, tilesWithErrors);
+        buildRestOfObstacle(obstacle, startTile, obstacle.segment(0).ccw(), tilesWithErrors);
         Logger.debug("Open obstacle, start tile={}, segment count={}, map ID={}:",
             startTile, obstacle.segments().size(), terrain.hashCode());
         Logger.debug(obstacle);
@@ -160,7 +156,9 @@ public class ObstacleBuilder {
             }
             exploredTiles.add(cursor.currentTile);
             byte tileContent = terrain.get(cursor.currentTile);
+
             boolean doubleWall = isDoubleWall(tileContent);
+            // check if obstacle tiles have same wall strength, ignore doors
             if (tileContent != Tiles.DOOR &&
                 (obstacle.hasDoubleWalls() && !doubleWall || !obstacle.hasDoubleWalls() && doubleWall)) {
                 errorAtCurrentTile(tilesWithErrors);
@@ -170,10 +168,10 @@ public class ObstacleBuilder {
             switch (tileContent) {
 
                 case Tiles.WALL_V, Tiles.DWALL_V -> {
-                    if (cursor.isMoving(DOWN)) {
+                    if (cursor.points(DOWN)) {
                         obstacle.addSegment(arrow(DOWN, TS), ccw, tileContent);
                         cursor.move(DOWN);
-                    } else if (cursor.isMoving(UP)) {
+                    } else if (cursor.points(UP)) {
                         obstacle.addSegment(arrow(UP, TS), ccw, tileContent);
                         cursor.move(UP);
                     } else {
@@ -182,10 +180,10 @@ public class ObstacleBuilder {
                 }
 
                 case Tiles.WALL_H, Tiles.DWALL_H, Tiles.DOOR -> {
-                    if (cursor.isMoving(RIGHT)) {
+                    if (cursor.points(RIGHT)) {
                         obstacle.addSegment(arrow(RIGHT, TS), ccw, tileContent);
                         cursor.move(RIGHT);
-                    } else if (cursor.isMoving(LEFT)) {
+                    } else if (cursor.points(LEFT)) {
                         obstacle.addSegment(arrow(LEFT, TS), ccw, tileContent);
                         cursor.move(LEFT);
                     } else {
@@ -194,11 +192,11 @@ public class ObstacleBuilder {
                 }
 
                 case Tiles.CORNER_SW, Tiles.DCORNER_SW, Tiles.DCORNER_ANGULAR_SW -> {
-                    if (cursor.isMoving(DOWN)) {
+                    if (cursor.points(DOWN)) {
                         ccw = true;
                         obstacle.addSegment(SEG_CORNER_SW_DOWN, ccw, tileContent);
                         cursor.move(RIGHT);
-                    } else if (cursor.isMoving(LEFT)) {
+                    } else if (cursor.points(LEFT)) {
                         ccw = false;
                         obstacle.addSegment(SEG_CORNER_SW_UP, ccw, tileContent);
                         cursor.move(UP);
@@ -208,12 +206,12 @@ public class ObstacleBuilder {
                 }
 
                 case Tiles.CORNER_SE, Tiles.DCORNER_SE, Tiles.DCORNER_ANGULAR_SE -> {
-                    if (cursor.isMoving(DOWN)) {
+                    if (cursor.points(DOWN)) {
                         ccw = false;
                         obstacle.addSegment(SEG_CORNER_SE_DOWN, ccw, tileContent);
                         cursor.move(LEFT);
                     }
-                    else if (cursor.isMoving(RIGHT)) {
+                    else if (cursor.points(RIGHT)) {
                         ccw = true;
                         obstacle.addSegment(SEG_CORNER_SE_UP, ccw, tileContent);
                         cursor.move(UP);
@@ -224,12 +222,12 @@ public class ObstacleBuilder {
                 }
 
                 case Tiles.CORNER_NE, Tiles.DCORNER_NE, Tiles.DCORNER_ANGULAR_NE -> {
-                    if (cursor.isMoving(UP)) {
+                    if (cursor.points(UP)) {
                         ccw = true;
                         obstacle.addSegment(SEG_CORNER_NE_UP, ccw, tileContent);
                         cursor.move(LEFT);
                     }
-                    else if (cursor.isMoving(RIGHT)) {
+                    else if (cursor.points(RIGHT)) {
                         ccw = false;
                         obstacle.addSegment(SEG_CORNER_NE_DOWN, ccw, tileContent);
                         cursor.move(DOWN);
@@ -240,12 +238,12 @@ public class ObstacleBuilder {
                 }
 
                 case Tiles.CORNER_NW, Tiles.DCORNER_NW, Tiles.DCORNER_ANGULAR_NW -> {
-                    if (cursor.isMoving(UP)) {
+                    if (cursor.points(UP)) {
                         ccw = false;
                         obstacle.addSegment(SEG_CORNER_NW_UP, ccw, tileContent);
                         cursor.move(RIGHT);
                     }
-                    else if (cursor.isMoving(LEFT)) {
+                    else if (cursor.points(LEFT)) {
                         ccw = true;
                         obstacle.addSegment(SEG_CORNER_NW_DOWN, ccw, tileContent);
                         cursor.move(DOWN);
