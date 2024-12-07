@@ -89,12 +89,12 @@ public interface WallBuilder {
             wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
     }
 
-    static void createCircularWall(
-        Group parent, Vector2f center,
+    static Node createCircularWall(
+        Vector2f center, double radius,
         DoubleProperty wallHeightPy, double coatHeight,
         Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy) {
 
-        Cylinder base = new Cylinder(HTS, wallHeightPy.get());
+        Cylinder base = new Cylinder(radius, wallHeightPy.get());
         base.setRotationAxis(Rotate.X_AXIS);
         base.setRotate(90);
         base.setTranslateX(center.x());
@@ -104,7 +104,7 @@ public interface WallBuilder {
         base.materialProperty().bind(fillMaterialPy);
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
-        Cylinder top = new Cylinder(HTS, coatHeight);
+        Cylinder top = new Cylinder(radius, coatHeight);
         top.setRotationAxis(Rotate.X_AXIS);
         top.setRotate(90);
         top.translateXProperty().bind(base.translateXProperty());
@@ -113,7 +113,7 @@ public interface WallBuilder {
         top.materialProperty().bind(strokeMaterialPy);
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
-        parent.getChildren().add(new Group(base, top));
+        return new Group(base, top);
     }
 
     static void buildObstacleWalls(
@@ -123,8 +123,9 @@ public interface WallBuilder {
         Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy)
     {
         if (obstacle.isClosed() && obstacle.numSegments() == 4) {
-            Vector2f center = obstacle.startPoint().minus(HTS, 0);
-            createCircularWall(parent, center, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
+            Vector2f center = obstacle.startPoint().plus(0, HTS);
+            Node wall = createCircularWall(center, HTS, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
+            parent.getChildren().add(wall);
             return;
         }
         int r = HTS;
