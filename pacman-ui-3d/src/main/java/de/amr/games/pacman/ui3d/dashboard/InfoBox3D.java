@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.InfoBox;
 import de.amr.games.pacman.ui2d.dashboard.InfoText;
-import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
+import de.amr.games.pacman.ui2d.scene.common.CameraControlledView;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.util.NightMode;
@@ -125,7 +125,7 @@ public class InfoBox3D extends InfoBox {
 
     private String sceneViewportSizeInfo() {
         if (context.currentGameScene().isPresent()
-            && context.currentGameScene().get() instanceof CameraControlledGameScene sgs) {
+            && context.currentGameScene().get() instanceof CameraControlledView sgs) {
             return "%.0fx%.0f".formatted(
                 sgs.viewPortWidthProperty().get(),
                 sgs.viewPortHeightProperty().get()
@@ -151,7 +151,7 @@ public class InfoBox3D extends InfoBox {
 
     private String sceneCameraInfo() {
         if (context.currentGameScene().isPresent()
-            && context.currentGameScene().get() instanceof CameraControlledGameScene scrollableGameScene) {
+            && context.currentGameScene().get() instanceof CameraControlledView scrollableGameScene) {
             var cam = scrollableGameScene.camera();
             return String.format("rot=%.0f x=%.0f y=%.0f z=%.0f",
                 cam.getRotate(), cam.getTranslateX(), cam.getTranslateY(), cam.getTranslateZ());

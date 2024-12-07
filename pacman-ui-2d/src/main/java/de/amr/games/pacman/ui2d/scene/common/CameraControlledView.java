@@ -8,7 +8,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.scene.Camera;
 import javafx.scene.Node;
 
-public interface CameraControlledGameScene {
+public interface CameraControlledView {
     DoubleProperty viewPortWidthProperty();
     DoubleProperty viewPortHeightProperty();
     Node viewPort();

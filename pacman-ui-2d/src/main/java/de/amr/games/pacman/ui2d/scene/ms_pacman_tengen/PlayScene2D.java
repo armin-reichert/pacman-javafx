@@ -18,7 +18,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.ui2d.input.Keyboard;
-import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
+import de.amr.games.pacman.ui2d.scene.common.CameraControlledView;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.sound.GameSound;
@@ -56,7 +56,7 @@ import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengen
  *
  * @author Armin Reichert
  */
-public class PlayScene2D extends GameScene2D implements CameraControlledGameScene {
+public class PlayScene2D extends GameScene2D implements CameraControlledView {
 
     // (NES screen width, BIG map height (42 tiles) + 2 extra tile rows)
     private static final Vector2i UNSCALED_CANVAS_SIZE = v2i(NES_SIZE.x(), 44 * TS);
@@ -131,13 +131,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
     private final Canvas canvas;
     private final MovingCamera movingCamera;
     private final ParallelCamera fixedCamera;
-    private final ObjectProperty<SceneDisplayMode> displayModePy = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING) {
-        @Override
-        protected void invalidated() {
-            SceneDisplayMode mode = get();
-            fxSubScene.setCamera(mode == SceneDisplayMode.SCROLLING ? movingCamera : fixedCamera);
-        }
-    };
+    private final ObjectProperty<SceneDisplayMode> displayModePy = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
 
     private MessageMovement messageMovement;
     private LevelCompleteAnimationTengen levelCompleteAnimation;
@@ -166,7 +160,9 @@ public class PlayScene2D extends GameScene2D implements CameraControlledGameScen
         movingCamera.scalingProperty().bind(scalingProperty());
 
         fixedCamera = new ParallelCamera();
-        fxSubScene.setCamera(fixedCamera);
+
+        fxSubScene.cameraProperty().bind(displayModeProperty()
+            .map(mode -> mode == SceneDisplayMode.SCROLLING ? movingCamera : fixedCamera));
     }
 
     public ObjectProperty<SceneDisplayMode> displayModeProperty() {

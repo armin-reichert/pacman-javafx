@@ -13,7 +13,7 @@ import de.amr.games.pacman.ui2d.GameActionProvider;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.*;
-import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
+import de.amr.games.pacman.ui2d.scene.common.CameraControlledView;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.SceneDisplayMode;
@@ -293,10 +293,10 @@ public class GamePage extends StackPane implements GameActionProvider {
         // new switch feature
         switch (gameScene) {
             case null -> Logger.error("No game scene to embed");
-            case CameraControlledGameScene cameraControlledGameScene -> {
-                getChildren().set(0, cameraControlledGameScene.viewPort());
-                cameraControlledGameScene.viewPortWidthProperty().bind(parentScene.widthProperty());
-                cameraControlledGameScene.viewPortHeightProperty().bind(parentScene.heightProperty());
+            case CameraControlledView cameraControlledView -> {
+                getChildren().set(0, cameraControlledView.viewPort());
+                cameraControlledView.viewPortWidthProperty().bind(parentScene.widthProperty());
+                cameraControlledView.viewPortHeightProperty().bind(parentScene.heightProperty());
             }
             case GameScene2D gameScene2D -> {
                 getChildren().set(0, gameCanvasLayer);

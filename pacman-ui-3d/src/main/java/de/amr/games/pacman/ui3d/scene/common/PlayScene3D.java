@@ -21,7 +21,7 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.scene.common.CameraControlledGameScene;
+import de.amr.games.pacman.ui2d.scene.common.CameraControlledView;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenActions;
 import de.amr.games.pacman.ui2d.sound.GameSound;
@@ -66,7 +66,7 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
  *
  * @author Armin Reichert
  */
-public class PlayScene3D implements GameScene, CameraControlledGameScene {
+public class PlayScene3D implements GameScene, CameraControlledView {
 
     //TODO localize?
     static final String SCORE_TEXT = "SCORE";
