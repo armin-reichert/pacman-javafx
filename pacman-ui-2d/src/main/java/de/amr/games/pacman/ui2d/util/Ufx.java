@@ -202,10 +202,10 @@ public interface Ufx {
                     writer.setColor(x, y, changes.get("fill").to);
                 }
                 if (color.equals(changes.get("stroke").from)) {
-                    writer.setColor(x, y, changes.get("fill").to);
+                    writer.setColor(x, y, changes.get("stroke").to);
                 }
-                if (color.equals(changes.get("food").from)) {
-                    writer.setColor(x, y, changes.get("fill").to);
+                if (color.equals(changes.get("pellet").from)) {
+                    writer.setColor(x, y, changes.get("pellet").to);
                 }
             }
         }
