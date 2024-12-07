@@ -12,8 +12,7 @@ import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Insets;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -23,6 +22,7 @@ import org.tinylog.Logger;
 
 import java.io.PrintWriter;
 import java.util.Locale;
+import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static javafx.scene.layout.BackgroundSize.AUTO;
@@ -187,5 +187,28 @@ public interface Ufx {
             case RIGHT -> 180;
             case DOWN  -> 270;
         };
+    }
+
+    record ColorChange(Color from, Color to) {}
+
+    static Image exchangeColors(Map<String, ColorChange> changes, Image source) {
+        WritableImage target = new WritableImage((int) source.getHeight(), (int) source.getWidth());
+        PixelReader reader = source.getPixelReader();
+        PixelWriter writer = target.getPixelWriter();
+        for (int y = 0; y < source.getHeight(); ++y) {
+            for (int x = 0; x < source.getWidth(); ++x) {
+                Color color = reader.getColor(x, y);
+                if (color.equals(changes.get("fill").from)) {
+                    writer.setColor(x, y, changes.get("fill").to);
+                }
+                if (color.equals(changes.get("stroke").from)) {
+                    writer.setColor(x, y, changes.get("fill").to);
+                }
+                if (color.equals(changes.get("food").from)) {
+                    writer.setColor(x, y, changes.get("fill").to);
+                }
+            }
+        }
+        return target;
     }
 }
