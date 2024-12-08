@@ -155,15 +155,6 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         levelNumberBoxesVisible = visible;
     }
 
-    private boolean isMapImageAvailable(int levelNumber, MapCategory mapCategory) {
-        return switch (mapCategory) {
-            case ARCADE -> true; // all available in sprite sheet
-            case MINI -> false; // TODO use map sprite if level uses color scheme in sprite sheet
-            case BIG -> false; // TODO use map sprite  if level uses color scheme in sprite sheet
-            case STRANGE -> !inClosedRange(levelNumber, 28, 31); // all except those with random color scheme
-        };
-    }
-
     private void drawMsOrMrPacMan(Pac pac) {
         if (!pac.isVisible()) {
             return;
@@ -240,14 +231,12 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             drawGameOptionsInfo(world.map().terrain(), game);
         }
 
-        // Maps with a color scheme differing from that in the sprite sheet have to be rendered using the
+        // Maps with a color scheme that does not exist in the sprite sheet have to be rendered using the
         // vector renderer for now.
-        // TODO: vector rendering looks really bad for some maps.
-        MapCategory mapCategory = game.mapCategory(); // must use this one because e.g. STRANGE maps use maps from BIG map set etc.
-        int mapNumber = world.map().getConfigValue("mapNumber");
-        boolean mapImageExists = game.isDemoLevel() || isMapImageAvailable(level.number, mapCategory);
-        if (mapImageExists) {
+        MapCategory mapCategory = game.mapCategory();
+        if (mapSprite.colorScheme() != null) { // map image for color scheme exists in sprite sheet
             drawLevelMessage(level, game.isDemoLevel()); // message appears under map image so draw it first
+            int mapNumber = world.map().getConfigValue("mapNumber");
             RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
                 ? strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
                 : mapSprite.area();

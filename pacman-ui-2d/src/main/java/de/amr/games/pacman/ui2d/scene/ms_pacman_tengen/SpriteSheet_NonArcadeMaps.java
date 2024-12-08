@@ -3,6 +3,7 @@
  */
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameAssets2D;
@@ -11,6 +12,7 @@ import javafx.scene.image.Image;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.RectArea.rect;
+import static de.amr.games.pacman.model.ms_pacman_tengen.MapCategory.BIG;
 import static de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme.*;
 
 class SpriteSheet_NonArcadeMaps {
@@ -116,6 +118,38 @@ class SpriteSheet_NonArcadeMaps {
     }
 
     public ImageAreaWithColorScheme strangeMapSprite(int levelNumber) {
-        return sprite(levelNumber, null); // TODO
+        NES_ColorScheme colorScheme = switch (levelNumber) {
+            case 1  -> _36_15_20_PINK_RED_WHITE;
+            case 2  -> _21_20_28_BLUE_WHITE_YELLOW;
+            case 3  ->  _16_20_15_ORANGE_WHITE_RED;
+            case 4  -> _01_38_20_BLUE_YELLOW_WHITE;
+            case 5  -> _35_28_20_PINK_YELLOW_WHITE;
+            case 6  -> _36_15_20_PINK_RED_WHITE;
+            case 7  -> _17_20_20_BROWN_WHITE_WHITE;
+            case 8  -> _13_20_28_VIOLET_WHITE_YELLOW;
+            case 9  -> _0F_20_28_BLACK_WHITE_YELLOW;
+            case 10 -> _0F_01_20_BLACK_BLUE_WHITE;
+            case 11 -> _14_25_20_VIOLET_ROSE_WHITE;
+            case 12 -> _15_20_20_RED_WHITE_WHITE;
+            case 13 -> _1B_20_20_GREEN_WHITE_WHITE;
+            case 14 -> _28_20_2A_YELLOW_WHITE_GREEN;
+            case 15 -> _1A_20_28_GREEN_WHITE_YELLOW;
+            case 16 -> _18_20_20_KHAKI_WHITE_WHITE;
+            case 17 -> _25_20_20_ROSE_WHITE_WHITE;
+            case 18 -> _12_20_28_BLUE_WHITE_YELLOW;
+            case 19 -> _07_20_20_BROWN_WHITE_WHITE;
+            case 20 -> _15_25_20_RED_ROSE_WHITE;
+            case 21 -> _0F_20_1C_BLACK_WHITE_GREEN;
+            case 22 -> _19_20_20_GREEN_WHITE_WHITE;
+            case 23 -> _0C_20_14_GREEN_WHITE_VIOLET;
+            case 24 -> _23_20_2B_VIOLET_WHITE_GREEN;
+            case 25 -> _10_20_28_GRAY_WHITE_YELLOW;
+            case 26,27 -> _04_20_20_VIOLET_WHITE_WHITE;
+            case 28,29,30,31 -> NES_ColorScheme.random();
+            case 32 -> _15_25_20_RED_ROSE_WHITE;
+            default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
+        };
+        //TODO compare also random color schemes with available schemes of corresponding maps
+        return sprite(levelNumber, Globals.inClosedRange(levelNumber, 28, 31) ? null : colorScheme);
     }
 }
