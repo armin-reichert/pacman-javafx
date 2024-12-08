@@ -51,17 +51,17 @@ public class Keyboard {
 
     public void register(KeyCodeCombination kcc, Object owner) {
         if (registeredCombinations.get(kcc) == owner) {
-            Logger.info("Key code combination '{}' already registered: {}", kcc, owner);
+            Logger.debug("Key code combination '{}' already registered: {}", kcc, owner);
         } else {
             registeredCombinations.put(kcc, owner);
-            Logger.info("Key code combination '{}' registered: {}", kcc, owner);
+            Logger.debug("Key code combination '{}' registered: {}", kcc, owner);
         }
     }
 
     public void unregister(KeyCodeCombination kcc, Object owner) {
         boolean removed = registeredCombinations.remove(kcc, owner);
         if (removed) {
-            Logger.info("Key code combination '{}' removed: {}", kcc, owner);
+            Logger.debug("Key code combination '{}' removed: {}", kcc, owner);
         }
     }
 
