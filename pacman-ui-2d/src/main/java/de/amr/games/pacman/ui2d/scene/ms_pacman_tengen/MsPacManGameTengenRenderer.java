@@ -291,7 +291,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         if (level.message() != null) {
             float x = getMessageAnchorPosition().x(), y = getMessageAnchorPosition().y();
             switch (level.message().type()) {
-                case READY -> drawText("READY!", x, y, assets.color(PFX_MS_PACMAN_TENGEN + ".color.ready_message"));
+                case READY -> drawTextCenteredOver("READY!", x, y, assets.color(PFX_MS_PACMAN_TENGEN + ".color.ready_message"));
                 case GAME_OVER -> {
                     Color color = assets.color(PFX_MS_PACMAN_TENGEN + ".color.game_over_message");
                     if (demoLevel) {
@@ -299,9 +299,9 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
                         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
                         color = Color.valueOf(nesColorScheme.strokeColor());
                     }
-                    drawText("GAME OVER", x, y, color);
+                    drawTextCenteredOver("GAME OVER", x, y, color);
                 }
-                case TEST_LEVEL -> drawText("TEST L%02d".formatted(level.number), x, y, nesPaletteColor(0x28));
+                case TEST_LEVEL -> drawTextCenteredOver("TEST L%02d".formatted(level.number), x, y, nesPaletteColor(0x28));
             }
         }
     }
@@ -466,7 +466,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         ctx().fillRect(scaled(cx), scaled(cy), scaled(16), scaled(16));
     }
 
-    private void drawText(String text, double cx, double y, Color color) {
+    private void drawTextCenteredOver(String text, double cx, double y, Color color) {
         double x = (cx - text.length() * 0.5 * TS);
         drawText(text, color, scaledArcadeFont(TS), x, y);
     }
