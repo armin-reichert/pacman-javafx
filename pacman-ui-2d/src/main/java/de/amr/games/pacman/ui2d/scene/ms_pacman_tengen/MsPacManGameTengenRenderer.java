@@ -380,13 +380,9 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         }
     }
 
-    public void drawBlueShadedTextAnimation(String text, Font font, long t, double x, double y) {
-        drawText(text, shadeOfBlue(t), font, x, y);
-    }
-
     // Blue colors used in intro, dark to brighter blue shade.
     // Cycles through palette indices 0x01, 0x11, 0x21, 0x31, each frame takes 16 ticks.
-    private Color shadeOfBlue(long tick) {
+    public Color shadeOfBlue(long tick) {
         int i = (int) (tick % 64) / 16;
         return nesPaletteColor(0x01 + 0x10 * i);
     }

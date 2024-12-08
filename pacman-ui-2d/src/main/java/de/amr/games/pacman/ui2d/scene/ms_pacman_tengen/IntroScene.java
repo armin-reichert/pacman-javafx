@@ -104,7 +104,7 @@ public class IntroScene extends GameScene2D {
         switch (sceneController.state()) {
             case WAITING_FOR_START -> {
                 if (!dark) {
-                    r.drawBlueShadedTextAnimation("TENGEN PRESENTS", scaledFont, t, 9 * TS, MARQUEE_Y - TS);
+                    r.drawText("TENGEN PRESENTS", r.shadeOfBlue(t), scaledFont, 9 * TS, MARQUEE_Y - TS);
                     r.drawSpriteScaled(MS_PAC_MAN_TITLE_SPRITE, 6 * TS, MARQUEE_Y);
                     if (t % 60 < 30) {
                         r.drawText("PRESS START", nesPaletteColor(0x20), scaledFont, 11 * TS, MARQUEE_Y + 9 * TS);
