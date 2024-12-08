@@ -12,7 +12,6 @@ import javafx.scene.image.Image;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.RectArea.rect;
-import static de.amr.games.pacman.model.ms_pacman_tengen.MapCategory.BIG;
 import static de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme.*;
 
 class SpriteSheet_NonArcadeMaps {
@@ -48,7 +47,7 @@ class SpriteSheet_NonArcadeMaps {
         image = assets.image(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".mazes.non_arcade");
     }
 
-    private ImageAreaWithColorScheme sprite(int spriteNumber, NES_ColorScheme colorScheme) {
+    private ImageAreaWithColorScheme imageAreaWithScheme(int spriteNumber, NES_ColorScheme colorScheme) {
         int colIndex, y;
         switch (spriteNumber) {
             case 1,2,3,4,5,6,7,8            -> { colIndex = (spriteNumber - 1);  y = 0;    }
@@ -82,7 +81,7 @@ class SpriteSheet_NonArcadeMaps {
             case 6 -> _23_20_2B_VIOLET_WHITE_GREEN;
             default -> null;
         };
-        return sprite(spriteNumber, colorScheme.equals(colorSchemeInSheet) ? colorScheme : null);
+        return imageAreaWithScheme(spriteNumber, colorScheme.equals(colorSchemeInSheet) ? colorScheme : null);
     }
 
     public ImageAreaWithColorScheme bigMapSprite(int mapNumber, NES_ColorScheme colorScheme) {
@@ -114,7 +113,7 @@ class SpriteSheet_NonArcadeMaps {
             case 11 -> _15_25_20_RED_ROSE_WHITE;
             default -> null;
         };
-        return sprite(spriteNumber, colorScheme.equals(colorSchemeInSheet) ? colorScheme : null);
+        return imageAreaWithScheme(spriteNumber, colorScheme.equals(colorSchemeInSheet) ? colorScheme : null);
     }
 
     public ImageAreaWithColorScheme strangeMapSprite(int levelNumber) {
@@ -150,6 +149,6 @@ class SpriteSheet_NonArcadeMaps {
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
         //TODO compare also random color schemes with available schemes of corresponding maps
-        return sprite(levelNumber, Globals.inClosedRange(levelNumber, 28, 31) ? null : colorScheme);
+        return imageAreaWithScheme(levelNumber, Globals.inClosedRange(levelNumber, 28, 31) ? null : colorScheme);
     }
 }
