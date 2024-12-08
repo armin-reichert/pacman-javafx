@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.util;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
@@ -22,8 +23,11 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.PrintWriter;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.BiPredicate;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static javafx.scene.layout.BackgroundSize.AUTO;
@@ -193,25 +197,78 @@ public interface Ufx {
     record ColorChange(Color from, Color to) {}
 
     static Image exchangeColors(Map<String, ColorChange> changes, Image source) {
-        WritableImage target = new WritableImage((int) source.getHeight(), (int) source.getWidth());
-        PixelReader reader = source.getPixelReader();
-        PixelWriter writer = target.getPixelWriter();
-        for (int y = 0; y < source.getHeight(); ++y) {
-            for (int x = 0; x < source.getWidth(); ++x) {
-                Color color = reader.getColor(x, y);
+        WritableImage target = new WritableImage((int) source.getWidth(), (int) source.getHeight());
+        PixelReader sourceReader = source.getPixelReader();
+        PixelWriter w = target.getPixelWriter();
+
+        Set<Color> colorsInImage = new HashSet<>();
+        for (int x = 0; x < source.getWidth(); ++x) {
+            for (int y = 0; y < source.getHeight(); ++y) {
+                Color color = sourceReader.getColor(x, y);
+                w.setColor(x, y, color);
+                colorsInImage.add(color);
+            }
+        }
+        Logger.info("Colors in image before: {}", colorsInImage);
+
+        for (int x = 0; x < source.getWidth(); ++x) {
+            for (int y = 0; y < source.getHeight(); ++y) {
+                final Color color = sourceReader.getColor(x, y);
                 if (color.equals(changes.get("fill").from)) {
-                    writer.setColor(x, y, changes.get("fill").to);
+                    w.setColor(x, y, changes.get("fill").to);
                 }
-                if (color.equals(changes.get("stroke").from)) {
-                    writer.setColor(x, y, changes.get("stroke").to);
+                else if (color.equals(changes.get("stroke").from)) {
+                    w.setColor(x, y, changes.get("stroke").to);
                 }
-                if (color.equals(changes.get("pellet").from)) {
-                    writer.setColor(x, y, changes.get("pellet").to);
+                else if (color.equals(changes.get("pellet").from)) {
+                    w.setColor(x, y, changes.get("pellet").to);
+                }
+            }
+        }
+
+        colorsInImage.clear();
+        PixelReader targetReader = target.getPixelReader();
+        for (int x = 0; x < target.getWidth(); ++x) {
+            for (int y = 0; y < target.getHeight(); ++y) {
+                Color color = targetReader.getColor(x, y);
+                w.setColor(x, y, color);
+                colorsInImage.add(color);
+            }
+        }
+        Logger.info("Colors in image after: {}", colorsInImage);
+
+        return target;
+    }
+
+    static Image maskImage(Image source, BiPredicate<Integer, Integer> insideMaskedArea, Color maskColor) {
+        WritableImage target = new WritableImage((int) source.getWidth(), (int) source.getHeight());
+        PixelReader sourceReader = source.getPixelReader();
+        PixelWriter w = target.getPixelWriter();
+        for (int x = 0; x < source.getWidth(); ++x) {
+            for (int y = 0; y < source.getHeight(); ++y) {
+                if (insideMaskedArea.test(x, y)) {
+                    w.setColor(x, y, maskColor);
+                } else {
+                    w.setColor(x, y, sourceReader.getColor(x, y));
                 }
             }
         }
         return target;
     }
+
+    static Image subImage(Image source, RectArea area) {
+        WritableImage target = new WritableImage(area.width(), area.height());
+        PixelReader reader = source.getPixelReader();
+        PixelWriter writer = target.getPixelWriter();
+        for (int y = 0; y < area.height(); ++y) {
+            for (int x = 0; x < area.width(); ++x) {
+                Color color = reader.getColor(area.x()  + x, area.y() + y);
+                writer.setColor(x, y, color);
+            }
+        }
+        return target;
+    }
+
 
     static Image exchange_NESColorScheme(Image source, NES_ColorScheme from, NES_ColorScheme to) {
         Map<String, ColorChange> changes = Map.of(
