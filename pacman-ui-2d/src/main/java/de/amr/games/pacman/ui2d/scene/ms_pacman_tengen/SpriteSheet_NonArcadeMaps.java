@@ -5,12 +5,17 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import org.tinylog.Logger;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.RectArea.rect;
@@ -43,6 +48,11 @@ class SpriteSheet_NonArcadeMaps {
         25, 25, 25, 25,
     };
 
+    static final RectArea BLINKY_AREA = new RectArea(105, 85, 14, 13);
+    static final RectArea OTHER_GHOSTS_AREA = new RectArea(89, 113, 46, 13);
+    static final RectArea MS_PAC_AREA = new RectArea(106, 180, 13, 15);
+
+
     private final Image image;
 
     public SpriteSheet_NonArcadeMaps(AssetStorage assets) {
@@ -61,10 +71,6 @@ class SpriteSheet_NonArcadeMaps {
         }
         int width = 28 * TS, height = MAP_ROW_COUNTS[spriteNumber - 1] * TS;
         return new RectArea(colIndex * width, y, width, height);
-    }
-
-    private ImageAreaWithColorScheme imageAreaWithScheme(int spriteNumber, NES_ColorScheme colorScheme) {
-        return new ImageAreaWithColorScheme(image, spriteArea(spriteNumber), colorScheme);
     }
 
     public ImageAreaWithColorScheme miniMapSprite(int mapNumber, NES_ColorScheme colorScheme) {
@@ -86,26 +92,35 @@ class SpriteSheet_NonArcadeMaps {
             case 6 -> _23_20_2B_VIOLET_WHITE_GREEN;
             default -> null;
         };
-        ImageAreaWithColorScheme sprite = imageAreaWithScheme(spriteNumber, colorScheme);
+
+        Logger.debug("Require Map #{} with color scheme {}", mapNumber, colorScheme);
+        ImageAreaWithColorScheme sprite = new ImageAreaWithColorScheme(image, spriteArea(spriteNumber), colorScheme);
         if (colorScheme.equals(colorSchemeInSheet)) {
+            Logger.debug("Found in sprite sheet");
             return sprite;
         }
-        return imageAreaWithScheme(spriteNumber, null);
-
-        /*
-        RectArea spriteArea = spriteArea(spriteNumber);
-        Image mapImage = Ufx.subImage(image, spriteArea);
-        RectArea blinkyArea = new RectArea(105, 85, 14, 13);
-        RectArea otherGhostsArea = new RectArea(89, 113, 46, 13);
-        RectArea msPacArea = new RectArea(106, 180, 13, 15);
-        mapImage = Ufx.maskImage(mapImage, (x, y) ->
-            blinkyArea.contains(x, y) || otherGhostsArea.contains(x, y) || msPacArea.contains(x, y),
-            Color.BLACK);
-        Image recoloredImage = Ufx.exchange_NESColorScheme(mapImage, colorSchemeInSheet, colorScheme);
-        return new ImageAreaWithColorScheme(recoloredImage, new RectArea(0, 0, spriteArea.width(), spriteArea.height()), colorScheme);
-
-         */
+        CacheKey cacheKey = new CacheKey(spriteNumber, colorScheme);
+        if (!miniMapCache.containsKey(cacheKey)) {
+            RectArea spriteArea = spriteArea(spriteNumber);
+            Image mapImage = Ufx.subImage(image, spriteArea);
+            mapImage = Ufx.maskImage(mapImage, (x, y) -> BLINKY_AREA.contains(x, y)
+                    || OTHER_GHOSTS_AREA.contains(x, y)
+                    || MS_PAC_AREA.contains(x, y), Color.valueOf(NES.Palette.color(0x0f)));
+            Image recoloredImage = Ufx.exchange_NESColorScheme(mapImage, colorSchemeInSheet, colorScheme);
+            var cacheValue = new ImageAreaWithColorScheme(recoloredImage,
+                new RectArea(0, 0, spriteArea.width(), spriteArea.height()),
+                colorScheme);
+            miniMapCache.put(cacheKey, cacheValue);
+            Logger.info("Map image recolored to {} and put into cache. Cache size: {}", colorScheme, miniMapCache.size());
+        } else {
+            Logger.debug("Map image found in cache");
+        }
+        return miniMapCache.get(cacheKey);
     }
+
+    private record CacheKey(int spriteNumber, NES_ColorScheme colorScheme) {}
+    private final Map<CacheKey, ImageAreaWithColorScheme> miniMapCache = new HashMap<>();
+
 
     public ImageAreaWithColorScheme bigMapSprite(int mapNumber, NES_ColorScheme colorScheme) {
         int spriteNumber = switch (mapNumber) {
@@ -136,7 +151,11 @@ class SpriteSheet_NonArcadeMaps {
             case 11 -> _15_25_20_RED_ROSE_WHITE;
             default -> null;
         };
-        return imageAreaWithScheme(spriteNumber, colorScheme.equals(colorSchemeInSheet) ? colorScheme : null);
+        if (colorScheme.equals(colorSchemeInSheet)) {
+            return new ImageAreaWithColorScheme(image, spriteArea(spriteNumber), colorScheme);
+        } else {
+            return new ImageAreaWithColorScheme(image, spriteArea(spriteNumber), null); //TODO
+        }
     }
 
     public ImageAreaWithColorScheme strangeMapSprite(int levelNumber) {
@@ -171,7 +190,11 @@ class SpriteSheet_NonArcadeMaps {
             case 32 -> _15_25_20_RED_ROSE_WHITE;
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
-        //TODO compare also random color schemes with available schemes of corresponding maps
-        return imageAreaWithScheme(levelNumber, Globals.inClosedRange(levelNumber, 28, 31) ? null : colorScheme);
+        if (Globals.inClosedRange(levelNumber, 28, 31)) {
+            //TODO compare also random color schemes with available schemes of corresponding maps
+            return new ImageAreaWithColorScheme(image, spriteArea(levelNumber), null);
+        } else {
+            return new ImageAreaWithColorScheme(image, spriteArea(levelNumber), colorScheme);
+        }
     }
 }
