@@ -28,7 +28,6 @@ import de.amr.games.pacman.ui2d.util.FlashMessageView;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
 import de.amr.games.pacman.ui2d.util.Picker;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
