@@ -36,6 +36,7 @@ import static de.amr.games.pacman.ui2d.GameAssets2D.PFX_MS_PACMAN_TENGEN;
 import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.NO_SPRITE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.nesPaletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet.*;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.SpriteSheet_NonArcadeMaps.strangeMap15Sprite;
 import static java.util.function.Predicate.not;
 
 /**
@@ -45,8 +46,8 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
 
     private final AssetStorage assets;
     private final MsPacManGameTengenSpriteSheet spriteSheet;
-    private final NonArcadeMaps nonArcadeMaps;
-    private final ArcadeMaps arcadeMaps;
+    private final SpriteSheet_NonArcadeMaps nonArcadeMapSprites;
+    private final SpriteSheet_ArcadeMaps arcadeMapSprites;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final TerrainRenderer terrainRenderer = new TerrainRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
@@ -63,8 +64,8 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         this.spriteSheet = checkNotNull(spriteSheet);
         this.canvas = checkNotNull(canvas);
 
-        arcadeMaps = new ArcadeMaps(assets);
-        nonArcadeMaps = new NonArcadeMaps(assets);
+        arcadeMapSprites = new SpriteSheet_ArcadeMaps(assets);
+        nonArcadeMapSprites = new SpriteSheet_NonArcadeMaps(assets);
         messageAnchorPosition = new Vector2f(14f * TS, 21 * TS);
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(bgColor);
@@ -77,11 +78,11 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         MapCategory category = worldMap.getConfigValue("mapCategory");
         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
         mapSprite = switch (category) {
-            case ARCADE  -> arcadeMaps.sprite(mapNumber, nesColorScheme);
-            case MINI    -> nonArcadeMaps.miniMapSprite(mapNumber, nesColorScheme);
-            case BIG     -> nonArcadeMaps.bigMapSprite(mapNumber, nesColorScheme);
+            case ARCADE  -> arcadeMapSprites.sprite(mapNumber, nesColorScheme);
+            case MINI    -> nonArcadeMapSprites.miniMapSprite(mapNumber, nesColorScheme);
+            case BIG     -> nonArcadeMapSprites.bigMapSprite(mapNumber, nesColorScheme);
             // Hack for easy STRANGE map sprite identification:
-            case STRANGE -> nonArcadeMaps.strangeMapSprite(worldMap.getConfigValue("levelNumber"));
+            case STRANGE -> nonArcadeMapSprites.strangeMapSprite(worldMap.getConfigValue("levelNumber"));
         };
 
         terrainRenderer.setMapBackgroundColor(bgColor);
@@ -248,18 +249,16 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         if (mapImageExists) {
             drawLevelMessage(level, game.isDemoLevel()); // message appears under map image so draw it first
             RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
-                ? nonArcadeMaps.strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
+                ? strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
                 : mapSprite.area();
             ctx().drawImage(mapSprite.source(),
-                area.x(), area.y(),
-                area.width(), area.height(),
-                scaled(mapX), scaled(mapY),
-                scaled(area.width()), scaled(area.height())
+                area.x(), area.y(), area.width(), area.height(),
+                scaled(mapX), scaled(mapY), scaled(area.width()), scaled(area.height())
             );
             overPaintActors(world);
-            //TODO: fixme over-painting pellets also over-paints moving message!
             ctx().save();
             ctx().scale(scaling(), scaling());
+            //TODO: fixme over-painting pellets also over-paints moving message!
             overPaintEatenPellets(world);
             overPaintEnergizers(world, tile -> !blinking || world.hasEatenFoodAt(tile));
             ctx().restore();
@@ -381,8 +380,8 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         }
     }
 
-    public void drawAnimatedTengenPresentsText(long t, double x, double y) {
-        drawText("TENGEN PRESENTS", shadeOfBlue(t), scaledArcadeFont(TS), x, y);
+    public void drawBlueShadedTextAnimation(String text, Font font, long t, double x, double y) {
+        drawText(text, shadeOfBlue(t), font, x, y);
     }
 
     // Blue colors used in intro, dark to brighter blue shade.

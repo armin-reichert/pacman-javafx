@@ -13,52 +13,52 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.RectArea.rect;
 import static de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme.*;
 
-public class NonArcadeMaps {
+class SpriteSheet_NonArcadeMaps {
 
     // Strange map #15 (level 32) has 3 different images to create an animation effect
-    // Image file "non_arcade_mazes.png"
     static final RectArea[] STRANGE_MAP_15_SPRITES = {
-            rect(1568,  840, 224, 248),
-            rect(1568, 1088, 224, 248),
-            rect(1568, 1336, 224, 248),
+        rect(1568,  840, 224, 248),
+        rect(1568, 1088, 224, 248),
+        rect(1568, 1336, 224, 248),
     };
 
-    // Strange map row counts as they appear in the sprite sheet
-    static final byte[] STRANGE_MAPS_ROW_COUNTS = {
-            31, 31, 31, 31, 31, 31, 30, 31,
-            31, 37, 31, 31, 31, 37, 31, 25,
-            37, 31, 37, 37, 37, 37, 37, 31,
-            37, 37, 31, 25, 31, 25, 31, 31, 37,
-            25, 25, 25, 25,
+    // Pattern (0^8 1^8 2^8 1^8)+
+    public static RectArea strangeMap15Sprite(long tick) {
+        // numFrames = 4, frameDuration = 8
+        int index = (int) ((tick % 32) / 8);
+        // (0, 1, 2, 3) -> (0, 1, 2, 1)
+        if (index == 3) index = 1;
+        return STRANGE_MAP_15_SPRITES[index];
+    }
+
+    // Map row counts as they appear in the sprite sheet (row by row)
+    static final byte[] MAP_ROW_COUNTS = {
+        31, 31, 31, 31, 31, 31, 30, 31,
+        31, 37, 31, 31, 31, 37, 31, 25,
+        37, 31, 37, 37, 37, 37, 37, 31,
+        37, 37, 31, 25, 31, 25, 31, 31, 37,
+        25, 25, 25, 25,
     };
 
     private final Image image;
 
-    public NonArcadeMaps(AssetStorage assets) {
+    public SpriteSheet_NonArcadeMaps(AssetStorage assets) {
         image = assets.image(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".mazes.non_arcade");
     }
 
     private ImageAreaWithColorScheme sprite(int spriteNumber, NES_ColorScheme colorScheme) {
-        int columnIndex, y;
+        int colIndex, y;
         switch (spriteNumber) {
-            case 1,2,3,4,5,6,7,8            -> { columnIndex = (spriteNumber - 1);  y = 0;    }
-            case 9,10,11,12,13,14,15,16     -> { columnIndex = (spriteNumber - 9);  y = 248;  }
-            case 17,18,19,20,21,22,23,24    -> { columnIndex = (spriteNumber - 17); y = 544;  }
-            case 25,26,27,28,29,30,31,32,33 -> { columnIndex = (spriteNumber - 25); y = 840;  }
-            case 34,35,36,37                -> { columnIndex = (spriteNumber - 34); y = 1136; }
+            case 1,2,3,4,5,6,7,8            -> { colIndex = (spriteNumber - 1);  y = 0;    }
+            case 9,10,11,12,13,14,15,16     -> { colIndex = (spriteNumber - 9);  y = 248;  }
+            case 17,18,19,20,21,22,23,24    -> { colIndex = (spriteNumber - 17); y = 544;  }
+            case 25,26,27,28,29,30,31,32,33 -> { colIndex = (spriteNumber - 25); y = 840;  }
+            case 34,35,36,37                -> { colIndex = (spriteNumber - 34); y = 1136; }
             default -> throw new IllegalArgumentException("Illegal non-Arcade map number: " + spriteNumber);
         }
-        int width = 28 * TS, height = STRANGE_MAPS_ROW_COUNTS[spriteNumber - 1] * TS;
-        RectArea area = new RectArea(columnIndex * width, y, width, height);
+        int width = 28 * TS, height = MAP_ROW_COUNTS[spriteNumber - 1] * TS;
+        RectArea area = new RectArea(colIndex * width, y, width, height);
         return new ImageAreaWithColorScheme(image, area, colorScheme);
-    }
-
-    // Creates pattern (00000000 11111111 22222222 11111111)...
-    public RectArea strangeMap15Sprite(long tick) {
-        int numFrames = 4, frameDuration = 8;
-        int index = (int) ((tick % (numFrames * frameDuration)) / frameDuration);
-        // (0, 1, 2, 3) -> (0, 1, 2, 1)
-        return STRANGE_MAP_15_SPRITES[index == 3 ? 1 : index];
     }
 
     public ImageAreaWithColorScheme miniMapSprite(int mapNumber, NES_ColorScheme colorScheme) {

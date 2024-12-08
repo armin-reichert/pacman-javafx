@@ -9,11 +9,13 @@ import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.scene.image.Image;
 
-public class ArcadeMaps {
+class SpriteSheet_ArcadeMaps {
+
+    static final int WIDTH = 28*8, HEIGHT = 31*8;
 
     private final Image image;
 
-    public ArcadeMaps(AssetStorage assets) {
+    public SpriteSheet_ArcadeMaps(AssetStorage assets) {
         image = assets.image(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".mazes.arcade");
     }
 
@@ -37,7 +39,6 @@ public class ArcadeMaps {
             default -> throw new IllegalArgumentException("Illegal Arcade map number: " + mapNumber);
         };
         int col = index % 3, row = index / 3;
-        int width = 28*8, height = 31*8;
-        return new ImageAreaWithColorScheme(image, new RectArea(col * width, row * height, width, height), colorScheme);
+        return new ImageAreaWithColorScheme(image, new RectArea(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT), colorScheme);
     }
 }

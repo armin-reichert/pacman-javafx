@@ -111,7 +111,7 @@ public class BootScene extends GameScene2D {
             r.ctx().setFill(nesPaletteColor(0x10));
             r.ctx().fillRect(0, 0, r.canvas().getWidth(), r.canvas().getHeight());
         } else {
-            r.drawAnimatedTengenPresentsText(t, TENGEN_PRESENTS_X, tengenPresentsY);
+            r.drawBlueShadedTextAnimation("TENGEN PRESENTS", r.scaledArcadeFont(TS), t, TENGEN_PRESENTS_X, tengenPresentsY);
             r.drawAnimatedEntity(ghost);
         }
     }
