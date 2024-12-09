@@ -248,7 +248,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             ctx().save();
             ctx().scale(scaling(), scaling());
             //TODO: fixme over-painting pellets also over-paints moving message!
-            overPaintEatenPellets(world);
+            drawPellets(world, Color.valueOf(mapSprite.colorScheme().pelletColor()), bgColor);
             overPaintEnergizers(world, tile -> !blinking || world.hasEatenFoodAt(tile));
             ctx().restore();
         }
@@ -261,6 +261,21 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             drawLevelMessage(level, game.isDemoLevel());
             terrainRenderer.drawTerrain(ctx(), world.map().terrain(), world.map().obstacles());
         }
+    }
+
+    private void drawPellets(GameWorld world, Color pelletColor, Color emptyColor) {
+        world.map().food().tiles()
+            .filter(world::isFoodPosition)
+            .filter(not(world::isEnergizerPosition))
+            .forEach(tile -> {
+                double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
+                ctx().setFill(emptyColor);
+                ctx().fillRect(centerX - 2, centerY - 2, 4, 4);
+                if (!world.hasEatenFoodAt(tile)) {
+                    ctx().setFill(pelletColor);
+                    ctx().fillRect(centerX - 1, centerY - 1, 2, 2);
+                }
+            });
     }
 
     @Override

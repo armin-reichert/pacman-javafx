@@ -59,7 +59,6 @@ class SpriteSheet_NonArcadeMaps {
 
     private final Image sourceImage;
 
-
     public SpriteSheet_NonArcadeMaps(AssetStorage assets) {
         sourceImage = assets.image(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".mazes.non_arcade");
     }
@@ -190,16 +189,17 @@ class SpriteSheet_NonArcadeMaps {
         if (!cache.containsKey(cacheKey)) {
             RectArea spriteArea = spriteArea(spriteNumber);
             Image availableMapImage = Ufx.subImage(sourceImage, spriteArea);
-            Color black = Color.valueOf(NES.Palette.color(0x0f));
+            Color maskColor = Color.TRANSPARENT;
+                //= Color.valueOf(NES.Palette.color(0x0f));
             availableMapImage = Ufx.maskImage(availableMapImage,
                 (x, y) -> BLINKY_AREA.contains(x, y)  || OTHER_GHOSTS_AREA.contains(x, y) || MS_PAC_AREA.contains(x, y),
-                black);
+                maskColor);
             Image recoloredImage = Ufx.exchange_NESColorScheme(availableMapImage, availableColorScheme, requiredColorScheme);
             var cacheValue = new ImageAreaWithColorScheme(recoloredImage,
                 new RectArea(0, 0, spriteArea.width(), spriteArea.height()),
                 requiredColorScheme);
             cache.put(cacheKey, cacheValue);
-            Logger.info("Map image recolored to {} and put into cache. Cache size: {}", requiredColorScheme, MINI_MAP_IMAGE_CACHE.size());
+            Logger.info("Map image recolored to {} and put into cache. Cache size: {}", requiredColorScheme, cache.size());
         } else {
             Logger.debug("Map image found in cache");
         }

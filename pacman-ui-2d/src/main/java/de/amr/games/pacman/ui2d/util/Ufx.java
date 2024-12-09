@@ -211,19 +211,32 @@ public interface Ufx {
         }
         Logger.info("Colors in image before: {}", colorsInImage);
 
+        boolean fillColorFound = false, strokeColorFound = false, pelletColorFound = false;
         for (int x = 0; x < source.getWidth(); ++x) {
             for (int y = 0; y < source.getHeight(); ++y) {
                 final Color color = sourceReader.getColor(x, y);
                 if (color.equals(changes.get("fill").from)) {
+                    fillColorFound = true;
                     w.setColor(x, y, changes.get("fill").to);
                 }
                 else if (color.equals(changes.get("stroke").from)) {
+                    strokeColorFound = true;
                     w.setColor(x, y, changes.get("stroke").to);
                 }
                 else if (color.equals(changes.get("pellet").from)) {
+                    pelletColorFound = true;
                     w.setColor(x, y, changes.get("pellet").to);
                 }
             }
+        }
+        if (!fillColorFound) {
+            Logger.warn("Fill color not found in image, WTF?");
+        }
+        if (!strokeColorFound) {
+            Logger.warn("Stroke color not found in image, WTF?");
+        }
+        if (!pelletColorFound) {
+            Logger.warn("Pellet color not found in image, WTF?");
         }
 
         colorsInImage.clear();
@@ -240,13 +253,13 @@ public interface Ufx {
         return target;
     }
 
-    static Image maskImage(Image source, BiPredicate<Integer, Integer> insideMaskedArea, Color maskColor) {
+    static Image maskImage(Image source, BiPredicate<Integer, Integer> isMasked, Color maskColor) {
         WritableImage target = new WritableImage((int) source.getWidth(), (int) source.getHeight());
         PixelReader sourceReader = source.getPixelReader();
         PixelWriter w = target.getPixelWriter();
         for (int x = 0; x < source.getWidth(); ++x) {
             for (int y = 0; y < source.getHeight(); ++y) {
-                if (insideMaskedArea.test(x, y)) {
+                if (isMasked.test(x, y)) {
                     w.setColor(x, y, maskColor);
                 } else {
                     w.setColor(x, y, sourceReader.getColor(x, y));
