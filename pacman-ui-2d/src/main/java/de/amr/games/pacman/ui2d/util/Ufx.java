@@ -230,13 +230,13 @@ public interface Ufx {
             }
         }
         if (!fillColorFound) {
-            Logger.warn("Fill color not found in image, WTF?");
+            Logger.warn("Fill color {} not found in image, WTF?", changes.get("fill").from);
         }
         if (!strokeColorFound) {
-            Logger.warn("Stroke color not found in image, WTF?");
+            Logger.warn("Stroke color {} not found in image, WTF?", changes.get("stroke").from);
         }
         if (!pelletColorFound) {
-            Logger.warn("Pellet color not found in image, WTF?");
+            Logger.warn("Pellet color {} not found in image, WTF?", changes.get("pellet").from);
         }
 
         colorsInImage.clear();
