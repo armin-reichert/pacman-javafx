@@ -292,9 +292,9 @@ public interface Ufx {
             for (int x = 0; x < image.getWidth(); ++x) {
                 Color color = reader.getColor(x, y);
                 if (color.equals(Color.TRANSPARENT)) continue;
-                found = !NES_PALETTE_COLORS.contains(color);
-                if (found) {
+                if (!NES_PALETTE_COLORS.contains(color)) {
                     Logger.warn("Found non-NES palette color {} at x={} y={}", color, x, y);
+                    found = true;
                 }
             }
         }

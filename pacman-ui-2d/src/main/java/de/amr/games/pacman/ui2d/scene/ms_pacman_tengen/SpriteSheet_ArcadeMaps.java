@@ -7,16 +7,22 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
+import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.scene.image.Image;
+import org.tinylog.Logger;
 
 class SpriteSheet_ArcadeMaps {
 
     static final int WIDTH = 28*8, HEIGHT = 31*8;
 
-    private final Image image;
+    private final Image sourceImage;
 
     public SpriteSheet_ArcadeMaps(AssetStorage assets) {
-        image = assets.image(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".mazes.arcade");
+        sourceImage = assets.image(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".mazes.arcade");
+        boolean illegalColor = Ufx.checkForNonNES_PaletteColors(sourceImage);
+        if (illegalColor) {
+            Logger.error("Found illegal color(s) in Arcade maps sprite sheet");
+        }
     }
 
     public ImageAreaWithColorScheme sprite(int mapNumber, NES_ColorScheme colorScheme) {
@@ -39,6 +45,6 @@ class SpriteSheet_ArcadeMaps {
             default -> throw new IllegalArgumentException("Illegal Arcade map number: " + mapNumber);
         };
         int col = index % 3, row = index / 3;
-        return new ImageAreaWithColorScheme(image, new RectArea(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT), colorScheme);
+        return new ImageAreaWithColorScheme(sourceImage, new RectArea(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT), colorScheme);
     }
 }
