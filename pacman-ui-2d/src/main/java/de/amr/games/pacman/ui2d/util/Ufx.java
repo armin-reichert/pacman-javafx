@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.util;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
@@ -28,6 +29,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiPredicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static javafx.scene.layout.BackgroundSize.AUTO;
@@ -282,6 +285,23 @@ public interface Ufx {
         return target;
     }
 
+    static boolean checkForNonNES_PaletteColors(Image image) {
+        boolean found = false;
+        PixelReader reader = image.getPixelReader();
+        for (int y = 0; y < image.getHeight(); ++y) {
+            for (int x = 0; x < image.getWidth(); ++x) {
+                Color color = reader.getColor(x, y);
+                if (color.equals(Color.TRANSPARENT)) continue;
+                found = !NES_PALETTE_COLORS.contains(color);
+                if (found) {
+                    Logger.warn("Found non-NES palette color {} at x={} y={}", color, x, y);
+                }
+            }
+        }
+        return found;
+    }
+
+    Set<Color> NES_PALETTE_COLORS = Stream.of(NES.Palette.COLORS).map(Color::valueOf).collect(Collectors.toSet());
 
     static Image exchange_NESColorScheme(Image source, NES_ColorScheme from, NES_ColorScheme to) {
         Map<String, ColorChange> changes = Map.of(

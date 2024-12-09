@@ -61,6 +61,10 @@ class SpriteSheet_NonArcadeMaps {
 
     public SpriteSheet_NonArcadeMaps(AssetStorage assets) {
         sourceImage = assets.image(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".mazes.non_arcade");
+        boolean illegalColor = Ufx.checkForNonNES_PaletteColors(sourceImage);
+        if (illegalColor) {
+            Logger.error("Found illegal color(s) in non-Arcade maps sprite sheet");
+        }
     }
 
     private RectArea spriteArea(int spriteNumber) {
