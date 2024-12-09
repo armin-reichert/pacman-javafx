@@ -248,8 +248,9 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             ctx().save();
             ctx().scale(scaling(), scaling());
             //TODO: fixme over-painting pellets also over-paints moving message!
-            drawPellets(world, Color.valueOf(mapSprite.colorScheme().pelletColor()), bgColor);
-            overPaintEnergizers(world, tile -> !blinking || world.hasEatenFoodAt(tile));
+            Color pelletColor = Color.valueOf(mapSprite.colorScheme().pelletColor());
+            drawPellets(world, pelletColor, bgColor);
+            drawEnergizers(world, pelletColor, bgColor);
             ctx().restore();
         }
         else {
@@ -276,6 +277,23 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
                     ctx().fillRect(centerX - 1, centerY - 1, 2, 2);
                 }
             });
+    }
+
+    private void drawEnergizers(GameWorld world, Color pelletColor, Color emptyColor) {
+        double size = TS;
+        double offset = 0.5 * (HTS);
+        world.map().food().tiles().filter(world::isEnergizerPosition).forEach(energizerTile -> {
+            double x = energizerTile.x() * TS, y = energizerTile.y() * TS;
+            ctx().setFill(emptyColor);
+            ctx().fillRect(x-1, y-1, TS + 2, TS + 2); // avoid blitzer
+            if (!world.hasEatenFoodAt(energizerTile) && blinking) {
+                ctx().setFill(pelletColor);
+                // draw pixelized "circle"
+                ctx().fillRect(x + offset, y, HTS, size);
+                ctx().fillRect(x, y + offset, size, HTS);
+                ctx().fillRect(x + 1, y + 1, size - 2, size - 2);
+            }
+        });
     }
 
     @Override
@@ -321,8 +339,17 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         Vector2f size = new Vector2i(world.houseSize().x() - 2, 2).scaled(TS * scaling());
         ctx().setFill(bgColor);
         ctx().fillRect(topLeftPosition.x(), topLeftPosition.y(), size.x(), size.y());
-        hideActorSprite(world.map().terrain().getTileProperty("pos_pac", v2i(14, 26)));
-        hideActorSprite(world.map().terrain().getTileProperty("pos_ghost_1_red", v2i(13, 14)));
+
+        overPaint(world.map().terrain().getTileProperty("pos_pac", v2i(14, 26)));
+        overPaint(world.map().terrain().getTileProperty("pos_ghost_1_red", v2i(13, 14)));
+    }
+
+    private void overPaint(Vector2i tile) {
+        // Parameter tile denotes the left of the two tiles where actor is located between. Compute center position.
+        double cx = tile.x() * TS;
+        double cy = tile.y() * TS - HTS;
+        ctx().setFill(bgColor);
+        ctx().fillRect(scaled(cx), scaled(cy), scaled(16), scaled(16));
     }
 
     private void drawGameOptionsInfo(TileMap terrain, MsPacManGameTengen game) {
@@ -460,14 +487,6 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
                 binding.key(NES.JoypadButton.BTN_RIGHT)
         ), 0, scaled(2*TS));
 
-    }
-
-    private void hideActorSprite(Vector2i tile) {
-        // Parameter tile denotes the left of the two tiles where actor is located between. Compute center position.
-        double cx = tile.x() * TS;
-        double cy = tile.y() * TS - HTS;
-        ctx().setFill(bgColor);
-        ctx().fillRect(scaled(cx), scaled(cy), scaled(16), scaled(16));
     }
 
     private void drawTextCenteredOver(String text, double cx, double y, Color color) {
