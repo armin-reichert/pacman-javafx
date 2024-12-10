@@ -107,7 +107,7 @@ class MapManager {
             case 23 -> coloredWorldMap(MINI, 1, _0C_20_14_GREEN_WHITE_VIOLET);
             case 24 -> coloredWorldMap(MINI, 6, _23_20_2B_VIOLET_WHITE_GREEN);
             case 25 -> coloredWorldMap(MINI, 1, _10_20_28_GRAY_WHITE_YELLOW);
-            case 26 -> coloredWorldMap(MINI, 2, _03_20_20_VIOLET_WHITE_WHITE);
+            case 26 -> coloredWorldMap(MINI, 2, _03_20_20_BLUE_WHITE_WHITE);
             case 27 -> coloredWorldMap(MINI, 3, _04_20_20_VIOLET_WHITE_WHITE);
             case 28 -> coloredWorldMapWithRandomColorScheme(MINI, 4);
             case 29 -> coloredWorldMapWithRandomColorScheme(MINI, 5);
@@ -148,7 +148,7 @@ class MapManager {
             case 23 -> coloredWorldMap(BIG,  4, _0C_20_14_GREEN_WHITE_VIOLET);
             case 24 -> coloredWorldMap(BIG,  5, _23_20_2B_VIOLET_WHITE_GREEN);
             case 25 -> coloredWorldMap(BIG,  8, _10_20_28_GRAY_WHITE_YELLOW);
-            case 26 -> coloredWorldMap(BIG, 10, _03_20_20_VIOLET_WHITE_WHITE);
+            case 26 -> coloredWorldMap(BIG, 10, _03_20_20_BLUE_WHITE_WHITE);
             case 27 -> coloredWorldMap(BIG,  8, _04_20_20_VIOLET_WHITE_WHITE);
             case 28 -> coloredWorldMapWithRandomColorScheme(BIG,  5);
             case 29 -> coloredWorldMapWithRandomColorScheme(BIG,  9);
@@ -186,7 +186,7 @@ class MapManager {
             case 23 -> coloredWorldMap(BIG,      5, _0C_20_14_GREEN_WHITE_VIOLET);
             case 24 -> coloredWorldMap(STRANGE,  4, _23_20_2B_VIOLET_WHITE_GREEN);
             case 25 -> coloredWorldMap(BIG,     10, _10_20_28_GRAY_WHITE_YELLOW);
-            case 26 -> coloredWorldMap(BIG,      9, _03_20_20_VIOLET_WHITE_WHITE);
+            case 26 -> coloredWorldMap(BIG,      9, _03_20_20_BLUE_WHITE_WHITE);
             case 27 -> coloredWorldMap(STRANGE, 14, _04_20_20_VIOLET_WHITE_WHITE);
             case 28 -> coloredWorldMapWithRandomColorScheme(MINI,     5);
             case 29 -> coloredWorldMapWithRandomColorScheme(STRANGE,  8);
