@@ -234,9 +234,9 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         // Maps with a color scheme that does not exist in the sprite sheet have to be rendered using the
         // vector renderer for now.
         MapCategory mapCategory = game.mapCategory();
+        int mapNumber = world.map().getConfigValue("mapNumber");
         if (mapSprite.colorScheme() != null) { // map image for color scheme exists in sprite sheet
             drawLevelMessage(level, game.isDemoLevel()); // message appears under map image so draw it first
-            int mapNumber = world.map().getConfigValue("mapNumber");
             RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
                 ? strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
                 : mapSprite.area();
@@ -254,6 +254,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             ctx().restore();
         }
         else {
+            Logger.warn("Map {}, No map sprite available, using vector renderer as default", mapNumber);
             world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
                 .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
             if (blinking) {

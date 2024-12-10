@@ -182,12 +182,7 @@ class SpriteSheet_NonArcadeMaps {
             case 32 -> _15_25_20_RED_ROSE_WHITE;
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
-        if (Globals.inClosedRange(levelNumber, 28, 31)) {
-            //TODO compare also random color schemes with available schemes of corresponding maps
-            return new ImageAreaWithColorScheme(sourceImage, spriteArea(levelNumber), null);
-        } else {
-            return new ImageAreaWithColorScheme(sourceImage, spriteArea(levelNumber), colorScheme);
-        }
+        return new ImageAreaWithColorScheme(sourceImage, spriteArea(levelNumber), colorScheme);
     }
 
     private ImageAreaWithColorScheme getOrCreateMapImage(
