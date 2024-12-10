@@ -102,13 +102,12 @@ class SpriteSheet_NonArcadeMaps {
             case 6 -> _23_20_2B_VIOLET_WHITE_GREEN;
             default -> null;
         };
-
         Vector2i pacTile = v2i(13, 23);
         Logger.debug("Get map #{} with color scheme {}", mapNumber, colorScheme);
         return colorScheme.equals(availableColorScheme)
             ? new ImageAreaWithColorScheme(sourceImage, spriteArea(spriteNumber), colorScheme)
             : getOrCreateMapImage(MINI_MAP_IMAGE_CACHE, spriteNumber, colorScheme, availableColorScheme,
-                (x, y) -> BLINKY_AREA.contains(x, y)  || OTHER_GHOSTS_AREA.contains(x, y) || (pacTile.x() == x && pacTile.y() == y)
+                (x, y) -> BLINKY_AREA.contains(x, y) || OTHER_GHOSTS_AREA.contains(x, y) || (pacTile.x() == x && pacTile.y() == y)
         );
     }
 
@@ -127,7 +126,6 @@ class SpriteSheet_NonArcadeMaps {
             case 11 -> 33;
             default -> throw new IllegalArgumentException("Illegal BIG map number: " + mapNumber);
         };
-        Vector2i pacTile = v2i(13, 32);
         NES_ColorScheme availableColorScheme = switch (mapNumber) {
             case  1 -> _07_20_20_BROWN_WHITE_WHITE;
             case  2 -> _15_25_20_RED_ROSE_WHITE;
@@ -142,7 +140,7 @@ class SpriteSheet_NonArcadeMaps {
             case 11 -> _15_25_20_RED_ROSE_WHITE;
             default -> null;
         };
-
+        Vector2i pacTile = v2i(13, 32);
         Logger.debug("Get map #{} with color scheme {}", mapNumber, colorScheme);
         return colorScheme.equals(availableColorScheme)
             ? new ImageAreaWithColorScheme(sourceImage, spriteArea(spriteNumber), colorScheme)
@@ -178,7 +176,8 @@ class SpriteSheet_NonArcadeMaps {
             case 23 -> _0C_20_14_GREEN_WHITE_VIOLET;
             case 24 -> _23_20_2B_VIOLET_WHITE_GREEN;
             case 25 -> _10_20_28_GRAY_WHITE_YELLOW;
-            case 26,27 -> _04_20_20_VIOLET_WHITE_WHITE;
+            case 26 -> _03_20_20_VIOLET_WHITE_WHITE;
+            case 27 -> _04_20_20_VIOLET_WHITE_WHITE;
             case 28,29,30,31 -> NES_ColorScheme.random();
             case 32 -> _15_25_20_RED_ROSE_WHITE;
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
