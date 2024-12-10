@@ -82,7 +82,13 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             case MINI    -> nonArcadeMapSprites.miniMapSprite(mapNumber, nesColorScheme);
             case BIG     -> nonArcadeMapSprites.bigMapSprite(mapNumber, nesColorScheme);
             // Hack for easy STRANGE map sprite identification:
-            case STRANGE -> nonArcadeMapSprites.strangeMapSprite(worldMap.getConfigValue("levelNumber"));
+            case STRANGE -> {
+                // TODO HACK!
+                int spriteNumber = worldMap.getConfigValue("levelNumber");
+                boolean random = worldMap.getConfigValue("randomColorScheme");
+                NES_ColorScheme colorScheme = worldMap.getConfigValue("nesColorScheme");
+                yield nonArcadeMapSprites.strangeMapSprite(spriteNumber, random ? colorScheme : null);
+            }
         };
 
         terrainRenderer.setMapBackgroundColor(bgColor);

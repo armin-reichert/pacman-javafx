@@ -3,6 +3,7 @@
  */
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
@@ -148,9 +149,8 @@ class SpriteSheet_NonArcadeMaps {
         );
     }
 
-    public ImageAreaWithColorScheme strangeMapSprite(int levelNumber) {
-        int spriteNumber = levelNumber;
-        NES_ColorScheme colorScheme = switch (spriteNumber) {
+    public ImageAreaWithColorScheme strangeMapSprite(int spriteNumber, NES_ColorScheme randomColorScheme) {
+        NES_ColorScheme availableColorScheme = switch (spriteNumber) {
             case 1  -> _36_15_20_PINK_RED_WHITE;
             case 2  -> _21_20_28_BLUE_WHITE_YELLOW;
             case 3  ->  _16_20_15_ORANGE_WHITE_RED;
@@ -178,21 +178,18 @@ class SpriteSheet_NonArcadeMaps {
             case 25 -> _10_20_28_GRAY_WHITE_YELLOW;
             case 26 -> _03_20_20_BLUE_WHITE_WHITE;
             case 27 -> _04_20_20_VIOLET_WHITE_WHITE;
-            case 28,29,30,31 -> NES_ColorScheme.random();
-            case 32 -> _15_25_20_RED_ROSE_WHITE;
-            default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
-        };
-        NES_ColorScheme availableColorScheme = switch (spriteNumber) {
-            default -> colorScheme;
             case 28 -> _00_2A_24_GRAY_GREEN_PINK;
-            case 29 -> _03_20_20_BLUE_WHITE_WHITE; //TODO this is wrong
+            case 29 -> _21_35_20_BLUE_PINK_WHITE;
             case 30 -> _28_16_20_YELLOW_RED_WHITE;
-            case 31 -> _03_20_20_BLUE_WHITE_WHITE; // TODO this is wrong
+            case 31 -> _12_16_20_BLUE_RED_WHITE;
+            case 32 -> _15_25_20_RED_ROSE_WHITE;
+            default -> throw new IllegalArgumentException("Illegal level number: " + spriteNumber);
         };
+        NES_ColorScheme colorScheme = randomColorScheme != null ? randomColorScheme : availableColorScheme;
         Vector2i pacTile = v2i(13, 23); //TODO this can vary
-        Logger.debug("Get map #{} with color scheme {}", spriteNumber, colorScheme);
+        Logger.debug("Get map #{} with color scheme {}", spriteNumber, availableColorScheme);
         return colorScheme.equals(availableColorScheme)
-            ? new ImageAreaWithColorScheme(sourceImage, spriteArea(spriteNumber), colorScheme)
+            ? new ImageAreaWithColorScheme(sourceImage, spriteArea(spriteNumber), availableColorScheme)
             : getOrCreateMapImage(MapCategory.STRANGE, spriteNumber, colorScheme, availableColorScheme,
             (x, y) -> BLINKY_AREA.contains(x, y) || OTHER_GHOSTS_AREA.contains(x, y) || (pacTile.x() == x && pacTile.y() == y)
         );
