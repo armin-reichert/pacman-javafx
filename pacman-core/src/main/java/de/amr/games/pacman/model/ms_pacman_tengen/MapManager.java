@@ -109,10 +109,10 @@ class MapManager {
             case 25 -> coloredWorldMap(MINI, 1, _10_20_28_GRAY_WHITE_YELLOW);
             case 26 -> coloredWorldMap(MINI, 2, _03_20_20_VIOLET_WHITE_WHITE);
             case 27 -> coloredWorldMap(MINI, 3, _04_20_20_VIOLET_WHITE_WHITE);
-            case 28 -> randomlyColoredWorldMap(MINI, 4);
-            case 29 -> randomlyColoredWorldMap(MINI, 5);
-            case 30 -> randomlyColoredWorldMap(MINI, 2);
-            case 31 -> randomlyColoredWorldMap(MINI, 3);
+            case 28 -> coloredWorldMapWithRandomColorScheme(MINI, 4);
+            case 29 -> coloredWorldMapWithRandomColorScheme(MINI, 5);
+            case 30 -> coloredWorldMapWithRandomColorScheme(MINI, 2);
+            case 31 -> coloredWorldMapWithRandomColorScheme(MINI, 3);
             case 32 -> coloredWorldMap(MINI, 6, _15_25_20_RED_ROSE_WHITE);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
@@ -150,10 +150,10 @@ class MapManager {
             case 25 -> coloredWorldMap(BIG,  8, _10_20_28_GRAY_WHITE_YELLOW);
             case 26 -> coloredWorldMap(BIG, 10, _03_20_20_VIOLET_WHITE_WHITE);
             case 27 -> coloredWorldMap(BIG,  8, _04_20_20_VIOLET_WHITE_WHITE);
-            case 28 -> randomlyColoredWorldMap(BIG,  5);
-            case 29 -> randomlyColoredWorldMap(BIG,  9);
-            case 30 -> randomlyColoredWorldMap(BIG,  2);
-            case 31 -> randomlyColoredWorldMap(BIG, 10);
+            case 28 -> coloredWorldMapWithRandomColorScheme(BIG,  5);
+            case 29 -> coloredWorldMapWithRandomColorScheme(BIG,  9);
+            case 30 -> coloredWorldMapWithRandomColorScheme(BIG,  2);
+            case 31 -> coloredWorldMapWithRandomColorScheme(BIG, 10);
             case 32 -> coloredWorldMap(BIG, 11, _15_25_20_RED_ROSE_WHITE);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
@@ -188,10 +188,10 @@ class MapManager {
             case 25 -> coloredWorldMap(BIG,     10, _10_20_28_GRAY_WHITE_YELLOW);
             case 26 -> coloredWorldMap(BIG,      9, _03_20_20_VIOLET_WHITE_WHITE);
             case 27 -> coloredWorldMap(STRANGE, 14, _04_20_20_VIOLET_WHITE_WHITE);
-            case 28 -> randomlyColoredWorldMap(MINI,     5);
-            case 29 -> randomlyColoredWorldMap(STRANGE,  8);
-            case 30 -> randomlyColoredWorldMap(MINI,     4);
-            case 31 -> randomlyColoredWorldMap(STRANGE, 12);
+            case 28 -> coloredWorldMapWithRandomColorScheme(MINI,     5);
+            case 29 -> coloredWorldMapWithRandomColorScheme(STRANGE,  8);
+            case 30 -> coloredWorldMapWithRandomColorScheme(MINI,     4);
+            case 31 -> coloredWorldMapWithRandomColorScheme(STRANGE, 11);
             case 32 -> coloredWorldMap(STRANGE, 15, _15_25_20_RED_ROSE_WHITE);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
@@ -209,7 +209,7 @@ class MapManager {
         return worldMap;
     }
 
-    private WorldMap randomlyColoredWorldMap(MapCategory category, int number) {
+    private WorldMap coloredWorldMapWithRandomColorScheme(MapCategory category, int number) {
         WorldMap worldMap = coloredWorldMap(category, number, NES_ColorScheme.random());
         worldMap.setConfigValue("randomColorScheme", true);
         return worldMap;
