@@ -231,8 +231,6 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             drawGameOptionsInfo(world.map().terrain(), game);
         }
 
-        // Maps with a color scheme that does not exist in the sprite sheet have to be rendered using the
-        // vector renderer for now.
         MapCategory mapCategory = game.mapCategory();
         int mapNumber = world.map().getConfigValue("mapNumber");
         if (mapSprite.colorScheme() != null) { // map image for color scheme exists in sprite sheet
@@ -254,14 +252,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             ctx().restore();
         }
         else {
-            Logger.warn("Map {}, No map sprite available, using vector renderer as default", mapNumber);
-            world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
-                .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
-            if (blinking) {
-                world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
-            }
-            drawLevelMessage(level, game.isDemoLevel());
-            terrainRenderer.drawTerrain(ctx(), world.map().terrain(), world.map().obstacles());
+            Logger.warn("Map {} cannot be rendered, no map sprite available", mapNumber);
         }
     }
 
