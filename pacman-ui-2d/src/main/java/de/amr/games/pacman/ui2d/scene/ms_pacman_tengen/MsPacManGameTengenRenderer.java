@@ -32,6 +32,8 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.Animations.*;
+import static de.amr.games.pacman.model.actors.Bonus.STATE_EATEN;
+import static de.amr.games.pacman.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.games.pacman.ui2d.GameAssets2D.PFX_MS_PACMAN_TENGEN;
 import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.NO_SPRITE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.nesPaletteColor;
@@ -44,6 +46,8 @@ import static java.util.function.Predicate.not;
  */
 public class MsPacManGameTengenRenderer implements GameRenderer {
 
+    private static final Color CANVAS_BACKGROUND_COLOR = Color.BLACK;
+
     private final AssetStorage assets;
     private final MsPacManGameTengenSpriteSheet spriteSheet;
     private final SpriteSheet_NonArcadeMaps nonArcadeMapSprites;
@@ -53,8 +57,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
     private final Canvas canvas;
 
-    private Color bgColor = Color.BLACK;
-    private ImageAreaWithColorScheme mapSprite;
+    private ColoredMaze mapSprite;
     private boolean blinking;
     private boolean levelNumberBoxesVisible;
     private Vector2f messageAnchorPosition;
@@ -68,7 +71,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         nonArcadeMapSprites = new SpriteSheet_NonArcadeMaps(assets);
         messageAnchorPosition = new Vector2f(14f * TS, 21 * TS);
         terrainRenderer.scalingPy.bind(scalingPy);
-        terrainRenderer.setMapBackgroundColor(bgColor);
+        terrainRenderer.setMapBackgroundColor(CANVAS_BACKGROUND_COLOR);
         foodRenderer.scalingPy.bind(scalingPy);
     }
 
@@ -78,20 +81,20 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         MapCategory category = worldMap.getConfigValue("mapCategory");
         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
         mapSprite = switch (category) {
-            case ARCADE  -> arcadeMapSprites.sprite(mapNumber, nesColorScheme);
-            case MINI    -> nonArcadeMapSprites.miniMapSprite(mapNumber, nesColorScheme);
-            case BIG     -> nonArcadeMapSprites.bigMapSprite(mapNumber, nesColorScheme);
+            case ARCADE  -> arcadeMapSprites.coloredMaze(mapNumber, nesColorScheme);
+            case MINI    -> nonArcadeMapSprites.miniMaze(mapNumber, nesColorScheme);
+            case BIG     -> nonArcadeMapSprites.bigMaze(mapNumber, nesColorScheme);
             // Hack for easy STRANGE map sprite identification:
             case STRANGE -> {
                 // TODO HACK!
                 int spriteNumber = worldMap.getConfigValue("levelNumber");
                 boolean random = worldMap.getConfigValue("randomColorScheme");
                 NES_ColorScheme colorScheme = worldMap.getConfigValue("nesColorScheme");
-                yield nonArcadeMapSprites.strangeMapSprite(spriteNumber, random ? colorScheme : null);
+                yield nonArcadeMapSprites.strangeMaze(spriteNumber, random ? colorScheme : null);
             }
         };
 
-        terrainRenderer.setMapBackgroundColor(bgColor);
+        terrainRenderer.setMapBackgroundColor(CANVAS_BACKGROUND_COLOR);
         terrainRenderer.setWallStrokeColor(Color.valueOf(nesColorScheme.strokeColor()));
         terrainRenderer.setWallFillColor(Color.valueOf(nesColorScheme.fillColor()));
         terrainRenderer.setDoorColor(Color.valueOf(nesColorScheme.strokeColor()));
@@ -130,13 +133,11 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
 
     @Override
     public Color backgroundColor() {
-        return bgColor;
+        return CANVAS_BACKGROUND_COLOR;
     }
 
     @Override
-    public void setBackgroundColor(Color color) {
-        bgColor = checkNotNull(color);
-    }
+    public void setBackgroundColor(Color color) {}
 
     @Override
     public void drawAnimatedEntity(AnimatedEntity guy) {
@@ -216,7 +217,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     }
 
     public void drawEmptyMap(WorldMap worldMap, Color fillColor, Color strokeColor) {
-        terrainRenderer.setMapBackgroundColor(bgColor);
+        terrainRenderer.setMapBackgroundColor(CANVAS_BACKGROUND_COLOR);
         terrainRenderer.setWallFillColor(fillColor);
         terrainRenderer.setWallStrokeColor(strokeColor);
         terrainRenderer.setDoorColor(strokeColor);
@@ -253,8 +254,8 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             ctx().scale(scaling(), scaling());
             //TODO: fixme over-painting pellets also over-paints moving message!
             Color pelletColor = Color.valueOf(mapSprite.colorScheme().pelletColor());
-            drawPellets(world, pelletColor, bgColor);
-            drawEnergizers(world, pelletColor, bgColor);
+            drawPellets(world, pelletColor);
+            drawEnergizers(world, pelletColor);
             ctx().restore();
         }
         else {
@@ -262,13 +263,13 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         }
     }
 
-    private void drawPellets(GameWorld world, Color pelletColor, Color emptyColor) {
+    private void drawPellets(GameWorld world, Color pelletColor) {
         world.map().food().tiles()
             .filter(world::isFoodPosition)
             .filter(not(world::isEnergizerPosition))
             .forEach(tile -> {
                 double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
-                ctx().setFill(emptyColor);
+                ctx().setFill(CANVAS_BACKGROUND_COLOR);
                 ctx().fillRect(centerX - 2, centerY - 2, 4, 4);
                 if (!world.hasEatenFoodAt(tile)) {
                     ctx().setFill(pelletColor);
@@ -277,12 +278,12 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             });
     }
 
-    private void drawEnergizers(GameWorld world, Color pelletColor, Color emptyColor) {
+    private void drawEnergizers(GameWorld world, Color pelletColor) {
         double size = TS;
         double offset = 0.5 * (HTS);
         world.map().food().tiles().filter(world::isEnergizerPosition).forEach(energizerTile -> {
             double x = energizerTile.x() * TS, y = energizerTile.y() * TS;
-            ctx().setFill(emptyColor);
+            ctx().setFill(CANVAS_BACKGROUND_COLOR);
             ctx().fillRect(x-1, y-1, TS + 2, TS + 2); // avoid blitzer
             if (!world.hasEatenFoodAt(energizerTile) && blinking) {
                 ctx().setFill(pelletColor);
@@ -300,8 +301,8 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         ctx().setImageSmoothing(false);
         ctx().translate(0, ((MovingBonus) bonus).elongationY());
         switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawEntitySprite(bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawEntitySprite(bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
+            case STATE_EDIBLE -> drawEntitySprite(bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            case STATE_EATEN  -> drawEntitySprite(bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
             default -> {}
         }
         ctx().restore();
@@ -335,7 +336,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     private void overPaintActors(GameWorld world) {
         Vector2f topLeftPosition = world.houseTopLeftTile().plus(1, 2).scaled(TS * scaling());
         Vector2f size = new Vector2i(world.houseSize().x() - 2, 2).scaled(TS * scaling());
-        ctx().setFill(bgColor);
+        ctx().setFill(CANVAS_BACKGROUND_COLOR);
         ctx().fillRect(topLeftPosition.x(), topLeftPosition.y(), size.x(), size.y());
 
         overPaint(world.map().terrain().getTileProperty("pos_pac", v2i(14, 26)));
@@ -346,7 +347,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         // Parameter tile denotes the left of the two tiles where actor is located between. Compute center position.
         double cx = tile.x() * TS;
         double cy = tile.y() * TS - HTS;
-        ctx().setFill(bgColor);
+        ctx().setFill(CANVAS_BACKGROUND_COLOR);
         ctx().fillRect(scaled(cx), scaled(cy), scaled(16), scaled(16));
     }
 
@@ -438,7 +439,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             drawSpriteCenteredOverTile(sprite, x, y);
             var numberX = x + 8;
             var numberY = y + 18; // baseline
-            ctx().setFill(bgColor);
+            ctx().setFill(CANVAS_BACKGROUND_COLOR);
             ctx().save();
             ctx().scale(scaling(), scaling());
             ctx().fillRect(numberX - 1, numberY - 8, 12, 8);
@@ -462,7 +463,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         ctx().setImageSmoothing(false);
         drawSpriteScaled(storkAnimation.currentSprite(), pos.x(), pos.y());
         if (hideBag) { // over-paint bag under beak
-            ctx().setFill(bgColor);
+            ctx().setFill(CANVAS_BACKGROUND_COLOR);
             ctx().fillRect(scaled(pos.x() - 1), scaled(pos.y() + 7), scaled(9), scaled(9));
         }
     }

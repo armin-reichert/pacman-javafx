@@ -19,13 +19,13 @@ class SpriteSheet_ArcadeMaps {
 
     public SpriteSheet_ArcadeMaps(AssetStorage assets) {
         sourceImage = assets.image(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".mazes.arcade");
-        boolean illegalColor = Ufx.checkForNonNES_PaletteColors(sourceImage);
-        if (illegalColor) {
+        boolean containsIllegalColor = Ufx.checkForNonNES_PaletteColors(sourceImage);
+        if (containsIllegalColor) {
             Logger.error("Found illegal color(s) in Arcade maps sprite sheet");
         }
     }
 
-    public ImageAreaWithColorScheme sprite(int mapNumber, NES_ColorScheme colorScheme) {
+    public ColoredMaze coloredMaze(int mapNumber, NES_ColorScheme colorScheme) {
         int index = switch (mapNumber) {
             case 1 -> 0;
             case 2 -> 1;
@@ -34,17 +34,17 @@ class SpriteSheet_ArcadeMaps {
                 case _35_28_20_PINK_YELLOW_WHITE  -> 4;
                 case _17_20_20_BROWN_WHITE_WHITE  -> 6;
                 case _0F_20_28_BLACK_WHITE_YELLOW -> 8;
-                default -> throw new IllegalArgumentException("No image found for map #3 and color scheme: " + colorScheme);
+                default -> throw new IllegalArgumentException("No maze image found for map #3 and color scheme: " + colorScheme);
             };
             case 4 -> switch (colorScheme) {
                 case _01_38_20_BLUE_YELLOW_WHITE   -> 3;
                 case _36_15_20_PINK_RED_WHITE      -> 5;
                 case _13_20_28_VIOLET_WHITE_YELLOW -> 7;
-                default -> throw new IllegalArgumentException("No image found for map #4 and color scheme: " + colorScheme);
+                default -> throw new IllegalArgumentException("No maze image found for map #4 and color scheme: " + colorScheme);
             };
             default -> throw new IllegalArgumentException("Illegal Arcade map number: " + mapNumber);
         };
         int col = index % 3, row = index / 3;
-        return new ImageAreaWithColorScheme(sourceImage, new RectArea(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT), colorScheme);
+        return new ColoredMaze(sourceImage, new RectArea(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT), colorScheme);
     }
 }
