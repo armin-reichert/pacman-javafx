@@ -479,10 +479,10 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             binding.key(NES.JoypadButton.BTN_A)
         ), 0, scaled(TS));
         ctx().strokeText(line2.formatted(
-                binding.key(NES.JoypadButton.BTN_UP),
-                binding.key(NES.JoypadButton.BTN_DOWN),
-                binding.key(NES.JoypadButton.BTN_LEFT),
-                binding.key(NES.JoypadButton.BTN_RIGHT)
+            binding.key(NES.JoypadButton.BTN_UP),
+            binding.key(NES.JoypadButton.BTN_DOWN),
+            binding.key(NES.JoypadButton.BTN_LEFT),
+            binding.key(NES.JoypadButton.BTN_RIGHT)
         ), 0, scaled(2*TS));
 
     }
