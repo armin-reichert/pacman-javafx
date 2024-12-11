@@ -26,6 +26,7 @@ import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -55,7 +56,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final TerrainRenderer terrainRenderer = new TerrainRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
-    private final Canvas canvas;
+    private final GraphicsContext ctx;
 
     private ColoredMaze mapSprite;
     private boolean blinking;
@@ -65,7 +66,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     public MsPacManGameTengenRenderer(AssetStorage assets, MsPacManGameTengenSpriteSheet spriteSheet, Canvas canvas) {
         this.assets = checkNotNull(assets);
         this.spriteSheet = checkNotNull(spriteSheet);
-        this.canvas = checkNotNull(canvas);
+        this.ctx = checkNotNull(canvas).getGraphicsContext2D();
 
         arcadeMapSprites = new SpriteSheet_ArcadeMaps(assets);
         nonArcadeMapSprites = new SpriteSheet_NonArcadeMaps(assets);
@@ -114,9 +115,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     }
 
     @Override
-    public Canvas canvas() {
-        return canvas;
-    }
+    public Canvas canvas() { return ctx.getCanvas(); }
 
     @Override
     public void setFlashMode(boolean flashMode) {}
@@ -141,7 +140,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
 
     @Override
     public void drawAnimatedEntity(AnimatedEntity guy) {
-        ctx().setImageSmoothing(false);
+        ctx.setImageSmoothing(false);
         if (guy instanceof Pac pac) {
             drawMsOrMrPacMan(pac);
         } else {
@@ -197,23 +196,23 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
 
     private void drawGuyHeading(Creature guy, Direction dir, SpriteAnimation spriteAnimation) {
         Vector2f center = guy.center().scaled((float) scaling());
-        ctx().save();
-        ctx().translate(center.x(), center.y());
+        ctx.save();
+        ctx.translate(center.x(), center.y());
         switch (dir) {
-            case UP    -> ctx().rotate(90);
+            case UP    -> ctx.rotate(90);
             case LEFT  -> {}
-            case RIGHT -> ctx().scale(-1, 1);
-            case DOWN  -> { ctx().scale(-1, 1); ctx().rotate(-90); }
+            case RIGHT -> ctx.scale(-1, 1);
+            case DOWN  -> { ctx.scale(-1, 1); ctx.rotate(-90); }
         }
         drawSpriteCenteredOverPosition(spriteAnimation.currentSprite(), 0, 0);
-        ctx().restore();
+        ctx.restore();
     }
 
     public void drawSceneBorders() {
-        ctx().setLineWidth(0.5);
-        ctx().setStroke(Color.grayRgb(50));
-        ctx().strokeLine(0.5, 0, 0.5, canvas.getHeight());
-        ctx().strokeLine(canvas.getWidth() - 0.5, 0, canvas.getWidth() - 0.5, canvas.getHeight());
+        ctx.setLineWidth(0.5);
+        ctx.setStroke(Color.grayRgb(50));
+        ctx.strokeLine(0.5, 0, 0.5, canvas().getHeight());
+        ctx.strokeLine(canvas().getWidth() - 0.5, 0, canvas().getWidth() - 0.5, canvas().getHeight());
     }
 
     public void drawEmptyMap(WorldMap worldMap, Color fillColor, Color strokeColor) {
@@ -221,7 +220,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         terrainRenderer.setWallFillColor(fillColor);
         terrainRenderer.setWallStrokeColor(strokeColor);
         terrainRenderer.setDoorColor(strokeColor);
-        terrainRenderer.drawTerrain(ctx(), worldMap.terrain(), worldMap.obstacles());
+        terrainRenderer.drawTerrain(ctx, worldMap.terrain(), worldMap.obstacles());
     }
 
     @Override
@@ -229,7 +228,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     }
 
     public void drawWorld(GameContext context, GameWorld world, double mapX, double mapY) {
-        ctx().setImageSmoothing(false);
+        ctx.setImageSmoothing(false);
 
         MsPacManGameTengen game = (MsPacManGameTengen) context.game();
         GameLevel level = context.level();
@@ -245,18 +244,18 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
                 ? strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
                 : mapSprite.area();
-            ctx().drawImage(mapSprite.source(),
+            ctx.drawImage(mapSprite.source(),
                 area.x(), area.y(), area.width(), area.height(),
                 scaled(mapX), scaled(mapY), scaled(area.width()), scaled(area.height())
             );
             overPaintActors(world);
-            ctx().save();
-            ctx().scale(scaling(), scaling());
+            ctx.save();
+            ctx.scale(scaling(), scaling());
             //TODO: fixme over-painting pellets also over-paints moving message!
             Color pelletColor = Color.valueOf(mapSprite.colorScheme().pelletColor());
             drawPellets(world, pelletColor);
             drawEnergizers(world, pelletColor);
-            ctx().restore();
+            ctx.restore();
         }
         else {
             Logger.warn("Map {} cannot be rendered, no map sprite available", mapNumber);
@@ -269,11 +268,11 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             .filter(not(world::isEnergizerPosition))
             .forEach(tile -> {
                 double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
-                ctx().setFill(CANVAS_BACKGROUND_COLOR);
-                ctx().fillRect(centerX - 2, centerY - 2, 4, 4);
+                ctx.setFill(CANVAS_BACKGROUND_COLOR);
+                ctx.fillRect(centerX - 2, centerY - 2, 4, 4);
                 if (!world.hasEatenFoodAt(tile)) {
-                    ctx().setFill(pelletColor);
-                    ctx().fillRect(centerX - 1, centerY - 1, 2, 2);
+                    ctx.setFill(pelletColor);
+                    ctx.fillRect(centerX - 1, centerY - 1, 2, 2);
                 }
             });
     }
@@ -283,29 +282,29 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         double offset = 0.5 * (HTS);
         world.map().food().tiles().filter(world::isEnergizerPosition).forEach(energizerTile -> {
             double x = energizerTile.x() * TS, y = energizerTile.y() * TS;
-            ctx().setFill(CANVAS_BACKGROUND_COLOR);
-            ctx().fillRect(x-1, y-1, TS + 2, TS + 2); // avoid blitzer
+            ctx.setFill(CANVAS_BACKGROUND_COLOR);
+            ctx.fillRect(x-1, y-1, TS + 2, TS + 2); // avoid blitzer
             if (!world.hasEatenFoodAt(energizerTile) && blinking) {
-                ctx().setFill(pelletColor);
+                ctx.setFill(pelletColor);
                 // draw pixelized "circle"
-                ctx().fillRect(x + offset, y, HTS, size);
-                ctx().fillRect(x, y + offset, size, HTS);
-                ctx().fillRect(x + 1, y + 1, size - 2, size - 2);
+                ctx.fillRect(x + offset, y, HTS, size);
+                ctx.fillRect(x, y + offset, size, HTS);
+                ctx.fillRect(x + 1, y + 1, size - 2, size - 2);
             }
         });
     }
 
     @Override
     public void drawBonus(Bonus bonus) {
-        ctx().save();
-        ctx().setImageSmoothing(false);
-        ctx().translate(0, ((MovingBonus) bonus).elongationY());
+        ctx.save();
+        ctx.setImageSmoothing(false);
+        ctx.translate(0, ((MovingBonus) bonus).elongationY());
         switch (bonus.state()) {
             case STATE_EDIBLE -> drawEntitySprite(bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
             case STATE_EATEN  -> drawEntitySprite(bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
             default -> {}
         }
-        ctx().restore();
+        ctx.restore();
     }
 
     private void drawLevelMessage(GameLevel level, boolean demoLevel) {
@@ -336,8 +335,8 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     private void overPaintActors(GameWorld world) {
         Vector2f topLeftPosition = world.houseTopLeftTile().plus(1, 2).scaled(TS * scaling());
         Vector2f size = new Vector2i(world.houseSize().x() - 2, 2).scaled(TS * scaling());
-        ctx().setFill(CANVAS_BACKGROUND_COLOR);
-        ctx().fillRect(topLeftPosition.x(), topLeftPosition.y(), size.x(), size.y());
+        ctx.setFill(CANVAS_BACKGROUND_COLOR);
+        ctx.fillRect(topLeftPosition.x(), topLeftPosition.y(), size.x(), size.y());
 
         overPaint(world.map().terrain().getTileProperty("pos_pac", v2i(14, 26)));
         overPaint(world.map().terrain().getTileProperty("pos_ghost_1_red", v2i(13, 14)));
@@ -347,8 +346,8 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         // Parameter tile denotes the left of the two tiles where actor is located between. Compute center position.
         double cx = tile.x() * TS;
         double cy = tile.y() * TS - HTS;
-        ctx().setFill(CANVAS_BACKGROUND_COLOR);
-        ctx().fillRect(scaled(cx), scaled(cy), scaled(16), scaled(16));
+        ctx.setFill(CANVAS_BACKGROUND_COLOR);
+        ctx.fillRect(scaled(cx), scaled(cy), scaled(16), scaled(16));
     }
 
     private void drawGameOptionsInfo(TileMap terrain, MsPacManGameTengen game) {
@@ -386,7 +385,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
 
     @Override
     public void drawLevelCounter(GameContext context, double x, double y) {
-        ctx().setImageSmoothing(false);
+        ctx.setImageSmoothing(false);
         MsPacManGameTengen game = (MsPacManGameTengen) context.game();
         int levelNumber = context.level().number;
         if (levelNumberBoxesVisible) {
@@ -419,13 +418,13 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
 
     public void drawBar(Color outlineColor, Color barColor, double width, double y) {
         double scaling = scaling();
-        ctx().save();
-        ctx().scale(scaling, scaling);
-        ctx().setFill(outlineColor);
-        ctx().fillRect(0, y, width, TS);
-        ctx().setFill(barColor);
-        ctx().fillRect(0, y + 1, width, TS - 2);
-        ctx().restore();
+        ctx.save();
+        ctx.scale(scaling, scaling);
+        ctx.setFill(outlineColor);
+        ctx.fillRect(0, y, width, TS);
+        ctx.setFill(barColor);
+        ctx.fillRect(0, y + 1, width, TS - 2);
+        ctx.restore();
     }
 
     public void drawClapperBoard(
@@ -435,22 +434,22 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         double x, double y)
     {
         animation.sprite().ifPresent(sprite -> {
-            ctx().setImageSmoothing(false);
+            ctx.setImageSmoothing(false);
             drawSpriteCenteredOverTile(sprite, x, y);
             var numberX = x + 8;
             var numberY = y + 18; // baseline
-            ctx().setFill(CANVAS_BACKGROUND_COLOR);
-            ctx().save();
-            ctx().scale(scaling(), scaling());
-            ctx().fillRect(numberX - 1, numberY - 8, 12, 8);
-            ctx().restore();
-            ctx().setFont(font);
-            ctx().setFill(textColor);
-            ctx().fillText(String.valueOf(number), scaled(numberX), scaled(numberY));
+            ctx.setFill(CANVAS_BACKGROUND_COLOR);
+            ctx.save();
+            ctx.scale(scaling(), scaling());
+            ctx.fillRect(numberX - 1, numberY - 8, 12, 8);
+            ctx.restore();
+            ctx.setFont(font);
+            ctx.setFill(textColor);
+            ctx.fillText(String.valueOf(number), scaled(numberX), scaled(numberY));
             if (animation.isTextVisible()) {
                 double textX = x + sprite.width();
                 double textY = y + 2;
-                ctx().fillText(text, scaled(textX), scaled(textY));
+                ctx.fillText(text, scaled(textX), scaled(textY));
             }
         });
     }
@@ -460,26 +459,26 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             return;
         }
         Vector2f pos = stork.position();
-        ctx().setImageSmoothing(false);
+        ctx.setImageSmoothing(false);
         drawSpriteScaled(storkAnimation.currentSprite(), pos.x(), pos.y());
         if (hideBag) { // over-paint bag under beak
-            ctx().setFill(CANVAS_BACKGROUND_COLOR);
-            ctx().fillRect(scaled(pos.x() - 1), scaled(pos.y() + 7), scaled(9), scaled(9));
+            ctx.setFill(CANVAS_BACKGROUND_COLOR);
+            ctx.fillRect(scaled(pos.x() - 1), scaled(pos.y() + 7), scaled(9), scaled(9));
         }
     }
 
     public void drawJoypadBindings(JoypadKeyBinding binding) {
         String line1 = " [SELECT]=%s   [START]=%s   [BUTTON B]=%s   [BUTTON A]=%s";
         String line2 = " [UP]=%s   [DOWN]=%s   [LEFT]=%s   [RIGHT]=%s";
-        ctx().setFont(Font.font("Sans", scaled(TS)));
-        ctx().setStroke(Color.WHITE);
-        ctx().strokeText(line1.formatted(
+        ctx.setFont(Font.font("Sans", scaled(TS)));
+        ctx.setStroke(Color.WHITE);
+        ctx.strokeText(line1.formatted(
             binding.key(NES.JoypadButton.BTN_SELECT),
             binding.key(NES.JoypadButton.BTN_START),
             binding.key(NES.JoypadButton.BTN_B),
             binding.key(NES.JoypadButton.BTN_A)
         ), 0, scaled(TS));
-        ctx().strokeText(line2.formatted(
+        ctx.strokeText(line2.formatted(
             binding.key(NES.JoypadButton.BTN_UP),
             binding.key(NES.JoypadButton.BTN_DOWN),
             binding.key(NES.JoypadButton.BTN_LEFT),
