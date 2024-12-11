@@ -3,7 +3,6 @@
  */
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
