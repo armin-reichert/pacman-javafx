@@ -49,8 +49,8 @@ class MapManager {
     public MapManager(String mapsRoot) {
         mapRepository.put(MapCategory.ARCADE,  createMaps(getClass(), mapsRoot + "arcade%d.world", 4));
         mapRepository.put(MapCategory.MINI,    createMaps(getClass(), mapsRoot + "mini%d.world", 6));
-        mapRepository.put(MapCategory.BIG,     createMaps(getClass(), mapsRoot + "big%d.world", 11));
-        mapRepository.put(MapCategory.STRANGE, createMaps(getClass(), mapsRoot + "strange%d.world", 15));
+        mapRepository.put(MapCategory.BIG,     createMaps(getClass(), mapsRoot + "big%02d.world", 11));
+        mapRepository.put(MapCategory.STRANGE, createMaps(getClass(), mapsRoot + "strange%02d.world", 15));
     }
 
     public WorldMap coloredWorldMap(MapCategory mapCategory, int levelNumber) {
