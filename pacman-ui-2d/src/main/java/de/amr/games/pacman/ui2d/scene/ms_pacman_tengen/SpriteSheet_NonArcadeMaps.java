@@ -24,6 +24,20 @@ import static de.amr.games.pacman.lib.RectArea.rect;
 import static de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 
+/**
+ * This class provides an API to access the images in file {@code non_arcade_mazes.png}.
+ * <p>
+ * This PNG file contains all mazes which are used for the MINI, BIG and STRANGE map categories.
+ * The color schemes correspond to the ones used in STRANGE mode running through all levels (1-32).
+ * Because levels 28-31 use random color schemes, and the MINI and BIG categories use their
+ * map in varying color schemes, the images in the file do not cover all required map/color scheme
+ * combinations.
+ * </p>
+ * <p>
+*  For this reason, a cache is provided where each maze image contained in the file can be
+ * stored after having been recolored to the color scheme required in the game level.
+ * </p>
+ */
 class SpriteSheet_NonArcadeMaps {
 
     private record CacheKey(MapCategory mapCategory, int spriteNumber, NES_ColorScheme colorScheme) {}
