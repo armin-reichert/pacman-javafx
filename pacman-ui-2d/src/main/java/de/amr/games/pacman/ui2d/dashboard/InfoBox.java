@@ -59,7 +59,7 @@ public abstract class InfoBox extends TitledPane {
 
     public void init(GameContext context) {
         this.context = context;
-        grid.setBackground(coloredBackground(context.assets().color("infobox.background_color")));
+        grid.setBackground(coloredBackground(DashboardAssets.IT.color("infobox.background_color")));
     }
 
     public void update() {
@@ -205,7 +205,7 @@ public abstract class InfoBox extends TitledPane {
         var slider = new Slider(min, max, initialValue);
         slider.setShowTickMarks(tickMarks);
         slider.setShowTickLabels(tickLabels);
-        slider.setMinWidth(context.assets().<Integer>get("infobox.min_col_width"));
+        slider.setMinWidth(DashboardAssets.IT.<Integer>get("infobox.min_col_width"));
         slider.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if (e.getClickCount() == 2) {
                 slider.setValue(initialValue);

@@ -36,6 +36,6 @@ public class InfoBoxJoypad extends InfoBox {
             joypad.key(NES.JoypadButton.BTN_LEFT).getDisplayText(),
             joypad.key(NES.JoypadButton.BTN_RIGHT).getDisplayText())
         );
-        addRow(new ImageView(context.assets().image(PFX_MS_PACMAN_TENGEN + ".image.nes-controller")));
+        addRow(new ImageView(DashboardAssets.IT.image("image.nes-controller")));
     }
 }

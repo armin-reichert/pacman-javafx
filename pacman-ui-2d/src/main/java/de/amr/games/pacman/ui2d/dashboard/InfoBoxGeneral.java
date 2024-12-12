@@ -36,9 +36,9 @@ public class InfoBoxGeneral extends InfoBox {
 
         GameClockFX clock = context.gameClock();
 
-        iconPlay = new ImageView(context.assets().image("icon.play"));
-        iconStop = new ImageView(context.assets().image("icon.stop"));
-        iconStep = new ImageView(context.assets().image("icon.step"));
+        iconPlay = new ImageView(DashboardAssets.IT.image("icon.play"));
+        iconStop = new ImageView(DashboardAssets.IT.image("icon.stop"));
+        iconStep = new ImageView(DashboardAssets.IT.image("icon.step"));
 
         addLabeledValue("Java Version",   Runtime.version().toString());
         addLabeledValue("JavaFX Version", System.getProperty("javafx.runtime.version"));

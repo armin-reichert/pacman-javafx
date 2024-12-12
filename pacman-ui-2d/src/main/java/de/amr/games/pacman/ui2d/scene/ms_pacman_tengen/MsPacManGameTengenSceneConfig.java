@@ -130,7 +130,6 @@ public class MsPacManGameTengenSceneConfig implements GameSceneConfig {
         assets.store(PFX_MS_PACMAN_TENGEN + ".helpButton.icon",                  rm.loadImage("graphics/icons/help-red-64.png"));
         assets.store(PFX_MS_PACMAN_TENGEN + ".icon",                             rm.loadImage("graphics/icons/mspacman.png"));
         assets.store(PFX_MS_PACMAN_TENGEN + ".logo.midway",                      rm.loadImage("graphics/mspacman/midway_logo.png"));
-        assets.store(PFX_MS_PACMAN_TENGEN + ".image.nes-controller",             rm.loadImage("graphics/tengen/nes-controller.jpg"));
 
         assets.store(PFX_MS_PACMAN_TENGEN + ".color.game_over_message",          nesPaletteColor(0x11));
         assets.store(PFX_MS_PACMAN_TENGEN + ".color.ready_message",              nesPaletteColor(0x28));

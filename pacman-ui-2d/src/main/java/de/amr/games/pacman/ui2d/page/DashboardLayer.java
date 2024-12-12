@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.dashboard.DashboardAssets;
 import de.amr.games.pacman.ui2d.dashboard.InfoBox;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import javafx.beans.binding.Bindings;
@@ -54,10 +55,10 @@ public class DashboardLayer extends BorderPane {
 
     private DashboardEntry createEntry(String title, InfoBox infoBox) {
         infoBox.setText(title);
-        infoBox.setMinLabelWidth(context.assets().get("infobox.min_label_width"));
-        infoBox.setTextColor(context.assets().get("infobox.text_color"));
-        infoBox.setContentTextFont(context.assets().get("infobox.text_font"));
-        infoBox.setLabelFont(context.assets().get("infobox.label_font"));
+        infoBox.setMinLabelWidth(DashboardAssets.IT.get("infobox.min_label_width"));
+        infoBox.setTextColor(DashboardAssets.IT.get("infobox.text_color"));
+        infoBox.setContentTextFont(DashboardAssets.IT.get("infobox.text_font"));
+        infoBox.setLabelFont(DashboardAssets.IT.get("infobox.label_font"));
         infoBox.init(context);
         return new DashboardEntry(title, infoBox);
     }

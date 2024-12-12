@@ -20,7 +20,7 @@ public class InfoBoxAbout extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        var theAuthor = new ImageView(context.assets().image("photo.armin1970"));
+        var theAuthor = new ImageView(DashboardAssets.IT.image("photo.armin1970"));
         theAuthor.setFitWidth(250);
         theAuthor.setPreserveRatio(true);
 
@@ -29,7 +29,7 @@ public class InfoBoxAbout extends InfoBox {
         madeBy.setFill(Color.grayRgb(150));
 
         var signature = new Text("Armin Reichert");
-        var font = context.assets().font("font.handwriting", 18);
+        var font = DashboardAssets.IT.font("font.handwriting", 18);
         signature.setFont(font);
         signature.setFill(Color.grayRgb(225));
 
