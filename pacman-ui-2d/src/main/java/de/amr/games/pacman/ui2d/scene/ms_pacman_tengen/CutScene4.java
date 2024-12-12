@@ -212,7 +212,7 @@ public class CutScene4 extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         var r = (MsPacManGameTengenRenderer) gr;
-        r.drawSceneBorders();
+        r.drawSceneBorderLines();
         r.drawClapperBoard(clapAnimation, "THE END", 4,
                 r.scaledArcadeFont(TS), clapTextColor, CLAP_TILE_X, CLAP_TILE_Y);
         r.drawAnimatedEntity(msPacMan);

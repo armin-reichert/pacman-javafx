@@ -171,7 +171,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
                 switch (animations.currentAnimationID()) {
                     case ANIM_PAC_MUNCHING, ANIM_MS_PACMAN_BOOSTER,
                          ANIM_MR_PACMAN_MUNCHING, ANIM_MR_PACMAN_BOOSTER,
-                         ANIM_JUNIOR_PACMAN -> drawGuyHeading(pac, pac.moveDir(), animation);
+                         ANIM_JUNIOR_PACMAN -> drawGuy(pac, pac.moveDir(), animation.currentSprite());
                     case ANIM_PAC_DYING -> {
                         Direction dir = Direction.UP;
                         if (animation.frameIndex() < 11) {
@@ -182,7 +182,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
                                 case 3 -> Direction.RIGHT;
                             };
                         }
-                        drawGuyHeading(pac, dir, animation);
+                        drawGuy(pac, dir, animation.currentSprite());
                     }
                     default -> GameRenderer.super.drawAnimatedEntity(pac);
                 }
@@ -192,7 +192,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         });
     }
 
-    private void drawGuyHeading(Creature guy, Direction dir, SpriteAnimation spriteAnimation) {
+    private void drawGuy(Creature guy, Direction dir, RectArea spriteLookingLeft) {
         Vector2f center = guy.center().scaled((float) scaling());
         ctx.save();
         ctx.translate(center.x(), center.y());
@@ -202,11 +202,11 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             case RIGHT -> ctx.scale(-1, 1);
             case DOWN  -> { ctx.scale(-1, 1); ctx.rotate(-90); }
         }
-        drawSpriteCenteredOverPosition(spriteAnimation.currentSprite(), 0, 0);
+        drawSpriteCenteredOverPosition(spriteLookingLeft, 0, 0);
         ctx.restore();
     }
 
-    public void drawSceneBorders() {
+    public void drawSceneBorderLines() {
         ctx.setLineWidth(0.5);
         ctx.setStroke(Color.grayRgb(50));
         ctx.strokeLine(0.5, 0, 0.5, canvas().getHeight());
@@ -426,12 +426,12 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     }
 
     public void drawClapperBoard(
-        ClapperboardAnimation animation,
+        ClapperboardAnimation clap,
         String text, int number,
         Font font, Color textColor,
         double x, double y)
     {
-        animation.sprite().ifPresent(sprite -> {
+        clap.sprite().ifPresent(sprite -> {
             ctx.setImageSmoothing(false);
             drawSpriteCenteredOverTile(sprite, x, y);
             var numberX = x + 8;
@@ -444,7 +444,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             ctx.setFont(font);
             ctx.setFill(textColor);
             ctx.fillText(String.valueOf(number), scaled(numberX), scaled(numberY));
-            if (animation.isTextVisible()) {
+            if (clap.isTextVisible()) {
                 double textX = x + sprite.width();
                 double textY = y + 2;
                 ctx.fillText(text, scaled(textX), scaled(textY));

@@ -216,7 +216,7 @@ public class CutScene1 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         var r = (MsPacManGameTengenRenderer) gr;
-        r.drawSceneBorders();
+        r.drawSceneBorderLines();
         r.setLevelNumberBoxesVisible(false);
         r.drawClapperBoard(clapAnimation, "THEY MEET", 1,
             r.scaledArcadeFont(TS), clapTextColor, CLAP_TILE_X, CLAP_TILE_Y);

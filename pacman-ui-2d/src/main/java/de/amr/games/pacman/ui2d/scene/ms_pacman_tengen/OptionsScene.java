@@ -241,7 +241,7 @@ public class OptionsScene extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         MsPacManGameTengenRenderer r = (MsPacManGameTengenRenderer) gr;
-        r.drawSceneBorders();
+        r.drawSceneBorderLines();
 
         if (initialDelay > 0) {
             return;

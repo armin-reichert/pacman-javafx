@@ -105,7 +105,7 @@ public class BootScene extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         var r = (MsPacManGameTengenRenderer) gr;
-        r.drawSceneBorders();
+        r.drawSceneBorderLines();
         r.setScaling(scaling());
         if (grayScreen) {
             r.ctx().setFill(nesPaletteColor(0x10));
