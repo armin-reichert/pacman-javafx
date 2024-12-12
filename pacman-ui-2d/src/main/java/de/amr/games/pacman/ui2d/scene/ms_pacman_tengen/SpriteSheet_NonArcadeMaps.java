@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.RectArea.rect;
 import static de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
@@ -71,8 +72,8 @@ public class SpriteSheet_NonArcadeMaps {
 
     private final Image sourceImage;
 
-    public SpriteSheet_NonArcadeMaps(AssetStorage assets) {
-        sourceImage = assets.image(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".mazes.non_arcade");
+    public SpriteSheet_NonArcadeMaps(Image sourceImage) {
+        this.sourceImage = checkNotNull(sourceImage);
     }
 
     private RectArea mazeSprite(int spriteNumber) {

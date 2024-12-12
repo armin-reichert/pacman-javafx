@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
+import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.PacManGames2dApp;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -39,9 +40,10 @@ public class MsPacManGameTengenSceneConfig implements GameSceneConfig {
 
     public MsPacManGameTengenSceneConfig(AssetStorage assets) {
         this.assets = checkNotNull(assets);
-        spriteSheet = assets.get("tengen.spritesheet");
-        arcadeMapSprites = new SpriteSheet_ArcadeMaps(assets);
-        nonArcadeMapSprites = new SpriteSheet_NonArcadeMaps(assets);
+
+        spriteSheet = new MsPacManGameTengenSpriteSheet(assets.image("tengen.spritesheet"));
+        arcadeMapSprites = new SpriteSheet_ArcadeMaps(assets.image(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".mazes.arcade"));
+        nonArcadeMapSprites = new SpriteSheet_NonArcadeMaps(assets.image(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".mazes.non_arcade"));
 
         set("BootScene",      new BootScene());
         set("IntroScene",     new IntroScene());

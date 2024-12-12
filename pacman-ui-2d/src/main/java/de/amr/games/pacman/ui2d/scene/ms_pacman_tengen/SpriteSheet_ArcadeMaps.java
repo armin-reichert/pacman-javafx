@@ -9,14 +9,16 @@ import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.scene.image.Image;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+
 public class SpriteSheet_ArcadeMaps {
 
     static final int WIDTH = 28*8, HEIGHT = 31*8;
 
     private final Image sourceImage;
 
-    public SpriteSheet_ArcadeMaps(AssetStorage assets) {
-        sourceImage = assets.image(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".mazes.arcade");
+    public SpriteSheet_ArcadeMaps(Image sourceImage) {
+        this.sourceImage = checkNotNull(sourceImage);
     }
 
     public ColoredMaze coloredMaze(int mapNumber, NES_ColorScheme colorScheme) {
