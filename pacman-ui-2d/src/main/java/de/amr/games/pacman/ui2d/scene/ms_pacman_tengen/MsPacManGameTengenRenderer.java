@@ -58,7 +58,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
     private final GraphicsContext ctx;
 
-    private ColoredMaze mapSprite;
+    private ColoredMaze maze;
     private boolean blinking;
     private boolean levelNumberBoxesVisible;
     private Vector2f messageAnchorPosition;
@@ -87,7 +87,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         int mapNumber = worldMap.getConfigValue("mapNumber");
         MapCategory category = worldMap.getConfigValue("mapCategory");
         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
-        mapSprite = switch (category) {
+        maze = switch (category) {
             case ARCADE  -> arcadeMapSprites.coloredMaze(mapNumber, nesColorScheme);
             case MINI    -> nonArcadeMapSprites.miniMaze(mapNumber, nesColorScheme);
             case BIG     -> nonArcadeMapSprites.bigMaze(mapNumber, nesColorScheme);
@@ -243,12 +243,12 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
 
         MapCategory mapCategory = game.mapCategory();
         int mapNumber = world.map().getConfigValue("mapNumber");
-        if (mapSprite.colorScheme() != null) { // map image for color scheme exists in sprite sheet
+        if (maze.colorScheme() != null) { // map image for color scheme exists in sprite sheet
             drawLevelMessage(level, game.isDemoLevel()); // message appears under map image so draw it first
             RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
                 ? strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
-                : mapSprite.area();
-            ctx.drawImage(mapSprite.source(),
+                : maze.area();
+            ctx.drawImage(maze.source(),
                 area.x(), area.y(), area.width(), area.height(),
                 scaled(mapX), scaled(mapY), scaled(area.width()), scaled(area.height())
             );
@@ -256,7 +256,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             ctx.save();
             ctx.scale(scaling(), scaling());
             //TODO: fixme over-painting pellets also over-paints moving message!
-            Color pelletColor = Color.valueOf(mapSprite.colorScheme().pelletColor());
+            Color pelletColor = Color.valueOf(maze.colorScheme().pelletColor());
             drawPellets(world, pelletColor);
             drawEnergizers(world, pelletColor);
             ctx.restore();
