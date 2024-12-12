@@ -5,7 +5,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.GameAssets2D;
+import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.MediaPlayer;
@@ -58,7 +58,7 @@ public class CutScene4 extends GameScene2D {
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
 
         music = context.sound().makeSound("intermission.4",1.0, false);
-        clapTextColor = context.assets().color(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".color.clapperboard");
+        clapTextColor = context.assets().color(PacManGamesUI.PFX_MS_PACMAN_TENGEN + ".color.clapperboard");
     }
 
     @Override
@@ -153,7 +153,7 @@ public class CutScene4 extends GameScene2D {
         var junior = new Pac();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         int rnd = Globals.randomInt(1, 3);
-        AudioClip clip = context.assets().get(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".audio.intermission.4.junior." + rnd);
+        AudioClip clip = context.assets().get(PacManGamesUI.PFX_MS_PACMAN_TENGEN + ".audio.intermission.4.junior." + rnd);
         junior.setPosition((float) randomX, size().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);

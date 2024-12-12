@@ -10,8 +10,6 @@ import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.ui2d.GameAssets2D.PFX_MS_PACMAN_TENGEN;
-
 public class InfoBoxJoypad extends InfoBox {
 
     public void init(GameContext context) {

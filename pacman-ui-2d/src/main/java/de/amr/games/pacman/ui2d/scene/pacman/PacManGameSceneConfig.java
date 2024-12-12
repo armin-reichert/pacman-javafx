@@ -6,8 +6,8 @@ package de.amr.games.pacman.ui2d.scene.pacman;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.*;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.GameAssets2D.PFX_PACMAN;
+import static de.amr.games.pacman.ui2d.PacManGamesUI.PFX_PACMAN;
 import static de.amr.games.pacman.ui2d.util.Ufx.imageBackground;
 
 public class PacManGameSceneConfig implements GameSceneConfig {
@@ -31,7 +31,7 @@ public class PacManGameSceneConfig implements GameSceneConfig {
 
     public PacManGameSceneConfig(AssetStorage assets) {
         this.assets = checkNotNull(assets);
-        loadAssets(() -> GameAssets2D.class);
+        loadAssets(() -> PacManGamesUI.class);
 
         spriteSheet = new PacManGameSpriteSheet(assets.get(PFX_PACMAN + ".spritesheet"));
 

@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.GameAssets2D;
+import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -149,7 +149,7 @@ public class CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Color color = context.assets().color(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".color.clapperboard"); //TODO check
+        Color color = context.assets().color(PacManGamesUI.PFX_MS_PACMAN_TENGEN + ".color.clapperboard"); //TODO check
         var r = (MsPacManGameTengenRenderer) gr;
         r.drawSceneBorderLines();
         r.setLevelNumberBoxesVisible(false);

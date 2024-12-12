@@ -6,8 +6,8 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.sound.GameSound;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui3d.model.Model3D;
@@ -45,7 +45,7 @@ public class PacMan3D implements Pac3D {
         this.pacMan = checkNotNull(pacMan);
         checkNotNull(assets);
 
-        String prefix = GameAssets2D.assetPrefix(variant);
+        String prefix = PacManGamesUI.assetPrefix(variant);
 
         Model3D model3D = assets.get("model3D.pacman");
 

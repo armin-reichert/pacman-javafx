@@ -11,7 +11,7 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.GameAssets2D;
+import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -83,7 +83,7 @@ public class CutScene1 extends GameScene2D {
         pinky.setAnimations(new GhostAnimations(spriteSheet, pinky.id()));
 
         music = context.sound().makeSound("intermission.1", 1.0, false);
-        clapTextColor = context.assets().color(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".color.clapperboard");
+        clapTextColor = context.assets().color(PacManGamesUI.PFX_MS_PACMAN_TENGEN + ".color.clapperboard");
     }
 
     @Override

@@ -23,10 +23,7 @@ import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
 import de.amr.games.pacman.ui2d.sound.GameSound;
-import de.amr.games.pacman.ui2d.util.AssetStorage;
-import de.amr.games.pacman.ui2d.util.FlashMessageView;
-import de.amr.games.pacman.ui2d.util.GameClockFX;
-import de.amr.games.pacman.ui2d.util.Picker;
+import de.amr.games.pacman.ui2d.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
@@ -57,7 +54,6 @@ import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.createIcon;
 
@@ -67,6 +63,20 @@ import static de.amr.games.pacman.ui2d.util.Ufx.createIcon;
  * @author Armin Reichert
  */
 public class PacManGamesUI implements GameEventListener, GameContext {
+
+    public static final String PFX_PACMAN = "pacman";
+    public static final String PFX_PACMAN_XXL = "pacman_xxl";
+    public static final String PFX_MS_PACMAN = "ms_pacman";
+    public static final String PFX_MS_PACMAN_TENGEN = "tengen";
+
+    public static String assetPrefix(GameVariant variant) {
+        return switch (variant) {
+            case MS_PACMAN        -> PFX_MS_PACMAN;
+            case MS_PACMAN_TENGEN -> PFX_MS_PACMAN_TENGEN;
+            case PACMAN           -> PFX_PACMAN;
+            case PACMAN_XXL       -> PFX_PACMAN_XXL;
+        };
+    }
 
     private static final Font  CONTEXT_MENU_TITLE_FONT = Font.font("Dialog", FontWeight.BLACK, 14);
     private static final Color CONTEXT_MENU_TITLE_BACKGROUND = Color.CORNFLOWERBLUE; // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
@@ -121,7 +131,27 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     public PacManGamesUI() {}
 
     public void loadAssets() {
-        GameAssets2D.addTo(assets);
+        ResourceManager rm = () -> PacManGamesUI.class;
+
+        assets.addBundle(rm.getModuleBundle("de.amr.games.pacman.ui2d.texts.messages"));
+
+        assets.store("font.arcade",                 rm.loadFont("fonts/emulogic.ttf", 8));
+        assets.store("font.handwriting",            rm.loadFont("fonts/Molle-Italic.ttf", 9));
+        assets.store("font.monospaced",             rm.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12));
+
+        //
+        // Common to all game variants
+        //
+
+        assets.store("startpage.arrow.left",        rm.loadImage("graphics/icons/arrow-left.png"));
+        assets.store("startpage.arrow.right",       rm.loadImage("graphics/icons/arrow-right.png"));
+        assets.store("wallpaper.color",             Color.rgb(72, 78, 135));
+        assets.store("voice.explain",               rm.url("sound/voice/press-key.mp3"));
+        assets.store("voice.autopilot.off",         rm.url("sound/voice/autopilot-off.mp3"));
+        assets.store("voice.autopilot.on",          rm.url("sound/voice/autopilot-on.mp3"));
+        assets.store("voice.immunity.off",          rm.url("sound/voice/immunity-off.mp3"));
+        assets.store("voice.immunity.on",           rm.url("sound/voice/immunity-on.mp3"));
+
         sound().setAssets(assets);
         pickerGameOver = Picker.fromBundle(assets.bundles().getFirst(), "game.over");
         pickerLevelComplete = Picker.fromBundle(assets.bundles().getFirst(), "level.complete");

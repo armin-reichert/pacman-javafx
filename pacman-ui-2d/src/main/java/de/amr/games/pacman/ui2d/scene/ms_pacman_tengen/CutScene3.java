@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.GameAssets2D;
+import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
@@ -79,7 +79,7 @@ public class CutScene3 extends GameScene2D {
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
 
         music = context.sound().makeSound("intermission.3",1.0, false);
-        clapTextColor = context.assets().color(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".color.clapperboard");
+        clapTextColor = context.assets().color(PacManGamesUI.PFX_MS_PACMAN_TENGEN + ".color.clapperboard");
     }
 
     @Override

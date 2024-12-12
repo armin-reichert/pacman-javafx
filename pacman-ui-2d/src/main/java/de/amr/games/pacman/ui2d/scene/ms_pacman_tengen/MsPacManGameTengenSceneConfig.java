@@ -9,9 +9,9 @@ import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
-import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.PacManGames2dApp;
+import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.GameAssets2D.PFX_MS_PACMAN_TENGEN;
+import static de.amr.games.pacman.ui2d.PacManGamesUI.PFX_MS_PACMAN_TENGEN;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 
 public class MsPacManGameTengenSceneConfig implements GameSceneConfig {
@@ -42,7 +42,7 @@ public class MsPacManGameTengenSceneConfig implements GameSceneConfig {
 
     public MsPacManGameTengenSceneConfig(AssetStorage assets) {
         this.assets = assets;
-        loadAssets(() -> GameAssets2D.class);
+        loadAssets(() -> PacManGamesUI.class);
 
         spriteSheet = new MsPacManGameTengenSpriteSheet(assets.image(PFX_MS_PACMAN_TENGEN + ".spritesheet"));
         arcadeMapSprites = new SpriteSheet_ArcadeMaps(assets.image(PFX_MS_PACMAN_TENGEN + ".mazes.arcade"));

@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui2d.util.Picker;
@@ -12,7 +11,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.scene.Scene;
 
-import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
@@ -30,7 +28,7 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
 public class PacManGamesUI_3D extends PacManGamesUI {
 
     public void loadAssets() {
-        GameAssets2D.addTo(assets);
+        super.loadAssets();
         GameAssets3D.addTo(assets);
         pickerGameOver = Picker.fromBundle(assets.bundles().getLast(), "game.over");
         pickerLevelComplete = Picker.fromBundle(assets.bundles().getLast(), "level.complete");

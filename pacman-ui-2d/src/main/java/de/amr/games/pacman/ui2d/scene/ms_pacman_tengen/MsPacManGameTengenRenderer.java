@@ -35,7 +35,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.Animations.*;
 import static de.amr.games.pacman.model.actors.Bonus.STATE_EATEN;
 import static de.amr.games.pacman.model.actors.Bonus.STATE_EDIBLE;
-import static de.amr.games.pacman.ui2d.GameAssets2D.PFX_MS_PACMAN_TENGEN;
+import static de.amr.games.pacman.ui2d.PacManGamesUI.PFX_MS_PACMAN_TENGEN;
 import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.NO_SPRITE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.nesPaletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet.*;

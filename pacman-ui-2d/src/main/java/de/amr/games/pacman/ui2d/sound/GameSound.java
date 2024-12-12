@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
+import static de.amr.games.pacman.ui2d.PacManGamesUI.assetPrefix;
 
 /**
  * @author Armin Reichert

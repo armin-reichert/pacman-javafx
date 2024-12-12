@@ -44,7 +44,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.GameAssets2D.assetPrefix;
+import static de.amr.games.pacman.ui2d.PacManGamesUI.assetPrefix;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 

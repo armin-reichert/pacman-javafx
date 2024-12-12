@@ -1,19 +1,17 @@
 package de.amr.games.pacman.ui2d.dashboard;
 
-import de.amr.games.pacman.ui2d.GameAssets2D;
+import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-
-import static de.amr.games.pacman.ui2d.GameAssets2D.PFX_MS_PACMAN_TENGEN;
 
 public class DashboardAssets extends AssetStorage {
 
     public static final DashboardAssets IT = new DashboardAssets();
 
     private DashboardAssets() {
-        ResourceManager rm = () -> GameAssets2D.class;
+        ResourceManager rm = () -> PacManGamesUI.class;
 
         store("font.handwriting",            rm.loadFont("fonts/Molle-Italic.ttf", 9));
         store("font.monospaced",             rm.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12));
