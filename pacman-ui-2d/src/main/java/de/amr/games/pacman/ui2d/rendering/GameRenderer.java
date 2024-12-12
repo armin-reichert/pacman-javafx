@@ -38,7 +38,7 @@ import static java.util.function.Predicate.not;
  */
 public interface GameRenderer {
 
-    default void update(WorldMap mapConfig) {}
+    default void setWorldMap(WorldMap worldMap) {}
     AssetStorage assets();
     Color backgroundColor();
     void setBackgroundColor(Color color);

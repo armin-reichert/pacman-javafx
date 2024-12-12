@@ -49,7 +49,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
             r.setScaling(scaling());
             r.clearCanvas();
             context.game().level().ifPresent(level -> {
-                r.update(level.world().map());
+                r.setWorldMap(level.world().map());
                 r.ctx().save();
                 r.ctx().translate(scaled(TS), 0);
                 drawSceneContent();

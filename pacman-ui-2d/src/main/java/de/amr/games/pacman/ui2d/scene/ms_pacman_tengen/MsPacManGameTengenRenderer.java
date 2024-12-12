@@ -83,7 +83,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     }
 
     @Override
-    public void update(WorldMap worldMap) {
+    public void setWorldMap(WorldMap worldMap) {
         int mapNumber = worldMap.getConfigValue("mapNumber");
         MapCategory category = worldMap.getConfigValue("mapCategory");
         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");

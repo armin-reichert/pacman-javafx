@@ -408,7 +408,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
         r.setScaling(scaling());
         r.clearCanvas();
         context.game().level().ifPresent(level -> {
-            r.update(level.world().map());
+            r.setWorldMap(level.world().map());
             r.ctx().save();
             r.ctx().translate(scaled(2 * TS), 0);
             drawSceneContent();

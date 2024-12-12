@@ -130,7 +130,7 @@ public class MsPacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void update(WorldMap worldMap) {
+    public void setWorldMap(WorldMap worldMap) {
         int index = worldMap.getConfigValue("colorMapIndex");
         fullMapSprite = FULL_MAPS_SPRITES[index];
         emptyMapSprite = EMPTY_MAPS_SPRITES[index];
