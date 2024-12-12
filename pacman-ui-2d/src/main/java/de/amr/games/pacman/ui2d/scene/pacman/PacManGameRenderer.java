@@ -29,14 +29,16 @@ public class PacManGameRenderer implements GameRenderer {
     public static final WorldMapColoring WORLDMAP_COLORING = new WorldMapColoring("#000000", "#2121ff", "#fcb5ff", "#febdb4");
 
     private final AssetStorage assets;
+    private final PacManGameSpriteSheet spriteSheet;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final Canvas canvas;
     private boolean flashMode;
     private boolean blinkingOn;
     private Color bgColor = Color.BLACK;
 
-    public PacManGameRenderer(AssetStorage assets, Canvas canvas) {
+    public PacManGameRenderer(AssetStorage assets, PacManGameSpriteSheet spriteSheet, Canvas canvas) {
         this.assets = checkNotNull(assets);
+        this.spriteSheet = checkNotNull(spriteSheet);
         this.canvas = checkNotNull(canvas);
     }
 
@@ -47,7 +49,7 @@ public class PacManGameRenderer implements GameRenderer {
 
     @Override
     public GameSpriteSheet spriteSheet() {
-        return assets.get("pacman.spritesheet");
+        return spriteSheet;
     }
 
     @Override

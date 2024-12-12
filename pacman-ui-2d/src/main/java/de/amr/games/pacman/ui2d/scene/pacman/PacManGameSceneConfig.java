@@ -33,7 +33,7 @@ public class PacManGameSceneConfig implements GameSceneConfig {
         this.assets = checkNotNull(assets);
         loadAssets(() -> GameAssets2D.class);
 
-        spriteSheet = assets.get(PFX_PACMAN + ".spritesheet");
+        spriteSheet = new PacManGameSpriteSheet(assets.get(PFX_PACMAN + ".spritesheet"));
 
         set("BootScene",   new BootScene());
         set("IntroScene",  new IntroScene());
@@ -61,7 +61,7 @@ public class PacManGameSceneConfig implements GameSceneConfig {
 
     @Override
     public PacManGameRenderer createRenderer(Canvas canvas) {
-        return new PacManGameRenderer(assets, canvas);
+        return new PacManGameRenderer(assets, spriteSheet, canvas);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class PacManGameSceneConfig implements GameSceneConfig {
     private void loadAssets(ResourceManager rm) {
         assets.store(PFX_PACMAN + ".scene_background",         imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
 
-        assets.store(PFX_PACMAN + ".spritesheet",              new PacManGameSpriteSheet(rm.loadImage("graphics/pacman/pacman_spritesheet.png")));
+        assets.store(PFX_PACMAN + ".spritesheet",              rm.loadImage("graphics/pacman/pacman_spritesheet.png"));
         assets.store(PFX_PACMAN + ".flashing_maze",            rm.loadImage("graphics/pacman/maze_flashing.png"));
 
         assets.store(PFX_PACMAN + ".startpage.image1",         rm.loadImage("graphics/pacman/f1.jpg"));
