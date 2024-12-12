@@ -75,55 +75,6 @@ public class GameAssets2D extends AssetStorage {
         assets.store("voice.immunity.on",                    rm.url("sound/voice/immunity-on.mp3"));
 
         //
-        // Ms. Pac-Man game
-        //
-
-        assets.store(PFX_MS_PACMAN + ".scene_background",              imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
-
-        assets.store(PFX_MS_PACMAN + ".spritesheet",                   new MsPacManGameSpriteSheet(rm.loadImage("graphics/mspacman/mspacman_spritesheet.png")));
-        assets.store(PFX_MS_PACMAN + ".flashing_mazes",                rm.loadImage("graphics/mspacman/mazes_flashing.png"));
-
-        assets.store(PFX_MS_PACMAN + ".startpage.image1",              rm.loadImage("graphics/mspacman/f1.jpg"));
-        assets.store(PFX_MS_PACMAN + ".startpage.image2",              rm.loadImage("graphics/mspacman/f2.jpg"));
-
-        assets.store(PFX_MS_PACMAN + ".helpButton.icon",               rm.loadImage("graphics/icons/help-red-64.png"));
-        assets.store(PFX_MS_PACMAN + ".icon",                          rm.loadImage("graphics/icons/mspacman.png"));
-        assets.store(PFX_MS_PACMAN + ".logo.midway",                   rm.loadImage("graphics/mspacman/midway_logo.png"));
-
-        assets.store(PFX_MS_PACMAN + ".ghost.0.color.normal.dress",    Color.valueOf(Arcade.Palette.RED));
-        assets.store(PFX_MS_PACMAN + ".ghost.1.color.normal.dress",    Color.valueOf(Arcade.Palette.PINK));
-        assets.store(PFX_MS_PACMAN + ".ghost.2.color.normal.dress",    Color.valueOf(Arcade.Palette.CYAN));
-        assets.store(PFX_MS_PACMAN + ".ghost.3.color.normal.dress",    Color.valueOf(Arcade.Palette.ORANGE));
-
-        assets.store(PFX_MS_PACMAN + ".color.game_over_message",       Color.valueOf(Arcade.Palette.RED));
-        assets.store(PFX_MS_PACMAN + ".color.ready_message",           Color.valueOf(Arcade.Palette.YELLOW));
-        assets.store(PFX_MS_PACMAN + ".color.clapperboard",            Color.valueOf(Arcade.Palette.WHITE));
-
-        // Clips
-        assets.store(PFX_MS_PACMAN + ".audio.bonus_eaten",             rm.loadAudioClip("sound/mspacman/Fruit.mp3"));
-        assets.store(PFX_MS_PACMAN + ".audio.credit",                  rm.loadAudioClip("sound/mspacman/credit.wav"));
-        assets.store(PFX_MS_PACMAN + ".audio.extra_life",              rm.loadAudioClip("sound/mspacman/ExtraLife.mp3"));
-        assets.store(PFX_MS_PACMAN + ".audio.ghost_eaten",             rm.loadAudioClip("sound/mspacman/Ghost.mp3"));
-        assets.store(PFX_MS_PACMAN + ".audio.sweep",                   rm.loadAudioClip("sound/common/sweep.mp3"));
-
-        // Audio played by MediaPlayer
-        assets.store(PFX_MS_PACMAN + ".audio.bonus_bouncing",          rm.url("sound/mspacman/Fruit Bounce.mp3"));
-        assets.store(PFX_MS_PACMAN + ".audio.game_ready",              rm.url("sound/mspacman/Start.mp3"));
-        assets.store(PFX_MS_PACMAN + ".audio.game_over",               rm.url("sound/common/game-over.mp3"));
-        assets.store(PFX_MS_PACMAN + ".audio.intermission.1",          rm.url("sound/mspacman/Act_1_They_Meet.mp3"));
-        assets.store(PFX_MS_PACMAN + ".audio.intermission.2",          rm.url("sound/mspacman/Act_2_The_Chase.mp3"));
-        assets.store(PFX_MS_PACMAN + ".audio.intermission.3",          rm.url("sound/mspacman/Act_3_Junior.mp3"));
-        assets.store(PFX_MS_PACMAN + ".audio.level_complete",          rm.url("sound/common/level-complete.mp3"));
-        assets.store(PFX_MS_PACMAN + ".audio.pacman_death",            rm.url("sound/mspacman/Died.mp3"));
-        assets.store(PFX_MS_PACMAN + ".audio.pacman_munch",            rm.url("sound/mspacman/munch.wav"));
-        assets.store(PFX_MS_PACMAN + ".audio.pacman_power",            rm.url("sound/mspacman/ScaredGhost.mp3"));
-        assets.store(PFX_MS_PACMAN + ".audio.siren.1",                 rm.url("sound/mspacman/GhostNoise1.wav"));
-        assets.store(PFX_MS_PACMAN + ".audio.siren.2",                 rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
-        assets.store(PFX_MS_PACMAN + ".audio.siren.3",                 rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
-        assets.store(PFX_MS_PACMAN + ".audio.siren.4",                 rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
-        assets.store(PFX_MS_PACMAN + ".audio.ghost_returns",           rm.url("sound/mspacman/GhostEyes.mp3"));
-
-        //
         // Pac-Man XXL
         //
         assets.store(PFX_PACMAN_XXL + ".scene_background",     imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
