@@ -110,7 +110,7 @@ public class Ghost extends Creature implements AnimatedEntity {
     }
 
     @Override
-    public Animations animationSet() {
+    public Animations animations() {
         return animations;
     }
 

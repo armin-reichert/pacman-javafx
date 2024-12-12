@@ -165,31 +165,29 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         if (!pac.isVisible()) {
             return;
         }
-        pac.animations().ifPresent(animations -> {
-            if (animations instanceof SpriteAnimationCollection spriteAnimations) {
-                SpriteAnimation spriteAnimation = spriteAnimations.currentAnimation();
-                if (spriteAnimation != null) {
-                    switch (animations.currentAnimationID()) {
-                        case ANIM_PAC_MUNCHING, ANIM_MS_PACMAN_BOOSTER,
-                             ANIM_MR_PACMAN_MUNCHING, ANIM_MR_PACMAN_BOOSTER,
-                             ANIM_JUNIOR_PACMAN -> drawGuyHeading(pac, pac.moveDir(), spriteAnimation);
-                        case ANIM_PAC_DYING -> {
-                            Direction dir = Direction.UP;
-                            if (spriteAnimation.frameIndex() < 11) {
-                                dir = switch (spriteAnimation.frameIndex() % 4) {
-                                    default -> Direction.DOWN; // start with DOWN
-                                    case 1 -> Direction.LEFT;
-                                    case 2 -> Direction.UP;
-                                    case 3 -> Direction.RIGHT;
-                                };
-                            }
-                            drawGuyHeading(pac, dir, spriteAnimation);
+        pac.optAnimations().map(SpriteAnimationCollection.class::cast).ifPresent(animations -> {
+            SpriteAnimation animation = animations.currentAnimation();
+            if (animation != null) {
+                switch (animations.currentAnimationID()) {
+                    case ANIM_PAC_MUNCHING, ANIM_MS_PACMAN_BOOSTER,
+                         ANIM_MR_PACMAN_MUNCHING, ANIM_MR_PACMAN_BOOSTER,
+                         ANIM_JUNIOR_PACMAN -> drawGuyHeading(pac, pac.moveDir(), animation);
+                    case ANIM_PAC_DYING -> {
+                        Direction dir = Direction.UP;
+                        if (animation.frameIndex() < 11) {
+                            dir = switch (animation.frameIndex() % 4) {
+                                default -> Direction.DOWN; // start with DOWN
+                                case 1 -> Direction.LEFT;
+                                case 2 -> Direction.UP;
+                                case 3 -> Direction.RIGHT;
+                            };
                         }
-                        default -> GameRenderer.super.drawAnimatedEntity(pac);
+                        drawGuyHeading(pac, dir, animation);
                     }
-                } else {
-                    Logger.error("No current animation for character {}", pac);
+                    default -> GameRenderer.super.drawAnimatedEntity(pac);
                 }
+            } else {
+                Logger.error("No current animation for character {}", pac);
             }
         });
     }

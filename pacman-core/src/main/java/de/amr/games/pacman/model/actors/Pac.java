@@ -58,7 +58,7 @@ public class Pac extends Creature implements AnimatedEntity {
     }
 
     @Override
-    public Animations animationSet() {
+    public Animations animations() {
         return animations;
     }
 

@@ -80,14 +80,14 @@ public class CutScene2 extends GameScene2D {
             msPacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
-            msPacMan.animations().ifPresent(Animations::startCurrentAnimation);
+            msPacMan.optAnimations().ifPresent(Animations::startCurrentAnimation);
             msPacMan.setSpeed(2.0f);
             msPacMan.show();
         }
         else if (t == 320) {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.selectAnimation(ANIM_MR_PACMAN_MUNCHING);
-            pacMan.animations().ifPresent(Animations::startCurrentAnimation);
+            pacMan.optAnimations().ifPresent(Animations::startCurrentAnimation);
             pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setSpeed(2.0f);

@@ -221,7 +221,7 @@ public class IntroScene extends GameScene2D {
                 var spriteSheet = (MsPacManGameTengenSpriteSheet) intro.context.currentGameSceneConfig().spriteSheet();
                 intro.msPacMan.setAnimations(new PacAnimations(spriteSheet));
                 intro.msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
-                intro.msPacMan.animations().ifPresent(Animations::startCurrentAnimation);
+                intro.msPacMan.optAnimations().ifPresent(Animations::startCurrentAnimation);
 
                 for (Ghost ghost : intro.ghosts) {
                     ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
@@ -304,7 +304,7 @@ public class IntroScene extends GameScene2D {
                 intro.msPacMan.move();
                 if (intro.msPacMan.posX() <= MS_PAC_MAN_STOP_X) {
                     intro.msPacMan.setSpeed(0);
-                    intro.msPacMan.animations().ifPresent(Animations::resetCurrentAnimation);
+                    intro.msPacMan.optAnimations().ifPresent(Animations::resetCurrentAnimation);
                 }
                 if (timer.atSecond(7)) {
                     // start demo level or show options

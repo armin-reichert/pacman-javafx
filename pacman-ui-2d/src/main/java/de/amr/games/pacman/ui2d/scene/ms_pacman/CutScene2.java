@@ -124,10 +124,10 @@ public class CutScene2 extends GameScene2D {
         void enterStateChasing() {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.selectAnimation(ANIM_MR_PACMAN_MUNCHING);
-            pacMan.animations().ifPresent(Animations::startCurrentAnimation);
+            pacMan.optAnimations().ifPresent(Animations::startCurrentAnimation);
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.selectAnimation(Animations.ANIM_PAC_MUNCHING);
-            msPacMan.animations().ifPresent(Animations::startCurrentAnimation);
+            msPacMan.optAnimations().ifPresent(Animations::startCurrentAnimation);
 
             setState(STATE_CHASING, TickTimer.INDEFINITE);
         }

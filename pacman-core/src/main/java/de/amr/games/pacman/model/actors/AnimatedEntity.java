@@ -21,39 +21,39 @@ public interface AnimatedEntity {
 
     void setAnimations(Animations animations);
 
-    Animations animationSet();
+    Animations animations();
 
-    default Optional<Animations> animations() {
-        return Optional.ofNullable(animationSet());
+    default Optional<Animations> optAnimations() {
+        return Optional.ofNullable(animations());
     }
 
     default void startAnimation() {
-        if (animationSet() != null) {
-            animationSet().startCurrentAnimation();
+        if (animations() != null) {
+            animations().startCurrentAnimation();
         } else {
             Logger.warn("Trying to start animation before animations have been created!");
         }
     }
 
     default void stopAnimation() {
-        if (animationSet() != null) {
-            animationSet().stopCurrentAnimation();
+        if (animations() != null) {
+            animations().stopCurrentAnimation();
         } else {
             Logger.warn("Trying to stop animation before animations have been created!");
         }
     }
 
     default void resetAnimation() {
-        if (animationSet() != null) {
-            animationSet().resetCurrentAnimation();
+        if (animations() != null) {
+            animations().resetCurrentAnimation();
         } else {
             Logger.warn("Trying to reset animation before animations have been created!");
         }
     }
 
     default void selectAnimation(String name, int index) {
-        if (animationSet() != null) {
-            animationSet().select(name, index);
+        if (animations() != null) {
+            animations().select(name, index);
         } else {
             Logger.warn("Trying to select animation '{}' (index: {}) before animations have been created!", name, index);
         }

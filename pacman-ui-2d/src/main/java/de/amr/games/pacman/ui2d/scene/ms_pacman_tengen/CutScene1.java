@@ -104,14 +104,14 @@ public class CutScene1 extends GameScene2D {
             mrPacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             mrPacMan.setSpeed(SPEED_CHASING);
             mrPacMan.selectAnimation("pacman_munching");
-            mrPacMan.animations().ifPresent(Animations::startCurrentAnimation);
+            mrPacMan.optAnimations().ifPresent(Animations::startCurrentAnimation);
             mrPacMan.show();
 
             msPacMan.setMoveDir(Direction.LEFT);
             msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
             msPacMan.setSpeed(SPEED_CHASING);
             msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
-            msPacMan.animations().ifPresent(Animations::startCurrentAnimation);
+            msPacMan.optAnimations().ifPresent(Animations::startCurrentAnimation);
             msPacMan.show();
         }
         else if (t == 160) {
@@ -172,10 +172,10 @@ public class CutScene1 extends GameScene2D {
             msPacMan.setMoveDir(Direction.RIGHT);
         }
         else if (t == 545) {
-            mrPacMan.animations().ifPresent(Animations::stopCurrentAnimation);
-            mrPacMan.animations().ifPresent(Animations::resetCurrentAnimation);
-            msPacMan.animations().ifPresent(Animations::stopCurrentAnimation);
-            msPacMan.animations().ifPresent(Animations::resetCurrentAnimation);
+            mrPacMan.optAnimations().ifPresent(Animations::stopCurrentAnimation);
+            mrPacMan.optAnimations().ifPresent(Animations::resetCurrentAnimation);
+            msPacMan.optAnimations().ifPresent(Animations::stopCurrentAnimation);
+            msPacMan.optAnimations().ifPresent(Animations::resetCurrentAnimation);
         }
         else if (t == 560) {
             heart.setPosition((mrPacMan.posX() + msPacMan.posX()) / 2, mrPacMan.posY() - TS * (2));
