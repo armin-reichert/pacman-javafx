@@ -6,8 +6,6 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
-import de.amr.games.pacman.ui2d.GameAssets2D;
-import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -36,8 +34,6 @@ import static de.amr.games.pacman.ui2d.util.Ufx.*;
  * </p>
  */
 public class SpriteSheet_NonArcadeMaps {
-
-    private record MazeSpec(MapCategory mapCategory, int spriteNumber, NES_ColorScheme colorScheme) {}
 
     // Strange map #15 (level 32) has 3 different images to create an animation effect
     static final RectArea[] STRANGE_MAP_15_SPRITES = {

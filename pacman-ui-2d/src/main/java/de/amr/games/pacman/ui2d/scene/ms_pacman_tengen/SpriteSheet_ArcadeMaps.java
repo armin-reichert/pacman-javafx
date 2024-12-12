@@ -5,8 +5,6 @@ package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
-import de.amr.games.pacman.ui2d.GameAssets2D;
-import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.scene.image.Image;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
