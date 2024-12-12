@@ -63,13 +63,19 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     private boolean levelNumberBoxesVisible;
     private Vector2f messageAnchorPosition;
 
-    public MsPacManGameTengenRenderer(AssetStorage assets, MsPacManGameTengenSpriteSheet spriteSheet, Canvas canvas) {
+    public MsPacManGameTengenRenderer(
+        AssetStorage assets,
+        MsPacManGameTengenSpriteSheet spriteSheet,
+        SpriteSheet_ArcadeMaps arcadeMapSprites,
+        SpriteSheet_NonArcadeMaps nonArcadeMapSprites,
+        Canvas canvas)
+    {
         this.assets = checkNotNull(assets);
         this.spriteSheet = checkNotNull(spriteSheet);
-        this.ctx = checkNotNull(canvas).getGraphicsContext2D();
-
-        arcadeMapSprites = new SpriteSheet_ArcadeMaps(assets);
-        nonArcadeMapSprites = new SpriteSheet_NonArcadeMaps(assets);
+        this.arcadeMapSprites = arcadeMapSprites;
+        this.nonArcadeMapSprites = nonArcadeMapSprites;
+        checkNotNull(canvas);
+        ctx = canvas.getGraphicsContext2D();
         messageAnchorPosition = new Vector2f(14f * TS, 21 * TS);
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(CANVAS_BACKGROUND_COLOR);

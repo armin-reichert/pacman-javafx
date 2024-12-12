@@ -8,7 +8,6 @@ import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
-import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -35,7 +34,7 @@ import static de.amr.games.pacman.ui2d.util.Ufx.*;
  * stored after having been recolored to the color scheme required in the game level.
  * </p>
  */
-class SpriteSheet_NonArcadeMaps {
+public class SpriteSheet_NonArcadeMaps {
 
     private record MazeSpec(MapCategory mapCategory, int spriteNumber, NES_ColorScheme colorScheme) {}
 

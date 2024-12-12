@@ -9,7 +9,7 @@ import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.scene.image.Image;
 
-class SpriteSheet_ArcadeMaps {
+public class SpriteSheet_ArcadeMaps {
 
     static final int WIDTH = 28*8, HEIGHT = 31*8;
 

@@ -33,11 +33,15 @@ public class MsPacManGameTengenSceneConfig implements GameSceneConfig {
 
     private final AssetStorage assets;
     private final MsPacManGameTengenSpriteSheet spriteSheet;
+    private final SpriteSheet_ArcadeMaps arcadeMapSprites;
+    private final SpriteSheet_NonArcadeMaps nonArcadeMapSprites;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public MsPacManGameTengenSceneConfig(AssetStorage assets) {
         this.assets = checkNotNull(assets);
         spriteSheet = assets.get("tengen.spritesheet");
+        arcadeMapSprites = new SpriteSheet_ArcadeMaps(assets);
+        nonArcadeMapSprites = new SpriteSheet_NonArcadeMaps(assets);
 
         set("BootScene",      new BootScene());
         set("IntroScene",     new IntroScene());
@@ -94,7 +98,7 @@ public class MsPacManGameTengenSceneConfig implements GameSceneConfig {
 
     @Override
     public MsPacManGameTengenRenderer createRenderer(Canvas canvas) {
-        return new MsPacManGameTengenRenderer(assets, spriteSheet, canvas);
+        return new MsPacManGameTengenRenderer(assets, spriteSheet, arcadeMapSprites, nonArcadeMapSprites, canvas);
     }
 
     @Override
