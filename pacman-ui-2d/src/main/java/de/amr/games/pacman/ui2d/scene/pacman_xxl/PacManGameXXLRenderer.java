@@ -12,6 +12,7 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
+import de.amr.games.pacman.ui2d.scene.pacman.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -46,10 +47,10 @@ public class PacManGameXXLRenderer implements GameRenderer {
     private boolean blinkingOn;
     private Color bgColor;
 
-    public PacManGameXXLRenderer(AssetStorage assets, Canvas canvas) {
+    public PacManGameXXLRenderer(AssetStorage assets, PacManGameSpriteSheet spriteSheet, Canvas canvas) {
         this.assets = checkNotNull(assets);
         this.canvas = checkNotNull(canvas);
-        spriteSheet = assets.get("pacman_xxl.spritesheet");
+        this.spriteSheet = checkNotNull(spriteSheet);
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(bgColor);
         foodRenderer.scalingPy.bind(scalingPy);
