@@ -124,46 +124,6 @@ public class GameAssets2D extends AssetStorage {
         assets.store(PFX_MS_PACMAN + ".audio.ghost_returns",           rm.url("sound/mspacman/GhostEyes.mp3"));
 
         //
-        // Pac-Man game
-        //
-
-        assets.store(PFX_PACMAN + ".scene_background",         imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
-
-        assets.store(PFX_PACMAN + ".spritesheet",              new PacManGameSpriteSheet(rm.loadImage("graphics/pacman/pacman_spritesheet.png")));
-        assets.store(PFX_PACMAN + ".flashing_maze",            rm.loadImage("graphics/pacman/maze_flashing.png"));
-
-        assets.store(PFX_PACMAN + ".startpage.image1",         rm.loadImage("graphics/pacman/f1.jpg"));
-        assets.store(PFX_PACMAN + ".startpage.image2",         rm.loadImage("graphics/pacman/f2.jpg"));
-        assets.store(PFX_PACMAN + ".startpage.image3",         rm.loadImage("graphics/pacman/f3.jpg"));
-
-        assets.store(PFX_PACMAN + ".helpButton.icon",          rm.loadImage("graphics/icons/help-blue-64.png"));
-        assets.store(PFX_PACMAN + ".icon",                     rm.loadImage("graphics/icons/pacman.png"));
-
-        assets.store(PFX_PACMAN + ".color.game_over_message",  Color.RED);
-        assets.store(PFX_PACMAN + ".color.ready_message",      Color.YELLOW);
-
-        // Clips
-        assets.store(PFX_PACMAN + ".audio.bonus_eaten",        rm.loadAudioClip("sound/pacman/eat_fruit.mp3"));
-        assets.store(PFX_PACMAN + ".audio.credit",             rm.loadAudioClip("sound/pacman/credit.wav"));
-        assets.store(PFX_PACMAN + ".audio.extra_life",         rm.loadAudioClip("sound/pacman/extend.mp3"));
-        assets.store(PFX_PACMAN + ".audio.ghost_eaten",        rm.loadAudioClip("sound/pacman/eat_ghost.mp3"));
-        assets.store(PFX_PACMAN + ".audio.sweep",              rm.loadAudioClip("sound/common/sweep.mp3"));
-
-        // Media player sounds
-        assets.store(PFX_PACMAN + ".audio.game_ready",         rm.url("sound/pacman/game_start.mp3"));
-        assets.store(PFX_PACMAN + ".audio.game_over",          rm.url("sound/common/game-over.mp3"));
-        assets.store(PFX_PACMAN + ".audio.intermission",       rm.url("sound/pacman/intermission.mp3"));
-        assets.store(PFX_PACMAN + ".audio.pacman_death",       rm.url("sound/pacman/pacman_death.wav"));
-        assets.store(PFX_PACMAN + ".audio.pacman_munch",       rm.url("sound/pacman/munch.wav"));
-        assets.store(PFX_PACMAN + ".audio.pacman_power",       rm.url("sound/pacman/ghost-turn-to-blue.mp3"));
-        assets.store(PFX_PACMAN + ".audio.level_complete",     rm.url("sound/common/level-complete.mp3"));
-        assets.store(PFX_PACMAN + ".audio.siren.1",            rm.url("sound/pacman/siren_1.mp3"));
-        assets.store(PFX_PACMAN + ".audio.siren.2",            rm.url("sound/pacman/siren_2.mp3"));
-        assets.store(PFX_PACMAN + ".audio.siren.3",            rm.url("sound/pacman/siren_3.mp3"));
-        assets.store(PFX_PACMAN + ".audio.siren.4",            rm.url("sound/pacman/siren_4.mp3"));
-        assets.store(PFX_PACMAN + ".audio.ghost_returns",      rm.url("sound/pacman/retreating.mp3"));
-
-        //
         // Pac-Man XXL
         //
         assets.store(PFX_PACMAN_XXL + ".scene_background",     imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
