@@ -42,7 +42,7 @@ public class GameLevel {
     private final List<Ghost> victims = new ArrayList<>();
     private Bonus bonus;
     private final byte[] bonusSymbols = new byte[2];
-    private byte nextBonusIndex; // -1=no bonus, 0=first, 1=second
+    private int nextBonusIndex; // -1=no bonus, 0=first, 1=second
     private Message message;
 
     private final Pulse blinking = new Pulse(10, Pulse.OFF);
@@ -141,7 +141,7 @@ public class GameLevel {
         return Optional.ofNullable(bonus);
     }
 
-    public byte nextBonusIndex() {
+    public int nextBonusIndex() {
         return nextBonusIndex;
     }
 

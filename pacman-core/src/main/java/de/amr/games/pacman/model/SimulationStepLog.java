@@ -18,7 +18,7 @@ import java.util.List;
 public class SimulationStepLog {
     public Vector2i foodFoundTile = null;
     public boolean  energizerFound = false;
-    public byte     bonusIndex = -1;
+    public int      bonusIndex = -1;
     public boolean  bonusEaten = false;
     public boolean  pacGetsPower = false;
     public boolean  pacStartsLosingPower = false;
