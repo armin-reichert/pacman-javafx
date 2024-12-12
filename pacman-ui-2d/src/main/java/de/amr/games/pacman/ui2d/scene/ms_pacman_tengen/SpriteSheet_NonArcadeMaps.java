@@ -4,7 +4,6 @@
 package de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
 
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameAssets2D;
@@ -16,10 +15,8 @@ import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiPredicate;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.v2i;
 import static de.amr.games.pacman.lib.RectArea.rect;
 import static de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
@@ -40,7 +37,7 @@ import static de.amr.games.pacman.ui2d.util.Ufx.*;
  */
 class SpriteSheet_NonArcadeMaps {
 
-    private record CacheKey(MapCategory mapCategory, int spriteNumber, NES_ColorScheme colorScheme) {}
+    private record MazeSpec(MapCategory mapCategory, int spriteNumber, NES_ColorScheme colorScheme) {}
 
     // Strange map #15 (level 32) has 3 different images to create an animation effect
     static final RectArea[] STRANGE_MAP_15_SPRITES = {
@@ -67,20 +64,16 @@ class SpriteSheet_NonArcadeMaps {
         25, 25, 25, 25,
     };
 
-    // These are the same for all maps
-    static final RectArea BLINKY_AREA = new RectArea(105, 85, 14, 13);
-    static final RectArea OTHER_GHOSTS_AREA = new RectArea(89, 113, 46, 13);
+    // Maze areas where ghosts are shown in maze images, must be masked at runtime
+    static final RectArea GHOST_OUTSIDE_HOUSE_AREA = new RectArea(105, 85, 14, 13);
+    static final RectArea GHOSTS_INSIDE_HOUSE_AREA = new RectArea(89, 113, 46, 13);
 
-    private static final Map<CacheKey, ColoredMaze> MAZE_CACHE = new HashMap<>();
+    private static final Map<MazeSpec, ColoredMaze> MAZE_CACHE = new HashMap<>();
 
     private final Image sourceImage;
 
     public SpriteSheet_NonArcadeMaps(AssetStorage assets) {
         sourceImage = assets.image(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".mazes.non_arcade");
-        boolean containsIllegalColor = Ufx.checkForNonNES_PaletteColors(sourceImage);
-        if (containsIllegalColor) {
-            Logger.error("Found illegal color(s) in non-Arcade maps sprite sheet");
-        }
     }
 
     private RectArea mazeSprite(int spriteNumber) {
@@ -116,13 +109,10 @@ class SpriteSheet_NonArcadeMaps {
             case 6 -> _23_20_2B_VIOLET_WHITE_GREEN;
             default -> null;
         };
-        Vector2i pacTile = v2i(13, 23);
         Logger.debug("Get map #{} with color scheme {}", mapNumber, colorScheme);
         return colorScheme.equals(availableColorScheme)
             ? new ColoredMaze(sourceImage, mazeSprite(spriteNumber), colorScheme)
-            : getOrCreateMaze(MapCategory.MINI, spriteNumber, colorScheme, availableColorScheme,
-                (x, y) -> BLINKY_AREA.contains(x, y) || OTHER_GHOSTS_AREA.contains(x, y) || (pacTile.x() == x && pacTile.y() == y)
-        );
+            : getOrCreateMaze(MapCategory.MINI, spriteNumber, colorScheme, availableColorScheme, 13, 23);
     }
 
     public ColoredMaze bigMaze(int mapNumber, NES_ColorScheme colorScheme) {
@@ -154,13 +144,10 @@ class SpriteSheet_NonArcadeMaps {
             case 11 -> _15_25_20_RED_ROSE_WHITE;
             default -> null;
         };
-        Vector2i pacTile = v2i(13, 32);
         Logger.debug("Get map #{} with color scheme {}", mapNumber, colorScheme);
         return colorScheme.equals(availableColorScheme)
             ? new ColoredMaze(sourceImage, mazeSprite(spriteNumber), colorScheme)
-            : getOrCreateMaze(MapCategory.BIG, spriteNumber, colorScheme, availableColorScheme,
-                (x, y) -> BLINKY_AREA.contains(x, y) || OTHER_GHOSTS_AREA.contains(x, y) || (pacTile.x() == x && pacTile.y() == y)
-        );
+            : getOrCreateMaze(MapCategory.BIG, spriteNumber, colorScheme, availableColorScheme, 13, 32);
     }
 
     public ColoredMaze strangeMaze(int spriteNumber, NES_ColorScheme randomColorScheme) {
@@ -200,13 +187,10 @@ class SpriteSheet_NonArcadeMaps {
             default -> throw new IllegalArgumentException("Illegal level number: " + spriteNumber);
         };
         NES_ColorScheme colorScheme = randomColorScheme != null ? randomColorScheme : availableColorScheme;
-        Vector2i pacTile = v2i(13, 23); //TODO this can vary
         Logger.debug("Get map #{} with color scheme {}", spriteNumber, availableColorScheme);
         return colorScheme.equals(availableColorScheme)
             ? new ColoredMaze(sourceImage, mazeSprite(spriteNumber), availableColorScheme)
-            : getOrCreateMaze(MapCategory.STRANGE, spriteNumber, colorScheme, availableColorScheme,
-            (x, y) -> BLINKY_AREA.contains(x, y) || OTHER_GHOSTS_AREA.contains(x, y) || (pacTile.x() == x && pacTile.y() == y)
-        );
+            : getOrCreateMaze(MapCategory.STRANGE, spriteNumber, colorScheme, availableColorScheme, 13, 23); //TODO Ms. Pac-Man tile can vary
     }
 
     private ColoredMaze getOrCreateMaze(
@@ -214,13 +198,13 @@ class SpriteSheet_NonArcadeMaps {
             int spriteNumber,
             NES_ColorScheme requiredColorScheme,
             NES_ColorScheme availableColorScheme,
-            BiPredicate<Integer, Integer> isMasked) {
+            int pacTileX, int pacTileY) {
 
-        var cacheKey = new CacheKey(mapCategory, spriteNumber, requiredColorScheme);
+        var cacheKey = new MazeSpec(mapCategory, spriteNumber, requiredColorScheme);
         if (!MAZE_CACHE.containsKey(cacheKey)) {
             RectArea mazeSprite = mazeSprite(spriteNumber);
             Image availableMazeImage = subImage(sourceImage, mazeSprite);
-            availableMazeImage = maskImage(availableMazeImage, isMasked, Color.TRANSPARENT);
+            availableMazeImage = maskImage(availableMazeImage, (x, y) -> isPixelMasked(x, y, pacTileX, pacTileY), Color.TRANSPARENT);
             Image recoloredMazeImage = exchange_NESColorScheme(availableMazeImage, availableColorScheme, requiredColorScheme);
             var cacheValue = new ColoredMaze(recoloredMazeImage,
                 new RectArea(0, 0, mazeSprite.width(), mazeSprite.height()),
@@ -229,5 +213,10 @@ class SpriteSheet_NonArcadeMaps {
             Logger.info("Maze recolored to {} and put into cache (size: {})", requiredColorScheme, MAZE_CACHE.size());
         }
         return MAZE_CACHE.get(cacheKey);
+    }
+
+    private boolean isPixelMasked(int x, int y, int pacTileX, int pacTileY) {
+        return GHOST_OUTSIDE_HOUSE_AREA.contains(x, y) || GHOSTS_INSIDE_HOUSE_AREA.contains(x, y)
+            || (pacTileX == x && pacTileY == y);
     }
 }

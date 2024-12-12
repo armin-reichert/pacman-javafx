@@ -22,11 +22,29 @@ import static de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme.*;
  */
 class MapManager {
 
-    private static List<WorldMap> createMaps(Class<?> loadingClass, String pattern, int count) {
+    private final Map<MapCategory, List<WorldMap>> mapRepository = new EnumMap<>(MapCategory.class);
+
+    MapManager(String mapsRoot) {
+        mapRepository.put(MapCategory.ARCADE,  createMaps(mapsRoot + "arcade%d.world", 4));
+        mapRepository.put(MapCategory.MINI,    createMaps(mapsRoot + "mini%d.world", 6));
+        mapRepository.put(MapCategory.BIG,     createMaps(mapsRoot + "big%02d.world", 11));
+        mapRepository.put(MapCategory.STRANGE, createMaps(mapsRoot + "strange%02d.world", 15));
+    }
+
+    WorldMap coloredWorldMap(MapCategory mapCategory, int levelNumber) {
+        return switch (mapCategory) {
+            case ARCADE  -> arcadeWorldMap(levelNumber);
+            case STRANGE -> strangeWorldMap(levelNumber);
+            case MINI    -> miniWorldMap(levelNumber);
+            case BIG     -> bigWorldMap(levelNumber);
+        };
+    }
+
+    private List<WorldMap> createMaps(String pattern, int count) {
         ArrayList<WorldMap> maps = new ArrayList<>();
         for (int num = 1; num <= count; ++num) {
             String path = pattern.formatted(num);
-            URL url = loadingClass.getResource(path);
+            URL url = getClass().getResource(path);
             if (url != null) {
                 try {
                     WorldMap worldMap = new WorldMap(url);
@@ -44,24 +62,6 @@ class MapManager {
         return maps;
     }
 
-    private final Map<MapCategory, List<WorldMap>> mapRepository = new EnumMap<>(MapCategory.class);
-
-    public MapManager(String mapsRoot) {
-        mapRepository.put(MapCategory.ARCADE,  createMaps(getClass(), mapsRoot + "arcade%d.world", 4));
-        mapRepository.put(MapCategory.MINI,    createMaps(getClass(), mapsRoot + "mini%d.world", 6));
-        mapRepository.put(MapCategory.BIG,     createMaps(getClass(), mapsRoot + "big%02d.world", 11));
-        mapRepository.put(MapCategory.STRANGE, createMaps(getClass(), mapsRoot + "strange%02d.world", 15));
-    }
-
-    public WorldMap coloredWorldMap(MapCategory mapCategory, int levelNumber) {
-        return switch (mapCategory) {
-            case ARCADE  -> arcadeWorldMap(levelNumber);
-            case STRANGE -> strangeWorldMap(levelNumber);
-            case MINI    -> miniWorldMap(levelNumber);
-            case BIG     -> bigWorldMap(levelNumber);
-        };
-    }
-
     private WorldMap arcadeWorldMap(int levelNumber) {
         return switch (levelNumber) {
             case 1,2         -> coloredMap(ARCADE, 1, _36_15_20_PINK_RED_WHITE);
@@ -77,9 +77,6 @@ class MapManager {
         };
     }
 
-    /**
-     * From this <a href="https://www.youtube.com/watch?v=cD0oGudVpbw">YouTube video</a>.
-     */
     private WorldMap miniWorldMap(int levelNumber) {
         return switch (levelNumber) {
             case 1  -> coloredMap(MINI, 1, _36_15_20_PINK_RED_WHITE);
@@ -118,9 +115,6 @@ class MapManager {
         };
     }
 
-    /**
-     * From this <a href="https://www.youtube.com/watch?v=NoImGoSAL7A">YouTube video</a>.
-     */
     private WorldMap bigWorldMap(int levelNumber) {
         return switch (levelNumber) {
             case 1  -> coloredMap(BIG,  1, _36_15_20_PINK_RED_WHITE);

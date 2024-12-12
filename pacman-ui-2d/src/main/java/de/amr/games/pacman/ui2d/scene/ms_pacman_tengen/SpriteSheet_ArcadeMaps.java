@@ -7,9 +7,7 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui2d.GameAssets2D;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
-import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.scene.image.Image;
-import org.tinylog.Logger;
 
 class SpriteSheet_ArcadeMaps {
 
@@ -19,10 +17,6 @@ class SpriteSheet_ArcadeMaps {
 
     public SpriteSheet_ArcadeMaps(AssetStorage assets) {
         sourceImage = assets.image(GameAssets2D.PFX_MS_PACMAN_TENGEN + ".mazes.arcade");
-        boolean containsIllegalColor = Ufx.checkForNonNES_PaletteColors(sourceImage);
-        if (containsIllegalColor) {
-            Logger.error("Found illegal color(s) in Arcade maps sprite sheet");
-        }
     }
 
     public ColoredMaze coloredMaze(int mapNumber, NES_ColorScheme colorScheme) {
