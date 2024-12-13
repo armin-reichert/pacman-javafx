@@ -84,6 +84,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
 
     @Override
     public void setWorldMap(WorldMap worldMap) {
+        Logger.info("Set world map to {}", worldMap.url());
         int mapNumber = worldMap.getConfigValue("mapNumber");
         MapCategory category = worldMap.getConfigValue("mapCategory");
         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
@@ -219,14 +220,6 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         ctx.strokeLine(canvas().getWidth() - 0.5, 0, canvas().getWidth() - 0.5, canvas().getHeight());
     }
 
-    public void drawEmptyMap(WorldMap worldMap, Color fillColor, Color strokeColor) {
-        terrainRenderer.setMapBackgroundColor(CANVAS_BACKGROUND_COLOR);
-        terrainRenderer.setWallFillColor(fillColor);
-        terrainRenderer.setWallStrokeColor(strokeColor);
-        terrainRenderer.setDoorColor(strokeColor);
-        terrainRenderer.drawTerrain(ctx, worldMap.terrain(), worldMap.obstacles());
-    }
-
     @Override
     public void drawWorld(GameWorld world, double x, double y) {
     }
@@ -264,6 +257,14 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         else {
             Logger.warn("Map {} cannot be rendered, no map sprite available", mapNumber);
         }
+    }
+
+    public void drawEmptyMap(WorldMap worldMap, Color fillColor, Color strokeColor) {
+        terrainRenderer.setMapBackgroundColor(CANVAS_BACKGROUND_COLOR);
+        terrainRenderer.setWallFillColor(fillColor);
+        terrainRenderer.setWallStrokeColor(strokeColor);
+        terrainRenderer.setDoorColor(strokeColor);
+        terrainRenderer.drawTerrain(ctx, worldMap.terrain(), worldMap.obstacles());
     }
 
     private void drawPellets(GameWorld world, Color pelletColor) {

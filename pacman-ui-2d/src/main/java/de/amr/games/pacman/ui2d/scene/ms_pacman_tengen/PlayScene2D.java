@@ -273,6 +273,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
             level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
             level.pac().setImmune(PY_IMMUNITY.get());
         }
+        gr.setWorldMap(level.world().map());
     }
 
     @Override
@@ -310,7 +311,6 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
                 levelCompleteAnimation.setOnHideGhosts(() -> context.level().ghosts().forEach(Ghost::hide));
                 levelCompleteAnimation.setOnFinished(() -> state.timer().expire());
                 levelCompleteAnimation.start();
-
             }
             case GAME_OVER -> {
                 var game = (MsPacManGameTengen) context.game();
@@ -408,7 +408,6 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
         r.setScaling(scaling());
         r.clearCanvas();
         context.game().level().ifPresent(level -> {
-            r.setWorldMap(level.world().map());
             r.ctx().save();
             r.ctx().translate(scaled(2 * TS), 0);
             drawSceneContent();
