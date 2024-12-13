@@ -11,8 +11,6 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
-import de.amr.games.pacman.maps.rendering.TerrainRenderer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
@@ -39,7 +37,7 @@ import static de.amr.games.pacman.ui2d.PacManGamesUI.PFX_MS_PACMAN_TENGEN;
 import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.NO_SPRITE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.nesPaletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet.*;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.SpriteSheet_NonArcadeMaps.strangeMap15Sprite;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.SpriteSheetWithMazes.strangeMap15Sprite;
 import static java.util.function.Predicate.not;
 
 /**
@@ -51,14 +49,12 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
 
     private final AssetStorage assets;
     private final MsPacManGameTengenSpriteSheet spriteSheet;
-    private final SpriteSheet_NonArcadeMaps nonArcadeMapSprites;
-    private final SpriteSheet_ArcadeMaps arcadeMapSprites;
+    private final SpriteSheetWithMazes mapSprites;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
-    private final TerrainRenderer terrainRenderer = new TerrainRenderer();
-    private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
     private final GraphicsContext ctx;
 
-    private ColoredMaze maze;
+    private ColoredMaze normalMaze;
+    private ColoredMaze flashingMaze;
     private boolean blinking;
     private boolean levelNumberBoxesVisible;
     private Vector2f messageAnchorPosition;
@@ -66,20 +62,15 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     public MsPacManGameTengenRenderer(
         AssetStorage assets,
         MsPacManGameTengenSpriteSheet spriteSheet,
-        SpriteSheet_ArcadeMaps arcadeMapSprites,
-        SpriteSheet_NonArcadeMaps nonArcadeMapSprites,
+        SpriteSheetWithMazes mapSprites,
         Canvas canvas)
     {
         this.assets = checkNotNull(assets);
         this.spriteSheet = checkNotNull(spriteSheet);
-        this.arcadeMapSprites = arcadeMapSprites;
-        this.nonArcadeMapSprites = nonArcadeMapSprites;
+        this.mapSprites = mapSprites;
         checkNotNull(canvas);
         ctx = canvas.getGraphicsContext2D();
         messageAnchorPosition = new Vector2f(14f * TS, 21 * TS);
-        terrainRenderer.scalingPy.bind(scalingPy);
-        terrainRenderer.setMapBackgroundColor(CANVAS_BACKGROUND_COLOR);
-        foodRenderer.scalingPy.bind(scalingPy);
     }
 
     @Override
@@ -88,27 +79,10 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         int mapNumber = worldMap.getConfigValue("mapNumber");
         MapCategory category = worldMap.getConfigValue("mapCategory");
         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
-        maze = switch (category) {
-            case ARCADE  -> arcadeMapSprites.coloredMaze(mapNumber, nesColorScheme);
-            case MINI    -> nonArcadeMapSprites.miniMaze(mapNumber, nesColorScheme);
-            case BIG     -> nonArcadeMapSprites.bigMaze(mapNumber, nesColorScheme);
-            // Hack for easy STRANGE map sprite identification:
-            case STRANGE -> {
-                // TODO HACK!
-                int spriteNumber = worldMap.getConfigValue("levelNumber");
-                boolean random = worldMap.getConfigValue("randomColorScheme");
-                NES_ColorScheme colorScheme = worldMap.getConfigValue("nesColorScheme");
-                yield nonArcadeMapSprites.strangeMaze(spriteNumber, random ? colorScheme : null);
-            }
-        };
 
-        terrainRenderer.setMapBackgroundColor(CANVAS_BACKGROUND_COLOR);
-        terrainRenderer.setWallStrokeColor(Color.valueOf(nesColorScheme.strokeColor()));
-        terrainRenderer.setWallFillColor(Color.valueOf(nesColorScheme.fillColor()));
-        terrainRenderer.setDoorColor(Color.valueOf(nesColorScheme.strokeColor()));
-
-        foodRenderer.setPelletColor(Color.valueOf(nesColorScheme.pelletColor()));
-        foodRenderer.setEnergizerColor(Color.valueOf(nesColorScheme.pelletColor()));
+        ColoredMaze[] mazes = mapSprites.getMazeSpriteSet(worldMap, category, mapNumber, nesColorScheme);
+        normalMaze = mazes[0];
+        flashingMaze = mazes[1]; //TODO
     }
 
     @Override
@@ -236,35 +210,43 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
 
         MapCategory mapCategory = game.mapCategory();
         int mapNumber = world.map().getConfigValue("mapNumber");
-        if (maze.colorScheme() != null) { // map image for color scheme exists in sprite sheet
+        if (normalMaze.colorScheme() != null) { // map image for color scheme exists in sprite sheet
+            // Draw food first, then message, then maze image
+            ctx.save();
+            ctx.scale(scaling(), scaling());
+            Color pelletColor = Color.valueOf(normalMaze.colorScheme().pelletColor());
+            drawPellets(world, pelletColor);
+            drawEnergizers(world, pelletColor);
+            ctx.restore();
+
             drawLevelMessage(level, game.isDemoLevel()); // message appears under map image so draw it first
+
             RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
                 ? strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
-                : maze.area();
-            ctx.drawImage(maze.source(),
+                : normalMaze.area();
+            ctx.drawImage(normalMaze.source(),
                 area.x(), area.y(), area.width(), area.height(),
                 scaled(mapX), scaled(mapY), scaled(area.width()), scaled(area.height())
             );
             overPaintActors(world);
-            ctx.save();
-            ctx.scale(scaling(), scaling());
-            //TODO: fixme over-painting pellets also over-paints moving message!
-            Color pelletColor = Color.valueOf(maze.colorScheme().pelletColor());
-            drawPellets(world, pelletColor);
-            drawEnergizers(world, pelletColor);
-            ctx.restore();
         }
         else {
             Logger.warn("Map {} cannot be rendered, no map sprite available", mapNumber);
         }
     }
 
-    public void drawEmptyMap(WorldMap worldMap, Color fillColor, Color strokeColor) {
-        terrainRenderer.setMapBackgroundColor(CANVAS_BACKGROUND_COLOR);
-        terrainRenderer.setWallFillColor(fillColor);
-        terrainRenderer.setWallStrokeColor(strokeColor);
-        terrainRenderer.setDoorColor(strokeColor);
-        terrainRenderer.drawTerrain(ctx, worldMap.terrain(), worldMap.obstacles());
+    public void drawWorldHighlighted(GameContext context, GameWorld world, double mapX, double mapY) {
+        ctx.setImageSmoothing(false);
+        MsPacManGameTengen game = (MsPacManGameTengen) context.game();
+        if (!isUsingDefaultGameOptions(game)) {
+            drawGameOptionsInfo(world.map().terrain(), game);
+        }
+        RectArea area = flashingMaze.area();
+        ctx.drawImage(flashingMaze.source(),
+            area.x(), area.y(), area.width(), area.height(),
+            scaled(mapX), scaled(mapY), scaled(area.width()), scaled(area.height())
+        );
+        overPaintActors(world);
     }
 
     private void drawPellets(GameWorld world, Color pelletColor) {
