@@ -156,7 +156,7 @@ public class SpriteSheetWithMazes {
 
         List<ColoredMaze> flashingMazes = new ArrayList<>();
         if (multipleFlashColors) {
-            for (var randomScheme : randomColorSchemes(flashCount)) {
+            for (var randomScheme : randomColorSchemes(flashCount, colorScheme)) {
                 ColoredMaze randomMaze = getOrCreateMaze(MapCategory.MINI, spriteNumber, mazeSprite, randomScheme, availableColorScheme, pacTileX, pacTileY);
                 flashingMazes.add(randomMaze);
             }
@@ -207,7 +207,7 @@ public class SpriteSheetWithMazes {
 
         List<ColoredMaze> flashingMazes = new ArrayList<>();
         if (multipleFlashColors) {
-            for (var randomScheme : randomColorSchemes(flashCount)) {
+            for (var randomScheme : randomColorSchemes(flashCount, colorScheme)) {
                 ColoredMaze randomMaze = getOrCreateMaze(MapCategory.BIG, spriteNumber, mazeSprite, randomScheme, availableColorScheme, pacTileX, pacTileY);
                 flashingMazes.add(randomMaze);
             }
@@ -267,7 +267,7 @@ public class SpriteSheetWithMazes {
 
         List<ColoredMaze> flashingMazes = new ArrayList<>();
         if (multipleFlashColors) {
-            for (var randomScheme : randomColorSchemes(flashCount)) {
+            for (var randomScheme : randomColorSchemes(flashCount, colorScheme)) {
                 ColoredMaze randomMaze = getOrCreateMaze(MapCategory.STRANGE, spriteNumber, mazeSprite, randomScheme, availableColorScheme, pacTileX, pacTileY);
                 flashingMazes.add(randomMaze);
             }
@@ -320,11 +320,13 @@ public class SpriteSheetWithMazes {
             || (pacTileX == x && pacTileY == y);
     }
 
-    public List<NES_ColorScheme> randomColorSchemes(int count) {
+    public List<NES_ColorScheme> randomColorSchemes(int count, NES_ColorScheme usedScheme) {
         Set<NES_ColorScheme> colorSchemes = new HashSet<>();
         while (colorSchemes.size() < count) {
             NES_ColorScheme colorScheme = NES_ColorScheme.random();
-            colorSchemes.add(colorScheme);
+            if (!colorScheme.equals(usedScheme)) {
+                colorSchemes.add(colorScheme);
+            }
         }
         return colorSchemes.stream().toList();
     }
