@@ -21,6 +21,7 @@ import de.amr.games.pacman.ui2d.input.Keyboard;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledView;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
+import de.amr.games.pacman.ui2d.scene.common.LevelCompleteAnimation;
 import de.amr.games.pacman.ui2d.sound.GameSound;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -134,7 +135,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
     private final ObjectProperty<SceneDisplayMode> displayModePy = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
 
     private MessageMovement messageMovement;
-    private LevelCompleteAnimationTengen levelCompleteAnimation;
+    private LevelCompleteAnimation levelCompleteAnimation;
 
     public PlayScene2D() {
         canvas = new Canvas();
@@ -274,8 +275,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
             level.pac().setImmune(PY_IMMUNITY.get());
         }
 
-        levelCompleteAnimation = new LevelCompleteAnimationTengen(
-            level.world().map(), level.numFlashes(), 10);
+        levelCompleteAnimation = new LevelCompleteAnimation(level.numFlashes(), 10);
         levelCompleteAnimation.setOnHideGhosts(() -> level.ghosts().forEach(Ghost::hide));
         levelCompleteAnimation.setOnFinished(() -> context.gameState().timer().expire());
 
