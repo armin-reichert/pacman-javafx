@@ -35,9 +35,9 @@ import static de.amr.games.pacman.model.actors.Bonus.STATE_EATEN;
 import static de.amr.games.pacman.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.games.pacman.ui2d.PacManGamesUI.PFX_MS_PACMAN_TENGEN;
 import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.NO_SPRITE;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MazeRepository.strangeMap15Sprite;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.nesPaletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet.*;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MazeRepository.strangeMap15Sprite;
 import static java.util.function.Predicate.not;
 
 /**
@@ -46,10 +46,11 @@ import static java.util.function.Predicate.not;
 public class MsPacManGameTengenRenderer implements GameRenderer {
 
     private static final Color CANVAS_BACKGROUND_COLOR = Color.BLACK;
+    private static final Vector2f DEFAULT_MESSAGE_ANCHOR_POS = new Vector2f(14f * TS, 21 * TS);
 
     private final AssetStorage assets;
     private final MsPacManGameTengenSpriteSheet spriteSheet;
-    private final MazeRepository mapSprites;
+    private final MazeRepository mazeRepository;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final GraphicsContext ctx;
 
@@ -61,21 +62,23 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     public MsPacManGameTengenRenderer(
         AssetStorage assets,
         MsPacManGameTengenSpriteSheet spriteSheet,
-        MazeRepository mapSprites,
+        MazeRepository mazeRepository,
         Canvas canvas)
     {
         this.assets = checkNotNull(assets);
         this.spriteSheet = checkNotNull(spriteSheet);
-        this.mapSprites = mapSprites;
+        this.mazeRepository = mazeRepository;
         checkNotNull(canvas);
         ctx = canvas.getGraphicsContext2D();
-        messageAnchorPosition = new Vector2f(14f * TS, 21 * TS);
+        messageAnchorPosition = DEFAULT_MESSAGE_ANCHOR_POS;
     }
 
     @Override
     public void setWorldMap(WorldMap worldMap) {
-        mazeSet = mapSprites.getMazeSpriteSet(worldMap, 5);
-        Logger.info("Using maze set {}", mazeSet);
+        int flashCount = 5; // TODO correct for all levels?
+        Logger.info("Create maze set with {} flash colors", flashCount);
+        mazeSet = mazeRepository.createMazeSet(worldMap, flashCount);
+        Logger.info("Maze set {}", mazeSet);
     }
 
     @Override
@@ -199,7 +202,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         MapCategory mapCategory = game.mapCategory();
         int mapNumber = world.map().getConfigValue("mapNumber");
 
-        if (!isUsingDefaultGameOptions(game)) {
+        if (areGameOptionsChanged(game)) {
             drawGameOptionsInfo(world.map().terrain(), game);
         }
 
@@ -229,7 +232,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     public void drawWorldHighlighted(GameContext context, GameWorld world, double mapX, double mapY, int flashingIndex) {
         ctx.setImageSmoothing(false);
         MsPacManGameTengen game = (MsPacManGameTengen) context.game();
-        if (!isUsingDefaultGameOptions(game)) {
+        if (areGameOptionsChanged(game)) {
             drawGameOptionsInfo(world.map().terrain(), game);
         }
         ColoredMaze maze = mazeSet.flashingMazes().get(flashingIndex);
@@ -312,10 +315,8 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         }
     }
 
-    private boolean isUsingDefaultGameOptions(MsPacManGameTengen game) {
-        return game.pacBooster() == PacBooster.OFF &&
-            game.difficulty() == Difficulty.NORMAL &&
-            game.mapCategory() == MapCategory.ARCADE;
+    private boolean areGameOptionsChanged(MsPacManGameTengen game) {
+        return game.pacBooster() != PacBooster.OFF || game.difficulty() != Difficulty.NORMAL || game.mapCategory() != MapCategory.ARCADE;
     }
 
     private void overPaintActors(GameWorld world) {

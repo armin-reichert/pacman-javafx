@@ -86,8 +86,7 @@ public class MazeRepository {
         this.nonArcadeMazesImage = checkNotNull(nonArcadeMazesImage);
     }
 
-    public MazeSet getMazeSpriteSet(WorldMap worldMap, int flashCount) {
-        Logger.info("Create maze set with {} flash colors", flashCount);
+    public MazeSet createMazeSet(WorldMap worldMap, int flashCount) {
         MapCategory mapCategory = worldMap.getConfigValue("mapCategory");
         int mapNumber = worldMap.getConfigValue("mapNumber");
         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
