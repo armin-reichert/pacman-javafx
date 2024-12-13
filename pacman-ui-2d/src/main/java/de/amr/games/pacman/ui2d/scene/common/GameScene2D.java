@@ -4,9 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene.common;
 
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
+import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.PlayScene2D;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCodeCombination;
@@ -103,7 +105,10 @@ public abstract class GameScene2D implements GameScene {
         if (context.isScoreVisible()) {
             gr.drawScores(context);
         }
-        context.game().level().ifPresent(level -> gr.setWorldMap(level.world().map()));
+        if (this instanceof PlayScene2D) {
+            //TODO do this only on level creation
+            context.game().level().ifPresent(level -> gr.setWorldMap(level.world().map()));
+        }
         drawSceneContent();
         if (debugInfoVisiblePy.get()) {
             drawDebugInfo();
