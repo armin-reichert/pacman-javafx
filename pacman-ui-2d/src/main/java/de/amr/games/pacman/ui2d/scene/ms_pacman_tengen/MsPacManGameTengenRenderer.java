@@ -29,6 +29,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -56,7 +57,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     private final GraphicsContext ctx;
 
     private ColoredMaze normalMaze;
-    private ColoredMaze flashingMaze;
+    private List<ColoredMaze> flashingMazes;
     private boolean blinking;
     private boolean levelNumberBoxesVisible;
     private Vector2f messageAnchorPosition;
@@ -78,14 +79,9 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     @Override
     public void setWorldMap(WorldMap worldMap) {
         Logger.info("Set world map to {}", worldMap.url());
-        List<ColoredMaze> mazes = mapSprites.getMazeSpriteSet(
-            worldMap,
-            worldMap.getConfigValue("mapCategory"),
-            worldMap.getConfigValue("mapNumber"),
-            worldMap.getConfigValue("nesColorScheme"),
-            worldMap.getConfigValue("randomColorScheme"));
+        List<ColoredMaze> mazes = mapSprites.getMazeSpriteSet(worldMap);
         normalMaze = mazes.getFirst();
-        flashingMaze = mazes.get(1); //TODO
+        flashingMazes = mazes.subList(1, mazes.size());
     }
 
     @Override
@@ -235,14 +231,17 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         }
     }
 
-    public void drawWorldHighlighted(GameContext context, GameWorld world, double mapX, double mapY) {
+    public void drawWorldHighlighted(GameContext context, GameWorld world, double mapX, double mapY, int flashingIndex) {
         ctx.setImageSmoothing(false);
         MsPacManGameTengen game = (MsPacManGameTengen) context.game();
         if (!isUsingDefaultGameOptions(game)) {
             drawGameOptionsInfo(world.map().terrain(), game);
         }
-        RectArea area = flashingMaze.area();
-        ctx.drawImage(flashingMaze.source(),
+        //TODO
+        //ColoredMaze maze = flashingMazes.get(flashingIndex);
+        ColoredMaze maze = flashingMazes.get(0);
+        RectArea area = maze.area();
+        ctx.drawImage(maze.source(),
             area.x(), area.y(), area.width(), area.height(),
             scaled(mapX), scaled(mapY), scaled(area.width()), scaled(area.height())
         );

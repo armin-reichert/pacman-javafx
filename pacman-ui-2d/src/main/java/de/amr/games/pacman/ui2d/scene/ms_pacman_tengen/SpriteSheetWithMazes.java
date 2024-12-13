@@ -78,27 +78,25 @@ public class SpriteSheetWithMazes {
         this.nonArcadeMazesImage = checkNotNull(nonArcadeMazesImage);
     }
 
-    public List<ColoredMaze> getMazeSpriteSet(
-        WorldMap worldMap,
-        MapCategory mapCategory,
-        int mapNumber,
-        NES_ColorScheme nesColorScheme,
-        boolean randomColorScheme)
-    {
+    public List<ColoredMaze> getMazeSpriteSet(WorldMap worldMap) {
+        MapCategory mapCategory = worldMap.getConfigValue("mapCategory");
+        int mapNumber = worldMap.getConfigValue("mapNumber");
+        NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
+        boolean randomColorScheme = worldMap.getConfigValue("randomColorScheme");
+        List<NES_ColorScheme> flashingColorSchemes = worldMap.getConfigValue("flashingColorSchemes");
         return switch (mapCategory) {
-            case ARCADE  -> arcadeMazes(mapNumber, nesColorScheme);
-            case MINI    -> miniMazes(mapNumber, nesColorScheme);
-            case BIG     -> bigMazes(mapNumber, nesColorScheme);
-            case STRANGE -> {
-                // TODO HACK!
+            case ARCADE  -> arcadeMazes(mapNumber, nesColorScheme, flashingColorSchemes);
+            case MINI    -> miniMazes(mapNumber, nesColorScheme, flashingColorSchemes);
+            case BIG     -> bigMazes(mapNumber, nesColorScheme, flashingColorSchemes);
+            case STRANGE -> { // TODO HACK!
                 int spriteNumber = worldMap.getConfigValue("levelNumber");
                 NES_ColorScheme colorScheme = worldMap.getConfigValue("nesColorScheme");
-                yield strangeMazes(spriteNumber, randomColorScheme ? colorScheme : null);
+                yield strangeMazes(spriteNumber, randomColorScheme ? colorScheme : null, flashingColorSchemes);
             }
         };
     }
 
-    private List<ColoredMaze> arcadeMazes(int mapNumber, NES_ColorScheme colorScheme) {
+    private List<ColoredMaze> arcadeMazes(int mapNumber, NES_ColorScheme colorScheme, List<NES_ColorScheme> flashingColorSchemes) {
         int spriteIndex = switch (mapNumber) {
             case 1 -> 0;
             case 2 -> 1;
@@ -124,7 +122,7 @@ public class SpriteSheetWithMazes {
         return List.of(normalMaze, flashingMaze);
     }
 
-    private List<ColoredMaze> miniMazes(int mapNumber, NES_ColorScheme colorScheme) {
+    private List<ColoredMaze> miniMazes(int mapNumber, NES_ColorScheme colorScheme, List<NES_ColorScheme> flashingColorSchemes) {
         int spriteNumber = switch (mapNumber) {
             case 1 -> 34;
             case 2 -> 35;
@@ -152,7 +150,7 @@ public class SpriteSheetWithMazes {
         return List.of(normalMaze, flashingMaze);
     }
 
-    private List<ColoredMaze> bigMazes(int mapNumber, NES_ColorScheme colorScheme) {
+    private List<ColoredMaze> bigMazes(int mapNumber, NES_ColorScheme colorScheme, List<NES_ColorScheme> flashingColorSchemes) {
         int spriteNumber = switch (mapNumber) {
             case  1 -> 19;
             case  2 -> 20;
@@ -190,7 +188,7 @@ public class SpriteSheetWithMazes {
         return List.of(normalMaze, flashingMaze);
     }
 
-    private List<ColoredMaze> strangeMazes(int spriteNumber, NES_ColorScheme randomColorScheme) {
+    private List<ColoredMaze> strangeMazes(int spriteNumber, NES_ColorScheme randomColorScheme, List<NES_ColorScheme> flashingColorSchemes) {
         NES_ColorScheme availableColorScheme = switch (spriteNumber) {
             case 1  -> _36_15_20_PINK_RED_WHITE;
             case 2  -> _21_20_28_BLUE_WHITE_YELLOW;

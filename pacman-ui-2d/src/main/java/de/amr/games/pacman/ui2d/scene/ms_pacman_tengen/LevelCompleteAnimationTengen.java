@@ -11,6 +11,7 @@ import de.amr.games.pacman.ui2d.scene.common.LevelCompleteAnimation;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,6 +30,7 @@ public class LevelCompleteAnimationTengen extends LevelCompleteAnimation {
             NES_ColorScheme previous = i > 0 ? colorSchemes.get(i-1) : null;
             colorSchemes.add(randomize ? randomColorSchemeNotRepeating(previous) : nesColorScheme);
         }
+        worldMap.setConfigValue("flashingColorSchemes", colorSchemes);
     }
 
     private NES_ColorScheme randomColorSchemeNotRepeating(NES_ColorScheme previous) {
@@ -38,6 +40,10 @@ public class LevelCompleteAnimationTengen extends LevelCompleteAnimation {
             nesColorScheme = NES_ColorScheme.random();
         }
         return nesColorScheme;
+    }
+
+    public List<NES_ColorScheme> colorSchemes() {
+        return Collections.unmodifiableList(colorSchemes);
     }
 
     public Color currentFillColor() {

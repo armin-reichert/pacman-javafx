@@ -273,6 +273,12 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
             level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
             level.pac().setImmune(PY_IMMUNITY.get());
         }
+
+        levelCompleteAnimation = new LevelCompleteAnimationTengen(
+            level.world().map(), level.numFlashes(), 10);
+        levelCompleteAnimation.setOnHideGhosts(() -> level.ghosts().forEach(Ghost::hide));
+        levelCompleteAnimation.setOnFinished(() -> context.gameState().timer().expire());
+
         gr.setWorldMap(level.world().map());
     }
 
@@ -306,10 +312,6 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
         switch (state) {
             case HUNTING -> movingCamera.focusPlayer(true);
             case LEVEL_COMPLETE -> {
-                levelCompleteAnimation = new LevelCompleteAnimationTengen(
-                    context.level().world().map(), context.level().numFlashes(), 10);
-                levelCompleteAnimation.setOnHideGhosts(() -> context.level().ghosts().forEach(Ghost::hide));
-                levelCompleteAnimation.setOnFinished(() -> state.timer().expire());
                 levelCompleteAnimation.start();
             }
             case GAME_OVER -> {
@@ -442,7 +444,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
         if (flashing && levelCompleteAnimation.isInHighlightPhase()) {
             //TODO support multi-color flashing again
             //r.drawEmptyMap(world.map(), levelCompleteAnimation.currentFillColor(), levelCompleteAnimation.currentStrokeColor());
-            r.drawWorldHighlighted(context, world, 0, 3 * TS);
+            r.drawWorldHighlighted(context, world, 0, 3 * TS, levelCompleteAnimation.flashingIndex());
         } else {
             r.drawWorld(context, world, 0,  3 * TS);
         }
