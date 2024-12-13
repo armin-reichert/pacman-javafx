@@ -201,33 +201,39 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
 
         MsPacManGameTengen game = (MsPacManGameTengen) context.game();
         GameLevel level = context.level();
+        MapCategory mapCategory = game.mapCategory();
+        int mapNumber = world.map().getConfigValue("mapNumber");
 
         if (!isUsingDefaultGameOptions(game)) {
             drawGameOptionsInfo(world.map().terrain(), game);
         }
 
-        MapCategory mapCategory = game.mapCategory();
-        int mapNumber = world.map().getConfigValue("mapNumber");
-        if (normalMaze.colorScheme() != null) { // map image for color scheme exists in sprite sheet
-            drawLevelMessage(level, game.isDemoLevel()); // message appears under map image so draw it first
-            RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
-                ? strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
-                : normalMaze.area();
-            ctx.drawImage(normalMaze.source(),
-                area.x(), area.y(), area.width(), area.height(),
-                scaled(mapX), scaled(mapY), scaled(area.width()), scaled(area.height())
-            );
-            overPaintActors(world);
-            ctx.save();
-            ctx.scale(scaling(), scaling());
-            Color pelletColor = Color.valueOf(normalMaze.colorScheme().pelletColor());
-            drawPellets(world, pelletColor);
-            drawEnergizers(world, pelletColor);
-            ctx.restore();
+        if (normalMaze == null) {
+            // setWorldMap() not yet called?
+            Logger.warn("Tick {}: No maze available", context.tick());
+            return;
         }
-        else {
-            Logger.warn("Map {} cannot be rendered, no map sprite available", mapNumber);
+
+        if (normalMaze.colorScheme() == null) { // TODO can this still happen?
+            Logger.warn("Map #{} from {} maps cannot be rendered, no color scheme exists", mapNumber, mapCategory);
+            return;
         }
+
+        drawLevelMessage(level, game.isDemoLevel()); // message appears under map image so draw it first
+        RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
+            ? strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
+            : normalMaze.area();
+        ctx.drawImage(normalMaze.source(),
+            area.x(), area.y(), area.width(), area.height(),
+            scaled(mapX), scaled(mapY), scaled(area.width()), scaled(area.height())
+        );
+        overPaintActors(world);
+        ctx.save();
+        ctx.scale(scaling(), scaling());
+        Color pelletColor = Color.valueOf(normalMaze.colorScheme().pelletColor());
+        drawPellets(world, pelletColor);
+        drawEnergizers(world, pelletColor);
+        ctx.restore();
     }
 
     public void drawWorldHighlighted(GameContext context, GameWorld world, double mapX, double mapY, int flashingIndex) {
