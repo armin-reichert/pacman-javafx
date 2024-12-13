@@ -29,7 +29,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -79,7 +78,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     @Override
     public void setWorldMap(WorldMap worldMap) {
         Logger.info("Set world map to {}", worldMap.url());
-        List<ColoredMaze> mazes = mapSprites.getMazeSpriteSet(worldMap);
+        List<ColoredMaze> mazes = mapSprites.getMazeSpriteSet(worldMap, 5);
         normalMaze = mazes.getFirst();
         flashingMazes = mazes.subList(1, mazes.size());
     }
@@ -237,9 +236,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         if (!isUsingDefaultGameOptions(game)) {
             drawGameOptionsInfo(world.map().terrain(), game);
         }
-        //TODO
-        //ColoredMaze maze = flashingMazes.get(flashingIndex);
-        ColoredMaze maze = flashingMazes.get(0);
+        ColoredMaze maze = flashingMazes.get(flashingIndex);
         RectArea area = maze.area();
         ctx.drawImage(maze.source(),
             area.x(), area.y(), area.width(), area.height(),

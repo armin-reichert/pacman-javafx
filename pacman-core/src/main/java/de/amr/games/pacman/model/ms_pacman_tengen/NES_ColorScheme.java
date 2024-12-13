@@ -12,7 +12,7 @@ import static de.amr.games.pacman.lib.Globals.randomInt;
  * The color schemes used in the Tengen Ms. Pac-Man maps.
  */
 public enum NES_ColorScheme {
-    FLASHING                      (0x0f, 0x20, 0x0f),
+    FLASHING_BLACK_WHITE(0x0f, 0x20, 0x0f),
     _0F_20_1C_BLACK_WHITE_GREEN   (0x0f, 0x20, 0x1c),
     _0F_20_28_BLACK_WHITE_YELLOW  (0x0f, 0x20, 0x28),
     _0F_01_20_BLACK_BLUE_WHITE    (0x0f, 0x01, 0x20),

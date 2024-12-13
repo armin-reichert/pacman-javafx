@@ -443,7 +443,6 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
         boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.isFlashing();
         if (flashing && levelCompleteAnimation.isInHighlightPhase()) {
             //TODO support multi-color flashing again
-            //r.drawEmptyMap(world.map(), levelCompleteAnimation.currentFillColor(), levelCompleteAnimation.currentStrokeColor());
             r.drawWorldHighlighted(context, world, 0, 3 * TS, levelCompleteAnimation.flashingIndex());
         } else {
             r.drawWorld(context, world, 0,  3 * TS);
