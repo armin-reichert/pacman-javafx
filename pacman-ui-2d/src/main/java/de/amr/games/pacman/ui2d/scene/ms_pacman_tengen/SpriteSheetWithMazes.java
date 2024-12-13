@@ -36,6 +36,17 @@ import static de.amr.games.pacman.ui2d.util.Ufx.*;
  */
 public class SpriteSheetWithMazes {
 
+    static final int ARCADE_MAZE_WIDTH = 28*8, ARCADE_MAZE_HEIGHT = 31*8;
+
+    // Map row counts as they appear in the sprite sheet (row by row)
+    static final byte[] NON_ARCADE_MAP_ROW_COUNTS = {
+        31, 31, 31, 31, 31, 31, 30, 31,
+        31, 37, 31, 31, 31, 37, 31, 25,
+        37, 31, 37, 37, 37, 37, 37, 31,
+        37, 37, 31, 25, 31, 25, 31, 31, 37,
+        25, 25, 25, 25,
+    };
+
     // Strange map #15 (level 32) has 3 different images to create an animation effect
     static final RectArea[] STRANGE_MAP_15_SPRITES = {
         rect(1568,  840, 224, 248),
@@ -52,22 +63,11 @@ public class SpriteSheetWithMazes {
         return STRANGE_MAP_15_SPRITES[index];
     }
 
-    // Map row counts as they appear in the sprite sheet (row by row)
-    static final byte[] MAP_ROW_COUNTS = {
-        31, 31, 31, 31, 31, 31, 30, 31,
-        31, 37, 31, 31, 31, 37, 31, 25,
-        37, 31, 37, 37, 37, 37, 37, 31,
-        37, 37, 31, 25, 31, 25, 31, 31, 37,
-        25, 25, 25, 25,
-    };
-
     // Maze areas where ghosts are shown in maze images, must be masked at runtime
     static final RectArea GHOST_OUTSIDE_HOUSE_AREA = new RectArea(105, 85, 14, 13);
     static final RectArea GHOSTS_INSIDE_HOUSE_AREA = new RectArea(89, 113, 46, 13);
 
     private static final Map<MazeSpec, ColoredMaze> MAZE_CACHE = new HashMap<>();
-
-    static final int ARCADE_MAZE_WIDTH = 28*8, ARCADE_MAZE_HEIGHT = 31*8;
 
     private final Image arcadeMazesImage;
     private final Image nonArcadeMazesImage;
@@ -245,7 +245,7 @@ public class SpriteSheetWithMazes {
             case 34,35,36,37                -> { colIndex = (spriteNumber - 34); y = 1136; }
             default -> throw new IllegalArgumentException("Illegal non-Arcade map number: " + spriteNumber);
         }
-        int width = 28 * TS, height = MAP_ROW_COUNTS[spriteNumber - 1] * TS;
+        int width = 28 * TS, height = NON_ARCADE_MAP_ROW_COUNTS[spriteNumber - 1] * TS;
         return new RectArea(colIndex * width, y, width, height);
     }
 
