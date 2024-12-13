@@ -29,6 +29,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
+import java.util.List;
+
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.Animations.*;
 import static de.amr.games.pacman.model.actors.Bonus.STATE_EATEN;
@@ -76,13 +78,14 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     @Override
     public void setWorldMap(WorldMap worldMap) {
         Logger.info("Set world map to {}", worldMap.url());
-        int mapNumber = worldMap.getConfigValue("mapNumber");
-        MapCategory category = worldMap.getConfigValue("mapCategory");
-        NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
-
-        ColoredMaze[] mazes = mapSprites.getMazeSpriteSet(worldMap, category, mapNumber, nesColorScheme);
-        normalMaze = mazes[0];
-        flashingMaze = mazes[1]; //TODO
+        List<ColoredMaze> mazes = mapSprites.getMazeSpriteSet(
+            worldMap,
+            worldMap.getConfigValue("mapCategory"),
+            worldMap.getConfigValue("mapNumber"),
+            worldMap.getConfigValue("nesColorScheme"),
+            worldMap.getConfigValue("randomColorScheme"));
+        normalMaze = mazes.getFirst();
+        flashingMaze = mazes.get(1); //TODO
     }
 
     @Override
@@ -211,16 +214,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         MapCategory mapCategory = game.mapCategory();
         int mapNumber = world.map().getConfigValue("mapNumber");
         if (normalMaze.colorScheme() != null) { // map image for color scheme exists in sprite sheet
-            // Draw food first, then message, then maze image
-            ctx.save();
-            ctx.scale(scaling(), scaling());
-            Color pelletColor = Color.valueOf(normalMaze.colorScheme().pelletColor());
-            drawPellets(world, pelletColor);
-            drawEnergizers(world, pelletColor);
-            ctx.restore();
-
             drawLevelMessage(level, game.isDemoLevel()); // message appears under map image so draw it first
-
             RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
                 ? strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
                 : normalMaze.area();
@@ -229,6 +223,12 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
                 scaled(mapX), scaled(mapY), scaled(area.width()), scaled(area.height())
             );
             overPaintActors(world);
+            ctx.save();
+            ctx.scale(scaling(), scaling());
+            Color pelletColor = Color.valueOf(normalMaze.colorScheme().pelletColor());
+            drawPellets(world, pelletColor);
+            drawEnergizers(world, pelletColor);
+            ctx.restore();
         }
         else {
             Logger.warn("Map {} cannot be rendered, no map sprite available", mapNumber);

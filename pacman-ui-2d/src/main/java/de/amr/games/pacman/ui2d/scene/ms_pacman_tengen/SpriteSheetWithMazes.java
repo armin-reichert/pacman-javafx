@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -77,11 +78,12 @@ public class SpriteSheetWithMazes {
         this.nonArcadeMazesImage = checkNotNull(nonArcadeMazesImage);
     }
 
-    public ColoredMaze[] getMazeSpriteSet(
+    public List<ColoredMaze> getMazeSpriteSet(
         WorldMap worldMap,
         MapCategory mapCategory,
         int mapNumber,
-        NES_ColorScheme nesColorScheme)
+        NES_ColorScheme nesColorScheme,
+        boolean randomColorScheme)
     {
         return switch (mapCategory) {
             case ARCADE  -> arcadeMazes(mapNumber, nesColorScheme);
@@ -90,14 +92,13 @@ public class SpriteSheetWithMazes {
             case STRANGE -> {
                 // TODO HACK!
                 int spriteNumber = worldMap.getConfigValue("levelNumber");
-                boolean random = worldMap.getConfigValue("randomColorScheme");
                 NES_ColorScheme colorScheme = worldMap.getConfigValue("nesColorScheme");
-                yield strangeMazes(spriteNumber, random ? colorScheme : null);
+                yield strangeMazes(spriteNumber, randomColorScheme ? colorScheme : null);
             }
         };
     }
 
-    private ColoredMaze[] arcadeMazes(int mapNumber, NES_ColorScheme colorScheme) {
+    private List<ColoredMaze> arcadeMazes(int mapNumber, NES_ColorScheme colorScheme) {
         int spriteIndex = switch (mapNumber) {
             case 1 -> 0;
             case 2 -> 1;
@@ -120,10 +121,10 @@ public class SpriteSheetWithMazes {
         RectArea mazeSprite = new RectArea(col * ARCADE_MAZE_WIDTH, row * ARCADE_MAZE_HEIGHT, ARCADE_MAZE_WIDTH, ARCADE_MAZE_HEIGHT);
         ColoredMaze normalMaze =  new ColoredMaze(arcadeMazesImage, mazeSprite, colorScheme);
         ColoredMaze flashingMaze = getOrCreateMaze(MapCategory.ARCADE, mapNumber, mazeSprite, FLASHING, colorScheme, 13, 23);
-        return new ColoredMaze[] { normalMaze, flashingMaze };
+        return List.of(normalMaze, flashingMaze);
     }
 
-    private ColoredMaze[] miniMazes(int mapNumber, NES_ColorScheme colorScheme) {
+    private List<ColoredMaze> miniMazes(int mapNumber, NES_ColorScheme colorScheme) {
         int spriteNumber = switch (mapNumber) {
             case 1 -> 34;
             case 2 -> 35;
@@ -148,10 +149,10 @@ public class SpriteSheetWithMazes {
             ? new ColoredMaze(nonArcadeMazesImage, nonArcadeMazeSprite(spriteNumber), colorScheme)
             : getOrCreateMaze(MapCategory.MINI, spriteNumber, mazeSprite, colorScheme, availableColorScheme, 13, 23);
         ColoredMaze flashingMaze = getOrCreateMaze(MapCategory.MINI, spriteNumber, mazeSprite, FLASHING, availableColorScheme, 13, 23);
-        return new ColoredMaze[] { normalMaze, flashingMaze };
+        return List.of(normalMaze, flashingMaze);
     }
 
-    private ColoredMaze[] bigMazes(int mapNumber, NES_ColorScheme colorScheme) {
+    private List<ColoredMaze> bigMazes(int mapNumber, NES_ColorScheme colorScheme) {
         int spriteNumber = switch (mapNumber) {
             case  1 -> 19;
             case  2 -> 20;
@@ -186,10 +187,10 @@ public class SpriteSheetWithMazes {
             ? new ColoredMaze(nonArcadeMazesImage, nonArcadeMazeSprite(spriteNumber), colorScheme)
             : getOrCreateMaze(MapCategory.BIG, spriteNumber, mazeSprite, colorScheme, availableColorScheme, 13, 32);
         ColoredMaze flashingMaze = getOrCreateMaze(MapCategory.BIG, spriteNumber, mazeSprite, FLASHING, availableColorScheme, 13, 32);
-        return new ColoredMaze[] { normalMaze, flashingMaze };
+        return List.of(normalMaze, flashingMaze);
     }
 
-    private ColoredMaze[] strangeMazes(int spriteNumber, NES_ColorScheme randomColorScheme) {
+    private List<ColoredMaze> strangeMazes(int spriteNumber, NES_ColorScheme randomColorScheme) {
         NES_ColorScheme availableColorScheme = switch (spriteNumber) {
             case 1  -> _36_15_20_PINK_RED_WHITE;
             case 2  -> _21_20_28_BLUE_WHITE_YELLOW;
@@ -232,7 +233,7 @@ public class SpriteSheetWithMazes {
             ? new ColoredMaze(nonArcadeMazesImage, nonArcadeMazeSprite(spriteNumber), availableColorScheme)
             : getOrCreateMaze(MapCategory.STRANGE, spriteNumber, mazeSprite, colorScheme, availableColorScheme, 13, 23); //TODO Ms. Pac-Man tile can vary
         ColoredMaze flashingMaze = getOrCreateMaze(MapCategory.STRANGE, spriteNumber, mazeSprite, FLASHING, availableColorScheme, 13, 23);
-        return new ColoredMaze[] { normalMaze, flashingMaze };
+        return List.of(normalMaze, flashingMaze);
     }
 
     private RectArea nonArcadeMazeSprite(int spriteNumber) {
