@@ -29,8 +29,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
-import java.util.List;
-
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.Animations.*;
 import static de.amr.games.pacman.model.actors.Bonus.STATE_EATEN;
@@ -55,8 +53,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final GraphicsContext ctx;
 
-    private ColoredMaze normalMaze;
-    private List<ColoredMaze> flashingMazes;
+    private MazeSet mazeSet;
     private boolean blinking;
     private boolean levelNumberBoxesVisible;
     private Vector2f messageAnchorPosition;
@@ -77,10 +74,8 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
 
     @Override
     public void setWorldMap(WorldMap worldMap) {
-        Logger.info("Set world map to {}", worldMap.url());
-        List<ColoredMaze> mazes = mapSprites.getMazeSpriteSet(worldMap, 5);
-        normalMaze = mazes.getFirst();
-        flashingMazes = mazes.subList(1, mazes.size());
+        mazeSet = mapSprites.getMazeSpriteSet(worldMap, 5);
+        Logger.info("Using maze set {}", mazeSet);
     }
 
     @Override
@@ -208,29 +203,24 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             drawGameOptionsInfo(world.map().terrain(), game);
         }
 
-        if (normalMaze == null) {
+        if (mazeSet == null) {
             // setWorldMap() not yet called?
             Logger.warn("Tick {}: No maze available", context.tick());
-            return;
-        }
-
-        if (normalMaze.colorScheme() == null) { // TODO can this still happen?
-            Logger.warn("Map #{} from {} maps cannot be rendered, no color scheme exists", mapNumber, mapCategory);
             return;
         }
 
         drawLevelMessage(level, game.isDemoLevel()); // message appears under map image so draw it first
         RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
             ? strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
-            : normalMaze.area();
-        ctx.drawImage(normalMaze.source(),
+            : mazeSet.normalMaze().area();
+        ctx.drawImage(mazeSet.normalMaze().source(),
             area.x(), area.y(), area.width(), area.height(),
             scaled(mapX), scaled(mapY), scaled(area.width()), scaled(area.height())
         );
         overPaintActors(world);
         ctx.save();
         ctx.scale(scaling(), scaling());
-        Color pelletColor = Color.valueOf(normalMaze.colorScheme().pelletColor());
+        Color pelletColor = Color.valueOf(mazeSet.normalMaze().colorScheme().pelletColor());
         drawPellets(world, pelletColor);
         drawEnergizers(world, pelletColor);
         ctx.restore();
@@ -242,7 +232,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         if (!isUsingDefaultGameOptions(game)) {
             drawGameOptionsInfo(world.map().terrain(), game);
         }
-        ColoredMaze maze = flashingMazes.get(flashingIndex);
+        ColoredMaze maze = mazeSet.flashingMazes().get(flashingIndex);
         RectArea area = maze.area();
         ctx.drawImage(maze.source(),
             area.x(), area.y(), area.width(), area.height(),
