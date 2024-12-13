@@ -33,7 +33,7 @@ import static de.amr.games.pacman.ui2d.util.Ufx.*;
  * stored after having been recolored to the color scheme required in the game level.
  * </p>
  */
-public class SpriteSheetWithMazes {
+public class MazeRepository {
 
     static final int ARCADE_MAZE_WIDTH = 28*8, ARCADE_MAZE_HEIGHT = 31*8;
 
@@ -62,16 +62,26 @@ public class SpriteSheetWithMazes {
         return STRANGE_MAP_15_SPRITES[index];
     }
 
+    private static List<NES_ColorScheme> randomColorSchemes(int count, NES_ColorScheme usedScheme) {
+        Set<NES_ColorScheme> colorSchemes = new HashSet<>();
+        while (colorSchemes.size() < count) {
+            NES_ColorScheme colorScheme = NES_ColorScheme.random();
+            if (!colorScheme.equals(usedScheme)) {
+                colorSchemes.add(colorScheme);
+            }
+        }
+        return colorSchemes.stream().toList();
+    }
+
     // Maze areas where ghosts are shown in maze images, must be masked at runtime
     static final RectArea GHOST_OUTSIDE_HOUSE_AREA = new RectArea(105, 85, 14, 13);
     static final RectArea GHOSTS_INSIDE_HOUSE_AREA = new RectArea(89, 113, 46, 13);
 
-    private static final Map<MazeSpec, ColoredMaze> MAZE_CACHE = new HashMap<>();
-
+    private final Map<MazeSpec, ColoredMaze> mazeCache = new HashMap<>();
     private final Image arcadeMazesImage;
     private final Image nonArcadeMazesImage;
 
-    public SpriteSheetWithMazes(Image arcadeMazesImage, Image nonArcadeMazesImage) {
+    public MazeRepository(Image arcadeMazesImage, Image nonArcadeMazesImage) {
         this.arcadeMazesImage = checkNotNull(arcadeMazesImage);
         this.nonArcadeMazesImage = checkNotNull(nonArcadeMazesImage);
     }
@@ -116,9 +126,7 @@ public class SpriteSheetWithMazes {
         };
         int col = spriteIndex % 3, row = spriteIndex / 3;
         RectArea mazeSprite = new RectArea(col * ARCADE_MAZE_WIDTH, row * ARCADE_MAZE_HEIGHT, ARCADE_MAZE_WIDTH, ARCADE_MAZE_HEIGHT);
-
         ColoredMaze normalMaze = new ColoredMaze(arcadeMazesImage, mazeSprite, colorScheme);
-
         List<ColoredMaze> flashingMazes = new ArrayList<>();
         ColoredMaze blackWhiteMaze = getOrCreateMaze(MapCategory.ARCADE, mapNumber, mazeSprite, FLASHING_BLACK_WHITE, colorScheme, 13, 23);
         for (int i = 0; i < flashCount; ++i) {
@@ -146,10 +154,8 @@ public class SpriteSheetWithMazes {
             case 6 -> _23_20_2B_VIOLET_WHITE_GREEN;
             default -> null;
         };
-        RectArea mazeSprite = nonArcadeMazeSprite(spriteNumber);
-        Logger.debug("Get map #{} with color scheme {}", mapNumber, colorScheme);
-
         int pacTileX = 13, pacTileY = 23;
+        RectArea mazeSprite = nonArcadeMazeSprite(spriteNumber);
         ColoredMaze normalMaze = colorScheme.equals(availableColorScheme)
             ? new ColoredMaze(nonArcadeMazesImage, nonArcadeMazeSprite(spriteNumber), colorScheme)
             : getOrCreateMaze(MapCategory.MINI, spriteNumber, mazeSprite, colorScheme, availableColorScheme, pacTileX, pacTileY);
@@ -198,9 +204,8 @@ public class SpriteSheetWithMazes {
             case 11 -> _15_25_20_RED_ROSE_WHITE;
             default -> null;
         };
-        RectArea mazeSprite = nonArcadeMazeSprite(spriteNumber);
-        Logger.debug("Get map #{} with color scheme {}", mapNumber, colorScheme);
         int pacTileX = 13, pacTileY = 32;
+        RectArea mazeSprite = nonArcadeMazeSprite(spriteNumber);
         ColoredMaze normalMaze = colorScheme.equals(availableColorScheme)
             ? new ColoredMaze(nonArcadeMazesImage, nonArcadeMazeSprite(spriteNumber), colorScheme)
             : getOrCreateMaze(MapCategory.BIG, spriteNumber, mazeSprite, colorScheme, availableColorScheme, pacTileX, pacTileY);
@@ -258,8 +263,6 @@ public class SpriteSheetWithMazes {
         };
         RectArea mazeSprite = nonArcadeMazeSprite(spriteNumber);
         NES_ColorScheme colorScheme = randomColorScheme != null ? randomColorScheme : availableColorScheme;
-        Logger.debug("Get map #{} with color scheme {}", spriteNumber, availableColorScheme);
-
         int pacTileX = 13, pacTileY = 23; // TODO check this, can vary!
         ColoredMaze normalMaze = colorScheme.equals(availableColorScheme)
             ? new ColoredMaze(nonArcadeMazesImage, nonArcadeMazeSprite(spriteNumber), availableColorScheme)
@@ -303,31 +306,20 @@ public class SpriteSheetWithMazes {
             int pacTileX, int pacTileY) {
 
         var cacheKey = new MazeSpec(mapCategory, spriteNumber, requiredColorScheme);
-        if (!MAZE_CACHE.containsKey(cacheKey)) {
+        if (!mazeCache.containsKey(cacheKey)) {
             Image availableImage = subImage(mapCategory == MapCategory.ARCADE ? arcadeMazesImage : nonArcadeMazesImage, mazeSprite);
             Image maskedImage = maskImage(availableImage, (x, y) -> isActorPixel(x, y, pacTileX, pacTileY), Color.TRANSPARENT);
             Image recoloredImage = exchange_NESColorScheme(maskedImage, availableColorScheme, requiredColorScheme);
             var cachedMaze = new ColoredMaze(recoloredImage, new RectArea(0, 0, mazeSprite.width(), mazeSprite.height()),
                 requiredColorScheme);
-            MAZE_CACHE.put(cacheKey, cachedMaze);
-            Logger.info("{} maze recolored to {} and put into cache (size: {})", mapCategory, requiredColorScheme, MAZE_CACHE.size());
+            mazeCache.put(cacheKey, cachedMaze);
+            Logger.info("{} maze recolored to {} and put into cache (size: {})", mapCategory, requiredColorScheme, mazeCache.size());
         }
-        return MAZE_CACHE.get(cacheKey);
+        return mazeCache.get(cacheKey);
     }
 
     private boolean isActorPixel(int x, int y, int pacTileX, int pacTileY) {
         return GHOST_OUTSIDE_HOUSE_AREA.contains(x, y) || GHOSTS_INSIDE_HOUSE_AREA.contains(x, y)
             || (pacTileX == x && pacTileY == y);
-    }
-
-    public List<NES_ColorScheme> randomColorSchemes(int count, NES_ColorScheme usedScheme) {
-        Set<NES_ColorScheme> colorSchemes = new HashSet<>();
-        while (colorSchemes.size() < count) {
-            NES_ColorScheme colorScheme = NES_ColorScheme.random();
-            if (!colorScheme.equals(usedScheme)) {
-                colorSchemes.add(colorScheme);
-            }
-        }
-        return colorSchemes.stream().toList();
     }
 }

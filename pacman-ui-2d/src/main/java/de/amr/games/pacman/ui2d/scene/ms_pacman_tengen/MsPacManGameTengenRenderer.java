@@ -37,7 +37,7 @@ import static de.amr.games.pacman.ui2d.PacManGamesUI.PFX_MS_PACMAN_TENGEN;
 import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.NO_SPRITE;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig.nesPaletteColor;
 import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSpriteSheet.*;
-import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.SpriteSheetWithMazes.strangeMap15Sprite;
+import static de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MazeRepository.strangeMap15Sprite;
 import static java.util.function.Predicate.not;
 
 /**
@@ -49,7 +49,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
 
     private final AssetStorage assets;
     private final MsPacManGameTengenSpriteSheet spriteSheet;
-    private final SpriteSheetWithMazes mapSprites;
+    private final MazeRepository mapSprites;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final GraphicsContext ctx;
 
@@ -61,7 +61,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     public MsPacManGameTengenRenderer(
         AssetStorage assets,
         MsPacManGameTengenSpriteSheet spriteSheet,
-        SpriteSheetWithMazes mapSprites,
+        MazeRepository mapSprites,
         Canvas canvas)
     {
         this.assets = checkNotNull(assets);

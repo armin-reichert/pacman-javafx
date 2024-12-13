@@ -36,6 +36,7 @@ public class LevelCompleteAnimation {
 
     public void start() {
         running = true;
+        Logger.info("Level complete animation started");
     }
 
     public void update() {
@@ -52,7 +53,7 @@ public class LevelCompleteAnimation {
                 int flashingTick = t - flashingStartTick;
                 if (flashingTick > 0 && flashingTick % singleFlashDuration == 0) {
                     flashingIndex += 1;
-                    Logger.info("Flashing index ->{} tick {}", flashingIndex, t);
+                    Logger.info("Flashing index -> {} on tick {}", flashingIndex, t);
                 }
             }
             ++t;

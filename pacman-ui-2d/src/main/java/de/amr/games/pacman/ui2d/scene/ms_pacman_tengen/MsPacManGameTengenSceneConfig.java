@@ -36,7 +36,7 @@ public class MsPacManGameTengenSceneConfig implements GameSceneConfig {
 
     private final AssetStorage assets;
     private final MsPacManGameTengenSpriteSheet spriteSheet;
-    private final SpriteSheetWithMazes mazeSprites;
+    private final MazeRepository mazeSprites;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public MsPacManGameTengenSceneConfig(AssetStorage assets) {
@@ -44,7 +44,7 @@ public class MsPacManGameTengenSceneConfig implements GameSceneConfig {
         loadAssets(() -> PacManGamesUI.class);
 
         spriteSheet = new MsPacManGameTengenSpriteSheet(assets.image(PFX_MS_PACMAN_TENGEN + ".spritesheet"));
-        mazeSprites = new SpriteSheetWithMazes(
+        mazeSprites = new MazeRepository(
             assets.image(PFX_MS_PACMAN_TENGEN + ".mazes.arcade"),
             assets.image(PFX_MS_PACMAN_TENGEN + ".mazes.non_arcade"));
 
