@@ -239,6 +239,13 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             scaled(mapX), scaled(mapY), scaled(area.width()), scaled(area.height())
         );
         overPaintActors(world);
+        // draw food to erase eaten food!
+        ctx.save();
+        ctx.scale(scaling(), scaling());
+        Color pelletColor = Color.valueOf(mazeSet.normalMaze().colorScheme().pelletColor());
+        drawPellets(world, pelletColor);
+        drawEnergizers(world, pelletColor);
+        ctx.restore();
     }
 
     private void drawPellets(GameWorld world, Color pelletColor) {
