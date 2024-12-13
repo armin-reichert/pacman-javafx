@@ -294,6 +294,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
         Logger.info("{} entered from {}", this, oldScene);
         context.enableJoypad();
         setKeyBindings();
+        gr.setWorldMap(context.level().world().map());
     }
 
     private void setKeyBindings() {
