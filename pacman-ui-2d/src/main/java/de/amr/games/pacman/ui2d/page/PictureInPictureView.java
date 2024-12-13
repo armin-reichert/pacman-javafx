@@ -49,12 +49,15 @@ public class PictureInPictureView extends VBox implements GameEventListener {
             r.setScaling(scaling());
             r.clearCanvas();
             context.game().level().ifPresent(level -> {
-                r.setWorldMap(level.world().map());
                 r.ctx().save();
                 r.ctx().translate(scaled(TS), 0);
                 drawSceneContent();
                 r.ctx().restore();
             });
+        }
+
+        public MsPacManGameTengenRenderer renderer() {
+            return (MsPacManGameTengenRenderer) gr;
         }
     }
 
@@ -88,6 +91,9 @@ public class PictureInPictureView extends VBox implements GameEventListener {
     public void onLevelCreated(GameEvent e) {
         createScene();
         recomputeLayout();
+        if (scene2D instanceof TengenPlayScene tengenScene) {
+            tengenScene.renderer().setWorldMap(context.level().world().map());
+        }
     }
 
     public void draw() {
