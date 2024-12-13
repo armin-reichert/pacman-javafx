@@ -308,7 +308,7 @@ public class MsPacManGameTengen extends GameModel {
         float increase = ghostSpeedIncreaseByFoodRemaining(this);
         if (increase > 0) {
             speed += increase;
-            Logger.info("Ghost speed increased by {0} units to {0.00} px/tick for {}", increase, speed, ghost.name());
+            Logger.debug("Ghost speed increased by {} units to {0.00} px/tick for {}", increase, speed, ghost.name());
         }
         return speed;
     }
