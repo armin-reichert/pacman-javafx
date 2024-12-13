@@ -93,18 +93,18 @@ public class MazeRepository {
         // if color scheme has been randomly selected (levels 28-31, except ARCADE mazes), use multiple flash colors
         boolean randomColorScheme = worldMap.getConfigValue("randomColorScheme");
         return switch (mapCategory) {
-            case ARCADE  -> arcadeMazes(mapNumber, nesColorScheme, flashCount);
-            case MINI    -> miniMazes(mapNumber, nesColorScheme, flashCount, randomColorScheme);
-            case BIG     -> bigMazes(mapNumber, nesColorScheme, flashCount, randomColorScheme);
+            case ARCADE  -> arcadeMazeSet(mapNumber, nesColorScheme, flashCount);
+            case MINI    -> miniMazeSet(mapNumber, nesColorScheme, flashCount, randomColorScheme);
+            case BIG     -> bigMazeSet(mapNumber, nesColorScheme, flashCount, randomColorScheme);
             case STRANGE -> { // TODO HACK!
                 int spriteNumber = worldMap.getConfigValue("levelNumber");
                 NES_ColorScheme colorScheme = worldMap.getConfigValue("nesColorScheme");
-                yield strangeMazes(spriteNumber, randomColorScheme ? colorScheme : null, flashCount, randomColorScheme);
+                yield strangeMazeSet(spriteNumber, randomColorScheme ? colorScheme : null, flashCount, randomColorScheme);
             }
         };
     }
 
-    private MazeSet arcadeMazes(int mapNumber, NES_ColorScheme colorScheme, int flashCount) {
+    private MazeSet arcadeMazeSet(int mapNumber, NES_ColorScheme colorScheme, int flashCount) {
         int spriteIndex = switch (mapNumber) {
             case 1 -> 0;
             case 2 -> 1;
@@ -134,7 +134,7 @@ public class MazeRepository {
         return new MazeSet(normalMaze, flashingMazes);
     }
 
-    private MazeSet miniMazes(int mapNumber, NES_ColorScheme colorScheme, int flashCount, boolean multipleFlashColors) {
+    private MazeSet miniMazeSet(int mapNumber, NES_ColorScheme colorScheme, int flashCount, boolean multipleFlashColors) {
         int spriteNumber = switch (mapNumber) {
             case 1 -> 34;
             case 2 -> 35;
@@ -174,7 +174,7 @@ public class MazeRepository {
         return new MazeSet(normalMaze, flashingMazes);
     }
 
-    private MazeSet bigMazes(int mapNumber, NES_ColorScheme colorScheme, int flashCount, boolean multipleFlashColors) {
+    private MazeSet bigMazeSet(int mapNumber, NES_ColorScheme colorScheme, int flashCount, boolean multipleFlashColors) {
         int spriteNumber = switch (mapNumber) {
             case  1 -> 19;
             case  2 -> 20;
@@ -224,7 +224,7 @@ public class MazeRepository {
         return new MazeSet(normalMaze, flashingMazes);
     }
 
-    private MazeSet strangeMazes(int spriteNumber, NES_ColorScheme randomColorScheme, int flashCount, boolean multipleFlashColors) {
+    private MazeSet strangeMazeSet(int spriteNumber, NES_ColorScheme randomColorScheme, int flashCount, boolean multipleFlashColors) {
         NES_ColorScheme availableColorScheme = switch (spriteNumber) {
             case 1  -> _36_15_20_PINK_RED_WHITE;
             case 2  -> _21_20_28_BLUE_WHITE_YELLOW;
