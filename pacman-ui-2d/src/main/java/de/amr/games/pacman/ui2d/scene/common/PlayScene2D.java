@@ -25,11 +25,11 @@ import org.tinylog.Logger;
 
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.arcade.pacman.model.PacManGame.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.games.pacman.ui2d.GameActions2D.*;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
@@ -236,6 +236,9 @@ public class PlayScene2D extends GameScene2D {
         Logger.info("{} entered from {}", this, oldScene);
         bindGameActions();
         registerGameActionKeyBindings(context.keyboard());
+        if (gr == null) {
+            setGameRenderer(context.currentGameSceneConfig().createRenderer(canvas));
+        }
         gr.setWorldMap(context.level().world().map());
     }
 
