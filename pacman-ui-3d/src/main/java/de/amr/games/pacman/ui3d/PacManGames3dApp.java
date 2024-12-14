@@ -4,8 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
+import de.amr.games.pacman.arcade.pacman.model.PacManGame;
+import de.amr.games.pacman.arcade.pacman_xxl.model.PacManGameXXL;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.ms_pacman.MsPacManGame;
+import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import de.amr.games.pacman.ui3d.scene.common.Perspective;
 import de.amr.games.pacman.ui3d.scene.ms_pacman.MsPacManGameSceneConfig3D;
@@ -62,6 +66,10 @@ public class PacManGames3dApp extends Application {
             Logger.info("User dir '{}' created", userDir);
         }
         GameController.create(userDir);
+        GameController.it().addGameImplementation(GameVariant.MS_PACMAN, new MsPacManGame(userDir));
+        GameController.it().addGameImplementation(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengen(userDir));
+        GameController.it().addGameImplementation(GameVariant.PACMAN, new PacManGame(userDir));
+        GameController.it().addGameImplementation(GameVariant.PACMAN_XXL, new PacManGameXXL(userDir));
         GameController.it().selectGame(GameVariant.PACMAN);
         PY_3D_ENABLED.set(false);
     }

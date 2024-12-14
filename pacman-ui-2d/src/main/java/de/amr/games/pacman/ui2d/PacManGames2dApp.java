@@ -4,9 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d;
 
+import de.amr.games.pacman.arcade.pacman.model.PacManGame;
+import de.amr.games.pacman.arcade.pacman_xxl.model.PacManGameXXL;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.pacman_xxl.MapSelectionMode;
+import de.amr.games.pacman.model.ms_pacman.MsPacManGame;
+import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
+import de.amr.games.pacman.arcade.pacman_xxl.model.MapSelectionMode;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSceneConfig;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.SceneDisplayMode;
@@ -65,6 +69,10 @@ public class PacManGames2dApp extends Application {
             Logger.info("User dir '{}' created", userDir);
         }
         GameController.create(userDir);
+        GameController.it().addGameImplementation(GameVariant.MS_PACMAN, new MsPacManGame(userDir));
+        GameController.it().addGameImplementation(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengen(userDir));
+        GameController.it().addGameImplementation(GameVariant.PACMAN, new PacManGame(userDir));
+        GameController.it().addGameImplementation(GameVariant.PACMAN_XXL, new PacManGameXXL(userDir));
         GameController.it().selectGame(GameVariant.PACMAN);
     }
 

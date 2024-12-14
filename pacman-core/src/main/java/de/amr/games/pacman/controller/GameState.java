@@ -16,7 +16,6 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
-import de.amr.games.pacman.model.pacman_xxl.PacManGameXXL;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -377,10 +376,13 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             GameVariant gameVariant = GameController.it().currentGameVariant();
             int numCustomMaps = 0;
+            //TODO fixme
+            /*
             if (gameVariant == GameVariant.PACMAN_XXL) {
                 PacManGameXXL xxlGame = (PacManGameXXL) game;
                 numCustomMaps = xxlGame.customMapsSortedByFile().size();
             }
+             */
             lastLevelNumber = switch (gameVariant) {
                 case MS_PACMAN -> 25;
                 case MS_PACMAN_TENGEN -> MsPacManGameTengen.MAX_LEVEL_NUMBER;
@@ -466,8 +468,10 @@ public enum GameState implements FsmState<GameModel> {
                 case MS_PACMAN_TENGEN -> 32;
                 case PACMAN -> 21;
                 case PACMAN_XXL -> {
-                    PacManGameXXL xxlGame = (PacManGameXXL) game;
-                    yield 8 + xxlGame.customMapsSortedByFile().size();
+                    //TODO fixme
+//                    PacManGameXXL xxlGame = (PacManGameXXL) game;
+//                    yield 8 + xxlGame.customMapsSortedByFile().size();
+                    yield 8;
                 }
             };
             timer.restartSeconds(TEASER_TIME_SECONDS);

@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.model.pacman;
+package de.amr.games.pacman.arcade.pacman.model;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.HuntingControl;
@@ -133,7 +133,7 @@ public class PacManGame extends GameModel {
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
 
-        String path = "/de/amr/games/pacman/maps/pacman/pacman.world";
+        String path = "/de/amr/games/pacman/maps/pacman.world";
         URL url = getClass().getResource(path);
         if (url == null) {
             throw new MissingResourceException("Map not found", getClass().getName(), path);

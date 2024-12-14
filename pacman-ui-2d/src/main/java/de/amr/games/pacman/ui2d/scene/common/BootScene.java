@@ -12,9 +12,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
+import static de.amr.games.pacman.arcade.pacman.model.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.arcade.pacman.model.PacManGame.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_TILES;
 
 public class BootScene extends GameScene2D {
 

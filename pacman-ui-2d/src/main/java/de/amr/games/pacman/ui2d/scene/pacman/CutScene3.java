@@ -12,9 +12,9 @@ import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
+import static de.amr.games.pacman.arcade.pacman.model.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
-import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
 
 /**
  * @author Armin Reichert

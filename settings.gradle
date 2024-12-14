@@ -1,3 +1,9 @@
 rootProject.name = 'pacman-javafx'
 
-include 'pacman-lib', 'pacman-core', 'pacman-mapeditor', 'pacman-ui-2d', 'pacman-ui-3d'
+include 'pacman-lib'
+include 'pacman-core'
+include 'pacman-mapeditor'
+include 'pacman-ui-2d'
+include 'pacman-ui-3d'
+include 'pacman-arcade-pacman'
+

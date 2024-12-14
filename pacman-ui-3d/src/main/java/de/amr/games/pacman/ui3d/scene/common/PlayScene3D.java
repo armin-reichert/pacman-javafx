@@ -44,10 +44,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static de.amr.games.pacman.arcade.pacman.model.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GameActions2D.*;
 import static de.amr.games.pacman.ui2d.PacManGamesUI.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;

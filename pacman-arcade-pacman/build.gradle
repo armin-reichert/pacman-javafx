@@ -1,0 +1,14 @@
+plugins {
+    id("java")
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':pacman-lib')
+    implementation project(':pacman-core')
+    implementation libs.tinylog_api
+    implementation libs.tinylog_impl
+}
