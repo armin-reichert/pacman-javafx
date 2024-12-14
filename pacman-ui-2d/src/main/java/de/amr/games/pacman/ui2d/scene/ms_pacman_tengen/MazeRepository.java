@@ -258,11 +258,11 @@ public class MazeRepository {
             case 30 -> _28_16_20_YELLOW_RED_WHITE;
             case 31 -> _12_16_20_BLUE_RED_WHITE;
             case 32 -> _15_25_20_RED_ROSE_WHITE;
-            default -> throw new IllegalArgumentException("Illegal level number: " + spriteNumber);
+            default -> throw new IllegalArgumentException("Illegal sprite number: " + spriteNumber);
         };
         RectArea mazeSprite = nonArcadeMazeSprite(spriteNumber);
         NES_ColorScheme colorScheme = randomColorScheme != null ? randomColorScheme : availableColorScheme;
-        int pacTileX = 13, pacTileY = 23; // TODO check this, can vary!
+        int pacTileX = 13, pacTileY = 23;
         ColoredMaze normalMaze = colorScheme.equals(availableColorScheme)
             ? new ColoredMaze(nonArcadeMazesImage, nonArcadeMazeSprite(spriteNumber), availableColorScheme)
             : getOrCreateMaze(MapCategory.STRANGE, spriteNumber, mazeSprite, colorScheme, availableColorScheme, pacTileX, pacTileY);
@@ -297,28 +297,37 @@ public class MazeRepository {
     }
 
     private ColoredMaze getOrCreateMaze(
-            MapCategory mapCategory,
-            int spriteNumber,
-            RectArea mazeSprite,
-            NES_ColorScheme requiredColorScheme,
-            NES_ColorScheme availableColorScheme,
-            int pacTileX, int pacTileY) {
-
-        var cacheKey = new MazeSpec(mapCategory, spriteNumber, requiredColorScheme);
+        MapCategory mapCategory,
+        int spriteNumber,
+        RectArea mazeSprite,
+        NES_ColorScheme newColorScheme,
+        NES_ColorScheme existingColorScheme,
+        int pacTileX, int pacTileY)
+    {
+        var cacheKey = new MazeSpec(mapCategory, spriteNumber, newColorScheme);
         if (!mazeCache.containsKey(cacheKey)) {
-            Image availableImage = subImage(mapCategory == MapCategory.ARCADE ? arcadeMazesImage : nonArcadeMazesImage, mazeSprite);
-            Image maskedImage = maskImage(availableImage, (x, y) -> isActorPixel(x, y, pacTileX, pacTileY), Color.TRANSPARENT);
-            Image recoloredImage = exchange_NESColorScheme(maskedImage, availableColorScheme, requiredColorScheme);
-            var cachedMaze = new ColoredMaze(recoloredImage, new RectArea(0, 0, mazeSprite.width(), mazeSprite.height()),
-                requiredColorScheme);
-            mazeCache.put(cacheKey, cachedMaze);
-            Logger.info("{} maze recolored to {} and put into cache (size: {})", mapCategory, requiredColorScheme, mazeCache.size());
+            Image spriteSource = mapCategory == MapCategory.ARCADE ? arcadeMazesImage : nonArcadeMazesImage;
+            Image mazeImage = recolorMazeImage(spriteSource, mazeSprite, existingColorScheme, newColorScheme, pacTileX, pacTileY);
+            var maze = new ColoredMaze(mazeImage, new RectArea(0, 0, mazeSprite.width(), mazeSprite.height()), newColorScheme);
+            mazeCache.put(cacheKey, maze);
+            Logger.info("{} maze recolored to {} and put into cache (size: {})", mapCategory, newColorScheme, mazeCache.size());
         }
         return mazeCache.get(cacheKey);
     }
 
+    private Image recolorMazeImage(
+        Image source, RectArea mazeArea,
+        NES_ColorScheme oldColorScheme, NES_ColorScheme newColorScheme,
+        int pacTileX, int pacTileY)
+    {
+        Image mazeImage = subImage(source, mazeArea);
+        Image imageWithoutGarbage = maskImage(mazeImage, (x, y) -> isActorPixel(x, y, pacTileX, pacTileY), Color.TRANSPARENT);
+        return exchange_NESColorScheme(imageWithoutGarbage, oldColorScheme, newColorScheme);
+    }
+
     private boolean isActorPixel(int x, int y, int pacTileX, int pacTileY) {
-        return GHOST_OUTSIDE_HOUSE_AREA.contains(x, y) || GHOSTS_INSIDE_HOUSE_AREA.contains(x, y)
+        return GHOST_OUTSIDE_HOUSE_AREA.contains(x, y)
+            || GHOSTS_INSIDE_HOUSE_AREA.contains(x, y)
             || (pacTileX == x && pacTileY == y);
     }
 }
