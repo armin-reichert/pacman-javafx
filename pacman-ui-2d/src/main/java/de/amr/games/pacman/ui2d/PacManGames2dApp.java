@@ -4,11 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d;
 
+import de.amr.games.pacman.arcade.ms_pacman.model.MsPacManGame;
 import de.amr.games.pacman.arcade.pacman.model.PacManGame;
 import de.amr.games.pacman.arcade.pacman_xxl.model.PacManGameXXL;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.ms_pacman.MsPacManGame;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.arcade.pacman_xxl.model.MapSelectionMode;
 import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSceneConfig;

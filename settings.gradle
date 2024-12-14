@@ -6,4 +6,5 @@ include 'pacman-mapeditor'
 include 'pacman-ui-2d'
 include 'pacman-ui-3d'
 include 'pacman-arcade-pacman'
+include 'pacman-arcade-mspacman'
 

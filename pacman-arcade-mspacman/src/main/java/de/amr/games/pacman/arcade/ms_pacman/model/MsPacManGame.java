@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.model.ms_pacman;
+package de.amr.games.pacman.arcade.ms_pacman.model;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.HuntingControl;

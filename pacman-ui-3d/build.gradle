@@ -22,6 +22,7 @@ dependencies {
     implementation project(':pacman-lib')
     implementation project(':pacman-core')
     implementation project(':pacman-arcade-pacman')
+    implementation project(':pacman-arcade-mspacman')
     implementation project(':pacman-ui-2d')
     implementation project(':pacman-mapeditor')
     implementation libs.tinylog_api
