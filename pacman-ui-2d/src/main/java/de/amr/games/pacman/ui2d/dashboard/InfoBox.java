@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.scene.common.GameScene;
+import de.amr.games.pacman.ui.GameContext;
+import de.amr.games.pacman.ui.GameScene;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.WritableObjectValue;
@@ -26,7 +26,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static de.amr.games.pacman.ui2d.dashboard.InfoText.NO_INFO;
-import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
+import static de.amr.games.pacman.ui.Ufx.coloredBackground;
 
 /**
  * Base class for area displaying UI info/editors.

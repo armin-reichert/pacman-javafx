@@ -5,12 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.GameActions2D;
-import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui.GameAction;
+import de.amr.games.pacman.ui.GameActions2D;
+import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.SceneDisplayMode;
-import de.amr.games.pacman.ui2d.util.NightMode;
+import de.amr.games.pacman.ui.NightMode;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.scene.common.Perspective;
 import javafx.beans.binding.Bindings;
@@ -24,10 +24,12 @@ import javafx.scene.shape.DrawMode;
 import java.time.LocalTime;
 
 import static de.amr.games.pacman.lib.Globals.inClosedRange;
+import static de.amr.games.pacman.ui.GlobalProperties.PY_AUTOPILOT;
+import static de.amr.games.pacman.ui.GlobalProperties.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.PacManGamesUI.contextMenuTitleItem;
-import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
-import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
+import static de.amr.games.pacman.ui.Keyboard.alt;
+import static de.amr.games.pacman.ui.Ufx.coloredBackground;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_PERSPECTIVE;
 
@@ -152,11 +154,13 @@ public class GamePage3D extends GamePage {
         miMuted.selectedProperty().bindBidirectional(context.sound().mutedProperty());
         contextMenu.getItems().add(miMuted);
 
+        /* TODO fixme
         GameAction action = GameActions2D.OPEN_EDITOR;
         var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
         miOpenMapEditor.setOnAction(e -> action.execute(context));
         miOpenMapEditor.setDisable(!action.isEnabled(context));
         contextMenu.getItems().add(miOpenMapEditor);
+        */
 
         var miQuit = new MenuItem(context.locText("quit"));
         miQuit.setOnAction(e -> GameActions2D.SHOW_START_PAGE.execute(context));

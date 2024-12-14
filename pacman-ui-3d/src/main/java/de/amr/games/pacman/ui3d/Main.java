@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.ui2d.util.Ufx;
+import de.amr.games.pacman.ui.Ufx;
 
 /**
  * @author Armin Reichert

@@ -31,8 +31,8 @@ import javafx.animation.Transition;
 import javafx.scene.Group;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.arcade.pacman.model.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 
 /**
  * @author Armin Reichert

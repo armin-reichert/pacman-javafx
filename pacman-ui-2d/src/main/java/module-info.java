@@ -8,23 +8,18 @@ open module de.amr.games.pacman.ui2d {
     requires javafx.controls;
     requires javafx.graphics;
     requires javafx.media;
+
     requires org.tinylog.api;
+
     requires de.amr.games.pacman;
+    requires de.amr.games.pacman.arcade.ms_pacman;
+    requires de.amr.games.pacman.arcade.pacman;
     requires de.amr.games.pacman.lib;
     requires de.amr.games.pacman.mapeditor;
-    requires de.amr.games.pacman.arcade.pacman;
-    requires de.amr.games.pacman.arcade.ms_pacman;
+    requires de.amr.games.pacman.ui;
 
     exports de.amr.games.pacman.ui2d;
     exports de.amr.games.pacman.ui2d.dashboard;
-    exports de.amr.games.pacman.ui2d.input;
     exports de.amr.games.pacman.ui2d.page;
-    exports de.amr.games.pacman.ui2d.rendering;
-    exports de.amr.games.pacman.ui2d.scene.common;
-    exports de.amr.games.pacman.ui2d.scene.ms_pacman;
     exports de.amr.games.pacman.ui2d.scene.ms_pacman_tengen;
-    exports de.amr.games.pacman.ui2d.scene.pacman;
-    exports de.amr.games.pacman.ui2d.scene.pacman_xxl;
-    exports de.amr.games.pacman.ui2d.sound;
-    exports de.amr.games.pacman.ui2d.util;
 }

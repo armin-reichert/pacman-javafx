@@ -6,9 +6,9 @@ package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.arcade.pacman_xxl.model.MapSelectionMode;
-import de.amr.games.pacman.arcade.pacman_xxl.model.PacManGameXXL;
-import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.arcade.pacman_xxl.MapSelectionMode;
+import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
+import de.amr.games.pacman.ui.GameContext;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;

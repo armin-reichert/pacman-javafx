@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.arcade.ms_pacman.model.MsPacManGame;
-import de.amr.games.pacman.arcade.pacman.model.PacManGame;
-import de.amr.games.pacman.arcade.pacman_xxl.model.PacManGameXXL;
+import de.amr.games.pacman.arcade.ms_pacman.MsPacManGame;
+import de.amr.games.pacman.arcade.pacman.PacManGame;
+import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;

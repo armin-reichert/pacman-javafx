@@ -4,13 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui.GameAction;
+import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui3d.scene.common.Perspective;
 import javafx.scene.shape.DrawMode;
 
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_PIP_ON;
-import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
+import static de.amr.games.pacman.ui.Ufx.toggle;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_PERSPECTIVE;
 

@@ -7,8 +7,8 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.*;
-import de.amr.games.pacman.ui2d.util.Carousel;
+import de.amr.games.pacman.ui.*;
+import de.amr.games.pacman.ui2d.PacManGamesUI;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.input.KeyCode;
@@ -19,7 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.input.Keyboard.naked;
+import static de.amr.games.pacman.ui.GameContext.PFX_PACMAN;
+import static de.amr.games.pacman.ui.Keyboard.naked;
 
 /**
  * Got the flyer images from <a href="https://flyers.arcade-museum.com/">The Arcade Flyer Archive</a>.
@@ -60,9 +61,9 @@ public class StartPage extends StackPane implements GameActionProvider {
 
         {
             var pacManFlyer = new Flyer(
-                context.assets().image(PacManGamesUI.PFX_PACMAN + ".startpage.image1"),
-                context.assets().image(PacManGamesUI.PFX_PACMAN + ".startpage.image2"),
-                context.assets().image(PacManGamesUI.PFX_PACMAN + ".startpage.image3")
+                context.assets().image(PFX_PACMAN + ".startpage.image1"),
+                context.assets().image(PFX_PACMAN + ".startpage.image2"),
+                context.assets().image(PFX_PACMAN + ".startpage.image3")
             );
             pacManFlyer.setUserData(GameVariant.PACMAN);
             pacManFlyer.selectFlyerPage(0);

@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.lib.nes.NES;
-import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
+import de.amr.games.pacman.ui.GameContext;
+import de.amr.games.pacman.ui.JoypadKeyBinding;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 

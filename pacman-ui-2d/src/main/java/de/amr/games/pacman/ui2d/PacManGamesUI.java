@@ -4,26 +4,18 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d;
 
-import de.amr.games.pacman.arcade.pacman_xxl.model.PacManGameXXL;
+import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui.*;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
-import de.amr.games.pacman.ui2d.input.ArcadeKeyBinding;
-import de.amr.games.pacman.ui2d.input.JoypadBindings;
-import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
-import de.amr.games.pacman.ui2d.input.Keyboard;
 import de.amr.games.pacman.ui2d.page.DashboardLayer;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.StartPage;
-import de.amr.games.pacman.ui2d.scene.common.GameScene;
-import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.common.GameSceneConfig;
-import de.amr.games.pacman.ui2d.sound.GameSound;
-import de.amr.games.pacman.ui2d.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
@@ -52,10 +44,10 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.games.pacman.arcade.pacman.model.PacManGame.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.ui.Ufx.createIcon;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
-import static de.amr.games.pacman.ui2d.util.Ufx.createIcon;
 
 /**
  * User interface for all Pac-Man game variants (2D only).
@@ -63,20 +55,6 @@ import static de.amr.games.pacman.ui2d.util.Ufx.createIcon;
  * @author Armin Reichert
  */
 public class PacManGamesUI implements GameEventListener, GameContext {
-
-    public static final String PFX_PACMAN = "pacman";
-    public static final String PFX_PACMAN_XXL = "pacman_xxl";
-    public static final String PFX_MS_PACMAN = "ms_pacman";
-    public static final String PFX_MS_PACMAN_TENGEN = "tengen";
-
-    public static String assetPrefix(GameVariant variant) {
-        return switch (variant) {
-            case MS_PACMAN        -> PFX_MS_PACMAN;
-            case MS_PACMAN_TENGEN -> PFX_MS_PACMAN_TENGEN;
-            case PACMAN           -> PFX_PACMAN;
-            case PACMAN_XXL       -> PFX_PACMAN_XXL;
-        };
-    }
 
     private static final Font  CONTEXT_MENU_TITLE_FONT = Font.font("Dialog", FontWeight.BLACK, 14);
     private static final Color CONTEXT_MENU_TITLE_BACKGROUND = Color.CORNFLOWERBLUE; // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
@@ -248,7 +226,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         Scene mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
 
         ImageView mutedIcon = createIcon(assets.get("icon.mute"), 48, sound().mutedProperty());
-        ImageView autoIcon = createIcon(assets.get("icon.auto"), 48, PY_AUTOPILOT);
+        ImageView autoIcon = createIcon(assets.get("icon.auto"), 48, GlobalProperties.PY_AUTOPILOT);
         var bottomRightIcons = new HBox(autoIcon, mutedIcon);
 
         ImageView pauseIcon = createIcon(assets.get("icon.pause"), 64, clock.pausedPy);
@@ -311,7 +289,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             PY_MAP_SELECTION_MODE.addListener((py, ov, selectionMode) -> xxlGame.setMapSelectionMode(selectionMode));
         }
 
-        String prefix = assetPrefix(variant);
+        String prefix = GameContext.assetPrefix(variant);
         sceneRoot.setBackground(assets.get(prefix + ".scene_background"));
         Image icon = assets.image(prefix + ".icon");
         if (icon != null) {
@@ -329,7 +307,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         return Bindings.createStringBinding(
             () -> {
                 // e.g. "app.title.pacman" vs. "app.title.pacman.paused"
-                String key = "app.title." + assetPrefix(gameVariant());
+                String key = "app.title." + GameContext.assetPrefix(gameVariant());
                 if (clock.isPaused()) { key += ".paused"; }
                 if (currentGameScene().isPresent() && currentGameScene().get() instanceof GameScene2D gameScene2D) {
                     return locText(key, "2D") + " (%.2fx)".formatted(gameScene2D.scaling());
@@ -495,21 +473,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     @Override
     public void setScoreVisible(boolean visible) {
         scoreVisible = visible;
-    }
-
-    @Override
-    public EditorPage getOrCreateEditorPage() {
-        if (editorPage == null) {
-            editorPage = new EditorPage(stage, this, game().customMapDir());
-            editorPage.setCloseAction(editor -> {
-                editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> stage.titleProperty().bind(stageTitleBinding()));
-                editor.stop();
-                clock.setTargetFrameRate(GameModel.TICKS_PER_SECOND);
-                gameController().restart(GameState.BOOT);
-                selectStartPage();
-            });
-        }
-        return editorPage;
     }
 
     @Override

@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.ui2d.util.AssetStorage;
-import de.amr.games.pacman.ui2d.util.Ufx;
+import de.amr.games.pacman.ui.AssetStorage;
+import de.amr.games.pacman.ui.Ufx;
 import javafx.animation.*;
 import javafx.animation.Animation.Status;
 import javafx.beans.property.ObjectProperty;

@@ -6,10 +6,10 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
-import de.amr.games.pacman.ui2d.sound.GameSound;
-import de.amr.games.pacman.ui2d.util.AssetStorage;
+import de.amr.games.pacman.ui.GameSound;
+import de.amr.games.pacman.ui.AssetStorage;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -21,8 +21,9 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.util.Ufx.now;
-import static de.amr.games.pacman.ui2d.util.Ufx.pauseSec;
+import static de.amr.games.pacman.ui.GameContext.assetPrefix;
+import static de.amr.games.pacman.ui.Ufx.now;
+import static de.amr.games.pacman.ui.Ufx.pauseSec;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
 
 /**
@@ -47,7 +48,7 @@ public class MsPacMan3D implements Pac3D {
         this.msPacMan = checkNotNull(msPacMan);
         checkNotNull(assets);
 
-        String prefix = PacManGamesUI.assetPrefix(variant);
+        String prefix = assetPrefix(variant);
         Model3D model3D = assets.get("model3D.pacman");
 
         shape3D = new PacShape3D(model3D, size,

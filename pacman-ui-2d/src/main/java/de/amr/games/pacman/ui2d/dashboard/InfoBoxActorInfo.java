@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
-import de.amr.games.pacman.arcade.pacman.model.PacManGame;
+import de.amr.games.pacman.arcade.pacman.PacManGame;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -13,8 +13,8 @@ import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.util.SpriteAnimationCollection;
+import de.amr.games.pacman.ui.GameContext;
+import de.amr.games.pacman.ui.SpriteAnimationCollection;
 
 import java.util.function.BiFunction;
 import java.util.function.Supplier;

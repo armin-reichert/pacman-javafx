@@ -4,19 +4,19 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d;
 
-import de.amr.games.pacman.arcade.ms_pacman.model.MsPacManGame;
-import de.amr.games.pacman.arcade.pacman.model.PacManGame;
-import de.amr.games.pacman.arcade.pacman_xxl.model.PacManGameXXL;
+import de.amr.games.pacman.arcade.ms_pacman.MsPacManGame;
+import de.amr.games.pacman.arcade.pacman.PacManGame;
+import de.amr.games.pacman.arcade.pacman.PacManGameSceneConfig;
+import de.amr.games.pacman.arcade.pacman_xxl.MapSelectionMode;
+import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
-import de.amr.games.pacman.arcade.pacman_xxl.model.MapSelectionMode;
-import de.amr.games.pacman.ui2d.scene.ms_pacman.MsPacManGameSceneConfig;
+import de.amr.games.pacman.ui.NightMode;
+import de.amr.games.pacman.arcade.ms_pacman.MsPacManGameSceneConfig;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.SceneDisplayMode;
-import de.amr.games.pacman.ui2d.scene.pacman.PacManGameSceneConfig;
-import de.amr.games.pacman.ui2d.scene.pacman_xxl.PacManGameXXLSceneConfig;
-import de.amr.games.pacman.ui2d.util.NightMode;
+import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXLSceneConfig;
 import javafx.application.Application;
 import javafx.beans.property.*;
 import javafx.geometry.Dimension2D;
@@ -37,13 +37,11 @@ import java.util.Map;
  */
 public class PacManGames2dApp extends Application {
 
-    public static final BooleanProperty PY_AUTOPILOT                  = new SimpleBooleanProperty(false);
     public static final ObjectProperty<Color> PY_CANVAS_BG_COLOR      = new SimpleObjectProperty<>(Color.BLACK);
     public static final BooleanProperty PY_CANVAS_IMAGE_SMOOTHING     = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_CANVAS_FONT_SMOOTHING      = new SimpleBooleanProperty(false);
     public static final ObjectProperty<MapSelectionMode> PY_MAP_SELECTION_MODE = new SimpleObjectProperty<>(MapSelectionMode.CUSTOM_MAPS_FIRST);
     public static final BooleanProperty PY_DEBUG_INFO_VISIBLE         = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_IMMUNITY                   = new SimpleBooleanProperty(false);
     public static final ObjectProperty<NightMode> PY_NIGHT_MODE       = new SimpleObjectProperty<>(NightMode.AUTO);
     public static final IntegerProperty PY_PIP_HEIGHT                 = new SimpleIntegerProperty(8*36);
     public static final BooleanProperty PY_PIP_ON                     = new SimpleBooleanProperty(false);

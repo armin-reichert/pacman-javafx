@@ -6,9 +6,9 @@ package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.util.FadingPane;
-import de.amr.games.pacman.ui2d.util.TooFancyGameCanvasContainer;
+import de.amr.games.pacman.ui.GameContext;
+import de.amr.games.pacman.ui.FadingPane;
+import de.amr.games.pacman.ui.TooFancyGameCanvasContainer;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
@@ -21,7 +21,7 @@ import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.util.Ufx.opaqueColor;
+import static de.amr.games.pacman.ui.Ufx.opaqueColor;
 
 /**
  * @author Armin Reichert

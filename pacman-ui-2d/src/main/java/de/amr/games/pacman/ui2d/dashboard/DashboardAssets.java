@@ -1,8 +1,8 @@
 package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.ui2d.PacManGamesUI;
-import de.amr.games.pacman.ui2d.util.AssetStorage;
-import de.amr.games.pacman.ui2d.util.ResourceManager;
+import de.amr.games.pacman.ui.AssetStorage;
+import de.amr.games.pacman.ui.ResourceManager;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 

@@ -1,6 +1,12 @@
 package de.amr.games.pacman.lib.arcade;
 
+import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.Vector2i;
+
 public interface Arcade {
+
+    public static final Vector2i ARCADE_MAP_SIZE_IN_TILES  = new Vector2i(28, 36);
+    public static final Vector2f ARCADE_MAP_SIZE_IN_PIXELS = new Vector2f(224, 288);
 
     interface Palette {
 

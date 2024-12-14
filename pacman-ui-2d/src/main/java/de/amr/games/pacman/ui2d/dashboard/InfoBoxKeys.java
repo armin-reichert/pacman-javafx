@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
-import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui.GameContext;
 
 /**
  * Keyboard shortcuts.

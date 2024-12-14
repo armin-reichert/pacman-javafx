@@ -2,7 +2,13 @@ module de.amr.games.pacman.arcade.pacman {
     requires de.amr.games.pacman;
     requires de.amr.games.pacman.lib;
     requires org.tinylog.api;
+    requires javafx.base;
+    requires javafx.controls;
+    requires javafx.graphics;
+    requires javafx.media;
+    requires de.amr.games.pacman.ui;
+    requires de.amr.games.pacman.mapeditor;
 
-    exports de.amr.games.pacman.arcade.pacman.model;
-    exports de.amr.games.pacman.arcade.pacman_xxl.model;
+    exports de.amr.games.pacman.arcade.pacman_xxl;
+    exports de.amr.games.pacman.arcade.pacman;
 }

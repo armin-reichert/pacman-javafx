@@ -4,10 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.scene.pacman_xxl;
 
-import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.scene.common.GameScene;
-import de.amr.games.pacman.ui2d.scene.pacman_xxl.PacManGameXXLSceneConfig;
-import de.amr.games.pacman.ui2d.util.AssetStorage;
+import de.amr.games.pacman.ui.GameContext;
+import de.amr.games.pacman.ui.GameScene;
+import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXLSceneConfig;
+import de.amr.games.pacman.ui.AssetStorage;
 import de.amr.games.pacman.ui3d.scene.common.PlayScene3D;
 
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;

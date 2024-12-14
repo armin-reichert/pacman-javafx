@@ -18,7 +18,7 @@ import javafx.util.Duration;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.requirePositive;
-import static de.amr.games.pacman.ui2d.util.Ufx.doAfterSec;
+import static de.amr.games.pacman.ui.Ufx.doAfterSec;
 import static java.util.Objects.requireNonNull;
 
 /**

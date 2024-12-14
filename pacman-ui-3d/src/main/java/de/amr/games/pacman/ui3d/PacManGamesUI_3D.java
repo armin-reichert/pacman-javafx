@@ -5,11 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.lib.arcade.Arcade;
+import de.amr.games.pacman.ui.*;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
-import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui2d.util.Picker;
-import de.amr.games.pacman.ui2d.util.ResourceManager;
-import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -22,7 +19,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_DEBUG_INFO_VISIBLE;
-import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
+import static de.amr.games.pacman.ui.Ufx.toggle;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_FLOOR_COLOR;
 
@@ -167,7 +164,7 @@ public class PacManGamesUI_3D extends PacManGamesUI {
             String sceneName = currentGameScene().map(gameScene -> gameScene.getClass().getSimpleName()).orElse(null);
             String sceneNameText = sceneName != null && PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(sceneName) : "";
             // resource key is composed of game variant, paused state and display mode (2D, 3D)
-            String key = "app.title." + assetPrefix(gameVariant());
+            String key = "app.title." + GameContext.assetPrefix(gameVariant());
             if (clock.isPaused()) {
                 key += ".paused";
             }
