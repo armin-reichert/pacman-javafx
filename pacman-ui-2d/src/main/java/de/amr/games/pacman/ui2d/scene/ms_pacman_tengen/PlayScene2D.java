@@ -274,11 +274,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
             level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
             level.pac().setImmune(PY_IMMUNITY.get());
         }
-
-        levelCompleteAnimation = new LevelCompleteAnimation(level.numFlashes(), 10);
-        levelCompleteAnimation.setOnHideGhosts(() -> level.ghosts().forEach(Ghost::hide));
-        levelCompleteAnimation.setOnFinished(() -> context.gameState().timer().expire());
-
+        createLevelCompleteAnimation(level);
         gr.setWorldMap(level.world().map());
     }
 
@@ -312,7 +308,13 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
     public void onEnterGameState(GameState state) {
         switch (state) {
             case HUNTING -> movingCamera.focusPlayer(true);
-            case LEVEL_COMPLETE -> levelCompleteAnimation.start();
+            case LEVEL_COMPLETE -> {
+                if (levelCompleteAnimation == null) {
+                    // if 3D scene was active when level has been created, the animation has not been created!
+                    createLevelCompleteAnimation(context.level());
+                }
+                levelCompleteAnimation.start();
+            }
             case GAME_OVER -> {
                 var game = (MsPacManGameTengen) context.game();
                 if (game.mapCategory() != MapCategory.ARCADE) {
@@ -482,5 +484,11 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
 
     private Stream<Ghost> ghostsInZOrder(GameLevel level) {
         return Stream.of(ORANGE_GHOST, CYAN_GHOST, PINK_GHOST, RED_GHOST).map(level::ghost);
+    }
+
+    private void createLevelCompleteAnimation(GameLevel level) {
+        levelCompleteAnimation = new LevelCompleteAnimation(level.numFlashes(), 10);
+        levelCompleteAnimation.setOnHideGhosts(() -> level.ghosts().forEach(Ghost::hide));
+        levelCompleteAnimation.setOnFinished(() -> context.gameState().timer().expire());
     }
 }

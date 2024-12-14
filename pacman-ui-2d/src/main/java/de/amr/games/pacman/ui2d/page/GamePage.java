@@ -115,11 +115,13 @@ public class GamePage extends StackPane implements GameActionProvider {
 
     protected final GameContext context;
     protected final Scene parentScene;
-    protected final Canvas gameCanvas;
-    protected final BorderPane gameCanvasLayer = new BorderPane();
-    protected final TooFancyGameCanvasContainer gameCanvasContainer;
+    protected final Canvas canvas = new Canvas();
+    protected final TooFancyGameCanvasContainer canvasContainer;
+
+    protected final BorderPane canvasLayer = new BorderPane();
     protected final DashboardLayer dashboardLayer; // dashboard, picture-in-picture view
     protected final PopupLayer popupLayer; // help, signature
+
     protected final ContextMenu contextMenu = new ContextMenu();
 
     public GamePage(GameContext context, Scene parentScene) {
@@ -128,25 +130,22 @@ public class GamePage extends StackPane implements GameActionProvider {
 
         bindGameActions();
         setOnContextMenuRequested(this::handleContextMenuRequest);
+        //TODO is this the recommended way to close an open context-menu?
+        setOnMouseClicked(e -> contextMenu.hide());
 
-        gameCanvas = new Canvas();
-        GraphicsContext g = gameCanvas.getGraphicsContext2D();
+        GraphicsContext g = canvas.getGraphicsContext2D();
         g.setFontSmoothingType(FontSmoothingType.GRAY);
         g.setImageSmoothing(false);
-        PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, nv) -> g.setFontSmoothingType(nv ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
-        PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, nv) -> g.setImageSmoothing(nv));
 
-        gameCanvasContainer = new TooFancyGameCanvasContainer(gameCanvas);
-        gameCanvasContainer.setMinScaling(0.5);
+        canvasContainer = new TooFancyGameCanvasContainer(canvas);
+        canvasContainer.setMinScaling(0.5);
+        // default: Arcade games aspect ratio
+        canvasContainer.setUnscaledCanvasWidth(ARCADE_MAP_SIZE_IN_PIXELS.x());
+        canvasContainer.setUnscaledCanvasHeight(ARCADE_MAP_SIZE_IN_PIXELS.y());
+        canvasContainer.setBorderColor(Color.valueOf(Arcade.Palette.WHITE));
+        canvasContainer.decorationEnabledPy.addListener((py, ov, nv) -> embedGameScene(gameScenePy.get()));
 
-        // default: Arcade aspect
-        gameCanvasContainer.setUnscaledCanvasWidth(ARCADE_MAP_SIZE_IN_PIXELS.x());
-        gameCanvasContainer.setUnscaledCanvasHeight(ARCADE_MAP_SIZE_IN_PIXELS.y());
-
-        gameCanvasContainer.setBorderColor(Color.valueOf(Arcade.Palette.WHITE));
-        gameCanvasContainer.decorationEnabledPy.addListener((py, ov, nv) -> embedGameScene(gameScenePy.get()));
-
-        gameCanvasLayer.setCenter(gameCanvasContainer);
+        canvasLayer.setCenter(canvasContainer);
 
         dashboardLayer = new DashboardLayer(context);
         InfoBox readMeBox = new InfoBoxReadmeFirst();
@@ -163,24 +162,23 @@ public class GamePage extends StackPane implements GameActionProvider {
             "Joypad Settings", new InfoBoxJoypad());
         dashboardLayer.addDashboardItem(context.locText("infobox.about.title"), new InfoBoxAbout());
 
-        popupLayer = new PopupLayer(context, gameCanvasContainer);
+        popupLayer = new PopupLayer(context, canvasContainer);
         popupLayer.setMouseTransparent(true);
-        popupLayer.sign(gameCanvasContainer,
+        popupLayer.sign(canvasContainer,
             context.assets().font("font.monospaced", 8), Color.LIGHTGRAY,
             context.locText("app.signature"));
 
-        getChildren().addAll(gameCanvasLayer, dashboardLayer, popupLayer);
+        getChildren().addAll(canvasLayer, dashboardLayer, popupLayer);
 
-        //TODO is this the recommended way to close an open context-menu?
-        setOnMouseClicked(e -> contextMenu.hide());
-
+        PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, nv) -> g.setFontSmoothingType(nv ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
+        PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, nv) -> g.setImageSmoothing(nv));
         PY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug) -> {
             if (debug) {
-                gameCanvasLayer.setBackground(coloredBackground(Color.DARKGREEN));
-                gameCanvasLayer.setBorder(border(Color.LIGHTGREEN, 2));
+                canvasLayer.setBackground(coloredBackground(Color.DARKGREEN));
+                canvasLayer.setBorder(border(Color.LIGHTGREEN, 2));
             } else {
-                gameCanvasLayer.setBackground(null);
-                gameCanvasLayer.setBorder(null);
+                canvasLayer.setBackground(null);
+                canvasLayer.setBorder(null);
             }
         });
     }
@@ -209,11 +207,11 @@ public class GamePage extends StackPane implements GameActionProvider {
     }
 
     public TooFancyGameCanvasContainer gameCanvasContainer() {
-        return gameCanvasContainer;
+        return canvasContainer;
     }
 
     public void setSize(double width, double height) {
-        gameCanvasContainer.resizeTo(width, height);
+        canvasContainer.resizeTo(width, height);
     }
 
     @Override
@@ -301,15 +299,15 @@ public class GamePage extends StackPane implements GameActionProvider {
             }
             case GameScene2D gameScene2D -> {
                 Vector2f sceneSize = gameScene2D.size();
-                gameCanvasContainer.backgroundProperty().bind(gameScene2D.backgroundColorProperty().map(Ufx::coloredBackground));
-                gameCanvasContainer.setUnscaledCanvasWidth(sceneSize.x());
-                gameCanvasContainer.setUnscaledCanvasHeight(sceneSize.y());
-                gameCanvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
+                canvasContainer.backgroundProperty().bind(gameScene2D.backgroundColorProperty().map(Ufx::coloredBackground));
+                canvasContainer.setUnscaledCanvasWidth(sceneSize.x());
+                canvasContainer.setUnscaledCanvasHeight(sceneSize.y());
+                canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
                 gameScene2D.scalingProperty().bind(
-                    gameCanvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_SCALING)));
-                GameRenderer renderer = context.currentGameSceneConfig().createRenderer(gameCanvas);
+                    canvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_SCALING)));
+                GameRenderer renderer = context.currentGameSceneConfig().createRenderer(canvas);
                 gameScene2D.setGameRenderer(renderer);
-                getChildren().set(0, gameCanvasLayer);
+                getChildren().set(0, canvasLayer);
             }
             default -> Logger.error("Cannot embed game scene of class {}", gameScene.getClass().getName());
         }
@@ -349,7 +347,7 @@ public class GamePage extends StackPane implements GameActionProvider {
     public void showHelp() {
         if (context.gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
             if (isCurrentGameScene2D()) {
-                popupLayer.showHelp(gameCanvasContainer.scaling());
+                popupLayer.showHelp(canvasContainer.scaling());
             }
         }
     }
