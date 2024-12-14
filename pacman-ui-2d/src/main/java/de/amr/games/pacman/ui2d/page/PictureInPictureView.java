@@ -83,7 +83,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
     private void createScene() {
         scene2D = context.gameVariant() == GameVariant.MS_PACMAN_TENGEN ? new TengenPlayScene(canvas) : new PlayScene2D();
         scene2D.setGameContext(context);
-        scene2D.setCanvas(canvas);
+        scene2D.setGameRenderer(context.currentGameSceneConfig().createRenderer(canvas));
         scene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
     }
 

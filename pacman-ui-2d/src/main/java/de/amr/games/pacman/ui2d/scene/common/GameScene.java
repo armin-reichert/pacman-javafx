@@ -8,6 +8,8 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.ui2d.GameActionProvider;
 import de.amr.games.pacman.ui2d.GameContext;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 /**
  * Common interface of all game scenes (2D and 3D).
@@ -15,6 +17,8 @@ import de.amr.games.pacman.ui2d.GameContext;
  * @author Armin Reichert
  */
 public interface GameScene extends GameEventListener, GameActionProvider {
+
+    Font DEBUG_FONT = Font.font("Sans", FontWeight.BOLD, 20);
 
     /**
      * @return the game scene context

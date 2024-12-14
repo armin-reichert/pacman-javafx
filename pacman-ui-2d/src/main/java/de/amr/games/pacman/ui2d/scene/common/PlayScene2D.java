@@ -31,9 +31,9 @@ import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.pacman.PacManGame.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.games.pacman.ui2d.GameActions2D.*;
-import static de.amr.games.pacman.ui2d.PacManGamesUI.assetPrefix;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
+import static de.amr.games.pacman.ui2d.PacManGamesUI.assetPrefix;
 
 /**
  * 2D play scene for all game variants except Tengen Ms. Pac-Man.
@@ -236,9 +236,6 @@ public class PlayScene2D extends GameScene2D {
         Logger.info("{} entered from {}", this, oldScene);
         bindGameActions();
         registerGameActionKeyBindings(context.keyboard());
-        if (gr == null) {
-            gr = context.currentGameSceneConfig().createRenderer(canvas);
-        }
         gr.setWorldMap(context.level().world().map());
     }
 

@@ -189,10 +189,10 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
 
     @Override
     public void doInit() {
-        setCanvas(canvas); // do not use common canvas from game page
         messageMovement = new MessageMovement();
         context.enableJoypad();
         context.setScoreVisible(true);
+        setGameRenderer(context.currentGameSceneConfig().createRenderer(canvas));
         movingCamera.focusTopOfScene();
     }
 
@@ -312,9 +312,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
     public void onEnterGameState(GameState state) {
         switch (state) {
             case HUNTING -> movingCamera.focusPlayer(true);
-            case LEVEL_COMPLETE -> {
-                levelCompleteAnimation.start();
-            }
+            case LEVEL_COMPLETE -> levelCompleteAnimation.start();
             case GAME_OVER -> {
                 var game = (MsPacManGameTengen) context.game();
                 if (game.mapCategory() != MapCategory.ARCADE) {

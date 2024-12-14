@@ -11,9 +11,6 @@ import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,14 +24,11 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public abstract class GameScene2D implements GameScene {
 
-    public static final Font DEBUG_FONT = Font.font("Sans", FontWeight.BOLD, 20);
-
     protected final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
     protected final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(this, "backgroundColor", Color.BLACK);
     protected final BooleanProperty debugInfoVisiblePy = new SimpleBooleanProperty(this, "debugInfoVisible", false);
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     protected GameContext context;
-    protected Canvas canvas;
     protected GameRenderer gr;
 
     @Override
@@ -81,14 +75,16 @@ public abstract class GameScene2D implements GameScene {
     protected void doInit() {}
     protected void doEnd() {}
 
-    public Canvas canvas() { return canvas; }
-
-    public void setCanvas(Canvas canvas) {
-        this.canvas = canvas;
-        gr = context.currentGameSceneConfig().createRenderer(canvas);
+    public void setGameRenderer(GameRenderer renderer) {
+        gr = checkNotNull(renderer);
         gr.clearCanvas();
-        Logger.info("Game renderer created: {}", gr);
     }
+
+    public GameRenderer renderer() {
+        return gr;
+    }
+
+    public Canvas canvas() { return gr.canvas(); }
 
     protected abstract void drawSceneContent();
 

@@ -13,6 +13,7 @@ import de.amr.games.pacman.ui2d.GameActionProvider;
 import de.amr.games.pacman.ui2d.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.*;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.common.CameraControlledView;
 import de.amr.games.pacman.ui2d.scene.common.GameScene;
 import de.amr.games.pacman.ui2d.scene.common.GameScene2D;
@@ -299,15 +300,16 @@ public class GamePage extends StackPane implements GameActionProvider {
                 cameraControlledView.viewPortHeightProperty().bind(parentScene.heightProperty());
             }
             case GameScene2D gameScene2D -> {
-                getChildren().set(0, gameCanvasLayer);
+                Vector2f sceneSize = gameScene2D.size();
                 gameCanvasContainer.backgroundProperty().bind(gameScene2D.backgroundColorProperty().map(Ufx::coloredBackground));
-                Vector2f sceneSize = gameScene.size();
                 gameCanvasContainer.setUnscaledCanvasWidth(sceneSize.x());
                 gameCanvasContainer.setUnscaledCanvasHeight(sceneSize.y());
                 gameCanvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-                gameScene2D.setCanvas(gameCanvas);
                 gameScene2D.scalingProperty().bind(
                     gameCanvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_SCALING)));
+                GameRenderer renderer = context.currentGameSceneConfig().createRenderer(gameCanvas);
+                gameScene2D.setGameRenderer(renderer);
+                getChildren().set(0, gameCanvasLayer);
             }
             default -> Logger.error("Cannot embed game scene of class {}", gameScene.getClass().getName());
         }
