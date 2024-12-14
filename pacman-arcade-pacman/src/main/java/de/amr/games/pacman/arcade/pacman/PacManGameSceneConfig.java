@@ -8,6 +8,15 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui.*;
+import de.amr.games.pacman.ui.assets.AssetStorage;
+import de.amr.games.pacman.ui.assets.GameSpriteSheet;
+import de.amr.games.pacman.ui.assets.ResourceManager;
+import de.amr.games.pacman.ui.assets.WorldMapColoring;
+import de.amr.games.pacman.ui.lib.Ufx;
+import de.amr.games.pacman.ui.scene.BootScene;
+import de.amr.games.pacman.ui.scene.GameScene;
+import de.amr.games.pacman.ui.scene.GameSceneConfig;
+import de.amr.games.pacman.ui.scene.PlayScene2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 

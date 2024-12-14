@@ -11,6 +11,21 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.*;
+import de.amr.games.pacman.ui.action.GameActionProvider;
+import de.amr.games.pacman.ui.action.GameActions2D;
+import de.amr.games.pacman.ui.assets.AssetStorage;
+import de.amr.games.pacman.ui.assets.GameSound;
+import de.amr.games.pacman.ui.assets.ResourceManager;
+import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
+import de.amr.games.pacman.ui.input.JoypadBindings;
+import de.amr.games.pacman.ui.input.JoypadKeyBinding;
+import de.amr.games.pacman.ui.input.Keyboard;
+import de.amr.games.pacman.ui.lib.GameClockFX;
+import de.amr.games.pacman.ui.lib.Picker;
+import de.amr.games.pacman.ui.scene.FlashMessageView;
+import de.amr.games.pacman.ui.scene.GameScene;
+import de.amr.games.pacman.ui.scene.GameScene2D;
+import de.amr.games.pacman.ui.scene.GameSceneConfig;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import de.amr.games.pacman.ui2d.page.DashboardLayer;
 import de.amr.games.pacman.ui2d.page.EditorPage;
@@ -46,7 +61,7 @@ import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.Ufx.createIcon;
+import static de.amr.games.pacman.ui.lib.Ufx.createIcon;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 
 /**

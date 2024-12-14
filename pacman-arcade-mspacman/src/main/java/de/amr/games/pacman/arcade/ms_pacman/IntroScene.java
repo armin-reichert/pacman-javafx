@@ -18,8 +18,8 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.GameActions2D;
-import de.amr.games.pacman.ui.GameScene2D;
+import de.amr.games.pacman.ui.action.GameActions2D;
+import de.amr.games.pacman.ui.scene.GameScene2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -28,7 +28,7 @@ import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.GameActions2D.bindTestActions;
+import static de.amr.games.pacman.ui.action.GameActions2D.bindTestActions;
 
 /**
  * Intro scene of the Ms. Pac-Man game.

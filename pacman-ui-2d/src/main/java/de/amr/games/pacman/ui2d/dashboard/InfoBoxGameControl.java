@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui2d.dashboard;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.GameActions2D;
+import de.amr.games.pacman.ui.action.GameActions2D;
 import de.amr.games.pacman.ui.GameContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;

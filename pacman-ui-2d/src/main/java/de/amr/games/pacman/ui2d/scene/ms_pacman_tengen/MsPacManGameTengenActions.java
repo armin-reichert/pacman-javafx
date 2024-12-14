@@ -8,16 +8,16 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.model.ms_pacman_tengen.PacBooster;
-import de.amr.games.pacman.ui.GameAction;
-import de.amr.games.pacman.ui.GameActionProvider;
-import de.amr.games.pacman.ui.GameActions2D;
+import de.amr.games.pacman.ui.action.GameAction;
+import de.amr.games.pacman.ui.action.GameActionProvider;
+import de.amr.games.pacman.ui.action.GameActions2D;
 import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.JoypadKeyBinding;
+import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
-import static de.amr.games.pacman.ui.Ufx.toggle;
+import static de.amr.games.pacman.ui.lib.Ufx.toggle;
 
 public enum MsPacManGameTengenActions implements GameAction {
 

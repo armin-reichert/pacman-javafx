@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.ui.Ufx;
+import de.amr.games.pacman.ui.lib.Ufx;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;

@@ -9,9 +9,9 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.GameScene;
-import de.amr.games.pacman.ui.GameScene2D;
-import de.amr.games.pacman.ui.SpriteAnimation;
+import de.amr.games.pacman.ui.scene.GameScene;
+import de.amr.games.pacman.ui.scene.GameScene2D;
+import de.amr.games.pacman.ui.assets.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 

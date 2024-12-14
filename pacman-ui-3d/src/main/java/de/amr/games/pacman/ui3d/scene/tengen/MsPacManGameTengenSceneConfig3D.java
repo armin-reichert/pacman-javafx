@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.scene.tengen;
 
 import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.GameScene;
+import de.amr.games.pacman.ui.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig;
-import de.amr.games.pacman.ui.AssetStorage;
+import de.amr.games.pacman.ui.assets.AssetStorage;
 import de.amr.games.pacman.ui3d.scene.common.PlayScene3D;
 
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;

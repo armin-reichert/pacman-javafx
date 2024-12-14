@@ -9,6 +9,14 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.*;
+import de.amr.games.pacman.ui.action.GameAction;
+import de.amr.games.pacman.ui.action.GameActionProvider;
+import de.amr.games.pacman.ui.action.GameActions2D;
+import de.amr.games.pacman.ui.lib.Ufx;
+import de.amr.games.pacman.ui.scene.CameraControlledView;
+import de.amr.games.pacman.ui.scene.GameScene;
+import de.amr.games.pacman.ui.scene.GameScene2D;
+import de.amr.games.pacman.ui.scene.TooFancyGameCanvasContainer;
 import de.amr.games.pacman.ui2d.PacManGames2dApp;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.dashboard.*;
@@ -35,8 +43,8 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.GlobalProperties.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui.GlobalProperties.PY_IMMUNITY;
-import static de.amr.games.pacman.ui.Keyboard.*;
-import static de.amr.games.pacman.ui.Ufx.*;
+import static de.amr.games.pacman.ui.input.Keyboard.*;
+import static de.amr.games.pacman.ui.lib.Ufx.*;
 
 /**
  * @author Armin Reichert

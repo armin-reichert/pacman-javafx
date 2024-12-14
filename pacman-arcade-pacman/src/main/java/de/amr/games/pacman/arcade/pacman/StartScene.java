@@ -8,8 +8,8 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.GameActions2D;
-import de.amr.games.pacman.ui.GameScene2D;
+import de.amr.games.pacman.ui.action.GameActions2D;
+import de.amr.games.pacman.ui.scene.GameScene2D;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.arcade.pacman.PacManGameSpriteSheet.MIDWAY_COPYRIGHT;

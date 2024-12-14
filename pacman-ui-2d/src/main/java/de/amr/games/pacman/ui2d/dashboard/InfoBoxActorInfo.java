@@ -14,7 +14,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.SpriteAnimationCollection;
+import de.amr.games.pacman.ui.assets.SpriteAnimationCollection;
 
 import java.util.function.BiFunction;
 import java.util.function.Supplier;

@@ -12,7 +12,7 @@ import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
-import de.amr.games.pacman.ui.NightMode;
+import de.amr.games.pacman.ui.lib.NightMode;
 import de.amr.games.pacman.arcade.ms_pacman.MsPacManGameSceneConfig;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig;
 import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.SceneDisplayMode;

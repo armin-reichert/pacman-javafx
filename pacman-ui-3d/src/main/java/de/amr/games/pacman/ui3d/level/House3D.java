@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.ui.WorldMapColoring;
+import de.amr.games.pacman.ui.assets.WorldMapColoring;
 import javafx.beans.property.*;
 import javafx.scene.Group;
 import javafx.scene.Node;

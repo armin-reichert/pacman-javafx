@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.JoypadKeyBinding;
+import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 

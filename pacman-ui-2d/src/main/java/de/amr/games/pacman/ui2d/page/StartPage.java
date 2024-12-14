@@ -8,6 +8,10 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.*;
+import de.amr.games.pacman.ui.action.GameAction;
+import de.amr.games.pacman.ui.action.GameActionProvider;
+import de.amr.games.pacman.ui.action.GameActions2D;
+import de.amr.games.pacman.ui.lib.Carousel;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -20,7 +24,7 @@ import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.GameContext.PFX_PACMAN;
-import static de.amr.games.pacman.ui.Keyboard.naked;
+import static de.amr.games.pacman.ui.input.Keyboard.naked;
 
 /**
  * Got the flyer images from <a href="https://flyers.arcade-museum.com/">The Arcade Flyer Archive</a>.

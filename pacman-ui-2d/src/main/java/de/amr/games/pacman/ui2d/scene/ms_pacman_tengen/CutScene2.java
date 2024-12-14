@@ -10,7 +10,7 @@ import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
-import de.amr.games.pacman.ui.GameScene2D;
+import de.amr.games.pacman.ui.scene.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
