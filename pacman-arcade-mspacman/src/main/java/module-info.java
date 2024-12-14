@@ -1,4 +1,4 @@
-module de.amr.games.pacman.arcade.ms_pacman {
+open module de.amr.games.pacman.arcade.ms_pacman {
     requires de.amr.games.pacman;
     requires de.amr.games.pacman.lib;
     requires de.amr.games.pacman.ui;
