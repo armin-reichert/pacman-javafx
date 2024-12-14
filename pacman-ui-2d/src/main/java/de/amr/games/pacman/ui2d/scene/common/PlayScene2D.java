@@ -67,6 +67,7 @@ public class PlayScene2D extends GameScene2D {
             bindFallbackPlayerControlActions(this);
         }
         registerGameActionKeyBindings(context.keyboard());
+        gr.setWorldMap(context.level().world().map());
     }
 
     @Override
@@ -135,6 +136,9 @@ public class PlayScene2D extends GameScene2D {
             return;
         }
         GameLevel level = context.level();
+
+        //TODO fixme
+        gr.setWorldMap(level.world().map());
 
         //TODO use more general solution, maybe terrain map property?
         if (context.gameVariant() == GameVariant.PACMAN_XXL) {
@@ -232,6 +236,7 @@ public class PlayScene2D extends GameScene2D {
         Logger.info("{} entered from {}", this, oldScene);
         bindGameActions();
         registerGameActionKeyBindings(context.keyboard());
+        gr.setWorldMap(context.level().world().map());
     }
 
     @Override

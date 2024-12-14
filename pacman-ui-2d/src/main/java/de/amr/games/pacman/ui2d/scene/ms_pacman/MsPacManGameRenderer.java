@@ -68,6 +68,7 @@ public class MsPacManGameRenderer implements GameRenderer {
     };
 
     private final AssetStorage assets;
+    private final MsPacManGameSpriteSheet spriteSheet;
     private final Canvas canvas;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final Image flashingMazesImage;
@@ -78,8 +79,9 @@ public class MsPacManGameRenderer implements GameRenderer {
     private boolean blinking;
     private Color bgColor = Color.BLACK;
 
-    public MsPacManGameRenderer(AssetStorage assets, Canvas canvas) {
+    public MsPacManGameRenderer(AssetStorage assets, MsPacManGameSpriteSheet spriteSheet, Canvas canvas) {
         this.assets = checkNotNull(assets);
+        this.spriteSheet = checkNotNull(spriteSheet);
         this.canvas = checkNotNull(canvas);
         flashingMazesImage = assets.get("ms_pacman.flashing_mazes");
     }
@@ -91,7 +93,7 @@ public class MsPacManGameRenderer implements GameRenderer {
 
     @Override
     public MsPacManGameSpriteSheet spriteSheet() {
-        return assets.get("ms_pacman.spritesheet");
+        return spriteSheet;
     }
 
     @Override
