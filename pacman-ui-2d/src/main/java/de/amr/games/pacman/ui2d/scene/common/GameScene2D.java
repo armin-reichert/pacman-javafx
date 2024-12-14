@@ -30,6 +30,7 @@ public abstract class GameScene2D implements GameScene {
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     protected GameContext context;
     protected GameRenderer gr;
+    protected Canvas canvas;
 
     @Override
     public final void init() {
@@ -84,7 +85,11 @@ public abstract class GameScene2D implements GameScene {
         return gr;
     }
 
-    public Canvas canvas() { return gr.canvas(); }
+    public void setCanvas(Canvas canvas) {
+        this.canvas = canvas;
+    }
+
+    public Canvas canvas() { return canvas; }
 
     protected abstract void drawSceneContent();
 

@@ -166,6 +166,11 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
             .map(mode -> mode == SceneDisplayMode.SCROLLING ? movingCamera : fixedCamera));
     }
 
+    @Override
+    public void setCanvas(Canvas canvas) {
+        // use our own canvas
+    }
+
     public ObjectProperty<SceneDisplayMode> displayModeProperty() {
         return displayModePy;
     }
