@@ -236,6 +236,9 @@ public class PlayScene2D extends GameScene2D {
         Logger.info("{} entered from {}", this, oldScene);
         bindGameActions();
         registerGameActionKeyBindings(context.keyboard());
+        if (gr == null) {
+            gr = context.currentGameSceneConfig().createRenderer(canvas);
+        }
         gr.setWorldMap(context.level().world().map());
     }
 

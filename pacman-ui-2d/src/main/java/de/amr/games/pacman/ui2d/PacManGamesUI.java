@@ -227,11 +227,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected void runOnEveryTick() {
         try {
             if (pagePy.get() == gamePage) {
-                currentGameScene().ifPresent(gameScene -> {
-                    if (gameScene instanceof  GameScene2D gameScene2D) {
-                        gameScene2D.draw();
-                    }
-                });
+                gamePage.draw();
                 gamePage.updateDashboard();
                 flashMessageLayer.update();
             } else {
