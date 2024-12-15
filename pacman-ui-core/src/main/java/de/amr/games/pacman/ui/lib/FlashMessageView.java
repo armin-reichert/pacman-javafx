@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui.scene;
+package de.amr.games.pacman.ui.lib;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.Background;

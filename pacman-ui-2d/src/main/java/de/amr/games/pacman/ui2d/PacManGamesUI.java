@@ -22,7 +22,7 @@ import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui.input.Keyboard;
 import de.amr.games.pacman.ui.lib.GameClockFX;
 import de.amr.games.pacman.ui.lib.Picker;
-import de.amr.games.pacman.ui.scene.FlashMessageView;
+import de.amr.games.pacman.ui.lib.FlashMessageView;
 import de.amr.games.pacman.ui.scene.GameScene;
 import de.amr.games.pacman.ui.scene.GameScene2D;
 import de.amr.games.pacman.ui.scene.GameSceneConfig;
