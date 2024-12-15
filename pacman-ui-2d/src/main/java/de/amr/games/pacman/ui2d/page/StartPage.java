@@ -11,13 +11,12 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacManStartPage;
-import de.amr.games.pacman.ui.*;
+import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.action.GameAction;
 import de.amr.games.pacman.ui.action.GameActionProvider;
 import de.amr.games.pacman.ui.action.GameActions2D;
 import de.amr.games.pacman.ui.lib.Carousel;
 import de.amr.games.pacman.ui.lib.Flyer;
-import de.amr.games.pacman.ui2d.PacManGamesUI;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.input.KeyCode;
@@ -28,7 +27,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui.GameContext.*;
 import static de.amr.games.pacman.ui.input.Keyboard.naked;
 
 /**
@@ -67,26 +65,10 @@ public class StartPage extends StackPane implements GameActionProvider {
 
         carousel = new Carousel(context.assets());
         carousel.selectButtonTextProperty().set(context.locText("play_button"));
-
-        {
-            var pacManStartPage = new ArcadePacManStartPage();
-            carousel.addSlide(pacManStartPage.root());
-        }
-
-        {
-            var msPacManStartPage = new ArcadeMsPacManStartPage();
-            carousel.addSlide(msPacManStartPage.root());
-        }
-
-        {
-            var pacManXXLStartPage = new ArcadePacManXXLStartPage();
-            carousel.addSlide(pacManXXLStartPage.root());
-        }
-
-        {
-            var msPacManTengenStartPage = new TengenMsPacManStartPage();
-            carousel.addSlide(msPacManTengenStartPage.root());
-        }
+        carousel.addSlide(new ArcadePacManStartPage().root());
+        carousel.addSlide(new ArcadeMsPacManStartPage().root());
+        carousel.addSlide(new ArcadePacManXXLStartPage().root());
+        carousel.addSlide(new TengenMsPacManStartPage().root());
 
         carousel.setOnPrevSlideSelected(() -> {
             var variant = (GameVariant) carousel.currentSlide().getUserData();
