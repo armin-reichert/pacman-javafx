@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameRenderer;
+import de.amr.games.pacman.ui.assets.AssetStorage;
 import de.amr.games.pacman.ui.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui.assets.WorldMapColoring;
 import javafx.scene.canvas.Canvas;
@@ -25,8 +26,9 @@ public interface GameConfiguration {
         return get(sceneID) == gameScene;
     }
     GameSpriteSheet spriteSheet();
-    GameRenderer createRenderer(Canvas canvas);
+    GameRenderer createRenderer(AssetStorage assets, Canvas canvas);
     WorldMapColoring worldMapColoring(WorldMap worldMap);
     void createActorAnimations(GameLevel level);
     GameScene selectGameScene(GameContext context);
+    AssetStorage assets();
 }

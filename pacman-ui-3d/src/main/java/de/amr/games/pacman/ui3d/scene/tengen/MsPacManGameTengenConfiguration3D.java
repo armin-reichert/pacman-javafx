@@ -14,8 +14,7 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
 
 public class MsPacManGameTengenConfiguration3D extends MsPacManGameTengenConfiguration {
 
-    public MsPacManGameTengenConfiguration3D(AssetStorage assets) {
-        super(assets);
+    public MsPacManGameTengenConfiguration3D() {
         set("PlayScene3D", new PlayScene3D());
     }
 

@@ -161,6 +161,10 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         });
     }
 
+    public GameConfiguration gameConfiguration(GameVariant variant) {
+        return gameConfigByVariant.get(variant);
+    }
+
     /**
      * Called from application start method (on JavaFX application thread).
 

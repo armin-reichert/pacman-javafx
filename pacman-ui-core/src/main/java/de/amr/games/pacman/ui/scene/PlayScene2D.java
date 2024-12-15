@@ -238,7 +238,7 @@ public class PlayScene2D extends GameScene2D {
         bindGameActions();
         registerGameActionKeyBindings(context.keyboard());
         if (gr == null) {
-            setGameRenderer(context.currentGameSceneConfig().createRenderer(canvas));
+            setGameRenderer(context.currentGameSceneConfig().createRenderer(context.assets(), canvas));
         }
         gr.setWorldMap(context.level().world().map());
     }

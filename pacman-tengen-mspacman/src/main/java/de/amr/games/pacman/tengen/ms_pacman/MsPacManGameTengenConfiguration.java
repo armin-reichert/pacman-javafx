@@ -14,8 +14,8 @@ import de.amr.games.pacman.ui.assets.AssetStorage;
 import de.amr.games.pacman.ui.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui.assets.ResourceManager;
 import de.amr.games.pacman.ui.assets.WorldMapColoring;
-import de.amr.games.pacman.ui.scene.GameScene;
 import de.amr.games.pacman.ui.scene.GameConfiguration;
+import de.amr.games.pacman.ui.scene.GameScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -30,6 +30,10 @@ import static de.amr.games.pacman.ui.lib.Ufx.coloredBackground;
 
 public class MsPacManGameTengenConfiguration implements GameConfiguration {
 
+    public static Color nesPaletteColor(int index) {
+        return Color.web(NES.Palette.color(index));
+    }
+
     public static final Vector2i NES_TILES = new Vector2i(32, 30);
     public static final Vector2i NES_SIZE = NES_TILES.scaled(TS);
 
@@ -38,10 +42,9 @@ public class MsPacManGameTengenConfiguration implements GameConfiguration {
     private final MazeRepository mazeRepository;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public MsPacManGameTengenConfiguration(AssetStorage assets) {
-        this.assets = assets;
+    public MsPacManGameTengenConfiguration() {
+        assets = new AssetStorage();
         loadAssets(() -> MsPacManGameTengenConfiguration.class);
-
         spriteSheet = new MsPacManGameTengenSpriteSheet(assets.image(PFX_MS_PACMAN_TENGEN + ".spritesheet"));
         mazeRepository = new MazeRepository(
             assets.image(PFX_MS_PACMAN_TENGEN + ".mazes.arcade"),
@@ -62,8 +65,9 @@ public class MsPacManGameTengenConfiguration implements GameConfiguration {
         playScene2D.displayModeProperty().bind(PY_TENGEN_PLAY_SCENE_DISPLAY_MODE);
     }
 
-    public static Color nesPaletteColor(int index) {
-        return Color.web(NES.Palette.color(index));
+    @Override
+    public AssetStorage assets() {
+        return assets;
     }
 
     @Override
@@ -101,7 +105,7 @@ public class MsPacManGameTengenConfiguration implements GameConfiguration {
     }
 
     @Override
-    public MsPacManGameTengenRenderer createRenderer(Canvas canvas) {
+    public MsPacManGameTengenRenderer createRenderer(AssetStorage assets, Canvas canvas) {
         return new MsPacManGameTengenRenderer(assets, spriteSheet, mazeRepository, canvas);
     }
 

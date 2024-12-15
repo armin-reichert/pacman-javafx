@@ -328,7 +328,7 @@ public class GamePage extends StackPane implements GameActionProvider {
                 canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
                 gameScene2D.scalingProperty().bind(
                     canvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_SCALING)));
-                GameRenderer renderer = context.currentGameSceneConfig().createRenderer(canvas);
+                GameRenderer renderer = context.currentGameSceneConfig().createRenderer(context.assets(), canvas);
                 gameScene2D.setCanvas(canvas);
                 gameScene2D.setGameRenderer(renderer);
                 getChildren().set(0, canvasLayer);

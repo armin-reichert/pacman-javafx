@@ -8,15 +8,15 @@ import de.amr.games.pacman.arcade.Resources;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.ui.*;
+import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.assets.AssetStorage;
 import de.amr.games.pacman.ui.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui.assets.ResourceManager;
 import de.amr.games.pacman.ui.assets.WorldMapColoring;
 import de.amr.games.pacman.ui.lib.Ufx;
 import de.amr.games.pacman.ui.scene.BootScene;
-import de.amr.games.pacman.ui.scene.GameScene;
 import de.amr.games.pacman.ui.scene.GameConfiguration;
+import de.amr.games.pacman.ui.scene.GameScene;
 import de.amr.games.pacman.ui.scene.PlayScene2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -25,21 +25,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.GameContext.PFX_PACMAN;
 
 public class PacManGameConfiguration implements GameConfiguration {
-
     private final AssetStorage assets;
     private final PacManGameSpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public PacManGameConfiguration(AssetStorage assets) {
-        this.assets = checkNotNull(assets);
+    public PacManGameConfiguration() {
+        assets = new AssetStorage();
         loadAssets(() -> Resources.class);
-
         spriteSheet = new PacManGameSpriteSheet(assets.get(PFX_PACMAN + ".spritesheet"));
-
         set("BootScene",   new BootScene());
         set("IntroScene",  new IntroScene());
         set("StartScene",  new StartScene());
@@ -47,6 +43,11 @@ public class PacManGameConfiguration implements GameConfiguration {
         set("CutScene1",   new CutScene1());
         set("CutScene2",   new CutScene2());
         set("CutScene3",   new CutScene3());
+    }
+
+    @Override
+    public AssetStorage assets() {
+        return assets;
     }
 
     @Override
@@ -65,7 +66,7 @@ public class PacManGameConfiguration implements GameConfiguration {
     }
 
     @Override
-    public PacManGameRenderer createRenderer(Canvas canvas) {
+    public PacManGameRenderer createRenderer(AssetStorage assets, Canvas canvas) {
         return new PacManGameRenderer(assets, spriteSheet, canvas);
     }
 

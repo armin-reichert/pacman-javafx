@@ -14,8 +14,7 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
 
 public class PacManGameConfiguration3D extends PacManGameConfiguration {
 
-    public PacManGameConfiguration3D(AssetStorage assets) {
-        super(assets);
+    public PacManGameConfiguration3D() {
         set("PlayScene3D", new PlayScene3D());
     }
 

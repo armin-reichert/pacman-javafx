@@ -31,8 +31,8 @@ public class MsPacManGameConfiguration implements GameConfiguration {
     private final MsPacManGameSpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public MsPacManGameConfiguration(AssetStorage assets) {
-        this.assets = checkNotNull(assets);
+    public MsPacManGameConfiguration() {
+        assets = new AssetStorage();
         loadAssets(() -> MsPacManGameConfiguration.class);
         spriteSheet = new MsPacManGameSpriteSheet(assets.get(GameContext.PFX_MS_PACMAN + ".spritesheet"));
 
@@ -43,6 +43,11 @@ public class MsPacManGameConfiguration implements GameConfiguration {
         set("CutScene1",   new CutScene1());
         set("CutScene2",   new CutScene2());
         set("CutScene3",   new CutScene3());
+    }
+
+    @Override
+    public AssetStorage assets() {
+        return assets;
     }
 
     @Override
@@ -66,7 +71,7 @@ public class MsPacManGameConfiguration implements GameConfiguration {
     }
 
     @Override
-    public MsPacManGameRenderer createRenderer(Canvas canvas) {
+    public MsPacManGameRenderer createRenderer(AssetStorage assets, Canvas canvas) {
         return new MsPacManGameRenderer(assets, spriteSheet, canvas);
     }
 

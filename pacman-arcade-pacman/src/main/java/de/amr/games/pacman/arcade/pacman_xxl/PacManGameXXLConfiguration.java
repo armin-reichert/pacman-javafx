@@ -8,14 +8,14 @@ import de.amr.games.pacman.arcade.Resources;
 import de.amr.games.pacman.arcade.pacman.*;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.ui.*;
-import de.amr.games.pacman.ui.assets.GameSpriteSheet;
+import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.assets.AssetStorage;
+import de.amr.games.pacman.ui.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui.assets.ResourceManager;
 import de.amr.games.pacman.ui.assets.WorldMapColoring;
 import de.amr.games.pacman.ui.scene.BootScene;
-import de.amr.games.pacman.ui.scene.GameScene;
 import de.amr.games.pacman.ui.scene.GameConfiguration;
+import de.amr.games.pacman.ui.scene.GameScene;
 import de.amr.games.pacman.ui.scene.PlayScene2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.lib.Ufx.imageBackground;
 
 public class PacManGameXXLConfiguration implements GameConfiguration {
@@ -33,11 +32,10 @@ public class PacManGameXXLConfiguration implements GameConfiguration {
     private final PacManGameSpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public PacManGameXXLConfiguration(AssetStorage assets) {
-        this.assets = checkNotNull(assets);
+    public PacManGameXXLConfiguration() {
+        assets = new AssetStorage();
         loadAssets(() -> Resources.class);
         spriteSheet = new PacManGameSpriteSheet(assets.get(GameContext.PFX_PACMAN_XXL + ".spritesheet"));
-
         set("BootScene",   new BootScene());
         set("IntroScene",  new IntroScene());
         set("StartScene",  new StartScene());
@@ -45,6 +43,11 @@ public class PacManGameXXLConfiguration implements GameConfiguration {
         set("CutScene1",   new CutScene1());
         set("CutScene2",   new CutScene2());
         set("CutScene3",   new CutScene3());
+    }
+
+    @Override
+    public AssetStorage assets() {
+        return assets;
     }
 
     @Override
@@ -63,7 +66,7 @@ public class PacManGameXXLConfiguration implements GameConfiguration {
     }
 
     @Override
-    public PacManGameXXLRenderer createRenderer(Canvas canvas) {
+    public PacManGameXXLRenderer createRenderer(AssetStorage assets, Canvas canvas) {
         return new PacManGameXXLRenderer(assets, spriteSheet, canvas);
     }
 

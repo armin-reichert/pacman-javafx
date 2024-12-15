@@ -197,7 +197,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
         messageMovement = new MessageMovement();
         context.enableJoypad();
         context.setScoreVisible(true);
-        setGameRenderer(context.currentGameSceneConfig().createRenderer(canvas));
+        setGameRenderer(context.currentGameSceneConfig().createRenderer(context.assets(), canvas));
         movingCamera.focusTopOfScene();
     }
 
