@@ -1,5 +1,6 @@
 package de.amr.games.pacman.ui2d.apps;
 
+import de.amr.games.pacman.arcade.ms_pacman.MsPacManGame;
 import de.amr.games.pacman.arcade.ms_pacman.MsPacManGameConfiguration;
 import de.amr.games.pacman.arcade.pacman.PacManGame;
 import de.amr.games.pacman.controller.GameController;
@@ -24,7 +25,7 @@ public class ArcadeMsPacManApp extends Application {
         if (userDir.mkdir()) {
             Logger.info("User dir '{}' created", userDir);
         }
-        GameController.it().addGameImplementation(GameVariant.MS_PACMAN, new PacManGame(userDir));
+        GameController.it().addGameImplementation(GameVariant.MS_PACMAN, new MsPacManGame(userDir));
         GameController.it().selectGame(GameVariant.MS_PACMAN);
     }
 
