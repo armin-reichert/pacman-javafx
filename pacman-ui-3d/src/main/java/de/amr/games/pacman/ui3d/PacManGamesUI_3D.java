@@ -22,8 +22,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui.lib.Ufx.toggle;
+import static de.amr.games.pacman.ui2d.GlobalProperties.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_FLOOR_COLOR;
 

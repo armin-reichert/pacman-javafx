@@ -6,12 +6,12 @@ package de.amr.games.pacman.ui3d.dashboard;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui2d.dashboard.InfoBox;
-import de.amr.games.pacman.ui2d.dashboard.InfoText;
+import de.amr.games.pacman.ui.lib.NightMode;
 import de.amr.games.pacman.ui.scene.CameraControlledView;
 import de.amr.games.pacman.ui.scene.GameScene;
 import de.amr.games.pacman.ui.scene.GameScene2D;
-import de.amr.games.pacman.ui.lib.NightMode;
+import de.amr.games.pacman.ui2d.dashboard.InfoBox;
+import de.amr.games.pacman.ui2d.dashboard.InfoText;
 import de.amr.games.pacman.ui3d.GameActions3D;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui3d.scene3d.Perspective;
@@ -25,7 +25,7 @@ import javafx.scene.shape.DrawMode;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
+import static de.amr.games.pacman.ui2d.GlobalProperties.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 
 /**

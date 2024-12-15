@@ -63,7 +63,7 @@ import java.util.Optional;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.lib.Ufx.createIcon;
-import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
+import static de.amr.games.pacman.ui2d.GlobalProperties.*;
 
 /**
  * User interface for all Pac-Man game variants (2D only).

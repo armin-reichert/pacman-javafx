@@ -36,17 +36,6 @@ import java.util.Map;
  */
 public class PacManGames2dApp extends Application {
 
-    public static final ObjectProperty<Color> PY_CANVAS_BG_COLOR      = new SimpleObjectProperty<>(Color.BLACK);
-    public static final BooleanProperty PY_CANVAS_IMAGE_SMOOTHING     = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_CANVAS_FONT_SMOOTHING      = new SimpleBooleanProperty(false);
-    public static final ObjectProperty<MapSelectionMode> PY_MAP_SELECTION_MODE = new SimpleObjectProperty<>(MapSelectionMode.CUSTOM_MAPS_FIRST);
-    public static final BooleanProperty PY_DEBUG_INFO_VISIBLE         = new SimpleBooleanProperty(false);
-    public static final ObjectProperty<NightMode> PY_NIGHT_MODE       = new SimpleObjectProperty<>(NightMode.AUTO);
-    public static final IntegerProperty PY_PIP_HEIGHT                 = new SimpleIntegerProperty(8*36);
-    public static final BooleanProperty PY_PIP_ON                     = new SimpleBooleanProperty(false);
-    public static final IntegerProperty PY_PIP_OPACITY_PERCENT        = new SimpleIntegerProperty(100);
-    public static final IntegerProperty PY_SIMULATION_STEPS           = new SimpleIntegerProperty(1);
-
     private static Dimension2D initialSize() {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double aspect = 1.2;

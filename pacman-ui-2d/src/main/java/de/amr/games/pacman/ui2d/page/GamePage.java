@@ -9,7 +9,8 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.SceneDisplayMode;
-import de.amr.games.pacman.ui.*;
+import de.amr.games.pacman.ui.GameContext;
+import de.amr.games.pacman.ui.GameRenderer;
 import de.amr.games.pacman.ui.action.GameAction;
 import de.amr.games.pacman.ui.action.GameActionProvider;
 import de.amr.games.pacman.ui.action.GameActions2D;
@@ -18,7 +19,6 @@ import de.amr.games.pacman.ui.scene.CameraControlledView;
 import de.amr.games.pacman.ui.scene.GameScene;
 import de.amr.games.pacman.ui.scene.GameScene2D;
 import de.amr.games.pacman.ui.scene.TooFancyGameCanvasContainer;
-import de.amr.games.pacman.ui2d.PacManGames2dApp;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.dashboard.*;
 import javafx.beans.property.ObjectProperty;
@@ -46,6 +46,7 @@ import static de.amr.games.pacman.ui.GlobalProperties.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui.GlobalProperties.PY_IMMUNITY;
 import static de.amr.games.pacman.ui.input.Keyboard.*;
 import static de.amr.games.pacman.ui.lib.Ufx.*;
+import static de.amr.games.pacman.ui2d.GlobalProperties.*;
 
 /**
  * @author Armin Reichert
@@ -54,7 +55,7 @@ public class GamePage extends StackPane implements GameActionProvider {
 
     static final double MAX_SCENE_SCALING = 5;
 
-    private final GameAction actionToggleDebugInfo = context -> Ufx.toggle(PacManGames2dApp.PY_DEBUG_INFO_VISIBLE);
+    private final GameAction actionToggleDebugInfo = context -> Ufx.toggle(PY_DEBUG_INFO_VISIBLE);
 
     private final GameAction actionShowHelp = context -> showHelp();
 
@@ -193,9 +194,9 @@ public class GamePage extends StackPane implements GameActionProvider {
 
         getChildren().addAll(canvasLayer, dashboardLayer, popupLayer);
 
-        PacManGames2dApp.PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, nv) -> g.setFontSmoothingType(nv ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
-        PacManGames2dApp.PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, nv) -> g.setImageSmoothing(nv));
-        PacManGames2dApp.PY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug) -> {
+        PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, nv) -> g.setFontSmoothingType(nv ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
+        PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, nv) -> g.setImageSmoothing(nv));
+        PY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug) -> {
             if (debug) {
                 canvasLayer.setBackground(coloredBackground(Color.DARKGREEN));
                 canvasLayer.setBorder(border(Color.LIGHTGREEN, 2));

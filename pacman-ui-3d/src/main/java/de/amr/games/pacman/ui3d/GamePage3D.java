@@ -6,10 +6,10 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.SceneDisplayMode;
-import de.amr.games.pacman.ui.action.GameActions2D;
 import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui2d.page.GamePage;
+import de.amr.games.pacman.ui.action.GameActions2D;
 import de.amr.games.pacman.ui.lib.NightMode;
+import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.scene3d.Perspective;
 import javafx.beans.binding.Bindings;
@@ -26,10 +26,11 @@ import static de.amr.games.pacman.lib.Globals.inClosedRange;
 import static de.amr.games.pacman.tengen.ms_pacman.GlobalProperties.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.games.pacman.ui.GlobalProperties.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui.GlobalProperties.PY_IMMUNITY;
-import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
-import static de.amr.games.pacman.ui2d.PacManGamesUI.contextMenuTitleItem;
 import static de.amr.games.pacman.ui.input.Keyboard.alt;
 import static de.amr.games.pacman.ui.lib.Ufx.coloredBackground;
+import static de.amr.games.pacman.ui2d.GlobalProperties.PY_NIGHT_MODE;
+import static de.amr.games.pacman.ui2d.GlobalProperties.PY_PIP_ON;
+import static de.amr.games.pacman.ui2d.PacManGamesUI.contextMenuTitleItem;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_PERSPECTIVE;
 

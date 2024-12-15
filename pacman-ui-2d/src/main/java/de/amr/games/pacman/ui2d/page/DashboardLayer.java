@@ -17,7 +17,7 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_PIP_ON;
+import static de.amr.games.pacman.ui2d.GlobalProperties.PY_PIP_ON;
 
 /**
  * @author Armin Reichert
