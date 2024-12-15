@@ -11,7 +11,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -37,14 +36,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
-    private static GameController THE_ONE;
-
-    public static void create(File userDir) {
-        if (THE_ONE != null) {
-            throw new IllegalStateException("Game controller has already been created");
-        }
-        THE_ONE = new GameController(userDir);
-    }
+    private static final GameController THE_ONE = new GameController();
 
     public static GameController it() {
         if (THE_ONE == null) {
@@ -53,17 +45,12 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         return THE_ONE;
     }
 
-    private final File userDir;
     private final CoinControl coinControl = new CoinControl();
     private final Map<GameVariant, GameModel> modelsByVariant = new EnumMap<>(GameVariant.class);
     private GameModel currentGame;
 
-    private GameController(File userDir) {
+    private GameController() {
         super(GameState.values());
-        this.userDir = checkNotNull(userDir);
-        if (!userDir.exists() || !userDir.isDirectory()) {
-            throw new IllegalArgumentException("Specified user directory is invalid: " + userDir);
-        }
         for (var entry : modelsByVariant.entrySet()) {
             Logger.info("Game variant {} => {}", entry.getKey(), entry.getValue());
         }

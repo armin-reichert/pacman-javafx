@@ -65,7 +65,6 @@ public class PacManGames3dApp extends Application {
         if (userDir.mkdir()) {
             Logger.info("User dir '{}' created", userDir);
         }
-        GameController.create(userDir);
         GameController.it().addGameImplementation(GameVariant.MS_PACMAN, new MsPacManGame(userDir));
         GameController.it().addGameImplementation(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengen(userDir));
         GameController.it().addGameImplementation(GameVariant.PACMAN, new PacManGame(userDir));
