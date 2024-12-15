@@ -16,6 +16,12 @@ dependencies {
     implementation libs.tinylog_impl
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 javafx {
     version = versions.javafx
     modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.media']

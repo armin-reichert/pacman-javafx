@@ -5,10 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.tengen.ms_pacman.SceneDisplayMode;
 import de.amr.games.pacman.ui.action.GameActions2D;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui2d.page.GamePage;
-import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.SceneDisplayMode;
 import de.amr.games.pacman.ui.lib.NightMode;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.scene.common.Perspective;
@@ -23,6 +23,7 @@ import javafx.scene.shape.DrawMode;
 import java.time.LocalTime;
 
 import static de.amr.games.pacman.lib.Globals.inClosedRange;
+import static de.amr.games.pacman.tengen.ms_pacman.GlobalProperties.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.games.pacman.ui.GlobalProperties.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui.GlobalProperties.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;

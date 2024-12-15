@@ -31,7 +31,7 @@ public class DashboardAssets extends AssetStorage {
         store("infobox.label_font",          Font.font("Sans", 12));
         store("infobox.text_font",           Font.font("Sans", 12));
 
-        store("image.nes-controller",        rm.loadImage("graphics/tengen/nes-controller.jpg"));
+        store("image.nes-controller",        rm.loadImage("graphics/nes-controller.jpg"));
 
     }
 }

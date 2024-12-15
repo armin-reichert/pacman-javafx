@@ -8,5 +8,5 @@ include 'pacman-ui-2d'
 include 'pacman-ui-3d'
 include 'pacman-arcade-pacman'
 include 'pacman-arcade-mspacman'
-include 'pacman-ui-core'
+include 'pacman-tengen-mspacman'
 

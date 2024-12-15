@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.tengen.ms_pacman.SceneDisplayMode;
 import de.amr.games.pacman.ui.*;
 import de.amr.games.pacman.ui.action.GameAction;
 import de.amr.games.pacman.ui.action.GameActionProvider;
@@ -20,7 +21,6 @@ import de.amr.games.pacman.ui.scene.TooFancyGameCanvasContainer;
 import de.amr.games.pacman.ui2d.PacManGames2dApp;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.dashboard.*;
-import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.SceneDisplayMode;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
@@ -41,6 +41,7 @@ import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.tengen.ms_pacman.GlobalProperties.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.games.pacman.ui.GlobalProperties.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui.GlobalProperties.PY_IMMUNITY;
 import static de.amr.games.pacman.ui.input.Keyboard.*;
@@ -253,20 +254,20 @@ public class GamePage extends StackPane implements GameActionProvider {
             // Switching scene display mode
             var miScaledToFit = new RadioMenuItem(context.locText("scaled_to_fit"));
             miScaledToFit.selectedProperty().addListener(
-                (py,ov,nv) -> PacManGames2dApp.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCALED_TO_FIT:SceneDisplayMode.SCROLLING));
-            PacManGames2dApp.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, nv) -> miScaledToFit.setSelected(nv == SceneDisplayMode.SCALED_TO_FIT));
+                (py,ov,nv) -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCALED_TO_FIT:SceneDisplayMode.SCROLLING));
+            PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, nv) -> miScaledToFit.setSelected(nv == SceneDisplayMode.SCALED_TO_FIT));
             contextMenu.getItems().add(miScaledToFit);
 
             var miScrolling = new RadioMenuItem(context.locText("scrolling"));
             miScrolling.selectedProperty().addListener(
-                (py,ov,nv) -> PacManGames2dApp.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCROLLING:SceneDisplayMode.SCALED_TO_FIT));
-            PacManGames2dApp.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, nv) -> miScrolling.setSelected(nv == SceneDisplayMode.SCROLLING));
+                (py,ov,nv) -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCROLLING:SceneDisplayMode.SCALED_TO_FIT));
+            PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, nv) -> miScrolling.setSelected(nv == SceneDisplayMode.SCROLLING));
             contextMenu.getItems().add(miScrolling);
 
             ToggleGroup exclusion = new ToggleGroup();
             miScaledToFit.setToggleGroup(exclusion);
             miScrolling.setToggleGroup(exclusion);
-            if (PacManGames2dApp.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get() == SceneDisplayMode.SCALED_TO_FIT) {
+            if (PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get() == SceneDisplayMode.SCALED_TO_FIT) {
                 miScaledToFit.setSelected(true);
             } else {
                 miScrolling.setSelected(true);

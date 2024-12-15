@@ -12,10 +12,9 @@ import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
+import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSceneConfig;
 import de.amr.games.pacman.ui.lib.NightMode;
 import de.amr.games.pacman.arcade.ms_pacman.MsPacManGameSceneConfig;
-import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenSceneConfig;
-import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.SceneDisplayMode;
 import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXLSceneConfig;
 import javafx.application.Application;
 import javafx.beans.property.*;
@@ -47,9 +46,6 @@ public class PacManGames2dApp extends Application {
     public static final BooleanProperty PY_PIP_ON                     = new SimpleBooleanProperty(false);
     public static final IntegerProperty PY_PIP_OPACITY_PERCENT        = new SimpleIntegerProperty(100);
     public static final IntegerProperty PY_SIMULATION_STEPS           = new SimpleIntegerProperty(1);
-
-    public static final BooleanProperty PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED = new SimpleBooleanProperty(false);
-    public static final ObjectProperty<SceneDisplayMode> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
 
     private static Dimension2D initialSize() {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();

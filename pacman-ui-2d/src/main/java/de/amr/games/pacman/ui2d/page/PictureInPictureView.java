@@ -8,10 +8,10 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenRenderer;
+import de.amr.games.pacman.tengen.ms_pacman.PlayScene2D;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.scene.GameScene2D;
-import de.amr.games.pacman.ui.scene.PlayScene2D;
-import de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.MsPacManGameTengenRenderer;
 import de.amr.games.pacman.ui.lib.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
@@ -32,7 +32,7 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
  */
 public class PictureInPictureView extends VBox implements GameEventListener {
 
-    private static class TengenPlayScene extends de.amr.games.pacman.ui2d.scene.ms_pacman_tengen.PlayScene2D {
+    private static class TengenPlayScene extends PlayScene2D {
 
         private final Canvas canvas;
 
