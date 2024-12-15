@@ -4,14 +4,19 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
+import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacManStartPage;
+import de.amr.games.pacman.arcade.pacman.ArcadePacManStartPage;
+import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXLStartPage;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacManStartPage;
 import de.amr.games.pacman.ui.*;
 import de.amr.games.pacman.ui.action.GameAction;
 import de.amr.games.pacman.ui.action.GameActionProvider;
 import de.amr.games.pacman.ui.action.GameActions2D;
 import de.amr.games.pacman.ui.lib.Carousel;
+import de.amr.games.pacman.ui.lib.Flyer;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -23,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui.GameContext.PFX_PACMAN;
+import static de.amr.games.pacman.ui.GameContext.*;
 import static de.amr.games.pacman.ui.input.Keyboard.naked;
 
 /**
@@ -64,44 +69,24 @@ public class StartPage extends StackPane implements GameActionProvider {
         carousel.selectButtonTextProperty().set(context.locText("play_button"));
 
         {
-            var pacManFlyer = new Flyer(
-                context.assets().image(PFX_PACMAN + ".startpage.image1"),
-                context.assets().image(PFX_PACMAN + ".startpage.image2"),
-                context.assets().image(PFX_PACMAN + ".startpage.image3")
-            );
-            pacManFlyer.setUserData(GameVariant.PACMAN);
-            pacManFlyer.selectFlyerPage(0);
-            carousel.addSlide(pacManFlyer);
+            var pacManStartPage = new ArcadePacManStartPage();
+            carousel.addSlide(pacManStartPage.root());
         }
 
         {
-            var msPacManFlyer = new Flyer(
-                context.assets().image(PacManGamesUI.PFX_MS_PACMAN + ".startpage.image1"),
-                context.assets().image(PacManGamesUI.PFX_MS_PACMAN + ".startpage.image2")
-            );
-            msPacManFlyer.setUserData(GameVariant.MS_PACMAN);
-            msPacManFlyer.selectFlyerPage(0);
-            carousel.addSlide(msPacManFlyer);
+            var msPacManStartPage = new ArcadeMsPacManStartPage();
+            carousel.addSlide(msPacManStartPage.root());
         }
 
         {
-            var pacManXXLFlyer = new Flyer(context.assets().image(PacManGamesUI.PFX_PACMAN_XXL + ".startpage.image1"));
-            pacManXXLFlyer.setLayoutMode(0, Flyer.LayoutMode.FILL);
-            pacManXXLFlyer.setUserData(GameVariant.PACMAN_XXL);
-            pacManXXLFlyer.selectFlyerPage(0);
-            carousel.addSlide(pacManXXLFlyer);
+            var pacManXXLStartPage = new ArcadePacManXXLStartPage();
+            carousel.addSlide(pacManXXLStartPage.root());
         }
 
         {
-            var msPacManTengenFlyer = new Flyer(
-                context.assets().image(PacManGamesUI.PFX_MS_PACMAN_TENGEN + ".startpage.image1"),
-                context.assets().image(PacManGamesUI.PFX_MS_PACMAN_TENGEN + ".startpage.image2")
-            );
-            msPacManTengenFlyer.setUserData(GameVariant.MS_PACMAN_TENGEN);
-            msPacManTengenFlyer.selectFlyerPage(0);
-            carousel.addSlide(msPacManTengenFlyer);
+            var msPacManTengenStartPage = new TengenMsPacManStartPage();
+            carousel.addSlide(msPacManTengenStartPage.root());
         }
-
 
         carousel.setOnPrevSlideSelected(() -> {
             var variant = (GameVariant) carousel.currentSlide().getUserData();
