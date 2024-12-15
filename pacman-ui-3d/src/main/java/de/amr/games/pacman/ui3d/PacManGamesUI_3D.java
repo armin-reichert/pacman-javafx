@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.lib.arcade.Arcade;
-import de.amr.games.pacman.ui.*;
+import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.assets.ResourceManager;
 import de.amr.games.pacman.ui.lib.Picker;
 import de.amr.games.pacman.ui.lib.Ufx;
@@ -156,10 +156,9 @@ public class PacManGamesUI_3D extends PacManGamesUI {
     }
 
     @Override
-    protected GamePage3D createGamePage(Scene parentScene) {
-        var gamePage = new GamePage3D(this, parentScene);
+    protected void createGamePage(Scene parentScene) {
+        gamePage = new GamePage3D(this, parentScene);
         gamePage.gameScenePy.bind(gameScenePy);
-        return gamePage;
     }
 
     @Override

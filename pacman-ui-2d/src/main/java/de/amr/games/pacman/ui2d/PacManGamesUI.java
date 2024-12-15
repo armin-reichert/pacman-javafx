@@ -183,6 +183,25 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         Scene mainScene = createMainScene(initialSize);
         stage.setScene(mainScene);
 
+        createStartPage();
+        createGamePage(mainScene);
+
+        clock.setPauseableCallback(this::runIfNotPausedOnEveryTick);
+        clock.setPermanentCallback(this::runOnEveryTick);
+
+        // init game variant property
+        gameVariantPy.set(gameVariant());
+
+        //TODO This doesn't fit for NES aspect ratio
+        stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
+        stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
+        stage.titleProperty().bind(stageTitleBinding());
+        stage.centerOnScreen();
+        stage.setOnShowing(e-> selectStartPage());
+        stage.show();
+    }
+
+    private void createStartPage() {
         startPage = new StartPage(this);
         startPage.gameVariantPy.bind(gameVariantPy);
         Stream.of(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN_TENGEN)
@@ -202,22 +221,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         if (startPage.carousel().numSlides() > 0){
             startPage.carousel().selectedIndexProperty().set(0);
         }
-
-        gamePage = createGamePage(mainScene);
-
-        clock.setPauseableCallback(this::runIfNotPausedOnEveryTick);
-        clock.setPermanentCallback(this::runOnEveryTick);
-
-        // init game variant property
-        gameVariantPy.set(gameVariant());
-
-        //TODO This doesn't fit for NES aspect ratio
-        stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
-        stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
-        stage.titleProperty().bind(stageTitleBinding());
-        stage.centerOnScreen();
-        stage.setOnShowing(e-> selectStartPage());
-        stage.show();
     }
 
     private void addMyselfAsGameListener(GameModel game) {
@@ -307,10 +310,9 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         gamePage.setSize(mainScene.getWidth(), mainScene.getHeight());
     }
 
-    protected GamePage createGamePage(Scene parentScene) {
-        var gamePage = new GamePage(this, parentScene);
+    protected void createGamePage(Scene parentScene) {
+        gamePage = new GamePage(this, parentScene);
         gamePage.gameScenePy.bind(gameScenePy);
-        return gamePage;
     }
 
     protected void handleGameVariantChange(GameVariant variant) {
