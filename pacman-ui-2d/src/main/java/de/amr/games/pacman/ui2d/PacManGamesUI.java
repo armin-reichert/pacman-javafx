@@ -4,12 +4,16 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d;
 
+import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacManStartPage;
+import de.amr.games.pacman.arcade.pacman.ArcadePacManStartPage;
+import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXLStartPage;
 import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacManStartPage;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GlobalProperties;
 import de.amr.games.pacman.ui.action.GameActionProvider;
@@ -59,6 +63,7 @@ import org.tinylog.Logger;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -180,6 +185,23 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
         startPage = new StartPage(this);
         startPage.gameVariantPy.bind(gameVariantPy);
+        Stream.of(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN_TENGEN)
+            .filter(variant -> gameController().gameModel(variant) != null)
+            .forEach(variant -> {
+                Node gameStartPage = switch (variant) {
+                    case PACMAN -> new ArcadePacManStartPage().root();
+                    case MS_PACMAN -> new ArcadeMsPacManStartPage().root();
+                    case PACMAN_XXL -> new ArcadePacManXXLStartPage().root();
+                    case MS_PACMAN_TENGEN -> new TengenMsPacManStartPage().root();
+                };
+                startPage.carousel().addSlide(gameStartPage);
+            });
+        if (startPage.carousel().numSlides() < 2) {
+            startPage.carousel().setNavigationVisible(false);
+        }
+        if (startPage.carousel().numSlides() > 0){
+            startPage.carousel().selectedIndexProperty().set(0);
+        }
 
         gamePage = createGamePage(mainScene);
 

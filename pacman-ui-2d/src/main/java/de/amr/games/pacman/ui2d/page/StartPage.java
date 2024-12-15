@@ -4,13 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
-import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacManStartPage;
-import de.amr.games.pacman.arcade.pacman.ArcadePacManStartPage;
-import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXLStartPage;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacManStartPage;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.action.GameAction;
 import de.amr.games.pacman.ui.action.GameActionProvider;
@@ -65,11 +61,6 @@ public class StartPage extends StackPane implements GameActionProvider {
 
         carousel = new Carousel(context.assets());
         carousel.selectButtonTextProperty().set(context.locText("play_button"));
-        carousel.addSlide(new ArcadePacManStartPage().root());
-        carousel.addSlide(new ArcadeMsPacManStartPage().root());
-        carousel.addSlide(new ArcadePacManXXLStartPage().root());
-        carousel.addSlide(new TengenMsPacManStartPage().root());
-
         carousel.setOnPrevSlideSelected(() -> {
             var variant = (GameVariant) carousel.currentSlide().getUserData();
             context.selectGameVariant(variant);
@@ -79,10 +70,13 @@ public class StartPage extends StackPane implements GameActionProvider {
             context.selectGameVariant(variant);
         });
         carousel.setOnSelect(context::selectGamePage);
-        carousel.selectedIndexProperty().set(0);
 
         getChildren().add(carousel);
         bindGameActions();
+    }
+
+    public Carousel carousel() {
+        return carousel;
     }
 
     private Flyer currentFlyer() {

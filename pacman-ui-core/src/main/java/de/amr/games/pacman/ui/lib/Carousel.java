@@ -85,22 +85,22 @@ public class Carousel extends StackPane {
     private Runnable onNextSlide;
 
     public Carousel(AssetStorage assets) {
-
         btnPrevSlide = createCarouselButton(assets.image("startpage.arrow.left"));
         btnPrevSlide.setOnAction(e -> prevSlide());
-
         btnNextSlide = createCarouselButton(assets.image("startpage.arrow.right"));
         btnNextSlide.setOnAction(e -> nextSlide());
-
         btnSelect = createSelectButton(assets);
         btnSelect.setTranslateY(-50);
-
         StackPane.setAlignment(btnPrevSlide, Pos.CENTER_LEFT);
         StackPane.setAlignment(btnNextSlide, Pos.CENTER_RIGHT);
         StackPane.setAlignment(btnSelect, Pos.BOTTOM_CENTER);
-
         buttonsLayer.getChildren().setAll(btnPrevSlide, btnNextSlide, btnSelect);
         getChildren().add(buttonsLayer);
+    }
+
+    public void setNavigationVisible(boolean visible) {
+        btnPrevSlide.setVisible(visible);
+        btnNextSlide.setVisible(visible);
     }
 
     public Node getBtnSelect() {
@@ -149,6 +149,10 @@ public class Carousel extends StackPane {
             onNextSlide.run();
         }
 
+    }
+
+    public int numSlides() {
+        return slides.size();
     }
 
     public void addSlide(Node slide) {
