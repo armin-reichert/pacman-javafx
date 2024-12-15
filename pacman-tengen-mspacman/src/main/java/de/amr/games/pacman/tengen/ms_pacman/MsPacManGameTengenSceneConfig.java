@@ -40,7 +40,7 @@ public class MsPacManGameTengenSceneConfig implements GameSceneConfig {
 
     public MsPacManGameTengenSceneConfig(AssetStorage assets) {
         this.assets = assets;
-        loadAssets(this::getClass);
+        loadAssets(() -> MsPacManGameTengenSceneConfig.class);
 
         spriteSheet = new MsPacManGameTengenSpriteSheet(assets.image(PFX_MS_PACMAN_TENGEN + ".spritesheet"));
         mazeRepository = new MazeRepository(

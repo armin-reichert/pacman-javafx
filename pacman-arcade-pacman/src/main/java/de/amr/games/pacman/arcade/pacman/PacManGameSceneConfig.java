@@ -36,7 +36,7 @@ public class PacManGameSceneConfig implements GameSceneConfig {
 
     public PacManGameSceneConfig(AssetStorage assets) {
         this.assets = checkNotNull(assets);
-        loadAssets(() -> Resources.class); //TODO fixme
+        loadAssets(() -> Resources.class);
 
         spriteSheet = new PacManGameSpriteSheet(assets.get(PFX_PACMAN + ".spritesheet"));
 

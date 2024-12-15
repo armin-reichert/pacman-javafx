@@ -33,7 +33,7 @@ public class MsPacManGameSceneConfig implements GameSceneConfig {
 
     public MsPacManGameSceneConfig(AssetStorage assets) {
         this.assets = checkNotNull(assets);
-        loadAssets(this::getClass); //TODO fixme
+        loadAssets(() -> MsPacManGameSceneConfig.class);
         spriteSheet = new MsPacManGameSpriteSheet(assets.get(GameContext.PFX_MS_PACMAN + ".spritesheet"));
 
         set("BootScene",   new BootScene());
