@@ -2,19 +2,19 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui3d.scene.tengen;
+package de.amr.games.pacman.ui3d.scene.pacman;
 
-import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSceneConfig;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.scene.GameScene;
+import de.amr.games.pacman.arcade.pacman.PacManGameConfiguration;
 import de.amr.games.pacman.ui.assets.AssetStorage;
 import de.amr.games.pacman.ui3d.scene.common.PlayScene3D;
 
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
 
-public class MsPacManGameTengenSceneConfig3D extends MsPacManGameTengenSceneConfig {
+public class PacManGameConfiguration3D extends PacManGameConfiguration {
 
-    public MsPacManGameTengenSceneConfig3D(AssetStorage assets) {
+    public PacManGameConfiguration3D(AssetStorage assets) {
         super(assets);
         set("PlayScene3D", new PlayScene3D());
     }

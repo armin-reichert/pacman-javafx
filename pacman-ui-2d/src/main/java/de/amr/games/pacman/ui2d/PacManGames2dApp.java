@@ -6,16 +6,16 @@ package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.arcade.ms_pacman.MsPacManGame;
 import de.amr.games.pacman.arcade.pacman.PacManGame;
-import de.amr.games.pacman.arcade.pacman.PacManGameSceneConfig;
+import de.amr.games.pacman.arcade.pacman.PacManGameConfiguration;
 import de.amr.games.pacman.arcade.pacman_xxl.MapSelectionMode;
 import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
-import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSceneConfig;
+import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration;
 import de.amr.games.pacman.ui.lib.NightMode;
-import de.amr.games.pacman.arcade.ms_pacman.MsPacManGameSceneConfig;
-import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXLSceneConfig;
+import de.amr.games.pacman.arcade.ms_pacman.MsPacManGameConfiguration;
+import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXLConfiguration;
 import javafx.application.Application;
 import javafx.beans.property.*;
 import javafx.geometry.Dimension2D;
@@ -73,10 +73,10 @@ public class PacManGames2dApp extends Application {
     public void start(Stage stage) {
         ui = new PacManGamesUI();
         ui.loadAssets();
-        ui.setGameSceneConfig(GameVariant.MS_PACMAN, new MsPacManGameSceneConfig(ui.assets));
-        ui.setGameSceneConfig(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenSceneConfig(ui.assets));
-        ui.setGameSceneConfig(GameVariant.PACMAN, new PacManGameSceneConfig(ui.assets));
-        ui.setGameSceneConfig(GameVariant.PACMAN_XXL, new PacManGameXXLSceneConfig(ui.assets));
+        ui.setGameConfiguration(GameVariant.MS_PACMAN, new MsPacManGameConfiguration(ui.assets));
+        ui.setGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration(ui.assets));
+        ui.setGameConfiguration(GameVariant.PACMAN, new PacManGameConfiguration(ui.assets));
+        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration(ui.assets));
         ui.createAndStart(stage, initialSize());
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         Logger.info("Assets loaded: {}", ui.assets().summary(

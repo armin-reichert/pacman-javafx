@@ -2,19 +2,19 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui3d.scene.pacman_xxl;
+package de.amr.games.pacman.ui3d.scene.ms_pacman;
 
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.scene.GameScene;
-import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXLSceneConfig;
+import de.amr.games.pacman.arcade.ms_pacman.MsPacManGameConfiguration;
 import de.amr.games.pacman.ui.assets.AssetStorage;
 import de.amr.games.pacman.ui3d.scene.common.PlayScene3D;
 
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
 
-public class PacManGameXXLSceneConfig3D extends PacManGameXXLSceneConfig {
+public class MsPacManGameConfiguration3D extends MsPacManGameConfiguration {
 
-    public PacManGameXXLSceneConfig3D(AssetStorage assets) {
+    public MsPacManGameConfiguration3D(AssetStorage assets) {
         super(assets);
         set("PlayScene3D", new PlayScene3D());
     }

@@ -11,8 +11,8 @@ import de.amr.games.pacman.ui.scene.GameScene2D;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSceneConfig.NES_SIZE;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSceneConfig.nesPaletteColor;
+import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_SIZE;
+import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.nesPaletteColor;
 
 public class CreditsScene extends GameScene2D {
 

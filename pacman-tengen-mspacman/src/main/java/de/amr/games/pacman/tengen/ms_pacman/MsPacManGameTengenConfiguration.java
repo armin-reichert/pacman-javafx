@@ -15,7 +15,7 @@ import de.amr.games.pacman.ui.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui.assets.ResourceManager;
 import de.amr.games.pacman.ui.assets.WorldMapColoring;
 import de.amr.games.pacman.ui.scene.GameScene;
-import de.amr.games.pacman.ui.scene.GameSceneConfig;
+import de.amr.games.pacman.ui.scene.GameConfiguration;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -28,7 +28,7 @@ import static de.amr.games.pacman.tengen.ms_pacman.GlobalProperties.PY_TENGEN_PL
 import static de.amr.games.pacman.ui.GameContext.PFX_MS_PACMAN_TENGEN;
 import static de.amr.games.pacman.ui.lib.Ufx.coloredBackground;
 
-public class MsPacManGameTengenSceneConfig implements GameSceneConfig {
+public class MsPacManGameTengenConfiguration implements GameConfiguration {
 
     public static final Vector2i NES_TILES = new Vector2i(32, 30);
     public static final Vector2i NES_SIZE = NES_TILES.scaled(TS);
@@ -38,9 +38,9 @@ public class MsPacManGameTengenSceneConfig implements GameSceneConfig {
     private final MazeRepository mazeRepository;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public MsPacManGameTengenSceneConfig(AssetStorage assets) {
+    public MsPacManGameTengenConfiguration(AssetStorage assets) {
         this.assets = assets;
-        loadAssets(() -> MsPacManGameTengenSceneConfig.class);
+        loadAssets(() -> MsPacManGameTengenConfiguration.class);
 
         spriteSheet = new MsPacManGameTengenSpriteSheet(assets.image(PFX_MS_PACMAN_TENGEN + ".spritesheet"));
         mazeRepository = new MazeRepository(

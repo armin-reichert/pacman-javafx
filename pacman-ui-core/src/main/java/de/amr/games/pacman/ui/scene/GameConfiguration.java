@@ -14,7 +14,7 @@ import javafx.scene.canvas.Canvas;
 
 import java.util.stream.Stream;
 
-public interface GameSceneConfig {
+public interface GameConfiguration {
     void set(String id, GameScene gameScene);
     GameScene get(String id);
     default void initGameScenes(GameContext context) {

@@ -13,7 +13,7 @@ import de.amr.games.pacman.ui.assets.ResourceManager;
 import de.amr.games.pacman.ui.assets.WorldMapColoring;
 import de.amr.games.pacman.ui.scene.BootScene;
 import de.amr.games.pacman.ui.scene.GameScene;
-import de.amr.games.pacman.ui.scene.GameSceneConfig;
+import de.amr.games.pacman.ui.scene.GameConfiguration;
 import de.amr.games.pacman.ui.scene.PlayScene2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -25,15 +25,15 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.lib.Ufx.imageBackground;
 
-public class MsPacManGameSceneConfig implements GameSceneConfig {
+public class MsPacManGameConfiguration implements GameConfiguration {
 
     private final AssetStorage assets;
     private final MsPacManGameSpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public MsPacManGameSceneConfig(AssetStorage assets) {
+    public MsPacManGameConfiguration(AssetStorage assets) {
         this.assets = checkNotNull(assets);
-        loadAssets(() -> MsPacManGameSceneConfig.class);
+        loadAssets(() -> MsPacManGameConfiguration.class);
         spriteSheet = new MsPacManGameSpriteSheet(assets.get(GameContext.PFX_MS_PACMAN + ".spritesheet"));
 
         set("BootScene",   new BootScene());

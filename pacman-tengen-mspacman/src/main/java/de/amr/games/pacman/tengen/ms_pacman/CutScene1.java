@@ -18,8 +18,8 @@ import javafx.scene.paint.Color;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.actors.Animations.ANIM_GHOST_NORMAL;
 import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSceneConfig.NES_SIZE;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSceneConfig.NES_TILES;
+import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_SIZE;
+import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_TILES;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSpriteSheet.HEART_SPRITE;
 import static de.amr.games.pacman.ui.GameContext.PFX_MS_PACMAN_TENGEN;
 

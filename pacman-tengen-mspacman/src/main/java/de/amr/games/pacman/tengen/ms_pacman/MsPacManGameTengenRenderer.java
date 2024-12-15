@@ -34,7 +34,7 @@ import static de.amr.games.pacman.model.actors.Animations.*;
 import static de.amr.games.pacman.model.actors.Bonus.STATE_EATEN;
 import static de.amr.games.pacman.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.games.pacman.tengen.ms_pacman.MazeRepository.strangeMap15Sprite;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSceneConfig.nesPaletteColor;
+import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.nesPaletteColor;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSpriteSheet.*;
 import static de.amr.games.pacman.ui.GameContext.PFX_MS_PACMAN_TENGEN;
 import static de.amr.games.pacman.ui.assets.GameSpriteSheet.NO_SPRITE;

@@ -10,7 +10,8 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.*;
+import de.amr.games.pacman.ui.GameContext;
+import de.amr.games.pacman.ui.GlobalProperties;
 import de.amr.games.pacman.ui.action.GameActionProvider;
 import de.amr.games.pacman.ui.action.GameActions2D;
 import de.amr.games.pacman.ui.assets.AssetStorage;
@@ -20,12 +21,12 @@ import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadBindings;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui.input.Keyboard;
+import de.amr.games.pacman.ui.lib.FlashMessageView;
 import de.amr.games.pacman.ui.lib.GameClockFX;
 import de.amr.games.pacman.ui.lib.Picker;
-import de.amr.games.pacman.ui.lib.FlashMessageView;
+import de.amr.games.pacman.ui.scene.GameConfiguration;
 import de.amr.games.pacman.ui.scene.GameScene;
 import de.amr.games.pacman.ui.scene.GameScene2D;
-import de.amr.games.pacman.ui.scene.GameSceneConfig;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import de.amr.games.pacman.ui2d.page.DashboardLayer;
 import de.amr.games.pacman.ui2d.page.EditorPage;
@@ -104,7 +105,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     protected ObjectProperty<Node> pagePy = new SimpleObjectProperty<>();
 
-    protected final Map<GameVariant, GameSceneConfig> gameSceneConfigByVariant = new EnumMap<>(GameVariant.class);
+    protected final Map<GameVariant, GameConfiguration> gameConfigByVariant = new EnumMap<>(GameVariant.class);
 
     protected final FlashMessageView flashMessageLayer = new FlashMessageView();
     protected final StackPane sceneRoot = new StackPane();
@@ -150,11 +151,10 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         pickerLevelComplete = Picker.fromBundle(assets.bundles().getFirst(), "level.complete");
     }
 
-    public void setGameSceneConfig(GameVariant variant, GameSceneConfig gameSceneConfig) {
-        gameSceneConfigByVariant.put(variant, gameSceneConfig);
-        gameSceneConfig.initGameScenes(this);
-        //TODO check this
-        gameSceneConfig.gameScenes().forEach(gameScene -> {
+    public void setGameConfiguration(GameVariant variant, GameConfiguration gameConfiguration) {
+        gameConfigByVariant.put(variant, gameConfiguration);
+        gameConfiguration.initGameScenes(this);
+        gameConfiguration.gameScenes().forEach(gameScene -> {
             if (gameScene instanceof GameScene2D gameScene2D) {
                 gameScene2D.debugInfoVisibleProperty().bind(PY_DEBUG_INFO_VISIBLE);
             }
@@ -456,8 +456,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public GameSceneConfig gameSceneConfig(GameVariant variant) {
-        return gameSceneConfigByVariant.get(variant);
+    public GameConfiguration gameSceneConfig(GameVariant variant) {
+        return gameConfigByVariant.get(variant);
     }
 
     @Override

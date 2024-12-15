@@ -12,10 +12,10 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import de.amr.games.pacman.ui3d.scene.common.Perspective;
-import de.amr.games.pacman.ui3d.scene.ms_pacman.MsPacManGameSceneConfig3D;
-import de.amr.games.pacman.ui3d.scene.pacman.PacManGameSceneConfig3D;
-import de.amr.games.pacman.ui3d.scene.pacman_xxl.PacManGameXXLSceneConfig3D;
-import de.amr.games.pacman.ui3d.scene.tengen.MsPacManGameTengenSceneConfig3D;
+import de.amr.games.pacman.ui3d.scene.ms_pacman.MsPacManGameConfiguration3D;
+import de.amr.games.pacman.ui3d.scene.pacman.PacManGameConfiguration3D;
+import de.amr.games.pacman.ui3d.scene.pacman_xxl.PacManGameXXLConfiguration3D;
+import de.amr.games.pacman.ui3d.scene.tengen.MsPacManGameTengenConfiguration3D;
 import javafx.application.Application;
 import javafx.beans.property.*;
 import javafx.geometry.Dimension2D;
@@ -77,10 +77,10 @@ public class PacManGames3dApp extends Application {
     public void start(Stage stage) {
         ui = new PacManGamesUI_3D();
         ui.loadAssets();
-        ui.setGameSceneConfig(GameVariant.MS_PACMAN, new MsPacManGameSceneConfig3D(ui.assets()));
-        ui.setGameSceneConfig(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenSceneConfig3D(ui.assets()));
-        ui.setGameSceneConfig(GameVariant.PACMAN, new PacManGameSceneConfig3D(ui.assets()));
-        ui.setGameSceneConfig(GameVariant.PACMAN_XXL, new PacManGameXXLSceneConfig3D(ui.assets()));
+        ui.setGameConfiguration(GameVariant.MS_PACMAN, new MsPacManGameConfiguration3D(ui.assets()));
+        ui.setGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration3D(ui.assets()));
+        ui.setGameConfiguration(GameVariant.PACMAN, new PacManGameConfiguration3D(ui.assets()));
+        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration3D(ui.assets()));
         ui.createAndStart(stage, initialSize());
 
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));

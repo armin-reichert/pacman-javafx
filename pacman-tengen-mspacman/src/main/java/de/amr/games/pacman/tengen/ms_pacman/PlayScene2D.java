@@ -46,7 +46,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenActions.QUIT_DEMO_LEVEL;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenActions.setDefaultJoypadBinding;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSceneConfig.*;
+import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.*;
 import static de.amr.games.pacman.ui.GlobalProperties.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui.GlobalProperties.PY_IMMUNITY;
 import static de.amr.games.pacman.ui.action.GameActions2D.bindCheatActions;

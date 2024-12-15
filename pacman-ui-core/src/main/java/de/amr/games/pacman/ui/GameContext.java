@@ -19,7 +19,7 @@ import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui.input.Keyboard;
 import de.amr.games.pacman.ui.lib.GameClockFX;
 import de.amr.games.pacman.ui.scene.GameScene;
-import de.amr.games.pacman.ui.scene.GameSceneConfig;
+import de.amr.games.pacman.ui.scene.GameConfiguration;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -115,8 +115,8 @@ public interface GameContext {
     }
 
     // Game scenes
-    GameSceneConfig gameSceneConfig(GameVariant variant);
-    default GameSceneConfig currentGameSceneConfig() { return gameSceneConfig(gameVariant()); }
+    GameConfiguration gameSceneConfig(GameVariant variant);
+    default GameConfiguration currentGameSceneConfig() { return gameSceneConfig(gameVariant()); }
     boolean currentGameSceneHasID(String gameSceneID);
     ObjectProperty<GameScene> gameSceneProperty();
     Optional<GameScene> currentGameScene();

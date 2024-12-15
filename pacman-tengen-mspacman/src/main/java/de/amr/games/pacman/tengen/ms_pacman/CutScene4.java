@@ -16,8 +16,8 @@ import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.actors.Animations.*;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSceneConfig.NES_SIZE;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSceneConfig.NES_TILES;
+import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_SIZE;
+import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_TILES;
 import static de.amr.games.pacman.ui.GameContext.PFX_MS_PACMAN_TENGEN;
 
 public class CutScene4 extends GameScene2D {
