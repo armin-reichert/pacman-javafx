@@ -4,16 +4,16 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.variants;
 
-import de.amr.games.pacman.arcade.ms_pacman.MsPacManGameConfiguration;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.scene.GameScene;
+import de.amr.games.pacman.arcade.pacman.PacManGameConfiguration;
 import de.amr.games.pacman.ui3d.scene3d.PlayScene3D;
 
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
 
-public class MsPacManGameConfiguration3D extends MsPacManGameConfiguration {
+public class PacManGameConfiguration_3D extends PacManGameConfiguration {
 
-    public MsPacManGameConfiguration3D() {
+    public PacManGameConfiguration_3D() {
         set("PlayScene3D", new PlayScene3D());
     }
 

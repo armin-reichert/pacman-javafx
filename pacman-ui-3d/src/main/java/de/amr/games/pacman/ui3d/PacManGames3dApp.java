@@ -12,10 +12,10 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import de.amr.games.pacman.ui3d.scene3d.Perspective;
-import de.amr.games.pacman.ui3d.variants.MsPacManGameConfiguration3D;
-import de.amr.games.pacman.ui3d.variants.MsPacManGameTengenConfiguration3D;
-import de.amr.games.pacman.ui3d.variants.PacManGameConfiguration3D;
-import de.amr.games.pacman.ui3d.variants.PacManGameXXLConfiguration3D;
+import de.amr.games.pacman.ui3d.variants.MsPacManGameConfiguration_3D;
+import de.amr.games.pacman.ui3d.variants.MsPacManGameTengenConfiguration_3D;
+import de.amr.games.pacman.ui3d.variants.PacManGameConfiguration_3D;
+import de.amr.games.pacman.ui3d.variants.PacManGameXXLConfiguration_3D;
 import javafx.application.Application;
 import javafx.beans.property.*;
 import javafx.geometry.Dimension2D;
@@ -77,10 +77,10 @@ public class PacManGames3dApp extends Application {
     public void start(Stage stage) {
         ui = new PacManGamesUI_3D();
         ui.loadAssets();
-        ui.setGameConfiguration(GameVariant.MS_PACMAN, new MsPacManGameConfiguration3D());
-        ui.setGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration3D());
-        ui.setGameConfiguration(GameVariant.PACMAN, new PacManGameConfiguration3D());
-        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration3D());
+        ui.setGameConfiguration(GameVariant.MS_PACMAN, new MsPacManGameConfiguration_3D());
+        ui.setGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration_3D());
+        ui.setGameConfiguration(GameVariant.PACMAN, new PacManGameConfiguration_3D());
+        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration_3D());
         for (GameVariant variant : GameVariant.values()) {
             ui.assets().addAll(ui.gameConfiguration(variant).assets());
         }
