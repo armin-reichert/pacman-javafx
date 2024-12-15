@@ -1,0 +1,29 @@
+plugins {
+    id("java")
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':pacman-lib')
+    implementation project(':pacman-core')
+    implementation project(':pacman-ui-core')
+    implementation project(':pacman-arcade-pacman')
+    implementation project(':pacman-mapeditor')
+    implementation libs.tinylog_api
+    implementation libs.tinylog_impl
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+javafx {
+    version = versions.javafx
+    modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.media']
+}

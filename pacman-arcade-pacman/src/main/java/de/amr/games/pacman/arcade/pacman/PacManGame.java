@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman;
 
+import de.amr.games.pacman.arcade.Resources;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEventType;
@@ -131,7 +132,7 @@ public class PacManGame extends GameModel {
         scoreManager.setExtraLifeScores(10_000);
 
         String path = "/de/amr/games/pacman/maps/pacman.world";
-        URL url = getClass().getResource(path);
+        URL url = Resources.class.getResource(path);
         if (url == null) {
             throw new MissingResourceException("Map not found", getClass().getName(), path);
         }

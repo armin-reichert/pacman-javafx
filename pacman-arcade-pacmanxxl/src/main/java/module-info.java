@@ -1,4 +1,4 @@
-open module de.amr.games.pacman.arcade.pacman {
+open module de.amr.games.pacman.arcade.pacman_xxl {
     requires de.amr.games.pacman;
     requires de.amr.games.pacman.lib;
     requires org.tinylog.api;
@@ -8,7 +8,7 @@ open module de.amr.games.pacman.arcade.pacman {
     requires javafx.media;
     requires de.amr.games.pacman.ui;
     requires de.amr.games.pacman.mapeditor;
+    requires de.amr.games.pacman.arcade.pacman;
 
-    exports de.amr.games.pacman.arcade.pacman;
-    exports de.amr.games.pacman.arcade;
+    exports de.amr.games.pacman.arcade.pacman_xxl;
 }

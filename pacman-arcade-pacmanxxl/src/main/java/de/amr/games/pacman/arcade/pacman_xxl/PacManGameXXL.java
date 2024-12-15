@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
+import de.amr.games.pacman.arcade.Resources;
 import de.amr.games.pacman.arcade.pacman.PacManGame;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
@@ -53,7 +54,7 @@ public class PacManGameXXL extends PacManGame {
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman_xxl.xml"));
         mapSelectionMode = MapSelectionMode.NO_CUSTOM_MAPS;
         for (int num = 1; num <= MAP_COUNT; ++num) {
-            URL url = getClass().getResource(MAP_PATTERN.formatted(num));
+            URL url = Resources.class.getResource(MAP_PATTERN.formatted(num));
             try {
                 WorldMap worldMap = new WorldMap(url);
                 standardMaps.add(worldMap);
@@ -90,7 +91,7 @@ public class PacManGameXXL extends PacManGame {
         levelCounterEnabled = true;
         WorldMap worldMap = createMapConfig(level.number);
         level.setNumFlashes(levelData(level.number).numFlashes());
-        level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
+        level.setIntermissionNumber(PacManGame.intermissionNumberAfterLevel(level.number));
         populateLevel(worldMap);
         level.pac().setAutopilot(autopilot);
         setCruiseElroy(0);
@@ -146,14 +147,14 @@ public class PacManGameXXL extends PacManGame {
     public void activateNextBonus() {
         level.advanceNextBonus();
         byte symbol = level.bonusSymbol(level.nextBonusIndex());
-        StaticBonus staticBonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
+        StaticBonus staticBonus = new StaticBonus(symbol, PacManGame.BONUS_VALUE_FACTORS[symbol] * 100);
         level.setBonus(staticBonus);
         // in a non-Arcade style custom map, the bonus position must be taken from the terrain map
         if (level.world().map().terrain().hasProperty(GameWorld.PROPERTY_POS_BONUS)) {
             Vector2i bonusTile = level.world().map().terrain().getTileProperty(GameWorld.PROPERTY_POS_BONUS, new Vector2i(13, 20));
             staticBonus.entity().setPosition(halfTileRightOf(bonusTile));
         } else {
-            staticBonus.entity().setPosition(BONUS_POS);
+            staticBonus.entity().setPosition(PacManGame.BONUS_POS);
         }
         staticBonus.setEdible(bonusEdibleTicks());
         publishGameEvent(GameEventType.BONUS_ACTIVATED, staticBonus.entity().tile());

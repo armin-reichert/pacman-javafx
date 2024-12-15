@@ -19,13 +19,17 @@ public class ArcadePacManXXLApp extends Application {
     private PacManGamesUI ui;
 
     @Override
-    public void init() throws Exception {
-        File userDir = new File(System.getProperty("user.home"), ".pacmanfx");
-        if (userDir.mkdir()) {
-            Logger.info("User dir '{}' created", userDir);
+    public void init() {
+        try {
+            File userDir = new File(System.getProperty("user.home"), ".pacmanfx");
+            if (userDir.mkdir()) {
+                Logger.info("User dir '{}' created", userDir);
+            }
+            GameController.it().addGameImplementation(GameVariant.PACMAN_XXL, new PacManGameXXL(userDir));
+            GameController.it().selectGame(GameVariant.PACMAN_XXL);
+        } catch (Exception x) {
+            x.printStackTrace(System.err);
         }
-        GameController.it().addGameImplementation(GameVariant.PACMAN_XXL, new PacManGameXXL(userDir));
-        GameController.it().selectGame(GameVariant.PACMAN_XXL);
     }
 
     @Override
