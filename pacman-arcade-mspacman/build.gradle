@@ -11,8 +11,7 @@ dependencies {
     implementation project(':pacman-lib')
     implementation project(':pacman-core')
     implementation project(':pacman-ui-core')
-    implementation libs.tinylog_api
-    implementation libs.tinylog_impl
+    implementation libs.bundles.tinylog
 }
 
 java {

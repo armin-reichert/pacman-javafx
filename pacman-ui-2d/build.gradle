@@ -24,8 +24,7 @@ dependencies {
     implementation project(':pacman-arcade-mspacman')
     implementation project(':pacman-tengen-mspacman')
     implementation project(':pacman-mapeditor')
-    implementation libs.tinylog_api
-    implementation libs.tinylog_impl
+    implementation libs.bundles.tinylog
 }
 
 javafx {

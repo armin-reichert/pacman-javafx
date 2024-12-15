@@ -8,6 +8,6 @@ include 'pacman-ui-2d'
 include 'pacman-ui-3d'
 include 'pacman-arcade-pacman'
 include 'pacman-arcade-mspacman'
-include 'pacman-tengen-mspacman'
 include 'pacman-arcade-pacmanxxl'
+include 'pacman-tengen-mspacman'
 

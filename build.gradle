@@ -1,10 +1,6 @@
 import org.gradle.internal.os.OperatingSystem
 
 buildscript {
-    ext.libs = [
-        "tinylog_api"  : "org.tinylog:tinylog-api:2.7.0",
-        "tinylog_impl" : "org.tinylog:tinylog-impl:2.7.0"
-    ]
     ext.versions = [
         "javafx": "21"
     ]
@@ -24,10 +20,6 @@ allprojects {
             options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'
         }
     }
-
-    // TODO Are Maven publishing data needed?
-    //group 'de.amr.games.pacman'
-    //version '1.0'
 }
 
 println("Operating System: name='${os.name}' version='${os.version}' arch='${arch}'")

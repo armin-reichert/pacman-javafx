@@ -10,8 +10,7 @@ repositories {
 dependencies {
     implementation project(':pacman-lib')
     implementation project(':pacman-core')
-    implementation libs.tinylog_api
-    implementation libs.tinylog_impl
+    implementation libs.bundles.tinylog
 }
 
 javafx {

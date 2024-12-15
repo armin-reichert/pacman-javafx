@@ -17,8 +17,7 @@ java {
 
 dependencies {
     implementation project(':pacman-lib')
-    implementation libs.tinylog_api
-    implementation libs.tinylog_impl
+    implementation libs.bundles.tinylog
 }
 
 javafx {
