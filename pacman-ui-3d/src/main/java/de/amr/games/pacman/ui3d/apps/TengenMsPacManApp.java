@@ -1,10 +1,12 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.ui3d.apps;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
-import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration;
-import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui3d.variants.MsPacManGameTengenConfiguration_3D;
 import javafx.application.Application;
