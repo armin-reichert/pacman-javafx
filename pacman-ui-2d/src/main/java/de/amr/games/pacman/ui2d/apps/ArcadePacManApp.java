@@ -1,9 +1,10 @@
-package de.amr.games.pacman.ui2d;
+package de.amr.games.pacman.ui2d.apps;
 
 import de.amr.games.pacman.arcade.pacman.PacManGame;
 import de.amr.games.pacman.arcade.pacman.PacManGameConfiguration;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.PacManGamesUI;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
@@ -13,7 +14,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 
-public class PacManGameApp extends Application {
+public class ArcadePacManApp extends Application {
 
     private PacManGamesUI ui;
 
@@ -33,7 +34,7 @@ public class PacManGameApp extends Application {
         ui.loadAssets();
         var config = new PacManGameConfiguration();
         ui.setGameConfiguration(GameVariant.PACMAN, config);
-        ui.assets.addAll(config.assets());
+        ui.assets().addAll(config.assets());
         ui.createAndStart(stage, initialSize());
     }
 

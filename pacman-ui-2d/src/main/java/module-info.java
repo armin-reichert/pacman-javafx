@@ -22,4 +22,5 @@ open module de.amr.games.pacman.ui2d {
     exports de.amr.games.pacman.ui2d;
     exports de.amr.games.pacman.ui2d.dashboard;
     exports de.amr.games.pacman.ui2d.page;
+    exports de.amr.games.pacman.ui2d.apps;
 }
