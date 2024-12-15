@@ -348,6 +348,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             if (nextGameScene != null) {
                 if (nextGameScene instanceof GameScene2D gameScene2D) {
                     configureGameScene2D(gameScene2D);
+                    gamePage.embedGameScene(nextGameScene);
                 }
                 nextGameScene.init();
                 if (is2D3DSwitch(prevGameScene, nextGameScene)) {
