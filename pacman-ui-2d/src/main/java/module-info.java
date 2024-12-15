@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2024 Armin Reichert (MIT License) See file LICENSE in repository root directory for details.
  */
 open module de.amr.games.pacman.ui2d {
-    // module is open to allow access to (non-class) resources
+    // module is open to allow access to (non-class) resources by 3D UI
 
     requires javafx.base;
     requires javafx.controls;
