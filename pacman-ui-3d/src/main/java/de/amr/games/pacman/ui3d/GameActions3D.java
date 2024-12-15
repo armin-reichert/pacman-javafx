@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.ui.action.GameAction;
 import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui3d.scene.common.Perspective;
+import de.amr.games.pacman.ui3d.scene3d.Perspective;
 import javafx.scene.shape.DrawMode;
 
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_PIP_ON;

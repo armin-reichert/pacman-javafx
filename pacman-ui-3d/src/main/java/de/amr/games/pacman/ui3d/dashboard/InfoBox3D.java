@@ -14,7 +14,7 @@ import de.amr.games.pacman.ui.scene.GameScene2D;
 import de.amr.games.pacman.ui.lib.NightMode;
 import de.amr.games.pacman.ui3d.GameActions3D;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
-import de.amr.games.pacman.ui3d.scene.common.Perspective;
+import de.amr.games.pacman.ui3d.scene3d.Perspective;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;

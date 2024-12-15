@@ -11,7 +11,7 @@ import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui.lib.NightMode;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
-import de.amr.games.pacman.ui3d.scene.common.Perspective;
+import de.amr.games.pacman.ui3d.scene3d.Perspective;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
