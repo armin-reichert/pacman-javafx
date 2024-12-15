@@ -20,8 +20,6 @@ import java.io.File;
 
 public class ArcadePacManXXLApp extends Application {
 
-    private PacManGamesUI ui;
-
     @Override
     public void init() {
         try {
@@ -37,12 +35,10 @@ public class ArcadePacManXXLApp extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
-        ui = new PacManGamesUI();
+    public void start(Stage stage) {
+        PacManGamesUI ui = new PacManGamesUI();
         ui.loadAssets();
-        var config = new PacManGameXXLConfiguration();
-        ui.setGameConfiguration(GameVariant.PACMAN_XXL, config);
-        ui.assets().addAll(config.assets());
+        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration());
         ui.createAndStart(stage, initialSize());
     }
 

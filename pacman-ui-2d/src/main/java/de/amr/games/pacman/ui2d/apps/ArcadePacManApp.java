@@ -20,25 +20,25 @@ import java.io.File;
 
 public class ArcadePacManApp extends Application {
 
-    private PacManGamesUI ui;
-
     @Override
-    public void init() throws Exception {
-        File userDir = new File(System.getProperty("user.home"), ".pacmanfx");
-        if (userDir.mkdir()) {
-            Logger.info("User dir '{}' created", userDir);
+    public void init() {
+        try {
+            File userDir = new File(System.getProperty("user.home"), ".pacmanfx");
+            if (userDir.mkdir()) {
+                Logger.info("User dir '{}' created", userDir);
+            }
+            GameController.it().addGameImplementation(GameVariant.PACMAN, new PacManGame(userDir));
+            GameController.it().selectGame(GameVariant.PACMAN);
+        } catch (Exception x) {
+            x.printStackTrace(System.err);
         }
-        GameController.it().addGameImplementation(GameVariant.PACMAN, new PacManGame(userDir));
-        GameController.it().selectGame(GameVariant.PACMAN);
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
-        ui = new PacManGamesUI();
+    public void start(Stage stage) {
+        PacManGamesUI ui = new PacManGamesUI();
         ui.loadAssets();
-        var config = new PacManGameConfiguration();
-        ui.setGameConfiguration(GameVariant.PACMAN, config);
-        ui.assets().addAll(config.assets());
+        ui.setGameConfiguration(GameVariant.PACMAN, new PacManGameConfiguration());
         ui.createAndStart(stage, initialSize());
     }
 

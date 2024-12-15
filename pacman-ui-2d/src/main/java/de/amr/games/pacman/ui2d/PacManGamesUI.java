@@ -158,6 +158,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     public void setGameConfiguration(GameVariant variant, GameConfiguration gameConfiguration) {
         gameConfigByVariant.put(variant, gameConfiguration);
+        assets.addAll(gameConfiguration.assets());
         gameConfiguration.initGameScenes(this);
         gameConfiguration.gameScenes().forEach(gameScene -> {
             if (gameScene instanceof GameScene2D gameScene2D) {

@@ -22,25 +22,25 @@ import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfigurati
 
 public class TengenMsPacManApp extends Application {
 
-    private PacManGamesUI_3D ui;
-
     @Override
-    public void init() throws Exception {
-        File userDir = new File(System.getProperty("user.home"), ".pacmanfx");
-        if (userDir.mkdir()) {
-            Logger.info("User dir '{}' created", userDir);
+    public void init() {
+        try {
+            File userDir = new File(System.getProperty("user.home"), ".pacmanfx");
+            if (userDir.mkdir()) {
+                Logger.info("User dir '{}' created", userDir);
+            }
+            GameController.it().addGameImplementation(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengen(userDir));
+            GameController.it().selectGame(GameVariant.MS_PACMAN_TENGEN);
+        } catch (Exception x) {
+            x.printStackTrace(System.err);
         }
-        GameController.it().addGameImplementation(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengen(userDir));
-        GameController.it().selectGame(GameVariant.MS_PACMAN_TENGEN);
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
-        ui = new PacManGamesUI_3D();
+    public void start(Stage stage) {
+        PacManGamesUI_3D ui = new PacManGamesUI_3D();
         ui.loadAssets();
-        var config = new MsPacManGameTengenConfiguration_3D();
-        ui.setGameConfiguration(GameVariant.MS_PACMAN_TENGEN, config);
-        ui.assets().addAll(config.assets());
+        ui.setGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration_3D());
         ui.createAndStart(stage, initialSize());
     }
 

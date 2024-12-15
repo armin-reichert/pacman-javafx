@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.apps;
 
 import de.amr.games.pacman.arcade.ms_pacman.MsPacManGame;
 import de.amr.games.pacman.arcade.ms_pacman.MsPacManGameConfiguration;
-import de.amr.games.pacman.arcade.pacman.PacManGame;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
@@ -21,25 +20,25 @@ import java.io.File;
 
 public class ArcadeMsPacManApp extends Application {
 
-    private PacManGamesUI ui;
-
     @Override
-    public void init() throws Exception {
-        File userDir = new File(System.getProperty("user.home"), ".pacmanfx");
-        if (userDir.mkdir()) {
-            Logger.info("User dir '{}' created", userDir);
+    public void init() {
+        try {
+            File userDir = new File(System.getProperty("user.home"), ".pacmanfx");
+            if (userDir.mkdir()) {
+                Logger.info("User dir '{}' created", userDir);
+            }
+            GameController.it().addGameImplementation(GameVariant.MS_PACMAN, new MsPacManGame(userDir));
+            GameController.it().selectGame(GameVariant.MS_PACMAN);
+        } catch (Exception x) {
+            x.printStackTrace(System.err);
         }
-        GameController.it().addGameImplementation(GameVariant.MS_PACMAN, new MsPacManGame(userDir));
-        GameController.it().selectGame(GameVariant.MS_PACMAN);
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
-        ui = new PacManGamesUI();
+    public void start(Stage stage) {
+        PacManGamesUI ui = new PacManGamesUI();
         ui.loadAssets();
-        var config = new MsPacManGameConfiguration();
-        ui.setGameConfiguration(GameVariant.MS_PACMAN, config);
-        ui.assets().addAll(config.assets());
+        ui.setGameConfiguration(GameVariant.MS_PACMAN, new MsPacManGameConfiguration());
         ui.createAndStart(stage, initialSize());
     }
 
