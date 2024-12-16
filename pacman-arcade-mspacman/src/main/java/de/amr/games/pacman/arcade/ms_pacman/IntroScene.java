@@ -163,7 +163,6 @@ public class IntroScene extends GameScene2D {
         return state;
     }
 
-    // TODO This is too cryptic
     private void drawMarquee(GraphicsContext g, BitSet marqueeState) {
         double xMin = 60, xMax = 192, yMin = 88, yMax = 148;
         for (int i = 0; i < NUM_BULBS; ++i) {

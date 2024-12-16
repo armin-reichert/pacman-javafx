@@ -432,7 +432,7 @@ public class MsPacManGame extends GameModel {
      * After 176 dots are consumed, the game attempts to spawn the second fruit of the level. If the first fruit is still
      * present in the level when (or eaten very shortly before) the 176th dot is consumed, the second fruit will not
      * spawn. Dying while a fruit is on screen causes it to immediately disappear and never return.
-     * (TODO: what does never mean here? For the rest of the game?).
+     * (TODO: what does "never" mean here? For the rest of the game?).
      * The type of fruit is determined by the level count - levels 1-7 will always have two cherries, two strawberries,
      * etc. until two bananas on level 7. On level 8 and beyond, the fruit type is randomly selected using the weights in
      * the following table:

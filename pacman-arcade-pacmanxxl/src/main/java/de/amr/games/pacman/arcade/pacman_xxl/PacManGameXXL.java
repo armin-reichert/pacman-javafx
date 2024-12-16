@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 
 /**
  * Extension of Arcade Pac-Man with 8 additional mazes (thanks to the one and only
@@ -132,10 +133,10 @@ public class PacManGameXXL extends PacManGame {
             colorMap = COLOR_MAPS.get(randomInt(0, COLOR_MAPS.size()));
         } else {
             colorMap = Map.of(
-                "fill",   worldMap.terrain().getStringPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_FILL, "000000"),
-                "stroke", worldMap.terrain().getStringPropertyOrDefault(WorldMap.PROPERTY_COLOR_WALL_STROKE, "0000ff"),
-                "door",   worldMap.terrain().getStringPropertyOrDefault(WorldMap.PROPERTY_COLOR_DOOR, "00ffff"),
-                "pellet", worldMap.food().getStringPropertyOrDefault(WorldMap.PROPERTY_COLOR_FOOD, "ffffff")
+            "fill",   worldMap.terrain().getStringPropertyOrDefault(PROPERTY_COLOR_WALL_FILL, "000000"),
+            "stroke", worldMap.terrain().getStringPropertyOrDefault(PROPERTY_COLOR_WALL_STROKE, "0000ff"),
+            "door",   worldMap.terrain().getStringPropertyOrDefault(PROPERTY_COLOR_DOOR, "00ffff"),
+            "pellet", worldMap.food().getStringPropertyOrDefault(PROPERTY_COLOR_FOOD, "ffffff")
             );
         }
         worldMap.setConfigValue("colorMap", colorMap);

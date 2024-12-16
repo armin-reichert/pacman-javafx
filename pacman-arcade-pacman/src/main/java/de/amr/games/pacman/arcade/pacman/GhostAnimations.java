@@ -92,7 +92,6 @@ public class GhostAnimations extends SpriteAnimationCollection {
             Animations.ANIM_BLINKY_PATCHED, patched,
             Animations.ANIM_BLINKY_NAKED, naked));
 
-        // TODO check this
         eyes.start();
         frightened.start();
         flashing.start();
