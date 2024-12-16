@@ -2,9 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.model.ms_pacman_tengen;
-
-import de.amr.games.pacman.lib.nes.NES;
+package de.amr.games.pacman.lib.nes;
 
 import static de.amr.games.pacman.lib.Globals.randomInt;
 

@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.ui.action.GameActions2D;
 import de.amr.games.pacman.ui.scene.GameScene2D;
 import javafx.scene.paint.Color;

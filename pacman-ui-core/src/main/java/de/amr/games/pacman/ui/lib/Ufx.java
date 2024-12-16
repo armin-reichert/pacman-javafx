@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui.lib;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.nes.NES;
-import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
+import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.Transition;

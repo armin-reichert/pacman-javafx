@@ -15,8 +15,6 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
-import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.ui.assets.GameSound;
 import de.amr.games.pacman.ui.input.Keyboard;
 import de.amr.games.pacman.ui.scene.CameraControlledView;

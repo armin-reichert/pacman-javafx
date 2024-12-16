@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.model.ms_pacman_tengen;
+package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEventType;
@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.Animations.ANIM_MS_PACMAN_BOOSTER;
 import static de.amr.games.pacman.model.actors.GhostState.*;
-import static de.amr.games.pacman.model.ms_pacman_tengen.SpeedConfiguration.*;
+import static de.amr.games.pacman.tengen.ms_pacman.SpeedConfiguration.*;
 
 /**
  * Ms. Pac-Man (Tengen).
@@ -89,7 +89,7 @@ public class MsPacManGameTengen extends GameModel {
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
     private static final String HIGH_SCORE_FILENAME = "highscore-ms_pacman_tengen.xml";
-    private static final String MAPS_ROOT = "/de/amr/games/pacman/maps/ms_pacman_tengen/";
+    private static final String MAPS_ROOT = "maps/";
 
     private static int intermissionNumberAfterLevel(int number) {
         return switch (number) {

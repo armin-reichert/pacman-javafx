@@ -6,8 +6,6 @@ package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.nes.NES;
-import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
-import de.amr.games.pacman.model.ms_pacman_tengen.PacBooster;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.action.GameAction;
 import de.amr.games.pacman.ui.action.GameActionProvider;

@@ -9,7 +9,7 @@ import de.amr.games.pacman.arcade.pacman.PacManGame;
 import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
+import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import de.amr.games.pacman.ui3d.scene3d.Perspective;
 import de.amr.games.pacman.ui3d.variants.MsPacManGameConfiguration_3D;

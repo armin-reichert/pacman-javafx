@@ -2,8 +2,9 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.model.ms_pacman_tengen;
+package de.amr.games.pacman.tengen.ms_pacman;
 
+import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import org.tinylog.Logger;
 
@@ -14,8 +15,8 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import static de.amr.games.pacman.model.ms_pacman_tengen.MapCategory.*;
-import static de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme.*;
+import static de.amr.games.pacman.lib.nes.NES_ColorScheme.*;
+import static de.amr.games.pacman.tengen.ms_pacman.MapCategory.*;
 
 /**
  * Package-private class encapsulating map management.

@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.model.ms_pacman_tengen;
+package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.model.GameException;
 import de.amr.games.pacman.model.GameLevel;

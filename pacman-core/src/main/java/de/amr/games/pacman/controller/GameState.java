@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -322,7 +321,9 @@ public enum GameState implements FsmState<GameModel> {
                 if (gameController().currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                     if (game.isDemoLevel()) {
                         gameController().changeState(SHOWING_CREDITS);
-                    } else {
+                    } else { //TODO fixme
+                        gameController().changeState(SETTING_OPTIONS);
+                        /*
                         var msPacManGameTengen = (MsPacManGameTengen) game;
                         if (msPacManGameTengen.startLevelNumber() >= 10 && msPacManGameTengen.numContinues() > 0) {
                             msPacManGameTengen.subtractOneContinue();
@@ -331,6 +332,7 @@ public enum GameState implements FsmState<GameModel> {
                             msPacManGameTengen.setNumContinues(4);
                             gameController().changeState(INTRO);
                         }
+                         */
                     }
                 } else {
                     game.resetForStartingNewGame();
@@ -385,7 +387,7 @@ public enum GameState implements FsmState<GameModel> {
              */
             lastLevelNumber = switch (gameVariant) {
                 case MS_PACMAN -> 25;
-                case MS_PACMAN_TENGEN -> MsPacManGameTengen.MAX_LEVEL_NUMBER;
+                case MS_PACMAN_TENGEN -> 32;
                 case PACMAN -> 21;
                 case PACMAN_XXL -> 8 + numCustomMaps;
             };
@@ -467,12 +469,7 @@ public enum GameState implements FsmState<GameModel> {
                 case MS_PACMAN -> 17;
                 case MS_PACMAN_TENGEN -> 32;
                 case PACMAN -> 21;
-                case PACMAN_XXL -> {
-                    //TODO fixme
-//                    PacManGameXXL xxlGame = (PacManGameXXL) game;
-//                    yield 8 + xxlGame.customMapsSortedByFile().size();
-                    yield 8;
-                }
+                case PACMAN_XXL -> 16;
             };
             timer.restartSeconds(TEASER_TIME_SECONDS);
             game.resetForStartingNewGame();
@@ -514,9 +511,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onExit(GameModel game) {
             game.levelCounter().clear();
         }
-
     },
-
 
     TESTING_CUT_SCENES {
         @Override

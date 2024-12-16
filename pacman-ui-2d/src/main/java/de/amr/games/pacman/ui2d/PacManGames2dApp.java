@@ -5,19 +5,16 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.arcade.ms_pacman.MsPacManGame;
+import de.amr.games.pacman.arcade.ms_pacman.MsPacManGameConfiguration;
 import de.amr.games.pacman.arcade.pacman.PacManGame;
 import de.amr.games.pacman.arcade.pacman.PacManGameConfiguration;
-import de.amr.games.pacman.arcade.pacman_xxl.MapSelectionMode;
 import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
+import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXLConfiguration;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
+import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration;
-import de.amr.games.pacman.ui.lib.NightMode;
-import de.amr.games.pacman.arcade.ms_pacman.MsPacManGameConfiguration;
-import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXLConfiguration;
 import javafx.application.Application;
-import javafx.beans.property.*;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;

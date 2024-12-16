@@ -4,18 +4,18 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
+import de.amr.games.pacman.arcade.ms_pacman.MsPacManGameRenderer;
+import de.amr.games.pacman.arcade.pacman.PacManGameRenderer;
 import de.amr.games.pacman.controller.HuntingControl;
+import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.assets.WorldMapColoring;
-import de.amr.games.pacman.arcade.ms_pacman.MsPacManGameRenderer;
-import de.amr.games.pacman.arcade.pacman.PacManGameRenderer;
 import javafx.scene.paint.Color;
 
 import java.util.Map;

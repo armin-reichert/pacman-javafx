@@ -4,9 +4,8 @@
 package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
-import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -16,7 +15,7 @@ import java.util.*;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.RectArea.rect;
-import static de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme.*;
+import static de.amr.games.pacman.lib.nes.NES_ColorScheme.*;
 import static de.amr.games.pacman.ui.lib.Ufx.*;
 
 /**

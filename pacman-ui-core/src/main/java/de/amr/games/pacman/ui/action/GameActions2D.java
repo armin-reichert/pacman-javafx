@@ -11,7 +11,6 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.Keyboard;
@@ -106,7 +105,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public boolean isEnabled(GameContext context) {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                return context.level().number < MsPacManGameTengen.MAX_LEVEL_NUMBER;
+                return context.level().number < 32; //TODO reconsider
             }
             return context.game().isPlaying() && context.gameState() == GameState.HUNTING;
         }

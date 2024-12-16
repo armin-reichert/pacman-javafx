@@ -3,7 +3,6 @@
  */
 package de.amr.games.pacman.tengen.ms_pacman;
 
-import de.amr.games.pacman.model.ms_pacman_tengen.MapCategory;
-import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
+import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 
 public record MazeSpec(MapCategory mapCategory, int spriteNumber, NES_ColorScheme colorScheme) {}

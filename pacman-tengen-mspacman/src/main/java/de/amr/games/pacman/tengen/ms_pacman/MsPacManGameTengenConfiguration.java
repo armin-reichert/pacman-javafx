@@ -6,9 +6,9 @@ package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.NES;
+import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.ms_pacman_tengen.NES_ColorScheme;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.assets.AssetStorage;
 import de.amr.games.pacman.ui.assets.GameSpriteSheet;

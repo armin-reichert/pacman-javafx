@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui3d.apps;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.ms_pacman_tengen.MsPacManGameTengen;
+import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui3d.variants.MsPacManGameTengenConfiguration_3D;
 import javafx.application.Application;
