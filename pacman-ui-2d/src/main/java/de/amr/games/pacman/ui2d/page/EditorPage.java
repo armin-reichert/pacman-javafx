@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
+import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.editor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
@@ -33,8 +34,6 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  * @author Armin Reichert
  */
 public class EditorPage extends BorderPane implements GameActionProvider {
-
-    private static final String MAP_ROOT_PATH = "/de/amr/games/pacman/maps/";
 
     private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     private final TileMapEditor editor;
@@ -68,14 +67,13 @@ public class EditorPage extends BorderPane implements GameActionProvider {
             }
         }
         editor.getLoadMapMenu().getItems().add(new SeparatorMenuItem());
+        */
         for (int mapNumber = 1; mapNumber <= 8; ++mapNumber) {
-            WorldMap map = loadMap("pacman_xxl/masonic_%d.world".formatted(mapNumber));
+            WorldMap map = loadMap(() -> PacManGameXXL.class, "maps/masonic_%d.world".formatted(mapNumber));
             if (map != null) {
                 editor.addLoadMapMenuItem("Pac-Man XXL " + mapNumber, map);
             }
         }
-
-         */
     }
 
     @Override
@@ -98,9 +96,8 @@ public class EditorPage extends BorderPane implements GameActionProvider {
         this.closeAction = closeAction;
     }
 
-    private WorldMap loadMap(String relativeMapPath) {
-        ResourceManager rm = () -> GameModel.class;
-        URL url = rm.url(MAP_ROOT_PATH + relativeMapPath);
+    private WorldMap loadMap(ResourceManager rm, String relativeMapPath) {
+        URL url = rm.url(relativeMapPath);
         if (url != null) {
             try {
                 WorldMap map = new WorldMap(url);

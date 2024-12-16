@@ -132,10 +132,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected final GameAction actionOpenEditor = new GameAction() {
         @Override
         public void execute(GameContext context) {
-            if (context.level().world() == null) {
-                Logger.error("Map editor cannot be opened because no world is available");
-                return;
-            }
             context.currentGameScene().ifPresent(GameScene::end);
             context.sound().stopAll();
             context.gameClock().stop();
@@ -146,7 +142,9 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
         @Override
         public boolean isEnabled(GameContext context) {
-            return context.gameVariant() == GameVariant.PACMAN_XXL;
+            return context.gameVariant() == GameVariant.PACMAN_XXL &&
+                    context.game().level().isPresent() &&
+                    context.level().world() != null;
         }
     };
 
