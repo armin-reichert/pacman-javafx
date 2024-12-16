@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
-import de.amr.games.pacman.arcade.Resources;
 import de.amr.games.pacman.arcade.pacman.PacManGame;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
@@ -32,7 +31,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 public class PacManGameXXL extends PacManGame {
 
     private static final int MAP_COUNT = 8;
-    private static final String MAP_PATTERN = "/de/amr/games/pacman/maps/pacman_xxl/masonic_%d.world";
+    private static final String MAP_PATTERN = "maps/masonic_%d.world";
 
     static final List<Map<String, String>> COLOR_MAPS = List.of(
         Map.of("fill", "#359c9c", "stroke", "#85e2ff", "door", "#fcb5ff", "pellet", "#feb8ae"),
@@ -54,7 +53,7 @@ public class PacManGameXXL extends PacManGame {
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman_xxl.xml"));
         mapSelectionMode = MapSelectionMode.NO_CUSTOM_MAPS;
         for (int num = 1; num <= MAP_COUNT; ++num) {
-            URL url = Resources.class.getResource(MAP_PATTERN.formatted(num));
+            URL url = getClass().getResource(MAP_PATTERN.formatted(num));
             try {
                 WorldMap worldMap = new WorldMap(url);
                 standardMaps.add(worldMap);
