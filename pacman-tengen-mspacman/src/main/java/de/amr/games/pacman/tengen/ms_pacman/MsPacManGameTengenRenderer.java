@@ -8,8 +8,8 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
+import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
@@ -460,16 +460,16 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         ctx.setFont(Font.font("Sans", scaled(TS)));
         ctx.setStroke(Color.WHITE);
         ctx.strokeText(line1.formatted(
-            binding.key(NES.JoypadButton.BTN_SELECT),
-            binding.key(NES.JoypadButton.BTN_START),
-            binding.key(NES.JoypadButton.BTN_B),
-            binding.key(NES.JoypadButton.BTN_A)
+            binding.key(NES_JoypadButton.BTN_SELECT),
+            binding.key(NES_JoypadButton.BTN_START),
+            binding.key(NES_JoypadButton.BTN_B),
+            binding.key(NES_JoypadButton.BTN_A)
         ), 0, scaled(TS));
         ctx.strokeText(line2.formatted(
-            binding.key(NES.JoypadButton.BTN_UP),
-            binding.key(NES.JoypadButton.BTN_DOWN),
-            binding.key(NES.JoypadButton.BTN_LEFT),
-            binding.key(NES.JoypadButton.BTN_RIGHT)
+            binding.key(NES_JoypadButton.BTN_UP),
+            binding.key(NES_JoypadButton.BTN_DOWN),
+            binding.key(NES_JoypadButton.BTN_LEFT),
+            binding.key(NES_JoypadButton.BTN_RIGHT)
         ), 0, scaled(2*TS));
 
     }

@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.nes.NES;
+import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.ui.action.GameActions2D;
 import de.amr.games.pacman.ui.scene.GameScene2D;
 import javafx.scene.text.Font;
@@ -22,7 +22,7 @@ public class CreditsScene extends GameScene2D {
     public void bindGameActions() {
         context.setScoreVisible(false);
         context.enableJoypad();
-        bind(GameActions2D.START_GAME, context.joypadKeys().key(NES.JoypadButton.BTN_START));
+        bind(GameActions2D.START_GAME, context.joypadKeys().key(NES_JoypadButton.BTN_START));
     }
 
     @Override

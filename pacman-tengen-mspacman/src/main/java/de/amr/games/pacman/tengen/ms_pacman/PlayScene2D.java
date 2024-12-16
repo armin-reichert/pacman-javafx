@@ -9,7 +9,7 @@ import de.amr.games.pacman.controller.HuntingControl;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.nes.NES;
+import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -298,7 +298,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
 
     private void setKeyBindings() {
         if (context.game().isDemoLevel()) {
-            bind(QUIT_DEMO_LEVEL, context.joypadKeys().key(NES.JoypadButton.BTN_START));
+            bind(QUIT_DEMO_LEVEL, context.joypadKeys().key(NES_JoypadButton.BTN_START));
         } else {
             setDefaultJoypadBinding(this, context.joypadKeys());
             bindFallbackPlayerControlActions(this);

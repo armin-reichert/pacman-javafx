@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
+import de.amr.games.pacman.lib.nes.NES_Palette;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui.GameContext;
@@ -31,7 +31,7 @@ import static de.amr.games.pacman.ui.lib.Ufx.coloredBackground;
 public class MsPacManGameTengenConfiguration implements GameConfiguration {
 
     public static Color nesPaletteColor(int index) {
-        return Color.web(NES.Palette.color(index));
+        return Color.web(NES_Palette.color(index));
     }
 
     public static final Vector2i NES_TILES = new Vector2i(32, 30);

@@ -43,9 +43,9 @@ public enum NES_ColorScheme {
     _28_20_2A_YELLOW_WHITE_GREEN  (0x28, 0x20, 0x2a);
 
     NES_ColorScheme(int fillIndex, int strokeIndex, int pelletIndex) {
-        fillColor   = NES.Palette.color(fillIndex);
-        strokeColor = NES.Palette.color(strokeIndex);
-        pelletColor = NES.Palette.color(pelletIndex);
+        fillColor   = NES_Palette.color(fillIndex);
+        strokeColor = NES_Palette.color(strokeIndex);
+        pelletColor = NES_Palette.color(pelletIndex);
     }
 
     public static NES_ColorScheme random() {

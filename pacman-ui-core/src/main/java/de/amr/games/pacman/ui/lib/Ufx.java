@@ -6,8 +6,8 @@ package de.amr.games.pacman.ui.lib;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.lib.nes.NES;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
+import de.amr.games.pacman.lib.nes.NES_Palette;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.Transition;
@@ -301,7 +301,7 @@ public interface Ufx {
         return found;
     }
 
-    Set<Color> NES_PALETTE_COLORS = Stream.of(NES.Palette.COLORS).map(Color::valueOf).collect(Collectors.toSet());
+    Set<Color> NES_PALETTE_COLORS = Stream.of(NES_Palette.COLORS).map(Color::valueOf).collect(Collectors.toSet());
 
     static Image exchange_NESColorScheme(Image source, NES_ColorScheme from, NES_ColorScheme to) {
         Map<String, ColorChange> changes = Map.of(

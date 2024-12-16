@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.lib.arcade.Arcade;
-import de.amr.games.pacman.lib.nes.NES;
+import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.action.GameAction;
@@ -87,11 +87,11 @@ public class StartPage extends StackPane implements GameActionProvider {
     public void bindGameActions() {
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             var joypadKeys = context.joypadKeys();
-            bind(context -> currentFlyer().prevFlyerPage(),  joypadKeys.key(NES.JoypadButton.BTN_UP));
-            bind(context -> currentFlyer().nextFlyerPage(),  joypadKeys.key(NES.JoypadButton.BTN_DOWN));
-            bind(context -> carousel.prevSlide(),            joypadKeys.key(NES.JoypadButton.BTN_LEFT));
-            bind(context -> carousel.nextSlide(),            joypadKeys.key(NES.JoypadButton.BTN_RIGHT));
-            bind(actionSelectGamePage,                       joypadKeys.key(NES.JoypadButton.BTN_START));
+            bind(context -> currentFlyer().prevFlyerPage(),  joypadKeys.key(NES_JoypadButton.BTN_UP));
+            bind(context -> currentFlyer().nextFlyerPage(),  joypadKeys.key(NES_JoypadButton.BTN_DOWN));
+            bind(context -> carousel.prevSlide(),            joypadKeys.key(NES_JoypadButton.BTN_LEFT));
+            bind(context -> carousel.nextSlide(),            joypadKeys.key(NES_JoypadButton.BTN_RIGHT));
+            bind(actionSelectGamePage,                       joypadKeys.key(NES_JoypadButton.BTN_START));
         } else {
             bind(context -> currentFlyer().prevFlyerPage(),  context.arcadeKeys().key(Arcade.Button.UP));
             bind(context -> currentFlyer().nextFlyerPage(),  context.arcadeKeys().key(Arcade.Button.DOWN));

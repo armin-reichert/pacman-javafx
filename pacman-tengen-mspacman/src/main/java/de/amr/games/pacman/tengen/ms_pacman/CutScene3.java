@@ -6,7 +6,7 @@ package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.nes.NES;
+import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.assets.SpriteAnimation;
@@ -60,7 +60,7 @@ public class CutScene3 extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(context -> context.gameController().terminateCurrentState(), context.joypadKeys().key(NES.JoypadButton.BTN_START));
+        bind(context -> context.gameController().terminateCurrentState(), context.joypadKeys().key(NES_JoypadButton.BTN_START));
     }
 
     @Override

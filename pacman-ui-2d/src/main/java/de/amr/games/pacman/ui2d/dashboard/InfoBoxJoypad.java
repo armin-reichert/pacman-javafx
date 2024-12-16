@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
-import de.amr.games.pacman.lib.nes.NES;
+import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import javafx.scene.image.ImageView;
@@ -19,20 +19,20 @@ public class InfoBoxJoypad extends InfoBox {
         String indent = "  "; // Urgh
         addLabeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(
             indent,
-            joypad.key(NES.JoypadButton.BTN_SELECT).getDisplayText(),
-            joypad.key(NES.JoypadButton.BTN_START).getDisplayText())
+            joypad.key(NES_JoypadButton.BTN_SELECT).getDisplayText(),
+            joypad.key(NES_JoypadButton.BTN_START).getDisplayText())
         );
         addLabeledValue("[B]  [A]", () -> "%s%s   %s".formatted(
             indent,
-            joypad.key(NES.JoypadButton.BTN_B).getDisplayText(),
-            joypad.key(NES.JoypadButton.BTN_A).getDisplayText())
+            joypad.key(NES_JoypadButton.BTN_B).getDisplayText(),
+            joypad.key(NES_JoypadButton.BTN_A).getDisplayText())
         );
         addLabeledValue("UP/DOWN/LEFT/RIGHT", () -> "%s%s  %s  %s  %s".formatted(
             indent,
-            joypad.key(NES.JoypadButton.BTN_UP).getDisplayText(),
-            joypad.key(NES.JoypadButton.BTN_DOWN).getDisplayText(),
-            joypad.key(NES.JoypadButton.BTN_LEFT).getDisplayText(),
-            joypad.key(NES.JoypadButton.BTN_RIGHT).getDisplayText())
+            joypad.key(NES_JoypadButton.BTN_UP).getDisplayText(),
+            joypad.key(NES_JoypadButton.BTN_DOWN).getDisplayText(),
+            joypad.key(NES_JoypadButton.BTN_LEFT).getDisplayText(),
+            joypad.key(NES_JoypadButton.BTN_RIGHT).getDisplayText())
         );
         addRow(new ImageView(DashboardAssets.IT.image("image.nes-controller")));
     }
