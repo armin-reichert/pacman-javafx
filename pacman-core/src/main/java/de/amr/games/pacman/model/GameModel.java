@@ -64,6 +64,7 @@ public abstract class GameModel {
     public abstract boolean        isOver();
     public abstract void           endGame();
     public abstract void           onPacKilled();
+    public abstract void           killGhost(Ghost ghost);
     public abstract void           activateNextBonus();
 
     public abstract float          ghostAttackSpeed(Ghost ghost);
@@ -418,22 +419,6 @@ public abstract class GameModel {
             publishGameEvent(GameEventType.BONUS_EATEN);
         } else {
             bonus.update(this);
-        }
-    }
-
-    public void killGhost(Ghost ghost) {
-        eventLog.killedGhosts.add(ghost);
-        int killedSoFar = level.victims().size();
-        int points = KILLED_GHOST_VALUES[killedSoFar];
-        level.addKilledGhost(ghost);
-        ghost.eaten(killedSoFar);
-        scoreManager.scorePoints(this, points);
-        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
-        //TODO if this behavior is specific to certain game variants, it has to be factored out
-        if (level.killedGhostCount() == 16) {
-            int extraPoints = POINTS_ALL_GHOSTS_IN_LEVEL;
-            scoreManager.scorePoints(this, extraPoints);
-            Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number);
         }
     }
 

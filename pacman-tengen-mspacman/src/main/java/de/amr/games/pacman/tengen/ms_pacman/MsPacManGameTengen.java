@@ -553,6 +553,17 @@ public class MsPacManGameTengen extends GameModel {
     }
 
     @Override
+    public void killGhost(Ghost ghost) {
+        eventLog.killedGhosts.add(ghost);
+        int killedSoFar = level.victims().size();
+        int points = KILLED_GHOST_VALUES[killedSoFar];
+        level.addKilledGhost(ghost);
+        ghost.eaten(killedSoFar);
+        scoreManager.scorePoints(this, points);
+        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
+    }
+
+    @Override
     protected void onGhostReleased(Ghost ghost) {
         // code that is executed when ghost is released from jailhouse
     }

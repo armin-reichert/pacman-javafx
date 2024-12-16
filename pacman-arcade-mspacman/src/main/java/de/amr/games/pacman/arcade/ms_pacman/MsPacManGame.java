@@ -404,6 +404,22 @@ public class MsPacManGame extends GameModel {
         level.pac().die();
     }
 
+    @Override
+    public void killGhost(Ghost ghost) {
+        eventLog.killedGhosts.add(ghost);
+        int killedSoFar = level.victims().size();
+        int points = KILLED_GHOST_VALUES[killedSoFar];
+        level.addKilledGhost(ghost);
+        ghost.eaten(killedSoFar);
+        scoreManager.scorePoints(this, points);
+        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
+        if (level.killedGhostCount() == 16) {
+            int extraPoints = POINTS_ALL_GHOSTS_IN_LEVEL;
+            scoreManager.scorePoints(this, extraPoints);
+            Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number);
+        }
+    }
+
     private void setCruiseElroyEnabled(boolean enabled) {
         if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
             cruiseElroy = (byte) -cruiseElroy;
