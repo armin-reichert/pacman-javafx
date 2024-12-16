@@ -105,9 +105,9 @@ public class MsPacManGameTengen extends GameModel {
     private Difficulty difficulty;
     private PacBooster pacBooster;
     private boolean boosterActive;
-    private byte startLevelNumber; // 1-7
+    private int startLevelNumber; // 1-7
     private boolean canStartNewGame;
-    private byte numContinues;
+    private int numContinues;
     private final Steering autopilot = new RuleBasedPacSteering(this);
     private final Steering demoLevelSteering = new RuleBasedPacSteering(this);
 
@@ -167,7 +167,7 @@ public class MsPacManGameTengen extends GameModel {
         setDifficulty(Difficulty.NORMAL);
         setMapCategory(MapCategory.ARCADE);
         setStartLevelNumber(1);
-        setNumContinues(4);
+        numContinues = 4;
     }
 
     public boolean hasDefaultOptionValues() {
@@ -217,29 +217,26 @@ public class MsPacManGameTengen extends GameModel {
         if (number < MIN_LEVEL_NUMBER || number > MAX_LEVEL_NUMBER) {
             throw GameException.illegalLevelNumber(number);
         }
-        startLevelNumber = (byte) number;
+        startLevelNumber = number;
     }
 
-    public byte startLevelNumber() {
+    public int startLevelNumber() {
         return startLevelNumber;
     }
 
-    public void setNumContinues(int number) {
-        if (numContinues < 0 || numContinues > 4) {
-            throw new IllegalArgumentException("Number of continues must be 0..4 but is " + number);
-        }
-        numContinues = (byte) number;
-    }
-
-    public byte numContinues() {
+    public int numContinues() {
         return numContinues;
     }
 
-    public void subtractOneContinue() {
-        if (numContinues == 0) {
-            throw new IllegalStateException("Cannot decrement number of continues");
+    @Override
+    public boolean continueOnGameOver() {
+        if (startLevelNumber >= 10 && numContinues > 0) {
+            numContinues -= 1;
+            return true;
+        } else {
+            numContinues = 4;
+            return false;
         }
-        numContinues -= 1;
     }
 
     public boolean isBoosterActive() {

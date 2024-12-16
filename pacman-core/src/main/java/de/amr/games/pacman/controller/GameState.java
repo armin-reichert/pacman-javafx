@@ -318,21 +318,13 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
+                //TODO find unified solution
                 if (gameController().currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                     if (game.isDemoLevel()) {
                         gameController().changeState(SHOWING_CREDITS);
-                    } else { //TODO fixme
-                        gameController().changeState(SETTING_OPTIONS);
-                        /*
-                        var msPacManGameTengen = (MsPacManGameTengen) game;
-                        if (msPacManGameTengen.startLevelNumber() >= 10 && msPacManGameTengen.numContinues() > 0) {
-                            msPacManGameTengen.subtractOneContinue();
-                            gameController().changeState(SETTING_OPTIONS);
-                        } else {
-                            msPacManGameTengen.setNumContinues(4);
-                            gameController().changeState(INTRO);
-                        }
-                         */
+                    } else {
+                        boolean canContinue = game.continueOnGameOver();
+                        gameController().changeState(canContinue ? SETTING_OPTIONS : INTRO);
                     }
                 } else {
                     game.resetForStartingNewGame();

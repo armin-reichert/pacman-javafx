@@ -60,6 +60,7 @@ public abstract class GameModel {
     public abstract void           resetEverything();
     public abstract void           resetForStartingNewGame();
     public abstract boolean        canStartNewGame();
+    public abstract boolean        continueOnGameOver();
     public abstract boolean        isOver();
     public abstract void           endGame();
     public abstract void           onPacKilled();

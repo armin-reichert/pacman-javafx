@@ -210,6 +210,11 @@ public class MsPacManGame extends GameModel {
     }
 
     @Override
+    public boolean continueOnGameOver() {
+        return false;
+    }
+
+    @Override
     public boolean isOver() {
         return lives == 0;
     }
