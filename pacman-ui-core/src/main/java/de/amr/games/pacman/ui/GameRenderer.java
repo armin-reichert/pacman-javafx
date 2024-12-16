@@ -54,10 +54,18 @@ public interface GameRenderer {
     }
 
     /**
-     * @return Unscaled position where message (READY etc.)  is displayed. Message text is centered horizontally to the
-     *          x-coordinate and text baseline is y-coordinate of given position
+     * @param position Unscaled position where message (READY etc.) is displayed.
+     *                 Message text is centered horizontally to the x-coordinate
+     *                 and text baseline is y-coordinate of given position
      */
-    Vector2f getMessageAnchorPosition();
+    public void setMessagePosition(Vector2f position);
+
+    /**
+     * @return Unscaled position where message (READY etc.) is displayed.
+     *         Message text is centered horizontally to the x-coordinate
+     *         and text baseline is y-coordinate of given position
+     */
+    Vector2f getMessagePosition();
 
     /**
      * Draws the given source scaled by the current scaling value.

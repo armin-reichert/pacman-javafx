@@ -126,11 +126,11 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     }
 
     @Override
-    public Vector2f getMessageAnchorPosition() {
+    public Vector2f getMessagePosition() {
         return messageAnchorPosition;
     }
 
-    public void setMessageAnchorPosition(Vector2f position) {
+    public void setMessagePosition(Vector2f position) {
         messageAnchorPosition = position;
     }
 
@@ -298,7 +298,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
 
     private void drawLevelMessage(GameLevel level, boolean demoLevel) {
         if (level.message() != null) {
-            float x = getMessageAnchorPosition().x(), y = getMessageAnchorPosition().y();
+            float x = getMessagePosition().x(), y = getMessagePosition().y();
             switch (level.message().type()) {
                 case READY -> drawTextCenteredOver("READY!", x, y, assets.color(PFX_MS_PACMAN_TENGEN + ".color.ready_message"));
                 case GAME_OVER -> {

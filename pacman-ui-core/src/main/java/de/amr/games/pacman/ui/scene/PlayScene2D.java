@@ -66,6 +66,7 @@ public class PlayScene2D extends GameScene2D {
         }
         registerGameActionKeyBindings(context.keyboard());
         gr.setWorldMap(context.level().world().map());
+        gr.setMessagePosition(centerBelowHouse(context.level().world()));
     }
 
     @Override
@@ -135,16 +136,8 @@ public class PlayScene2D extends GameScene2D {
         }
         GameLevel level = context.level();
 
-        //TODO fixme
+        //TODO fixme: avoid calling this in every frame
         gr.setWorldMap(level.world().map());
-
-        //TODO fixme and use more general solution, maybe terrain map property?
-        /*
-        if (context.gameVariant() == GameVariant.PACMAN_XXL) {
-            PacManGameXXLRenderer r = (PacManGameXXLRenderer) gr;
-            r.setMessageAnchorPosition(centerBelowHouse(level.world()));
-        }
-         */
 
         drawLevelMessage(level.message());
 
@@ -208,8 +201,8 @@ public class PlayScene2D extends GameScene2D {
                 }
             }
             // this assumes fixed width font of one tile size
-            double x = gr.getMessageAnchorPosition().x() - (text.length() * HTS);
-            gr.drawText(text, color, gr.scaledArcadeFont(TS), x, gr.getMessageAnchorPosition().y());
+            double x = gr.getMessagePosition().x() - (text.length() * HTS);
+            gr.drawText(text, color, gr.scaledArcadeFont(TS), x, gr.getMessagePosition().y());
         }
     }
 

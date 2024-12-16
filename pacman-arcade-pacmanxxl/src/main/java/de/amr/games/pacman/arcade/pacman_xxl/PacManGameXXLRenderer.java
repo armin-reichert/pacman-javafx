@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
+import de.amr.games.pacman.arcade.pacman.PacManGameSpriteSheet;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
@@ -11,9 +12,8 @@ import de.amr.games.pacman.maps.rendering.TerrainRenderer;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui.GameRenderer;
-import de.amr.games.pacman.ui.assets.GameSpriteSheet;
-import de.amr.games.pacman.arcade.pacman.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.assets.AssetStorage;
+import de.amr.games.pacman.ui.assets.GameSpriteSheet;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
@@ -98,11 +98,11 @@ public class PacManGameXXLRenderer implements GameRenderer {
     }
 
     @Override
-    public Vector2f getMessageAnchorPosition() {
+    public Vector2f getMessagePosition() {
         return messageAnchorPosition;
     }
 
-    public void setMessageAnchorPosition(Vector2f messageAnchorPosition) {
+    public void setMessagePosition(Vector2f messageAnchorPosition) {
         this.messageAnchorPosition = messageAnchorPosition;
     }
 
@@ -118,6 +118,7 @@ public class PacManGameXXLRenderer implements GameRenderer {
         }
         else {
             WorldMap worldMap = world.map();
+
             Map<String, String> mapColorScheme = worldMap.getConfigValue("colorMap");
             terrainRenderer.setMapBackgroundColor(bgColor);
             terrainRenderer.setWallStrokeColor(Color.web(mapColorScheme.get("stroke")));

@@ -10,8 +10,8 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
-import de.amr.games.pacman.ui.assets.AssetStorage;
 import de.amr.games.pacman.ui.GameRenderer;
+import de.amr.games.pacman.ui.assets.AssetStorage;
 import de.amr.games.pacman.ui.assets.ImageArea;
 import de.amr.games.pacman.ui.assets.WorldMapColoring;
 import javafx.beans.property.DoubleProperty;
@@ -66,6 +66,8 @@ public class MsPacManGameRenderer implements GameRenderer {
         rect(0, 4*248, 224, 248),
         rect(0, 5*248, 224, 248),
     };
+
+    private static final Vector2f MESSAGE_POSITION = new Vector2f(14 * TS, 21 * TS);
 
     private final AssetStorage assets;
     private final MsPacManGameSpriteSheet spriteSheet;
@@ -127,9 +129,12 @@ public class MsPacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public Vector2f getMessageAnchorPosition() {
-        return new Vector2f(14 * TS, 21 * TS);
+    public Vector2f getMessagePosition() {
+        return MESSAGE_POSITION;
     }
+
+    @Override
+    public void setMessagePosition(Vector2f position) {}
 
     @Override
     public void setWorldMap(WorldMap worldMap) {

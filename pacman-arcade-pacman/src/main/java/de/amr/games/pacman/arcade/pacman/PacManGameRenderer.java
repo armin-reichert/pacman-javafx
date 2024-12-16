@@ -7,8 +7,8 @@ package de.amr.games.pacman.arcade.pacman;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
-import de.amr.games.pacman.ui.assets.AssetStorage;
 import de.amr.games.pacman.ui.GameRenderer;
+import de.amr.games.pacman.ui.assets.AssetStorage;
 import de.amr.games.pacman.ui.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui.assets.WorldMapColoring;
 import javafx.beans.property.DoubleProperty;
@@ -16,10 +16,10 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.arcade.pacman.PacManGameSpriteSheet.EMPTY_MAZE_SPRITE;
 import static de.amr.games.pacman.arcade.pacman.PacManGameSpriteSheet.FULL_MAZE_SPRITE;
+import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * @author Armin Reichert
@@ -27,6 +27,8 @@ import static de.amr.games.pacman.arcade.pacman.PacManGameSpriteSheet.FULL_MAZE_
 public class PacManGameRenderer implements GameRenderer {
 
     public static final WorldMapColoring WORLDMAP_COLORING = new WorldMapColoring("#000000", "#2121ff", "#fcb5ff", "#febdb4");
+
+    private static final Vector2f MESSAGE_POSITION = new Vector2f(14 * TS, 21 * TS);
 
     private final AssetStorage assets;
     private final PacManGameSpriteSheet spriteSheet;
@@ -83,9 +85,12 @@ public class PacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public Vector2f getMessageAnchorPosition() {
-        return new Vector2f(14f * TS, 21 * TS);
+    public Vector2f getMessagePosition() {
+        return MESSAGE_POSITION;
     }
+
+    @Override
+    public void setMessagePosition(Vector2f position) {}
 
     @Override
     public void drawWorld(GameWorld world, double x, double y) {

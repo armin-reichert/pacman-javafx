@@ -437,12 +437,12 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
         }
         Vector2f messageCenterPosition = centerPosBelowHouse(world);
         if (messageMovement != null) {
-            r.setMessageAnchorPosition(messageMovement.isRunning()
+            r.setMessagePosition(messageMovement.isRunning()
                     ? new Vector2f(messageMovement.currentX(), messageCenterPosition.y())
                     : messageCenterPosition
             );
         } else {
-            r.setMessageAnchorPosition(messageCenterPosition);
+            r.setMessagePosition(messageCenterPosition);
         }
 
         r.setBlinking(level.blinking().isOn());
