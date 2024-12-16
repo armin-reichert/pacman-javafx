@@ -139,6 +139,9 @@ public class PlayScene2D extends GameScene2D {
         //TODO fixme: avoid calling this in every frame
         gr.setWorldMap(level.world().map());
 
+        //TODO have no better solution yet
+        gr.setMessagePosition(centerBelowHouse(context.level().world()));
+
         drawLevelMessage(level.message());
 
         boolean flashMode = levelCompleteAnimation != null && levelCompleteAnimation.isInHighlightPhase();
