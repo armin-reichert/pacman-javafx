@@ -158,6 +158,7 @@ public class PacManGamesUI_3D extends PacManGamesUI {
     @Override
     protected void createGamePage(Scene parentScene) {
         gamePage = new GamePage3D(this, parentScene);
+        gamePage.setActionOpenEditor(actionOpenEditor);
         gamePage.gameScenePy.bind(gameScenePy);
     }
 

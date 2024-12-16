@@ -16,6 +16,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacManStartPage;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GlobalProperties;
+import de.amr.games.pacman.ui.action.GameAction;
 import de.amr.games.pacman.ui.action.GameActionProvider;
 import de.amr.games.pacman.ui.action.GameActions2D;
 import de.amr.games.pacman.ui.assets.AssetStorage;
@@ -127,6 +128,27 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     protected int selectedJoypadIndex;
     protected ArcadeKeyBinding arcade = ArcadeKeyBinding.DEFAULT_BINDING;
+
+    protected final GameAction actionOpenEditor = new GameAction() {
+        @Override
+        public void execute(GameContext context) {
+            if (context.level().world() == null) {
+                Logger.error("Map editor cannot be opened because no world is available");
+                return;
+            }
+            context.currentGameScene().ifPresent(GameScene::end);
+            context.sound().stopAll();
+            context.gameClock().stop();
+            EditorPage editorPage = getOrCreateEditorPage();
+            editorPage.startEditor(context.level().world().map());
+            context.selectPage(editorPage);
+        }
+
+        @Override
+        public boolean isEnabled(GameContext context) {
+            return context.gameVariant() == GameVariant.PACMAN_XXL;
+        }
+    };
 
     public PacManGamesUI() {}
 
@@ -308,12 +330,27 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         return mainScene;
     }
 
+    private EditorPage getOrCreateEditorPage() {
+        if (editorPage == null) {
+            editorPage = new EditorPage(stage, this, game().customMapDir());
+            editorPage.setCloseAction(editor -> {
+                editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> stage.titleProperty().bind(stageTitleBinding()));
+                editor.stop();
+                clock.setTargetFrameRate(GameModel.TICKS_PER_SECOND);
+                gameController().restart(GameState.BOOT);
+                selectStartPage();
+            });
+        }
+        return editorPage;
+    }
+
     private void adaptGamePageSizeToMainScene(Scene mainScene) {
         gamePage.setSize(mainScene.getWidth(), mainScene.getHeight());
     }
 
     protected void createGamePage(Scene parentScene) {
         gamePage = new GamePage(this, parentScene);
+        gamePage.setActionOpenEditor(actionOpenEditor);
         gamePage.gameScenePy.bind(gameScenePy);
     }
 

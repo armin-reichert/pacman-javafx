@@ -58,6 +58,7 @@ public class EditorPage extends BorderPane implements GameActionProvider {
         miQuitEditor.setOnAction(e -> closeAction.accept(editor));
         editor.getFileMenu().getItems().add(miQuitEditor);
 
+        /*
         editor.addLoadMapMenuItem("Pac-Man", loadMap("pacman/pacman.world"));
         editor.getLoadMapMenu().getItems().add(new SeparatorMenuItem());
         for (int mapNumber = 1; mapNumber <= 6; ++mapNumber) {
@@ -73,6 +74,8 @@ public class EditorPage extends BorderPane implements GameActionProvider {
                 editor.addLoadMapMenuItem("Pac-Man XXL " + mapNumber, map);
             }
         }
+
+         */
     }
 
     @Override

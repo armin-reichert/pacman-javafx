@@ -155,13 +155,12 @@ public class GamePage3D extends GamePage {
         miMuted.selectedProperty().bindBidirectional(context.sound().mutedProperty());
         contextMenu.getItems().add(miMuted);
 
-        /* TODO fixme
-        GameAction action = GameActions2D.OPEN_EDITOR;
         var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
-        miOpenMapEditor.setOnAction(e -> action.execute(context));
-        miOpenMapEditor.setDisable(!action.isEnabled(context));
+        miOpenMapEditor.setOnAction(e -> {
+            if (actionOpenEditor != null) actionOpenEditor.execute(context);
+        });
+        miOpenMapEditor.setDisable(actionOpenEditor == null || !actionOpenEditor.isEnabled(context));
         contextMenu.getItems().add(miOpenMapEditor);
-        */
 
         var miQuit = new MenuItem(context.locText("quit"));
         miQuit.setOnAction(e -> GameActions2D.SHOW_START_PAGE.execute(context));

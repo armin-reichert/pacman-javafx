@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameModel;
@@ -107,26 +108,7 @@ public class GamePage extends StackPane implements GameActionProvider {
         context.sound().playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
     };
 
-    private final GameAction actionOpenEditor = new GameAction() {
-        @Override
-        public void execute(GameContext context) {
-            if (context.level().world() == null) {
-                Logger.error("Map editor cannot be opened because no world is available");
-                return;
-            }
-            context.currentGameScene().ifPresent(GameScene::end);
-            context.sound().stopAll();
-            context.gameClock().stop();
-            EditorPage editorPage = getOrCreateEditorPage();
-            editorPage.startEditor(context.level().world().map());
-            context.selectPage(editorPage);
-        }
-
-        @Override
-        public boolean isEnabled(GameContext context) {
-            return context.gameVariant() == GameVariant.PACMAN_XXL;
-        }
-    };
+    protected GameAction actionOpenEditor;
 
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
 
@@ -212,7 +194,6 @@ public class GamePage extends StackPane implements GameActionProvider {
         bind(GameActions2D.BOOT,            KeyCode.F3);
         bind(GameActions2D.SHOW_START_PAGE, KeyCode.Q);
         bind(GameActions2D.TOGGLE_PAUSED,   KeyCode.P);
-        bind(actionOpenEditor,              shift_alt(KeyCode.E));
         bind(actionToggleDebugInfo,         alt(KeyCode.D));
         bind(actionShowHelp,                KeyCode.H);
         bind(actionSimulationSlower,        alt(KeyCode.MINUS));
@@ -242,6 +223,11 @@ public class GamePage extends StackPane implements GameActionProvider {
     public void handleInput(GameContext context) {
         context.ifGameActionTriggeredRunItElse(this,
             () -> context.currentGameScene().ifPresent(gameScene -> gameScene.handleInput(context)));
+    }
+
+    public void setActionOpenEditor(GameAction actionOpenEditor) {
+        this.actionOpenEditor = actionOpenEditor;
+        bind(actionOpenEditor, shift_alt(KeyCode.E));
     }
 
     private void handleContextMenuRequest(ContextMenuEvent event) {
@@ -290,9 +276,11 @@ public class GamePage extends StackPane implements GameActionProvider {
         miMuted.selectedProperty().bindBidirectional(context.sound().mutedProperty());
         contextMenu.getItems().add(miMuted);
 
-        if (context.gameVariant() == GameVariant.PACMAN_XXL || context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+        if (context.gameVariant() == GameVariant.PACMAN_XXL) {
             var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
-            miOpenMapEditor.setOnAction(e -> actionOpenEditor.execute(context));
+            miOpenMapEditor.setOnAction(e -> {
+                if (actionOpenEditor != null) actionOpenEditor.execute(context);
+            });
             contextMenu.getItems().add(miOpenMapEditor);
         }
 
@@ -376,25 +364,4 @@ public class GamePage extends StackPane implements GameActionProvider {
             }
         }
     }
-
-    private EditorPage getOrCreateEditorPage() {
-        throw new UnsupportedOperationException();
-    }
-
-    /*
-    private EditorPage getOrCreateEditorPage() {
-        if (editorPage == null) {
-            editorPage = new EditorPage(stage, this, game().customMapDir());
-            editorPage.setCloseAction(editor -> {
-                editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> stage.titleProperty().bind(stageTitleBinding()));
-                editor.stop();
-                clock.setTargetFrameRate(GameModel.TICKS_PER_SECOND);
-                gameController().restart(GameState.BOOT);
-                selectStartPage();
-            });
-        }
-        return editorPage;
-    }
-*/
-
 }
