@@ -46,7 +46,7 @@ import static de.amr.games.pacman.ui.GlobalProperties.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui.GlobalProperties.PY_IMMUNITY;
 import static de.amr.games.pacman.ui.input.Keyboard.*;
 import static de.amr.games.pacman.ui.lib.Ufx.*;
-import static de.amr.games.pacman.ui2d.GlobalProperties.*;
+import static de.amr.games.pacman.ui2d.GlobalProperties2d.*;
 
 /**
  * @author Armin Reichert

@@ -25,7 +25,7 @@ import javafx.scene.shape.DrawMode;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static de.amr.games.pacman.ui2d.GlobalProperties.*;
+import static de.amr.games.pacman.ui2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 
 /**

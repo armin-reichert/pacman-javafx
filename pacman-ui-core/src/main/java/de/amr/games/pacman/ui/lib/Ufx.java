@@ -14,6 +14,7 @@ import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.geometry.Insets;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
@@ -67,7 +68,7 @@ public interface Ufx {
         }
     }
 
-    static ImageView createIcon(Image iconImage, int size, BooleanProperty visibleProperty) {
+    static ImageView createIcon(Image iconImage, int size, ObservableBooleanValue visibleProperty) {
         var icon = new ImageView(iconImage);
         icon.setFitWidth(size);
         icon.setPreserveRatio(true);

@@ -57,7 +57,6 @@ public class StartPage extends StackPane implements GameActionProvider {
 
     public StartPage(GameContext context) {
         this.context = checkNotNull(context);
-        setBackground(context.assets().get("wallpaper.pacman"));
 
         carousel = new Carousel(context.assets());
         carousel.selectButtonTextProperty().set(context.locText("play_button"));

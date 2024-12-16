@@ -9,6 +9,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -47,7 +48,11 @@ public class AssetStorage {
      */
     @SuppressWarnings("unchecked")
     public <T> T get(String key) {
-        return (T) map.get(key);
+        T value = (T) map.get(key);
+        if (value == null) {
+            Logger.error("Asset not found, key={}", key);
+        }
+        return value;
     }
 
     public Color color(String key) {

@@ -11,7 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 
-import static de.amr.games.pacman.ui2d.GlobalProperties.*;
+import static de.amr.games.pacman.ui2d.GlobalProperties2d.*;
 
 /**
  * General settings.

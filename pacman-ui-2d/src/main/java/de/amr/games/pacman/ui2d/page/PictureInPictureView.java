@@ -20,7 +20,7 @@ import javafx.scene.layout.VBox;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.GlobalProperties.*;
+import static de.amr.games.pacman.ui2d.GlobalProperties2d.*;
 
 /**
  * Picture-in-Picture view. Adapts its aspect ratio to the current game world. Height can be changed via dashboard.

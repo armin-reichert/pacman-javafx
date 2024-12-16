@@ -20,7 +20,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 
-import static de.amr.games.pacman.ui2d.GlobalProperties.PY_MAP_SELECTION_MODE;
+import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_MAP_SELECTION_MODE;
 
 
 /**

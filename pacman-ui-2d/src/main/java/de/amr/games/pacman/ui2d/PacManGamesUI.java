@@ -28,6 +28,7 @@ import de.amr.games.pacman.ui.input.Keyboard;
 import de.amr.games.pacman.ui.lib.FlashMessageView;
 import de.amr.games.pacman.ui.lib.GameClockFX;
 import de.amr.games.pacman.ui.lib.Picker;
+import de.amr.games.pacman.ui.lib.Ufx;
 import de.amr.games.pacman.ui.scene.GameConfiguration;
 import de.amr.games.pacman.ui.scene.GameScene;
 import de.amr.games.pacman.ui.scene.GameScene2D;
@@ -68,7 +69,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.lib.Ufx.createIcon;
-import static de.amr.games.pacman.ui2d.GlobalProperties.*;
+import static de.amr.games.pacman.ui.GlobalProperties.*;
 
 /**
  * User interface for all Pac-Man game variants (2D only).
@@ -138,13 +139,16 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         assets.store("font.handwriting",            rm.loadFont("fonts/Molle-Italic.ttf", 9));
         assets.store("font.monospaced",             rm.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12));
 
-        //
-        // Common to all game variants
-        //
+        assets.store("icon.auto",                   rm.loadImage("graphics/icons/auto.png"));
+        assets.store("icon.mute",                   rm.loadImage("graphics/icons/mute.png"));
+        assets.store("icon.pause",                  rm.loadImage("graphics/icons/pause.png"));
 
+        //TODO move to start page class
         assets.store("startpage.arrow.left",        rm.loadImage("graphics/icons/arrow-left.png"));
         assets.store("startpage.arrow.right",       rm.loadImage("graphics/icons/arrow-right.png"));
+
         assets.store("wallpaper.color",             Color.rgb(72, 78, 135));
+
         assets.store("voice.explain",               rm.url("sound/voice/press-key.mp3"));
         assets.store("voice.autopilot.off",         rm.url("sound/voice/autopilot-off.mp3"));
         assets.store("voice.autopilot.on",          rm.url("sound/voice/autopilot-on.mp3"));
@@ -273,16 +277,13 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         ImageView mutedIcon = createIcon(assets.get("icon.mute"), 48, sound().mutedProperty());
         ImageView autoIcon = createIcon(assets.get("icon.auto"), 48, GlobalProperties.PY_AUTOPILOT);
         var bottomRightIcons = new HBox(autoIcon, mutedIcon);
-
-        ImageView pauseIcon = createIcon(assets.get("icon.pause"), 64, clock.pausedPy);
-
         bottomRightIcons.setMaxWidth(128);
         bottomRightIcons.setMaxHeight(64);
+        bottomRightIcons.visibleProperty().bind(Bindings.createBooleanBinding(() -> pagePy.get() != editorPage, pagePy));
         StackPane.setAlignment(bottomRightIcons, Pos.BOTTOM_RIGHT);
-        StackPane.setAlignment(pauseIcon, Pos.CENTER);
 
-        bottomRightIcons.visibleProperty().bind(
-                Bindings.createBooleanBinding(() -> pagePy.get() != editorPage, pagePy));
+        ImageView pauseIcon = createIcon(assets.get("icon.pause"), 64, clock.pausedPy);
+        StackPane.setAlignment(pauseIcon, Pos.CENTER);
         pauseIcon.visibleProperty().bind(
                 Bindings.createBooleanBinding(() -> pagePy.get() != editorPage && clock.isPaused(), pagePy, clock.pausedPy));
 
@@ -329,8 +330,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             // We cannot use data binding to the game model classes because the game models are in project
             // "pacman-core" which has no dependency to JavaFX data binding.
             PacManGameXXL xxlGame = (PacManGameXXL) game;
-            xxlGame.setMapSelectionMode(PY_MAP_SELECTION_MODE.get());
-            PY_MAP_SELECTION_MODE.addListener((py, ov, selectionMode) -> xxlGame.setMapSelectionMode(selectionMode));
+            xxlGame.setMapSelectionMode(GlobalProperties2d.PY_MAP_SELECTION_MODE.get());
+            GlobalProperties2d.PY_MAP_SELECTION_MODE.addListener((py, ov, selectionMode) -> xxlGame.setMapSelectionMode(selectionMode));
         }
 
         String prefix = GameContext.assetPrefix(variant);

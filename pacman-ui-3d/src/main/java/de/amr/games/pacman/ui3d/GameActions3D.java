@@ -10,7 +10,7 @@ import de.amr.games.pacman.ui3d.scene3d.Perspective;
 import javafx.scene.shape.DrawMode;
 
 import static de.amr.games.pacman.ui.lib.Ufx.toggle;
-import static de.amr.games.pacman.ui2d.GlobalProperties.PY_PIP_ON;
+import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_PIP_ON;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_PERSPECTIVE;
 
