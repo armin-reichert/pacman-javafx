@@ -45,7 +45,7 @@ public class GamePage3D extends GamePage {
         backgroundProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (!context.currentGameSceneHasID("PlayScene3D")) {
-                    return context.assets().get("wallpaper.background"); // little Pac-Man tapestry
+                    return context.assets().get("wallpaper.tapestry"); // little Pac-Man tapestry
                 }
                 if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
                     return coloredBackground(Color.rgb(100, 100, 200));
