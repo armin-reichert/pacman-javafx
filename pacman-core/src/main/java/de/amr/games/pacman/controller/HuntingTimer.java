@@ -10,7 +10,10 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-public abstract class HuntingControl {
+/**
+ * Hunting happens in a sequence of scatter and chasing phases.
+ */
+public abstract class HuntingTimer extends TickTimer {
 
     public enum PhaseType { SCATTERING, CHASING }
 
@@ -21,53 +24,24 @@ public abstract class HuntingControl {
         return (byte) phaseIndex;
     }
 
-    private final TickTimer timer;
     private int phaseIndex;
     private PhaseType phaseType;
     private Runnable phaseChangeAction;
 
-    protected HuntingControl() {
-        timer = new TickTimer("HuntingTimer-" + getClass().getSimpleName());
+    protected HuntingTimer() {
+        super("HuntingTimer");
         phaseIndex = 0;
         phaseType = PhaseType.SCATTERING;
     }
 
     public void reset() {
-        timer.stop();
-        timer.reset(TickTimer.INDEFINITE);
+        stop();
+        reset(TickTimer.INDEFINITE);
         phaseIndex = 0;
         phaseType = PhaseType.SCATTERING;
     }
 
     public abstract long huntingTicks(int levelNumber, int phaseIndex);
-
-    public void update() {
-        timer.doTick();
-    }
-
-    public long currentTick() {
-        return timer.tickCount();
-    }
-
-    public long remaining() {
-        return timer.remainingTicks();
-    }
-
-    public boolean isCurrentPhaseOver() {
-        return timer.hasExpired();
-    }
-
-    public void start() {
-        timer.start();
-    }
-
-    public void stop() {
-        timer.stop();
-    }
-
-    public boolean isStopped() {
-        return timer.isStopped();
-    }
 
     public void setOnPhaseChange(Runnable phaseChangeAction) {
         this.phaseChangeAction = phaseChangeAction;
@@ -91,11 +65,11 @@ public abstract class HuntingControl {
     private void startHuntingPhase(int phaseIndex, PhaseType type, long duration) {
         this.phaseIndex = checkHuntingPhaseIndex(phaseIndex);
         phaseType = type;
-        timer.reset(duration);
-        timer.start();
+        reset(duration);
+        start();
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds) started. {}",
             this.phaseIndex, phaseType,
-            timer.durationTicks(), (float) timer.durationTicks() / GameModel.TICKS_PER_SECOND, timer);
+            durationTicks(), (float) durationTicks() / GameModel.TICKS_PER_SECOND, this);
     }
 
     public int phaseIndex() {
@@ -107,13 +81,13 @@ public abstract class HuntingControl {
     }
 
     public Optional<Integer> currentScatterPhaseIndex() {
-        return phaseType == HuntingControl.PhaseType.SCATTERING
+        return phaseType == HuntingTimer.PhaseType.SCATTERING
             ? Optional.of(phaseIndex / 2)
             : Optional.empty();
     }
 
     public Optional<Integer> currentChasingPhaseIndex() {
-        return phaseType == HuntingControl.PhaseType.CHASING
+        return phaseType == HuntingTimer.PhaseType.CHASING
             ? Optional.of(phaseIndex / 2)
             : Optional.empty();
     }

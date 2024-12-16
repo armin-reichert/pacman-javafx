@@ -6,7 +6,7 @@ package de.amr.games.pacman.arcade.pacman;
 
 import de.amr.games.pacman.arcade.Resources;
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.controller.HuntingControl;
+import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2f;
@@ -145,7 +145,7 @@ public class PacManGame extends GameModel {
             throw new RuntimeException(x);
         }
 
-        huntingControl = new HuntingControl() {
+        huntingControl = new HuntingTimer() {
             @Override
             public long huntingTicks(int levelNumber, int phaseIndex) {
                 long ticks = switch (levelNumber) {
@@ -448,7 +448,7 @@ public class PacManGame extends GameModel {
     }
 
     protected void ghostHuntingBehaviour(Ghost ghost) {
-        boolean chasing = huntingControl.phaseType() == HuntingControl.PhaseType.CHASING
+        boolean chasing = huntingControl.phaseType() == HuntingTimer.PhaseType.CHASING
             || ghost.id() == RED_GHOST && cruiseElroy > 0;
         Vector2i targetTile = chasing ? chasingTarget(ghost) : scatterTarget(ghost);
         ghost.followTarget(targetTile, ghostAttackSpeed(ghost));

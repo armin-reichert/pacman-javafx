@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tengen.ms_pacman;
 
-import de.amr.games.pacman.controller.HuntingControl;
+import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
@@ -112,7 +112,7 @@ public class MsPacManGameTengen extends GameModel {
     private final Steering demoLevelSteering = new RuleBasedPacSteering(this);
 
     //TODO: I have no info about the exact timing so far, so I use these (inofficial) Arcade game values for now
-    private class MsPacManGameTengenHuntingControl extends HuntingControl
+    private class MsPacManGameTengenHuntingControl extends HuntingTimer
     {
         static final long[] TICKS_LEVEL_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, TickTimer.INDEFINITE };
         static final long[] TICKS_LEVEL_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, TickTimer.INDEFINITE };
@@ -574,7 +574,7 @@ public class MsPacManGameTengen extends GameModel {
         if (huntingControl.phaseIndex() == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
             ghost.roam(speed);
         } else {
-            boolean chasing = huntingControl.phaseType() == HuntingControl.PhaseType.CHASING;
+            boolean chasing = huntingControl.phaseType() == HuntingTimer.PhaseType.CHASING;
             Vector2i targetTile = chasing ? chasingTarget(ghost) : scatterTarget(ghost);
             ghost.followTarget(targetTile, speed);
         }

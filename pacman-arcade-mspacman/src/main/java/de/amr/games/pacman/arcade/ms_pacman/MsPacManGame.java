@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.controller.HuntingControl;
+import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
@@ -168,7 +168,7 @@ public class MsPacManGame extends GameModel {
         scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
 
-        huntingControl = new HuntingControl() {
+        huntingControl = new HuntingTimer() {
             @Override
             public long huntingTicks(int levelNumber, int phaseIndex) {
                 long ticks = levelNumber < 5 ? HUNTING_TICKS_LEVEL_1_TO_4[phaseIndex] : HUNTING_TICKS_LEVEL_5_PLUS[phaseIndex];
@@ -554,7 +554,7 @@ public class MsPacManGame extends GameModel {
         if (huntingControl.phaseIndex() == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
             ghost.roam(ghostAttackSpeed(ghost));
         } else {
-            boolean chasing = huntingControl.phaseType() == HuntingControl.PhaseType.CHASING
+            boolean chasing = huntingControl.phaseType() == HuntingTimer.PhaseType.CHASING
                 || ghost.id() == RED_GHOST && cruiseElroy > 0;
             Vector2i targetTile = chasing ? chasingTarget(ghost) : scatterTarget(ghost);
             ghost.followTarget(targetTile, ghostAttackSpeed(ghost));

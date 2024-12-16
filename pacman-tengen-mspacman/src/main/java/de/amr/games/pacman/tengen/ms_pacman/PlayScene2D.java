@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.controller.HuntingControl;
+import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
@@ -386,7 +386,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
         GameLevel level = context.level();
         GameSound sound = context.sound();
         if (context.gameState() == GameState.HUNTING && !level.powerTimer().isRunning()) {
-            HuntingControl huntingControl = context.game().huntingControl();
+            HuntingTimer huntingControl = context.game().huntingControl();
             int sirenNumber = 1 + huntingControl.phaseIndex() / 2; // TODO check how this works in original game
             sound.selectSiren(sirenNumber);
             sound.playSiren();

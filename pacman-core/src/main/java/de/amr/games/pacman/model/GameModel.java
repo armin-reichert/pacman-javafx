@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
-import de.amr.games.pacman.controller.HuntingControl;
+import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
@@ -14,6 +14,7 @@ import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.Pac;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -45,7 +46,7 @@ public abstract class GameModel {
     protected final List<Byte>     levelCounter = new ArrayList<>();
     protected final GateKeeper     gateKeeper = new GateKeeper();
     protected final ScoreManager   scoreManager = new ScoreManager();
-    protected HuntingControl       huntingControl;
+    protected HuntingTimer huntingControl;
     protected File                 customMapDir;
     protected boolean              levelCounterEnabled;
     protected boolean              playing;
@@ -115,7 +116,7 @@ public abstract class GameModel {
 
     public void updateCustomMaps() {}
 
-    public HuntingControl huntingControl() {
+    public HuntingTimer huntingControl() {
         return huntingControl;
     }
 
@@ -317,30 +318,32 @@ public abstract class GameModel {
     }
 
     public void doHuntingStep() {
-        if (huntingControl.isCurrentPhaseOver()) {
-            Logger.info("Hunting phase {} ({}) ends, tick={}", huntingControl.phaseIndex(), huntingControl.phaseType(), huntingControl.currentTick());
-            huntingControl.startNextPhase(level.number);
-        } else {
-            huntingControl.update();
-        }
-
+        GameWorld world = level.world();
+        Pac pac = level.pac();
+        updateHuntingTimer();
         level.blinking().tick();
         gateKeeper.unlockGhosts(level, this::onGhostReleased, eventLog);
-
-        checkForFood(level.pac().tile());
-        level.pac().update(this);
+        checkForFood(world, pac);
+        pac.update(this);
         updatePacPower();
         checkPacKilled();
-        if (eventLog.pacKilled) {
-            return;
+        if (!eventLog.pacKilled) {
+            level.ghosts().forEach(ghost -> ghost.update(this));
+            level.ghosts(FRIGHTENED).filter(level.pac()::sameTile).forEach(this::killGhost);
+            if (eventLog.killedGhosts.isEmpty()) {
+                level.bonus().ifPresent(this::updateBonus);
+            }
         }
+    }
 
-        level.ghosts().forEach(ghost -> ghost.update(this));
-        level.ghosts(FRIGHTENED).filter(level.pac()::sameTile).forEach(this::killGhost);
-        if (!eventLog.killedGhosts.isEmpty()) {
-            return;
+    private void updateHuntingTimer() {
+        if (huntingControl.hasExpired()) {
+            Logger.info("Hunting phase {} ({}) ends, tick={}",
+                huntingControl.phaseIndex(), huntingControl.phaseType(), huntingControl.tickCount());
+            huntingControl.startNextPhase(level.number);
+        } else {
+            huntingControl.doTick();
         }
-        level.bonus().ifPresent(this::updateBonus);
     }
 
     private void checkPacKilled() {
@@ -352,18 +355,18 @@ public abstract class GameModel {
         }
     }
 
-    private void checkForFood(Vector2i tile) {
-        if (!level.world().hasFoodAt(tile)) {
-            level.pac().starve();
-            return;
+    private void checkForFood(GameWorld world, Pac pac) {
+        Vector2i tile = pac.tile();
+        if (world.hasFoodAt(tile)) {
+            eventLog.foodFoundTile = tile;
+            eventLog.energizerFound = world.isEnergizerPosition(tile);
+            world.registerFoodEatenAt(tile);
+            onPelletOrEnergizerEaten(tile, world.uneatenFoodCount(), eventLog.energizerFound);
+            pac.endStarving();
+            publishGameEvent(GameEventType.PAC_FOUND_FOOD, tile);
+        } else {
+            pac.starve();
         }
-        level.pac().endStarving();
-        eventLog.foodFoundTile = tile;
-        eventLog.energizerFound = level.world().isEnergizerPosition(tile);
-        level.world().registerFoodEatenAt(tile);
-        // let specific game do its stuff:
-        onPelletOrEnergizerEaten(tile, level.world().uneatenFoodCount(), eventLog.energizerFound);
-        publishGameEvent(GameEventType.PAC_FOUND_FOOD, tile);
     }
 
     protected void processEatenEnergizer() {
