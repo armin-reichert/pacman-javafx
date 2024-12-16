@@ -47,7 +47,7 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public class MsPacManGame extends GameModel {
 
-    private static final String MAP_PATTERN = "/de/amr/games/pacman/maps/mspacman/mspacman_%d.world";
+    private static final String MAP_PATTERN = "maps/mspacman_%d.world";
 
     private final List<WorldMap> maps = new ArrayList<>();
 
