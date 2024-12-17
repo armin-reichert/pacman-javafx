@@ -4,12 +4,16 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.apps;
 
+import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacManStartPage;
 import de.amr.games.pacman.arcade.ms_pacman.MsPacManGame;
+import de.amr.games.pacman.arcade.pacman.ArcadePacManStartPage;
 import de.amr.games.pacman.arcade.pacman.PacManGame;
+import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXLStartPage;
 import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacManStartPage;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import de.amr.games.pacman.ui3d.GlobalProperties3d;
@@ -67,14 +71,18 @@ public class PacManGames3dApp extends Application {
     public void start(Stage stage) {
         ui = new PacManGamesUI_3D();
         ui.loadAssets();
+        // Now, UI asset storage exists, add game variants including thier assets
         ui.setGameConfiguration(GameVariant.MS_PACMAN, new MsPacManGameConfiguration_3D());
         ui.setGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration_3D());
         ui.setGameConfiguration(GameVariant.PACMAN, new PacManGameConfiguration_3D());
         ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration_3D());
-        for (GameVariant variant : GameVariant.values()) {
-            ui.assets().addAll(ui.gameConfiguration(variant).assets());
-        }
+
         ui.create(stage, initialSize());
+        ui.addStartPageCarouselSlide(new ArcadePacManStartPage().root());
+        ui.addStartPageCarouselSlide(new ArcadeMsPacManStartPage().root());
+        ui.addStartPageCarouselSlide(new ArcadePacManXXLStartPage().root());
+        ui.addStartPageCarouselSlide(new TengenMsPacManStartPage().root());
+
         ui.appendDashboardItem(PacManGamesUI.DashboardItemID.README);
         ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GENERAL);
         ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GAME_CONTROL);

@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.apps;
 
+import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacManStartPage;
 import de.amr.games.pacman.arcade.ms_pacman.MsPacManGame;
 import de.amr.games.pacman.arcade.ms_pacman.MsPacManGameConfiguration;
 import de.amr.games.pacman.controller.GameController;
@@ -40,6 +41,8 @@ public class ArcadeMsPacManApp extends Application {
         ui.loadAssets();
         ui.setGameConfiguration(GameVariant.MS_PACMAN, new MsPacManGameConfiguration());
         ui.create(stage, initialSize());
+        ui.addStartPageCarouselSlide(new ArcadeMsPacManStartPage().root());
+
         ui.appendDashboardItem(PacManGamesUI.DashboardItemID.README);
         ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GENERAL);
         ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GAME_CONTROL);

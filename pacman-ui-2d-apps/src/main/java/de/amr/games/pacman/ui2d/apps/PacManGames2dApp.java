@@ -4,21 +4,26 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.apps;
 
+import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacManStartPage;
 import de.amr.games.pacman.arcade.ms_pacman.MsPacManGame;
 import de.amr.games.pacman.arcade.ms_pacman.MsPacManGameConfiguration;
+import de.amr.games.pacman.arcade.pacman.ArcadePacManStartPage;
 import de.amr.games.pacman.arcade.pacman.PacManGame;
 import de.amr.games.pacman.arcade.pacman.PacManGameConfiguration;
+import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXLStartPage;
 import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
 import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXLConfiguration;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacManStartPage;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -29,6 +34,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * @author Armin Reichert
@@ -61,11 +67,18 @@ public class PacManGames2dApp extends Application {
     public void start(Stage stage) {
         ui = new PacManGamesUI();
         ui.loadAssets();
-        ui.setGameConfiguration(GameVariant.MS_PACMAN, new MsPacManGameConfiguration());
-        ui.setGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration());
+        // Now, UI asset storage exists, add game variants including thier assets
         ui.setGameConfiguration(GameVariant.PACMAN, new PacManGameConfiguration());
+        ui.setGameConfiguration(GameVariant.MS_PACMAN, new MsPacManGameConfiguration());
         ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration());
+        ui.setGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration());
+
         ui.create(stage, initialSize());
+        ui.addStartPageCarouselSlide(new ArcadePacManStartPage().root());
+        ui.addStartPageCarouselSlide(new ArcadeMsPacManStartPage().root());
+        ui.addStartPageCarouselSlide(new ArcadePacManXXLStartPage().root());
+        ui.addStartPageCarouselSlide(new TengenMsPacManStartPage().root());
+
         ui.appendDashboardItem(PacManGamesUI.DashboardItemID.README);
         ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GENERAL);
         ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GAME_CONTROL);

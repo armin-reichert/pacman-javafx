@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui3d.apps;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacManStartPage;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxJoypad;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
@@ -45,6 +46,8 @@ public class TengenMsPacManApp extends Application {
         ui.loadAssets();
         ui.setGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration_3D());
         ui.create(stage, initialSize());
+        ui.addStartPageCarouselSlide(new TengenMsPacManStartPage().root());
+
         ui.appendDashboardItem(PacManGamesUI.DashboardItemID.README);
         ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GENERAL);
         ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GAME_CONTROL);
