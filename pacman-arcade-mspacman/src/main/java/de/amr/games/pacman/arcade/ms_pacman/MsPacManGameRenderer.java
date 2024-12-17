@@ -31,7 +31,7 @@ import static de.amr.games.pacman.lib.RectArea.rect;
  */
 public class MsPacManGameRenderer implements GameRenderer {
 
-    public static final List<WorldMapColoring> WORLD_MAP_COLORINGS = List.of(
+    static final List<WorldMapColoring> WORLD_MAP_COLORINGS = List.of(
         new WorldMapColoring("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
         new WorldMapColoring("47B7FF", "DEDEFF", "FCB5FF","FFFF00"),
         new WorldMapColoring("DE9751", "DEDEFF", "FCB5FF","FF0000"),

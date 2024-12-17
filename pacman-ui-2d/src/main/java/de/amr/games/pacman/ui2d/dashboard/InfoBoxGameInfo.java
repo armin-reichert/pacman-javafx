@@ -4,15 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
-import de.amr.games.pacman.arcade.ms_pacman.MsPacManGameRenderer;
-import de.amr.games.pacman.arcade.pacman.PacManGameRenderer;
 import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.assets.WorldMapColoring;
@@ -49,10 +46,7 @@ public class InfoBoxGameInfo extends InfoBox {
                 Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
                 return "%s %s %s".formatted(colorMap.get("fill"), colorMap.get("stroke"), colorMap.get("pellet"));
             } else if (worldMap.hasConfigValue("colorMapIndex")) {
-                int index = worldMap.getConfigValue("colorMapIndex");
-                WorldMapColoring coloring = context.gameVariant() == GameVariant.PACMAN
-                    ? PacManGameRenderer.WORLDMAP_COLORING
-                    : MsPacManGameRenderer.WORLD_MAP_COLORINGS.get(index);
+                WorldMapColoring coloring = context.currentGameSceneConfig().worldMapColoring(worldMap);
                 return formatColorMap(coloring.fill(), coloring.stroke(), coloring.pellet());
             } else {
                 return InfoText.NO_INFO;
