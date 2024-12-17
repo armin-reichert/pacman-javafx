@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+group = 'de.amr.games.pacman.ui3d.apps'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':pacman-lib')
+    implementation project(':pacman-core')
+    implementation project(':pacman-ui-core')
+    implementation project(':pacman-ui-2d')
+    implementation project(':pacman-ui-3d')
+    implementation project(':pacman-mapeditor')
+    implementation project(':pacman-arcade-pacman')
+    implementation project(':pacman-arcade-pacmanxxl')
+    implementation project(':pacman-arcade-mspacman')
+    implementation project(':pacman-tengen-mspacman')
+    implementation libs.bundles.tinylog
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+javafx {
+    version = versions.javafx
+    modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.media']
+}
+
+
