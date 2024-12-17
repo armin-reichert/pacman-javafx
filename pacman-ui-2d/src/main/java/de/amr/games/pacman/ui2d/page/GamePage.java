@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.tengen.ms_pacman.SceneDisplayMode;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameRenderer;
 import de.amr.games.pacman.ui.action.GameAction;
@@ -19,7 +18,6 @@ import de.amr.games.pacman.ui.scene.CameraControlledView;
 import de.amr.games.pacman.ui.scene.GameScene;
 import de.amr.games.pacman.ui.scene.GameScene2D;
 import de.amr.games.pacman.ui.scene.TooFancyGameCanvasContainer;
-import de.amr.games.pacman.ui2d.PacManGamesUI;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
@@ -40,7 +38,6 @@ import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.tengen.ms_pacman.GlobalProperties.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.games.pacman.ui.GlobalProperties.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui.GlobalProperties.PY_IMMUNITY;
 import static de.amr.games.pacman.ui.input.Keyboard.*;
@@ -126,16 +123,19 @@ public class GamePage extends StackPane implements GameActionProvider {
     protected final DashboardLayer dashboardLayer; // dashboard, picture-in-picture view
     protected final PopupLayer popupLayer; // help, signature
 
-    protected final ContextMenu contextMenu = new ContextMenu();
+    protected ContextMenu contextMenu;
 
     public GamePage(GameContext context, Scene parentScene) {
         this.context = checkNotNull(context);
         this.parentScene = checkNotNull(parentScene);
 
         bindGameActions();
+
         setOnContextMenuRequested(this::handleContextMenuRequest);
         //TODO is this the recommended way to close an open context-menu?
-        setOnMouseClicked(e -> contextMenu.hide());
+        setOnMouseClicked(e -> {
+            if (contextMenu != null) contextMenu.hide();
+        });
 
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setFontSmoothingType(FontSmoothingType.GRAY);
@@ -216,65 +216,21 @@ public class GamePage extends StackPane implements GameActionProvider {
     }
 
     private void handleContextMenuRequest(ContextMenuEvent event) {
-        if (!context.currentGameSceneHasID("PlayScene2D")) {
-            return;
-        }
-        contextMenu.getItems().clear();
+        gameScenePy.get().supplyContextMenu(event).ifPresent(menu -> {
+            contextMenu = new ContextMenu();
+            contextMenu.getItems().addAll(menu.getItems());
 
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            contextMenu.getItems().add(Ufx.contextMenuTitleItem(context.locText("scene_display")));
-            // Switching scene display mode
-            var miScaledToFit = new RadioMenuItem(context.locText("scaled_to_fit"));
-            miScaledToFit.selectedProperty().addListener(
-                (py,ov,nv) -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCALED_TO_FIT:SceneDisplayMode.SCROLLING));
-            PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, nv) -> miScaledToFit.setSelected(nv == SceneDisplayMode.SCALED_TO_FIT));
-            contextMenu.getItems().add(miScaledToFit);
-
-            var miScrolling = new RadioMenuItem(context.locText("scrolling"));
-            miScrolling.selectedProperty().addListener(
-                (py,ov,nv) -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCROLLING:SceneDisplayMode.SCALED_TO_FIT));
-            PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, nv) -> miScrolling.setSelected(nv == SceneDisplayMode.SCROLLING));
-            contextMenu.getItems().add(miScrolling);
-
-            ToggleGroup exclusion = new ToggleGroup();
-            miScaledToFit.setToggleGroup(exclusion);
-            miScrolling.setToggleGroup(exclusion);
-            if (PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get() == SceneDisplayMode.SCALED_TO_FIT) {
-                miScaledToFit.setSelected(true);
-            } else {
-                miScrolling.setSelected(true);
-            }
-        }
-        contextMenu.getItems().add(Ufx.contextMenuTitleItem(context.locText("pacman")));
-
-        var miAutopilot = new CheckMenuItem(context.locText("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
-        contextMenu.getItems().add(miAutopilot);
-
-        var miImmunity = new CheckMenuItem(context.locText("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
-        contextMenu.getItems().add(miImmunity);
-
-        contextMenu.getItems().add(new SeparatorMenuItem());
-
-        var miMuted = new CheckMenuItem(context.locText("muted"));
-        miMuted.selectedProperty().bindBidirectional(context.sound().mutedProperty());
-        contextMenu.getItems().add(miMuted);
-
-        if (context.gameVariant() == GameVariant.PACMAN_XXL) {
+            contextMenu.getItems().add(new SeparatorMenuItem());
             var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
-            miOpenMapEditor.setOnAction(e -> {
+            miOpenMapEditor.setOnAction(ae -> {
                 if (actionOpenEditor != null) actionOpenEditor.execute(context);
             });
+            miOpenMapEditor.setDisable(actionOpenEditor == null || !actionOpenEditor.isEnabled(context));
             contextMenu.getItems().add(miOpenMapEditor);
-        }
 
-        var miQuit = new MenuItem(context.locText("quit"));
-        miQuit.setOnAction(e -> GameActions2D.SHOW_START_PAGE.execute(context));
-        contextMenu.getItems().add(miQuit);
-
-        contextMenu.show(this, event.getScreenX(), event.getScreenY());
-        contextMenu.requestFocus();
+            contextMenu.show(this, event.getScreenX(), event.getScreenY());
+            contextMenu.requestFocus();
+        });
         event.consume();
     }
 
@@ -282,7 +238,7 @@ public class GamePage extends StackPane implements GameActionProvider {
         if (gameScene != null) {
             embedGameScene(gameScene);
         }
-        contextMenu.hide();
+        if (contextMenu != null) contextMenu.hide();
     }
 
     public void embedGameScene(GameScene gameScene) {

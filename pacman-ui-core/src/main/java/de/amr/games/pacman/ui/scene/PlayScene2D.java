@@ -18,10 +18,14 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.action.GameActions2D;
 import de.amr.games.pacman.ui.assets.GameSound;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
+import de.amr.games.pacman.ui.lib.Ufx;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.*;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
@@ -302,5 +306,42 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onPacLostPower(GameEvent e) {
         context.sound().stopPacPowerSound();
+    }
+
+    @Override
+    public Optional<ContextMenu> supplyContextMenu(ContextMenuEvent e) {
+        ContextMenu contextMenu = new ContextMenu();
+
+        contextMenu.getItems().add(Ufx.contextMenuTitleItem(context.locText("pacman")));
+
+        var miAutopilot = new CheckMenuItem(context.locText("autopilot"));
+        miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
+        contextMenu.getItems().add(miAutopilot);
+
+        var miImmunity = new CheckMenuItem(context.locText("immunity"));
+        miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
+        contextMenu.getItems().add(miImmunity);
+
+        contextMenu.getItems().add(new SeparatorMenuItem());
+
+        var miMuted = new CheckMenuItem(context.locText("muted"));
+        miMuted.selectedProperty().bindBidirectional(context.sound().mutedProperty());
+        contextMenu.getItems().add(miMuted);
+
+        /*
+        if (context.gameVariant() == GameVariant.PACMAN_XXL) {
+            var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
+            miOpenMapEditor.setOnAction(ae -> {
+                if (actionOpenEditor != null) actionOpenEditor.execute(context);
+            });
+            contextMenu.getItems().add(miOpenMapEditor);
+        }
+         */
+
+        var miQuit = new MenuItem(context.locText("quit"));
+        miQuit.setOnAction(ae -> GameActions2D.SHOW_START_PAGE.execute(context));
+        contextMenu.getItems().add(miQuit);
+
+        return Optional.of(contextMenu);
     }
 }

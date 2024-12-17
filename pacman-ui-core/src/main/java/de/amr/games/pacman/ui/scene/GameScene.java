@@ -6,10 +6,14 @@ package de.amr.games.pacman.ui.scene;
 
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.ui.action.GameActionProvider;
 import de.amr.games.pacman.ui.GameContext;
+import de.amr.games.pacman.ui.action.GameActionProvider;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+
+import java.util.Optional;
 
 /**
  * Common interface of all game scenes (2D and 3D).
@@ -56,4 +60,6 @@ public interface GameScene extends GameEventListener, GameActionProvider {
      * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.
      */
     default void onSceneVariantSwitch(GameScene oldScene) {}
+
+    default Optional<ContextMenu> supplyContextMenu(ContextMenuEvent e) { return Optional.empty(); }
 }

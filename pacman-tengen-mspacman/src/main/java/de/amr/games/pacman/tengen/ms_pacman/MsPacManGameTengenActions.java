@@ -13,8 +13,8 @@ import de.amr.games.pacman.ui.action.GameActions2D;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.tengen.ms_pacman.GlobalProperties.PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED;
-import static de.amr.games.pacman.tengen.ms_pacman.GlobalProperties.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
+import static de.amr.games.pacman.tengen.ms_pacman.GlobalPropertiesTengen.PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED;
+import static de.amr.games.pacman.tengen.ms_pacman.GlobalPropertiesTengen.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.games.pacman.ui.lib.Ufx.toggle;
 
 public enum MsPacManGameTengenActions implements GameAction {

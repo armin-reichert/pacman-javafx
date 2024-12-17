@@ -18,6 +18,7 @@ import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenActions;
+import de.amr.games.pacman.tengen.ms_pacman.SceneDisplayMode;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.action.GameAction;
 import de.amr.games.pacman.ui.action.GameActions2D;
@@ -33,6 +34,8 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.*;
+import javafx.scene.control.*;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.paint.Color;
@@ -48,14 +51,14 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.tengen.ms_pacman.GlobalPropertiesTengen.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenActions.setDefaultJoypadBinding;
 import static de.amr.games.pacman.ui.GameContext.assetPrefix;
-import static de.amr.games.pacman.ui.GlobalProperties.PY_AUTOPILOT;
-import static de.amr.games.pacman.ui.GlobalProperties.PY_IMMUNITY;
+import static de.amr.games.pacman.ui.GlobalProperties.*;
 import static de.amr.games.pacman.ui.action.GameActions2D.*;
 import static de.amr.games.pacman.ui.input.Keyboard.alt;
-import static de.amr.games.pacman.ui.lib.Ufx.doAfterSec;
-import static de.amr.games.pacman.ui.lib.Ufx.now;
+import static de.amr.games.pacman.ui.lib.Ufx.*;
+import static de.amr.games.pacman.ui.lib.Ufx.contextMenuTitleItem;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
 
 /**
@@ -593,5 +596,63 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
             })
         );
+    }
+
+    @Override
+    public Optional<ContextMenu> supplyContextMenu(ContextMenuEvent e) {
+        ContextMenu contextMenu = new ContextMenu();
+
+        contextMenu.getItems().add(contextMenuTitleItem(context.locText("scene_display")));
+
+        var item = new MenuItem(context.locText("use_2D_scene"));
+        item.setOnAction(ae -> GameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute(context));
+        contextMenu.getItems().add(item);
+
+        // Toggle picture-in-picture display
+        var miPiP = new CheckMenuItem(context.locText("pip"));
+        miPiP.selectedProperty().bindBidirectional(PY_PIP_ON);
+        contextMenu.getItems().add(miPiP);
+
+        contextMenu.getItems().add(contextMenuTitleItem(context.locText("select_perspective")));
+
+        // Camera perspective selection
+        var perspectivesGroup = new ToggleGroup();
+        for (var perspective : Perspective.Name.values()) {
+            var miPerspective = new RadioMenuItem(context.locText(perspective.name()));
+            miPerspective.setToggleGroup(perspectivesGroup);
+            // keep global property in sync with selection
+            miPerspective.selectedProperty().addListener((py, ov, selected) -> {
+                if (selected) {
+                    PY_3D_PERSPECTIVE.set(perspective);
+                }
+            });
+            // keep selection in sync with global property value
+            PY_3D_PERSPECTIVE.addListener((py, ov, newPerspective) -> miPerspective.setSelected(newPerspective == perspective));
+            miPerspective.setSelected(perspective == PY_3D_PERSPECTIVE.get()); // == is allowed for enum comparison
+            contextMenu.getItems().add(miPerspective);
+            }
+
+        // Common items
+        contextMenu.getItems().add(contextMenuTitleItem(context.locText("pacman")));
+
+        var miAutopilot = new CheckMenuItem(context.locText("autopilot"));
+        miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
+        contextMenu.getItems().add(miAutopilot);
+
+        var miImmunity = new CheckMenuItem(context.locText("immunity"));
+        miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
+        contextMenu.getItems().add(miImmunity);
+
+        contextMenu.getItems().add(new SeparatorMenuItem());
+
+        var miMuted = new CheckMenuItem(context.locText("muted"));
+        miMuted.selectedProperty().bindBidirectional(context.sound().mutedProperty());
+        contextMenu.getItems().add(miMuted);
+
+        var miQuit = new MenuItem(context.locText("quit"));
+        miQuit.setOnAction(ae -> GameActions2D.SHOW_START_PAGE.execute(context));
+        contextMenu.getItems().add(miQuit);
+
+        return Optional.of(contextMenu);
     }
 }

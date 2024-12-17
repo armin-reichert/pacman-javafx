@@ -11,12 +11,15 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui.action.GameActions2D;
 import de.amr.games.pacman.ui.assets.GameSound;
 import de.amr.games.pacman.ui.input.Keyboard;
+import de.amr.games.pacman.ui.lib.Ufx;
 import de.amr.games.pacman.ui.scene.CameraControlledView;
 import de.amr.games.pacman.ui.scene.GameScene;
 import de.amr.games.pacman.ui.scene.GameScene2D;
@@ -30,18 +33,22 @@ import javafx.scene.Node;
 import javafx.scene.ParallelCamera;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.*;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
+import static de.amr.games.pacman.tengen.ms_pacman.GlobalPropertiesTengen.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenActions.QUIT_DEMO_LEVEL;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenActions.setDefaultJoypadBinding;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.*;
@@ -493,5 +500,55 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
         levelCompleteAnimation = new LevelCompleteAnimation(level.numFlashes(), 10);
         levelCompleteAnimation.setOnHideGhosts(() -> level.ghosts().forEach(Ghost::hide));
         levelCompleteAnimation.setOnFinished(() -> context.gameState().timer().expire());
+    }
+
+    @Override
+    public Optional<ContextMenu> supplyContextMenu(ContextMenuEvent e) {
+        ContextMenu contextMenu = new ContextMenu();
+        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            contextMenu.getItems().add(Ufx.contextMenuTitleItem(context.locText("scene_display")));
+            // Switching scene display mode
+            var miScaledToFit = new RadioMenuItem(context.locText("scaled_to_fit"));
+            miScaledToFit.selectedProperty().addListener(
+                    (py,ov,nv) -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCALED_TO_FIT:SceneDisplayMode.SCROLLING));
+            PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, nv) -> miScaledToFit.setSelected(nv == SceneDisplayMode.SCALED_TO_FIT));
+            contextMenu.getItems().add(miScaledToFit);
+
+            var miScrolling = new RadioMenuItem(context.locText("scrolling"));
+            miScrolling.selectedProperty().addListener(
+                    (py,ov,nv) -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCROLLING:SceneDisplayMode.SCALED_TO_FIT));
+            PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, nv) -> miScrolling.setSelected(nv == SceneDisplayMode.SCROLLING));
+            contextMenu.getItems().add(miScrolling);
+
+            ToggleGroup exclusion = new ToggleGroup();
+            miScaledToFit.setToggleGroup(exclusion);
+            miScrolling.setToggleGroup(exclusion);
+            if (PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get() == SceneDisplayMode.SCALED_TO_FIT) {
+                miScaledToFit.setSelected(true);
+            } else {
+                miScrolling.setSelected(true);
+            }
+        }
+        contextMenu.getItems().add(Ufx.contextMenuTitleItem(context.locText("pacman")));
+
+        var miAutopilot = new CheckMenuItem(context.locText("autopilot"));
+        miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
+        contextMenu.getItems().add(miAutopilot);
+
+        var miImmunity = new CheckMenuItem(context.locText("immunity"));
+        miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
+        contextMenu.getItems().add(miImmunity);
+
+        contextMenu.getItems().add(new SeparatorMenuItem());
+
+        var miMuted = new CheckMenuItem(context.locText("muted"));
+        miMuted.selectedProperty().bindBidirectional(context.sound().mutedProperty());
+        contextMenu.getItems().add(miMuted);
+
+        var miQuit = new MenuItem(context.locText("quit"));
+        miQuit.setOnAction(ae -> GameActions2D.SHOW_START_PAGE.execute(context));
+        contextMenu.getItems().add(miQuit);
+
+        return Optional.of(contextMenu);
     }
 }
