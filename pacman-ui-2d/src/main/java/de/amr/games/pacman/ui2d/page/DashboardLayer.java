@@ -4,11 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.DashboardAssets;
 import de.amr.games.pacman.ui2d.dashboard.InfoBox;
-import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import javafx.beans.binding.Bindings;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -84,14 +82,6 @@ public class DashboardLayer extends BorderPane {
     public void showDashboard() {
         updateDashboardContainer();
         dashboardContainer.setVisible(true);
-        dashboardContainer.getChildren().stream()
-                .filter(infoBox -> infoBox instanceof InfoBoxCustomMaps)
-                .findFirst()
-                .ifPresent(infoBox -> {
-                    if (context.gameVariant() != GameVariant.PACMAN_XXL) {
-                        dashboardContainer.getChildren().remove(infoBox);
-                    }
-                });
     }
 
     public void toggleDashboardVisibility() {

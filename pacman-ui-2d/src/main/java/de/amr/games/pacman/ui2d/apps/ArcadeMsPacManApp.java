@@ -40,6 +40,13 @@ public class ArcadeMsPacManApp extends Application {
         ui.loadAssets();
         ui.setGameConfiguration(GameVariant.MS_PACMAN, new MsPacManGameConfiguration());
         ui.create(stage, initialSize());
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.README);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GENERAL);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GAME_CONTROL);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GAME_INFO);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.ACTOR_INFO);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.KEYBOARD);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.ABOUT);
         ui.show();
     }
 

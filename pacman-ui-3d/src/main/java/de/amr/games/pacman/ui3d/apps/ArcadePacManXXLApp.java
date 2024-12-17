@@ -7,8 +7,10 @@ package de.amr.games.pacman.ui3d.apps;
 import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
+import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.variants.PacManGameXXLConfiguration_3D;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
@@ -41,7 +43,15 @@ public class ArcadePacManXXLApp extends Application {
         ui.loadAssets();
         ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration_3D());
         ui.create(stage, initialSize());
-        ui.insertDashboardItem(5, ui.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.README);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GENERAL);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GAME_CONTROL);
+        ui.appendDashboardItem(ui.locText("infobox.3D_settings.title"), new InfoBox3D());
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GAME_INFO);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.ACTOR_INFO);
+        ui.appendDashboardItem(ui.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.KEYBOARD);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.ABOUT);
         ui.show();
     }
 

@@ -7,7 +7,10 @@ package de.amr.games.pacman.ui3d.apps;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
+import de.amr.games.pacman.ui2d.PacManGamesUI;
+import de.amr.games.pacman.ui2d.dashboard.InfoBoxJoypad;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
+import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.variants.MsPacManGameTengenConfiguration_3D;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
@@ -42,6 +45,15 @@ public class TengenMsPacManApp extends Application {
         ui.loadAssets();
         ui.setGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration_3D());
         ui.create(stage, initialSize());
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.README);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GENERAL);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GAME_CONTROL);
+        ui.appendDashboardItem(ui.locText("infobox.3D_settings.title"), new InfoBox3D());
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GAME_INFO);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.ACTOR_INFO);
+        ui.appendDashboardItem("Joypad Settings", new InfoBoxJoypad());
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.KEYBOARD);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.ABOUT);
         ui.show();
     }
 

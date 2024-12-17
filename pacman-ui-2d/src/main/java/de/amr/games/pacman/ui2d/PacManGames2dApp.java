@@ -14,6 +14,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration;
+import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
@@ -63,14 +64,21 @@ public class PacManGames2dApp extends Application {
         ui.setGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration());
         ui.setGameConfiguration(GameVariant.PACMAN, new PacManGameConfiguration());
         ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration());
-        for (GameVariant variant : GameVariant.values()) {
-            ui.assets.addAll(ui.gameConfiguration(variant).assets());
-        }
         ui.create(stage, initialSize());
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.README);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GENERAL);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GAME_CONTROL);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GAME_INFO);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.ACTOR_INFO);
+        ui.appendDashboardItem(ui.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.KEYBOARD);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.ABOUT);
+
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         Logger.info("Assets loaded: {}", ui.assets().summary(
             Map.of(Image.class, "images",  Font.class, "fonts", Color.class, "colors", AudioClip.class, "audio clips")
         ));
+
         ui.show();
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }

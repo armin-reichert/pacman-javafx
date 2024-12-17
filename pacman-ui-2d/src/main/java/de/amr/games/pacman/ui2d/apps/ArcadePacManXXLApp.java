@@ -41,7 +41,14 @@ public class ArcadePacManXXLApp extends Application {
         ui.loadAssets();
         ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration());
         ui.create(stage, initialSize());
-        ui.insertDashboardItem(5, ui.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.README);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GENERAL);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GAME_CONTROL);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GAME_INFO);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.ACTOR_INFO);
+        ui.appendDashboardItem(ui.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.KEYBOARD);
+        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.ABOUT);
         ui.show();
     }
 
