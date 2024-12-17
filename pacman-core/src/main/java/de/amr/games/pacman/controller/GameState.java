@@ -8,6 +8,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
+import de.amr.games.pacman.model.CustomMapsHandler;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -36,7 +37,9 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();
             game.resetEverything();
-            game.updateCustomMaps();
+            if (game instanceof CustomMapsHandler customMapsHandler) {
+                customMapsHandler.updateCustomMaps();
+            }
         }
 
         @Override

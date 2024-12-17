@@ -9,7 +9,9 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.CustomMapsHandler;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
@@ -29,7 +31,7 @@ import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
  * Extension of Arcade Pac-Man with 8 additional mazes (thanks to the one and only
  * <a href="https://github.com/masonicGIT/pacman">Shaun Williams</a>).
  */
-public class PacManGameXXL extends PacManGame {
+public class PacManGameXXL extends PacManGame implements CustomMapsHandler {
 
     private static final int MAP_COUNT = 8;
     private static final String MAP_PATTERN = "maps/masonic_%d.world";
@@ -45,12 +47,17 @@ public class PacManGameXXL extends PacManGame {
         Map.of("fill", "#5036d9", "stroke", "#5f8bcf", "door", "#fcb5ff", "pellet", "#feb8ae")
     );
 
+    private final File customMapDir;
     private final List<WorldMap> standardMaps = new ArrayList<>();
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
     private MapSelectionMode mapSelectionMode;
 
     public PacManGameXXL(File userDir) {
         super(userDir);
+        customMapDir = new File(userDir, "maps");
+        if (customMapDir.mkdir()) {
+            Logger.info("Created custom map directory {}", customMapDir);
+        }
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman_xxl.xml"));
         mapSelectionMode = MapSelectionMode.NO_CUSTOM_MAPS;
         for (int num = 1; num <= MAP_COUNT; ++num) {
@@ -64,15 +71,6 @@ public class PacManGameXXL extends PacManGame {
             }
         }
         updateCustomMaps();
-    }
-
-    public void setMapSelectionMode(MapSelectionMode mapSelectionMode) {
-        this.mapSelectionMode = checkNotNull(mapSelectionMode);
-        Logger.info("Map selection mode is now {}", mapSelectionMode);
-    }
-
-    public MapSelectionMode mapSelectionMode() {
-        return mapSelectionMode;
     }
 
     @Override
@@ -160,10 +158,31 @@ public class PacManGameXXL extends PacManGame {
         publishGameEvent(GameEventType.BONUS_ACTIVATED, staticBonus.entity().tile());
     }
 
+    // Custom map handling
+
+    @Override
+    public void setMapSelectionMode(MapSelectionMode mapSelectionMode) {
+        this.mapSelectionMode = checkNotNull(mapSelectionMode);
+        Logger.info("Map selection mode is now {}", mapSelectionMode);
+    }
+
+    @Override
+    public MapSelectionMode mapSelectionMode() {
+        return mapSelectionMode;
+    }
+
+
+    @Override
+    public File customMapDir() {
+        return customMapDir;
+    }
+
+    @Override
     public Map<File, WorldMap> customMapsByFile() {
         return customMapsByFile;
     }
 
+    @Override
     public List<WorldMap> customMapsSortedByFile() {
         return customMapsByFile.keySet().stream().sorted().map(customMapsByFile::get).toList();
     }

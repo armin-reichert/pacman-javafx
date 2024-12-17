@@ -1,4 +1,4 @@
-package de.amr.games.pacman.arcade.pacman_xxl;
+package de.amr.games.pacman.model;
 
 public enum MapSelectionMode {
     /**

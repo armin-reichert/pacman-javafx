@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
-import de.amr.games.pacman.arcade.pacman.PacManGame;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -100,13 +99,16 @@ public class InfoBoxActorInfo extends InfoBox {
         };
     }
 
-    private String ghostNameAndState(GameModel game, Ghost ghost) {
+    protected String ghostNameAndState(GameModel game, Ghost ghost) {
         String name = ghost.name();
+        //TODO make this work again
+        /*
         if (game instanceof PacManGame pacManGame) {
             if (ghost.id() == GameModel.RED_GHOST && pacManGame.cruiseElroy() > 0) {
                 name = "Elroy" + pacManGame.cruiseElroy();
             }
         }
+        */
         return String.format("%s (%s)", name, ghostState(game, ghost));
     }
 

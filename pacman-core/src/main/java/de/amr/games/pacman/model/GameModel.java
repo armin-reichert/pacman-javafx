@@ -46,8 +46,7 @@ public abstract class GameModel {
     protected final List<Byte>     levelCounter = new ArrayList<>();
     protected final GateKeeper     gateKeeper = new GateKeeper();
     protected final ScoreManager   scoreManager = new ScoreManager();
-    protected HuntingTimer huntingControl;
-    protected File                 customMapDir;
+    protected HuntingTimer         huntingControl;
     protected boolean              levelCounterEnabled;
     protected boolean              playing;
     protected boolean              simulateOverflowBug;
@@ -92,10 +91,6 @@ public abstract class GameModel {
     protected abstract void        onGhostReleased(Ghost ghost);
 
     protected GameModel(File userDir) {
-        customMapDir = new File(userDir, "maps");
-        if (customMapDir.mkdir()) {
-            Logger.info("Created custom map directory {}", customMapDir);
-        }
     }
 
     public Optional<GameLevel> level() {
@@ -109,12 +104,6 @@ public abstract class GameModel {
     public boolean isDemoLevel() {
         return demoLevel;
     }
-
-    public File customMapDir() {
-        return customMapDir;
-    }
-
-    public void updateCustomMaps() {}
 
     public HuntingTimer huntingControl() {
         return huntingControl;

@@ -4,17 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
-import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.editor.TileMapEditor;
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui.*;
+import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.action.GameAction;
 import de.amr.games.pacman.ui.action.GameActionProvider;
 import de.amr.games.pacman.ui.assets.ResourceManager;
 import de.amr.games.pacman.ui.lib.Ufx;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -68,8 +65,10 @@ public class EditorPage extends BorderPane implements GameActionProvider {
         }
         editor.getLoadMapMenu().getItems().add(new SeparatorMenuItem());
         */
+
+        //TODO reconsider this
         for (int mapNumber = 1; mapNumber <= 8; ++mapNumber) {
-            WorldMap map = loadMap(() -> PacManGameXXL.class, "maps/masonic_%d.world".formatted(mapNumber));
+            WorldMap map = loadMap(() -> context.game().getClass(), "maps/masonic_%d.world".formatted(mapNumber));
             if (map != null) {
                 editor.addLoadMapMenuItem("Pac-Man XXL " + mapNumber, map);
             }

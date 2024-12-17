@@ -4,10 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
+import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.arcade.pacman_xxl.MapSelectionMode;
-import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
+import de.amr.games.pacman.model.CustomMapsHandler;
 import de.amr.games.pacman.ui.GameContext;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -71,12 +70,13 @@ public class InfoBoxCustomMaps extends InfoBox {
     }
 
     public void updateTableView() {
-        PacManGameXXL xxlGame = context.gameController().gameModel(GameVariant.PACMAN_XXL);
-        ObservableList<MapInfo> items = FXCollections.observableArrayList();
-        for (File file  : xxlGame.customMapsByFile().keySet().stream().sorted().toList()) {
-            WorldMap map = xxlGame.customMapsByFile().get(file);
-            items.add(new MapInfo(file.getName(), map.terrain().numRows(), map.terrain().numCols()));
+        if (context.game() instanceof CustomMapsHandler customMapsHandler) {
+            ObservableList<MapInfo> items = FXCollections.observableArrayList();
+            for (File file : customMapsHandler.customMapsByFile().keySet().stream().sorted().toList()) {
+                WorldMap map = customMapsHandler.customMapsByFile().get(file);
+                items.add(new MapInfo(file.getName(), map.terrain().numRows(), map.terrain().numCols()));
+            }
+            mapTable.setItems(items);
         }
-        mapTable.setItems(items);
     }
 }

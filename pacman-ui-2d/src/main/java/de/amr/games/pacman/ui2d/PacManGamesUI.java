@@ -4,10 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d;
 
-import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.model.CustomMapsHandler;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameContext;
@@ -317,8 +317,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     private EditorPage getOrCreateEditorPage() {
-        if (editorPage == null) {
-            editorPage = new EditorPage(stage, this, game().customMapDir());
+        if (editorPage == null && game() instanceof CustomMapsHandler customMapsHandler) {
+            editorPage = new EditorPage(stage, this, customMapsHandler.customMapDir());
             editorPage.setCloseAction(editor -> {
                 editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> stage.titleProperty().bind(stageTitleBinding()));
                 editor.stop();
@@ -373,12 +373,11 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         addMyselfAsGameListener(game);
 
         // TODO: Not sure if this belongs here
-        if (variant == GameVariant.PACMAN_XXL) {
+        if (game instanceof CustomMapsHandler customMapsHandler) {
             // We cannot use data binding to the game model classes because the game models are in project
             // "pacman-core" which has no dependency to JavaFX data binding.
-            PacManGameXXL xxlGame = (PacManGameXXL) game;
-            xxlGame.setMapSelectionMode(GlobalProperties2d.PY_MAP_SELECTION_MODE.get());
-            GlobalProperties2d.PY_MAP_SELECTION_MODE.addListener((py, ov, selectionMode) -> xxlGame.setMapSelectionMode(selectionMode));
+            customMapsHandler.setMapSelectionMode(GlobalProperties2d.PY_MAP_SELECTION_MODE.get());
+            GlobalProperties2d.PY_MAP_SELECTION_MODE.addListener((py, ov, selectionMode) -> customMapsHandler.setMapSelectionMode(selectionMode));
         }
 
         String prefix = GameContext.assetPrefix(variant);
