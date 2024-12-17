@@ -33,7 +33,7 @@ import de.amr.games.pacman.ui.lib.Ufx;
 import de.amr.games.pacman.ui.scene.GameConfiguration;
 import de.amr.games.pacman.ui.scene.GameScene;
 import de.amr.games.pacman.ui.scene.GameScene2D;
-import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
+import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.page.DashboardLayer;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
@@ -211,6 +211,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
         createStartPage();
         createGamePage(mainScene);
+        addDefaultDashboard();
 
         clock.setPauseableCallback(this::runIfNotPausedOnEveryTick);
         clock.setPermanentCallback(this::runOnEveryTick);
@@ -354,6 +355,27 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         gamePage = new GamePage(this, parentScene);
         gamePage.setActionOpenEditor(actionOpenEditor);
         gamePage.gameScenePy.bind(gameScenePy);
+    }
+
+    public void addDefaultDashboard() {
+        InfoBox readMeBox = new InfoBoxReadmeFirst();
+        readMeBox.setExpanded(true);
+        appendDashboardItem("Welcome to the Pleasuredome!", readMeBox);
+        appendDashboardItem(locText("infobox.general.title"), new InfoBoxGeneral());
+        appendDashboardItem(locText("infobox.game_control.title"), new InfoBoxGameControl());
+        appendDashboardItem(locText("infobox.game_info.title"), new InfoBoxGameInfo());
+        appendDashboardItem(locText("infobox.actor_info.title"), new InfoBoxActorInfo());
+        appendDashboardItem(locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
+        appendDashboardItem("Joypad Settings", new InfoBoxJoypad());
+        appendDashboardItem(locText("infobox.about.title"), new InfoBoxAbout());
+    }
+
+    public void appendDashboardItem(String title, InfoBox infoBox) {
+        gamePage.dashboardLayer().addDashboardItem(title, infoBox);
+    }
+
+    public void insertDashboardItem(int index, String title, InfoBox infoBox) {
+        gamePage.dashboardLayer().insertDashboardItem(index, title, infoBox);
     }
 
     protected void handleGameVariantChange(GameVariant variant) {

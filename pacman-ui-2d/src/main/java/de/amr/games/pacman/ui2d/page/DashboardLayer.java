@@ -67,12 +67,12 @@ public class DashboardLayer extends BorderPane {
         dashboardEntries.add(createEntry(title, infoBox));
     }
 
-    private void updateDashboardContainer() {
-        dashboardContainer.getChildren().setAll(dashboardEntries.stream().map(DashboardEntry::infoBox).toArray(InfoBox[]::new));
+    public void insertDashboardItem(int index, String title, InfoBox infoBox) {
+        dashboardEntries.add(index, createEntry(title, infoBox));
     }
 
-    public void addEntry(int index, String title, InfoBox infoBox) {
-        dashboardEntries.add(index, createEntry(title, infoBox));
+    private void updateDashboardContainer() {
+        dashboardContainer.getChildren().setAll(dashboardEntries.stream().map(DashboardEntry::infoBox).toArray(InfoBox[]::new));
     }
 
     public boolean isDashboardOpen() { return dashboardContainer.isVisible(); }

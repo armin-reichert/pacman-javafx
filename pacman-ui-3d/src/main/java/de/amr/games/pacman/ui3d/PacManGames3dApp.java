@@ -10,6 +10,7 @@ import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
+import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import de.amr.games.pacman.ui3d.scene3d.Perspective;
 import de.amr.games.pacman.ui3d.variants.MsPacManGameConfiguration_3D;
@@ -85,6 +86,8 @@ public class PacManGames3dApp extends Application {
             ui.assets().addAll(ui.gameConfiguration(variant).assets());
         }
         ui.create(stage, initialSize());
+        ui.insertDashboardItem(3, ui.locText("infobox.3D_settings.title"), new InfoBox3D());
+
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         Logger.info("Assets: {}", ui.assets().summary(Map.of(
             Model3D.class,"3D models",
@@ -92,6 +95,7 @@ public class PacManGames3dApp extends Application {
             Font.class, "fonts",
             Color.class, "colors",
             AudioClip.class, "audio clips")));
+
         ui.show();
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }

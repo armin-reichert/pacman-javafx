@@ -10,7 +10,6 @@ import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.action.GameActions2D;
 import de.amr.games.pacman.ui.lib.NightMode;
 import de.amr.games.pacman.ui2d.page.GamePage;
-import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.scene3d.Perspective;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
@@ -41,7 +40,6 @@ public class GamePage3D extends GamePage {
 
     public GamePage3D(GameContext context, Scene parentScene) {
         super(context, parentScene);
-        dashboardLayer.addEntry(3, context.locText("infobox.3D_settings.title"), new InfoBox3D());
         backgroundProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (!context.currentGameSceneHasID("PlayScene3D")) {

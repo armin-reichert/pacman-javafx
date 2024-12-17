@@ -9,6 +9,7 @@ import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXLConfiguration;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
+import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
@@ -40,6 +41,7 @@ public class ArcadePacManXXLApp extends Application {
         ui.loadAssets();
         ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration());
         ui.create(stage, initialSize());
+        ui.insertDashboardItem(5, ui.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
         ui.show();
     }
 

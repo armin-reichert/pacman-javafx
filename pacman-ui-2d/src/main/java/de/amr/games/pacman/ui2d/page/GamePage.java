@@ -20,7 +20,6 @@ import de.amr.games.pacman.ui.scene.GameScene;
 import de.amr.games.pacman.ui.scene.GameScene2D;
 import de.amr.games.pacman.ui.scene.TooFancyGameCanvasContainer;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
-import de.amr.games.pacman.ui2d.dashboard.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
@@ -153,17 +152,6 @@ public class GamePage extends StackPane implements GameActionProvider {
         canvasLayer.setCenter(canvasContainer);
 
         dashboardLayer = new DashboardLayer(context);
-        InfoBox readMeBox = new InfoBoxReadmeFirst();
-        readMeBox.setExpanded(true);
-        dashboardLayer.addDashboardItem("Welcome to the Pleasuredome!", readMeBox);
-        dashboardLayer.addDashboardItem(context.locText("infobox.general.title"), new InfoBoxGeneral());
-        dashboardLayer.addDashboardItem(context.locText("infobox.game_control.title"), new InfoBoxGameControl());
-        dashboardLayer.addDashboardItem(context.locText("infobox.game_info.title"), new InfoBoxGameInfo());
-        dashboardLayer.addDashboardItem(context.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
-        dashboardLayer.addDashboardItem(context.locText("infobox.actor_info.title"), new InfoBoxActorInfo());
-        dashboardLayer.addDashboardItem(context.locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
-        dashboardLayer.addDashboardItem("Joypad Settings", new InfoBoxJoypad());
-        dashboardLayer.addDashboardItem(context.locText("infobox.about.title"), new InfoBoxAbout());
 
         popupLayer = new PopupLayer(context, canvasContainer);
         popupLayer.setMouseTransparent(true);
