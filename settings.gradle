@@ -11,4 +11,5 @@ include 'pacman-arcade-pacman'
 include 'pacman-arcade-mspacman'
 include 'pacman-arcade-pacmanxxl'
 include 'pacman-tengen-mspacman'
+include 'pacman-ui-2d-apps'
 
