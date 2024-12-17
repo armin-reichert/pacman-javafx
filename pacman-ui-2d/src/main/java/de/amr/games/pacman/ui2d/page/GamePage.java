@@ -222,7 +222,7 @@ public class GamePage extends StackPane implements GameActionProvider {
         contextMenu.getItems().clear();
 
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            contextMenu.getItems().add(PacManGamesUI.contextMenuTitleItem(context.locText("scene_display")));
+            contextMenu.getItems().add(Ufx.contextMenuTitleItem(context.locText("scene_display")));
             // Switching scene display mode
             var miScaledToFit = new RadioMenuItem(context.locText("scaled_to_fit"));
             miScaledToFit.selectedProperty().addListener(
@@ -245,7 +245,7 @@ public class GamePage extends StackPane implements GameActionProvider {
                 miScrolling.setSelected(true);
             }
         }
-        contextMenu.getItems().add(PacManGamesUI.contextMenuTitleItem(context.locText("pacman")));
+        contextMenu.getItems().add(Ufx.contextMenuTitleItem(context.locText("pacman")));
 
         var miAutopilot = new CheckMenuItem(context.locText("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);

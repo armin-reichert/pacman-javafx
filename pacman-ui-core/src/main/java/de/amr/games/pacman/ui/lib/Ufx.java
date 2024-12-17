@@ -16,11 +16,15 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.geometry.Insets;
+import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -45,6 +49,16 @@ public interface Ufx {
 
     BackgroundSize FILL_PAGE = new BackgroundSize(1, 1, true, true, false, true);
     BackgroundSize FIT_HEIGHT = new BackgroundSize(AUTO, 1, false, true, true, false);
+
+    Font  CONTEXT_MENU_TITLE_FONT = Font.font("Dialog", FontWeight.BLACK, 14);
+    Color CONTEXT_MENU_TITLE_BACKGROUND = Color.CORNFLOWERBLUE; // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
+
+    static MenuItem contextMenuTitleItem(String title) {
+        var text = new Text(title);
+        text.setFont(CONTEXT_MENU_TITLE_FONT);
+        text.setFill(CONTEXT_MENU_TITLE_BACKGROUND);
+        return new CustomMenuItem(text);
+    }
 
     /**
      * Launches the application specified by the given class. In case an exception is thrown,
