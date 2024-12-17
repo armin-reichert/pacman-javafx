@@ -44,10 +44,10 @@ This will create
 - an installer for the full game (subdirectory `pacman-ui-3d/build/jpackage`)
 - an installer for the map editor (subdirectory `pacman-mapeditor/build/jpackage`)
 
-### Running the application(s) using Gradle
+### Running the main application (including all games) using Gradle
 
-- Pac-Man 2D: `./gradlew pacman-ui-2d:run`
-- Pac-Man 3D: `./gradlew pacman-ui-3d:run`
+- Pac-Man 2D: `./gradlew pacman-ui-2d-apps:run`
+- Pac-Man 3D: `./gradlew pacman-ui-3d-apps:run`
 
 To be able to create the Windows executables, you need to have the following tools installed:
 
