@@ -20,7 +20,10 @@ import de.amr.games.pacman.ui.assets.GameSound;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.lib.Ufx;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -327,16 +330,6 @@ public class PlayScene2D extends GameScene2D {
         var miMuted = new CheckMenuItem(context.locText("muted"));
         miMuted.selectedProperty().bindBidirectional(context.sound().mutedProperty());
         contextMenu.getItems().add(miMuted);
-
-        /*
-        if (context.gameVariant() == GameVariant.PACMAN_XXL) {
-            var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
-            miOpenMapEditor.setOnAction(ae -> {
-                if (actionOpenEditor != null) actionOpenEditor.execute(context);
-            });
-            contextMenu.getItems().add(miOpenMapEditor);
-        }
-         */
 
         var miQuit = new MenuItem(context.locText("quit"));
         miQuit.setOnAction(ae -> GameActions2D.SHOW_START_PAGE.execute(context));
