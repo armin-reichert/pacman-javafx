@@ -66,11 +66,12 @@ public class PacManGames2dApp extends Application {
         for (GameVariant variant : GameVariant.values()) {
             ui.assets.addAll(ui.gameConfiguration(variant).assets());
         }
-        ui.createAndStart(stage, initialSize());
+        ui.create(stage, initialSize());
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         Logger.info("Assets loaded: {}", ui.assets().summary(
             Map.of(Image.class, "images",  Font.class, "fonts", Color.class, "colors", AudioClip.class, "audio clips")
         ));
+        ui.show();
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }
 

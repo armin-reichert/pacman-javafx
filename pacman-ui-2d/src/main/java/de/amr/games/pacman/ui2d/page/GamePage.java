@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
-import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameModel;
@@ -163,9 +162,7 @@ public class GamePage extends StackPane implements GameActionProvider {
         dashboardLayer.addDashboardItem(context.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
         dashboardLayer.addDashboardItem(context.locText("infobox.actor_info.title"), new InfoBoxActorInfo());
         dashboardLayer.addDashboardItem(context.locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
-        dashboardLayer.addDashboardItem(
-            /*context.locText("infobox.keyboard_shortcuts_tengen.title"*/
-            "Joypad Settings", new InfoBoxJoypad());
+        dashboardLayer.addDashboardItem("Joypad Settings", new InfoBoxJoypad());
         dashboardLayer.addDashboardItem(context.locText("infobox.about.title"), new InfoBoxAbout());
 
         popupLayer = new PopupLayer(context, canvasContainer);

@@ -69,8 +69,9 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.ui.GlobalProperties.PY_CANVAS_BG_COLOR;
+import static de.amr.games.pacman.ui.GlobalProperties.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui.lib.Ufx.createIcon;
-import static de.amr.games.pacman.ui.GlobalProperties.*;
 
 /**
  * User interface for all Pac-Man game variants (2D only).
@@ -201,7 +202,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
      * @param stage primary stage (window)
      * @param initialSize initial UI size
      */
-    public void createAndStart(Stage stage, Dimension2D initialSize) {
+    public void create(Stage stage, Dimension2D initialSize) {
         this.stage = checkNotNull(stage);
         checkNotNull(initialSize);
 
@@ -223,6 +224,9 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         stage.titleProperty().bind(stageTitleBinding());
         stage.centerOnScreen();
         stage.setOnShowing(e-> selectStartPage());
+    }
+
+    public void show() {
         stage.show();
     }
 

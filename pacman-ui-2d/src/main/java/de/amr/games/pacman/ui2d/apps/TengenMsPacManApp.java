@@ -41,7 +41,8 @@ public class TengenMsPacManApp extends Application {
         PacManGamesUI ui = new PacManGamesUI();
         ui.loadAssets();
         ui.setGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration());
-        ui.createAndStart(stage, initialSize());
+        ui.create(stage, initialSize());
+        ui.show();
     }
 
     private static Dimension2D initialSize() {

@@ -39,7 +39,8 @@ public class ArcadePacManXXLApp extends Application {
         PacManGamesUI ui = new PacManGamesUI();
         ui.loadAssets();
         ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration());
-        ui.createAndStart(stage, initialSize());
+        ui.create(stage, initialSize());
+        ui.show();
     }
 
     private static Dimension2D initialSize() {
