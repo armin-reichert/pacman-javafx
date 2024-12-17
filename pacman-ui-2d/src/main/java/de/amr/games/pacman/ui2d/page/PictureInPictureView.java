@@ -8,7 +8,6 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenRenderer;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.lib.Ufx;
 import de.amr.games.pacman.ui.scene.GameScene2D;
@@ -45,19 +44,14 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         @Override
         public void draw() {
             setScaling(canvas.getHeight() / (size().y() + 3 * TS));
-            var r = (MsPacManGameTengenRenderer) gr;
-            r.setScaling(scaling());
-            r.clearCanvas();
+            gr.setScaling(scaling());
+            gr.clearCanvas();
             context.game().level().ifPresent(level -> {
-                r.ctx().save();
-                r.ctx().translate(scaled(TS), 0);
+                gr.ctx().save();
+                gr.ctx().translate(scaled(TS), 0);
                 drawSceneContent();
-                r.ctx().restore();
+                gr.ctx().restore();
             });
-        }
-
-        public MsPacManGameTengenRenderer renderer() {
-            return (MsPacManGameTengenRenderer) gr;
         }
     }
 
