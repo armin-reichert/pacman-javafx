@@ -4,11 +4,6 @@ plugins {
     id 'org.beryx.jlink' version '3.0.1' //  adds also 'application' plugin
 }
 
-application {
-    mainModule = 'de.amr.games.pacman.ui2d'
-    mainClass = 'de.amr.games.pacman.ui2d.Main'
-}
-
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
@@ -32,26 +27,3 @@ javafx {
     modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.media']
 }
 
-jlink {
-    imageZip = layout.buildDirectory.file("distributions/javafx-ui2d-${javafx.platform.classifier}.zip")
-    options = ['--compress', 'zip-9', '--strip-debug', '--no-header-files', '--no-man-pages']
-    launcher {
-        name = 'Pac-Man-FX-2D'
-    }
-    jpackage {
-        appVersion = '1.0'
-        vendor = 'Armin Reichert'
-        installerOptions = []
-        if (os.isWindows()) {
-            icon = 'pacman.ico'
-            installerType = 'msi'
-            installerOptions += ['--win-dir-chooser', '--win-menu', '--win-menu-group', 'Pac-Man FX', '--win-shortcut']
-        } else if (os.isLinux()) {
-            installerType = 'deb'
-        }
-    }
-}
-
-jlinkZip {
-    group = 'distribution'
-}

@@ -1,8 +1,12 @@
 module de.amr.games.pacman.ui2d.apps {
     requires org.tinylog.api;
+
     requires javafx.graphics;
+    requires javafx.media;
+
     requires de.amr.games.pacman;
     requires de.amr.games.pacman.lib;
+    requires de.amr.games.pacman.ui;
     requires de.amr.games.pacman.ui2d;
     requires de.amr.games.pacman.arcade.ms_pacman;
     requires de.amr.games.pacman.arcade.pacman;

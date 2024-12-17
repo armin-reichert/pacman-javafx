@@ -46,7 +46,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.GameContext.assetPrefix;
 import static de.amr.games.pacman.ui.lib.Ufx.*;
-import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
+import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
 
 /**
  * @author Armin Reichert

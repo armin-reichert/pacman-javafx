@@ -30,8 +30,8 @@ import static de.amr.games.pacman.ui.lib.Ufx.coloredBackground;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_NIGHT_MODE;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_PIP_ON;
 import static de.amr.games.pacman.ui2d.PacManGamesUI.contextMenuTitleItem;
-import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
-import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_PERSPECTIVE;
+import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_DRAW_MODE;
+import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_PERSPECTIVE;
 
 /**
  * @author Armin Reichert

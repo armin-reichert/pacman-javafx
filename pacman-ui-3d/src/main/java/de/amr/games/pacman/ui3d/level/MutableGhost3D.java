@@ -11,7 +11,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.assets.AssetStorage;
 import de.amr.games.pacman.ui.lib.Ufx;
-import de.amr.games.pacman.ui3d.PacManGames3dApp;
+import de.amr.games.pacman.ui3d.GlobalProperties3d;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
@@ -90,7 +90,7 @@ public class MutableGhost3D {
         this.size = size;
         this.numFlashes = numFlashes;
 
-        drawModePy.bind(PacManGames3dApp.PY_3D_DRAW_MODE);
+        drawModePy.bind(GlobalProperties3d.PY_3D_DRAW_MODE);
 
         ghost3D = new Ghost3D(ghost.id(), dressShape, pupilsShape, eyeballsShape, assets, assetPrefix, size);
         ghost3D.drawModePy.bind(drawModePy);

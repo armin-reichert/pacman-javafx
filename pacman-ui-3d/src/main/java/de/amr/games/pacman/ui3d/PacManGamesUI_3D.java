@@ -24,8 +24,8 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.ui.lib.Ufx.toggle;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
-import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
-import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_FLOOR_COLOR;
+import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_ENABLED;
+import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_FLOOR_COLOR;
 
 /**
  * User interface for all Pac-Man game variants with a 3D play scene. All others scenes are in 2D.

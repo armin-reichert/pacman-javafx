@@ -2,15 +2,15 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d;
+package de.amr.games.pacman.ui3d.apps;
 
-import static de.amr.games.pacman.ui.lib.Ufx.launchApplication;
+import de.amr.games.pacman.ui.lib.Ufx;
 
 /**
  * @author Armin Reichert
  */
 public class Main {
     public static void main(String[] args) {
-        launchApplication(PacManGames2dApp.class, args);
+        Ufx.launchApplication(PacManGames3dApp.class, args);
     }
 }

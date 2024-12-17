@@ -21,7 +21,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
+import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_DRAW_MODE;
 
 /**
  * Displays a Pac-Man shape for each live remaining.

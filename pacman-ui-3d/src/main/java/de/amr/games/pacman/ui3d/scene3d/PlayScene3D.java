@@ -56,7 +56,7 @@ import static de.amr.games.pacman.ui.action.GameActions2D.*;
 import static de.amr.games.pacman.ui.input.Keyboard.alt;
 import static de.amr.games.pacman.ui.lib.Ufx.doAfterSec;
 import static de.amr.games.pacman.ui.lib.Ufx.now;
-import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
+import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
 
 /**
  * 3D play scene.

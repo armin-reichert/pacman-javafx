@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.*;
-import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
+import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
 
 /**
  * 3D related settings.

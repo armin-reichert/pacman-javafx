@@ -9,7 +9,7 @@ import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.scene.GameScene;
 import de.amr.games.pacman.ui3d.scene3d.PlayScene3D;
 
-import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_ENABLED;
+import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_ENABLED;
 
 public class MsPacManGameConfiguration_3D extends MsPacManGameConfiguration {
 

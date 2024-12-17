@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
+import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_DRAW_MODE;
 
 /**
  * @author Armin Reichert
