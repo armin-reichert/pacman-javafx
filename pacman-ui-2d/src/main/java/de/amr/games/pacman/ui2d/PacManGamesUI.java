@@ -104,44 +104,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         new KeyCodeCombination(KeyCode.D)
     );
 
-    private final JoypadKeyBinding[] joypadBindings = { JOYPAD_CURSOR_KEYS, JOYPAD_WASD };
-
-    protected final Keyboard keyboard = new Keyboard();
-
-    protected final GameClockFX clock = new GameClockFX();
-
-    protected final AssetStorage assets = new AssetStorage();
-
-    protected final GameSound gameSound = new GameSound();
-
-    protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
-
-    protected final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
-        @Override
-        protected void invalidated() {
-            handleGameVariantChange(get());
-        }
-    };
-
-    protected ObjectProperty<Node> pagePy = new SimpleObjectProperty<>();
-
-    protected final Map<GameVariant, GameConfiguration> gameConfigByVariant = new EnumMap<>(GameVariant.class);
-
-    protected final FlashMessageView flashMessageLayer = new FlashMessageView();
-    protected final StackPane sceneRoot = new StackPane();
-    protected Stage stage;
-    protected StartPage startPage;
-    protected GamePage gamePage;
-    protected EditorPage editorPage;
-
-    protected boolean scoreVisible;
-    protected boolean signatureShown; //TODO make this work again for all intro screens
-    protected Picker<String> pickerGameOver;
-    protected Picker<String> pickerLevelComplete;
-
-    protected int selectedJoypadIndex;
-    protected ArcadeInput arcade = DEFAULT_ARCADE_KEY_BINDING;
-
     protected final GameAction actionOpenEditor = new GameAction() {
         @Override
         public void execute(GameContext context) {
@@ -156,10 +118,39 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         @Override
         public boolean isEnabled(GameContext context) {
             return context.gameVariant() == GameVariant.PACMAN_XXL &&
-                    context.game().level().isPresent() &&
-                    context.level().world() != null;
+                context.game().level().isPresent() &&
+                context.level().world() != null;
         }
     };
+
+    protected final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
+        @Override
+        protected void invalidated() {
+            handleGameVariantChange(get());
+        }
+    };
+
+    protected final ObjectProperty<Node> pagePy = new SimpleObjectProperty<>(this, "page");
+    protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
+
+    protected final Map<GameVariant, GameConfiguration> gameConfigByVariant = new EnumMap<>(GameVariant.class);
+    protected final JoypadKeyBinding[] joypadBindings = { JOYPAD_CURSOR_KEYS, JOYPAD_WASD };
+    protected final Keyboard keyboard = new Keyboard();
+    protected final GameClockFX clock = new GameClockFX();
+    protected final AssetStorage assets = new AssetStorage();
+    protected final GameSound gameSound = new GameSound();
+    protected final FlashMessageView flashMessageLayer = new FlashMessageView();
+    protected final StackPane sceneRoot = new StackPane();
+
+    protected Stage stage;
+    protected StartPage startPage;
+    protected GamePage gamePage;
+    protected EditorPage editorPage;
+    protected boolean scoreVisible;
+    protected Picker<String> pickerGameOver;
+    protected Picker<String> pickerLevelComplete;
+    protected int selectedJoypadIndex;
+    protected ArcadeInput arcadeInput = DEFAULT_ARCADE_KEY_BINDING;
 
     public PacManGamesUI() {}
 
@@ -486,7 +477,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     @Override
     public ArcadeInput arcadeKeys() {
-        return arcade;
+        return arcadeInput;
     }
 
     @Override
@@ -605,7 +596,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     @Override
     public void selectStartPage() {
         clock.stop();
-        gameSceneProperty().set(null);
+        gameScenePy.set(null);
         //TODO check this
         gamePage.dashboardLayer().hideDashboard();
         selectPage(startPage);
