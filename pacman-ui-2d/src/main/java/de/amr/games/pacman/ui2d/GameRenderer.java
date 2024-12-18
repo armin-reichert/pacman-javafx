@@ -190,7 +190,7 @@ public interface GameRenderer {
 
     void drawWorld(GameWorld world, double x, double y);
 
-    void setFlashMode(boolean on);
+    void setMazeHighlighted(boolean on);
 
     void setBlinking(boolean on);
 

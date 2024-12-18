@@ -77,7 +77,7 @@ public class MsPacManGameRenderer implements GameRenderer {
     private RectArea fullMapSprite;
     private RectArea emptyMapSprite;
     private ImageArea flashingMapSprite;
-    private boolean flashMode;
+    private boolean mazeHighlighted;
     private boolean blinking;
     private Color bgColor = Color.BLACK;
 
@@ -104,8 +104,8 @@ public class MsPacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void setFlashMode(boolean flashMode) {
-        this.flashMode = flashMode;
+    public void setMazeHighlighted(boolean highlighted) {
+        mazeHighlighted = highlighted;
     }
 
     @Override
@@ -146,7 +146,7 @@ public class MsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void drawWorld(GameWorld world, double x, double y) {
-        if (flashMode) {
+        if (mazeHighlighted) {
             drawSubImageScaled(flashingMapSprite.source(), flashingMapSprite.area(), x, y);
         } else if (world.uneatenFoodCount() == 0) {
             drawSpriteScaled(emptyMapSprite, x, y);

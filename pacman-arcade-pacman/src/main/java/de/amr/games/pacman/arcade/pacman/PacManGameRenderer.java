@@ -34,7 +34,7 @@ public class PacManGameRenderer implements GameRenderer {
     private final PacManGameSpriteSheet spriteSheet;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final Canvas canvas;
-    private boolean flashMode;
+    private boolean mazeHighlighted;
     private boolean blinkingOn;
     private Color bgColor = Color.BLACK;
 
@@ -60,8 +60,8 @@ public class PacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void setFlashMode(boolean flashMode) {
-        this.flashMode = flashMode;
+    public void setMazeHighlighted(boolean highlighted) {
+        this.mazeHighlighted = highlighted;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class PacManGameRenderer implements GameRenderer {
         double scaling = scaling();
         ctx().save();
         ctx().scale(scaling, scaling);
-        if (flashMode) {
+        if (mazeHighlighted) {
             ctx().drawImage(assets.image("pacman.flashing_maze"), x, y);
         } else {
             if (world.uneatenFoodCount() == 0) {

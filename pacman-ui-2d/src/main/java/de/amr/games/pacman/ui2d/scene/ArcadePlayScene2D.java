@@ -69,7 +69,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         }
         registerGameActionKeyBindings(context.keyboard());
         gr.setWorldMap(context.level().world().map());
-        gr.setMessagePosition(centerBelowHouse(context.level().world()));
+        gr.setMessagePosition(centerPositionBelowHouse(context.level().world()));
     }
 
     @Override
@@ -139,56 +139,11 @@ public class ArcadePlayScene2D extends GameScene2D {
         }
         GameLevel level = context.level();
 
-        //TODO fixme: avoid calling this in every frame
-        gr.setWorldMap(level.world().map());
-
-        drawLevelMessage(level.message());
-
-        boolean flashMode = levelCompleteAnimation != null && levelCompleteAnimation.isInHighlightPhase();
-        gr.setFlashMode(flashMode);
-        gr.setBlinking(level.blinking().isOn());
-        gr.drawWorld(level.world(), 0, 3 * TS);
-        level.bonus().ifPresent(gr::drawBonus);
-
-        gr.drawAnimatedEntity(level.pac());
-        ghostsInZOrder().forEach(gr::drawAnimatedEntity);
-
-        if (debugInfoVisiblePy.get()) {
-            gr.drawAnimatedCreatureInfo(level.pac());
-            ghostsInZOrder().forEach(gr::drawAnimatedCreatureInfo);
-        }
-
-        if (context.game().canStartNewGame()) {
-            //TODO: this code is ugly
-            int numLivesShown = context.game().lives() - 1;
-            if (context.gameState() == GameState.STARTING_GAME && !level.pac().isVisible()) {
-                numLivesShown += 1;
-            }
-            gr.drawLivesCounter(numLivesShown, 5, 2 * TS, size().y() - 2 * TS);
-        } else {
-            int credit = context.gameController().coinControl().credit();
-            gr.drawText("CREDIT %2d".formatted(credit), Color.valueOf(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
-        }
-        gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
-    }
-
-    private Vector2f centerBelowHouse(GameWorld world) {
-        Vector2i houseTopLeft = world.houseTopLeftTile(), houseSize = world.houseSize();
-        float x = TS * (houseTopLeft.x() + houseSize.x() * 0.5f);
-        float y = TS * (houseTopLeft.y() + houseSize.y() + 1);
-        return new Vector2f(x, y);
-    }
-
-    private Stream<Ghost> ghostsInZOrder() {
-        return Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
-            .map(context.level()::ghost);
-    }
-
-    private void drawLevelMessage(GameLevel.Message message) {
-        if (message != null) {
+        // Draw message
+        if (level.message() != null) {
             Color color = null;
             String text = null;
-            switch (message.type()) {
+            switch (level.message().type()) {
                 case GAME_OVER -> {
                     color = Color.valueOf(Arcade.Palette.RED);
                     text = "GAME  OVER";
@@ -202,11 +157,57 @@ public class ArcadePlayScene2D extends GameScene2D {
                     text = "TEST    L%03d".formatted(context.level().number);
                 }
             }
-            // this assumes fixed width font of one tile size
-            gr.setMessagePosition(centerBelowHouse(context.level().world()));
+            gr.setMessagePosition(centerPositionBelowHouse(context.level().world()));
+            // this assumes fixed width font of one tile size:
             double x = gr.getMessagePosition().x() - (text.length() * HTS);
             gr.drawText(text, color, gr.scaledArcadeFont(TS), x, gr.getMessagePosition().y());
         }
+
+        // Draw maze
+        boolean highlighted = levelCompleteAnimation != null && levelCompleteAnimation.isInHighlightPhase();
+        gr.setMazeHighlighted(highlighted);
+        gr.setBlinking(level.blinking().isOn());
+        gr.setWorldMap(level.world().map()); //TODO fixme: avoid calling this in every frame
+        gr.drawWorld(level.world(), 0, 3 * TS);
+
+        // Draw bonus
+        level.bonus().ifPresent(gr::drawBonus);
+
+        // Draw guys and debug info if activated
+        gr.drawAnimatedEntity(level.pac());
+        ghostsInZOrder(level).forEach(gr::drawAnimatedEntity);
+        if (debugInfoVisiblePy.get()) {
+            gr.drawAnimatedCreatureInfo(level.pac());
+            ghostsInZOrder(level).forEach(gr::drawAnimatedCreatureInfo);
+        }
+
+        // Draw lives counter or remaining credit
+        if (context.game().canStartNewGame()) {
+            //TODO: this code is ugly
+            int numLivesShown = context.game().lives() - 1;
+            if (context.gameState() == GameState.STARTING_GAME && !level.pac().isVisible()) {
+                numLivesShown += 1;
+            }
+            gr.drawLivesCounter(numLivesShown, 5, 2 * TS, size().y() - 2 * TS);
+        } else {
+            int credit = context.gameController().coinControl().credit();
+            gr.drawText("CREDIT %2d".formatted(credit), Color.valueOf(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS),
+                    2 * TS, size().y() - 2);
+        }
+
+        // Draw level counter
+        gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
+    }
+
+    private Vector2f centerPositionBelowHouse(GameWorld world) {
+        Vector2i houseTopLeft = world.houseTopLeftTile(), houseSize = world.houseSize();
+        float x = TS * (houseTopLeft.x() + houseSize.x() * 0.5f);
+        float y = TS * (houseTopLeft.y() + houseSize.y() + 1);
+        return new Vector2f(x, y);
+    }
+
+    private Stream<Ghost> ghostsInZOrder(GameLevel level) {
+        return Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST).map(level::ghost);
     }
 
     @Override

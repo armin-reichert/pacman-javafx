@@ -94,7 +94,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     public Canvas canvas() { return ctx.getCanvas(); }
 
     @Override
-    public void setFlashMode(boolean flashMode) {}
+    public void setMazeHighlighted(boolean flashMode) {}
 
     @Override
     public void setBlinking(boolean blinking) {

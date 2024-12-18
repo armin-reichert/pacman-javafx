@@ -43,7 +43,7 @@ public class PacManGameXXLRenderer implements GameRenderer {
     private final TerrainRenderer terrainRenderer = new TerrainRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
     private Vector2f messageAnchorPosition;
-    private boolean flashMode;
+    private boolean mazeHighlighted;
     private boolean blinkingOn;
     private Color bgColor;
 
@@ -73,8 +73,8 @@ public class PacManGameXXLRenderer implements GameRenderer {
     }
 
     @Override
-    public void setFlashMode(boolean flashMode) {
-        this.flashMode = flashMode;
+    public void setMazeHighlighted(boolean highlighted) {
+        mazeHighlighted = highlighted;
     }
 
     @Override
@@ -109,7 +109,7 @@ public class PacManGameXXLRenderer implements GameRenderer {
     @Override
     public void drawWorld(GameWorld world, double x, double y) {
         terrainRenderer.setMapBackgroundColor(bgColor);
-        if (flashMode) {
+        if (mazeHighlighted) {
             terrainRenderer.setMapBackgroundColor(bgColor);
             terrainRenderer.setWallStrokeColor(blinkingOn ? Color.WHITE : Color.BLACK);
             terrainRenderer.setWallFillColor(blinkingOn   ? Color.BLACK : Color.WHITE);
