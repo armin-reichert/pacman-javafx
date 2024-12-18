@@ -3,6 +3,8 @@ package de.amr.games.pacman.ui.input;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import javafx.scene.input.KeyCodeCombination;
 
+import java.util.stream.Stream;
+
 public record ArcadeKeyBinding(
     KeyCodeCombination keyInsertCoin,
     KeyCodeCombination keyStart,
@@ -10,9 +12,7 @@ public record ArcadeKeyBinding(
     KeyCodeCombination keyDown,
     KeyCodeCombination keyLeft,
     KeyCodeCombination keyRight)
-    implements ArcadeInput
 {
-    @Override
     public KeyCodeCombination key(Arcade.Button button) {
         return switch (button) {
             case START -> keyStart;
@@ -22,5 +22,9 @@ public record ArcadeKeyBinding(
             case LEFT -> keyLeft;
             case RIGHT -> keyRight;
         };
+    }
+
+    public Stream<KeyCodeCombination> keys() {
+        return Stream.of(Arcade.Button.values()).map(this::key);
     }
 }

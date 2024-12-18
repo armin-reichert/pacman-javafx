@@ -18,7 +18,6 @@ import de.amr.games.pacman.ui.action.GameActions2D;
 import de.amr.games.pacman.ui.assets.AssetStorage;
 import de.amr.games.pacman.ui.assets.GameSound;
 import de.amr.games.pacman.ui.assets.ResourceManager;
-import de.amr.games.pacman.ui.input.ArcadeInput;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui.input.Keyboard;
@@ -71,7 +70,7 @@ import static de.amr.games.pacman.ui.lib.Ufx.createIcon;
  */
 public class PacManGamesUI implements GameEventListener, GameContext {
 
-    public static final ArcadeInput DEFAULT_ARCADE_KEY_BINDING = new ArcadeKeyBinding(
+    public static final ArcadeKeyBinding DEFAULT_ARCADE_KEY_BINDING = new ArcadeKeyBinding(
         new KeyCodeCombination(KeyCode.DIGIT5),
         new KeyCodeCombination(KeyCode.DIGIT1),
         new KeyCodeCombination(KeyCode.UP),
@@ -134,7 +133,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
     protected final Map<GameVariant, GameConfiguration> gameConfigByVariant = new EnumMap<>(GameVariant.class);
-    protected final JoypadKeyBinding[] joypadBindings = { JOYPAD_CURSOR_KEYS, JOYPAD_WASD };
+    protected final JoypadKeyBinding[] joypadKeys = { JOYPAD_CURSOR_KEYS, JOYPAD_WASD };
     protected final Keyboard keyboard = new Keyboard();
     protected final GameClockFX clock = new GameClockFX();
     protected final AssetStorage assets = new AssetStorage();
@@ -150,7 +149,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected Picker<String> pickerGameOver;
     protected Picker<String> pickerLevelComplete;
     protected int selectedJoypadIndex;
-    protected ArcadeInput arcadeInput = DEFAULT_ARCADE_KEY_BINDING;
+    protected ArcadeKeyBinding arcadeKeys = DEFAULT_ARCADE_KEY_BINDING;
 
     public PacManGamesUI() {}
 
@@ -472,19 +471,19 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public ArcadeInput arcadeKeys() {
-        return arcadeInput;
+    public ArcadeKeyBinding arcadeKeys() {
+        return arcadeKeys;
     }
 
     @Override
     public JoypadKeyBinding joypadKeys() {
-        return joypadBindings[selectedJoypadIndex];
+        return joypadKeys[selectedJoypadIndex];
     }
 
     @Override
     public void nextJoypadKeys() {
         selectedJoypadIndex = selectedJoypadIndex + 1;
-        if (selectedJoypadIndex == joypadBindings.length) {
+        if (selectedJoypadIndex == joypadKeys.length) {
             selectedJoypadIndex = 0;
         }
     }

@@ -17,7 +17,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.action.GameActions2D;
 import de.amr.games.pacman.ui.assets.GameSound;
-import de.amr.games.pacman.ui.input.ArcadeInput;
 import de.amr.games.pacman.ui.lib.Ufx;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckMenuItem;
@@ -54,20 +53,18 @@ public class PlayScene2D extends GameScene2D {
     @Override
     protected void doInit() {
         context.setScoreVisible(true);
-        ArcadeInput arcadeController = context.arcadeKeys();
-        GameActions2D.bindDefaultArcadeControllerActions(this, arcadeController);
+        GameActions2D.bindDefaultArcadeControllerActions(this, context.arcadeKeys());
         GameActions2D.bindFallbackPlayerControlActions(this);
         registerGameActionKeyBindings(context.keyboard());
     }
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        ArcadeInput arcadeController = context.arcadeKeys();
         if (context.game().isDemoLevel()) {
-            bind(GameActions2D.INSERT_COIN, arcadeController.key(Arcade.Button.COIN));
+            bind(GameActions2D.INSERT_COIN, context.arcadeKeys().key(Arcade.Button.COIN));
         } else {
             GameActions2D.bindCheatActions(this);
-            GameActions2D.bindDefaultArcadeControllerActions(this, arcadeController);
+            GameActions2D.bindDefaultArcadeControllerActions(this, context.arcadeKeys());
             GameActions2D.bindFallbackPlayerControlActions(this);
         }
         registerGameActionKeyBindings(context.keyboard());

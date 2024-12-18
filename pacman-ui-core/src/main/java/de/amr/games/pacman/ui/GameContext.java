@@ -14,7 +14,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.action.GameActionProvider;
 import de.amr.games.pacman.ui.assets.AssetStorage;
 import de.amr.games.pacman.ui.assets.GameSound;
-import de.amr.games.pacman.ui.input.ArcadeInput;
+import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui.input.Keyboard;
 import de.amr.games.pacman.ui.lib.GameClockFX;
@@ -66,7 +66,7 @@ public interface GameContext {
 
     // Input
     Keyboard keyboard();
-    ArcadeInput arcadeKeys();
+    ArcadeKeyBinding arcadeKeys();
     JoypadKeyBinding joypadKeys();
     void enableJoypad();
     void disableJoypad();
