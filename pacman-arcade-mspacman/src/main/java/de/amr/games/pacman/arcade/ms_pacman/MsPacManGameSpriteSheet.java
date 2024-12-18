@@ -6,15 +6,15 @@ package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.ui.assets.GameSpriteSheet;
-import de.amr.games.pacman.ui.assets.SpriteAnimation;
+import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
+import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
 import javafx.scene.image.Image;
 
 import java.util.List;
 import java.util.stream.IntStream;
 
 import static de.amr.games.pacman.lib.RectArea.rect;
-import static de.amr.games.pacman.ui.assets.GameSpriteSheet.rectArray;
+import static de.amr.games.pacman.ui2d.assets.GameSpriteSheet.rectArray;
 
 /**
  * @author Armin Reichert

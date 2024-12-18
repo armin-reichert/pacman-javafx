@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.variants;
 
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration;
-import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.scene.GameScene;
+import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui3d.scene3d.PlayScene3D;
 
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_ENABLED;

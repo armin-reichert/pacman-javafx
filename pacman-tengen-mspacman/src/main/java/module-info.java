@@ -1,7 +1,7 @@
 open module de.amr.games.pacman.tengen.ms_pacman {
     requires de.amr.games.pacman;
     requires de.amr.games.pacman.lib;
-    requires de.amr.games.pacman.ui;
+    requires de.amr.games.pacman.ui2d;
 
     requires javafx.base;
     requires javafx.controls;

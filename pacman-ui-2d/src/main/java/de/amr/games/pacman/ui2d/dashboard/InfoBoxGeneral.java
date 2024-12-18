@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
-import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.action.GameActions2D;
-import de.amr.games.pacman.ui.lib.GameClockFX;
+import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.action.GameActions2D;
+import de.amr.games.pacman.ui2d.lib.GameClockFX;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;

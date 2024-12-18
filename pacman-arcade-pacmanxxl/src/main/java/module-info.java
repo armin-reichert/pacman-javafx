@@ -6,7 +6,7 @@ open module de.amr.games.pacman.arcade.pacman_xxl {
     requires javafx.controls;
     requires javafx.graphics;
     requires javafx.media;
-    requires de.amr.games.pacman.ui;
+    requires de.amr.games.pacman.ui2d;
     requires de.amr.games.pacman.mapeditor;
     requires de.amr.games.pacman.arcade.pacman;
 

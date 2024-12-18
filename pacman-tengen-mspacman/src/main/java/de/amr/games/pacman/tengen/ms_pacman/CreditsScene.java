@@ -6,8 +6,8 @@ package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES_JoypadButton;
-import de.amr.games.pacman.ui.action.GameActions2D;
-import de.amr.games.pacman.ui.scene.GameScene2D;
+import de.amr.games.pacman.ui2d.action.GameActions2D;
+import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;

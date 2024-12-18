@@ -6,11 +6,11 @@ package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.editor.TileMapEditor;
-import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.action.GameAction;
-import de.amr.games.pacman.ui.action.GameActionProvider;
-import de.amr.games.pacman.ui.assets.ResourceManager;
-import de.amr.games.pacman.ui.lib.Ufx;
+import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.action.GameAction;
+import de.amr.games.pacman.ui2d.action.GameActionProvider;
+import de.amr.games.pacman.ui2d.assets.ResourceManager;
+import de.amr.games.pacman.ui2d.lib.Ufx;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.BorderPane;

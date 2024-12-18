@@ -10,8 +10,8 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.assets.SpriteAnimation;
-import de.amr.games.pacman.ui.scene.GameScene2D;
+import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
+import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 

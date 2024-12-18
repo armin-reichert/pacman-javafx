@@ -5,8 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.scene.GameScene;
+import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.lib.Ufx;
+import de.amr.games.pacman.ui2d.scene.GameScene;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.WritableObjectValue;
@@ -26,7 +27,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static de.amr.games.pacman.ui2d.dashboard.InfoText.NO_INFO;
-import static de.amr.games.pacman.ui.lib.Ufx.coloredBackground;
 
 /**
  * Base class for area displaying UI info/editors.
@@ -59,7 +59,7 @@ public abstract class InfoBox extends TitledPane {
 
     public void init(GameContext context) {
         this.context = context;
-        grid.setBackground(coloredBackground(DashboardAssets.IT.color("infobox.background_color")));
+        grid.setBackground(Ufx.coloredBackground(DashboardAssets.IT.color("infobox.background_color")));
     }
 
     public void update() {

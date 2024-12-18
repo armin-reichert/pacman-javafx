@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
-import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.lib.Ufx;
+import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.lib.Ufx;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;

@@ -6,9 +6,9 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.assets.AssetStorage;
-import de.amr.games.pacman.ui.assets.GameSound;
+import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.assets.AssetStorage;
+import de.amr.games.pacman.ui2d.assets.GameSound;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -20,8 +20,8 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui.lib.Ufx.now;
-import static de.amr.games.pacman.ui.lib.Ufx.pauseSec;
+import static de.amr.games.pacman.ui2d.lib.Ufx.now;
+import static de.amr.games.pacman.ui2d.lib.Ufx.pauseSec;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
 
 /**

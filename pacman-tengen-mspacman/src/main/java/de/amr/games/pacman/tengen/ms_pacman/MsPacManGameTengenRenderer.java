@@ -15,12 +15,12 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
-import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.GameRenderer;
-import de.amr.games.pacman.ui.assets.AssetStorage;
-import de.amr.games.pacman.ui.assets.SpriteAnimation;
-import de.amr.games.pacman.ui.assets.SpriteAnimationCollection;
-import de.amr.games.pacman.ui.input.JoypadKeyBinding;
+import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.GameRenderer;
+import de.amr.games.pacman.ui2d.assets.AssetStorage;
+import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
+import de.amr.games.pacman.ui2d.assets.SpriteAnimationCollection;
+import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
@@ -36,7 +36,7 @@ import static de.amr.games.pacman.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.games.pacman.tengen.ms_pacman.MazeRepository.strangeMap15Sprite;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.nesPaletteColor;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSpriteSheet.*;
-import static de.amr.games.pacman.ui.assets.GameSpriteSheet.NO_SPRITE;
+import static de.amr.games.pacman.ui2d.assets.GameSpriteSheet.NO_SPRITE;
 import static java.util.function.Predicate.not;
 
 /**

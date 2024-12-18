@@ -18,8 +18,8 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.action.GameActions2D;
-import de.amr.games.pacman.ui.scene.GameScene2D;
+import de.amr.games.pacman.ui2d.action.GameActions2D;
+import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 

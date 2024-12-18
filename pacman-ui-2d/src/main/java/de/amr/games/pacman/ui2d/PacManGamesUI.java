@@ -10,29 +10,27 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.model.CustomMapsHandler;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.GlobalProperties;
-import de.amr.games.pacman.ui.action.GameAction;
-import de.amr.games.pacman.ui.action.GameActionProvider;
-import de.amr.games.pacman.ui.action.GameActions2D;
-import de.amr.games.pacman.ui.assets.AssetStorage;
-import de.amr.games.pacman.ui.assets.GameSound;
-import de.amr.games.pacman.ui.assets.ResourceManager;
-import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
-import de.amr.games.pacman.ui.input.JoypadKeyBinding;
-import de.amr.games.pacman.ui.input.Keyboard;
-import de.amr.games.pacman.ui.lib.FlashMessageView;
-import de.amr.games.pacman.ui.lib.GameClockFX;
-import de.amr.games.pacman.ui.lib.Picker;
-import de.amr.games.pacman.ui.lib.Ufx;
-import de.amr.games.pacman.ui.scene.GameConfiguration;
-import de.amr.games.pacman.ui.scene.GameScene;
-import de.amr.games.pacman.ui.scene.GameScene2D;
+import de.amr.games.pacman.ui2d.action.GameAction;
+import de.amr.games.pacman.ui2d.action.GameActionProvider;
+import de.amr.games.pacman.ui2d.action.GameActions2D;
+import de.amr.games.pacman.ui2d.assets.AssetStorage;
+import de.amr.games.pacman.ui2d.assets.GameSound;
+import de.amr.games.pacman.ui2d.assets.ResourceManager;
 import de.amr.games.pacman.ui2d.dashboard.*;
+import de.amr.games.pacman.ui2d.input.ArcadeKeyBinding;
+import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
+import de.amr.games.pacman.ui2d.input.Keyboard;
+import de.amr.games.pacman.ui2d.lib.FlashMessageView;
+import de.amr.games.pacman.ui2d.lib.GameClockFX;
+import de.amr.games.pacman.ui2d.lib.Picker;
+import de.amr.games.pacman.ui2d.lib.Ufx;
 import de.amr.games.pacman.ui2d.page.DashboardLayer;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.StartPage;
+import de.amr.games.pacman.ui2d.scene.GameConfiguration;
+import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
@@ -59,9 +57,8 @@ import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.GlobalProperties.PY_CANVAS_BG_COLOR;
-import static de.amr.games.pacman.ui.GlobalProperties.PY_DEBUG_INFO_VISIBLE;
-import static de.amr.games.pacman.ui.lib.Ufx.createIcon;
+import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_CANVAS_BG_COLOR;
+import static de.amr.games.pacman.ui2d.lib.Ufx.createIcon;
 
 /**
  * User interface for all Pac-Man game variants (2D only).
@@ -185,7 +182,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         gameConfiguration.initGameScenes(this);
         gameConfiguration.gameScenes().forEach(gameScene -> {
             if (gameScene instanceof GameScene2D gameScene2D) {
-                gameScene2D.debugInfoVisibleProperty().bind(PY_DEBUG_INFO_VISIBLE);
+                gameScene2D.debugInfoVisibleProperty().bind(GlobalProperties2d.PY_DEBUG_INFO_VISIBLE);
             }
         });
     }
@@ -282,7 +279,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         Scene mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
 
         ImageView mutedIcon = createIcon(assets.get("icon.mute"), 48, sound().mutedProperty());
-        ImageView autoIcon = createIcon(assets.get("icon.auto"), 48, GlobalProperties.PY_AUTOPILOT);
+        ImageView autoIcon = createIcon(assets.get("icon.auto"), 48, GlobalProperties2d.PY_AUTOPILOT);
         var bottomRightIcons = new HBox(autoIcon, mutedIcon);
         bottomRightIcons.setMaxWidth(128);
         bottomRightIcons.setMaxHeight(64);

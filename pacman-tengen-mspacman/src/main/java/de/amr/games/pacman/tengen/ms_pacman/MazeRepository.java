@@ -16,7 +16,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.RectArea.rect;
 import static de.amr.games.pacman.lib.nes.NES_ColorScheme.*;
-import static de.amr.games.pacman.ui.lib.Ufx.*;
+import static de.amr.games.pacman.ui2d.lib.Ufx.*;
 
 /**
  * This class provides an API to access the maze images in files {@code non_arcade_mazes.png} and {@code arcade_mazes.png}.

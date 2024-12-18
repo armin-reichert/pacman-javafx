@@ -7,9 +7,9 @@ package de.amr.games.pacman.tengen.ms_pacman;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.assets.GameSpriteSheet;
-import de.amr.games.pacman.ui.assets.SpriteAnimation;
-import de.amr.games.pacman.ui.assets.SpriteAnimationCollection;
+import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
+import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
+import de.amr.games.pacman.ui2d.assets.SpriteAnimationCollection;
 
 import java.util.Map;
 

@@ -1,8 +1,8 @@
 package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.assets.ResourceManager;
-import de.amr.games.pacman.ui.lib.Flyer;
+import de.amr.games.pacman.ui2d.assets.ResourceManager;
+import de.amr.games.pacman.ui2d.lib.Flyer;
 
 public class ArcadeMsPacManStartPage {
 

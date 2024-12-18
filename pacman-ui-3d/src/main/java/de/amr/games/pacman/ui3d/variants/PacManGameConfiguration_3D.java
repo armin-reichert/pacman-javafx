@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.variants;
 
-import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.scene.GameScene;
+import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.arcade.pacman.PacManGameConfiguration;
 import de.amr.games.pacman.ui3d.scene3d.PlayScene3D;
 

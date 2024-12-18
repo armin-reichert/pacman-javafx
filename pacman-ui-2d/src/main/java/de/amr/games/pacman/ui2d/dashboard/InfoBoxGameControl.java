@@ -7,16 +7,16 @@ package de.amr.games.pacman.ui2d.dashboard;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.action.GameActions2D;
-import de.amr.games.pacman.ui.GameContext;
+import de.amr.games.pacman.ui2d.action.GameActions2D;
+import de.amr.games.pacman.ui2d.GameContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 
 import static de.amr.games.pacman.lib.Globals.oneOf;
-import static de.amr.games.pacman.ui.GlobalProperties.PY_AUTOPILOT;
-import static de.amr.games.pacman.ui.GlobalProperties.PY_IMMUNITY;
+import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_AUTOPILOT;
+import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_IMMUNITY;
 
 /**
  * Game related settings.

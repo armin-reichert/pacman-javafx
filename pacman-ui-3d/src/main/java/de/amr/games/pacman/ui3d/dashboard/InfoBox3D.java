@@ -5,11 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.dashboard;
 
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.lib.NightMode;
-import de.amr.games.pacman.ui.scene.CameraControlledView;
-import de.amr.games.pacman.ui.scene.GameScene;
-import de.amr.games.pacman.ui.scene.GameScene2D;
+import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.lib.NightMode;
+import de.amr.games.pacman.ui2d.scene.CameraControlledView;
+import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.dashboard.InfoBox;
 import de.amr.games.pacman.ui2d.dashboard.InfoText;
 import de.amr.games.pacman.ui3d.GameActions3D;

@@ -9,14 +9,15 @@ import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.nes.NES_Palette;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.assets.AssetStorage;
-import de.amr.games.pacman.ui.assets.GameSpriteSheet;
-import de.amr.games.pacman.ui.assets.ResourceManager;
-import de.amr.games.pacman.ui.assets.WorldMapColoring;
-import de.amr.games.pacman.ui.scene.GameConfiguration;
-import de.amr.games.pacman.ui.scene.GameScene;
-import de.amr.games.pacman.ui.scene.GameScene2D;
+import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.assets.AssetStorage;
+import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
+import de.amr.games.pacman.ui2d.assets.ResourceManager;
+import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
+import de.amr.games.pacman.ui2d.scene.GameConfiguration;
+import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui2d.scene.GameScene2D;
+import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -26,7 +27,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.tengen.ms_pacman.GlobalPropertiesTengen.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
-import static de.amr.games.pacman.ui.lib.Ufx.coloredBackground;
+import static de.amr.games.pacman.ui2d.lib.Ufx.coloredBackground;
 
 public class MsPacManGameTengenConfiguration implements GameConfiguration {
 

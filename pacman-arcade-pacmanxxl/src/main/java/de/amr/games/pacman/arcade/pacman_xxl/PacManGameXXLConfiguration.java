@@ -8,12 +8,13 @@ import de.amr.games.pacman.arcade.Resources;
 import de.amr.games.pacman.arcade.pacman.*;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.assets.AssetStorage;
-import de.amr.games.pacman.ui.assets.GameSpriteSheet;
-import de.amr.games.pacman.ui.assets.ResourceManager;
-import de.amr.games.pacman.ui.assets.WorldMapColoring;
-import de.amr.games.pacman.ui.scene.*;
+import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.assets.AssetStorage;
+import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
+import de.amr.games.pacman.ui2d.assets.ResourceManager;
+import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
+import de.amr.games.pacman.ui2d.scene.*;
+import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -21,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.ui.lib.Ufx.imageBackground;
+import static de.amr.games.pacman.ui2d.lib.Ufx.imageBackground;
 
 public class PacManGameXXLConfiguration implements GameConfiguration {
 

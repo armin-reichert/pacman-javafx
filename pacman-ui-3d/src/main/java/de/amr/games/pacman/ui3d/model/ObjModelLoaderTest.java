@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.model;
 
-import de.amr.games.pacman.ui.assets.ResourceManager;
+import de.amr.games.pacman.ui2d.assets.ResourceManager;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
 import org.tinylog.Logger;
 

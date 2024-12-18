@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.lib.NightMode;
+import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.lib.NightMode;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
@@ -20,9 +20,9 @@ import javafx.scene.shape.DrawMode;
 import java.time.LocalTime;
 
 import static de.amr.games.pacman.lib.Globals.inClosedRange;
-import static de.amr.games.pacman.ui.input.Keyboard.alt;
-import static de.amr.games.pacman.ui.lib.Ufx.coloredBackground;
-import static de.amr.games.pacman.ui.lib.Ufx.contextMenuTitleItem;
+import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
+import static de.amr.games.pacman.ui2d.lib.Ufx.coloredBackground;
+import static de.amr.games.pacman.ui2d.lib.Ufx.contextMenuTitleItem;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_NIGHT_MODE;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_DRAW_MODE;
 

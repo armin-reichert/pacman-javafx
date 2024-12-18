@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
-import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.lib.Ufx;
+import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.lib.Ufx;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -18,8 +18,8 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.ui.GlobalProperties.PY_AUTOPILOT;
-import static de.amr.games.pacman.ui.GlobalProperties.PY_IMMUNITY;
+import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_AUTOPILOT;
+import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_IMMUNITY;
 
 
 /**

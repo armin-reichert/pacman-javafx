@@ -11,8 +11,8 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.assets.WorldMapColoring;
+import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
 import javafx.scene.paint.Color;
 
 import java.util.Map;
