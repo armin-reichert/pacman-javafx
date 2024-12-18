@@ -18,7 +18,6 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.actors.Animations.*;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_TILES;
-import static de.amr.games.pacman.ui.GameContext.PFX_MS_PACMAN_TENGEN;
 
 public class CutScene4 extends GameScene2D {
 
@@ -44,6 +43,7 @@ public class CutScene4 extends GameScene2D {
 
     @Override
     protected void doInit() {
+        String assetKeyPrefix = context.currentGameConfig().assetKeyPrefix();
         t = -1;
 
         context.setScoreVisible(false);
@@ -53,12 +53,12 @@ public class CutScene4 extends GameScene2D {
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
 
-        spriteSheet = (MsPacManGameTengenSpriteSheet) context.currentGameSceneConfig().spriteSheet();
+        spriteSheet = (MsPacManGameTengenSpriteSheet) context.currentGameConfig().spriteSheet();
         mrPacMan.setAnimations(new PacAnimations(spriteSheet));
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
 
         music = context.sound().makeSound("intermission.4",1.0, false);
-        clapTextColor = context.assets().color(PFX_MS_PACMAN_TENGEN + ".color.clapperboard");
+        clapTextColor = context.assets().color(assetKeyPrefix + ".color.clapperboard");
     }
 
     @Override
@@ -150,10 +150,11 @@ public class CutScene4 extends GameScene2D {
     }
 
     private void spawnJunior() {
+        String assetKeyPrefix = context.currentGameConfig().assetKeyPrefix();
         var junior = new Pac();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         int rnd = Globals.randomInt(1, 3);
-        AudioClip clip = context.assets().get(PFX_MS_PACMAN_TENGEN + ".audio.intermission.4.junior." + rnd);
+        AudioClip clip = context.assets().get(assetKeyPrefix + ".audio.intermission.4.junior." + rnd);
         junior.setPosition((float) randomX, size().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);

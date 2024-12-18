@@ -23,7 +23,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.*;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -258,7 +260,7 @@ public class GamePage extends StackPane implements GameActionProvider {
                 canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
                 gameScene2D.scalingProperty().bind(
                     canvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_SCALING)));
-                GameRenderer renderer = context.currentGameSceneConfig().createRenderer(context.assets(), canvas);
+                GameRenderer renderer = context.currentGameConfig().createRenderer(context.assets(), canvas);
                 gameScene2D.setCanvas(canvas);
                 gameScene2D.setGameRenderer(renderer);
                 getChildren().set(0, canvasLayer);

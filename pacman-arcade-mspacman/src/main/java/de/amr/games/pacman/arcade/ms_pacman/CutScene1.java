@@ -21,7 +21,6 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.Animations.*;
-import static de.amr.games.pacman.ui.GameContext.PFX_MS_PACMAN;
 
 /**
  * Intermission scene 1: "They meet".
@@ -69,7 +68,7 @@ public class CutScene1 extends GameScene2D {
 
         music = context.sound().makeSound("intermission.1", 1.0, false);
 
-        var spriteSheet = (MsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
+        var spriteSheet = (MsPacManGameSpriteSheet) context.currentGameConfig().spriteSheet();
         msPac.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
         inky.setAnimations(new GhostAnimations(spriteSheet, inky.id()));
@@ -100,7 +99,8 @@ public class CutScene1 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         MsPacManGameRenderer r = (MsPacManGameRenderer) gr;
-        Color color = context.assets().color(PFX_MS_PACMAN + ".color.clapperboard");
+        String assetKeyPrefix = context.currentGameConfig().assetKeyPrefix();
+        Color color = context.assets().color(assetKeyPrefix + ".color.clapperboard");
         r.drawClapperBoard(r.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
         r.drawAnimatedEntity(msPac);
         r.drawAnimatedEntity(pacMan);

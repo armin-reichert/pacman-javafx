@@ -36,7 +36,6 @@ import static de.amr.games.pacman.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.games.pacman.tengen.ms_pacman.MazeRepository.strangeMap15Sprite;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.nesPaletteColor;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSpriteSheet.*;
-import static de.amr.games.pacman.ui.GameContext.PFX_MS_PACMAN_TENGEN;
 import static de.amr.games.pacman.ui.assets.GameSpriteSheet.NO_SPRITE;
 import static java.util.function.Predicate.not;
 
@@ -201,6 +200,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         GameLevel level = context.level();
         MapCategory mapCategory = game.mapCategory();
         int mapNumber = world.map().getConfigValue("mapNumber");
+        String assetKeyPrefix = context.currentGameConfig().assetKeyPrefix();
 
         if (areGameOptionsChanged(game)) {
             drawGameOptionsInfo(world.map().terrain(), game);
@@ -212,7 +212,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             return;
         }
 
-        drawLevelMessage(level, game.isDemoLevel()); // message appears under map image so draw it first
+        drawLevelMessage(assetKeyPrefix, level, game.isDemoLevel()); // message appears under map image so draw it first
         RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
             ? strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
             : mazeSet.normalMaze().area();
@@ -296,13 +296,13 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         ctx.restore();
     }
 
-    private void drawLevelMessage(GameLevel level, boolean demoLevel) {
+    private void drawLevelMessage(String assetKeyPrefix, GameLevel level, boolean demoLevel) {
         if (level.message() != null) {
             float x = getMessagePosition().x(), y = getMessagePosition().y();
             switch (level.message().type()) {
-                case READY -> drawTextCenteredOver("READY!", x, y, assets.color(PFX_MS_PACMAN_TENGEN + ".color.ready_message"));
+                case READY -> drawTextCenteredOver("READY!", x, y, assets.color(assetKeyPrefix + ".color.ready_message"));
                 case GAME_OVER -> {
-                    Color color = assets.color(PFX_MS_PACMAN_TENGEN + ".color.game_over_message");
+                    Color color = assets.color(assetKeyPrefix + ".color.game_over_message");
                     if (demoLevel) {
                         WorldMap worldMap = level.world().map();
                         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");

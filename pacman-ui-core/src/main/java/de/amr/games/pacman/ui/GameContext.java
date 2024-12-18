@@ -18,8 +18,8 @@ import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui.input.Keyboard;
 import de.amr.games.pacman.ui.lib.GameClockFX;
-import de.amr.games.pacman.ui.scene.GameScene;
 import de.amr.games.pacman.ui.scene.GameConfiguration;
+import de.amr.games.pacman.ui.scene.GameScene;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -34,20 +34,6 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  * @author Armin Reichert
  */
 public interface GameContext {
-
-    String PFX_PACMAN = "pacman";
-    String PFX_PACMAN_XXL = "pacman_xxl";
-    String PFX_MS_PACMAN = "ms_pacman";
-    String PFX_MS_PACMAN_TENGEN = "tengen";
-
-    static String assetPrefix(GameVariant variant) {
-        return switch (variant) {
-            case MS_PACMAN        -> PFX_MS_PACMAN;
-            case MS_PACMAN_TENGEN -> PFX_MS_PACMAN_TENGEN;
-            case PACMAN           -> PFX_PACMAN;
-            case PACMAN_XXL       -> PFX_PACMAN_XXL;
-        };
-    }
 
     // Assets
     AssetStorage assets();
@@ -116,7 +102,7 @@ public interface GameContext {
 
     // Game scenes
     GameConfiguration gameSceneConfig(GameVariant variant);
-    default GameConfiguration currentGameSceneConfig() { return gameSceneConfig(gameVariant()); }
+    default GameConfiguration currentGameConfig() { return gameSceneConfig(gameVariant()); }
     boolean currentGameSceneHasID(String gameSceneID);
     ObjectProperty<GameScene> gameSceneProperty();
     Optional<GameScene> currentGameScene();

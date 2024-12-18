@@ -21,7 +21,6 @@ import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_TILES;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSpriteSheet.HEART_SPRITE;
-import static de.amr.games.pacman.ui.GameContext.PFX_MS_PACMAN_TENGEN;
 
 /**
  * Intermission scene 1: "They meet".
@@ -67,6 +66,8 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public void doInit() {
+        String assetKeyPrefix = context.currentGameConfig().assetKeyPrefix();
+
         t = -1;
         context.setScoreVisible(false);
 
@@ -76,14 +77,14 @@ public class CutScene1 extends GameScene2D {
         pinky = Ghost.pinky();
         heart = new Entity();
 
-        var spriteSheet = (MsPacManGameTengenSpriteSheet) context.currentGameSceneConfig().spriteSheet();
+        var spriteSheet = (MsPacManGameTengenSpriteSheet) context.currentGameConfig().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         mrPacMan.setAnimations(new PacAnimations(spriteSheet));
         inky.setAnimations(new GhostAnimations(spriteSheet, inky.id()));
         pinky.setAnimations(new GhostAnimations(spriteSheet, pinky.id()));
 
         music = context.sound().makeSound("intermission.1", 1.0, false);
-        clapTextColor = context.assets().color(PFX_MS_PACMAN_TENGEN + ".color.clapperboard");
+        clapTextColor = context.assets().color(assetKeyPrefix + ".color.clapperboard");
     }
 
     @Override

@@ -17,9 +17,9 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.GameContext;
+import de.amr.games.pacman.ui.assets.AssetStorage;
 import de.amr.games.pacman.ui.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui.assets.WorldMapColoring;
-import de.amr.games.pacman.ui.assets.AssetStorage;
 import de.amr.games.pacman.ui.lib.Ufx;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui3d.animation.Squirting;
@@ -44,7 +44,6 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui.GameContext.assetPrefix;
 import static de.amr.games.pacman.ui.lib.Ufx.*;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
 
@@ -71,13 +70,12 @@ public class GameLevel3D {
 
     static final PhongMaterial DEFAULT_MATERIAL = new PhongMaterial();
 
-    static Pac3D createPac3D(GameVariant variant, AssetStorage assets, Pac pac) {
+    static Pac3D createPac3D(GameVariant variant, AssetStorage assets, String assetKeyPrefix, Pac pac) {
         Pac3D pac3D = switch (variant) {
-            case MS_PACMAN, MS_PACMAN_TENGEN -> new MsPacMan3D(variant, pac, PAC_SIZE, assets);
-            case PACMAN, PACMAN_XXL          -> new PacMan3D(variant, pac, PAC_SIZE, assets);
+            case MS_PACMAN, MS_PACMAN_TENGEN -> new MsPacMan3D(variant, pac, PAC_SIZE, assets, assetKeyPrefix);
+            case PACMAN, PACMAN_XXL          -> new PacMan3D(variant, pac, PAC_SIZE, assets, assetKeyPrefix);
         };
-        String prefix = assetPrefix(variant);
-        pac3D.shape3D().light().setColor(assets.color(prefix + ".pac.color.head").desaturate());
+        pac3D.shape3D().light().setColor(assets.color(assetKeyPrefix + ".pac.color.head").desaturate());
         pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
         return pac3D;
     }
@@ -89,8 +87,9 @@ public class GameLevel3D {
         return new MutableGhost3D(dressShape, pupilsShape, eyeballsShape, assets, assetPrefix, ghost, GHOST_SIZE, numFlashes);
     }
 
-    static LivesCounter3D createLivesCounter3D(GameVariant variant, AssetStorage assets,  boolean canStartNewGame) {
-        Node[] shapes = IntStream.range(0, LIVES_COUNTER_MAX).mapToObj(i -> createLivesCounterShape(variant, assets)).toArray(Node[]::new);
+    static LivesCounter3D createLivesCounter3D(GameVariant variant, AssetStorage assets, String assetKeyPrefix, boolean canStartNewGame) {
+        Node[] shapes = IntStream.range(0, LIVES_COUNTER_MAX)
+            .mapToObj(i -> createLivesCounterShape(variant, assets, assetKeyPrefix)).toArray(Node[]::new);
         var counter3D = new LivesCounter3D(shapes, 10);
         counter3D.setTranslateX(2 * TS);
         counter3D.setTranslateY(2 * TS);
@@ -101,28 +100,27 @@ public class GameLevel3D {
         return counter3D;
     }
 
-    static Node createLivesCounterShape(GameVariant variant, AssetStorage assets) {
-        String prefix = assetPrefix(variant);
+    static Node createLivesCounterShape(GameVariant variant, AssetStorage assets, String assetKeyPrefix) {
         return switch (variant) {
             case MS_PACMAN, MS_PACMAN_TENGEN -> new Group(
                 PacModel3D.createPacShape(
                     assets.get("model3D.pacman"), LIVES_SHAPE_SIZE,
-                    assets.color(prefix + ".pac.color.head"),
-                    assets.color(prefix + ".pac.color.eyes"),
-                    assets.color(prefix + ".pac.color.palate")
+                    assets.color(assetKeyPrefix + ".pac.color.head"),
+                    assets.color(assetKeyPrefix + ".pac.color.eyes"),
+                    assets.color(assetKeyPrefix + ".pac.color.palate")
                 ),
                 PacModel3D.createFemaleParts(LIVES_SHAPE_SIZE,
-                    assets.color(prefix + ".pac.color.hairbow"),
-                    assets.color(prefix + ".pac.color.hairbow.pearls"),
-                    assets.color(prefix + ".pac.color.boobs")
+                    assets.color(assetKeyPrefix + ".pac.color.hairbow"),
+                    assets.color(assetKeyPrefix + ".pac.color.hairbow.pearls"),
+                    assets.color(assetKeyPrefix + ".pac.color.boobs")
                 )
             );
             case PACMAN, PACMAN_XXL ->
                 PacModel3D.createPacShape(
                     assets.get("model3D.pacman"), LIVES_SHAPE_SIZE,
-                    assets.color(prefix + ".pac.color.head"),
-                    assets.color(prefix + ".pac.color.eyes"),
-                    assets.color(prefix + ".pac.color.palate")
+                    assets.color(assetKeyPrefix + ".pac.color.head"),
+                    assets.color(assetKeyPrefix + ".pac.color.eyes"),
+                    assets.color(assetKeyPrefix + ".pac.color.palate")
                 );
         };
     }
@@ -201,17 +199,18 @@ public class GameLevel3D {
         this.context = context;
 
         final AssetStorage assets = context.assets();
+        final String assetKeyPrefix = context.currentGameConfig().assetKeyPrefix();
         final GameVariant variant = context.gameVariant();
         final GameModel game = context.game();
         final GameLevel level = context.level();
         final GameWorld world = level.world();
         final WorldMapColoring coloring = context.gameSceneConfig(variant).worldMapColoring(world.map());
 
-        pac3D = createPac3D(variant, assets, level.pac());
+        pac3D = createPac3D(variant, assets, assetKeyPrefix, level.pac());
         ghosts3D = level.ghosts()
-            .map(ghost -> createMutableGhost3D(assets, assetPrefix(variant), ghost, level.numFlashes()))
+            .map(ghost -> createMutableGhost3D(assets, assetKeyPrefix, ghost, level.numFlashes()))
             .toList();
-        livesCounter3D = createLivesCounter3D(variant, assets, game.canStartNewGame());
+        livesCounter3D = createLivesCounter3D(variant, assets, assetKeyPrefix, game.canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCounterPy);
         message3D = createMessage3D(assets);
 
@@ -238,7 +237,7 @@ public class GameLevel3D {
         double x = context.level().world().map().terrain().numCols() * TS - 2 * TS;
         double y = 2 * TS;
         Node levelCounter3D = createLevelCounter3D(
-            context.currentGameSceneConfig().spriteSheet(),
+            context.currentGameConfig().spriteSheet(),
             context.game().levelCounter(), x, y);
         root.getChildren().add(levelCounter3D);
     }

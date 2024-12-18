@@ -18,7 +18,6 @@ import static de.amr.games.pacman.model.actors.Animations.ANIM_MR_PACMAN_MUNCHIN
 import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_TILES;
-import static de.amr.games.pacman.ui.GameContext.PFX_MS_PACMAN_TENGEN;
 
 /**
  * Intermission scene 2: "The chase".
@@ -57,7 +56,7 @@ public class CutScene2 extends GameScene2D {
         context.setScoreVisible(false);
         pacMan = new Pac();
         msPacMan = new Pac();
-        var spriteSheet = (MsPacManGameTengenSpriteSheet) context.currentGameSceneConfig().spriteSheet();
+        var spriteSheet = (MsPacManGameTengenSpriteSheet) context.currentGameConfig().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
         music = context.sound().makeSound("intermission.2",1.0, false);
@@ -149,7 +148,8 @@ public class CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Color color = context.assets().color(PFX_MS_PACMAN_TENGEN + ".color.clapperboard"); //TODO check
+        String assetKeyPrefix = context.currentGameConfig().assetKeyPrefix();
+        Color color = context.assets().color(assetKeyPrefix + ".color.clapperboard"); //TODO check
         var r = (MsPacManGameTengenRenderer) gr;
         r.drawSceneBorderLines();
         r.setLevelNumberBoxesVisible(false);

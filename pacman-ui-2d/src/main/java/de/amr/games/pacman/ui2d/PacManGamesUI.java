@@ -365,14 +365,14 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             GlobalProperties2d.PY_MAP_SELECTION_MODE.addListener((py, ov, selectionMode) -> customMapsHandler.setMapSelectionMode(selectionMode));
         }
 
-        String prefix = GameContext.assetPrefix(variant);
-        sceneRoot.setBackground(assets.get(prefix + ".scene_background"));
-        Image icon = assets.image(prefix + ".icon");
+        String assetKeyPrefix = currentGameConfig().assetKeyPrefix();
+        sceneRoot.setBackground(assets.get(assetKeyPrefix + ".scene_background"));
+        Image icon = assets.image(assetKeyPrefix + ".icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
         }
         try {
-            sound().init(variant);
+            sound().setGameVariant(variant, currentGameConfig().assetKeyPrefix());
         } catch (Exception x) {
             Logger.error(x);
         }
@@ -383,7 +383,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         return Bindings.createStringBinding(
             () -> {
                 // e.g. "app.title.pacman" vs. "app.title.pacman.paused"
-                String key = "app.title." + GameContext.assetPrefix(gameVariant());
+                String key = "app.title." + currentGameConfig().assetKeyPrefix();
                 if (clock.isPaused()) { key += ".paused"; }
                 if (currentGameScene().isPresent() && currentGameScene().get() instanceof GameScene2D gameScene2D) {
                     return locText(key, "2D") + " (%.2fx)".formatted(gameScene2D.scaling());
@@ -399,7 +399,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     protected void updateGameScene(boolean reloadCurrent) {
         GameScene prevGameScene = gameScenePy.get();
-        GameScene nextGameScene = currentGameSceneConfig().selectGameScene(this);
+        GameScene nextGameScene = currentGameConfig().selectGameScene(this);
         boolean sceneChanging = nextGameScene != prevGameScene;
         if (reloadCurrent || sceneChanging) {
             if (prevGameScene != null) {
@@ -429,7 +429,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     private boolean is2D3DSwitch(GameScene oldGameScene, GameScene newGameScene) {
-        var cfg = currentGameSceneConfig();
+        var cfg = currentGameConfig();
         return
             cfg.gameSceneHasID(oldGameScene, "PlayScene2D") &&
             cfg.gameSceneHasID(newGameScene, "PlayScene3D") ||
@@ -531,7 +531,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         if (currentGameScene().isEmpty()) {
             return false;
         }
-        return currentGameSceneConfig().gameSceneHasID(currentGameScene().get(), sceneID);
+        return currentGameConfig().gameSceneHasID(currentGameScene().get(), sceneID);
     }
 
     @Override
@@ -637,7 +637,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     @Override
     public void onLevelCreated(GameEvent event) {
-        currentGameSceneConfig().createActorAnimations(level());
+        currentGameConfig().createActorAnimations(level());
         sound().setEnabled(!game().isDemoLevel());
         // size of game scene might have changed, so re-embed
         currentGameScene().ifPresent(gamePage::embedGameScene);

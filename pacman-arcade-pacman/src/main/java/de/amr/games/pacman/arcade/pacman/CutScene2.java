@@ -9,9 +9,9 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui.assets.SpriteAnimation;
 import de.amr.games.pacman.ui.scene.GameScene;
 import de.amr.games.pacman.ui.scene.GameScene2D;
-import de.amr.games.pacman.ui.assets.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
@@ -50,7 +50,7 @@ public class CutScene2 extends GameScene2D {
         music = context.sound().makeSound("intermission", 1.0, false);
         music.setCycleCount(1);
 
-        var spriteSheet = (PacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
+        var spriteSheet = (PacManGameSpriteSheet) context.currentGameConfig().spriteSheet();
         pac.setAnimations(new PacAnimations(spriteSheet));
 
         var blinkyAnimations = new GhostAnimations(spriteSheet, blinky.id());

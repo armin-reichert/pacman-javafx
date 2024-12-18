@@ -54,7 +54,7 @@ public class BootScene extends GameScene2D {
             ghost = Ghost.blinky();
             ghost.setSpeed(0);
             ghost.hide();
-            GameSpriteSheet spriteSheet = context.currentGameSceneConfig().spriteSheet();
+            GameSpriteSheet spriteSheet = context.currentGameConfig().spriteSheet();
             ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
             ghost.selectAnimation(Animations.ANIM_GHOST_NORMAL);
         }

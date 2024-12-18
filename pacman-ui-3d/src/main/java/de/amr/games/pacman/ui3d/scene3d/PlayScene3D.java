@@ -51,7 +51,6 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenActions.setDefaultJoypadBinding;
-import static de.amr.games.pacman.ui.GameContext.assetPrefix;
 import static de.amr.games.pacman.ui.GlobalProperties.*;
 import static de.amr.games.pacman.ui.action.GameActions2D.*;
 import static de.amr.games.pacman.ui.input.Keyboard.alt;
@@ -267,7 +266,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // when score is disabled, show text "game over"
-            Color color = context.assets().color(assetPrefix(context.gameVariant()) + ".color.game_over_message");
+            String assetKeyPrefix = context.currentGameConfig().assetKeyPrefix();
+            Color color = context.assets().color(assetKeyPrefix + ".color.game_over_message");
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 WorldMap worldMap = context.level().world().map();
                 NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
@@ -377,7 +377,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     private void onEnterStateGhostDying() {
-        GameSpriteSheet spriteSheet = context.currentGameSceneConfig().spriteSheet();
+        GameSpriteSheet spriteSheet = context.currentGameConfig().spriteSheet();
         RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
         context.game().eventLog().killedGhosts.forEach(ghost -> {
             int victimIndex = context.level().victims().indexOf(ghost);
@@ -441,7 +441,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        context.level().bonus().ifPresent(bonus -> level3D.replaceBonus3D(bonus, context.currentGameSceneConfig().spriteSheet()));
+        context.level().bonus().ifPresent(bonus -> level3D.replaceBonus3D(bonus, context.currentGameConfig().spriteSheet()));
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             //TODO also in Ms. Pac-Man!
             context.sound().playBonusBouncingSound();

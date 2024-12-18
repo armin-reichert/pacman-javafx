@@ -10,8 +10,8 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.scene.GameScene2D;
 import de.amr.games.pacman.ui.assets.SpriteAnimation;
+import de.amr.games.pacman.ui.scene.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
@@ -20,7 +20,6 @@ import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.Animations.ANIM_MR_PACMAN_MUNCHING;
 import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
-import static de.amr.games.pacman.ui.GameContext.PFX_MS_PACMAN;
 
 /**
  * Intermission scene 3: "Junior".
@@ -61,7 +60,7 @@ public class CutScene3 extends GameScene2D {
         bag = new Entity();
 
         music = context.sound().makeSound("intermission.3", 1.0, false);
-        var spriteSheet = (MsPacManGameSpriteSheet) context.currentGameSceneConfig().spriteSheet();
+        var spriteSheet = (MsPacManGameSpriteSheet) context.currentGameConfig().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
 
@@ -93,7 +92,8 @@ public class CutScene3 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         MsPacManGameRenderer r = (MsPacManGameRenderer) gr;
-        Color color = context.assets().color(PFX_MS_PACMAN + ".color.clapperboard");
+        String assetKeyPrefix = context.currentGameConfig().assetKeyPrefix();
+        Color color = context.assets().color(assetKeyPrefix + ".color.clapperboard");
         r.drawClapperBoard(r.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
         r.drawAnimatedEntity(msPacMan);
         r.drawAnimatedEntity(pacMan);

@@ -77,7 +77,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
     public void onLevelCreated(GameEvent e) {
         scene2D = context.gameVariant() == GameVariant.MS_PACMAN_TENGEN ? new TengenPlayScene(canvas) : new PlayScene2D();
         scene2D.setGameContext(context);
-        scene2D.setGameRenderer(context.currentGameSceneConfig().createRenderer(context.assets(), canvas));
+        scene2D.setGameRenderer(context.currentGameConfig().createRenderer(context.assets(), canvas));
         scene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
         scene2D.renderer().setWorldMap(context.level().world().map());
         recomputeLayout();

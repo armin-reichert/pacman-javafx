@@ -20,7 +20,6 @@ import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfigurati
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_TILES;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSpriteSheet.BLUE_BAG_SPRITE;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSpriteSheet.JUNIOR_PAC_SPRITE;
-import static de.amr.games.pacman.ui.GameContext.PFX_MS_PACMAN_TENGEN;
 
 /**
  * Intermission scene 3: "Junior".
@@ -65,6 +64,8 @@ public class CutScene3 extends GameScene2D {
 
     @Override
     public void doInit() {
+        String assetKeyPrefix = context.currentGameConfig().assetKeyPrefix();
+
         t = -1;
         context.setScoreVisible(false);
 
@@ -74,12 +75,12 @@ public class CutScene3 extends GameScene2D {
         bagWithJunior = new Entity();
         bagWithJunior.hide();
 
-        spriteSheet = (MsPacManGameTengenSpriteSheet) context.currentGameSceneConfig().spriteSheet();
+        spriteSheet = (MsPacManGameTengenSpriteSheet) context.currentGameConfig().spriteSheet();
         mrPacMan.setAnimations(new PacAnimations(spriteSheet));
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
 
         music = context.sound().makeSound("intermission.3",1.0, false);
-        clapTextColor = context.assets().color(PFX_MS_PACMAN_TENGEN + ".color.clapperboard");
+        clapTextColor = context.assets().color(assetKeyPrefix + ".color.clapperboard");
     }
 
     @Override

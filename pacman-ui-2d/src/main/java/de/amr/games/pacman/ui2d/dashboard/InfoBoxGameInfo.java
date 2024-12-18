@@ -46,7 +46,7 @@ public class InfoBoxGameInfo extends InfoBox {
                 Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
                 return "%s %s %s".formatted(colorMap.get("fill"), colorMap.get("stroke"), colorMap.get("pellet"));
             } else if (worldMap.hasConfigValue("colorMapIndex")) {
-                WorldMapColoring coloring = context.currentGameSceneConfig().worldMapColoring(worldMap);
+                WorldMapColoring coloring = context.currentGameConfig().worldMapColoring(worldMap);
                 return formatColorMap(coloring.fill(), coloring.stroke(), coloring.pellet());
             } else {
                 return InfoText.NO_INFO;

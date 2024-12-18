@@ -36,7 +36,6 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
-import static de.amr.games.pacman.ui.GameContext.assetPrefix;
 import static de.amr.games.pacman.ui.GlobalProperties.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui.GlobalProperties.PY_IMMUNITY;
 
@@ -193,7 +192,7 @@ public class PlayScene2D extends GameScene2D {
 
     private void drawLevelMessage(GameLevel.Message message) {
         if (message != null) {
-            String assetPrefix = assetPrefix(context.gameVariant());
+            String assetPrefix = context.currentGameConfig().assetKeyPrefix();
             Color color = null;
             String text = null;
             switch (message.type()) {
@@ -241,7 +240,7 @@ public class PlayScene2D extends GameScene2D {
         bindGameActions();
         registerGameActionKeyBindings(context.keyboard());
         if (gr == null) {
-            setGameRenderer(context.currentGameSceneConfig().createRenderer(context.assets(), canvas));
+            setGameRenderer(context.currentGameConfig().createRenderer(context.assets(), canvas));
         }
         gr.setWorldMap(context.level().world().map());
     }

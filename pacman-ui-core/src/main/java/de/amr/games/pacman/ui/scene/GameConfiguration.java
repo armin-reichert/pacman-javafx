@@ -31,4 +31,5 @@ public interface GameConfiguration {
     void createActorAnimations(GameLevel level);
     GameScene selectGameScene(GameContext context);
     AssetStorage assets();
+    String assetKeyPrefix();
 }

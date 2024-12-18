@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.lib.arcade.Arcade;
-import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.assets.ResourceManager;
 import de.amr.games.pacman.ui.lib.Picker;
 import de.amr.games.pacman.ui.lib.Ufx;
@@ -167,8 +166,9 @@ public class PacManGamesUI_3D extends PacManGamesUI {
         return Bindings.createStringBinding(() -> {
             String sceneName = currentGameScene().map(gameScene -> gameScene.getClass().getSimpleName()).orElse(null);
             String sceneNameText = sceneName != null && PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(sceneName) : "";
+            String assetKeyPrefix = currentGameConfig().assetKeyPrefix();
             // resource key is composed of game variant, paused state and display mode (2D, 3D)
-            String key = "app.title." + GameContext.assetPrefix(gameVariant());
+            String key = "app.title." + assetKeyPrefix;
             if (clock.isPaused()) {
                 key += ".paused";
             }

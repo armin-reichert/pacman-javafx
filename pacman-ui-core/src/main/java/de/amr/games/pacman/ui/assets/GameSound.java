@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui.GameContext.assetPrefix;
 
 /**
  * @author Armin Reichert
@@ -35,6 +34,7 @@ public class GameSound {
     private final BooleanProperty mutedPy = new SimpleBooleanProperty(false);
 
     private GameVariant gameVariant;
+    private String assetKeyPrefix;
     private AssetStorage assets;
 
     private final Map<GameVariant, Map<String, MediaPlayer>> soundsByGameVariant = new HashMap<>();
@@ -48,7 +48,7 @@ public class GameSound {
     private MediaPlayer voice;
 
     private String soundURL(String keySuffix) {
-        String assetKey = assetPrefix(gameVariant) + ".audio." + keySuffix;
+        String assetKey = assetKeyPrefix + ".audio." + keySuffix;
         URL url = assets.get(assetKey);
         return url != null ? url.toExternalForm() : null;
     }
@@ -69,8 +69,9 @@ public class GameSound {
     }
 
     //TODO check volume settings
-    public void init(GameVariant gameVariant) {
+    public void setGameVariant(GameVariant gameVariant, String assetKeyPrefix) {
         this.gameVariant = checkNotNull(gameVariant);
+        this.assetKeyPrefix = checkNotNull(assetKeyPrefix);
         if (soundsByGameVariant.get(gameVariant).isEmpty()) {
             Map<String, MediaPlayer> sounds = new HashMap<>();
             soundsByGameVariant.put(gameVariant, sounds);
@@ -146,7 +147,7 @@ public class GameSound {
 
     public void playClipIfEnabled(String keySuffix, double volume) {
         checkNotNull(keySuffix);
-        String assetKey = assetPrefix(gameVariant) + ".audio." + keySuffix;
+        String assetKey = assetKeyPrefix + ".audio." + keySuffix;
         AudioClip clip = assets.get(assetKey);
         if (clip == null) {
             Logger.error("No audio clip with key {}", assetKey);

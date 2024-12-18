@@ -7,8 +7,8 @@ package de.amr.games.pacman.ui3d.level;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.assets.GameSound;
 import de.amr.games.pacman.ui.assets.AssetStorage;
+import de.amr.games.pacman.ui.assets.GameSound;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
 import javafx.geometry.Point3D;
@@ -18,7 +18,6 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui.GameContext.assetPrefix;
 import static de.amr.games.pacman.ui.lib.Ufx.doAfterSec;
 import static de.amr.games.pacman.ui.lib.Ufx.now;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
@@ -40,23 +39,22 @@ public class PacMan3D implements Pac3D {
      * @param size diameter of Pac-Man
      * @param assets asset map
      */
-    public PacMan3D(GameVariant variant, Pac pacMan, double size, AssetStorage assets) {
+    public PacMan3D(GameVariant variant, Pac pacMan, double size, AssetStorage assets, String assetKeyPrefix) {
         checkNotNull(variant);
         this.pacMan = checkNotNull(pacMan);
         checkNotNull(assets);
-
-        String prefix = assetPrefix(variant);
+        checkNotNull(assetKeyPrefix);
 
         Model3D model3D = assets.get("model3D.pacman");
 
         shape3D = new PacShape3D(model3D, size,
-            assets.color(prefix + ".pac.color.head"),
-            assets.color(prefix + ".pac.color.palate"));
+            assets.color(assetKeyPrefix + ".pac.color.head"),
+            assets.color(assetKeyPrefix + ".pac.color.palate"));
 
         Group body = PacModel3D.createPacShape(model3D, size,
-            assets.color(prefix + ".pac.color.head"),
-            assets.color(prefix + ".pac.color.eyes"),
-            assets.color(prefix + ".pac.color.palate")
+            assets.color(assetKeyPrefix + ".pac.color.head"),
+            assets.color(assetKeyPrefix + ".pac.color.eyes"),
+            assets.color(assetKeyPrefix + ".pac.color.palate")
         );
         meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(shape3D.drawModeProperty());
         meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(shape3D.drawModeProperty());
