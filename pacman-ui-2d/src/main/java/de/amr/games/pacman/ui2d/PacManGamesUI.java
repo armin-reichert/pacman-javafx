@@ -237,7 +237,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     private void addMyselfAsGameListener(GameModel game) {
         game.addGameEventListener(this);
-        game.addGameEventListener(gamePage.dashboardLayer().getPip());
+        game.addGameEventListener(gamePage.dashboardLayer().pipView());
     }
 
     /**
@@ -390,6 +390,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         } catch (Exception x) {
             Logger.error(x);
         }
+
+        //TODO reconsider this
         gamePage.gameCanvasContainer().decorationEnabledPy.set(gameVariant() != GameVariant.MS_PACMAN_TENGEN);
     }
 
@@ -655,6 +657,10 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         sound().setEnabled(!game().isDemoLevel());
         // size of game scene might have changed, so re-embed
         currentGameScene().ifPresent(gamePage::embedGameScene);
+
+        GameScene2D pipScene = currentGameConfig().createPiPScene(this, gamePage.gameCanvasContainer().canvas());
+        gamePage.dashboardLayer().pipView().setScene2D(pipScene);
+
         Logger.info("Game level {} ({}) created", level().number, gameVariant());
         Logger.info("Actor animations created");
         Logger.info("Sounds {}", sound().isEnabled() ? "enabled" : "disabled");

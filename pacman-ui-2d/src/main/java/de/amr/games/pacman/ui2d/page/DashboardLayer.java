@@ -47,7 +47,7 @@ public class DashboardLayer extends BorderPane {
         return dashboardEntries;
     }
 
-    public PictureInPictureView getPip() {
+    public PictureInPictureView pipView() {
         return pip;
     }
 

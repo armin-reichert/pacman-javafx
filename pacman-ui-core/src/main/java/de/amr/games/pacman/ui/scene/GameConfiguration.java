@@ -25,6 +25,7 @@ public interface GameConfiguration {
     default boolean gameSceneHasID(GameScene gameScene, String sceneID) {
         return get(sceneID) == gameScene;
     }
+    GameScene2D createPiPScene(GameContext context, Canvas canvas);
     GameSpriteSheet spriteSheet();
     GameRenderer createRenderer(AssetStorage assets, Canvas canvas);
     WorldMapColoring worldMapColoring(WorldMap worldMap);

@@ -16,6 +16,7 @@ import de.amr.games.pacman.ui.assets.ResourceManager;
 import de.amr.games.pacman.ui.assets.WorldMapColoring;
 import de.amr.games.pacman.ui.scene.GameConfiguration;
 import de.amr.games.pacman.ui.scene.GameScene;
+import de.amr.games.pacman.ui.scene.GameScene2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -101,6 +102,14 @@ public class MsPacManGameTengenConfiguration implements GameConfiguration {
     @Override
     public Stream<GameScene> gameScenes() {
         return scenesByID.values().stream();
+    }
+
+    @Override
+    public GameScene2D createPiPScene(GameContext context, Canvas canvasNotUsed) {
+        var gameScene = new TengenPiP_PlayScene();
+        gameScene.setGameContext(context);
+        gameScene.setGameRenderer(createRenderer(assets, gameScene.canvas()));
+        return gameScene;
     }
 
     @Override

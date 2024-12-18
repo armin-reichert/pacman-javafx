@@ -11,10 +11,7 @@ import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.assets.AssetStorage;
 import de.amr.games.pacman.ui.assets.ResourceManager;
 import de.amr.games.pacman.ui.assets.WorldMapColoring;
-import de.amr.games.pacman.ui.scene.BootScene;
-import de.amr.games.pacman.ui.scene.GameConfiguration;
-import de.amr.games.pacman.ui.scene.GameScene;
-import de.amr.games.pacman.ui.scene.PlayScene2D;
+import de.amr.games.pacman.ui.scene.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -67,6 +64,14 @@ public class MsPacManGameConfiguration implements GameConfiguration {
     @Override
     public Stream<GameScene> gameScenes() {
         return scenesByID.values().stream();
+    }
+
+    @Override
+    public GameScene2D createPiPScene(GameContext context, Canvas canvas) {
+        var gameScene = new PlayScene2D();
+        gameScene.setGameContext(context);
+        gameScene.setGameRenderer(createRenderer(assets, canvas));
+        return gameScene;
     }
 
     @Override
