@@ -18,7 +18,6 @@ import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenActions;
-import de.amr.games.pacman.tengen.ms_pacman.SceneDisplayMode;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.action.GameAction;
 import de.amr.games.pacman.ui.action.GameActions2D;
@@ -51,14 +50,12 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.tengen.ms_pacman.GlobalPropertiesTengen.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenActions.setDefaultJoypadBinding;
 import static de.amr.games.pacman.ui.GameContext.assetPrefix;
 import static de.amr.games.pacman.ui.GlobalProperties.*;
 import static de.amr.games.pacman.ui.action.GameActions2D.*;
 import static de.amr.games.pacman.ui.input.Keyboard.alt;
 import static de.amr.games.pacman.ui.lib.Ufx.*;
-import static de.amr.games.pacman.ui.lib.Ufx.contextMenuTitleItem;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
 
 /**
@@ -173,13 +170,11 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             Logger.error("3D level already created?");
         }
         switch (context.gameState()) {
-            case TESTING_LEVEL_BONI -> {
+            case TESTING_LEVEL_BONI, TESTING_LEVEL_TEASERS -> {
                 replaceGameLevel3D();
-                showLevelTestMessage("BONI LEVEL " + level.number);
-            }
-            case TESTING_LEVEL_TEASERS -> {
-                replaceGameLevel3D();
-                showLevelTestMessage("PREVIEW LEVEL " + level.number);
+                level3D.livesCounter3D().shapesRotation().play();
+                level3D.energizers3D().forEach(Energizer3D::startPumping);
+                showLevelTestMessage("TEST LEVEL " + level.number);
             }
             default -> {
                 if (!context.game().isDemoLevel()){

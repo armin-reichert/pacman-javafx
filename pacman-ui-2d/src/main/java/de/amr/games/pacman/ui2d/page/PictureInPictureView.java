@@ -24,10 +24,9 @@ import static de.amr.games.pacman.ui2d.GlobalProperties2d.*;
 /**
  * Picture-in-Picture view. Adapts its aspect ratio to the current game world. Height can be changed via dashboard.
  * <p>
+ * TODO: fixme: should not depend on specific game
  * TODO: For large maps we need a camera inside this view or something alike
  * </p>
- *
- * @author Armin Reichert
  */
 public class PictureInPictureView extends VBox implements GameEventListener {
 
@@ -74,20 +73,14 @@ public class PictureInPictureView extends VBox implements GameEventListener {
         visibleProperty().addListener((py,ov,visible) -> recomputeLayout());
     }
 
-    private void createScene() {
+    @Override
+    public void onLevelCreated(GameEvent e) {
         scene2D = context.gameVariant() == GameVariant.MS_PACMAN_TENGEN ? new TengenPlayScene(canvas) : new PlayScene2D();
         scene2D.setGameContext(context);
         scene2D.setGameRenderer(context.currentGameSceneConfig().createRenderer(context.assets(), canvas));
         scene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
-    }
-
-    @Override
-    public void onLevelCreated(GameEvent e) {
-        createScene();
+        scene2D.renderer().setWorldMap(context.level().world().map());
         recomputeLayout();
-        if (scene2D instanceof TengenPlayScene tengenScene) {
-            tengenScene.renderer().setWorldMap(context.level().world().map());
-        }
     }
 
     public void draw() {
