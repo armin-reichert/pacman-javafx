@@ -225,13 +225,13 @@ public enum GameActions2D implements GameAction {
         }
     };
 
-    public static void bindDefaultArcadeControllerActions(GameActionProvider actionProvider, ArcadeKeyBinding arcadeController) {
-        actionProvider.bind(GameActions2D.INSERT_COIN,   arcadeController.key(Arcade.Button.COIN));
-        actionProvider.bind(GameActions2D.START_GAME,   arcadeController.key(Arcade.Button.START));
-        actionProvider.bind(GameActions2D.PLAYER_UP,    arcadeController.key(Arcade.Button.UP));
-        actionProvider.bind(GameActions2D.PLAYER_DOWN,  arcadeController.key(Arcade.Button.DOWN));
-        actionProvider.bind(GameActions2D.PLAYER_LEFT,  arcadeController.key(Arcade.Button.LEFT));
-        actionProvider.bind(GameActions2D.PLAYER_RIGHT, arcadeController.key(Arcade.Button.RIGHT));
+    public static void bindDefaultArcadeControllerActions(GameActionProvider actionProvider, ArcadeKeyBinding arcadeKeys) {
+        actionProvider.bind(GameActions2D.INSERT_COIN,  arcadeKeys.key(Arcade.Button.COIN));
+        actionProvider.bind(GameActions2D.START_GAME,   arcadeKeys.key(Arcade.Button.START));
+        actionProvider.bind(GameActions2D.PLAYER_UP,    arcadeKeys.key(Arcade.Button.UP));
+        actionProvider.bind(GameActions2D.PLAYER_DOWN,  arcadeKeys.key(Arcade.Button.DOWN));
+        actionProvider.bind(GameActions2D.PLAYER_LEFT,  arcadeKeys.key(Arcade.Button.LEFT));
+        actionProvider.bind(GameActions2D.PLAYER_RIGHT, arcadeKeys.key(Arcade.Button.RIGHT));
     }
 
     public static void bindFallbackPlayerControlActions(GameActionProvider actionProvider) {
