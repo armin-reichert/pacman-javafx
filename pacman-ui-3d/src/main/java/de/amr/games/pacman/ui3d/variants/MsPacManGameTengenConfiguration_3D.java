@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui3d.variants;
 
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui3d.scene3d.PlayScene3D;
 
@@ -13,7 +14,8 @@ import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_ENABLED;
 
 public class MsPacManGameTengenConfiguration_3D extends MsPacManGameTengenConfiguration {
 
-    public MsPacManGameTengenConfiguration_3D() {
+    public MsPacManGameTengenConfiguration_3D(AssetStorage assets) {
+        super(assets);
         set("PlayScene3D", new PlayScene3D());
     }
 

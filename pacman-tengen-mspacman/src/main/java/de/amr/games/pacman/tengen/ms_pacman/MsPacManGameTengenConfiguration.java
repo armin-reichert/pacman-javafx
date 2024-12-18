@@ -38,14 +38,12 @@ public class MsPacManGameTengenConfiguration implements GameConfiguration {
     public static final Vector2i NES_TILES = new Vector2i(32, 30);
     public static final Vector2i NES_SIZE = NES_TILES.scaled(TS);
 
-    private final AssetStorage assets;
     private final MsPacManGameTengenSpriteSheet spriteSheet;
     private final MazeRepository mazeRepository;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public MsPacManGameTengenConfiguration() {
-        assets = new AssetStorage();
-        loadAssets(() -> MsPacManGameTengenConfiguration.class);
+    public MsPacManGameTengenConfiguration(AssetStorage assets) {
+        loadAssets(() -> MsPacManGameTengenConfiguration.class, assets);
         spriteSheet = new MsPacManGameTengenSpriteSheet(assets.image(assetKeyPrefix() + ".spritesheet"));
         mazeRepository = new MazeRepository(
             assets.image(assetKeyPrefix() + ".mazes.arcade"),
@@ -64,11 +62,6 @@ public class MsPacManGameTengenConfiguration implements GameConfiguration {
         //TODO where is the best place to do that?
         PlayScene2D playScene2D = (PlayScene2D) get("PlayScene2D");
         playScene2D.displayModeProperty().bind(PY_TENGEN_PLAY_SCENE_DISPLAY_MODE);
-    }
-
-    @Override
-    public AssetStorage assets() {
-        return assets;
     }
 
     @Override
@@ -109,7 +102,7 @@ public class MsPacManGameTengenConfiguration implements GameConfiguration {
     public GameScene2D createPiPScene(GameContext context, Canvas canvasNotUsed) {
         var gameScene = new TengenPiP_PlayScene();
         gameScene.setGameContext(context);
-        gameScene.setGameRenderer(createRenderer(assets, gameScene.canvas()));
+        gameScene.setGameRenderer(createRenderer(context.assets(), gameScene.canvas()));
         return gameScene;
     }
 
@@ -134,7 +127,7 @@ public class MsPacManGameTengenConfiguration implements GameConfiguration {
         level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id())));
     }
 
-    private void loadAssets(ResourceManager rm) {
+    private void loadAssets(ResourceManager rm, AssetStorage assets) {
         assets.store(assetKeyPrefix() + ".scene_background",                 coloredBackground(Color.BLACK));
 
         assets.store(assetKeyPrefix() + ".spritesheet",                      rm.loadImage("graphics/spritesheet.png"));

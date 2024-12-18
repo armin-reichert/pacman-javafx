@@ -26,13 +26,11 @@ import static de.amr.games.pacman.ui2d.lib.Ufx.imageBackground;
 
 public class PacManGameXXLConfiguration implements GameConfiguration {
 
-    private final AssetStorage assets;
     private final PacManGameSpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public PacManGameXXLConfiguration() {
-        assets = new AssetStorage();
-        loadAssets(() -> Resources.class);
+    public PacManGameXXLConfiguration(AssetStorage assets) {
+        loadAssets(() -> Resources.class, assets);
         spriteSheet = new PacManGameSpriteSheet(assets.get(assetKeyPrefix() + ".spritesheet"));
         set("BootScene",   new BootScene());
         set("IntroScene",  new IntroScene());
@@ -41,11 +39,6 @@ public class PacManGameXXLConfiguration implements GameConfiguration {
         set("CutScene1",   new CutScene1());
         set("CutScene2",   new CutScene2());
         set("CutScene3",   new CutScene3());
-    }
-
-    @Override
-    public AssetStorage assets() {
-        return assets;
     }
 
     @Override
@@ -72,7 +65,7 @@ public class PacManGameXXLConfiguration implements GameConfiguration {
     public GameScene2D createPiPScene(GameContext context, Canvas canvas) {
         var gameScene = new PlayScene2D();
         gameScene.setGameContext(context);
-        gameScene.setGameRenderer(createRenderer(assets, canvas));
+        gameScene.setGameRenderer(createRenderer(context.assets(), canvas));
         return gameScene;
     }
 
@@ -111,7 +104,7 @@ public class PacManGameXXLConfiguration implements GameConfiguration {
         level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id())));
     }
 
-    private void loadAssets(ResourceManager rm) {
+    private void loadAssets(ResourceManager rm, AssetStorage assets) {
         assets.store(assetKeyPrefix() + ".scene_background",     imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
 
         assets.store(assetKeyPrefix() + ".icon",                 rm.loadImage("graphics/icons/pacman.png"));

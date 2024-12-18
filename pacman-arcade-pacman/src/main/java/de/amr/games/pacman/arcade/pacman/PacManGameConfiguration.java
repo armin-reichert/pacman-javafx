@@ -24,13 +24,12 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class PacManGameConfiguration implements GameConfiguration {
-    private final AssetStorage assets;
+
     private final PacManGameSpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public PacManGameConfiguration() {
-        assets = new AssetStorage();
-        loadAssets(() -> Resources.class);
+    public PacManGameConfiguration(AssetStorage assets) {
+        loadAssets(() -> Resources.class, assets);
         spriteSheet = new PacManGameSpriteSheet(assets.get(assetKeyPrefix() + ".spritesheet"));
         set("BootScene",   new BootScene());
         set("IntroScene",  new IntroScene());
@@ -39,11 +38,6 @@ public class PacManGameConfiguration implements GameConfiguration {
         set("CutScene1",   new CutScene1());
         set("CutScene2",   new CutScene2());
         set("CutScene3",   new CutScene3());
-    }
-
-    @Override
-    public AssetStorage assets() {
-        return assets;
     }
 
     @Override
@@ -70,7 +64,7 @@ public class PacManGameConfiguration implements GameConfiguration {
     public GameScene2D createPiPScene(GameContext context, Canvas canvas) {
         var gameScene = new PlayScene2D();
         gameScene.setGameContext(context);
-        gameScene.setGameRenderer(createRenderer(assets, canvas));
+        gameScene.setGameRenderer(createRenderer(context.assets(), canvas));
         return gameScene;
     }
 
@@ -108,7 +102,7 @@ public class PacManGameConfiguration implements GameConfiguration {
         level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id())));
     }
 
-    private void loadAssets(ResourceManager rm) {
+    private void loadAssets(ResourceManager rm, AssetStorage assets) {
         assets.store(assetKeyPrefix() + ".scene_background",         Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
 
         assets.store(assetKeyPrefix() + ".spritesheet",              rm.loadImage("graphics/pacman_spritesheet.png"));

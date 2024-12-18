@@ -31,6 +31,5 @@ public interface GameConfiguration {
     WorldMapColoring worldMapColoring(WorldMap worldMap);
     void createActorAnimations(GameLevel level);
     GameScene selectGameScene(GameContext context);
-    AssetStorage assets();
     String assetKeyPrefix();
 }

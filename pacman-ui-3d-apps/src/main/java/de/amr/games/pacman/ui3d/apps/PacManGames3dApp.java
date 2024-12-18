@@ -75,10 +75,10 @@ public class PacManGames3dApp extends Application {
         ui.loadAssets();
 
         // UI asset storage exists now, add game variants including their own assets
-        ui.addGameConfiguration(GameVariant.MS_PACMAN, new MsPacManGameConfiguration_3D());
-        ui.addGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration_3D());
-        ui.addGameConfiguration(GameVariant.PACMAN, new PacManGameConfiguration_3D());
-        ui.addGameConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration_3D());
+        ui.addGameConfiguration(GameVariant.MS_PACMAN, new MsPacManGameConfiguration_3D(ui.assets()));
+        ui.addGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration_3D(ui.assets()));
+        ui.addGameConfiguration(GameVariant.PACMAN, new PacManGameConfiguration_3D(ui.assets()));
+        ui.addGameConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration_3D(ui.assets()));
 
         ui.create(stage, initialSize());
         ui.addStartPageSlide(new ArcadePacManStartPage().root());

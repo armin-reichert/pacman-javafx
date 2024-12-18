@@ -12,7 +12,6 @@ import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.ResourceManager;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
 import de.amr.games.pacman.ui2d.scene.*;
-import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -24,13 +23,11 @@ import static de.amr.games.pacman.ui2d.lib.Ufx.imageBackground;
 
 public class MsPacManGameConfiguration implements GameConfiguration {
 
-    private final AssetStorage assets;
     private final MsPacManGameSpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public MsPacManGameConfiguration() {
-        assets = new AssetStorage();
-        loadAssets(() -> MsPacManGameConfiguration.class);
+    public MsPacManGameConfiguration(AssetStorage assets) {
+        loadAssets(() -> MsPacManGameConfiguration.class, assets);
         spriteSheet = new MsPacManGameSpriteSheet(assets.get(assetKeyPrefix() + ".spritesheet"));
 
         set("BootScene",   new BootScene());
@@ -40,11 +37,6 @@ public class MsPacManGameConfiguration implements GameConfiguration {
         set("CutScene1",   new CutScene1());
         set("CutScene2",   new CutScene2());
         set("CutScene3",   new CutScene3());
-    }
-
-    @Override
-    public AssetStorage assets() {
-        return assets;
     }
 
     @Override
@@ -71,7 +63,7 @@ public class MsPacManGameConfiguration implements GameConfiguration {
     public GameScene2D createPiPScene(GameContext context, Canvas canvas) {
         var gameScene = new PlayScene2D();
         gameScene.setGameContext(context);
-        gameScene.setGameRenderer(createRenderer(assets, canvas));
+        gameScene.setGameRenderer(createRenderer(context.assets(), canvas));
         return gameScene;
     }
 
@@ -109,7 +101,7 @@ public class MsPacManGameConfiguration implements GameConfiguration {
         level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id())));
     }
 
-    private void loadAssets(ResourceManager rm) {
+    private void loadAssets(ResourceManager rm, AssetStorage assets) {
         assets.store(assetKeyPrefix() + ".scene_background",              imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
 
         assets.store(assetKeyPrefix() + ".spritesheet",                   rm.loadImage("graphics/mspacman_spritesheet.png"));
