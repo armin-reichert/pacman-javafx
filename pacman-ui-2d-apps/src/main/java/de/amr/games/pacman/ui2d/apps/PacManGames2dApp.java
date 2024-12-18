@@ -35,7 +35,7 @@ import java.io.File;
 import java.util.Map;
 
 /**
- * Application containing all game variants and including 2D play scene only.
+ * Application containing all game variants and including play scenes in 2D only.
  *
  * @author Armin Reichert
  */
