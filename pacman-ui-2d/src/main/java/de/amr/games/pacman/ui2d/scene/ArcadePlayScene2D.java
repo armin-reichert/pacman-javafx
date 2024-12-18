@@ -43,7 +43,7 @@ import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_IMMUNITY;
  *
  * @author Armin Reichert
  */
-public class PlayScene2D extends GameScene2D {
+public class ArcadePlayScene2D extends GameScene2D {
 
     private LevelCompleteAnimation levelCompleteAnimation;
 

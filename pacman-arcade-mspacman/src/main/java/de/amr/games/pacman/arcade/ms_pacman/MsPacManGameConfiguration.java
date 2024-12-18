@@ -30,10 +30,10 @@ public class MsPacManGameConfiguration implements GameConfiguration {
         loadAssets(() -> MsPacManGameConfiguration.class, assets);
         spriteSheet = new MsPacManGameSpriteSheet(assets.get(assetKeyPrefix() + ".spritesheet"));
 
-        set("BootScene",   new BootScene());
+        set("BootScene",   new ArcadeBootScene());
         set("IntroScene",  new IntroScene());
         set("StartScene",  new StartScene());
-        set("PlayScene2D", new PlayScene2D());
+        set("PlayScene2D", new ArcadePlayScene2D());
         set("CutScene1",   new CutScene1());
         set("CutScene2",   new CutScene2());
         set("CutScene3",   new CutScene3());
@@ -61,7 +61,7 @@ public class MsPacManGameConfiguration implements GameConfiguration {
 
     @Override
     public GameScene2D createPiPScene(GameContext context, Canvas canvas) {
-        var gameScene = new PlayScene2D();
+        var gameScene = new ArcadePlayScene2D();
         gameScene.setGameContext(context);
         gameScene.setGameRenderer(createRenderer(context.assets(), canvas));
         return gameScene;

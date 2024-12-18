@@ -14,7 +14,6 @@ import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.assets.ResourceManager;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
 import de.amr.games.pacman.ui2d.scene.*;
-import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -32,10 +31,10 @@ public class PacManGameXXLConfiguration implements GameConfiguration {
     public PacManGameXXLConfiguration(AssetStorage assets) {
         loadAssets(() -> Resources.class, assets);
         spriteSheet = new PacManGameSpriteSheet(assets.get(assetKeyPrefix() + ".spritesheet"));
-        set("BootScene",   new BootScene());
+        set("BootScene",   new ArcadeBootScene());
         set("IntroScene",  new IntroScene());
         set("StartScene",  new StartScene());
-        set("PlayScene2D", new PlayScene2D());
+        set("PlayScene2D", new ArcadePlayScene2D());
         set("CutScene1",   new CutScene1());
         set("CutScene2",   new CutScene2());
         set("CutScene3",   new CutScene3());
@@ -63,7 +62,7 @@ public class PacManGameXXLConfiguration implements GameConfiguration {
 
     @Override
     public GameScene2D createPiPScene(GameContext context, Canvas canvas) {
-        var gameScene = new PlayScene2D();
+        var gameScene = new ArcadePlayScene2D();
         gameScene.setGameContext(context);
         gameScene.setGameRenderer(createRenderer(context.assets(), canvas));
         return gameScene;
