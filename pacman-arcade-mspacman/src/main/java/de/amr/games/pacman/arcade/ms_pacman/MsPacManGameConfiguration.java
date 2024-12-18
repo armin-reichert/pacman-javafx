@@ -119,8 +119,6 @@ public class MsPacManGameConfiguration implements GameConfiguration {
         assets.store(assetKeyPrefix() + ".ghost.2.color.normal.dress",    Color.valueOf(Arcade.Palette.CYAN));
         assets.store(assetKeyPrefix() + ".ghost.3.color.normal.dress",    Color.valueOf(Arcade.Palette.ORANGE));
 
-        assets.store(assetKeyPrefix() + ".color.game_over_message",       Color.valueOf(Arcade.Palette.RED));
-        assets.store(assetKeyPrefix() + ".color.ready_message",           Color.valueOf(Arcade.Palette.YELLOW));
         assets.store(assetKeyPrefix() + ".color.clapperboard",            Color.valueOf(Arcade.Palette.WHITE));
 
         // Clips

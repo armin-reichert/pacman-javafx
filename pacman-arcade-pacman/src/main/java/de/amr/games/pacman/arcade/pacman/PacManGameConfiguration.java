@@ -114,9 +114,6 @@ public class PacManGameConfiguration implements GameConfiguration {
         assets.store(assetKeyPrefix() + ".helpButton.icon",          rm.loadImage("graphics/icons/help-blue-64.png"));
         assets.store(assetKeyPrefix() + ".icon",                     rm.loadImage("graphics/icons/pacman.png"));
 
-        assets.store(assetKeyPrefix() + ".color.game_over_message",  Color.RED);
-        assets.store(assetKeyPrefix() + ".color.ready_message",      Color.YELLOW);
-
         // Clips
         assets.store(assetKeyPrefix() + ".audio.bonus_eaten",        rm.loadAudioClip("sound/eat_fruit.mp3"));
         assets.store(assetKeyPrefix() + ".audio.credit",             rm.loadAudioClip("sound/credit.wav"));

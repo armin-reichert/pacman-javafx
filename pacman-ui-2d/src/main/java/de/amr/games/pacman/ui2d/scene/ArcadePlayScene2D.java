@@ -142,9 +142,6 @@ public class ArcadePlayScene2D extends GameScene2D {
         //TODO fixme: avoid calling this in every frame
         gr.setWorldMap(level.world().map());
 
-        //TODO have no better solution yet
-        gr.setMessagePosition(centerBelowHouse(context.level().world()));
-
         drawLevelMessage(level.message());
 
         boolean flashMode = levelCompleteAnimation != null && levelCompleteAnimation.isInHighlightPhase();
@@ -189,16 +186,15 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     private void drawLevelMessage(GameLevel.Message message) {
         if (message != null) {
-            String assetPrefix = context.currentGameConfig().assetKeyPrefix();
             Color color = null;
             String text = null;
             switch (message.type()) {
                 case GAME_OVER -> {
-                    color = context.assets().color(assetPrefix + ".color.game_over_message");
+                    color = Color.valueOf(Arcade.Palette.RED);
                     text = "GAME  OVER";
                 }
                 case READY -> {
-                    color = context.assets().color(assetPrefix + ".color.ready_message");
+                    color = Color.valueOf(Arcade.Palette.YELLOW);
                     text = "READY!";
                 }
                 case TEST_LEVEL -> {
@@ -207,6 +203,7 @@ public class ArcadePlayScene2D extends GameScene2D {
                 }
             }
             // this assumes fixed width font of one tile size
+            gr.setMessagePosition(centerBelowHouse(context.level().world()));
             double x = gr.getMessagePosition().x() - (text.length() * HTS);
             gr.drawText(text, color, gr.scaledArcadeFont(TS), x, gr.getMessagePosition().y());
         }

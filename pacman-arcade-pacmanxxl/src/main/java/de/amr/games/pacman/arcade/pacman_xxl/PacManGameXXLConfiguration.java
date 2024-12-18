@@ -15,7 +15,6 @@ import de.amr.games.pacman.ui2d.assets.ResourceManager;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
 import de.amr.games.pacman.ui2d.scene.*;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -111,9 +110,6 @@ public class PacManGameXXLConfiguration implements GameConfiguration {
         assets.store(assetKeyPrefix() + ".startpage.image1",     rm.loadImage("graphics/pacman_xxl_logo.jpg"));
 
         assets.store(assetKeyPrefix() + ".spritesheet",          rm.loadImage("graphics/pacman_spritesheet.png"));
-
-        assets.store(assetKeyPrefix() + ".color.game_over_message", Color.RED);
-        assets.store(assetKeyPrefix() + ".color.ready_message",  Color.YELLOW);
 
         // Clips
         assets.store(assetKeyPrefix() + ".audio.bonus_eaten",    rm.loadAudioClip("sound/eat_fruit.mp3"));
