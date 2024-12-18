@@ -18,8 +18,8 @@ import de.amr.games.pacman.ui.action.GameActions2D;
 import de.amr.games.pacman.ui.assets.AssetStorage;
 import de.amr.games.pacman.ui.assets.GameSound;
 import de.amr.games.pacman.ui.assets.ResourceManager;
+import de.amr.games.pacman.ui.input.ArcadeInput;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
-import de.amr.games.pacman.ui.input.JoypadBindings;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui.input.Keyboard;
 import de.amr.games.pacman.ui.lib.FlashMessageView;
@@ -45,6 +45,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -70,9 +71,40 @@ import static de.amr.games.pacman.ui.lib.Ufx.createIcon;
  */
 public class PacManGamesUI implements GameEventListener, GameContext {
 
-    private final JoypadKeyBinding[] joypadBindings = {
-        JoypadBindings.JOYPAD_CURSOR_KEYS, JoypadBindings.JOYPAD_WASD
-    };
+    public static final ArcadeInput DEFAULT_ARCADE_KEY_BINDING = new ArcadeKeyBinding(
+        new KeyCodeCombination(KeyCode.DIGIT5),
+        new KeyCodeCombination(KeyCode.DIGIT1),
+        new KeyCodeCombination(KeyCode.UP),
+        new KeyCodeCombination(KeyCode.DOWN),
+        new KeyCodeCombination(KeyCode.LEFT),
+        new KeyCodeCombination(KeyCode.RIGHT)
+    );
+
+    // My current bindings, might be crap
+    public static final JoypadKeyBinding JOYPAD_CURSOR_KEYS = new JoypadKeyBinding.Binding(
+        new KeyCodeCombination(KeyCode.SPACE),
+        new KeyCodeCombination(KeyCode.ENTER),
+        new KeyCodeCombination(KeyCode.B),
+        new KeyCodeCombination(KeyCode.N),
+        new KeyCodeCombination(KeyCode.UP),
+        new KeyCodeCombination(KeyCode.DOWN),
+        new KeyCodeCombination(KeyCode.LEFT),
+        new KeyCodeCombination(KeyCode.RIGHT)
+    );
+
+    // Like Mesen emulator key set #2
+    public static final JoypadKeyBinding JOYPAD_WASD = new JoypadKeyBinding.Binding(
+        new KeyCodeCombination(KeyCode.U),
+        new KeyCodeCombination(KeyCode.I),
+        new KeyCodeCombination(KeyCode.J),
+        new KeyCodeCombination(KeyCode.K),
+        new KeyCodeCombination(KeyCode.W),
+        new KeyCodeCombination(KeyCode.S),
+        new KeyCodeCombination(KeyCode.A),
+        new KeyCodeCombination(KeyCode.D)
+    );
+
+    private final JoypadKeyBinding[] joypadBindings = { JOYPAD_CURSOR_KEYS, JOYPAD_WASD };
 
     protected final Keyboard keyboard = new Keyboard();
 
@@ -108,7 +140,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected Picker<String> pickerLevelComplete;
 
     protected int selectedJoypadIndex;
-    protected ArcadeKeyBinding arcade = ArcadeKeyBinding.DEFAULT_BINDING;
+    protected ArcadeInput arcade = DEFAULT_ARCADE_KEY_BINDING;
 
     protected final GameAction actionOpenEditor = new GameAction() {
         @Override
@@ -170,10 +202,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 gameScene2D.debugInfoVisibleProperty().bind(PY_DEBUG_INFO_VISIBLE);
             }
         });
-    }
-
-    public GameConfiguration gameConfiguration(GameVariant variant) {
-        return gameConfigByVariant.get(variant);
     }
 
     /**
@@ -457,7 +485,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public ArcadeKeyBinding arcadeKeys() {
+    public ArcadeInput arcadeKeys() {
         return arcade;
     }
 
