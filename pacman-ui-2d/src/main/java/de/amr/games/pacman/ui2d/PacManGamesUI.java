@@ -167,10 +167,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         assets.store("icon.mute",                   rm.loadImage("graphics/icons/mute.png"));
         assets.store("icon.pause",                  rm.loadImage("graphics/icons/pause.png"));
 
-        //TODO move to start page class
-        assets.store("startpage.arrow.left",        rm.loadImage("graphics/icons/arrow-left.png"));
-        assets.store("startpage.arrow.right",       rm.loadImage("graphics/icons/arrow-right.png"));
-
         assets.store("wallpaper.color",             Color.rgb(72, 78, 135));
         assets.store("wallpaper.tapestry",          Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")) );
         assets.store("voice.explain",               rm.url("sound/voice/press-key.mp3"));

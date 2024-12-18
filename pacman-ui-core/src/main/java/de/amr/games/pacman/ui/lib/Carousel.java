@@ -1,6 +1,6 @@
 package de.amr.games.pacman.ui.lib;
 
-import de.amr.games.pacman.ui.assets.AssetStorage;
+import de.amr.games.pacman.ui.assets.ResourceManager;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,6 +17,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
@@ -40,13 +41,13 @@ public class Carousel extends StackPane {
         return button;
     }
 
-    private Node createSelectButton(AssetStorage assets) {
+    private Node createSelectButton(Font font) {
         Color bgColor = Color.rgb(0, 155, 252, 0.7);
         Color fillColor = Color.WHITE;
 
         var buttonText = new Text();
         buttonText.setFill(fillColor);
-        buttonText.setFont(assets.font("font.arcade", 30));
+        buttonText.setFont(font);
         buttonText.textProperty().bind(selectButtonTextPy);
 
         var shadow = new DropShadow();
@@ -77,24 +78,33 @@ public class Carousel extends StackPane {
 
     private final StackPane buttonsLayer = new StackPane();
     private final List<Node> slides = new ArrayList<>();
-    private final Node btnSelect;
+    private final Node btnStart;
     private final Button btnPrevSlide;
     private final Button btnNextSlide;
 
     private Runnable onPrevSlide;
     private Runnable onNextSlide;
 
-    public Carousel(AssetStorage assets) {
-        btnPrevSlide = createCarouselButton(assets.image("startpage.arrow.left"));
+    public Carousel() {
+        ResourceManager rm = this::getClass;
+
+        Image arrowLeftImage = rm.loadImage("arrow-left.png");
+        Image arrowRightImage = rm.loadImage("arrow-right.png");
+        Font startButtonFont = rm.loadFont("emulogic.ttf", 30);
+
+        btnPrevSlide = createCarouselButton(arrowLeftImage);
         btnPrevSlide.setOnAction(e -> prevSlide());
-        btnNextSlide = createCarouselButton(assets.image("startpage.arrow.right"));
-        btnNextSlide.setOnAction(e -> nextSlide());
-        btnSelect = createSelectButton(assets);
-        btnSelect.setTranslateY(-50);
         StackPane.setAlignment(btnPrevSlide, Pos.CENTER_LEFT);
+
+        btnNextSlide = createCarouselButton(arrowRightImage);
+        btnNextSlide.setOnAction(e -> nextSlide());
         StackPane.setAlignment(btnNextSlide, Pos.CENTER_RIGHT);
-        StackPane.setAlignment(btnSelect, Pos.BOTTOM_CENTER);
-        buttonsLayer.getChildren().setAll(btnPrevSlide, btnNextSlide, btnSelect);
+
+        btnStart = createSelectButton(startButtonFont);
+        btnStart.setTranslateY(-50);
+        StackPane.setAlignment(btnStart, Pos.BOTTOM_CENTER);
+
+        buttonsLayer.getChildren().setAll(btnPrevSlide, btnNextSlide, btnStart);
         getChildren().add(buttonsLayer);
     }
 
@@ -103,8 +113,8 @@ public class Carousel extends StackPane {
         btnNextSlide.setVisible(visible);
     }
 
-    public Node getBtnSelect() {
-        return btnSelect;
+    public Node getBtnStart() {
+        return btnStart;
     }
 
     public IntegerProperty selectedIndexProperty() {
@@ -124,7 +134,7 @@ public class Carousel extends StackPane {
     }
 
     public void setOnSelect(Runnable action) {
-        btnSelect.setOnMouseClicked(e -> {
+        btnStart.setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY)) {
                 action.run();
             }

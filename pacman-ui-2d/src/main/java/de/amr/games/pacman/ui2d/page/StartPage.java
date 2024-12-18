@@ -58,7 +58,7 @@ public class StartPage extends StackPane implements GameActionProvider {
     public StartPage(GameContext context) {
         this.context = checkNotNull(context);
 
-        carousel = new Carousel(context.assets());
+        carousel = new Carousel();
         carousel.selectButtonTextProperty().set(context.locText("play_button"));
         carousel.setOnPrevSlideSelected(() -> {
             var variant = (GameVariant) carousel.currentSlide().getUserData();
