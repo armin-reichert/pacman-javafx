@@ -35,6 +35,8 @@ import java.io.File;
 import java.util.Map;
 
 /**
+ * Application containing all game variants and including 2D play scene only.
+ *
  * @author Armin Reichert
  */
 public class PacManGames2dApp extends Application {
@@ -65,7 +67,8 @@ public class PacManGames2dApp extends Application {
     public void start(Stage stage) {
         ui = new PacManGamesUI();
         ui.loadAssets();
-        // Now, UI asset storage exists, add game variants including thier assets
+
+        // UI asset storage exists now, add game variants including their own assets
         ui.addGameConfiguration(GameVariant.PACMAN, new PacManGameConfiguration());
         ui.addGameConfiguration(GameVariant.MS_PACMAN, new MsPacManGameConfiguration());
         ui.addGameConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration());
