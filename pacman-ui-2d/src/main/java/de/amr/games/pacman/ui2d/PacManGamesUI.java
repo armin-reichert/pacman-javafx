@@ -525,7 +525,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public GameConfiguration gameSceneConfig(GameVariant variant) {
+    public GameConfiguration gameConfiguration(GameVariant variant) {
         return gameConfigByVariant.get(variant);
     }
 

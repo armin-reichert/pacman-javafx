@@ -204,7 +204,7 @@ public class GameLevel3D {
         final GameModel game = context.game();
         final GameLevel level = context.level();
         final GameWorld world = level.world();
-        final WorldMapColoring coloring = context.gameSceneConfig(variant).worldMapColoring(world.map());
+        final WorldMapColoring coloring = context.gameConfiguration(variant).worldMapColoring(world.map());
 
         pac3D = createPac3D(variant, assets, assetKeyPrefix, level.pac());
         ghosts3D = level.ghosts()

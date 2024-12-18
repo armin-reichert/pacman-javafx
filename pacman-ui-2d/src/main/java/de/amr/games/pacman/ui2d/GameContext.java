@@ -59,7 +59,7 @@ public interface GameContext {
     default GameController gameController() { return GameController.it(); }
     default GameState gameState() { return gameController().state(); }
     default GameModel game() { return gameController().currentGame(); }
-    /** @return game level (which must exist!) */
+    /** @return the current game level, throw exception if level does not exist */
     default GameLevel level() { return game().level().orElseThrow(); }
     default GameVariant gameVariant() { return gameController().currentGameVariant(); }
     void selectGameVariant(GameVariant variant);
@@ -73,6 +73,8 @@ public interface GameContext {
     void nextJoypadKeys();
 
     // GUI
+    GameConfiguration gameConfiguration(GameVariant variant);
+    default GameConfiguration currentGameConfig() { return gameConfiguration(gameVariant()); }
     void setScoreVisible(boolean visible);
     boolean isScoreVisible();
     void selectPage(Node page);
@@ -101,8 +103,6 @@ public interface GameContext {
     }
 
     // Game scenes
-    GameConfiguration gameSceneConfig(GameVariant variant);
-    default GameConfiguration currentGameConfig() { return gameSceneConfig(gameVariant()); }
     boolean currentGameSceneHasID(String gameSceneID);
     ObjectProperty<GameScene> gameSceneProperty();
     Optional<GameScene> currentGameScene();
