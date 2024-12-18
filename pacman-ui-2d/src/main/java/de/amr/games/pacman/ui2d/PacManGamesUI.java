@@ -161,7 +161,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         pickerLevelComplete = Picker.fromBundle(assets.bundles().getFirst(), "level.complete");
     }
 
-    public void setGameConfiguration(GameVariant variant, GameConfiguration gameConfiguration) {
+    public void addGameConfiguration(GameVariant variant, GameConfiguration gameConfiguration) {
         gameConfigByVariant.put(variant, gameConfiguration);
         assets.addAll(gameConfiguration.assets());
         gameConfiguration.initGameScenes(this);
@@ -215,7 +215,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         startPage.gameVariantPy.bind(gameVariantPy);
     }
 
-    public void addStartPageCarouselSlide(Node slide) {
+    public void addStartPageSlide(Node slide) {
         startPage.carousel().addSlide(slide);
         startPage.carousel().setNavigationVisible(startPage.carousel().numSlides() >= 2);
         startPage.carousel().selectedIndexProperty().set(0);
@@ -329,23 +329,23 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         README, GENERAL, GAME_CONTROL, GAME_INFO, ACTOR_INFO, KEYBOARD, ABOUT
     }
 
-    public void appendDashboardItem(DashboardItemID id) {
+    public void addDashboardItem(DashboardItemID id) {
         switch (id) {
             case README -> {
                 InfoBox readMeBox = new InfoBoxReadmeFirst();
                 readMeBox.setExpanded(true);
-                appendDashboardItem("Welcome to the Pleasuredome!", readMeBox);
+                addDashboardItem("Welcome to the Pleasuredome!", readMeBox);
             }
-            case GENERAL -> appendDashboardItem(locText("infobox.general.title"), new InfoBoxGeneral());
-            case GAME_CONTROL -> appendDashboardItem(locText("infobox.game_control.title"), new InfoBoxGameControl());
-            case GAME_INFO -> appendDashboardItem(locText("infobox.game_info.title"), new InfoBoxGameInfo());
-            case ACTOR_INFO -> appendDashboardItem(locText("infobox.actor_info.title"), new InfoBoxActorInfo());
-            case KEYBOARD -> appendDashboardItem(locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
-            case ABOUT -> appendDashboardItem(locText("infobox.about.title"), new InfoBoxAbout());
+            case GENERAL -> addDashboardItem(locText("infobox.general.title"), new InfoBoxGeneral());
+            case GAME_CONTROL -> addDashboardItem(locText("infobox.game_control.title"), new InfoBoxGameControl());
+            case GAME_INFO -> addDashboardItem(locText("infobox.game_info.title"), new InfoBoxGameInfo());
+            case ACTOR_INFO -> addDashboardItem(locText("infobox.actor_info.title"), new InfoBoxActorInfo());
+            case KEYBOARD -> addDashboardItem(locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
+            case ABOUT -> addDashboardItem(locText("infobox.about.title"), new InfoBoxAbout());
         }
     }
 
-    public void appendDashboardItem(String title, InfoBox infoBox) {
+    public void addDashboardItem(String title, InfoBox infoBox) {
         gamePage.dashboardLayer().addDashboardItem(title, infoBox);
     }
 

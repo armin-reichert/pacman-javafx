@@ -23,7 +23,6 @@ import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -34,7 +33,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.Map;
-import java.util.stream.Stream;
 
 /**
  * @author Armin Reichert
@@ -68,25 +66,25 @@ public class PacManGames2dApp extends Application {
         ui = new PacManGamesUI();
         ui.loadAssets();
         // Now, UI asset storage exists, add game variants including thier assets
-        ui.setGameConfiguration(GameVariant.PACMAN, new PacManGameConfiguration());
-        ui.setGameConfiguration(GameVariant.MS_PACMAN, new MsPacManGameConfiguration());
-        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration());
-        ui.setGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration());
+        ui.addGameConfiguration(GameVariant.PACMAN, new PacManGameConfiguration());
+        ui.addGameConfiguration(GameVariant.MS_PACMAN, new MsPacManGameConfiguration());
+        ui.addGameConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration());
+        ui.addGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration());
 
         ui.create(stage, initialSize());
-        ui.addStartPageCarouselSlide(new ArcadePacManStartPage().root());
-        ui.addStartPageCarouselSlide(new ArcadeMsPacManStartPage().root());
-        ui.addStartPageCarouselSlide(new ArcadePacManXXLStartPage().root());
-        ui.addStartPageCarouselSlide(new TengenMsPacManStartPage().root());
+        ui.addStartPageSlide(new ArcadePacManStartPage().root());
+        ui.addStartPageSlide(new ArcadeMsPacManStartPage().root());
+        ui.addStartPageSlide(new ArcadePacManXXLStartPage().root());
+        ui.addStartPageSlide(new TengenMsPacManStartPage().root());
 
-        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.README);
-        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GENERAL);
-        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GAME_CONTROL);
-        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GAME_INFO);
-        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.ACTOR_INFO);
-        ui.appendDashboardItem(ui.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
-        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.KEYBOARD);
-        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.ABOUT);
+        ui.addDashboardItem(PacManGamesUI.DashboardItemID.README);
+        ui.addDashboardItem(PacManGamesUI.DashboardItemID.GENERAL);
+        ui.addDashboardItem(PacManGamesUI.DashboardItemID.GAME_CONTROL);
+        ui.addDashboardItem(PacManGamesUI.DashboardItemID.GAME_INFO);
+        ui.addDashboardItem(PacManGamesUI.DashboardItemID.ACTOR_INFO);
+        ui.addDashboardItem(ui.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
+        ui.addDashboardItem(PacManGamesUI.DashboardItemID.KEYBOARD);
+        ui.addDashboardItem(PacManGamesUI.DashboardItemID.ABOUT);
 
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         Logger.info("Assets loaded: {}", ui.assets().summary(

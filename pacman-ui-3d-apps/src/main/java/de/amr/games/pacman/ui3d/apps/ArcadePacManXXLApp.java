@@ -42,19 +42,19 @@ public class ArcadePacManXXLApp extends Application {
     public void start(Stage stage) {
         PacManGamesUI_3D ui = new PacManGamesUI_3D();
         ui.loadAssets();
-        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration_3D());
+        ui.addGameConfiguration(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration_3D());
         ui.create(stage, initialSize());
-        ui.addStartPageCarouselSlide(new ArcadePacManXXLStartPage().root());
+        ui.addStartPageSlide(new ArcadePacManXXLStartPage().root());
 
-        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.README);
-        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GENERAL);
-        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GAME_CONTROL);
-        ui.appendDashboardItem(ui.locText("infobox.3D_settings.title"), new InfoBox3D());
-        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.GAME_INFO);
-        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.ACTOR_INFO);
-        ui.appendDashboardItem(ui.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
-        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.KEYBOARD);
-        ui.appendDashboardItem(PacManGamesUI.DashboardItemID.ABOUT);
+        ui.addDashboardItem(PacManGamesUI.DashboardItemID.README);
+        ui.addDashboardItem(PacManGamesUI.DashboardItemID.GENERAL);
+        ui.addDashboardItem(PacManGamesUI.DashboardItemID.GAME_CONTROL);
+        ui.addDashboardItem(ui.locText("infobox.3D_settings.title"), new InfoBox3D());
+        ui.addDashboardItem(PacManGamesUI.DashboardItemID.GAME_INFO);
+        ui.addDashboardItem(PacManGamesUI.DashboardItemID.ACTOR_INFO);
+        ui.addDashboardItem(ui.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
+        ui.addDashboardItem(PacManGamesUI.DashboardItemID.KEYBOARD);
+        ui.addDashboardItem(PacManGamesUI.DashboardItemID.ABOUT);
         ui.show();
     }
 
