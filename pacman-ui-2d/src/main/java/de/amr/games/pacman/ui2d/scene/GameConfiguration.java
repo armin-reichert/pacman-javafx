@@ -32,4 +32,5 @@ public interface GameConfiguration {
     void createActorAnimations(GameLevel level);
     GameScene selectGameScene(GameContext context);
     String assetKeyPrefix();
+    default boolean isGameCanvasDecorated() { return true; }
 }

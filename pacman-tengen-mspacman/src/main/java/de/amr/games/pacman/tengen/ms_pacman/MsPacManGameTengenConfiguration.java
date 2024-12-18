@@ -107,6 +107,9 @@ public class MsPacManGameTengenConfiguration implements GameConfiguration {
     }
 
     @Override
+    public boolean isGameCanvasDecorated() { return false; }
+
+    @Override
     public GameSpriteSheet spriteSheet() {
         return spriteSheet;
     }

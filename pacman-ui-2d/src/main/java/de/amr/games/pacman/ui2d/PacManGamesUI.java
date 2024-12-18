@@ -231,11 +231,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         startPage.carousel().selectedIndexProperty().set(0);
     }
 
-    private void addMyselfAsGameListener(GameModel game) {
-        game.addGameEventListener(this);
-        game.addGameEventListener(gamePage.dashboardLayer().pipView());
-    }
-
     /**
      * Executed on clock tick if game is not paused.
      */
@@ -364,7 +359,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         Logger.info("Selected game variant: {}", variant);
 
         GameModel game = gameController().gameModel(variant);
-        addMyselfAsGameListener(game);
+        game.addGameEventListener(this);
+        game.addGameEventListener(gamePage.dashboardLayer().pipView());
 
         // TODO: Not sure if this belongs here
         if (game instanceof CustomMapsHandler customMapsHandler) {
@@ -388,9 +384,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         } catch (Exception x) {
             Logger.error(x);
         }
-
-        //TODO reconsider this
-        gamePage.gameCanvasContainer().decorationEnabledPy.set(gameVariant() != GameVariant.MS_PACMAN_TENGEN);
+        gamePage.gameCanvasContainer().decorationEnabledPy.set(currentGameConfig().isGameCanvasDecorated());
     }
 
     protected StringBinding stageTitleBinding() {
