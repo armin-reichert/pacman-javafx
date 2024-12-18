@@ -221,15 +221,13 @@ public class GamePage extends StackPane implements GameActionProvider {
         gameScenePy.get().supplyContextMenu(event).ifPresent(menu -> {
             contextMenu = new ContextMenu();
             contextMenu.getItems().addAll(menu.getItems());
-
-            contextMenu.getItems().add(new SeparatorMenuItem());
-            var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
-            miOpenMapEditor.setOnAction(ae -> {
-                if (actionOpenEditor != null) actionOpenEditor.execute(context);
-            });
-            miOpenMapEditor.setDisable(actionOpenEditor == null || !actionOpenEditor.isEnabled(context));
-            contextMenu.getItems().add(miOpenMapEditor);
-
+            if (actionOpenEditor != null) {
+                contextMenu.getItems().add(new SeparatorMenuItem());
+                var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
+                miOpenMapEditor.setOnAction(ae -> actionOpenEditor.execute(context));
+                miOpenMapEditor.setDisable(!actionOpenEditor.isEnabled(context));
+                contextMenu.getItems().add(miOpenMapEditor);
+            }
             contextMenu.show(this, event.getScreenX(), event.getScreenY());
             contextMenu.requestFocus();
         });

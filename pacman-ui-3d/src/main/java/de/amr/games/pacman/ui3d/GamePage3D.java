@@ -70,15 +70,13 @@ public class GamePage3D extends GamePage {
                 contextMenu.getItems().add(item);
             }
             contextMenu.getItems().addAll(menu.getItems());
-
-            contextMenu.getItems().add(new SeparatorMenuItem());
-            var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
-            miOpenMapEditor.setOnAction(ae -> {
-                if (actionOpenEditor != null) actionOpenEditor.execute(context);
-            });
-            miOpenMapEditor.setDisable(actionOpenEditor == null || !actionOpenEditor.isEnabled(context));
-            contextMenu.getItems().add(miOpenMapEditor);
-
+            if (actionOpenEditor != null) {
+                contextMenu.getItems().add(new SeparatorMenuItem());
+                var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
+                miOpenMapEditor.setOnAction(ae -> actionOpenEditor.execute(context));
+                miOpenMapEditor.setDisable(!actionOpenEditor.isEnabled(context));
+                contextMenu.getItems().add(miOpenMapEditor);
+            }
             contextMenu.show(this, event.getScreenX(), event.getScreenY());
             contextMenu.requestFocus();
         });

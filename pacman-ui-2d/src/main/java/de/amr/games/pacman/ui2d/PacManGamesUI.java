@@ -335,7 +335,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     protected void createGamePage(Scene parentScene) {
         gamePage = new GamePage(this, parentScene);
-        gamePage.setActionOpenEditor(actionOpenEditor);
         gamePage.gameScenePy.bind(gameScenePy);
     }
 
@@ -373,10 +372,13 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
         // TODO: Not sure if this belongs here
         if (game instanceof CustomMapsHandler customMapsHandler) {
+            gamePage.setActionOpenEditor(actionOpenEditor);
             // We cannot use data binding to the game model classes because the game models are in project
             // "pacman-core" which has no dependency to JavaFX data binding.
             customMapsHandler.setMapSelectionMode(GlobalProperties2d.PY_MAP_SELECTION_MODE.get());
             GlobalProperties2d.PY_MAP_SELECTION_MODE.addListener((py, ov, selectionMode) -> customMapsHandler.setMapSelectionMode(selectionMode));
+        } else {
+            gamePage.setActionOpenEditor(null);
         }
 
         String assetKeyPrefix = currentGameConfig().assetKeyPrefix();
