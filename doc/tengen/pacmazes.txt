@@ -1,0 +1,139 @@
+MS. PAC-MAN (NES) MAZE DATA FORMAT - v1.0 - 8/6/99
+--------------------------------------------------
+cracked by Scoutboy & BMF54123
+documentation by BMF54123
+-------------------------
+
+Please excuse any goof-ups, this is my first attempt at writing a technical
+doc. The whole thing's probably written very badly. Bleh. =P
+
+Before you start hacking the mazes, you might want to print out a list of all
+the maze wall/dot tiles and their associated hex values. It'll help, trust me.
+
+
+Data locations & byte values
+----------------------------
+In the .NES file, the maze data starts at $2F08 (byte value is 45), and ends
+at $5F0F (byte value is FF). Each byte in this range will be one of the
+following values:
+
+00-0F (maze walls, dots)
+40-7F (maze walls)
+82-8C (repeat byte)
+FF    (end of maze)
+
+Hex value FF defines the end of a maze's data. It tells the maze drawing
+routine to stop reading data, and assemble the maze.
+
+
+In-game maze layout
+-------------------
+In the game itself, every maze is 28 tiles wide. The height of the maze will
+vary depending on which maze type you choose in the main menu (ARCADE, MINI,
+BIG, or STRANGE). Every maze is mirrored left-right.
+
+
+Data compression
+----------------
+Ms. Pac-Man uses two simple forms of compression to store its mazes
+efficiently.
+
+Compression, part 1
+--------------------
+In the ROM, each line of the maze is actually 14 tiles wide. The game program
+mirrors each line of tiles left-right, except:
+
+1. tiles in the range 40-5F will be changed to 60-7F, and vice versa
+2. tiles in the range 00-0F will be left alone (they work on either side)
+
+Compression, part 2
+-------------------
+To save even more space, strings of identical tiles (the bottom of the maze,
+long horizontal rows of dots) are reduced to two bytes. The first byte
+(ranging from 82-8D) defines how many times the next byte (tile) will be
+repeated (82 = 3 times, 83 = 4 times, 84 = 5 times, etc). Example:
+
+01 01 01 01 01 01
+
+would be stored as
+
+85 01 (repeat tile #01 6 times)
+
+A bigger example:
+
+46 02 02 02 02 4A 6A 02 02 02 02 02 02 02
+
+would be stored as
+
+46 83 02 4A 6A 86 02
+
+(Using both compression methods, that's 28 on-screen tiles compressed into 7
+bytes! Wow!)
+
+
+Putting the data together
+-------------------------
+Let's review what we've learned, shall we? The following is the first row of
+the first maze of ARCADE mode:
+
+45 85 01 68 48 84 01
+
+We decipher it into:
+
+tile 45, tile 01 repeated 6x, tile 68, tile 48, tile 01 repeated 5x
+
+or, a bad ASCII example:
+
+Ú------·Ö-----
+
+Mirrored left-right, we get the top row of maze 1:
+
+Ú------·Ö----------·Ö------¿
+
+Easy, no?
+
+When hacking the maze data, remember that there is no break between the lines
+of data for each line of the maze (each maze is stored in one L O N G string).
+You could easily corrupt the maze by accidentally crossing the invisible line
+into the next line of data, so be careful!
+
+
+Assorted things
+---------------
+From start to end, a maze's uncompressed size MUST be divisible by 14.
+
+Every time you change a repeat byte, you must be able to compensate for the
+change. For example, let's say you have two repeat bytes in the same line, one
+is 6, the other is 3. If you wanted to change the 6 to a 4, you'd need to
+change the 3 to a 5. This will keep the line the same length when it's
+uncompressed, keeping the maze engine happy.
+
+Moving the FF's around to change maze sizes is NOT recommended (see point #1).
+If you want to shrink a maze, replace the last (or first) few lines of
+walls/dots with 00's (but leave the repeat bytes intact). I currently don't
+know how to enlarge a maze without messing it up.
+
+You can't really rearrange the mazes a lot, because of the limited space (due
+to compression). Perhaps if I figure out some way to expand the ROM...
+
+After hacking a maze, sometimes ghosts will be able to move through a wall
+that the Mrs. can't. I'm not sure why this happens.
+
+If you discover anything important that I left out, please tell me. =)
+
+
+Contact us
+----------
+
+BMF54123
+--------
+bmf54123@hotmail.com
+http://members.tripod.com/rlogic/hacks
+
+Scoutboy
+--------
+scoutboy14@hotmail.com
+http://www.icehouse.net/triplett
+
+END
+---

@@ -165,6 +165,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
         assets.store("wallpaper.color",             Color.rgb(72, 78, 135));
         assets.store("wallpaper.tapestry",          Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")) );
+
         assets.store("voice.explain",               rm.url("sound/voice/press-key.mp3"));
         assets.store("voice.autopilot.off",         rm.url("sound/voice/autopilot-off.mp3"));
         assets.store("voice.autopilot.on",          rm.url("sound/voice/autopilot-on.mp3"));
@@ -172,11 +173,14 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         assets.store("voice.immunity.on",           rm.url("sound/voice/immunity-on.mp3"));
 
         sound().setAssets(assets);
+
         pickerGameOver = Picker.fromBundle(assets.bundles().getFirst(), "game.over");
         pickerLevelComplete = Picker.fromBundle(assets.bundles().getFirst(), "level.complete");
     }
 
-    public void addGameConfiguration(GameVariant variant, GameConfiguration gameConfiguration) {
+    public void configureGameVariant(GameVariant variant, GameConfiguration gameConfiguration) {
+        checkNotNull(variant);
+        checkNotNull(gameConfiguration);
         gameConfigByVariant.put(variant, gameConfiguration);
         gameConfiguration.initGameScenes(this);
         gameConfiguration.gameScenes().forEach(gameScene -> {

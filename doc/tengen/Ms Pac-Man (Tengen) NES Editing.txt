@@ -1,0 +1,295 @@
+Ms. Pac-Man (NES Tengen Port) Hacking Notes:
+By Supergamerguy
+
+
+1. Palettes
+2. In-Game Text
+3. Title Screen
+
+
+
+Palettes:
+Title Screen Letters - 28 16 30
+
+28 05 01 - Mrs. Pac-Man and Pac-Man
+
+28 05 0F - Mrs. Pac-Man and Pac Man Lives
+
+
+11 25 30 - Blue and Pink Ghost
+
+05 16 30 - Red and Orange Ghost
+
+
+01 01 30 (doubled) - Scared and Flashing Ghosts
+
+
+11 01 30 - Score Text (compressed?)
+
+
+21 01 30 - Ghost Score Colors (compressed?)
+
+
+05 1A 30 - Cherry, Strawberry, and Apple Colors (compressed?)
+
+
+1A 16 30 - Orange (fruit), Pretzel, and Pear Colors (compressed?)
+
+
+28 30 0F - Banana Colors (compressed?)
+
+
+36 15 30 - Maze 1 colors and Power Pellets
+
+
+21 30 28 - Maze 2 colors and Power Pellets 
+
+
+16 30 15 - Maze 3 colors and Power Pellets
+
+
+01 38 30 - Maze 4 colors and Power Pellets
+
+
+35 28 30 - Maze 5 colors and Power Pellets
+
+
+36 15 30 - Maze 6 colors and Power Pellets
+
+
+17 30 30 - Maze 7 colors and Power Pellets
+
+
+13 30 28 - Maze 8 colors and Power Pellets
+
+
+0F 30 28 - Maze 9 colors and Power Pellets
+
+----------------------------------------------------------------
+"Strange" Mazes:
+
+11 25 30 - Milk
+
+
+07 36 16 - Ice Cream
+
+
+19 3C 0C - Glass Slipper
+
+
+01 26 30 - Star (with the initials PA)
+
+
+28 26 07 - Klax Hand
+
+
+1A 16 30 - Ring with Jewel (same colors as Cherry, Strawberry, etc.)
+
+
+27 17 30 - Sunflower
+
+
+0F 01 30 - Maze 10 (Strange) and Power Pellets
+
+
+14 25 30 - Maze 11 (Strange) and Power Pellets
+
+
+15 30 30 - Maze 12 (Strange) and Power Pellets
+
+
+1B 30 30 - Maze 13 (Strange) and Power Pellets
+
+
+28 30 2A - Maze 14 (Strange) and Power Pellets
+
+
+1A 30 28 - Maze 15 (Strange) and Power Pellets
+
+
+18 30 30 - Maze 16 (Strange) and Power Pellets
+
+
+25 30 30 - Maze 17 (Strange) and Power Pellets
+
+
+12 30 28 - Maze 18 (Strange) and Power Pellets
+
+
+07 30 30 - Maze 19 (Strange) and Power Pellets
+
+
+15 25 30 - Maze 20 (Strange) and Power Pellets
+
+
+0F 30 1C - Maze 21 (Strange) and Power Pellets
+
+
+19 30 30 - Maze 22 (Strange) and Power Pellets
+
+
+0C 30 14 - Maze 23 (Strange) and Power Pellets
+
+
+23 20 2B - Maze 24 (Strange) and Power Pellets
+
+
+10 30 28 - Maze 25 (Strange) and Power Pellets
+
+
+03 30 30 - Maze 26 (Strange) and Power Pellets
+
+
+04 30 30 - Maze 27 (Strange) and Power Pellets
+
+
+15 30 30 - Maze 28 (Strange) and Power Pellets
+
+
+09 30 31 - Maze 29 (Strange) and Power Pellets
+
+
+00 19 24 - Maze 30 (Strange) and Power Pellets
+
+
+19 30 31 - Maze 31 (Strange) and Power Pellets
+
+
+15 25 35 - Maze 32 (Strange) and Power Pellets
+
+
+
+
+
+
+----------------------------------------------------------------
+Main Text:
+20 - space between letters
+21 - !
+30 - 0
+31 - 1
+32 - 2
+33 - 3
+34 - 4
+35 - 5
+36 - 6
+37 - 7
+38 - 8
+39 - 9
+3A - :
+3B - '
+3C - <
+3F - ?
+40 - ©
+41 - A
+42 - B
+43 - C
+44 - D
+45 - E
+46 - F
+47 - G
+48 - H
+49 - I
+4A - J
+4B - K
+4C - L
+4D - M
+4E - N
+4F - O
+50 - P
+51 - Q
+52 - R
+53 - S
+54 - T
+55 - U
+56 - V
+57 - W
+58 - X
+59 - Y
+5A - Z
+5B - " (left quotation mark)
+5C - -
+5D - ' (right quotation mark)
+
+Title Screen Text:
+
+(there is a space here)Tengen Presents		
+
+Ms Pac-Man TM Namco Ltd				
+©1990 Tengen Inc				
+All Rights Reserved				
+
+
+Options Text:
+Ms Pac-Man Options				
+
+Type:						
+1 Player (and twelve spaces)			
+2 Player Alternating				
+2 Plyaer Competitive				
+2 Player Cooperative				
+
+Pac Booster    : 				
+(there are 4 spaces between Booster and :)	
+
+Game Difficulty:
+
+Maze Selection :
+Arcade
+Mini
+Big
+Strange
+
+Starting Level :
+
+Move Arrow With Joypad
+Choose Options With A and B
+
+
+Cutscene Text:
+"Ms Pac-Man"
+With
+Blinky					
+Inky (two spaces)			
+Pinky (one space)			
+Sue (three spaces)			
+Starring
+Ms. Pac-Man						
+Pac-Man							
+
+
+Credits Text:
+Credits for Ms Pac-Man			
+Game Programmer:			
+Franz Lanzinger				
+Special Thanks:				
+Jeff Yonan				
+Dave O'Riva				
+
+Ms Pac-Man TM Namco Ltd
+©1990 Tengen Inc
+All Rights Reserved
+
+
+The Flashing Text at the Beginning:
+(there is a space here)Tengen Presents		
+
+
+
+---------------------------------------------------------------
+Title Screen Editing:
+
+NOTE: 20 is a blank space
+
+PPU Values - Lines 001C00 through 001C40
+
+- Top Row (of the word Ms.): 05 21 C0 C1 20 C3 C2, 
+where C0 is the first tile being displayed (starting at Top Left Corner)
+
+- Next Row (below Top Row): 25 21 C2 AF 20 C2 C4 20 CE
+
+- Next Row (starts the word Pac): 65 21 C2 C5 20 C6 C7 20 CA CB 
+20 E8 20 C0 C1 20 C6 C7 20 C0 C2
+
+- Last Row: 85 21 AF 20 20 C8 C9 20 CC CD 20 E9 20 C2 AF 20 C8 
+C9 20 C2 AF

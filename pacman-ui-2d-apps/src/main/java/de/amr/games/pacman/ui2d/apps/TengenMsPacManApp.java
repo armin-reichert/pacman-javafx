@@ -42,7 +42,7 @@ public class TengenMsPacManApp extends Application {
     public void start(Stage stage) {
         PacManGamesUI ui = new PacManGamesUI();
         ui.loadAssets();
-        ui.addGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration(ui.assets()));
+        ui.configureGameVariant(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration(ui.assets()));
         ui.create(stage, initialSize());
         ui.addStartPageSlide(new TengenMsPacManStartPage().root());
 
