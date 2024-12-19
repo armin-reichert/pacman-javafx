@@ -5,6 +5,7 @@ plugins {
     id 'org.beryx.jlink' version '3.0.1' //  adds also 'application' plugin
 }
 
+
 repositories {
     mavenCentral()
 }
@@ -57,6 +58,9 @@ jlink {
             installerOptions += ['--win-dir-chooser', '--win-menu', '--win-menu-group', 'Pac-Man FX', '--win-shortcut']
         } else if (os.isLinux()) {
             installerType = 'deb'
+        } else if (os.isMacOs()) {
+            installerType = 'dmg'
+            installerOptions += ['--mac-package-identifier', 'pacman-ui-3d-app-allgames']
         }
     }
 }
