@@ -1,0 +1,66 @@
+plugins {
+    id 'java'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+    id 'application'
+    id 'org.beryx.jlink' version '3.0.1' //  adds also 'application' plugin
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':pacman-lib')
+    implementation project(':pacman-core')
+    implementation project(':pacman-ui-2d')
+    implementation project(':pacman-ui-3d')
+    implementation project(':pacman-mapeditor')
+    implementation project(':pacman-arcade-pacman')
+    implementation project(':pacman-arcade-pacmanxxl')
+    implementation project(':pacman-arcade-mspacman')
+    implementation project(':pacman-tengen-mspacman')
+    implementation libs.bundles.tinylog
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+javafx {
+    version = versions.javafx
+    modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.media']
+}
+
+application {
+    mainModule = 'de.amr.games.pacman.ui3d.app_suite'
+    mainClass = 'de.amr.games.pacman.ui3d.app_suite.Main'
+    if (os.isLinux()) {
+        applicationDefaultJvmArgs = ['-Dprism.forceGPU=true']
+    }
+}
+
+jlink {
+    imageZip = layout.buildDirectory.file("distributions/javafx-ui3d-${javafx.platform.classifier}.zip")
+    options = ['--compress', 'zip-9', '--strip-debug', '--no-header-files', '--no-man-pages']
+    launcher {
+        name = 'Pac-Man-FX-3D'
+    }
+    jpackage {
+        appVersion = '1.0'
+        vendor = 'Armin Reichert'
+        installerOptions = []
+        if (os.isWindows()) {
+            icon = 'pacman.ico'
+            installerType = 'msi'
+            installerOptions += ['--win-dir-chooser', '--win-menu', '--win-menu-group', 'Pac-Man FX', '--win-shortcut']
+        } else if (os.isLinux()) {
+            installerType = 'deb'
+        }
+    }
+}
+
+jlinkZip {
+    group = 'distribution'
+}

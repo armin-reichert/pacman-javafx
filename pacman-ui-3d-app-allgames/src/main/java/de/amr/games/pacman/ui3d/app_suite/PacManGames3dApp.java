@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui3d.apps;
+package de.amr.games.pacman.ui3d.app_suite;
 
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacManStartPage;
 import de.amr.games.pacman.arcade.ms_pacman.MsPacManGame;
