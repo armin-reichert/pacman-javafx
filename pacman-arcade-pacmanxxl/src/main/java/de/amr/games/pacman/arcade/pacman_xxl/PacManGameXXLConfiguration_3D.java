@@ -2,19 +2,19 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui3d.variants;
+package de.amr.games.pacman.arcade.pacman_xxl;
 
-import de.amr.games.pacman.arcade.ms_pacman.MsPacManGameConfiguration;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui3d.GlobalProperties3d;
 import de.amr.games.pacman.ui3d.scene3d.PlayScene3D;
 
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_ENABLED;
 
-public class MsPacManGameConfiguration_3D extends MsPacManGameConfiguration {
+public class PacManGameXXLConfiguration_3D extends PacManGameXXLConfiguration {
 
-    public MsPacManGameConfiguration_3D(AssetStorage assets) {
+    public PacManGameXXLConfiguration_3D(AssetStorage assets) {
         super(assets);
         setGameScene("PlayScene3D", new PlayScene3D());
     }
@@ -22,7 +22,7 @@ public class MsPacManGameConfiguration_3D extends MsPacManGameConfiguration {
     @Override
     public GameScene selectGameScene(GameContext context) {
         GameScene gameScene2D = super.selectGameScene(context);
-        if (PY_3D_ENABLED.get() && gameSceneHasID(gameScene2D, "PlayScene2D")) {
+        if (GlobalProperties3d.PY_3D_ENABLED.get() && gameSceneHasID(gameScene2D, "PlayScene2D")) {
             GameScene playScene3D = getGameScene("PlayScene3D");
             return playScene3D != null ? playScene3D : gameScene2D;
         }

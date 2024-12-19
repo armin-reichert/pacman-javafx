@@ -14,10 +14,10 @@ dependencies {
     implementation project(':pacman-core')
     implementation project(':pacman-ui-2d')
     implementation project(':pacman-mapeditor')
-    implementation project(':pacman-arcade-pacman')
-    implementation project(':pacman-arcade-pacmanxxl')
-    implementation project(':pacman-arcade-mspacman')
-    implementation project(':pacman-tengen-mspacman')
+    //implementation project(':pacman-arcade-pacman')
+    //implementation project(':pacman-arcade-pacmanxxl')
+    //implementation project(':pacman-arcade-mspacman')
+    //implementation project(':pacman-tengen-mspacman')
     implementation libs.bundles.tinylog
 }
 

@@ -13,10 +13,6 @@ open module de.amr.games.pacman.ui3d {
     requires de.amr.games.pacman.lib;
     requires de.amr.games.pacman.ui2d;
     requires de.amr.games.pacman.mapeditor;
-    requires de.amr.games.pacman.arcade.pacman;
-    requires de.amr.games.pacman.arcade.pacman_xxl;
-    requires de.amr.games.pacman.arcade.ms_pacman;
-    requires de.amr.games.pacman.tengen.ms_pacman;
 
     exports de.amr.games.pacman.ui3d;
     exports de.amr.games.pacman.ui3d.animation;
@@ -24,5 +20,4 @@ open module de.amr.games.pacman.ui3d {
     exports de.amr.games.pacman.ui3d.level;
     exports de.amr.games.pacman.ui3d.model;
     exports de.amr.games.pacman.ui3d.scene3d;
-    exports de.amr.games.pacman.ui3d.variants;
 }

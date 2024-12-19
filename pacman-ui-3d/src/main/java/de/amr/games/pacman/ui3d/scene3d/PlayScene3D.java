@@ -11,13 +11,11 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
-import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenActions;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.action.GameAction;
 import de.amr.games.pacman.ui2d.action.GameActions2D;
@@ -50,7 +48,6 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenActions.setDefaultJoypadBinding;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui2d.action.GameActions2D.*;
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
@@ -140,14 +137,14 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         if (context.game().isDemoLevel()) {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                bind(MsPacManGameTengenActions.QUIT_DEMO_LEVEL, context.joypadKeys().key(NES_JoypadButton.BTN_START));
+                //TODO fixme: bind(MsPacManGameTengenActions.QUIT_DEMO_LEVEL, context.joypadKeys().key(NES_JoypadButton.BTN_START));
             } else {
                 bind(GameActions2D.INSERT_COIN, context.arcadeKeys().key(Arcade.Button.COIN));
             }
         }
         else {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                setDefaultJoypadBinding(this, context.joypadKeys());
+                //TODO fixme: setDefaultJoypadBinding(this, context.joypadKeys());
             } else {
                 bindDefaultArcadeControllerActions(this, context.arcadeKeys());
             }

@@ -12,7 +12,7 @@ import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxJoypad;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
-import de.amr.games.pacman.ui3d.variants.MsPacManGameTengenConfiguration_3D;
+import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration_3D;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;

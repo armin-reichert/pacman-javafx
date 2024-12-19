@@ -11,7 +11,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
-import de.amr.games.pacman.ui3d.variants.MsPacManGameConfiguration_3D;
+import de.amr.games.pacman.arcade.ms_pacman.MsPacManGameConfiguration_3D;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
