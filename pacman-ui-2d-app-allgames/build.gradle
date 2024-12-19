@@ -55,7 +55,7 @@ jlink {
       installerOptions += ['--win-dir-chooser', '--win-menu', '--win-menu-group', 'Pac-Man FX', '--win-shortcut']
     } else if (os.isLinux()) {
       installerType = 'deb'
-    } else if (os.isMacOs()) {
+    } else if (os.isMacOsX()) {
       installerType = 'dmg'
     }
   }
