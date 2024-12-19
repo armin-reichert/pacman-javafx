@@ -5,6 +5,7 @@ plugins {
     id 'org.beryx.jlink' version '3.0.1' //  adds also 'application' plugin
 }
 
+version='1.0'
 
 repositories {
     mavenCentral()
@@ -60,7 +61,6 @@ jlink {
             installerType = 'deb'
         } else if (os.isMacOs()) {
             installerType = 'dmg'
-            installerOptions += ['--mac-package-identifier', 'pacman-ui-3d-app-allgames']
         }
     }
 }
