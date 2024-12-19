@@ -46,7 +46,7 @@ This will create
 
 ### Running the main application (including all games) using Gradle
 
-- Pac-Man 2D: `./gradlew pacman-ui-2d-apps:run`
+- Pac-Man 2D: `./gradlew pacman-ui-2d-app-allgames:run`
 - Pac-Man 3D: `./gradlew pacman-ui-3d-apps:run`
 
 To be able to create the Windows executables, you need to have the following tools installed:
