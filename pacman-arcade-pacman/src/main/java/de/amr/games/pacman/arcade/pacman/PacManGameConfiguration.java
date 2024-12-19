@@ -16,7 +16,6 @@ import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
 import de.amr.games.pacman.ui2d.lib.Ufx;
 import de.amr.games.pacman.ui2d.scene.*;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,13 +29,13 @@ public class PacManGameConfiguration implements GameConfiguration {
     public PacManGameConfiguration(AssetStorage assets) {
         loadAssets(() -> Resources.class, assets);
         spriteSheet = new PacManGameSpriteSheet(assets.get(assetKeyPrefix() + ".spritesheet"));
-        set("BootScene",   new ArcadeBootScene());
-        set("IntroScene",  new IntroScene());
-        set("StartScene",  new StartScene());
-        set("PlayScene2D", new ArcadePlayScene2D());
-        set("CutScene1",   new CutScene1());
-        set("CutScene2",   new CutScene2());
-        set("CutScene3",   new CutScene3());
+        setGameScene("BootScene",   new ArcadeBootScene());
+        setGameScene("IntroScene",  new IntroScene());
+        setGameScene("StartScene",  new StartScene());
+        setGameScene("PlayScene2D", new ArcadePlayScene2D());
+        setGameScene("CutScene1",   new CutScene1());
+        setGameScene("CutScene2",   new CutScene2());
+        setGameScene("CutScene3",   new CutScene3());
     }
 
     @Override
@@ -45,12 +44,12 @@ public class PacManGameConfiguration implements GameConfiguration {
     }
 
     @Override
-    public void set(String id, GameScene gameScene) {
+    public void setGameScene(String id, GameScene gameScene) {
         scenesByID.put(id, gameScene);
     }
 
     @Override
-    public GameScene get(String id) {
+    public GameScene getGameScene(String id) {
         return scenesByID.get(id);
     }
 
@@ -92,7 +91,7 @@ public class PacManGameConfiguration implements GameConfiguration {
             case GameState.TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");
             default                 -> "PlayScene2D";
         };
-        return get(sceneID);
+        return getGameScene(sceneID);
     }
 
     @Override

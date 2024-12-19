@@ -178,6 +178,12 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         pickerLevelComplete = Picker.fromBundle(assets.bundles().getFirst(), "level.complete");
     }
 
+    /**
+     * Stores the configuration for a game variant and initializes the game scenes (assigns the game context).
+     *
+     * @param variant a game variant
+     * @param gameConfiguration the configuration for this variant
+     */
     public void configureGameVariant(GameVariant variant, GameConfiguration gameConfiguration) {
         checkNotNull(variant);
         checkNotNull(gameConfiguration);

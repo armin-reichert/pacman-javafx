@@ -16,14 +16,14 @@ public class MsPacManGameConfiguration_3D extends MsPacManGameConfiguration {
 
     public MsPacManGameConfiguration_3D(AssetStorage assets) {
         super(assets);
-        set("PlayScene3D", new PlayScene3D());
+        setGameScene("PlayScene3D", new PlayScene3D());
     }
 
     @Override
     public GameScene selectGameScene(GameContext context) {
         GameScene gameScene2D = super.selectGameScene(context);
         if (PY_3D_ENABLED.get() && gameSceneHasID(gameScene2D, "PlayScene2D")) {
-            GameScene playScene3D = get("PlayScene3D");
+            GameScene playScene3D = getGameScene("PlayScene3D");
             return playScene3D != null ? playScene3D : gameScene2D;
         }
         return gameScene2D;

@@ -17,7 +17,6 @@ import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
 import de.amr.games.pacman.ui2d.scene.GameConfiguration;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
-import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -49,18 +48,18 @@ public class MsPacManGameTengenConfiguration implements GameConfiguration {
             assets.image(assetKeyPrefix() + ".mazes.arcade"),
             assets.image(assetKeyPrefix() + ".mazes.non_arcade"));
 
-        set("BootScene",      new BootScene());
-        set("IntroScene",     new IntroScene());
-        set("StartScene",     new OptionsScene());
-        set("ShowingCredits", new CreditsScene());
-        set("PlayScene2D",    new PlayScene2D());
-        set("CutScene1",      new CutScene1());
-        set("CutScene2",      new CutScene2());
-        set("CutScene3",      new CutScene3());
-        set("CutScene4",      new CutScene4());
+        setGameScene("BootScene",      new BootScene());
+        setGameScene("IntroScene",     new IntroScene());
+        setGameScene("StartScene",     new OptionsScene());
+        setGameScene("ShowingCredits", new CreditsScene());
+        setGameScene("PlayScene2D",    new PlayScene2D());
+        setGameScene("CutScene1",      new CutScene1());
+        setGameScene("CutScene2",      new CutScene2());
+        setGameScene("CutScene3",      new CutScene3());
+        setGameScene("CutScene4",      new CutScene4());
 
         //TODO where is the best place to do that?
-        PlayScene2D playScene2D = (PlayScene2D) get("PlayScene2D");
+        PlayScene2D playScene2D = (PlayScene2D) getGameScene("PlayScene2D");
         playScene2D.displayModeProperty().bind(PY_TENGEN_PLAY_SCENE_DISPLAY_MODE);
     }
 
@@ -80,16 +79,16 @@ public class MsPacManGameTengenConfiguration implements GameConfiguration {
             case TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");
             default                 -> "PlayScene2D";
         };
-        return get(sceneID);
+        return getGameScene(sceneID);
     }
 
     @Override
-    public void set(String id, GameScene gameScene) {
+    public void setGameScene(String id, GameScene gameScene) {
         scenesByID.put(id, gameScene);
     }
 
     @Override
-    public GameScene get(String id) {
+    public GameScene getGameScene(String id) {
         return scenesByID.get(id);
     }
 
