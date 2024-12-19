@@ -1,4 +1,4 @@
-module de.amr.games.pacman.ui3d.app_suite {
+module de.amr.games.pacman.ui3d.appsuite {
     requires org.tinylog.api;
     requires javafx.graphics;
     requires javafx.media;
@@ -12,5 +12,5 @@ module de.amr.games.pacman.ui3d.app_suite {
     requires de.amr.games.pacman.arcade.pacman_xxl;
     requires de.amr.games.pacman.tengen.ms_pacman;
 
-    exports de.amr.games.pacman.ui3d.app_suite;
+    exports de.amr.games.pacman.ui3d.appsuite;
 }

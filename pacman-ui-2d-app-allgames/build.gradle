@@ -35,8 +35,8 @@ javafx {
 }
 
 application {
-  mainModule = 'de.amr.games.pacman.ui2d.app_suite'
-  mainClass = 'de.amr.games.pacman.ui2d.app_suite.Main'
+  mainModule = 'de.amr.games.pacman.ui2d.appsuite'
+  mainClass = 'de.amr.games.pacman.ui2d.appsuite.Main'
 }
 
 jlink {

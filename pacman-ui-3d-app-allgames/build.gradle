@@ -36,8 +36,8 @@ javafx {
 }
 
 application {
-    mainModule = 'de.amr.games.pacman.ui3d.app_suite'
-    mainClass = 'de.amr.games.pacman.ui3d.app_suite.Main'
+    mainModule = 'de.amr.games.pacman.ui3d.appsuite'
+    mainClass = 'de.amr.games.pacman.ui3d.appsuite.Main'
     if (os.isLinux()) {
         applicationDefaultJvmArgs = ['-Dprism.forceGPU=true']
     }
