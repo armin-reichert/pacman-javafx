@@ -102,22 +102,23 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            if (game.isPlaying()) { // resume running game
+            if (game.isPlaying()) {
+                // resume running game
                 if (timer.tickCount() == 1) {
+                    game.level().ifPresent(GameLevel::showReadyMessage);
                     game.letsGetReadyToRumble();
                     game.showGuys();
-                    game.level().ifPresent(level -> level.setMessage(new GameLevel.Message(GameLevel.MessageType.READY)));
                 } else if (timer.tickCount() == TICK_RESUME_GAME) {
                     gameController().changeState(GameState.HUNTING);
                 }
             }
-            else if (game.canStartNewGame()) { // start new game
+            else if (game.canStartNewGame()) {
+                // start new game
                 if (timer.tickCount() == 1) {
                     game.startNewGame();
                 }
                 else if (timer.tickCount() == 2) {
                     game.startLevel();
-                    game.level().ifPresent(level -> level.setMessage(new GameLevel.Message(GameLevel.MessageType.READY)));
                 }
                 else if (timer.tickCount() == TICK_NEW_GAME_SHOW_GUYS) {
                     game.showGuys();
@@ -132,7 +133,7 @@ public enum GameState implements FsmState<GameModel> {
                     game.createDemoLevel();
                     game.startLevel();
                     game.showGuys();
-                    game.level().ifPresent(level -> level.setMessage(new GameLevel.Message(GameLevel.MessageType.GAME_OVER)));
+                    game.level().ifPresent(GameLevel::showGameOverMessage);
                 }
                 else if (timer.tickCount() == TICK_DEMO_LEVEL_START_PLAYING) {
                     gameController().changeState(GameState.HUNTING);
@@ -159,7 +160,7 @@ public enum GameState implements FsmState<GameModel> {
             if (timer.tickCount() == delay) {
                 game.startHunting();
                 if (level.message() != null && level.message().type() == GameLevel.MessageType.READY) {
-                    level.setMessage(null);
+                    level.clearMessage();
                 }
             }
             game.doHuntingStep();
@@ -176,7 +177,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onExit(GameModel game) {
             GameLevel level = game.level().orElseThrow();
             if (level.message() != null && level.message().type() == GameLevel.MessageType.READY) {
-                level.setMessage(null);
+                level.clearMessage();
             }
         }
     },
@@ -315,7 +316,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             timer.restartTicks(game.gameOverStateTicks());
             game.endGame();
-            game.level().ifPresent(level -> level.setMessage(new GameLevel.Message(GameLevel.MessageType.GAME_OVER)));
+            game.level().ifPresent(GameLevel::showGameOverMessage);
         }
 
         @Override
@@ -343,7 +344,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onExit(GameModel game) {
             game.setPlaying(false);
-            game.level().ifPresent(level -> level.setMessage(null));
+            game.level().ifPresent(GameLevel::clearMessage);
         }
     },
 
@@ -362,29 +363,20 @@ public enum GameState implements FsmState<GameModel> {
         }
     },
 
+    // Tests
 
-    // Test states
-
-    TESTING_LEVEL_BONI {
+    TESTING_LEVELS {
 
         private int lastLevelNumber;
 
         @Override
         public void onEnter(GameModel game) {
             GameVariant gameVariant = GameController.it().currentGameVariant();
-            int numCustomMaps = 0;
-            //TODO fixme
-            /*
-            if (gameVariant == GameVariant.PACMAN_XXL) {
-                PacManGameXXL xxlGame = (PacManGameXXL) game;
-                numCustomMaps = xxlGame.customMapsSortedByFile().size();
-            }
-             */
             lastLevelNumber = switch (gameVariant) {
                 case MS_PACMAN -> 25;
                 case MS_PACMAN_TENGEN -> 32;
                 case PACMAN -> 21;
-                case PACMAN_XXL -> 8 + numCustomMaps;
+                case PACMAN_XXL -> 16;
             };
             timer.restartIndefinitely();
             game.resetForStartingNewGame();

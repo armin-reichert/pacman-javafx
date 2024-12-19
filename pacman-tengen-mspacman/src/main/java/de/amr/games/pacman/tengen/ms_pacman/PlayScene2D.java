@@ -44,7 +44,7 @@ import org.tinylog.Logger;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
+import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
@@ -265,7 +265,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
     @Override
     public void onGameStarted(GameEvent e) {
         boolean silent = context.game().isDemoLevel() ||
-            context.gameState() == TESTING_LEVEL_BONI ||
+            context.gameState() == TESTING_LEVELS ||
             context.gameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
             context.sound().playGameReadySound();

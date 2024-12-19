@@ -157,6 +157,7 @@ public abstract class GameModel {
         scoreManager.setHighScoreEnabled(!isDemoLevel());
         letsGetReadyToRumble();
         setActorBaseSpeed(level.number);
+        level.showReadyMessage();
         Logger.info("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
         level.setStartTime(System.currentTimeMillis());
         Logger.info("{} started", isDemoLevel() ? "Demo Level" : "Level " + level.number);

@@ -46,7 +46,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_BONI;
+import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -169,7 +169,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             Logger.error("3D level already created?");
         }
         switch (context.gameState()) {
-            case TESTING_LEVEL_BONI, TESTING_LEVEL_TEASERS -> {
+            case TESTING_LEVELS, TESTING_LEVEL_TEASERS -> {
                 replaceGameLevel3D();
                 level3D.livesCounter3D().shapesRotation().play();
                 level3D.energizers3D().forEach(Energizer3D::startPumping);
@@ -348,7 +348,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             case GHOST_DYING           -> onEnterStateGhostDying();
             case LEVEL_COMPLETE        -> onEnterStateLevelComplete();
             case LEVEL_TRANSITION      -> onEnterStateLevelTransition();
-            case TESTING_LEVEL_BONI    -> onEnterStateTestingLevelBoni();
+            case TESTING_LEVELS -> onEnterStateTestingLevelBoni();
             case TESTING_LEVEL_TEASERS -> onEnterStateTestingLevelTeasers();
             case GAME_OVER             -> onEnterStateGameOver();
             default -> {}
@@ -480,7 +480,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onGameStarted(GameEvent e) {
         boolean silent = context.game().isDemoLevel() ||
-                context.gameState() == TESTING_LEVEL_BONI ||
+                context.gameState() == TESTING_LEVELS ||
                 context.gameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
             context.sound().playGameReadySound();

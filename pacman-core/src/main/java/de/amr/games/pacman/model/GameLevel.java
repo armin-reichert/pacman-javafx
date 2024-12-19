@@ -98,8 +98,16 @@ public class GameLevel {
         return intermissionNumber;
     }
 
-    public void setMessage(Message message) {
-        this.message = message;
+    public void showReadyMessage() {
+        message = new Message(MessageType.READY);
+    }
+
+    public void showGameOverMessage() {
+        message = new Message(MessageType.GAME_OVER);
+    }
+
+    public void clearMessage() {
+        message = null;
     }
 
     public Message message() {

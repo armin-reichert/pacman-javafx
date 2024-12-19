@@ -166,7 +166,7 @@ public enum GameActions2D implements GameAction {
         public void execute(GameContext context) {
             context.sound().stopAll();
             context.currentGameScene().ifPresent(GameScene::end);
-            if (context.gameState() == GameState.TESTING_LEVEL_BONI) {
+            if (context.gameState() == GameState.TESTING_LEVELS) {
                 context.gameState().onExit(context.game()); //TODO exit other states too?
             }
             context.gameClock().setTargetFrameRate(GameModel.TICKS_PER_SECOND);
@@ -201,7 +201,7 @@ public enum GameActions2D implements GameAction {
     TEST_LEVELS_BONI {
         @Override
         public void execute(GameContext context) {
-            context.gameController().restart(GameState.TESTING_LEVEL_BONI);
+            context.gameController().restart(GameState.TESTING_LEVELS);
             context.showFlashMessageSec(3, "Level TEST MODE");
         }
     },
