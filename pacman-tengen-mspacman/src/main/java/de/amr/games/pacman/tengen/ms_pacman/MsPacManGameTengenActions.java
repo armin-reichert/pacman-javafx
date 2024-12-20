@@ -80,14 +80,4 @@ public enum MsPacManGameTengenActions implements GameAction {
             }
         }
     };
-
-    public static void setDefaultJoypadBinding(GameActionProvider actionProvider, JoypadKeyBinding binding) {
-        actionProvider.bind(MsPacManGameTengenActions.TOGGLE_PAC_BOOSTER,
-            binding.key(NES_JoypadButton.BTN_A),
-            binding.key(NES_JoypadButton.BTN_B));
-        actionProvider.bind(GameActions2D.PLAYER_UP,    binding.key(NES_JoypadButton.BTN_UP));
-        actionProvider.bind(GameActions2D.PLAYER_DOWN,  binding.key(NES_JoypadButton.BTN_DOWN));
-        actionProvider.bind(GameActions2D.PLAYER_LEFT,  binding.key(NES_JoypadButton.BTN_LEFT));
-        actionProvider.bind(GameActions2D.PLAYER_RIGHT, binding.key(NES_JoypadButton.BTN_RIGHT));
-    }
 }

@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
+import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.*;
@@ -137,14 +138,26 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         if (context.game().isDemoLevel()) {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                //TODO fixme: bind(MsPacManGameTengenActions.QUIT_DEMO_LEVEL, context.joypadKeys().key(NES_JoypadButton.BTN_START));
+                //TODO how to bind Tengen-only actions?
+//                bind(MsPacManGameTengenActions.QUIT_DEMO_LEVEL, context.joypadKeys().key(NES_JoypadButton.BTN_START));
             } else {
                 bind(GameActions2D.INSERT_COIN, context.arcadeKeys().key(Arcade.Button.COIN));
             }
         }
         else {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                //TODO fixme: setDefaultJoypadBinding(this, context.joypadKeys());
+                bind(GameActions2D.PLAYER_UP,    context.joypadKeys().key(NES_JoypadButton.BTN_UP));
+                bind(GameActions2D.PLAYER_DOWN,  context.joypadKeys().key(NES_JoypadButton.BTN_DOWN));
+                bind(GameActions2D.PLAYER_LEFT,  context.joypadKeys().key(NES_JoypadButton.BTN_LEFT));
+                bind(GameActions2D.PLAYER_RIGHT, context.joypadKeys().key(NES_JoypadButton.BTN_RIGHT));
+                //TODO how to bind Tengen-only actions?
+                /*
+                bind(MsPacManGameTengenActions.TOGGLE_PAC_BOOSTER,
+                    context.joypadKeys().key(NES_JoypadButton.BTN_A),
+                    context.joypadKeys().key(NES_JoypadButton.BTN_B));
+                */
+                bindFallbackPlayerControlActions(this);
+                bindCheatActions(this);
             } else {
                 bindDefaultArcadeControllerActions(this, context.arcadeKeys());
             }

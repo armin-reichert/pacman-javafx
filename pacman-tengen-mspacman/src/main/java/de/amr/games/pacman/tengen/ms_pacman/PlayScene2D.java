@@ -50,7 +50,6 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.tengen.ms_pacman.GlobalPropertiesTengen.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenActions.QUIT_DEMO_LEVEL;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenActions.setDefaultJoypadBinding;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.*;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_IMMUNITY;
@@ -307,7 +306,13 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
         if (context.game().isDemoLevel()) {
             bind(QUIT_DEMO_LEVEL, context.joypadKeys().key(NES_JoypadButton.BTN_START));
         } else {
-            setDefaultJoypadBinding(this, context.joypadKeys());
+            bind(GameActions2D.PLAYER_UP,    context.joypadKeys().key(NES_JoypadButton.BTN_UP));
+            bind(GameActions2D.PLAYER_DOWN,  context.joypadKeys().key(NES_JoypadButton.BTN_DOWN));
+            bind(GameActions2D.PLAYER_LEFT,  context.joypadKeys().key(NES_JoypadButton.BTN_LEFT));
+            bind(GameActions2D.PLAYER_RIGHT, context.joypadKeys().key(NES_JoypadButton.BTN_RIGHT));
+            bind(MsPacManGameTengenActions.TOGGLE_PAC_BOOSTER,
+                context.joypadKeys().key(NES_JoypadButton.BTN_A),
+                context.joypadKeys().key(NES_JoypadButton.BTN_B));
             bindFallbackPlayerControlActions(this);
             bindCheatActions(this);
         }
