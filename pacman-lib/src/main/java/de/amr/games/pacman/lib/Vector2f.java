@@ -55,6 +55,10 @@ public record Vector2f(float x, float y) {
         return new Vector2f(x / len, y / len);
     }
 
+    public Vector2f midpoint(Vector2f v) {
+        return this.plus(v).scaled(0.5f);
+    }
+
     public float euclideanDistance(Vector2f v) {
         return this.minus(v).length();
     }

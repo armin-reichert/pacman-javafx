@@ -331,16 +331,16 @@ public class GameLevel3D {
             }
             else if (seg.isNWCorner()) {
                 if (seg.ccw()) {
-                    addCorner(parent, p.plus(-r, 0), p, q, thickness);
+                    addCorner(parent, p.minus(r, 0), p, q, thickness);
                 } else {
-                    addCorner(parent, p.plus(0, -r), q, p, thickness);
+                    addCorner(parent, p.minus(0, r), q, p, thickness);
                 }
             }
             else if (seg.isSWCorner()) {
                 if (seg.ccw()) {
                     addCorner(parent, p.plus(0, r), q, p, thickness);
                 } else {
-                    addCorner(parent, p.plus(-r, 0), p, q, thickness);
+                    addCorner(parent, p.minus(r, 0), p, q, thickness);
                 }
             }
             else if (seg.isSECorner()) {
@@ -352,7 +352,7 @@ public class GameLevel3D {
             }
             else if (seg.isNECorner()) {
                 if (seg.ccw()) {
-                    addCorner(parent, p.plus(0, -r), q, p, thickness);
+                    addCorner(parent, p.minus(0, r), q, p, thickness);
                 } else {
                     addCorner(parent, p.plus(r, 0), p, q, thickness);
                 }
@@ -361,29 +361,23 @@ public class GameLevel3D {
         }
     }
 
-    private void addCorner(Group parent, Vector2f corner, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {
+    private void addCorner(Group parent, Vector2f cornerPoint, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {
         Node hWall =  wallCenteredAt(
-            corner.plus(horEndPoint).scaled(0.5f),
-            corner.minus(horEndPoint).length(),
+            cornerPoint.midpoint(horEndPoint),
+            cornerPoint.minus(horEndPoint).length(),
             thickness,
             obstacleHeightPy, OBSTACLE_COAT_HEIGHT,
             wallFillMaterialPy, wallStrokeMaterialPy);
 
         Node vWall = wallCenteredAt(
-            corner.plus(vertEndPoint).scaled(0.5f),
+            cornerPoint.midpoint(vertEndPoint),
             thickness,
-            corner.minus(vertEndPoint).length(),
+            cornerPoint.minus(vertEndPoint).length(),
             obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
 
-        Node cornerWall = cornerWall(corner, 0.5*thickness, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
+        Node cornerWall = cornerWall(cornerPoint, 0.5*thickness, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
 
         parent.getChildren().addAll(hWall, vWall, cornerWall);
-    }
-
-    private Node vWall(Vector2f p, Vector2f q, double thickness, DoubleProperty wallHeightPy)
-    {
-        return wallCenteredAt(p.plus(q).scaled(0.5f), thickness, q.minus(p).length(),
-            wallHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
     }
 
     private Box createFloor(Map<String, PhongMaterial> textures, double sizeX, double sizeY) {
