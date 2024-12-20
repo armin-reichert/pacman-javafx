@@ -127,7 +127,6 @@ public class PacManGameXXL extends PacManGame implements CustomMapsHandler {
             }
         }
         if (standardMaps.contains(worldMap)) {
-            // try using random color scheme, TODO: avoid repetitions
             colorMap = COLOR_MAPS.get(randomInt(0, COLOR_MAPS.size()));
         } else {
             colorMap = Map.of(

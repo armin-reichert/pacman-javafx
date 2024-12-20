@@ -64,7 +64,7 @@ public class Obstacle {
     }
 
     public boolean isClosed() {
-        return startPoint.equals(endPoint); // TODO use almost equals?
+        return startPoint.equals(endPoint);
     }
 
     public boolean hasDoubleWalls() {

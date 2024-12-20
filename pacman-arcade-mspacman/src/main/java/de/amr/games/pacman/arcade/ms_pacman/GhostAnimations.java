@@ -65,7 +65,6 @@ public class GhostAnimations extends SpriteAnimationCollection {
             Animations.ANIM_GHOST_EYES, eyes,
             Animations.ANIM_GHOST_NUMBER, number));
 
-        // TODO check this
         eyes.start();
         frightened.start();
         flashing.start();

@@ -123,7 +123,6 @@ public abstract class FiniteStateMachine<S extends FsmState<C>, C> {
      */
     public void changeState(S newState) {
         if (newState == currentState) {
-            // TODO check this
             throw new IllegalStateException("FiniteStateMachine: Self loop in state " + currentState);
         }
         C context = context();

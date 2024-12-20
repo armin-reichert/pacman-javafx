@@ -654,7 +654,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
     }
 
     private void createViewMenu() {
-        var miShowPropertyEditors = new CheckMenuItem("Properties"); //TODO localize
+        var miShowPropertyEditors = new CheckMenuItem(tt("menu.view.properties"));
         miShowPropertyEditors.selectedProperty().bindBidirectional(propertyEditorsVisiblePy);
 
         var miShowTerrain = new CheckMenuItem(tt("menu.view.terrain"));

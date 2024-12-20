@@ -402,7 +402,6 @@ public class PacManGame extends GameModel {
         ghost.eaten(killedSoFar);
         scoreManager.scorePoints(this, points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
-        //TODO if this behavior is specific to certain game variants, it has to be factored out
         if (level.killedGhostCount() == 16) {
             int extraPoints = POINTS_ALL_GHOSTS_IN_LEVEL;
             scoreManager.scorePoints(this, extraPoints);
