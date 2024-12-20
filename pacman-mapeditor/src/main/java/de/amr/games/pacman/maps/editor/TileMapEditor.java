@@ -110,7 +110,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
         }
     };
     final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
-    final ObjectProperty<String> titlePy = new SimpleObjectProperty<>("Tile Map Editor");
+    final StringProperty titlePy = new SimpleStringProperty("Tile Map Editor");
 
     private final EditController editController;
 
@@ -163,6 +163,8 @@ public class TileMapEditor implements TileMapEditorViewModel {
         rubberCursor = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
         setWorldMap(new WorldMap(36, 28));
     }
+
+    public StringProperty titleProperty() { return titlePy; }
 
     private String urlString(String resourcePath) {
         URL url = requireNonNull(getClass().getResource(resourcePath));
