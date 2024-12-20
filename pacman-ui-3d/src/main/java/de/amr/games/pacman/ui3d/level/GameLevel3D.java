@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.TileMap;
@@ -46,6 +47,8 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.lib.Ufx.*;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
+import static de.amr.games.pacman.ui3d.level.WallBuilder.createCircularWall;
+import static de.amr.games.pacman.ui3d.level.WallBuilder.wallCenteredAt;
 
 /**
  * @author Armin Reichert
@@ -281,13 +284,9 @@ public class GameLevel3D {
         Box floor = createFloor(assets.get("floor_textures"), terrain.numCols() * TS - 1, terrain.numRows() * TS - 1);
 
         for (Obstacle obstacle : world.map().obstacles()) {
-            if (world.isPartOfHouse(tileAt(obstacle.startPoint()))) {
-                continue;
+            if (!world.isPartOfHouse(tileAt(obstacle.startPoint()))) {
+                addObstacle(mazeGroup, obstacle, obstacle.hasDoubleWalls() ? BORDER_WALL_THICKNESS : OBSTACLE_THICKNESS);
             }
-            WallBuilder.buildObstacleWalls(mazeGroup, obstacle, obstacleHeightPy,
-                obstacle.hasDoubleWalls() ? BORDER_WALL_THICKNESS : OBSTACLE_THICKNESS,
-                OBSTACLE_COAT_HEIGHT,
-                wallFillMaterialPy, wallStrokeMaterialPy);
         }
 
         house3D = new House3D(world, coloring);
@@ -300,6 +299,84 @@ public class GameLevel3D {
         mazeGroup.getChildren().add(house3D.root());
         worldGroup.getChildren().addAll(floor, mazeGroup);
         root.getChildren().add(house3D.door3D());
+    }
+
+    private void addObstacle(
+        Group parent,
+        Obstacle obstacle,
+        double thickness)
+    {
+        if (obstacle.isClosed() && obstacle.numSegments() == 4) {
+            Vector2f center = obstacle.startPoint().plus(0, HTS);
+            Node wall = createCircularWall(center, HTS, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
+            parent.getChildren().add(wall);
+            return;
+        }
+        int r = HTS;
+        Vector2f p = obstacle.startPoint();
+        for (int i = 0; i < obstacle.numSegments(); ++i) {
+            Obstacle.Segment seg = obstacle.segment(i);
+            Vector2f q = p.plus(seg.vector());
+            if (seg.isVerticalLine()) {
+                Vector2f center = p.plus(seg.vector().scaled(0.5f));
+                double length = seg.vector().length();
+                Node wall = wallCenteredAt(center, thickness, length, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
+                parent.getChildren().add(wall);
+            }
+            else if (seg.isHorizontalLine()) {
+                Vector2f center = p.plus(seg.vector().scaled(0.5f));
+                double length = seg.vector().length();
+                Node wall = wallCenteredAt(center, length + thickness, thickness, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
+                parent.getChildren().add(wall);
+            }
+            else if (seg.isNWCorner()) {
+                if (seg.ccw()) {
+                    addCorner(parent, p.plus(-r, 0), p, q, thickness);
+                } else {
+                    addCorner(parent, p.plus(0, -r), q, p, thickness);
+                }
+            }
+            else if (seg.isSWCorner()) {
+                if (seg.ccw()) {
+                    addCorner(parent, p.plus(0, r), q, p, thickness);
+                } else {
+                    addCorner(parent, p.plus(-r, 0), p, q, thickness);
+                }
+            }
+            else if (seg.isSECorner()) {
+                if (seg.ccw()) {
+                    addCorner(parent, p.plus(r, 0), p, q, thickness);
+                } else {
+                    addCorner(parent, p.plus(0, r), q, p, thickness);
+                }
+            }
+            else if (seg.isNECorner()) {
+                if (seg.ccw()) {
+                    addCorner(parent, p.plus(0, -r), q, p, thickness);
+                } else {
+                    addCorner(parent, p.plus(r, 0), p, q, thickness);
+                }
+            }
+            p = q;
+        }
+    }
+
+    private void addCorner(Group parent, Vector2f corner, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {
+        Node hWall = hWall(corner, horEndPoint, thickness, obstacleHeightPy);
+        Node vWall = vWall(corner, vertEndPoint, thickness, obstacleHeightPy);
+        parent.getChildren().addAll(hWall, vWall);
+
+    }
+
+    private Node hWall(Vector2f p, Vector2f q, double thickness, DoubleProperty wallHeightPy) {
+        return wallCenteredAt(p.plus(q).scaled(0.5f), q.minus(p).length() + thickness, thickness,
+            wallHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
+    }
+
+    private Node vWall(Vector2f p, Vector2f q, double thickness, DoubleProperty wallHeightPy)
+    {
+        return wallCenteredAt(p.plus(q).scaled(0.5f), thickness, q.minus(p).length(),
+            wallHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
     }
 
     private Box createFloor(Map<String, PhongMaterial> textures, double sizeX, double sizeY) {

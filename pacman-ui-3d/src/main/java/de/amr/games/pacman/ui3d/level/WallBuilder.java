@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.Obstacle;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.Property;
 import javafx.scene.Group;
@@ -114,90 +113,5 @@ public interface WallBuilder {
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         return new Group(base, top);
-    }
-
-    static void buildObstacleWalls(
-        Group parent,
-        Obstacle obstacle,
-        DoubleProperty wallHeightPy, double thickness, double coatHeight,
-        Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy)
-    {
-        if (obstacle.isClosed() && obstacle.numSegments() == 4) {
-            Vector2f center = obstacle.startPoint().plus(0, HTS);
-            Node wall = createCircularWall(center, HTS, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
-            parent.getChildren().add(wall);
-            return;
-        }
-        int r = HTS;
-        Vector2f p = obstacle.startPoint();
-        for (int i = 0; i < obstacle.numSegments(); ++i) {
-            Obstacle.Segment seg = obstacle.segment(i);
-            Vector2f q = p.plus(seg.vector());
-            if (seg.isVerticalLine()) {
-                Vector2f center = p.plus(seg.vector().scaled(0.5f));
-                double length = seg.vector().length();
-                Node wall = wallCenteredAt(center, thickness, length, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
-                parent.getChildren().add(wall);
-            }
-            else if (seg.isHorizontalLine()) {
-                Vector2f center = p.plus(seg.vector().scaled(0.5f));
-                double length = seg.vector().length();
-                Node wall = wallCenteredAt(center, length + thickness, thickness, wallHeightPy, coatHeight, fillMaterialPy, strokeMaterialPy);
-                parent.getChildren().add(wall);
-            }
-            else if (seg.isNWCorner()) {
-                if (seg.ccw()) {
-                    Vector2f corner = p.plus(-r, 0);
-                    Node hWall = hWall(corner, p, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
-                    Node vWall = vWall(corner, q, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
-                    parent.getChildren().addAll(hWall, vWall);
-                } else {
-                    Vector2f corner = p.plus(0, -r);
-                    Node hWall = hWall(corner, q, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
-                    Node vWall = vWall(corner, p, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
-                    parent.getChildren().addAll(hWall, vWall);
-                }
-            }
-            else if (seg.isSWCorner()) {
-                if (seg.ccw()) {
-                    Vector2f corner = p.plus(0, r);
-                    Node hWall = hWall(corner, q, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
-                    Node vWall = vWall(corner, p, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
-                    parent.getChildren().addAll(hWall, vWall);
-                } else {
-                    Vector2f corner = p.plus(-r, 0);
-                    Node hWall = hWall(corner, p, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
-                    Node vWall = vWall(corner, q, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
-                    parent.getChildren().addAll(hWall, vWall);
-                }
-            }
-            else if (seg.isSECorner()) {
-                if (seg.ccw()) {
-                    Vector2f corner = p.plus(r, 0);
-                    Node hWall = hWall(corner, p, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
-                    Node vWall = vWall(corner, q, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
-                    parent.getChildren().addAll(hWall, vWall);
-                } else {
-                    Vector2f corner = p.plus(0, r);
-                    Node hWall = hWall(corner, q, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
-                    Node vWall = vWall(corner, p, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
-                    parent.getChildren().addAll(hWall, vWall);
-                }
-            }
-            else if (seg.isNECorner()) {
-                if (seg.ccw()) {
-                    Vector2f corner = p.plus(0, -r);
-                    Node hWall = hWall(corner, q, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
-                    Node vWall = vWall(corner, p, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
-                    parent.getChildren().addAll(hWall, vWall);
-                } else {
-                    Vector2f corner = p.plus(r, 0);
-                    Node hWall = hWall(corner, p, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
-                    Node vWall = vWall(corner, q, wallHeightPy, thickness, coatHeight, fillMaterialPy, strokeMaterialPy);
-                    parent.getChildren().addAll(hWall, vWall);
-                }
-            }
-            p = q;
-        }
     }
 }
