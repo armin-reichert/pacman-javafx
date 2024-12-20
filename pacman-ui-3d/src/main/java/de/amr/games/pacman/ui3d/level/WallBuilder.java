@@ -75,6 +75,7 @@ public interface WallBuilder {
         Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy)
     {
         Cylinder base = new Cylinder();
+        base.setMouseTransparent(true);
         base.setRadius(radius);
         base.heightProperty().bind(wallHeightPy);
         base.setRotationAxis(Rotate.X_AXIS);
@@ -86,6 +87,7 @@ public interface WallBuilder {
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         Cylinder top = new Cylinder();
+        top.setMouseTransparent(true);
         top.setRadius(radius);
         top.setHeight(coatHeight);
         top.setRotationAxis(Rotate.X_AXIS);
