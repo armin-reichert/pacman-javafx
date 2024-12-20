@@ -35,6 +35,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
@@ -47,8 +48,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.lib.Ufx.*;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
-import static de.amr.games.pacman.ui3d.level.WallBuilder.createCircularWall;
-import static de.amr.games.pacman.ui3d.level.WallBuilder.wallCenteredAt;
+import static de.amr.games.pacman.ui3d.level.WallBuilder.*;
 
 /**
  * @author Armin Reichert
@@ -362,15 +362,22 @@ public class GameLevel3D {
     }
 
     private void addCorner(Group parent, Vector2f corner, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {
-        Node hWall = hWall(corner, horEndPoint, thickness, obstacleHeightPy);
-        Node vWall = vWall(corner, vertEndPoint, thickness, obstacleHeightPy);
-        parent.getChildren().addAll(hWall, vWall);
+        Node hWall =  wallCenteredAt(
+            corner.plus(horEndPoint).scaled(0.5f),
+            corner.minus(horEndPoint).length(),
+            thickness,
+            obstacleHeightPy, OBSTACLE_COAT_HEIGHT,
+            wallFillMaterialPy, wallStrokeMaterialPy);
 
-    }
+        Node vWall = wallCenteredAt(
+            corner.plus(vertEndPoint).scaled(0.5f),
+            thickness,
+            corner.minus(vertEndPoint).length(),
+            obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
 
-    private Node hWall(Vector2f p, Vector2f q, double thickness, DoubleProperty wallHeightPy) {
-        return wallCenteredAt(p.plus(q).scaled(0.5f), q.minus(p).length() + thickness, thickness,
-            wallHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
+        Node cornerWall = cornerWall(corner, 0.5*thickness, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
+
+        parent.getChildren().addAll(hWall, vWall, cornerWall);
     }
 
     private Node vWall(Vector2f p, Vector2f q, double thickness, DoubleProperty wallHeightPy)

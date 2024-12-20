@@ -69,6 +69,36 @@ public interface WallBuilder {
         return new Group(base, top);
     }
 
+    static Group cornerWall(
+        Vector2f center, double radius,
+        DoubleProperty wallHeightPy, double coatHeight,
+        Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy)
+    {
+        Cylinder base = new Cylinder();
+        base.setRadius(radius);
+        base.heightProperty().bind(wallHeightPy);
+        base.setRotationAxis(Rotate.X_AXIS);
+        base.setRotate(90);
+        base.setTranslateX(center.x());
+        base.setTranslateY(center.y());
+        base.translateZProperty().bind(wallHeightPy.multiply(-0.5).add(2*coatHeight));
+        base.materialProperty().bind(fillMaterialPy);
+        base.drawModeProperty().bind(PY_3D_DRAW_MODE);
+
+        Cylinder top = new Cylinder();
+        top.setRadius(radius);
+        top.setHeight(coatHeight);
+        top.setRotationAxis(Rotate.X_AXIS);
+        top.setRotate(90);
+        top.setTranslateX(center.x());
+        top.setTranslateY(center.y());
+        top.translateZProperty().bind(wallHeightPy.add(0.5*coatHeight).multiply(-1).add(2*coatHeight));
+        top.materialProperty().bind(strokeMaterialPy);
+        top.drawModeProperty().bind(PY_3D_DRAW_MODE);
+
+        return new Group(base, top);
+    }
+
 
     static Node hWall(
         Vector2f p, Vector2f q,
