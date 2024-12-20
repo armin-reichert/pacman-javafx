@@ -10,10 +10,7 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
-import de.amr.games.pacman.lib.nes.NES_ColorScheme;
-import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.lib.tilemap.TileMap;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -56,7 +53,7 @@ import static de.amr.games.pacman.ui2d.lib.Ufx.*;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
 
 /**
- * 3D play scene.
+ * 3D play scene for Arcade game variants. Tengen 3D scene is a subclass which adapts the action bindings.
  *
  * <p>Provides different camera perspectives that can be selected sequentially using keys <code>Alt+LEFT</code>
  * and <code>Alt+RIGHT</code>.</p>
@@ -66,9 +63,9 @@ import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
 public class PlayScene3D implements GameScene, CameraControlledView {
 
     //TODO localize?
-    static final String SCORE_TEXT = "SCORE";
-    static final String HIGH_SCORE_TEXT = "HIGH SCORE";
-    static final String GAME_OVER_TEXT = "GAME OVER!";
+    protected static final String SCORE_TEXT = "SCORE";
+    protected static final String HIGH_SCORE_TEXT = "HIGH SCORE";
+    protected static final String GAME_OVER_TEXT = "GAME OVER!";
 
     // Each 3D play scene has its own set of cameras/perspectives
     private final Map<Perspective.Name, Perspective> namePerspectiveMap = new EnumMap<>(Perspective.Name.class);
@@ -88,13 +85,13 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     };
 
     private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
-    private GameContext context;
+    protected GameContext context;
 
     private final SubScene fxSubScene;
     private final Group root;
-    private final Scores3D scores3D;
+    protected final Scores3D scores3D;
 
-    private GameLevel3D level3D;
+    protected GameLevel3D level3D;
     private Animation levelCompleteAnimation;
 
     public PlayScene3D() {
@@ -137,30 +134,10 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         bind(GameActions3D.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
         bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         if (context.game().isDemoLevel()) {
-            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                //TODO how to bind Tengen-only actions?
-//                bind(MsPacManGameTengenActions.QUIT_DEMO_LEVEL, context.joypadKeys().key(NES_JoypadButton.BTN_START));
-            } else {
-                bind(GameActions2D.INSERT_COIN, context.arcadeKeys().key(Arcade.Button.COIN));
-            }
+            bind(GameActions2D.INSERT_COIN, context.arcadeKeys().key(Arcade.Button.COIN));
         }
         else {
-            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                bind(GameActions2D.PLAYER_UP,    context.joypadKeys().key(NES_JoypadButton.BTN_UP));
-                bind(GameActions2D.PLAYER_DOWN,  context.joypadKeys().key(NES_JoypadButton.BTN_DOWN));
-                bind(GameActions2D.PLAYER_LEFT,  context.joypadKeys().key(NES_JoypadButton.BTN_LEFT));
-                bind(GameActions2D.PLAYER_RIGHT, context.joypadKeys().key(NES_JoypadButton.BTN_RIGHT));
-                //TODO how to bind Tengen-only actions?
-                /*
-                bind(MsPacManGameTengenActions.TOGGLE_PAC_BOOSTER,
-                    context.joypadKeys().key(NES_JoypadButton.BTN_A),
-                    context.joypadKeys().key(NES_JoypadButton.BTN_B));
-                */
-                bindFallbackPlayerControlActions(this);
-                bindCheatActions(this);
-            } else {
-                bindDefaultArcadeControllerActions(this, context.arcadeKeys());
-            }
+            bindDefaultArcadeControllerActions(this, context.arcadeKeys());
             bindFallbackPlayerControlActions(this);
             bindCheatActions(this);
             context.setScoreVisible(true); //TODO check this
@@ -267,7 +244,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         scores3D.rotateProperty().set(camera.getRotate());
     }
 
-    private void updateScores() {
+    protected void updateScores() {
         ScoreManager manager = context.game().scoreManager();
         Score score = manager.score(), highScore = manager.highScore();
 
@@ -278,11 +255,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         else { // when score is disabled, show text "game over"
             String assetKeyPrefix = context.currentGameConfig().assetKeyPrefix();
             Color color = context.assets().color(assetKeyPrefix + ".color.game_over_message");
-            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                WorldMap worldMap = context.level().world().map();
-                NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
-                color = Color.valueOf(nesColorScheme.fillColor());
-            }
             scores3D.showTextAsScore(GAME_OVER_TEXT, color);
         }
     }
@@ -452,8 +424,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onBonusActivated(GameEvent event) {
         context.level().bonus().ifPresent(bonus -> level3D.replaceBonus3D(bonus, context.currentGameConfig().spriteSheet()));
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            //TODO also in Ms. Pac-Man!
+        if (context.gameVariant() == GameVariant.MS_PACMAN) {
             context.sound().playBonusBouncingSound();
         }
     }
@@ -461,8 +432,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onBonusEaten(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            //TODO also in Ms. Pac-Man!
+        if (context.gameVariant() == GameVariant.MS_PACMAN) {
             context.sound().stopBonusBouncingSound();
         }
         context.sound().playBonusEatenSound();
@@ -471,8 +441,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onBonusExpired(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::onBonusExpired);
-        if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            //TODO also in Ms. Pac-Man!
+        if (context.gameVariant() == GameVariant.MS_PACMAN) {
             context.sound().stopBonusBouncingSound();
         }
     }

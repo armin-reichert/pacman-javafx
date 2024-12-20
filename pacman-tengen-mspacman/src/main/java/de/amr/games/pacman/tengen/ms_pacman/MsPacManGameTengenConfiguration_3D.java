@@ -8,13 +8,12 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui3d.GlobalProperties3d;
-import de.amr.games.pacman.ui3d.scene3d.PlayScene3D;
 
 public class MsPacManGameTengenConfiguration_3D extends MsPacManGameTengenConfiguration {
 
     public MsPacManGameTengenConfiguration_3D(AssetStorage assets) {
         super(assets);
-        setGameScene("PlayScene3D", new PlayScene3D());
+        setGameScene("PlayScene3D", new TengenPlayScene3D());
     }
 
     @Override
