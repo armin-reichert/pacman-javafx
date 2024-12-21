@@ -253,7 +253,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // when score is disabled, show text "game over"
-            String assetKeyPrefix = context.currentGameConfig().assetKeyPrefix();
+            String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
             Color color = context.assets().color(assetKeyPrefix + ".color.game_over_message");
             scores3D.showTextAsScore(GAME_OVER_TEXT, color);
         }
@@ -359,7 +359,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     private void onEnterStateGhostDying() {
-        GameSpriteSheet spriteSheet = context.currentGameConfig().spriteSheet();
+        GameSpriteSheet spriteSheet = context.gameConfiguration().spriteSheet();
         RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
         context.game().eventLog().killedGhosts.forEach(ghost -> {
             int victimIndex = context.level().victims().indexOf(ghost);
@@ -423,7 +423,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        context.level().bonus().ifPresent(bonus -> level3D.replaceBonus3D(bonus, context.currentGameConfig().spriteSheet()));
+        context.level().bonus().ifPresent(bonus -> level3D.replaceBonus3D(bonus, context.gameConfiguration().spriteSheet()));
         if (context.gameVariant() == GameVariant.MS_PACMAN) {
             context.sound().playBonusBouncingSound();
         }

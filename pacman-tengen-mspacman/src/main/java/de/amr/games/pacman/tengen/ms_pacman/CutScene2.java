@@ -56,7 +56,7 @@ public class CutScene2 extends GameScene2D {
         context.setScoreVisible(false);
         pacMan = new Pac();
         msPacMan = new Pac();
-        var spriteSheet = (MsPacManGameTengenSpriteSheet) context.currentGameConfig().spriteSheet();
+        var spriteSheet = (MsPacManGameTengenSpriteSheet) context.gameConfiguration().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
         music = context.sound().makeSound("intermission.2",1.0, false);
@@ -148,7 +148,7 @@ public class CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        String assetKeyPrefix = context.currentGameConfig().assetKeyPrefix();
+        String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
         Color color = context.assets().color(assetKeyPrefix + ".color.clapperboard"); //TODO check
         var r = (MsPacManGameTengenRenderer) gr;
         r.drawSceneBorderLines();

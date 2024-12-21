@@ -11,14 +11,12 @@ import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
 import de.amr.games.pacman.ui2d.lib.Ufx;
@@ -72,99 +70,6 @@ public class GameLevel3D {
 
     static final PhongMaterial DEFAULT_MATERIAL = new PhongMaterial();
 
-    static Pac3D createPac3D(GameVariant variant, AssetStorage assets, String assetKeyPrefix, Pac pac) {
-        Pac3D pac3D = switch (variant) {
-            case MS_PACMAN, MS_PACMAN_TENGEN -> new MsPacMan3D(variant, pac, PAC_SIZE, assets, assetKeyPrefix);
-            case PACMAN, PACMAN_XXL          -> new PacMan3D(variant, pac, PAC_SIZE, assets, assetKeyPrefix);
-        };
-        pac3D.shape3D().light().setColor(assets.color(assetKeyPrefix + ".pac.color.head").desaturate());
-        pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
-        return pac3D;
-    }
-
-    static MutableGhost3D createMutableGhost3D(AssetStorage assets, String assetPrefix, Ghost ghost, int numFlashes) {
-        Shape3D dressShape    = new MeshView(assets.get("model3D.ghost.mesh.dress"));
-        Shape3D pupilsShape   = new MeshView(assets.get("model3D.ghost.mesh.pupils"));
-        Shape3D eyeballsShape = new MeshView(assets.get("model3D.ghost.mesh.eyeballs"));
-        return new MutableGhost3D(dressShape, pupilsShape, eyeballsShape, assets, assetPrefix, ghost, GHOST_SIZE, numFlashes);
-    }
-
-    static LivesCounter3D createLivesCounter3D(GameVariant variant, AssetStorage assets, String assetKeyPrefix, boolean canStartNewGame) {
-        Node[] shapes = IntStream.range(0, LIVES_COUNTER_MAX)
-            .mapToObj(i -> createLivesCounterShape(variant, assets, assetKeyPrefix)).toArray(Node[]::new);
-        var counter3D = new LivesCounter3D(shapes, 10);
-        counter3D.setTranslateX(2 * TS);
-        counter3D.setTranslateY(2 * TS);
-        counter3D.setVisible(canStartNewGame);
-        counter3D.drawModePy.bind(PY_3D_DRAW_MODE);
-        counter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
-        counter3D.light().setLightOn(canStartNewGame);
-        return counter3D;
-    }
-
-    static Node createLivesCounterShape(GameVariant variant, AssetStorage assets, String assetKeyPrefix) {
-        return switch (variant) {
-            case MS_PACMAN, MS_PACMAN_TENGEN -> new Group(
-                PacModel3D.createPacShape(
-                    assets.get("model3D.pacman"), LIVES_SHAPE_SIZE,
-                    assets.color(assetKeyPrefix + ".pac.color.head"),
-                    assets.color(assetKeyPrefix + ".pac.color.eyes"),
-                    assets.color(assetKeyPrefix + ".pac.color.palate")
-                ),
-                PacModel3D.createFemaleParts(LIVES_SHAPE_SIZE,
-                    assets.color(assetKeyPrefix + ".pac.color.hairbow"),
-                    assets.color(assetKeyPrefix + ".pac.color.hairbow.pearls"),
-                    assets.color(assetKeyPrefix + ".pac.color.boobs")
-                )
-            );
-            case PACMAN, PACMAN_XXL ->
-                PacModel3D.createPacShape(
-                    assets.get("model3D.pacman"), LIVES_SHAPE_SIZE,
-                    assets.color(assetKeyPrefix + ".pac.color.head"),
-                    assets.color(assetKeyPrefix + ".pac.color.eyes"),
-                    assets.color(assetKeyPrefix + ".pac.color.palate")
-                );
-        };
-    }
-
-    private static Node createLevelCounter3D(GameSpriteSheet spriteSheet, List<Byte> symbols, double x, double y) {
-        double spacing = 2 * TS;
-        var levelCounter3D = new Group();
-        levelCounter3D.setTranslateX(x);
-        levelCounter3D.setTranslateY(y);
-        levelCounter3D.setTranslateZ(-6);
-        levelCounter3D.getChildren().clear();
-        int n = 0;
-        for (byte symbol : symbols) {
-            Box cube = new Box(TS, TS, TS);
-            cube.setTranslateX(-n * spacing);
-            cube.setTranslateZ(-HTS);
-            levelCounter3D.getChildren().add(cube);
-
-            var material = new PhongMaterial(Color.WHITE);
-            material.setDiffuseMap(spriteSheet.subImage(spriteSheet.bonusSymbolSprite(symbol)));
-            cube.setMaterial(material);
-
-            var spinning = new RotateTransition(Duration.seconds(6), cube);
-            spinning.setAxis(Rotate.X_AXIS);
-            spinning.setCycleCount(Animation.INDEFINITE);
-            spinning.setByAngle(360);
-            spinning.setRate(n % 2 == 0 ? 1 : -1);
-            spinning.setInterpolator(Interpolator.LINEAR);
-            spinning.play();
-
-            n += 1;
-        }
-        return levelCounter3D;
-    }
-
-    static Message3D createMessage3D(AssetStorage assets) {
-        var message3D = new Message3D("", assets.font("font.arcade", 6), Color.YELLOW, Color.WHITE);
-        message3D.setRotation(Rotate.X_AXIS, 90);
-        message3D.setVisible(false);
-        return message3D;
-    }
-
     private final StringProperty floorTextureNamePy = new SimpleStringProperty(this, "floorTextureName", GlobalProperties3d.NO_TEXTURE);
     private final DoubleProperty borderWallHeightPy = new SimpleDoubleProperty(this, "borderWallHeight", BORDER_WALL_HEIGHT);
     private final DoubleProperty obstacleHeightPy   = new SimpleDoubleProperty(this, "obstacleHeight", OBSTACLE_HEIGHT);
@@ -196,30 +101,27 @@ public class GameLevel3D {
     public GameLevel3D(GameContext context) {
         this.context = context;
 
-        final AssetStorage assets = context.assets();
-        final String assetKeyPrefix = context.currentGameConfig().assetKeyPrefix();
-        final GameVariant variant = context.gameVariant();
         final GameModel game = context.game();
         final GameLevel level = context.level();
         final GameWorld world = level.world();
-        final WorldMapColoring coloring = context.gameConfiguration(variant).worldMapColoring(world.map());
+        final WorldMapColoring coloring = context.gameConfiguration().worldMapColoring(world.map());
 
-        pac3D = createPac3D(variant, assets, assetKeyPrefix, level.pac());
-        ghosts3D = level.ghosts()
-            .map(ghost -> createMutableGhost3D(assets, assetKeyPrefix, ghost, level.numFlashes()))
-            .toList();
-        livesCounter3D = createLivesCounter3D(variant, assets, assetKeyPrefix, game.canStartNewGame());
+        pac3D = createPac3D(level.pac());
+        ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, level.numFlashes())).toList();
+
+        livesCounter3D = createLivesCounter3D(game.canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCounterPy);
-        message3D = createMessage3D(assets);
+
+        message3D = new Message3D("", context.assets().font("font.arcade", 6), Color.YELLOW, Color.WHITE);
+        message3D.setRotation(Rotate.X_AXIS, 90);
+        message3D.setVisible(false);
 
         wallFillMaterialPy.bind(Bindings.createObjectBinding(
             () -> coloredMaterial(opaqueColor(wallFillColorPy.get(), wallOpacityPy.get())),
             wallFillColorPy, wallOpacityPy));
-
         wallStrokeMaterialPy.bind(wallStrokeColorPy.map(Ufx::coloredMaterial));
-
-        buildWorld3D(world, assets, coloring);
-        addFood3D(world, assets, coloring);
+        buildWorld3D(world, coloring);
+        addFood3D(world, coloring);
 
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
         root.getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
@@ -230,14 +132,102 @@ public class GameLevel3D {
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
     }
 
+    private Pac3D createPac3D(Pac pac) {
+        String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
+        Pac3D pac3D = switch (context.gameVariant()) {
+            case MS_PACMAN, MS_PACMAN_TENGEN -> new MsPacMan3D(context.gameVariant(), pac, PAC_SIZE, context.assets(), assetKeyPrefix);
+            case PACMAN, PACMAN_XXL          -> new PacMan3D(context.gameVariant(), pac, PAC_SIZE, context.assets(), assetKeyPrefix);
+        };
+        pac3D.shape3D().light().setColor(context.assets().color(assetKeyPrefix + ".pac.color.head").desaturate());
+        pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
+        return pac3D;
+    }
+
+    private MutableGhost3D createGhost3D(Ghost ghost, int numFlashes) {
+        String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
+        Shape3D dressShape    = new MeshView(context.assets().get("model3D.ghost.mesh.dress"));
+        Shape3D pupilsShape   = new MeshView(context.assets().get("model3D.ghost.mesh.pupils"));
+        Shape3D eyeballsShape = new MeshView(context.assets().get("model3D.ghost.mesh.eyeballs"));
+        return new MutableGhost3D(dressShape, pupilsShape, eyeballsShape, context.assets(), assetKeyPrefix, ghost, GHOST_SIZE, numFlashes);
+    }
+
+    private LivesCounter3D createLivesCounter3D(boolean canStartNewGame) {
+        Node[] shapes = IntStream.range(0, LIVES_COUNTER_MAX).mapToObj(i -> createLivesCounterShape()).toArray(Node[]::new);
+        var counter3D = new LivesCounter3D(shapes, 10);
+        counter3D.setTranslateX(2 * TS);
+        counter3D.setTranslateY(2 * TS);
+        counter3D.setVisible(canStartNewGame);
+        counter3D.drawModePy.bind(PY_3D_DRAW_MODE);
+        counter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
+        counter3D.light().setLightOn(canStartNewGame);
+        return counter3D;
+    }
+
+    private Node createLivesCounterShape() {
+        String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
+        return switch (context.gameVariant()) {
+            case MS_PACMAN, MS_PACMAN_TENGEN -> new Group(
+                PacModel3D.createPacShape(
+                    context.assets().get("model3D.pacman"), LIVES_SHAPE_SIZE,
+                    context.assets().color(assetKeyPrefix + ".pac.color.head"),
+                    context.assets().color(assetKeyPrefix + ".pac.color.eyes"),
+                    context.assets().color(assetKeyPrefix + ".pac.color.palate")
+                ),
+                PacModel3D.createFemaleParts(LIVES_SHAPE_SIZE,
+                    context.assets().color(assetKeyPrefix + ".pac.color.hairbow"),
+                    context.assets().color(assetKeyPrefix + ".pac.color.hairbow.pearls"),
+                    context.assets().color(assetKeyPrefix + ".pac.color.boobs")
+                )
+            );
+            case PACMAN, PACMAN_XXL ->
+                PacModel3D.createPacShape(
+                    context.assets().get("model3D.pacman"), LIVES_SHAPE_SIZE,
+                    context.assets().color(assetKeyPrefix + ".pac.color.head"),
+                    context.assets().color(assetKeyPrefix + ".pac.color.eyes"),
+                    context.assets().color(assetKeyPrefix + ".pac.color.palate")
+                );
+        };
+    }
+
     public void addLevelCounter() {
         // Place level counter at top right maze corner
         double x = context.level().world().map().terrain().numCols() * TS - 2 * TS;
         double y = 2 * TS;
         Node levelCounter3D = createLevelCounter3D(
-            context.currentGameConfig().spriteSheet(),
+            context.gameConfiguration().spriteSheet(),
             context.game().levelCounter(), x, y);
         root.getChildren().add(levelCounter3D);
+    }
+
+    private Node createLevelCounter3D(GameSpriteSheet spriteSheet, List<Byte> symbols, double x, double y) {
+        double spacing = 2 * TS;
+        var levelCounter3D = new Group();
+        levelCounter3D.setTranslateX(x);
+        levelCounter3D.setTranslateY(y);
+        levelCounter3D.setTranslateZ(-6);
+        levelCounter3D.getChildren().clear();
+        int n = 0;
+        for (byte symbol : symbols) {
+            Box cube = new Box(TS, TS, TS);
+            cube.setTranslateX(-n * spacing);
+            cube.setTranslateZ(-HTS);
+            levelCounter3D.getChildren().add(cube);
+
+            var material = new PhongMaterial(Color.WHITE);
+            material.setDiffuseMap(spriteSheet.subImage(spriteSheet.bonusSymbolSprite(symbol)));
+            cube.setMaterial(material);
+
+            var spinning = new RotateTransition(Duration.seconds(6), cube);
+            spinning.setAxis(Rotate.X_AXIS);
+            spinning.setCycleCount(Animation.INDEFINITE);
+            spinning.setByAngle(360);
+            spinning.setRate(n % 2 == 0 ? 1 : -1);
+            spinning.setInterpolator(Interpolator.LINEAR);
+            spinning.play();
+
+            n += 1;
+        }
+        return levelCounter3D;
     }
 
     /**
@@ -268,7 +258,7 @@ public class GameLevel3D {
         }
     }
 
-    private void buildWorld3D(GameWorld world, AssetStorage assets, WorldMapColoring coloring) {
+    private void buildWorld3D(GameWorld world, WorldMapColoring coloring) {
         //TODO check this
         obstacleHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
@@ -278,7 +268,7 @@ public class GameLevel3D {
         TileMap terrain = world.map().terrain();
         Box floor = createFloor(terrain.numCols() * TS - 1, terrain.numRows() * TS - 1);
         floor.materialProperty().bind(Bindings.createObjectBinding(
-            () -> createFloorMaterial(floorColorPy.get(), floorTextureNamePy.get(), assets.get("floor_textures")),
+            () -> createFloorMaterial(floorColorPy.get(), floorTextureNamePy.get(), context.assets().get("floor_textures")),
             floorColorPy, floorTextureNamePy
         ));
 
@@ -397,10 +387,10 @@ public class GameLevel3D {
             : textures.get(textureName);
     }
 
-    private void addFood3D(GameWorld world, AssetStorage assets, WorldMapColoring coloring) {
+    private void addFood3D(GameWorld world, WorldMapColoring coloring) {
         TileMap foodMap = world.map().food();
         Material foodMaterial = coloredMaterial(coloring.pellet());
-        Model3D pelletModel3D = assets.get("model3D.pellet");
+        Model3D pelletModel3D = context.assets().get("model3D.pellet");
         foodMap.tiles().filter(world::hasFoodAt).forEach(tile -> {
             Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
             if (world.isEnergizerPosition(tile)) {

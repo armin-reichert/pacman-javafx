@@ -164,7 +164,7 @@ public class PacManGamesUI_3D extends PacManGamesUI {
         return Bindings.createStringBinding(() -> {
             String sceneName = currentGameScene().map(gameScene -> gameScene.getClass().getSimpleName()).orElse(null);
             String sceneNameText = sceneName != null && PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(sceneName) : "";
-            String assetKeyPrefix = currentGameConfig().assetKeyPrefix();
+            String assetKeyPrefix = gameConfiguration().assetKeyPrefix();
             // resource key is composed of game variant, paused state and display mode (2D, 3D)
             String key = "app.title." + assetKeyPrefix;
             if (clock.isPaused()) {

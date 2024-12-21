@@ -200,7 +200,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         GameLevel level = context.level();
         MapCategory mapCategory = game.mapCategory();
         int mapNumber = world.map().getConfigValue("mapNumber");
-        String assetKeyPrefix = context.currentGameConfig().assetKeyPrefix();
+        String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
 
         if (areGameOptionsChanged(game)) {
             drawGameOptionsInfo(world.map().terrain(), game);

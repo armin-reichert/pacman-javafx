@@ -74,7 +74,7 @@ public interface GameContext {
 
     // GUI
     GameConfiguration gameConfiguration(GameVariant variant);
-    default GameConfiguration currentGameConfig() { return gameConfiguration(gameVariant()); }
+    default GameConfiguration gameConfiguration() { return gameConfiguration(gameVariant()); }
     void setScoreVisible(boolean visible);
     boolean isScoreVisible();
     void selectPage(Node page);

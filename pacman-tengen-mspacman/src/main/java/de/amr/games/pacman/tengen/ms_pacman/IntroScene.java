@@ -217,7 +217,7 @@ public class IntroScene extends GameScene2D {
                 }
                 intro.ghostIndex = 0;
 
-                var spriteSheet = (MsPacManGameTengenSpriteSheet) intro.context.currentGameConfig().spriteSheet();
+                var spriteSheet = (MsPacManGameTengenSpriteSheet) intro.context.gameConfiguration().spriteSheet();
                 intro.msPacMan.setAnimations(new PacAnimations(spriteSheet));
                 intro.msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
                 intro.msPacMan.optAnimations().ifPresent(Animations::startCurrentAnimation);

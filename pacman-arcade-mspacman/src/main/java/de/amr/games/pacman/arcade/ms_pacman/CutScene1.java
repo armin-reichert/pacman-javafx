@@ -68,7 +68,7 @@ public class CutScene1 extends GameScene2D {
 
         music = context.sound().makeSound("intermission.1", 1.0, false);
 
-        var spriteSheet = (MsPacManGameSpriteSheet) context.currentGameConfig().spriteSheet();
+        var spriteSheet = (MsPacManGameSpriteSheet) context.gameConfiguration().spriteSheet();
         msPac.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
         inky.setAnimations(new GhostAnimations(spriteSheet, inky.id()));
@@ -99,7 +99,7 @@ public class CutScene1 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         MsPacManGameRenderer r = (MsPacManGameRenderer) gr;
-        String assetKeyPrefix = context.currentGameConfig().assetKeyPrefix();
+        String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
         Color color = context.assets().color(assetKeyPrefix + ".color.clapperboard");
         r.drawClapperBoard(r.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
         r.drawAnimatedEntity(msPac);

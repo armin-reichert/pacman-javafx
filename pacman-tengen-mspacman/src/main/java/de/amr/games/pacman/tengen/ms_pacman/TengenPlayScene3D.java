@@ -57,7 +57,7 @@ public class TengenPlayScene3D extends PlayScene3D {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // when score is disabled, show text "game over"
-            String assetKeyPrefix = context.currentGameConfig().assetKeyPrefix();
+            String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
             Color color = context.assets().color(assetKeyPrefix + ".color.game_over_message");
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 WorldMap worldMap = context.level().world().map();
@@ -70,7 +70,7 @@ public class TengenPlayScene3D extends PlayScene3D {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        context.level().bonus().ifPresent(bonus -> level3D.replaceBonus3D(bonus, context.currentGameConfig().spriteSheet()));
+        context.level().bonus().ifPresent(bonus -> level3D.replaceBonus3D(bonus, context.gameConfiguration().spriteSheet()));
         context.sound().playBonusBouncingSound();
     }
 

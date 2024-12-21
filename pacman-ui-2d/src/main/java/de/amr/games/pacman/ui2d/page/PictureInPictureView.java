@@ -55,7 +55,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
     @Override
     public void onLevelCreated(GameEvent e) {
         scene2D.setGameContext(context);
-        scene2D.setGameRenderer(context.currentGameConfig().createRenderer(context.assets(), canvas));
+        scene2D.setGameRenderer(context.gameConfiguration().createRenderer(context.assets(), canvas));
         scene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
         scene2D.renderer().setWorldMap(context.level().world().map());
         recomputeLayout();

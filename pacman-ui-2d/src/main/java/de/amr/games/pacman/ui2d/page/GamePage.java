@@ -40,11 +40,9 @@ import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_AUTOPILOT;
-import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_IMMUNITY;
+import static de.amr.games.pacman.ui2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui2d.input.Keyboard.*;
 import static de.amr.games.pacman.ui2d.lib.Ufx.*;
-import static de.amr.games.pacman.ui2d.GlobalProperties2d.*;
 
 /**
  * @author Armin Reichert
@@ -258,7 +256,7 @@ public class GamePage extends StackPane implements GameActionProvider {
                 canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
                 gameScene2D.scalingProperty().bind(
                     canvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_SCALING)));
-                GameRenderer renderer = context.currentGameConfig().createRenderer(context.assets(), canvas);
+                GameRenderer renderer = context.gameConfiguration().createRenderer(context.assets(), canvas);
                 gameScene2D.setCanvas(canvas);
                 gameScene2D.setGameRenderer(renderer);
                 getChildren().set(0, canvasLayer);

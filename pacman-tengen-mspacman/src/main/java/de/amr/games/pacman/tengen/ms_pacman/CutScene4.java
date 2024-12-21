@@ -43,7 +43,7 @@ public class CutScene4 extends GameScene2D {
 
     @Override
     protected void doInit() {
-        String assetKeyPrefix = context.currentGameConfig().assetKeyPrefix();
+        String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
         t = -1;
 
         context.setScoreVisible(false);
@@ -53,7 +53,7 @@ public class CutScene4 extends GameScene2D {
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
 
-        spriteSheet = (MsPacManGameTengenSpriteSheet) context.currentGameConfig().spriteSheet();
+        spriteSheet = (MsPacManGameTengenSpriteSheet) context.gameConfiguration().spriteSheet();
         mrPacMan.setAnimations(new PacAnimations(spriteSheet));
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
 
@@ -150,7 +150,7 @@ public class CutScene4 extends GameScene2D {
     }
 
     private void spawnJunior() {
-        String assetKeyPrefix = context.currentGameConfig().assetKeyPrefix();
+        String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
         var junior = new Pac();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         int rnd = Globals.randomInt(1, 3);

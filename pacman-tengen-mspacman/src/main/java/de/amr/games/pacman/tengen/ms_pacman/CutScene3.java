@@ -64,7 +64,7 @@ public class CutScene3 extends GameScene2D {
 
     @Override
     public void doInit() {
-        String assetKeyPrefix = context.currentGameConfig().assetKeyPrefix();
+        String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
 
         t = -1;
         context.setScoreVisible(false);
@@ -75,7 +75,7 @@ public class CutScene3 extends GameScene2D {
         bagWithJunior = new Entity();
         bagWithJunior.hide();
 
-        spriteSheet = (MsPacManGameTengenSpriteSheet) context.currentGameConfig().spriteSheet();
+        spriteSheet = (MsPacManGameTengenSpriteSheet) context.gameConfiguration().spriteSheet();
         mrPacMan.setAnimations(new PacAnimations(spriteSheet));
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
 
