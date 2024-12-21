@@ -35,7 +35,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
@@ -171,10 +170,6 @@ public class GameLevel3D {
     private final DoubleProperty obstacleHeightPy   = new SimpleDoubleProperty(this, "obstacleHeight", OBSTACLE_HEIGHT);
     private final DoubleProperty wallOpacityPy      = new SimpleDoubleProperty(this, "wallOpacity",1.0);
 
-    private final DoubleProperty  houseHeightPy = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
-    private final BooleanProperty houseUsedPy   = new SimpleBooleanProperty(this, "houseUsed", false);
-    private final BooleanProperty houseOpenPy   = new SimpleBooleanProperty(this, "houseOpen", false);
-
     private final ObjectProperty<Color> floorColorPy      = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
     private final ObjectProperty<Color> wallFillColorPy   = new SimpleObjectProperty<>(this, "wallFillColor", Color.BLUE);
     private final ObjectProperty<Color> wallStrokeColorPy = new SimpleObjectProperty<>(this, "wallStrokeColor", Color.LIGHTBLUE);
@@ -262,8 +257,8 @@ public class GameLevel3D {
             .filter(ghost -> ghost.position().euclideanDistance(context.level().world().houseEntryPosition()) <= HOUSE_SENSITIVITY)
             .anyMatch(Ghost::isVisible);
 
-        houseUsedPy.set(houseAccessRequired);
-        houseOpenPy.set(ghostNearHouseEntry);
+        house3D.usedPy.set(houseAccessRequired);
+        house3D.openPy.set(ghostNearHouseEntry);
 
         int symbolsDisplayed = Math.max(0, context.game().lives() - 1);
         if (!context.level().pac().isVisible() && context.gameState() == GameState.STARTING_GAME) {
@@ -290,11 +285,11 @@ public class GameLevel3D {
         }
 
         house3D = new House3D(world, coloring);
-        house3D.heightPy.bind(houseHeightPy);
-        house3D.fillMaterialPy.bind(wallFillColorPy.map(fillColor -> opaqueColor(fillColor, HOUSE_OPACITY)).map(Ufx::coloredMaterial));
+        house3D.heightPy.set(HOUSE_HEIGHT);
+        house3D.fillMaterialPy.bind(wallFillColorPy
+            .map(color -> opaqueColor(color, HOUSE_OPACITY))
+            .map(Ufx::coloredMaterial));
         house3D.strokeMaterialPy.bind(wallStrokeMaterialPy);
-        house3D.usedPy.bind(houseUsedPy);
-        house3D.openPy.bind(houseOpenPy);
 
         mazeGroup.getChildren().add(house3D.root());
         worldGroup.getChildren().addAll(floor, mazeGroup);
@@ -373,9 +368,13 @@ public class GameLevel3D {
             cornerPoint.midpoint(vertEndPoint),
             thickness,
             cornerPoint.minus(vertEndPoint).length(),
-            obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
+            obstacleHeightPy, OBSTACLE_COAT_HEIGHT,
+            wallFillMaterialPy, wallStrokeMaterialPy);
 
-        Node cornerWall = cornerWall(cornerPoint, 0.5*thickness, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
+        Node cornerWall = cornerWall(cornerPoint,
+            0.5 * thickness,
+            obstacleHeightPy, OBSTACLE_COAT_HEIGHT,
+            wallFillMaterialPy, wallStrokeMaterialPy);
 
         parent.getChildren().addAll(hWall, vWall, cornerWall);
     }
@@ -477,7 +476,7 @@ public class GameLevel3D {
             ));
         var houseDisappears = new Timeline(
             new KeyFrame(totalDuration.multiply(0.33),
-                new KeyValue(houseHeightPy, 0, Interpolator.EASE_IN)
+                new KeyValue(house3D.heightPy, 0, Interpolator.EASE_IN)
             ));
         var borderWallsDisappear = new Timeline(
             new KeyFrame(totalDuration.multiply(0.33),

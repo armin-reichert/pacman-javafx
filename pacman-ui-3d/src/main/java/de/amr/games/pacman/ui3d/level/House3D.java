@@ -26,9 +26,10 @@ public class House3D {
     static final float WALL_COAT_HEIGHT = 0.1f;
 
     public final DoubleProperty heightPy = new SimpleDoubleProperty(this, "height", 7);
+    public final BooleanProperty openPy  = new SimpleBooleanProperty();
+    public final BooleanProperty usedPy  = new SimpleBooleanProperty();
+
     public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.5);
-    public final BooleanProperty openPy = new SimpleBooleanProperty();
-    public final BooleanProperty usedPy = new SimpleBooleanProperty();
     public final ObjectProperty<PhongMaterial> fillMaterialPy  = new SimpleObjectProperty<>(this, "fillMaterial", DEFAULT_MATERIAL);
     public final ObjectProperty<PhongMaterial> strokeMaterialPy  = new SimpleObjectProperty<>(this, "strokeMaterial", DEFAULT_MATERIAL);
 
