@@ -88,15 +88,13 @@ public class TerrainRenderer implements TileMapRenderer {
         g.save();
         g.scale(scaling(), scaling());
 
-        obstacles.stream()
-            .filter(Obstacle::hasDoubleWalls)
+        obstacles.stream().filter(Obstacle::hasDoubleWalls)
             .forEach(obstacle -> {
                 drawObstacle(g, obstacle, doubleStrokeOuterWidth, false, wallStrokeColor);
                 drawObstacle(g, obstacle, doubleStrokeInnerWidth, false, wallFillColor);
             });
 
-        obstacles.stream()
-            .filter(Predicate.not(Obstacle::hasDoubleWalls))
+        obstacles.stream().filter(Predicate.not(Obstacle::hasDoubleWalls))
             .forEach(obstacle -> drawObstacle(g, obstacle, singleStrokeWidth, true, wallStrokeColor));
 
         terrainMap.tiles(Tiles.DOOR)
@@ -110,43 +108,43 @@ public class TerrainRenderer implements TileMapRenderer {
         Vector2f p = obstacle.startPoint();
         g.beginPath();
         g.moveTo(p.x(), p.y());
-        for (int i = 0; i < obstacle.segments().size(); ++i) {
-            Obstacle.Segment seg = obstacle.segment(i);
-            p = p.plus(seg.vector());
+        for (Obstacle.Segment segment : obstacle.segments()) {
+            p = p.plus(segment.vector());
             double x = p.x(), y = p.y();
-            if (seg.isStraightLine()) {
+            if (segment.isStraightLine()) {
                 g.lineTo(x, y);
             } else {
-                if (seg.isRoundedNWCorner()) {
-                    if (seg.ccw()) g.arc(x+r, y,   r, r,  90, 90);
-                    else           g.arc(x,   y+r, r, r, 180, -90);
+                // Corners are represented by diagonal line segments
+                if (segment.isRoundedNWCorner()) {
+                    if (segment.ccw()) g.arc(x+r, y,   r, r,  90, 90);
+                    else               g.arc(x,   y+r, r, r, 180, -90);
                 }
-                else if (seg.isRoundedSWCorner()) {
-                    if (seg.ccw()) g.arc(x,   y-r, r, r, 180, 90);
-                    else           g.arc(x+r, y,   r, r, 270, -90);
+                else if (segment.isRoundedSWCorner()) {
+                    if (segment.ccw()) g.arc(x,   y-r, r, r, 180, 90);
+                    else               g.arc(x+r, y,   r, r, 270, -90);
                 }
-                else if (seg.isRoundedSECorner()) {
-                    if (seg.ccw()) g.arc(x-r, y,   r, r, 270, 90);
-                    else           g.arc(x,   y-r, r, r, 0, -90);
+                else if (segment.isRoundedSECorner()) {
+                    if (segment.ccw()) g.arc(x-r, y,   r, r, 270, 90);
+                    else               g.arc(x,   y-r, r, r, 0, -90);
                 }
-                else if (seg.isRoundedNECorner()) {
-                    if (seg.ccw()) g.arc(x,   y+r, r, r, 0, 90);
-                    else           g.arc(x-r, y,   r, r, 90, -90);
+                else if (segment.isRoundedNECorner()) {
+                    if (segment.ccw()) g.arc(x,   y+r, r, r, 0, 90);
+                    else               g.arc(x-r, y,   r, r, 90, -90);
                 }
-                else if (seg.isAngularNWCorner()) {
-                    if (seg.ccw()) g.lineTo(x,y-r); else g.lineTo(x-r, y);
+                else if (segment.isAngularNWCorner()) {
+                    if (segment.ccw()) g.lineTo(x,y-r); else g.lineTo(x-r, y);
                     g.lineTo(x, y);
                 }
-                else if (seg.isAngularSWCorner()) {
-                    if (seg.ccw()) g.lineTo(x-r, y); else g.lineTo(x, y+r);
+                else if (segment.isAngularSWCorner()) {
+                    if (segment.ccw()) g.lineTo(x-r, y); else g.lineTo(x, y+r);
                     g.lineTo(x, y);
                 }
-                else if (seg.isAngularSECorner()) {
-                    if (seg.ccw()) g.lineTo(x,y+r); else g.lineTo(x-r, y);
+                else if (segment.isAngularSECorner()) {
+                    if (segment.ccw()) g.lineTo(x,y+r); else g.lineTo(x-r, y);
                     g.lineTo(x, y);
                 }
-                else if (seg.isAngularNECorner()) {
-                    if (seg.ccw()) g.lineTo(x+r, y); else g.lineTo(x-r, y-r);
+                else if (segment.isAngularNECorner()) {
+                    if (segment.ccw()) g.lineTo(x+r, y); else g.lineTo(x-r, y-r);
                     g.lineTo(x, y);
                 }
             }
@@ -173,12 +171,12 @@ public class TerrainRenderer implements TileMapRenderer {
         double x = tile.x() * TS, y = tile.y() * TS + 3;
         if (leftDoor) {
             g.setFill(mapBackgroundColor);
-            g.fillRect(x, y - 1, 2*TS, 4);
+            g.fillRect(x, y - 1, 2 * TS, 4);
             g.setFill(doorColor);
-            g.fillRect(x, y, 2*TS, 2);
+            g.fillRect(x, y, 2 * TS, 2);
             g.setFill(wallStrokeColor);
-            g.fillRect(x-1, y-1, 1, 3);
-            g.fillRect(x+2*TS, y-1, 1, 3);
+            g.fillRect(x - 1, y - 1, 1, 3);
+            g.fillRect(x + 2 * TS, y - 1, 1, 3);
         }
     }
 }

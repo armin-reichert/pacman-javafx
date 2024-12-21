@@ -9,6 +9,7 @@ open module de.amr.games.pacman {
     exports de.amr.games.pacman.controller;
     exports de.amr.games.pacman.event;
     exports de.amr.games.pacman.model;
+    exports de.amr.games.pacman.model.actors;
     exports de.amr.games.pacman.lib;
     exports de.amr.games.pacman.lib.arcade;
     exports de.amr.games.pacman.lib.fsm;
@@ -16,6 +17,5 @@ open module de.amr.games.pacman {
     exports de.amr.games.pacman.lib.nes;
     exports de.amr.games.pacman.lib.tilemap;
     exports de.amr.games.pacman.lib.timer;
-    exports de.amr.games.pacman.model.actors;
     exports de.amr.games.pacman.steering;
 }
