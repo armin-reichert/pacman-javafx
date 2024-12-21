@@ -10,7 +10,6 @@ open module de.amr.games.pacman.ui3d {
     requires javafx.media;
     requires org.tinylog.api;
     requires de.amr.games.pacman;
-    requires de.amr.games.pacman.lib;
     requires de.amr.games.pacman.ui2d;
     requires de.amr.games.pacman.mapeditor;
 

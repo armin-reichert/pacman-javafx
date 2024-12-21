@@ -12,7 +12,6 @@ open module de.amr.games.pacman.ui2d {
     requires org.tinylog.api;
 
     requires de.amr.games.pacman;
-    requires de.amr.games.pacman.lib;
     requires de.amr.games.pacman.mapeditor;
 
     exports de.amr.games.pacman.ui2d;

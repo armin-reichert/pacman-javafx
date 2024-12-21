@@ -9,6 +9,5 @@ java {
 }
 
 dependencies {
-    implementation project(':pacman-lib')
     implementation libs.bundles.tinylog
 }

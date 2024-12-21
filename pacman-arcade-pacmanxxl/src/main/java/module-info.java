@@ -1,6 +1,5 @@
 open module de.amr.games.pacman.arcade.pacman_xxl {
     requires de.amr.games.pacman;
-    requires de.amr.games.pacman.lib;
     requires org.tinylog.api;
     requires javafx.base;
     requires javafx.controls;

@@ -4,7 +4,6 @@ module de.amr.games.pacman.ui3d.appsuite {
     requires javafx.media;
 
     requires de.amr.games.pacman;
-    requires de.amr.games.pacman.lib;
     requires de.amr.games.pacman.ui3d;
     requires de.amr.games.pacman.ui2d;
     requires de.amr.games.pacman.arcade.ms_pacman;

@@ -101,7 +101,6 @@ public interface WallBuilder {
         return new Group(base, top);
     }
 
-
     static Node hWall(
         Vector2f p, Vector2f q,
         DoubleProperty wallHeightPy, double thickness, double coatHeight,

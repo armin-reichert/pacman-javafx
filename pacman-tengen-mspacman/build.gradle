@@ -8,7 +8,6 @@ repositories {
 }
 
 dependencies {
-  implementation project(':pacman-lib')
   implementation project(':pacman-core')
   implementation project(':pacman-ui-2d')
   implementation project(':pacman-ui-3d')
