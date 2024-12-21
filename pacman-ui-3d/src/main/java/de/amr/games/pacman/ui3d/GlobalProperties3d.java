@@ -1,5 +1,6 @@
 package de.amr.games.pacman.ui3d;
 
+import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.ui3d.scene3d.Perspective;
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
@@ -13,11 +14,11 @@ public interface GlobalProperties3d {
     ObjectProperty<DrawMode>    PY_3D_DRAW_MODE          = new SimpleObjectProperty<>(DrawMode.FILL);
     BooleanProperty             PY_3D_ENABLED            = new SimpleBooleanProperty(false);
     BooleanProperty             PY_3D_ENERGIZER_EXPLODES = new SimpleBooleanProperty(true);
-    ObjectProperty<Color>       PY_3D_FLOOR_COLOR        = new SimpleObjectProperty<>(Color.web("#202020"));
+    ObjectProperty<Color>       PY_3D_FLOOR_COLOR        = new SimpleObjectProperty<>(Color.grayRgb(32));
     StringProperty              PY_3D_FLOOR_TEXTURE      = new SimpleStringProperty(NO_TEXTURE);
-    ObjectProperty<Color>       PY_3D_LIGHT_COLOR        = new SimpleObjectProperty<>(Color.GHOSTWHITE);
+    ObjectProperty<Color>       PY_3D_LIGHT_COLOR        = new SimpleObjectProperty<>(Color.WHITE);
     BooleanProperty             PY_3D_PAC_LIGHT_ENABLED  = new SimpleBooleanProperty(true);
-    ObjectProperty<Perspective.Name> PY_3D_PERSPECTIVE   = new SimpleObjectProperty<>(Perspective.Name.TOTAL);
+    ObjectProperty<Perspective.Name> PY_3D_PERSPECTIVE   = new SimpleObjectProperty<>(Perspective.Name.FOLLOWING_PLAYER);
     DoubleProperty              PY_3D_WALL_HEIGHT        = new SimpleDoubleProperty(3.5);
-    DoubleProperty              PY_3D_WALL_OPACITY       = new SimpleDoubleProperty(0.9);
+    DoubleProperty              PY_3D_WALL_OPACITY       = new SimpleDoubleProperty(1.0);
 }
