@@ -22,7 +22,7 @@ import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
 import de.amr.games.pacman.ui2d.lib.Ufx;
-import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
+import de.amr.games.pacman.ui3d.GlobalProperties3d;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
@@ -165,7 +165,7 @@ public class GameLevel3D {
         return message3D;
     }
 
-    private final StringProperty floorTextureNamePy = new SimpleStringProperty(this, "floorTextureName", PacManGamesUI_3D.NO_TEXTURE);
+    private final StringProperty floorTextureNamePy = new SimpleStringProperty(this, "floorTextureName", GlobalProperties3d.NO_TEXTURE);
     private final DoubleProperty borderWallHeightPy = new SimpleDoubleProperty(this, "borderWallHeight", BORDER_WALL_HEIGHT);
     private final DoubleProperty obstacleHeightPy   = new SimpleDoubleProperty(this, "obstacleHeight", OBSTACLE_HEIGHT);
     private final DoubleProperty wallOpacityPy      = new SimpleDoubleProperty(this, "wallOpacity",1.0);
@@ -276,7 +276,11 @@ public class GameLevel3D {
         wallFillColorPy.set(coloring.fill());
 
         TileMap terrain = world.map().terrain();
-        Box floor = createFloor(assets.get("floor_textures"), terrain.numCols() * TS - 1, terrain.numRows() * TS - 1);
+        Box floor = createFloor(terrain.numCols() * TS - 1, terrain.numRows() * TS - 1);
+        floor.materialProperty().bind(Bindings.createObjectBinding(
+            () -> createFloorMaterial(floorColorPy.get(), floorTextureNamePy.get(), assets.get("floor_textures")),
+            floorColorPy, floorTextureNamePy
+        ));
 
         for (Obstacle obstacle : world.map().obstacles()) {
             if (!world.isPartOfHouse(tileAt(obstacle.startPoint()))) {
@@ -296,11 +300,7 @@ public class GameLevel3D {
         root.getChildren().add(house3D.door3D());
     }
 
-    private void addObstacle(
-        Group parent,
-        Obstacle obstacle,
-        double thickness)
-    {
+    private void addObstacle(Group parent, Obstacle obstacle, double thickness) {
         if (obstacle.isClosed() && obstacle.numSegments() == 4) {
             Vector2f center = obstacle.startPoint().plus(0, HTS);
             Node wall = createCircularWall(center, HTS, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
@@ -379,24 +379,20 @@ public class GameLevel3D {
         parent.getChildren().addAll(hWall, vWall, cornerWall);
     }
 
-    private Box createFloor(Map<String, PhongMaterial> textures, double sizeX, double sizeY) {
+    private Box createFloor(double sizeX, double sizeY) {
         var floor = new Box(sizeX, sizeY, FLOOR_THICKNESS);
-        // Place floor such that left-upper corner is at origin and floor surface is at z=0
+        // Translate floor such that left-upper corner is at origin and floor surface is at z=0
         floor.translateXProperty().bind(floor.widthProperty().multiply(0.5));
         floor.translateYProperty().bind(floor.heightProperty().multiply(0.5));
         floor.translateZProperty().bind(floor.depthProperty().multiply(0.5));
         floor.drawModeProperty().bind(PY_3D_DRAW_MODE);
-        floor.materialProperty().bind(Bindings.createObjectBinding(
-            () -> createFloorMaterial(floorColorPy.get(), floorTextureNamePy.get(), textures),
-            floorColorPy, floorTextureNamePy
-        ));
         floorColorPy.bind(PY_3D_FLOOR_COLOR);
         floorTextureNamePy.bind(PY_3D_FLOOR_TEXTURE);
         return floor;
     }
 
     private PhongMaterial createFloorMaterial(Color color, String textureName, Map<String, PhongMaterial> textures) {
-        return PacManGamesUI_3D.NO_TEXTURE.equals(textureName) || !textures.containsKey(textureName)
+        return GlobalProperties3d.NO_TEXTURE.equals(textureName) || !textures.containsKey(textureName)
             ? coloredMaterial(color)
             : textures.get(textureName);
     }
