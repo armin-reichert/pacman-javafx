@@ -1,6 +1,5 @@
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.ui3d.scene3d.Perspective;
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
