@@ -26,7 +26,6 @@ import de.amr.games.pacman.steering.Steering;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.stream.Stream;
@@ -117,7 +116,7 @@ public class PacManGame extends GameModel {
     protected static final int[] HUNTING_TICKS_LEVEL_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
     protected static final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 300, 1200, 300, 62262,   1, -1};
 
-    protected final WorldMap theWorldMap;
+    protected WorldMap theWorldMap;
     protected final Steering autopilot = new RuleBasedPacSteering(this);
     protected Steering demoLevelSteering;
     protected byte cruiseElroy;
@@ -126,24 +125,25 @@ public class PacManGame extends GameModel {
         super(userDir);
         initialLives = 3;
         simulateOverflowBug = true;
-
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
+        loadWorldMap(ResourceRoot.class.getResource("maps/pacman.world"));
+        createHuntingControl();
+    }
 
-        String mapPath = "maps/pacman.world";
-        URL url = ResourceRoot.class.getResource(mapPath);
-        if (url == null) {
-            throw new RuntimeException("Invalid map path: %s".formatted(mapPath));
-        }
+    private void loadWorldMap(URL url) {
         try {
             theWorldMap = new WorldMap(url);
             theWorldMap.setConfigValue("mapNumber", 1);
             theWorldMap.setConfigValue("colorMapIndex", 0);
-        } catch (IOException x) {
-            Logger.error("Could not create world map, url={}", url);
-            throw new RuntimeException(x);
+        } catch (Exception x) {
+            String message = "Could not create world map, url=%s".formatted(url);
+            Logger.error(message);
+            throw new RuntimeException(message, x);
         }
+    }
 
+    private void createHuntingControl() {
         huntingControl = new HuntingTimer() {
             @Override
             public long huntingTicks(int levelNumber, int phaseIndex) {
