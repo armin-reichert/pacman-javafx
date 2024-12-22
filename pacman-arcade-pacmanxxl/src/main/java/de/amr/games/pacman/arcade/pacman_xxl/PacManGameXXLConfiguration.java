@@ -107,7 +107,6 @@ public class PacManGameXXLConfiguration implements GameConfiguration {
 
         assets.store(assetKeyPrefix() + ".icon",                 rm.loadImage("graphics/icons/pacman.png"));
         assets.store(assetKeyPrefix() + ".helpButton.icon",      rm.loadImage("graphics/icons/help-blue-64.png"));
-        assets.store(assetKeyPrefix() + ".startpage.image1",     rm.loadImage("graphics/pacman_xxl_logo.jpg"));
 
         assets.store(assetKeyPrefix() + ".spritesheet",          rm.loadImage("graphics/pacman_spritesheet.png"));
 
