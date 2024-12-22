@@ -37,13 +37,11 @@ public class CutScene4 extends GameScene2D {
     private MediaPlayer music;
     private ClapperboardAnimation clapAnimation;
     private MsPacManGameTengenSpriteSheet spriteSheet;
-    private Color clapTextColor;
 
     private int t;
 
     @Override
     protected void doInit() {
-        String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
         t = -1;
 
         context.setScoreVisible(false);
@@ -58,7 +56,6 @@ public class CutScene4 extends GameScene2D {
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
 
         music = context.sound().makeSound("intermission.4",1.0, false);
-        clapTextColor = context.assets().color(assetKeyPrefix + ".color.clapperboard");
     }
 
     @Override
@@ -214,8 +211,7 @@ public class CutScene4 extends GameScene2D {
     protected void drawSceneContent() {
         var r = (MsPacManGameTengenRenderer) gr;
         r.drawSceneBorderLines();
-        r.drawClapperBoard(clapAnimation, "THE END", 4,
-                r.scaledArcadeFont(TS), clapTextColor, CLAP_TILE_X, CLAP_TILE_Y);
+        r.drawClapperBoard(clapAnimation, "THE END", 4, CLAP_TILE_X, CLAP_TILE_Y);
         r.drawAnimatedEntity(msPacMan);
         r.drawAnimatedEntity(mrPacMan);
         juniors.forEach(r::drawAnimatedEntity);

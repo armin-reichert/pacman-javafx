@@ -143,7 +143,6 @@ public class MsPacManGameTengenConfiguration implements GameConfiguration {
 
         assets.store(assetKeyPrefix() + ".color.game_over_message",          nesPaletteColor(0x11));
         assets.store(assetKeyPrefix() + ".color.ready_message",              nesPaletteColor(0x28));
-        assets.store(assetKeyPrefix() + ".color.clapperboard",               nesPaletteColor(0x20));
 
         assets.store(assetKeyPrefix() + ".pac.color.head",                   nesPaletteColor(0x28));
         assets.store(assetKeyPrefix() + ".pac.color.eyes",                   nesPaletteColor(0x02));

@@ -417,7 +417,6 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     public void drawClapperBoard(
         ClapperboardAnimation clap,
         String text, int number,
-        Font font, Color textColor,
         double x, double y)
     {
         clap.sprite().ifPresent(sprite -> {
@@ -430,8 +429,8 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             ctx.scale(scaling(), scaling());
             ctx.fillRect(numberX - 1, numberY - 8, 12, 8);
             ctx.restore();
-            ctx.setFont(font);
-            ctx.setFill(textColor);
+            ctx.setFont(scaledArcadeFont(TS));
+            ctx.setFill(nesPaletteColor(0x20));
             ctx.fillText(String.valueOf(number), scaled(numberX), scaled(numberY));
             if (clap.isTextVisible()) {
                 double textX = x + sprite.width();

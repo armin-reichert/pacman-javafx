@@ -54,7 +54,6 @@ public class CutScene1 extends GameScene2D {
     private Ghost pinky;
     private Entity heart;
     private ClapperboardAnimation clapAnimation;
-    private Color clapTextColor;
     private boolean collided;
 
     private int t;
@@ -66,8 +65,6 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public void doInit() {
-        String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
-
         t = -1;
         context.setScoreVisible(false);
 
@@ -84,7 +81,6 @@ public class CutScene1 extends GameScene2D {
         pinky.setAnimations(new GhostAnimations(spriteSheet, pinky.id()));
 
         music = context.sound().makeSound("intermission.1", 1.0, false);
-        clapTextColor = context.assets().color(assetKeyPrefix + ".color.clapperboard");
     }
 
     @Override
@@ -219,8 +215,7 @@ public class CutScene1 extends GameScene2D {
         var r = (MsPacManGameTengenRenderer) gr;
         r.drawSceneBorderLines();
         r.setLevelNumberBoxesVisible(false);
-        r.drawClapperBoard(clapAnimation, "THEY MEET", 1,
-            r.scaledArcadeFont(TS), clapTextColor, CLAP_TILE_X, CLAP_TILE_Y);
+        r.drawClapperBoard(clapAnimation, "THEY MEET", 1, CLAP_TILE_X, CLAP_TILE_Y);
         r.drawAnimatedEntity(msPacMan);
         r.drawAnimatedEntity(mrPacMan);
         r.drawAnimatedEntity(inky);

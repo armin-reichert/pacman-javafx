@@ -148,13 +148,10 @@ public class CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
-        Color color = context.assets().color(assetKeyPrefix + ".color.clapperboard"); //TODO check
         var r = (MsPacManGameTengenRenderer) gr;
         r.drawSceneBorderLines();
         r.setLevelNumberBoxesVisible(false);
-        r.drawClapperBoard(clapAnimation, "THE CHASE", 2,
-            r.scaledArcadeFont(TS), color, CLAP_TILE_X, CLAP_TILE_Y);
+        r.drawClapperBoard(clapAnimation, "THE CHASE", 2, CLAP_TILE_X, CLAP_TILE_Y);
         r.drawAnimatedEntity(msPacMan);
         r.drawAnimatedEntity(pacMan);
         if (context.game().level().isPresent()) { // avoid exception in cut scene test mode
