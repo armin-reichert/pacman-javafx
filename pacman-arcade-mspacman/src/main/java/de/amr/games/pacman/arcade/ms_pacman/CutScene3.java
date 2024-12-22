@@ -7,7 +7,6 @@ package de.amr.games.pacman.arcade.ms_pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
@@ -52,7 +51,7 @@ public class CutScene3 extends GameScene2D {
 
     @Override
     public void doInit() {
-        context.setScoreVisible(context.gameVariant() != GameVariant.MS_PACMAN_TENGEN);
+        context.setScoreVisible(true);
 
         pacMan = new Pac();
         msPacMan = new Pac();

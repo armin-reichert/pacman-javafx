@@ -7,7 +7,6 @@ package de.amr.games.pacman.arcade.ms_pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -29,9 +28,9 @@ import static de.amr.games.pacman.model.actors.Animations.ANIM_MR_PACMAN_MUNCHIN
  */
 public class CutScene2 extends GameScene2D {
 
-    static final int UPPER_LANE_Y = TS * 12;
+    static final int UPPER_LANE_Y  = TS * 12;
     static final int MIDDLE_LANE_Y = TS * 18;
-    static final int LOWER_LANE_Y = TS * 24;
+    static final int LOWER_LANE_Y  = TS * 24;
 
     private Pac pacMan;
     private Pac msPacMan;
@@ -46,7 +45,7 @@ public class CutScene2 extends GameScene2D {
 
     @Override
     public void doInit() {
-        context.setScoreVisible(context.gameVariant() != GameVariant.MS_PACMAN_TENGEN);
+        context.setScoreVisible(true);
 
         pacMan = new Pac();
         msPacMan = new Pac();
