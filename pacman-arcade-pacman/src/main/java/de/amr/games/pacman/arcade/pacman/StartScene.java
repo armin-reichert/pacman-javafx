@@ -14,7 +14,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.arcade.pacman.PacManGameSpriteSheet.MIDWAY_COPYRIGHT;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.lib.Globals.toPx;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 
 /**
@@ -51,12 +51,12 @@ public class StartScene extends GameScene2D {
         Color pink = Color.valueOf(Arcade.Palette.PINK);
         Color rose = Color.valueOf(Arcade.Palette.ROSE);
         Color white = Color.valueOf(Arcade.Palette.WHITE);
-        gr.drawText("PUSH START BUTTON", orange, font8, t(6), t(17));
-        gr.drawText("1 PLAYER ONLY", cyan, font8, t(8), t(21));
-        gr.drawText("BONUS PAC-MAN FOR 10000", rose, font8, t(1), t(25));
-        gr.drawText("PTS", rose, font6, t(25), t(25));
+        gr.drawText("PUSH START BUTTON", orange, font8, toPx(6), toPx(17));
+        gr.drawText("1 PLAYER ONLY", cyan, font8, toPx(8), toPx(21));
+        gr.drawText("BONUS PAC-MAN FOR 10000", rose, font8, toPx(1), toPx(25));
+        gr.drawText("PTS", rose, font6, toPx(25), toPx(25));
         if (context.gameVariant() == GameVariant.PACMAN) {
-            gr.drawText(MIDWAY_COPYRIGHT, pink, font8, t(4), t(29));
+            gr.drawText(MIDWAY_COPYRIGHT, pink, font8, toPx(4), toPx(29));
         }
         gr.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), white, font8, 2 * TS, size().y() - 2);
         gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);

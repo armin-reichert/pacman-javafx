@@ -83,8 +83,8 @@ public class MutableGhost3D {
         requireNonNull(eyeballsShape);
         requireNonNull(assets);
         requireNonNull(ghost);
-        requirePositive(size);
-        requirePositive(numFlashes);
+        assertNonNegative(size);
+        assertNonNegative(numFlashes);
 
         this.ghost = ghost;
         this.size = size;

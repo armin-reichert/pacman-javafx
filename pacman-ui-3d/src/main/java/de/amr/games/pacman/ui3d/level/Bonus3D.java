@@ -43,9 +43,9 @@ public class Bonus3D extends Box {
     public Bonus3D(Bonus bonus, Image symbolImage, Image pointsImage) {
         super(SYMBOL_WIDTH, TS, TS);
 
-        checkNotNull(bonus);
-        checkNotNull(symbolImage);
-        checkNotNull(pointsImage);
+        assertNotNull(bonus);
+        assertNotNull(symbolImage);
+        assertNotNull(pointsImage);
 
         this.bonus = bonus;
         symbolImageView = new ImageView(symbolImage);

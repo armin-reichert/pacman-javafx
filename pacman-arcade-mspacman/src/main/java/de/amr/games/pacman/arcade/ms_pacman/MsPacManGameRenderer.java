@@ -83,9 +83,9 @@ public class MsPacManGameRenderer implements GameRenderer {
     private Color bgColor = Color.BLACK;
 
     public MsPacManGameRenderer(AssetStorage assets, MsPacManGameSpriteSheet spriteSheet, Canvas canvas) {
-        this.assets = checkNotNull(assets);
-        this.spriteSheet = checkNotNull(spriteSheet);
-        this.canvas = checkNotNull(canvas);
+        this.assets = assertNotNull(assets);
+        this.spriteSheet = assertNotNull(spriteSheet);
+        this.canvas = assertNotNull(canvas);
         flashingMazesImage = assets.get("ms_pacman.flashing_mazes");
     }
 
@@ -126,7 +126,7 @@ public class MsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void setBackgroundColor(Color color) {
-        bgColor = checkNotNull(color);
+        bgColor = assertNotNull(color);
     }
 
     @Override
@@ -189,7 +189,7 @@ public class MsPacManGameRenderer implements GameRenderer {
 
     public void drawMsPacManMidwayCopyright(double x, double y, Color color, Font font) {
         Image image = assets.get("ms_pacman.logo.midway");
-        drawImageScaled(image, x, y + 2, t(4) - 2, t(4));
+        drawImageScaled(image, x, y + 2, toPx(4) - 2, toPx(4));
         ctx().setFont(font);
         ctx().setFill(color);
         ctx().fillText("©", scaled(x + TS * 5), scaled(y + TS * 2 + 2));

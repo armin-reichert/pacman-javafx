@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.maps.editor;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
@@ -22,7 +23,6 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.v2i;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
@@ -307,7 +307,7 @@ public class EditController {
     }
 
     void setMode(EditMode mode) {
-        modePy.set(checkNotNull(mode));
+        modePy.set(Globals.assertNotNull(mode));
     }
 
     boolean hasUnsavedChanges() {
@@ -449,8 +449,8 @@ public class EditController {
      * into account.
      */
     public void setTileValue(TileMap tileMap, Vector2i tile, byte value) {
-        checkNotNull(tileMap);
-        checkNotNull(tile);
+        Globals.assertNotNull(tileMap);
+        Globals.assertNotNull(tile);
         if (editingEnabledPy.get()) {
             tileMap.set(tile, value);
             if (symmetricEditModePy.get()) {

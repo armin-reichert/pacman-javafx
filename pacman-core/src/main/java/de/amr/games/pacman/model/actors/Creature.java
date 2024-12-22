@@ -110,7 +110,7 @@ public abstract class Creature extends Entity {
     }
 
     public void setWorld(GameWorld world) {
-        this.world = checkNotNull(world);
+        this.world = assertNotNull(world);
     }
 
     public GameWorld world() {

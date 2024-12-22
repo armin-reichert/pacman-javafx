@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.editor.TileMapEditor;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -25,8 +26,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-
 /**
  * @author Armin Reichert
  */
@@ -37,9 +36,9 @@ public class EditorPage extends BorderPane implements GameActionProvider {
     private Consumer<TileMapEditor> closeAction = editor -> {};
 
     public EditorPage(Stage stage, GameContext context, File customMapDir) {
-        checkNotNull(stage);
-        checkNotNull(context);
-        checkNotNull(customMapDir);
+        Globals.assertNotNull(stage);
+        Globals.assertNotNull(context);
+        Globals.assertNotNull(customMapDir);
 
         // without this, Pac-Man wallpaper shines through
         setBackground(Ufx.coloredBackground(Color.web("#dddddd"))); // JavaFX default grey

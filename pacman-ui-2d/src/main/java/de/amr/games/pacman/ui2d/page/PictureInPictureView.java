@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -17,7 +18,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.VBox;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.*;
 
 /**
@@ -34,7 +34,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
     private GameScene2D scene2D;
 
     public PictureInPictureView(GameContext context) {
-        this.context = checkNotNull(context);
+        this.context = Globals.assertNotNull(context);
         canvas.heightProperty().bind(PY_PIP_HEIGHT);
         canvas.heightProperty().addListener((py,ov,nv) -> recomputeLayout());
         getChildren().add(canvas);
@@ -49,7 +49,7 @@ public class PictureInPictureView extends VBox implements GameEventListener {
     }
 
     public void setScene2D(GameScene2D scene2D) {
-        this.scene2D = checkNotNull(scene2D);
+        this.scene2D = Globals.assertNotNull(scene2D);
     }
 
     @Override

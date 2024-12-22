@@ -93,7 +93,7 @@ public class Entity {
     }
 
     public void setPosition(Vector2f position) {
-        checkNotNull(position, "Position of entity must not be null");
+        assertNotNull(position, "Position of entity must not be null");
         posX = position.x();
         posY = position.y();
     }
@@ -110,7 +110,7 @@ public class Entity {
     }
 
     public void setVelocity(Vector2f velocity) {
-        checkNotNull(velocity, "Velocity of entity must not be null");
+        assertNotNull(velocity, "Velocity of entity must not be null");
         velX = velocity.x();
         velY = velocity.y();
     }
@@ -125,7 +125,7 @@ public class Entity {
     }
 
     public void setAcceleration(Vector2f acceleration) {
-        checkNotNull(acceleration, "Acceleration of entity must not be null");
+        assertNotNull(acceleration, "Acceleration of entity must not be null");
         accX = acceleration.x();
         accY = acceleration.y();
     }
@@ -165,7 +165,7 @@ public class Entity {
      * @return <code>true</code> if both entities occupy same tile
      */
     public boolean sameTile(Entity other) {
-        checkNotNull(other, "Entity to check for same tile must not be null");
+        assertNotNull(other, "Entity to check for same tile must not be null");
         return tile().equals(other.tile());
     }
 }

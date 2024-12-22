@@ -16,7 +16,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.lib.Globals.toPx;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.Animations.*;
 
@@ -121,7 +121,7 @@ public class CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr.drawSpriteScaled(blinkyStretching.currentSprite(), t(14), t(19) + 3);
+        gr.drawSpriteScaled(blinkyStretching.currentSprite(), toPx(14), toPx(19) + 3);
         gr.drawAnimatedEntity(blinky);
         gr.drawAnimatedEntity(pac);
         gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
@@ -131,6 +131,6 @@ public class CutScene2 extends GameScene2D {
     protected void drawDebugInfo() {
         gr.drawTileGrid(size().x(), size().y());
         String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        gr.drawText(text, Color.YELLOW, GameScene.DEBUG_FONT, t(1), t(5));
+        gr.drawText(text, Color.YELLOW, GameScene.DEBUG_FONT, toPx(1), toPx(5));
     }
 }

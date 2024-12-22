@@ -4,9 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
-import de.amr.games.pacman.ui2d.action.GameAction;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameRenderer;
+import de.amr.games.pacman.ui2d.action.GameAction;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCodeCombination;
@@ -14,8 +15,6 @@ import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * Base class of all 2D scenes.
@@ -52,7 +51,7 @@ public abstract class GameScene2D implements GameScene {
 
     @Override
     public void setGameContext(GameContext context) {
-        this.context = checkNotNull(context);
+        this.context = Globals.assertNotNull(context);
     }
 
     @Override
@@ -77,7 +76,7 @@ public abstract class GameScene2D implements GameScene {
     protected void doEnd() {}
 
     public void setGameRenderer(GameRenderer renderer) {
-        gr = checkNotNull(renderer);
+        gr = Globals.assertNotNull(renderer);
         gr.clearCanvas();
     }
 

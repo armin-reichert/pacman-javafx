@@ -4,11 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib;
 
-import org.tinylog.Logger;
-
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Random;
 
 /**
  * @author Armin Reichert
@@ -43,7 +41,7 @@ public class Globals {
      * @return tile containing given position
      */
     public static Vector2i tileAt(Vector2f position) {
-        checkNotNull(position);
+        assertNotNull(position);
         return tileAt(position.x(), position.y());
     }
 
@@ -69,35 +67,39 @@ public class Globals {
         return halfTileRightOf(tile.x(), tile.y());
     }
 
-    public static float t(double tiles) {
+    /**
+     * @param tiles amount of tiles
+     * @return pixels corresponding to amount of tiles
+     */
+    public static float toPx(double tiles) {
         return (float) tiles * TS;
     }
 
-    public static <T> T checkNotNull(T value) {
+    public static <T> T assertNotNull(T value) {
         return Objects.requireNonNull(value, "");
     }
 
-    public static <T> T checkNotNull(T value, String message) {
+    public static <T> T assertNotNull(T value, String message) {
         return Objects.requireNonNull(value, message);
     }
 
-    public static Vector2i checkTileNotNull(Vector2i tile) {
-        return checkNotNull(tile, MSG_TILE_NULL);
+    public static Vector2i assertTileNotNull(Vector2i tile) {
+        return assertNotNull(tile, MSG_TILE_NULL);
     }
 
     public static Direction checkDirectionNotNull(Direction dir) {
-        return checkNotNull(dir, MSG_DIR_NULL);
+        return assertNotNull(dir, MSG_DIR_NULL);
     }
 
-    public static double requirePositive(double value, String messageFormat) {
+    public static double assertNonNegative(double value, String messageFormat) {
         if (value < 0) {
             throw new IllegalArgumentException(String.format(messageFormat, value));
         }
         return value;
     }
 
-    public static double requirePositive(double value) {
-        return requirePositive(value, "%f must be positive");
+    public static double assertNonNegative(double value) {
+        return assertNonNegative(value, "%f must be zero or positive");
     }
 
     /**
@@ -143,19 +145,6 @@ public class Globals {
             b = tmp;
         }
         return a + (b - a) * RND.nextDouble();
-    }
-
-    public static boolean inPercentOfCases(int percent) {
-        if (percent < 0 || percent > 100) {
-            throw new IllegalArgumentException(String.format("Percent value must be in range [0, 100] but is %d", percent));
-        }
-        if (percent == 0) {
-            return false;
-        }
-        if (percent == 100) {
-            return true;
-        }
-        return randomInt(0, 100) < percent;
     }
 
     public static boolean isEven(int n) {
@@ -245,52 +234,5 @@ public class Globals {
             case 1 -> value.equals(alternatives[0]);
             default -> Arrays.asList(alternatives).contains(value);
         };
-    }
-
-    /**
-     * @param colorSpec color specification in one of the following 3 formats:
-     *                  <ul>
-     *                  <li><code>#rrggbb</code> (hexadecimal digits)</li>
-     *                  <li><code>rrggbb</code>(hexadecimal digits)</li>
-     *                  <li><code>rgb(red,green,blue)</code> (decimal values from 0.255)</li>
-     *                  </ul>
-     * @return color spec in the form <code>rrggbb</code> (hexadecimal digits)
-     */
-    public static Optional<String> colorToHexFormat(String colorSpec) {
-        if (Pattern.matches("#?\\p{XDigit}{6}", colorSpec)) {
-            return Optional.of(colorSpec);
-        }
-        Pattern rgbPattern = Pattern.compile("rgb\\((\\d{1,3}),(\\d{1,3}),(\\d{1,3})\\)");
-        Matcher m = rgbPattern.matcher(colorSpec);
-        if (m.matches()) {
-            String r = m.group(1), g = m.group(2), b = m.group(3);
-            Short red = parseColorComponent(colorSpec, r);
-            Short green = parseColorComponent(colorSpec, g);
-            Short blue = parseColorComponent(colorSpec, b);
-            if (red == null || green == null || blue == null) {
-                return Optional.empty();
-            }
-            HexFormat fmt = HexFormat.of();
-            return Optional.of(fmt.toHexDigits(red).substring(2)
-                + fmt.toHexDigits(green).substring(2)
-                + fmt.toHexDigits(blue).substring(2));
-        } else {
-            Logger.error("'{}': Invalid color format", colorSpec);
-        }
-        return Optional.empty();
-    }
-
-    private static Short parseColorComponent(String color, String comp) {
-        try {
-            short value = Short.parseShort(comp);
-            if (!inClosedRange(value, 0, 255)) {
-                Logger.error("'{}': Component value {} is out of range 0.255", color, value);
-                return null;
-            }
-            return value;
-        } catch (NumberFormatException x) {
-            Logger.error("No valid color component value: '{}'", comp);
-            return null;
-        }
     }
 }

@@ -6,6 +6,7 @@ package de.amr.games.pacman.controller;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.event.GameStateChangeEvent;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -13,8 +14,6 @@ import org.tinylog.Logger;
 
 import java.util.EnumMap;
 import java.util.Map;
-
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * Controller (in the sense of MVC) for all game variants.
@@ -71,12 +70,12 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     @SuppressWarnings("unchecked")
     public <T extends GameModel> T gameModel(GameVariant variant) {
-        checkNotNull(variant);
+        Globals.assertNotNull(variant);
         return (T) modelsByVariant.get(variant);
     }
 
     public void selectGame(GameVariant variant) {
-        checkNotNull(variant);
+        Globals.assertNotNull(variant);
         GameVariant oldVariant = currentGame != null ? currentGameVariant() : null;
         currentGame = gameModel(variant);
         if (oldVariant != variant) {

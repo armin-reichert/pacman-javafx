@@ -4,12 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.event;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 
 import java.util.Optional;
-
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * @author Armin Reichert
@@ -21,8 +20,8 @@ public class GameEvent {
     public final Vector2i tile;
 
     public GameEvent(GameEventType type, GameModel game, Vector2i tile) {
-        checkNotNull(type);
-        checkNotNull(game);
+        Globals.assertNotNull(type);
+        Globals.assertNotNull(game);
         this.type = type;
         this.game = game;
         this.tile = tile;

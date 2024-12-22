@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
+import de.amr.games.pacman.lib.Globals;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
@@ -13,7 +14,6 @@ import javafx.scene.shape.Box;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.lib.Globals.requirePositive;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -97,7 +97,7 @@ public class Message3D extends Group {
     }
 
     public void setQuality(double quality) {
-        requirePositive(quality, "Text3D quality must be positive but is %f");
+        Globals.assertNonNegative(quality, "Text3D quality must be positive but is %f");
         if (quality != this.quality) {
             this.quality = quality;
             updateImage();

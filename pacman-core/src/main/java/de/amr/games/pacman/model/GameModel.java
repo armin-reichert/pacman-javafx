@@ -9,6 +9,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.model.actors.Animations;
@@ -22,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
@@ -421,7 +421,7 @@ public abstract class GameModel {
     private final List<GameEventListener> gameEventListeners = new ArrayList<>();
 
     public void addGameEventListener(GameEventListener listener) {
-        checkNotNull(listener);
+        Globals.assertNotNull(listener);
         if (!gameEventListeners.contains(listener)) {
             gameEventListeners.add(listener);
         } else {
@@ -430,18 +430,18 @@ public abstract class GameModel {
     }
 
     public void publishGameEvent(GameEvent event) {
-        checkNotNull(event);
+        Globals.assertNotNull(event);
         gameEventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
         Logger.trace("Published game event: {}", event);
     }
 
     public void publishGameEvent(GameEventType type) {
-        checkNotNull(type);
+        Globals.assertNotNull(type);
         publishGameEvent(new GameEvent(type, this));
     }
 
     public void publishGameEvent(GameEventType type, Vector2i tile) {
-        checkNotNull(type);
+        Globals.assertNotNull(type);
         publishGameEvent(new GameEvent(type, this, tile));
     }
 }

@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.maps.editor;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
@@ -46,7 +47,6 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.maps.editor.TileMapEditorViewModel.tt;
 import static java.util.Objects.requireNonNull;
@@ -269,11 +269,11 @@ public class TileMapEditor implements TileMapEditorViewModel {
     }
 
     public void setWorldMap(WorldMap map) {
-        worldMapPy.set(checkNotNull(map));
+        worldMapPy.set(Globals.assertNotNull(map));
     }
 
     public void createUI(Stage stage) {
-        this.stage = checkNotNull(stage);
+        this.stage = Globals.assertNotNull(stage);
         createRenderers();
         createFileChooser();
         createMenuBarAndMenus();
@@ -679,15 +679,15 @@ public class TileMapEditor implements TileMapEditorViewModel {
     }
 
     public void addLoadMapMenuItem(String description, WorldMap map) {
-        checkNotNull(description);
-        checkNotNull(map);
+        Globals.assertNotNull(description);
+        Globals.assertNotNull(map);
         var miLoadMap = new MenuItem(description);
         miLoadMap.setOnAction(e -> loadMap(map));
         menuLoadMap.getItems().add(miLoadMap);
     }
 
     public void loadMap(WorldMap worldMap) {
-        checkNotNull(worldMap);
+        Globals.assertNotNull(worldMap);
         if (editController.hasUnsavedChanges()) {
             showSaveConfirmationDialog(this::showSaveDialog, () -> {
                 setWorldMap(new WorldMap(worldMap));

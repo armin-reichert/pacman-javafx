@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.arcade.pacman.PacManGameSpriteSheet;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
@@ -22,7 +23,6 @@ import javafx.scene.paint.Color;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static java.util.function.Predicate.not;
 
 /**
@@ -48,9 +48,9 @@ public class PacManGameXXLRenderer implements GameRenderer {
     private Color bgColor;
 
     public PacManGameXXLRenderer(AssetStorage assets, PacManGameSpriteSheet spriteSheet, Canvas canvas) {
-        this.assets = checkNotNull(assets);
-        this.canvas = checkNotNull(canvas);
-        this.spriteSheet = checkNotNull(spriteSheet);
+        this.assets = Globals.assertNotNull(assets);
+        this.canvas = Globals.assertNotNull(canvas);
+        this.spriteSheet = Globals.assertNotNull(spriteSheet);
         terrainRenderer.scalingPy.bind(scalingPy);
         terrainRenderer.setMapBackgroundColor(bgColor);
         foodRenderer.scalingPy.bind(scalingPy);
@@ -94,7 +94,7 @@ public class PacManGameXXLRenderer implements GameRenderer {
 
     @Override
     public void setBackgroundColor(Color color) {
-        bgColor = checkNotNull(color);
+        bgColor = Globals.assertNotNull(color);
     }
 
     @Override

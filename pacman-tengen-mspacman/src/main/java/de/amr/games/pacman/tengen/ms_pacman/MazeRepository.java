@@ -3,6 +3,7 @@
  */
 package de.amr.games.pacman.tengen.ms_pacman;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
@@ -13,7 +14,6 @@ import org.tinylog.Logger;
 import java.util.*;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.RectArea.rect;
 import static de.amr.games.pacman.lib.nes.NES_ColorScheme.*;
 import static de.amr.games.pacman.ui2d.lib.Ufx.*;
@@ -81,8 +81,8 @@ public class MazeRepository {
     private final Image nonArcadeMazesImage;
 
     public MazeRepository(Image arcadeMazesImage, Image nonArcadeMazesImage) {
-        this.arcadeMazesImage = checkNotNull(arcadeMazesImage);
-        this.nonArcadeMazesImage = checkNotNull(nonArcadeMazesImage);
+        this.arcadeMazesImage = Globals.assertNotNull(arcadeMazesImage);
+        this.nonArcadeMazesImage = Globals.assertNotNull(nonArcadeMazesImage);
     }
 
     public MazeSet createMazeSet(WorldMap worldMap, int flashCount) {

@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.lib;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.nes.NES_Palette;
@@ -37,7 +38,6 @@ import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static javafx.scene.layout.BackgroundSize.AUTO;
 
 /**
@@ -95,17 +95,17 @@ public interface Ufx {
     }
 
     static  Color opaqueColor(Color color, double opacity) {
-        checkNotNull(color);
+        Globals.assertNotNull(color);
         return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
     }
 
     static  Background coloredBackground(Color color) {
-        checkNotNull(color);
+        Globals.assertNotNull(color);
         return new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY));
     }
 
     static  Background coloredRoundedBackground(Color color, int radius) {
-        checkNotNull(color);
+        Globals.assertNotNull(color);
         return new Background(new BackgroundFill(color, new CornerRadii(radius), Insets.EMPTY));
     }
 
@@ -131,13 +131,13 @@ public interface Ufx {
     }
 
     static Border roundedBorder(Color color, double cornerRadius, double width) {
-        checkNotNull(color);
+        Globals.assertNotNull(color);
         return new Border(
             new BorderStroke(color, BorderStrokeStyle.SOLID, new CornerRadii(cornerRadius), new BorderWidths(width)));
     }
 
     static Border border(Color color, double width) {
-        checkNotNull(color);
+        Globals.assertNotNull(color);
         return new Border(new BorderStroke(color, BorderStrokeStyle.SOLID, null, new BorderWidths(width)));
     }
 
@@ -146,14 +146,14 @@ public interface Ufx {
     }
 
     static PhongMaterial coloredMaterial(Color color) {
-        checkNotNull(color);
+        Globals.assertNotNull(color);
         var material = new PhongMaterial(color);
         material.setSpecularColor(color.brighter());
         return material;
     }
 
     static PhongMaterial coloredMaterial(ObjectProperty<Color> colorProperty) {
-        checkNotNull(colorProperty);
+        Globals.assertNotNull(colorProperty);
         var material = new PhongMaterial();
         material.diffuseColorProperty().bind(colorProperty);
         material.specularColorProperty().bind(colorProperty.map(Color::brighter));
@@ -181,20 +181,20 @@ public interface Ufx {
      * @return pause transition
      */
     static Transition doAfterSec(double delaySeconds, Runnable action) {
-        checkNotNull(action);
+        Globals.assertNotNull(action);
         var pause = new PauseTransition(Duration.seconds(delaySeconds));
         pause.setOnFinished(e -> action.run());
         return pause;
     }
 
     static Animation doAfterSec(double delaySeconds, Animation animation) {
-        checkNotNull(animation);
+        Globals.assertNotNull(animation);
         animation.setDelay(Duration.seconds(delaySeconds).add(animation.getDelay()));
         return animation;
     }
 
     static Transition now(Runnable action) {
-        checkNotNull(action);
+        Globals.assertNotNull(action);
         var wrapper = new Transition() {
             @Override
             protected void interpolate(double frac) {}

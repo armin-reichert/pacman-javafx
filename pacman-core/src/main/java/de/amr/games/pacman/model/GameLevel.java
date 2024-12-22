@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -15,8 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 public class GameLevel {
 
@@ -130,7 +129,7 @@ public class GameLevel {
     }
 
     public Stream<Ghost> ghosts(GhostState... states) {
-        checkNotNull(states);
+        Globals.assertNotNull(states);
         if (ghosts == null) {
             return Stream.empty();
         }

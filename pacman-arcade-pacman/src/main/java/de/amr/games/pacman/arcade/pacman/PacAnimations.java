@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.pacman;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
@@ -15,15 +16,13 @@ import de.amr.games.pacman.ui2d.assets.SpriteAnimationCollection;
 
 import java.util.Map;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-
 /**
  * @author Armin Reichert
  */
 public class PacAnimations extends SpriteAnimationCollection {
 
     public PacAnimations(PacManGameSpriteSheet spriteSheet) {
-        checkNotNull(spriteSheet);
+        Globals.assertNotNull(spriteSheet);
         add(Map.of(
             Animations.ANIM_PAC_MUNCHING,
             SpriteAnimation.spriteSheet(spriteSheet).info("Pac-Man munching")

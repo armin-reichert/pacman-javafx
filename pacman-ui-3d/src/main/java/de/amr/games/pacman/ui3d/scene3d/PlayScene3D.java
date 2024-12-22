@@ -308,7 +308,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void setGameContext(GameContext context) {
-        this.context = checkNotNull(context);
+        this.context = assertNotNull(context);
     }
 
     public Perspective perspective() {

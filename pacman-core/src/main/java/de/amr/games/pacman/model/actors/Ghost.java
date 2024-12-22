@@ -76,7 +76,7 @@ public class Ghost extends Creature implements AnimatedEntity {
     }
 
     public void setHuntingBehaviour(Consumer<Ghost> huntingBehaviour) {
-        this.huntingBehaviour = checkNotNull(huntingBehaviour);
+        this.huntingBehaviour = assertNotNull(huntingBehaviour);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class Ghost extends Creature implements AnimatedEntity {
     }
 
     public void setRevivalPosition(Vector2f position) {
-        checkNotNull(position);
+        assertNotNull(position);
         revivalPosition = position;
     }
 
@@ -168,8 +168,8 @@ public class Ghost extends Creature implements AnimatedEntity {
 
     @Override
     public boolean canAccessTile(Vector2i tile) {
-        checkTileNotNull(tile);
-        checkNotNull(world);
+        assertTileNotNull(tile);
+        assertNotNull(world);
 
         // hunting ghosts cannot move up at certain tiles in Pac-Man game
         if (state == HUNTING_PAC) {
@@ -223,7 +223,7 @@ public class Ghost extends Creature implements AnimatedEntity {
      * @param state the new state
      */
     public void setState(GhostState state) {
-        checkNotNull(state);
+        assertNotNull(state);
         if (this.state == state) {
             Logger.trace("{} is already in state {}", name, state);
         }
@@ -243,7 +243,7 @@ public class Ghost extends Creature implements AnimatedEntity {
      * @param game game variant
      */
     public void update(GameModel game) {
-        checkNotNull(game);
+        assertNotNull(game);
         switch (state) {
             case LOCKED             -> updateStateLocked(game);
             case LEAVING_HOUSE      -> updateStateLeavingHouse(game);

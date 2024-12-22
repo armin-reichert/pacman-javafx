@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.model;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.ui3d.objimport.ObjImporter;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
@@ -19,7 +20,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -59,7 +59,7 @@ public class Model3D {
     private final Map<String, PhongMaterial> materials = new HashMap<>();
 
     public Model3D(URL objFileURL) {
-        checkNotNull(objFileURL);
+        Globals.assertNotNull(objFileURL);
         Logger.info("Loading 3D OBJ model from URL: {}", objFileURL);
         try {
             importModel(new ObjImporter(objFileURL.toExternalForm()));
@@ -69,7 +69,7 @@ public class Model3D {
     }
 
     public Model3D(File objFile) {
-        checkNotNull(objFile);
+        Globals.assertNotNull(objFile);
         Logger.info("Loading 3D OBJ model from file '{}'", objFile);
         try (var in = new FileInputStream(objFile)) {
             importModel(new ObjImporter(in));

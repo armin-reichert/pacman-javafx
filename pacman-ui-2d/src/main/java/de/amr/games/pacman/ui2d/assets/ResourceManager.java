@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.assets;
 
+import de.amr.games.pacman.lib.Globals;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
 import javafx.scene.text.Font;
@@ -12,8 +13,6 @@ import org.tinylog.Logger;
 import java.net.URL;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * <p>
@@ -49,7 +48,7 @@ public interface ResourceManager {
      * @return URL of resource addressed by this path
      */
     default URL url(String path) {
-        checkNotNull(path);
+        Globals.assertNotNull(path);
         URL url = rootClass().getResource(path);
         if (url == null) {
             throw new MissingResourceException(

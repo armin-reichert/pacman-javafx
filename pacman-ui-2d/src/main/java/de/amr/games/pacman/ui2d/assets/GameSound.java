@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.assets;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameVariant;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -16,8 +17,6 @@ import org.tinylog.Logger;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * @author Armin Reichert
@@ -70,8 +69,8 @@ public class GameSound {
 
     //TODO check volume settings
     public void setGameVariant(GameVariant gameVariant, String assetKeyPrefix) {
-        this.gameVariant = checkNotNull(gameVariant);
-        this.assetKeyPrefix = checkNotNull(assetKeyPrefix);
+        this.gameVariant = Globals.assertNotNull(gameVariant);
+        this.assetKeyPrefix = Globals.assertNotNull(assetKeyPrefix);
         if (soundsByGameVariant.get(gameVariant).isEmpty()) {
             Map<String, MediaPlayer> sounds = new HashMap<>();
             soundsByGameVariant.put(gameVariant, sounds);
@@ -146,7 +145,7 @@ public class GameSound {
     }
 
     public void playClipIfEnabled(String keySuffix, double volume) {
-        checkNotNull(keySuffix);
+        Globals.assertNotNull(keySuffix);
         String assetKey = assetKeyPrefix + ".audio." + keySuffix;
         AudioClip clip = assets.get(assetKey);
         if (clip == null) {
@@ -162,7 +161,7 @@ public class GameSound {
     // Public API
 
     public void setAssets(AssetStorage assets) {
-        this.assets = checkNotNull(assets);
+        this.assets = Globals.assertNotNull(assets);
     }
 
     public BooleanProperty enabledProperty() {

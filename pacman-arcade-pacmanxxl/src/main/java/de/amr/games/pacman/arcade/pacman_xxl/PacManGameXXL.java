@@ -161,7 +161,7 @@ public class PacManGameXXL extends PacManGame implements CustomMapsHandler {
 
     @Override
     public void setMapSelectionMode(MapSelectionMode mapSelectionMode) {
-        this.mapSelectionMode = checkNotNull(mapSelectionMode);
+        this.mapSelectionMode = assertNotNull(mapSelectionMode);
         Logger.info("Map selection mode is now {}", mapSelectionMode);
     }
 

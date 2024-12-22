@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameModel;
@@ -38,7 +39,6 @@ import org.tinylog.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui2d.input.Keyboard.*;
@@ -126,8 +126,8 @@ public class GamePage extends StackPane implements GameActionProvider {
     protected ContextMenu contextMenu;
 
     public GamePage(GameContext context, Scene parentScene) {
-        this.context = checkNotNull(context);
-        this.parentScene = checkNotNull(parentScene);
+        this.context = Globals.assertNotNull(context);
+        this.parentScene = Globals.assertNotNull(parentScene);
 
         bindGameActions();
 

@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
@@ -17,7 +18,6 @@ import javafx.util.Duration;
 
 import java.util.Optional;
 
-import static de.amr.games.pacman.lib.Globals.requirePositive;
 import static de.amr.games.pacman.ui2d.lib.Ufx.doAfterSec;
 import static java.util.Objects.requireNonNull;
 
@@ -34,7 +34,7 @@ public class Energizer3D extends Sphere implements Eatable3D {
     private Animation eatenAnimation;
 
     public Energizer3D(double radius) {
-        requirePositive(radius, "Energizer radius must be positive but is %f");
+        Globals.assertNonNegative(radius, "Energizer radius must be positive but is %f");
         setRadius(radius);
         setUserData(this);
 

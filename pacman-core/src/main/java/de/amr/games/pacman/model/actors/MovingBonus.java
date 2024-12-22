@@ -6,6 +6,7 @@ package de.amr.games.pacman.model.actors;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.Pulse;
@@ -18,8 +19,6 @@ import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * A bonus that tumbles through the world, starting at some portal, making one round around the ghost house and leaving
@@ -40,7 +39,7 @@ public class MovingBonus extends Creature implements Bonus {
     private RouteBasedSteering steering;
 
     public MovingBonus(GameWorld world, byte symbol, int points) {
-        this.world = checkNotNull(world);
+        this.world = Globals.assertNotNull(world);
         this.symbol = symbol;
         this.points = points;
         reset();
@@ -163,7 +162,7 @@ public class MovingBonus extends Creature implements Bonus {
     }
 
     public void setRoute(List<NavPoint> route, boolean leftToRight) {
-        checkNotNull(route);
+        Globals.assertNotNull(route);
         var routeCopy = new ArrayList<>(route);
         centerOverTile(routeCopy.get(0).tile());
         setMoveAndWishDir(leftToRight ? Direction.RIGHT : Direction.LEFT);

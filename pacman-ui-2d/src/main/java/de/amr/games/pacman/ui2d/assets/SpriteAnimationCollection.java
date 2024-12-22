@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.assets;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Animations;
@@ -12,8 +13,6 @@ import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * @author Armin Reichert
@@ -32,7 +31,7 @@ public class SpriteAnimationCollection implements Animations {
     }
 
     public boolean isCurrentAnimationID(String id) {
-        checkNotNull(id);
+        Globals.assertNotNull(id);
         return id.equals(currentAnimationID);
     }
 

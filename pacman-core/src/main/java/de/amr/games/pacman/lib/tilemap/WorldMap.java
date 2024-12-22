@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib.tilemap;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import org.tinylog.Logger;
 
@@ -14,8 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
-
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * @author Armin Reichert
@@ -45,7 +44,7 @@ public class WorldMap {
      * @param other other map
      */
     public WorldMap(WorldMap other) {
-        checkNotNull(other);
+        Globals.assertNotNull(other);
         terrain = new TileMap(other.terrain);
         obstacles = new ArrayList<>(other.obstacles);
         food = new TileMap(other.food);
@@ -60,7 +59,7 @@ public class WorldMap {
     }
 
     public WorldMap(URL url) throws IOException {
-        this.url = checkNotNull(url);
+        this.url = Globals.assertNotNull(url);
         var r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
         parse(r.lines());
         updateObstacleList();

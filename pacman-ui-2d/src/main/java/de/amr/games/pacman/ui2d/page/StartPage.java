@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.model.GameVariant;
@@ -24,7 +25,6 @@ import javafx.scene.layout.StackPane;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.input.Keyboard.naked;
 
 /**
@@ -58,7 +58,7 @@ public class StartPage extends StackPane implements GameActionProvider {
     private final Carousel carousel;
 
     public StartPage(GameContext context) {
-        this.context = checkNotNull(context);
+        this.context = Globals.assertNotNull(context);
 
         carousel = new Carousel();
         carousel.selectButtonTextProperty().set(context.locText("play_button"));

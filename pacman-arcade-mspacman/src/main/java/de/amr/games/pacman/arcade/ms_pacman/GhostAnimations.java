@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
@@ -15,15 +16,13 @@ import de.amr.games.pacman.ui2d.assets.SpriteAnimationCollection;
 
 import java.util.Map;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-
 /**
  * @author Armin Reichert
  */
 public class GhostAnimations extends SpriteAnimationCollection {
 
     public GhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
-        checkNotNull(spriteSheet);
+        Globals.assertNotNull(spriteSheet);
 
         var normal = SpriteAnimation
             .spriteSheet(spriteSheet)

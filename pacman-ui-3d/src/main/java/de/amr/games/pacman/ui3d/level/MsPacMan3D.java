@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -19,7 +20,6 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.lib.Ufx.now;
 import static de.amr.games.pacman.ui2d.lib.Ufx.pauseSec;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
@@ -43,10 +43,10 @@ public class MsPacMan3D implements Pac3D {
      * @param assetKeyPrefix prefix of asse keys (depends on current game variant)
      */
     public MsPacMan3D(GameVariant variant, Pac msPacMan, double size, AssetStorage assets, String assetKeyPrefix) {
-        checkNotNull(variant);
-        this.msPacMan = checkNotNull(msPacMan);
-        checkNotNull(assets);
-        checkNotNull(assetKeyPrefix);
+        Globals.assertNotNull(variant);
+        this.msPacMan = Globals.assertNotNull(msPacMan);
+        Globals.assertNotNull(assets);
+        Globals.assertNotNull(assetKeyPrefix);
 
         Model3D model3D = assets.get("model3D.pacman");
 

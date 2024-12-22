@@ -14,7 +14,7 @@ import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.lib.Globals.toPx;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.Animations.ANIM_MR_PACMAN_MUNCHING;
 import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
@@ -90,7 +90,7 @@ public class CutScene3 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         MsPacManGameRenderer r = (MsPacManGameRenderer) gr;
-        r.drawClapperBoard(r.scaledArcadeFont(TS), clapAnimation, t(3), t(10));
+        r.drawClapperBoard(r.scaledArcadeFont(TS), clapAnimation, toPx(3), toPx(10));
         r.drawAnimatedEntity(msPacMan);
         r.drawAnimatedEntity(pacMan);
         r.drawEntitySprite(stork, storkAnimation.currentSprite());

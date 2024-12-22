@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -17,7 +18,6 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.lib.Ufx.doAfterSec;
 import static de.amr.games.pacman.ui2d.lib.Ufx.now;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
@@ -40,10 +40,10 @@ public class PacMan3D implements Pac3D {
      * @param assets asset map
      */
     public PacMan3D(GameVariant variant, Pac pacMan, double size, AssetStorage assets, String assetKeyPrefix) {
-        checkNotNull(variant);
-        this.pacMan = checkNotNull(pacMan);
-        checkNotNull(assets);
-        checkNotNull(assetKeyPrefix);
+        Globals.assertNotNull(variant);
+        this.pacMan = Globals.assertNotNull(pacMan);
+        Globals.assertNotNull(assets);
+        Globals.assertNotNull(assetKeyPrefix);
 
         Model3D model3D = assets.get("model3D.pacman");
 

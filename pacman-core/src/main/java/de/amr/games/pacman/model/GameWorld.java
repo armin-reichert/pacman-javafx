@@ -64,7 +64,7 @@ public class GameWorld {
     private int uneatenFoodCount;
 
     public GameWorld(WorldMap map) {
-        this.map = checkNotNull(map);
+        this.map = assertNotNull(map);
         TileMap terrain = map.terrain(), food = map.food();
 
         var portalList = new ArrayList<Portal>();
@@ -116,12 +116,12 @@ public class GameWorld {
     }
 
     public boolean isOutsideWorld(Vector2i tile) {
-        checkTileNotNull(tile);
+        assertTileNotNull(tile);
         return map.terrain().outOfBounds(tile.y(), tile.x());
     }
 
     public boolean isInsideWorld(Vector2i tile) {
-        checkTileNotNull(tile);
+        assertTileNotNull(tile);
         return !isOutsideWorld(tile);
     }
 
@@ -138,22 +138,22 @@ public class GameWorld {
     }
 
     public boolean isPortalAt(Vector2i tile) {
-        checkTileNotNull(tile);
+        assertTileNotNull(tile);
         return portals().anyMatch(portal -> portal.contains(tile));
     }
 
     public boolean isDoorAt(Vector2i tile) {
-        checkTileNotNull(tile);
+        assertTileNotNull(tile);
         return tile.equals(leftDoorTile) || tile.equals(rightDoorTile);
     }
 
     public boolean isBlockedTile(Vector2i tile) {
-        checkTileNotNull(tile);
+        assertTileNotNull(tile);
         return !isOutsideWorld(tile) && isWallLikeContent(map.terrain().get(tile));
     }
 
     public boolean isTunnel(Vector2i tile) {
-        checkTileNotNull(tile);
+        assertTileNotNull(tile);
         if (isOutsideWorld(tile)) {
             return false;
         }
@@ -161,7 +161,7 @@ public class GameWorld {
     }
 
     public boolean isIntersection(Vector2i tile) {
-        checkTileNotNull(tile);
+        assertTileNotNull(tile);
         if (isOutsideWorld(tile) || isPartOfHouse(tile)) {
             return false;
         }
@@ -227,7 +227,7 @@ public class GameWorld {
      * @return tells if the given tile is part of the ghost house
      */
     public boolean isPartOfHouse(Vector2i tile) {
-        checkTileNotNull(tile);
+        assertTileNotNull(tile);
         Vector2i max = houseTopLeftTile.plus(houseSize().minus(1, 1));
         return tile.x() >= houseTopLeftTile.x() && tile.x() <= max.x() //
             && tile.y() >= houseTopLeftTile.y() && tile.y() <= max.y();
@@ -249,7 +249,7 @@ public class GameWorld {
 
     public void setGhostDirection(byte ghostID, Direction dir) {
         checkGhostID(ghostID);
-        checkNotNull(dir);
+        assertNotNull(dir);
         ghostDirections[ghostID] = dir;
     }
 
@@ -273,7 +273,7 @@ public class GameWorld {
     }
 
     public void registerFoodEatenAt(Vector2i tile) {
-        checkTileNotNull(tile);
+        assertTileNotNull(tile);
         if (isOutsideWorld(tile)) {
             Logger.error("Attempt to eat food from tile outside world");
             return;
@@ -285,22 +285,22 @@ public class GameWorld {
     }
 
     public boolean isFoodPosition(Vector2i tile) {
-        checkTileNotNull(tile);
+        assertTileNotNull(tile);
         return !isOutsideWorld(tile) && map.food().get(tile) != EMPTY;
     }
 
     public boolean isEnergizerPosition(Vector2i tile) {
-        checkTileNotNull(tile);
+        assertTileNotNull(tile);
         return !isOutsideWorld(tile) && map.food().get(tile) == ENERGIZER;
     }
 
     public boolean hasFoodAt(Vector2i tile) {
-        checkTileNotNull(tile);
+        assertTileNotNull(tile);
         return isFoodPosition(tile) && !hasEatenFoodAt(tile);
     }
 
     public boolean hasEatenFoodAt(Vector2i tile) {
-        checkTileNotNull(tile);
+        assertTileNotNull(tile);
         return !isOutsideWorld(tile) && eatenFood.get(map.food().index(tile));
     }
 }

@@ -16,7 +16,7 @@ import javafx.scene.media.MediaPlayer;
 
 import static de.amr.games.pacman.arcade.ms_pacman.MsPacManGameSpriteSheet.HEART_SPRITE;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.lib.Globals.toPx;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.Animations.*;
 
@@ -97,7 +97,7 @@ public class CutScene1 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         MsPacManGameRenderer r = (MsPacManGameRenderer) gr;
-        r.drawClapperBoard(r.scaledArcadeFont(TS), clapAnimation, t(3), t(10));
+        r.drawClapperBoard(r.scaledArcadeFont(TS), clapAnimation, toPx(3), toPx(10));
         r.drawAnimatedEntity(msPac);
         r.drawAnimatedEntity(pacMan);
         r.drawAnimatedEntity(inky);

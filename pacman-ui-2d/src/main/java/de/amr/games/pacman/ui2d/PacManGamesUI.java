@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui2d;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.CustomMapsHandler;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -55,7 +56,6 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_CANVAS_BG_COLOR;
 import static de.amr.games.pacman.ui2d.lib.Ufx.createIcon;
@@ -185,8 +185,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
      * @param gameConfiguration the configuration for this variant
      */
     public void configureGameVariant(GameVariant variant, GameConfiguration gameConfiguration) {
-        checkNotNull(variant);
-        checkNotNull(gameConfiguration);
+        Globals.assertNotNull(variant);
+        Globals.assertNotNull(gameConfiguration);
         gameConfigByVariant.put(variant, gameConfiguration);
         gameConfiguration.initGameScenes(this);
         gameConfiguration.gameScenes().forEach(gameScene -> {
@@ -203,8 +203,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
      * @param initialSize initial UI size
      */
     public void create(Stage stage, Dimension2D initialSize) {
-        this.stage = checkNotNull(stage);
-        checkNotNull(initialSize);
+        this.stage = Globals.assertNotNull(stage);
+        Globals.assertNotNull(initialSize);
 
         Scene mainScene = createMainScene(initialSize);
         stage.setScene(mainScene);

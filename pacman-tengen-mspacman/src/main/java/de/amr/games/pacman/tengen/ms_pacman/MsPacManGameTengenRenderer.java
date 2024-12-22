@@ -64,10 +64,10 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         MazeRepository mazeRepository,
         Canvas canvas)
     {
-        this.assets = checkNotNull(assets);
-        this.spriteSheet = checkNotNull(spriteSheet);
+        this.assets = assertNotNull(assets);
+        this.spriteSheet = assertNotNull(spriteSheet);
         this.mazeRepository = mazeRepository;
-        checkNotNull(canvas);
+        assertNotNull(canvas);
         ctx = canvas.getGraphicsContext2D();
         messageAnchorPosition = DEFAULT_MESSAGE_ANCHOR_POS;
     }
@@ -351,12 +351,12 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             case NORMAL -> NO_SPRITE;
         };
         double centerX = terrain.numCols() * HTS;
-        double y = t(2) + HTS;
+        double y = toPx(2) + HTS;
         if (game.pacBooster() != PacBooster.OFF) {
-            drawSpriteCenteredOverPosition(BOOSTER_SPRITE, centerX - t(6), y);
+            drawSpriteCenteredOverPosition(BOOSTER_SPRITE, centerX - toPx(6), y);
         }
         drawSpriteCenteredOverPosition(difficultySprite, centerX, y);
-        drawSpriteCenteredOverPosition(categorySprite, centerX + t(4.5), y);
+        drawSpriteCenteredOverPosition(categorySprite, centerX + toPx(4.5), y);
         drawSpriteCenteredOverPosition(INFO_FRAME_SPRITE, centerX, y);
     }
 
@@ -364,10 +364,10 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     public void drawScores(GameContext context) {
         Color color = nesPaletteColor(0x20);
         Font font = scaledArcadeFont(TS);
-        if (context.gameClock().getTickCount() % 60 < 30) { drawText("1UP", color, font, t(2), t(1)); }
-        drawText("HIGH SCORE", color, font, t(9), t(1));
-        drawText("%6d".formatted(context.game().scoreManager().score().points()), color, font, 0, t(2));
-        drawText("%6d".formatted(context.game().scoreManager().highScore().points()), color, font, t(11), t(2));
+        if (context.gameClock().getTickCount() % 60 < 30) { drawText("1UP", color, font, toPx(2), toPx(1)); }
+        drawText("HIGH SCORE", color, font, toPx(9), toPx(1));
+        drawText("%6d".formatted(context.game().scoreManager().score().points()), color, font, 0, toPx(2));
+        drawText("%6d".formatted(context.game().scoreManager().highScore().points()), color, font, toPx(11), toPx(2));
     }
 
     @Override

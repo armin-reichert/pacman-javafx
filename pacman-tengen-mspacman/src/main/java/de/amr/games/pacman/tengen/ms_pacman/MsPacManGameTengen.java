@@ -187,7 +187,7 @@ public class MsPacManGameTengen extends GameModel {
     }
 
     public void setMapCategory(MapCategory mapCategory) {
-        this.mapCategory = checkNotNull(mapCategory);
+        this.mapCategory = assertNotNull(mapCategory);
         if (mapCategory == MapCategory.ARCADE) {
             /* see https://tcrf.net/Ms._Pac-Man_(NES,_Tengen):
             Humorously, instead of adding a check to disable multiple extra lives,

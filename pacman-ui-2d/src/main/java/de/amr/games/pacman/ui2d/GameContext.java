@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameLevel;
@@ -28,8 +29,6 @@ import org.tinylog.Logger;
 import java.text.MessageFormat;
 import java.util.Optional;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-
 /**
  * @author Armin Reichert
  */
@@ -40,7 +39,7 @@ public interface GameContext {
     GameSound sound();
 
     default String locText(String keyOrPattern, Object... args) {
-        checkNotNull(keyOrPattern);
+        Globals.assertNotNull(keyOrPattern);
         for (var bundle : assets().bundles()) {
             if (bundle.containsKey(keyOrPattern)) {
                 return MessageFormat.format(bundle.getString(keyOrPattern), args);

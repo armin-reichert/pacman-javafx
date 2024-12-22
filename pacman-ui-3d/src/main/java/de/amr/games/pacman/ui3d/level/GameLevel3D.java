@@ -434,7 +434,7 @@ public class GameLevel3D {
     }
 
     public void replaceBonus3D(Bonus bonus, GameSpriteSheet spriteSheet) {
-        checkNotNull(bonus);
+        assertNotNull(bonus);
         if (bonus3D != null) {
             worldGroup.getChildren().remove(bonus3D);
         }
@@ -505,12 +505,12 @@ public class GameLevel3D {
     public Stream<Energizer3D> energizers3D() { return energizers3D.stream(); }
 
     public Optional<Energizer3D> energizer3D(Vector2i tile) {
-        checkTileNotNull(tile);
+        assertTileNotNull(tile);
         return energizers3D().filter(e3D -> e3D.tile().equals(tile)).findFirst();
     }
 
     public Optional<Pellet3D> pellet3D(Vector2i tile) {
-        checkTileNotNull(tile);
+        assertTileNotNull(tile);
         return Optional.ofNullable(pellets3D.get(tile));
     }
 }
