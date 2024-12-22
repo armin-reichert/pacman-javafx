@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.arcade.ms_pacman.MsPacManGameSpriteSheet.HEART_SPRITE;
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -98,9 +97,7 @@ public class CutScene1 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         MsPacManGameRenderer r = (MsPacManGameRenderer) gr;
-        String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
-        Color color = context.assets().color(assetKeyPrefix + ".color.clapperboard");
-        r.drawClapperBoard(r.scaledArcadeFont(TS), color, clapAnimation, t(3), t(10));
+        r.drawClapperBoard(r.scaledArcadeFont(TS), clapAnimation, t(3), t(10));
         r.drawAnimatedEntity(msPac);
         r.drawAnimatedEntity(pacMan);
         r.drawAnimatedEntity(inky);

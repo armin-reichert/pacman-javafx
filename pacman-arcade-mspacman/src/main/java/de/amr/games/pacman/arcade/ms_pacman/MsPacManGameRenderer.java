@@ -6,6 +6,7 @@ package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -171,9 +172,10 @@ public class MsPacManGameRenderer implements GameRenderer {
         ctx().restore();
     }
 
-    public void drawClapperBoard(Font font, Color textColor, ClapperboardAnimation clapperboardAnimation, double x, double y) {
+    public void drawClapperBoard(Font font, ClapperboardAnimation clapperboardAnimation, double x, double y) {
         clapperboardAnimation.currentSprite().ifPresent(sprite -> {
             drawSpriteCenteredOverTile(sprite, x, y);
+            Color textColor = Color.valueOf(Arcade.Palette.WHITE);
             ctx().setFont(font);
             ctx().setFill(textColor.darker());
             var numberX = scaled(x + sprite.width() - 25);
