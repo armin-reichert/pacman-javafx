@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
-import de.amr.games.pacman.arcade.Resources;
+import de.amr.games.pacman.arcade.ResourceRoot;
 import de.amr.games.pacman.arcade.pacman.*;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
@@ -28,7 +28,7 @@ public class PacManGameXXLConfiguration implements GameConfiguration {
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public PacManGameXXLConfiguration(AssetStorage assets) {
-        loadAssets(() -> Resources.class, assets);
+        loadAssets(() -> ResourceRoot.class, assets);
         spriteSheet = new PacManGameSpriteSheet(assets.get(assetKeyPrefix() + ".spritesheet"));
         setGameScene("BootScene",   new ArcadeBootScene());
         setGameScene("IntroScene",  new IntroScene());
