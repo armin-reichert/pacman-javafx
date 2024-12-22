@@ -131,10 +131,10 @@ public class PacManGame extends GameModel {
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
 
-        String path = "/de/amr/games/pacman/maps/pacman.world";
-        URL url = ResourceRoot.class.getResource(path);
+        String mapPath = "maps/pacman.world";
+        URL url = ResourceRoot.class.getResource(mapPath);
         if (url == null) {
-            throw new MissingResourceException("Map not found", getClass().getName(), path);
+            throw new MissingResourceException("Map not found", getClass().getName(), mapPath);
         }
         try {
             theWorldMap = new WorldMap(url);
