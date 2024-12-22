@@ -73,10 +73,10 @@ public interface Ufx {
             Logger.info("Locale (default): {}", Locale.getDefault());
             Application.launch(appClass, args);
         } catch (Throwable x) {
+            x.printStackTrace(System.err);
             try (var pw = new PrintWriter("oh_shit.txt")) {
                 x.printStackTrace(pw);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace(System.err);
             }
         }

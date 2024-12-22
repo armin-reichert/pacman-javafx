@@ -29,7 +29,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.MissingResourceException;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -134,7 +133,7 @@ public class PacManGame extends GameModel {
         String mapPath = "maps/pacman.world";
         URL url = ResourceRoot.class.getResource(mapPath);
         if (url == null) {
-            throw new MissingResourceException("Map not found", getClass().getName(), mapPath);
+            throw new RuntimeException("Invalid map path: %s".formatted(mapPath));
         }
         try {
             theWorldMap = new WorldMap(url);
