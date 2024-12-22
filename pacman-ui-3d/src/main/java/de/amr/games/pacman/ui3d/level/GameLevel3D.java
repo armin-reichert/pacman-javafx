@@ -100,7 +100,7 @@ public class GameLevel3D {
     private Bonus3D bonus3D;
 
     public GameLevel3D(GameContext context) {
-        this.context = context;
+        this.context = assertNotNull(context);
 
         final GameModel game = context.game();
         final GameLevel level = context.level();
@@ -122,7 +122,7 @@ public class GameLevel3D {
             wallFillColorPy, wallOpacityPy));
         wallStrokeMaterialPy.bind(wallStrokeColorPy.map(Ufx::coloredMaterial));
         buildWorld3D(world, coloring);
-        addFood3D(world, coloring);
+        addFood3D(world, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
         root.getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
@@ -282,9 +282,7 @@ public class GameLevel3D {
 
         house3D = new House3D(world, coloring);
         house3D.heightPy.set(HOUSE_HEIGHT);
-        house3D.fillMaterialPy.bind(wallFillColorPy
-            .map(color -> opaqueColor(color, HOUSE_OPACITY))
-            .map(Ufx::coloredMaterial));
+        house3D.fillMaterialPy.bind(wallFillColorPy.map(color -> opaqueColor(color, HOUSE_OPACITY)).map(Ufx::coloredMaterial));
         house3D.strokeMaterialPy.bind(wallStrokeMaterialPy);
 
         mazeGroup.getChildren().add(house3D.root());
@@ -389,11 +387,8 @@ public class GameLevel3D {
             : textures.get(textureName);
     }
 
-    private void addFood3D(GameWorld world, WorldMapColoring coloring) {
-        TileMap foodMap = world.map().food();
-        Material foodMaterial = coloredMaterial(coloring.pellet());
-        Model3D pelletModel3D = context.assets().get("model3D.pellet");
-        foodMap.tiles().filter(world::hasFoodAt).forEach(tile -> {
+    private void addFood3D(GameWorld world, Model3D pelletModel3D, Material foodMaterial) {
+        world.map().food().tiles().filter(world::hasFoodAt).forEach(tile -> {
             Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
             if (world.isEnergizerPosition(tile)) {
                 var energizer3D = new Energizer3D(ENERGIZER_RADIUS);
