@@ -16,7 +16,7 @@ import javafx.scene.image.WritableImage;
  */
 public interface GameSpriteSheet {
 
-    static RectArea[] rectArray(RectArea... areas) {
+    static RectArea[] rectAreas(RectArea... areas) {
         return areas;
     }
 
@@ -30,6 +30,31 @@ public interface GameSpriteSheet {
 
     RectArea NO_SPRITE  = RectArea.PIXEL;
 
+    Image sourceImage();
+
+    /**
+     * @param area rectangular region
+     * @return image copy of region
+     */
+    default Image subImage(RectArea area) {
+        return subImage(area.x(), area.y(), area.width(), area.height());
+    }
+
+    /**
+     * @param x      region x-coordinate
+     * @param y      region y-coordinate
+     * @param width  region width
+     * @param height region height
+     * @return image copy of region
+     */
+    default Image subImage(int x, int y, int width, int height) {
+        var subImage = new WritableImage(width, height);
+        subImage.getPixelWriter().setPixels(0, 0, width, height, sourceImage().getPixelReader(), x, y);
+        return subImage;
+    }
+
+    // Game-related stuff
+
     RectArea[] pacMunchingSprites(Direction dir);
     RectArea[] pacDyingSprites();
 
@@ -42,27 +67,4 @@ public interface GameSpriteSheet {
     RectArea livesCounterSprite();
     RectArea bonusSymbolSprite(byte symbol);
     RectArea bonusValueSprite(byte symbol);
-
-    Image sourceImage();
-
-    /**
-     * @param r rectangular region
-     * @return image copy of region
-     */
-    default Image subImage(RectArea r) {
-        return subImage(r.x(), r.y(), r.width(), r.height());
-    }
-
-    /**
-     * @param x      region x-coordinate
-     * @param y      region y-coordinate
-     * @param width  region width
-     * @param height region height
-     * @return image copy of region
-     */
-    default Image subImage(int x, int y, int width, int height) {
-        var image = new WritableImage(width, height);
-        image.getPixelWriter().setPixels(0, 0, width, height, sourceImage().getPixelReader(), x, y);
-        return image;
-    }
 }

@@ -29,6 +29,7 @@ import javafx.beans.property.*;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
@@ -214,7 +215,8 @@ public class GameLevel3D {
             levelCounter3D.getChildren().add(cube);
 
             var material = new PhongMaterial(Color.WHITE);
-            material.setDiffuseMap(spriteSheet.subImage(spriteSheet.bonusSymbolSprite(symbol)));
+            Image texture = spriteSheet.subImage(spriteSheet.bonusSymbolSprite(symbol));
+            material.setDiffuseMap(texture);
             cube.setMaterial(material);
 
             var spinning = new RotateTransition(Duration.seconds(6), cube);

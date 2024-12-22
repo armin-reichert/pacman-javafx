@@ -43,7 +43,7 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
         return tiles;
     }
 
-    private static final RectArea[] GHOST_NUMBER_SPRITES = GameSpriteSheet.rectArray(
+    private static final RectArea[] GHOST_NUMBER_SPRITES = GameSpriteSheet.rectAreas(
         rect(456, 133, 15, 7),  // 200
         rect(472, 133, 15, 7),  // 400
         rect(488, 133, 15, 7),  // 800
@@ -83,7 +83,7 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
             var wide   = rect(OFF_X      + margin, d * 16 + margin, size, size);
             var middle = rect(OFF_X + 16 + margin, d * 16 + margin, size, size);
             var closed = rect(OFF_X + 32 + margin,          margin, size, size);
-            PAC_MUNCHING_SPRITES[d] = GameSpriteSheet.rectArray(closed, closed, middle, middle, wide, wide, middle, middle);
+            PAC_MUNCHING_SPRITES[d] = GameSpriteSheet.rectAreas(closed, closed, middle, middle, wide, wide, middle, middle);
         }
     }
 
@@ -104,7 +104,7 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
         }
     }
 
-    private static final RectArea[] GHOST_FRIGHTENED_SPRITES = GameSpriteSheet.rectArray(
+    private static final RectArea[] GHOST_FRIGHTENED_SPRITES = GameSpriteSheet.rectAreas(
         rect(OFF_X + RASTER_SIZE * (8), RASTER_SIZE * (4), RASTER_SIZE, RASTER_SIZE),
         rect(OFF_X + RASTER_SIZE * (9), RASTER_SIZE * (4), RASTER_SIZE, RASTER_SIZE));
 
@@ -113,11 +113,11 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
     private static final RectArea[][] GHOST_EYES_SPRITES = new RectArea[4][];
     static {
         for (byte d = 0; d < 4; ++d) {
-            GHOST_EYES_SPRITES[d] = GameSpriteSheet.rectArray(rect(OFF_X + RASTER_SIZE * (8 + d), RASTER_SIZE * (5), RASTER_SIZE, RASTER_SIZE));
+            GHOST_EYES_SPRITES[d] = GameSpriteSheet.rectAreas(rect(OFF_X + RASTER_SIZE * (8 + d), RASTER_SIZE * (5), RASTER_SIZE, RASTER_SIZE));
         }
     }
 
-    private static final RectArea[] BIG_PAC_MAN_SPRITES = GameSpriteSheet.rectArray(
+    private static final RectArea[] BIG_PAC_MAN_SPRITES = GameSpriteSheet.rectAreas(
         rect(OFF_X + 32, 16, 32, 32), rect(OFF_X + 64, 16, 32, 32), rect(OFF_X + 96, 16, 32, 32));
 
     private static final RectArea[] BLINKY_STRETCHED_SPRITES = new RectArea[5];

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static de.amr.games.pacman.lib.RectArea.rect;
-import static de.amr.games.pacman.ui2d.assets.GameSpriteSheet.rectArray;
+import static de.amr.games.pacman.ui2d.assets.GameSpriteSheet.rectAreas;
 
 /**
  * @author Armin Reichert
@@ -24,7 +24,7 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
     private static final byte RASTER_SIZE = 16;
     private static final List<Direction> ORDER = List.of(Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
-    private static final RectArea[] GHOST_NUMBER_SPRITES = rectArray(
+    private static final RectArea[] GHOST_NUMBER_SPRITES = rectAreas(
         spriteAt(0, 8), spriteAt(1, 8), spriteAt(2, 8), spriteAt(3, 8));
 
     private static final RectArea[] BONUS_SYMBOL_SPRITES = IntStream.range(0, 8)
@@ -39,49 +39,44 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
 
     private static final RectArea[][] MS_PAC_MAN_MUNCHING_SPRITES = new RectArea[4][];
     static {
-        for (byte d = 0; d < 4; ++d) {
-            var wide = spriteAt(0, d);
-            var open = spriteAt(1, d);
-            var closed = spriteAt(2, d);
-            MS_PAC_MAN_MUNCHING_SPRITES[d] = rectArray(open, open, wide, wide, open, open, open, closed, closed);
+        for (byte dir = 0; dir < 4; ++dir) {
+            RectArea wide = spriteAt(0, dir), open = spriteAt(1, dir), closed = spriteAt(2, dir);
+            MS_PAC_MAN_MUNCHING_SPRITES[dir] = rectAreas(open, open, wide, wide, open, open, open, closed, closed);
         }
     }
 
     private static final RectArea[] MS_PAC_MAN_DYING_SPRITES;
     static {
-        var right = spriteAt(1, 0);
-        var left = spriteAt(1, 1);
-        var up = spriteAt(1, 2);
-        var down = spriteAt(1, 3);
+        RectArea right = spriteAt(1, 0), left = spriteAt(1, 1), up = spriteAt(1, 2), down = spriteAt(1, 3);
         // TODO: this is not yet 100% correct
-        MS_PAC_MAN_DYING_SPRITES = rectArray(down, left, up, right, down, left, up, right, down, left, up);
+        MS_PAC_MAN_DYING_SPRITES = rectAreas(down, left, up, right, down, left, up, right, down, left, up);
     }
 
     private static final RectArea[][][] GHOSTS_NORMAL_SPRITES = new RectArea[4][4][];
     static {
         for (byte id = 0; id < 4; ++id) {
-            for (byte d = 0; d < 4; ++d) {
-                GHOSTS_NORMAL_SPRITES[id][d] = rectArray(spriteAt(2 * d, 4 + id), spriteAt(2 * d + 1, 4 + id));
+            for (byte dir = 0; dir < 4; ++dir) {
+                GHOSTS_NORMAL_SPRITES[id][dir] = rectAreas(spriteAt(2 * dir, 4 + id), spriteAt(2 * dir + 1, 4 + id));
             }
         }
     }
 
-    private static final RectArea[] GHOST_FRIGHTENED_SPRITES = rectArray(spriteAt(8, 4), spriteAt(9, 4));
+    private static final RectArea[] GHOST_FRIGHTENED_SPRITES = rectAreas(spriteAt(8, 4), spriteAt(9, 4));
 
-    private static final RectArea[] GHOST_FLASHING_SPRITES = rectArray(
+    private static final RectArea[] GHOST_FLASHING_SPRITES = rectAreas(
             spriteAt(8, 4), spriteAt(9, 4), spriteAt(10, 4), spriteAt(11, 4));
 
     private static final RectArea[][] GHOST_EYES_SPRITES = new RectArea[4][];
     static {
-        for (byte d = 0; d < 4; ++d) {
-            GHOST_EYES_SPRITES[d] = rectArray(spriteAt(8 + d, 5));
+        for (byte dir = 0; dir < 4; ++dir) {
+            GHOST_EYES_SPRITES[dir] = rectAreas(spriteAt(8 + dir, 5));
         }
     }
 
     private static final RectArea[][] MR_PAC_MAN_MUNCHING_SPRITES = new RectArea[4][];
     static {
-        for (byte d = 0; d < 4; ++d) {
-            MR_PAC_MAN_MUNCHING_SPRITES[d] = rectArray(spriteAt(0, 9 + d), spriteAt(1, 9 + d), spriteAt(2, 9));
+        for (byte dir = 0; dir < 4; ++dir) {
+            MR_PAC_MAN_MUNCHING_SPRITES[dir] = rectAreas(spriteAt(0, 9 + dir), spriteAt(1, 9 + dir), spriteAt(2, 9));
         }
     }
 
@@ -89,7 +84,7 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
     static final RectArea BLUE_BAG_SPRITE = rect(488, 199, 8, 8);
     static final RectArea JUNIOR_PAC_SPRITE = rect(509, 200, 8, 8);
 
-    static final RectArea[] CLAPPERBOARD_SPRITES = rectArray(
+    static final RectArea[] CLAPPERBOARD_SPRITES = rectAreas(
         rect(456, 208, 32, 32),  // open
         rect(488, 208, 32, 32),  // middle
         rect(520, 208, 32, 32)); // closed
