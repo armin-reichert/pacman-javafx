@@ -158,25 +158,23 @@ public class IntroScene extends GameScene2D {
     }
 
     private void drawGallery() {
-        PacManGameSpriteSheet spriteSheet = (PacManGameSpriteSheet) context.gameConfiguration().spriteSheet();
+        var spriteSheet = (PacManGameSpriteSheet) context.gameConfiguration().spriteSheet();
         Font font = gr.scaledArcadeFont(TS);
-        int tx = LEFT_TILE_X;
         if (titleVisible) {
-            gr.drawText("CHARACTER / NICKNAME", Color.valueOf(Arcade.Palette.WHITE), font, t(tx + 3), t(6));
+            gr.drawText("CHARACTER / NICKNAME", Color.valueOf(Arcade.Palette.WHITE), font, t(LEFT_TILE_X + 3), t(6));
         }
         for (byte id = 0; id < 4; ++id) {
-            if (!ghostImageVisible[id]) {
-                continue;
+            int tileY = 7 + 3 * id;
+            if (ghostImageVisible[id]) {
+                gr.drawSpriteCenteredOverTile(spriteSheet.ghostFacingRight(id), t(LEFT_TILE_X) + 4, t(tileY));
             }
-            int ty = 7 + 3 * id;
-            gr.drawSpriteCenteredOverTile(spriteSheet.ghostFacingRight(id), t(tx) + 4, t(ty));
             if (ghostCharacterVisible[id]) {
                 String text = "-" + GHOST_CHARACTERS[id];
-                gr.drawText(text, GHOST_COLORS[id], font, t(tx + 3), t(ty + 1));
+                gr.drawText(text, GHOST_COLORS[id], font, t(LEFT_TILE_X + 3), t(tileY + 1));
             }
             if (ghostNicknameVisible[id]) {
                 String text = '"' + ghosts[id].name().toUpperCase() + '"';
-                gr.drawText(text, GHOST_COLORS[id], font, t(tx + 14), t(ty + 1));
+                gr.drawText(text, GHOST_COLORS[id], font, t(LEFT_TILE_X + 14), t(tileY + 1));
             }
         }
     }
@@ -201,17 +199,17 @@ public class IntroScene extends GameScene2D {
         var color = Color.valueOf(Arcade.Palette.WHITE);
         var font8 = gr.scaledArcadeFont(8);
         var font6 = gr.scaledArcadeFont(6);
-        int tx = LEFT_TILE_X + 6;
-        int ty = 25;
+        int tileX = LEFT_TILE_X + 6;
+        int tileY = 25;
         gr.ctx().setFill(PELLET_COLOR);
-        gr.ctx().fillRect(scaled(t(tx) + 4), scaled(t(ty - 1) + 4), scaled(2), scaled(2));
+        gr.ctx().fillRect(scaled(t(tileX) + 4), scaled(t(tileY - 1) + 4), scaled(2), scaled(2));
         if (blinking.isOn()) {
-            drawEnergizer(t(tx), t(ty + 1));
+            drawEnergizer(t(tileX), t(tileY + 1));
         }
-        gr.drawText("10",  color, font8, t(tx + 2), t(ty));
-        gr.drawText("PTS", color, font6, t(tx + 5), t(ty));
-        gr.drawText("50",  color, font8, t(tx + 2), t(ty + 2));
-        gr.drawText("PTS", color, font6, t(tx + 5), t(ty + 2));
+        gr.drawText("10",  color, font8, t(tileX + 2), t(tileY));
+        gr.drawText("PTS", color, font6, t(tileX + 5), t(tileY));
+        gr.drawText("50",  color, font8, t(tileX + 2), t(tileY + 2));
+        gr.drawText("PTS", color, font6, t(tileX + 5), t(tileY + 2));
     }
 
     // draw pixelated "circle"
