@@ -23,12 +23,15 @@ import java.util.stream.Stream;
 
 public class PacManGameConfiguration implements GameConfiguration {
 
+    private static final WorldMapColoring MAP_COLORING = new WorldMapColoring("#000000", "#2121ff", "#fcb5ff", "#febdb4");
+
     private final PacManGameSpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public PacManGameConfiguration(AssetStorage assets) {
         loadAssets(() -> ResourceRoot.class, assets);
         spriteSheet = new PacManGameSpriteSheet(assets.get(assetKeyPrefix() + ".spritesheet"));
+
         setGameScene("BootScene",   new ArcadeBootScene());
         setGameScene("IntroScene",  new IntroScene());
         setGameScene("StartScene",  new StartScene());
@@ -73,7 +76,7 @@ public class PacManGameConfiguration implements GameConfiguration {
 
     @Override
     public WorldMapColoring worldMapColoring(WorldMap worldMap) {
-        return PacManGameRenderer.WORLDMAP_COLORING;
+        return MAP_COLORING;
     }
 
     @Override

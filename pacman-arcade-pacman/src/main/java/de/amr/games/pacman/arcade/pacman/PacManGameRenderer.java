@@ -10,7 +10,6 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui2d.GameRenderer;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
@@ -25,8 +24,6 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  * @author Armin Reichert
  */
 public class PacManGameRenderer implements GameRenderer {
-
-    public static final WorldMapColoring WORLDMAP_COLORING = new WorldMapColoring("#000000", "#2121ff", "#fcb5ff", "#febdb4");
 
     private static final Vector2f MESSAGE_POSITION = new Vector2f(14 * TS, 21 * TS);
 
