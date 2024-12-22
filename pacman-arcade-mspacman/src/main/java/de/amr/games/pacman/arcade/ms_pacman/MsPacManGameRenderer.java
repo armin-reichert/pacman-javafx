@@ -34,14 +34,14 @@ public class MsPacManGameRenderer implements GameRenderer {
 
     static final List<WorldMapColoring> WORLD_MAP_COLORINGS = List.of(
         new WorldMapColoring("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
-        new WorldMapColoring("47B7FF", "DEDEFF", "FCB5FF","FFFF00"),
-        new WorldMapColoring("DE9751", "DEDEFF", "FCB5FF","FF0000"),
-        new WorldMapColoring("2121FF", "FFB751", "FCB5FF","DEDEFF"),
-        new WorldMapColoring("FFB7FF", "FFFF00", "FCB5FF","00FFFF"),
-        new WorldMapColoring("FFB7AE", "FF0000", "FCB5FF","DEDEFF")
+        new WorldMapColoring("47B7FF", "DEDEFF", "FCB5FF", "FFFF00"),
+        new WorldMapColoring("DE9751", "DEDEFF", "FCB5FF", "FF0000"),
+        new WorldMapColoring("2121FF", "FFB751", "FCB5FF", "DEDEFF"),
+        new WorldMapColoring("FFB7FF", "FFFF00", "FCB5FF", "00FFFF"),
+        new WorldMapColoring("FFB7AE", "FF0000", "FCB5FF", "DEDEFF")
     );
 
-    private static final RectArea[] FULL_MAPS_SPRITES = {
+    private static final RectArea[] FULL_MAP_SPRITES = {
         rect(0,     0, 224, 248),
         rect(0,   248, 224, 248),
         rect(0, 2*248, 224, 248),
@@ -50,7 +50,7 @@ public class MsPacManGameRenderer implements GameRenderer {
         rect(0, 5*248, 224, 248),
     };
 
-    private static final RectArea[] EMPTY_MAPS_SPRITES = {
+    private static final RectArea[] EMPTY_MAP_SPRITES = {
         rect(228,     0, 224, 248),
         rect(228,   248, 224, 248),
         rect(228, 2*248, 224, 248),
@@ -139,10 +139,10 @@ public class MsPacManGameRenderer implements GameRenderer {
 
     @Override
     public void setWorldMap(WorldMap worldMap) {
-        int index = worldMap.getConfigValue("colorMapIndex");
-        fullMapSprite = FULL_MAPS_SPRITES[index];
-        emptyMapSprite = EMPTY_MAPS_SPRITES[index];
-        flashingMapSprite = new ImageArea(flashingMazesImage, FLASHING_MAP_SPRITES[index]);
+        int colorMapIndex = worldMap.getConfigValue("colorMapIndex");
+        fullMapSprite = FULL_MAP_SPRITES[colorMapIndex];
+        emptyMapSprite = EMPTY_MAP_SPRITES[colorMapIndex];
+        flashingMapSprite = new ImageArea(flashingMazesImage, FLASHING_MAP_SPRITES[colorMapIndex]);
     }
 
     @Override
@@ -152,9 +152,9 @@ public class MsPacManGameRenderer implements GameRenderer {
         } else if (world.uneatenFoodCount() == 0) {
             drawSpriteScaled(emptyMapSprite, x, y);
         } else {
+            drawSpriteScaled(fullMapSprite, x, y);
             ctx().save();
             ctx().scale(scaling(), scaling());
-            drawSpriteUnscaled(fullMapSprite, x, y);
             overPaintEatenPellets(world);
             overPaintEnergizers(world, tile -> !blinking || world.hasEatenFoodAt(tile));
             ctx().restore();
