@@ -172,11 +172,11 @@ public class MsPacManGameRenderer implements GameRenderer {
         ctx().restore();
     }
 
-    public void drawClapperBoard(Font font, ClapperboardAnimation clapperboardAnimation, double x, double y) {
+    public void drawClapperBoard(ClapperboardAnimation clapperboardAnimation, double x, double y) {
         clapperboardAnimation.currentSprite().ifPresent(sprite -> {
             drawSpriteCenteredOverTile(sprite, x, y);
             Color textColor = Color.valueOf(Arcade.Palette.WHITE);
-            ctx().setFont(font);
+            ctx().setFont(scaledArcadeFont(TS));
             ctx().setFill(textColor.darker());
             var numberX = scaled(x + sprite.width() - 25);
             var numberY = scaled(y + 18);

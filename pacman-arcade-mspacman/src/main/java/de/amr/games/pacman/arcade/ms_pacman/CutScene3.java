@@ -90,7 +90,7 @@ public class CutScene3 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         MsPacManGameRenderer r = (MsPacManGameRenderer) gr;
-        r.drawClapperBoard(r.scaledArcadeFont(TS), clapAnimation, toPx(3), toPx(10));
+        r.drawClapperBoard(clapAnimation, toPx(3), toPx(10));
         r.drawAnimatedEntity(msPacMan);
         r.drawAnimatedEntity(pacMan);
         r.drawEntitySprite(stork, storkAnimation.currentSprite());
