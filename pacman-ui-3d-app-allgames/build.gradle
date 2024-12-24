@@ -5,8 +5,6 @@ plugins {
     id 'org.beryx.jlink' version '3.0.1' //  adds also 'application' plugin
 }
 
-version='1.0'
-
 repositories {
     mavenCentral()
 }
@@ -23,6 +21,14 @@ dependencies {
     implementation libs.bundles.tinylog
 }
 
+application {
+    mainModule = 'de.amr.games.pacman.ui3d.appsuite'
+    mainClass = 'de.amr.games.pacman.ui3d.appsuite.Main'
+    if (os.isLinux()) {
+        applicationDefaultJvmArgs = ['-Dprism.forceGPU=true']
+    }
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(versions.java)
@@ -32,14 +38,6 @@ java {
 javafx {
     version = versions.javafx
     modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.media']
-}
-
-application {
-    mainModule = 'de.amr.games.pacman.ui3d.appsuite'
-    mainClass = 'de.amr.games.pacman.ui3d.appsuite.Main'
-    if (os.isLinux()) {
-        applicationDefaultJvmArgs = ['-Dprism.forceGPU=true']
-    }
 }
 
 jlink {

@@ -3,17 +3,17 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
+dependencies {
+    implementation project(':pacman-core')
+    implementation project(':pacman-mapeditor')
+    implementation project(':pacman-ui-2d')
+    implementation libs.bundles.tinylog
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(versions.java)
     }
-}
-
-dependencies {
-    implementation project(':pacman-core')
-    implementation project(':pacman-ui-2d')
-    implementation project(':pacman-mapeditor')
-    implementation libs.bundles.tinylog
 }
 
 javafx {

@@ -5,21 +5,24 @@ plugins {
   id 'org.beryx.jlink' version '3.0.1' //  adds also 'application' plugin
 }
 
-version='1.0'
-
 repositories {
   mavenCentral()
 }
 
 dependencies {
   implementation project(':pacman-core')
-  implementation project(':pacman-ui-2d')
   implementation project(':pacman-mapeditor')
+  implementation project(':pacman-ui-2d')
   implementation project(':pacman-arcade-pacman')
   implementation project(':pacman-arcade-pacmanxxl')
   implementation project(':pacman-arcade-mspacman')
   implementation project(':pacman-tengen-mspacman')
   implementation libs.bundles.tinylog
+}
+
+application {
+  mainModule = 'de.amr.games.pacman.ui2d.appsuite'
+  mainClass = 'de.amr.games.pacman.ui2d.appsuite.Main'
 }
 
 java {
@@ -31,11 +34,6 @@ java {
 javafx {
   version = versions.javafx
   modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.media']
-}
-
-application {
-  mainModule = 'de.amr.games.pacman.ui2d.appsuite'
-  mainClass = 'de.amr.games.pacman.ui2d.appsuite.Main'
 }
 
 jlink {

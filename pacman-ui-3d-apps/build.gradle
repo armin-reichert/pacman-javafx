@@ -9,9 +9,9 @@ repositories {
 
 dependencies {
     implementation project(':pacman-core')
+    implementation project(':pacman-mapeditor')
     implementation project(':pacman-ui-2d')
     implementation project(':pacman-ui-3d')
-    implementation project(':pacman-mapeditor')
     implementation project(':pacman-arcade-pacman')
     implementation project(':pacman-arcade-pacmanxxl')
     implementation project(':pacman-arcade-mspacman')

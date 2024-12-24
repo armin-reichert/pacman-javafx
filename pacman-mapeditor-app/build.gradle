@@ -5,6 +5,12 @@ plugins {
     id 'org.beryx.jlink' version '3.0.1'
 }
 
+dependencies {
+    implementation project(':pacman-core')
+    implementation project(':pacman-mapeditor')
+    implementation libs.bundles.tinylog
+}
+
 application {
     mainModule = 'de.amr.games.pacman.mapeditor.app'
     mainClass  = 'de.amr.games.pacman.maps.editor.app.Main'
@@ -16,12 +22,6 @@ java {
     }
 }
 
-dependencies {
-    implementation project(':pacman-core')
-    implementation project(':pacman-mapeditor')
-    implementation libs.bundles.tinylog
-}
-
 javafx {
     version = versions.javafx
     modules = ['javafx.base', 'javafx.graphics', 'javafx.controls']
@@ -29,11 +29,7 @@ javafx {
 
 jlink {
     imageZip = layout.buildDirectory.file("distributions/javafx-mapeditor-app-${javafx.platform.classifier}.zip")
-    options = [
-            '--strip-debug',
-            '--compress', 'zip-9',
-            '--no-header-files',
-            '--no-man-pages']
+    options = ['--strip-debug', '--compress', 'zip-9', '--no-header-files', '--no-man-pages']
     launcher {
         name = 'Pac-Man-FX-Map-Editor'
     }
@@ -43,11 +39,7 @@ jlink {
         if (os.isWindows()) {
             icon = 'mapeditor.ico'
             installerType = 'msi'
-            installerOptions = [
-                    '--win-dir-chooser',
-                    '--win-menu',
-                    '--win-menu-group', 'Pac-Man FX',
-                    '--win-shortcut']
+            installerOptions = ['--win-dir-chooser', '--win-menu', '--win-menu-group', 'Pac-Man FX', '--win-shortcut']
         }
         if (os.isLinux()) {
             installerType = 'deb'
