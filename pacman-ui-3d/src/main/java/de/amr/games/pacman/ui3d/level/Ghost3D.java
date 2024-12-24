@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
-import de.amr.games.pacman.lib.Globals;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.lib.Ufx;
 import javafx.animation.*;
@@ -24,7 +22,7 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import static java.util.Objects.requireNonNull;
+import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * @author Armin Reichert
@@ -62,13 +60,13 @@ public class Ghost3D {
         Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
         AssetStorage assets, String assetPrefix, double size) {
 
-        GameLevel.checkGhostID(id);
-        requireNonNull(dressShape);
-        requireNonNull(pupilsShape);
-        requireNonNull(eyeballsShape);
-        requireNonNull(assets);
-        requireNonNull(assetPrefix);
-        Globals.assertNonNegative(size, "Size must be positive but is %f");
+        assertLegalGhostID(id);
+        assertNotNull(dressShape);
+        assertNotNull(pupilsShape);
+        assertNotNull(eyeballsShape);
+        assertNotNull(assets);
+        assertNotNull(assetPrefix);
+        assertNonNegative(size);
 
         this.id = id;
         this.assets = assets;

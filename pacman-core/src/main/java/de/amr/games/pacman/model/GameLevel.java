@@ -17,17 +17,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Globals.assertLegalGhostID;
+
 public class GameLevel {
 
     public enum MessageType { READY, GAME_OVER, TEST_LEVEL }
     public record Message(MessageType type) {}
-
-    public static byte checkGhostID(byte id) {
-        if (id < 0 || id > 3) {
-            throw GameException.illegalGhostID(id);
-        }
-        return id;
-    }
 
     public final int number; // 1=first level
     private long startTime;
@@ -50,10 +45,6 @@ public class GameLevel {
     public GameLevel(int number) {
         this.number = number;
         nextBonusIndex = -1;
-    }
-
-    public void resetKilledGhostCount() {
-        killedGhostCount = 0;
     }
 
     public void addKilledGhost(Ghost victim) {
@@ -120,7 +111,7 @@ public class GameLevel {
     public Pac pac() { return pac; }
 
     public Ghost ghost(byte id) {
-        checkGhostID(id);
+        assertLegalGhostID(id);
         return ghosts != null ? ghosts[id] : null;
     }
 

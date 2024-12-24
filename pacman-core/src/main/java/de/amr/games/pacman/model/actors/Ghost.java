@@ -71,7 +71,7 @@ public class Ghost extends Creature implements AnimatedEntity {
      * @param id ghost ID
      */
     private Ghost(byte id) {
-        this.id = GameLevel.checkGhostID(id);
+        this.id = assertLegalGhostID(id);
         corneringSpeedUp = -1.25f;
     }
 

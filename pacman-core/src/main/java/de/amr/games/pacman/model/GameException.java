@@ -9,10 +9,6 @@ package de.amr.games.pacman.model;
  */
 public class GameException extends RuntimeException {
 
-    public static GameException illegalGameVariant(GameVariant variant) {
-        return new GameException(String.format("Illegal game variant value '%s'", variant));
-    }
-
     public static GameException illegalGhostID(byte id) {
         return new GameException(String.format("Illegal ghost ID value '%d' (Allowed values: 0-3)", id));
     }

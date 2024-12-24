@@ -147,7 +147,7 @@ public abstract class Creature extends Entity {
      * @param dir the move direction
      */
     public void setMoveDir(Direction dir) {
-        moveDir = checkDirectionNotNull(dir);
+        moveDir = assertDirectionNotNull(dir);
         setVelocity(moveDir.vector().scaled(velocity().length()));
         Logger.trace("{}: moveDir: {}. {}", name(), moveDir, this);
     }
@@ -165,7 +165,7 @@ public abstract class Creature extends Entity {
      * @param dir the wish direction
      */
     public void setWishDir(Direction dir) {
-        wishDir = checkDirectionNotNull(dir);
+        wishDir = assertDirectionNotNull(dir);
         Logger.trace("{}: wishDir: {}. {}", name(), wishDir, this);
     }
 

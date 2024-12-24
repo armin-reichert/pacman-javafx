@@ -18,7 +18,6 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.Tiles.*;
-import static de.amr.games.pacman.model.GameLevel.checkGhostID;
 import static de.amr.games.pacman.model.GameModel.*;
 
 /**
@@ -97,7 +96,7 @@ public class GameWorld {
     }
 
     public Vector2i ghostScatterTile(byte ghostID) {
-        checkGhostID(ghostID);
+        assertLegalGhostID(ghostID);
         return switch (ghostID) {
             case RED_GHOST -> map.terrain().getTileProperty(
                 PROPERTY_POS_SCATTER_RED_GHOST, v2i(0, map.terrain().numCols() - 3));
@@ -238,23 +237,23 @@ public class GameWorld {
     }
 
     public void setGhostPosition(byte ghostID, Vector2f position) {
-        checkGhostID(ghostID);
+        assertLegalGhostID(ghostID);
         ghostPositions[ghostID] = position;
     }
 
     public Vector2f ghostPosition(byte ghostID) {
-        checkGhostID(ghostID);
+        assertLegalGhostID(ghostID);
         return ghostPositions[ghostID];
     }
 
     public void setGhostDirection(byte ghostID, Direction dir) {
-        checkGhostID(ghostID);
+        assertLegalGhostID(ghostID);
         assertNotNull(dir);
         ghostDirections[ghostID] = dir;
     }
 
     public Direction ghostDirection(byte ghostID) {
-        checkGhostID(ghostID);
+        assertLegalGhostID(ghostID);
         return ghostDirections[ghostID];
     }
 

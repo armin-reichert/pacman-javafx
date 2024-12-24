@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib;
 
+import de.amr.games.pacman.model.GameException;
+
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
@@ -13,14 +15,10 @@ import java.util.Random;
  */
 public class Globals {
 
-    /**
-     * Tile size (8px).
-     */
+    /** Tile size (8px). */
     public static final int TS = 8;
 
-    /**
-     * Half tile size (4px).
-     */
+    /** Half tile size (4px). */
     public static final int HTS = 4;
 
     public static final Random RND = new Random();
@@ -87,7 +85,14 @@ public class Globals {
         return assertNotNull(tile, MSG_TILE_NULL);
     }
 
-    public static Direction checkDirectionNotNull(Direction dir) {
+    public static byte assertLegalGhostID(byte id) {
+        if (id < 0 || id > 3) {
+            throw GameException.illegalGhostID(id);
+        }
+        return id;
+    }
+
+    public static Direction assertDirectionNotNull(Direction dir) {
         return assertNotNull(dir, MSG_DIR_NULL);
     }
 
