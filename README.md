@@ -1,4 +1,4 @@
-# A JavaFX UI (2D + 3D) for Pac-Man and Ms. Pac-Man
+# A JavaFX UI (2D+3D) for Pac-Man (Arcade) and Ms. Pac-Man (Arcade + Tengen NES Version)
 
 ## ℹ️ Online version available
 
@@ -12,14 +12,14 @@ This has been made possible thanks to the [WebFX](https://webfx.dev/) transpiler
 
 ## About this project
 
-This is an implementation of the classic Arcade games Pac-Man and Ms. Pac-Man in a JavaFX user interface. The game implementation is completely decoupled from the user interface such that also different user interfaces (e.g. a Swing UI) can be implemented without any change to the game code. (When developing the game, I originally maintained a Swing and a JavaFX UI in parallel to validate the UI abstraction, however the Swing UI got outdated and has been abandonded.)
+This is an implementation of the classic Arcade games Pac-Man and Ms. Pac-Man and the NES version of Ms. Pac-Man by Tengen in a JavaFX user interface. 
 
 There is a 2D-only user interface version and an extended version where the play scene can be switched between 2D and 3D, even during the gameplay (key combination <kbd>
 Alt+3</kbd>). The game implementation tries to mimic the original Arcade version as good as possible, however there are some differences, e.g. in the "attract mode" behaviour, or the bonus behaviour in the Ms. Pac-Man game.
 
 The game also contains a 3rd game variant (working title "Pac-Man XXL") with 8 maps (shamelessly stolen from the one and only Shaun Williams 👏, https://github.com/masonicGIT/pacman). To integrate these maps, I implemented a map editor that can either be used as a standalone application or called from within the XXL version of the game). The nice thing is that all these maps and all your custom maps are playable in 2D and in 3D! You can also create maps of different size than the original Pac-Man maps, however this is still work in progress. Also the game can hang if the maps have dead-ends. So you have to be aware of that. The map editor has been used to create all the 8 new maps and you don't have to specify any graphics assets when adding a new map. Colors can be specified using map properties inside the editor.
 
-### How to use custom maps (in progress)
+### How to use custom maps in PacMan XXL
 
 Use the map editor to create your custom map and store the `.world` file inside folder `$user_home/.pacmanfx/maps`. Select the "Pac-Man XXL" game variant, start it and open the dashboard (<key>F1</key> or <key>Alt+B</key>). In the "Custom Maps" info box, select "CUSTOM_MAPS_FIRST". This will select all your custom maps (in alphabetic order) first, then the standard maps and after the last standard map, select any maps randomly.
 
@@ -40,14 +40,9 @@ Prerequisites: You need to have [JDK 21](https://www.oracle.com/java/technologie
 - `./gradlew jpackage` or just `make` (Windows) or `./make.sh` (Linux)
 
 This will create
-- an installer (.msi/.deb/.dmg depending on your platform) for the 2D-only game (subdirectory `pacman-ui-2d/build/jpackage`)
-- an installer for the full game (subdirectory `pacman-ui-3d/build/jpackage`)
-- an installer for the map editor (subdirectory `pacman-mapeditor/build/jpackage`)
-
-### Running the main application (including all games) using Gradle
-
-- Pac-Man 2D: `./gradlew pacman-ui-2d-app-allgames:run`
-- Pac-Man 3D: `./gradlew pacman-ui-3d-app-allgames:run`
+- an installer (.msi/.deb/.dmg depending on your platform) for the 2D-only game (subdirectory `pacman-ui-2d-app-allgames/build/jpackage`)
+- an installer for the 2D+3D game (subdirectory `pacman-ui-3d-app-allgames/build/jpackage`)
+- an installer for the map editor (subdirectory `pacman-mapeditor-app/build/jpackage`)
 
 To be able to create the Windows executables, you need to have the following tools installed:
 
@@ -58,6 +53,11 @@ as described in the [JavaPackager guide](https://github.com/fvarrui/JavaPackager
 (👏 to [Francisco Vargas Ruiz](https://github.com/fvarrui)).
 
 I also had to add the paths "C:\Program Files (x86)\WiX Toolset v3.11\bin" and "C:\Program Files (x86)\Inno Setup 6" to my PATH variable.
+
+### Running the main application (all games) using Gradle
+
+- Pac-Man 2D: `./gradlew pacman-ui-2d-app-allgames:run`
+- Pac-Man 3D: `./gradlew pacman-ui-3d-app-allgames:run`
 
 ## How to use the application
 
@@ -121,11 +121,26 @@ There are some new videos about the different game variants available on [YouTub
 #### Pac-Man
 ![Pac-Man Play Scene](doc/pacman-playscene-2d.png)
 
+#### Ms. Pac-Man (Arcade)
+![Ms. Pac-Man Play Scene](doc/mspacman-playscene-2d.png)
+
 #### Pac-Man XXL
 ![Pac-Man Play Scene New](doc/pacman-newmaze-sample.png)
 
-#### Ms. Pac-Man
-![Ms. Pac-Man Play Scene](doc/mspacman-playscene-2d.png)
+#### Ms. Pac-Man (Tengen)
+
+![Start Page](doc/tengen/screenshots/startpage.png)
+
+![Boot Scene](doc/tengen/screenshots/boot-scene.png)
+
+![Intro Scene](doc/tengen/screenshots/intro-scene.png)
+
+![Options Scene](doc/tengen/screenshots/options-scene.png)
+
+![Demo Level](doc/tengen/screenshots/demolevel.png)
+
+![Strange Mode Scene](doc/tengen/screenshots/strange-maze-level-8.png)
+
 
 ### 3D Play Scenes
 
