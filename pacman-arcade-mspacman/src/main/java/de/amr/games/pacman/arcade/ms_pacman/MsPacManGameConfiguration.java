@@ -16,12 +16,23 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.ui2d.lib.Ufx.imageBackground;
 
 public class MsPacManGameConfiguration implements GameConfiguration {
+
+    private static final List<WorldMapColoring> WORLD_MAP_COLORINGS = List.of(
+        new WorldMapColoring("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
+        new WorldMapColoring("47B7FF", "DEDEFF", "FCB5FF", "FFFF00"),
+        new WorldMapColoring("DE9751", "DEDEFF", "FCB5FF", "FF0000"),
+        new WorldMapColoring("2121FF", "FFB751", "FCB5FF", "DEDEFF"),
+        new WorldMapColoring("FFB7FF", "FFFF00", "FCB5FF", "00FFFF"),
+        new WorldMapColoring("FFB7AE", "FF0000", "FCB5FF", "DEDEFF")
+    );
+
 
     private final MsPacManGameSpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
@@ -69,7 +80,7 @@ public class MsPacManGameConfiguration implements GameConfiguration {
 
     @Override
     public WorldMapColoring worldMapColoring(WorldMap worldMap) {
-        return MsPacManGameRenderer.WORLD_MAP_COLORINGS.get(worldMap.getConfigValue("colorMapIndex"));
+        return WORLD_MAP_COLORINGS.get(worldMap.getConfigValue("colorMapIndex"));
     }
 
     @Override

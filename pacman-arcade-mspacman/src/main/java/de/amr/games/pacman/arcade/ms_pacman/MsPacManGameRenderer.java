@@ -14,15 +14,12 @@ import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameRenderer;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.ImageArea;
-import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-
-import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.RectArea.rect;
@@ -31,15 +28,6 @@ import static de.amr.games.pacman.lib.RectArea.rect;
  * @author Armin Reichert
  */
 public class MsPacManGameRenderer implements GameRenderer {
-
-    static final List<WorldMapColoring> WORLD_MAP_COLORINGS = List.of(
-        new WorldMapColoring("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
-        new WorldMapColoring("47B7FF", "DEDEFF", "FCB5FF", "FFFF00"),
-        new WorldMapColoring("DE9751", "DEDEFF", "FCB5FF", "FF0000"),
-        new WorldMapColoring("2121FF", "FFB751", "FCB5FF", "DEDEFF"),
-        new WorldMapColoring("FFB7FF", "FFFF00", "FCB5FF", "00FFFF"),
-        new WorldMapColoring("FFB7AE", "FF0000", "FCB5FF", "DEDEFF")
-    );
 
     private static final RectArea[] FULL_MAP_SPRITES = {
         rect(0,     0, 224, 248),
