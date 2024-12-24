@@ -27,14 +27,13 @@ import static de.amr.games.pacman.model.actors.Animations.ANIM_MR_PACMAN_MUNCHIN
  */
 public class CutScene2 extends GameScene2D {
 
-    static final int UPPER_LANE_Y  = TS * 12;
-    static final int MIDDLE_LANE_Y = TS * 18;
-    static final int LOWER_LANE_Y  = TS * 24;
+    private static final int UPPER_LANE_Y  = TS * 12;
+    private static final int MIDDLE_LANE_Y = TS * 18;
+    private static final int LOWER_LANE_Y  = TS * 24;
 
     private Pac pacMan;
     private Pac msPacMan;
 
-    private SceneController sceneController;
     private MediaPlayer music;
     private ClapperboardAnimation clapAnimation;
 
@@ -58,8 +57,7 @@ public class CutScene2 extends GameScene2D {
         clapAnimation = new ClapperboardAnimation("2", "THE CHASE");
         clapAnimation.start();
 
-        sceneController = new SceneController();
-        sceneController.setState(SceneController.STATE_FLAP, 120);
+        setSceneState(STATE_FLAP, 120);
     }
 
     @Override
@@ -69,7 +67,7 @@ public class CutScene2 extends GameScene2D {
 
     @Override
     public void update() {
-        sceneController.tick();
+        updateSceneState();
     }
 
     @Override
@@ -86,98 +84,97 @@ public class CutScene2 extends GameScene2D {
         r.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 
-    private class SceneController {
+    // Scene controller state machine
 
-        static final byte STATE_FLAP = 0;
-        static final byte STATE_CHASING = 1;
+    private static final byte STATE_FLAP = 0;
+    private static final byte STATE_CHASING = 1;
 
-        byte state;
-        final TickTimer stateTimer = new TickTimer("MsPacManCutScene2");
+    private byte state;
+    private final TickTimer stateTimer = new TickTimer("MsPacManCutScene2");
 
-        void setState(byte state, long ticks) {
-            this.state = state;
-            stateTimer.reset(ticks);
-            stateTimer.start();
+    private void setSceneState(byte state, long ticks) {
+        this.state = state;
+        stateTimer.reset(ticks);
+        stateTimer.start();
+    }
+
+    private void updateSceneState() {
+        switch (state) {
+            case STATE_FLAP -> updateStateFlap();
+            case STATE_CHASING -> updateStateChasing();
+            default -> throw new IllegalStateException("Illegal state: " + state);
         }
+        stateTimer.doTick();
+    }
 
-        void tick() {
-            switch (state) {
-                case STATE_FLAP -> updateStateFlap();
-                case STATE_CHASING -> updateStateChasing();
-                default -> throw new IllegalStateException("Illegal state: " + state);
-            }
-            stateTimer.doTick();
+    private void updateStateFlap() {
+        clapAnimation.tick();
+        if (stateTimer.hasExpired()) {
+            music.play();
+            enterStateChasing();
         }
+    }
 
-        void updateStateFlap() {
-            clapAnimation.tick();
-            if (stateTimer.hasExpired()) {
-                music.play();
-                enterStateChasing();
-            }
-        }
+    private void enterStateChasing() {
+        pacMan.setMoveDir(Direction.RIGHT);
+        pacMan.selectAnimation(ANIM_MR_PACMAN_MUNCHING);
+        pacMan.optAnimations().ifPresent(Animations::startCurrentAnimation);
+        msPacMan.setMoveDir(Direction.RIGHT);
+        msPacMan.selectAnimation(Animations.ANIM_PAC_MUNCHING);
+        msPacMan.optAnimations().ifPresent(Animations::startCurrentAnimation);
 
-        void enterStateChasing() {
+        setSceneState(STATE_CHASING, TickTimer.INDEFINITE);
+    }
+
+    private void updateStateChasing() {
+        if (stateTimer.atSecond(4.5)) {
+            pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
             pacMan.setMoveDir(Direction.RIGHT);
-            pacMan.selectAnimation(ANIM_MR_PACMAN_MUNCHING);
-            pacMan.optAnimations().ifPresent(Animations::startCurrentAnimation);
+            pacMan.setSpeed(2.0f);
+            pacMan.show();
+            msPacMan.setPosition(TS * (-8), UPPER_LANE_Y);
             msPacMan.setMoveDir(Direction.RIGHT);
-            msPacMan.selectAnimation(Animations.ANIM_PAC_MUNCHING);
-            msPacMan.optAnimations().ifPresent(Animations::startCurrentAnimation);
-
-            setState(STATE_CHASING, TickTimer.INDEFINITE);
+            msPacMan.setSpeed(2.0f);
+            msPacMan.show();
         }
-
-        void updateStateChasing() {
-            if (stateTimer.atSecond(4.5)) {
-                pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
-                pacMan.setMoveDir(Direction.RIGHT);
-                pacMan.setSpeed(2.0f);
-                pacMan.show();
-                msPacMan.setPosition(TS * (-8), UPPER_LANE_Y);
-                msPacMan.setMoveDir(Direction.RIGHT);
-                msPacMan.setSpeed(2.0f);
-                msPacMan.show();
-            }
-            else if (stateTimer.atSecond(9)) {
-                pacMan.setPosition(TS * 36, LOWER_LANE_Y);
-                pacMan.setMoveDir(Direction.LEFT);
-                pacMan.setSpeed(2.0f);
-                msPacMan.setPosition(TS * 30, LOWER_LANE_Y);
-                msPacMan.setMoveDir(Direction.LEFT);
-                msPacMan.setSpeed(2.0f);
-            }
-            else if (stateTimer.atSecond(13.5)) {
-                pacMan.setMoveDir(Direction.RIGHT);
-                pacMan.setSpeed(2.0f);
-                msPacMan.setPosition(TS * (-8), MIDDLE_LANE_Y);
-                msPacMan.setMoveDir(Direction.RIGHT);
-                msPacMan.setSpeed(2.0f);
-                pacMan.setPosition(TS * (-2), MIDDLE_LANE_Y);
-            }
-            else if (stateTimer.atSecond(17.5)) {
-                pacMan.setPosition(TS * 42, UPPER_LANE_Y);
-                pacMan.setMoveDir(Direction.LEFT);
-                pacMan.setSpeed(4.0f);
-                msPacMan.setPosition(TS * 30, UPPER_LANE_Y);
-                msPacMan.setMoveDir(Direction.LEFT);
-                msPacMan.setSpeed(4.0f);
-            }
-            else if (stateTimer.atSecond(18.5)) {
-                pacMan.setPosition(TS * (-2), LOWER_LANE_Y);
-                pacMan.setMoveDir(Direction.RIGHT);
-                pacMan.setSpeed(4.0f);
-                msPacMan.setPosition(TS * (-14), LOWER_LANE_Y);
-                msPacMan.setMoveDir(Direction.RIGHT);
-                msPacMan.setSpeed(4.0f);
-            }
-            else if (stateTimer.atSecond(23)) {
-                context.gameController().terminateCurrentState();
-            }
-            else {
-                pacMan.move();
-                msPacMan.move();
-            }
+        else if (stateTimer.atSecond(9)) {
+            pacMan.setPosition(TS * 36, LOWER_LANE_Y);
+            pacMan.setMoveDir(Direction.LEFT);
+            pacMan.setSpeed(2.0f);
+            msPacMan.setPosition(TS * 30, LOWER_LANE_Y);
+            msPacMan.setMoveDir(Direction.LEFT);
+            msPacMan.setSpeed(2.0f);
+        }
+        else if (stateTimer.atSecond(13.5)) {
+            pacMan.setMoveDir(Direction.RIGHT);
+            pacMan.setSpeed(2.0f);
+            msPacMan.setPosition(TS * (-8), MIDDLE_LANE_Y);
+            msPacMan.setMoveDir(Direction.RIGHT);
+            msPacMan.setSpeed(2.0f);
+            pacMan.setPosition(TS * (-2), MIDDLE_LANE_Y);
+        }
+        else if (stateTimer.atSecond(17.5)) {
+            pacMan.setPosition(TS * 42, UPPER_LANE_Y);
+            pacMan.setMoveDir(Direction.LEFT);
+            pacMan.setSpeed(4.0f);
+            msPacMan.setPosition(TS * 30, UPPER_LANE_Y);
+            msPacMan.setMoveDir(Direction.LEFT);
+            msPacMan.setSpeed(4.0f);
+        }
+        else if (stateTimer.atSecond(18.5)) {
+            pacMan.setPosition(TS * (-2), LOWER_LANE_Y);
+            pacMan.setMoveDir(Direction.RIGHT);
+            pacMan.setSpeed(4.0f);
+            msPacMan.setPosition(TS * (-14), LOWER_LANE_Y);
+            msPacMan.setMoveDir(Direction.RIGHT);
+            msPacMan.setSpeed(4.0f);
+        }
+        else if (stateTimer.atSecond(23)) {
+            context.gameController().terminateCurrentState();
+        }
+        else {
+            pacMan.move();
+            msPacMan.move();
         }
     }
 }

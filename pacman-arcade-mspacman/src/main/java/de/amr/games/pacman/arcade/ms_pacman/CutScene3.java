@@ -31,9 +31,8 @@ import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
  */
 public class CutScene3 extends GameScene2D {
 
-    static final int LANE_Y = TS * 24;
+    private static final int LANE_Y = TS * 24;
 
-    private SceneController sceneController;
     private Pac pacMan;
     private Pac msPacMan;
     private Entity stork;
@@ -68,8 +67,7 @@ public class CutScene3 extends GameScene2D {
         clapAnimation = new ClapperboardAnimation("3", "JUNIOR");
         clapAnimation.start();
 
-        sceneController = new SceneController();
-        sceneController.setState(SceneController.STATE_FLAP, TickTimer.INDEFINITE);
+        setSceneState(STATE_FLAP, TickTimer.INDEFINITE);
     }
 
     @Override
@@ -79,7 +77,7 @@ public class CutScene3 extends GameScene2D {
 
     @Override
     public void update() {
-        sceneController.tick();
+        updateSceneState();
     }
 
     @Override
@@ -98,94 +96,93 @@ public class CutScene3 extends GameScene2D {
         r.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 
-    private class SceneController {
+    // scene controller state machine
 
-        static final byte STATE_FLAP = 0;
-        static final byte STATE_DELIVER_JUNIOR = 1;
-        static final byte STATE_STORK_LEAVES_SCENE = 2;
+    private static final byte STATE_FLAP = 0;
+    private static final byte STATE_DELIVER_JUNIOR = 1;
+    private static final byte STATE_STORK_LEAVES_SCENE = 2;
 
-        byte state;
-        final TickTimer stateTimer = new TickTimer("MsPacManCutScene3");
+    private byte state;
+    private final TickTimer stateTimer = new TickTimer("MsPacManCutScene3");
 
-        void setState(byte state, long ticks) {
-            this.state = state;
-            stateTimer.reset(ticks);
-            stateTimer.start();
+    private void setSceneState(byte state, long ticks) {
+        this.state = state;
+        stateTimer.reset(ticks);
+        stateTimer.start();
+    }
+
+    private void updateSceneState() {
+        switch (state) {
+            case STATE_FLAP -> updateStateFlap();
+            case STATE_DELIVER_JUNIOR -> updateStateDeliverJunior();
+            case STATE_STORK_LEAVES_SCENE -> updateStateStorkLeavesScene();
+            default -> throw new IllegalStateException("Illegal state: " + state);
+        }
+        stateTimer.doTick();
+    }
+
+    private void updateStateFlap() {
+        clapAnimation.tick();
+        if (stateTimer.atSecond(1)) {
+            music.play();
+        } else if (stateTimer.atSecond(3)) {
+            enterStateDeliverJunior();
+        }
+    }
+
+    private void enterStateDeliverJunior() {
+        pacMan.setMoveDir(Direction.RIGHT);
+        pacMan.setPosition(TS * 3, LANE_Y - 4);
+        pacMan.selectAnimation(ANIM_MR_PACMAN_MUNCHING);
+        pacMan.show();
+
+        msPacMan.setMoveDir(Direction.RIGHT);
+        msPacMan.setPosition(TS * 5, LANE_Y - 4);
+        msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
+        msPacMan.show();
+
+        stork.setPosition(TS * 30, TS * 12);
+        stork.setVelocity(-0.8f, 0);
+        stork.show();
+
+        bag.setPosition(stork.position().plus(-14, 3));
+        bag.setVelocity(stork.velocity());
+        bag.setAcceleration(Vector2f.ZERO);
+        bag.show();
+        bagOpen = false;
+        numBagBounces = 0;
+
+        setSceneState(STATE_DELIVER_JUNIOR, TickTimer.INDEFINITE);
+    }
+
+    private void updateStateDeliverJunior() {
+        stork.move();
+        bag.move();
+
+        // release bag from storks beak?
+        if (stork.tile().x() == 20) {
+            bag.setAcceleration(0, 0.04f); // gravity
+            stork.setVelocity(-1, 0);
         }
 
-        void tick() {
-            switch (state) {
-                case STATE_FLAP -> updateStateFlap();
-                case STATE_DELIVER_JUNIOR -> updateStateDeliverJunior();
-                case STATE_STORK_LEAVES_SCENE -> updateStateStorkLeavesScene();
-                default -> throw new IllegalStateException("Illegal state: " + state);
-            }
-            stateTimer.doTick();
-        }
-
-        void updateStateFlap() {
-            clapAnimation.tick();
-            if (stateTimer.atSecond(1)) {
-                music.play();
-            } else if (stateTimer.atSecond(3)) {
-                enterStateDeliverJunior();
+        // (closed) bag reaches ground for first time?
+        if (!bagOpen && bag.posY() > LANE_Y) {
+            ++numBagBounces;
+            if (numBagBounces < 3) {
+                bag.setVelocity(-0.2f, -1f / numBagBounces);
+                bag.setPosY(LANE_Y);
+            } else {
+                bagOpen = true;
+                bag.setVelocity(Vector2f.ZERO);
+                setSceneState(STATE_STORK_LEAVES_SCENE, 3 * 60);
             }
         }
+    }
 
-        void enterStateDeliverJunior() {
-            pacMan.setMoveDir(Direction.RIGHT);
-            pacMan.setPosition(TS * 3, LANE_Y - 4);
-            pacMan.selectAnimation(ANIM_MR_PACMAN_MUNCHING);
-            pacMan.show();
-
-            msPacMan.setMoveDir(Direction.RIGHT);
-            msPacMan.setPosition(TS * 5, LANE_Y - 4);
-            msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
-            msPacMan.show();
-
-            stork.setPosition(TS * 30, TS * 12);
-            stork.setVelocity(-0.8f, 0);
-            stork.show();
-
-            bag.setPosition(stork.position().plus(-14, 3));
-            bag.setVelocity(stork.velocity());
-            bag.setAcceleration(Vector2f.ZERO);
-            bag.show();
-            bagOpen = false;
-            numBagBounces = 0;
-
-            setState(STATE_DELIVER_JUNIOR, TickTimer.INDEFINITE);
-        }
-
-        void updateStateDeliverJunior() {
-            stork.move();
-            bag.move();
-
-            // release bag from storks beak?
-            if (stork.tile().x() == 20) {
-                bag.setAcceleration(0, 0.04f); // gravity
-                stork.setVelocity(-1, 0);
-            }
-
-            // (closed) bag reaches ground for first time?
-            if (!bagOpen && bag.posY() > LANE_Y) {
-                ++numBagBounces;
-                if (numBagBounces < 3) {
-                    bag.setVelocity(-0.2f, -1f / numBagBounces);
-                    bag.setPosY(LANE_Y);
-                } else {
-                    bagOpen = true;
-                    bag.setVelocity(Vector2f.ZERO);
-                    setState(STATE_STORK_LEAVES_SCENE, 3 * 60);
-                }
-            }
-        }
-
-        void updateStateStorkLeavesScene() {
-            stork.move();
-            if (stateTimer.hasExpired()) {
-                context.gameController().terminateCurrentState();
-            }
+    private void updateStateStorkLeavesScene() {
+        stork.move();
+        if (stateTimer.hasExpired()) {
+            context.gameController().terminateCurrentState();
         }
     }
 }
