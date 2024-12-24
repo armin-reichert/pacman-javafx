@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
@@ -11,6 +15,6 @@ public interface CustomMapsHandler {
     void updateCustomMaps();
     Map<File, WorldMap> customMapsByFile();
     List<WorldMap> customMapsSortedByFile();
-    MapSelectionMode mapSelectionMode();
-    void setMapSelectionMode(MapSelectionMode mode);
+    CustomMapSelectionMode mapSelectionMode();
+    void setMapSelectionMode(CustomMapSelectionMode mode);
 }

@@ -9,9 +9,9 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.model.CustomMapsHandler;
 import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
@@ -50,7 +50,7 @@ public class PacManGameXXL extends PacManGame implements CustomMapsHandler {
     private final File customMapDir;
     private final List<WorldMap> standardMaps = new ArrayList<>();
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
-    private MapSelectionMode mapSelectionMode;
+    private CustomMapSelectionMode mapSelectionMode;
 
     public PacManGameXXL(File userDir) {
         super(userDir);
@@ -59,7 +59,7 @@ public class PacManGameXXL extends PacManGame implements CustomMapsHandler {
             Logger.info("Created custom map directory {}", customMapDir);
         }
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman_xxl.xml"));
-        mapSelectionMode = MapSelectionMode.NO_CUSTOM_MAPS;
+        mapSelectionMode = CustomMapSelectionMode.NO_CUSTOM_MAPS;
         for (int num = 1; num <= MAP_COUNT; ++num) {
             URL url = getClass().getResource(MAP_PATTERN.formatted(num));
             try {
@@ -160,13 +160,13 @@ public class PacManGameXXL extends PacManGame implements CustomMapsHandler {
     // Custom map handling
 
     @Override
-    public void setMapSelectionMode(MapSelectionMode mapSelectionMode) {
+    public void setMapSelectionMode(CustomMapSelectionMode mapSelectionMode) {
         this.mapSelectionMode = assertNotNull(mapSelectionMode);
         Logger.info("Map selection mode is now {}", mapSelectionMode);
     }
 
     @Override
-    public MapSelectionMode mapSelectionMode() {
+    public CustomMapSelectionMode mapSelectionMode() {
         return mapSelectionMode;
     }
 

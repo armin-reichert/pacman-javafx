@@ -1,6 +1,10 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.model;
 
-public enum MapSelectionMode {
+public enum CustomMapSelectionMode {
     /**
      * Standard maps 1-8 in order, then randomly.
      */

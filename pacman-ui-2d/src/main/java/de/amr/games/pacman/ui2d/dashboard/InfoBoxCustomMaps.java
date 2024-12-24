@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
-import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.model.CustomMapsHandler;
 import de.amr.games.pacman.ui2d.GameContext;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -30,13 +30,13 @@ public class InfoBoxCustomMaps extends InfoBox {
     record MapInfo(String fileName, int numRows, int numCols) {}
 
     private TableView<MapInfo> mapTable;
-    private ComboBox<MapSelectionMode> comboMapSelectionMode;
+    private ComboBox<CustomMapSelectionMode> comboMapSelectionMode;
 
     @Override
     public void init(GameContext context) {
         super.init(context);
 
-        comboMapSelectionMode = addComboBox("Map Selection", MapSelectionMode.values());
+        comboMapSelectionMode = addComboBox("Map Selection", CustomMapSelectionMode.values());
         comboMapSelectionMode.setOnAction(e -> PY_MAP_SELECTION_MODE.set(comboMapSelectionMode.getValue()));
         comboMapSelectionMode.getSelectionModel().select(PY_MAP_SELECTION_MODE.get());
 
