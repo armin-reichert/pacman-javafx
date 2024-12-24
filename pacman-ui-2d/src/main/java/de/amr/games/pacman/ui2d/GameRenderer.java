@@ -295,8 +295,8 @@ public interface GameRenderer {
     default void drawScores(GameContext context) {
         Color color = Color.valueOf(Arcade.Palette.WHITE);
         Font font = scaledArcadeFont(TS);
-        drawScore(context.game().scoreManager().score(),     "SCORE",      toPx(1),  toPx(1), font, color);
-        drawScore(context.game().scoreManager().highScore(), "HIGH SCORE", toPx(14), toPx(1), font, color);
+        drawScore(context.game().scoreManager().score(),     "SCORE",      tiles2Px(1),  tiles2Px(1), font, color);
+        drawScore(context.game().scoreManager().highScore(), "HIGH SCORE", tiles2Px(14), tiles2Px(1), font, color);
     }
 
     default void drawScore(Score score, String title, double x, double y, Font font, Color color) {
@@ -304,7 +304,7 @@ public interface GameRenderer {
         drawText(title, color, font, x, y);
         drawText(String.format("%7s", pointsText), color, font, x, y + TS + 1);
         if (score.points() != 0) {
-            drawText("L" + score.levelNumber(), color, font, x + toPx(8), y + TS + 1);
+            drawText("L" + score.levelNumber(), color, font, x + tiles2Px(8), y + TS + 1);
         }
     }
 

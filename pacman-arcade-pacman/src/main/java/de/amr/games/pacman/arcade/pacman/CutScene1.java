@@ -14,7 +14,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.toPx;
+import static de.amr.games.pacman.lib.Globals.tiles2Px;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.Animations.*;
 
@@ -113,6 +113,6 @@ public class CutScene1 extends GameScene2D {
     protected void drawDebugInfo() {
         gr.drawTileGrid(size().x(), size().y());
         String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        gr.drawText(text, Color.YELLOW, GameScene.DEBUG_FONT, toPx(1), toPx(5));
+        gr.drawText(text, Color.YELLOW, GameScene.DEBUG_FONT, tiles2Px(1), tiles2Px(5));
     }
 }

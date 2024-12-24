@@ -69,7 +69,7 @@ public class Globals {
      * @param tiles amount of tiles
      * @return pixels corresponding to amount of tiles
      */
-    public static float toPx(double tiles) {
+    public static float tiles2Px(double tiles) {
         return (float) tiles * TS;
     }
 

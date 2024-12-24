@@ -351,12 +351,12 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
             case NORMAL -> NO_SPRITE;
         };
         double centerX = terrain.numCols() * HTS;
-        double y = toPx(2) + HTS;
+        double y = tiles2Px(2) + HTS;
         if (game.pacBooster() != PacBooster.OFF) {
-            drawSpriteCenteredOverPosition(BOOSTER_SPRITE, centerX - toPx(6), y);
+            drawSpriteCenteredOverPosition(BOOSTER_SPRITE, centerX - tiles2Px(6), y);
         }
         drawSpriteCenteredOverPosition(difficultySprite, centerX, y);
-        drawSpriteCenteredOverPosition(categorySprite, centerX + toPx(4.5), y);
+        drawSpriteCenteredOverPosition(categorySprite, centerX + tiles2Px(4.5), y);
         drawSpriteCenteredOverPosition(INFO_FRAME_SPRITE, centerX, y);
     }
 
@@ -364,10 +364,10 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     public void drawScores(GameContext context) {
         Color color = nesPaletteColor(0x20);
         Font font = scaledArcadeFont(TS);
-        if (context.gameClock().getTickCount() % 60 < 30) { drawText("1UP", color, font, toPx(2), toPx(1)); }
-        drawText("HIGH SCORE", color, font, toPx(9), toPx(1));
-        drawText("%6d".formatted(context.game().scoreManager().score().points()), color, font, 0, toPx(2));
-        drawText("%6d".formatted(context.game().scoreManager().highScore().points()), color, font, toPx(11), toPx(2));
+        if (context.gameClock().getTickCount() % 60 < 30) { drawText("1UP", color, font, tiles2Px(2), tiles2Px(1)); }
+        drawText("HIGH SCORE", color, font, tiles2Px(9), tiles2Px(1));
+        drawText("%6d".formatted(context.game().scoreManager().score().points()), color, font, 0, tiles2Px(2));
+        drawText("%6d".formatted(context.game().scoreManager().highScore().points()), color, font, tiles2Px(11), tiles2Px(2));
     }
 
     @Override

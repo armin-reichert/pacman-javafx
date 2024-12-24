@@ -132,18 +132,18 @@ public class IntroScene extends GameScene2D {
             case CHASING_PAC -> {
                 drawPoints();
                 if (blinking.isOn()) {
-                    drawEnergizer(toPx(LEFT_TILE_X), toPx(20));
+                    drawEnergizer(tiles2Px(LEFT_TILE_X), tiles2Px(20));
                 }
                 drawGuys(flutter(timer.tickCount()));
                 if (context.gameVariant() == GameVariant.PACMAN) {
-                    gr.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, Color.valueOf(Arcade.Palette.PINK), gr.scaledArcadeFont(TS),  toPx(4), toPx(32));
+                    gr.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, Color.valueOf(Arcade.Palette.PINK), gr.scaledArcadeFont(TS),  tiles2Px(4), tiles2Px(32));
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(0);
                 if (context.gameVariant() == GameVariant.PACMAN) {
-                    gr.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, Color.valueOf(Arcade.Palette.PINK), gr.scaledArcadeFont(TS),  toPx(4), toPx(32));
+                    gr.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, Color.valueOf(Arcade.Palette.PINK), gr.scaledArcadeFont(TS),  tiles2Px(4), tiles2Px(32));
                 }
             }
             default -> {}
@@ -161,20 +161,20 @@ public class IntroScene extends GameScene2D {
         var spriteSheet = (PacManGameSpriteSheet) context.gameConfiguration().spriteSheet();
         Font font = gr.scaledArcadeFont(TS);
         if (titleVisible) {
-            gr.drawText("CHARACTER / NICKNAME", Color.valueOf(Arcade.Palette.WHITE), font, toPx(LEFT_TILE_X + 3), toPx(6));
+            gr.drawText("CHARACTER / NICKNAME", Color.valueOf(Arcade.Palette.WHITE), font, tiles2Px(LEFT_TILE_X + 3), tiles2Px(6));
         }
         for (byte id = 0; id < 4; ++id) {
             int tileY = 7 + 3 * id;
             if (ghostImageVisible[id]) {
-                gr.drawSpriteCenteredOverTile(spriteSheet.ghostFacingRight(id), toPx(LEFT_TILE_X) + 4, toPx(tileY));
+                gr.drawSpriteCenteredOverTile(spriteSheet.ghostFacingRight(id), tiles2Px(LEFT_TILE_X) + 4, tiles2Px(tileY));
             }
             if (ghostCharacterVisible[id]) {
                 String text = "-" + GHOST_CHARACTERS[id];
-                gr.drawText(text, GHOST_COLORS[id], font, toPx(LEFT_TILE_X + 3), toPx(tileY + 1));
+                gr.drawText(text, GHOST_COLORS[id], font, tiles2Px(LEFT_TILE_X + 3), tiles2Px(tileY + 1));
             }
             if (ghostNicknameVisible[id]) {
                 String text = '"' + ghosts[id].name().toUpperCase() + '"';
-                gr.drawText(text, GHOST_COLORS[id], font, toPx(LEFT_TILE_X + 14), toPx(tileY + 1));
+                gr.drawText(text, GHOST_COLORS[id], font, tiles2Px(LEFT_TILE_X + 14), tiles2Px(tileY + 1));
             }
         }
     }
@@ -202,14 +202,14 @@ public class IntroScene extends GameScene2D {
         int tileX = LEFT_TILE_X + 6;
         int tileY = 25;
         gr.ctx().setFill(PELLET_COLOR);
-        gr.ctx().fillRect(scaled(toPx(tileX) + 4), scaled(toPx(tileY - 1) + 4), scaled(2), scaled(2));
+        gr.ctx().fillRect(scaled(tiles2Px(tileX) + 4), scaled(tiles2Px(tileY - 1) + 4), scaled(2), scaled(2));
         if (blinking.isOn()) {
-            drawEnergizer(toPx(tileX), toPx(tileY + 1));
+            drawEnergizer(tiles2Px(tileX), tiles2Px(tileY + 1));
         }
-        gr.drawText("10",  color, font8, toPx(tileX + 2), toPx(tileY));
-        gr.drawText("PTS", color, font6, toPx(tileX + 5), toPx(tileY));
-        gr.drawText("50",  color, font8, toPx(tileX + 2), toPx(tileY + 2));
-        gr.drawText("PTS", color, font6, toPx(tileX + 5), toPx(tileY + 2));
+        gr.drawText("10",  color, font8, tiles2Px(tileX + 2), tiles2Px(tileY));
+        gr.drawText("PTS", color, font6, tiles2Px(tileX + 5), tiles2Px(tileY));
+        gr.drawText("50",  color, font8, tiles2Px(tileX + 2), tiles2Px(tileY + 2));
+        gr.drawText("PTS", color, font6, tiles2Px(tileX + 5), tiles2Px(tileY + 2));
     }
 
     // draw pixelated "circle"

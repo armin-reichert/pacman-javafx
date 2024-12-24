@@ -177,7 +177,7 @@ public class MsPacManGameRenderer implements GameRenderer {
 
     public void drawMsPacManMidwayCopyright(double x, double y, Color color, Font font) {
         Image image = assets.get("ms_pacman.logo.midway");
-        drawImageScaled(image, x, y + 2, toPx(4) - 2, toPx(4));
+        drawImageScaled(image, x, y + 2, tiles2Px(4) - 2, tiles2Px(4));
         ctx().setFont(font);
         ctx().setFill(color);
         ctx().fillText("©", scaled(x + TS * 5), scaled(y + TS * 2 + 2));
