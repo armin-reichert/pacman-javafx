@@ -11,7 +11,7 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
-import de.amr.games.pacman.ui2d.assets.SpriteAnimationCollection;
+import de.amr.games.pacman.ui2d.assets.SpriteAnimationSet;
 
 import java.util.Map;
 
@@ -21,7 +21,7 @@ import static de.amr.games.pacman.lib.Globals.assertNotNull;
 /**
  * @author Armin Reichert
  */
-public class GhostAnimations extends SpriteAnimationCollection {
+public class GhostAnimations extends SpriteAnimationSet {
 
     public GhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
         assertNotNull(spriteSheet);

@@ -12,14 +12,14 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
-import de.amr.games.pacman.ui2d.assets.SpriteAnimationCollection;
+import de.amr.games.pacman.ui2d.assets.SpriteAnimationSet;
 
 import java.util.Map;
 
 /**
  * @author Armin Reichert
  */
-public class GhostAnimations extends SpriteAnimationCollection {
+public class GhostAnimations extends SpriteAnimationSet {
 
     public static final int NORMAL_FRAME_TICKS = 8;  // TODO check this in emulator
     public static final int FRIGHTENED_FRAME_TICKS = 8;  // TODO check this in emulator

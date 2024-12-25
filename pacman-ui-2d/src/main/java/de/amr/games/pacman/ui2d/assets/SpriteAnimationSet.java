@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * @author Armin Reichert
  */
-public class SpriteAnimationCollection implements Animations {
+public class SpriteAnimationSet implements Animations {
 
     protected final Map<String, SpriteAnimation> animationsByID = new HashMap<>();
     protected String currentAnimationID;

@@ -18,7 +18,7 @@ import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
-import de.amr.games.pacman.ui2d.assets.SpriteAnimationCollection;
+import de.amr.games.pacman.ui2d.assets.SpriteAnimationSet;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -175,7 +175,7 @@ public interface GameRenderer {
             return;
         }
         character.animations().ifPresent(animations -> {
-            if (animations instanceof SpriteAnimationCollection spriteAnimations) {
+            if (animations instanceof SpriteAnimationSet spriteAnimations) {
                 SpriteAnimation currentAnimation = spriteAnimations.currentAnimation();
                 if (currentAnimation != null) {
                     drawActorSprite(character.actor(), spriteAnimations.currentSprite(character));
@@ -231,7 +231,7 @@ public interface GameRenderer {
      * @param animatedCreature animated entity (must contain an entity of type {@link Creature}
      */
     default void drawAnimatedCreatureInfo(AnimatedActor2D animatedCreature) {
-        animatedCreature.animations().map(SpriteAnimationCollection.class::cast).ifPresent(animations -> {
+        animatedCreature.animations().map(SpriteAnimationSet.class::cast).ifPresent(animations -> {
             var guy = (Creature) animatedCreature.actor();
             String animID = animations.currentAnimationID();
             if (animID != null) {

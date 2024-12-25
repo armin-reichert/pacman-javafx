@@ -19,7 +19,7 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameRenderer;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
-import de.amr.games.pacman.ui2d.assets.SpriteAnimationCollection;
+import de.amr.games.pacman.ui2d.assets.SpriteAnimationSet;
 import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -141,10 +141,10 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         if (!pac.isVisible()) {
             return;
         }
-        pac.animations().map(SpriteAnimationCollection.class::cast).ifPresent(animations -> {
-            SpriteAnimation animation = animations.currentAnimation();
+        pac.animations().map(SpriteAnimationSet.class::cast).ifPresent(spriteAnimations -> {
+            SpriteAnimation animation = spriteAnimations.currentAnimation();
             if (animation != null) {
-                switch (animations.currentAnimationID()) {
+                switch (spriteAnimations.currentAnimationID()) {
                     case ANIM_PAC_MUNCHING, ANIM_MS_PACMAN_BOOSTER,
                          ANIM_MR_PACMAN_MUNCHING, ANIM_MR_PACMAN_BOOSTER,
                          ANIM_JUNIOR_PACMAN -> drawGuy(pac, pac.moveDir(), animation.currentSprite());

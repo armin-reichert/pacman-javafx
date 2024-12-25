@@ -12,14 +12,14 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
-import de.amr.games.pacman.ui2d.assets.SpriteAnimationCollection;
+import de.amr.games.pacman.ui2d.assets.SpriteAnimationSet;
 
 import java.util.Map;
 
 /**
  * @author Armin Reichert
  */
-public class PacAnimations extends SpriteAnimationCollection {
+public class PacAnimations extends SpriteAnimationSet {
 
     public PacAnimations(PacManGameSpriteSheet spriteSheet) {
         Globals.assertNotNull(spriteSheet);

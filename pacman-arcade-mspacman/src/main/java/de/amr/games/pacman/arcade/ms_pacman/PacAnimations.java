@@ -11,7 +11,7 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
-import de.amr.games.pacman.ui2d.assets.SpriteAnimationCollection;
+import de.amr.games.pacman.ui2d.assets.SpriteAnimationSet;
 
 import java.util.Map;
 
@@ -20,7 +20,7 @@ import static de.amr.games.pacman.lib.Globals.assertNotNull;
 /**
  * @author Armin Reichert
  */
-public class PacAnimations extends SpriteAnimationCollection {
+public class PacAnimations extends SpriteAnimationSet {
 
     public PacAnimations(MsPacManGameSpriteSheet spriteSheet) {
         assertNotNull(spriteSheet);
