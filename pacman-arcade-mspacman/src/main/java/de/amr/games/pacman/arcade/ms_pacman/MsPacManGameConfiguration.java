@@ -121,7 +121,6 @@ public class MsPacManGameConfiguration implements GameConfiguration {
         assets.store(assetKeyPrefix() + ".startpage.image1",              rm.loadImage("graphics/f1.jpg"));
         assets.store(assetKeyPrefix() + ".startpage.image2",              rm.loadImage("graphics/f2.jpg"));
 
-        assets.store(assetKeyPrefix() + ".helpButton.icon",               rm.loadImage("graphics/icons/help-red-64.png"));
         assets.store(assetKeyPrefix() + ".icon",                          rm.loadImage("graphics/icons/mspacman.png"));
         assets.store(assetKeyPrefix() + ".logo.midway",                   rm.loadImage("graphics/midway_logo.png"));
 

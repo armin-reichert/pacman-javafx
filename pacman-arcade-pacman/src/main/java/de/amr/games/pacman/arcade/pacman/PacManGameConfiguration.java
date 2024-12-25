@@ -113,7 +113,6 @@ public class PacManGameConfiguration implements GameConfiguration {
         assets.store(assetKeyPrefix() + ".startpage.image2",         rm.loadImage("graphics/f2.jpg"));
         assets.store(assetKeyPrefix() + ".startpage.image3",         rm.loadImage("graphics/f3.jpg"));
 
-        assets.store(assetKeyPrefix() + ".helpButton.icon",          rm.loadImage("graphics/icons/help-blue-64.png"));
         assets.store(assetKeyPrefix() + ".icon",                     rm.loadImage("graphics/icons/pacman.png"));
 
         // Clips

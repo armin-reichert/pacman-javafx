@@ -104,10 +104,7 @@ public class PacManGameXXLConfiguration implements GameConfiguration {
 
     private void loadAssets(ResourceManager rm, AssetStorage assets) {
         assets.store(assetKeyPrefix() + ".scene_background",     imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
-
         assets.store(assetKeyPrefix() + ".icon",                 rm.loadImage("graphics/icons/pacman.png"));
-        assets.store(assetKeyPrefix() + ".helpButton.icon",      rm.loadImage("graphics/icons/help-blue-64.png"));
-
         assets.store(assetKeyPrefix() + ".spritesheet",          rm.loadImage("graphics/pacman_spritesheet.png"));
 
         // Clips
