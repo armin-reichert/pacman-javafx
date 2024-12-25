@@ -30,7 +30,7 @@ public class PacManGameConfiguration implements GameConfiguration {
 
     public PacManGameConfiguration(AssetStorage assets) {
         loadAssets(() -> ResourceRoot.class, assets);
-        spriteSheet = new PacManGameSpriteSheet(assets.get(assetKeyPrefix() + ".spritesheet"));
+        spriteSheet = new PacManGameSpriteSheet(assets.get("pacman.spritesheet"));
 
         setGameScene("BootScene",   new ArcadeBootScene());
         setGameScene("IntroScene",  new IntroScene());
@@ -92,7 +92,7 @@ public class PacManGameConfiguration implements GameConfiguration {
             case GameState.INTRO              -> "IntroScene";
             case GameState.INTERMISSION       -> "CutScene" + context.level().intermissionNumber();
             case GameState.TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");
-            default                 -> "PlayScene2D";
+            default -> "PlayScene2D";
         };
         return getGameScene(sceneID);
     }
