@@ -72,12 +72,12 @@ public class Bonus3D extends Box {
     }
 
     public void update(GameContext context) {
-        Vector2f position = bonus.entity().center();
-        setTranslateX(position.x());
-        setTranslateY(position.y());
+        Vector2f center = bonus.entity().position().plus(HTS, HTS);
+        setTranslateX(center.x());
+        setTranslateY(center.y());
         setTranslateZ(-HTS);
         if (context.game().level().isPresent()) {
-            boolean outsideWorld = position.x() < HTS || position.x() > context.level().world().map().terrain().numCols() * TS - HTS;
+            boolean outsideWorld = center.x() < HTS || center.x() > context.level().world().map().terrain().numCols() * TS - HTS;
             boolean visible = !(bonus.state() == Bonus.STATE_INACTIVE || outsideWorld);
             setVisible(visible);
             if (edibleAnimation.getStatus() == Animation.Status.RUNNING && bonus instanceof MovingBonus movingBonus) {

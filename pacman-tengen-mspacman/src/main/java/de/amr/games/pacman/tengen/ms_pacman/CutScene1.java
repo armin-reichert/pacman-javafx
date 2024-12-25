@@ -7,8 +7,8 @@ package de.amr.games.pacman.tengen.ms_pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES_JoypadButton;
+import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.Animations;
-import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -52,7 +52,7 @@ public class CutScene1 extends GameScene2D {
     private Pac msPacMan;
     private Ghost inky;
     private Ghost pinky;
-    private Entity heart;
+    private Actor2D heart;
     private ClapperboardAnimation clapAnimation;
     private boolean collided;
 
@@ -72,7 +72,7 @@ public class CutScene1 extends GameScene2D {
         msPacMan = new Pac();
         inky = Ghost.inky();
         pinky = Ghost.pinky();
-        heart = new Entity();
+        heart = new Actor2D();
 
         var spriteSheet = (MsPacManGameTengenSpriteSheet) context.gameConfiguration().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));

@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.scene3d;
 
 import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.actors.Entity;
+import de.amr.games.pacman.model.actors.Actor2D;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 
@@ -50,8 +50,8 @@ public abstract class Perspective {
         }
 
         @Override
-        public void update(GameWorld world, Entity focussedEntity) {
-            var position = focussedEntity.position();
+        public void update(GameWorld world, Actor2D focussedActor) {
+            var position = focussedActor.position();
             double speed = 0.02;
             double x = lerp(cam.getTranslateX(), position.x(), speed);
             double y = lerp(cam.getTranslateY(), position.y(), speed);
@@ -72,7 +72,7 @@ public abstract class Perspective {
         }
 
         @Override
-        public void update(GameWorld world, Entity spottedEntity) {
+        public void update(GameWorld world, Actor2D spottedActor) {
             int sizeX = world.map().terrain().numCols() * TS;
             int sizeY = world.map().terrain().numRows() * TS;
             cam.setRotationAxis(Rotate.X_AXIS);
@@ -97,12 +97,12 @@ public abstract class Perspective {
         }
 
         @Override
-        public void update(GameWorld world, Entity spottedEntity) {
+        public void update(GameWorld world, Actor2D spottedActor) {
             double speedX = 0.03;
             double speedY = 0.06;
             double worldWidth = world.map().terrain().numCols() * TS;
-            double targetX = clamp(spottedEntity.posX(), 100, worldWidth - 100);
-            double targetY = spottedEntity.posY() + 150;
+            double targetX = clamp(spottedActor.posX(), 100, worldWidth - 100);
+            double targetY = spottedActor.posY() + 150;
             cam.setTranslateX(lerp(cam.getTranslateX(), targetX, speedX));
             cam.setTranslateY(lerp(cam.getTranslateY(), targetY, speedY));
         }
@@ -121,12 +121,12 @@ public abstract class Perspective {
         }
 
         @Override
-        public void update(GameWorld world, Entity spottedEntity) {
+        public void update(GameWorld world, Actor2D spottedActor) {
             double speedX = 0.04;
             double speedY = 0.04;
             double worldWidth = world.map().terrain().numCols() * TS;
-            double targetX = clamp(spottedEntity.posX(), 40, worldWidth - 40);
-            double targetY = spottedEntity.position().y() + 100;
+            double targetX = clamp(spottedActor.posX(), 40, worldWidth - 40);
+            double targetY = spottedActor.position().y() + 100;
             cam.setTranslateX(lerp(cam.getTranslateX(), targetX, speedX));
             cam.setTranslateY(lerp(cam.getTranslateY(), targetY, speedY));
             cam.setTranslateZ(-40);
@@ -142,7 +142,7 @@ public abstract class Perspective {
 
     public abstract void init(GameWorld world);
 
-    public abstract void update(GameWorld world, Entity spottedEntity);
+    public abstract void update(GameWorld world, Actor2D spottedActor);
 
     public PerspectiveCamera getCamera() {
         return cam;

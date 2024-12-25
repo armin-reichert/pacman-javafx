@@ -6,9 +6,9 @@ package de.amr.games.pacman.ui2d.assets;
 
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Animations;
-import de.amr.games.pacman.model.actors.Entity;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -48,7 +48,7 @@ public class SpriteAnimationCollection implements Animations {
     }
 
     //TODO passing spritesheet is not necessary
-    protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
+    protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Actor2D actor) {
         return null;
     }
 

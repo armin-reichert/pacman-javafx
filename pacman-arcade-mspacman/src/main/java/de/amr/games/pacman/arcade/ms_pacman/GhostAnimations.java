@@ -6,8 +6,8 @@ package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.Animations;
-import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
@@ -81,8 +81,8 @@ public class GhostAnimations extends SpriteAnimationCollection {
     }
 
     @Override
-    protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
-        if (entity instanceof Ghost ghost) {
+    protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Actor2D actor) {
+        if (actor instanceof Ghost ghost) {
             if (isCurrentAnimationID(Animations.ANIM_GHOST_NORMAL)) {
                 return spriteSheet.ghostNormalSprites(ghost.id(), ghost.wishDir());
             }
@@ -90,6 +90,6 @@ public class GhostAnimations extends SpriteAnimationCollection {
                 return spriteSheet.ghostEyesSprites(ghost.wishDir());
             }
         }
-        return super.selectedSprites(spriteSheet, entity);
+        return super.selectedSprites(spriteSheet, actor);
     }
 }

@@ -11,10 +11,10 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
+import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.AnimatedEntity;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Creature;
-import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
@@ -155,13 +155,13 @@ public interface GameRenderer {
     /**
      * Draws the sprite over the collision box (one tile large) of the given entity (if visible).
      *
-     * @param entity an entity e.g. Pac-Man or a ghost
+     * @param actor an entity e.g. Pac-Man or a ghost
      * @param sprite sprite sheet region (can be null)
      */
-    default void drawEntitySprite(Entity entity, RectArea sprite) {
-        assertNotNull(entity);
-        if (entity.isVisible() && sprite != null) {
-            drawSpriteCenteredOverTile(sprite, entity.posX(), entity.posY());
+    default void drawEntitySprite(Actor2D actor, RectArea sprite) {
+        assertNotNull(actor);
+        if (actor.isVisible() && sprite != null) {
+            drawSpriteCenteredOverTile(sprite, actor.posX(), actor.posY());
         }
     }
 
@@ -242,8 +242,9 @@ public interface GameRenderer {
             }
             if (guy.wishDir() != null) {
                 float scaling = (float) scaling();
-                Vector2f arrowHead = guy.center().plus(guy.wishDir().vector().scaled(12f)).scaled(scaling);
-                Vector2f guyCenter = guy.center().scaled(scaling);
+                Vector2f center = guy.position().plus(HTS, HTS);
+                Vector2f arrowHead = center.plus(guy.wishDir().vector().scaled(12f)).scaled(scaling);
+                Vector2f guyCenter = center.scaled(scaling);
                 float radius = scaling * 2, diameter = 2 * radius;
                 ctx().setStroke(Color.WHITE);
                 ctx().setLineWidth(0.5);

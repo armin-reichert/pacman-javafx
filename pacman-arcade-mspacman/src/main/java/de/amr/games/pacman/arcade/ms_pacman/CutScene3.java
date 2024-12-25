@@ -7,7 +7,7 @@ package de.amr.games.pacman.arcade.ms_pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.actors.Entity;
+import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -35,8 +35,8 @@ public class CutScene3 extends GameScene2D {
 
     private Pac pacMan;
     private Pac msPacMan;
-    private Entity stork;
-    private Entity bag;
+    private Actor2D stork;
+    private Actor2D bag;
     private boolean bagOpen;
     private int numBagBounces;
 
@@ -53,8 +53,8 @@ public class CutScene3 extends GameScene2D {
 
         pacMan = new Pac();
         msPacMan = new Pac();
-        stork = new Entity();
-        bag = new Entity();
+        stork = new Actor2D();
+        bag = new Actor2D();
 
         music = context.sound().makeSound("intermission.3", 1.0, false);
         var spriteSheet = (MsPacManGameSpriteSheet) context.gameConfiguration().spriteSheet();

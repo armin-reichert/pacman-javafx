@@ -6,7 +6,7 @@ package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.model.actors.Entity;
+import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
@@ -105,8 +105,8 @@ public class PacAnimations extends SpriteAnimationCollection {
     }
 
     @Override
-    protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Entity entity) {
-        if (entity instanceof Pac msPacMan) {
+    protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Actor2D actor) {
+        if (actor instanceof Pac msPacMan) {
             if (isCurrentAnimationID(ANIM_PAC_MUNCHING)) {
                 return MsPacManGameTengenSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT;
             }
@@ -117,6 +117,6 @@ public class PacAnimations extends SpriteAnimationCollection {
                 return ((MsPacManGameTengenSpriteSheet)spriteSheet).pacManMunchingSprites(msPacMan.moveDir());
             }
         }
-        return super.selectedSprites(spriteSheet, entity);
+        return super.selectedSprites(spriteSheet, actor);
     }
 }

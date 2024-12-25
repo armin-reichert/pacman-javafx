@@ -169,7 +169,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     }
 
     private void drawGuy(Creature guy, Direction dir, RectArea spriteLookingLeft) {
-        Vector2f center = guy.center().scaled((float) scaling());
+        Vector2f center = guy.position().plus(HTS, HTS).scaled((float) scaling());
         ctx.save();
         ctx.translate(center.x(), center.y());
         switch (dir) {
@@ -440,7 +440,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         });
     }
 
-    public void drawStork(SpriteAnimation storkAnimation, Entity stork, boolean hideBag) {
+    public void drawStork(SpriteAnimation storkAnimation, Actor2D stork, boolean hideBag) {
         if (!stork.isVisible()) {
             return;
         }

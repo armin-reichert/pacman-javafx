@@ -10,24 +10,23 @@ import de.amr.games.pacman.lib.Vector2i;
 import static de.amr.games.pacman.lib.Globals.*;
 
 /**
- * Base class for all "entities", e.g. creatures and bonus entities. Each entity has a position, velocity, acceleration
- * and visibility.
+ * Base class for all 2D game actors, e.g. creatures and bonus entities.
+ * <p>
+ * Each actor has a position velocity, acceleration (all sub-pixel precision) and a visibility.
+ * </p>
  *
  * @author Armin Reichert
  */
-public class Entity {
+public class Actor2D {
 
-    protected boolean visible = false;
-    protected float posX;
-    protected float posY;
-    protected float velX;
-    protected float velY;
-    protected float accX;
-    protected float accY;
+    protected boolean visible;
+    protected float posX, posY;
+    protected float velX, velY;
+    protected float accX, accY;
 
     @Override
     public String toString() {
-        return "Entity{" +
+        return "Actor{" +
             "visible=" + visible +
             ", posX=" + posX +
             ", posY=" + posY +
@@ -38,14 +37,12 @@ public class Entity {
             '}';
     }
 
+    /**
+     * Resets this actor thingy to its initial state, not that it is invisible by default!
+     */
     public void reset() {
         visible = false;
-        posX = 0;
-        posY = 0;
-        velX = 0;
-        velY = 0;
-        accX = 0;
-        accY = 0;
+        posX = posY = velX = velY = accX = accY = 0;
     }
 
     public boolean isVisible() {
@@ -64,8 +61,16 @@ public class Entity {
         visible = false;
     }
 
+    public void setPosX(float value) {
+        posX = value;
+    }
+
     public float posX() {
         return posX;
+    }
+
+    public void setPosY(float value) {
+        posY = value;
     }
 
     public float posY() {
@@ -79,14 +84,6 @@ public class Entity {
         return v2f(posX, posY);
     }
 
-    public void setPosX(float pos_x) {
-        this.posX = pos_x;
-    }
-
-    public void setPosY(float pos_y) {
-        this.posY = pos_y;
-    }
-
     public void setPosition(float x, float y) {
         posX = x;
         posY = y;
@@ -96,13 +93,6 @@ public class Entity {
         assertNotNull(position, "Position of entity must not be null");
         posX = position.x();
         posY = position.y();
-    }
-
-    /**
-     * @return Center position of entity collision box (position property stores *upper left corner* of box).
-     */
-    public Vector2f center() {
-        return v2f(posX + HTS, posY + HTS);
     }
 
     public Vector2f velocity() {
@@ -164,7 +154,7 @@ public class Entity {
      * @param other some entity
      * @return <code>true</code> if both entities occupy same tile
      */
-    public boolean sameTile(Entity other) {
+    public boolean sameTile(Actor2D other) {
         assertNotNull(other, "Entity to check for same tile must not be null");
         return tile().equals(other.tile());
     }

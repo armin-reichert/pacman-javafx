@@ -13,8 +13,8 @@ import java.util.Optional;
  */
 public interface AnimatedEntity {
 
-    default Entity entity() {
-        return (Entity) this;
+    default Actor2D entity() {
+        return (Actor2D) this;
     }
 
     boolean isVisible();

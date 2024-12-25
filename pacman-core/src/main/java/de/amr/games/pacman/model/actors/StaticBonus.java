@@ -15,7 +15,7 @@ import org.tinylog.Logger;
  *
  * @author Armin Reichert
  */
-public class StaticBonus extends Entity implements Bonus {
+public class StaticBonus extends Actor2D implements Bonus {
 
     private final byte symbol;
     private final int points;

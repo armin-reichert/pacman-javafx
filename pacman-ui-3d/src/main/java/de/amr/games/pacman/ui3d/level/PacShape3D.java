@@ -91,7 +91,7 @@ public class PacShape3D extends Group {
     }
 
     public void updatePosition(Pac pac) {
-        Vector2f center = pac.center();
+        Vector2f center = pac.position().plus(HTS, HTS);
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(initialZ);

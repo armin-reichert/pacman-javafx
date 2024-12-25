@@ -27,7 +27,7 @@ public interface Bonus {
     /**
      * @return Entity representing this bonus in the world.
      */
-    Entity entity();
+    Actor2D entity();
 
     /**
      * @return the symbol of this bonus.

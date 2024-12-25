@@ -137,7 +137,7 @@ public class MutableGhost3D {
     }
 
     private void updateTransform() {
-        Vector2f center = ghost.center();
+        Vector2f center = ghost.position().plus(HTS, HTS);
         root.setTranslateX(center.x());
         root.setTranslateY(center.y());
         root.setTranslateZ(-0.5 * size - 2.0); // lift a bit over floor

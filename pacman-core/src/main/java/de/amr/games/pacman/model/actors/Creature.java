@@ -21,7 +21,7 @@ import static de.amr.games.pacman.lib.Globals.*;
  *
  * @author Armin Reichert
  */
-public abstract class Creature extends Entity {
+public abstract class Creature extends Actor2D {
 
     /** Order in which directions are selected when navigation decision is met. */
     Direction[] DIRECTION_PRIORITY = {UP, LEFT, DOWN, RIGHT};
@@ -341,12 +341,11 @@ public abstract class Creature extends Entity {
      * @param dir the direction to move
      */
     protected void tryMoving(Direction dir) {
-        final Vector2i tileBeforeMove = tile();
-        final Vector2f dirVector = dir.vector().toVector2f();
-        final Vector2f newVelocity = dirVector.scaled(velocity().length());
-        final Vector2f touchPosition = center().plus(dirVector.scaled(HTS)).plus(newVelocity);
-        final Vector2i touchedTile = tileAt(touchPosition);
         final boolean isTurn = !dir.sameOrientation(moveDir);
+        final Vector2i tileBeforeMove = tile();
+        final Vector2f newVelocity = dir.vector().scaled(velocity().length());
+        final Vector2f touchPosition = position().plus(HTS, HTS).plus(dir.vector().scaled((float) HTS)).plus(newVelocity);
+        final Vector2i touchedTile = tileAt(touchPosition);
 
         if (!canAccessTile(touchedTile)) {
             if (!isTurn) {
@@ -369,7 +368,7 @@ public abstract class Creature extends Entity {
         }
 
         if (isTurn && corneringSpeedUp != 0) {
-            setVelocity(newVelocity.plus(dirVector.scaled(corneringSpeedUp)));
+            setVelocity(newVelocity.plus(dir.vector().scaled(corneringSpeedUp)));
             Logger.trace("{} velocity around corner: {}", name(), velocity().length());
             move();
             setVelocity(newVelocity);

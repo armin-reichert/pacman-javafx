@@ -314,7 +314,7 @@ public class Ghost extends Creature implements AnimatedEntity {
             return;
         }
         // move inside house
-        float centerX = center().x();
+        float centerX = posX + HTS;
         float houseCenterX = world.houseCenter().x();
         if (differsAtMost(0.5f * speedInsideHouse, centerX, houseCenterX)) {
             // align horizontally and raise

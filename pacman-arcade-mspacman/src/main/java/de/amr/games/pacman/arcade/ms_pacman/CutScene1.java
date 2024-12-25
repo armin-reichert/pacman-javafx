@@ -7,8 +7,8 @@ package de.amr.games.pacman.arcade.ms_pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
+import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.Animations;
-import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -44,7 +44,7 @@ public class CutScene1 extends GameScene2D {
     private Pac msPac;
     private Ghost inky;
     private Ghost pinky;
-    private Entity heart;
+    private Actor2D heart;
 
     private MediaPlayer music;
     private ClapperboardAnimation clapAnimation;
@@ -60,7 +60,7 @@ public class CutScene1 extends GameScene2D {
         msPac = new Pac();
         inky = Ghost.inky();
         pinky = Ghost.pinky();
-        heart = new Entity();
+        heart = new Actor2D();
 
         music = context.sound().makeSound("intermission.1", 1.0, false);
 
