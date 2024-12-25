@@ -1,4 +1,4 @@
-# A JavaFX remake (2D+3D) for Pac-Man (Arcade) and Ms. Pac-Man (Arcade + Tengen NES Version)
+# A JavaFX remake (2D+3D) of Pac-Man (Arcade) and Ms. Pac-Man (Arcade + Tengen NES Version)
 
 ## ℹ️ Online version available
 
