@@ -11,6 +11,6 @@ import de.amr.games.pacman.ui2d.lib.Ufx;
  */
 public class Main {
     public static void main(String[] args) {
-        Ufx.launchApplication(PacManGames3dApp.class, args);
+        Ufx.startApp(PacManGames3dApp.class, args);
     }
 }
