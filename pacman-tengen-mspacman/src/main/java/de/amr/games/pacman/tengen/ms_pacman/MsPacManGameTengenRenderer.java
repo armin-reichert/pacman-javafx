@@ -30,7 +30,7 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.model.actors.Animations.*;
+import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.model.actors.Bonus.STATE_EATEN;
 import static de.amr.games.pacman.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.games.pacman.tengen.ms_pacman.MazeRepository.strangeMap15Sprite;

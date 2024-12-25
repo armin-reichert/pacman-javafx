@@ -7,7 +7,7 @@ package de.amr.games.pacman.model.actors;
 /**
  * @author Armin Reichert
  */
-public interface Animations {
+public interface ActorAnimations {
 
     // Common animation IDs
     String ANIM_PAC_MUNCHING     = "pac_munching";

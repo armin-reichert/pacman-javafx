@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
+import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
 
 /**
  * @author Armin Reichert

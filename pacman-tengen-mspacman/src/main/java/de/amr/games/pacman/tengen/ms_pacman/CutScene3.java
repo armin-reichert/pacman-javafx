@@ -15,7 +15,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
+import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_TILES;
 import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSpriteSheet.BLUE_BAG_SPRITE;

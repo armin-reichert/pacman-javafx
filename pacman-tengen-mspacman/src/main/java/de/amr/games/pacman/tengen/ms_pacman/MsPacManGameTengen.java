@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.model.actors.Animations.ANIM_MS_PACMAN_BOOSTER;
+import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MS_PACMAN_BOOSTER;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 import static de.amr.games.pacman.tengen.ms_pacman.SpeedConfiguration.*;
 
@@ -374,10 +374,10 @@ public class MsPacManGameTengen extends GameModel {
     @Override
     protected void initActorAnimations() {
         level.pac().selectAnimation(boosterActive
-            ? ANIM_MS_PACMAN_BOOSTER : Animations.ANIM_PAC_MUNCHING);
+            ? ANIM_MS_PACMAN_BOOSTER : ActorAnimations.ANIM_PAC_MUNCHING);
         level.pac().resetAnimation();
         level.ghosts().forEach(ghost -> {
-            ghost.selectAnimation(Animations.ANIM_GHOST_NORMAL);
+            ghost.selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
             ghost.resetAnimation();
         });
     }
@@ -391,7 +391,7 @@ public class MsPacManGameTengen extends GameModel {
             }
             level.pac().setBaseSpeed(speed);
             level.pac().selectAnimation(boosterActive
-                ? ANIM_MS_PACMAN_BOOSTER : Animations.ANIM_PAC_MUNCHING);
+                ? ANIM_MS_PACMAN_BOOSTER : ActorAnimations.ANIM_PAC_MUNCHING);
         }
     }
 

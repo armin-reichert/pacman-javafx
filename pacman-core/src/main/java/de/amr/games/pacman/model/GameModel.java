@@ -12,7 +12,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.Pulse;
-import de.amr.games.pacman.model.actors.Animations;
+import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
@@ -185,10 +185,10 @@ public abstract class GameModel {
     }
 
     protected void initActorAnimations() {
-        level.pac().selectAnimation(Animations.ANIM_PAC_MUNCHING);
+        level.pac().selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);
         level.pac().resetAnimation();
         level.ghosts().forEach(ghost -> {
-            ghost.selectAnimation(Animations.ANIM_GHOST_NORMAL);
+            ghost.selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
             ghost.resetAnimation();
         });
     }

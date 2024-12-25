@@ -26,7 +26,7 @@ public class Pac extends Creature implements AnimatedActor2D {
     private long starvingTicks;
     private Steering autopilot;
     private boolean usingAutopilot;
-    private Animations animations;
+    private ActorAnimations animations;
     private boolean immune;
 
     public void setName(String name) {
@@ -54,12 +54,17 @@ public class Pac extends Creature implements AnimatedActor2D {
             '}';
     }
 
-    public void setAnimations(Animations animations) {
+    @Override
+    public Actor2D actor() {
+        return this;
+    }
+
+    public void setAnimations(ActorAnimations animations) {
         this.animations = animations;
     }
 
     @Override
-    public Optional<Animations> animations() {
+    public Optional<ActorAnimations> animations() {
         return Optional.ofNullable(animations);
     }
 
@@ -87,7 +92,7 @@ public class Pac extends Creature implements AnimatedActor2D {
         starvingTicks = 0;
         corneringSpeedUp = 1.5f; // no real cornering implementation but better than nothing
         if (animations != null) {
-            animations.select(Animations.ANIM_PAC_MUNCHING, 0);
+            animations.select(ActorAnimations.ANIM_PAC_MUNCHING, 0);
         }
     }
 
@@ -128,7 +133,7 @@ public class Pac extends Creature implements AnimatedActor2D {
         setSpeed(0);
         setRestingTicks(Pac.REST_INDEFINITELY);
         animations.stop();
-        selectAnimation(Animations.ANIM_PAC_MUNCHING);
+        selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);
         animations.reset();
     }
 

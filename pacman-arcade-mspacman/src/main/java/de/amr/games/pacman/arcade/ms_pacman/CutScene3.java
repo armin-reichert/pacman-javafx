@@ -16,8 +16,8 @@ import javafx.scene.media.MediaPlayer;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.tiles2Px;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.model.actors.Animations.ANIM_MR_PACMAN_MUNCHING;
-import static de.amr.games.pacman.model.actors.Animations.ANIM_PAC_MUNCHING;
+import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MR_PACMAN_MUNCHING;
+import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
 
 /**
  * Intermission scene 3: "Junior".

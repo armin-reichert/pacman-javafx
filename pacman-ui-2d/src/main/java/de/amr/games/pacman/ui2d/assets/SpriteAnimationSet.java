@@ -7,8 +7,8 @@ package de.amr.games.pacman.ui2d.assets;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.Actor2D;
+import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.AnimatedActor2D;
-import de.amr.games.pacman.model.actors.Animations;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * @author Armin Reichert
  */
-public class SpriteAnimationSet implements Animations {
+public class SpriteAnimationSet implements ActorAnimations {
 
     protected final Map<String, SpriteAnimation> animationsByID = new HashMap<>();
     protected String currentAnimationID;

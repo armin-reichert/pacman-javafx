@@ -14,7 +14,7 @@ import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.actors.Animations;
+import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
@@ -83,10 +83,10 @@ public class IntroScene extends GameScene2D {
 
         MsPacManGameSpriteSheet spriteSheet = (MsPacManGameSpriteSheet) context.gameConfiguration().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
-        msPacMan.selectAnimation(Animations.ANIM_PAC_MUNCHING);
+        msPacMan.selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);
         for (Ghost ghost : ghosts) {
             ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
-            ghost.selectAnimation(Animations.ANIM_GHOST_NORMAL);
+            ghost.selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
         }
         sceneController.restart(SceneState.STARTING);
     }
@@ -196,7 +196,7 @@ public class IntroScene extends GameScene2D {
                 intro.msPacMan.setMoveDir(Direction.LEFT);
                 intro.msPacMan.setSpeed(SPEED);
                 intro.msPacMan.setVisible(true);
-                intro.msPacMan.selectAnimation(Animations.ANIM_PAC_MUNCHING);
+                intro.msPacMan.selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);
                 intro.msPacMan.startAnimation();
                 for (Ghost ghost : intro.ghosts) {
                     ghost.setPosition(TS * 33.5f, TS * 20);

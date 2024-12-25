@@ -12,7 +12,7 @@ import de.amr.games.pacman.model.CustomMapsHandler;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.actors.Animations;
+import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -286,7 +286,7 @@ public enum GameState implements FsmState<GameModel> {
             else if (timer.tickCount() == TICK_HIDE_GHOSTS) {
                 level.ghosts().forEach(Ghost::hide);
                 //TODO this does not belong here
-                level.pac().selectAnimation(Animations.ANIM_PAC_DYING);
+                level.pac().selectAnimation(ActorAnimations.ANIM_PAC_DYING);
                 level.pac().resetAnimation();
             }
             else if (timer.tickCount() == TICK_START_PAC_ANIMATION) {

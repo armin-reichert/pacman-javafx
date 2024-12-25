@@ -11,29 +11,27 @@ import java.util.Optional;
  */
 public interface AnimatedActor2D {
 
-    default Actor2D actor() {
-        return (Actor2D) this;
-    }
+    Actor2D actor();
 
-    Optional<Animations> animations();
+    Optional<ActorAnimations> animations();
 
     default void startAnimation() {
-        animations().ifPresent(Animations::start);
+        animations().ifPresent(ActorAnimations::start);
     }
 
     default void stopAnimation() {
-        animations().ifPresent(Animations::stop);
+        animations().ifPresent(ActorAnimations::stop);
     }
 
     default void resetAnimation() {
-        animations().ifPresent(Animations::reset);
+        animations().ifPresent(ActorAnimations::reset);
     }
 
-    default void selectAnimation(String name, int index) {
-        animations().ifPresent(animations -> animations.select(name, index));
+    default void selectAnimation(String id, int index) {
+        animations().ifPresent(animations -> animations.select(id, index));
     }
 
-    default void selectAnimation(String name) {
-        selectAnimation(name, 0);
+    default void selectAnimation(String id) {
+        selectAnimation(id, 0);
     }
 }
