@@ -54,10 +54,12 @@ as described in the [JavaPackager guide](https://github.com/fvarrui/JavaPackager
 
 I also had to add the paths "C:\Program Files (x86)\WiX Toolset v3.11\bin" and "C:\Program Files (x86)\Inno Setup 6" to my PATH variable.
 
-### Running the main application (all games) using Gradle
+### Running the application (including all games) using Gradle
 
 - Pac-Man 2D: `./gradlew pacman-ui-2d-app-allgames:run`
 - Pac-Man 3D: `./gradlew pacman-ui-3d-app-allgames:run`
+
+- Map Editor: `./gradlew pacman-mapeditor-app:run`
 
 ## How to use the application
 
