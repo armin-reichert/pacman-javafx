@@ -5,10 +5,6 @@ plugins {
   id 'org.beryx.jlink' version '3.0.1' //  adds also 'application' plugin
 }
 
-repositories {
-  mavenCentral()
-}
-
 dependencies {
   implementation project(':pacman-core')
   implementation project(':pacman-mapeditor')
@@ -42,6 +38,7 @@ jlink {
   launcher {
     name = 'Pac-Man-FX-2D'
   }
+
   jpackage {
     appVersion = '1.0'
     vendor = 'Armin Reichert'
