@@ -40,7 +40,6 @@ public interface Animations {
     String ANIM_JUNIOR_PACMAN          = "junior";
 
     String currentAnimationID();
-    Object currentAnimation();
     void select(String name, int index);
     void startCurrentAnimation();
     void stopCurrentAnimation();

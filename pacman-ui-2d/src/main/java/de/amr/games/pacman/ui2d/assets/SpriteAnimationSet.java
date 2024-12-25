@@ -57,7 +57,6 @@ public class SpriteAnimationSet implements Animations {
         return currentAnimationID;
     }
 
-    @Override
     public SpriteAnimation currentAnimation() {
         return currentAnimationID != null ? animation(currentAnimationID) : null;
     }
