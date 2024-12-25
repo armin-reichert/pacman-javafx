@@ -11,7 +11,6 @@ import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
@@ -220,7 +219,7 @@ public class IntroScene extends GameScene2D {
                 var spriteSheet = (MsPacManGameTengenSpriteSheet) intro.context.gameConfiguration().spriteSheet();
                 intro.msPacMan.setAnimations(new PacAnimations(spriteSheet));
                 intro.msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
-                intro.msPacMan.optAnimations().ifPresent(Animations::startCurrentAnimation);
+                intro.msPacMan.startAnimation();
 
                 for (Ghost ghost : intro.ghosts) {
                     ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
@@ -303,7 +302,7 @@ public class IntroScene extends GameScene2D {
                 intro.msPacMan.move();
                 if (intro.msPacMan.posX() <= MS_PAC_MAN_STOP_X) {
                     intro.msPacMan.setSpeed(0);
-                    intro.msPacMan.optAnimations().ifPresent(Animations::resetCurrentAnimation);
+                    intro.msPacMan.resetAnimation();
                 }
                 if (timer.atSecond(7)) {
                     // start demo level or show options

@@ -141,7 +141,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         if (!pac.isVisible()) {
             return;
         }
-        pac.optAnimations().map(SpriteAnimationCollection.class::cast).ifPresent(animations -> {
+        pac.animations().map(SpriteAnimationCollection.class::cast).ifPresent(animations -> {
             SpriteAnimation animation = animations.currentAnimation();
             if (animation != null) {
                 switch (animations.currentAnimationID()) {

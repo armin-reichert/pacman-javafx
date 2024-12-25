@@ -14,7 +14,6 @@ import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
@@ -279,7 +278,7 @@ public class IntroScene extends GameScene2D {
                 intro.pacMan.setSpeed(CHASE_SPEED);
                 intro.pacMan.show();
                 intro.pacMan.selectAnimation(ANIM_PAC_MUNCHING);
-                intro.pacMan.optAnimations().ifPresent(Animations::startCurrentAnimation);
+                intro.pacMan.startAnimation();
                 Stream.of(intro.ghosts).forEach(ghost -> {
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setPosition(intro.pacMan.position().plus(16 * (ghost.id() + 1), 0));

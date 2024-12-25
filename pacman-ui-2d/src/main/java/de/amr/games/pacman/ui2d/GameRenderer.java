@@ -174,7 +174,7 @@ public interface GameRenderer {
         if (character == null || !character.actor().isVisible()) {
             return;
         }
-        character.optAnimations().ifPresent(animations -> {
+        character.animations().ifPresent(animations -> {
             if (animations instanceof SpriteAnimationCollection spriteAnimations) {
                 SpriteAnimation currentAnimation = spriteAnimations.currentAnimation();
                 if (currentAnimation != null) {
@@ -231,7 +231,7 @@ public interface GameRenderer {
      * @param animatedCreature animated entity (must contain an entity of type {@link Creature}
      */
     default void drawAnimatedCreatureInfo(AnimatedActor2D animatedCreature) {
-        animatedCreature.optAnimations().map(SpriteAnimationCollection.class::cast).ifPresent(animations -> {
+        animatedCreature.animations().map(SpriteAnimationCollection.class::cast).ifPresent(animations -> {
             var guy = (Creature) animatedCreature.actor();
             String animID = animations.currentAnimationID();
             if (animID != null) {

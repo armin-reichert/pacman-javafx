@@ -6,7 +6,6 @@ package de.amr.games.pacman.arcade.pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
@@ -82,7 +81,7 @@ public class CutScene2 extends GameScene2D {
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.15f);
                 pac.selectAnimation(ANIM_PAC_MUNCHING);
-                pac.optAnimations().ifPresent(Animations::startCurrentAnimation);
+                pac.startAnimation();
                 pac.show();
             }
             case ANIMATION_START + 111 -> {

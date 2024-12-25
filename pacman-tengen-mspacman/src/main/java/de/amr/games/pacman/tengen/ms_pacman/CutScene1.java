@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.model.actors.Actor2D;
-import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -101,14 +100,14 @@ public class CutScene1 extends GameScene2D {
             mrPacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             mrPacMan.setSpeed(SPEED_CHASING);
             mrPacMan.selectAnimation("pacman_munching");
-            mrPacMan.optAnimations().ifPresent(Animations::startCurrentAnimation);
+            mrPacMan.startAnimation();
             mrPacMan.show();
 
             msPacMan.setMoveDir(Direction.LEFT);
             msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
             msPacMan.setSpeed(SPEED_CHASING);
             msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
-            msPacMan.optAnimations().ifPresent(Animations::startCurrentAnimation);
+            msPacMan.startAnimation();
             msPacMan.show();
         }
         else if (t == 160) {
@@ -169,10 +168,10 @@ public class CutScene1 extends GameScene2D {
             msPacMan.setMoveDir(Direction.RIGHT);
         }
         else if (t == 545) {
-            mrPacMan.optAnimations().ifPresent(Animations::stopCurrentAnimation);
-            mrPacMan.optAnimations().ifPresent(Animations::resetCurrentAnimation);
-            msPacMan.optAnimations().ifPresent(Animations::stopCurrentAnimation);
-            msPacMan.optAnimations().ifPresent(Animations::resetCurrentAnimation);
+            mrPacMan.stopAnimation();
+            mrPacMan.resetAnimation();
+            msPacMan.stopAnimation();
+            msPacMan.resetAnimation();
         }
         else if (t == 560) {
             heart.setPosition((mrPacMan.posX() + msPacMan.posX()) / 2, mrPacMan.posY() - TS * (2));

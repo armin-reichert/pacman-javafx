@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Actor2D;
-import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -144,7 +143,7 @@ public class CutScene1 extends GameScene2D {
         pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
         pacMan.setSpeed(SPEED_PAC_CHASING);
         pacMan.selectAnimation(ANIM_MR_PACMAN_MUNCHING);
-        pacMan.optAnimations().ifPresent(Animations::startCurrentAnimation);
+        pacMan.startAnimation();
         pacMan.show();
 
         inky.setMoveAndWishDir(Direction.RIGHT);
@@ -158,7 +157,7 @@ public class CutScene1 extends GameScene2D {
         msPac.setPosition(TS * 30, LOWER_LANE_Y);
         msPac.setSpeed(SPEED_PAC_CHASING);
         msPac.selectAnimation(ANIM_PAC_MUNCHING);
-        msPac.optAnimations().ifPresent(Animations::startCurrentAnimation);
+        msPac.startAnimation();
         msPac.show();
 
         pinky.setMoveAndWishDir(Direction.LEFT);
@@ -244,13 +243,13 @@ public class CutScene1 extends GameScene2D {
     private void enterStateInHeaven() {
         pacMan.setSpeed(0);
         pacMan.setMoveDir(Direction.LEFT);
-        pacMan.optAnimations().ifPresent(Animations::stopCurrentAnimation);
-        pacMan.optAnimations().ifPresent(Animations::resetCurrentAnimation);
+        pacMan.stopAnimation();
+        pacMan.resetAnimation();
 
         msPac.setSpeed(0);
         msPac.setMoveDir(Direction.RIGHT);
-        msPac.optAnimations().ifPresent(Animations::stopCurrentAnimation);
-        msPac.optAnimations().ifPresent(Animations::resetCurrentAnimation);
+        msPac.stopAnimation();
+        msPac.resetAnimation();
 
         inky.setSpeed(0);
         inky.hide();

@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model.actors;
 
-import org.tinylog.Logger;
-
 import java.util.Optional;
 
 /**
@@ -17,42 +15,22 @@ public interface AnimatedActor2D {
         return (Actor2D) this;
     }
 
-    Animations animations();
-
-    default Optional<Animations> optAnimations() {
-        return Optional.ofNullable(animations());
-    }
+    Optional<Animations> animations();
 
     default void startAnimation() {
-        if (animations() != null) {
-            animations().startCurrentAnimation();
-        } else {
-            Logger.warn("Trying to start animation before animations have been created!");
-        }
+        animations().ifPresent(Animations::startCurrentAnimation);
     }
 
     default void stopAnimation() {
-        if (animations() != null) {
-            animations().stopCurrentAnimation();
-        } else {
-            Logger.warn("Trying to stop animation before animations have been created!");
-        }
+        animations().ifPresent(Animations::stopCurrentAnimation);
     }
 
     default void resetAnimation() {
-        if (animations() != null) {
-            animations().resetCurrentAnimation();
-        } else {
-            Logger.warn("Trying to reset animation before animations have been created!");
-        }
+        animations().ifPresent(Animations::resetCurrentAnimation);
     }
 
     default void selectAnimation(String name, int index) {
-        if (animations() != null) {
-            animations().select(name, index);
-        } else {
-            Logger.warn("Trying to select animation '{}' (index: {}) before animations have been created!", name, index);
-        }
+        animations().ifPresent(animations -> animations.select(name, index));
     }
 
     default void selectAnimation(String name) {

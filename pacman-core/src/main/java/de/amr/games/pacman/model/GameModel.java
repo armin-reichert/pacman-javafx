@@ -186,7 +186,7 @@ public abstract class GameModel {
 
     protected void initActorAnimations() {
         level.pac().selectAnimation(Animations.ANIM_PAC_MUNCHING);
-        level.pac().optAnimations().ifPresent(Animations::resetCurrentAnimation);
+        level.pac().resetAnimation();
         level.ghosts().forEach(ghost -> {
             ghost.selectAnimation(Animations.ANIM_GHOST_NORMAL);
             ghost.resetAnimation();

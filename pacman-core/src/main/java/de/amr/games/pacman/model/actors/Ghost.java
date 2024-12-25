@@ -15,6 +15,7 @@ import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static de.amr.games.pacman.lib.Direction.*;
@@ -109,8 +110,8 @@ public class Ghost extends Creature implements AnimatedActor2D {
     }
 
     @Override
-    public Animations animations() {
-        return animations;
+    public Optional<Animations> animations() {
+        return Optional.ofNullable(animations);
     }
 
     public boolean insideHouse() {

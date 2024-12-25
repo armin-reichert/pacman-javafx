@@ -9,6 +9,8 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.steering.Steering;
 
+import java.util.Optional;
+
 /**
  * Pac-Man / Ms. Pac-Man.
  *
@@ -57,8 +59,8 @@ public class Pac extends Creature implements AnimatedActor2D {
     }
 
     @Override
-    public Animations animations() {
-        return animations;
+    public Optional<Animations> animations() {
+        return Optional.ofNullable(animations);
     }
 
     @Override

@@ -7,7 +7,6 @@ package de.amr.games.pacman.tengen.ms_pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES_JoypadButton;
-import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import javafx.scene.media.MediaPlayer;
@@ -79,14 +78,14 @@ public class CutScene2 extends GameScene2D {
             msPacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
-            msPacMan.optAnimations().ifPresent(Animations::startCurrentAnimation);
+            msPacMan.startAnimation();
             msPacMan.setSpeed(2.0f);
             msPacMan.show();
         }
         else if (t == 320) {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.selectAnimation(ANIM_MR_PACMAN_MUNCHING);
-            pacMan.optAnimations().ifPresent(Animations::startCurrentAnimation);
+            pacMan.startAnimation();
             pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setSpeed(2.0f);
