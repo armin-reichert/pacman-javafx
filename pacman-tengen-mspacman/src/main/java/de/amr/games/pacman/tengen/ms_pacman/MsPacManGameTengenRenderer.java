@@ -144,7 +144,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         pac.animations().map(SpriteAnimationSet.class::cast).ifPresent(spriteAnimations -> {
             SpriteAnimation animation = spriteAnimations.currentAnimation();
             if (animation != null) {
-                switch (spriteAnimations.currentAnimationID()) {
+                switch (spriteAnimations.currentID()) {
                     case ANIM_PAC_MUNCHING, ANIM_MS_PACMAN_BOOSTER,
                          ANIM_MR_PACMAN_MUNCHING, ANIM_MR_PACMAN_BOOSTER,
                          ANIM_JUNIOR_PACMAN -> drawGuy(pac, pac.moveDir(), animation.currentSprite());

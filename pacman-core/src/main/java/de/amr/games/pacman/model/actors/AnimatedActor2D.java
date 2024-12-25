@@ -18,15 +18,15 @@ public interface AnimatedActor2D {
     Optional<Animations> animations();
 
     default void startAnimation() {
-        animations().ifPresent(Animations::startCurrentAnimation);
+        animations().ifPresent(Animations::start);
     }
 
     default void stopAnimation() {
-        animations().ifPresent(Animations::stopCurrentAnimation);
+        animations().ifPresent(Animations::stop);
     }
 
     default void resetAnimation() {
-        animations().ifPresent(Animations::resetCurrentAnimation);
+        animations().ifPresent(Animations::reset);
     }
 
     default void selectAnimation(String name, int index) {

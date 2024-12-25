@@ -75,9 +75,9 @@ public class GhostAnimations extends SpriteAnimationSet {
     }
 
     @Override
-    public void select(String name, int frameIndex) {
-        super.select(name, frameIndex);
-        if (Animations.ANIM_GHOST_NUMBER.equals(name)) {
+    public void select(String id, int frameIndex) {
+        super.select(id, frameIndex);
+        if (Animations.ANIM_GHOST_NUMBER.equals(id)) {
             animation(Animations.ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
         }
     }

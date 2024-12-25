@@ -53,7 +53,7 @@ public class SpriteAnimationSet implements Animations {
     }
 
     @Override
-    public String currentAnimationID() {
+    public String currentID() {
         return currentAnimationID;
     }
 
@@ -74,21 +74,21 @@ public class SpriteAnimationSet implements Animations {
     }
 
     @Override
-    public void startCurrentAnimation() {
+    public void start() {
         if (currentAnimation() != null) {
             currentAnimation().start();
         }
     }
 
     @Override
-    public void stopCurrentAnimation() {
+    public void stop() {
         if (currentAnimation() != null) {
             currentAnimation().stop();
         }
     }
 
     @Override
-    public void resetCurrentAnimation() {
+    public void reset() {
         if (currentAnimation() != null) {
             currentAnimation().reset();
         }

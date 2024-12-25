@@ -112,9 +112,9 @@ public class Pac extends Creature implements AnimatedActor2D {
             tryMoving();
             //Logger.info(moveInfo);
             if (moveInfo.moved) {
-                animations.startCurrentAnimation();
+                animations.start();
             } else {
-                animations.stopCurrentAnimation();
+                animations.stop();
             }
         } else {
             --restingTicks;
@@ -127,14 +127,14 @@ public class Pac extends Creature implements AnimatedActor2D {
     public void freeze() {
         setSpeed(0);
         setRestingTicks(Pac.REST_INDEFINITELY);
-        animations.stopCurrentAnimation();
+        animations.stop();
         selectAnimation(Animations.ANIM_PAC_MUNCHING);
-        animations.resetCurrentAnimation();
+        animations.reset();
     }
 
     public void die() {
         setSpeed(0);
-        animations.stopCurrentAnimation();
+        animations.stop();
         dead = true;
     }
 

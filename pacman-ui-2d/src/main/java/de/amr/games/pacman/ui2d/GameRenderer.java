@@ -233,7 +233,7 @@ public interface GameRenderer {
     default void drawAnimatedCreatureInfo(AnimatedActor2D animatedCreature) {
         animatedCreature.animations().map(SpriteAnimationSet.class::cast).ifPresent(animations -> {
             var guy = (Creature) animatedCreature.actor();
-            String animID = animations.currentAnimationID();
+            String animID = animations.currentID();
             if (animID != null) {
                 String text = animID + " " + animations.currentAnimation().frameIndex();
                 ctx().setFill(Color.WHITE);
