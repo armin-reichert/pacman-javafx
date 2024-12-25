@@ -137,9 +137,9 @@ public class IntroScene extends GameScene2D {
             r.drawText("MS PAC-MAN", Color.valueOf(Arcade.Palette.YELLOW), font, TITLE_POSITION.x(), TOP_Y + tiles2Px(6));
         }
         for (Ghost ghost : ghosts) {
-            r.drawAnimatedEntity(ghost);
+            r.drawAnimatedActor(ghost);
         }
-        r.drawAnimatedEntity(msPacMan);
+        r.drawAnimatedActor(msPacMan);
         r.drawMsPacManMidwayCopyright(tiles2Px(6), tiles2Px(28), Color.valueOf(Arcade.Palette.RED), font);
         r.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), Color.valueOf(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
         r.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);

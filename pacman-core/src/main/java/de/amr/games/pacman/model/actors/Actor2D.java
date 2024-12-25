@@ -90,7 +90,7 @@ public class Actor2D {
     }
 
     public void setPosition(Vector2f position) {
-        assertNotNull(position, "Position of entity must not be null");
+        assertNotNull(position, "Position of actor must not be null");
         posX = position.x();
         posY = position.y();
     }
@@ -100,7 +100,7 @@ public class Actor2D {
     }
 
     public void setVelocity(Vector2f velocity) {
-        assertNotNull(velocity, "Velocity of entity must not be null");
+        assertNotNull(velocity, "Velocity of actor must not be null");
         velX = velocity.x();
         velY = velocity.y();
     }
@@ -115,7 +115,7 @@ public class Actor2D {
     }
 
     public void setAcceleration(Vector2f acceleration) {
-        assertNotNull(acceleration, "Acceleration of entity must not be null");
+        assertNotNull(acceleration, "Acceleration of actor must not be null");
         accX = acceleration.x();
         accY = acceleration.y();
     }
@@ -126,7 +126,7 @@ public class Actor2D {
     }
 
     /**
-     * Moves this entity by its current velocity and increases its velocity by its current acceleration.
+     * Moves this actor by its current velocity and increases its velocity by its current acceleration.
      */
     public void move() {
         posX += velX;
@@ -136,7 +136,7 @@ public class Actor2D {
     }
 
     /**
-     * @return Tile containing the center of the entity collision box.
+     * @return Tile containing the center of the actor collision box.
      */
     public Vector2i tile() {
         return tileAt(posX + HTS, posY + HTS);
@@ -151,7 +151,7 @@ public class Actor2D {
     }
 
     /**
-     * @param other some entity
+     * @param other some actor
      * @return <code>true</code> if both entities occupy same tile
      */
     public boolean sameTile(Actor2D other) {

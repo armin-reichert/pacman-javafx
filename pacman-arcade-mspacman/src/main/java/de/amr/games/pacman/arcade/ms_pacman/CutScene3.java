@@ -89,10 +89,10 @@ public class CutScene3 extends GameScene2D {
     public void drawSceneContent() {
         MsPacManGameRenderer r = (MsPacManGameRenderer) gr;
         r.drawClapperBoard(clapAnimation, tiles2Px(3), tiles2Px(10));
-        r.drawAnimatedEntity(msPacMan);
-        r.drawAnimatedEntity(pacMan);
-        r.drawEntitySprite(stork, storkAnimation.currentSprite());
-        r.drawEntitySprite(bag, bagOpen ? MsPacManGameSpriteSheet.JUNIOR_PAC_SPRITE : MsPacManGameSpriteSheet.BLUE_BAG_SPRITE);
+        r.drawAnimatedActor(msPacMan);
+        r.drawAnimatedActor(pacMan);
+        r.drawActorSprite(stork, storkAnimation.currentSprite());
+        r.drawActorSprite(bag, bagOpen ? MsPacManGameSpriteSheet.JUNIOR_PAC_SPRITE : MsPacManGameSpriteSheet.BLUE_BAG_SPRITE);
         r.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 

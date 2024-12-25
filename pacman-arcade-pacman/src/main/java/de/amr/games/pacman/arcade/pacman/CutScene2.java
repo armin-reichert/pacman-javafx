@@ -122,8 +122,8 @@ public class CutScene2 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         gr.drawSpriteScaled(blinkyStretching.currentSprite(), tiles2Px(14), tiles2Px(19) + 3);
-        gr.drawAnimatedEntity(blinky);
-        gr.drawAnimatedEntity(pac);
+        gr.drawAnimatedActor(blinky);
+        gr.drawAnimatedActor(pac);
         gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 

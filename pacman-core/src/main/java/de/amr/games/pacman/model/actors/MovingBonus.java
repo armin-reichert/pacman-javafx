@@ -70,7 +70,7 @@ public class MovingBonus extends Creature implements Bonus {
     }
 
     @Override
-    public MovingBonus entity() {
+    public MovingBonus actor() {
         return this;
     }
 

@@ -115,12 +115,12 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     public void setBackgroundColor(Color color) {}
 
     @Override
-    public void drawAnimatedEntity(AnimatedEntity guy) {
+    public void drawAnimatedActor(AnimatedActor2D guy) {
         ctx.setImageSmoothing(false);
         if (guy instanceof Pac pac) {
             drawMsOrMrPacMan(pac);
         } else {
-            GameRenderer.super.drawAnimatedEntity(guy);
+            GameRenderer.super.drawAnimatedActor(guy);
         }
     }
 
@@ -160,7 +160,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
                         }
                         drawGuy(pac, dir, animation.currentSprite());
                     }
-                    default -> GameRenderer.super.drawAnimatedEntity(pac);
+                    default -> GameRenderer.super.drawAnimatedActor(pac);
                 }
             } else {
                 Logger.error("No current animation for character {}", pac);
@@ -289,8 +289,8 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
         ctx.setImageSmoothing(false);
         ctx.translate(0, ((MovingBonus) bonus).elongationY());
         switch (bonus.state()) {
-            case STATE_EDIBLE -> drawEntitySprite(bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
-            case STATE_EATEN  -> drawEntitySprite(bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
+            case STATE_EDIBLE -> drawActorSprite(bonus.actor(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            case STATE_EATEN  -> drawActorSprite(bonus.actor(), spriteSheet.bonusValueSprite(bonus.symbol()));
             default -> {}
         }
         ctx.restore();

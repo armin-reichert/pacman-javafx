@@ -126,15 +126,15 @@ public class IntroScene extends GameScene2D {
                 Ghost currentGhost = ghosts[ghostIndex];
                 Color ghostColor = context.assets().color("tengen.ghost.%d.color.normal.dress".formatted(currentGhost.id()));
                 r.drawText(currentGhost.name().toUpperCase(), ghostColor, scaledFont, MARQUEE_X + 44, MARQUEE_Y + 41);
-                for (Ghost ghost : ghosts) { r.drawAnimatedEntity(ghost); }
+                for (Ghost ghost : ghosts) { r.drawAnimatedActor(ghost); }
             }
             case MS_PACMAN_MARCHING_IN -> {
                 drawMarquee();
                 r.drawText("\"MS PAC-MAN\"", nesPaletteColor(0x28), scaledFont, MARQUEE_X + 20, MARQUEE_Y - 18);
                 r.drawText("STARRING", nesPaletteColor(0x20), scaledFont, MARQUEE_X + 12, MARQUEE_Y + 22);
                 r.drawText("MS PAC-MAN", nesPaletteColor(0x28), scaledFont, MARQUEE_X + 28, MARQUEE_Y + 38);
-                for (Ghost ghost : ghosts) { r.drawAnimatedEntity(ghost); }
-                r.drawAnimatedEntity(msPacMan);
+                for (Ghost ghost : ghosts) { r.drawAnimatedActor(ghost); }
+                r.drawAnimatedActor(msPacMan);
             }
         }
 

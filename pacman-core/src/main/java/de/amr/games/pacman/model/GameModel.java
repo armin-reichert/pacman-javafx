@@ -405,7 +405,7 @@ public abstract class GameModel {
     }
 
     private void updateBonus(Bonus bonus) {
-        if (bonus.state() == Bonus.STATE_EDIBLE && level.pac().sameTile(bonus.entity())) {
+        if (bonus.state() == Bonus.STATE_EDIBLE && level.pac().sameTile(bonus.actor())) {
             bonus.setEaten(BONUS_POINTS_SHOWN_TICKS);
             scoreManager.scorePoints(this, bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);

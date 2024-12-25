@@ -14,7 +14,7 @@ import de.amr.games.pacman.steering.Steering;
  *
  * @author Armin Reichert
  */
-public class Pac extends Creature implements AnimatedEntity {
+public class Pac extends Creature implements AnimatedActor2D {
 
     public static final byte REST_INDEFINITELY = -1;
 
@@ -52,7 +52,6 @@ public class Pac extends Creature implements AnimatedEntity {
             '}';
     }
 
-    @Override
     public void setAnimations(Animations animations) {
         this.animations = animations;
     }

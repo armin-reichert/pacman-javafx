@@ -166,13 +166,13 @@ public class CutScene3 extends GameScene2D {
         r.drawSceneBorderLines();
         r.drawClapperBoard(clapAnimation, "JUNIOR", 3, CLAP_TILE_X, CLAP_TILE_Y);
         r.drawStork(storkAnimation, stork, bagReleased);
-        r.drawAnimatedEntity(msPacMan);
-        r.drawAnimatedEntity(mrPacMan);
+        r.drawAnimatedActor(msPacMan);
+        r.drawAnimatedActor(mrPacMan);
         if (bagWithJunior.isVisible()) {
             if (bagOpen) {
-                r.drawEntitySprite(bagWithJunior, JUNIOR_PAC_SPRITE);
+                r.drawActorSprite(bagWithJunior, JUNIOR_PAC_SPRITE);
             } else {
-                r.drawEntitySprite(bagWithJunior, BLUE_BAG_SPRITE);
+                r.drawActorSprite(bagWithJunior, BLUE_BAG_SPRITE);
             }
         }
         if (context.game().level().isPresent()) { // avoid exception in cut scene test mode

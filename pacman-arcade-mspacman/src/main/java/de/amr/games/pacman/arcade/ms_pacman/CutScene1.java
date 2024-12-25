@@ -95,11 +95,11 @@ public class CutScene1 extends GameScene2D {
     public void drawSceneContent() {
         MsPacManGameRenderer r = (MsPacManGameRenderer) gr;
         r.drawClapperBoard(clapAnimation, tiles2Px(3), tiles2Px(10));
-        r.drawAnimatedEntity(msPac);
-        r.drawAnimatedEntity(pacMan);
-        r.drawAnimatedEntity(inky);
-        r.drawAnimatedEntity(pinky);
-        r.drawEntitySprite(heart, HEART_SPRITE);
+        r.drawAnimatedActor(msPac);
+        r.drawAnimatedActor(pacMan);
+        r.drawAnimatedActor(inky);
+        r.drawAnimatedActor(pinky);
+        r.drawActorSprite(heart, HEART_SPRITE);
         r.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 

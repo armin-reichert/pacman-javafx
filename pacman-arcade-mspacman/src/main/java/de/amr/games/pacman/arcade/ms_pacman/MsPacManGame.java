@@ -542,7 +542,7 @@ public class MsPacManGame extends GameModel {
         Logger.info("Moving bonus created, route: {} ({})", route, crossMazeLeftToRight ? "left to right" : "right to left");
 
         level.setBonus(movingBonus);
-        publishGameEvent(GameEventType.BONUS_ACTIVATED, movingBonus.entity().tile());
+        publishGameEvent(GameEventType.BONUS_ACTIVATED, movingBonus.actor().tile());
     }
 
     /**

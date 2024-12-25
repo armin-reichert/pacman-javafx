@@ -72,7 +72,7 @@ public class Bonus3D extends Box {
     }
 
     public void update(GameContext context) {
-        Vector2f center = bonus.entity().position().plus(HTS, HTS);
+        Vector2f center = bonus.actor().position().plus(HTS, HTS);
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-HTS);
@@ -81,7 +81,7 @@ public class Bonus3D extends Box {
             boolean visible = !(bonus.state() == Bonus.STATE_INACTIVE || outsideWorld);
             setVisible(visible);
             if (edibleAnimation.getStatus() == Animation.Status.RUNNING && bonus instanceof MovingBonus movingBonus) {
-                updateMovingBonusEdibleAnimation(movingBonus.entity().moveDir());
+                updateMovingBonusEdibleAnimation(movingBonus.actor().moveDir());
             }
         }
     }

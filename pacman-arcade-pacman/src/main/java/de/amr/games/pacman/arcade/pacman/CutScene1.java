@@ -104,8 +104,8 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr.drawAnimatedEntity(pac);
-        gr.drawAnimatedEntity(blinky);
+        gr.drawAnimatedActor(pac);
+        gr.drawAnimatedActor(blinky);
         gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 

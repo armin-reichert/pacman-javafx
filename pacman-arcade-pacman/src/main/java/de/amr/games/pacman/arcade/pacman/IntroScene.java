@@ -181,18 +181,18 @@ public class IntroScene extends GameScene2D {
 
     private void drawGuys(int shakingAmount) {
         if (shakingAmount == 0) {
-            Stream.of(ghosts).forEach(gr::drawAnimatedEntity);
+            Stream.of(ghosts).forEach(gr::drawAnimatedActor);
         } else {
-            gr.drawAnimatedEntity(ghosts[0]);
-            gr.drawAnimatedEntity(ghosts[3]);
+            gr.drawAnimatedActor(ghosts[0]);
+            gr.drawAnimatedActor(ghosts[3]);
             // shaking ghosts effect, not quite as in original game
             gr.ctx().save();
             gr.ctx().translate(shakingAmount, 0);
-            gr.drawAnimatedEntity(ghosts[1]);
-            gr.drawAnimatedEntity(ghosts[2]);
+            gr.drawAnimatedActor(ghosts[1]);
+            gr.drawAnimatedActor(ghosts[2]);
             gr.ctx().restore();
         }
-        gr.drawAnimatedEntity(pacMan);
+        gr.drawAnimatedActor(pacMan);
     }
 
     private void drawPoints() {

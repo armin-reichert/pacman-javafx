@@ -152,8 +152,8 @@ public class CutScene2 extends GameScene2D {
         r.drawSceneBorderLines();
         r.setLevelNumberBoxesVisible(false);
         r.drawClapperBoard(clapAnimation, "THE CHASE", 2, CLAP_TILE_X, CLAP_TILE_Y);
-        r.drawAnimatedEntity(msPacMan);
-        r.drawAnimatedEntity(pacMan);
+        r.drawAnimatedActor(msPacMan);
+        r.drawAnimatedActor(pacMan);
         if (context.game().level().isPresent()) { // avoid exception in cut scene test mode
             r.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 3 * TS);
         }

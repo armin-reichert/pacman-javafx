@@ -174,8 +174,8 @@ public class ArcadePlayScene2D extends GameScene2D {
         level.bonus().ifPresent(gr::drawBonus);
 
         // Draw guys and debug info if activated
-        gr.drawAnimatedEntity(level.pac());
-        ghostsInZOrder(level).forEach(gr::drawAnimatedEntity);
+        gr.drawAnimatedActor(level.pac());
+        ghostsInZOrder(level).forEach(gr::drawAnimatedActor);
         if (debugInfoVisiblePy.get()) {
             gr.drawAnimatedCreatureInfo(level.pac());
             ghostsInZOrder(level).forEach(gr::drawAnimatedCreatureInfo);

@@ -79,8 +79,8 @@ public class CutScene2 extends GameScene2D {
     public void drawSceneContent() {
         MsPacManGameRenderer r = (MsPacManGameRenderer) gr;
         r.drawClapperBoard(clapAnimation, tiles2Px(3), tiles2Px(10));
-        r.drawAnimatedEntity(msPacMan);
-        r.drawAnimatedEntity(pacMan);
+        r.drawAnimatedActor(msPacMan);
+        r.drawAnimatedActor(pacMan);
         r.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 

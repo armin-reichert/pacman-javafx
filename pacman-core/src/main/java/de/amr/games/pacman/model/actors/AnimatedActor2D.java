@@ -11,15 +11,11 @@ import java.util.Optional;
 /**
  * @author Armin Reichert
  */
-public interface AnimatedEntity {
+public interface AnimatedActor2D {
 
-    default Actor2D entity() {
+    default Actor2D actor() {
         return (Actor2D) this;
     }
-
-    boolean isVisible();
-
-    void setAnimations(Animations animations);
 
     Animations animations();
 

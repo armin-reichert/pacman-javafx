@@ -216,11 +216,11 @@ public class CutScene1 extends GameScene2D {
         r.drawSceneBorderLines();
         r.setLevelNumberBoxesVisible(false);
         r.drawClapperBoard(clapAnimation, "THEY MEET", 1, CLAP_TILE_X, CLAP_TILE_Y);
-        r.drawAnimatedEntity(msPacMan);
-        r.drawAnimatedEntity(mrPacMan);
-        r.drawAnimatedEntity(inky);
-        r.drawAnimatedEntity(pinky);
-        r.drawEntitySprite(heart, HEART_SPRITE);
+        r.drawAnimatedActor(msPacMan);
+        r.drawAnimatedActor(mrPacMan);
+        r.drawAnimatedActor(inky);
+        r.drawAnimatedActor(pinky);
+        r.drawActorSprite(heart, HEART_SPRITE);
         if (context.game().level().isPresent()) {
             // avoid exception in cut scene test mode
             r.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 3 * TS);

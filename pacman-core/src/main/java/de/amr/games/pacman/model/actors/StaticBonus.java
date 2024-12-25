@@ -30,7 +30,7 @@ public class StaticBonus extends Actor2D implements Bonus {
     }
 
     @Override
-    public StaticBonus entity() {
+    public StaticBonus actor() {
         return this;
     }
 

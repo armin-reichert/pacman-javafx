@@ -12,7 +12,7 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.Actor2D;
-import de.amr.games.pacman.model.actors.AnimatedEntity;
+import de.amr.games.pacman.model.actors.AnimatedActor2D;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
@@ -158,7 +158,7 @@ public interface GameRenderer {
      * @param actor an entity e.g. Pac-Man or a ghost
      * @param sprite sprite sheet region (can be null)
      */
-    default void drawEntitySprite(Actor2D actor, RectArea sprite) {
+    default void drawActorSprite(Actor2D actor, RectArea sprite) {
         assertNotNull(actor);
         if (actor.isVisible() && sprite != null) {
             drawSpriteCenteredOverTile(sprite, actor.posX(), actor.posY());
@@ -170,15 +170,15 @@ public interface GameRenderer {
      *
      * @param character the animated entity
      */
-    default void drawAnimatedEntity(AnimatedEntity character) {
-        if (character == null || !character.isVisible()) {
+    default void drawAnimatedActor(AnimatedActor2D character) {
+        if (character == null || !character.actor().isVisible()) {
             return;
         }
         character.optAnimations().ifPresent(animations -> {
             if (animations instanceof SpriteAnimationCollection spriteAnimations) {
                 SpriteAnimation currentAnimation = spriteAnimations.currentAnimation();
                 if (currentAnimation != null) {
-                    drawEntitySprite(character.entity(), spriteAnimations.currentSprite(character));
+                    drawActorSprite(character.actor(), spriteAnimations.currentSprite(character));
                 } else {
                     Logger.error("No current animation for character {}", character);
                 }
@@ -230,9 +230,9 @@ public interface GameRenderer {
     /**
      * @param animatedCreature animated entity (must contain an entity of type {@link Creature}
      */
-    default void drawAnimatedCreatureInfo(AnimatedEntity animatedCreature) {
+    default void drawAnimatedCreatureInfo(AnimatedActor2D animatedCreature) {
         animatedCreature.optAnimations().map(SpriteAnimationCollection.class::cast).ifPresent(animations -> {
-            var guy = (Creature) animatedCreature.entity();
+            var guy = (Creature) animatedCreature.actor();
             String animID = animations.currentAnimationID();
             if (animID != null) {
                 String text = animID + " " + animations.currentAnimation().frameIndex();

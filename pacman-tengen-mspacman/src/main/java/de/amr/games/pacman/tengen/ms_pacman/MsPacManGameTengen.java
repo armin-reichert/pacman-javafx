@@ -520,7 +520,7 @@ public class MsPacManGameTengen extends GameModel {
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
         level.setBonus(movingBonus);
         movingBonus.setEdible(TickTimer.INDEFINITE);
-        publishGameEvent(GameEventType.BONUS_ACTIVATED, movingBonus.entity().tile());
+        publishGameEvent(GameEventType.BONUS_ACTIVATED, movingBonus.actor().tile());
     }
 
     @Override

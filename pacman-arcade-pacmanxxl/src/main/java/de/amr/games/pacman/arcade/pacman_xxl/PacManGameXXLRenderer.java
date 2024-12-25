@@ -137,9 +137,9 @@ public class PacManGameXXLRenderer implements GameRenderer {
 
     public void drawBonus(Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
-            drawEntitySprite(bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            drawActorSprite(bonus.actor(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
         } else if (bonus.state() == Bonus.STATE_EATEN) {
-            drawEntitySprite(bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
+            drawActorSprite(bonus.actor(), spriteSheet.bonusValueSprite(bonus.symbol()));
         }
     }
 }

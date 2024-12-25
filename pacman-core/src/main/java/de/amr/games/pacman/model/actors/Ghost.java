@@ -26,7 +26,7 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  *
  * @author Armin Reichert
  */
-public class Ghost extends Creature implements AnimatedEntity {
+public class Ghost extends Creature implements AnimatedActor2D {
 
     public static Ghost blinky() {
         var ghost = new Ghost(GameModel.RED_GHOST);
@@ -104,7 +104,6 @@ public class Ghost extends Creature implements AnimatedEntity {
         return name;
     }
 
-    @Override
     public void setAnimations(Animations animations) {
         this.animations = animations;
     }

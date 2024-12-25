@@ -154,8 +154,8 @@ public class MsPacManGameRenderer implements GameRenderer {
         ctx().save();
         ctx().translate(0, movingBonus.elongationY());
         switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawEntitySprite(bonus.entity(), spriteSheet().bonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawEntitySprite(bonus.entity(), spriteSheet().bonusValueSprite(bonus.symbol()));
+            case Bonus.STATE_EDIBLE -> drawActorSprite(bonus.actor(), spriteSheet().bonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawActorSprite(bonus.actor(), spriteSheet().bonusValueSprite(bonus.symbol()));
         }
         ctx().restore();
     }

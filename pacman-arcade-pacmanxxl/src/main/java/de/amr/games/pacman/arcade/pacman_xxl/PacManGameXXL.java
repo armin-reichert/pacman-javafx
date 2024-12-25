@@ -149,12 +149,12 @@ public class PacManGameXXL extends PacManGame implements CustomMapsHandler {
         // in a non-Arcade style custom map, the bonus position must be taken from the terrain map
         if (level.world().map().terrain().hasProperty(GameWorld.PROPERTY_POS_BONUS)) {
             Vector2i bonusTile = level.world().map().terrain().getTileProperty(GameWorld.PROPERTY_POS_BONUS, new Vector2i(13, 20));
-            staticBonus.entity().setPosition(halfTileRightOf(bonusTile));
+            staticBonus.actor().setPosition(halfTileRightOf(bonusTile));
         } else {
-            staticBonus.entity().setPosition(PacManGame.BONUS_POS);
+            staticBonus.actor().setPosition(PacManGame.BONUS_POS);
         }
         staticBonus.setEdible(bonusEdibleTicks());
-        publishGameEvent(GameEventType.BONUS_ACTIVATED, staticBonus.entity().tile());
+        publishGameEvent(GameEventType.BONUS_ACTIVATED, staticBonus.actor().tile());
     }
 
     // Custom map handling

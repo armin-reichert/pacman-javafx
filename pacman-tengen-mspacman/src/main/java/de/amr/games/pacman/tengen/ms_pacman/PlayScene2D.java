@@ -465,8 +465,8 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
 
         context.level().bonus().ifPresent(r::drawBonus);
 
-        r.drawAnimatedEntity(msPacMan);
-        ghostsInZOrder(level).forEach(r::drawAnimatedEntity);
+        r.drawAnimatedActor(msPacMan);
+        ghostsInZOrder(level).forEach(r::drawAnimatedActor);
 
         int livesCounterEntries = game.lives() - 1;
         if (context.gameState() == GameState.STARTING_GAME && !msPacMan.isVisible()) {

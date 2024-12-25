@@ -212,9 +212,9 @@ public class CutScene4 extends GameScene2D {
         var r = (MsPacManGameTengenRenderer) gr;
         r.drawSceneBorderLines();
         r.drawClapperBoard(clapAnimation, "THE END", 4, CLAP_TILE_X, CLAP_TILE_Y);
-        r.drawAnimatedEntity(msPacMan);
-        r.drawAnimatedEntity(mrPacMan);
-        juniors.forEach(r::drawAnimatedEntity);
+        r.drawAnimatedActor(msPacMan);
+        r.drawAnimatedActor(mrPacMan);
+        juniors.forEach(r::drawAnimatedActor);
 
         if (context.game().level().isPresent()) { // avoid exception in cut scene test mode
             r.setLevelNumberBoxesVisible(false);

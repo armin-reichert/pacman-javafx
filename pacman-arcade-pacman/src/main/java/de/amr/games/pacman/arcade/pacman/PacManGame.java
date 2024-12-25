@@ -436,9 +436,9 @@ public class PacManGame extends GameModel {
         byte symbol = level.bonusSymbol(level.nextBonusIndex());
         StaticBonus staticBonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         staticBonus.setEdible(bonusEdibleTicks());
-        staticBonus.entity().setPosition(BONUS_POS);
+        staticBonus.actor().setPosition(BONUS_POS);
         level.setBonus(staticBonus);
-        publishGameEvent(GameEventType.BONUS_ACTIVATED, staticBonus.entity().tile());
+        publishGameEvent(GameEventType.BONUS_ACTIVATED, staticBonus.actor().tile());
     }
 
     protected int bonusEdibleTicks() {
