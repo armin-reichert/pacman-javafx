@@ -59,8 +59,8 @@ public class PacManGamesUI_3D extends PacManGamesUI {
         });
         assets.store("floor_textures", texturesByName);
 
-        pickerGameOver = Picker.fromBundle(assets.bundles().getLast(), "game.over");
-        pickerLevelComplete = Picker.fromBundle(assets.bundles().getLast(), "level.complete");
+        textPickerGameOverTexts = Picker.fromBundle(assets.bundles().getLast(), "game.over");
+        textPickerLevelCompleteTexts = Picker.fromBundle(assets.bundles().getLast(), "level.complete");
         sound().setAssets(assets);
     }
 

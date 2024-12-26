@@ -54,6 +54,7 @@ import org.tinylog.Logger;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_CANVAS_BG_COLOR;
@@ -146,8 +147,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected GamePage gamePage;
     protected EditorPage editorPage;
     protected boolean scoreVisible;
-    protected Picker<String> pickerGameOver;
-    protected Picker<String> pickerLevelComplete;
+    protected Picker<String> textPickerGameOverTexts;
+    protected Picker<String> textPickerLevelCompleteTexts;
     protected int selectedJoypadIndex;
     protected ArcadeKeyBinding arcadeKeys;
 
@@ -160,27 +161,27 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     public void loadAssets() {
         ResourceManager rm = () -> PacManGamesUI.class;
 
-        assets.addBundle(rm.getModuleBundle("de.amr.games.pacman.ui2d.texts.messages"));
+        ResourceBundle textResources = rm.getModuleBundle("de.amr.games.pacman.ui2d.texts.messages");
+        textPickerGameOverTexts      = Picker.fromBundle(textResources, "game.over");
+        textPickerLevelCompleteTexts = Picker.fromBundle(textResources, "level.complete");
+        assets.addBundle(textResources);
 
-        assets.store("scene_background",            Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
-        assets.store("font.arcade",                 rm.loadFont("fonts/emulogic.ttf", 8));
-        assets.store("font.handwriting",            rm.loadFont("fonts/Molle-Italic.ttf", 9));
-        assets.store("font.monospaced",             rm.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12));
+        assets.store("scene_background",     Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
+        assets.store("font.arcade",          rm.loadFont("fonts/emulogic.ttf", 8));
+        assets.store("font.handwriting",     rm.loadFont("fonts/Molle-Italic.ttf", 9));
+        assets.store("font.monospaced",      rm.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12));
 
-        assets.store("icon.auto",                   rm.loadImage("graphics/icons/auto.png"));
-        assets.store("icon.mute",                   rm.loadImage("graphics/icons/mute.png"));
-        assets.store("icon.pause",                  rm.loadImage("graphics/icons/pause.png"));
+        assets.store("icon.auto",            rm.loadImage("graphics/icons/auto.png"));
+        assets.store("icon.mute",            rm.loadImage("graphics/icons/mute.png"));
+        assets.store("icon.pause",           rm.loadImage("graphics/icons/pause.png"));
 
-        assets.store("voice.explain",               rm.url("sound/voice/press-key.mp3"));
-        assets.store("voice.autopilot.off",         rm.url("sound/voice/autopilot-off.mp3"));
-        assets.store("voice.autopilot.on",          rm.url("sound/voice/autopilot-on.mp3"));
-        assets.store("voice.immunity.off",          rm.url("sound/voice/immunity-off.mp3"));
-        assets.store("voice.immunity.on",           rm.url("sound/voice/immunity-on.mp3"));
+        assets.store("voice.explain",        rm.url("sound/voice/press-key.mp3"));
+        assets.store("voice.autopilot.off",  rm.url("sound/voice/autopilot-off.mp3"));
+        assets.store("voice.autopilot.on",   rm.url("sound/voice/autopilot-on.mp3"));
+        assets.store("voice.immunity.off",   rm.url("sound/voice/immunity-off.mp3"));
+        assets.store("voice.immunity.on",    rm.url("sound/voice/immunity-on.mp3"));
 
-        sound().setAssets(assets);
-
-        pickerGameOver = Picker.fromBundle(assets.bundles().getFirst(), "game.over");
-        pickerLevelComplete = Picker.fromBundle(assets.bundles().getFirst(), "level.complete");
+        gameSound.setAssets(assets);
     }
 
     /**
@@ -203,7 +204,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     /**
      * Called from application start method (on JavaFX application thread).
-
+     *
      * @param stage primary stage (window)
      * @param initialSize initial UI size
      */
@@ -505,12 +506,12 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     @Override
     public String locGameOverMessage() {
-        return pickerGameOver.next();
+        return textPickerGameOverTexts.next();
     }
 
     @Override
     public String locLevelCompleteMessage(int levelNumber) {
-        return pickerLevelComplete.next() + "\n\n" + locText("level_complete", levelNumber);
+        return textPickerLevelCompleteTexts.next() + "\n\n" + locText("level_complete", levelNumber);
     }
 
     @Override
