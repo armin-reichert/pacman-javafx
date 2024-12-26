@@ -33,9 +33,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
-import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Shape3D;
+import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -292,11 +290,53 @@ public class GameLevel3D {
 
     private void addObstacle(Group parent, Obstacle obstacle, double thickness) {
         if (obstacle.isClosed() && obstacle.numSegments() == 4) {
+            // obstacle consists of 4 corners i.e it is a circle of size 1 tile
             Vector2f center = obstacle.startPoint().plus(0, HTS);
             Node wall = createCircularWall(center, HTS, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
             parent.getChildren().add(wall);
             return;
         }
+        else if (obstacle.isClosed() && obstacle.segments().stream().filter(Obstacle.Segment::isRoundedCorner).count() == 4) {
+            // rectangular obstacle
+            Vector2f[] points = obstacle.points();
+            if (points.length > 6) {
+                Vector2f centerTowerNW = new Vector2f(points[0].x(), points[1].y());
+                Vector2f centerTowerSW = new Vector2f(points[3].x(), points[2].y());
+                Vector2f centerTowerSE = new Vector2f(points[4].x(), points[5].y());
+                Vector2f centerTowerNE = new Vector2f(points[7].x(), points[6].y());
+
+                addTower(parent, centerTowerNW);
+                addTower(parent, centerTowerSW);
+                addTower(parent, centerTowerSE);
+                addTower(parent, centerTowerNE);
+
+                Vector2f centerWallN = centerTowerNW.midpoint(centerTowerNE);
+                Vector2f centerWallS = centerTowerSW.midpoint(centerTowerSE);
+                Vector2f centerWallW = centerTowerNW.midpoint(centerTowerSW);
+                Vector2f centerWallE = centerTowerNE.midpoint(centerTowerSE);
+                Vector2f center = centerWallW.midpoint(centerWallE);
+
+                addCastleWall(parent, centerWallN, centerTowerNE.euclideanDistance(centerTowerNW), TS);
+                addCastleWall(parent, centerWallS, centerTowerSE.euclideanDistance(centerTowerSW), TS);
+                addCastleWall(parent, centerWallW, TS, centerTowerNW.euclideanDistance(centerTowerSW));
+                addCastleWall(parent, centerWallE, TS, centerTowerNE.euclideanDistance(centerTowerSE));
+                addCastleWall(parent, center, centerWallW.euclideanDistance(centerWallE) - TS, centerWallN.euclideanDistance(centerWallS) - TS);
+            } else {
+                Vector2f center0 = new Vector2f(points[0].x(), points[1].y());
+                Vector2f center1 = new Vector2f(points[3].x(), points[4].y());
+                Vector2f centerWall = center0.midpoint(center1);
+                addTower(parent, center0);
+                addTower(parent, center1);
+                if (center0.x() < center1.x()) {
+                    addCastleWall(parent, centerWall, center0.euclideanDistance(center1), TS);
+                } else {
+                    addCastleWall(parent, centerWall, TS, center0.euclideanDistance(center1));
+                }
+
+            }
+            return;
+        }
+
         int r = HTS;
         Vector2f p = obstacle.startPoint();
         for (int i = 0; i < obstacle.numSegments(); ++i) {
@@ -344,6 +384,16 @@ public class GameLevel3D {
             }
             p = q;
         }
+    }
+
+    private void addTower(Group parent, Vector2f center) {
+        Node tower = createCircularWall(center, HTS, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
+        parent.getChildren().add(tower);
+    }
+
+    private void addCastleWall(Group parent, Vector2f center, double sizeX, double sizeY) {
+        Node wall = wallCenteredAt(center, sizeX, sizeY, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
+        parent.getChildren().add(wall);
     }
 
     private void addCorner(Group parent, Vector2f cornerPoint, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {

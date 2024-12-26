@@ -20,6 +20,7 @@ public class Obstacle {
         public boolean isRoundedSWCorner() { return mapContent == Tiles.CORNER_SW || mapContent == Tiles.DCORNER_SW; }
         public boolean isRoundedSECorner() { return mapContent == Tiles.CORNER_SE || mapContent == Tiles.DCORNER_SE; }
         public boolean isRoundedNECorner() { return mapContent == Tiles.CORNER_NE || mapContent == Tiles.DCORNER_NE; }
+        public boolean isRoundedCorner() { return isRoundedNWCorner() || isRoundedSWCorner() || isRoundedSECorner() || isRoundedNECorner(); }
         public boolean isAngularNWCorner() { return mapContent == Tiles.DCORNER_ANGULAR_NW; }
         public boolean isAngularSWCorner() { return mapContent == Tiles.DCORNER_ANGULAR_SW; }
         public boolean isAngularSECorner() { return mapContent == Tiles.DCORNER_ANGULAR_SE; }
@@ -42,6 +43,15 @@ public class Obstacle {
         this.startPoint = startPoint;
         endPoint = startPoint;
         this.doubleWalls = doubleWalls;
+    }
+
+    public Vector2f[] points() {
+        Vector2f[] points = new Vector2f[numSegments()];
+        points[0] = startPoint;
+        for (int i = 0; i < numSegments() - 1; ++i) {
+            points[i+1] = points[i].plus(segment(i).vector());
+        }
+        return points;
     }
 
     @Override
