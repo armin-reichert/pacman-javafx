@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.CustomMapsHandler;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -56,6 +55,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_CANVAS_BG_COLOR;
 import static de.amr.games.pacman.ui2d.lib.Ufx.createIcon;
@@ -191,15 +191,14 @@ public class PacManGamesUI implements GameEventListener, GameContext {
      * @param gameConfiguration the configuration for this variant
      */
     public void configureGameVariant(GameVariant variant, GameConfiguration gameConfiguration) {
-        Globals.assertNotNull(variant);
-        Globals.assertNotNull(gameConfiguration);
+        assertNotNull(variant);
+        assertNotNull(gameConfiguration);
         gameConfigByVariant.put(variant, gameConfiguration);
         gameConfiguration.initGameScenes(this);
-        gameConfiguration.gameScenes().forEach(gameScene -> {
-            if (gameScene instanceof GameScene2D gameScene2D) {
-                gameScene2D.debugInfoVisibleProperty().bind(GlobalProperties2d.PY_DEBUG_INFO_VISIBLE);
-            }
-        });
+        gameConfiguration.gameScenes()
+            .filter(GameScene2D.class::isInstance)
+            .map(GameScene2D.class::cast)
+            .forEach(gameScene2D -> gameScene2D.debugInfoVisibleProperty().bind(GlobalProperties2d.PY_DEBUG_INFO_VISIBLE));
     }
 
     /**
@@ -209,8 +208,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
      * @param initialSize initial UI size
      */
     public void create(Stage stage, Dimension2D initialSize) {
-        this.stage = Globals.assertNotNull(stage);
-        Globals.assertNotNull(initialSize);
+        this.stage = assertNotNull(stage);
+        assertNotNull(initialSize);
 
         Scene mainScene = createMainScene(initialSize);
         stage.setScene(mainScene);
@@ -222,7 +221,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         clock.setPermanentCallback(this::runOnEveryTick);
 
         // init game variant property
-        gameVariantPy.set(gameVariant());
+        gameVariantPy.set(gameController().currentGameVariant());
 
         //TODO This doesn't fit for NES aspect ratio
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
@@ -315,8 +314,10 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 }
             }
         });
+
         mainScene.widthProperty().addListener((py,ov,nv) -> adaptGamePageSizeToMainScene(mainScene));
         mainScene.heightProperty().addListener((py,ov,nv) -> adaptGamePageSizeToMainScene(mainScene));
+
         return mainScene;
     }
 
@@ -532,6 +533,11 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     @Override
     public ObjectProperty<GameScene> gameSceneProperty() {
         return gameScenePy;
+    }
+
+    @Override
+    public GameVariant gameVariant() {
+        return gameVariantPy.get();
     }
 
     @Override

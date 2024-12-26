@@ -60,7 +60,7 @@ public interface GameContext {
     default GameModel game() { return gameController().currentGame(); }
     /** @return the current game level, throw exception if level does not exist */
     default GameLevel level() { return game().level().orElseThrow(); }
-    default GameVariant gameVariant() { return gameController().currentGameVariant(); }
+    GameVariant gameVariant();
     void selectGameVariant(GameVariant variant);
 
     // Input
