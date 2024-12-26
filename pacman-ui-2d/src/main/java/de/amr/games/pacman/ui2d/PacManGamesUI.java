@@ -32,7 +32,6 @@ import de.amr.games.pacman.ui2d.scene.GameConfiguration;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Dimension2D;
@@ -222,7 +221,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         //TODO This doesn't fit for NES aspect ratio
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
         stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
-        stage.titleProperty().bind(stageTitleBinding());
+        bindStageTitle();
         stage.centerOnScreen();
         stage.setOnShowing(e-> selectStartPage());
     }
@@ -321,7 +320,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         if (editorPage == null && game() instanceof CustomMapsHandler customMapsHandler) {
             editorPage = new EditorPage(stage, this, customMapsHandler.customMapDir());
             editorPage.setCloseAction(editor -> {
-                editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> stage.titleProperty().bind(stageTitleBinding()));
+                editor.showSaveConfirmationDialog(editor::showSaveDialog, this::bindStageTitle);
                 editor.stop();
                 clock.setTargetFrameRate(GameModel.TICKS_PER_SECOND);
                 gameController().restart(GameState.BOOT);
@@ -395,10 +394,10 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         gamePage.gameCanvasContainer().decorationEnabledPy.set(gameConfiguration().isGameCanvasDecorated());
     }
 
-    protected StringBinding stageTitleBinding() {
-        return Bindings.createStringBinding(
+    protected void bindStageTitle() {
+        stage.titleProperty().bind(Bindings.createStringBinding(
             () -> {
-                // e.g. "app.title.pacman" vs. "app.title.pacman.paused"
+                // "app.title.pacman" vs. "app.title.pacman.paused"
                 String key = "app.title." + gameConfiguration().assetKeyPrefix();
                 if (clock.isPaused()) { key += ".paused"; }
                 if (currentGameScene().isPresent() && currentGameScene().get() instanceof GameScene2D gameScene2D) {
@@ -406,7 +405,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 }
                 return locText(key, "2D");
             },
-            clock.pausedPy, gameVariantPy, gameScenePy, gamePage.heightProperty());
+            clock.pausedPy, gameVariantPy, gameScenePy, gamePage.heightProperty())
+        );
     }
 
     private void configureGameScene2D(GameScene2D gameScene2D) {

@@ -10,7 +10,6 @@ import de.amr.games.pacman.ui2d.lib.Picker;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
 import javafx.scene.Scene;
 import javafx.scene.paint.PhongMaterial;
 
@@ -72,24 +71,24 @@ public class PacManGamesUI_3D extends PacManGamesUI {
     }
 
     @Override
-    protected StringBinding stageTitleBinding() {
-        return Bindings.createStringBinding(() -> {
-            String sceneName = currentGameScene().map(gameScene -> gameScene.getClass().getSimpleName()).orElse(null);
-            String sceneNameText = sceneName != null && PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(sceneName) : "";
-            String assetKeyPrefix = gameConfiguration().assetKeyPrefix();
-            // resource key is composed of game variant, paused state and display mode (2D, 3D)
-            String key = "app.title." + assetKeyPrefix;
-            if (clock.isPaused()) {
-                key += ".paused";
-            }
-            String modeKey = locText(PY_3D_ENABLED.get() ? "threeD" : "twoD");
-            if (currentGameScene().isPresent() && currentGameScene().get() instanceof GameScene2D gameScene2D) {
-                return locText(key, modeKey) + sceneNameText + " (%.2fx)".formatted(gameScene2D.scaling());
-            }
-            return locText(key, modeKey) + sceneNameText;
-        },
-        clock.pausedPy, gameVariantPy, gameScenePy, gamePage.heightProperty(),
-        PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE);
+    protected void bindStageTitle() {
+        stage.titleProperty().bind(Bindings.createStringBinding(
+            () -> {
+                String sceneName = currentGameScene().map(gameScene -> gameScene.getClass().getSimpleName()).orElse(null);
+                String sceneNameText = sceneName != null && PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(sceneName) : "";
+                String assetKeyPrefix = gameConfiguration().assetKeyPrefix();
+                String key = "app.title." + assetKeyPrefix;
+                if (clock.isPaused()) {
+                    key += ".paused";
+                }
+                String modeKey = locText(PY_3D_ENABLED.get() ? "threeD" : "twoD");
+                if (currentGameScene().isPresent() && currentGameScene().get() instanceof GameScene2D gameScene2D) {
+                    return locText(key, modeKey) + sceneNameText + " (%.2fx)".formatted(gameScene2D.scaling());
+                }
+                return locText(key, modeKey) + sceneNameText;
+            },
+            clock.pausedPy, gameVariantPy, gameScenePy, gamePage.heightProperty(), PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE)
+        );
     }
 
     @Override
