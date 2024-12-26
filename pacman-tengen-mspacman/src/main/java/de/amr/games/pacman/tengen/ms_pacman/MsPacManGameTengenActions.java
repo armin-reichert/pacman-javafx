@@ -5,12 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.action.GameAction;
-import de.amr.games.pacman.ui2d.action.GameActionProvider;
-import de.amr.games.pacman.ui2d.action.GameActions2D;
-import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.tengen.ms_pacman.GlobalPropertiesTengen.PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED;
@@ -19,13 +15,13 @@ import static de.amr.games.pacman.ui2d.lib.Ufx.toggle;
 
 public enum MsPacManGameTengenActions implements GameAction {
 
-    SELECT_NEXT_JOYPAD {
+    SELECT_NEXT_JOYPAD_KEY_BINDING {
         @Override
         public void execute(GameContext context) {
-            context.disableJoypad();
-            context.nextJoypadKeys();
-            context.enableJoypad();
-            Logger.info("Selected joypad: {} ", context.joypadKeys());
+            context.unregisterJoypadKeyBinding();
+            context.selectNextJoypadKeyBinding();
+            context.registerJoypadKeyBinding();
+            Logger.info("Selected joypad: {} ", context.currentJoypadKeyBinding());
         }
     },
 

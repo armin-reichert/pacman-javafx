@@ -130,7 +130,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
     protected final Map<GameVariant, GameConfiguration> gameConfigByVariant = new EnumMap<>(GameVariant.class);
-    protected final JoypadKeyBinding[] joypadKeys;
+    protected final JoypadKeyBinding[] joypadKeyBindings;
     protected final Keyboard keyboard = new Keyboard();
     protected final GameClockFX clock = new GameClockFX();
     protected final AssetStorage assets = new AssetStorage();
@@ -150,7 +150,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     public PacManGamesUI() {
         arcadeKeys = DEFAULT_ARCADE_KEY_BINDING;
-        joypadKeys = new JoypadKeyBinding[] { JOYPAD_CURSOR_KEYS, JOYPAD_WASD };
+        joypadKeyBindings = new JoypadKeyBinding[] { JOYPAD_CURSOR_KEYS, JOYPAD_WASD };
         selectedJoypadIndex = 0;
     }
 
@@ -477,28 +477,28 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public JoypadKeyBinding joypadKeys() {
-        return joypadKeys[selectedJoypadIndex];
+    public JoypadKeyBinding currentJoypadKeyBinding() {
+        return joypadKeyBindings[selectedJoypadIndex];
     }
 
     @Override
-    public void nextJoypadKeys() {
+    public void selectNextJoypadKeyBinding() {
         selectedJoypadIndex = selectedJoypadIndex + 1;
-        if (selectedJoypadIndex == joypadKeys.length) {
+        if (selectedJoypadIndex == joypadKeyBindings.length) {
             selectedJoypadIndex = 0;
         }
     }
 
     @Override
-    public void enableJoypad() {
-        Logger.info("Enable joypad {}", joypadKeys());
-        joypadKeys().register(keyboard);
+    public void registerJoypadKeyBinding() {
+        Logger.info("Enable joypad key binding {}", currentJoypadKeyBinding());
+        currentJoypadKeyBinding().register(keyboard);
     }
 
     @Override
-    public void disableJoypad() {
-        Logger.info("Disable joypad {}", joypadKeys());
-        joypadKeys().unregister(keyboard);
+    public void unregisterJoypadKeyBinding() {
+        Logger.info("Disable joypad key binding {}", currentJoypadKeyBinding());
+        currentJoypadKeyBinding().unregister(keyboard);
     }
 
     @Override

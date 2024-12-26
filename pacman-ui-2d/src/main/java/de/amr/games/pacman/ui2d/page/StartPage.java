@@ -94,7 +94,7 @@ public class StartPage extends StackPane implements GameActionProvider {
     @Override
     public void bindGameActions() {
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            JoypadKeyBinding joypadKeys = context.joypadKeys();
+            JoypadKeyBinding joypadKeys = context.currentJoypadKeyBinding();
             bind(context -> currentFlyer().prevFlyerPage(),  joypadKeys.key(NES_JoypadButton.BTN_UP));
             bind(context -> currentFlyer().nextFlyerPage(),  joypadKeys.key(NES_JoypadButton.BTN_DOWN));
             bind(context -> carousel.prevSlide(),            joypadKeys.key(NES_JoypadButton.BTN_LEFT));

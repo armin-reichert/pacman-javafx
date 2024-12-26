@@ -199,7 +199,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
     @Override
     public void doInit() {
         messageMovement = new MessageMovement();
-        context.enableJoypad();
+        context.registerJoypadKeyBinding();
         context.setScoreVisible(true);
         setGameRenderer(context.gameConfiguration().createRenderer(context.assets(), canvas));
         movingCamera.focusTopOfScene();
@@ -208,7 +208,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
     @Override
     protected void doEnd() {
         context.sound().stopAll();
-        context.disableJoypad();
+        context.unregisterJoypadKeyBinding();
     }
 
     @Override
@@ -273,7 +273,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        context.enableJoypad();
+        context.registerJoypadKeyBinding();
         setKeyBindings();
 
         GameLevel level = context.level();
@@ -297,22 +297,22 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
-        context.enableJoypad();
+        context.registerJoypadKeyBinding();
         setKeyBindings();
         gr.setWorldMap(context.level().world().map());
     }
 
     private void setKeyBindings() {
         if (context.game().isDemoLevel()) {
-            bind(QUIT_DEMO_LEVEL, context.joypadKeys().key(NES_JoypadButton.BTN_START));
+            bind(QUIT_DEMO_LEVEL, context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_START));
         } else {
-            bind(GameActions2D.PLAYER_UP,    context.joypadKeys().key(NES_JoypadButton.BTN_UP));
-            bind(GameActions2D.PLAYER_DOWN,  context.joypadKeys().key(NES_JoypadButton.BTN_DOWN));
-            bind(GameActions2D.PLAYER_LEFT,  context.joypadKeys().key(NES_JoypadButton.BTN_LEFT));
-            bind(GameActions2D.PLAYER_RIGHT, context.joypadKeys().key(NES_JoypadButton.BTN_RIGHT));
+            bind(GameActions2D.PLAYER_UP,    context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_UP));
+            bind(GameActions2D.PLAYER_DOWN,  context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_DOWN));
+            bind(GameActions2D.PLAYER_LEFT,  context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_LEFT));
+            bind(GameActions2D.PLAYER_RIGHT, context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_RIGHT));
             bind(MsPacManGameTengenActions.TOGGLE_PAC_BOOSTER,
-                context.joypadKeys().key(NES_JoypadButton.BTN_A),
-                context.joypadKeys().key(NES_JoypadButton.BTN_B));
+                context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_A),
+                context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_B));
             bindFallbackPlayerControlActions(this);
             bindCheatActions(this);
         }

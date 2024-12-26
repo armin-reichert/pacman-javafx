@@ -29,16 +29,16 @@ public class TengenPlayScene3D extends PlayScene3D {
         bind(GameActions3D.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
         bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         if (context.game().isDemoLevel()) {
-            bind(MsPacManGameTengenActions.QUIT_DEMO_LEVEL, context.joypadKeys().key(NES_JoypadButton.BTN_START));
+            bind(MsPacManGameTengenActions.QUIT_DEMO_LEVEL, context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_START));
         }
         else {
-            bind(GameActions2D.PLAYER_UP,    context.joypadKeys().key(NES_JoypadButton.BTN_UP));
-            bind(GameActions2D.PLAYER_DOWN,  context.joypadKeys().key(NES_JoypadButton.BTN_DOWN));
-            bind(GameActions2D.PLAYER_LEFT,  context.joypadKeys().key(NES_JoypadButton.BTN_LEFT));
-            bind(GameActions2D.PLAYER_RIGHT, context.joypadKeys().key(NES_JoypadButton.BTN_RIGHT));
+            bind(GameActions2D.PLAYER_UP,    context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_UP));
+            bind(GameActions2D.PLAYER_DOWN,  context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_DOWN));
+            bind(GameActions2D.PLAYER_LEFT,  context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_LEFT));
+            bind(GameActions2D.PLAYER_RIGHT, context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_RIGHT));
             bind(MsPacManGameTengenActions.TOGGLE_PAC_BOOSTER,
-                context.joypadKeys().key(NES_JoypadButton.BTN_A),
-                context.joypadKeys().key(NES_JoypadButton.BTN_B));
+                context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_A),
+                context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_B));
             bindFallbackPlayerControlActions(this);
             bindCheatActions(this);
             bindFallbackPlayerControlActions(this);

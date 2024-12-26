@@ -61,15 +61,15 @@ public class OptionsScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(MsPacManGameTengenActions.SELECT_NEXT_JOYPAD, alt(KeyCode.J));
-        bind(MsPacManGameTengenActions.START_PLAYING, context.joypadKeys().key(NES_JoypadButton.BTN_START));
-        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, context.joypadKeys().key(NES_JoypadButton.BTN_SELECT));
+        bind(MsPacManGameTengenActions.SELECT_NEXT_JOYPAD_KEY_BINDING, alt(KeyCode.J));
+        bind(MsPacManGameTengenActions.START_PLAYING, context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_START));
+        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_SELECT));
         GameActions2D.bindTestActions(this);
     }
 
     @Override
     public void doInit() {
-        context.enableJoypad();
+        context.registerJoypadKeyBinding();
         context.setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
         game = (MsPacManGameTengen) context.game();
@@ -80,7 +80,7 @@ public class OptionsScene extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        context.disableJoypad();
+        context.unregisterJoypadKeyBinding();
     }
 
     @Override
@@ -116,7 +116,7 @@ public class OptionsScene extends GameScene2D {
     }
 
     private boolean isJoypadPressed(NES_JoypadButton button) {
-        return context.keyboard().isMatching(context.joypadKeys().key(button));
+        return context.keyboard().isMatching(context.currentJoypadKeyBinding().key(button));
     }
 
     @Override
@@ -305,7 +305,7 @@ public class OptionsScene extends GameScene2D {
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), size().x(), y);
 
         if (PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            r.drawJoypadBindings(context.joypadKeys());
+            r.drawJoypadBindings(context.currentJoypadKeyBinding());
         }
     }
 

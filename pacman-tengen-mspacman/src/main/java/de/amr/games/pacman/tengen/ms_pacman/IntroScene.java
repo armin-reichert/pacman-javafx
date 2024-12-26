@@ -65,21 +65,21 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.START_GAME, context.joypadKeys().key(NES_JoypadButton.BTN_START));
-        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, context.joypadKeys().key(NES_JoypadButton.BTN_SELECT));
+        bind(GameActions2D.START_GAME, context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_START));
+        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_SELECT));
     }
 
     @Override
     public void doInit() {
         context.setScoreVisible(false);
-        context.enableJoypad();
+        context.registerJoypadKeyBinding();
         sceneController.restart(SceneState.WAITING_FOR_START);
     }
 
     @Override
     protected void doEnd() {
         context.sound().stopVoice(); // TODO check if needed
-        context.disableJoypad();
+        context.unregisterJoypadKeyBinding();
     }
 
     @Override
@@ -138,7 +138,7 @@ public class IntroScene extends GameScene2D {
         }
 
         if (PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            r.drawJoypadBindings(context.joypadKeys());
+            r.drawJoypadBindings(context.currentJoypadKeyBinding());
         }
     }
 

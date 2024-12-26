@@ -66,10 +66,10 @@ public interface GameContext {
     // Input
     Keyboard keyboard();
     ArcadeKeyBinding arcadeKeys();
-    JoypadKeyBinding joypadKeys();
-    void enableJoypad();
-    void disableJoypad();
-    void nextJoypadKeys();
+    JoypadKeyBinding currentJoypadKeyBinding();
+    void registerJoypadKeyBinding();
+    void unregisterJoypadKeyBinding();
+    void selectNextJoypadKeyBinding();
 
     // GUI
     GameConfiguration gameConfiguration(GameVariant variant);
