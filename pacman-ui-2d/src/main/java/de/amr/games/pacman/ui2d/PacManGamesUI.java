@@ -348,7 +348,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             case README -> {
                 InfoBox readMeBox = new InfoBoxReadmeFirst();
                 readMeBox.setExpanded(true);
-                addDashboardItem("Welcome to the Pleasuredome!", readMeBox);
+                addDashboardItem(locText("infobox.readme.title"), readMeBox);
             }
             case GENERAL -> addDashboardItem(locText("infobox.general.title"), new InfoBoxGeneral());
             case GAME_CONTROL -> addDashboardItem(locText("infobox.game_control.title"), new InfoBoxGameControl());
