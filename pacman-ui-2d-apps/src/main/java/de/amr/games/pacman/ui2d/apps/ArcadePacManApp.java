@@ -9,6 +9,7 @@ import de.amr.games.pacman.arcade.pacman.PacManGame;
 import de.amr.games.pacman.arcade.pacman.PacManGameConfiguration;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.DashboardItemID;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
@@ -43,13 +44,13 @@ public class ArcadePacManApp extends Application {
         ui.create(stage, initialSize());
         ui.startPage().addSlide(new ArcadePacManStartPage().root());
 
-        ui.addDashboardItem(PacManGamesUI.DashboardItemID.README);
-        ui.addDashboardItem(PacManGamesUI.DashboardItemID.GENERAL);
-        ui.addDashboardItem(PacManGamesUI.DashboardItemID.GAME_CONTROL);
-        ui.addDashboardItem(PacManGamesUI.DashboardItemID.GAME_INFO);
-        ui.addDashboardItem(PacManGamesUI.DashboardItemID.ACTOR_INFO);
-        ui.addDashboardItem(PacManGamesUI.DashboardItemID.KEYBOARD);
-        ui.addDashboardItem(PacManGamesUI.DashboardItemID.ABOUT);
+        ui.addDashboardItem(DashboardItemID.README);
+        ui.addDashboardItem(DashboardItemID.GENERAL);
+        ui.addDashboardItem(DashboardItemID.GAME_CONTROL);
+        ui.addDashboardItem(DashboardItemID.GAME_INFO);
+        ui.addDashboardItem(DashboardItemID.ACTOR_INFO);
+        ui.addDashboardItem(DashboardItemID.KEYBOARD);
+        ui.addDashboardItem(DashboardItemID.ABOUT);
         ui.show();
     }
 

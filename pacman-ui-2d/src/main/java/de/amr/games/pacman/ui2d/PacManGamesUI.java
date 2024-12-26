@@ -67,10 +67,6 @@ import static de.amr.games.pacman.ui2d.lib.Ufx.createIcon;
  */
 public class PacManGamesUI implements GameEventListener, GameContext {
 
-    public enum DashboardItemID {
-        README, GENERAL, GAME_CONTROL, GAME_INFO, ACTOR_INFO, KEYBOARD, ABOUT
-    }
-
     public static final ArcadeKeyBinding DEFAULT_ARCADE_KEY_BINDING = new ArcadeKeyBinding(
         new KeyCodeCombination(KeyCode.DIGIT5),
         new KeyCodeCombination(KeyCode.DIGIT1),

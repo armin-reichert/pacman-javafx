@@ -18,7 +18,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration_3D;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacManStartPage;
-import de.amr.games.pacman.ui2d.PacManGamesUI;
+import de.amr.games.pacman.ui2d.DashboardItemID;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import de.amr.games.pacman.ui3d.GlobalProperties3d;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
@@ -86,15 +86,15 @@ public class PacManGames3dApp extends Application {
         ui.startPage().addSlide(new ArcadePacManXXLStartPage().root());
         ui.startPage().addSlide(new TengenMsPacManStartPage().root());
 
-        ui.addDashboardItem(PacManGamesUI.DashboardItemID.README);
-        ui.addDashboardItem(PacManGamesUI.DashboardItemID.GENERAL);
-        ui.addDashboardItem(PacManGamesUI.DashboardItemID.GAME_CONTROL);
+        ui.addDashboardItem(DashboardItemID.README);
+        ui.addDashboardItem(DashboardItemID.GENERAL);
+        ui.addDashboardItem(DashboardItemID.GAME_CONTROL);
         ui.addDashboardItem(ui.locText("infobox.3D_settings.title"), new InfoBox3D());
-        ui.addDashboardItem(PacManGamesUI.DashboardItemID.GAME_INFO);
-        ui.addDashboardItem(PacManGamesUI.DashboardItemID.ACTOR_INFO);
+        ui.addDashboardItem(DashboardItemID.GAME_INFO);
+        ui.addDashboardItem(DashboardItemID.ACTOR_INFO);
         ui.addDashboardItem(ui.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
-        ui.addDashboardItem(PacManGamesUI.DashboardItemID.KEYBOARD);
-        ui.addDashboardItem(PacManGamesUI.DashboardItemID.ABOUT);
+        ui.addDashboardItem(DashboardItemID.KEYBOARD);
+        ui.addDashboardItem(DashboardItemID.ABOUT);
 
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         Logger.info("Assets: {}", ui.assets().summary(Map.of(
