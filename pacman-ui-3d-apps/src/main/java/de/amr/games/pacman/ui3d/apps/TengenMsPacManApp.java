@@ -7,12 +7,12 @@ package de.amr.games.pacman.ui3d.apps;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
+import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration_3D;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacManStartPage;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxJoypad;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
-import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration_3D;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
@@ -46,7 +46,7 @@ public class TengenMsPacManApp extends Application {
         ui.loadAssets();
         ui.configureGameVariant(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration_3D(ui.assets()));
         ui.create(stage, initialSize());
-        ui.addStartPageSlide(new TengenMsPacManStartPage().root());
+        ui.startPage().addSlide(new TengenMsPacManStartPage().root());
 
         ui.addDashboardItem(PacManGamesUI.DashboardItemID.README);
         ui.addDashboardItem(PacManGamesUI.DashboardItemID.GENERAL);

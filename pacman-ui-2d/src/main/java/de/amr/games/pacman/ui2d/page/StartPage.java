@@ -18,6 +18,7 @@ import de.amr.games.pacman.ui2d.lib.Carousel;
 import de.amr.games.pacman.ui2d.lib.Flyer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.StackPane;
@@ -74,6 +75,12 @@ public class StartPage extends StackPane implements GameActionProvider {
 
         getChildren().add(carousel);
         bindGameActions();
+    }
+
+    public void addSlide(Node slide) {
+        carousel.addSlide(slide);
+        carousel.setNavigationVisible(carousel.numSlides() >= 2);
+        carousel.selectedIndexProperty().set(0);
     }
 
     public Carousel carousel() {

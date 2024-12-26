@@ -133,7 +133,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
     protected final Map<GameVariant, GameConfiguration> gameConfigByVariant = new EnumMap<>(GameVariant.class);
-    protected final JoypadKeyBinding[] joypadKeys = { JOYPAD_CURSOR_KEYS, JOYPAD_WASD };
+    protected final JoypadKeyBinding[] joypadKeys;
     protected final Keyboard keyboard = new Keyboard();
     protected final GameClockFX clock = new GameClockFX();
     protected final AssetStorage assets = new AssetStorage();
@@ -149,9 +149,13 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected Picker<String> pickerGameOver;
     protected Picker<String> pickerLevelComplete;
     protected int selectedJoypadIndex;
-    protected ArcadeKeyBinding arcadeKeys = DEFAULT_ARCADE_KEY_BINDING;
+    protected ArcadeKeyBinding arcadeKeys;
 
-    public PacManGamesUI() {}
+    public PacManGamesUI() {
+        arcadeKeys = DEFAULT_ARCADE_KEY_BINDING;
+        joypadKeys = new JoypadKeyBinding[] { JOYPAD_CURSOR_KEYS, JOYPAD_WASD };
+        selectedJoypadIndex = 0;
+    }
 
     public void loadAssets() {
         ResourceManager rm = () -> PacManGamesUI.class;
@@ -236,10 +240,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         startPage.gameVariantPy.bind(gameVariantPy);
     }
 
-    public void addStartPageSlide(Node slide) {
-        startPage.carousel().addSlide(slide);
-        startPage.carousel().setNavigationVisible(startPage.carousel().numSlides() >= 2);
-        startPage.carousel().selectedIndexProperty().set(0);
+    public StartPage startPage() {
+        return startPage;
     }
 
     /**

@@ -75,10 +75,10 @@ public class PacManGames2dApp extends Application {
         ui.configureGameVariant(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration(ui.assets()));
 
         ui.create(stage, initialSize());
-        ui.addStartPageSlide(new ArcadePacManStartPage().root());
-        ui.addStartPageSlide(new ArcadeMsPacManStartPage().root());
-        ui.addStartPageSlide(new ArcadePacManXXLStartPage().root());
-        ui.addStartPageSlide(new TengenMsPacManStartPage().root());
+        ui.startPage().addSlide(new ArcadePacManStartPage().root());
+        ui.startPage().addSlide(new ArcadeMsPacManStartPage().root());
+        ui.startPage().addSlide(new ArcadePacManXXLStartPage().root());
+        ui.startPage().addSlide(new TengenMsPacManStartPage().root());
 
         ui.addDashboardItem(PacManGamesUI.DashboardItemID.README);
         ui.addDashboardItem(PacManGamesUI.DashboardItemID.GENERAL);
