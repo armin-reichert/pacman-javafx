@@ -33,7 +33,9 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Box;
+import javafx.scene.shape.MeshView;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -266,11 +268,7 @@ public class GameLevel3D {
         wallFillColorPy.set(coloring.fill());
 
         TileMap terrain = world.map().terrain();
-        Box floor = createFloor(terrain.numCols() * TS - 1, terrain.numRows() * TS - 1);
-        floor.materialProperty().bind(Bindings.createObjectBinding(
-            () -> createFloorMaterial(floorColorPy.get(), floorTextureNamePy.get(), context.assets().get("floor_textures")),
-            floorColorPy, floorTextureNamePy
-        ));
+        Box floor = createFloor(terrain.numCols() * TS, terrain.numRows() * TS);
 
         for (Obstacle obstacle : world.map().obstacles()) {
             if (!world.isPartOfHouse(tileAt(obstacle.startPoint()))) {
@@ -289,54 +287,24 @@ public class GameLevel3D {
     }
 
     private void addObstacle(Group parent, Obstacle obstacle, double thickness) {
-        if (obstacle.isClosed() && obstacle.numSegments() == 4) {
-            // obstacle consists of 4 corners i.e it is a circle of size 1 tile
-            Vector2f center = obstacle.startPoint().plus(0, HTS);
-            Node wall = createCircularWall(center, HTS, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
-            parent.getChildren().add(wall);
-            return;
+        if (obstacle.isUnitCircle()) {
+            addUnitCircleObstacle(parent, obstacle);
         }
-        else if (obstacle.isClosed() && obstacle.segments().stream().filter(Obstacle.Segment::isRoundedCorner).count() == 4) {
-            // rectangular obstacle
-            Vector2f[] points = obstacle.points();
-            if (points.length > 6) {
-                Vector2f centerTowerNW = new Vector2f(points[0].x(), points[1].y());
-                Vector2f centerTowerSW = new Vector2f(points[3].x(), points[2].y());
-                Vector2f centerTowerSE = new Vector2f(points[4].x(), points[5].y());
-                Vector2f centerTowerNE = new Vector2f(points[7].x(), points[6].y());
-
-                addTower(parent, centerTowerNW);
-                addTower(parent, centerTowerSW);
-                addTower(parent, centerTowerSE);
-                addTower(parent, centerTowerNE);
-
-                Vector2f centerWallN = centerTowerNW.midpoint(centerTowerNE);
-                Vector2f centerWallS = centerTowerSW.midpoint(centerTowerSE);
-                Vector2f centerWallW = centerTowerNW.midpoint(centerTowerSW);
-                Vector2f centerWallE = centerTowerNE.midpoint(centerTowerSE);
-                Vector2f center = centerWallW.midpoint(centerWallE);
-
-                addCastleWall(parent, centerWallN, centerTowerNE.euclideanDistance(centerTowerNW), TS);
-                addCastleWall(parent, centerWallS, centerTowerSE.euclideanDistance(centerTowerSW), TS);
-                addCastleWall(parent, centerWallW, TS, centerTowerNW.euclideanDistance(centerTowerSW));
-                addCastleWall(parent, centerWallE, TS, centerTowerNE.euclideanDistance(centerTowerSE));
-                addCastleWall(parent, center, centerWallW.euclideanDistance(centerWallE) - TS, centerWallN.euclideanDistance(centerWallS) - TS);
-            } else {
-                Vector2f center0 = new Vector2f(points[0].x(), points[1].y());
-                Vector2f center1 = new Vector2f(points[3].x(), points[4].y());
-                Vector2f centerWall = center0.midpoint(center1);
-                addTower(parent, center0);
-                addTower(parent, center1);
-                if (center0.x() < center1.x()) {
-                    addCastleWall(parent, centerWall, center0.euclideanDistance(center1), TS);
-                } else {
-                    addCastleWall(parent, centerWall, TS, center0.euclideanDistance(center1));
-                }
-
-            }
-            return;
+        else if (obstacle.isO_Shape()) {
+            addOShapeObstacle(parent, obstacle);
         }
+        else if (obstacle.isL_Shape()) {
+            //TODO
+        }
+        else if (obstacle.isT_Shape()) {
+            //TODO
+        }
+        else {
+            addGeneralShapeObstacle(parent, obstacle, thickness);
+        }
+    }
 
+    private void addGeneralShapeObstacle(Group parent, Obstacle obstacle, double thickness) {
         int r = HTS;
         Vector2f p = obstacle.startPoint();
         for (int i = 0; i < obstacle.numSegments(); ++i) {
@@ -347,35 +315,30 @@ public class GameLevel3D {
                 double length = seg.vector().length();
                 Node wall = wallCenteredAt(center, thickness, length, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
                 parent.getChildren().add(wall);
-            }
-            else if (seg.isHorizontalLine()) {
+            } else if (seg.isHorizontalLine()) {
                 Vector2f center = p.plus(seg.vector().scaled(0.5f));
                 double length = seg.vector().length();
                 Node wall = wallCenteredAt(center, length + thickness, thickness, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
                 parent.getChildren().add(wall);
-            }
-            else if (seg.isNWCorner()) {
+            } else if (seg.isNWCorner()) {
                 if (seg.ccw()) {
                     addCorner(parent, p.minus(r, 0), p, q, thickness);
                 } else {
                     addCorner(parent, p.minus(0, r), q, p, thickness);
                 }
-            }
-            else if (seg.isSWCorner()) {
+            } else if (seg.isSWCorner()) {
                 if (seg.ccw()) {
                     addCorner(parent, p.plus(0, r), q, p, thickness);
                 } else {
                     addCorner(parent, p.minus(r, 0), p, q, thickness);
                 }
-            }
-            else if (seg.isSECorner()) {
+            } else if (seg.isSECorner()) {
                 if (seg.ccw()) {
                     addCorner(parent, p.plus(r, 0), p, q, thickness);
                 } else {
                     addCorner(parent, p.plus(0, r), q, p, thickness);
                 }
-            }
-            else if (seg.isNECorner()) {
+            } else if (seg.isNECorner()) {
                 if (seg.ccw()) {
                     addCorner(parent, p.minus(0, r), q, p, thickness);
                 } else {
@@ -384,6 +347,51 @@ public class GameLevel3D {
             }
             p = q;
         }
+    }
+
+    private void addOShapeObstacle(Group parent, Obstacle obstacle) {
+        Vector2f[] points = obstacle.points();
+        if (points.length > 6) {
+            Vector2f centerTowerNW = new Vector2f(points[0].x(), points[1].y());
+            Vector2f centerTowerSW = new Vector2f(points[3].x(), points[2].y());
+            Vector2f centerTowerSE = new Vector2f(points[4].x(), points[5].y());
+            Vector2f centerTowerNE = new Vector2f(points[7].x(), points[6].y());
+
+            addTower(parent, centerTowerNW);
+            addTower(parent, centerTowerSW);
+            addTower(parent, centerTowerSE);
+            addTower(parent, centerTowerNE);
+
+            Vector2f centerWallN = centerTowerNW.midpoint(centerTowerNE);
+            Vector2f centerWallS = centerTowerSW.midpoint(centerTowerSE);
+            Vector2f centerWallW = centerTowerNW.midpoint(centerTowerSW);
+            Vector2f centerWallE = centerTowerNE.midpoint(centerTowerSE);
+            Vector2f center = centerWallW.midpoint(centerWallE);
+
+            addCastleWall(parent, centerWallN, centerTowerNE.euclideanDistance(centerTowerNW), TS);
+            addCastleWall(parent, centerWallS, centerTowerSE.euclideanDistance(centerTowerSW), TS);
+            addCastleWall(parent, centerWallW, TS, centerTowerNW.euclideanDistance(centerTowerSW));
+            addCastleWall(parent, centerWallE, TS, centerTowerNE.euclideanDistance(centerTowerSE));
+            addCastleWall(parent, center, centerWallW.euclideanDistance(centerWallE) - TS, centerWallN.euclideanDistance(centerWallS) - TS);
+        } else {
+            Vector2f center0 = new Vector2f(points[0].x(), points[1].y());
+            Vector2f center1 = new Vector2f(points[3].x(), points[4].y());
+            Vector2f centerWall = center0.midpoint(center1);
+            addTower(parent, center0);
+            addTower(parent, center1);
+            if (center0.x() < center1.x()) {
+                addCastleWall(parent, centerWall, center0.euclideanDistance(center1), TS);
+            } else {
+                addCastleWall(parent, centerWall, TS, center0.euclideanDistance(center1));
+            }
+
+        }
+    }
+
+    private void addUnitCircleObstacle(Group parent, Obstacle obstacle) {
+        Vector2f center = obstacle.startPoint().plus(0, HTS);
+        Node wall = createCircularWall(center, HTS, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
+        parent.getChildren().add(wall);
     }
 
     private void addTower(Group parent, Vector2f center) {
@@ -420,18 +428,22 @@ public class GameLevel3D {
     }
 
     private Box createFloor(double sizeX, double sizeY) {
-        var floor = new Box(sizeX, sizeY, FLOOR_THICKNESS);
-        // Translate floor such that left-upper corner is at origin and floor surface is at z=0
-        floor.translateXProperty().bind(floor.widthProperty().multiply(0.5));
+        // add some extra space
+        var floor = new Box(sizeX + 10, sizeY, FLOOR_THICKNESS);
+        floor.materialProperty().bind(Bindings.createObjectBinding(this::createFloorMaterial, floorColorPy, floorTextureNamePy));
+        floor.translateXProperty().bind(floor.widthProperty().multiply(0.5).subtract(5));
         floor.translateYProperty().bind(floor.heightProperty().multiply(0.5));
-        floor.translateZProperty().bind(floor.depthProperty().multiply(0.5));
+        floor.translateZProperty().set(FLOOR_THICKNESS * 0.5);
         floor.drawModeProperty().bind(PY_3D_DRAW_MODE);
         floorColorPy.bind(PY_3D_FLOOR_COLOR);
         floorTextureNamePy.bind(PY_3D_FLOOR_TEXTURE);
         return floor;
     }
 
-    private PhongMaterial createFloorMaterial(Color color, String textureName, Map<String, PhongMaterial> textures) {
+    private PhongMaterial createFloorMaterial() {
+        Color color = floorColorPy.get();
+        String textureName = floorTextureNamePy.get();
+        Map<String, PhongMaterial> textures = context.assets().get("floor_textures");
         return GlobalProperties3d.NO_TEXTURE.equals(textureName) || !textures.containsKey(textureName)
             ? coloredMaterial(color)
             : textures.get(textureName);

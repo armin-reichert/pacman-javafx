@@ -92,4 +92,21 @@ public class Obstacle {
     public Segment segment(int i) {
         return segments.get(i);
     }
+
+    public boolean isUnitCircle() {
+        return isClosed() && numSegments() == 4;
+    }
+
+    public boolean isO_Shape() {
+        return isClosed() &&
+            segments().stream().filter(Segment::isRoundedCorner).count() == 4;
+    }
+
+    public boolean isL_Shape() {
+        return false; // TODO
+    }
+
+    public boolean isT_Shape() {
+        return false; //TODO
+    }
 }
