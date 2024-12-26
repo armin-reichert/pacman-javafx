@@ -74,9 +74,10 @@ public interface WallBuilder {
         DoubleProperty wallHeightPy, double coatHeight,
         Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy)
     {
-        Cylinder base = new Cylinder();
+        int divisions = 24;
+
+        Cylinder base = new Cylinder(radius, wallHeightPy.get(), divisions);
         base.setMouseTransparent(true);
-        base.setRadius(radius);
         base.heightProperty().bind(wallHeightPy);
         base.setRotationAxis(Rotate.X_AXIS);
         base.setRotate(90);
@@ -86,10 +87,8 @@ public interface WallBuilder {
         base.materialProperty().bind(fillMaterialPy);
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
-        Cylinder top = new Cylinder();
+        Cylinder top = new Cylinder(radius, coatHeight, divisions);
         top.setMouseTransparent(true);
-        top.setRadius(radius);
-        top.setHeight(coatHeight);
         top.setRotationAxis(Rotate.X_AXIS);
         top.setRotate(90);
         top.setTranslateX(center.x());
@@ -124,7 +123,9 @@ public interface WallBuilder {
         DoubleProperty wallHeightPy, double coatHeight,
         Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy) {
 
-        Cylinder base = new Cylinder(radius, wallHeightPy.get());
+        int divisions = 24;
+
+        Cylinder base = new Cylinder(radius, wallHeightPy.get(), divisions);
         base.setRotationAxis(Rotate.X_AXIS);
         base.setRotate(90);
         base.setTranslateX(center.x());
@@ -133,8 +134,9 @@ public interface WallBuilder {
         base.heightProperty().bind(wallHeightPy);
         base.materialProperty().bind(fillMaterialPy);
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        base.setMouseTransparent(true);
 
-        Cylinder top = new Cylinder(radius, coatHeight);
+        Cylinder top = new Cylinder(radius, coatHeight, divisions);
         top.setRotationAxis(Rotate.X_AXIS);
         top.setRotate(90);
         top.translateXProperty().bind(base.translateXProperty());
@@ -142,6 +144,7 @@ public interface WallBuilder {
         top.translateZProperty().bind(wallHeightPy.add(0.5*coatHeight).multiply(-1).add(2*coatHeight));
         top.materialProperty().bind(strokeMaterialPy);
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        top.setMouseTransparent(true);
 
         return new Group(base, top);
     }

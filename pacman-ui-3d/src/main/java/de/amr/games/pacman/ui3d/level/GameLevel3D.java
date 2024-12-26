@@ -354,7 +354,21 @@ public class GameLevel3D {
 
     private void addOShapeObstacle(Group parent, Obstacle obstacle) {
         Vector2f[] points = obstacle.points();
-        if (points.length > 6) {
+        if (points.length == 6) {
+            // one tile wide O-shape
+            Vector2f center0 = new Vector2f(points[0].x(), points[1].y());
+            Vector2f center1 = new Vector2f(points[3].x(), points[4].y());
+            Vector2f centerWall = center0.midpoint(center1);
+            addTower(parent, center0);
+            addTower(parent, center1);
+            if (center0.x() < center1.x()) {
+                addCastleWall(parent, centerWall, center0.euclideanDistance(center1), TS);
+            } else {
+                addCastleWall(parent, centerWall, TS, center0.euclideanDistance(center1));
+            }
+        }
+        else if (points.length > 6) {
+            // wider than one tile wide O-shape
             Vector2f centerTowerNW = new Vector2f(points[0].x(), points[1].y());
             Vector2f centerTowerSW = new Vector2f(points[3].x(), points[2].y());
             Vector2f centerTowerSE = new Vector2f(points[4].x(), points[5].y());
@@ -376,18 +390,6 @@ public class GameLevel3D {
             addCastleWall(parent, centerWallW, TS, centerTowerNW.euclideanDistance(centerTowerSW));
             addCastleWall(parent, centerWallE, TS, centerTowerNE.euclideanDistance(centerTowerSE));
             addCastleWall(parent, center, centerWallW.euclideanDistance(centerWallE) - TS, centerWallN.euclideanDistance(centerWallS) - TS);
-        } else {
-            Vector2f center0 = new Vector2f(points[0].x(), points[1].y());
-            Vector2f center1 = new Vector2f(points[3].x(), points[4].y());
-            Vector2f centerWall = center0.midpoint(center1);
-            addTower(parent, center0);
-            addTower(parent, center1);
-            if (center0.x() < center1.x()) {
-                addCastleWall(parent, centerWall, center0.euclideanDistance(center1), TS);
-            } else {
-                addCastleWall(parent, centerWall, TS, center0.euclideanDistance(center1));
-            }
-
         }
     }
 
