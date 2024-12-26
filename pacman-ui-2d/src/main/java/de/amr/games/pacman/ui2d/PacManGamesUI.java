@@ -48,7 +48,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -66,6 +65,10 @@ import static de.amr.games.pacman.ui2d.lib.Ufx.createIcon;
  * @author Armin Reichert
  */
 public class PacManGamesUI implements GameEventListener, GameContext {
+
+    public enum DashboardItemID {
+        README, GENERAL, GAME_CONTROL, GAME_INFO, ACTOR_INFO, KEYBOARD, ABOUT
+    }
 
     public static final ArcadeKeyBinding DEFAULT_ARCADE_KEY_BINDING = new ArcadeKeyBinding(
         new KeyCodeCombination(KeyCode.DIGIT5),
@@ -155,6 +158,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
         assets.addBundle(rm.getModuleBundle("de.amr.games.pacman.ui2d.texts.messages"));
 
+        assets.store("scene_background",            Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
         assets.store("font.arcade",                 rm.loadFont("fonts/emulogic.ttf", 8));
         assets.store("font.handwriting",            rm.loadFont("fonts/Molle-Italic.ttf", 9));
         assets.store("font.monospaced",             rm.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12));
@@ -162,9 +166,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         assets.store("icon.auto",                   rm.loadImage("graphics/icons/auto.png"));
         assets.store("icon.mute",                   rm.loadImage("graphics/icons/mute.png"));
         assets.store("icon.pause",                  rm.loadImage("graphics/icons/pause.png"));
-
-        assets.store("wallpaper.color",             Color.rgb(72, 78, 135));
-        assets.store("wallpaper.tapestry",          Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")) );
 
         assets.store("voice.explain",               rm.url("sound/voice/press-key.mp3"));
         assets.store("voice.autopilot.off",         rm.url("sound/voice/autopilot-off.mp3"));
@@ -339,10 +340,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         gamePage.gameScenePy.bind(gameScenePy);
     }
 
-    public enum DashboardItemID {
-        README, GENERAL, GAME_CONTROL, GAME_INFO, ACTOR_INFO, KEYBOARD, ABOUT
-    }
-
     public void addDashboardItem(DashboardItemID id) {
         switch (id) {
             case README -> {
@@ -384,7 +381,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         }
 
         String assetKeyPrefix = gameConfiguration().assetKeyPrefix();
-        sceneRoot.setBackground(assets.get(assetKeyPrefix + ".scene_background"));
+        sceneRoot.setBackground(assets.get("scene_background"));
         Image icon = assets.image(assetKeyPrefix + ".icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);

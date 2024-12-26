@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.assets.ResourceManager;
 import de.amr.games.pacman.ui2d.lib.Picker;
-import de.amr.games.pacman.ui2d.lib.Ufx;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.beans.binding.Bindings;
@@ -51,9 +50,6 @@ public class PacManGamesUI_3D extends PacManGamesUI {
         assets.store("model3D.ghost.mesh.dress",    ghostModel3D.mesh("Sphere.004_Sphere.034_light_blue_ghost"));
         assets.store("model3D.ghost.mesh.pupils",   ghostModel3D.mesh("Sphere.010_Sphere.039_grey_wall"));
         assets.store("model3D.ghost.mesh.eyeballs", ghostModel3D.mesh("Sphere.009_Sphere.036_white"));
-
-        assets.store("wallpaper.day",   Ufx.wallpaperBackground(rm.loadImage("graphics/abstract-wallpaper-1.jpg")));
-        assets.store("wallpaper.night", Ufx.wallpaperBackground(rm.loadImage("graphics/abstract-wallpaper-2.jpg")));
 
         Map<String, PhongMaterial> texturesByName = new LinkedHashMap<>();
         Stream.of("Carpet", "Rubber", "Wood").forEach(name -> {

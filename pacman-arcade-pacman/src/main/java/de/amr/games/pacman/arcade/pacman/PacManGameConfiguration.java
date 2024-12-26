@@ -13,7 +13,6 @@ import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.assets.ResourceManager;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
-import de.amr.games.pacman.ui2d.lib.Ufx;
 import de.amr.games.pacman.ui2d.scene.*;
 import javafx.scene.canvas.Canvas;
 
@@ -104,8 +103,6 @@ public class PacManGameConfiguration implements GameConfiguration {
     }
 
     private void loadAssets(ResourceManager rm, AssetStorage assets) {
-        assets.store(assetKeyPrefix() + ".scene_background",         Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
-
         assets.store(assetKeyPrefix() + ".spritesheet",              rm.loadImage("graphics/pacman_spritesheet.png"));
         assets.store(assetKeyPrefix() + ".flashing_maze",            rm.loadImage("graphics/maze_flashing.png"));
 

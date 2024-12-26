@@ -20,8 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.ui2d.lib.Ufx.imageBackground;
-
 public class MsPacManGameConfiguration implements GameConfiguration {
 
     private static final List<WorldMapColoring> WORLD_MAP_COLORINGS = List.of(
@@ -113,8 +111,6 @@ public class MsPacManGameConfiguration implements GameConfiguration {
     }
 
     private void loadAssets(ResourceManager rm, AssetStorage assets) {
-        assets.store(assetKeyPrefix() + ".scene_background",              imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
-
         assets.store(assetKeyPrefix() + ".spritesheet",                   rm.loadImage("graphics/mspacman_spritesheet.png"));
         assets.store(assetKeyPrefix() + ".flashing_mazes",                rm.loadImage("graphics/mazes_flashing.png"));
 

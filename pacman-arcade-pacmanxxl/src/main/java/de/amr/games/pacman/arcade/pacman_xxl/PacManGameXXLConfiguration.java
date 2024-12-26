@@ -20,8 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.ui2d.lib.Ufx.imageBackground;
-
 public class PacManGameXXLConfiguration implements GameConfiguration {
 
     private final PacManGameSpriteSheet spriteSheet;
@@ -103,7 +101,6 @@ public class PacManGameXXLConfiguration implements GameConfiguration {
     }
 
     private void loadAssets(ResourceManager rm, AssetStorage assets) {
-        assets.store(assetKeyPrefix() + ".scene_background",     imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
         assets.store(assetKeyPrefix() + ".icon",                 rm.loadImage("graphics/icons/pacman.png"));
         assets.store(assetKeyPrefix() + ".spritesheet",          rm.loadImage("graphics/pacman_spritesheet.png"));
 

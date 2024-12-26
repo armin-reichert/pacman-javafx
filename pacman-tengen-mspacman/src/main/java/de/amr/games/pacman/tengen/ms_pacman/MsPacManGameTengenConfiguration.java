@@ -26,7 +26,6 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.tengen.ms_pacman.GlobalPropertiesTengen.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
-import static de.amr.games.pacman.ui2d.lib.Ufx.coloredBackground;
 
 public class MsPacManGameTengenConfiguration implements GameConfiguration {
 
@@ -130,8 +129,6 @@ public class MsPacManGameTengenConfiguration implements GameConfiguration {
     }
 
     private void loadAssets(ResourceManager rm, AssetStorage assets) {
-        assets.store(assetKeyPrefix() + ".scene_background",                 coloredBackground(Color.BLACK));
-
         assets.store(assetKeyPrefix() + ".spritesheet",                      rm.loadImage("graphics/spritesheet.png"));
         assets.store(assetKeyPrefix() + ".mazes.arcade",                     rm.loadImage("graphics/arcade_mazes.png"));
         assets.store(assetKeyPrefix() + ".mazes.non_arcade",                 rm.loadImage("graphics/non_arcade_mazes.png"));
