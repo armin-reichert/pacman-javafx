@@ -119,6 +119,8 @@ public class MsPacManGameConfiguration implements GameConfiguration {
         assets.store("ms_pacman.icon",                          rm.loadImage("graphics/icons/mspacman.png"));
         assets.store("ms_pacman.logo.midway",                   rm.loadImage("graphics/midway_logo.png"));
 
+        assets.store("ms_pacman.color.game_over_message",         Color.valueOf(Arcade.Palette.RED));
+
         assets.store("ms_pacman.pac.color.head",                  Color.valueOf(Arcade.Palette.YELLOW));
         assets.store("ms_pacman.pac.color.eyes",                  Color.grayRgb(33));
         assets.store("ms_pacman.pac.color.palate",                Color.rgb(240, 180, 160));
