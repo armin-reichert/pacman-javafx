@@ -12,11 +12,12 @@ import javafx.scene.text.Font;
 
 public class InfoBoxJoypad extends InfoBox {
 
+    private JoypadKeyBinding joypad;
     public void init(GameContext context) {
         super.init(context);
-        JoypadKeyBinding joypad = context.currentJoypadKeyBinding();
         setContentTextFont(Font.font("Monospace", 16));
         String indent = "  "; // Urgh
+        joypad = context.currentJoypadKeyBinding();
         addLabeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(
             indent,
             joypad.key(NES_JoypadButton.BTN_SELECT).getDisplayText(),
@@ -35,5 +36,11 @@ public class InfoBoxJoypad extends InfoBox {
             joypad.key(NES_JoypadButton.BTN_RIGHT).getDisplayText())
         );
         addRow(new ImageView(DashboardAssets.IT.image("image.nes-controller")));
+    }
+
+    @Override
+    public void update() {
+        joypad = context.currentJoypadKeyBinding();
+        super.update();
     }
 }
