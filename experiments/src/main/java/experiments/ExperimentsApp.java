@@ -2,8 +2,8 @@ package experiments;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
+import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
 import de.amr.games.pacman.lib.tilemap.Tiles;
-import de.amr.games.pacman.ui2d.lib.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
@@ -16,7 +16,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
@@ -25,7 +24,6 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.lib.Ufx.coloredMaterial;
-import static de.amr.games.pacman.ui2d.lib.Ufx.wallpaperBackground;
 import static java.lang.Math.TAU;
 
 public class ExperimentsApp extends Application {
@@ -124,9 +122,9 @@ public class ExperimentsApp extends Application {
         Vector2f currentPoint = obstacle.startPoint();
         Vector2f endPoint = null;
         for (int i = 0; i < obstacle.numSegments(); ++i) {
-            Obstacle.Segment segment = obstacle.segment(i);
-            Obstacle.Segment prevSegment = i > 0 ? obstacle.segment(i - 1) : obstacle.segment(obstacle.numSegments() - 1);
-            Obstacle.Segment nextSegment = i < obstacle.numSegments() - 1 ? obstacle.segment(i + 1) : obstacle.segment(0);
+            ObstacleSegment segment = obstacle.segment(i);
+            ObstacleSegment prevSegment = i > 0 ? obstacle.segment(i - 1) : obstacle.segment(obstacle.numSegments() - 1);
+            ObstacleSegment nextSegment = i < obstacle.numSegments() - 1 ? obstacle.segment(i + 1) : obstacle.segment(0);
             Logger.info("Current point: {} segment: {}", currentPoint, segment);
             endPoint = currentPoint.plus(segment.vector());
             if (segment.isVerticalLine()) {
@@ -156,7 +154,7 @@ public class ExperimentsApp extends Application {
         Logger.info("End point: {}", endPoint);
     }
 
-    private void addCorner(Obstacle.Segment segment, Obstacle.Segment prevSegment, Obstacle.Segment nextSegment, Vector2f start, Vector2f end) {
+    private void addCorner(ObstacleSegment segment, ObstacleSegment prevSegment, ObstacleSegment nextSegment, Vector2f start, Vector2f end) {
         if (segment.isNWCorner() && prevSegment.isNECorner()) {
             Vector2f center = start.plus(0, HTS);
             addCornerCylinder(center);
@@ -184,7 +182,7 @@ public class ExperimentsApp extends Application {
         content.getChildren().add(cyl);
     }
 
-    private void addVerticalWall(Obstacle.Segment segment, Vector2f startPoint, Vector2f endPoint) {
+    private void addVerticalWall(ObstacleSegment segment, Vector2f startPoint, Vector2f endPoint) {
         Vector2f middlePoint = startPoint.plus(endPoint).scaled(0.5f);
         Box wall = new Box();
         wall.setMaterial(WALL_MATERIAL);
@@ -196,7 +194,7 @@ public class ExperimentsApp extends Application {
         content.getChildren().add(wall);
     }
 
-    private void addHorizontalWall(Obstacle.Segment segment, Vector2f startPoint, Vector2f endPoint) {
+    private void addHorizontalWall(ObstacleSegment segment, Vector2f startPoint, Vector2f endPoint) {
         Vector2f middlePoint = startPoint.plus(endPoint).scaled(0.5f);
         Box wall = new Box();
         wall.setMaterial(WALL_MATERIAL);

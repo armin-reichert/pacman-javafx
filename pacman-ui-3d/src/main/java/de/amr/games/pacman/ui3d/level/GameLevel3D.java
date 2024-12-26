@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
+import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
@@ -310,7 +311,7 @@ public class GameLevel3D {
         int r = HTS;
         Vector2f p = obstacle.startPoint();
         for (int i = 0; i < obstacle.numSegments(); ++i) {
-            Obstacle.Segment seg = obstacle.segment(i);
+            ObstacleSegment seg = obstacle.segment(i);
             Vector2f q = p.plus(seg.vector());
             if (seg.isVerticalLine()) {
                 Vector2f center = p.plus(seg.vector().scaled(0.5f));

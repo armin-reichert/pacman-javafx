@@ -276,7 +276,7 @@ public class ObstacleBuilder {
             boolean mergedCCW = false;
             byte mergedMapContent = -1;
             for (int i = 0; i < obstacle.numSegments(); ++i) {
-                Obstacle.Segment segment = obstacle.segment(i);
+                ObstacleSegment segment = obstacle.segment(i);
                 if (segment.isStraightLine()) {
                     if (merging) { // continue merging
                         mergedVector = mergedVector.plus(segment.vector());

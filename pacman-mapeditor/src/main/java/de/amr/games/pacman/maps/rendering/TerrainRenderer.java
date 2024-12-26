@@ -7,6 +7,7 @@ package de.amr.games.pacman.maps.rendering;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
+import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
 import javafx.beans.property.DoubleProperty;
@@ -108,7 +109,7 @@ public class TerrainRenderer implements TileMapRenderer {
         Vector2f p = obstacle.startPoint();
         g.beginPath();
         g.moveTo(p.x(), p.y());
-        for (Obstacle.Segment segment : obstacle.segments()) {
+        for (ObstacleSegment segment : obstacle.segments()) {
             p = p.plus(segment.vector());
             double x = p.x(), y = p.y();
             if (segment.isStraightLine()) {
