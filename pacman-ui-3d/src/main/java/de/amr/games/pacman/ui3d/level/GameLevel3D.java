@@ -287,11 +287,12 @@ public class GameLevel3D {
     }
 
     private void addObstacle(Group parent, Obstacle obstacle, double thickness) {
+        Group obstacleGroup = new Group();
         if (obstacle.isUnitCircle()) {
-            addUnitCircleObstacle(parent, obstacle);
+            addUnitCircleObstacle(obstacleGroup, obstacle);
         }
         else if (obstacle.isO_Shape()) {
-            addOShapeObstacle(parent, obstacle);
+            addOShapeObstacle(obstacleGroup, obstacle);
         }
         else if (obstacle.isL_Shape()) {
             //TODO
@@ -300,8 +301,9 @@ public class GameLevel3D {
             //TODO
         }
         else {
-            addGeneralShapeObstacle(parent, obstacle, thickness);
+            addGeneralShapeObstacle(obstacleGroup, obstacle, thickness);
         }
+        parent.getChildren().add(obstacleGroup);
     }
 
     private void addGeneralShapeObstacle(Group parent, Obstacle obstacle, double thickness) {
@@ -388,12 +390,6 @@ public class GameLevel3D {
         }
     }
 
-    private void addUnitCircleObstacle(Group parent, Obstacle obstacle) {
-        Vector2f center = obstacle.startPoint().plus(0, HTS);
-        Node wall = createCircularWall(center, HTS, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
-        parent.getChildren().add(wall);
-    }
-
     private void addTower(Group parent, Vector2f center) {
         Node tower = createCircularWall(center, HTS, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
         parent.getChildren().add(tower);
@@ -401,6 +397,12 @@ public class GameLevel3D {
 
     private void addCastleWall(Group parent, Vector2f center, double sizeX, double sizeY) {
         Node wall = wallCenteredAt(center, sizeX, sizeY, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
+        parent.getChildren().add(wall);
+    }
+
+    private void addUnitCircleObstacle(Group parent, Obstacle obstacle) {
+        Vector2f center = obstacle.startPoint().plus(0, HTS);
+        Node wall = createCircularWall(center, HTS, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
         parent.getChildren().add(wall);
     }
 
