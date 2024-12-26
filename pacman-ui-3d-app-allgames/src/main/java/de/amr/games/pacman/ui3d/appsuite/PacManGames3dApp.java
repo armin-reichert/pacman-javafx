@@ -93,6 +93,7 @@ public class PacManGames3dApp extends Application {
         ui.addDashboardItem(DashboardItemID.GAME_INFO);
         ui.addDashboardItem(DashboardItemID.ACTOR_INFO);
         ui.addDashboardItem(ui.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
+        ui.addDashboardItem(DashboardItemID.JOYPAD);
         ui.addDashboardItem(DashboardItemID.KEYBOARD);
         ui.addDashboardItem(DashboardItemID.ABOUT);
 

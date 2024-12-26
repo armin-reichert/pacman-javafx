@@ -10,7 +10,6 @@ import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration_3D;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacManStartPage;
 import de.amr.games.pacman.ui2d.DashboardItemID;
-import de.amr.games.pacman.ui2d.dashboard.InfoBoxJoypad;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import javafx.application.Application;
@@ -54,7 +53,7 @@ public class TengenMsPacManApp extends Application {
         ui.addDashboardItem(ui.locText("infobox.3D_settings.title"), new InfoBox3D());
         ui.addDashboardItem(DashboardItemID.GAME_INFO);
         ui.addDashboardItem(DashboardItemID.ACTOR_INFO);
-        ui.addDashboardItem("Joypad Settings", new InfoBoxJoypad());
+        ui.addDashboardItem(DashboardItemID.JOYPAD);
         ui.addDashboardItem(DashboardItemID.KEYBOARD);
         ui.addDashboardItem(DashboardItemID.ABOUT);
         ui.show();

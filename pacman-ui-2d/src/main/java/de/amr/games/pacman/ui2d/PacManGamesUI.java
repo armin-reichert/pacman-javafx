@@ -352,6 +352,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             case GAME_INFO -> addDashboardItem(locText("infobox.game_info.title"), new InfoBoxGameInfo());
             case ACTOR_INFO -> addDashboardItem(locText("infobox.actor_info.title"), new InfoBoxActorInfo());
             case KEYBOARD -> addDashboardItem(locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
+            case JOYPAD -> addDashboardItem(locText("infobox.joypad.title"), new InfoBoxJoypad());
             case ABOUT -> addDashboardItem(locText("infobox.about.title"), new InfoBoxAbout());
         }
     }
