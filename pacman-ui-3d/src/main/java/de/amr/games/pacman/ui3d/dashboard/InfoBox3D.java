@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.dashboard.InfoBox;
 import de.amr.games.pacman.ui2d.dashboard.InfoText;
-import de.amr.games.pacman.ui2d.lib.NightMode;
 import de.amr.games.pacman.ui2d.scene.CameraControlledView;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -50,7 +49,6 @@ public class InfoBox3D extends InfoBox {
     private Slider sliderWallHeight;
     private Slider sliderWallOpacity;
     private CheckBox cbPacLighted;
-    private ComboBox<NightMode> comboNightMode;
     private CheckBox cbAxesVisible;
     private CheckBox cbWireframeMode;
 
@@ -71,7 +69,6 @@ public class InfoBox3D extends InfoBox {
         sliderWallHeight     = adddSlider("Obstacle Height", 0, 16, PY_3D_WALL_HEIGHT.get(), false, false);
         sliderWallOpacity    = adddSlider("Wall Opacity", 0, 1, PY_3D_WALL_OPACITY.get(), false, false);
         cbEnergizerExplodes  = addCheckBox("Energizer Explosion");
-        comboNightMode       = addComboBox("Night Mode", NightMode.values());
         cbPacLighted         = addCheckBox("Pac-Man Lighted");
         cbAxesVisible        = addCheckBox("Show Axes");
         cbWireframeMode      = addCheckBox("Wireframe Mode");
@@ -90,7 +87,6 @@ public class InfoBox3D extends InfoBox {
         setEditor(cbPiPOn, PY_PIP_ON);
         setEditor(comboPerspectives, PY_3D_PERSPECTIVE);
         setEditor(cbEnergizerExplodes, PY_3D_ENERGIZER_EXPLODES);
-        setEditor(comboNightMode, PY_NIGHT_MODE);
         setEditor(cbPacLighted, PY_3D_PAC_LIGHT_ENABLED);
         setEditor(cbAxesVisible, PY_3D_AXES_VISIBLE);
 
@@ -110,7 +106,6 @@ public class InfoBox3D extends InfoBox {
         comboFloorTexture.setValue(PY_3D_FLOOR_TEXTURE.get());
         comboPerspectives.setValue(PY_3D_PERSPECTIVE.get());
         cbEnergizerExplodes.setSelected(PY_3D_ENERGIZER_EXPLODES.get());
-        comboNightMode.setValue(PY_NIGHT_MODE.get());
         cbPacLighted.setSelected(PY_3D_PAC_LIGHT_ENABLED.get());
         cbAxesVisible.setSelected(PY_3D_AXES_VISIBLE.get());
         cbWireframeMode.setSelected(PY_3D_DRAW_MODE.get() == DrawMode.LINE);
