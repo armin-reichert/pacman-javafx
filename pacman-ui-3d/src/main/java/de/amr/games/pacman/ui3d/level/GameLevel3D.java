@@ -398,12 +398,12 @@ public class GameLevel3D {
     }
 
     private void addTower(Group parent, Vector2f center) {
-        Node tower = createCircularWall(center, HTS, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
+        Node tower = createCircularWall(center, HTS, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallStrokeMaterialPy, wallFillMaterialPy);
         parent.getChildren().add(tower);
     }
 
     private void addCastleWall(Group parent, Vector2f center, double sizeX, double sizeY) {
-        Node wall = wallCenteredAt(center, sizeX, sizeY, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
+        Node wall = wallCenteredAt(center, sizeX, sizeY, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallStrokeMaterialPy, wallFillMaterialPy);
         parent.getChildren().add(wall);
     }
 
