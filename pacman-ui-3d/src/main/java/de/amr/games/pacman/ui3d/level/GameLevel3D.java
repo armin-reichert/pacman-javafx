@@ -304,51 +304,6 @@ public class GameLevel3D {
         parent.getChildren().add(obstacleGroup);
     }
 
-    private void addGeneralShapeObstacle(Group parent, Obstacle obstacle, double thickness) {
-        int r = HTS;
-        Vector2f p = obstacle.startPoint();
-        for (int i = 0; i < obstacle.numSegments(); ++i) {
-            ObstacleSegment seg = obstacle.segment(i);
-            Vector2f q = p.plus(seg.vector());
-            if (seg.isVerticalLine()) {
-                Vector2f center = p.plus(seg.vector().scaled(0.5f));
-                double length = seg.vector().length();
-                Node wall = wallCenteredAt(center, thickness, length, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
-                parent.getChildren().add(wall);
-            } else if (seg.isHorizontalLine()) {
-                Vector2f center = p.plus(seg.vector().scaled(0.5f));
-                double length = seg.vector().length();
-                Node wall = wallCenteredAt(center, length + thickness, thickness, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
-                parent.getChildren().add(wall);
-            } else if (seg.isNWCorner()) {
-                if (seg.ccw()) {
-                    addCorner(parent, p.minus(r, 0), p, q, thickness);
-                } else {
-                    addCorner(parent, p.minus(0, r), q, p, thickness);
-                }
-            } else if (seg.isSWCorner()) {
-                if (seg.ccw()) {
-                    addCorner(parent, p.plus(0, r), q, p, thickness);
-                } else {
-                    addCorner(parent, p.minus(r, 0), p, q, thickness);
-                }
-            } else if (seg.isSECorner()) {
-                if (seg.ccw()) {
-                    addCorner(parent, p.plus(r, 0), p, q, thickness);
-                } else {
-                    addCorner(parent, p.plus(0, r), q, p, thickness);
-                }
-            } else if (seg.isNECorner()) {
-                if (seg.ccw()) {
-                    addCorner(parent, p.minus(0, r), q, p, thickness);
-                } else {
-                    addCorner(parent, p.plus(r, 0), p, q, thickness);
-                }
-            }
-            p = q;
-        }
-    }
-
     private void addOShapeObstacle(Group parent, Obstacle obstacle) {
         Vector2f[] points = obstacle.points();
         if (obstacle.numSegments() == 4) {
@@ -402,8 +357,57 @@ public class GameLevel3D {
         parent.getChildren().add(wall);
     }
 
-    private void addCorner(Group parent, Vector2f cornerPoint, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {
-        Node hWall =  wallCenteredAt(
+    private void addGeneralShapeObstacle(Group parent, Obstacle obstacle, double thickness) {
+        int r = HTS;
+        Vector2f p = obstacle.startPoint();
+        for (int i = 0; i < obstacle.numSegments(); ++i) {
+            ObstacleSegment segment = obstacle.segment(i);
+            double length = segment.vector().length();
+            Vector2f q = p.plus(segment.vector());
+            if (segment.isVerticalLine()) {
+                Node wall = wallCenteredAt(p.midpoint(q), thickness, length, obstacleHeightPy, OBSTACLE_COAT_HEIGHT,
+                    wallFillMaterialPy, wallStrokeMaterialPy);
+                parent.getChildren().add(wall);
+            }
+            else if (segment.isHorizontalLine()) {
+                Node wall = wallCenteredAt(p.midpoint(q), length + thickness, thickness, obstacleHeightPy, OBSTACLE_COAT_HEIGHT,
+                    wallFillMaterialPy, wallStrokeMaterialPy);
+                parent.getChildren().add(wall);
+            }
+            else if (segment.isNWCorner()) {
+                if (segment.ccw()) {
+                    addGeneralShapeCorner(parent, p.plus(-r, 0), p, q, thickness);
+                } else {
+                    addGeneralShapeCorner(parent, p.plus(0, -r), q, p, thickness);
+                }
+            }
+            else if (segment.isSWCorner()) {
+                if (segment.ccw()) {
+                    addGeneralShapeCorner(parent, p.plus(0, r), q, p, thickness);
+                } else {
+                    addGeneralShapeCorner(parent, p.plus(-r, 0), p, q, thickness);
+                }
+            }
+            else if (segment.isSECorner()) {
+                if (segment.ccw()) {
+                    addGeneralShapeCorner(parent, p.plus(r, 0), p, q, thickness);
+                } else {
+                    addGeneralShapeCorner(parent, p.plus(0, r), q, p, thickness);
+                }
+            }
+            else if (segment.isNECorner()) {
+                if (segment.ccw()) {
+                    addGeneralShapeCorner(parent, p.plus(0, -r), q, p, thickness);
+                } else {
+                    addGeneralShapeCorner(parent, p.plus(r, 0), p, q, thickness);
+                }
+            }
+            p = q;
+        }
+    }
+
+    private void addGeneralShapeCorner(Group parent, Vector2f cornerPoint, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {
+        Node hWall = wallCenteredAt(
             cornerPoint.midpoint(horEndPoint),
             cornerPoint.minus(horEndPoint).length(),
             thickness,
