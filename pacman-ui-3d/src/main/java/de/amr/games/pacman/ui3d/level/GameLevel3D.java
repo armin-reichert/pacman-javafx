@@ -299,14 +299,14 @@ public class GameLevel3D {
             // Invert colors
             wallBuilder.setTopMaterial(wallFillMaterialPy.get());
             wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
-            addOShapeObstacle(obstacleGroup, obstacle);
+            wallBuilder.addOShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
         }
         else if (obstacle.isL_Shape()) {
             Logger.info("Found L-shape: {}", obstacle);
             // Invert colors
             wallBuilder.setTopMaterial(wallFillMaterialPy.get());
             wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
-            addLShapeObstacle(obstacleGroup, obstacle);
+            wallBuilder.addLShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
         }
         else if (obstacle.isT_Shape()) {
             // Invert colors
@@ -318,173 +318,9 @@ public class GameLevel3D {
                 obstacle.isClosed(), obstacle.numSegments(), obstacle.numDeadEnds());
             wallBuilder.setBaseMaterial(wallFillMaterialPy.get());
             wallBuilder.setTopMaterial(wallStrokeMaterialPy.get());
-            addGeneralShapeObstacle(obstacleGroup, obstacle, thickness);
+            wallBuilder.addGeneralShapeObstacle(obstacleGroup, obstacle, thickness, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
         }
         parent.getChildren().add(obstacleGroup);
-    }
-
-    private void addOShapeObstacle(Group parent, Obstacle obstacle) {
-        Vector2f[] points = obstacle.points();
-        if (obstacle.numSegments() == 4) {
-            addTower(parent, new Vector2f(points[0].x(), points[1].y()));
-            Logger.info("Added one-tile circle, dead ends={}", obstacle.numDeadEnds());
-        }
-        else if (obstacle.numSegments() == 6) {
-            Vector2f center0 = new Vector2f(points[0].x(), points[1].y());
-            Vector2f center1 = new Vector2f(points[3].x(), points[4].y());
-            Vector2f centerWall = center0.midpoint(center1);
-            addTower(parent, center0);
-            addTower(parent, center1);
-            if (center0.x() < center1.x()) {
-                addCastleWall(parent, centerWall, center0.manhattanDistance(center1), TS);
-            } else {
-                addCastleWall(parent, centerWall, TS, center0.manhattanDistance(center1));
-            }
-            Logger.info("Added {}-segment oval, dead ends={}", obstacle.numSegments(), obstacle.numDeadEnds());
-        }
-        else {
-            // wider than one tile wide O-shape
-            Vector2f centerTowerNW = new Vector2f(points[0].x(), points[1].y());
-            Vector2f centerTowerSW = new Vector2f(points[3].x(), points[2].y());
-            Vector2f centerTowerSE = new Vector2f(points[4].x(), points[5].y());
-            Vector2f centerTowerNE = new Vector2f(points[7].x(), points[6].y());
-
-            addTower(parent, centerTowerNW);
-            addTower(parent, centerTowerSW);
-            addTower(parent, centerTowerSE);
-            addTower(parent, centerTowerNE);
-
-            Vector2f centerWallN = centerTowerNW.midpoint(centerTowerNE);
-            Vector2f centerWallS = centerTowerSW.midpoint(centerTowerSE);
-            Vector2f centerWallW = centerTowerNW.midpoint(centerTowerSW);
-            Vector2f centerWallE = centerTowerNE.midpoint(centerTowerSE);
-            Vector2f center = centerWallW.midpoint(centerWallE);
-
-            addCastleWall(parent, centerWallN, centerTowerNE.manhattanDistance(centerTowerNW), TS);
-            addCastleWall(parent, centerWallS, centerTowerSE.manhattanDistance(centerTowerSW), TS);
-            addCastleWall(parent, centerWallW, TS, centerTowerNW.manhattanDistance(centerTowerSW));
-            addCastleWall(parent, centerWallE, TS, centerTowerNE.manhattanDistance(centerTowerSE));
-            addCastleWall(parent, center, centerWallW.manhattanDistance(centerWallE) - TS, centerWallN.manhattanDistance(centerWallS) - TS);
-
-            Logger.info("Added {}-segment oval, dead ends={}", obstacle.numSegments(), obstacle.numDeadEnds());
-        }
-    }
-
-    private void addLShapeObstacle(Group parent, Obstacle obstacle) {
-        List<Integer> deadEndPositions = obstacle.deadEndSegmentPositions();
-        Vector2f[] points = obstacle.points();
-        int deadEnd0 = deadEndPositions.getFirst(), deadEnd1 = deadEndPositions.getLast();
-        Vector2f center0 = deadEndCenter(obstacle, points, deadEnd0);
-        Vector2f center1 = deadEndCenter(obstacle, points, deadEnd1);
-        ObstacleSegment deadEnd0Segment = obstacle.segment(deadEnd0);
-        Vector2f knee = null;
-        if (deadEnd0Segment.isRoundedSECorner() || deadEnd0Segment.isRoundedNWCorner()) {
-            knee = new Vector2f(center1.x(), center0.y());
-        } else if (deadEnd0Segment.isRoundedSWCorner()) {
-            knee = new Vector2f(center0.x(), center1.y());
-        }
-        addTower(parent, center0);
-        addTower(parent, center1);
-        addTower(parent, knee);
-
-        if (center0.x() == knee.x()) {
-            addCastleWall(parent, center0.midpoint(knee), TS, center0.manhattanDistance(knee));
-        } else if (center0.y() == knee.y()) {
-            addCastleWall(parent, center0.midpoint(knee), center0.manhattanDistance(knee), TS);
-        }
-        if (center1.x() == knee.x()) {
-            addCastleWall(parent, center1.midpoint(knee), TS, center1.manhattanDistance(knee));
-        } else if (center1.y() == knee.y()) {
-            addCastleWall(parent, center1.midpoint(knee), center1.manhattanDistance(knee), TS);
-        }
-    }
-
-    private Vector2f deadEndCenter(Obstacle obstacle, Vector2f[] points, int deadEndIndex) {
-        ObstacleSegment segment = obstacle.segment(deadEndIndex);
-        return switch (segment.mapContent()) {
-            case Tiles.CORNER_NW -> points[deadEndIndex].plus(0, HTS);
-            case Tiles.CORNER_SW -> points[deadEndIndex].plus(HTS, 0);
-            case Tiles.CORNER_SE -> points[deadEndIndex].plus(0, -HTS);
-            case Tiles.CORNER_NE -> points[deadEndIndex].plus(-HTS, 0);
-            default -> throw new IllegalStateException();
-        };
-    }
-
-    private void addTower(Group parent, Vector2f center) {
-        Node tower = wallBuilder.createCircularWall(center, HTS, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
-        parent.getChildren().add(tower);
-    }
-
-    private void addCastleWall(Group parent, Vector2f center, double sizeX, double sizeY) {
-        Node wall = wallBuilder.wallCenteredAt(center, sizeX, sizeY, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
-        parent.getChildren().add(wall);
-    }
-
-    private void addGeneralShapeObstacle(Group parent, Obstacle obstacle, double thickness) {
-        int r = HTS;
-        Vector2f p = obstacle.startPoint();
-        for (int i = 0; i < obstacle.numSegments(); ++i) {
-            ObstacleSegment segment = obstacle.segment(i);
-            double length = segment.vector().length();
-            Vector2f q = p.plus(segment.vector());
-            if (segment.isVerticalLine()) {
-                Node wall = wallBuilder.wallCenteredAt(p.midpoint(q), thickness, length, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
-                parent.getChildren().add(wall);
-            }
-            else if (segment.isHorizontalLine()) {
-                Node wall = wallBuilder.wallCenteredAt(p.midpoint(q), length + thickness, thickness, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
-                parent.getChildren().add(wall);
-            }
-            else if (segment.isNWCorner()) {
-                if (segment.ccw()) {
-                    addGeneralShapeCorner(parent, p.plus(-r, 0), p, q, thickness);
-                } else {
-                    addGeneralShapeCorner(parent, p.plus(0, -r), q, p, thickness);
-                }
-            }
-            else if (segment.isSWCorner()) {
-                if (segment.ccw()) {
-                    addGeneralShapeCorner(parent, p.plus(0, r), q, p, thickness);
-                } else {
-                    addGeneralShapeCorner(parent, p.plus(-r, 0), p, q, thickness);
-                }
-            }
-            else if (segment.isSECorner()) {
-                if (segment.ccw()) {
-                    addGeneralShapeCorner(parent, p.plus(r, 0), p, q, thickness);
-                } else {
-                    addGeneralShapeCorner(parent, p.plus(0, r), q, p, thickness);
-                }
-            }
-            else if (segment.isNECorner()) {
-                if (segment.ccw()) {
-                    addGeneralShapeCorner(parent, p.plus(0, -r), q, p, thickness);
-                } else {
-                    addGeneralShapeCorner(parent, p.plus(r, 0), p, q, thickness);
-                }
-            }
-            p = q;
-        }
-    }
-
-    private void addGeneralShapeCorner(Group parent, Vector2f cornerPoint, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {
-        Node hWall = wallBuilder.wallCenteredAt(
-            cornerPoint.midpoint(horEndPoint),
-            Math.abs(cornerPoint.x() - horEndPoint.x()),
-            thickness,
-            obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
-
-        Node vWall = wallBuilder.wallCenteredAt(
-            cornerPoint.midpoint(vertEndPoint),
-            thickness,
-            Math.abs(cornerPoint.y() - vertEndPoint.y()),
-            obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
-
-        Node cornerWall = wallBuilder.cornerWall(cornerPoint,
-            0.5 * thickness,
-            obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
-
-        parent.getChildren().addAll(hWall, vWall, cornerWall);
     }
 
     private Box createFloor(double sizeX, double sizeY) {
