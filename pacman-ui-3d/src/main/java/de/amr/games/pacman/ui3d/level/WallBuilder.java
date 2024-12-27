@@ -211,29 +211,29 @@ public class WallBuilder {
     public void addLShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
         List<Integer> deadEndPositions = obstacle.deadEndSegmentPositions();
         Vector2f[] points = obstacle.points();
-        int deadEnd0 = deadEndPositions.getFirst(), deadEnd1 = deadEndPositions.getLast();
-        Vector2f center0 = deadEndCenter(obstacle, points, deadEnd0);
-        Vector2f center1 = deadEndCenter(obstacle, points, deadEnd1);
-        ObstacleSegment deadEnd0Segment = obstacle.segment(deadEnd0);
+        int d0 = deadEndPositions.getFirst(), d1 = deadEndPositions.getLast();
+        Vector2f c0 = deadEndCenter(obstacle, points, d0);
+        Vector2f c1 = deadEndCenter(obstacle, points, d1);
+        ObstacleSegment d0Segment = obstacle.segment(d0);
         Vector2f knee = null;
-        if (deadEnd0Segment.isRoundedSECorner() || deadEnd0Segment.isRoundedNWCorner()) {
-            knee = new Vector2f(center1.x(), center0.y());
-        } else if (deadEnd0Segment.isRoundedSWCorner()) {
-            knee = new Vector2f(center0.x(), center1.y());
+        if (d0Segment.isRoundedSECorner() || d0Segment.isRoundedNWCorner()) {
+            knee = new Vector2f(c1.x(), c0.y());
+        } else if (d0Segment.isRoundedSWCorner()) {
+            knee = new Vector2f(c0.x(), c1.y());
         }
-        addTower(parent, center0, baseHeightPy, topHeight);
-        addTower(parent, center1, baseHeightPy, topHeight);
+        addTower(parent, c0, baseHeightPy, topHeight);
+        addTower(parent, c1, baseHeightPy, topHeight);
         addTower(parent, knee, baseHeightPy, topHeight);
 
-        if (center0.x() == knee.x()) {
-            addCastleWall(parent, center0.midpoint(knee), TS, center0.manhattanDistance(knee), baseHeightPy, topHeight);
-        } else if (center0.y() == knee.y()) {
-            addCastleWall(parent, center0.midpoint(knee), center0.manhattanDistance(knee), TS, baseHeightPy, topHeight);
+        if (c0.x() == knee.x()) {
+            addCastleWall(parent, c0.midpoint(knee), TS, c0.manhattanDistance(knee), baseHeightPy, topHeight);
+        } else if (c0.y() == knee.y()) {
+            addCastleWall(parent, c0.midpoint(knee), c0.manhattanDistance(knee), TS, baseHeightPy, topHeight);
         }
-        if (center1.x() == knee.x()) {
-            addCastleWall(parent, center1.midpoint(knee), TS, center1.manhattanDistance(knee), baseHeightPy, topHeight);
-        } else if (center1.y() == knee.y()) {
-            addCastleWall(parent, center1.midpoint(knee), center1.manhattanDistance(knee), TS, baseHeightPy, topHeight);
+        if (c1.x() == knee.x()) {
+            addCastleWall(parent, c1.midpoint(knee), TS, c1.manhattanDistance(knee), baseHeightPy, topHeight);
+        } else if (c1.y() == knee.y()) {
+            addCastleWall(parent, c1.midpoint(knee), c1.manhattanDistance(knee), TS, baseHeightPy, topHeight);
         }
     }
 
