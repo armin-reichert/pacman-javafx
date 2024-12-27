@@ -102,6 +102,8 @@ public class GameLevel3D {
     private House3D house3D;
     private Bonus3D bonus3D;
 
+    private final WallBuilder wallBuilder = new WallBuilder();
+
     public GameLevel3D(GameContext context) {
         this.context = assertNotNull(context);
 
@@ -279,10 +281,11 @@ public class GameLevel3D {
             }
         }
 
-        house3D = new House3D(world, coloring);
+        house3D = new House3D();
         house3D.heightPy.set(HOUSE_HEIGHT);
-        house3D.fillMaterialPy.bind(wallFillColorPy.map(color -> opaqueColor(color, HOUSE_OPACITY)).map(Ufx::coloredMaterial));
-        house3D.strokeMaterialPy.bind(wallStrokeMaterialPy);
+        house3D.wallBuilder().setBaseMaterial(Ufx.coloredMaterial(opaqueColor(coloring.fill(), HOUSE_OPACITY)));
+        house3D.wallBuilder().setTopMaterial(wallStrokeMaterialPy.get());
+        house3D.build(world, coloring);
 
         mazeGroup.getChildren().add(house3D.root());
         worldGroup.getChildren().addAll(floor, mazeGroup);
@@ -293,18 +296,28 @@ public class GameLevel3D {
         Group obstacleGroup = new Group();
         if (obstacle.isO_Shape()) {
             Logger.info("Found O-shape: {}", obstacle);
+            // Invert colors
+            wallBuilder.setTopMaterial(wallFillMaterialPy.get());
+            wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
             addOShapeObstacle(obstacleGroup, obstacle);
         }
         else if (obstacle.isL_Shape()) {
             Logger.info("Found L-shape: {}", obstacle);
+            // Invert colors
+            wallBuilder.setTopMaterial(wallFillMaterialPy.get());
+            wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
             addLShapeObstacle(obstacleGroup, obstacle);
         }
         else if (obstacle.isT_Shape()) {
-            //TODO
+            // Invert colors
+            wallBuilder.setTopMaterial(wallFillMaterialPy.get());
+            wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
         }
         else {
             Logger.info("Found other shape: closed={} num segments={} num dead-ends={}",
                 obstacle.isClosed(), obstacle.numSegments(), obstacle.numDeadEnds());
+            wallBuilder.setBaseMaterial(wallFillMaterialPy.get());
+            wallBuilder.setTopMaterial(wallStrokeMaterialPy.get());
             addGeneralShapeObstacle(obstacleGroup, obstacle, thickness);
         }
         parent.getChildren().add(obstacleGroup);
@@ -398,12 +411,12 @@ public class GameLevel3D {
     }
 
     private void addTower(Group parent, Vector2f center) {
-        Node tower = createCircularWall(center, HTS, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallStrokeMaterialPy, wallFillMaterialPy);
+        Node tower = wallBuilder.createCircularWall(center, HTS, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
         parent.getChildren().add(tower);
     }
 
     private void addCastleWall(Group parent, Vector2f center, double sizeX, double sizeY) {
-        Node wall = wallCenteredAt(center, sizeX, sizeY, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallStrokeMaterialPy, wallFillMaterialPy);
+        Node wall = wallBuilder.wallCenteredAt(center, sizeX, sizeY, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
         parent.getChildren().add(wall);
     }
 
@@ -415,13 +428,11 @@ public class GameLevel3D {
             double length = segment.vector().length();
             Vector2f q = p.plus(segment.vector());
             if (segment.isVerticalLine()) {
-                Node wall = wallCenteredAt(p.midpoint(q), thickness, length, obstacleHeightPy, OBSTACLE_COAT_HEIGHT,
-                    wallFillMaterialPy, wallStrokeMaterialPy);
+                Node wall = wallBuilder.wallCenteredAt(p.midpoint(q), thickness, length, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
                 parent.getChildren().add(wall);
             }
             else if (segment.isHorizontalLine()) {
-                Node wall = wallCenteredAt(p.midpoint(q), length + thickness, thickness, obstacleHeightPy, OBSTACLE_COAT_HEIGHT,
-                    wallFillMaterialPy, wallStrokeMaterialPy);
+                Node wall = wallBuilder.wallCenteredAt(p.midpoint(q), length + thickness, thickness, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
                 parent.getChildren().add(wall);
             }
             else if (segment.isNWCorner()) {
@@ -457,24 +468,21 @@ public class GameLevel3D {
     }
 
     private void addGeneralShapeCorner(Group parent, Vector2f cornerPoint, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {
-        Node hWall = wallCenteredAt(
+        Node hWall = wallBuilder.wallCenteredAt(
             cornerPoint.midpoint(horEndPoint),
             Math.abs(cornerPoint.x() - horEndPoint.x()),
             thickness,
-            obstacleHeightPy, OBSTACLE_COAT_HEIGHT,
-            wallFillMaterialPy, wallStrokeMaterialPy);
+            obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
 
-        Node vWall = wallCenteredAt(
+        Node vWall = wallBuilder.wallCenteredAt(
             cornerPoint.midpoint(vertEndPoint),
             thickness,
             Math.abs(cornerPoint.y() - vertEndPoint.y()),
-            obstacleHeightPy, OBSTACLE_COAT_HEIGHT,
-            wallFillMaterialPy, wallStrokeMaterialPy);
+            obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
 
-        Node cornerWall = cornerWall(cornerPoint,
+        Node cornerWall = wallBuilder.cornerWall(cornerPoint,
             0.5 * thickness,
-            obstacleHeightPy, OBSTACLE_COAT_HEIGHT,
-            wallFillMaterialPy, wallStrokeMaterialPy);
+            obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
 
         parent.getChildren().addAll(hWall, vWall, cornerWall);
     }

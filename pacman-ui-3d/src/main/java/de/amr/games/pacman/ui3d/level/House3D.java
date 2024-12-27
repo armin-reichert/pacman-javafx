@@ -30,13 +30,21 @@ public class House3D {
     public final BooleanProperty usedPy  = new SimpleBooleanProperty();
 
     public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.5);
-    public final ObjectProperty<PhongMaterial> fillMaterialPy  = new SimpleObjectProperty<>(this, "fillMaterial", DEFAULT_MATERIAL);
-    public final ObjectProperty<PhongMaterial> strokeMaterialPy  = new SimpleObjectProperty<>(this, "strokeMaterial", DEFAULT_MATERIAL);
 
     private final Group root = new Group();
-    private final Door3D door3D;
+    private Door3D door3D;
 
-    public House3D(GameWorld world, WorldMapColoring coloring) {
+    private final WallBuilder wallBuilder = new WallBuilder();
+
+    public House3D() {
+        openPy.addListener((py, wasOpen, isOpen) -> {
+            if (isOpen) {
+                door3D.playTraversalAnimation();
+            }
+        });
+    }
+
+    public void build(GameWorld world, WorldMapColoring coloring) {
         // tile coordinates
         int xMin = world.houseTopLeftTile().x();
         int xMax = xMin + world.houseSize().x() - 1;
@@ -45,11 +53,11 @@ public class House3D {
 
         Vector2i leftDoorTile = world.houseLeftDoorTile(), rightDoorTile = world.houseRightDoorTile();
         root.getChildren().addAll(
-            createWall(xMin, yMin, leftDoorTile.x() - 1, yMin),
-            createWall(rightDoorTile.x() + 1, yMin, xMax, yMin),
-            createWall(xMin, yMin, xMin, yMax),
-            createWall(xMax, yMin, xMax, yMax),
-            createWall(xMin, yMax, xMax, yMax)
+                createWall(xMin, yMin, leftDoorTile.x() - 1, yMin),
+                createWall(rightDoorTile.x() + 1, yMin, xMax, yMin),
+                createWall(xMin, yMin, xMin, yMax),
+                createWall(xMax, yMin, xMax, yMax),
+                createWall(xMin, yMax, xMax, yMax)
         );
 
         door3D = new Door3D(leftDoorTile, rightDoorTile, coloring.door());
@@ -67,18 +75,15 @@ public class House3D {
         light.setTranslateY(centerY - 6);
         light.translateZProperty().bind(heightPy.multiply(-1));
         root.getChildren().add(light);
+    }
 
-        openPy.addListener((py, wasOpen, isOpen) -> {
-            if (isOpen) {
-                door3D.playTraversalAnimation();
-            }
-        });
+    public WallBuilder wallBuilder() {
+        return wallBuilder;
     }
 
     private Node createWall(int x1, int y1, int x2, int y2) {
-        return WallBuilder.createWallBetweenTiles(v2i(x1, y1), v2i(x2, y2),
-            wallThicknessPy.get(), heightPy, WALL_COAT_HEIGHT,
-            fillMaterialPy, strokeMaterialPy);
+        return wallBuilder.createWallBetweenTiles(v2i(x1, y1), v2i(x2, y2),
+            wallThicknessPy.get(), heightPy, WALL_COAT_HEIGHT);
     }
 
     public Group root() { return root; }
