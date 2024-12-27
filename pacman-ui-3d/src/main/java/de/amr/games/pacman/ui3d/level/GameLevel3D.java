@@ -5,12 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
-import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
 import de.amr.games.pacman.lib.tilemap.TileMap;
-import de.amr.games.pacman.lib.tilemap.Tiles;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
@@ -49,7 +46,6 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.lib.Ufx.*;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
-import static de.amr.games.pacman.ui3d.level.WallBuilder.*;
 
 /**
  * @author Armin Reichert
@@ -122,10 +118,9 @@ public class GameLevel3D {
         message3D.setRotation(Rotate.X_AXIS, 90);
         message3D.setVisible(false);
 
-        wallFillMaterialPy.bind(Bindings.createObjectBinding(
-            () -> coloredMaterial(opaqueColor(wallFillColorPy.get(), wallOpacityPy.get())),
-            wallFillColorPy, wallOpacityPy));
-        wallStrokeMaterialPy.bind(wallStrokeColorPy.map(Ufx::coloredMaterial));
+        wallFillMaterialPy.setValue(createWallFillMaterial());
+        wallStrokeMaterialPy.setValue(createWallStrokeMaterial());
+
         buildWorld3D(world, coloring);
         addFood3D(world, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 
@@ -136,6 +131,24 @@ public class GameLevel3D {
 
         PY_3D_WALL_HEIGHT.addListener((py,ov,nv) -> obstacleHeightPy.set(nv.doubleValue()));
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+    }
+
+    private PhongMaterial createWallFillMaterial() {
+        PhongMaterial material = new PhongMaterial();
+        material.diffuseColorProperty().bind(Bindings.createObjectBinding(
+                () -> opaqueColor(wallFillColorPy.get(), wallOpacityPy.get()), wallFillColorPy, wallOpacityPy
+        ));
+        material.specularColorProperty().bind(material.diffuseColorProperty().map(Color::brighter));
+        return material;
+    }
+
+    private PhongMaterial createWallStrokeMaterial( ){
+        PhongMaterial material = new PhongMaterial();
+        material.diffuseColorProperty().bind(Bindings.createObjectBinding(
+                () -> opaqueColor(wallStrokeColorPy.get(), wallOpacityPy.get()), wallStrokeColorPy, wallOpacityPy
+        ));
+        material.specularColorProperty().bind(material.diffuseColorProperty().map(Color::brighter));
+        return material;
     }
 
     private Pac3D createPac3D(Pac pac) {
