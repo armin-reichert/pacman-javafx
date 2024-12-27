@@ -289,10 +289,7 @@ public class GameLevel3D {
 
     private void addObstacle(Group parent, Obstacle obstacle, double thickness) {
         Group obstacleGroup = new Group();
-        if (obstacle.isUnitCircle()) {
-            addUnitCircleObstacle(obstacleGroup, obstacle);
-        }
-        else if (obstacle.isO_Shape()) {
+        if (obstacle.isO_Shape()) {
             addOShapeObstacle(obstacleGroup, obstacle);
         }
         else if (obstacle.isL_Shape()) {
@@ -354,8 +351,10 @@ public class GameLevel3D {
 
     private void addOShapeObstacle(Group parent, Obstacle obstacle) {
         Vector2f[] points = obstacle.points();
-        if (points.length == 6) {
-            // one tile wide O-shape
+        if (obstacle.numSegments() == 4) {
+            addTower(parent, new Vector2f(points[0].x(), points[1].y()));
+        }
+        else if (obstacle.numSegments() == 6) {
             Vector2f center0 = new Vector2f(points[0].x(), points[1].y());
             Vector2f center1 = new Vector2f(points[3].x(), points[4].y());
             Vector2f centerWall = center0.midpoint(center1);
@@ -367,7 +366,7 @@ public class GameLevel3D {
                 addCastleWall(parent, centerWall, TS, center0.euclideanDistance(center1));
             }
         }
-        else if (points.length > 6) {
+        else {
             // wider than one tile wide O-shape
             Vector2f centerTowerNW = new Vector2f(points[0].x(), points[1].y());
             Vector2f centerTowerSW = new Vector2f(points[3].x(), points[2].y());
@@ -400,12 +399,6 @@ public class GameLevel3D {
 
     private void addCastleWall(Group parent, Vector2f center, double sizeX, double sizeY) {
         Node wall = wallCenteredAt(center, sizeX, sizeY, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
-        parent.getChildren().add(wall);
-    }
-
-    private void addUnitCircleObstacle(Group parent, Obstacle obstacle) {
-        Vector2f center = obstacle.startPoint().plus(0, HTS);
-        Node wall = createCircularWall(center, HTS, obstacleHeightPy, OBSTACLE_COAT_HEIGHT, wallFillMaterialPy, wallStrokeMaterialPy);
         parent.getChildren().add(wall);
     }
 
