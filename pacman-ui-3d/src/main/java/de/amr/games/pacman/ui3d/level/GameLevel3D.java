@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
 import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.lib.tilemap.Tiles;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
@@ -39,6 +40,7 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.stream.IntStream;
@@ -290,15 +292,19 @@ public class GameLevel3D {
     private void addObstacle(Group parent, Obstacle obstacle, double thickness) {
         Group obstacleGroup = new Group();
         if (obstacle.isO_Shape()) {
+            Logger.info("Found O-shape: {}", obstacle);
             addOShapeObstacle(obstacleGroup, obstacle);
         }
         else if (obstacle.isL_Shape()) {
-            //TODO
+            Logger.info("Found L-shape: {}", obstacle);
+            addLShapeObstacle(obstacleGroup, obstacle);
         }
         else if (obstacle.isT_Shape()) {
             //TODO
         }
         else {
+            Logger.info("Found other shape: closed={} num segments={} num dead-ends={}",
+                obstacle.isClosed(), obstacle.numSegments(), obstacle.numDeadEnds());
             addGeneralShapeObstacle(obstacleGroup, obstacle, thickness);
         }
         parent.getChildren().add(obstacleGroup);
@@ -308,6 +314,7 @@ public class GameLevel3D {
         Vector2f[] points = obstacle.points();
         if (obstacle.numSegments() == 4) {
             addTower(parent, new Vector2f(points[0].x(), points[1].y()));
+            Logger.info("Added one-tile circle, dead ends={}", obstacle.numDeadEnds());
         }
         else if (obstacle.numSegments() == 6) {
             Vector2f center0 = new Vector2f(points[0].x(), points[1].y());
@@ -320,6 +327,7 @@ public class GameLevel3D {
             } else {
                 addCastleWall(parent, centerWall, TS, center0.manhattanDistance(center1));
             }
+            Logger.info("Added {}-segment oval, dead ends={}", obstacle.numSegments(), obstacle.numDeadEnds());
         }
         else {
             // wider than one tile wide O-shape
@@ -344,7 +352,49 @@ public class GameLevel3D {
             addCastleWall(parent, centerWallW, TS, centerTowerNW.manhattanDistance(centerTowerSW));
             addCastleWall(parent, centerWallE, TS, centerTowerNE.manhattanDistance(centerTowerSE));
             addCastleWall(parent, center, centerWallW.manhattanDistance(centerWallE) - TS, centerWallN.manhattanDistance(centerWallS) - TS);
+
+            Logger.info("Added {}-segment oval, dead ends={}", obstacle.numSegments(), obstacle.numDeadEnds());
         }
+    }
+
+    private void addLShapeObstacle(Group parent, Obstacle obstacle) {
+        List<Integer> deadEndPositions = obstacle.deadEndSegmentPositions();
+        Vector2f[] points = obstacle.points();
+        int deadEnd0 = deadEndPositions.getFirst(), deadEnd1 = deadEndPositions.getLast();
+        Vector2f center0 = deadEndCenter(obstacle, points, deadEnd0);
+        Vector2f center1 = deadEndCenter(obstacle, points, deadEnd1);
+        ObstacleSegment deadEnd0Segment = obstacle.segment(deadEnd0);
+        Vector2f knee = null;
+        if (deadEnd0Segment.isRoundedSECorner() || deadEnd0Segment.isRoundedNWCorner()) {
+            knee = new Vector2f(center1.x(), center0.y());
+        } else if (deadEnd0Segment.isRoundedSWCorner()) {
+            knee = new Vector2f(center0.x(), center1.y());
+        }
+        addTower(parent, center0);
+        addTower(parent, center1);
+        addTower(parent, knee);
+
+        if (center0.x() == knee.x()) {
+            addCastleWall(parent, center0.midpoint(knee), TS, center0.manhattanDistance(knee));
+        } else if (center0.y() == knee.y()) {
+            addCastleWall(parent, center0.midpoint(knee), center0.manhattanDistance(knee), TS);
+        }
+        if (center1.x() == knee.x()) {
+            addCastleWall(parent, center1.midpoint(knee), TS, center1.manhattanDistance(knee));
+        } else if (center1.y() == knee.y()) {
+            addCastleWall(parent, center1.midpoint(knee), center1.manhattanDistance(knee), TS);
+        }
+    }
+
+    private Vector2f deadEndCenter(Obstacle obstacle, Vector2f[] points, int deadEndIndex) {
+        ObstacleSegment segment = obstacle.segment(deadEndIndex);
+        return switch (segment.mapContent()) {
+            case Tiles.CORNER_NW -> points[deadEndIndex].plus(0, HTS);
+            case Tiles.CORNER_SW -> points[deadEndIndex].plus(HTS, 0);
+            case Tiles.CORNER_SE -> points[deadEndIndex].plus(0, -HTS);
+            case Tiles.CORNER_NE -> points[deadEndIndex].plus(-HTS, 0);
+            default -> throw new IllegalStateException();
+        };
     }
 
     private void addTower(Group parent, Vector2f center) {

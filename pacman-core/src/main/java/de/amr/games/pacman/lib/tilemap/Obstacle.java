@@ -74,20 +74,44 @@ public class Obstacle {
         return segments.get(i);
     }
 
-    public boolean isUnitCircle() {
-        return isClosed() && numSegments() == 4;
-    }
-
     public boolean isO_Shape() {
-        return isClosed() &&
-            segments().stream().filter(ObstacleSegment::isRoundedCorner).count() == 4;
+        return isClosed() && segments().stream().filter(ObstacleSegment::isRoundedCorner).count() == 4;
     }
 
     public boolean isL_Shape() {
-        return false; // TODO
+        return isClosed() && numSegments() == 10 && numDeadEnds() == 2;
     }
 
     public boolean isT_Shape() {
         return false; //TODO
+    }
+
+    public List<Integer> deadEndSegmentPositions() {
+        List<Integer> positions = new ArrayList<>();
+        for (int i = 0; i < segments.size(); ++i) {
+            if (hasDeadEndAt(i)) {
+                positions.add(i);
+            }
+        }
+        return positions;
+    }
+
+    public int numDeadEnds() {
+        int count = 0;
+        for (int i = 0; i < segments.size(); ++i) {
+            if (hasDeadEndAt(i)) {
+                count += 1;
+            }
+        }
+        return count;
+    }
+
+    private boolean hasDeadEndAt(int i) {
+        ObstacleSegment segment = segments.get(i);
+        if (i < segments.size() - 1) {
+            return segment.isRoundedCorner() && segments.get(i+1).isRoundedCorner();
+        } else {
+            return segment.isRoundedCorner() && segments.getFirst().isRoundedCorner();
+        }
     }
 }
