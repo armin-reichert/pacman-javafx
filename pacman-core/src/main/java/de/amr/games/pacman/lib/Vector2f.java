@@ -83,7 +83,7 @@ public record Vector2f(float x, float y) {
         if (getClass() != other.getClass())
             return false;
         Vector2f v = (Vector2f) other;
-        return Math.abs(v.x - x) <= EPSILON && Math.abs(v.y - y) <= EPSILON;
+        return roughlyEquals(v, EPSILON, EPSILON);
     }
 
     @Override
