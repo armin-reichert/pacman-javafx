@@ -64,6 +64,10 @@ public record Vector2f(float x, float y) {
         return this.minus(v).length();
     }
 
+    public float manhattanDistance(Vector2f v) {
+        return Math.abs(x - v.x) + Math.abs(y - v.y);
+    }
+
     /**
      * @param v other vector
      * @param dx maximum allowed deviation of x component

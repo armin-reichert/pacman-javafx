@@ -316,9 +316,9 @@ public class GameLevel3D {
             addTower(parent, center0);
             addTower(parent, center1);
             if (center0.x() < center1.x()) {
-                addCastleWall(parent, centerWall, center0.euclideanDistance(center1), TS);
+                addCastleWall(parent, centerWall, center0.manhattanDistance(center1), TS);
             } else {
-                addCastleWall(parent, centerWall, TS, center0.euclideanDistance(center1));
+                addCastleWall(parent, centerWall, TS, center0.manhattanDistance(center1));
             }
         }
         else {
@@ -339,11 +339,11 @@ public class GameLevel3D {
             Vector2f centerWallE = centerTowerNE.midpoint(centerTowerSE);
             Vector2f center = centerWallW.midpoint(centerWallE);
 
-            addCastleWall(parent, centerWallN, centerTowerNE.euclideanDistance(centerTowerNW), TS);
-            addCastleWall(parent, centerWallS, centerTowerSE.euclideanDistance(centerTowerSW), TS);
-            addCastleWall(parent, centerWallW, TS, centerTowerNW.euclideanDistance(centerTowerSW));
-            addCastleWall(parent, centerWallE, TS, centerTowerNE.euclideanDistance(centerTowerSE));
-            addCastleWall(parent, center, centerWallW.euclideanDistance(centerWallE) - TS, centerWallN.euclideanDistance(centerWallS) - TS);
+            addCastleWall(parent, centerWallN, centerTowerNE.manhattanDistance(centerTowerNW), TS);
+            addCastleWall(parent, centerWallS, centerTowerSE.manhattanDistance(centerTowerSW), TS);
+            addCastleWall(parent, centerWallW, TS, centerTowerNW.manhattanDistance(centerTowerSW));
+            addCastleWall(parent, centerWallE, TS, centerTowerNE.manhattanDistance(centerTowerSE));
+            addCastleWall(parent, center, centerWallW.manhattanDistance(centerWallE) - TS, centerWallN.manhattanDistance(centerWallS) - TS);
         }
     }
 
@@ -409,7 +409,7 @@ public class GameLevel3D {
     private void addGeneralShapeCorner(Group parent, Vector2f cornerPoint, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {
         Node hWall = wallCenteredAt(
             cornerPoint.midpoint(horEndPoint),
-            cornerPoint.minus(horEndPoint).length(),
+            Math.abs(cornerPoint.x() - horEndPoint.x()),
             thickness,
             obstacleHeightPy, OBSTACLE_COAT_HEIGHT,
             wallFillMaterialPy, wallStrokeMaterialPy);
@@ -417,7 +417,7 @@ public class GameLevel3D {
         Node vWall = wallCenteredAt(
             cornerPoint.midpoint(vertEndPoint),
             thickness,
-            cornerPoint.minus(vertEndPoint).length(),
+            Math.abs(cornerPoint.y() - vertEndPoint.y()),
             obstacleHeightPy, OBSTACLE_COAT_HEIGHT,
             wallFillMaterialPy, wallStrokeMaterialPy);
 
