@@ -399,7 +399,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
     private void updateStateReturningToHouse(GameModel game) {
         float speedReturningToHouse = game.ghostSpeedReturningToHouse(this);
         Vector2f houseEntry = world.houseEntryPosition();
-        if (position().almostEquals(houseEntry, 0.5f * speedReturningToHouse, 0)) {
+        if (position().roughlyEquals(houseEntry, 0.5f * speedReturningToHouse, 0)) {
             setPosition(houseEntry);
             setMoveAndWishDir(DOWN);
             setState(ENTERING_HOUSE);
@@ -418,8 +418,8 @@ public class Ghost extends Creature implements AnimatedActor2D {
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
     private void updateStateEnteringHouse(GameModel game) {
-        float speedReturningToHouse = game.ghostSpeedReturningToHouse(this);
-        if (position().almostEquals(revivalPosition, speedReturningToHouse / 2, speedReturningToHouse / 2)) {
+        float speed = game.ghostSpeedReturningToHouse(this);
+        if (position().roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
             setPosition(revivalPosition);
             setMoveAndWishDir(UP);
             setState(LOCKED);
@@ -432,7 +432,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
         } else if (posX < revivalPosition.x()) {
             setMoveAndWishDir(RIGHT);
         }
-        setSpeed(speedReturningToHouse);
+        setSpeed(speed);
         move();
     }
 }

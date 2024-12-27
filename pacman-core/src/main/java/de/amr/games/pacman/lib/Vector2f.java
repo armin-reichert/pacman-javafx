@@ -4,11 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib;
 
-import static de.amr.games.pacman.lib.Globals.differsAtMost;
-
 /**
- * Immutable 2D vector with float precision. Component values are treated as equal if they differ less than
- * {@link #EPSILON}.
+ * Immutable 2D vector with float precision.
+ * <p>Component values are treated as equal if they differ less than {@link #EPSILON}.
  *
  * @author Armin Reichert
  */
@@ -18,8 +16,8 @@ public record Vector2f(float x, float y) {
 
     public static final float EPSILON = 1e-6f;
 
-    public static Vector2f fromDouble(double x, double y) {
-        return new Vector2f((float) x, (float) y);
+    public Vector2f(double x, double y) {
+        this((float)x, (float)y);
     }
 
     public Vector2f plus(Vector2f v) {
@@ -51,6 +49,9 @@ public record Vector2f(float x, float y) {
     }
 
     public Vector2f normalized() {
+        if (equals(ZERO)) {
+            throw new IllegalArgumentException("Null vector cannot be normalized");
+        }
         float len = length();
         return new Vector2f(x / len, y / len);
     }
@@ -63,8 +64,14 @@ public record Vector2f(float x, float y) {
         return this.minus(v).length();
     }
 
-    public boolean almostEquals(Vector2f v, float dx, float dy) {
-        return differsAtMost(dx, x, v.x) && differsAtMost(dy, y, v.y);
+    /**
+     * @param v other vector
+     * @param dx maximum allowed deviation of x component
+     * @param dy maximum allowed deviation of y component
+     * @return {@code true} if this vector differs from the given vector at most as much as the given deviations
+     */
+    public boolean roughlyEquals(Vector2f v, float dx, float dy) {
+        return Math.abs(v.x - x) <= dx && Math.abs(v.y - y) <= dy;
     }
 
     @Override
