@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 public class PacManGameConfiguration implements GameConfiguration {
 
-    private static final WorldMapColoring MAP_COLORING = new WorldMapColoring("#000000", "#2121ff", "#fcb5ff", "#febdb4");
+    private static final WorldMapColoring MAP_COLORING = new WorldMapColoring("#1a1a1a", "#2121ff", "#fcb5ff", "#febdb4");
 
     private final PacManGameSpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();

@@ -13,7 +13,7 @@ public interface GlobalProperties3d {
     ObjectProperty<DrawMode>    PY_3D_DRAW_MODE          = new SimpleObjectProperty<>(DrawMode.FILL);
     BooleanProperty             PY_3D_ENABLED            = new SimpleBooleanProperty(false);
     BooleanProperty             PY_3D_ENERGIZER_EXPLODES = new SimpleBooleanProperty(true);
-    ObjectProperty<Color>       PY_3D_FLOOR_COLOR        = new SimpleObjectProperty<>(Color.grayRgb(32));
+    ObjectProperty<Color>       PY_3D_FLOOR_COLOR        = new SimpleObjectProperty<>(Color.BLACK);
     StringProperty              PY_3D_FLOOR_TEXTURE      = new SimpleStringProperty(NO_TEXTURE);
     ObjectProperty<Color>       PY_3D_LIGHT_COLOR        = new SimpleObjectProperty<>(Color.WHITE);
     BooleanProperty             PY_3D_PAC_LIGHT_ENABLED  = new SimpleBooleanProperty(true);
