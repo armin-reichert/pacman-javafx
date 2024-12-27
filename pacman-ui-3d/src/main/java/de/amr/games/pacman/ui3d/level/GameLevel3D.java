@@ -328,6 +328,13 @@ public class GameLevel3D {
             wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
             wallBuilder.addTShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
         }
+        else if (obstacle.isCrossShape()) {
+            Logger.info("Found Cross-shape: {}", obstacle);
+            // Invert colors
+            wallBuilder.setTopMaterial(wallFillMaterialPy.get());
+            wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
+            wallBuilder.addCrossShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
+        }
         else {
             Logger.info("Found other shape: closed={} num segments={} num dead-ends={}",
                 obstacle.isClosed(), obstacle.numSegments(), obstacle.numDeadEnds());

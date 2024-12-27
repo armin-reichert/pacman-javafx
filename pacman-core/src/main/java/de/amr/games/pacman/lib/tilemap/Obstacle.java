@@ -83,7 +83,12 @@ public class Obstacle {
     }
 
     public boolean isT_Shape() {
+        //TODO: this is not 100% correct
         return isClosed() && numSegments() == 13 && numDeadEnds() == 3;
+    }
+
+    public boolean isCrossShape() {
+        return isClosed() && numSegments() == 20 && numDeadEnds() == 4;
     }
 
     public List<Integer> deadEndSegmentPositions() {

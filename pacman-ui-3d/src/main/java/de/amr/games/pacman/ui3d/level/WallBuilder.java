@@ -237,6 +237,25 @@ public class WallBuilder {
         }
     }
 
+    public void addCrossShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
+        List<Integer> deadEnds = obstacle.deadEndSegmentPositions();
+        int d0 = deadEnds.getFirst(), d1 = deadEnds.get(1), d2 = deadEnds.get(2), d3 = deadEnds.get(3);
+        Vector2f[] points = obstacle.points();
+        Vector2f c0 = deadEndCenter(obstacle, points, d0);
+        Vector2f c1 = deadEndCenter(obstacle, points, d1);
+        Vector2f c2 = deadEndCenter(obstacle, points, d2);
+        Vector2f c3 = deadEndCenter(obstacle, points, d3);
+        Vector2f center = new Vector2f(c3.x(), c0.y());
+        addTower(parent, c0, baseHeightPy, topHeight);
+        addTower(parent, c1, baseHeightPy, topHeight);
+        addTower(parent, c2, baseHeightPy, topHeight);
+        addTower(parent, c3, baseHeightPy, topHeight);
+        addCastleWall(parent, c0.midpoint(center), c0.manhattanDistance(center), TS, baseHeightPy, topHeight);
+        addCastleWall(parent, c2.midpoint(center), c2.manhattanDistance(center), TS, baseHeightPy, topHeight);
+        addCastleWall(parent, c1.midpoint(center), TS, c1.manhattanDistance(center), baseHeightPy, topHeight);
+        addCastleWall(parent, c3.midpoint(center), TS, c3.manhattanDistance(center), baseHeightPy, topHeight);
+    }
+
     public void addTShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
         List<Integer> deadEnds = obstacle.deadEndSegmentPositions();
         int d0 = deadEnds.getFirst(), d1 = deadEnds.get(1), d2 = deadEnds.get(2);
