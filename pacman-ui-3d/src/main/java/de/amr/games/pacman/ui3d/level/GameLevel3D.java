@@ -322,9 +322,11 @@ public class GameLevel3D {
             wallBuilder.addLShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
         }
         else if (obstacle.isT_Shape()) {
+            Logger.info("Found T-shape: {}", obstacle);
             // Invert colors
             wallBuilder.setTopMaterial(wallFillMaterialPy.get());
             wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
+            wallBuilder.addTShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
         }
         else {
             Logger.info("Found other shape: closed={} num segments={} num dead-ends={}",

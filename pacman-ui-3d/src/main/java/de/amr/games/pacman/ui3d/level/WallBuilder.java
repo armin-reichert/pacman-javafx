@@ -237,7 +237,63 @@ public class WallBuilder {
         }
     }
 
-    public Vector2f deadEndCenter(Obstacle obstacle, Vector2f[] points, int deadEndIndex) {
+    public void addTShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
+        List<Integer> deadEnds = obstacle.deadEndSegmentPositions();
+        int d0 = deadEnds.getFirst(), d1 = deadEnds.get(1), d2 = deadEnds.get(2);
+        Vector2f[] points = obstacle.points();
+        Vector2f c0 = deadEndCenter(obstacle, points, d0);
+        Vector2f c1 = deadEndCenter(obstacle, points, d1);
+        Vector2f c2 = deadEndCenter(obstacle, points, d2);
+        Vector2f join = null;
+        if (c2.x() == c0.x() && c1.x() > c2.x()) {
+            join = new Vector2f(c0.x(), c1.y());
+        }
+        else if (c0.y() == c2.y() && c1.y() > c0.y()) {
+            join = new Vector2f(c1.x(), c0.y());
+        }
+        else if (c0.y() == c1.y() && c2.y() < c0.y()) {
+            join = new Vector2f(c2.x(), c0.y());
+        }
+        else if (c2.x() == c1.x() && c0.x() < c1.x()) {
+            join = new Vector2f(c1.x(), c0.y());
+        }
+        else {
+            Logger.error("Illegal T-shape obstacle: {}", obstacle);
+            return;
+        }
+        addTower(parent, c0, baseHeightPy, topHeight);
+        addTower(parent, c1, baseHeightPy, topHeight);
+        addTower(parent, c2, baseHeightPy, topHeight);
+        addTower(parent, join, baseHeightPy, topHeight);
+
+        if (c0.x() == join.x()) {
+            addCastleWall(parent, c0.midpoint(join), TS, c0.manhattanDistance(join), baseHeightPy, topHeight);
+        } else if (c0.y() == join.y()) {
+            addCastleWall(parent, c0.midpoint(join), c0.manhattanDistance(join), TS, baseHeightPy, topHeight);
+        }
+        if (c1.x() == join.x()) {
+            addCastleWall(parent, c1.midpoint(join), TS, c1.manhattanDistance(join), baseHeightPy, topHeight);
+        } else if (c1.y() == join.y()) {
+            addCastleWall(parent, c1.midpoint(join), c1.manhattanDistance(join), TS, baseHeightPy, topHeight);
+        }
+        if (c2.x() == join.x()) {
+            addCastleWall(parent, c2.midpoint(join), TS, c2.manhattanDistance(join), baseHeightPy, topHeight);
+        } else if (c2.y() == join.y()) {
+            addCastleWall(parent, c2.midpoint(join), c2.manhattanDistance(join), TS, baseHeightPy, topHeight);
+        }
+    }
+
+    private void addTower(Group parent, Vector2f center, DoubleProperty baseHeightPy, double topHeight) {
+        Node tower = createCircularWall(center, HTS, baseHeightPy, topHeight);
+        parent.getChildren().add(tower);
+    }
+
+    private void addCastleWall(Group parent, Vector2f center, double sizeX, double sizeY, DoubleProperty baseHeightPy, double topHeight) {
+        Node wall = wallCenteredAt(center, sizeX, sizeY, baseHeightPy, topHeight);
+        parent.getChildren().add(wall);
+    }
+
+    private Vector2f deadEndCenter(Obstacle obstacle, Vector2f[] points, int deadEndIndex) {
         ObstacleSegment segment = obstacle.segment(deadEndIndex);
         return switch (segment.mapContent()) {
             case Tiles.CORNER_NW -> points[deadEndIndex].plus(0, HTS);
@@ -246,16 +302,6 @@ public class WallBuilder {
             case Tiles.CORNER_NE -> points[deadEndIndex].plus(-HTS, 0);
             default -> throw new IllegalStateException();
         };
-    }
-
-    public void addTower(Group parent, Vector2f center, DoubleProperty baseHeightPy, double topHeight) {
-        Node tower = createCircularWall(center, HTS, baseHeightPy, topHeight);
-        parent.getChildren().add(tower);
-    }
-
-    public void addCastleWall(Group parent, Vector2f center, double sizeX, double sizeY, DoubleProperty baseHeightPy, double topHeight) {
-        Node wall = wallCenteredAt(center, sizeX, sizeY, baseHeightPy, topHeight);
-        parent.getChildren().add(wall);
     }
 
     public void addGeneralShapeObstacle(Group parent, Obstacle obstacle, double thickness, DoubleProperty baseHeightPy, double topHeight) {
