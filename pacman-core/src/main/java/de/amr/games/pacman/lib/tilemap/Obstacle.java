@@ -90,13 +90,14 @@ public class Obstacle {
 
     public boolean isCrossShape() {
         if (isClosed() && numSegments() == 20 && numDeadEnds() == 4) {
-            //TODO Test if this is not an H-shape
-            int[] deadEnds = deadEndSegmentIndices();
-            Vector2f[] d = new Vector2f[4];
+            //TODO Check if this is not an H-shape
+            int[] d = deadEndSegmentIndices();
+            Vector2f[] c = new Vector2f[4];
             for (int i = 0; i < 4; ++i) {
-                d[i] = points.get(deadEnds[i]);
+                c[i] = deadEndCenter(d[i]);
             }
-            return true;
+            // d[0] = left, d[1] = bottom, d[2] = right, d[3] = top
+            return c[0].x() < c[2].x() && c[0].y() == c[2].y() && c[3].y() < c[1].y() && c[3].x() == c[1].x();
         }
         return false;
     }
@@ -133,8 +134,8 @@ public class Obstacle {
         }
     }
 
-    public Vector2f deadEndCenter(Obstacle obstacle, int index) {
-        ObstacleSegment segment = obstacle.segment(index);
+    public Vector2f deadEndCenter(int index) {
+        ObstacleSegment segment = segment(index);
         return switch (segment.mapContent()) {
             case Tiles.CORNER_NW -> points.get(index).plus(0, HTS);
             case Tiles.CORNER_SW -> points.get(index).plus(HTS, 0);
