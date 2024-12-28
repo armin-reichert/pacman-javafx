@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 
@@ -90,10 +91,10 @@ public class Obstacle {
     public boolean isCrossShape() {
         if (isClosed() && numSegments() == 20 && numDeadEnds() == 4) {
             //TODO Test if this is not an H-shape
-            List<Integer> deadEnds = deadEndSegmentPositions();
+            int[] deadEnds = deadEndSegmentIndices();
             Vector2f[] d = new Vector2f[4];
             for (int i = 0; i < 4; ++i) {
-                d[i] = points.get(deadEnds.get(i));
+                d[i] = points.get(deadEnds[i]);
             }
             return true;
         }
@@ -101,10 +102,10 @@ public class Obstacle {
     }
 
     public boolean isU_Shape() {
-        List<Integer> deadEnds = deadEndSegmentPositions();
-        return numSegments() == 14 && deadEnds.size() == 2
-            && ( hAligned(points.get(deadEnds.getFirst()), points.get(deadEnds.getLast()))
-              || vAligned(points.get(deadEnds.getFirst()), points.get(deadEnds.getLast())) );
+        int[] deadEnds = deadEndSegmentIndices();
+        return numSegments() == 14 && deadEnds.length == 2
+            && ( hAligned(points.get(deadEnds[0]), points.get(deadEnds[1]))
+              || vAligned(points.get(deadEnds[0]), points.get(deadEnds[1])) );
     }
 
     private boolean hAligned(Vector2f p, Vector2f q) {
@@ -115,24 +116,12 @@ public class Obstacle {
         return p.x() == q.x();
     }
 
-    public List<Integer> deadEndSegmentPositions() {
-        List<Integer> positions = new ArrayList<>();
-        for (int i = 0; i < segments.size(); ++i) {
-            if (hasDeadEndAt(i)) {
-                positions.add(i);
-            }
-        }
-        return positions;
+    public int[] deadEndSegmentIndices() {
+        return IntStream.range(0, segments.size()).filter(this::hasDeadEndAt).toArray();
     }
 
     public int numDeadEnds() {
-        int count = 0;
-        for (int i = 0; i < segments.size(); ++i) {
-            if (hasDeadEndAt(i)) {
-                count += 1;
-            }
-        }
-        return count;
+        return (int) IntStream.range(0, segments.size()).filter(this::hasDeadEndAt).count();
     }
 
     private boolean hasDeadEndAt(int i) {
