@@ -283,7 +283,7 @@ public class GameLevel3D {
         wallStrokeColorPy.set(coloring.stroke());
         wallFillColorPy.set(coloring.fill());
         if (coloring.fill().equals(Color.BLACK)) {
-            wallFillColorPy.set(Color.grayRgb(20)); // to give some contrast with floor
+            wallFillColorPy.set(Color.grayRgb(42)); // to give some contrast with floor
         }
 
         TileMap terrain = world.map().terrain();
