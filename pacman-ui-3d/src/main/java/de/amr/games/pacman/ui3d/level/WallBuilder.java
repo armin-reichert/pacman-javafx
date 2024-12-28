@@ -256,6 +256,42 @@ public class WallBuilder {
         addCastleWall(parent, c3.midpoint(center), TS, c3.manhattanDistance(center), baseHeightPy, topHeight);
     }
 
+    public void addUShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
+        List<Integer> deadEnds = obstacle.deadEndSegmentPositions();
+        int d0 = deadEnds.getFirst(), d1 = deadEnds.get(1);
+        Vector2f[] points = obstacle.points();
+        Vector2f c0 = deadEndCenter(obstacle, points, d0);
+        Vector2f c1 = deadEndCenter(obstacle, points, d1);
+        // find centers on opposite side of dead ends
+        if (d0 == 6 && d1 == 13) {
+            // U in normal orientation, open on top
+            Vector2f oc0 = deadEndCenter(obstacle, points, 4); // right leg
+            Vector2f oc1 = deadEndCenter(obstacle, points, 2); // left leg
+            addTower(parent, c0,  baseHeightPy, topHeight);
+            addTower(parent, c1,  baseHeightPy, topHeight);
+            addTower(parent, oc0, baseHeightPy, topHeight);
+            addTower(parent, oc1, baseHeightPy, topHeight);
+            addCastleWall(parent, c0.midpoint(oc0), TS, c0.manhattanDistance(oc0), baseHeightPy, topHeight);
+            addCastleWall(parent, c1.midpoint(oc1), TS, c1.manhattanDistance(oc1), baseHeightPy, topHeight);
+            addCastleWall(parent, oc0.midpoint(oc1), oc0.manhattanDistance(oc1), TS, baseHeightPy, topHeight);
+        }
+        else if (d0 == 2 && d1 == 9) {
+            // U vertically mirrored, open at bottom d0=left, d1=right
+            Vector2f oc0 = deadEndCenter(obstacle, points, 0); // left leg
+            Vector2f oc1 = deadEndCenter(obstacle, points, 12); // right leg
+            addTower(parent, c0,  baseHeightPy, topHeight);
+            addTower(parent, c1,  baseHeightPy, topHeight);
+            addTower(parent, oc0, baseHeightPy, topHeight);
+            addTower(parent, oc1, baseHeightPy, topHeight);
+            addCastleWall(parent, c0.midpoint(oc0), TS, c0.manhattanDistance(oc0), baseHeightPy, topHeight);
+            addCastleWall(parent, c1.midpoint(oc1), TS, c1.manhattanDistance(oc1), baseHeightPy, topHeight);
+            addCastleWall(parent, oc0.midpoint(oc1), oc0.manhattanDistance(oc1), TS, baseHeightPy, topHeight);
+        }
+        else {
+            //TODO other orientations
+        }
+    }
+
     public void addTShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
         List<Integer> deadEnds = obstacle.deadEndSegmentPositions();
         int d0 = deadEnds.getFirst(), d1 = deadEnds.get(1), d2 = deadEnds.get(2);

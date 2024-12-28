@@ -91,6 +91,11 @@ public class Obstacle {
         return isClosed() && numSegments() == 20 && numDeadEnds() == 4;
     }
 
+    public boolean isU_Shape() {
+        //TODO: this is not 100% correct
+        return numSegments() == 14 && numDeadEnds() == 2;
+    }
+
     public List<Integer> deadEndSegmentPositions() {
         List<Integer> positions = new ArrayList<>();
         for (int i = 0; i < segments.size(); ++i) {
