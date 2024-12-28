@@ -279,11 +279,12 @@ public class GameLevel3D {
     }
 
     private void buildWorld3D(GameWorld world, WorldMapColoring coloring) {
-        //TODO check this
         obstacleHeightPy.set(PY_3D_WALL_HEIGHT.get());
-
         wallStrokeColorPy.set(coloring.stroke());
         wallFillColorPy.set(coloring.fill());
+        if (coloring.fill().equals(Color.BLACK)) {
+            wallFillColorPy.set(Color.grayRgb(20)); // to give some contrast with floor
+        }
 
         TileMap terrain = world.map().terrain();
         Box floor = createFloor(terrain.numCols() * TS, terrain.numRows() * TS);

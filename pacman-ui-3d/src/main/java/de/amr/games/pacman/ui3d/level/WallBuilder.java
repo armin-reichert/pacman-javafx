@@ -263,7 +263,7 @@ public class WallBuilder {
         Vector2f c0 = deadEndCenter(obstacle, points, d0);
         Vector2f c1 = deadEndCenter(obstacle, points, d1);
         // find centers on opposite side of dead ends
-        Vector2f oc0=null, oc1=null;
+        Vector2f oc0, oc1;
         if (d0 == 6 && d1 == 13) {
             // U in normal orientation, open on top
             oc0 = deadEndCenter(obstacle, points, 4); // right leg
