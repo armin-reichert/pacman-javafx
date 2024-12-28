@@ -158,14 +158,13 @@ public class WallBuilder {
     }
 
     public void addOShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
-        Vector2f[] points = obstacle.points();
         if (obstacle.numSegments() == 4) {
-            addTower(parent, new Vector2f(points[0].x(), points[1].y()), baseHeightPy, topHeight);
+            addTower(parent, new Vector2f(obstacle.point(0).x(), obstacle.point(1).y()), baseHeightPy, topHeight);
             Logger.info("Added one-tile circle, dead ends={}", obstacle.numDeadEnds());
         }
         else if (obstacle.numSegments() == 6) {
-            Vector2f center0 = new Vector2f(points[0].x(), points[1].y());
-            Vector2f center1 = new Vector2f(points[3].x(), points[4].y());
+            Vector2f center0 = new Vector2f(obstacle.point(0).x(), obstacle.point(1).y());
+            Vector2f center1 = new Vector2f(obstacle.point(3).x(), obstacle.point(4).y());
             Vector2f centerWall = center0.midpoint(center1);
             addTower(parent, center0, baseHeightPy, topHeight);
             addTower(parent, center1, baseHeightPy, topHeight);
@@ -178,10 +177,10 @@ public class WallBuilder {
         }
         else {
             // wider than one tile wide O-shape
-            Vector2f centerTowerNW = new Vector2f(points[0].x(), points[1].y());
-            Vector2f centerTowerSW = new Vector2f(points[3].x(), points[2].y());
-            Vector2f centerTowerSE = new Vector2f(points[4].x(), points[5].y());
-            Vector2f centerTowerNE = new Vector2f(points[7].x(), points[6].y());
+            Vector2f centerTowerNW = new Vector2f(obstacle.point(0).x(), obstacle.point(1).y());
+            Vector2f centerTowerSW = new Vector2f(obstacle.point(3).x(), obstacle.point(2).y());
+            Vector2f centerTowerSE = new Vector2f(obstacle.point(4).x(), obstacle.point(5).y());
+            Vector2f centerTowerNE = new Vector2f(obstacle.point(7).x(), obstacle.point(6).y());
 
             addTower(parent, centerTowerNW, baseHeightPy, topHeight);
             addTower(parent, centerTowerSW, baseHeightPy, topHeight);
@@ -213,11 +212,14 @@ public class WallBuilder {
         Vector2f c0 = obstacle.deadEndCenter(obstacle, d0);
         Vector2f c1 = obstacle.deadEndCenter(obstacle, d1);
         ObstacleSegment d0Segment = obstacle.segment(d0);
-        Vector2f knee = null;
+        Vector2f knee;
         if (d0Segment.isRoundedSECorner() || d0Segment.isRoundedNWCorner()) {
             knee = new Vector2f(c1.x(), c0.y());
         } else if (d0Segment.isRoundedSWCorner()) {
             knee = new Vector2f(c0.x(), c1.y());
+        } else {
+            Logger.error("Invalid L-shape detected: {}", obstacle);
+            return;
         }
         addTower(parent, c0, baseHeightPy, topHeight);
         addTower(parent, c1, baseHeightPy, topHeight);

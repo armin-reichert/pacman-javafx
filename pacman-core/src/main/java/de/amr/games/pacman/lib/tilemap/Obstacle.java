@@ -17,6 +17,7 @@ import static de.amr.games.pacman.lib.Globals.HTS;
  */
 public class Obstacle {
 
+    //TODO better store only one of these?
     private final List<ObstacleSegment> segments = new ArrayList<>();
     private final List<Vector2f> points = new ArrayList<>();
     private final boolean doubleWalls;
@@ -48,6 +49,10 @@ public class Obstacle {
     public Vector2f startPoint() { return points.getFirst(); }
 
     public Vector2f endPoint() { return points.getLast(); }
+
+    public Vector2f point(int i) {
+        return points.get(i);
+    }
 
     public boolean isClosed() {
         return startPoint().equals(endPoint());
