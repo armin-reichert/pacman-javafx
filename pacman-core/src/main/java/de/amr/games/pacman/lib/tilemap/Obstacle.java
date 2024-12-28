@@ -82,20 +82,21 @@ public class Obstacle {
         if (segments().stream().filter(ObstacleSegment::isRoundedCorner).count() == 4) {
             return ObstacleType.O_SHAPE;
         }
-        if ((numSegments() == 9 || numSegments() == 10) && numDeadEnds() == 2) {
+        int[] d = deadEndSegmentIndices();
+        if (d.length == 2 && (numSegments() == 9 || numSegments() == 10)) {
             return ObstacleType.L_SHAPE;
         }
-        if (numSegments() == 13 && numDeadEnds() == 3) {
-            return ObstacleType.T_SHAPE;
-        }
-        if (numSegments() == 14 && numDeadEnds() == 2) {
-            int[] deadEnds = deadEndSegmentIndices();
-            if (hAligned(points.get(deadEnds[0]), points.get(deadEnds[1]))
-                || vAligned(points.get(deadEnds[0]), points.get(deadEnds[1])) ) {
+        if (d.length == 2 && numSegments() == 14) {
+            if (hAligned(points.get(d[0]), points.get(d[1])) || vAligned(points.get(d[0]), points.get(d[1])) ) {
                 return ObstacleType.U_SHAPE;
+            } else {
+                return ObstacleType.S_SHAPE; // TODO correct?
             }
         }
-        if (numSegments() == 20 && numDeadEnds() == 4) {
+        if (d.length == 3 && numSegments() == 13) {
+            return ObstacleType.T_SHAPE;
+        }
+        if (d.length == 4 && numSegments() == 20) {
             Vector2f[] c = deadEndCenters();
             // Check if this is not an H-shape
             // d[0] = left, d[1] = bottom, d[2] = right, d[3] = top
@@ -107,14 +108,14 @@ public class Obstacle {
         return ObstacleType.ANY;
     }
 
-    private Vector2f[] deadEndCenters() {
+    public Vector2f[] deadEndCenters() {
         return deadEndCenters(deadEndSegmentIndices());
     }
 
-    private Vector2f[] deadEndCenters(int[] indices) {
+    public Vector2f[] deadEndCenters(int[] indices) {
         Vector2f[] c = new Vector2f[indices.length];
         for (int i = 0; i < indices.length; ++i) {
-            c[i] = deadEndCenter(indices[i]);
+            c[i] = towerCenterPoint(indices[i]);
         }
         return c;
     }
@@ -161,7 +162,7 @@ public class Obstacle {
         return false;
     }
 
-    public Vector2f deadEndCenter(int index) {
+    public Vector2f towerCenterPoint(int index) {
         ObstacleSegment segment = segment(index);
         return switch (segment.mapContent()) {
             case Tiles.CORNER_NW -> points.get(index).plus(0, HTS);

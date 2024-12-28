@@ -322,6 +322,13 @@ public class GameLevel3D {
                 wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
                 wallBuilder.addLShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
             }
+            case S_SHAPE -> {
+                Logger.info("Found S-shape: {}", obstacle);
+                // Invert colors
+                wallBuilder.setTopMaterial(wallFillMaterialPy.get());
+                wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
+                wallBuilder.addSShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
+            }
             case T_SHAPE -> {
                 Logger.info("Found T-shape: {}", obstacle);
                 // Invert colors

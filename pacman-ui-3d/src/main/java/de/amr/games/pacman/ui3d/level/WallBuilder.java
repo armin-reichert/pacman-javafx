@@ -158,7 +158,7 @@ public class WallBuilder {
     public void addOShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
         if (obstacle.numSegments() == 4) {
             addTower(parent, new Vector2f(obstacle.point(0).x(), obstacle.point(1).y()), baseHeightPy, topHeight);
-            Logger.info("Added one-tile circle, dead ends={}", obstacle.numDeadEnds());
+            Logger.info("Added one-tile O-shape, dead ends={}", obstacle.numDeadEnds());
         }
         else if (obstacle.numSegments() == 6) {
             Vector2f center0 = new Vector2f(obstacle.point(0).x(), obstacle.point(1).y());
@@ -171,7 +171,7 @@ public class WallBuilder {
             } else {
                 addCastleWall(parent, centerWall, TS, center0.manhattanDist(center1), baseHeightPy, topHeight);
             }
-            Logger.info("Added {}-segment oval, dead ends={}", obstacle.numSegments(), obstacle.numDeadEnds());
+            Logger.info("Added {}-segment O-shape, dead ends={}", obstacle.numSegments(), obstacle.numDeadEnds());
         }
         else {
             // wider than one tile wide O-shape
@@ -207,8 +207,8 @@ public class WallBuilder {
     public void addLShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
         int[] deadEnds = obstacle.deadEndSegmentIndices();
         int d0 = deadEnds[0], d1 = deadEnds[1];
-        Vector2f c0 = obstacle.deadEndCenter(d0);
-        Vector2f c1 = obstacle.deadEndCenter(d1);
+        Vector2f c0 = obstacle.towerCenterPoint(d0);
+        Vector2f c1 = obstacle.towerCenterPoint(d1);
         ObstacleSegment d0Segment = obstacle.segment(d0);
         Vector2f knee;
         if (d0Segment.isRoundedSECorner() || d0Segment.isRoundedNWCorner()) {
@@ -237,10 +237,10 @@ public class WallBuilder {
 
     public void addCrossShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
         int[] d = obstacle.deadEndSegmentIndices();
-        Vector2f c0 = obstacle.deadEndCenter(d[0]);
-        Vector2f c1 = obstacle.deadEndCenter(d[1]);
-        Vector2f c2 = obstacle.deadEndCenter(d[2]);
-        Vector2f c3 = obstacle.deadEndCenter(d[3]);
+        Vector2f c0 = obstacle.towerCenterPoint(d[0]);
+        Vector2f c1 = obstacle.towerCenterPoint(d[1]);
+        Vector2f c2 = obstacle.towerCenterPoint(d[2]);
+        Vector2f c3 = obstacle.towerCenterPoint(d[3]);
         Vector2f center = new Vector2f(c3.x(), c0.y());
         addTower(parent, c0, baseHeightPy, topHeight);
         addTower(parent, c1, baseHeightPy, topHeight);
@@ -254,38 +254,38 @@ public class WallBuilder {
 
     public void addUShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
         int[] d = obstacle.deadEndSegmentIndices();
-        Vector2f c0 = obstacle.deadEndCenter(d[0]);
-        Vector2f c1 = obstacle.deadEndCenter(d[1]);
+        Vector2f c0 = obstacle.towerCenterPoint(d[0]);
+        Vector2f c1 = obstacle.towerCenterPoint(d[1]);
         // find centers on opposite side of dead ends
         Vector2f oc0, oc1;
         if (d[0] == 6 && d[1] == 13) {
             // U in normal orientation, open on top
-            oc0 = obstacle.deadEndCenter(4); // right leg
-            oc1 = obstacle.deadEndCenter(2); // left leg
+            oc0 = obstacle.towerCenterPoint(4); // right leg
+            oc1 = obstacle.towerCenterPoint(2); // left leg
             addCastleWall(parent, c0.midpoint(oc0), TS, c0.manhattanDist(oc0), baseHeightPy, topHeight);
             addCastleWall(parent, c1.midpoint(oc1), TS, c1.manhattanDist(oc1), baseHeightPy, topHeight);
             addCastleWall(parent, oc0.midpoint(oc1), oc0.manhattanDist(oc1), TS, baseHeightPy, topHeight);
         }
         else if (d[0] == 2 && d[1] == 9) {
             // U vertically mirrored, open at bottom d[0]=left, d[1]=right
-            oc0 = obstacle.deadEndCenter(0); // left leg
-            oc1 = obstacle.deadEndCenter(12); // right leg
+            oc0 = obstacle.towerCenterPoint(0); // left leg
+            oc1 = obstacle.towerCenterPoint(12); // right leg
             addCastleWall(parent, c0.midpoint(oc0), TS, c0.manhattanDist(oc0), baseHeightPy, topHeight);
             addCastleWall(parent, c1.midpoint(oc1), TS, c1.manhattanDist(oc1), baseHeightPy, topHeight);
             addCastleWall(parent, oc0.midpoint(oc1), oc0.manhattanDist(oc1), TS, baseHeightPy, topHeight);
         }
         else if (d[0] == 4 && d[1] == 11) {
             // U open at right side, d[0]=bottom, d[1]=top
-            oc0 = obstacle.deadEndCenter(2); // left bottom
-            oc1 = obstacle.deadEndCenter(0); // right top
+            oc0 = obstacle.towerCenterPoint(2); // left bottom
+            oc1 = obstacle.towerCenterPoint(0); // right top
             addCastleWall(parent, c0.midpoint(oc0), c0.manhattanDist(oc0), TS, baseHeightPy, topHeight);
             addCastleWall(parent, c1.midpoint(oc1), c1.manhattanDist(oc1), TS, baseHeightPy, topHeight);
             addCastleWall(parent, oc0.midpoint(oc1), TS, oc0.manhattanDist(oc1), baseHeightPy, topHeight);
         }
         else if (d[0] == 0 && d[1] == 7) {
             // U open at left side, d[0]=top, d[1]=bottom
-            oc0 = obstacle.deadEndCenter(12); // right top
-            oc1 = obstacle.deadEndCenter(10); // right bottom
+            oc0 = obstacle.towerCenterPoint(12); // right top
+            oc1 = obstacle.towerCenterPoint(10); // right bottom
             addCastleWall(parent, c0.midpoint(oc0), c0.manhattanDist(oc0), TS, baseHeightPy, topHeight);
             addCastleWall(parent, c1.midpoint(oc1), c1.manhattanDist(oc1), TS, baseHeightPy, topHeight);
             addCastleWall(parent, oc0.midpoint(oc1), TS, oc0.manhattanDist(oc1), baseHeightPy, topHeight);
@@ -300,11 +300,44 @@ public class WallBuilder {
         addTower(parent, oc1, baseHeightPy, topHeight);
     }
 
+    public void addSShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
+        int[] d = obstacle.deadEndSegmentIndices();
+        Vector2f[] c = obstacle.deadEndCenters(); // count=2
+        addTower(parent, c[0], baseHeightPy, topHeight);
+        addTower(parent, c[1], baseHeightPy, topHeight);
+        Vector2f tc0, tc1;
+        if (d[0] == 0 && d[1] == 7) {
+            // S-shape mirrored vertically
+            tc0 = obstacle.towerCenterPoint(12);
+            tc1 = obstacle.towerCenterPoint(5);
+            addTower(parent, tc0, baseHeightPy, topHeight);
+            addTower(parent, tc1, baseHeightPy, topHeight);
+            addCastleWall(parent, c[0].midpoint(tc0), c[0].manhattanDist(tc0), TS, baseHeightPy, topHeight);
+            addCastleWall(parent, c[1].midpoint(tc1), c[1].manhattanDist(tc1), TS, baseHeightPy, topHeight);
+            // vertical wall
+            addCastleWall(parent, tc0.midpoint(tc1), TS, tc0.manhattanDist(tc1), baseHeightPy, topHeight);
+        } else if (d[0] == 4 && d[1] == 11) {
+            // normal S-shape orientation
+            tc0 = obstacle.towerCenterPoint(0);
+            tc1 = obstacle.towerCenterPoint(7);
+            addTower(parent, tc0, baseHeightPy, topHeight);
+            addTower(parent, tc1, baseHeightPy, topHeight);
+            addCastleWall(parent, tc0.midpoint(c[1]), tc0.manhattanDist(c[1]), TS, baseHeightPy, topHeight);
+            addCastleWall(parent, c[0].midpoint(tc1), c[0].manhattanDist(tc1), TS, baseHeightPy, topHeight);
+            // vertical wall
+            addCastleWall(parent, tc0.midpoint(tc1), TS, tc0.manhattanDist(tc1), baseHeightPy, topHeight);
+        } else {
+            //TODO two other S-shape orientations
+            Logger.error("Invalid S-shape detected");
+            return;
+        }
+    }
+
     public void addTShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
         int[] d = obstacle.deadEndSegmentIndices();
-        Vector2f c0 = obstacle.deadEndCenter(d[0]);
-        Vector2f c1 = obstacle.deadEndCenter(d[1]);
-        Vector2f c2 = obstacle.deadEndCenter(d[2]);
+        Vector2f c0 = obstacle.towerCenterPoint(d[0]);
+        Vector2f c1 = obstacle.towerCenterPoint(d[1]);
+        Vector2f c2 = obstacle.towerCenterPoint(d[2]);
         Vector2f join;
         if (c2.x() == c0.x() && c1.x() > c2.x()) {
             join = new Vector2f(c0.x(), c1.y());
@@ -319,7 +352,7 @@ public class WallBuilder {
             join = new Vector2f(c1.x(), c0.y());
         }
         else {
-            Logger.error("Illegal T-shape obstacle: {}", obstacle);
+            Logger.error("Invalid T-shape obstacle: {}", obstacle);
             return;
         }
         addTower(parent, c0, baseHeightPy, topHeight);
