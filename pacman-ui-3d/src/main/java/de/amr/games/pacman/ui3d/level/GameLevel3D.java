@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui3d.level;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
@@ -286,15 +285,12 @@ public class GameLevel3D {
             wallFillColorPy.set(Color.grayRgb(42)); // to give some contrast with floor
         }
 
-        TileMap terrain = world.map().terrain();
-        Box floor = createFloor(terrain.numCols() * TS, terrain.numRows() * TS);
-
+        Box floor = createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
         for (Obstacle obstacle : world.map().obstacles()) {
             if (!world.isPartOfHouse(tileAt(obstacle.startPoint()))) {
                 addObstacle(mazeGroup, obstacle, obstacle.hasDoubleWalls() ? BORDER_WALL_THICKNESS : OBSTACLE_THICKNESS);
             }
         }
-
         house3D = new House3D();
         house3D.heightPy.set(HOUSE_HEIGHT);
         house3D.wallBuilder().setBaseMaterial(Ufx.coloredMaterial(opaqueColor(coloring.fill(), HOUSE_OPACITY)));
@@ -308,6 +304,7 @@ public class GameLevel3D {
 
     private void addObstacle(Group parent, Obstacle obstacle, double thickness) {
         Group obstacleGroup = new Group();
+        parent.getChildren().add(obstacleGroup);
         if (obstacle.isO_Shape()) {
             Logger.info("Found O-shape: {}", obstacle);
             // Invert colors
@@ -350,7 +347,6 @@ public class GameLevel3D {
             wallBuilder.setTopMaterial(wallStrokeMaterialPy.get());
             wallBuilder.addGeneralShapeObstacle(obstacleGroup, obstacle, thickness, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
         }
-        parent.getChildren().add(obstacleGroup);
     }
 
     private Box createFloor(double sizeX, double sizeY) {

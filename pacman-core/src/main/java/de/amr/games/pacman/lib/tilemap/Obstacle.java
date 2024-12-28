@@ -85,21 +85,32 @@ public class Obstacle {
 
     public boolean isT_Shape() {
         //TODO: this is not 100% correct
-        return isClosed() && numSegments() == 13 && numDeadEnds() == 3;
+        if (isClosed() && numSegments() == 13 && numDeadEnds() == 3) {
+            Vector2f[] c = deadEndCenters();
+        }
+        return false;
     }
 
     public boolean isCrossShape() {
         if (isClosed() && numSegments() == 20 && numDeadEnds() == 4) {
-            //TODO Check if this is not an H-shape
-            int[] d = deadEndSegmentIndices();
-            Vector2f[] c = new Vector2f[4];
-            for (int i = 0; i < 4; ++i) {
-                c[i] = deadEndCenter(d[i]);
-            }
+            Vector2f[] c = deadEndCenters();
+            // Check if this is not an H-shape
             // d[0] = left, d[1] = bottom, d[2] = right, d[3] = top
             return c[0].x() < c[2].x() && c[0].y() == c[2].y() && c[3].y() < c[1].y() && c[3].x() == c[1].x();
         }
         return false;
+    }
+
+    private Vector2f[] deadEndCenters() {
+        return deadEndCenters(deadEndSegmentIndices());
+    }
+
+    private Vector2f[] deadEndCenters(int[] indices) {
+        Vector2f[] c = new Vector2f[indices.length];
+        for (int i = 0; i < indices.length; ++i) {
+            c[i] = deadEndCenter(indices[i]);
+        }
+        return c;
     }
 
     public boolean isU_Shape() {
@@ -127,11 +138,17 @@ public class Obstacle {
 
     private boolean hasDeadEndAt(int i) {
         ObstacleSegment segment = segments.get(i);
-        if (i < segments.size() - 1) {
-            return segment.isRoundedCorner() && segments.get(i+1).isRoundedCorner();
-        } else {
-            return segment.isRoundedCorner() && segments.getFirst().isRoundedCorner();
-        }
+        ObstacleSegment nextSegment = i < segments.size() - 1 ? segments.get(i + 1) : segments.getFirst();
+        return segmentsFormDeadEnd(segment, nextSegment);
+    }
+
+    /** Tells if two segments in counter-clockwise order form a dead-end */
+    private boolean segmentsFormDeadEnd(ObstacleSegment s1, ObstacleSegment s2) {
+        if (s1.isAngularNECorner() && s2.isRoundedNWCorner()) return true;
+        if (s1.isAngularNWCorner() && s2.isRoundedSWCorner()) return true;
+        if (s1.isAngularSWCorner() && s2.isRoundedSECorner()) return true;
+        if (s1.isAngularSECorner() && s2.isRoundedNECorner()) return true;
+        return false;
     }
 
     public Vector2f deadEndCenter(int index) {
