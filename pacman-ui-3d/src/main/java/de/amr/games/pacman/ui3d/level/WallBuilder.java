@@ -280,15 +280,30 @@ public class WallBuilder {
             addCastleWall(parent, c1.midpoint(oc1), TS, c1.manhattanDist(oc1), baseHeightPy, topHeight);
             addCastleWall(parent, oc0.midpoint(oc1), oc0.manhattanDist(oc1), TS, baseHeightPy, topHeight);
         }
+        else if (d0 == 4 && d1 == 11) {
+            // U open at right side, d0=bottom, d1=top
+            oc0 = deadEndCenter(obstacle, points, 2); // left bottom
+            oc1 = deadEndCenter(obstacle, points, 0); // right top
+            addCastleWall(parent, c0.midpoint(oc0), c0.manhattanDist(oc0), TS, baseHeightPy, topHeight);
+            addCastleWall(parent, c1.midpoint(oc1), c1.manhattanDist(oc1), TS, baseHeightPy, topHeight);
+            addCastleWall(parent, oc0.midpoint(oc1), TS, oc0.manhattanDist(oc1), baseHeightPy, topHeight);
+        }
+        else if (d0 == 0 && d1 == 7) {
+            // U open at left side, d0=top, d1=bottom
+            oc0 = deadEndCenter(obstacle, points, 12); // right top
+            oc1 = deadEndCenter(obstacle, points, 10); // right bottom
+            addCastleWall(parent, c0.midpoint(oc0), c0.manhattanDist(oc0), TS, baseHeightPy, topHeight);
+            addCastleWall(parent, c1.midpoint(oc1), c1.manhattanDist(oc1), TS, baseHeightPy, topHeight);
+            addCastleWall(parent, oc0.midpoint(oc1), TS, oc0.manhattanDist(oc1), baseHeightPy, topHeight);
+        }
         else {
-            //TODO other 2 orientations
+            Logger.info("Invalid U-shape detected: {}", obstacle);
+            return;
         }
         addTower(parent, c0,  baseHeightPy, topHeight);
         addTower(parent, c1,  baseHeightPy, topHeight);
-        if (oc0 != null && oc1 != null) {
-            addTower(parent, oc0, baseHeightPy, topHeight);
-            addTower(parent, oc1, baseHeightPy, topHeight);
-        }
+        addTower(parent, oc0, baseHeightPy, topHeight);
+        addTower(parent, oc1, baseHeightPy, topHeight);
     }
 
     public void addTShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {

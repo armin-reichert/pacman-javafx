@@ -92,8 +92,19 @@ public class Obstacle {
     }
 
     public boolean isU_Shape() {
-        //TODO: this is not 100% correct
-        return numSegments() == 14 && numDeadEnds() == 2;
+        List<Integer> deadEnds = deadEndSegmentPositions();
+        Vector2f[] points = points();
+        return numSegments() == 14 && deadEnds.size() == 2
+            && ( hAligned(points[deadEnds.getFirst()], points[deadEnds.getLast()])
+              || vAligned(points[deadEnds.getFirst()], points[deadEnds.getLast()]) );
+    }
+
+    private boolean hAligned(Vector2f p, Vector2f q) {
+        return p.y() == q.y();
+    }
+
+    private boolean vAligned(Vector2f p, Vector2f q) {
+        return p.x() == q.x();
     }
 
     public List<Integer> deadEndSegmentPositions() {
