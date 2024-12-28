@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static de.amr.games.pacman.lib.Globals.HTS;
+
 /**
  * Open or closed polygon.
  */
@@ -88,7 +90,17 @@ public class Obstacle {
     }
 
     public boolean isCrossShape() {
-        return isClosed() && numSegments() == 20 && numDeadEnds() == 4;
+        if (isClosed() && numSegments() == 20 && numDeadEnds() == 4) {
+            //TODO Test if this is not an H-shape
+            List<Integer> deadEnds = deadEndSegmentPositions();
+            Vector2f[] points = points();
+            Vector2f[] d = new Vector2f[4];
+            for (int i = 0; i < 4; ++i) {
+                d[i] = points[deadEnds.get(i)];
+            }
+            return true;
+        }
+        return false;
     }
 
     public boolean isU_Shape() {
@@ -135,4 +147,16 @@ public class Obstacle {
             return segment.isRoundedCorner() && segments.getFirst().isRoundedCorner();
         }
     }
+
+    public Vector2f deadEndCenter(Obstacle obstacle, Vector2f[] points, int index) {
+        ObstacleSegment segment = obstacle.segment(index);
+        return switch (segment.mapContent()) {
+            case Tiles.CORNER_NW -> points[index].plus(0, HTS);
+            case Tiles.CORNER_SW -> points[index].plus(HTS, 0);
+            case Tiles.CORNER_SE -> points[index].plus(0, -HTS);
+            case Tiles.CORNER_NE -> points[index].plus(-HTS, 0);
+            default -> throw new IllegalStateException();
+        };
+    }
+
 }

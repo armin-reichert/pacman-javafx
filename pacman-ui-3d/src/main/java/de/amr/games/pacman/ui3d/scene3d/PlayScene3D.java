@@ -393,7 +393,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.addLevelCounter();
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
-        showLevelTestMessage("BONI LEVEL" + context.level().number);
+        showLevelTestMessage("TEST LEVEL" + context.level().number);
         PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
     }
 
