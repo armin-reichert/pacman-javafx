@@ -18,30 +18,23 @@ import static de.amr.games.pacman.lib.Globals.HTS;
 public class Obstacle {
 
     private final List<ObstacleSegment> segments = new ArrayList<>();
-    private final Vector2f startPoint;
-    private Vector2f endPoint;
+    private final List<Vector2f> points = new ArrayList<>();
     private final boolean doubleWalls;
 
     public Obstacle(Vector2f startPoint, boolean doubleWalls) {
-        this.startPoint = startPoint;
-        endPoint = startPoint;
+        points.add(startPoint);
         this.doubleWalls = doubleWalls;
     }
 
     public Vector2f[] points() {
-        Vector2f[] points = new Vector2f[numSegments()];
-        points[0] = startPoint;
-        for (int i = 0; i < numSegments() - 1; ++i) {
-            points[i+1] = points[i].plus(segment(i).vector());
-        }
-        return points;
+        return points.toArray(Vector2f[]::new);
     }
 
     @Override
     public String toString() {
         return "Obstacle{" +
-            "startPoint=" + startPoint +
-            ", endPoint=" + endPoint +
+            "startPoint=" + points.getFirst() +
+            ", endPoint=" + points.getLast() +
             ", segment count=" + segments.size() +
             ", segments=" + segments +
             '}';
@@ -49,15 +42,15 @@ public class Obstacle {
 
     public void addSegment(Vector2f vector, boolean ccw, byte content) {
         segments.add(new ObstacleSegment(vector, ccw, content));
-        endPoint = endPoint.plus(vector);
+        points.add(endPoint().plus(vector));
     }
 
-    public Vector2f startPoint() {
-        return startPoint;
-    }
+    public Vector2f startPoint() { return points.getFirst(); }
+
+    public Vector2f endPoint() { return points.getLast(); }
 
     public boolean isClosed() {
-        return startPoint.equals(endPoint);
+        return startPoint().equals(endPoint());
     }
 
     public boolean hasDoubleWalls() {
@@ -93,10 +86,9 @@ public class Obstacle {
         if (isClosed() && numSegments() == 20 && numDeadEnds() == 4) {
             //TODO Test if this is not an H-shape
             List<Integer> deadEnds = deadEndSegmentPositions();
-            Vector2f[] points = points();
             Vector2f[] d = new Vector2f[4];
             for (int i = 0; i < 4; ++i) {
-                d[i] = points[deadEnds.get(i)];
+                d[i] = points.get(deadEnds.get(i));
             }
             return true;
         }
@@ -105,10 +97,9 @@ public class Obstacle {
 
     public boolean isU_Shape() {
         List<Integer> deadEnds = deadEndSegmentPositions();
-        Vector2f[] points = points();
         return numSegments() == 14 && deadEnds.size() == 2
-            && ( hAligned(points[deadEnds.getFirst()], points[deadEnds.getLast()])
-              || vAligned(points[deadEnds.getFirst()], points[deadEnds.getLast()]) );
+            && ( hAligned(points.get(deadEnds.getFirst()), points.get(deadEnds.getLast()))
+              || vAligned(points.get(deadEnds.getFirst()), points.get(deadEnds.getLast())) );
     }
 
     private boolean hAligned(Vector2f p, Vector2f q) {
@@ -148,15 +139,14 @@ public class Obstacle {
         }
     }
 
-    public Vector2f deadEndCenter(Obstacle obstacle, Vector2f[] points, int index) {
+    public Vector2f deadEndCenter(Obstacle obstacle, int index) {
         ObstacleSegment segment = obstacle.segment(index);
         return switch (segment.mapContent()) {
-            case Tiles.CORNER_NW -> points[index].plus(0, HTS);
-            case Tiles.CORNER_SW -> points[index].plus(HTS, 0);
-            case Tiles.CORNER_SE -> points[index].plus(0, -HTS);
-            case Tiles.CORNER_NE -> points[index].plus(-HTS, 0);
+            case Tiles.CORNER_NW -> points.get(index).plus(0, HTS);
+            case Tiles.CORNER_SW -> points.get(index).plus(HTS, 0);
+            case Tiles.CORNER_SE -> points.get(index).plus(0, -HTS);
+            case Tiles.CORNER_NE -> points.get(index).plus(-HTS, 0);
             default -> throw new IllegalStateException();
         };
     }
-
 }

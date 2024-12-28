@@ -209,10 +209,9 @@ public class WallBuilder {
 
     public void addLShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
         List<Integer> deadEndPositions = obstacle.deadEndSegmentPositions();
-        Vector2f[] points = obstacle.points();
         int d0 = deadEndPositions.getFirst(), d1 = deadEndPositions.getLast();
-        Vector2f c0 = obstacle.deadEndCenter(obstacle, points, d0);
-        Vector2f c1 = obstacle.deadEndCenter(obstacle, points, d1);
+        Vector2f c0 = obstacle.deadEndCenter(obstacle, d0);
+        Vector2f c1 = obstacle.deadEndCenter(obstacle, d1);
         ObstacleSegment d0Segment = obstacle.segment(d0);
         Vector2f knee = null;
         if (d0Segment.isRoundedSECorner() || d0Segment.isRoundedNWCorner()) {
@@ -239,11 +238,10 @@ public class WallBuilder {
     public void addCrossShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
         List<Integer> deadEnds = obstacle.deadEndSegmentPositions();
         int d0 = deadEnds.getFirst(), d1 = deadEnds.get(1), d2 = deadEnds.get(2), d3 = deadEnds.get(3);
-        Vector2f[] points = obstacle.points();
-        Vector2f c0 = obstacle.deadEndCenter(obstacle, points, d0);
-        Vector2f c1 = obstacle.deadEndCenter(obstacle, points, d1);
-        Vector2f c2 = obstacle.deadEndCenter(obstacle, points, d2);
-        Vector2f c3 = obstacle.deadEndCenter(obstacle, points, d3);
+        Vector2f c0 = obstacle.deadEndCenter(obstacle, d0);
+        Vector2f c1 = obstacle.deadEndCenter(obstacle, d1);
+        Vector2f c2 = obstacle.deadEndCenter(obstacle, d2);
+        Vector2f c3 = obstacle.deadEndCenter(obstacle, d3);
         Vector2f center = new Vector2f(c3.x(), c0.y());
         addTower(parent, c0, baseHeightPy, topHeight);
         addTower(parent, c1, baseHeightPy, topHeight);
@@ -258,39 +256,38 @@ public class WallBuilder {
     public void addUShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
         List<Integer> deadEnds = obstacle.deadEndSegmentPositions();
         int d0 = deadEnds.getFirst(), d1 = deadEnds.get(1);
-        Vector2f[] points = obstacle.points();
-        Vector2f c0 = obstacle.deadEndCenter(obstacle, points, d0);
-        Vector2f c1 = obstacle.deadEndCenter(obstacle, points, d1);
+        Vector2f c0 = obstacle.deadEndCenter(obstacle, d0);
+        Vector2f c1 = obstacle.deadEndCenter(obstacle, d1);
         // find centers on opposite side of dead ends
         Vector2f oc0, oc1;
         if (d0 == 6 && d1 == 13) {
             // U in normal orientation, open on top
-            oc0 = obstacle.deadEndCenter(obstacle, points, 4); // right leg
-            oc1 = obstacle.deadEndCenter(obstacle, points, 2); // left leg
+            oc0 = obstacle.deadEndCenter(obstacle, 4); // right leg
+            oc1 = obstacle.deadEndCenter(obstacle, 2); // left leg
             addCastleWall(parent, c0.midpoint(oc0), TS, c0.manhattanDist(oc0), baseHeightPy, topHeight);
             addCastleWall(parent, c1.midpoint(oc1), TS, c1.manhattanDist(oc1), baseHeightPy, topHeight);
             addCastleWall(parent, oc0.midpoint(oc1), oc0.manhattanDist(oc1), TS, baseHeightPy, topHeight);
         }
         else if (d0 == 2 && d1 == 9) {
             // U vertically mirrored, open at bottom d0=left, d1=right
-            oc0 = obstacle.deadEndCenter(obstacle, points, 0); // left leg
-            oc1 = obstacle.deadEndCenter(obstacle, points, 12); // right leg
+            oc0 = obstacle.deadEndCenter(obstacle, 0); // left leg
+            oc1 = obstacle.deadEndCenter(obstacle, 12); // right leg
             addCastleWall(parent, c0.midpoint(oc0), TS, c0.manhattanDist(oc0), baseHeightPy, topHeight);
             addCastleWall(parent, c1.midpoint(oc1), TS, c1.manhattanDist(oc1), baseHeightPy, topHeight);
             addCastleWall(parent, oc0.midpoint(oc1), oc0.manhattanDist(oc1), TS, baseHeightPy, topHeight);
         }
         else if (d0 == 4 && d1 == 11) {
             // U open at right side, d0=bottom, d1=top
-            oc0 = obstacle.deadEndCenter(obstacle, points, 2); // left bottom
-            oc1 = obstacle.deadEndCenter(obstacle, points, 0); // right top
+            oc0 = obstacle.deadEndCenter(obstacle, 2); // left bottom
+            oc1 = obstacle.deadEndCenter(obstacle, 0); // right top
             addCastleWall(parent, c0.midpoint(oc0), c0.manhattanDist(oc0), TS, baseHeightPy, topHeight);
             addCastleWall(parent, c1.midpoint(oc1), c1.manhattanDist(oc1), TS, baseHeightPy, topHeight);
             addCastleWall(parent, oc0.midpoint(oc1), TS, oc0.manhattanDist(oc1), baseHeightPy, topHeight);
         }
         else if (d0 == 0 && d1 == 7) {
             // U open at left side, d0=top, d1=bottom
-            oc0 = obstacle.deadEndCenter(obstacle, points, 12); // right top
-            oc1 = obstacle.deadEndCenter(obstacle, points, 10); // right bottom
+            oc0 = obstacle.deadEndCenter(obstacle, 12); // right top
+            oc1 = obstacle.deadEndCenter(obstacle, 10); // right bottom
             addCastleWall(parent, c0.midpoint(oc0), c0.manhattanDist(oc0), TS, baseHeightPy, topHeight);
             addCastleWall(parent, c1.midpoint(oc1), c1.manhattanDist(oc1), TS, baseHeightPy, topHeight);
             addCastleWall(parent, oc0.midpoint(oc1), TS, oc0.manhattanDist(oc1), baseHeightPy, topHeight);
@@ -308,10 +305,9 @@ public class WallBuilder {
     public void addTShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
         List<Integer> deadEnds = obstacle.deadEndSegmentPositions();
         int d0 = deadEnds.getFirst(), d1 = deadEnds.get(1), d2 = deadEnds.get(2);
-        Vector2f[] points = obstacle.points();
-        Vector2f c0 = obstacle.deadEndCenter(obstacle, points, d0);
-        Vector2f c1 = obstacle.deadEndCenter(obstacle, points, d1);
-        Vector2f c2 = obstacle.deadEndCenter(obstacle, points, d2);
+        Vector2f c0 = obstacle.deadEndCenter(obstacle, d0);
+        Vector2f c1 = obstacle.deadEndCenter(obstacle, d1);
+        Vector2f c2 = obstacle.deadEndCenter(obstacle, d2);
         Vector2f join;
         if (c2.x() == c0.x() && c1.x() > c2.x()) {
             join = new Vector2f(c0.x(), c1.y());
