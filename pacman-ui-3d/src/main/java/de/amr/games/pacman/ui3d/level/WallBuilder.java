@@ -382,7 +382,6 @@ public class WallBuilder {
         addTower(parent, c0, baseHeightPy, topHeight);
         addTower(parent, c1, baseHeightPy, topHeight);
         addTower(parent, c2, baseHeightPy, topHeight);
-        addTower(parent, join, baseHeightPy, topHeight);
 
         if (c0.x() == join.x()) {
             addCastleWall(parent, c0.midpoint(join), TS, c0.manhattanDist(join), baseHeightPy, topHeight);
