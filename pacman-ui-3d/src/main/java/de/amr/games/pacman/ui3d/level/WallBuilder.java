@@ -17,8 +17,7 @@ import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_DRAW_MODE;
 
 /**
@@ -316,7 +315,8 @@ public class WallBuilder {
             addCastleWall(parent, c[1].midpoint(tc1), c[1].manhattanDist(tc1), TS, baseHeightPy, topHeight);
             // vertical wall
             addCastleWall(parent, tc0.midpoint(tc1), TS, tc0.manhattanDist(tc1), baseHeightPy, topHeight);
-        } else if (d[0] == 4 && d[1] == 11) {
+        }
+        else if (d[0] == 4 && d[1] == 11) {
             // normal S-shape orientation
             tc0 = obstacle.towerCenterPoint(0);
             tc1 = obstacle.towerCenterPoint(7);
@@ -326,10 +326,34 @@ public class WallBuilder {
             addCastleWall(parent, c[0].midpoint(tc1), c[0].manhattanDist(tc1), TS, baseHeightPy, topHeight);
             // vertical wall
             addCastleWall(parent, tc0.midpoint(tc1), TS, tc0.manhattanDist(tc1), baseHeightPy, topHeight);
-        } else {
-            //TODO two other S-shape orientations
+        }
+        else if (d[0] == 6 && d[1] == 13) {
+            if (c[1].x() < c[0].x()) {
+                // S-shape rotated by 90 degrees
+                tc0 = obstacle.towerCenterPoint(9);
+                tc1 = obstacle.towerCenterPoint(2);
+                addTower(parent, tc0, baseHeightPy, topHeight);
+                addTower(parent, tc1, baseHeightPy, topHeight);
+                // horizontal tc1 - tc0
+                addCastleWall(parent, tc1.midpoint(tc0), tc1.manhattanDist(tc0), TS, baseHeightPy, topHeight);
+                // vertical c1 - tc1 and tc0 - c0
+                addCastleWall(parent, c[1].midpoint(tc1), TS, c[1].manhattanDist(tc1), baseHeightPy, topHeight);
+                addCastleWall(parent, tc0.midpoint(c[0]), TS, tc0.manhattanDist(c[0]), baseHeightPy, topHeight);
+            } else {
+                // S-shape mirrored and rotated by 90 degrees
+                tc0 = obstacle.towerCenterPoint(4);
+                tc1 = obstacle.towerCenterPoint(11);
+                addTower(parent, tc0, baseHeightPy, topHeight);
+                addTower(parent, tc1, baseHeightPy, topHeight);
+                // horizontal tc1 - tc0
+                addCastleWall(parent, tc1.midpoint(tc0), tc1.manhattanDist(tc0), TS, baseHeightPy, topHeight);
+                // vertical c1 - tc1 and tc0 - c0
+                addCastleWall(parent, c[1].midpoint(tc1), TS, c[1].manhattanDist(tc1), baseHeightPy, topHeight);
+                addCastleWall(parent, tc0.midpoint(c[0]), TS, tc0.manhattanDist(c[0]), baseHeightPy, topHeight);
+            }
+        }
+        else {
             Logger.error("Invalid S-shape detected");
-            return;
         }
     }
 
