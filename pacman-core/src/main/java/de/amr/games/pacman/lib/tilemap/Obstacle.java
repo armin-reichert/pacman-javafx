@@ -75,30 +75,29 @@ public class Obstacle {
         return segments.get(i);
     }
 
-    public boolean isO_Shape() {
-        return isClosed() && segments().stream().filter(ObstacleSegment::isRoundedCorner).count() == 4;
-    }
-
-    public boolean isL_Shape() {
-        return isClosed() && numSegments() == 10 && numDeadEnds() == 2;
-    }
-
-    public boolean isT_Shape() {
-        if (isClosed() && numSegments() == 13 && numDeadEnds() == 3) {
-            //TODO: this is not 100% correct
-            return true;
+    public ObstacleType computeType() {
+        if (!isClosed()) {
+            return ObstacleType.ANY;
         }
-        return false;
-    }
-
-    public boolean isCrossShape() {
-        if (isClosed() && numSegments() == 20 && numDeadEnds() == 4) {
+        if (segments().stream().filter(ObstacleSegment::isRoundedCorner).count() == 4) {
+            return ObstacleType.O_SHAPE;
+        }
+        if ((numSegments() == 9 || numSegments() == 10) && numDeadEnds() == 2) {
+            return ObstacleType.L_SHAPE;
+        }
+        if (numSegments() == 13 && numDeadEnds() == 3) {
+            return ObstacleType.T_SHAPE;
+        }
+        if (numSegments() == 20 && numDeadEnds() == 4) {
             Vector2f[] c = deadEndCenters();
             // Check if this is not an H-shape
             // d[0] = left, d[1] = bottom, d[2] = right, d[3] = top
-            return c[0].x() < c[2].x() && c[0].y() == c[2].y() && c[3].y() < c[1].y() && c[3].x() == c[1].x();
+            if (c[0].x() < c[2].x() && c[0].y() == c[2].y() &&
+                    c[3].y() < c[1].y() && c[3].x() == c[1].x()) {
+                return ObstacleType.CROSS_SHAPE;
+            }
         }
-        return false;
+        return ObstacleType.ANY;
     }
 
     private Vector2f[] deadEndCenters() {
