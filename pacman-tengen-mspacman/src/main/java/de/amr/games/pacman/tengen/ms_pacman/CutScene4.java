@@ -195,7 +195,7 @@ public class CutScene4 extends GameScene2D {
         Vector2f pos1 = junior.tile().plus(dir1.vector()).scaled(TS).toVector2f();
         Vector2f pos2 = junior.tile().plus(dir2.vector()).scaled(TS).toVector2f();
         Vector2f center = size().scaled(0.5);
-        double dist1 = pos1.euclideanDistance(center), dist2 = pos2.euclideanDistance(center);
+        double dist1 = pos1.euclideanDist(center), dist2 = pos2.euclideanDist(center);
         return Double.compare(dist1, dist2);
     }
 

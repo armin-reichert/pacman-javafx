@@ -60,11 +60,11 @@ public record Vector2f(float x, float y) {
         return this.plus(v).scaled(0.5f);
     }
 
-    public float euclideanDistance(Vector2f v) {
+    public float euclideanDist(Vector2f v) {
         return this.minus(v).length();
     }
 
-    public float manhattanDistance(Vector2f v) {
+    public float manhattanDist(Vector2f v) {
         return Math.abs(x - v.x) + Math.abs(y - v.y);
     }
 
