@@ -88,6 +88,13 @@ public class Obstacle {
         if (numSegments() == 13 && numDeadEnds() == 3) {
             return ObstacleType.T_SHAPE;
         }
+        if (numSegments() == 14 && numDeadEnds() == 2) {
+            int[] deadEnds = deadEndSegmentIndices();
+            if (hAligned(points.get(deadEnds[0]), points.get(deadEnds[1]))
+                || vAligned(points.get(deadEnds[0]), points.get(deadEnds[1])) ) {
+                return ObstacleType.U_SHAPE;
+            }
+        }
         if (numSegments() == 20 && numDeadEnds() == 4) {
             Vector2f[] c = deadEndCenters();
             // Check if this is not an H-shape
