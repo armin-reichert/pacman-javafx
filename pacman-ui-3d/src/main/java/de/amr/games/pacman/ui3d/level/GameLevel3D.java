@@ -264,7 +264,7 @@ public class GameLevel3D {
 
         boolean ghostNearHouseEntry = context.level()
             .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-            .filter(ghost -> ghost.position().euclideanDistance(context.level().world().houseEntryPosition()) <= HOUSE_SENSITIVITY)
+            .filter(ghost -> ghost.position().euclideanDist(context.level().world().houseEntryPosition()) <= HOUSE_SENSITIVITY)
             .anyMatch(Ghost::isVisible);
 
         house3D.usedPy.set(houseAccessRequired);

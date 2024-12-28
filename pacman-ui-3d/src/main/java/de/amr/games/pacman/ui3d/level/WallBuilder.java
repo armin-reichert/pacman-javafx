@@ -171,9 +171,9 @@ public class WallBuilder {
             addTower(parent, center0, baseHeightPy, topHeight);
             addTower(parent, center1, baseHeightPy, topHeight);
             if (center0.x() < center1.x()) {
-                addCastleWall(parent, centerWall, center0.manhattanDistance(center1), TS, baseHeightPy, topHeight);
+                addCastleWall(parent, centerWall, center0.manhattanDist(center1), TS, baseHeightPy, topHeight);
             } else {
-                addCastleWall(parent, centerWall, TS, center0.manhattanDistance(center1), baseHeightPy, topHeight);
+                addCastleWall(parent, centerWall, TS, center0.manhattanDist(center1), baseHeightPy, topHeight);
             }
             Logger.info("Added {}-segment oval, dead ends={}", obstacle.numSegments(), obstacle.numDeadEnds());
         }
@@ -195,13 +195,13 @@ public class WallBuilder {
             Vector2f centerWallE = centerTowerNE.midpoint(centerTowerSE);
             Vector2f center = centerWallW.midpoint(centerWallE);
 
-            addCastleWall(parent, centerWallN, centerTowerNE.manhattanDistance(centerTowerNW), TS, baseHeightPy, topHeight);
-            addCastleWall(parent, centerWallS, centerTowerSE.manhattanDistance(centerTowerSW), TS, baseHeightPy, topHeight);
-            addCastleWall(parent, centerWallW, TS, centerTowerNW.manhattanDistance(centerTowerSW), baseHeightPy, topHeight);
-            addCastleWall(parent, centerWallE, TS, centerTowerNE.manhattanDistance(centerTowerSE), baseHeightPy, topHeight);
+            addCastleWall(parent, centerWallN, centerTowerNE.manhattanDist(centerTowerNW), TS, baseHeightPy, topHeight);
+            addCastleWall(parent, centerWallS, centerTowerSE.manhattanDist(centerTowerSW), TS, baseHeightPy, topHeight);
+            addCastleWall(parent, centerWallW, TS, centerTowerNW.manhattanDist(centerTowerSW), baseHeightPy, topHeight);
+            addCastleWall(parent, centerWallE, TS, centerTowerNE.manhattanDist(centerTowerSE), baseHeightPy, topHeight);
             addCastleWall(parent, center,
-                    centerWallW.manhattanDistance(centerWallE) - TS,
-                    centerWallN.manhattanDistance(centerWallS) - TS,
+                    centerWallW.manhattanDist(centerWallE) - TS,
+                    centerWallN.manhattanDist(centerWallS) - TS,
                     baseHeightPy, topHeight);
 
             Logger.info("Added {}-segment oval, dead ends={}", obstacle.numSegments(), obstacle.numDeadEnds());
@@ -226,14 +226,14 @@ public class WallBuilder {
         addTower(parent, knee, baseHeightPy, topHeight);
 
         if (c0.x() == knee.x()) {
-            addCastleWall(parent, c0.midpoint(knee), TS, c0.manhattanDistance(knee), baseHeightPy, topHeight);
+            addCastleWall(parent, c0.midpoint(knee), TS, c0.manhattanDist(knee), baseHeightPy, topHeight);
         } else if (c0.y() == knee.y()) {
-            addCastleWall(parent, c0.midpoint(knee), c0.manhattanDistance(knee), TS, baseHeightPy, topHeight);
+            addCastleWall(parent, c0.midpoint(knee), c0.manhattanDist(knee), TS, baseHeightPy, topHeight);
         }
         if (c1.x() == knee.x()) {
-            addCastleWall(parent, c1.midpoint(knee), TS, c1.manhattanDistance(knee), baseHeightPy, topHeight);
+            addCastleWall(parent, c1.midpoint(knee), TS, c1.manhattanDist(knee), baseHeightPy, topHeight);
         } else if (c1.y() == knee.y()) {
-            addCastleWall(parent, c1.midpoint(knee), c1.manhattanDistance(knee), TS, baseHeightPy, topHeight);
+            addCastleWall(parent, c1.midpoint(knee), c1.manhattanDist(knee), TS, baseHeightPy, topHeight);
         }
     }
 
@@ -250,10 +250,10 @@ public class WallBuilder {
         addTower(parent, c1, baseHeightPy, topHeight);
         addTower(parent, c2, baseHeightPy, topHeight);
         addTower(parent, c3, baseHeightPy, topHeight);
-        addCastleWall(parent, c0.midpoint(center), c0.manhattanDistance(center), TS, baseHeightPy, topHeight);
-        addCastleWall(parent, c2.midpoint(center), c2.manhattanDistance(center), TS, baseHeightPy, topHeight);
-        addCastleWall(parent, c1.midpoint(center), TS, c1.manhattanDistance(center), baseHeightPy, topHeight);
-        addCastleWall(parent, c3.midpoint(center), TS, c3.manhattanDistance(center), baseHeightPy, topHeight);
+        addCastleWall(parent, c0.midpoint(center), c0.manhattanDist(center), TS, baseHeightPy, topHeight);
+        addCastleWall(parent, c2.midpoint(center), c2.manhattanDist(center), TS, baseHeightPy, topHeight);
+        addCastleWall(parent, c1.midpoint(center), TS, c1.manhattanDist(center), baseHeightPy, topHeight);
+        addCastleWall(parent, c3.midpoint(center), TS, c3.manhattanDist(center), baseHeightPy, topHeight);
     }
 
     public void addUShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
@@ -263,32 +263,31 @@ public class WallBuilder {
         Vector2f c0 = deadEndCenter(obstacle, points, d0);
         Vector2f c1 = deadEndCenter(obstacle, points, d1);
         // find centers on opposite side of dead ends
+        Vector2f oc0=null, oc1=null;
         if (d0 == 6 && d1 == 13) {
             // U in normal orientation, open on top
-            Vector2f oc0 = deadEndCenter(obstacle, points, 4); // right leg
-            Vector2f oc1 = deadEndCenter(obstacle, points, 2); // left leg
-            addTower(parent, c0,  baseHeightPy, topHeight);
-            addTower(parent, c1,  baseHeightPy, topHeight);
-            addTower(parent, oc0, baseHeightPy, topHeight);
-            addTower(parent, oc1, baseHeightPy, topHeight);
-            addCastleWall(parent, c0.midpoint(oc0), TS, c0.manhattanDistance(oc0), baseHeightPy, topHeight);
-            addCastleWall(parent, c1.midpoint(oc1), TS, c1.manhattanDistance(oc1), baseHeightPy, topHeight);
-            addCastleWall(parent, oc0.midpoint(oc1), oc0.manhattanDistance(oc1), TS, baseHeightPy, topHeight);
+            oc0 = deadEndCenter(obstacle, points, 4); // right leg
+            oc1 = deadEndCenter(obstacle, points, 2); // left leg
+            addCastleWall(parent, c0.midpoint(oc0), TS, c0.manhattanDist(oc0), baseHeightPy, topHeight);
+            addCastleWall(parent, c1.midpoint(oc1), TS, c1.manhattanDist(oc1), baseHeightPy, topHeight);
+            addCastleWall(parent, oc0.midpoint(oc1), oc0.manhattanDist(oc1), TS, baseHeightPy, topHeight);
         }
         else if (d0 == 2 && d1 == 9) {
             // U vertically mirrored, open at bottom d0=left, d1=right
-            Vector2f oc0 = deadEndCenter(obstacle, points, 0); // left leg
-            Vector2f oc1 = deadEndCenter(obstacle, points, 12); // right leg
-            addTower(parent, c0,  baseHeightPy, topHeight);
-            addTower(parent, c1,  baseHeightPy, topHeight);
-            addTower(parent, oc0, baseHeightPy, topHeight);
-            addTower(parent, oc1, baseHeightPy, topHeight);
-            addCastleWall(parent, c0.midpoint(oc0), TS, c0.manhattanDistance(oc0), baseHeightPy, topHeight);
-            addCastleWall(parent, c1.midpoint(oc1), TS, c1.manhattanDistance(oc1), baseHeightPy, topHeight);
-            addCastleWall(parent, oc0.midpoint(oc1), oc0.manhattanDistance(oc1), TS, baseHeightPy, topHeight);
+            oc0 = deadEndCenter(obstacle, points, 0); // left leg
+            oc1 = deadEndCenter(obstacle, points, 12); // right leg
+            addCastleWall(parent, c0.midpoint(oc0), TS, c0.manhattanDist(oc0), baseHeightPy, topHeight);
+            addCastleWall(parent, c1.midpoint(oc1), TS, c1.manhattanDist(oc1), baseHeightPy, topHeight);
+            addCastleWall(parent, oc0.midpoint(oc1), oc0.manhattanDist(oc1), TS, baseHeightPy, topHeight);
         }
         else {
-            //TODO other orientations
+            //TODO other 2 orientations
+        }
+        addTower(parent, c0,  baseHeightPy, topHeight);
+        addTower(parent, c1,  baseHeightPy, topHeight);
+        if (oc0 != null && oc1 != null) {
+            addTower(parent, oc0, baseHeightPy, topHeight);
+            addTower(parent, oc1, baseHeightPy, topHeight);
         }
     }
 
@@ -322,19 +321,19 @@ public class WallBuilder {
         addTower(parent, join, baseHeightPy, topHeight);
 
         if (c0.x() == join.x()) {
-            addCastleWall(parent, c0.midpoint(join), TS, c0.manhattanDistance(join), baseHeightPy, topHeight);
+            addCastleWall(parent, c0.midpoint(join), TS, c0.manhattanDist(join), baseHeightPy, topHeight);
         } else if (c0.y() == join.y()) {
-            addCastleWall(parent, c0.midpoint(join), c0.manhattanDistance(join), TS, baseHeightPy, topHeight);
+            addCastleWall(parent, c0.midpoint(join), c0.manhattanDist(join), TS, baseHeightPy, topHeight);
         }
         if (c1.x() == join.x()) {
-            addCastleWall(parent, c1.midpoint(join), TS, c1.manhattanDistance(join), baseHeightPy, topHeight);
+            addCastleWall(parent, c1.midpoint(join), TS, c1.manhattanDist(join), baseHeightPy, topHeight);
         } else if (c1.y() == join.y()) {
-            addCastleWall(parent, c1.midpoint(join), c1.manhattanDistance(join), TS, baseHeightPy, topHeight);
+            addCastleWall(parent, c1.midpoint(join), c1.manhattanDist(join), TS, baseHeightPy, topHeight);
         }
         if (c2.x() == join.x()) {
-            addCastleWall(parent, c2.midpoint(join), TS, c2.manhattanDistance(join), baseHeightPy, topHeight);
+            addCastleWall(parent, c2.midpoint(join), TS, c2.manhattanDist(join), baseHeightPy, topHeight);
         } else if (c2.y() == join.y()) {
-            addCastleWall(parent, c2.midpoint(join), c2.manhattanDistance(join), TS, baseHeightPy, topHeight);
+            addCastleWall(parent, c2.midpoint(join), c2.manhattanDist(join), TS, baseHeightPy, topHeight);
         }
     }
 
