@@ -84,9 +84,9 @@ public class Obstacle {
     }
 
     public boolean isT_Shape() {
-        //TODO: this is not 100% correct
         if (isClosed() && numSegments() == 13 && numDeadEnds() == 3) {
-            Vector2f[] c = deadEndCenters();
+            //TODO: this is not 100% correct
+            return true;
         }
         return false;
     }
@@ -144,10 +144,14 @@ public class Obstacle {
 
     /** Tells if two segments in counter-clockwise order form a dead-end */
     private boolean segmentsFormDeadEnd(ObstacleSegment s1, ObstacleSegment s2) {
-        if (s1.isAngularNECorner() && s2.isRoundedNWCorner()) return true;
-        if (s1.isAngularNWCorner() && s2.isRoundedSWCorner()) return true;
-        if (s1.isAngularSWCorner() && s2.isRoundedSECorner()) return true;
-        if (s1.isAngularSECorner() && s2.isRoundedNECorner()) return true;
+        if (s1.isRoundedNECorner() && s2.isRoundedNWCorner()) return true;
+        if (s1.isRoundedNWCorner() && s2.isRoundedSWCorner()) return true;
+        if (s1.isRoundedSWCorner() && s2.isRoundedSECorner()) return true;
+        if (s1.isRoundedSECorner() && s2.isRoundedNECorner()) return true;
+        if (s1.isAngularNECorner() && s2.isAngularNWCorner()) return true;
+        if (s1.isAngularNWCorner() && s2.isAngularSWCorner()) return true;
+        if (s1.isAngularSWCorner() && s2.isAngularSECorner()) return true;
+        if (s1.isAngularSECorner() && s2.isAngularNECorner()) return true;
         return false;
     }
 
