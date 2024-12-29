@@ -155,16 +155,10 @@ public class WallBuilder {
                 Logger.info("Added one-tile O-shape, dead ends={}", obstacle.numUTurns());
             }
             case 6 -> {
-                Vector2f tower0 = new Vector2f(obstacle.point(0).x(), obstacle.point(1).y());
-                Vector2f tower1 = new Vector2f(obstacle.point(3).x(), obstacle.point(4).y());
-                Vector2f centerWall = tower0.midpoint(tower1);
-                addTower(parent, tower0);
-                addTower(parent, tower1);
-                if (tower0.x() < tower1.x()) {
-                    addCastleWallWithCenter(parent, centerWall, tower0.manhattanDist(tower1), TS);
-                } else {
-                    addCastleWallWithCenter(parent, centerWall, TS, tower0.manhattanDist(tower1));
-                }
+                Vector2f[] c = obstacle.uTurnCenters();
+                addTower(parent, c[0]);
+                addTower(parent, c[1]);
+                addCastleWallBetween(parent, c[0], c[1]);
                 Logger.info("Added {}-segment O-shape, dead ends={}", obstacle.numSegments(), obstacle.numUTurns());
             }
             default -> {
