@@ -314,7 +314,7 @@ public class GameLevel3D {
         wallBuilder.setTopHeight(OBSTACLE_COAT_HEIGHT);
         switch (obstacleType) {
             default -> {
-                Logger.info("Found shape: closed={} segments={} dead-ends={}", obstacle.isClosed(), obstacle.numSegments(), obstacle.numDeadEnds());
+                Logger.info("Found shape: closed={} segments={} dead-ends={}", obstacle.isClosed(), obstacle.numSegments(), obstacle.numUTurns());
                 wallBuilder.addGeneralShapeObstacle(obstacleGroup, obstacle, thickness);
             }
             case CROSS_SHAPE -> {

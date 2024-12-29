@@ -45,13 +45,13 @@ public class Obstacle {
     }
 
     public String encoding() {
-        StringBuilder signature = new StringBuilder();
+        StringBuilder encoding = new StringBuilder();
         for (int i = 0; i < segments.size(); ++i) {
             byte tileCode = segment(i).mapContent();
             char ch = (char) ('a' + tileCode);
-            signature.append(ch);
+            encoding.append(ch);
         }
-        return signature.toString();
+        return encoding.toString();
     }
 
     public void addSegment(Vector2f vector, boolean ccw, byte content) {
@@ -96,30 +96,22 @@ public class Obstacle {
                 .filter(type -> type.matches(encoding)).findFirst().orElse(ObstacleType.ANY);
     }
 
-    private boolean hAligned(Vector2f p, Vector2f q) {
-        return p.y() == q.y();
+    public IntStream uTurnSegmentIndices() {
+        return IntStream.range(0, segments.size()).filter(this::hasUTurnAt);
     }
 
-    private boolean vAligned(Vector2f p, Vector2f q) {
-        return p.x() == q.x();
+    public int numUTurns() {
+        return (int) uTurnSegmentIndices().count();
     }
 
-    public IntStream deadEndSegmentIndices() {
-        return IntStream.range(0, segments.size()).filter(this::hasDeadEndAtSegment);
-    }
-
-    public int numDeadEnds() {
-        return (int) deadEndSegmentIndices().count();
-    }
-
-    private boolean hasDeadEndAtSegment(int i) {
+    private boolean hasUTurnAt(int i) {
         ObstacleSegment segment = segments.get(i);
         ObstacleSegment nextSegment = i < segments.size() - 1 ? segments.get(i + 1) : segments.getFirst();
-        return isDeadEnd(segment, nextSegment);
+        return isUTurn(segment, nextSegment);
     }
 
-    /** Tells if two corner segments in counter-clockwise order form a dead-end */
-    private boolean isDeadEnd(ObstacleSegment s1, ObstacleSegment s2) {
+    /** Tells if two corner segments in counter-clockwise order form a U-turn */
+    private boolean isUTurn(ObstacleSegment s1, ObstacleSegment s2) {
         if (s1.isRoundedNECorner() && s2.isRoundedNWCorner()) return true;
         if (s1.isRoundedNWCorner() && s2.isRoundedSWCorner()) return true;
         if (s1.isRoundedSWCorner() && s2.isRoundedSECorner()) return true;
@@ -131,7 +123,7 @@ public class Obstacle {
         return false;
     }
 
-    public Vector2f cornerCenter(int index) {
+    public Vector2f uTurnCenter(int index) {
         ObstacleSegment corner = segment(index);
         return switch (corner.mapContent()) {
             case Tiles.CORNER_NW -> points.get(index).plus(0, HTS);
@@ -142,7 +134,7 @@ public class Obstacle {
         };
     }
 
-    public Vector2f[] deadEndCenters() {
-        return deadEndSegmentIndices().mapToObj(this::cornerCenter).toArray(Vector2f[]::new);
+    public Vector2f[] uTurnCenters() {
+        return uTurnSegmentIndices().mapToObj(this::uTurnCenter).toArray(Vector2f[]::new);
     }
 }
