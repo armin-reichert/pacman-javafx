@@ -60,8 +60,7 @@ public class WallBuilder {
         throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(beginTile, endTile));
     }
 
-    public Node compositeWallCenteredAt(Vector2f center, double sizeX, double sizeY, DoubleProperty wallHeightPy)
-    {
+    public Node compositeWallCenteredAt(Vector2f center, double sizeX, double sizeY, DoubleProperty wallHeightPy) {
         var base = new Box(sizeX, sizeY, wallHeightPy.get());
         base.setMaterial(baseMaterial);
         base.setTranslateX(center.x());
@@ -161,27 +160,27 @@ public class WallBuilder {
             Logger.info("Added {}-segment O-shape, dead ends={}", obstacle.numSegments(), obstacle.numDeadEnds());
         }
         else {
-            // wider than one tile wide O-shape
-            Vector2f centerTowerNW = new Vector2f(obstacle.point(0).x(), obstacle.point(1).y());
-            Vector2f centerTowerSW = new Vector2f(obstacle.point(3).x(), obstacle.point(2).y());
-            Vector2f centerTowerSE = new Vector2f(obstacle.point(4).x(), obstacle.point(5).y());
-            Vector2f centerTowerNE = new Vector2f(obstacle.point(7).x(), obstacle.point(6).y());
+            // O-shape with 4 towers
+            Vector2f towerNW = new Vector2f(obstacle.point(0).x(), obstacle.point(1).y());
+            Vector2f towerSW = new Vector2f(obstacle.point(3).x(), obstacle.point(2).y());
+            Vector2f towerSE = new Vector2f(obstacle.point(4).x(), obstacle.point(5).y());
+            Vector2f towerNE = new Vector2f(obstacle.point(7).x(), obstacle.point(6).y());
 
-            addTower(parent, centerTowerNW, baseHeightPy);
-            addTower(parent, centerTowerSW, baseHeightPy);
-            addTower(parent, centerTowerSE, baseHeightPy);
-            addTower(parent, centerTowerNE, baseHeightPy);
+            addTower(parent, towerNW, baseHeightPy);
+            addTower(parent, towerSW, baseHeightPy);
+            addTower(parent, towerSE, baseHeightPy);
+            addTower(parent, towerNE, baseHeightPy);
 
-            Vector2f centerWallN = centerTowerNW.midpoint(centerTowerNE);
-            Vector2f centerWallS = centerTowerSW.midpoint(centerTowerSE);
-            Vector2f centerWallW = centerTowerNW.midpoint(centerTowerSW);
-            Vector2f centerWallE = centerTowerNE.midpoint(centerTowerSE);
+            Vector2f centerWallN = towerNW.midpoint(towerNE);
+            Vector2f centerWallS = towerSW.midpoint(towerSE);
+            Vector2f centerWallW = towerNW.midpoint(towerSW);
+            Vector2f centerWallE = towerNE.midpoint(towerSE);
             Vector2f center = centerWallW.midpoint(centerWallE);
 
-            addCastleWall(parent, centerWallN, centerTowerNE.manhattanDist(centerTowerNW), TS, baseHeightPy);
-            addCastleWall(parent, centerWallS, centerTowerSE.manhattanDist(centerTowerSW), TS, baseHeightPy);
-            addCastleWall(parent, centerWallW, TS, centerTowerNW.manhattanDist(centerTowerSW), baseHeightPy);
-            addCastleWall(parent, centerWallE, TS, centerTowerNE.manhattanDist(centerTowerSE), baseHeightPy);
+            addCastleWall(parent, centerWallN, towerNE.manhattanDist(towerNW), TS, baseHeightPy);
+            addCastleWall(parent, centerWallS, towerSE.manhattanDist(towerSW), TS, baseHeightPy);
+            addCastleWall(parent, centerWallW, TS, towerNW.manhattanDist(towerSW), baseHeightPy);
+            addCastleWall(parent, centerWallE, TS, towerNE.manhattanDist(towerSE), baseHeightPy);
             addCastleWall(parent, center,
                     centerWallW.manhattanDist(centerWallE) - TS,
                     centerWallN.manhattanDist(centerWallS) - TS,
