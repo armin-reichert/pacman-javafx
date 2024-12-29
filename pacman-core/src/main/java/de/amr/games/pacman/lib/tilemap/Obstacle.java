@@ -42,6 +42,16 @@ public class Obstacle {
             '}';
     }
 
+    public String signature() {
+        StringBuilder signature = new StringBuilder();
+        for (int i = 0; i < segments.size(); ++i) {
+            byte tileCode = segment(i).mapContent();
+            char ch = (char) ('a' + tileCode);
+            signature.append(ch);
+        }
+        return signature.toString();
+    }
+
     public void addSegment(Vector2f vector, boolean ccw, byte content) {
         segments.add(new ObstacleSegment(vector, ccw, content));
         points.add(endPoint().plus(vector));
