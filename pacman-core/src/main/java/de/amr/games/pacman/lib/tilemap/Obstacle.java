@@ -93,9 +93,10 @@ public class Obstacle {
         if (segments().stream().filter(ObstacleSegment::isRoundedCorner).count() == 4) {
             return ObstacleType.O_SHAPE;
         }
+        String signature = signature();
         Vector2f[] c = deadEndCenters();
         int numDeadEnds = c.length;
-        if (numDeadEnds == 2 && (numSegments() == 9 || numSegments() == 10)) {
+        if (ObstacleType.L_SHAPE.matches(signature)) {
             return ObstacleType.L_SHAPE;
         }
         if (numDeadEnds == 2 && numSegments() == 14) {
@@ -106,7 +107,7 @@ public class Obstacle {
                 return ObstacleType.S_SHAPE;
             }
         }
-        if (numDeadEnds == 3 && numSegments() == 13) {
+        if (ObstacleType.T_SHAPE.matches(signature)) {
             return ObstacleType.T_SHAPE;
         }
         if (numDeadEnds == 4 && numSegments() == 20) {
