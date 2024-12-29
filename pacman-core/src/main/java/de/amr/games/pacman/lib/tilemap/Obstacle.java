@@ -82,28 +82,28 @@ public class Obstacle {
         if (segments().stream().filter(ObstacleSegment::isRoundedCorner).count() == 4) {
             return ObstacleType.O_SHAPE;
         }
-        int[] d = deadEndSegmentIndices();
         Vector2f[] c = deadEndCenters();
-        if (d.length == 2 && (numSegments() == 9 || numSegments() == 10)) {
+        int numDeadEnds = c.length;
+        if (numDeadEnds == 2 && (numSegments() == 9 || numSegments() == 10)) {
             return ObstacleType.L_SHAPE;
         }
-        if (d.length == 2 && numSegments() == 14) {
+        if (numDeadEnds == 2 && numSegments() == 14) {
+            //TODO not 100% correct!
             if (hAligned(c[0], c[1]) || vAligned(c[0], c[1]) ) {
                 return ObstacleType.U_SHAPE;
             } else {
-                return ObstacleType.S_SHAPE; // TODO correct?
+                return ObstacleType.S_SHAPE;
             }
         }
-        if (d.length == 3 && numSegments() == 13) {
+        if (numDeadEnds == 3 && numSegments() == 13) {
             return ObstacleType.T_SHAPE;
         }
-        if (d.length == 4 && numSegments() == 20) {
-            // Check if this is not an H-shape
-            // d[0] = left, d[1] = bottom, d[2] = right, d[3] = top
-            if (c[0].x() < c[2].x() && c[0].y() == c[2].y() &&
-                    c[3].y() < c[1].y() && c[3].x() == c[1].x()) {
+        if (numDeadEnds == 4 && numSegments() == 20) {
+            // c[0] = left, c[1] = bottom, c[2] = right, c[3] = top
+            if (c[0].x() < c[2].x() && c[0].y() == c[2].y() && c[3].y() < c[1].y() && c[3].x() == c[1].x()) {
                 return ObstacleType.CROSS_SHAPE;
             }
+            // TODO: is it an H-shape?
         }
         return ObstacleType.ANY;
     }
@@ -118,13 +118,6 @@ public class Obstacle {
             c[i] = towerCenterPoint(indices[i]);
         }
         return c;
-    }
-
-    public boolean isU_Shape() {
-        int[] deadEnds = deadEndSegmentIndices();
-        return numSegments() == 14 && deadEnds.length == 2
-            && ( hAligned(points.get(deadEnds[0]), points.get(deadEnds[1]))
-              || vAligned(points.get(deadEnds[0]), points.get(deadEnds[1])) );
     }
 
     private boolean hAligned(Vector2f p, Vector2f q) {
