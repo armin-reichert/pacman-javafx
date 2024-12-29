@@ -308,7 +308,6 @@ public class GameLevel3D {
         Group obstacleGroup = new Group();
         parent.getChildren().add(obstacleGroup);
         ObstacleType obstacleType = obstacle.computeType();
-        Logger.info("Obstacle signature: {}", obstacle.signature());
         wallBuilder.setTopMaterial(wallFillMaterialPy.get());
         wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
         wallBuilder.setBaseHeightProperty(obstacleHeightPy);

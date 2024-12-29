@@ -35,8 +35,9 @@ public class Obstacle {
     @Override
     public String toString() {
         return "Obstacle{" +
-            "startPoint=" + points.getFirst() +
-            ", endPoint=" + points.getLast() +
+            "signature=" + signature() +
+            ", start=" + points.getFirst() +
+            ", end=" + points.getLast() +
             ", segment count=" + segments.size() +
             ", segments=" + segments +
             '}';
