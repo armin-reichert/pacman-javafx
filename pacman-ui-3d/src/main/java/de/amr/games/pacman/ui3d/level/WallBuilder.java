@@ -141,52 +141,52 @@ public class WallBuilder {
         return new Group(base, top);
     }
 
-    public void addOShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy) {
-        if (obstacle.numSegments() == 4) {
-            addTower(parent, new Vector2f(obstacle.point(0).x(), obstacle.point(1).y()), baseHeightPy);
-            Logger.info("Added one-tile O-shape, dead ends={}", obstacle.numDeadEnds());
-        }
-        else if (obstacle.numSegments() == 6) {
-            Vector2f center0 = new Vector2f(obstacle.point(0).x(), obstacle.point(1).y());
-            Vector2f center1 = new Vector2f(obstacle.point(3).x(), obstacle.point(4).y());
-            Vector2f centerWall = center0.midpoint(center1);
-            addTower(parent, center0, baseHeightPy);
-            addTower(parent, center1, baseHeightPy);
-            if (center0.x() < center1.x()) {
-                addCastleWall(parent, centerWall, center0.manhattanDist(center1), TS, baseHeightPy);
-            } else {
-                addCastleWall(parent, centerWall, TS, center0.manhattanDist(center1), baseHeightPy);
+    public void addOShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, boolean fillCenter) {
+        switch (obstacle.numSegments()) {
+            case 4 -> {
+                Vector2f tower = new Vector2f(obstacle.point(0).x(), obstacle.point(1).y());
+                addTower(parent, tower, baseHeightPy);
+                Logger.info("Added one-tile O-shape, dead ends={}", obstacle.numDeadEnds());
             }
-            Logger.info("Added {}-segment O-shape, dead ends={}", obstacle.numSegments(), obstacle.numDeadEnds());
-        }
-        else {
-            // O-shape with 4 towers
-            Vector2f towerNW = new Vector2f(obstacle.point(0).x(), obstacle.point(1).y());
-            Vector2f towerSW = new Vector2f(obstacle.point(3).x(), obstacle.point(2).y());
-            Vector2f towerSE = new Vector2f(obstacle.point(4).x(), obstacle.point(5).y());
-            Vector2f towerNE = new Vector2f(obstacle.point(7).x(), obstacle.point(6).y());
+            case 6 -> {
+                Vector2f tower0 = new Vector2f(obstacle.point(0).x(), obstacle.point(1).y());
+                Vector2f tower1 = new Vector2f(obstacle.point(3).x(), obstacle.point(4).y());
+                Vector2f centerWall = tower0.midpoint(tower1);
+                addTower(parent, tower0, baseHeightPy);
+                addTower(parent, tower1, baseHeightPy);
+                if (tower0.x() < tower1.x()) {
+                    addCastleWall(parent, centerWall, tower0.manhattanDist(tower1), TS, baseHeightPy);
+                } else {
+                    addCastleWall(parent, centerWall, TS, tower0.manhattanDist(tower1), baseHeightPy);
+                }
+                Logger.info("Added {}-segment O-shape, dead ends={}", obstacle.numSegments(), obstacle.numDeadEnds());
+            }
+            default -> {
+                // O-shape with 4 towers
+                Vector2f towerNW = new Vector2f(obstacle.point(0).x(), obstacle.point(1).y());
+                Vector2f towerSW = new Vector2f(obstacle.point(3).x(), obstacle.point(2).y());
+                Vector2f towerSE = new Vector2f(obstacle.point(4).x(), obstacle.point(5).y());
+                Vector2f towerNE = new Vector2f(obstacle.point(7).x(), obstacle.point(6).y());
 
-            addTower(parent, towerNW, baseHeightPy);
-            addTower(parent, towerSW, baseHeightPy);
-            addTower(parent, towerSE, baseHeightPy);
-            addTower(parent, towerNE, baseHeightPy);
+                Vector2f centerWallN = towerNW.midpoint(towerNE);
+                Vector2f centerWallS = towerSW.midpoint(towerSE);
+                Vector2f centerWallW = towerNW.midpoint(towerSW);
+                Vector2f centerWallE = towerNE.midpoint(towerSE);
+                Vector2f center = centerWallW.midpoint(centerWallE);
 
-            Vector2f centerWallN = towerNW.midpoint(towerNE);
-            Vector2f centerWallS = towerSW.midpoint(towerSE);
-            Vector2f centerWallW = towerNW.midpoint(towerSW);
-            Vector2f centerWallE = towerNE.midpoint(towerSE);
-            Vector2f center = centerWallW.midpoint(centerWallE);
-
-            addCastleWall(parent, centerWallN, towerNE.manhattanDist(towerNW), TS, baseHeightPy);
-            addCastleWall(parent, centerWallS, towerSE.manhattanDist(towerSW), TS, baseHeightPy);
-            addCastleWall(parent, centerWallW, TS, towerNW.manhattanDist(towerSW), baseHeightPy);
-            addCastleWall(parent, centerWallE, TS, towerNE.manhattanDist(towerSE), baseHeightPy);
-            addCastleWall(parent, center,
-                    centerWallW.manhattanDist(centerWallE) - TS,
-                    centerWallN.manhattanDist(centerWallS) - TS,
-                    baseHeightPy);
-
-            Logger.info("Added {}-segment oval, dead ends={}", obstacle.numSegments(), obstacle.numDeadEnds());
+                addTower(parent, towerNW, baseHeightPy);
+                addTower(parent, towerSW, baseHeightPy);
+                addTower(parent, towerSE, baseHeightPy);
+                addTower(parent, towerNE, baseHeightPy);
+                addCastleWall(parent, centerWallN, towerNE.manhattanDist(towerNW), TS, baseHeightPy);
+                addCastleWall(parent, centerWallS, towerSE.manhattanDist(towerSW), TS, baseHeightPy);
+                addCastleWall(parent, centerWallW, TS, towerNW.manhattanDist(towerSW), baseHeightPy);
+                addCastleWall(parent, centerWallE, TS, towerNE.manhattanDist(towerSE), baseHeightPy);
+                if (fillCenter) {
+                    addCastleWall(parent, center, centerWallW.manhattanDist(centerWallE) - TS, centerWallN.manhattanDist(centerWallS) - TS, baseHeightPy);
+                }
+                Logger.info("Added {}-segment oval, dead ends={}", obstacle.numSegments(), obstacle.numDeadEnds());
+            }
         }
     }
 

@@ -311,10 +311,11 @@ public class GameLevel3D {
         switch (obstacleType) {
             case O_SHAPE -> {
                 Logger.info("Found O-shape: {}", obstacle);
+                boolean fillCenter = true; //TODO mark in map
                 // Invert colors
                 wallBuilder.setTopMaterial(wallFillMaterialPy.get());
                 wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
-                wallBuilder.addOShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy);
+                wallBuilder.addOShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy, fillCenter);
             }
             case L_SHAPE -> {
                 Logger.info("Found L-shape: {}", obstacle);
