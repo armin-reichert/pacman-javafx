@@ -192,8 +192,8 @@ public class WallBuilder {
 
     public void addLShapeObstacle(Group parent, Obstacle obstacle) {
         int[] d = obstacle.uTurnSegmentIndices().toArray();
-        Vector2f c0 = obstacle.uTurnCenter(d[0]);
-        Vector2f c1 = obstacle.uTurnCenter(d[1]);
+        Vector2f c0 = obstacle.cornerCenter(d[0]);
+        Vector2f c1 = obstacle.cornerCenter(d[1]);
         ObstacleSegment d0Segment = obstacle.segment(d[0]);
         Vector2f knee;
         if (d0Segment.isRoundedSECorner() || d0Segment.isRoundedNWCorner()) {
@@ -233,10 +233,10 @@ public class WallBuilder {
             }
             case "dgbecfbdgbfebgcdbfeb" -> {
                 // H rotated by 90 degrees
-                Vector2f towerNW = obstacle.uTurnCenter(0);
-                Vector2f towerSW = obstacle.uTurnCenter(8);
-                Vector2f towerSE = obstacle.uTurnCenter(10);
-                Vector2f towerNE = obstacle.uTurnCenter(17);
+                Vector2f towerNW = obstacle.cornerCenter(0);
+                Vector2f towerSW = obstacle.cornerCenter(8);
+                Vector2f towerSE = obstacle.cornerCenter(10);
+                Vector2f towerNE = obstacle.cornerCenter(17);
                 addTower(parent, towerNW);
                 addTower(parent, towerSW);
                 addTower(parent, towerSE);
@@ -249,10 +249,10 @@ public class WallBuilder {
             }
             case "dcgfcdbecgfcedcfbgce" -> {
                 // H in normal orientation
-                Vector2f towerNW = obstacle.uTurnCenter(0);
-                Vector2f towerSW = obstacle.uTurnCenter(2);
-                Vector2f towerSE = obstacle.uTurnCenter(9);
-                Vector2f towerNE = obstacle.uTurnCenter(12);
+                Vector2f towerNW = obstacle.cornerCenter(0);
+                Vector2f towerSW = obstacle.cornerCenter(2);
+                Vector2f towerSE = obstacle.cornerCenter(9);
+                Vector2f towerNE = obstacle.cornerCenter(12);
                 addTower(parent, towerNW);
                 addTower(parent, towerSW);
                 addTower(parent, towerSE);
@@ -282,38 +282,38 @@ public class WallBuilder {
 
     public void addUShapeObstacle(Group parent, Obstacle obstacle) {
         int[] d = obstacle.uTurnSegmentIndices().toArray();
-        Vector2f c0 = obstacle.uTurnCenter(d[0]);
-        Vector2f c1 = obstacle.uTurnCenter(d[1]);
+        Vector2f c0 = obstacle.cornerCenter(d[0]);
+        Vector2f c1 = obstacle.cornerCenter(d[1]);
         // find centers on opposite side of dead ends
         Vector2f oc0, oc1;
         if (d[0] == 6 && d[1] == 13) {
             // U in normal orientation, open on top
-            oc0 = obstacle.uTurnCenter(4); // right leg
-            oc1 = obstacle.uTurnCenter(2); // left leg
+            oc0 = obstacle.cornerCenter(4); // right leg
+            oc1 = obstacle.cornerCenter(2); // left leg
             addCastleWallWithCenter(parent, c0.midpoint(oc0), TS, c0.manhattanDist(oc0));
             addCastleWallWithCenter(parent, c1.midpoint(oc1), TS, c1.manhattanDist(oc1));
             addCastleWallWithCenter(parent, oc0.midpoint(oc1), oc0.manhattanDist(oc1), TS);
         }
         else if (d[0] == 2 && d[1] == 9) {
             // U vertically mirrored, open at bottom d[0]=left, d[1]=right
-            oc0 = obstacle.uTurnCenter(0); // left leg
-            oc1 = obstacle.uTurnCenter(12); // right leg
+            oc0 = obstacle.cornerCenter(0); // left leg
+            oc1 = obstacle.cornerCenter(12); // right leg
             addCastleWallWithCenter(parent, c0.midpoint(oc0), TS, c0.manhattanDist(oc0));
             addCastleWallWithCenter(parent, c1.midpoint(oc1), TS, c1.manhattanDist(oc1));
             addCastleWallWithCenter(parent, oc0.midpoint(oc1), oc0.manhattanDist(oc1), TS);
         }
         else if (d[0] == 4 && d[1] == 11) {
             // U open at right side, d[0]=bottom, d[1]=top
-            oc0 = obstacle.uTurnCenter(2); // left bottom
-            oc1 = obstacle.uTurnCenter(0); // right top
+            oc0 = obstacle.cornerCenter(2); // left bottom
+            oc1 = obstacle.cornerCenter(0); // right top
             addCastleWallWithCenter(parent, c0.midpoint(oc0), c0.manhattanDist(oc0), TS);
             addCastleWallWithCenter(parent, c1.midpoint(oc1), c1.manhattanDist(oc1), TS);
             addCastleWallWithCenter(parent, oc0.midpoint(oc1), TS, oc0.manhattanDist(oc1));
         }
         else if (d[0] == 0 && d[1] == 7) {
             // U open at left side, d[0]=top, d[1]=bottom
-            oc0 = obstacle.uTurnCenter(12); // right top
-            oc1 = obstacle.uTurnCenter(10); // right bottom
+            oc0 = obstacle.cornerCenter(12); // right top
+            oc1 = obstacle.cornerCenter(10); // right bottom
             addCastleWallWithCenter(parent, c0.midpoint(oc0), c0.manhattanDist(oc0), TS);
             addCastleWallWithCenter(parent, c1.midpoint(oc1), c1.manhattanDist(oc1), TS);
             addCastleWallWithCenter(parent, oc0.midpoint(oc1), TS, oc0.manhattanDist(oc1));
@@ -336,8 +336,8 @@ public class WallBuilder {
         Vector2f tc0, tc1;
         if (d[0] == 0 && d[1] == 7) {
             // S-shape mirrored vertically
-            tc0 = obstacle.uTurnCenter(12);
-            tc1 = obstacle.uTurnCenter(5);
+            tc0 = obstacle.cornerCenter(12);
+            tc1 = obstacle.cornerCenter(5);
             addTower(parent, tc0);
             addTower(parent, tc1);
             addCastleWallWithCenter(parent, c[0].midpoint(tc0), c[0].manhattanDist(tc0), TS);
@@ -347,8 +347,8 @@ public class WallBuilder {
         }
         else if (d[0] == 4 && d[1] == 11) {
             // normal S-shape orientation
-            tc0 = obstacle.uTurnCenter(0);
-            tc1 = obstacle.uTurnCenter(7);
+            tc0 = obstacle.cornerCenter(0);
+            tc1 = obstacle.cornerCenter(7);
             addTower(parent, tc0);
             addTower(parent, tc1);
             addCastleWallWithCenter(parent, tc0.midpoint(c[1]), tc0.manhattanDist(c[1]), TS);
@@ -359,8 +359,8 @@ public class WallBuilder {
         else if (d[0] == 6 && d[1] == 13) {
             if (c[1].x() < c[0].x()) {
                 // S-shape rotated by 90 degrees
-                tc0 = obstacle.uTurnCenter(9);
-                tc1 = obstacle.uTurnCenter(2);
+                tc0 = obstacle.cornerCenter(9);
+                tc1 = obstacle.cornerCenter(2);
                 addTower(parent, tc0);
                 addTower(parent, tc1);
                 // horizontal tc1 - tc0
@@ -370,8 +370,8 @@ public class WallBuilder {
                 addCastleWallWithCenter(parent, tc0.midpoint(c[0]), TS, tc0.manhattanDist(c[0]));
             } else {
                 // S-shape mirrored and rotated by 90 degrees
-                tc0 = obstacle.uTurnCenter(4);
-                tc1 = obstacle.uTurnCenter(11);
+                tc0 = obstacle.cornerCenter(4);
+                tc1 = obstacle.cornerCenter(11);
                 addTower(parent, tc0);
                 addTower(parent, tc1);
                 // horizontal tc1 - tc0
@@ -388,9 +388,9 @@ public class WallBuilder {
 
     public void addTShapeObstacle(Group parent, Obstacle obstacle) {
         int[] d = obstacle.uTurnSegmentIndices().toArray();
-        Vector2f c0 = obstacle.uTurnCenter(d[0]);
-        Vector2f c1 = obstacle.uTurnCenter(d[1]);
-        Vector2f c2 = obstacle.uTurnCenter(d[2]);
+        Vector2f c0 = obstacle.cornerCenter(d[0]);
+        Vector2f c1 = obstacle.cornerCenter(d[1]);
+        Vector2f c2 = obstacle.cornerCenter(d[2]);
         Vector2f join;
         if (c2.x() == c0.x() && c1.x() > c2.x()) {
             join = new Vector2f(c0.x(), c1.y());

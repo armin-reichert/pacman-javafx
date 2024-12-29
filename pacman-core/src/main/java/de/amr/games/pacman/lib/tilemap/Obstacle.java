@@ -123,7 +123,7 @@ public class Obstacle {
         return false;
     }
 
-    public Vector2f uTurnCenter(int index) {
+    public Vector2f cornerCenter(int index) {
         ObstacleSegment corner = segment(index);
         return switch (corner.mapContent()) {
             case TileEncoding.CORNER_NW -> points.get(index).plus(0, HTS);
@@ -135,6 +135,6 @@ public class Obstacle {
     }
 
     public Vector2f[] uTurnCenters() {
-        return uTurnSegmentIndices().mapToObj(this::uTurnCenter).toArray(Vector2f[]::new);
+        return uTurnSegmentIndices().mapToObj(this::cornerCenter).toArray(Vector2f[]::new);
     }
 }
