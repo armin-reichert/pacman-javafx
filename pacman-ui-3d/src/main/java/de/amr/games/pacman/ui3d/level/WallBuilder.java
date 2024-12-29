@@ -110,19 +110,12 @@ public class WallBuilder {
         return new Group(base, top);
     }
 
-    public Node hWall(
-        Vector2f p, Vector2f q,
-        DoubleProperty wallHeightPy, double thickness, double topHeight)
-    {
-        return wallCenteredAt(p.plus(q).scaled(0.5f), q.minus(p).length() + thickness, thickness,
-            wallHeightPy, topHeight);
+    public Node hWallBetween(Vector2f p, Vector2f q, DoubleProperty wallHeightPy, double thickness, double topHeight) {
+        return wallCenteredAt(p.plus(q).scaled(0.5f), p.manhattanDist(q) + thickness, thickness, wallHeightPy, topHeight);
     }
 
-    public Node vWall(
-        Vector2f p, Vector2f q,
-        DoubleProperty wallHeightPy, double thickness, double topHeight)
-    {
-        return wallCenteredAt(p.plus(q).scaled(0.5f), thickness, q.minus(p).length(), wallHeightPy, topHeight);
+    public Node vWallBetween(Vector2f p, Vector2f q, DoubleProperty wallHeightPy, double thickness, double topHeight) {
+        return wallCenteredAt(p.plus(q).scaled(0.5f), thickness, p.manhattanDist(q), wallHeightPy, topHeight);
     }
 
     public Node createCircularWall(
@@ -205,11 +198,10 @@ public class WallBuilder {
     }
 
     public void addLShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
-        int[] deadEnds = obstacle.deadEndSegmentIndices();
-        int d0 = deadEnds[0], d1 = deadEnds[1];
-        Vector2f c0 = obstacle.cornerCenter(d0);
-        Vector2f c1 = obstacle.cornerCenter(d1);
-        ObstacleSegment d0Segment = obstacle.segment(d0);
+        int[] d = obstacle.deadEndSegmentIndices().toArray();
+        Vector2f c0 = obstacle.cornerCenter(d[0]);
+        Vector2f c1 = obstacle.cornerCenter(d[1]);
+        ObstacleSegment d0Segment = obstacle.segment(d[0]);
         Vector2f knee;
         if (d0Segment.isRoundedSECorner() || d0Segment.isRoundedNWCorner()) {
             knee = new Vector2f(c1.x(), c0.y());
@@ -236,7 +228,7 @@ public class WallBuilder {
     }
 
     public void addCrossShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
-        int[] d = obstacle.deadEndSegmentIndices();
+        int[] d = obstacle.deadEndSegmentIndices().toArray();
         Vector2f c0 = obstacle.cornerCenter(d[0]);
         Vector2f c1 = obstacle.cornerCenter(d[1]);
         Vector2f c2 = obstacle.cornerCenter(d[2]);
@@ -253,7 +245,7 @@ public class WallBuilder {
     }
 
     public void addUShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
-        int[] d = obstacle.deadEndSegmentIndices();
+        int[] d = obstacle.deadEndSegmentIndices().toArray();
         Vector2f c0 = obstacle.cornerCenter(d[0]);
         Vector2f c1 = obstacle.cornerCenter(d[1]);
         // find centers on opposite side of dead ends
@@ -301,7 +293,7 @@ public class WallBuilder {
     }
 
     public void addSShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
-        int[] d = obstacle.deadEndSegmentIndices();
+        int[] d = obstacle.deadEndSegmentIndices().toArray();
         Vector2f[] c = obstacle.deadEndCenters(); // count=2
         addTower(parent, c[0], baseHeightPy, topHeight);
         addTower(parent, c[1], baseHeightPy, topHeight);
@@ -359,7 +351,7 @@ public class WallBuilder {
     }
 
     public void addTShapeObstacle(Group parent, Obstacle obstacle, DoubleProperty baseHeightPy, double topHeight) {
-        int[] d = obstacle.deadEndSegmentIndices();
+        int[] d = obstacle.deadEndSegmentIndices().toArray();
         Vector2f c0 = obstacle.cornerCenter(d[0]);
         Vector2f c1 = obstacle.cornerCenter(d[1]);
         Vector2f c2 = obstacle.cornerCenter(d[2]);
@@ -402,13 +394,11 @@ public class WallBuilder {
     }
 
     private void addTower(Group parent, Vector2f center, DoubleProperty baseHeightPy, double topHeight) {
-        Node tower = createCircularWall(center, HTS, baseHeightPy, topHeight);
-        parent.getChildren().add(tower);
+        parent.getChildren().add(createCircularWall(center, HTS, baseHeightPy, topHeight));
     }
 
     private void addCastleWall(Group parent, Vector2f center, double sizeX, double sizeY, DoubleProperty baseHeightPy, double topHeight) {
-        Node wall = wallCenteredAt(center, sizeX, sizeY, baseHeightPy, topHeight);
-        parent.getChildren().add(wall);
+        parent.getChildren().add(wallCenteredAt(center, sizeX, sizeY, baseHeightPy, topHeight));
     }
 
     public void addGeneralShapeObstacle(Group parent, Obstacle obstacle, double thickness, DoubleProperty baseHeightPy, double topHeight) {
@@ -471,9 +461,7 @@ public class WallBuilder {
                 Math.abs(cornerPoint.y() - vertEndPoint.y()),
                 baseHeightPy, topHeight);
 
-        Node cornerWall = cornerWall(cornerPoint,
-                0.5 * thickness,
-                baseHeightPy, topHeight);
+        Node cornerWall = cornerWall(cornerPoint, 0.5 * thickness, baseHeightPy, topHeight);
 
         parent.getChildren().addAll(hWall, vWall, cornerWall);
     }

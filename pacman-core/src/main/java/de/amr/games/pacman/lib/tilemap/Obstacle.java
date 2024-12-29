@@ -108,18 +108,6 @@ public class Obstacle {
         return ObstacleType.ANY;
     }
 
-    public Vector2f[] deadEndCenters() {
-        return deadEndCenters(deadEndSegmentIndices());
-    }
-
-    public Vector2f[] deadEndCenters(int[] indices) {
-        Vector2f[] c = new Vector2f[indices.length];
-        for (int i = 0; i < indices.length; ++i) {
-            c[i] = cornerCenter(indices[i]);
-        }
-        return c;
-    }
-
     private boolean hAligned(Vector2f p, Vector2f q) {
         return p.y() == q.y();
     }
@@ -128,16 +116,12 @@ public class Obstacle {
         return p.x() == q.x();
     }
 
-    public IntStream deadEndSegments() {
+    public IntStream deadEndSegmentIndices() {
         return IntStream.range(0, segments.size()).filter(this::hasDeadEndAtSegment);
     }
 
-    public int[] deadEndSegmentIndices() {
-        return deadEndSegments().toArray();
-    }
-
     public int numDeadEnds() {
-        return (int) deadEndSegments().count();
+        return (int) deadEndSegmentIndices().count();
     }
 
     private boolean hasDeadEndAtSegment(int i) {
@@ -168,5 +152,9 @@ public class Obstacle {
             case Tiles.CORNER_NE -> points.get(index).plus(-HTS, 0);
             default -> throw new IllegalStateException();
         };
+    }
+
+    public Vector2f[] deadEndCenters() {
+        return deadEndSegmentIndices().mapToObj(this::cornerCenter).toArray(Vector2f[]::new);
     }
 }
