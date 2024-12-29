@@ -7,6 +7,7 @@ package de.amr.games.pacman.lib.tilemap;
 import de.amr.games.pacman.lib.Vector2f;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -35,7 +36,7 @@ public class Obstacle {
     @Override
     public String toString() {
         return "Obstacle{" +
-            "signature=" + signature() +
+            "encoding=" + encoding() +
             ", start=" + points.getFirst() +
             ", end=" + points.getLast() +
             ", segment count=" + segments.size() +
@@ -43,7 +44,7 @@ public class Obstacle {
             '}';
     }
 
-    public String signature() {
+    public String encoding() {
         StringBuilder signature = new StringBuilder();
         for (int i = 0; i < segments.size(); ++i) {
             byte tileCode = segment(i).mapContent();
@@ -90,34 +91,9 @@ public class Obstacle {
         if (!isClosed()) {
             return ObstacleType.ANY;
         }
-        if (segments().stream().filter(ObstacleSegment::isRoundedCorner).count() == 4) {
-            return ObstacleType.O_SHAPE;
-        }
-        String signature = signature();
-        Vector2f[] c = deadEndCenters();
-        int numDeadEnds = c.length;
-        if (ObstacleType.L_SHAPE.matches(signature)) {
-            return ObstacleType.L_SHAPE;
-        }
-        if (numDeadEnds == 2 && numSegments() == 14) {
-            //TODO not 100% correct!
-            if (hAligned(c[0], c[1]) || vAligned(c[0], c[1]) ) {
-                return ObstacleType.U_SHAPE;
-            } else {
-                return ObstacleType.S_SHAPE;
-            }
-        }
-        if (ObstacleType.T_SHAPE.matches(signature)) {
-            return ObstacleType.T_SHAPE;
-        }
-        if (numDeadEnds == 4 && numSegments() == 20) {
-            // c[0] = left, c[1] = bottom, c[2] = right, c[3] = top
-            if (c[0].x() < c[2].x() && c[0].y() == c[2].y() && c[3].y() < c[1].y() && c[3].x() == c[1].x()) {
-                return ObstacleType.CROSS_SHAPE;
-            }
-            // TODO: is it an H-shape?
-        }
-        return ObstacleType.ANY;
+        String encoding = encoding();
+        return Arrays.stream(ObstacleType.values())
+                .filter(type -> type.matches(encoding)).findFirst().orElse(ObstacleType.ANY);
     }
 
     private boolean hAligned(Vector2f p, Vector2f q) {

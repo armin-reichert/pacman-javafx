@@ -7,19 +7,35 @@ import java.util.stream.Stream;
  * The encoding depends on the byte values in interface {@link Tiles}!
  */
 public enum ObstacleType {
-    CROSS_SHAPE,
+    CROSS_SHAPE("dfdgegfdfege",
+            "dcfdgecgfcdfegce",
+            "dfbdgbegfdbfebge",
+            "dcfbdgbecgfcdbfebgce"),
+
     F_SHAPE,
+
     H_SHAPE,
+
     L_SHAPE(
             "dgegfceb", "dcgfdfeb", "dcgbfege", "dfdgbfce", // 8 segments
             "dcgbfegce", "dcfdgbfce", "dcgfcdfeb", "dgecgfceb", // 9 segments
             "dgbegfceb", "dcgfdbfeb", "dcgbfebge", "dfbdgbfce", // 9 segments
             "dcgbfebgce", "dcfbdgbfce", "dgbecgfceb", "dcgfcdbfeb" // 10 segments
     ),
-    O_SHAPE,
-    S_SHAPE,
+
+    O_SHAPE("dgfe", "dcgfce", "dgbfeb", "dcgbfceb"),
+
+    S_SHAPE("dcfdgbfcdfeb", "dgecgbfegceb", "dcgbegfcebge", "dfbdcgfdbfce",
+            "dcfbdgbfcdbfeb", "dgbecgbfebgceb", "dcgbecgfcebgce", "dcfbdcgfcdbfce"),
+
     T_SHAPE("dgbecgfcdbfeb", "dcfbdgbfebgce", "dcgfcdbfebgce", "dcfbdgbecgfce"),
-    U_SHAPE,
+
+    U_SHAPE(
+            "dcgbfcedfge", "dcgfdegfceb", "dcgbfegdfeb", "dgefdgbfceb",
+            "dcgbfcedcfgce", "dcgfcdecgfceb", "dcgbfebgdbfeb", "dgbefbdgbfceb",
+            "dcgbfcedcfbgce", "dcgfcdbecgfceb", "dcgbfebgcdbfeb", "dgbecfbdgbfceb"
+    ),
+
     ANY;
 
     ObstacleType(String... encodingStrings) {
