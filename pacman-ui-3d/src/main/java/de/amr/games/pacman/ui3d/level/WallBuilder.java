@@ -46,19 +46,19 @@ public class WallBuilder {
             Vector2i right = beginTile.x() < endTile.x() ? endTile : beginTile;
             Vector2f center = left.plus(right).scaled((float) HTS).plus(HTS, HTS);
             int length = right.minus(left).scaled(TS).x();
-            return wallCenteredAt(center, length + thickness, thickness, wallHeightPy, coatHeight);
+            return compositeWallCenteredAt(center, length + thickness, thickness, wallHeightPy, coatHeight);
         }
         else if (beginTile.x() == endTile.x()) { // vertical wall
             Vector2i top    = beginTile.y() < endTile.y() ? beginTile : endTile;
             Vector2i bottom = beginTile.y() < endTile.y() ? endTile : beginTile;
             Vector2f center = top.plus(bottom).scaled((float) HTS).plus(HTS, HTS);
             int length = bottom.minus(top).scaled(TS).y();
-            return wallCenteredAt(center, thickness, length, wallHeightPy, coatHeight);
+            return compositeWallCenteredAt(center, thickness, length, wallHeightPy, coatHeight);
         }
         throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(beginTile, endTile));
     }
 
-    public Node wallCenteredAt(
+    public Node compositeWallCenteredAt(
         Vector2f center, double sizeX, double sizeY,
         DoubleProperty wallHeightPy, double topHeight)
     {
@@ -80,10 +80,7 @@ public class WallBuilder {
         return new Group(base, top);
     }
 
-    public Group cornerWall(
-        Vector2f center, double radius,
-        DoubleProperty wallHeightPy, double topHeight)
-    {
+    public Group compositeCornerWall(Vector2f center, double radius, DoubleProperty wallHeightPy, double topHeight) {
         int divisions = 24;
 
         Cylinder base = new Cylinder(radius, wallHeightPy.get(), divisions);
@@ -110,18 +107,15 @@ public class WallBuilder {
         return new Group(base, top);
     }
 
-    public Node hWallBetween(Vector2f p, Vector2f q, DoubleProperty wallHeightPy, double thickness, double topHeight) {
-        return wallCenteredAt(p.plus(q).scaled(0.5f), p.manhattanDist(q) + thickness, thickness, wallHeightPy, topHeight);
+    public Node compositeHWallBetween(Vector2f p, Vector2f q, DoubleProperty wallHeightPy, double thickness, double topHeight) {
+        return compositeWallCenteredAt(p.plus(q).scaled(0.5f), p.manhattanDist(q) + thickness, thickness, wallHeightPy, topHeight);
     }
 
-    public Node vWallBetween(Vector2f p, Vector2f q, DoubleProperty wallHeightPy, double thickness, double topHeight) {
-        return wallCenteredAt(p.plus(q).scaled(0.5f), thickness, p.manhattanDist(q), wallHeightPy, topHeight);
+    public Node compositeVWallBetween(Vector2f p, Vector2f q, DoubleProperty wallHeightPy, double thickness, double topHeight) {
+        return compositeWallCenteredAt(p.plus(q).scaled(0.5f), thickness, p.manhattanDist(q), wallHeightPy, topHeight);
     }
 
-    public Node createCircularWall(
-        Vector2f center, double radius,
-        DoubleProperty wallHeightPy, double topHeight)
-    {
+    public Node compositeCircularWall(Vector2f center, double radius, DoubleProperty wallHeightPy, double topHeight) {
         int divisions = 24;
 
         Cylinder base = new Cylinder(radius, wallHeightPy.get(), divisions);
@@ -394,11 +388,11 @@ public class WallBuilder {
     }
 
     private void addTower(Group parent, Vector2f center, DoubleProperty baseHeightPy, double topHeight) {
-        parent.getChildren().add(createCircularWall(center, HTS, baseHeightPy, topHeight));
+        parent.getChildren().add(compositeCircularWall(center, HTS, baseHeightPy, topHeight));
     }
 
     private void addCastleWall(Group parent, Vector2f center, double sizeX, double sizeY, DoubleProperty baseHeightPy, double topHeight) {
-        parent.getChildren().add(wallCenteredAt(center, sizeX, sizeY, baseHeightPy, topHeight));
+        parent.getChildren().add(compositeWallCenteredAt(center, sizeX, sizeY, baseHeightPy, topHeight));
     }
 
     public void addGeneralShapeObstacle(Group parent, Obstacle obstacle, double thickness, DoubleProperty baseHeightPy, double topHeight) {
@@ -409,11 +403,11 @@ public class WallBuilder {
             double length = segment.vector().length();
             Vector2f q = p.plus(segment.vector());
             if (segment.isVerticalLine()) {
-                Node wall = wallCenteredAt(p.midpoint(q), thickness, length, baseHeightPy, topHeight);
+                Node wall = compositeWallCenteredAt(p.midpoint(q), thickness, length, baseHeightPy, topHeight);
                 parent.getChildren().add(wall);
             }
             else if (segment.isHorizontalLine()) {
-                Node wall = wallCenteredAt(p.midpoint(q), length + thickness, thickness, baseHeightPy, topHeight);
+                Node wall = compositeWallCenteredAt(p.midpoint(q), length + thickness, thickness, baseHeightPy, topHeight);
                 parent.getChildren().add(wall);
             }
             else if (segment.isNWCorner()) {
@@ -449,19 +443,19 @@ public class WallBuilder {
     }
 
     public void addGeneralShapeCorner(Group parent, Vector2f cornerPoint, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness, DoubleProperty baseHeightPy, double topHeight) {
-        Node hWall = wallCenteredAt(
+        Node hWall = compositeWallCenteredAt(
                 cornerPoint.midpoint(horEndPoint),
                 Math.abs(cornerPoint.x() - horEndPoint.x()),
                 thickness,
                 baseHeightPy, topHeight);
 
-        Node vWall = wallCenteredAt(
+        Node vWall = compositeWallCenteredAt(
                 cornerPoint.midpoint(vertEndPoint),
                 thickness,
                 Math.abs(cornerPoint.y() - vertEndPoint.y()),
                 baseHeightPy, topHeight);
 
-        Node cornerWall = cornerWall(cornerPoint, 0.5 * thickness, baseHeightPy, topHeight);
+        Node cornerWall = compositeCornerWall(cornerPoint, 0.5 * thickness, baseHeightPy, topHeight);
 
         parent.getChildren().addAll(hWall, vWall, cornerWall);
     }
