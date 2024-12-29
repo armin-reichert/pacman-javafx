@@ -14,7 +14,8 @@ public enum ObstacleType {
 
     F_SHAPE,
 
-    H_SHAPE,
+    H_SHAPE("dgefdgbfegdfeb", "dcgfdegfcedfge",
+            "dgbecfbdgbfebgcdbfeb", "dcgfcdbecgfcedcfbgce"),
 
     L_SHAPE(
             "dgegfceb", "dcgfdfeb", "dcgbfege", "dfdgbfce", // 8 segments

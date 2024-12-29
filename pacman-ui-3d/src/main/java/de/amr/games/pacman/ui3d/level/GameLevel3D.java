@@ -317,14 +317,22 @@ public class GameLevel3D {
                 Logger.info("Found shape: closed={} segments={} dead-ends={}", obstacle.isClosed(), obstacle.numSegments(), obstacle.numDeadEnds());
                 wallBuilder.addGeneralShapeObstacle(obstacleGroup, obstacle, thickness);
             }
-            case O_SHAPE -> {
-                Logger.info("Found O-shape: {}", obstacle);
-                boolean fillCenter = true; //TODO mark in map
-                wallBuilder.addOShapeObstacle(obstacleGroup, obstacle, fillCenter);
+            case CROSS_SHAPE -> {
+                Logger.info("Found Cross-shape: {}", obstacle);
+                wallBuilder.addCrossShapeObstacle(obstacleGroup, obstacle);
+            }
+            case H_SHAPE -> {
+                Logger.info("Found H-shape: {}", obstacle);
+                wallBuilder.addHShapeObstacle(obstacleGroup, obstacle);
             }
             case L_SHAPE -> {
                 Logger.info("Found L-shape: {}", obstacle);
                 wallBuilder.addLShapeObstacle(obstacleGroup, obstacle);
+            }
+            case O_SHAPE -> {
+                Logger.info("Found O-shape: {}", obstacle);
+                boolean fillCenter = true; //TODO mark in map
+                wallBuilder.addOShapeObstacle(obstacleGroup, obstacle, fillCenter);
             }
             case S_SHAPE -> {
                 Logger.info("Found S-shape: {}", obstacle);
@@ -333,10 +341,6 @@ public class GameLevel3D {
             case T_SHAPE -> {
                 Logger.info("Found T-shape: {}", obstacle);
                 wallBuilder.addTShapeObstacle(obstacleGroup, obstacle);
-            }
-            case CROSS_SHAPE -> {
-                Logger.info("Found Cross-shape: {}", obstacle);
-                wallBuilder.addCrossShapeObstacle(obstacleGroup, obstacle);
             }
             case U_SHAPE -> {
                 Logger.info("Found U-shape: {}", obstacle);

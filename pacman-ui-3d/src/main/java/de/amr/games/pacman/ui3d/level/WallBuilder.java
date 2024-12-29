@@ -226,6 +226,54 @@ public class WallBuilder {
         }
     }
 
+    public void addHShapeObstacle(Group parent, Obstacle obstacle) {
+        String encoding = obstacle.encoding();
+        switch (encoding) {
+            case "dgefdgbfegdfeb" -> {
+                // little H rotated 90 degrees
+                Logger.error("Little-H obstacle creation still missing!");
+            }
+            case "dcgfdegfcedfge" -> {
+                // little H in normal orientation
+                Logger.error("Little-H obstacle creation still missing!");
+            }
+            case "dgbecfbdgbfebgcdbfeb" -> {
+                // H rotated by 90 degrees
+                Vector2f towerNW = obstacle.cornerCenter(0);
+                Vector2f towerSW = obstacle.cornerCenter(8);
+                Vector2f towerSE = obstacle.cornerCenter(10);
+                Vector2f towerNE = obstacle.cornerCenter(17);
+                addTower(parent, towerNW);
+                addTower(parent, towerSW);
+                addTower(parent, towerSE);
+                addTower(parent, towerNE);
+                Vector2f topJoin = towerNW.midpoint(towerNE);
+                Vector2f bottomJoin = towerSW.midpoint(towerSE);
+                Vector2f center = topJoin.midpoint(bottomJoin);
+                addCastleWall(parent, topJoin, towerNW.manhattanDist(towerNE), TS);
+                addCastleWall(parent, bottomJoin, towerSW.manhattanDist(towerSE), TS);
+                addCastleWall(parent, center, TS, topJoin.manhattanDist(bottomJoin));
+            }
+            case "dcgfcdbecgfcedcfbgce" -> {
+                // H in normal orientation
+                Vector2f towerNW = obstacle.cornerCenter(0);
+                Vector2f towerSW = obstacle.cornerCenter(2);
+                Vector2f towerSE = obstacle.cornerCenter(9);
+                Vector2f towerNE = obstacle.cornerCenter(12);
+                addTower(parent, towerNW);
+                addTower(parent, towerSW);
+                addTower(parent, towerSE);
+                addTower(parent, towerNE);
+                Vector2f leftJoin = towerNW.midpoint(towerSW);
+                Vector2f rightJoin = towerNE.midpoint(towerSE);
+                Vector2f center = leftJoin.midpoint(rightJoin);
+                addCastleWall(parent, leftJoin, TS, towerNW.manhattanDist(towerSW));
+                addCastleWall(parent, rightJoin, TS, towerNE.manhattanDist(towerSE));
+                addCastleWall(parent, center, leftJoin.manhattanDist(rightJoin), TS);
+            }
+        }
+    }
+
     public void addCrossShapeObstacle(Group parent, Obstacle obstacle) {
         int[] d = obstacle.deadEndSegmentIndices().toArray();
         Vector2f c0 = obstacle.cornerCenter(d[0]);
