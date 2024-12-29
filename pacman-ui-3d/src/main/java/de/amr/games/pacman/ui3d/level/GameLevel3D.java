@@ -294,7 +294,7 @@ public class GameLevel3D {
             }
         }
         house3D = new House3D();
-        house3D.heightPy.set(HOUSE_HEIGHT);
+        house3D.baseWallHeightPy.set(HOUSE_HEIGHT);
         house3D.wallBuilder().setBaseMaterial(Ufx.coloredMaterial(opaqueColor(coloring.fill(), HOUSE_OPACITY)));
         house3D.wallBuilder().setTopMaterial(wallStrokeMaterialPy.get());
         house3D.build(world, coloring);
@@ -310,35 +310,37 @@ public class GameLevel3D {
         ObstacleType obstacleType = obstacle.computeType();
         wallBuilder.setTopMaterial(wallFillMaterialPy.get());
         wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
+        wallBuilder.setBaseHeightProperty(obstacleHeightPy);
+        wallBuilder.setTopHeight(OBSTACLE_COAT_HEIGHT);
         switch (obstacleType) {
             default -> {
                 Logger.info("Found shape: closed={} segments={} dead-ends={}", obstacle.isClosed(), obstacle.numSegments(), obstacle.numDeadEnds());
-                wallBuilder.addGeneralShapeObstacle(obstacleGroup, obstacle, thickness, obstacleHeightPy);
+                wallBuilder.addGeneralShapeObstacle(obstacleGroup, obstacle, thickness);
             }
             case O_SHAPE -> {
                 Logger.info("Found O-shape: {}", obstacle);
                 boolean fillCenter = true; //TODO mark in map
-                wallBuilder.addOShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy, fillCenter);
+                wallBuilder.addOShapeObstacle(obstacleGroup, obstacle, fillCenter);
             }
             case L_SHAPE -> {
                 Logger.info("Found L-shape: {}", obstacle);
-                wallBuilder.addLShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy);
+                wallBuilder.addLShapeObstacle(obstacleGroup, obstacle);
             }
             case S_SHAPE -> {
                 Logger.info("Found S-shape: {}", obstacle);
-                wallBuilder.addSShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy);
+                wallBuilder.addSShapeObstacle(obstacleGroup, obstacle);
             }
             case T_SHAPE -> {
                 Logger.info("Found T-shape: {}", obstacle);
-                wallBuilder.addTShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy);
+                wallBuilder.addTShapeObstacle(obstacleGroup, obstacle);
             }
             case CROSS_SHAPE -> {
                 Logger.info("Found Cross-shape: {}", obstacle);
-                wallBuilder.addCrossShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy);
+                wallBuilder.addCrossShapeObstacle(obstacleGroup, obstacle);
             }
             case U_SHAPE -> {
                 Logger.info("Found U-shape: {}", obstacle);
-                wallBuilder.addUShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy);
+                wallBuilder.addUShapeObstacle(obstacleGroup, obstacle);
             }
         }
     }
@@ -437,7 +439,7 @@ public class GameLevel3D {
             ));
         var houseDisappears = new Timeline(
             new KeyFrame(totalDuration.multiply(0.33),
-                new KeyValue(house3D.heightPy, 0, Interpolator.EASE_IN)
+                new KeyValue(house3D.baseWallHeightPy, 0, Interpolator.EASE_IN)
             ));
         var borderWallsDisappear = new Timeline(
             new KeyFrame(totalDuration.multiply(0.33),

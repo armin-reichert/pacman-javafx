@@ -15,7 +15,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_DRAW_MODE;
@@ -25,14 +24,12 @@ import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_DRAW_MODE;
  */
 public class House3D {
 
-    static final PhongMaterial DEFAULT_MATERIAL = new PhongMaterial();
     static final float WALL_COAT_HEIGHT = 0.1f;
+    static final float WALL_THICKNESS = 1.5f;
 
-    public final DoubleProperty heightPy = new SimpleDoubleProperty(this, "height", 7);
+    public final DoubleProperty baseWallHeightPy = new SimpleDoubleProperty(this, "baseWallHeight", 7);
     public final BooleanProperty openPy  = new SimpleBooleanProperty();
     public final BooleanProperty usedPy  = new SimpleBooleanProperty();
-
-    public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.5);
 
     private final Group root = new Group();
     private Door3D door3D;
@@ -45,7 +42,8 @@ public class House3D {
                 door3D.playTraversalAnimation();
             }
         });
-        wallBuilder.setTopHeight(0.1f);
+        wallBuilder.setBaseHeightProperty(baseWallHeightPy);
+        wallBuilder.setTopHeight(WALL_COAT_HEIGHT);
     }
 
     public void build(GameWorld world, WorldMapColoring coloring) {
@@ -77,7 +75,7 @@ public class House3D {
         light.setMaxRange(3 * TS);
         light.setTranslateX(centerX);
         light.setTranslateY(centerY - 6);
-        light.translateZProperty().bind(heightPy.multiply(-1));
+        light.translateZProperty().bind(baseWallHeightPy.multiply(-1));
         root.getChildren().add(light);
     }
 
@@ -86,7 +84,7 @@ public class House3D {
     }
 
     private Node createWall(int x1, int y1, int x2, int y2) {
-        return wallBuilder.createWallBetweenTiles(v2i(x1, y1), v2i(x2, y2), wallThicknessPy.get(), heightPy);
+        return wallBuilder.createWallBetweenTiles(v2i(x1, y1), v2i(x2, y2), WALL_THICKNESS);
     }
 
     public Group root() { return root; }
