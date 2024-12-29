@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
 import de.amr.games.pacman.lib.tilemap.TileMap;
-import de.amr.games.pacman.lib.tilemap.Tiles;
+import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
@@ -98,8 +98,8 @@ public class TerrainRenderer implements TileMapRenderer {
         obstacles.stream().filter(Predicate.not(Obstacle::hasDoubleWalls))
             .forEach(obstacle -> drawObstacle(g, obstacle, singleStrokeWidth, true, wallStrokeColor));
 
-        terrainMap.tiles(Tiles.DOOR)
-            .forEach(doorTile -> drawDoor(g, doorTile, terrainMap.get(doorTile.y(), doorTile.x() + 1) == Tiles.DOOR));
+        terrainMap.tiles(TileEncoding.DOOR)
+            .forEach(doorTile -> drawDoor(g, doorTile, terrainMap.get(doorTile.y(), doorTile.x() + 1) == TileEncoding.DOOR));
 
         g.restore();
     }

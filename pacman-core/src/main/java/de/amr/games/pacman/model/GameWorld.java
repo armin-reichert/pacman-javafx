@@ -17,7 +17,7 @@ import java.util.BitSet;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.tilemap.Tiles.*;
+import static de.amr.games.pacman.lib.tilemap.TileEncoding.*;
 import static de.amr.games.pacman.model.GameModel.*;
 
 /**

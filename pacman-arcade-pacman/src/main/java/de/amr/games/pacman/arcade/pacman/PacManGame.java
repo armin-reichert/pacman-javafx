@@ -11,7 +11,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.Tiles;
+import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
@@ -264,7 +264,7 @@ public class PacManGame extends GameModel {
         level.pac().setAutopilot(autopilot);
         setCruiseElroy(0);
         List<Vector2i> oneWayDownTiles = theWorldMap.terrain().tiles()
-            .filter(tile -> theWorldMap.terrain().get(tile) == Tiles.ONE_WAY_DOWN).toList();
+            .filter(tile -> theWorldMap.terrain().get(tile) == TileEncoding.ONE_WAY_DOWN).toList();
         level.ghosts().forEach(ghost -> {
             ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
             ghost.setSpecialTerrainTiles(oneWayDownTiles);

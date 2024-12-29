@@ -3,7 +3,7 @@ package experiments;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
-import de.amr.games.pacman.lib.tilemap.Tiles;
+import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
@@ -105,19 +105,19 @@ public class ExperimentsApp extends Application {
         }
 
         obstacle = new Obstacle(new Vector2f(0, 15*TS), false);
-        extendObstacle(-4, 4, true, Tiles.CORNER_NW);
-        extendObstacle(0, 3*8, true, Tiles.WALL_V);
-        extendObstacle(-4, 4, false, Tiles.CORNER_SE);
-        extendObstacle(-8, 0, false, Tiles.WALL_H);
-        extendObstacle(-4, 4, true, Tiles.CORNER_NW);
-        extendObstacle(4, 4, true, Tiles.CORNER_SW);
-        extendObstacle(4*8, 0, true, Tiles.WALL_H);
-        extendObstacle(4, -4, true, Tiles.CORNER_SE);
-        extendObstacle(-4, -4, true, Tiles.CORNER_NE);
-        extendObstacle(-8, 0, true, Tiles.WALL_H);
-        extendObstacle(-4, -4, false, Tiles.CORNER_SW);
-        extendObstacle(0, -3*8, false, Tiles.WALL_V);
-        extendObstacle(-4, -4, true, Tiles.CORNER_NE);
+        extendObstacle(-4, 4, true, TileEncoding.CORNER_NW);
+        extendObstacle(0, 3*8, true, TileEncoding.WALL_V);
+        extendObstacle(-4, 4, false, TileEncoding.CORNER_SE);
+        extendObstacle(-8, 0, false, TileEncoding.WALL_H);
+        extendObstacle(-4, 4, true, TileEncoding.CORNER_NW);
+        extendObstacle(4, 4, true, TileEncoding.CORNER_SW);
+        extendObstacle(4*8, 0, true, TileEncoding.WALL_H);
+        extendObstacle(4, -4, true, TileEncoding.CORNER_SE);
+        extendObstacle(-4, -4, true, TileEncoding.CORNER_NE);
+        extendObstacle(-8, 0, true, TileEncoding.WALL_H);
+        extendObstacle(-4, -4, false, TileEncoding.CORNER_SW);
+        extendObstacle(0, -3*8, false, TileEncoding.WALL_V);
+        extendObstacle(-4, -4, true, TileEncoding.CORNER_NE);
 
         Vector2f currentPoint = obstacle.startPoint();
         Vector2f endPoint = null;

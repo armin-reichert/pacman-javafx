@@ -4,7 +4,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 /**
- * The encoding depends on the byte values in interface {@link Tiles}!
+ * The encoding depends on the byte values in interface {@link TileEncoding}!
  */
 public enum ObstacleType {
     CROSS_SHAPE("dfdgegfdfege",

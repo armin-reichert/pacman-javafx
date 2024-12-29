@@ -14,7 +14,7 @@ import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.tilemap.Tiles.isDoubleWall;
+import static de.amr.games.pacman.lib.tilemap.TileEncoding.isDoubleWall;
 
 public class ObstacleBuilder {
 
@@ -74,9 +74,9 @@ public class ObstacleBuilder {
 
         terrain.tiles()
             .filter(tile ->
-                terrain.get(tile) == Tiles.CORNER_NW ||
-                terrain.get(tile) == Tiles.DCORNER_NW ||
-                terrain.get(tile) == Tiles.DCORNER_ANGULAR_NW) // house top-left corner
+                terrain.get(tile) == TileEncoding.CORNER_NW ||
+                terrain.get(tile) == TileEncoding.DCORNER_NW ||
+                terrain.get(tile) == TileEncoding.DCORNER_ANGULAR_NW) // house top-left corner
             .filter(Predicate.not(exploredTiles::contains))
             .map(cornerNW -> buildClosedObstacle(cornerNW, tilesWithErrors))
             .forEach(obstacles::add);
@@ -110,25 +110,25 @@ public class ObstacleBuilder {
         byte startTileContent = terrain.get(startTile);
         var obstacle = new Obstacle(startPoint, isDoubleWall(startTileContent));
         cursor = new Cursor(startTile);
-        if (startTileContent == Tiles.DWALL_H) {
+        if (startTileContent == TileEncoding.DWALL_H) {
             Direction startDir = startsAtLeftBorder ? RIGHT : LEFT;
-            obstacle.addSegment(arrow(startDir, TS), true, Tiles.DWALL_H);
+            obstacle.addSegment(arrow(startDir, TS), true, TileEncoding.DWALL_H);
             cursor.move(startDir);
         }
-        else if (startsAtLeftBorder && startTileContent == Tiles.DCORNER_SE) {
-            obstacle.addSegment(SEG_CORNER_SE_UP, true, Tiles.DCORNER_SE);
+        else if (startsAtLeftBorder && startTileContent == TileEncoding.DCORNER_SE) {
+            obstacle.addSegment(SEG_CORNER_SE_UP, true, TileEncoding.DCORNER_SE);
             cursor.move(UP);
         }
-        else if (startsAtLeftBorder && startTileContent == Tiles.DCORNER_NE) {
-            obstacle.addSegment(SEG_CORNER_NE_DOWN, false, Tiles.DCORNER_NE);
+        else if (startsAtLeftBorder && startTileContent == TileEncoding.DCORNER_NE) {
+            obstacle.addSegment(SEG_CORNER_NE_DOWN, false, TileEncoding.DCORNER_NE);
             cursor.move(DOWN);
         }
-        else if (!startsAtLeftBorder && startTileContent == Tiles.DCORNER_SW) {
-            obstacle.addSegment(SEG_CORNER_SW_UP, false, Tiles.DCORNER_SW);
+        else if (!startsAtLeftBorder && startTileContent == TileEncoding.DCORNER_SW) {
+            obstacle.addSegment(SEG_CORNER_SW_UP, false, TileEncoding.DCORNER_SW);
             cursor.move(UP);
         }
-        else if (!startsAtLeftBorder && startTileContent == Tiles.DCORNER_NW) {
-            obstacle.addSegment(SEG_CORNER_NW_DOWN, true, Tiles.DCORNER_NW);
+        else if (!startsAtLeftBorder && startTileContent == TileEncoding.DCORNER_NW) {
+            obstacle.addSegment(SEG_CORNER_NW_DOWN, true, TileEncoding.DCORNER_NW);
             cursor.move(DOWN);
         }
         else {
@@ -159,7 +159,7 @@ public class ObstacleBuilder {
 
             boolean doubleWall = isDoubleWall(tileContent);
             // check if obstacle tiles have same wall strength, ignore doors
-            if (tileContent != Tiles.DOOR &&
+            if (tileContent != TileEncoding.DOOR &&
                 (obstacle.hasDoubleWalls() && !doubleWall || !obstacle.hasDoubleWalls() && doubleWall)) {
                 errorAtCurrentTile(tilesWithErrors);
                 break;
@@ -167,7 +167,7 @@ public class ObstacleBuilder {
 
             switch (tileContent) {
 
-                case Tiles.WALL_V, Tiles.DWALL_V -> {
+                case TileEncoding.WALL_V, TileEncoding.DWALL_V -> {
                     if (cursor.points(DOWN)) {
                         obstacle.addSegment(arrow(DOWN, TS), ccw, tileContent);
                         cursor.move(DOWN);
@@ -179,7 +179,7 @@ public class ObstacleBuilder {
                     }
                 }
 
-                case Tiles.WALL_H, Tiles.DWALL_H, Tiles.DOOR -> {
+                case TileEncoding.WALL_H, TileEncoding.DWALL_H, TileEncoding.DOOR -> {
                     if (cursor.points(RIGHT)) {
                         obstacle.addSegment(arrow(RIGHT, TS), ccw, tileContent);
                         cursor.move(RIGHT);
@@ -191,7 +191,7 @@ public class ObstacleBuilder {
                     }
                 }
 
-                case Tiles.CORNER_SW, Tiles.DCORNER_SW, Tiles.DCORNER_ANGULAR_SW -> {
+                case TileEncoding.CORNER_SW, TileEncoding.DCORNER_SW, TileEncoding.DCORNER_ANGULAR_SW -> {
                     if (cursor.points(DOWN)) {
                         ccw = true;
                         obstacle.addSegment(SEG_CORNER_SW_DOWN, ccw, tileContent);
@@ -205,7 +205,7 @@ public class ObstacleBuilder {
                     }
                 }
 
-                case Tiles.CORNER_SE, Tiles.DCORNER_SE, Tiles.DCORNER_ANGULAR_SE -> {
+                case TileEncoding.CORNER_SE, TileEncoding.DCORNER_SE, TileEncoding.DCORNER_ANGULAR_SE -> {
                     if (cursor.points(DOWN)) {
                         ccw = false;
                         obstacle.addSegment(SEG_CORNER_SE_DOWN, ccw, tileContent);
@@ -221,7 +221,7 @@ public class ObstacleBuilder {
                     }
                 }
 
-                case Tiles.CORNER_NE, Tiles.DCORNER_NE, Tiles.DCORNER_ANGULAR_NE -> {
+                case TileEncoding.CORNER_NE, TileEncoding.DCORNER_NE, TileEncoding.DCORNER_ANGULAR_NE -> {
                     if (cursor.points(UP)) {
                         ccw = true;
                         obstacle.addSegment(SEG_CORNER_NE_UP, ccw, tileContent);
@@ -237,7 +237,7 @@ public class ObstacleBuilder {
                     }
                 }
 
-                case Tiles.CORNER_NW, Tiles.DCORNER_NW, Tiles.DCORNER_ANGULAR_NW -> {
+                case TileEncoding.CORNER_NW, TileEncoding.DCORNER_NW, TileEncoding.DCORNER_ANGULAR_NW -> {
                     if (cursor.points(UP)) {
                         ccw = false;
                         obstacle.addSegment(SEG_CORNER_NW_UP, ccw, tileContent);

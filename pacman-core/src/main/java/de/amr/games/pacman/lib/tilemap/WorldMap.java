@@ -94,8 +94,8 @@ public class WorldMap {
                 Logger.error("Line skipped: '{}'", line);
             }
         }
-        terrain = TileMap.parseTileMap(terrainSection, tv -> 0 <= tv && tv <= Tiles.LAST_TERRAIN_VALUE);
-        food = TileMap.parseTileMap(foodSection, tv -> 0 <= tv && tv <= Tiles.ENERGIZER);
+        terrain = TileMap.parseTileMap(terrainSection, tv -> 0 <= tv && tv <= TileEncoding.LAST_TERRAIN_VALUE);
+        food = TileMap.parseTileMap(foodSection, tv -> 0 <= tv && tv <= TileEncoding.ENERGIZER);
     }
 
     public List<Vector2i> updateObstacleList() {

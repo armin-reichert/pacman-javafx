@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
-import de.amr.games.pacman.lib.tilemap.Tiles;
+import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainRenderer;
@@ -549,29 +549,29 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     private Palette createTerrainPalette() {
         var palette = new Palette(PALETTE_ID_TERRAIN, TOOL_SIZE, 1, 23, tileMapEditorTerrainRenderer);
-        palette.addTileTool(editController, Tiles.EMPTY, "Empty Space");
-        palette.addTileTool(editController, Tiles.WALL_H, "Horiz. Wall");
-        palette.addTileTool(editController, Tiles.WALL_V, "Vert. Wall");
-        palette.addTileTool(editController, Tiles.DWALL_H, "Horiz. Double-Wall");
-        palette.addTileTool(editController, Tiles.DWALL_V, "Vert. Double-Wall");
-        palette.addTileTool(editController, Tiles.CORNER_NW, "NW Corner");
-        palette.addTileTool(editController, Tiles.CORNER_NE, "NE Corner");
-        palette.addTileTool(editController, Tiles.CORNER_SW, "SW Corner");
-        palette.addTileTool(editController, Tiles.CORNER_SE, "SE Corner");
-        palette.addTileTool(editController, Tiles.DCORNER_NW, "NW Corner");
-        palette.addTileTool(editController, Tiles.DCORNER_NE, "NE Corner");
-        palette.addTileTool(editController, Tiles.DCORNER_SW, "SW Corner");
-        palette.addTileTool(editController, Tiles.DCORNER_SE, "SE Corner");
-        palette.addTileTool(editController, Tiles.DCORNER_ANGULAR_NW, "NW Corner");
-        palette.addTileTool(editController, Tiles.DCORNER_ANGULAR_NE, "NE Corner");
-        palette.addTileTool(editController, Tiles.DCORNER_ANGULAR_SW, "SW Corner");
-        palette.addTileTool(editController, Tiles.DCORNER_ANGULAR_SE, "SE Corner");
-        palette.addTileTool(editController, Tiles.TUNNEL, "Tunnel");
-        palette.addTileTool(editController, Tiles.DOOR, "Door");
-        palette.addTileTool(editController, Tiles.ONE_WAY_UP, "One-Way Up");
-        palette.addTileTool(editController, Tiles.ONE_WAY_RIGHT, "One-Way Right");
-        palette.addTileTool(editController, Tiles.ONE_WAY_DOWN, "One-Way Down");
-        palette.addTileTool(editController, Tiles.ONE_WAY_LEFT, "One-Way Left");
+        palette.addTileTool(editController, TileEncoding.EMPTY, "Empty Space");
+        palette.addTileTool(editController, TileEncoding.WALL_H, "Horiz. Wall");
+        palette.addTileTool(editController, TileEncoding.WALL_V, "Vert. Wall");
+        palette.addTileTool(editController, TileEncoding.DWALL_H, "Horiz. Double-Wall");
+        palette.addTileTool(editController, TileEncoding.DWALL_V, "Vert. Double-Wall");
+        palette.addTileTool(editController, TileEncoding.CORNER_NW, "NW Corner");
+        palette.addTileTool(editController, TileEncoding.CORNER_NE, "NE Corner");
+        palette.addTileTool(editController, TileEncoding.CORNER_SW, "SW Corner");
+        palette.addTileTool(editController, TileEncoding.CORNER_SE, "SE Corner");
+        palette.addTileTool(editController, TileEncoding.DCORNER_NW, "NW Corner");
+        palette.addTileTool(editController, TileEncoding.DCORNER_NE, "NE Corner");
+        palette.addTileTool(editController, TileEncoding.DCORNER_SW, "SW Corner");
+        palette.addTileTool(editController, TileEncoding.DCORNER_SE, "SE Corner");
+        palette.addTileTool(editController, TileEncoding.DCORNER_ANGULAR_NW, "NW Corner");
+        palette.addTileTool(editController, TileEncoding.DCORNER_ANGULAR_NE, "NE Corner");
+        palette.addTileTool(editController, TileEncoding.DCORNER_ANGULAR_SW, "SW Corner");
+        palette.addTileTool(editController, TileEncoding.DCORNER_ANGULAR_SE, "SE Corner");
+        palette.addTileTool(editController, TileEncoding.TUNNEL, "Tunnel");
+        palette.addTileTool(editController, TileEncoding.DOOR, "Door");
+        palette.addTileTool(editController, TileEncoding.ONE_WAY_UP, "One-Way Up");
+        palette.addTileTool(editController, TileEncoding.ONE_WAY_RIGHT, "One-Way Right");
+        palette.addTileTool(editController, TileEncoding.ONE_WAY_DOWN, "One-Way Down");
+        palette.addTileTool(editController, TileEncoding.ONE_WAY_LEFT, "One-Way Left");
 
         palette.selectTool(0); // "No Tile"
         return palette;
@@ -579,7 +579,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     private Palette createActorPalette() {
         var palette = new Palette(PALETTE_ID_ACTORS, TOOL_SIZE, 1, 10, tileMapEditorTerrainRenderer);
-        palette.addTileTool(editController, Tiles.EMPTY, "");
+        palette.addTileTool(editController, TileEncoding.EMPTY, "");
         palette.addPropertyTool(PROPERTY_POS_PAC, "Pac-Man");
         palette.addPropertyTool(PROPERTY_POS_RED_GHOST, "Red Ghost");
         palette.addPropertyTool(PROPERTY_POS_PINK_GHOST, "Pink Ghost");
@@ -595,9 +595,9 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     private Palette createFoodPalette() {
         var palette = new Palette(PALETTE_ID_FOOD, TOOL_SIZE, 1, 3, foodMapRenderer);
-        palette.addTileTool(editController, Tiles.EMPTY, "No Food");
-        palette.addTileTool(editController, Tiles.PELLET, "Pellet");
-        palette.addTileTool(editController, Tiles.ENERGIZER, "Energizer");
+        palette.addTileTool(editController, TileEncoding.EMPTY, "No Food");
+        palette.addTileTool(editController, TileEncoding.PELLET, "Pellet");
+        palette.addTileTool(editController, TileEncoding.ENERGIZER, "Energizer");
         palette.selectTool(0); // "No Food"
         return palette;
     }

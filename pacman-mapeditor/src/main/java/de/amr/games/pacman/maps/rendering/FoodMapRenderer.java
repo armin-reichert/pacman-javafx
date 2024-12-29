@@ -7,7 +7,7 @@ package de.amr.games.pacman.maps.rendering;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.TileMap;
-import de.amr.games.pacman.lib.tilemap.Tiles;
+import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.GraphicsContext;
@@ -58,8 +58,8 @@ public class FoodMapRenderer implements TileMapRenderer {
     @Override
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
         switch (content) {
-            case Tiles.PELLET -> drawPellet(g, tile);
-            case Tiles.ENERGIZER -> drawEnergizer(g, tile);
+            case TileEncoding.PELLET -> drawPellet(g, tile);
+            case TileEncoding.ENERGIZER -> drawEnergizer(g, tile);
             default -> {}
         }
     }

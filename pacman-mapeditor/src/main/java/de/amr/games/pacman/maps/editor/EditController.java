@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
-import de.amr.games.pacman.lib.tilemap.Tiles;
+import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -45,24 +45,24 @@ public class EditController {
     };
 
     static final byte[][] CIRCLE_2x2 = {
-        {Tiles.CORNER_NW, Tiles.CORNER_NE},
-        {Tiles.CORNER_SW, Tiles.CORNER_SE}
+        {TileEncoding.CORNER_NW, TileEncoding.CORNER_NE},
+        {TileEncoding.CORNER_SW, TileEncoding.CORNER_SE}
     };
 
     static byte mirroredTileContent(byte content) {
         return switch (content) {
-            case Tiles.CORNER_NE -> Tiles.CORNER_NW;
-            case Tiles.CORNER_NW -> Tiles.CORNER_NE;
-            case Tiles.CORNER_SE -> Tiles.CORNER_SW;
-            case Tiles.CORNER_SW -> Tiles.CORNER_SE;
-            case Tiles.DCORNER_NE -> Tiles.DCORNER_NW;
-            case Tiles.DCORNER_NW -> Tiles.DCORNER_NE;
-            case Tiles.DCORNER_SE -> Tiles.DCORNER_SW;
-            case Tiles.DCORNER_SW -> Tiles.DCORNER_SE;
-            case Tiles.DCORNER_ANGULAR_NE -> Tiles.DCORNER_ANGULAR_NW;
-            case Tiles.DCORNER_ANGULAR_NW -> Tiles.DCORNER_ANGULAR_NE;
-            case Tiles.DCORNER_ANGULAR_SE -> Tiles.DCORNER_ANGULAR_SW;
-            case Tiles.DCORNER_ANGULAR_SW -> Tiles.DCORNER_ANGULAR_SE;
+            case TileEncoding.CORNER_NE -> TileEncoding.CORNER_NW;
+            case TileEncoding.CORNER_NW -> TileEncoding.CORNER_NE;
+            case TileEncoding.CORNER_SE -> TileEncoding.CORNER_SW;
+            case TileEncoding.CORNER_SW -> TileEncoding.CORNER_SE;
+            case TileEncoding.DCORNER_NE -> TileEncoding.DCORNER_NW;
+            case TileEncoding.DCORNER_NW -> TileEncoding.DCORNER_NE;
+            case TileEncoding.DCORNER_SE -> TileEncoding.DCORNER_SW;
+            case TileEncoding.DCORNER_SW -> TileEncoding.DCORNER_SE;
+            case TileEncoding.DCORNER_ANGULAR_NE -> TileEncoding.DCORNER_ANGULAR_NW;
+            case TileEncoding.DCORNER_ANGULAR_NW -> TileEncoding.DCORNER_ANGULAR_NE;
+            case TileEncoding.DCORNER_ANGULAR_SE -> TileEncoding.DCORNER_ANGULAR_SW;
+            case TileEncoding.DCORNER_ANGULAR_SW -> TileEncoding.DCORNER_ANGULAR_SE;
             default -> content;
         };
     }
@@ -398,17 +398,17 @@ public class EditController {
 
     void addBorder(TileMap terrain, int emptyRowsTop, int emptyRowsBottom) {
         for (int row = emptyRowsTop; row < terrain.numRows() - emptyRowsBottom; ++row) {
-            terrain.set(row, 0, Tiles.DWALL_V);
-            terrain.set(row, terrain.numCols() - 1, Tiles.DWALL_V);
+            terrain.set(row, 0, TileEncoding.DWALL_V);
+            terrain.set(row, terrain.numCols() - 1, TileEncoding.DWALL_V);
         }
         for (int col = 1; col < terrain.numCols() - 1; ++col) {
-            terrain.set(emptyRowsTop, col, Tiles.DWALL_H);
-            terrain.set(terrain.numRows() - 1 - emptyRowsBottom, col, Tiles.DWALL_H);
+            terrain.set(emptyRowsTop, col, TileEncoding.DWALL_H);
+            terrain.set(terrain.numRows() - 1 - emptyRowsBottom, col, TileEncoding.DWALL_H);
         }
-        terrain.set(emptyRowsTop, 0, Tiles.DCORNER_NW);
-        terrain.set(emptyRowsTop, terrain.numCols() - 1, Tiles.DCORNER_NE);
-        terrain.set(terrain.numRows() - 1 - emptyRowsBottom, 0, Tiles.DCORNER_SW);
-        terrain.set(terrain.numRows() - 1 - emptyRowsBottom, terrain.numCols() - 1, Tiles.DCORNER_SE);
+        terrain.set(emptyRowsTop, 0, TileEncoding.DCORNER_NW);
+        terrain.set(emptyRowsTop, terrain.numCols() - 1, TileEncoding.DCORNER_NE);
+        terrain.set(terrain.numRows() - 1 - emptyRowsBottom, 0, TileEncoding.DCORNER_SW);
+        terrain.set(terrain.numRows() - 1 - emptyRowsBottom, terrain.numCols() - 1, TileEncoding.DCORNER_SE);
 
         markTileMapEdited(terrain);
     }
@@ -461,7 +461,7 @@ public class EditController {
     }
 
     void eraseTileValue(TileMap tileMap, Vector2i tile) {
-        tileMap.set(tile, Tiles.EMPTY);
+        tileMap.set(tile, TileEncoding.EMPTY);
         markTileMapEdited(tileMap);
     }
 

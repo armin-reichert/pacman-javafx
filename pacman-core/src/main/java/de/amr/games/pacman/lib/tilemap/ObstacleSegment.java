@@ -8,19 +8,19 @@ import de.amr.games.pacman.lib.Vector2f;
 
 public record ObstacleSegment(Vector2f vector, boolean ccw, byte mapContent) {
     public boolean isRoundedNWCorner() {
-        return mapContent == Tiles.CORNER_NW || mapContent == Tiles.DCORNER_NW;
+        return mapContent == TileEncoding.CORNER_NW || mapContent == TileEncoding.DCORNER_NW;
     }
 
     public boolean isRoundedSWCorner() {
-        return mapContent == Tiles.CORNER_SW || mapContent == Tiles.DCORNER_SW;
+        return mapContent == TileEncoding.CORNER_SW || mapContent == TileEncoding.DCORNER_SW;
     }
 
     public boolean isRoundedSECorner() {
-        return mapContent == Tiles.CORNER_SE || mapContent == Tiles.DCORNER_SE;
+        return mapContent == TileEncoding.CORNER_SE || mapContent == TileEncoding.DCORNER_SE;
     }
 
     public boolean isRoundedNECorner() {
-        return mapContent == Tiles.CORNER_NE || mapContent == Tiles.DCORNER_NE;
+        return mapContent == TileEncoding.CORNER_NE || mapContent == TileEncoding.DCORNER_NE;
     }
 
     public boolean isRoundedCorner() {
@@ -28,19 +28,19 @@ public record ObstacleSegment(Vector2f vector, boolean ccw, byte mapContent) {
     }
 
     public boolean isAngularNWCorner() {
-        return mapContent == Tiles.DCORNER_ANGULAR_NW;
+        return mapContent == TileEncoding.DCORNER_ANGULAR_NW;
     }
 
     public boolean isAngularSWCorner() {
-        return mapContent == Tiles.DCORNER_ANGULAR_SW;
+        return mapContent == TileEncoding.DCORNER_ANGULAR_SW;
     }
 
     public boolean isAngularSECorner() {
-        return mapContent == Tiles.DCORNER_ANGULAR_SE;
+        return mapContent == TileEncoding.DCORNER_ANGULAR_SE;
     }
 
     public boolean isAngularNECorner() {
-        return mapContent == Tiles.DCORNER_ANGULAR_NE;
+        return mapContent == TileEncoding.DCORNER_ANGULAR_NE;
     }
 
     public boolean isNWCorner() {
@@ -60,11 +60,11 @@ public record ObstacleSegment(Vector2f vector, boolean ccw, byte mapContent) {
     }
 
     public boolean isVerticalLine() {
-        return mapContent == Tiles.WALL_V || mapContent == Tiles.DWALL_V;
+        return mapContent == TileEncoding.WALL_V || mapContent == TileEncoding.DWALL_V;
     }
 
     public boolean isHorizontalLine() {
-        return mapContent == Tiles.WALL_H || mapContent == Tiles.DWALL_H;
+        return mapContent == TileEncoding.WALL_H || mapContent == TileEncoding.DWALL_H;
     }
 
     public boolean isStraightLine() {

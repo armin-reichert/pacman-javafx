@@ -84,7 +84,7 @@ public class TileMap {
                     if (valueAllowed.test(value)) {
                         tileMap.data[row][col] = value;
                     } else {
-                        tileMap.data[row][col] = Tiles.EMPTY;
+                        tileMap.data[row][col] = TileEncoding.EMPTY;
                         Logger.error("Invalid tile map value {} at row {}, col {}", value, row, col);
                     }
                 } catch (NumberFormatException x) {
@@ -263,11 +263,11 @@ public class TileMap {
     }
 
     /**
-     * Sets all map data to {@link Tiles#EMPTY}
+     * Sets all map data to {@link TileEncoding#EMPTY}
      */
     public void clear() {
         for (byte[] row : data) {
-            Arrays.fill(row, Tiles.EMPTY);
+            Arrays.fill(row, TileEncoding.EMPTY);
         }
     }
 

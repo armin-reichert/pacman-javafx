@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.TileMap;
-import de.amr.games.pacman.lib.tilemap.Tiles;
+import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import de.amr.games.pacman.maps.rendering.TileMapRenderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -107,21 +107,21 @@ public class TileMapEditorTerrainRenderer implements TileMapRenderer {
 
     private void drawTileUnscaled(GraphicsContext g, Vector2i tile, byte content) {
         switch (content) {
-            case Tiles.WALL -> drawWall(g, tile);
-            case Tiles.WALL_H -> drawWallH(g, tile);
-            case Tiles.WALL_V -> drawWallV(g, tile);
-            case Tiles.DWALL_H -> drawDWallH(g, tile);
-            case Tiles.DWALL_V -> drawDWallV(g, tile);
-            case Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE -> drawCorner(g, tile, content);
-            case Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE -> drawDCorner(g, tile, content);
-            case Tiles.DCORNER_ANGULAR_NW, Tiles.DCORNER_ANGULAR_NE, Tiles.DCORNER_ANGULAR_SW, Tiles.DCORNER_ANGULAR_SE
+            case TileEncoding.WALL -> drawWall(g, tile);
+            case TileEncoding.WALL_H -> drawWallH(g, tile);
+            case TileEncoding.WALL_V -> drawWallV(g, tile);
+            case TileEncoding.DWALL_H -> drawDWallH(g, tile);
+            case TileEncoding.DWALL_V -> drawDWallV(g, tile);
+            case TileEncoding.CORNER_NW, TileEncoding.CORNER_NE, TileEncoding.CORNER_SW, TileEncoding.CORNER_SE -> drawCorner(g, tile, content);
+            case TileEncoding.DCORNER_NW, TileEncoding.DCORNER_NE, TileEncoding.DCORNER_SW, TileEncoding.DCORNER_SE -> drawDCorner(g, tile, content);
+            case TileEncoding.DCORNER_ANGULAR_NW, TileEncoding.DCORNER_ANGULAR_NE, TileEncoding.DCORNER_ANGULAR_SW, TileEncoding.DCORNER_ANGULAR_SE
                     -> drawDCornerAngular(g, tile, content, xp, yp);
-            case Tiles.DOOR -> drawDoor(g, tile, doorColor);
-            case Tiles.TUNNEL -> drawTunnel(g, tile);
-            case Tiles.ONE_WAY_UP    -> drawOneWaySign(g, tile, Direction.UP);
-            case Tiles.ONE_WAY_RIGHT -> drawOneWaySign(g, tile, Direction.RIGHT);
-            case Tiles.ONE_WAY_DOWN  -> drawOneWaySign(g, tile, Direction.DOWN);
-            case Tiles.ONE_WAY_LEFT  -> drawOneWaySign(g, tile, Direction.LEFT);
+            case TileEncoding.DOOR -> drawDoor(g, tile, doorColor);
+            case TileEncoding.TUNNEL -> drawTunnel(g, tile);
+            case TileEncoding.ONE_WAY_UP    -> drawOneWaySign(g, tile, Direction.UP);
+            case TileEncoding.ONE_WAY_RIGHT -> drawOneWaySign(g, tile, Direction.RIGHT);
+            case TileEncoding.ONE_WAY_DOWN  -> drawOneWaySign(g, tile, Direction.DOWN);
+            case TileEncoding.ONE_WAY_LEFT  -> drawOneWaySign(g, tile, Direction.LEFT);
             default -> {}
         }
     }
@@ -236,10 +236,10 @@ public class TileMapEditorTerrainRenderer implements TileMapRenderer {
         g.setStroke(wallStrokeColor);
         g.setLineWidth(1);
         switch (cornerType) {
-            case Tiles.CORNER_NW -> g.strokeArc(x + 4, y + 4, TS, TS, 90, 90,  ArcType.OPEN);
-            case Tiles.CORNER_NE -> g.strokeArc(x - 4, y + 4, TS, TS, 0, 90,   ArcType.OPEN);
-            case Tiles.CORNER_SE -> g.strokeArc(x - 4, y - 4, TS, TS, 270, 90, ArcType.OPEN);
-            case Tiles.CORNER_SW -> g.strokeArc(x + 4, y - 4, TS, TS, 180, 90, ArcType.OPEN);
+            case TileEncoding.CORNER_NW -> g.strokeArc(x + 4, y + 4, TS, TS, 90, 90,  ArcType.OPEN);
+            case TileEncoding.CORNER_NE -> g.strokeArc(x - 4, y + 4, TS, TS, 0, 90,   ArcType.OPEN);
+            case TileEncoding.CORNER_SE -> g.strokeArc(x - 4, y - 4, TS, TS, 270, 90, ArcType.OPEN);
+            case TileEncoding.CORNER_SW -> g.strokeArc(x + 4, y - 4, TS, TS, 180, 90, ArcType.OPEN);
             default -> {}
         }
     }
@@ -249,19 +249,19 @@ public class TileMapEditorTerrainRenderer implements TileMapRenderer {
         g.setStroke(wallStrokeColor);
         g.setLineWidth(1);
         switch (cornerType) {
-            case Tiles.DCORNER_NW -> {
+            case TileEncoding.DCORNER_NW -> {
                 g.strokeArc(x + 5, y + 5, 6, 6, 90, 90, ArcType.OPEN);
                 g.strokeArc(x + 3, y + 3, 10, 10, 90, 90, ArcType.OPEN);
             }
-            case Tiles.DCORNER_NE -> {
+            case TileEncoding.DCORNER_NE -> {
                 g.strokeArc(x - 3, y + 5, 6, 6, 0, 90, ArcType.OPEN);
                 g.strokeArc(x - 5, y + 3, 10, 10, 0, 90, ArcType.OPEN);
             }
-            case Tiles.DCORNER_SE -> {
+            case TileEncoding.DCORNER_SE -> {
                 g.strokeArc(x - 3, y - 3, 6, 6, 270, 90, ArcType.OPEN);
                 g.strokeArc(x - 5, y - 5, 10, 10, 270, 90, ArcType.OPEN);
             }
-            case Tiles.DCORNER_SW -> {
+            case TileEncoding.DCORNER_SW -> {
                 g.strokeArc(x + 5, y - 3, 6, 6, 180, 90, ArcType.OPEN);
                 g.strokeArc(x + 3, y - 5, 10, 10, 180, 90, ArcType.OPEN);
             }
@@ -277,7 +277,7 @@ public class TileMapEditorTerrainRenderer implements TileMapRenderer {
         g.setStroke(wallStrokeColor);
         g.setLineWidth(1);
         switch (cornerType) {
-            case Tiles.DCORNER_ANGULAR_NW -> {
+            case TileEncoding.DCORNER_ANGULAR_NW -> {
                 xp[0]=xp[1]=cx-d; xp[2]=rightEdge;
                 yp[0]=bottomEdge; yp[1]=yp[2]=cy-d;
                 g.strokePolyline(xp,yp,xp.length);
@@ -286,7 +286,7 @@ public class TileMapEditorTerrainRenderer implements TileMapRenderer {
                 yp[0]=bottomEdge; yp[1]=yp[2]=cy+d;
                 g.strokePolyline(xp,yp,xp.length);
             }
-            case Tiles.DCORNER_ANGULAR_NE -> {
+            case TileEncoding.DCORNER_ANGULAR_NE -> {
                 xp[0]=x; xp[1]=xp[2]=cx+d;
                 yp[0]=yp[1]=cy-d; yp[2]=bottomEdge;
                 g.strokePolyline(xp,yp,xp.length);
@@ -295,7 +295,7 @@ public class TileMapEditorTerrainRenderer implements TileMapRenderer {
                 yp[0]=yp[1]=cy+d; yp[2]=bottomEdge;
                 g.strokePolyline(xp,yp,xp.length);
             }
-            case Tiles.DCORNER_ANGULAR_SE -> {
+            case TileEncoding.DCORNER_ANGULAR_SE -> {
                 xp[0]=x; xp[1]=xp[2]=cx-d;
                 yp[0]=yp[1]=cy-d; yp[2]=y;
                 g.strokePolyline(xp,yp,xp.length);
@@ -304,7 +304,7 @@ public class TileMapEditorTerrainRenderer implements TileMapRenderer {
                 yp[0]=yp[1]=cy+d; yp[2]=y;
                 g.strokePolyline(xp,yp,xp.length);
             }
-            case Tiles.DCORNER_ANGULAR_SW -> {
+            case TileEncoding.DCORNER_ANGULAR_SW -> {
                 xp[0]=xp[1]=cx-d; xp[2]=rightEdge;
                 yp[0]=y; yp[1]=yp[2]=cy+d;
                 g.strokePolyline(xp,yp,xp.length);

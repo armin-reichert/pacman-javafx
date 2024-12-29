@@ -7,7 +7,7 @@ package de.amr.games.pacman.lib.tilemap;
 /**
  * @author Armin Reichert
  */
-public interface Tiles {
+public interface TileEncoding {
 
     byte EMPTY = 0;
 

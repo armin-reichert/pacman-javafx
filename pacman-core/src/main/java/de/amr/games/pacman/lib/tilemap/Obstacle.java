@@ -126,10 +126,10 @@ public class Obstacle {
     public Vector2f uTurnCenter(int index) {
         ObstacleSegment corner = segment(index);
         return switch (corner.mapContent()) {
-            case Tiles.CORNER_NW -> points.get(index).plus(0, HTS);
-            case Tiles.CORNER_SW -> points.get(index).plus(HTS, 0);
-            case Tiles.CORNER_SE -> points.get(index).plus(0, -HTS);
-            case Tiles.CORNER_NE -> points.get(index).plus(-HTS, 0);
+            case TileEncoding.CORNER_NW -> points.get(index).plus(0, HTS);
+            case TileEncoding.CORNER_SW -> points.get(index).plus(HTS, 0);
+            case TileEncoding.CORNER_SE -> points.get(index).plus(0, -HTS);
+            case TileEncoding.CORNER_NE -> points.get(index).plus(-HTS, 0);
             default -> throw new IllegalStateException();
         };
     }
