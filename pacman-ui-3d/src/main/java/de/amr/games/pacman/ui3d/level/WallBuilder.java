@@ -275,20 +275,26 @@ public class WallBuilder {
     }
 
     public void addCrossShapeObstacle(Group parent, Obstacle obstacle) {
-        int[] d = obstacle.uTurnSegmentIndices().toArray();
-        Vector2f c0 = obstacle.uTurnCenter(d[0]);
-        Vector2f c1 = obstacle.uTurnCenter(d[1]);
-        Vector2f c2 = obstacle.uTurnCenter(d[2]);
-        Vector2f c3 = obstacle.uTurnCenter(d[3]);
-        Vector2f center = new Vector2f(c3.x(), c0.y());
-        addTower(parent, c0);
-        addTower(parent, c1);
-        addTower(parent, c2);
-        addTower(parent, c3);
-        addCastleWall(parent, c0.midpoint(center), c0.manhattanDist(center), TS);
-        addCastleWall(parent, c2.midpoint(center), c2.manhattanDist(center), TS);
-        addCastleWall(parent, c1.midpoint(center), TS, c1.manhattanDist(center));
-        addCastleWall(parent, c3.midpoint(center), TS, c3.manhattanDist(center));
+        Vector2f[] c = obstacle.uTurnCenters();
+        Vector2f center = new Vector2f(c[3].x(), c[0].y());
+        addTower(parent, c[0]);
+        addTower(parent, c[1]);
+        addTower(parent, c[2]);
+        addTower(parent, c[3]);
+        addCastleWall(parent, c[0], center);
+        addCastleWall(parent, c[2], center);
+        addCastleWall(parent, c[1], center);
+        addCastleWall(parent, c[3], center);
+    }
+
+    private void addCastleWall(Group parent, Vector2f p, Vector2f q) {
+        if (p.x() == q.x()) { // vertical wall
+            addCastleWall(parent, p.midpoint(q), TS, p.manhattanDist(q));
+        } else if (p.y() == q.y()) { // horizontal wall
+            addCastleWall(parent, p.midpoint(q), p.manhattanDist(q), TS);
+        } else {
+            Logger.error("Can only add horizontal or vertical castle walls, p={}, q={}", p, q);
+        }
     }
 
     public void addUShapeObstacle(Group parent, Obstacle obstacle) {
