@@ -115,7 +115,7 @@ public class Obstacle {
     public Vector2f[] deadEndCenters(int[] indices) {
         Vector2f[] c = new Vector2f[indices.length];
         for (int i = 0; i < indices.length; ++i) {
-            c[i] = towerCenterPoint(indices[i]);
+            c[i] = cornerCenter(indices[i]);
         }
         return c;
     }
@@ -128,22 +128,26 @@ public class Obstacle {
         return p.x() == q.x();
     }
 
+    public IntStream deadEndSegments() {
+        return IntStream.range(0, segments.size()).filter(this::hasDeadEndAtSegment);
+    }
+
     public int[] deadEndSegmentIndices() {
-        return IntStream.range(0, segments.size()).filter(this::hasDeadEndAt).toArray();
+        return deadEndSegments().toArray();
     }
 
     public int numDeadEnds() {
-        return (int) IntStream.range(0, segments.size()).filter(this::hasDeadEndAt).count();
+        return (int) deadEndSegments().count();
     }
 
-    private boolean hasDeadEndAt(int i) {
+    private boolean hasDeadEndAtSegment(int i) {
         ObstacleSegment segment = segments.get(i);
         ObstacleSegment nextSegment = i < segments.size() - 1 ? segments.get(i + 1) : segments.getFirst();
-        return segmentsFormDeadEnd(segment, nextSegment);
+        return isDeadEnd(segment, nextSegment);
     }
 
-    /** Tells if two segments in counter-clockwise order form a dead-end */
-    private boolean segmentsFormDeadEnd(ObstacleSegment s1, ObstacleSegment s2) {
+    /** Tells if two corner segments in counter-clockwise order form a dead-end */
+    private boolean isDeadEnd(ObstacleSegment s1, ObstacleSegment s2) {
         if (s1.isRoundedNECorner() && s2.isRoundedNWCorner()) return true;
         if (s1.isRoundedNWCorner() && s2.isRoundedSWCorner()) return true;
         if (s1.isRoundedSWCorner() && s2.isRoundedSECorner()) return true;
@@ -155,9 +159,9 @@ public class Obstacle {
         return false;
     }
 
-    public Vector2f towerCenterPoint(int index) {
-        ObstacleSegment segment = segment(index);
-        return switch (segment.mapContent()) {
+    public Vector2f cornerCenter(int index) {
+        ObstacleSegment corner = segment(index);
+        return switch (corner.mapContent()) {
             case Tiles.CORNER_NW -> points.get(index).plus(0, HTS);
             case Tiles.CORNER_SW -> points.get(index).plus(HTS, 0);
             case Tiles.CORNER_SE -> points.get(index).plus(0, -HTS);
