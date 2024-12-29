@@ -286,16 +286,6 @@ public class WallBuilder {
         addCastleWallBetween(parent, c[3], center);
     }
 
-    private void addCastleWallBetween(Group parent, Vector2f p, Vector2f q) {
-        if (p.x() == q.x()) { // vertical wall
-            addCastleWallWithCenter(parent, p.midpoint(q), TS, p.manhattanDist(q));
-        } else if (p.y() == q.y()) { // horizontal wall
-            addCastleWallWithCenter(parent, p.midpoint(q), p.manhattanDist(q), TS);
-        } else {
-            Logger.error("Can only add horizontal or vertical castle walls, p={}, q={}", p, q);
-        }
-    }
-
     public void addUShapeObstacle(Group parent, Obstacle obstacle) {
         int[] d = obstacle.uTurnSegmentIndices().toArray();
         Vector2f c0 = obstacle.uTurnCenter(d[0]);
@@ -447,6 +437,16 @@ public class WallBuilder {
 
     private void addTower(Group parent, Vector2f center) {
         parent.getChildren().add(compositeCircularWall(center, HTS));
+    }
+
+    private void addCastleWallBetween(Group parent, Vector2f p, Vector2f q) {
+        if (p.x() == q.x()) { // vertical wall
+            addCastleWallWithCenter(parent, p.midpoint(q), TS, p.manhattanDist(q));
+        } else if (p.y() == q.y()) { // horizontal wall
+            addCastleWallWithCenter(parent, p.midpoint(q), p.manhattanDist(q), TS);
+        } else {
+            Logger.error("Can only add horizontal or vertical castle walls, p={}, q={}", p, q);
+        }
     }
 
     private void addCastleWallWithCenter(Group parent, Vector2f center, double sizeX, double sizeY) {
