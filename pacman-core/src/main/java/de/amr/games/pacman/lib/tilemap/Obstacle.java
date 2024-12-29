@@ -83,11 +83,12 @@ public class Obstacle {
             return ObstacleType.O_SHAPE;
         }
         int[] d = deadEndSegmentIndices();
+        Vector2f[] c = deadEndCenters();
         if (d.length == 2 && (numSegments() == 9 || numSegments() == 10)) {
             return ObstacleType.L_SHAPE;
         }
         if (d.length == 2 && numSegments() == 14) {
-            if (hAligned(points.get(d[0]), points.get(d[1])) || vAligned(points.get(d[0]), points.get(d[1])) ) {
+            if (hAligned(c[0], c[1]) || vAligned(c[0], c[1]) ) {
                 return ObstacleType.U_SHAPE;
             } else {
                 return ObstacleType.S_SHAPE; // TODO correct?
@@ -97,7 +98,6 @@ public class Obstacle {
             return ObstacleType.T_SHAPE;
         }
         if (d.length == 4 && numSegments() == 20) {
-            Vector2f[] c = deadEndCenters();
             // Check if this is not an H-shape
             // d[0] = left, d[1] = bottom, d[2] = right, d[3] = top
             if (c[0].x() < c[2].x() && c[0].y() == c[2].y() &&
