@@ -279,6 +279,7 @@ public class GameLevel3D {
     }
 
     private void buildWorld3D(GameWorld world, WorldMapColoring coloring) {
+        wallBuilder.setTopHeight(OBSTACLE_COAT_HEIGHT);
         obstacleHeightPy.set(PY_3D_WALL_HEIGHT.get());
         wallStrokeColorPy.set(coloring.stroke());
         wallFillColorPy.set(coloring.fill());
@@ -313,49 +314,49 @@ public class GameLevel3D {
                 // Invert colors
                 wallBuilder.setTopMaterial(wallFillMaterialPy.get());
                 wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
-                wallBuilder.addOShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
+                wallBuilder.addOShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy);
             }
             case L_SHAPE -> {
                 Logger.info("Found L-shape: {}", obstacle);
                 // Invert colors
                 wallBuilder.setTopMaterial(wallFillMaterialPy.get());
                 wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
-                wallBuilder.addLShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
+                wallBuilder.addLShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy);
             }
             case S_SHAPE -> {
                 Logger.info("Found S-shape: {}", obstacle);
                 // Invert colors
                 wallBuilder.setTopMaterial(wallFillMaterialPy.get());
                 wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
-                wallBuilder.addSShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
+                wallBuilder.addSShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy);
             }
             case T_SHAPE -> {
                 Logger.info("Found T-shape: {}", obstacle);
                 // Invert colors
                 wallBuilder.setTopMaterial(wallFillMaterialPy.get());
                 wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
-                wallBuilder.addTShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
+                wallBuilder.addTShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy);
             }
             case CROSS_SHAPE -> {
                 Logger.info("Found Cross-shape: {}", obstacle);
                 // Invert colors
                 wallBuilder.setTopMaterial(wallFillMaterialPy.get());
                 wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
-                wallBuilder.addCrossShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
+                wallBuilder.addCrossShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy);
             }
             case U_SHAPE -> {
                 Logger.info("Found U-shape: {}", obstacle);
                 // Invert colors
                 wallBuilder.setTopMaterial(wallFillMaterialPy.get());
                 wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
-                wallBuilder.addUShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
+                wallBuilder.addUShapeObstacle(obstacleGroup, obstacle, obstacleHeightPy);
             }
             default -> {
                 Logger.info("Found other shape: closed={} num segments={} num dead-ends={}",
                         obstacle.isClosed(), obstacle.numSegments(), obstacle.numDeadEnds());
                 wallBuilder.setBaseMaterial(wallFillMaterialPy.get());
                 wallBuilder.setTopMaterial(wallStrokeMaterialPy.get());
-                wallBuilder.addGeneralShapeObstacle(obstacleGroup, obstacle, thickness, obstacleHeightPy, OBSTACLE_COAT_HEIGHT);
+                wallBuilder.addGeneralShapeObstacle(obstacleGroup, obstacle, thickness, obstacleHeightPy);
             }
         }
     }

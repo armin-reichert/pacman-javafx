@@ -7,7 +7,10 @@ package de.amr.games.pacman.ui3d.level;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
@@ -42,6 +45,7 @@ public class House3D {
                 door3D.playTraversalAnimation();
             }
         });
+        wallBuilder.setTopHeight(0.1f);
     }
 
     public void build(GameWorld world, WorldMapColoring coloring) {
@@ -82,8 +86,7 @@ public class House3D {
     }
 
     private Node createWall(int x1, int y1, int x2, int y2) {
-        return wallBuilder.createWallBetweenTiles(v2i(x1, y1), v2i(x2, y2),
-            wallThicknessPy.get(), heightPy, WALL_COAT_HEIGHT);
+        return wallBuilder.createWallBetweenTiles(v2i(x1, y1), v2i(x2, y2), wallThicknessPy.get(), heightPy);
     }
 
     public Group root() { return root; }
