@@ -112,7 +112,7 @@ Cheats:
 
 <div float="left">
     <a href="https://magentacloud.de/s/wiBT4sHy52dApYG">
-        <img src="doc/pacman-maze.png" style="width:500px">
+        <img src="doc/mspacman-maze.png" style="width:500px">
     </a>
 </div>
 
