@@ -148,20 +148,20 @@ public class WallBuilder {
     }
 
     public void addOShapeObstacle(Group parent, Obstacle obstacle, boolean fillCenter) {
-        switch (obstacle.numSegments()) {
-            case 4 -> {
+        switch (obstacle.encoding()) {
+            case "dgfe" -> {
                 Vector2f tower = obstacle.cornerCenter(0);
                 addTower(parent, tower);
-                Logger.info("Added one-tile O-shape, dead ends={}", obstacle.numUTurns());
+                Logger.info("- Added O-shape 3D, segments={} U-turns={}", obstacle.numSegments(), obstacle.numUTurns());
             }
-            case 6 -> {
+            case "dcgfce", "dgbfeb" -> {
                 Vector2f[] c = obstacle.uTurnCenters();
                 addTower(parent, c[0]);
                 addTower(parent, c[1]);
                 addCastleWallBetween(parent, c[0], c[1]);
-                Logger.info("Added {}-segment O-shape, dead ends={}", obstacle.numSegments(), obstacle.numUTurns());
+                Logger.info("- Added O-shape 3D, segments={} U-turns={}", obstacle.numSegments(), obstacle.numUTurns());
             }
-            default -> {
+            case "dcgbfceb" -> {
                 // O-shape with 4 towers
                 Vector2f towerNW = new Vector2f(obstacle.point(0).x(), obstacle.point(1).y());
                 Vector2f towerSW = new Vector2f(obstacle.point(3).x(), obstacle.point(2).y());
@@ -185,8 +185,9 @@ public class WallBuilder {
                 if (fillCenter) {
                     addCastleWallWithCenter(parent, center, centerWallW.manhattanDist(centerWallE) - TS, centerWallN.manhattanDist(centerWallS) - TS);
                 }
-                Logger.info("Added {}-segment oval, dead ends={}", obstacle.numSegments(), obstacle.numUTurns());
+                Logger.info("- Added O-shape 3D, segments={} U-turns={}", obstacle.numSegments(), obstacle.numUTurns());
             }
+            default -> Logger.error("Invalid O-shape detected {}", obstacle);
         }
     }
 
@@ -284,7 +285,7 @@ public class WallBuilder {
         int[] d = obstacle.uTurnSegmentIndices().toArray();
         Vector2f c0 = obstacle.cornerCenter(d[0]);
         Vector2f c1 = obstacle.cornerCenter(d[1]);
-        // find centers on opposite side of dead ends
+        // find centers on opposite side of U-turns
         Vector2f oc0, oc1;
         if (d[0] == 6 && d[1] == 13) {
             // U in normal orientation, open on top
