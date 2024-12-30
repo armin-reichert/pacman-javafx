@@ -57,6 +57,8 @@ public enum ObstacleType {
         "dcfbdgbecgfce"
     ),
 
+    T_2ROWS_SHAPE("dcgbecgfcdbfceb"),
+
     U_SHAPE(
         "dcgbfcedfge", "dcgfdegfceb", "dcgbfegdfeb", "dgefdgbfceb",
         "dcgbfcedcfgce", "dcgfcdecgfceb", "dcgbfebgdbfeb", "dgbefbdgbfceb",

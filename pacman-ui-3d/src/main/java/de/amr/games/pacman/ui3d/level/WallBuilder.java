@@ -447,6 +447,25 @@ public class WallBuilder {
         }
     }
 
+    //TODO This handles only the normal orientation
+    public void addT2RowsShape3D(Group parent, Obstacle obstacle) {
+        Vector2f leg = obstacle.uTurnCenters()[0];
+        Vector2f cornerNW = obstacle.cornerCenter(0);
+        Vector2f cornerSW = obstacle.cornerCenter(2);
+        Vector2f cornerSE= obstacle.cornerCenter(11);
+        Vector2f cornerNE = obstacle.cornerCenter(13);
+        addTower(parent, leg);
+        addTower(parent, cornerNW);
+        addTower(parent, cornerNE);
+        addTower(parent, cornerSW);
+        addTower(parent, cornerSE);
+        addCastleWall(parent, cornerNW, cornerSW);
+        addCastleWall(parent, cornerNE, cornerSE);
+        addCastleWall(parent, cornerNW, cornerNE);
+        addCastleWall(parent, cornerSW, cornerSE);
+        addCastleWall(parent, leg, new Vector2f(leg.x(), cornerSW.y()));
+    }
+
     private void addTower(Group parent, Vector2f center) {
         parent.getChildren().add(compositeCircularWall(center, HTS));
     }

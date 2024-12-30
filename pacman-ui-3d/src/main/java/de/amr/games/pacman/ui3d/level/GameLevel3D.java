@@ -319,15 +319,16 @@ public class GameLevel3D {
         parent.getChildren().add(obstacleGroup);
         ObstacleType obstacleType = obstacle.computeType();
         switch (obstacleType) {
-            case ANY ->         wallBuilder.addObstacle3D(obstacleGroup, obstacle, thickness);
-            case CROSS_SHAPE -> wallBuilder.addCross3D(obstacleGroup, obstacle);
-            case F_SHAPE ->     wallBuilder.addFShape3D(obstacleGroup, obstacle);
-            case H_SHAPE ->     wallBuilder.addHShape3D(obstacleGroup, obstacle);
-            case L_SHAPE ->     wallBuilder.addLShape3D(obstacleGroup, obstacle);
-            case O_SHAPE ->     wallBuilder.addOShape3D(obstacleGroup, obstacle, fillCenter);
-            case S_SHAPE ->     wallBuilder.addSShape3D(obstacleGroup, obstacle);
-            case T_SHAPE ->     wallBuilder.addTShape3D(obstacleGroup, obstacle);
-            case U_SHAPE ->     wallBuilder.addUShape3D(obstacleGroup, obstacle);
+            case ANY ->           wallBuilder.addObstacle3D(obstacleGroup, obstacle, thickness);
+            case CROSS_SHAPE ->   wallBuilder.addCross3D(obstacleGroup, obstacle);
+            case F_SHAPE ->       wallBuilder.addFShape3D(obstacleGroup, obstacle);
+            case H_SHAPE ->       wallBuilder.addHShape3D(obstacleGroup, obstacle);
+            case L_SHAPE ->       wallBuilder.addLShape3D(obstacleGroup, obstacle);
+            case O_SHAPE ->       wallBuilder.addOShape3D(obstacleGroup, obstacle, fillCenter);
+            case S_SHAPE ->       wallBuilder.addSShape3D(obstacleGroup, obstacle);
+            case T_SHAPE ->       wallBuilder.addTShape3D(obstacleGroup, obstacle);
+            case T_2ROWS_SHAPE -> wallBuilder.addT2RowsShape3D(obstacleGroup, obstacle);
+            case U_SHAPE ->       wallBuilder.addUShape3D(obstacleGroup, obstacle);
         }
         Logger.info("{} 3D added, obstacle={}", obstacleType, obstacle);
     }
