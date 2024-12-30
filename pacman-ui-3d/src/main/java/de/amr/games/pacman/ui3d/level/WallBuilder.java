@@ -479,6 +479,12 @@ public class WallBuilder {
             addTengen_BigMap2_DeskLike(parent, obstacle);
             return;
         }
+        if (encoding.equals("dcgbecgfcdbecgfcdbfceb")) {
+            // Tengen BIG map #3, large double-T obstacle on the top
+            addTengen_BigMap3_DoubleTOnTop(parent, obstacle);
+            return;
+        }
+
 
         int r = HTS;
         Vector2f p = obstacle.startPoint();
@@ -561,6 +567,29 @@ public class WallBuilder {
         addCastleWallBetween(parent, outerBottomL, outerBottomL.minus(0, 6 * TS));
         addCastleWallBetween(parent, outerBottomR, outerBottomR.minus(0, 6 * TS));
     }
+
+    private void addTengen_BigMap3_DoubleTOnTop(Group parent, Obstacle obstacle) {
+        Vector2f cornerNW = obstacle.cornerCenter(0);
+        Vector2f cornerNE = cornerNW.plus(12 * TS, 0);
+        Vector2f cornerSW = cornerNW.plus(0, TS);
+        Vector2f cornerSE = cornerNE.plus(0, TS);
+        Vector2f[] c = obstacle.uTurnCenters();
+        Vector2f bottomL = c[0], bottomR = c[1];
+        addTower(parent, cornerNW);
+        addTower(parent, cornerNE);
+        addTower(parent, cornerSW);
+        addTower(parent, cornerSE);
+        addTower(parent, bottomL);
+        addTower(parent, bottomR);
+        addCastleWallBetween(parent, cornerNW, cornerSW);
+        addCastleWallBetween(parent, cornerNE, cornerSE);
+        addCastleWallBetween(parent, cornerNW, cornerNE);
+        addCastleWallBetween(parent, cornerSW, cornerSE);
+        addCastleWallBetween(parent, bottomL, bottomL.minus(0, 3 * TS));
+        addCastleWallBetween(parent, bottomR, bottomR.minus(0, 3 * TS));
+    }
+
+
 
     private void addGeneralShapeCorner(Group parent, Vector2f corner, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {
         Node hWall = compositeWallCenteredAt(corner.midpoint(horEndPoint), corner.manhattanDist(horEndPoint), thickness);
