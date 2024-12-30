@@ -282,10 +282,9 @@ public class GameLevel3D {
         wallBuilder.setTopHeight(OBSTACLE_COAT_HEIGHT);
         obstacleHeightPy.set(PY_3D_WALL_HEIGHT.get());
         wallStrokeColorPy.set(coloring.stroke());
-        wallFillColorPy.set(coloring.fill());
-        if (coloring.fill().equals(Color.BLACK)) {
-            wallFillColorPy.set(Color.grayRgb(42)); // to give some contrast with floor
-        }
+        Color wallFillColor = coloring.fill().equals(Color.BLACK)
+            ? Color.grayRgb(30) : coloring.fill(); // need some contrast with floor
+        wallFillColorPy.setValue(wallFillColor);
 
         Box floor = createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
         for (Obstacle obstacle : world.map().obstacles()) {
@@ -295,7 +294,7 @@ public class GameLevel3D {
         }
         house3D = new House3D();
         house3D.baseWallHeightPy.set(HOUSE_HEIGHT);
-        house3D.wallBuilder().setBaseMaterial(Ufx.coloredMaterial(opaqueColor(coloring.fill(), HOUSE_OPACITY)));
+        house3D.wallBuilder().setBaseMaterial(Ufx.coloredMaterial(opaqueColor(wallFillColor, HOUSE_OPACITY)));
         house3D.wallBuilder().setTopMaterial(wallStrokeMaterialPy.get());
         house3D.build(world, coloring);
 
