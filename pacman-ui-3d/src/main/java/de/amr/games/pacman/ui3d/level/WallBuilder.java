@@ -113,11 +113,11 @@ public class WallBuilder {
     }
 
     public Node compositeHWallBetween(Vector2f p, Vector2f q, double thickness) {
-        return compositeWallCenteredAt(p.plus(q).scaled(0.5f), p.manhattanDist(q) + thickness, thickness);
+        return compositeWallCenteredAt(p.midpoint(q), p.manhattanDist(q) + thickness, thickness);
     }
 
     public Node compositeVWallBetween(Vector2f p, Vector2f q, double thickness) {
-        return compositeWallCenteredAt(p.plus(q).scaled(0.5f), thickness, p.manhattanDist(q));
+        return compositeWallCenteredAt(p.midpoint(q), thickness, p.manhattanDist(q));
     }
 
     public Node compositeCircularWall(Vector2f center, double radius) {
@@ -164,15 +164,15 @@ public class WallBuilder {
                 var towers = new Vector2f[] {
                     obstacle.cornerCenter(0), obstacle.cornerCenter(2), obstacle.cornerCenter(4), obstacle.cornerCenter(6)
                 };
-                for (int i = 0; i < 4; ++i) {
+                for (int i = 0; i < towers.length; ++i) {
                     addTower(parent, towers[i]);
-                    int next = i < 3 ? i + 1 : 0;
+                    int next = i < towers.length - 1 ? i + 1 : 0;
                     addCastleWallBetween(parent, towers[i], towers[next]);
                 }
                 if (fillCenter) {
                     Vector2f center = towers[0].midpoint(towers[2]);
-                    double height = towers[0].manhattanDist(towers[1]), width = towers[0].manhattanDist(towers[3]);
-                    addCastleWallWithCenter(parent, center, width - TS, height - TS);
+                    double height = towers[0].manhattanDist(towers[1]) - TS, width = towers[0].manhattanDist(towers[3]) - TS;
+                    addCastleWallWithCenter(parent, center, width, height);
                 }
                 Logger.info("- Added O-shape 3D, segments={} U-turns={}", obstacle.numSegments(), obstacle.numUTurns());
             }
@@ -243,8 +243,8 @@ public class WallBuilder {
 
     public void addCross3D(Group parent, Obstacle obstacle) {
         Vector2f[] c = obstacle.uTurnCenters();
-        for (int i = 0; i < 4; ++i) {
-            addTower(parent, c[i]);
+        for (Vector2f tower : c) {
+            addTower(parent, tower);
         }
         addCastleWallBetween(parent, c[0], c[2]);
         addCastleWallBetween(parent, c[1], c[3]);
