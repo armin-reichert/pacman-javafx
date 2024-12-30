@@ -270,15 +270,11 @@ public class WallBuilder {
 
     public void addCrossShapeObstacle(Group parent, Obstacle obstacle) {
         Vector2f[] c = obstacle.uTurnCenters();
-        Vector2f center = new Vector2f(c[3].x(), c[0].y());
-        addTower(parent, c[0]);
-        addTower(parent, c[1]);
-        addTower(parent, c[2]);
-        addTower(parent, c[3]);
-        addCastleWallBetween(parent, c[0], center);
-        addCastleWallBetween(parent, c[2], center);
-        addCastleWallBetween(parent, c[1], center);
-        addCastleWallBetween(parent, c[3], center);
+        for (int i = 0; i < 4; ++i) {
+            addTower(parent, c[i]);
+        }
+        addCastleWallBetween(parent, c[0], c[2]);
+        addCastleWallBetween(parent, c[1], c[3]);
     }
 
     public void addUShapeObstacle(Group parent, Obstacle obstacle) {
