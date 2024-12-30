@@ -59,7 +59,7 @@ public class GameLevel3D {
     static final float OBSTACLE_COAT_HEIGHT  = 0.1f;
     static final float OBSTACLE_THICKNESS    = 1.25f;
     static final float BORDER_WALL_HEIGHT    = 6.0f;
-    static final float BORDER_WALL_THICKNESS = 2.5f;
+    static final float BORDER_WALL_THICKNESS = 1.5f;
     static final float HOUSE_HEIGHT          = 12.0f;
     static final float HOUSE_OPACITY         = 0.4f;
     static final float HOUSE_SENSITIVITY     = 1.5f * TS;
