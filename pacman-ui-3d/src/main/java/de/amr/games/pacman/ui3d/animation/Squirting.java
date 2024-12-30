@@ -93,7 +93,7 @@ public class Squirting extends Transition {
                 randomDouble(dropVelocityMin.getZ(), dropVelocityMax.getZ()));
             root.getChildren().add(drop);
         }
-        Logger.info("{} drops created", root.getChildren().size());
+        Logger.debug("{} drops created", root.getChildren().size());
     }
 
     @Override

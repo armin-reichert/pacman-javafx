@@ -153,14 +153,12 @@ public class WallBuilder {
         switch (obstacle.encoding()) {
             case "dgfe" -> { // 1-tile circle
                 addTower(parent, obstacle.cornerCenter(0));
-                Logger.info("- Added O-shape 3D, segments={} U-turns={}", obstacle.numSegments(), obstacle.numUTurns());
             }
             case "dcgfce", "dgbfeb" -> { // oval with one small side (2 U-turns)
                 Vector2f[] c = obstacle.uTurnCenters();
                 addTower(parent, c[0]);
                 addTower(parent, c[1]);
                 addCastleWallBetween(parent, c[0], c[1]);
-                Logger.info("- Added O-shape 3D, segments={} U-turns={}", obstacle.numSegments(), obstacle.numUTurns());
             }
             case "dcgbfceb" -> { // oval without U-turns
                 var towers = new Vector2f[] {
@@ -176,7 +174,6 @@ public class WallBuilder {
                     double height = towers[0].manhattanDist(towers[1]) - TS, width = towers[0].manhattanDist(towers[3]) - TS;
                     addCastleWallWithCenter(parent, center, width, height);
                 }
-                Logger.info("- Added O-shape 3D, segments={} U-turns={}", obstacle.numSegments(), obstacle.numUTurns());
             }
             default -> Logger.error("Invalid O-shape detected {}", obstacle);
         }
@@ -469,6 +466,14 @@ public class WallBuilder {
     }
 
     public void addObstacle3D(Group parent, Obstacle obstacle, double thickness) {
+        //TODO handle special cases elsewhere, maybe in game-specific code?
+        String encoding = obstacle.encoding();
+        if (encoding.equals("dcfbdcgbfcebgce")) {
+            // Tengen BIG map #1, upside T at top, center
+            addTengen_BigMap1_UpsideT(parent, obstacle);
+            return;
+        }
+
         int r = HTS;
         Vector2f p = obstacle.startPoint();
         for (int i = 0; i < obstacle.numSegments(); ++i) {
@@ -513,6 +518,24 @@ public class WallBuilder {
             }
             p = q;
         }
+    }
+
+    private void addTengen_BigMap1_UpsideT(Group parent, Obstacle obstacle) {
+        Vector2f top = obstacle.uTurnCenters()[0];
+        Vector2f cornerNW = obstacle.cornerCenter(4);
+        Vector2f cornerSW = obstacle.cornerCenter(6);
+        Vector2f cornerSE = obstacle.cornerCenter(8);
+        Vector2f cornerNE = obstacle.cornerCenter(10);
+        addTower(parent, top);
+        addTower(parent, cornerNW);
+        addTower(parent, cornerSW);
+        addTower(parent, cornerSE);
+        addTower(parent, cornerNE);
+        addCastleWallBetween(parent, cornerNW, cornerSW);
+        addCastleWallBetween(parent, cornerNE, cornerSE);
+        float width = cornerNW.manhattanDist(cornerNE), height = 2 * TS;
+        addCastleWallWithCenter(parent, cornerNW.midpoint(cornerSE), width, height);
+        addCastleWallBetween(parent, top, cornerSW.midpoint(cornerSE));
     }
 
     private void addGeneralShapeCorner(Group parent, Vector2f corner, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {

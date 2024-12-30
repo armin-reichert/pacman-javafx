@@ -286,10 +286,16 @@ public class GameLevel3D {
             ? Color.grayRgb(30) : coloring.fill(); // need some contrast with floor
         wallFillColorPy.setValue(wallFillColor);
 
+        Logger.info("Build world 3D from map {}", world.map().url());
+        Logger.info("Obstacles:");
+        world.map().obstacles().forEach(obstacle -> Logger.info("{}: {}", obstacle.computeType(), obstacle));
+
         Box floor = createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
         for (Obstacle obstacle : world.map().obstacles()) {
             if (!world.isPartOfHouse(tileAt(obstacle.startPoint()))) {
-                addObstacle(mazeGroup, obstacle, obstacle.hasDoubleWalls() ? BORDER_WALL_THICKNESS : OBSTACLE_THICKNESS);
+                boolean fillCenter = true; // TODO use map property
+                addObstacle(mazeGroup, obstacle,
+                    obstacle.hasDoubleWalls() ? BORDER_WALL_THICKNESS : OBSTACLE_THICKNESS, fillCenter);
             }
         }
         house3D = new House3D();
@@ -303,53 +309,27 @@ public class GameLevel3D {
         root.getChildren().add(house3D.door3D());
     }
 
-    private void addObstacle(Group parent, Obstacle obstacle, double thickness) {
-        Group obstacleGroup = new Group();
-        parent.getChildren().add(obstacleGroup);
-        ObstacleType obstacleType = obstacle.computeType();
+    private void addObstacle(Group parent, Obstacle obstacle, double thickness, boolean fillCenter) {
         wallBuilder.setTopMaterial(wallFillMaterialPy.get());
         wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
         wallBuilder.setBaseHeightProperty(obstacleHeightPy);
         wallBuilder.setTopHeight(OBSTACLE_COAT_HEIGHT);
+
+        Group obstacleGroup = new Group();
+        parent.getChildren().add(obstacleGroup);
+        ObstacleType obstacleType = obstacle.computeType();
         switch (obstacleType) {
-            default -> {
-                Logger.info("Found shape: closed={} segments={} dead-ends={}", obstacle.isClosed(), obstacle.numSegments(), obstacle.numUTurns());
-                wallBuilder.addObstacle3D(obstacleGroup, obstacle, thickness);
-            }
-            case CROSS_SHAPE -> {
-                Logger.info("Found Cross-shape: {}", obstacle);
-                wallBuilder.addCross3D(obstacleGroup, obstacle);
-            }
-            case F_SHAPE -> {
-                Logger.info("Found F-shape: {}", obstacle);
-                wallBuilder.addFShape3D(obstacleGroup, obstacle);
-            }
-            case H_SHAPE -> {
-                Logger.info("Found H-shape: {}", obstacle);
-                wallBuilder.addHShape3D(obstacleGroup, obstacle);
-            }
-            case L_SHAPE -> {
-                Logger.info("Found L-shape: {}", obstacle);
-                wallBuilder.addLShape3D(obstacleGroup, obstacle);
-            }
-            case O_SHAPE -> {
-                Logger.info("Found O-shape: {}", obstacle);
-                boolean fillCenter = true; //TODO mark in map
-                wallBuilder.addOShape3D(obstacleGroup, obstacle, fillCenter);
-            }
-            case S_SHAPE -> {
-                Logger.info("Found S-shape: {}", obstacle);
-                wallBuilder.addSShape3D(obstacleGroup, obstacle);
-            }
-            case T_SHAPE -> {
-                Logger.info("Found T-shape: {}", obstacle);
-                wallBuilder.addTShape3D(obstacleGroup, obstacle);
-            }
-            case U_SHAPE -> {
-                Logger.info("Found U-shape: {}", obstacle);
-                wallBuilder.addUShape3D(obstacleGroup, obstacle);
-            }
+            case ANY ->         wallBuilder.addObstacle3D(obstacleGroup, obstacle, thickness);
+            case CROSS_SHAPE -> wallBuilder.addCross3D(obstacleGroup, obstacle);
+            case F_SHAPE ->     wallBuilder.addFShape3D(obstacleGroup, obstacle);
+            case H_SHAPE ->     wallBuilder.addHShape3D(obstacleGroup, obstacle);
+            case L_SHAPE ->     wallBuilder.addLShape3D(obstacleGroup, obstacle);
+            case O_SHAPE ->     wallBuilder.addOShape3D(obstacleGroup, obstacle, fillCenter);
+            case S_SHAPE ->     wallBuilder.addSShape3D(obstacleGroup, obstacle);
+            case T_SHAPE ->     wallBuilder.addTShape3D(obstacleGroup, obstacle);
+            case U_SHAPE ->     wallBuilder.addUShape3D(obstacleGroup, obstacle);
         }
+        Logger.info("{} 3D added, obstacle={}", obstacleType, obstacle);
     }
 
     private Box createFloor(double sizeX, double sizeY) {

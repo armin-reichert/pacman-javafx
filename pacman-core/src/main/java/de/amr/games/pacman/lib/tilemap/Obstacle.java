@@ -6,10 +6,7 @@ package de.amr.games.pacman.lib.tilemap;
 
 import de.amr.games.pacman.lib.Vector2f;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
@@ -19,17 +16,22 @@ import static de.amr.games.pacman.lib.Globals.HTS;
  */
 public class Obstacle {
 
-    //TODO better store only one of these?
+    private final Vector2f startPoint;
+    private Vector2f endPoint;
     private final List<ObstacleSegment> segments = new ArrayList<>();
-    private final List<Vector2f> points = new ArrayList<>();
     private final boolean doubleWalls;
 
     public Obstacle(Vector2f startPoint, boolean doubleWalls) {
-        points.add(startPoint);
+        this.startPoint = this.endPoint = Objects.requireNonNull(startPoint);
         this.doubleWalls = doubleWalls;
     }
 
     public Vector2f[] points() {
+        List<Vector2f> points = new ArrayList<>();
+        points.add(startPoint);
+        for (ObstacleSegment segment : segments) {
+            points.add(segment.start().plus(segment.vector()));
+        }
         return points.toArray(Vector2f[]::new);
     }
 
@@ -37,8 +39,8 @@ public class Obstacle {
     public String toString() {
         return "Obstacle{" +
             "encoding=" + encoding() +
-            ", start=" + points.getFirst() +
-            ", end=" + points.getLast() +
+            ", start=" + startPoint +
+            ", end=" + endPoint +
             ", segment count=" + segments.size() +
             ", segments=" + segments +
             '}';
@@ -55,16 +57,20 @@ public class Obstacle {
     }
 
     public void addSegment(Vector2f vector, boolean ccw, byte content) {
-        segments.add(new ObstacleSegment(vector, ccw, content));
-        points.add(endPoint().plus(vector));
+        if (segments.isEmpty()) {
+            segments.add(new ObstacleSegment(startPoint, vector, ccw, content));
+        } else {
+            segments.add(new ObstacleSegment(segments.getLast().end(), vector, ccw, content));
+        }
+        endPoint = segments.getLast().end();
     }
 
-    public Vector2f startPoint() { return points.getFirst(); }
+    public Vector2f startPoint() { return startPoint; }
 
-    public Vector2f endPoint() { return points.getLast(); }
+    public Vector2f endPoint() { return endPoint; }
 
     public Vector2f point(int i) {
-        return points.get(i);
+        return i < numSegments() ? segment(i).start() : segment(i).end();
     }
 
     public boolean isClosed() {
@@ -126,10 +132,10 @@ public class Obstacle {
     public Vector2f cornerCenter(int index) {
         ObstacleSegment corner = segment(index);
         return switch (corner.mapContent()) {
-            case TileEncoding.CORNER_NW -> points.get(index).plus(0, HTS);
-            case TileEncoding.CORNER_SW -> points.get(index).plus(HTS, 0);
-            case TileEncoding.CORNER_SE -> points.get(index).plus(0, -HTS);
-            case TileEncoding.CORNER_NE -> points.get(index).plus(-HTS, 0);
+            case TileEncoding.CORNER_NW -> point(index).plus(0, HTS);
+            case TileEncoding.CORNER_SW -> point(index).plus(HTS, 0);
+            case TileEncoding.CORNER_SE -> point(index).plus(0, -HTS);
+            case TileEncoding.CORNER_NE -> point(index).plus(-HTS, 0);
             default -> throw new IllegalStateException();
         };
     }
