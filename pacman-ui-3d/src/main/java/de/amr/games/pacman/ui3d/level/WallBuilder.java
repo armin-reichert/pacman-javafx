@@ -158,7 +158,7 @@ public class WallBuilder {
                 Vector2f[] c = obstacle.uTurnCenters();
                 addTower(parent, c[0]);
                 addTower(parent, c[1]);
-                addCastleWallBetween(parent, c[0], c[1]);
+                addCastleWall(parent, c[0], c[1]);
             }
             case "dcgbfceb" -> { // oval without U-turns
                 var towers = new Vector2f[] {
@@ -167,7 +167,7 @@ public class WallBuilder {
                 for (int i = 0; i < towers.length; ++i) {
                     addTower(parent, towers[i]);
                     int next = i < towers.length - 1 ? i + 1 : 0;
-                    addCastleWallBetween(parent, towers[i], towers[next]);
+                    addCastleWall(parent, towers[i], towers[next]);
                 }
                 if (fillCenter) {
                     Vector2f center = towers[0].midpoint(towers[2]);
@@ -189,8 +189,8 @@ public class WallBuilder {
         addTower(parent, c[0]);
         addTower(parent, c[1]);
         addTower(parent, corner);
-        addCastleWallBetween(parent, c[0], corner);
-        addCastleWallBetween(parent, c[1], corner);
+        addCastleWall(parent, c[0], corner);
+        addCastleWall(parent, c[1], corner);
     }
 
     public void addFShape3D(Group parent, Obstacle obstacle) {
@@ -209,9 +209,9 @@ public class WallBuilder {
                     addTower(parent, tower);
                 }
                 addTower(parent, spineTop);
-                addCastleWallBetween(parent, spineTop, c[0]);
-                addCastleWallBetween(parent, spineMiddle, c[1]);
-                addCastleWallBetween(parent, spineTop, c[2]);
+                addCastleWall(parent, spineTop, c[0]);
+                addCastleWall(parent, spineMiddle, c[1]);
+                addCastleWall(parent, spineTop, c[2]);
             }
             case "dgbecgfcdbecgfceb", "dcfbdgbfcedcfbgce" -> {
                 Arrays.sort(c, (p, q) -> Float.compare(p.x(), q.x()));
@@ -222,9 +222,9 @@ public class WallBuilder {
                     addTower(parent, tower);
                 }
                 addTower(parent, spineRight);
-                addCastleWallBetween(parent, c[0], spineRight);
-                addCastleWallBetween(parent, spineMiddle, c[1]);
-                addCastleWallBetween(parent, spineRight, c[2]);
+                addCastleWall(parent, c[0], spineRight);
+                addCastleWall(parent, spineMiddle, c[1]);
+                addCastleWall(parent, spineRight, c[2]);
             }
             case "dcgfcdbecgfcdbfeb", "dcgbfebgcedcfbgce" -> {
                 Arrays.sort(c, (p, q) -> Float.compare(p.x(), q.x()));
@@ -235,9 +235,9 @@ public class WallBuilder {
                     addTower(parent, tower);
                 }
                 addTower(parent, spineLeft);
-                addCastleWallBetween(parent, spineLeft, c[2]);
-                addCastleWallBetween(parent, spineLeft, c[0]);
-                addCastleWallBetween(parent, spineMiddle, c[1]);
+                addCastleWall(parent, spineLeft, c[2]);
+                addCastleWall(parent, spineLeft, c[0]);
+                addCastleWall(parent, spineMiddle, c[1]);
             }
         }
     }
@@ -263,8 +263,8 @@ public class WallBuilder {
                 addTower(parent, towerSW);
                 addTower(parent, towerSE);
                 addTower(parent, towerNE);
-                addCastleWallBetween(parent, towerNW, towerNE);
-                addCastleWallBetween(parent, towerSW, towerSE);
+                addCastleWall(parent, towerNW, towerNE);
+                addCastleWall(parent, towerSW, towerSE);
                 Vector2f topJoin = towerNW.midpoint(towerNE);
                 Vector2f bottomJoin = towerSW.midpoint(towerSE);
                 addCastleWallWithCenter(parent, topJoin.midpoint(bottomJoin), TS, topJoin.manhattanDist(bottomJoin));
@@ -294,8 +294,8 @@ public class WallBuilder {
         for (Vector2f tower : c) {
             addTower(parent, tower);
         }
-        addCastleWallBetween(parent, c[0], c[2]);
-        addCastleWallBetween(parent, c[1], c[3]);
+        addCastleWall(parent, c[0], c[2]);
+        addCastleWall(parent, c[1], c[3]);
     }
 
     public void addUShape3D(Group parent, Obstacle obstacle) {
@@ -451,7 +451,7 @@ public class WallBuilder {
         parent.getChildren().add(compositeCircularWall(center, HTS));
     }
 
-    private void addCastleWallBetween(Group parent, Vector2f p, Vector2f q) {
+    private void addCastleWall(Group parent, Vector2f p, Vector2f q) {
         if (p.x() == q.x()) { // vertical wall
             addCastleWallWithCenter(parent, p.midpoint(q), TS, p.manhattanDist(q));
         } else if (p.y() == q.y()) { // horizontal wall
@@ -543,11 +543,11 @@ public class WallBuilder {
         addTower(parent, cornerSW);
         addTower(parent, cornerSE);
         addTower(parent, cornerNE);
-        addCastleWallBetween(parent, cornerNW, cornerSW);
-        addCastleWallBetween(parent, cornerNE, cornerSE);
+        addCastleWall(parent, cornerNW, cornerSW);
+        addCastleWall(parent, cornerNE, cornerSE);
         float width = cornerNW.manhattanDist(cornerNE), height = 2 * TS;
         addCastleWallWithCenter(parent, cornerNW.midpoint(cornerSE), width, height);
-        addCastleWallBetween(parent, top, cornerSW.midpoint(cornerSE));
+        addCastleWall(parent, top, cornerSW.midpoint(cornerSE));
     }
 
     private void addTengen_BigMap2_DeskLike(Group parent, Obstacle obstacle) {
@@ -561,11 +561,11 @@ public class WallBuilder {
         addTower(parent, outerBottomL);
         addTower(parent, innerBottomR);
         addTower(parent, outerBottomR);
-        addCastleWallBetween(parent, topL, topR);
-        addCastleWallBetween(parent, outerBottomL, innerBottomL);
-        addCastleWallBetween(parent, outerBottomR, innerBottomR);
-        addCastleWallBetween(parent, outerBottomL, outerBottomL.minus(0, 6 * TS));
-        addCastleWallBetween(parent, outerBottomR, outerBottomR.minus(0, 6 * TS));
+        addCastleWall(parent, topL, topR);
+        addCastleWall(parent, outerBottomL, innerBottomL);
+        addCastleWall(parent, outerBottomR, innerBottomR);
+        addCastleWall(parent, outerBottomL, outerBottomL.minus(0, 6 * TS));
+        addCastleWall(parent, outerBottomR, outerBottomR.minus(0, 6 * TS));
     }
 
     private void addTengen_BigMap3_DoubleTOnTop(Group parent, Obstacle obstacle) {
@@ -581,15 +581,13 @@ public class WallBuilder {
         addTower(parent, cornerSE);
         addTower(parent, bottomL);
         addTower(parent, bottomR);
-        addCastleWallBetween(parent, cornerNW, cornerSW);
-        addCastleWallBetween(parent, cornerNE, cornerSE);
-        addCastleWallBetween(parent, cornerNW, cornerNE);
-        addCastleWallBetween(parent, cornerSW, cornerSE);
-        addCastleWallBetween(parent, bottomL, bottomL.minus(0, 3 * TS));
-        addCastleWallBetween(parent, bottomR, bottomR.minus(0, 3 * TS));
+        addCastleWall(parent, cornerNW, cornerSW);
+        addCastleWall(parent, cornerNE, cornerSE);
+        addCastleWall(parent, cornerNW, cornerNE);
+        addCastleWall(parent, cornerSW, cornerSE);
+        addCastleWall(parent, bottomL, bottomL.minus(0, 3 * TS));
+        addCastleWall(parent, bottomR, bottomR.minus(0, 3 * TS));
     }
-
-
 
     private void addGeneralShapeCorner(Group parent, Vector2f corner, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {
         Node hWall = compositeWallCenteredAt(corner.midpoint(horEndPoint), corner.manhattanDist(horEndPoint), thickness);

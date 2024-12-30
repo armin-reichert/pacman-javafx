@@ -605,6 +605,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         gameScenePy.set(null);
         //TODO check this
         gamePage.dashboardLayer().hideDashboard();
+        sceneRoot.setBackground(assets.get("scene_background"));
         selectPage(startPage);
     }
 
