@@ -14,7 +14,12 @@ public enum ObstacleType {
         "dcfbdgbecgfcdbfebgce"
     ),
 
-    F_SHAPE,
+    F_SHAPE(
+        "dcgfcdbfebgdbfeb",
+        "dgbefbdgbecgfceb",
+        "dcgfcdbfebgcdbfeb",
+        "dgbecfbdgbecgfceb"
+    ),
 
     H_SHAPE(
         "dgefdgbfegdfeb",

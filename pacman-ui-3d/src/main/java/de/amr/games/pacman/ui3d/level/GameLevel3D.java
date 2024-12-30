@@ -321,6 +321,10 @@ public class GameLevel3D {
                 Logger.info("Found Cross-shape: {}", obstacle);
                 wallBuilder.addCross3D(obstacleGroup, obstacle);
             }
+            case F_SHAPE -> {
+                Logger.info("Found F-shape: {}", obstacle);
+                wallBuilder.addFShape3D(obstacleGroup, obstacle);
+            }
             case H_SHAPE -> {
                 Logger.info("Found H-shape: {}", obstacle);
                 wallBuilder.addHShape3D(obstacleGroup, obstacle);

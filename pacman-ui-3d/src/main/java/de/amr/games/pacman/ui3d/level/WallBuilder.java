@@ -18,6 +18,8 @@ import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 import org.tinylog.Logger;
 
+import java.util.Arrays;
+
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_DRAW_MODE;
@@ -192,6 +194,29 @@ public class WallBuilder {
         addTower(parent, corner);
         addCastleWallBetween(parent, c[0], corner);
         addCastleWallBetween(parent, c[1], corner);
+    }
+
+    public void addFShape3D(Group parent, Obstacle obstacle) {
+        String encoding = obstacle.encoding();
+        switch (encoding) {
+            case "dcgfcdbfebgdbfeb",
+                 "dgbefbdgbecgfceb",
+                 "dcgfcdbfebgcdbfeb",
+                 "dgbecfbdgbecgfceb"-> {
+                Vector2f[] c = obstacle.uTurnCenters();
+                Arrays.sort(c, (p, q) -> Float.compare(p.y(), q.y()));
+                float spineX = c[2].x();
+                Vector2f spineTop = new Vector2f(spineX, c[0].y());
+                Vector2f spineMiddle = new Vector2f(spineX, c[1].y());
+                for (var tower : c) {
+                    addTower(parent, tower);
+                }
+                addTower(parent, spineTop);
+                addCastleWallBetween(parent, spineTop, c[0]);
+                addCastleWallBetween(parent, spineMiddle, c[1]);
+                addCastleWallBetween(parent, spineTop, c[2]);
+            }
+        }
     }
 
     public void addHShape3D(Group parent, Obstacle obstacle) {
