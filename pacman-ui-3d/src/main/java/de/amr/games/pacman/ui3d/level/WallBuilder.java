@@ -181,33 +181,17 @@ public class WallBuilder {
     }
 
     public void addLShape3D(Group parent, Obstacle obstacle) {
+        Vector2f[] c = obstacle.uTurnCenters();
         int[] d = obstacle.uTurnSegmentIndices().toArray();
-        Vector2f c0 = obstacle.cornerCenter(d[0]);
-        Vector2f c1 = obstacle.cornerCenter(d[1]);
-        ObstacleSegment d0Segment = obstacle.segment(d[0]);
-        Vector2f knee;
-        if (d0Segment.isRoundedSECorner() || d0Segment.isRoundedNWCorner()) {
-            knee = new Vector2f(c1.x(), c0.y());
-        } else if (d0Segment.isRoundedSWCorner()) {
-            knee = new Vector2f(c0.x(), c1.y());
-        } else {
-            Logger.error("Invalid L-shape detected: {}", obstacle);
-            return;
-        }
-        addTower(parent, c0);
-        addTower(parent, c1);
-        addTower(parent, knee);
-
-        if (c0.x() == knee.x()) {
-            addCastleWallWithCenter(parent, c0.midpoint(knee), TS, c0.manhattanDist(knee));
-        } else if (c0.y() == knee.y()) {
-            addCastleWallWithCenter(parent, c0.midpoint(knee), c0.manhattanDist(knee), TS);
-        }
-        if (c1.x() == knee.x()) {
-            addCastleWallWithCenter(parent, c1.midpoint(knee), TS, c1.manhattanDist(knee));
-        } else if (c1.y() == knee.y()) {
-            addCastleWallWithCenter(parent, c1.midpoint(knee), c1.manhattanDist(knee), TS);
-        }
+        ObstacleSegment firstUTurn = obstacle.segment(d[0]);
+        Vector2f corner = firstUTurn.isRoundedSECorner() || firstUTurn.isRoundedNWCorner()
+            ? new Vector2f(c[1].x(), c[0].y())
+            : new Vector2f(c[0].x(), c[1].y());
+        addTower(parent, c[0]);
+        addTower(parent, c[1]);
+        addTower(parent, corner);
+        addCastleWallBetween(parent, c[0], corner);
+        addCastleWallBetween(parent, c[1], corner);
     }
 
     public void addHShape3D(Group parent, Obstacle obstacle) {

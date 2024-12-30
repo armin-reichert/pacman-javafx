@@ -9,7 +9,7 @@ import java.net.URL;
 public class ShapesApp {
 
     public static void main(String[] args) throws IOException {
-        URL url = ShapesApp.class.getResource("/H-shapes.world");
+        URL url = ShapesApp.class.getResource("/O-shapes.world");
         WorldMap worldMap = new WorldMap(url);
         worldMap.obstacles().forEach(Logger::info);
     }
