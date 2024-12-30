@@ -18,7 +18,9 @@ public enum ObstacleType {
         "dcgfcdbfebgdbfeb",
         "dgbefbdgbecgfceb",
         "dcgfcdbfebgcdbfeb",
-        "dgbecfbdgbecgfceb"
+        "dgbecfbdgbecgfceb",
+        "dgbecgfcdbecgfceb", "dcfbdgbfcedcfbgce",
+        "dcgfcdbecgfcdbfeb", "dcgbfebgcedcfbgce"
     ),
 
     H_SHAPE(

@@ -198,12 +198,12 @@ public class WallBuilder {
 
     public void addFShape3D(Group parent, Obstacle obstacle) {
         String encoding = obstacle.encoding();
+        Vector2f[] c = obstacle.uTurnCenters();
         switch (encoding) {
             case "dcgfcdbfebgdbfeb",
                  "dgbefbdgbecgfceb",
                  "dcgfcdbfebgcdbfeb",
                  "dgbecfbdgbecgfceb"-> {
-                Vector2f[] c = obstacle.uTurnCenters();
                 Arrays.sort(c, (p, q) -> Float.compare(p.y(), q.y()));
                 float spineX = c[2].x();
                 Vector2f spineTop = new Vector2f(spineX, c[0].y());
@@ -215,6 +215,32 @@ public class WallBuilder {
                 addCastleWallBetween(parent, spineTop, c[0]);
                 addCastleWallBetween(parent, spineMiddle, c[1]);
                 addCastleWallBetween(parent, spineTop, c[2]);
+            }
+            case "dgbecgfcdbecgfceb", "dcfbdgbfcedcfbgce" -> {
+                Arrays.sort(c, (p, q) -> Float.compare(p.x(), q.x()));
+                float spineY = c[0].y();
+                Vector2f spineMiddle = new Vector2f(c[1].x(), spineY);
+                Vector2f spineRight = new Vector2f(c[2].x(), spineY);
+                for (var tower : c) {
+                    addTower(parent, tower);
+                }
+                addTower(parent, spineRight);
+                addCastleWallBetween(parent, c[0], spineRight);
+                addCastleWallBetween(parent, spineMiddle, c[1]);
+                addCastleWallBetween(parent, spineRight, c[2]);
+            }
+            case "dcgfcdbecgfcdbfeb", "dcgbfebgcedcfbgce" -> {
+                Arrays.sort(c, (p, q) -> Float.compare(p.x(), q.x()));
+                float spineY = c[2].y();
+                Vector2f spineLeft = new Vector2f(c[0].x(), spineY);
+                Vector2f spineMiddle = new Vector2f(c[1].x(), spineY);
+                for (var tower : c) {
+                    addTower(parent, tower);
+                }
+                addTower(parent, spineLeft);
+                addCastleWallBetween(parent, spineLeft, c[2]);
+                addCastleWallBetween(parent, spineLeft, c[0]);
+                addCastleWallBetween(parent, spineMiddle, c[1]);
             }
         }
     }
