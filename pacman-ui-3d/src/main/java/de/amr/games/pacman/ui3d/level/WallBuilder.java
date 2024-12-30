@@ -466,11 +466,17 @@ public class WallBuilder {
     }
 
     public void addObstacle3D(Group parent, Obstacle obstacle, double thickness) {
+
         //TODO handle special cases elsewhere, maybe in game-specific code?
         String encoding = obstacle.encoding();
         if (encoding.equals("dcfbdcgbfcebgce")) {
             // Tengen BIG map #1, upside T at top, center
             addTengen_BigMap1_UpsideT(parent, obstacle);
+            return;
+        }
+        if (encoding.equals("dgbecgbfebgcdbecfbdgbfcdbfeb")) {
+            // Tengen BIG map #2, large desk-like obstacle on the bottom
+            addTengen_BigMap2_DeskLike(parent, obstacle);
             return;
         }
 
@@ -536,6 +542,24 @@ public class WallBuilder {
         float width = cornerNW.manhattanDist(cornerNE), height = 2 * TS;
         addCastleWallWithCenter(parent, cornerNW.midpoint(cornerSE), width, height);
         addCastleWallBetween(parent, top, cornerSW.midpoint(cornerSE));
+    }
+
+    private void addTengen_BigMap2_DeskLike(Group parent, Obstacle obstacle) {
+        Vector2f[] c = obstacle.uTurnCenters();
+        Vector2f topL = c[0], innerBottomL = c[1], innerBottomR = c[2], topR = c[3];
+        Vector2f outerBottomL = innerBottomL.minus(4 * TS, 0);
+        Vector2f outerBottomR = innerBottomR.plus(4 * TS, 0);
+        addTower(parent, topL);
+        addTower(parent, topR);
+        addTower(parent, innerBottomL);
+        addTower(parent, outerBottomL);
+        addTower(parent, innerBottomR);
+        addTower(parent, outerBottomR);
+        addCastleWallBetween(parent, topL, topR);
+        addCastleWallBetween(parent, outerBottomL, innerBottomL);
+        addCastleWallBetween(parent, outerBottomR, innerBottomR);
+        addCastleWallBetween(parent, outerBottomL, outerBottomL.minus(0, 6 * TS));
+        addCastleWallBetween(parent, outerBottomR, outerBottomR.minus(0, 6 * TS));
     }
 
     private void addGeneralShapeCorner(Group parent, Vector2f corner, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {
