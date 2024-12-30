@@ -161,6 +161,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         textPickerLevelCompleteTexts = Picker.fromBundle(textResources, "level.complete");
         assets.addBundle(textResources);
 
+        assets.store("blue_sky_background",  Ufx.imageBackground(rm.loadImage("graphics/blue_sky.jpg")));
         assets.store("scene_background",     Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
         assets.store("font.arcade",          rm.loadFont("fonts/emulogic.ttf", 8));
         assets.store("font.handwriting",     rm.loadFont("fonts/Molle-Italic.ttf", 9));
@@ -435,6 +436,9 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             if (sceneChanging) {
                 gameScenePy.set(nextGameScene);
             }
+            sceneRoot.setBackground(currentGameSceneHasID("PlayScene3D")
+                ? assets.get("blue_sky_background")
+                : assets.get("scene_background"));
             Logger.info("Game scene is now: {}", sceneDisplayName(nextGameScene));
         }
     }
