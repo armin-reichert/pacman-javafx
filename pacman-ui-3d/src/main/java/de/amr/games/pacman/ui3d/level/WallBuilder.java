@@ -150,7 +150,7 @@ public class WallBuilder {
     public void addOShapeObstacle(Group parent, Obstacle obstacle, boolean fillCenter) {
         switch (obstacle.numSegments()) {
             case 4 -> {
-                Vector2f tower = new Vector2f(obstacle.point(0).x(), obstacle.point(1).y());
+                Vector2f tower = obstacle.cornerCenter(0);
                 addTower(parent, tower);
                 Logger.info("Added one-tile O-shape, dead ends={}", obstacle.numUTurns());
             }
