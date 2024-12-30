@@ -147,43 +147,32 @@ public class WallBuilder {
         return new Group(base, top);
     }
 
-    public void addOShapeObstacle(Group parent, Obstacle obstacle, boolean fillCenter) {
+    public void addOShape3D(Group parent, Obstacle obstacle, boolean fillCenter) {
         switch (obstacle.encoding()) {
-            case "dgfe" -> {
-                Vector2f tower = obstacle.cornerCenter(0);
-                addTower(parent, tower);
+            case "dgfe" -> { // 1-tile circle
+                addTower(parent, obstacle.cornerCenter(0));
                 Logger.info("- Added O-shape 3D, segments={} U-turns={}", obstacle.numSegments(), obstacle.numUTurns());
             }
-            case "dcgfce", "dgbfeb" -> {
+            case "dcgfce", "dgbfeb" -> { // oval with one small side (2 U-turns)
                 Vector2f[] c = obstacle.uTurnCenters();
                 addTower(parent, c[0]);
                 addTower(parent, c[1]);
                 addCastleWallBetween(parent, c[0], c[1]);
                 Logger.info("- Added O-shape 3D, segments={} U-turns={}", obstacle.numSegments(), obstacle.numUTurns());
             }
-            case "dcgbfceb" -> {
-                // O-shape with 4 towers
-                Vector2f towerNW = new Vector2f(obstacle.point(0).x(), obstacle.point(1).y());
-                Vector2f towerSW = new Vector2f(obstacle.point(3).x(), obstacle.point(2).y());
-                Vector2f towerSE = new Vector2f(obstacle.point(4).x(), obstacle.point(5).y());
-                Vector2f towerNE = new Vector2f(obstacle.point(7).x(), obstacle.point(6).y());
-
-                Vector2f centerWallN = towerNW.midpoint(towerNE);
-                Vector2f centerWallS = towerSW.midpoint(towerSE);
-                Vector2f centerWallW = towerNW.midpoint(towerSW);
-                Vector2f centerWallE = towerNE.midpoint(towerSE);
-                Vector2f center = centerWallW.midpoint(centerWallE);
-
-                addTower(parent, towerNW);
-                addTower(parent, towerSW);
-                addTower(parent, towerSE);
-                addTower(parent, towerNE);
-                addCastleWallWithCenter(parent, centerWallN, towerNE.manhattanDist(towerNW), TS);
-                addCastleWallWithCenter(parent, centerWallS, towerSE.manhattanDist(towerSW), TS);
-                addCastleWallWithCenter(parent, centerWallW, TS, towerNW.manhattanDist(towerSW));
-                addCastleWallWithCenter(parent, centerWallE, TS, towerNE.manhattanDist(towerSE));
+            case "dcgbfceb" -> { // oval without U-turns
+                var towers = new Vector2f[] {
+                    obstacle.cornerCenter(0), obstacle.cornerCenter(2), obstacle.cornerCenter(4), obstacle.cornerCenter(6)
+                };
+                for (int i = 0; i < 4; ++i) {
+                    addTower(parent, towers[i]);
+                    int next = i < 3 ? i + 1 : 0;
+                    addCastleWallBetween(parent, towers[i], towers[next]);
+                }
                 if (fillCenter) {
-                    addCastleWallWithCenter(parent, center, centerWallW.manhattanDist(centerWallE) - TS, centerWallN.manhattanDist(centerWallS) - TS);
+                    Vector2f center = towers[0].midpoint(towers[2]);
+                    double height = towers[0].manhattanDist(towers[1]), width = towers[0].manhattanDist(towers[3]);
+                    addCastleWallWithCenter(parent, center, width - TS, height - TS);
                 }
                 Logger.info("- Added O-shape 3D, segments={} U-turns={}", obstacle.numSegments(), obstacle.numUTurns());
             }
@@ -191,7 +180,7 @@ public class WallBuilder {
         }
     }
 
-    public void addLShapeObstacle(Group parent, Obstacle obstacle) {
+    public void addLShape3D(Group parent, Obstacle obstacle) {
         int[] d = obstacle.uTurnSegmentIndices().toArray();
         Vector2f c0 = obstacle.cornerCenter(d[0]);
         Vector2f c1 = obstacle.cornerCenter(d[1]);
@@ -221,7 +210,7 @@ public class WallBuilder {
         }
     }
 
-    public void addHShapeObstacle(Group parent, Obstacle obstacle) {
+    public void addHShape3D(Group parent, Obstacle obstacle) {
         String encoding = obstacle.encoding();
         switch (encoding) {
             case "dgefdgbfegdfeb" -> {
@@ -268,7 +257,7 @@ public class WallBuilder {
         }
     }
 
-    public void addCrossShapeObstacle(Group parent, Obstacle obstacle) {
+    public void addCross3D(Group parent, Obstacle obstacle) {
         Vector2f[] c = obstacle.uTurnCenters();
         for (int i = 0; i < 4; ++i) {
             addTower(parent, c[i]);
@@ -277,7 +266,7 @@ public class WallBuilder {
         addCastleWallBetween(parent, c[1], c[3]);
     }
 
-    public void addUShapeObstacle(Group parent, Obstacle obstacle) {
+    public void addUShape3D(Group parent, Obstacle obstacle) {
         int[] d = obstacle.uTurnSegmentIndices().toArray();
         Vector2f c0 = obstacle.cornerCenter(d[0]);
         Vector2f c1 = obstacle.cornerCenter(d[1]);
@@ -325,7 +314,7 @@ public class WallBuilder {
         addTower(parent, oc1);
     }
 
-    public void addSShapeObstacle(Group parent, Obstacle obstacle) {
+    public void addSShape3D(Group parent, Obstacle obstacle) {
         int[] d = obstacle.uTurnSegmentIndices().toArray();
         Vector2f[] c = obstacle.uTurnCenters(); // count=2
         addTower(parent, c[0]);
@@ -383,7 +372,7 @@ public class WallBuilder {
         }
     }
 
-    public void addTShapeObstacle(Group parent, Obstacle obstacle) {
+    public void addTShape3D(Group parent, Obstacle obstacle) {
         int[] d = obstacle.uTurnSegmentIndices().toArray();
         Vector2f c0 = obstacle.cornerCenter(d[0]);
         Vector2f c1 = obstacle.cornerCenter(d[1]);
@@ -444,7 +433,7 @@ public class WallBuilder {
         parent.getChildren().add(compositeWallCenteredAt(center, sizeX, sizeY));
     }
 
-    public void addGeneralShapeObstacle(Group parent, Obstacle obstacle, double thickness) {
+    public void addObstacle3D(Group parent, Obstacle obstacle, double thickness) {
         int r = HTS;
         Vector2f p = obstacle.startPoint();
         for (int i = 0; i < obstacle.numSegments(); ++i) {

@@ -315,36 +315,36 @@ public class GameLevel3D {
         switch (obstacleType) {
             default -> {
                 Logger.info("Found shape: closed={} segments={} dead-ends={}", obstacle.isClosed(), obstacle.numSegments(), obstacle.numUTurns());
-                wallBuilder.addGeneralShapeObstacle(obstacleGroup, obstacle, thickness);
+                wallBuilder.addObstacle3D(obstacleGroup, obstacle, thickness);
             }
             case CROSS_SHAPE -> {
                 Logger.info("Found Cross-shape: {}", obstacle);
-                wallBuilder.addCrossShapeObstacle(obstacleGroup, obstacle);
+                wallBuilder.addCross3D(obstacleGroup, obstacle);
             }
             case H_SHAPE -> {
                 Logger.info("Found H-shape: {}", obstacle);
-                wallBuilder.addHShapeObstacle(obstacleGroup, obstacle);
+                wallBuilder.addHShape3D(obstacleGroup, obstacle);
             }
             case L_SHAPE -> {
                 Logger.info("Found L-shape: {}", obstacle);
-                wallBuilder.addLShapeObstacle(obstacleGroup, obstacle);
+                wallBuilder.addLShape3D(obstacleGroup, obstacle);
             }
             case O_SHAPE -> {
                 Logger.info("Found O-shape: {}", obstacle);
                 boolean fillCenter = true; //TODO mark in map
-                wallBuilder.addOShapeObstacle(obstacleGroup, obstacle, fillCenter);
+                wallBuilder.addOShape3D(obstacleGroup, obstacle, fillCenter);
             }
             case S_SHAPE -> {
                 Logger.info("Found S-shape: {}", obstacle);
-                wallBuilder.addSShapeObstacle(obstacleGroup, obstacle);
+                wallBuilder.addSShape3D(obstacleGroup, obstacle);
             }
             case T_SHAPE -> {
                 Logger.info("Found T-shape: {}", obstacle);
-                wallBuilder.addTShapeObstacle(obstacleGroup, obstacle);
+                wallBuilder.addTShape3D(obstacleGroup, obstacle);
             }
             case U_SHAPE -> {
                 Logger.info("Found U-shape: {}", obstacle);
-                wallBuilder.addUShapeObstacle(obstacleGroup, obstacle);
+                wallBuilder.addUShape3D(obstacleGroup, obstacle);
             }
         }
     }
