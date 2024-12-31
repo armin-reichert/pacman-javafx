@@ -91,7 +91,7 @@ public class GameLevel3D {
     private final Group mazeGroup = new Group();
     private final Message3D message3D;
     private final Pac3D pac3D;
-    private final List<MutableGhost3D> ghosts3D;
+    private final List<Ghost3DAppearance> ghosts3D;
     private final Map<Vector2i, Pellet3D> pellets3D = new HashMap<>();
     private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
     private final LivesCounter3D livesCounter3D;
@@ -162,12 +162,12 @@ public class GameLevel3D {
         return pac3D;
     }
 
-    private MutableGhost3D createGhost3D(Ghost ghost, int numFlashes) {
+    private Ghost3DAppearance createGhost3D(Ghost ghost, int numFlashes) {
         String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
         Shape3D dressShape    = new MeshView(context.assets().get("model3D.ghost.mesh.dress"));
         Shape3D pupilsShape   = new MeshView(context.assets().get("model3D.ghost.mesh.pupils"));
         Shape3D eyeballsShape = new MeshView(context.assets().get("model3D.ghost.mesh.eyeballs"));
-        return new MutableGhost3D(dressShape, pupilsShape, eyeballsShape, context.assets(), assetKeyPrefix, ghost, GHOST_SIZE, numFlashes);
+        return new Ghost3DAppearance(dressShape, pupilsShape, eyeballsShape, context.assets(), assetKeyPrefix, ghost, GHOST_SIZE, numFlashes);
     }
 
     private LivesCounter3D createLivesCounter3D(boolean canStartNewGame) {
@@ -455,9 +455,9 @@ public class GameLevel3D {
 
     public Pac3D pac3D() { return pac3D; }
 
-    public List<MutableGhost3D> ghosts3D() { return ghosts3D; }
+    public List<Ghost3DAppearance> ghosts3D() { return ghosts3D; }
 
-    public MutableGhost3D ghost3D(byte id) { return ghosts3D.get(id); }
+    public Ghost3DAppearance ghost3D(byte id) { return ghosts3D.get(id); }
 
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
 

@@ -44,7 +44,7 @@ public class Ghost3D {
     private final RotateTransition dressAnimation;
     private Animation flashingAnimation;
 
-    private Color color(String keySuffix) { return assets.color(assetPrefix + keySuffix); }
+    private Color color(String assetKeySuffix) { return assets.color(assetPrefix + assetKeySuffix); }
 
     private Color normalDressColor()        { return color(".ghost.%d.color.normal.dress".formatted(id));  }
     private Color normalPupilsColor()       { return color(".ghost.%d.color.normal.pupils".formatted(id)); }
@@ -146,28 +146,28 @@ public class Ghost3D {
     }
 
     public void appearFrightened() {
-        dress.setVisible(true);
         ensureFlashingAnimationIsStopped();
         dressColorPy.set(frightenedDressColor());
         eyeballsColorPy.set(frightenedEyeballsColor());
         pupilsColorPy.set(frightenedPupilsColor());
+        dress.setVisible(true);
         Logger.info("Appear frightened, ghost {}", id);
     }
 
     public void appearNormal() {
-        dress.setVisible(true);
         ensureFlashingAnimationIsStopped();
         dressColorPy.set(normalDressColor());
         eyeballsColorPy.set(normalEyeballsColor());
         pupilsColorPy.set(normalPupilsColor());
+        dress.setVisible(true);
         Logger.info("Appear normal, ghost {}", id);
     }
 
     public void appearEyesOnly() {
-        dress.setVisible(false);
         ensureFlashingAnimationIsStopped();
         eyeballsColorPy.set(normalEyeballsColor());
         pupilsColorPy.set(normalPupilsColor());
+        dress.setVisible(false);
         Logger.info("Appear eyes, ghost {}", id);
     }
 

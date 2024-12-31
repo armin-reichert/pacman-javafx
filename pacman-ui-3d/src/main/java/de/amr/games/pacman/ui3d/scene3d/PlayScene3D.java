@@ -347,6 +347,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     private void onEnterStateHunting() {
+        level3D.pac3D().init();
+        level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
         level3D.livesCounter3D().shapesRotation().play();
         level3D.energizers3D().forEach(Energizer3D::startPumping);
     }
