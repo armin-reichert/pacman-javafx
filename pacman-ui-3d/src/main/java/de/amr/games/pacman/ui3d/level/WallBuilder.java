@@ -485,60 +485,34 @@ public class WallBuilder {
     }
 
     public void addObstacle3D(Group parent, Obstacle obstacle, double thickness) {
-
         //TODO handle special cases elsewhere, maybe in game-specific code?
         String encoding = obstacle.encoding();
-        if (encoding.equals("dcfbdcgbfcebgce")) {
+        switch (obstacle.encoding()) {
             // Tengen BIG map #1, upside T at top, center
-            addTengen_BigMap1_UpsideT(parent, obstacle);
-            return;
-        }
-        if (encoding.equals("dgbecgbfebgcdbecfbdgbfcdbfeb")) {
+            case "dcfbdcgbfcebgce" -> addTengen_BigMap1_UpsideT(parent, obstacle);
             // Tengen BIG map #2, large desk-like obstacle on the bottom
-            addTengen_BigMap2_DeskLike(parent, obstacle);
-            return;
-        }
-        if (encoding.equals("dcgbecgfcdbecgfcdbfceb")) {
+            case "dgbecgbfebgcdbecfbdgbfcdbfeb" -> addTengen_BigMap2_DeskLike(parent, obstacle);
             // Tengen BIG map #3, large double-T obstacle on the top
-            addTengen_BigMap3_DoubleTOnTop(parent, obstacle);
-            return;
-        }
-        if (encoding.equals("dcgbecgbfcdbfcebdcfbgceb")) {
+            case "dcgbecgfcdbecgfcdbfceb" -> addTengen_BigMap3_DoubleTOnTop(parent, obstacle);
             // Tengen BIG map #5, bowl-like obstacle on the top
-            addTengen_BigMap5_Bowl(parent, obstacle);
-            return;
-        }
-        if (encoding.equals("dcgfcdbfebgcdbfebgcdbfeb")) {
+            case "dcgbecgbfcdbfcebdcfbgceb" -> addTengen_BigMap5_Bowl(parent, obstacle);
             // Tengen BIG map #5, double-F on left side
-            addTengen_BigMap5_DoubleFLeft(parent, obstacle);
-            return;
-        }
-        if (encoding.equals("dgbecfbdgbecfbdgbecgfceb")) {
+            case "dcgfcdbfebgcdbfebgcdbfeb" -> addTengen_BigMap5_DoubleFLeft(parent, obstacle);
             // Tengen BIG map #5, double-F on right side
-            addTengen_BigMap5_DoubleFRight(parent, obstacle);
-            return;
-        }
-        if (encoding.equals("dcfbdgbecfbdgbfebgcdbfebgce")) {
+            case "dgbecfbdgbecfbdgbecgfceb" -> addTengen_BigMap5_DoubleFRight(parent, obstacle);
             // Tengen BIG map #5, plane-like obstacle middle bottom
-            addTengen_BigMap5_PlaneLike(parent, obstacle);
-            return;
-        }
-        if (encoding.equals("dcgbecgbfcdbfcedcfbdcfbgcebgce")) {
+            case "dcfbdgbecfbdgbfebgcdbfebgce" -> addTengen_BigMap5_PlaneLike(parent, obstacle);
             // Tengen BIG map #8, big-bowl obstacle middle bottom
-            addTengen_BigMap8_BigBowl(parent, obstacle);
-            return;
-        }
-        if (encoding.equals("dcgbfebgcdbfceb")) {
+            case "dcgbecgbfcdbfcedcfbdcfbgcebgce" -> addTengen_BigMap8_BigBowl(parent, obstacle);
             // Tengen BIG map #8, sea-horse obstacle left
-            addTengen_BigMap8_SeaHorseLeft(parent, obstacle);
-            return;
-        }
-        if (encoding.equals("dcgbecfbdgbfceb")) {
+            case "dcgbfebgcdbfceb" -> addTengen_BigMap8_SeaHorseLeft(parent, obstacle);
             // Tengen BIG map #8, sea-horse obstacle left
-            addTengen_BigMap8_SeaHorseRight(parent, obstacle);
-            return;
+            case "dcgbecfbdgbfceb" -> addTengen_BigMap8_SeaHorseRight(parent, obstacle);
+            default -> addGenericObstacle3D(parent, obstacle, thickness);
         }
+    }
 
+    private void addGenericObstacle3D(Group parent, Obstacle obstacle, double thickness) {
         int r = HTS;
         Vector2f p = obstacle.startPoint();
         for (int i = 0; i < obstacle.numSegments(); ++i) {
@@ -555,37 +529,37 @@ public class WallBuilder {
             }
             else if (segment.isNWCorner()) {
                 if (segment.ccw()) {
-                    addGeneralShapeCorner(parent, p.plus(-r, 0), p, q, thickness);
+                    addGenericShapeCorner(parent, p.plus(-r, 0), p, q, thickness);
                 } else {
-                    addGeneralShapeCorner(parent, p.plus(0, -r), q, p, thickness);
+                    addGenericShapeCorner(parent, p.plus(0, -r), q, p, thickness);
                 }
             }
             else if (segment.isSWCorner()) {
                 if (segment.ccw()) {
-                    addGeneralShapeCorner(parent, p.plus(0, r), q, p, thickness);
+                    addGenericShapeCorner(parent, p.plus(0, r), q, p, thickness);
                 } else {
-                    addGeneralShapeCorner(parent, p.plus(-r, 0), p, q, thickness);
+                    addGenericShapeCorner(parent, p.plus(-r, 0), p, q, thickness);
                 }
             }
             else if (segment.isSECorner()) {
                 if (segment.ccw()) {
-                    addGeneralShapeCorner(parent, p.plus(r, 0), p, q, thickness);
+                    addGenericShapeCorner(parent, p.plus(r, 0), p, q, thickness);
                 } else {
-                    addGeneralShapeCorner(parent, p.plus(0, r), q, p, thickness);
+                    addGenericShapeCorner(parent, p.plus(0, r), q, p, thickness);
                 }
             }
             else if (segment.isNECorner()) {
                 if (segment.ccw()) {
-                    addGeneralShapeCorner(parent, p.plus(0, -r), q, p, thickness);
+                    addGenericShapeCorner(parent, p.plus(0, -r), q, p, thickness);
                 } else {
-                    addGeneralShapeCorner(parent, p.plus(r, 0), p, q, thickness);
+                    addGenericShapeCorner(parent, p.plus(r, 0), p, q, thickness);
                 }
             }
             p = q;
         }
     }
 
-    private void addGeneralShapeCorner(Group parent, Vector2f corner, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {
+    private void addGenericShapeCorner(Group parent, Vector2f corner, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {
         Node hWall = compositeWallCenteredAt(corner.midpoint(horEndPoint), corner.manhattanDist(horEndPoint), thickness);
         Node vWall = compositeWallCenteredAt(corner.midpoint(vertEndPoint), thickness, corner.manhattanDist(vertEndPoint));
         Node cWall = compositeCornerWall(corner, 0.5 * thickness);
