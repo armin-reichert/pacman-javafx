@@ -523,7 +523,21 @@ public class WallBuilder {
             addTengen_BigMap5_PlaneLike(parent, obstacle);
             return;
         }
-
+        if (encoding.equals("dcgbecgbfcdbfcedcfbdcfbgcebgce")) {
+            // Tengen BIG map #8, big-bowl obstacle middle bottom
+            addTengen_BigMap8_BigBowl(parent, obstacle);
+            return;
+        }
+        if (encoding.equals("dcgbfebgcdbfceb")) {
+            // Tengen BIG map #8, sea-horse obstacle left
+            addTengen_BigMap8_SeaHorseLeft(parent, obstacle);
+            return;
+        }
+        if (encoding.equals("dcgbecfbdgbfceb")) {
+            // Tengen BIG map #8, sea-horse obstacle left
+            addTengen_BigMap8_SeaHorseRight(parent, obstacle);
+            return;
+        }
 
         int r = HTS;
         Vector2f p = obstacle.startPoint();
@@ -723,5 +737,56 @@ public class WallBuilder {
         addCastleWall(parent, leftBack, rightBack);
     }
 
+    private void addTengen_BigMap8_BigBowl(Group parent, Obstacle obstacle) {
+        Vector2f[] p = new Vector2f[8];
+        p[0] = obstacle.uTurnCenters()[1];
+        p[1] = p[0].plus(0, 2 * TS);
+        p[2] = p[1].plus(3 * TS, 0);
+        p[3] = p[2].plus(0, 6 * TS);
+        p[4] = p[3].plus(12 * TS, 0);
+        p[5] = p[4].minus(0, 6 * TS);
+        p[6] = p[5].plus(3 * TS, 0);
+        p[7] = p[6].minus(0, 2 * TS);
+        for (int i = 0; i < p.length; ++i) {
+            addTower(parent, p[i]);
+            if (i + 1 < p.length) addCastleWall(parent, p[i], p[i+1]);
+        }
+    }
+
+    private void addTengen_BigMap8_SeaHorseLeft(Group parent, Obstacle obstacle) {
+        Vector2f cornerNW = obstacle.cornerCenter(0);
+        Vector2f cornerSW = obstacle.cornerCenter(2);
+        Vector2f foot = obstacle.cornerCenter(4);
+        Vector2f nose = obstacle.cornerCenter(11);
+        Vector2f cornerNE = obstacle.cornerCenter(13);
+        addTower(parent, cornerNW);
+        addTower(parent, cornerSW);
+        addTower(parent, foot);
+        addTower(parent, nose);
+        addTower(parent, cornerNE);
+        addCastleWall(parent, cornerNW, cornerSW);
+        addCastleWall(parent, cornerNW, cornerNE);
+        addCastleWall(parent, cornerSW, foot);
+        addCastleWall(parent, cornerNE, nose);
+        addCastleWall(parent, nose, nose.minus(2*TS, 0));
+    }
+
+    private void addTengen_BigMap8_SeaHorseRight(Group parent, Obstacle obstacle) {
+        Vector2f cornerNW = obstacle.cornerCenter(0);
+        Vector2f foot = obstacle.cornerCenter(8);
+        Vector2f nose = obstacle.cornerCenter(2);
+        Vector2f cornerSE = obstacle.cornerCenter(11);
+        Vector2f cornerNE = obstacle.cornerCenter(13);
+        addTower(parent, cornerNW);
+        addTower(parent, nose);
+        addTower(parent, cornerSE);
+        addTower(parent, foot);
+        addTower(parent, cornerNE);
+        addCastleWall(parent, cornerNW, nose);
+        addCastleWall(parent, cornerNW, cornerNE);
+        addCastleWall(parent, nose, nose.plus(2*TS, 0));
+        addCastleWall(parent, cornerSE, cornerNE);
+        addCastleWall(parent, cornerSE, foot);
+    }
 
 }
