@@ -508,6 +508,16 @@ public class WallBuilder {
             addTengen_BigMap5_Bowl(parent, obstacle);
             return;
         }
+        if (encoding.equals("dcgfcdbfebgcdbfebgcdbfeb")) {
+            // Tengen BIG map #5, double-F on left side
+            addTengen_BigMap5_DoubleFLeft(parent, obstacle);
+            return;
+        }
+        if (encoding.equals("dgbecfbdgbecfbdgbecgfceb")) {
+            // Tengen BIG map #5, double-F on right side
+            addTengen_BigMap5_DoubleFRight(parent, obstacle);
+            return;
+        }
 
         int r = HTS;
         Vector2f p = obstacle.startPoint();
@@ -652,6 +662,44 @@ public class WallBuilder {
         addCastleWall(parent, rightCornerNW, rightBottom);
 
         addCastleWall(parent, leftBottom, rightBottom);
+    }
+
+    private void addTengen_BigMap5_DoubleFLeft(Group parent, Obstacle obstacle) {
+        Vector2f cornerNW = obstacle.cornerCenter(0);
+        Vector2f cornerSW = obstacle.cornerCenter(2);
+        Vector2f[] c = obstacle.uTurnCenters();
+        Vector2f topRight = c[3], middleRight = c[2], bottomRight = c[1];
+
+        addTower(parent, cornerNW);
+        addTower(parent, cornerSW);
+        addTower(parent, topRight);
+        addTower(parent, middleRight);
+        addTower(parent, bottomRight);
+
+        addCastleWall(parent, cornerNW, cornerSW);
+        addCastleWall(parent, cornerNW, topRight);
+        addCastleWall(parent, middleRight.minus(3 *TS, 0), middleRight);
+        addCastleWall(parent, bottomRight.minus(3 *TS, 0), bottomRight);
+        addCastleWall(parent, cornerNW, cornerSW);
+    }
+
+    private void addTengen_BigMap5_DoubleFRight(Group parent, Obstacle obstacle) {
+        Vector2f cornerNE = obstacle.cornerCenter(22);
+        Vector2f cornerSE = obstacle.cornerCenter(20);
+        Vector2f[] c = obstacle.uTurnCenters();
+        Vector2f topLeft = c[0], middleLeft = c[1], bottomLeft = c[2];
+
+        addTower(parent, cornerNE);
+        addTower(parent, cornerSE);
+        addTower(parent, topLeft);
+        addTower(parent, middleLeft);
+        addTower(parent, bottomLeft);
+
+        addCastleWall(parent, cornerNE, cornerSE);
+        addCastleWall(parent, cornerNE, topLeft);
+        addCastleWall(parent, middleLeft.plus(3 *TS, 0), middleLeft);
+        addCastleWall(parent, bottomLeft.plus(3 *TS, 0), bottomLeft);
+        addCastleWall(parent, cornerNE, cornerSE);
     }
 
 }
