@@ -507,6 +507,9 @@ public class WallBuilder {
             case "dcgbfebgcdbfceb" -> addTengen_BigMap8_SeaHorseLeft(parent, obstacle);
             // Tengen BIG map #8, sea-horse obstacle left
             case "dcgbecfbdgbfceb" -> addTengen_BigMap8_SeaHorseRight(parent, obstacle);
+            // Tengen BIG map #9, inward turned legs (left+right)
+            case "dcgbfebgcdbecfbdgbfceb" -> addTengen_BigMap9_InwardLegs(parent, obstacle);
+
             default -> addGenericObstacle3D(parent, obstacle, thickness);
         }
     }
@@ -755,6 +758,26 @@ public class WallBuilder {
         addCastleWall(parent, nose, nose.plus(2*TS, 0));
         addCastleWall(parent, cornerSE, cornerNE);
         addCastleWall(parent, cornerSE, foot);
+    }
+
+    private void addTengen_BigMap9_InwardLegs(Group parent, Obstacle obstacle) {
+        Vector2f[] utc = obstacle.uTurnCenters();
+        Vector2f toeLeft = utc[0], toeRight = utc[1];
+        Vector2f cornerNW = obstacle.cornerCenter(0);
+        Vector2f heelLeft = obstacle.cornerCenter(2);
+        Vector2f heelRight = obstacle.cornerCenter(18);
+        Vector2f cornerNE = obstacle.cornerCenter(20);
+        addTower(parent, cornerNW);
+        addTower(parent, cornerNE);
+        addTower(parent, heelLeft);
+        addTower(parent, toeLeft);
+        addTower(parent, heelRight);
+        addTower(parent, toeRight);
+        addCastleWall(parent, cornerNW, cornerNE);
+        addCastleWall(parent, cornerNW, heelLeft);
+        addCastleWall(parent, heelLeft, toeLeft);
+        addCastleWall(parent, cornerNE, heelRight);
+        addCastleWall(parent, heelRight, toeRight);
     }
 
 }
