@@ -518,6 +518,12 @@ public class WallBuilder {
             addTengen_BigMap5_DoubleFRight(parent, obstacle);
             return;
         }
+        if (encoding.equals("dcfbdgbecfbdgbfebgcdbfebgce")) {
+            // Tengen BIG map #5, plane-like obstacle middle bottom
+            addTengen_BigMap5_PlaneLike(parent, obstacle);
+            return;
+        }
+
 
         int r = HTS;
         Vector2f p = obstacle.startPoint();
@@ -701,5 +707,21 @@ public class WallBuilder {
         addCastleWall(parent, bottomLeft.plus(3 *TS, 0), bottomLeft);
         addCastleWall(parent, cornerNE, cornerSE);
     }
+
+    private void addTengen_BigMap5_PlaneLike(Group parent, Obstacle obstacle) {
+        Vector2f[] c = obstacle.uTurnCenters();
+        Vector2f nose = c[4], leftWing = c[0], rightWing = c[3], leftBack = c[1], rightBack = c[2];
+
+        addTower(parent, nose);
+        addTower(parent, leftWing);
+        addTower(parent, leftBack);
+        addTower(parent, rightWing);
+        addTower(parent, rightBack);
+
+        addCastleWall(parent, nose, leftBack.midpoint(rightBack));
+        addCastleWall(parent, leftWing, rightWing);
+        addCastleWall(parent, leftBack, rightBack);
+    }
+
 
 }
