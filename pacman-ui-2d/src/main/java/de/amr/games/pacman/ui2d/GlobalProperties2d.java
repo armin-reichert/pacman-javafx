@@ -16,7 +16,7 @@ public interface GlobalProperties2d {
     BooleanProperty PY_DEBUG_INFO_VISIBLE      = new SimpleBooleanProperty(false);
     BooleanProperty PY_IMMUNITY                = new SimpleBooleanProperty(false);
     ObjectProperty<CustomMapSelectionMode> PY_MAP_SELECTION_MODE = new SimpleObjectProperty<>(CustomMapSelectionMode.CUSTOM_MAPS_FIRST);
-    IntegerProperty PY_PIP_HEIGHT              = new SimpleIntegerProperty(8*36);
+    IntegerProperty PY_PIP_HEIGHT              = new SimpleIntegerProperty(400);
     BooleanProperty PY_PIP_ON                  = new SimpleBooleanProperty(false);
     IntegerProperty PY_PIP_OPACITY_PERCENT     = new SimpleIntegerProperty(100);
     IntegerProperty PY_SIMULATION_STEPS        = new SimpleIntegerProperty(1);

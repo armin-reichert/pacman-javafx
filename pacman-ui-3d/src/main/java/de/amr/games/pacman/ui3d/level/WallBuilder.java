@@ -509,7 +509,8 @@ public class WallBuilder {
             case "dcgbecfbdgbfceb" -> addTengen_BigMap8_SeaHorseRight(parent, obstacle);
             // Tengen BIG map #9, inward turned legs (left+right)
             case "dcgbfebgcdbecfbdgbfceb" -> addTengen_BigMap9_InwardLegs(parent, obstacle);
-
+            // Tengen BIG map #11, Tour Eiffel-like
+            case "dcfbdcgfcdbecgfcebgce" -> addTengen_BigMap11_TourEiffel(parent, obstacle);
             default -> addGenericObstacle3D(parent, obstacle, thickness);
         }
     }
@@ -780,4 +781,20 @@ public class WallBuilder {
         addCastleWall(parent, heelRight, toeRight);
     }
 
+    private void addTengen_BigMap11_TourEiffel(Group parent, Obstacle obstacle) {
+        Vector2f[] utc = obstacle.uTurnCenters();
+        Vector2f baseLeft = utc[0], baseRight = utc[1], top = utc[2];
+        Vector2f platformLeft = obstacle.cornerCenter(4);
+        Vector2f platformRight = obstacle.cornerCenter(16);
+        Vector2f topBase = new Vector2f(top.x(), platformLeft.y());
+        addTower(parent, top);
+        addTower(parent, platformLeft);
+        addTower(parent, platformRight);
+        addTower(parent, baseLeft);
+        addTower(parent, baseRight);
+        addCastleWall(parent, top, topBase);
+        addCastleWall(parent, platformLeft, platformRight);
+        addCastleWall(parent, platformLeft, baseLeft);
+        addCastleWall(parent, platformRight, baseRight);
+    }
 }
