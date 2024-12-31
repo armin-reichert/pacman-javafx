@@ -503,7 +503,11 @@ public class WallBuilder {
             addTengen_BigMap3_DoubleTOnTop(parent, obstacle);
             return;
         }
-
+        if (encoding.equals("dcgbecgbfcdbfcebdcfbgceb")) {
+            // Tengen BIG map #5, bowl-like obstacle on the top
+            addTengen_BigMap5_Bowl(parent, obstacle);
+            return;
+        }
 
         int r = HTS;
         Vector2f p = obstacle.startPoint();
@@ -550,6 +554,15 @@ public class WallBuilder {
             p = q;
         }
     }
+
+    private void addGeneralShapeCorner(Group parent, Vector2f corner, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {
+        Node hWall = compositeWallCenteredAt(corner.midpoint(horEndPoint), corner.manhattanDist(horEndPoint), thickness);
+        Node vWall = compositeWallCenteredAt(corner.midpoint(vertEndPoint), thickness, corner.manhattanDist(vertEndPoint));
+        Node cWall = compositeCornerWall(corner, 0.5 * thickness);
+        parent.getChildren().addAll(hWall, vWall, cWall);
+    }
+
+    // other obstacles not handled by predefined types:
 
     private void addTengen_BigMap1_UpsideT(Group parent, Obstacle obstacle) {
         Vector2f top = obstacle.uTurnCenters()[0];
@@ -608,10 +621,37 @@ public class WallBuilder {
         addCastleWall(parent, bottomR, bottomR.minus(0, 3 * TS));
     }
 
-    private void addGeneralShapeCorner(Group parent, Vector2f corner, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {
-        Node hWall = compositeWallCenteredAt(corner.midpoint(horEndPoint), corner.manhattanDist(horEndPoint), thickness);
-        Node vWall = compositeWallCenteredAt(corner.midpoint(vertEndPoint), thickness, corner.manhattanDist(vertEndPoint));
-        Node cWall = compositeCornerWall(corner, 0.5 * thickness);
-        parent.getChildren().addAll(hWall, vWall, cWall);
+    private void addTengen_BigMap5_Bowl(Group parent, Obstacle obstacle) {
+        Vector2f leftCornerNW = obstacle.cornerCenter(0);
+        Vector2f leftCornerSW = leftCornerNW.plus(0, TS);
+        Vector2f leftCornerNE = leftCornerNW.plus(2 * TS, 0);
+
+        Vector2f rightCornerNW = leftCornerNW.plus(8 * TS, 0);
+        Vector2f rightCornerNE = rightCornerNW.plus(2 * TS, 0);
+        Vector2f rightCornerSE = rightCornerNE.plus(0, TS);
+        Vector2f leftBottom = leftCornerNW.plus(2 * TS, 4 * TS);
+        Vector2f rightBottom = leftBottom.plus(6 * TS, 0);
+
+        addTower(parent, leftCornerNW);
+        addTower(parent, leftCornerSW);
+        addTower(parent, leftCornerNE);
+
+        addTower(parent, rightCornerNW);
+        addTower(parent, rightCornerNE);
+        addTower(parent, rightCornerSE);
+
+        addTower(parent, leftBottom);
+        addTower(parent, rightBottom);
+
+        addCastleWall(parent, leftCornerNW, leftCornerNE);
+        addCastleWall(parent, leftCornerNW, leftCornerSW);
+        addCastleWall(parent, leftCornerNE, leftBottom);
+
+        addCastleWall(parent, rightCornerNW, rightCornerNE);
+        addCastleWall(parent, rightCornerNE, rightCornerSE);
+        addCastleWall(parent, rightCornerNW, rightBottom);
+
+        addCastleWall(parent, leftBottom, rightBottom);
     }
+
 }
