@@ -124,6 +124,31 @@ public class GameLevel3D {
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
     }
 
+    public void update(GameContext context) {
+        pac3D.update(context);
+        ghosts3D().forEach(ghost3D -> ghost3D.update(context));
+        bonus3D().ifPresent(bonus -> bonus.update(context));
+
+        boolean houseAccessRequired = context.level()
+            .ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+            .anyMatch(Ghost::isVisible);
+
+        boolean ghostNearHouseEntry = context.level()
+            .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+            .filter(ghost -> ghost.position().euclideanDist(context.level().world().houseEntryPosition()) <= HOUSE_SENSITIVITY)
+            .anyMatch(Ghost::isVisible);
+
+        house3D.usedPy.set(houseAccessRequired);
+        house3D.openPy.set(ghostNearHouseEntry);
+
+        int symbolsDisplayed = Math.max(0, context.game().lives() - 1);
+        if (!context.level().pac().isVisible() && context.gameState() == GameState.STARTING_GAME) {
+            livesCounterPy.set(symbolsDisplayed + 1);
+        } else {
+            livesCounterPy.set(symbolsDisplayed);
+        }
+    }
+
     private Pac3D createPac3D(Pac pac) {
         String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
         Pac3D pac3D = switch (context.gameVariant()) {
@@ -140,11 +165,13 @@ public class GameLevel3D {
         Shape3D dressShape    = new MeshView(context.assets().get("model3D.ghost.mesh.dress"));
         Shape3D pupilsShape   = new MeshView(context.assets().get("model3D.ghost.mesh.pupils"));
         Shape3D eyeballsShape = new MeshView(context.assets().get("model3D.ghost.mesh.eyeballs"));
-        return new Ghost3DAppearance(dressShape, pupilsShape, eyeballsShape, context.assets(), assetKeyPrefix, ghost, GHOST_SIZE, numFlashes);
+        return new Ghost3DAppearance(dressShape, pupilsShape, eyeballsShape, context.assets(), assetKeyPrefix,
+            ghost, GHOST_SIZE, numFlashes);
     }
 
     private LivesCounter3D createLivesCounter3D(boolean canStartNewGame) {
-        Node[] shapes = IntStream.range(0, LIVES_COUNTER_MAX).mapToObj(i -> createLivesCounterShape()).toArray(Node[]::new);
+        Node[] shapes = IntStream.range(0, LIVES_COUNTER_MAX)
+            .mapToObj(i -> createLivesCounterShape()).toArray(Node[]::new);
         var counter3D = new LivesCounter3D(shapes, 10);
         counter3D.setTranslateX(2 * TS);
         counter3D.setTranslateY(2 * TS);
@@ -223,36 +250,8 @@ public class GameLevel3D {
         return levelCounter3D;
     }
 
-    /**
-     * Updates level from game state.
-     */
-    public void update(GameContext context) {
-        pac3D.update(context);
-        ghosts3D().forEach(ghost3D -> ghost3D.update(context));
-        bonus3D().ifPresent(bonus -> bonus.update(context));
-
-        boolean houseAccessRequired = context.level()
-            .ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-            .anyMatch(Ghost::isVisible);
-
-        boolean ghostNearHouseEntry = context.level()
-            .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-            .filter(ghost -> ghost.position().euclideanDist(context.level().world().houseEntryPosition()) <= HOUSE_SENSITIVITY)
-            .anyMatch(Ghost::isVisible);
-
-        house3D.usedPy.set(houseAccessRequired);
-        house3D.openPy.set(ghostNearHouseEntry);
-
-        int symbolsDisplayed = Math.max(0, context.game().lives() - 1);
-        if (!context.level().pac().isVisible() && context.gameState() == GameState.STARTING_GAME) {
-            livesCounterPy.set(symbolsDisplayed + 1);
-        } else {
-            livesCounterPy.set(symbolsDisplayed);
-        }
-    }
-
     private void buildWorld3D(GameWorld world, WorldMapColoring coloring) {
-        wallBuilder.setTopHeight(OBSTACLE_COAT_HEIGHT);
+        wallBuilder.setWallTopHeight(OBSTACLE_COAT_HEIGHT);
         obstacleHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
         Color wallBaseColor = coloring.stroke();
@@ -277,10 +276,10 @@ public class GameLevel3D {
         ));
         wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
-        wallBuilder.setTopMaterial(wallTopMaterial);
-        wallBuilder.setBaseMaterial(wallBaseMaterial);
-        wallBuilder.setBaseHeightProperty(obstacleHeightPy);
-        wallBuilder.setTopHeight(OBSTACLE_COAT_HEIGHT);
+        wallBuilder.setWallTopMaterial(wallTopMaterial);
+        wallBuilder.setWallBaseMaterial(wallBaseMaterial);
+        wallBuilder.setWallBaseHeightProperty(obstacleHeightPy);
+        wallBuilder.setWallTopHeight(OBSTACLE_COAT_HEIGHT);
         for (Obstacle obstacle : world.map().obstacles()) {
             if (!world.isPartOfHouse(tileAt(obstacle.startPoint()))) {
                 boolean fillCenter = true; // TODO use map property
@@ -292,8 +291,8 @@ public class GameLevel3D {
         //TODO: not sure about house coloring, wall "stroke" color is too often white which looks bad for house wall
         // Therefore, we exchange "stroke" an "fill" colors
         house3D = new House3D();
-        house3D.wallBuilder().setBaseMaterial(coloredMaterial(opaqueColor(coloring.fill(), HOUSE_OPACITY)));
-        house3D.wallBuilder().setTopMaterial(coloredMaterial(coloring.stroke()));
+        house3D.wallBuilder().setWallBaseMaterial(coloredMaterial(opaqueColor(coloring.fill(), HOUSE_OPACITY)));
+        house3D.wallBuilder().setWallTopMaterial(coloredMaterial(coloring.stroke()));
         house3D.baseWallHeightPy.set(HOUSE_HEIGHT);
         house3D.build(world, coloring);
 
@@ -336,11 +335,10 @@ public class GameLevel3D {
     }
 
     private PhongMaterial createFloorMaterial() {
-        Color color = floorColorPy.get();
-        String textureName = floorTextureNamePy.get();
         Map<String, PhongMaterial> textures = context.assets().get("floor_textures");
+        String textureName = floorTextureNamePy.get();
         return GlobalProperties3d.NO_TEXTURE.equals(textureName) || !textures.containsKey(textureName)
-            ? coloredMaterial(color)
+            ? coloredMaterial(floorColorPy.get())
             : textures.get(textureName);
     }
 

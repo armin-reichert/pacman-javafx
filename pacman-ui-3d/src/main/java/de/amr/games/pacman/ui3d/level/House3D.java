@@ -42,8 +42,8 @@ public class House3D {
                 door3D.playTraversalAnimation();
             }
         });
-        wallBuilder.setBaseHeightProperty(baseWallHeightPy);
-        wallBuilder.setTopHeight(WALL_COAT_HEIGHT);
+        wallBuilder.setWallBaseHeightProperty(baseWallHeightPy);
+        wallBuilder.setWallTopHeight(WALL_COAT_HEIGHT);
     }
 
     public void build(GameWorld world, WorldMapColoring coloring) {

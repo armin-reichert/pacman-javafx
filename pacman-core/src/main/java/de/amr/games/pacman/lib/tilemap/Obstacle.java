@@ -102,12 +102,12 @@ public class Obstacle {
                 .filter(type -> type.matches(encoding)).findFirst().orElse(ObstacleType.ANY);
     }
 
-    public IntStream uTurnSegmentIndices() {
+    public IntStream uTurnIndices() {
         return IntStream.range(0, segments.size()).filter(this::hasUTurnAt);
     }
 
     public int numUTurns() {
-        return (int) uTurnSegmentIndices().count();
+        return (int) uTurnIndices().count();
     }
 
     private boolean hasUTurnAt(int i) {
@@ -141,6 +141,6 @@ public class Obstacle {
     }
 
     public Vector2f[] uTurnCenters() {
-        return uTurnSegmentIndices().mapToObj(this::cornerCenter).toArray(Vector2f[]::new);
+        return uTurnIndices().mapToObj(this::cornerCenter).toArray(Vector2f[]::new);
     }
 }
