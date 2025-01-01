@@ -18,7 +18,6 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
-import de.amr.games.pacman.ui2d.lib.Ufx;
 import de.amr.games.pacman.ui3d.GlobalProperties3d;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import de.amr.games.pacman.ui3d.model.Model3D;
@@ -68,16 +67,12 @@ public class GameLevel3D {
     static final float ENERGIZER_RADIUS      = 3.5f;
     static final float PELLET_RADIUS         = 1.0f;
 
-    static final PhongMaterial DEFAULT_MATERIAL = new PhongMaterial();
-
     private final StringProperty floorTextureNamePy = new SimpleStringProperty(this, "floorTextureName", GlobalProperties3d.NO_TEXTURE);
     private final DoubleProperty borderWallHeightPy = new SimpleDoubleProperty(this, "borderWallHeight", BORDER_WALL_HEIGHT);
     private final DoubleProperty obstacleHeightPy   = new SimpleDoubleProperty(this, "obstacleHeight", OBSTACLE_HEIGHT);
     private final DoubleProperty wallOpacityPy      = new SimpleDoubleProperty(this, "wallOpacity",1.0);
 
     private final ObjectProperty<Color> floorColorPy      = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
-    private final ObjectProperty<Color> wallFillColorPy   = new SimpleObjectProperty<>(this, "wallFillColor", Color.BLUE);
-    private final ObjectProperty<Color> wallStrokeColorPy = new SimpleObjectProperty<>(this, "wallStrokeColor", Color.LIGHTBLUE);
 
     public final IntegerProperty livesCounterPy = new SimpleIntegerProperty(0);
 
@@ -127,24 +122,6 @@ public class GameLevel3D {
 
         PY_3D_WALL_HEIGHT.addListener((py,ov,nv) -> obstacleHeightPy.set(nv.doubleValue()));
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
-    }
-
-    private PhongMaterial createWallFillMaterial() {
-        PhongMaterial material = new PhongMaterial();
-        material.diffuseColorProperty().bind(Bindings.createObjectBinding(
-                () -> opaqueColor(wallFillColorPy.get(), wallOpacityPy.get()), wallFillColorPy, wallOpacityPy
-        ));
-        material.specularColorProperty().bind(material.diffuseColorProperty().map(Color::brighter));
-        return material;
-    }
-
-    private PhongMaterial createWallStrokeMaterial( ){
-        PhongMaterial material = new PhongMaterial();
-        material.diffuseColorProperty().bind(Bindings.createObjectBinding(
-                () -> opaqueColor(wallStrokeColorPy.get(), wallOpacityPy.get()), wallStrokeColorPy, wallOpacityPy
-        ));
-        material.specularColorProperty().bind(material.diffuseColorProperty().map(Color::brighter));
-        return material;
     }
 
     private Pac3D createPac3D(Pac pac) {
@@ -277,20 +254,33 @@ public class GameLevel3D {
     private void buildWorld3D(GameWorld world, WorldMapColoring coloring) {
         wallBuilder.setTopHeight(OBSTACLE_COAT_HEIGHT);
         obstacleHeightPy.set(PY_3D_WALL_HEIGHT.get());
-        wallStrokeColorPy.set(coloring.stroke());
-        Color wallFillColor = coloring.fill().equals(Color.BLACK)
+
+        Color wallBaseColor = coloring.stroke();
+        Color wallTopColor = coloring.fill().equals(Color.BLACK)
             ? Color.grayRgb(30) : coloring.fill(); // need some contrast with floor
-        wallFillColorPy.setValue(wallFillColor);
 
         Logger.info("Build world 3D from map {}", world.map().url());
         Logger.info("Obstacles:");
         world.map().obstacles().forEach(obstacle -> Logger.info("{}: {}", obstacle.computeType(), obstacle));
 
-        wallBuilder.setTopMaterial(createWallFillMaterial());
-        wallBuilder.setBaseMaterial(createWallStrokeMaterial());
+        Box floor = createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
+
+        var wallTopMaterial = new PhongMaterial();
+        wallTopMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
+            () -> opaqueColor(wallTopColor, wallOpacityPy.get()), wallOpacityPy
+        ));
+        wallTopMaterial.specularColorProperty().bind(wallTopMaterial.diffuseColorProperty().map(Color::brighter));
+
+        var wallBaseMaterial = new PhongMaterial();
+        wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
+            () -> opaqueColor(wallBaseColor, wallOpacityPy.get()), wallOpacityPy
+        ));
+        wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
+
+        wallBuilder.setTopMaterial(wallTopMaterial);
+        wallBuilder.setBaseMaterial(wallBaseMaterial);
         wallBuilder.setBaseHeightProperty(obstacleHeightPy);
         wallBuilder.setTopHeight(OBSTACLE_COAT_HEIGHT);
-        Box floor = createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
         for (Obstacle obstacle : world.map().obstacles()) {
             if (!world.isPartOfHouse(tileAt(obstacle.startPoint()))) {
                 boolean fillCenter = true; // TODO use map property
@@ -298,10 +288,13 @@ public class GameLevel3D {
                     obstacle.hasDoubleWalls() ? BORDER_WALL_THICKNESS : OBSTACLE_THICKNESS, fillCenter);
             }
         }
+
+        //TODO: not sure about house coloring, wall "stroke" color is too often white which looks bad for house wall
+        // Therefore, we exchange "stroke" an "fill" colors
         house3D = new House3D();
+        house3D.wallBuilder().setBaseMaterial(coloredMaterial(opaqueColor(coloring.fill(), HOUSE_OPACITY)));
+        house3D.wallBuilder().setTopMaterial(coloredMaterial(coloring.stroke()));
         house3D.baseWallHeightPy.set(HOUSE_HEIGHT);
-        house3D.wallBuilder().setBaseMaterial(Ufx.coloredMaterial(opaqueColor(wallFillColor, HOUSE_OPACITY)));
-        house3D.wallBuilder().setTopMaterial(createWallStrokeMaterial());
         house3D.build(world, coloring);
 
         mazeGroup.getChildren().add(house3D.root());
@@ -331,7 +324,8 @@ public class GameLevel3D {
     private Box createFloor(double sizeX, double sizeY) {
         // add some extra space
         var floor = new Box(sizeX + 10, sizeY, FLOOR_THICKNESS);
-        floor.materialProperty().bind(Bindings.createObjectBinding(this::createFloorMaterial, floorColorPy, floorTextureNamePy));
+        floor.materialProperty().bind(
+            Bindings.createObjectBinding(this::createFloorMaterial, floorColorPy, floorTextureNamePy));
         floor.translateXProperty().bind(floor.widthProperty().multiply(0.5).subtract(5));
         floor.translateYProperty().bind(floor.heightProperty().multiply(0.5));
         floor.translateZProperty().set(FLOOR_THICKNESS * 0.5);
