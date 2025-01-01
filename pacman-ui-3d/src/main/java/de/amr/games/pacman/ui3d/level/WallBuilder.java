@@ -71,6 +71,7 @@ public class WallBuilder {
     public Node compositeWallCenteredAt(Vector2f center, double sizeX, double sizeY) {
         var base = new Box(sizeX, sizeY, baseHeightPy.get());
         base.setMaterial(baseMaterial);
+        base.setMouseTransparent(true);
         base.setTranslateX(center.x());
         base.setTranslateY(center.y());
         base.translateZProperty().bind(baseHeightPy.multiply(-0.5).add(2*topHeight));
@@ -79,6 +80,7 @@ public class WallBuilder {
 
         var top = new Box(sizeX, sizeY, topHeight);
         top.setMaterial(topMaterial);
+        top.setMouseTransparent(true);
         top.setTranslateX(center.x());
         top.setTranslateY(center.y());
         top.translateZProperty().bind(baseHeightPy.add(0.5*topHeight).multiply(-1).add(2*topHeight));

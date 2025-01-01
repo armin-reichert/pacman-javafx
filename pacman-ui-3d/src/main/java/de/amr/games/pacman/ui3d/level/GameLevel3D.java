@@ -108,6 +108,8 @@ public class GameLevel3D {
         final GameWorld world = level.world();
         final WorldMapColoring coloring = context.gameConfiguration().worldMapColoring(world.map());
 
+        root.setMouseTransparent(true); //TODO does this increase performance?
+
         pac3D = createPac3D(level.pac());
         ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, level.numFlashes())).toList();
 
