@@ -129,13 +129,13 @@ public class Obstacle {
         return false;
     }
 
-    public Vector2f cornerCenter(int index) {
-        ObstacleSegment corner = segment(index);
+    public Vector2f cornerCenter(int segmentIndex) {
+        ObstacleSegment corner = segment(segmentIndex);
         return switch (corner.mapContent()) {
-            case TileEncoding.CORNER_NW -> point(index).plus(0, HTS);
-            case TileEncoding.CORNER_SW -> point(index).plus(HTS, 0);
-            case TileEncoding.CORNER_SE -> point(index).plus(0, -HTS);
-            case TileEncoding.CORNER_NE -> point(index).plus(-HTS, 0);
+            case TileEncoding.CORNER_NW -> point(segmentIndex).plus(0, HTS);
+            case TileEncoding.CORNER_SW -> point(segmentIndex).plus(HTS, 0);
+            case TileEncoding.CORNER_SE -> point(segmentIndex).plus(0, -HTS);
+            case TileEncoding.CORNER_NE -> point(segmentIndex).plus(-HTS, 0);
             default -> throw new IllegalStateException();
         };
     }
