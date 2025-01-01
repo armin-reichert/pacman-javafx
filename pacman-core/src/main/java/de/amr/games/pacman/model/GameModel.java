@@ -12,10 +12,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.Pulse;
-import de.amr.games.pacman.model.actors.ActorAnimations;
-import de.amr.games.pacman.model.actors.Bonus;
-import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.actors.*;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -190,13 +187,13 @@ public abstract class GameModel {
     }
 
     public void showGuys() {
-        level.pac().setVisible(true);
-        level.ghosts().forEach(ghost -> ghost.setVisible(true));
+        level.pac().show();
+        level.ghosts().forEach(Actor2D::show);
     }
 
     public void hideGuys() {
-        level.pac().setVisible(false);
-        level.ghosts().forEach(ghost -> ghost.setVisible(false));
+        level.pac().hide();
+        level.ghosts().forEach(Actor2D::hide);
     }
 
     public SimulationStepLog eventLog() {
