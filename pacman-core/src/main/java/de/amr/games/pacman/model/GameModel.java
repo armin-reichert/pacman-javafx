@@ -18,7 +18,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -89,9 +88,6 @@ public abstract class GameModel {
 
     protected abstract void        onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
     protected abstract void        onGhostReleased(Ghost ghost);
-
-    protected GameModel(File userDir) {
-    }
 
     public Optional<GameLevel> level() {
         return Optional.ofNullable(level);
