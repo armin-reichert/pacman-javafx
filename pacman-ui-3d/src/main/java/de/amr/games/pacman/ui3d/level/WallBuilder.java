@@ -522,6 +522,9 @@ public class WallBuilder {
             // Tengen BIG map #9, inward turned legs (left+right)
             case "dcgbfebgcdbecfbdgbfceb" -> addTengen_BigMap9_InwardLegs(parent, obstacle);
 
+            // Tengen BIG map #10, table upside-down, at top of maze
+            case "dcfbdgbfebgcedcfbgce" -> addTengen_BigMap10_TableUpsideDown(parent, obstacle);
+
             // Tengen BIG map #11, Tour Eiffel-like
             case "dcfbdcgfcdbecgfcebgce" -> addTengen_BigMap11_TourEiffel(parent, obstacle);
 
@@ -854,6 +857,19 @@ public class WallBuilder {
         connect(parent, heelLeft, toeLeft);
         connect(parent, cornerNE, heelRight);
         connect(parent, heelRight, toeRight);
+    }
+
+    private void addTengen_BigMap10_TableUpsideDown(Group parent, Obstacle obstacle) {
+        Vector2f[] t = new Vector2f[4];
+        t[0] = obstacle.cornerCenter(0);
+        t[1] = obstacle.cornerCenter(4);
+        t[2] = obstacle.cornerCenter(8);
+        t[3] = obstacle.cornerCenter(12);
+        Vector2f h0 = new Vector2f(t[0].x(), t[1].y()), h1 = new Vector2f(t[3].x(), t[1].y());
+        for (Vector2f tower : t) { addTower(parent, tower); }
+        connect(parent, t[1], t[2]);
+        connect(parent, t[0], h0);
+        connect(parent, t[3], h1);
     }
 
     private void addTengen_BigMap11_TourEiffel(Group parent, Obstacle obstacle) {
