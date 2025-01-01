@@ -153,23 +153,26 @@ public class WallBuilder {
 
     public void addOShape3D(Group parent, Obstacle obstacle, boolean fillCenter) {
         switch (obstacle.encoding()) {
-            case "dgfe" -> { // 1-tile circle
-                addTower(parent, obstacle.cornerCenter(0));
-            }
-            case "dcgfce", "dgbfeb" -> { // oval with one small side and 2 towers
+            // 1-tile circle
+            case "dgfe" -> addTower(parent, obstacle.cornerCenter(0));
+
+            // oval with one small side and 2 towers
+            case "dcgfce", "dgbfeb" -> {
                 Vector2f[] c = obstacle.uTurnCenters();
                 addTower(parent, c[0]);
                 addTower(parent, c[1]);
-                addCastleWall(parent, c[0], c[1]);
+                addCastle(parent, c[0], c[1]);
             }
-            case "dcgbfceb" -> { // larger oval with 4 towers
+
+            // larger oval with 4 towers
+            case "dcgbfceb" -> {
                 var towers = new Vector2f[] {
                     obstacle.cornerCenter(0), obstacle.cornerCenter(2), obstacle.cornerCenter(4), obstacle.cornerCenter(6)
                 };
                 for (int i = 0; i < towers.length; ++i) {
                     addTower(parent, towers[i]);
                     int next = i < towers.length - 1 ? i + 1 : 0;
-                    addCastleWall(parent, towers[i], towers[next]);
+                    addCastle(parent, towers[i], towers[next]);
                 }
                 if (fillCenter) {
                     Vector2f center = towers[0].midpoint(towers[2]);
@@ -177,7 +180,8 @@ public class WallBuilder {
                     addCastleWallWithCenter(parent, center, width, height);
                 }
             }
-            default -> Logger.error("Invalid O-shape detected {}", obstacle);
+
+            default -> Logger.error("Invalid O-shape detected: {}", obstacle);
         }
     }
 
@@ -191,8 +195,8 @@ public class WallBuilder {
         addTower(parent, utc[0]);
         addTower(parent, utc[1]);
         addTower(parent, corner);
-        addCastleWall(parent, utc[0], corner);
-        addCastleWall(parent, utc[1], corner);
+        addCastle(parent, utc[0], corner);
+        addCastle(parent, utc[1], corner);
     }
 
     public void addFShape3D(Group parent, Obstacle obstacle) {
@@ -210,9 +214,9 @@ public class WallBuilder {
                     addTower(parent, tower);
                 }
                 addTower(parent, spineTop);
-                addCastleWall(parent, spineTop, utc[0]);
-                addCastleWall(parent, spineMiddle, utc[1]);
-                addCastleWall(parent, spineTop, utc[2]);
+                addCastle(parent, spineTop, utc[0]);
+                addCastle(parent, spineMiddle, utc[1]);
+                addCastle(parent, spineTop, utc[2]);
             }
             case "dgbecgfcdbecgfceb", "dcfbdgbfcedcfbgce" -> {
                 Arrays.sort(utc, (p, q) -> Float.compare(p.x(), q.x()));
@@ -223,9 +227,9 @@ public class WallBuilder {
                     addTower(parent, tower);
                 }
                 addTower(parent, spineRight);
-                addCastleWall(parent, utc[0], spineRight);
-                addCastleWall(parent, spineMiddle, utc[1]);
-                addCastleWall(parent, spineRight, utc[2]);
+                addCastle(parent, utc[0], spineRight);
+                addCastle(parent, spineMiddle, utc[1]);
+                addCastle(parent, spineRight, utc[2]);
             }
             case "dcgfcdbecgfcdbfeb", "dcgbfebgcedcfbgce" -> {
                 Arrays.sort(utc, (p, q) -> Float.compare(p.x(), q.x()));
@@ -236,9 +240,9 @@ public class WallBuilder {
                     addTower(parent, tower);
                 }
                 addTower(parent, spineLeft);
-                addCastleWall(parent, spineLeft, utc[2]);
-                addCastleWall(parent, spineLeft, utc[0]);
-                addCastleWall(parent, spineMiddle, utc[1]);
+                addCastle(parent, spineLeft, utc[2]);
+                addCastle(parent, spineLeft, utc[0]);
+                addCastle(parent, spineMiddle, utc[1]);
             }
         }
     }
@@ -261,8 +265,8 @@ public class WallBuilder {
                 addTower(parent, towerSW);
                 addTower(parent, towerSE);
                 addTower(parent, towerNE);
-                addCastleWall(parent, towerNW, towerNE);
-                addCastleWall(parent, towerSW, towerSE);
+                addCastle(parent, towerNW, towerNE);
+                addCastle(parent, towerSW, towerSE);
                 addCastleWallWithCenter(parent, topJoin.midpoint(bottomJoin), TS, topJoin.manhattanDist(bottomJoin));
             }
             case "dcgfcdbecgfcedcfbgce" -> {
@@ -290,8 +294,8 @@ public class WallBuilder {
         for (Vector2f tower : utc) {
             addTower(parent, tower);
         }
-        addCastleWall(parent, utc[0], utc[2]);
-        addCastleWall(parent, utc[1], utc[3]);
+        addCastle(parent, utc[0], utc[2]);
+        addCastle(parent, utc[1], utc[3]);
     }
 
     //TODO rework and simplify
@@ -454,18 +458,18 @@ public class WallBuilder {
         addTower(parent, cornerNE);
         addTower(parent, cornerSW);
         addTower(parent, cornerSE);
-        addCastleWall(parent, cornerNW, cornerSW);
-        addCastleWall(parent, cornerNE, cornerSE);
-        addCastleWall(parent, cornerNW, cornerNE);
-        addCastleWall(parent, cornerSW, cornerSE);
-        addCastleWall(parent, leg, new Vector2f(leg.x(), cornerSW.y()));
+        addCastle(parent, cornerNW, cornerSW);
+        addCastle(parent, cornerNE, cornerSE);
+        addCastle(parent, cornerNW, cornerNE);
+        addCastle(parent, cornerSW, cornerSE);
+        addCastle(parent, leg, new Vector2f(leg.x(), cornerSW.y()));
     }
 
     private void addTower(Group parent, Vector2f center) {
         parent.getChildren().add(compositeCircularWall(center, HTS));
     }
 
-    private void addCastleWall(Group parent, Vector2f p, Vector2f q) {
+    private void addCastle(Group parent, Vector2f p, Vector2f q) {
         if (p.x() == q.x()) { // vertical wall
             addCastleWallWithCenter(parent, p.midpoint(q), TS, p.manhattanDist(q));
         } else if (p.y() == q.y()) { // horizontal wall
@@ -484,28 +488,43 @@ public class WallBuilder {
         switch (obstacle.encoding()) {
             // Tengen BIG map #1, upside T at top, center
             case "dcfbdcgbfcebgce" -> addTengen_BigMap1_UpsideT(parent, obstacle);
+
             // Tengen BIG map #2, large desk-like obstacle on the bottom
             case "dgbecgbfebgcdbecfbdgbfcdbfeb" -> addTengen_BigMap2_DeskLike(parent, obstacle);
+
             // Tengen BIG map #3, large double-T obstacle on the top
             case "dcgbecgfcdbecgfcdbfceb" -> addTengen_BigMap3_DoubleTOnTop(parent, obstacle);
+
             // Tengen BIG map #5, bowl-like obstacle on the top
             case "dcgbecgbfcdbfcebdcfbgceb" -> addTengen_BigMap5_Bowl(parent, obstacle);
+
             // Tengen BIG map #5, double-F on left side
             case "dcgfcdbfebgcdbfebgcdbfeb" -> addTengen_BigMap5_DoubleFLeft(parent, obstacle);
+
             // Tengen BIG map #5, double-F on right side
             case "dgbecfbdgbecfbdgbecgfceb" -> addTengen_BigMap5_DoubleFRight(parent, obstacle);
+
             // Tengen BIG map #5, plane-like obstacle middle bottom
             case "dcfbdgbecfbdgbfebgcdbfebgce" -> addTengen_BigMap5_PlaneLike(parent, obstacle);
+
+            // Tengen BIG map #6, huge 62-segment obstacle on top
+            case "dcgbecgbecgfcdbfcdbecgbecgfcdbfcdbfcebdcgbecfbgcebdcfbgcdbfceb" -> addTengen_BigMap8_62SegmentObstacle(parent, obstacle);
+
             // Tengen BIG map #8, big-bowl obstacle middle bottom
             case "dcgbecgbfcdbfcedcfbdcfbgcebgce" -> addTengen_BigMap8_BigBowl(parent, obstacle);
+
             // Tengen BIG map #8, sea-horse obstacle left
             case "dcgbfebgcdbfceb" -> addTengen_BigMap8_SeaHorseLeft(parent, obstacle);
+
             // Tengen BIG map #8, sea-horse obstacle left
             case "dcgbecfbdgbfceb" -> addTengen_BigMap8_SeaHorseRight(parent, obstacle);
+
             // Tengen BIG map #9, inward turned legs (left+right)
             case "dcgbfebgcdbecfbdgbfceb" -> addTengen_BigMap9_InwardLegs(parent, obstacle);
+
             // Tengen BIG map #11, Tour Eiffel-like
             case "dcfbdcgfcdbecgfcebgce" -> addTengen_BigMap11_TourEiffel(parent, obstacle);
+
             default -> addGenericObstacle3D(parent, obstacle, thickness);
         }
     }
@@ -572,11 +591,11 @@ public class WallBuilder {
         addTower(parent, cornerSW);
         addTower(parent, cornerSE);
         addTower(parent, cornerNE);
-        addCastleWall(parent, cornerNW, cornerSW);
-        addCastleWall(parent, cornerNE, cornerSE);
+        addCastle(parent, cornerNW, cornerSW);
+        addCastle(parent, cornerNE, cornerSE);
         float width = cornerNW.manhattanDist(cornerNE), height = 2 * TS;
         addCastleWallWithCenter(parent, cornerNW.midpoint(cornerSE), width, height);
-        addCastleWall(parent, top, cornerSW.midpoint(cornerSE));
+        addCastle(parent, top, cornerSW.midpoint(cornerSE));
     }
 
     private void addTengen_BigMap2_DeskLike(Group parent, Obstacle obstacle) {
@@ -590,11 +609,11 @@ public class WallBuilder {
         addTower(parent, outerBottomL);
         addTower(parent, innerBottomR);
         addTower(parent, outerBottomR);
-        addCastleWall(parent, topL, topR);
-        addCastleWall(parent, outerBottomL, innerBottomL);
-        addCastleWall(parent, outerBottomR, innerBottomR);
-        addCastleWall(parent, outerBottomL, outerBottomL.minus(0, 6 * TS));
-        addCastleWall(parent, outerBottomR, outerBottomR.minus(0, 6 * TS));
+        addCastle(parent, topL, topR);
+        addCastle(parent, outerBottomL, innerBottomL);
+        addCastle(parent, outerBottomR, innerBottomR);
+        addCastle(parent, outerBottomL, outerBottomL.minus(0, 6 * TS));
+        addCastle(parent, outerBottomR, outerBottomR.minus(0, 6 * TS));
     }
 
     private void addTengen_BigMap3_DoubleTOnTop(Group parent, Obstacle obstacle) {
@@ -610,12 +629,12 @@ public class WallBuilder {
         addTower(parent, cornerSE);
         addTower(parent, bottomL);
         addTower(parent, bottomR);
-        addCastleWall(parent, cornerNW, cornerSW);
-        addCastleWall(parent, cornerNE, cornerSE);
-        addCastleWall(parent, cornerNW, cornerNE);
-        addCastleWall(parent, cornerSW, cornerSE);
-        addCastleWall(parent, bottomL, bottomL.minus(0, 3 * TS));
-        addCastleWall(parent, bottomR, bottomR.minus(0, 3 * TS));
+        addCastle(parent, cornerNW, cornerSW);
+        addCastle(parent, cornerNE, cornerSE);
+        addCastle(parent, cornerNW, cornerNE);
+        addCastle(parent, cornerSW, cornerSE);
+        addCastle(parent, bottomL, bottomL.minus(0, 3 * TS));
+        addCastle(parent, bottomR, bottomR.minus(0, 3 * TS));
     }
 
     private void addTengen_BigMap5_Bowl(Group parent, Obstacle obstacle) {
@@ -640,15 +659,15 @@ public class WallBuilder {
         addTower(parent, leftBottom);
         addTower(parent, rightBottom);
 
-        addCastleWall(parent, leftCornerNW, leftCornerNE);
-        addCastleWall(parent, leftCornerNW, leftCornerSW);
-        addCastleWall(parent, leftCornerNE, leftBottom);
+        addCastle(parent, leftCornerNW, leftCornerNE);
+        addCastle(parent, leftCornerNW, leftCornerSW);
+        addCastle(parent, leftCornerNE, leftBottom);
 
-        addCastleWall(parent, rightCornerNW, rightCornerNE);
-        addCastleWall(parent, rightCornerNE, rightCornerSE);
-        addCastleWall(parent, rightCornerNW, rightBottom);
+        addCastle(parent, rightCornerNW, rightCornerNE);
+        addCastle(parent, rightCornerNE, rightCornerSE);
+        addCastle(parent, rightCornerNW, rightBottom);
 
-        addCastleWall(parent, leftBottom, rightBottom);
+        addCastle(parent, leftBottom, rightBottom);
     }
 
     private void addTengen_BigMap5_DoubleFLeft(Group parent, Obstacle obstacle) {
@@ -663,11 +682,11 @@ public class WallBuilder {
         addTower(parent, middleRight);
         addTower(parent, bottomRight);
 
-        addCastleWall(parent, cornerNW, cornerSW);
-        addCastleWall(parent, cornerNW, topRight);
-        addCastleWall(parent, middleRight.minus(3 *TS, 0), middleRight);
-        addCastleWall(parent, bottomRight.minus(3 *TS, 0), bottomRight);
-        addCastleWall(parent, cornerNW, cornerSW);
+        addCastle(parent, cornerNW, cornerSW);
+        addCastle(parent, cornerNW, topRight);
+        addCastle(parent, middleRight.minus(3 *TS, 0), middleRight);
+        addCastle(parent, bottomRight.minus(3 *TS, 0), bottomRight);
+        addCastle(parent, cornerNW, cornerSW);
     }
 
     private void addTengen_BigMap5_DoubleFRight(Group parent, Obstacle obstacle) {
@@ -682,11 +701,11 @@ public class WallBuilder {
         addTower(parent, middleLeft);
         addTower(parent, bottomLeft);
 
-        addCastleWall(parent, cornerNE, cornerSE);
-        addCastleWall(parent, cornerNE, topLeft);
-        addCastleWall(parent, middleLeft.plus(3 *TS, 0), middleLeft);
-        addCastleWall(parent, bottomLeft.plus(3 *TS, 0), bottomLeft);
-        addCastleWall(parent, cornerNE, cornerSE);
+        addCastle(parent, cornerNE, cornerSE);
+        addCastle(parent, cornerNE, topLeft);
+        addCastle(parent, middleLeft.plus(3 *TS, 0), middleLeft);
+        addCastle(parent, bottomLeft.plus(3 *TS, 0), bottomLeft);
+        addCastle(parent, cornerNE, cornerSE);
     }
 
     private void addTengen_BigMap5_PlaneLike(Group parent, Obstacle obstacle) {
@@ -699,10 +718,56 @@ public class WallBuilder {
         addTower(parent, rightWing);
         addTower(parent, rightBack);
 
-        addCastleWall(parent, nose, leftBack.midpoint(rightBack));
-        addCastleWall(parent, leftWing, rightWing);
-        addCastleWall(parent, leftBack, rightBack);
+        addCastle(parent, nose, leftBack.midpoint(rightBack));
+        addCastle(parent, leftWing, rightWing);
+        addCastle(parent, leftBack, rightBack);
     }
+
+    private void addTengen_BigMap8_62SegmentObstacle(Group parent, Obstacle obstacle) {
+        Vector2f[] utc = obstacle.uTurnCenters();
+        Vector2f legLeft = utc[0], legRight = utc[1];
+
+        // left part
+        Vector2f cornerNWLeft = obstacle.cornerCenter(0);
+        Vector2f cornerNELeft = cornerNWLeft.plus(5*TS, 0);
+        Vector2f cornerSWLeft = cornerNWLeft.plus(0, 4*TS);
+        Vector2f cornerSELeft = cornerNELeft.plus(0, TS);
+        Vector2f pLeft = cornerSWLeft.plus(2*TS, 3*TS);
+        Vector2f qLeft = pLeft.plus(0, -3*TS);
+
+        // corridor connecting left and right part
+        Vector2f corridorBottomLeft = legLeft.plus(3*TS, -3*TS);
+        Vector2f corridorTopLeft = corridorBottomLeft.plus(0, -7*TS);
+        Vector2f corridorTopRight = corridorTopLeft.plus(6*TS, 0);
+        Vector2f corridorBottomRight = corridorTopRight.plus(0, 7*TS);
+
+        addTower(parent, cornerNWLeft);
+        addTower(parent, cornerNELeft);
+        addTower(parent, cornerSWLeft);
+        addTower(parent, cornerSELeft);
+        addTower(parent, qLeft);
+        addTower(parent, pLeft);
+        addCastle(parent, cornerNWLeft, cornerNELeft);
+        addCastle(parent, cornerNWLeft, cornerSWLeft);
+        addCastle(parent, cornerNELeft, cornerSELeft);
+        addCastle(parent, cornerSWLeft, qLeft);
+        addCastle(parent, pLeft, qLeft);
+
+        addCastle(parent, qLeft, corridorBottomLeft);
+        addTower(parent, legLeft);
+        addCastle(parent, legLeft, pLeft.midpoint(corridorBottomLeft));
+        addCastle(parent, pLeft, corridorBottomLeft);
+        addTower(parent, corridorBottomLeft);
+        addCastle(parent, corridorBottomLeft, corridorTopLeft);
+        addTower(parent, corridorTopLeft);
+        addCastle(parent, corridorTopLeft, corridorTopRight);
+        addTower(parent, corridorTopRight);
+        addCastle(parent, corridorTopRight, corridorBottomRight);
+        addTower(parent, corridorBottomRight);
+        addTower(parent, legLeft);
+
+    }
+
 
     private void addTengen_BigMap8_BigBowl(Group parent, Obstacle obstacle) {
         Vector2f[] p = new Vector2f[8];
@@ -716,7 +781,7 @@ public class WallBuilder {
         p[7] = p[6].minus(0, 2 * TS);
         for (int i = 0; i < p.length; ++i) {
             addTower(parent, p[i]);
-            if (i + 1 < p.length) addCastleWall(parent, p[i], p[i+1]);
+            if (i + 1 < p.length) addCastle(parent, p[i], p[i+1]);
         }
     }
 
@@ -731,11 +796,11 @@ public class WallBuilder {
         addTower(parent, foot);
         addTower(parent, nose);
         addTower(parent, cornerNE);
-        addCastleWall(parent, cornerNW, cornerSW);
-        addCastleWall(parent, cornerNW, cornerNE);
-        addCastleWall(parent, cornerSW, foot);
-        addCastleWall(parent, cornerNE, nose);
-        addCastleWall(parent, nose, nose.minus(2*TS, 0));
+        addCastle(parent, cornerNW, cornerSW);
+        addCastle(parent, cornerNW, cornerNE);
+        addCastle(parent, cornerSW, foot);
+        addCastle(parent, cornerNE, nose);
+        addCastle(parent, nose, nose.minus(2*TS, 0));
     }
 
     private void addTengen_BigMap8_SeaHorseRight(Group parent, Obstacle obstacle) {
@@ -749,11 +814,11 @@ public class WallBuilder {
         addTower(parent, cornerSE);
         addTower(parent, foot);
         addTower(parent, cornerNE);
-        addCastleWall(parent, cornerNW, nose);
-        addCastleWall(parent, cornerNW, cornerNE);
-        addCastleWall(parent, nose, nose.plus(2*TS, 0));
-        addCastleWall(parent, cornerSE, cornerNE);
-        addCastleWall(parent, cornerSE, foot);
+        addCastle(parent, cornerNW, nose);
+        addCastle(parent, cornerNW, cornerNE);
+        addCastle(parent, nose, nose.plus(2*TS, 0));
+        addCastle(parent, cornerSE, cornerNE);
+        addCastle(parent, cornerSE, foot);
     }
 
     private void addTengen_BigMap9_InwardLegs(Group parent, Obstacle obstacle) {
@@ -769,11 +834,11 @@ public class WallBuilder {
         addTower(parent, toeLeft);
         addTower(parent, heelRight);
         addTower(parent, toeRight);
-        addCastleWall(parent, cornerNW, cornerNE);
-        addCastleWall(parent, cornerNW, heelLeft);
-        addCastleWall(parent, heelLeft, toeLeft);
-        addCastleWall(parent, cornerNE, heelRight);
-        addCastleWall(parent, heelRight, toeRight);
+        addCastle(parent, cornerNW, cornerNE);
+        addCastle(parent, cornerNW, heelLeft);
+        addCastle(parent, heelLeft, toeLeft);
+        addCastle(parent, cornerNE, heelRight);
+        addCastle(parent, heelRight, toeRight);
     }
 
     private void addTengen_BigMap11_TourEiffel(Group parent, Obstacle obstacle) {
@@ -787,9 +852,9 @@ public class WallBuilder {
         addTower(parent, platformRight);
         addTower(parent, baseLeft);
         addTower(parent, baseRight);
-        addCastleWall(parent, top, topBase);
-        addCastleWall(parent, platformLeft, platformRight);
-        addCastleWall(parent, platformLeft, baseLeft);
-        addCastleWall(parent, platformRight, baseRight);
+        addCastle(parent, top, topBase);
+        addCastle(parent, platformLeft, platformRight);
+        addCastle(parent, platformLeft, baseLeft);
+        addCastle(parent, platformRight, baseRight);
     }
 }
