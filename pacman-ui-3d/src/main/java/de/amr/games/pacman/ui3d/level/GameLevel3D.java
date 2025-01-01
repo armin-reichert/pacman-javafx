@@ -79,9 +79,6 @@ public class GameLevel3D {
     private final ObjectProperty<Color> wallFillColorPy   = new SimpleObjectProperty<>(this, "wallFillColor", Color.BLUE);
     private final ObjectProperty<Color> wallStrokeColorPy = new SimpleObjectProperty<>(this, "wallStrokeColor", Color.LIGHTBLUE);
 
-    private final ObjectProperty<PhongMaterial> wallFillMaterialPy   = new SimpleObjectProperty<>(this, "wallFillMaterial", DEFAULT_MATERIAL);
-    private final ObjectProperty<PhongMaterial> wallStrokeMaterialPy = new SimpleObjectProperty<>(this, "wallStrokeMaterial", DEFAULT_MATERIAL);
-
     public final IntegerProperty livesCounterPy = new SimpleIntegerProperty(0);
 
     private final GameContext context;
@@ -119,9 +116,6 @@ public class GameLevel3D {
         message3D = new Message3D("", context.assets().font("font.arcade", 6), Color.YELLOW, Color.WHITE);
         message3D.setRotation(Rotate.X_AXIS, 90);
         message3D.setVisible(false);
-
-        wallFillMaterialPy.setValue(createWallFillMaterial());
-        wallStrokeMaterialPy.setValue(createWallStrokeMaterial());
 
         buildWorld3D(world, coloring);
         addFood3D(world, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
@@ -292,6 +286,10 @@ public class GameLevel3D {
         Logger.info("Obstacles:");
         world.map().obstacles().forEach(obstacle -> Logger.info("{}: {}", obstacle.computeType(), obstacle));
 
+        wallBuilder.setTopMaterial(createWallFillMaterial());
+        wallBuilder.setBaseMaterial(createWallStrokeMaterial());
+        wallBuilder.setBaseHeightProperty(obstacleHeightPy);
+        wallBuilder.setTopHeight(OBSTACLE_COAT_HEIGHT);
         Box floor = createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
         for (Obstacle obstacle : world.map().obstacles()) {
             if (!world.isPartOfHouse(tileAt(obstacle.startPoint()))) {
@@ -303,7 +301,7 @@ public class GameLevel3D {
         house3D = new House3D();
         house3D.baseWallHeightPy.set(HOUSE_HEIGHT);
         house3D.wallBuilder().setBaseMaterial(Ufx.coloredMaterial(opaqueColor(wallFillColor, HOUSE_OPACITY)));
-        house3D.wallBuilder().setTopMaterial(wallStrokeMaterialPy.get());
+        house3D.wallBuilder().setTopMaterial(createWallStrokeMaterial());
         house3D.build(world, coloring);
 
         mazeGroup.getChildren().add(house3D.root());
@@ -312,11 +310,6 @@ public class GameLevel3D {
     }
 
     private void addObstacle(Group parent, Obstacle obstacle, double thickness, boolean fillCenter) {
-        wallBuilder.setTopMaterial(wallFillMaterialPy.get());
-        wallBuilder.setBaseMaterial(wallStrokeMaterialPy.get());
-        wallBuilder.setBaseHeightProperty(obstacleHeightPy);
-        wallBuilder.setTopHeight(OBSTACLE_COAT_HEIGHT);
-
         Group obstacleGroup = new Group();
         parent.getChildren().add(obstacleGroup);
         ObstacleType obstacleType = obstacle.computeType();
