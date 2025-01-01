@@ -32,7 +32,7 @@ import static de.amr.games.pacman.maps.editor.TileMapEditor.*;
  */
 public class TileMapEditorTerrainRenderer implements TileMapRenderer {
 
-    private static final Color SEGMENT_NUMBER_COLOR = Color.CORAL;
+    private static final Color SEGMENT_NUMBER_COLOR = Color.YELLOW;
     private static final double SEGMENT_NUMBER_FONT_SIZE = 4;
     private static final Font SEGMENT_NUMBER_FONT = Font.font(SEGMENT_NUMBER_FONT_SIZE);
 
