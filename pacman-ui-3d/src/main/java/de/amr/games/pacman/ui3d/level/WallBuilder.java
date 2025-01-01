@@ -528,6 +528,15 @@ public class WallBuilder {
             // Tengen BIG map #11, Tour Eiffel-like
             case "dcfbdcgfcdbecgfcebgce" -> addTengen_BigMap11_TourEiffel(parent, obstacle);
 
+            // Tengen STRANGE map #1, leg-like obstacle at left side at bottom of maze
+            case "dcfbdgbfcdbfebgce" -> addTengen_StrangeMap1_Leg_Left(parent, obstacle);
+
+            // Tengen STRANGE map #1, leg-like obstacle at right side at bottom of maze
+            case "dcfbdgbecgbfebgce" -> addTengen_StrangeMap1_Leg_Right(parent, obstacle);
+
+            // Tengen STRANGE map #1, Y-shaped obstacle at center at bottom of maze
+            case "dgbecgbecgfcdbfcdbfebdcfbgceb" -> addTengen_StrangeMap1_YShape(parent, obstacle);
+
             default -> addGenericObstacle3D(parent, obstacle, thickness);
         }
     }
@@ -783,9 +792,7 @@ public class WallBuilder {
         connect(parent, t[14], t[13]);
         connect(parent, t[13], t[12]);
         connect(parent, t[12], h[4]);
-
     }
-
 
     private void addTengen_BigMap8_BigBowl(Group parent, Obstacle obstacle) {
         Vector2f[] p = new Vector2f[8];
@@ -887,5 +894,50 @@ public class WallBuilder {
         connect(parent, platformLeft, platformRight);
         connect(parent, platformLeft, baseLeft);
         connect(parent, platformRight, baseRight);
+    }
+
+    private void addTengen_StrangeMap1_Leg_Left(Group parent, Obstacle obstacle) {
+        Vector2f[] t = new Vector2f[4];
+        t[0] = obstacle.cornerCenter(0);
+        t[1] = obstacle.cornerCenter(4);
+        t[2] = obstacle.cornerCenter(7);
+        t[3] = obstacle.cornerCenter(11);
+        Vector2f h = new Vector2f(t[0].x(), t[3].y());
+        for (Vector2f tower : t) { addTower(parent, tower); }
+        connect(parent, t[0], t[2]);
+        connect(parent, t[2], t[1]);
+        connect(parent, h, t[3]);
+    }
+
+    private void addTengen_StrangeMap1_Leg_Right(Group parent, Obstacle obstacle) {
+        Vector2f[] t = new Vector2f[4];
+        t[0] = obstacle.cornerCenter(0);
+        t[1] = obstacle.cornerCenter(4);
+        t[2] = obstacle.cornerCenter(9);
+        t[3] = obstacle.cornerCenter(11);
+        Vector2f h = new Vector2f(t[0].x(), t[1].y());
+        for (Vector2f tower : t) { addTower(parent, tower); }
+        connect(parent, t[0], t[2]);
+        connect(parent, t[2], t[3]);
+        connect(parent, h, t[1]);
+    }
+
+    private void addTengen_StrangeMap1_YShape(Group parent, Obstacle obstacle) {
+        Vector2f[] t = new Vector2f[7];
+        t[0] = obstacle.cornerCenter(0);
+        t[1] = obstacle.cornerCenter(27);
+        t[2] = obstacle.cornerCenter(5);
+        t[3] = obstacle.cornerCenter(9);
+        t[4] = obstacle.cornerCenter(14);
+        t[5] = obstacle.cornerCenter(18);
+        t[6] = obstacle.cornerCenter(21);
+        Vector2f h = new Vector2f(t[3].x(), t[2].y());
+        for (Vector2f tower : t) { addTower(parent, tower); }
+        connect(parent, t[0], t[1]);
+        connect(parent, t[1], t[2]);
+        connect(parent, t[2], t[4]);
+        connect(parent, t[4], t[6]);
+        connect(parent, t[6], t[5]);
+        connect(parent, t[3], h);
     }
 }
