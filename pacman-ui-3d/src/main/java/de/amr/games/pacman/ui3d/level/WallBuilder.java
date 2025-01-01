@@ -537,6 +537,13 @@ public class WallBuilder {
             // Tengen STRANGE map #1, Y-shaped obstacle at center at bottom of maze
             case "dgbecgbecgfcdbfcdbfebdcfbgceb" -> addTengen_StrangeMap1_YShape(parent, obstacle);
 
+            // Tengen STRANGE map #2, bowl-like obstacle at center at top of maze
+            case "dgbecgbfcdbfebdcfbgceb" -> addTengen_StrangeMap2_Bowl(parent, obstacle);
+
+            case "dcgbecgfcebgcdbfeb" -> addTengen_StrangeMap2_Gallows_Left(parent, obstacle);
+
+            case "dgbecfbdcgfcdbfceb" -> addTengen_StrangeMap2_Gallows_Right(parent, obstacle);
+
             default -> addGenericObstacle3D(parent, obstacle, thickness);
         }
     }
@@ -940,4 +947,60 @@ public class WallBuilder {
         connect(parent, t[6], t[5]);
         connect(parent, t[3], h);
     }
+
+    private void addTengen_StrangeMap2_Bowl(Group parent, Obstacle obstacle) {
+        Vector2f[] t = new Vector2f[6];
+        t[0] = obstacle.cornerCenter(0);
+        t[1] = obstacle.cornerCenter(20);
+        t[2] = obstacle.cornerCenter(5);
+        t[3] = obstacle.cornerCenter(7);
+        t[4] = obstacle.cornerCenter(14);
+        t[5] = obstacle.cornerCenter(11);
+        for (Vector2f tower : t) { addTower(parent, tower); }
+        connect(parent, t[0], t[1]);
+        connect(parent, t[1], t[2]);
+        connect(parent, t[2], t[3]);
+        connect(parent, t[3], t[4]);
+        connect(parent, t[4], t[5]);
+    }
+
+    private void addTengen_StrangeMap2_Gallows_Right(Group parent, Obstacle obstacle) {
+        Vector2f[] t = new Vector2f[5];
+        t[0] = obstacle.cornerCenter(0);
+        t[1] = obstacle.cornerCenter(16);
+        t[2] = obstacle.cornerCenter(7);
+        t[3] = obstacle.cornerCenter(14);
+        t[4] = obstacle.cornerCenter(9);
+        var h0 = new Vector2f(t[1].x(), t[2].y());
+        var h1 = new Vector2f(t[2].x(), t[3].y());
+        for (Vector2f tower : t) { addTower(parent, tower); }
+        connect(parent, t[0], t[1]);
+        connect(parent, t[1], t[3]);
+        connect(parent, h0, t[2]);
+        connect(parent, t[2], t[4]);
+        connect(parent, h1, t[3]);
+        // fill hole
+        parent.getChildren().add(compositeWallCenteredAt(h0.midpoint(h1), 2*TS, 3*TS));
+    }
+
+    private void addTengen_StrangeMap2_Gallows_Left(Group parent, Obstacle obstacle) {
+        Vector2f[] t = new Vector2f[5];
+        t[0] = obstacle.cornerCenter(0);
+        t[1] = obstacle.cornerCenter(15);
+        t[2] = obstacle.cornerCenter(2);
+        t[3] = obstacle.cornerCenter(9);
+        t[4] = obstacle.cornerCenter(6);
+        var h0 = new Vector2f(t[0].x(), t[3].y());
+        var h1 = new Vector2f(t[3].x(), t[2].y());
+        for (Vector2f tower : t) { addTower(parent, tower); }
+        connect(parent, t[0], t[1]);
+        connect(parent, t[0], t[2]);
+        connect(parent, h0, t[3]);
+        connect(parent, t[3], t[4]);
+        connect(parent, t[2], h1);
+        // fill hole
+        parent.getChildren().add(compositeWallCenteredAt(h0.midpoint(h1), 2*TS, 3*TS));
+    }
+
+
 }
