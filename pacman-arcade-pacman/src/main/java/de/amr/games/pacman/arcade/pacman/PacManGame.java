@@ -122,7 +122,6 @@ public class PacManGame extends GameModel {
     protected byte cruiseElroy;
 
     public PacManGame(File userDir) {
-        super(userDir);
         initialLives = 3;
         simulateOverflowBug = true;
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman.xml"));

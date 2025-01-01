@@ -144,8 +144,6 @@ public class MsPacManGame extends GameModel {
     private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man at all?
 
     public MsPacManGame(File userDir) {
-        super(userDir);
-
         for (int num = 1; num <= 4; ++num) {
             URL url = getClass().getResource(MAP_PATTERN.formatted(num));
             if (url != null) {
