@@ -540,15 +540,20 @@ public class WallBuilder {
             // Tengen STRANGE map #2, bowl-like obstacle at center at top of maze
             case "dgbecgbfcdbfebdcfbgceb" -> addTengen_StrangeMap2_Bowl(parent, obstacle);
 
+            // Tengen STRANGE map #2, gallow-like obstacle at left/top
             case "dcgbecgfcebgcdbfeb" -> addTengen_StrangeMap2_Gallows_Left(parent, obstacle);
 
+            // Tengen STRANGE map #2, gallow-like obstacle at right/top
             case "dgbecfbdcgfcdbfceb" -> addTengen_StrangeMap2_Gallows_Right(parent, obstacle);
+
+            // Tengen STRANGE map #3. large hat-like onstacle center/top
+            case "dfbdcfbdcgfdbfcdbecgbegfcebgcebgeb" -> addTengen_StrangeMap3_Hat(parent, obstacle);
 
             default -> addGenericObstacle3D(parent, obstacle, thickness);
         }
     }
 
-    private void addGenericObstacle3D (Group parent, Obstacle obstacle,double thickness){
+    private void addGenericObstacle3D(Group parent, Obstacle obstacle, double thickness){
         int r = HTS;
         Vector2f p = obstacle.startPoint();
         for (int i = 0; i < obstacle.numSegments(); ++i) {
@@ -1002,5 +1007,39 @@ public class WallBuilder {
         parent.getChildren().add(compositeWallCenteredAt(h0.midpoint(h1), 2*TS, 3*TS));
     }
 
+    private void addTengen_StrangeMap3_Hat(Group parent, Obstacle obstacle) {
+        Vector2f[] t = new Vector2f[10];
+        t[0] = obstacle.cornerCenter(0);
+        t[1] = obstacle.cornerCenter(32);
+        t[2] = obstacle.cornerCenter(3);
+        t[3] = obstacle.cornerCenter(29);
+        t[4] = obstacle.cornerCenter(7);
+        t[5] = obstacle.cornerCenter(25);
+        t[6] = obstacle.cornerCenter(9);
+        t[7] = obstacle.cornerCenter(13);
+        t[8] = obstacle.cornerCenter(19);
+        t[9] = obstacle.cornerCenter(22);
+        Vector2f[] h = new Vector2f[6];
+        h[0] = t[0].plus(0, TS);
+        h[1] = t[1].plus(0, TS);
+        h[2] = t[2].plus(TS, 0);
+        h[3] = t[3].minus(TS, 0);
+        h[4] = t[7].minus(TS, 0);
+        h[5] = t[8].plus(TS, 0);
+        for (Vector2f tower : t) { addTower(parent, tower); }
+        connect(parent, t[0], t[1]);
+        connect(parent, t[0], h[0]);
+        connect(parent, t[1], h[1]);
+        connect(parent, h[0], h[1]);
+        connect(parent, t[2], t[3]);
+        connect(parent, t[2], h[4]);
+        connect(parent, h[2], t[7]);
+        connect(parent, t[4], t[7]);
+        connect(parent, t[4], t[6]);
+        connect(parent, h[3], t[8]);
+        connect(parent, t[3], h[5]);
+        connect(parent, t[8], t[5]);
+        connect(parent, t[5], t[9]);
+    }
 
 }
