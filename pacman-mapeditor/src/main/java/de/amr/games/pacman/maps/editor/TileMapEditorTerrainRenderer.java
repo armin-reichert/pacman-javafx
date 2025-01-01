@@ -5,8 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.maps.editor;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
+import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import de.amr.games.pacman.maps.rendering.TileMapRenderer;
@@ -15,6 +17,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import javafx.scene.text.Font;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,8 +32,13 @@ import static de.amr.games.pacman.maps.editor.TileMapEditor.*;
  */
 public class TileMapEditorTerrainRenderer implements TileMapRenderer {
 
+    private static final Color SEGMENT_NUMBER_COLOR = Color.CORAL;
+    private static final double SEGMENT_NUMBER_FONT_SIZE = 4;
+    private static final Font SEGMENT_NUMBER_FONT = Font.font(SEGMENT_NUMBER_FONT_SIZE);
+
     public DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
 
+    protected boolean segmentNumbersDisplayed;
     protected Color wallFillColor = Color.BLACK;
     protected Color wallStrokeColor = Color.GREEN;
     protected Color doorColor = Color.PINK;
@@ -62,6 +70,10 @@ public class TileMapEditorTerrainRenderer implements TileMapRenderer {
         this.doorColor = doorColor;
     }
 
+    public void setSegmentNumbersDisplayed(boolean segmentNumbersDisplayed) {
+        this.segmentNumbersDisplayed = segmentNumbersDisplayed;
+    }
+
     @Override
     public void drawTerrain(GraphicsContext g, TileMap terrainMap, List<Obstacle> obstacles) {
         g.save();
@@ -71,6 +83,17 @@ public class TileMapEditorTerrainRenderer implements TileMapRenderer {
         specialTile(terrainMap, PROPERTY_POS_SCATTER_PINK_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.PINK));
         specialTile(terrainMap, PROPERTY_POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.CYAN));
         specialTile(terrainMap, PROPERTY_POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.ORANGE));
+        if (segmentNumbersDisplayed) {
+            obstacles.forEach(obstacle -> {
+                for (int i = 0; i < obstacle.numSegments(); ++i) {
+                    ObstacleSegment segment = obstacle.segment(i);
+                    Vector2f start = segment.start(), end = segment.end(), middle = start.plus(end).scaled(0.5f);
+                    g.setFill(SEGMENT_NUMBER_COLOR);
+                    g.setFont(SEGMENT_NUMBER_FONT);
+                    g.fillText(String.valueOf(i), middle.x() - 0.5 * SEGMENT_NUMBER_FONT_SIZE, middle.y());
+                }
+            });
+        }
         g.restore();
     }
 
