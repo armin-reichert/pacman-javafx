@@ -9,8 +9,8 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.TileEncoding;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.maps.rendering.TileMapRenderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -18,6 +18,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +35,7 @@ public class TileMapEditorTerrainRenderer implements TileMapRenderer {
 
     private static final Color SEGMENT_NUMBER_COLOR = Color.YELLOW;
     private static final double SEGMENT_NUMBER_FONT_SIZE = 4;
-    private static final Font SEGMENT_NUMBER_FONT = Font.font(SEGMENT_NUMBER_FONT_SIZE);
+    private static final Font SEGMENT_NUMBER_FONT = Font.font("Sans", FontWeight.BOLD, SEGMENT_NUMBER_FONT_SIZE);
 
     public DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
 
