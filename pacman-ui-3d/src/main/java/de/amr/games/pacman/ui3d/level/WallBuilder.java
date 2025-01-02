@@ -890,16 +890,9 @@ public class WallBuilder {
     }
 
     private void addTengen_StrangeMap1_YShape(Group parent, Obstacle obstacle) {
-        Vector2f[] t = new Vector2f[7];
-        t[0] = obstacle.cornerCenter(0);
-        t[1] = obstacle.cornerCenter(27);
-        t[2] = obstacle.cornerCenter(5);
-        t[3] = obstacle.cornerCenter(9);
-        t[4] = obstacle.cornerCenter(14);
-        t[5] = obstacle.cornerCenter(18);
-        t[6] = obstacle.cornerCenter(21);
+        Vector2f[] t = obstacle.cornerCenters(0, 27, 5, 9, 14, 18, 21);
         Vector2f h = vec_2f(t[3].x(), t[2].y());
-        for (Vector2f tower : t) { towers(parent, tower); }
+        towers(parent, t);
         wall(parent, t[0], t[1]);
         wall(parent, t[1], t[2]);
         wall(parent, t[2], t[4]);
