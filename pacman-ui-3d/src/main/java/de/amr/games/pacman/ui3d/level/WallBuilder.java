@@ -529,7 +529,13 @@ public class WallBuilder {
             // Tengen BIG map #5, plane-like obstacle middle bottom
             case "dcfbdgbecfbdgbfebgcdbfebgce" -> addTengen_BigMap5_PlaneLike(parent, obstacle);
 
-            // Tengen BIG map #6, huge 62-segment obstacle on top
+            // Tengen BIG map #6, obstacle left-top
+            case "dcgfcdbfcebgce" -> addTengen_BigMap6_LeftTopObstacle(parent, obstacle);
+
+            // Tengen BIG map #6, obstacle right-top
+            case "dcfbdcgbecgfce" -> addTengen_BigMap6_RightTopObstacle(parent, obstacle);
+
+            // Tengen BIG map #8, huge 62-segment obstacle on top
             case "dcgbecgbecgfcdbfcdbecgbecgfcdbfcdbfcebdcgbecfbgcebdcfbgcdbfceb" -> addTengen_BigMap8_62SegmentObstacle(parent, obstacle);
 
             // Tengen BIG map #8, big-bowl obstacle middle bottom
@@ -873,4 +879,25 @@ public class WallBuilder {
         wall(parent, t[8], t[5]);
         wall(parent, t[5], t[9]);
     }
+
+    private void addTengen_BigMap6_LeftTopObstacle(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 2, 7, 9);
+        Vector2f[] h = { vec_2f(t[1].x(), t[2].y()), vec_2f(t[1].x(), t[3].y()) };
+        towers(parent, t);
+        wall(parent, t[0], t[1]);
+        wall(parent, h[0], t[2]);
+        wall(parent, t[2], t[3]);
+        wall(parent, t[3], h[1]);
+    }
+
+    private void addTengen_BigMap6_RightTopObstacle(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 4, 6, 10);
+        Vector2f[] h = { vec_2f(t[0].x(), t[1].y()), vec_2f(t[0].x(), t[2].y()) };
+        towers(parent, t);
+        wall(parent, t[0], t[3]);
+        wall(parent, h[0], t[1]);
+        wall(parent, t[1], t[2]);
+        wall(parent, t[2], h[1]);
+    }
+
 }
