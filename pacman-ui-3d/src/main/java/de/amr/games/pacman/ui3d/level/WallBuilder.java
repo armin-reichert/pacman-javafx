@@ -608,9 +608,8 @@ public class WallBuilder {
         towers(parent, t);
         wall(parent, t[1], t[2]);
         wall(parent, t[3], t[4]);
-        float width = t[1].manhattanDist(t[4]), height = 2 * TS;
-        wallAtCenter(parent, t[1].midpoint(t[3]), width, height);
         wall(parent, t[0], t[2].midpoint(t[3]));
+        wallAtCenter(parent, t[1].midpoint(t[3]), t[1].manhattanDist(t[4]), 2 * TS);
     }
 
     private void addTengen_BigMap2_DeskLike(Group parent, Obstacle obstacle) {
@@ -618,12 +617,7 @@ public class WallBuilder {
         Vector2f topL = c[0], innerBottomL = c[1], innerBottomR = c[2], topR = c[3];
         Vector2f outerBottomL = innerBottomL.minus(4 * TS, 0);
         Vector2f outerBottomR = innerBottomR.plus(4 * TS, 0);
-        towers(parent, topL);
-        towers(parent, topR);
-        towers(parent, innerBottomL);
-        towers(parent, outerBottomL);
-        towers(parent, innerBottomR);
-        towers(parent, outerBottomR);
+        towers(parent, topL, topR, innerBottomL, outerBottomL, innerBottomR, outerBottomR);
         wall(parent, topL, topR);
         wall(parent, outerBottomL, innerBottomL);
         wall(parent, outerBottomR, innerBottomR);
@@ -638,12 +632,7 @@ public class WallBuilder {
         Vector2f cornerSE = cornerNE.plus(0, TS);
         Vector2f[] c = obstacle.uTurnCenters();
         Vector2f bottomL = c[0], bottomR = c[1];
-        towers(parent, cornerNW);
-        towers(parent, cornerNE);
-        towers(parent, cornerSW);
-        towers(parent, cornerSE);
-        towers(parent, bottomL);
-        towers(parent, bottomR);
+        towers(parent, cornerNW, cornerNE, cornerSW, cornerSE, bottomL, bottomR);
         wall(parent, cornerNW, cornerSW);
         wall(parent, cornerNE, cornerSE);
         wall(parent, cornerNW, cornerNE);
@@ -656,32 +645,18 @@ public class WallBuilder {
         Vector2f leftCornerNW = obstacle.cornerCenter(0);
         Vector2f leftCornerSW = leftCornerNW.plus(0, TS);
         Vector2f leftCornerNE = leftCornerNW.plus(2 * TS, 0);
-
         Vector2f rightCornerNW = leftCornerNW.plus(8 * TS, 0);
         Vector2f rightCornerNE = rightCornerNW.plus(2 * TS, 0);
         Vector2f rightCornerSE = rightCornerNE.plus(0, TS);
         Vector2f leftBottom = leftCornerNW.plus(2 * TS, 4 * TS);
         Vector2f rightBottom = leftBottom.plus(6 * TS, 0);
-
-        towers(parent, leftCornerNW);
-        towers(parent, leftCornerSW);
-        towers(parent, leftCornerNE);
-
-        towers(parent, rightCornerNW);
-        towers(parent, rightCornerNE);
-        towers(parent, rightCornerSE);
-
-        towers(parent, leftBottom);
-        towers(parent, rightBottom);
-
+        towers(parent, leftCornerNW, leftCornerSW, leftCornerNE, rightCornerNW, rightCornerNE, rightCornerSE, leftBottom, rightBottom);
         wall(parent, leftCornerNW, leftCornerNE);
         wall(parent, leftCornerNW, leftCornerSW);
         wall(parent, leftCornerNE, leftBottom);
-
         wall(parent, rightCornerNW, rightCornerNE);
         wall(parent, rightCornerNE, rightCornerSE);
         wall(parent, rightCornerNW, rightBottom);
-
         wall(parent, leftBottom, rightBottom);
     }
 
@@ -690,17 +665,11 @@ public class WallBuilder {
         Vector2f cornerSW = obstacle.cornerCenter(2);
         Vector2f[] c = obstacle.uTurnCenters();
         Vector2f topRight = c[3], middleRight = c[2], bottomRight = c[1];
-
-        towers(parent, cornerNW);
-        towers(parent, cornerSW);
-        towers(parent, topRight);
-        towers(parent, middleRight);
-        towers(parent, bottomRight);
-
+        towers(parent, cornerNW, cornerSW, topRight, middleRight, bottomRight);
         wall(parent, cornerNW, cornerSW);
         wall(parent, cornerNW, topRight);
-        wall(parent, middleRight.minus(3 *TS, 0), middleRight);
-        wall(parent, bottomRight.minus(3 *TS, 0), bottomRight);
+        wall(parent, middleRight.minus(3 * TS, 0), middleRight);
+        wall(parent, bottomRight.minus(3 * TS, 0), bottomRight);
         wall(parent, cornerNW, cornerSW);
     }
 
@@ -709,13 +678,7 @@ public class WallBuilder {
         Vector2f cornerSE = obstacle.cornerCenter(20);
         Vector2f[] c = obstacle.uTurnCenters();
         Vector2f topLeft = c[0], middleLeft = c[1], bottomLeft = c[2];
-
-        towers(parent, cornerNE);
-        towers(parent, cornerSE);
-        towers(parent, topLeft);
-        towers(parent, middleLeft);
-        towers(parent, bottomLeft);
-
+        towers(parent, cornerNE, cornerSE, topLeft, middleLeft, bottomLeft);
         wall(parent, cornerNE, cornerSE);
         wall(parent, cornerNE, topLeft);
         wall(parent, middleLeft.plus(3 *TS, 0), middleLeft);
@@ -726,13 +689,7 @@ public class WallBuilder {
     private void addTengen_BigMap5_PlaneLike(Group parent, Obstacle obstacle) {
         Vector2f[] c = obstacle.uTurnCenters();
         Vector2f nose = c[4], leftWing = c[0], rightWing = c[3], leftBack = c[1], rightBack = c[2];
-
-        towers(parent, nose);
-        towers(parent, leftWing);
-        towers(parent, leftBack);
-        towers(parent, rightWing);
-        towers(parent, rightBack);
-
+        towers(parent, nose, leftWing, leftBack, rightWing, rightBack);
         wall(parent, nose, leftBack.midpoint(rightBack));
         wall(parent, leftWing, rightWing);
         wall(parent, leftBack, rightBack);
@@ -787,8 +744,8 @@ public class WallBuilder {
         p[5] = p[4].minus(0, 6 * TS);
         p[6] = p[5].plus(3 * TS, 0);
         p[7] = p[6].minus(0, 2 * TS);
+        towers(parent, p);
         for (int i = 0; i < p.length; ++i) {
-            towers(parent, p[i]);
             if (i + 1 < p.length) wall(parent, p[i], p[i+1]);
         }
     }
