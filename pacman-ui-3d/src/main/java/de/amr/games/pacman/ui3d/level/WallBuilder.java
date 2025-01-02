@@ -154,14 +154,14 @@ public class WallBuilder {
     public void addOShape3D(Group parent, Obstacle obstacle, boolean fillCenter) {
         switch (obstacle.encoding()) {
             // 1-tile circle
-            case "dgfe" -> addTower(parent, obstacle.cornerCenter(0));
+            case "dgfe" -> tower(parent, obstacle.cornerCenter(0));
 
             // oval with one small side and 2 towers
             case "dcgfce", "dgbfeb" -> {
                 Vector2f[] c = obstacle.uTurnCenters();
-                addTower(parent, c[0]);
-                addTower(parent, c[1]);
-                connect(parent, c[0], c[1]);
+                tower(parent, c[0]);
+                tower(parent, c[1]);
+                wall(parent, c[0], c[1]);
             }
 
             // larger oval with 4 towers
@@ -170,9 +170,9 @@ public class WallBuilder {
                     obstacle.cornerCenter(0), obstacle.cornerCenter(2), obstacle.cornerCenter(4), obstacle.cornerCenter(6)
                 };
                 for (int i = 0; i < towers.length; ++i) {
-                    addTower(parent, towers[i]);
+                    tower(parent, towers[i]);
                     int next = i < towers.length - 1 ? i + 1 : 0;
-                    connect(parent, towers[i], towers[next]);
+                    wall(parent, towers[i], towers[next]);
                 }
                 if (fillCenter) {
                     Vector2f center = towers[0].midpoint(towers[2]);
@@ -192,11 +192,11 @@ public class WallBuilder {
         Vector2f corner = firstUTurn.isRoundedSECorner() || firstUTurn.isRoundedNWCorner()
             ? new Vector2f(utc[1].x(), utc[0].y())
             : new Vector2f(utc[0].x(), utc[1].y());
-        addTower(parent, utc[0]);
-        addTower(parent, utc[1]);
-        addTower(parent, corner);
-        connect(parent, utc[0], corner);
-        connect(parent, utc[1], corner);
+        tower(parent, utc[0]);
+        tower(parent, utc[1]);
+        tower(parent, corner);
+        wall(parent, utc[0], corner);
+        wall(parent, utc[1], corner);
     }
 
     public void addFShape3D(Group parent, Obstacle obstacle) {
@@ -211,12 +211,12 @@ public class WallBuilder {
                 Vector2f spineTop = new Vector2f(spineX, utc[0].y());
                 Vector2f spineMiddle = new Vector2f(spineX, utc[1].y());
                 for (var tower : utc) {
-                    addTower(parent, tower);
+                    tower(parent, tower);
                 }
-                addTower(parent, spineTop);
-                connect(parent, spineTop, utc[0]);
-                connect(parent, spineMiddle, utc[1]);
-                connect(parent, spineTop, utc[2]);
+                tower(parent, spineTop);
+                wall(parent, spineTop, utc[0]);
+                wall(parent, spineMiddle, utc[1]);
+                wall(parent, spineTop, utc[2]);
             }
             case "dgbecgfcdbecgfceb", "dcfbdgbfcedcfbgce" -> {
                 Arrays.sort(utc, (p, q) -> Float.compare(p.x(), q.x()));
@@ -224,12 +224,12 @@ public class WallBuilder {
                 Vector2f spineMiddle = new Vector2f(utc[1].x(), spineY);
                 Vector2f spineRight = new Vector2f(utc[2].x(), spineY);
                 for (var tower : utc) {
-                    addTower(parent, tower);
+                    tower(parent, tower);
                 }
-                addTower(parent, spineRight);
-                connect(parent, utc[0], spineRight);
-                connect(parent, spineMiddle, utc[1]);
-                connect(parent, spineRight, utc[2]);
+                tower(parent, spineRight);
+                wall(parent, utc[0], spineRight);
+                wall(parent, spineMiddle, utc[1]);
+                wall(parent, spineRight, utc[2]);
             }
             case "dcgfcdbecgfcdbfeb", "dcgbfebgcedcfbgce" -> {
                 Arrays.sort(utc, (p, q) -> Float.compare(p.x(), q.x()));
@@ -237,12 +237,12 @@ public class WallBuilder {
                 Vector2f spineLeft = new Vector2f(utc[0].x(), spineY);
                 Vector2f spineMiddle = new Vector2f(utc[1].x(), spineY);
                 for (var tower : utc) {
-                    addTower(parent, tower);
+                    tower(parent, tower);
                 }
-                addTower(parent, spineLeft);
-                connect(parent, spineLeft, utc[2]);
-                connect(parent, spineLeft, utc[0]);
-                connect(parent, spineMiddle, utc[1]);
+                tower(parent, spineLeft);
+                wall(parent, spineLeft, utc[2]);
+                wall(parent, spineLeft, utc[0]);
+                wall(parent, spineMiddle, utc[1]);
             }
         }
     }
@@ -261,12 +261,12 @@ public class WallBuilder {
                 Vector2f towerNE = obstacle.cornerCenter(17);
                 Vector2f topJoin = towerNW.midpoint(towerNE);
                 Vector2f bottomJoin = towerSW.midpoint(towerSE);
-                addTower(parent, towerNW);
-                addTower(parent, towerSW);
-                addTower(parent, towerSE);
-                addTower(parent, towerNE);
-                connect(parent, towerNW, towerNE);
-                connect(parent, towerSW, towerSE);
+                tower(parent, towerNW);
+                tower(parent, towerSW);
+                tower(parent, towerSE);
+                tower(parent, towerNE);
+                wall(parent, towerNW, towerNE);
+                wall(parent, towerSW, towerSE);
                 addCastleWallWithCenter(parent, topJoin.midpoint(bottomJoin), TS, topJoin.manhattanDist(bottomJoin));
             }
             case "dcgfcdbecgfcedcfbgce" -> {
@@ -278,10 +278,10 @@ public class WallBuilder {
                 Vector2f leftJoin = towerNW.midpoint(towerSW);
                 Vector2f rightJoin = towerNE.midpoint(towerSE);
                 Vector2f center = leftJoin.midpoint(rightJoin);
-                addTower(parent, towerNW);
-                addTower(parent, towerSW);
-                addTower(parent, towerSE);
-                addTower(parent, towerNE);
+                tower(parent, towerNW);
+                tower(parent, towerSW);
+                tower(parent, towerSE);
+                tower(parent, towerNE);
                 addCastleWallWithCenter(parent, leftJoin, TS, towerNW.manhattanDist(towerSW));
                 addCastleWallWithCenter(parent, rightJoin, TS, towerNE.manhattanDist(towerSE));
                 addCastleWallWithCenter(parent, center, leftJoin.manhattanDist(rightJoin), TS);
@@ -292,10 +292,10 @@ public class WallBuilder {
     public void addCross3D(Group parent, Obstacle obstacle) {
         Vector2f[] utc = obstacle.uTurnCenters();
         for (Vector2f tower : utc) {
-            addTower(parent, tower);
+            tower(parent, tower);
         }
-        connect(parent, utc[0], utc[2]);
-        connect(parent, utc[1], utc[3]);
+        wall(parent, utc[0], utc[2]);
+        wall(parent, utc[1], utc[3]);
     }
 
     //TODO rework and simplify
@@ -341,25 +341,25 @@ public class WallBuilder {
             Logger.info("Invalid U-shape detected: {}", obstacle);
             return;
         }
-        addTower(parent, c0);
-        addTower(parent, c1);
-        addTower(parent, oc0);
-        addTower(parent, oc1);
+        tower(parent, c0);
+        tower(parent, c1);
+        tower(parent, oc0);
+        tower(parent, oc1);
     }
 
     //TODO rework and simplify
     public void addSShape3D(Group parent, Obstacle obstacle) {
         int[] uti = obstacle.uTurnIndices().toArray();
         Vector2f[] utc = obstacle.uTurnCenters(); // count=2
-        addTower(parent, utc[0]);
-        addTower(parent, utc[1]);
+        tower(parent, utc[0]);
+        tower(parent, utc[1]);
         Vector2f tc0, tc1;
         if (uti[0] == 0 && uti[1] == 7) {
             // S-shape mirrored vertically
             tc0 = obstacle.cornerCenter(12);
             tc1 = obstacle.cornerCenter(5);
-            addTower(parent, tc0);
-            addTower(parent, tc1);
+            tower(parent, tc0);
+            tower(parent, tc1);
             addCastleWallWithCenter(parent, utc[0].midpoint(tc0), utc[0].manhattanDist(tc0), TS);
             addCastleWallWithCenter(parent, utc[1].midpoint(tc1), utc[1].manhattanDist(tc1), TS);
             // vertical wall
@@ -369,8 +369,8 @@ public class WallBuilder {
             // normal S-shape orientation
             tc0 = obstacle.cornerCenter(0);
             tc1 = obstacle.cornerCenter(7);
-            addTower(parent, tc0);
-            addTower(parent, tc1);
+            tower(parent, tc0);
+            tower(parent, tc1);
             addCastleWallWithCenter(parent, tc0.midpoint(utc[1]), tc0.manhattanDist(utc[1]), TS);
             addCastleWallWithCenter(parent, utc[0].midpoint(tc1), utc[0].manhattanDist(tc1), TS);
             // vertical wall
@@ -381,8 +381,8 @@ public class WallBuilder {
                 // S-shape rotated by 90 degrees
                 tc0 = obstacle.cornerCenter(9);
                 tc1 = obstacle.cornerCenter(2);
-                addTower(parent, tc0);
-                addTower(parent, tc1);
+                tower(parent, tc0);
+                tower(parent, tc1);
                 // horizontal tc1 - tc0
                 addCastleWallWithCenter(parent, tc1.midpoint(tc0), tc1.manhattanDist(tc0), TS);
                 // vertical c1 - tc1 and tc0 - c0
@@ -392,8 +392,8 @@ public class WallBuilder {
                 // S-shape mirrored and rotated by 90 degrees
                 tc0 = obstacle.cornerCenter(4);
                 tc1 = obstacle.cornerCenter(11);
-                addTower(parent, tc0);
-                addTower(parent, tc1);
+                tower(parent, tc0);
+                tower(parent, tc1);
                 // horizontal tc1 - tc0
                 addCastleWallWithCenter(parent, tc1.midpoint(tc0), tc1.manhattanDist(tc0), TS);
                 // vertical c1 - tc1 and tc0 - c0
@@ -425,9 +425,9 @@ public class WallBuilder {
             Logger.error("Invalid T-shape obstacle: {}", obstacle);
             return;
         }
-        addTower(parent, utc[0]);
-        addTower(parent, utc[1]);
-        addTower(parent, utc[2]);
+        tower(parent, utc[0]);
+        tower(parent, utc[1]);
+        tower(parent, utc[2]);
 
         if (utc[0].x() == join.x()) {
             addCastleWallWithCenter(parent, utc[0].midpoint(join), TS, utc[0].manhattanDist(join));
@@ -453,23 +453,23 @@ public class WallBuilder {
         Vector2f cornerSW = obstacle.cornerCenter(2);
         Vector2f cornerSE= obstacle.cornerCenter(11);
         Vector2f cornerNE = obstacle.cornerCenter(13);
-        addTower(parent, leg);
-        addTower(parent, cornerNW);
-        addTower(parent, cornerNE);
-        addTower(parent, cornerSW);
-        addTower(parent, cornerSE);
-        connect(parent, cornerNW, cornerSW);
-        connect(parent, cornerNE, cornerSE);
-        connect(parent, cornerNW, cornerNE);
-        connect(parent, cornerSW, cornerSE);
-        connect(parent, leg, new Vector2f(leg.x(), cornerSW.y()));
+        tower(parent, leg);
+        tower(parent, cornerNW);
+        tower(parent, cornerNE);
+        tower(parent, cornerSW);
+        tower(parent, cornerSE);
+        wall(parent, cornerNW, cornerSW);
+        wall(parent, cornerNE, cornerSE);
+        wall(parent, cornerNW, cornerNE);
+        wall(parent, cornerSW, cornerSE);
+        wall(parent, leg, new Vector2f(leg.x(), cornerSW.y()));
     }
 
-    private void addTower(Group parent, Vector2f center) {
+    private void tower(Group parent, Vector2f center) {
         parent.getChildren().add(compositeCircularWall(center, HTS));
     }
 
-    private void connect(Group parent, Vector2f p, Vector2f q) {
+    private void wall(Group parent, Vector2f p, Vector2f q) {
         if (p.x() == q.x()) { // vertical wall
             addCastleWallWithCenter(parent, p.midpoint(q), TS, p.manhattanDist(q));
         } else if (p.y() == q.y()) { // horizontal wall
@@ -602,24 +602,16 @@ public class WallBuilder {
         parent.getChildren().addAll(hWall, vWall, cWall);
     }
 
-    // other obstacles not handled by predefined types:
+    // Obstacles not handled by standard obstacle types:
 
     private void addTengen_BigMap1_UpsideT(Group parent, Obstacle obstacle) {
-        Vector2f top = obstacle.uTurnCenters()[0];
-        Vector2f cornerNW = obstacle.cornerCenter(4);
-        Vector2f cornerSW = obstacle.cornerCenter(6);
-        Vector2f cornerSE = obstacle.cornerCenter(8);
-        Vector2f cornerNE = obstacle.cornerCenter(10);
-        addTower(parent, top);
-        addTower(parent, cornerNW);
-        addTower(parent, cornerSW);
-        addTower(parent, cornerSE);
-        addTower(parent, cornerNE);
-        connect(parent, cornerNW, cornerSW);
-        connect(parent, cornerNE, cornerSE);
-        float width = cornerNW.manhattanDist(cornerNE), height = 2 * TS;
-        addCastleWallWithCenter(parent, cornerNW.midpoint(cornerSE), width, height);
-        connect(parent, top, cornerSW.midpoint(cornerSE));
+        Vector2f[] t = obstacle.cornerCenters(0, 4, 6, 8, 10);
+        for (Vector2f tower : t) { tower(parent, tower); }
+        wall(parent, t[1], t[2]);
+        wall(parent, t[3], t[4]);
+        float width = t[1].manhattanDist(t[4]), height = 2 * TS;
+        addCastleWallWithCenter(parent, t[1].midpoint(t[3]), width, height);
+        wall(parent, t[0], t[2].midpoint(t[3]));
     }
 
     private void addTengen_BigMap2_DeskLike(Group parent, Obstacle obstacle) {
@@ -627,17 +619,17 @@ public class WallBuilder {
         Vector2f topL = c[0], innerBottomL = c[1], innerBottomR = c[2], topR = c[3];
         Vector2f outerBottomL = innerBottomL.minus(4 * TS, 0);
         Vector2f outerBottomR = innerBottomR.plus(4 * TS, 0);
-        addTower(parent, topL);
-        addTower(parent, topR);
-        addTower(parent, innerBottomL);
-        addTower(parent, outerBottomL);
-        addTower(parent, innerBottomR);
-        addTower(parent, outerBottomR);
-        connect(parent, topL, topR);
-        connect(parent, outerBottomL, innerBottomL);
-        connect(parent, outerBottomR, innerBottomR);
-        connect(parent, outerBottomL, outerBottomL.minus(0, 6 * TS));
-        connect(parent, outerBottomR, outerBottomR.minus(0, 6 * TS));
+        tower(parent, topL);
+        tower(parent, topR);
+        tower(parent, innerBottomL);
+        tower(parent, outerBottomL);
+        tower(parent, innerBottomR);
+        tower(parent, outerBottomR);
+        wall(parent, topL, topR);
+        wall(parent, outerBottomL, innerBottomL);
+        wall(parent, outerBottomR, innerBottomR);
+        wall(parent, outerBottomL, outerBottomL.minus(0, 6 * TS));
+        wall(parent, outerBottomR, outerBottomR.minus(0, 6 * TS));
     }
 
     private void addTengen_BigMap3_DoubleTOnTop(Group parent, Obstacle obstacle) {
@@ -647,18 +639,18 @@ public class WallBuilder {
         Vector2f cornerSE = cornerNE.plus(0, TS);
         Vector2f[] c = obstacle.uTurnCenters();
         Vector2f bottomL = c[0], bottomR = c[1];
-        addTower(parent, cornerNW);
-        addTower(parent, cornerNE);
-        addTower(parent, cornerSW);
-        addTower(parent, cornerSE);
-        addTower(parent, bottomL);
-        addTower(parent, bottomR);
-        connect(parent, cornerNW, cornerSW);
-        connect(parent, cornerNE, cornerSE);
-        connect(parent, cornerNW, cornerNE);
-        connect(parent, cornerSW, cornerSE);
-        connect(parent, bottomL, bottomL.minus(0, 3 * TS));
-        connect(parent, bottomR, bottomR.minus(0, 3 * TS));
+        tower(parent, cornerNW);
+        tower(parent, cornerNE);
+        tower(parent, cornerSW);
+        tower(parent, cornerSE);
+        tower(parent, bottomL);
+        tower(parent, bottomR);
+        wall(parent, cornerNW, cornerSW);
+        wall(parent, cornerNE, cornerSE);
+        wall(parent, cornerNW, cornerNE);
+        wall(parent, cornerSW, cornerSE);
+        wall(parent, bottomL, bottomL.minus(0, 3 * TS));
+        wall(parent, bottomR, bottomR.minus(0, 3 * TS));
     }
 
     private void addTengen_BigMap5_Bowl(Group parent, Obstacle obstacle) {
@@ -672,26 +664,26 @@ public class WallBuilder {
         Vector2f leftBottom = leftCornerNW.plus(2 * TS, 4 * TS);
         Vector2f rightBottom = leftBottom.plus(6 * TS, 0);
 
-        addTower(parent, leftCornerNW);
-        addTower(parent, leftCornerSW);
-        addTower(parent, leftCornerNE);
+        tower(parent, leftCornerNW);
+        tower(parent, leftCornerSW);
+        tower(parent, leftCornerNE);
 
-        addTower(parent, rightCornerNW);
-        addTower(parent, rightCornerNE);
-        addTower(parent, rightCornerSE);
+        tower(parent, rightCornerNW);
+        tower(parent, rightCornerNE);
+        tower(parent, rightCornerSE);
 
-        addTower(parent, leftBottom);
-        addTower(parent, rightBottom);
+        tower(parent, leftBottom);
+        tower(parent, rightBottom);
 
-        connect(parent, leftCornerNW, leftCornerNE);
-        connect(parent, leftCornerNW, leftCornerSW);
-        connect(parent, leftCornerNE, leftBottom);
+        wall(parent, leftCornerNW, leftCornerNE);
+        wall(parent, leftCornerNW, leftCornerSW);
+        wall(parent, leftCornerNE, leftBottom);
 
-        connect(parent, rightCornerNW, rightCornerNE);
-        connect(parent, rightCornerNE, rightCornerSE);
-        connect(parent, rightCornerNW, rightBottom);
+        wall(parent, rightCornerNW, rightCornerNE);
+        wall(parent, rightCornerNE, rightCornerSE);
+        wall(parent, rightCornerNW, rightBottom);
 
-        connect(parent, leftBottom, rightBottom);
+        wall(parent, leftBottom, rightBottom);
     }
 
     private void addTengen_BigMap5_DoubleFLeft(Group parent, Obstacle obstacle) {
@@ -700,17 +692,17 @@ public class WallBuilder {
         Vector2f[] c = obstacle.uTurnCenters();
         Vector2f topRight = c[3], middleRight = c[2], bottomRight = c[1];
 
-        addTower(parent, cornerNW);
-        addTower(parent, cornerSW);
-        addTower(parent, topRight);
-        addTower(parent, middleRight);
-        addTower(parent, bottomRight);
+        tower(parent, cornerNW);
+        tower(parent, cornerSW);
+        tower(parent, topRight);
+        tower(parent, middleRight);
+        tower(parent, bottomRight);
 
-        connect(parent, cornerNW, cornerSW);
-        connect(parent, cornerNW, topRight);
-        connect(parent, middleRight.minus(3 *TS, 0), middleRight);
-        connect(parent, bottomRight.minus(3 *TS, 0), bottomRight);
-        connect(parent, cornerNW, cornerSW);
+        wall(parent, cornerNW, cornerSW);
+        wall(parent, cornerNW, topRight);
+        wall(parent, middleRight.minus(3 *TS, 0), middleRight);
+        wall(parent, bottomRight.minus(3 *TS, 0), bottomRight);
+        wall(parent, cornerNW, cornerSW);
     }
 
     private void addTengen_BigMap5_DoubleFRight(Group parent, Obstacle obstacle) {
@@ -719,32 +711,32 @@ public class WallBuilder {
         Vector2f[] c = obstacle.uTurnCenters();
         Vector2f topLeft = c[0], middleLeft = c[1], bottomLeft = c[2];
 
-        addTower(parent, cornerNE);
-        addTower(parent, cornerSE);
-        addTower(parent, topLeft);
-        addTower(parent, middleLeft);
-        addTower(parent, bottomLeft);
+        tower(parent, cornerNE);
+        tower(parent, cornerSE);
+        tower(parent, topLeft);
+        tower(parent, middleLeft);
+        tower(parent, bottomLeft);
 
-        connect(parent, cornerNE, cornerSE);
-        connect(parent, cornerNE, topLeft);
-        connect(parent, middleLeft.plus(3 *TS, 0), middleLeft);
-        connect(parent, bottomLeft.plus(3 *TS, 0), bottomLeft);
-        connect(parent, cornerNE, cornerSE);
+        wall(parent, cornerNE, cornerSE);
+        wall(parent, cornerNE, topLeft);
+        wall(parent, middleLeft.plus(3 *TS, 0), middleLeft);
+        wall(parent, bottomLeft.plus(3 *TS, 0), bottomLeft);
+        wall(parent, cornerNE, cornerSE);
     }
 
     private void addTengen_BigMap5_PlaneLike(Group parent, Obstacle obstacle) {
         Vector2f[] c = obstacle.uTurnCenters();
         Vector2f nose = c[4], leftWing = c[0], rightWing = c[3], leftBack = c[1], rightBack = c[2];
 
-        addTower(parent, nose);
-        addTower(parent, leftWing);
-        addTower(parent, leftBack);
-        addTower(parent, rightWing);
-        addTower(parent, rightBack);
+        tower(parent, nose);
+        tower(parent, leftWing);
+        tower(parent, leftBack);
+        tower(parent, rightWing);
+        tower(parent, rightBack);
 
-        connect(parent, nose, leftBack.midpoint(rightBack));
-        connect(parent, leftWing, rightWing);
-        connect(parent, leftBack, rightBack);
+        wall(parent, nose, leftBack.midpoint(rightBack));
+        wall(parent, leftWing, rightWing);
+        wall(parent, leftBack, rightBack);
     }
 
     private void addTengen_BigMap8_62SegmentObstacle(Group parent, Obstacle obstacle) {
@@ -778,32 +770,32 @@ public class WallBuilder {
         h[6] = new Vector2f(t[4].x(), t[0].y());
         h[7] = new Vector2f(t[11].x(), t[13].y());
 
-        for (Vector2f tower : t) { addTower(parent, tower); }
+        for (Vector2f tower : t) { tower(parent, tower); }
 
-        connect(parent, t[0], t[1]);
-        connect(parent, h[0], h[6]);
-        connect(parent, t[0], t[3]);
-        connect(parent, t[3], h[1]);
-        connect(parent, t[1], t[2]);
-        connect(parent, t[2], h[0]);
-        connect(parent, h[0], h[1]);
-        connect(parent, h[1], t[4]);
-        connect(parent, t[4], t[6]);
-        connect(parent, h[2], t[5]);
-        connect(parent, t[6], t[7]);
-        connect(parent, t[7], t[8]);
-        connect(parent, t[8], t[9]);
-        connect(parent, t[9], t[11]);
-        connect(parent, h[3], t[10]);
-        connect(parent, t[11], h[4]);
-        connect(parent, h[4], t[12]);
-        connect(parent, h[4], h[5]);
-        connect(parent, h[5], t[15]);
-        connect(parent, h[5], h[7]);
-        connect(parent, t[15], t[14]);
-        connect(parent, t[14], t[13]);
-        connect(parent, t[13], t[12]);
-        connect(parent, t[12], h[4]);
+        wall(parent, t[0], t[1]);
+        wall(parent, h[0], h[6]);
+        wall(parent, t[0], t[3]);
+        wall(parent, t[3], h[1]);
+        wall(parent, t[1], t[2]);
+        wall(parent, t[2], h[0]);
+        wall(parent, h[0], h[1]);
+        wall(parent, h[1], t[4]);
+        wall(parent, t[4], t[6]);
+        wall(parent, h[2], t[5]);
+        wall(parent, t[6], t[7]);
+        wall(parent, t[7], t[8]);
+        wall(parent, t[8], t[9]);
+        wall(parent, t[9], t[11]);
+        wall(parent, h[3], t[10]);
+        wall(parent, t[11], h[4]);
+        wall(parent, h[4], t[12]);
+        wall(parent, h[4], h[5]);
+        wall(parent, h[5], t[15]);
+        wall(parent, h[5], h[7]);
+        wall(parent, t[15], t[14]);
+        wall(parent, t[14], t[13]);
+        wall(parent, t[13], t[12]);
+        wall(parent, t[12], h[4]);
     }
 
     private void addTengen_BigMap8_BigBowl(Group parent, Obstacle obstacle) {
@@ -817,8 +809,8 @@ public class WallBuilder {
         p[6] = p[5].plus(3 * TS, 0);
         p[7] = p[6].minus(0, 2 * TS);
         for (int i = 0; i < p.length; ++i) {
-            addTower(parent, p[i]);
-            if (i + 1 < p.length) connect(parent, p[i], p[i+1]);
+            tower(parent, p[i]);
+            if (i + 1 < p.length) wall(parent, p[i], p[i+1]);
         }
     }
 
@@ -828,16 +820,16 @@ public class WallBuilder {
         Vector2f foot = obstacle.cornerCenter(4);
         Vector2f nose = obstacle.cornerCenter(11);
         Vector2f cornerNE = obstacle.cornerCenter(13);
-        addTower(parent, cornerNW);
-        addTower(parent, cornerSW);
-        addTower(parent, foot);
-        addTower(parent, nose);
-        addTower(parent, cornerNE);
-        connect(parent, cornerNW, cornerSW);
-        connect(parent, cornerNW, cornerNE);
-        connect(parent, cornerSW, foot);
-        connect(parent, cornerNE, nose);
-        connect(parent, nose, nose.minus(2*TS, 0));
+        tower(parent, cornerNW);
+        tower(parent, cornerSW);
+        tower(parent, foot);
+        tower(parent, nose);
+        tower(parent, cornerNE);
+        wall(parent, cornerNW, cornerSW);
+        wall(parent, cornerNW, cornerNE);
+        wall(parent, cornerSW, foot);
+        wall(parent, cornerNE, nose);
+        wall(parent, nose, nose.minus(2*TS, 0));
     }
 
     private void addTengen_BigMap8_SeaHorseRight(Group parent, Obstacle obstacle) {
@@ -846,16 +838,16 @@ public class WallBuilder {
         Vector2f nose = obstacle.cornerCenter(2);
         Vector2f cornerSE = obstacle.cornerCenter(11);
         Vector2f cornerNE = obstacle.cornerCenter(13);
-        addTower(parent, cornerNW);
-        addTower(parent, nose);
-        addTower(parent, cornerSE);
-        addTower(parent, foot);
-        addTower(parent, cornerNE);
-        connect(parent, cornerNW, nose);
-        connect(parent, cornerNW, cornerNE);
-        connect(parent, nose, nose.plus(2*TS, 0));
-        connect(parent, cornerSE, cornerNE);
-        connect(parent, cornerSE, foot);
+        tower(parent, cornerNW);
+        tower(parent, nose);
+        tower(parent, cornerSE);
+        tower(parent, foot);
+        tower(parent, cornerNE);
+        wall(parent, cornerNW, nose);
+        wall(parent, cornerNW, cornerNE);
+        wall(parent, nose, nose.plus(2*TS, 0));
+        wall(parent, cornerSE, cornerNE);
+        wall(parent, cornerSE, foot);
     }
 
     private void addTengen_BigMap9_InwardLegs(Group parent, Obstacle obstacle) {
@@ -865,17 +857,17 @@ public class WallBuilder {
         Vector2f heelLeft = obstacle.cornerCenter(2);
         Vector2f heelRight = obstacle.cornerCenter(18);
         Vector2f cornerNE = obstacle.cornerCenter(20);
-        addTower(parent, cornerNW);
-        addTower(parent, cornerNE);
-        addTower(parent, heelLeft);
-        addTower(parent, toeLeft);
-        addTower(parent, heelRight);
-        addTower(parent, toeRight);
-        connect(parent, cornerNW, cornerNE);
-        connect(parent, cornerNW, heelLeft);
-        connect(parent, heelLeft, toeLeft);
-        connect(parent, cornerNE, heelRight);
-        connect(parent, heelRight, toeRight);
+        tower(parent, cornerNW);
+        tower(parent, cornerNE);
+        tower(parent, heelLeft);
+        tower(parent, toeLeft);
+        tower(parent, heelRight);
+        tower(parent, toeRight);
+        wall(parent, cornerNW, cornerNE);
+        wall(parent, cornerNW, heelLeft);
+        wall(parent, heelLeft, toeLeft);
+        wall(parent, cornerNE, heelRight);
+        wall(parent, heelRight, toeRight);
     }
 
     private void addTengen_BigMap10_TableUpsideDown(Group parent, Obstacle obstacle) {
@@ -885,10 +877,10 @@ public class WallBuilder {
         t[2] = obstacle.cornerCenter(8);
         t[3] = obstacle.cornerCenter(12);
         Vector2f h0 = new Vector2f(t[0].x(), t[1].y()), h1 = new Vector2f(t[3].x(), t[1].y());
-        for (Vector2f tower : t) { addTower(parent, tower); }
-        connect(parent, t[1], t[2]);
-        connect(parent, t[0], h0);
-        connect(parent, t[3], h1);
+        for (Vector2f tower : t) { tower(parent, tower); }
+        wall(parent, t[1], t[2]);
+        wall(parent, t[0], h0);
+        wall(parent, t[3], h1);
     }
 
     private void addTengen_BigMap11_TourEiffel(Group parent, Obstacle obstacle) {
@@ -897,15 +889,15 @@ public class WallBuilder {
         Vector2f platformLeft = obstacle.cornerCenter(4);
         Vector2f platformRight = obstacle.cornerCenter(16);
         Vector2f topBase = new Vector2f(top.x(), platformLeft.y());
-        addTower(parent, top);
-        addTower(parent, platformLeft);
-        addTower(parent, platformRight);
-        addTower(parent, baseLeft);
-        addTower(parent, baseRight);
-        connect(parent, top, topBase);
-        connect(parent, platformLeft, platformRight);
-        connect(parent, platformLeft, baseLeft);
-        connect(parent, platformRight, baseRight);
+        tower(parent, top);
+        tower(parent, platformLeft);
+        tower(parent, platformRight);
+        tower(parent, baseLeft);
+        tower(parent, baseRight);
+        wall(parent, top, topBase);
+        wall(parent, platformLeft, platformRight);
+        wall(parent, platformLeft, baseLeft);
+        wall(parent, platformRight, baseRight);
     }
 
     private void addTengen_StrangeMap1_Leg_Left(Group parent, Obstacle obstacle) {
@@ -915,23 +907,19 @@ public class WallBuilder {
         t[2] = obstacle.cornerCenter(7);
         t[3] = obstacle.cornerCenter(11);
         Vector2f h = new Vector2f(t[0].x(), t[3].y());
-        for (Vector2f tower : t) { addTower(parent, tower); }
-        connect(parent, t[0], t[2]);
-        connect(parent, t[2], t[1]);
-        connect(parent, h, t[3]);
+        for (Vector2f tower : t) { tower(parent, tower); }
+        wall(parent, t[0], t[2]);
+        wall(parent, t[2], t[1]);
+        wall(parent, h, t[3]);
     }
 
     private void addTengen_StrangeMap1_Leg_Right(Group parent, Obstacle obstacle) {
-        Vector2f[] t = new Vector2f[4];
-        t[0] = obstacle.cornerCenter(0);
-        t[1] = obstacle.cornerCenter(4);
-        t[2] = obstacle.cornerCenter(9);
-        t[3] = obstacle.cornerCenter(11);
+        Vector2f[] t = obstacle.cornerCenters(0, 4, 9, 11);
         Vector2f h = new Vector2f(t[0].x(), t[1].y());
-        for (Vector2f tower : t) { addTower(parent, tower); }
-        connect(parent, t[0], t[2]);
-        connect(parent, t[2], t[3]);
-        connect(parent, h, t[1]);
+        for (Vector2f tower : t) { tower(parent, tower); }
+        wall(parent, t[0], t[2]);
+        wall(parent, t[2], t[3]);
+        wall(parent, h, t[1]);
     }
 
     private void addTengen_StrangeMap1_YShape(Group parent, Obstacle obstacle) {
@@ -944,13 +932,13 @@ public class WallBuilder {
         t[5] = obstacle.cornerCenter(18);
         t[6] = obstacle.cornerCenter(21);
         Vector2f h = new Vector2f(t[3].x(), t[2].y());
-        for (Vector2f tower : t) { addTower(parent, tower); }
-        connect(parent, t[0], t[1]);
-        connect(parent, t[1], t[2]);
-        connect(parent, t[2], t[4]);
-        connect(parent, t[4], t[6]);
-        connect(parent, t[6], t[5]);
-        connect(parent, t[3], h);
+        for (Vector2f tower : t) { tower(parent, tower); }
+        wall(parent, t[0], t[1]);
+        wall(parent, t[1], t[2]);
+        wall(parent, t[2], t[4]);
+        wall(parent, t[4], t[6]);
+        wall(parent, t[6], t[5]);
+        wall(parent, t[3], h);
     }
 
     private void addTengen_StrangeMap2_Bowl(Group parent, Obstacle obstacle) {
@@ -961,12 +949,12 @@ public class WallBuilder {
         t[3] = obstacle.cornerCenter(7);
         t[4] = obstacle.cornerCenter(14);
         t[5] = obstacle.cornerCenter(11);
-        for (Vector2f tower : t) { addTower(parent, tower); }
-        connect(parent, t[0], t[1]);
-        connect(parent, t[1], t[2]);
-        connect(parent, t[2], t[3]);
-        connect(parent, t[3], t[4]);
-        connect(parent, t[4], t[5]);
+        for (Vector2f tower : t) { tower(parent, tower); }
+        wall(parent, t[0], t[1]);
+        wall(parent, t[1], t[2]);
+        wall(parent, t[2], t[3]);
+        wall(parent, t[3], t[4]);
+        wall(parent, t[4], t[5]);
     }
 
     private void addTengen_StrangeMap2_Gallows_Right(Group parent, Obstacle obstacle) {
@@ -978,47 +966,32 @@ public class WallBuilder {
         t[4] = obstacle.cornerCenter(9);
         var h0 = new Vector2f(t[1].x(), t[2].y());
         var h1 = new Vector2f(t[2].x(), t[3].y());
-        for (Vector2f tower : t) { addTower(parent, tower); }
-        connect(parent, t[0], t[1]);
-        connect(parent, t[1], t[3]);
-        connect(parent, h0, t[2]);
-        connect(parent, t[2], t[4]);
-        connect(parent, h1, t[3]);
+        for (Vector2f tower : t) { tower(parent, tower); }
+        wall(parent, t[0], t[1]);
+        wall(parent, t[1], t[3]);
+        wall(parent, h0, t[2]);
+        wall(parent, t[2], t[4]);
+        wall(parent, h1, t[3]);
         // fill hole
         parent.getChildren().add(compositeWallCenteredAt(h0.midpoint(h1), 2*TS, 3*TS));
     }
 
     private void addTengen_StrangeMap2_Gallows_Left(Group parent, Obstacle obstacle) {
-        Vector2f[] t = new Vector2f[5];
-        t[0] = obstacle.cornerCenter(0);
-        t[1] = obstacle.cornerCenter(15);
-        t[2] = obstacle.cornerCenter(2);
-        t[3] = obstacle.cornerCenter(9);
-        t[4] = obstacle.cornerCenter(6);
+        Vector2f[] t = obstacle.cornerCenters(0, 15, 2, 9, 6);
         var h0 = new Vector2f(t[0].x(), t[3].y());
         var h1 = new Vector2f(t[3].x(), t[2].y());
-        for (Vector2f tower : t) { addTower(parent, tower); }
-        connect(parent, t[0], t[1]);
-        connect(parent, t[0], t[2]);
-        connect(parent, h0, t[3]);
-        connect(parent, t[3], t[4]);
-        connect(parent, t[2], h1);
+        for (Vector2f tower : t) { tower(parent, tower); }
+        wall(parent, t[0], t[1]);
+        wall(parent, t[0], t[2]);
+        wall(parent, h0, t[3]);
+        wall(parent, t[3], t[4]);
+        wall(parent, t[2], h1);
         // fill hole
         parent.getChildren().add(compositeWallCenteredAt(h0.midpoint(h1), 2*TS, 3*TS));
     }
 
     private void addTengen_StrangeMap3_Hat(Group parent, Obstacle obstacle) {
-        Vector2f[] t = new Vector2f[10];
-        t[0] = obstacle.cornerCenter(0);
-        t[1] = obstacle.cornerCenter(32);
-        t[2] = obstacle.cornerCenter(3);
-        t[3] = obstacle.cornerCenter(29);
-        t[4] = obstacle.cornerCenter(7);
-        t[5] = obstacle.cornerCenter(25);
-        t[6] = obstacle.cornerCenter(9);
-        t[7] = obstacle.cornerCenter(13);
-        t[8] = obstacle.cornerCenter(19);
-        t[9] = obstacle.cornerCenter(22);
+        Vector2f[] t = obstacle.cornerCenters(0, 32, 3, 29, 7, 25, 9, 13, 19, 22);
         Vector2f[] h = new Vector2f[6];
         h[0] = t[0].plus(0, TS);
         h[1] = t[1].plus(0, TS);
@@ -1026,20 +999,19 @@ public class WallBuilder {
         h[3] = t[3].minus(TS, 0);
         h[4] = t[7].minus(TS, 0);
         h[5] = t[8].plus(TS, 0);
-        for (Vector2f tower : t) { addTower(parent, tower); }
-        connect(parent, t[0], t[1]);
-        connect(parent, t[0], h[0]);
-        connect(parent, t[1], h[1]);
-        connect(parent, h[0], h[1]);
-        connect(parent, t[2], t[3]);
-        connect(parent, t[2], h[4]);
-        connect(parent, h[2], t[7]);
-        connect(parent, t[4], t[7]);
-        connect(parent, t[4], t[6]);
-        connect(parent, h[3], t[8]);
-        connect(parent, t[3], h[5]);
-        connect(parent, t[8], t[5]);
-        connect(parent, t[5], t[9]);
+        for (Vector2f tower : t) { tower(parent, tower); }
+        wall(parent, t[0], t[1]);
+        wall(parent, t[0], h[0]);
+        wall(parent, t[1], h[1]);
+        wall(parent, h[0], h[1]);
+        wall(parent, t[2], t[3]);
+        wall(parent, t[2], h[4]);
+        wall(parent, h[2], t[7]);
+        wall(parent, t[4], t[7]);
+        wall(parent, t[4], t[6]);
+        wall(parent, h[3], t[8]);
+        wall(parent, t[3], h[5]);
+        wall(parent, t[8], t[5]);
+        wall(parent, t[5], t[9]);
     }
-
 }

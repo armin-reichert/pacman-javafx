@@ -140,6 +140,10 @@ public class Obstacle {
         };
     }
 
+    public Vector2f[] cornerCenters(int... segmentIndices) {
+        return Arrays.stream(segmentIndices).mapToObj(this::cornerCenter).toArray(Vector2f[]::new);
+    }
+
     public Vector2f[] uTurnCenters() {
         return uTurnIndices().mapToObj(this::cornerCenter).toArray(Vector2f[]::new);
     }
