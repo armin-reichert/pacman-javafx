@@ -150,6 +150,28 @@ public class WallBuilder {
         return new Group(base, top);
     }
 
+    private void towers(Group parent, Vector2f... centers) {
+        for (Vector2f center : centers) {
+            parent.getChildren().add(compositeCircularWall(center, HTS));
+        }
+    }
+
+    private void wall(Group parent, Vector2f p, Vector2f q) {
+        if (p.x() == q.x()) { // vertical wall
+            wallAtCenter(parent, p.midpoint(q), TS, p.manhattanDist(q));
+        } else if (p.y() == q.y()) { // horizontal wall
+            wallAtCenter(parent, p.midpoint(q), p.manhattanDist(q), TS);
+        } else {
+            Logger.error("Can only add horizontal or vertical castle walls, p={}, q={}", p, q);
+        }
+    }
+
+    private void wallAtCenter(Group parent, Vector2f center, double sizeX, double sizeY) {
+        parent.getChildren().add(compositeWallCenteredAt(center, sizeX, sizeY));
+    }
+
+    // Standard 3D obstacles
+
     public void addOShape3D(Group parent, Obstacle obstacle, boolean fillCenter) {
         switch (obstacle.encoding()) {
             // 1-tile circle
@@ -158,25 +180,21 @@ public class WallBuilder {
             // oval with one small side and 2 towers
             case "dcgfce", "dgbfeb" -> {
                 Vector2f[] c = obstacle.uTurnCenters();
-                towers(parent, c[0]);
-                towers(parent, c[1]);
+                towers(parent, c);
                 wall(parent, c[0], c[1]);
             }
 
             // larger oval with 4 towers
             case "dcgbfceb" -> {
-                var towers = new Vector2f[] {
-                    obstacle.cornerCenter(0), obstacle.cornerCenter(2), obstacle.cornerCenter(4), obstacle.cornerCenter(6)
-                };
-                for (int i = 0; i < towers.length; ++i) {
-                    towers(parent, towers[i]);
-                    int next = i < towers.length - 1 ? i + 1 : 0;
-                    wall(parent, towers[i], towers[next]);
+                Vector2f[] t = obstacle.cornerCenters(0, 2, 4, 6);
+                towers(parent, t);
+                for (int i = 0; i < t.length; ++i) {
+                    int next = i < t.length - 1 ? i + 1 : 0;
+                    wall(parent, t[i], t[next]);
                 }
                 if (fillCenter) {
-                    Vector2f center = towers[0].midpoint(towers[2]);
-                    double height = towers[0].manhattanDist(towers[1]) - TS, width = towers[0].manhattanDist(towers[3]) - TS;
-                    wallAtCenter(parent, center, width, height);
+                    double height = t[0].manhattanDist(t[1]) - TS, width = t[0].manhattanDist(t[3]) - TS;
+                    wallAtCenter(parent, t[0].midpoint(t[2]), width, height);
                 }
             }
 
@@ -191,8 +209,7 @@ public class WallBuilder {
         Vector2f corner = firstUTurn.isRoundedSECorner() || firstUTurn.isRoundedNWCorner()
             ? vec_2f(utc[1].x(), utc[0].y())
             : vec_2f(utc[0].x(), utc[1].y());
-        towers(parent, utc[0]);
-        towers(parent, utc[1]);
+        towers(parent, utc);
         towers(parent, corner);
         wall(parent, utc[0], corner);
         wall(parent, utc[1], corner);
@@ -209,9 +226,7 @@ public class WallBuilder {
                 float spineX = utc[2].x();
                 Vector2f spineTop = vec_2f(spineX, utc[0].y());
                 Vector2f spineMiddle = vec_2f(spineX, utc[1].y());
-                for (var tower : utc) {
-                    towers(parent, tower);
-                }
+                towers(parent, utc);
                 towers(parent, spineTop);
                 wall(parent, spineTop, utc[0]);
                 wall(parent, spineMiddle, utc[1]);
@@ -222,9 +237,7 @@ public class WallBuilder {
                 float spineY = utc[0].y();
                 Vector2f spineMiddle = vec_2f(utc[1].x(), spineY);
                 Vector2f spineRight = vec_2f(utc[2].x(), spineY);
-                for (var tower : utc) {
-                    towers(parent, tower);
-                }
+                towers(parent, utc);
                 towers(parent, spineRight);
                 wall(parent, utc[0], spineRight);
                 wall(parent, spineMiddle, utc[1]);
@@ -235,9 +248,7 @@ public class WallBuilder {
                 float spineY = utc[2].y();
                 Vector2f spineLeft = vec_2f(utc[0].x(), spineY);
                 Vector2f spineMiddle = vec_2f(utc[1].x(), spineY);
-                for (var tower : utc) {
-                    towers(parent, tower);
-                }
+                towers(parent, utc);
                 towers(parent, spineLeft);
                 wall(parent, spineLeft, utc[2]);
                 wall(parent, spineLeft, utc[0]);
@@ -260,10 +271,7 @@ public class WallBuilder {
                 Vector2f towerNE = obstacle.cornerCenter(17);
                 Vector2f topJoin = towerNW.midpoint(towerNE);
                 Vector2f bottomJoin = towerSW.midpoint(towerSE);
-                towers(parent, towerNW);
-                towers(parent, towerSW);
-                towers(parent, towerSE);
-                towers(parent, towerNE);
+                towers(parent, towerNW, towerSW, towerSE, towerNE);
                 wall(parent, towerNW, towerNE);
                 wall(parent, towerSW, towerSE);
                 wallAtCenter(parent, topJoin.midpoint(bottomJoin), TS, topJoin.manhattanDist(bottomJoin));
@@ -277,10 +285,7 @@ public class WallBuilder {
                 Vector2f leftJoin = towerNW.midpoint(towerSW);
                 Vector2f rightJoin = towerNE.midpoint(towerSE);
                 Vector2f center = leftJoin.midpoint(rightJoin);
-                towers(parent, towerNW);
-                towers(parent, towerSW);
-                towers(parent, towerSE);
-                towers(parent, towerNE);
+                towers(parent, towerNW, towerSW, towerSE, towerNE);
                 wallAtCenter(parent, leftJoin, TS, towerNW.manhattanDist(towerSW));
                 wallAtCenter(parent, rightJoin, TS, towerNE.manhattanDist(towerSE));
                 wallAtCenter(parent, center, leftJoin.manhattanDist(rightJoin), TS);
@@ -290,7 +295,7 @@ public class WallBuilder {
 
     public void addCross3D(Group parent, Obstacle obstacle) {
         Vector2f[] utc = obstacle.uTurnCenters();
-        for (Vector2f tower : utc) { towers(parent, tower); }
+        towers(parent, utc);
         wall(parent, utc[0], utc[2]);
         wall(parent, utc[1], utc[3]);
     }
@@ -338,25 +343,20 @@ public class WallBuilder {
             Logger.info("Invalid U-shape detected: {}", obstacle);
             return;
         }
-        towers(parent, c0);
-        towers(parent, c1);
-        towers(parent, oc0);
-        towers(parent, oc1);
+        towers(parent, c0, c1, oc0, oc1);
     }
 
     //TODO rework and simplify
     public void addSShape3D(Group parent, Obstacle obstacle) {
         int[] uti = obstacle.uTurnIndices().toArray();
         Vector2f[] utc = obstacle.uTurnCenters(); // count=2
-        towers(parent, utc[0]);
-        towers(parent, utc[1]);
+        towers(parent, utc);
         Vector2f tc0, tc1;
         if (uti[0] == 0 && uti[1] == 7) {
             // S-shape mirrored vertically
             tc0 = obstacle.cornerCenter(12);
             tc1 = obstacle.cornerCenter(5);
-            towers(parent, tc0);
-            towers(parent, tc1);
+            towers(parent, tc0, tc1);
             wallAtCenter(parent, utc[0].midpoint(tc0), utc[0].manhattanDist(tc0), TS);
             wallAtCenter(parent, utc[1].midpoint(tc1), utc[1].manhattanDist(tc1), TS);
             // vertical wall
@@ -366,8 +366,7 @@ public class WallBuilder {
             // normal S-shape orientation
             tc0 = obstacle.cornerCenter(0);
             tc1 = obstacle.cornerCenter(7);
-            towers(parent, tc0);
-            towers(parent, tc1);
+            towers(parent, tc0, tc1);
             wallAtCenter(parent, tc0.midpoint(utc[1]), tc0.manhattanDist(utc[1]), TS);
             wallAtCenter(parent, utc[0].midpoint(tc1), utc[0].manhattanDist(tc1), TS);
             // vertical wall
@@ -378,8 +377,7 @@ public class WallBuilder {
                 // S-shape rotated by 90 degrees
                 tc0 = obstacle.cornerCenter(9);
                 tc1 = obstacle.cornerCenter(2);
-                towers(parent, tc0);
-                towers(parent, tc1);
+                towers(parent, tc0, tc1);
                 // horizontal tc1 - tc0
                 wallAtCenter(parent, tc1.midpoint(tc0), tc1.manhattanDist(tc0), TS);
                 // vertical c1 - tc1 and tc0 - c0
@@ -389,8 +387,7 @@ public class WallBuilder {
                 // S-shape mirrored and rotated by 90 degrees
                 tc0 = obstacle.cornerCenter(4);
                 tc1 = obstacle.cornerCenter(11);
-                towers(parent, tc0);
-                towers(parent, tc1);
+                towers(parent, tc0, tc1);
                 // horizontal tc1 - tc0
                 wallAtCenter(parent, tc1.midpoint(tc0), tc1.manhattanDist(tc0), TS);
                 // vertical c1 - tc1 and tc0 - c0
@@ -422,10 +419,7 @@ public class WallBuilder {
             Logger.error("Invalid T-shape obstacle: {}", obstacle);
             return;
         }
-        towers(parent, utc[0]);
-        towers(parent, utc[1]);
-        towers(parent, utc[2]);
-
+        towers(parent, utc);
         if (utc[0].x() == join.x()) {
             wallAtCenter(parent, utc[0].midpoint(join), TS, utc[0].manhattanDist(join));
         } else if (utc[0].y() == join.y()) {
@@ -450,11 +444,7 @@ public class WallBuilder {
         Vector2f cornerSW = obstacle.cornerCenter(2);
         Vector2f cornerSE = obstacle.cornerCenter(11);
         Vector2f cornerNE = obstacle.cornerCenter(13);
-        towers(parent, leg);
-        towers(parent, cornerNW);
-        towers(parent, cornerNE);
-        towers(parent, cornerSW);
-        towers(parent, cornerSE);
+        towers(parent, leg, cornerNW, cornerNE, cornerSW, cornerSE);
         wall(parent, cornerNW, cornerSW);
         wall(parent, cornerNE, cornerSE);
         wall(parent, cornerNW, cornerNE);
@@ -462,25 +452,58 @@ public class WallBuilder {
         wall(parent, leg, vec_2f(leg.x(), cornerSW.y()));
     }
 
-    private void towers(Group parent, Vector2f... centers) {
-        for (Vector2f center : centers) {
-            parent.getChildren().add(compositeCircularWall(center, HTS));
+    // fallback obstacle builder
+
+    private void addGenericObstacle3D(Group parent, Obstacle obstacle, double thickness){
+        int r = HTS;
+        Vector2f p = obstacle.startPoint();
+        for (int i = 0; i < obstacle.numSegments(); ++i) {
+            ObstacleSegment segment = obstacle.segment(i);
+            double length = segment.vector().length();
+            Vector2f q = p.plus(segment.vector());
+            if (segment.isVerticalLine()) {
+                Node wall = compositeWallCenteredAt(p.midpoint(q), thickness, length);
+                parent.getChildren().add(wall);
+            } else if (segment.isHorizontalLine()) {
+                Node wall = compositeWallCenteredAt(p.midpoint(q), length + thickness, thickness);
+                parent.getChildren().add(wall);
+            } else if (segment.isNWCorner()) {
+                if (segment.ccw()) {
+                    addGenericShapeCorner(parent, p.plus(-r, 0), p, q, thickness);
+                } else {
+                    addGenericShapeCorner(parent, p.plus(0, -r), q, p, thickness);
+                }
+            } else if (segment.isSWCorner()) {
+                if (segment.ccw()) {
+                    addGenericShapeCorner(parent, p.plus(0, r), q, p, thickness);
+                } else {
+                    addGenericShapeCorner(parent, p.plus(-r, 0), p, q, thickness);
+                }
+            } else if (segment.isSECorner()) {
+                if (segment.ccw()) {
+                    addGenericShapeCorner(parent, p.plus(r, 0), p, q, thickness);
+                } else {
+                    addGenericShapeCorner(parent, p.plus(0, r), q, p, thickness);
+                }
+            } else if (segment.isNECorner()) {
+                if (segment.ccw()) {
+                    addGenericShapeCorner(parent, p.plus(0, -r), q, p, thickness);
+                } else {
+                    addGenericShapeCorner(parent, p.plus(r, 0), p, q, thickness);
+                }
+            }
+            p = q;
         }
     }
 
-    private void wall(Group parent, Vector2f p, Vector2f q) {
-        if (p.x() == q.x()) { // vertical wall
-            wallAtCenter(parent, p.midpoint(q), TS, p.manhattanDist(q));
-        } else if (p.y() == q.y()) { // horizontal wall
-            wallAtCenter(parent, p.midpoint(q), p.manhattanDist(q), TS);
-        } else {
-            Logger.error("Can only add horizontal or vertical castle walls, p={}, q={}", p, q);
-        }
+    private void addGenericShapeCorner(Group parent, Vector2f corner, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {
+        Node hWall = compositeWallCenteredAt(corner.midpoint(horEndPoint), corner.manhattanDist(horEndPoint), thickness);
+        Node vWall = compositeWallCenteredAt(corner.midpoint(vertEndPoint), thickness, corner.manhattanDist(vertEndPoint));
+        Node cWall = compositeCornerWall(corner, 0.5 * thickness);
+        parent.getChildren().addAll(hWall, vWall, cWall);
     }
 
-    private void wallAtCenter(Group parent, Vector2f center, double sizeX, double sizeY) {
-        parent.getChildren().add(compositeWallCenteredAt(center, sizeX, sizeY));
-    }
+    // dispatcher
 
     public void addObstacle3D(Group parent, Obstacle obstacle, double thickness) {
         //TODO handle special cases elsewhere, maybe in game-specific code?
@@ -550,55 +573,6 @@ public class WallBuilder {
 
             default -> addGenericObstacle3D(parent, obstacle, thickness);
         }
-    }
-
-    private void addGenericObstacle3D(Group parent, Obstacle obstacle, double thickness){
-        int r = HTS;
-        Vector2f p = obstacle.startPoint();
-        for (int i = 0; i < obstacle.numSegments(); ++i) {
-            ObstacleSegment segment = obstacle.segment(i);
-            double length = segment.vector().length();
-            Vector2f q = p.plus(segment.vector());
-            if (segment.isVerticalLine()) {
-                Node wall = compositeWallCenteredAt(p.midpoint(q), thickness, length);
-                parent.getChildren().add(wall);
-            } else if (segment.isHorizontalLine()) {
-                Node wall = compositeWallCenteredAt(p.midpoint(q), length + thickness, thickness);
-                parent.getChildren().add(wall);
-            } else if (segment.isNWCorner()) {
-                if (segment.ccw()) {
-                    addGenericShapeCorner(parent, p.plus(-r, 0), p, q, thickness);
-                } else {
-                    addGenericShapeCorner(parent, p.plus(0, -r), q, p, thickness);
-                }
-            } else if (segment.isSWCorner()) {
-                if (segment.ccw()) {
-                    addGenericShapeCorner(parent, p.plus(0, r), q, p, thickness);
-                } else {
-                    addGenericShapeCorner(parent, p.plus(-r, 0), p, q, thickness);
-                }
-            } else if (segment.isSECorner()) {
-                if (segment.ccw()) {
-                    addGenericShapeCorner(parent, p.plus(r, 0), p, q, thickness);
-                } else {
-                    addGenericShapeCorner(parent, p.plus(0, r), q, p, thickness);
-                }
-            } else if (segment.isNECorner()) {
-                if (segment.ccw()) {
-                    addGenericShapeCorner(parent, p.plus(0, -r), q, p, thickness);
-                } else {
-                    addGenericShapeCorner(parent, p.plus(r, 0), p, q, thickness);
-                }
-            }
-            p = q;
-        }
-    }
-
-    private void addGenericShapeCorner(Group parent, Vector2f corner, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {
-        Node hWall = compositeWallCenteredAt(corner.midpoint(horEndPoint), corner.manhattanDist(horEndPoint), thickness);
-        Node vWall = compositeWallCenteredAt(corner.midpoint(vertEndPoint), thickness, corner.manhattanDist(vertEndPoint));
-        Node cWall = compositeCornerWall(corner, 0.5 * thickness);
-        parent.getChildren().addAll(hWall, vWall, cWall);
     }
 
     // Obstacles not handled by standard obstacle types:
