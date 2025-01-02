@@ -58,7 +58,7 @@ public class WorldRenderer3D {
         base.setMouseTransparent(true);
         base.setTranslateX(center.x());
         base.setTranslateY(center.y());
-        base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5).add(wallTopHeight));
+        base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         var top = new Box(sizeX, sizeY, wallTopHeight);
@@ -66,7 +66,7 @@ public class WorldRenderer3D {
         top.setMouseTransparent(true);
         top.setTranslateX(center.x());
         top.setTranslateY(center.y());
-        top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1).add(wallTopHeight));
+        top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         return new Group(base, top);
@@ -99,7 +99,7 @@ public class WorldRenderer3D {
         base.setRotate(90);
         base.setTranslateX(center.x());
         base.setTranslateY(center.y());
-        base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5).add(wallTopHeight));
+        base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         Cylinder top = new Cylinder(radius, wallTopHeight, CORNER_WALL_CYLINDER_DIVISIONS);
@@ -109,7 +109,7 @@ public class WorldRenderer3D {
         top.setRotate(90);
         top.setTranslateX(center.x());
         top.setTranslateY(center.y());
-        top.translateZProperty().bind(wallBaseHeightPy.add(0.5* wallTopHeight).multiply(-1).add(wallTopHeight));
+        top.translateZProperty().bind(wallBaseHeightPy.add(0.5* wallTopHeight).multiply(-1));
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         return new Group(base, top);
@@ -130,7 +130,7 @@ public class WorldRenderer3D {
         base.setRotate(90);
         base.setTranslateX(center.x());
         base.setTranslateY(center.y());
-        base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5).add(wallTopHeight));
+        base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
         base.heightProperty().bind(wallBaseHeightPy);
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
         base.setMouseTransparent(true);
@@ -141,7 +141,7 @@ public class WorldRenderer3D {
         top.setRotate(90);
         top.translateXProperty().bind(base.translateXProperty());
         top.translateYProperty().bind(base.translateYProperty());
-        top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1).add(wallTopHeight));
+        top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
         top.setMouseTransparent(true);
 
