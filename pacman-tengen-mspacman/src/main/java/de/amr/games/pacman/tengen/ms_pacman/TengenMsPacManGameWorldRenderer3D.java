@@ -89,8 +89,8 @@ public class TengenMsPacManGameWorldRenderer3D extends DefaultWorldRenderer3D {
             // Tengen STRANGE map #3, mushroom center-bottom
             case "dcgbecgbfcdbfceb" -> render_StrangeMap3_Mushroom(parent, obstacle);
 
-            // Tengen STRANGE map #3, glasses center-bottom
-            case "dcgbfcebdcfbgceb" -> render_StrangeMap3_Glasses(parent, obstacle);
+            // Tengen STRANGE map #3 and #7, U-shape with stronger "legs"
+            case "dcgbfcebdcfbgceb" -> render_StrangeMap3_7_StrongLeggedUShape(parent, obstacle);
 
             // Tengen STRANGE map #4, huge obstacle
             case "dgbecfbdcgbfcdbecgbfcebgcdbfebdgbecfbgcebgcedcfbdcfbgcdbfeb" -> render_StrangeMap4_Huge(parent, obstacle);
@@ -431,16 +431,19 @@ public class TengenMsPacManGameWorldRenderer3D extends DefaultWorldRenderer3D {
         addWallAtCenter(parent, h[0].midpoint(h[1]), 2 * TS, 3 * TS);
     }
 
-    private void render_StrangeMap3_Glasses(Group parent, Obstacle obstacle) {
+    private void render_StrangeMap3_7_StrongLeggedUShape(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 2, 4, 6, 8, 14);
+        Vector2f[] h = { vec_2f(t[5].x(), t[1].y()), vec_2f(t[4].x(), t[2].y()) };
         addTowers(parent, t);
         addWall(parent, t[0], t[1]);
         addWall(parent, t[1], t[2]);
         addWall(parent, t[2], t[3]);
         addWall(parent, t[3], t[4]);
+        addWall(parent, t[4], h[1]);
         addWall(parent, t[5], t[0]);
-        addWallAtCenter(parent, t[1].midpoint(t[5]), 6 * TS, 2 * TS);
-        addWallAtCenter(parent, t[2].midpoint(t[4]), 6 * TS, 2 * TS);
+        addWall(parent, t[5], h[0]);
+        addWallAtCenter(parent, t[1].midpoint(t[5]), t[0].manhattanDist(t[5]), t[0].manhattanDist(t[1]));
+        addWallAtCenter(parent, t[2].midpoint(t[4]), t[3].manhattanDist(t[4]), t[2].manhattanDist(t[3]));
     }
 
     private void render_StrangeMap4_Huge(Group parent, Obstacle obstacle) {
