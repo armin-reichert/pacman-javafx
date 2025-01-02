@@ -34,7 +34,7 @@ public class House3D {
     private final Group root = new Group();
     private Door3D door3D;
 
-    private final WallBuilder wallBuilder = new WallBuilder();
+    private final WorldRenderer3D worldRenderer3D = new WorldRenderer3D();
 
     public House3D() {
         openPy.addListener((py, wasOpen, isOpen) -> {
@@ -42,8 +42,8 @@ public class House3D {
                 door3D.playTraversalAnimation();
             }
         });
-        wallBuilder.setWallBaseHeightProperty(baseWallHeightPy);
-        wallBuilder.setWallTopHeight(WALL_COAT_HEIGHT);
+        worldRenderer3D.setWallBaseHeightProperty(baseWallHeightPy);
+        worldRenderer3D.setWallTopHeight(WALL_COAT_HEIGHT);
     }
 
     public void build(GameWorld world, WorldMapColoring coloring) {
@@ -79,12 +79,12 @@ public class House3D {
         root.getChildren().add(light);
     }
 
-    public WallBuilder wallBuilder() {
-        return wallBuilder;
+    public WorldRenderer3D renderer3D() {
+        return worldRenderer3D;
     }
 
     private Node createWall(int x1, int y1, int x2, int y2) {
-        return wallBuilder.createWallBetweenTiles(vec_2i(x1, y1), vec_2i(x2, y2), WALL_THICKNESS);
+        return worldRenderer3D.createCompositeWallBetweenTiles(vec_2i(x1, y1), vec_2i(x2, y2), WALL_THICKNESS);
     }
 
     public Group root() { return root; }

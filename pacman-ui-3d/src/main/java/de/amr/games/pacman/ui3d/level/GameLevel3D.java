@@ -90,7 +90,7 @@ public class GameLevel3D {
     private House3D house3D;
     private Bonus3D bonus3D;
 
-    private final WallBuilder wallBuilder = new WallBuilder();
+    private final WorldRenderer3D worldRenderer3D = new WorldRenderer3D();
 
     public GameLevel3D(GameContext context) {
         this.context = assertNotNull(context);
@@ -251,18 +251,11 @@ public class GameLevel3D {
     }
 
     private void buildWorld3D(GameWorld world, WorldMapColoring coloring) {
-        wallBuilder.setWallTopHeight(OBSTACLE_COAT_HEIGHT);
-        obstacleHeightPy.set(PY_3D_WALL_HEIGHT.get());
+        Logger.info("Build world 3D from map {}", world.map().url());
 
         Color wallBaseColor = coloring.stroke();
-        Color wallTopColor = coloring.fill().equals(Color.BLACK)
-            ? Color.grayRgb(30) : coloring.fill(); // need some contrast with floor
-
-        Logger.info("Build world 3D from map {}", world.map().url());
-        Logger.info("Obstacles:");
-        world.map().obstacles().forEach(obstacle -> Logger.info("{}: {}", obstacle.computeType(), obstacle));
-
-        Box floor = createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
+        // need some contrast with floor iffill color is black
+        Color wallTopColor = coloring.fill().equals(Color.BLACK) ? Color.grayRgb(30) : coloring.fill();
 
         var wallTopMaterial = new PhongMaterial();
         wallTopMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
@@ -276,10 +269,16 @@ public class GameLevel3D {
         ));
         wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
-        wallBuilder.setWallTopMaterial(wallTopMaterial);
-        wallBuilder.setWallBaseMaterial(wallBaseMaterial);
-        wallBuilder.setWallBaseHeightProperty(obstacleHeightPy);
-        wallBuilder.setWallTopHeight(OBSTACLE_COAT_HEIGHT);
+        worldRenderer3D.setWallTopHeight(OBSTACLE_COAT_HEIGHT);
+        worldRenderer3D.setWallTopMaterial(wallTopMaterial);
+        worldRenderer3D.setWallBaseMaterial(wallBaseMaterial);
+        worldRenderer3D.setWallBaseHeightProperty(obstacleHeightPy);
+        worldRenderer3D.setWallTopHeight(OBSTACLE_COAT_HEIGHT);
+        //TODO check this:
+        obstacleHeightPy.set(PY_3D_WALL_HEIGHT.get());
+
+        Box floor = createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
+        world.map().obstacles().forEach(obstacle -> Logger.info("{}: {}", obstacle.computeType(), obstacle));
         for (Obstacle obstacle : world.map().obstacles()) {
             if (!world.isPartOfHouse(tileAt(obstacle.startPoint()))) {
                 boolean fillCenter = true; // TODO use map property
@@ -290,34 +289,16 @@ public class GameLevel3D {
 
         //TODO: not sure about house coloring, wall "stroke" color is too often white which looks bad for house wall
         // Therefore, we exchange "stroke" an "fill" colors
+        //TODO should there be a HouseRenderer3D which creates the House3D instead?
         house3D = new House3D();
-        house3D.wallBuilder().setWallBaseMaterial(coloredMaterial(opaqueColor(coloring.fill(), HOUSE_OPACITY)));
-        house3D.wallBuilder().setWallTopMaterial(coloredMaterial(coloring.stroke()));
+        house3D.renderer3D().setWallBaseMaterial(coloredMaterial(opaqueColor(coloring.fill(), HOUSE_OPACITY)));
+        house3D.renderer3D().setWallTopMaterial(coloredMaterial(coloring.stroke()));
         house3D.baseWallHeightPy.set(HOUSE_HEIGHT);
         house3D.build(world, coloring);
 
         mazeGroup.getChildren().add(house3D.root());
         worldGroup.getChildren().addAll(floor, mazeGroup);
         root.getChildren().add(house3D.door3D());
-    }
-
-    private void addObstacle(Group parent, Obstacle obstacle, double thickness, boolean fillCenter) {
-        Group obstacleGroup = new Group();
-        parent.getChildren().add(obstacleGroup);
-        ObstacleType obstacleType = obstacle.computeType();
-        switch (obstacleType) {
-            case ANY ->           wallBuilder.addObstacle3D(obstacleGroup, obstacle, thickness);
-            case CROSS_SHAPE ->   wallBuilder.addCross3D(obstacleGroup, obstacle);
-            case F_SHAPE ->       wallBuilder.addFShape3D(obstacleGroup, obstacle);
-            case H_SHAPE ->       wallBuilder.addHShape3D(obstacleGroup, obstacle);
-            case L_SHAPE ->       wallBuilder.addLShape3D(obstacleGroup, obstacle);
-            case O_SHAPE ->       wallBuilder.addOShape3D(obstacleGroup, obstacle, fillCenter);
-            case S_SHAPE ->       wallBuilder.addSShape3D(obstacleGroup, obstacle);
-            case T_SHAPE ->       wallBuilder.addTShape3D(obstacleGroup, obstacle);
-            case T_2ROWS_SHAPE -> wallBuilder.addT2RowsShape3D(obstacleGroup, obstacle);
-            case U_SHAPE ->       wallBuilder.addUShape3D(obstacleGroup, obstacle);
-        }
-        Logger.info("{} 3D added, obstacle={}", obstacleType, obstacle);
     }
 
     private Box createFloor(double sizeX, double sizeY) {
@@ -340,6 +321,25 @@ public class GameLevel3D {
         return GlobalProperties3d.NO_TEXTURE.equals(textureName) || !textures.containsKey(textureName)
             ? coloredMaterial(floorColorPy.get())
             : textures.get(textureName);
+    }
+
+    private void addObstacle(Group parent, Obstacle obstacle, double thickness, boolean fillCenter) {
+        Group obstacleGroup = new Group();
+        parent.getChildren().add(obstacleGroup);
+        ObstacleType obstacleType = obstacle.computeType();
+        switch (obstacleType) {
+            case ANY ->           worldRenderer3D.addObstacle3D(obstacleGroup, obstacle, thickness);
+            case CROSS_SHAPE ->   worldRenderer3D.addCross3D(obstacleGroup, obstacle);
+            case F_SHAPE ->       worldRenderer3D.addFShape3D(obstacleGroup, obstacle);
+            case H_SHAPE ->       worldRenderer3D.addHShape3D(obstacleGroup, obstacle);
+            case L_SHAPE ->       worldRenderer3D.addLShape3D(obstacleGroup, obstacle);
+            case O_SHAPE ->       worldRenderer3D.addOShape3D(obstacleGroup, obstacle, fillCenter);
+            case S_SHAPE ->       worldRenderer3D.addSShape3D(obstacleGroup, obstacle);
+            case T_SHAPE ->       worldRenderer3D.addTShape3D(obstacleGroup, obstacle);
+            case T_2ROWS_SHAPE -> worldRenderer3D.addT2RowsShape3D(obstacleGroup, obstacle);
+            case U_SHAPE ->       worldRenderer3D.addUShape3D(obstacleGroup, obstacle);
+        }
+        Logger.info("{} 3D added, obstacle={}", obstacleType, obstacle);
     }
 
     private void addFood3D(GameWorld world, Model3D pelletModel3D, Material foodMaterial) {
