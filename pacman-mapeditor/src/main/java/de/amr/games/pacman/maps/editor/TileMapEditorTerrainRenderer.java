@@ -33,7 +33,7 @@ import static de.amr.games.pacman.maps.editor.TileMapEditor.*;
  */
 public class TileMapEditorTerrainRenderer implements TileMapRenderer {
 
-    private static final Color SEGMENT_NUMBER_COLOR = Color.YELLOW;
+    private static final Color SEGMENT_NUMBER_COLOR = Color.GRAY;
     private static final double SEGMENT_NUMBER_FONT_SIZE = 4;
     private static final Font SEGMENT_NUMBER_FONT = Font.font("Sans", FontWeight.BOLD, SEGMENT_NUMBER_FONT_SIZE);
 
@@ -89,9 +89,12 @@ public class TileMapEditorTerrainRenderer implements TileMapRenderer {
                 for (int i = 0; i < obstacle.numSegments(); ++i) {
                     ObstacleSegment segment = obstacle.segment(i);
                     Vector2f start = segment.start(), end = segment.end(), middle = start.plus(end).scaled(0.5f);
-                    g.setFill(SEGMENT_NUMBER_COLOR);
                     g.setFont(SEGMENT_NUMBER_FONT);
+                    g.setFill(SEGMENT_NUMBER_COLOR);
                     g.fillText(String.valueOf(i), middle.x() - 0.5 * SEGMENT_NUMBER_FONT_SIZE, middle.y());
+                    g.setStroke(Color.WHITE);
+                    g.setLineWidth(0.1);
+                    g.strokeText(String.valueOf(i), middle.x() - 0.5 * SEGMENT_NUMBER_FONT_SIZE, middle.y());
                 }
             });
         }
