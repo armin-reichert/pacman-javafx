@@ -95,8 +95,38 @@ public class TengenMsPacManGameWorldRenderer3D extends DefaultWorldRenderer3D {
             // Tengen STRANGE map #4, huge obstacle
             case "dgbecfbdcgbfcdbecgbfcebgcdbfebdgbecfbgcebgcedcfbdcfbgcdbfeb" -> render_StrangeMap4_Huge(parent, obstacle);
 
+            // Tengen STRANGE map #7: boots pointing left
+            case "dcfbdgbfceb" -> render_Boot_PointingLeft(parent, obstacle);
+
+            // Tengen STRANGE map #7: boots pointing left
+            case "dcgbfebgceb" -> render_Boot_PointingRight(parent, obstacle);
+
             default -> addGenericObstacle3D(parent, obstacle, thickness);
         }
+    }
+
+    // TODO add these to standard shapes?
+
+    private void render_Boot_PointingLeft(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 4, 7, 9);
+        Vector2f h0 = vec_2f(t[0].x(), t[1].y());
+        addTowers(parent, t);
+        addWall(parent, t[0], h0);
+        addWall(parent, t[1], t[2]);
+        addWall(parent, t[2], t[3]);
+        addWall(parent, t[3], t[0]);
+        addWallAtCenter(parent, t[0].midpoint(t[2]), t[0].manhattanDist(t[3]), t[3].manhattanDist(t[2]));
+    }
+
+    private void render_Boot_PointingRight(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 2, 4, 9);
+        Vector2f h0 = vec_2f(t[3].x(), t[1].y());
+        addTowers(parent, t);
+        addWall(parent, t[0], t[1]);
+        addWall(parent, t[1], t[2]);
+        addWall(parent, h0, t[3]);
+        addWall(parent, t[3], t[0]);
+        addWallAtCenter(parent, t[1].midpoint(t[3]), t[0].manhattanDist(t[3]), t[0].manhattanDist(t[1]));
     }
 
     private void render_BigMap1_UpsideT(Group parent, Obstacle obstacle) {
