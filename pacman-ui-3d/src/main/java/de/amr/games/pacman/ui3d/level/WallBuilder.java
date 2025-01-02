@@ -577,6 +577,12 @@ public class WallBuilder {
             // Tengen STRANGE map #3. large hat-like onstacle center/top
             case "dfbdcfbdcgfdbfcdbecgbegfcebgcebgeb" -> addTengen_StrangeMap3_Hat(parent, obstacle);
 
+            // Tengen STRANGE map #3, mushroom center-bottom
+            case "dcgbecgbfcdbfceb" -> addTengen_StrangeMap3_Mushroom(parent, obstacle);
+
+            // Tengen STRANGE map #3, glasses center-bottom
+            case "dcgbfcebdcfbgceb" -> addTengen_StrangeMap3_Glasses(parent, obstacle);
+
             default -> addGenericObstacle3D(parent, obstacle, thickness);
         }
     }
@@ -898,6 +904,33 @@ public class WallBuilder {
         wall(parent, h[0], t[1]);
         wall(parent, t[1], t[2]);
         wall(parent, t[2], h[1]);
+    }
+
+    private void addTengen_StrangeMap3_Mushroom(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 2, 6, 8, 12, 14);
+        Vector2f[] h = { vec_2f(t[2].x(), t[1].y()), vec_2f(t[3].x(), t[1].y()) };
+        towers(parent, t);
+        wall(parent, t[0], t[1]);
+        wall(parent, t[1], h[0]);
+        wall(parent, h[0], t[2]);
+        wall(parent, t[2], t[3]);
+        wall(parent, t[3], h[1]);
+        wall(parent, h[1], t[4]);
+        wall(parent, t[4], t[5]);
+        wall(parent, t[5], t[0]);
+        wallAtCenter(parent, h[0].midpoint(h[1]), 2 * TS, 3 * TS);
+    }
+
+    private void addTengen_StrangeMap3_Glasses(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 2, 4, 6, 8, 14);
+        towers(parent, t);
+        wall(parent, t[0], t[1]);
+        wall(parent, t[1], t[2]);
+        wall(parent, t[2], t[3]);
+        wall(parent, t[3], t[4]);
+        wall(parent, t[5], t[0]);
+        wallAtCenter(parent, t[1].midpoint(t[5]), 6 * TS, 2 * TS);
+        wallAtCenter(parent, t[2].midpoint(t[4]), 6 * TS, 2 * TS);
     }
 
 }
