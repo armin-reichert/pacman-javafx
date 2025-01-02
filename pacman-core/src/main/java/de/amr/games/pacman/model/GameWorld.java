@@ -69,18 +69,18 @@ public class GameWorld {
         var portalList = new ArrayList<Portal>();
         int firstColumn = 0, lastColumn = terrain.numCols() - 1;
         for (int row = 0; row < terrain.numRows(); ++row) {
-            Vector2i leftBorderTile = v2i(firstColumn, row), rightBorderTile = v2i(lastColumn, row);
+            Vector2i leftBorderTile = vec_2i(firstColumn, row), rightBorderTile = vec_2i(lastColumn, row);
             if (terrain.get(row, firstColumn) == TUNNEL && terrain.get(row, lastColumn) == TUNNEL) {
                 portalList.add(new Portal(leftBorderTile, rightBorderTile, 2));
             }
         }
         portals = portalList.toArray(new Portal[0]);
 
-        pacPosition                  = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_PAC,          v2i(13,26)));
-        ghostPositions[RED_GHOST]    = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_RED_GHOST,    v2i(13,14)));
-        ghostPositions[PINK_GHOST]   = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_PINK_GHOST,   v2i(13,17)));
-        ghostPositions[CYAN_GHOST]   = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_CYAN_GHOST,   v2i(11,17)));
-        ghostPositions[ORANGE_GHOST] = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_ORANGE_GHOST, v2i(15,17)));
+        pacPosition                  = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_PAC,          vec_2i(13,26)));
+        ghostPositions[RED_GHOST]    = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_RED_GHOST,    vec_2i(13,14)));
+        ghostPositions[PINK_GHOST]   = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_PINK_GHOST,   vec_2i(13,17)));
+        ghostPositions[CYAN_GHOST]   = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_CYAN_GHOST,   vec_2i(11,17)));
+        ghostPositions[ORANGE_GHOST] = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_ORANGE_GHOST, vec_2i(15,17)));
 
         energizerTiles = food.tiles(ENERGIZER).toArray(Vector2i[]::new);
         eatenFood = new BitSet(food.numCols() * food.numRows());
@@ -99,13 +99,13 @@ public class GameWorld {
         assertLegalGhostID(ghostID);
         return switch (ghostID) {
             case RED_GHOST -> map.terrain().getTileProperty(
-                PROPERTY_POS_SCATTER_RED_GHOST, v2i(0, map.terrain().numCols() - 3));
+                PROPERTY_POS_SCATTER_RED_GHOST, vec_2i(0, map.terrain().numCols() - 3));
             case PINK_GHOST -> map.terrain().getTileProperty(
-                PROPERTY_POS_SCATTER_PINK_GHOST, v2i(0, 3));
+                PROPERTY_POS_SCATTER_PINK_GHOST, vec_2i(0, 3));
             case CYAN_GHOST -> map.terrain().getTileProperty(
-                PROPERTY_POS_SCATTER_CYAN_GHOST, v2i(map.terrain().numRows() - 1, map.terrain().numCols() - 1));
+                PROPERTY_POS_SCATTER_CYAN_GHOST, vec_2i(map.terrain().numRows() - 1, map.terrain().numCols() - 1));
             case ORANGE_GHOST -> map.terrain().getTileProperty(
-                PROPERTY_POS_SCATTER_ORANGE_GHOST, v2i(map.terrain().numRows() - 1, 0));
+                PROPERTY_POS_SCATTER_ORANGE_GHOST, vec_2i(map.terrain().numRows() - 1, 0));
             default -> throw new IllegalArgumentException("Illegal ghost ID: " + ghostID);
         };
     }
@@ -176,10 +176,10 @@ public class GameWorld {
      * @param topLeftY tile-y of top left corner
      */
     public void createArcadeHouse(int topLeftX, int topLeftY) {
-        houseTopLeftTile = v2i(topLeftX, topLeftY);
-        houseSize = v2i(8, 5);
-        leftDoorTile = v2i(topLeftX + 3, topLeftY);
-        rightDoorTile = v2i(topLeftX + 4, topLeftY);
+        houseTopLeftTile = vec_2i(topLeftX, topLeftY);
+        houseSize = vec_2i(8, 5);
+        leftDoorTile = vec_2i(topLeftX + 3, topLeftY);
+        rightDoorTile = vec_2i(topLeftX + 4, topLeftY);
         setGhostDirection(RED_GHOST, Direction.LEFT);
         setGhostDirection(PINK_GHOST, Direction.DOWN);
         setGhostDirection(CYAN_GHOST, Direction.UP);
@@ -206,7 +206,7 @@ public class GameWorld {
      * @return position where ghost can enter the door
      */
     public Vector2f houseEntryPosition() {
-        return v2f(TS * rightDoorTile.x() - HTS, TS * (rightDoorTile.y() - 1));
+        return vec_2f(TS * rightDoorTile.x() - HTS, TS * (rightDoorTile.y() - 1));
     }
 
     public Vector2f houseCenter() {

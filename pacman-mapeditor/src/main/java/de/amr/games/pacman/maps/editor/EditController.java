@@ -7,8 +7,8 @@ package de.amr.games.pacman.maps.editor;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.TileEncoding;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -23,7 +23,7 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.lib.Globals.v2i;
+import static de.amr.games.pacman.lib.Globals.vec_2i;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.maps.editor.TileMapEditorViewModel.*;
@@ -481,7 +481,7 @@ public class EditController {
         var worldMap = new WorldMap(tilesY, tilesX);
         TileMap terrain = worldMap.terrain();
 
-        Vector2i houseOrigin = v2i(tilesX / 2 - 4, tilesY / 2 - 3);
+        Vector2i houseOrigin = vec_2i(tilesX / 2 - 4, tilesY / 2 - 3);
 
         addBorder(terrain, 3, 2);
         addHouse(terrain, houseOrigin);
@@ -493,10 +493,10 @@ public class EditController {
         terrain.setProperty(PROPERTY_POS_PAC, formatTile(houseOrigin.plus(3, 11)));
         terrain.setProperty(PROPERTY_POS_BONUS, formatTile(houseOrigin.plus(3, 5)));
 
-        terrain.setProperty(PROPERTY_POS_SCATTER_RED_GHOST, formatTile(v2i(tilesX - 3, 0)));
-        terrain.setProperty(PROPERTY_POS_SCATTER_PINK_GHOST, formatTile(v2i(3, 0)));
-        terrain.setProperty(PROPERTY_POS_SCATTER_CYAN_GHOST, formatTile(v2i(tilesX - 1, tilesY - 2)));
-        terrain.setProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(v2i(0, tilesY - 2)));
+        terrain.setProperty(PROPERTY_POS_SCATTER_RED_GHOST, formatTile(vec_2i(tilesX - 3, 0)));
+        terrain.setProperty(PROPERTY_POS_SCATTER_PINK_GHOST, formatTile(vec_2i(3, 0)));
+        terrain.setProperty(PROPERTY_POS_SCATTER_CYAN_GHOST, formatTile(vec_2i(tilesX - 1, tilesY - 2)));
+        terrain.setProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(vec_2i(0, tilesY - 2)));
 
         invalidateTerrainData();
 

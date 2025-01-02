@@ -43,7 +43,7 @@ public class IntroScene extends GameScene2D {
     static final int TOP_Y = TS * 11 + 1;
     static final int STOP_X_GHOST = TS * 6 - 4;
     static final int STOP_X_MS_PAC_MAN = TS * 15 + 2;
-    static final Vector2i TITLE_POSITION = v2i(TS * 10, TS * 8);
+    static final Vector2i TITLE_POSITION = vec_2i(TS * 10, TS * 8);
     static final int NUM_BULBS = 96;
     static final int DISTANCE_BETWEEN_ACTIVE_BULBS = 16;
 

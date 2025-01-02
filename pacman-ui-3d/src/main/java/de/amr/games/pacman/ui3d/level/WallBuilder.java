@@ -189,8 +189,8 @@ public class WallBuilder {
         int[] d = obstacle.uTurnIndices().toArray();
         ObstacleSegment firstUTurn = obstacle.segment(d[0]);
         Vector2f corner = firstUTurn.isRoundedSECorner() || firstUTurn.isRoundedNWCorner()
-            ? new Vector2f(utc[1].x(), utc[0].y())
-            : new Vector2f(utc[0].x(), utc[1].y());
+            ? vec_2f(utc[1].x(), utc[0].y())
+            : vec_2f(utc[0].x(), utc[1].y());
         tower(parent, utc[0]);
         tower(parent, utc[1]);
         tower(parent, corner);
@@ -207,8 +207,8 @@ public class WallBuilder {
                  "dgbecfbdgbecgfceb"-> {
                 Arrays.sort(utc, (p, q) -> Float.compare(p.y(), q.y()));
                 float spineX = utc[2].x();
-                Vector2f spineTop = new Vector2f(spineX, utc[0].y());
-                Vector2f spineMiddle = new Vector2f(spineX, utc[1].y());
+                Vector2f spineTop = vec_2f(spineX, utc[0].y());
+                Vector2f spineMiddle = vec_2f(spineX, utc[1].y());
                 for (var tower : utc) {
                     tower(parent, tower);
                 }
@@ -220,8 +220,8 @@ public class WallBuilder {
             case "dgbecgfcdbecgfceb", "dcfbdgbfcedcfbgce" -> {
                 Arrays.sort(utc, (p, q) -> Float.compare(p.x(), q.x()));
                 float spineY = utc[0].y();
-                Vector2f spineMiddle = new Vector2f(utc[1].x(), spineY);
-                Vector2f spineRight = new Vector2f(utc[2].x(), spineY);
+                Vector2f spineMiddle = vec_2f(utc[1].x(), spineY);
+                Vector2f spineRight = vec_2f(utc[2].x(), spineY);
                 for (var tower : utc) {
                     tower(parent, tower);
                 }
@@ -233,8 +233,8 @@ public class WallBuilder {
             case "dcgfcdbecgfcdbfeb", "dcgbfebgcedcfbgce" -> {
                 Arrays.sort(utc, (p, q) -> Float.compare(p.x(), q.x()));
                 float spineY = utc[2].y();
-                Vector2f spineLeft = new Vector2f(utc[0].x(), spineY);
-                Vector2f spineMiddle = new Vector2f(utc[1].x(), spineY);
+                Vector2f spineLeft = vec_2f(utc[0].x(), spineY);
+                Vector2f spineMiddle = vec_2f(utc[1].x(), spineY);
                 for (var tower : utc) {
                     tower(parent, tower);
                 }
@@ -409,16 +409,16 @@ public class WallBuilder {
         Vector2f[] utc = obstacle.uTurnCenters();
         Vector2f join;
         if (utc[2].x() == utc[0].x() && utc[1].x() > utc[2].x()) {
-            join = new Vector2f(utc[0].x(), utc[1].y());
+            join = vec_2f(utc[0].x(), utc[1].y());
         }
         else if (utc[0].y() == utc[2].y() && utc[1].y() > utc[0].y()) {
-            join = new Vector2f(utc[1].x(), utc[0].y());
+            join = vec_2f(utc[1].x(), utc[0].y());
         }
         else if (utc[0].y() == utc[1].y() && utc[2].y() < utc[0].y()) {
-            join = new Vector2f(utc[2].x(), utc[0].y());
+            join = vec_2f(utc[2].x(), utc[0].y());
         }
         else if (utc[2].x() == utc[1].x() && utc[0].x() < utc[1].x()) {
-            join = new Vector2f(utc[1].x(), utc[0].y());
+            join = vec_2f(utc[1].x(), utc[0].y());
         }
         else {
             Logger.error("Invalid T-shape obstacle: {}", obstacle);
@@ -461,7 +461,7 @@ public class WallBuilder {
         wall(parent, cornerNE, cornerSE);
         wall(parent, cornerNW, cornerNE);
         wall(parent, cornerSW, cornerSE);
-        wall(parent, leg, new Vector2f(leg.x(), cornerSW.y()));
+        wall(parent, leg, vec_2f(leg.x(), cornerSW.y()));
     }
 
     private void tower(Group parent, Vector2f center) {
@@ -741,14 +741,14 @@ public class WallBuilder {
     private void addTengen_BigMap8_62SegmentObstacle(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 60, 58, 2, 6, 10, 15, 50, 48, 21, 25, 30, 34, 36, 38, 40);
         Vector2f[] h = new Vector2f[8];
-        h[0] = v2f(t[4].x(),  t[2].y());
-        h[1] = v2f(t[4].x(),  t[3].y());
-        h[2] = v2f(t[5].x(),  t[4].y());
-        h[3] = v2f(t[10].x(), t[9].y());
-        h[4] = v2f(t[11].x(), t[12].y());
-        h[5] = v2f(t[11].x(), t[15].y());
-        h[6] = v2f(t[4].x(),  t[0].y());
-        h[7] = v2f(t[11].x(), t[13].y());
+        h[0] = vec_2f(t[4].x(),  t[2].y());
+        h[1] = vec_2f(t[4].x(),  t[3].y());
+        h[2] = vec_2f(t[5].x(),  t[4].y());
+        h[3] = vec_2f(t[10].x(), t[9].y());
+        h[4] = vec_2f(t[11].x(), t[12].y());
+        h[5] = vec_2f(t[11].x(), t[15].y());
+        h[6] = vec_2f(t[4].x(),  t[0].y());
+        h[7] = vec_2f(t[11].x(), t[13].y());
 
         for (Vector2f tower : t) { tower(parent, tower); }
 
@@ -851,12 +851,8 @@ public class WallBuilder {
     }
 
     private void addTengen_BigMap10_TableUpsideDown(Group parent, Obstacle obstacle) {
-        Vector2f[] t = new Vector2f[4];
-        t[0] = obstacle.cornerCenter(0);
-        t[1] = obstacle.cornerCenter(4);
-        t[2] = obstacle.cornerCenter(8);
-        t[3] = obstacle.cornerCenter(12);
-        Vector2f h0 = new Vector2f(t[0].x(), t[1].y()), h1 = new Vector2f(t[3].x(), t[1].y());
+        Vector2f[] t = obstacle.cornerCenters(0, 4, 8, 12);
+        Vector2f h0 = vec_2f(t[0].x(), t[1].y()), h1 = vec_2f(t[3].x(), t[1].y());
         for (Vector2f tower : t) { tower(parent, tower); }
         wall(parent, t[1], t[2]);
         wall(parent, t[0], h0);
@@ -868,7 +864,7 @@ public class WallBuilder {
         Vector2f baseLeft = utc[0], baseRight = utc[1], top = utc[2];
         Vector2f platformLeft = obstacle.cornerCenter(4);
         Vector2f platformRight = obstacle.cornerCenter(16);
-        Vector2f topBase = new Vector2f(top.x(), platformLeft.y());
+        Vector2f topBase = vec_2f(top.x(), platformLeft.y());
         tower(parent, top);
         tower(parent, platformLeft);
         tower(parent, platformRight);
@@ -886,7 +882,7 @@ public class WallBuilder {
         t[1] = obstacle.cornerCenter(4);
         t[2] = obstacle.cornerCenter(7);
         t[3] = obstacle.cornerCenter(11);
-        Vector2f h = new Vector2f(t[0].x(), t[3].y());
+        Vector2f h = vec_2f(t[0].x(), t[3].y());
         for (Vector2f tower : t) { tower(parent, tower); }
         wall(parent, t[0], t[2]);
         wall(parent, t[2], t[1]);
@@ -895,7 +891,7 @@ public class WallBuilder {
 
     private void addTengen_StrangeMap1_Leg_Right(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 4, 9, 11);
-        Vector2f h = new Vector2f(t[0].x(), t[1].y());
+        Vector2f h = vec_2f(t[0].x(), t[1].y());
         for (Vector2f tower : t) { tower(parent, tower); }
         wall(parent, t[0], t[2]);
         wall(parent, t[2], t[3]);
@@ -911,7 +907,7 @@ public class WallBuilder {
         t[4] = obstacle.cornerCenter(14);
         t[5] = obstacle.cornerCenter(18);
         t[6] = obstacle.cornerCenter(21);
-        Vector2f h = new Vector2f(t[3].x(), t[2].y());
+        Vector2f h = vec_2f(t[3].x(), t[2].y());
         for (Vector2f tower : t) { tower(parent, tower); }
         wall(parent, t[0], t[1]);
         wall(parent, t[1], t[2]);
@@ -944,8 +940,8 @@ public class WallBuilder {
         t[2] = obstacle.cornerCenter(7);
         t[3] = obstacle.cornerCenter(14);
         t[4] = obstacle.cornerCenter(9);
-        var h0 = new Vector2f(t[1].x(), t[2].y());
-        var h1 = new Vector2f(t[2].x(), t[3].y());
+        var h0 = vec_2f(t[1].x(), t[2].y());
+        var h1 = vec_2f(t[2].x(), t[3].y());
         for (Vector2f tower : t) { tower(parent, tower); }
         wall(parent, t[0], t[1]);
         wall(parent, t[1], t[3]);
@@ -958,8 +954,8 @@ public class WallBuilder {
 
     private void addTengen_StrangeMap2_Gallows_Left(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 15, 2, 9, 6);
-        var h0 = new Vector2f(t[0].x(), t[3].y());
-        var h1 = new Vector2f(t[3].x(), t[2].y());
+        var h0 = vec_2f(t[0].x(), t[3].y());
+        var h1 = vec_2f(t[3].x(), t[2].y());
         for (Vector2f tower : t) { tower(parent, tower); }
         wall(parent, t[0], t[1]);
         wall(parent, t[0], t[2]);

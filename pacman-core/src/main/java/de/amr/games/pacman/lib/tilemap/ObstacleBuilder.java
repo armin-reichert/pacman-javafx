@@ -36,13 +36,13 @@ public class ObstacleBuilder {
         }
     }
     
-    private static final Vector2f SEG_CORNER_NW_UP   = v2f(HTS, -HTS);
+    private static final Vector2f SEG_CORNER_NW_UP   = vec_2f(HTS, -HTS);
     private static final Vector2f SEG_CORNER_NW_DOWN = SEG_CORNER_NW_UP.inverse();
-    private static final Vector2f SEG_CORNER_SW_UP   = v2f(-HTS, -HTS);
+    private static final Vector2f SEG_CORNER_SW_UP   = vec_2f(-HTS, -HTS);
     private static final Vector2f SEG_CORNER_SW_DOWN = SEG_CORNER_SW_UP.inverse();
-    private static final Vector2f SEG_CORNER_SE_UP   = v2f(HTS, -HTS);
+    private static final Vector2f SEG_CORNER_SE_UP   = vec_2f(HTS, -HTS);
     private static final Vector2f SEG_CORNER_SE_DOWN = SEG_CORNER_SE_UP.inverse();
-    private static final Vector2f SEG_CORNER_NE_UP   = v2f(-HTS, -HTS);
+    private static final Vector2f SEG_CORNER_NE_UP   = vec_2f(-HTS, -HTS);
     private static final Vector2f SEG_CORNER_NE_DOWN = SEG_CORNER_NE_UP.inverse();
 
     public static List<Obstacle> buildObstacles(TileMap terrain, List<Vector2i> tilesWithErrors) {

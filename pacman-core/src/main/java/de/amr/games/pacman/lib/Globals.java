@@ -26,11 +26,11 @@ public class Globals {
     private static final String MSG_TILE_NULL = "Tile must not be null";
     private static final String MSG_DIR_NULL = "Direction must not be null";
 
-    public static Vector2i v2i(int x, int y) {
+    public static Vector2i vec_2i(int x, int y) {
         return new Vector2i(x, y);
     }
 
-    public static Vector2f v2f(double x, double y) {
+    public static Vector2f vec_2f(double x, double y) {
         return new Vector2f((float) x, (float) y);
     }
 
@@ -49,7 +49,7 @@ public class Globals {
      * @return tile containing given position
      */
     public static Vector2i tileAt(float x, float y) {
-        return v2i((int) (x / TS), (int) (y / TS));
+        return vec_2i((int) (x / TS), (int) (y / TS));
     }
 
     /**
@@ -58,7 +58,7 @@ public class Globals {
      * @return position  (scaled by tile size) half tile right of tile origin
      */
     public static Vector2f halfTileRightOf(int tileX, int tileY) {
-        return v2f(TS * tileX + HTS, TS * tileY);
+        return vec_2f(TS * tileX + HTS, TS * tileY);
     }
 
     public static Vector2f halfTileRightOf(Vector2i tile) {

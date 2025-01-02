@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.v2i;
+import static de.amr.games.pacman.lib.Globals.vec_2i;
 
 /**
  * @author Armin Reichert
@@ -128,7 +128,7 @@ public class TileMap {
      * @return tile with given index
      */
     public Vector2i tile(int index) {
-        return v2i(index % numCols(), index / numCols());
+        return vec_2i(index % numCols(), index / numCols());
     }
 
     /**

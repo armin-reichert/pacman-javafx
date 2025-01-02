@@ -64,13 +64,13 @@ public class CutScene3 extends GameScene2D {
         switch (frame) {
             case ANIMATION_START -> {
                 music.play();
-                pac.centerOverTile(v2i(29, 20));
+                pac.centerOverTile(vec_2i(29, 20));
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.25f);
                 pac.show();
                 pac.selectAnimation(ANIM_PAC_MUNCHING);
                 pac.startAnimation();
-                blinky.centerOverTile(v2i(35, 20));
+                blinky.centerOverTile(vec_2i(35, 20));
                 blinky.setMoveAndWishDir(Direction.LEFT);
                 blinky.setSpeed(1.25f);
                 blinky.show();
@@ -78,7 +78,7 @@ public class CutScene3 extends GameScene2D {
                 blinky.startAnimation();
             }
             case ANIMATION_START + 400 -> {
-                blinky.centerOverTile(v2i(-1, 20));
+                blinky.centerOverTile(vec_2i(-1, 20));
                 blinky.setMoveAndWishDir(Direction.RIGHT);
                 blinky.selectAnimation(GhostAnimations.ANIM_BLINKY_NAKED);
                 blinky.startAnimation();

@@ -84,7 +84,7 @@ public class House3D {
     }
 
     private Node createWall(int x1, int y1, int x2, int y2) {
-        return wallBuilder.createWallBetweenTiles(v2i(x1, y1), v2i(x2, y2), WALL_THICKNESS);
+        return wallBuilder.createWallBetweenTiles(vec_2i(x1, y1), vec_2i(x2, y2), WALL_THICKNESS);
     }
 
     public Group root() { return root; }
