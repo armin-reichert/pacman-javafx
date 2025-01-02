@@ -95,6 +95,12 @@ public class TengenMsPacManGameWorldRenderer3D extends DefaultWorldRenderer3D {
             // Tengen STRANGE map #4, huge obstacle
             case "dgbecfbdcgbfcdbecgbfcebgcdbfebdgbecfbgcebgcedcfbdcfbgcdbfeb" -> render_StrangeMap4_Huge(parent, obstacle);
 
+            // Tengen STRANGE map #7: top-left strange obstacle
+            case "dcfbdgbecgbecfbdgbfcdbfeb" -> render_Strange7_TopLeft(parent, obstacle);
+
+            // Tengen STRANGE map #7: top-right strange obstacle
+            case "dgbecgbfebgcdbfcdbfebgceb" -> render_Strange7_TopRight(parent, obstacle);
+
             // Tengen STRANGE map #7: boots pointing left
             case "dcfbdgbfceb" -> render_Boot_PointingLeft(parent, obstacle);
 
@@ -503,6 +509,38 @@ public class TengenMsPacManGameWorldRenderer3D extends DefaultWorldRenderer3D {
         // fill holes
         addWallAtCenter(parent, h[1].midpoint(t[3]), 3*TS, 3*TS);
         addWallAtCenter(parent, h[3].midpoint(t[9]), 3*TS, 3*TS);
+    }
+
+    private void render_Strange7_TopLeft(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 4, 9, 15, 18, 22);
+        Vector2f[] h = {
+            vec_2f(t[0].x(), t[1].y()),
+            vec_2f(t[2].x(), t[1].y()),
+            vec_2f(t[0].x(), t[2].y()),
+        };
+        addTowers(parent, t);
+        addWall(parent, t[0], t[4]);
+        addWall(parent, t[1], h[0]);
+        addWall(parent, t[2], h[2]);
+        addWall(parent, t[3], t[4]);
+        addWall(parent, t[0], t[5]);
+        addWallAtCenter(parent, h[1].midpoint(h[2]), 3*TS, 2*TS);
+    }
+
+    private void render_Strange7_TopRight(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 5, 7, 14, 18, 23);
+        Vector2f[] h = {
+                vec_2f(t[1].x(), t[4].y()),
+                vec_2f(t[3].x(), t[4].y()),
+                vec_2f(t[1].x(), t[3].y()),
+        };
+        addTowers(parent, t);
+        addWall(parent, t[0], t[5]);
+        addWall(parent, t[4], h[0]);
+        addWall(parent, t[3], h[2]);
+        addWall(parent, t[1], t[2]);
+        addWall(parent, t[1], t[5]);
+        addWallAtCenter(parent, h[1].midpoint(h[2]), 3*TS, 2*TS);
     }
 
 
