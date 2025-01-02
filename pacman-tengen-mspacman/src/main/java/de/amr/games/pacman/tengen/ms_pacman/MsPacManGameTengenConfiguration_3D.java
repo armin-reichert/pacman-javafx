@@ -8,8 +8,10 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui3d.GlobalProperties3d;
+import de.amr.games.pacman.ui3d.level.WorldRenderer3D;
+import de.amr.games.pacman.ui3d.scene3d.GameConfiguration3D;
 
-public class MsPacManGameTengenConfiguration_3D extends MsPacManGameTengenConfiguration {
+public class MsPacManGameTengenConfiguration_3D extends MsPacManGameTengenConfiguration implements GameConfiguration3D {
 
     public MsPacManGameTengenConfiguration_3D(AssetStorage assets) {
         super(assets);
@@ -24,5 +26,10 @@ public class MsPacManGameTengenConfiguration_3D extends MsPacManGameTengenConfig
             return playScene3D != null ? playScene3D : gameScene2D;
         }
         return gameScene2D;
+    }
+
+    @Override
+    public WorldRenderer3D createWorldRenderer() {
+        return new WorldRenderer3D();
     }
 }
