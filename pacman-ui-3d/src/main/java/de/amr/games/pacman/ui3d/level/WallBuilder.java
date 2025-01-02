@@ -20,8 +20,7 @@ import org.tinylog.Logger;
 
 import java.util.Arrays;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_DRAW_MODE;
 
 /**
@@ -740,35 +739,16 @@ public class WallBuilder {
     }
 
     private void addTengen_BigMap8_62SegmentObstacle(Group parent, Obstacle obstacle) {
-        // Towers
-        Vector2f[] t = new Vector2f[16];
-        t[0]  = obstacle.cornerCenter(0);
-        t[1]  = obstacle.cornerCenter(60);
-        t[2]  = obstacle.cornerCenter(58);
-        t[3]  = obstacle.cornerCenter(2);
-        t[4]  = obstacle.cornerCenter(6);
-        t[5]  = obstacle.cornerCenter(10);
-        t[6]  = obstacle.cornerCenter(15);
-        t[7]  = obstacle.cornerCenter(50);
-        t[8]  = obstacle.cornerCenter(48);
-        t[9]  = obstacle.cornerCenter(21);
-        t[10] = obstacle.cornerCenter(25);
-        t[11] = obstacle.cornerCenter(30);
-        t[12] = obstacle.cornerCenter(34);
-        t[13] = obstacle.cornerCenter(36);
-        t[14] = obstacle.cornerCenter(38);
-        t[15] = obstacle.cornerCenter(40);
-
-        // Help vertices
+        Vector2f[] t = obstacle.cornerCenters(0, 60, 58, 2, 6, 10, 15, 50, 48, 21, 25, 30, 34, 36, 38, 40);
         Vector2f[] h = new Vector2f[8];
-        h[0] = new Vector2f(t[4].x(), t[2].y());
-        h[1] = new Vector2f(t[4].x(), t[3].y());
-        h[2] = new Vector2f(t[5].x(), t[4].y());
-        h[3] = new Vector2f(t[10].x(), t[9].y());
-        h[4] = new Vector2f(t[11].x(), t[12].y());
-        h[5] = new Vector2f(t[11].x(), t[15].y());
-        h[6] = new Vector2f(t[4].x(), t[0].y());
-        h[7] = new Vector2f(t[11].x(), t[13].y());
+        h[0] = v2f(t[4].x(),  t[2].y());
+        h[1] = v2f(t[4].x(),  t[3].y());
+        h[2] = v2f(t[5].x(),  t[4].y());
+        h[3] = v2f(t[10].x(), t[9].y());
+        h[4] = v2f(t[11].x(), t[12].y());
+        h[5] = v2f(t[11].x(), t[15].y());
+        h[6] = v2f(t[4].x(),  t[0].y());
+        h[7] = v2f(t[11].x(), t[13].y());
 
         for (Vector2f tower : t) { tower(parent, tower); }
 
