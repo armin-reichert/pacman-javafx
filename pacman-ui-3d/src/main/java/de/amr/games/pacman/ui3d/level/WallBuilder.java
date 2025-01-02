@@ -290,9 +290,7 @@ public class WallBuilder {
 
     public void addCross3D(Group parent, Obstacle obstacle) {
         Vector2f[] utc = obstacle.uTurnCenters();
-        for (Vector2f tower : utc) {
-            tower(parent, tower);
-        }
+        for (Vector2f tower : utc) { tower(parent, tower); }
         wall(parent, utc[0], utc[2]);
         wall(parent, utc[1], utc[3]);
     }
@@ -464,8 +462,10 @@ public class WallBuilder {
         wall(parent, leg, vec_2f(leg.x(), cornerSW.y()));
     }
 
-    private void tower(Group parent, Vector2f center) {
-        parent.getChildren().add(compositeCircularWall(center, HTS));
+    private void tower(Group parent, Vector2f... centers) {
+        for (Vector2f center : centers) {
+            parent.getChildren().add(compositeCircularWall(center, HTS));
+        }
     }
 
     private void wall(Group parent, Vector2f p, Vector2f q) {
@@ -605,7 +605,7 @@ public class WallBuilder {
 
     private void addTengen_BigMap1_UpsideT(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 4, 6, 8, 10);
-        for (Vector2f tower : t) { tower(parent, tower); }
+        tower(parent, t);
         wall(parent, t[1], t[2]);
         wall(parent, t[3], t[4]);
         float width = t[1].manhattanDist(t[4]), height = 2 * TS;
@@ -750,8 +750,7 @@ public class WallBuilder {
         h[6] = vec_2f(t[4].x(),  t[0].y());
         h[7] = vec_2f(t[11].x(), t[13].y());
 
-        for (Vector2f tower : t) { tower(parent, tower); }
-
+        tower(parent, t);
         wall(parent, t[0], t[1]);
         wall(parent, h[0], h[6]);
         wall(parent, t[0], t[3]);
@@ -795,21 +794,13 @@ public class WallBuilder {
     }
 
     private void addTengen_BigMap8_SeaHorseLeft(Group parent, Obstacle obstacle) {
-        Vector2f cornerNW = obstacle.cornerCenter(0);
-        Vector2f cornerSW = obstacle.cornerCenter(2);
-        Vector2f foot = obstacle.cornerCenter(4);
-        Vector2f nose = obstacle.cornerCenter(11);
-        Vector2f cornerNE = obstacle.cornerCenter(13);
-        tower(parent, cornerNW);
-        tower(parent, cornerSW);
-        tower(parent, foot);
-        tower(parent, nose);
-        tower(parent, cornerNE);
-        wall(parent, cornerNW, cornerSW);
-        wall(parent, cornerNW, cornerNE);
-        wall(parent, cornerSW, foot);
-        wall(parent, cornerNE, nose);
-        wall(parent, nose, nose.minus(2*TS, 0));
+        Vector2f[] t = obstacle.cornerCenters(0, 2, 4, 11, 13);
+        tower(parent, t);
+        wall(parent, t[0], t[1]);
+        wall(parent, t[0], t[4]);
+        wall(parent, t[1], t[2]);
+        wall(parent, t[4], t[3]);
+        wall(parent, t[3], t[3].minus(2*TS, 0));
     }
 
     private void addTengen_BigMap8_SeaHorseRight(Group parent, Obstacle obstacle) {
