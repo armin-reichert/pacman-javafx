@@ -176,7 +176,7 @@ public class WallBuilder {
                 if (fillCenter) {
                     Vector2f center = towers[0].midpoint(towers[2]);
                     double height = towers[0].manhattanDist(towers[1]) - TS, width = towers[0].manhattanDist(towers[3]) - TS;
-                    addCastleWallWithCenter(parent, center, width, height);
+                    wallAtCenter(parent, center, width, height);
                 }
             }
 
@@ -266,7 +266,7 @@ public class WallBuilder {
                 tower(parent, towerNE);
                 wall(parent, towerNW, towerNE);
                 wall(parent, towerSW, towerSE);
-                addCastleWallWithCenter(parent, topJoin.midpoint(bottomJoin), TS, topJoin.manhattanDist(bottomJoin));
+                wallAtCenter(parent, topJoin.midpoint(bottomJoin), TS, topJoin.manhattanDist(bottomJoin));
             }
             case "dcgfcdbecgfcedcfbgce" -> {
                 // H in normal orientation
@@ -281,9 +281,9 @@ public class WallBuilder {
                 tower(parent, towerSW);
                 tower(parent, towerSE);
                 tower(parent, towerNE);
-                addCastleWallWithCenter(parent, leftJoin, TS, towerNW.manhattanDist(towerSW));
-                addCastleWallWithCenter(parent, rightJoin, TS, towerNE.manhattanDist(towerSE));
-                addCastleWallWithCenter(parent, center, leftJoin.manhattanDist(rightJoin), TS);
+                wallAtCenter(parent, leftJoin, TS, towerNW.manhattanDist(towerSW));
+                wallAtCenter(parent, rightJoin, TS, towerNE.manhattanDist(towerSE));
+                wallAtCenter(parent, center, leftJoin.manhattanDist(rightJoin), TS);
             }
         }
     }
@@ -308,33 +308,33 @@ public class WallBuilder {
             // U in normal orientation, open on top
             oc0 = obstacle.cornerCenter(4); // right leg
             oc1 = obstacle.cornerCenter(2); // left leg
-            addCastleWallWithCenter(parent, c0.midpoint(oc0), TS, c0.manhattanDist(oc0));
-            addCastleWallWithCenter(parent, c1.midpoint(oc1), TS, c1.manhattanDist(oc1));
-            addCastleWallWithCenter(parent, oc0.midpoint(oc1), oc0.manhattanDist(oc1), TS);
+            wallAtCenter(parent, c0.midpoint(oc0), TS, c0.manhattanDist(oc0));
+            wallAtCenter(parent, c1.midpoint(oc1), TS, c1.manhattanDist(oc1));
+            wallAtCenter(parent, oc0.midpoint(oc1), oc0.manhattanDist(oc1), TS);
         }
         else if (uti[0] == 2 && uti[1] == 9) {
             // U vertically mirrored, open at bottom d[0]=left, d[1]=right
             oc0 = obstacle.cornerCenter(0); // left leg
             oc1 = obstacle.cornerCenter(12); // right leg
-            addCastleWallWithCenter(parent, c0.midpoint(oc0), TS, c0.manhattanDist(oc0));
-            addCastleWallWithCenter(parent, c1.midpoint(oc1), TS, c1.manhattanDist(oc1));
-            addCastleWallWithCenter(parent, oc0.midpoint(oc1), oc0.manhattanDist(oc1), TS);
+            wallAtCenter(parent, c0.midpoint(oc0), TS, c0.manhattanDist(oc0));
+            wallAtCenter(parent, c1.midpoint(oc1), TS, c1.manhattanDist(oc1));
+            wallAtCenter(parent, oc0.midpoint(oc1), oc0.manhattanDist(oc1), TS);
         }
         else if (uti[0] == 4 && uti[1] == 11) {
             // U open at right side, d[0]=bottom, d[1]=top
             oc0 = obstacle.cornerCenter(2); // left bottom
             oc1 = obstacle.cornerCenter(0); // right top
-            addCastleWallWithCenter(parent, c0.midpoint(oc0), c0.manhattanDist(oc0), TS);
-            addCastleWallWithCenter(parent, c1.midpoint(oc1), c1.manhattanDist(oc1), TS);
-            addCastleWallWithCenter(parent, oc0.midpoint(oc1), TS, oc0.manhattanDist(oc1));
+            wallAtCenter(parent, c0.midpoint(oc0), c0.manhattanDist(oc0), TS);
+            wallAtCenter(parent, c1.midpoint(oc1), c1.manhattanDist(oc1), TS);
+            wallAtCenter(parent, oc0.midpoint(oc1), TS, oc0.manhattanDist(oc1));
         }
         else if (uti[0] == 0 && uti[1] == 7) {
             // U open at left side, d[0]=top, d[1]=bottom
             oc0 = obstacle.cornerCenter(12); // right top
             oc1 = obstacle.cornerCenter(10); // right bottom
-            addCastleWallWithCenter(parent, c0.midpoint(oc0), c0.manhattanDist(oc0), TS);
-            addCastleWallWithCenter(parent, c1.midpoint(oc1), c1.manhattanDist(oc1), TS);
-            addCastleWallWithCenter(parent, oc0.midpoint(oc1), TS, oc0.manhattanDist(oc1));
+            wallAtCenter(parent, c0.midpoint(oc0), c0.manhattanDist(oc0), TS);
+            wallAtCenter(parent, c1.midpoint(oc1), c1.manhattanDist(oc1), TS);
+            wallAtCenter(parent, oc0.midpoint(oc1), TS, oc0.manhattanDist(oc1));
         }
         else {
             Logger.info("Invalid U-shape detected: {}", obstacle);
@@ -359,10 +359,10 @@ public class WallBuilder {
             tc1 = obstacle.cornerCenter(5);
             tower(parent, tc0);
             tower(parent, tc1);
-            addCastleWallWithCenter(parent, utc[0].midpoint(tc0), utc[0].manhattanDist(tc0), TS);
-            addCastleWallWithCenter(parent, utc[1].midpoint(tc1), utc[1].manhattanDist(tc1), TS);
+            wallAtCenter(parent, utc[0].midpoint(tc0), utc[0].manhattanDist(tc0), TS);
+            wallAtCenter(parent, utc[1].midpoint(tc1), utc[1].manhattanDist(tc1), TS);
             // vertical wall
-            addCastleWallWithCenter(parent, tc0.midpoint(tc1), TS, tc0.manhattanDist(tc1));
+            wallAtCenter(parent, tc0.midpoint(tc1), TS, tc0.manhattanDist(tc1));
         }
         else if (uti[0] == 4 && uti[1] == 11) {
             // normal S-shape orientation
@@ -370,10 +370,10 @@ public class WallBuilder {
             tc1 = obstacle.cornerCenter(7);
             tower(parent, tc0);
             tower(parent, tc1);
-            addCastleWallWithCenter(parent, tc0.midpoint(utc[1]), tc0.manhattanDist(utc[1]), TS);
-            addCastleWallWithCenter(parent, utc[0].midpoint(tc1), utc[0].manhattanDist(tc1), TS);
+            wallAtCenter(parent, tc0.midpoint(utc[1]), tc0.manhattanDist(utc[1]), TS);
+            wallAtCenter(parent, utc[0].midpoint(tc1), utc[0].manhattanDist(tc1), TS);
             // vertical wall
-            addCastleWallWithCenter(parent, tc0.midpoint(tc1), TS, tc0.manhattanDist(tc1));
+            wallAtCenter(parent, tc0.midpoint(tc1), TS, tc0.manhattanDist(tc1));
         }
         else if (uti[0] == 6 && uti[1] == 13) {
             if (utc[1].x() < utc[0].x()) {
@@ -383,10 +383,10 @@ public class WallBuilder {
                 tower(parent, tc0);
                 tower(parent, tc1);
                 // horizontal tc1 - tc0
-                addCastleWallWithCenter(parent, tc1.midpoint(tc0), tc1.manhattanDist(tc0), TS);
+                wallAtCenter(parent, tc1.midpoint(tc0), tc1.manhattanDist(tc0), TS);
                 // vertical c1 - tc1 and tc0 - c0
-                addCastleWallWithCenter(parent, utc[1].midpoint(tc1), TS, utc[1].manhattanDist(tc1));
-                addCastleWallWithCenter(parent, tc0.midpoint(utc[0]), TS, tc0.manhattanDist(utc[0]));
+                wallAtCenter(parent, utc[1].midpoint(tc1), TS, utc[1].manhattanDist(tc1));
+                wallAtCenter(parent, tc0.midpoint(utc[0]), TS, tc0.manhattanDist(utc[0]));
             } else {
                 // S-shape mirrored and rotated by 90 degrees
                 tc0 = obstacle.cornerCenter(4);
@@ -394,10 +394,10 @@ public class WallBuilder {
                 tower(parent, tc0);
                 tower(parent, tc1);
                 // horizontal tc1 - tc0
-                addCastleWallWithCenter(parent, tc1.midpoint(tc0), tc1.manhattanDist(tc0), TS);
+                wallAtCenter(parent, tc1.midpoint(tc0), tc1.manhattanDist(tc0), TS);
                 // vertical c1 - tc1 and tc0 - c0
-                addCastleWallWithCenter(parent, utc[1].midpoint(tc1), TS, utc[1].manhattanDist(tc1));
-                addCastleWallWithCenter(parent, tc0.midpoint(utc[0]), TS, tc0.manhattanDist(utc[0]));
+                wallAtCenter(parent, utc[1].midpoint(tc1), TS, utc[1].manhattanDist(tc1));
+                wallAtCenter(parent, tc0.midpoint(utc[0]), TS, tc0.manhattanDist(utc[0]));
             }
         }
         else {
@@ -429,19 +429,19 @@ public class WallBuilder {
         tower(parent, utc[2]);
 
         if (utc[0].x() == join.x()) {
-            addCastleWallWithCenter(parent, utc[0].midpoint(join), TS, utc[0].manhattanDist(join));
+            wallAtCenter(parent, utc[0].midpoint(join), TS, utc[0].manhattanDist(join));
         } else if (utc[0].y() == join.y()) {
-            addCastleWallWithCenter(parent, utc[0].midpoint(join), utc[0].manhattanDist(join), TS);
+            wallAtCenter(parent, utc[0].midpoint(join), utc[0].manhattanDist(join), TS);
         }
         if (utc[1].x() == join.x()) {
-            addCastleWallWithCenter(parent, utc[1].midpoint(join), TS, utc[1].manhattanDist(join));
+            wallAtCenter(parent, utc[1].midpoint(join), TS, utc[1].manhattanDist(join));
         } else if (utc[1].y() == join.y()) {
-            addCastleWallWithCenter(parent, utc[1].midpoint(join), utc[1].manhattanDist(join), TS);
+            wallAtCenter(parent, utc[1].midpoint(join), utc[1].manhattanDist(join), TS);
         }
         if (utc[2].x() == join.x()) {
-            addCastleWallWithCenter(parent, utc[2].midpoint(join), TS, utc[2].manhattanDist(join));
+            wallAtCenter(parent, utc[2].midpoint(join), TS, utc[2].manhattanDist(join));
         } else if (utc[2].y() == join.y()) {
-            addCastleWallWithCenter(parent, utc[2].midpoint(join), utc[2].manhattanDist(join), TS);
+            wallAtCenter(parent, utc[2].midpoint(join), utc[2].manhattanDist(join), TS);
         }
     }
 
@@ -450,7 +450,7 @@ public class WallBuilder {
         Vector2f leg = obstacle.uTurnCenters()[0];
         Vector2f cornerNW = obstacle.cornerCenter(0);
         Vector2f cornerSW = obstacle.cornerCenter(2);
-        Vector2f cornerSE= obstacle.cornerCenter(11);
+        Vector2f cornerSE = obstacle.cornerCenter(11);
         Vector2f cornerNE = obstacle.cornerCenter(13);
         tower(parent, leg);
         tower(parent, cornerNW);
@@ -470,15 +470,15 @@ public class WallBuilder {
 
     private void wall(Group parent, Vector2f p, Vector2f q) {
         if (p.x() == q.x()) { // vertical wall
-            addCastleWallWithCenter(parent, p.midpoint(q), TS, p.manhattanDist(q));
+            wallAtCenter(parent, p.midpoint(q), TS, p.manhattanDist(q));
         } else if (p.y() == q.y()) { // horizontal wall
-            addCastleWallWithCenter(parent, p.midpoint(q), p.manhattanDist(q), TS);
+            wallAtCenter(parent, p.midpoint(q), p.manhattanDist(q), TS);
         } else {
             Logger.error("Can only add horizontal or vertical castle walls, p={}, q={}", p, q);
         }
     }
 
-    private void addCastleWallWithCenter(Group parent, Vector2f center, double sizeX, double sizeY) {
+    private void wallAtCenter(Group parent, Vector2f center, double sizeX, double sizeY) {
         parent.getChildren().add(compositeWallCenteredAt(center, sizeX, sizeY));
     }
 
@@ -609,7 +609,7 @@ public class WallBuilder {
         wall(parent, t[1], t[2]);
         wall(parent, t[3], t[4]);
         float width = t[1].manhattanDist(t[4]), height = 2 * TS;
-        addCastleWallWithCenter(parent, t[1].midpoint(t[3]), width, height);
+        wallAtCenter(parent, t[1].midpoint(t[3]), width, height);
         wall(parent, t[0], t[2].midpoint(t[3]));
     }
 
