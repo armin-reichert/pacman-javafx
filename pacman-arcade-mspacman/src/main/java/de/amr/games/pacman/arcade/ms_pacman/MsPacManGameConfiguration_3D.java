@@ -8,7 +8,7 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui3d.GlobalProperties3d;
-import de.amr.games.pacman.ui3d.level.WorldRenderer3D;
+import de.amr.games.pacman.ui3d.level.DefaultWorldRenderer3D;
 import de.amr.games.pacman.ui3d.scene3d.GameConfiguration3D;
 import de.amr.games.pacman.ui3d.scene3d.PlayScene3D;
 
@@ -30,7 +30,7 @@ public class MsPacManGameConfiguration_3D extends MsPacManGameConfiguration impl
     }
 
     @Override
-    public WorldRenderer3D createWorldRenderer() {
-        return new WorldRenderer3D();
+    public DefaultWorldRenderer3D createWorldRenderer() {
+        return new DefaultWorldRenderer3D();
     }
 }

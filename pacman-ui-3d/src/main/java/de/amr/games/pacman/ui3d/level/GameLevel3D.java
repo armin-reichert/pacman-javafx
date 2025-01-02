@@ -267,7 +267,7 @@ public class GameLevel3D {
         wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
         GameConfiguration3D gameConfiguration3D = (GameConfiguration3D) context.gameConfiguration();
-        WorldRenderer3D worldRenderer3D = gameConfiguration3D.createWorldRenderer();
+        DefaultWorldRenderer3D worldRenderer3D = gameConfiguration3D.createWorldRenderer();
         worldRenderer3D.setWallTopHeight(OBSTACLE_COAT_HEIGHT);
         worldRenderer3D.setWallTopMaterial(wallTopMaterial);
         worldRenderer3D.setWallBaseMaterial(wallBaseMaterial);
@@ -301,7 +301,7 @@ public class GameLevel3D {
     }
 
     //TODO move into renderer interface?
-    private void renderObstacle(WorldRenderer3D renderer, Group parent, Obstacle obstacle, double thickness, boolean fillCenter) {
+    private void renderObstacle(DefaultWorldRenderer3D renderer, Group parent, Obstacle obstacle, double thickness, boolean fillCenter) {
         Group obstacleGroup = new Group();
         parent.getChildren().add(obstacleGroup);
         ObstacleType obstacleType = obstacle.computeType();
