@@ -134,6 +134,12 @@ public class TengenMsPacManGameWorldRenderer3D extends WorldRenderer3D {
             // STRANGE map #10: island right of spaceship
             case "dcfdcgfdfdfceb" -> render_Strange10_IslandRightOfSpaceship(parent, obstacle);
 
+            // STRANGE map #10: left of house
+            case "dcfbdgbecgfcdfceb" -> render_Strange10_RectangleWithTwoLegsAtLowerLeftEdge(parent, obstacle);
+
+            // STRANGE map #10: right of house
+            case "dcgecgfcdbfebgceb" -> render_Strange10_RectangleWithTwoLegsAtLowerRightEdge(parent, obstacle);
+
             default -> addGenericObstacle3D(parent, obstacle, thickness);
         }
     }
@@ -686,6 +692,24 @@ public class TengenMsPacManGameWorldRenderer3D extends WorldRenderer3D {
         addWall(parent, t[1], t[3]);
         addWall(parent, t[1], t[2]);
         addWall(parent, t[4], t[4].minus(TS, 0));
+    }
+
+    private void render_Strange10_RectangleWithTwoLegsAtLowerLeftEdge(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 4, 9, 13, 15);
+        addTowers(parent, t);
+        addWall(parent, t[0], t[2]);
+        addWall(parent, t[1], t[3]);
+        addWall(parent, t[3], t[4]);
+        addWall(parent, t[0], t[4]);
+    }
+
+    private void render_Strange10_RectangleWithTwoLegsAtLowerRightEdge(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 2, 5, 10, 15);
+        addTowers(parent, t);
+        addWall(parent, t[0], t[4]);
+        addWall(parent, t[0], t[1]);
+        addWall(parent, t[1], t[3]);
+        addWall(parent, t[2], t[4]);
     }
 
 
