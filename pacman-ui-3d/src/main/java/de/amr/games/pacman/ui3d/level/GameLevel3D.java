@@ -55,7 +55,7 @@ public class GameLevel3D {
     static final int   LIVES_COUNTER_MAX     = 5;
     static final float LIVES_SHAPE_SIZE      = 10.0f;
     static final float FLOOR_THICKNESS       = 0.5f;
-    static final float OBSTACLE_HEIGHT       = 5.5f;
+    static final float OBSTACLE_BASE_HEIGHT = 5.5f;
     static final float OBSTACLE_COAT_HEIGHT  = 0.1f;
     static final float OBSTACLE_THICKNESS    = 1.25f;
     static final float BORDER_WALL_HEIGHT    = 6.0f;
@@ -69,9 +69,8 @@ public class GameLevel3D {
     static final float PELLET_RADIUS         = 1.0f;
 
     private final StringProperty floorTextureNamePy  = new SimpleStringProperty(this, "floorTextureName", GlobalProperties3d.NO_TEXTURE);
-    private final DoubleProperty borderWallHeightPy  = new SimpleDoubleProperty(this, "borderWallHeight", BORDER_WALL_HEIGHT);
-    private final DoubleProperty obstacleHeightPy    = new SimpleDoubleProperty(this, "obstacleHeight", OBSTACLE_HEIGHT);
-    private final DoubleProperty wallOpacityPy       = new SimpleDoubleProperty(this, "wallOpacity",1.0);
+    private final DoubleProperty obstacleBaseHeightPy = new SimpleDoubleProperty(this, "obstacleBaseHeight", OBSTACLE_BASE_HEIGHT);
+    private final DoubleProperty wallOpacityPy       = new SimpleDoubleProperty(this, "wallOpacity", 1.0);
     private final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
     private final IntegerProperty livesCounterPy     = new SimpleIntegerProperty(0);
 
@@ -117,7 +116,7 @@ public class GameLevel3D {
         ghosts3D.forEach(ghost3D -> root.getChildren().add(ghost3D.root()));
         root.getChildren().addAll(message3D, livesCounter3D, worldGroup);
 
-        PY_3D_WALL_HEIGHT.addListener((py,ov,nv) -> obstacleHeightPy.set(nv.doubleValue()));
+        PY_3D_WALL_HEIGHT.addListener((py,ov,nv) -> obstacleBaseHeightPy.set(nv.doubleValue()));
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
     }
 
@@ -269,11 +268,11 @@ public class GameLevel3D {
         GameConfiguration3D gameConfiguration3D = (GameConfiguration3D) context.gameConfiguration();
         WorldRenderer3D worldRenderer = gameConfiguration3D.createWorldRenderer();
         worldRenderer.setWallBaseMaterial(wallBaseMaterial);
-        worldRenderer.setWallBaseHeightProperty(obstacleHeightPy);
+        worldRenderer.setWallBaseHeightProperty(obstacleBaseHeightPy);
         worldRenderer.setWallTopMaterial(wallTopMaterial);
         worldRenderer.setWallTopHeight(OBSTACLE_COAT_HEIGHT);
         //TODO check this:
-        obstacleHeightPy.set(PY_3D_WALL_HEIGHT.get());
+        obstacleBaseHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
         Box floor = createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
         worldGroup.getChildren().add(floor);
@@ -376,7 +375,7 @@ public class GameLevel3D {
         message3D.setTranslateY(y);
         message3D.setTranslateZ(halfHeight); // just under floor
         var moveUpAnimation = new TranslateTransition(Duration.seconds(1), message3D);
-        moveUpAnimation.setToZ(-(halfHeight + 0.5 * obstacleHeightPy.get()));
+        moveUpAnimation.setToZ(-(halfHeight + 0.5 * obstacleBaseHeightPy.get()));
         var moveDownAnimation = new TranslateTransition(Duration.seconds(1), message3D);
         moveDownAnimation.setDelay(Duration.seconds(displaySeconds));
         moveDownAnimation.setToZ(halfHeight);
@@ -409,18 +408,13 @@ public class GameLevel3D {
         var totalDuration = Duration.seconds(seconds);
         var obstaclesDisappear = new Timeline(
             new KeyFrame(totalDuration.multiply(0.33),
-                new KeyValue(obstacleHeightPy, 0, Interpolator.EASE_IN)
+                new KeyValue(obstacleBaseHeightPy, 0, Interpolator.EASE_IN)
             ));
         var houseDisappears = new Timeline(
             new KeyFrame(totalDuration.multiply(0.33),
                 new KeyValue(house3D.baseWallHeightPy, 0, Interpolator.EASE_IN)
             ));
-        var borderWallsDisappear = new Timeline(
-            new KeyFrame(totalDuration.multiply(0.33),
-                new KeyValue(borderWallHeightPy, 0, Interpolator.EASE_IN)
-            )
-        );
-        var animation  = new SequentialTransition(houseDisappears, obstaclesDisappear, borderWallsDisappear);
+        var animation = new SequentialTransition(houseDisappears, obstaclesDisappear);
         animation.setOnFinished(e -> mazeGroup.setVisible(false));
         return animation;
     }
@@ -430,7 +424,7 @@ public class GameLevel3D {
             return pauseSec(1.0);
         }
         var animation = new Timeline(
-            new KeyFrame(Duration.millis(125), new KeyValue(obstacleHeightPy, 0, Interpolator.EASE_BOTH))
+            new KeyFrame(Duration.millis(125), new KeyValue(obstacleBaseHeightPy, 0, Interpolator.EASE_BOTH))
         );
         animation.setAutoReverse(true);
         animation.setCycleCount(2*numFlashes);
