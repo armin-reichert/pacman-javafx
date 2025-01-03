@@ -107,6 +107,18 @@ public class TengenMsPacManGameWorldRenderer3D extends WorldRenderer3D {
             // Tengen STRANGE map #7: boots pointing left
             case "dcgbfebgceb" -> render_Boot_PointingRight(parent, obstacle);
 
+            // STRANGE map #8: rectangle with two arms at top-right corner, left maze side
+            case "dcfbdcgbfcdbfebgce" -> render_RectangleWithTwoArmsAtTopRightCorner(parent, obstacle);
+
+            // STRANGE map #8: rectangle with two arms at top-left corner, right maze side
+            case "dcfbdgbecgbfcebgce" -> render_RectangleWithTwoArmsAtTopLeftCorner(parent, obstacle);
+
+            // STRANGE map #8: rectangle with one arm at top-right corner, left maze side
+            case "dcgbfcdbfeb" -> render_RectangleWithArmAtTopRightCorner(parent, obstacle);
+
+            // STRANGE map #8: rectangle with one arm at top-left corner, right maze side
+            case "dgbecgbfceb" -> render_RectangleWithArmAtTopLeftCorner(parent, obstacle);
+
             default -> addGenericObstacle3D(parent, obstacle, thickness);
         }
     }
@@ -543,5 +555,46 @@ public class TengenMsPacManGameWorldRenderer3D extends WorldRenderer3D {
         addWallAtCenter(parent, h[1].midpoint(h[2]), 3*TS, 2*TS);
     }
 
+    private void render_RectangleWithTwoArmsAtTopRightCorner(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 4, 6, 8, 12);
+        addTowers(parent, t);
+        addWall(parent, t[1], t[2]);
+        addWall(parent, t[1], t[4]);
+        addWall(parent, t[2], t[3]);
+        addWall(parent, t[3], t[0]);
+        addWallAtCenter(parent, t[1].midpoint(t[3]), t[2].manhattanDist(t[3]), t[1].manhattanDist(t[2]));
+    }
+
+    private void render_RectangleWithTwoArmsAtTopLeftCorner(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 4, 9, 11, 13);
+        addTowers(parent, t);
+        addWall(parent, t[0], t[2]);
+        addWall(parent, t[1], t[4]);
+        addWall(parent, t[4], t[3]);
+        addWall(parent, t[3], t[2]);
+        addWallAtCenter(parent, t[2].midpoint(t[4]), t[2].manhattanDist(t[3]), t[3].manhattanDist(t[4]));
+    }
+
+    private void render_RectangleWithArmAtTopRightCorner(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 2, 4, 8);
+        Vector2f h = vec_2f(t[2].x(), t[0].y());
+        addTowers(parent, t);
+        addWall(parent, t[0], t[3]);
+        addWall(parent, t[0], t[1]);
+        addWall(parent, t[1], t[2]);
+        addWall(parent, t[2], h);
+        addWallAtCenter(parent, t[0].midpoint(t[2]), t[1].manhattanDist(t[2]), t[0].manhattanDist(t[1]));
+    }
+
+    private void render_RectangleWithArmAtTopLeftCorner(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 5, 7, 9);
+        Vector2f h = vec_2f(t[1].x(), t[0].y());
+        addTowers(parent, t);
+        addWall(parent, t[0], t[3]);
+        addWall(parent, h, t[1]);
+        addWall(parent, t[1], t[2]);
+        addWall(parent, t[2], t[3]);
+        addWallAtCenter(parent, t[1].midpoint(t[3]), t[1].manhattanDist(t[2]), t[2].manhattanDist(t[3]));
+    }
 
 }
