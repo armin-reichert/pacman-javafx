@@ -67,11 +67,11 @@ public class GameLevel3D {
     static final float ENERGIZER_RADIUS      = 3.5f;
     static final float PELLET_RADIUS         = 1.0f;
 
-    private final StringProperty floorTextureNamePy  = new SimpleStringProperty(this, "floorTextureName", GlobalProperties3d.NO_TEXTURE);
+    private final StringProperty floorTextureNamePy   = new SimpleStringProperty(this, "floorTextureName", GlobalProperties3d.NO_TEXTURE);
     private final DoubleProperty obstacleBaseHeightPy = new SimpleDoubleProperty(this, "obstacleBaseHeight", OBSTACLE_BASE_HEIGHT);
-    private final DoubleProperty wallOpacityPy       = new SimpleDoubleProperty(this, "wallOpacity", 1.0);
-    private final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
-    private final IntegerProperty livesCounterPy     = new SimpleIntegerProperty(0);
+    private final DoubleProperty wallOpacityPy        = new SimpleDoubleProperty(this, "wallOpacity", 1.0);
+    private final ObjectProperty<Color> floorColorPy  = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
+    private final IntegerProperty livesCounterPy      = new SimpleIntegerProperty(0);
 
     private final GameContext context;
 
@@ -108,7 +108,6 @@ public class GameLevel3D {
         message3D.setVisible(false);
 
         buildWorld3D(world, coloring);
-        addFood3D(world, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
         root.getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
@@ -293,28 +292,29 @@ public class GameLevel3D {
         house3D.build(world, coloring);
         mazeGroup.getChildren().add(house3D.root());
 
+        addFood3D(world, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
+
         worldGroup.getChildren().add(mazeGroup);
         root.getChildren().add(house3D.door3D());
     }
 
     //TODO move into renderer interface?
-    private void renderObstacle(WorldRenderer3D renderer, Group parent, Obstacle obstacle, double thickness, boolean fillCenter) {
-        Group obstacleGroup = new Group();
-        parent.getChildren().add(obstacleGroup);
-        ObstacleType obstacleType = obstacle.computeType();
-        switch (obstacleType) {
-            case ANY ->           renderer.addObstacle3D(obstacleGroup, obstacle, thickness);
-            case CROSS_SHAPE ->   renderer.addCross3D(obstacleGroup, obstacle);
-            case F_SHAPE ->       renderer.addFShape3D(obstacleGroup, obstacle);
-            case H_SHAPE ->       renderer.addHShape3D(obstacleGroup, obstacle);
-            case L_SHAPE ->       renderer.addLShape3D(obstacleGroup, obstacle);
-            case O_SHAPE ->       renderer.addOShape3D(obstacleGroup, obstacle, fillCenter);
-            case S_SHAPE ->       renderer.addSShape3D(obstacleGroup, obstacle);
-            case T_SHAPE ->       renderer.addTShape3D(obstacleGroup, obstacle);
-            case T_2ROWS_SHAPE -> renderer.addT2RowsShape3D(obstacleGroup, obstacle);
-            case U_SHAPE ->       renderer.addUShape3D(obstacleGroup, obstacle);
+    private void renderObstacle(WorldRenderer3D renderer, Group parent, Obstacle obstacle, double thickness, boolean fillOShapes) {
+        Group og = new Group();
+        parent.getChildren().add(og);
+        ObstacleType type = obstacle.computeType();
+        switch (type) {
+            case ANY ->           renderer.addObstacle3D(og, obstacle, thickness);
+            case CROSS_SHAPE ->   renderer.addCross3D(og, obstacle);
+            case F_SHAPE ->       renderer.addFShape3D(og, obstacle);
+            case H_SHAPE ->       renderer.addHShape3D(og, obstacle);
+            case L_SHAPE ->       renderer.addLShape3D(og, obstacle);
+            case O_SHAPE ->       renderer.addOShape3D(og, obstacle, fillOShapes);
+            case S_SHAPE ->       renderer.addSShape3D(og, obstacle);
+            case T_SHAPE ->       renderer.addTShape3D(og, obstacle);
+            case T_SHAPE_TWO_ROWS -> renderer.addTShapeTwoRows3D(og, obstacle);
+            case U_SHAPE ->       renderer.addUShape3D(og, obstacle);
         }
-        Logger.info("{} 3D added, obstacle={}", obstacleType, obstacle);
     }
 
     private Box createFloor(double sizeX, double sizeY) {

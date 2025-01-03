@@ -443,7 +443,7 @@ public class WorldRenderer3D {
     }
 
     //TODO This handles only the normal orientation
-    public void addT2RowsShape3D(Group parent, Obstacle obstacle) {
+    public void addTShapeTwoRows3D(Group parent, Obstacle obstacle) {
         Vector2f leg = obstacle.uTurnCenters()[0];
         Vector2f cornerNW = obstacle.cornerCenter(0);
         Vector2f cornerSW = obstacle.cornerCenter(2);
