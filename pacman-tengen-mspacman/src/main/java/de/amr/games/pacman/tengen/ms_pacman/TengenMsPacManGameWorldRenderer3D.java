@@ -125,6 +125,15 @@ public class TengenMsPacManGameWorldRenderer3D extends WorldRenderer3D {
             // STRANGE map #9: large obstacle right maze side
             case "dgbecfbdgbecfbdgbfebgcdbfebgcdbfebgceb" -> render_Strange9_LargeObstacleRight(parent, obstacle);
 
+            // STRANGE map #10: spaceship top, center
+            case "dcfbdcgbecgfcdbfcebgceb" -> render_Strange10_SpaceShipTopCenter(parent, obstacle);
+
+            // STRANGE map #10: island left of spaceship
+            case "dcgegegfcegceb" -> render_Strange10_IslandLeftOfSpaceship(parent, obstacle);
+
+            // STRANGE map #10: island right of spaceship
+            case "dcfdcgfdfdfceb" -> render_Strange10_IslandRightOfSpaceship(parent, obstacle);
+
             default -> addGenericObstacle3D(parent, obstacle, thickness);
         }
     }
@@ -636,6 +645,47 @@ public class TengenMsPacManGameWorldRenderer3D extends WorldRenderer3D {
         addWall(parent, t[1], h[2]);
         addWall(parent, t[2], t[3]);
         addWall(parent, t[6], h[3]);
+    }
+
+    private void render_Strange10_SpaceShipTopCenter(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 4, 6, 10, 15, 17, 21);
+        Vector2f[] h = {
+                vec_2f(t[0].x(), t[1].y()),
+                vec_2f(t[6].x(), t[1].y()),
+                vec_2f(t[3].x(), t[2].y())
+        };
+        addTowers(parent, t);
+        addWall(parent, t[0], t[6]);
+        addWall(parent, t[0], h[0]);
+        addWall(parent, t[6], h[1]);
+        addWall(parent, t[1], t[5]);
+        addWall(parent, t[1], t[2]);
+        addWall(parent, t[3], h[2]);
+        addWall(parent, t[4], t[5]);
+        addWallAtCenter(parent, t[0].midpoint(h[1]), t[0].manhattanDist(t[6]), t[0].manhattanDist(h[0]));
+        addWallAtCenter(parent, t[1].midpoint(t[4]), t[1].manhattanDist(t[5]), t[1].manhattanDist(t[2]) + TS);
+    }
+
+    private void render_Strange10_IslandLeftOfSpaceship(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 2, 4, 6, 9, 12);
+        addTowers(parent, t);
+        addWall(parent, t[0], t[1]);
+        addWall(parent, t[0], t[5]);
+        addWall(parent, t[5], t[2]);
+        addWall(parent, t[2], t[4]);
+        addWall(parent, t[4], t[3]);
+        addWall(parent, t[1], t[1].plus(TS, 0));
+    }
+
+    private void render_Strange10_IslandRightOfSpaceship(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 3, 5, 8, 10, 12);
+        addTowers(parent, t);
+        addWall(parent, t[0], t[3]);
+        addWall(parent, t[0], t[5]);
+        addWall(parent, t[5], t[4]);
+        addWall(parent, t[1], t[3]);
+        addWall(parent, t[1], t[2]);
+        addWall(parent, t[4], t[4].minus(TS, 0));
     }
 
 
