@@ -267,36 +267,35 @@ public class GameLevel3D {
         wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
         GameConfiguration3D gameConfiguration3D = (GameConfiguration3D) context.gameConfiguration();
-        WorldRenderer3D worldRenderer3D = gameConfiguration3D.createWorldRenderer();
-        worldRenderer3D.setWallTopHeight(OBSTACLE_COAT_HEIGHT);
-        worldRenderer3D.setWallTopMaterial(wallTopMaterial);
-        worldRenderer3D.setWallBaseMaterial(wallBaseMaterial);
-        worldRenderer3D.setWallBaseHeightProperty(obstacleHeightPy);
-        worldRenderer3D.setWallTopHeight(OBSTACLE_COAT_HEIGHT);
+        WorldRenderer3D worldRenderer = gameConfiguration3D.createWorldRenderer();
+        worldRenderer.setWallBaseMaterial(wallBaseMaterial);
+        worldRenderer.setWallBaseHeightProperty(obstacleHeightPy);
+        worldRenderer.setWallTopMaterial(wallTopMaterial);
+        worldRenderer.setWallTopHeight(OBSTACLE_COAT_HEIGHT);
         //TODO check this:
         obstacleHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
         Box floor = createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
-        world.map().obstacles().forEach(obstacle -> Logger.info("{}: {}", obstacle.computeType(), obstacle));
+        worldGroup.getChildren().add(floor);
+
         for (Obstacle obstacle : world.map().obstacles()) {
+            Logger.info("{}: {}", obstacle.computeType(), obstacle);
             if (!world.isPartOfHouse(tileAt(obstacle.startPoint()))) {
                 boolean fillCenter = true; // TODO use map property
-                renderObstacle(worldRenderer3D, mazeGroup, obstacle,
+                renderObstacle(worldRenderer, mazeGroup, obstacle,
                     obstacle.hasDoubleWalls() ? BORDER_WALL_THICKNESS : OBSTACLE_THICKNESS, fillCenter);
             }
         }
 
-        //TODO: not sure about house coloring, wall "stroke" color is too often white which looks bad for house wall
-        // Therefore, we exchange "stroke" an "fill" colors
         //TODO should there be a HouseRenderer3D which creates the House3D instead?
         house3D = new House3D();
         house3D.renderer3D().setWallBaseMaterial(coloredMaterial(opaqueColor(coloring.fill(), HOUSE_OPACITY)));
         house3D.renderer3D().setWallTopMaterial(coloredMaterial(coloring.stroke()));
         house3D.baseWallHeightPy.set(HOUSE_HEIGHT);
         house3D.build(world, coloring);
-
         mazeGroup.getChildren().add(house3D.root());
-        worldGroup.getChildren().addAll(floor, mazeGroup);
+
+        worldGroup.getChildren().add(mazeGroup);
         root.getChildren().add(house3D.door3D());
     }
 
