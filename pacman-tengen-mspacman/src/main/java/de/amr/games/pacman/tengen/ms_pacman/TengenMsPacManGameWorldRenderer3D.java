@@ -119,6 +119,12 @@ public class TengenMsPacManGameWorldRenderer3D extends WorldRenderer3D {
             // STRANGE map #8: rectangle with one arm at top-left corner, right maze side
             case "dgbecgbfceb" -> render_RectangleWithArmAtTopLeftCorner(parent, obstacle);
 
+            // STRANGE map #9: large obstacle left maze side
+            case "dcfbdgbecfbdgbecfbdgbfebgcdbfebgcdbfeb" -> render_Strange9_LargeObstacleLeft(parent, obstacle);
+
+            // STRANGE map #9: large obstacle right maze side
+            case "dgbecfbdgbecfbdgbfebgcdbfebgcdbfebgceb" -> render_Strange9_LargeObstacleRight(parent, obstacle);
+
             default -> addGenericObstacle3D(parent, obstacle, thickness);
         }
     }
@@ -596,5 +602,41 @@ public class TengenMsPacManGameWorldRenderer3D extends WorldRenderer3D {
         addWall(parent, t[2], t[3]);
         addWallAtCenter(parent, t[1].midpoint(t[3]), t[1].manhattanDist(t[2]), t[2].manhattanDist(t[3]));
     }
+
+    private void render_Strange9_LargeObstacleLeft(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 5, 11, 18, 21, 28, 35);
+        Vector2f[] h = {
+                vec_2f(t[0].x(), t[1].y()),
+                vec_2f(t[0].x(), t[2].y()),
+                vec_2f(t[0].x(), t[5].y()),
+                vec_2f(t[0].x(), t[3].y()),
+        };
+        addTowers(parent, t);
+        addWall(parent, t[0], t[6]);
+        addWall(parent, t[1], h[0]);
+        addWall(parent, t[2], h[1]);
+        addWall(parent, h[2], t[5]);
+        addWall(parent, t[0], t[5]);
+        addWall(parent, t[3], t[4]);
+        addWall(parent, t[0], h[3]);
+    }
+
+    private void render_Strange9_LargeObstacleRight(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 7, 14, 17, 24, 31, 36);
+        Vector2f[] h = {
+                vec_2f(t[6].x(), t[5].y()),
+                vec_2f(t[6].x(), t[4].y()),
+                vec_2f(t[6].x(), t[1].y()),
+                vec_2f(t[6].x(), t[2].y()),
+        };
+        addTowers(parent, t);
+        addWall(parent, t[0], t[6]);
+        addWall(parent, h[0], t[5]);
+        addWall(parent, h[1], t[4]);
+        addWall(parent, t[1], h[2]);
+        addWall(parent, t[2], t[3]);
+        addWall(parent, t[6], h[3]);
+    }
+
 
 }
