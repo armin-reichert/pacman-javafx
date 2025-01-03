@@ -34,7 +34,7 @@ public class House3D {
     private final Group root = new Group();
     private Door3D door3D;
 
-    private final DefaultWorldRenderer3D worldRenderer3D = new DefaultWorldRenderer3D();
+    private final WorldRenderer3D worldRenderer3D = new WorldRenderer3D();
 
     public House3D() {
         openPy.addListener((py, wasOpen, isOpen) -> {
@@ -79,7 +79,7 @@ public class House3D {
         root.getChildren().add(light);
     }
 
-    public DefaultWorldRenderer3D renderer3D() {
+    public WorldRenderer3D renderer3D() {
         return worldRenderer3D;
     }
 

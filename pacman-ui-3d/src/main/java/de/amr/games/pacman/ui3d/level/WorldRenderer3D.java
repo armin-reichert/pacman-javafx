@@ -26,9 +26,9 @@ import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_DRAW_MODE;
 /**
  * @author Armin Reichert
  */
-public class DefaultWorldRenderer3D {
+public class WorldRenderer3D {
 
-    protected static final int CORNER_WALL_CYLINDER_DIVISIONS = 24;
+    protected static final int CYLINDER_DIVISIONS = 24;
 
     protected PhongMaterial wallBaseMaterial = new PhongMaterial();
     protected PhongMaterial wallTopMaterial = new PhongMaterial();
@@ -91,7 +91,7 @@ public class DefaultWorldRenderer3D {
     }
 
     public Group createCompositeCornerWall(Vector2f center, double radius) {
-        Cylinder base = new Cylinder(radius, wallBaseHeightPy.get(), CORNER_WALL_CYLINDER_DIVISIONS);
+        Cylinder base = new Cylinder(radius, wallBaseHeightPy.get(), CYLINDER_DIVISIONS);
         base.setMaterial(wallBaseMaterial);
         base.setMouseTransparent(true);
         base.heightProperty().bind(wallBaseHeightPy);
@@ -102,7 +102,7 @@ public class DefaultWorldRenderer3D {
         base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
-        Cylinder top = new Cylinder(radius, wallTopHeight, CORNER_WALL_CYLINDER_DIVISIONS);
+        Cylinder top = new Cylinder(radius, wallTopHeight, CYLINDER_DIVISIONS);
         top.setMaterial(wallTopMaterial);
         top.setMouseTransparent(true);
         top.setRotationAxis(Rotate.X_AXIS);
@@ -124,7 +124,7 @@ public class DefaultWorldRenderer3D {
     }
 
     public Node createCompositeCircularWall(Vector2f center, double radius) {
-        Cylinder base = new Cylinder(radius, wallBaseHeightPy.get(), CORNER_WALL_CYLINDER_DIVISIONS);
+        Cylinder base = new Cylinder(radius, wallBaseHeightPy.get(), CYLINDER_DIVISIONS);
         base.setMaterial(wallBaseMaterial);
         base.setRotationAxis(Rotate.X_AXIS);
         base.setRotate(90);
@@ -135,7 +135,7 @@ public class DefaultWorldRenderer3D {
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
         base.setMouseTransparent(true);
 
-        Cylinder top = new Cylinder(radius, wallTopHeight, CORNER_WALL_CYLINDER_DIVISIONS);
+        Cylinder top = new Cylinder(radius, wallTopHeight, CYLINDER_DIVISIONS);
         top.setMaterial(wallTopMaterial);
         top.setRotationAxis(Rotate.X_AXIS);
         top.setRotate(90);

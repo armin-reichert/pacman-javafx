@@ -6,13 +6,13 @@ package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
-import de.amr.games.pacman.ui3d.level.DefaultWorldRenderer3D;
+import de.amr.games.pacman.ui3d.level.WorldRenderer3D;
 import javafx.scene.Group;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.vec_2f;
 
-public class TengenMsPacManGameWorldRenderer3D extends DefaultWorldRenderer3D {
+public class TengenMsPacManGameWorldRenderer3D extends WorldRenderer3D {
 
     @Override
     public void addObstacle3D(Group parent, Obstacle obstacle, double thickness) {
