@@ -8,7 +8,6 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.ScoreManager;
 import de.amr.games.pacman.ui2d.action.GameActions2D;
@@ -57,13 +56,9 @@ public class TengenPlayScene3D extends PlayScene3D {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // when score is disabled, show text "game over"
-            String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
-            Color color = context.assets().color(assetKeyPrefix + ".color.game_over_message");
-            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                WorldMap worldMap = context.level().world().map();
-                NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
-                color = Color.valueOf(nesColorScheme.fillColor());
-            }
+            WorldMap worldMap = context.level().world().map();
+            NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
+            Color color = Color.valueOf(nesColorScheme.strokeColor());
             scores3D.showTextAsScore(GAME_OVER_TEXT, color);
         }
     }
