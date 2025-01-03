@@ -55,10 +55,9 @@ public class GameLevel3D {
     static final int   LIVES_COUNTER_MAX     = 5;
     static final float LIVES_SHAPE_SIZE      = 10.0f;
     static final float FLOOR_THICKNESS       = 0.5f;
-    static final float OBSTACLE_BASE_HEIGHT = 5.5f;
-    static final float OBSTACLE_COAT_HEIGHT  = 0.1f;
+    static final float OBSTACLE_BASE_HEIGHT  = 7.0f;
+    static final float OBSTACLE_TOP_HEIGHT   = 0.1f;
     static final float OBSTACLE_THICKNESS    = 1.25f;
-    static final float BORDER_WALL_HEIGHT    = 6.0f;
     static final float BORDER_WALL_THICKNESS = 1.5f;
     static final float HOUSE_HEIGHT          = 12.0f;
     static final float HOUSE_OPACITY         = 0.4f;
@@ -270,7 +269,7 @@ public class GameLevel3D {
         worldRenderer.setWallBaseMaterial(wallBaseMaterial);
         worldRenderer.setWallBaseHeightProperty(obstacleBaseHeightPy);
         worldRenderer.setWallTopMaterial(wallTopMaterial);
-        worldRenderer.setWallTopHeight(OBSTACLE_COAT_HEIGHT);
+        worldRenderer.setWallTopHeight(OBSTACLE_TOP_HEIGHT);
         //TODO check this:
         obstacleBaseHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
