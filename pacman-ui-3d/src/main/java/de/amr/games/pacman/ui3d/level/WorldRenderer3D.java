@@ -77,14 +77,14 @@ public class WorldRenderer3D {
             Vector2i left  = beginTile.x() < endTile.x() ? beginTile : endTile;
             Vector2i right = beginTile.x() < endTile.x() ? endTile : beginTile;
             Vector2f center = left.plus(right).scaled((float) HTS).plus(HTS, HTS);
-            int length = right.minus(left).scaled(TS).x();
+            int length = TS * (right.x() - left.x());
             return createCompositeWallCenteredAt(center, length + thickness, thickness);
         }
         else if (beginTile.x() == endTile.x()) { // vertical wall
             Vector2i top    = beginTile.y() < endTile.y() ? beginTile : endTile;
             Vector2i bottom = beginTile.y() < endTile.y() ? endTile : beginTile;
             Vector2f center = top.plus(bottom).scaled((float) HTS).plus(HTS, HTS);
-            int length = bottom.minus(top).scaled(TS).y();
+            int length = TS * (bottom.y() - top.y());
             return createCompositeWallCenteredAt(center, thickness, length);
         }
         throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(beginTile, endTile));
@@ -160,7 +160,7 @@ public class WorldRenderer3D {
         } else if (p.y() == q.y()) { // horizontal wall
             addWallAtCenter(parent, p.midpoint(q), p.manhattanDist(q), TS);
         } else {
-            Logger.error("Can only add horizontal or vertical castle walls, p={}, q={}", p, q);
+            Logger.error("Cannot add horizontal/vertical wall between {} and {}", p, q);
         }
     }
 
@@ -187,7 +187,7 @@ public class WorldRenderer3D {
                 addWall(parent, c[0], c[1]);
             }
 
-            // larger oval with 4 towers
+            // larger oval with 4 "towers"
             case "dcgbfceb" -> {
                 Vector2f[] t = obstacle.cornerCenters(0, 2, 4, 6);
                 addTowers(parent, t);
@@ -314,6 +314,7 @@ public class WorldRenderer3D {
             // U in normal orientation, open on top
             oc0 = obstacle.cornerCenter(4); // right leg
             oc1 = obstacle.cornerCenter(2); // left leg
+            addTowers(parent, c0, c1, oc0, oc1);
             addWallAtCenter(parent, c0.midpoint(oc0), TS, c0.manhattanDist(oc0));
             addWallAtCenter(parent, c1.midpoint(oc1), TS, c1.manhattanDist(oc1));
             addWallAtCenter(parent, oc0.midpoint(oc1), oc0.manhattanDist(oc1), TS);
@@ -322,6 +323,7 @@ public class WorldRenderer3D {
             // U vertically mirrored, open at bottom d[0]=left, d[1]=right
             oc0 = obstacle.cornerCenter(0); // left leg
             oc1 = obstacle.cornerCenter(12); // right leg
+            addTowers(parent, c0, c1, oc0, oc1);
             addWallAtCenter(parent, c0.midpoint(oc0), TS, c0.manhattanDist(oc0));
             addWallAtCenter(parent, c1.midpoint(oc1), TS, c1.manhattanDist(oc1));
             addWallAtCenter(parent, oc0.midpoint(oc1), oc0.manhattanDist(oc1), TS);
@@ -330,6 +332,7 @@ public class WorldRenderer3D {
             // U open at right side, d[0]=bottom, d[1]=top
             oc0 = obstacle.cornerCenter(2); // left bottom
             oc1 = obstacle.cornerCenter(0); // right top
+            addTowers(parent, c0, c1, oc0, oc1);
             addWallAtCenter(parent, c0.midpoint(oc0), c0.manhattanDist(oc0), TS);
             addWallAtCenter(parent, c1.midpoint(oc1), c1.manhattanDist(oc1), TS);
             addWallAtCenter(parent, oc0.midpoint(oc1), TS, oc0.manhattanDist(oc1));
@@ -338,15 +341,14 @@ public class WorldRenderer3D {
             // U open at left side, d[0]=top, d[1]=bottom
             oc0 = obstacle.cornerCenter(12); // right top
             oc1 = obstacle.cornerCenter(10); // right bottom
+            addTowers(parent, c0, c1, oc0, oc1);
             addWallAtCenter(parent, c0.midpoint(oc0), c0.manhattanDist(oc0), TS);
             addWallAtCenter(parent, c1.midpoint(oc1), c1.manhattanDist(oc1), TS);
             addWallAtCenter(parent, oc0.midpoint(oc1), TS, oc0.manhattanDist(oc1));
         }
         else {
             Logger.info("Invalid U-shape detected: {}", obstacle);
-            return;
         }
-        addTowers(parent, c0, c1, oc0, oc1);
     }
 
     //TODO rework and simplify
