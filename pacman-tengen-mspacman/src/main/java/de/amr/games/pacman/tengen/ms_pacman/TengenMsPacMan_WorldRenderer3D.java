@@ -155,6 +155,12 @@ public class TengenMsPacMan_WorldRenderer3D extends WorldRenderer3D {
             // STRANGE map #12: dog-like looking right
             case "dfbdcgfcdbecgfcdbfceb" -> render_Strange12_DogLookingRight(parent, obstacle);
 
+            // STRANGE map #14: Gamma-like with wider arms
+            case "dcgbfcdbfceb" -> render_Strange14_Gamma(parent, obstacle);
+
+            // STRANGE map #14: Gamma-like with wider arms, mirrored
+            case "dcgbecgbfceb" -> render_Strange14_Gamma_Mirrored(parent, obstacle);
+
             // STRANGE map #15: obstacle left of house
             case "dgbecfbdgbecgbfebgceb" -> render_Strange15_LeftOfHouse(parent, obstacle);
 
@@ -816,4 +822,29 @@ public class TengenMsPacMan_WorldRenderer3D extends WorldRenderer3D {
     }
 
 
+    private void render_Strange14_Gamma(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 2, 4, 8, 10);
+        Vector2f h = vec_2f(t[2].x(), t[3].y());
+        addTowers(parent, t);
+        addWall(parent, t[0], t[1]);
+        addWall(parent, t[1], t[2]);
+        addWall(parent, t[2], h);
+        addWall(parent, h, t[3]);
+        addWall(parent, t[3], t[4]);
+        addWall(parent, t[4], t[0]);
+        addWallAtCenter(parent, t[0].midpoint(h), t[1].manhattanDist(t[2]), t[3].manhattanDist(t[4]));
+    }
+
+    private void render_Strange14_Gamma_Mirrored(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 2, 6, 8, 10);
+        Vector2f h = vec_2f(t[2].x(), t[1].y());
+        addTowers(parent, t);
+        addWall(parent, t[0], t[1]);
+        addWall(parent, t[1], h);
+        addWall(parent, h, t[2]);
+        addWall(parent, t[2], t[3]);
+        addWall(parent, t[3], t[4]);
+        addWall(parent, t[4], t[0]);
+        addWallAtCenter(parent, t[4].midpoint(h), t[2].manhattanDist(t[3]), t[0].manhattanDist(t[1]));
+    }
 }
