@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
+import de.amr.games.pacman.lib.tilemap.ObstacleType;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
@@ -179,8 +180,22 @@ public class WorldRenderer3D {
     }
 
     // default implementation for non-standard obstacles
-    public void addObstacle3D(Group parent, Obstacle obstacle) {
-        addGenericObstacle3D(parent, obstacle);
+    public void renderObstacle3D(Group parent, Obstacle obstacle) {
+        Group og = new Group();
+        parent.getChildren().add(og);
+        ObstacleType type = obstacle.computeType();
+        switch (type) {
+            case ANY ->           addUncategorizedObstacle3D(og, obstacle);
+            case CROSS_SHAPE ->   addCross3D(og, obstacle);
+            case F_SHAPE ->       addFShape3D(og, obstacle);
+            case H_SHAPE ->       addHShape3D(og, obstacle);
+            case L_SHAPE ->       addLShape3D(og, obstacle);
+            case O_SHAPE ->       addOShape3D(og, obstacle);
+            case S_SHAPE ->       addSShape3D(og, obstacle);
+            case T_SHAPE ->       addTShape3D(og, obstacle);
+            case T_SHAPE_TWO_ROWS -> addTShapeTwoRows3D(og, obstacle);
+            case U_SHAPE ->       addUShape3D(og, obstacle);
+        }
     }
 
     // Standard 3D obstacles
@@ -472,7 +487,7 @@ public class WorldRenderer3D {
 
     // fallback obstacle builder
 
-    protected void addGenericObstacle3D(Group parent, Obstacle obstacle){
+    protected void addUncategorizedObstacle3D(Group parent, Obstacle obstacle){
         int r = HTS;
         Vector2f p = obstacle.startPoint();
         for (int i = 0; i < obstacle.numSegments(); ++i) {

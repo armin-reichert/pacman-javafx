@@ -291,7 +291,7 @@ public class GameLevel3D {
             Logger.info("{}: {}", obstacle.computeType(), obstacle);
             if (!world.isPartOfHouse(tileAt(obstacle.startPoint()))) {
                 worldRenderer.setWallThickness(obstacle.hasDoubleWalls() ? BORDER_WALL_THICKNESS : OBSTACLE_THICKNESS);
-                renderObstacle(worldRenderer, mazeGroup, obstacle);
+                worldRenderer.renderObstacle3D(mazeGroup, obstacle);
             }
         }
 
@@ -307,25 +307,6 @@ public class GameLevel3D {
 
         worldGroup.getChildren().add(mazeGroup);
         root.getChildren().add(house3D.door3D());
-    }
-
-    //TODO move into renderer interface?
-    private void renderObstacle(WorldRenderer3D renderer, Group parent, Obstacle obstacle) {
-        Group og = new Group();
-        parent.getChildren().add(og);
-        ObstacleType type = obstacle.computeType();
-        switch (type) {
-            case ANY ->           renderer.addObstacle3D(og, obstacle);
-            case CROSS_SHAPE ->   renderer.addCross3D(og, obstacle);
-            case F_SHAPE ->       renderer.addFShape3D(og, obstacle);
-            case H_SHAPE ->       renderer.addHShape3D(og, obstacle);
-            case L_SHAPE ->       renderer.addLShape3D(og, obstacle);
-            case O_SHAPE ->       renderer.addOShape3D(og, obstacle);
-            case S_SHAPE ->       renderer.addSShape3D(og, obstacle);
-            case T_SHAPE ->       renderer.addTShape3D(og, obstacle);
-            case T_SHAPE_TWO_ROWS -> renderer.addTShapeTwoRows3D(og, obstacle);
-            case U_SHAPE ->       renderer.addUShape3D(og, obstacle);
-        }
     }
 
     private Box createFloor(double sizeX, double sizeY) {

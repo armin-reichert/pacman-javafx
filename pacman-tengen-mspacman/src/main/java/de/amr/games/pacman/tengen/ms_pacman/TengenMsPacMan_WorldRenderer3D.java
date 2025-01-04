@@ -15,7 +15,7 @@ import static de.amr.games.pacman.lib.Globals.vec_2f;
 public class TengenMsPacMan_WorldRenderer3D extends WorldRenderer3D {
 
     @Override
-    public void addObstacle3D(Group parent, Obstacle obstacle) {
+    public void addUncategorizedObstacle3D(Group parent, Obstacle obstacle) {
         switch (obstacle.encoding()) {
             // Tengen BIG map #1, upside T at top, center
             case "dcfbdcgbfcebgce" -> render_BigMap1_UpsideT(parent, obstacle);
@@ -167,7 +167,7 @@ public class TengenMsPacMan_WorldRenderer3D extends WorldRenderer3D {
             // STRANGE map #15: obstacle right of house
             case "dcfbdgbfcdbfebgcdbfeb" -> render_Strange15_RightOfHouse(parent, obstacle);
 
-            default -> addGenericObstacle3D(parent, obstacle);
+            default -> super.addUncategorizedObstacle3D(parent, obstacle);
         }
     }
 
