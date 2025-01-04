@@ -155,6 +155,12 @@ public class TengenMsPacMan_WorldRenderer3D extends WorldRenderer3D {
             // STRANGE map #12: dog-like looking right
             case "dfbdcgfcdbecgfcdbfceb" -> render_Strange12_DogLookingRight(parent, obstacle);
 
+            // STRANGE map #15: obstacle left of house
+            case "dgbecfbdgbecgbfebgceb" -> render_Strange15_LeftOfHouse(parent, obstacle);
+
+            // STRANGE map #15: obstacle right of house
+            case "dcfbdgbfcdbfebgcdbfeb" -> render_Strange15_RightOfHouse(parent, obstacle);
+
             default -> addGenericObstacle3D(parent, obstacle);
         }
     }
@@ -787,6 +793,26 @@ public class TengenMsPacMan_WorldRenderer3D extends WorldRenderer3D {
         addWall(parent, t[3], h);
         addWall(parent, t[4], t[5]);
         addWall(parent, t[0], t[0].plus(0, TS));
+    }
+
+    private void render_Strange15_LeftOfHouse(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 7, 12, 14, 19);
+        Vector2f h = vec_2f(t[2].x(), t[1].y());
+        addTowers(parent, t);
+        addWall(parent, t[0], t[4]);
+        addWall(parent, t[4], t[2]);
+        addWall(parent, t[2], t[3]);
+        addWall(parent, t[1], h);
+    }
+
+    private void render_Strange15_RightOfHouse(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 4, 7, 11, 18);
+        Vector2f h = vec_2f(t[0].x(), t[3].y());
+        addTowers(parent, t);
+        addWall(parent, t[0], t[4]);
+        addWall(parent, t[0], t[2]);
+        addWall(parent, t[1], t[2]);
+        addWall(parent, t[3], h);
     }
 
 
