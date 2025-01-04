@@ -48,9 +48,9 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
-import static de.amr.games.pacman.tengen.ms_pacman.GlobalPropertiesTengen.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenActions.QUIT_DEMO_LEVEL;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.*;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.*;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GlobalProperties.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.action.GameActions2D.bindCheatActions;
@@ -61,7 +61,7 @@ import static de.amr.games.pacman.ui2d.action.GameActions2D.bindFallbackPlayerCo
  *
  * @author Armin Reichert
  */
-public class PlayScene2D extends GameScene2D implements CameraControlledView {
+public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraControlledView {
 
     // (NES screen width, BIG map height (42 tiles) + 2 extra tile rows)
     private static final Vector2i UNSCALED_CANVAS_SIZE = vec_2i(NES_SIZE.x(), 44 * TS);
@@ -141,7 +141,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
     private MessageMovement messageMovement;
     private LevelCompleteAnimation levelCompleteAnimation;
 
-    public PlayScene2D() {
+    public TengenMsPacMan_PlayScene2D() {
         canvas = new Canvas();
         canvas.widthProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_SIZE.x()));
         canvas.heightProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_SIZE.y()));
@@ -193,7 +193,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
 
     @Override
     public void bindGameActions() {
-        bind(MsPacManGameTengenActions.TOGGLE_DISPLAY_MODE, Keyboard.alt(KeyCode.C));
+        bind(TengenMsPacMan_GameActions.TOGGLE_DISPLAY_MODE, Keyboard.alt(KeyCode.C));
     }
 
     @Override
@@ -310,7 +310,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
             bind(GameActions2D.PLAYER_DOWN,  context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_DOWN));
             bind(GameActions2D.PLAYER_LEFT,  context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_LEFT));
             bind(GameActions2D.PLAYER_RIGHT, context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_RIGHT));
-            bind(MsPacManGameTengenActions.TOGGLE_PAC_BOOSTER,
+            bind(TengenMsPacMan_GameActions.TOGGLE_PAC_BOOSTER,
                 context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_A),
                 context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_B));
             bindFallbackPlayerControlActions(this);
@@ -422,7 +422,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
         updateScaling();
         updateCameraPosition(scaling());
 
-        var r = (MsPacManGameTengenRenderer) gr;
+        var r = (TengenMsPacMan_Renderer2D) gr;
         r.setScaling(scaling());
         r.clearCanvas();
         context.game().level().ifPresent(level -> {
@@ -435,7 +435,7 @@ public class PlayScene2D extends GameScene2D implements CameraControlledView {
 
     @Override
     protected void drawSceneContent() {
-        var r = (MsPacManGameTengenRenderer) gr;
+        var r = (TengenMsPacMan_Renderer2D) gr;
 
         MsPacManGameTengen game = (MsPacManGameTengen) context.game();
         GameLevel level = context.level();

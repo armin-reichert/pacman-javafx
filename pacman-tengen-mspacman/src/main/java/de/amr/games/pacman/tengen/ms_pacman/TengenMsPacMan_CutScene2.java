@@ -15,8 +15,8 @@ import javafx.scene.paint.Color;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MR_PACMAN_MUNCHING;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_SIZE;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_TILES;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.NES_SIZE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.NES_TILES;
 
 /**
  * Intermission scene 2: "The chase".
@@ -26,7 +26,7 @@ import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfigurati
  *
  * @author Armin Reichert
  */
-public class CutScene2 extends GameScene2D {
+public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
     static final int CLAP_TILE_X = TS * 3;
     static final int CLAP_TILE_Y = TS * 10;
@@ -55,9 +55,9 @@ public class CutScene2 extends GameScene2D {
         context.setScoreVisible(false);
         pacMan = new Pac();
         msPacMan = new Pac();
-        var spriteSheet = (MsPacManGameTengenSpriteSheet) context.gameConfiguration().spriteSheet();
-        msPacMan.setAnimations(new PacAnimations(spriteSheet));
-        pacMan.setAnimations(new PacAnimations(spriteSheet));
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
+        msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
+        pacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         music = context.sound().makeSound("intermission.2",1.0, false);
     }
 
@@ -147,7 +147,7 @@ public class CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        var r = (MsPacManGameTengenRenderer) gr;
+        var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
         r.setLevelNumberBoxesVisible(false);
         r.drawClapperBoard(clapAnimation, "THE CHASE", 2, CLAP_TILE_X, CLAP_TILE_Y);

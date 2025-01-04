@@ -16,10 +16,10 @@ import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_SIZE;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_TILES;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.NES_SIZE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.NES_TILES;
 
-public class CutScene4 extends GameScene2D {
+public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     static final int LEFT_BORDER = TS;
     static final int RIGHT_BORDER = TS * (NES_TILES.x() - 2);
@@ -36,7 +36,7 @@ public class CutScene4 extends GameScene2D {
 
     private MediaPlayer music;
     private ClapperboardAnimation clapAnimation;
-    private MsPacManGameTengenSpriteSheet spriteSheet;
+    private TengenMsPacMan_SpriteSheet spriteSheet;
 
     private int t;
 
@@ -51,9 +51,9 @@ public class CutScene4 extends GameScene2D {
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
 
-        spriteSheet = (MsPacManGameTengenSpriteSheet) context.gameConfiguration().spriteSheet();
-        mrPacMan.setAnimations(new PacAnimations(spriteSheet));
-        msPacMan.setAnimations(new PacAnimations(spriteSheet));
+        spriteSheet = (TengenMsPacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
+        mrPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
+        msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
 
         music = context.sound().makeSound("intermission.4",1.0, false);
     }
@@ -155,7 +155,7 @@ public class CutScene4 extends GameScene2D {
         junior.setPosition((float) randomX, size().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
-        junior.setAnimations(new PacAnimations(spriteSheet));
+        junior.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         junior.selectAnimation(ANIM_JUNIOR_PACMAN);
         junior.show();
         juniors.add(junior);
@@ -209,7 +209,7 @@ public class CutScene4 extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        var r = (MsPacManGameTengenRenderer) gr;
+        var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
         r.drawClapperBoard(clapAnimation, "THE END", 4, CLAP_TILE_X, CLAP_TILE_Y);
         r.drawAnimatedActor(msPacMan);

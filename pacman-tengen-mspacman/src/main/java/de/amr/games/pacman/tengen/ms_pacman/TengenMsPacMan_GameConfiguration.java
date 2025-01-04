@@ -25,9 +25,9 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.tengen.ms_pacman.GlobalPropertiesTengen.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GlobalProperties.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
 
-public class MsPacManGameTengenConfiguration implements GameConfiguration {
+public class TengenMsPacMan_GameConfiguration implements GameConfiguration {
 
     public static Color nesPaletteColor(int index) {
         return Color.web(NES_Palette.color(index));
@@ -36,29 +36,29 @@ public class MsPacManGameTengenConfiguration implements GameConfiguration {
     public static final Vector2i NES_TILES = new Vector2i(32, 30);
     public static final Vector2i NES_SIZE = NES_TILES.scaled(TS);
 
-    private final MsPacManGameTengenSpriteSheet spriteSheet;
+    private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final MazeRepository mazeRepository;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public MsPacManGameTengenConfiguration(AssetStorage assets) {
-        loadAssets(() -> MsPacManGameTengenConfiguration.class, assets);
-        spriteSheet = new MsPacManGameTengenSpriteSheet(assets.image(assetKeyPrefix() + ".spritesheet"));
+    public TengenMsPacMan_GameConfiguration(AssetStorage assets) {
+        loadAssets(() -> TengenMsPacMan_GameConfiguration.class, assets);
+        spriteSheet = new TengenMsPacMan_SpriteSheet(assets.image(assetKeyPrefix() + ".spritesheet"));
         mazeRepository = new MazeRepository(
             assets.image(assetKeyPrefix() + ".mazes.arcade"),
             assets.image(assetKeyPrefix() + ".mazes.non_arcade"));
 
-        setGameScene("BootScene",      new BootScene());
-        setGameScene("IntroScene",     new IntroScene());
-        setGameScene("StartScene",     new OptionsScene());
-        setGameScene("ShowingCredits", new CreditsScene());
-        setGameScene("PlayScene2D",    new PlayScene2D());
-        setGameScene("CutScene1",      new CutScene1());
-        setGameScene("CutScene2",      new CutScene2());
-        setGameScene("CutScene3",      new CutScene3());
-        setGameScene("CutScene4",      new CutScene4());
+        setGameScene("BootScene",      new TengenMsPacMan_BootScene());
+        setGameScene("IntroScene",     new TengenMsPacMan_IntroScene());
+        setGameScene("StartScene",     new TengenMsPacMan_OptionsScene());
+        setGameScene("ShowingCredits", new TengenMsPacMan_CreditsScene());
+        setGameScene("PlayScene2D",    new TengenMsPacMan_PlayScene2D());
+        setGameScene("CutScene1",      new TengenMsPacMan_CutScene1());
+        setGameScene("CutScene2",      new TengenMsPacMan_CutScene2());
+        setGameScene("CutScene3",      new TengenMsPacMan_CutScene3());
+        setGameScene("CutScene4",      new TengenMsPacMan_CutScene4());
 
         //TODO where is the best place to do that?
-        PlayScene2D playScene2D = (PlayScene2D) getGameScene("PlayScene2D");
+        TengenMsPacMan_PlayScene2D playScene2D = (TengenMsPacMan_PlayScene2D) getGameScene("PlayScene2D");
         playScene2D.displayModeProperty().bind(PY_TENGEN_PLAY_SCENE_DISPLAY_MODE);
     }
 
@@ -98,7 +98,7 @@ public class MsPacManGameTengenConfiguration implements GameConfiguration {
 
     @Override
     public GameScene2D createPiPScene(GameContext context, Canvas canvasNotUsed) {
-        var gameScene = new TengenPiP_PlayScene();
+        var gameScene = new TengenMsPacMan_PiPScene();
         gameScene.setGameContext(context);
         gameScene.setGameRenderer(createRenderer(context.assets(), gameScene.canvas()));
         return gameScene;
@@ -113,8 +113,8 @@ public class MsPacManGameTengenConfiguration implements GameConfiguration {
     }
 
     @Override
-    public MsPacManGameTengenRenderer createRenderer(AssetStorage assets, Canvas canvas) {
-        return new MsPacManGameTengenRenderer(assets, spriteSheet, mazeRepository, canvas);
+    public TengenMsPacMan_Renderer2D createRenderer(AssetStorage assets, Canvas canvas) {
+        return new TengenMsPacMan_Renderer2D(assets, spriteSheet, mazeRepository, canvas);
     }
 
     @Override
@@ -124,8 +124,8 @@ public class MsPacManGameTengenConfiguration implements GameConfiguration {
 
     @Override
     public void createActorAnimations(GameLevel level) {
-        level.pac().setAnimations(new PacAnimations(spriteSheet));
-        level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id())));
+        level.pac().setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
+        level.ghosts().forEach(ghost -> ghost.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, ghost.id())));
     }
 
     private void loadAssets(ResourceManager rm, AssetStorage assets) {

@@ -17,7 +17,7 @@ import static de.amr.games.pacman.model.GameModel.*;
 /**
  * @author Armin Reichert
  */
-public class MsPacManGameTengenSpriteSheet implements GameSpriteSheet {
+public class TengenMsPacMan_SpriteSheet implements GameSpriteSheet {
 
     private final Image source;
 
@@ -177,7 +177,7 @@ public class MsPacManGameTengenSpriteSheet implements GameSpriteSheet {
     static final RectArea BLUE_BAG_SPRITE = rect(241, 363, 7, 8);
     static final RectArea JUNIOR_PAC_SPRITE = rect(176, 304, 7, 8);
 
-    public MsPacManGameTengenSpriteSheet(Image source) {
+    public TengenMsPacMan_SpriteSheet(Image source) {
         this.source = source;
     }
 

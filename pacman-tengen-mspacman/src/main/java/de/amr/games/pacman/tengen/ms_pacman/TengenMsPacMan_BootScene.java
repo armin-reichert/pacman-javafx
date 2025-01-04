@@ -17,13 +17,13 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_SIZE;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.nesPaletteColor;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.NES_SIZE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.nesPaletteColor;
 
 /**
  * Animated "TENGEN PRESENTS" text and ghost running through scene.
  */
-public class BootScene extends GameScene2D {
+public class TengenMsPacMan_BootScene extends GameScene2D {
 
     private static final int TENGEN_PRESENTS_FINAL_Y = 13 * TS;
     private static final int TENGEN_PRESENTS_X = 9 * TS;
@@ -55,7 +55,7 @@ public class BootScene extends GameScene2D {
             ghost.setSpeed(0);
             ghost.hide();
             GameSpriteSheet spriteSheet = context.gameConfiguration().spriteSheet();
-            ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
+            ghost.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, ghost.id()));
             ghost.selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
         }
         if (t == 7) {
@@ -104,7 +104,7 @@ public class BootScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        var r = (MsPacManGameTengenRenderer) gr;
+        var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
         r.setScaling(scaling());
         if (grayScreen) {

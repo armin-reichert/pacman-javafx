@@ -19,13 +19,13 @@ import java.util.Map;
 /**
  * @author Armin Reichert
  */
-public class GhostAnimations extends SpriteAnimationSet {
+public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet {
 
     public static final int NORMAL_FRAME_TICKS = 8;  // TODO check this in emulator
     public static final int FRIGHTENED_FRAME_TICKS = 8;  // TODO check this in emulator
     public static final int FLASH_FRAME_TICKS = 7;  // TODO check this in emulator
 
-    public GhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
+    public TengenMsPacMan_GhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
         Globals.assertNotNull(spriteSheet);
 
         var normal = SpriteAnimation

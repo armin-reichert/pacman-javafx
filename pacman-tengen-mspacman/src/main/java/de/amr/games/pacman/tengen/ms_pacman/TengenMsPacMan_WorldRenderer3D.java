@@ -12,7 +12,7 @@ import javafx.scene.Group;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.vec_2f;
 
-public class TengenMsPacManGameWorldRenderer3D extends WorldRenderer3D {
+public class TengenMsPacMan_WorldRenderer3D extends WorldRenderer3D {
 
     @Override
     public void addObstacle3D(Group parent, Obstacle obstacle, double thickness) {

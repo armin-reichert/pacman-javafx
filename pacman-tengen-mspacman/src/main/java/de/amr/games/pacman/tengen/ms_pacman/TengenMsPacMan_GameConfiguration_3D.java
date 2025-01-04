@@ -11,11 +11,11 @@ import de.amr.games.pacman.ui3d.GlobalProperties3d;
 import de.amr.games.pacman.ui3d.level.WorldRenderer3D;
 import de.amr.games.pacman.ui3d.scene3d.GameConfiguration3D;
 
-public class MsPacManGameTengenConfiguration_3D extends MsPacManGameTengenConfiguration implements GameConfiguration3D {
+public class TengenMsPacMan_GameConfiguration_3D extends TengenMsPacMan_GameConfiguration implements GameConfiguration3D {
 
-    public MsPacManGameTengenConfiguration_3D(AssetStorage assets) {
+    public TengenMsPacMan_GameConfiguration_3D(AssetStorage assets) {
         super(assets);
-        setGameScene("PlayScene3D", new TengenPlayScene3D());
+        setGameScene("PlayScene3D", new TengenMsPacMan_PlayScene3D());
     }
 
     @Override
@@ -30,6 +30,6 @@ public class MsPacManGameTengenConfiguration_3D extends MsPacManGameTengenConfig
 
     @Override
     public WorldRenderer3D createWorldRenderer() {
-        return new TengenMsPacManGameWorldRenderer3D();
+        return new TengenMsPacMan_WorldRenderer3D();
     }
 }

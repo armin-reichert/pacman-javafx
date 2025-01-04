@@ -7,8 +7,8 @@ package de.amr.games.pacman.ui2d.apps;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
-import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration;
-import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacManStartPage;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.games.pacman.ui2d.DashboardItemID;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import javafx.application.Application;
@@ -20,7 +20,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_SIZE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.NES_SIZE;
 
 public class TengenMsPacManApp extends Application {
 
@@ -42,9 +42,9 @@ public class TengenMsPacManApp extends Application {
     public void start(Stage stage) {
         PacManGamesUI ui = new PacManGamesUI();
         ui.loadAssets();
-        ui.configureGameVariant(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration(ui.assets()));
+        ui.configureGameVariant(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameConfiguration(ui.assets()));
         ui.create(stage, initialSize());
-        ui.startPage().addSlide(new TengenMsPacManStartPage().root());
+        ui.startPage().addSlide(new TengenMsPacMan_StartPage().root());
 
         ui.addDashboardItem(DashboardItemID.README);
         ui.addDashboardItem(DashboardItemID.GENERAL);

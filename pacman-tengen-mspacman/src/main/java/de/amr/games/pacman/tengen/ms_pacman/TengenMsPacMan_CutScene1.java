@@ -17,9 +17,9 @@ import javafx.scene.paint.Color;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_GHOST_NORMAL;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_SIZE;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_TILES;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSpriteSheet.HEART_SPRITE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.NES_SIZE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.NES_TILES;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.HEART_SPRITE;
 
 /**
  * Intermission scene 1: "They meet".
@@ -30,7 +30,7 @@ import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSpriteSheet
  *
  * @author Armin Reichert
  */
-public class CutScene1 extends GameScene2D {
+public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     static final int CLAP_TILE_X = TS * 3;
     static final int CLAP_TILE_Y = TS * 10;
@@ -73,11 +73,11 @@ public class CutScene1 extends GameScene2D {
         pinky = Ghost.pinky();
         heart = new Actor2D();
 
-        var spriteSheet = (MsPacManGameTengenSpriteSheet) context.gameConfiguration().spriteSheet();
-        msPacMan.setAnimations(new PacAnimations(spriteSheet));
-        mrPacMan.setAnimations(new PacAnimations(spriteSheet));
-        inky.setAnimations(new GhostAnimations(spriteSheet, inky.id()));
-        pinky.setAnimations(new GhostAnimations(spriteSheet, pinky.id()));
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
+        msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
+        mrPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
+        inky.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, inky.id()));
+        pinky.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, pinky.id()));
 
         music = context.sound().makeSound("intermission.1", 1.0, false);
     }
@@ -211,7 +211,7 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        var r = (MsPacManGameTengenRenderer) gr;
+        var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
         r.setLevelNumberBoxesVisible(false);
         r.drawClapperBoard(clapAnimation, "THEY MEET", 1, CLAP_TILE_X, CLAP_TILE_Y);

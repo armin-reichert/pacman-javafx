@@ -11,10 +11,10 @@ import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_SIZE;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.nesPaletteColor;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.NES_SIZE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.nesPaletteColor;
 
-public class CreditsScene extends GameScene2D {
+public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     static final float DISPLAY_SECONDS = 12;
 
@@ -39,7 +39,7 @@ public class CreditsScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        var r = (MsPacManGameTengenRenderer) gr;
+        var r = (TengenMsPacMan_Renderer2D) gr;
         Font scaledFont = r.scaledArcadeFont(TS);
         double width = size().x();
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), width, 20);
@@ -51,7 +51,7 @@ public class CreditsScene extends GameScene2D {
         }
     }
 
-    private void drawOriginalGameAuthors(MsPacManGameTengenRenderer r, Font scaledFont) {
+    private void drawOriginalGameAuthors(TengenMsPacMan_Renderer2D r, Font scaledFont) {
         int y = 7 * TS;
         r.drawText("CREDITS FOR MS PAC-MAN", nesPaletteColor(0x20), scaledFont, 3 * TS, y);
         y += 4 * TS;
@@ -72,7 +72,7 @@ public class CreditsScene extends GameScene2D {
         r.drawText("ALL RIGHTS RESERVED", nesPaletteColor(0x19), scaledFont, 6 * TS, y);
     }
 
-    private void drawJavaFXVersionAuthors(MsPacManGameTengenRenderer r, Font scaledFont) {
+    private void drawJavaFXVersionAuthors(TengenMsPacMan_Renderer2D r, Font scaledFont) {
         int y = 7 * TS;
         r.drawText("CREDITS FOR JAVAFX REMAKE", nesPaletteColor(0x20), scaledFont, 3 * TS, y);
         y += 4 * TS;

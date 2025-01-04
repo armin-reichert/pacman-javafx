@@ -9,11 +9,11 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.action.GameAction;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.tengen.ms_pacman.GlobalPropertiesTengen.PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED;
-import static de.amr.games.pacman.tengen.ms_pacman.GlobalPropertiesTengen.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GlobalProperties.PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GlobalProperties.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.games.pacman.ui2d.lib.Ufx.toggle;
 
-public enum MsPacManGameTengenActions implements GameAction {
+public enum TengenMsPacMan_GameActions implements GameAction {
 
     SELECT_NEXT_JOYPAD_KEY_BINDING {
         @Override

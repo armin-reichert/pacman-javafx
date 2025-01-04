@@ -17,34 +17,34 @@ import java.util.Map;
 /**
  * @author Armin Reichert
  */
-public class PacAnimations extends SpriteAnimationSet {
+public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet {
 
-    public PacAnimations(MsPacManGameTengenSpriteSheet spriteSheet) {
+    public TengenMsPacMan_PacAnimations(TengenMsPacMan_SpriteSheet spriteSheet) {
         Globals.assertNotNull(spriteSheet);
 
         var msPacManMunching = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man munching")
-            .sprites(MsPacManGameTengenSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT)
+            .sprites(TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT)
             .loop();
 
         var msPacManMunchingBooster = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man munching booster mode")
-            .sprites(MsPacManGameTengenSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
+            .sprites(TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
             .loop();
 
         var msPacManWavingHand = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man waving hand")
-            .sprites(MsPacManGameTengenSpriteSheet.MS_PAC_WAVING_HAND)
+            .sprites(TengenMsPacMan_SpriteSheet.MS_PAC_WAVING_HAND)
             .frameTicks(8)
             .loop();
 
         var msPacManTurningAway = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man turning away")
-            .sprites(MsPacManGameTengenSpriteSheet.MS_PAC_TURNING_AWAY)
+            .sprites(TengenMsPacMan_SpriteSheet.MS_PAC_TURNING_AWAY)
             .frameTicks(15)
             .end();
 
@@ -58,35 +58,35 @@ public class PacAnimations extends SpriteAnimationSet {
         var mrPacManMunching = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man's husband munching")
-            .sprites(MsPacManGameTengenSpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT)
+            .sprites(TengenMsPacMan_SpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT)
             .frameTicks(2)
             .loop();
 
         var mrPacManMunchingBooster = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man's husband munching booster mode")
-            .sprites(MsPacManGameTengenSpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
+            .sprites(TengenMsPacMan_SpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
             .frameTicks(2)
             .loop();
 
         var mrPacManWavingHand = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Pac-Man waving hand")
-            .sprites(MsPacManGameTengenSpriteSheet.MR_PAC_WAVING_HAND)
+            .sprites(TengenMsPacMan_SpriteSheet.MR_PAC_WAVING_HAND)
             .frameTicks(8)
             .loop();
 
         var mrPacManTurningAway = SpriteAnimation
                 .spriteSheet(spriteSheet)
                 .info("Mr. Pac-Man turning away")
-                .sprites(MsPacManGameTengenSpriteSheet.MR_PAC_TURNING_AWAY)
+                .sprites(TengenMsPacMan_SpriteSheet.MR_PAC_TURNING_AWAY)
                 .frameTicks(15)
                 .end();
 
         var junior = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Junior Pac-Man")
-            .sprites(MsPacManGameTengenSpriteSheet.JUNIOR_PAC_SPRITE)
+            .sprites(TengenMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE)
             .end();
 
         add(Map.of(
@@ -108,13 +108,13 @@ public class PacAnimations extends SpriteAnimationSet {
     protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Actor2D actor) {
         if (actor instanceof Pac msPacMan) {
             if (isCurrentAnimationID(ANIM_PAC_MUNCHING)) {
-                return MsPacManGameTengenSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT;
+                return TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT;
             }
             if (isCurrentAnimationID(ANIM_MS_PACMAN_BOOSTER)) {
-                return MsPacManGameTengenSpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER;
+                return TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER;
             }
             if (isCurrentAnimationID(ANIM_MR_PACMAN_MUNCHING)) {
-                return ((MsPacManGameTengenSpriteSheet)spriteSheet).pacManMunchingSprites(msPacMan.moveDir());
+                return ((TengenMsPacMan_SpriteSheet)spriteSheet).pacManMunchingSprites(msPacMan.moveDir());
             }
         }
         return super.selectedSprites(spriteSheet, actor);

@@ -15,11 +15,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.tengen.ms_pacman.GlobalPropertiesTengen.PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenActions.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_SIZE;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.nesPaletteColor;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSpriteSheet.CONTINUES_SPRITES;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.NES_SIZE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.nesPaletteColor;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GlobalProperties.PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.CONTINUES_SPRITES;
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
 
 /**
@@ -30,7 +30,7 @@ import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
  *
  * @author Armin Reichert
  */
-public class OptionsScene extends GameScene2D {
+public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     static final int COL_ARROW = 2 * TS;
     static final int COL_LABEL = 4 * TS;
@@ -61,8 +61,8 @@ public class OptionsScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(MsPacManGameTengenActions.SELECT_NEXT_JOYPAD_KEY_BINDING, alt(KeyCode.J));
-        bind(MsPacManGameTengenActions.START_PLAYING, context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_START));
+        bind(TengenMsPacMan_GameActions.SELECT_NEXT_JOYPAD_KEY_BINDING, alt(KeyCode.J));
+        bind(TengenMsPacMan_GameActions.START_PLAYING, context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_START));
         bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_SELECT));
         GameActions2D.bindTestActions(this);
     }
@@ -236,7 +236,7 @@ public class OptionsScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        MsPacManGameTengenRenderer r = (MsPacManGameTengenRenderer) gr;
+        TengenMsPacMan_Renderer2D r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
 
         if (initialDelay > 0) {

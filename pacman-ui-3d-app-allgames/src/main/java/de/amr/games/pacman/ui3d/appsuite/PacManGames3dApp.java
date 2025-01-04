@@ -16,8 +16,8 @@ import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXLConfiguration_3D;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
-import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration_3D;
-import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacManStartPage;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration_3D;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.games.pacman.ui2d.DashboardItemID;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import de.amr.games.pacman.ui3d.GlobalProperties3d;
@@ -76,7 +76,7 @@ public class PacManGames3dApp extends Application {
 
         // UI asset storage exists now, add game variants including their own assets
         ui.configureGameVariant(GameVariant.MS_PACMAN, new MsPacManGameConfiguration_3D(ui.assets()));
-        ui.configureGameVariant(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration_3D(ui.assets()));
+        ui.configureGameVariant(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameConfiguration_3D(ui.assets()));
         ui.configureGameVariant(GameVariant.PACMAN, new PacManGameConfiguration_3D(ui.assets()));
         ui.configureGameVariant(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration_3D(ui.assets()));
 
@@ -84,7 +84,7 @@ public class PacManGames3dApp extends Application {
         ui.startPage().addSlide(new ArcadePacManStartPage().root());
         ui.startPage().addSlide(new ArcadeMsPacManStartPage().root());
         ui.startPage().addSlide(new ArcadePacManXXLStartPage().root());
-        ui.startPage().addSlide(new TengenMsPacManStartPage().root());
+        ui.startPage().addSlide(new TengenMsPacMan_StartPage().root());
 
         ui.addDashboardItem(DashboardItemID.README);
         ui.addDashboardItem(DashboardItemID.GENERAL);

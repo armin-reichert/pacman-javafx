@@ -34,21 +34,21 @@ import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.model.actors.Bonus.STATE_EATEN;
 import static de.amr.games.pacman.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.games.pacman.tengen.ms_pacman.MazeRepository.strangeMap15Sprite;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.nesPaletteColor;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSpriteSheet.*;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.nesPaletteColor;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.*;
 import static de.amr.games.pacman.ui2d.assets.GameSpriteSheet.NO_SPRITE;
 import static java.util.function.Predicate.not;
 
 /**
  * @author Armin Reichert
  */
-public class MsPacManGameTengenRenderer implements GameRenderer {
+public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     private static final Color CANVAS_BACKGROUND_COLOR = Color.BLACK;
     private static final Vector2f DEFAULT_MESSAGE_ANCHOR_POS = new Vector2f(14f * TS, 21 * TS);
 
     private final AssetStorage assets;
-    private final MsPacManGameTengenSpriteSheet spriteSheet;
+    private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final MazeRepository mazeRepository;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final GraphicsContext ctx;
@@ -58,9 +58,9 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     private boolean levelNumberBoxesVisible;
     private Vector2f messageAnchorPosition;
 
-    public MsPacManGameTengenRenderer(
+    public TengenMsPacMan_Renderer2D(
         AssetStorage assets,
-        MsPacManGameTengenSpriteSheet spriteSheet,
+        TengenMsPacMan_SpriteSheet spriteSheet,
         MazeRepository mazeRepository,
         Canvas canvas)
     {
@@ -86,7 +86,7 @@ public class MsPacManGameTengenRenderer implements GameRenderer {
     }
 
     @Override
-    public MsPacManGameTengenSpriteSheet spriteSheet() {
+    public TengenMsPacMan_SpriteSheet spriteSheet() {
         return spriteSheet;
     }
 

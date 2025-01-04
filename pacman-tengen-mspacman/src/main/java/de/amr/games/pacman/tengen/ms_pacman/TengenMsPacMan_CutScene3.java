@@ -16,10 +16,10 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_SIZE;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration.NES_TILES;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSpriteSheet.BLUE_BAG_SPRITE;
-import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSpriteSheet.JUNIOR_PAC_SPRITE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.NES_SIZE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.NES_TILES;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.BLUE_BAG_SPRITE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE;
 
 /**
  * Intermission scene 3: "Junior".
@@ -31,7 +31,7 @@ import static de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenSpriteSheet
  *
  * @author Armin Reichert
  */
-public class CutScene3 extends GameScene2D {
+public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     static final int CLAP_TILE_X = TS * 3;
     static final int CLAP_TILE_Y = TS * 10;
@@ -50,7 +50,7 @@ public class CutScene3 extends GameScene2D {
     private boolean bagOpen;
     private boolean darkness;
 
-    private MsPacManGameTengenSpriteSheet spriteSheet;
+    private TengenMsPacMan_SpriteSheet spriteSheet;
     private ClapperboardAnimation clapAnimation;
     private SpriteAnimation storkAnimation;
 
@@ -72,9 +72,9 @@ public class CutScene3 extends GameScene2D {
         bagWithJunior = new Actor2D();
         bagWithJunior.hide();
 
-        spriteSheet = (MsPacManGameTengenSpriteSheet) context.gameConfiguration().spriteSheet();
-        mrPacMan.setAnimations(new PacAnimations(spriteSheet));
-        msPacMan.setAnimations(new PacAnimations(spriteSheet));
+        spriteSheet = (TengenMsPacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
+        mrPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
+        msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
 
         music = context.sound().makeSound("intermission.3",1.0, false);
     }
@@ -162,7 +162,7 @@ public class CutScene3 extends GameScene2D {
         if (darkness) {
             return;
         }
-        var r = (MsPacManGameTengenRenderer) gr;
+        var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
         r.drawClapperBoard(clapAnimation, "JUNIOR", 3, CLAP_TILE_X, CLAP_TILE_Y);
         r.drawStork(storkAnimation, stork, bagReleased);

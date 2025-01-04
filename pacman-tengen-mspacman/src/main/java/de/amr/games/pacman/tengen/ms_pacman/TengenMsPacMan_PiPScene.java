@@ -5,11 +5,11 @@ import javafx.scene.canvas.Canvas;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 
-class TengenPiP_PlayScene extends de.amr.games.pacman.tengen.ms_pacman.PlayScene2D {
+class TengenMsPacMan_PiPScene extends TengenMsPacMan_PlayScene2D {
 
     private final Canvas canvas;
 
-    public TengenPiP_PlayScene() {
+    public TengenMsPacMan_PiPScene() {
         canvas = new Canvas();
         viewPortHeightProperty().bind(canvas.heightProperty());
         viewPortWidthProperty().bind(canvas.widthProperty());

@@ -16,8 +16,8 @@ import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXLConfiguration;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
-import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengenConfiguration;
-import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacManStartPage;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.games.pacman.ui2d.DashboardItemID;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
@@ -73,13 +73,13 @@ public class PacManGames2dApp extends Application {
         ui.configureGameVariant(GameVariant.PACMAN, new PacManGameConfiguration(ui.assets()));
         ui.configureGameVariant(GameVariant.MS_PACMAN, new MsPacManGameConfiguration(ui.assets()));
         ui.configureGameVariant(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration(ui.assets()));
-        ui.configureGameVariant(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengenConfiguration(ui.assets()));
+        ui.configureGameVariant(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameConfiguration(ui.assets()));
 
         ui.create(stage, initialSize());
         ui.startPage().addSlide(new ArcadePacManStartPage().root());
         ui.startPage().addSlide(new ArcadeMsPacManStartPage().root());
         ui.startPage().addSlide(new ArcadePacManXXLStartPage().root());
-        ui.startPage().addSlide(new TengenMsPacManStartPage().root());
+        ui.startPage().addSlide(new TengenMsPacMan_StartPage().root());
 
         ui.addDashboardItem(DashboardItemID.README);
         ui.addDashboardItem(DashboardItemID.GENERAL);

@@ -21,21 +21,21 @@ import static de.amr.games.pacman.ui2d.action.GameActions2D.bindCheatActions;
 import static de.amr.games.pacman.ui2d.action.GameActions2D.bindFallbackPlayerControlActions;
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
 
-public class TengenPlayScene3D extends PlayScene3D {
+public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     public void bindGameActions() {
         bind(GameActions3D.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
         bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         if (context.game().isDemoLevel()) {
-            bind(MsPacManGameTengenActions.QUIT_DEMO_LEVEL, context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_START));
+            bind(TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL, context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_START));
         }
         else {
             bind(GameActions2D.PLAYER_UP,    context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_UP));
             bind(GameActions2D.PLAYER_DOWN,  context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_DOWN));
             bind(GameActions2D.PLAYER_LEFT,  context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_LEFT));
             bind(GameActions2D.PLAYER_RIGHT, context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_RIGHT));
-            bind(MsPacManGameTengenActions.TOGGLE_PAC_BOOSTER,
+            bind(TengenMsPacMan_GameActions.TOGGLE_PAC_BOOSTER,
                 context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_A),
                 context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_B));
             bindFallbackPlayerControlActions(this);
