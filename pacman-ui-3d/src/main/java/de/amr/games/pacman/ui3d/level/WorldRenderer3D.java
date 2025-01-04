@@ -181,22 +181,20 @@ public class WorldRenderer3D {
 
     // default implementation for non-standard obstacles
     public void renderObstacle3D(Group parent, Obstacle obstacle) {
-        Group og = new Group();
-        parent.getChildren().add(og);
         ObstacleType type = obstacle.computeType();
         switch (type) {
-            case ANY ->            addUncategorizedObstacle3D(og, obstacle);
-            case CROSS_SHAPE ->    addCross3D(og, obstacle);
-            case F_SHAPE ->        addFShape3D(og, obstacle);
-            case H_SHAPE ->        addHShape3D(og, obstacle);
-            case L_SHAPE ->        addLShape3D(og, obstacle);
-            case L_SHAPE_DOUBLE -> addLShapeDouble(og, obstacle);
-            case L_SHAPE_DOUBLE_MIRRORED -> addLShapeDoubleMirrored(og, obstacle);
-            case O_SHAPE ->        addOShape3D(og, obstacle);
-            case S_SHAPE ->        addSShape3D(og, obstacle);
-            case T_SHAPE ->        addTShape3D(og, obstacle);
-            case T_SHAPE_TWO_ROWS -> addTShapeTwoRows3D(og, obstacle);
-            case U_SHAPE ->        addUShape3D(og, obstacle);
+            case ANY ->            addUncategorizedObstacle3D(parent, obstacle);
+            case CROSS_SHAPE ->    addCross3D(parent, obstacle);
+            case F_SHAPE ->        addFShape3D(parent, obstacle);
+            case H_SHAPE ->        addHShape3D(parent, obstacle);
+            case L_SHAPE ->        addLShape3D(parent, obstacle);
+            case L_SHAPE_DOUBLE -> addLShapeDouble(parent, obstacle);
+            case L_SHAPE_DOUBLE_MIRRORED -> addLShapeDoubleMirrored(parent, obstacle);
+            case O_SHAPE ->        addOShape3D(parent, obstacle);
+            case S_SHAPE ->        addSShape3D(parent, obstacle);
+            case T_SHAPE ->        addTShape3D(parent, obstacle);
+            case T_SHAPE_TWO_ROWS -> addTShapeTwoRows3D(parent, obstacle);
+            case U_SHAPE ->        addUShape3D(parent, obstacle);
         }
     }
 
