@@ -34,6 +34,7 @@ public class WorldRenderer3D {
     protected PhongMaterial wallTopMaterial = new PhongMaterial();
     protected DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(1.0);
     protected double wallTopHeight;
+    protected boolean oShapeFilled = true;
 
     public void setWallBaseMaterial(PhongMaterial material) {
         wallBaseMaterial = material;
@@ -49,6 +50,10 @@ public class WorldRenderer3D {
 
     public void setWallTopHeight(double height) {
         wallTopHeight = height;
+    }
+
+    public void setOShapeFilled(boolean value) {
+        this.oShapeFilled = value;
     }
 
     public Node createCompositeWallCenteredAt(Vector2f center, double sizeX, double sizeY) {
@@ -175,7 +180,7 @@ public class WorldRenderer3D {
 
     // Standard 3D obstacles
 
-    public void addOShape3D(Group parent, Obstacle obstacle, boolean fillCenter) {
+    public void addOShape3D(Group parent, Obstacle obstacle) {
         switch (obstacle.encoding()) {
             // 1-tile circle
             case "dgfe" -> addTowers(parent, obstacle.cornerCenter(0));
@@ -195,7 +200,7 @@ public class WorldRenderer3D {
                     int next = i < t.length - 1 ? i + 1 : 0;
                     addWall(parent, t[i], t[next]);
                 }
-                if (fillCenter) {
+                if (oShapeFilled) {
                     double height = t[0].manhattanDist(t[1]) - TS, width = t[0].manhattanDist(t[3]) - TS;
                     addWallAtCenter(parent, t[0].midpoint(t[2]), width, height);
                 }

@@ -278,9 +278,8 @@ public class GameLevel3D {
         for (Obstacle obstacle : world.map().obstacles()) {
             Logger.info("{}: {}", obstacle.computeType(), obstacle);
             if (!world.isPartOfHouse(tileAt(obstacle.startPoint()))) {
-                boolean fillCenter = true; // TODO use map property
                 renderObstacle(worldRenderer, mazeGroup, obstacle,
-                    obstacle.hasDoubleWalls() ? BORDER_WALL_THICKNESS : OBSTACLE_THICKNESS, fillCenter);
+                    obstacle.hasDoubleWalls() ? BORDER_WALL_THICKNESS : OBSTACLE_THICKNESS);
             }
         }
 
@@ -299,7 +298,7 @@ public class GameLevel3D {
     }
 
     //TODO move into renderer interface?
-    private void renderObstacle(WorldRenderer3D renderer, Group parent, Obstacle obstacle, double thickness, boolean fillOShapes) {
+    private void renderObstacle(WorldRenderer3D renderer, Group parent, Obstacle obstacle, double thickness) {
         Group og = new Group();
         parent.getChildren().add(og);
         ObstacleType type = obstacle.computeType();
@@ -309,7 +308,7 @@ public class GameLevel3D {
             case F_SHAPE ->       renderer.addFShape3D(og, obstacle);
             case H_SHAPE ->       renderer.addHShape3D(og, obstacle);
             case L_SHAPE ->       renderer.addLShape3D(og, obstacle);
-            case O_SHAPE ->       renderer.addOShape3D(og, obstacle, fillOShapes);
+            case O_SHAPE ->       renderer.addOShape3D(og, obstacle);
             case S_SHAPE ->       renderer.addSShape3D(og, obstacle);
             case T_SHAPE ->       renderer.addTShape3D(og, obstacle);
             case T_SHAPE_TWO_ROWS -> renderer.addTShapeTwoRows3D(og, obstacle);
