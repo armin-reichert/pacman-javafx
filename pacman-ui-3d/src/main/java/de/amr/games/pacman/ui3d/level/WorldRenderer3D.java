@@ -33,7 +33,8 @@ public class WorldRenderer3D {
     protected PhongMaterial wallBaseMaterial = new PhongMaterial();
     protected PhongMaterial wallTopMaterial = new PhongMaterial();
     protected DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(1.0);
-    protected double wallTopHeight;
+    protected float wallTopHeight;
+    protected float wallThickness = 1;
     protected boolean oShapeFilled = true;
 
     public void setWallBaseMaterial(PhongMaterial material) {
@@ -48,8 +49,12 @@ public class WorldRenderer3D {
         wallBaseHeightPy = py;
     }
 
-    public void setWallTopHeight(double height) {
+    public void setWallTopHeight(float height) {
         wallTopHeight = height;
+    }
+
+    public void setWallThickness(float wallThickness) {
+        this.wallThickness = wallThickness;
     }
 
     public void setOShapeFilled(boolean value) {
@@ -77,20 +82,20 @@ public class WorldRenderer3D {
         return new Group(base, top);
     }
 
-    public Node createCompositeWallBetweenTiles(Vector2i beginTile, Vector2i endTile, double thickness) {
+    public Node createCompositeWallBetweenTiles(Vector2i beginTile, Vector2i endTile) {
         if (beginTile.y() == endTile.y()) { // horizontal wall
             Vector2i left  = beginTile.x() < endTile.x() ? beginTile : endTile;
             Vector2i right = beginTile.x() < endTile.x() ? endTile : beginTile;
             Vector2f center = left.plus(right).scaled((float) HTS).plus(HTS, HTS);
             int length = TS * (right.x() - left.x());
-            return createCompositeWallCenteredAt(center, length + thickness, thickness);
+            return createCompositeWallCenteredAt(center, length + wallThickness, wallThickness);
         }
         else if (beginTile.x() == endTile.x()) { // vertical wall
             Vector2i top    = beginTile.y() < endTile.y() ? beginTile : endTile;
             Vector2i bottom = beginTile.y() < endTile.y() ? endTile : beginTile;
             Vector2f center = top.plus(bottom).scaled((float) HTS).plus(HTS, HTS);
             int length = TS * (bottom.y() - top.y());
-            return createCompositeWallCenteredAt(center, thickness, length);
+            return createCompositeWallCenteredAt(center, wallThickness, length);
         }
         throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(beginTile, endTile));
     }
@@ -120,12 +125,12 @@ public class WorldRenderer3D {
         return new Group(base, top);
     }
 
-    public Node createCompositeHorizontalWallBetween(Vector2f p, Vector2f q, double thickness) {
-        return createCompositeWallCenteredAt(p.midpoint(q), p.manhattanDist(q) + thickness, thickness);
+    public Node createCompositeHorizontalWallBetween(Vector2f p, Vector2f q) {
+        return createCompositeWallCenteredAt(p.midpoint(q), p.manhattanDist(q) + wallThickness, wallThickness);
     }
 
-    public Node createCompositeVerticalWallBetween(Vector2f p, Vector2f q, double thickness) {
-        return createCompositeWallCenteredAt(p.midpoint(q), thickness, p.manhattanDist(q));
+    public Node createCompositeVerticalWallBetween(Vector2f p, Vector2f q) {
+        return createCompositeWallCenteredAt(p.midpoint(q), wallThickness, p.manhattanDist(q));
     }
 
     public Node createCompositeCircularWall(Vector2f center, double radius) {
@@ -174,8 +179,8 @@ public class WorldRenderer3D {
     }
 
     // default implementation for non-standard obstacles
-    public void addObstacle3D(Group parent, Obstacle obstacle, double thickness) {
-        addGenericObstacle3D(parent, obstacle, thickness);
+    public void addObstacle3D(Group parent, Obstacle obstacle) {
+        addGenericObstacle3D(parent, obstacle);
     }
 
     // Standard 3D obstacles
@@ -464,7 +469,7 @@ public class WorldRenderer3D {
 
     // fallback obstacle builder
 
-    protected void addGenericObstacle3D(Group parent, Obstacle obstacle, double thickness){
+    protected void addGenericObstacle3D(Group parent, Obstacle obstacle){
         int r = HTS;
         Vector2f p = obstacle.startPoint();
         for (int i = 0; i < obstacle.numSegments(); ++i) {
@@ -472,44 +477,44 @@ public class WorldRenderer3D {
             double length = segment.vector().length();
             Vector2f q = p.plus(segment.vector());
             if (segment.isVerticalLine()) {
-                Node wall = createCompositeWallCenteredAt(p.midpoint(q), thickness, length);
+                Node wall = createCompositeWallCenteredAt(p.midpoint(q), wallThickness, length);
                 parent.getChildren().add(wall);
             } else if (segment.isHorizontalLine()) {
-                Node wall = createCompositeWallCenteredAt(p.midpoint(q), length + thickness, thickness);
+                Node wall = createCompositeWallCenteredAt(p.midpoint(q), length + wallThickness, wallThickness);
                 parent.getChildren().add(wall);
             } else if (segment.isNWCorner()) {
                 if (segment.ccw()) {
-                    addGenericShapeCorner(parent, p.plus(-r, 0), p, q, thickness);
+                    addGenericShapeCorner(parent, p.plus(-r, 0), p, q);
                 } else {
-                    addGenericShapeCorner(parent, p.plus(0, -r), q, p, thickness);
+                    addGenericShapeCorner(parent, p.plus(0, -r), q, p);
                 }
             } else if (segment.isSWCorner()) {
                 if (segment.ccw()) {
-                    addGenericShapeCorner(parent, p.plus(0, r), q, p, thickness);
+                    addGenericShapeCorner(parent, p.plus(0, r), q, p);
                 } else {
-                    addGenericShapeCorner(parent, p.plus(-r, 0), p, q, thickness);
+                    addGenericShapeCorner(parent, p.plus(-r, 0), p, q);
                 }
             } else if (segment.isSECorner()) {
                 if (segment.ccw()) {
-                    addGenericShapeCorner(parent, p.plus(r, 0), p, q, thickness);
+                    addGenericShapeCorner(parent, p.plus(r, 0), p, q);
                 } else {
-                    addGenericShapeCorner(parent, p.plus(0, r), q, p, thickness);
+                    addGenericShapeCorner(parent, p.plus(0, r), q, p);
                 }
             } else if (segment.isNECorner()) {
                 if (segment.ccw()) {
-                    addGenericShapeCorner(parent, p.plus(0, -r), q, p, thickness);
+                    addGenericShapeCorner(parent, p.plus(0, -r), q, p);
                 } else {
-                    addGenericShapeCorner(parent, p.plus(r, 0), p, q, thickness);
+                    addGenericShapeCorner(parent, p.plus(r, 0), p, q);
                 }
             }
             p = q;
         }
     }
 
-    protected void addGenericShapeCorner(Group parent, Vector2f corner, Vector2f horEndPoint, Vector2f vertEndPoint, double thickness) {
-        Node hWall = createCompositeWallCenteredAt(corner.midpoint(horEndPoint), corner.manhattanDist(horEndPoint), thickness);
-        Node vWall = createCompositeWallCenteredAt(corner.midpoint(vertEndPoint), thickness, corner.manhattanDist(vertEndPoint));
-        Node cWall = createCompositeCornerWall(corner, 0.5 * thickness);
+    protected void addGenericShapeCorner(Group parent, Vector2f corner, Vector2f horEndPoint, Vector2f vertEndPoint) {
+        Node hWall = createCompositeWallCenteredAt(corner.midpoint(horEndPoint), corner.manhattanDist(horEndPoint), wallThickness);
+        Node vWall = createCompositeWallCenteredAt(corner.midpoint(vertEndPoint), wallThickness, corner.manhattanDist(vertEndPoint));
+        Node cWall = createCompositeCornerWall(corner, 0.5 * wallThickness);
         parent.getChildren().addAll(hWall, vWall, cWall);
     }
 }

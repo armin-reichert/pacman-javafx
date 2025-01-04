@@ -12,7 +12,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 
@@ -44,6 +43,7 @@ public class House3D {
         });
         worldRenderer3D.setWallBaseHeightProperty(baseWallHeightPy);
         worldRenderer3D.setWallTopHeight(WALL_COAT_HEIGHT);
+        worldRenderer3D.setWallThickness(WALL_THICKNESS);
     }
 
     public void build(GameWorld world, WorldMapColoring coloring) {
@@ -55,11 +55,11 @@ public class House3D {
 
         Vector2i leftDoorTile = world.houseLeftDoorTile(), rightDoorTile = world.houseRightDoorTile();
         root.getChildren().addAll(
-                createWall(xMin, yMin, leftDoorTile.x() - 1, yMin),
-                createWall(rightDoorTile.x() + 1, yMin, xMax, yMin),
-                createWall(xMin, yMin, xMin, yMax),
-                createWall(xMax, yMin, xMax, yMax),
-                createWall(xMin, yMax, xMax, yMax)
+            worldRenderer3D.createCompositeWallBetweenTiles(vec_2i(xMin, yMin), vec_2i(leftDoorTile.x() - 1, yMin)),
+            worldRenderer3D.createCompositeWallBetweenTiles(vec_2i(rightDoorTile.x() + 1, yMin), vec_2i(xMax, yMin)),
+            worldRenderer3D.createCompositeWallBetweenTiles(vec_2i(xMin, yMin), vec_2i(xMin, yMax)),
+            worldRenderer3D.createCompositeWallBetweenTiles(vec_2i(xMax, yMin), vec_2i(xMax, yMax)),
+            worldRenderer3D.createCompositeWallBetweenTiles(vec_2i(xMin, yMax), vec_2i(xMax, yMax))
         );
 
         door3D = new Door3D(leftDoorTile, rightDoorTile, coloring.door());
@@ -83,9 +83,6 @@ public class House3D {
         return worldRenderer3D;
     }
 
-    private Node createWall(int x1, int y1, int x2, int y2) {
-        return worldRenderer3D.createCompositeWallBetweenTiles(vec_2i(x1, y1), vec_2i(x2, y2), WALL_THICKNESS);
-    }
 
     public Group root() { return root; }
 
