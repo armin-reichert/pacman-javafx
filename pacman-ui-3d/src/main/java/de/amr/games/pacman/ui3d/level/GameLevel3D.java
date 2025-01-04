@@ -67,6 +67,8 @@ public class GameLevel3D {
     static final float ENERGIZER_RADIUS      = 3.5f;
     static final float PELLET_RADIUS         = 1.0f;
 
+    private static final String PROPERTY_OSHAPES_FILLED = "rendering_oshapes_filled";
+
     private final StringProperty floorTextureNamePy   = new SimpleStringProperty(this, "floorTextureName", GlobalProperties3d.NO_TEXTURE);
     private final DoubleProperty obstacleBaseHeightPy = new SimpleDoubleProperty(this, "obstacleBaseHeight", OBSTACLE_BASE_HEIGHT);
     private final DoubleProperty wallOpacityPy        = new SimpleDoubleProperty(this, "wallOpacity", 1.0);
@@ -275,6 +277,16 @@ public class GameLevel3D {
         Box floor = createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
         worldGroup.getChildren().add(floor);
 
+        //TODO just a temporary solution until I find something better
+        if (world.map().terrain().hasProperty(PROPERTY_OSHAPES_FILLED)) {
+            String value = (String) world.map().terrain().getProperty(PROPERTY_OSHAPES_FILLED);
+            try {
+                boolean filled = Boolean.parseBoolean(value);
+                worldRenderer.setOShapeFilled(filled);
+            } catch (Exception x) {
+                Logger.error("Map property '{}}' is not a valid boolean value: {}", PROPERTY_OSHAPES_FILLED, value);
+            }
+        }
         for (Obstacle obstacle : world.map().obstacles()) {
             Logger.info("{}: {}", obstacle.computeType(), obstacle);
             if (!world.isPartOfHouse(tileAt(obstacle.startPoint()))) {
