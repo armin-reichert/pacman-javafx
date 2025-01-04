@@ -1,11 +1,11 @@
-package de.amr.games.pacman.tengen.ms_pacman;
+package de.amr.games.pacman.tengen.ms_pacman.scene;
 
 import de.amr.games.pacman.ui2d.GlobalProperties2d;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 
-class TengenMsPacMan_PiPScene extends TengenMsPacMan_PlayScene2D {
+public class TengenMsPacMan_PiPScene extends TengenMsPacMan_PlayScene2D {
 
     private final Canvas canvas;
 

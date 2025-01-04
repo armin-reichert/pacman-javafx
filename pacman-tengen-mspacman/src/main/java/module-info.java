@@ -11,4 +11,7 @@ open module de.amr.games.pacman.tengen.ms_pacman {
     requires de.amr.games.pacman.ui3d;
 
     exports de.amr.games.pacman.tengen.ms_pacman;
+    exports de.amr.games.pacman.tengen.ms_pacman.maps;
+    exports de.amr.games.pacman.tengen.ms_pacman.rendering2d;
+    exports de.amr.games.pacman.tengen.ms_pacman.scene;
 }

@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.tengen.ms_pacman;
+package de.amr.games.pacman.tengen.ms_pacman.maps;
 
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
@@ -16,23 +16,20 @@ import java.util.List;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.nes.NES_ColorScheme.*;
-import static de.amr.games.pacman.tengen.ms_pacman.MapCategory.*;
+import static de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory.*;
 
-/**
- * Package-private class encapsulating map management.
- */
-class MapManager {
+public class MapManager {
 
     private final Map<MapCategory, List<WorldMap>> mapRepository = new EnumMap<>(MapCategory.class);
 
-    MapManager(String mapsRoot) {
+    public MapManager(String mapsRoot) {
         mapRepository.put(MapCategory.ARCADE,  createMaps(mapsRoot + "arcade%d.world", 4));
         mapRepository.put(MapCategory.MINI,    createMaps(mapsRoot + "mini%d.world", 6));
         mapRepository.put(MapCategory.BIG,     createMaps(mapsRoot + "big%02d.world", 11));
         mapRepository.put(MapCategory.STRANGE, createMaps(mapsRoot + "strange%02d.world", 15));
     }
 
-    WorldMap coloredWorldMap(MapCategory mapCategory, int levelNumber) {
+    public WorldMap coloredWorldMap(MapCategory mapCategory, int levelNumber) {
         return switch (mapCategory) {
             case ARCADE  -> arcadeWorldMap(levelNumber);
             case STRANGE -> strangeWorldMap(levelNumber);

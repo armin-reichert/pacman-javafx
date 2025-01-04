@@ -1,5 +1,6 @@
 package de.amr.games.pacman.tengen.ms_pacman;
 
+import de.amr.games.pacman.tengen.ms_pacman.scene.SceneDisplayMode;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;

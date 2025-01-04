@@ -2,13 +2,13 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.tengen.ms_pacman;
+package de.amr.games.pacman.tengen.ms_pacman.rendering2d;
 
 import de.amr.games.pacman.lib.RectArea;
 
 import java.util.Optional;
 
-import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.CLAPPERBOARD_SPRITES;
+import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.CLAPPERBOARD_SPRITES;
 
 /**
  * @author Armin Reichert

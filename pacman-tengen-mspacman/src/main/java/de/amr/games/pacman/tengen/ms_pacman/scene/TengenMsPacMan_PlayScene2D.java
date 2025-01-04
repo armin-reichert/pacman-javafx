@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.tengen.ms_pacman;
+package de.amr.games.pacman.tengen.ms_pacman.scene;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.controller.HuntingTimer;
@@ -16,6 +16,11 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions;
+import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
+import de.amr.games.pacman.tengen.ms_pacman.rendering2d.MessageMovement;
+import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.ui2d.action.GameActions2D;
 import de.amr.games.pacman.ui2d.assets.GameSound;
 import de.amr.games.pacman.ui2d.input.Keyboard;

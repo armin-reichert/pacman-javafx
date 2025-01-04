@@ -9,6 +9,12 @@ import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.nes.NES_Palette;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.tengen.ms_pacman.maps.MapRepository;
+import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_GhostAnimations;
+import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_PacAnimations;
+import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
+import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet;
+import de.amr.games.pacman.tengen.ms_pacman.scene.*;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
@@ -37,13 +43,13 @@ public class TengenMsPacMan_GameConfiguration implements GameConfiguration {
     public static final Vector2i NES_SIZE = NES_TILES.scaled(TS);
 
     private final TengenMsPacMan_SpriteSheet spriteSheet;
-    private final MazeRepository mazeRepository;
+    private final MapRepository mapRepository;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public TengenMsPacMan_GameConfiguration(AssetStorage assets) {
         loadAssets(() -> TengenMsPacMan_GameConfiguration.class, assets);
         spriteSheet = new TengenMsPacMan_SpriteSheet(assets.image(assetKeyPrefix() + ".spritesheet"));
-        mazeRepository = new MazeRepository(
+        mapRepository = new MapRepository(
             assets.image(assetKeyPrefix() + ".mazes.arcade"),
             assets.image(assetKeyPrefix() + ".mazes.non_arcade"));
 
@@ -114,7 +120,7 @@ public class TengenMsPacMan_GameConfiguration implements GameConfiguration {
 
     @Override
     public TengenMsPacMan_Renderer2D createRenderer(AssetStorage assets, Canvas canvas) {
-        return new TengenMsPacMan_Renderer2D(assets, spriteSheet, mazeRepository, canvas);
+        return new TengenMsPacMan_Renderer2D(assets, spriteSheet, mapRepository, canvas);
     }
 
     @Override

@@ -17,6 +17,8 @@ import de.amr.games.pacman.model.Portal;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import de.amr.games.pacman.steering.Steering;
+import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
+import de.amr.games.pacman.tengen.ms_pacman.maps.MapManager;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -89,7 +91,7 @@ public class MsPacManGameTengen extends GameModel {
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
     private static final String HIGH_SCORE_FILENAME = "highscore-ms_pacman_tengen.xml";
-    private static final String MAPS_ROOT = "maps/";
+    private static final String MAPS_ROOT = "/de/amr/games/pacman/tengen/ms_pacman/maps/";
 
     private static int intermissionNumberAfterLevel(int number) {
         return switch (number) {

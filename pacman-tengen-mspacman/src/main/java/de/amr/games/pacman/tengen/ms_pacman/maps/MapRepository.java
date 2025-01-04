@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2024 Armin Reichert (MIT License) See file LICENSE in repository root directory for details.
  */
-package de.amr.games.pacman.tengen.ms_pacman;
+package de.amr.games.pacman.tengen.ms_pacman.maps;
 
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RectArea;
@@ -32,7 +32,7 @@ import static de.amr.games.pacman.ui2d.lib.Ufx.*;
  * stored after having been recolored to the color scheme required in the game level.
  * </p>
  */
-public class MazeRepository {
+public class MapRepository {
 
     static final int ARCADE_MAZE_WIDTH = 28*8, ARCADE_MAZE_HEIGHT = 31*8;
 
@@ -76,16 +76,16 @@ public class MazeRepository {
     static final RectArea GHOST_OUTSIDE_HOUSE_AREA = new RectArea(105, 85, 14, 13);
     static final RectArea GHOSTS_INSIDE_HOUSE_AREA = new RectArea(89, 113, 46, 13);
 
-    private final Map<MazeSpec, ColoredMaze> mazeCache = new HashMap<>();
+    private final Map<ColoredMapDefinition, ColoredMapImage> mazeCache = new HashMap<>();
     private final Image arcadeMazesImage;
     private final Image nonArcadeMazesImage;
 
-    public MazeRepository(Image arcadeMazesImage, Image nonArcadeMazesImage) {
+    public MapRepository(Image arcadeMazesImage, Image nonArcadeMazesImage) {
         this.arcadeMazesImage = Globals.assertNotNull(arcadeMazesImage);
         this.nonArcadeMazesImage = Globals.assertNotNull(nonArcadeMazesImage);
     }
 
-    public MazeSet createMazeSet(WorldMap worldMap, int flashCount) {
+    public ColoredMapSet createMazeSet(WorldMap worldMap, int flashCount) {
         MapCategory mapCategory = worldMap.getConfigValue("mapCategory");
         int mapNumber = worldMap.getConfigValue("mapNumber");
         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
@@ -103,7 +103,7 @@ public class MazeRepository {
         };
     }
 
-    private MazeSet arcadeMazeSet(int mapNumber, NES_ColorScheme colorScheme, int flashCount) {
+    private ColoredMapSet arcadeMazeSet(int mapNumber, NES_ColorScheme colorScheme, int flashCount) {
         int spriteIndex = switch (mapNumber) {
             case 1 -> 0;
             case 2 -> 1;
@@ -124,16 +124,16 @@ public class MazeRepository {
         };
         int col = spriteIndex % 3, row = spriteIndex / 3;
         RectArea mazeSprite = new RectArea(col * ARCADE_MAZE_WIDTH, row * ARCADE_MAZE_HEIGHT, ARCADE_MAZE_WIDTH, ARCADE_MAZE_HEIGHT);
-        ColoredMaze normalMaze = new ColoredMaze(arcadeMazesImage, mazeSprite, colorScheme);
-        List<ColoredMaze> flashingMazes = new ArrayList<>();
-        ColoredMaze blackWhiteMaze = getOrCreateMaze(MapCategory.ARCADE, mapNumber, mazeSprite, FLASHING_BLACK_WHITE, colorScheme, 13, 23);
+        ColoredMapImage normalMaze = new ColoredMapImage(arcadeMazesImage, mazeSprite, colorScheme);
+        List<ColoredMapImage> flashingMazes = new ArrayList<>();
+        ColoredMapImage blackWhiteMaze = getOrCreateMaze(MapCategory.ARCADE, mapNumber, mazeSprite, FLASHING_BLACK_WHITE, colorScheme, 13, 23);
         for (int i = 0; i < flashCount; ++i) {
             flashingMazes.add(blackWhiteMaze);
         }
-        return new MazeSet(normalMaze, flashingMazes);
+        return new ColoredMapSet(normalMaze, flashingMazes);
     }
 
-    private MazeSet miniMazeSet(int mapNumber, NES_ColorScheme colorScheme, int flashCount, boolean multipleFlashColors) {
+    private ColoredMapSet miniMazeSet(int mapNumber, NES_ColorScheme colorScheme, int flashCount, boolean multipleFlashColors) {
         int spriteNumber = switch (mapNumber) {
             case 1 -> 34;
             case 2 -> 35;
@@ -154,26 +154,26 @@ public class MazeRepository {
         };
         int pacTileX = 13, pacTileY = 23;
         RectArea mazeSprite = nonArcadeMazeSprite(spriteNumber);
-        ColoredMaze normalMaze = colorScheme.equals(availableColorScheme)
-            ? new ColoredMaze(nonArcadeMazesImage, nonArcadeMazeSprite(spriteNumber), colorScheme)
+        ColoredMapImage normalMaze = colorScheme.equals(availableColorScheme)
+            ? new ColoredMapImage(nonArcadeMazesImage, nonArcadeMazeSprite(spriteNumber), colorScheme)
             : getOrCreateMaze(MapCategory.MINI, spriteNumber, mazeSprite, colorScheme, availableColorScheme, pacTileX, pacTileY);
 
-        List<ColoredMaze> flashingMazes = new ArrayList<>();
+        List<ColoredMapImage> flashingMazes = new ArrayList<>();
         if (multipleFlashColors) {
             for (var randomScheme : randomColorSchemes(flashCount, colorScheme)) {
-                ColoredMaze randomMaze = getOrCreateMaze(MapCategory.MINI, spriteNumber, mazeSprite, randomScheme, availableColorScheme, pacTileX, pacTileY);
+                ColoredMapImage randomMaze = getOrCreateMaze(MapCategory.MINI, spriteNumber, mazeSprite, randomScheme, availableColorScheme, pacTileX, pacTileY);
                 flashingMazes.add(randomMaze);
             }
         } else {
-            ColoredMaze blackWhiteMaze = getOrCreateMaze(MapCategory.MINI, spriteNumber, mazeSprite, FLASHING_BLACK_WHITE, availableColorScheme, pacTileX, pacTileY);
+            ColoredMapImage blackWhiteMaze = getOrCreateMaze(MapCategory.MINI, spriteNumber, mazeSprite, FLASHING_BLACK_WHITE, availableColorScheme, pacTileX, pacTileY);
             for (int i = 0; i < flashCount; ++i) {
                 flashingMazes.add(blackWhiteMaze);
             }
         }
-        return new MazeSet(normalMaze, flashingMazes);
+        return new ColoredMapSet(normalMaze, flashingMazes);
     }
 
-    private MazeSet bigMazeSet(int mapNumber, NES_ColorScheme colorScheme, int flashCount, boolean multipleFlashColors) {
+    private ColoredMapSet bigMazeSet(int mapNumber, NES_ColorScheme colorScheme, int flashCount, boolean multipleFlashColors) {
         int spriteNumber = switch (mapNumber) {
             case  1 -> 19;
             case  2 -> 20;
@@ -204,26 +204,26 @@ public class MazeRepository {
         };
         int pacTileX = 13, pacTileY = 32;
         RectArea mazeSprite = nonArcadeMazeSprite(spriteNumber);
-        ColoredMaze normalMaze = colorScheme.equals(availableColorScheme)
-            ? new ColoredMaze(nonArcadeMazesImage, nonArcadeMazeSprite(spriteNumber), colorScheme)
+        ColoredMapImage normalMaze = colorScheme.equals(availableColorScheme)
+            ? new ColoredMapImage(nonArcadeMazesImage, nonArcadeMazeSprite(spriteNumber), colorScheme)
             : getOrCreateMaze(MapCategory.BIG, spriteNumber, mazeSprite, colorScheme, availableColorScheme, pacTileX, pacTileY);
 
-        List<ColoredMaze> flashingMazes = new ArrayList<>();
+        List<ColoredMapImage> flashingMazes = new ArrayList<>();
         if (multipleFlashColors) {
             for (var randomScheme : randomColorSchemes(flashCount, colorScheme)) {
-                ColoredMaze randomMaze = getOrCreateMaze(MapCategory.BIG, spriteNumber, mazeSprite, randomScheme, availableColorScheme, pacTileX, pacTileY);
+                ColoredMapImage randomMaze = getOrCreateMaze(MapCategory.BIG, spriteNumber, mazeSprite, randomScheme, availableColorScheme, pacTileX, pacTileY);
                 flashingMazes.add(randomMaze);
             }
         } else {
-            ColoredMaze blackWhiteMaze = getOrCreateMaze(MapCategory.BIG, spriteNumber, mazeSprite, FLASHING_BLACK_WHITE, availableColorScheme, pacTileX, pacTileY);
+            ColoredMapImage blackWhiteMaze = getOrCreateMaze(MapCategory.BIG, spriteNumber, mazeSprite, FLASHING_BLACK_WHITE, availableColorScheme, pacTileX, pacTileY);
             for (int i = 0; i < flashCount; ++i) {
                 flashingMazes.add(blackWhiteMaze);
             }
         }
-        return new MazeSet(normalMaze, flashingMazes);
+        return new ColoredMapSet(normalMaze, flashingMazes);
     }
 
-    private MazeSet strangeMazeSet(int spriteNumber, NES_ColorScheme randomColorScheme, int flashCount, boolean multipleFlashColors) {
+    private ColoredMapSet strangeMazeSet(int spriteNumber, NES_ColorScheme randomColorScheme, int flashCount, boolean multipleFlashColors) {
         NES_ColorScheme availableColorScheme = switch (spriteNumber) {
             case 1  -> _36_15_20_PINK_RED_WHITE;
             case 2  -> _21_20_28_BLUE_WHITE_YELLOW;
@@ -262,23 +262,23 @@ public class MazeRepository {
         RectArea mazeSprite = nonArcadeMazeSprite(spriteNumber);
         NES_ColorScheme colorScheme = randomColorScheme != null ? randomColorScheme : availableColorScheme;
         int pacTileX = 13, pacTileY = 23;
-        ColoredMaze normalMaze = colorScheme.equals(availableColorScheme)
-            ? new ColoredMaze(nonArcadeMazesImage, nonArcadeMazeSprite(spriteNumber), availableColorScheme)
+        ColoredMapImage normalMaze = colorScheme.equals(availableColorScheme)
+            ? new ColoredMapImage(nonArcadeMazesImage, nonArcadeMazeSprite(spriteNumber), availableColorScheme)
             : getOrCreateMaze(MapCategory.STRANGE, spriteNumber, mazeSprite, colorScheme, availableColorScheme, pacTileX, pacTileY);
 
-        List<ColoredMaze> flashingMazes = new ArrayList<>();
+        List<ColoredMapImage> flashingMazes = new ArrayList<>();
         if (multipleFlashColors) {
             for (var randomScheme : randomColorSchemes(flashCount, colorScheme)) {
-                ColoredMaze randomMaze = getOrCreateMaze(MapCategory.STRANGE, spriteNumber, mazeSprite, randomScheme, availableColorScheme, pacTileX, pacTileY);
+                ColoredMapImage randomMaze = getOrCreateMaze(MapCategory.STRANGE, spriteNumber, mazeSprite, randomScheme, availableColorScheme, pacTileX, pacTileY);
                 flashingMazes.add(randomMaze);
             }
         } else {
-            ColoredMaze blackWhiteMaze = getOrCreateMaze(MapCategory.STRANGE, spriteNumber, mazeSprite, FLASHING_BLACK_WHITE, availableColorScheme, pacTileX, pacTileY);
+            ColoredMapImage blackWhiteMaze = getOrCreateMaze(MapCategory.STRANGE, spriteNumber, mazeSprite, FLASHING_BLACK_WHITE, availableColorScheme, pacTileX, pacTileY);
             for (int i = 0; i < flashCount; ++i) {
                 flashingMazes.add(blackWhiteMaze);
             }
         }
-        return new MazeSet(normalMaze, flashingMazes);
+        return new ColoredMapSet(normalMaze, flashingMazes);
     }
 
     private RectArea nonArcadeMazeSprite(int spriteNumber) {
@@ -295,7 +295,7 @@ public class MazeRepository {
         return new RectArea(colIndex * width, y, width, height);
     }
 
-    private ColoredMaze getOrCreateMaze(
+    private ColoredMapImage getOrCreateMaze(
         MapCategory mapCategory,
         int spriteNumber,
         RectArea mazeSprite,
@@ -303,11 +303,11 @@ public class MazeRepository {
         NES_ColorScheme existingColorScheme,
         int pacTileX, int pacTileY)
     {
-        var cacheKey = new MazeSpec(mapCategory, spriteNumber, newColorScheme);
+        var cacheKey = new ColoredMapDefinition(mapCategory, spriteNumber, newColorScheme);
         if (!mazeCache.containsKey(cacheKey)) {
             Image spriteSource = mapCategory == MapCategory.ARCADE ? arcadeMazesImage : nonArcadeMazesImage;
             Image mazeImage = recolorMazeImage(spriteSource, mazeSprite, existingColorScheme, newColorScheme, pacTileX, pacTileY);
-            var maze = new ColoredMaze(mazeImage, new RectArea(0, 0, mazeSprite.width(), mazeSprite.height()), newColorScheme);
+            var maze = new ColoredMapImage(mazeImage, new RectArea(0, 0, mazeSprite.width(), mazeSprite.height()), newColorScheme);
             mazeCache.put(cacheKey, maze);
             Logger.info("{} maze recolored to {} and put into cache (size: {})", mapCategory, newColorScheme, mazeCache.size());
         }

@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.tengen.ms_pacman;
+package de.amr.games.pacman.tengen.ms_pacman.rendering2d;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
@@ -15,6 +15,13 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.tengen.ms_pacman.Difficulty;
+import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
+import de.amr.games.pacman.tengen.ms_pacman.PacBooster;
+import de.amr.games.pacman.tengen.ms_pacman.maps.ColoredMapImage;
+import de.amr.games.pacman.tengen.ms_pacman.maps.ColoredMapSet;
+import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
+import de.amr.games.pacman.tengen.ms_pacman.maps.MapRepository;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameRenderer;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
@@ -33,9 +40,9 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.model.actors.Bonus.STATE_EATEN;
 import static de.amr.games.pacman.model.actors.Bonus.STATE_EDIBLE;
-import static de.amr.games.pacman.tengen.ms_pacman.MazeRepository.strangeMap15Sprite;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.nesPaletteColor;
-import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.*;
+import static de.amr.games.pacman.tengen.ms_pacman.maps.MapRepository.strangeMap15Sprite;
+import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.*;
 import static de.amr.games.pacman.ui2d.assets.GameSpriteSheet.NO_SPRITE;
 import static java.util.function.Predicate.not;
 
@@ -49,11 +56,11 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     private final AssetStorage assets;
     private final TengenMsPacMan_SpriteSheet spriteSheet;
-    private final MazeRepository mazeRepository;
+    private final MapRepository mapRepository;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final GraphicsContext ctx;
 
-    private MazeSet mazeSet;
+    private ColoredMapSet coloredMapSet;
     private boolean blinking;
     private boolean levelNumberBoxesVisible;
     private Vector2f messageAnchorPosition;
@@ -61,12 +68,12 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public TengenMsPacMan_Renderer2D(
         AssetStorage assets,
         TengenMsPacMan_SpriteSheet spriteSheet,
-        MazeRepository mazeRepository,
+        MapRepository mapRepository,
         Canvas canvas)
     {
         this.assets = assertNotNull(assets);
         this.spriteSheet = assertNotNull(spriteSheet);
-        this.mazeRepository = mazeRepository;
+        this.mapRepository = mapRepository;
         assertNotNull(canvas);
         ctx = canvas.getGraphicsContext2D();
         messageAnchorPosition = DEFAULT_MESSAGE_ANCHOR_POS;
@@ -76,8 +83,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public void setWorldMap(WorldMap worldMap) {
         int flashCount = 5; // TODO correct for all levels?
         Logger.info("Create maze set with {} flash colors", flashCount);
-        mazeSet = mazeRepository.createMazeSet(worldMap, flashCount);
-        Logger.info("Maze set {}", mazeSet);
+        coloredMapSet = mapRepository.createMazeSet(worldMap, flashCount);
+        Logger.info("Maze set {}", coloredMapSet);
     }
 
     @Override
@@ -206,7 +213,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             drawGameOptionsInfo(world.map().terrain(), game);
         }
 
-        if (mazeSet == null) {
+        if (coloredMapSet == null) {
             // setWorldMap() not yet called?
             Logger.warn("Tick {}: No maze available", context.tick());
             return;
@@ -215,15 +222,15 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         drawLevelMessage(assetKeyPrefix, level, game.isDemoLevel()); // message appears under map image so draw it first
         RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
             ? strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
-            : mazeSet.normalMaze().area();
-        ctx.drawImage(mazeSet.normalMaze().source(),
+            : coloredMapSet.normalMaze().area();
+        ctx.drawImage(coloredMapSet.normalMaze().source(),
             area.x(), area.y(), area.width(), area.height(),
             scaled(mapX), scaled(mapY), scaled(area.width()), scaled(area.height())
         );
         overPaintActors(world);
         ctx.save();
         ctx.scale(scaling(), scaling());
-        Color pelletColor = Color.valueOf(mazeSet.normalMaze().colorScheme().pelletColor());
+        Color pelletColor = Color.valueOf(coloredMapSet.normalMaze().colorScheme().pelletColor());
         drawPellets(world, pelletColor);
         drawEnergizers(world, pelletColor);
         ctx.restore();
@@ -235,7 +242,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         if (areGameOptionsChanged(game)) {
             drawGameOptionsInfo(world.map().terrain(), game);
         }
-        ColoredMaze maze = mazeSet.flashingMazes().get(flashingIndex);
+        ColoredMapImage maze = coloredMapSet.flashingMazes().get(flashingIndex);
         RectArea area = maze.area();
         ctx.drawImage(maze.source(),
             area.x(), area.y(), area.width(), area.height(),
@@ -245,7 +252,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         // draw food to erase eaten food!
         ctx.save();
         ctx.scale(scaling(), scaling());
-        Color pelletColor = Color.valueOf(mazeSet.normalMaze().colorScheme().pelletColor());
+        Color pelletColor = Color.valueOf(coloredMapSet.normalMaze().colorScheme().pelletColor());
         drawPellets(world, pelletColor);
         drawEnergizers(world, pelletColor);
         ctx.restore();
