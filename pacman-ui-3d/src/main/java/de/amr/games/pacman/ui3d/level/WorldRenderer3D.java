@@ -306,11 +306,14 @@ public class WorldRenderer3D {
         }
     }
 
+    // Note that this can also be a cross where the horizontal parts are not aligned vertically!
     public void addCross3D(Group parent, Obstacle obstacle) {
-        Vector2f[] utc = obstacle.uTurnCenters();
-        addTowers(parent, utc);
-        addWall(parent, utc[0], utc[2]);
-        addWall(parent, utc[1], utc[3]);
+        Vector2f[] t = obstacle.cornerCenters(0, 4, 9, 14);
+        Vector2f[] h = { vec_2f(t[0].x(), t[3].y()), vec_2f(t[0].x(), t[1].y()) };
+        addTowers(parent, t);
+        addWall(parent, t[0], t[2]);
+        addWall(parent, h[0], t[3]);
+        addWall(parent, h[1], t[1]);
     }
 
     //TODO rework and simplify
