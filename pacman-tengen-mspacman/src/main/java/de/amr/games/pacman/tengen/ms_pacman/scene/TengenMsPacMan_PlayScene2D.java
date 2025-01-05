@@ -46,6 +46,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -513,20 +515,20 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     @Override
-    public Optional<ContextMenu> supplyContextMenu(ContextMenuEvent e) {
-        ContextMenu contextMenu = new ContextMenu();
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
+        List<MenuItem> items = new ArrayList<>();
         // Switching scene display mode
         var miScaledToFit = new RadioMenuItem(context.locText("scaled_to_fit"));
         miScaledToFit.selectedProperty().addListener(
                 (py,ov,nv) -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCALED_TO_FIT:SceneDisplayMode.SCROLLING));
         PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, nv) -> miScaledToFit.setSelected(nv == SceneDisplayMode.SCALED_TO_FIT));
-        contextMenu.getItems().add(miScaledToFit);
+        items.add(miScaledToFit);
 
         var miScrolling = new RadioMenuItem(context.locText("scrolling"));
         miScrolling.selectedProperty().addListener(
                 (py,ov,nv) -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCROLLING:SceneDisplayMode.SCALED_TO_FIT));
         PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, nv) -> miScrolling.setSelected(nv == SceneDisplayMode.SCROLLING));
-        contextMenu.getItems().add(miScrolling);
+        items.add(miScrolling);
 
         ToggleGroup exclusion = new ToggleGroup();
         miScaledToFit.setToggleGroup(exclusion);
@@ -536,26 +538,26 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         } else {
             miScrolling.setSelected(true);
         }
-        contextMenu.getItems().add(Ufx.contextMenuTitleItem(context.locText("pacman")));
+        items.add(Ufx.contextMenuTitleItem(context.locText("pacman")));
 
         var miAutopilot = new CheckMenuItem(context.locText("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
-        contextMenu.getItems().add(miAutopilot);
+        items.add(miAutopilot);
 
         var miImmunity = new CheckMenuItem(context.locText("immunity"));
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
-        contextMenu.getItems().add(miImmunity);
+        items.add(miImmunity);
 
-        contextMenu.getItems().add(new SeparatorMenuItem());
+        items.add(new SeparatorMenuItem());
 
         var miMuted = new CheckMenuItem(context.locText("muted"));
         miMuted.selectedProperty().bindBidirectional(context.sound().mutedProperty());
-        contextMenu.getItems().add(miMuted);
+        items.add(miMuted);
 
         var miQuit = new MenuItem(context.locText("quit"));
         miQuit.setOnAction(ae -> GameActions2D.SHOW_START_PAGE.execute(context));
-        contextMenu.getItems().add(miQuit);
+        items.add(miQuit);
 
-        return Optional.of(contextMenu);
+        return items;
     }
 }

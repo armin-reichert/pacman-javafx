@@ -13,6 +13,9 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
 import static de.amr.games.pacman.ui2d.lib.Ufx.contextMenuTitleItem;
 
@@ -34,25 +37,25 @@ public class GamePage3D extends GamePage {
     }
 
     private void handleContextMenuRequest(ContextMenuEvent event) {
-        gameScenePy.get().supplyContextMenu(event).ifPresent(menu -> {
-            contextMenu = new ContextMenu();
-            if (context.currentGameSceneHasID("PlayScene2D")) {
-                contextMenu.getItems().add(contextMenuTitleItem(context.locText("scene_display")));
-                var item = new MenuItem(context.locText("use_3D_scene"));
-                item.setOnAction(ae -> GameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute(context));
-                contextMenu.getItems().add(item);
-            }
-            contextMenu.getItems().addAll(menu.getItems());
-            if (actionOpenEditor != null) {
-                contextMenu.getItems().add(new SeparatorMenuItem());
-                var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
-                miOpenMapEditor.setOnAction(ae -> actionOpenEditor.execute(context));
-                miOpenMapEditor.setDisable(!actionOpenEditor.isEnabled(context));
-                contextMenu.getItems().add(miOpenMapEditor);
-            }
-            contextMenu.show(this, event.getScreenX(), event.getScreenY());
-            contextMenu.requestFocus();
-        });
+        List<MenuItem> menuItems = new ArrayList<>();
+        if (context.currentGameSceneHasID("PlayScene2D")) {
+            menuItems.add(contextMenuTitleItem(context.locText("scene_display")));
+            var item = new MenuItem(context.locText("use_3D_scene"));
+            item.setOnAction(ae -> GameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute(context));
+            menuItems.add(item);
+        }
+        List<MenuItem> gameSceneMenuItems = gameScenePy.get().supplyContextMenuItems(event);
+        menuItems.addAll(gameSceneMenuItems);
+        if (actionOpenEditor != null) {
+            menuItems.add(new SeparatorMenuItem());
+            var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
+            miOpenMapEditor.setOnAction(ae -> actionOpenEditor.execute(context));
+            miOpenMapEditor.setDisable(!actionOpenEditor.isEnabled(context));
+            menuItems.add(miOpenMapEditor);
+        }
+        contextMenu = new ContextMenu(menuItems.toArray(MenuItem[]::new));
+        contextMenu.show(this, event.getScreenX(), event.getScreenY());
+        contextMenu.requestFocus();
         event.consume();
     }
 }

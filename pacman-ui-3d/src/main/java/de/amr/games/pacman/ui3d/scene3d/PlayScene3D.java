@@ -40,10 +40,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
@@ -583,21 +580,21 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     @Override
-    public Optional<ContextMenu> supplyContextMenu(ContextMenuEvent e) {
-        ContextMenu contextMenu = new ContextMenu();
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
+        List<MenuItem> items = new ArrayList<>();
 
-        contextMenu.getItems().add(contextMenuTitleItem(context.locText("scene_display")));
+        items.add(contextMenuTitleItem(context.locText("scene_display")));
 
         var item = new MenuItem(context.locText("use_2D_scene"));
         item.setOnAction(ae -> GameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute(context));
-        contextMenu.getItems().add(item);
+        items.add(item);
 
         // Toggle picture-in-picture display
         var miPiP = new CheckMenuItem(context.locText("pip"));
         miPiP.selectedProperty().bindBidirectional(PY_PIP_ON);
-        contextMenu.getItems().add(miPiP);
+        items.add(miPiP);
 
-        contextMenu.getItems().add(contextMenuTitleItem(context.locText("select_perspective")));
+        items.add(contextMenuTitleItem(context.locText("select_perspective")));
 
         // Camera perspective selection
         var perspectivesGroup = new ToggleGroup();
@@ -613,30 +610,30 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             // keep selection in sync with global property value
             PY_3D_PERSPECTIVE.addListener((py, ov, newPerspective) -> miPerspective.setSelected(newPerspective == perspective));
             miPerspective.setSelected(perspective == PY_3D_PERSPECTIVE.get()); // == is allowed for enum comparison
-            contextMenu.getItems().add(miPerspective);
+            items.add(miPerspective);
             }
 
         // Common items
-        contextMenu.getItems().add(contextMenuTitleItem(context.locText("pacman")));
+        items.add(contextMenuTitleItem(context.locText("pacman")));
 
         var miAutopilot = new CheckMenuItem(context.locText("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
-        contextMenu.getItems().add(miAutopilot);
+        items.add(miAutopilot);
 
         var miImmunity = new CheckMenuItem(context.locText("immunity"));
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
-        contextMenu.getItems().add(miImmunity);
+        items.add(miImmunity);
 
-        contextMenu.getItems().add(new SeparatorMenuItem());
+        items.add(new SeparatorMenuItem());
 
         var miMuted = new CheckMenuItem(context.locText("muted"));
         miMuted.selectedProperty().bindBidirectional(context.sound().mutedProperty());
-        contextMenu.getItems().add(miMuted);
+        items.add(miMuted);
 
         var miQuit = new MenuItem(context.locText("quit"));
         miQuit.setOnAction(ae -> GameActions2D.SHOW_START_PAGE.execute(context));
-        contextMenu.getItems().add(miQuit);
+        items.add(miQuit);
 
-        return Optional.of(contextMenu);
+        return items;
     }
 }

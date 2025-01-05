@@ -27,6 +27,8 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -306,29 +308,28 @@ public class ArcadePlayScene2D extends GameScene2D {
     }
 
     @Override
-    public Optional<ContextMenu> supplyContextMenu(ContextMenuEvent e) {
-        ContextMenu contextMenu = new ContextMenu();
-
-        contextMenu.getItems().add(Ufx.contextMenuTitleItem(context.locText("pacman")));
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
+        List<MenuItem> items = new ArrayList<>();
+        items.add(Ufx.contextMenuTitleItem(context.locText("pacman")));
 
         var miAutopilot = new CheckMenuItem(context.locText("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
-        contextMenu.getItems().add(miAutopilot);
+        items.add(miAutopilot);
 
         var miImmunity = new CheckMenuItem(context.locText("immunity"));
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
-        contextMenu.getItems().add(miImmunity);
+        items.add(miImmunity);
 
-        contextMenu.getItems().add(new SeparatorMenuItem());
+        items.add(new SeparatorMenuItem());
 
         var miMuted = new CheckMenuItem(context.locText("muted"));
         miMuted.selectedProperty().bindBidirectional(context.sound().mutedProperty());
-        contextMenu.getItems().add(miMuted);
+        items.add(miMuted);
 
         var miQuit = new MenuItem(context.locText("quit"));
         miQuit.setOnAction(ae -> GameActions2D.SHOW_START_PAGE.execute(context));
-        contextMenu.getItems().add(miQuit);
+        items.add(miQuit);
 
-        return Optional.of(contextMenu);
+        return items;
     }
 }

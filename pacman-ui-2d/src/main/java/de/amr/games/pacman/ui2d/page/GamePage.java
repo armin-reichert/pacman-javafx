@@ -36,7 +36,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -216,19 +218,17 @@ public class GamePage extends StackPane implements GameActionProvider {
     }
 
     private void handleContextMenuRequest(ContextMenuEvent event) {
-        gameScenePy.get().supplyContextMenu(event).ifPresent(menu -> {
-            contextMenu = new ContextMenu();
-            contextMenu.getItems().addAll(menu.getItems());
-            if (actionOpenEditor != null) {
-                contextMenu.getItems().add(new SeparatorMenuItem());
-                var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
-                miOpenMapEditor.setOnAction(ae -> actionOpenEditor.execute(context));
-                miOpenMapEditor.setDisable(!actionOpenEditor.isEnabled(context));
-                contextMenu.getItems().add(miOpenMapEditor);
-            }
-            contextMenu.show(this, event.getScreenX(), event.getScreenY());
-            contextMenu.requestFocus();
-        });
+        List<MenuItem> menuItems = new ArrayList<>(gameScenePy.get().supplyContextMenuItems(event));
+        if (actionOpenEditor != null) {
+            menuItems.add(new SeparatorMenuItem());
+            var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
+            miOpenMapEditor.setOnAction(ae -> actionOpenEditor.execute(context));
+            miOpenMapEditor.setDisable(!actionOpenEditor.isEnabled(context));
+            menuItems.add(miOpenMapEditor);
+        }
+        contextMenu = new ContextMenu(menuItems.toArray(MenuItem[]::new));
+        contextMenu.show(this, event.getScreenX(), event.getScreenY());
+        contextMenu.requestFocus();
         event.consume();
     }
 
