@@ -50,7 +50,7 @@ import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
 /**
  * @author Armin Reichert
  */
-public class GameLevel3D {
+public class GameLevel3D extends Group {
 
     static final int   LIVES_COUNTER_MAX     = 5;
     static final float FLOOR_THICKNESS       = 0.5f;
@@ -89,7 +89,6 @@ public class GameLevel3D {
 
     private final GameContext context;
 
-    private final Group root = new Group();
     private final Group worldGroup = new Group();
     private final Group mazeGroup = new Group();
     private final Group house3D = new Group();
@@ -111,7 +110,7 @@ public class GameLevel3D {
         final GameWorld world = level.world();
         final WorldMapColoring coloring = context.gameConfiguration().worldMapColoring(world.map());
 
-        root.setMouseTransparent(true); //TODO does this increase performance?
+        setMouseTransparent(true); //TODO does this increase performance?
 
         pac3D = createPac3D(level.pac());
         ghost3DAppearances = level.ghosts().map(ghost -> createGhost3D(ghost, level.numFlashes())).toList();
@@ -126,9 +125,9 @@ public class GameLevel3D {
         buildWorld3D(world, coloring);
 
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
-        root.getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
-        root.getChildren().addAll(ghost3DAppearances);
-        root.getChildren().addAll(message3D, livesCounter3D, worldGroup);
+        getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
+        getChildren().addAll(ghost3DAppearances);
+        getChildren().addAll(message3D, livesCounter3D, worldGroup);
 
         PY_3D_WALL_HEIGHT.addListener((py,ov,nv) -> obstacleBaseHeightPy.set(nv.doubleValue()));
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
@@ -200,7 +199,7 @@ public class GameLevel3D {
         Node levelCounter3D = createLevelCounter3D(
             context.gameConfiguration().spriteSheet(),
             context.game().levelCounter(), x, y);
-        root.getChildren().add(levelCounter3D);
+        getChildren().add(levelCounter3D);
     }
 
     private Node createLevelCounter3D(GameSpriteSheet spriteSheet, List<Byte> symbols, double x, double y) {
@@ -288,7 +287,7 @@ public class GameLevel3D {
 
         mazeGroup.getChildren().add(house3D);
         worldGroup.getChildren().add(mazeGroup);
-        root.getChildren().add(door3D);
+        getChildren().add(door3D);
     }
 
     private void createHouse(GameWorld world, WorldMapColoring coloring) {
@@ -361,19 +360,19 @@ public class GameLevel3D {
                 energizer3D.shape3D().setMaterial(foodMaterial);
                 energizer3D.setTile(tile);
                 energizer3D.setPosition(position);
-                var squirting = new Squirting(root, Duration.seconds(2));
+                var squirting = new Squirting(this, Duration.seconds(2));
                 squirting.setDropReachesFinalPosition(drop ->
                     drop.getTranslateZ() >= -1 && world.containsPoint(drop.getTranslateX(), drop.getTranslateY()));
                 squirting.createDrops(15, 46, foodMaterial, position);
                 energizer3D.setEatenAnimation(squirting);
-                root.getChildren().add(energizer3D.shape3D());
+                getChildren().add(energizer3D.shape3D());
                 energizers3D.add(energizer3D);
             } else {
                 var pellet3D = new Pellet3D(pelletModel3D, PELLET_RADIUS);
                 pellet3D.shape3D().setMaterial(foodMaterial);
                 pellet3D.setTile(tile);
                 pellet3D.setPosition(position);
-                root.getChildren().add(pellet3D.shape3D());
+                getChildren().add(pellet3D.shape3D());
                 pellets3D.put(tile, pellet3D);
             }
         });
@@ -409,7 +408,7 @@ public class GameLevel3D {
     }
 
     public RotateTransition levelRotateAnimation(double seconds) {
-        var rotation = new RotateTransition(Duration.seconds(seconds), root);
+        var rotation = new RotateTransition(Duration.seconds(seconds), this);
         rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
         rotation.setFromAngle(0);
         rotation.setToAngle(360);
@@ -443,8 +442,6 @@ public class GameLevel3D {
         animation.setCycleCount(2 * numFlashes);
         return animation;
     }
-
-    public Group root() { return root; }
 
     public Pac3D pac3D() { return pac3D; }
 
