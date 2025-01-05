@@ -143,13 +143,12 @@ public class GameLevel3D {
         boolean houseAccessRequired = context.level()
             .ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .anyMatch(Ghost::isVisible);
+        houseLightOnPy.set(houseAccessRequired);
 
         boolean ghostNearHouseEntry = context.level()
             .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .filter(ghost -> ghost.position().euclideanDist(context.level().world().houseEntryPosition()) <= HOUSE_SENSITIVITY)
             .anyMatch(Ghost::isVisible);
-
-        houseLightOnPy.set(houseAccessRequired);
         houseOpenPy.set(ghostNearHouseEntry);
 
         int symbolsDisplayed = Math.max(0, context.game().lives() - 1);
