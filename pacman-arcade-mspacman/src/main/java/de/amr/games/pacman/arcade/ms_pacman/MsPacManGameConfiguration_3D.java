@@ -8,9 +8,12 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui3d.GlobalProperties3d;
+import de.amr.games.pacman.ui3d.level.PacModel3D;
 import de.amr.games.pacman.ui3d.level.WorldRenderer3D;
 import de.amr.games.pacman.ui3d.scene3d.GameConfiguration3D;
 import de.amr.games.pacman.ui3d.scene3d.PlayScene3D;
+import javafx.scene.Group;
+import javafx.scene.Node;
 
 public class MsPacManGameConfiguration_3D extends MsPacManGameConfiguration implements GameConfiguration3D {
 
@@ -32,5 +35,23 @@ public class MsPacManGameConfiguration_3D extends MsPacManGameConfiguration impl
     @Override
     public WorldRenderer3D createWorldRenderer() {
         return new WorldRenderer3D();
+    }
+
+    @Override
+    public Node createLivesCounterShape(AssetStorage assets) {
+        String akp = assetKeyPrefix();
+        return new Group(
+            PacModel3D.createPacShape(
+                assets.get("model3D.pacman"), 10,
+                assets.color(akp + ".pac.color.head"),
+                assets.color(akp + ".pac.color.eyes"),
+                assets.color(akp + ".pac.color.palate")
+            ),
+            PacModel3D.createFemaleParts(10,
+                assets.color(akp + ".pac.color.hairbow"),
+                assets.color(akp + ".pac.color.hairbow.pearls"),
+                assets.color(akp + ".pac.color.boobs")
+            )
+        );
     }
 }

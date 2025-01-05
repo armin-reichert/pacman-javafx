@@ -9,8 +9,11 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui3d.GlobalProperties3d;
+import de.amr.games.pacman.ui3d.level.PacModel3D;
 import de.amr.games.pacman.ui3d.level.WorldRenderer3D;
 import de.amr.games.pacman.ui3d.scene3d.GameConfiguration3D;
+import javafx.scene.Group;
+import javafx.scene.Node;
 
 public class TengenMsPacMan_GameConfiguration_3D extends TengenMsPacMan_GameConfiguration implements GameConfiguration3D {
 
@@ -32,5 +35,23 @@ public class TengenMsPacMan_GameConfiguration_3D extends TengenMsPacMan_GameConf
     @Override
     public WorldRenderer3D createWorldRenderer() {
         return new TengenMsPacMan_WorldRenderer3D();
+    }
+
+    @Override
+    public Node createLivesCounterShape(AssetStorage assets) {
+        String akp = assetKeyPrefix();
+        return new Group(
+            PacModel3D.createPacShape(
+                assets.get("model3D.pacman"), 10,
+                assets.color(akp + ".pac.color.head"),
+                assets.color(akp + ".pac.color.eyes"),
+                assets.color(akp + ".pac.color.palate")
+            ),
+            PacModel3D.createFemaleParts(10,
+                assets.color(akp + ".pac.color.hairbow"),
+                assets.color(akp + ".pac.color.hairbow.pearls"),
+                assets.color(akp + ".pac.color.boobs")
+            )
+        );
     }
 }

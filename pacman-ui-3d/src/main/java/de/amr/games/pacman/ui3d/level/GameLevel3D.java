@@ -53,7 +53,6 @@ import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
 public class GameLevel3D {
 
     static final int   LIVES_COUNTER_MAX     = 5;
-    static final float LIVES_SHAPE_SIZE      = 10.0f;
     static final float FLOOR_THICKNESS       = 0.5f;
     static final float OBSTACLE_BASE_HEIGHT  = 7.0f;
     static final float OBSTACLE_TOP_HEIGHT   = 0.1f;
@@ -180,8 +179,9 @@ public class GameLevel3D {
     }
 
     private LivesCounter3D createLivesCounter3D(boolean canStartNewGame) {
+        GameConfiguration3D config3D = (GameConfiguration3D) context.gameConfiguration();
         Node[] shapes = IntStream.range(0, LIVES_COUNTER_MAX)
-            .mapToObj(i -> createLivesCounterShape()).toArray(Node[]::new);
+            .mapToObj(i -> config3D.createLivesCounterShape(context.assets())).toArray(Node[]::new);
         var counter3D = new LivesCounter3D(shapes, 10);
         counter3D.setTranslateX(2 * TS);
         counter3D.setTranslateY(2 * TS);
@@ -192,31 +192,6 @@ public class GameLevel3D {
         return counter3D;
     }
 
-    private Node createLivesCounterShape() {
-        String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
-        return switch (context.gameVariant()) {
-            case MS_PACMAN, MS_PACMAN_TENGEN -> new Group(
-                PacModel3D.createPacShape(
-                    context.assets().get("model3D.pacman"), LIVES_SHAPE_SIZE,
-                    context.assets().color(assetKeyPrefix + ".pac.color.head"),
-                    context.assets().color(assetKeyPrefix + ".pac.color.eyes"),
-                    context.assets().color(assetKeyPrefix + ".pac.color.palate")
-                ),
-                PacModel3D.createFemaleParts(LIVES_SHAPE_SIZE,
-                    context.assets().color(assetKeyPrefix + ".pac.color.hairbow"),
-                    context.assets().color(assetKeyPrefix + ".pac.color.hairbow.pearls"),
-                    context.assets().color(assetKeyPrefix + ".pac.color.boobs")
-                )
-            );
-            case PACMAN, PACMAN_XXL ->
-                PacModel3D.createPacShape(
-                    context.assets().get("model3D.pacman"), LIVES_SHAPE_SIZE,
-                    context.assets().color(assetKeyPrefix + ".pac.color.head"),
-                    context.assets().color(assetKeyPrefix + ".pac.color.eyes"),
-                    context.assets().color(assetKeyPrefix + ".pac.color.palate")
-                );
-        };
-    }
 
     public void addLevelCounter() {
         // Place level counter at top right maze corner
