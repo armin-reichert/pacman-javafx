@@ -61,7 +61,7 @@ import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
  *
  * @author Armin Reichert
  */
-public class PlayScene3D implements GameScene, CameraControlledView {
+public class PlayScene3D extends Group implements GameScene, CameraControlledView {
 
     //TODO localize?
     protected static final String SCORE_TEXT = "SCORE";
@@ -89,7 +89,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     protected GameContext context;
 
     private final SubScene fxSubScene;
-    private final Group root;
     protected final Scores3D scores3D;
 
     protected GameLevel3D level3D;
@@ -100,9 +99,9 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         var axes = new CoordinateSystem();
         scores3D = new Scores3D(SCORE_TEXT, HIGH_SCORE_TEXT);
         // last child is placeholder for level 3D
-        root = new Group(scores3D, axes, ambientLight, new Group());
+        getChildren().addAll(scores3D, axes, ambientLight, new Group());
         // initial size is irrelevant, it is bound to parent scene later
-        fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
+        fxSubScene = new SubScene(this, 42, 42, true, SceneAntialiasing.BALANCED);
         fxSubScene.setFill(Color.TRANSPARENT);
         fxSubScene.cameraProperty().bind(perspectiveNamePy.map(name -> perspective().getCamera()));
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
@@ -503,8 +502,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     private void replaceGameLevel3D() {
         level3D = new GameLevel3D(context);
-        int lastIndex = root.getChildren().size() - 1;
-        root.getChildren().set(lastIndex, level3D);
+        int lastIndex = getChildren().size() - 1;
+        getChildren().set(lastIndex, level3D);
         scores3D.translateXProperty().bind(level3D.translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.translateYProperty().subtract(3.5 * TS));
         scores3D.translateZProperty().bind(level3D.translateZProperty().subtract(3 * TS));

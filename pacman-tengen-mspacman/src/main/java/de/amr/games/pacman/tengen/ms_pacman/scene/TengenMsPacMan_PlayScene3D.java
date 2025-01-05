@@ -15,6 +15,7 @@ import de.amr.games.pacman.ui2d.action.GameActions2D;
 import de.amr.games.pacman.ui3d.GameActions3D;
 import de.amr.games.pacman.ui3d.level.Bonus3D;
 import de.amr.games.pacman.ui3d.scene3d.PlayScene3D;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
@@ -23,6 +24,13 @@ import static de.amr.games.pacman.ui2d.action.GameActions2D.bindFallbackPlayerCo
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
 
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
+
+    private final ImageView gameSettingsImage;
+
+    public TengenMsPacMan_PlayScene3D() {
+        gameSettingsImage = new ImageView();
+
+    }
 
     @Override
     public void bindGameActions() {
