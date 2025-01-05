@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
@@ -57,9 +57,9 @@ public class Ghost3DAppearance {
     private final Ghost3D ghost3D;
     private final Box numberCube;
     private final RotateTransition numberCubeRotation;
-    private final RotateTransition brakeAnimation;
     private final double size;
     private final int numFlashes;
+    private RotateTransition brakeAnimation;
 
     public Ghost3DAppearance(
         Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
@@ -90,13 +90,27 @@ public class Ghost3DAppearance {
         numberCubeRotation.setInterpolator(Interpolator.LINEAR);
         numberCubeRotation.setRate(0.75);
 
-        brakeAnimation = new RotateTransition(Duration.seconds(0.5), root);
-        brakeAnimation.setAxis(Rotate.Y_AXIS);
-        brakeAnimation.setByAngle(35);
-        brakeAnimation.setAutoReverse(true);
-        brakeAnimation.setCycleCount(2);
-
         appearancePy.set(Appearance.COLORED_GHOST);
+    }
+
+    private void playBrakeAnimation() {
+        if (ghost.moveDir().isHorizontal()) {
+            brakeAnimation = new RotateTransition(Duration.seconds(0.5), root);
+            brakeAnimation.setAxis(Rotate.Y_AXIS);
+            brakeAnimation.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
+            brakeAnimation.setAutoReverse(true);
+            brakeAnimation.setCycleCount(2);
+            brakeAnimation.setInterpolator(Interpolator.EASE_OUT);
+            brakeAnimation.play();
+        }
+    }
+
+    private void endBrakeAnimation() {
+        if (brakeAnimation != null) {
+            brakeAnimation.stop();
+            root.setRotationAxis(Rotate.Y_AXIS);
+            root.setRotate(0);
+        }
     }
 
     public Group root() {
@@ -132,7 +146,7 @@ public class Ghost3DAppearance {
     }
 
     private void stopAllAnimations() {
-        brakeAnimation.stop();
+        endBrakeAnimation();
         ghost3D.stopDressAnimation();
         numberCubeRotation.stop();
     }
@@ -144,20 +158,7 @@ public class Ghost3DAppearance {
             numberCubeRotation.stop();
             ghost3D.playDressAnimation();
             if (ghost.moveInfo().tunnelEntered) {
-                switch (ghost.moveDir()) {
-                    case LEFT -> {
-                        brakeAnimation.setByAngle(-40);
-                        brakeAnimation.playFromStart();
-                    }
-                    case RIGHT -> {
-                        brakeAnimation.setByAngle(40);
-                        brakeAnimation.playFromStart();
-                    }
-                    default -> {}
-                }
-            }
-            if (ghost.moveInfo().tunnelLeft) {
-                brakeAnimation.stop();
+                playBrakeAnimation();
             }
         }
     }
