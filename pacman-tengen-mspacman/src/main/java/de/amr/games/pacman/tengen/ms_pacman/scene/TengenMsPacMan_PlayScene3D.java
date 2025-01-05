@@ -59,6 +59,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         var renderer = (TengenMsPacMan_Renderer2D) context.gameConfiguration().createRenderer(context.assets(), canvas);
+        renderer.ctx().setImageSmoothing(false);
         renderer.setScaling(scale);
         renderer.drawGameOptionsInfo(unscaledWidth, HTS, (MsPacManGameTengen) context.game());
 
