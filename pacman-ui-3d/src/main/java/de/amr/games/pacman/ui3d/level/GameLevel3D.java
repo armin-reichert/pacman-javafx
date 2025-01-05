@@ -96,7 +96,7 @@ public class GameLevel3D {
     private final Group house3D = new Group();
     private final Message3D message3D;
     private final Pac3D pac3D;
-    private final List<Ghost3DAppearance> ghosts3D;
+    private final List<Ghost3DAppearance> ghost3DAppearances;
     private final Map<Vector2i, Pellet3D> pellets3D = new HashMap<>();
     private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
     private final LivesCounter3D livesCounter3D;
@@ -115,7 +115,7 @@ public class GameLevel3D {
         root.setMouseTransparent(true); //TODO does this increase performance?
 
         pac3D = createPac3D(level.pac());
-        ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, level.numFlashes())).toList();
+        ghost3DAppearances = level.ghosts().map(ghost -> createGhost3D(ghost, level.numFlashes())).toList();
 
         livesCounter3D = createLivesCounter3D(game.canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCounterPy);
@@ -128,7 +128,7 @@ public class GameLevel3D {
 
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
         root.getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
-        ghosts3D.forEach(ghost3D -> root.getChildren().add(ghost3D.root()));
+        root.getChildren().addAll(ghost3DAppearances);
         root.getChildren().addAll(message3D, livesCounter3D, worldGroup);
 
         PY_3D_WALL_HEIGHT.addListener((py,ov,nv) -> obstacleBaseHeightPy.set(nv.doubleValue()));
@@ -473,9 +473,9 @@ public class GameLevel3D {
 
     public Pac3D pac3D() { return pac3D; }
 
-    public List<Ghost3DAppearance> ghosts3D() { return ghosts3D; }
+    public List<Ghost3DAppearance> ghosts3D() { return ghost3DAppearances; }
 
-    public Ghost3DAppearance ghost3D(byte id) { return ghosts3D.get(id); }
+    public Ghost3DAppearance ghost3D(byte id) { return ghost3DAppearances.get(id); }
 
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
 

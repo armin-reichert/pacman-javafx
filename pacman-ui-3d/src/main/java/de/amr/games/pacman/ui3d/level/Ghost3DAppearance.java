@@ -41,7 +41,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public class Ghost3DAppearance {
+public class Ghost3DAppearance extends Group {
 
     public enum Appearance { COLORED_GHOST, FRIGHTENED_GHOST, FLASHING_GHOST, GHOST_EYES, NUMBER }
 
@@ -53,7 +53,6 @@ public class Ghost3DAppearance {
     };
 
     private final Ghost ghost;
-    private final Group root = new Group();
     private final Ghost3D ghost3D;
     private final Box numberCube;
     private final RotateTransition numberCubeRotation;
@@ -95,7 +94,7 @@ public class Ghost3DAppearance {
 
     private void playBrakeAnimation() {
         if (ghost.moveDir().isHorizontal()) {
-            brakeAnimation = new RotateTransition(Duration.seconds(0.5), root);
+            brakeAnimation = new RotateTransition(Duration.seconds(0.5), this);
             brakeAnimation.setAxis(Rotate.Y_AXIS);
             brakeAnimation.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
             brakeAnimation.setAutoReverse(true);
@@ -108,13 +107,9 @@ public class Ghost3DAppearance {
     private void endBrakeAnimation() {
         if (brakeAnimation != null) {
             brakeAnimation.stop();
-            root.setRotationAxis(Rotate.Y_AXIS);
-            root.setRotate(0);
+            setRotationAxis(Rotate.Y_AXIS);
+            setRotate(0);
         }
-    }
-
-    public Group root() {
-        return root;
     }
 
     public void init(GameContext context) {
@@ -137,12 +132,12 @@ public class Ghost3DAppearance {
 
     private void updateTransform() {
         Vector2f center = ghost.position().plus(HTS, HTS);
-        root.setTranslateX(center.x());
-        root.setTranslateY(center.y());
-        root.setTranslateZ(-0.5 * size - 2.0); // a little bit over the floor
+        setTranslateX(center.x());
+        setTranslateY(center.y());
+        setTranslateZ(-0.5 * size - 2.0); // a little bit over the floor
         ghost3D.turnTo(Ufx.angle(ghost.wishDir()));
         boolean outsideTerrain = center.x() < HTS || center.x() > ghost.world().map().terrain().numCols() * TS - HTS;
-        root.setVisible(ghost.isVisible() && !outsideTerrain);
+        setVisible(ghost.isVisible() && !outsideTerrain);
     }
 
     private void stopAllAnimations() {
@@ -164,7 +159,7 @@ public class Ghost3DAppearance {
     }
 
     private void changeAppearance(Appearance appearance) {
-        root.getChildren().setAll(appearance == Appearance.NUMBER ? numberCube : ghost3D.root());
+        getChildren().setAll(appearance == Appearance.NUMBER ? numberCube : ghost3D.root());
         switch (appearance) {
             case COLORED_GHOST -> ghost3D.appearNormal();
             case FRIGHTENED_GHOST -> ghost3D.appearFrightened();
