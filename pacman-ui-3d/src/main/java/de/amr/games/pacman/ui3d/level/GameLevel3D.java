@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui3d.level;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
-import de.amr.games.pacman.lib.tilemap.ObstacleType;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
@@ -28,6 +27,7 @@ import javafx.beans.property.*;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.PointLight;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
@@ -59,7 +59,9 @@ public class GameLevel3D {
     static final float OBSTACLE_TOP_HEIGHT   = 0.1f;
     static final float OBSTACLE_THICKNESS    = 1.25f;
     static final float BORDER_WALL_THICKNESS = 1.5f;
-    static final float HOUSE_HEIGHT          = 12.0f;
+    static final float HOUSE_BASE_HEIGHT     = 12.0f;
+    static final float HOUSE_WALL_TOP_HEIGHT = 0.1f;
+    static final float HOUSE_WALL_THICKNESS  = 1.5f;
     static final float HOUSE_OPACITY         = 0.4f;
     static final float HOUSE_SENSITIVITY     = 1.5f * TS;
     static final float PAC_SIZE              = 14.0f;
@@ -67,7 +69,7 @@ public class GameLevel3D {
     static final float ENERGIZER_RADIUS      = 3.5f;
     static final float PELLET_RADIUS         = 1.0f;
 
-    private static final String PROPERTY_OSHAPES_FILLED = "rendering_oshapes_filled";
+    static final String PROPERTY_OSHAPES_FILLED = "rendering_oshapes_filled";
 
     private final StringProperty floorTextureNamePy   = new SimpleStringProperty(this, "floorTextureName", GlobalProperties3d.NO_TEXTURE);
     private final DoubleProperty obstacleBaseHeightPy = new SimpleDoubleProperty(this, "obstacleBaseHeight", OBSTACLE_BASE_HEIGHT);
@@ -75,18 +77,31 @@ public class GameLevel3D {
     private final ObjectProperty<Color> floorColorPy  = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
     private final IntegerProperty livesCounterPy      = new SimpleIntegerProperty(0);
 
+    private final DoubleProperty houseBaseHeightPy    = new SimpleDoubleProperty(this, "houseBaseHeight", HOUSE_BASE_HEIGHT);
+    private final BooleanProperty houseOpenPy = new SimpleBooleanProperty() {
+        @Override
+        protected void invalidated() {
+            if (houseOpenPy.get()) {
+                door3D.playTraversalAnimation();
+            }
+        }
+    };
+    private final BooleanProperty houseLightOnPy = new SimpleBooleanProperty();
+
     private final GameContext context;
 
     private final Group root = new Group();
     private final Group worldGroup = new Group();
     private final Group mazeGroup = new Group();
+    private final Group house3D = new Group();
     private final Message3D message3D;
     private final Pac3D pac3D;
     private final List<Ghost3DAppearance> ghosts3D;
     private final Map<Vector2i, Pellet3D> pellets3D = new HashMap<>();
     private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
     private final LivesCounter3D livesCounter3D;
-    private House3D house3D;
+    private Door3D door3D;
+
     private Bonus3D bonus3D;
 
     public GameLevel3D(GameContext context) {
@@ -134,8 +149,8 @@ public class GameLevel3D {
             .filter(ghost -> ghost.position().euclideanDist(context.level().world().houseEntryPosition()) <= HOUSE_SENSITIVITY)
             .anyMatch(Ghost::isVisible);
 
-        house3D.usedPy.set(houseAccessRequired);
-        house3D.openPy.set(ghostNearHouseEntry);
+        houseLightOnPy.set(houseAccessRequired);
+        houseOpenPy.set(ghostNearHouseEntry);
 
         int symbolsDisplayed = Math.max(0, context.game().lives() - 1);
         if (!context.level().pac().isVisible() && context.gameState() == GameState.STARTING_GAME) {
@@ -294,19 +309,52 @@ public class GameLevel3D {
                 worldRenderer.renderObstacle3D(mazeGroup, obstacle);
             }
         }
-
-        //TODO should there be a HouseRenderer3D which creates the House3D instead?
-        house3D = new House3D();
-        house3D.renderer3D().setWallBaseMaterial(coloredMaterial(opaqueColor(coloring.fill(), HOUSE_OPACITY)));
-        house3D.renderer3D().setWallTopMaterial(coloredMaterial(coloring.stroke()));
-        house3D.baseWallHeightPy.set(HOUSE_HEIGHT);
-        house3D.build(world, coloring);
-        mazeGroup.getChildren().add(house3D.root());
-
+        createHouse(world, coloring);
         addFood3D(world, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 
+        mazeGroup.getChildren().add(house3D);
         worldGroup.getChildren().add(mazeGroup);
-        root.getChildren().add(house3D.door3D());
+        root.getChildren().add(door3D);
+    }
+
+    private void createHouse(GameWorld world, WorldMapColoring coloring) {
+        houseBaseHeightPy.set(HOUSE_BASE_HEIGHT);
+
+        WorldRenderer3D renderer3D = new WorldRenderer3D();
+        renderer3D.setWallBaseHeightProperty(houseBaseHeightPy);
+        renderer3D.setWallTopHeight(HOUSE_WALL_TOP_HEIGHT);
+        renderer3D.setWallThickness(HOUSE_WALL_THICKNESS);
+        renderer3D.setWallBaseMaterial(coloredMaterial(opaqueColor(coloring.fill(), HOUSE_OPACITY)));
+        renderer3D.setWallTopMaterial(coloredMaterial(coloring.stroke()));
+
+        int tilesX = world.houseSize().x(), tilesY = world.houseSize().y();
+        int xMin = world.houseTopLeftTile().x(), xMax = xMin + tilesX - 1;
+        int yMin = world.houseTopLeftTile().y(), yMax = yMin + tilesY - 1;
+        Vector2i leftDoorTile = world.houseLeftDoorTile(), rightDoorTile = world.houseRightDoorTile();
+
+        house3D.getChildren().addAll(
+            renderer3D.createCompositeWallBetweenTiles(vec_2i(xMin, yMin), vec_2i(leftDoorTile.x() - 1, yMin)),
+            renderer3D.createCompositeWallBetweenTiles(vec_2i(rightDoorTile.x() + 1, yMin), vec_2i(xMax, yMin)),
+            renderer3D.createCompositeWallBetweenTiles(vec_2i(xMin, yMin), vec_2i(xMin, yMax)),
+            renderer3D.createCompositeWallBetweenTiles(vec_2i(xMax, yMin), vec_2i(xMax, yMax)),
+            renderer3D.createCompositeWallBetweenTiles(vec_2i(xMin, yMax), vec_2i(xMax, yMax))
+        );
+
+        door3D = new Door3D(leftDoorTile, rightDoorTile, coloring.door(), HOUSE_BASE_HEIGHT);
+        door3D.drawModePy.bind(PY_3D_DRAW_MODE);
+
+        // pixel coordinates
+        float centerX = xMin * TS + tilesX * HTS;
+        float centerY = yMin * TS + tilesY * HTS;
+
+        var light = new PointLight();
+        light.lightOnProperty().bind(houseLightOnPy);
+        light.setColor(Color.GHOSTWHITE);
+        light.setMaxRange(3 * TS);
+        light.setTranslateX(centerX);
+        light.setTranslateY(centerY - 6);
+        light.translateZProperty().bind(houseBaseHeightPy.multiply(-1));
+        house3D.getChildren().add(light);
     }
 
     private Box createFloor(double sizeX, double sizeY) {
@@ -403,7 +451,7 @@ public class GameLevel3D {
             ));
         var houseDisappears = new Timeline(
             new KeyFrame(totalDuration.multiply(0.33),
-                new KeyValue(house3D.baseWallHeightPy, 0, Interpolator.EASE_IN)
+                new KeyValue(houseBaseHeightPy, 0, Interpolator.EASE_IN)
             ));
         var animation = new SequentialTransition(houseDisappears, obstaclesDisappear);
         animation.setOnFinished(e -> mazeGroup.setVisible(false));
@@ -434,8 +482,6 @@ public class GameLevel3D {
 
     public LivesCounter3D livesCounter3D() { return livesCounter3D; }
 
-    public House3D house3D() { return house3D; }
-
     public Stream<Pellet3D> pellets3D() { return pellets3D.values().stream(); }
 
     public Stream<Energizer3D> energizers3D() { return energizers3D.stream(); }
@@ -448,5 +494,10 @@ public class GameLevel3D {
     public Optional<Pellet3D> pellet3D(Vector2i tile) {
         assertTileNotNull(tile);
         return Optional.ofNullable(pellets3D.get(tile));
+    }
+
+    public void hideHouseDoor() {
+        assertNotNull(door3D);
+        door3D.setVisible(false);
     }
 }

@@ -115,7 +115,7 @@ public class WorldMap {
             w.println(FOOD_SECTION_START);
             food.print(w);
             return true;
-        } catch (Exception x) {
+        } catch (IOException x) {
             Logger.error(x);
             return false;
         }

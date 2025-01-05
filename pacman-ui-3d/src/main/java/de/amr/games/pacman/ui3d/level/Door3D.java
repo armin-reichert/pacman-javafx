@@ -32,9 +32,9 @@ public class Door3D extends Group {
     private final DoubleProperty barThicknessPy = new SimpleDoubleProperty(0.75);
     private final PhongMaterial barMaterial;
 
-    public Door3D(Vector2i leftWingTile, Vector2i rightWingTile, Color color) {
+    public Door3D(Vector2i leftWingTile, Vector2i rightWingTile, Color color, double height) {
         barMaterial = Ufx.coloredMaterial(color);
-        getChildren().addAll(createDoorWing(leftWingTile), createDoorWing(rightWingTile));
+        getChildren().addAll(createDoorWing(leftWingTile, height), createDoorWing(rightWingTile, height));
     }
 
     public void playTraversalAnimation() {
@@ -48,14 +48,14 @@ public class Door3D extends Group {
         ).play();
     }
 
-    private Group createDoorWing(Vector2i tile) {
+    private Group createDoorWing(Vector2i tile, double height) {
         var group = new Group();
 
         group.setTranslateX(tile.x() * TS);
         group.setTranslateY(tile.y() * TS);
 
         for (int i = 0; i < 2; ++i) {
-            var verticalBar = new Cylinder(barThicknessPy.get(), GameLevel3D.HOUSE_HEIGHT);
+            var verticalBar = new Cylinder(barThicknessPy.get(), height);
             verticalBar.radiusProperty().bind(barThicknessPy);
             verticalBar.setMaterial(barMaterial);
             verticalBar.setTranslateX(i * 4 + 2);

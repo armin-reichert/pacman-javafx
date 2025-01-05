@@ -378,7 +378,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.pellets3D().forEach(Pellet3D::onEaten);
         level3D.energizers3D().forEach(Energizer3D::onEaten);
         level3D.livesCounter3D().shapesRotation().stop();
-        level3D.house3D().door3D().setVisible(false);
+        level3D.hideHouseDoor();
         playLevelCompleteAnimation(context.level());
     }
 
