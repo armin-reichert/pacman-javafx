@@ -25,7 +25,9 @@ import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui3d.GameActions3D;
 import de.amr.games.pacman.ui3d.level.*;
 import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
 import javafx.animation.SequentialTransition;
+import javafx.animation.Timeline;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -50,7 +52,8 @@ import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui2d.action.GameActions2D.*;
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
-import static de.amr.games.pacman.ui2d.lib.Ufx.*;
+import static de.amr.games.pacman.ui2d.lib.Ufx.contextMenuTitleItem;
+import static de.amr.games.pacman.ui2d.lib.Ufx.doAfterSec;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
 
 /**
@@ -555,24 +558,24 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     private Animation levelCompleteAnimation(int numFlashes) {
-        boolean showMessage = Globals.randomInt(1, 100) < 25;
-        //TODO replace with Timeline?
-        return new SequentialTransition(
-              now(() -> {
-                  perspectiveNamePy.unbind();
-                  perspectiveNamePy.set(Perspective.Name.TOTAL);
-                  level3D.livesCounter3D().light().setLightOn(false);
-                  if (showMessage) {
-                      context.showFlashMessageSec(3, context.locLevelCompleteMessage(context.level().number));
-                  }
-                  context.sound().playLevelCompleteSound();
-              })
-            , doAfterSec(1.0, () -> context.level().ghosts().forEach(Ghost::hide))
-            , doAfterSec(1.0, level3D.mazeFlashAnimation(numFlashes))
-            , doAfterSec(0.5, () -> context.level().pac().hide())
-            , doAfterSec(0.5, level3D.levelRotateAnimation(1.5))
-            , level3D.wallsDisappearAnimation(2.0)
-            , doAfterSec(1, () -> {
+        return new Timeline(
+            new KeyFrame(Duration.ZERO, e -> {
+                perspectiveNamePy.unbind();
+                perspectiveNamePy.set(Perspective.Name.TOTAL);
+                level3D.livesCounter3D().light().setLightOn(false);
+                if (Globals.randomInt(1, 100) < 25) {
+                    context.showFlashMessageSec(3, context.locLevelCompleteMessage(context.level().number));
+                }
+            }),
+            new KeyFrame(Duration.seconds(1.0), e -> context.level().ghosts().forEach(Ghost::hide)),
+            new KeyFrame(Duration.seconds(1.5), e -> level3D.mazeFlashAnimation(numFlashes).play()),
+            new KeyFrame(Duration.seconds(4.5), e -> context.level().pac().hide()),
+            new KeyFrame(Duration.seconds(5.0), e -> level3D.levelRotateAnimation(1.5).play()),
+            new KeyFrame(Duration.seconds(7.0), e -> {
+                level3D.wallsDisappearAnimation(2.0).play();
+                context.sound().playLevelCompleteSound();
+            }),
+            new KeyFrame(Duration.seconds(9.5), e -> {
                 context.sound().playLevelChangedSound();
                 perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
             })

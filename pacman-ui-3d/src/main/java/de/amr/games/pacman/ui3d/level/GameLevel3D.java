@@ -440,7 +440,7 @@ public class GameLevel3D {
             new KeyFrame(Duration.millis(125), new KeyValue(obstacleBaseHeightPy, 0, Interpolator.EASE_BOTH))
         );
         animation.setAutoReverse(true);
-        animation.setCycleCount(2*numFlashes);
+        animation.setCycleCount(2 * numFlashes);
         return animation;
     }
 
