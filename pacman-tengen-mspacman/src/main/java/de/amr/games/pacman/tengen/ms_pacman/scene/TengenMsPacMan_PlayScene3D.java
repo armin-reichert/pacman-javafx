@@ -49,17 +49,15 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         }
 
         TileMap terrain = context.level().world().map().terrain();
-        float scale = 10;
+        float scale = 6;
         int unscaledWidth = terrain.numCols() * TS;
         int unscaledHeight = TS;
         var canvas = new Canvas(scale * unscaledWidth, scale * unscaledHeight);
 
-        GraphicsContext ctx = canvas.getGraphicsContext2D();
-        ctx.setFill(level3D.floorColor());
-        ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
         var renderer = (TengenMsPacMan_Renderer2D) context.gameConfiguration().createRenderer(context.assets(), canvas);
         renderer.ctx().setImageSmoothing(false);
+        renderer.ctx().setFill(level3D.floorColor());
+        renderer.ctx().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         renderer.setScaling(scale);
         renderer.drawGameOptionsInfo(unscaledWidth, HTS, (MsPacManGameTengen) context.game());
 
