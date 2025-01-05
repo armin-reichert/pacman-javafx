@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui3d.scene3d;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
@@ -554,12 +555,16 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     private Animation levelCompleteAnimation(int numFlashes) {
+        boolean showMessage = Globals.randomInt(1, 100) < 25;
+        //TODO replace with Timeline?
         return new SequentialTransition(
               now(() -> {
                   perspectiveNamePy.unbind();
                   perspectiveNamePy.set(Perspective.Name.TOTAL);
                   level3D.livesCounter3D().light().setLightOn(false);
-                  context.showFlashMessageSec(3, context.locLevelCompleteMessage(context.level().number));
+                  if (showMessage) {
+                      context.showFlashMessageSec(3, context.locLevelCompleteMessage(context.level().number));
+                  }
                   context.sound().playLevelCompleteSound();
               })
             , doAfterSec(1.0, () -> context.level().ghosts().forEach(Ghost::hide))
