@@ -109,7 +109,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     }
 
     @Override
-    public final void init() {
+    public void init() {
         context.setScoreVisible(true); //TODO check this
         scores3D.setFont(context.assets().font("font.arcade", 8));
         bindGameActions();
@@ -500,7 +500,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         context.sound().stopPacPowerSound();
     }
 
-    private void replaceGameLevel3D() {
+    protected void replaceGameLevel3D() {
         level3D = new GameLevel3D(context);
         int lastIndex = getChildren().size() - 1;
         getChildren().set(lastIndex, level3D);

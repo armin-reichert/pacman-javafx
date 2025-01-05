@@ -210,7 +210,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
 
         if (areGameOptionsChanged(game)) {
-            drawGameOptionsInfo(world.map().terrain(), game);
+            drawGameOptionsInfo(world.map().terrain().numCols() * TS, tiles2Px(2) + HTS, game);
         }
 
         if (coloredMapSet == null) {
@@ -240,7 +240,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx.setImageSmoothing(false);
         MsPacManGameTengen game = (MsPacManGameTengen) context.game();
         if (areGameOptionsChanged(game)) {
-            drawGameOptionsInfo(world.map().terrain(), game);
+            drawGameOptionsInfo(world.map().terrain().numCols() * TS, tiles2Px(2) + HTS, game);
         }
         ColoredMapImage maze = coloredMapSet.flashingMazes().get(flashingIndex);
         RectArea area = maze.area();
@@ -344,7 +344,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx.fillRect(scaled(cx), scaled(cy), scaled(16), scaled(16));
     }
 
-    private void drawGameOptionsInfo(TileMap terrain, MsPacManGameTengen game) {
+    public void drawGameOptionsInfo(double width, double y, MsPacManGameTengen game) {
         RectArea categorySprite = switch (game.mapCategory()) {
             case BIG     -> BIG_SPRITE;
             case MINI    -> MINI_SPRITE;
@@ -357,8 +357,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             case CRAZY  -> CRAZY_SPRITE;
             case NORMAL -> NO_SPRITE;
         };
-        double centerX = terrain.numCols() * HTS;
-        double y = tiles2Px(2) + HTS;
+        double centerX = 0.5 * width;
         if (game.pacBooster() != PacBooster.OFF) {
             drawSpriteCenteredOverPosition(BOOSTER_SPRITE, centerX - tiles2Px(6), y);
         }

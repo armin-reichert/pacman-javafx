@@ -7,29 +7,74 @@ package de.amr.games.pacman.tengen.ms_pacman.scene;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.nes.NES_JoypadButton;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.ScoreManager;
+import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions;
+import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.ui2d.action.GameActions2D;
 import de.amr.games.pacman.ui3d.GameActions3D;
 import de.amr.games.pacman.ui3d.level.Bonus3D;
 import de.amr.games.pacman.ui3d.scene3d.PlayScene3D;
+import javafx.scene.Camera;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
+import javafx.scene.transform.Rotate;
 
+import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.action.GameActions2D.bindCheatActions;
 import static de.amr.games.pacman.ui2d.action.GameActions2D.bindFallbackPlayerControlActions;
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
 
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
-    private final ImageView gameSettingsImage;
+    public TengenMsPacMan_PlayScene3D() {}
 
-    public TengenMsPacMan_PlayScene3D() {
-        gameSettingsImage = new ImageView();
+    @Override
+    protected void replaceGameLevel3D() {
+        super.replaceGameLevel3D();
 
+        MsPacManGameTengen game = (MsPacManGameTengen) context.game();
+        if (game.hasDefaultOptionValues()) {
+            return;
+        }
+
+        TileMap terrain = context.level().world().map().terrain();
+        float scale = 10;
+        int unscaledWidth = terrain.numCols() * TS;
+        int unscaledHeight = TS;
+        var canvas = new Canvas(scale * unscaledWidth, scale * unscaledHeight);
+
+        GraphicsContext ctx = canvas.getGraphicsContext2D();
+        ctx.setFill(level3D.floorColor());
+        ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        var renderer = (TengenMsPacMan_Renderer2D) context.gameConfiguration().createRenderer(context.assets(), canvas);
+        renderer.setScaling(scale);
+        renderer.drawGameOptionsInfo(unscaledWidth, HTS, (MsPacManGameTengen) context.game());
+
+        Box settingsView = new Box(unscaledWidth, unscaledHeight, 0.05);
+        var texture = new PhongMaterial();
+        ImageView snap = new ImageView(canvas.snapshot(null, null));
+        snap.setFitWidth(unscaledWidth);
+        snap.setFitHeight(unscaledHeight);
+        texture.setDiffuseMap(snap.getImage());
+
+        settingsView.setMaterial(texture);
+        settingsView.setTranslateX(unscaledWidth * 0.5);
+        settingsView.setTranslateY(terrain.numRows() * TS - TS);
+        settingsView.setTranslateZ(-HTS);
+
+        level3D.getChildren().add(settingsView);
     }
 
     @Override

@@ -467,6 +467,8 @@ public class GameLevel3D extends Group {
         return Optional.ofNullable(pellets3D.get(tile));
     }
 
+    public Color floorColor() { return floorColorPy.get(); }
+
     public void hideHouseDoor() {
         assertNotNull(door3D);
         door3D.setVisible(false);
