@@ -155,8 +155,11 @@ There are some new videos about the different game variants available on [YouTub
 #### Pac-Man XXL Custom Map
 ![Custom Map](doc/wide-maze-3d.png)
 
-#### Ms. Pac-Man
+#### Ms. Pac-Man (Arcade)
 ![Ms. Pac-Man Play Scene](doc/mspacman-maze.png)
+
+### Ms. Pac-Man (Tengen)
+![Ms. Pac-Man Tengen Play Scene](doc/tengen-playscene-3d.png)
 
 
 ### Tile map editor
