@@ -38,7 +38,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     protected void replaceGameLevel3D() {
         super.replaceGameLevel3D();
-        MsPacManGameTengen game = (MsPacManGameTengen) context.game();
+        MsPacManGameTengen game = context.game();
         if (!game.hasDefaultOptionValues()) {
             addGameOptionsArea(game);
         }

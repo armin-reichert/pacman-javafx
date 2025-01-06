@@ -78,7 +78,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         context.registerJoypadKeyBinding();
         context.setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
-        game = (MsPacManGameTengen) context.game();
+        game = context.game();
         game.setCanStartNewGame(true);
         resetIdleTimer();
         initialDelay = INITIAL_DELAY;

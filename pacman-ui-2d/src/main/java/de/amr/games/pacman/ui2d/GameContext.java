@@ -53,15 +53,24 @@ public interface GameContext {
     String locLevelCompleteMessage(int levelNumber);
 
     // Game model and controller
+
     GameClockFX gameClock();
-    default long tick() { return gameClock().getTickCount(); }
+
     default GameController gameController() { return GameController.it(); }
+
     default GameState gameState() { return gameController().state(); }
-    default GameModel game() { return gameController().currentGame(); }
+
+    @SuppressWarnings("unchecked")
+    default <GAME extends GameModel> GAME game() { return (GAME) gameController().currentGame(); }
+
     /** @return the current game level, throw exception if level does not exist */
     default GameLevel level() { return game().level().orElseThrow(); }
+
     GameVariant gameVariant();
+
     void selectGameVariant(GameVariant variant);
+
+    default long tick() { return gameClock().getTickCount(); }
 
     // Input
     Keyboard keyboard();

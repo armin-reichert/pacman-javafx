@@ -202,7 +202,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public void drawWorld(GameContext context, GameWorld world, double mapX, double mapY) {
         ctx.setImageSmoothing(false);
 
-        MsPacManGameTengen game = (MsPacManGameTengen) context.game();
+        MsPacManGameTengen game = context.game();
         GameLevel level = context.level();
         MapCategory mapCategory = game.mapCategory();
         int mapNumber = world.map().getConfigValue("mapNumber");
@@ -237,7 +237,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     public void drawWorldHighlighted(GameContext context, GameWorld world, double mapX, double mapY, int flashingIndex) {
         ctx.setImageSmoothing(false);
-        MsPacManGameTengen game = (MsPacManGameTengen) context.game();
+        MsPacManGameTengen game = context.game();
         if (areGameOptionsChanged(game)) {
             drawGameOptionsInfoCenteredAt(world.map().terrain().numCols() * HTS, tiles2Px(2) + HTS, game);
         }
@@ -377,7 +377,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     @Override
     public void drawLevelCounter(GameContext context, double x, double y) {
         ctx.setImageSmoothing(false);
-        MsPacManGameTengen game = (MsPacManGameTengen) context.game();
+        MsPacManGameTengen game = context.game();
         int levelNumber = context.level().number;
         if (levelNumberBoxesVisible) {
             drawLevelNumberBox(levelNumber, 0, y); // left box

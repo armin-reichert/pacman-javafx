@@ -11,7 +11,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -48,7 +47,6 @@ import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
@@ -338,7 +336,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 levelCompleteAnimation.start();
             }
             case GAME_OVER -> {
-                var game = (MsPacManGameTengen) context.game();
+                MsPacManGameTengen game = context.game();
                 if (game.mapCategory() != MapCategory.ARCADE) {
                     float belowHouse = centerPosBelowHouse(context.level().world()).x();
                     messageMovement.start(MOVING_MESSAGE_DELAY, belowHouse, size().x());
@@ -444,7 +442,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     protected void drawSceneContent() {
         var r = (TengenMsPacMan_Renderer2D) gr;
 
-        MsPacManGameTengen game = (MsPacManGameTengen) context.game();
+        MsPacManGameTengen game = context.game();
         GameLevel level = context.level();
         GameWorld world = level.world();
         Pac msPacMan = level.pac();
