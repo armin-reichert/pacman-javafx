@@ -4,13 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
-import de.amr.games.pacman.lib.Globals;
 import javafx.geometry.Point3D;
-import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
@@ -19,10 +16,11 @@ import static java.util.Objects.requireNonNull;
 /**
  * @author Armin Reichert
  */
-public class Message3D extends Group {
+public class Message3D extends ImageView {
 
-    private final Box blackboard;
-    private double quality;
+    private static final int MARGIN = 3;
+    private static final int QUALITY = 3;
+
     private Font font;
     private Color borderColor;
     private Color textColor;
@@ -30,10 +28,7 @@ public class Message3D extends Group {
     private boolean batchUpdate;
 
     public Message3D(String text, Font font, Color textColor, Color borderColor) {
-        blackboard = new Box(100, 10, 0.1);
-        getChildren().add(blackboard);
         beginBatch();
-        setQuality(3);
         setFont(font);
         setBorderColor(borderColor);
         setTextColor(textColor);
@@ -49,21 +44,12 @@ public class Message3D extends Group {
         if (batchUpdate) {
             return;
         }
-        if (text.isBlank()) {
-            blackboard.setWidth(0);
-            blackboard.setHeight(0);
-            return;
-        }
+        double width = text.length() * font.getSize() + MARGIN;
+        double height = font.getSize() + MARGIN;
 
-        int padding = 3;
-        double width = text.length() * font.getSize() + padding;
-        double height = font.getSize() + padding;
-        blackboard.setWidth(width);
-        blackboard.setHeight(height);
-
-        var canvas = new Canvas(width * quality, height * quality);
+        var canvas = new Canvas(width * QUALITY, height * QUALITY);
         var g = canvas.getGraphicsContext2D();
-        var canvasFontSize = font.getSize() * quality;
+        var canvasFontSize = font.getSize() * QUALITY;
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         g.setStroke(borderColor);
@@ -71,13 +57,11 @@ public class Message3D extends Group {
         g.strokeRect(0, 0, canvas.getWidth(), canvas.getHeight());
         g.setFont(Font.font(font.getFamily(), canvasFontSize));
         g.setFill(textColor);
-        g.fillText(text, 0.5 * quality * padding, 0.8 * quality * height);
+        g.fillText(text, 0.5 * QUALITY * MARGIN, 0.8 * QUALITY * height);
 
-        var image = canvas.snapshot(null, null);
-        var material = new PhongMaterial();
-        material.setDiffuseMap(image);
-        //material.setBumpMap(source);
-        blackboard.setMaterial(material);
+        setImage(canvas.snapshot(null, null));
+        setFitWidth(width);
+        setFitHeight(height);
         Logger.trace("New source produced");
     }
 
@@ -94,14 +78,6 @@ public class Message3D extends Group {
     public void endBatch() {
         batchUpdate = false;
         updateImage();
-    }
-
-    public void setQuality(double quality) {
-        Globals.assertNonNegative(quality, "Text3D quality must be positive but is %f");
-        if (quality != this.quality) {
-            this.quality = quality;
-            updateImage();
-        }
     }
 
     public void setFont(Font font) {

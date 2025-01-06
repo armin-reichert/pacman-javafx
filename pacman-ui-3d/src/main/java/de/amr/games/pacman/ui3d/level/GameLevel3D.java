@@ -379,11 +379,11 @@ public class GameLevel3D extends Group {
         energizers3D.trimToSize();
     }
 
-    public void showAnimatedMessage(String text, double displaySeconds, double x, double y) {
+    public void showAnimatedMessage(String text, double displaySeconds, double centerX, double y) {
         message3D.setText(text);
         message3D.setVisible(true);
         double halfHeight = 0.5 * message3D.getBoundsInLocal().getHeight();
-        message3D.setTranslateX(x);
+        message3D.setTranslateX(centerX - 0.5 * message3D.getFitWidth());
         message3D.setTranslateY(y);
         message3D.setTranslateZ(halfHeight); // just under floor
         var moveUpAnimation = new TranslateTransition(Duration.seconds(1), message3D);
