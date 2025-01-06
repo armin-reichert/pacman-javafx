@@ -56,7 +56,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         renderer.ctx().setFill(level3D.floorColor());
         renderer.ctx().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         renderer.setScaling(scale);
-        renderer.drawGameOptionsInfo(unscaledWidth, HTS, game);
+        renderer.drawGameOptionsInfoCenteredAt(0.5 * unscaledWidth, HTS, game);
 
         ImageView snap = new ImageView(canvas.snapshot(null, null));
         snap.setFitWidth(unscaledWidth);
@@ -68,7 +68,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         surface.setMaterial(texture);
 
         surface.setTranslateX(unscaledWidth * 0.5);
-        surface.setTranslateY(terrain.numRows() * TS - TS);
+        surface.setTranslateY(terrain.numRows() * TS - 1.5 * TS);
         surface.setTranslateZ(-level3D.floorThickness());
 
         level3D.getChildren().add(surface);
