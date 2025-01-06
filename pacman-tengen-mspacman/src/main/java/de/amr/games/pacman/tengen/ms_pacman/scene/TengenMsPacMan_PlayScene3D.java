@@ -22,8 +22,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -46,31 +44,25 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     private void addGameOptionsArea(MsPacManGameTengen game) {
         TileMap terrain = context.level().world().map().terrain();
-        float scale = 6;
         int unscaledWidth = terrain.numCols() * TS;
         int unscaledHeight = TS;
+
+        float scale = 5; // for better quality
         var canvas = new Canvas(scale * unscaledWidth, scale * unscaledHeight);
+        canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
 
         var renderer = (TengenMsPacMan_Renderer2D) context.gameConfiguration().createRenderer(context.assets(), canvas);
-        renderer.ctx().setImageSmoothing(false);
-        renderer.fillCanvas(level3D.floorColor());
         renderer.setScaling(scale);
+        renderer.fillCanvas(level3D.floorColor());
         renderer.drawGameOptionsInfoCenteredAt(0.5 * unscaledWidth, HTS, game);
 
-        ImageView snap = new ImageView(canvas.snapshot(null, null));
-        snap.setFitWidth(unscaledWidth);
-        snap.setFitHeight(unscaledHeight);
+        ImageView infoView = new ImageView(canvas.snapshot(null, null));
+        infoView.setFitWidth(unscaledWidth);
+        infoView.setFitHeight(unscaledHeight);
+        infoView.setTranslateY(terrain.numRows() * TS - 1.5 * TS);
+        infoView.setTranslateZ(-level3D.floorThickness());
 
-        Box surface = new Box(unscaledWidth, unscaledHeight, 0.05);
-        var texture = new PhongMaterial();
-        texture.setDiffuseMap(snap.getImage());
-        surface.setMaterial(texture);
-
-        surface.setTranslateX(unscaledWidth * 0.5);
-        surface.setTranslateY(terrain.numRows() * TS - 1.5 * TS);
-        surface.setTranslateZ(-level3D.floorThickness());
-
-        level3D.getChildren().add(surface);
+        level3D.getChildren().add(infoView);
     }
 
     @Override
