@@ -390,7 +390,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         }
     }
 
-    private void drawLevelNumberBox(int levelNumber, double x, double y) {
+    public void drawLevelNumberBox(int levelNumber, double x, double y) {
         drawSpriteScaled(LEVEL_BOX_SPRITE, x, y);
         double digitY = y + 2;
         int tens = levelNumber / 10, ones = levelNumber % 10;
