@@ -330,7 +330,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             case GHOST_DYING           -> onEnterStateGhostDying();
             case LEVEL_COMPLETE        -> onEnterStateLevelComplete();
             case LEVEL_TRANSITION      -> onEnterStateLevelTransition();
-            case TESTING_LEVELS -> onEnterStateTestingLevelBoni();
+            case TESTING_LEVELS        -> onEnterStateTestingLevelBoni();
             case TESTING_LEVEL_TEASERS -> onEnterStateTestingLevelTeasers();
             case GAME_OVER             -> onEnterStateGameOver();
             default -> {}
@@ -412,7 +412,9 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         stopLevelAnimations();
         // delay state exit for 3 seconds
         context.gameState().timer().restartSeconds(3);
-        context.showFlashMessageSec(3, context.locGameOverMessage());
+        if (Globals.randomInt(0, 100) < 25) {
+            context.showFlashMessageSec(3, context.locGameOverMessage());
+        }
         context.sound().stopAll();
         context.sound().playGameOverSound();
     }
