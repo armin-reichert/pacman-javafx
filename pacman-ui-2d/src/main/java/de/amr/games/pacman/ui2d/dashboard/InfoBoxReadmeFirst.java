@@ -12,24 +12,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class InfoBoxReadmeFirst extends InfoBox {
 
-    static final String[] LINES = {
-        "While this dashboard is open, steer Pac-Man",
-        "by pressing Ctrl+[steering key].",
-        "",
-        "This dashboard might also interfere with",
-        "other keys. If you encounter any such issue,",
-        "close it with F1 or Alt+B.",
-        "",
-        "Relax (and do it)!"
-    };
+public class InfoBoxReadmeFirst extends InfoBox {
 
     @Override
     public void init(GameContext context) {
         super.init(context);
         Text readmeText = new Text();
-        readmeText.setText(String.join("\n", LINES));
+        readmeText.setText(context.locText("infobox.readme.content"));
         readmeText.setFont(Font.font("Serif", 16));
         readmeText.setFill(Color.WHITE);
         Pane pane = new BorderPane(readmeText);
