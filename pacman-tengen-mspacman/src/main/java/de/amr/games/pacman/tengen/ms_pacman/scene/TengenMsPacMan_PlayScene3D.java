@@ -54,17 +54,17 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         var renderer = (TengenMsPacMan_Renderer2D) context.gameConfiguration().createRenderer(context.assets(), canvas);
         renderer.setScaling(scale);
         renderer.fillCanvas(level3D.floorColor());
-        renderer.drawGameOptionsInfoCenteredAt(0.5 * unscaledWidth, HTS, game);
+        renderer.drawGameOptionsInfoCenteredAt(0.5 * unscaledWidth, TS+HTS, game);
         renderer.drawLevelNumberBox(context.level().number, 0, 0);
         renderer.drawLevelNumberBox(context.level().number, unscaledWidth - 2*TS, 0);
 
-        ImageView infoView = new ImageView(canvas.snapshot(null, null));
-        infoView.setFitWidth(unscaledWidth);
-        infoView.setFitHeight(unscaledHeight);
-        infoView.setTranslateY(terrain.numRows() * TS - 2 * TS);
-        infoView.setTranslateZ(-level3D.floorThickness());
+        ImageView optionsArea = new ImageView(canvas.snapshot(null, null));
+        optionsArea.setFitWidth(unscaledWidth);
+        optionsArea.setFitHeight(unscaledHeight);
+        optionsArea.setTranslateY((terrain.numRows() - 2) * TS);
+        optionsArea.setTranslateZ(-level3D.floorThickness());
 
-        level3D.getChildren().add(infoView);
+        level3D.getChildren().add(optionsArea);
     }
 
     @Override
