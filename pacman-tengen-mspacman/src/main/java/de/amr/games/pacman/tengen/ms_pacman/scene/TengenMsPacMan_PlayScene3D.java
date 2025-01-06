@@ -38,12 +38,13 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     protected void replaceGameLevel3D() {
         super.replaceGameLevel3D();
-
         MsPacManGameTengen game = (MsPacManGameTengen) context.game();
-        if (game.hasDefaultOptionValues()) {
-            return;
+        if (!game.hasDefaultOptionValues()) {
+            addGameInfoArea(game);
         }
+    }
 
+    private void addGameInfoArea(MsPacManGameTengen game) {
         TileMap terrain = context.level().world().map().terrain();
         float scale = 6;
         int unscaledWidth = terrain.numCols() * TS;
