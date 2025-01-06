@@ -92,6 +92,7 @@ public class GameLevel3D extends Group {
     private final Group worldGroup = new Group();
     private final Group mazeGroup = new Group();
     private final Group house3D = new Group();
+    private Box floor;
     private final Message3D message3D;
     private final Pac3D pac3D;
     private final List<Ghost3DAppearance> ghost3DAppearances;
@@ -262,7 +263,7 @@ public class GameLevel3D extends Group {
         //TODO check this:
         obstacleBaseHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
-        Box floor = createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
+        createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
         worldGroup.getChildren().add(floor);
 
         //TODO just a temporary solution until I find something better
@@ -330,9 +331,9 @@ public class GameLevel3D extends Group {
         house3D.getChildren().add(light);
     }
 
-    private Box createFloor(double sizeX, double sizeY) {
+    private void createFloor(double sizeX, double sizeY) {
         // add some extra space
-        var floor = new Box(sizeX + 10, sizeY, FLOOR_THICKNESS);
+        floor = new Box(sizeX + 10, sizeY, FLOOR_THICKNESS);
         floor.materialProperty().bind(
             Bindings.createObjectBinding(this::createFloorMaterial, floorColorPy, floorTextureNamePy));
         floor.translateXProperty().bind(floor.widthProperty().multiply(0.5).subtract(5));
@@ -341,7 +342,6 @@ public class GameLevel3D extends Group {
         floor.drawModeProperty().bind(PY_3D_DRAW_MODE);
         floorColorPy.bind(PY_3D_FLOOR_COLOR);
         floorTextureNamePy.bind(PY_3D_FLOOR_TEXTURE);
-        return floor;
     }
 
     private PhongMaterial createFloorMaterial() {
@@ -468,6 +468,8 @@ public class GameLevel3D extends Group {
     }
 
     public Color floorColor() { return floorColorPy.get(); }
+
+    public double floorThickness() { return floor.getDepth(); }
 
     public void hideHouseDoor() {
         assertNotNull(door3D);

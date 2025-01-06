@@ -18,16 +18,12 @@ import de.amr.games.pacman.ui2d.action.GameActions2D;
 import de.amr.games.pacman.ui3d.GameActions3D;
 import de.amr.games.pacman.ui3d.level.Bonus3D;
 import de.amr.games.pacman.ui3d.scene3d.PlayScene3D;
-import javafx.scene.Camera;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.transform.Rotate;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -59,21 +55,22 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         renderer.ctx().setFill(level3D.floorColor());
         renderer.ctx().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         renderer.setScaling(scale);
-        renderer.drawGameOptionsInfo(unscaledWidth, HTS, (MsPacManGameTengen) context.game());
+        renderer.drawGameOptionsInfo(unscaledWidth, HTS, game);
 
-        Box settingsView = new Box(unscaledWidth, unscaledHeight, 0.05);
-        var texture = new PhongMaterial();
         ImageView snap = new ImageView(canvas.snapshot(null, null));
         snap.setFitWidth(unscaledWidth);
         snap.setFitHeight(unscaledHeight);
+
+        Box surface = new Box(unscaledWidth, unscaledHeight, 0.05);
+        var texture = new PhongMaterial();
         texture.setDiffuseMap(snap.getImage());
+        surface.setMaterial(texture);
 
-        settingsView.setMaterial(texture);
-        settingsView.setTranslateX(unscaledWidth * 0.5);
-        settingsView.setTranslateY(terrain.numRows() * TS - TS);
-        settingsView.setTranslateZ(-HTS);
+        surface.setTranslateX(unscaledWidth * 0.5);
+        surface.setTranslateY(terrain.numRows() * TS - TS);
+        surface.setTranslateZ(-level3D.floorThickness());
 
-        level3D.getChildren().add(settingsView);
+        level3D.getChildren().add(surface);
     }
 
     @Override
