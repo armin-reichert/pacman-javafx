@@ -93,13 +93,13 @@ public class GameLevel3D extends Group {
     private final Group mazeGroup = new Group();
     private final Group house3D = new Group();
     private Box floor;
-    private final Message3D message3D;
     private final Pac3D pac3D;
     private final List<Ghost3DAppearance> ghost3DAppearances;
     private final Map<Vector2i, Pellet3D> pellets3D = new HashMap<>();
     private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
     private final LivesCounter3D livesCounter3D;
     private Door3D door3D;
+    private Message3D message3D;
 
     private Bonus3D bonus3D;
 
@@ -119,16 +119,12 @@ public class GameLevel3D extends Group {
         livesCounter3D = createLivesCounter3D(game.canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCounterPy);
 
-        message3D = new Message3D("", context.assets().font("font.arcade", 6), Color.YELLOW, Color.WHITE);
-        message3D.setRotation(Rotate.X_AXIS, 90);
-        message3D.setVisible(false);
-
         buildWorld3D(world, coloring);
 
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
         getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
         getChildren().addAll(ghost3DAppearances);
-        getChildren().addAll(message3D, livesCounter3D, worldGroup);
+        getChildren().addAll(livesCounter3D, worldGroup);
 
         PY_3D_WALL_HEIGHT.addListener((py,ov,nv) -> obstacleBaseHeightPy.set(nv.doubleValue()));
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
@@ -380,18 +376,28 @@ public class GameLevel3D extends Group {
     }
 
     public void showAnimatedMessage(String text, double displaySeconds, double centerX, double y) {
-        message3D.setText(text);
-        message3D.setVisible(true);
+        getChildren().remove(message3D);
+        message3D = Message3D.newBuilder()
+                .text(text)
+                .font(context.assets().font("font.arcade", 6))
+                .borderColor(Color.WHITE)
+                .textColor(Color.YELLOW)
+                .build();
+        getChildren().add(message3D);
+
         double halfHeight = 0.5 * message3D.getBoundsInLocal().getHeight();
         message3D.setTranslateX(centerX - 0.5 * message3D.getFitWidth());
         message3D.setTranslateY(y);
         message3D.setTranslateZ(halfHeight); // just under floor
+
         var moveUpAnimation = new TranslateTransition(Duration.seconds(1), message3D);
         moveUpAnimation.setToZ(-(halfHeight + 0.5 * obstacleBaseHeightPy.get()));
+
         var moveDownAnimation = new TranslateTransition(Duration.seconds(1), message3D);
         moveDownAnimation.setDelay(Duration.seconds(displaySeconds));
         moveDownAnimation.setToZ(halfHeight);
         moveDownAnimation.setOnFinished(e -> message3D.setVisible(false));
+
         new SequentialTransition(moveUpAnimation, moveDownAnimation).play();
     }
 

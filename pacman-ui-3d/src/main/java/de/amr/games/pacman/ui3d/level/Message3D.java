@@ -4,19 +4,31 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
-import javafx.geometry.Point3D;
+import de.amr.games.pacman.lib.Globals;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.transform.Rotate;
 import org.tinylog.Logger;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
  */
 public class Message3D extends ImageView {
+
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private final Message3D message = new Message3D();
+        public Builder font(Font font) { message.font = Globals.assertNotNull(font); return this; }
+        public Builder borderColor(Color color) { message.borderColor = Globals.assertNotNull(color); return this; }
+        public Builder textColor(Color color) { message.textColor = Globals.assertNotNull(color); return this; }
+        public Builder text(String text) { message.text = Globals.assertNotNull(text); return this; }
+        public Message3D build() { message.updateImage(); return message; }
+    }
 
     private static final int MARGIN = 3;
     private static final int QUALITY = 3;
@@ -25,25 +37,13 @@ public class Message3D extends ImageView {
     private Color borderColor;
     private Color textColor;
     private String text;
-    private boolean batchUpdate;
 
-    public Message3D(String text, Font font, Color textColor, Color borderColor) {
-        beginBatch();
-        setFont(font);
-        setBorderColor(borderColor);
-        setTextColor(textColor);
-        setText(text);
-        endBatch();
-    }
-
-    public Message3D() {
-        this("Hello, world!", Font.font("Sans", 8), Color.WHITE, Color.grayRgb(200));
+    private Message3D() {
+        setRotationAxis(Rotate.X_AXIS);
+        setRotate(90);
     }
 
     private void updateImage() {
-        if (batchUpdate) {
-            return;
-        }
         double width = text.length() * font.getSize() + MARGIN;
         double height = font.getSize() + MARGIN;
 
@@ -63,54 +63,5 @@ public class Message3D extends ImageView {
         setFitWidth(width);
         setFitHeight(height);
         Logger.trace("New source produced");
-    }
-
-    public void setRotation(Point3D axis, double angle) {
-        requireNonNull(axis);
-        setRotationAxis(axis);
-        setRotate(angle);
-    }
-
-    public void beginBatch() {
-        batchUpdate = true;
-    }
-
-    public void endBatch() {
-        batchUpdate = false;
-        updateImage();
-    }
-
-    public void setFont(Font font) {
-        requireNonNull(font);
-        if (!font.equals(this.font)) {
-            this.font = font;
-            updateImage();
-        }
-    }
-
-    public void setBorderColor(Color color) {
-        requireNonNull(color);
-        if (!color.equals(this.borderColor)) {
-            this.borderColor = color;
-            updateImage();
-        }
-    }
-
-    public void setTextColor(Color color) {
-        requireNonNull(color);
-        if (!color.equals(this.textColor)) {
-            this.textColor = color;
-            updateImage();
-        }
-    }
-
-    public void setText(String text) {
-        if (text == null) {
-            text = "";
-        }
-        if (!text.equals(this.text)) {
-            this.text = text;
-            updateImage();
-        }
     }
 }
