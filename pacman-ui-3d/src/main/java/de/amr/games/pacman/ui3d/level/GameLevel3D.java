@@ -376,8 +376,10 @@ public class GameLevel3D extends Group {
     }
 
     public void showAnimatedMessage(String text, double displaySeconds, double centerX, double y) {
-        getChildren().remove(message3D);
-        message3D = Message3D.newBuilder()
+        if (message3D != null) {
+            getChildren().remove(message3D);
+        }
+        message3D = Message3D.builder()
                 .text(text)
                 .font(context.assets().font("font.arcade", 6))
                 .borderColor(Color.WHITE)
