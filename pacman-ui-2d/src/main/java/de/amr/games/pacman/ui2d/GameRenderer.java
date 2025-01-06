@@ -24,6 +24,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
@@ -39,16 +40,34 @@ import static java.util.function.Predicate.not;
 public interface GameRenderer {
 
     default void setWorldMap(WorldMap worldMap) {}
+
     AssetStorage assets();
+
     Color backgroundColor();
+
     void setBackgroundColor(Color color);
+
     GameSpriteSheet spriteSheet();
+
     Canvas canvas();
+
     default GraphicsContext ctx() { return canvas().getGraphicsContext2D(); }
+
+    default void fillCanvas(Paint paint) {
+        ctx().setFill(paint);
+        ctx().fillRect(0, 0, canvas().getWidth(), canvas().getHeight());
+    }
+
+    default void clearCanvas() { fillCanvas(backgroundColor()); }
+
     DoubleProperty scalingProperty();
+
     default void setScaling(double value) { scalingProperty().set(value); }
+
     default double scaling() { return scalingProperty().get(); }
+
     default double scaled(double value) { return scaling() * value; }
+
     default Font scaledArcadeFont(double size) {
         return assets().font("font.arcade", scaled(size));
     }
@@ -193,11 +212,6 @@ public interface GameRenderer {
     void setMazeHighlighted(boolean on);
 
     void setBlinking(boolean on);
-
-    default void clearCanvas() {
-        ctx().setFill(backgroundColor());
-        ctx().fillRect(0, 0, canvas().getWidth(), canvas().getHeight());
-    }
 
     /**
      * Over-paints all eaten pellet tiles.
