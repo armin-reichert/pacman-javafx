@@ -22,14 +22,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class PacManGameConfiguration implements GameConfiguration {
+public class ArcadePacMan_GameConfig implements GameConfiguration {
 
     private static final WorldMapColoring MAP_COLORING = new WorldMapColoring("#000000", "#2121ff", "#fcb5ff", "#febdb4");
 
     private final PacManGameSpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public PacManGameConfiguration(AssetStorage assets) {
+    public ArcadePacMan_GameConfig(AssetStorage assets) {
         loadAssets(() -> ResourceRoot.class, assets);
         spriteSheet = new PacManGameSpriteSheet(assets.get("pacman.spritesheet"));
 

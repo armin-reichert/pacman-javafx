@@ -9,11 +9,11 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.assets.ResourceManager;
 import de.amr.games.pacman.ui2d.lib.Flyer;
 
-public class ArcadePacManStartPage {
+public class ArcadePacMan_StartPage {
 
     private final Flyer flyer;
 
-    public ArcadePacManStartPage() {
+    public ArcadePacMan_StartPage() {
         ResourceManager rm = () -> ResourceRoot.class;
         flyer = new Flyer(
             rm.loadImage("graphics/f1.jpg"),

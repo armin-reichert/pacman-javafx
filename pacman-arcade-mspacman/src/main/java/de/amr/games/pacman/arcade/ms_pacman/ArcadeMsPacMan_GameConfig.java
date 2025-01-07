@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class MsPacManGameConfiguration implements GameConfiguration {
+public class ArcadeMsPacMan_GameConfig implements GameConfiguration {
 
     private static final List<WorldMapColoring> WORLD_MAP_COLORINGS = List.of(
         new WorldMapColoring("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
@@ -34,8 +34,8 @@ public class MsPacManGameConfiguration implements GameConfiguration {
     private final MsPacManGameSpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public MsPacManGameConfiguration(AssetStorage assets) {
-        loadAssets(() -> MsPacManGameConfiguration.class, assets);
+    public ArcadeMsPacMan_GameConfig(AssetStorage assets) {
+        loadAssets(() -> ArcadeMsPacMan_GameConfig.class, assets);
         spriteSheet = new MsPacManGameSpriteSheet(assets.get("ms_pacman.spritesheet"));
 
         setGameScene("BootScene",   new ArcadeBootScene());

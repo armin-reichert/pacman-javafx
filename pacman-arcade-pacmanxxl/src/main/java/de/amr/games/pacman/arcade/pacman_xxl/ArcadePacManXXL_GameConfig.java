@@ -22,12 +22,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class PacManGameXXLConfiguration implements GameConfiguration {
+public class ArcadePacManXXL_GameConfig implements GameConfiguration {
 
     private final PacManGameSpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public PacManGameXXLConfiguration(AssetStorage assets) {
+    public ArcadePacManXXL_GameConfig(AssetStorage assets) {
         loadAssets(() -> ResourceRoot.class, assets);
         spriteSheet = new PacManGameSpriteSheet(assets.get(assetKeyPrefix() + ".spritesheet"));
 

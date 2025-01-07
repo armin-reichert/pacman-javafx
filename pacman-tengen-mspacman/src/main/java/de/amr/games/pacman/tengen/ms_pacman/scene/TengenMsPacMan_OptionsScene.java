@@ -22,8 +22,8 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
-import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.NES_SIZE;
-import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.nesPaletteColor;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfig.NES_SIZE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfig.nesPaletteColor;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GlobalProperties.PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.CONTINUES_SPRITES;
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;

@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.apps;
 
-import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXLStartPage;
+import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXLGameConfig_3D;
+import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXL_StartPage;
 import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
-import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXLConfiguration_3D;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.DashboardItemID;
@@ -42,9 +42,9 @@ public class ArcadePacManXXLApp extends Application {
     public void start(Stage stage) {
         PacManGamesUI_3D ui = new PacManGamesUI_3D();
         ui.loadAssets();
-        ui.configureGameVariant(GameVariant.PACMAN_XXL, new PacManGameXXLConfiguration_3D(ui.assets()));
+        ui.configureGameVariant(GameVariant.PACMAN_XXL, new ArcadePacManXXLGameConfig_3D(ui.assets()));
         ui.create(stage, initialSize());
-        ui.startPage().addSlide(new ArcadePacManXXLStartPage().root());
+        ui.startPage().addSlide(new ArcadePacManXXL_StartPage().root());
 
         ui.addDashboardItem(DashboardItemID.README);
         ui.addDashboardItem(DashboardItemID.GENERAL);

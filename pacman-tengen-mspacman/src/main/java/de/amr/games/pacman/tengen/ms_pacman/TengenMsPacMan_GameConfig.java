@@ -33,7 +33,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GlobalProperties.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
 
-public class TengenMsPacMan_GameConfiguration implements GameConfiguration {
+public class TengenMsPacMan_GameConfig implements GameConfiguration {
 
     public static Color nesPaletteColor(int index) {
         return Color.web(NES_Palette.color(index));
@@ -46,8 +46,8 @@ public class TengenMsPacMan_GameConfiguration implements GameConfiguration {
     private final MapRepository mapRepository;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public TengenMsPacMan_GameConfiguration(AssetStorage assets) {
-        loadAssets(() -> TengenMsPacMan_GameConfiguration.class, assets);
+    public TengenMsPacMan_GameConfig(AssetStorage assets) {
+        loadAssets(() -> TengenMsPacMan_GameConfig.class, assets);
         spriteSheet = new TengenMsPacMan_SpriteSheet(assets.image(assetKeyPrefix() + ".spritesheet"));
         mapRepository = new MapRepository(
             assets.image(assetKeyPrefix() + ".mazes.arcade"),

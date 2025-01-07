@@ -54,7 +54,7 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL;
-import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfiguration.*;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfig.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GlobalProperties.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_IMMUNITY;
