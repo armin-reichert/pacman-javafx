@@ -218,7 +218,6 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             return;
         }
 
-        drawLevelMessage(assetKeyPrefix, level, game.isDemoLevel()); // message appears under map image so draw it first
         RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
             ? strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
             : coloredMapSet.normalMaze().area();
@@ -227,6 +226,9 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             scaled(mapX), scaled(mapY), scaled(area.width()), scaled(area.height())
         );
         overPaintActors(world);
+    }
+
+    public void drawFood(GameWorld world) {
         ctx.save();
         ctx.scale(scaling(), scaling());
         Color pelletColor = Color.valueOf(coloredMapSet.normalMaze().colorScheme().pelletColor());
@@ -302,7 +304,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx.restore();
     }
 
-    private void drawLevelMessage(String assetKeyPrefix, GameLevel level, boolean demoLevel) {
+    public void drawLevelMessage(String assetKeyPrefix, GameLevel level, boolean demoLevel) {
         if (level.message() != null) {
             float x = getMessagePosition().x(), y = getMessagePosition().y();
             switch (level.message().type()) {

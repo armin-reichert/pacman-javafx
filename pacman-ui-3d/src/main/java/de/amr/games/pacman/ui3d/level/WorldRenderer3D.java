@@ -33,10 +33,16 @@ public class WorldRenderer3D {
 
     protected PhongMaterial wallBaseMaterial = new PhongMaterial();
     protected PhongMaterial wallTopMaterial = new PhongMaterial();
+    protected PhongMaterial cornerMaterial = new PhongMaterial();
+
     protected DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(1.0);
     protected float wallTopHeight;
     protected float wallThickness = 1;
     protected boolean oShapeFilled = true;
+
+    public void setCornerMaterial(PhongMaterial material) {
+        this.cornerMaterial = material;
+    }
 
     public void setWallBaseMaterial(PhongMaterial material) {
         wallBaseMaterial = material;
@@ -103,7 +109,7 @@ public class WorldRenderer3D {
 
     public Group createCompositeCornerWall(Vector2f center, double radius) {
         Cylinder base = new Cylinder(radius, wallBaseHeightPy.get(), CYLINDER_DIVISIONS);
-        base.setMaterial(wallBaseMaterial);
+        base.setMaterial(cornerMaterial);
         base.setMouseTransparent(true);
         base.heightProperty().bind(wallBaseHeightPy);
         base.setRotationAxis(Rotate.X_AXIS);
@@ -136,7 +142,7 @@ public class WorldRenderer3D {
 
     public Node createCompositeCircularWall(Vector2f center, double radius) {
         Cylinder base = new Cylinder(radius, wallBaseHeightPy.get(), CYLINDER_DIVISIONS);
-        base.setMaterial(wallBaseMaterial);
+        base.setMaterial(cornerMaterial);
         base.setRotationAxis(Rotate.X_AXIS);
         base.setRotate(90);
         base.setTranslateX(center.x());

@@ -74,6 +74,7 @@ public class GameLevel3D extends Group {
     private final DoubleProperty obstacleBaseHeightPy = new SimpleDoubleProperty(this, "obstacleBaseHeight", OBSTACLE_BASE_HEIGHT);
     private final DoubleProperty wallOpacityPy        = new SimpleDoubleProperty(this, "wallOpacity", 1.0);
     private final ObjectProperty<Color> floorColorPy  = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
+    private final ObjectProperty<Color> cornerColorPy = new SimpleObjectProperty<>(this, "cornerColor", Color.WHITE);
     private final IntegerProperty livesCounterPy      = new SimpleIntegerProperty(0);
 
     private final DoubleProperty houseBaseHeightPy    = new SimpleDoubleProperty(this, "houseBaseHeight", HOUSE_BASE_HEIGHT);
@@ -109,7 +110,7 @@ public class GameLevel3D extends Group {
         final GameModel game = context.game();
         final GameLevel level = context.level();
         final GameWorld world = level.world();
-        final WorldMapColoring coloring = context.gameConfiguration().worldMapColoring(world.map());
+        final WorldMapColoring mapColoring = context.gameConfiguration().worldMapColoring(world.map());
 
         setMouseTransparent(true); //TODO does this increase performance?
 
@@ -119,7 +120,7 @@ public class GameLevel3D extends Group {
         livesCounter3D = createLivesCounter3D(game.canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCounterPy);
 
-        buildWorld3D(world, coloring);
+        buildWorld3D(world, mapColoring);
 
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
         getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
@@ -253,6 +254,7 @@ public class GameLevel3D extends Group {
         GameConfiguration3D gameConfiguration3D = (GameConfiguration3D) context.gameConfiguration();
         WorldRenderer3D worldRenderer = gameConfiguration3D.createWorldRenderer();
         worldRenderer.setWallBaseMaterial(wallBaseMaterial);
+        worldRenderer.setCornerMaterial(wallBaseMaterial); // TODO use other material to achieve nice effect
         worldRenderer.setWallBaseHeightProperty(obstacleBaseHeightPy);
         worldRenderer.setWallTopMaterial(wallTopMaterial);
         worldRenderer.setWallTopHeight(OBSTACLE_TOP_HEIGHT);

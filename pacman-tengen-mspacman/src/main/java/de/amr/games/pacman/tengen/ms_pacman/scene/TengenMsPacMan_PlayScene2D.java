@@ -465,7 +465,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         if (flashing && levelCompleteAnimation.isInHighlightPhase()) {
             r.drawWorldHighlighted(context, world, 0, 3 * TS, levelCompleteAnimation.flashingIndex());
         } else {
+            //TODO in the original game, the message is draw under the maze image but over the pellets!
             r.drawWorld(context, world, 0,  3 * TS);
+            r.drawFood(world);
+            r.drawLevelMessage(context.gameConfiguration().assetKeyPrefix(), level, game.isDemoLevel());
         }
 
         context.level().bonus().ifPresent(r::drawBonus);
