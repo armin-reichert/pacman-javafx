@@ -12,7 +12,7 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(versions.java)
+        languageVersion = versions.java
     }
 }
 

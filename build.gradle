@@ -1,7 +1,10 @@
 import org.gradle.internal.os.OperatingSystem
 
 buildscript {
-    ext.versions = [ java: 21, javafx: 21 ]
+    ext.versions = [
+            java: JavaLanguageVersion.of(21),
+            javafx: "21"
+    ]
     ext.os = OperatingSystem.current()
     ext.arch = System.getProperty("os.arch")
 }
