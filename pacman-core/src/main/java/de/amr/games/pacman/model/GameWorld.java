@@ -18,24 +18,13 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.TileEncoding.*;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.model.GameModel.*;
 
 /**
  * @author Armin Reichert
  */
 public class GameWorld {
-
-    public static final String PROPERTY_POS_BONUS                = "pos_bonus";
-    public static final String PROPERTY_POS_PAC                  = "pos_pac";
-    public static final String PROPERTY_POS_RED_GHOST            = "pos_ghost_1_red";
-    public static final String PROPERTY_POS_PINK_GHOST           = "pos_ghost_2_pink";
-    public static final String PROPERTY_POS_CYAN_GHOST           = "pos_ghost_3_cyan";
-    public static final String PROPERTY_POS_ORANGE_GHOST         = "pos_ghost_4_orange";
-    public static final String PROPERTY_POS_SCATTER_RED_GHOST    = "pos_scatter_ghost_1_red";
-    public static final String PROPERTY_POS_SCATTER_PINK_GHOST   = "pos_scatter_ghost_2_pink";
-    public static final String PROPERTY_POS_SCATTER_CYAN_GHOST   = "pos_scatter_ghost_3_cyan";
-    public static final String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
-    public static final String PROPERTY_POS_HOUSE_MIN_TILE       = "pos_house_min_tile";
 
     private static boolean isWallLikeContent(byte content) {
         return content == WALL_H  || content == WALL_V

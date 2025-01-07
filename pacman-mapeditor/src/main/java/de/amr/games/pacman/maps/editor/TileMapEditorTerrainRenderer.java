@@ -26,7 +26,7 @@ import java.util.Optional;
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.tilemap.TileMap.parseVector2i;
-import static de.amr.games.pacman.maps.editor.TileMapEditor.*;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 
 /**
  * @author Armin Reichert

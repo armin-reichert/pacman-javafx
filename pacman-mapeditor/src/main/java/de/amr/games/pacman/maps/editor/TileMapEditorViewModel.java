@@ -28,18 +28,6 @@ public interface TileMapEditorViewModel {
     byte PALETTE_ID_TERRAIN = 1;
     byte PALETTE_ID_FOOD    = 2;
 
-    String PROPERTY_POS_BONUS                = "pos_bonus";
-    String PROPERTY_POS_PAC                  = "pos_pac";
-    String PROPERTY_POS_RED_GHOST            = "pos_ghost_1_red";
-    String PROPERTY_POS_PINK_GHOST           = "pos_ghost_2_pink";
-    String PROPERTY_POS_CYAN_GHOST           = "pos_ghost_3_cyan";
-    String PROPERTY_POS_ORANGE_GHOST         = "pos_ghost_4_orange";
-    String PROPERTY_POS_SCATTER_RED_GHOST    = "pos_scatter_ghost_1_red";
-    String PROPERTY_POS_SCATTER_PINK_GHOST   = "pos_scatter_ghost_2_pink";
-    String PROPERTY_POS_SCATTER_CYAN_GHOST   = "pos_scatter_ghost_3_cyan";
-    String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
-    String PROPERTY_POS_HOUSE_MIN_TILE       = "pos_house_min_tile";
-
     String DEFAULT_COLOR_FOOD                = "rgb(255,255,255)";
     String DEFAULT_COLOR_WALL_STROKE         = "rgb(33,33,255)";
     String DEFAULT_COLOR_WALL_FILL           = "rgb(0,0,0)";

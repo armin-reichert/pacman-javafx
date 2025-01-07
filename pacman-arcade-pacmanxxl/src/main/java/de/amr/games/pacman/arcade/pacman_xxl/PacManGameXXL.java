@@ -11,7 +11,6 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.model.CustomMapsHandler;
-import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
@@ -76,11 +75,11 @@ public class PacManGameXXL extends PacManGame implements CustomMapsHandler {
     @Override
     protected void populateLevel(WorldMap worldMap) {
         super.populateLevel(worldMap);
-        if (!worldMap.terrain().hasProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE)) {
+        if (!worldMap.terrain().hasProperty(WorldMap.PROPERTY_POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
-            worldMap.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(vec_2i(10, 15)));
+            worldMap.terrain().setProperty(WorldMap.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(vec_2i(10, 15)));
         }
-        Vector2i topLeftTile = worldMap.terrain().getTileProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i topLeftTile = worldMap.terrain().getTileProperty(WorldMap.PROPERTY_POS_HOUSE_MIN_TILE, null);
         level.world().createArcadeHouse(topLeftTile.x(), topLeftTile.y());
     }
 
@@ -147,8 +146,8 @@ public class PacManGameXXL extends PacManGame implements CustomMapsHandler {
         StaticBonus staticBonus = new StaticBonus(symbol, PacManGame.BONUS_VALUE_FACTORS[symbol] * 100);
         level.setBonus(staticBonus);
         // in a non-Arcade style custom map, the bonus position must be taken from the terrain map
-        if (level.world().map().terrain().hasProperty(GameWorld.PROPERTY_POS_BONUS)) {
-            Vector2i bonusTile = level.world().map().terrain().getTileProperty(GameWorld.PROPERTY_POS_BONUS, new Vector2i(13, 20));
+        if (level.world().map().terrain().hasProperty(WorldMap.PROPERTY_POS_BONUS)) {
+            Vector2i bonusTile = level.world().map().terrain().getTileProperty(WorldMap.PROPERTY_POS_BONUS, new Vector2i(13, 20));
             staticBonus.actor().setPosition(halfTileRightOf(bonusTile));
         } else {
             staticBonus.actor().setPosition(PacManGame.BONUS_POS);
