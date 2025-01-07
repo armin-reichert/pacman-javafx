@@ -252,24 +252,19 @@ public class GameWorld {
     }
 
     public void registerFoodEatenAt(Vector2i tile) {
-        assertTileNotNull(tile);
-        if (isOutsideWorld(tile)) {
-            Logger.error("Attempt to eat food from tile outside world");
-            return;
-        }
         if (hasFoodAt(tile)) {
             eatenFood.set(map.food().index(tile));
             --uneatenFoodCount;
+        } else {
+            Logger.warn("Attempt to eat foot at tile {} that has none", tile);
         }
     }
 
     public boolean isFoodPosition(Vector2i tile) {
-        assertTileNotNull(tile);
         return !isOutsideWorld(tile) && map.food().get(tile) != EMPTY;
     }
 
     public boolean isEnergizerPosition(Vector2i tile) {
-        assertTileNotNull(tile);
         return !isOutsideWorld(tile) && map.food().get(tile) == ENERGIZER;
     }
 
@@ -278,7 +273,6 @@ public class GameWorld {
     }
 
     public boolean hasEatenFoodAt(Vector2i tile) {
-        assertTileNotNull(tile);
         return !isOutsideWorld(tile) && eatenFood.get(map.food().index(tile));
     }
 }
