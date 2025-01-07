@@ -91,21 +91,26 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     private final SubScene fxSubScene;
     protected final Scores3D scores3D;
 
+    protected final AmbientLight ambientLight;
     protected GameLevel3D level3D;
     private Animation levelCompleteAnimation;
 
     public PlayScene3D() {
-        var ambientLight = new AmbientLight();
+        ambientLight = new AmbientLight();
+        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
+
         var axes = new CoordinateSystem();
+        axes.visibleProperty().bind(PY_3D_AXES_VISIBLE);
+
         scores3D = new Scores3D(SCORE_TEXT, HIGH_SCORE_TEXT);
+
         // last child is placeholder for level 3D
         getChildren().addAll(scores3D, axes, ambientLight, new Group());
+
         // initial size is irrelevant, it is bound to parent scene later
         fxSubScene = new SubScene(this, 42, 42, true, SceneAntialiasing.BALANCED);
         fxSubScene.setFill(Color.TRANSPARENT);
         fxSubScene.cameraProperty().bind(perspectiveNamePy.map(name -> perspective().getCamera()));
-        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
-        axes.visibleProperty().bind(PY_3D_AXES_VISIBLE);
     }
 
     @Override
