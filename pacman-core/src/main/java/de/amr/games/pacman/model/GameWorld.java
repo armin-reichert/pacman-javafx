@@ -26,7 +26,7 @@ import static de.amr.games.pacman.model.GameModel.*;
  */
 public class GameWorld {
 
-    private static boolean isWallLikeContent(byte content) {
+    private static boolean isInaccessible(byte content) {
         return content == WALL_H  || content == WALL_V
             || content == DWALL_H || content == DWALL_V
             || content == CORNER_NE  || content == CORNER_NW  || content == CORNER_SE  || content == CORNER_SW
@@ -86,15 +86,13 @@ public class GameWorld {
 
     public Vector2i ghostScatterTile(byte ghostID) {
         assertLegalGhostID(ghostID);
+        TileMap terrain = map.terrain();
+        int numRows = terrain.numRows(), numCols = terrain.numCols();
         return switch (ghostID) {
-            case RED_GHOST -> map.terrain().getTileProperty(
-                PROPERTY_POS_SCATTER_RED_GHOST, vec_2i(0, map.terrain().numCols() - 3));
-            case PINK_GHOST -> map.terrain().getTileProperty(
-                PROPERTY_POS_SCATTER_PINK_GHOST, vec_2i(0, 3));
-            case CYAN_GHOST -> map.terrain().getTileProperty(
-                PROPERTY_POS_SCATTER_CYAN_GHOST, vec_2i(map.terrain().numRows() - 1, map.terrain().numCols() - 1));
-            case ORANGE_GHOST -> map.terrain().getTileProperty(
-                PROPERTY_POS_SCATTER_ORANGE_GHOST, vec_2i(map.terrain().numRows() - 1, 0));
+            case RED_GHOST    -> terrain.getTileProperty(PROPERTY_POS_SCATTER_RED_GHOST, vec_2i(0, numCols - 3));
+            case PINK_GHOST   -> terrain.getTileProperty(PROPERTY_POS_SCATTER_PINK_GHOST, vec_2i(0, 3));
+            case CYAN_GHOST   -> terrain.getTileProperty(PROPERTY_POS_SCATTER_CYAN_GHOST, vec_2i(numRows - 1, numCols - 1));
+            case ORANGE_GHOST -> terrain.getTileProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, vec_2i(numRows - 1, 0));
             default -> throw new IllegalArgumentException("Illegal ghost ID: " + ghostID);
         };
     }
@@ -109,7 +107,6 @@ public class GameWorld {
     }
 
     public boolean isInsideWorld(Vector2i tile) {
-        assertTileNotNull(tile);
         return !isOutsideWorld(tile);
     }
 
@@ -136,20 +133,14 @@ public class GameWorld {
     }
 
     public boolean isBlockedTile(Vector2i tile) {
-        assertTileNotNull(tile);
-        return !isOutsideWorld(tile) && isWallLikeContent(map.terrain().get(tile));
+        return !isOutsideWorld(tile) && isInaccessible(map.terrain().get(tile));
     }
 
     public boolean isTunnel(Vector2i tile) {
-        assertTileNotNull(tile);
-        if (isOutsideWorld(tile)) {
-            return false;
-        }
-        return map.terrain().get(tile) == TUNNEL;
+        return !isOutsideWorld(tile) && map.terrain().get(tile) == TUNNEL;
     }
 
     public boolean isIntersection(Vector2i tile) {
-        assertTileNotNull(tile);
         if (isOutsideWorld(tile) || isPartOfHouse(tile)) {
             return false;
         }
@@ -283,7 +274,6 @@ public class GameWorld {
     }
 
     public boolean hasFoodAt(Vector2i tile) {
-        assertTileNotNull(tile);
         return isFoodPosition(tile) && !hasEatenFoodAt(tile);
     }
 
