@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.apps;
 
-import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacManGameConfig_3D;
+import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameConfig3D;
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.games.pacman.arcade.ms_pacman.MsPacManGame;
 import de.amr.games.pacman.controller.GameController;
@@ -41,7 +41,7 @@ public class ArcadeMsPacManApp extends Application {
     public void start(Stage stage) {
         PacManGamesUI_3D ui = new PacManGamesUI_3D();
         ui.loadAssets();
-        ui.configureGameVariant(GameVariant.MS_PACMAN, new ArcadeMsPacManGameConfig_3D(ui.assets()));
+        ui.configureGameVariant(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameConfig3D(ui.assets()));
         ui.create(stage, initialSize());
         ui.startPage().addSlide(new ArcadeMsPacMan_StartPage().root());
 

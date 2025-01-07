@@ -4,19 +4,19 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.appsuite;
 
-import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacManGameConfig_3D;
+import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameConfig3D;
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.games.pacman.arcade.ms_pacman.MsPacManGame;
-import de.amr.games.pacman.arcade.pacman.ArcadePacManGameConfig_3D;
+import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameConfig3D;
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.games.pacman.arcade.pacman.PacManGame;
-import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXLGameConfig_3D;
+import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXLGameConfig3D;
 import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXL_StartPage;
 import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
-import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfig_3D;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfig3D;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.games.pacman.ui2d.DashboardItemID;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
@@ -75,10 +75,10 @@ public class PacManGames3dApp extends Application {
         ui.loadAssets();
 
         // UI asset storage exists now, add game variants including their own assets
-        ui.configureGameVariant(GameVariant.MS_PACMAN, new ArcadeMsPacManGameConfig_3D(ui.assets()));
-        ui.configureGameVariant(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameConfig_3D(ui.assets()));
-        ui.configureGameVariant(GameVariant.PACMAN, new ArcadePacManGameConfig_3D(ui.assets()));
-        ui.configureGameVariant(GameVariant.PACMAN_XXL, new ArcadePacManXXLGameConfig_3D(ui.assets()));
+        ui.configureGameVariant(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameConfig3D(ui.assets()));
+        ui.configureGameVariant(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameConfig3D(ui.assets()));
+        ui.configureGameVariant(GameVariant.PACMAN, new ArcadePacMan_GameConfig3D(ui.assets()));
+        ui.configureGameVariant(GameVariant.PACMAN_XXL, new ArcadePacManXXLGameConfig3D(ui.assets()));
 
         ui.create(stage, initialSize());
         ui.startPage().addSlide(new ArcadePacMan_StartPage().root());

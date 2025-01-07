@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.arcade.ms_pacman;
+package de.amr.games.pacman.arcade.pacman;
 
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
@@ -12,12 +12,11 @@ import de.amr.games.pacman.ui3d.level.PacModel3D;
 import de.amr.games.pacman.ui3d.level.WorldRenderer3D;
 import de.amr.games.pacman.ui3d.scene3d.GameConfiguration3D;
 import de.amr.games.pacman.ui3d.scene3d.PlayScene3D;
-import javafx.scene.Group;
 import javafx.scene.Node;
 
-public class ArcadeMsPacManGameConfig_3D extends ArcadeMsPacMan_GameConfig implements GameConfiguration3D {
+public class ArcadePacMan_GameConfig3D extends ArcadePacMan_GameConfig implements GameConfiguration3D {
 
-    public ArcadeMsPacManGameConfig_3D(AssetStorage assets) {
+    public ArcadePacMan_GameConfig3D(AssetStorage assets) {
         super(assets);
         setGameScene("PlayScene3D", new PlayScene3D());
     }
@@ -40,18 +39,11 @@ public class ArcadeMsPacManGameConfig_3D extends ArcadeMsPacMan_GameConfig imple
     @Override
     public Node createLivesCounterShape(AssetStorage assets) {
         String akp = assetKeyPrefix();
-        return new Group(
-            PacModel3D.createPacShape(
-                assets.get("model3D.pacman"), 10,
-                assets.color(akp + ".pac.color.head"),
-                assets.color(akp + ".pac.color.eyes"),
-                assets.color(akp + ".pac.color.palate")
-            ),
-            PacModel3D.createFemaleParts(10,
-                assets.color(akp + ".pac.color.hairbow"),
-                assets.color(akp + ".pac.color.hairbow.pearls"),
-                assets.color(akp + ".pac.color.boobs")
-            )
+        return PacModel3D.createPacShape(
+            assets.get("model3D.pacman"), 10,
+            assets.color(akp + ".pac.color.head"),
+            assets.color(akp + ".pac.color.eyes"),
+            assets.color(akp + ".pac.color.palate")
         );
     }
 }

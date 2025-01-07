@@ -14,9 +14,9 @@ import de.amr.games.pacman.ui3d.scene3d.GameConfiguration3D;
 import de.amr.games.pacman.ui3d.scene3d.PlayScene3D;
 import javafx.scene.Node;
 
-public class ArcadePacManXXLGameConfig_3D extends ArcadePacManXXL_GameConfig implements GameConfiguration3D {
+public class ArcadePacManXXLGameConfig3D extends ArcadePacManXXL_GameConfig implements GameConfiguration3D {
 
-    public ArcadePacManXXLGameConfig_3D(AssetStorage assets) {
+    public ArcadePacManXXLGameConfig3D(AssetStorage assets) {
         super(assets);
         setGameScene("PlayScene3D", new PlayScene3D());
     }
