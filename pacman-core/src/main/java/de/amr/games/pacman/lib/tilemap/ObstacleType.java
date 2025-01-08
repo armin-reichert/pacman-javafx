@@ -37,9 +37,9 @@ public enum ObstacleType {
         "dcgbfebgce", "dcfbdgbfce", "dgbecgfceb", "dcgfcdbfeb" // 10 segment
     ),
 
-    L_SHAPE_DOUBLE("dcgbecgbfebgcebgce"),
+    LL_SHAPE("dcgbecgbfebgcebgce"),
 
-    L_SHAPE_DOUBLE_MIRRORED("dcfbdcfbdgbfcdbfce"),
+    LL_SHAPE_MIRRORED("dcfbdcfbdgbfcdbfce"),
 
     O_SHAPE("dgfe", "dcgfce", "dgbfeb", "dcgbfceb"),
 

@@ -193,8 +193,8 @@ public class WorldRenderer3D {
             case F_SHAPE ->                 addFShape3D(parent, obstacle);
             case H_SHAPE ->                 addHShape3D(parent, obstacle);
             case L_SHAPE ->                 addLShape3D(parent, obstacle);
-            case L_SHAPE_DOUBLE ->          addLShapeDouble(parent, obstacle);
-            case L_SHAPE_DOUBLE_MIRRORED -> addLShapeDoubleMirrored(parent, obstacle);
+            case LL_SHAPE ->          addLShapeDouble(parent, obstacle);
+            case LL_SHAPE_MIRRORED -> addLShapeDoubleMirrored(parent, obstacle);
             case O_SHAPE ->                 addOShape3D(parent, obstacle);
             case S_SHAPE ->                 addSShape3D(parent, obstacle);
             case T_SHAPE ->                 addTShape3D(parent, obstacle);
