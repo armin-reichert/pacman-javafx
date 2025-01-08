@@ -599,7 +599,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             PY_3D_PERSPECTIVE.addListener((py, ov, newPerspective) -> miPerspective.setSelected(newPerspective == perspective));
             miPerspective.setSelected(perspective == PY_3D_PERSPECTIVE.get()); // == is allowed for enum comparison
             items.add(miPerspective);
-            }
+        }
 
         // Common items
         items.add(contextMenuTitleItem(context.locText("pacman")));

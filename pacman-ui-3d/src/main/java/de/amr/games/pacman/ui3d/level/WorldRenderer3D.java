@@ -107,31 +107,6 @@ public class WorldRenderer3D {
         throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(beginTile, endTile));
     }
 
-    public Group createCompositeCornerWall(Vector2f center, double radius) {
-        Cylinder base = new Cylinder(radius, wallBaseHeightPy.get(), CYLINDER_DIVISIONS);
-        base.setMaterial(cornerMaterial);
-        base.setMouseTransparent(true);
-        base.heightProperty().bind(wallBaseHeightPy);
-        base.setRotationAxis(Rotate.X_AXIS);
-        base.setRotate(90);
-        base.setTranslateX(center.x());
-        base.setTranslateY(center.y());
-        base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
-        base.drawModeProperty().bind(PY_3D_DRAW_MODE);
-
-        Cylinder top = new Cylinder(radius, wallTopHeight, CYLINDER_DIVISIONS);
-        top.setMaterial(wallTopMaterial);
-        top.setMouseTransparent(true);
-        top.setRotationAxis(Rotate.X_AXIS);
-        top.setRotate(90);
-        top.setTranslateX(center.x());
-        top.setTranslateY(center.y());
-        top.translateZProperty().bind(wallBaseHeightPy.add(0.5* wallTopHeight).multiply(-1));
-        top.drawModeProperty().bind(PY_3D_DRAW_MODE);
-
-        return new Group(base, top);
-    }
-
     public Node createCompositeHorizontalWallBetween(Vector2f p, Vector2f q) {
         return createCompositeWallCenteredAt(p.midpoint(q), p.manhattanDist(q) + wallThickness, wallThickness);
     }
@@ -558,4 +533,30 @@ public class WorldRenderer3D {
         Node cWall = createCompositeCornerWall(corner, 0.5 * wallThickness);
         parent.getChildren().addAll(hWall, vWall, cWall);
     }
+
+    private Group createCompositeCornerWall(Vector2f center, double radius) {
+        Cylinder base = new Cylinder(radius, wallBaseHeightPy.get(), CYLINDER_DIVISIONS);
+        base.setMaterial(wallBaseMaterial);
+        base.setMouseTransparent(true);
+        base.heightProperty().bind(wallBaseHeightPy);
+        base.setRotationAxis(Rotate.X_AXIS);
+        base.setRotate(90);
+        base.setTranslateX(center.x());
+        base.setTranslateY(center.y());
+        base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
+        base.drawModeProperty().bind(PY_3D_DRAW_MODE);
+
+        Cylinder top = new Cylinder(radius, wallTopHeight, CYLINDER_DIVISIONS);
+        top.setMaterial(wallTopMaterial);
+        top.setMouseTransparent(true);
+        top.setRotationAxis(Rotate.X_AXIS);
+        top.setRotate(90);
+        top.setTranslateX(center.x());
+        top.setTranslateY(center.y());
+        top.translateZProperty().bind(wallBaseHeightPy.add(0.5* wallTopHeight).multiply(-1));
+        top.drawModeProperty().bind(PY_3D_DRAW_MODE);
+
+        return new Group(base, top);
+    }
+
 }

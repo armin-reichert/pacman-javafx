@@ -251,10 +251,15 @@ public class GameLevel3D extends Group {
         ));
         wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
+        //var cornerMaterial = new PhongMaterial();
+        //cornerMaterial.diffuseColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::darker));
+        //cornerMaterial.specularColorProperty().bind(wallBaseMaterial.specularColorProperty().map(Color::darker));
+        var cornerMaterial = wallBaseMaterial;
+
         GameConfiguration3D gameConfiguration3D = (GameConfiguration3D) context.gameConfiguration();
         WorldRenderer3D worldRenderer = gameConfiguration3D.createWorldRenderer();
         worldRenderer.setWallBaseMaterial(wallBaseMaterial);
-        worldRenderer.setCornerMaterial(wallBaseMaterial); // TODO use other material to achieve nice effect
+        worldRenderer.setCornerMaterial(cornerMaterial);
         worldRenderer.setWallBaseHeightProperty(obstacleBaseHeightPy);
         worldRenderer.setWallTopMaterial(wallTopMaterial);
         worldRenderer.setWallTopHeight(OBSTACLE_TOP_HEIGHT);
