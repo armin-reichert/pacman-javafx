@@ -19,7 +19,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 public abstract class Perspective {
 
     public enum Name {
-        DRONE, TOTAL, FOLLOWING_PLAYER, NEAR_PLAYER;
+        DRONE, TOTAL, TRACK_PLAYER, NEAR_PLAYER;
 
         public Name prev() {
             int n = values().length, ord = ordinal();
@@ -83,7 +83,7 @@ public abstract class Perspective {
         }
     }
 
-    public static class FollowingPlayer extends Perspective {
+    public static class TrackingPlayer extends Perspective {
         @Override
         public String toString() {
             return "Following Player";
@@ -108,7 +108,7 @@ public abstract class Perspective {
         }
     }
 
-    public static class NearPlayer extends Perspective {
+    public static class StalkingPlayer extends Perspective {
         @Override
         public String toString() {
             return "Near Player";

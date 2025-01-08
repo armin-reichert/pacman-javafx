@@ -103,7 +103,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             WorldMap worldMap = context.level().world().map();
             NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
             Color color = Color.valueOf(nesColorScheme.strokeColor());
-            scores3D.showTextAsScore(GAME_OVER_TEXT, color);
+            scores3D.showTextAsScore(TEXT_GAME_OVER, color);
         }
     }
 

@@ -17,7 +17,7 @@ public interface GlobalProperties3d {
     StringProperty              PY_3D_FLOOR_TEXTURE      = new SimpleStringProperty(NO_TEXTURE);
     ObjectProperty<Color>       PY_3D_LIGHT_COLOR        = new SimpleObjectProperty<>(Color.WHITE);
     BooleanProperty             PY_3D_PAC_LIGHT_ENABLED  = new SimpleBooleanProperty(true);
-    ObjectProperty<Perspective.Name> PY_3D_PERSPECTIVE   = new SimpleObjectProperty<>(Perspective.Name.FOLLOWING_PLAYER);
+    ObjectProperty<Perspective.Name> PY_3D_PERSPECTIVE   = new SimpleObjectProperty<>(Perspective.Name.TRACK_PLAYER);
     DoubleProperty              PY_3D_WALL_HEIGHT        = new SimpleDoubleProperty(3.5);
     DoubleProperty              PY_3D_WALL_OPACITY       = new SimpleDoubleProperty(1.0);
 }

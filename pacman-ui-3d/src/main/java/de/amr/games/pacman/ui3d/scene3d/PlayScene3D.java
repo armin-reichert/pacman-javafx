@@ -54,46 +54,32 @@ import static de.amr.games.pacman.ui2d.lib.Ufx.doAfterSec;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
 
 /**
- * 3D play scene for Arcade game variants. Tengen 3D scene is a subclass which adapts the action bindings.
- *
- * <p>Provides different camera perspectives that can be selected sequentially using keys <code>Alt+LEFT</code>
- * and <code>Alt+RIGHT</code>.</p>
+ * 3D play scene. Provides different camera perspectives that can be stepped
+ * through using keys <code>Alt+LEFT</code> and <code>Alt+RIGHT</code>.
  *
  * @author Armin Reichert
  */
 public class PlayScene3D extends Group implements GameScene, CameraControlledView {
 
-    //TODO localize?
-    protected static final String SCORE_TEXT = "SCORE";
-    protected static final String HIGH_SCORE_TEXT = "HIGH SCORE";
-    protected static final String GAME_OVER_TEXT = "GAME OVER!";
+    public static final String TEXT_SCORE = "SCORE";
+    public static final String TEXT_HIGH_SCORE = "HIGH SCORE";
+    public static final String TEXT_GAME_OVER = "GAME OVER!";
 
-    // Each 3D play scene has its own set of cameras/perspectives
-    private final Map<Perspective.Name, Perspective> namePerspectiveMap = new EnumMap<>(Perspective.Name.class);
-    {
-        namePerspectiveMap.put(Perspective.Name.DRONE, new Perspective.Drone());
-        namePerspectiveMap.put(Perspective.Name.TOTAL, new Perspective.Total());
-        namePerspectiveMap.put(Perspective.Name.FOLLOWING_PLAYER, new Perspective.FollowingPlayer());
-        namePerspectiveMap.put(Perspective.Name.NEAR_PLAYER, new Perspective.NearPlayer());
-    }
-
-    public final ObjectProperty<Perspective.Name> perspectiveNamePy = new SimpleObjectProperty<>() {
+    protected final ObjectProperty<Perspective.Name> perspectiveNamePy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
-            Logger.info("Perspective named changed to {}", get());
-            context.game().level().ifPresent(level -> perspective().init(level.world()));
+        context.game().level().ifPresent(level -> perspective().init(level.world()));
         }
     };
 
-    private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
-    protected GameContext context;
-
-    private final SubScene fxSubScene;
+    protected final Map<Perspective.Name, Perspective> perspectiveMap = new EnumMap<>(Perspective.Name.class);
+    protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
+    protected final SubScene fxSubScene;
     protected final Scores3D scores3D;
-
     protected final AmbientLight ambientLight;
+    protected GameContext context;
     protected GameLevel3D level3D;
-    private Animation levelCompleteAnimation;
+    protected Animation levelCompleteAnimation;
 
     public PlayScene3D() {
         ambientLight = new AmbientLight();
@@ -102,36 +88,39 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         var axes = new CoordinateSystem();
         axes.visibleProperty().bind(PY_3D_AXES_VISIBLE);
 
-        scores3D = new Scores3D(SCORE_TEXT, HIGH_SCORE_TEXT);
+        scores3D = new Scores3D(TEXT_SCORE, TEXT_HIGH_SCORE);
 
         // last child is placeholder for level 3D
         getChildren().addAll(scores3D, axes, ambientLight, new Group());
 
         // initial size is irrelevant, it is bound to parent scene later
-        fxSubScene = new SubScene(this, 42, 42, true, SceneAntialiasing.BALANCED);
+        fxSubScene = new SubScene(this, 88, 88, true, SceneAntialiasing.BALANCED);
         fxSubScene.setFill(Color.TRANSPARENT);
-        fxSubScene.cameraProperty().bind(perspectiveNamePy.map(name -> perspective().getCamera()));
+        fxSubScene.cameraProperty().bind(perspectiveNamePy.map(name -> perspectiveMap.get(name).getCamera()));
+
+        perspectiveMap.put(Perspective.Name.DRONE, new Perspective.Drone());
+        perspectiveMap.put(Perspective.Name.TOTAL, new Perspective.Total());
+        perspectiveMap.put(Perspective.Name.TRACK_PLAYER, new Perspective.TrackingPlayer());
+        perspectiveMap.put(Perspective.Name.NEAR_PLAYER, new Perspective.StalkingPlayer());
     }
 
     @Override
     public void init() {
-        context.setScoreVisible(true); //TODO check this
-        scores3D.setFont(context.assets().font("font.arcade", 8));
         bindGameActions();
         registerGameActionKeyBindings(context().keyboard());
+        context.setScoreVisible(true);
         perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
-        Logger.info("3D play scene initialized. {}", this);
+        scores3D.setFont(context.assets().font("font.arcade", 8));
     }
 
     @Override
     public final void end() {
+        unregisterGameActionKeyBindings(context().keyboard());
         perspectiveNamePy.unbind();
         if (levelCompleteAnimation != null) {
             levelCompleteAnimation.stop();
         }
         level3D = null;
-        unregisterGameActionKeyBindings(context().keyboard());
-        Logger.info("3D play scene ended. {}", this);
     }
 
     @Override
@@ -140,25 +129,21 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         if (context.game().isDemoLevel()) {
             bind(GameActions2D.INSERT_COIN, context.arcadeKeys().key(Arcade.Button.COIN));
-        }
-        else {
+        } else {
             bindDefaultArcadeControllerActions(this, context.arcadeKeys());
             bindFallbackPlayerControlActions(this);
             bindCheatActions(this);
-            context.setScoreVisible(true); //TODO check this
         }
         registerGameActionKeyBindings(context.keyboard());
     }
 
     @Override
     public void onLevelStarted(GameEvent event) {
+        bindGameActions(); //TODO check this
         GameLevel level = context.level();
-        bindGameActions();
         if (!hasLevel3D()) {
             replaceGameLevel3D();
             level3D.addLevelCounter();
-        } else {
-            Logger.error("3D level already created?");
         }
         switch (context.gameState()) {
             case TESTING_LEVELS, TESTING_LEVEL_TEASERS -> {
@@ -174,16 +159,13 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             }
         }
         updateScores();
-        namePerspectiveMap.forEach((name, perspective) -> perspective.init(level.world()));
+        perspectiveMap.values().forEach(perspective -> perspective.init(level.world()));
     }
 
     @Override
     public void onSceneVariantSwitch(GameScene fromScene) {
-        Logger.info("{} entered from {}", getClass().getSimpleName(), fromScene.getClass().getSimpleName());
-
         bindGameActions();
         registerGameActionKeyBindings(context.keyboard());
-
         if (!hasLevel3D()) {
             replaceGameLevel3D();
             level3D.addLevelCounter();
@@ -260,7 +242,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         else { // when score is disabled, show text "game over"
             String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
             Color color = context.assets().color(assetKeyPrefix + ".color.game_over_message");
-            scores3D.showTextAsScore(GAME_OVER_TEXT, color);
+            scores3D.showTextAsScore(TEXT_GAME_OVER, color);
         }
     }
 
@@ -317,7 +299,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     }
 
     public Perspective perspective() {
-        return namePerspectiveMap.get(perspectiveNamePy.get());
+        return perspectiveMap.get(perspectiveNamePy.get());
     }
 
     @Override
