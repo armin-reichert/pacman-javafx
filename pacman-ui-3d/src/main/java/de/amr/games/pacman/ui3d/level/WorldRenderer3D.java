@@ -168,8 +168,10 @@ public class WorldRenderer3D {
             case F_SHAPE ->                 addFShape3D(parent, obstacle);
             case H_SHAPE ->                 addHShape3D(parent, obstacle);
             case L_SHAPE ->                 addLShape3D(parent, obstacle);
-            case LL_SHAPE ->          addLShapeDouble(parent, obstacle);
-            case LL_SHAPE_MIRRORED -> addLShapeDoubleMirrored(parent, obstacle);
+            case LL_SHAPE ->                addLShapeDouble(parent, obstacle);
+            case LL_SHAPE_MIRRORED ->       addLShapeDoubleMirrored(parent, obstacle);
+            case LLL_SHAPE ->               addLShapeTriple(parent, obstacle);
+            case LLL_SHAPE_MIRRORED ->      addLShapeTripleMirrored(parent, obstacle);
             case O_SHAPE ->                 addOShape3D(parent, obstacle);
             case S_SHAPE ->                 addSShape3D(parent, obstacle);
             case T_SHAPE ->                 addTShape3D(parent, obstacle);
@@ -240,6 +242,28 @@ public class WorldRenderer3D {
         addWall(parent, t[1], t[3]);
         addWall(parent, t[3], t[2]);
     }
+
+    private void addLShapeTriple(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 2, 21, 6, 17, 10, 12);
+        addTowers(parent, t);
+        addWall(parent, t[0], t[1]);
+        addWall(parent, t[1], t[2]);
+        addWall(parent, t[2], t[3]);
+        addWall(parent, t[3], t[4]);
+        addWall(parent, t[4], t[5]);
+    }
+
+    private void addLShapeTripleMirrored(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 4, 8, 12, 15, 19, 23);
+        addTowers(parent, t);
+        addWall(parent, t[0], t[6]);
+        addWall(parent, t[6], t[1]);
+        addWall(parent, t[1], t[5]);
+        addWall(parent, t[5], t[2]);
+        addWall(parent, t[2], t[4]);
+        addWall(parent, t[4], t[3]);
+    }
+
 
     public void addFShape3D(Group parent, Obstacle obstacle) {
         Vector2f[] utc = obstacle.uTurnCenters();

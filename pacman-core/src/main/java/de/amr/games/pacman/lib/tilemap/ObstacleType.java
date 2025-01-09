@@ -41,6 +41,10 @@ public enum ObstacleType {
 
     LL_SHAPE_MIRRORED("dcfbdcfbdgbfcdbfce"),
 
+    LLL_SHAPE("dcgbecgbecgbfebgcebgcebgce"),
+
+    LLL_SHAPE_MIRRORED("dcfbdcfbdcfbdgbfcdbfcdbfce"),
+
     O_SHAPE("dgfe", "dcgfce", "dgbfeb", "dcgbfceb"),
 
     S_SHAPE(

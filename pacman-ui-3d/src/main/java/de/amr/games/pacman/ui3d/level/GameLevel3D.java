@@ -235,6 +235,10 @@ public class GameLevel3D extends Group {
     private void buildWorld3D(GameWorld world, WorldMapColoring coloring) {
         Logger.info("Build world 3D from map {}", world.map().url());
 
+        createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
+        worldGroup.getChildren().add(floor);
+
+
         Color wallBaseColor = coloring.stroke();
         // need some contrast with floor if fill color is black
         Color wallTopColor = coloring.fill().equals(Color.BLACK) ? Color.grayRgb(30) : coloring.fill();
@@ -263,11 +267,9 @@ public class GameLevel3D extends Group {
         worldRenderer.setWallBaseHeightProperty(obstacleBaseHeightPy);
         worldRenderer.setWallTopMaterial(wallTopMaterial);
         worldRenderer.setWallTopHeight(OBSTACLE_TOP_HEIGHT);
+
         //TODO check this:
         obstacleBaseHeightPy.set(PY_3D_WALL_HEIGHT.get());
-
-        createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
-        worldGroup.getChildren().add(floor);
 
         //TODO just a temporary solution until I find something better
         if (world.map().terrain().hasProperty(PROPERTY_OSHAPES_FILLED)) {
