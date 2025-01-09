@@ -166,8 +166,12 @@ public class WorldRenderer3D {
             case ANY ->                     addUncategorizedObstacle3D(parent, obstacle);
             case CROSS_SHAPE ->             addCross3D(parent, obstacle);
             case F_SHAPE ->                 addFShape3D(parent, obstacle);
+            case GAMMA_SPIKED ->            addGammaSpiked(parent, obstacle);
+            case GAMMA_SPIKED_MIRRORED ->   addGammaSpikedMirrored(parent, obstacle);
             case H_SHAPE ->                 addHShape3D(parent, obstacle);
             case L_SHAPE ->                 addLShape3D(parent, obstacle);
+            case L_SPIKED ->                addLSpikedShape3D(parent, obstacle);
+            case L_SPIKED_MIRRORED ->       addLSpikedMirroredShape3D(parent, obstacle);
             case LL_SHAPE ->                addLShapeDouble(parent, obstacle);
             case LL_SHAPE_MIRRORED ->       addLShapeDoubleMirrored(parent, obstacle);
             case LLL_SHAPE ->               addLShapeTriple(parent, obstacle);
@@ -225,6 +229,24 @@ public class WorldRenderer3D {
         addWall(parent, utc[1], corner);
     }
 
+    public void addLSpikedShape3D(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 4, 9, 11);
+        Vector2f h = vec_2f(t[0].x(), t[1].y());
+        addTowers(parent, t);
+        addWall(parent, t[0], t[2]);
+        addWall(parent, t[1], h);
+        addWall(parent, t[2], t[3]);
+    }
+
+    private void addLSpikedMirroredShape3D(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 4, 7, 11);
+        Vector2f h = vec_2f(t[0].x(), t[3].y());
+        addTowers(parent, t);
+        addWall(parent, t[0], t[2]);
+        addWall(parent, h, t[3]);
+        addWall(parent, t[1], t[2]);
+    }
+
     public void addLShapeDouble(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 2, 6, 8, 13);
         addTowers(parent, t);
@@ -251,6 +273,7 @@ public class WorldRenderer3D {
         addWall(parent, t[2], t[3]);
         addWall(parent, t[3], t[4]);
         addWall(parent, t[4], t[5]);
+        addWall(parent, t[5], t[6]);
     }
 
     private void addLShapeTripleMirrored(Group parent, Obstacle obstacle) {
@@ -305,6 +328,24 @@ public class WorldRenderer3D {
                 addWall(parent, spineMiddle, utc[1]);
             }
         }
+    }
+
+    private void addGammaSpiked(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 4, 9, 14);
+        Vector2f h = vec_2f(t[0].x(), t[1].y());
+        addTowers(parent, t);
+        addWall(parent, t[0], t[2]);
+        addWall(parent, t[1], h);
+        addWall(parent, t[0], t[3]);
+    }
+
+    private void addGammaSpikedMirrored(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 5, 10, 15);
+        Vector2f h = vec_2f(t[3].x(), t[2].y());
+        addTowers(parent, t);
+        addWall(parent, t[0], t[3]);
+        addWall(parent, t[3], t[1]);
+        addWall(parent, h, t[2]);
     }
 
     public void addHShape3D(Group parent, Obstacle obstacle) {

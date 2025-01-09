@@ -23,6 +23,9 @@ public enum ObstacleType {
         "dcgfcdbecgfcdbfeb", "dcgbfebgcedcfbgce"
     ),
 
+    GAMMA_SPIKED("dcfbdgbecgfcdbfeb"),
+    GAMMA_SPIKED_MIRRORED("dgbecgfcdbfebgceb"),
+
     H_SHAPE(
         "dgefdgbfegdfeb",
         "dcgfdegfcedfge",
@@ -36,6 +39,10 @@ public enum ObstacleType {
         "dgbegfceb", "dcgfdbfeb", "dcgbfebge", "dfbdgbfce", // 9 segments
         "dcgbfebgce", "dcfbdgbfce", "dgbecgfceb", "dcgfcdbfeb" // 10 segment
     ),
+
+    L_SPIKED("dcfbdgbecgbfebgce"),
+
+    L_SPIKED_MIRRORED("dcfbdgbfcdbfebgce"),
 
     LL_SHAPE("dcgbecgbfebgcebgce"),
 
