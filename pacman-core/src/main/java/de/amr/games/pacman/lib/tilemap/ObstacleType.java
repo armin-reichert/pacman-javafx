@@ -65,6 +65,11 @@ public enum ObstacleType {
         "dcfbdcgfcdbfce"
     ),
 
+    SPACE_SHIP_UP("dcfbdcgfcdbecgfcebgce"),
+    SPACE_SHIP_DOWN("dcgbecgfcdbfcedcfbgce"),
+    SPACE_SHIP_LEFT("dcfbdgbecgbfebgcdbfeb"),
+    SPACE_SHIP_RIGHT("dgbecfbdgbfcdbfebgceb"),
+
     T_SHAPE(
         "dgbecgfcdbfeb",
         "dcfbdgbfebgce",
