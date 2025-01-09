@@ -36,13 +36,7 @@ import java.util.Map;
 public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     private static final GameController THE_ONE = new GameController();
-
-    public static GameController it() {
-        if (THE_ONE == null) {
-            throw new IllegalStateException("Game controller has not yet been created");
-        }
-        return THE_ONE;
-    }
+    public static GameController it() { return THE_ONE; }
 
     private final CoinControl coinControl = new CoinControl();
     private final Map<GameVariant, GameModel> modelsByVariant = new EnumMap<>(GameVariant.class);
@@ -50,11 +44,9 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     private GameController() {
         super(GameState.values());
-        for (var entry : modelsByVariant.entrySet()) {
-            Logger.info("Game variant {} => {}", entry.getKey(), entry.getValue());
-        }
         // map state change events to game events
         addStateChangeListener((oldState, newState) -> currentGame.publishGameEvent(new GameStateChangeEvent(currentGame, oldState, newState)));
+        Logger.info("Game controller created");
     }
 
     /**

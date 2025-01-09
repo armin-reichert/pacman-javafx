@@ -62,7 +62,7 @@ public class ObstacleBuilder {
         tilesWithErrors.clear();
         List<Obstacle> obstacles = new ArrayList<>();
 
-        Logger.info("Find obstacles in map ID={} size={}x{}", terrain.hashCode(), terrain.numRows(), terrain.numCols());
+        Logger.debug("Find obstacles in map ID={} size={}x{}", terrain.hashCode(), terrain.numRows(), terrain.numCols());
         // Note: order of detection matters! Otherwise, when searching for closed
         // obstacles first, each failed attempt must set its visited tile set to unvisited!
         terrain.tiles()
@@ -81,9 +81,9 @@ public class ObstacleBuilder {
             .map(cornerNW -> buildClosedObstacle(cornerNW, tilesWithErrors))
             .forEach(obstacles::add);
 
-        Logger.info("Found {} obstacles", obstacles.size());
+        Logger.debug("Found {} obstacles", obstacles.size());
         obstacles = optimize(obstacles);
-        Logger.info("Optimized {} obstacles", obstacles.size());
+        Logger.debug("Optimized {} obstacles", obstacles.size());
         return obstacles;
     }
 
