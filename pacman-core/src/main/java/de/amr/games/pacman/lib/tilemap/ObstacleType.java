@@ -80,6 +80,14 @@ public enum ObstacleType {
         "dcgbfcedcfbgce", "dcgfcdbecgfceb", "dcgbfebgcdbfeb", "dgbecfbdgbfceb"
     ),
 
+    //TODO these obstacle types belong elsewhere
+
+    // Junior Pac-Man Map #4 left of house
+    JUNIOR_4_LEFT_OF_HOUSE("dcgbecgfcebgcedcfbgce"),
+
+    // Junior Pac-Man Map #4 right of house
+    JUNIOR_4_RIGHT_OF_HOUSE("dcfbgcedcfbdcgfcdbfce"),
+
     ANY;
 
     ObstacleType(String... encodingStrings) {

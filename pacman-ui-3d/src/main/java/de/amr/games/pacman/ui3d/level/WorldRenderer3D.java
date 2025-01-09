@@ -181,6 +181,11 @@ public class WorldRenderer3D {
             case T_SHAPE ->                 addTShape3D(parent, obstacle);
             case T_SHAPE_TWO_ROWS ->        addTShapeTwoRows3D(parent, obstacle);
             case U_SHAPE ->                 addUShape3D(parent, obstacle);
+
+            //TODO these belong elsewhere
+            case JUNIOR_4_LEFT_OF_HOUSE ->  add_Junior_4_LeftOfHouse(parent, obstacle);
+            case JUNIOR_4_RIGHT_OF_HOUSE -> add_Junior_4_RightOfHouse(parent, obstacle);
+
         }
     }
 
@@ -623,5 +628,30 @@ public class WorldRenderer3D {
 
         return new Group(base, top);
     }
+
+
+    // Junior Pac-Man maze obstacles. TODO: move elsewhere
+
+    private void add_Junior_4_LeftOfHouse(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 2, 6, 9, 13);
+        Vector2f h = vec_2f(t[4].x(), t[1].y());
+        addTowers(parent, t);
+        addWall(parent, t[0], t[1]);
+        addWall(parent, t[1], t[3]);
+        addWall(parent, t[3], t[2]);
+        addWall(parent, t[4], h);
+    }
+
+
+    private void add_Junior_4_RightOfHouse(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 6, 11, 13, 18);
+        Vector2f h = vec_2f(t[1].x(), t[2].y());
+        addTowers(parent, t);
+        addWall(parent, t[0], t[4]);
+        addWall(parent, t[4], t[2]);
+        addWall(parent, t[1], h);
+        addWall(parent, t[2], t[3]);
+    }
+
 
 }

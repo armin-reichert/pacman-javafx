@@ -74,7 +74,6 @@ public class GameLevel3D extends Group {
     private final DoubleProperty obstacleBaseHeightPy = new SimpleDoubleProperty(this, "obstacleBaseHeight", OBSTACLE_BASE_HEIGHT);
     private final DoubleProperty wallOpacityPy        = new SimpleDoubleProperty(this, "wallOpacity", 1.0);
     private final ObjectProperty<Color> floorColorPy  = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
-    private final ObjectProperty<Color> cornerColorPy = new SimpleObjectProperty<>(this, "cornerColor", Color.WHITE);
     private final IntegerProperty livesCounterPy      = new SimpleIntegerProperty(0);
 
     private final DoubleProperty houseBaseHeightPy    = new SimpleDoubleProperty(this, "houseBaseHeight", HOUSE_BASE_HEIGHT);
