@@ -20,7 +20,6 @@ import de.amr.games.pacman.ui2d.assets.GameSound;
 import de.amr.games.pacman.ui2d.lib.Ufx;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
@@ -29,7 +28,6 @@ import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
@@ -192,7 +190,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             }
             gr.drawLivesCounter(numLivesShown, 5, 2 * TS, size().y() - 2 * TS);
         } else {
-            int credit = context.gameController().coinControl().credit();
+            int credit = context.gameController().credit;
             gr.drawText("CREDIT %2d".formatted(credit), Color.valueOf(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS),
                     2 * TS, size().y() - 2);
         }

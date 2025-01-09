@@ -58,7 +58,7 @@ public class StartScene extends GameScene2D {
         if (context.gameVariant() == GameVariant.PACMAN) {
             gr.drawText(MIDWAY_COPYRIGHT, pink, font8, tiles2Px(4), tiles2Px(29));
         }
-        gr.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), white, font8, 2 * TS, size().y() - 2);
+        gr.drawText("CREDIT %2d".formatted(context.gameController().credit), white, font8, 2 * TS, size().y() - 2);
         gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 

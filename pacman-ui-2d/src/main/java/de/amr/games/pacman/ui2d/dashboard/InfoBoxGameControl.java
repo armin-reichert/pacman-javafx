@@ -4,11 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.action.GameActions2D;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.action.GameActions2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -43,7 +44,7 @@ public class InfoBoxGameControl extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        spinnerCredit      = addIntSpinner("Credit", 0, context.gameController().coinControl().maxCoins(), 0);
+        spinnerCredit      = addIntSpinner("Credit", 0, GameController.MAX_COINS, 0);
         comboGameVariant   = addComboBox("Variant", GameVariant.values());
         comboInitialLives  = addComboBox("Initial Lives", new Integer[] {3, 5});
         bgLevelActions     = addButtonList("Game Level", "Start", "Quit", "Next");
@@ -51,7 +52,7 @@ public class InfoBoxGameControl extends InfoBox {
         cbAutopilot        = addCheckBox("Autopilot");
         cbImmunity         = addCheckBox("Pac-Man Immune");
 
-        spinnerCredit.valueProperty().addListener((py, ov, number) -> context.gameController().coinControl().setNumCoins(number));
+        spinnerCredit.valueProperty().addListener((py, ov, number) -> context.gameController().credit = number);
 
         comboGameVariant.setOnAction(e -> {
             if (comboGameVariant.getValue() != context.gameVariant()) {
@@ -78,7 +79,7 @@ public class InfoBoxGameControl extends InfoBox {
         GameModel game = context.game();
         GameState state = context.gameState();
 
-        spinnerCredit.getValueFactory().setValue(context.gameController().coinControl().credit());
+        spinnerCredit.getValueFactory().setValue(context.gameController().credit);
         comboGameVariant.setValue(context.gameVariant());
         comboInitialLives.setValue(game.initialLives());
 

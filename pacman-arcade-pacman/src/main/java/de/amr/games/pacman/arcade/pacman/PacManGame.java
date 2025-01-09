@@ -199,7 +199,7 @@ public class PacManGame extends GameModel {
 
     @Override
     public boolean canStartNewGame() {
-        return GameController.it().coinControl().hasCredit();
+        return GameController.it().credit > 0;
     }
 
     @Override
@@ -219,7 +219,9 @@ public class PacManGame extends GameModel {
 
     @Override
     public void endGame() {
-        GameController.it().coinControl().consumeCoin();
+        if (GameController.it().credit > 0) {
+            GameController.it().credit -= 1;
+        }
         scoreManager().updateHighScore();
         publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
     }

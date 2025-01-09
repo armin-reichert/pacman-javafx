@@ -54,7 +54,7 @@ public class StartScene extends GameScene2D {
         r.drawSpriteScaled(spriteSheet.livesCounterSprite(), tiles2Px(13), tiles2Px(23) + 1);
         r.drawText("PTS", orange, font6, tiles2Px(25), tiles2Px(25));
         r.drawMsPacManMidwayCopyright(tiles2Px(6), tiles2Px(28), red, r.scaledArcadeFont(TS));
-        r.drawText("CREDIT %2d".formatted(context.gameController().coinControl().credit()), white, r.scaledArcadeFont(TS),
+        r.drawText("CREDIT %2d".formatted(context.gameController().credit), white, r.scaledArcadeFont(TS),
             tiles2Px(2), size().y() - 2);
         r.drawLevelCounter(context, size().x() - tiles2Px(4), size().y() - tiles2Px(2));
     }

@@ -35,12 +35,15 @@ import java.util.Map;
  */
 public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
-    private static final GameController THE_ONE = new GameController();
     public static GameController it() { return THE_ONE; }
 
-    private final CoinControl coinControl = new CoinControl();
+    public static final int MAX_COINS = 99;
+
+    private static final GameController THE_ONE = new GameController();
+
     private final Map<GameVariant, GameModel> modelsByVariant = new EnumMap<>(GameVariant.class);
     private GameModel currentGame;
+    public int credit;
 
     private GameController() {
         super(GameState.values());
@@ -92,9 +95,5 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     public void update() {
         currentGame.clearEventLog();
         super.update();
-    }
-
-    public CoinControl coinControl() {
-        return coinControl;
     }
 }

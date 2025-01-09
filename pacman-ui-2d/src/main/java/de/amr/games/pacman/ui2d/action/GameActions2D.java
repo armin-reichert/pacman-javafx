@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.action;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
@@ -34,8 +35,8 @@ public enum GameActions2D implements GameAction {
     INSERT_COIN {
         @Override
         public void execute(GameContext context) {
-            boolean coinInserted = context.gameController().coinControl().insertCoin();
-            if (coinInserted) {
+            if (context.gameController().credit < GameController.MAX_COINS) {
+                context.gameController().credit += 1;
                 context.sound().enabledProperty().set(true);
                 context.game().publishGameEvent(GameEventType.CREDIT_ADDED);
             }
@@ -52,7 +53,7 @@ public enum GameActions2D implements GameAction {
             return context.gameState() == GameState.SETTING_OPTIONS ||
                 context.gameState() == INTRO ||
                 context.game().isDemoLevel() ||
-                !context.gameController().coinControl().hasCredit();
+                context.gameController().credit == 0;
         }
     },
 
