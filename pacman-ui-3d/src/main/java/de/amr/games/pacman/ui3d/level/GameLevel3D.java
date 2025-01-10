@@ -39,6 +39,8 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -232,7 +234,7 @@ public class GameLevel3D extends Group {
     }
 
     private void buildWorld3D(GameWorld world, WorldMapColoring coloring) {
-        Logger.info("Build world 3D from map {}", world.map().url());
+        Logger.info("Build world 3D. Map URL='{}'", URLDecoder.decode(world.map().url().toExternalForm(), StandardCharsets.UTF_8));
 
         createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
         worldGroup.getChildren().add(floor);

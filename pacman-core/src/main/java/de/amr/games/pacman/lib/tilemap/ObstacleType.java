@@ -54,6 +54,11 @@ public enum ObstacleType {
 
     O_SHAPE("dgfe", "dcgfce", "dgbfeb", "dcgbfceb"),
 
+    OPEN_SQUARE_NW("dgbecfbgcedcgbfceb"),
+    OPEN_SQUARE_NE("dcgbfcedcfbgcdbfeb"),
+    OPEN_SQUARE_SE("dcgbfebgcdbecgfceb"),
+    OPEN_SQUARE_SW("dcgfcdbecfbdgbfceb"),
+
     S_SHAPE(
         "dcfdgbfcdfeb",
         "dgecgbfegceb",

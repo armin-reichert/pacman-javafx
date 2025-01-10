@@ -177,6 +177,10 @@ public class WorldRenderer3D {
             case LLL_SHAPE ->               addLShapeTriple(parent, obstacle);
             case LLL_SHAPE_MIRRORED ->      addLShapeTripleMirrored(parent, obstacle);
             case O_SHAPE ->                 addOShape3D(parent, obstacle);
+            case OPEN_SQUARE_SE ->          addOpenSquareSE(parent, obstacle);
+            case OPEN_SQUARE_SW ->          addOpenSquareSW(parent, obstacle);
+            case OPEN_SQUARE_NE ->          addOpenSquareNE(parent, obstacle);
+            case OPEN_SQUARE_NW ->          addOpenSquareNW(parent, obstacle);
             case S_SHAPE ->                 addSShape3D(parent, obstacle);
             case T_SHAPE ->                 addTShape3D(parent, obstacle);
             case T_SHAPE_TWO_ROWS ->        addTShapeTwoRows3D(parent, obstacle);
@@ -598,6 +602,41 @@ public class WorldRenderer3D {
         addWall(parent, t[3], t[4]);
     }
 
+    private void addOpenSquareSE(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 2, 4, 13, 16);
+        addTowers(parent, t);
+        addWall(parent, t[0], t[1]);
+        addWall(parent, t[1], t[2]);
+        addWall(parent, t[0], t[4]);
+        addWall(parent, t[3], t[4]);
+    }
+
+    private void addOpenSquareSW(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 2, 11, 14, 16);
+        addTowers(parent, t);
+        addWall(parent, t[0], t[1]);
+        addWall(parent, t[0], t[4]);
+        addWall(parent, t[2], t[3]);
+        addWall(parent, t[3], t[4]);
+    }
+
+    private void addOpenSquareNE(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 2, 4, 6, 15);
+        addTowers(parent, t);
+        addWall(parent, t[0], t[1]);
+        addWall(parent, t[1], t[2]);
+        addWall(parent, t[2], t[3]);
+        addWall(parent, t[0], t[4]);
+    }
+
+    private void addOpenSquareNW(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 9, 12, 14, 16);
+        addTowers(parent, t);
+        addWall(parent, t[0], t[4]);
+        addWall(parent, t[4], t[3]);
+        addWall(parent, t[3], t[2]);
+        addWall(parent, t[2], t[1]);
+    }
 
     // Junior Pac-Man maze obstacles. TODO: move elsewhere
 
