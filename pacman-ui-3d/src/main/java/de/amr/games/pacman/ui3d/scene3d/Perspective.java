@@ -172,9 +172,5 @@ public abstract class Perspective {
 
     public abstract void update(GameWorld world, Actor2D spottedActor);
 
-    public PerspectiveCamera getCamera() {
-        return camera;
-    }
-
     final PerspectiveCamera camera;
 }

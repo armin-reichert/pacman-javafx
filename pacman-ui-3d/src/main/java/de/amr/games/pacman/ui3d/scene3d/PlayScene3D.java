@@ -90,7 +90,6 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         axes.visibleProperty().bind(PY_3D_AXES_VISIBLE);
 
         scores3D = new Scores3D(TEXT_SCORE, TEXT_HIGH_SCORE);
-
         // last child is placeholder for level 3D
         getChildren().addAll(scores3D, axes, ambientLight, new Group());
 
@@ -99,6 +98,9 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         perspectiveMap.put(Perspective.Name.TOTAL, new Perspective.Total(camera));
         perspectiveMap.put(Perspective.Name.TRACK_PLAYER, new Perspective.TrackingPlayer(camera));
         perspectiveMap.put(Perspective.Name.NEAR_PLAYER, new Perspective.StalkingPlayer(camera));
+
+        scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
+        scores3D.rotateProperty().bind(camera.rotateProperty());
 
         // initial size is irrelevant, gets bound to parent scene size later
         fxSubScene = new SubScene(this, 88, 88, true, SceneAntialiasing.BALANCED);
@@ -223,14 +225,11 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             updateScores();
             updateSound(context.sound());
         }
-        updatePerspective(level);
+        perspective().update(level.world(), level.pac());
     }
 
-    private void updatePerspective(GameLevel level) {
-        perspective().update(level.world(), level.pac());
-        Camera camera = perspective().getCamera();
-        scores3D.rotationAxisProperty().set(camera.getRotationAxis());
-        scores3D.rotateProperty().set(camera.getRotate());
+    protected Perspective perspective() {
+        return perspectiveMap.get(perspectiveNamePy.get());
     }
 
     protected void updateScores() {
@@ -298,10 +297,6 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     @Override
     public void setGameContext(GameContext context) {
         this.context = assertNotNull(context);
-    }
-
-    public Perspective perspective() {
-        return perspectiveMap.get(perspectiveNamePy.get());
     }
 
     @Override
