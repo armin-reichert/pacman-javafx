@@ -586,22 +586,30 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
         items.add(contextMenuTitleItem(context.locText("select_perspective")));
 
-        // Camera perspective selection
-        var perspectivesGroup = new ToggleGroup();
+        // Camera perspective radio buttons
+        var radioButtonGroup = new ToggleGroup();
         for (var perspective : Perspective.Name.values()) {
             var miPerspective = new RadioMenuItem(context.locText(perspective.name()));
-            miPerspective.setToggleGroup(perspectivesGroup);
-            // keep global property in sync with selection
-            miPerspective.selectedProperty().addListener((py, ov, selected) -> {
-                if (selected) {
-                    PY_3D_PERSPECTIVE.set(perspective);
-                }
-            });
-            // keep selection in sync with global property value
-            PY_3D_PERSPECTIVE.addListener((py, ov, newPerspective) -> miPerspective.setSelected(newPerspective == perspective));
-            miPerspective.setSelected(perspective == PY_3D_PERSPECTIVE.get()); // == is allowed for enum comparison
+            miPerspective.setToggleGroup(radioButtonGroup);
+            miPerspective.setUserData(perspective);
+            if (perspective == PY_3D_PERSPECTIVE.get())  { // == allowed for enum values
+                miPerspective.setSelected(true);
+            }
             items.add(miPerspective);
         }
+        // keep radio button group in sync with global property value
+        radioButtonGroup.selectedToggleProperty().addListener((py, ov, radioButton) -> {
+            if (radioButton != null) {
+                PY_3D_PERSPECTIVE.set((Perspective.Name) radioButton.getUserData());
+            }
+        });
+        PY_3D_PERSPECTIVE.addListener((py, ov, name) -> {
+            for (Toggle toggle : radioButtonGroup.getToggles()) {
+                if (toggle.getUserData() == name) { // == allowed for enum values
+                    radioButtonGroup.selectToggle(toggle);
+                }
+            }
+        });
 
         // Common items
         items.add(contextMenuTitleItem(context.locText("pacman")));
