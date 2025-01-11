@@ -115,8 +115,8 @@ public abstract class Perspective {
             camera.setFarClip(10000.0);
             camera.setFieldOfView(40); // default: 30
             camera.setRotationAxis(Rotate.X_AXIS);
-            camera.setRotate(60);
-            camera.setTranslateZ(-120);
+            camera.setRotate(70);
+            camera.setTranslateZ(-60);
         }
 
         @Override
@@ -124,7 +124,7 @@ public abstract class Perspective {
             double speedX = 0.03;
             double speedY = 0.06;
             double worldWidth = world.map().terrain().numCols() * TS;
-            double targetX = clamp(spottedActor.posX(), 100, worldWidth - 100);
+            double targetX = clamp(spottedActor.posX(), 80, worldWidth - 80);
             double targetY = spottedActor.posY() + 150;
             camera.setTranslateX(lerp(camera.getTranslateX(), targetX, speedX));
             camera.setTranslateY(lerp(camera.getTranslateY(), targetY, speedY));
