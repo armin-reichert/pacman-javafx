@@ -81,6 +81,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     protected GameLevel3D level3D;
     protected Animation levelCompleteAnimation;
 
+    // When constructor is called, context is not yet available!
     public PlayScene3D() {
         ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
@@ -93,7 +94,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         // last child is placeholder for level 3D
         getChildren().addAll(scores3D, axes, ambientLight, new Group());
 
-        // initial size is irrelevant, it is bound to parent scene later
+        // initial size is irrelevant, gets bound to parent scene size later
         fxSubScene = new SubScene(this, 88, 88, true, SceneAntialiasing.BALANCED);
         fxSubScene.setFill(Color.TRANSPARENT);
         fxSubScene.cameraProperty().bind(perspectiveNamePy.map(name -> perspectiveMap.get(name).getCamera()));

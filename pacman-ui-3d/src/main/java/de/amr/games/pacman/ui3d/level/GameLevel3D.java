@@ -190,7 +190,6 @@ public class GameLevel3D extends Group {
         return counter3D;
     }
 
-
     public void addLevelCounter() {
         // Place level counter at top right maze corner
         double x = context.level().world().map().terrain().numCols() * TS - 2 * TS;
@@ -238,7 +237,6 @@ public class GameLevel3D extends Group {
 
         createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
         worldGroup.getChildren().add(floor);
-
 
         Color wallBaseColor = coloring.stroke();
         // need some contrast with floor if fill color is black
