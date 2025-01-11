@@ -103,7 +103,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         // initial size is irrelevant, gets bound to parent scene size later
         fxSubScene = new SubScene(this, 88, 88, true, SceneAntialiasing.BALANCED);
         fxSubScene.setFill(Color.TRANSPARENT);
-        fxSubScene.cameraProperty().bind(perspectiveNamePy.map(name -> perspectiveMap.get(name).getCamera()));
+        fxSubScene.setCamera(camera);
     }
 
     @Override
