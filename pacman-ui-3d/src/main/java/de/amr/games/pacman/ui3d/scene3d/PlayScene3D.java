@@ -94,15 +94,16 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         // last child is placeholder for level 3D
         getChildren().addAll(scores3D, axes, ambientLight, new Group());
 
+        var camera = new PerspectiveCamera(true);
+        perspectiveMap.put(Perspective.Name.DRONE, new Perspective.Drone(camera));
+        perspectiveMap.put(Perspective.Name.TOTAL, new Perspective.Total(camera));
+        perspectiveMap.put(Perspective.Name.TRACK_PLAYER, new Perspective.TrackingPlayer(camera));
+        perspectiveMap.put(Perspective.Name.NEAR_PLAYER, new Perspective.StalkingPlayer(camera));
+
         // initial size is irrelevant, gets bound to parent scene size later
         fxSubScene = new SubScene(this, 88, 88, true, SceneAntialiasing.BALANCED);
         fxSubScene.setFill(Color.TRANSPARENT);
         fxSubScene.cameraProperty().bind(perspectiveNamePy.map(name -> perspectiveMap.get(name).getCamera()));
-
-        perspectiveMap.put(Perspective.Name.DRONE, new Perspective.Drone());
-        perspectiveMap.put(Perspective.Name.TOTAL, new Perspective.Total());
-        perspectiveMap.put(Perspective.Name.TRACK_PLAYER, new Perspective.TrackingPlayer());
-        perspectiveMap.put(Perspective.Name.NEAR_PLAYER, new Perspective.StalkingPlayer());
     }
 
     @Override
