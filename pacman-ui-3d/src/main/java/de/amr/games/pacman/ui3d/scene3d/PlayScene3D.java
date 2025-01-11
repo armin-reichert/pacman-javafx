@@ -76,22 +76,18 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     protected final SubScene fxSubScene;
     protected final Scores3D scores3D;
-    protected final AmbientLight ambientLight;
     protected GameContext context;
     protected GameLevel3D level3D;
     protected Animation levelCompleteAnimation;
 
     // When constructor is called, context is not yet available!
     public PlayScene3D() {
-        ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
-
         var axes = new CoordinateSystem();
         axes.visibleProperty().bind(PY_3D_AXES_VISIBLE);
 
         scores3D = new Scores3D(TEXT_SCORE, TEXT_HIGH_SCORE);
         // last child is placeholder for level 3D
-        getChildren().addAll(scores3D, axes, ambientLight, new Group());
+        getChildren().addAll(scores3D, axes, new Group());
 
         var camera = new PerspectiveCamera(true);
         perspectiveMap.put(Perspective.Name.DRONE, new Perspective.Drone(camera));

@@ -77,6 +77,7 @@ public class WorldRenderer3D {
         base.setTranslateY(center.y());
         base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        base.setUserData("obstacleBase");
 
         var top = new Box(sizeX, sizeY, wallTopHeight);
         top.setMaterial(wallTopMaterial);
@@ -85,6 +86,7 @@ public class WorldRenderer3D {
         top.setTranslateY(center.y());
         top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        top.setUserData("obstacleTop");
 
         return new Group(base, top);
     }
@@ -126,6 +128,7 @@ public class WorldRenderer3D {
         base.heightProperty().bind(wallBaseHeightPy);
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
         base.setMouseTransparent(true);
+        base.setUserData("obstacleBase");
 
         Cylinder top = new Cylinder(radius, wallTopHeight, CYLINDER_DIVISIONS);
         top.setMaterial(wallTopMaterial);
@@ -136,13 +139,15 @@ public class WorldRenderer3D {
         top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
         top.setMouseTransparent(true);
+        top.setUserData("obstacleTop");
 
         return new Group(base, top);
     }
 
     protected void addTowers(Group parent, Vector2f... centers) {
         for (Vector2f center : centers) {
-            parent.getChildren().add(createCompositeCircularWall(center, HTS));
+            Node tower = createCompositeCircularWall(center, HTS);
+            parent.getChildren().add(tower);
         }
     }
 
