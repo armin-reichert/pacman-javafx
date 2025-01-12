@@ -333,6 +333,7 @@ public class GameLevel3D extends Group {
             HOUSE_OPACITY,
             houseBaseHeightPy, HOUSE_WALL_TOP_HEIGHT, HOUSE_WALL_THICKNESS,
             houseLightOnPy);
+        getChildren().add(door3D); //TODO check this
     }
 
     private void createFloor(double sizeX, double sizeY) {
