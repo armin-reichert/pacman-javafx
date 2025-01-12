@@ -313,7 +313,17 @@ public class GameLevel3D extends Group {
                 worldRenderer.renderObstacle3D(mazeGroup, obstacle);
             }
         }
-        addHouse(mazeGroup, world, coloring);
+
+        // House
+        houseBaseHeightPy.set(HOUSE_BASE_HEIGHT);
+        //WorldRenderer3D renderer3D = new WorldRenderer3D();
+        door3D = worldRenderer.addGhostHouse(
+            mazeGroup, world,
+            coloring.fill(), coloring.stroke(), coloring.door(),
+            HOUSE_OPACITY,
+            houseBaseHeightPy, HOUSE_WALL_TOP_HEIGHT, HOUSE_WALL_THICKNESS,
+            houseLightOnPy);
+        getChildren().add(door3D); //TODO check this
         addFood3D(world, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 
         worldGroup.getChildren().add(mazeGroup);
@@ -322,18 +332,6 @@ public class GameLevel3D extends Group {
         obstacleTopNodes = mazeGroup.lookupAll("*").stream()
             .filter(node -> "obstacleTop".equals(node.getUserData()))
             .collect(Collectors.toSet());
-    }
-
-    private void addHouse(Group parent, GameWorld world, WorldMapColoring coloring) {
-        houseBaseHeightPy.set(HOUSE_BASE_HEIGHT);
-        WorldRenderer3D renderer3D = new WorldRenderer3D();
-        door3D = renderer3D.addGhostHouse(
-            parent, world,
-            coloring.fill(), coloring.stroke(), coloring.door(),
-            HOUSE_OPACITY,
-            houseBaseHeightPy, HOUSE_WALL_TOP_HEIGHT, HOUSE_WALL_THICKNESS,
-            houseLightOnPy);
-        getChildren().add(door3D); //TODO check this
     }
 
     private void createFloor(double sizeX, double sizeY) {
