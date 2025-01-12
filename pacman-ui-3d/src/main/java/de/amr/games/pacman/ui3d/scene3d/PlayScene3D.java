@@ -360,7 +360,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         level3D.pellets3D().forEach(Pellet3D::onEaten);
         level3D.energizers3D().forEach(Energizer3D::onEaten);
         level3D.livesCounter3D().shapesRotation().stop();
-        level3D.hideHouseDoor();
+        level3D.door3D().setVisible(false);
         playLevelCompleteAnimation(context.level());
     }
 

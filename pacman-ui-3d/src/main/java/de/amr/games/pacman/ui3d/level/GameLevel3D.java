@@ -91,9 +91,7 @@ public class GameLevel3D extends Group {
     private final BooleanProperty houseLightOnPy = new SimpleBooleanProperty();
 
     private final GameContext context;
-
-    protected final AmbientLight ambientLight;
-
+    private final AmbientLight ambientLight;
     private final Group worldGroup = new Group();
     private final Group mazeGroup = new Group();
     private final Pac3D pac3D;
@@ -103,11 +101,13 @@ public class GameLevel3D extends Group {
     private final LivesCounter3D livesCounter3D;
     private Door3D door3D;
     private Box floor;
-    private PhongMaterial cornerMaterial;
-    private Set<Node> obstacleTopNodes;
     private Message3D message3D;
-
     private Bonus3D bonus3D;
+
+    // experimental
+    private PhongMaterial cornerMaterial;
+    private Set<Node> obstacleBaseNodes;
+    private PhongMaterial highlightMaterial = new PhongMaterial(Color.YELLOW);
 
     public GameLevel3D(GameContext context) {
         this.context = assertNotNull(context);
@@ -179,9 +179,6 @@ public class GameLevel3D extends Group {
 
          */
     }
-
-    private PhongMaterial highlightMaterial = new PhongMaterial(Color.YELLOW);
-
 
     private Pac3D createPac3D(Pac pac) {
         String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
@@ -306,6 +303,7 @@ public class GameLevel3D extends Group {
                 Logger.error("Map property '{}}' is not a valid boolean value: {}", PROPERTY_OSHAPES_FILLED, value);
             }
         }
+
         for (Obstacle obstacle : world.map().obstacles()) {
             Logger.info("{}: {}", obstacle.computeType(), obstacle);
             if (!world.isPartOfHouse(tileAt(obstacle.startPoint()))) {
@@ -316,7 +314,6 @@ public class GameLevel3D extends Group {
 
         // House
         houseBaseHeightPy.set(HOUSE_BASE_HEIGHT);
-        //WorldRenderer3D renderer3D = new WorldRenderer3D();
         door3D = worldRenderer.addGhostHouse(
             mazeGroup, world,
             coloring.fill(), coloring.stroke(), coloring.door(),
@@ -324,13 +321,14 @@ public class GameLevel3D extends Group {
             houseBaseHeightPy, HOUSE_WALL_TOP_HEIGHT, HOUSE_WALL_THICKNESS,
             houseLightOnPy);
         getChildren().add(door3D); //TODO check this
+
         addFood3D(world, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 
         worldGroup.getChildren().add(mazeGroup);
 
         // experimental
-        obstacleTopNodes = mazeGroup.lookupAll("*").stream()
-            .filter(node -> "obstacleTop".equals(node.getUserData()))
+        obstacleBaseNodes = mazeGroup.lookupAll("*").stream()
+            .filter(node -> "obstacleBase".equals(node.getUserData()))
             .collect(Collectors.toSet());
     }
 
@@ -387,11 +385,11 @@ public class GameLevel3D extends Group {
             getChildren().remove(message3D);
         }
         message3D = Message3D.builder()
-                .text(text)
-                .font(context.assets().font("font.arcade", 6))
-                .borderColor(Color.WHITE)
-                .textColor(Color.YELLOW)
-                .build();
+            .text(text)
+            .font(context.assets().font("font.arcade", 6))
+            .borderColor(Color.WHITE)
+            .textColor(Color.YELLOW)
+            .build();
         getChildren().add(message3D);
 
         double halfHeight = 0.5 * message3D.getBoundsInLocal().getHeight();
@@ -486,8 +484,7 @@ public class GameLevel3D extends Group {
 
     public double floorThickness() { return floor.getDepth(); }
 
-    public void hideHouseDoor() {
-        assertNotNull(door3D);
-        door3D.setVisible(false);
+    public Door3D door3D() {
+        return door3D;
     }
 }
