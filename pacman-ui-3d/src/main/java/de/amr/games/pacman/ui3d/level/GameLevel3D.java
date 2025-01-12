@@ -25,6 +25,7 @@ import javafx.animation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.Point3D;
+import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
@@ -42,6 +43,7 @@ import org.tinylog.Logger;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -91,15 +93,19 @@ public class GameLevel3D extends Group {
 
     private final GameContext context;
 
+    protected final AmbientLight ambientLight;
+
     private final Group worldGroup = new Group();
     private final Group mazeGroup = new Group();
     private final Group house3D = new Group();
-    private Box floor;
     private final Pac3D pac3D;
     private final List<Ghost3DAppearance> ghost3DAppearances;
     private final Map<Vector2i, Pellet3D> pellets3D = new HashMap<>();
     private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
     private final LivesCounter3D livesCounter3D;
+    private Box floor;
+    private PhongMaterial cornerMaterial;
+    private Set<Node> obstacleTopNodes;
     private Door3D door3D;
     private Message3D message3D;
 
@@ -130,6 +136,10 @@ public class GameLevel3D extends Group {
 
         PY_3D_WALL_HEIGHT.addListener((py,ov,nv) -> obstacleBaseHeightPy.set(nv.doubleValue()));
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+
+        ambientLight = new AmbientLight();
+        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
+        getChildren().add(ambientLight);
     }
 
     public void update(GameContext context) {
@@ -154,7 +164,26 @@ public class GameLevel3D extends Group {
         } else {
             livesCounterPy.set(symbolsDisplayed);
         }
+
+        // experimental
+        /*
+        Vector2f pacPos = context.level().pac().position();
+        for (Node obstacleNode : obstacleTopNodes) {
+            Vector2f towerPos = vec_2f(obstacleNode.getTranslateX(), obstacleNode.getTranslateY());
+            if (obstacleNode instanceof Shape3D shape3D) {
+                if (towerPos.euclideanDist(pacPos) < 6 * TS) {
+                    shape3D.setMaterial(highlightMaterial);
+                } else {
+                    shape3D.setMaterial(cornerMaterial);
+                }
+            }
+        }
+
+         */
     }
+
+    private PhongMaterial highlightMaterial = new PhongMaterial(Color.YELLOW);
+
 
     private Pac3D createPac3D(Pac pac) {
         String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
@@ -254,10 +283,9 @@ public class GameLevel3D extends Group {
         ));
         wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
-        //var cornerMaterial = new PhongMaterial();
-        //cornerMaterial.diffuseColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::darker));
-        //cornerMaterial.specularColorProperty().bind(wallBaseMaterial.specularColorProperty().map(Color::darker));
-        var cornerMaterial = wallBaseMaterial;
+        cornerMaterial = new PhongMaterial();
+        cornerMaterial.setDiffuseColor(wallBaseColor);
+        cornerMaterial.specularColorProperty().bind(cornerMaterial.diffuseColorProperty().map(Color::brighter));
 
         GameConfiguration3D gameConfiguration3D = (GameConfiguration3D) context.gameConfiguration();
         WorldRenderer3D worldRenderer = gameConfiguration3D.createWorldRenderer();
@@ -293,6 +321,11 @@ public class GameLevel3D extends Group {
         mazeGroup.getChildren().add(house3D);
         worldGroup.getChildren().add(mazeGroup);
         getChildren().add(door3D);
+
+        // experimental
+        obstacleTopNodes = mazeGroup.lookupAll("*").stream()
+            .filter(node -> "obstacleTop".equals(node.getUserData()))
+            .collect(Collectors.toSet());
     }
 
     private void createHouse(GameWorld world, WorldMapColoring coloring) {
