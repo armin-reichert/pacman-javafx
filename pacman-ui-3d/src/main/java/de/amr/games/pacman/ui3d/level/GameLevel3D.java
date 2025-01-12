@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.model.GameLevel;
@@ -49,6 +50,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.lib.Ufx.*;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
+import static de.amr.games.pacman.ui3d.level.WorldRenderer3D.isTagged;
 
 /**
  * @author Armin Reichert
@@ -164,20 +166,17 @@ public class GameLevel3D extends Group {
         }
 
         // experimental
-        /*
-        Vector2f pacPos = context.level().pac().position();
-        for (Node obstacleNode : obstacleTopNodes) {
-            Vector2f towerPos = vec_2f(obstacleNode.getTranslateX(), obstacleNode.getTranslateY());
-            if (obstacleNode instanceof Shape3D shape3D) {
-                if (towerPos.euclideanDist(pacPos) < 6 * TS) {
+        Vector2f pacPosition = context.level().pac().position();
+        for (Node baseNode : obstacleBaseNodes) {
+            Vector2f baseNodePosition = vec_2f(baseNode.getTranslateX(), baseNode.getTranslateY());
+            if (baseNode instanceof Shape3D shape3D) {
+                if (baseNodePosition.euclideanDist(pacPosition) < 2 * TS) {
                     shape3D.setMaterial(highlightMaterial);
                 } else {
                     shape3D.setMaterial(cornerMaterial);
                 }
             }
         }
-
-         */
     }
 
     private Pac3D createPac3D(Pac pac) {
@@ -327,9 +326,20 @@ public class GameLevel3D extends Group {
         worldGroup.getChildren().add(mazeGroup);
 
         // experimental
-        obstacleBaseNodes = mazeGroup.lookupAll("*").stream()
-            .filter(node -> "obstacleBase".equals(node.getUserData()))
-            .collect(Collectors.toSet());
+        Set<Group> obstacleGroups = mazeGroup.lookupAll("*").stream()
+                .filter(Group.class::isInstance)
+                .map(Group.class::cast)
+                .filter(group -> isTagged(group, WorldRenderer3D.Tag.INNER_OBSTACLE))
+                .collect(Collectors.toSet());
+
+        obstacleBaseNodes = new HashSet<>();
+        for (Group og : obstacleGroups) {
+             for (Node node : og.lookupAll("*")) {
+                 if (WorldRenderer3D.isTagged(node, WorldRenderer3D.Tag.WALL_BASE)) {
+                     obstacleBaseNodes.add(node);
+                 }
+             }
+        }
     }
 
     private void createFloor(double sizeX, double sizeY) {

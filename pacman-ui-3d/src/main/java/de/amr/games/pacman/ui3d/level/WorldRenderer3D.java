@@ -24,6 +24,9 @@ import javafx.scene.transform.Rotate;
 import org.tinylog.Logger;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.lib.Ufx.coloredMaterial;
@@ -36,6 +39,24 @@ import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_DRAW_MODE;
  * @author Armin Reichert
  */
 public class WorldRenderer3D {
+
+    public enum Tag { WALL_BASE, WALL_TOP, OUTER_WALL, CORNER, INNER_OBSTACLE }
+
+    @SuppressWarnings("unchecked")
+    public static void addTags(Node node, Tag... tags) {
+        Set<Tag> tagSet = (Set<Tag>) node.getUserData();
+        if (tagSet == null) {
+            tagSet = new HashSet<>(3);
+            node.setUserData(tagSet);
+        }
+        tagSet.addAll(Arrays.asList(tags));
+    }
+
+    @SuppressWarnings("unchecked")
+    public static boolean isTagged(Node node, Tag tag) {
+        Set<Tag> tagSet = (Set<Tag>) node.getUserData();
+        return tagSet != null && tagSet.contains(tag);
+    }
 
     protected static final int CYLINDER_DIVISIONS = 24;
 
@@ -85,7 +106,7 @@ public class WorldRenderer3D {
         base.setTranslateY(center.y());
         base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
-        base.setUserData("obstacleBase");
+        addTags(base, Tag.WALL_BASE);
 
         var top = new Box(sizeX, sizeY, wallTopHeight);
         top.setMaterial(wallTopMaterial);
@@ -94,7 +115,7 @@ public class WorldRenderer3D {
         top.setTranslateY(center.y());
         top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
-        top.setUserData("obstacleTop");
+        addTags(base, Tag.WALL_TOP);
 
         return new Group(base, top);
     }
@@ -136,7 +157,7 @@ public class WorldRenderer3D {
         base.heightProperty().bind(wallBaseHeightPy);
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
         base.setMouseTransparent(true);
-        base.setUserData("obstacleBase");
+        addTags(base, Tag.WALL_BASE, Tag.CORNER);
 
         Cylinder top = new Cylinder(radius, wallTopHeight, CYLINDER_DIVISIONS);
         top.setMaterial(wallTopMaterial);
@@ -147,7 +168,7 @@ public class WorldRenderer3D {
         top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
         top.setMouseTransparent(true);
-        top.setUserData("obstacleTop");
+        addTags(base, Tag.WALL_TOP, Tag.CORNER);
 
         return new Group(base, top);
     }
@@ -175,39 +196,44 @@ public class WorldRenderer3D {
 
     public void renderObstacle3D(Group parent, Obstacle obstacle) {
         ObstacleType type = obstacle.computeType();
+        if (type == ObstacleType.ANY) {
+            addUncategorizedObstacle3D(parent, obstacle);
+            return;
+        }
+        Group og = new Group();
+        addTags(og, Tag.INNER_OBSTACLE);
+        parent.getChildren().add(og);
         switch (type) {
-            case ANY ->                     addUncategorizedObstacle3D(parent, obstacle);
-            case CROSS_SHAPE ->             addCross3D(parent, obstacle);
-            case F_SHAPE ->                 addFShape3D(parent, obstacle);
-            case GAMMA_SPIKED ->            addGammaSpiked(parent, obstacle);
-            case GAMMA_SPIKED_MIRRORED ->   addGammaSpikedMirrored(parent, obstacle);
-            case H_SHAPE ->                 addHShape3D(parent, obstacle);
-            case L_SHAPE ->                 addLShape3D(parent, obstacle);
-            case L_SPIKED ->                addLSpikedShape3D(parent, obstacle);
-            case L_SPIKED_MIRRORED ->       addLSpikedMirroredShape3D(parent, obstacle);
-            case LL_SHAPE ->                addLShapeDouble(parent, obstacle);
-            case LL_SHAPE_MIRRORED ->       addLShapeDoubleMirrored(parent, obstacle);
-            case LLL_SHAPE ->               addLShapeTriple(parent, obstacle);
-            case LLL_SHAPE_MIRRORED ->      addLShapeTripleMirrored(parent, obstacle);
-            case O_SHAPE ->                 addOShape3D(parent, obstacle);
-            case OPEN_SQUARE_SE ->          addOpenSquareSE(parent, obstacle);
-            case OPEN_SQUARE_SW ->          addOpenSquareSW(parent, obstacle);
-            case OPEN_SQUARE_NE ->          addOpenSquareNE(parent, obstacle);
-            case OPEN_SQUARE_NW ->          addOpenSquareNW(parent, obstacle);
-            case S_SHAPE ->                 addSShape3D(parent, obstacle);
-            case T_SHAPE ->                 addTShape3D(parent, obstacle);
-            case T_SHAPE_TWO_ROWS ->        addTShapeTwoRows3D(parent, obstacle);
-            case U_SHAPE ->                 addUShape3D(parent, obstacle);
+            case CROSS_SHAPE ->             addCross3D(og, obstacle);
+            case F_SHAPE ->                 addFShape3D(og, obstacle);
+            case GAMMA_SPIKED ->            addGammaSpiked(og, obstacle);
+            case GAMMA_SPIKED_MIRRORED ->   addGammaSpikedMirrored(og, obstacle);
+            case H_SHAPE ->                 addHShape3D(og, obstacle);
+            case L_SHAPE ->                 addLShape3D(og, obstacle);
+            case L_SPIKED ->                addLSpikedShape3D(og, obstacle);
+            case L_SPIKED_MIRRORED ->       addLSpikedMirroredShape3D(og, obstacle);
+            case LL_SHAPE ->                addLShapeDouble(og, obstacle);
+            case LL_SHAPE_MIRRORED ->       addLShapeDoubleMirrored(og, obstacle);
+            case LLL_SHAPE ->               addLShapeTriple(og, obstacle);
+            case LLL_SHAPE_MIRRORED ->      addLShapeTripleMirrored(og, obstacle);
+            case O_SHAPE ->                 addOShape3D(og, obstacle);
+            case OPEN_SQUARE_SE ->          addOpenSquareSE(og, obstacle);
+            case OPEN_SQUARE_SW ->          addOpenSquareSW(og, obstacle);
+            case OPEN_SQUARE_NE ->          addOpenSquareNE(og, obstacle);
+            case OPEN_SQUARE_NW ->          addOpenSquareNW(og, obstacle);
+            case S_SHAPE ->                 addSShape3D(og, obstacle);
+            case T_SHAPE ->                 addTShape3D(og, obstacle);
+            case T_SHAPE_TWO_ROWS ->        addTShapeTwoRows3D(og, obstacle);
+            case U_SHAPE ->                 addUShape3D(og, obstacle);
 
-            case SPACE_SHIP_DOWN ->         addSpaceShipDown(parent, obstacle);
-            case SPACE_SHIP_UP ->           addSpaceShipUp(parent, obstacle);
-            case SPACE_SHIP_LEFT ->         addSpaceShipLeft(parent, obstacle);
-            case SPACE_SHIP_RIGHT ->        addSpaceShipRight(parent, obstacle);
+            case SPACE_SHIP_DOWN ->         addSpaceShipDown(og, obstacle);
+            case SPACE_SHIP_UP ->           addSpaceShipUp(og, obstacle);
+            case SPACE_SHIP_LEFT ->         addSpaceShipLeft(og, obstacle);
+            case SPACE_SHIP_RIGHT ->        addSpaceShipRight(og, obstacle);
 
             //TODO these belong elsewhere
-            case JUNIOR_4_LEFT_OF_HOUSE ->  add_Junior_4_LeftOfHouse(parent, obstacle);
-            case JUNIOR_4_RIGHT_OF_HOUSE -> add_Junior_4_RightOfHouse(parent, obstacle);
-
+            case JUNIOR_4_LEFT_OF_HOUSE ->  add_Junior_4_LeftOfHouse(og, obstacle);
+            case JUNIOR_4_RIGHT_OF_HOUSE -> add_Junior_4_RightOfHouse(og, obstacle);
         }
     }
 
