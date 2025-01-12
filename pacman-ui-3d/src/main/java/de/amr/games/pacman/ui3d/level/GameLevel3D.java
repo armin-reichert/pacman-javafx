@@ -28,7 +28,6 @@ import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.PointLight;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
@@ -97,16 +96,15 @@ public class GameLevel3D extends Group {
 
     private final Group worldGroup = new Group();
     private final Group mazeGroup = new Group();
-    private final Group house3D = new Group();
     private final Pac3D pac3D;
     private final List<Ghost3DAppearance> ghost3DAppearances;
     private final Map<Vector2i, Pellet3D> pellets3D = new HashMap<>();
     private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
     private final LivesCounter3D livesCounter3D;
+    private Door3D door3D;
     private Box floor;
     private PhongMaterial cornerMaterial;
     private Set<Node> obstacleTopNodes;
-    private Door3D door3D;
     private Message3D message3D;
 
     private Bonus3D bonus3D;
@@ -315,12 +313,10 @@ public class GameLevel3D extends Group {
                 worldRenderer.renderObstacle3D(mazeGroup, obstacle);
             }
         }
-        createHouse(world, coloring);
+        addHouse(mazeGroup, world, coloring);
         addFood3D(world, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 
-        mazeGroup.getChildren().add(house3D);
         worldGroup.getChildren().add(mazeGroup);
-        getChildren().add(door3D);
 
         // experimental
         obstacleTopNodes = mazeGroup.lookupAll("*").stream()
@@ -328,44 +324,15 @@ public class GameLevel3D extends Group {
             .collect(Collectors.toSet());
     }
 
-    private void createHouse(GameWorld world, WorldMapColoring coloring) {
+    private void addHouse(Group parent, GameWorld world, WorldMapColoring coloring) {
         houseBaseHeightPy.set(HOUSE_BASE_HEIGHT);
-
         WorldRenderer3D renderer3D = new WorldRenderer3D();
-        renderer3D.setWallBaseHeightProperty(houseBaseHeightPy);
-        renderer3D.setWallTopHeight(HOUSE_WALL_TOP_HEIGHT);
-        renderer3D.setWallThickness(HOUSE_WALL_THICKNESS);
-        renderer3D.setWallBaseMaterial(coloredMaterial(opaqueColor(coloring.fill(), HOUSE_OPACITY)));
-        renderer3D.setWallTopMaterial(coloredMaterial(coloring.stroke()));
-
-        int tilesX = world.houseSize().x(), tilesY = world.houseSize().y();
-        int xMin = world.houseTopLeftTile().x(), xMax = xMin + tilesX - 1;
-        int yMin = world.houseTopLeftTile().y(), yMax = yMin + tilesY - 1;
-        Vector2i leftDoorTile = world.houseLeftDoorTile(), rightDoorTile = world.houseRightDoorTile();
-
-        house3D.getChildren().addAll(
-            renderer3D.createCompositeWallBetweenTiles(vec_2i(xMin, yMin), vec_2i(leftDoorTile.x() - 1, yMin)),
-            renderer3D.createCompositeWallBetweenTiles(vec_2i(rightDoorTile.x() + 1, yMin), vec_2i(xMax, yMin)),
-            renderer3D.createCompositeWallBetweenTiles(vec_2i(xMin, yMin), vec_2i(xMin, yMax)),
-            renderer3D.createCompositeWallBetweenTiles(vec_2i(xMax, yMin), vec_2i(xMax, yMax)),
-            renderer3D.createCompositeWallBetweenTiles(vec_2i(xMin, yMax), vec_2i(xMax, yMax))
-        );
-
-        door3D = new Door3D(leftDoorTile, rightDoorTile, coloring.door(), HOUSE_BASE_HEIGHT);
-        door3D.drawModePy.bind(PY_3D_DRAW_MODE);
-
-        // pixel coordinates
-        float centerX = xMin * TS + tilesX * HTS;
-        float centerY = yMin * TS + tilesY * HTS;
-
-        var light = new PointLight();
-        light.lightOnProperty().bind(houseLightOnPy);
-        light.setColor(Color.GHOSTWHITE);
-        light.setMaxRange(3 * TS);
-        light.setTranslateX(centerX);
-        light.setTranslateY(centerY - 6);
-        light.translateZProperty().bind(houseBaseHeightPy.multiply(-1));
-        house3D.getChildren().add(light);
+        door3D = renderer3D.addGhostHouse(
+            parent, world,
+            coloring.fill(), coloring.stroke(), coloring.door(),
+            HOUSE_OPACITY,
+            houseBaseHeightPy, HOUSE_WALL_TOP_HEIGHT, HOUSE_WALL_THICKNESS,
+            houseLightOnPy);
     }
 
     private void createFloor(double sizeX, double sizeY) {

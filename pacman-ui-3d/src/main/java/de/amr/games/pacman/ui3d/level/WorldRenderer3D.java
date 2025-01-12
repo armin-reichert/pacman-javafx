@@ -9,10 +9,14 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
 import de.amr.games.pacman.lib.tilemap.ObstacleType;
+import de.amr.games.pacman.model.GameWorld;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.PointLight;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
@@ -22,9 +26,13 @@ import org.tinylog.Logger;
 import java.util.Arrays;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui2d.lib.Ufx.coloredMaterial;
+import static de.amr.games.pacman.ui2d.lib.Ufx.opaqueColor;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_DRAW_MODE;
 
 /**
+ * A 3D printer for creating all artifacts in a 3D world.
+ *
  * @author Armin Reichert
  */
 public class WorldRenderer3D {
@@ -740,5 +748,52 @@ public class WorldRenderer3D {
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         return new Group(base, top);
+    }
+
+    public Door3D addGhostHouse(
+        Group parent,
+        GameWorld world,
+        Color houseBaseColor, Color houseTopColor, Color doorsColor, float wallOpacity,
+        DoubleProperty wallBaseHeightPy, float wallTopHeight, float wallThickness,
+        BooleanProperty houseLightOnPy)
+    {
+        Vector2i houseSize = world.houseSize();
+        setWallBaseHeightProperty(wallBaseHeightPy);
+        setWallTopHeight(wallTopHeight);
+        setWallThickness(wallThickness);
+        setWallBaseMaterial(coloredMaterial(opaqueColor(houseBaseColor, wallOpacity)));
+        setWallTopMaterial(coloredMaterial(houseTopColor));
+
+        int tilesX = houseSize.x(), tilesY = houseSize.y();
+        int xMin = world.houseTopLeftTile().x(), xMax = xMin + tilesX - 1;
+        int yMin = world.houseTopLeftTile().y(), yMax = yMin + tilesY - 1;
+        Vector2i leftDoorTile = world.houseLeftDoorTile(), rightDoorTile = world.houseRightDoorTile();
+
+        var door3D = new Door3D(leftDoorTile, rightDoorTile, doorsColor, wallBaseHeightPy.get());
+        door3D.drawModePy.bind(PY_3D_DRAW_MODE);
+
+        parent.getChildren().addAll(
+            createCompositeWallBetweenTiles(vec_2i(xMin, yMin), vec_2i(leftDoorTile.x() - 1, yMin)),
+            createCompositeWallBetweenTiles(vec_2i(rightDoorTile.x() + 1, yMin), vec_2i(xMax, yMin)),
+            createCompositeWallBetweenTiles(vec_2i(xMin, yMin), vec_2i(xMin, yMax)),
+            createCompositeWallBetweenTiles(vec_2i(xMax, yMin), vec_2i(xMax, yMax)),
+            createCompositeWallBetweenTiles(vec_2i(xMin, yMax), vec_2i(xMax, yMax))
+        );
+
+        // pixel coordinates
+        float centerX = xMin * TS + tilesX * HTS;
+        float centerY = yMin * TS + tilesY * HTS;
+
+        var light = new PointLight();
+        light.lightOnProperty().bind(houseLightOnPy);
+        light.setColor(Color.GHOSTWHITE);
+        light.setMaxRange(3 * TS);
+        light.setTranslateX(centerX);
+        light.setTranslateY(centerY - 6);
+        light.translateZProperty().bind(wallBaseHeightPy.multiply(-1));
+
+        parent.getChildren().add(light);
+
+        return door3D;
     }
 }
