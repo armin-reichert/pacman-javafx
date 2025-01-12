@@ -51,7 +51,8 @@ import static de.amr.games.pacman.ui2d.action.GameActions2D.*;
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
 import static de.amr.games.pacman.ui2d.lib.Ufx.contextMenuTitleItem;
 import static de.amr.games.pacman.ui2d.lib.Ufx.doAfterSec;
-import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
+import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_AXES_VISIBLE;
+import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_PERSPECTIVE;
 
 /**
  * 3D play scene. Provides different camera perspectives that can be stepped
@@ -68,11 +69,11 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     protected final ObjectProperty<Perspective.Name> perspectiveNamePy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
-        context.game().level().ifPresent(level -> perspective().init(level.world()));
+            context.game().level().ifPresent(level -> perspective().init(level.world()));
         }
     };
 
-    protected final Map<Perspective.Name, Perspective> perspectiveMap = new EnumMap<>(Perspective.Name.class);
+    protected final Map<Perspective.Name, Perspective> perspectives = new EnumMap<>(Perspective.Name.class);
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     protected final SubScene fxSubScene;
     protected final Scores3D scores3D;
@@ -86,14 +87,15 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         axes.visibleProperty().bind(PY_3D_AXES_VISIBLE);
 
         scores3D = new Scores3D(TEXT_SCORE, TEXT_HIGH_SCORE);
+
         // last child is placeholder for level 3D
         getChildren().addAll(scores3D, axes, new Group());
 
         var camera = new PerspectiveCamera(true);
-        perspectiveMap.put(Perspective.Name.DRONE, new Perspective.Drone(camera));
-        perspectiveMap.put(Perspective.Name.TOTAL, new Perspective.Total(camera));
-        perspectiveMap.put(Perspective.Name.TRACK_PLAYER, new Perspective.TrackingPlayer(camera));
-        perspectiveMap.put(Perspective.Name.NEAR_PLAYER, new Perspective.StalkingPlayer(camera));
+        perspectives.put(Perspective.Name.DRONE, new Perspective.Drone(camera));
+        perspectives.put(Perspective.Name.TOTAL, new Perspective.Total(camera));
+        perspectives.put(Perspective.Name.TRACK_PLAYER, new Perspective.TrackingPlayer(camera));
+        perspectives.put(Perspective.Name.NEAR_PLAYER, new Perspective.StalkingPlayer(camera));
 
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
@@ -159,7 +161,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             }
         }
         updateScores();
-        perspectiveMap.values().forEach(perspective -> perspective.init(level.world()));
+        perspectives.values().forEach(perspective -> perspective.init(level.world()));
     }
 
     @Override
@@ -225,7 +227,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     }
 
     protected Perspective perspective() {
-        return perspectiveMap.get(perspectiveNamePy.get());
+        return perspectives.get(perspectiveNamePy.get());
     }
 
     protected void updateScores() {
