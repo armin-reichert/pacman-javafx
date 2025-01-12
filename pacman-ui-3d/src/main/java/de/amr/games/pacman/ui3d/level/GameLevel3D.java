@@ -329,13 +329,13 @@ public class GameLevel3D extends Group {
         Set<Group> obstacleGroups = mazeGroup.lookupAll("*").stream()
                 .filter(Group.class::isInstance)
                 .map(Group.class::cast)
-                .filter(group -> isTagged(group, WorldRenderer3D.Tag.INNER_OBSTACLE))
+                .filter(group -> isTagged(group, WorldRenderer3D.TAG_INNER_OBSTACLE))
                 .collect(Collectors.toSet());
 
         obstacleBaseNodes = new HashSet<>();
         for (Group og : obstacleGroups) {
              for (Node node : og.lookupAll("*")) {
-                 if (WorldRenderer3D.isTagged(node, WorldRenderer3D.Tag.WALL_BASE)) {
+                 if (WorldRenderer3D.isTagged(node, WorldRenderer3D.TAG_WALL_BASE)) {
                      obstacleBaseNodes.add(node);
                  }
              }

@@ -24,9 +24,6 @@ import javafx.scene.transform.Rotate;
 import org.tinylog.Logger;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.lib.Ufx.coloredMaterial;
@@ -40,22 +37,29 @@ import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_DRAW_MODE;
  */
 public class WorldRenderer3D {
 
-    public enum Tag { WALL_BASE, WALL_TOP, OUTER_WALL, CORNER, INNER_OBSTACLE }
+    public final static byte TAG_WALL_BASE      = 0x01;
+    public final static byte TAG_WALL_TOP       = 0x02;
+    public final static byte TAG_OUTER_WALL     = 0x04;
+    public final static byte TAG_CORNER         = 0x08;
+    public final static byte TAG_INNER_OBSTACLE = 0x10;
 
-    @SuppressWarnings("unchecked")
-    public static void addTags(Node node, Tag... tags) {
-        Set<Tag> tagSet = (Set<Tag>) node.getUserData();
-        if (tagSet == null) {
-            tagSet = new HashSet<>(3);
-            node.setUserData(tagSet);
+    public static void addTags(Node node, byte... tags) {
+        if (node.getUserData() == null) {
+            node.setUserData((byte)0);
         }
-        tagSet.addAll(Arrays.asList(tags));
+        byte value = (byte) node.getUserData();
+        for (byte tag : tags) {
+            value |= tag;
+        }
+        node.setUserData(value);
     }
 
-    @SuppressWarnings("unchecked")
-    public static boolean isTagged(Node node, Tag tag) {
-        Set<Tag> tagSet = (Set<Tag>) node.getUserData();
-        return tagSet != null && tagSet.contains(tag);
+    public static boolean isTagged(Node node, byte tag) {
+        if (node.getUserData() != null) {
+            byte value = (byte) node.getUserData();
+            return (value & tag) != 0;
+        }
+        return false;
     }
 
     protected static final int CYLINDER_DIVISIONS = 24;
@@ -106,7 +110,7 @@ public class WorldRenderer3D {
         base.setTranslateY(center.y());
         base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
-        addTags(base, Tag.WALL_BASE);
+        addTags(base, TAG_WALL_BASE);
 
         var top = new Box(sizeX, sizeY, wallTopHeight);
         top.setMaterial(wallTopMaterial);
@@ -115,7 +119,7 @@ public class WorldRenderer3D {
         top.setTranslateY(center.y());
         top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
-        addTags(base, Tag.WALL_TOP);
+        addTags(base, TAG_WALL_TOP);
 
         return new Group(base, top);
     }
@@ -157,7 +161,7 @@ public class WorldRenderer3D {
         base.heightProperty().bind(wallBaseHeightPy);
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
         base.setMouseTransparent(true);
-        addTags(base, Tag.WALL_BASE, Tag.CORNER);
+        addTags(base, TAG_WALL_BASE, TAG_CORNER);
 
         Cylinder top = new Cylinder(radius, wallTopHeight, CYLINDER_DIVISIONS);
         top.setMaterial(wallTopMaterial);
@@ -168,7 +172,7 @@ public class WorldRenderer3D {
         top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
         top.setMouseTransparent(true);
-        addTags(base, Tag.WALL_TOP, Tag.CORNER);
+        addTags(base, TAG_WALL_TOP, TAG_CORNER);
 
         return new Group(base, top);
     }
@@ -201,7 +205,7 @@ public class WorldRenderer3D {
             return;
         }
         Group og = new Group();
-        addTags(og, Tag.INNER_OBSTACLE);
+        addTags(og, TAG_INNER_OBSTACLE);
         parent.getChildren().add(og);
         switch (type) {
             case CROSS_SHAPE ->             addCross3D(og, obstacle);
