@@ -45,7 +45,7 @@ public class WorldRenderer3D {
 
     public static void addTags(Node node, byte... tags) {
         if (node.getUserData() == null) {
-            node.setUserData((byte)0);
+            node.setUserData((byte) 0);
         }
         byte value = (byte) node.getUserData();
         for (byte tag : tags) {
