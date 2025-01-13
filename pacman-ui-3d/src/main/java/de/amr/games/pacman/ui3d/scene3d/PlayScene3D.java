@@ -448,19 +448,20 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     @Override
     public void onPacFoundFood(GameEvent event) {
-        GameWorld world = context.level().world();
-        if (event.tile().isEmpty()) {
+        Vector2i tile = event.tile().orElse(null);
+        if (tile == null) {
             // When cheat "eat all pellets" has been used, no tile is present in the event.
-            // In that case, ensure that the 3D representations are in sync with the game model.
-            world.map().food().tiles()
-                .filter(world::hasEatenFoodAt)
-                .map(level3D::pellet3D)
-                .flatMap(Optional::stream)
-                .forEach(Eatable3D::onEaten);
+            level3D.pellets3D().forEach(Pellet3D::onEaten);
         } else {
-            Vector2i tile = event.tile().get();
-            level3D.energizer3D(tile).ifPresent(Energizer3D::onEaten);
-            level3D.pellet3D(tile).ifPresent(Pellet3D::onEaten);
+            Optional<Energizer3D> energizer3D = level3D.energizer3D(tile);
+            if (energizer3D.isPresent()) {
+                energizer3D.get().onEaten();
+            } else {
+                level3D.pellets3D()
+                    .filter(pellet3D -> tile.equals(pellet3D.tile()))
+                    .findFirst()
+                    .ifPresent(Pellet3D::onEaten);
+            }
         }
         context.sound().playMunchingSound();
     }

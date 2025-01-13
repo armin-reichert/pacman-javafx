@@ -100,7 +100,7 @@ public class GameLevel3D extends Group {
     private final Group mazeGroup = new Group();
     private final Pac3D pac3D;
     private final List<Ghost3DAppearance> ghost3DAppearances;
-    private final Map<Vector2i, Pellet3D> pellets3D = new HashMap<>();
+    private final List<Pellet3D> pellets3D = new ArrayList<>();
     private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
     private final LivesCounter3D livesCounter3D;
     private Door3D door3D;
@@ -388,7 +388,7 @@ public class GameLevel3D extends Group {
                 pellet3D.setTile(tile);
                 pellet3D.setPosition(position);
                 getChildren().add(pellet3D.shape3D());
-                pellets3D.put(tile, pellet3D);
+                pellets3D.add(pellet3D);
             }
         });
         energizers3D.trimToSize();
@@ -486,18 +486,13 @@ public class GameLevel3D extends Group {
 
     public LivesCounter3D livesCounter3D() { return livesCounter3D; }
 
-    public Stream<Pellet3D> pellets3D() { return pellets3D.values().stream(); }
+    public Stream<Pellet3D> pellets3D() { return pellets3D.stream(); }
 
     public Stream<Energizer3D> energizers3D() { return energizers3D.stream(); }
 
     public Optional<Energizer3D> energizer3D(Vector2i tile) {
         assertTileNotNull(tile);
         return energizers3D().filter(e3D -> e3D.tile().equals(tile)).findFirst();
-    }
-
-    public Optional<Pellet3D> pellet3D(Vector2i tile) {
-        assertTileNotNull(tile);
-        return Optional.ofNullable(pellets3D.get(tile));
     }
 
     public Color floorColor() { return floorColorPy.get(); }
