@@ -62,7 +62,7 @@ public class GameLevel3D extends Group {
 
     private final DoubleProperty obstacleBaseHeightPy = new SimpleDoubleProperty(OBSTACLE_BASE_HEIGHT);
     private final DoubleProperty wallOpacityPy        = new SimpleDoubleProperty(1);
-    private final IntegerProperty livesCounterPy      = new SimpleIntegerProperty(0);
+    private final IntegerProperty livesCountPy        = new SimpleIntegerProperty(0);
     private final DoubleProperty houseBaseHeightPy    = new SimpleDoubleProperty(HOUSE_BASE_HEIGHT);
     private final BooleanProperty houseLightOnPy      = new SimpleBooleanProperty(false);
 
@@ -105,7 +105,7 @@ public class GameLevel3D extends Group {
         ghost3DAppearances = level.ghosts().map(ghost -> createGhost3D(ghost, level.numFlashes())).toList();
 
         livesCounter3D = createLivesCounter3D(game.canStartNewGame());
-        livesCounter3D.livesCountPy.bind(livesCounterPy);
+        livesCounter3D.livesCountPy.bind(livesCountPy);
 
         worldGroup.getChildren().add(mazeGroup);
         addWorld3D(mazeGroup, world);
@@ -143,9 +143,9 @@ public class GameLevel3D extends Group {
 
         int symbolsDisplayed = Math.max(0, context.game().lives() - 1);
         if (!context.level().pac().isVisible() && context.gameState() == GameState.STARTING_GAME) {
-            livesCounterPy.set(symbolsDisplayed + 1);
+            livesCountPy.set(symbolsDisplayed + 1);
         } else {
-            livesCounterPy.set(symbolsDisplayed);
+            livesCountPy.set(symbolsDisplayed);
         }
 
         // experimental
