@@ -326,10 +326,11 @@ public class GameLevel3D extends Group {
 
     private void createFloor(double sizeX, double sizeY) {
         // add some extra space
-        floor = new Box(sizeX + 10, sizeY, FLOOR_THICKNESS);
+        double extraSpace = 10;
+        floor = new Box(sizeX + extraSpace, sizeY, FLOOR_THICKNESS);
         floor.materialProperty().bind(
             Bindings.createObjectBinding(this::createFloorMaterial, floorColorPy, floorTextureNamePy));
-        floor.translateXProperty().bind(floor.widthProperty().multiply(0.5).subtract(5));
+        floor.translateXProperty().bind(floor.widthProperty().multiply(0.5).subtract(0.5*extraSpace));
         floor.translateYProperty().bind(floor.heightProperty().multiply(0.5));
         floor.translateZProperty().set(FLOOR_THICKNESS * 0.5);
         floor.drawModeProperty().bind(PY_3D_DRAW_MODE);
