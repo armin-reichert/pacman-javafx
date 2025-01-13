@@ -17,9 +17,9 @@ import static de.amr.games.pacman.lib.Globals.*;
  *
  * @author Armin Reichert
  */
-public abstract class Perspective {
+public interface Perspective {
 
-    public enum Name {
+    enum Name {
         DRONE, TOTAL, TRACK_PLAYER, NEAR_PLAYER;
 
         public Name prev() {
@@ -33,12 +33,8 @@ public abstract class Perspective {
         }
     }
 
-    public static class Drone extends Perspective {
-        static final int HEIGHT = 200;
-
-        public Drone(SubScene scene) {
-            super(scene);
-        }
+    class Drone implements Perspective {
+        static final int HEIGHT_OVER_GROUND = 200;
 
         @Override
         public String toString() {
@@ -46,7 +42,8 @@ public abstract class Perspective {
         }
 
         @Override
-        public void init(GameWorld world) {
+        public void init(SubScene scene, GameWorld world) {
+            PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
             camera.setNearClip(0.1);
             camera.setFarClip(10000.0);
             camera.setFieldOfView(40); // default: 30
@@ -54,26 +51,23 @@ public abstract class Perspective {
             camera.setRotate(0);
             camera.setTranslateX(0);
             camera.setTranslateY(0);
-            camera.setTranslateZ(-HEIGHT);
+            camera.setTranslateZ(-HEIGHT_OVER_GROUND);
         }
 
         @Override
-        public void update(GameWorld world, Actor2D focussedActor) {
+        public void update(SubScene scene, GameWorld world, Actor2D focussedActor) {
+            PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
             var position = focussedActor.position();
             double speed = 0.02;
             double x = lerp(camera.getTranslateX(), position.x(), speed);
             double y = lerp(camera.getTranslateY(), position.y(), speed);
-            camera.setTranslateZ(-HEIGHT);
+            camera.setTranslateZ(-HEIGHT_OVER_GROUND);
             camera.setTranslateX(x);
             camera.setTranslateY(y);
         }
-    };
+    }
 
-    public static class Total extends Perspective {
-
-        public Total(SubScene scene) {
-            super(scene);
-        }
+    class Total implements Perspective {
 
         @Override
         public String toString() {
@@ -81,7 +75,8 @@ public abstract class Perspective {
         }
 
         @Override
-        public void init(GameWorld world) {
+        public void init(SubScene scene, GameWorld world) {
+            PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
             camera.setNearClip(0.1);
             camera.setFarClip(10000.0);
             camera.setFieldOfView(40); // default: 30
@@ -90,7 +85,8 @@ public abstract class Perspective {
         }
 
         @Override
-        public void update(GameWorld world, Actor2D spottedActor) {
+        public void update(SubScene scene, GameWorld world, Actor2D spottedActor) {
+            PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
             int sizeX = world.map().terrain().numCols() * TS;
             int sizeY = world.map().terrain().numRows() * TS;
             camera.setTranslateX(sizeX * 0.5);
@@ -99,11 +95,7 @@ public abstract class Perspective {
         }
     }
 
-    public static class TrackingPlayer extends Perspective {
-
-        public TrackingPlayer(SubScene scene) {
-            super(scene);
-        }
+    class TrackingPlayer implements Perspective {
 
         @Override
         public String toString() {
@@ -111,7 +103,8 @@ public abstract class Perspective {
         }
 
         @Override
-        public void init(GameWorld world) {
+        public void init(SubScene scene, GameWorld world) {
+            PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
             camera.setNearClip(0.1);
             camera.setFarClip(10000.0);
             camera.setFieldOfView(40); // default: 30
@@ -121,7 +114,8 @@ public abstract class Perspective {
         }
 
         @Override
-        public void update(GameWorld world, Actor2D spottedActor) {
+        public void update(SubScene scene, GameWorld world, Actor2D spottedActor) {
+            PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
             double speedX = 0.03;
             double speedY = 0.06;
             double worldWidth = world.map().terrain().numCols() * TS;
@@ -132,11 +126,7 @@ public abstract class Perspective {
         }
     }
 
-    public static class StalkingPlayer extends Perspective {
-
-        public StalkingPlayer(SubScene scene) {
-            super(scene);
-        }
+    class StalkingPlayer implements Perspective {
 
         @Override
         public String toString() {
@@ -144,7 +134,8 @@ public abstract class Perspective {
         }
 
         @Override
-        public void init(GameWorld world) {
+        public void init(SubScene scene, GameWorld world) {
+            PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
             camera.setNearClip(0.1);
             camera.setFarClip(10000.0);
             camera.setFieldOfView(40); // default: 30
@@ -153,7 +144,8 @@ public abstract class Perspective {
         }
 
         @Override
-        public void update(GameWorld world, Actor2D spottedActor) {
+        public void update(SubScene scene, GameWorld world, Actor2D spottedActor) {
+            PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
             double speedX = 0.04;
             double speedY = 0.04;
             double worldWidth = world.map().terrain().numCols() * TS;
@@ -163,17 +155,9 @@ public abstract class Perspective {
             camera.setTranslateY(lerp(camera.getTranslateY(), targetY, speedY));
             camera.setTranslateZ(-40);
         }
-    };
-
-    Perspective(SubScene scene) {
-        this.scene = scene;
-        this.camera = (PerspectiveCamera) scene.getCamera();
     }
 
-    public abstract void init(GameWorld world);
+    void init(SubScene scene, GameWorld world);
 
-    public abstract void update(GameWorld world, Actor2D spottedActor);
-
-    final SubScene scene;
-    final PerspectiveCamera camera;
+    void update(SubScene scene, GameWorld world, Actor2D spottedActor);
 }

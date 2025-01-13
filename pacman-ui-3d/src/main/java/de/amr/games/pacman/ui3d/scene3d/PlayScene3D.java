@@ -69,13 +69,14 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     protected final ObjectProperty<Perspective.Name> perspectiveNamePy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
-            context.game().level().ifPresent(level -> perspective().init(level.world()));
+            context.game().level().ifPresent(level -> perspective().init(fxSubScene, level.world()));
         }
     };
 
     protected final Map<Perspective.Name, Perspective> perspectives = new EnumMap<>(Perspective.Name.class);
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     protected final SubScene fxSubScene;
+    protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final Scores3D scores3D;
     protected GameContext context;
     protected GameLevel3D level3D;
@@ -91,17 +92,15 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         // last child is placeholder for level 3D
         getChildren().addAll(scores3D, axes, new Group());
 
-        var camera = new PerspectiveCamera(true);
-
         // initial size is irrelevant, gets bound to parent scene size later
         fxSubScene = new SubScene(this, 88, 88, true, SceneAntialiasing.BALANCED);
         fxSubScene.setFill(Color.TRANSPARENT);
         fxSubScene.setCamera(camera);
 
-        perspectives.put(Perspective.Name.DRONE, new Perspective.Drone(fxSubScene));
-        perspectives.put(Perspective.Name.TOTAL, new Perspective.Total(fxSubScene));
-        perspectives.put(Perspective.Name.TRACK_PLAYER, new Perspective.TrackingPlayer(fxSubScene));
-        perspectives.put(Perspective.Name.NEAR_PLAYER, new Perspective.StalkingPlayer(fxSubScene));
+        perspectives.put(Perspective.Name.DRONE, new Perspective.Drone());
+        perspectives.put(Perspective.Name.TOTAL, new Perspective.Total());
+        perspectives.put(Perspective.Name.TRACK_PLAYER, new Perspective.TrackingPlayer());
+        perspectives.put(Perspective.Name.NEAR_PLAYER, new Perspective.StalkingPlayer());
 
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
@@ -163,7 +162,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             }
         }
         updateScores();
-        perspectives.values().forEach(perspective -> perspective.init(level.world()));
+        perspectives.values().forEach(perspective -> perspective.init(fxSubScene, level.world()));
     }
 
     @Override
@@ -225,7 +224,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             updateScores();
             updateSound(context.sound());
         }
-        perspective().update(level.world(), level.pac());
+        perspective().update(fxSubScene, level.world(), level.pac());
     }
 
     protected Perspective perspective() {
@@ -314,7 +313,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             case GHOST_DYING           -> onEnterStateGhostDying();
             case LEVEL_COMPLETE        -> onEnterStateLevelComplete();
             case LEVEL_TRANSITION      -> onEnterStateLevelTransition();
-            case TESTING_LEVELS        -> onEnterStateTestingLevelBoni();
+            case TESTING_LEVELS        -> onEnterStateTestingLevels();
             case TESTING_LEVEL_TEASERS -> onEnterStateTestingLevelTeasers();
             case GAME_OVER             -> onEnterStateGameOver();
             default -> {}
@@ -371,10 +370,10 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         replaceGameLevel3D();
         level3D.addLevelCounter();
         level3D.pac3D().init();
-        perspective().init(context.level().world());
+        perspective().init(fxSubScene, context.level().world());
     }
 
-    private void onEnterStateTestingLevelBoni() {
+    private void onEnterStateTestingLevels() {
         replaceGameLevel3D();
         level3D.addLevelCounter();
         level3D.pac3D().init();
