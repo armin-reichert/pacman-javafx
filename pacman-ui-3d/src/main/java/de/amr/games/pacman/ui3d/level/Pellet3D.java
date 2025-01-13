@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.Animation;
@@ -15,6 +14,7 @@ import javafx.scene.transform.Scale;
 
 import java.util.Optional;
 
+import static de.amr.games.pacman.lib.Globals.assertNonNegative;
 import static de.amr.games.pacman.ui2d.lib.Ufx.doAfterSec;
 import static java.util.Objects.requireNonNull;
 
@@ -31,7 +31,7 @@ public class Pellet3D implements Eatable3D {
 
     public Pellet3D(Model3D model3D, double radius) {
         requireNonNull(model3D);
-        Globals.assertNonNegative(radius, "Pellet3D radius must be positive but is %f");
+        assertNonNegative(radius, "Pellet3D radius must be positive but is %f");
 
         shape = model3D.meshViewById(MESH_ID_PELLET);
         shape.setRotationAxis(Rotate.Z_AXIS);
@@ -82,6 +82,6 @@ public class Pellet3D implements Eatable3D {
 
     @Override
     public String toString() {
-        return String.format("[Pellet, tile: %s, %s]", tile(), shape);
+        return String.format("[Pellet3D tile=%s]", tile());
     }
 }
