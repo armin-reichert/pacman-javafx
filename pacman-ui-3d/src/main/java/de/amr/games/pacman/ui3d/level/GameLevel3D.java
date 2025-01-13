@@ -470,6 +470,12 @@ public class GameLevel3D extends Group {
         return animation;
     }
 
+    public void stopAnimations() {
+        energizers3D().forEach(Energizer3D::stopPumping);
+        livesCounter3D().shapesRotation().stop();
+        bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
+    }
+
     public Pac3D pac3D() { return pac3D; }
 
     public List<Ghost3DAppearance> ghosts3D() { return ghost3DAppearances; }

@@ -321,7 +321,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     private void onEnterStateStartingGame() {
         if (hasLevel3D()) {
-            stopLevelAnimations();
+            level3D.stopAnimations();
             level3D.pac3D().init();
             level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
             showReadyMessage();
@@ -391,7 +391,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     }
 
     private void onEnterStateGameOver() {
-        stopLevelAnimations();
+        level3D.stopAnimations();
         // delay state exit for 3 seconds
         context.gameState().timer().restartSeconds(3);
         if (Globals.randomInt(0, 100) < 25) {
@@ -399,12 +399,6 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         }
         context.sound().stopAll();
         context.sound().playGameOverSound();
-    }
-
-    private void stopLevelAnimations() {
-        level3D.energizers3D().forEach(Energizer3D::stopPumping);
-        level3D.livesCounter3D().shapesRotation().stop();
-        level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
     }
 
     @Override
