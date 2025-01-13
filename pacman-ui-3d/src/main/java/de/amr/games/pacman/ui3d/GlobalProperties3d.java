@@ -32,7 +32,7 @@ public interface GlobalProperties3d {
     BooleanProperty             PY_3D_ENABLED            = new SimpleBooleanProperty(false);
     BooleanProperty             PY_3D_ENERGIZER_EXPLODES = new SimpleBooleanProperty(true);
     ObjectProperty<Color>       PY_3D_FLOOR_COLOR        = new SimpleObjectProperty<>(Color.rgb(20,20,20));
-    StringProperty              PY_3D_FLOOR_TEXTURE      = new SimpleStringProperty(NO_TEXTURE);
+    StringProperty PY_3D_FLOOR_TEXTURE_NAME = new SimpleStringProperty(NO_TEXTURE);
     ObjectProperty<Color>       PY_3D_LIGHT_COLOR        = new SimpleObjectProperty<>(Color.WHITE);
     BooleanProperty             PY_3D_PAC_LIGHT_ENABLED  = new SimpleBooleanProperty(true);
     ObjectProperty<Perspective.Name> PY_3D_PERSPECTIVE   = new SimpleObjectProperty<>(Perspective.Name.TRACK_PLAYER);

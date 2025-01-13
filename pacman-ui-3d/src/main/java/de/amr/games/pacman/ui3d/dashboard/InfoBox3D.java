@@ -79,7 +79,7 @@ public class InfoBox3D extends InfoBox {
         setEditor(pickerLightColor, PY_3D_LIGHT_COLOR);
         setEditor(pickerFloorColor, PY_3D_FLOOR_COLOR);
         setEditor(pickerLightColor, PY_3D_LIGHT_COLOR);
-        setEditor(comboFloorTexture, PY_3D_FLOOR_TEXTURE);
+        setEditor(comboFloorTexture, PY_3D_FLOOR_TEXTURE_NAME);
         setEditor(sliderPiPSceneHeight, PY_PIP_HEIGHT);
         setEditor(sliderPiPOpacity, PY_PIP_OPACITY_PERCENT);
         setEditor(sliderWallHeight, PY_3D_WALL_HEIGHT);
@@ -103,7 +103,7 @@ public class InfoBox3D extends InfoBox {
         sliderWallOpacity.setValue(PY_3D_WALL_OPACITY.get());
         cbUsePlayScene3D.setSelected(PY_3D_ENABLED.get());
         cbPiPOn.setSelected(PY_PIP_ON.getValue());
-        comboFloorTexture.setValue(PY_3D_FLOOR_TEXTURE.get());
+        comboFloorTexture.setValue(PY_3D_FLOOR_TEXTURE_NAME.get());
         comboPerspectives.setValue(PY_3D_PERSPECTIVE.get());
         cbEnergizerExplodes.setSelected(PY_3D_ENERGIZER_EXPLODES.get());
         cbPacLighted.setSelected(PY_3D_PAC_LIGHT_ENABLED.get());

@@ -60,10 +60,8 @@ public class GameLevel3D extends Group {
 
     private static final String OSHAPES_FILLED_PROPERTY_NAME = "rendering_oshapes_filled";
 
-    private final StringProperty floorTextureNamePy   = new SimpleStringProperty(GlobalProperties3d.NO_TEXTURE);
     private final DoubleProperty obstacleBaseHeightPy = new SimpleDoubleProperty(OBSTACLE_BASE_HEIGHT);
     private final DoubleProperty wallOpacityPy        = new SimpleDoubleProperty(1);
-    private final ObjectProperty<Color> floorColorPy  = new SimpleObjectProperty<>(Color.BLACK);
     private final IntegerProperty livesCounterPy      = new SimpleIntegerProperty(0);
     private final DoubleProperty houseBaseHeightPy    = new SimpleDoubleProperty(HOUSE_BASE_HEIGHT);
     private final BooleanProperty houseLightOnPy      = new SimpleBooleanProperty(false);
@@ -329,22 +327,20 @@ public class GameLevel3D extends Group {
         double extraSpace = 10;
         floor = new Box(sizeX + extraSpace, sizeY, FLOOR_THICKNESS);
         floor.materialProperty().bind(
-            Bindings.createObjectBinding(this::createFloorMaterial, floorColorPy, floorTextureNamePy));
+            Bindings.createObjectBinding(this::createFloorMaterial, PY_3D_FLOOR_COLOR, PY_3D_FLOOR_TEXTURE_NAME));
         floor.translateXProperty().bind(floor.widthProperty().multiply(0.5).subtract(0.5*extraSpace));
         floor.translateYProperty().bind(floor.heightProperty().multiply(0.5));
         floor.translateZProperty().set(FLOOR_THICKNESS * 0.5);
         floor.drawModeProperty().bind(PY_3D_DRAW_MODE);
-        floorColorPy.bind(PY_3D_FLOOR_COLOR);
-        floorTextureNamePy.bind(PY_3D_FLOOR_TEXTURE);
 
         worldGroup.getChildren().add(floor);
     }
 
     private PhongMaterial createFloorMaterial() {
         Map<String, PhongMaterial> textures = context.assets().get("floor_textures");
-        String textureName = floorTextureNamePy.get();
+        String textureName = PY_3D_FLOOR_TEXTURE_NAME.get();
         return GlobalProperties3d.NO_TEXTURE.equals(textureName) || !textures.containsKey(textureName)
-            ? coloredMaterial(floorColorPy.get())
+            ? coloredMaterial(PY_3D_FLOOR_COLOR.get())
             : textures.get(textureName);
     }
 
@@ -471,7 +467,7 @@ public class GameLevel3D extends Group {
 
     public Stream<Energizer3D> energizers3D() { return energizers3D.stream(); }
 
-    public Color floorColor() { return floorColorPy.get(); }
+    public Color floorColor() { return PY_3D_FLOOR_COLOR.get(); }
 
     public double floorThickness() { return floor.getDepth(); }
 
