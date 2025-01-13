@@ -61,13 +61,13 @@ public class GameLevel3D extends Group {
 
     private static final String OSHAPES_FILLED_PROPERTY_NAME = "rendering_oshapes_filled";
 
-    private final StringProperty floorTextureNamePy   = new SimpleStringProperty(this, "floorTextureName", GlobalProperties3d.NO_TEXTURE);
-    private final DoubleProperty obstacleBaseHeightPy = new SimpleDoubleProperty(this, "obstacleBaseHeight", OBSTACLE_BASE_HEIGHT);
-    private final DoubleProperty wallOpacityPy        = new SimpleDoubleProperty(this, "wallOpacity", 1.0);
-    private final ObjectProperty<Color> floorColorPy  = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
+    private final StringProperty floorTextureNamePy   = new SimpleStringProperty(GlobalProperties3d.NO_TEXTURE);
+    private final DoubleProperty obstacleBaseHeightPy = new SimpleDoubleProperty(OBSTACLE_BASE_HEIGHT);
+    private final DoubleProperty wallOpacityPy        = new SimpleDoubleProperty(1);
+    private final ObjectProperty<Color> floorColorPy  = new SimpleObjectProperty<>(Color.BLACK);
     private final IntegerProperty livesCounterPy      = new SimpleIntegerProperty(0);
-    private final DoubleProperty houseBaseHeightPy    = new SimpleDoubleProperty(this, "houseBaseHeight", HOUSE_BASE_HEIGHT);
-    private final BooleanProperty houseLightOnPy      = new SimpleBooleanProperty(this, "houseLightOn", false);
+    private final DoubleProperty houseBaseHeightPy    = new SimpleDoubleProperty(HOUSE_BASE_HEIGHT);
+    private final BooleanProperty houseLightOnPy      = new SimpleBooleanProperty(false);
 
     private final BooleanProperty houseOpenPy = new SimpleBooleanProperty() {
         @Override
