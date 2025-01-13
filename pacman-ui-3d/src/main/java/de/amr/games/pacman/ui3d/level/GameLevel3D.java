@@ -66,17 +66,17 @@ public class GameLevel3D extends Group {
     private final DoubleProperty wallOpacityPy        = new SimpleDoubleProperty(this, "wallOpacity", 1.0);
     private final ObjectProperty<Color> floorColorPy  = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
     private final IntegerProperty livesCounterPy      = new SimpleIntegerProperty(0);
-
     private final DoubleProperty houseBaseHeightPy    = new SimpleDoubleProperty(this, "houseBaseHeight", HOUSE_BASE_HEIGHT);
+    private final BooleanProperty houseLightOnPy      = new SimpleBooleanProperty(this, "houseLightOn", false);
+
     private final BooleanProperty houseOpenPy = new SimpleBooleanProperty() {
         @Override
         protected void invalidated() {
             if (houseOpenPy.get()) {
-                door3D.playTraversalAnimation();
+                door3D.playOpenCloseAnimation();
             }
         }
     };
-    private final BooleanProperty houseLightOnPy = new SimpleBooleanProperty();
 
     private final GameContext context;
     private final AmbientLight ambientLight;
@@ -110,7 +110,8 @@ public class GameLevel3D extends Group {
         livesCounter3D = createLivesCounter3D(game.canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCounterPy);
 
-        buildWorld3D(world);
+        worldGroup.getChildren().add(mazeGroup);
+        addWorld3D(mazeGroup, world);
 
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
         getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
@@ -251,9 +252,8 @@ public class GameLevel3D extends Group {
         return levelCounter3D;
     }
 
-    private void buildWorld3D(GameWorld world) {
+    private void addWorld3D(Group parent, GameWorld world) {
         Logger.info("Build world 3D. Map URL='{}'", URLDecoder.decode(world.map().url().toExternalForm(), StandardCharsets.UTF_8));
-
 
         WorldMapColoring coloring = context.gameConfiguration().worldMapColoring(world.map());        createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
         Color wallBaseColor = coloring.stroke();
@@ -276,23 +276,22 @@ public class GameLevel3D extends Group {
         cornerMaterial.setDiffuseColor(wallBaseColor);
         cornerMaterial.specularColorProperty().bind(cornerMaterial.diffuseColorProperty().map(Color::brighter));
 
-        GameConfiguration3D gameConfiguration3D = (GameConfiguration3D) context.gameConfiguration();
-        WorldRenderer3D worldRenderer = gameConfiguration3D.createWorldRenderer();
-        worldRenderer.setWallBaseMaterial(wallBaseMaterial);
-        worldRenderer.setCornerMaterial(cornerMaterial);
-        worldRenderer.setWallBaseHeightProperty(obstacleBaseHeightPy);
-        worldRenderer.setWallTopMaterial(wallTopMaterial);
-        worldRenderer.setWallTopHeight(OBSTACLE_TOP_HEIGHT);
+        var configuration3D = (GameConfiguration3D) context.gameConfiguration();
+        WorldRenderer3D r3D = configuration3D.createWorldRenderer();
+        r3D.setWallBaseMaterial(wallBaseMaterial);
+        r3D.setWallBaseHeightProperty(obstacleBaseHeightPy);
+        r3D.setWallTopMaterial(wallTopMaterial);
+        r3D.setWallTopHeight(OBSTACLE_TOP_HEIGHT);
+        r3D.setCornerMaterial(cornerMaterial);
 
         //TODO check this:
         obstacleBaseHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
         //TODO just a temporary solution until I find something better
         if (world.map().terrain().hasProperty(OSHAPES_FILLED_PROPERTY_NAME)) {
-            String value = (String) world.map().terrain().getProperty(OSHAPES_FILLED_PROPERTY_NAME);
+            Object value = world.map().terrain().getProperty(OSHAPES_FILLED_PROPERTY_NAME);
             try {
-                boolean filled = Boolean.parseBoolean(value);
-                worldRenderer.setOShapeFilled(filled);
+                r3D.setOShapeFilled(Boolean.parseBoolean(String.valueOf(value)));
             } catch (Exception x) {
                 Logger.error("Map property '{}}' is not a valid boolean value: {}", OSHAPES_FILLED_PROPERTY_NAME, value);
             }
@@ -301,15 +300,15 @@ public class GameLevel3D extends Group {
         for (Obstacle obstacle : world.map().obstacles()) {
             Logger.info("{}: {}", obstacle.computeType(), obstacle);
             if (!world.isPartOfHouse(tileAt(obstacle.startPoint()))) {
-                worldRenderer.setWallThickness(obstacle.hasDoubleWalls() ? BORDER_WALL_THICKNESS : OBSTACLE_THICKNESS);
-                worldRenderer.renderObstacle3D(mazeGroup, obstacle);
+                r3D.setWallThickness(obstacle.hasDoubleWalls() ? BORDER_WALL_THICKNESS : OBSTACLE_THICKNESS);
+                r3D.renderObstacle3D(parent, obstacle);
             }
         }
 
         // House
         houseBaseHeightPy.set(HOUSE_BASE_HEIGHT);
-        door3D = worldRenderer.addGhostHouse(
-            mazeGroup, world,
+        door3D = r3D.addGhostHouse(
+            parent, world,
             coloring.fill(), coloring.stroke(), coloring.door(),
             HOUSE_OPACITY,
             houseBaseHeightPy, HOUSE_WALL_TOP_HEIGHT, HOUSE_WALL_THICKNESS,
@@ -318,10 +317,8 @@ public class GameLevel3D extends Group {
 
         addFood3D(world, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 
-        worldGroup.getChildren().add(mazeGroup);
-
         // experimental
-        obstacleGroups = mazeGroup.lookupAll("*").stream()
+        obstacleGroups = parent.lookupAll("*").stream()
                 .filter(Group.class::isInstance)
                 .map(Group.class::cast)
                 .filter(group -> isTagged(group, WorldRenderer3D.TAG_INNER_OBSTACLE))

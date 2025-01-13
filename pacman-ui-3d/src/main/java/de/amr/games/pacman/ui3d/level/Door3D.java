@@ -37,7 +37,7 @@ public class Door3D extends Group {
         getChildren().addAll(createDoorWing(leftWingTile, height), createDoorWing(rightWingTile, height));
     }
 
-    public void playTraversalAnimation() {
+    public void playOpenCloseAnimation() {
         new Timeline(
             new KeyFrame(Duration.seconds(0.25),
                     new KeyValue(barThicknessPy, 0)),
