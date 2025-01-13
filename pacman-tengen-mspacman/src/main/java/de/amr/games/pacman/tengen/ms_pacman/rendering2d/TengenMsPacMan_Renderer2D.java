@@ -229,6 +229,10 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     public void drawFood(GameWorld world) {
+        if (coloredMapSet == null) {
+            Logger.error("Cannot draw food: no map set available");
+            return; //TODO check why this happens
+        }
         ctx.save();
         ctx.scale(scaling(), scaling());
         Color pelletColor = Color.valueOf(coloredMapSet.normalMaze().colorScheme().pelletColor());
