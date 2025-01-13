@@ -92,18 +92,20 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         getChildren().addAll(scores3D, axes, new Group());
 
         var camera = new PerspectiveCamera(true);
-        perspectives.put(Perspective.Name.DRONE, new Perspective.Drone(camera));
-        perspectives.put(Perspective.Name.TOTAL, new Perspective.Total(camera));
-        perspectives.put(Perspective.Name.TRACK_PLAYER, new Perspective.TrackingPlayer(camera));
-        perspectives.put(Perspective.Name.NEAR_PLAYER, new Perspective.StalkingPlayer(camera));
-
-        scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
-        scores3D.rotateProperty().bind(camera.rotateProperty());
 
         // initial size is irrelevant, gets bound to parent scene size later
         fxSubScene = new SubScene(this, 88, 88, true, SceneAntialiasing.BALANCED);
         fxSubScene.setFill(Color.TRANSPARENT);
         fxSubScene.setCamera(camera);
+
+        perspectives.put(Perspective.Name.DRONE, new Perspective.Drone(fxSubScene));
+        perspectives.put(Perspective.Name.TOTAL, new Perspective.Total(fxSubScene));
+        perspectives.put(Perspective.Name.TRACK_PLAYER, new Perspective.TrackingPlayer(fxSubScene));
+        perspectives.put(Perspective.Name.NEAR_PLAYER, new Perspective.StalkingPlayer(fxSubScene));
+
+        scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
+        scores3D.rotateProperty().bind(camera.rotateProperty());
+
     }
 
     @Override

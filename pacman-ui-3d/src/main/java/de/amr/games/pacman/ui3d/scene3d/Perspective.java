@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui3d.scene3d;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Actor2D;
 import javafx.scene.PerspectiveCamera;
+import javafx.scene.SubScene;
 import javafx.scene.transform.Rotate;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -35,8 +36,8 @@ public abstract class Perspective {
     public static class Drone extends Perspective {
         static final int HEIGHT = 200;
 
-        public Drone(PerspectiveCamera camera) {
-            super(camera);
+        public Drone(SubScene scene) {
+            super(scene);
         }
 
         @Override
@@ -70,8 +71,8 @@ public abstract class Perspective {
 
     public static class Total extends Perspective {
 
-        public Total(PerspectiveCamera camera) {
-            super(camera);
+        public Total(SubScene scene) {
+            super(scene);
         }
 
         @Override
@@ -84,14 +85,14 @@ public abstract class Perspective {
             camera.setNearClip(0.1);
             camera.setFarClip(10000.0);
             camera.setFieldOfView(40); // default: 30
+            camera.setRotationAxis(Rotate.X_AXIS);
+            camera.setRotate(70);
         }
 
         @Override
         public void update(GameWorld world, Actor2D spottedActor) {
             int sizeX = world.map().terrain().numCols() * TS;
             int sizeY = world.map().terrain().numRows() * TS;
-            camera.setRotationAxis(Rotate.X_AXIS);
-            camera.setRotate(70);
             camera.setTranslateX(sizeX * 0.5);
             camera.setTranslateY(sizeY * 1.5);
             camera.setTranslateZ(-100);
@@ -100,8 +101,8 @@ public abstract class Perspective {
 
     public static class TrackingPlayer extends Perspective {
 
-        public TrackingPlayer(PerspectiveCamera camera) {
-            super(camera);
+        public TrackingPlayer(SubScene scene) {
+            super(scene);
         }
 
         @Override
@@ -133,8 +134,8 @@ public abstract class Perspective {
 
     public static class StalkingPlayer extends Perspective {
 
-        public StalkingPlayer(PerspectiveCamera camera) {
-            super(camera);
+        public StalkingPlayer(SubScene scene) {
+            super(scene);
         }
 
         @Override
@@ -164,13 +165,15 @@ public abstract class Perspective {
         }
     };
 
-    Perspective(PerspectiveCamera camera) {
-        this.camera = camera;
+    Perspective(SubScene scene) {
+        this.scene = scene;
+        this.camera = (PerspectiveCamera) scene.getCamera();
     }
 
     public abstract void init(GameWorld world);
 
     public abstract void update(GameWorld world, Actor2D spottedActor);
 
+    final SubScene scene;
     final PerspectiveCamera camera;
 }
