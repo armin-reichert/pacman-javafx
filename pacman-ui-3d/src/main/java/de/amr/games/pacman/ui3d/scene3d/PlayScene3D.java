@@ -453,17 +453,19 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             // When cheat "eat all pellets" has been used, no tile is present in the event.
             level3D.pellets3D().forEach(Pellet3D::onEaten);
         } else {
-            Optional<Energizer3D> energizer3D = level3D.energizer3D(tile);
-            if (energizer3D.isPresent()) {
-                energizer3D.get().onEaten();
+            Energizer3D energizer3D = level3D.energizers3D()
+                .filter(e3D -> tile.equals(e3D.tile()))
+                .findFirst().orElse(null);
+            if (energizer3D != null) {
+                energizer3D.onEaten();
             } else {
                 level3D.pellets3D()
                     .filter(pellet3D -> tile.equals(pellet3D.tile()))
                     .findFirst()
                     .ifPresent(Pellet3D::onEaten);
             }
+            context.sound().playMunchingSound();
         }
-        context.sound().playMunchingSound();
     }
 
     @Override

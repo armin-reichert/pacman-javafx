@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
@@ -470,11 +469,6 @@ public class GameLevel3D extends Group {
     public Stream<Pellet3D> pellets3D() { return pellets3D.stream(); }
 
     public Stream<Energizer3D> energizers3D() { return energizers3D.stream(); }
-
-    public Optional<Energizer3D> energizer3D(Vector2i tile) {
-        assertTileNotNull(tile);
-        return energizers3D().filter(e3D -> e3D.tile().equals(tile)).findFirst();
-    }
 
     public Color floorColor() { return floorColorPy.get(); }
 
