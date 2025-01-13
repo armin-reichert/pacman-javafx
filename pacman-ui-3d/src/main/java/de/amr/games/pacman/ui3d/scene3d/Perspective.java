@@ -19,6 +19,9 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public interface Perspective {
 
+    void init(SubScene scene, GameWorld world);
+    void update(SubScene scene, GameWorld world, Actor2D spottedActor);
+
     enum Name {
         DRONE, TOTAL, TRACK_PLAYER, NEAR_PLAYER;
 
@@ -156,8 +159,4 @@ public interface Perspective {
             camera.setTranslateZ(-40);
         }
     }
-
-    void init(SubScene scene, GameWorld world);
-
-    void update(SubScene scene, GameWorld world, Actor2D spottedActor);
 }
