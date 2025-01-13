@@ -59,23 +59,7 @@ import static de.amr.games.pacman.ui3d.level.WorldRenderer3D.isTagged;
  */
 public class GameLevel3D extends Group {
 
-    static final int   LIVES_COUNTER_MAX     = 5;
-    static final float FLOOR_THICKNESS       = 0.5f;
-    static final float OBSTACLE_BASE_HEIGHT  = 7.0f;
-    static final float OBSTACLE_TOP_HEIGHT   = 0.1f;
-    static final float OBSTACLE_THICKNESS    = 1.25f;
-    static final float BORDER_WALL_THICKNESS = 1.5f;
-    static final float HOUSE_BASE_HEIGHT     = 12.0f;
-    static final float HOUSE_WALL_TOP_HEIGHT = 0.1f;
-    static final float HOUSE_WALL_THICKNESS  = 1.5f;
-    static final float HOUSE_OPACITY         = 0.4f;
-    static final float HOUSE_SENSITIVITY     = 1.5f * TS;
-    static final float PAC_SIZE              = 14.0f;
-    static final float GHOST_SIZE            = 13.5f;
-    static final float ENERGIZER_RADIUS      = 3.5f;
-    static final float PELLET_RADIUS         = 1.0f;
-
-    static final String PROPERTY_OSHAPES_FILLED = "rendering_oshapes_filled";
+    private static final String OSHAPES_FILLED_PROPERTY_NAME = "rendering_oshapes_filled";
 
     private final StringProperty floorTextureNamePy   = new SimpleStringProperty(this, "floorTextureName", GlobalProperties3d.NO_TEXTURE);
     private final DoubleProperty obstacleBaseHeightPy = new SimpleDoubleProperty(this, "obstacleBaseHeight", OBSTACLE_BASE_HEIGHT);
@@ -119,9 +103,6 @@ public class GameLevel3D extends Group {
         final GameModel game = context.game();
         final GameLevel level = context.level();
         final GameWorld world = level.world();
-        final WorldMapColoring mapColoring = context.gameConfiguration().worldMapColoring(world.map());
-
-        setMouseTransparent(true); //TODO does this increase performance?
 
         pac3D = createPac3D(level.pac());
         ghost3DAppearances = level.ghosts().map(ghost -> createGhost3D(ghost, level.numFlashes())).toList();
@@ -129,7 +110,7 @@ public class GameLevel3D extends Group {
         livesCounter3D = createLivesCounter3D(game.canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCounterPy);
 
-        buildWorld3D(world, mapColoring);
+        buildWorld3D(world);
 
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
         getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
@@ -142,6 +123,8 @@ public class GameLevel3D extends Group {
         ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
         getChildren().add(ambientLight);
+
+        setMouseTransparent(true); //TODO does this increase performance?
     }
 
     public void update(GameContext context) {
@@ -268,12 +251,11 @@ public class GameLevel3D extends Group {
         return levelCounter3D;
     }
 
-    private void buildWorld3D(GameWorld world, WorldMapColoring coloring) {
+    private void buildWorld3D(GameWorld world) {
         Logger.info("Build world 3D. Map URL='{}'", URLDecoder.decode(world.map().url().toExternalForm(), StandardCharsets.UTF_8));
 
-        createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
-        worldGroup.getChildren().add(floor);
 
+        WorldMapColoring coloring = context.gameConfiguration().worldMapColoring(world.map());        createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
         Color wallBaseColor = coloring.stroke();
         // need some contrast with floor if fill color is black
         Color wallTopColor = coloring.fill().equals(Color.BLACK) ? Color.grayRgb(30) : coloring.fill();
@@ -306,13 +288,13 @@ public class GameLevel3D extends Group {
         obstacleBaseHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
         //TODO just a temporary solution until I find something better
-        if (world.map().terrain().hasProperty(PROPERTY_OSHAPES_FILLED)) {
-            String value = (String) world.map().terrain().getProperty(PROPERTY_OSHAPES_FILLED);
+        if (world.map().terrain().hasProperty(OSHAPES_FILLED_PROPERTY_NAME)) {
+            String value = (String) world.map().terrain().getProperty(OSHAPES_FILLED_PROPERTY_NAME);
             try {
                 boolean filled = Boolean.parseBoolean(value);
                 worldRenderer.setOShapeFilled(filled);
             } catch (Exception x) {
-                Logger.error("Map property '{}}' is not a valid boolean value: {}", PROPERTY_OSHAPES_FILLED, value);
+                Logger.error("Map property '{}}' is not a valid boolean value: {}", OSHAPES_FILLED_PROPERTY_NAME, value);
             }
         }
 
@@ -357,6 +339,8 @@ public class GameLevel3D extends Group {
         floor.drawModeProperty().bind(PY_3D_DRAW_MODE);
         floorColorPy.bind(PY_3D_FLOOR_COLOR);
         floorTextureNamePy.bind(PY_3D_FLOOR_TEXTURE);
+
+        worldGroup.getChildren().add(floor);
     }
 
     private PhongMaterial createFloorMaterial() {
