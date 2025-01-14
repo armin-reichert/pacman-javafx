@@ -151,62 +151,58 @@ public class WorldRenderer3D {
         parent.getChildren().add(g);
     }
 
-    public Node createCompositeWallCenteredAt(Vector2f center, double sizeX, double sizeY) {
+    public Node createWallCenteredAt(Vector2f center, double sizeX, double sizeY) {
         var base = new Box(sizeX, sizeY, wallBaseHeightPy.get());
         base.depthProperty().bind(wallBaseHeightPy);
         base.setMaterial(wallBaseMaterial);
-        base.setTranslateX(center.x());
-        base.setTranslateY(center.y());
         base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
         addTags(base, TAG_WALL_BASE);
 
         var top = new Box(sizeX, sizeY, wallTopHeight);
         top.setMaterial(wallTopMaterial);
-        top.setTranslateX(center.x());
-        top.setTranslateY(center.y());
         top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
         addTags(top, TAG_WALL_TOP);
 
         Group wall = new Group(base, top);
+        wall.setTranslateX(center.x());
+        wall.setTranslateY(center.y());
         wall.setMouseTransparent(true);
         return wall;
     }
 
-    public Node createCompositeWallBetweenTiles(Vector2i beginTile, Vector2i endTile) {
+    public Node createWallBetweenTiles(Vector2i beginTile, Vector2i endTile) {
         if (beginTile.y() == endTile.y()) { // horizontal wall
             Vector2i left  = beginTile.x() < endTile.x() ? beginTile : endTile;
             Vector2i right = beginTile.x() < endTile.x() ? endTile : beginTile;
             Vector2f center = left.plus(right).scaled((float) HTS).plus(HTS, HTS);
             int length = TS * (right.x() - left.x());
-            return createCompositeWallCenteredAt(center, length + wallThickness, wallThickness);
+            return createWallCenteredAt(center, length + wallThickness, wallThickness);
         }
         else if (beginTile.x() == endTile.x()) { // vertical wall
             Vector2i top    = beginTile.y() < endTile.y() ? beginTile : endTile;
             Vector2i bottom = beginTile.y() < endTile.y() ? endTile : beginTile;
             Vector2f center = top.plus(bottom).scaled((float) HTS).plus(HTS, HTS);
             int length = TS * (bottom.y() - top.y());
-            return createCompositeWallCenteredAt(center, wallThickness, length);
+            return createWallCenteredAt(center, wallThickness, length);
         }
         throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(beginTile, endTile));
     }
 
-    public Node createCompositeHorizontalWallBetween(Vector2f p, Vector2f q) {
-        return createCompositeWallCenteredAt(p.midpoint(q), p.manhattanDist(q) + wallThickness, wallThickness);
+    public Node createHorizontalWallBetween(Vector2f p, Vector2f q) {
+        return createWallCenteredAt(p.midpoint(q), p.manhattanDist(q) + wallThickness, wallThickness);
     }
 
-    public Node createCompositeVerticalWallBetween(Vector2f p, Vector2f q) {
-        return createCompositeWallCenteredAt(p.midpoint(q), wallThickness, p.manhattanDist(q));
+    public Node createVerticalWallBetween(Vector2f p, Vector2f q) {
+        return createWallCenteredAt(p.midpoint(q), wallThickness, p.manhattanDist(q));
     }
 
-    public Node createCompositeCircularWall(Vector2f center, double radius) {
+    public Node createCircularWall(Vector2f center, double radius) {
         Cylinder base = new Cylinder(radius, wallBaseHeightPy.get(), CYLINDER_DIVISIONS);
         base.setMaterial(cornerMaterial);
         base.setRotationAxis(Rotate.X_AXIS);
         base.setRotate(90);
-        base.setTranslateX(center.x());
-        base.setTranslateY(center.y());
         base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
         base.heightProperty().bind(wallBaseHeightPy);
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
@@ -216,20 +212,20 @@ public class WorldRenderer3D {
         top.setMaterial(wallTopMaterial);
         top.setRotationAxis(Rotate.X_AXIS);
         top.setRotate(90);
-        top.translateXProperty().bind(base.translateXProperty());
-        top.translateYProperty().bind(base.translateYProperty());
         top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
         addTags(top, TAG_WALL_TOP, TAG_CORNER);
 
         Group wall = new Group(base, top);
+        wall.setTranslateX(center.x());
+        wall.setTranslateY(center.y());
         wall.setMouseTransparent(true);
         return wall;
     }
 
     protected void addTowers(Group parent, Vector2f... centers) {
         for (Vector2f center : centers) {
-            Node tower = createCompositeCircularWall(center, HTS);
+            Node tower = createCircularWall(center, HTS);
             parent.getChildren().add(tower);
         }
     }
@@ -245,7 +241,7 @@ public class WorldRenderer3D {
     }
 
     protected void addWallAtCenter(Group parent, Vector2f center, double sizeX, double sizeY) {
-        parent.getChildren().add(createCompositeWallCenteredAt(center, sizeX, sizeY));
+        parent.getChildren().add(createWallCenteredAt(center, sizeX, sizeY));
     }
 
     // Standard 3D obstacles
@@ -721,10 +717,10 @@ public class WorldRenderer3D {
             double length = segment.vector().length();
             Vector2f q = p.plus(segment.vector());
             if (segment.isVerticalLine()) {
-                Node wall = createCompositeWallCenteredAt(p.midpoint(q), wallThickness, length);
+                Node wall = createWallCenteredAt(p.midpoint(q), wallThickness, length);
                 parent.getChildren().add(wall);
             } else if (segment.isHorizontalLine()) {
-                Node wall = createCompositeWallCenteredAt(p.midpoint(q), length + wallThickness, wallThickness);
+                Node wall = createWallCenteredAt(p.midpoint(q), length + wallThickness, wallThickness);
                 parent.getChildren().add(wall);
             } else if (segment.isNWCorner()) {
                 if (segment.ccw()) {
@@ -756,8 +752,8 @@ public class WorldRenderer3D {
     }
 
     protected void addGenericShapeCorner(Group parent, Vector2f corner, Vector2f horEndPoint, Vector2f vertEndPoint) {
-        Node hWall = createCompositeWallCenteredAt(corner.midpoint(horEndPoint), corner.manhattanDist(horEndPoint), wallThickness);
-        Node vWall = createCompositeWallCenteredAt(corner.midpoint(vertEndPoint), wallThickness, corner.manhattanDist(vertEndPoint));
+        Node hWall = createWallCenteredAt(corner.midpoint(horEndPoint), corner.manhattanDist(horEndPoint), wallThickness);
+        Node vWall = createWallCenteredAt(corner.midpoint(vertEndPoint), wallThickness, corner.manhattanDist(vertEndPoint));
         Node cWall = createCompositeCornerWall(corner, 0.5 * wallThickness);
         parent.getChildren().addAll(hWall, vWall, cWall);
     }
@@ -810,11 +806,11 @@ public class WorldRenderer3D {
         door3D.drawModePy.bind(PY_3D_DRAW_MODE);
 
         parent.getChildren().addAll(
-            createCompositeWallBetweenTiles(vec_2i(xMin, yMin), vec_2i(leftDoorTile.x() - 1, yMin)),
-            createCompositeWallBetweenTiles(vec_2i(rightDoorTile.x() + 1, yMin), vec_2i(xMax, yMin)),
-            createCompositeWallBetweenTiles(vec_2i(xMin, yMin), vec_2i(xMin, yMax)),
-            createCompositeWallBetweenTiles(vec_2i(xMax, yMin), vec_2i(xMax, yMax)),
-            createCompositeWallBetweenTiles(vec_2i(xMin, yMax), vec_2i(xMax, yMax))
+            createWallBetweenTiles(vec_2i(xMin, yMin), vec_2i(leftDoorTile.x() - 1, yMin)),
+            createWallBetweenTiles(vec_2i(rightDoorTile.x() + 1, yMin), vec_2i(xMax, yMin)),
+            createWallBetweenTiles(vec_2i(xMin, yMin), vec_2i(xMin, yMax)),
+            createWallBetweenTiles(vec_2i(xMax, yMin), vec_2i(xMax, yMax)),
+            createWallBetweenTiles(vec_2i(xMin, yMax), vec_2i(xMax, yMax))
         );
 
         // pixel coordinates
