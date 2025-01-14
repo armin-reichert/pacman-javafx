@@ -162,7 +162,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             }
         }
         updateScores();
-        perspectives.values().forEach(perspective -> perspective.init(fxSubScene, level.world()));
+        perspective().init(fxSubScene, level.world());
     }
 
     @Override
