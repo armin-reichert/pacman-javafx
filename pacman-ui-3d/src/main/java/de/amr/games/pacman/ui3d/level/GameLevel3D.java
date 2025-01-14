@@ -5,8 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
@@ -23,7 +21,10 @@ import de.amr.games.pacman.ui3d.model.Model3D;
 import de.amr.games.pacman.ui3d.scene3d.GameConfiguration3D;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -33,66 +34,53 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.lib.Ufx.*;
+import static de.amr.games.pacman.ui2d.lib.Ufx.coloredMaterial;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
-import static de.amr.games.pacman.ui3d.level.WorldRenderer3D.TAG_WALL_BASE;
-import static de.amr.games.pacman.ui3d.level.WorldRenderer3D.isTagged;
 
 /**
  * @author Armin Reichert
  */
 public class GameLevel3D extends Group {
 
-    private static final String OSHAPES_FILLED_PROPERTY_NAME = "rendering_oshapes_filled";
-
-    private final DoubleProperty obstacleBaseHeightPy = new SimpleDoubleProperty(OBSTACLE_BASE_HEIGHT);
-    private final DoubleProperty wallOpacityPy        = new SimpleDoubleProperty(1);
-    private final IntegerProperty livesCountPy        = new SimpleIntegerProperty(0);
-    private final DoubleProperty houseBaseHeightPy    = new SimpleDoubleProperty(HOUSE_BASE_HEIGHT);
-    private final BooleanProperty houseLightOnPy      = new SimpleBooleanProperty(false);
-
     private final BooleanProperty houseOpenPy = new SimpleBooleanProperty() {
         @Override
         protected void invalidated() {
             if (houseOpenPy.get()) {
-                door3D.playOpenCloseAnimation();
+                maze3D.door3D().playOpenCloseAnimation();
             }
         }
     };
 
+    private final IntegerProperty livesCountPy = new SimpleIntegerProperty(0);
+
     private final GameContext context;
     private final AmbientLight ambientLight;
+
     private final Group worldGroup = new Group();
-    private final Group mazeGroup = new Group();
+
+    private final Maze3D maze3D = new Maze3D();
     private final Pac3D pac3D;
     private final List<Ghost3DAppearance> ghost3DAppearances;
     private final List<Pellet3D> pellets3D = new ArrayList<>();
     private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
     private final LivesCounter3D livesCounter3D;
-    private Door3D door3D;
-    private Box floor;
+
+    private Box floor3D;
     private Message3D message3D;
     private Bonus3D bonus3D;
-
-    // experimental
-    private PhongMaterial cornerMaterial;
-    private Set<Group> obstacleGroups;
-    private PhongMaterial highlightMaterial = new PhongMaterial(Color.YELLOW);
 
     public GameLevel3D(GameContext context) {
         this.context = assertNotNull(context);
@@ -107,16 +95,20 @@ public class GameLevel3D extends Group {
         livesCounter3D = createLivesCounter3D(game.canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCountPy);
 
-        worldGroup.getChildren().add(mazeGroup);
-        addWorld3D(mazeGroup, world);
+        floor3D = createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
+        worldGroup.getChildren().add(floor3D);
+
+        WorldMapColoring coloring = context.gameConfiguration().worldMapColoring(world.map());
+        maze3D.build((GameConfiguration3D) context.gameConfiguration(), world, coloring);
+        worldGroup.getChildren().add(maze3D);
+
+        addFood3D(world, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
         getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
         getChildren().addAll(ghost3DAppearances);
         getChildren().addAll(livesCounter3D, worldGroup);
 
-        PY_3D_WALL_HEIGHT.addListener((py,ov,nv) -> obstacleBaseHeightPy.set(nv.doubleValue()));
-        wallOpacityPy.bind(PY_3D_WALL_OPACITY);
 
         ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
@@ -133,7 +125,7 @@ public class GameLevel3D extends Group {
         boolean houseAccessRequired = context.level()
             .ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .anyMatch(Ghost::isVisible);
-        houseLightOnPy.set(houseAccessRequired);
+        maze3D().setHouseLightOn(houseAccessRequired);
 
         boolean ghostNearHouseEntry = context.level()
             .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
@@ -149,28 +141,7 @@ public class GameLevel3D extends Group {
         }
 
         // experimental
-        //highlightObstacleNearPac(context.level().pac().position());
-    }
-
-    private void highlightObstacleNearPac(Vector2f pacPosition) {
-        for (Group obstacleGroup : obstacleGroups) {
-            Set<Node> obstacleParts = obstacleGroup.lookupAll("*").stream()
-                    .filter(node -> node instanceof Box || node instanceof Cylinder)
-                    .collect(Collectors.toSet());
-            boolean highlight = false;
-            for (Node node : obstacleParts) {
-                if (isTagged(node, TAG_WALL_BASE)) {
-                    Vector2f nodePosition = vec_2f(node.getTranslateX(), node.getTranslateY());
-                    highlight = nodePosition.euclideanDist(pacPosition) < 2 * TS;
-                    break;
-                }
-            }
-            for (Node node : obstacleParts) {
-                if (isTagged(node, TAG_WALL_BASE) && node instanceof Shape3D shape3D) {
-                    shape3D.setMaterial(highlight ? highlightMaterial : cornerMaterial); // TODO
-                }
-            }
-        }
+        //maze3D.highlightObstacleNearPac(context.level().pac().position());
     }
 
     private Pac3D createPac3D(Pac pac) {
@@ -249,91 +220,17 @@ public class GameLevel3D extends Group {
         return levelCounter3D;
     }
 
-    private void addWorld3D(Group parent, GameWorld world) {
-        Logger.info("Build world 3D. Map URL='{}'", URLDecoder.decode(world.map().url().toExternalForm(), StandardCharsets.UTF_8));
-
-        WorldMapColoring coloring = context.gameConfiguration().worldMapColoring(world.map());        createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
-        Color wallBaseColor = coloring.stroke();
-        // need some contrast with floor if fill color is black
-        Color wallTopColor = coloring.fill().equals(Color.BLACK) ? Color.grayRgb(30) : coloring.fill();
-
-        var wallTopMaterial = new PhongMaterial();
-        wallTopMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
-            () -> opaqueColor(wallTopColor, wallOpacityPy.get()), wallOpacityPy
-        ));
-        wallTopMaterial.specularColorProperty().bind(wallTopMaterial.diffuseColorProperty().map(Color::brighter));
-
-        var wallBaseMaterial = new PhongMaterial();
-        wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
-            () -> opaqueColor(wallBaseColor, wallOpacityPy.get()), wallOpacityPy
-        ));
-        wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
-
-        cornerMaterial = new PhongMaterial();
-        cornerMaterial.setDiffuseColor(wallBaseColor);
-        cornerMaterial.specularColorProperty().bind(cornerMaterial.diffuseColorProperty().map(Color::brighter));
-
-        var configuration3D = (GameConfiguration3D) context.gameConfiguration();
-        WorldRenderer3D r3D = configuration3D.createWorldRenderer();
-        r3D.setWallBaseMaterial(wallBaseMaterial);
-        r3D.setWallBaseHeightProperty(obstacleBaseHeightPy);
-        r3D.setWallTopMaterial(wallTopMaterial);
-        r3D.setWallTopHeight(OBSTACLE_TOP_HEIGHT);
-        r3D.setCornerMaterial(cornerMaterial);
-
-        //TODO check this:
-        obstacleBaseHeightPy.set(PY_3D_WALL_HEIGHT.get());
-
-        //TODO just a temporary solution until I find something better
-        if (world.map().terrain().hasProperty(OSHAPES_FILLED_PROPERTY_NAME)) {
-            Object value = world.map().terrain().getProperty(OSHAPES_FILLED_PROPERTY_NAME);
-            try {
-                r3D.setOShapeFilled(Boolean.parseBoolean(String.valueOf(value)));
-            } catch (Exception x) {
-                Logger.error("Map property '{}}' is not a valid boolean value: {}", OSHAPES_FILLED_PROPERTY_NAME, value);
-            }
-        }
-
-        for (Obstacle obstacle : world.map().obstacles()) {
-            Logger.info("{}: {}", obstacle.computeType(), obstacle);
-            if (!world.isPartOfHouse(tileAt(obstacle.startPoint()))) {
-                r3D.setWallThickness(obstacle.hasDoubleWalls() ? BORDER_WALL_THICKNESS : OBSTACLE_THICKNESS);
-                r3D.renderObstacle3D(parent, obstacle);
-            }
-        }
-
-        // House
-        houseBaseHeightPy.set(HOUSE_BASE_HEIGHT);
-        door3D = r3D.addGhostHouse(
-            parent, world,
-            coloring.fill(), coloring.stroke(), coloring.door(),
-            HOUSE_OPACITY,
-            houseBaseHeightPy, HOUSE_WALL_TOP_HEIGHT, HOUSE_WALL_THICKNESS,
-            houseLightOnPy);
-        getChildren().add(door3D); //TODO check this
-
-        addFood3D(world, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
-
-        // experimental
-        obstacleGroups = parent.lookupAll("*").stream()
-                .filter(Group.class::isInstance)
-                .map(Group.class::cast)
-                .filter(group -> isTagged(group, WorldRenderer3D.TAG_INNER_OBSTACLE))
-                .collect(Collectors.toSet());
-    }
-
-    private void createFloor(double sizeX, double sizeY) {
+    private Box createFloor(double sizeX, double sizeY) {
         // add some extra space
         double extraSpace = 10;
-        floor = new Box(sizeX + extraSpace, sizeY, FLOOR_THICKNESS);
-        floor.materialProperty().bind(
+        var floor3D = new Box(sizeX + extraSpace, sizeY, FLOOR_THICKNESS);
+        floor3D.materialProperty().bind(
             Bindings.createObjectBinding(this::createFloorMaterial, PY_3D_FLOOR_COLOR, PY_3D_FLOOR_TEXTURE_NAME));
-        floor.translateXProperty().bind(floor.widthProperty().multiply(0.5).subtract(0.5*extraSpace));
-        floor.translateYProperty().bind(floor.heightProperty().multiply(0.5));
-        floor.translateZProperty().set(FLOOR_THICKNESS * 0.5);
-        floor.drawModeProperty().bind(PY_3D_DRAW_MODE);
-
-        worldGroup.getChildren().add(floor);
+        floor3D.translateXProperty().bind(floor3D.widthProperty().multiply(0.5).subtract(0.5*extraSpace));
+        floor3D.translateYProperty().bind(floor3D.heightProperty().multiply(0.5));
+        floor3D.translateZProperty().set(FLOOR_THICKNESS * 0.5);
+        floor3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        return floor3D;
     }
 
     private PhongMaterial createFloorMaterial() {
@@ -389,7 +286,7 @@ public class GameLevel3D extends Group {
         message3D.setTranslateZ(halfHeight); // just under floor
 
         var moveUpAnimation = new TranslateTransition(Duration.seconds(1), message3D);
-        moveUpAnimation.setToZ(-(halfHeight + 0.5 * obstacleBaseHeightPy.get()));
+        moveUpAnimation.setToZ(-(halfHeight + 0.5 * OBSTACLE_BASE_HEIGHT));
 
         var moveDownAnimation = new TranslateTransition(Duration.seconds(1), message3D);
         moveDownAnimation.setDelay(Duration.seconds(displaySeconds));
@@ -420,38 +317,13 @@ public class GameLevel3D extends Group {
         return rotation;
     }
 
-    public Animation wallsDisappearAnimation(double seconds) {
-        var totalDuration = Duration.seconds(seconds);
-        var obstaclesDisappear = new Timeline(
-            new KeyFrame(totalDuration.multiply(0.33),
-                new KeyValue(obstacleBaseHeightPy, 0, Interpolator.EASE_IN)
-            ));
-        var houseDisappears = new Timeline(
-            new KeyFrame(totalDuration.multiply(0.33),
-                new KeyValue(houseBaseHeightPy, 0, Interpolator.EASE_IN)
-            ));
-        var animation = new SequentialTransition(houseDisappears, obstaclesDisappear);
-        animation.setOnFinished(e -> mazeGroup.setVisible(false));
-        return animation;
-    }
-
-    public Animation mazeFlashAnimation(int numFlashes) {
-        if (numFlashes == 0) {
-            return pauseSec(1.0);
-        }
-        var animation = new Timeline(
-            new KeyFrame(Duration.millis(125), new KeyValue(obstacleBaseHeightPy, 0, Interpolator.EASE_BOTH))
-        );
-        animation.setAutoReverse(true);
-        animation.setCycleCount(2 * numFlashes);
-        return animation;
-    }
-
     public void stopAnimations() {
         energizers3D().forEach(Energizer3D::stopPumping);
         livesCounter3D().shapesRotation().stop();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
     }
+
+    public Maze3D maze3D() { return maze3D; }
 
     public Pac3D pac3D() { return pac3D; }
 
@@ -469,9 +341,6 @@ public class GameLevel3D extends Group {
 
     public Color floorColor() { return PY_3D_FLOOR_COLOR.get(); }
 
-    public double floorThickness() { return floor.getDepth(); }
+    public double floorThickness() { return floor3D.getDepth(); }
 
-    public Door3D door3D() {
-        return door3D;
-    }
 }

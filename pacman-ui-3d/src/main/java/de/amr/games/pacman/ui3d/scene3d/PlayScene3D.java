@@ -361,7 +361,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         level3D.pellets3D().forEach(Pellet3D::onEaten);
         level3D.energizers3D().forEach(Energizer3D::onEaten);
         level3D.livesCounter3D().shapesRotation().stop();
-        level3D.door3D().setVisible(false);
+        level3D.maze3D().door3D().setVisible(false);
         playLevelCompleteAnimation(context.level());
     }
 
@@ -530,7 +530,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     private Animation levelCompleteAnimationBeforeIntermission(int numFlashes) {
         return new SequentialTransition(
             doAfterSec(1.0, () -> context.level().ghosts().forEach(Ghost::hide))
-            , level3D.mazeFlashAnimation(numFlashes)
+            , level3D.maze3D().mazeFlashAnimation(numFlashes)
             , doAfterSec(2.5, () -> context.level().pac().hide())
         );
     }
@@ -546,11 +546,11 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
                 }
             }),
             new KeyFrame(Duration.seconds(1.0), e -> context.level().ghosts().forEach(Ghost::hide)),
-            new KeyFrame(Duration.seconds(1.5), e -> level3D.mazeFlashAnimation(numFlashes).play()),
+            new KeyFrame(Duration.seconds(1.5), e -> level3D.maze3D().mazeFlashAnimation(numFlashes).play()),
             new KeyFrame(Duration.seconds(4.5), e -> context.level().pac().hide()),
             new KeyFrame(Duration.seconds(5.0), e -> level3D.levelRotateAnimation(1.5).play()),
             new KeyFrame(Duration.seconds(7.0), e -> {
-                level3D.wallsDisappearAnimation(2.0).play();
+                level3D.maze3D().wallsDisappearAnimation(2.0).play();
                 context.sound().playLevelCompleteSound();
             }),
             new KeyFrame(Duration.seconds(9.5), e -> {
