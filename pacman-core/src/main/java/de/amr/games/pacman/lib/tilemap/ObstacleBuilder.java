@@ -9,12 +9,15 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import org.tinylog.Logger;
 
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
+import java.util.Objects;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.TileEncoding.isDoubleWall;
+import static java.util.function.Predicate.not;
 
 public class ObstacleBuilder {
 
@@ -46,16 +49,23 @@ public class ObstacleBuilder {
     private static final Vector2f SEG_CORNER_NE_DOWN = SEG_CORNER_NE_UP.inverse();
 
     public static List<Obstacle> buildObstacles(TileMap terrain, List<Vector2i> tilesWithErrors) {
-        var ob = new ObstacleBuilder(terrain);
-        return ob.buildObstacles(tilesWithErrors);
+        return new ObstacleBuilder(terrain).buildObstacles(tilesWithErrors);
     }
 
     private final TileMap terrain;
-    private final Set<Vector2i> exploredTiles = new HashSet<>();
+    private final BitSet exploredTiles = new BitSet();
     private Cursor cursor;
 
     private ObstacleBuilder(TileMap terrain) {
         this.terrain = terrain;
+    }
+
+    private boolean isExplored(Vector2i tile) {
+        return exploredTiles.get(terrain.index(tile));
+    }
+
+    private void setExplored(Vector2i tile) {
+        exploredTiles.set(terrain.index(tile));
     }
 
     private List<Obstacle> buildObstacles(List<Vector2i> tilesWithErrors) {
@@ -67,7 +77,7 @@ public class ObstacleBuilder {
         // obstacles first, each failed attempt must set its visited tile set to unvisited!
         terrain.tiles()
             .filter(tile -> tile.x() == 0 || tile.x() == terrain.numCols() - 1)
-            .filter(Predicate.not(exploredTiles::contains))
+            .filter(not(this::isExplored))
             .map(tile -> buildOpenObstacle(tile, tile.x() == 0, tilesWithErrors))
             .filter(Objects::nonNull)
             .forEach(obstacles::add);
@@ -77,7 +87,7 @@ public class ObstacleBuilder {
                 terrain.get(tile) == TileEncoding.CORNER_NW ||
                 terrain.get(tile) == TileEncoding.DCORNER_NW ||
                 terrain.get(tile) == TileEncoding.DCORNER_ANGULAR_NW) // house top-left corner
-            .filter(Predicate.not(exploredTiles::contains))
+            .filter(not(this::isExplored))
             .map(cornerNW -> buildClosedObstacle(cornerNW, tilesWithErrors))
             .forEach(obstacles::add);
 
@@ -94,7 +104,7 @@ public class ObstacleBuilder {
         obstacle.addSegment(SEG_CORNER_NW_DOWN, true, startTileContent);
         cursor = new Cursor(cornerNW);
         cursor.move(DOWN);
-        exploredTiles.add(cornerNW);
+        setExplored(cornerNW);
         buildRestOfObstacle(obstacle, cornerNW, true, tilesWithErrors);
         if (obstacle.isClosed()) {
             Logger.debug("Closed obstacle, top-left tile={}, map ID={}:", cornerNW, terrain.hashCode());
@@ -134,7 +144,7 @@ public class ObstacleBuilder {
         else {
             return null;
         }
-        exploredTiles.add(startTile);
+        setExplored(startTile);
         buildRestOfObstacle(obstacle, startTile, obstacle.segment(0).ccw(), tilesWithErrors);
         Logger.debug("Open obstacle, start tile={}, segment count={}, map ID={}:",
             startTile, obstacle.segments().size(), terrain.hashCode());
@@ -151,10 +161,10 @@ public class ObstacleBuilder {
         int bailout = 0;
         while (bailout < 1000) {
             ++bailout;
-            if (exploredTiles.contains(cursor.currentTile)) {
+            if (isExplored(cursor.currentTile)) {
                 break;
             }
-            exploredTiles.add(cursor.currentTile);
+            setExplored(cursor.currentTile);
             byte tileContent = terrain.get(cursor.currentTile);
 
             boolean doubleWall = isDoubleWall(tileContent);
