@@ -115,39 +115,39 @@ public class WorldRenderer3D {
             addUncategorizedObstacle3D(parent, obstacle);
             return;
         }
-        Group obstacleGroup = new Group();
-        addTags(obstacleGroup, TAG_INNER_OBSTACLE);
-        parent.getChildren().add(obstacleGroup);
+        Group g = new Group();
+        addTags(g, TAG_INNER_OBSTACLE);
+        parent.getChildren().add(g);
         switch (type) {
-            case CROSS ->                 render_Cross(obstacleGroup, obstacle);
-            case F ->                     render_F(obstacleGroup, obstacle);
-            case GAMMA_SPIKED ->          render_Gamma_Spiked(obstacleGroup, obstacle);
-            case GAMMA_SPIKED_MIRRORED -> render_Gamma_Spiked_Mirrored(obstacleGroup, obstacle);
-            case H ->                     render_H(obstacleGroup, obstacle);
-            case L ->                     render_L(obstacleGroup, obstacle);
-            case L_SPIKED ->              render_L_Spiked(obstacleGroup, obstacle);
-            case L_SPIKED_MIRRORED ->     render_L_Spiked_Mirrored(obstacleGroup, obstacle);
-            case LL ->                    render_LL(obstacleGroup, obstacle);
-            case LL_MIRRORED ->           render_LL_Mirrored(obstacleGroup, obstacle);
-            case LLL ->                   render_LLL(obstacleGroup, obstacle);
-            case LLL_MIRRORED ->          render_LLL_Mirrored(obstacleGroup, obstacle);
-            case O ->                     render_O(obstacleGroup, obstacle);
-            case OPEN_SQUARE_SE ->        render_OpenSquare_SE(obstacleGroup, obstacle);
-            case OPEN_SQUARE_SW ->        render_OpenSquare_SW(obstacleGroup, obstacle);
-            case OPEN_SQUARE_NE ->        render_OpenSquare_NE(obstacleGroup, obstacle);
-            case OPEN_SQUARE_NW ->        render_OpenSquare_NW(obstacleGroup, obstacle);
-            case S ->                     render_S(obstacleGroup, obstacle);
-            case SPACESHIP_DOWN ->        render_Spaceship_Down(obstacleGroup, obstacle);
-            case SPACESHIP_UP ->          render_Spaceship_Up(obstacleGroup, obstacle);
-            case SPACESHIP_LEFT ->        render_Spaceship_Left(obstacleGroup, obstacle);
-            case SPACESHIP_RIGHT ->       render_Spaceship_Right(obstacleGroup, obstacle);
-            case T ->                     render_T(obstacleGroup, obstacle);
-            case T_TWO_ROWS ->            render_T_TwoRows(obstacleGroup, obstacle);
-            case U ->                     render_U(obstacleGroup, obstacle);
+            case CROSS ->                 render_Cross(g, obstacle);
+            case F ->                     render_F(g, obstacle);
+            case GAMMA_SPIKED ->          render_Gamma_Spiked(g, obstacle);
+            case GAMMA_SPIKED_MIRRORED -> render_Gamma_Spiked_Mirrored(g, obstacle);
+            case H ->                     render_H(g, obstacle);
+            case L ->                     render_L(g, obstacle);
+            case L_SPIKED ->              render_L_Spiked(g, obstacle);
+            case L_SPIKED_MIRRORED ->     render_L_Spiked_Mirrored(g, obstacle);
+            case LL ->                    render_LL(g, obstacle);
+            case LL_MIRRORED ->           render_LL_Mirrored(g, obstacle);
+            case LLL ->                   render_LLL(g, obstacle);
+            case LLL_MIRRORED ->          render_LLL_Mirrored(g, obstacle);
+            case O ->                     render_O(g, obstacle);
+            case OPEN_SQUARE_SE ->        render_OpenSquare_SE(g, obstacle);
+            case OPEN_SQUARE_SW ->        render_OpenSquare_SW(g, obstacle);
+            case OPEN_SQUARE_NE ->        render_OpenSquare_NE(g, obstacle);
+            case OPEN_SQUARE_NW ->        render_OpenSquare_NW(g, obstacle);
+            case S ->                     render_S(g, obstacle);
+            case SPACESHIP_DOWN ->        render_Spaceship_Down(g, obstacle);
+            case SPACESHIP_UP ->          render_Spaceship_Up(g, obstacle);
+            case SPACESHIP_LEFT ->        render_Spaceship_Left(g, obstacle);
+            case SPACESHIP_RIGHT ->       render_Spaceship_Right(g, obstacle);
+            case T ->                     render_T(g, obstacle);
+            case T_TWO_ROWS ->            render_T_TwoRows(g, obstacle);
+            case U ->                     render_U(g, obstacle);
 
             //TODO these belong elsewhere
-            case JUNIOR_4_LEFT_OF_HOUSE ->  render_Junior_4_LeftOfHouse(obstacleGroup, obstacle);
-            case JUNIOR_4_RIGHT_OF_HOUSE -> render_Junior_4_RightOfHouse(obstacleGroup, obstacle);
+            case JUNIOR_4_LEFT_OF_HOUSE ->  render_Junior_4_LeftOfHouse(g, obstacle);
+            case JUNIOR_4_RIGHT_OF_HOUSE -> render_Junior_4_RightOfHouse(g, obstacle);
         }
     }
 
