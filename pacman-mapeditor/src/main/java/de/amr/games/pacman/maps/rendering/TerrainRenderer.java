@@ -8,18 +8,18 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.TileEncoding;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
+import static java.util.function.Predicate.not;
 
 /**
  * Vector renderer for terrain tile maps.
@@ -95,7 +95,7 @@ public class TerrainRenderer implements TileMapRenderer {
                 drawObstacle(g, obstacle, doubleStrokeInnerWidth, false, wallFillColor);
             });
 
-        obstacles.stream().filter(Predicate.not(Obstacle::hasDoubleWalls))
+        obstacles.stream().filter(not(Obstacle::hasDoubleWalls))
             .forEach(obstacle -> drawObstacle(g, obstacle, singleStrokeWidth, true, wallStrokeColor));
 
         terrainMap.tiles(TileEncoding.DOOR)
@@ -115,37 +115,33 @@ public class TerrainRenderer implements TileMapRenderer {
             if (segment.isStraightLine()) {
                 g.lineTo(x, y);
             } else {
-                // Corners are represented by diagonal line segments
+                boolean counterClockwise = segment.ccw();
                 if (segment.isRoundedNWCorner()) {
-                    if (segment.ccw()) g.arc(x+r, y,   r, r,  90, 90);
-                    else               g.arc(x,   y+r, r, r, 180, -90);
+                    if (counterClockwise) g.arc(x+r, y, r, r,  90, 90); else g.arc(x, y+r, r, r, 180, -90);
                 }
                 else if (segment.isRoundedSWCorner()) {
-                    if (segment.ccw()) g.arc(x,   y-r, r, r, 180, 90);
-                    else               g.arc(x+r, y,   r, r, 270, -90);
+                    if (counterClockwise) g.arc(x, y-r, r, r, 180, 90); else g.arc(x+r, y, r, r, 270, -90);
                 }
                 else if (segment.isRoundedSECorner()) {
-                    if (segment.ccw()) g.arc(x-r, y,   r, r, 270, 90);
-                    else               g.arc(x,   y-r, r, r, 0, -90);
+                    if (counterClockwise) g.arc(x-r, y, r, r, 270, 90); else g.arc(x, y-r, r, r, 0, -90);
                 }
                 else if (segment.isRoundedNECorner()) {
-                    if (segment.ccw()) g.arc(x,   y+r, r, r, 0, 90);
-                    else               g.arc(x-r, y,   r, r, 90, -90);
+                    if (counterClockwise) g.arc(x, y+r, r, r, 0, 90); else g.arc(x-r, y, r, r, 90, -90);
                 }
                 else if (segment.isAngularNWCorner()) {
-                    if (segment.ccw()) g.lineTo(x,y-r); else g.lineTo(x-r, y);
+                    if (counterClockwise) g.lineTo(x,y-r); else g.lineTo(x-r, y);
                     g.lineTo(x, y);
                 }
                 else if (segment.isAngularSWCorner()) {
-                    if (segment.ccw()) g.lineTo(x-r, y); else g.lineTo(x, y+r);
+                    if (counterClockwise) g.lineTo(x-r, y); else g.lineTo(x, y+r);
                     g.lineTo(x, y);
                 }
                 else if (segment.isAngularSECorner()) {
-                    if (segment.ccw()) g.lineTo(x,y+r); else g.lineTo(x-r, y);
+                    if (counterClockwise) g.lineTo(x,y+r); else g.lineTo(x-r, y);
                     g.lineTo(x, y);
                 }
                 else if (segment.isAngularNECorner()) {
-                    if (segment.ccw()) g.lineTo(x+r, y); else g.lineTo(x-r, y-r);
+                    if (counterClockwise) g.lineTo(x+r, y); else g.lineTo(x-r, y-r);
                     g.lineTo(x, y);
                 }
             }
@@ -164,7 +160,7 @@ public class TerrainRenderer implements TileMapRenderer {
 
     @Override
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
-        // this renderer doesn't draw tiles individually but draws precomputed paths
+        // this renderer doesn't draw tiles individually but draws complete paths
     }
 
     // assume we always have a pair of horizontally neighbored doors
