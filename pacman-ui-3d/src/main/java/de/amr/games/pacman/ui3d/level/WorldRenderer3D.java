@@ -116,8 +116,6 @@ public class WorldRenderer3D {
             return;
         }
         Group g = new Group();
-        addTags(g, TAG_INNER_OBSTACLE);
-        parent.getChildren().add(g);
         switch (type) {
             case CROSS ->                 render_Cross(g, obstacle);
             case F ->                     render_F(g, obstacle);
@@ -149,6 +147,8 @@ public class WorldRenderer3D {
             case JUNIOR_4_LEFT_OF_HOUSE ->  render_Junior_4_LeftOfHouse(g, obstacle);
             case JUNIOR_4_RIGHT_OF_HOUSE -> render_Junior_4_RightOfHouse(g, obstacle);
         }
+        addTags(g, TAG_INNER_OBSTACLE);
+        parent.getChildren().add(g);
     }
 
     public Node createCompositeWallCenteredAt(Vector2f center, double sizeX, double sizeY) {
