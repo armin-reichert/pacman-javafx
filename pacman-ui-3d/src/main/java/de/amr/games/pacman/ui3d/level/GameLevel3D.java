@@ -109,7 +109,6 @@ public class GameLevel3D extends Group {
         getChildren().addAll(ghost3DAppearances);
         getChildren().addAll(livesCounter3D, worldGroup);
 
-
         ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
         getChildren().add(ambientLight);
@@ -141,7 +140,7 @@ public class GameLevel3D extends Group {
         }
 
         // experimental
-        //maze3D.highlightObstacleNearPac(context.level().pac().position());
+        //maze3D.highlightObstacleNearPac(pac3D, context.level().pac());
     }
 
     private Pac3D createPac3D(Pac pac) {

@@ -4,10 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
+import de.amr.games.pacman.ui2d.lib.Ufx;
 import de.amr.games.pacman.ui3d.scene3d.GameConfiguration3D;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
@@ -15,6 +16,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -47,10 +50,13 @@ public class Maze3D extends Group {
 
     private Door3D door3D;
 
-    // experimental
+    private PhongMaterial wallBaseMaterial;
+    private PhongMaterial wallTopMaterial;
     private PhongMaterial cornerMaterial;
+
+    // experimental
+    private PhongMaterial highlightMaterial = Ufx.coloredMaterial(Color.YELLOW);
     private Set<Group> obstacleGroups;
-    private PhongMaterial highlightMaterial = new PhongMaterial(Color.YELLOW);
 
     public void build(GameConfiguration3D configuration3D, GameWorld world, WorldMapColoring coloring) {
         Logger.info("Build world 3D. Map URL='{}'", URLDecoder.decode(world.map().url().toExternalForm(), StandardCharsets.UTF_8));
@@ -59,17 +65,17 @@ public class Maze3D extends Group {
         // need some contrast with floor if fill color is black
         Color wallTopColor = coloring.fill().equals(Color.BLACK) ? Color.grayRgb(30) : coloring.fill();
 
-        var wallTopMaterial = new PhongMaterial();
-        wallTopMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
-                () -> opaqueColor(wallTopColor, wallOpacityPy.get()), wallOpacityPy
-        ));
-        wallTopMaterial.specularColorProperty().bind(wallTopMaterial.diffuseColorProperty().map(Color::brighter));
-
-        var wallBaseMaterial = new PhongMaterial();
+        wallBaseMaterial = new PhongMaterial();
         wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
                 () -> opaqueColor(wallBaseColor, wallOpacityPy.get()), wallOpacityPy
         ));
         wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
+
+        wallTopMaterial = new PhongMaterial();
+        wallTopMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
+                () -> opaqueColor(wallTopColor, wallOpacityPy.get()), wallOpacityPy
+        ));
+        wallTopMaterial.specularColorProperty().bind(wallTopMaterial.diffuseColorProperty().map(Color::brighter));
 
         cornerMaterial = new PhongMaterial();
         cornerMaterial.setDiffuseColor(wallBaseColor);
@@ -159,23 +165,26 @@ public class Maze3D extends Group {
         return animation;
     }
 
-    public void highlightObstacleNearPac(Vector2f pacPosition) {
+    public void highlightObstacleNearPac(Pac3D pac3D, Pac pac) {
+        Bounds pacSensitiveArea = new BoundingBox(pac.posX(), pac.posY(), 0, 3*TS, 3*TS, TS);
         for (Group obstacleGroup : obstacleGroups) {
-            Set<Node> obstacleParts = obstacleGroup.lookupAll("*").stream()
-                    .filter(node -> node instanceof Box || node instanceof Cylinder)
-                    .collect(Collectors.toSet());
-            boolean highlight = false;
-            for (Node node : obstacleParts) {
-                if (isTagged(node, TAG_WALL_BASE)) {
-                    Vector2f nodePosition = vec_2f(node.getTranslateX(), node.getTranslateY());
-                    highlight = nodePosition.euclideanDist(pacPosition) < 2 * TS;
-                    break;
+            Bounds bounds = obstacleGroup.getBoundsInLocal();
+            if (bounds.intersects(pacSensitiveArea)) {
+                Logger.info("Pac near obstacle {}", obstacleGroup);
+                Timeline timeline = new Timeline();
+                Set<Node> obstacleParts = obstacleGroup.lookupAll("*").stream()
+                        .filter(node -> node instanceof Box || node instanceof Cylinder)
+                        .collect(Collectors.toSet());
+                for (Node node : obstacleParts) {
+                    if (isTagged(node, TAG_WALL_BASE) && node instanceof Shape3D shape3D) {
+                        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0.1),
+                                e -> shape3D.setMaterial(highlightMaterial)));
+                        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1.5),
+                                e -> shape3D.setMaterial(wallBaseMaterial)));
+                    }
                 }
-            }
-            for (Node node : obstacleParts) {
-                if (isTagged(node, TAG_WALL_BASE) && node instanceof Shape3D shape3D) {
-                    shape3D.setMaterial(highlight ? highlightMaterial : cornerMaterial); // TODO
-                }
+                timeline.play();
+                break;
             }
         }
     }
