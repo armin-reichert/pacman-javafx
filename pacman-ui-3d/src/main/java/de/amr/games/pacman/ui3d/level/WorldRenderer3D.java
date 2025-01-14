@@ -119,32 +119,31 @@ public class WorldRenderer3D {
         addTags(og, TAG_INNER_OBSTACLE);
         parent.getChildren().add(og);
         switch (type) {
-            case CROSS_SHAPE ->             addCross3D(og, obstacle);
-            case F_SHAPE ->                 addFShape3D(og, obstacle);
-            case GAMMA_SPIKED ->            addGammaSpiked(og, obstacle);
-            case GAMMA_SPIKED_MIRRORED ->   addGammaSpikedMirrored(og, obstacle);
-            case H_SHAPE ->                 addHShape3D(og, obstacle);
-            case L_SHAPE ->                 addLShape3D(og, obstacle);
-            case L_SPIKED ->                addLSpikedShape3D(og, obstacle);
-            case L_SPIKED_MIRRORED ->       addLSpikedMirroredShape3D(og, obstacle);
-            case LL_SHAPE ->                addLShapeDouble(og, obstacle);
-            case LL_SHAPE_MIRRORED ->       addLShapeDoubleMirrored(og, obstacle);
-            case LLL_SHAPE ->               addLShapeTriple(og, obstacle);
-            case LLL_SHAPE_MIRRORED ->      addLShapeTripleMirrored(og, obstacle);
-            case O_SHAPE ->                 addOShape3D(og, obstacle);
-            case OPEN_SQUARE_SE ->          addOpenSquareSE(og, obstacle);
-            case OPEN_SQUARE_SW ->          addOpenSquareSW(og, obstacle);
-            case OPEN_SQUARE_NE ->          addOpenSquareNE(og, obstacle);
-            case OPEN_SQUARE_NW ->          addOpenSquareNW(og, obstacle);
-            case S_SHAPE ->                 addSShape3D(og, obstacle);
-            case T_SHAPE ->                 addTShape3D(og, obstacle);
-            case T_SHAPE_TWO_ROWS ->        addTShapeTwoRows3D(og, obstacle);
-            case U_SHAPE ->                 addUShape3D(og, obstacle);
-
-            case SPACE_SHIP_DOWN ->         addSpaceShipDown(og, obstacle);
-            case SPACE_SHIP_UP ->           addSpaceShipUp(og, obstacle);
-            case SPACE_SHIP_LEFT ->         addSpaceShipLeft(og, obstacle);
-            case SPACE_SHIP_RIGHT ->        addSpaceShipRight(og, obstacle);
+            case CROSS ->                 addCross3D(og, obstacle);
+            case F ->                     addFShape3D(og, obstacle);
+            case GAMMA_SPIKED ->          addGammaSpiked(og, obstacle);
+            case GAMMA_SPIKED_MIRRORED -> addGammaSpikedMirrored(og, obstacle);
+            case H ->                     addHShape3D(og, obstacle);
+            case L ->                     addLShape3D(og, obstacle);
+            case L_SPIKED ->              addLSpikedShape3D(og, obstacle);
+            case L_SPIKED_MIRRORED ->     addLSpikedMirroredShape3D(og, obstacle);
+            case LL ->                    addLShapeDouble(og, obstacle);
+            case LL_MIRRORED ->           addLShapeDoubleMirrored(og, obstacle);
+            case LLL ->                   addLShapeTriple(og, obstacle);
+            case LLL_MIRRORED ->          addLShapeTripleMirrored(og, obstacle);
+            case O ->                     addOShape3D(og, obstacle);
+            case OPEN_SQUARE_SE ->        addOpenSquareSE(og, obstacle);
+            case OPEN_SQUARE_SW ->        addOpenSquareSW(og, obstacle);
+            case OPEN_SQUARE_NE ->        addOpenSquareNE(og, obstacle);
+            case OPEN_SQUARE_NW ->        addOpenSquareNW(og, obstacle);
+            case S ->                     addSShape3D(og, obstacle);
+            case SPACESHIP_DOWN ->        addSpaceShipDown(og, obstacle);
+            case SPACESHIP_UP ->          addSpaceShipUp(og, obstacle);
+            case SPACESHIP_LEFT ->        addSpaceShipLeft(og, obstacle);
+            case SPACESHIP_RIGHT ->       addSpaceShipRight(og, obstacle);
+            case T ->                     addTShape3D(og, obstacle);
+            case T_TWO_ROWS ->            addTShapeTwoRows3D(og, obstacle);
+            case U ->                     addUShape3D(og, obstacle);
 
             //TODO these belong elsewhere
             case JUNIOR_4_LEFT_OF_HOUSE ->  add_Junior_4_LeftOfHouse(og, obstacle);

@@ -7,14 +7,14 @@ import java.util.stream.Stream;
  * The encoding depends on the byte values in interface {@link TileEncoding}!
  */
 public enum ObstacleType {
-    CROSS_SHAPE(
+    CROSS(
         "dfdgegfdfege",
         "dcfdgecgfcdfegce",
         "dfbdgbegfdbfebge",
         "dcfbdgbecgfcdbfebgce"
     ),
 
-    F_SHAPE(
+    F(
         "dcgfcdbfebgdbfeb",
         "dgbefbdgbecgfceb",
         "dcgfcdbfebgcdbfeb",
@@ -26,14 +26,14 @@ public enum ObstacleType {
     GAMMA_SPIKED("dcfbdgbecgfcdbfeb"),
     GAMMA_SPIKED_MIRRORED("dgbecgfcdbfebgceb"),
 
-    H_SHAPE(
+    H(
         "dgefdgbfegdfeb",
         "dcgfdegfcedfge",
         "dgbecfbdgbfebgcdbfeb",
         "dcgfcdbecgfcedcfbgce"
     ),
 
-    L_SHAPE(
+    L(
         "dgegfceb", "dcgfdfeb", "dcgbfege", "dfdgbfce", // 8 segments
         "dcgbfegce", "dcfdgbfce", "dcgfcdfeb", "dgecgfceb", // 9 segments
         "dgbegfceb", "dcgfdbfeb", "dcgbfebge", "dfbdgbfce", // 9 segments
@@ -44,22 +44,22 @@ public enum ObstacleType {
 
     L_SPIKED_MIRRORED("dcfbdgbfcdbfebgce"),
 
-    LL_SHAPE("dcgbecgbfebgcebgce"),
+    LL("dcgbecgbfebgcebgce"),
 
-    LL_SHAPE_MIRRORED("dcfbdcfbdgbfcdbfce"),
+    LL_MIRRORED("dcfbdcfbdgbfcdbfce"),
 
-    LLL_SHAPE("dcgbecgbecgbfebgcebgcebgce"),
+    LLL("dcgbecgbecgbfebgcebgcebgce"),
 
-    LLL_SHAPE_MIRRORED("dcfbdcfbdcfbdgbfcdbfcdbfce"),
+    LLL_MIRRORED("dcfbdcfbdcfbdgbfcdbfcdbfce"),
 
-    O_SHAPE("dgfe", "dcgfce", "dgbfeb", "dcgbfceb"),
+    O("dgfe", "dcgfce", "dgbfeb", "dcgbfceb"),
 
     OPEN_SQUARE_NW("dgbecfbgcedcgbfceb"),
     OPEN_SQUARE_NE("dcgbfcedcfbgcdbfeb"),
     OPEN_SQUARE_SE("dcgbfebgcdbecgfceb"),
     OPEN_SQUARE_SW("dcgfcdbecfbdgbfceb"),
 
-    S_SHAPE(
+    S(
         "dcfdgbfcdfeb",
         "dgecgbfegceb",
         "dcgbegfcebge",
@@ -70,21 +70,21 @@ public enum ObstacleType {
         "dcfbdcgfcdbfce"
     ),
 
-    SPACE_SHIP_UP("dcfbdcgfcdbecgfcebgce"),
-    SPACE_SHIP_DOWN("dcgbecgfcdbfcedcfbgce"),
-    SPACE_SHIP_LEFT("dcfbdgbecgbfebgcdbfeb"),
-    SPACE_SHIP_RIGHT("dgbecfbdgbfcdbfebgceb"),
+    SPACESHIP_UP("dcfbdcgfcdbecgfcebgce"),
+    SPACESHIP_DOWN("dcgbecgfcdbfcedcfbgce"),
+    SPACESHIP_LEFT("dcfbdgbecgbfebgcdbfeb"),
+    SPACESHIP_RIGHT("dgbecfbdgbfcdbfebgceb"),
 
-    T_SHAPE(
+    T(
         "dgbecgfcdbfeb",
         "dcfbdgbfebgce",
         "dcgfcdbfebgce",
         "dcfbdgbecgfce"
     ),
 
-    T_SHAPE_TWO_ROWS("dcgbecgfcdbfceb"),
+    T_TWO_ROWS("dcgbecgfcdbfceb"),
 
-    U_SHAPE(
+    U(
         "dcgbfcedfge", "dcgfdegfceb", "dcgbfegdfeb", "dgefdgbfceb",
         "dcgbfcedcfgce", "dcgfcdecgfceb", "dcgbfebgdbfeb", "dgbefbdgbfceb",
         "dcgbfcedcfbgce", "dcgfcdbecgfceb", "dcgbfebgcdbfeb", "dgbecfbdgbfceb"
