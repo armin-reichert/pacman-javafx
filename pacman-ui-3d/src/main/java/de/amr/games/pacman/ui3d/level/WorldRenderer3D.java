@@ -115,39 +115,39 @@ public class WorldRenderer3D {
             addUncategorizedObstacle3D(parent, obstacle);
             return;
         }
-        Group og = new Group();
-        addTags(og, TAG_INNER_OBSTACLE);
-        parent.getChildren().add(og);
+        Group obstacleGroup = new Group();
+        addTags(obstacleGroup, TAG_INNER_OBSTACLE);
+        parent.getChildren().add(obstacleGroup);
         switch (type) {
-            case CROSS ->                 addCross3D(og, obstacle);
-            case F ->                     addFShape3D(og, obstacle);
-            case GAMMA_SPIKED ->          addGammaSpiked(og, obstacle);
-            case GAMMA_SPIKED_MIRRORED -> addGammaSpikedMirrored(og, obstacle);
-            case H ->                     addHShape3D(og, obstacle);
-            case L ->                     addLShape3D(og, obstacle);
-            case L_SPIKED ->              addLSpikedShape3D(og, obstacle);
-            case L_SPIKED_MIRRORED ->     addLSpikedMirroredShape3D(og, obstacle);
-            case LL ->                    addLShapeDouble(og, obstacle);
-            case LL_MIRRORED ->           addLShapeDoubleMirrored(og, obstacle);
-            case LLL ->                   addLShapeTriple(og, obstacle);
-            case LLL_MIRRORED ->          addLShapeTripleMirrored(og, obstacle);
-            case O ->                     addOShape3D(og, obstacle);
-            case OPEN_SQUARE_SE ->        addOpenSquareSE(og, obstacle);
-            case OPEN_SQUARE_SW ->        addOpenSquareSW(og, obstacle);
-            case OPEN_SQUARE_NE ->        addOpenSquareNE(og, obstacle);
-            case OPEN_SQUARE_NW ->        addOpenSquareNW(og, obstacle);
-            case S ->                     addSShape3D(og, obstacle);
-            case SPACESHIP_DOWN ->        addSpaceShipDown(og, obstacle);
-            case SPACESHIP_UP ->          addSpaceShipUp(og, obstacle);
-            case SPACESHIP_LEFT ->        addSpaceShipLeft(og, obstacle);
-            case SPACESHIP_RIGHT ->       addSpaceShipRight(og, obstacle);
-            case T ->                     addTShape3D(og, obstacle);
-            case T_TWO_ROWS ->            addTShapeTwoRows3D(og, obstacle);
-            case U ->                     addUShape3D(og, obstacle);
+            case CROSS ->                 render_Cross(obstacleGroup, obstacle);
+            case F ->                     render_F(obstacleGroup, obstacle);
+            case GAMMA_SPIKED ->          render_Gamma_Spiked(obstacleGroup, obstacle);
+            case GAMMA_SPIKED_MIRRORED -> render_Gamma_Spiked_Mirrored(obstacleGroup, obstacle);
+            case H ->                     render_H(obstacleGroup, obstacle);
+            case L ->                     render_L(obstacleGroup, obstacle);
+            case L_SPIKED ->              render_L_Spiked(obstacleGroup, obstacle);
+            case L_SPIKED_MIRRORED ->     render_L_Spiked_Mirrored(obstacleGroup, obstacle);
+            case LL ->                    render_LL(obstacleGroup, obstacle);
+            case LL_MIRRORED ->           render_LL_Mirrored(obstacleGroup, obstacle);
+            case LLL ->                   render_LLL(obstacleGroup, obstacle);
+            case LLL_MIRRORED ->          render_LLL_Mirrored(obstacleGroup, obstacle);
+            case O ->                     render_O(obstacleGroup, obstacle);
+            case OPEN_SQUARE_SE ->        render_OpenSquare_SE(obstacleGroup, obstacle);
+            case OPEN_SQUARE_SW ->        render_OpenSquare_SW(obstacleGroup, obstacle);
+            case OPEN_SQUARE_NE ->        render_OpenSquare_NE(obstacleGroup, obstacle);
+            case OPEN_SQUARE_NW ->        render_OpenSquare_NW(obstacleGroup, obstacle);
+            case S ->                     render_S(obstacleGroup, obstacle);
+            case SPACESHIP_DOWN ->        render_Spaceship_Down(obstacleGroup, obstacle);
+            case SPACESHIP_UP ->          render_Spaceship_Up(obstacleGroup, obstacle);
+            case SPACESHIP_LEFT ->        render_Spaceship_Left(obstacleGroup, obstacle);
+            case SPACESHIP_RIGHT ->       render_Spaceship_Right(obstacleGroup, obstacle);
+            case T ->                     render_T(obstacleGroup, obstacle);
+            case T_TWO_ROWS ->            render_T_TwoRows(obstacleGroup, obstacle);
+            case U ->                     render_U(obstacleGroup, obstacle);
 
             //TODO these belong elsewhere
-            case JUNIOR_4_LEFT_OF_HOUSE ->  add_Junior_4_LeftOfHouse(og, obstacle);
-            case JUNIOR_4_RIGHT_OF_HOUSE -> add_Junior_4_RightOfHouse(og, obstacle);
+            case JUNIOR_4_LEFT_OF_HOUSE ->  render_Junior_4_LeftOfHouse(obstacleGroup, obstacle);
+            case JUNIOR_4_RIGHT_OF_HOUSE -> render_Junior_4_RightOfHouse(obstacleGroup, obstacle);
         }
     }
 
@@ -250,7 +250,7 @@ public class WorldRenderer3D {
 
     // Standard 3D obstacles
 
-    public void addOShape3D(Group parent, Obstacle obstacle) {
+    public void render_O(Group parent, Obstacle obstacle) {
         switch (obstacle.encoding()) {
             // 1-tile circle
             case "dgfe" -> addTowers(parent, obstacle.cornerCenter(0));
@@ -280,7 +280,7 @@ public class WorldRenderer3D {
         }
     }
 
-    public void addLShape3D(Group parent, Obstacle obstacle) {
+    public void render_L(Group parent, Obstacle obstacle) {
         Vector2f[] utc = obstacle.uTurnCenters();
         int[] d = obstacle.uTurnIndices().toArray();
         ObstacleSegment firstUTurn = obstacle.segment(d[0]);
@@ -293,7 +293,7 @@ public class WorldRenderer3D {
         addWall(parent, utc[1], corner);
     }
 
-    public void addLSpikedShape3D(Group parent, Obstacle obstacle) {
+    public void render_L_Spiked(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 4, 9, 11);
         Vector2f h = vec_2f(t[0].x(), t[1].y());
         addTowers(parent, t);
@@ -302,7 +302,7 @@ public class WorldRenderer3D {
         addWall(parent, t[2], t[3]);
     }
 
-    private void addLSpikedMirroredShape3D(Group parent, Obstacle obstacle) {
+    private void render_L_Spiked_Mirrored(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 4, 7, 11);
         Vector2f h = vec_2f(t[0].x(), t[3].y());
         addTowers(parent, t);
@@ -311,7 +311,7 @@ public class WorldRenderer3D {
         addWall(parent, t[1], t[2]);
     }
 
-    public void addLShapeDouble(Group parent, Obstacle obstacle) {
+    public void render_LL(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 2, 6, 8, 13);
         addTowers(parent, t);
         addWall(parent, t[0], t[1]);
@@ -320,7 +320,7 @@ public class WorldRenderer3D {
         addWall(parent, t[2], t[3]);
     }
 
-    public void addLShapeDoubleMirrored(Group parent, Obstacle obstacle) {
+    public void render_LL_Mirrored(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 4, 8, 11, 15);
         addTowers(parent, t);
         addWall(parent, t[0], t[4]);
@@ -329,7 +329,7 @@ public class WorldRenderer3D {
         addWall(parent, t[3], t[2]);
     }
 
-    private void addLShapeTriple(Group parent, Obstacle obstacle) {
+    private void render_LLL(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 2, 21, 6, 17, 10, 12);
         addTowers(parent, t);
         addWall(parent, t[0], t[1]);
@@ -340,7 +340,7 @@ public class WorldRenderer3D {
         addWall(parent, t[5], t[6]);
     }
 
-    private void addLShapeTripleMirrored(Group parent, Obstacle obstacle) {
+    private void render_LLL_Mirrored(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 4, 8, 12, 15, 19, 23);
         addTowers(parent, t);
         addWall(parent, t[0], t[6]);
@@ -352,7 +352,7 @@ public class WorldRenderer3D {
     }
 
 
-    public void addFShape3D(Group parent, Obstacle obstacle) {
+    public void render_F(Group parent, Obstacle obstacle) {
         Vector2f[] utc = obstacle.uTurnCenters();
         switch (obstacle.encoding()) {
             case "dcgfcdbfebgdbfeb",
@@ -394,7 +394,7 @@ public class WorldRenderer3D {
         }
     }
 
-    private void addGammaSpiked(Group parent, Obstacle obstacle) {
+    private void render_Gamma_Spiked(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 4, 9, 14);
         Vector2f h = vec_2f(t[0].x(), t[1].y());
         addTowers(parent, t);
@@ -403,7 +403,7 @@ public class WorldRenderer3D {
         addWall(parent, t[0], t[3]);
     }
 
-    private void addGammaSpikedMirrored(Group parent, Obstacle obstacle) {
+    private void render_Gamma_Spiked_Mirrored(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 5, 10, 15);
         Vector2f h = vec_2f(t[3].x(), t[2].y());
         addTowers(parent, t);
@@ -412,7 +412,7 @@ public class WorldRenderer3D {
         addWall(parent, h, t[2]);
     }
 
-    public void addHShape3D(Group parent, Obstacle obstacle) {
+    public void render_H(Group parent, Obstacle obstacle) {
         switch (obstacle.encoding()) {
             // little H rotated 90 degrees
             case "dgefdgbfegdfeb" -> Logger.error("Little-H obstacle creation still missing!");
@@ -449,7 +449,7 @@ public class WorldRenderer3D {
     }
 
     // Note that this can also be a cross where the horizontal parts are not aligned vertically!
-    public void addCross3D(Group parent, Obstacle obstacle) {
+    public void render_Cross(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 4, 9, 14);
         Vector2f[] h = { vec_2f(t[0].x(), t[3].y()), vec_2f(t[0].x(), t[1].y()) };
         addTowers(parent, t);
@@ -459,7 +459,7 @@ public class WorldRenderer3D {
     }
 
     //TODO rework and simplify
-    public void addUShape3D(Group parent, Obstacle obstacle) {
+    public void render_U(Group parent, Obstacle obstacle) {
         int[] uti = obstacle.uTurnIndices().toArray();
         Vector2f c0 = obstacle.cornerCenter(uti[0]);
         Vector2f c1 = obstacle.cornerCenter(uti[1]);
@@ -507,7 +507,7 @@ public class WorldRenderer3D {
     }
 
     //TODO rework and simplify
-    public void addSShape3D(Group parent, Obstacle obstacle) {
+    public void render_S(Group parent, Obstacle obstacle) {
         int[] uti = obstacle.uTurnIndices().toArray();
         Vector2f[] utc = obstacle.uTurnCenters(); // count=2
         addTowers(parent, utc);
@@ -560,7 +560,7 @@ public class WorldRenderer3D {
         }
     }
 
-    public void addTShape3D(Group parent, Obstacle obstacle) {
+    public void render_T(Group parent, Obstacle obstacle) {
         Vector2f[] utc = obstacle.uTurnCenters();
         Vector2f join;
         if (utc[2].x() == utc[0].x() && utc[1].x() > utc[2].x()) {
@@ -598,7 +598,7 @@ public class WorldRenderer3D {
     }
 
     //TODO This handles only the normal orientation
-    public void addTShapeTwoRows3D(Group parent, Obstacle obstacle) {
+    public void render_T_TwoRows(Group parent, Obstacle obstacle) {
         Vector2f leg = obstacle.uTurnCenters()[0];
         Vector2f cornerNW = obstacle.cornerCenter(0);
         Vector2f cornerSW = obstacle.cornerCenter(2);
@@ -612,7 +612,7 @@ public class WorldRenderer3D {
         addWall(parent, leg, vec_2f(leg.x(), cornerSW.y()));
     }
 
-    private void addSpaceShipRight(Group parent, Obstacle obstacle) {
+    private void render_Spaceship_Right(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 7, 10, 14, 19);
         Vector2f h = vec_2f(t[2].x(), t[3].y());
         addTowers(parent, t);
@@ -622,7 +622,7 @@ public class WorldRenderer3D {
         addWall(parent, t[2], t[4]);
     }
 
-    private void addSpaceShipLeft(Group parent, Obstacle obstacle) {
+    private void render_Spaceship_Left(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 4, 9, 11, 18);
         Vector2f h = vec_2f(t[0].x(), t[1].y());
         addTowers(parent, t);
@@ -632,7 +632,7 @@ public class WorldRenderer3D {
         addWall(parent, t[0], t[4]);
     }
 
-    private void addSpaceShipUp(Group parent, Obstacle obstacle) {
+    private void render_Spaceship_Up(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 4, 6, 13, 16);
         Vector2f h = vec_2f(t[0].x(), t[1].y());
         addTowers(parent, t);
@@ -642,7 +642,7 @@ public class WorldRenderer3D {
         addWall(parent, t[4], t[3]);
     }
 
-    private void addSpaceShipDown(Group parent, Obstacle obstacle) {
+    private void render_Spaceship_Down(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 2, 6, 11, 13);
         Vector2f h = vec_2f(t[2].x(), t[1].y());
         addTowers(parent, t);
@@ -652,7 +652,7 @@ public class WorldRenderer3D {
         addWall(parent, t[3], t[4]);
     }
 
-    private void addOpenSquareSE(Group parent, Obstacle obstacle) {
+    private void render_OpenSquare_SE(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 2, 4, 13, 16);
         addTowers(parent, t);
         addWall(parent, t[0], t[1]);
@@ -661,7 +661,7 @@ public class WorldRenderer3D {
         addWall(parent, t[3], t[4]);
     }
 
-    private void addOpenSquareSW(Group parent, Obstacle obstacle) {
+    private void render_OpenSquare_SW(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 2, 11, 14, 16);
         addTowers(parent, t);
         addWall(parent, t[0], t[1]);
@@ -670,7 +670,7 @@ public class WorldRenderer3D {
         addWall(parent, t[3], t[4]);
     }
 
-    private void addOpenSquareNE(Group parent, Obstacle obstacle) {
+    private void render_OpenSquare_NE(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 2, 4, 6, 15);
         addTowers(parent, t);
         addWall(parent, t[0], t[1]);
@@ -679,7 +679,7 @@ public class WorldRenderer3D {
         addWall(parent, t[0], t[4]);
     }
 
-    private void addOpenSquareNW(Group parent, Obstacle obstacle) {
+    private void render_OpenSquare_NW(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 9, 12, 14, 16);
         addTowers(parent, t);
         addWall(parent, t[0], t[4]);
@@ -690,7 +690,7 @@ public class WorldRenderer3D {
 
     // Junior Pac-Man maze obstacles. TODO: move elsewhere
 
-    private void add_Junior_4_LeftOfHouse(Group parent, Obstacle obstacle) {
+    private void render_Junior_4_LeftOfHouse(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 2, 6, 9, 13);
         Vector2f h = vec_2f(t[4].x(), t[1].y());
         addTowers(parent, t);
@@ -701,7 +701,7 @@ public class WorldRenderer3D {
     }
 
 
-    private void add_Junior_4_RightOfHouse(Group parent, Obstacle obstacle) {
+    private void render_Junior_4_RightOfHouse(Group parent, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 6, 11, 13, 18);
         Vector2f h = vec_2f(t[1].x(), t[2].y());
         addTowers(parent, t);
