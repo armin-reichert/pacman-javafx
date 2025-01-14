@@ -19,7 +19,17 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.TileEncoding.isDoubleWall;
 import static java.util.function.Predicate.not;
 
+/**
+ * Analyzes a terrain tile map and creates the obstacle list. An obstacle is in essence a
+ * list of vectors defining the contour path of the obstacle. The path starts at the NW corner
+ * of the obstacle and moves in counter-clockwise order around it.
+ */
 public class ObstacleBuilder {
+
+    // Public API
+    public static List<Obstacle> buildObstacles(TileMap terrain, List<Vector2i> tilesWithErrors) {
+        return new ObstacleBuilder(terrain).buildObstacles(tilesWithErrors);
+    }
 
     static class Cursor {
         private Vector2i prevTile, currentTile;
@@ -38,7 +48,8 @@ public class ObstacleBuilder {
             currentTile = currentTile.plus(dir.vector());
         }
     }
-    
+
+    // Corners are represented by "diagonal" vectors
     private static final Vector2f SEG_CORNER_NW_UP   = vec_2f(HTS, -HTS);
     private static final Vector2f SEG_CORNER_NW_DOWN = SEG_CORNER_NW_UP.inverse();
     private static final Vector2f SEG_CORNER_SW_UP   = vec_2f(-HTS, -HTS);
@@ -47,10 +58,6 @@ public class ObstacleBuilder {
     private static final Vector2f SEG_CORNER_SE_DOWN = SEG_CORNER_SE_UP.inverse();
     private static final Vector2f SEG_CORNER_NE_UP   = vec_2f(-HTS, -HTS);
     private static final Vector2f SEG_CORNER_NE_DOWN = SEG_CORNER_NE_UP.inverse();
-
-    public static List<Obstacle> buildObstacles(TileMap terrain, List<Vector2i> tilesWithErrors) {
-        return new ObstacleBuilder(terrain).buildObstacles(tilesWithErrors);
-    }
 
     private final TileMap terrain;
     private final BitSet exploredTiles = new BitSet();
