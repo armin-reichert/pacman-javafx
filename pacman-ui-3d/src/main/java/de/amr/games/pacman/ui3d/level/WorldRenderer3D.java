@@ -557,39 +557,39 @@ public class WorldRenderer3D {
     }
 
     public void render_T(Group parent, Obstacle obstacle) {
-        Vector2f[] utc = obstacle.uTurnCenters();
-        Vector2f join;
-        if (utc[2].x() == utc[0].x() && utc[1].x() > utc[2].x()) {
-            join = vec_2f(utc[0].x(), utc[1].y());
-        }
-        else if (utc[0].y() == utc[2].y() && utc[1].y() > utc[0].y()) {
-            join = vec_2f(utc[1].x(), utc[0].y());
-        }
-        else if (utc[0].y() == utc[1].y() && utc[2].y() < utc[0].y()) {
-            join = vec_2f(utc[2].x(), utc[0].y());
-        }
-        else if (utc[2].x() == utc[1].x() && utc[0].x() < utc[1].x()) {
-            join = vec_2f(utc[1].x(), utc[0].y());
-        }
-        else {
-            Logger.error("Invalid T-shape obstacle: {}", obstacle);
-            return;
-        }
-        addTowers(parent, utc);
-        if (utc[0].x() == join.x()) {
-            addWallAtCenter(parent, utc[0].midpoint(join), TS, utc[0].manhattanDist(join));
-        } else if (utc[0].y() == join.y()) {
-            addWallAtCenter(parent, utc[0].midpoint(join), utc[0].manhattanDist(join), TS);
-        }
-        if (utc[1].x() == join.x()) {
-            addWallAtCenter(parent, utc[1].midpoint(join), TS, utc[1].manhattanDist(join));
-        } else if (utc[1].y() == join.y()) {
-            addWallAtCenter(parent, utc[1].midpoint(join), utc[1].manhattanDist(join), TS);
-        }
-        if (utc[2].x() == join.x()) {
-            addWallAtCenter(parent, utc[2].midpoint(join), TS, utc[2].manhattanDist(join));
-        } else if (utc[2].y() == join.y()) {
-            addWallAtCenter(parent, utc[2].midpoint(join), utc[2].manhattanDist(join), TS);
+        switch (obstacle.encoding()) {
+            case "dgbecgfcdbfeb" -> {
+                // T in normal orientation
+                Vector2f[] t = obstacle.cornerCenters(0, 5, 10);
+                Vector2f h = vec_2f(t[1].x(), t[0].y());
+                addTowers(parent, t);
+                addWall(parent, t[0], t[2]);
+                addWall(parent, h, t[1]);
+            }
+            case "dcfbdgbfebgce" -> {
+                // T mirrored vertically
+                Vector2f[] t = obstacle.cornerCenters(0, 4, 7);
+                Vector2f h = vec_2f(t[0].x(), t[1].y());
+                addTowers(parent, t);
+                addWall(parent, h, t[0]);
+                addWall(parent, t[1], t[2]);
+            }
+            case "dcgfcdbfebgce" -> {
+                // T with leg pointing right
+                Vector2f[] t = obstacle.cornerCenters(0, 2, 7);
+                Vector2f h = vec_2f(t[0].x(), t[2].y());
+                addTowers(parent, t);
+                addWall(parent, t[0], t[1]);
+                addWall(parent, h, t[2]);
+            }
+            case "dcfbdgbecgfce" -> {
+                // T with leg pointing left
+                Vector2f[] t = obstacle.cornerCenters(0, 4, 9);
+                Vector2f h = vec_2f(t[0].x(), t[1].y());
+                addTowers(parent, t);
+                addWall(parent, t[0], t[2]);
+                addWall(parent, h, t[1]);
+            }
         }
     }
 
