@@ -53,12 +53,10 @@ public class Maze3D extends Group {
     private final Door3D door3D;
 
     private final PhongMaterial wallBaseMaterial;
-    private final PhongMaterial wallTopMaterial;
-    private final PhongMaterial cornerMaterial;
 
     // experimental
     private final PhongMaterial highlightMaterial = Ufx.coloredMaterial(Color.YELLOW);
-    private Set<Group> obstacleGroups;
+    private final Set<Group> obstacleGroups;
 
     public Maze3D(GameConfiguration3D configuration3D, GameWorld world, WorldMapColoring coloring) {
         Logger.info("Build world 3D. Map URL='{}'", URLDecoder.decode(world.map().url().toExternalForm(), StandardCharsets.UTF_8));
@@ -73,13 +71,13 @@ public class Maze3D extends Group {
         ));
         wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
-        wallTopMaterial = new PhongMaterial();
+        PhongMaterial wallTopMaterial = new PhongMaterial();
         wallTopMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
                 () -> opaqueColor(wallTopColor, wallOpacityPy.get()), wallOpacityPy
         ));
         wallTopMaterial.specularColorProperty().bind(wallTopMaterial.diffuseColorProperty().map(Color::brighter));
 
-        cornerMaterial = new PhongMaterial();
+        PhongMaterial cornerMaterial = new PhongMaterial();
         cornerMaterial.setDiffuseColor(wallBaseColor);
         cornerMaterial.specularColorProperty().bind(cornerMaterial.diffuseColorProperty().map(Color::brighter));
 
@@ -142,14 +140,10 @@ public class Maze3D extends Group {
 
     public Animation wallsDisappearAnimation(double seconds) {
         var totalDuration = Duration.seconds(seconds);
-        var obstaclesDisappear = new Timeline(
-                new KeyFrame(totalDuration.multiply(0.33),
-                        new KeyValue(obstacleBaseHeightPy, 0, Interpolator.EASE_IN)
-                ));
         var houseDisappears = new Timeline(
-                new KeyFrame(totalDuration.multiply(0.33),
-                        new KeyValue(houseBaseHeightPy, 0, Interpolator.EASE_IN)
-                ));
+            new KeyFrame(totalDuration.multiply(0.33), new KeyValue(houseBaseHeightPy, 0, Interpolator.EASE_IN)));
+        var obstaclesDisappear = new Timeline(
+            new KeyFrame(totalDuration.multiply(0.33), new KeyValue(obstacleBaseHeightPy, 0, Interpolator.EASE_IN)));
         var animation = new SequentialTransition(houseDisappears, obstaclesDisappear);
         animation.setOnFinished(e -> setVisible(false));
         return animation;
@@ -160,8 +154,7 @@ public class Maze3D extends Group {
             return pauseSec(1.0);
         }
         var animation = new Timeline(
-                new KeyFrame(Duration.millis(125), new KeyValue(obstacleBaseHeightPy, 0, Interpolator.EASE_BOTH))
-        );
+            new KeyFrame(Duration.millis(125), new KeyValue(obstacleBaseHeightPy, 0, Interpolator.EASE_BOTH)));
         animation.setAutoReverse(true);
         animation.setCycleCount(2 * numFlashes);
         return animation;
