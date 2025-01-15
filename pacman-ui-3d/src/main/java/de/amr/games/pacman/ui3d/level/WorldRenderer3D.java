@@ -762,23 +762,21 @@ public class WorldRenderer3D {
         Cylinder base = new Cylinder(radius, wallBaseHeightPy.get(), CYLINDER_DIVISIONS);
         base.setMaterial(wallBaseMaterial);
         base.heightProperty().bind(wallBaseHeightPy);
+        base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
         base.setRotationAxis(Rotate.X_AXIS);
         base.setRotate(90);
-        base.setTranslateX(center.x());
-        base.setTranslateY(center.y());
-        base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         Cylinder top = new Cylinder(radius, wallTopHeight, CYLINDER_DIVISIONS);
         top.setMaterial(wallTopMaterial);
         top.setRotationAxis(Rotate.X_AXIS);
         top.setRotate(90);
-        top.setTranslateX(center.x());
-        top.setTranslateY(center.y());
         top.translateZProperty().bind(wallBaseHeightPy.add(0.5* wallTopHeight).multiply(-1));
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         Group wall = new Group(base, top);
+        wall.setTranslateX(center.x());
+        wall.setTranslateY(center.y());
         wall.setMouseTransparent(true);
         return wall;
     }
