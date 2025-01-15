@@ -211,8 +211,7 @@ public class GameSound {
             if (siren != null) {
                 stop(siren.player());
             }
-            //TODO why are sirens so loud? Volume seems only be 0 or 1?
-            MediaPlayer sirenPlayer = makeSound("siren." + number, 0.1, true);
+            MediaPlayer sirenPlayer = makeSound("siren." + number, 1, true);
             if (sirenPlayer == null) {
                 //Logger.error("Could not create media player for siren number {}", number);
                 siren = null;

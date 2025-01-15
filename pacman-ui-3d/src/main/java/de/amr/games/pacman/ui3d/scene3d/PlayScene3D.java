@@ -355,13 +355,13 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         world.map().food().tiles().filter(world::hasFoodAt).forEach(world::registerFoodEatenAt);
         level3D.pellets3D().forEach(Pellet3D::onEaten);
         level3D.energizers3D().forEach(Energizer3D::onEaten);
-        level3D.livesCounter3D().shapesRotation().stop();
         level3D.maze3D().door3D().setVisible(false);
+
+        level3D.stopAnimations();
+
         perspectiveNamePy.unbind();
         perspectiveNamePy.set(Perspective.Name.TOTAL);
-        level3D.playLevelCompleteAnimation(
-            () -> perspectiveNamePy.bind(PY_3D_PERSPECTIVE)
-        );
+        level3D.playLevelCompleteAnimationAndThen(() -> perspectiveNamePy.bind(PY_3D_PERSPECTIVE));
     }
 
     private void onEnterStateLevelTransition() {
@@ -471,6 +471,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     @Override
     public void onPacGetsPower(GameEvent event) {
         level3D.pac3D().setPowerMode(true);
+        level3D.maze3D().playMaterialAnimation();
         context.sound().stopSiren();
         context.sound().playPacPowerSound();
     }
@@ -478,6 +479,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     @Override
     public void onPacLostPower(GameEvent event) {
         level3D.pac3D().setPowerMode(false);
+        level3D.maze3D().stopMaterialAnimation();
         context.sound().stopPacPowerSound();
     }
 

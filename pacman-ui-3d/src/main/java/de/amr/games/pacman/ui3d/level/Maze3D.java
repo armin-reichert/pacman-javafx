@@ -9,6 +9,7 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
 import de.amr.games.pacman.ui2d.lib.Ufx;
+import de.amr.games.pacman.ui3d.animation.MaterialAnimation;
 import de.amr.games.pacman.ui3d.scene3d.GameConfiguration3D;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
@@ -57,6 +58,9 @@ public class Maze3D extends Group {
     // experimental
     private final PhongMaterial highlightMaterial = Ufx.coloredMaterial(Color.YELLOW);
     private final Set<Group> obstacleGroups;
+    private final MaterialAnimation materialAnimation;
+
+    ;
 
     public Maze3D(GameConfiguration3D configuration3D, GameWorld world, WorldMapColoring coloring) {
         Logger.info("Build world 3D. Map URL='{}'", URLDecoder.decode(world.map().url().toExternalForm(), StandardCharsets.UTF_8));
@@ -72,10 +76,16 @@ public class Maze3D extends Group {
         wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
         PhongMaterial wallTopMaterial = new PhongMaterial();
+        wallTopMaterial.setDiffuseColor(wallTopColor);
+        wallTopMaterial.setSpecularColor(wallTopColor.brighter());
+        /*
         wallTopMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
                 () -> opaqueColor(wallTopColor, wallOpacityPy.get()), wallOpacityPy
         ));
         wallTopMaterial.specularColorProperty().bind(wallTopMaterial.diffuseColorProperty().map(Color::brighter));
+        */
+
+        materialAnimation = new MaterialAnimation(Duration.seconds(0.25), wallTopMaterial, wallTopColor, wallBaseColor);
 
         PhongMaterial cornerMaterial = new PhongMaterial();
         cornerMaterial.setDiffuseColor(wallBaseColor);
@@ -128,6 +138,15 @@ public class Maze3D extends Group {
 
         PY_3D_WALL_HEIGHT.addListener((py, ov, nv) -> obstacleBaseHeightPy.set(nv.doubleValue()));
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+    }
+
+    public void playMaterialAnimation() {
+        materialAnimation.play();
+    }
+
+    public void stopMaterialAnimation() {
+        materialAnimation.stop();
+        materialAnimation.jumpTo(Duration.ZERO);
     }
 
     public void setHouseLightOn(boolean on) {

@@ -315,7 +315,7 @@ public class GameLevel3D extends Group {
         return rotation;
     }
 
-    public void playLevelCompleteAnimation(Runnable onEnd) {
+    public void playLevelCompleteAnimationAndThen(Runnable onEnd) {
         context.gameState().timer().resetIndefiniteTime(); // block game state until animation has finished
         levelCompleteAnimation = context.level().intermissionNumber() != 0
             ? levelCompleteAnimationBeforeIntermission(context.level().numFlashes())
@@ -365,6 +365,7 @@ public class GameLevel3D extends Group {
         if (levelCompleteAnimation != null) {
             levelCompleteAnimation.stop();
         }
+        maze3D.stopMaterialAnimation();
     }
 
     public Maze3D maze3D() { return maze3D; }
