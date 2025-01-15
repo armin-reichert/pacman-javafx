@@ -371,9 +371,6 @@ public class GameLevel3D extends Group {
         energizers3D().forEach(Energizer3D::stopPumping);
         livesCounter3D().shapesRotation().stop();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-        if (levelCompleteAnimation != null) {
-            levelCompleteAnimation.stop();
-        }
         maze3D.stopMaterialAnimation();
     }
 
