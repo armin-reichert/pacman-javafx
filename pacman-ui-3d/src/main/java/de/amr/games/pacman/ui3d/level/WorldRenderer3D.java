@@ -595,17 +595,14 @@ public class WorldRenderer3D {
 
     //TODO This handles only the normal orientation
     public void render_T_TwoRows(Group parent, Obstacle obstacle) {
-        Vector2f leg = obstacle.uTurnCenters()[0];
-        Vector2f cornerNW = obstacle.cornerCenter(0);
-        Vector2f cornerSW = obstacle.cornerCenter(2);
-        Vector2f cornerSE = obstacle.cornerCenter(11);
-        Vector2f cornerNE = obstacle.cornerCenter(13);
-        addTowers(parent, leg, cornerNW, cornerNE, cornerSW, cornerSE);
-        addWall(parent, cornerNW, cornerSW);
-        addWall(parent, cornerNE, cornerSE);
-        addWall(parent, cornerNW, cornerNE);
-        addWall(parent, cornerSW, cornerSE);
-        addWall(parent, leg, vec_2f(leg.x(), cornerSW.y()));
+        Vector2f[] t = obstacle.cornerCenters(0, 2, 6, 11, 13);
+        Vector2f h = vec_2f(t[2].x(), t[1].y());
+        addTowers(parent, t);
+        addWall(parent, t[0], t[1]);
+        addWall(parent, t[0], t[4]);
+        addWall(parent, t[1], t[3]);
+        addWall(parent, t[3], t[4]);
+        addWall(parent, h, t[2]);
     }
 
     private void render_Spaceship_Right(Group parent, Obstacle obstacle) {
