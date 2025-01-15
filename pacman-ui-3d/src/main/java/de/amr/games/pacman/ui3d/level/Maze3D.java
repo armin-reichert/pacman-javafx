@@ -9,7 +9,7 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
 import de.amr.games.pacman.ui2d.lib.Ufx;
-import de.amr.games.pacman.ui3d.animation.MaterialAnimation;
+import de.amr.games.pacman.ui3d.animation.MaterialColorAnimation;
 import de.amr.games.pacman.ui3d.scene3d.GameConfiguration3D;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
@@ -58,9 +58,7 @@ public class Maze3D extends Group {
     // experimental
     private final PhongMaterial highlightMaterial = Ufx.coloredMaterial(Color.YELLOW);
     private final Set<Group> obstacleGroups;
-    private final MaterialAnimation materialAnimation;
-
-    ;
+    private final MaterialColorAnimation materialColorAnimation;
 
     public Maze3D(GameConfiguration3D configuration3D, GameWorld world, WorldMapColoring coloring) {
         Logger.info("Build world 3D. Map URL='{}'", URLDecoder.decode(world.map().url().toExternalForm(), StandardCharsets.UTF_8));
@@ -85,7 +83,7 @@ public class Maze3D extends Group {
         wallTopMaterial.specularColorProperty().bind(wallTopMaterial.diffuseColorProperty().map(Color::brighter));
         */
 
-        materialAnimation = new MaterialAnimation(Duration.seconds(0.25), wallTopMaterial, wallTopColor, wallBaseColor);
+        materialColorAnimation = new MaterialColorAnimation(Duration.seconds(0.25), wallTopMaterial, wallTopColor, wallBaseColor);
 
         PhongMaterial cornerMaterial = new PhongMaterial();
         cornerMaterial.setDiffuseColor(wallBaseColor);
@@ -141,12 +139,12 @@ public class Maze3D extends Group {
     }
 
     public void playMaterialAnimation() {
-        materialAnimation.play();
+        materialColorAnimation.play();
     }
 
     public void stopMaterialAnimation() {
-        materialAnimation.stop();
-        materialAnimation.jumpTo(Duration.ZERO);
+        materialColorAnimation.stop();
+        materialColorAnimation.jumpTo(Duration.ZERO);
     }
 
     public void setHouseLightOn(boolean on) {

@@ -10,13 +10,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
 
-public class MaterialAnimation extends Transition {
+public class MaterialColorAnimation extends Transition {
 
     private final PhongMaterial material;
     private final Color fromColor;
     private final Color toColor;
 
-    public MaterialAnimation(Duration cycleDuration, PhongMaterial material, Color fromColor, Color toColor) {
+    public MaterialColorAnimation(Duration cycleDuration, PhongMaterial material, Color fromColor, Color toColor) {
         this.material = material;
         this.fromColor = fromColor;
         this.toColor = toColor;
