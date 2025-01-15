@@ -25,9 +25,6 @@ import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui3d.GameActions3D;
 import de.amr.games.pacman.ui3d.level.*;
 import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.SequentialTransition;
-import javafx.animation.Timeline;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -50,7 +47,6 @@ import static de.amr.games.pacman.ui2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui2d.action.GameActions2D.*;
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
 import static de.amr.games.pacman.ui2d.lib.Ufx.contextMenuTitleItem;
-import static de.amr.games.pacman.ui2d.lib.Ufx.doAfterSec;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_AXES_VISIBLE;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_PERSPECTIVE;
 
@@ -78,9 +74,9 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     protected final SubScene fxSubScene;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final Scores3D scores3D;
+
     protected GameContext context;
     protected GameLevel3D level3D;
-    protected Animation levelCompleteAnimation;
 
     // When constructor is called, context is not yet available!
     public PlayScene3D() {
@@ -120,9 +116,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     public final void end() {
         unregisterGameActionKeyBindings(context().keyboard());
         perspectiveNamePy.unbind();
-        if (levelCompleteAnimation != null) {
-            levelCompleteAnimation.stop();
-        }
+        level3D.stopAnimations();
         level3D = null;
     }
 
@@ -362,7 +356,11 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         level3D.energizers3D().forEach(Energizer3D::onEaten);
         level3D.livesCounter3D().shapesRotation().stop();
         level3D.maze3D().door3D().setVisible(false);
-        playLevelCompleteAnimation(context.level());
+        perspectiveNamePy.unbind();
+        perspectiveNamePy.set(Perspective.Name.TOTAL);
+        level3D.playLevelCompleteAnimation(
+            () -> perspectiveNamePy.bind(PY_3D_PERSPECTIVE)
+        );
     }
 
     private void onEnterStateLevelTransition() {
@@ -515,49 +513,6 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         animation.setDelay(Duration.seconds(1));
         animation.setOnFinished(e -> context.gameState().timer().expire());
         animation.play();
-    }
-
-    private void playLevelCompleteAnimation(GameLevel level) {
-        context.gameState().timer().resetIndefiniteTime(); // block game state until animation has finished
-        levelCompleteAnimation = level.intermissionNumber() != 0
-            ? levelCompleteAnimationBeforeIntermission(level.numFlashes())
-            : levelCompleteAnimation(level.numFlashes());
-        levelCompleteAnimation.setDelay(Duration.seconds(1.0));
-        levelCompleteAnimation.setOnFinished(e -> context.gameState().timer().expire());
-        levelCompleteAnimation.play();
-    }
-
-    private Animation levelCompleteAnimationBeforeIntermission(int numFlashes) {
-        return new SequentialTransition(
-            doAfterSec(1.0, () -> context.level().ghosts().forEach(Ghost::hide))
-            , level3D.maze3D().mazeFlashAnimation(numFlashes)
-            , doAfterSec(2.5, () -> context.level().pac().hide())
-        );
-    }
-
-    private Animation levelCompleteAnimation(int numFlashes) {
-        return new Timeline(
-            new KeyFrame(Duration.ZERO, e -> {
-                perspectiveNamePy.unbind();
-                perspectiveNamePy.set(Perspective.Name.TOTAL);
-                level3D.livesCounter3D().light().setLightOn(false);
-                if (Globals.randomInt(1, 100) < 25) {
-                    context.showFlashMessageSec(3, context.locLevelCompleteMessage(context.level().number));
-                }
-            }),
-            new KeyFrame(Duration.seconds(1.0), e -> context.level().ghosts().forEach(Ghost::hide)),
-            new KeyFrame(Duration.seconds(1.5), e -> level3D.maze3D().mazeFlashAnimation(numFlashes).play()),
-            new KeyFrame(Duration.seconds(4.5), e -> context.level().pac().hide()),
-            new KeyFrame(Duration.seconds(5.0), e -> level3D.levelRotateAnimation(1.5).play()),
-            new KeyFrame(Duration.seconds(7.0), e -> {
-                level3D.maze3D().wallsDisappearAnimation(2.0).play();
-                context.sound().playLevelCompleteSound();
-            }),
-            new KeyFrame(Duration.seconds(9.5), e -> {
-                context.sound().playLevelChangedSound();
-                perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
-            })
-        );
     }
 
     @Override

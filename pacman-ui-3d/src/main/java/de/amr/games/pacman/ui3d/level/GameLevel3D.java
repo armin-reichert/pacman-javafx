@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
@@ -49,6 +50,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.lib.Ufx.coloredMaterial;
+import static de.amr.games.pacman.ui2d.lib.Ufx.doAfterSec;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
 
 /**
@@ -80,6 +82,7 @@ public class GameLevel3D extends Group {
 
     private Message3D message3D;
     private Bonus3D bonus3D;
+    private Animation levelCompleteAnimation;
 
     public GameLevel3D(GameContext context) {
         this.context = assertNotNull(context);
@@ -312,10 +315,56 @@ public class GameLevel3D extends Group {
         return rotation;
     }
 
+    public void playLevelCompleteAnimation(Runnable onEnd) {
+        context.gameState().timer().resetIndefiniteTime(); // block game state until animation has finished
+        levelCompleteAnimation = context.level().intermissionNumber() != 0
+            ? levelCompleteAnimationBeforeIntermission(context.level().numFlashes())
+            : levelCompleteAnimation(context.level().numFlashes());
+        levelCompleteAnimation.setDelay(Duration.seconds(1.0));
+        levelCompleteAnimation.setOnFinished(e -> {
+            onEnd.run();
+            context.gameState().timer().expire();
+        });
+        levelCompleteAnimation.play();
+    }
+
+    private Animation levelCompleteAnimationBeforeIntermission(int numFlashes) {
+        return new SequentialTransition(
+            doAfterSec(1.0, () -> context.level().ghosts().forEach(Ghost::hide))
+            , maze3D.mazeFlashAnimation(numFlashes)
+            , doAfterSec(2.5, () -> context.level().pac().hide())
+        );
+    }
+
+    private Animation levelCompleteAnimation(int numFlashes) {
+        return new Timeline(
+            new KeyFrame(Duration.ZERO, e -> {
+                livesCounter3D().light().setLightOn(false);
+                if (Globals.randomInt(1, 100) < 25) {
+                    context.showFlashMessageSec(3, context.locLevelCompleteMessage(context.level().number));
+                }
+            }),
+            new KeyFrame(Duration.seconds(1.0), e -> context.level().ghosts().forEach(Ghost::hide)),
+            new KeyFrame(Duration.seconds(1.5), e -> maze3D.mazeFlashAnimation(numFlashes).play()),
+            new KeyFrame(Duration.seconds(4.5), e -> context.level().pac().hide()),
+            new KeyFrame(Duration.seconds(5.0), e -> levelRotateAnimation(1.5).play()),
+            new KeyFrame(Duration.seconds(7.0), e -> {
+                maze3D.wallsDisappearAnimation(2.0).play();
+                context.sound().playLevelCompleteSound();
+            }),
+            new KeyFrame(Duration.seconds(9.5), e -> {
+                context.sound().playLevelChangedSound();
+            })
+        );
+    }
+
     public void stopAnimations() {
         energizers3D().forEach(Energizer3D::stopPumping);
         livesCounter3D().shapesRotation().stop();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
+        if (levelCompleteAnimation != null) {
+            levelCompleteAnimation.stop();
+        }
     }
 
     public Maze3D maze3D() { return maze3D; }
