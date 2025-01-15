@@ -17,6 +17,7 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
+import de.amr.games.pacman.ui2d.lib.Ufx;
 import de.amr.games.pacman.ui3d.GlobalProperties3d;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import de.amr.games.pacman.ui3d.model.Model3D;
@@ -315,17 +316,25 @@ public class GameLevel3D extends Group {
         return rotation;
     }
 
-    public void playLevelCompleteAnimationAndThen(Runnable onEnd) {
-        context.gameState().timer().resetIndefiniteTime(); // block game state until animation has finished
+    public void playLevelCompleteAnimationAfterSec(double delaySeconds, Runnable onStart, Runnable onFinished) {
         levelCompleteAnimation = context.level().intermissionNumber() != 0
             ? levelCompleteAnimationBeforeIntermission(context.level().numFlashes())
             : levelCompleteAnimation(context.level().numFlashes());
-        levelCompleteAnimation.setDelay(Duration.seconds(1.0));
-        levelCompleteAnimation.setOnFinished(e -> {
-            onEnd.run();
+
+        Transition animation = new SequentialTransition(
+                Ufx.now(() -> {
+                    // keep game state until animation has finished
+                    context.gameState().timer().resetIndefiniteTime();
+                    onStart.run();
+                }),
+                levelCompleteAnimation
+        );
+        animation.setOnFinished(e -> {
+            onFinished.run();
             context.gameState().timer().expire();
         });
-        levelCompleteAnimation.play();
+        animation.setDelay(Duration.seconds(delaySeconds));
+        animation.play();
     }
 
     private Animation levelCompleteAnimationBeforeIntermission(int numFlashes) {

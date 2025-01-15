@@ -359,9 +359,12 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
         level3D.stopAnimations();
 
-        perspectiveNamePy.unbind();
-        perspectiveNamePy.set(Perspective.Name.TOTAL);
-        level3D.playLevelCompleteAnimationAndThen(() -> perspectiveNamePy.bind(PY_3D_PERSPECTIVE));
+        level3D.playLevelCompleteAnimationAfterSec(2.0,
+            () -> {
+                perspectiveNamePy.unbind();
+                perspectiveNamePy.set(Perspective.Name.TOTAL);
+            },
+            () -> perspectiveNamePy.bind(PY_3D_PERSPECTIVE));
     }
 
     private void onEnterStateLevelTransition() {
