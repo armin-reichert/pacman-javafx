@@ -13,6 +13,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
 import de.amr.games.pacman.ui3d.GlobalProperties3d;
@@ -58,27 +59,25 @@ public class GameLevel3D extends Group {
     private final BooleanProperty houseOpenPy = new SimpleBooleanProperty() {
         @Override
         protected void invalidated() {
-            if (houseOpenPy.get()) {
-                maze3D.door3D().playOpenCloseAnimation();
-            }
+        if (houseOpenPy.get()) {
+            maze3D.door3D().playOpenCloseAnimation();
+        }
         }
     };
 
     private final IntegerProperty livesCountPy = new SimpleIntegerProperty(0);
 
     private final GameContext context;
-    private final AmbientLight ambientLight;
-
     private final Group worldGroup = new Group();
-
-    private final Maze3D maze3D = new Maze3D();
+    private final AmbientLight ambientLight;
     private final Pac3D pac3D;
     private final List<Ghost3DAppearance> ghost3DAppearances;
     private final List<Pellet3D> pellets3D = new ArrayList<>();
     private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
     private final LivesCounter3D livesCounter3D;
+    private final Box floor3D;
+    private final Maze3D maze3D;
 
-    private Box floor3D;
     private Message3D message3D;
     private Bonus3D bonus3D;
 
@@ -95,15 +94,12 @@ public class GameLevel3D extends Group {
         livesCounter3D = createLivesCounter3D(game.canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCountPy);
 
-        floor3D = createFloor(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
-        worldGroup.getChildren().add(floor3D);
-
+        floor3D = createFloor(context.assets(), world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
         WorldMapColoring coloring = context.gameConfiguration().worldMapColoring(world.map());
-        maze3D.build((GameConfiguration3D) context.gameConfiguration(), world, coloring);
-        worldGroup.getChildren().add(maze3D);
-
+        maze3D = new Maze3D((GameConfiguration3D) context.gameConfiguration(), world, coloring);
         addFood3D(world, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 
+        worldGroup.getChildren().addAll(floor3D, maze3D);
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
         getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
         getChildren().addAll(ghost3DAppearances);
@@ -219,12 +215,12 @@ public class GameLevel3D extends Group {
         return levelCounter3D;
     }
 
-    private Box createFloor(double sizeX, double sizeY) {
+    private Box createFloor(AssetStorage assets, double sizeX, double sizeY) {
         // add some extra space
         double extraSpace = 10;
         var floor3D = new Box(sizeX + extraSpace, sizeY, FLOOR_THICKNESS);
         floor3D.materialProperty().bind(
-            Bindings.createObjectBinding(this::createFloorMaterial, PY_3D_FLOOR_COLOR, PY_3D_FLOOR_TEXTURE_NAME));
+            Bindings.createObjectBinding(() -> createFloorMaterial(assets), PY_3D_FLOOR_COLOR, PY_3D_FLOOR_TEXTURE_NAME));
         floor3D.translateXProperty().bind(floor3D.widthProperty().multiply(0.5).subtract(0.5*extraSpace));
         floor3D.translateYProperty().bind(floor3D.heightProperty().multiply(0.5));
         floor3D.translateZProperty().set(FLOOR_THICKNESS * 0.5);
@@ -232,8 +228,8 @@ public class GameLevel3D extends Group {
         return floor3D;
     }
 
-    private PhongMaterial createFloorMaterial() {
-        Map<String, PhongMaterial> textures = context.assets().get("floor_textures");
+    private PhongMaterial createFloorMaterial(AssetStorage assets) {
+        Map<String, PhongMaterial> textures = assets.get("floor_textures");
         String textureName = PY_3D_FLOOR_TEXTURE_NAME.get();
         return GlobalProperties3d.NO_TEXTURE.equals(textureName) || !textures.containsKey(textureName)
             ? coloredMaterial(PY_3D_FLOOR_COLOR.get())
@@ -326,7 +322,7 @@ public class GameLevel3D extends Group {
 
     public Pac3D pac3D() { return pac3D; }
 
-    public List<Ghost3DAppearance> ghosts3D() { return ghost3DAppearances; }
+    public Stream<Ghost3DAppearance> ghosts3D() { return ghost3DAppearances.stream(); }
 
     public Ghost3DAppearance ghost3D(byte id) { return ghost3DAppearances.get(id); }
 
@@ -341,5 +337,4 @@ public class GameLevel3D extends Group {
     public Color floorColor() { return PY_3D_FLOOR_COLOR.get(); }
 
     public double floorThickness() { return floor3D.getDepth(); }
-
 }

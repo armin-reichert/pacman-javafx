@@ -33,8 +33,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.lib.Ufx.*;
+import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.tileAt;
+import static de.amr.games.pacman.ui2d.lib.Ufx.opaqueColor;
+import static de.amr.games.pacman.ui2d.lib.Ufx.pauseSec;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
 import static de.amr.games.pacman.ui3d.level.WorldRenderer3D.TAG_WALL_BASE;
 import static de.amr.games.pacman.ui3d.level.WorldRenderer3D.isTagged;
@@ -48,17 +50,17 @@ public class Maze3D extends Group {
     private final DoubleProperty houseBaseHeightPy = new SimpleDoubleProperty(HOUSE_BASE_HEIGHT);
     private final BooleanProperty houseLightOnPy = new SimpleBooleanProperty(false);
 
-    private Door3D door3D;
+    private final Door3D door3D;
 
-    private PhongMaterial wallBaseMaterial;
-    private PhongMaterial wallTopMaterial;
-    private PhongMaterial cornerMaterial;
+    private final PhongMaterial wallBaseMaterial;
+    private final PhongMaterial wallTopMaterial;
+    private final PhongMaterial cornerMaterial;
 
     // experimental
-    private PhongMaterial highlightMaterial = Ufx.coloredMaterial(Color.YELLOW);
+    private final PhongMaterial highlightMaterial = Ufx.coloredMaterial(Color.YELLOW);
     private Set<Group> obstacleGroups;
 
-    public void build(GameConfiguration3D configuration3D, GameWorld world, WorldMapColoring coloring) {
+    public Maze3D(GameConfiguration3D configuration3D, GameWorld world, WorldMapColoring coloring) {
         Logger.info("Build world 3D. Map URL='{}'", URLDecoder.decode(world.map().url().toExternalForm(), StandardCharsets.UTF_8));
 
         Color wallBaseColor = coloring.stroke();
