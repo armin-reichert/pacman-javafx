@@ -1,7 +1,7 @@
 /**
  * Module is open to give access to map files under resources folder.
  */
-open module de.amr.games.pacman.mapeditor.app {
+open module de.amr.games.pacman.maps.editor.app {
 
     requires javafx.graphics;
     requires javafx.controls;

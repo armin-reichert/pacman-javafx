@@ -12,7 +12,7 @@ dependencies {
 }
 
 application {
-    mainModule = "de.amr.games.pacman.mapeditor.app"
+    mainModule = "de.amr.games.pacman.maps.editor.app"
     mainClass  = "de.amr.games.pacman.maps.editor.app.Main"
 }
 

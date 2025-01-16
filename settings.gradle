@@ -8,6 +8,6 @@ include "pacman-app-arcade-mspacman"
 include "pacman-app-arcade-pacmanxxl"
 include "pacman-app-tengen-mspacman"
 include "pacman-app-allgames"
-include "pacman-mapeditor-app"
+include "pacman-app-mapeditor"
 include "experiments"
 
