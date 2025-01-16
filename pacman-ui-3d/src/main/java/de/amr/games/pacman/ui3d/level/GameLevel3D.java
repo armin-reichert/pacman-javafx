@@ -17,7 +17,6 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
-import de.amr.games.pacman.ui2d.lib.Ufx;
 import de.amr.games.pacman.ui3d.GlobalProperties3d;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import de.amr.games.pacman.ui3d.model.Model3D;
@@ -50,8 +49,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.lib.Ufx.coloredMaterial;
-import static de.amr.games.pacman.ui2d.lib.Ufx.doAfterSec;
+import static de.amr.games.pacman.ui2d.lib.Ufx.*;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
 
 /**
@@ -62,9 +60,9 @@ public class GameLevel3D extends Group {
     private final BooleanProperty houseOpenPy = new SimpleBooleanProperty() {
         @Override
         protected void invalidated() {
-        if (houseOpenPy.get()) {
-            maze3D.door3D().playOpenCloseAnimation();
-        }
+            if (houseOpenPy.get()) {
+                maze3D.door3D().playOpenCloseAnimation();
+            }
         }
     };
 
@@ -83,7 +81,9 @@ public class GameLevel3D extends Group {
 
     private Message3D message3D;
     private Bonus3D bonus3D;
+
     private Animation levelCompleteAnimation;
+
 
     public GameLevel3D(GameContext context) {
         this.context = assertNotNull(context);
@@ -316,28 +316,26 @@ public class GameLevel3D extends Group {
         return rotation;
     }
 
-    public void playLevelCompleteAnimationAfterSec(double delaySeconds, Runnable onStart, Runnable onFinished) {
-        levelCompleteAnimation = context.level().intermissionNumber() != 0
-            ? levelCompleteAnimationBeforeIntermission(context.level().numFlashes())
-            : levelCompleteAnimation(context.level().numFlashes());
-
-        Transition animation = new SequentialTransition(
-                Ufx.now(() -> {
-                    // keep game state until animation has finished
-                    context.gameState().timer().resetIndefiniteTime();
-                    onStart.run();
-                }),
-                levelCompleteAnimation
+    public void playLevelCompleteAnimation(double delaySeconds, Runnable onStart, Runnable onFinished) {
+        levelCompleteAnimation = new SequentialTransition(
+            now(() -> {
+                // keep game state until animation has finished
+                context.gameState().timer().resetIndefiniteTime();
+                onStart.run();
+            }),
+            context.level().intermissionNumber() != 0
+                ? levelTransformationBeforeIntermission(context.level().numFlashes())
+                : levelTransformation(context.level().numFlashes())
         );
-        animation.setOnFinished(e -> {
+        levelCompleteAnimation.setOnFinished(e -> {
             onFinished.run();
             context.gameState().timer().expire();
         });
-        animation.setDelay(Duration.seconds(delaySeconds));
-        animation.play();
+        levelCompleteAnimation.setDelay(Duration.seconds(delaySeconds));
+        levelCompleteAnimation.play();
     }
 
-    private Animation levelCompleteAnimationBeforeIntermission(int numFlashes) {
+    private Animation levelTransformationBeforeIntermission(int numFlashes) {
         return new SequentialTransition(
             doAfterSec(1.0, () -> context.level().ghosts().forEach(Ghost::hide))
             , maze3D.mazeFlashAnimation(numFlashes)
@@ -345,7 +343,7 @@ public class GameLevel3D extends Group {
         );
     }
 
-    private Animation levelCompleteAnimation(int numFlashes) {
+    private Animation levelTransformation(int numFlashes) {
         return new Timeline(
             new KeyFrame(Duration.ZERO, e -> {
                 livesCounter3D().light().setLightOn(false);
@@ -361,9 +359,7 @@ public class GameLevel3D extends Group {
                 maze3D.wallsDisappearAnimation(2.0).play();
                 context.sound().playLevelCompleteSound();
             }),
-            new KeyFrame(Duration.seconds(9.5), e -> {
-                context.sound().playLevelChangedSound();
-            })
+            new KeyFrame(Duration.seconds(9.5), e -> context.sound().playLevelChangedSound())
         );
     }
 
@@ -372,6 +368,9 @@ public class GameLevel3D extends Group {
         livesCounter3D().shapesRotation().stop();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         maze3D.stopMaterialAnimation();
+        if (levelCompleteAnimation != null) {
+            levelCompleteAnimation.stop();
+        }
     }
 
     public Maze3D maze3D() { return maze3D; }
