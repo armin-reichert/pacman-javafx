@@ -12,7 +12,7 @@ dependencies {
     implementation project(":pacman-app-arcade-pacman")
     implementation project(":pacman-app-arcade-pacmanxxl")
     implementation project(":pacman-app-arcade-mspacman")
-    implementation project(":pacman-tengen-mspacman")
+    implementation project(":pacman-app-tengen-mspacman")
     implementation libs.bundles.tinylog
 }
 
