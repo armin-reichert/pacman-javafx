@@ -67,7 +67,7 @@ public class LivesCounter3D extends Group {
             shape.visibleProperty().bind(livesCountPy.map(count -> count.intValue() > (int) shape.getUserData()));
             getChildren().add(shape);
         }
-        resetShapeRotation();
+        resetShapes();
         getChildren().addAll(standsGroup, light);
     }
 
@@ -75,7 +75,7 @@ public class LivesCounter3D extends Group {
         return light;
     }
 
-    public void resetShapeRotation() {
+    public void resetShapes() {
         for (Node shape : pacShapes) {
             shape.setRotationAxis(Rotate.Z_AXIS);
             shape.setRotate(240);
@@ -83,7 +83,6 @@ public class LivesCounter3D extends Group {
     }
 
     public Animation createAnimation() {
-        resetShapeRotation();
         var transition = new ParallelTransition();
         for (Node shape : pacShapes) {
             var rotation = new RotateTransition(Duration.seconds(10.0), shape);

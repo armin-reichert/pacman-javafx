@@ -307,6 +307,13 @@ public class GameLevel3D extends Group {
         worldGroup.getChildren().add(bonus3D);
     }
 
+    public void playLivesCounterAnimation() {
+        //TODO new animation creation needed?
+        livesCounterAnimation = livesCounter3D.createAnimation();
+        livesCounter3D.resetShapes();
+        livesCounterAnimation.play();
+    }
+
     public RotateTransition levelRotateAnimation(double seconds) {
         var rotation = new RotateTransition(Duration.seconds(seconds), this);
         rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
@@ -366,9 +373,7 @@ public class GameLevel3D extends Group {
     public void stopAnimations() {
         energizers3D().forEach(Energizer3D::stopPumping);
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-        if (maze3D != null) {
-            maze3D.stopMaterialAnimation();
-        }
+        maze3D.stopMaterialAnimation();
         if (livesCounterAnimation != null) {
             livesCounterAnimation.stop();
         }
@@ -389,12 +394,6 @@ public class GameLevel3D extends Group {
 
     public LivesCounter3D livesCounter3D() { return livesCounter3D; }
 
-    public void playLivesCounterAnimation() {
-        livesCounterAnimation = livesCounter3D.createAnimation();
-        livesCounter3D.resetShapeRotation();
-        livesCounterAnimation.play();
-    }
-
     public Stream<Pellet3D> pellets3D() { return pellets3D.stream(); }
 
     public Stream<Energizer3D> energizers3D() { return energizers3D.stream(); }
@@ -402,5 +401,4 @@ public class GameLevel3D extends Group {
     public Color floorColor() { return PY_3D_FLOOR_COLOR.get(); }
 
     public double floorThickness() { return floor3D.getDepth(); }
-
 }
