@@ -1,12 +1,12 @@
 plugins {
-  id 'java'
-  id 'org.openjfx.javafxplugin' version '0.1.0'
+  id "java"
+  id "org.openjfx.javafxplugin" version "0.1.0"
 }
 
 dependencies {
-  implementation project(':pacman-core')
-  implementation project(':pacman-ui-2d')
-  implementation project(':pacman-ui-3d')
+  implementation project(":pacman-core")
+  implementation project(":pacman-ui-2d")
+  implementation project(":pacman-ui-3d")
   implementation libs.bundles.tinylog
 }
 
@@ -18,5 +18,5 @@ java {
 
 javafx {
   version = versions.javafx
-  modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.media']
+  modules = ["javafx.base", "javafx.graphics", "javafx.controls", "javafx.media"]
 }

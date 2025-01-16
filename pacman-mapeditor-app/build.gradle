@@ -1,19 +1,19 @@
 plugins {
-    id 'java'
-    id 'org.openjfx.javafxplugin' version '0.1.0'
-    id 'application'
-    id 'org.beryx.jlink' version '3.0.1'
+    id "java"
+    id "org.openjfx.javafxplugin" version "0.1.0"
+    id "application"
+    id "org.beryx.jlink" version "3.0.1"
 }
 
 dependencies {
-    implementation project(':pacman-core')
-    implementation project(':pacman-mapeditor')
+    implementation project(":pacman-core")
+    implementation project(":pacman-mapeditor")
     implementation libs.bundles.tinylog
 }
 
 application {
-    mainModule = 'de.amr.games.pacman.mapeditor.app'
-    mainClass  = 'de.amr.games.pacman.maps.editor.app.Main'
+    mainModule = "de.amr.games.pacman.mapeditor.app"
+    mainClass  = "de.amr.games.pacman.maps.editor.app.Main"
 }
 
 java {
@@ -24,29 +24,29 @@ java {
 
 javafx {
     version = versions.javafx
-    modules = ['javafx.base', 'javafx.graphics', 'javafx.controls']
+    modules = ["javafx.base", "javafx.graphics", "javafx.controls"]
 }
 
 jlink {
     imageZip = layout.buildDirectory.file("distributions/javafx-mapeditor-app-${javafx.platform.classifier}.zip")
-    options = ['--strip-debug', '--compress', 'zip-9', '--no-header-files', '--no-man-pages']
+    options = ["--strip-debug", "--compress", "zip-9", "--no-header-files", "--no-man-pages"]
     launcher {
-        name = 'Pac-Man-FX-Map-Editor'
+        name = "Pac-Man-FX-Map-Editor"
     }
     jpackage {
-        appVersion = '1.0'
-        vendor = 'Armin Reichert'
+        appVersion = "1.0"
+        vendor = "Armin Reichert"
         if (os.isWindows()) {
-            icon = 'mapeditor.ico'
-            installerType = 'msi'
-            installerOptions = ['--win-dir-chooser', '--win-menu', '--win-menu-group', 'Pac-Man FX', '--win-shortcut']
+            icon = "mapeditor.ico"
+            installerType = "msi"
+            installerOptions = ["--win-dir-chooser", "--win-menu", "--win-menu-group", "Pac-Man FX", "--win-shortcut"]
         }
         if (os.isLinux()) {
-            installerType = 'deb'
+            installerType = "deb"
         }
     }
 }
 
 jlinkZip {
-    group = 'distribution'
+    group = "distribution"
 }

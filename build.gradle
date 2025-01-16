@@ -16,11 +16,11 @@ allprojects {
     }
 
     tasks.withType(JavaCompile).configureEach {
-        options.encoding = 'UTF-8'
+        options.encoding = "UTF-8"
         configure(options) {
-            options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'
+            options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
         }
     }
 }
 
-println("Operating System: name='${os.name}' version='${os.version}' arch='${arch}'")
+println("Operating System: name=${os.name} version=${os.version} arch=${arch}")

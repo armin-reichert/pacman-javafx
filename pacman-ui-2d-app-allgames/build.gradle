@@ -1,24 +1,24 @@
 plugins {
-  id 'java'
-  id 'org.openjfx.javafxplugin' version '0.1.0'
-  id 'application'
-  id 'org.beryx.jlink' version '3.0.1' //  adds also 'application' plugin
+  id "java"
+  id "org.openjfx.javafxplugin" version "0.1.0"
+  id "application"
+  id "org.beryx.jlink" version "3.0.1" //  adds also "application" plugin
 }
 
 dependencies {
-  implementation project(':pacman-core')
-  implementation project(':pacman-mapeditor')
-  implementation project(':pacman-ui-2d')
-  implementation project(':pacman-arcade-pacman')
-  implementation project(':pacman-arcade-pacmanxxl')
-  implementation project(':pacman-arcade-mspacman')
-  implementation project(':pacman-tengen-mspacman')
+  implementation project(":pacman-core")
+  implementation project(":pacman-mapeditor")
+  implementation project(":pacman-ui-2d")
+  implementation project(":pacman-arcade-pacman")
+  implementation project(":pacman-arcade-pacmanxxl")
+  implementation project(":pacman-arcade-mspacman")
+  implementation project(":pacman-tengen-mspacman")
   implementation libs.bundles.tinylog
 }
 
 application {
-  mainModule = 'de.amr.games.pacman.ui2d.appsuite'
-  mainClass = 'de.amr.games.pacman.ui2d.appsuite.Main'
+  mainModule = "de.amr.games.pacman.ui2d.appsuite"
+  mainClass = "de.amr.games.pacman.ui2d.appsuite.Main"
 }
 
 java {
@@ -29,32 +29,32 @@ java {
 
 javafx {
   version = versions.javafx
-  modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.media']
+  modules = ["javafx.base", "javafx.graphics", "javafx.controls", "javafx.media"]
 }
 
 jlink {
   imageZip = layout.buildDirectory.file("distributions/javafx-ui2d-${javafx.platform.classifier}.zip")
-  options = ['--compress', 'zip-9', '--strip-debug', '--no-header-files', '--no-man-pages']
+  options = ["--compress", "zip-9", "--strip-debug", "--no-header-files", "--no-man-pages"]
   launcher {
-    name = 'Pac-Man-FX-2D'
+    name = "Pac-Man-FX-2D"
   }
 
   jpackage {
-    appVersion = '1.0'
-    vendor = 'Armin Reichert'
+    appVersion = "1.0"
+    vendor = "Armin Reichert"
     installerOptions = []
     if (os.isWindows()) {
-      icon = 'pacman.ico'
-      installerType = 'msi'
-      installerOptions += ['--win-dir-chooser', '--win-menu', '--win-menu-group', 'Pac-Man FX', '--win-shortcut']
+      icon = "pacman.ico"
+      installerType = "msi"
+      installerOptions += ["--win-dir-chooser", "--win-menu", "--win-menu-group", "Pac-Man FX", "--win-shortcut"]
     } else if (os.isLinux()) {
-      installerType = 'deb'
+      installerType = "deb"
     } else if (os.isMacOsX()) {
-      installerType = 'dmg'
+      installerType = "dmg"
     }
   }
 }
 
 jlinkZip {
-  group = 'distribution'
+  group = "distribution"
 }
