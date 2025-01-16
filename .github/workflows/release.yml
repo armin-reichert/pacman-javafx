@@ -38,19 +38,19 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}
-          path: pacman-ui-3d-app-allgames/build/jpackage/*.msi
+          path: pacman-app-allgames/build/jpackage/*.msi
           if-no-files-found: ignore
       - name: Upload Linux deb
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}
-          path: pacman-ui-3d-app-allgames/build/jpackage/*.deb
+          path: pacman-app-allgames/build/jpackage/*.deb
           if-no-files-found: ignore
       - name: Upload Mac-OS dmg
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}
-          path: pacman-ui-3d-app-allgames/build/jpackage/*.dmg
+          path: pacman-app-allgames/build/jpackage/*.dmg
           if-no-files-found: ignore
 
   download-and-release-artifacts:
@@ -60,13 +60,13 @@ jobs:
       - name: Download artifacts created for 3D game version
         uses: actions/download-artifact@v4
         with:
-          path: pacman-ui-3d-app-allgames/build/jpackage
+          path: pacman-app-allgames/build/jpackage
       - name: List files
         run: ls -R
       - name: Attach installers to the release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./pacman-ui-3d-app-allgames/build/jpackage/macos-latest/*.dmg
-            ./pacman-ui-3d-app-allgames/build/jpackage/ubuntu-latest/*.deb
-            ./pacman-ui-3d-app-allgames/build/jpackage/windows-latest/*.msi
+            ./pacman-app-allgames/build/jpackage/macos-latest/*.dmg
+            ./pacman-app-allgames/build/jpackage/ubuntu-latest/*.deb
+            ./pacman-app-allgames/build/jpackage/windows-latest/*.msi
