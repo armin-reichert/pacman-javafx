@@ -40,8 +40,7 @@ Prerequisites: You need to have [JDK 21](https://www.oracle.com/java/technologie
 - `./gradlew jpackage` or just `make` (Windows) or `./make.sh` (Linux)
 
 This will create
-- an installer (.msi/.deb/.dmg depending on your platform) for the 2D-only game (subdirectory `pacman-ui-2d-app-allgames/build/jpackage`)
-- an installer for the 2D+3D game (subdirectory `pacman-ui-3d-app-allgames/build/jpackage`)
+- an installer (.msi, .deb, or .dmg, depending on your platform) for the app containing all game variants (subdirectory `pacman-ui-3d-app-allgames/build/jpackage`)
 - an installer for the map editor (subdirectory `pacman-mapeditor-app/build/jpackage`)
 
 To be able to create the Windows executables, you need to have the following tools installed:
@@ -56,9 +55,7 @@ I also had to add the paths "C:\Program Files (x86)\WiX Toolset v3.11\bin" and "
 
 ### Running the application (including all games) using Gradle
 
-- Pac-Man 2D: `./gradlew pacman-ui-2d-app-allgames:run`
-- Pac-Man 3D: `./gradlew pacman-ui-3d-app-allgames:run`
-
+- All-game-variants app: `./gradlew pacman-ui-3d-app-allgames:run`
 - Map Editor: `./gradlew pacman-mapeditor-app:run`
 
 ## How to use the application
