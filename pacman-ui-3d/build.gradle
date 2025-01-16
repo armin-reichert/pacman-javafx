@@ -6,7 +6,6 @@ plugins {
 dependencies {
     implementation project(":pacman-core")
     implementation project(":pacman-mapeditor")
-    implementation project(":pacman-ui-2d")
     implementation libs.bundles.tinylog
 }
 

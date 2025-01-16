@@ -5,7 +5,6 @@ module de.amr.games.pacman.ui3d.apps {
 
     requires de.amr.games.pacman;
     requires de.amr.games.pacman.ui3d;
-    requires de.amr.games.pacman.ui2d;
     requires de.amr.games.pacman.arcade.ms_pacman;
     requires de.amr.games.pacman.arcade.pacman;
     requires de.amr.games.pacman.arcade.pacman_xxl;

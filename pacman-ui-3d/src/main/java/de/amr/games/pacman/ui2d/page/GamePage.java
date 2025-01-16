@@ -53,7 +53,7 @@ public class GamePage extends StackPane implements GameActionProvider {
 
     static final double MAX_SCENE_SCALING = 5;
 
-    private final GameAction actionToggleDebugInfo = context -> Ufx.toggle(PY_DEBUG_INFO_VISIBLE);
+    private final GameAction actionToggleDebugInfo = context -> toggle(PY_DEBUG_INFO_VISIBLE);
 
     private final GameAction actionShowHelp = context -> showHelp();
 
