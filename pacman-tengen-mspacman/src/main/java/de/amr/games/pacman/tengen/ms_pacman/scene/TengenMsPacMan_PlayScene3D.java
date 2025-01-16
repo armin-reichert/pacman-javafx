@@ -71,6 +71,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     public void bindGameActions() {
         bind(GameActions3D.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
         bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
+        bind(GameActions3D.TOGGLE_DRAW_MODE, alt(KeyCode.W));
         if (context.game().isDemoLevel()) {
             bind(TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL, context.currentJoypadKeyBinding().key(NES_JoypadButton.BTN_START));
         }
