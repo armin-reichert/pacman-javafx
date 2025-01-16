@@ -146,7 +146,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         switch (context.gameState()) {
             case TESTING_LEVELS, TESTING_LEVEL_TEASERS -> {
                 replaceGameLevel3D();
-                level3D.livesCounter3D().shapesRotation().play();
+                level3D.playLivesCounterAnimation();
                 level3D.energizers3D().forEach(Energizer3D::startPumping);
                 showLevelTestMessage("TEST LEVEL " + level.number);
             }
@@ -184,7 +184,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             if (level.powerTimer().isRunning()) {
                 context.sound().playPacPowerSound();
             }
-            level3D.livesCounter3D().shapesRotation().play();
+            level3D.playLivesCounterAnimation();
         }
         updateScores();
     }
@@ -327,11 +327,12 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     private void onEnterStateHunting() {
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
-        level3D.livesCounter3D().shapesRotation().play();
         level3D.energizers3D().forEach(Energizer3D::startPumping);
+        level3D.playLivesCounterAnimation();
     }
 
     private void onEnterStatePacManDying() {
+        level3D.stopAnimations();
         context.sound().stopAll();
         // last update before dying animation
         level3D.pac3D().update(context);

@@ -41,41 +41,33 @@ public class LivesCounter3D extends Group {
     private final ObjectProperty<PhongMaterial> pillarMaterialPy = new SimpleObjectProperty<>(this, "pillarMaterial", new PhongMaterial());
     private final ObjectProperty<PhongMaterial> plateMaterialPy = new SimpleObjectProperty<>(this, "plateMaterial", new PhongMaterial());
 
+    private final Node[] pacShapes;
     private final PointLight light = new PointLight();
-    private final ParallelTransition shapesRotation = new ParallelTransition();
 
-    public LivesCounter3D(Node[] shapes, int shapeHeight) {
+    public LivesCounter3D(Node[] pacShapes, int shapeHeight) {
+        this.pacShapes = pacShapes;
+
         pillarMaterialPy.bind(pillarColorPy.map(Ufx::coloredMaterial));
         plateMaterialPy.bind((plateColorPy.map(Ufx::coloredMaterial)));
 
-        light.setMaxRange  (TS * (shapes.length + 1));
-        light.setTranslateX(TS * (shapes.length - 1));
+        light.setMaxRange  (TS * (pacShapes.length + 1));
+        light.setTranslateX(TS * (pacShapes.length - 1));
         light.setTranslateY(TS * (-1));
         light.translateZProperty().bind(pillarHeightPy.add(20).multiply(-1));
 
         var standsGroup = new Group();
-        for (int i = 0; i < shapes.length; ++i) {
+        for (int i = 0; i < pacShapes.length; ++i) {
             int x = i * 2 * TS;
             standsGroup.getChildren().add(createStand(x));
-
-            Node shape = shapes[i];
+            Node shape = pacShapes[i];
             shape.setUserData(i);
             shape.setTranslateX(x);
             shape.setTranslateY(0);
             shape.translateZProperty().bind(pillarHeightPy.add(plateThicknessPy).add(0.5 * shapeHeight).negate());
-            shape.setRotationAxis(Rotate.Z_AXIS);
-            shape.setRotate(180);
             shape.visibleProperty().bind(livesCountPy.map(count -> count.intValue() > (int) shape.getUserData()));
             getChildren().add(shape);
-
-            var rotation = new RotateTransition(Duration.seconds(10.0), shape);
-            rotation.setAxis(Rotate.Z_AXIS);
-            rotation.setByAngle(180);
-            rotation.setInterpolator(Interpolator.LINEAR);
-            rotation.setCycleCount(Animation.INDEFINITE);
-            rotation.setAutoReverse(true);
-            shapesRotation.getChildren().add(rotation);
         }
+        resetShapeRotation();
         getChildren().addAll(standsGroup, light);
     }
 
@@ -83,8 +75,27 @@ public class LivesCounter3D extends Group {
         return light;
     }
 
-    public Animation shapesRotation() {
-        return shapesRotation;
+    public void resetShapeRotation() {
+        for (Node shape : pacShapes) {
+            shape.setRotationAxis(Rotate.Z_AXIS);
+            shape.setRotate(240);
+        }
+    }
+
+    public Animation createAnimation() {
+        resetShapeRotation();
+        var transition = new ParallelTransition();
+        for (Node shape : pacShapes) {
+            var rotation = new RotateTransition(Duration.seconds(10.0), shape);
+            rotation.setAxis(Rotate.Z_AXIS);
+            rotation.setFromAngle(240);
+            rotation.setToAngle(300);
+            rotation.setInterpolator(Interpolator.LINEAR);
+            rotation.setCycleCount(Animation.INDEFINITE);
+            rotation.setAutoReverse(true);
+            transition.getChildren().add(rotation);
+        }
+        return transition;
     }
 
     private Group createStand(double x) {
