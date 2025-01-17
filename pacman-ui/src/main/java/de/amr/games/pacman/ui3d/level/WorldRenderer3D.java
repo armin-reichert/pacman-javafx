@@ -417,38 +417,40 @@ public class WorldRenderer3D {
         addWall(g, h, t[2]);
     }
 
+    //TODO make complete
     public void render_H(Group g, Obstacle obstacle) {
         switch (obstacle.encoding()) {
+
             // little H rotated 90 degrees
             case "dgefdgbfegdfeb" -> Logger.error("Little-H obstacle creation still missing!");
+
             // little H in normal orientation
             case "dcgfdegfcedfge" -> Logger.error("Little-H obstacle creation still missing!");
-            case "dgbecfbdgbfebgcdbfeb" -> {
-                // H rotated by 90 degrees
-                Vector2f towerNW = obstacle.cornerCenter(0);
-                Vector2f towerSW = obstacle.cornerCenter(8);
-                Vector2f towerSE = obstacle.cornerCenter(10);
-                Vector2f towerNE = obstacle.cornerCenter(17);
-                Vector2f topJoin = towerNW.midpoint(towerNE);
-                Vector2f bottomJoin = towerSW.midpoint(towerSE);
-                addTowers(g, towerNW, towerSW, towerSE, towerNE);
-                addWall(g, towerNW, towerNE);
-                addWall(g, towerSW, towerSE);
-                addWallAtCenter(g, topJoin.midpoint(bottomJoin), TS, topJoin.manhattanDist(bottomJoin));
-            }
+
+            // H in normal orientation
             case "dcgfcdbecgfcedcfbgce" -> {
-                // H in normal orientation
-                Vector2f towerNW = obstacle.cornerCenter(0);
-                Vector2f towerSW = obstacle.cornerCenter(2);
-                Vector2f towerSE = obstacle.cornerCenter(9);
-                Vector2f towerNE = obstacle.cornerCenter(12);
-                Vector2f leftJoin = towerNW.midpoint(towerSW);
-                Vector2f rightJoin = towerNE.midpoint(towerSE);
-                Vector2f center = leftJoin.midpoint(rightJoin);
-                addTowers(g, towerNW, towerSW, towerSE, towerNE);
-                addWallAtCenter(g, leftJoin, TS, towerNW.manhattanDist(towerSW));
-                addWallAtCenter(g, rightJoin, TS, towerNE.manhattanDist(towerSE));
-                addWallAtCenter(g, center, leftJoin.manhattanDist(rightJoin), TS);
+                Vector2f[] t = obstacle.cornerCenters(0, 2, 9, 12);
+                Vector2f[] h = {
+                        vec_2f(t[0].x(), t[0].midpoint(t[1]).y()),
+                        vec_2f(t[2].x(), t[2].midpoint(t[3]).y()),
+                };
+                addTowers(g, t);
+                addWall(g, t[0], t[1]);
+                addWall(g, t[2], t[3]);
+                addWall(g, h[0], h[1]);
+            }
+
+            // H rotated by 90 degrees
+            case "dgbecfbdgbfebgcdbfeb" -> {
+                Vector2f[] t = obstacle.cornerCenters(0, 7, 10, 17);
+                Vector2f[] h = {
+                        vec_2f(t[0].midpoint(t[3]).x(), t[0].y()),
+                        vec_2f(t[1].midpoint(t[2]).x(), t[1].y()),
+                };
+                addTowers(g, t);
+                addWall(g, t[0], t[3]);
+                addWall(g, t[1], t[2]);
+                addWall(g, h[0], h[1]);
             }
         }
     }
