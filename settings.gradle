@@ -2,7 +2,7 @@ rootProject.name = "pacman-javafx"
 
 include "pacman-core"
 include "pacman-mapeditor"
-include "pacman-ui-3d"
+include "pacman-ui"
 include "pacman-app-arcade-pacman"
 include "pacman-app-arcade-mspacman"
 include "pacman-app-arcade-pacmanxxl"
