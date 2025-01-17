@@ -138,6 +138,7 @@ public class WorldRenderer3D {
             case OPEN_SQUARE_NE ->        render_OpenSquare_NE(og, obstacle);
             case OPEN_SQUARE_NW ->        render_OpenSquare_NW(og, obstacle);
             case S ->                     render_S(og, obstacle);
+            case S_SMALL ->               render_S_Small(og, obstacle);
             case SPACESHIP_DOWN ->        render_Spaceship_Down(og, obstacle);
             case SPACESHIP_UP ->          render_Spaceship_Up(og, obstacle);
             case SPACESHIP_LEFT ->        render_Spaceship_Left(og, obstacle);
@@ -510,57 +511,78 @@ public class WorldRenderer3D {
         }
     }
 
-    //TODO rework and simplify
     public void render_S(Group g, Obstacle obstacle) {
-        int[] uti = obstacle.uTurnIndices().toArray();
-        Vector2f[] utc = obstacle.uTurnCenters(); // count=2
-        addTowers(g, utc);
-        Vector2f tc0, tc1;
-        if (uti[0] == 0 && uti[1] == 7) {
-            // S-shape mirrored vertically
-            tc0 = obstacle.cornerCenter(12);
-            tc1 = obstacle.cornerCenter(5);
-            addTowers(g, tc0, tc1);
-            addWallAtCenter(g, utc[0].midpoint(tc0), utc[0].manhattanDist(tc0), TS);
-            addWallAtCenter(g, utc[1].midpoint(tc1), utc[1].manhattanDist(tc1), TS);
-            // vertical wall
-            addWallAtCenter(g, tc0.midpoint(tc1), TS, tc0.manhattanDist(tc1));
-        }
-        else if (uti[0] == 4 && uti[1] == 11) {
-            // normal S-shape orientation
-            tc0 = obstacle.cornerCenter(0);
-            tc1 = obstacle.cornerCenter(7);
-            addTowers(g, tc0, tc1);
-            addWallAtCenter(g, tc0.midpoint(utc[1]), tc0.manhattanDist(utc[1]), TS);
-            addWallAtCenter(g, utc[0].midpoint(tc1), utc[0].manhattanDist(tc1), TS);
-            // vertical wall
-            addWallAtCenter(g, tc0.midpoint(tc1), TS, tc0.manhattanDist(tc1));
-        }
-        else if (uti[0] == 6 && uti[1] == 13) {
-            if (utc[1].x() < utc[0].x()) {
-                // S-shape rotated by 90 degrees
-                tc0 = obstacle.cornerCenter(9);
-                tc1 = obstacle.cornerCenter(2);
-                addTowers(g, tc0, tc1);
-                // horizontal tc1 - tc0
-                addWallAtCenter(g, tc1.midpoint(tc0), tc1.manhattanDist(tc0), TS);
-                // vertical c1 - tc1 and tc0 - c0
-                addWallAtCenter(g, utc[1].midpoint(tc1), TS, utc[1].manhattanDist(tc1));
-                addWallAtCenter(g, tc0.midpoint(utc[0]), TS, tc0.manhattanDist(utc[0]));
-            } else {
-                // S-shape mirrored and rotated by 90 degrees
-                tc0 = obstacle.cornerCenter(4);
-                tc1 = obstacle.cornerCenter(11);
-                addTowers(g, tc0, tc1);
-                // horizontal tc1 - tc0
-                addWallAtCenter(g, tc1.midpoint(tc0), tc1.manhattanDist(tc0), TS);
-                // vertical c1 - tc1 and tc0 - c0
-                addWallAtCenter(g, utc[1].midpoint(tc1), TS, utc[1].manhattanDist(tc1));
-                addWallAtCenter(g, tc0.midpoint(utc[0]), TS, tc0.manhattanDist(utc[0]));
+        switch (obstacle.encoding()) {
+            case "dcfbdgbfcdbfeb" -> {
+                // normal orientation
+                Vector2f[] t = obstacle.cornerCenters(0, 4, 7, 11);
+                addTowers(g, t);
+                addWall(g, t[0], t[3]);
+                addWall(g, t[1], t[2]);
+                addWall(g, t[0], t[2]);
+            }
+            case "dgbecgbfebgceb" -> {
+                // mirrored horizontally
+                Vector2f[] t = obstacle.cornerCenters(0, 5, 7, 12);
+                addTowers(g, t);
+                addWall(g, t[0], t[3]);
+                addWall(g, t[1], t[2]);
+                addWall(g, t[3], t[1]);
+            }
+            case "dcgbecgfcebgce" -> {
+                // rot 90 counter-clockwise
+                Vector2f[] t = obstacle.cornerCenters(0, 2, 6, 9);
+                addTowers(g, t);
+                addWall(g, t[0], t[1]);
+                addWall(g, t[1], t[3]);
+                addWall(g, t[2], t[3]);
+            }
+            case "dcfbdcgfcdbfce" -> {
+                // rot 90 counter-clockwise mirrored horizontally
+                Vector2f[] t = obstacle.cornerCenters(0, 4, 6, 11);
+                addTowers(g, t);
+                addWall(g, t[0], t[3]);
+                addWall(g, t[1], t[2]);
+                addWall(g, t[1], t[3]);
+
             }
         }
-        else {
-            Logger.error("Invalid S-shape detected");
+    }
+
+    public void render_S_Small(Group g, Obstacle obstacle) {
+        switch (obstacle.encoding()) {
+            case "dcfdgbfcdfeb" -> {
+                // mini-S normal orientation
+                Vector2f[] t = obstacle.cornerCenters(0, 3, 6, 9);
+                addTowers(g, t);
+                addWall(g, t[0], t[3]);
+                addWall(g, t[1], t[2]);
+                addWall(g, t[0], t[2]);
+            }
+            case "dgecgbfegceb" -> {
+                // mini-S normal orientation mirrored horizontally
+                Vector2f[] t = obstacle.cornerCenters(0, 4, 6, 10);
+                addTowers(g, t);
+                addWall(g, t[0], t[3]);
+                addWall(g, t[1], t[2]);
+                addWall(g, t[3], t[1]);
+            }
+            case "dcgbegfcebge" -> {
+                // mini-S rot 90 counter-clockwise
+                Vector2f[] t = obstacle.cornerCenters(0, 2, 5, 8);
+                addTowers(g, t);
+                addWall(g, t[0], t[1]);
+                addWall(g, t[1], t[3]);
+                addWall(g, t[2], t[3]);
+            }
+            case "dfbdcgfdbfce" -> {
+                // mini-S rot 90 counter-clockwise mirrored horizontally
+                Vector2f[] t = obstacle.cornerCenters(0, 3, 5, 9);
+                addTowers(g, t);
+                addWall(g, t[0], t[3]);
+                addWall(g, t[1], t[2]);
+                addWall(g, t[1], t[3]);
+            }
         }
     }
 

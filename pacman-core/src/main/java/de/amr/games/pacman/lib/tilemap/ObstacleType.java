@@ -65,14 +65,19 @@ public enum ObstacleType {
     OPEN_SQUARE_SW("dcgfcdbecfbdgbfceb"),
 
     S(
-        "dcfdgbfcdfeb",
-        "dgecgbfegceb",
-        "dcgbegfcebge",
-        "dfbdcgfdbfce",
-        "dcfbdgbfcdbfeb",
-        "dgbecgbfebgceb",
-        "dcgbecgfcebgce",
-        "dcfbdcgfcdbfce"
+        "dcfbdgbfcdbfeb", // normal orientation
+        "dgbecgbfebgceb", // mirrored horizontally
+
+        "dcgbecgfcebgce", // rot 90 counter-clockwise
+        "dcfbdcgfcdbfce"  // rot 90 counter-clockwise mirrored horizontally
+    ),
+
+    S_SMALL(
+        "dcfdgbfcdfeb",   // mini-S normal orientation
+        "dgecgbfegceb",   // mini-S normal orientation mirrored horizontally
+
+        "dcgbegfcebge",  // mini-S rot 90 counter-clockwise
+        "dfbdcgfdbfce"   // mini-S rot 90 counter-clockwise mirrored horizontally
     ),
 
     SPACESHIP_UP("dcfbdcgfcdbecgfcebgce"),
