@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.maps.editor;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import de.amr.games.pacman.lib.tilemap.TileMap;
@@ -23,6 +22,7 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.Globals.vec_2i;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
@@ -32,8 +32,6 @@ import static de.amr.games.pacman.maps.editor.TileMapEditorViewModel.*;
  * @author Armin Reichert
  */
 public class EditController {
-
-    public enum EditMode {DRAW, ERASE}
 
     // For now, here:
     static final byte[][] GHOST_HOUSE_SHAPE = {
@@ -67,8 +65,6 @@ public class EditController {
         };
     }
 
-    final BooleanProperty editingEnabledPy = new SimpleBooleanProperty(false);
-
     final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>();
 
     final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>() {
@@ -90,8 +86,9 @@ public class EditController {
         @Override
         protected void invalidated() {
             switch (get()) {
-                case EditMode.DRAW -> viewModel.indicateEditMode();
-                case EditMode.ERASE -> viewModel.indicateEraseMode();
+                case INSPECT -> viewModel.indicateInspectMode();
+                case DRAW -> viewModel.indicateEditMode();
+                case ERASE -> viewModel.indicateEraseMode();
             }
         }
     };
@@ -110,8 +107,8 @@ public class EditController {
         this.worldMapPy.bind(viewModel.worldMapProperty());
         viewModel.gridSizeProperty().addListener((py,ov,nv) -> invalidateTerrainData());
         obstacleEditor = new ObstacleEditor(this, viewModel);
-        obstacleEditor.enabledPy.bind(editingEnabledPy);
-        setMode(EditMode.DRAW);
+        obstacleEditor.enabledPy.bind(modePy.map(mode -> mode != EditMode.INSPECT));
+        setMode(EditMode.INSPECT);
     }
 
     Vector2i editedContentMinTile() {
@@ -140,8 +137,8 @@ public class EditController {
         if (event.getButton() == MouseButton.PRIMARY) {
             viewModel.canvas().requestFocus();
             viewModel.contextMenu().hide();
-            if (event.getClickCount() == 2 && !editingEnabledPy.get()) {
-                editingEnabledPy.set(true);
+            if (event.getClickCount() == 2 && isMode(EditMode.INSPECT)) {
+                setMode(EditMode.DRAW);
             }
         }
     }
@@ -175,11 +172,11 @@ public class EditController {
     void onEditCanvasMouseMoved(MouseEvent event) {
         Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
         focussedTilePy.set(tile);
-        if (!editingEnabledPy.get()) {
+        if (isMode(EditMode.INSPECT)) {
             return;
         }
         WorldMap worldMap = worldMapPy.get();
-        if (modePy.get() == EditMode.ERASE) {
+        if (isMode(EditMode.ERASE)) {
             switch (viewModel.selectedPaletteID()) {
                 case PALETTE_ID_TERRAIN -> eraseTileValue(worldMap.terrain(), tile);
                 case PALETTE_ID_FOOD -> eraseTileValue(worldMap.food(), tile);
@@ -242,24 +239,20 @@ public class EditController {
     void onKeyTyped(KeyEvent event) {
         Logger.debug("Typed {}", event);
         String ch = event.getCharacter();
-        boolean editingEnabled = editingEnabledPy.get();
         switch (ch) {
+            case "i" -> {
+                setMode(EditMode.INSPECT);
+            }
             case "n" -> {
-                if (editingEnabled) setNormalDrawMode();
+                setMode(EditMode.DRAW);
+                symmetricEditModePy.set(false);
             }
             case "s" -> {
-                if (editingEnabled) {
-                    setSymmetricDrawMode();
-                }
+                setMode(EditMode.DRAW);
+                symmetricEditModePy.set(true);
             }
             case "x" -> {
-                if (editingEnabled) {
-                    if (modePy.get() == EditMode.ERASE) {
-                        modePy.set(EditMode.DRAW);
-                    } else {
-                        setEraseMode();
-                    }
-                }
+                setMode(isMode(EditMode.ERASE) ? EditMode.INSPECT : EditMode.ERASE);
             }
             case "+" -> {
                 if (viewModel.gridSizeProperty().get() < MAX_GRID_SIZE) {
@@ -275,39 +268,27 @@ public class EditController {
     }
 
     void onEditCanvasContextMenuRequested(ContextMenu contextMenu, ContextMenuEvent event) {
-        if (editingEnabledPy.get()) {
+        if (!isMode(EditMode.INSPECT)) {
             Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
             WorldMap worldMap = worldMapPy.get();
 
             var miAddCircle2x2 = new MenuItem("2x2 Circle");
             miAddCircle2x2.setOnAction(actionEvent -> addShapeMirrored(worldMap.terrain(), CIRCLE_2x2, tile));
-            miAddCircle2x2.disableProperty().bind(editingEnabledPy.not());
 
             var miAddHouse = new MenuItem(tt("menu.edit.add_house"));
             miAddHouse.setOnAction(actionEvent -> addHouse(worldMap.terrain(), tile));
-            miAddHouse.disableProperty().bind(editingEnabledPy.not());
 
             contextMenu.getItems().setAll(miAddCircle2x2, miAddHouse);
             contextMenu.show(viewModel.canvas(), event.getScreenX(), event.getScreenY());
         }
     }
 
-    void setNormalDrawMode() {
-        setMode(EditMode.DRAW);
-        symmetricEditModePy.set(false);
-    }
+    EditMode mode() { return modePy.get(); }
 
-    void setSymmetricDrawMode() {
-        setMode(EditMode.DRAW);
-        symmetricEditModePy.set(true);
-    }
-
-    void setEraseMode() {
-        setMode(EditMode.ERASE);
-    }
+    boolean isMode(EditMode mode) { return mode() == mode; }
 
     void setMode(EditMode mode) {
-        modePy.set(Globals.assertNotNull(mode));
+        modePy.set(assertNotNull(mode));
     }
 
     boolean hasUnsavedChanges() {
@@ -363,7 +344,7 @@ public class EditController {
     }
 
     void editAtMousePosition(MouseEvent event) {
-        if (!editingEnabledPy.get()) {
+        if (isMode(EditMode.INSPECT)) {
             return;
         }
         WorldMap worldMap = worldMapPy.get();
@@ -449,13 +430,11 @@ public class EditController {
      * into account.
      */
     public void setTileValue(TileMap tileMap, Vector2i tile, byte value) {
-        Globals.assertNotNull(tileMap);
-        Globals.assertNotNull(tile);
-        if (editingEnabledPy.get()) {
-            tileMap.set(tile, value);
-            if (symmetricEditModePy.get()) {
-                tileMap.set(tile.y(), tileMap.numCols() - 1 - tile.x(), mirroredTileContent(tileMap.get(tile)));
-            }
+        assertNotNull(tileMap);
+        assertNotNull(tile);
+        tileMap.set(tile, value);
+        if (symmetricEditModePy.get()) {
+            tileMap.set(tile.y(), tileMap.numCols() - 1 - tile.x(), mirroredTileContent(tileMap.get(tile)));
         }
         markTileMapEdited(tileMap);
     }

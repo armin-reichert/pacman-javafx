@@ -7,8 +7,8 @@ package de.amr.games.pacman.maps.editor;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.TileEncoding;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainRenderer;
@@ -230,6 +230,13 @@ public class TileMapEditor implements TileMapEditorViewModel {
     }
 
     @Override
+    public void indicateInspectMode() {
+        if (editCanvas != null) {
+            editCanvas.setCursor(Cursor.HAND); // TODO use other cursor
+        }
+    }
+
+    @Override
     public void indicateEditMode() {
         if (editCanvas != null) {
             editCanvas.setCursor(Cursor.DEFAULT);
@@ -260,7 +267,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     public void stop() {
         clock.stop();
-        editController.editingEnabledPy.set(false);
+        editController.setMode(EditMode.INSPECT);
         //editController.clearUnsavedChanges();
     }
 
@@ -398,11 +405,11 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
     private void createPropertyEditors() {
         terrainMapPropertiesEditor = new PropertyEditorPane(editController);
-        terrainMapPropertiesEditor.enabledPy.bind(editController.editingEnabledPy);
+        terrainMapPropertiesEditor.enabledPy.bind(editController.modePy.map(mode -> mode != EditMode.INSPECT));
         terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
         foodMapPropertiesEditor = new PropertyEditorPane(editController);
-        foodMapPropertiesEditor.enabledPy.bind(editController.editingEnabledPy);
+        foodMapPropertiesEditor.enabledPy.bind(editController.modePy.map(mode -> mode != EditMode.INSPECT));
         foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
         var terrainPropertiesPane = new TitledPane();
@@ -442,17 +449,12 @@ public class TileMapEditor implements TileMapEditorViewModel {
         editModeIndicator.setFont(FONT_STATUS_LINE);
         editModeIndicator.setTextFill(Color.RED);
         editModeIndicator.textProperty().bind(Bindings.createStringBinding(
-            () -> {
-                if (!editController.editingEnabledPy.get()) {
-                    return "Editing disabled";
-                }
-                return switch (editController.modePy.get()) {
+            () -> switch (editController.modePy.get()) {
+                    case INSPECT -> "Inspection Mode";
                     case DRAW -> editController.symmetricEditModePy.get() ?  "Symmetric Mode" : "Normal Mode";
                     case ERASE -> "Erase Mode";
-                };
-
             },
-            editController.modePy, editController.editingEnabledPy, editController.symmetricEditModePy
+            editController.modePy, editController.symmetricEditModePy
     ));
     }
 
@@ -647,7 +649,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
             miClearTerrain,
             miClearFood);
 
-        menuEdit.disableProperty().bind(editController.editingEnabledPy.not());
+        menuEdit.disableProperty().bind(editController.modePy.map(mode -> mode == EditMode.INSPECT));
     }
 
     private void createLoadMapMenu() {
@@ -967,7 +969,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
             foodMapRenderer.drawFood(g, worldMap().food());
         }
         drawActorSprites(g);
-        if (!editController.editingEnabledPy.get()) {
+        if (editController.modePy.get() == EditMode.INSPECT) {
             drawEditingHint(g);
         }
         Vector2i focussedTile = editController.focussedTilePy.get();

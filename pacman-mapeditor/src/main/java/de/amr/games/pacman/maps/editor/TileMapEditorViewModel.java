@@ -59,8 +59,8 @@ public interface TileMapEditorViewModel {
 
     void showMessage(String message, long seconds, MessageType type);
 
+    void indicateInspectMode();
     void indicateEraseMode();
-
     void indicateEditMode();
 
     Palette selectedPalette();
@@ -76,4 +76,5 @@ public interface TileMapEditorViewModel {
     Optional<File> readNextMapFileInDirectory();
 
     Optional<File> readPrevMapFileInDirectory();
+
 }
