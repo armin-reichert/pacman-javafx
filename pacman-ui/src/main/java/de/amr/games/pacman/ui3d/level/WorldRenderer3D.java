@@ -124,6 +124,7 @@ public class WorldRenderer3D {
             case GAMMA_SPIKED ->          render_Gamma_Spiked(og, obstacle);
             case GAMMA_SPIKED_MIRRORED -> render_Gamma_Spiked_Mirrored(og, obstacle);
             case H ->                     render_H(og, obstacle);
+            case I ->                     render_I(og, obstacle);
             case L ->                     render_L(og, obstacle);
             case L_SPIKED ->              render_L_Spiked(og, obstacle);
             case L_SPIKED_MIRRORED ->     render_L_Spiked_Mirrored(og, obstacle);
@@ -250,13 +251,6 @@ public class WorldRenderer3D {
 
     public void render_O(Group g, Obstacle obstacle) {
         switch (obstacle.encoding()) {
-            // oval with one small side and 2 towers
-            case "dcgfce", "dgbfeb" -> {
-                Vector2f[] c = obstacle.uTurnCenters();
-                addTowers(g, c);
-                addWall(g, c[0], c[1]);
-            }
-
             // larger oval with 4 "towers"
             case "dcgbfceb" -> {
                 Vector2f[] t = obstacle.cornerCenters(0, 2, 4, 6);
@@ -272,6 +266,17 @@ public class WorldRenderer3D {
             }
 
             default -> Logger.error("Invalid O-shape detected: {}", obstacle);
+        }
+    }
+
+    // oval with one small side and 2 towers
+    public void render_I(Group g, Obstacle obstacle) {
+        switch (obstacle.encoding()) {
+            case "dcgfce", "dgbfeb" -> {
+                Vector2f[] c = obstacle.uTurnCenters();
+                addTowers(g, c);
+                addWall(g, c[0], c[1]);
+            }
         }
     }
 

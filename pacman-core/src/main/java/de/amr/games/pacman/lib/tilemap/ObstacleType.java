@@ -36,6 +36,8 @@ public enum ObstacleType {
         "dcgfcdbecgfcedcfbgce"
     ),
 
+    I("dcgfce", "dgbfeb"),
+
     L(
         "dgegfceb", "dcgfdfeb", "dcgbfege", "dfdgbfce", // 8 segments
         "dcgbfegce", "dcfdgbfce", "dcgfcdfeb", "dgecgfceb", // 9 segments
@@ -55,7 +57,7 @@ public enum ObstacleType {
 
     LLL_MIRRORED("dcfbdcfbdcfbdgbfcdbfcdbfce"),
 
-    O("dcgfce", "dgbfeb", "dcgbfceb"),
+    O("dcgbfceb"),
 
     OPEN_SQUARE_NW("dgbecfbgcedcgbfceb"),
     OPEN_SQUARE_NE("dcgbfcedcfbgcdbfeb"),
