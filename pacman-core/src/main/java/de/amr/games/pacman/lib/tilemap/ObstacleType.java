@@ -8,6 +8,8 @@ import java.util.stream.Stream;
  * The encoding depends on the byte values in interface {@link TileEncoding}!
  */
 public enum ObstacleType {
+    COIN("dgfe"),
+
     CROSS(
         "dfdgegfdfege",
         "dcfdgecgfcdfegce",
@@ -53,7 +55,7 @@ public enum ObstacleType {
 
     LLL_MIRRORED("dcfbdcfbdcfbdgbfcdbfcdbfce"),
 
-    O("dgfe", "dcgfce", "dgbfeb", "dcgbfceb"),
+    O("dcgfce", "dgbfeb", "dcgbfceb"),
 
     OPEN_SQUARE_NW("dgbecfbgcedcgbfceb"),
     OPEN_SQUARE_NE("dcgbfcedcfbgcdbfeb"),

@@ -118,6 +118,7 @@ public class WorldRenderer3D {
         // each obstacle has its own group
         Group og = new Group();
         switch (type) {
+            case COIN ->                  render_Coin(og, obstacle);
             case CROSS ->                 render_Cross(og, obstacle);
             case F ->                     render_F(og, obstacle);
             case GAMMA_SPIKED ->          render_Gamma_Spiked(og, obstacle);
@@ -249,9 +250,6 @@ public class WorldRenderer3D {
 
     public void render_O(Group g, Obstacle obstacle) {
         switch (obstacle.encoding()) {
-            // 1-tile circle
-            case "dgfe" -> addTowers(g, obstacle.cornerCenter(0));
-
             // oval with one small side and 2 towers
             case "dcgfce", "dgbfeb" -> {
                 Vector2f[] c = obstacle.uTurnCenters();
@@ -275,6 +273,10 @@ public class WorldRenderer3D {
 
             default -> Logger.error("Invalid O-shape detected: {}", obstacle);
         }
+    }
+
+    public void render_Coin(Group g, Obstacle obstacle) {
+        addTowers(g, obstacle.cornerCenter(0));
     }
 
     public void render_L(Group g, Obstacle obstacle) {
