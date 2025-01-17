@@ -5,10 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.maps.editor;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.TileEncoding;
-import de.amr.games.pacman.lib.tilemap.TileMap;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.lib.tilemap.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -21,9 +20,9 @@ import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static de.amr.games.pacman.lib.Globals.assertNotNull;
-import static de.amr.games.pacman.lib.Globals.vec_2i;
+import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.maps.editor.TileMapEditorViewModel.*;
@@ -203,6 +202,27 @@ public class EditController {
         }
     }
 
+    void identifyObstacleAtTilePosition(Vector2i tile) {
+        Obstacle obstacleAtTile = viewModel.worldMap().obstacles().stream()
+            .filter(obstacle -> Globals.tileAt(obstacle.startPoint().minus(HTS, 0)).equals(tile))
+            .findFirst().orElse(null);
+        if (obstacleAtTile != null) {
+            String encoding = obstacleAtTile.encoding();
+            Clipboard clipboard = Clipboard.getSystemClipboard();
+            ClipboardContent content = new ClipboardContent();
+            content.putString(encoding);
+            clipboard.setContent(content);
+            Optional<ObstacleType> type = ObstacleType.identify(encoding);
+            if (type.isPresent()) {
+                showInfoMessage("'%s' identified (copied to clipboard)".formatted(type.get()), 5);
+            } else {
+                showInfoMessage("Obstacle identified (copied to clipboard)", 5);
+            }
+        } else {
+            showInfoMessage("", 1);
+        }
+    }
+
     void onKeyPressed(KeyEvent event) {
         if (event.isAltDown()) {
             if (event.getCode() == KeyCode.LEFT) {
@@ -344,11 +364,12 @@ public class EditController {
     }
 
     void editAtMousePosition(MouseEvent event) {
+        Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
         if (isMode(EditMode.INSPECT)) {
+            identifyObstacleAtTilePosition(tile);
             return;
         }
         WorldMap worldMap = worldMapPy.get();
-        Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
         boolean erase = event.isControlDown();
         switch (viewModel.selectedPaletteID()) {
             case PALETTE_ID_TERRAIN -> editMapTileAtMousePosition(worldMap.terrain(), tile, erase);

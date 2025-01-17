@@ -1,5 +1,6 @@
 package de.amr.games.pacman.lib.tilemap;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -99,6 +100,10 @@ public enum ObstacleType {
     JUNIOR_4_RIGHT_OF_HOUSE("dcfbgcedcfbdcgfcdbfce"),
 
     ANY;
+
+    public static Optional<ObstacleType> identify(String encoding) {
+        return Stream.of(values()).filter(type -> type.matches(encoding)).findFirst();
+    }
 
     ObstacleType(String... encodingStrings) {
         encodings = Set.of(encodingStrings);
