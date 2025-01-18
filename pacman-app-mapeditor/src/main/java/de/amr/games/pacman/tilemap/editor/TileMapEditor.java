@@ -27,6 +27,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -122,6 +124,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
     private ScrollPane spEditCanvas;
     private Canvas previewCanvas;
     private ScrollPane spPreviewCanvas;
+    private Preview3D preview3D;
     private Text sourceView;
     private ScrollPane spSourceView;
     private TabPane tabPaneMapViews;
@@ -287,6 +290,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
         createMenuBarAndMenus();
         createEditCanvas();
         createPreviewCanvas();
+        createPreview3D();
         createMapSourceView();
         createPalettes();
         createPropertyEditors();
@@ -300,6 +304,20 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
         contentPane.setOnKeyTyped(editController::onKeyTyped);
         contentPane.setOnKeyPressed(editController::onKeyPressed);
+
+        contentPane.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+            switch (e.getCode()) {
+                case KeyCode.P -> {
+                    if (preview3D.isVisible()) {
+                        preview3D.hide();
+                    } else {
+                        updatePreview3D();
+                        preview3D.show();
+                    }
+                }
+            }
+        });
+
         propertyEditorsVisiblePy.set(false);
     }
 
@@ -352,6 +370,20 @@ public class TileMapEditor implements TileMapEditorViewModel {
         spPreviewCanvas.visibleProperty().bind(previewVisiblePy);
         previewCanvas.widthProperty().bind(editCanvas.widthProperty());
         previewCanvas.heightProperty().bind(editCanvas.heightProperty());
+    }
+
+    private void createPreview3D() {
+        preview3D = new Preview3D();
+        worldMapPy.addListener((py,ov,nv) -> updatePreview3D());
+    }
+
+    private void updatePreview3D() {
+        TileMap terrainMap = worldMap().terrain();
+        Color wallBaseColor = getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_STROKE,
+                parseColor(DEFAULT_COLOR_WALL_STROKE));
+        Color wallTopColor = getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL,
+                parseColor(DEFAULT_COLOR_WALL_FILL));
+        preview3D.updateContent(worldMapPy.get(), wallBaseColor, wallTopColor);
     }
 
     private void createMapSourceView() {
@@ -541,6 +573,9 @@ public class TileMapEditor implements TileMapEditorViewModel {
                 drawEditCanvas();
                 drawPreviewCanvas();
                 drawSelectedPalette();
+                if (preview3D.isVisible()) {
+                    updatePreview3D(); //TODO do this only if terrain is invalid
+                }
             } catch (Exception x) {
                 Logger.error(x);
                 drawBlueScreen(x); // TODO this is crap

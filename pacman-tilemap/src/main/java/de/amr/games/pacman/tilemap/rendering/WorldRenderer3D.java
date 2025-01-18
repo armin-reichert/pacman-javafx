@@ -57,12 +57,12 @@ public class WorldRenderer3D {
         return false;
     }
 
-    private static  Color opaqueColor(Color color, double opacity) {
+    public static Color opaqueColor(Color color, double opacity) {
         Globals.assertNotNull(color);
         return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
     }
 
-    private static PhongMaterial coloredMaterial(Color color) {
+    public static PhongMaterial coloredMaterial(Color color) {
         Globals.assertNotNull(color);
         var material = new PhongMaterial(color);
         material.setSpecularColor(color.brighter());
@@ -75,7 +75,7 @@ public class WorldRenderer3D {
     protected PhongMaterial wallTopMaterial = new PhongMaterial();
     protected PhongMaterial cornerMaterial = new PhongMaterial();
 
-    protected DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(1.0);
+    protected DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(3.0);
     protected float wallTopHeight;
     protected float wallThickness = 1;
     protected boolean oShapeFilled = true;
