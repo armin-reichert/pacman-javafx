@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.maps.editor.app;
+package de.amr.games.pacman.tilemap.editor.app;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.editor.TileMapEditor;
@@ -29,7 +29,7 @@ import static java.util.stream.IntStream.rangeClosed;
  */
 public class TileMapEditorApp extends Application  {
 
-    static final String SAMPLE_MAPS_PATH = "/de/amr/games/pacman/maps/samples/";
+    static final String SAMPLE_MAPS_PATH = "/de/amr/games/pacman/tilemap/editor/maps/";
 
     private WorldMap mapPacManGame;
     private List<WorldMap> mapsMsPacManGame;

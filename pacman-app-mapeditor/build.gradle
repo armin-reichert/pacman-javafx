@@ -12,8 +12,8 @@ dependencies {
 }
 
 application {
-    mainModule = "de.amr.games.pacman.maps.editor.app"
-    mainClass  = "de.amr.games.pacman.maps.editor.app.Main"
+    mainModule = "de.amr.games.pacman.tilemap.editor.app"
+    mainClass  = "de.amr.games.pacman.tilemap.editor.app.Main"
 }
 
 java {

@@ -8,6 +8,5 @@ open module de.amr.games.pacman.tilemap {
     requires org.tinylog.api;
     requires de.amr.games.pacman;
 
-    exports de.amr.games.pacman.tilemap.editor;
     exports de.amr.games.pacman.tilemap.rendering;
 }

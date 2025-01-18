@@ -1,4 +1,6 @@
-package de.amr.games.pacman.maps.editor.app;
+package de.amr.games.pacman.tilemap.editor.app;
+
+import org.tinylog.Logger;
 
 import static javafx.application.Application.launch;
 
@@ -7,6 +9,7 @@ public class Main {
         try {
             launch(TileMapEditorApp.class, args);
         } catch (Exception x) {
+            Logger.trace(x);
             x.printStackTrace(System.err);
         }
     }

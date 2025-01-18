@@ -9,6 +9,7 @@ dependencies {
     implementation project(":pacman-core")
     implementation project(":pacman-ui")
     implementation project(":pacman-tilemap")
+    implementation project(":pacman-tilemap")
     implementation project(":pacman-app-arcade-pacman")
     implementation project(":pacman-app-arcade-pacmanxxl")
     implementation project(":pacman-app-arcade-mspacman")
