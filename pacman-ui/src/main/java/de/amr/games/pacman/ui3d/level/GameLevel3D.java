@@ -104,6 +104,12 @@ public class GameLevel3D extends Group {
         addFood3D(world, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 
         worldGroup.getChildren().addAll(floor3D, maze3D);
+
+        // for wireframe mode view
+        worldGroup.lookupAll("*").stream().filter(Shape3D.class::isInstance)
+            .forEach(shape3D -> ((Shape3D) shape3D).drawModeProperty().bind(PY_3D_DRAW_MODE));
+
+
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
         getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
         getChildren().addAll(ghost3DAppearances);
@@ -114,6 +120,7 @@ public class GameLevel3D extends Group {
         getChildren().add(ambientLight);
 
         setMouseTransparent(true); //TODO does this increase performance?
+
     }
 
     public void update(GameContext context) {

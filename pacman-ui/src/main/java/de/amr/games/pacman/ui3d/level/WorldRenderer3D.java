@@ -28,7 +28,6 @@ import java.util.Arrays;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.lib.Ufx.coloredMaterial;
 import static de.amr.games.pacman.ui2d.lib.Ufx.opaqueColor;
-import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_DRAW_MODE;
 
 /**
  * A 3D printer for creating all artifacts in a 3D world.
@@ -160,13 +159,11 @@ public class WorldRenderer3D {
         base.depthProperty().bind(wallBaseHeightPy);
         base.setMaterial(wallBaseMaterial);
         base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
-        base.drawModeProperty().bind(PY_3D_DRAW_MODE);
         addTags(base, TAG_WALL_BASE);
 
         var top = new Box(sizeX, sizeY, wallTopHeight);
         top.setMaterial(wallTopMaterial);
         top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
-        top.drawModeProperty().bind(PY_3D_DRAW_MODE);
         addTags(top, TAG_WALL_TOP);
 
         Group wall = new Group(base, top);
@@ -209,7 +206,6 @@ public class WorldRenderer3D {
         base.setRotate(90);
         base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
         base.heightProperty().bind(wallBaseHeightPy);
-        base.drawModeProperty().bind(PY_3D_DRAW_MODE);
         addTags(base, TAG_WALL_BASE, TAG_CORNER);
 
         Cylinder top = new Cylinder(radius, wallTopHeight, CYLINDER_DIVISIONS);
@@ -217,7 +213,6 @@ public class WorldRenderer3D {
         top.setRotationAxis(Rotate.X_AXIS);
         top.setRotate(90);
         top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
-        top.drawModeProperty().bind(PY_3D_DRAW_MODE);
         addTags(top, TAG_WALL_TOP, TAG_CORNER);
 
         Group wall = new Group(base, top);
@@ -794,14 +789,12 @@ public class WorldRenderer3D {
         base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
         base.setRotationAxis(Rotate.X_AXIS);
         base.setRotate(90);
-        base.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         Cylinder top = new Cylinder(radius, wallTopHeight, CYLINDER_DIVISIONS);
         top.setMaterial(wallTopMaterial);
         top.setRotationAxis(Rotate.X_AXIS);
         top.setRotate(90);
         top.translateZProperty().bind(wallBaseHeightPy.add(0.5* wallTopHeight).multiply(-1));
-        top.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         Group wall = new Group(base, top);
         wall.setTranslateX(center.x());
@@ -830,7 +823,6 @@ public class WorldRenderer3D {
         Vector2i leftDoorTile = world.houseLeftDoorTile(), rightDoorTile = world.houseRightDoorTile();
 
         var door3D = new Door3D(leftDoorTile, rightDoorTile, doorsColor, wallBaseHeightPy.get());
-        door3D.drawModePy.bind(PY_3D_DRAW_MODE);
 
         parent.getChildren().addAll(
             createWallBetweenTiles(vec_2i(xMin, yMin), vec_2i(leftDoorTile.x() - 1, yMin)),
