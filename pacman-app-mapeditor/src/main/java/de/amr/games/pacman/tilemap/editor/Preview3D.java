@@ -1,15 +1,20 @@
 package de.amr.games.pacman.tilemap.editor;
 
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
+import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.rendering.WorldRenderer3D;
+import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
+import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 
 public class Preview3D {
@@ -40,7 +45,7 @@ public class Preview3D {
         return sphere;
     }
 
-    public void updateContent(WorldMap worldMap, Color wallBaseColor, Color wallTopColor) {
+    public void updateContent(WorldMap worldMap, Color wallBaseColor, Color wallTopColor, Color foodColor) {
         root.getChildren().clear();
 
         AmbientLight ambientLight = new AmbientLight(Color.WHITE);
@@ -69,11 +74,30 @@ public class Preview3D {
             r3D.renderObstacle3D(maze, obstacle);
         }
 
+        var foodMaterial = WorldRenderer3D.coloredMaterial(foodColor);
+        worldMap.food().tiles().filter(tile -> hasFood(worldMap, tile)).forEach(tile -> {
+            Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
+            var pellet = new Sphere(hasEnergizer(worldMap, tile) ? 4 : 1);
+            pellet.setMaterial(foodMaterial);
+            pellet.setTranslateX(position.getX());
+            pellet.setTranslateY(position.getY());
+            pellet.setTranslateZ(-4);
+            maze.getChildren().add(pellet);
+        });
+
         camera.setRotationAxis(Rotate.X_AXIS);
         camera.setRotate(60);
         camera.translateXProperty().bind(stage.widthProperty().subtract(worldWidth).multiply(-0.5));
         camera.translateYProperty().bind(stage.heightProperty().multiply(-0.5));
         camera.setTranslateZ(50);
+    }
+
+    private boolean hasFood(WorldMap worldMap, Vector2i tile) {
+        return worldMap.food().get(tile) != TileEncoding.EMPTY;
+    }
+
+    private boolean hasEnergizer(WorldMap worldMap, Vector2i tile) {
+        return worldMap.food().get(tile) == TileEncoding.ENERGIZER;
     }
 
     public boolean isVisible() {

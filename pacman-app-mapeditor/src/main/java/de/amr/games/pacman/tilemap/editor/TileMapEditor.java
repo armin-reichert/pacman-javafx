@@ -272,6 +272,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
         clock.stop();
         editController.setMode(EditMode.INSPECT);
         //editController.clearUnsavedChanges();
+        preview3D.hide();
     }
 
     @Override
@@ -307,7 +308,7 @@ public class TileMapEditor implements TileMapEditorViewModel {
 
         contentPane.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
-                case KeyCode.P -> {
+                case KeyCode.DIGIT3 -> {
                     if (preview3D.isVisible()) {
                         preview3D.hide();
                     } else {
@@ -383,7 +384,8 @@ public class TileMapEditor implements TileMapEditorViewModel {
                 parseColor(DEFAULT_COLOR_WALL_STROKE));
         Color wallTopColor = getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL,
                 parseColor(DEFAULT_COLOR_WALL_FILL));
-        preview3D.updateContent(worldMapPy.get(), wallBaseColor, wallTopColor);
+        Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, parseColor(DEFAULT_COLOR_FOOD));
+        preview3D.updateContent(worldMapPy.get(), wallBaseColor, wallTopColor, foodColor);
     }
 
     private void createMapSourceView() {

@@ -78,7 +78,10 @@ public class TileMapEditorApp extends Application  {
         rangeClosed(1, 8).forEach(num -> editor.addLoadMapMenuItem("Pac-Man XXL " + num, mapsPacManXXLGame.get(num - 1)));
 
         stage.titleProperty().bind(editor.titleProperty());
-        stage.setOnCloseRequest(e -> editor.showSaveConfirmationDialog(editor::showSaveDialog, stage::close));
+        stage.setOnCloseRequest(e -> editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> {
+            editor.stop();
+            stage.close();
+        }));
         stage.show();
 
         editor.loadMap(mapPacManGame);
