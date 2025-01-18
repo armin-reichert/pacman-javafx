@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
@@ -26,8 +27,6 @@ import org.tinylog.Logger;
 import java.util.Arrays;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.lib.Ufx.coloredMaterial;
-import static de.amr.games.pacman.ui2d.lib.Ufx.opaqueColor;
 
 /**
  * A 3D printer for creating all artifacts in a 3D world.
@@ -59,6 +58,18 @@ public class WorldRenderer3D {
             return (value & tag) != 0;
         }
         return false;
+    }
+
+    private static  Color opaqueColor(Color color, double opacity) {
+        Globals.assertNotNull(color);
+        return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+    }
+
+    private static PhongMaterial coloredMaterial(Color color) {
+        Globals.assertNotNull(color);
+        var material = new PhongMaterial(color);
+        material.setSpecularColor(color.brighter());
+        return material;
     }
 
     protected static final int CYLINDER_DIVISIONS = 24;
