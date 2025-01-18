@@ -4,7 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
+import de.amr.games.pacman.maps.rendering.WorldRenderer3D;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
@@ -21,6 +23,7 @@ import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -34,13 +37,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.tileAt;
-import static de.amr.games.pacman.ui2d.lib.Ufx.opaqueColor;
-import static de.amr.games.pacman.ui2d.lib.Ufx.pauseSec;
+import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.maps.rendering.WorldRenderer3D.TAG_WALL_BASE;
+import static de.amr.games.pacman.maps.rendering.WorldRenderer3D.isTagged;
+import static de.amr.games.pacman.ui2d.lib.Ufx.*;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
-import static de.amr.games.pacman.ui3d.level.WorldRenderer3D.TAG_WALL_BASE;
-import static de.amr.games.pacman.ui3d.level.WorldRenderer3D.isTagged;
 
 public class Maze3D extends Group {
 
@@ -119,8 +120,8 @@ public class Maze3D extends Group {
 
         // House
         houseBaseHeightPy.set(HOUSE_BASE_HEIGHT);
-        door3D = r3D.addGhostHouse(
-                this, world,
+        door3D = addGhostHouse(
+                this, world, r3D,
                 coloring.fill(), coloring.stroke(), coloring.door(),
                 HOUSE_OPACITY,
                 houseBaseHeightPy, HOUSE_WALL_TOP_HEIGHT, HOUSE_WALL_THICKNESS,
@@ -136,6 +137,53 @@ public class Maze3D extends Group {
 
         PY_3D_WALL_HEIGHT.addListener((py, ov, nv) -> obstacleBaseHeightPy.set(nv.doubleValue()));
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+    }
+
+    private Door3D addGhostHouse(
+        Group parent,
+        GameWorld world,
+        WorldRenderer3D r3D,
+        Color houseBaseColor, Color houseTopColor, Color doorsColor, float wallOpacity,
+        DoubleProperty wallBaseHeightPy, float wallTopHeight, float wallThickness,
+        BooleanProperty houseLightOnPy)
+    {
+        Vector2i houseSize = world.houseSize();
+        r3D.setWallBaseHeightProperty(wallBaseHeightPy);
+        r3D.setWallTopHeight(wallTopHeight);
+        r3D.setWallThickness(wallThickness);
+        r3D.setWallBaseMaterial(coloredMaterial(opaqueColor(houseBaseColor, wallOpacity)));
+        r3D.setWallTopMaterial(coloredMaterial(houseTopColor));
+
+        int tilesX = houseSize.x(), tilesY = houseSize.y();
+        int xMin = world.houseTopLeftTile().x(), xMax = xMin + tilesX - 1;
+        int yMin = world.houseTopLeftTile().y(), yMax = yMin + tilesY - 1;
+        Vector2i leftDoorTile = world.houseLeftDoorTile(), rightDoorTile = world.houseRightDoorTile();
+
+        var door3D = new Door3D(leftDoorTile, rightDoorTile, doorsColor, wallBaseHeightPy.get());
+
+        parent.getChildren().addAll(
+            r3D.createWallBetweenTiles(vec_2i(xMin, yMin), vec_2i(leftDoorTile.x() - 1, yMin)),
+            r3D.createWallBetweenTiles(vec_2i(rightDoorTile.x() + 1, yMin), vec_2i(xMax, yMin)),
+            r3D.createWallBetweenTiles(vec_2i(xMin, yMin), vec_2i(xMin, yMax)),
+            r3D.createWallBetweenTiles(vec_2i(xMax, yMin), vec_2i(xMax, yMax)),
+            r3D.createWallBetweenTiles(vec_2i(xMin, yMax), vec_2i(xMax, yMax))
+        );
+
+        // pixel coordinates
+        float centerX = xMin * TS + tilesX * HTS;
+        float centerY = yMin * TS + tilesY * HTS;
+
+        var light = new PointLight();
+        light.lightOnProperty().bind(houseLightOnPy);
+        light.setColor(Color.GHOSTWHITE);
+        light.setMaxRange(3 * TS);
+        light.setTranslateX(centerX);
+        light.setTranslateY(centerY - 6);
+        light.translateZProperty().bind(wallBaseHeightPy.multiply(-1));
+
+        parent.getChildren().add(light);
+
+        return door3D;
     }
 
     public void playMaterialAnimation() {

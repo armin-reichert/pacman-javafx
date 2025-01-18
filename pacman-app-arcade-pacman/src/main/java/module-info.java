@@ -9,6 +9,7 @@ open module de.amr.games.pacman.arcade.pacman {
     requires javafx.graphics;
     requires javafx.media;
     requires de.amr.games.pacman;
+    requires de.amr.games.pacman.mapeditor;
     requires de.amr.games.pacman.ui3d;
 
     exports de.amr.games.pacman.arcade.pacman;
