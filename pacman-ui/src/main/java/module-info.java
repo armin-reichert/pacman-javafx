@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-open module de.amr.games.pacman.ui3d {
+open module de.amr.games.pacman.ui {
     // module is open to allow access to non-class resources
 
     requires javafx.graphics;
@@ -10,7 +10,7 @@ open module de.amr.games.pacman.ui3d {
     requires javafx.media;
     requires org.tinylog.api;
     requires de.amr.games.pacman;
-    requires de.amr.games.pacman.mapeditor;
+    requires de.amr.games.pacman.tilemap;
 
     exports de.amr.games.pacman.ui2d;
     exports de.amr.games.pacman.ui2d.action;

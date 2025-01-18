@@ -6,7 +6,7 @@ package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
-import de.amr.games.pacman.maps.rendering.WorldRenderer3D;
+import de.amr.games.pacman.tilemap.rendering.WorldRenderer3D;
 import javafx.scene.Group;
 
 import static de.amr.games.pacman.lib.Globals.TS;

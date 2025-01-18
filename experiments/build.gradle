@@ -9,7 +9,7 @@ repositories {
 
 dependencies {
     implementation project(":pacman-core")
-    implementation project(":pacman-mapeditor")
+    implementation project(":pacman-tilemap")
     implementation project(":pacman-ui")
     implementation libs.bundles.tinylog
 }

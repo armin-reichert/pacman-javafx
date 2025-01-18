@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
-import de.amr.games.pacman.maps.rendering.WorldRenderer3D;
+import de.amr.games.pacman.tilemap.rendering.WorldRenderer3D;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
@@ -38,8 +38,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.maps.rendering.WorldRenderer3D.TAG_WALL_BASE;
-import static de.amr.games.pacman.maps.rendering.WorldRenderer3D.isTagged;
+import static de.amr.games.pacman.tilemap.rendering.WorldRenderer3D.TAG_WALL_BASE;
+import static de.amr.games.pacman.tilemap.rendering.WorldRenderer3D.isTagged;
 import static de.amr.games.pacman.ui2d.lib.Ufx.*;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
 

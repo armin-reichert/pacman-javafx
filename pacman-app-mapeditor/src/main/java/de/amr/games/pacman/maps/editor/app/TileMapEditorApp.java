@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.maps.editor.app;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.maps.editor.TileMapEditor;
+import de.amr.games.pacman.tilemap.editor.TileMapEditor;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
@@ -21,7 +21,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.maps.editor.TileMapEditorViewModel.tt;
+import static de.amr.games.pacman.tilemap.editor.TileMapEditorViewModel.tt;
 import static java.util.stream.IntStream.rangeClosed;
 
 /**

@@ -1,13 +1,13 @@
 /**
  * Module is open to give access to map files under resources folder.
  */
-open module de.amr.games.pacman.maps.editor.app {
+open module de.amr.games.pacman.tilemap {
 
     requires javafx.graphics;
     requires javafx.controls;
     requires org.tinylog.api;
     requires de.amr.games.pacman;
-    requires de.amr.games.pacman.tilemap;
 
-    exports de.amr.games.pacman.maps.editor.app;
+    exports de.amr.games.pacman.tilemap.editor;
+    exports de.amr.games.pacman.tilemap.rendering;
 }

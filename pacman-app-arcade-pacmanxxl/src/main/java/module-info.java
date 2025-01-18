@@ -6,9 +6,9 @@ open module de.amr.games.pacman.arcade.pacman_xxl {
     requires javafx.media;
 
     requires de.amr.games.pacman;
-    requires de.amr.games.pacman.mapeditor;
+    requires de.amr.games.pacman.tilemap;
     requires de.amr.games.pacman.arcade.pacman;
-    requires de.amr.games.pacman.ui3d;
+    requires de.amr.games.pacman.ui;
 
     exports de.amr.games.pacman.arcade.pacman_xxl;
 }

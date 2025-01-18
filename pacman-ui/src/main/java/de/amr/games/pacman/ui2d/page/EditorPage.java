@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.maps.editor.TileMapEditor;
+import de.amr.games.pacman.tilemap.editor.TileMapEditor;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.action.GameAction;
 import de.amr.games.pacman.ui2d.action.GameActionProvider;
