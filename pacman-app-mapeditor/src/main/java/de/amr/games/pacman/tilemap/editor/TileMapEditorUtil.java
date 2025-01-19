@@ -6,6 +6,7 @@ package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import de.amr.games.pacman.lib.tilemap.TileMap;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -75,5 +76,12 @@ public interface TileMapEditorUtil {
             }
         }
         return defaultColor;
+    }
+
+    static HBox filler(int pixels) {
+        var filler = new HBox();
+        filler.setMinWidth(pixels);
+        filler.setMaxWidth(pixels);
+        return filler;
     }
 }

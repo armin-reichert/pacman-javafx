@@ -56,7 +56,7 @@ import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.*;
  */
 public class TileMapEditor {
 
-    public static final short RENDERING_FPS = 20;
+    public static final short RENDERING_FPS = 5;
     public static final short TOOL_SIZE = 32;
     public static final short MIN_GRID_SIZE = 8;
     public static final short MAX_GRID_SIZE = 128;
@@ -202,10 +202,6 @@ public class TileMapEditor {
 
     public IntegerProperty gridSizeProperty() {
         return gridSizePy;
-    }
-
-    public Canvas canvas() {
-        return editCanvas;
     }
 
     public ContextMenu contextMenu() {
@@ -498,13 +494,6 @@ public class TileMapEditor {
 
         sliderZoomContainer = new HBox(new Label("Zoom"), sliderZoom);
         sliderZoomContainer.setSpacing(5);
-    }
-
-    private HBox filler(int pixels) {
-        var filler = new HBox();
-        filler.setMinWidth(pixels);
-        filler.setMaxWidth(pixels);
-        return filler;
     }
 
     private void arrangeMainLayout() {
@@ -982,7 +971,7 @@ public class TileMapEditor {
             g.setStroke(Color.YELLOW);
             g.setLineWidth(0.75);
             g.setLineDashes(5, 5);
-            g.strokeLine(canvas().getWidth() / 2, 0, canvas().getWidth() / 2, canvas().getHeight());
+            g.strokeLine(editCanvas.getWidth() / 2, 0, editCanvas.getWidth() / 2, editCanvas.getHeight());
             g.restore();
         }
 
@@ -1094,7 +1083,6 @@ public class TileMapEditor {
     }
 
     private void initEventHandlers() {
-        Canvas editCanvas = canvas();
         editCanvas.setOnMouseClicked(this::onEditCanvasMouseClicked);
         editCanvas.setOnMouseReleased(this::onEditCanvasMouseReleased);
         editCanvas.setOnMouseDragged(this::onEditCanvasMouseDragged);
@@ -1105,7 +1093,7 @@ public class TileMapEditor {
     private void onEditCanvasMouseClicked(MouseEvent event) {
         Logger.debug("Mouse clicked {}", event);
         if (event.getButton() == MouseButton.PRIMARY) {
-            canvas().requestFocus();
+            editCanvas.requestFocus();
             contextMenu().hide();
             if (event.getClickCount() == 2 && isMode(EditMode.INSPECT)) {
                 setMode(EditMode.DRAW);
@@ -1274,7 +1262,7 @@ public class TileMapEditor {
             miAddHouse.setOnAction(actionEvent -> addHouse(worldMap.terrain(), tile));
 
             contextMenu.getItems().setAll(miAddCircle2x2, miAddHouse);
-            contextMenu.show(canvas(), event.getScreenX(), event.getScreenY());
+            contextMenu.show(editCanvas, event.getScreenX(), event.getScreenY());
         }
     }
 
