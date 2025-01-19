@@ -196,7 +196,7 @@ public class TileMapEditor {
         obstacleEditor.worldMapPy.bind(worldMapPy);
 
         setWorldMap(new WorldMap(36, 28));
-        setMode(EditMode.INSPECT);
+        setEditMode(EditMode.INSPECT);
     }
 
     public StringProperty titleProperty() { return titlePy; }
@@ -271,7 +271,7 @@ public class TileMapEditor {
     public void stop() {
         clock.stop();
         preview3D.hide();
-        setMode(EditMode.INSPECT);
+        setEditMode(EditMode.INSPECT);
     }
 
     public WorldMap worldMap() {
@@ -1052,8 +1052,8 @@ public class TileMapEditor {
         if (event.getButton() == MouseButton.PRIMARY) {
             editCanvas.requestFocus();
             contextMenu.hide();
-            if (event.getClickCount() == 2 && isMode(EditMode.INSPECT)) {
-                setMode(EditMode.DRAW);
+            if (event.getClickCount() == 2 && isEditMode(EditMode.INSPECT)) {
+                setEditMode(EditMode.DRAW);
             }
         }
     }
@@ -1179,18 +1179,18 @@ public class TileMapEditor {
         String ch = event.getCharacter();
         switch (ch) {
             case "i" -> {
-                setMode(EditMode.INSPECT);
+                setEditMode(EditMode.INSPECT);
             }
             case "n" -> {
-                setMode(EditMode.DRAW);
+                setEditMode(EditMode.DRAW);
                 symmetricEditModePy.set(false);
             }
             case "s" -> {
-                setMode(EditMode.DRAW);
+                setEditMode(EditMode.DRAW);
                 symmetricEditModePy.set(true);
             }
             case "x" -> {
-                setMode(EditMode.ERASE);
+                setEditMode(EditMode.ERASE);
             }
             case "+" -> {
                 if (gridSize() < TileMapEditor.MAX_GRID_SIZE) {
@@ -1210,7 +1210,7 @@ public class TileMapEditor {
     }
 
     private void onEditCanvasContextMenuRequested(ContextMenuEvent event) {
-        if (!isMode(EditMode.INSPECT)) {
+        if (!isEditMode(EditMode.INSPECT)) {
             Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
             WorldMap worldMap = worldMapPy.get();
 
@@ -1227,9 +1227,9 @@ public class TileMapEditor {
 
     public EditMode editMode() { return modePy.get(); }
 
-    public boolean isMode(EditMode mode) { return editMode() == mode; }
+    public boolean isEditMode(EditMode mode) { return editMode() == mode; }
 
-    public void setMode(EditMode mode) {
+    public void setEditMode(EditMode mode) {
         modePy.set(assertNotNull(mode));
     }
 
@@ -1283,7 +1283,7 @@ public class TileMapEditor {
 
     private void editAtMousePosition(MouseEvent event) {
         Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
-        if (isMode(EditMode.INSPECT)) {
+        if (isEditMode(EditMode.INSPECT)) {
             identifyObstacleAtTilePosition(tile);
             return;
         }
