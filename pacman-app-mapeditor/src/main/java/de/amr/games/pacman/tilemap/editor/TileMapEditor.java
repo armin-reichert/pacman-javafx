@@ -817,6 +817,7 @@ public class TileMapEditor {
                     saveAction.run();
                 } else if (choice == choiceNoSave) {
                     noSaveAction.run();
+                    unsavedChanges = false;
                 } else if (choice == choiceCancel) {
                     confirmationDialog.close();
                 }
