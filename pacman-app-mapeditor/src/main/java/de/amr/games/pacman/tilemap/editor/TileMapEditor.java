@@ -349,7 +349,6 @@ public class TileMapEditor {
 
         spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);
-
     }
 
     private void createPreviewCanvas() {
