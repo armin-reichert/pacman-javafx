@@ -8,16 +8,13 @@ import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import de.amr.games.pacman.lib.tilemap.TileMap;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
 public class ObstacleEditor {
 
-    final BooleanProperty enabledPy = new SimpleBooleanProperty();
-
     private final TileMapEditor editor;
 
+    private boolean enabled;
     private Vector2i anchor;
     private Vector2i frontier;
     private Vector2i minTile; // top left corner
@@ -28,6 +25,10 @@ public class ObstacleEditor {
         this.editor = editor;
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public Vector2i minTile() {
         return minTile;
     }
@@ -36,16 +37,8 @@ public class ObstacleEditor {
         return maxTile;
     }
 
-    public boolean isDisabled() {
-        Palette selectedPalette = editor.selectedPalette();
-        boolean emptyTileEntrySelected =
-            selectedPalette.id() == TileMapEditor.PALETTE_ID_TERRAIN &&
-            selectedPalette.getSelectedEntryRow() == 0 && selectedPalette.getSelectedEntryCol() == 0;
-        return !(enabledPy.get() && emptyTileEntrySelected);
-    }
-
     public void startEditing(Vector2i tile) {
-        if (isDisabled()) {
+        if (!enabled) {
             return;
         }
         Logger.debug("Start inserting obstacle at tile {}", tile);
@@ -53,7 +46,7 @@ public class ObstacleEditor {
     }
 
     public void continueEditing(Vector2i tile) {
-        if (isDisabled()) {
+        if (!enabled) {
             return;
         }
         if (tile.equals(frontier)) {
@@ -87,7 +80,7 @@ public class ObstacleEditor {
     }
 
     public void endEditing(Vector2i tile) {
-        if (isDisabled()) {
+        if (!enabled) {
             return;
         }
         Logger.debug("End inserting obstacle at tile {}", tile);

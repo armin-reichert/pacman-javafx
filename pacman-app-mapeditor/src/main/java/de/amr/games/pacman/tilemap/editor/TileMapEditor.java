@@ -189,8 +189,6 @@ public class TileMapEditor {
     }
 
     public TileMapEditor(File workDir) {
-        obstacleEditor.enabledPy.bind(modePy.map(mode -> mode != EditMode.INSPECT));
-
         lastUsedDir = workDir;
         titlePy.bind(createTitleBinding());
 
@@ -238,18 +236,21 @@ public class TileMapEditor {
     public void onEnterInspectMode() {
         if (editCanvas != null) {
             editCanvas.setCursor(Cursor.HAND); // TODO use other cursor
+            obstacleEditor.setEnabled(false);
         }
     }
 
     public void onEnterEditMode() {
         if (editCanvas != null) {
             editCanvas.setCursor(Cursor.DEFAULT);
+            obstacleEditor.setEnabled(true);
         }
     }
 
     public void onEnterEraseMode() {
         if (editCanvas != null) {
             editCanvas.setCursor(RUBBER_CURSOR);
+            obstacleEditor.setEnabled(false);
         }
     }
 
@@ -475,7 +476,7 @@ public class TileMapEditor {
         editModeIndicator.textProperty().bind(Bindings.createStringBinding(
             () -> switch (modePy.get()) {
                     case INSPECT -> "Inspection Mode";
-                    case DRAW -> symmetricEditModePy.get() ?  "Symmetric Mode" : "Normal Mode";
+                    case DRAW -> symmetricEditModePy.get() ?  "Symmetric Edit" : "Normal Edit";
                     case ERASE -> "Erase Mode";
             },
             modePy, symmetricEditModePy
