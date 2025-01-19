@@ -19,6 +19,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Side;
 import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
@@ -93,6 +94,9 @@ public class TileMapEditor {
             }
             invalidateTerrainData();
             updateSourceView(worldMap);
+            if (preview3D != null) {
+                initPreview3D();
+            }
         }
     };
 
@@ -369,9 +373,33 @@ public class TileMapEditor {
         preview3DSubScene = new SubScene(group, 500, 500, true, SceneAntialiasing.BALANCED);
         preview3DSubScene.setCamera(preview3D.camera());
         preview3DSubScene.setFill(Color.CORNFLOWERBLUE);
-
-        worldMapPy.addListener((py,ov,nv) -> updatePreview3D());
+        preview3DSubScene.setOnMouseDragged(e -> {
+            Point2D p = new Point2D(e.getX(), e.getY());
+            if (prevDragPosition != null) {
+                Camera cam = preview3D.camera();
+                double damp = 0.25;
+                double dx = p.getX() - prevDragPosition.getX();
+                double dy = p.getY() - prevDragPosition.getY();
+                Logger.debug("Mouse dragged by x={}px and y={}px", dx, dy);
+                cam.setTranslateX(cam.getTranslateX() + damp * dx);
+                cam.setTranslateY(cam.getTranslateY() + damp * dy);
+            }
+            prevDragPosition = p;
+        });
     }
+
+    private void initPreview3D() {
+        double mapWidth = worldMap().terrain().numCols() * TS;
+        double mapHeight = worldMap().terrain().numRows() * TS;
+        PerspectiveCamera camera = preview3D.camera();
+        camera.setRotationAxis(Rotate.X_AXIS);
+        camera.setRotate(70);
+        camera.setTranslateX(mapWidth * 0.5);
+        camera.setTranslateY(mapHeight * 1.5);
+        camera.setTranslateZ(-100);
+    }
+
+    private Point2D prevDragPosition;
 
     private void updatePreview3D() {
         TileMap terrainMap = worldMap().terrain();
@@ -382,16 +410,6 @@ public class TileMapEditor {
         Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, parseColor(COLOR_FOOD));
         preview3D.setColors(wallBaseColor, wallTopColor, foodColor);
         preview3D.setWorldMap(worldMap());
-
-        double mapWidth = worldMap().terrain().numCols() * TS;
-        double mapHeight = worldMap().terrain().numRows() * TS;
-
-        PerspectiveCamera camera = preview3D.camera();
-        camera.setRotationAxis(Rotate.X_AXIS);
-        camera.setRotate(70);
-        camera.setTranslateX(mapWidth * 0.5);
-        camera.setTranslateY(mapHeight * 1.5);
-        camera.setTranslateZ(-100);
     }
 
 
