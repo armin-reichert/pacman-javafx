@@ -18,7 +18,10 @@ import javafx.stage.Stage;
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 
-public class Preview3D {
+public class Preview3D extends Group {
+
+    public record SceneEmbedding(Scene scene, Preview3D preview3D) {}
+    public record SubSceneEmbedding(SubScene subScene, Preview3D preview3D) {}
 
     private final DoubleProperty widthPy = new SimpleDoubleProperty(800);
     private final DoubleProperty heightPy = new SimpleDoubleProperty(400);
@@ -33,13 +36,16 @@ public class Preview3D {
     private Color wallTopColor;
     private Color foodColor;
 
-    public static Preview3D createInsideStage(Stage stage) {
+    public static SceneEmbedding embedInScene() {
         var preview3D = new Preview3D();
         var scene = new Scene(preview3D.root, preview3D.widthPy.get(), preview3D.heightPy.get(), true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.CORNFLOWERBLUE);
         scene.setCamera(preview3D.camera);
-        stage.setScene(scene);
-        return preview3D;
+        return new SceneEmbedding(scene, preview3D);
+    }
+
+    public Node root() {
+        return root;
     }
 
     public Preview3D() {

@@ -365,9 +365,11 @@ public class TileMapEditor {
     }
 
     private void createPreview3D() {
+        Preview3D.SceneEmbedding embedding = Preview3D.embedInScene();
+        preview3D = embedding.preview3D();
         preview3DStage = new Stage();
         preview3DStage.setTitle("3D Preview");
-        preview3D = Preview3D.createInsideStage(preview3DStage);
+        preview3DStage.setScene(embedding.scene());
         worldMapPy.addListener((py,ov,nv) -> updatePreview3D());
     }
 
