@@ -334,9 +334,12 @@ public class TileMapEditor {
     private void createEditCanvas() {
         editCanvas = new Canvas();
 
-        //TODO check this
         editCanvas.setOnContextMenuRequested(event -> onEditCanvasContextMenuRequested(contextMenu, event));
-        initEventHandlers();
+        editCanvas.setOnMouseClicked(this::onEditCanvasMouseClicked);
+        editCanvas.setOnMouseReleased(this::onEditCanvasMouseReleased);
+        editCanvas.setOnMouseDragged(this::onEditCanvasMouseDragged);
+        editCanvas.setOnMouseMoved(this::onEditCanvasMouseMoved);
+        editCanvas.setOnKeyPressed(this::onEditCanvasKeyPressed);
 
         spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);
@@ -1080,14 +1083,6 @@ public class TileMapEditor {
 
     private byte[][] editedContent() {
         return obstacleEditor.editedContent();
-    }
-
-    private void initEventHandlers() {
-        editCanvas.setOnMouseClicked(this::onEditCanvasMouseClicked);
-        editCanvas.setOnMouseReleased(this::onEditCanvasMouseReleased);
-        editCanvas.setOnMouseDragged(this::onEditCanvasMouseDragged);
-        editCanvas.setOnMouseMoved(this::onEditCanvasMouseMoved);
-        editCanvas.setOnKeyPressed(this::onEditCanvasKeyPressed);
     }
 
     private void onEditCanvasMouseClicked(MouseEvent event) {
