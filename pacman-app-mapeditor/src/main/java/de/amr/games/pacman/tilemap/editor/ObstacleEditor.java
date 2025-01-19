@@ -16,8 +16,7 @@ public class ObstacleEditor {
 
     final BooleanProperty enabledPy = new SimpleBooleanProperty();
 
-    private final EditController editController;
-    private final TileMapEditor viewModel;
+    private final TileMapEditor editor;
 
     private Vector2i anchor;
     private Vector2i frontier;
@@ -25,9 +24,8 @@ public class ObstacleEditor {
     private Vector2i maxTile; // bottom right corner
     private boolean join = true;
 
-    public ObstacleEditor(EditController editController, TileMapEditor viewModel) {
-        this.editController = editController;
-        this.viewModel = viewModel;
+    public ObstacleEditor(TileMapEditor editor) {
+        this.editor = editor;
     }
 
     public Vector2i minTile() {
@@ -39,7 +37,7 @@ public class ObstacleEditor {
     }
 
     public boolean isDisabled() {
-        Palette selectedPalette = viewModel.selectedPalette();
+        Palette selectedPalette = editor.selectedPalette();
         boolean emptyTileEntrySelected =
             selectedPalette.id() == TileMapEditor.PALETTE_ID_TERRAIN &&
             selectedPalette.getSelectedEntryRow() == 0 && selectedPalette.getSelectedEntryCol() == 0;
@@ -100,10 +98,10 @@ public class ObstacleEditor {
         byte[][] editedContent = editedContent();
         if (editedContent != null) {
             if (join) {
-                TileMap originalTerrain = viewModel.worldMapProperty().get().terrain();
+                TileMap originalTerrain = editor.worldMapProperty().get().terrain();
                 editedContent = joinedContent(originalTerrain, editedContent, editedContent.length, editedContent[0].length);
             }
-            copy(editedContent, viewModel.worldMapProperty().get().terrain());
+            copy(editedContent, editor.worldMapProperty().get().terrain());
         }
         anchor = frontier = minTile = maxTile = null;
     }
@@ -229,7 +227,7 @@ public class ObstacleEditor {
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
                 Vector2i tile = new Vector2i(minTile.x() + col, minTile.y() + row);
-                editController.setTileValue(tileMap, tile, values[row][col]);
+                editor.setTileValue(tileMap, tile, values[row][col]);
             }
         }
     }

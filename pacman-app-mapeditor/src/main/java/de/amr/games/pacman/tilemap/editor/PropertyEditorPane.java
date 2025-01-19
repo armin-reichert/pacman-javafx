@@ -75,7 +75,7 @@ public class PropertyEditorPane extends BorderPane {
         return tileMapPy.get();
     }
 
-    private final EditController editController;
+    private final TileMapEditor editor;
     private final GridPane grid = new GridPane();
     private final List<AbstractPropertyEditor> propertyEditors = new ArrayList<>();
 
@@ -104,31 +104,31 @@ public class PropertyEditorPane extends BorderPane {
                     deleteProperty(propertyName);
                 } else {
                     nameEditor.setText(propertyName);
-                    editController.showErrorMessage("Cannot delete other property %s".formatted(deletePropertyName), 2);
+                    editor.showErrorMessage("Cannot delete other property %s".formatted(deletePropertyName), 2);
                 }
                 return;
             }
             if (!isValidPropertyName(editedName)) {
                 nameEditor.setText(propertyName);
-                editController.showErrorMessage("Property name %s is invalid".formatted(editedName), 2);
+                editor.showErrorMessage("Property name %s is invalid".formatted(editedName), 2);
                 return;
             }
             if (tileMap().hasProperty(editedName)) {
-                editController.showErrorMessage("Property name already used", 2);
+                editor.showErrorMessage("Property name already used", 2);
                 nameEditor.setText(propertyName);
                 return;
             }
             tileMap().removeProperty(propertyName);
             tileMap().setProperty(editedName, formattedPropertyValue());
-            editController.showInfoMessage("Property %s renamed to %s".formatted(propertyName, editedName), 2);
+            editor.showInfoMessage("Property %s renamed to %s".formatted(propertyName, editedName), 2);
             propertyName = editedName;
             rebuildPropertyEditors(); // sort order might have changed
-            editController.markTileMapEdited(tileMap());
+            editor.markTileMapEdited(tileMap());
         }
 
         void storePropertyValue() {
             tileMap().setProperty(propertyName, formattedPropertyValue());
-            editController.markTileMapEdited(tileMap());
+            editor.markTileMapEdited(tileMap());
         }
 
         abstract String formattedPropertyValue();
@@ -249,8 +249,8 @@ public class PropertyEditorPane extends BorderPane {
         }
     }
 
-    public PropertyEditorPane(EditController editController) {
-        this.editController = Globals.assertNotNull(editController);
+    public PropertyEditorPane(TileMapEditor editController) {
+        this.editor = Globals.assertNotNull(editController);
 
         var btnAddColorEntry = new Button("Color");
         btnAddColorEntry.setOnAction(e -> {
@@ -327,9 +327,9 @@ public class PropertyEditorPane extends BorderPane {
 
     void deleteProperty(String propertyName) {
         tileMap().removeProperty(propertyName);
-        editController.markTileMapEdited(tileMap());
+        editor.markTileMapEdited(tileMap());
         rebuildPropertyEditors(); //TODO check
-        editController.showInfoMessage("Property %s deleted".formatted(propertyName), 3);
+        editor.showInfoMessage("Property %s deleted".formatted(propertyName), 3);
         Logger.debug("Property {} deleted", propertyName);
     }
 }

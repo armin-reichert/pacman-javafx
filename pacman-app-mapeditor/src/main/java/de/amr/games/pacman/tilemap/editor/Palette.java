@@ -67,7 +67,7 @@ public class Palette {
         return id;
     }
 
-    public TileValueEditorTool newTileTool(EditController editController, byte value, String description) {
+    public TileValueEditorTool newTileTool(TileMapEditor editController, byte value, String description) {
         return new TileValueEditorTool(editController, renderer, toolSize, value, description);
     }
 
@@ -75,8 +75,8 @@ public class Palette {
         return new PropertyValueEditorTool(renderer, toolSize, propertyName, description);
     }
 
-    public void addTileTool(EditController editController, byte value, String description) {
-        tools.add(newTileTool(editController, value, description));
+    public void addTileTool(TileMapEditor editor, byte value, String description) {
+        tools.add(newTileTool(editor, value, description));
     }
 
     public void addPropertyTool(String propertyName, String description) {
