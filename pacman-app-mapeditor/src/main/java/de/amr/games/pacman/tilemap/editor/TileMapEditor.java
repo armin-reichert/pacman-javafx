@@ -20,8 +20,7 @@ import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Side;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
+import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -32,6 +31,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -59,7 +59,7 @@ public class TileMapEditor {
     public static final short RENDERING_FPS = 5;
     public static final short TOOL_SIZE = 32;
     public static final short MIN_GRID_SIZE = 8;
-    public static final short MAX_GRID_SIZE = 128;
+    public static final short MAX_GRID_SIZE = 64;
 
     public static final byte PALETTE_ID_ACTORS  = 0;
     public static final byte PALETTE_ID_TERRAIN = 1;
@@ -160,7 +160,8 @@ public class TileMapEditor {
     private ScrollPane spPreviewCanvas;
     private Text sourceView;
     private ScrollPane spSourceView;
-    private TabPane tabPaneMapViews;
+    private TabPane tabPanePreviews;
+    private SplitPane splitPaneEditorAndPreviews;
     private Label messageLabel;
     private Label focussedTileInfo;
     private Label editModeIndicator;
@@ -168,8 +169,8 @@ public class TileMapEditor {
     private FileChooser fileChooser;
     private TabPane tabPaneWithPalettes;
 
-    private Stage preview3DStage;
     private Preview3D preview3D;
+    private SubScene preview3DSubScene;
 
     private final ContextMenu contextMenu = new ContextMenu();
     private MenuBar menuBar;
@@ -272,7 +273,6 @@ public class TileMapEditor {
 
     public void stop() {
         clock.stop();
-        preview3DStage.hide();
         setEditMode(EditMode.INSPECT);
     }
 
@@ -298,7 +298,7 @@ public class TileMapEditor {
         createMapSourceView();
         createPalettes();
         createPropertyEditors();
-        createTabPaneWithMapViews();
+        createTabPaneWithPreviews();
         createFocussedTileIndicator();
         createEditModeIndicator();
         createMessageDisplay();
@@ -365,11 +365,12 @@ public class TileMapEditor {
     }
 
     private void createPreview3D() {
-        Preview3D.SceneEmbedding embedding = Preview3D.embedInScene();
-        preview3D = embedding.preview3D();
-        preview3DStage = new Stage();
-        preview3DStage.setTitle("3D Preview");
-        preview3DStage.setScene(embedding.scene());
+        preview3D = new Preview3D(500, 500);
+        var group = new Group(preview3D.root());
+        preview3DSubScene = new SubScene(group, 500, 500, true, SceneAntialiasing.BALANCED);
+        preview3DSubScene.setCamera(preview3D.camera());
+        preview3DSubScene.setFill(Color.BLACK);
+
         worldMapPy.addListener((py,ov,nv) -> updatePreview3D());
     }
 
@@ -382,7 +383,18 @@ public class TileMapEditor {
         Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, parseColor(COLOR_FOOD));
         preview3D.setColors(wallBaseColor, wallTopColor, foodColor);
         preview3D.setWorldMap(worldMap());
+
+        double mapWidth = worldMap().terrain().numCols() * TS;
+        double mapHeight = worldMap().terrain().numRows() * TS;
+
+        PerspectiveCamera camera = preview3D.camera();
+        camera.setRotationAxis(Rotate.X_AXIS);
+        camera.setRotate(70);
+        camera.setTranslateX(mapWidth * 0.5);
+        camera.setTranslateY(mapHeight * 1.5);
+        camera.setTranslateZ(-100);
     }
+
 
     private void createMapSourceView() {
         sourceView = new Text();
@@ -397,18 +409,20 @@ public class TileMapEditor {
         spSourceView.setFitToHeight(true);
     }
 
-    private void createTabPaneWithMapViews() {
+    private void createTabPaneWithPreviews() {
+        var tabPreview2D = new Tab(tt("preview2D"), previewCanvas);
+        var tabPreview3D = new Tab(tt("preview3D"), preview3DSubScene);
         var tabSourceView = new Tab(tt("source"), spSourceView);
-        tabSourceView.setClosable(false);
 
-        var splitPane = new SplitPane(spEditCanvas, spPreviewCanvas);
-        splitPane.setDividerPositions(0.5);
+        tabPanePreviews = new TabPane(tabPreview2D, tabPreview3D, tabSourceView);
+        tabPanePreviews.setSide(Side.BOTTOM);
+        tabPanePreviews.getTabs().forEach(tab -> tab.setClosable(false));
 
-        var tabPreview = new Tab(tt("preview"), splitPane);
-        tabPreview.setClosable(false);
+        preview3DSubScene.widthProperty().bind(tabPanePreviews.widthProperty());
+        preview3DSubScene.heightProperty().bind(tabPanePreviews.heightProperty());
 
-        tabPaneMapViews = new TabPane(tabPreview, tabSourceView);
-        tabPaneMapViews.setSide(Side.BOTTOM);
+        splitPaneEditorAndPreviews = new SplitPane(spEditCanvas, tabPanePreviews);
+        splitPaneEditorAndPreviews.setDividerPositions(0.5);
     }
 
     private void createPalettes() {
@@ -512,11 +526,14 @@ public class TileMapEditor {
         statusLine.setPadding(new Insets(10, 10, 10, 10));
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        var right = new VBox(tabPaneWithPalettes, tabPaneMapViews, statusLine);
-        right.setPadding(new Insets(0,5,0,5));
+        var contentArea = new VBox(tabPaneWithPalettes, splitPaneEditorAndPreviews, statusLine);
+        contentArea.setPadding(new Insets(0,5,0,5));
+        VBox.setVgrow(tabPaneWithPalettes, Priority.NEVER);
+        VBox.setVgrow(splitPaneEditorAndPreviews, Priority.ALWAYS);
+        VBox.setVgrow(statusLine, Priority.NEVER);
 
         contentPane.setLeft(propertyEditorsPane);
-        contentPane.setCenter(right);
+        contentPane.setCenter(contentArea);
     }
 
     private StringBinding createTitleBinding() {
@@ -563,7 +580,7 @@ public class TileMapEditor {
                 drawEditCanvas();
                 drawPreviewCanvas();
                 drawSelectedPalette();
-                if (preview3DStage.isShowing()) {
+                if (preview3D != null) {
                     updatePreview3D(); //TODO do this only if terrain is invalid
                 }
             } catch (Exception x) {
@@ -1208,10 +1225,6 @@ public class TileMapEditor {
                 if (gridSize() > TileMapEditor.MIN_GRID_SIZE) {
                     gridSizePy.set(gridSize() - 1);
                 }
-            }
-            case "3"-> {
-                updatePreview3D();
-                preview3DStage.show();
             }
         }
     }

@@ -12,13 +12,11 @@ import javafx.scene.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Sphere;
-import javafx.scene.transform.Rotate;
-import javafx.stage.Stage;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 
-public class Preview3D extends Group {
+public class Preview3D {
 
     public record SceneEmbedding(Scene scene, Preview3D preview3D) {}
     public record SubSceneEmbedding(SubScene subScene, Preview3D preview3D) {}
@@ -28,7 +26,7 @@ public class Preview3D extends Group {
 
     private final Group root = new Group();
     private final WorldRenderer3D r3D;
-    private final PerspectiveCamera camera = new PerspectiveCamera();
+    private final PerspectiveCamera camera;
 
     private WorldMap worldMap;
 
@@ -36,23 +34,25 @@ public class Preview3D extends Group {
     private Color wallTopColor;
     private Color foodColor;
 
-    public static SceneEmbedding embedInScene() {
-        var preview3D = new Preview3D();
-        var scene = new Scene(preview3D.root, preview3D.widthPy.get(), preview3D.heightPy.get(), true, SceneAntialiasing.BALANCED);
-        scene.setFill(Color.CORNFLOWERBLUE);
-        scene.setCamera(preview3D.camera);
-        return new SceneEmbedding(scene, preview3D);
-    }
-
     public Node root() {
         return root;
     }
 
-    public Preview3D() {
+    public PerspectiveCamera camera() {
+        return camera;
+    }
+
+    public Preview3D(double width, double height) {
         r3D = new WorldRenderer3D();
         root.getChildren().add(createSampleContent());
-        camera.setRotationAxis(Rotate.X_AXIS);
-        camera.setRotate(60);
+
+        camera = new PerspectiveCamera(true);
+        camera.setNearClip(0.1);
+        camera.setFarClip(10000.0);
+        camera.setFieldOfView(40); // default: 30
+
+        widthPy.set(width);
+        heightPy.set(height);
     }
 
     public DoubleProperty widthProperty() { return widthPy; }
@@ -61,10 +61,6 @@ public class Preview3D extends Group {
 
     public void setWorldMap(WorldMap worldMap) {
         this.worldMap = worldMap;
-        double worldWidth = worldMap.terrain().numCols() * TS;
-        camera.translateXProperty().bind(widthProperty().subtract(worldWidth).multiply(-0.5));
-        camera.translateYProperty().bind(heightProperty().multiply(-0.5));
-        camera.setTranslateZ(50);
         updateContent();
     }
 
@@ -91,6 +87,10 @@ public class Preview3D extends Group {
 
         Group og = new Group();
         root.getChildren().add(og);
+
+        Sphere origin = new Sphere(1);
+        origin.setMaterial(WorldRenderer3D.coloredMaterial(Color.YELLOW));
+        og.getChildren().add(origin);
 
         // Floor left-upper corner at origin
         Box floor = new Box(worldWidth, worldHeight, 0.1);
