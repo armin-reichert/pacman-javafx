@@ -88,10 +88,6 @@ public class Preview3D {
         Group og = new Group();
         root.getChildren().add(og);
 
-        Sphere origin = new Sphere(1);
-        origin.setMaterial(WorldRenderer3D.coloredMaterial(Color.YELLOW));
-        og.getChildren().add(origin);
-
         // Floor left-upper corner at origin
         Box floor = new Box(worldWidth, worldHeight, 0.1);
         floor.setTranslateX(0.5 * worldWidth);

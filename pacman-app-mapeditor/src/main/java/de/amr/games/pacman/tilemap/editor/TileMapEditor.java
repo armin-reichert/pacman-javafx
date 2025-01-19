@@ -156,11 +156,10 @@ public class TileMapEditor {
     private Pane propertyEditorsPane;
     private Canvas editCanvas;
     private ScrollPane spEditCanvas;
-    private Canvas previewCanvas;
     private ScrollPane spPreviewCanvas;
+    private Canvas previewCanvas;
     private Text sourceView;
     private ScrollPane spSourceView;
-    private TabPane tabPanePreviews;
     private SplitPane splitPaneEditorAndPreviews;
     private Label messageLabel;
     private Label focussedTileInfo;
@@ -410,11 +409,11 @@ public class TileMapEditor {
     }
 
     private void createTabPaneWithPreviews() {
-        var tabPreview2D = new Tab(tt("preview2D"), previewCanvas);
+        var tabPreview2D = new Tab(tt("preview2D"), spPreviewCanvas);
         var tabPreview3D = new Tab(tt("preview3D"), preview3DSubScene);
         var tabSourceView = new Tab(tt("source"), spSourceView);
 
-        tabPanePreviews = new TabPane(tabPreview2D, tabPreview3D, tabSourceView);
+        TabPane tabPanePreviews = new TabPane(tabPreview2D, tabPreview3D, tabSourceView);
         tabPanePreviews.setSide(Side.BOTTOM);
         tabPanePreviews.getTabs().forEach(tab -> tab.setClosable(false));
 
