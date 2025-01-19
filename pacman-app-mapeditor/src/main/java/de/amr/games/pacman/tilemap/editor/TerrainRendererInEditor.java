@@ -31,7 +31,7 @@ import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 /**
  * @author Armin Reichert
  */
-public class TileMapEditorTerrainRenderer implements TileMapRenderer {
+public class TerrainRendererInEditor implements TileMapRenderer {
 
     private static final Color SEGMENT_NUMBER_COLOR = Color.GRAY;
     private static final double SEGMENT_NUMBER_FONT_SIZE = 4;
@@ -47,7 +47,7 @@ public class TileMapEditorTerrainRenderer implements TileMapRenderer {
     private final double[] xp = new double[3];
     private final double[] yp = new double[3];
 
-    public TileMapEditorTerrainRenderer() {
+    public TerrainRendererInEditor() {
     }
 
     @Override

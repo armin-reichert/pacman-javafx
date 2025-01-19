@@ -9,6 +9,10 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
+import java.net.URL;
+
+import static java.util.Objects.requireNonNull;
+
 public interface TileMapEditorUtil {
 
     byte[][] GHOST_HOUSE_SHAPE = {
@@ -23,6 +27,11 @@ public interface TileMapEditorUtil {
         {TileEncoding.CORNER_NW, TileEncoding.CORNER_NE},
         {TileEncoding.CORNER_SW, TileEncoding.CORNER_SE}
     };
+
+    static String urlString(String resourcePath) {
+        URL url = requireNonNull(TileMapEditorUtil.class.getResource(resourcePath));
+        return url.toExternalForm();
+    }
 
     static byte mirroredTileContent(byte content) {
         return switch (content) {
