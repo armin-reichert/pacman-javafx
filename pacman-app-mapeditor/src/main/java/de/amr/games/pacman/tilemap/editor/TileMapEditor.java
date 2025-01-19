@@ -48,7 +48,6 @@ import java.time.Instant;
 import java.util.*;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.Globals.vec_2i;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.getColorFromMap;
@@ -100,23 +99,23 @@ public class TileMapEditor {
     static final int TOOL_SIZE = 32;
     static final int ACTIVE_RENDERING_FPS = 20;
 
-    final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>();
-    final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
-    final IntegerProperty gridSizePy = new SimpleIntegerProperty(16);
-    final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
-    final BooleanProperty segmentNumbersDisplayedPy = new SimpleBooleanProperty(false);
-    final BooleanProperty previewVisiblePy = new SimpleBooleanProperty(true);
-    final BooleanProperty propertyEditorsVisiblePy = new SimpleBooleanProperty(true) {
+    private final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>();
+    private final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
+    private final IntegerProperty gridSizePy = new SimpleIntegerProperty(16);
+    private final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
+    private final BooleanProperty segmentNumbersDisplayedPy = new SimpleBooleanProperty(false);
+    private final BooleanProperty previewVisiblePy = new SimpleBooleanProperty(true);
+    private final BooleanProperty propertyEditorsVisiblePy = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
             changePropertyEditorsPaneVisibility(get());
         }
     };
-    final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
-    final StringProperty titlePy = new SimpleStringProperty("Tile Map Editor");
-    final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>();
+    private final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
+    private final StringProperty titlePy = new SimpleStringProperty("Tile Map Editor");
+    private final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>();
 
-    final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>() {
+    private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
             WorldMap map = get();
@@ -131,7 +130,7 @@ public class TileMapEditor {
         }
     };
 
-    final ObjectProperty<EditMode> modePy = new SimpleObjectProperty<>() {
+    private final ObjectProperty<EditMode> modePy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
             switch (get()) {
@@ -142,7 +141,7 @@ public class TileMapEditor {
         }
     };
 
-    final BooleanProperty symmetricEditModePy = new SimpleBooleanProperty(true);
+    private final BooleanProperty symmetricEditModePy = new SimpleBooleanProperty(true);
 
     private final ObstacleEditor obstacleEditor;
     private boolean unsavedChanges;
@@ -328,19 +327,6 @@ public class TileMapEditor {
 
         contentPane.setOnKeyTyped(this::onKeyTyped);
         contentPane.setOnKeyPressed(this::onKeyPressed);
-
-        contentPane.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            switch (e.getCode()) {
-                case KeyCode.DIGIT3 -> {
-                    if (preview3D.isVisible()) {
-                        preview3D.hide();
-                    } else {
-                        updatePreview3D();
-                        preview3D.show();
-                    }
-                }
-            }
-        });
 
         propertyEditorsVisiblePy.set(false);
     }
@@ -1320,6 +1306,10 @@ public class TileMapEditor {
                 if (gridSizeProperty().get() > TileMapEditor.MIN_GRID_SIZE) {
                     gridSizeProperty().set(gridSizeProperty().get() - 1);
                 }
+            }
+            case "3"-> {
+                updatePreview3D();
+                preview3D.show();
             }
         }
     }
