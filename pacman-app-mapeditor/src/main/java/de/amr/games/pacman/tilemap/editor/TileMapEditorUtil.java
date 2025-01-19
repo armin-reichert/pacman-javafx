@@ -4,11 +4,43 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tilemap.editor;
 
+import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 public interface TileMapEditorUtil {
+
+    byte[][] GHOST_HOUSE_SHAPE = {
+        {16, 8, 8, 14, 14, 8, 8, 17},
+        {9, 0, 0, 0, 0, 0, 0, 9},
+        {9, 0, 0, 0, 0, 0, 0, 9},
+        {9, 0, 0, 0, 0, 0, 0, 9},
+        {19, 8, 8, 8, 8, 8, 8, 18}
+    };
+
+    byte[][] CIRCLE_2x2 = {
+        {TileEncoding.CORNER_NW, TileEncoding.CORNER_NE},
+        {TileEncoding.CORNER_SW, TileEncoding.CORNER_SE}
+    };
+
+    static byte mirroredTileContent(byte content) {
+        return switch (content) {
+            case TileEncoding.CORNER_NE -> TileEncoding.CORNER_NW;
+            case TileEncoding.CORNER_NW -> TileEncoding.CORNER_NE;
+            case TileEncoding.CORNER_SE -> TileEncoding.CORNER_SW;
+            case TileEncoding.CORNER_SW -> TileEncoding.CORNER_SE;
+            case TileEncoding.DCORNER_NE -> TileEncoding.DCORNER_NW;
+            case TileEncoding.DCORNER_NW -> TileEncoding.DCORNER_NE;
+            case TileEncoding.DCORNER_SE -> TileEncoding.DCORNER_SW;
+            case TileEncoding.DCORNER_SW -> TileEncoding.DCORNER_SE;
+            case TileEncoding.DCORNER_ANGULAR_NE -> TileEncoding.DCORNER_ANGULAR_NW;
+            case TileEncoding.DCORNER_ANGULAR_NW -> TileEncoding.DCORNER_ANGULAR_NE;
+            case TileEncoding.DCORNER_ANGULAR_SE -> TileEncoding.DCORNER_ANGULAR_SW;
+            case TileEncoding.DCORNER_ANGULAR_SW -> TileEncoding.DCORNER_ANGULAR_SE;
+            default -> content;
+        };
+    }
 
     static Color parseColor(String text) {
         try {

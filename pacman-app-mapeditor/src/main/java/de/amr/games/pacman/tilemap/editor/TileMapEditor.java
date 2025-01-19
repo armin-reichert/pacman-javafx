@@ -50,8 +50,7 @@ import java.util.*;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
-import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.getColorFromMap;
-import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.parseColor;
+import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -1100,52 +1099,19 @@ public class TileMapEditor {
 
     // Controller part
 
-
-    // For now, here:
-    static final byte[][] GHOST_HOUSE_SHAPE = {
-        {16, 8, 8, 14, 14, 8, 8, 17},
-        {9, 0, 0, 0, 0, 0, 0, 9},
-        {9, 0, 0, 0, 0, 0, 0, 9},
-        {9, 0, 0, 0, 0, 0, 0, 9},
-        {19, 8, 8, 8, 8, 8, 8, 18}
-    };
-
-    static final byte[][] CIRCLE_2x2 = {
-        {TileEncoding.CORNER_NW, TileEncoding.CORNER_NE},
-        {TileEncoding.CORNER_SW, TileEncoding.CORNER_SE}
-    };
-
-    static byte mirroredTileContent(byte content) {
-        return switch (content) {
-            case TileEncoding.CORNER_NE -> TileEncoding.CORNER_NW;
-            case TileEncoding.CORNER_NW -> TileEncoding.CORNER_NE;
-            case TileEncoding.CORNER_SE -> TileEncoding.CORNER_SW;
-            case TileEncoding.CORNER_SW -> TileEncoding.CORNER_SE;
-            case TileEncoding.DCORNER_NE -> TileEncoding.DCORNER_NW;
-            case TileEncoding.DCORNER_NW -> TileEncoding.DCORNER_NE;
-            case TileEncoding.DCORNER_SE -> TileEncoding.DCORNER_SW;
-            case TileEncoding.DCORNER_SW -> TileEncoding.DCORNER_SE;
-            case TileEncoding.DCORNER_ANGULAR_NE -> TileEncoding.DCORNER_ANGULAR_NW;
-            case TileEncoding.DCORNER_ANGULAR_NW -> TileEncoding.DCORNER_ANGULAR_NE;
-            case TileEncoding.DCORNER_ANGULAR_SE -> TileEncoding.DCORNER_ANGULAR_SW;
-            case TileEncoding.DCORNER_ANGULAR_SW -> TileEncoding.DCORNER_ANGULAR_SE;
-            default -> content;
-        };
-    }
-
-    Vector2i editedContentMinTile() {
+    private Vector2i editedContentMinTile() {
         return obstacleEditor.minTile();
     }
 
-    Vector2i editedContentMaxTile() {
+    private Vector2i editedContentMaxTile() {
         return obstacleEditor.maxTile();
     }
 
-    byte[][] editedContent() {
+    private byte[][] editedContent() {
         return obstacleEditor.editedContent();
     }
 
-    void initEventHandlers() {
+    private void initEventHandlers() {
         Canvas editCanvas = canvas();
         editCanvas.setOnMouseClicked(this::onEditCanvasMouseClicked);
         editCanvas.setOnMouseReleased(this::onEditCanvasMouseReleased);
@@ -1154,7 +1120,7 @@ public class TileMapEditor {
         editCanvas.setOnKeyPressed(this::onEditCanvasKeyPressed);
     }
 
-    void onEditCanvasMouseClicked(MouseEvent event) {
+    private void onEditCanvasMouseClicked(MouseEvent event) {
         Logger.debug("Mouse clicked {}", event);
         if (event.getButton() == MouseButton.PRIMARY) {
             canvas().requestFocus();
@@ -1165,7 +1131,7 @@ public class TileMapEditor {
         }
     }
 
-    void onEditCanvasMouseDragged(MouseEvent event) {
+    private void onEditCanvasMouseDragged(MouseEvent event) {
         Logger.debug("Mouse dragged {}", event);
         if (!dragging) {
             Vector2i dragStartTile = tileAtMousePosition(event.getX(), event.getY());
@@ -1177,7 +1143,7 @@ public class TileMapEditor {
         }
     }
 
-    void onEditCanvasMouseReleased(MouseEvent event) {
+    private void onEditCanvasMouseReleased(MouseEvent event) {
         if (event.getButton() == MouseButton.PRIMARY) {
             Logger.debug("Mouse released: {}", event);
             if (dragging) {
@@ -1191,7 +1157,7 @@ public class TileMapEditor {
         }
     }
 
-    void onEditCanvasMouseMoved(MouseEvent event) {
+    private void onEditCanvasMouseMoved(MouseEvent event) {
         Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
         focussedTilePy.set(tile);
         if (isMode(EditMode.INSPECT)) {
@@ -1225,7 +1191,7 @@ public class TileMapEditor {
         }
     }
 
-    void identifyObstacleAtTilePosition(Vector2i tile) {
+    private void identifyObstacleAtTilePosition(Vector2i tile) {
         Obstacle obstacleAtTile = worldMap().obstacles().stream()
             .filter(obstacle -> Globals.tileAt(obstacle.startPoint().minus(HTS, 0)).equals(tile))
             .findFirst().orElse(null);
@@ -1246,7 +1212,7 @@ public class TileMapEditor {
         }
     }
 
-    void onKeyPressed(KeyEvent event) {
+    private void onKeyPressed(KeyEvent event) {
         if (event.isAltDown()) {
             if (event.getCode() == KeyCode.LEFT) {
                 event.consume();
@@ -1262,7 +1228,7 @@ public class TileMapEditor {
         }
     }
 
-    void onEditCanvasKeyPressed(KeyEvent event) {
+    private void onEditCanvasKeyPressed(KeyEvent event) {
         Direction cursor = switch (event.getCode()) {
             case LEFT -> Direction.LEFT;
             case RIGHT -> Direction.RIGHT;
@@ -1279,7 +1245,7 @@ public class TileMapEditor {
         }
     }
 
-    void onKeyTyped(KeyEvent event) {
+    private void onKeyTyped(KeyEvent event) {
         Logger.debug("Typed {}", event);
         String ch = event.getCharacter();
         switch (ch) {
@@ -1314,7 +1280,7 @@ public class TileMapEditor {
         }
     }
 
-    void onEditCanvasContextMenuRequested(ContextMenu contextMenu, ContextMenuEvent event) {
+    private void onEditCanvasContextMenuRequested(ContextMenu contextMenu, ContextMenuEvent event) {
         if (!isMode(EditMode.INSPECT)) {
             Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
             WorldMap worldMap = worldMapPy.get();
@@ -1330,19 +1296,19 @@ public class TileMapEditor {
         }
     }
 
-    EditMode mode() { return modePy.get(); }
+    public EditMode mode() { return modePy.get(); }
 
-    boolean isMode(EditMode mode) { return mode() == mode; }
+    public boolean isMode(EditMode mode) { return mode() == mode; }
 
-    void setMode(EditMode mode) {
+    public void setMode(EditMode mode) {
         modePy.set(assertNotNull(mode));
     }
 
-    boolean hasUnsavedChanges() {
+    public boolean hasUnsavedChanges() {
         return unsavedChanges;
     }
 
-    void clearUnsavedChanges() {
+    public void clearUnsavedChanges() {
         unsavedChanges = false;
     }
 
