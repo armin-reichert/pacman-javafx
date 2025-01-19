@@ -51,6 +51,8 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.Globals.vec_2i;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
+import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.getColorFromMap;
+import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.parseColor;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -65,49 +67,22 @@ public class TileMapEditor {
     public static final byte PALETTE_ID_TERRAIN = 1;
     public static final byte PALETTE_ID_FOOD    = 2;
 
-    public static final String DEFAULT_COLOR_FOOD                = "rgb(255,255,255)";
-    public static final String DEFAULT_COLOR_WALL_STROKE         = "rgb(33,33,255)";
-    public static final String DEFAULT_COLOR_WALL_FILL           = "rgb(0,0,0)";
-    public static final String DEFAULT_COLOR_DOOR                = "rgb(255,183, 255)";
-
-    public static final Vector2i DEFAULT_POS_HOUSE               = new Vector2i(10, 15);
-    public static final Vector2i DEFAULT_POS_RED_GHOST           = DEFAULT_POS_HOUSE.plus(3, -1);
-    public static final Vector2i DEFAULT_POS_CYAN_GHOST          = DEFAULT_POS_HOUSE.plus(1, 2);
-    public static final Vector2i DEFAULT_POS_PINK_GHOST          = DEFAULT_POS_HOUSE.plus(3, 2);
-    public static final Vector2i DEFAULT_POS_ORANGE_GHOST        = DEFAULT_POS_HOUSE.plus(5, 2);
-    public static final Vector2i DEFAULT_POS_BONUS               = new Vector2i(13, 20);
-    public static final Vector2i DEFAULT_POS_PAC                 = new Vector2i(13, 26);
+    public static final String DEFAULT_COLOR_FOOD         = "rgb(255,255,255)";
+    public static final String DEFAULT_COLOR_WALL_STROKE  = "rgb(33,33,255)";
+    public static final String DEFAULT_COLOR_WALL_FILL    = "rgb(0,0,0)";
+    public static final String DEFAULT_COLOR_DOOR         = "rgb(255,183, 255)";
+    public static final Vector2i DEFAULT_POS_HOUSE        = new Vector2i(10, 15);
+    public static final Vector2i DEFAULT_POS_RED_GHOST    = DEFAULT_POS_HOUSE.plus(3, -1);
+    public static final Vector2i DEFAULT_POS_CYAN_GHOST   = DEFAULT_POS_HOUSE.plus(1, 2);
+    public static final Vector2i DEFAULT_POS_PINK_GHOST   = DEFAULT_POS_HOUSE.plus(3, 2);
+    public static final Vector2i DEFAULT_POS_ORANGE_GHOST = DEFAULT_POS_HOUSE.plus(5, 2);
+    public static final Vector2i DEFAULT_POS_BONUS        = new Vector2i(13, 20);
+    public static final Vector2i DEFAULT_POS_PAC          = new Vector2i(13, 26);
 
     public static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(TileMapEditor.class.getPackageName() + ".texts");
 
     public static String tt(String key, Object... args) {
         return MessageFormat.format(TEXT_BUNDLE.getString(key), args);
-    }
-
-    public static Color parseColor(String text) {
-        try {
-            return Color.web(text);
-        } catch (Exception x) {
-            Logger.error(x);
-            return Color.WHITE;
-        }
-    }
-
-    public static String formatColor(Color color) {
-        return String.format("rgb(%d,%d,%d)", (int)(color.getRed()*255), (int)(color.getGreen()*255), (int)(color.getBlue()*255));
-    }
-
-    public static Color getColorFromMap(TileMap map, String key, Color defaultColor) {
-        if (map.hasProperty(key)) {
-            String colorSpec = map.getStringProperty(key);
-            try {
-                return Color.web(colorSpec);
-            } catch (Exception x) {
-                Logger.error("Could not create color from value '{}'", colorSpec);
-                return defaultColor;
-            }
-        }
-        return defaultColor;
     }
 
     static final Node NO_GRAPHIC = null;
