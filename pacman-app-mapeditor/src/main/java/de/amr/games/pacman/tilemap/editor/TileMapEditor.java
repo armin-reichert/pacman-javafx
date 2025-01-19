@@ -71,12 +71,31 @@ public class TileMapEditor {
         return MessageFormat.format(TEXT_BUNDLE.getString(key), args);
     }
 
-    static final Node NO_GRAPHIC = null;
+    public static final Node NO_GRAPHIC = null;
 
-    static final Font FONT_STATUS_LINE = Font.font(Font.getDefault().getFamily(), FontWeight.BOLD, 12);
-    static final Font FONT_MESSAGE     = Font.font("Serif", FontWeight.EXTRA_BOLD, 14);
+    public static final Font FONT_STATUS_LINE = Font.font(Font.getDefault().getFamily(), FontWeight.BOLD, 12);
+    public static final Font FONT_MESSAGE     = Font.font("Serif", FontWeight.EXTRA_BOLD, 14);
+    public static final Cursor RUBBER_CURSOR  = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
+
+    // Properties
 
     private final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>();
+
+    private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>() {
+        @Override
+        protected void invalidated() {
+            WorldMap worldMap = get();
+            if (foodPropertiesEditor() != null) {
+                foodPropertiesEditor().setTileMap(worldMap.food());
+            }
+            if (terrainPropertiesEditor() != null) {
+                terrainPropertiesEditor().setTileMap(worldMap.terrain());
+            }
+            invalidateTerrainData();
+            updateSourceView(worldMap);
+        }
+    };
+
     private final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
 
     private final IntegerProperty gridSizePy = new SimpleIntegerProperty(16) {
@@ -87,7 +106,9 @@ public class TileMapEditor {
     };
 
     private final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
+
     private final BooleanProperty segmentNumbersDisplayedPy = new SimpleBooleanProperty(false);
+
     private final BooleanProperty previewVisiblePy = new SimpleBooleanProperty(true);
 
     private final BooleanProperty propertyEditorsVisiblePy = new SimpleBooleanProperty(true) {
@@ -98,23 +119,10 @@ public class TileMapEditor {
     };
 
     private final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
-    private final StringProperty titlePy = new SimpleStringProperty("Tile Map Editor");
-    private final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>();
 
-    private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>() {
-        @Override
-        protected void invalidated() {
-            WorldMap map = get();
-            if (foodPropertiesEditor() != null) {
-                foodPropertiesEditor().setTileMap(map.food());
-            }
-            if (terrainPropertiesEditor() != null) {
-                terrainPropertiesEditor().setTileMap(map.terrain());
-            }
-            invalidateTerrainData();
-            updateSourceView();
-        }
-    };
+    private final StringProperty titlePy = new SimpleStringProperty("Tile Map Editor");
+
+    private final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>();
 
     private final ObjectProperty<EditMode> modePy = new SimpleObjectProperty<>() {
         @Override
@@ -129,11 +137,19 @@ public class TileMapEditor {
 
     private final BooleanProperty symmetricEditModePy = new SimpleBooleanProperty(true);
 
-    private final ObstacleEditor obstacleEditor;
+    // Attributes
+
+    private File lastUsedDir;
+    private Instant messageCloseTime;
+    private Timeline clock;
     private boolean unsavedChanges;
     private boolean terrainDataUpToDate;
     private boolean dragging = false;
     private final List<Vector2i> tilesWithErrors = new ArrayList<>();
+
+    private final ObstacleEditor obstacleEditor  = new ObstacleEditor(this);
+
+    // Widgets
 
     private final BorderPane contentPane = new BorderPane();
     private Stage stage;
@@ -152,37 +168,31 @@ public class TileMapEditor {
     private HBox sliderZoomContainer;
     private FileChooser fileChooser;
     private TabPane tabPaneWithPalettes;
-    private final Cursor rubberCursor;
 
+    private final ContextMenu contextMenu = new ContextMenu();
     private MenuBar menuBar;
     private Menu menuFile;
     private Menu menuEdit;
     private Menu menuLoadMap;
     private Menu menuView;
 
-    private final ContextMenu       contextMenu = new ContextMenu();
-    private final Palette[]         palettes = new Palette[3];
-    private PropertyEditorPane      terrainMapPropertiesEditor;
-    private PropertyEditorPane      foodMapPropertiesEditor;
+    private final Palette[] palettes = new Palette[3];
+    private PropertyEditorPane terrainMapPropertiesEditor;
+    private PropertyEditorPane foodMapPropertiesEditor;
+
     private TerrainRendererInEditor editorTerrainRenderer;
     private TerrainRenderer         previewTerrainRenderer;
     private FoodMapRenderer         foodMapRenderer;
-
-    private File lastUsedDir;
-    private Instant messageCloseTime;
-    private Timeline clock;
 
     public TileMapEditor() {
         this(new File(System.getProperty("user.home")));
     }
 
     public TileMapEditor(File workDir) {
-        obstacleEditor = new ObstacleEditor(this);
         obstacleEditor.enabledPy.bind(modePy.map(mode -> mode != EditMode.INSPECT));
 
         lastUsedDir = workDir;
         titlePy.bind(createTitleBinding());
-        rubberCursor = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
 
         setWorldMap(new WorldMap(36, 28));
         setMode(EditMode.INSPECT);
@@ -218,10 +228,6 @@ public class TileMapEditor {
         return foodMapPropertiesEditor;
     }
 
-    public void updateSourceView() {
-        updateSourceView(worldMap());
-    }
-
     public void showMessage(String message, long seconds, MessageType type) {
         messageLabel.setText(message);
         Color color = switch (type) {
@@ -247,7 +253,7 @@ public class TileMapEditor {
 
     public void indicateEraseMode() {
         if (editCanvas != null) {
-            editCanvas.setCursor(rubberCursor);
+            editCanvas.setCursor(RUBBER_CURSOR);
         }
     }
 
@@ -1313,7 +1319,7 @@ public class TileMapEditor {
         unsavedChanges = true;
         WorldMap worldMap = worldMapPy.get();
         if (worldMap != null) {
-            updateSourceView();
+            updateSourceView(worldMap);
             if (tileMap == worldMap.terrain()) {
                 invalidateTerrainData();
             }
