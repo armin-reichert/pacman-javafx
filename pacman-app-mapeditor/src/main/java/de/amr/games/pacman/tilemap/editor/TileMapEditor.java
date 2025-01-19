@@ -73,7 +73,7 @@ public class TileMapEditor {
 
     public static final Node NO_GRAPHIC = null;
 
-    public static final Font FONT_STATUS_LINE = Font.font(Font.getDefault().getFamily(), FontWeight.BOLD, 12);
+    public static final Font FONT_STATUS_LINE = Font.font("Monospace", FontWeight.BOLD, 14);
     public static final Font FONT_MESSAGE     = Font.font("Serif", FontWeight.EXTRA_BOLD, 14);
     public static final Cursor RUBBER_CURSOR  = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
 
@@ -237,6 +237,7 @@ public class TileMapEditor {
         if (editCanvas != null) {
             editCanvas.setCursor(Cursor.HAND); // TODO use other cursor
             obstacleEditor.setEnabled(false);
+            clearMessage();
         }
     }
 
@@ -244,6 +245,7 @@ public class TileMapEditor {
         if (editCanvas != null) {
             editCanvas.setCursor(Cursor.DEFAULT);
             obstacleEditor.setEnabled(true);
+            clearMessage();
         }
     }
 
@@ -251,6 +253,8 @@ public class TileMapEditor {
         if (editCanvas != null) {
             editCanvas.setCursor(RUBBER_CURSOR);
             obstacleEditor.setEnabled(false);
+            clearMessage();
+            showInfoMessage("Shift+Move to erase", 3);
         }
     }
 
@@ -464,9 +468,9 @@ public class TileMapEditor {
         focussedTileInfo = new Label();
         focussedTileInfo.setFont(FONT_STATUS_LINE);
         focussedTileInfo.setMinWidth(100);
-        focussedTileInfo.setMaxWidth(100);
+        focussedTileInfo.setMaxWidth(120);
         focussedTileInfo.textProperty().bind(focussedTilePy.map(
-            tile -> tile != null ? "Tile: x=%2d y=%2d".formatted(tile.x(), tile.y()) : "n/a"));
+            tile -> tile != null ? "(%2d,%2d)".formatted(tile.x(), tile.y()) : "n/a"));
     }
 
     private void createEditModeIndicator() {
@@ -503,12 +507,11 @@ public class TileMapEditor {
 
     private void arrangeMainLayout() {
         var spacer = new Region();
+        var statusLine = new HBox(focussedTileInfo, editModeIndicator, filler(20), messageLabel, spacer, sliderZoomContainer);
+        statusLine.setPadding(new Insets(10, 10, 10, 10));
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        var bottom = new HBox(focussedTileInfo, editModeIndicator, filler(50), messageLabel, spacer, sliderZoomContainer);
-        bottom.setPadding(new Insets(10, 10, 10, 10));
-
-        var right = new VBox(tabPaneWithPalettes, tabPaneMapViews, bottom);
+        var right = new VBox(tabPaneWithPalettes, tabPaneMapViews, statusLine);
         right.setPadding(new Insets(0,5,0,5));
 
         contentPane.setLeft(propertyEditorsPane);
@@ -1071,35 +1074,37 @@ public class TileMapEditor {
 
     private void onEditCanvasMouseMoved(MouseEvent event) {
         Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
-        focussedTilePy.set(tile);
-        if (isMode(EditMode.INSPECT)) {
-            return;
-        }
         WorldMap worldMap = worldMapPy.get();
-        if (isMode(EditMode.ERASE)) {
-            switch (selectedPaletteID()) {
-                case TileMapEditor.PALETTE_ID_TERRAIN -> eraseTileValue(worldMap.terrain(), tile);
-                case TileMapEditor.PALETTE_ID_FOOD -> eraseTileValue(worldMap.food(), tile);
-            }
-        } else {
-            if (event.isShiftDown()) {
-                switch (selectedPaletteID()) {
-                    case TileMapEditor.PALETTE_ID_TERRAIN -> {
-                        if (selectedPalette().isToolSelected()) {
-                            selectedPalette().selectedTool().apply(worldMap.terrain(), focussedTilePy.get());
+        focussedTilePy.set(tile);
+        switch (editMode()) {
+            case EditMode.DRAW -> {
+                if (event.isShiftDown()) {
+                    switch (selectedPaletteID()) {
+                        case TileMapEditor.PALETTE_ID_TERRAIN -> {
+                            if (selectedPalette().isToolSelected()) {
+                                selectedPalette().selectedTool().apply(worldMap.terrain(), focussedTilePy.get());
+                            }
+                            markTileMapEdited(worldMap.terrain());
                         }
-                        markTileMapEdited(worldMap.terrain());
-                    }
-                    case TileMapEditor.PALETTE_ID_FOOD -> {
-                        if (selectedPalette().isToolSelected()) {
-                            selectedPalette().selectedTool().apply(worldMap.food(), focussedTilePy.get());
+                        case TileMapEditor.PALETTE_ID_FOOD -> {
+                            if (selectedPalette().isToolSelected()) {
+                                selectedPalette().selectedTool().apply(worldMap.food(), focussedTilePy.get());
+                            }
+                            markTileMapEdited(worldMap.food());
                         }
-                        markTileMapEdited(worldMap.food());
-                    }
-                    default -> {
+                        default -> {}
                     }
                 }
             }
+            case EditMode.ERASE -> {
+                if (event.isShiftDown()) {
+                    switch (selectedPaletteID()) {
+                        case TileMapEditor.PALETTE_ID_TERRAIN -> eraseTileValue(worldMap.terrain(), tile);
+                        case TileMapEditor.PALETTE_ID_FOOD -> eraseTileValue(worldMap.food(), tile);
+                    }
+                }
+            }
+            case EditMode.INSPECT -> {}
         }
     }
 
@@ -1208,9 +1213,9 @@ public class TileMapEditor {
         }
     }
 
-    public EditMode mode() { return modePy.get(); }
+    public EditMode editMode() { return modePy.get(); }
 
-    public boolean isMode(EditMode mode) { return mode() == mode; }
+    public boolean isMode(EditMode mode) { return editMode() == mode; }
 
     public void setMode(EditMode mode) {
         modePy.set(assertNotNull(mode));
@@ -1360,6 +1365,10 @@ public class TileMapEditor {
     void eraseTileValue(TileMap tileMap, Vector2i tile) {
         tileMap.set(tile, TileEncoding.EMPTY);
         markTileMapEdited(tileMap);
+    }
+
+    public void clearMessage() {
+        showInfoMessage("", 0);
     }
 
     public void showInfoMessage(String message, long seconds) {
