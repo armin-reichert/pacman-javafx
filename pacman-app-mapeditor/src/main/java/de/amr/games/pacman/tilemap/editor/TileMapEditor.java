@@ -822,7 +822,7 @@ public class TileMapEditor {
             lastUsedDir = file.getParentFile();
             if (file.getName().endsWith(".world")) {
                 worldMap().save(file);
-                clearUnsavedChanges();
+                unsavedChanges = false;
                 readMapFile(file);
             } else {
                 Logger.error("No .world file selected");
@@ -1276,10 +1276,6 @@ public class TileMapEditor {
 
     public boolean hasUnsavedChanges() {
         return unsavedChanges;
-    }
-
-    public void clearUnsavedChanges() {
-        unsavedChanges = false;
     }
 
     /**
