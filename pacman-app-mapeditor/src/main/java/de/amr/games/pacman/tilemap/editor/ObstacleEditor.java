@@ -98,10 +98,10 @@ public class ObstacleEditor {
         byte[][] editedContent = editedContent();
         if (editedContent != null) {
             if (join) {
-                TileMap originalTerrain = editor.worldMapProperty().get().terrain();
+                TileMap originalTerrain = editor.worldMap().terrain();
                 editedContent = joinedContent(originalTerrain, editedContent, editedContent.length, editedContent[0].length);
             }
-            copy(editedContent, editor.worldMapProperty().get().terrain());
+            copy(editedContent, editor.worldMap().terrain());
         }
         anchor = frontier = minTile = maxTile = null;
     }

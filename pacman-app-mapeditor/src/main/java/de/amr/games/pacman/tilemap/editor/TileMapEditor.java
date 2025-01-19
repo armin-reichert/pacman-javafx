@@ -50,7 +50,6 @@ import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.*;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.*;
-import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
@@ -190,10 +189,6 @@ public class TileMapEditor {
     }
 
     public StringProperty titleProperty() { return titlePy; }
-
-    public ObjectProperty<WorldMap> worldMapProperty() {
-        return worldMapPy;
-    }
 
     public IntegerProperty gridSizeProperty() {
         return gridSizePy;
