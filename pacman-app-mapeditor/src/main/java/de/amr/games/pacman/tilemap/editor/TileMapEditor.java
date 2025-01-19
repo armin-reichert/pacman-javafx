@@ -368,7 +368,7 @@ public class TileMapEditor {
         var group = new Group(preview3D.root());
         preview3DSubScene = new SubScene(group, 500, 500, true, SceneAntialiasing.BALANCED);
         preview3DSubScene.setCamera(preview3D.camera());
-        preview3DSubScene.setFill(Color.BLACK);
+        preview3DSubScene.setFill(Color.CORNFLOWERBLUE);
 
         worldMapPy.addListener((py,ov,nv) -> updatePreview3D());
     }
