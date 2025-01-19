@@ -374,12 +374,15 @@ public class TileMapEditor {
             Point2D p = new Point2D(e.getX(), e.getY());
             if (prevDragPosition != null) {
                 Camera cam = preview3D.camera();
-                double damp = 0.25;
                 double dx = p.getX() - prevDragPosition.getX();
                 double dy = p.getY() - prevDragPosition.getY();
                 Logger.debug("Mouse dragged by x={}px and y={}px", dx, dy);
-                cam.setTranslateX(cam.getTranslateX() + damp * dx);
-                cam.setTranslateY(cam.getTranslateY() + damp * dy);
+                cam.setTranslateX(cam.getTranslateX() + 0.2 * dx);
+                if (e.isControlDown()) {
+                    cam.setTranslateY(cam.getTranslateY() + 0.2 * dy);
+                } else {
+                    cam.setTranslateZ(cam.getTranslateZ() + 0.4 * dy);
+                }
             }
             prevDragPosition = p;
         });

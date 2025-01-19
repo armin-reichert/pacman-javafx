@@ -19,7 +19,6 @@ import static de.amr.games.pacman.lib.Globals.TS;
 
 public class Preview3D {
 
-    public record SceneEmbedding(Scene scene, Preview3D preview3D) {}
     public record SubSceneEmbedding(SubScene subScene, Preview3D preview3D) {}
 
     private final DoubleProperty widthPy = new SimpleDoubleProperty(800);
