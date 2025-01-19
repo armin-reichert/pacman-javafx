@@ -387,6 +387,9 @@ public class TileMapEditor {
             prevDragPosition = p;
         });
         preview3DSubScene.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                initPreview3D();
+            }
             prevDragPosition = new Point2D(e.getX(), e.getY());
         });
     }
