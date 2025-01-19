@@ -75,9 +75,9 @@ public class WorldRenderer3D {
     protected PhongMaterial wallTopMaterial = new PhongMaterial();
     protected PhongMaterial cornerMaterial = new PhongMaterial();
 
-    protected DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(3.0);
-    protected float wallTopHeight;
-    protected float wallThickness = 1;
+    protected DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(3.5);
+    protected float wallTopHeight = 0.1f;
+    protected float wallThickness = 2;
     protected boolean oShapeFilled = true;
 
     public void setCornerMaterial(PhongMaterial material) {

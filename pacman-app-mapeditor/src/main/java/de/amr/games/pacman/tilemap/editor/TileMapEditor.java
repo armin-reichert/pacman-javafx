@@ -416,6 +416,7 @@ public class TileMapEditor {
         TabPane tabPanePreviews = new TabPane(tabPreview2D, tabPreview3D, tabSourceView);
         tabPanePreviews.setSide(Side.BOTTOM);
         tabPanePreviews.getTabs().forEach(tab -> tab.setClosable(false));
+        tabPanePreviews.getSelectionModel().select(0);
 
         preview3DSubScene.widthProperty().bind(tabPanePreviews.widthProperty());
         preview3DSubScene.heightProperty().bind(tabPanePreviews.heightProperty());
