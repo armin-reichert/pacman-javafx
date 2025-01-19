@@ -8,12 +8,19 @@ import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
+
+import java.util.Objects;
+import java.util.function.BiConsumer;
 
 public class ObstacleEditor {
 
-    private final TileMapEditor editor;
+    public final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>();
 
+    private final BiConsumer<Vector2i, Byte> editAction;
     private boolean enabled;
     private Vector2i anchor;
     private Vector2i frontier;
@@ -21,8 +28,8 @@ public class ObstacleEditor {
     private Vector2i maxTile; // bottom right corner
     private boolean join = true;
 
-    public ObstacleEditor(TileMapEditor editor) {
-        this.editor = editor;
+    public ObstacleEditor(BiConsumer<Vector2i, Byte> editAction) {
+        this.editAction = Objects.requireNonNull(editAction);
     }
 
     public void setEnabled(boolean enabled) {
@@ -91,20 +98,21 @@ public class ObstacleEditor {
         byte[][] editedContent = editedContent();
         if (editedContent != null) {
             if (join) {
-                TileMap originalTerrain = editor.worldMap().terrain();
-                editedContent = joinedContent(originalTerrain, editedContent, editedContent.length, editedContent[0].length);
+                editedContent = joinedContent(editedContent, editedContent.length, editedContent[0].length);
             }
-            copy(editedContent, editor.worldMap().terrain());
+            copy(editedContent);
         }
         anchor = frontier = minTile = maxTile = null;
     }
 
-    private byte[][] joinedContent(TileMap original, byte[][] editedContent, int numRows, int numCols) {
+    private byte[][] joinedContent(byte[][] editedContent, int numRows, int numCols) {
         byte[][] joinedContent = new byte[numRows][numCols];
         for (int row = 0; row < numRows; ++row) {
             System.arraycopy(editedContent[row], 0, joinedContent[row], 0, numCols);
         }
         int crossings;
+
+        TileMap original = worldMapPy.get().terrain();
 
         joinedContent[0][0] = switch (original.get(minTile)) {
             case TileEncoding.CORNER_NE -> TileEncoding.WALL_H;
@@ -214,13 +222,13 @@ public class ObstacleEditor {
         return area;
     }
 
-    private void copy(byte[][] values, TileMap tileMap) {
+    private void copy(byte[][] values) {
         int numRows = values.length;
         int numCols = values[0].length;
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
                 Vector2i tile = new Vector2i(minTile.x() + col, minTile.y() + row);
-                editor.setTileValue(tileMap, tile, values[row][col]);
+                editAction.accept(tile, values[row][col]);
             }
         }
     }

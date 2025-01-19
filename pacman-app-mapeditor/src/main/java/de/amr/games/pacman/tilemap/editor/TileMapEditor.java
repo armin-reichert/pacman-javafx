@@ -147,7 +147,7 @@ public class TileMapEditor {
     private boolean dragging = false;
     private final List<Vector2i> tilesWithErrors = new ArrayList<>();
 
-    private final ObstacleEditor obstacleEditor  = new ObstacleEditor(this);
+    private final ObstacleEditor obstacleEditor;
 
     // Widgets
 
@@ -191,6 +191,9 @@ public class TileMapEditor {
     public TileMapEditor(File workDir) {
         lastUsedDir = workDir;
         titlePy.bind(createTitleBinding());
+
+        obstacleEditor = new ObstacleEditor((tile, value) -> setTileValue(worldMap().terrain(), tile, value));
+        obstacleEditor.worldMapPy.bind(worldMapPy);
 
         setWorldMap(new WorldMap(36, 28));
         setMode(EditMode.INSPECT);
