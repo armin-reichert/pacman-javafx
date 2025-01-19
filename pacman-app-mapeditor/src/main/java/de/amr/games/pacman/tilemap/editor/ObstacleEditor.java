@@ -6,8 +6,8 @@ package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.TileEncoding;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
@@ -17,7 +17,7 @@ public class ObstacleEditor {
     final BooleanProperty enabledPy = new SimpleBooleanProperty();
 
     private final EditController editController;
-    private final TileMapEditorViewModel viewModel;
+    private final TileMapEditor viewModel;
 
     private Vector2i anchor;
     private Vector2i frontier;
@@ -25,7 +25,7 @@ public class ObstacleEditor {
     private Vector2i maxTile; // bottom right corner
     private boolean join = true;
 
-    public ObstacleEditor(EditController editController, TileMapEditorViewModel viewModel) {
+    public ObstacleEditor(EditController editController, TileMapEditor viewModel) {
         this.editController = editController;
         this.viewModel = viewModel;
     }
@@ -41,7 +41,7 @@ public class ObstacleEditor {
     public boolean isDisabled() {
         Palette selectedPalette = viewModel.selectedPalette();
         boolean emptyTileEntrySelected =
-            selectedPalette.id() == TileMapEditorViewModel.PALETTE_ID_TERRAIN &&
+            selectedPalette.id() == TileMapEditor.PALETTE_ID_TERRAIN &&
             selectedPalette.getSelectedEntryRow() == 0 && selectedPalette.getSelectedEntryCol() == 0;
         return !(enabledPy.get() && emptyTileEntrySelected);
     }

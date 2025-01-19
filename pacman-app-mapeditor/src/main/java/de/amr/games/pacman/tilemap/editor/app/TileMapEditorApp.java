@@ -21,7 +21,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.tilemap.editor.TileMapEditorViewModel.tt;
+import static de.amr.games.pacman.tilemap.editor.TileMapEditor.tt;
 import static java.util.stream.IntStream.rangeClosed;
 
 /**

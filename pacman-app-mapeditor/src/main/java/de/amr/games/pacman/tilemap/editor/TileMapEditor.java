@@ -45,18 +45,46 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
-import static de.amr.games.pacman.tilemap.editor.TileMapEditorViewModel.tt;
 import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
  */
-public class TileMapEditor implements TileMapEditorViewModel {
+public class TileMapEditor {
+
+    public static final byte MIN_GRID_SIZE = 8;
+    public static final byte MAX_GRID_SIZE = 64;
+
+    public static final byte PALETTE_ID_ACTORS  = 0;
+    public static final byte PALETTE_ID_TERRAIN = 1;
+    public static final byte PALETTE_ID_FOOD    = 2;
+
+    public static final String DEFAULT_COLOR_FOOD                = "rgb(255,255,255)";
+    public static final String DEFAULT_COLOR_WALL_STROKE         = "rgb(33,33,255)";
+    public static final String DEFAULT_COLOR_WALL_FILL           = "rgb(0,0,0)";
+    public static final String DEFAULT_COLOR_DOOR                = "rgb(255,183, 255)";
+
+    public static final Vector2i DEFAULT_POS_HOUSE               = new Vector2i(10, 15);
+    public static final Vector2i DEFAULT_POS_RED_GHOST           = DEFAULT_POS_HOUSE.plus(3, -1);
+    public static final Vector2i DEFAULT_POS_CYAN_GHOST          = DEFAULT_POS_HOUSE.plus(1, 2);
+    public static final Vector2i DEFAULT_POS_PINK_GHOST          = DEFAULT_POS_HOUSE.plus(3, 2);
+    public static final Vector2i DEFAULT_POS_ORANGE_GHOST        = DEFAULT_POS_HOUSE.plus(5, 2);
+    public static final Vector2i DEFAULT_POS_BONUS               = new Vector2i(13, 20);
+    public static final Vector2i DEFAULT_POS_PAC                 = new Vector2i(13, 26);
+
+    public static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(TileMapEditor.class.getPackageName() + ".texts");
+
+    public static String tt(String key, Object... args) {
+        return MessageFormat.format(TEXT_BUNDLE.getString(key), args);
+    }
+
 
     public static Color parseColor(String text) {
         try {
@@ -175,52 +203,42 @@ public class TileMapEditor implements TileMapEditorViewModel {
         return url.toExternalForm();
     }
 
-    @Override
     public ObjectProperty<WorldMap> worldMapProperty() {
         return worldMapPy;
     }
 
-    @Override
     public IntegerProperty gridSizeProperty() {
         return gridSizePy;
     }
 
-    @Override
     public Canvas canvas() {
         return editCanvas;
     }
 
-    @Override
     public ContextMenu contextMenu() {
         return contextMenu;
     }
 
-    @Override
     public byte selectedPaletteID() {
         return (Byte) tabPaneWithPalettes.getSelectionModel().getSelectedItem().getUserData();
     }
 
-    @Override
     public Palette selectedPalette() {
         return palettes[selectedPaletteID()];
     }
 
-    @Override
     public PropertyEditorPane terrainPropertiesEditor() {
         return terrainMapPropertiesEditor;
     }
 
-    @Override
     public PropertyEditorPane foodPropertiesEditor() {
         return foodMapPropertiesEditor;
     }
 
-    @Override
     public void updateSourceView() {
         updateSourceView(worldMap());
     }
 
-    @Override
     public void showMessage(String message, long seconds, MessageType type) {
         messageLabel.setText(message);
         Color color = switch (type) {
@@ -232,21 +250,18 @@ public class TileMapEditor implements TileMapEditorViewModel {
         messageCloseTime = Instant.now().plus(java.time.Duration.ofSeconds(seconds));
     }
 
-    @Override
     public void indicateInspectMode() {
         if (editCanvas != null) {
             editCanvas.setCursor(Cursor.HAND); // TODO use other cursor
         }
     }
 
-    @Override
     public void indicateEditMode() {
         if (editCanvas != null) {
             editCanvas.setCursor(Cursor.DEFAULT);
         }
     }
 
-    @Override
     public void indicateEraseMode() {
         if (editCanvas != null) {
             editCanvas.setCursor(rubberCursor);
@@ -275,7 +290,6 @@ public class TileMapEditor implements TileMapEditorViewModel {
         preview3D.hide();
     }
 
-    @Override
     public WorldMap worldMap() {
         return worldMapPy.get();
     }
@@ -798,12 +812,10 @@ public class TileMapEditor implements TileMapEditorViewModel {
         return false;
     }
 
-    @Override
     public Optional<File> readNextMapFileInDirectory() {
         return nextMapFileInDirectory(currentFilePy.get(), true).filter(this::readMapFile);
     }
 
-    @Override
     public Optional<File> readPrevMapFileInDirectory() {
         return nextMapFileInDirectory(currentFilePy.get(), false).filter(this::readMapFile);
     }

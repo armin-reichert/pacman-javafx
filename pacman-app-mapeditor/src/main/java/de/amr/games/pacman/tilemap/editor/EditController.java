@@ -93,14 +93,14 @@ public class EditController {
 
     final BooleanProperty symmetricEditModePy = new SimpleBooleanProperty(true);
 
-    private final TileMapEditorViewModel viewModel;
+    private final TileMapEditor viewModel;
     private final ObstacleEditor obstacleEditor;
     private boolean unsavedChanges;
     private boolean terrainDataUpToDate;
     private boolean dragging = false;
     private final List<Vector2i> tilesWithErrors = new ArrayList<>();
 
-    EditController(TileMapEditorViewModel viewModel) {
+    EditController(TileMapEditor viewModel) {
         this.viewModel = viewModel;
         this.worldMapPy.bind(viewModel.worldMapProperty());
         viewModel.gridSizeProperty().addListener((py,ov,nv) -> invalidateTerrainData());
@@ -176,19 +176,19 @@ public class EditController {
         WorldMap worldMap = worldMapPy.get();
         if (isMode(EditMode.ERASE)) {
             switch (viewModel.selectedPaletteID()) {
-                case TileMapEditorViewModel.PALETTE_ID_TERRAIN -> eraseTileValue(worldMap.terrain(), tile);
-                case TileMapEditorViewModel.PALETTE_ID_FOOD -> eraseTileValue(worldMap.food(), tile);
+                case TileMapEditor.PALETTE_ID_TERRAIN -> eraseTileValue(worldMap.terrain(), tile);
+                case TileMapEditor.PALETTE_ID_FOOD -> eraseTileValue(worldMap.food(), tile);
             }
         } else {
             if (event.isShiftDown()) {
                 switch (viewModel.selectedPaletteID()) {
-                    case TileMapEditorViewModel.PALETTE_ID_TERRAIN -> {
+                    case TileMapEditor.PALETTE_ID_TERRAIN -> {
                         if (viewModel.selectedPalette().isToolSelected()) {
                             viewModel.selectedPalette().selectedTool().apply(worldMap.terrain(), focussedTilePy.get());
                         }
                         markTileMapEdited(worldMap.terrain());
                     }
-                    case TileMapEditorViewModel.PALETTE_ID_FOOD -> {
+                    case TileMapEditor.PALETTE_ID_FOOD -> {
                         if (viewModel.selectedPalette().isToolSelected()) {
                             viewModel.selectedPalette().selectedTool().apply(worldMap.food(), focussedTilePy.get());
                         }
@@ -274,12 +274,12 @@ public class EditController {
                 setMode(isMode(EditMode.ERASE) ? EditMode.INSPECT : EditMode.ERASE);
             }
             case "+" -> {
-                if (viewModel.gridSizeProperty().get() < TileMapEditorViewModel.MAX_GRID_SIZE) {
+                if (viewModel.gridSizeProperty().get() < TileMapEditor.MAX_GRID_SIZE) {
                     viewModel.gridSizeProperty().set(viewModel.gridSizeProperty().get() + 1);
                 }
             }
             case "-" -> {
-                if (viewModel.gridSizeProperty().get() > TileMapEditorViewModel.MIN_GRID_SIZE) {
+                if (viewModel.gridSizeProperty().get() > TileMapEditor.MIN_GRID_SIZE) {
                     viewModel.gridSizeProperty().set(viewModel.gridSizeProperty().get() - 1);
                 }
             }
@@ -294,7 +294,7 @@ public class EditController {
             var miAddCircle2x2 = new MenuItem("2x2 Circle");
             miAddCircle2x2.setOnAction(actionEvent -> addShapeMirrored(worldMap.terrain(), CIRCLE_2x2, tile));
 
-            var miAddHouse = new MenuItem(TileMapEditorViewModel.tt("menu.edit.add_house"));
+            var miAddHouse = new MenuItem(TileMapEditor.tt("menu.edit.add_house"));
             miAddHouse.setOnAction(actionEvent -> addHouse(worldMap.terrain(), tile));
 
             contextMenu.getItems().setAll(miAddCircle2x2, miAddHouse);
@@ -371,15 +371,15 @@ public class EditController {
         WorldMap worldMap = worldMapPy.get();
         boolean erase = event.isControlDown();
         switch (viewModel.selectedPaletteID()) {
-            case TileMapEditorViewModel.PALETTE_ID_TERRAIN -> editMapTileAtMousePosition(worldMap.terrain(), tile, erase);
-            case TileMapEditorViewModel.PALETTE_ID_ACTORS -> {
+            case TileMapEditor.PALETTE_ID_TERRAIN -> editMapTileAtMousePosition(worldMap.terrain(), tile, erase);
+            case TileMapEditor.PALETTE_ID_ACTORS -> {
                 if (viewModel.selectedPalette().isToolSelected()) {
                     viewModel.selectedPalette().selectedTool().apply(worldMap.terrain(), tile);
                     markTileMapEdited(worldMap.terrain());
                     viewModel.terrainPropertiesEditor().updatePropertyEditorValues();
                 }
             }
-            case TileMapEditorViewModel.PALETTE_ID_FOOD -> editMapTileAtMousePosition(worldMap.food(), tile, erase);
+            case TileMapEditor.PALETTE_ID_FOOD -> editMapTileAtMousePosition(worldMap.food(), tile, erase);
             default -> Logger.error("Unknown palette selection");
         }
     }
@@ -485,9 +485,9 @@ public class EditController {
         addBorder(terrain, 3, 2);
         addHouse(terrain, houseOrigin);
 
-        terrain.setProperty(PROPERTY_COLOR_WALL_STROKE, TileMapEditorViewModel.DEFAULT_COLOR_WALL_STROKE);
-        terrain.setProperty(PROPERTY_COLOR_WALL_FILL, TileMapEditorViewModel.DEFAULT_COLOR_WALL_FILL);
-        terrain.setProperty(PROPERTY_COLOR_DOOR, TileMapEditorViewModel.DEFAULT_COLOR_DOOR);
+        terrain.setProperty(PROPERTY_COLOR_WALL_STROKE, TileMapEditor.DEFAULT_COLOR_WALL_STROKE);
+        terrain.setProperty(PROPERTY_COLOR_WALL_FILL, TileMapEditor.DEFAULT_COLOR_WALL_FILL);
+        terrain.setProperty(PROPERTY_COLOR_DOOR, TileMapEditor.DEFAULT_COLOR_DOOR);
 
         terrain.setProperty(PROPERTY_POS_PAC, formatTile(houseOrigin.plus(3, 11)));
         terrain.setProperty(PROPERTY_POS_BONUS, formatTile(houseOrigin.plus(3, 5)));
@@ -499,7 +499,7 @@ public class EditController {
 
         invalidateTerrainData();
 
-        worldMap.food().setProperty(PROPERTY_COLOR_FOOD, TileMapEditorViewModel.DEFAULT_COLOR_FOOD);
+        worldMap.food().setProperty(PROPERTY_COLOR_FOOD, TileMapEditor.DEFAULT_COLOR_FOOD);
 
         Logger.info("Map created. rows={}, cols={}", tilesY, tilesX);
         return worldMap;
