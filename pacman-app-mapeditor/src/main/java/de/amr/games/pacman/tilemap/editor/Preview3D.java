@@ -5,6 +5,8 @@ import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.rendering.WorldRenderer3D;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
@@ -12,31 +14,58 @@ import javafx.scene.shape.Box;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 
 public class Preview3D {
 
+    private final DoubleProperty widthPy = new SimpleDoubleProperty(800);
+    private final DoubleProperty heightPy = new SimpleDoubleProperty(400);
+
     private final Group root = new Group();
-    private final Stage stage;
-    private final Scene scene;
     private final WorldRenderer3D r3D;
     private final PerspectiveCamera camera = new PerspectiveCamera();
 
-    public Preview3D() {
-        scene = new Scene(root, 800, 400, true, SceneAntialiasing.BALANCED);
+    private WorldMap worldMap;
+
+    private Color wallBaseColor;
+    private Color wallTopColor;
+    private Color foodColor;
+
+    public static Preview3D createInsideStage(Stage stage) {
+        var preview3D = new Preview3D();
+        var scene = new Scene(preview3D.root, preview3D.widthPy.get(), preview3D.heightPy.get(), true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.CORNFLOWERBLUE);
-        scene.setCamera(camera);
-
-        stage = new Stage();
-        stage.setTitle("3D Preview");
+        scene.setCamera(preview3D.camera);
         stage.setScene(scene);
+        return preview3D;
+    }
 
+    public Preview3D() {
         r3D = new WorldRenderer3D();
-
         root.getChildren().add(createSampleContent());
+        camera.setRotationAxis(Rotate.X_AXIS);
+        camera.setRotate(60);
+    }
+
+    public DoubleProperty widthProperty() { return widthPy; }
+
+    public DoubleProperty heightProperty() { return heightPy; }
+
+    public void setWorldMap(WorldMap worldMap) {
+        this.worldMap = worldMap;
+        double worldWidth = worldMap.terrain().numCols() * TS;
+        camera.translateXProperty().bind(widthProperty().subtract(worldWidth).multiply(-0.5));
+        camera.translateYProperty().bind(heightProperty().multiply(-0.5));
+        camera.setTranslateZ(50);
+        updateContent();
+    }
+
+    public void setColors(Color wallBaseColor, Color wallTopColor, Color foodColor) {
+        this.wallBaseColor = wallBaseColor;
+        this.wallTopColor = wallTopColor;
+        this.foodColor = foodColor;
     }
 
     private Node createSampleContent() {
@@ -45,7 +74,7 @@ public class Preview3D {
         return sphere;
     }
 
-    public void updateContent(WorldMap worldMap, Color wallBaseColor, Color wallTopColor, Color foodColor) {
+    private void updateContent() {
         root.getChildren().clear();
 
         AmbientLight ambientLight = new AmbientLight(Color.WHITE);
@@ -84,12 +113,6 @@ public class Preview3D {
             pellet.setTranslateZ(-4);
             maze.getChildren().add(pellet);
         });
-
-        camera.setRotationAxis(Rotate.X_AXIS);
-        camera.setRotate(60);
-        camera.translateXProperty().bind(stage.widthProperty().subtract(worldWidth).multiply(-0.5));
-        camera.translateYProperty().bind(stage.heightProperty().multiply(-0.5));
-        camera.setTranslateZ(50);
     }
 
     private boolean hasFood(WorldMap worldMap, Vector2i tile) {
@@ -98,17 +121,5 @@ public class Preview3D {
 
     private boolean hasEnergizer(WorldMap worldMap, Vector2i tile) {
         return worldMap.food().get(tile) == TileEncoding.ENERGIZER;
-    }
-
-    public boolean isVisible() {
-        return stage.isShowing();
-    }
-
-    public void show() {
-        stage.show();
-    }
-
-    public void hide() {
-        stage.hide();
     }
 }

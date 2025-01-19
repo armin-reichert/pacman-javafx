@@ -158,7 +158,6 @@ public class TileMapEditor {
     private ScrollPane spEditCanvas;
     private Canvas previewCanvas;
     private ScrollPane spPreviewCanvas;
-    private Preview3D preview3D;
     private Text sourceView;
     private ScrollPane spSourceView;
     private TabPane tabPaneMapViews;
@@ -168,6 +167,9 @@ public class TileMapEditor {
     private HBox sliderZoomContainer;
     private FileChooser fileChooser;
     private TabPane tabPaneWithPalettes;
+
+    private Stage preview3DStage;
+    private Preview3D preview3D;
 
     private final ContextMenu contextMenu = new ContextMenu();
     private MenuBar menuBar;
@@ -270,7 +272,7 @@ public class TileMapEditor {
 
     public void stop() {
         clock.stop();
-        preview3D.hide();
+        preview3DStage.hide();
         setEditMode(EditMode.INSPECT);
     }
 
@@ -363,7 +365,9 @@ public class TileMapEditor {
     }
 
     private void createPreview3D() {
-        preview3D = new Preview3D();
+        preview3DStage = new Stage();
+        preview3DStage.setTitle("3D Preview");
+        preview3D = Preview3D.createInsideStage(preview3DStage);
         worldMapPy.addListener((py,ov,nv) -> updatePreview3D());
     }
 
@@ -374,7 +378,8 @@ public class TileMapEditor {
         Color wallTopColor = getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL,
                 parseColor(COLOR_WALL_FILL));
         Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, parseColor(COLOR_FOOD));
-        preview3D.updateContent(worldMapPy.get(), wallBaseColor, wallTopColor, foodColor);
+        preview3D.setColors(wallBaseColor, wallTopColor, foodColor);
+        preview3D.setWorldMap(worldMap());
     }
 
     private void createMapSourceView() {
@@ -556,7 +561,7 @@ public class TileMapEditor {
                 drawEditCanvas();
                 drawPreviewCanvas();
                 drawSelectedPalette();
-                if (preview3D.isVisible()) {
+                if (preview3DStage.isShowing()) {
                     updatePreview3D(); //TODO do this only if terrain is invalid
                 }
             } catch (Exception x) {
@@ -1204,7 +1209,7 @@ public class TileMapEditor {
             }
             case "3"-> {
                 updatePreview3D();
-                preview3D.show();
+                preview3DStage.show();
             }
         }
     }
