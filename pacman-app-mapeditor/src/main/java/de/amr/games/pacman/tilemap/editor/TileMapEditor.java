@@ -113,8 +113,6 @@ public class TileMapEditor {
 
     private final BooleanProperty segmentNumbersDisplayedPy = new SimpleBooleanProperty(false);
 
-    private final BooleanProperty previewVisiblePy = new SimpleBooleanProperty(true);
-
     private final BooleanProperty propertyEditorsVisiblePy = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
@@ -362,7 +360,6 @@ public class TileMapEditor {
         spPreviewCanvas.setFitToHeight(true);
         spPreviewCanvas.hvalueProperty().bindBidirectional(spEditCanvas.hvalueProperty());
         spPreviewCanvas.vvalueProperty().bindBidirectional(spEditCanvas.vvalueProperty());
-        spPreviewCanvas.visibleProperty().bind(previewVisiblePy);
         previewCanvas.widthProperty().bind(editCanvas.widthProperty());
         previewCanvas.heightProperty().bind(editCanvas.heightProperty());
     }
@@ -399,10 +396,10 @@ public class TileMapEditor {
         double mapHeight = worldMap().terrain().numRows() * TS;
         PerspectiveCamera camera = preview3D.camera();
         camera.setRotationAxis(Rotate.X_AXIS);
-        camera.setRotate(70);
+        camera.setRotate(60);
         camera.setTranslateX(mapWidth * 0.5);
         camera.setTranslateY(mapHeight * 1.5);
-        camera.setTranslateZ(-100);
+        camera.setTranslateZ(-140);
     }
 
     private Point2D prevDragPosition;
@@ -506,8 +503,8 @@ public class TileMapEditor {
     private void createFocussedTileIndicator() {
         focussedTileInfo = new Label();
         focussedTileInfo.setFont(FONT_STATUS_LINE);
-        focussedTileInfo.setMinWidth(100);
-        focussedTileInfo.setMaxWidth(120);
+        focussedTileInfo.setMinWidth(70);
+        focussedTileInfo.setMaxWidth(70);
         focussedTileInfo.textProperty().bind(focussedTilePy.map(
             tile -> tile != null ? "(%2d,%2d)".formatted(tile.x(), tile.y()) : "n/a"));
     }
@@ -530,7 +527,6 @@ public class TileMapEditor {
         messageLabel = new Label();
         messageLabel.setFont(FONT_MESSAGE);
         messageLabel.setMinWidth(200);
-        messageLabel.setPadding(new Insets(0, 0, 0, 10));
     }
 
     private void createZoomSlider() {
@@ -683,17 +679,12 @@ public class TileMapEditor {
         var miShowSegmentNumbers = new CheckMenuItem(tt("menu.view.segment_numbers"));
         miShowSegmentNumbers.selectedProperty().bindBidirectional(segmentNumbersDisplayedPy);
 
-        var miShowPreview = new CheckMenuItem(tt("menu.view.preview"));
-        miShowPreview.selectedProperty().bindBidirectional(previewVisiblePy);
-
         menuView = new Menu(tt("menu.view"), NO_GRAPHIC,
             miShowPropertyEditors,
             miShowTerrain,
             miShowSegmentNumbers,
             miShowFood,
-            miShowGrid,
-            new SeparatorMenuItem(),
-            miShowPreview);
+            miShowGrid);
     }
 
     public void addLoadMapMenuItem(String description, WorldMap map) {
@@ -1238,6 +1229,7 @@ public class TileMapEditor {
                 setEditMode(EditMode.DRAW);
                 symmetricEditModePy.set(true);
             }
+            case "w" -> preview3D.wireframeProperty().set(!preview3D.wireframeProperty().get());
             case "x" -> {
                 setEditMode(EditMode.ERASE);
             }
