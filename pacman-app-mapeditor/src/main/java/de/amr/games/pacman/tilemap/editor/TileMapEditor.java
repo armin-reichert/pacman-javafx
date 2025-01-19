@@ -201,14 +201,6 @@ public class TileMapEditor {
 
     public StringProperty titleProperty() { return titlePy; }
 
-    public IntegerProperty gridSizeProperty() {
-        return gridSizePy;
-    }
-
-    public ContextMenu contextMenu() {
-        return contextMenu;
-    }
-
     public byte selectedPaletteID() {
         return (Byte) tabPaneWithPalettes.getSelectionModel().getSelectedItem().getUserData();
     }
@@ -1042,7 +1034,7 @@ public class TileMapEditor {
         Logger.debug("Mouse clicked {}", event);
         if (event.getButton() == MouseButton.PRIMARY) {
             editCanvas.requestFocus();
-            contextMenu().hide();
+            contextMenu.hide();
             if (event.getClickCount() == 2 && isMode(EditMode.INSPECT)) {
                 setMode(EditMode.DRAW);
             }
@@ -1181,16 +1173,16 @@ public class TileMapEditor {
                 symmetricEditModePy.set(true);
             }
             case "x" -> {
-                setMode(isMode(EditMode.ERASE) ? EditMode.INSPECT : EditMode.ERASE);
+                setMode(EditMode.ERASE);
             }
             case "+" -> {
-                if (gridSizeProperty().get() < TileMapEditor.MAX_GRID_SIZE) {
-                    gridSizeProperty().set(gridSizeProperty().get() + 1);
+                if (gridSize() < TileMapEditor.MAX_GRID_SIZE) {
+                    gridSizePy.set(gridSize() + 1);
                 }
             }
             case "-" -> {
-                if (gridSizeProperty().get() > TileMapEditor.MIN_GRID_SIZE) {
-                    gridSizeProperty().set(gridSizeProperty().get() - 1);
+                if (gridSize() > TileMapEditor.MIN_GRID_SIZE) {
+                    gridSizePy.set(gridSize() - 1);
                 }
             }
             case "3"-> {
@@ -1233,7 +1225,7 @@ public class TileMapEditor {
      * @return number of full tiles spanned by pixels
      */
     private int fullTiles(double pixels) {
-        return (int) (pixels / gridSizeProperty().get());
+        return (int) (pixels / gridSize());
     }
 
     void invalidateTerrainData() {
