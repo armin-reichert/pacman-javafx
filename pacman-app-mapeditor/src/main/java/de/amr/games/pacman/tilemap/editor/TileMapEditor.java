@@ -1228,11 +1228,11 @@ public class TileMapEditor {
         return (int) (pixels / gridSize());
     }
 
-    void invalidateTerrainData() {
+    private void invalidateTerrainData() {
         terrainDataUpToDate = false;
     }
 
-    void ensureTerrainMapsPathsUpToDate() {
+    private void ensureTerrainMapsPathsUpToDate() {
         if (!terrainDataUpToDate) {
             WorldMap worldMap = worldMapPy.get();
             tilesWithErrors.clear();
@@ -1252,11 +1252,11 @@ public class TileMapEditor {
         }
     }
 
-    Vector2i tileAtMousePosition(double mouseX, double mouseY) {
+    private Vector2i tileAtMousePosition(double mouseX, double mouseY) {
         return new Vector2i(fullTiles(mouseX), fullTiles(mouseY));
     }
 
-    void editMapTileAtMousePosition(TileMap tileMap, Vector2i tile, boolean erase) {
+    private void editMapTileAtMousePosition(TileMap tileMap, Vector2i tile, boolean erase) {
         if (erase) { // Control-Click clears tile content
             eraseTileValue(tileMap, tile);
         } else if (selectedPalette().isToolSelected()) {
@@ -1264,7 +1264,7 @@ public class TileMapEditor {
         }
     }
 
-    void editAtMousePosition(MouseEvent event) {
+    private void editAtMousePosition(MouseEvent event) {
         Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
         if (isMode(EditMode.INSPECT)) {
             identifyObstacleAtTilePosition(tile);
@@ -1286,16 +1286,16 @@ public class TileMapEditor {
         }
     }
 
-    void clearTerrain(WorldMap worldMap) {
+    private void clearTerrain(WorldMap worldMap) {
         worldMap.terrain().clear();
     }
 
-    void clearFood(WorldMap worldMap) {
+    private void clearFood(WorldMap worldMap) {
         worldMap.food().clear();
         markTileMapEdited(worldMap.food());
     }
 
-    void addBorder(TileMap terrain, int emptyRowsTop, int emptyRowsBottom) {
+    private void addBorder(TileMap terrain, int emptyRowsTop, int emptyRowsBottom) {
         for (int row = emptyRowsTop; row < terrain.numRows() - emptyRowsBottom; ++row) {
             terrain.set(row, 0, TileEncoding.DWALL_V);
             terrain.set(row, terrain.numCols() - 1, TileEncoding.DWALL_V);
@@ -1312,7 +1312,7 @@ public class TileMapEditor {
         markTileMapEdited(terrain);
     }
 
-    void addHouse(TileMap terrain, Vector2i tile) {
+    private void addHouse(TileMap terrain, Vector2i tile) {
         addShape(terrain, GHOST_HOUSE_SHAPE, tile);
         terrain.setProperty(PROPERTY_POS_HOUSE_MIN_TILE, formatTile(tile));
         terrain.setProperty(PROPERTY_POS_RED_GHOST, formatTile(tile.plus(3, -1)));
@@ -1323,7 +1323,7 @@ public class TileMapEditor {
         terrainPropertiesEditor().rebuildPropertyEditors();
     }
 
-    void addShapeMirrored(TileMap map, byte[][] content, Vector2i originTile) {
+    private void addShapeMirrored(TileMap map, byte[][] content, Vector2i originTile) {
         int numRows = content.length, numCols = content[0].length;
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
@@ -1333,7 +1333,7 @@ public class TileMapEditor {
         markTileMapEdited(map);
     }
 
-    void addShape(TileMap map, byte[][] content, Vector2i originTile) {
+    private void addShape(TileMap map, byte[][] content, Vector2i originTile) {
         int numRows = content.length, numCols = content[0].length;
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
@@ -1347,7 +1347,7 @@ public class TileMapEditor {
      * This method should be used whenever a tile value is set! It takes editor enabled state and symmetric editing mode
      * into account.
      */
-    public void setTileValue(TileMap tileMap, Vector2i tile, byte value) {
+    void setTileValue(TileMap tileMap, Vector2i tile, byte value) {
         assertNotNull(tileMap);
         assertNotNull(tile);
         tileMap.set(tile, value);
@@ -1357,28 +1357,28 @@ public class TileMapEditor {
         markTileMapEdited(tileMap);
     }
 
-    void eraseTileValue(TileMap tileMap, Vector2i tile) {
+    private void eraseTileValue(TileMap tileMap, Vector2i tile) {
         tileMap.set(tile, TileEncoding.EMPTY);
         markTileMapEdited(tileMap);
     }
 
-    public void clearMessage() {
+    void clearMessage() {
         showInfoMessage("", 0);
     }
 
-    public void showInfoMessage(String message, long seconds) {
+    void showInfoMessage(String message, long seconds) {
         showMessage(message, seconds, MessageType.INFO);
     }
 
-    public void showWarningMessage(String message, long seconds) {
+    void showWarningMessage(String message, long seconds) {
         showMessage(message, seconds, MessageType.WARNING);
     }
 
-    public void showErrorMessage(String message, long seconds) {
+    void showErrorMessage(String message, long seconds) {
         showMessage(message, seconds, MessageType.ERROR);
     }
 
-    WorldMap createPreconfiguredMap(int tilesX, int tilesY) {
+    private WorldMap createPreconfiguredMap(int tilesX, int tilesY) {
         var worldMap = new WorldMap(tilesY, tilesX);
         TileMap terrain = worldMap.terrain();
 
