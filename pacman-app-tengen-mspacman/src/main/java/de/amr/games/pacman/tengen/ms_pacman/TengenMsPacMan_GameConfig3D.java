@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tengen.ms_pacman;
 
-import de.amr.games.pacman.tilemap.rendering.WorldRenderer3D;
 import de.amr.games.pacman.tengen.ms_pacman.scene.TengenMsPacMan_PlayScene3D;
+import de.amr.games.pacman.tilemap.rendering.WorldRenderer3D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
@@ -34,7 +34,7 @@ public class TengenMsPacMan_GameConfig3D extends TengenMsPacMan_GameConfig imple
 
     @Override
     public WorldRenderer3D createWorldRenderer() {
-        return new TengenMsPacMan_WorldRenderer3D();
+        return new WorldRenderer3D();
     }
 
     @Override
