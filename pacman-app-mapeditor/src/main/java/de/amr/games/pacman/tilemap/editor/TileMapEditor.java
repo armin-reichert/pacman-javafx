@@ -128,9 +128,9 @@ public class TileMapEditor {
         @Override
         protected void invalidated() {
             switch (get()) {
-                case INSPECT -> indicateInspectMode();
-                case DRAW -> indicateEditMode();
-                case ERASE -> indicateEraseMode();
+                case INSPECT -> onEnterInspectMode();
+                case DRAW -> onEnterEditMode();
+                case ERASE -> onEnterEraseMode();
             }
         }
     };
@@ -235,19 +235,19 @@ public class TileMapEditor {
         messageCloseTime = Instant.now().plus(java.time.Duration.ofSeconds(seconds));
     }
 
-    public void indicateInspectMode() {
+    public void onEnterInspectMode() {
         if (editCanvas != null) {
             editCanvas.setCursor(Cursor.HAND); // TODO use other cursor
         }
     }
 
-    public void indicateEditMode() {
+    public void onEnterEditMode() {
         if (editCanvas != null) {
             editCanvas.setCursor(Cursor.DEFAULT);
         }
     }
 
-    public void indicateEraseMode() {
+    public void onEnterEraseMode() {
         if (editCanvas != null) {
             editCanvas.setCursor(RUBBER_CURSOR);
         }
@@ -270,22 +270,24 @@ public class TileMapEditor {
 
     public void stop() {
         clock.stop();
-        setMode(EditMode.INSPECT);
-        //editController.clearUnsavedChanges();
         preview3D.hide();
+        setMode(EditMode.INSPECT);
     }
 
     public WorldMap worldMap() {
         return worldMapPy.get();
     }
 
-    public void setWorldMap(WorldMap map) {
-        worldMapPy.set(Globals.assertNotNull(map));
+    public void setWorldMap(WorldMap worldMap) {
+        worldMapPy.set(assertNotNull(worldMap));
     }
 
     public void createUI(Stage stage) {
-        this.stage = Globals.assertNotNull(stage);
+        this.stage = assertNotNull(stage);
+
+        // must be created before palettes!
         createRenderers();
+
         createFileChooser();
         createMenuBarAndMenus();
         createEditCanvas();
@@ -324,31 +326,30 @@ public class TileMapEditor {
 
     private void createFileChooser() {
         fileChooser = new FileChooser();
-        var worldExtensionFilter = new FileChooser.ExtensionFilter("World Map Files", "*.world");
-        var anyExtensionFilter = new FileChooser.ExtensionFilter("All Files", "*.*");
-        fileChooser.getExtensionFilters().addAll(worldExtensionFilter, anyExtensionFilter);
-        fileChooser.setSelectedExtensionFilter(worldExtensionFilter);
+        var worldMapFilesFilter = new FileChooser.ExtensionFilter("World Map Files", "*.world");
+        var allFilesFilter = new FileChooser.ExtensionFilter("All Files", "*.*");
+        fileChooser.getExtensionFilters().addAll(worldMapFilesFilter, allFilesFilter);
+        fileChooser.setSelectedExtensionFilter(worldMapFilesFilter);
         fileChooser.setInitialDirectory(lastUsedDir);
     }
 
     private void createEditCanvas() {
         editCanvas = new Canvas();
+        editCanvas.heightProperty().bind(Bindings.createDoubleBinding(
+            () -> (double) worldMap().terrain().numRows() * gridSize(), worldMapPy, gridSizePy));
+        editCanvas.widthProperty().bind(Bindings.createDoubleBinding(
+            () -> (double) worldMap().terrain().numCols() * gridSize(), worldMapPy, gridSizePy));
 
-        editCanvas.setOnContextMenuRequested(event -> onEditCanvasContextMenuRequested(contextMenu, event));
+        editCanvas.setOnContextMenuRequested(this::onEditCanvasContextMenuRequested);
         editCanvas.setOnMouseClicked(this::onEditCanvasMouseClicked);
-        editCanvas.setOnMouseReleased(this::onEditCanvasMouseReleased);
         editCanvas.setOnMouseDragged(this::onEditCanvasMouseDragged);
         editCanvas.setOnMouseMoved(this::onEditCanvasMouseMoved);
+        editCanvas.setOnMouseReleased(this::onEditCanvasMouseReleased);
         editCanvas.setOnKeyPressed(this::onEditCanvasKeyPressed);
 
         spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);
 
-        // Note: this must be done *after* the initial map has been created/loaded!
-        editCanvas.heightProperty().bind(Bindings.createDoubleBinding(
-            () -> (double) worldMap().terrain().numRows() * gridSize(), worldMapPy, gridSizePy));
-        editCanvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> (double) worldMap().terrain().numCols() * gridSize(), worldMapPy, gridSizePy));
     }
 
     private void createPreviewCanvas() {
@@ -405,9 +406,9 @@ public class TileMapEditor {
     }
 
     private void createPalettes() {
-        palettes[PALETTE_ID_ACTORS]  = createActorPalette();
-        palettes[PALETTE_ID_TERRAIN] = createTerrainPalette();
-        palettes[PALETTE_ID_FOOD]    = createFoodPalette();
+        palettes[PALETTE_ID_ACTORS]  = createActorPalette(PALETTE_ID_ACTORS, TOOL_SIZE, this, editorTerrainRenderer);
+        palettes[PALETTE_ID_TERRAIN] = createTerrainPalette(PALETTE_ID_TERRAIN, TOOL_SIZE, this, editorTerrainRenderer);
+        palettes[PALETTE_ID_FOOD]    = createFoodPalette(PALETTE_ID_FOOD, TOOL_SIZE, this, foodMapRenderer);
 
         var tab1 = new Tab(tt("terrain"), palettes[PALETTE_ID_TERRAIN].root());
         tab1.setClosable(false);
@@ -569,61 +570,6 @@ public class TileMapEditor {
         clock.setCycleCount(Animation.INDEFINITE);
     }
 
-    private Palette createTerrainPalette() {
-        var palette = new Palette(PALETTE_ID_TERRAIN, TOOL_SIZE, 1, 23, editorTerrainRenderer);
-        palette.addTileTool(this, TileEncoding.EMPTY, "Empty Space");
-        palette.addTileTool(this, TileEncoding.WALL_H, "Horiz. Wall");
-        palette.addTileTool(this, TileEncoding.WALL_V, "Vert. Wall");
-        palette.addTileTool(this, TileEncoding.DWALL_H, "Horiz. Double-Wall");
-        palette.addTileTool(this, TileEncoding.DWALL_V, "Vert. Double-Wall");
-        palette.addTileTool(this, TileEncoding.CORNER_NW, "NW Corner");
-        palette.addTileTool(this, TileEncoding.CORNER_NE, "NE Corner");
-        palette.addTileTool(this, TileEncoding.CORNER_SW, "SW Corner");
-        palette.addTileTool(this, TileEncoding.CORNER_SE, "SE Corner");
-        palette.addTileTool(this, TileEncoding.DCORNER_NW, "NW Corner");
-        palette.addTileTool(this, TileEncoding.DCORNER_NE, "NE Corner");
-        palette.addTileTool(this, TileEncoding.DCORNER_SW, "SW Corner");
-        palette.addTileTool(this, TileEncoding.DCORNER_SE, "SE Corner");
-        palette.addTileTool(this, TileEncoding.DCORNER_ANGULAR_NW, "NW Corner");
-        palette.addTileTool(this, TileEncoding.DCORNER_ANGULAR_NE, "NE Corner");
-        palette.addTileTool(this, TileEncoding.DCORNER_ANGULAR_SW, "SW Corner");
-        palette.addTileTool(this, TileEncoding.DCORNER_ANGULAR_SE, "SE Corner");
-        palette.addTileTool(this, TileEncoding.TUNNEL, "Tunnel");
-        palette.addTileTool(this, TileEncoding.DOOR, "Door");
-        palette.addTileTool(this, TileEncoding.ONE_WAY_UP, "One-Way Up");
-        palette.addTileTool(this, TileEncoding.ONE_WAY_RIGHT, "One-Way Right");
-        palette.addTileTool(this, TileEncoding.ONE_WAY_DOWN, "One-Way Down");
-        palette.addTileTool(this, TileEncoding.ONE_WAY_LEFT, "One-Way Left");
-
-        palette.selectTool(0); // "No Tile"
-        return palette;
-    }
-
-    private Palette createActorPalette() {
-        var palette = new Palette(PALETTE_ID_ACTORS, TOOL_SIZE, 1, 10, editorTerrainRenderer);
-        palette.addTileTool(this, TileEncoding.EMPTY, "");
-        palette.addPropertyTool(PROPERTY_POS_PAC, "Pac-Man");
-        palette.addPropertyTool(PROPERTY_POS_RED_GHOST, "Red Ghost");
-        palette.addPropertyTool(PROPERTY_POS_PINK_GHOST, "Pink Ghost");
-        palette.addPropertyTool(PROPERTY_POS_CYAN_GHOST, "Cyan Ghost");
-        palette.addPropertyTool(PROPERTY_POS_ORANGE_GHOST, "Orange Ghost");
-        palette.addPropertyTool(PROPERTY_POS_SCATTER_RED_GHOST, "Red Ghost Scatter");
-        palette.addPropertyTool(PROPERTY_POS_SCATTER_PINK_GHOST, "Pink Ghost Scatter");
-        palette.addPropertyTool(PROPERTY_POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter");
-        palette.addPropertyTool(PROPERTY_POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter");
-        palette.selectTool(0); // "No actor"
-        return palette;
-    }
-
-    private Palette createFoodPalette() {
-        var palette = new Palette(PALETTE_ID_FOOD, TOOL_SIZE, 1, 3, foodMapRenderer);
-        palette.addTileTool(this, TileEncoding.EMPTY, "No Food");
-        palette.addTileTool(this, TileEncoding.PELLET, "Pellet");
-        palette.addTileTool(this, TileEncoding.ENERGIZER, "Energizer");
-        palette.selectTool(0); // "No Food"
-        return palette;
-    }
-
     private void createMenuBarAndMenus() {
         createFileMenu();
         createEditMenu();
@@ -705,15 +651,15 @@ public class TileMapEditor {
     }
 
     public void addLoadMapMenuItem(String description, WorldMap map) {
-        Globals.assertNotNull(description);
-        Globals.assertNotNull(map);
+        assertNotNull(description);
+        assertNotNull(map);
         var miLoadMap = new MenuItem(description);
         miLoadMap.setOnAction(e -> loadMap(map));
         menuLoadMap.getItems().add(miLoadMap);
     }
 
     public void loadMap(WorldMap worldMap) {
-        Globals.assertNotNull(worldMap);
+        assertNotNull(worldMap);
         if (hasUnsavedChanges()) {
             showSaveConfirmationDialog(this::showSaveDialog, () -> {
                 setWorldMap(new WorldMap(worldMap));
@@ -1245,7 +1191,7 @@ public class TileMapEditor {
         }
     }
 
-    private void onEditCanvasContextMenuRequested(ContextMenu contextMenu, ContextMenuEvent event) {
+    private void onEditCanvasContextMenuRequested(ContextMenuEvent event) {
         if (!isMode(EditMode.INSPECT)) {
             Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
             WorldMap worldMap = worldMapPy.get();

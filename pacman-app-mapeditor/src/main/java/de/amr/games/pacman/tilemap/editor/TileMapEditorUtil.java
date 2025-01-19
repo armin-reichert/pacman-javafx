@@ -6,12 +6,14 @@ package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.tilemap.rendering.TileMapRenderer;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.net.URL;
 
+import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static java.util.Objects.requireNonNull;
 
 public interface TileMapEditorUtil {
@@ -83,5 +85,60 @@ public interface TileMapEditorUtil {
         filler.setMinWidth(pixels);
         filler.setMaxWidth(pixels);
         return filler;
+    }
+
+    static Palette createTerrainPalette(byte id, int toolSize, TileMapEditor editor, TileMapRenderer renderer) {
+        var palette = new Palette(id, toolSize, 1, 23, renderer);
+        palette.addTileTool(editor, TileEncoding.EMPTY, "Empty Space");
+        palette.addTileTool(editor, TileEncoding.WALL_H, "Horiz. Wall");
+        palette.addTileTool(editor, TileEncoding.WALL_V, "Vert. Wall");
+        palette.addTileTool(editor, TileEncoding.DWALL_H, "Horiz. Double-Wall");
+        palette.addTileTool(editor, TileEncoding.DWALL_V, "Vert. Double-Wall");
+        palette.addTileTool(editor, TileEncoding.CORNER_NW, "NW Corner");
+        palette.addTileTool(editor, TileEncoding.CORNER_NE, "NE Corner");
+        palette.addTileTool(editor, TileEncoding.CORNER_SW, "SW Corner");
+        palette.addTileTool(editor, TileEncoding.CORNER_SE, "SE Corner");
+        palette.addTileTool(editor, TileEncoding.DCORNER_NW, "NW Corner");
+        palette.addTileTool(editor, TileEncoding.DCORNER_NE, "NE Corner");
+        palette.addTileTool(editor, TileEncoding.DCORNER_SW, "SW Corner");
+        palette.addTileTool(editor, TileEncoding.DCORNER_SE, "SE Corner");
+        palette.addTileTool(editor, TileEncoding.DCORNER_ANGULAR_NW, "NW Corner");
+        palette.addTileTool(editor, TileEncoding.DCORNER_ANGULAR_NE, "NE Corner");
+        palette.addTileTool(editor, TileEncoding.DCORNER_ANGULAR_SW, "SW Corner");
+        palette.addTileTool(editor, TileEncoding.DCORNER_ANGULAR_SE, "SE Corner");
+        palette.addTileTool(editor, TileEncoding.TUNNEL, "Tunnel");
+        palette.addTileTool(editor, TileEncoding.DOOR, "Door");
+        palette.addTileTool(editor, TileEncoding.ONE_WAY_UP, "One-Way Up");
+        palette.addTileTool(editor, TileEncoding.ONE_WAY_RIGHT, "One-Way Right");
+        palette.addTileTool(editor, TileEncoding.ONE_WAY_DOWN, "One-Way Down");
+        palette.addTileTool(editor, TileEncoding.ONE_WAY_LEFT, "One-Way Left");
+
+        palette.selectTool(0); // "No Tile"
+        return palette;
+    }
+
+    static Palette createActorPalette(byte id, int toolSize, TileMapEditor editor, TerrainRendererInEditor renderer) {
+        var palette = new Palette(id, toolSize, 1, 10, renderer);
+        palette.addTileTool(editor, TileEncoding.EMPTY, "");
+        palette.addPropertyTool(PROPERTY_POS_PAC, "Pac-Man");
+        palette.addPropertyTool(PROPERTY_POS_RED_GHOST, "Red Ghost");
+        palette.addPropertyTool(PROPERTY_POS_PINK_GHOST, "Pink Ghost");
+        palette.addPropertyTool(PROPERTY_POS_CYAN_GHOST, "Cyan Ghost");
+        palette.addPropertyTool(PROPERTY_POS_ORANGE_GHOST, "Orange Ghost");
+        palette.addPropertyTool(PROPERTY_POS_SCATTER_RED_GHOST, "Red Ghost Scatter");
+        palette.addPropertyTool(PROPERTY_POS_SCATTER_PINK_GHOST, "Pink Ghost Scatter");
+        palette.addPropertyTool(PROPERTY_POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter");
+        palette.addPropertyTool(PROPERTY_POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter");
+        palette.selectTool(0); // "No actor"
+        return palette;
+    }
+
+    static Palette createFoodPalette(byte id, int toolSize, TileMapEditor editor, TileMapRenderer renderer) {
+        var palette = new Palette(id, toolSize, 1, 3, renderer);
+        palette.addTileTool(editor, TileEncoding.EMPTY, "No Food");
+        palette.addTileTool(editor, TileEncoding.PELLET, "Pellet");
+        palette.addTileTool(editor, TileEncoding.ENERGIZER, "Energizer");
+        palette.selectTool(0); // "No Food"
+        return palette;
     }
 }
