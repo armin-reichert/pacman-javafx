@@ -1016,6 +1016,24 @@ public class TileMapEditor {
         }
     }
 
+    // Messages
+
+    void clearMessage() {
+        showInfoMessage("", 0);
+    }
+
+    void showInfoMessage(String message, long seconds) {
+        showMessage(message, seconds, MessageType.INFO);
+    }
+
+    void showWarningMessage(String message, long seconds) {
+        showMessage(message, seconds, MessageType.WARNING);
+    }
+
+    void showErrorMessage(String message, long seconds) {
+        showMessage(message, seconds, MessageType.ERROR);
+    }
+
     // Controller part
 
     private Vector2i editedContentMinTile() {
@@ -1360,22 +1378,6 @@ public class TileMapEditor {
     private void eraseTileValue(TileMap tileMap, Vector2i tile) {
         tileMap.set(tile, TileEncoding.EMPTY);
         markTileMapEdited(tileMap);
-    }
-
-    void clearMessage() {
-        showInfoMessage("", 0);
-    }
-
-    void showInfoMessage(String message, long seconds) {
-        showMessage(message, seconds, MessageType.INFO);
-    }
-
-    void showWarningMessage(String message, long seconds) {
-        showMessage(message, seconds, MessageType.WARNING);
-    }
-
-    void showErrorMessage(String message, long seconds) {
-        showMessage(message, seconds, MessageType.ERROR);
     }
 
     private WorldMap createPreconfiguredMap(int tilesX, int tilesY) {
