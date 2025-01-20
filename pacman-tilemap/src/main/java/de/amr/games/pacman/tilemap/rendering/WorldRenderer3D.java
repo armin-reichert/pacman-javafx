@@ -76,7 +76,7 @@ public class WorldRenderer3D {
     protected PhongMaterial cornerMaterial = new PhongMaterial();
 
     protected DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(3.5);
-    protected float wallTopHeight = 0.1f;
+    protected float wallTopHeight = 0.2f;
     protected float wallThickness = 2;
     protected boolean oShapeFilled = true;
 
@@ -813,168 +813,194 @@ public class WorldRenderer3D {
 
     // Tengen maps
 
-    public void addUncategorizedObstacle3D(Group g, Obstacle obstacle) {
+    public void addUncategorizedObstacle3D(Group parent, Obstacle obstacle) {
         switch (obstacle.encoding()) {
             // Tengen BIG map #1, upside T at top, center
-            case "dcfbdcgbfcebgce" -> render_BigMap1_UpsideT(g, obstacle);
+            case "dcfbdcgbfcebgce" -> render_BigMap1_UpsideT(parent, obstacle);
 
             // Tengen BIG map #2, large desk-like obstacle on the bottom
-            case "dgbecgbfebgcdbecfbdgbfcdbfeb" -> render_BigMap2_DeskLike(g, obstacle);
+            case "dgbecgbfebgcdbecfbdgbfcdbfeb" -> render_BigMap2_DeskLike(parent, obstacle);
 
             // Tengen BIG map #3, large double-T obstacle on the top
-            case "dcgbecgfcdbecgfcdbfceb" -> render_BigMap3_DoubleTOnTop(g, obstacle);
+            case "dcgbecgfcdbecgfcdbfceb" -> render_BigMap3_DoubleTOnTop(parent, obstacle);
 
             // Tengen BIG map #5, bowl-like obstacle on the top
-            case "dcgbecgbfcdbfcebdcfbgceb" -> render_BigMap5_Bowl(g, obstacle);
+            case "dcgbecgbfcdbfcebdcfbgceb" -> render_BigMap5_Bowl(parent, obstacle);
 
             // Tengen BIG map #5, double-F on left side
-            case "dcgfcdbfebgcdbfebgcdbfeb" -> render_BigMap5_DoubleFLeft(g, obstacle);
+            case "dcgfcdbfebgcdbfebgcdbfeb" -> render_BigMap5_DoubleFLeft(parent, obstacle);
 
             // Tengen BIG map #5, double-F on right side
-            case "dgbecfbdgbecfbdgbecgfceb" -> render_BigMap5_DoubleFRight(g, obstacle);
+            case "dgbecfbdgbecfbdgbecgfceb" -> render_BigMap5_DoubleFRight(parent, obstacle);
 
             // Tengen BIG map #5, plane-like obstacle middle bottom
-            case "dcfbdgbecfbdgbfebgcdbfebgce" -> render_BigMap5_PlaneLike(g, obstacle);
+            case "dcfbdgbecfbdgbfebgcdbfebgce" -> render_BigMap5_PlaneLike(parent, obstacle);
 
             // Tengen BIG map #6, obstacle left-top
-            case "dcgfcdbfcebgce" -> render_BigMap6_LeftTopObstacle(g, obstacle);
+            case "dcgfcdbfcebgce" -> render_BigMap6_LeftTopObstacle(parent, obstacle);
 
             // Tengen BIG map #6, obstacle right-top
-            case "dcfbdcgbecgfce" -> render_BigMap6_RightTopObstacle(g, obstacle);
+            case "dcfbdcgbecgfce" -> render_BigMap6_RightTopObstacle(parent, obstacle);
 
             // Tengen BIG map #8, huge 62-segment obstacle on top
-            case "dcgbecgbecgfcdbfcdbecgbecgfcdbfcdbfcebdcgbecfbgcebdcfbgcdbfceb" -> render_BigMap8_62SegmentObstacle(g, obstacle);
+            case "dcgbecgbecgfcdbfcdbecgbecgfcdbfcdbfcebdcgbecfbgcebdcfbgcdbfceb" -> render_BigMap8_62SegmentObstacle(parent, obstacle);
 
             // Tengen BIG map #8, big-bowl obstacle middle bottom
-            case "dcgbecgbfcdbfcedcfbdcfbgcebgce" -> render_BigMap8_BigBowl(g, obstacle);
+            case "dcgbecgbfcdbfcedcfbdcfbgcebgce" -> render_BigMap8_BigBowl(parent, obstacle);
 
             // Tengen BIG map #8, sea-horse obstacle left
-            case "dcgbfebgcdbfceb" -> render_BigMap8_SeaHorseLeft(g, obstacle);
+            case "dcgbfebgcdbfceb" -> render_BigMap8_SeaHorseLeft(parent, obstacle);
 
             // Tengen BIG map #8, sea-horse obstacle left
-            case "dcgbecfbdgbfceb" -> render_BigMap8_SeaHorseRight(g, obstacle);
+            case "dcgbecfbdgbfceb" -> render_BigMap8_SeaHorseRight(parent, obstacle);
 
             // Tengen BIG map #9, inward turned legs (left+right)
-            case "dcgbfebgcdbecfbdgbfceb" -> render_BigMap9_InwardLegs(g, obstacle);
+            case "dcgbfebgcdbecfbdgbfceb" -> render_BigMap9_InwardLegs(parent, obstacle);
 
             // Tengen BIG map #10, table upside-down, at top of maze
-            case "dcfbdgbfebgcedcfbgce" -> render_BigMap10_TableUpsideDown(g, obstacle);
+            case "dcfbdgbfebgcedcfbgce" -> render_BigMap10_TableUpsideDown(parent, obstacle);
 
             // Tengen BIG map #11, Tour Eiffel-like
-            case "dcfbdcgfcdbecgfcebgce" -> render_BigMap11_TourEiffel(g, obstacle);
+            case "dcfbdcgfcdbecgfcebgce" -> render_BigMap11_TourEiffel(parent, obstacle);
 
             // Tengen STRANGE map #1, leg-like obstacle at left side at bottom of maze
-            case "dcfbdgbfcdbfebgce" -> render_StrangeMap1_Leg_Left(g, obstacle);
+            case "dcfbdgbfcdbfebgce" -> render_StrangeMap1_Leg_Left(parent, obstacle);
 
             // Tengen STRANGE map #1, leg-like obstacle at right side at bottom of maze
-            case "dcfbdgbecgbfebgce" -> render_StrangeMap1_Leg_Right(g, obstacle);
+            case "dcfbdgbecgbfebgce" -> render_StrangeMap1_Leg_Right(parent, obstacle);
 
             // Tengen STRANGE map #1, Y-shaped obstacle at center at bottom of maze
-            case "dgbecgbecgfcdbfcdbfebdcfbgceb" -> render_StrangeMap1_YShape(g, obstacle);
+            case "dgbecgbecgfcdbfcdbfebdcfbgceb" -> render_StrangeMap1_YShape(parent, obstacle);
 
             // Tengen STRANGE map #2, bowl-like obstacle at center at top of maze
-            case "dgbecgbfcdbfebdcfbgceb" -> render_StrangeMap2_Bowl(g, obstacle);
+            case "dgbecgbfcdbfebdcfbgceb" -> render_StrangeMap2_Bowl(parent, obstacle);
 
             // Tengen STRANGE map #2, gallow-like obstacle at left/top
-            case "dcgbecgfcebgcdbfeb" -> render_StrangeMap2_Gallows_Left(g, obstacle);
+            case "dcgbecgfcebgcdbfeb" -> render_StrangeMap2_Gallows_Left(parent, obstacle);
 
             // Tengen STRANGE map #2, gallow-like obstacle at right/top
-            case "dgbecfbdcgfcdbfceb" -> render_StrangeMap2_Gallows_Right(g, obstacle);
+            case "dgbecfbdcgfcdbfceb" -> render_StrangeMap2_Gallows_Right(parent, obstacle);
 
             // Tengen STRANGE map #3, large hat-like onstacle center/top
-            case "dfbdcfbdcgfdbfcdbecgbegfcebgcebgeb" -> render_StrangeMap3_Hat(g, obstacle);
+            case "dfbdcfbdcgfdbfcdbecgbegfcebgcebgeb" -> render_StrangeMap3_Hat(parent, obstacle);
 
             // Tengen STRANGE map #3, mushroom center-bottom
-            case "dcgbecgbfcdbfceb" -> render_StrangeMap3_Mushroom(g, obstacle);
+            case "dcgbecgbfcdbfceb" -> render_StrangeMap3_Mushroom(parent, obstacle);
 
             // Tengen STRANGE map #3 and #7, U-shape with stronger "legs"
-            case "dcgbfcebdcfbgceb" -> render_StrangeMap3_7_StrongLeggedUShape(g, obstacle);
+            case "dcgbfcebdcfbgceb" -> render_StrangeMap3_7_StrongLeggedUShape(parent, obstacle);
 
             // Tengen STRANGE map #4, huge obstacle
-            case "dgbecfbdcgbfcdbecgbfcebgcdbfebdgbecfbgcebgcedcfbdcfbgcdbfeb" -> render_StrangeMap4_Huge(g, obstacle);
+            case "dgbecfbdcgbfcdbecgbfcebgcdbfebdgbecfbgcebgcedcfbdcfbgcdbfeb" -> render_StrangeMap4_Huge(parent, obstacle);
 
             // Tengen STRANGE map #7: top-left strange obstacle
-            case "dcfbdgbecgbecfbdgbfcdbfeb" -> render_Strange7_TopLeft(g, obstacle);
+            case "dcfbdgbecgbecfbdgbfcdbfeb" -> render_Strange7_TopLeft(parent, obstacle);
 
             // Tengen STRANGE map #7: top-right strange obstacle
-            case "dgbecgbfebgcdbfcdbfebgceb" -> render_Strange7_TopRight(g, obstacle);
+            case "dgbecgbfebgcdbfcdbfebgceb" -> render_Strange7_TopRight(parent, obstacle);
 
             // Tengen STRANGE map #7: boots pointing left
-            case "dcfbdgbfceb" -> render_Boot_PointingLeft(g, obstacle);
+            case "dcfbdgbfceb" -> render_Boot_PointingLeft(parent, obstacle);
 
             // Tengen STRANGE map #7: boots pointing left
-            case "dcgbfebgceb" -> render_Boot_PointingRight(g, obstacle);
+            case "dcgbfebgceb" -> render_Boot_PointingRight(parent, obstacle);
 
             // STRANGE map #8: rectangle with two arms at top-right corner, left maze side
-            case "dcfbdcgbfcdbfebgce" -> render_RectangleWithTwoArmsAtTopRightCorner(g, obstacle);
+            case "dcfbdcgbfcdbfebgce" -> render_RectangleWithTwoArmsAtTopRightCorner(parent, obstacle);
 
             // STRANGE map #8: rectangle with two arms at top-left corner, right maze side
-            case "dcfbdgbecgbfcebgce" -> render_RectangleWithTwoArmsAtTopLeftCorner(g, obstacle);
+            case "dcfbdgbecgbfcebgce" -> render_RectangleWithTwoArmsAtTopLeftCorner(parent, obstacle);
 
             // STRANGE map #8: rectangle with one arm at top-right corner, left maze side
-            case "dcgbfcdbfeb" -> render_RectangleWithArmAtTopRightCorner(g, obstacle);
+            case "dcgbfcdbfeb" -> render_RectangleWithArmAtTopRightCorner(parent, obstacle);
 
             // STRANGE map #8: rectangle with one arm at top-left corner, right maze side
-            case "dgbecgbfceb" -> render_RectangleWithArmAtTopLeftCorner(g, obstacle);
+            case "dgbecgbfceb" -> render_RectangleWithArmAtTopLeftCorner(parent, obstacle);
 
             // STRANGE map #9: large obstacle left maze side
-            case "dcfbdgbecfbdgbecfbdgbfebgcdbfebgcdbfeb" -> render_Strange9_LargeObstacleLeft(g, obstacle);
+            case "dcfbdgbecfbdgbecfbdgbfebgcdbfebgcdbfeb" -> render_Strange9_LargeObstacleLeft(parent, obstacle);
 
             // STRANGE map #9: large obstacle right maze side
-            case "dgbecfbdgbecfbdgbfebgcdbfebgcdbfebgceb" -> render_Strange9_LargeObstacleRight(g, obstacle);
+            case "dgbecfbdgbecfbdgbfebgcdbfebgcdbfebgceb" -> render_Strange9_LargeObstacleRight(parent, obstacle);
 
             // STRANGE map #10: spaceship top, center
-            case "dcfbdcgbecgfcdbfcebgceb" -> render_Strange10_SpaceShipTopCenter(g, obstacle);
+            case "dcfbdcgbecgfcdbfcebgceb" -> render_Strange10_SpaceShipTopCenter(parent, obstacle);
 
             // STRANGE map #10: island left of spaceship
-            case "dcgegegfcegceb" -> render_Strange10_IslandLeftOfSpaceship(g, obstacle);
+            case "dcgegegfcegceb" -> render_Strange10_IslandLeftOfSpaceship(parent, obstacle);
 
             // STRANGE map #10: island right of spaceship
-            case "dcfdcgfdfdfceb" -> render_Strange10_IslandRightOfSpaceship(g, obstacle);
+            case "dcfdcgfdfdfceb" -> render_Strange10_IslandRightOfSpaceship(parent, obstacle);
 
             // STRANGE map #10: left of house
-            case "dcfbdgbecgfcdfceb" -> render_Strange10_RectangleWithTwoLegsAtLowerLeftEdge(g, obstacle);
+            case "dcfbdgbecgfcdfceb" -> render_Strange10_RectangleWithTwoLegsAtLowerLeftEdge(parent, obstacle);
 
             // STRANGE map #10: right of house
-            case "dcgecgfcdbfebgceb" -> render_Strange10_RectangleWithTwoLegsAtLowerRightEdge(g, obstacle);
+            case "dcgecgfcdbfebgceb" -> render_Strange10_RectangleWithTwoLegsAtLowerRightEdge(parent, obstacle);
 
             // STRANGE map #10: obstacle below house
-            case "dfdgbecgfcdbfegeb" -> render_Strange10_ObstacleBelowHouse(g, obstacle);
+            case "dfdgbecgfcdbfegeb" -> render_Strange10_ObstacleBelowHouse(parent, obstacle);
 
             // STRANGE map #10: pistol-like shape pointing left
-            case "dgbecgbfcegeb" -> render_Strange10_PistolPointingLeft(g, obstacle);
+            case "dgbecgbfcegeb" -> render_Strange10_PistolPointingLeft(parent, obstacle);
 
             // STRANGE map #10: pistol-like shape pointing right
-            case "dfdcgbfcdbfeb" -> render_Strange10_PistolPointingRight(g, obstacle);
+            case "dfdcgbfcdbfeb" -> render_Strange10_PistolPointingRight(parent, obstacle);
 
             // STRANGE map #12: dog-like looking left
-            case "dcgbecgfcdbecgfcebgeb" -> render_Strange12_DogLookingLeft(g, obstacle);
+            case "dcgbecgfcdbecgfcebgeb" -> render_Strange12_DogLookingLeft(parent, obstacle);
 
             // STRANGE map #12: dog-like looking right
-            case "dfbdcgfcdbecgfcdbfceb" -> render_Strange12_DogLookingRight(g, obstacle);
+            case "dfbdcgfcdbecgfcdbfceb" -> render_Strange12_DogLookingRight(parent, obstacle);
 
             // STRANGE map #14: Gamma-like with wider arms
-            case "dcgbfcdbfceb" -> render_Strange14_Gamma(g, obstacle);
+            case "dcgbfcdbfceb" -> render_Strange14_Gamma(parent, obstacle);
 
             // STRANGE map #14: Gamma-like with wider arms, mirrored
-            case "dcgbecgbfceb" -> render_Strange14_Gamma_Mirrored(g, obstacle);
+            case "dcgbecgbfceb" -> render_Strange14_Gamma_Mirrored(parent, obstacle);
 
             // STRANGE map #15: obstacle left of house
-            case "dgbecfbdgbecgbfebgceb" -> render_Strange15_LeftOfHouse(g, obstacle);
+            case "dgbecfbdgbecgbfebgceb" -> render_Strange15_LeftOfHouse(parent, obstacle);
 
             // STRANGE map #15: obstacle right of house
-            case "dcfbdgbfcdbfebgcdbfeb" -> render_Strange15_RightOfHouse(g, obstacle);
+            case "dcfbdgbfcdbfebgcdbfeb" -> render_Strange15_RightOfHouse(parent, obstacle);
 
 
             // other obstacle types
-            case "dcgbfcedcfbgcedcfbgce" -> render_dcgbfcedcfbgcedcfbgce(g, obstacle);
+            case "dcgbfcedcfbgcedcfbgce" -> render_dcgbfcedcfbgcedcfbgce(parent, obstacle);
 
-            case "dgbecfbdgbfebgceb" -> render_dgbecfbdgbfebgceb(g, obstacle);
+            case "dgbecfbdgbfebgceb" -> render_dgbecfbdgbfebgceb(parent, obstacle);
 
-            case "dcfbdgbfebgcdbfeb" -> render_dcfbdgbfebgcdbfeb(g, obstacle);
+            case "dcfbdgbfebgcdbfeb" -> render_dcfbdgbfebgcdbfeb(parent, obstacle);
+            
+            case "dcgbecgfceb" -> render_dcgbecgfceb(parent, obstacle);
 
-            default -> addGenericObstacle3D(g, obstacle);
+            case "dcgfcdbfceb" -> render_dcgfcdbfceb(parent, obstacle);
+
+            default -> addGenericObstacle3D(parent, obstacle);
         }
+    }
+
+    private void render_dcgfcdbfceb(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 2, 7, 9);
+        Vector2f h = vec_2f(t[0].x(), t[2].y());
+        addTowers(parent, t);
+        addWall(parent, t[0], t[1]);
+        addWall(parent, t[0], t[3]);
+        addWall(parent, t[2], t[3]);
+        addWall(parent, t[2], h);
+        addWallAtCenter(parent, t[0].midpoint(t[2]), TS, TS);
+    }
+
+    private void render_dcgbecgfceb(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 2, 6, 9);
+        Vector2f h = vec_2f(t[3].x(), t[1].y());
+        addTowers(parent, t);
+        addWall(parent, t[0], t[1]);
+        addWall(parent, t[0], t[3]);
+        addWall(parent, t[3], t[2]);
+        addWall(parent, t[1], h);
+        addWallAtCenter(parent, t[0].midpoint(h), TS, TS);
     }
 
     private void render_dcgbfcedcfbgcedcfbgce(Group parent, Obstacle obstacle) {
