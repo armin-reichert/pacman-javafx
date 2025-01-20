@@ -411,8 +411,9 @@ public class TileMapEditor {
                 parseColor(COLOR_WALL_STROKE));
             Color wallTopColor = getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL,
                 parseColor(COLOR_WALL_FILL));
+            preview3D.setTerrainColors(wallBaseColor, wallTopColor);
             Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, parseColor(COLOR_FOOD));
-            preview3D.setColors(wallBaseColor, wallTopColor, foodColor);
+            preview3D.setFoodColor(foodColor);
             preview3D.setWorldMap(worldMap());
             initPreview3DCameraPerspective();
         }
@@ -1296,15 +1297,16 @@ public class TileMapEditor {
         }
     }
 
-    void markTileMapEdited(TileMap tileMap) {
+    void markTileMapEdited(TileMap editedMap) {
         unsavedChanges = true;
-        WorldMap worldMap = worldMapPy.get();
-        if (worldMap != null) {
-            updateSourceView(worldMap);
-            if (tileMap == worldMap.terrain()) {
+        if (worldMap() != null) {
+            updateSourceView(worldMap());
+            if (editedMap == worldMap().terrain()) {
                 invalidateTerrainData();
             } else {
                 if (preview3D != null) {
+                    Color foodColor = getColorFromMap(editedMap, PROPERTY_COLOR_FOOD, parseColor(COLOR_FOOD));
+                    preview3D.setFoodColor(foodColor);
                     preview3D.updateFood();
                 }
             }

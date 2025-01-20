@@ -78,16 +78,13 @@ public class Preview3D {
         updateFood();
     }
 
-    public void setColors(Color wallBaseColor, Color wallTopColor, Color foodColor) {
+    public void setTerrainColors(Color wallBaseColor, Color wallTopColor) {
         this.wallBaseColor = wallBaseColor;
         this.wallTopColor = wallTopColor;
-        this.foodColor = foodColor;
     }
 
-    private Node createSampleContent() {
-        var sphere = new Sphere(200);
-        sphere.setMaterial(WorldRenderer3D.coloredMaterial(Color.GREEN));
-        return sphere;
+    public void setFoodColor(Color color) {
+        this.foodColor = color;
     }
 
     private void updateMaze() {
