@@ -40,6 +40,12 @@ jobs:
           name: ${{ matrix.os }}
           path: pacman-app-allgames/build/jpackage/*.msi
           if-no-files-found: ignore
+      - name: Upload Windows Map Editor
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}
+          path: pacman-app-mapeditor/build/jpackage/*.msi
+          if-no-files-found: ignore
       - name: Upload Linux deb
         uses: actions/upload-artifact@v4
         with:
@@ -57,10 +63,14 @@ jobs:
     needs: build-and-upload-artifacts
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifacts created for 3D game version
+      - name: Download all-games apps
         uses: actions/download-artifact@v4
         with:
           path: pacman-app-allgames/build/jpackage
+      - name: Download Map Editor app
+        uses: actions/download-artifact@v4
+        with:
+          path: pacman-app-mapeditor/build/jpackage
       - name: List files
         run: ls -R
       - name: Attach installers to the release
@@ -70,3 +80,4 @@ jobs:
             ./pacman-app-allgames/build/jpackage/macos-latest/*.dmg
             ./pacman-app-allgames/build/jpackage/ubuntu-latest/*.deb
             ./pacman-app-allgames/build/jpackage/windows-latest/*.msi
+            ./pacman-app-mapeditor/build/jpackage/windows-latest/*.msi
