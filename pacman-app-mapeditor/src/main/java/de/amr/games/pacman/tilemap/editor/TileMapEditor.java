@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2021-2024 Armin Reichert (MIT License)
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tilemap.editor;
@@ -75,7 +75,7 @@ public class TileMapEditor {
     public static final Node NO_GRAPHIC = null;
 
     public static final Font FONT_STATUS_LINE = Font.font("Monospace", FontWeight.BOLD, 14);
-    public static final Font FONT_MESSAGE     = Font.font("Serif", FontWeight.EXTRA_BOLD, 14);
+    public static final Font FONT_MESSAGE     = Font.font("Sans", FontWeight.BOLD, 14);
     public static final Cursor RUBBER_CURSOR  = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
 
     // Properties
@@ -94,9 +94,6 @@ public class TileMapEditor {
             }
             invalidateTerrainData();
             updateSourceView(worldMap);
-            if (preview3D != null) {
-                initPreview3D();
-            }
         }
     };
 
@@ -388,13 +385,13 @@ public class TileMapEditor {
         });
         preview3DSubScene.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
-                initPreview3D();
+                initPreview3DCameraPerspective();
             }
             prevDragPosition = new Point2D(e.getX(), e.getY());
         });
     }
 
-    private void initPreview3D() {
+    private void initPreview3DCameraPerspective() {
         double mapWidth = worldMap().terrain().numCols() * TS;
         double mapHeight = worldMap().terrain().numRows() * TS;
         PerspectiveCamera camera = preview3D.camera();
@@ -407,15 +404,18 @@ public class TileMapEditor {
 
     private Point2D prevDragPosition;
 
-    private void updatePreview3D() {
-        TileMap terrainMap = worldMap().terrain();
-        Color wallBaseColor = getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_STROKE,
+    private void rebuildPreview3D() {
+        if (preview3D != null) {
+            TileMap terrainMap = worldMap().terrain();
+            Color wallBaseColor = getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_STROKE,
                 parseColor(COLOR_WALL_STROKE));
-        Color wallTopColor = getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL,
+            Color wallTopColor = getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL,
                 parseColor(COLOR_WALL_FILL));
-        Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, parseColor(COLOR_FOOD));
-        preview3D.setColors(wallBaseColor, wallTopColor, foodColor);
-        preview3D.setWorldMap(worldMap());
+            Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, parseColor(COLOR_FOOD));
+            preview3D.setColors(wallBaseColor, wallTopColor, foodColor);
+            preview3D.setWorldMap(worldMap());
+            initPreview3DCameraPerspective();
+        }
     }
 
 
@@ -603,9 +603,6 @@ public class TileMapEditor {
                 drawEditCanvas();
                 drawPreviewCanvas();
                 drawSelectedPalette();
-                if (preview3D != null) {
-                    updatePreview3D(); //TODO do this only if terrain is invalid
-                }
             } catch (Exception x) {
                 Logger.error(x);
                 drawBlueScreen(x); // TODO this is crap
@@ -1294,6 +1291,7 @@ public class TileMapEditor {
             WorldMap worldMap = worldMapPy.get();
             tilesWithErrors.clear();
             tilesWithErrors.addAll(worldMap.updateObstacleList());
+            rebuildPreview3D();
             terrainDataUpToDate = true;
         }
     }
@@ -1305,6 +1303,10 @@ public class TileMapEditor {
             updateSourceView(worldMap);
             if (tileMap == worldMap.terrain()) {
                 invalidateTerrainData();
+            } else {
+                if (preview3D != null) {
+                    preview3D.updateFood();
+                }
             }
         }
     }
@@ -1427,6 +1429,7 @@ public class TileMapEditor {
 
         addBorder(terrain, 3, 2);
         addHouse(terrain, houseOrigin);
+        worldMap.updateObstacleList();
 
         terrain.setProperty(PROPERTY_COLOR_WALL_STROKE, COLOR_WALL_STROKE);
         terrain.setProperty(PROPERTY_COLOR_WALL_FILL, COLOR_WALL_FILL);

@@ -5,7 +5,10 @@ import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.rendering.WorldRenderer3D;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
@@ -13,6 +16,7 @@ import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
+import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -26,6 +30,9 @@ public class Preview3D {
     private final BooleanProperty wireframePy = new SimpleBooleanProperty(false);
 
     private final Group root = new Group();
+    private final Group mazeGroup = new Group();
+    private final Group foodGroup = new Group();
+
     private final WorldRenderer3D r3D;
     private final PerspectiveCamera camera;
 
@@ -45,7 +52,10 @@ public class Preview3D {
 
     public Preview3D(double width, double height) {
         r3D = new WorldRenderer3D();
-        root.getChildren().add(createSampleContent());
+        root.getChildren().addAll(mazeGroup, foodGroup);
+
+        AmbientLight ambientLight = new AmbientLight(Color.WHITE);
+        root.getChildren().add(ambientLight);
 
         camera = new PerspectiveCamera(true);
         camera.setNearClip(0.1);
@@ -64,7 +74,8 @@ public class Preview3D {
 
     public void setWorldMap(WorldMap worldMap) {
         this.worldMap = worldMap;
-        updateContent();
+        updateMaze();
+        updateFood();
     }
 
     public void setColors(Color wallBaseColor, Color wallTopColor, Color foodColor) {
@@ -79,34 +90,37 @@ public class Preview3D {
         return sphere;
     }
 
-    private void updateContent() {
-        root.getChildren().clear();
-
-        AmbientLight ambientLight = new AmbientLight(Color.WHITE);
-        root.getChildren().add(ambientLight);
+    private void updateMaze() {
+        mazeGroup.getChildren().clear();
 
         double worldWidth = worldMap.terrain().numCols() * TS;
         double worldHeight = worldMap.terrain().numRows() * TS;
-
-        Group og = new Group();
-        root.getChildren().add(og);
 
         // Floor left-upper corner at origin
         Box floor = new Box(worldWidth, worldHeight, 0.1);
         floor.setTranslateX(0.5 * worldWidth);
         floor.setTranslateY(0.5 * worldHeight);
         floor.setMaterial(WorldRenderer3D.coloredMaterial(Color.BLACK));
-        og.getChildren().add(floor);
-
-        Group maze = new Group();
-        root.getChildren().add(maze);
+        mazeGroup.getChildren().add(floor);
 
         r3D.setWallBaseMaterial(WorldRenderer3D.coloredMaterial(wallBaseColor));
         r3D.setCornerMaterial(WorldRenderer3D.coloredMaterial(wallBaseColor));
         r3D.setWallTopMaterial(WorldRenderer3D.coloredMaterial(wallTopColor));
         for (Obstacle obstacle : worldMap.obstacles()) {
-            r3D.renderObstacle3D(maze, obstacle);
+            r3D.renderObstacle3D(mazeGroup, obstacle);
         }
+        // exclude normal pellets from wireframe display
+        mazeGroup.lookupAll("*").stream()
+                .filter(Shape3D.class::isInstance)
+                .map(Shape3D.class::cast)
+                .forEach(shape3D -> shape3D.drawModeProperty()
+                        .bind(wireframePy.map(wireframe -> wireframe ? DrawMode.LINE : DrawMode.FILL)));
+
+        Logger.info("Maze 3D recreated");
+    }
+
+    public void updateFood() {
+        foodGroup.getChildren().clear();
 
         var foodMaterial = WorldRenderer3D.coloredMaterial(foodColor);
         worldMap.food().tiles().filter(tile -> hasFood(worldMap, tile)).forEach(tile -> {
@@ -117,18 +131,8 @@ public class Preview3D {
             pellet.setTranslateX(position.getX());
             pellet.setTranslateY(position.getY());
             pellet.setTranslateZ(-4);
-            pellet.setUserData(energizer ? "energizer" : "pellet");
-            maze.getChildren().add(pellet);
+            foodGroup.getChildren().add(pellet);
         });
-
-        // exclude normal pellets from wireframe display
-        maze.lookupAll("*").stream()
-                .filter(Shape3D.class::isInstance)
-                .map(Shape3D.class::cast)
-                .filter(shape3D -> !"pellet".equals(shape3D.getUserData()))
-                .forEach(shape3D -> shape3D.drawModeProperty()
-                        .bind(wireframePy.map(wireframe -> wireframe ? DrawMode.LINE : DrawMode.FILL)));
-
     }
 
     private boolean hasFood(WorldMap worldMap, Vector2i tile) {
