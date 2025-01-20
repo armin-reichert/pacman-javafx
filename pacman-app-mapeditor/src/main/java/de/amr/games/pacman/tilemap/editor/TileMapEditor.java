@@ -167,7 +167,7 @@ public class TileMapEditor {
     private FileChooser fileChooser;
     private TabPane tabPaneWithPalettes;
 
-    private Preview3D preview3D;
+    private MazePreview3D mazePreview3D;
     private SubScene preview3DSubScene;
 
     private final ContextMenu contextMenu = new ContextMenu();
@@ -362,15 +362,15 @@ public class TileMapEditor {
     }
 
     private void createPreview3D() {
-        preview3D = new Preview3D(500, 500);
-        var group = new Group(preview3D.root());
+        mazePreview3D = new MazePreview3D(500, 500);
+        var group = new Group(mazePreview3D.root());
         preview3DSubScene = new SubScene(group, 500, 500, true, SceneAntialiasing.BALANCED);
-        preview3DSubScene.setCamera(preview3D.camera());
+        preview3DSubScene.setCamera(mazePreview3D.camera());
         preview3DSubScene.setFill(Color.CORNFLOWERBLUE);
         preview3DSubScene.setOnMouseDragged(e -> {
             Point2D p = new Point2D(e.getX(), e.getY());
             if (prevDragPosition != null) {
-                Camera cam = preview3D.camera();
+                Camera cam = mazePreview3D.camera();
                 double dx = p.getX() - prevDragPosition.getX();
                 double dy = p.getY() - prevDragPosition.getY();
                 Logger.debug("Mouse dragged by x={}px and y={}px", dx, dy);
@@ -394,7 +394,7 @@ public class TileMapEditor {
     private void initPreview3DCameraPerspective() {
         double mapWidth = worldMap().terrain().numCols() * TS;
         double mapHeight = worldMap().terrain().numRows() * TS;
-        PerspectiveCamera camera = preview3D.camera();
+        PerspectiveCamera camera = mazePreview3D.camera();
         camera.setRotationAxis(Rotate.X_AXIS);
         camera.setRotate(60);
         camera.setTranslateX(mapWidth * 0.5);
@@ -405,20 +405,11 @@ public class TileMapEditor {
     private Point2D prevDragPosition;
 
     private void rebuildPreview3D() {
-        if (preview3D != null) {
-            TileMap terrainMap = worldMap().terrain();
-            Color wallBaseColor = getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_STROKE,
-                parseColor(COLOR_WALL_STROKE));
-            Color wallTopColor = getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL,
-                parseColor(COLOR_WALL_FILL));
-            preview3D.setTerrainColors(wallBaseColor, wallTopColor);
-            Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, parseColor(COLOR_FOOD));
-            preview3D.setFoodColor(foodColor);
-            preview3D.setWorldMap(worldMap());
+        if (mazePreview3D != null) {
+            mazePreview3D.update(worldMap());
             initPreview3DCameraPerspective();
         }
     }
-
 
     private void createMapSourceView() {
         sourceView = new Text();
@@ -1230,7 +1221,7 @@ public class TileMapEditor {
                 setEditMode(EditMode.DRAW);
                 symmetricEditModePy.set(true);
             }
-            case "w" -> preview3D.wireframeProperty().set(!preview3D.wireframeProperty().get());
+            case "w" -> mazePreview3D.wireframeProperty().set(!mazePreview3D.wireframeProperty().get());
             case "x" -> {
                 setEditMode(EditMode.ERASE);
             }
@@ -1304,10 +1295,8 @@ public class TileMapEditor {
             if (editedMap == worldMap().terrain()) {
                 invalidateTerrainData();
             } else {
-                if (preview3D != null) {
-                    Color foodColor = getColorFromMap(editedMap, PROPERTY_COLOR_FOOD, parseColor(COLOR_FOOD));
-                    preview3D.setFoodColor(foodColor);
-                    preview3D.updateFood();
+                if (mazePreview3D != null) {
+                    mazePreview3D.updateFood(worldMap());
                 }
             }
         }

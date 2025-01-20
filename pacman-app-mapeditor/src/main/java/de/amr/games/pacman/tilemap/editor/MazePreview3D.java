@@ -1,8 +1,13 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.TileEncoding;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.rendering.WorldRenderer3D;
 import javafx.beans.property.BooleanProperty;
@@ -20,10 +25,15 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.PROPERTY_COLOR_FOOD;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.PROPERTY_COLOR_WALL_FILL;
+import static de.amr.games.pacman.tilemap.editor.ArcadeMap.*;
+import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.getColorFromMap;
+import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.parseColor;
 
-public class Preview3D {
+public class MazePreview3D {
 
-    public record SubSceneEmbedding(SubScene subScene, Preview3D preview3D) {}
+    public record SubSceneEmbedding(SubScene subScene, MazePreview3D mazePreview3D) {}
 
     private final DoubleProperty widthPy = new SimpleDoubleProperty(800);
     private final DoubleProperty heightPy = new SimpleDoubleProperty(400);
@@ -36,12 +46,6 @@ public class Preview3D {
     private final WorldRenderer3D r3D;
     private final PerspectiveCamera camera;
 
-    private WorldMap worldMap;
-
-    private Color wallBaseColor;
-    private Color wallTopColor;
-    private Color foodColor;
-
     public Node root() {
         return root;
     }
@@ -50,7 +54,7 @@ public class Preview3D {
         return camera;
     }
 
-    public Preview3D(double width, double height) {
+    public MazePreview3D(double width, double height) {
         r3D = new WorldRenderer3D();
         root.getChildren().addAll(mazeGroup, foodGroup);
 
@@ -72,26 +76,19 @@ public class Preview3D {
 
     public BooleanProperty wireframeProperty() { return wireframePy; }
 
-    public void setWorldMap(WorldMap worldMap) {
-        this.worldMap = worldMap;
-        updateMaze();
-        updateFood();
+    public void update(WorldMap worldMap) {
+        updateMaze(worldMap);
+        updateFood(worldMap);
     }
 
-    public void setTerrainColors(Color wallBaseColor, Color wallTopColor) {
-        this.wallBaseColor = wallBaseColor;
-        this.wallTopColor = wallTopColor;
-    }
-
-    public void setFoodColor(Color color) {
-        this.foodColor = color;
-    }
-
-    private void updateMaze() {
-        mazeGroup.getChildren().clear();
-
+    private void updateMaze(WorldMap worldMap) {
         double worldWidth = worldMap.terrain().numCols() * TS;
         double worldHeight = worldMap.terrain().numRows() * TS;
+        TileMap terrainMap = worldMap.terrain();
+        Color wallBaseColor = getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_STROKE, parseColor(COLOR_WALL_STROKE));
+        Color wallTopColor = getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(COLOR_WALL_FILL));
+
+        mazeGroup.getChildren().clear();
 
         // Floor left-upper corner at origin
         Box floor = new Box(worldWidth, worldHeight, 0.1);
@@ -106,6 +103,7 @@ public class Preview3D {
         for (Obstacle obstacle : worldMap.obstacles()) {
             r3D.renderObstacle3D(mazeGroup, obstacle);
         }
+
         // exclude normal pellets from wireframe display
         mazeGroup.lookupAll("*").stream()
                 .filter(Shape3D.class::isInstance)
@@ -116,10 +114,10 @@ public class Preview3D {
         Logger.info("Maze 3D recreated");
     }
 
-    public void updateFood() {
-        foodGroup.getChildren().clear();
-
+    public void updateFood(WorldMap worldMap) {
+        Color foodColor = getColorFromMap(worldMap.food(), PROPERTY_COLOR_FOOD, parseColor(COLOR_FOOD));
         var foodMaterial = WorldRenderer3D.coloredMaterial(foodColor);
+        foodGroup.getChildren().clear();
         worldMap.food().tiles().filter(tile -> hasFood(worldMap, tile)).forEach(tile -> {
             Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
             boolean energizer = hasEnergizer(worldMap, tile);
