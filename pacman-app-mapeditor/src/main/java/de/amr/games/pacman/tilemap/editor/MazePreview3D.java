@@ -33,8 +33,6 @@ import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.parseColor;
 
 public class MazePreview3D {
 
-    public record SubSceneEmbedding(SubScene subScene, MazePreview3D mazePreview3D) {}
-
     private final DoubleProperty widthPy = new SimpleDoubleProperty(800);
     private final DoubleProperty heightPy = new SimpleDoubleProperty(400);
     private final BooleanProperty wireframePy = new SimpleBooleanProperty(false);
