@@ -5,7 +5,7 @@ name: Release
 
 on:
   release:
-    types: [ published ] # if this is omitted, the workflow starts 3 times when creating a release!
+    types: [ created, edited ] # if this is omitted, the workflow starts 3 times when creating a release!
 
 jobs:
   
