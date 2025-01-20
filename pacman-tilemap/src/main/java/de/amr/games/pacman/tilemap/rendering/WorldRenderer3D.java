@@ -965,8 +965,44 @@ public class WorldRenderer3D {
             // STRANGE map #15: obstacle right of house
             case "dcfbdgbfcdbfebgcdbfeb" -> render_Strange15_RightOfHouse(g, obstacle);
 
+
+            // other obstacle types
+            case "dcgbfcedcfbgcedcfbgce" -> render_dcgbfcedcfbgcedcfbgce(g, obstacle);
+
+            case "dgbecfbdgbfebgceb" -> render_dgbecfbdgbfebgceb(g, obstacle);
+
+            case "dcfbdgbfebgcdbfeb" -> render_dcfbdgbfebgcdbfeb(g, obstacle);
+
             default -> addGenericObstacle3D(g, obstacle);
         }
+    }
+
+    private void render_dcgbfcedcfbgcedcfbgce(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 2, 4, 6, 13);
+        Vector2f h = vec_2f(t[4].x(), t[1].y());
+        addTowers(parent, t);
+        addWall(parent, t[0], t[1]);
+        addWall(parent, t[1], t[2]);
+        addWall(parent, t[2], t[3]);
+        addWall(parent, t[4], h);
+    }
+
+    private void render_dgbecfbdgbfebgceb(Group g, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 7, 10, 15);
+        Vector2f h = vec_2f(t[3].x(), t[1].y());
+        addTowers(g, t);
+        addWall(g, t[0], t[3]);
+        addWall(g, t[3], h);
+        addWall(g, t[1], t[2]);
+    }
+
+    private void render_dcfbdgbfebgcdbfeb(Group parent, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 4, 7, 14);
+        Vector2f h = vec_2f(t[0].x(), t[1].y());
+        addTowers(parent, t);
+        addWall(parent, t[0], t[3]);
+        addWall(parent, t[0], h);
+        addWall(parent, t[1], t[2]);
     }
 
     private void render_Boot_PointingLeft(Group parent, Obstacle obstacle) {
