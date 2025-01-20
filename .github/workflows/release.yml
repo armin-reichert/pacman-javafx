@@ -40,13 +40,6 @@ jobs:
           name: ${{matrix.os}}-app-allgames-msi
           path: pacman-app-allgames/build/jpackage/*.msi
           if-no-files-found: ignore
-      - name: Upload Windows Map Editor
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{matrix.os}}-mapeditor-msi
-          path: pacman-app-mapeditor/build/jpackage/*.msi
-          if-no-files-found: ignore
-          overwrite: true
       - name: Upload Linux deb
         uses: actions/upload-artifact@v4
         with:
