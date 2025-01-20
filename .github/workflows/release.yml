@@ -43,7 +43,7 @@ jobs:
       - name: Upload Windows Map Editor
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.os }}
+          name: ${{matrix.os}}-mapeditor
           path: pacman-app-mapeditor/build/jpackage/*.msi
           if-no-files-found: ignore
           overwrite: true
