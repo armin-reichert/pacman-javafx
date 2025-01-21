@@ -25,8 +25,7 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.PROPERTY_COLOR_FOOD;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.PROPERTY_COLOR_WALL_FILL;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.*;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.getColorFromMap;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.parseColor;
@@ -43,6 +42,8 @@ public class MazePreview3D {
 
     private final WorldRenderer3D r3D;
     private final PerspectiveCamera camera;
+
+    private final DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(3.5);
 
     public Node root() {
         return root;
@@ -80,11 +81,13 @@ public class MazePreview3D {
     }
 
     private void updateMaze(WorldMap worldMap) {
-        double worldWidth = worldMap.terrain().numCols() * TS;
-        double worldHeight = worldMap.terrain().numRows() * TS;
-        TileMap terrainMap = worldMap.terrain();
-        Color wallBaseColor = getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_STROKE, parseColor(COLOR_WALL_STROKE));
-        Color wallTopColor = getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(COLOR_WALL_FILL));
+        TileMap terrain = worldMap.terrain();
+        double worldWidth = terrain.numCols() * TS;
+        double worldHeight = terrain.numRows() * TS;
+
+        Color wallBaseColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_STROKE, parseColor(COLOR_WALL_STROKE));
+        Color wallTopColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_FILL, parseColor(COLOR_WALL_FILL));
+        Color doorColor = getColorFromMap(terrain, PROPERTY_COLOR_DOOR, parseColor(COLOR_DOOR));
 
         mazeGroup.getChildren().clear();
 
@@ -95,12 +98,24 @@ public class MazePreview3D {
         floor.setMaterial(WorldRenderer3D.coloredMaterial(Color.BLACK));
         mazeGroup.getChildren().add(floor);
 
+        r3D.setWallBaseHeightProperty(wallBaseHeightPy);
         r3D.setWallBaseMaterial(WorldRenderer3D.coloredMaterial(wallBaseColor));
         r3D.setCornerMaterial(WorldRenderer3D.coloredMaterial(wallBaseColor));
         r3D.setWallTopMaterial(WorldRenderer3D.coloredMaterial(wallTopColor));
+
         for (Obstacle obstacle : worldMap.obstacles()) {
             r3D.renderObstacle3D(mazeGroup, obstacle);
         }
+
+        var doorMaterial = WorldRenderer3D.coloredMaterial(doorColor);
+        terrain.tiles().filter(tile -> terrain.get(tile) == TileEncoding.DOOR).forEach(tile -> {
+            Box door = new Box(7, 2, wallBaseHeightPy.get());
+            door.setMaterial(doorMaterial);
+            door.setTranslateX(tile.x() * TS + HTS);
+            door.setTranslateY(tile.y() * TS + HTS);
+            door.setTranslateZ(-door.getDepth() * 0.5);
+            mazeGroup.getChildren().add(door);
+        });
 
         // exclude normal pellets from wireframe display
         mazeGroup.lookupAll("*").stream()
