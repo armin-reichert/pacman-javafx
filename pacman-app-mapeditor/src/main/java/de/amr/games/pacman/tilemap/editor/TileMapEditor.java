@@ -903,19 +903,26 @@ public class TileMapEditor {
     }
 
     private void drawEditCanvas() {
+        final WorldMap map = worldMap();
+        final TileMap terrain = map.terrain(), food = map.food();
+
         GraphicsContext g = editCanvas.getGraphicsContext2D();
         g.setImageSmoothing(false);
+
+        // Background
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, editCanvas.getWidth(), editCanvas.getHeight());
+
         drawGrid(g);
+
+        // Terrain
         if (terrainVisiblePy.get()) {
-            TileMap terrainMap = worldMap().terrain();
             editorTerrainRenderer.setScaling(gridSize() / 8.0);
-            editorTerrainRenderer.setWallStrokeColor(getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_STROKE, parseColor(COLOR_WALL_STROKE)));
-            editorTerrainRenderer.setWallFillColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(COLOR_WALL_FILL)));
-            editorTerrainRenderer.setDoorColor(getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(COLOR_DOOR)));
+            editorTerrainRenderer.setWallStrokeColor(getColorFromMap(terrain, WorldMap.PROPERTY_COLOR_WALL_STROKE, parseColor(COLOR_WALL_STROKE)));
+            editorTerrainRenderer.setWallFillColor(getColorFromMap(terrain, PROPERTY_COLOR_WALL_FILL, parseColor(COLOR_WALL_FILL)));
+            editorTerrainRenderer.setDoorColor(getColorFromMap(terrain, PROPERTY_COLOR_DOOR, parseColor(COLOR_DOOR)));
             editorTerrainRenderer.setSegmentNumbersDisplayed(segmentNumbersDisplayedPy.get());
-            editorTerrainRenderer.drawTerrain(g, terrainMap, worldMap().obstacles());
+            editorTerrainRenderer.drawTerrain(g, terrain, map.obstacles());
 
             byte[][] editedObstacleContent = obstacleEditor.editedContent();
             if (editedObstacleContent != null) {
@@ -927,17 +934,20 @@ public class TileMapEditor {
                 }
             }
         }
+
+        // Tiles that seem to be wrong
         double gs = gridSize();
         for (Vector2i tile : tilesWithErrors) {
-            g.setFont(Font.font("sans", gs-2));
+            g.setFont(Font.font("sans", gs - 2));
             g.setFill(Color.grayRgb(200, 0.8));
-            g.fillText("?", tile.x() * gs + 0.25 * gs, tile.y() * gs + 0.8*gs);
+            g.fillText("?", tile.x() * gs + 0.25 * gs, tile.y() * gs + 0.8 * gs);
             if (symmetricEditModePy.get()) {
-                int x = worldMap().terrain().numCols() - tile.x() - 1;
-                g.fillText("?", x * gs + 0.25 * gs, tile.y() * gs + 0.8*gs);
+                int x = terrain.numCols() - tile.x() - 1;
+                g.fillText("?", x * gs + 0.25 * gs, tile.y() * gs + 0.8 * gs);
             }
         }
-        // vertical separator
+
+        // Vertical separator to indicate symmetric edit mode
         if (isEditMode(EditMode.DRAW) && symmetricEditModePy.get()) {
             g.save();
             g.setStroke(Color.YELLOW);
@@ -947,23 +957,26 @@ public class TileMapEditor {
             g.restore();
         }
 
+        // Food
         if (foodVisiblePy.get()) {
-            Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, parseColor(COLOR_FOOD));
+            Color foodColor = getColorFromMap(food, PROPERTY_COLOR_FOOD, parseColor(COLOR_FOOD));
             foodMapRenderer.setScaling(gridSize() / 8.0);
             foodMapRenderer.setEnergizerColor(foodColor);
             foodMapRenderer.setPelletColor(foodColor);
-            foodMapRenderer.drawFood(g, worldMap().food());
+            foodMapRenderer.drawFood(g, food);
         }
+
         drawActorSprites(g);
-        if (modePy.get() == EditMode.INSPECT) {
+
+        if (isEditMode(EditMode.INSPECT)) {
             drawEditingHint(g);
         }
+
         Vector2i focussedTile = focussedTilePy.get();
         if (focussedTile != null) {
-            double tilePx = gridSize();
             g.setStroke(Color.YELLOW);
             g.setLineWidth(1);
-            g.strokeRect(focussedTile.x() * tilePx, focussedTile.y() * tilePx, tilePx, tilePx);
+            g.strokeRect(focussedTile.x() * gs, focussedTile.y() * gs, gs, gs);
         }
     }
 
