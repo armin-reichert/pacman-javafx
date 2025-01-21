@@ -110,10 +110,10 @@ public class TileMapEditor {
 
     private final BooleanProperty segmentNumbersDisplayedPy = new SimpleBooleanProperty(false);
 
-    private final BooleanProperty propertyEditorsVisiblePy = new SimpleBooleanProperty(true) {
+    private final BooleanProperty propertyEditorsVisiblePy = new SimpleBooleanProperty(false) {
         @Override
         protected void invalidated() {
-            changePropertyEditorsPaneVisibility(get());
+            setPropertyEditorsVisible(get());
         }
     };
 
@@ -256,6 +256,7 @@ public class TileMapEditor {
 
     public void start() {
         stage.titleProperty().bind(titlePy);
+        setPropertyEditorsVisible(propertyEditorsVisiblePy.get());
         spEditCanvas.heightProperty().addListener((py,ov,nv) -> {
             if (ov.doubleValue() == 0) { // initial resize
                 Logger.info("Canvas scrollpane height {0.00}", spEditCanvas.getHeight());
@@ -301,13 +302,12 @@ public class TileMapEditor {
         createEditModeIndicator();
         createMessageDisplay();
         createZoomSlider();
+
         arrangeMainLayout();
         initActiveRendering();
 
         contentPane.setOnKeyTyped(this::onKeyTyped);
         contentPane.setOnKeyPressed(this::onKeyPressed);
-
-        propertyEditorsVisiblePy.set(false);
     }
 
     private void createRenderers() {
@@ -480,12 +480,8 @@ public class TileMapEditor {
         propertyEditorsPane.visibleProperty().bind(propertyEditorsVisiblePy);
     }
 
-    private void changePropertyEditorsPaneVisibility(boolean visible) {
-        if (visible) {
-            contentPane.setLeft(propertyEditorsPane);
-        } else {
-            contentPane.setLeft(null);
-        }
+    private void setPropertyEditorsVisible(boolean visible) {
+        contentPane.setLeft(visible ? propertyEditorsPane : null);
     }
 
     private void createFocussedTileIndicator() {
@@ -547,7 +543,7 @@ public class TileMapEditor {
     private StringBinding createTitleBinding() {
         return Bindings.createStringBinding(() -> {
                 File currentFile = currentFilePy.get();
-                String desc = "";
+                String desc;
                 if (currentFile != null) {
                     desc = "[%s] - %s".formatted(currentFile.getName(), currentFile.getPath());
                 } else if (worldMap() != null && worldMap().url() != null) {
