@@ -250,6 +250,9 @@ public abstract class Creature extends Actor2D {
                 }
             }
         }
+        if (targetDir == null) {
+            targetDir = moveDir.opposite();
+        }
         return Optional.ofNullable(targetDir);
     }
 
