@@ -385,13 +385,13 @@ public class TileMapEditor {
         });
         preview3DSubScene.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
-                initPreview3DCameraPerspective();
+                initMazePreview3DCameraPerspective();
             }
             prevDragPosition = new Point2D(e.getX(), e.getY());
         });
     }
 
-    private void initPreview3DCameraPerspective() {
+    private void initMazePreview3DCameraPerspective() {
         double mapWidth = worldMap().terrain().numCols() * TS;
         double mapHeight = worldMap().terrain().numRows() * TS;
         PerspectiveCamera camera = mazePreview3D.camera();
@@ -403,13 +403,6 @@ public class TileMapEditor {
     }
 
     private Point2D prevDragPosition;
-
-    private void rebuildPreview3D() {
-        if (mazePreview3D != null) {
-            mazePreview3D.update(worldMap());
-            initPreview3DCameraPerspective();
-        }
-    }
 
     private void createMapSourceView() {
         sourceView = new Text();
@@ -1251,10 +1244,13 @@ public class TileMapEditor {
 
     private void ensureTerrainMapsPathsUpToDate() {
         if (!terrainDataUpToDate) {
-            WorldMap worldMap = worldMapPy.get();
             tilesWithErrors.clear();
-            tilesWithErrors.addAll(worldMap.updateObstacleList());
-            rebuildPreview3D();
+            tilesWithErrors.addAll(worldMap().updateObstacleList());
+            if (mazePreview3D != null) {
+                mazePreview3D.updateMaze(worldMap());
+                mazePreview3D.updateFood(worldMap());
+                initMazePreview3DCameraPerspective();
+            }
             terrainDataUpToDate = true;
         }
     }
@@ -1291,18 +1287,17 @@ public class TileMapEditor {
             identifyObstacleAtTile(tile);
             return;
         }
-        WorldMap worldMap = worldMapPy.get();
         boolean erase = event.isControlDown();
         switch (selectedPaletteID()) {
-            case TileMapEditor.PALETTE_ID_TERRAIN -> editMapTileAtMousePosition(worldMap.terrain(), tile, erase);
+            case TileMapEditor.PALETTE_ID_TERRAIN -> editMapTileAtMousePosition(worldMap().terrain(), tile, erase);
             case TileMapEditor.PALETTE_ID_ACTORS -> {
                 if (selectedPalette().isToolSelected()) {
-                    selectedPalette().selectedTool().apply(worldMap.terrain(), tile);
-                    markTileMapEdited(worldMap.terrain());
+                    selectedPalette().selectedTool().apply(worldMap().terrain(), tile);
+                    markTileMapEdited(worldMap().terrain());
                     terrainPropertiesEditor().updatePropertyEditorValues();
                 }
             }
-            case TileMapEditor.PALETTE_ID_FOOD -> editMapTileAtMousePosition(worldMap.food(), tile, erase);
+            case TileMapEditor.PALETTE_ID_FOOD -> editMapTileAtMousePosition(worldMap().food(), tile, erase);
             default -> Logger.error("Unknown palette selection");
         }
     }
@@ -1395,8 +1390,6 @@ public class TileMapEditor {
         terrain.setProperty(PROPERTY_POS_SCATTER_PINK_GHOST, formatTile(vec_2i(3, 0)));
         terrain.setProperty(PROPERTY_POS_SCATTER_CYAN_GHOST, formatTile(vec_2i(tilesX - 1, tilesY - 2)));
         terrain.setProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(vec_2i(0, tilesY - 2)));
-
-        invalidateTerrainData();
 
         worldMap.food().setProperty(PROPERTY_COLOR_FOOD, COLOR_FOOD);
 

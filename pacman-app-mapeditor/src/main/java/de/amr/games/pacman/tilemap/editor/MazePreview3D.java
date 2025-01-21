@@ -15,7 +15,10 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Point3D;
-import javafx.scene.*;
+import javafx.scene.AmbientLight;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
@@ -75,12 +78,7 @@ public class MazePreview3D {
 
     public BooleanProperty wireframeProperty() { return wireframePy; }
 
-    public void update(WorldMap worldMap) {
-        updateMaze(worldMap);
-        updateFood(worldMap);
-    }
-
-    private void updateMaze(WorldMap worldMap) {
+    public void updateMaze(WorldMap worldMap) {
         TileMap terrain = worldMap.terrain();
         double worldWidth = terrain.numCols() * TS;
         double worldHeight = terrain.numRows() * TS;
