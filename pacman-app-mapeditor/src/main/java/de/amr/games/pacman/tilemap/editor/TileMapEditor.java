@@ -670,6 +670,7 @@ public class TileMapEditor {
         menuBar = new MenuBar(menuFile, menuEdit, menuLoadMap, menuView);
     }
 
+    // also called from EditorPage
     public void addLoadMapMenuItem(String description, WorldMap map) {
         assertNotNull(description);
         assertNotNull(map);
@@ -936,7 +937,8 @@ public class TileMapEditor {
                 g.fillText("?", x * gs + 0.25 * gs, tile.y() * gs + 0.8*gs);
             }
         }
-        if (symmetricEditModePy.get()) {
+        // vertical separator
+        if (isEditMode(EditMode.DRAW) && symmetricEditModePy.get()) {
             g.save();
             g.setStroke(Color.YELLOW);
             g.setLineWidth(0.75);
