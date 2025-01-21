@@ -250,7 +250,7 @@ public class TileMapEditor {
             editCanvas.setCursor(RUBBER_CURSOR);
             obstacleEditor.setEnabled(false);
             clearMessage();
-            showInfoMessage("Shift+Move to erase", 3);
+            showMessage("Press Shift + Move mouse to erase", 3, MessageType.INFO);
         }
     }
 
@@ -265,7 +265,7 @@ public class TileMapEditor {
                 gridSizePy.set((int) gridSize);
             }
         });
-        showInfoMessage(tt("welcome_message"), 3);
+        showMessage(tt("welcome_message"), 3, MessageType.INFO);
         clock.play();
     }
 
@@ -1053,19 +1053,7 @@ public class TileMapEditor {
     // Messages
 
     void clearMessage() {
-        showInfoMessage("", 0);
-    }
-
-    void showInfoMessage(String message, long seconds) {
-        showMessage(message, seconds, MessageType.INFO);
-    }
-
-    void showWarningMessage(String message, long seconds) {
-        showMessage(message, seconds, MessageType.WARNING);
-    }
-
-    void showErrorMessage(String message, long seconds) {
-        showMessage(message, seconds, MessageType.ERROR);
+        showMessage("", 0, MessageType.INFO);
     }
 
     // Controller part
@@ -1167,12 +1155,12 @@ public class TileMapEditor {
             clipboard.setContent(content);
             Optional<ObstacleType> type = ObstacleType.identify(encoding);
             if (type.isPresent()) {
-                showInfoMessage("'%s' identified (copied to clipboard)".formatted(type.get()), 5);
+                showMessage("'%s' identified (copied to clipboard)".formatted(type.get()), 5, MessageType.INFO);
             } else {
-                showInfoMessage("Obstacle identified (copied to clipboard)", 5);
+                showMessage("Obstacle identified (copied to clipboard)", 5, MessageType.INFO);
             }
         } else {
-            showInfoMessage("", 1);
+            showMessage("", 1, MessageType.INFO);
         }
     }
 
@@ -1181,13 +1169,13 @@ public class TileMapEditor {
             if (event.getCode() == KeyCode.LEFT) {
                 event.consume();
                 readPrevMapFileInDirectory().ifPresentOrElse(
-                    file -> showInfoMessage("Previous map file read: %s".formatted(file.getName()), 3),
-                    () -> showErrorMessage("Previous file not available", 1));
+                    file -> showMessage("Previous map file read: %s".formatted(file.getName()), 3, MessageType.INFO),
+                    () -> showMessage("Previous file not available", 1, MessageType.ERROR));
             } else if (event.getCode() == KeyCode.RIGHT) {
                 event.consume();
                 readNextMapFileInDirectory().ifPresentOrElse(
-                    file -> showInfoMessage("Next map file read: %s".formatted(file.getName()), 3),
-                    () -> showErrorMessage("Next file not available", 1));
+                    file -> showMessage("Next map file read: %s".formatted(file.getName()), 3, MessageType.INFO),
+                    () -> showMessage("Next file not available", 1, MessageType.ERROR));
             }
         }
     }
