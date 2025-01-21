@@ -93,7 +93,7 @@ public class TileMapEditor {
                 terrainPropertiesEditor().setTileMap(worldMap.terrain());
             }
             invalidateTerrainData();
-            updateSourceView(worldMap);
+            updateSourceView();
         }
     };
 
@@ -554,17 +554,16 @@ public class TileMapEditor {
     private StringBinding createTitleBinding() {
         return Bindings.createStringBinding(() -> {
                 File currentFile = currentFilePy.get();
-                WorldMap worldMap = worldMap();
                 String desc = "";
                 if (currentFile != null) {
                     desc = "[%s] - %s".formatted(currentFile.getName(), currentFile.getPath());
-                } else if (worldMap != null && worldMap.url() != null) {
-                    desc = "[%s]".formatted(worldMap.url());
+                } else if (worldMap() != null && worldMap().url() != null) {
+                    desc = "[%s]".formatted(worldMap().url());
                 } else {
                     desc = "[%s]".formatted(tt("unsaved_map"));
                 }
-                if (worldMap != null) {
-                    String prefix = "(%d rows, %d cols)".formatted(worldMap.terrain().numRows(), worldMap.terrain().numCols());
+                if (worldMap() != null) {
+                    String prefix = "(%d rows, %d cols)".formatted(worldMap().terrain().numRows(), worldMap().terrain().numCols());
                     desc = prefix + " " + desc;
                 }
                 return tt("map_editor") + ": " + desc;
@@ -861,13 +860,13 @@ public class TileMapEditor {
         return gridSizePy.get();
     }
 
-    private void updateSourceView(WorldMap worldMap) {
+    private void updateSourceView() {
         if (sourceView == null) {
             Logger.warn("Cannot update source view as it doesn't exist yet");
             return;
         }
         try {
-            String source = worldMap.sourceCode();
+            String source = worldMap().sourceCode();
             String[] lines = source.split("\n");
             for (int i = 0; i < lines.length; ++i) {
                 lines[i] = "%5d:   %s".formatted(i+1, lines[i]);
@@ -1260,7 +1259,7 @@ public class TileMapEditor {
     void markTileMapEdited(TileMap editedMap) {
         unsavedChanges = true;
         if (worldMap() != null) {
-            updateSourceView(worldMap());
+            updateSourceView();
             if (editedMap == worldMap().terrain()) {
                 invalidateTerrainData();
             } else {
