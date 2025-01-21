@@ -740,15 +740,20 @@ public class TileMapEditor {
         return false;
     }
 
-    public Optional<File> readNextMapFileInDirectory() {
-        return nextMapFileInDirectory(currentFilePy.get(), true).filter(this::readMapFile);
+    public Optional<File> nextMapFileInDirectory() {
+        Optional<File> file = selectMapFileInDirectory(true);
+        file.ifPresent(this::readMapFile);
+        return file;
     }
 
-    public Optional<File> readPrevMapFileInDirectory() {
-        return nextMapFileInDirectory(currentFilePy.get(), false).filter(this::readMapFile);
+    public Optional<File> prevMapFileInDirectory() {
+        Optional<File> file = selectMapFileInDirectory(false);
+        file.ifPresent(this::readMapFile);
+        return file;
     }
 
-    private Optional<File> nextMapFileInDirectory(File currentFile, boolean forward) {
+    private Optional<File> selectMapFileInDirectory(boolean forward) {
+        File currentFile = currentFilePy.get();
         if (currentFile == null) {
             return Optional.empty();
         }
@@ -1149,14 +1154,15 @@ public class TileMapEditor {
         if (event.isAltDown()) {
             if (event.getCode() == KeyCode.LEFT) {
                 event.consume();
-                readPrevMapFileInDirectory().ifPresentOrElse(
-                    file -> showMessage("Previous map file read: %s".formatted(file.getName()), 3, MessageType.INFO),
-                    () -> showMessage("Previous file not available", 1, MessageType.ERROR));
+                prevMapFileInDirectory().ifPresentOrElse(
+                    file -> showMessage("Map loaded: %s".formatted(file.getName()), 3, MessageType.INFO),
+                    () -> showMessage("Previous map file not available", 1, MessageType.ERROR));
             } else if (event.getCode() == KeyCode.RIGHT) {
                 event.consume();
-                readNextMapFileInDirectory().ifPresentOrElse(
-                    file -> showMessage("Next map file read: %s".formatted(file.getName()), 3, MessageType.INFO),
-                    () -> showMessage("Next file not available", 1, MessageType.ERROR));
+                Optional<File> nextFile = nextMapFileInDirectory();
+                nextFile.ifPresentOrElse(
+                    file -> showMessage("Map loaded: %s".formatted(file.getName()), 3, MessageType.INFO),
+                    () -> showMessage("Next map file not available", 1, MessageType.ERROR));
             }
         }
     }
