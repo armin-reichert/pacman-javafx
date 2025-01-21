@@ -72,10 +72,12 @@ public class TileMapEditor {
         return MessageFormat.format(TEXT_BUNDLE.getString(key), args);
     }
 
+    public static final String EDIT_HELP = "(I)=Inspect  (N)=Normal  (S)=Symmetric  (X)=Erase ->Shift+Move";
+
     public static final Node NO_GRAPHIC = null;
 
-    public static final Font FONT_STATUS_LINE = Font.font("Monospace", FontWeight.BOLD, 14);
-    public static final Font FONT_MESSAGE     = Font.font("Sans", FontWeight.BOLD, 14);
+    public static final Font FONT_STATUS_LINE = Font.font("Sans", FontWeight.BOLD, 14);
+    public static final Font FONT_MESSAGE     = Font.font("Sans", FontWeight.NORMAL, 14);
     public static final Cursor RUBBER_CURSOR  = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
 
     // Properties
@@ -234,6 +236,7 @@ public class TileMapEditor {
             editCanvas.setCursor(Cursor.HAND); // TODO use other cursor
             obstacleEditor.setEnabled(false);
             clearMessage();
+            showMessage(EDIT_HELP, 30, MessageType.INFO);
         }
     }
 
@@ -242,6 +245,7 @@ public class TileMapEditor {
             editCanvas.setCursor(Cursor.DEFAULT);
             obstacleEditor.setEnabled(true);
             clearMessage();
+            showMessage(EDIT_HELP, 30, MessageType.INFO);
         }
     }
 
@@ -250,7 +254,7 @@ public class TileMapEditor {
             editCanvas.setCursor(RUBBER_CURSOR);
             obstacleEditor.setEnabled(false);
             clearMessage();
-            showMessage("Press Shift + Move mouse to erase", 3, MessageType.INFO);
+            showMessage(EDIT_HELP, 30, MessageType.INFO);
         }
     }
 
@@ -266,7 +270,7 @@ public class TileMapEditor {
                 gridSizePy.set((int) gridSize);
             }
         });
-        showMessage(tt("welcome_message"), 3, MessageType.INFO);
+        showMessage(EDIT_HELP, 30, MessageType.INFO);
         clock.play();
     }
 
@@ -499,9 +503,9 @@ public class TileMapEditor {
         editModeIndicator.setTextFill(Color.RED);
         editModeIndicator.textProperty().bind(Bindings.createStringBinding(
             () -> switch (modePy.get()) {
-                    case INSPECT -> "Inspection Mode";
-                    case DRAW -> symmetricEditModePy.get() ?  "Symmetric Edit" : "Normal Edit";
-                    case ERASE -> "Erase Mode";
+                    case INSPECT -> "INSPECT";
+                    case DRAW -> symmetricEditModePy.get() ?  "SYMMETRIC" : "NORMAL";
+                    case ERASE -> "ERASE";
             },
             modePy, symmetricEditModePy
     ));
