@@ -128,26 +128,27 @@ public class MazePreview3D {
     }
 
     public void updateFood(WorldMap worldMap) {
-        Color foodColor = getColorFromMap(worldMap.food(), PROPERTY_COLOR_FOOD, parseColor(COLOR_FOOD));
+        TileMap food = worldMap.food();
+        Color foodColor = getColorFromMap(food, PROPERTY_COLOR_FOOD, parseColor(COLOR_FOOD));
         var foodMaterial = WorldRenderer3D.coloredMaterial(foodColor);
         foodGroup.getChildren().clear();
-        worldMap.food().tiles().filter(tile -> hasFood(worldMap, tile)).forEach(tile -> {
-            Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
-            boolean energizer = hasEnergizer(worldMap, tile);
+        food.tiles().filter(tile -> hasFoodAt(food, tile)).forEach(tile -> {
+            Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -4);
+            boolean energizer = hasEnergizerAt(food, tile);
             var pellet = new Sphere(energizer ? 4 : 1, 32);
             pellet.setMaterial(foodMaterial);
             pellet.setTranslateX(position.getX());
             pellet.setTranslateY(position.getY());
-            pellet.setTranslateZ(-4);
+            pellet.setTranslateZ(position.getZ());
             foodGroup.getChildren().add(pellet);
         });
     }
 
-    private boolean hasFood(WorldMap worldMap, Vector2i tile) {
-        return worldMap.food().get(tile) != TileEncoding.EMPTY;
+    private boolean hasFoodAt(TileMap food, Vector2i tile) {
+        return food.get(tile) != TileEncoding.EMPTY;
     }
 
-    private boolean hasEnergizer(WorldMap worldMap, Vector2i tile) {
-        return worldMap.food().get(tile) == TileEncoding.ENERGIZER;
+    private boolean hasEnergizerAt(TileMap food, Vector2i tile) {
+        return food.get(tile) == TileEncoding.ENERGIZER;
     }
 }
