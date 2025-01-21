@@ -375,8 +375,8 @@ public class TileMapEditor {
             Point2D p = new Point2D(e.getX(), e.getY());
             if (prevDragPosition != null) {
                 Camera cam = mazePreview3D.camera();
-                double dx = p.getX() - prevDragPosition.getX();
-                double dy = p.getY() - prevDragPosition.getY();
+                double dx = prevDragPosition.getX() - p.getX();
+                double dy = prevDragPosition.getY() - p.getY();
                 Logger.debug("Mouse dragged by x={}px and y={}px", dx, dy);
                 cam.setTranslateX(cam.getTranslateX() + 0.2 * dx);
                 if (e.isControlDown()) {
