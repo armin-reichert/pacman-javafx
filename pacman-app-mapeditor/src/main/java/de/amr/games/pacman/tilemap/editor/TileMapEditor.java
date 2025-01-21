@@ -604,14 +604,7 @@ public class TileMapEditor {
     }
 
     private void createMenuBarAndMenus() {
-        createFileMenu();
-        createEditMenu();
-        createLoadMapMenu();
-        createViewMenu();
-        menuBar = new MenuBar(menuFile, menuEdit, menuLoadMap, menuView);
-    }
-
-    private void createFileMenu() {
+        // File
         var miNew = new MenuItem(tt("menu.file.new"));
         miNew.setOnAction(e -> showNewMapDialog());
 
@@ -622,9 +615,8 @@ public class TileMapEditor {
         miSaveAs.setOnAction(e -> showSaveDialog());
 
         menuFile = new Menu(tt("menu.file"), NO_GRAPHIC, miNew, miOpen, miSaveAs);
-    }
 
-    private void createEditMenu() {
+        // Edit
         var miSymmetricMode = new CheckMenuItem(tt("menu.edit.symmetric"));
         miSymmetricMode.selectedProperty().bindBidirectional(symmetricEditModePy);
 
@@ -651,13 +643,11 @@ public class TileMapEditor {
             miClearFood);
 
         menuEdit.disableProperty().bind(modePy.map(mode -> mode == EditMode.INSPECT));
-    }
 
-    private void createLoadMapMenu() {
+        // Maps
         menuLoadMap = new Menu(tt("menu.load_map"));
-    }
 
-    private void createViewMenu() {
+        // View
         var miShowPropertyEditors = new CheckMenuItem(tt("menu.view.properties"));
         miShowPropertyEditors.selectedProperty().bindBidirectional(propertyEditorsVisiblePy);
 
@@ -674,11 +664,10 @@ public class TileMapEditor {
         miShowSegmentNumbers.selectedProperty().bindBidirectional(segmentNumbersDisplayedPy);
 
         menuView = new Menu(tt("menu.view"), NO_GRAPHIC,
-            miShowPropertyEditors,
-            miShowTerrain,
-            miShowSegmentNumbers,
-            miShowFood,
-            miShowGrid);
+            miShowPropertyEditors, miShowTerrain, miShowSegmentNumbers, miShowFood, miShowGrid);
+
+        // Menu Bar
+        menuBar = new MenuBar(menuFile, menuEdit, menuLoadMap, menuView);
     }
 
     public void addLoadMapMenuItem(String description, WorldMap map) {
