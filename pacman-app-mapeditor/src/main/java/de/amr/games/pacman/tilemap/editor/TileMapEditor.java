@@ -1338,6 +1338,7 @@ public class TileMapEditor {
 
     private void clearTerrain(WorldMap worldMap) {
         worldMap.terrain().clear();
+        markTileMapEdited(worldMap.terrain());
     }
 
     private void clearFood(WorldMap worldMap) {
