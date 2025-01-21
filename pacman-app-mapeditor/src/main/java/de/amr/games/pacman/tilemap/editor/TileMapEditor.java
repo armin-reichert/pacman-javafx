@@ -634,12 +634,15 @@ public class TileMapEditor {
 
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
-            clearTerrain(worldMap());
+            worldMap().terrain().clear();
             markTileMapEdited(worldMap().terrain());
         });
 
         var miClearFood = new MenuItem(tt("menu.edit.clear_food"));
-        miClearFood.setOnAction(e -> clearFood(worldMap()));
+        miClearFood.setOnAction(e -> {
+            worldMap().food().clear();
+            markTileMapEdited(worldMap().food());
+        });
 
         menuEdit = new Menu(tt("menu.edit"), NO_GRAPHIC,
             miSymmetricMode,
@@ -1334,16 +1337,6 @@ public class TileMapEditor {
             case TileMapEditor.PALETTE_ID_FOOD -> editMapTileAtMousePosition(worldMap.food(), tile, erase);
             default -> Logger.error("Unknown palette selection");
         }
-    }
-
-    private void clearTerrain(WorldMap worldMap) {
-        worldMap.terrain().clear();
-        markTileMapEdited(worldMap.terrain());
-    }
-
-    private void clearFood(WorldMap worldMap) {
-        worldMap.food().clear();
-        markTileMapEdited(worldMap.food());
     }
 
     private void addBorder(TileMap terrain, int emptyRowsTop, int emptyRowsBottom) {
