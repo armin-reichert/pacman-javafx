@@ -692,7 +692,7 @@ public class TileMapEditor {
 
     public void loadMap(WorldMap worldMap) {
         assertNotNull(worldMap);
-        if (hasUnsavedChanges()) {
+        if (unsavedChanges) {
             showSaveConfirmationDialog(this::showSaveDialog, () -> {
                 setWorldMap(new WorldMap(worldMap));
                 currentFilePy.set(null);
@@ -813,7 +813,7 @@ public class TileMapEditor {
     }
 
     public void showSaveConfirmationDialog(Runnable saveAction, Runnable noSaveAction) {
-        if (hasUnsavedChanges()) {
+        if (unsavedChanges) {
             var confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
             confirmationDialog.setTitle(tt("save_dialog.title"));
             confirmationDialog.setHeaderText(tt("save_dialog.header_text"));
@@ -928,12 +928,12 @@ public class TileMapEditor {
             editorTerrainRenderer.setSegmentNumbersDisplayed(segmentNumbersDisplayedPy.get());
             editorTerrainRenderer.drawTerrain(g, terrainMap, worldMap().obstacles());
 
-            byte[][] editedContent = editedContent();
-            if (editedContent != null) {
-                for (int row = 0; row < editedContent.length; ++row) {
-                    for (int col = 0; col < editedContent[0].length; ++col) {
-                        Vector2i tile = editedContentMinTile().plus(col, row);
-                        editorTerrainRenderer.drawTile(g, tile, editedContent[row][col]);
+            byte[][] editedObstacleContent = obstacleEditor.editedContent();
+            if (editedObstacleContent != null) {
+                for (int row = 0; row < editedObstacleContent.length; ++row) {
+                    for (int col = 0; col < editedObstacleContent[0].length; ++col) {
+                        Vector2i tile = obstacleEditor.minTile().plus(col, row);
+                        editorTerrainRenderer.drawTile(g, tile, editedObstacleContent[row][col]);
                     }
                 }
             }
@@ -1050,25 +1050,11 @@ public class TileMapEditor {
         }
     }
 
-    // Messages
-
     void clearMessage() {
         showMessage("", 0, MessageType.INFO);
     }
 
     // Controller part
-
-    private Vector2i editedContentMinTile() {
-        return obstacleEditor.minTile();
-    }
-
-    private Vector2i editedContentMaxTile() {
-        return obstacleEditor.maxTile();
-    }
-
-    private byte[][] editedContent() {
-        return obstacleEditor.editedContent();
-    }
 
     private void onEditCanvasMouseClicked(MouseEvent event) {
         Logger.debug("Mouse clicked {}", event);
@@ -1143,7 +1129,7 @@ public class TileMapEditor {
         }
     }
 
-    private void identifyObstacleAtTilePosition(Vector2i tile) {
+    private void identifyObstacleAtTile(Vector2i tile) {
         Obstacle obstacleAtTile = worldMap().obstacles().stream()
             .filter(obstacle -> Globals.tileAt(obstacle.startPoint().minus(HTS, 0)).equals(tile))
             .findFirst().orElse(null);
@@ -1201,9 +1187,7 @@ public class TileMapEditor {
         Logger.debug("Typed {}", event);
         String ch = event.getCharacter();
         switch (ch) {
-            case "i" -> {
-                setEditMode(EditMode.INSPECT);
-            }
+            case "i" -> setEditMode(EditMode.INSPECT);
             case "n" -> {
                 setEditMode(EditMode.DRAW);
                 symmetricEditModePy.set(false);
@@ -1213,9 +1197,7 @@ public class TileMapEditor {
                 symmetricEditModePy.set(true);
             }
             case "w" -> mazePreview3D.wireframeProperty().set(!mazePreview3D.wireframeProperty().get());
-            case "x" -> {
-                setEditMode(EditMode.ERASE);
-            }
+            case "x" -> setEditMode(EditMode.ERASE);
             case "+" -> {
                 if (gridSize() < TileMapEditor.MAX_GRID_SIZE) {
                     gridSizePy.set(gridSize() + 1);
@@ -1251,10 +1233,6 @@ public class TileMapEditor {
 
     public void setEditMode(EditMode mode) {
         modePy.set(assertNotNull(mode));
-    }
-
-    public boolean hasUnsavedChanges() {
-        return unsavedChanges;
     }
 
     /**
@@ -1308,7 +1286,7 @@ public class TileMapEditor {
     private void editAtMousePosition(MouseEvent event) {
         Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
         if (isEditMode(EditMode.INSPECT)) {
-            identifyObstacleAtTilePosition(tile);
+            identifyObstacleAtTile(tile);
             return;
         }
         WorldMap worldMap = worldMapPy.get();
