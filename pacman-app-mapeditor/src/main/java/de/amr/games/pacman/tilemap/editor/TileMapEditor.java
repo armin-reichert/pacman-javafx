@@ -856,14 +856,13 @@ public class TileMapEditor {
             return;
         }
         try {
-            String source = worldMap().sourceCode();
-            String[] lines = source.split("\n");
+            StringBuilder sb = new StringBuilder();
+            String[] lines = worldMap().sourceCode().split("\n");
             for (int i = 0; i < lines.length; ++i) {
-                lines[i] = "%5d:   %s".formatted(i+1, lines[i]);
+                sb.append("%5d: ".formatted(i + 1)).append(lines[i]).append("\n");
             }
-            sourceView.setText(String.join("\n", lines));
+            sourceView.setText(sb.toString());
         } catch (Exception x) {
-            Logger.error("Could not create text for map");
             Logger.error(x);
         }
     }
