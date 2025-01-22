@@ -398,27 +398,17 @@ public class WorldRenderer3D {
             // H in normal orientation
             case "dcgfcdbecgfcedcfbgce" -> {
                 Vector2f[] t = obstacle.cornerCenters(0, 2, 9, 12);
-                Vector2f[] h = {
-                        vec_2f(t[0].x(), t[0].midpoint(t[1]).y()),
-                        vec_2f(t[2].x(), t[2].midpoint(t[3]).y()),
-                };
+                Vector2f[] h = { vec_2f(t[0].x(), t[0].midpoint(t[1]).y()), vec_2f(t[2].x(), t[2].midpoint(t[3]).y()) };
                 addTowers(g, t);
-                addWall(g, t[0], t[1]);
-                addWall(g, t[2], t[3]);
-                addWall(g, h[0], h[1]);
+                addWalls(g, t[0], t[1], t[2], t[3], h[0], h[1]);
             }
 
             // H rotated by 90 degrees
             case "dgbecfbdgbfebgcdbfeb" -> {
                 Vector2f[] t = obstacle.cornerCenters(0, 7, 10, 17);
-                Vector2f[] h = {
-                        vec_2f(t[0].midpoint(t[3]).x(), t[0].y()),
-                        vec_2f(t[1].midpoint(t[2]).x(), t[1].y()),
-                };
+                Vector2f[] h = { vec_2f(t[0].midpoint(t[3]).x(), t[0].y()), vec_2f(t[1].midpoint(t[2]).x(), t[1].y()) };
                 addTowers(g, t);
-                addWall(g, t[0], t[3]);
-                addWall(g, t[1], t[2]);
-                addWall(g, h[0], h[1]);
+                addWalls(g, t[0], t[3], t[1], t[2], h[0], h[1]);
             }
         }
     }
