@@ -136,7 +136,7 @@ public class Obstacle {
             case TileEncoding.CORNER_SW -> point(segmentIndex).plus(HTS, 0);
             case TileEncoding.CORNER_SE -> point(segmentIndex).plus(0, -HTS);
             case TileEncoding.CORNER_NE -> point(segmentIndex).plus(-HTS, 0);
-            default -> throw new IllegalStateException();
+            default -> throw new IllegalStateException("No corner tile at index " + segmentIndex);
         };
     }
 

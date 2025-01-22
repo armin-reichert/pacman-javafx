@@ -247,40 +247,39 @@ public class WorldRenderer3D {
         }
     }
 
+    protected void addWalls(Group parent, Vector2f... wallEndPoints) {
+        if (wallEndPoints.length == 0 || wallEndPoints.length % 2 == 1) {
+            throw new IllegalArgumentException("There must be an even, non-zero number of wall end points");
+        }
+        for (int i = 0; i < wallEndPoints.length / 2; ++i) {
+            addWall(parent, wallEndPoints[2*i], wallEndPoints[2*i+1]);
+        }
+     }
+
     protected void addWallAtCenter(Group parent, Vector2f center, double sizeX, double sizeY) {
         parent.getChildren().add(createWallCenteredAt(center, sizeX, sizeY));
     }
 
     // Standard 3D obstacles
 
-    public void render_O(Group g, Obstacle obstacle) {
-        switch (obstacle.encoding()) {
-            // larger oval with 4 "towers"
-            case "dcgbfceb" -> {
-                Vector2f[] t = obstacle.cornerCenters(0, 2, 4, 6);
-                addTowers(g, t);
-                for (int i = 0; i < t.length; ++i) {
-                    int next = i < t.length - 1 ? i + 1 : 0;
-                    addWall(g, t[i], t[next]);
-                }
-                if (oShapeFilled) {
-                    double height = t[0].manhattanDist(t[1]) - TS, width = t[0].manhattanDist(t[3]) - TS;
-                    addWallAtCenter(g, t[0].midpoint(t[2]), width, height);
-                }
-            }
-
-            default -> Logger.error("Invalid O-shape detected: {}", obstacle);
-        }
+    public void render_I(Group g, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 3);
+        addTowers(g, t);
+        addWall(g, t[0], t[1]);
     }
 
-    // oval with one small side and 2 towers
-    public void render_I(Group g, Obstacle obstacle) {
-        switch (obstacle.encoding()) {
-            case "dcgfce", "dgbfeb" -> {
-                Vector2f[] c = obstacle.uTurnCenters();
-                addTowers(g, c);
-                addWall(g, c[0], c[1]);
-            }
+    public void render_O(Group g, Obstacle obstacle) {
+        Vector2f[] t = obstacle.cornerCenters(0, 2, 4, 6);
+        addTowers(g, t);
+        addWalls(g,
+            t[0], t[1],
+            t[1], t[2],
+            t[2], t[3],
+            t[3], t[0]);
+        if (oShapeFilled) {
+            double width = Math.abs(t[0].x() - t[2].x()) - TS;
+            double height = Math.abs(t[0].y() - t[2].y()) - TS;
+            addWallAtCenter(g, t[0].midpoint(t[2]), width, height);
         }
     }
 
