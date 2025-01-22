@@ -32,6 +32,8 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class WorldRenderer3D {
 
+    protected static final int CYLINDER_DIVISIONS = 24;
+
     public final static byte TAG_WALL_BASE      = 0x01;
     public final static byte TAG_WALL_TOP       = 0x02;
     public final static byte TAG_OUTER_WALL     = 0x04;
@@ -58,18 +60,16 @@ public class WorldRenderer3D {
     }
 
     public static Color opaqueColor(Color color, double opacity) {
-        Globals.assertNotNull(color);
+        assertNotNull(color);
         return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
     }
 
     public static PhongMaterial coloredMaterial(Color color) {
-        Globals.assertNotNull(color);
+        assertNotNull(color);
         var material = new PhongMaterial(color);
         material.setSpecularColor(color.brighter());
         return material;
     }
-
-    protected static final int CYLINDER_DIVISIONS = 24;
 
     protected PhongMaterial wallBaseMaterial = new PhongMaterial();
     protected PhongMaterial wallTopMaterial = new PhongMaterial();
