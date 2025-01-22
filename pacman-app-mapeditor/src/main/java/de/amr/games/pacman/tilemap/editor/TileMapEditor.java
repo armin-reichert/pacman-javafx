@@ -556,14 +556,14 @@ public class TileMapEditor {
 
     private StringBinding createTitleBinding() {
         return Bindings.createStringBinding(() -> {
-                File currentFile = currentFilePy.get();
-                if (currentFile != null) {
-                    return tt("map_editor") + ": " + "[%s] - %s".formatted(currentFile.getName(), currentFile.getPath());
+                File mapFile = currentFilePy.get();
+                if (mapFile != null) {
+                    return "%s: [%s] - %s".formatted( tt("map_editor"), mapFile.getName(), mapFile.getPath() );
                 }
                 if (worldMap() != null && worldMap().url() != null) {
-                    return tt("map_editor") + ": " + "[%s]".formatted(worldMap().url());
+                    return  "%s: [%s]".formatted( tt("map_editor"), worldMap().url() );
                 }
-                return tt("map_editor") + ": " + "[%s]".formatted(tt("unsaved_map"));
+                return "%s: [%s]".formatted( tt("map_editor"), tt("unsaved_map") );
             }, currentFilePy, worldMapPy
         );
     }
