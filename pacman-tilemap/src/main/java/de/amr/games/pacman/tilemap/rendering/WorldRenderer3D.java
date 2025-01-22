@@ -262,6 +262,10 @@ public class WorldRenderer3D {
 
     // Standard 3D obstacles
 
+    public void render_Coin(Group g, Obstacle obstacle) {
+        addTowers(g, obstacle.cornerCenter(0));
+    }
+
     public void render_I(Group g, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 3);
         addTowers(g, t);
@@ -271,11 +275,7 @@ public class WorldRenderer3D {
     public void render_O(Group g, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 2, 4, 6);
         addTowers(g, t);
-        addWalls(g,
-            t[0], t[1],
-            t[1], t[2],
-            t[2], t[3],
-            t[3], t[0]);
+        addWalls(g, t[0], t[1], t[1], t[2], t[2], t[3], t[3], t[0]);
         if (oShapeFilled) {
             double width = Math.abs(t[0].x() - t[2].x()) - TS;
             double height = Math.abs(t[0].y() - t[2].y()) - TS;
@@ -283,81 +283,57 @@ public class WorldRenderer3D {
         }
     }
 
-    public void render_Coin(Group g, Obstacle obstacle) {
-        addTowers(g, obstacle.cornerCenter(0));
-    }
-
+    //TODO rework
     public void render_L(Group g, Obstacle obstacle) {
-        Vector2f[] utc = obstacle.uTurnCenters();
+        Vector2f[] u = obstacle.uTurnCenters();
         int[] d = obstacle.uTurnIndices().toArray();
         ObstacleSegment firstUTurn = obstacle.segment(d[0]);
         Vector2f corner = firstUTurn.isRoundedSECorner() || firstUTurn.isRoundedNWCorner()
-            ? vec_2f(utc[1].x(), utc[0].y())
-            : vec_2f(utc[0].x(), utc[1].y());
-        addTowers(g, utc);
+            ? vec_2f(u[1].x(), u[0].y())
+            : vec_2f(u[0].x(), u[1].y());
+        addTowers(g, u);
         addTowers(g, corner);
-        addWall(g, utc[0], corner);
-        addWall(g, utc[1], corner);
+        addWall(g, u[0], corner);
+        addWall(g, u[1], corner);
     }
 
     public void render_L_Spiked(Group g, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 4, 9, 11);
         Vector2f h = vec_2f(t[0].x(), t[1].y());
         addTowers(g, t);
-        addWall(g, t[0], t[2]);
-        addWall(g, t[1], h);
-        addWall(g, t[2], t[3]);
+        addWalls(g, t[0], t[2], t[1], h, t[2], t[3]);
     }
 
     private void render_L_Spiked_Mirrored(Group g, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 4, 7, 11);
         Vector2f h = vec_2f(t[0].x(), t[3].y());
         addTowers(g, t);
-        addWall(g, t[0], t[2]);
-        addWall(g, h, t[3]);
-        addWall(g, t[1], t[2]);
+        addWalls(g, t[0], t[2], h, t[3], t[1], t[2]);
     }
 
     public void render_LL(Group g, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 2, 6, 8, 13);
         addTowers(g, t);
-        addWall(g, t[0], t[1]);
-        addWall(g, t[1], t[4]);
-        addWall(g, t[4], t[2]);
-        addWall(g, t[2], t[3]);
+        addWalls(g, t[0], t[1], t[1], t[4], t[4], t[2], t[2], t[3]);
     }
 
     public void render_LL_Mirrored(Group g, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 4, 8, 11, 15);
         addTowers(g, t);
-        addWall(g, t[0], t[4]);
-        addWall(g, t[1], t[4]);
-        addWall(g, t[1], t[3]);
-        addWall(g, t[3], t[2]);
+        addWalls(g, t[0], t[4], t[1], t[4], t[1], t[3], t[3], t[2]);
     }
 
     private void render_LLL(Group g, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 2, 21, 6, 17, 10, 12);
         addTowers(g, t);
-        addWall(g, t[0], t[1]);
-        addWall(g, t[1], t[2]);
-        addWall(g, t[2], t[3]);
-        addWall(g, t[3], t[4]);
-        addWall(g, t[4], t[5]);
-        addWall(g, t[5], t[6]);
+        addWalls(g, t[0], t[1], t[1], t[2], t[2], t[3], t[3], t[4], t[4], t[5], t[5], t[6]);
     }
 
     private void render_LLL_Mirrored(Group g, Obstacle obstacle) {
         Vector2f[] t = obstacle.cornerCenters(0, 4, 8, 12, 15, 19, 23);
         addTowers(g, t);
-        addWall(g, t[0], t[6]);
-        addWall(g, t[6], t[1]);
-        addWall(g, t[1], t[5]);
-        addWall(g, t[5], t[2]);
-        addWall(g, t[2], t[4]);
-        addWall(g, t[4], t[3]);
+        addWalls(g, t[0], t[6], t[6], t[1], t[1], t[5], t[5], t[2], t[2], t[4], t[4], t[3]);
     }
-
 
     public void render_F(Group g, Obstacle obstacle) {
         Vector2f[] utc = obstacle.uTurnCenters();
