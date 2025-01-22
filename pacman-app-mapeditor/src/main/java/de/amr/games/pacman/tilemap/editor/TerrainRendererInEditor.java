@@ -88,7 +88,7 @@ public class TerrainRendererInEditor implements TileMapRenderer {
             obstacles.forEach(obstacle -> {
                 for (int i = 0; i < obstacle.numSegments(); ++i) {
                     ObstacleSegment segment = obstacle.segment(i);
-                    Vector2f start = segment.start(), end = segment.end(), middle = start.plus(end).scaled(0.5f);
+                    Vector2f start = segment.startPoint(), end = segment.endPoint(), middle = start.plus(end).scaled(0.5f);
                     g.setFont(SEGMENT_NUMBER_FONT);
                     g.setFill(SEGMENT_NUMBER_COLOR);
                     g.fillText(String.valueOf(i), middle.x() - 0.5 * SEGMENT_NUMBER_FONT_SIZE, middle.y());

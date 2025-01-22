@@ -6,10 +6,10 @@ package de.amr.games.pacman.lib.tilemap;
 
 import de.amr.games.pacman.lib.Vector2f;
 
-public record ObstacleSegment(Vector2f start, Vector2f vector, boolean ccw, byte mapContent) {
+public record ObstacleSegment(Vector2f startPoint, Vector2f vector, boolean ccw, byte mapContent) {
 
-    public Vector2f end() {
-        return start.plus(vector);
+    public Vector2f endPoint() {
+        return startPoint.plus(vector);
     }
 
     public boolean isRoundedNWCorner() {

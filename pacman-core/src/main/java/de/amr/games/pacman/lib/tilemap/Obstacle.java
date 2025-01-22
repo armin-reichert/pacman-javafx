@@ -30,7 +30,7 @@ public class Obstacle {
         List<Vector2f> points = new ArrayList<>();
         points.add(startPoint);
         for (ObstacleSegment segment : segments) {
-            points.add(segment.start().plus(segment.vector()));
+            points.add(segment.startPoint().plus(segment.vector()));
         }
         return points.toArray(Vector2f[]::new);
     }
@@ -60,9 +60,9 @@ public class Obstacle {
         if (segments.isEmpty()) {
             segments.add(new ObstacleSegment(startPoint, vector, ccw, content));
         } else {
-            segments.add(new ObstacleSegment(segments.getLast().end(), vector, ccw, content));
+            segments.add(new ObstacleSegment(segments.getLast().endPoint(), vector, ccw, content));
         }
-        endPoint = segments.getLast().end();
+        endPoint = segments.getLast().endPoint();
     }
 
     public Vector2f startPoint() { return startPoint; }
@@ -70,7 +70,7 @@ public class Obstacle {
     public Vector2f endPoint() { return endPoint; }
 
     public Vector2f point(int i) {
-        return i < numSegments() ? segment(i).start() : segment(i).end();
+        return i < numSegments() ? segment(i).startPoint() : segment(i).endPoint();
     }
 
     public boolean isClosed() {
