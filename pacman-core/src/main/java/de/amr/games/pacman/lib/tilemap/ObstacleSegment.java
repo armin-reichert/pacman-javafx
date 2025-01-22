@@ -6,26 +6,26 @@ package de.amr.games.pacman.lib.tilemap;
 
 import de.amr.games.pacman.lib.Vector2f;
 
-public record ObstacleSegment(Vector2f startPoint, Vector2f vector, boolean ccw, byte mapContent) {
+public record ObstacleSegment(Vector2f startPoint, Vector2f vector, boolean ccw, byte encoding) {
 
     public Vector2f endPoint() {
         return startPoint.plus(vector);
     }
 
     public boolean isRoundedNWCorner() {
-        return mapContent == TileEncoding.CORNER_NW || mapContent == TileEncoding.DCORNER_NW;
+        return encoding == TileEncoding.CORNER_NW || encoding == TileEncoding.DCORNER_NW;
     }
 
     public boolean isRoundedSWCorner() {
-        return mapContent == TileEncoding.CORNER_SW || mapContent == TileEncoding.DCORNER_SW;
+        return encoding == TileEncoding.CORNER_SW || encoding == TileEncoding.DCORNER_SW;
     }
 
     public boolean isRoundedSECorner() {
-        return mapContent == TileEncoding.CORNER_SE || mapContent == TileEncoding.DCORNER_SE;
+        return encoding == TileEncoding.CORNER_SE || encoding == TileEncoding.DCORNER_SE;
     }
 
     public boolean isRoundedNECorner() {
-        return mapContent == TileEncoding.CORNER_NE || mapContent == TileEncoding.DCORNER_NE;
+        return encoding == TileEncoding.CORNER_NE || encoding == TileEncoding.DCORNER_NE;
     }
 
     public boolean isRoundedCorner() {
@@ -33,19 +33,19 @@ public record ObstacleSegment(Vector2f startPoint, Vector2f vector, boolean ccw,
     }
 
     public boolean isAngularNWCorner() {
-        return mapContent == TileEncoding.DCORNER_ANGULAR_NW;
+        return encoding == TileEncoding.DCORNER_ANGULAR_NW;
     }
 
     public boolean isAngularSWCorner() {
-        return mapContent == TileEncoding.DCORNER_ANGULAR_SW;
+        return encoding == TileEncoding.DCORNER_ANGULAR_SW;
     }
 
     public boolean isAngularSECorner() {
-        return mapContent == TileEncoding.DCORNER_ANGULAR_SE;
+        return encoding == TileEncoding.DCORNER_ANGULAR_SE;
     }
 
     public boolean isAngularNECorner() {
-        return mapContent == TileEncoding.DCORNER_ANGULAR_NE;
+        return encoding == TileEncoding.DCORNER_ANGULAR_NE;
     }
 
     public boolean isNWCorner() {
@@ -65,11 +65,11 @@ public record ObstacleSegment(Vector2f startPoint, Vector2f vector, boolean ccw,
     }
 
     public boolean isVerticalLine() {
-        return mapContent == TileEncoding.WALL_V || mapContent == TileEncoding.DWALL_V;
+        return encoding == TileEncoding.WALL_V || encoding == TileEncoding.DWALL_V;
     }
 
     public boolean isHorizontalLine() {
-        return mapContent == TileEncoding.WALL_H || mapContent == TileEncoding.DWALL_H;
+        return encoding == TileEncoding.WALL_H || encoding == TileEncoding.DWALL_H;
     }
 
     public boolean isStraightLine() {

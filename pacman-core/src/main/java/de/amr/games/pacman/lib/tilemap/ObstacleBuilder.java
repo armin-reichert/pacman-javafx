@@ -300,7 +300,7 @@ public class ObstacleBuilder {
                     } else { // start merging
                         mergedVector = segment.vector();
                         mergedCCW = segment.ccw();
-                        mergedMapContent = segment.mapContent();
+                        mergedMapContent = segment.encoding();
                         merging = true;
                     }
                 }
@@ -309,7 +309,7 @@ public class ObstacleBuilder {
                         optimized.addSegment(mergedVector, mergedCCW, mergedMapContent);
                         merging = false;
                     }
-                    optimized.addSegment(segment.vector(), segment.ccw(), segment.mapContent());
+                    optimized.addSegment(segment.vector(), segment.ccw(), segment.encoding());
                 }
             }
             if (merging) {

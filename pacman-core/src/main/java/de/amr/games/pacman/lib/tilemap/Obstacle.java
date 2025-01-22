@@ -49,7 +49,7 @@ public class Obstacle {
     public String encoding() {
         StringBuilder encoding = new StringBuilder();
         for (int i = 0; i < segments.size(); ++i) {
-            byte tileCode = segment(i).mapContent();
+            byte tileCode = segment(i).encoding();
             char ch = (char) ('a' + tileCode);
             encoding.append(ch);
         }
@@ -127,7 +127,7 @@ public class Obstacle {
 
     public Vector2f cornerCenter(int segmentIndex) {
         ObstacleSegment corner = segment(segmentIndex);
-        return switch (corner.mapContent()) {
+        return switch (corner.encoding()) {
             case TileEncoding.CORNER_NW -> point(segmentIndex).plus(0, HTS);
             case TileEncoding.CORNER_SW -> point(segmentIndex).plus(HTS, 0);
             case TileEncoding.CORNER_SE -> point(segmentIndex).plus(0, -HTS);
