@@ -168,6 +168,7 @@ public class TileMapEditor {
     private HBox sliderZoomContainer;
     private FileChooser fileChooser;
     private TabPane tabPaneWithPalettes;
+    private HBox statusLine;
 
     private MazePreview3D mazePreview3D;
     private SubScene preview3DSubScene;
@@ -306,6 +307,7 @@ public class TileMapEditor {
         createEditModeIndicator();
         createMessageDisplay();
         createZoomSlider();
+        createStatusLine();
 
         arrangeMainLayout();
         initActiveRendering();
@@ -528,12 +530,20 @@ public class TileMapEditor {
         sliderZoomContainer.setSpacing(5);
     }
 
-    private void arrangeMainLayout() {
+    private void createStatusLine() {
+        var mapSizeInfo = new Text();
+        mapSizeInfo.setFont(FONT_STATUS_LINE);
+        mapSizeInfo.textProperty().bind(worldMapPy.map(worldMap -> (worldMap != null)
+            ? "%2d cols %2d rows".formatted(worldMap.terrain().numCols(), worldMap.terrain().numRows()) : "")
+        );
+
         var spacer = new Region();
-        var statusLine = new HBox(focussedTileInfo, editModeIndicator, filler(20), messageLabel, spacer, sliderZoomContainer);
+        statusLine = new HBox(mapSizeInfo, filler(10), focussedTileInfo, editModeIndicator, filler(20), messageLabel, spacer, sliderZoomContainer);
         statusLine.setPadding(new Insets(10, 10, 10, 10));
         HBox.setHgrow(spacer, Priority.ALWAYS);
+    }
 
+    private void arrangeMainLayout() {
         var contentArea = new VBox(tabPaneWithPalettes, splitPaneEditorAndPreviews, statusLine);
         contentArea.setPadding(new Insets(0,5,0,5));
         VBox.setVgrow(tabPaneWithPalettes, Priority.NEVER);
@@ -547,19 +557,13 @@ public class TileMapEditor {
     private StringBinding createTitleBinding() {
         return Bindings.createStringBinding(() -> {
                 File currentFile = currentFilePy.get();
-                String desc;
                 if (currentFile != null) {
-                    desc = "[%s] - %s".formatted(currentFile.getName(), currentFile.getPath());
-                } else if (worldMap() != null && worldMap().url() != null) {
-                    desc = "[%s]".formatted(worldMap().url());
-                } else {
-                    desc = "[%s]".formatted(tt("unsaved_map"));
+                    return tt("map_editor") + ": " + "[%s] - %s".formatted(currentFile.getName(), currentFile.getPath());
                 }
-                if (worldMap() != null) {
-                    String prefix = "(%d rows, %d cols)".formatted(worldMap().terrain().numRows(), worldMap().terrain().numCols());
-                    desc = prefix + " " + desc;
+                if (worldMap() != null && worldMap().url() != null) {
+                    return tt("map_editor") + ": " + "[%s]".formatted(worldMap().url());
                 }
-                return tt("map_editor") + ": " + desc;
+                return tt("map_editor") + ": " + "[%s]".formatted(tt("unsaved_map"));
             }, currentFilePy, worldMapPy
         );
     }
