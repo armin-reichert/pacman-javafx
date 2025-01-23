@@ -11,9 +11,7 @@ import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
 import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import de.amr.games.pacman.lib.tilemap.TileMap;
-import de.amr.games.pacman.tilemap.rendering.TileMapRenderer;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -31,45 +29,18 @@ import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 /**
  * @author Armin Reichert
  */
-public class TerrainRendererInEditor implements TileMapRenderer {
+public class TerrainRendererInEditor extends TerrainRenderer {
 
     private static final Color SEGMENT_NUMBER_COLOR = Color.GRAY;
     private static final double SEGMENT_NUMBER_FONT_SIZE = 4;
     private static final Font SEGMENT_NUMBER_FONT = Font.font("Sans", FontWeight.BOLD, SEGMENT_NUMBER_FONT_SIZE);
 
-    public DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
-
-    protected boolean segmentNumbersDisplayed;
-    protected Color wallFillColor = Color.BLACK;
-    protected Color wallStrokeColor = Color.GREEN;
-    protected Color doorColor = Color.PINK;
+    private boolean segmentNumbersDisplayed;
 
     private final double[] xp = new double[3];
     private final double[] yp = new double[3];
 
-    public TerrainRendererInEditor() {
-    }
-
-    @Override
-    public void setScaling(double scaling) {
-        scalingPy.set((float) scaling);
-    }
-
-    public double scaling() {
-        return scalingPy.get();
-    }
-
-    public void setWallStrokeColor(Color color) {
-        wallStrokeColor = color;
-    }
-
-    public void setWallFillColor(Color wallFillColor) {
-        this.wallFillColor = wallFillColor;
-    }
-
-    public void setDoorColor(Color doorColor) {
-        this.doorColor = doorColor;
-    }
+    public TerrainRendererInEditor() {}
 
     public void setSegmentNumbersDisplayed(boolean segmentNumbersDisplayed) {
         this.segmentNumbersDisplayed = segmentNumbersDisplayed;
@@ -143,7 +114,7 @@ public class TerrainRendererInEditor implements TileMapRenderer {
             case TileEncoding.DCORNER_NW, TileEncoding.DCORNER_NE, TileEncoding.DCORNER_SW, TileEncoding.DCORNER_SE -> drawDCorner(g, tile, content);
             case TileEncoding.DCORNER_ANGULAR_NW, TileEncoding.DCORNER_ANGULAR_NE, TileEncoding.DCORNER_ANGULAR_SW, TileEncoding.DCORNER_ANGULAR_SE
                     -> drawDCornerAngular(g, tile, content, xp, yp);
-            case TileEncoding.DOOR -> drawDoor(g, tile, doorColor);
+            case TileEncoding.DOOR -> drawDoor(g, tile, colors.doorColor());
             case TileEncoding.TUNNEL -> drawTunnel(g, tile);
             case TileEncoding.ONE_WAY_UP    -> drawOneWaySign(g, tile, Direction.UP);
             case TileEncoding.ONE_WAY_RIGHT -> drawOneWaySign(g, tile, Direction.RIGHT);
@@ -226,19 +197,19 @@ public class TerrainRendererInEditor implements TileMapRenderer {
 
     private void drawWall(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * TS, y = tile.y() * TS;
-        g.setFill(wallFillColor);
+        g.setFill(colors.wallFillColor());
         g.fillRect(x, y, TS, TS);
     }
 
     private void drawWallH(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * TS, y = tile.y() * TS;
-        g.setFill(wallStrokeColor);
+        g.setFill(colors.wallStrokeColor());
         g.fillRect(x, y + 3.5f, TS, 1);
     }
 
     private void drawDWallH(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * TS, y = tile.y() * TS;
-        g.setFill(wallStrokeColor);
+        g.setFill(colors.wallStrokeColor());
         // add 1 pixel to avoid gaps
         g.fillRect(x, y + 2.5f, TS, 1);
         g.fillRect(x, y + 4.5f, TS, 1);
@@ -246,21 +217,21 @@ public class TerrainRendererInEditor implements TileMapRenderer {
 
     private void drawWallV(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * TS, y = tile.y() * TS;
-        g.setFill(wallStrokeColor);
+        g.setFill(colors.wallStrokeColor());
         // add 1 pixel to avoid gaps
         g.fillRect(x + 3.5f, y, 1, TS);
     }
 
     private void drawDWallV(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * TS, y = tile.y() * TS;
-        g.setFill(wallStrokeColor);
+        g.setFill(colors.wallStrokeColor());
         g.fillRect(x + 2.5f, y, 1, TS);
         g.fillRect(x + 4.5f, y, 1, TS);
     }
 
     private void drawCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
         double x = tile.x() * TS, y = tile.y() * TS;
-        g.setStroke(wallStrokeColor);
+        g.setStroke(colors.wallStrokeColor());
         g.setLineWidth(1);
         switch (cornerType) {
             case TileEncoding.CORNER_NW -> g.strokeArc(x + 4, y + 4, TS, TS, 90, 90,  ArcType.OPEN);
@@ -273,7 +244,7 @@ public class TerrainRendererInEditor implements TileMapRenderer {
 
     private void drawDCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
         double x = tile.x() * TS, y = tile.y() * TS;
-        g.setStroke(wallStrokeColor);
+        g.setStroke(colors.wallStrokeColor());
         g.setLineWidth(1);
         switch (cornerType) {
             case TileEncoding.DCORNER_NW -> {
@@ -301,7 +272,7 @@ public class TerrainRendererInEditor implements TileMapRenderer {
         double cx = x + HTS, cy = y + HTS;
         double rightEdge = x + TS, bottomEdge = y + TS;
         double d = 1;
-        g.setStroke(wallStrokeColor);
+        g.setStroke(colors.wallStrokeColor());
         g.setLineWidth(1);
         switch (cornerType) {
             case TileEncoding.DCORNER_ANGULAR_NW -> {

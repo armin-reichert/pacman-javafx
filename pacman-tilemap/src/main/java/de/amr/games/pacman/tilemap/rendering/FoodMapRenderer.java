@@ -5,15 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tilemap.rendering;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.Obstacle;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.TileEncoding;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-
-import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -46,16 +43,11 @@ public class FoodMapRenderer implements TileMapRenderer {
         this.pelletColor = pelletColor;
     }
 
-    @Override
-    public void drawTerrain(GraphicsContext g, TileMap terrainMap, List<Obstacle> obstacles) {
-    }
 
-    @Override
     public void drawFood(GraphicsContext g, TileMap map) {
         map.tiles().forEach(tile -> drawTile(g, tile, map.get(tile)));
     }
 
-    @Override
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
         switch (content) {
             case TileEncoding.PELLET -> drawPellet(g, tile);

@@ -25,13 +25,17 @@ import static de.amr.games.pacman.lib.Globals.TS;
  */
 public class TerrainRenderer implements TileMapRenderer {
 
+    public record ColorScheme(Color backgroundColor, Color wallFillColor, Color wallStrokeColor, Color doorColor) {}
+
+    public static final ColorScheme DEFAULT_COLOR_SCHEME = new ColorScheme(Color.BLACK, Color.RED,  Color.GOLD, Color.PINK);
+
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
 
-    private double doubleStrokeOuterWidth;
-    private double doubleStrokeInnerWidth;
-    private double singleStrokeWidth;
+    protected double doubleStrokeOuterWidth;
+    protected double doubleStrokeInnerWidth;
+    protected double singleStrokeWidth;
 
-    private ColorScheme colors = DEFAULT_COLOR_SCHEME;
+    protected ColorScheme colors = DEFAULT_COLOR_SCHEME;
 
     public TerrainRenderer() {
         doubleStrokeOuterWidth = 4;
@@ -64,7 +68,6 @@ public class TerrainRenderer implements TileMapRenderer {
         this.singleStrokeWidth = singleStrokeWidth;
     }
 
-    @Override
     public void drawTerrain(GraphicsContext g, TileMap terrainMap, List<Obstacle> obstacles) {
         g.save();
         g.scale(scaling(), scaling());

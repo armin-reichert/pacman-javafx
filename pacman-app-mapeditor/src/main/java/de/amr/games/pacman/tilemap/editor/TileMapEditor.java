@@ -11,7 +11,6 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.*;
 import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
-import de.amr.games.pacman.tilemap.rendering.TileMapRenderer;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -76,6 +75,8 @@ public class TileMapEditor {
     public static final String EDIT_HELP = "(I)=Inspect  (N)=Normal  (S)=Symmetric  (X)=Erase ->Shift+Move";
 
     public static final Node NO_GRAPHIC = null;
+
+    public static final Color CANVAS_BACKGROUND = Color.BLACK;
 
     public static final Font FONT_STATUS_LINE = Font.font("Sans", FontWeight.BOLD, 14);
     public static final Font FONT_MESSAGE     = Font.font("Sans", FontWeight.NORMAL, 14);
@@ -318,12 +319,11 @@ public class TileMapEditor {
     }
 
     private void createRenderers() {
-        TileMapRenderer.ColorScheme colors = new TileMapRenderer.ColorScheme(
+        TerrainRenderer.ColorScheme colors = new TerrainRenderer.ColorScheme(
             Color.BLACK, parseColor(COLOR_WALL_FILL), parseColor(COLOR_WALL_STROKE), parseColor(COLOR_DOOR));
 
         editorTerrainRenderer = new TerrainRendererInEditor();
-        editorTerrainRenderer.setWallStrokeColor(parseColor(COLOR_WALL_STROKE));
-        editorTerrainRenderer.setWallFillColor(parseColor(COLOR_WALL_FILL));
+        editorTerrainRenderer.setColors(colors);
 
         previewTerrainRenderer = new TerrainRenderer();
         previewTerrainRenderer.setColors(colors);
@@ -591,9 +591,16 @@ public class TileMapEditor {
         clock = new Timeline(RENDERING_FPS, new KeyFrame(Duration.millis(frameDuration), e -> {
             updateMessageAnimation();
             try {
-                drawEditCanvas();
-                drawPreviewCanvas(Color.BLACK);
-                drawSelectedPalette();
+                TileMap terrainMap = worldMap().terrain();
+                TerrainRenderer.ColorScheme colors = new TerrainRenderer.ColorScheme(
+                    CANVAS_BACKGROUND,
+                    getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(COLOR_WALL_FILL)),
+                    getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(COLOR_WALL_STROKE)),
+                    getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(COLOR_DOOR))
+                );
+                drawEditCanvas(colors);
+                drawPreviewCanvas(colors);
+                drawSelectedPalette(colors);
             } catch (Exception x) {
                 Logger.error(x);
                 drawBlueScreen(x); // TODO this is crap
@@ -906,7 +913,7 @@ public class TileMapEditor {
         g.fillText(text, x, y);
     }
 
-    private void drawEditCanvas() {
+    private void drawEditCanvas(TerrainRenderer.ColorScheme colors) {
         final WorldMap map = worldMap();
         final TileMap terrain = map.terrain(), food = map.food();
 
@@ -914,7 +921,7 @@ public class TileMapEditor {
         g.setImageSmoothing(false);
 
         // Background
-        g.setFill(Color.BLACK);
+        g.setFill(colors.backgroundColor());
         g.fillRect(0, 0, editCanvas.getWidth(), editCanvas.getHeight());
 
         drawGrid(g);
@@ -922,9 +929,7 @@ public class TileMapEditor {
         // Terrain
         if (terrainVisiblePy.get()) {
             editorTerrainRenderer.setScaling(gridSize() / 8.0);
-            editorTerrainRenderer.setWallStrokeColor(getColorFromMap(terrain, WorldMap.PROPERTY_COLOR_WALL_STROKE, parseColor(COLOR_WALL_STROKE)));
-            editorTerrainRenderer.setWallFillColor(getColorFromMap(terrain, PROPERTY_COLOR_WALL_FILL, parseColor(COLOR_WALL_FILL)));
-            editorTerrainRenderer.setDoorColor(getColorFromMap(terrain, PROPERTY_COLOR_DOOR, parseColor(COLOR_DOOR)));
+            editorTerrainRenderer.setColors(colors);
             editorTerrainRenderer.setSegmentNumbersDisplayed(segmentNumbersDisplayedPy.get());
             editorTerrainRenderer.drawTerrain(g, terrain, map.obstacles());
 
@@ -993,20 +998,14 @@ public class TileMapEditor {
         drawSprite(g, PROPERTY_POS_BONUS, BONUS_SPRITE, TILE_BONUS);
     }
 
-    private void drawPreviewCanvas(Color backgroundColor) {
+    private void drawPreviewCanvas(TerrainRenderer.ColorScheme colors) {
         GraphicsContext g = previewCanvas.getGraphicsContext2D();
         g.setImageSmoothing(false);
-        g.setFill(backgroundColor);
+        g.setFill(colors.backgroundColor());
         g.fillRect(0, 0, previewCanvas.getWidth(), previewCanvas.getHeight());
         if (terrainVisiblePy.get()) {
             TileMap terrainMap = worldMap().terrain();
             ensureTerrainMapsPathsUpToDate();
-            TileMapRenderer.ColorScheme colors = new TileMapRenderer.ColorScheme(
-                backgroundColor,
-                getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(COLOR_WALL_FILL)),
-                getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(COLOR_WALL_STROKE)),
-                getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(COLOR_DOOR))
-            );
             previewTerrainRenderer.setScaling(gridSize() / 8.0);
             previewTerrainRenderer.setColors(colors);
             previewTerrainRenderer.drawTerrain(g, terrainMap, worldMap().obstacles());
@@ -1034,12 +1033,12 @@ public class TileMapEditor {
         g.drawImage(SPRITE_SHEET, sprite.x(), sprite.y(), sprite.width(), sprite.height(), x - ox, y - oy, w, h);
     }
 
-    private void drawSelectedPalette() {
+    private void drawSelectedPalette(TerrainRenderer.ColorScheme colors) {
         Palette selectedPalette = palettes[selectedPaletteID()];
         if (selectedPaletteID() == PALETTE_ID_TERRAIN) {
             double scaling = editorTerrainRenderer.scaling();
             editorTerrainRenderer.setScaling((double) TOOL_SIZE / 8);
-            editorTerrainRenderer.setWallStrokeColor(editorTerrainRenderer.wallStrokeColor);
+            editorTerrainRenderer.setColors(colors);
             editorTerrainRenderer.setScaling(scaling);
         }
         selectedPalette.draw();
