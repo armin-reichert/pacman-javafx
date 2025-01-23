@@ -88,19 +88,15 @@ public class TerrainRenderer implements TileMapRenderer {
     public void drawTerrain(GraphicsContext g, TileMap terrainMap, List<Obstacle> obstacles) {
         g.save();
         g.scale(scaling(), scaling());
-
-        obstacles.stream().filter(Obstacle::hasDoubleWalls)
-            .forEach(obstacle -> {
+        for (Obstacle obstacle : obstacles) {
+            if (obstacle.hasDoubleWalls()) {
                 drawObstacle(g, obstacle, doubleStrokeOuterWidth, false, wallStrokeColor);
                 drawObstacle(g, obstacle, doubleStrokeInnerWidth, false, wallFillColor);
-            });
-
-        obstacles.stream().filter(not(Obstacle::hasDoubleWalls))
-            .forEach(obstacle -> drawObstacle(g, obstacle, singleStrokeWidth, true, wallStrokeColor));
-
-        terrainMap.tiles(TileEncoding.DOOR)
-            .forEach(doorTile -> drawDoor(g, doorTile, terrainMap.get(doorTile.y(), doorTile.x() + 1) == TileEncoding.DOOR));
-
+            } else {
+                drawObstacle(g, obstacle, singleStrokeWidth, true, wallStrokeColor);
+            }
+        }
+        terrainMap.tiles(TileEncoding.DOOR).forEach(door -> drawDoor(g, door, terrainMap.get(door.y(), door.x() - 1) != TileEncoding.DOOR));
         g.restore();
     }
 
