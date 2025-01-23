@@ -6,7 +6,6 @@ package de.amr.games.pacman.lib.tilemap;
 
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2i;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,44 +15,31 @@ import static de.amr.games.pacman.lib.Globals.vec_2i;
 
 public interface ObstaclePartitioning {
 
-    public static void main(String[] args) {
-        List<RectArea> rects = computePartition(null);
-        for (RectArea r : rects) {
-            Logger.info(r);
-        }
-    }
-
     static List<RectArea> computePartition(Obstacle obstacle) {
         List<RectArea> rectangleList = new ArrayList<>();
         List<Vector2i> polygon = computeInnerPolygon(obstacle);
         while (!polygon.isEmpty()) {
-            Vector2i p_k = min_point(polygon);
-            Vector2i p_l = min_point_except(polygon, p_k);
-            Vector2i p_m = min_point_between(polygon, p_k, p_l);
-            rectangleList.add( span(p_k, new Vector2i(p_l.x(), p_m.y())) );
+            Vector2i p_k = min_point(polygon), p_l = min_point_except(polygon, p_k), p_m = min_point_between(polygon, p_k, p_l);
+            rectangleList.add( spanned_rect(p_k, vec_2i(p_l.x(), p_m.y())) );
             toggle(polygon, p_k);
             toggle(polygon, p_l);
-            toggle(polygon, new Vector2i(p_k.x(), p_m.y()));
-            toggle(polygon, new Vector2i(p_l.x(), p_m.y()));
+            toggle(polygon, vec_2i(p_k.x(), p_m.y()));
+            toggle(polygon, vec_2i(p_l.x(), p_m.y()));
         }
         return rectangleList;
     }
 
-    static RectArea span(Vector2i p_min, Vector2i p_max) {
+    static RectArea spanned_rect(Vector2i p_min, Vector2i p_max) {
         return new RectArea(p_min.x(), p_min.y(), p_max.x() - p_min.x(), p_max.y() - p_min.y());
     }
 
     static void toggle(List<Vector2i> polygon, Vector2i p) {
-        if (polygon.contains(p)) {
-            polygon.remove(p);
-        } else {
-            polygon.add(p);
-        }
+        if (polygon.contains(p)) polygon.remove(p); else polygon.add(p);
     }
 
     static Vector2i min_point_between(List<Vector2i> polygon, Vector2i left, Vector2i right) {
-        List<Vector2i> points = polygon.stream().filter(p -> left.x() <= p.x() && p.x() < right.x() && p.y() > left.y()).toList();
-        return min_point(points);
+        List<Vector2i> points_between = polygon.stream().filter(p -> left.x() <= p.x() && p.x() < right.x() && p.y() > left.y()).toList();
+        return min_point(points_between);
     }
 
     static Vector2i min_point_except(List<Vector2i> polygon, Vector2i p) {
