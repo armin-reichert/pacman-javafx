@@ -4,11 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib.tilemap;
 
-import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.Vector2i;
 
-public record ObstacleSegment(Vector2f startPoint, Vector2f vector, boolean ccw, byte encoding) {
+public record ObstacleSegment(Vector2i startPoint, Vector2i vector, boolean ccw, byte encoding) {
 
-    public Vector2f endPoint() {
+    public Vector2i endPoint() {
         return startPoint.plus(vector);
     }
 

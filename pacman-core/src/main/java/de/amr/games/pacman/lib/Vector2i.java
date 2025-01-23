@@ -35,6 +35,8 @@ public record Vector2i(int x, int y) {
 
     public Vector2f scaled(double s) { return new Vector2f((float)s * x, (float)s * y); }
 
+    public Vector2i inverse() { return new Vector2i(-x, -y); }
+
     public Vector2i plus(Vector2i v) {
         return new Vector2i(x + v.x, y + v.y);
     }
@@ -55,13 +57,17 @@ public record Vector2i(int x, int y) {
         return new Vector2i(x - dx, y - dy);
     }
 
-    public double euclideanDistance(Vector2i v) {
+    public Vector2i midpoint(Vector2i v) { return new Vector2i((x + v.x) / 2, (y + v.y) / 2); }
+
+    public double euclideanDist(Vector2i v) {
         return Math.hypot(x - v.x, y - v.y);
     }
 
-    public int manhattanDistance(Vector2i v) {
+    public int manhattanDist(Vector2i v) {
         return Math.abs(x - v.x) + Math.abs(y - v.y);
     }
+
+    public double length() { return euclideanDist(Vector2i.ZERO); }
 
     public Stream<Vector2i> neighbors() {
         return Stream.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT).map(dir -> this.plus(dir.vector()));

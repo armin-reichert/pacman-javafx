@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.lib.tilemap;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import org.tinylog.Logger;
 
@@ -50,14 +49,14 @@ public class ObstacleBuilder {
     }
 
     // Corners are represented by "diagonal" vectors
-    private static final Vector2f SEG_CORNER_NW_UP   = vec_2f(HTS, -HTS);
-    private static final Vector2f SEG_CORNER_NW_DOWN = SEG_CORNER_NW_UP.inverse();
-    private static final Vector2f SEG_CORNER_SW_UP   = vec_2f(-HTS, -HTS);
-    private static final Vector2f SEG_CORNER_SW_DOWN = SEG_CORNER_SW_UP.inverse();
-    private static final Vector2f SEG_CORNER_SE_UP   = vec_2f(HTS, -HTS);
-    private static final Vector2f SEG_CORNER_SE_DOWN = SEG_CORNER_SE_UP.inverse();
-    private static final Vector2f SEG_CORNER_NE_UP   = vec_2f(-HTS, -HTS);
-    private static final Vector2f SEG_CORNER_NE_DOWN = SEG_CORNER_NE_UP.inverse();
+    private static final Vector2i SEG_CORNER_NW_UP   = vec_2i(HTS, -HTS);
+    private static final Vector2i SEG_CORNER_NW_DOWN = SEG_CORNER_NW_UP.inverse();
+    private static final Vector2i SEG_CORNER_SW_UP   = vec_2i(-HTS, -HTS);
+    private static final Vector2i SEG_CORNER_SW_DOWN = SEG_CORNER_SW_UP.inverse();
+    private static final Vector2i SEG_CORNER_SE_UP   = vec_2i(HTS, -HTS);
+    private static final Vector2i SEG_CORNER_SE_DOWN = SEG_CORNER_SE_UP.inverse();
+    private static final Vector2i SEG_CORNER_NE_UP   = vec_2i(-HTS, -HTS);
+    private static final Vector2i SEG_CORNER_NE_DOWN = SEG_CORNER_NE_UP.inverse();
 
     private final TileMap terrain;
     private final BitSet exploredTiles = new BitSet();
@@ -105,7 +104,7 @@ public class ObstacleBuilder {
     }
 
     private Obstacle buildClosedObstacle(Vector2i cornerNW, List<Vector2i> tilesWithErrors) {
-        Vector2f startPoint = cornerNW.scaled((float)TS).plus(TS, HTS);
+        Vector2i startPoint = cornerNW.scaled(TS).plus(TS, HTS);
         byte startTileContent = terrain.get(cornerNW);
         Obstacle obstacle = new Obstacle(startPoint, isDoubleWall(startTileContent));
         obstacle.addSegment(SEG_CORNER_NW_DOWN, true, startTileContent);
@@ -123,7 +122,7 @@ public class ObstacleBuilder {
     }
 
     private Obstacle buildOpenObstacle(Vector2i startTile, boolean startsAtLeftBorder, List<Vector2i> tilesWithErrors) {
-        Vector2f startPoint = startTile.scaled((float) TS).plus(startsAtLeftBorder ? 0 : TS, HTS);
+        Vector2i startPoint = startTile.scaled(TS).plus(startsAtLeftBorder ? 0 : TS, HTS);
         byte startTileContent = terrain.get(startTile);
         var obstacle = new Obstacle(startPoint, isDoubleWall(startTileContent));
         cursor = new Cursor(startTile);
@@ -279,7 +278,7 @@ public class ObstacleBuilder {
         }
     }
 
-    private Vector2f arrow(Direction dir, float length) {
+    private Vector2i arrow(Direction dir, int length) {
         return dir.vector().scaled(length);
     }
 
@@ -289,7 +288,7 @@ public class ObstacleBuilder {
             Obstacle optimized = new Obstacle(obstacle.startPoint(), obstacle.hasDoubleWalls());
             optimizedObstacles.add(optimized);
             boolean merging = false;
-            Vector2f mergedVector = null;
+            Vector2i mergedVector = null;
             boolean mergedCCW = false;
             byte mergedMapContent = -1;
             for (int i = 0; i < obstacle.numSegments(); ++i) {

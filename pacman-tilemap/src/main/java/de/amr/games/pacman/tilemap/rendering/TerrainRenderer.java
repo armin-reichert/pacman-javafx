@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tilemap.rendering;
 
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
@@ -85,7 +84,7 @@ public class TerrainRenderer implements TileMapRenderer {
 
     private void drawObstacle(GraphicsContext g, Obstacle obstacle, double lineWidth, boolean fill, Color strokeColor) {
         int r = HTS;
-        Vector2f p = obstacle.startPoint();
+        Vector2i p = obstacle.startPoint();
         g.beginPath();
         g.moveTo(p.x(), p.y());
         for (ObstacleSegment segment : obstacle.segments()) {

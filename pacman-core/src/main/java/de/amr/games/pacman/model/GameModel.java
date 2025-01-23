@@ -220,7 +220,7 @@ public abstract class GameModel {
             // Inky: attacks from opposite side as Blinky
             case CYAN_GHOST -> level.pac().tilesAhead(2, simulateOverflowBug).scaled(2).minus(level.ghost(RED_GHOST).tile());
             // Clyde/Sue: attacks directly but retreats if Pac is near
-            case ORANGE_GHOST -> ghost.tile().euclideanDistance(level.pac().tile()) < 8 ? scatterTarget(ghost) : level.pac().tile();
+            case ORANGE_GHOST -> ghost.tile().euclideanDist(level.pac().tile()) < 8 ? scatterTarget(ghost) : level.pac().tile();
             default -> throw GameException.illegalGhostID(ghost.id());
         };
     }

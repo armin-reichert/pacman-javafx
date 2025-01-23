@@ -1141,7 +1141,7 @@ public class TileMapEditor {
 
     private void identifyObstacleAtTile(Vector2i tile) {
         Obstacle obstacleAtTile = worldMap().obstacles().stream()
-            .filter(obstacle -> Globals.tileAt(obstacle.startPoint().minus(HTS, 0)).equals(tile))
+            .filter(obstacle -> Globals.tileAt(obstacle.startPoint().minus(HTS, 0).toVector2f()).equals(tile))
             .findFirst().orElse(null);
         if (obstacleAtTile != null) {
             String encoding = obstacleAtTile.encoding();

@@ -6,12 +6,22 @@ package de.amr.games.pacman.lib.tilemap;
 
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2i;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import static de.amr.games.pacman.lib.Globals.vec_2i;
+
 public interface ObstaclePartitioning {
+
+    public static void main(String[] args) {
+        List<RectArea> rects = computePartition(null);
+        for (RectArea r : rects) {
+            Logger.info(r);
+        }
+    }
 
     static List<RectArea> computePartition(Obstacle obstacle) {
         List<RectArea> rectangleList = new ArrayList<>();
@@ -58,6 +68,12 @@ public interface ObstaclePartitioning {
     }
 
     static List<Vector2i> computeInnerPolygon(Obstacle obstacle) {
-        return List.of(); //TODO
+/*
+        return new ArrayList<>(List.of(vec_2i(8, 0), vec_2i(8, 24), vec_2i(0, 24), vec_2i(0, 32), vec_2i(8, 32), vec_2i(8, 48),
+                vec_2i(16, 48), vec_2i(16, 16), vec_2i(24, 16), vec_2i(24, 8), vec_2i(16, 8), vec_2i(16, 0)
+        ));
+ */
+        Vector2i p = obstacle.startPoint();
+        return List.of();
     }
 }

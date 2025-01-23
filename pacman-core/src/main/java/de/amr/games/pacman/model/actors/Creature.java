@@ -243,7 +243,7 @@ public abstract class Creature extends Actor2D {
             }
             Vector2i neighborTile = currentTile.plus(dir.vector());
             if (canAccessTile(neighborTile)) {
-                double d = neighborTile.euclideanDistance(targetTile);
+                double d = neighborTile.euclideanDist(targetTile);
                 if (d < minDistToTarget) {
                     minDistToTarget = d;
                     targetDir = dir;

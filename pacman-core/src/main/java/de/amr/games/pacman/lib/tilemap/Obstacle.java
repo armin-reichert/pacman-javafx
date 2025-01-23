@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.lib.tilemap;
 
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.Vector2i;
 
 import java.util.*;
 import java.util.stream.IntStream;
@@ -16,29 +17,29 @@ import static de.amr.games.pacman.lib.Globals.HTS;
  */
 public class Obstacle {
 
-    private final Vector2f startPoint;
-    private Vector2f endPoint;
+    private final Vector2i startPoint;
+    private Vector2i endPoint;
     private final List<ObstacleSegment> segments = new ArrayList<>();
     private final boolean doubleWalls;
 
-    public Obstacle(Vector2f startPoint, boolean doubleWalls) {
+    public Obstacle(Vector2i startPoint, boolean doubleWalls) {
         this.startPoint = this.endPoint = Objects.requireNonNull(startPoint);
         this.doubleWalls = doubleWalls;
     }
 
-    public void addSegment(Vector2f vector, boolean ccw, byte content) {
+    public void addSegment(Vector2i vector, boolean ccw, byte content) {
         ObstacleSegment segment = new ObstacleSegment(endPoint, vector, ccw, content);
         segments.add(segment);
         endPoint = segment.endPoint();
     }
 
-    public Vector2f[] points() {
-        List<Vector2f> points = new ArrayList<>();
+    public Vector2i[] points() {
+        List<Vector2i> points = new ArrayList<>();
         points.add(startPoint);
         for (ObstacleSegment segment : segments) {
             points.add(segment.startPoint().plus(segment.vector()));
         }
-        return points.toArray(Vector2f[]::new);
+        return points.toArray(Vector2i[]::new);
     }
 
     @Override
@@ -62,11 +63,11 @@ public class Obstacle {
         return encoding.toString();
     }
 
-    public Vector2f startPoint() { return startPoint; }
+    public Vector2i startPoint() { return startPoint; }
 
-    public Vector2f endPoint() { return endPoint; }
+    public Vector2i endPoint() { return endPoint; }
 
-    public Vector2f point(int i) {
+    public Vector2i point(int i) {
         return i < numSegments() ? segment(i).startPoint() : segment(i).endPoint();
     }
 
@@ -122,7 +123,7 @@ public class Obstacle {
         return false;
     }
 
-    public Vector2f cornerCenter(int segmentIndex) {
+    public Vector2i cornerCenter(int segmentIndex) {
         ObstacleSegment corner = segment(segmentIndex);
         return switch (corner.encoding()) {
             case TileEncoding.CORNER_NW -> point(segmentIndex).plus(0, HTS);
@@ -133,7 +134,7 @@ public class Obstacle {
         };
     }
 
-    public Vector2f[] cornerCenters(int... segmentIndices) {
-        return Arrays.stream(segmentIndices).mapToObj(this::cornerCenter).toArray(Vector2f[]::new);
+    public Vector2i[] cornerCenters(int... segmentIndices) {
+        return Arrays.stream(segmentIndices).mapToObj(this::cornerCenter).toArray(Vector2i[]::new);
     }
 }
