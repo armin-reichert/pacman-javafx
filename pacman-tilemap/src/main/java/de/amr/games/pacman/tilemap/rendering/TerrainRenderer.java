@@ -19,7 +19,6 @@ import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static java.util.function.Predicate.not;
 
 /**
  * Vector renderer for terrain tile maps.
@@ -32,19 +31,16 @@ public class TerrainRenderer implements TileMapRenderer {
     private double doubleStrokeInnerWidth;
     private double singleStrokeWidth;
 
-    private Color mapBackgroundColor;
-    private Color wallFillColor;
-    private Color wallStrokeColor;
-    private Color doorColor;
+    private ColorScheme colors = DEFAULT_COLOR_SCHEME;
 
     public TerrainRenderer() {
-        mapBackgroundColor = Color.BLACK;
-        wallFillColor = Color.BLACK;
-        wallStrokeColor = Color.GREEN;
-        doorColor = Color.PINK;
         doubleStrokeOuterWidth = 4;
         doubleStrokeInnerWidth = 2;
         singleStrokeWidth = 1;
+    }
+
+    public void setColors(ColorScheme colors) {
+        this.colors = colors;
     }
 
     @Override
@@ -54,22 +50,6 @@ public class TerrainRenderer implements TileMapRenderer {
 
     public double scaling() {
         return scalingPy.get();
-    }
-
-    public void setMapBackgroundColor(Color mapBackgroundColor) {
-        this.mapBackgroundColor = mapBackgroundColor;
-    }
-
-    public void setWallStrokeColor(Color color) {
-        wallStrokeColor = color;
-    }
-
-    public void setWallFillColor(Color wallFillColor) {
-        this.wallFillColor = wallFillColor;
-    }
-
-    public void setDoorColor(Color doorColor) {
-        this.doorColor = doorColor;
     }
 
     public void setDoubleStrokeInnerWidth(double doubleStrokeInnerWidth) {
@@ -90,10 +70,10 @@ public class TerrainRenderer implements TileMapRenderer {
         g.scale(scaling(), scaling());
         for (Obstacle obstacle : obstacles) {
             if (obstacle.hasDoubleWalls()) {
-                drawObstacle(g, obstacle, doubleStrokeOuterWidth, false, wallStrokeColor);
-                drawObstacle(g, obstacle, doubleStrokeInnerWidth, false, wallFillColor);
+                drawObstacle(g, obstacle, doubleStrokeOuterWidth, false, colors.wallStrokeColor());
+                drawObstacle(g, obstacle, doubleStrokeInnerWidth, false, colors.wallFillColor());
             } else {
-                drawObstacle(g, obstacle, singleStrokeWidth, true, wallStrokeColor);
+                drawObstacle(g, obstacle, singleStrokeWidth, true, colors.wallStrokeColor());
             }
         }
         terrainMap.tiles(TileEncoding.DOOR).forEach(door -> drawDoor(g, door, terrainMap.get(door.y(), door.x() - 1) != TileEncoding.DOOR));
@@ -145,7 +125,7 @@ public class TerrainRenderer implements TileMapRenderer {
         if (obstacle.isClosed()) {
             g.closePath();
             if (fill) {
-                g.setFill(wallFillColor);
+                g.setFill(colors.wallFillColor());
                 g.fill();
             }
         }
@@ -163,11 +143,11 @@ public class TerrainRenderer implements TileMapRenderer {
     private void drawDoor(GraphicsContext g, Vector2i tile, boolean leftDoor) {
         double x = tile.x() * TS, y = tile.y() * TS + 3;
         if (leftDoor) {
-            g.setFill(mapBackgroundColor);
+            g.setFill(colors.backgroundColor());
             g.fillRect(x, y - 1, 2 * TS, 4);
-            g.setFill(doorColor);
+            g.setFill(colors.doorColor());
             g.fillRect(x, y, 2 * TS, 2);
-            g.setFill(wallStrokeColor);
+            g.setFill(colors.wallStrokeColor());
             g.fillRect(x - 1, y - 1, 1, 3);
             g.fillRect(x + 2 * TS, y - 1, 1, 3);
         }

@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.*;
 import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
+import de.amr.games.pacman.tilemap.rendering.TileMapRenderer;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -317,13 +318,15 @@ public class TileMapEditor {
     }
 
     private void createRenderers() {
+        TileMapRenderer.ColorScheme colors = new TileMapRenderer.ColorScheme(
+            Color.BLACK, parseColor(COLOR_WALL_FILL), parseColor(COLOR_WALL_STROKE), parseColor(COLOR_DOOR));
+
         editorTerrainRenderer = new TerrainRendererInEditor();
         editorTerrainRenderer.setWallStrokeColor(parseColor(COLOR_WALL_STROKE));
         editorTerrainRenderer.setWallFillColor(parseColor(COLOR_WALL_FILL));
 
         previewTerrainRenderer = new TerrainRenderer();
-        previewTerrainRenderer.setWallStrokeColor(parseColor(COLOR_WALL_STROKE));
-        previewTerrainRenderer.setWallFillColor(parseColor(COLOR_WALL_FILL));
+        previewTerrainRenderer.setColors(colors);
 
         foodMapRenderer = new FoodMapRenderer();
         foodMapRenderer.setPelletColor(parseColor(COLOR_FOOD));
@@ -589,7 +592,7 @@ public class TileMapEditor {
             updateMessageAnimation();
             try {
                 drawEditCanvas();
-                drawPreviewCanvas();
+                drawPreviewCanvas(Color.BLACK);
                 drawSelectedPalette();
             } catch (Exception x) {
                 Logger.error(x);
@@ -990,18 +993,22 @@ public class TileMapEditor {
         drawSprite(g, PROPERTY_POS_BONUS, BONUS_SPRITE, TILE_BONUS);
     }
 
-    private void drawPreviewCanvas() {
+    private void drawPreviewCanvas(Color backgroundColor) {
         GraphicsContext g = previewCanvas.getGraphicsContext2D();
         g.setImageSmoothing(false);
-        g.setFill(Color.BLACK);
+        g.setFill(backgroundColor);
         g.fillRect(0, 0, previewCanvas.getWidth(), previewCanvas.getHeight());
         if (terrainVisiblePy.get()) {
             TileMap terrainMap = worldMap().terrain();
             ensureTerrainMapsPathsUpToDate();
+            TileMapRenderer.ColorScheme colors = new TileMapRenderer.ColorScheme(
+                backgroundColor,
+                getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(COLOR_WALL_FILL)),
+                getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(COLOR_WALL_STROKE)),
+                getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(COLOR_DOOR))
+            );
             previewTerrainRenderer.setScaling(gridSize() / 8.0);
-            previewTerrainRenderer.setWallStrokeColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(COLOR_WALL_STROKE)));
-            previewTerrainRenderer.setWallFillColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(COLOR_WALL_FILL)));
-            previewTerrainRenderer.setDoorColor(getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(COLOR_DOOR)));
+            previewTerrainRenderer.setColors(colors);
             previewTerrainRenderer.drawTerrain(g, terrainMap, worldMap().obstacles());
         }
         if (foodVisiblePy.get()) {

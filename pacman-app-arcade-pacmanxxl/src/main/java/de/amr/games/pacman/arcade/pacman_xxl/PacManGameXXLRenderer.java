@@ -5,13 +5,13 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.arcade.pacman.PacManGameSpriteSheet;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;
-import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
+import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;
+import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
+import de.amr.games.pacman.tilemap.rendering.TileMapRenderer;
 import de.amr.games.pacman.ui2d.GameRenderer;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
@@ -23,6 +23,7 @@ import javafx.scene.paint.Color;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static java.util.function.Predicate.not;
 
 /**
@@ -46,15 +47,17 @@ public class PacManGameXXLRenderer implements GameRenderer {
     private boolean mazeHighlighted;
     private boolean blinkingOn;
     private Color bgColor;
+    private TileMapRenderer.ColorScheme blinkingOnColors;
+    private TileMapRenderer.ColorScheme blinkingOffColors;
 
     public PacManGameXXLRenderer(AssetStorage assets, PacManGameSpriteSheet spriteSheet, Canvas canvas) {
-        this.assets = Globals.assertNotNull(assets);
-        this.canvas = Globals.assertNotNull(canvas);
-        this.spriteSheet = Globals.assertNotNull(spriteSheet);
+        this.assets = assertNotNull(assets);
+        this.canvas = assertNotNull(canvas);
+        this.spriteSheet = assertNotNull(spriteSheet);
         terrainRenderer.scalingPy.bind(scalingPy);
-        terrainRenderer.setMapBackgroundColor(bgColor);
         foodRenderer.scalingPy.bind(scalingPy);
         messageAnchorPosition = DEFAULT_MESSAGE_ANCHOR_POSITION;
+        setBackgroundColor(Color.BLACK);
     }
 
     @Override
@@ -94,7 +97,9 @@ public class PacManGameXXLRenderer implements GameRenderer {
 
     @Override
     public void setBackgroundColor(Color color) {
-        bgColor = Globals.assertNotNull(color);
+        bgColor = assertNotNull(color);
+        blinkingOnColors = new TileMapRenderer.ColorScheme(bgColor, Color.BLACK, Color.WHITE, Color.BLACK);
+        blinkingOffColors = new TileMapRenderer.ColorScheme(bgColor, Color.WHITE, Color.BLACK, Color.BLACK);
     }
 
     @Override
@@ -108,25 +113,24 @@ public class PacManGameXXLRenderer implements GameRenderer {
 
     @Override
     public void drawWorld(GameWorld world, double x, double y) {
-        terrainRenderer.setMapBackgroundColor(bgColor);
         if (mazeHighlighted) {
-            terrainRenderer.setMapBackgroundColor(bgColor);
-            terrainRenderer.setWallStrokeColor(blinkingOn ? Color.WHITE : Color.BLACK);
-            terrainRenderer.setWallFillColor(blinkingOn   ? Color.BLACK : Color.WHITE);
-            terrainRenderer.setDoorColor(Color.BLACK);
+            terrainRenderer.setColors(blinkingOn ? blinkingOnColors : blinkingOffColors);
             terrainRenderer.drawTerrain(ctx(), world.map().terrain(), world.map().obstacles());
         }
         else {
             WorldMap worldMap = world.map();
-
-            Map<String, String> mapColorScheme = worldMap.getConfigValue("colorMap");
-            terrainRenderer.setMapBackgroundColor(bgColor);
-            terrainRenderer.setWallStrokeColor(Color.web(mapColorScheme.get("stroke")));
-            terrainRenderer.setWallFillColor(Color.web(mapColorScheme.get("fill")));
-            terrainRenderer.setDoorColor(Color.web(mapColorScheme.get("door")));
+            Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
+            TileMapRenderer.ColorScheme colors = new TileMapRenderer.ColorScheme(
+                bgColor,
+                Color.web(colorMap.get("fill")),
+                Color.web(colorMap.get("stroke")),
+                Color.web(colorMap.get("door"))
+            );
+            terrainRenderer.setColors(colors);
             terrainRenderer.drawTerrain(ctx(), world.map().terrain(), world.map().obstacles());
-            foodRenderer.setPelletColor(Color.web(mapColorScheme.get("pellet")));
-            foodRenderer.setEnergizerColor(Color.web(mapColorScheme.get("pellet")));
+
+            foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));
+            foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
             world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
                 .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
             if (blinkingOn) {
