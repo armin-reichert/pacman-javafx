@@ -26,6 +26,12 @@ public class Obstacle {
         this.doubleWalls = doubleWalls;
     }
 
+    public void addSegment(Vector2f vector, boolean ccw, byte content) {
+        ObstacleSegment segment = new ObstacleSegment(endPoint, vector, ccw, content);
+        segments.add(segment);
+        endPoint = segment.endPoint();
+    }
+
     public Vector2f[] points() {
         List<Vector2f> points = new ArrayList<>();
         points.add(startPoint);
@@ -54,15 +60,6 @@ public class Obstacle {
             encoding.append(ch);
         }
         return encoding.toString();
-    }
-
-    public void addSegment(Vector2f vector, boolean ccw, byte content) {
-        if (segments.isEmpty()) {
-            segments.add(new ObstacleSegment(startPoint, vector, ccw, content));
-        } else {
-            segments.add(new ObstacleSegment(segments.getLast().endPoint(), vector, ccw, content));
-        }
-        endPoint = segments.getLast().endPoint();
     }
 
     public Vector2f startPoint() { return startPoint; }
