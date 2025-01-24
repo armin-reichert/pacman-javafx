@@ -4,8 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tilemap.rendering;
 
+import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
+import de.amr.games.pacman.lib.tilemap.ObstaclePartitioning;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
 import de.amr.games.pacman.lib.tilemap.ObstacleType;
 import javafx.beans.property.DoubleProperty;
@@ -20,6 +22,7 @@ import javafx.scene.transform.Rotate;
 import org.tinylog.Logger;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
 
@@ -293,6 +296,13 @@ public class WorldRenderer3D {
         Vector2i h = vec_2i(t[0].x(), t[1].y());
         addTowers(g, t);
         addWalls(g, t[0], t[2], t[1], h, t[2], t[3]);
+
+        //TODO test
+//        Logger.info("Rect partition:");
+//        List<RectArea> partition = ObstaclePartitioning.computeRectangularPartition(obstacle);
+//        for (var r : partition) {
+//            Logger.info(r);
+//        }
     }
 
     private void render_L_Spiked_Mirrored(Group g, Obstacle obstacle) {
