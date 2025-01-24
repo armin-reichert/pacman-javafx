@@ -1,6 +1,6 @@
 package experiments;
 
-import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
 import de.amr.games.pacman.lib.tilemap.TileEncoding;
@@ -104,7 +104,7 @@ public class ExperimentsApp extends Application {
             content.getChildren().add(wallEast);
         }
 
-        obstacle = new Obstacle(new Vector2f(0, 15*TS), false);
+        obstacle = new Obstacle(new Vector2i(0, 15*TS), false);
         extendObstacle(-4, 4, true, TileEncoding.CORNER_NW);
         extendObstacle(0, 3*8, true, TileEncoding.WALL_V);
         extendObstacle(-4, 4, false, TileEncoding.CORNER_SE);
@@ -119,8 +119,8 @@ public class ExperimentsApp extends Application {
         extendObstacle(0, -3*8, false, TileEncoding.WALL_V);
         extendObstacle(-4, -4, true, TileEncoding.CORNER_NE);
 
-        Vector2f currentPoint = obstacle.startPoint();
-        Vector2f endPoint = null;
+        Vector2i currentPoint = obstacle.startPoint();
+        Vector2i endPoint = null;
         for (int i = 0; i < obstacle.numSegments(); ++i) {
             ObstacleSegment segment = obstacle.segment(i);
             ObstacleSegment prevSegment = i > 0 ? obstacle.segment(i - 1) : obstacle.segment(obstacle.numSegments() - 1);
@@ -134,19 +134,19 @@ public class ExperimentsApp extends Application {
                 addHorizontalWall(segment, currentPoint, endPoint);
             }
             else if (segment.isRoundedNWCorner()) {
-                endPoint = currentPoint.plus(segment.ccw() ? vec_2f(-HTS, HTS) : vec_2f(HTS, -HTS));
+                endPoint = currentPoint.plus(segment.ccw() ? vec_2i(-HTS, HTS) : vec_2i(HTS, -HTS));
                 addCorner(segment, prevSegment, nextSegment, currentPoint, endPoint);
             }
             else if (segment.isRoundedSWCorner()) {
-                endPoint = currentPoint.plus(segment.ccw() ? vec_2f(HTS, HTS) : vec_2f(-HTS, -HTS));
+                endPoint = currentPoint.plus(segment.ccw() ? vec_2i(HTS, HTS) : vec_2i(-HTS, -HTS));
                 addCorner(segment, prevSegment, nextSegment, currentPoint, endPoint);
             }
             else if (segment.isRoundedSECorner()) {
-                endPoint = currentPoint.plus(segment.ccw() ? vec_2f(HTS, -HTS) : vec_2f(-HTS, HTS));
+                endPoint = currentPoint.plus(segment.ccw() ? vec_2i(HTS, -HTS) : vec_2i(-HTS, HTS));
                 addCorner(segment, prevSegment, nextSegment, currentPoint, endPoint);
             }
             else if (segment.isRoundedNECorner()) {
-                endPoint = currentPoint.plus(segment.ccw() ? vec_2f(-HTS, -HTS) : vec_2f(HTS, HTS));
+                endPoint = currentPoint.plus(segment.ccw() ? vec_2i(-HTS, -HTS) : vec_2i(HTS, HTS));
                 addCorner(segment, prevSegment, nextSegment, currentPoint, endPoint);
             }
             currentPoint = endPoint;
@@ -154,22 +154,22 @@ public class ExperimentsApp extends Application {
         Logger.info("End point: {}", endPoint);
     }
 
-    private void addCorner(ObstacleSegment segment, ObstacleSegment prevSegment, ObstacleSegment nextSegment, Vector2f start, Vector2f end) {
+    private void addCorner(ObstacleSegment segment, ObstacleSegment prevSegment, ObstacleSegment nextSegment, Vector2i start, Vector2i end) {
         if (segment.isNWCorner() && prevSegment.isNECorner()) {
-            Vector2f center = start.plus(0, HTS);
+            Vector2i center = start.plus(0, HTS);
             addCornerCylinder(center);
         }
         else if (segment.isSECorner() && nextSegment.isNECorner()) {
-            Vector2f center = start.plus(0, -HTS);
+            Vector2i center = start.plus(0, -HTS);
             addCornerCylinder(center);
         }
         else if (segment.isNWCorner() && nextSegment.isSWCorner()) {
-            Vector2f center = start.plus(0, HTS);
+            Vector2i center = start.plus(0, HTS);
             addCornerCylinder(center);
         }
     }
 
-    private void addCornerCylinder(Vector2f center) {
+    private void addCornerCylinder(Vector2i center) {
         Cylinder cyl = new Cylinder();
         //cyl.setDrawMode(DrawMode.LINE);
         cyl.setMaterial(WALL_MATERIAL);
@@ -182,8 +182,8 @@ public class ExperimentsApp extends Application {
         content.getChildren().add(cyl);
     }
 
-    private void addVerticalWall(ObstacleSegment segment, Vector2f startPoint, Vector2f endPoint) {
-        Vector2f middlePoint = startPoint.plus(endPoint).scaled(0.5f);
+    private void addVerticalWall(ObstacleSegment segment, Vector2i startPoint, Vector2i endPoint) {
+        Vector2i middlePoint = startPoint.midpoint(endPoint);
         Box wall = new Box();
         wall.setMaterial(WALL_MATERIAL);
         wall.setTranslateX(middlePoint.x());
@@ -194,8 +194,8 @@ public class ExperimentsApp extends Application {
         content.getChildren().add(wall);
     }
 
-    private void addHorizontalWall(ObstacleSegment segment, Vector2f startPoint, Vector2f endPoint) {
-        Vector2f middlePoint = startPoint.plus(endPoint).scaled(0.5f);
+    private void addHorizontalWall(ObstacleSegment segment, Vector2i startPoint, Vector2i endPoint) {
+        Vector2i middlePoint = startPoint.midpoint(endPoint);
         Box wall = new Box();
         wall.setMaterial(WALL_MATERIAL);
         wall.setTranslateX(middlePoint.x());
@@ -206,8 +206,8 @@ public class ExperimentsApp extends Application {
         content.getChildren().add(wall);
     }
 
-    private void extendObstacle(float dx, float dy, boolean ccw, byte content) {
-        obstacle.addSegment(new Vector2f(dx, dy), ccw, content);
+    private void extendObstacle(int dx, int dy, boolean ccw, byte content) {
+        obstacle.addSegment(new Vector2i(dx, dy), ccw, content);
     }
 
     private void createBallCyclingAroundCylinder() {
