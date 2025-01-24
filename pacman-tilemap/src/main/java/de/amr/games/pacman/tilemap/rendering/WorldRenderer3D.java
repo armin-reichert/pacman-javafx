@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tilemap.rendering;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
 import de.amr.games.pacman.lib.tilemap.ObstacleType;
@@ -262,13 +261,13 @@ public class WorldRenderer3D {
     }
 
     public void render_I(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 3);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 3);
         addTowers(g, t);
         addWall(g, t[0], t[1]);
     }
 
     public void render_O(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 4, 6);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 4, 6);
         addTowers(g, t);
         addWalls(g, t[0], t[1], t[1], t[2], t[2], t[3], t[3], t[0]);
         if (oShapeFilled) {
@@ -290,39 +289,39 @@ public class WorldRenderer3D {
     }
 
     public void render_L_Spiked(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 9, 11);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 9, 11);
         Vector2i h = vec_2i(t[0].x(), t[1].y());
         addTowers(g, t);
         addWalls(g, t[0], t[2], t[1], h, t[2], t[3]);
     }
 
     private void render_L_Spiked_Mirrored(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 7, 11);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 7, 11);
         Vector2i h = vec_2i(t[0].x(), t[3].y());
         addTowers(g, t);
         addWalls(g, t[0], t[2], h, t[3], t[1], t[2]);
     }
 
     public void render_LL(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 6, 8, 13);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 6, 8, 13);
         addTowers(g, t);
         addWalls(g, t[0], t[1], t[1], t[4], t[4], t[2], t[2], t[3]);
     }
 
     public void render_LL_Mirrored(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 8, 11, 15);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 8, 11, 15);
         addTowers(g, t);
         addWalls(g, t[0], t[4], t[1], t[4], t[1], t[3], t[3], t[2]);
     }
 
     private void render_LLL(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 21, 6, 17, 10, 12);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 21, 6, 17, 10, 12);
         addTowers(g, t);
         addWalls(g, t[0], t[1], t[1], t[2], t[2], t[3], t[3], t[4], t[4], t[5], t[5], t[6]);
     }
 
     private void render_LLL_Mirrored(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 8, 12, 15, 19, 23);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 8, 12, 15, 19, 23);
         addTowers(g, t);
         addWalls(g, t[0], t[6], t[6], t[1], t[1], t[5], t[5], t[2], t[2], t[4], t[4], t[3]);
     }
@@ -368,14 +367,14 @@ public class WorldRenderer3D {
     }
 
     private void render_Gamma_Spiked(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 9, 14);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 9, 14);
         Vector2i h = vec_2i(t[0].x(), t[1].y());
         addTowers(g, t);
         addWalls(g, t[0], t[2], t[1], h, t[0], t[3]);
     }
 
     private void render_Gamma_Spiked_Mirrored(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 5, 10, 15);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 5, 10, 15);
         Vector2i h = vec_2i(t[3].x(), t[2].y());
         addTowers(g, t);
         addWalls(g, t[0], t[3], t[3], t[1], h, t[2]);
@@ -393,7 +392,7 @@ public class WorldRenderer3D {
 
             // H in normal orientation
             case "dcgfcdbecgfcedcfbgce" -> {
-                Vector2i[] t = obstacle.cornerCenters(0, 2, 9, 12);
+                Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 9, 12);
                 Vector2i[] h = { vec_2i(t[0].x(), t[0].midpoint(t[1]).y()), vec_2i(t[2].x(), t[2].midpoint(t[3]).y()) };
                 addTowers(g, t);
                 addWalls(g, t[0], t[1], t[2], t[3], h[0], h[1]);
@@ -401,7 +400,7 @@ public class WorldRenderer3D {
 
             // H rotated by 90 degrees
             case "dgbecfbdgbfebgcdbfeb" -> {
-                Vector2i[] t = obstacle.cornerCenters(0, 7, 10, 17);
+                Vector2i[] t = obstacle.cornerCentersAtSegments(0, 7, 10, 17);
                 Vector2i[] h = { vec_2i(t[0].midpoint(t[3]).x(), t[0].y()), vec_2i(t[1].midpoint(t[2]).x(), t[1].y()) };
                 addTowers(g, t);
                 addWalls(g, t[0], t[3], t[1], t[2], h[0], h[1]);
@@ -411,7 +410,7 @@ public class WorldRenderer3D {
 
     // Note that this can also be a cross where the horizontal parts are not aligned vertically!
     public void render_Cross(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 9, 14);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 9, 14);
         Vector2i[] h = { vec_2i(t[0].x(), t[3].y()), vec_2i(t[0].x(), t[1].y()) };
         addTowers(g, t);
         addWalls(g, t[0], t[2], h[0], t[3], h[1], t[1]);
@@ -469,25 +468,25 @@ public class WorldRenderer3D {
         switch (obstacle.encoding()) {
             case "dcfbdgbfcdbfeb" -> {
                 // normal orientation
-                Vector2i[] t = obstacle.cornerCenters(0, 4, 7, 11);
+                Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 7, 11);
                 addTowers(g, t);
                 addWalls(g, t[0], t[3], t[1], t[2], t[0], t[2]);
             }
             case "dgbecgbfebgceb" -> {
                 // mirrored horizontally
-                Vector2i[] t = obstacle.cornerCenters(0, 5, 7, 12);
+                Vector2i[] t = obstacle.cornerCentersAtSegments(0, 5, 7, 12);
                 addTowers(g, t);
                 addWalls(g, t[0], t[3], t[1], t[2], t[3], t[1]);
             }
             case "dcgbecgfcebgce" -> {
                 // rot 90 counter-clockwise
-                Vector2i[] t = obstacle.cornerCenters(0, 2, 6, 9);
+                Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 6, 9);
                 addTowers(g, t);
                 addWalls(g, t[0], t[1], t[1], t[3], t[2], t[3]);
             }
             case "dcfbdcgfcdbfce" -> {
                 // rot 90 counter-clockwise mirrored horizontally
-                Vector2i[] t = obstacle.cornerCenters(0, 4, 6, 11);
+                Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 6, 11);
                 addTowers(g, t);
                 addWalls(g, t[0], t[3], t[1], t[2], t[1], t[3]);
             }
@@ -498,25 +497,25 @@ public class WorldRenderer3D {
         switch (obstacle.encoding()) {
             case "dcfdgbfcdfeb" -> {
                 // mini-S normal orientation
-                Vector2i[] t = obstacle.cornerCenters(0, 3, 6, 9);
+                Vector2i[] t = obstacle.cornerCentersAtSegments(0, 3, 6, 9);
                 addTowers(g, t);
                 addWalls(g, t[0], t[3], t[1], t[2], t[0], t[2]);
             }
             case "dgecgbfegceb" -> {
                 // mini-S normal orientation mirrored horizontally
-                Vector2i[] t = obstacle.cornerCenters(0, 4, 6, 10);
+                Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 6, 10);
                 addTowers(g, t);
                 addWalls(g, t[0], t[3], t[1], t[2], t[3], t[1]);
             }
             case "dcgbegfcebge" -> {
                 // mini-S rot 90 counter-clockwise
-                Vector2i[] t = obstacle.cornerCenters(0, 2, 5, 8);
+                Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 5, 8);
                 addTowers(g, t);
                 addWalls(g, t[0], t[1], t[1], t[3], t[2], t[3]);
             }
             case "dfbdcgfdbfce" -> {
                 // mini-S rot 90 counter-clockwise mirrored horizontally
-                Vector2i[] t = obstacle.cornerCenters(0, 3, 5, 9);
+                Vector2i[] t = obstacle.cornerCentersAtSegments(0, 3, 5, 9);
                 addTowers(g, t);
                 addWalls(g, t[0], t[3], t[1], t[2], t[1], t[3]);
             }
@@ -527,28 +526,28 @@ public class WorldRenderer3D {
         switch (obstacle.encoding()) {
             case "dgbecgfcdbfeb" -> {
                 // T in normal orientation
-                Vector2i[] t = obstacle.cornerCenters(0, 5, 10);
+                Vector2i[] t = obstacle.cornerCentersAtSegments(0, 5, 10);
                 Vector2i h = vec_2i(t[1].x(), t[0].y());
                 addTowers(g, t);
                 addWalls(g, t[0], t[2], h, t[1]);
             }
             case "dcfbdgbfebgce" -> {
                 // T mirrored vertically
-                Vector2i[] t = obstacle.cornerCenters(0, 4, 7);
+                Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 7);
                 Vector2i h = vec_2i(t[0].x(), t[1].y());
                 addTowers(g, t);
                 addWalls(g, h, t[0], t[1], t[2]);
             }
             case "dcgfcdbfebgce" -> {
                 // T with leg pointing right
-                Vector2i[] t = obstacle.cornerCenters(0, 2, 7);
+                Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 7);
                 Vector2i h = vec_2i(t[0].x(), t[2].y());
                 addTowers(g, t);
                 addWalls(g, t[0], t[1], h, t[2]);
             }
             case "dcfbdgbecgfce" -> {
                 // T with leg pointing left
-                Vector2i[] t = obstacle.cornerCenters(0, 4, 9);
+                Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 9);
                 Vector2i h = vec_2i(t[0].x(), t[1].y());
                 addTowers(g, t);
                 addWalls(g, t[0], t[2], h, t[1]);
@@ -558,60 +557,60 @@ public class WorldRenderer3D {
 
     //TODO This handles only the normal orientation
     public void render_T_TwoRows(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 6, 11, 13);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 6, 11, 13);
         Vector2i h = vec_2i(t[2].x(), t[1].y());
         addTowers(g, t);
         addWalls(g, t[0], t[1], t[0], t[4], t[1], t[3], t[3], t[4], h, t[2]);
     }
 
     private void render_Spaceship_Right(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 7, 10, 14, 19);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 7, 10, 14, 19);
         Vector2i h = vec_2i(t[2].x(), t[3].y());
         addTowers(g, t);
         addWalls(g, t[0], t[4], h, t[3], t[1], t[2], t[2], t[4]);
     }
 
     private void render_Spaceship_Left(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 9, 11, 18);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 9, 11, 18);
         Vector2i h = vec_2i(t[0].x(), t[1].y());
         addTowers(g, t);
         addWalls(g, t[0], t[2], t[2], t[3], h, t[1], t[0], t[4]);
     }
 
     private void render_Spaceship_Up(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 6, 13, 16);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 6, 13, 16);
         Vector2i h = vec_2i(t[0].x(), t[1].y());
         addTowers(g, t);
         addWalls(g, t[0], h, t[1], t[4], t[1], t[2], t[4], t[3]);
     }
 
     private void render_Spaceship_Down(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 6, 11, 13);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 6, 11, 13);
         Vector2i h = vec_2i(t[2].x(), t[1].y());
         addTowers(g, t);
         addWalls(g, t[0], t[1], t[1], t[3], h, t[2], t[3], t[4]);
     }
 
     private void render_OpenSquare_SE(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 4, 13, 16);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 4, 13, 16);
         addTowers(g, t);
         addWalls(g, t[0], t[1], t[1], t[2], t[0], t[4], t[3], t[4]);
     }
 
     private void render_OpenSquare_SW(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 11, 14, 16);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 11, 14, 16);
         addTowers(g, t);
         addWalls(g, t[0], t[1], t[0], t[4], t[2], t[3], t[3], t[4]);
     }
 
     private void render_OpenSquare_NE(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 4, 6, 15);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 4, 6, 15);
         addTowers(g, t);
         addWalls(g, t[0], t[1], t[1], t[2], t[2], t[3], t[0], t[4]);
     }
 
     private void render_OpenSquare_NW(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 9, 12, 14, 16);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 9, 12, 14, 16);
         addTowers(g, t);
         addWalls(g, t[0], t[4], t[4], t[3], t[3], t[2], t[2], t[1]);
     }
@@ -619,14 +618,14 @@ public class WorldRenderer3D {
     // Junior Pac-Man maze obstacles. TODO: move elsewhere
 
     private void render_Junior_4_LeftOfHouse(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 6, 9, 13);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 6, 9, 13);
         Vector2i h = vec_2i(t[4].x(), t[1].y());
         addTowers(g, t);
         addWalls(g, t[0], t[1], t[1], t[3], t[3], t[2], t[4], h);
     }
 
     private void render_Junior_4_RightOfHouse(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 6, 11, 13, 18);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 6, 11, 13, 18);
         Vector2i h = vec_2i(t[1].x(), t[2].y());
         addTowers(g, t);
         addWalls(g, t[0], t[4], t[4], t[2], t[1], h, t[2], t[3]);
@@ -875,7 +874,7 @@ public class WorldRenderer3D {
     }
 
     private void render_dcgfcdbfceb(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 7, 9);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 7, 9);
         Vector2i h = vec_2i(t[0].x(), t[2].y());
         addTowers(parent, t);
         addWalls(parent, t[0], t[1], t[0], t[3], t[2], t[3], t[2], h);
@@ -883,7 +882,7 @@ public class WorldRenderer3D {
     }
 
     private void render_dcgbecgfceb(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 6, 9);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 6, 9);
         Vector2i h = vec_2i(t[3].x(), t[1].y());
         addTowers(parent, t);
         addWalls(parent, t[0], t[1], t[0], t[3], t[3], t[2], t[1], h);
@@ -891,28 +890,28 @@ public class WorldRenderer3D {
     }
 
     private void render_dcgbfcedcfbgcedcfbgce(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 4, 6, 13);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 4, 6, 13);
         Vector2i h = vec_2i(t[4].x(), t[1].y());
         addTowers(parent, t);
         addWalls(parent, t[0], t[1], t[1], t[2], t[2], t[3], t[4], h);
     }
 
     private void render_dgbecfbdgbfebgceb(Group g, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 7, 10, 15);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 7, 10, 15);
         Vector2i h = vec_2i(t[3].x(), t[1].y());
         addTowers(g, t);
         addWalls(g, t[0], t[3], t[3], h, t[1], t[2]);
     }
 
     private void render_dcfbdgbfebgcdbfeb(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 7, 14);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 7, 14);
         Vector2i h = vec_2i(t[0].x(), t[1].y());
         addTowers(parent, t);
         addWalls(parent, t[0], t[3], t[0], h, t[1], t[2]);
     }
 
     private void render_Boot_PointingLeft(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 7, 9);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 7, 9);
         Vector2i h0 = vec_2i(t[0].x(), t[1].y());
         addTowers(parent, t);
         addWalls(parent, t[0], h0, t[1], t[2], t[2], t[3], t[3], t[0]);
@@ -920,7 +919,7 @@ public class WorldRenderer3D {
     }
 
     private void render_Boot_PointingRight(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 4, 9);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 4, 9);
         Vector2i h0 = vec_2i(t[3].x(), t[1].y());
         addTowers(parent, t);
         addWalls(parent, t[0], t[1], t[1], t[2], h0, t[3], t[3], t[0]);
@@ -928,7 +927,7 @@ public class WorldRenderer3D {
     }
 
     private void render_BigMap1_UpsideT(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 6, 8, 10);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 6, 8, 10);
         addTowers(parent, t);
         addWalls(parent, t[1], t[2], t[3], t[4], t[0], t[2].midpoint(t[3]));
         addWallAtCenter(parent, t[1].midpoint(t[3]), t[1].manhattanDist(t[4]), 2 * TS);
@@ -1018,7 +1017,7 @@ public class WorldRenderer3D {
     }
 
     private void render_BigMap8_62SegmentObstacle(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 60, 58, 2, 6, 10, 15, 50, 48, 21, 25, 30, 34, 36, 38, 40);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 60, 58, 2, 6, 10, 15, 50, 48, 21, 25, 30, 34, 36, 38, 40);
         Vector2i[] h = new Vector2i[8];
         h[0] = vec_2i(t[4].x(),  t[2].y());
         h[1] = vec_2i(t[4].x(),  t[3].y());
@@ -1074,13 +1073,13 @@ public class WorldRenderer3D {
     }
 
     private void render_BigMap8_SeaHorseLeft(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 4, 11, 13);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 4, 11, 13);
         addTowers(parent, t);
         addWalls(parent, t[0], t[1], t[0], t[4], t[1], t[2], t[4], t[3], t[3], t[3].minus(2*TS, 0));
     }
 
     private void render_BigMap8_SeaHorseRight(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 8, 2, 11, 13);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 8, 2, 11, 13);
         addTowers(parent, t);
         addWalls(parent, t[0], t[2], t[0], t[4], t[3], t[4], t[3], t[1], t[2], t[2].plus(2*TS, 0));
     }
@@ -1101,7 +1100,7 @@ public class WorldRenderer3D {
     }
 
     private void render_BigMap10_TableUpsideDown(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 8, 12);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 8, 12);
         Vector2i h0 = vec_2i(t[0].x(), t[1].y()), h1 = vec_2i(t[3].x(), t[1].y());
         addTowers(parent, t);
         addWalls(parent, t[1], t[2], t[0], h0, t[3], h1);
@@ -1121,34 +1120,34 @@ public class WorldRenderer3D {
     }
 
     private void render_StrangeMap1_Leg_Left(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 7, 11);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 7, 11);
         Vector2i h = vec_2i(t[0].x(), t[3].y());
         addTowers(parent, t);
         addWalls(parent, t[0], t[2], t[2], t[1], h, t[3]);
     }
 
     private void render_StrangeMap1_Leg_Right(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 9, 11);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 9, 11);
         Vector2i h = vec_2i(t[0].x(), t[1].y());
         addTowers(parent, t);
         addWalls(parent, t[0], t[2], t[2], t[3], h, t[1]);
     }
 
     private void render_StrangeMap1_YShape(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 27, 5, 9, 14, 18, 21);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 27, 5, 9, 14, 18, 21);
         Vector2i h = vec_2i(t[3].x(), t[2].y());
         addTowers(parent, t);
         addWalls(parent, t[0], t[1], t[1], t[2], t[2], t[4], t[4], t[6], t[6], t[5], t[3], h);
     }
 
     private void render_StrangeMap2_Bowl(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 20, 5, 7, 14, 11);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 20, 5, 7, 14, 11);
         addTowers(parent, t);
         addWalls(parent, t[0], t[1], t[1], t[2], t[2], t[3], t[3], t[4], t[4], t[5]);
     }
 
     private void render_StrangeMap2_Gallows_Right(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 16, 7, 14, 9);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 16, 7, 14, 9);
         var h0 = vec_2i(t[1].x(), t[2].y());
         var h1 = vec_2i(t[2].x(), t[3].y());
         addTowers(parent, t);
@@ -1158,7 +1157,7 @@ public class WorldRenderer3D {
     }
 
     private void render_StrangeMap2_Gallows_Left(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 15, 2, 9, 6);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 15, 2, 9, 6);
         var h0 = vec_2i(t[0].x(), t[3].y());
         var h1 = vec_2i(t[3].x(), t[2].y());
         addTowers(parent, t);
@@ -1168,7 +1167,7 @@ public class WorldRenderer3D {
     }
 
     private void render_StrangeMap3_Hat(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 32, 3, 29, 7, 25, 9, 13, 19, 22);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 32, 3, 29, 7, 25, 9, 13, 19, 22);
         Vector2i[] h = new Vector2i[6];
         h[0] = t[0].plus(0, TS);
         h[1] = t[1].plus(0, TS);
@@ -1182,21 +1181,21 @@ public class WorldRenderer3D {
     }
 
     private void render_BigMap6_LeftTopObstacle(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 7, 9);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 7, 9);
         Vector2i[] h = { vec_2i(t[1].x(), t[2].y()), vec_2i(t[1].x(), t[3].y()) };
         addTowers(parent, t);
         addWalls(parent, t[0], t[1], h[0], t[2], t[2], t[3], t[3], h[1]);
     }
 
     private void render_BigMap6_RightTopObstacle(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 6, 10);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 6, 10);
         Vector2i[] h = { vec_2i(t[0].x(), t[1].y()), vec_2i(t[0].x(), t[2].y()) };
         addTowers(parent, t);
         addWalls(parent, t[0], t[3], h[0], t[1], t[1], t[2], t[2], h[1]);
     }
 
     private void render_StrangeMap3_Mushroom(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 6, 8, 12, 14);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 6, 8, 12, 14);
         Vector2i[] h = { vec_2i(t[2].x(), t[1].y()), vec_2i(t[3].x(), t[1].y()) };
         addTowers(parent, t);
         addWalls(parent, t[0], t[1], t[1], h[0], h[0], t[2], t[2], t[3], t[3], h[1], h[1], t[4], t[4], t[5], t[5], t[0]);
@@ -1204,7 +1203,7 @@ public class WorldRenderer3D {
     }
 
     private void render_StrangeMap3_7_StrongLeggedUShape(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 4, 6, 8, 14);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 4, 6, 8, 14);
         Vector2i[] h = { vec_2i(t[5].x(), t[1].y()), vec_2i(t[4].x(), t[2].y()) };
         addTowers(parent, t);
         addWalls(parent, t[0], t[1], t[1], t[2], t[2], t[3], t[3], t[4], t[4], h[1], t[5], t[0], t[5], h[0]);
@@ -1213,7 +1212,7 @@ public class WorldRenderer3D {
     }
 
     private void render_StrangeMap4_Huge(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 57, 7, 9, 11, 48, 39, 43, 17, 19, 21, 27, 30);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 57, 7, 9, 11, 48, 39, 43, 17, 19, 21, 27, 30);
         Vector2i[] h = {
                 t[0].plus(2 * TS, 0),
                 vec_2i(t[0].x() + 2 * TS, t[2].y()),
@@ -1230,7 +1229,7 @@ public class WorldRenderer3D {
     }
 
     private void render_Strange7_TopLeft(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 9, 15, 18, 22);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 9, 15, 18, 22);
         Vector2i[] h = { vec_2i(t[0].x(), t[1].y()), vec_2i(t[2].x(), t[1].y()), vec_2i(t[0].x(), t[2].y()) };
         addTowers(parent, t);
         addWalls(parent, t[0], t[4], t[1], h[0], t[2], h[2], t[3], t[4], t[0], t[5]);
@@ -1238,7 +1237,7 @@ public class WorldRenderer3D {
     }
 
     private void render_Strange7_TopRight(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 5, 7, 14, 18, 23);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 5, 7, 14, 18, 23);
         Vector2i[] h = { vec_2i(t[1].x(), t[4].y()), vec_2i(t[3].x(), t[4].y()), vec_2i(t[1].x(), t[3].y()) };
         addTowers(parent, t);
         addWalls(parent, t[0], t[5], t[4], h[0], t[3], h[2], t[1], t[2], t[1], t[5]);
@@ -1246,21 +1245,21 @@ public class WorldRenderer3D {
     }
 
     private void render_RectangleWithTwoArmsAtTopRightCorner(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 6, 8, 12);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 6, 8, 12);
         addTowers(parent, t);
         addWalls(parent, t[1], t[2], t[1], t[4], t[2], t[3], t[3], t[0]);
         addWallAtCenter(parent, t[1].midpoint(t[3]), t[2].manhattanDist(t[3]), t[1].manhattanDist(t[2]));
     }
 
     private void render_RectangleWithTwoArmsAtTopLeftCorner(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 9, 11, 13);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 9, 11, 13);
         addTowers(parent, t);
         addWalls(parent, t[0], t[2], t[1], t[4], t[4], t[3], t[3], t[2]);
         addWallAtCenter(parent, t[2].midpoint(t[4]), t[2].manhattanDist(t[3]), t[3].manhattanDist(t[4]));
     }
 
     private void render_RectangleWithArmAtTopRightCorner(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 4, 8);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 4, 8);
         Vector2i h = vec_2i(t[2].x(), t[0].y());
         addTowers(parent, t);
         addWalls(parent, t[0], t[3], t[0], t[1], t[1], t[2], t[2], h);
@@ -1268,7 +1267,7 @@ public class WorldRenderer3D {
     }
 
     private void render_RectangleWithArmAtTopLeftCorner(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 5, 7, 9);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 5, 7, 9);
         Vector2i h = vec_2i(t[1].x(), t[0].y());
         addTowers(parent, t);
         addWalls(parent, t[0], t[3], h, t[1], t[1], t[2], t[2], t[3]);
@@ -1276,21 +1275,21 @@ public class WorldRenderer3D {
     }
 
     private void render_Strange9_LargeObstacleLeft(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 5, 11, 18, 21, 28, 35);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 5, 11, 18, 21, 28, 35);
         Vector2i[] h = { vec_2i(t[0].x(), t[1].y()), vec_2i(t[0].x(), t[2].y()), vec_2i(t[0].x(), t[5].y()), vec_2i(t[0].x(), t[3].y()) };
         addTowers(parent, t);
         addWalls(parent, t[0], t[6], t[1], h[0], t[2], h[1], h[2], t[5], t[0], t[5], t[3], t[4], t[0], h[3]);
     }
 
     private void render_Strange9_LargeObstacleRight(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 7, 14, 17, 24, 31, 36);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 7, 14, 17, 24, 31, 36);
         Vector2i[] h = { vec_2i(t[6].x(), t[5].y()), vec_2i(t[6].x(), t[4].y()), vec_2i(t[6].x(), t[1].y()), vec_2i(t[6].x(), t[2].y()) };
         addTowers(parent, t);
         addWalls(parent, t[0], t[6], h[0], t[5], h[1], t[4], t[1], h[2], t[2], t[3], t[6], h[3]);
     }
 
     private void render_Strange10_SpaceShipTopCenter(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 6, 10, 15, 17, 21);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 6, 10, 15, 17, 21);
         Vector2i[] h = { vec_2i(t[0].x(), t[1].y()), vec_2i(t[6].x(), t[1].y()), vec_2i(t[3].x(), t[2].y()) };
         addTowers(parent, t);
         addWalls(parent, t[0], t[6], t[0], h[0], t[6], h[1], t[1], t[5], t[1], t[2], t[3], h[2], t[4], t[5]);
@@ -1299,31 +1298,31 @@ public class WorldRenderer3D {
     }
 
     private void render_Strange10_IslandLeftOfSpaceship(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 4, 6, 9, 12);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 4, 6, 9, 12);
         addTowers(parent, t);
         addWalls(parent, t[0], t[1], t[0], t[5], t[5], t[2], t[2], t[4], t[4], t[3], t[1], t[1].plus(TS, 0));
     }
 
     private void render_Strange10_IslandRightOfSpaceship(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 3, 5, 8, 10, 12);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 3, 5, 8, 10, 12);
         addTowers(parent, t);
         addWalls(parent, t[0], t[3], t[0], t[5], t[5], t[4], t[1], t[3], t[1], t[2], t[4], t[4].minus(TS, 0));
     }
 
     private void render_Strange10_RectangleWithTwoLegsAtLowerLeftEdge(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 9, 13, 15);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 9, 13, 15);
         addTowers(parent, t);
         addWalls(parent, t[0], t[2], t[1], t[3], t[3], t[4], t[0], t[4]);
     }
 
     private void render_Strange10_RectangleWithTwoLegsAtLowerRightEdge(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 5, 10, 15);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 5, 10, 15);
         addTowers(parent, t);
         addWalls(parent, t[0], t[4], t[0], t[1], t[1], t[3], t[2], t[4]);
     }
 
     private void render_Strange10_ObstacleBelowHouse(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 7, 12, 15);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 7, 12, 15);
         Vector2i[] h = {
                 vec_2i(t[0].x(), t[1].y()),
                 vec_2i(t[2].x(), t[1].y()),
@@ -1334,42 +1333,42 @@ public class WorldRenderer3D {
     }
 
     private void render_Strange10_PistolPointingLeft(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 5, 7, 9, 11);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 5, 7, 9, 11);
         Vector2i h = vec_2i(t[4].x(), t[3].y());
         addTowers(parent, t);
         addWalls(parent, t[0], t[4], t[4], t[1], t[1], t[2], t[2], t[3], t[3], h);
     }
 
     private void render_Strange10_PistolPointingRight(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 4, 6, 10);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 4, 6, 10);
         Vector2i h = vec_2i(t[0].x(), t[1].y());
         addTowers(parent, t);
         addWalls(parent, t[0], t[4], t[0], t[3], t[1], h, t[1], t[2], t[2], t[3]);
     }
 
     private void render_Strange12_DogLookingLeft(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 6, 13, 16, 19);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 6, 13, 16, 19);
         Vector2i h = vec_2i(t[2].x(), t[1].y());
         addTowers(parent, t);
         addWalls(parent, t[0], t[5], t[0], t[1], t[1], t[4], t[2], h, t[3], t[4], t[5], t[5].plus(0, TS));
     }
 
     private void render_Strange12_DogLookingRight(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 3, 5, 12, 17, 19);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 3, 5, 12, 17, 19);
         Vector2i h = vec_2i(t[3].x(), t[1].y());
         addTowers(parent, t);
         addWalls(parent, t[0], t[5], t[1], t[4], t[1], t[2], t[3], h, t[4], t[5], t[0], t[0].plus(0, TS));
     }
 
     private void render_Strange15_LeftOfHouse(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 7, 12, 14, 19);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 7, 12, 14, 19);
         Vector2i h = vec_2i(t[2].x(), t[1].y());
         addTowers(parent, t);
         addWalls(parent, t[0], t[4], t[4], t[2], t[2], t[3], t[1], h);
     }
 
     private void render_Strange15_RightOfHouse(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 4, 7, 11, 18);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 7, 11, 18);
         Vector2i h = vec_2i(t[0].x(), t[3].y());
         addTowers(parent, t);
         addWalls(parent, t[0], t[4], t[0], t[2], t[1], t[2], t[3], h);
@@ -1377,7 +1376,7 @@ public class WorldRenderer3D {
 
 
     private void render_Strange14_Gamma(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 4, 8, 10);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 4, 8, 10);
         Vector2i h = vec_2i(t[2].x(), t[3].y());
         addTowers(parent, t);
         addWalls(parent, t[0], t[1], t[1], t[2], t[2], h, h, t[3], t[3], t[4], t[4], t[0]);
@@ -1385,7 +1384,7 @@ public class WorldRenderer3D {
     }
 
     private void render_Strange14_Gamma_Mirrored(Group parent, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters(0, 2, 6, 8, 10);
+        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 6, 8, 10);
         Vector2i h = vec_2i(t[2].x(), t[1].y());
         addTowers(parent, t);
         addWalls(parent, t[0], t[1], t[1], h, h, t[2], t[2], t[3], t[3], t[4], t[4], t[0]);

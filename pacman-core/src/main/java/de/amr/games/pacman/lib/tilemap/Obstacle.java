@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib.tilemap;
 
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 
 import java.util.*;
@@ -134,7 +133,28 @@ public class Obstacle {
         };
     }
 
-    public Vector2i[] cornerCenters(int... segmentIndices) {
+    public Vector2i[] cornerCentersAtSegments(int... segmentIndices) {
         return Arrays.stream(segmentIndices).mapToObj(this::cornerCenter).toArray(Vector2i[]::new);
+    }
+
+    public Vector2i[] cornerCenters() {
+        Set<Vector2i> centers = new LinkedHashSet<>();
+        for (var segment : segments) {
+            switch (segment.encoding()) {
+                case TileEncoding.CORNER_NW -> {
+                    if (segment.vector().y() > 0) centers.add(segment.startPoint().plus(0, HTS));
+                }
+                case TileEncoding.CORNER_SW -> {
+                    if (segment.vector().y() > 0) centers.add(segment.startPoint().plus(HTS, 0));
+                }
+                case TileEncoding.CORNER_SE -> {
+                    if (segment.vector().y() < 0) centers.add(segment.startPoint().plus(0, -HTS));
+                }
+                case TileEncoding.CORNER_NE -> {
+                    if (segment.vector().y() < 0) centers.add(segment.startPoint().plus(-HTS, 0));
+                }
+            }
+        }
+        return centers.toArray(Vector2i[]::new);
     }
 }
