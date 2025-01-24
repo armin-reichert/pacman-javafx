@@ -30,7 +30,7 @@ public interface PolygonToRectangleConversion {
             Vector2i p_m = minPointBetweenAndBelow(innerPoints, p_k, p_l);
             Vector2i p_max = vec_2i(p_l.x(), p_m.y());
             Logger.info("p_k={}   p_l={}   p_m={}   p_max={}", p_k, p_l, p_m, p_max);
-            RectArea r = spannedRectangle(p_k, p_max);
+            var r = new RectArea(p_k.x(), p_k.y(), p_max.x() - p_k.x(), p_max.y() - p_k.y());
             rectangles.add(r);
             Logger.info("rect={}", r);
             flip(innerPoints, p_k);
@@ -40,10 +40,6 @@ public interface PolygonToRectangleConversion {
             Logger.info("Inner polygon: {}", innerPoints);
         }
         return rectangles;
-    }
-
-    static RectArea spannedRectangle(Vector2i pMin, Vector2i pMax) {
-        return new RectArea(pMin.x(), pMin.y(), pMax.x() - pMin.x(), pMax.y() - pMin.y());
     }
 
     static void flip(Set<Vector2i> polygon, Vector2i p) {
