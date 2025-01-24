@@ -112,7 +112,7 @@ public class Maze3D extends Group {
 
         for (Obstacle obstacle : world.map().obstacles()) {
             Logger.info("{}: {}", obstacle.computeType(), obstacle);
-            if (!world.isPartOfHouse(tileAt(obstacle.startPoint()))) {
+            if (!world.isPartOfHouse(tileAt(obstacle.startPoint().toVector2f()))) {
                 r3D.setWallThickness(obstacle.hasDoubleWalls() ? BORDER_WALL_THICKNESS : OBSTACLE_THICKNESS);
                 r3D.renderObstacle3D(this, obstacle);
             }

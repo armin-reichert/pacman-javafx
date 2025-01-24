@@ -58,11 +58,6 @@ public class WorldRenderer3D {
         return false;
     }
 
-    public static Color opaqueColor(Color color, double opacity) {
-        assertNotNull(color);
-        return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
-    }
-
     public static PhongMaterial coloredMaterial(Color color) {
         assertNotNull(color);
         var material = new PhongMaterial(color);
@@ -124,6 +119,7 @@ public class WorldRenderer3D {
         // each obstacle has its own group
         Group og = new Group();
         switch (type) {
+            default -> Logger.error("No 3D renderer implemented for obstacle type {}", type);
             case COIN ->                  render_Coin(og, obstacle);
             case CROSS ->                 render_Cross(og, obstacle);
             case F ->                     render_F(og, obstacle);
