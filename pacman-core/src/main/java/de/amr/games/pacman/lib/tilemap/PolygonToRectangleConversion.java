@@ -21,22 +21,23 @@ public interface PolygonToRectangleConversion {
 
     static List<RectArea> apply(Obstacle obstacle) {
         Logger.info(obstacle);
-        Set<Vector2i> innerPolygon = computeInnerPoints(obstacle);
-        Logger.info("Inner polygon: {}", innerPolygon);
+        Set<Vector2i> innerPoints = computeInnerPoints(obstacle);
+        Logger.info("Inner points: {}", innerPoints);
         List<RectArea> rectangles = new ArrayList<>();
-        while (!innerPolygon.isEmpty()) {
-            Vector2i p_k = minPoint(innerPolygon.stream());
-            Vector2i p_l = minPointExcluding(innerPolygon, p_k);
-            Vector2i p_m = minPointBetweenAndBelow(innerPolygon, p_k, p_l);
+        while (!innerPoints.isEmpty()) {
+            Vector2i p_k = minPoint(innerPoints.stream());
+            Vector2i p_l = minPointExcluding(innerPoints, p_k);
+            Vector2i p_m = minPointBetweenAndBelow(innerPoints, p_k, p_l);
             Vector2i p_max = vec_2i(p_l.x(), p_m.y());
-            Logger.info("p_k={}   p_l={}   p_m={}", p_k, p_l, p_m);
-            Logger.info("rect min={} max={}", p_k, p_max);
-            rectangles.add( spannedRectangle(p_k, p_max) );
-            flip(innerPolygon, p_k);
-            flip(innerPolygon, p_l);
-            flip(innerPolygon, vec_2i(p_k.x(), p_m.y()));
-            flip(innerPolygon, vec_2i(p_l.x(), p_m.y()));
-            Logger.info("Inner polygon: {}", innerPolygon);
+            Logger.info("p_k={}   p_l={}   p_m={}   p_max={}", p_k, p_l, p_m, p_max);
+            RectArea r = spannedRectangle(p_k, p_max);
+            rectangles.add(r);
+            Logger.info("rect={}", r);
+            flip(innerPoints, p_k);
+            flip(innerPoints, p_l);
+            flip(innerPoints, vec_2i(p_k.x(), p_m.y()));
+            flip(innerPoints, vec_2i(p_l.x(), p_m.y()));
+            Logger.info("Inner polygon: {}", innerPoints);
         }
         return rectangles;
     }
