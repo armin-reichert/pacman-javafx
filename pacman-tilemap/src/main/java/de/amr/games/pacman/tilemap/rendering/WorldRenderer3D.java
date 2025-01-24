@@ -5,9 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tilemap.rendering;
 
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
-import de.amr.games.pacman.lib.tilemap.ObstaclePartitioning;
+import de.amr.games.pacman.lib.tilemap.PolygonToRectangleConversion;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
 import de.amr.games.pacman.lib.tilemap.ObstacleType;
 import javafx.beans.property.DoubleProperty;
@@ -159,7 +160,7 @@ public class WorldRenderer3D {
         parent.getChildren().add(og);
     }
 
-    public Node createWallCenteredAt(Vector2i center, double sizeX, double sizeY) {
+    public Node createWallCenteredAt(Vector2f center, double sizeX, double sizeY) {
         var base = new Box(sizeX, sizeY, wallBaseHeightPy.get());
         base.depthProperty().bind(wallBaseHeightPy);
         base.setMaterial(wallBaseMaterial);
@@ -184,24 +185,16 @@ public class WorldRenderer3D {
             Vector2i right = beginTile.x() < endTile.x() ? endTile : beginTile;
             Vector2i center = left.plus(right).scaled(HTS).plus(HTS, HTS);
             int length = TS * (right.x() - left.x());
-            return createWallCenteredAt(center, length + wallThickness, wallThickness);
+            return createWallCenteredAt(center.toVector2f(), length + wallThickness, wallThickness);
         }
         else if (beginTile.x() == endTile.x()) { // vertical wall
             Vector2i top    = beginTile.y() < endTile.y() ? beginTile : endTile;
             Vector2i bottom = beginTile.y() < endTile.y() ? endTile : beginTile;
             Vector2i center = top.plus(bottom).scaled(HTS).plus(HTS, HTS);
             int length = TS * (bottom.y() - top.y());
-            return createWallCenteredAt(center, wallThickness, length);
+            return createWallCenteredAt(center.toVector2f(), wallThickness, length);
         }
         throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(beginTile, endTile));
-    }
-
-    public Node createHorizontalWallBetween(Vector2i p, Vector2i q) {
-        return createWallCenteredAt(p.midpoint(q), p.manhattanDist(q) + wallThickness, wallThickness);
-    }
-
-    public Node createVerticalWallBetween(Vector2i p, Vector2i q) {
-        return createWallCenteredAt(p.midpoint(q), wallThickness, p.manhattanDist(q));
     }
 
     public Node createCircularWall(Vector2i center, double radius) {
@@ -254,7 +247,7 @@ public class WorldRenderer3D {
      }
 
     protected void addWallAtCenter(Group parent, Vector2i center, double sizeX, double sizeY) {
-        parent.getChildren().add(createWallCenteredAt(center, sizeX, sizeY));
+        parent.getChildren().add(createWallCenteredAt(center.toVector2f(), sizeX, sizeY));
     }
 
     // Standard 3D obstacles
@@ -643,6 +636,17 @@ public class WorldRenderer3D {
 
     // generic obstacle builder
 
+    protected void addGenericInnerObstacle3D(Group g, Obstacle obstacle) {
+        List<RectArea> rectangles = PolygonToRectangleConversion.apply(obstacle);
+        Vector2i[] towers = obstacle.cornerCenters();
+        addTowers(g, towers);
+        for (RectArea rect : rectangles) {
+            Vector2f center = vec_2f(rect.x(), rect.y()).plus(rect.width() * 0.5f, rect.height() * 0.5f);
+            g.getChildren().add(createWallCenteredAt(center, rect.width(), rect.height()));
+            Logger.info(rect);
+        }
+    }
+
     protected void addGenericObstacle3D(Group g, Obstacle obstacle){
         int r = HTS;
         Vector2i p = obstacle.startPoint();
@@ -651,10 +655,10 @@ public class WorldRenderer3D {
             double length = segment.vector().length();
             Vector2i q = p.plus(segment.vector());
             if (segment.isVerticalLine()) {
-                Node wall = createWallCenteredAt(p.midpoint(q), wallThickness, length);
+                Node wall = createWallCenteredAt(p.midpoint(q).toVector2f(), wallThickness, length);
                 g.getChildren().add(wall);
             } else if (segment.isHorizontalLine()) {
-                Node wall = createWallCenteredAt(p.midpoint(q), length + wallThickness, wallThickness);
+                Node wall = createWallCenteredAt(p.midpoint(q).toVector2f(), length + wallThickness, wallThickness);
                 g.getChildren().add(wall);
             } else if (segment.isNWCorner()) {
                 if (segment.ccw()) {
@@ -686,8 +690,8 @@ public class WorldRenderer3D {
     }
 
     protected void addGenericShapeCorner(Group parent, Vector2i corner, Vector2i horEndPoint, Vector2i vertEndPoint) {
-        Node hWall = createWallCenteredAt(corner.midpoint(horEndPoint), corner.manhattanDist(horEndPoint), wallThickness);
-        Node vWall = createWallCenteredAt(corner.midpoint(vertEndPoint), wallThickness, corner.manhattanDist(vertEndPoint));
+        Node hWall = createWallCenteredAt(corner.midpoint(horEndPoint).toVector2f(), corner.manhattanDist(horEndPoint), wallThickness);
+        Node vWall = createWallCenteredAt(corner.midpoint(vertEndPoint).toVector2f(), wallThickness, corner.manhattanDist(vertEndPoint));
         Node cWall = createCompositeCornerWall(corner, 0.5 * wallThickness);
         parent.getChildren().addAll(hWall, vWall, cWall);
     }
@@ -878,6 +882,9 @@ public class WorldRenderer3D {
             case "dcgbecgfceb" -> render_dcgbecgfceb(parent, obstacle);
 
             case "dcgfcdbfceb" -> render_dcgfcdbfceb(parent, obstacle);
+
+            //TEST
+            case "dcfbdcgbecgbfcdbfceb" -> addGenericInnerObstacle3D(parent, obstacle);
 
             default -> addGenericObstacle3D(parent, obstacle);
         }
