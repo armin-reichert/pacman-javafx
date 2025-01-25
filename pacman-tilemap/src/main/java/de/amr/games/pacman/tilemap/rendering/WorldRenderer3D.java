@@ -627,16 +627,15 @@ public class WorldRenderer3D {
         addWalls(g, t[0], t[4], t[4], t[2], t[1], h, t[2], t[3]);
     }
 
-    // generic obstacle builder
+    // generic obstacle rendering
 
-    protected void addGenericInnerObstacle3D(Group g, Obstacle obstacle) {
+    protected void renderUsingRectangularPartition(Group g, Obstacle obstacle) {
+        Vector2i[] cornerCenters = obstacle.cornerCenters();
+        addTowers(g, cornerCenters);
         List<RectArea> rectangles = PolygonToRectangleConversion.apply(obstacle);
-        Vector2i[] towers = obstacle.cornerCenters();
-        addTowers(g, towers);
-        for (RectArea rect : rectangles) {
-            Vector2f center = vec_2f(rect.x(), rect.y()).plus(rect.width() * 0.5f, rect.height() * 0.5f);
-            g.getChildren().add(createWallCenteredAt(center, rect.width(), rect.height()));
-            Logger.info(rect);
+        for (RectArea r : rectangles) {
+            Vector2f center = vec_2f( r.x() + r.width() * 0.5f, r.y() + r.height() * 0.5f );
+            g.getChildren().add(createWallCenteredAt(center, r.width(), r.height()));
         }
     }
 
@@ -877,7 +876,7 @@ public class WorldRenderer3D {
             case "dcgfcdbfceb" -> render_dcgfcdbfceb(parent, obstacle);
 
             //TEST
-            case "dcfbdcgbecgbfcdbfceb" -> addGenericInnerObstacle3D(parent, obstacle);
+            case "dcfbdcgbecgbfcdbfceb" -> renderUsingRectangularPartition(parent, obstacle);
 
             default -> addGenericObstacle3D(parent, obstacle);
         }
