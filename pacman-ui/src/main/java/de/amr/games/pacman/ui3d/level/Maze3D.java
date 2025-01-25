@@ -6,9 +6,9 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
-import de.amr.games.pacman.tilemap.rendering.WorldRenderer3D;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.tilemap.rendering.WorldRenderer3D;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
 import de.amr.games.pacman.ui2d.lib.Ufx;
 import de.amr.games.pacman.ui3d.animation.MaterialColorAnimation;
@@ -111,7 +111,6 @@ public class Maze3D extends Group {
         }
 
         for (Obstacle obstacle : world.map().obstacles()) {
-            Logger.info("{}: {}", obstacle.computeType(), obstacle);
             if (!world.isPartOfHouse(tileAt(obstacle.startPoint().toVector2f()))) {
                 r3D.setWallThickness(obstacle.hasDoubleWalls() ? BORDER_WALL_THICKNESS : OBSTACLE_THICKNESS);
                 r3D.renderObstacle3D(this, obstacle);

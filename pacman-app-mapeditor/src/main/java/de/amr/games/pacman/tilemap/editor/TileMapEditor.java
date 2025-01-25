@@ -1149,12 +1149,7 @@ public class TileMapEditor {
             ClipboardContent content = new ClipboardContent();
             content.putString(encoding);
             clipboard.setContent(content);
-            Optional<ObstacleType> type = ObstacleType.identify(encoding);
-            if (type.isPresent()) {
-                showMessage("'%s' identified (copied to clipboard)".formatted(type.get()), 5, MessageType.INFO);
-            } else {
-                showMessage("Obstacle identified (copied to clipboard)", 5, MessageType.INFO);
-            }
+            showMessage("Obstacle identified (copied to clipboard)", 5, MessageType.INFO);
         } else {
             showMessage("", 1, MessageType.INFO);
         }

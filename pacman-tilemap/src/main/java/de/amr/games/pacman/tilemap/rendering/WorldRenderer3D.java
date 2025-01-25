@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
-import de.amr.games.pacman.lib.tilemap.ObstacleType;
 import de.amr.games.pacman.lib.tilemap.PolygonToRectSet;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -203,25 +202,19 @@ public class WorldRenderer3D {
      * @param obstacle an obstacle
      */
     public void renderObstacle3D(Group parent, Obstacle obstacle) {
-        ObstacleType type = obstacle.computeType();
-        if (type == ObstacleType.ANY) {
-            // render single-wall obstacles using generic renderer
-            if (obstacle.isClosed() && !obstacle.hasDoubleWalls() && obstacle.segment(0).isRoundedCorner() ) {
-                render_ClosedSingleStrokeObstacle(parent, obstacle);
-            } else {
-                render_DoubleStrokeObstacle(parent, obstacle);
+        if (obstacle.isClosed() && !obstacle.hasDoubleWalls() && obstacle.segment(0).isRoundedCorner() ) {
+            Group og = new Group();
+            switch (obstacle.encoding()) {
+                default ->         render_ClosedSingleStrokeObstacle(og, obstacle);
+                case "dgfe" ->     render_Coin(og, obstacle);
+                case "dcgbfceb" -> render_O(og, obstacle);
             }
-            return;
+            addTags(og, TAG_INNER_OBSTACLE);
+            parent.getChildren().add(og);
+            render_ClosedSingleStrokeObstacle(parent, obstacle);
+        } else {
+            render_DoubleStrokeObstacle(parent, obstacle);
         }
-        // each obstacle has its own group
-        Group og = new Group();
-        switch (obstacle.encoding()) {
-            default ->         render_ClosedSingleStrokeObstacle(og, obstacle);
-            case "dgfe" ->     render_Coin(og, obstacle);
-            case "dcgbfceb" -> render_O(og, obstacle);
-        }
-        addTags(og, TAG_INNER_OBSTACLE);
-        parent.getChildren().add(og);
     }
 
     // Standard 3D obstacles
@@ -243,7 +236,7 @@ public class WorldRenderer3D {
 
     protected void render_ClosedSingleStrokeObstacle(Group g, Obstacle obstacle) {
         String encoding = obstacle.encoding();
-        Logger.info("Render generic: obstacle type={} encoding={}", ObstacleType.identify(encoding).orElse(ObstacleType.ANY), encoding);
+        Logger.info("Render 3D obstacle with encoding={}", encoding);
         Vector2i[] cornerCenters = obstacle.cornerCenters();
         addTowers(g, cornerCenters);
         List<RectArea> rectangles = PolygonToRectSet.apply(obstacle);

@@ -90,15 +90,6 @@ public class Obstacle {
         return segments.get(i);
     }
 
-    public ObstacleType computeType() {
-        if (!isClosed()) {
-            return ObstacleType.ANY;
-        }
-        String encoding = encoding();
-        return Arrays.stream(ObstacleType.values())
-                .filter(type -> type.matches(encoding)).findFirst().orElse(ObstacleType.ANY);
-    }
-
     public IntStream uTurnSegmentIndices() {
         return IntStream.range(0, segments.size()).filter(this::hasUTurnAt);
     }
