@@ -59,8 +59,6 @@ public interface PolygonToRectSet {
         List<Vector2i> points = new ArrayList<>();
         points.add(obstacle.startPoint());
         for (var segment : obstacle.segments()) {
-            Vector2i start = segment.startPoint();
-            boolean ccw = segment.ccw();
             boolean down = segment.vector().y() > 0, up = segment.vector().y() < 0;
             int dx = 0, dy = 0;
             if (segment.isRoundedNWCorner()) {
