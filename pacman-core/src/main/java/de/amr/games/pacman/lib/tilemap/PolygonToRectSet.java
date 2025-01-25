@@ -56,8 +56,10 @@ public interface PolygonToRectSet {
     }
 
     static Collection<Vector2i> computeInnerPoints(Obstacle obstacle) {
+
+        Vector2i startPoint = obstacle.startPoint();
         List<Vector2i> points = new ArrayList<>();
-        points.add(obstacle.startPoint());
+        points.add(startPoint);
         for (var segment : obstacle.segments()) {
             boolean down = segment.vector().y() > 0, up = segment.vector().y() < 0;
             int dx = 0, dy = 0;
@@ -88,16 +90,22 @@ public interface PolygonToRectSet {
             if (stack.isEmpty()) {
                 stack.push(edge);
             }
-            else if (stack.peekFirst().plus(edge).equals(Vector2i.ZERO)) {
+            else if (stack.peekFirst().equals(edge.inverse())) {
                 stack.pop();
             } else {
                 stack.push(edge);
             }
         }
+        if (!stack.isEmpty() && stack.getFirst().equals(stack.getLast().inverse())) {
+            //TODO what to do?
+            startPoint = startPoint.plus(stack.getLast());
+            stack.removeLast();
+        }
+
         stack = stack.reversed();
 
         points.clear();
-        Vector2i p = obstacle.startPoint();
+        Vector2i p = startPoint;
         points.add(p);
         Vector2i sumVector = null;
         for (Vector2i edge : stack) {

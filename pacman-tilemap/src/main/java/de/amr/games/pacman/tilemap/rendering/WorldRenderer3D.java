@@ -216,17 +216,16 @@ public class WorldRenderer3D {
             case COIN ->                  render_Coin(og, obstacle);
             case CROSS ->                 render_Cross(og, obstacle);
             case F ->                     render_F(og, obstacle);
-            case GAMMA_SPIKED ->          render_Gamma_Spiked(og, obstacle);
-            case GAMMA_SPIKED_MIRRORED -> render_Gamma_Spiked_Mirrored(og, obstacle);
+            case GAMMA_SPIKED ->          render_Generic(og, obstacle); //render_Gamma_Spiked(og, obstacle);
+            case GAMMA_SPIKED_MIRRORED -> render_Generic(og, obstacle); // render_Gamma_Spiked_Mirrored(og, obstacle);
             case H ->                     render_H(og, obstacle);
             case I ->                     render_I(og, obstacle);
-            case L ->                     //renderUsingRectangularPartition(og, obstacle);
-                                          render_L(og, obstacle);
+            case L ->                     render_Generic(og, obstacle); //render_L(og, obstacle);
             case L_SPIKED ->              render_L_Spiked(og, obstacle);
             case L_SPIKED_MIRRORED ->     render_L_Spiked_Mirrored(og, obstacle);
             case LL ->                    render_LL(og, obstacle);
             case LL_MIRRORED ->           render_LL_Mirrored(og, obstacle);
-            case LLL ->                   render_LLL(og, obstacle);
+            case LLL ->                   render_Generic(og, obstacle); //render_LLL(og, obstacle);
             case LLL_MIRRORED ->          render_LLL_Mirrored(og, obstacle);
             case O ->                     render_O(og, obstacle);
             case OPEN_SQUARE_SE ->        render_OpenSquare_SE(og, obstacle);
@@ -630,7 +629,7 @@ public class WorldRenderer3D {
 
     // generic obstacle rendering
 
-    protected void renderUsingRectangularPartition(Group g, Obstacle obstacle) {
+    protected void render_Generic(Group g, Obstacle obstacle) {
         Vector2i[] cornerCenters = obstacle.cornerCenters();
         addTowers(g, cornerCenters);
         List<RectArea> rectangles = PolygonToRectSet.apply(obstacle);
@@ -780,15 +779,14 @@ public class WorldRenderer3D {
             // Tengen STRANGE map #2, gallow-like obstacle at right/top
             case "dgbecfbdcgfcdbfceb" -> render_StrangeMap2_Gallows_Right(parent, obstacle);
 
-            // Tengen STRANGE map #3, large hat-like onstacle center/top
-            case "dfbdcfbdcgfdbfcdbecgbegfcebgcebgeb" -> render_StrangeMap3_Hat(parent, obstacle);
+            // Tengen STRANGE map #3, large hat-like obstacle center/top
+            case "dfbdcfbdcgfdbfcdbecgbegfcebgcebgeb" -> render_Generic(parent, obstacle); //render_StrangeMap3_Hat(parent, obstacle);
 
             // Tengen STRANGE map #3, mushroom center-bottom
-            case "dcgbecgbfcdbfceb" -> render_StrangeMap3_Mushroom(parent, obstacle);
+            case "dcgbecgbfcdbfceb" -> render_Generic(parent, obstacle); //render_StrangeMap3_Mushroom(parent, obstacle);
 
             // Tengen STRANGE map #3 and #7, U-shape with stronger "legs"
-            case "dcgbfcebdcfbgceb" -> renderUsingRectangularPartition(parent, obstacle); //TODO still buggy
-                    //render_StrangeMap3_7_StrongLeggedUShape(parent, obstacle);
+            case "dcgbfcebdcfbgceb" -> render_Generic(parent, obstacle); //render_StrangeMap3_7_StrongLeggedUShape(parent, obstacle);
 
             // Tengen STRANGE map #4, huge obstacle
             case "dgbecfbdcgbfcdbecgbfcebgcdbfebdgbecfbgcebgcedcfbdcfbgcdbfeb" -> render_StrangeMap4_Huge(parent, obstacle);
@@ -818,34 +816,34 @@ public class WorldRenderer3D {
             case "dgbecgbfceb" -> render_RectangleWithArmAtTopLeftCorner(parent, obstacle);
 
             // STRANGE map #9: large obstacle left maze side
-            case "dcfbdgbecfbdgbecfbdgbfebgcdbfebgcdbfeb" -> render_Strange9_LargeObstacleLeft(parent, obstacle);
+            case "dcfbdgbecfbdgbecfbdgbfebgcdbfebgcdbfeb" -> render_Generic(parent, obstacle); // render_Strange9_LargeObstacleLeft(parent, obstacle);
 
             // STRANGE map #9: large obstacle right maze side
-            case "dgbecfbdgbecfbdgbfebgcdbfebgcdbfebgceb" -> render_Strange9_LargeObstacleRight(parent, obstacle);
+            case "dgbecfbdgbecfbdgbfebgcdbfebgcdbfebgceb" -> render_Generic(parent, obstacle); //render_Strange9_LargeObstacleRight(parent, obstacle);
 
             // STRANGE map #10: spaceship top, center
-            case "dcfbdcgbecgfcdbfcebgceb" -> render_Strange10_SpaceShipTopCenter(parent, obstacle);
+            case "dcfbdcgbecgfcdbfcebgceb" -> render_Generic(parent, obstacle); //render_Strange10_SpaceShipTopCenter(parent, obstacle);
 
             // STRANGE map #10: island left of spaceship
-            case "dcgegegfcegceb" -> render_Strange10_IslandLeftOfSpaceship(parent, obstacle);
+            case "dcgegegfcegceb" -> render_Generic(parent, obstacle); //render_Strange10_IslandLeftOfSpaceship(parent, obstacle);
 
             // STRANGE map #10: island right of spaceship
-            case "dcfdcgfdfdfceb" -> render_Strange10_IslandRightOfSpaceship(parent, obstacle);
+            case "dcfdcgfdfdfceb" -> render_Generic(parent, obstacle); //render_Strange10_IslandRightOfSpaceship(parent, obstacle);
 
             // STRANGE map #10: left of house
-            case "dcfbdgbecgfcdfceb" -> render_Strange10_RectangleWithTwoLegsAtLowerLeftEdge(parent, obstacle);
+            case "dcfbdgbecgfcdfceb" -> render_Generic(parent, obstacle); //render_Strange10_RectangleWithTwoLegsAtLowerLeftEdge(parent, obstacle);
 
             // STRANGE map #10: right of house
-            case "dcgecgfcdbfebgceb" -> render_Strange10_RectangleWithTwoLegsAtLowerRightEdge(parent, obstacle);
+            case "dcgecgfcdbfebgceb" -> render_Generic(parent, obstacle); //render_Strange10_RectangleWithTwoLegsAtLowerRightEdge(parent, obstacle);
 
             // STRANGE map #10: obstacle below house
-            case "dfdgbecgfcdbfegeb" -> render_Strange10_ObstacleBelowHouse(parent, obstacle);
+            case "dfdgbecgfcdbfegeb" -> render_Generic(parent, obstacle); //render_Strange10_ObstacleBelowHouse(parent, obstacle);
 
             // STRANGE map #10: pistol-like shape pointing left
-            case "dgbecgbfcegeb" -> render_Strange10_PistolPointingLeft(parent, obstacle);
+            case "dgbecgbfcegeb" -> render_Generic(parent, obstacle); //render_Strange10_PistolPointingLeft(parent, obstacle);
 
             // STRANGE map #10: pistol-like shape pointing right
-            case "dfdcgbfcdbfeb" -> render_Strange10_PistolPointingRight(parent, obstacle);
+            case "dfdcgbfcdbfeb" -> render_Generic(parent, obstacle); //render_Strange10_PistolPointingRight(parent, obstacle);
 
             // STRANGE map #12: dog-like looking left
             case "dcgbecgfcdbecgfcebgeb" -> render_Strange12_DogLookingLeft(parent, obstacle);
@@ -878,7 +876,7 @@ public class WorldRenderer3D {
             case "dcgfcdbfceb" -> render_dcgfcdbfceb(parent, obstacle);
 
             //TEST
-            case "dcfbdcgbecgbfcdbfceb" -> renderUsingRectangularPartition(parent, obstacle);
+            case "dcfbdcgbecgbfcdbfceb" -> render_Generic(parent, obstacle);
 
             default -> addGenericObstacle3D(parent, obstacle);
         }
