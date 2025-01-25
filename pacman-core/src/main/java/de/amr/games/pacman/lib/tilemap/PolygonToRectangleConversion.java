@@ -15,7 +15,8 @@ import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.vec_2i;
 
 /**
- * Implements the polygon-to-rectangle conversion algorithm by Gourley/Green (1983).
+ * Implements the Gourley/Green
+ * <a href="https://ieeexplore.ieee.org/document/4037339">polygon-to-rectangle conversion algorithm</a>.
  */
 public interface PolygonToRectangleConversion {
 
@@ -26,11 +27,10 @@ public interface PolygonToRectangleConversion {
         while (!innerPoints.isEmpty()) {
             Logger.info("Inner points: {}", innerPoints);
             Vector2i p_k = minPoint(innerPoints.stream());
-            Vector2i p_l = minPointExcluding(innerPoints, p_k);
-            Vector2i p_m = minPointBetweenAndBelow(innerPoints, p_k, p_l);
-            Vector2i p_max = vec_2i(p_l.x(), p_m.y());
-            var r = new RectArea(p_k.x(), p_k.y(), p_max.x() - p_k.x(), p_max.y() - p_k.y());
-            Logger.info("p_k={}   p_l={}   p_m={}   p_max={}", p_k, p_l, p_m, p_max);
+            Vector2i p_l = minPoint(innerPoints.stream().filter(p -> !p.equals(p_k)));
+            Vector2i p_m = minPoint(innerPoints.stream().filter(p -> p_k.x() <= p.x() && p.x() < p_l.x() && p.y() > p_k.y()));
+            var r = new RectArea(p_k.x(), p_k.y(), p_l.x() - p_k.x(), p_m.y() - p_k.y());
+            Logger.info("p_k={}   p_l={}   p_m={}", p_k, p_l, p_m);
             Logger.info(r);
             rectangles.add(r);
             flip(innerPoints, p_k);
@@ -41,6 +41,10 @@ public interface PolygonToRectangleConversion {
         return rectangles;
     }
 
+    static Vector2i minPoint(Stream<Vector2i> points) {
+        return points.min(Comparator.comparingInt(Vector2i::y).thenComparingInt(Vector2i::x)).orElseThrow();
+    }
+
     static void flip(Set<Vector2i> polygon, Vector2i p) {
         if (polygon.contains(p)) {
             polygon.remove(p);
@@ -49,18 +53,6 @@ public interface PolygonToRectangleConversion {
             polygon.add(p);
             Logger.info("{} added", p);
         }
-    }
-
-    static Vector2i minPointBetweenAndBelow(Set<Vector2i> points, Vector2i left, Vector2i right) {
-        return minPoint(points.stream().filter(p -> left.x() <= p.x() && p.x() < right.x() && p.y() > left.y()));
-    }
-
-    static Vector2i minPointExcluding(Set<Vector2i> polygon, Vector2i excludedPoint) {
-        return minPoint(polygon.stream().filter(p -> !p.equals(excludedPoint)));
-    }
-
-    static Vector2i minPoint(Stream<Vector2i> points) {
-        return points.min(Comparator.comparingInt(Vector2i::y).thenComparingInt(Vector2i::x)).orElseThrow();
     }
 
     static Set<Vector2i> computeInnerPoints(Obstacle obstacle) {
@@ -119,6 +111,6 @@ public interface PolygonToRectangleConversion {
     }
 
     static boolean sameDirection(Vector2i e, Vector2i f) {
-        return e.x() == 0 && f.x() == 0 || e.y() == 0 && f.y() == 0;
+        return Math.signum(e.x()) == Math.signum(f.x()) && Math.signum(e.y()) == Math.signum(f.y());
     }
 }
