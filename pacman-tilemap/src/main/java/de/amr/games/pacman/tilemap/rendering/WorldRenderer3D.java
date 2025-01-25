@@ -105,61 +105,6 @@ public class WorldRenderer3D {
         this.oShapeFilled = value;
     }
 
-    /**
-     * Analyzes the given obstacle by its encoding and creates a 3D representation consisting
-     * only of (groups of) Cylinder and Box primitives. If the obstacle cannot be identified,
-     * a generic 3D representation is created.
-     *
-     * @param parent the group where the 3D shapes are added to
-     * @param obstacle an obstacle
-     */
-    public void renderObstacle3D(Group parent, Obstacle obstacle) {
-        ObstacleType type = obstacle.computeType();
-        if (type == ObstacleType.ANY) {
-            addUncategorizedObstacle3D(parent, obstacle);
-            return;
-        }
-        // each obstacle has its own group
-        Group og = new Group();
-        switch (type) {
-            default -> Logger.error("No 3D renderer implemented for obstacle type {}", type);
-            case COIN ->                  render_Coin(og, obstacle);
-            case CROSS ->                 render_Cross(og, obstacle);
-            case F ->                     render_F(og, obstacle);
-            case GAMMA_SPIKED ->          render_Gamma_Spiked(og, obstacle);
-            case GAMMA_SPIKED_MIRRORED -> render_Gamma_Spiked_Mirrored(og, obstacle);
-            case H ->                     render_H(og, obstacle);
-            case I ->                     render_I(og, obstacle);
-            case L ->                     render_L(og, obstacle);
-            case L_SPIKED ->              render_L_Spiked(og, obstacle);
-            case L_SPIKED_MIRRORED ->     render_L_Spiked_Mirrored(og, obstacle);
-            case LL ->                    render_LL(og, obstacle);
-            case LL_MIRRORED ->           render_LL_Mirrored(og, obstacle);
-            case LLL ->                   render_LLL(og, obstacle);
-            case LLL_MIRRORED ->          render_LLL_Mirrored(og, obstacle);
-            case O ->                     render_O(og, obstacle);
-            case OPEN_SQUARE_SE ->        render_OpenSquare_SE(og, obstacle);
-            case OPEN_SQUARE_SW ->        render_OpenSquare_SW(og, obstacle);
-            case OPEN_SQUARE_NE ->        render_OpenSquare_NE(og, obstacle);
-            case OPEN_SQUARE_NW ->        render_OpenSquare_NW(og, obstacle);
-            case S ->                     render_S(og, obstacle);
-            case S_SMALL ->               render_S_Small(og, obstacle);
-            case SPACESHIP_DOWN ->        render_Spaceship_Down(og, obstacle);
-            case SPACESHIP_UP ->          render_Spaceship_Up(og, obstacle);
-            case SPACESHIP_LEFT ->        render_Spaceship_Left(og, obstacle);
-            case SPACESHIP_RIGHT ->       render_Spaceship_Right(og, obstacle);
-            case T ->                     render_T(og, obstacle);
-            case T_TWO_ROWS ->            render_T_TwoRows(og, obstacle);
-            case U ->                     render_U(og, obstacle);
-
-            //TODO these belong elsewhere
-            case JUNIOR_4_LEFT_OF_HOUSE ->  render_Junior_4_LeftOfHouse(og, obstacle);
-            case JUNIOR_4_RIGHT_OF_HOUSE -> render_Junior_4_RightOfHouse(og, obstacle);
-        }
-        addTags(og, TAG_INNER_OBSTACLE);
-        parent.getChildren().add(og);
-    }
-
     public Node createWallCenteredAt(Vector2f center, double sizeX, double sizeY) {
         var base = new Box(sizeX, sizeY, wallBaseHeightPy.get());
         base.depthProperty().bind(wallBaseHeightPy);
@@ -244,10 +189,65 @@ public class WorldRenderer3D {
         for (int i = 0; i < wallEndPoints.length / 2; ++i) {
             addWall(parent, wallEndPoints[2*i], wallEndPoints[2*i+1]);
         }
-     }
+    }
 
     protected void addWallAtCenter(Group parent, Vector2i center, double sizeX, double sizeY) {
         parent.getChildren().add(createWallCenteredAt(center.toVector2f(), sizeX, sizeY));
+    }
+
+    /**
+     * Analyzes the given obstacle by its encoding and creates a 3D representation consisting
+     * only of (groups of) Cylinder and Box primitives. If the obstacle cannot be identified,
+     * a generic 3D representation is created.
+     *
+     * @param parent the group where the 3D shapes are added to
+     * @param obstacle an obstacle
+     */
+    public void renderObstacle3D(Group parent, Obstacle obstacle) {
+        ObstacleType type = obstacle.computeType();
+        if (type == ObstacleType.ANY) {
+            addUncategorizedObstacle3D(parent, obstacle);
+            return;
+        }
+        // each obstacle has its own group
+        Group og = new Group();
+        switch (type) {
+            default -> Logger.error("No 3D renderer implemented for obstacle type {}", type);
+            case COIN ->                  render_Coin(og, obstacle);
+            case CROSS ->                 render_Cross(og, obstacle);
+            case F ->                     render_F(og, obstacle);
+            case GAMMA_SPIKED ->          render_Gamma_Spiked(og, obstacle);
+            case GAMMA_SPIKED_MIRRORED -> render_Gamma_Spiked_Mirrored(og, obstacle);
+            case H ->                     render_H(og, obstacle);
+            case I ->                     render_I(og, obstacle);
+            case L ->                     render_L(og, obstacle);
+            case L_SPIKED ->              render_L_Spiked(og, obstacle);
+            case L_SPIKED_MIRRORED ->     render_L_Spiked_Mirrored(og, obstacle);
+            case LL ->                    render_LL(og, obstacle);
+            case LL_MIRRORED ->           render_LL_Mirrored(og, obstacle);
+            case LLL ->                   render_LLL(og, obstacle);
+            case LLL_MIRRORED ->          render_LLL_Mirrored(og, obstacle);
+            case O ->                     render_O(og, obstacle);
+            case OPEN_SQUARE_SE ->        render_OpenSquare_SE(og, obstacle);
+            case OPEN_SQUARE_SW ->        render_OpenSquare_SW(og, obstacle);
+            case OPEN_SQUARE_NE ->        render_OpenSquare_NE(og, obstacle);
+            case OPEN_SQUARE_NW ->        render_OpenSquare_NW(og, obstacle);
+            case S ->                     render_S(og, obstacle);
+            case S_SMALL ->               render_S_Small(og, obstacle);
+            case SPACESHIP_DOWN ->        render_Spaceship_Down(og, obstacle);
+            case SPACESHIP_UP ->          render_Spaceship_Up(og, obstacle);
+            case SPACESHIP_LEFT ->        render_Spaceship_Left(og, obstacle);
+            case SPACESHIP_RIGHT ->       render_Spaceship_Right(og, obstacle);
+            case T ->                     render_T(og, obstacle);
+            case T_TWO_ROWS ->            render_T_TwoRows(og, obstacle);
+            case U ->                     render_U(og, obstacle);
+
+            //TODO these belong elsewhere
+            case JUNIOR_4_LEFT_OF_HOUSE ->  render_Junior_4_LeftOfHouse(og, obstacle);
+            case JUNIOR_4_RIGHT_OF_HOUSE -> render_Junior_4_RightOfHouse(og, obstacle);
+        }
+        addTags(og, TAG_INNER_OBSTACLE);
+        parent.getChildren().add(og);
     }
 
     // Standard 3D obstacles
@@ -289,13 +289,6 @@ public class WorldRenderer3D {
         Vector2i h = vec_2i(t[0].x(), t[1].y());
         addTowers(g, t);
         addWalls(g, t[0], t[2], t[1], h, t[2], t[3]);
-
-        //TODO test
-//        Logger.info("Rect partition:");
-//        List<RectArea> partition = ObstaclePartitioning.computeRectangularPartition(obstacle);
-//        for (var r : partition) {
-//            Logger.info(r);
-//        }
     }
 
     private void render_L_Spiked_Mirrored(Group g, Obstacle obstacle) {
