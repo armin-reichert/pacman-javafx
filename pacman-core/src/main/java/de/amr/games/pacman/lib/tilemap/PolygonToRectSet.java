@@ -21,17 +21,17 @@ import static de.amr.games.pacman.lib.Globals.vec_2i;
 public interface PolygonToRectSet {
 
     static List<RectArea> apply(Obstacle obstacle) {
-        Logger.info(obstacle);
+        Logger.debug(obstacle);
         Collection<Vector2i> innerPoints = computeInnerPoints(obstacle);
         List<RectArea> rectangles = new ArrayList<>();
         while (!innerPoints.isEmpty()) {
-            Logger.info("Inner points: {}", innerPoints);
+            Logger.debug("Inner points: {}", innerPoints);
             Vector2i p_k = minPoint(innerPoints.stream());
             Vector2i p_l = minPoint(innerPoints.stream().filter(p -> !p.equals(p_k)));
             Vector2i p_m = minPoint(innerPoints.stream().filter(p -> p_k.x() <= p.x() && p.x() < p_l.x() && p.y() > p_k.y()));
             var r = new RectArea(p_k.x(), p_k.y(), p_l.x() - p_k.x(), p_m.y() - p_k.y());
-            Logger.info("p_k={}   p_l={}   p_m={}", p_k, p_l, p_m);
-            Logger.info(r);
+            Logger.debug("p_k={}   p_l={}   p_m={}", p_k, p_l, p_m);
+            Logger.debug(r);
             rectangles.add(r);
             flip(innerPoints, p_k);
             flip(innerPoints, p_l);
@@ -48,10 +48,10 @@ public interface PolygonToRectSet {
     static void flip(Collection<Vector2i> polygon, Vector2i p) {
         if (polygon.contains(p)) {
             polygon.remove(p);
-            Logger.info("{} removed", p);
+            Logger.debug("{} removed", p);
         } else {
             polygon.add(p);
-            Logger.info("{} added", p);
+            Logger.debug("{} added", p);
         }
     }
 

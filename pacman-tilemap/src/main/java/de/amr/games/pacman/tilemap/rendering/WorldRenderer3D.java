@@ -224,7 +224,7 @@ public class WorldRenderer3D {
             case GAMMA_SPIKED ->          render_Generic(og, obstacle); //render_Gamma_Spiked(og, obstacle);
             case GAMMA_SPIKED_MIRRORED -> render_Generic(og, obstacle); // render_Gamma_Spiked_Mirrored(og, obstacle);
             case H ->                     render_H(og, obstacle);
-            case I ->                     render_I(og, obstacle);
+            case I ->                     render_Generic(og, obstacle); // render_I(og, obstacle);
             case L ->                     render_Generic(og, obstacle); //render_L(og, obstacle);
             case L_SPIKED ->              render_L_Spiked(og, obstacle);
             case L_SPIKED_MIRRORED ->     render_L_Spiked_Mirrored(og, obstacle);
@@ -635,6 +635,8 @@ public class WorldRenderer3D {
     // generic obstacle rendering
 
     protected void render_Generic(Group g, Obstacle obstacle) {
+        String encoding = obstacle.encoding();
+        Logger.info("Render generic: obstacle type={} encoding={}", ObstacleType.identify(encoding).orElse(ObstacleType.ANY), Logger.isDebugEnabled());
         Vector2i[] cornerCenters = obstacle.cornerCenters();
         addTowers(g, cornerCenters);
         List<RectArea> rectangles = PolygonToRectSet.apply(obstacle);
