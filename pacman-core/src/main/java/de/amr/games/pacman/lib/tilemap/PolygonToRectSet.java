@@ -22,7 +22,7 @@ public interface PolygonToRectSet {
 
     static List<RectArea> apply(Obstacle obstacle) {
         Logger.info(obstacle);
-        Set<Vector2i> innerPoints = computeInnerPoints(obstacle);
+        Collection<Vector2i> innerPoints = computeInnerPoints(obstacle);
         List<RectArea> rectangles = new ArrayList<>();
         while (!innerPoints.isEmpty()) {
             Logger.info("Inner points: {}", innerPoints);
@@ -45,7 +45,7 @@ public interface PolygonToRectSet {
         return points.min(Comparator.comparingInt(Vector2i::y).thenComparingInt(Vector2i::x)).orElseThrow();
     }
 
-    static void flip(Set<Vector2i> polygon, Vector2i p) {
+    static void flip(Collection<Vector2i> polygon, Vector2i p) {
         if (polygon.contains(p)) {
             polygon.remove(p);
             Logger.info("{} removed", p);
@@ -55,7 +55,7 @@ public interface PolygonToRectSet {
         }
     }
 
-    static Set<Vector2i> computeInnerPoints(Obstacle obstacle) {
+    static Collection<Vector2i> computeInnerPoints(Obstacle obstacle) {
         List<Vector2i> points = new ArrayList<>();
         points.add(obstacle.startPoint());
         for (var segment : obstacle.segments()) {
@@ -75,17 +75,32 @@ public interface PolygonToRectSet {
             }
             points.add(segment.endPoint());
         }
-        //TODO remove points inside edges
-        List<Vector2i> edgeVectors = new ArrayList<>();
+
+        // remove inverse pairs of edges and points inside edges
+        List<Vector2i> edges = new ArrayList<>();
         for (int i = 0; i < points.size() - 1; ++i) {
             Vector2i edge = points.get(i + 1).minus(points.get(i));
-            edgeVectors.add(edge);
+            edges.add(edge);
         }
+
+        Deque<Vector2i> stack = new ArrayDeque<>();
+        for (Vector2i edge : edges) {
+            if (stack.isEmpty()) {
+                stack.push(edge);
+            }
+            else if (stack.peekFirst().plus(edge).equals(Vector2i.ZERO)) {
+                stack.pop();
+            } else {
+                stack.push(edge);
+            }
+        }
+        stack = stack.reversed();
+
         points.clear();
         Vector2i p = obstacle.startPoint();
         points.add(p);
         Vector2i sumVector = null;
-        for (Vector2i edge : edgeVectors) {
+        for (Vector2i edge : stack) {
             if (sumVector == null) {
                 sumVector = edge;
             }
@@ -98,7 +113,7 @@ public interface PolygonToRectSet {
                 p = q;
             }
         }
-        return new LinkedHashSet<>(points);
+        return points;
     }
 
     static boolean sameDirection(Vector2i e, Vector2i f) {

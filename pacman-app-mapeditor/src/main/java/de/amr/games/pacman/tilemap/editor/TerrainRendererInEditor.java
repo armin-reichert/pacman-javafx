@@ -64,18 +64,20 @@ public class TerrainRendererInEditor extends TerrainRenderer {
                     g.setLineWidth(0.1);
                     g.strokeText(String.valueOf(i), middle.x() - 0.5 * SEGMENT_NUMBER_FONT_SIZE, middle.y());
                 }
+
                 Vector2i prev = null;
-                g.setFill(Color.RED);
-                g.setStroke(Color.RED);
-                g.setLineWidth(0.5);
                 double r = 1;
                 for (Vector2i p : PolygonToRectSet.computeInnerPoints(obstacle)) {
+                    g.setFill(Color.RED);
+                    g.setStroke(Color.RED);
+                    g.setLineWidth(1);
                     g.fillOval(p.x() - r, p.y() - r, 2*r, 2*r);
                     if (prev != null) {
                         g.strokeLine(prev.x(), prev.y(), p.x(), p.y());
                     }
                     prev = p;
                 }
+
             });
         }
         g.restore();
