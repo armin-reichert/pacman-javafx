@@ -221,13 +221,13 @@ public class WorldRenderer3D {
             case COIN ->                  render_Coin(og, obstacle);
             case CROSS ->                 render_Cross(og, obstacle);
             case F ->                     render_F(og, obstacle);
-            case GAMMA_SPIKED ->          render_Generic(og, obstacle); //render_Gamma_Spiked(og, obstacle);
+            case GAMMA_SPIKED ->          render_Generic(og, obstacle); // render_Gamma_Spiked(og, obstacle);
             case GAMMA_SPIKED_MIRRORED -> render_Generic(og, obstacle); // render_Gamma_Spiked_Mirrored(og, obstacle);
             case H ->                     render_H(og, obstacle);
             case I ->                     render_Generic(og, obstacle); // render_I(og, obstacle);
-            case L ->                     render_Generic(og, obstacle); //render_L(og, obstacle);
-            case L_SPIKED ->              render_L_Spiked(og, obstacle);
-            case L_SPIKED_MIRRORED ->     render_L_Spiked_Mirrored(og, obstacle);
+            case L ->                     render_Generic(og, obstacle); // render_L(og, obstacle);
+            case L_SPIKED ->              render_Generic(og, obstacle); // render_L_Spiked(og, obstacle);
+            case L_SPIKED_MIRRORED ->     render_Generic(og, obstacle); // render_L_Spiked_Mirrored(og, obstacle);
             case LL ->                    render_LL(og, obstacle);
             case LL_MIRRORED ->           render_LL_Mirrored(og, obstacle);
             case LLL ->                   render_Generic(og, obstacle); //render_LLL(og, obstacle);
