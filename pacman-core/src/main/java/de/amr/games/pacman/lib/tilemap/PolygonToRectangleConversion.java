@@ -22,22 +22,21 @@ public interface PolygonToRectangleConversion {
     static List<RectArea> apply(Obstacle obstacle) {
         Logger.info(obstacle);
         Set<Vector2i> innerPoints = computeInnerPoints(obstacle);
-        Logger.info("Inner points: {}", innerPoints);
         List<RectArea> rectangles = new ArrayList<>();
         while (!innerPoints.isEmpty()) {
+            Logger.info("Inner points: {}", innerPoints);
             Vector2i p_k = minPoint(innerPoints.stream());
             Vector2i p_l = minPointExcluding(innerPoints, p_k);
             Vector2i p_m = minPointBetweenAndBelow(innerPoints, p_k, p_l);
             Vector2i p_max = vec_2i(p_l.x(), p_m.y());
-            Logger.info("p_k={}   p_l={}   p_m={}   p_max={}", p_k, p_l, p_m, p_max);
             var r = new RectArea(p_k.x(), p_k.y(), p_max.x() - p_k.x(), p_max.y() - p_k.y());
+            Logger.info("p_k={}   p_l={}   p_m={}   p_max={}", p_k, p_l, p_m, p_max);
+            Logger.info(r);
             rectangles.add(r);
-            Logger.info("rect={}", r);
             flip(innerPoints, p_k);
             flip(innerPoints, p_l);
             flip(innerPoints, vec_2i(p_k.x(), p_m.y()));
             flip(innerPoints, vec_2i(p_l.x(), p_m.y()));
-            Logger.info("Inner polygon: {}", innerPoints);
         }
         return rectangles;
     }
@@ -65,59 +64,58 @@ public interface PolygonToRectangleConversion {
     }
 
     static Set<Vector2i> computeInnerPoints(Obstacle obstacle) {
-        List<Vector2i> polygon = new ArrayList<>();
-        polygon.add(obstacle.startPoint());
+        List<Vector2i> points = new ArrayList<>();
+        points.add(obstacle.startPoint());
         for (var segment : obstacle.segments()) {
             boolean down = segment.vector().y() > 0, up = !down;
             switch (segment.encoding()) {
                 case TileEncoding.CORNER_NW -> {
                     Vector2i p = down ? segment.startPoint().plus(0, HTS) : segment.startPoint().plus(0, -HTS);
-                    polygon.add(p);
-                    polygon.add(segment.endPoint());
+                    points.add(p);
+                    points.add(segment.endPoint());
                 }
                 case TileEncoding.CORNER_SW -> {
                     Vector2i p = down ? segment.startPoint().plus(HTS, 0) : segment.startPoint().plus(-HTS, 0);
-                    polygon.add(p);
-                    polygon.add(segment.endPoint());
+                    points.add(p);
+                    points.add(segment.endPoint());
                 }
                 case TileEncoding.CORNER_SE -> {
                     Vector2i p = up ? segment.startPoint().plus(0, -HTS) : segment.startPoint().plus(0, HTS);
-                    polygon.add(p);
-                    polygon.add(segment.endPoint());
+                    points.add(p);
+                    points.add(segment.endPoint());
                 }
                 case TileEncoding.CORNER_NE -> {
                     Vector2i p = up ? segment.startPoint().plus(-HTS, 0) : segment.startPoint().plus(HTS, 0);
-                    polygon.add(p);
-                    polygon.add(segment.endPoint());
+                    points.add(p);
+                    points.add(segment.endPoint());
                 }
-                default -> polygon.add(segment.endPoint());
+                default -> points.add(segment.endPoint());
             }
         }
         //TODO remove points inside edges
-        List<Vector2i> edges = new ArrayList<>();
-        for (int i = 0; i < polygon.size() - 1; ++i) {
-            Vector2i edge = polygon.get(i + 1).minus(polygon.get(i));
-            edges.add(edge);
+        List<Vector2i> edgeVectors = new ArrayList<>();
+        for (int i = 0; i < points.size() - 1; ++i) {
+            Vector2i edge = points.get(i + 1).minus(points.get(i));
+            edgeVectors.add(edge);
         }
-        polygon.clear();
+        points.clear();
         Vector2i p = obstacle.startPoint();
-        polygon.add(p);
-        Vector2i v = null;
-        for (Vector2i edge : edges) {
-            if (v == null) {
-                v = edge;
+        points.add(p);
+        Vector2i sumVector = null;
+        for (Vector2i edge : edgeVectors) {
+            if (sumVector == null) {
+                sumVector = edge;
             }
-            else if (sameDirection(v, edge)) {
-                v = v.plus(edge);
+            else if (sameDirection(sumVector, edge)) {
+                sumVector = sumVector.plus(edge);
             } else {
-                Vector2i q = p.plus(v);
-                polygon.add(q);
-                v = edge;
+                Vector2i q = p.plus(sumVector);
+                points.add(q);
+                sumVector = edge;
                 p = q;
             }
         }
-
-        return new HashSet<>(polygon);
+        return new HashSet<>(points);
     }
 
     static boolean sameDirection(Vector2i e, Vector2i f) {
