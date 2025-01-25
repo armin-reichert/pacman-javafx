@@ -206,7 +206,11 @@ public class WorldRenderer3D {
     public void renderObstacle3D(Group parent, Obstacle obstacle) {
         ObstacleType type = obstacle.computeType();
         if (type == ObstacleType.ANY) {
-            addUncategorizedObstacle3D(parent, obstacle);
+            if (obstacle.isClosed() && obstacle.segment(0).isRoundedCorner()) { // exclude house
+                render_Generic(parent, obstacle);
+            } else {
+                render_UncategorizedObstacle3D(parent, obstacle);
+            }
             return;
         }
         // each obstacle has its own group
@@ -711,7 +715,7 @@ public class WorldRenderer3D {
 
     // Tengen maps
 
-    public void addUncategorizedObstacle3D(Group parent, Obstacle obstacle) {
+    public void render_UncategorizedObstacle3D(Group parent, Obstacle obstacle) {
         switch (obstacle.encoding()) {
             // Tengen BIG map #1, upside T at top, center
             case "dcfbdcgbfcebgce" -> render_BigMap1_UpsideT(parent, obstacle);
