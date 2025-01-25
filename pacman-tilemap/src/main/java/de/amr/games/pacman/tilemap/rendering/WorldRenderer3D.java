@@ -239,10 +239,10 @@ public class WorldRenderer3D {
             case OPEN_SQUARE_NW ->        render_OpenSquare_NW(og, obstacle);
             case S ->                     render_Generic(og, obstacle); // render_S(og, obstacle);
             case S_SMALL ->               render_S_Small(og, obstacle);
-            case SPACESHIP_DOWN ->        render_Spaceship_Down(og, obstacle);
-            case SPACESHIP_UP ->          render_Spaceship_Up(og, obstacle);
-            case SPACESHIP_LEFT ->        render_Spaceship_Left(og, obstacle);
-            case SPACESHIP_RIGHT ->       render_Spaceship_Right(og, obstacle);
+            case SPACESHIP_DOWN ->        render_Generic(og, obstacle); // render_Spaceship_Down(og, obstacle);
+            case SPACESHIP_UP ->          render_Generic(og, obstacle); // render_Spaceship_Up(og, obstacle);
+            case SPACESHIP_LEFT ->        render_Generic(og, obstacle); // render_Spaceship_Left(og, obstacle);
+            case SPACESHIP_RIGHT ->       render_Generic(og, obstacle); // render_Spaceship_Right(og, obstacle);
             case T ->                     render_Generic(og, obstacle); // render_T(og, obstacle);
             case T_TWO_ROWS ->            render_T_TwoRows(og, obstacle);
             case U ->                     render_Generic(og, obstacle); // render_U(og, obstacle);
