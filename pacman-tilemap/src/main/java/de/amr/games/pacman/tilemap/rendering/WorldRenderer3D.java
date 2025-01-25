@@ -787,7 +787,8 @@ public class WorldRenderer3D {
             case "dcgbecgbfcdbfceb" -> render_StrangeMap3_Mushroom(parent, obstacle);
 
             // Tengen STRANGE map #3 and #7, U-shape with stronger "legs"
-            case "dcgbfcebdcfbgceb" -> render_StrangeMap3_7_StrongLeggedUShape(parent, obstacle);
+            case "dcgbfcebdcfbgceb" -> renderUsingRectangularPartition(parent, obstacle); //TODO still buggy
+                    //render_StrangeMap3_7_StrongLeggedUShape(parent, obstacle);
 
             // Tengen STRANGE map #4, huge obstacle
             case "dgbecfbdcgbfcdbecgbfcebgcdbfebdgbecfbgcebgcedcfbdcfbgcdbfeb" -> render_StrangeMap4_Huge(parent, obstacle);

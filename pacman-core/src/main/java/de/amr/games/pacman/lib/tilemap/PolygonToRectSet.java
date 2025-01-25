@@ -60,13 +60,20 @@ public interface PolygonToRectSet {
         points.add(obstacle.startPoint());
         for (var segment : obstacle.segments()) {
             Vector2i start = segment.startPoint();
-            boolean down = segment.vector().y() > 0;
-            switch (segment.encoding()) {
-                // add intermediate point to make "stair step" from diagonal corner vectors
-                case TileEncoding.CORNER_NW -> points.add(down ? start.plus(0, HTS)  : start.plus(HTS, 0));
-                case TileEncoding.CORNER_SW -> points.add(down ? start.plus(HTS, 0)  : start.plus(0, -HTS));
-                case TileEncoding.CORNER_SE -> points.add(down ? start.plus(-HTS, 0) : start.plus(0, -HTS));
-                case TileEncoding.CORNER_NE -> points.add(down ? start.plus(0, HTS)  : start.plus(-HTS, 0));
+            boolean ccw = segment.ccw();
+            boolean down = segment.vector().y() > 0, up = segment.vector().y() < 0;
+            int dx = 0, dy = 0;
+            if (segment.isRoundedNWCorner()) {
+                if (down) { dy = HTS; } else { dy = -HTS; }
+            } else if (segment.isRoundedSWCorner()) {
+                if (down) { dx = HTS; } else { dx = -HTS; }
+            } else if (segment.isRoundedSECorner()) {
+                if (up) { dy = -HTS;  } else { dy = HTS; }
+            } else if (segment.isRoundedNECorner()) {
+                if (up) { dx = -HTS; } else { dx = HTS; }
+            }
+            if (dx != 0 || dy != 0) {
+                points.add(segment.startPoint().plus(dx, dy));
             }
             points.add(segment.endPoint());
         }
