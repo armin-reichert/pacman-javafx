@@ -22,7 +22,6 @@ import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 import org.tinylog.Logger;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -208,21 +207,18 @@ public class WorldRenderer3D {
         if (type == ObstacleType.ANY) {
             // render single-wall obstacles using generic renderer
             if (obstacle.isClosed() && !obstacle.hasDoubleWalls() && obstacle.segment(0).isRoundedCorner() ) {
-                render_Generic(parent, obstacle);
+                render_ClosedSingleStrokeObstacle(parent, obstacle);
             } else {
-                addGenericObstacle3D(parent, obstacle);
+                render_DoubleStrokeObstacle(parent, obstacle);
             }
             return;
         }
         // each obstacle has its own group
         Group og = new Group();
-        switch (type) {
-            default ->           render_Generic(og, obstacle);
-            case COIN ->         render_Coin(og, obstacle);
-            case F ->            render_F(og, obstacle);
-            case H ->            render_H(og, obstacle);
-            case O ->            render_O(og, obstacle);
-            case S_SMALL ->      render_S_Small(og, obstacle);
+        switch (obstacle.encoding()) {
+            default ->         render_ClosedSingleStrokeObstacle(og, obstacle);
+            case "dgfe" ->     render_Coin(og, obstacle);
+            case "dcgbfceb" -> render_O(og, obstacle);
         }
         addTags(og, TAG_INNER_OBSTACLE);
         parent.getChildren().add(og);
@@ -245,106 +241,7 @@ public class WorldRenderer3D {
         }
     }
 
-    //TODO rework
-    public void render_F(Group g, Obstacle obstacle) {
-        Vector2i[] u = obstacle.uTurnSegmentIndices().mapToObj(obstacle::cornerCenter).toArray(Vector2i[]::new);
-        switch (obstacle.encoding()) {
-            case "dcgfcdbfebgdbfeb", "dgbefbdgbecgfceb", "dcgfcdbfebgcdbfeb", "dgbecfbdgbecgfceb"-> {
-                Arrays.sort(u, (p, q) -> Float.compare(p.y(), q.y()));
-                int spineX = u[2].x();
-                Vector2i spineTop = vec_2i(spineX, u[0].y());
-                Vector2i spineMiddle = vec_2i(spineX, u[1].y());
-                addTowers(g, u);
-                addTowers(g, spineTop);
-                addWall(g, spineTop, u[0]);
-                addWall(g, spineMiddle, u[1]);
-                addWall(g, spineTop, u[2]);
-            }
-            case "dgbecgfcdbecgfceb", "dcfbdgbfcedcfbgce" -> {
-                Arrays.sort(u, (p, q) -> Float.compare(p.x(), q.x()));
-                int spineY = u[0].y();
-                Vector2i spineMiddle = vec_2i(u[1].x(), spineY);
-                Vector2i spineRight = vec_2i(u[2].x(), spineY);
-                addTowers(g, u);
-                addTowers(g, spineRight);
-                addWall(g, u[0], spineRight);
-                addWall(g, spineMiddle, u[1]);
-                addWall(g, spineRight, u[2]);
-            }
-            case "dcgfcdbecgfcdbfeb", "dcgbfebgcedcfbgce" -> {
-                Arrays.sort(u, (p, q) -> Float.compare(p.x(), q.x()));
-                int spineY = u[2].y();
-                Vector2i spineLeft = vec_2i(u[0].x(), spineY);
-                Vector2i spineMiddle = vec_2i(u[1].x(), spineY);
-                addTowers(g, u);
-                addTowers(g, spineLeft);
-                addWall(g, spineLeft, u[2]);
-                addWall(g, spineLeft, u[0]);
-                addWall(g, spineMiddle, u[1]);
-            }
-        }
-    }
-
-    //TODO make complete
-    public void render_H(Group g, Obstacle obstacle) {
-        switch (obstacle.encoding()) {
-
-            // little H rotated 90 degrees
-            case "dgefdgbfegdfeb" -> Logger.error("Little-H obstacle creation still missing!");
-
-            // little H in normal orientation
-            case "dcgfdegfcedfge" -> Logger.error("Little-H obstacle creation still missing!");
-
-            // H in normal orientation
-            case "dcgfcdbecgfcedcfbgce" -> {
-                Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 9, 12);
-                Vector2i[] h = { vec_2i(t[0].x(), t[0].midpoint(t[1]).y()), vec_2i(t[2].x(), t[2].midpoint(t[3]).y()) };
-                addTowers(g, t);
-                addWalls(g, t[0], t[1], t[2], t[3], h[0], h[1]);
-            }
-
-            // H rotated by 90 degrees
-            case "dgbecfbdgbfebgcdbfeb" -> {
-                Vector2i[] t = obstacle.cornerCentersAtSegments(0, 7, 10, 17);
-                Vector2i[] h = { vec_2i(t[0].midpoint(t[3]).x(), t[0].y()), vec_2i(t[1].midpoint(t[2]).x(), t[1].y()) };
-                addTowers(g, t);
-                addWalls(g, t[0], t[3], t[1], t[2], h[0], h[1]);
-            }
-        }
-    }
-
-    public void render_S_Small(Group g, Obstacle obstacle) {
-        switch (obstacle.encoding()) {
-            case "dcfdgbfcdfeb" -> {
-                // mini-S normal orientation
-                Vector2i[] t = obstacle.cornerCentersAtSegments(0, 3, 6, 9);
-                addTowers(g, t);
-                addWalls(g, t[0], t[3], t[1], t[2], t[0], t[2]);
-            }
-            case "dgecgbfegceb" -> {
-                // mini-S normal orientation mirrored horizontally
-                Vector2i[] t = obstacle.cornerCentersAtSegments(0, 4, 6, 10);
-                addTowers(g, t);
-                addWalls(g, t[0], t[3], t[1], t[2], t[3], t[1]);
-            }
-            case "dcgbegfcebge" -> {
-                // mini-S rot 90 counter-clockwise
-                Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 5, 8);
-                addTowers(g, t);
-                addWalls(g, t[0], t[1], t[1], t[3], t[2], t[3]);
-            }
-            case "dfbdcgfdbfce" -> {
-                // mini-S rot 90 counter-clockwise mirrored horizontally
-                Vector2i[] t = obstacle.cornerCentersAtSegments(0, 3, 5, 9);
-                addTowers(g, t);
-                addWalls(g, t[0], t[3], t[1], t[2], t[1], t[3]);
-            }
-        }
-    }
-
-    // generic obstacle rendering
-
-    protected void render_Generic(Group g, Obstacle obstacle) {
+    protected void render_ClosedSingleStrokeObstacle(Group g, Obstacle obstacle) {
         String encoding = obstacle.encoding();
         Logger.info("Render generic: obstacle type={} encoding={}", ObstacleType.identify(encoding).orElse(ObstacleType.ANY), encoding);
         Vector2i[] cornerCenters = obstacle.cornerCenters();
@@ -359,7 +256,7 @@ public class WorldRenderer3D {
     /**
      * Renders outer walls and non-single-wall obstacle inside.
      */
-    protected void addGenericObstacle3D(Group g, Obstacle obstacle){
+    protected void render_DoubleStrokeObstacle(Group g, Obstacle obstacle){
         int r = HTS;
         Vector2i p = obstacle.startPoint();
         for (int i = 0; i < obstacle.numSegments(); ++i) {
