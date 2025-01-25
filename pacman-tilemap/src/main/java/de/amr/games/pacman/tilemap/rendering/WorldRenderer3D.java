@@ -206,10 +206,11 @@ public class WorldRenderer3D {
     public void renderObstacle3D(Group parent, Obstacle obstacle) {
         ObstacleType type = obstacle.computeType();
         if (type == ObstacleType.ANY) {
-            if (obstacle.isClosed() && obstacle.segment(0).isRoundedCorner()) { // exclude house
+            // render single-wall obstacles using generic renderer
+            if (obstacle.isClosed() && !obstacle.hasDoubleWalls() && obstacle.segment(0).isRoundedCorner() ) {
                 render_Generic(parent, obstacle);
             } else {
-                render_UncategorizedObstacle3D(parent, obstacle);
+                addGenericObstacle3D(parent, obstacle);
             }
             return;
         }
@@ -643,6 +644,12 @@ public class WorldRenderer3D {
         }
     }
 
+    /**
+     * Renders outer walls and non-single-wall obstacle inside.
+     *
+     * @param g
+     * @param obstacle
+     */
     protected void addGenericObstacle3D(Group g, Obstacle obstacle){
         int r = HTS;
         Vector2i p = obstacle.startPoint();
@@ -715,7 +722,7 @@ public class WorldRenderer3D {
 
     // Tengen maps
 
-    public void render_UncategorizedObstacle3D(Group parent, Obstacle obstacle) {
+    public void render_TengenObstacle3D(Group parent, Obstacle obstacle) {
         switch (obstacle.encoding()) {
             // Tengen BIG map #1, upside T at top, center
             case "dcfbdcgbfcebgce" -> render_BigMap1_UpsideT(parent, obstacle);
@@ -878,11 +885,6 @@ public class WorldRenderer3D {
             case "dcgbecgfceb" -> render_dcgbecgfceb(parent, obstacle);
 
             case "dcgfcdbfceb" -> render_dcgfcdbfceb(parent, obstacle);
-
-            //TEST
-            case "dcfbdcgbecgbfcdbfceb" -> render_Generic(parent, obstacle);
-
-            default -> addGenericObstacle3D(parent, obstacle);
         }
     }
 
