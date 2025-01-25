@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
-import de.amr.games.pacman.lib.tilemap.PolygonToRectangleConversion;
+import de.amr.games.pacman.lib.tilemap.PolygonToRectSet;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
 import de.amr.games.pacman.lib.tilemap.ObstacleType;
 import javafx.beans.property.DoubleProperty;
@@ -220,7 +220,8 @@ public class WorldRenderer3D {
             case GAMMA_SPIKED_MIRRORED -> render_Gamma_Spiked_Mirrored(og, obstacle);
             case H ->                     render_H(og, obstacle);
             case I ->                     render_I(og, obstacle);
-            case L ->                     render_L(og, obstacle);
+            case L ->                     //renderUsingRectangularPartition(og, obstacle);
+                                          render_L(og, obstacle);
             case L_SPIKED ->              render_L_Spiked(og, obstacle);
             case L_SPIKED_MIRRORED ->     render_L_Spiked_Mirrored(og, obstacle);
             case LL ->                    render_LL(og, obstacle);
@@ -632,7 +633,7 @@ public class WorldRenderer3D {
     protected void renderUsingRectangularPartition(Group g, Obstacle obstacle) {
         Vector2i[] cornerCenters = obstacle.cornerCenters();
         addTowers(g, cornerCenters);
-        List<RectArea> rectangles = PolygonToRectangleConversion.apply(obstacle);
+        List<RectArea> rectangles = PolygonToRectSet.apply(obstacle);
         for (RectArea r : rectangles) {
             Vector2f center = vec_2f( r.x() + r.width() * 0.5f, r.y() + r.height() * 0.5f );
             g.getChildren().add(createWallCenteredAt(center, r.width(), r.height()));

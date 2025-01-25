@@ -18,7 +18,7 @@ import static de.amr.games.pacman.lib.Globals.vec_2i;
  * Implements the Gourley/Green
  * <a href="https://ieeexplore.ieee.org/document/4037339">polygon-to-rectangle conversion algorithm</a>.
  */
-public interface PolygonToRectangleConversion {
+public interface PolygonToRectSet {
 
     static List<RectArea> apply(Obstacle obstacle) {
         Logger.info(obstacle);
@@ -59,30 +59,16 @@ public interface PolygonToRectangleConversion {
         List<Vector2i> points = new ArrayList<>();
         points.add(obstacle.startPoint());
         for (var segment : obstacle.segments()) {
-            boolean down = segment.vector().y() > 0, up = !down;
+            Vector2i start = segment.startPoint();
+            boolean down = segment.vector().y() > 0;
             switch (segment.encoding()) {
-                case TileEncoding.CORNER_NW -> {
-                    Vector2i p = down ? segment.startPoint().plus(0, HTS) : segment.startPoint().plus(0, -HTS);
-                    points.add(p);
-                    points.add(segment.endPoint());
-                }
-                case TileEncoding.CORNER_SW -> {
-                    Vector2i p = down ? segment.startPoint().plus(HTS, 0) : segment.startPoint().plus(-HTS, 0);
-                    points.add(p);
-                    points.add(segment.endPoint());
-                }
-                case TileEncoding.CORNER_SE -> {
-                    Vector2i p = up ? segment.startPoint().plus(0, -HTS) : segment.startPoint().plus(0, HTS);
-                    points.add(p);
-                    points.add(segment.endPoint());
-                }
-                case TileEncoding.CORNER_NE -> {
-                    Vector2i p = up ? segment.startPoint().plus(-HTS, 0) : segment.startPoint().plus(HTS, 0);
-                    points.add(p);
-                    points.add(segment.endPoint());
-                }
-                default -> points.add(segment.endPoint());
+                // add intermediate point to make "stair step" from diagonal corner vectors
+                case TileEncoding.CORNER_NW -> points.add(down ? start.plus(0, HTS)  : start.plus(HTS, 0));
+                case TileEncoding.CORNER_SW -> points.add(down ? start.plus(HTS, 0)  : start.plus(0, -HTS));
+                case TileEncoding.CORNER_SE -> points.add(down ? start.plus(-HTS, 0) : start.plus(0, -HTS));
+                case TileEncoding.CORNER_NE -> points.add(down ? start.plus(0, HTS)  : start.plus(-HTS, 0));
             }
+            points.add(segment.endPoint());
         }
         //TODO remove points inside edges
         List<Vector2i> edgeVectors = new ArrayList<>();
@@ -107,7 +93,7 @@ public interface PolygonToRectangleConversion {
                 p = q;
             }
         }
-        return new HashSet<>(points);
+        return new LinkedHashSet<>(points);
     }
 
     static boolean sameDirection(Vector2i e, Vector2i f) {
