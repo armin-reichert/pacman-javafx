@@ -7,10 +7,7 @@ package de.amr.games.pacman.tilemap.editor;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.Obstacle;
-import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
-import de.amr.games.pacman.lib.tilemap.TileEncoding;
-import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.lib.tilemap.*;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -66,6 +63,18 @@ public class TerrainRendererInEditor extends TerrainRenderer {
                     g.setStroke(Color.WHITE);
                     g.setLineWidth(0.1);
                     g.strokeText(String.valueOf(i), middle.x() - 0.5 * SEGMENT_NUMBER_FONT_SIZE, middle.y());
+                }
+                Vector2i prev = null;
+                g.setFill(Color.RED);
+                g.setStroke(Color.RED);
+                g.setLineWidth(0.5);
+                double r = 1;
+                for (Vector2i p : PolygonToRectSet.computeInnerPoints(obstacle)) {
+                    g.fillOval(p.x() - r, p.y() - r, 2*r, 2*r);
+                    if (prev != null) {
+                        g.strokeLine(prev.x(), prev.y(), p.x(), p.y());
+                    }
+                    prev = p;
                 }
             });
         }
