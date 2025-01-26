@@ -204,14 +204,13 @@ public class WorldRenderer3D {
     public void renderObstacle3D(Group parent, Obstacle obstacle) {
         if (obstacle.isClosed() && !obstacle.hasDoubleWalls() && obstacle.segment(0).isRoundedCorner() ) {
             Group og = new Group();
-            switch (obstacle.encoding()) {
-                default ->         render_ClosedSingleStrokeObstacle(og, obstacle);
-                case "dgfe" ->     render_Coin(og, obstacle);
-                case "dcgbfceb" -> render_O(og, obstacle);
-            }
             addTags(og, TAG_INNER_OBSTACLE);
             parent.getChildren().add(og);
-            render_ClosedSingleStrokeObstacle(parent, obstacle);
+            switch (obstacle.encoding()) {
+                case "dgfe" ->     render_Coin(og, obstacle);
+                case "dcgbfceb" -> render_O(og, obstacle);
+                default ->         render_ClosedSingleStrokeObstacle(og, obstacle);
+            }
         } else {
             render_DoubleStrokeObstacle(parent, obstacle);
         }

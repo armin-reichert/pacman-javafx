@@ -114,6 +114,8 @@ public class TileMapEditor {
 
     private final BooleanProperty segmentNumbersDisplayedPy = new SimpleBooleanProperty(false);
 
+    private final BooleanProperty obstacleInnerAreaDisplayedPy = new SimpleBooleanProperty(false);
+
     private final BooleanProperty propertyEditorsVisiblePy = new SimpleBooleanProperty(false) {
         @Override
         protected void invalidated() {
@@ -590,21 +592,27 @@ public class TileMapEditor {
         double frameDuration = 1000.0 / RENDERING_FPS;
         clock = new Timeline(RENDERING_FPS, new KeyFrame(Duration.millis(frameDuration), e -> {
             updateMessageAnimation();
+            TileMap terrainMap = worldMap().terrain();
+            TerrainRenderer.ColorScheme colors = new TerrainRenderer.ColorScheme(
+                CANVAS_BACKGROUND,
+                getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(COLOR_WALL_FILL)),
+                getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(COLOR_WALL_STROKE)),
+                getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(COLOR_DOOR))
+            );
             try {
-                TileMap terrainMap = worldMap().terrain();
-                TerrainRenderer.ColorScheme colors = new TerrainRenderer.ColorScheme(
-                    CANVAS_BACKGROUND,
-                    getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(COLOR_WALL_FILL)),
-                    getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(COLOR_WALL_STROKE)),
-                    getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(COLOR_DOOR))
-                );
-                drawEditCanvas(colors);
-                drawPreviewCanvas(colors);
                 drawSelectedPalette(colors);
             } catch (Exception x) {
                 Logger.error(x);
-                drawBlueScreen(x); // TODO this is crap
-                clock.stop();
+            }
+            try {
+                drawEditCanvas(colors);
+            } catch (Exception x) {
+                Logger.error(x);
+            }
+            try {
+                drawPreviewCanvas(colors);
+            } catch (Exception x) {
+                Logger.error(x);
             }
         }));
         clock.setCycleCount(Animation.INDEFINITE);
@@ -655,23 +663,26 @@ public class TileMapEditor {
         menuLoadMap = new Menu(tt("menu.load_map"));
 
         // View
-        var miShowPropertyEditors = new CheckMenuItem(tt("menu.view.properties"));
-        miShowPropertyEditors.selectedProperty().bindBidirectional(propertyEditorsVisiblePy);
+        var miProperties = new CheckMenuItem(tt("menu.view.properties"));
+        miProperties.selectedProperty().bindBidirectional(propertyEditorsVisiblePy);
 
-        var miShowTerrain = new CheckMenuItem(tt("menu.view.terrain"));
-        miShowTerrain.selectedProperty().bindBidirectional(terrainVisiblePy);
+        var miTerrain = new CheckMenuItem(tt("menu.view.terrain"));
+        miTerrain.selectedProperty().bindBidirectional(terrainVisiblePy);
 
-        var miShowFood = new CheckMenuItem(tt("menu.view.food"));
-        miShowFood.selectedProperty().bindBidirectional(foodVisiblePy);
+        var miFood = new CheckMenuItem(tt("menu.view.food"));
+        miFood.selectedProperty().bindBidirectional(foodVisiblePy);
 
-        var miShowGrid = new CheckMenuItem(tt("menu.view.grid"));
-        miShowGrid.selectedProperty().bindBidirectional(gridVisiblePy);
+        var miGrid = new CheckMenuItem(tt("menu.view.grid"));
+        miGrid.selectedProperty().bindBidirectional(gridVisiblePy);
 
-        var miShowSegmentNumbers = new CheckMenuItem(tt("menu.view.segment_numbers"));
-        miShowSegmentNumbers.selectedProperty().bindBidirectional(segmentNumbersDisplayedPy);
+        var miSegmentNumbers = new CheckMenuItem(tt("menu.view.segment_numbers"));
+        miSegmentNumbers.selectedProperty().bindBidirectional(segmentNumbersDisplayedPy);
+
+        var miObstacleInnerArea = new CheckMenuItem("Inner Obstacle Area"); //TODO localize
+        miObstacleInnerArea.selectedProperty().bindBidirectional(obstacleInnerAreaDisplayedPy);
 
         menuView = new Menu(tt("menu.view"), NO_GRAPHIC,
-            miShowPropertyEditors, miShowTerrain, miShowSegmentNumbers, miShowFood, miShowGrid);
+            miProperties, miTerrain, miSegmentNumbers, miObstacleInnerArea, miFood, miGrid);
 
         // Menu Bar
         menuBar = new MenuBar(menuFile, menuEdit, menuLoadMap, menuView);
@@ -931,6 +942,7 @@ public class TileMapEditor {
             editorTerrainRenderer.setScaling(gridSize() / 8.0);
             editorTerrainRenderer.setColors(colors);
             editorTerrainRenderer.setSegmentNumbersDisplayed(segmentNumbersDisplayedPy.get());
+            editorTerrainRenderer.setObstacleInnerAreaDisplayed(obstacleInnerAreaDisplayedPy.get());
             editorTerrainRenderer.drawTerrain(g, terrain, map.obstacles());
 
             byte[][] editedObstacleContent = obstacleEditor.editedContent();

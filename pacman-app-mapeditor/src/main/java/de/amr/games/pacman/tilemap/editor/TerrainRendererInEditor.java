@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.*;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
@@ -22,6 +21,7 @@ import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.tilemap.TileMap.parseVector2i;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
+import static java.util.function.Predicate.not;
 
 /**
  * @author Armin Reichert
@@ -33,6 +33,7 @@ public class TerrainRendererInEditor extends TerrainRenderer {
     private static final Font SEGMENT_NUMBER_FONT = Font.font("Sans", FontWeight.BOLD, SEGMENT_NUMBER_FONT_SIZE);
 
     private boolean segmentNumbersDisplayed;
+    private boolean obstacleInnerAreaDisplayed;
 
     private final double[] xp = new double[3];
     private final double[] yp = new double[3];
@@ -41,6 +42,10 @@ public class TerrainRendererInEditor extends TerrainRenderer {
 
     public void setSegmentNumbersDisplayed(boolean segmentNumbersDisplayed) {
         this.segmentNumbersDisplayed = segmentNumbersDisplayed;
+    }
+
+    public void setObstacleInnerAreaDisplayed(boolean obstacleInnerAreaDisplayed) {
+        this.obstacleInnerAreaDisplayed = obstacleInnerAreaDisplayed;
     }
 
     @Override
@@ -64,20 +69,25 @@ public class TerrainRendererInEditor extends TerrainRenderer {
                     g.setLineWidth(0.1);
                     g.strokeText(String.valueOf(i), middle.x() - 0.5 * SEGMENT_NUMBER_FONT_SIZE, middle.y());
                 }
-
+            });
+        }
+        if (obstacleInnerAreaDisplayed) {
+            double r = 1;
+            g.setFill(Color.grayRgb(150));
+            g.setStroke(Color.grayRgb(150));
+            g.setLineWidth(0.5);
+            obstacles.stream()
+                .filter(Obstacle::isClosed)
+                .filter(not(Obstacle::hasDoubleWalls))
+                .forEach(obstacle -> {
                 Vector2i prev = null;
-                double r = 1;
                 for (Vector2i p : PolygonToRectSet.computeInnerPoints(obstacle)) {
-                    g.setFill(Color.RED);
-                    g.setStroke(Color.RED);
-                    g.setLineWidth(1);
                     g.fillOval(p.x() - r, p.y() - r, 2*r, 2*r);
                     if (prev != null) {
                         g.strokeLine(prev.x(), prev.y(), p.x(), p.y());
                     }
                     prev = p;
                 }
-
             });
         }
         g.restore();
