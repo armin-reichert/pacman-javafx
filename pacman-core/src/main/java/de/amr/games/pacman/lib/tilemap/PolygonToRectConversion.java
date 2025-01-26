@@ -6,7 +6,6 @@ package de.amr.games.pacman.lib.tilemap;
 
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2i;
-import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -18,9 +17,9 @@ import static de.amr.games.pacman.lib.Globals.vec_2i;
  * Implements the Gourley/Green
  * <a href="https://ieeexplore.ieee.org/document/4037339">polygon-to-rectangle conversion algorithm</a>.
  */
-public interface PolygonToRectSet {
+public interface PolygonToRectConversion {
 
-    static List<RectArea> apply(Obstacle obstacle) {
+    static List<RectArea> convert(Obstacle obstacle) {
         Collection<Vector2i> innerPoints = computeInnerPoints(obstacle);
         List<RectArea> rectangles = new ArrayList<>();
         while (!innerPoints.isEmpty()) {

@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
-import de.amr.games.pacman.lib.tilemap.PolygonToRectSet;
+import de.amr.games.pacman.lib.tilemap.PolygonToRectConversion;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
@@ -238,7 +238,7 @@ public class WorldRenderer3D {
         Logger.info("Render 3D obstacle with encoding={}", encoding);
         Vector2i[] cornerCenters = obstacle.cornerCenters();
         addTowers(g, cornerCenters);
-        List<RectArea> rectangles = PolygonToRectSet.apply(obstacle);
+        List<RectArea> rectangles = PolygonToRectConversion.convert(obstacle);
         for (RectArea r : rectangles) {
             Vector2f center = vec_2f( r.x() + r.width() * 0.5f, r.y() + r.height() * 0.5f );
             g.getChildren().add(createWallCenteredAt(center, r.width(), r.height()));
