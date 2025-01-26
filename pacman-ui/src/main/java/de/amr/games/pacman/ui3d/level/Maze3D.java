@@ -91,11 +91,12 @@ public class Maze3D extends Group {
         cornerMaterial.specularColorProperty().bind(cornerMaterial.diffuseColorProperty().map(Color::brighter));
 
         WorldRenderer3D r3D = configuration3D.createWorldRenderer();
-        r3D.setWallBaseMaterial(wallBaseMaterial);
         r3D.setWallBaseHeightProperty(obstacleBaseHeightPy);
-        r3D.setWallTopMaterial(wallTopMaterial);
         r3D.setWallTopHeight(OBSTACLE_TOP_HEIGHT);
-        r3D.setCornerMaterial(cornerMaterial);
+        r3D.setWallBaseMaterial(wallBaseMaterial);
+        r3D.setWallTopMaterial(wallTopMaterial);
+        r3D.setCornerBaseMaterial(cornerMaterial);
+        r3D.setCornerTopMaterial(wallTopMaterial);
 
         //TODO check this:
         obstacleBaseHeightPy.set(PY_3D_WALL_HEIGHT.get());

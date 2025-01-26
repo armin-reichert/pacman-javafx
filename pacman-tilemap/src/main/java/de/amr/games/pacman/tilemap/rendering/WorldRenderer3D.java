@@ -68,15 +68,20 @@ public class WorldRenderer3D {
 
     private PhongMaterial wallBaseMaterial = new PhongMaterial();
     private PhongMaterial wallTopMaterial = new PhongMaterial();
-    private PhongMaterial cornerMaterial = new PhongMaterial();
+    private PhongMaterial cornerBaseMaterial = new PhongMaterial();
+    private PhongMaterial cornerTopMaterial = new PhongMaterial();
 
     private DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(3.5);
     private float wallTopHeight = 0.2f;
     private float wallThickness = 2;
     private boolean oShapeFilled = true;
 
-    public void setCornerMaterial(PhongMaterial material) {
-        this.cornerMaterial = material;
+    public void setCornerBaseMaterial(PhongMaterial material) {
+        this.cornerBaseMaterial = material;
+    }
+
+    public void setCornerTopMaterial(PhongMaterial cornerTopMaterial) {
+        this.cornerTopMaterial = cornerTopMaterial;
     }
 
     public void setWallBaseMaterial(PhongMaterial material) {
@@ -142,7 +147,7 @@ public class WorldRenderer3D {
 
     public Node createCircularWall(Vector2i center, double radius) {
         Cylinder base = new Cylinder(radius, wallBaseHeightPy.get(), CYLINDER_DIVISIONS);
-        base.setMaterial(cornerMaterial);
+        base.setMaterial(cornerBaseMaterial);
         base.setRotationAxis(Rotate.X_AXIS);
         base.setRotate(90);
         base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
@@ -150,7 +155,7 @@ public class WorldRenderer3D {
         addTags(base, TAG_WALL_BASE, TAG_CORNER);
 
         Cylinder top = new Cylinder(radius, wallTopHeight, CYLINDER_DIVISIONS);
-        top.setMaterial(wallTopMaterial);
+        top.setMaterial(cornerTopMaterial);
         top.setRotationAxis(Rotate.X_AXIS);
         top.setRotate(90);
         top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
@@ -294,14 +299,14 @@ public class WorldRenderer3D {
 
     private Group createCompositeCornerWall(Vector2i center, double radius) {
         Cylinder base = new Cylinder(radius, wallBaseHeightPy.get(), CYLINDER_DIVISIONS);
-        base.setMaterial(wallBaseMaterial);
+        base.setMaterial(cornerBaseMaterial);
         base.heightProperty().bind(wallBaseHeightPy);
         base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
         base.setRotationAxis(Rotate.X_AXIS);
         base.setRotate(90);
 
         Cylinder top = new Cylinder(radius, wallTopHeight, CYLINDER_DIVISIONS);
-        top.setMaterial(wallTopMaterial);
+        top.setMaterial(cornerTopMaterial);
         top.setRotationAxis(Rotate.X_AXIS);
         top.setRotate(90);
         top.translateZProperty().bind(wallBaseHeightPy.add(0.5* wallTopHeight).multiply(-1));

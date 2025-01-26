@@ -98,8 +98,9 @@ public class MazePreview3D {
 
         r3D.setWallBaseHeightProperty(wallBaseHeightPy);
         r3D.setWallBaseMaterial(WorldRenderer3D.coloredMaterial(wallBaseColor));
-        r3D.setCornerMaterial(WorldRenderer3D.coloredMaterial(wallBaseColor));
         r3D.setWallTopMaterial(WorldRenderer3D.coloredMaterial(wallTopColor));
+        r3D.setCornerBaseMaterial(WorldRenderer3D.coloredMaterial(wallBaseColor));
+        r3D.setCornerTopMaterial(WorldRenderer3D.coloredMaterial(wallTopColor));
 
         for (Obstacle obstacle : worldMap.obstacles()) {
             r3D.renderObstacle3D(mazeGroup, obstacle);
