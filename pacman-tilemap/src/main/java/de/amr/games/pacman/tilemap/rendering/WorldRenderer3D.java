@@ -32,7 +32,7 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class WorldRenderer3D {
 
-    protected static final int CYLINDER_DIVISIONS = 24;
+    private static final int CYLINDER_DIVISIONS = 24;
 
     public final static byte TAG_WALL_BASE      = 0x01;
     public final static byte TAG_WALL_TOP       = 0x02;
@@ -66,14 +66,14 @@ public class WorldRenderer3D {
         return material;
     }
 
-    protected PhongMaterial wallBaseMaterial = new PhongMaterial();
-    protected PhongMaterial wallTopMaterial = new PhongMaterial();
-    protected PhongMaterial cornerMaterial = new PhongMaterial();
+    private PhongMaterial wallBaseMaterial = new PhongMaterial();
+    private PhongMaterial wallTopMaterial = new PhongMaterial();
+    private PhongMaterial cornerMaterial = new PhongMaterial();
 
-    protected DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(3.5);
-    protected float wallTopHeight = 0.2f;
-    protected float wallThickness = 2;
-    protected boolean oShapeFilled = true;
+    private DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(3.5);
+    private float wallTopHeight = 0.2f;
+    private float wallThickness = 2;
+    private boolean oShapeFilled = true;
 
     public void setCornerMaterial(PhongMaterial material) {
         this.cornerMaterial = material;
@@ -163,14 +163,14 @@ public class WorldRenderer3D {
         return wall;
     }
 
-    protected void addTowers(Group parent, Vector2i... centers) {
+    private void addTowers(Group parent, Vector2i... centers) {
         for (Vector2i center : centers) {
             Node tower = createCircularWall(center, HTS);
             parent.getChildren().add(tower);
         }
     }
 
-    protected void addWall(Group parent, Vector2i p, Vector2i q) {
+    private void addWall(Group parent, Vector2i p, Vector2i q) {
         if (p.x() == q.x()) { // vertical wall
             addWallAtCenter(parent, p.midpoint(q), TS, p.manhattanDist(q));
         } else if (p.y() == q.y()) { // horizontal wall
@@ -180,7 +180,7 @@ public class WorldRenderer3D {
         }
     }
 
-    protected void addWalls(Group parent, Vector2i... wallEndPoints) {
+    private void addWalls(Group parent, Vector2i... wallEndPoints) {
         if (wallEndPoints.length == 0 || wallEndPoints.length % 2 == 1) {
             throw new IllegalArgumentException("There must be an even, non-zero number of wall end points");
         }
@@ -189,53 +189,48 @@ public class WorldRenderer3D {
         }
     }
 
-    protected void addWallAtCenter(Group parent, Vector2i center, double sizeX, double sizeY) {
+    private void addWallAtCenter(Group parent, Vector2i center, double sizeX, double sizeY) {
         parent.getChildren().add(createWallCenteredAt(center.toVector2f(), sizeX, sizeY));
     }
 
     /**
-     * Analyzes the given obstacle by its encoding and creates a 3D representation consisting
-     * only of (groups of) Cylinder and Box primitives. If the obstacle cannot be identified,
-     * a generic 3D representation is created.
+     * Creates a 3D representation for the given obstacle.
+     * <p>
+     * For each closed, single-wall obstacles, a group of Cylinder and Box primitives is created. For all other obstacles,
+     * a sequence of walls and cylinders as corners is created.
      *
-     * @param parent the group where the 3D shapes are added to
+     * @param parent the group into which the 3D shapes are added
      * @param obstacle an obstacle
      */
     public void renderObstacle3D(Group parent, Obstacle obstacle) {
-        if (obstacle.isClosed() && !obstacle.hasDoubleWalls() && obstacle.segment(0).isRoundedCorner() ) {
+        String encoding = obstacle.encoding();
+        Logger.info("Render 3D obstacle with encoding '{}'", encoding);
+        if (obstacle.isClosed() && !obstacle.hasDoubleWalls()) {
             Group og = new Group();
             addTags(og, TAG_INNER_OBSTACLE);
             parent.getChildren().add(og);
-            switch (obstacle.encoding()) {
-                case "dgfe" ->     render_Coin(og, obstacle);
-                case "dcgbfceb" -> render_O(og, obstacle);
-                default ->         render_ClosedSingleStrokeObstacle(og, obstacle);
+            switch (encoding) {
+                case "dgfe" ->     addTowers(og, obstacle.cornerCenter(0)); // single tower
+                case "dcgbfceb" -> render_O(og, obstacle); // filled or hollow O-shaped obstacle
+                default ->         render_ClosedSingleWallObstacle(og, obstacle);
             }
         } else {
             render_DoubleStrokeObstacle(parent, obstacle);
         }
     }
 
-    // Standard 3D obstacles
-
-    public void render_Coin(Group g, Obstacle obstacle) {
-        addTowers(g, obstacle.cornerCenter(0));
-    }
-
-    public void render_O(Group g, Obstacle obstacle) {
+    public void render_O(Group og, Obstacle obstacle) {
         Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 4, 6);
-        addTowers(g, t);
-        addWalls(g, t[0], t[1], t[1], t[2], t[2], t[3], t[3], t[0]);
+        addTowers(og, t);
+        addWalls(og, t[0], t[1], t[1], t[2], t[2], t[3], t[3], t[0]);
         if (oShapeFilled) {
-            double width = Math.abs(t[0].x() - t[2].x()) - TS;
+            double width  = Math.abs(t[0].x() - t[2].x()) - TS;
             double height = Math.abs(t[0].y() - t[2].y()) - TS;
-            addWallAtCenter(g, t[0].midpoint(t[2]), width, height);
+            addWallAtCenter(og, t[0].midpoint(t[2]), width, height);
         }
     }
 
-    protected void render_ClosedSingleStrokeObstacle(Group g, Obstacle obstacle) {
-        String encoding = obstacle.encoding();
-        Logger.info("Render 3D obstacle with encoding={}", encoding);
+    private void render_ClosedSingleWallObstacle(Group g, Obstacle obstacle) {
         Vector2i[] cornerCenters = obstacle.cornerCenters();
         addTowers(g, cornerCenters);
         List<RectArea> rectangles = PolygonToRectConversion.convert(obstacle);
@@ -248,7 +243,7 @@ public class WorldRenderer3D {
     /**
      * Renders outer walls and non-single-wall obstacle inside.
      */
-    protected void render_DoubleStrokeObstacle(Group g, Obstacle obstacle){
+    private void render_DoubleStrokeObstacle(Group g, Obstacle obstacle){
         int r = HTS;
         Vector2i p = obstacle.startPoint();
         for (int i = 0; i < obstacle.numSegments(); ++i) {
@@ -290,7 +285,7 @@ public class WorldRenderer3D {
         }
     }
 
-    protected void addGenericShapeCorner(Group parent, Vector2i corner, Vector2i horEndPoint, Vector2i vertEndPoint) {
+    private void addGenericShapeCorner(Group parent, Vector2i corner, Vector2i horEndPoint, Vector2i vertEndPoint) {
         Node hWall = createWallCenteredAt(corner.midpoint(horEndPoint).toVector2f(), corner.manhattanDist(horEndPoint), wallThickness);
         Node vWall = createWallCenteredAt(corner.midpoint(vertEndPoint).toVector2f(), wallThickness, corner.manhattanDist(vertEndPoint));
         Node cWall = createCompositeCornerWall(corner, 0.5 * wallThickness);
