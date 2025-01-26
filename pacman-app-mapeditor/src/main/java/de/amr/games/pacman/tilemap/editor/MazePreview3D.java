@@ -20,20 +20,27 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.*;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.getColorFromMap;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.parseColor;
 
 public class MazePreview3D {
+
+    private static PhongMaterial coloredMaterial(Color color) {
+        assertNotNull(color);
+        var material = new PhongMaterial(color);
+        material.setSpecularColor(color.brighter());
+        return material;
+    }
 
     private final DoubleProperty widthPy = new SimpleDoubleProperty(800);
     private final DoubleProperty heightPy = new SimpleDoubleProperty(400);
@@ -93,20 +100,20 @@ public class MazePreview3D {
         Box floor = new Box(worldWidth, worldHeight, 0.1);
         floor.setTranslateX(0.5 * worldWidth);
         floor.setTranslateY(0.5 * worldHeight);
-        floor.setMaterial(WorldRenderer3D.coloredMaterial(Color.BLACK));
+        floor.setMaterial(coloredMaterial(Color.BLACK));
         mazeGroup.getChildren().add(floor);
 
         r3D.setWallBaseHeightProperty(wallBaseHeightPy);
-        r3D.setWallBaseMaterial(WorldRenderer3D.coloredMaterial(wallBaseColor));
-        r3D.setWallTopMaterial(WorldRenderer3D.coloredMaterial(wallTopColor));
-        r3D.setCornerBaseMaterial(WorldRenderer3D.coloredMaterial(wallBaseColor));
-        r3D.setCornerTopMaterial(WorldRenderer3D.coloredMaterial(wallTopColor));
+        r3D.setWallBaseMaterial(coloredMaterial(wallBaseColor));
+        r3D.setWallTopMaterial(coloredMaterial(wallTopColor));
+        r3D.setCornerBaseMaterial(coloredMaterial(wallBaseColor));
+        r3D.setCornerTopMaterial(coloredMaterial(wallTopColor));
 
         for (Obstacle obstacle : worldMap.obstacles()) {
             r3D.renderObstacle3D(mazeGroup, obstacle);
         }
 
-        var doorMaterial = WorldRenderer3D.coloredMaterial(doorColor);
+        var doorMaterial = coloredMaterial(doorColor);
         terrain.tiles().filter(tile -> terrain.get(tile) == TileEncoding.DOOR).forEach(tile -> {
             Box door = new Box(7, 2, wallBaseHeightPy.get());
             door.setMaterial(doorMaterial);
@@ -129,7 +136,7 @@ public class MazePreview3D {
     public void updateFood(WorldMap worldMap) {
         TileMap food = worldMap.food();
         Color foodColor = getColorFromMap(food, PROPERTY_COLOR_FOOD, parseColor(COLOR_FOOD));
-        var foodMaterial = WorldRenderer3D.coloredMaterial(foodColor);
+        var foodMaterial = coloredMaterial(foodColor);
         foodGroup.getChildren().clear();
         food.tiles().filter(tile -> hasFoodAt(food, tile)).forEach(tile -> {
             Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -4);

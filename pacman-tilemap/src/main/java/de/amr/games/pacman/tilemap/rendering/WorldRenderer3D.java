@@ -14,7 +14,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
@@ -57,13 +56,6 @@ public class WorldRenderer3D {
             return (value & tag) != 0;
         }
         return false;
-    }
-
-    public static PhongMaterial coloredMaterial(Color color) {
-        assertNotNull(color);
-        var material = new PhongMaterial(color);
-        material.setSpecularColor(color.brighter());
-        return material;
     }
 
     private PhongMaterial wallBaseMaterial = new PhongMaterial();
