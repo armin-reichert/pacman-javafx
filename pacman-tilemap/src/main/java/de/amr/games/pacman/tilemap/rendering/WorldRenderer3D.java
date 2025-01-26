@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tilemap.rendering;
 
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.lib.RectAreaFloat;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
@@ -230,8 +231,8 @@ public class WorldRenderer3D {
     private void render_ClosedSingleWallObstacle(Group g, Obstacle obstacle) {
         Vector2i[] cornerCenters = obstacle.cornerCenters();
         addTowers(g, cornerCenters);
-        List<RectArea> rectangles = PolygonToRectConversion.convert(obstacle);
-        for (RectArea r : rectangles) {
+        List<RectAreaFloat> rectangles = PolygonToRectConversion.convert(obstacle);
+        for (RectAreaFloat r : rectangles) {
             Vector2f center = vec_2f( r.x() + r.width() * 0.5f, r.y() + r.height() * 0.5f );
             g.getChildren().add(createWallCenteredAt(center, r.width(), r.height()));
         }

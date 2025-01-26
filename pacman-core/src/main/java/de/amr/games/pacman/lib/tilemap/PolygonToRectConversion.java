@@ -5,13 +5,13 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.lib.tilemap;
 
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.RectAreaFloat;
+import de.amr.games.pacman.lib.Vector2f;
 
 import java.util.*;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.vec_2i;
+import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * Implements the Gourley/Green
@@ -19,29 +19,29 @@ import static de.amr.games.pacman.lib.Globals.vec_2i;
  */
 public interface PolygonToRectConversion {
 
-    static List<RectArea> convert(Obstacle obstacle) {
-        Collection<Vector2i> innerPoints = computeInnerPoints(obstacle);
-        List<RectArea> rectangles = new ArrayList<>();
+    static List<RectAreaFloat> convert(Obstacle obstacle) {
+        Collection<Vector2f> innerPoints = computeInnerPoints(obstacle);
+        List<RectAreaFloat> rectangles = new ArrayList<>();
         while (!innerPoints.isEmpty()) {
-            Vector2i p_k = minPoint(obstacle, innerPoints.stream());
-            Vector2i p_l = minPoint(obstacle, innerPoints.stream().filter(p -> !p.equals(p_k)));
-            Vector2i p_m = minPoint(obstacle, innerPoints.stream().filter(p -> p_k.x() <= p.x() && p.x() < p_l.x() && p.y() > p_k.y()));
-            var r = new RectArea(p_k.x(), p_k.y(), p_l.x() - p_k.x(), p_m.y() - p_k.y());
+            Vector2f p_k = minPoint(obstacle, innerPoints.stream());
+            Vector2f p_l = minPoint(obstacle, innerPoints.stream().filter(p -> !p.equals(p_k)));
+            Vector2f p_m = minPoint(obstacle, innerPoints.stream().filter(p -> p_k.x() <= p.x() && p.x() < p_l.x() && p.y() > p_k.y()));
+            var r = new RectAreaFloat(p_k.x(), p_k.y(), p_l.x() - p_k.x(), p_m.y() - p_k.y());
             rectangles.add(r);
             flip(innerPoints, p_k);
             flip(innerPoints, p_l);
-            flip(innerPoints, vec_2i(p_k.x(), p_m.y()));
-            flip(innerPoints, vec_2i(p_l.x(), p_m.y()));
+            flip(innerPoints, vec_2f(p_k.x(), p_m.y()));
+            flip(innerPoints, vec_2f(p_l.x(), p_m.y()));
         }
         return rectangles;
     }
 
-    static Vector2i minPoint(Obstacle obstacle, Stream<Vector2i> points) {
-        return points.min(Comparator.comparingInt(Vector2i::y).thenComparingInt(Vector2i::x))
+    static Vector2f minPoint(Obstacle obstacle, Stream<Vector2f> points) {
+        return points.min(Comparator.comparingDouble(Vector2f::y).thenComparingDouble(Vector2f::x))
             .orElseThrow(() -> new IllegalStateException("Obstacle with encoding '%s' caused error".formatted(obstacle.encoding())));
     }
 
-    static void flip(Collection<Vector2i> polygon, Vector2i p) {
+    static void flip(Collection<Vector2f> polygon, Vector2f p) {
         if (polygon.contains(p)) {
             polygon.remove(p);
         } else {
@@ -49,13 +49,13 @@ public interface PolygonToRectConversion {
         }
     }
 
-    static Collection<Vector2i> computeInnerPoints(Obstacle obstacle) {
-        Vector2i startPoint = obstacle.startPoint();
-        List<Vector2i> points = new ArrayList<>();
+    static Collection<Vector2f> computeInnerPoints(Obstacle obstacle) {
+        Vector2f startPoint = obstacle.startPoint().toVector2f();
+        List<Vector2f> points = new ArrayList<>();
         points.add(startPoint);
         for (var segment : obstacle.segments()) {
             boolean down = segment.vector().y() > 0, up = segment.vector().y() < 0;
-            int dx = 0, dy = 0;
+            float dx = 0, dy = 0;
             if (segment.isRoundedNWCorner()) {
                 if (down) { dy = HTS; } else { dy = -HTS; }
             } else if (segment.isRoundedSWCorner()) {
@@ -68,18 +68,18 @@ public interface PolygonToRectConversion {
             if (dx != 0 || dy != 0) {
                 points.add(segment.startPoint().plus(dx, dy));
             }
-            points.add(segment.endPoint());
+            points.add(segment.endPoint().toVector2f());
         }
 
         // remove inverse pairs of edges and points inside edges
-        List<Vector2i> edges = new ArrayList<>();
+        List<Vector2f> edges = new ArrayList<>();
         for (int i = 0; i < points.size() - 1; ++i) {
-            Vector2i edge = points.get(i + 1).minus(points.get(i));
+            Vector2f edge = points.get(i + 1).minus(points.get(i));
             edges.add(edge);
         }
 
-        Deque<Vector2i> stack = new ArrayDeque<>();
-        for (Vector2i edge : edges) {
+        Deque<Vector2f> stack = new ArrayDeque<>();
+        for (Vector2f edge : edges) {
             if (stack.isEmpty()) {
                 stack.push(edge);
             }
@@ -97,17 +97,17 @@ public interface PolygonToRectConversion {
         stack = stack.reversed();
 
         points.clear();
-        Vector2i p = startPoint;
+        Vector2f p = startPoint;
         points.add(p);
-        Vector2i sumVector = null;
-        for (Vector2i edge : stack) {
+        Vector2f sumVector = null;
+        for (Vector2f edge : stack) {
             if (sumVector == null) {
                 sumVector = edge;
             }
             else if (sameDirection(sumVector, edge)) {
                 sumVector = sumVector.plus(edge);
             } else {
-                Vector2i q = p.plus(sumVector);
+                Vector2f q = p.plus(sumVector);
                 points.add(q);
                 sumVector = edge;
                 p = q;
@@ -116,7 +116,7 @@ public interface PolygonToRectConversion {
         return points;
     }
 
-    static boolean sameDirection(Vector2i e, Vector2i f) {
+    static boolean sameDirection(Vector2f e, Vector2f f) {
         return Math.signum(e.x()) == Math.signum(f.x()) && Math.signum(e.y()) == Math.signum(f.y());
     }
 }

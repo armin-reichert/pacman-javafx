@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.*;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
@@ -80,8 +81,8 @@ public class TerrainRendererInEditor extends TerrainRenderer {
                 .filter(Obstacle::isClosed)
                 .filter(not(Obstacle::hasDoubleWalls))
                 .forEach(obstacle -> {
-                Vector2i prev = null;
-                for (Vector2i p : PolygonToRectConversion.computeInnerPoints(obstacle)) {
+                Vector2f prev = null;
+                for (Vector2f p : PolygonToRectConversion.computeInnerPoints(obstacle)) {
                     g.fillOval(p.x() - r, p.y() - r, 2*r, 2*r);
                     if (prev != null) {
                         g.strokeLine(prev.x(), prev.y(), p.x(), p.y());
