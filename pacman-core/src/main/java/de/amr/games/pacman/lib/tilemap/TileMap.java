@@ -80,7 +80,7 @@ public class TileMap {
             for (int col = 0; col < columns.length; ++col) {
                 String entry = columns[col].trim();
                 try {
-                    byte value = Byte.parseByte(entry);
+                    byte value = Byte.decode(entry);
                     if (valueAllowed.test(value)) {
                         tileMap.data[row][col] = value;
                     } else {
@@ -277,7 +277,9 @@ public class TileMap {
         pw.println(DATA_SECTION_START);
         for (int row = 0; row < numRows(); ++row) {
             for (int col = 0; col < numCols(); ++col) {
-                pw.printf("%2d", data[row][col]);
+                byte value = data[row][col];
+                //pw.printf("%2d", value);
+                pw.printf("#%02X", value);
                 if (col < numCols() - 1) {
                     pw.print(",");
                 }
