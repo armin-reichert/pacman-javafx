@@ -77,26 +77,24 @@ public class Maze3D extends Group {
         PhongMaterial wallTopMaterial = new PhongMaterial();
         wallTopMaterial.setDiffuseColor(wallTopColor);
         wallTopMaterial.setSpecularColor(wallTopColor.brighter());
-        /*
-        wallTopMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
-                () -> opaqueColor(wallTopColor, wallOpacityPy.get()), wallOpacityPy
-        ));
-        wallTopMaterial.specularColorProperty().bind(wallTopMaterial.diffuseColorProperty().map(Color::brighter));
-        */
 
         materialColorAnimation = new MaterialColorAnimation(Duration.seconds(0.25), wallTopMaterial, wallTopColor, wallBaseColor);
 
-        PhongMaterial cornerMaterial = new PhongMaterial();
-        cornerMaterial.setDiffuseColor(wallBaseColor);
-        cornerMaterial.specularColorProperty().bind(cornerMaterial.diffuseColorProperty().map(Color::brighter));
+        PhongMaterial cornerBaseMaterial = new PhongMaterial();
+        cornerBaseMaterial.setDiffuseColor(wallBaseColor); // for now use same color
+        cornerBaseMaterial.specularColorProperty().bind(cornerBaseMaterial.diffuseColorProperty().map(Color::brighter));
+
+        PhongMaterial cornerTopMaterial = new PhongMaterial();
+        cornerTopMaterial.setDiffuseColor(wallTopColor);
+        cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
 
         WorldRenderer3D r3D = configuration3D.createWorldRenderer();
         r3D.setWallBaseHeightProperty(obstacleBaseHeightPy);
         r3D.setWallTopHeight(OBSTACLE_TOP_HEIGHT);
         r3D.setWallBaseMaterial(wallBaseMaterial);
         r3D.setWallTopMaterial(wallTopMaterial);
-        r3D.setCornerBaseMaterial(cornerMaterial);
-        r3D.setCornerTopMaterial(wallTopMaterial);
+        r3D.setCornerBaseMaterial(cornerBaseMaterial);
+        r3D.setCornerTopMaterial(wallTopMaterial); // for now such that power animation also affects corner top
 
         //TODO check this:
         obstacleBaseHeightPy.set(PY_3D_WALL_HEIGHT.get());
