@@ -4,14 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib.tilemap;
 
-import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.RectAreaFloat;
 import de.amr.games.pacman.lib.Vector2f;
 
 import java.util.*;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.vec_2f;
 
 /**
  * Implements the Gourley/Green
@@ -41,12 +41,8 @@ public interface PolygonToRectConversion {
             .orElseThrow(() -> new IllegalStateException("Obstacle with encoding '%s' caused error".formatted(obstacle.encoding())));
     }
 
-    static void flip(Collection<Vector2f> polygon, Vector2f p) {
-        if (polygon.contains(p)) {
-            polygon.remove(p);
-        } else {
-            polygon.add(p);
-        }
+    static void flip(Collection<Vector2f> points, Vector2f p) {
+        if (points.contains(p)) { points.remove(p); } else { points.add(p); }
     }
 
     static Collection<Vector2f> computeInnerPoints(Obstacle obstacle) {
