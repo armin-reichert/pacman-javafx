@@ -88,6 +88,9 @@ public class TerrainRendererInEditor extends TerrainRenderer {
                     Color color = RANDOM_COLORS[i];
                     g.setFill(color);
                     g.fillRect(rect.x(), rect.y(), rect.width(), rect.height());
+                    g.setFill(Color.WHITE);
+                    g.setFont(Font.font(3.0));
+                    g.fillText("R" + i, rect.x() + rect.width() * 0.5 - 3, rect.y() + rect.height() * 0.5 + 1);
                 }
                 g.setFill(Color.RED);
                 g.setStroke(Color.grayRgb(150));
