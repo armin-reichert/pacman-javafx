@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.*;
-import de.amr.games.pacman.lib.nes.NES_Palette;
 import de.amr.games.pacman.lib.tilemap.*;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
 import javafx.scene.canvas.GraphicsContext;
@@ -93,7 +92,7 @@ public class TerrainRendererInEditor extends TerrainRenderer {
                 g.setFill(Color.RED);
                 g.setStroke(Color.grayRgb(150));
                 g.setLineWidth(0.5);
-                for (Vector2f p : PolygonToRectConversion.computeInnerPoints(obstacle)) {
+                for (Vector2f p : PolygonToRectConversion.computeInnerPolygonPoints(obstacle)) {
                     g.fillOval(p.x() - r, p.y() - r, 2*r, 2*r);
                     if (prev != null) {
                         g.strokeLine(prev.x(), prev.y(), p.x(), p.y());

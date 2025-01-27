@@ -6,7 +6,6 @@ package de.amr.games.pacman.lib.tilemap;
 
 import de.amr.games.pacman.lib.RectAreaFloat;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.Vector2i;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -21,7 +20,7 @@ import static de.amr.games.pacman.lib.Globals.vec_2f;
 public interface PolygonToRectConversion {
 
     static List<RectAreaFloat> convert(Obstacle obstacle) {
-        Collection<Vector2f> innerPoints = computeInnerPoints(obstacle);
+        Collection<Vector2f> innerPoints = computeInnerPolygonPoints(obstacle);
         List<RectAreaFloat> rectangles = new ArrayList<>();
         while (!innerPoints.isEmpty()) {
             Vector2f p_k = minPoint(obstacle, innerPoints.stream());
@@ -46,9 +45,9 @@ public interface PolygonToRectConversion {
         if (points.contains(p)) { points.remove(p); } else { points.add(p); }
     }
 
-    static Collection<Vector2f> computeInnerPoints(Obstacle obstacle) {
+    static Collection<Vector2f> computeInnerPolygonPoints(Obstacle obstacle) {
         Vector2f start = obstacle.startPoint().toVector2f();
-        List<Vector2f> edges1 = replaceCornerVectors(obstacle);
+        List<Vector2f> edges1 = replaceDiagonalCornerEdges(obstacle);
         List<Vector2f> edges2 = removeInversePairs(edges1);
         // Handle degenerate case
         if (edges2.size() > 2) {
@@ -60,11 +59,10 @@ public interface PolygonToRectConversion {
             }
         }
         List<Vector2f> edges3 = compressEdges(edges2);
-        List<Vector2f> points = makePoints(start, edges3);
-        return points;
+        return makeOpenPolygonPoints(start, edges3);
     }
 
-    static List<Vector2f> replaceCornerVectors(Obstacle obstacle) {
+    static List<Vector2f> replaceDiagonalCornerEdges(Obstacle obstacle) {
         List<Vector2f> edges = new ArrayList<>();
         for (var segment : obstacle.segments()) {
             boolean down = segment.vector().y() > 0, up = segment.vector().y() < 0;
@@ -84,9 +82,9 @@ public interface PolygonToRectConversion {
         return edges;
     }
 
-    static List<Vector2f> removeInversePairs(List<Vector2f> polygon) {
+    static List<Vector2f> removeInversePairs(List<Vector2f> polygonEdges) {
         Deque<Vector2f> stack = new ArrayDeque<>();
-        for (var edge : polygon) {
+        for (var edge : polygonEdges) {
             if (stack.isEmpty()) {
                 stack.push(edge);
             } else {
@@ -100,14 +98,14 @@ public interface PolygonToRectConversion {
         return new ArrayList<>(stack.reversed()); // stack.reversed() returns immutable list
     }
 
-    static List<Vector2f> compressEdges(List<Vector2f> polygon) {
+    static List<Vector2f> compressEdges(List<Vector2f> polygonEdges) {
         List<Vector2f> edges = new ArrayList<>();
-        if (polygon.isEmpty()) {
+        if (polygonEdges.isEmpty()) {
             return edges;
         }
-        edges.add(polygon.getFirst());
-        for (int i = 1; i < polygon.size(); ++i) {
-            Vector2f edge = polygon.get(i);
+        edges.add(polygonEdges.getFirst());
+        for (int i = 1; i < polygonEdges.size(); ++i) {
+            Vector2f edge = polygonEdges.get(i);
             Vector2f last = edges.getLast();
             if (sameDirection(edge, last)) {
                 edges.removeLast();
@@ -120,10 +118,10 @@ public interface PolygonToRectConversion {
         return edges;
     }
 
-    static List<Vector2f> makePoints(Vector2f startPoint, List<Vector2f> polygon) {
+    static List<Vector2f> makeOpenPolygonPoints(Vector2f startPoint, List<Vector2f> polygonEdges) {
         List<Vector2f> points = new ArrayList<>();
         points.add(startPoint);
-        for (var edge : polygon) {
+        for (var edge : polygonEdges) {
             points.add(points.getLast().plus(edge));
         }
         if (points.getFirst().equals(points.getLast())) {
