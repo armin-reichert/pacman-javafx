@@ -6,6 +6,7 @@ package de.amr.games.pacman.lib.tilemap;
 
 import de.amr.games.pacman.lib.RectAreaFloat;
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.Vector2i;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -46,64 +47,87 @@ public interface PolygonToRectConversion {
     }
 
     static Collection<Vector2f> computeInnerPoints(Obstacle obstacle) {
-        Vector2f startPoint = obstacle.startPoint().toVector2f();
-        List<Vector2f> points = new ArrayList<>();
-        points.add(startPoint);
+        Vector2f start = obstacle.startPoint().toVector2f();
+        List<Vector2f> edges1 = replaceCornerVectors(obstacle);
+        List<Vector2f> edges2 = removeInversePairs(edges1);
+        // Handle degenerate case
+        if (edges2.size() > 2) {
+            if (edges2.getLast().equals(edges2.getFirst().inverse())) {
+                edges2.removeLast();
+                edges2.removeLast();
+                start = start.plus(edges2.removeFirst());
+                start = start.plus(edges2.removeFirst());
+            }
+        }
+        List<Vector2f> edges3 = compressEdges(edges2);
+        List<Vector2f> points = makePoints(start, edges3);
+        return points;
+    }
+
+    static List<Vector2f> replaceCornerVectors(Obstacle obstacle) {
+        List<Vector2f> edges = new ArrayList<>();
         for (var segment : obstacle.segments()) {
             boolean down = segment.vector().y() > 0, up = segment.vector().y() < 0;
             float dx = 0, dy = 0;
-            if (segment.isRoundedNWCorner()) {
-                if (down) { dy = HTS; } else { dy = -HTS; }
-            } else if (segment.isRoundedSWCorner()) {
-                if (down) { dx = HTS; } else { dx = -HTS; }
-            } else if (segment.isRoundedSECorner()) {
-                if (up) { dy = -HTS;  } else { dy = HTS; }
-            } else if (segment.isRoundedNECorner()) {
-                if (up) { dx = -HTS; } else { dx = HTS; }
-            }
+            if      (segment.isRoundedNWCorner()) { dy = down ? HTS : -HTS; }
+            else if (segment.isRoundedSWCorner()) { dx = down ? HTS : -HTS; }
+            else if (segment.isRoundedSECorner()) { dy = up ? -HTS : HTS; }
+            else if (segment.isRoundedNECorner()) { dx = up ? -HTS : HTS; }
             if (dx != 0 || dy != 0) {
-                points.add(segment.startPoint().plus(dx, dy));
+                Vector2f e1 = vec_2f(dx, dy), e2 = segment.vector().toVector2f().minus(e1);
+                edges.add(e1);
+                edges.add(e2);
+            } else {
+                edges.add(segment.vector().toVector2f());
             }
-            points.add(segment.endPoint().toVector2f());
         }
+        return edges;
+    }
 
-        // remove inverse pairs of edges and points inside edges
+    static List<Vector2f> removeInversePairs(List<Vector2f> polygon) {
+        Deque<Vector2f> stack = new ArrayDeque<>();
+        for (var edge : polygon) {
+            if (stack.isEmpty()) {
+                stack.push(edge);
+            } else {
+                if (stack.peek().equals(edge.inverse())) {
+                    stack.pop();
+                } else {
+                    stack.push(edge);
+                }
+            }
+        }
+        return new ArrayList<>(stack.reversed()); // stack.reversed() returns immutable list
+    }
+
+    static List<Vector2f> compressEdges(List<Vector2f> polygon) {
         List<Vector2f> edges = new ArrayList<>();
-        for (int i = 0; i < points.size() - 1; ++i) {
-            Vector2f edge = points.get(i + 1).minus(points.get(i));
-            edges.add(edge);
+        if (polygon.isEmpty()) {
+            return edges;
         }
+        edges.add(polygon.getFirst());
+        for (int i = 1; i < polygon.size(); ++i) {
+            Vector2f edge = polygon.get(i);
+            Vector2f last = edges.getLast();
+            if (sameDirection(edge, last)) {
+                edges.removeLast();
+                edges.add(last.plus(edge));
+            }
+            else {
+                edges.add(edge);
+            }
+        }
+        return edges;
+    }
 
-        Deque<Vector2f> purgedEdges = new ArrayDeque<>();
-        for (Vector2f edge : edges) {
-            if (purgedEdges.isEmpty()) {
-                purgedEdges.push(edge);
-            }
-            else if (purgedEdges.peek().equals(edge.inverse())) {
-                purgedEdges.pop();
-            } else {
-                purgedEdges.push(edge);
-            }
+    static List<Vector2f> makePoints(Vector2f startPoint, List<Vector2f> polygon) {
+        List<Vector2f> points = new ArrayList<>();
+        points.add(startPoint);
+        for (var edge : polygon) {
+            points.add(points.getLast().plus(edge));
         }
-        if (!purgedEdges.isEmpty() && purgedEdges.getFirst().equals(purgedEdges.getLast().inverse())) {
-            startPoint = startPoint.plus(purgedEdges.getLast());
-            purgedEdges.removeLast();
-        }
-        purgedEdges = purgedEdges.reversed();
-
-        Vector2f p = startPoint;
-        Vector2f sum = Vector2f.ZERO;
-        points.clear();
-        points.add(p);
-        for (Vector2f edge : purgedEdges) {
-            if (sum.equals(Vector2f.ZERO) || sameDirection(sum, edge)) {
-                sum = sum.plus(edge);
-            } else {
-                Vector2f q = p.plus(sum);
-                points.add(q);
-                sum = edge;
-                p = q;
-            }
+        if (points.getFirst().equals(points.getLast())) {
+            points.removeLast();
         }
         return points;
     }
