@@ -79,7 +79,7 @@ public interface PolygonToRectConversion {
             if (purgedEdges.isEmpty()) {
                 purgedEdges.push(edge);
             }
-            else if (purgedEdges.peekFirst().equals(edge.inverse())) {
+            else if (purgedEdges.peek().equals(edge.inverse())) {
                 purgedEdges.pop();
             } else {
                 purgedEdges.push(edge);
