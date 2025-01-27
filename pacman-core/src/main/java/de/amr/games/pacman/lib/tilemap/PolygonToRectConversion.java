@@ -74,38 +74,34 @@ public interface PolygonToRectConversion {
             edges.add(edge);
         }
 
-        Deque<Vector2f> stack = new ArrayDeque<>();
+        Deque<Vector2f> purgedEdges = new ArrayDeque<>();
         for (Vector2f edge : edges) {
-            if (stack.isEmpty()) {
-                stack.push(edge);
+            if (purgedEdges.isEmpty()) {
+                purgedEdges.push(edge);
             }
-            else if (stack.peekFirst().equals(edge.inverse())) {
-                stack.pop();
+            else if (purgedEdges.peekFirst().equals(edge.inverse())) {
+                purgedEdges.pop();
             } else {
-                stack.push(edge);
+                purgedEdges.push(edge);
             }
         }
-        if (!stack.isEmpty() && stack.getFirst().equals(stack.getLast().inverse())) {
-            startPoint = startPoint.plus(stack.getLast());
-            stack.removeLast();
+        if (!purgedEdges.isEmpty() && purgedEdges.getFirst().equals(purgedEdges.getLast().inverse())) {
+            startPoint = startPoint.plus(purgedEdges.getLast());
+            purgedEdges.removeLast();
         }
+        purgedEdges = purgedEdges.reversed();
 
-        stack = stack.reversed();
-
-        points.clear();
         Vector2f p = startPoint;
+        Vector2f sum = Vector2f.ZERO;
+        points.clear();
         points.add(p);
-        Vector2f sumVector = null;
-        for (Vector2f edge : stack) {
-            if (sumVector == null) {
-                sumVector = edge;
-            }
-            else if (sameDirection(sumVector, edge)) {
-                sumVector = sumVector.plus(edge);
+        for (Vector2f edge : purgedEdges) {
+            if (sum.equals(Vector2f.ZERO) || sameDirection(sum, edge)) {
+                sum = sum.plus(edge);
             } else {
-                Vector2f q = p.plus(sumVector);
+                Vector2f q = p.plus(sum);
                 points.add(q);
-                sumVector = edge;
+                sum = edge;
                 p = q;
             }
         }
