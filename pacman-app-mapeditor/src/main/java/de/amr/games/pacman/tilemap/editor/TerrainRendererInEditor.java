@@ -4,9 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tilemap.editor;
 
-import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.*;
+import de.amr.games.pacman.lib.nes.NES_Palette;
 import de.amr.games.pacman.lib.tilemap.*;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
 import javafx.scene.canvas.GraphicsContext;
@@ -18,8 +17,7 @@ import javafx.scene.text.FontWeight;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.TileMap.parseVector2i;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static java.util.function.Predicate.not;
@@ -29,6 +27,12 @@ import static java.util.function.Predicate.not;
  */
 public class TerrainRendererInEditor extends TerrainRenderer {
 
+    private static final Color[] RANDOM_COLORS = new Color[50];
+    static {
+        for (int i = 0; i < RANDOM_COLORS.length; ++i) {
+            RANDOM_COLORS[i] = Color.rgb(randomInt(0, 256),randomInt(0, 256), randomInt(0, 256));
+        }
+    }
     private static final Color SEGMENT_NUMBER_COLOR = Color.GRAY;
     private static final double SEGMENT_NUMBER_FONT_SIZE = 4;
     private static final Font SEGMENT_NUMBER_FONT = Font.font("Sans", FontWeight.BOLD, SEGMENT_NUMBER_FONT_SIZE);
@@ -74,14 +78,21 @@ public class TerrainRendererInEditor extends TerrainRenderer {
         }
         if (obstacleInnerAreaDisplayed) {
             double r = 1;
-            g.setFill(Color.grayRgb(150));
-            g.setStroke(Color.grayRgb(150));
-            g.setLineWidth(0.5);
             obstacles.stream()
                 .filter(Obstacle::isClosed)
                 .filter(not(Obstacle::hasDoubleWalls))
                 .forEach(obstacle -> {
                 Vector2f prev = null;
+                List<RectAreaFloat> rectangles = PolygonToRectConversion.convert(obstacle);
+                for (int i = 0; i < rectangles.size(); ++i) {
+                    RectAreaFloat rect = rectangles.get(i);
+                    Color color = RANDOM_COLORS[i];
+                    g.setFill(color);
+                    g.fillRect(rect.x(), rect.y(), rect.width(), rect.height());
+                }
+                g.setFill(Color.RED);
+                g.setStroke(Color.grayRgb(150));
+                g.setLineWidth(0.5);
                 for (Vector2f p : PolygonToRectConversion.computeInnerPoints(obstacle)) {
                     g.fillOval(p.x() - r, p.y() - r, 2*r, 2*r);
                     if (prev != null) {
