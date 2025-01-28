@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2021-2024 Armin Reichert (MIT License)
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
 open module de.amr.games.pacman.arcade.ms_pacman {
