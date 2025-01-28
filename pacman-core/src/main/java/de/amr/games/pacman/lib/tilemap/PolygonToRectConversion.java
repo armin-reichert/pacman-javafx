@@ -58,7 +58,7 @@ public interface PolygonToRectConversion {
                 start = start.plus(edges2.removeFirst());
             }
         }
-        List<Vector2f> edges3 = compressEdges(edges2);
+        List<Vector2f> edges3 = combineEdgesWithSameDirection(edges2);
         return makeOpenPolygonPoints(start, edges3);
     }
 
@@ -98,7 +98,7 @@ public interface PolygonToRectConversion {
         return new ArrayList<>(stack.reversed()); // stack.reversed() returns immutable list
     }
 
-    static List<Vector2f> compressEdges(List<Vector2f> polygonEdges) {
+    static List<Vector2f> combineEdgesWithSameDirection(List<Vector2f> polygonEdges) {
         List<Vector2f> edges = new ArrayList<>();
         if (polygonEdges.isEmpty()) {
             return edges;
