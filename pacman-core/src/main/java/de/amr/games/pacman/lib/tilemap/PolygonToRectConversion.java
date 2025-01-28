@@ -20,18 +20,18 @@ import static de.amr.games.pacman.lib.Globals.vec_2f;
 public interface PolygonToRectConversion {
 
     static List<RectAreaFloat> convert(Obstacle obstacle) {
-        Collection<Vector2f> innerPoints = computeInnerPolygonPoints(obstacle);
         List<RectAreaFloat> rectangles = new ArrayList<>();
-        while (!innerPoints.isEmpty()) {
-            Vector2f p_k = minPoint(obstacle, innerPoints.stream());
-            Vector2f p_l = minPoint(obstacle, innerPoints.stream().filter(p -> !p.equals(p_k)));
-            Vector2f p_m = minPoint(obstacle, innerPoints.stream().filter(p -> p_k.x() <= p.x() && p.x() < p_l.x() && p.y() > p_k.y()));
+        Collection<Vector2f> points = computeInnerPolygonPoints(obstacle);
+        while (!points.isEmpty()) {
+            Vector2f p_k = minPoint(obstacle, points.stream());
+            Vector2f p_l = minPoint(obstacle, points.stream().filter(p -> !p.equals(p_k)));
+            Vector2f p_m = minPoint(obstacle, points.stream().filter(p -> p_k.x() <= p.x() && p.x() < p_l.x() && p.y() > p_k.y()));
             var r = new RectAreaFloat(p_k.x(), p_k.y(), p_l.x() - p_k.x(), p_m.y() - p_k.y());
             rectangles.add(r);
-            flip(innerPoints, p_k);
-            flip(innerPoints, p_l);
-            flip(innerPoints, vec_2f(p_k.x(), p_m.y()));
-            flip(innerPoints, vec_2f(p_l.x(), p_m.y()));
+            points.remove(p_k);
+            points.remove(p_l);
+            flip(points, vec_2f(p_k.x(), p_m.y()));
+            flip(points, vec_2f(p_l.x(), p_m.y()));
         }
         return rectangles;
     }
