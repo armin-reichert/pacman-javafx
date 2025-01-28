@@ -79,10 +79,10 @@ public class TerrainRendererInEditor extends TerrainRenderer {
         if (obstacleInnerAreaDisplayed) {
             double r = 1;
             obstacles.stream().filter(Obstacle::isClosed).filter(not(Obstacle::hasDoubleWalls)).forEach(obstacle -> {
-                Vector2f prev = null;
-                List<RectAreaFloat> rectangles = PolygonToRectConversion.convert(obstacle);
+                Vector2i prev = null;
+                List<RectArea> rectangles = PolygonToRectConversion.convert(obstacle);
                 for (int i = 0; i < rectangles.size(); ++i) {
-                    RectAreaFloat rect = rectangles.get(i);
+                    RectArea rect = rectangles.get(i);
                     g.setFill(RANDOM_COLORS[i]);
                     g.fillRect(rect.x(), rect.y(), rect.width(), rect.height());
                     g.setFill(Color.WHITE);
@@ -92,7 +92,7 @@ public class TerrainRendererInEditor extends TerrainRenderer {
                 g.setFill(Color.RED);
                 g.setStroke(Color.grayRgb(150));
                 g.setLineWidth(0.5);
-                for (Vector2f p : PolygonToRectConversion.computeInnerPolygonPoints(obstacle)) {
+                for (Vector2i p : PolygonToRectConversion.computeInnerPolygonPoints(obstacle)) {
                     g.fillOval(p.x() - r, p.y() - r, 2*r, 2*r);
                     if (prev != null) {
                         g.strokeLine(prev.x(), prev.y(), p.x(), p.y());
