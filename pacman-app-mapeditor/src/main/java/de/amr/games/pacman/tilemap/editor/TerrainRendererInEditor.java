@@ -32,7 +32,8 @@ public class TerrainRendererInEditor extends TerrainRenderer {
             RANDOM_COLORS[i] = Color.rgb(randomInt(0, 256),randomInt(0, 256), randomInt(0, 256));
         }
     }
-    private static final Color SEGMENT_NUMBER_COLOR = Color.GRAY;
+    private static final Color SEGMENT_NUMBER_FILL_COLOR = Color.LIGHTGRAY;
+    private static final Color SEGMENT_NUMBER_STROKE_COLOR = Color.BLACK;
     private static final double SEGMENT_NUMBER_FONT_SIZE = 4;
     private static final Font SEGMENT_NUMBER_FONT = Font.font("Sans", FontWeight.BOLD, SEGMENT_NUMBER_FONT_SIZE);
 
@@ -67,30 +68,26 @@ public class TerrainRendererInEditor extends TerrainRenderer {
                     ObstacleSegment segment = obstacle.segment(i);
                     Vector2i start = segment.startPoint(), end = segment.endPoint(), middle = start.midpoint(end);
                     g.setFont(SEGMENT_NUMBER_FONT);
-                    g.setFill(SEGMENT_NUMBER_COLOR);
-                    g.fillText(String.valueOf(i), middle.x() - 0.5 * SEGMENT_NUMBER_FONT_SIZE, middle.y());
-                    g.setStroke(Color.WHITE);
+                    g.setFill(SEGMENT_NUMBER_FILL_COLOR);
+                    g.setStroke(SEGMENT_NUMBER_STROKE_COLOR);
                     g.setLineWidth(0.1);
+                    g.fillText(String.valueOf(i), middle.x() - 0.5 * SEGMENT_NUMBER_FONT_SIZE, middle.y());
                     g.strokeText(String.valueOf(i), middle.x() - 0.5 * SEGMENT_NUMBER_FONT_SIZE, middle.y());
                 }
             });
         }
         if (obstacleInnerAreaDisplayed) {
             double r = 1;
-            obstacles.stream()
-                .filter(Obstacle::isClosed)
-                .filter(not(Obstacle::hasDoubleWalls))
-                .forEach(obstacle -> {
+            obstacles.stream().filter(Obstacle::isClosed).filter(not(Obstacle::hasDoubleWalls)).forEach(obstacle -> {
                 Vector2f prev = null;
                 List<RectAreaFloat> rectangles = PolygonToRectConversion.convert(obstacle);
                 for (int i = 0; i < rectangles.size(); ++i) {
                     RectAreaFloat rect = rectangles.get(i);
-                    Color color = RANDOM_COLORS[i];
-                    g.setFill(color);
+                    g.setFill(RANDOM_COLORS[i]);
                     g.fillRect(rect.x(), rect.y(), rect.width(), rect.height());
                     g.setFill(Color.WHITE);
-                    g.setFont(Font.font(3.0));
-                    g.fillText("R" + i, rect.x() + rect.width() * 0.5 - 3, rect.y() + rect.height() * 0.5 + 1);
+                    g.setFont(Font.font("Sans", FontWeight.BOLD, 3.5));
+                    g.fillText("R" + i, rect.x() + rect.width() * 0.5 - 2, rect.y() + rect.height() * 0.5 + 1);
                 }
                 g.setFill(Color.RED);
                 g.setStroke(Color.grayRgb(150));
