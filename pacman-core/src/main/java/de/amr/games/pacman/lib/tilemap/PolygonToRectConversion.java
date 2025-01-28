@@ -15,7 +15,7 @@ import static de.amr.games.pacman.lib.Globals.vec_2i;
 
 /**
  * Implements the Gourley/Green
- * <a href="https://ieeexplore.ieee.org/document/4037339">polygon-to-rectangle conversion algorithm</a>.
+ * <a href="https://github.com/armin-reichert/pacman-javafx/blob/main/doc/gourley1983.pdf">polygon-to-rectangle conversion algorithm</a>.
  */
 public interface PolygonToRectConversion {
 
