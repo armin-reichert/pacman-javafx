@@ -25,8 +25,8 @@ public interface PolygonToRectConversion {
         while (!points.isEmpty()) {
             Vector2i p_k = minPoint(obstacle, points.stream());
             Vector2i p_l = minPoint(obstacle, points.stream().filter(p -> !p.equals(p_k)));
-            // Note: In the original paper the condition is p_k.x() < p_l.x() but that leads to incorrect answers for some polygons!
-            // After changing the condition to p_k.x() <= p_l.x() the problem disappeared!
+            // Note: In the original paper, the condition is p.x() < p_l.x() but that leads to incorrect answers for some polygons!
+            // After changing the condition to p.x() <= p_l.x(), the problem disappeared!
             Vector2i p_m = minPoint(obstacle, points.stream().filter(p -> p_k.x() <= p.x() && p.x() <= p_l.x() && p.y() > p_k.y()));
             Vector2i p_km = new Vector2i(p_k.x(), p_m.y());
             Vector2i p_lm = new Vector2i(p_l.x(), p_m.y());
