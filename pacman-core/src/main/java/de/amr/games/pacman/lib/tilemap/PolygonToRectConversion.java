@@ -7,12 +7,16 @@ package de.amr.games.pacman.lib.tilemap;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2i;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.vec_2i;
 import static java.lang.Math.signum;
+import static java.util.Comparator.comparingDouble;
 
 /**
  * Implements the Gourley/Green
@@ -21,7 +25,7 @@ import static java.lang.Math.signum;
 public interface PolygonToRectConversion {
 
     static List<RectArea> convert(Obstacle obstacle) {
-        List<RectArea> rectangles = new ArrayList<>();
+        var rectangles = new ArrayList<RectArea>();
         Collection<Vector2i> points = computeInnerPolygonPoints(obstacle);
         while (!points.isEmpty()) {
             Vector2i p_k = minPoint(obstacle, points.stream());
@@ -44,8 +48,8 @@ public interface PolygonToRectConversion {
     }
 
     static Vector2i minPoint(Obstacle obstacle, Stream<Vector2i> points) {
-        return points.min(Comparator.comparingDouble(Vector2i::y).thenComparingDouble(Vector2i::x))
-            .orElseThrow(() -> new IllegalStateException("Obstacle with encoding '%s' caused error".formatted(obstacle.encoding())));
+        return points.min(comparingDouble(Vector2i::y).thenComparingDouble(Vector2i::x))
+            .orElseThrow(() -> new IllegalStateException("Error converting Obstacle " + obstacle));
     }
 
     static Collection<Vector2i> computeInnerPolygonPoints(Obstacle obstacle) {
