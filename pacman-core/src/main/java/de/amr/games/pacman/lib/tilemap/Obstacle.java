@@ -12,7 +12,7 @@ import java.util.stream.IntStream;
 import static de.amr.games.pacman.lib.Globals.HTS;
 
 /**
- * Open or closed polygon.
+ * Open or closed polygon. Corners are represented by two diagonal vectors.
  */
 public class Obstacle {
 
@@ -47,6 +47,7 @@ public class Obstacle {
             "encoding=" + encoding() +
             ", start=" + startPoint +
             ", end=" + endPoint +
+            ", doubleWalls=" + doubleWalls +
             ", segment count=" + segments.size() +
             ", segments=" + segments +
             '}';
