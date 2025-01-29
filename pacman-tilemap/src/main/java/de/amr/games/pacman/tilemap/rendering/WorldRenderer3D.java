@@ -211,44 +211,40 @@ public class WorldRenderer3D {
     }
 
     /**
-     * Renders outer walls and non-single-wall obstacle inside.
+     * Renders maze outer double-walls and double-wall-obstacles inside the maze.
      */
     private void render_DoubleStrokeObstacle(Group g, Obstacle obstacle){
         int r = HTS;
-        Vector2i p = obstacle.startPoint();
-        for (int i = 0; i < obstacle.numSegments(); ++i) {
-            ObstacleSegment segment = obstacle.segment(i);
-            double length = segment.vector().length();
-            Vector2i q = p.plus(segment.vector());
+        for (ObstacleSegment segment : obstacle.segments()) {
+            boolean counterClockwise = segment.ccw();
+            Vector2i start = segment.startPoint(), end = segment.endPoint();
             if (segment.isStraightLine()) {
-                addWallBetween(g, p, q, wallThickness);
-//                g.getChildren().add(createWallCenteredAt(p.midpoint(q), wallThickness, length));
+                addWallBetween(g, start, end, wallThickness);
             } else if (segment.isNWCorner()) {
-                if (segment.ccw()) {
-                    addCornerWalls(g, p.plus(-r, 0), p, q);
+                if (counterClockwise) {
+                    addCornerWalls(g, start.plus(-r, 0), start, end);
                 } else {
-                    addCornerWalls(g, p.plus(0, -r), q, p);
+                    addCornerWalls(g, start.plus(0, -r), end, start);
                 }
             } else if (segment.isSWCorner()) {
-                if (segment.ccw()) {
-                    addCornerWalls(g, p.plus(0, r), q, p);
+                if (counterClockwise) {
+                    addCornerWalls(g, start.plus(0, r), end, start);
                 } else {
-                    addCornerWalls(g, p.plus(-r, 0), p, q);
+                    addCornerWalls(g, start.plus(-r, 0), start, end);
                 }
             } else if (segment.isSECorner()) {
-                if (segment.ccw()) {
-                    addCornerWalls(g, p.plus(r, 0), p, q);
+                if (counterClockwise) {
+                    addCornerWalls(g, start.plus(r, 0), start, end);
                 } else {
-                    addCornerWalls(g, p.plus(0, r), q, p);
+                    addCornerWalls(g, start.plus(0, r), end, start);
                 }
             } else if (segment.isNECorner()) {
-                if (segment.ccw()) {
-                    addCornerWalls(g, p.plus(0, -r), q, p);
+                if (counterClockwise) {
+                    addCornerWalls(g, start.plus(0, -r), end, start);
                 } else {
-                    addCornerWalls(g, p.plus(r, 0), p, q);
+                    addCornerWalls(g, start.plus(r, 0), start, end);
                 }
             }
-            p = q;
         }
     }
 
