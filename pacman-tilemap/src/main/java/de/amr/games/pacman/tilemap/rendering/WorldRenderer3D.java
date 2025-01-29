@@ -20,9 +20,8 @@ import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 import org.tinylog.Logger;
 
-import java.util.List;
-
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.TS;
 
 /**
  * A 3D printer for creating all artifacts in a 3D world.
@@ -228,12 +227,9 @@ public class WorldRenderer3D {
     }
 
     private void render_ClosedSingleWallObstacle(Group g, Obstacle obstacle) {
-        Vector2i[] cornerCenters = obstacle.cornerCenters();
-        addTowers(g, cornerCenters);
-        List<RectArea> rectangles = PolygonToRectConversion.convert(obstacle);
-        for (RectArea r : rectangles) {
-            Vector2f center = vec_2f( r.x() + r.width() * 0.5f, r.y() + r.height() * 0.5f );
-            g.getChildren().add(createWallCenteredAt(center, r.width(), r.height()));
+        addTowers(g, obstacle.cornerCenters());
+        for (RectArea rect : PolygonToRectConversion.convert(obstacle)) {
+            g.getChildren().add(createWallCenteredAt(rect.center(), rect.width(), rect.height()));
         }
     }
 
