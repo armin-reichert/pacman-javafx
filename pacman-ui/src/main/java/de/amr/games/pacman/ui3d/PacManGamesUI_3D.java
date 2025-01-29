@@ -48,16 +48,6 @@ public class PacManGamesUI_3D extends PacManGamesUI {
         assets.store("model3D.ghost.mesh.pupils",   ghostModel3D.mesh("Sphere.010_Sphere.039_grey_wall"));
         assets.store("model3D.ghost.mesh.eyeballs", ghostModel3D.mesh("Sphere.009_Sphere.036_white"));
 
-        Map<String, PhongMaterial> texturesByName = new LinkedHashMap<>();
-        Stream.of("Carpet", "Rubber", "Wood").forEach(name -> {
-            var texture = new PhongMaterial();
-            texture.setBumpMap(rm.loadImage("graphics/textures/%s-bump.jpg".formatted(name.toLowerCase())));
-            texture.setDiffuseMap(rm.loadImage("graphics/textures/%s-diffuse.jpg".formatted(name.toLowerCase())));
-            texture.diffuseColorProperty().bind(PY_3D_FLOOR_COLOR);
-            texturesByName.put(name, texture);
-        });
-        assets.store("floor_textures", texturesByName);
-
         textPickerGameOverTexts = Picker.fromBundle(assets.bundles().getLast(), "game.over");
         textPickerLevelCompleteTexts = Picker.fromBundle(assets.bundles().getLast(), "level.complete");
         sound().setAssets(assets);

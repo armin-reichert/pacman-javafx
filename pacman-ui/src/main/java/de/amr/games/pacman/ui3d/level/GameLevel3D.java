@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Globals;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
@@ -18,18 +17,19 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
-import de.amr.games.pacman.ui3d.GlobalProperties3d;
+import de.amr.games.pacman.ui2d.lib.Ufx;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import de.amr.games.pacman.ui3d.scene3d.GameConfiguration3D;
 import javafx.animation.*;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.PointLight;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
@@ -42,7 +42,6 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -229,21 +228,12 @@ public class GameLevel3D extends Group {
         // add some extra space
         double extraSpace = 10;
         var floor3D = new Box(sizeX + extraSpace, sizeY, FLOOR_THICKNESS);
-        floor3D.materialProperty().bind(
-            Bindings.createObjectBinding(() -> createFloorMaterial(assets), PY_3D_FLOOR_COLOR, PY_3D_FLOOR_TEXTURE_NAME));
+        floor3D.materialProperty().bind(PY_3D_FLOOR_COLOR.map(Ufx::coloredMaterial));
         floor3D.translateXProperty().bind(floor3D.widthProperty().multiply(0.5).subtract(0.5*extraSpace));
         floor3D.translateYProperty().bind(floor3D.heightProperty().multiply(0.5));
         floor3D.translateZProperty().set(FLOOR_THICKNESS * 0.5);
         floor3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
         return floor3D;
-    }
-
-    private PhongMaterial createFloorMaterial(AssetStorage assets) {
-        Map<String, PhongMaterial> textures = assets.get("floor_textures");
-        String textureName = PY_3D_FLOOR_TEXTURE_NAME.get();
-        return GlobalProperties3d.NO_TEXTURE.equals(textureName) || !textures.containsKey(textureName)
-            ? coloredMaterial(PY_3D_FLOOR_COLOR.get())
-            : textures.get(textureName);
     }
 
     private void addFood3D(GameWorld world, Model3D pelletModel3D, Material foodMaterial) {
