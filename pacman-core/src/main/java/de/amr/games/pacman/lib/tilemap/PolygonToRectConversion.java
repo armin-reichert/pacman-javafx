@@ -69,10 +69,8 @@ public interface PolygonToRectConversion {
         for (var segment : obstacle.segments()) {
             boolean down = segment.vector().y() > 0;
             int dx = 0, dy = 0;
-            if      (segment.isNWCorner()) { dy = down ? HTS : -HTS; }
-            else if (segment.isSWCorner()) { dx = down ? HTS : -HTS; }
-            else if (segment.isSECorner()) { dy = down ? HTS : -HTS; }
-            else if (segment.isNECorner()) { dx = down ? HTS : -HTS; }
+            if      (segment.isNWCorner() || segment.isSECorner()) { dy = down ? HTS : -HTS; }
+            else if (segment.isSWCorner() || segment.isNECorner()) { dx = down ? HTS : -HTS; }
             if (dx != 0 || dy != 0) {
                 Vector2i e1 = vec_2i(dx, dy), e2 = segment.vector().minus(e1);
                 edges.add(e1);
