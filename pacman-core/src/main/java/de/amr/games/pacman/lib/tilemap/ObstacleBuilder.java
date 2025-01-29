@@ -75,16 +75,18 @@ public class ObstacleBuilder {
     }
 
     private List<Obstacle> buildObstacles(List<Vector2i> tilesWithErrors) {
-        tilesWithErrors.clear();
-        List<Obstacle> obstacles = new ArrayList<>();
-
         Logger.debug("Find obstacles in map ID={} size={}x{}", terrain.hashCode(), terrain.numRows(), terrain.numCols());
+
+        tilesWithErrors.clear();
+        exploredTiles.clear();
+
+        var obstacles = new ArrayList<Obstacle>();
+
         // Note: order of detection matters! Otherwise, when searching for closed
         // obstacles first, each failed attempt must set its visited tile set to unvisited!
         terrain.tiles()
             .filter(tile -> tile.x() == 0 || tile.x() == terrain.numCols() - 1)
-            .filter(not(this::isExplored))
-            .map(tile -> buildOpenObstacle(tile, tile.x() == 0, tilesWithErrors))
+            .map(borderTile -> buildOpenObstacle(borderTile, borderTile.x() == 0, tilesWithErrors))
             .filter(Objects::nonNull)
             .forEach(obstacles::add);
 
@@ -282,8 +284,8 @@ public class ObstacleBuilder {
         return dir.vector().scaled(length);
     }
 
-    private List<Obstacle> optimize(List<Obstacle> obstacles) {
-        List<Obstacle> optimizedObstacles = new ArrayList<>();
+    private ArrayList<Obstacle> optimize(List<Obstacle> obstacles) {
+        var optimizedObstacles = new ArrayList<Obstacle>();
         for (Obstacle obstacle : obstacles) {
             Obstacle optimized = new Obstacle(obstacle.startPoint(), obstacle.hasDoubleWalls());
             optimizedObstacles.add(optimized);
