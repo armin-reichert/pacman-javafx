@@ -155,13 +155,13 @@ public class WorldRenderer3D {
         return wall;
     }
 
-    private void addWall(Group parent, Vector2i p, Vector2i q) {
-        if (p.x() == q.x()) { // vertical wall
-            addWallAtCenter(parent, p.midpoint(q), TS, p.manhattanDist(q));
-        } else if (p.y() == q.y()) { // horizontal wall
-            addWallAtCenter(parent, p.midpoint(q), p.manhattanDist(q), TS);
+    private void addWallBetween(Group parent, Vector2i p1, Vector2i p2) {
+        if (p1.x() == p2.x()) { // vertical wall
+            addWallAtCenter(parent, p1.midpoint(p2), TS, Math.abs(p1.y() - p2.y()));
+        } else if (p1.y() == p2.y()) { // horizontal wall
+            addWallAtCenter(parent, p1.midpoint(p2), Math.abs(p1.x() - p2.x()), TS);
         } else {
-            Logger.error("Cannot add horizontal/vertical wall between {} and {}", p, q);
+            Logger.error("Cannot add horizontal/vertical wall between {} and {}", p1, p2);
         }
     }
 
@@ -187,12 +187,12 @@ public class WorldRenderer3D {
             parent.getChildren().add(g);
             //TODO provide more general solution for polygons with holes
             if ("dcgbfceb".equals(encoding) && !oShapeFilled) {
-                Vector2i[] t = obstacle.cornerCenters();
-                addTowers(g, t);
-                addWall(g, t[0], t[1]);
-                addWall(g, t[1], t[2]);
-                addWall(g, t[2], t[3]);
-                addWall(g, t[3], t[0]);
+                Vector2i[] cornerCenters = obstacle.cornerCenters();
+                addTowers(g, cornerCenters);
+                addWallBetween(g, cornerCenters[0], cornerCenters[1]);
+                addWallBetween(g, cornerCenters[1], cornerCenters[2]);
+                addWallBetween(g, cornerCenters[2], cornerCenters[3]);
+                addWallBetween(g, cornerCenters[3], cornerCenters[0]);
             } else {
                 render_ClosedSingleWallObstacle(g, obstacle);
             }
