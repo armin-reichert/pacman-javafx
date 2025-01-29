@@ -66,7 +66,7 @@ public class Maze3D extends Group {
 
         Color wallBaseColor = coloring.stroke();
         // need some contrast with floor if fill color is black
-        Color wallTopColor = coloring.fill().equals(Color.BLACK) ? Color.grayRgb(30) : coloring.fill();
+        Color wallTopColor = coloring.fill().equals(Color.BLACK) ? Color.grayRgb(42) : coloring.fill();
 
         wallBaseMaterial = new PhongMaterial();
         wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
