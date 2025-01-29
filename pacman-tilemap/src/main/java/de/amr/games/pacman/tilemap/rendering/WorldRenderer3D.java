@@ -155,11 +155,11 @@ public class WorldRenderer3D {
         return wall;
     }
 
-    private void addWallBetween(Group parent, Vector2i p1, Vector2i p2) {
+    public void addWallBetween(Group parent, Vector2i p1, Vector2i p2, double wallThickness) {
         if (p1.x() == p2.x()) { // vertical wall
-            addWallAtCenter(parent, p1.midpoint(p2), TS, Math.abs(p1.y() - p2.y()));
+            addWallAtCenter(parent, p1.midpoint(p2), wallThickness, Math.abs(p1.y() - p2.y()));
         } else if (p1.y() == p2.y()) { // horizontal wall
-            addWallAtCenter(parent, p1.midpoint(p2), Math.abs(p1.x() - p2.x()), TS);
+            addWallAtCenter(parent, p1.midpoint(p2), Math.abs(p1.x() - p2.x()), wallThickness);
         } else {
             Logger.error("Cannot add horizontal/vertical wall between {} and {}", p1, p2);
         }
@@ -189,10 +189,10 @@ public class WorldRenderer3D {
             if ("dcgbfceb".equals(encoding) && !oShapeFilled) {
                 Vector2i[] cornerCenters = obstacle.cornerCenters();
                 addTowers(g, cornerCenters);
-                addWallBetween(g, cornerCenters[0], cornerCenters[1]);
-                addWallBetween(g, cornerCenters[1], cornerCenters[2]);
-                addWallBetween(g, cornerCenters[2], cornerCenters[3]);
-                addWallBetween(g, cornerCenters[3], cornerCenters[0]);
+                addWallBetween(g, cornerCenters[0], cornerCenters[1], TS);
+                addWallBetween(g, cornerCenters[1], cornerCenters[2], TS);
+                addWallBetween(g, cornerCenters[2], cornerCenters[3], TS);
+                addWallBetween(g, cornerCenters[3], cornerCenters[0], TS);
             } else {
                 render_ClosedSingleWallObstacle(g, obstacle);
             }
