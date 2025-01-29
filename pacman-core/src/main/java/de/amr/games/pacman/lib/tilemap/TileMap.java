@@ -98,6 +98,13 @@ public class TileMap {
     private final Map<String, Object> properties = new HashMap<>();
     private final byte[][] data;
 
+    public TileMap(int numRows, int numCols) {
+        data = new byte[numRows][numCols];
+    }
+
+    private TileMap(byte[][] data) {
+        this.data = data;
+    }
 
     public TileMap(TileMap other) {
         int numRows = other.numRows(), numCols = other.numCols();
@@ -106,14 +113,6 @@ public class TileMap {
         for (int row = 0; row < numRows; ++row) {
             data[row] = Arrays.copyOf(other.data[row], numCols);
         }
-    }
-
-    public TileMap(int numRows, int numCols) {
-        data = new byte[numRows][numCols];
-    }
-
-    private TileMap(byte[][] data) {
-        this.data = data;
     }
 
     /**
@@ -278,7 +277,6 @@ public class TileMap {
         for (int row = 0; row < numRows(); ++row) {
             for (int col = 0; col < numCols(); ++col) {
                 byte value = data[row][col];
-                //pw.printf("%2d", value);
                 pw.printf("#%02X", value);
                 if (col < numCols() - 1) {
                     pw.print(",");
