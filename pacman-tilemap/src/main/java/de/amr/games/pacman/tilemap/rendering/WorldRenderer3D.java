@@ -155,13 +155,6 @@ public class WorldRenderer3D {
         return wall;
     }
 
-    private void addTowers(Group parent, Vector2i... centers) {
-        for (Vector2i center : centers) {
-            Node tower = createCircularWall(center, HTS);
-            parent.getChildren().add(tower);
-        }
-    }
-
     private void addWall(Group parent, Vector2i p, Vector2i q) {
         if (p.x() == q.x()) { // vertical wall
             addWallAtCenter(parent, p.midpoint(q), TS, p.manhattanDist(q));
@@ -189,30 +182,22 @@ public class WorldRenderer3D {
         String encoding = obstacle.encoding();
         Logger.info("Render 3D obstacle with encoding '{}'", encoding);
         if (obstacle.isClosed() && !obstacle.hasDoubleWalls()) {
-            Group og = new Group();
-            addTags(og, TAG_INNER_OBSTACLE);
-            parent.getChildren().add(og);
-            switch (encoding) {
-                case "dgfe" ->     addTowers(og, obstacle.cornerCenter(0)); // single tower
-                case "dcgbfceb" -> render_O(og, obstacle); // filled or hollow O-shaped obstacle
-                default ->         render_ClosedSingleWallObstacle(og, obstacle);
+            Group g = new Group();
+            addTags(g, TAG_INNER_OBSTACLE);
+            parent.getChildren().add(g);
+            //TODO provide more general solution for polygons with holes
+            if ("dcgbfceb".equals(encoding) && !oShapeFilled) {
+                Vector2i[] t = obstacle.cornerCenters();
+                addTowers(g, t);
+                addWall(g, t[0], t[1]);
+                addWall(g, t[1], t[2]);
+                addWall(g, t[2], t[3]);
+                addWall(g, t[3], t[0]);
+            } else {
+                render_ClosedSingleWallObstacle(g, obstacle);
             }
         } else {
             render_DoubleStrokeObstacle(parent, obstacle);
-        }
-    }
-
-    public void render_O(Group og, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCenters();
-        addTowers(og, t);
-        addWall(og, t[0], t[1]);
-        addWall(og, t[1], t[2]);
-        addWall(og, t[2], t[3]);
-        addWall(og, t[3], t[0]);
-        if (oShapeFilled) {
-            double width  = Math.abs(t[0].x() - t[2].x()) - TS;
-            double height = Math.abs(t[0].y() - t[2].y()) - TS;
-            addWallAtCenter(og, t[0].midpoint(t[2]), width, height);
         }
     }
 
@@ -220,6 +205,12 @@ public class WorldRenderer3D {
         addTowers(g, obstacle.cornerCenters());
         for (RectArea rect : PolygonToRectConversion.convert(obstacle)) {
             g.getChildren().add(createWallCenteredAt(rect.center(), rect.width(), rect.height()));
+        }
+    }
+
+    private void addTowers(Group parent, Vector2i... centers) {
+        for (Vector2i center : centers) {
+            parent.getChildren().add(createCircularWall(center, HTS));
         }
     }
 
