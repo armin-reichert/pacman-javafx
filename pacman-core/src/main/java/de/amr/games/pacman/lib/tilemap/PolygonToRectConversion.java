@@ -72,16 +72,13 @@ public interface PolygonToRectConversion {
     static List<Vector2i> replaceDiagonalCornerEdges(Obstacle obstacle) {
         var edges = new ArrayList<Vector2i>();
         for (ObstacleSegment segment : obstacle.segments()) {
-            if (segment.isStraightLine()) {
-                edges.add(segment.vector());
+            Vector2i v = segment.vector();
+            if (v.x() != 0 && v.y() != 0) { // diagonal
+                Vector2i e = segment.isNWCorner() || segment.isSECorner() ? vec_2i(0, v.y()) : vec_2i(v.x(), 0);
+                edges.add(e);
+                edges.add(v.minus(e));
             } else {
-                boolean down = segment.vector().y() > 0;
-                int dx = 0, dy = 0;
-                if      (segment.isNWCorner() || segment.isSECorner()) { dy = down ? HTS : -HTS; }
-                else if (segment.isSWCorner() || segment.isNECorner()) { dx = down ? HTS : -HTS; }
-                Vector2i e1 = vec_2i(dx, dy), e2 = segment.vector().minus(e1);
-                edges.add(e1);
-                edges.add(e2);
+                edges.add(v);
             }
         }
         return edges;
