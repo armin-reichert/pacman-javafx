@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.vec_2i;
+import static java.lang.Math.signum;
 
 /**
  * Implements the Gourley/Green
@@ -65,26 +66,26 @@ public interface PolygonToRectConversion {
     }
 
     static List<Vector2i> replaceDiagonalCornerEdges(Obstacle obstacle) {
-        List<Vector2i> edges = new ArrayList<>();
-        for (var segment : obstacle.segments()) {
-            boolean down = segment.vector().y() > 0;
-            int dx = 0, dy = 0;
-            if      (segment.isNWCorner() || segment.isSECorner()) { dy = down ? HTS : -HTS; }
-            else if (segment.isSWCorner() || segment.isNECorner()) { dx = down ? HTS : -HTS; }
-            if (dx != 0 || dy != 0) {
+        var edges = new ArrayList<Vector2i>();
+        for (ObstacleSegment segment : obstacle.segments()) {
+            if (segment.isStraightLine()) {
+                edges.add(segment.vector());
+            } else {
+                boolean down = segment.vector().y() > 0;
+                int dx = 0, dy = 0;
+                if      (segment.isNWCorner() || segment.isSECorner()) { dy = down ? HTS : -HTS; }
+                else if (segment.isSWCorner() || segment.isNECorner()) { dx = down ? HTS : -HTS; }
                 Vector2i e1 = vec_2i(dx, dy), e2 = segment.vector().minus(e1);
                 edges.add(e1);
                 edges.add(e2);
-            } else {
-                edges.add(segment.vector());
             }
         }
         return edges;
     }
 
     static List<Vector2i> removeInversePairs(List<Vector2i> polygonEdges) {
-        Deque<Vector2i> stack = new ArrayDeque<>();
-        for (var edge : polygonEdges) {
+        var stack = new ArrayDeque<Vector2i>();
+        for (Vector2i edge : polygonEdges) {
             if (stack.isEmpty()) {
                 stack.push(edge);
             } else {
@@ -99,7 +100,7 @@ public interface PolygonToRectConversion {
     }
 
     static List<Vector2i> combineEdgesWithSameDirection(List<Vector2i> polygonEdges) {
-        List<Vector2i> edges = new ArrayList<>();
+        var edges = new ArrayList<Vector2i>();
         if (polygonEdges.isEmpty()) {
             return edges;
         }
@@ -110,8 +111,7 @@ public interface PolygonToRectConversion {
             if (sameDirection(edge, last)) {
                 edges.removeLast();
                 edges.add(last.plus(edge));
-            }
-            else {
+            } else {
                 edges.add(edge);
             }
         }
@@ -119,9 +119,9 @@ public interface PolygonToRectConversion {
     }
 
     static List<Vector2i> makeOpenPolygonPoints(Vector2i startPoint, List<Vector2i> polygonEdges) {
-        List<Vector2i> points = new ArrayList<>();
+        var points = new ArrayList<Vector2i>();
         points.add(startPoint);
-        for (var edge : polygonEdges) {
+        for (Vector2i edge : polygonEdges) {
             points.add(points.getLast().plus(edge));
         }
         if (points.getFirst().equals(points.getLast())) {
@@ -130,7 +130,7 @@ public interface PolygonToRectConversion {
         return points;
     }
 
-    static boolean sameDirection(Vector2i e, Vector2i f) {
-        return Math.signum(e.x()) == Math.signum(f.x()) && Math.signum(e.y()) == Math.signum(f.y());
+    static boolean sameDirection(Vector2i v, Vector2i w) {
+        return signum(v.x()) == signum(w.x()) && signum(v.y()) == signum(w.y());
     }
 }
