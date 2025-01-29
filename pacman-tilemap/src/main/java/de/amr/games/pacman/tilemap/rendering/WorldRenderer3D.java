@@ -100,6 +100,16 @@ public class WorldRenderer3D {
         this.oShapeFilled = value;
     }
 
+    public void addWallBetween(Group g, Vector2i p1, Vector2i p2, double wallThickness) {
+        if (p1.x() == p2.x()) { // vertical wall
+            g.getChildren().add(createWallCenteredAt(p1.midpoint(p2), wallThickness, Math.abs(p1.y() - p2.y())));
+        } else if (p1.y() == p2.y()) { // horizontal wall
+            g.getChildren().add(createWallCenteredAt(p1.midpoint(p2), Math.abs(p1.x() - p2.x()), wallThickness));
+        } else {
+            Logger.error("Cannot add horizontal/vertical wall between {} and {}", p1, p2);
+        }
+    }
+
     public Node createWallBetweenTiles(Vector2i t1, Vector2i t2) {
         Vector2i center = t1.plus(t2).scaled(HTS).plus(HTS, HTS);
         if (t1.y() == t2.y()) { // horizontal wall
@@ -155,16 +165,6 @@ public class WorldRenderer3D {
         return wall;
     }
 
-    public void addWallBetween(Group parent, Vector2i p1, Vector2i p2, double wallThickness) {
-        if (p1.x() == p2.x()) { // vertical wall
-            parent.getChildren().add(createWallCenteredAt(p1.midpoint(p2), wallThickness, Math.abs(p1.y() - p2.y())));
-        } else if (p1.y() == p2.y()) { // horizontal wall
-            parent.getChildren().add(createWallCenteredAt(p1.midpoint(p2), Math.abs(p1.x() - p2.x()), wallThickness));
-        } else {
-            Logger.error("Cannot add horizontal/vertical wall between {} and {}", p1, p2);
-        }
-    }
-
     /**
      * Creates a 3D representation for the given obstacle.
      * <p>
@@ -178,19 +178,19 @@ public class WorldRenderer3D {
         String encoding = obstacle.encoding();
         Logger.info("Render 3D obstacle with encoding '{}'", encoding);
         if (obstacle.isClosed() && !obstacle.hasDoubleWalls()) {
-            Group g = new Group();
-            addTags(g, TAG_INNER_OBSTACLE);
-            parent.getChildren().add(g);
+            Group og = new Group();
+            addTags(og, TAG_INNER_OBSTACLE);
+            parent.getChildren().add(og);
             //TODO provide more general solution for polygons with holes
             if ("dcgbfceb".equals(encoding) && !oShapeFilled) {
                 Vector2i[] cornerCenters = obstacle.cornerCenters();
-                addTowers(g, cornerCenters);
-                addWallBetween(g, cornerCenters[0], cornerCenters[1], TS);
-                addWallBetween(g, cornerCenters[1], cornerCenters[2], TS);
-                addWallBetween(g, cornerCenters[2], cornerCenters[3], TS);
-                addWallBetween(g, cornerCenters[3], cornerCenters[0], TS);
+                addTowers(og, cornerCenters);
+                addWallBetween(og, cornerCenters[0], cornerCenters[1], TS);
+                addWallBetween(og, cornerCenters[1], cornerCenters[2], TS);
+                addWallBetween(og, cornerCenters[2], cornerCenters[3], TS);
+                addWallBetween(og, cornerCenters[3], cornerCenters[0], TS);
             } else {
-                render_ClosedSingleWallObstacle(g, obstacle);
+                render_ClosedSingleWallObstacle(parent, obstacle);
             }
         } else {
             render_DoubleStrokeObstacle(parent, obstacle);
@@ -204,9 +204,9 @@ public class WorldRenderer3D {
         }
     }
 
-    private void addTowers(Group parent, Vector2i... centers) {
+    private void addTowers(Group g, Vector2i... centers) {
         for (Vector2i center : centers) {
-            parent.getChildren().add(createCircularWall(center, HTS));
+            g.getChildren().add(createCircularWall(center, HTS));
         }
     }
 
@@ -220,46 +220,43 @@ public class WorldRenderer3D {
             ObstacleSegment segment = obstacle.segment(i);
             double length = segment.vector().length();
             Vector2i q = p.plus(segment.vector());
-            if (segment.isVerticalLine()) {
-                Node wall = createWallCenteredAt(p.midpoint(q), wallThickness, length);
-                g.getChildren().add(wall);
-            } else if (segment.isHorizontalLine()) {
-                Node wall = createWallCenteredAt(p.midpoint(q), length + wallThickness, wallThickness);
-                g.getChildren().add(wall);
+            if (segment.isStraightLine()) {
+                addWallBetween(g, p, q, wallThickness);
+//                g.getChildren().add(createWallCenteredAt(p.midpoint(q), wallThickness, length));
             } else if (segment.isNWCorner()) {
                 if (segment.ccw()) {
-                    addGenericShapeCorner(g, p.plus(-r, 0), p, q);
+                    addCornerWalls(g, p.plus(-r, 0), p, q);
                 } else {
-                    addGenericShapeCorner(g, p.plus(0, -r), q, p);
+                    addCornerWalls(g, p.plus(0, -r), q, p);
                 }
             } else if (segment.isSWCorner()) {
                 if (segment.ccw()) {
-                    addGenericShapeCorner(g, p.plus(0, r), q, p);
+                    addCornerWalls(g, p.plus(0, r), q, p);
                 } else {
-                    addGenericShapeCorner(g, p.plus(-r, 0), p, q);
+                    addCornerWalls(g, p.plus(-r, 0), p, q);
                 }
             } else if (segment.isSECorner()) {
                 if (segment.ccw()) {
-                    addGenericShapeCorner(g, p.plus(r, 0), p, q);
+                    addCornerWalls(g, p.plus(r, 0), p, q);
                 } else {
-                    addGenericShapeCorner(g, p.plus(0, r), q, p);
+                    addCornerWalls(g, p.plus(0, r), q, p);
                 }
             } else if (segment.isNECorner()) {
                 if (segment.ccw()) {
-                    addGenericShapeCorner(g, p.plus(0, -r), q, p);
+                    addCornerWalls(g, p.plus(0, -r), q, p);
                 } else {
-                    addGenericShapeCorner(g, p.plus(r, 0), p, q);
+                    addCornerWalls(g, p.plus(r, 0), p, q);
                 }
             }
             p = q;
         }
     }
 
-    private void addGenericShapeCorner(Group parent, Vector2i corner, Vector2i horEndPoint, Vector2i vertEndPoint) {
+    private void addCornerWalls(Group g, Vector2i corner, Vector2i horEndPoint, Vector2i vertEndPoint) {
         Node hWall = createWallCenteredAt(corner.midpoint(horEndPoint), corner.manhattanDist(horEndPoint), wallThickness);
         Node vWall = createWallCenteredAt(corner.midpoint(vertEndPoint), wallThickness, corner.manhattanDist(vertEndPoint));
         Node cWall = createCompositeCornerWall(corner, 0.5 * wallThickness);
-        parent.getChildren().addAll(hWall, vWall, cWall);
+        g.getChildren().addAll(hWall, vWall, cWall);
     }
 
     private Group createCompositeCornerWall(Vector2i center, double radius) {
