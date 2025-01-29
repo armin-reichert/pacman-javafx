@@ -172,15 +172,6 @@ public class WorldRenderer3D {
         }
     }
 
-    private void addWalls(Group parent, Vector2i... wallEndPoints) {
-        if (wallEndPoints.length == 0 || wallEndPoints.length % 2 == 1) {
-            throw new IllegalArgumentException("There must be an even, non-zero number of wall end points");
-        }
-        for (int i = 0; i < wallEndPoints.length / 2; ++i) {
-            addWall(parent, wallEndPoints[2*i], wallEndPoints[2*i+1]);
-        }
-    }
-
     private void addWallAtCenter(Group parent, Vector2f center, double sizeX, double sizeY) {
         parent.getChildren().add(createWallCenteredAt(center, sizeX, sizeY));
     }
@@ -212,9 +203,12 @@ public class WorldRenderer3D {
     }
 
     public void render_O(Group og, Obstacle obstacle) {
-        Vector2i[] t = obstacle.cornerCentersAtSegments(0, 2, 4, 6);
+        Vector2i[] t = obstacle.cornerCenters();
         addTowers(og, t);
-        addWalls(og, t[0], t[1], t[1], t[2], t[2], t[3], t[3], t[0]);
+        addWall(og, t[0], t[1]);
+        addWall(og, t[1], t[2]);
+        addWall(og, t[2], t[3]);
+        addWall(og, t[3], t[0]);
         if (oShapeFilled) {
             double width  = Math.abs(t[0].x() - t[2].x()) - TS;
             double height = Math.abs(t[0].y() - t[2].y()) - TS;
